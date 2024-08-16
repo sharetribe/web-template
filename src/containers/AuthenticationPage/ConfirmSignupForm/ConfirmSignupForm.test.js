@@ -5,7 +5,7 @@ import { renderWithProviders as render, testingLibrary } from '../../../util/tes
 import { fakeIntl } from '../../../util/testData';
 
 import TermsAndConditions from '../TermsAndConditions/TermsAndConditions';
-import SignupForm from './SignupForm';
+import ConfirmSignupForm from './ConfirmSignupForm';
 
 const { screen, fireEvent, userEvent, waitFor } = testingLibrary;
 
@@ -96,7 +96,15 @@ const userFields = [
   },
 ];
 
-describe('SignupForm', () => {
+const authInfo = {
+  idpToken: '123',
+  email: 'name@example.com',
+  firstName: 'Firstname',
+  lastName: 'Lastname',
+  idpId: 'idpId',
+};
+
+describe('ConfirmSignupForm', () => {
   // Terms and conditions component passed in as props
   const termsAndConditions = (
     <TermsAndConditions onOpenTermsOfService={noop} onOpenPrivacyPolicy={noop} intl={fakeIntl} />
@@ -106,19 +114,21 @@ describe('SignupForm', () => {
   // // However, this form starts to be too big DOM structure to be snapshot tested nicely
   // it('matches snapshot', () => {
   //   const tree = render(
-  //     <SignupForm intl={fakeIntl} termsAndConditions={termsAndConditions} onSubmit={noop} />
+  //     <ConfirmSignupForm intl={fakeIntl} termsAndConditions={termsAndConditions} onSubmit={noop} />
   //   );
   //   expect(tree.asFragment()).toMatchSnapshot();
   // });
 
-  it('enables Sign up button when required fields are filled', async () => {
+  it('enables Continue with button when required fields are filled', async () => {
     render(
-      <SignupForm
+      <ConfirmSignupForm
+        authInfo={authInfo}
         intl={fakeIntl}
         termsAndConditions={termsAndConditions}
         userTypes={userTypes}
         userFields={userFields}
         onSubmit={noop}
+        onOpenTermsOfService={noop}
       />
     );
 
@@ -131,34 +141,40 @@ describe('SignupForm', () => {
     });
 
     // Test that sign up button is disabled at first
-    expect(screen.getByRole('button', { name: 'SignupForm.signUp' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'ConfirmSignupForm.signUp' })).toBeDisabled();
 
-    // Type the values to the sign up form
-    userEvent.type(
-      screen.getByRole('textbox', { name: 'SignupForm.emailLabel' }),
-      'joe@example.com'
+    // Check that auth info details are in the form already
+    expect(screen.getByRole('textbox', { name: 'ConfirmSignupForm.emailLabel' })).toHaveValue(
+      authInfo.email
     );
-    userEvent.type(screen.getByRole('textbox', { name: 'SignupForm.firstNameLabel' }), 'Joe');
-    userEvent.type(screen.getByRole('textbox', { name: 'SignupForm.lastNameLabel' }), 'Dunphy');
-    userEvent.type(screen.getByLabelText('SignupForm.passwordLabel'), 'secret-password');
+    expect(screen.getByRole('textbox', { name: 'ConfirmSignupForm.firstNameLabel' })).toHaveValue(
+      authInfo.firstName
+    );
+    expect(screen.getByRole('textbox', { name: 'ConfirmSignupForm.lastNameLabel' })).toHaveValue(
+      authInfo.lastName
+    );
+
+    // Type a value in the required text field
     userEvent.type(screen.getByLabelText('Text Field'), 'Text value');
 
     // Test that sign up button is still disabled before clicking the checkbox
-    expect(screen.getByRole('button', { name: 'SignupForm.signUp' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'ConfirmSignupForm.signUp' })).toBeDisabled();
     fireEvent.click(screen.getByLabelText(/AuthenticationPage.termsAndConditionsAcceptText/i));
 
-    // Test that sign up button is enabled after typing the values
-    expect(screen.getByRole('button', { name: 'SignupForm.signUp' })).toBeEnabled();
+    // Test that sign up button is enabled after typing the final value and selecting the checkbox
+    expect(screen.getByRole('button', { name: 'ConfirmSignupForm.signUp' })).toBeEnabled();
   });
 
   it('shows custom user fields according to configuration', async () => {
     render(
-      <SignupForm
+      <ConfirmSignupForm
+        authInfo={authInfo}
         intl={fakeIntl}
         termsAndConditions={termsAndConditions}
         userTypes={userTypes}
         userFields={userFields}
         onSubmit={noop}
+        onOpenTermsOfService={noop}
       />
     );
 
@@ -177,7 +193,8 @@ describe('SignupForm', () => {
     // Don't show user fields that have displayInSignUp: false
     expect(screen.queryByText('Boolean Field')).toBeNull();
 
-    // Don't show user fields that are limited to user types – SignupForm does not support user types yet!
+    // Don't show user fields that are limited to user types –
+    // ConfirmSignupForm does not support user types yet!
     expect(screen.queryByText('Enum Field 2')).toBeNull();
   });
 });

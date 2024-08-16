@@ -1,7 +1,15 @@
 import React from 'react';
 import { fakeIntl } from '../../../util/testData';
 import TermsAndConditions from '../TermsAndConditions/TermsAndConditions';
-import SignupForm from './SignupForm';
+import ConfirmSignupForm from './ConfirmSignupForm';
+
+const authInfo = {
+  idpToken: '123',
+  email: 'name@example.com',
+  firstName: 'Firstname',
+  lastName: 'Lastname',
+  idpId: 'idpId',
+};
 
 const userTypes = [
   {
@@ -89,9 +97,10 @@ const userFields = [
 ];
 
 export const Empty = {
-  component: SignupForm,
+  component: ConfirmSignupForm,
   props: {
-    formId: 'SignupFormExample',
+    formId: 'ConfirmSignupFormExample',
+    authInfo,
     userTypes,
     userFields,
     onSubmit(values) {
@@ -104,7 +113,7 @@ export const Empty = {
       <TermsAndConditions
         onOpenTermsOfService={() => setTosModalOpen(true)}
         onOpenPrivacyPolicy={() => setPrivacyModalOpen(true)}
-        formId="SignupFormExample"
+        formId="ConfirmSignupFormExample"
         intl={fakeIntl}
       />
     ),
