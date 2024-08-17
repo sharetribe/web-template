@@ -9,74 +9,88 @@ import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactI
 import { propTypes } from '../../../../util/types';
 
 // Import shared components
-import { Button, Form, FieldTextInput } from '../../../../components';
+import { Button, Form } from '../../../../components';
 
 // Import modules from this directory
 import css from './EditListingDocumentsForm.module.css';
 
+export const EditListingDocumentsFormComponent = props => {
 
-export const EditListingDocumentsFormComponent = props => (
-  <FinalForm
-    {...props}
-    render={formRenderProps => {
-      const {
-        formId,
-        autoFocus,
-        className,
-        disabled,
-        ready,
-        handleSubmit,
-        intl,
-        invalid,
-        pristine,
-        saveActionMsg,
-        updated,
-        updateInProgress,
-        fetchErrors,
-      } = formRenderProps;
+  const { onDocumentUpload } = props;
 
-      const classes = classNames(css.root, className);
-      const submitReady = (updated && pristine) || ready;
-      const submitInProgress = updateInProgress;
-      const submitDisabled = invalid || disabled || submitInProgress;
-      const { updateListingError, showListingsError } = fetchErrors || {};
+  return (
+    <FinalForm
+      {...props}
+      render={formRenderProps => {
+        const {
+          formId,
+          className,
+          disabled,
+          handleSubmit,
+          invalid,
+          pristine,
+          saveActionMsg,
+          updated,
+          updateInProgress,
+          fetchErrors,
+        } = formRenderProps;
 
-      return (
-        <Form onSubmit={handleSubmit} className={classes}>
-          {updateListingError ? (
-            <p className={css.error}>
-              <FormattedMessage id="EditListingDocumentsForm.updateFailed" />
-            </p>
-          ) : null}
-          {showListingsError ? (
-            <p className={css.error}>
-              <FormattedMessage id="EditListingDocumentsForm.showListingFailed" />
-            </p>
-          ) : null}
-          <FieldTextInput
-            id={`${formId}documents`}
-            name="extraFeatures"
-            className={css.input}
-            autoFocus={autoFocus}
-            type="textarea"
-            label="Extra documents"
-            placeholder={intl.formatMessage({ id: 'EditListingDocumentsForm.documentsInputPlaceholder' })}
-          />
+        const classes = classNames(css.root, className);
+        const submitReady = (updated && pristine) || !invalid;
+        const submitInProgress = updateInProgress;
+        const submitDisabled = invalid || disabled || submitInProgress;
+        const { updateListingError, showListingsError } = fetchErrors || {};
 
-          <Button
-            className={css.submitButton}
-            type="submit"
-            inProgress={submitInProgress}
-            disabled={submitDisabled}
-            ready={submitReady}
-          >
-            {saveActionMsg}
-          </Button>
-        </Form>
-      );
-    }}
-  />
-);
+        const onChange = e => {
+          const file = e.target.files[0];
+          onDocumentUpload(file);
+        };
+
+        return (
+          <Form onSubmit={handleSubmit} className={classes}>
+            {updateListingError ? (
+              <p className={css.error}>
+                <FormattedMessage id="EditListingDocumentsForm.updateFailed" />
+              </p>
+            ) : null}
+            {showListingsError ? (
+              <p className={css.error}>
+                <FormattedMessage id="EditListingDocumentsForm.showListingFailed" />
+              </p>
+            ) : null}
+
+            <div className={css.uploadContainer}>
+              <input
+                id={`${formId}documents`}
+                name="documents"
+                type="file"
+                onChange={onChange}
+                className={css.fileInput}
+              />
+
+              <label
+                htmlFor={`${formId}documents`}
+                className={css.uploadButton}
+              >
+                Add
+              </label>
+            </div>
+
+            <Button
+              className={css.submitButton}
+              type="submit"
+              inProgress={submitInProgress}
+              disabled={submitDisabled}
+              ready={submitReady}
+            >
+              {saveActionMsg}
+            </Button>
+          </Form>
+        );
+      }}
+    />
+  );
+};
 
 EditListingDocumentsFormComponent.defaultProps = {
   fetchErrors: null,
@@ -86,6 +100,7 @@ EditListingDocumentsFormComponent.defaultProps = {
 EditListingDocumentsFormComponent.propTypes = {
   formId: string,
   intl: intlShape.isRequired,
+  onDocumentUpload: func.isRequired,
   onSubmit: func.isRequired,
   saveActionMsg: string.isRequired,
   disabled: bool.isRequired,

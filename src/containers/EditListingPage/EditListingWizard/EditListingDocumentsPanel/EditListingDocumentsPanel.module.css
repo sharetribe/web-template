@@ -14,3 +14,49 @@
 .priceCurrencyInvalid {
   color: var(--colorFail);
 }
+
+/* Container for the table */
+.tableContainer {
+  margin-bottom: 20px;
+}
+
+/* Ensures consistent table layout */
+.documentsTable {
+  width: 100%; /* Ensures the table takes the full width of its container */
+  border-collapse: collapse; /* Collapses table borders for a cleaner look */
+  table-layout: fixed;
+}
+
+/* Style for table headers and cells */
+.documentsTable th,
+.documentsTable td {
+  padding: 8px 12px; /* Adjust padding as needed */
+  border: 1px solid #ddd; /* Border for table cells */
+  text-align: center; /* Center-align text */
+  white-space: nowrap; /* Prevent text from wrapping to the next line */
+  overflow: hidden; /* Hide any overflowing text */
+  text-overflow: ellipsis; /* Display ellipsis (...) for overflowing text */
+}
+
+/* Style for table headers */
+.documentsTable th {
+  background-color: #f4f4f4; /* Background color for table headers */
+  font-weight: bold; /* Bold text for headers */
+}
+
+/* Style for table rows on hover */
+.documentsTable tr:hover {
+  background-color: #f9f9f9; /* Background color for hover effect */
+}
+
+/* Style for document name column */
+.documentsTable th:first-child,
+.documentsTable td:first-child {
+  width: 80%; /* 80% of table width */
+}
+
+/* Style for actions column */
+.documentsTable th:last-child,
+.documentsTable td:last-child {
+  width: 20%; /* 20% of table width */
+}

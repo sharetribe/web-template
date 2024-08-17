@@ -1,19 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-
-// Import configs and util modules
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { LISTING_STATE_DRAFT } from '../../../../util/types';
-import { types as sdkTypes } from '../../../../util/sdkLoader';
-
-// Import shared components
-import {
-  H3,
-  ListingLink, PrimaryButtonInline
-} from '../../../../components';
-
-// Import modules from this directory
+import { H3, ListingLink, PrimaryButtonInline } from '../../../../components';
 import EditListingDocumentsForm from './EditListingDocumentsForm';
 import css from './EditListingDocumentsPanel.module.css';
 
@@ -29,6 +19,7 @@ const EditListingDocumentsPanel = props => {
     listing,
     disabled,
     ready,
+    onDocumentUpload,
     onSubmit,
     submitButtonText,
     panelUpdated,
@@ -37,9 +28,25 @@ const EditListingDocumentsPanel = props => {
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
-  const documents = getInitialValues(props);
+  const initialDocuments = getInitialValues(props);
   const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
   const unitType = listing?.attributes?.publicData?.unitType;
+
+  const [documents, addDocuments] = useState(initialDocuments);
+
+  const onDocumentUploadHandler = file => {
+    if (file) {
+      addDocuments([
+        ...documents,
+        { id: `${file.name}_${Date.now()}`, name: file.name, url: URL.createObjectURL(file) }
+      ]);
+    }
+  };
+
+  const onDocumentRemoveHandler = index => {
+    const newDocuments = documents.filter((doc, i) => i !== index);
+    addDocuments(newDocuments);
+  };
 
   return (
     <div className={classes}>
@@ -57,44 +64,39 @@ const EditListingDocumentsPanel = props => {
         )}
       </H3>
 
-      <table className="documents-table">
-        <thead>
-        <tr>
-          <th>Document Name</th>
-          <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {documents.map((doc, index) => (
-          <tr key={index}>
-            <td align={'center'}>
-              <a href={doc.url} target="_blank" rel="noopener noreferrer">
-                {doc.name}
-              </a>
-            </td>
-            <td align={'center'}>
-              <PrimaryButtonInline type="submit">
-                Delete
-              </PrimaryButtonInline>
-            </td>
+      <div className={css.tableContainer}>
+        <table className={css.documentsTable}>
+          <thead>
+          <tr>
+            <th>Document Name</th>
+            <th>Actions</th>
           </tr>
-        ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+          {documents.map((doc, index) => (
+            <tr key={index}>
+              <td align={'center'}>
+                <a href={doc.url} target="_blank" rel="noopener noreferrer">
+                  {doc.name}
+                </a>
+              </td>
+              <td align={'center'}>
+                <PrimaryButtonInline onClick={() => onDocumentRemoveHandler(index)}>
+                  Delete
+                </PrimaryButtonInline>
+              </td>
+            </tr>
+          ))}
+          </tbody>
+        </table>
+      </div>
 
       <EditListingDocumentsForm
         className={css.form}
         initialValues={documents}
-        onSubmit={values => {
-          const { extraFeatures = '' } = values;
-
-          // New values for listing attributes
-          const updateValues = {
-            publicData: {
-              extraFeatures,
-            },
-          };
-          onSubmit(updateValues);
+        onDocumentUpload={onDocumentUploadHandler}
+        onSubmit={_ => {
+          onSubmit(documents);
         }}
         unitType={unitType}
         saveActionMsg={submitButtonText}
@@ -103,12 +105,11 @@ const EditListingDocumentsPanel = props => {
         updated={panelUpdated}
         updateInProgress={updateInProgress}
         fetchErrors={errors}
+        documents={documents}
       />
     </div>
   );
 };
-
-const { func, object, string, bool } = PropTypes;
 
 EditListingDocumentsPanel.defaultProps = {
   className: null,
@@ -117,19 +118,17 @@ EditListingDocumentsPanel.defaultProps = {
 };
 
 EditListingDocumentsPanel.propTypes = {
-  className: string,
-  rootClassName: string,
-
-  // We cannot use propTypes.listing since the listing might be a draft.
-  listing: object,
-
-  disabled: bool.isRequired,
-  ready: bool.isRequired,
-  onSubmit: func.isRequired,
-  submitButtonText: string.isRequired,
-  panelUpdated: bool.isRequired,
-  updateInProgress: bool.isRequired,
-  errors: object.isRequired,
+  className: PropTypes.string,
+  rootClassName: PropTypes.string,
+  listing: PropTypes.object,
+  disabled: PropTypes.bool.isRequired,
+  ready: PropTypes.bool.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  onDocumentUpload: PropTypes.func.isRequired,
+  submitButtonText: PropTypes.string.isRequired,
+  panelUpdated: PropTypes.bool.isRequired,
+  updateInProgress: PropTypes.bool.isRequired,
+  errors: PropTypes.object.isRequired,
 };
 
 export default EditListingDocumentsPanel;

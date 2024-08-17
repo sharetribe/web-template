@@ -38,3 +38,39 @@
     margin-top: 100px;
   }
 }
+
+.uploadContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center horizontally */
+  margin-bottom: 20px; /* Space between the button and the form */
+}
+
+.fileInput {
+  display: none;
+}
+
+.uploadButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px; /* Width for the rectangle */
+  height: 40px; /* Height for the rectangle */
+  border: 2px solid #ccc;
+  border-radius: 8px; /* Small rounded corners */
+  font-size: 16px;
+  font-weight: bold;
+  color: #666;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  /* Ensure text is centered */
+  text-align: center;
+  line-height: 1; /* Ensures the text is vertically centered */
+  padding: 0; /* Remove any padding to center the text */
+}
+
+.uploadButton:hover {
+  background-color: #eee;
+}
