@@ -251,9 +251,8 @@ const tabCompleted = (tab, listing, config) => {
     case PHOTOS:
       return images && images.length > 0;
     case DOCUMENTS:
+      // Do we need always some doc?
       return true;
-    // /** For a required attribute: **/
-    // return !!publicData.extraFeatures;
     default:
       return false;
   }
