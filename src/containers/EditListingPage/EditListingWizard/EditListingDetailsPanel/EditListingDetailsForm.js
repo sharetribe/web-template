@@ -328,8 +328,10 @@ const EditListingDetailsFormComponent = props => (
       const classes = classNames(css.root, className);
       const submitReady = (updated && pristine) || ready;
       const submitInProgress = updateInProgress;
-      const submitDisabled = invalid || disabled || submitInProgress;
-      
+      const hasMandatoryListingTypeData = listingType && transactionProcessAlias && unitType;
+      const submitDisabled =
+        invalid || disabled || submitInProgress || !hasMandatoryListingTypeData;
+        
       const handleCreateListingClick = () => {
         console.log('PublicArticleBtn2'); // Log para verificar
         if (typeof fbq !== 'undefined') {
