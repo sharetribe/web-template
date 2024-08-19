@@ -27,6 +27,7 @@ export const EditListingDocumentsFormComponent = props => {
           className,
           disabled,
           handleSubmit,
+          ready,
           invalid,
           pristine,
           saveActionMsg,
@@ -36,7 +37,7 @@ export const EditListingDocumentsFormComponent = props => {
         } = formRenderProps;
 
         const classes = classNames(css.root, className);
-        const submitReady = (updated && pristine) || !invalid;
+        const submitReady = (updated && pristine) || ready;
         const submitInProgress = updateInProgress;
         const submitDisabled = invalid || disabled || submitInProgress;
         const { updateListingError, showListingsError } = fetchErrors || {};

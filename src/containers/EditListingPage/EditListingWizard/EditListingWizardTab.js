@@ -99,7 +99,6 @@ const EditListingWizardTab = props => {
     onUpdateListing,
     onCreateListingDraft,
     onImageUpload,
-    onDocumentUpload,
     onManageDisableScrolling,
     onListingTypeChange,
     onRemoveImage,
@@ -261,7 +260,6 @@ const EditListingWizardTab = props => {
         <EditListingDocumentsPanel
           {...panelProps(DOCUMENTS)}
           documents={documents}
-          onDocumentUpload={onDocumentUpload}
         />
       );
     }
@@ -318,7 +316,6 @@ EditListingWizardTab.propTypes = {
   onUpdateListing: func.isRequired,
   onCreateListingDraft: func.isRequired,
   onImageUpload: func.isRequired,
-  onDocumentUpload: func.isRequired,
   onRemoveImage: func.isRequired,
   onListingTypeChange: func.isRequired,
   updatedTab: string,

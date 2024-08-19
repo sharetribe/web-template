@@ -558,7 +558,7 @@ export function requestShowListing(actionPayload, config) {
       .then(response => {
 
         // Load of documents for the listing
-        greenStockSdk.getDocument(actionPayload.id.uuid)
+        greenStockSdk.getDocuments(actionPayload.id.uuid)
           .then(r => {
             response.data.data.relationships.documents = r.documents
             // EditListingPage fetches new listing data, which also needs to be added to global data
@@ -659,8 +659,9 @@ export function requestCreateListingDraft(data, config) {
 export function requestUpdateListing(tab, data, config) {
   return (dispatch, getState, sdks) => {
     const sdk = sdks.shareTribeSdk;
+    const greenStockSdk = sdks.greenStoqSdk;
     dispatch(updateListingRequest(data));
-    const { id, stockUpdate, images, ...rest } = data;
+    const { id, stockUpdate, images, documents, ...rest } = data;
 
     // If images should be saved, create array out of the image UUIDs for the API call
     const imageProperty = typeof images !== 'undefined' ? { images: imageIds(images) } : {};
@@ -697,6 +698,11 @@ export function requestUpdateListing(tab, data, config) {
         }
 
         return response;
+      })
+      .then(() => {
+        if (documents) {
+          greenStockSdk.updateDocuments(id.uuid, documents)
+        }
       })
       .catch(e => {
         log.error(e, 'update-listing-failed', { listingData: data });

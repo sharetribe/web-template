@@ -105,7 +105,6 @@ export const EditListingPageComponent = props => {
     onPublishListingDraft,
     onUpdateListing,
     onImageUpload,
-    onDocumentUpload,
     onRemoveListingImage,
     onManageDisableScrolling,
     onPayoutDetailsSubmit,
@@ -251,7 +250,6 @@ export const EditListingPageComponent = props => {
           onGetStripeConnectAccountLink={onGetStripeConnectAccountLink}
           getAccountLinkInProgress={getAccountLinkInProgress}
           onImageUpload={onImageUpload}
-          onDocumentUpload={onDocumentUpload}
           onRemoveImage={onRemoveListingImage}
           currentUser={currentUser}
           onManageDisableScrolling={onManageDisableScrolling}
@@ -319,7 +317,6 @@ EditListingPageComponent.propTypes = {
   onCreateListingDraft: func.isRequired,
   onPublishListingDraft: func.isRequired,
   onImageUpload: func.isRequired,
-  onDocumentUpload: func.isRequired,
   onManageDisableScrolling: func.isRequired,
   onPayoutDetailsChange: func.isRequired,
   onPayoutDetailsSubmit: func.isRequired,
@@ -400,8 +397,6 @@ const mapDispatchToProps = dispatch => ({
   onPublishListingDraft: listingId => dispatch(requestPublishListingDraft(listingId)),
   onImageUpload: (data, listingImageConfig) =>
     dispatch(requestImageUpload(data, listingImageConfig)),
-  onDocumentUpload: (data) =>
-    dispatch(requestDocumentUpload(data)),
   onManageDisableScrolling: (componentId, disableScrolling) =>
     dispatch(manageDisableScrolling(componentId, disableScrolling)),
   onPayoutDetailsChange: () => dispatch(stripeAccountClearError()),

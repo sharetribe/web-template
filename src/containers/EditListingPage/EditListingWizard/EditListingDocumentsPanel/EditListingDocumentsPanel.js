@@ -19,7 +19,6 @@ const EditListingDocumentsPanel = props => {
     listing,
     disabled,
     ready,
-    onDocumentUpload,
     onSubmit,
     submitButtonText,
     panelUpdated,
@@ -32,20 +31,26 @@ const EditListingDocumentsPanel = props => {
   const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
   const unitType = listing?.attributes?.publicData?.unitType;
 
-  const [documents, addDocuments] = useState(initialDocuments);
+  const [tableDocuments, addTableDocuments] = useState(initialDocuments);
+  const [originalDocumentsToRemove, addOriginalDocumentsToRemove] = useState([]);
+  const [newDocuments, addNewDocuments] = useState([]);
 
   const onDocumentUploadHandler = file => {
     if (file) {
-      addDocuments([
-        ...documents,
-        { id: `${file.name}_${Date.now()}`, name: file.name, url: URL.createObjectURL(file) }
+      addTableDocuments([
+        ...tableDocuments,
+        { id: `${file.name}_${Date.now()}`, name: file.name}
       ]);
+      addNewDocuments([...newDocuments, file]);
     }
   };
 
-  const onDocumentRemoveHandler = index => {
-    const newDocuments = documents.filter((doc, i) => i !== index);
-    addDocuments(newDocuments);
+  const onDocumentRemoveHandler = (index, doc)=> {
+    const newDocuments = tableDocuments.filter((doc, i) => i !== index);
+    addTableDocuments(newDocuments);
+    if (doc.url) {
+      addOriginalDocumentsToRemove([...originalDocumentsToRemove, doc.id]);
+    }
   };
 
   return (
@@ -73,7 +78,7 @@ const EditListingDocumentsPanel = props => {
           </tr>
           </thead>
           <tbody>
-          {documents.map((doc, index) => (
+          {tableDocuments.map((doc, index) => (
             <tr key={index}>
               <td align={'center'}>
                 <a href={doc.url} target="_blank" rel="noopener noreferrer">
@@ -81,7 +86,7 @@ const EditListingDocumentsPanel = props => {
                 </a>
               </td>
               <td align={'center'}>
-                <PrimaryButtonInline onClick={() => onDocumentRemoveHandler(index)}>
+                <PrimaryButtonInline onClick={() => onDocumentRemoveHandler(index, doc)}>
                   Delete
                 </PrimaryButtonInline>
               </td>
@@ -93,10 +98,16 @@ const EditListingDocumentsPanel = props => {
 
       <EditListingDocumentsForm
         className={css.form}
-        initialValues={documents}
+        initialValues={tableDocuments}
         onDocumentUpload={onDocumentUploadHandler}
         onSubmit={_ => {
-          onSubmit(documents);
+          const updateValues = {
+            documents: {
+              documentsAdded: newDocuments,
+              documentsRemoved: originalDocumentsToRemove
+            }
+          };
+          onSubmit(updateValues);
         }}
         unitType={unitType}
         saveActionMsg={submitButtonText}
@@ -105,7 +116,7 @@ const EditListingDocumentsPanel = props => {
         updated={panelUpdated}
         updateInProgress={updateInProgress}
         fetchErrors={errors}
-        documents={documents}
+        documents={tableDocuments}
       />
     </div>
   );
@@ -124,7 +135,6 @@ EditListingDocumentsPanel.propTypes = {
   disabled: PropTypes.bool.isRequired,
   ready: PropTypes.bool.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  onDocumentUpload: PropTypes.func.isRequired,
   submitButtonText: PropTypes.string.isRequired,
   panelUpdated: PropTypes.bool.isRequired,
   updateInProgress: PropTypes.bool.isRequired,
