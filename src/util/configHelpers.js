@@ -78,7 +78,11 @@ const hasClashWithBuiltInPublicDataKey = listingFields => {
 /////////////////////////
 
 const mergeCurrency = (hostedCurrency, defaultCurrency) => {
+  /* Ine
   const currency = hostedCurrency || defaultCurrency;
+  */
+  const currency = defaultCurrency;
+  /*fin Ine*/
   const supportedCurrencies = Object.keys(subUnitDivisors);
   if (supportedCurrencies.includes(currency)) {
     return currency;
@@ -836,6 +840,10 @@ const validUserFields = (userFields, userTypesInUse) => {
 ///////////////////////////////////
 // Validate listing types config //
 ///////////////////////////////////
+
+const getListingTypeStringsInUse = listingTypes => {
+  return listingTypes.map(lt => `${lt.listingType}`);
+};
 
 const validListingTypes = listingTypes => {
   // Check what transaction processes this client app supports
