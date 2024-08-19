@@ -1,4 +1,5 @@
-import { storableError } from '../../util/errors';
+import { createImageVariantConfig } from '../../util/sdkLoader';
+import { isErrorUserPendingApproval, isForbiddenError, storableError } from '../../util/errors';
 import { convertUnitToSubUnit, unitDivisor } from '../../util/currency';
 import {
   parseDateFromISO8601,
@@ -8,8 +9,8 @@ import {
   daysBetween,
   getStartOf,
 } from '../../util/dates';
-import { createImageVariantConfig } from '../../util/sdkLoader';
 import { constructQueryParamName, isOriginInUse, isStockInUse } from '../../util/search';
+import { isUserAuthorized } from '../../util/userHelpers';
 import { parse } from '../../util/urlHelpers';
 
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
@@ -262,8 +263,11 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
       return response;
     })
     .catch(e => {
-      dispatch(searchListingsError(storableError(e)));
-      throw e;
+      const error = storableError(e);
+      dispatch(searchListingsError(error));
+      if (!(isErrorUserPendingApproval(error) || isForbiddenError(error))) {
+        throw e;
+      }
     });
 };
 
@@ -273,6 +277,16 @@ export const setActiveListing = listingId => ({
 });
 
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
+  // In private marketplace mode, this page won't fetch data if the user is unauthorized
+  const state = getState();
+  const currentUser = state.user?.currentUser;
+  const isAuthorized = currentUser && isUserAuthorized(currentUser);
+  const isPrivateMarketplace = config.accessControl.marketplace.private === true;
+  const canFetchData = !isPrivateMarketplace || (isPrivateMarketplace && isAuthorized);
+  if (!canFetchData) {
+    return Promise.resolve();
+  }
+
   const queryParams = parse(search, {
     latlng: ['origin'],
     latlngBounds: ['bounds'],

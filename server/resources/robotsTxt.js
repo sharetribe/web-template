@@ -2,6 +2,9 @@ const fs = require('fs');
 const { Transform, Writable } = require('stream');
 const log = require('../log.js');
 const { getRootURL } = require('../api-util/rootURL.js');
+const sdkUtils = require('../api-util/sdk.js');
+
+const dev = process.env.REACT_APP_ENV === 'development';
 
 // Emulate feature that's part of sitemap dependency
 const streamToPromise = stream => {
@@ -27,9 +30,32 @@ const streamToPromise = stream => {
   });
 };
 
-// Simple variable cache
-// This assumes that robots.txt does not change after first initialization
-let cachedRobotsTxt = null;
+// Time-to-live (ttl) is set to one day aka 86400 seconds
+const ttl = 86400; // seconds
+
+// This creates simple (proxied) memory cache
+const createCacheProxy = ttl => {
+  const cache = {};
+  return new Proxy(cache, {
+    // Get data for the property together with timestamp
+    get(target, property, receiver) {
+      const cachedData = target[property];
+      if (!!cachedData) {
+        // Check if the cached data has expired
+        if (Date.now() - cachedData.timestamp < ttl * 1000) {
+          return cachedData;
+        }
+      }
+      return { data: null, timestamp: cachedData?.timestamp || Date.now() };
+    },
+    // Set given value as data to property accompanied with timestamp
+    set(target, property, value, receiver) {
+      target[property] = { data: value, timestamp: Date.now() };
+    },
+  });
+};
+
+const cache = createCacheProxy(ttl);
 
 // Fallback data if something failes with streams
 const fallbackRobotsTxt = `
@@ -49,20 +75,19 @@ Disallow: /account
 Disallow: /reset-password
 Disallow: /verify-email
 Disallow: /preview
+Disallow: /styleguide
 Crawl-Delay: 5
 `;
 
-// Middleware to generate robots.txt
-// This reads the accompanied robots.txt file and changes the sitemap url on the fly
-module.exports = (req, res) => {
-  res.header('Content-Type', 'text/plain');
-
-  // If we have a cached content send it
-  if (cachedRobotsTxt) {
-    res.send(cachedRobotsTxt);
-    return;
-  }
-
+/**
+ * This processes given robots.txt file (adds correct URL for the sitemap-index.xml)
+ * and sends it as response.
+ *
+ * @param {Object} req
+ * @param {Object} res
+ * @param {String} robotsTxtPath
+ */
+const sendRobotsTxt = (req, res, robotsTxtPath) => {
   const sitemapIndexUrl = `${getRootURL({ useDevApiServerPort: true })}/sitemap-index.xml`;
 
   try {
@@ -77,11 +102,11 @@ module.exports = (req, res) => {
       },
     });
 
-    const readStream = fs.createReadStream('server/resources/robots.txt', { encoding: 'utf8' });
+    const readStream = fs.createReadStream(robotsTxtPath, { encoding: 'utf8' });
     const robotsStream = readStream.pipe(modifiedStream);
 
     // Save the data to a variable cache
-    streamToPromise(robotsStream).then(rs => (cachedRobotsTxt = rs));
+    streamToPromise(robotsStream).then(rs => (cache.robotsTxt = rs));
 
     robotsStream.pipe(res).on('error', e => {
       throw e;
@@ -90,4 +115,47 @@ module.exports = (req, res) => {
     log.error(e, 'robots-txt-render-failed');
     res.send(fallbackRobotsTxt);
   }
+};
+// Middleware to generate robots.txt
+// This reads the accompanied robots.txt file and changes the sitemap url on the fly
+module.exports = (req, res) => {
+  res.set({
+    'Content-Type': 'text/plain',
+    'Cache-Control': `public, max-age=${ttl}`,
+  });
+
+  // If we have a cached content send it
+  const { data, timestamp } = cache.robotsTxt;
+  if (data && timestamp) {
+    const age = Math.floor((Date.now() - timestamp) / 1000);
+    res.set('Age', age);
+    res.send(data);
+    return;
+  }
+
+  const sdk = sdkUtils.getSdk(req, res);
+  sdkUtils
+    .fetchAccessControlAsset(sdk)
+    .then(response => {
+      const accessControlAsset = response.data.data[0];
+
+      const { marketplace } =
+        accessControlAsset?.type === 'jsonAsset' ? accessControlAsset.attributes.data : {};
+      const isPrivateMarketplace = marketplace?.private === true;
+      const robotsTxtPath = isPrivateMarketplace
+        ? 'server/resources/robotsPrivateMarketplace.txt'
+        : 'server/resources/robots.txt';
+
+      sendRobotsTxt(req, res, robotsTxtPath);
+    })
+    .catch(e => {
+      // Log error
+      const is404 = e.status === 404;
+      if (is404 && dev) {
+        console.log('robots-txt-render-failed-no-asset-found');
+      }
+      // TODO: This defaults to more permissive robots.txt due to backward compatibility.
+      // You might want to change that.
+      sendRobotsTxt(req, res, 'server/resources/robots.txt');
+    });
 };
