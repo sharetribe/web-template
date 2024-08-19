@@ -186,3 +186,23 @@ exports.fetchBranding = sdk => {
     return response;
   });
 };
+
+// Fetch branding asset with 'latest' alias.
+// This is needed for generating webmanifest on server-side.
+exports.fetchAccessControlAsset = sdk => {
+  return sdk
+    .assetsByAlias({ paths: ['/general/access-control.json'], alias: 'latest' })
+    .then(response => {
+      // Let's throw an error if we can't fetch branding for some reason
+      const accessControlAsset = response?.data?.data?.[0];
+      if (!accessControlAsset) {
+        const message = 'access-control configuration was not available.';
+        const error = new Error(message);
+        error.status = 404;
+        error.statusText = message;
+        error.data = {};
+        throw error;
+      }
+      return response;
+    });
+};

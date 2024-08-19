@@ -13,7 +13,11 @@ import {
   SCHEMA_TYPE_TEXT,
   propTypes,
 } from '../../util/types';
-import { PROFILE_PAGE_PENDING_APPROVAL_VARIANT } from '../../util/urlHelpers';
+import {
+  NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
+  PROFILE_PAGE_PENDING_APPROVAL_VARIANT,
+} from '../../util/urlHelpers';
+import { isErrorUserPendingApproval, isForbiddenError, isNotFoundError } from '../../util/errors';
 import { pickCustomFieldProps } from '../../util/fieldHelpers';
 import { isUserAuthorized } from '../../util/userHelpers';
 import { richText } from '../../util/richText';
@@ -297,33 +301,42 @@ export const ProfilePageComponent = props => {
   const profileUser = useCurrentUser ? currentUser : user;
   const { bio, displayName, publicData, metadata } = profileUser?.attributes?.profile || {};
   const { userFields } = config.user;
+  const isPrivateMarketplace = config.accessControl.marketplace.private === true;
+  const isUnauthorizedUser = currentUser && !isUserAuthorized(currentUser);
+  const isUnauthorizedOnPrivateMarketplace = isPrivateMarketplace && isUnauthorizedUser;
+  const hasUserPendingApprovalError = isErrorUserPendingApproval(userShowError);
 
   const schemaTitleVars = { name: displayName, marketplaceName: config.marketplaceName };
   const schemaTitle = intl.formatMessage({ id: 'ProfilePage.schemaTitle' }, schemaTitleVars);
 
   if (!isDataLoaded) {
     return null;
-  } else if (!isPreview && userShowError && userShowError.status === 404) {
+  } else if (!isPreview && isNotFoundError(userShowError)) {
     return <NotFoundPage staticContext={props.staticContext} />;
+  } else if (!isPreview && isForbiddenError(userShowError)) {
+    // This can happen if private marketplace mode is active, but it's not reflected through asset yet.
+    return (
+      <NamedRedirect
+        name="SignupPage"
+        state={{ from: `${location.pathname}${location.search}${location.hash}` }}
+      />
+    );
+  } else if (!isPreview && (isUnauthorizedOnPrivateMarketplace || hasUserPendingApprovalError)) {
+    return (
+      <NamedRedirect
+        name="NoAccessPage"
+        params={{ missingAccessRight: NO_ACCESS_PAGE_USER_PENDING_APPROVAL }}
+      />
+    );
   } else if (isPreview && mounted && !isCurrentUser) {
     // Someone is manipulating the URL, redirect to current user's profile page.
     return isCurrentUser === false ? (
       <NamedRedirect name="ProfilePage" params={{ id: currentUser?.id?.uuid }} />
     ) : null;
-  } else if (isPreview && !mounted) {
-    // This preview of the profile page is not not rendered on server-side
-    // and the first pass on client-side needs to render the same UI.
-    return (
-      <Page
-        scrollingDisabled={scrollingDisabled}
-        title={schemaTitle}
-        schema={{
-          '@context': 'http://schema.org',
-          '@type': 'ProfilePage',
-          name: schemaTitle,
-        }}
-      />
-    );
+  } else if ((isPreview || isPrivateMarketplace) && !mounted) {
+    // This preview of the profile page is not rendered on server-side
+    // and the first pass on client-side should render the same UI.
+    return null;
   }
   // This is rendering normal profile page (not preview for pending-approval)
   return (
