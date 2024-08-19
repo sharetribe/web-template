@@ -39,7 +39,7 @@ const EditListingDocumentsPanel = props => {
     if (file) {
       addTableDocuments([
         ...tableDocuments,
-        { id: `${file.name}_${Date.now()}`, name: file.name}
+        { url: URL.createObjectURL(file), name: file.name}
       ]);
       addNewDocuments([...newDocuments, file]);
     }
@@ -48,7 +48,7 @@ const EditListingDocumentsPanel = props => {
   const onDocumentRemoveHandler = (index, doc)=> {
     const newDocuments = tableDocuments.filter((doc, i) => i !== index);
     addTableDocuments(newDocuments);
-    if (doc.url) {
+    if (doc.id) {
       addOriginalDocumentsToRemove([...originalDocumentsToRemove, doc.id]);
     }
   };

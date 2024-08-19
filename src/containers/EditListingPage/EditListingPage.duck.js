@@ -684,6 +684,12 @@ export function requestUpdateListing(tab, data, config) {
     return updateStockOfListingMaybe(id, stockUpdate, dispatch)
       .then(() => sdk.ownListings.update(ownListingUpdateValues, queryParams))
       .then(response => {
+        if (documents) {
+          greenStockSdk.updateDocuments(id.uuid, documents)
+        }
+        return response;
+      })
+      .then(response => {
         dispatch(updateListingSuccess(response));
         dispatch(addMarketplaceEntities(response));
         dispatch(markTabUpdated(tab));
@@ -698,11 +704,6 @@ export function requestUpdateListing(tab, data, config) {
         }
 
         return response;
-      })
-      .then(() => {
-        if (documents) {
-          greenStockSdk.updateDocuments(id.uuid, documents)
-        }
       })
       .catch(e => {
         log.error(e, 'update-listing-failed', { listingData: data });
