@@ -254,8 +254,14 @@ export const formatMoney = (intl, value) => {
   // If you have used currencies that are not listed in src/config/settingsCurrency.js,
   // you might want to use option { enforceSupportedCurrencies: false }
   const options = {};
-  const numberFormatOptions = getCurrencyFormatting(value.currency, options);
-
+    const numberFormatOptions = {
+    style: 'currency',
+    currency: value.currency,
+    currencyDisplay: 'symbol',
+    useGrouping: true,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  };
   return intl.formatNumber(valueAsNumber, numberFormatOptions);
 };
 
