@@ -6,7 +6,10 @@ import { connect } from 'react-redux';
 import { useConfiguration } from '../../context/configurationContext';
 import appSettings from '../../config/settings';
 import { useIntl } from '../../util/reactIntl';
-import { NO_ACCESS_PAGE_POST_LISTINGS } from '../../util/urlHelpers';
+import {
+  NO_ACCESS_PAGE_POST_LISTINGS,
+  NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
+} from '../../util/urlHelpers';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 
 import {
@@ -32,9 +35,16 @@ export const NoAccessPageComponent = props => {
   const { scrollingDisabled, params: pathParams } = props;
 
   const missingAccessRight = pathParams?.missingAccessRight;
+  const isUserPendingApprovalPage = missingAccessRight === NO_ACCESS_PAGE_USER_PENDING_APPROVAL;
   const isPostingRightsPage = missingAccessRight === NO_ACCESS_PAGE_POST_LISTINGS;
 
-  const messages = isPostingRightsPage
+  const messages = isUserPendingApprovalPage
+    ? {
+        schemaTitle: 'NoAccessPage.userPendingApproval.schemaTitle',
+        heading: 'NoAccessPage.userPendingApproval.heading',
+        content: 'NoAccessPage.userPendingApproval.content',
+      }
+    : isPostingRightsPage
     ? {
         schemaTitle: 'NoAccessPage.postListings.schemaTitle',
         heading: 'NoAccessPage.postListings.heading',
