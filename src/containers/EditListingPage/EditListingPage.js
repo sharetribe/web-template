@@ -13,6 +13,7 @@ import {
   LISTING_PAGE_PARAM_TYPES,
   LISTING_PAGE_PENDING_APPROVAL_VARIANT,
   NO_ACCESS_PAGE_POST_LISTINGS,
+  NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
   createSlug,
   parse,
 } from '../../util/urlHelpers';
@@ -20,7 +21,7 @@ import {
 import { LISTING_STATE_DRAFT, LISTING_STATE_PENDING_APPROVAL, propTypes } from '../../util/types';
 import { isErrorNoPermissionToPostListings } from '../../util/errors';
 import { ensureOwnListing } from '../../util/data';
-import { hasPermissionToPostListings } from '../../util/userHelpers';
+import { hasPermissionToPostListings, isUserAuthorized } from '../../util/userHelpers';
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
 import {
@@ -138,7 +139,14 @@ export const EditListingPageComponent = props => {
   const hasStripeOnboardingDataIfNeeded = returnURLType ? !!currentUser?.id : true;
   const showWizard = hasStripeOnboardingDataIfNeeded && (isNewURI || currentListing.id);
 
-  if (shouldRedirectNoPostingRights) {
+  if (!isUserAuthorized(currentUser)) {
+    return (
+      <NamedRedirect
+        name="NoAccessPage"
+        params={{ missingAccessRight: NO_ACCESS_PAGE_USER_PENDING_APPROVAL }}
+      />
+    );
+  } else if (shouldRedirectNoPostingRights) {
     return (
       <NamedRedirect
         name="NoAccessPage"
@@ -289,7 +297,6 @@ EditListingPageComponent.defaultProps = {
   stripeAccountFetched: null,
   currentUser: null,
   stripeAccount: null,
-  currentUserHasOrders: null,
   listing: null,
   listingDraft: null,
   notificationCount: 0,

@@ -7,6 +7,7 @@ import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { FormattedMessage } from '../../util/reactIntl';
 import { ensureCurrentUser } from '../../util/data';
 import { propTypes } from '../../util/types';
+import { isUserAuthorized } from '../../util/userHelpers';
 import { pathByRouteName } from '../../util/routes';
 
 import { Modal } from '../../components';
@@ -104,7 +105,7 @@ class ModalMissingInformation extends Component {
     let content = null;
 
     const currentUserLoaded = user && user.id;
-    if (currentUserLoaded) {
+    if (currentUserLoaded && isUserAuthorized(currentUser)) {
       if (this.state.showMissingInformationReminder === EMAIL_VERIFICATION) {
         content = (
           <EmailReminder
