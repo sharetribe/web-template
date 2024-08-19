@@ -193,7 +193,7 @@ const fetchCurrentUserHasListingsError = e => ({
   payload: e,
 });
 
-const fetchCurrentUserNotificationsRequest = () => ({
+export const fetchCurrentUserNotificationsRequest = () => ({
   type: FETCH_CURRENT_USER_NOTIFICATIONS_REQUEST,
 });
 
@@ -323,7 +323,8 @@ export const fetchCurrentUser = options => (dispatch, getState, sdk) => {
   const state = getState();
   const { currentUserHasListings, currentUserShowTimestamp } = state.user || {};
   const { isAuthenticated } = state.auth;
-  const { callParams = null, updateHasListings = true, updateNotifications = true } = options || {};
+  const { callParams = null, updateHasListings = true, updateNotifications = true, afterLogin } =
+    options || {};
 
   // Double fetch might happen when e.g. profile page is making a full page load
   const aSecondAgo = new Date().getTime() - 1000;
@@ -333,7 +334,7 @@ export const fetchCurrentUser = options => (dispatch, getState, sdk) => {
   // Set in-progress, no errors
   dispatch(currentUserShowRequest());
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated && !afterLogin) {
     // Make sure current user is null
     dispatch(currentUserShowSuccess(null));
     return Promise.resolve({});
