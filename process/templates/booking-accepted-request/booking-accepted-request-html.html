@@ -249,7 +249,10 @@
                             </tr>
                           </tbody>
                         </table>
-                        {{/if}}{{/eq}}{{#eq "line-item/customer-commission" code}}
+                        
+                        {{/if}}{{/eq}}{{/contains}}{{/each}}
+
+                        {{/eq}}{{#eq "line-item/provider-commission" code}}
                         <table align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                           <tbody>
                             <tr>
@@ -263,8 +266,8 @@
                               </td>
                             </tr>
                           </tbody>
-                        </table>
-                        {{/eq}}{{/contains}}{{/each}}
+                        </table> 
+                        {{/eq}}{{/each}}
                         <hr style="width:100%;border:none;border-top:1px solid #eaeaea;border-color:#E1E1E1;margin:20px 0" />
                         <table align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                           <tbody>
