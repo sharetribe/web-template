@@ -179,8 +179,8 @@ export const login = (username, password) => (dispatch, getState, sdk) => {
   // just dispatches the login error action.
   return sdk
     .login({ username, password })
+    .then(() => dispatch(fetchCurrentUser({ afterLogin: true })))
     .then(() => dispatch(loginSuccess()))
-    .then(() => dispatch(fetchCurrentUser()))
     .catch(e => dispatch(loginError(storableError(e))));
 };
 
