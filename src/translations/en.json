@@ -334,6 +334,7 @@
   "FilterForm.clear": "Clear",
   "FilterForm.submit": "Apply",
   "FilterPlain.clear": "Clear",
+  "BookingDatesForm.helmetFeeLabel": "Helmet rental fee: {fee}",
   "ImageCarousel.imageAltText": "listing photo {index}/{count}",
   "ImageFromFile.couldNotReadFile": "Couldn't read file",
   "InboxPage.default-booking.accepted.status": "Accepted",
