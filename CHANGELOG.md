@@ -14,6 +14,10 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+## [v5.4.0] 2024-08-20
+
+- [change] auth.duck.js: login flow should wait for currentUser entity be loaded.
+  [#436](https://github.com/sharetribe/web-template/pull/436)
 - [add] Access control: private marketplace mode
 
   - Fetch a new asset: /general/access-control.json to check private: true/false flag
@@ -39,6 +43,8 @@ way to update this template, but currently, we follow a pattern:
 
 - [fix] SearchPage: SearchFiltersMobile (modal) should be above topbar.
   [#432](https://github.com/sharetribe/web-template/pull/432)
+
+  [v5.4.0]: https://github.com/sharetribe/web-template/compare/v5.3.0...v5.4.0
 
 ## [v5.3.0] 2024-08-13
 
