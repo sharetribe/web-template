@@ -2,7 +2,7 @@ const { WebClient } = require('@slack/web-api');
 
 const { COMMUNITY_STATUS, SELLER_STATUS } = require('../api-util/metadataHelper')
 const { integrationSdkInit } = require('../api-util/scriptManager');
-
+const { studioCreatorInit } = require('../api-util/studioHelper');
 
 const SELLER_ACTIONS_BLOCK_ID = 'seller_actions';
 const COMMUNITY_ACTIONS_BLOCK_ID = 'community_actions';
@@ -68,6 +68,7 @@ const slackInteractivity = async (req, res) => {
 	try {
 		const channel = payload.channel.id;
 		const { ts: messageTimestamp, blocks } = payload.message;
+		const integrationSdk = integrationSdkInit();
 		let metadata;
 		switch (action) {
 			case SLACK_ACTIONS.approveSeller: {
@@ -82,7 +83,16 @@ const slackInteractivity = async (req, res) => {
 			}
 			case SLACK_ACTIONS.approveCommunity: {
 				console.warn(`--- APPROVE COMMUNITY: ${userId}`);
-				metadata = { communityStatus: COMMUNITY_STATUS.APPROVED }
+				const response = await integrationSdk.users.show({ id: userId });
+				const user = response.data.data;
+				const { profile } = user.attributes
+				const { studioId, communityId } = profile.metadata || {};
+				let ids = { studioId, communityId }
+				if (!studioId) {
+					const newCreator = await studioCreatorInit(userId, studioId, communityId);
+					ids = newCreator;
+				}
+				metadata = { communityStatus: COMMUNITY_STATUS.APPROVED, ...ids }
 				break;
 			}
 			case SLACK_ACTIONS.rejectCommunity: {
@@ -96,7 +106,6 @@ const slackInteractivity = async (req, res) => {
 		}
 		const withMetadata = !!metadata
 		if (withMetadata) {
-			const integrationSdk = integrationSdkInit();
 			await integrationSdk.users.updateProfile({
 				id: userId,
 				metadata,

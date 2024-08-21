@@ -12,7 +12,7 @@ function studioBrandUserInit(brandStudioId) {
      */
     const newBrandStudioId = 'newBrandStudioId';
     const communityId = 'communityId'
-    const studioId = 'studioId'
+    const studioId = '123'
     return {
       brandStudioId: newBrandStudioId,
       communityId,
@@ -24,13 +24,28 @@ function studioBrandUserInit(brandStudioId) {
    *    - Add BrandUser and new User to the existing Brand
    */
   const communityId = 'communityId'
-  const studioId = 'studioId'
+  const studioId = '123'
   return {
     communityId,
     studioId,
   }
 }
 
+async function studioCreatorInit(userId) {
+  const communityId = 'studioCreatorInit_communityId'
+  const studioId = 'studioCreatorInit_studioId'
+  return {
+    communityId,
+    studioId,
+  }
+}
+
+function studioBrandUpdate(brandStudioId, brandName) {
+  return true
+}
+
 module.exports = {
-  studioBrandUserInit
+  studioBrandUserInit,
+  studioCreatorInit,
+  studioBrandUpdate,
 };

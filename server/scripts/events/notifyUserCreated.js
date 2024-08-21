@@ -119,28 +119,31 @@ function script () {
       } = event.attributes;
       const userId = resourceId.uuid;
       const { profile, email, identityProviders } = user.attributes
+      const { displayName, firstName, lastName } = profile;
       const { userType } = profile.publicData;
       if (userType === USER_TYPES.BUYER) {
         return;
       }
       const { metadata, privateData } = await getExtendedData(userId, userType, profile)
+      const {studioId, communityId, membership, sellerStatus, communityStatus} = metadata || {}
       await integrationSdk.users.updateProfile({
         id: userId,
         ...(!!privateData && { privateData }),
         metadata,
       }, QUERY_PARAMS);
-      await updateAuth0User(
-        identityProviders[0].userId,
-        userId,
-        metadata.studioId,
-        metadata.communityId,
-        profile.firstName,
-        profile.lastName,
-        metadata.membership,
-        metadata.sellerStatus,
-        metadata.communityStatus,
+      await updateAuth0User({
+        auth0UserId: identityProviders[0].userId,
+        marketId: userId,
+        studioId,
+        communityId,
+        firstName,
+        lastName,
+        displayName,
+        membership,
+        sellerStatus,
+        communityStatus,
         userType,
-      )
+      })
       if (userType === USER_TYPES.SELLER) {
         const { displayName } = profile;
         const { portfolioURL } = profile.publicData;

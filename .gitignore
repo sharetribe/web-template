@@ -15,7 +15,3 @@ build
 .env.copy
 npm-debug.log
 yarn-error.log
-
-# cache
-# *.state
-**/*.state

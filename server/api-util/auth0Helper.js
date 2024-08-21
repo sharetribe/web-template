@@ -17,21 +17,21 @@ function getClient() {
   return client;
 }
 
-async function updateAuth0User(
+async function updateAuth0User({
   auth0UserId,
   marketId,
   studioId,
   communityId,
   firstName,
   lastName,
+  displayName,
   membership,
   sellerStatus,
   communityStatus,
   userType,
-) {
+}) {
   const auth0 = getClient();
   const params = { id: auth0UserId };
-  const userFullName = `${firstName} ${lastName}`;
   const appMetadata = {
     marketId,
     ...(studioId ? { studioId } : {}),
@@ -46,8 +46,8 @@ async function updateAuth0User(
     family_name: lastName,
   };
   return await auth0.users.update(params, {
-    name: userFullName,
-    nickname: userFullName,
+    name: displayName,
+    nickname: displayName,
     app_metadata: appMetadata,
     user_metadata: userMetadata,
   });

@@ -49,7 +49,10 @@ function generateScript (SCRIPT_NAME, queryEvents, analyzeEvent) {
     // which allows continuing polling from the correct place
     const stateFile = `server/scripts/events/cache/${SCRIPT_NAME}.state`;
 
+    // IGNORE CACHE ON LOCAL DEVELOPMENT
     const saveLastEventSequenceId = (sequenceId) => {
+      const dev = process.env.REACT_APP_ENV === 'development';
+      if (dev) return null;
       try {
         fs.writeFileSync(stateFile, sequenceId.toString());
       } catch (err) {
@@ -57,7 +60,10 @@ function generateScript (SCRIPT_NAME, queryEvents, analyzeEvent) {
       }
     };
 
+    // IGNORE CACHE ON LOCAL DEVELOPMENT
     const loadLastEventSequenceId = () => {
+      const dev = process.env.REACT_APP_ENV === 'development';
+      if (dev) return null;
       try {
         const data = fs.readFileSync(stateFile);
         const parsedValue = parseInt(data, 10)

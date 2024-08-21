@@ -4,7 +4,7 @@ const notifyUserUpdated = require('./notifyUserUpdated');
 async function loadEventScripts() {
   console.warn("\nLoading event's scripts..");
   notifyUserCreated();
-  // notifyUserUpdated();
+  notifyUserUpdated();
   console.warn("Loading event's scripts DONE\n");
 }
 
