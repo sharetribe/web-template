@@ -2,6 +2,9 @@ import React from 'react';
 import flow from 'lodash/flow';
 import flatMap from 'lodash/flatMap';
 import map from 'lodash/map';
+
+import { sanitizeUrl } from './sanitize';
+
 import { ExternalLink } from '../components';
 // NOTE: This file imports components/index.js, which may lead to circular dependency
 
@@ -9,9 +12,9 @@ import { ExternalLink } from '../components';
  * Add zero width space (zwsp) around given breakchars (default '/') to make word break possible.
  * E.g. "one/two/three" => ["one", "​/​", "two" "​/​" "three"]
  *
- * @param {string} wordToBreak word to be broken from special character points.
- * @param {string} breakChars string containing possible chars that can be surrounded with zwsp.
- * @return {Array<string>} returns an array containing strings-
+ * @param {String} wordToBreak word to be broken from special character points.
+ * @param {String} breakChars string containing possible chars that can be surrounded with zwsp.
+ * @return {Array<String>} returns an array containing strings-
  */
 export const zwspAroundSpecialCharsSplit = (wordToBreak, breakChars = '/') => {
   if (typeof wordToBreak !== 'string') {
@@ -33,10 +36,10 @@ export const zwspAroundSpecialCharsSplit = (wordToBreak, breakChars = '/') => {
  * Layouts are not fixed sizes - So, long words in text make flexboxed items to grow too big.
  * This wraps long words with span and adds given class to it
  *
- * @param {string} word to be wrapped if requirement (longWordMinLength) is met
- * @param {number} key span needs a key in React/JSX
- * @param {number} longWordMinLength minimum length when word is considered long
- * @param {string} longWordClass class to be added to spans
+ * @param {String} word to be wrapped if requirement (longWordMinLength) is met
+ * @param {Number} key span needs a key in React/JSX
+ * @param {Number} longWordMinLength minimum length when word is considered long
+ * @param {String} longWordClass class to be added to spans
  * @return {node} returns a string or component
  */
 export const wrapLongWord = (word, key, options = {}) => {
@@ -55,11 +58,34 @@ export const wrapLongWord = (word, key, options = {}) => {
   );
 };
 
+// Get the number of opened parenthesis
+const getOpenedParenthesisCount = str =>
+  Array.from(str).reduce((opened, currentChar) => {
+    return currentChar === '(' ? ++opened : currentChar === ')' ? --opened : opened;
+  }, 0);
+// Split extra parentheses from a (partial) string containing URL
+const splitExtraParentheses = str => {
+  // If the count is not 0, the the parentheses are not balanced
+  const parenthesesCount = getOpenedParenthesisCount(str);
+  if (parenthesesCount < 0) {
+    const trailingParentheses = Array.from(str)
+      .reverse()
+      .reduce((count, currentChar) => {
+        return currentChar === ')' && parenthesesCount + count < 0 ? ++count : count;
+      }, 0);
+
+    // return an array of splitted strings, where 1st item is URL with balanced number of trailing parentheses
+    // and the extra parentheses are returned as the second item in the array.
+    return [str.slice(0, -1 * trailingParentheses), str.slice(-1 * trailingParentheses)];
+  }
+  return [str];
+};
+
 /**
  * Find links from words and surround them with <ExternalLink> component
  *
- * @param {string} word to be linkified if requirement (link) is met
- * @param {number} key span needs a key in React/JSX
+ * @param {String} word to be linkified if requirement (link) is met
+ * @param {Number} key span needs a key in React/JSX
  * @param {Object} options than can contain keys: linkify, linkClass.
  * @return {Array<node>} returns a array containing ExternalLink component or strings
  */
@@ -84,16 +110,22 @@ export const linkifyOrWrapLinkSplit = (word, key, options = {}) => {
   // https://stackoverflow.com/questions/1500260/detect-urls-in-text-with-javascript
 
   // eslint-disable-next-line no-useless-escape
-  const urlRegex = /(\bhttps?:\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
+  const urlRegex = /(\bhttps?:\/\/[-A-Z0-9+&@#\/%?=~_|\(\)!:,.;]*[-A-Z0-9+&@#\/%=~_|\)])/gi;
   if (word.match(urlRegex)) {
     // Split strings like "(http://www.example.com)" to ["(","http://www.example.com",")"]
     return word.split(urlRegex).map(w => {
-      return !w.match(urlRegex) ? (
+      const isEmptyString = !w.match(urlRegex);
+      const [sanitizedURL, extra] =
+        !isEmptyString && linkify ? splitExtraParentheses(sanitizeUrl(w)) : [w];
+      return isEmptyString ? (
         w
       ) : linkify ? (
-        <ExternalLink key={key} href={w} className={linkClass}>
-          {w}
-        </ExternalLink>
+        <React.Fragment key={key}>
+          <ExternalLink href={sanitizedURL} className={linkClass}>
+            {sanitizedURL}
+          </ExternalLink>
+          {extra}
+        </React.Fragment>
       ) : linkClass ? (
         <span key={key} className={linkClass}>
           {w}
@@ -112,8 +144,11 @@ export const linkifyOrWrapLinkSplit = (word, key, options = {}) => {
  * Wrap long words: options should contain longWordMinLength & longWordClass
  * Linkify found links: options should contain "linkify: true" (linkClass is optional)
  *
- * @param {string} text check text content
- * @param {object} options { longWordMinLength, longWordClass, linkify = false, linkClass }
+ * Note: this autolinks only strings that start with 'http'. In addition, links are assumed
+ *       to lead outside of the app. In-app linking is not supported atm.
+ *
+ * @param {String} text check text content
+ * @param {Object} options { longWordMinLength, longWordClass, linkify = false, linkClass }
  * @return {Array<node>} returns a child array containing strings and inline elements
  */
 export const richText = (text, options) => {

@@ -611,8 +611,7 @@ class EditListingWizard extends Component {
               <>
                 <p className={css.modalMessage}>
                   <FormattedMessage id="EditListingWizard.payoutModalInfo" />
-                </p>
-                
+                </p>                
               </>
             )}
           </div>

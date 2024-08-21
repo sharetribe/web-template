@@ -40,7 +40,12 @@ const initialState = {
   currentPageResultIds: [],
 };
 
-const resultIds = data => data.data.map(l => l.id);
+const resultIds = data => {
+  const listings = data.data;
+  return listings
+    .filter(l => !l.attributes.deleted && l.attributes.state === 'published')
+    .map(l => l.id);
+};
 
 const listingPageReducer = (state = initialState, action = {}) => {
   const { type, payload } = action;
@@ -261,6 +266,8 @@ export const loadData = (params, search, config) => {
         'title',
         'geolocation',
         'price',
+        'deleted',
+        'state',
         'publicData.listingType',
         'publicData.transactionProcessAlias',
         'publicData.unitType',

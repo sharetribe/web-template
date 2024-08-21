@@ -96,6 +96,7 @@ export const IncludeScripts = props => {
       </script>
     );
   }
+
   analyticsLibraries.push(
     <script key='fb'>
       {`
@@ -117,7 +118,7 @@ export const IncludeScripts = props => {
     src="https://www.facebook.com/tr?id=1362681471057091&ev=PageView&noscript=1"
     />`}</noscript>
   )
-
+  
   if (plausibleDomains) {
     // If plausibleDomains is not an empty string, include their script too.
     analyticsLibraries.push(

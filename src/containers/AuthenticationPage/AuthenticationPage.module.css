@@ -10,6 +10,7 @@
 
   @media (--viewportMedium) {
     height: unset;
+    min-height: unset;
   }
 }
 
@@ -106,6 +107,29 @@
   @media (--viewportMedium) {
     width: 604px;
     padding-top: 11px;
+  }
+}
+
+/* userType selection */
+.userTypeSelect {
+  margin-bottom: 24px;
+
+  @media (--viewportMedium) {
+    margin-bottom: 32px;
+  }
+}
+
+.selectedLabel {
+  composes: label from global;
+}
+.selectedValue {
+  margin-top: 0;
+  margin-bottom: 6px;
+
+  @media (--viewportMedium) {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 2px 0 6px 0;
   }
 }
 

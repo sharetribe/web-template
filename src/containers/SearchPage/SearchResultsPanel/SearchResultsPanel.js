@@ -70,10 +70,11 @@ const SearchResultsPanel = props => {
       console.error('Meta Pixel no está definido');
     }
   };
+ 
   return (
     <div className={classes}>
       <div className={classNames(css.stickyButtonContainer)}>
-        <button style={{position:'static'}}
+        <button style={{ position: 'static' }}
           className={classNames(css.stickyButton, css.whatsappButton)}
           onClick={handleButtonClick}
         >

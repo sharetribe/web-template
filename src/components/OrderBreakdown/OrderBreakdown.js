@@ -55,7 +55,7 @@ export const OrderBreakdownComponent = props => {
     return sum + (isCustomer && item.code === LINE_ITEM_CUSTOMER_COMMISSION && !item.reversal ? item.lineTotal.amount : 0);
   }, 0);
 
-  const netSubtotal = subtotal - customerCommission;
+  const netSubtotal = subtotal - subtotal * 20 / 100;
 
   const hasCommissionLineItem = lineItems.find(item => {
     const hasCustomerCommission = isCustomer && item.code === LINE_ITEM_CUSTOMER_COMMISSION;
@@ -115,19 +115,19 @@ export const OrderBreakdownComponent = props => {
       <div className={css.subTotalLineItem}>
         <span className={css.itemLabel}>
           <FormattedMessage id="OrderBreakdown.subTotal" />
-        </span>
-        <span className={css.itemValue}>
+        </span> 
+         <span className={css.itemValue}>
           {intl.formatNumber(netSubtotal / 100, { style: 'currency', currency })}
-        </span>
+        </span> 
       </div>
-{/*       <LineItemSubTotalMaybe
+{/* {       <LineItemSubTotalMaybe
         lineItems={lineItems}
         code={lineItemUnitType}
         userRole={userRole}
         intl={intl}
         marketplaceCurrency={currency}
       />
- */}
+ } */}
       <LineItemRefundMaybe lineItems={lineItems} intl={intl} marketplaceCurrency={currency} />
 
       <LineItemCustomerCommissionMaybe

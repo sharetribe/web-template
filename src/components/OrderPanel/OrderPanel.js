@@ -116,6 +116,7 @@ const handleSubmit = (
     : () => openOrderModal(isOwnListing, isClosed, history, location);
 };
 
+
 /* INE:
 const handleSubmit = (
   isOwnListing,
@@ -181,6 +182,7 @@ const OrderPanel = props => {
     onManageDisableScrolling,
     onFetchTimeSlots,
     monthlyTimeSlots,
+    isInquiryWithoutPayment,
     history,
     location,
     intl,
@@ -194,6 +196,7 @@ const OrderPanel = props => {
     fetchLineItemsError,
     onToggleFavorites,
     currentUser,
+    payoutDetailsWarning,
   } = props;
 
   const publicData = listing?.attributes?.publicData || {};
@@ -292,6 +295,7 @@ const OrderPanel = props => {
     }
   };
   const helmetFee = listing?.attributes?.publicData.helmetFee;
+
   return (
     <div className={classes}>
       <ModalInMobile
@@ -417,17 +421,18 @@ const OrderPanel = props => {
             <FormattedMessage id="OrderPanel.closedListingButtonText" />
           </div>
         ) : (
-          <PrimaryButton
-            onClick={handleSubmit(
-              isOwnListing,
-              isClosed,
-              showInquiryForm,
-              onSubmit,
-              history,
-              location
-            )}
-            disabled={isOutOfStock}
-          >
+            <PrimaryButton
+              onClick={handleSubmit(
+                props.isOwnListing,
+                props.isClosed,
+                props.showInquiryForm,
+                props.onSubmit,
+                history,
+                props.location
+              )}
+              disabled={props.isOutOfStock}
+            >
+
             {isBooking ? (
               <FormattedMessage id="OrderPanel.ctaButtonMessageBooking" />
             ) : isOutOfStock ? (

@@ -92,14 +92,16 @@ export function sanitizeUrl(url) {
  * but if you use this data on props, it might create XSS vulnerabilities
  * E.g. you should sanitize and encode URI if you are creating links from public data.
  */
-export const sanitizeUser = entity => {
+export const sanitizeUser = (entity, config = {}) => {
   const { attributes, ...restEntity } = entity || {};
   const { profile, ...restAttributes } = attributes || {};
-  const { bio, displayName, abbreviatedName, publicData, metadata } = profile || {};
+  const { bio, displayName, abbreviatedName, publicData = {}, metadata = {}, ...restProfile } =
+    profile || {};
 
   const sanitizePublicData = publicData => {
     // TODO: If you add public data, you should probably sanitize it here.
-    return publicData ? { publicData } : {};
+    const sanitizedConfiguredPublicData = sanitizeConfiguredPublicData(publicData, config);
+    return publicData ? { publicData: sanitizedConfiguredPublicData } : {};
   };
   const sanitizeMetadata = metadata => {
     // TODO: If you add user-generated metadata through Integration API,
@@ -115,6 +117,7 @@ export const sanitizeUser = entity => {
           bio: sanitizeText(bio),
           ...sanitizePublicData(publicData),
           ...sanitizeMetadata(metadata),
+          ...restProfile,
         },
       }
     : {};
@@ -129,7 +132,7 @@ export const sanitizeUser = entity => {
  * @param {object} config containing "schemaType"
  * @returns sanitized value or null
  */
-const sanitizedListingFields = (value, config) => {
+const sanitizedExtendedDataFields = (value, config) => {
   const { schemaType, enumOptions } = config;
   const sanitized =
     schemaType === 'text'
@@ -159,13 +162,19 @@ const sanitizedListingFields = (value, config) => {
  * @returns
  */
 const sanitizeConfiguredPublicData = (publicData, config = {}) => {
-  const sanitizedConfiguredPublicData = Object.entries(publicData).reduce((sanitized, entry) => {
+  // The publicData could be null (e.g. for banned user)
+  const publicDataObj = publicData || {};
+  return Object.entries(publicDataObj).reduce((sanitized, entry) => {
     const [key, value] = entry;
     const foundListingFieldConfig = config?.listingFields?.find(d => d.key === key);
-    const sanitizedValue = ['listingType', 'transactionProcessAlias', 'unitType'].includes(key)
+    const foundUserFieldConfig = config?.userFields?.find(d => d.key === key);
+    const knownKeysWithString = ['listingType', 'transactionProcessAlias', 'unitType', 'userType'];
+    const sanitizedValue = knownKeysWithString.includes(key)
       ? sanitizeText(value)
       : foundListingFieldConfig
-      ? sanitizedListingFields(value, foundListingFieldConfig)
+      ? sanitizedExtendedDataFields(value, foundListingFieldConfig)
+      : foundUserFieldConfig
+      ? sanitizedExtendedDataFields(value, foundUserFieldConfig)
       : typeof value === 'string'
       ? sanitizeText(value)
       : value;
@@ -175,7 +184,6 @@ const sanitizeConfiguredPublicData = (publicData, config = {}) => {
       [key]: sanitizedValue,
     };
   }, {});
-  return sanitizedConfiguredPublicData;
 };
 
 /**
@@ -228,7 +236,7 @@ export const sanitizeEntity = (entity, config) => {
     case 'listing':
       return sanitizeListing(entity, config);
     case 'user':
-      return sanitizeUser(entity);
+      return sanitizeUser(entity, config);
     default:
       return entity;
   }
