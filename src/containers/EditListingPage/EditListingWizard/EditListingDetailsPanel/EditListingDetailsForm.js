@@ -331,7 +331,7 @@ const EditListingDetailsFormComponent = props => (
       const hasMandatoryListingTypeData = listingType && transactionProcessAlias && unitType;
       const submitDisabled =
         invalid || disabled || submitInProgress || !hasMandatoryListingTypeData;
-        
+
       const handleCreateListingClick = () => {
         console.log('PublicArticleBtn2'); // Log para verificar
         if (typeof fbq !== 'undefined') {
