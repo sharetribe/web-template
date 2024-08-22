@@ -1,8 +1,10 @@
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { fetchCurrentUser } from '../../ducks/user.duck';
 import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
+import { PROFILE_PAGE_PENDING_APPROVAL_VARIANT } from '../../util/urlHelpers';
 import { denormalisedResponseEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
+import { isUserAuthorized } from '../../util/userHelpers';
 
 const { UUID } = sdkTypes;
 
@@ -144,7 +146,10 @@ export const queryUserListings = (userId, config) => (dispatch, getState, sdk) =
     })
     .then(response => {
       // Pick only the id and type properties from the response listings
-      const listingRefs = response.data.data.map(({ id, type }) => ({ id, type }));
+      const listings = response.data.data;
+      const listingRefs = listings
+        .filter(l => l => !l.attributes.deleted && l.attributes.state === 'published')
+        .map(({ id, type }) => ({ id, type }));
       dispatch(addMarketplaceEntities(response));
       dispatch(queryListingsSuccess(listingRefs));
       return response;
@@ -185,15 +190,53 @@ export const showUser = (userId, config) => (dispatch, getState, sdk) => {
     .catch(e => dispatch(showUserError(storableError(e))));
 };
 
+const isCurrentUser = (userId, cu) => userId?.uuid === cu?.id?.uuid;
+
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   const userId = new UUID(params.id);
+  const isPreviewForCurrentUser = params.variant === PROFILE_PAGE_PENDING_APPROVAL_VARIANT;
+  const currentUser = getState()?.user?.currentUser;
+  const fetchCurrentUserOptions = {
+    updateHasListings: false,
+    updateNotifications: false,
+  };
 
   // Clear state so that previously loaded data is not visible
   // in case this page load fails.
   dispatch(setInitialState());
 
+  if (isPreviewForCurrentUser) {
+    return dispatch(fetchCurrentUser(fetchCurrentUserOptions)).then(() => {
+      if (isCurrentUser(userId, currentUser) && isUserAuthorized(currentUser)) {
+        // Scenario: 'active' user somehow tries to open a link for "variant" profile
+        return Promise.all([
+          dispatch(showUser(userId, config)),
+          dispatch(queryUserListings(userId, config)),
+          dispatch(queryUserReviews(userId)),
+        ]);
+      } else if (isCurrentUser(userId, currentUser)) {
+        // Handle a scenario, where user (in pending-approval state)
+        // tries to see their own profile page.
+        // => just set userId to state
+        return dispatch(showUserRequest(userId));
+      } else {
+        return Promise.resolve({});
+      }
+    });
+  }
+
+  // Fetch data for plain profile page.
+  // Note 1: returns 404s if user is not 'active'.
+  // Note 2: In private marketplace mode, this page won't fetch data if the user is unauthorized
+  const isAuthorized = currentUser && isUserAuthorized(currentUser);
+  const isPrivateMarketplace = config.accessControl.marketplace.private === true;
+  const canFetchData = !isPrivateMarketplace || (isPrivateMarketplace && isAuthorized);
+  if (!canFetchData) {
+    return Promise.resolve();
+  }
+
   return Promise.all([
-    dispatch(fetchCurrentUser()),
+    dispatch(fetchCurrentUser(fetchCurrentUserOptions)),
     dispatch(showUser(userId, config)),
     dispatch(queryUserListings(userId, config)),
     dispatch(queryUserReviews(userId)),

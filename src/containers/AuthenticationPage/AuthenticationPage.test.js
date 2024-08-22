@@ -15,7 +15,6 @@ const props = {
   isAuthenticated: false,
   authInProgress: false,
   scrollingDisabled: false,
-  currentUserHasListings: false,
   onLogout: noop,
   onManageDisableScrolling: noop,
   onResendVerificationEmail: noop,

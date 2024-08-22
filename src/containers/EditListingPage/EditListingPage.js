@@ -12,11 +12,16 @@ import {
   LISTING_PAGE_PARAM_TYPE_NEW,
   LISTING_PAGE_PARAM_TYPES,
   LISTING_PAGE_PENDING_APPROVAL_VARIANT,
+  NO_ACCESS_PAGE_POST_LISTINGS,
+  NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
   createSlug,
   parse,
 } from '../../util/urlHelpers';
+
 import { LISTING_STATE_DRAFT, LISTING_STATE_PENDING_APPROVAL, propTypes } from '../../util/types';
+import { isErrorNoPermissionToPostListings } from '../../util/errors';
 import { ensureOwnListing } from '../../util/data';
+import { hasPermissionToPostListings, isUserAuthorized } from '../../util/userHelpers';
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
 import {
@@ -123,13 +128,32 @@ export const EditListingPageComponent = props => {
   const currentListing = ensureOwnListing(getOwnListing(listingId));
   const { state: currentListingState } = currentListing.attributes;
 
+  const hasPostingRights = hasPermissionToPostListings(currentUser);
+  const hasPostingRightsError = isErrorNoPermissionToPostListings(page.publishListingError?.error);
+  const shouldRedirectNoPostingRights =
+    !!currentUser?.id && ((isNewListingFlow && !hasPostingRights) || hasPostingRightsError);
+
   const isPastDraft = currentListingState && currentListingState !== LISTING_STATE_DRAFT;
-  const shouldRedirect = isNewListingFlow && listingId && isPastDraft;
+  const shouldRedirectAfterPosting = isNewListingFlow && listingId && isPastDraft;
 
-  const hasStripeOnboardingDataIfNeeded = returnURLType ? !!(currentUser && currentUser.id) : true;
-  const showForm = hasStripeOnboardingDataIfNeeded && (isNewURI || currentListing.id);
+  const hasStripeOnboardingDataIfNeeded = returnURLType ? !!currentUser?.id : true;
+  const showWizard = hasStripeOnboardingDataIfNeeded && (isNewURI || currentListing.id);
 
-  if (shouldRedirect) {
+  if (!isUserAuthorized(currentUser)) {
+    return (
+      <NamedRedirect
+        name="NoAccessPage"
+        params={{ missingAccessRight: NO_ACCESS_PAGE_USER_PENDING_APPROVAL }}
+      />
+    );
+  } else if (shouldRedirectNoPostingRights) {
+    return (
+      <NamedRedirect
+        name="NoAccessPage"
+        params={{ missingAccessRight: NO_ACCESS_PAGE_POST_LISTINGS }}
+      />
+    );
+  } else if (shouldRedirectAfterPosting) {
     const isPendingApproval =
       currentListing && currentListingState === LISTING_STATE_PENDING_APPROVAL;
 
@@ -155,7 +179,7 @@ export const EditListingPageComponent = props => {
         };
 
     return <NamedRedirect {...redirectProps} />;
-  } else if (showForm) {
+  } else if (showWizard) {
     const {
       createListingDraftError = null,
       publishListingError = null,
@@ -180,7 +204,7 @@ export const EditListingPageComponent = props => {
       addExceptionError,
       deleteExceptionError,
     };
-    // TODO: is this dead code? (shouldRedirect is checked before)
+    // TODO: is this dead code? (shouldRedirectAfterPosting is checked before)
     const newListingPublished =
       isDraftURI && currentListing && currentListingState !== LISTING_STATE_DRAFT;
 
@@ -248,7 +272,7 @@ export const EditListingPageComponent = props => {
       </Page>
     );
   } else {
-    // If user has come to this page through a direct linkto edit existing listing,
+    // If user has come to this page through a direct link to edit existing listing,
     // we need to load it first.
     const loadingPageMsg = {
       id: 'EditListingPage.loadingListingData',
@@ -273,7 +297,6 @@ EditListingPageComponent.defaultProps = {
   stripeAccountFetched: null,
   currentUser: null,
   stripeAccount: null,
-  currentUserHasOrders: null,
   listing: null,
   listingDraft: null,
   notificationCount: 0,

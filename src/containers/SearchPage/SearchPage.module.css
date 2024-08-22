@@ -1,11 +1,5 @@
 @import '../../styles/customMediaQueries.css';
 
-/* Can be given to Topbar when a modal is opened
- * so that the Topbar is not rendered on top of it.*/
-.topbarBehindModal {
-  z-index: initial;
-}
-
 .topbar {
   width: 100%;
 
@@ -20,6 +14,12 @@
     /* We need to raise Topbar above .container */
     z-index: var(--zIndexTopbar);
   }
+}
+
+/* Can be given to Topbar when a modal is opened
+ * so that the Topbar is not rendered on top of it.*/
+.topbarBehindModal {
+  z-index: initial;
 }
 
 .container {

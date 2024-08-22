@@ -17,7 +17,10 @@ import {
   LISTING_PAGE_PARAM_TYPE_DRAFT,
   LISTING_PAGE_PARAM_TYPE_EDIT,
   createSlug,
+  NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
 } from '../../util/urlHelpers';
+import { isErrorUserPendingApproval, isForbiddenError } from '../../util/errors.js';
+import { isUserAuthorized } from '../../util/userHelpers.js';
 import { convertMoneyToNumber } from '../../util/currency';
 import {
   ensureListing,
@@ -284,8 +287,13 @@ export const ListingPageComponent = props => {
       }
     : {};
   const currentStock = currentListing.currentStock?.attributes?.quantity || 0;
-  const schemaAvailability =
-    currentStock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock';
+  const schemaAvailability = !currentListing.currentStock
+    ? null
+    : currentStock > 0
+    ? 'https://schema.org/InStock'
+    : 'https://schema.org/OutOfStock';
+
+  const availabilityMaybe = schemaAvailability ? { availability: schemaAvailability } : {};
 
   const onToggleFavorites = handleToggleFavorites({
     ...commonParams,
@@ -313,7 +321,7 @@ export const ListingPageComponent = props => {
           '@type': 'Offer',
           url: productURL,
           ...schemaPriceMaybe,
-          availability: schemaAvailability,
+          ...availabilityMaybe,
         },
       }}
     >
@@ -499,6 +507,31 @@ const EnhancedListingPage = props => {
   const intl = useIntl();
   const history = useHistory();
   const location = useLocation();
+
+  const showListingError = props.showListingError;
+  const isVariant = props.params?.variant?.length > 0;
+  if (isForbiddenError(showListingError) && !isVariant) {
+    // This can happen if private marketplace mode is active
+    return (
+      <NamedRedirect
+        name="SignupPage"
+        state={{ from: `${location.pathname}${location.search}${location.hash}` }}
+      />
+    );
+  }
+
+  const currentUser = props.currentUser;
+  const isPrivateMarketplace = config.accessControl.marketplace.private === true;
+  const isUnauthorizedUser = currentUser && !isUserAuthorized(currentUser);
+  const hasUserPendingApprovalError = isErrorUserPendingApproval(showListingError);
+  if ((isPrivateMarketplace && isUnauthorizedUser) || hasUserPendingApprovalError) {
+    return (
+      <NamedRedirect
+        name="NoAccessPage"
+        params={{ missingAccessRight: NO_ACCESS_PAGE_USER_PENDING_APPROVAL }}
+      />
+    );
+  }
 
   return (
     <ListingPageComponent

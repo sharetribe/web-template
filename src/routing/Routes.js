@@ -17,10 +17,16 @@ import NotFoundPage from '../containers/NotFoundPage/NotFoundPage';
 
 import LoadableComponentErrorBoundary from './LoadableComponentErrorBoundary/LoadableComponentErrorBoundary';
 
+const isBanned = currentUser => {
+  const isBrowser = typeof window !== 'undefined';
+  // Future todo: currentUser?.attributes?.state === 'banned'
+  return isBrowser && currentUser?.attributes?.banned === true;
+};
+
 const canShowComponent = props => {
-  const { isAuthenticated, route } = props;
+  const { isAuthenticated, currentUser, route } = props;
   const { auth } = route;
-  return !auth || isAuthenticated;
+  return !auth || (isAuthenticated && !isBanned(currentUser));
 };
 
 const callLoadData = props => {
@@ -72,7 +78,7 @@ const setPageScrollPosition = (location, delayed) => {
       // might affect user initiated scrolling.
       delayed = window.setTimeout(() => {
         const reTry = document.querySelector(location.hash);
-        reTry.scrollIntoView({
+        reTry?.scrollIntoView({
           block: 'start',
           behavior: 'smooth',
         });
@@ -124,12 +130,17 @@ class RouteComponentRenderer extends Component {
   }
 
   render() {
-    const { route, match, location, staticContext } = this.props;
+    const { route, match, location, staticContext, currentUser } = this.props;
     const { component: RouteComponent, authPage = 'SignupPage', extraProps } = route;
     const canShow = canShowComponent(this.props);
     if (!canShow) {
       staticContext.unauthorized = true;
     }
+
+    const hasCurrentUser = !!currentUser?.id;
+    const restrictedPageWithCurrentUser = !canShow && hasCurrentUser;
+    // Banned users are redirected to LandingPage
+    const isBannedFromAuthPages = restrictedPageWithCurrentUser && isBanned(currentUser);
     return canShow ? (
       <LoadableComponentErrorBoundary>
         <RouteComponent
@@ -139,6 +150,8 @@ class RouteComponentRenderer extends Component {
           {...extraProps}
         />
       </LoadableComponentErrorBoundary>
+    ) : isBannedFromAuthPages ? (
+      <NamedRedirect name="LandingPage" />
     ) : (
       <NamedRedirect
         name={authPage}
@@ -153,6 +166,7 @@ RouteComponentRenderer.defaultProps = { staticContext: {} };
 RouteComponentRenderer.propTypes = {
   isAuthenticated: bool.isRequired,
   logoutInProgress: bool.isRequired,
+  currentUser: propTypes.currentUser,
   route: propTypes.route.isRequired,
   routeConfiguration: arrayOf(propTypes.route).isRequired,
   match: shape({
@@ -168,7 +182,8 @@ RouteComponentRenderer.propTypes = {
 
 const mapStateToProps = state => {
   const { isAuthenticated, logoutInProgress } = state.auth;
-  return { isAuthenticated, logoutInProgress };
+  const { currentUser } = state.user;
+  return { isAuthenticated, logoutInProgress, currentUser };
 };
 const RouteComponentContainer = compose(connect(mapStateToProps))(RouteComponentRenderer);
 

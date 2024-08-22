@@ -1,6 +1,7 @@
 import React from 'react';
 
 // Import config and utils
+import { useIntl } from '../../util/reactIntl';
 import {
   SCHEMA_TYPE_ENUM,
   SCHEMA_TYPE_MULTI_ENUM,
@@ -8,10 +9,9 @@ import {
   SCHEMA_TYPE_LONG,
   SCHEMA_TYPE_BOOLEAN,
 } from '../../util/types';
-import { useIntl } from '../../util/reactIntl';
 import { required, nonEmptyArray, validateInteger } from '../../util/validators';
 // Import shared components
-import { FieldCheckboxGroup, FieldSelect, FieldTextInput, FieldBoolean } from '..';
+import { FieldCheckboxGroup, FieldSelect, FieldTextInput, FieldBoolean } from '../../components';
 // Import modules from this directory
 import css from './CustomExtendedDataField.module.css';
 
