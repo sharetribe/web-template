@@ -39,7 +39,7 @@ export const logoSettings = {
 };
 
 // brandImageURL is used as a background image on the "hero" section of several pages.
-// Used on AuthenticationPage, EmailVerificationPage, PasswordRecoveryPage, PasswordResetPage etc.
+// Used on AuthenticationPage, EmailVerificationPage, etc.
 // NOTE: Those pages use ResponsiveBackgroundImageContainer component,
 //       it's possible to include more image variants to make image fetching more performant.
 export const brandImageURL = brandImage;

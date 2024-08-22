@@ -8,10 +8,10 @@ import arrayMutators from 'final-form-arrays';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { ensureCurrentUser } from '../../../util/data';
-import { propTypes } from '../../../util/types';
+import { propTypes, USER_TYPES, SELLER_STATUS } from '../../../util/types';
 import * as validators from '../../../util/validators';
 import { isUploadImageOverLimitError } from '../../../util/errors';
-import { getPropsForCustomUserFieldInputs } from '../../../util/userHelpers';
+import { getPropsForCustomUserFieldInputs, getBrandUserFieldInputs, isBuyer, isCreativeSeller } from '../../../util/userHelpers';
 
 import {
   Form,
@@ -19,6 +19,7 @@ import {
   Button,
   ImageFromFile,
   IconSpinner,
+  FieldBoolean,
   FieldTextInput,
   H4,
   CustomExtendedDataField,
@@ -29,17 +30,51 @@ import css from './ProfileSettingsForm.module.css';
 const ACCEPT_IMAGES = 'image/*';
 const UPLOAD_CHANGE_DELAY = 2000; // Show spinner so that browser has time to load img srcset
 
+function getApplyAsSellerFieldConfig(userType, sellerStatus) {
+  if (isCreativeSeller(userType)) {
+    const showPendingLabel =  sellerStatus === SELLER_STATUS.APPLIED;
+    const showWaitlistedLabel = sellerStatus === SELLER_STATUS.WAITLISTED;
+    const showToggle = false;
+    if (showPendingLabel) {
+      const showField = true;
+      return [
+        showField,
+        showToggle,
+        'ProfileSettingsForm.applyAsSellerPendingInfo',
+      ]
+    }
+    if (showWaitlistedLabel) {
+      const showField = true;
+      return [
+        showField,
+        showToggle,
+        'ProfileSettingsForm.applyAsSellerWaitlistedInfo',
+      ]
+    }
+    const showField = false;
+    return [
+      showField,
+      showToggle,
+      'ProfileSettingsForm.applyAsSellerWaitlistedInfo',
+    ]
+  }
+  const showField = isBuyer(userType);
+  const showToggle = isBuyer(userType);
+  return [
+    showField,
+    showToggle,
+    'ProfileSettingsForm.applyAsSellerInfo',
+  ]
+}
+
 const DisplayNameMaybe = props => {
   const { userTypeConfig, intl } = props;
-
   const isDisabled = userTypeConfig?.defaultUserFields?.displayName === false;
   if (isDisabled) {
     return null;
   }
-
   const { required } = userTypeConfig?.displayNameSettings || {};
   const isRequired = required === true;
-
   const validateMaybe = isRequired
     ? {
         validate: validators.required(
@@ -49,7 +84,6 @@ const DisplayNameMaybe = props => {
         ),
       }
     : {};
-
   return (
     <div className={css.sectionContainer}>
       <H4 as="h2" className={css.sectionTitle}>
@@ -124,9 +158,17 @@ class ProfileSettingsFormComponent extends Component {
             marketplaceName,
             values,
             userFields,
-            userTypeConfig,
+            userTypes,
+            sellerStatus,
           } = fieldRenderProps;
-
+          const { applyAsSeller, userType: initialUserType } = values || {};
+          const userType = applyAsSeller ? USER_TYPES.SELLER : initialUserType;
+          const [
+            showApplyAsSellerField,
+            showApplyAsSellerToggle,
+            applyAsSellerInfoId,
+          ] = getApplyAsSellerFieldConfig(initialUserType, sellerStatus)
+          const userTypeConfig = userTypes.find(config => config.userType === userType);
           const user = ensureCurrentUser(currentUser);
 
           // First name
@@ -140,7 +182,6 @@ class ProfileSettingsFormComponent extends Component {
             id: 'ProfileSettingsForm.firstNameRequired',
           });
           const firstNameRequired = validators.required(firstNameRequiredMessage);
-
           // Last name
           const lastNameLabel = intl.formatMessage({
             id: 'ProfileSettingsForm.lastNameLabel',
@@ -152,13 +193,19 @@ class ProfileSettingsFormComponent extends Component {
             id: 'ProfileSettingsForm.lastNameRequired',
           });
           const lastNameRequired = validators.required(lastNameRequiredMessage);
-
           // Bio
           const bioLabel = intl.formatMessage({
             id: 'ProfileSettingsForm.bioLabel',
           });
           const bioPlaceholder = intl.formatMessage({
             id: 'ProfileSettingsForm.bioPlaceholder',
+          });
+          // Apply as seller
+          const applyAsSellerLabel = intl.formatMessage({
+            id: 'ProfileSettingsForm.applyAsSellerLabel',
+          });
+          const applyAsSellerFieldPlaceholder = intl.formatMessage({
+            id: 'CustomExtendedDataField.placeholderBoolean',
           });
 
           const uploadingOverlay =
@@ -239,11 +286,10 @@ class ProfileSettingsFormComponent extends Component {
           const pristineSinceLastSubmit = submittedOnce && isEqual(values, this.submittedValues);
           const submitDisabled =
             invalid || pristine || pristineSinceLastSubmit || uploadInProgress || submitInProgress;
-
           const userFieldProps = getPropsForCustomUserFieldInputs(
             userFields,
             intl,
-            userTypeConfig?.userType,
+            userType,
             false
           );
 
@@ -367,10 +413,35 @@ class ProfileSettingsFormComponent extends Component {
                   <FormattedMessage id="ProfileSettingsForm.bioInfo" values={{ marketplaceName }} />
                 </p>
               </div>
+
+              {showApplyAsSellerField && (
+                <div className={classNames(css.sectionContainer)}>
+                  <H4 as="h2" className={css.sectionTitle}>
+                    <FormattedMessage id="ProfileSettingsForm.applyAsSellerHeading" />
+                  </H4>
+                  {showApplyAsSellerToggle && (
+                    <FieldBoolean
+                      id="applyAsSeller"
+                      name="applyAsSeller"
+                      label={applyAsSellerLabel}
+                      placeholder={applyAsSellerFieldPlaceholder}
+                    />
+                  )}
+                  <p className={css.extraInfo}>
+                    <FormattedMessage id={applyAsSellerInfoId} values={{ marketplaceName }} />
+                  </p>
+                </div>
+              )}
+
               <div className={classNames(css.sectionContainer, css.lastSection)}>
-                {userFieldProps.map(fieldProps => (
-                  <CustomExtendedDataField {...fieldProps} formId={formId} />
-                ))}
+                {userFieldProps.map(fieldProps => {
+                  const isBrandAdmin = currentUser.attributes.profile.metadata.isBrandAdmin || false
+                  const fieldKey = fieldProps.fieldConfig.key;
+                  const showField = getBrandUserFieldInputs(userType, isBrandAdmin, fieldKey)
+                  return (
+                    <CustomExtendedDataField {...fieldProps} formId={formId} disabled={!showField}/>
+                  )
+                })}
               </div>
               {submitError}
               <Button
@@ -408,7 +479,9 @@ ProfileSettingsFormComponent.propTypes = {
   uploadInProgress: bool.isRequired,
   updateInProgress: bool.isRequired,
   updateProfileError: propTypes.error,
+  userTypes: propTypes.userTypes.isRequired,
   updateProfileReady: bool,
+  sellerStatus: propTypes.sellerStatus,
 
   // from injectIntl
   intl: intlShape.isRequired,
