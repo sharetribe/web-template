@@ -6,7 +6,13 @@ import { connect } from 'react-redux';
 import { useConfiguration } from '../../context/configurationContext';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
+import { PROFILE_PAGE_PENDING_APPROVAL_VARIANT } from '../../util/urlHelpers';
 import { ensureCurrentUser } from '../../util/data';
+import {
+  initialValuesForUserFields,
+  isUserAuthorized,
+  pickUserFieldsData,
+} from '../../util/userHelpers';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 
 import { H3, Page, UserNav, NamedLink, LayoutSingleColumn } from '../../components';
@@ -18,13 +24,29 @@ import ProfileSettingsForm from './ProfileSettingsForm/ProfileSettingsForm';
 
 import { updateProfile, uploadImage } from './ProfileSettingsPage.duck';
 import css from './ProfileSettingsPage.module.css';
-import { initialValuesForUserFields, pickUserFieldsData } from '../../util/userHelpers';
 
 const onImageUploadHandler = (values, fn) => {
   const { id, imageId, file } = values;
   if (file) {
     fn({ id, imageId, file });
   }
+};
+
+const ViewProfileLink = props => {
+  const { userUUID, isUnauthorizedUser } = props;
+  return userUUID && isUnauthorizedUser ? (
+    <NamedLink
+      className={css.profileLink}
+      name="ProfilePageVariant"
+      params={{ id: userUUID, variant: PROFILE_PAGE_PENDING_APPROVAL_VARIANT }}
+    >
+      <FormattedMessage id="ProfileSettingsPage.viewProfileLink" />
+    </NamedLink>
+  ) : userUUID ? (
+    <NamedLink className={css.profileLink} name="ProfilePage" params={{ id: userUUID }}>
+      <FormattedMessage id="ProfileSettingsPage.viewProfileLink" />
+    </NamedLink>
+  ) : null;
 };
 
 export const ProfileSettingsPageComponent = props => {
@@ -90,6 +112,9 @@ export const ProfileSettingsPageComponent = props => {
     protectedData,
     privateData,
   } = user?.attributes.profile;
+  // I.e. the status is active, not pending-approval or banned
+  const isUnauthorizedUser = currentUser && !isUserAuthorized(currentUser);
+
   const { userType } = publicData || {};
   const profileImageId = user.profileImage ? user.profileImage.id : null;
   const profileImage = image || { imageId: profileImageId };
@@ -143,15 +168,8 @@ export const ProfileSettingsPageComponent = props => {
             <H3 as="h1" className={css.heading}>
               <FormattedMessage id="ProfileSettingsPage.heading" />
             </H3>
-            {user.id ? (
-              <NamedLink
-                className={css.profileLink}
-                name="ProfilePage"
-                params={{ id: user.id.uuid }}
-              >
-                <FormattedMessage id="ProfileSettingsPage.viewProfileLink" />
-              </NamedLink>
-            ) : null}
+
+            <ViewProfileLink userUUID={user?.id?.uuid} isUnauthorizedUser={isUnauthorizedUser} />
           </div>
           {profileSettingsForm}
         </div>

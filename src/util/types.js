@@ -125,7 +125,7 @@ propTypes.imageAsset = shape({
 });
 
 // Denormalised user object
-propTypes.currentUser = shape({
+const currentUser = shape({
   id: propTypes.uuid.isRequired,
   type: propTypes.value('currentUser').isRequired,
   attributes: shape({
@@ -143,6 +143,21 @@ propTypes.currentUser = shape({
   }),
   profileImage: propTypes.image,
 });
+const currentUserBanned = shape({
+  id: propTypes.uuid.isRequired,
+  type: propTypes.value('currentUser').isRequired,
+  attributes: shape({
+    banned: propTypes.value(true).isRequired,
+  }),
+});
+const currentUserDeleted = shape({
+  id: propTypes.uuid.isRequired,
+  type: propTypes.value('currentUser').isRequired,
+  attributes: shape({
+    deleted: propTypes.value(true).isRequired,
+  }),
+});
+propTypes.currentUser = oneOfType([currentUser, currentUserBanned, currentUserDeleted]);
 
 const userAttributes = shape({
   banned: propTypes.value(false).isRequired,
@@ -628,6 +643,9 @@ export const ERROR_CODE_NOT_FOUND = 'not-found';
 export const ERROR_CODE_FORBIDDEN = 'forbidden';
 export const ERROR_CODE_MISSING_STRIPE_ACCOUNT = 'transaction-missing-stripe-account';
 export const ERROR_CODE_STOCK_OLD_TOTAL_MISMATCH = 'old-total-mismatch';
+export const ERROR_CODE_PERMISSION_DENIED_POST_LISTINGS = 'permission-denied-post-listings';
+export const ERROR_CODE_PERMISSION_DENIED_PENDING_APPROVAL = 'permission-denied-pending-approval';
+export const ERROR_CODE_USER_PENDING_APPROVAL = 'user-pending-approval';
 
 const ERROR_CODES = [
   ERROR_CODE_TRANSACTION_LISTING_NOT_FOUND,
@@ -647,6 +665,9 @@ const ERROR_CODES = [
   ERROR_CODE_FORBIDDEN,
   ERROR_CODE_MISSING_STRIPE_ACCOUNT,
   ERROR_CODE_STOCK_OLD_TOTAL_MISMATCH,
+  ERROR_CODE_PERMISSION_DENIED_POST_LISTINGS,
+  ERROR_CODE_PERMISSION_DENIED_PENDING_APPROVAL,
+  ERROR_CODE_USER_PENDING_APPROVAL,
 ];
 
 // API error

@@ -1,7 +1,7 @@
+import * as log from '../util/log';
+import { storableError } from '../util/errors';
 import { clearCurrentUser, fetchCurrentUser } from './user.duck';
 import { createUserWithIdp } from '../util/api';
-import { storableError } from '../util/errors';
-import * as log from '../util/log';
 
 const authenticated = authInfo => authInfo?.isAnonymous === false;
 const loggedInAs = authInfo => authInfo?.isLoggedInAs === true;
@@ -179,8 +179,8 @@ export const login = (username, password) => (dispatch, getState, sdk) => {
   // just dispatches the login error action.
   return sdk
     .login({ username, password })
+    .then(() => dispatch(fetchCurrentUser({ afterLogin: true })))
     .then(() => dispatch(loginSuccess()))
-    .then(() => dispatch(fetchCurrentUser()))
     .catch(e => dispatch(loginError(storableError(e))));
 };
 

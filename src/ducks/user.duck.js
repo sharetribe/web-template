@@ -1,12 +1,13 @@
+import { util as sdkUtil } from '../util/sdkLoader';
 import { denormalisedResponseEntities, ensureOwnListing } from '../util/data';
-import { storableError } from '../util/errors';
-import { LISTING_STATE_DRAFT } from '../util/types';
 import * as log from '../util/log';
+import { LISTING_STATE_DRAFT } from '../util/types';
+import { storableError } from '../util/errors';
+import { isUserAuthorized } from '../util/userHelpers';
 import { getTransitionsNeedingProviderAttention } from '../transactions/transaction';
 
 import { authInfo } from './auth.duck';
 import { stripeAccountCreateSuccess } from './stripeConnectAccount.duck';
-import { util as sdkUtil } from '../util/sdkLoader';
 
 // ================ Action types ================ //
 
@@ -58,6 +59,7 @@ const mergeCurrentUser = (oldCurrentUser, newCurrentUser) => {
 
 const initialState = {
   currentUser: null,
+  currentUserShowTimestamp: 0,
   currentUserShowError: null,
   currentUserHasListings: false,
   currentUserHasListingsError: null,
@@ -75,7 +77,11 @@ export default function reducer(state = initialState, action = {}) {
     case CURRENT_USER_SHOW_REQUEST:
       return { ...state, currentUserShowError: null };
     case CURRENT_USER_SHOW_SUCCESS:
-      return { ...state, currentUser: mergeCurrentUser(state.currentUser, payload) };
+      return {
+        ...state,
+        currentUser: mergeCurrentUser(state.currentUser, payload),
+        currentUserShowTimestamp: payload ? new Date().getTime() : 0,
+      };
     case CURRENT_USER_SHOW_ERROR:
       // eslint-disable-next-line no-console
       console.error(payload);
@@ -187,7 +193,7 @@ const fetchCurrentUserHasListingsError = e => ({
   payload: e,
 });
 
-const fetchCurrentUserNotificationsRequest = () => ({
+export const fetchCurrentUserNotificationsRequest = () => ({
   type: FETCH_CURRENT_USER_NOTIFICATIONS_REQUEST,
 });
 
@@ -245,12 +251,12 @@ export const fetchCurrentUserHasListings = () => (dispatch, getState, sdk) => {
   const params = {
     // Since we are only interested in if the user has published
     // listings, we only need at most one result.
-    authorId: currentUser.id.uuid,
+    states: 'published',
     page: 1,
     perPage: 1,
   };
 
-  return sdk.listings
+  return sdk.ownListings
     .query(params)
     .then(response => {
       const hasListings = response.data.data && response.data.data.length > 0;
@@ -313,18 +319,29 @@ export const fetchCurrentUserNotifications = () => (dispatch, getState, sdk) => 
     .catch(e => dispatch(fetchCurrentUserNotificationsError(storableError(e))));
 };
 
-export const fetchCurrentUser = (params = null) => (dispatch, getState, sdk) => {
-  dispatch(currentUserShowRequest());
-  const { isAuthenticated } = getState().auth;
+export const fetchCurrentUser = options => (dispatch, getState, sdk) => {
+  const state = getState();
+  const { currentUserHasListings, currentUserShowTimestamp } = state.user || {};
+  const { isAuthenticated } = state.auth;
+  const { callParams = null, updateHasListings = true, updateNotifications = true, afterLogin } =
+    options || {};
 
-  if (!isAuthenticated) {
+  // Double fetch might happen when e.g. profile page is making a full page load
+  const aSecondAgo = new Date().getTime() - 1000;
+  if (currentUserShowTimestamp > aSecondAgo) {
+    return Promise.resolve({});
+  }
+  // Set in-progress, no errors
+  dispatch(currentUserShowRequest());
+
+  if (!isAuthenticated && !afterLogin) {
     // Make sure current user is null
     dispatch(currentUserShowSuccess(null));
     return Promise.resolve({});
   }
 
-  const parameters = params || {
-    include: ['profileImage', 'stripeAccount'],
+  const parameters = callParams || {
+    include: ['effectivePermissionSet', 'profileImage', 'stripeAccount'],
     'fields.image': [
       'variants.square-small',
       'variants.square-small2x',
@@ -363,10 +380,20 @@ export const fetchCurrentUser = (params = null) => (dispatch, getState, sdk) => 
       return currentUser;
     })
     .then(currentUser => {
-      dispatch(fetchCurrentUserHasListings());
-      dispatch(fetchCurrentUserNotifications());
-      if (!currentUser.attributes.emailVerified) {
-        dispatch(fetchCurrentUserHasOrders());
+      // If currentUser is not active (e.g. in 'pending-approval' state),
+      // then they don't have listings or transactions that we care about.
+      if (isUserAuthorized(currentUser)) {
+        if (currentUserHasListings === false && updateHasListings !== false) {
+          dispatch(fetchCurrentUserHasListings());
+        }
+
+        if (updateNotifications !== false) {
+          dispatch(fetchCurrentUserNotifications());
+        }
+
+        if (!currentUser.attributes.emailVerified) {
+          dispatch(fetchCurrentUserHasOrders());
+        }
       }
 
       // Make sure auth info is up to date

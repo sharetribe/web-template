@@ -10,6 +10,8 @@
  */
 
 import {
+  ERROR_CODE_FORBIDDEN,
+  ERROR_CODE_NOT_FOUND,
   ERROR_CODE_TRANSACTION_LISTING_NOT_FOUND,
   ERROR_CODE_TRANSACTION_INVALID_TRANSITION,
   ERROR_CODE_TRANSACTION_ALREADY_REVIEWED_BY_CUSTOMER,
@@ -24,6 +26,9 @@ import {
   ERROR_CODE_TRANSACTION_BOOKING_TIME_NOT_AVAILABLE,
   ERROR_CODE_TRANSACTION_LISTING_INSUFFICIENT_STOCK,
   ERROR_CODE_STOCK_OLD_TOTAL_MISMATCH,
+  ERROR_CODE_PERMISSION_DENIED_POST_LISTINGS,
+  ERROR_CODE_PERMISSION_DENIED_PENDING_APPROVAL,
+  ERROR_CODE_USER_PENDING_APPROVAL,
 } from './types';
 // NOTE: This file imports types.js, which may lead to circular dependency
 
@@ -43,6 +48,16 @@ const hasErrorWithCode = (error, code) => {
 const responseAPIErrors = error => {
   return error && error.data && error.data.errors ? error.data.errors : [];
 };
+
+/**
+ * 403 Forbidden
+ */
+export const isForbiddenError = error => hasErrorWithCode(error, ERROR_CODE_FORBIDDEN);
+
+/**
+ * 404 Not Found
+ */
+export const isNotFoundError = error => hasErrorWithCode(error, ERROR_CODE_NOT_FOUND);
 
 /**
  * 429 Too Many Requests error
@@ -235,6 +250,31 @@ export const isChangeEmailWrongPassword = error => error && error.status === 403
  * is due to giving wrong password.
  */
 export const isChangePasswordWrongPassword = error => error && error.status === 403;
+
+/**
+ * Check if the given API error (from `sdk.listings.open(params)` or `sdk.listings.publish(params)`)
+ * is due to denied permission to post listings.
+ */
+export const isErrorNoPermissionToPostListings = error =>
+  error &&
+  error.status === 403 &&
+  hasErrorWithCode(error, ERROR_CODE_PERMISSION_DENIED_POST_LISTINGS);
+
+/**
+ * Check if the given API error (from `sdk.transactions.initiate(params)`
+ * is due to denied permission for users in pending-approval state.
+ */
+export const isErrorNoPermissionForUserPendingApproval = error =>
+  error &&
+  error.status === 403 &&
+  hasErrorWithCode(error, ERROR_CODE_PERMISSION_DENIED_PENDING_APPROVAL);
+
+/**
+ * Check if the given API error (from `sdk.listings.query(params)`
+ * is due to denied permission for users in pending-approval state.
+ */
+export const isErrorUserPendingApproval = error =>
+  error && error.status === 403 && hasErrorWithCode(error, ERROR_CODE_USER_PENDING_APPROVAL);
 
 /**
  * Check if the given API error (from

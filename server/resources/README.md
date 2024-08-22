@@ -29,6 +29,11 @@ from `REACT_APP_MARKETPLACE_ROOT_URL`. This transformation is done by the actual
 **Note**: on localhost, this file is served from the Dev port on apiServer.js (3500 aka
 http://localhost:3500/robots.txt) for debugging purposes.
 
+### Robots.txt on private marketplace
+
+There's a more restrictive version of the robots.txt (robotsPrivateMarketplace.txt), which is used
+if access-control.json asset has private mode set active.
+
 ## Sitemap
 
 A [sitemap](https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview) is a file
@@ -60,6 +65,8 @@ The sitemap-index.xml contains links to 3 different sub sitemaps:
 - sitemap-recent-listings.xml
 - sitemap-recent-pages.xml
 
+**Note**: sitemap-recent-listings.xml is not served if the private marketplace mode is activated.
+
 ### /sitemap-default.xml
 
 This sitemap contains links to public built-in pages of the client app. It also shows
@@ -71,10 +78,14 @@ sitemap. E.g. if you have added a category "hats", you could highlight that for 
 by adding `searchHats: { url: '/s?pub_category=hats' }` to variable **defaultPublicPaths** on
 sitemap.js.
 
+**Note**: search page is not served if the private marketplace mode is activated.
+
 ### /sitemap-recent-listings.xml
 
 The recent listings is the heaviest file to be returned. Marketplace API returns max 10,000 recent
 listings, from which the XML syntax is created and the result is compressed.
+
+**Note**: sitemap-recent-listings.xml is not served if the private marketplace mode is activated.
 
 ### /sitemap-recent-pages.xml
 

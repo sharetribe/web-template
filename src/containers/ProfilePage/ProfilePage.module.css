@@ -40,6 +40,10 @@
     margin: 0 96px 48px 0;
   }
 }
+.avatarPlaceholder {
+  composes: avatar;
+  width: 96px;
+}
 
 .mobileHeading {
   flex-shrink: 0;

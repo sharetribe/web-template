@@ -14,6 +14,82 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [change] Update one copy text.
+  [#439](https://github.com/sharetribe/web-template/pull/439)
+
+## [v5.4.0] 2024-08-20
+
+- [change] auth.duck.js: login flow should wait for currentUser entity be loaded.
+  [#436](https://github.com/sharetribe/web-template/pull/436)
+- [add] Access control: private marketplace mode
+
+  - Fetch a new asset: /general/access-control.json to check private: true/false flag
+  - Make SearchPage, ListingPage, ProfilePage, Styleguide require authentication
+  - Ensure currentUser entity is loaded before loadData on client-side
+  - Restrict data load & add redirections for SearchPage, ListingPage, and ProfilePage
+
+  [#434](https://github.com/sharetribe/web-template/pull/434)
+
+- [add] Access control: 'pending-approval' state for users.
+
+  - Users will get "state", which is exposed through currentUser's attribute
+  - A new state is "pending-approval", which restricts user from initiating transactions and posting
+    listings.
+  - In addition, 'banned' users will also have state 'banned'.
+  - Extra: Routes.js: do not allow banned users to auth pages
+  - [fix]: InboxPage.duck.js: include deleted and banned attributes
+  - [fix]: ModalMissingInformation: only 'active' users get this modal shown
+  - [fix]: Inquiry modal: open the modal after authentication
+  - Some util-file imports have been reordered (might cause conflicts)
+
+  [#428](https://github.com/sharetribe/web-template/pull/428)
+
+- [fix] SearchPage: SearchFiltersMobile (modal) should be above topbar.
+  [#432](https://github.com/sharetribe/web-template/pull/432)
+
+  [v5.4.0]: https://github.com/sharetribe/web-template/compare/v5.3.0...v5.4.0
+
+## [v5.3.0] 2024-08-13
+
+- [change] ProfilePage: redirect Stripe's crawler to landing page (profile page might be empty).
+  [#430](https://github.com/sharetribe/web-template/pull/430)
+- [add] Add currently available translations for DE, ES, FR.
+  [#429](https://github.com/sharetribe/web-template/pull/429)
+- [add] Handle API's new permission model & permission to post listings
+
+  - CurrentUser fetch includes a new relationship: effectivePermissionSet
+  - There is a new Page component: NoAccessPage
+  - If user has no posting rights: they can't create or edit a draft listing and they can't open a
+    previously closed published listing. Instead, they are redirected to NoAccessPage
+
+  [#426](https://github.com/sharetribe/web-template/pull/426)
+
+- [fix] Routes.js: reTry can be undefined in some cases (reTry.scrollIntoView)
+  [#427](https://github.com/sharetribe/web-template/pull/427)
+- [change] ProfilePage: remove withViewport and refactor a bit.
+  [#424](https://github.com/sharetribe/web-template/pull/424)
+- [change] Update express.js (v4.19.2) and nodemon (3.1.4).
+  [#421](https://github.com/sharetribe/web-template/pull/421)
+- [add] richText.js: support parentheses on autolinked URLs.
+  [#419](https://github.com/sharetribe/web-template/pull/419)
+- [fix] Safari has a bug related to reading array directly from JSON-LD script tag.
+  [#418](https://github.com/sharetribe/web-template/pull/418)
+- [fix] There could be rare time-windows when indexing has not caught up with deleted & closed
+  listings. This might result those listings to be included to listing queries.
+  [#417](https://github.com/sharetribe/web-template/pull/417)
+
+  [v5.3.0]: https://github.com/sharetribe/web-template/compare/v5.2.1...v5.3.0
+
+## [v5.2.1] 2024-07-02
+
+- [fix] fix: calculateShippingFee (when shippingPriceInSubunitsAdditionalItems is 0, no shipping fee
+  was included) [#414](https://github.com/sharetribe/web-template/pull/414)
+- [fix] Remove stock from schema if there's no stock in use.
+  [#405](https://github.com/sharetribe/web-template/pull/405)
+- [fix] Remove left-behind slash from inquiry-new-inquiry email template reference.
+  [#406](https://github.com/sharetribe/web-template/pull/406)
+- [fix] The subject line of purchase-new-order email had a wrong variable name.
+  [#413](https://github.com/sharetribe/web-template/pull/413)
 - [change] Fix another typo in FR translations.
   [#409](https://github.com/sharetribe/web-template/pull/409)
 - [change] Fix a typo in FR translations.
@@ -24,6 +100,8 @@ way to update this template, but currently, we follow a pattern:
   [#403](https://github.com/sharetribe/web-template/pull/403)
 - [change] FilterComponent: relax generated name-attribute for inputs: allow camelCase.
   [#402](https://github.com/sharetribe/web-template/pull/402)
+
+  [v5.2.1]: https://github.com/sharetribe/web-template/compare/v5.2.0...v5.2.1
 
 ## [v5.2.0] 2024-05-28
 

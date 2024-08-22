@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { bool, arrayOf, number, shape } from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import { bool, arrayOf, oneOfType } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 import { useConfiguration } from '../../context/configurationContext';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import {
   REVIEW_TYPE_OF_PROVIDER,
   REVIEW_TYPE_OF_CUSTOMER,
@@ -13,9 +13,13 @@ import {
   SCHEMA_TYPE_TEXT,
   propTypes,
 } from '../../util/types';
-import { ensureCurrentUser, ensureUser } from '../../util/data';
-import { withViewport } from '../../util/uiHelpers';
+import {
+  NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
+  PROFILE_PAGE_PENDING_APPROVAL_VARIANT,
+} from '../../util/urlHelpers';
+import { isErrorUserPendingApproval, isForbiddenError, isNotFoundError } from '../../util/errors';
 import { pickCustomFieldProps } from '../../util/fieldHelpers';
+import { isUserAuthorized } from '../../util/userHelpers';
 import { richText } from '../../util/richText';
 
 import { isScrollingDisabled } from '../../ducks/ui.duck';
@@ -31,6 +35,7 @@ import {
   Reviews,
   ButtonTabNavHorizontal,
   LayoutSideNavigation,
+  NamedRedirect,
 } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
@@ -46,7 +51,7 @@ const MAX_MOBILE_SCREEN_WIDTH = 768;
 const MIN_LENGTH_FOR_LONG_WORDS = 20;
 
 export const AsideContent = props => {
-  const { user, displayName, isCurrentUser } = props;
+  const { user, displayName, showLinkToProfileSettingsPage } = props;
   return (
     <div className={css.asideContent}>
       <AvatarLarge className={css.avatar} user={user} disableProfileLink />
@@ -55,7 +60,7 @@ export const AsideContent = props => {
           <FormattedMessage id="ProfilePage.mobileHeading" values={{ name: displayName }} />
         ) : null}
       </H2>
-      {isCurrentUser ? (
+      {showLinkToProfileSettingsPage ? (
         <>
           <NamedLink className={css.editLinkMobile} name="ProfileSettingsPage">
             <FormattedMessage id="ProfilePage.editProfileLinkMobile" />
@@ -187,7 +192,6 @@ export const MainContent = props => {
     queryListingsError,
     reviews,
     queryReviewsError,
-    viewport,
     publicData,
     metadata,
     userFieldConfig,
@@ -195,7 +199,11 @@ export const MainContent = props => {
   } = props;
 
   const hasListings = listings.length > 0;
-  const isMobileLayout = viewport.width < MAX_MOBILE_SCREEN_WIDTH;
+  const hasMatchMedia = typeof window !== 'undefined' && window?.matchMedia;
+  const isMobileLayout = hasMatchMedia
+    ? window.matchMedia(`(max-width: ${MAX_MOBILE_SCREEN_WIDTH}px)`)?.matches
+    : true;
+
   const hasBio = !!bio;
   const bioWithLinks = richText(bio, {
     linkify: true,
@@ -220,12 +228,16 @@ export const MainContent = props => {
         <FormattedMessage id="ProfilePage.desktopHeading" values={{ name: displayName }} />
       </H2>
       {hasBio ? <p className={css.bio}>{bioWithLinks}</p> : null}
-      <CustomUserFields
-        publicData={publicData}
-        metadata={metadata}
-        userFieldConfig={userFieldConfig}
-        intl={intl}
-      />
+
+      {displayName ? (
+        <CustomUserFields
+          publicData={publicData}
+          metadata={metadata}
+          userFieldConfig={userFieldConfig}
+          intl={intl}
+        />
+      ) : null}
+
       {hasListings ? (
         <div className={listingsContainerClasses}>
           <H4 as="h2" className={css.listingsTitle}>
@@ -251,20 +263,82 @@ export const MainContent = props => {
 
 export const ProfilePageComponent = props => {
   const config = useConfiguration();
-  const { scrollingDisabled, currentUser, userShowError, user, intl, ...rest } = props;
-  const ensuredCurrentUser = ensureCurrentUser(currentUser);
-  const profileUser = ensureUser(user);
-  const isCurrentUser =
-    ensuredCurrentUser.id && profileUser.id && ensuredCurrentUser.id.uuid === profileUser.id.uuid;
+  const intl = useIntl();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const {
+    scrollingDisabled,
+    params: pathParams,
+    currentUser,
+    useCurrentUser,
+    userShowError,
+    user,
+    ...rest
+  } = props;
+  const isVariant = pathParams.variant?.length > 0;
+  const isPreview = isVariant && pathParams.variant === PROFILE_PAGE_PENDING_APPROVAL_VARIANT;
+
+  // Stripe's onboarding needs a business URL for each seller, but the profile page can be
+  // too empty for the provider at the time they are creating their first listing.
+  // To remedy the situation, we redirect Stripe's crawler to the landing page of the marketplace.
+  // TODO: When there's more content on the profile page, we should consider by-passing this redirection.
+  const searchParams = rest?.location?.search;
+  const isStorefront = searchParams
+    ? new URLSearchParams(searchParams)?.get('mode') === 'storefront'
+    : false;
+  if (isStorefront) {
+    return <NamedRedirect name="LandingPage" />;
+  }
+
+  const isDataLoaded = isPreview
+    ? currentUser != null || userShowError != null
+    : user != null || userShowError != null;
+  const isCurrentUser = currentUser?.id && currentUser?.id?.uuid === pathParams.id;
+  const profileUser = useCurrentUser ? currentUser : user;
   const { bio, displayName, publicData, metadata } = profileUser?.attributes?.profile || {};
   const { userFields } = config.user;
+  const isPrivateMarketplace = config.accessControl.marketplace.private === true;
+  const isUnauthorizedUser = currentUser && !isUserAuthorized(currentUser);
+  const isUnauthorizedOnPrivateMarketplace = isPrivateMarketplace && isUnauthorizedUser;
+  const hasUserPendingApprovalError = isErrorUserPendingApproval(userShowError);
 
   const schemaTitleVars = { name: displayName, marketplaceName: config.marketplaceName };
   const schemaTitle = intl.formatMessage({ id: 'ProfilePage.schemaTitle' }, schemaTitleVars);
 
-  if (userShowError && userShowError.status === 404) {
+  if (!isDataLoaded) {
+    return null;
+  } else if (!isPreview && isNotFoundError(userShowError)) {
     return <NotFoundPage staticContext={props.staticContext} />;
+  } else if (!isPreview && isForbiddenError(userShowError)) {
+    // This can happen if private marketplace mode is active, but it's not reflected through asset yet.
+    return (
+      <NamedRedirect
+        name="SignupPage"
+        state={{ from: `${location.pathname}${location.search}${location.hash}` }}
+      />
+    );
+  } else if (!isPreview && (isUnauthorizedOnPrivateMarketplace || hasUserPendingApprovalError)) {
+    return (
+      <NamedRedirect
+        name="NoAccessPage"
+        params={{ missingAccessRight: NO_ACCESS_PAGE_USER_PENDING_APPROVAL }}
+      />
+    );
+  } else if (isPreview && mounted && !isCurrentUser) {
+    // Someone is manipulating the URL, redirect to current user's profile page.
+    return isCurrentUser === false ? (
+      <NamedRedirect name="ProfilePage" params={{ id: currentUser?.id?.uuid }} />
+    ) : null;
+  } else if ((isPreview || isPrivateMarketplace) && !mounted) {
+    // This preview of the profile page is not rendered on server-side
+    // and the first pass on client-side should render the same UI.
+    return null;
   }
+  // This is rendering normal profile page (not preview for pending-approval)
   return (
     <Page
       scrollingDisabled={scrollingDisabled}
@@ -279,7 +353,11 @@ export const ProfilePageComponent = props => {
         sideNavClassName={css.aside}
         topbar={<TopbarContainer />}
         sideNav={
-          <AsideContent user={user} isCurrentUser={isCurrentUser} displayName={displayName} />
+          <AsideContent
+            user={profileUser}
+            showLinkToProfileSettingsPage={mounted && isCurrentUser}
+            displayName={displayName}
+          />
         }
         footer={<FooterContainer />}
       >
@@ -310,21 +388,13 @@ ProfilePageComponent.defaultProps = {
 ProfilePageComponent.propTypes = {
   scrollingDisabled: bool.isRequired,
   currentUser: propTypes.currentUser,
-  user: propTypes.user,
+  useCurrentUser: bool.isRequired,
+  user: oneOfType([propTypes.user, propTypes.currentUser]),
   userShowError: propTypes.error,
   queryListingsError: propTypes.error,
   listings: arrayOf(propTypes.listing).isRequired,
   reviews: arrayOf(propTypes.review),
   queryReviewsError: propTypes.error,
-
-  // form withViewport
-  viewport: shape({
-    width: number.isRequired,
-    height: number.isRequired,
-  }).isRequired,
-
-  // from injectIntl
-  intl: intlShape.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -339,23 +409,24 @@ const mapStateToProps = state => {
   } = state.ProfilePage;
   const userMatches = getMarketplaceEntities(state, [{ type: 'user', id: userId }]);
   const user = userMatches.length === 1 ? userMatches[0] : null;
-  const listings = getMarketplaceEntities(state, userListingRefs);
+
+  // Show currentUser's data if it's not approved yet
+  const isCurrentUser = userId?.uuid === currentUser?.id?.uuid;
+  const useCurrentUser = isCurrentUser && !isUserAuthorized(currentUser);
+
   return {
     scrollingDisabled: isScrollingDisabled(state),
     currentUser,
+    useCurrentUser,
     user,
     userShowError,
     queryListingsError,
-    listings,
+    listings: getMarketplaceEntities(state, userListingRefs),
     reviews,
     queryReviewsError,
   };
 };
 
-const ProfilePage = compose(
-  connect(mapStateToProps),
-  withViewport,
-  injectIntl
-)(ProfilePageComponent);
+const ProfilePage = compose(connect(mapStateToProps))(ProfilePageComponent);
 
 export default ProfilePage;

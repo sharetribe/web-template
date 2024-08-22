@@ -246,10 +246,10 @@ describe('EditListingPage', () => {
     return num >= 0 && num < 10 ? `0${num}` : `${num}`;
   };
 
-  const initialState = listing => ({
+  const initialState = (listing, currentUser) => ({
     EditListingPage: {
       createListingDraftError: null,
-      listingId: listing.id,
+      listingId: listing?.id || null,
       submittedListingId: null,
       redirectToListing: false,
       uploadedImages: {},
@@ -280,10 +280,17 @@ describe('EditListingPage', () => {
     },
     marketplaceData: {
       entities: {
-        ownListing: {
-          [listing.id.uuid]: listing,
-        },
+        ownListing: listing
+          ? {
+              [listing.id.uuid]: listing,
+            }
+          : {},
       },
+    },
+    user: {
+      currentUser: currentUser || createCurrentUser('id-of-me-myself'),
+      currentUserHasListings: false,
+      sendVerificationEmailInProgress: false,
     },
   });
 
@@ -313,6 +320,7 @@ describe('EditListingPage', () => {
     const { getByText, queryAllByText, getByRole, getByLabelText, queryAllByRole } = render(
       <EditListingPage {...props} />,
       {
+        initialState: initialState(),
         config,
         routeConfiguration,
       }
@@ -389,6 +397,7 @@ describe('EditListingPage', () => {
     const { getByText, getByRole, getByLabelText, queryAllByRole } = render(
       <EditListingPage {...props} />,
       {
+        initialState: initialState(),
         config,
         routeConfiguration,
       }
@@ -514,6 +523,7 @@ describe('EditListingPage', () => {
     const { getByText, getByRole, getByLabelText, queryAllByRole } = render(
       <EditListingPage {...props} />,
       {
+        initialState: initialState(),
         config,
         routeConfiguration,
       }
@@ -2342,12 +2352,12 @@ describe('EditListingPageComponent', () => {
     render(
       <EditListingPageComponent
         params={{ id: 'id', slug: 'slug', type: 'new', tab: 'details' }}
-        currentUserHasListings={false}
         isAuthenticated={false}
         authInProgress={false}
         fetchInProgress={false}
         location={{ search: '' }}
         history={{ push: noop, replace: noop }}
+        currentUser={createCurrentUser('id-of-me-myself', { state: 'active' })}
         getAccountLinkInProgress={false}
         getOwnListing={noop}
         images={[]}
