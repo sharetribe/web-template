@@ -20,7 +20,7 @@ const createFilterOptions = options => options.map(o => ({ key: `${o.option}`, l
 const getLabel = fieldConfig => fieldConfig?.saveConfig?.label || fieldConfig?.label;
 
 const CustomFieldEnum = props => {
-  const { name, fieldConfig, defaultRequiredMessage, formId, intl } = props;
+  const { name, fieldConfig, defaultRequiredMessage, formId, intl, disabled } = props;
   const { enumOptions = [], saveConfig } = fieldConfig || {};
   const { placeholderMessage, isRequired, requiredMessage } = saveConfig || {};
   const validateMaybe = isRequired
@@ -39,6 +39,7 @@ const CustomFieldEnum = props => {
       name={name}
       id={formId ? `${formId}.${name}` : name}
       label={label}
+      disabled={disabled}
       {...validateMaybe}
     >
       <option disabled value="">
@@ -57,7 +58,7 @@ const CustomFieldEnum = props => {
 };
 
 const CustomFieldMultiEnum = props => {
-  const { name, fieldConfig, defaultRequiredMessage, formId } = props;
+  const { name, fieldConfig, defaultRequiredMessage, formId, disabled } = props;
   const { enumOptions = [], saveConfig } = fieldConfig || {};
   const { isRequired, requiredMessage } = saveConfig || {};
   const label = getLabel(fieldConfig);
@@ -72,13 +73,14 @@ const CustomFieldMultiEnum = props => {
       name={name}
       label={label}
       options={createFilterOptions(enumOptions)}
+      disabled={disabled}
       {...validateMaybe}
     />
   ) : null;
 };
 
 const CustomFieldText = props => {
-  const { name, fieldConfig, defaultRequiredMessage, formId, intl } = props;
+  const { name, fieldConfig, defaultRequiredMessage, formId, intl, disabled } = props;
   const { placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
   const label = getLabel(fieldConfig);
   const validateMaybe = isRequired
@@ -86,22 +88,34 @@ const CustomFieldText = props => {
     : {};
   const placeholder =
     placeholderMessage || intl.formatMessage({ id: 'CustomExtendedDataField.placeholderText' });
+  const fieldKey = fieldConfig.key;
+  const notTextArea = [
+    'instagramHandle',
+    'portfolioURL',
+    'linkedinHandle',
+    'tiktokHandle',
+    'youtubeHandle',
+    'vimeoHandle',
+    'twitterHandle',
+    'birthday',
+  ].includes(fieldKey);
 
   return (
     <FieldTextInput
       className={css.customField}
       id={formId ? `${formId}.${name}` : name}
       name={name}
-      type="textarea"
+      {...(notTextArea ? { type: 'text' } : { type: 'textarea' })}
       label={label}
       placeholder={placeholder}
+      disabled={disabled}
       {...validateMaybe}
     />
   );
 };
 
 const CustomFieldLong = props => {
-  const { name, fieldConfig, defaultRequiredMessage, formId, intl } = props;
+  const { name, fieldConfig, defaultRequiredMessage, formId, intl, disabled } = props;
   const { minimum, maximum, saveConfig } = fieldConfig;
   const { placeholderMessage, isRequired, requiredMessage } = saveConfig || {};
   const label = getLabel(fieldConfig);
@@ -138,12 +152,13 @@ const CustomFieldLong = props => {
       label={label}
       placeholder={placeholder}
       validate={value => validate(value, minimum, maximum)}
+      disabled={disabled}
     />
   );
 };
 
 const CustomFieldBoolean = props => {
-  const { name, fieldConfig, defaultRequiredMessage, formId, intl } = props;
+  const { name, fieldConfig, defaultRequiredMessage, formId, intl, disabled } = props;
   const { placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
   const label = getLabel(fieldConfig);
   const validateMaybe = isRequired
@@ -159,6 +174,7 @@ const CustomFieldBoolean = props => {
       name={name}
       label={label}
       placeholder={placeholder}
+      disabled={disabled}
       {...validateMaybe}
     />
   );

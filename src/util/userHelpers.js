@@ -1,4 +1,4 @@
-import { EXTENDED_DATA_SCHEMA_TYPES } from './types';
+import { EXTENDED_DATA_SCHEMA_TYPES, USER_TYPES } from './types';
 import { getFieldValue } from './fieldHelpers';
 
 /**
@@ -166,4 +166,30 @@ export const isUserAuthorized = (currentUser, permissionsToCheck) => {
   return permissionsToCheck && postListings
     ? isActive && hasPermissionToPostListings(currentUser)
     : isActive;
+};
+
+export const isStudioBrand = (userType) => {
+  return userType === USER_TYPES.BRAND;
+};
+
+export const isBuyer = (userType) => {
+  return userType === USER_TYPES.BUYER;
+};
+
+export const isCreativeSeller = (userType) => {
+  return userType === USER_TYPES.SELLER;
+};
+
+export const getBrandUserFieldInputs = (userType, isBrandAdmin, fieldKey) => {
+  const hideBrandFields = isStudioBrand(userType) && !isBrandAdmin;
+  if (!hideBrandFields) { return true }
+  switch (fieldKey) {
+    case 'brandName':
+    case 'brandWebsite':
+    case 'aboutUs':
+    case 'brandIndustry':
+      return false;
+    default:
+      return true;
+  }
 };

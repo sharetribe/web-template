@@ -703,4 +703,30 @@ export const DATE_TYPE_DATETIME = 'datetime';
 
 propTypes.dateType = oneOf([DATE_TYPE_DATE, DATE_TYPE_TIME, DATE_TYPE_DATETIME]);
 
+export const USER_TYPES = {
+  BRAND: 'studio-brand',
+  BUYER: 'buyer',
+  SELLER: 'creative-seller'
+}
+
+export const COMMUNITY_STATUS = {
+  APPLIED: 'APPLIED',
+  APPROVED: 'APPROVED',
+  WAITLISTED: 'WAITLISTED',
+}
+
+export const SELLER_STATUS = {
+  APPLIED: 'APPLIED',
+  APPROVED: 'APPROVED',
+  WAITLISTED: 'WAITLISTED',
+}
+
+export const MEMBERSHIP_TYPES = {
+  BASIC: 'BASIC',
+  CONNECT: 'CONNECT',
+  PRO: 'PRO',
+}
+
+propTypes.sellerStatus = oneOfType(SELLER_STATUS);
+
 export { propTypes };

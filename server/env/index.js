@@ -6,6 +6,8 @@
 
 const fs = require('fs');
 
+const { loadSecrets } = require('./secretManager')
+
 const NODE_ENV = process.env.NODE_ENV;
 
 if (!NODE_ENV) {
@@ -23,7 +25,8 @@ var dotenvFiles = [
   '.env',
 ].filter(Boolean);
 
-const configureEnv = () => {
+const configureEnv = async () => {
+  console.warn('\nLoading environment variables..');
   // Load environment variables from .env* files. Suppress warnings using silent
   // if this file is missing. dotenv will never modify any environment variables
   // that have already been set.
@@ -38,6 +41,10 @@ const configureEnv = () => {
       );
     }
   });
+  const secrets = await loadSecrets();
+  process.env = { ...secrets, ...process.env };
+
+  console.warn('Loading environment variables DONE\n');
 };
 
 module.exports = {

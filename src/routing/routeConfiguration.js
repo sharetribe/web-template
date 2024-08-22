@@ -18,14 +18,12 @@ const CMSPage = loadable(() => import(/* webpackChunkName: "CMSPage" */ '../cont
 const ContactDetailsPage = loadable(() => import(/* webpackChunkName: "ContactDetailsPage" */ '../containers/ContactDetailsPage/ContactDetailsPage'));
 const EditListingPage = loadable(() => import(/* webpackChunkName: "EditListingPage" */ '../containers/EditListingPage/EditListingPage'));
 const EmailVerificationPage = loadable(() => import(/* webpackChunkName: "EmailVerificationPage" */ '../containers/EmailVerificationPage/EmailVerificationPage'));
+const FavoriteListingsPage = loadable(() => import(/* webpackChunkName: "FavoriteListingsPage" */ '../containers/FavoriteListingsPage/FavoriteListingsPage'));
 const InboxPage = loadable(() => import(/* webpackChunkName: "InboxPage" */ '../containers/InboxPage/InboxPage'));
 const LandingPage = loadable(() => import(/* webpackChunkName: "LandingPage" */ '../containers/LandingPage/LandingPage'));
 const ListingPageCoverPhoto = loadable(() => import(/* webpackChunkName: "ListingPageCoverPhoto" */ /* webpackPrefetch: true */ '../containers/ListingPage/ListingPageCoverPhoto'));
 const ListingPageCarousel = loadable(() => import(/* webpackChunkName: "ListingPageCarousel" */ /* webpackPrefetch: true */ '../containers/ListingPage/ListingPageCarousel'));
 const ManageListingsPage = loadable(() => import(/* webpackChunkName: "ManageListingsPage" */ '../containers/ManageListingsPage/ManageListingsPage'));
-const PasswordChangePage = loadable(() => import(/* webpackChunkName: "PasswordChangePage" */ '../containers/PasswordChangePage/PasswordChangePage'));
-const PasswordRecoveryPage = loadable(() => import(/* webpackChunkName: "PasswordRecoveryPage" */ '../containers/PasswordRecoveryPage/PasswordRecoveryPage'));
-const PasswordResetPage = loadable(() => import(/* webpackChunkName: "PasswordResetPage" */ '../containers/PasswordResetPage/PasswordResetPage'));
 const PaymentMethodsPage = loadable(() => import(/* webpackChunkName: "PaymentMethodsPage" */ '../containers/PaymentMethodsPage/PaymentMethodsPage'));
 const PrivacyPolicyPage = loadable(() => import(/* webpackChunkName: "PrivacyPolicyPage" */ '../containers/PrivacyPolicyPage/PrivacyPolicyPage'));
 const ProfilePage = loadable(() => import(/* webpackChunkName: "ProfilePage" */ '../containers/ProfilePage/ProfilePage'));
@@ -42,7 +40,6 @@ const StyleguidePage = loadable(() => import(/* webpackChunkName: "StyleguidePag
 
 export const ACCOUNT_SETTINGS_PAGES = [
   'ContactDetailsPage',
-  'PasswordChangePage',
   'StripePayoutPage',
   'PaymentMethodsPage',
 ];
@@ -62,16 +59,16 @@ const RedirectToLandingPage = () => <NamedRedirect name="LandingPage" />;
 // Our routes are exact by default.
 // See behaviour from Routes.js where Route is created.
 const routeConfiguration = (layoutConfig, accessControlConfig) => {
-  const SearchPage = layoutConfig.searchPage?.variantType === 'map' 
-    ? SearchPageWithMap 
+  const SearchPage = layoutConfig.searchPage?.variantType === 'map'
+    ? SearchPageWithMap
     : SearchPageWithGrid;
-  const ListingPage = layoutConfig.listingPage?.variantType === 'carousel' 
-    ? ListingPageCarousel 
+  const ListingPage = layoutConfig.listingPage?.variantType === 'carousel'
+    ? ListingPageCarousel
     : ListingPageCoverPhoto;
 
   const isPrivateMarketplace = accessControlConfig?.marketplace?.private === true;
   const authForPrivateMarketplace = isPrivateMarketplace ? { auth: true } : {};
-  
+
   return [
     {
       path: '/',
@@ -155,6 +152,14 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       loadData: pageDataLoadingAPI.ListingPage.loadData,
     },
     {
+      path: '/favorites',
+      name: 'FavoriteListingsPage',
+      auth: true,
+      authPage: 'LoginPage',
+      component: FavoriteListingsPage,
+      loadData: pageDataLoadingAPI.FavoriteListingsPage.loadData,
+    },
+    {
       path: '/u',
       name: 'ProfileBasePage',
       component: RedirectToLandingPage,
@@ -204,6 +209,14 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       extraProps: { tab: 'signup' },
       loadData: pageDataLoadingAPI.AuthenticationPage.loadData,
     },
+    // Add BrandUser to an existing Brand
+    {
+      path: '/signup/:userType/:brandStudioId',
+      name: 'SignupForUserTypePage',
+      component: AuthenticationPage,
+      extraProps: { tab: 'signup' },
+      loadData: pageDataLoadingAPI.AuthenticationPage.loadData,
+    },
     {
       path: '/confirm',
       name: 'ConfirmPage',
@@ -211,11 +224,7 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       extraProps: { tab: 'confirm' },
       loadData: pageDataLoadingAPI.AuthenticationPage.loadData,
     },
-    {
-      path: '/recover-password',
-      name: 'PasswordRecoveryPage',
-      component: PasswordRecoveryPage,
-    },
+
     {
       path: '/inbox',
       name: 'InboxBasePage',
@@ -287,13 +296,6 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       authPage: 'LoginPage',
       component: ContactDetailsPage,
       loadData: pageDataLoadingAPI.ContactDetailsPage.loadData,
-    },
-    {
-      path: '/account/change-password',
-      name: 'PasswordChangePage',
-      auth: true,
-      authPage: 'LoginPage',
-      component: PasswordChangePage,
     },
     {
       path: '/account/payments',
@@ -376,11 +378,11 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
     // Do not change this path!
     //
     // The API expects that the application implements /reset-password endpoint
-    {
-      path: '/reset-password',
-      name: 'PasswordResetPage',
-      component: PasswordResetPage ,
-    },
+    // {
+    //   path: '/reset-password',
+    //   name: 'PasswordResetPage',
+    //   component: PasswordResetPage ,
+    // },
 
     // Do not change this path!
     //

@@ -114,8 +114,6 @@ import * as InquiryForm from './containers/ListingPage/InquiryForm/InquiryForm.e
 import * as ImageCarousel from './containers/ListingPage/ImageCarousel/ImageCarousel.example';
 import * as ListingImageGallery from './containers/ListingPage/ListingImageGallery/ListingImageGallery.example';
 import * as UserCard from './containers/ListingPage/UserCard/UserCard.example';
-import * as PasswordRecoveryForm from './containers/PasswordRecoveryPage/PasswordRecoveryForm/PasswordRecoveryForm.example';
-import * as PasswordResetForm from './containers/PasswordResetPage/PasswordResetForm/PasswordResetForm.example';
 import * as ManageListingCard from './containers/ManageListingsPage/ManageListingCard/ManageListingCard.example';
 import * as InboxPage from './containers/InboxPage/InboxPage.example';
 
@@ -214,8 +212,6 @@ export {
   PageBuilder,
   PaginationLinks,
   PanelHeading,
-  PasswordRecoveryForm,
-  PasswordResetForm,
   PriceFilter,
   PropertyGroup,
   RangeSlider,
