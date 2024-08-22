@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import { useConfiguration } from '../../context/configurationContext';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
-import { propTypes } from '../../util/types';
+import { propTypes, USER_TYPES } from '../../util/types';
 import { ensureCurrentUser } from '../../util/data';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 
@@ -44,16 +44,14 @@ export const ProfileSettingsPageComponent = props => {
 
   const { userFields, userTypes = [] } = config.user;
 
-  const handleSubmit = (values, userType) => {
-    const { firstName, lastName, displayName, bio: rawBio, ...rest } = values;
-
+  const handleSubmit = (values) => {
+    const { firstName, lastName, displayName, bio: rawBio, userType: initialUserType, applyAsSeller, ...rest } = values;
     const displayNameMaybe = displayName
       ? { displayName: displayName.trim() }
       : { displayName: null };
-
+    const userType = applyAsSeller ? USER_TYPES.SELLER : initialUserType.trim();
     // Ensure that the optional bio is a string
     const bio = rawBio || '';
-
     const profile = {
       firstName: firstName.trim(),
       lastName: lastName.trim(),
@@ -61,6 +59,7 @@ export const ProfileSettingsPageComponent = props => {
       bio,
       publicData: {
         ...pickUserFieldsData(rest, 'public', userType, userFields),
+        userType,
       },
       protectedData: {
         ...pickUserFieldsData(rest, 'protected', userType, userFields),
@@ -70,7 +69,6 @@ export const ProfileSettingsPageComponent = props => {
       },
     };
     const uploadedImage = props.image;
-
     // Update profileImage only if file system has been accessed
     const updatedValues =
       uploadedImage && uploadedImage.imageId && uploadedImage.file
@@ -89,13 +87,13 @@ export const ProfileSettingsPageComponent = props => {
     publicData,
     protectedData,
     privateData,
+    metadata,
   } = user?.attributes.profile;
   const { userType } = publicData || {};
   const profileImageId = user.profileImage ? user.profileImage.id : null;
   const profileImage = image || { imageId: profileImageId };
   const userTypeConfig = userTypes.find(config => config.userType === userType);
   const isDisplayNameIncluded = userTypeConfig?.defaultUserFields?.displayName !== false;
-  const preselectedUserType = userTypeConfig?.userType || null;
   // ProfileSettingsForm decides if it's allowed to show the input field.
   const displayNameMaybe = isDisplayNameIncluded && displayName ? { displayName } : {};
 
@@ -109,7 +107,8 @@ export const ProfileSettingsPageComponent = props => {
         ...displayNameMaybe,
         bio,
         profileImage: user.profileImage,
-        userType: preselectedUserType,
+        userType,
+        applyAsSeller: false,
         ...initialValuesForUserFields(publicData, 'public', userType, userFields),
         ...initialValuesForUserFields(protectedData, 'protected', userType, userFields),
         ...initialValuesForUserFields(privateData, 'private', userType, userFields),
@@ -120,10 +119,11 @@ export const ProfileSettingsPageComponent = props => {
       updateInProgress={updateInProgress}
       uploadImageError={uploadImageError}
       updateProfileError={updateProfileError}
-      onSubmit={values => handleSubmit(values, userType)}
+      onSubmit={values => handleSubmit(values)}
       marketplaceName={config.marketplaceName}
       userFields={userFields}
       userTypes={userTypes}
+      sellerStatus={metadata?.sellerStatus}
     />
   ) : null;
 

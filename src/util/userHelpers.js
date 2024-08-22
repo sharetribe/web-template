@@ -1,4 +1,4 @@
-import { EXTENDED_DATA_SCHEMA_TYPES } from './types';
+import { EXTENDED_DATA_SCHEMA_TYPES, USER_TYPES } from './types';
 import { getFieldValue } from './fieldHelpers';
 
 /**
@@ -135,7 +135,15 @@ export const getPropsForCustomUserFieldInputs = (
 };
 
 export const isStudioBrand = (userType) => {
-  return userType === 'studio-brand';
+  return userType === USER_TYPES.BRAND;
+};
+
+export const isBuyer = (userType) => {
+  return userType === USER_TYPES.BUYER;
+};
+
+export const isCreativeSeller = (userType) => {
+  return userType === USER_TYPES.SELLER;
 };
 
 export const getBrandUserFieldInputs = (userType, isBrandAdmin, fieldKey) => {
@@ -150,8 +158,4 @@ export const getBrandUserFieldInputs = (userType, isBrandAdmin, fieldKey) => {
     default:
       return true;
   }
-};
-
-export const getSelectableUserTypes = (userTypes) => {
-  return userTypes.filter((type) => !isStudioBrand(type.userType));
 };
