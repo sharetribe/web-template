@@ -31,9 +31,7 @@ export const setup = () => {
  * @param {String} userId ID of current user
  */
 export const setUserId = userId => {
-  Sentry.configureScope(scope => {
-    scope.setUser({ id: userId });
-  });
+  Sentry.setUser({ id: userId });
 };
 
 /**
@@ -41,9 +39,7 @@ export const setUserId = userId => {
  */
 
 export const clearUserId = () => {
-  Sentry.configureScope(scope => {
-    scope.setUser(null);
-  });
+  Sentry.setUser(null);
 };
 
 const printAPIErrorsAsConsoleTable = apiErrors => {
