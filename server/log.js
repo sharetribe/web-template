@@ -9,45 +9,23 @@ const Sentry = require('@sentry/node');
 const ENV = process.env.REACT_APP_ENV;
 const SENTRY_DSN = process.env.REACT_APP_SENTRY_DSN;
 
-/**
- * Set up error loggin. If a Sentry DSN is defined
- * Sentry client is configured.
- */
-exports.setup = () => {
-  if (SENTRY_DSN) {
-    // Configure the Sentry client. As is, this catches unhandled
-    // exceptions from starting the server etc. but does not catch the
-    // ones thrown from Express.js middleware functions. For those
-    // an error handler has to be added to the Express app.
-    Sentry.init({ dsn: SENTRY_DSN, environment: ENV });
-  }
-};
+// Initialize Sentry ~ the way their suggested approach using instrument.js would have done it.
+if (SENTRY_DSN) {
 
-/**
- * Returns a Sentry request handler in case
- * Sentry client is set up.
- */
-exports.requestHandler = () => {
-  if (SENTRY_DSN) {
-    return Sentry.Handlers.requestHandler();
-  } else {
-    return (req, res, next) => {
-      next();
-    };
-  }
-};
+  // Configure the Sentry client. As is, this catches unhandled
+  // exceptions from starting the server etc. but does not catch the
+  // ones thrown from Express.js middleware functions. For those
+  // an error handler has to be added to the Express app.
+  Sentry.init({ dsn: SENTRY_DSN, environment: ENV });
+}
 
 /**
  * Returns a Sentry error handler in case
  * Sentry client is set up.
  */
-exports.errorHandler = () => {
+exports.setupExpressErrorHandler = app => {
   if (SENTRY_DSN) {
-    return Sentry.Handlers.errorHandler();
-  } else {
-    return (err, req, res, next) => {
-      next(err);
-    };
+    Sentry.setupExpressErrorHandler(app);
   }
 };
 
