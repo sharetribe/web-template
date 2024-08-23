@@ -77,7 +77,8 @@ exports.handleError = (res, error) => {
     res
       .status(error.status)
       .json({
-        name: 'Local API request failed',
+        name: 'LocalAPIError',
+        message: 'Local API request failed',
         status,
         statusText,
         data,
