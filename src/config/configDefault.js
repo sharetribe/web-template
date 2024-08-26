@@ -20,7 +20,7 @@ const defaultConfig = {
   // It should match one of the currencies listed in currencySettings.js
   // Note: The currency comes from localization asset nowadays by default.
   //       To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeCurrency func)
-  currency: 'USD',
+  currency: 'ARS',
 
   // Listing minimum price in currency sub units, e.g. cents.
   // By default, always try to take the value of listingMinimumPriceSubUnits from the transaction-size.json asset.
@@ -30,10 +30,10 @@ const defaultConfig = {
   // Note 1: 0 means no restriction to the price (Currently, Console won't show it.)
   // Note 2: To use only this built-in configuration, you need to remove the overwrite from configHelper.js (mergeConfig func)
   // Note 3: Stripe does have a minimum fee that depends on country, currency, etc!
-  listingMinimumPriceSubUnits: 500,
+  listingMinimumPriceSubUnits: 0,
 
   // Marketplace name is needed for microcopy (aka marketplace texts) and in meta tags (bots and social media sharing reads those)
-  marketplaceName: process.env.REACT_APP_MARKETPLACE_NAME || 'Biketribe',
+  marketplaceName: process.env.REACT_APP_MARKETPLACE_NAME || 'Rundo',
 
   // Modify Stripe configuration in configStripe.js
   // - picks REACT_APP_STRIPE_PUBLISHABLE_KEY from environment variables
@@ -72,7 +72,7 @@ const defaultConfig = {
   // Note: The localization comes from localization asset nowadays by default.
   //       To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeLocalizations func)
   localization: {
-    locale: 'en-US',
+    locale: 'es-ES',
     // First day of week
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Locale/getWeekInfo#return_value
     // 1: Monday
@@ -115,7 +115,7 @@ const defaultConfig = {
   // Facebook page is used in SEO schema (http://schema.org/Organization)
   siteFacebookPage: null, // e.g. 'https://www.facebook.com/Sharetribe/',
   // Instagram page is used in SEO schema (http://schema.org/Organization)
-  siteInstagramPage: null, // e.g. 'https://www.instagram.com/sharetribe/',
+  siteInstagramPage: 'https://www.instagram.com/rundo.co/', // e.g. 'https://www.instagram.com/sharetribe/',
   // Twitter handle is needed in meta tags (twitter:site). Start it with '@' character
   siteTwitterHandle: null, // e.g. '@sharetribe',
 
@@ -133,9 +133,9 @@ const defaultConfig = {
   // Note: Google doesn't recognize this:
   // https://developers.google.com/search/docs/advanced/structured-data/logo#structured-data-type-definitions
   address: {
-    addressCountry: null, // 'FI',
+    addressCountry: "ARG", // 'FI',
     addressRegion: null, // 'Helsinki',
-    postalCode: null, // '00130',
+    postalCode: "8400", // '00130',
     streetAddress: null, // 'Erottajankatu 19 B',
   },
 };
