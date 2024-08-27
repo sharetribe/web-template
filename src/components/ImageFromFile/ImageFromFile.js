@@ -11,6 +11,10 @@ import css from './ImageFromFile.module.css';
 // when FileReader has loaded given file as dataURL
 const readImage = file =>
   new Promise((resolve, reject) => {
+    if (!window?.FileReader) {
+      reject(new Error(`No FileReader found from window scope.`));
+      return;
+    }
     const reader = new FileReader();
     reader.onload = e => resolve(e.target.result);
     reader.onerror = e => {

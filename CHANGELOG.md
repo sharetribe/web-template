@@ -20,6 +20,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## [v5.4.0] 2024-08-20
 
+- [change] Update Sentry (v6.19.7 -> v8.26.0). Add ignoreErrors setup, add CSP directives and avoid
+  some errors. [#441](https://github.com/sharetribe/web-template/pull/441)
 - [fix] ListingPage: the optional chaining for processType variable was faulty.
   [#443](https://github.com/sharetribe/web-template/pull/443)
 - [change] auth.duck.js: login flow should wait for currentUser entity be loaded.
