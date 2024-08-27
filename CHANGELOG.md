@@ -14,8 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
-- [change] Update one copy text.
-  [#439](https://github.com/sharetribe/web-template/pull/439)
+- [change] Updates to the configuration script. Marketplace name is now prompted in the mandatory
+  settings. [#440](https://github.com/sharetribe/web-template/pull/440)
+- [change] Update one copy text. [#439](https://github.com/sharetribe/web-template/pull/439)
 
 ## [v5.4.0] 2024-08-20
 
