@@ -20,6 +20,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## [v5.4.0] 2024-08-20
 
+- [fix] ListingPage: the optional chaining for processType variable was faulty.
+  [#443](https://github.com/sharetribe/web-template/pull/443)
 - [change] auth.duck.js: login flow should wait for currentUser entity be loaded.
   [#436](https://github.com/sharetribe/web-template/pull/436)
 - [add] Access control: private marketplace mode
