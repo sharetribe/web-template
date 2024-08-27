@@ -19,6 +19,11 @@ require('source-map-support').install();
 // Configure process.env with .env.* files
 require('./env').configureEnv();
 
+// Setup Sentry
+// Note 1: This needs to happen before other express requires
+// Note 2: this doesn't use instrument.js file but log.js
+const log = require('./log');
+
 const fs = require('fs');
 const express = require('express');
 const helmet = require('helmet');
@@ -38,7 +43,6 @@ const sitemapResourceRoute = require('./resources/sitemap');
 const { getExtractors } = require('./importer');
 const renderer = require('./renderer');
 const dataLoader = require('./dataLoader');
-const log = require('./log');
 const csp = require('./csp');
 const sdkUtils = require('./api-util/sdk');
 
@@ -57,13 +61,6 @@ const cspEnabled = CSP === 'block' || CSP === 'report';
 const app = express();
 
 const errorPage = fs.readFileSync(path.join(buildPath, '500.html'), 'utf-8');
-
-// Setup error logger
-log.setup();
-// Add logger request handler. In case Sentry is set up
-// request information is added to error context when sent
-// to Sentry.
-app.use(log.requestHandler());
 
 // The helmet middleware sets various HTTP headers to improve security.
 // See: https://www.npmjs.com/package/helmet
@@ -257,7 +254,7 @@ app.get('*', (req, res) => {
 
 // Set error handler. If Sentry is set up, all error responses
 // will be logged there.
-app.use(log.errorHandler());
+log.setupExpressErrorHandler(app);
 
 if (cspEnabled) {
   // Dig out the value of the given CSP report key from the request body.
