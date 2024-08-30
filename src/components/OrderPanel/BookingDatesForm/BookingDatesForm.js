@@ -443,13 +443,14 @@ const handleFormSpyChange = (
   const { seats, bookingDates } = formValues.values;
 
   const { startDate, endDate } = bookingDates ? bookingDates : {};
-
+  const hasHelmetFee = formValues.values?.helmetFee?.length > 0;
   if (startDate && endDate && !fetchLineItemsInProgress) {
     onFetchTransactionLineItems({
       orderData: {
         bookingStart: startDate,
         bookingEnd: endDate,
         seats: parseInt(seats, 10),
+        hasHelmetFee,
       },
       listingId,
       isOwnListing,

@@ -8,6 +8,7 @@ const {
   calculateQuantityFromDates,
   calculateQuantityFromHours,
   calculateLineTotal,
+  calculateShippingFee,
   calculateTotalFromLineItems,
   calculateTotalForProvider,
   calculateTotalForCustomer,
@@ -150,6 +151,119 @@ describe('calculateLineTotal()', () => {
     expect(() => calculateLineTotal(lineItem)).toThrowError(
       `Can't calculate the lineTotal of lineItem: ${code}. Make sure the lineItem has quantity, percentage or both seats and units`
     );
+  });
+});
+
+describe('calculateShippingFee()', () => {
+  it('should calculate shipping with quantity 1', () => {
+    const shippingPriceInSubunitsOneItem = 1000;
+    const shippingPriceInSubunitsAdditionalItems = 100;
+    const currency = 'EUR';
+    const quantity = 1;
+    const shippingFee = calculateShippingFee(
+      shippingPriceInSubunitsOneItem,
+      shippingPriceInSubunitsAdditionalItems,
+      currency,
+      quantity
+    );
+    expect(shippingFee).toEqual(new Money(1000, 'EUR'));
+  });
+
+  it('should calculate shipping with quantity 2', () => {
+    const shippingPriceInSubunitsOneItem = 1000;
+    const shippingPriceInSubunitsAdditionalItems = 100;
+    const currency = 'EUR';
+    const quantity = 2;
+    const shippingFee = calculateShippingFee(
+      shippingPriceInSubunitsOneItem,
+      shippingPriceInSubunitsAdditionalItems,
+      currency,
+      quantity
+    );
+    expect(shippingFee).toEqual(new Money(1100, 'EUR'));
+  });
+
+  it('should calculate shipping with quantity 3', () => {
+    const shippingPriceInSubunitsOneItem = 1000;
+    const shippingPriceInSubunitsAdditionalItems = 100;
+    const currency = 'EUR';
+    const quantity = 3;
+    const shippingFee = calculateShippingFee(
+      shippingPriceInSubunitsOneItem,
+      shippingPriceInSubunitsAdditionalItems,
+      currency,
+      quantity
+    );
+    expect(shippingFee).toEqual(new Money(1200, 'EUR'));
+  });
+
+  it('should calculate shipping with quantity 2 and additional fee 0', () => {
+    const shippingPriceInSubunitsOneItem = 1000;
+    const shippingPriceInSubunitsAdditionalItems = 0;
+    const currency = 'EUR';
+    const quantity = 2;
+    const shippingFee = calculateShippingFee(
+      shippingPriceInSubunitsOneItem,
+      shippingPriceInSubunitsAdditionalItems,
+      currency,
+      quantity
+    );
+    expect(shippingFee).toEqual(new Money(1000, 'EUR'));
+  });
+
+  it('should calculate shipping with quantity 2, base fee 0, and additional fee 0', () => {
+    const shippingPriceInSubunitsOneItem = 0;
+    const shippingPriceInSubunitsAdditionalItems = 0;
+    const currency = 'EUR';
+    const quantity = 2;
+    const shippingFee = calculateShippingFee(
+      shippingPriceInSubunitsOneItem,
+      shippingPriceInSubunitsAdditionalItems,
+      currency,
+      quantity
+    );
+    expect(shippingFee).toEqual(new Money(0, 'EUR'));
+  });
+  it('should calculate shipping with quantity 2, base fee 0, and additional fee 100', () => {
+    const shippingPriceInSubunitsOneItem = 0;
+    const shippingPriceInSubunitsAdditionalItems = 100;
+    const currency = 'EUR';
+    const quantity = 2;
+    const shippingFee = calculateShippingFee(
+      shippingPriceInSubunitsOneItem,
+      shippingPriceInSubunitsAdditionalItems,
+      currency,
+      quantity
+    );
+    expect(shippingFee).toEqual(new Money(100, 'EUR'));
+  });
+
+  it('should calculate shipping with quantity 1, negative fee', () => {
+    const shippingPriceInSubunitsOneItem = -1000;
+    const shippingPriceInSubunitsAdditionalItems = -100;
+    const currency = 'EUR';
+    const quantity = 1;
+    const shippingFee = calculateShippingFee(
+      shippingPriceInSubunitsOneItem,
+      shippingPriceInSubunitsAdditionalItems,
+      currency,
+      quantity
+    );
+    expect(shippingFee).toEqual(null);
+  });
+
+  it('should calculate shipping with quantity 2, negative fees', () => {
+    const shippingPriceInSubunitsOneItem = -1000;
+    const shippingPriceInSubunitsAdditionalItems = -100;
+    const currency = 'EUR';
+    const quantity = 2;
+    const shippingFee = calculateShippingFee(
+      shippingPriceInSubunitsOneItem,
+      shippingPriceInSubunitsAdditionalItems,
+      currency,
+      quantity
+    );
+    expect(shippingFee).toEqual(null);
   });
 });
 

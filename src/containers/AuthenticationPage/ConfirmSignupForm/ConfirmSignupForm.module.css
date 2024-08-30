@@ -10,6 +10,9 @@
   }
 }
 
+.defaultUserFields {
+}
+
 .name {
   display: flex;
   justify-content: space-between;
@@ -34,4 +37,13 @@
 
 .bottomWrapper {
   composes: marketplaceModalBottomWrapper from global;
+}
+
+.row,
+.customFields {
+  margin-top: 24px;
+
+  @media (--viewportMedium) {
+    margin-top: 32px;
+  }
 }

@@ -10,9 +10,21 @@
   }
 }
 
+.defaultUserFields {
+}
+
 .name {
   display: flex;
   justify-content: space-between;
+  margin-top: 24px;
+
+  @media (--viewportMedium) {
+    margin-top: 32px;
+  }
+}
+
+.row,
+.customFields {
   margin-top: 24px;
 
   @media (--viewportMedium) {
@@ -34,12 +46,4 @@
 
 .bottomWrapper {
   composes: marketplaceModalBottomWrapper from global;
-}
-
-.phone {
-  margin-top: 24px;
-
-  @media (--viewportMedium) {
-    margin-top: 32px;
-  }
 }

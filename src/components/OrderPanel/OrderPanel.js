@@ -196,6 +196,7 @@ const OrderPanel = props => {
     fetchLineItemsError,
     onToggleFavorites,
     currentUser,
+    payoutDetailsWarning,
   } = props;
 
   const publicData = listing?.attributes?.publicData || {};

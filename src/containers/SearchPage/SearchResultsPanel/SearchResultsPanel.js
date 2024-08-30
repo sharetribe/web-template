@@ -70,7 +70,7 @@ const SearchResultsPanel = props => {
       console.error('Meta Pixel no está definido');
     }
   };
-
+ 
   return (
     <div className={classes}>
       <div className={classNames(css.stickyButtonContainer)}>

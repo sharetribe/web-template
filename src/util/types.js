@@ -125,7 +125,7 @@ propTypes.imageAsset = shape({
 });
 
 // Denormalised user object
-propTypes.currentUser = shape({
+const currentUser = shape({
   id: propTypes.uuid.isRequired,
   type: propTypes.value('currentUser').isRequired,
   attributes: shape({
@@ -143,6 +143,21 @@ propTypes.currentUser = shape({
   }),
   profileImage: propTypes.image,
 });
+const currentUserBanned = shape({
+  id: propTypes.uuid.isRequired,
+  type: propTypes.value('currentUser').isRequired,
+  attributes: shape({
+    banned: propTypes.value(true).isRequired,
+  }),
+});
+const currentUserDeleted = shape({
+  id: propTypes.uuid.isRequired,
+  type: propTypes.value('currentUser').isRequired,
+  attributes: shape({
+    deleted: propTypes.value(true).isRequired,
+  }),
+});
+propTypes.currentUser = oneOfType([currentUser, currentUserBanned, currentUserDeleted]);
 
 const userAttributes = shape({
   banned: propTypes.value(false).isRequired,
@@ -309,6 +324,18 @@ propTypes.availabilityException = shape({
   }),
 });
 
+export const STOCK_ONE_ITEM = 'oneItem';
+export const STOCK_MULTIPLE_ITEMS = 'multipleItems';
+export const STOCK_INFINITE_ONE_ITEM = 'infiniteOneItem';
+export const STOCK_INFINITE_MULTIPLE_ITEMS = 'infiniteMultipleItems';
+export const STOCK_INFINITE_ITEMS = [STOCK_INFINITE_ONE_ITEM, STOCK_INFINITE_MULTIPLE_ITEMS];
+export const STOCK_TYPES = [
+  STOCK_ONE_ITEM,
+  STOCK_MULTIPLE_ITEMS,
+  STOCK_INFINITE_ONE_ITEM,
+  STOCK_INFINITE_MULTIPLE_ITEMS,
+];
+
 propTypes.transition = shape({
   createdAt: instanceOf(Date).isRequired,
   by: oneOf(TX_TRANSITION_ACTORS).isRequired,
@@ -472,37 +499,106 @@ propTypes.defaultFiltersConfig = arrayOf(
     step: number,
   }).isRequired
 );
+
 // Extended data config
-propTypes.listingFieldsConfig = arrayOf(
+propTypes.userType = shape({
+  userType: string.isRequired,
+  label: string.isRequired,
+  defaultUserFields: shape({
+    displayName: bool,
+    phoneNumber: bool,
+  }),
+  displayNameSettings: shape({
+    displayInSignUp: bool,
+    required: bool,
+  }),
+  phoneNumberSettings: shape({
+    displayInSignUp: bool,
+    required: bool,
+  }),
+});
+propTypes.userTypes = arrayOf(propTypes.userType);
+
+propTypes.fieldEnumOptions = arrayOf(
   shape({
-    key: string.isRequired,
-    scope: string,
-    includeForListingTypes: arrayOf(string),
-    schemaType: oneOf(EXTENDED_DATA_SCHEMA_TYPES).isRequired,
-    enumOptions: arrayOf(
-      shape({
-        option: oneOfType([string, number]).isRequired,
-        label: string.isRequired,
-      })
-    ),
-    filterConfig: shape({
-      indexForSearch: bool,
-      label: string.isRequired,
-      group: oneOf(['primary', 'secondary']),
-      filterType: string,
-    }),
-    showConfig: shape({
-      label: string.isRequired,
-      isDetail: bool,
-    }),
-    saveConfig: shape({
-      label: string.isRequired,
-      placeholderMessage: string,
-      isRequired: bool,
-      requiredMessage: string,
-    }).isRequired,
+    option: oneOfType([string, number]).isRequired,
+    label: string.isRequired,
   })
 );
+
+propTypes.userField = shape({
+  key: string.isRequired,
+  scope: string,
+  schemaType: oneOf(EXTENDED_DATA_SCHEMA_TYPES).isRequired,
+  enumOptions: propTypes.fieldEnumOptions,
+  showConfig: shape({
+    label: string.isRequired,
+    displayInProfile: bool,
+  }),
+  saveConfig: shape({
+    label: string.isRequired,
+    placeholderMessage: string,
+    isRequired: bool,
+    requiredMessage: string,
+    displayInSignUp: bool,
+  }).isRequired,
+  userTypeConfig: shape({
+    limitToUserTypeIds: bool.isRequired,
+    userTypeIds: arrayOf(string),
+  }),
+});
+propTypes.userFields = arrayOf(propTypes.userField);
+
+propTypes.listingType = shape({
+  listingType: string.isRequired,
+  label: string.isRequired,
+  transactionType: shape({
+    process: string.isRequired,
+    alias: string.isRequired,
+    unitType: string.isRequired,
+  }).isRequired,
+  defaultListingFields: shape({
+    price: bool,
+    location: bool,
+    payoutDetails: bool,
+    shipping: bool,
+    pickup: bool,
+  }),
+});
+propTypes.listingTypes = arrayOf(propTypes.userType);
+
+propTypes.listingField = shape({
+  key: string.isRequired,
+  scope: string,
+  schemaType: oneOf(EXTENDED_DATA_SCHEMA_TYPES).isRequired,
+  enumOptions: propTypes.fieldEnumOptions,
+  filterConfig: shape({
+    indexForSearch: bool,
+    label: string.isRequired,
+    group: oneOf(['primary', 'secondary']),
+    filterType: string,
+  }),
+  showConfig: shape({
+    label: string.isRequired,
+    isDetail: bool,
+  }),
+  saveConfig: shape({
+    label: string.isRequired,
+    placeholderMessage: string,
+    isRequired: bool,
+    requiredMessage: string,
+  }).isRequired,
+  listingTypeConfig: shape({
+    limitToListingTypeIds: bool.isRequired,
+    listingTypeIds: arrayOf(string),
+  }),
+  categoryConfig: shape({
+    limitToCategoryIds: bool.isRequired,
+    categoryIds: arrayOf(string),
+  }),
+});
+
+propTypes.listingFields = arrayOf(propTypes.listingField);
 
 const sortConfigOptionWithLabel = shape({
   key: oneOf(['createdAt', '-createdAt', 'price', '-price', 'relevance']).isRequired,
@@ -547,6 +643,9 @@ export const ERROR_CODE_NOT_FOUND = 'not-found';
 export const ERROR_CODE_FORBIDDEN = 'forbidden';
 export const ERROR_CODE_MISSING_STRIPE_ACCOUNT = 'transaction-missing-stripe-account';
 export const ERROR_CODE_STOCK_OLD_TOTAL_MISMATCH = 'old-total-mismatch';
+export const ERROR_CODE_PERMISSION_DENIED_POST_LISTINGS = 'permission-denied-post-listings';
+export const ERROR_CODE_PERMISSION_DENIED_PENDING_APPROVAL = 'permission-denied-pending-approval';
+export const ERROR_CODE_USER_PENDING_APPROVAL = 'user-pending-approval';
 
 const ERROR_CODES = [
   ERROR_CODE_TRANSACTION_LISTING_NOT_FOUND,
@@ -566,6 +665,9 @@ const ERROR_CODES = [
   ERROR_CODE_FORBIDDEN,
   ERROR_CODE_MISSING_STRIPE_ACCOUNT,
   ERROR_CODE_STOCK_OLD_TOTAL_MISMATCH,
+  ERROR_CODE_PERMISSION_DENIED_POST_LISTINGS,
+  ERROR_CODE_PERMISSION_DENIED_PENDING_APPROVAL,
+  ERROR_CODE_USER_PENDING_APPROVAL,
 ];
 
 // API error
