@@ -215,7 +215,7 @@ const SignupFormComponent = props => (
 
           <div className={css.bottomWrapper}>
             {termsAndConditions}
-            <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
+            <PrimaryButton onClick={handleFormSubmit} type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
               <FormattedMessage id="SignupForm.signUp" />
             </PrimaryButton>
           </div>
