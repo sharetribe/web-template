@@ -56,18 +56,6 @@ const SignupFormComponent = props => (
         })
       );
 
-      // phone number
-      const phoneLabel = intl.formatMessage({
-        id: 'SignupForm.phoneLabel',
-      });
-      const phonePlaceholder = intl.formatMessage({
-        id: 'SignupForm.phonePlaceholder',
-      });
-      const phoneRequiredMessage = intl.formatMessage({
-        id: 'SignupForm.phoneRequired',
-      });
-      const phoneRequired = validators.required(phoneRequiredMessage);
-
       // password
       const passwordRequiredMessage = intl.formatMessage({
         id: 'SignupForm.passwordRequired',
@@ -227,7 +215,7 @@ const SignupFormComponent = props => (
 
           <div className={css.bottomWrapper}>
             {termsAndConditions}
-            <PrimaryButton onClick={handleFormSubmit} type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
+            <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
               <FormattedMessage id="SignupForm.signUp" />
             </PrimaryButton>
           </div>
@@ -252,8 +240,8 @@ SignupFormComponent.propTypes = {
   inProgress: bool,
   termsAndConditions: node.isRequired,
   preselectedUserType: string,
-  userTypes: propTypes.userTypes,
-  userFields: propTypes.listingFields,
+  userTypes: propTypes.userTypes.isRequired,
+  userFields: propTypes.listingFields.isRequired,
 
   // from injectIntl
   intl: intlShape.isRequired,
