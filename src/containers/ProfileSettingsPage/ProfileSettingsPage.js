@@ -6,7 +6,13 @@ import { connect } from 'react-redux';
 import { useConfiguration } from '../../context/configurationContext';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
+import { PROFILE_PAGE_PENDING_APPROVAL_VARIANT } from '../../util/urlHelpers';
 import { ensureCurrentUser } from '../../util/data';
+import {
+  initialValuesForUserFields,
+  isUserAuthorized,
+  pickUserFieldsData,
+} from '../../util/userHelpers';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 
 import { H3, Page, UserNav, NamedLink, LayoutSingleColumn } from '../../components';
@@ -26,6 +32,23 @@ const onImageUploadHandler = (values, fn) => {
   }
 };
 
+const ViewProfileLink = props => {
+  const { userUUID, isUnauthorizedUser } = props;
+  return userUUID && isUnauthorizedUser ? (
+    <NamedLink
+      className={css.profileLink}
+      name="ProfilePageVariant"
+      params={{ id: userUUID, variant: PROFILE_PAGE_PENDING_APPROVAL_VARIANT }}
+    >
+      <FormattedMessage id="ProfileSettingsPage.viewProfileLink" />
+    </NamedLink>
+  ) : userUUID ? (
+    <NamedLink className={css.profileLink} name="ProfilePage" params={{ id: userUUID }}>
+      <FormattedMessage id="ProfileSettingsPage.viewProfileLink" />
+    </NamedLink>
+  ) : null;
+};
+
 export const ProfileSettingsPageComponent = props => {
   const config = useConfiguration();
   const {
@@ -41,8 +64,14 @@ export const ProfileSettingsPageComponent = props => {
     intl,
   } = props;
 
-  const handleSubmit = values => {
-    const { firstName, lastName, bio: rawBio } = values;
+  const { userFields, userTypes = [] } = config.user;
+
+  const handleSubmit = (values, userType) => {
+    const { firstName, lastName, displayName, bio: rawBio, ...rest } = values;
+
+    const displayNameMaybe = displayName
+      ? { displayName: displayName.trim() }
+      : { displayName: null };
 
     // Ensure that the optional bio is a string
     const bio = rawBio || '';
@@ -50,7 +79,17 @@ export const ProfileSettingsPageComponent = props => {
     const profile = {
       firstName: firstName.trim(),
       lastName: lastName.trim(),
+      ...displayNameMaybe,
       bio,
+      publicData: {
+        ...pickUserFieldsData(rest, 'public', userType, userFields),
+      },
+      protectedData: {
+        ...pickUserFieldsData(rest, 'protected', userType, userFields),
+      },
+      privateData: {
+        ...pickUserFieldsData(rest, 'private', userType, userFields),
+      },
     };
     const uploadedImage = props.image;
 
@@ -64,23 +103,50 @@ export const ProfileSettingsPageComponent = props => {
   };
 
   const user = ensureCurrentUser(currentUser);
-  const { firstName, lastName, bio } = user.attributes.profile;
+  const {
+    firstName,
+    lastName,
+    displayName,
+    bio,
+    publicData,
+    protectedData,
+    privateData,
+  } = user?.attributes.profile;
+  // I.e. the status is active, not pending-approval or banned
+  const isUnauthorizedUser = currentUser && !isUserAuthorized(currentUser);
+
+  const { userType } = publicData || {};
   const profileImageId = user.profileImage ? user.profileImage.id : null;
   const profileImage = image || { imageId: profileImageId };
+  const userTypeConfig = userTypes.find(config => config.userType === userType);
+  const isDisplayNameIncluded = userTypeConfig?.defaultUserFields?.displayName !== false;
+  // ProfileSettingsForm decides if it's allowed to show the input field.
+  const displayNameMaybe = isDisplayNameIncluded && displayName ? { displayName } : {};
 
   const profileSettingsForm = user.id ? (
     <ProfileSettingsForm
       className={css.form}
       currentUser={currentUser}
-      initialValues={{ firstName, lastName, bio, profileImage: user.profileImage }}
+      initialValues={{
+        firstName,
+        lastName,
+        ...displayNameMaybe,
+        bio,
+        profileImage: user.profileImage,
+        ...initialValuesForUserFields(publicData, 'public', userType, userFields),
+        ...initialValuesForUserFields(protectedData, 'protected', userType, userFields),
+        ...initialValuesForUserFields(privateData, 'private', userType, userFields),
+      }}
       profileImage={profileImage}
       onImageUpload={e => onImageUploadHandler(e, onImageUpload)}
       uploadInProgress={uploadInProgress}
       updateInProgress={updateInProgress}
       uploadImageError={uploadImageError}
       updateProfileError={updateProfileError}
-      onSubmit={handleSubmit}
+      onSubmit={values => handleSubmit(values, userType)}
       marketplaceName={config.marketplaceName}
+      userFields={userFields}
+      userTypeConfig={userTypeConfig}
     />
   ) : null;
 
@@ -91,7 +157,7 @@ export const ProfileSettingsPageComponent = props => {
       <LayoutSingleColumn
         topbar={
           <>
-            <TopbarContainer currentPage="ProfileSettingsPage" />
+            <TopbarContainer />
             <UserNav currentPage="ProfileSettingsPage" />
           </>
         }
@@ -102,15 +168,8 @@ export const ProfileSettingsPageComponent = props => {
             <H3 as="h1" className={css.heading}>
               <FormattedMessage id="ProfileSettingsPage.heading" />
             </H3>
-            {user.id ? (
-              <NamedLink
-                className={css.profileLink}
-                name="ProfilePage"
-                params={{ id: user.id.uuid }}
-              >
-                <FormattedMessage id="ProfileSettingsPage.viewProfileLink" />
-              </NamedLink>
-            ) : null}
+
+            <ViewProfileLink userUUID={user?.id?.uuid} isUnauthorizedUser={isUnauthorizedUser} />
           </div>
           {profileSettingsForm}
         </div>
