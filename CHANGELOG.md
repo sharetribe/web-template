@@ -18,6 +18,8 @@ way to update this template, but currently, we follow a pattern:
 - [change] Updates to the configuration script. Marketplace name is now prompted in the mandatory
   settings. [#440](https://github.com/sharetribe/web-template/pull/440)
 - [change] Update one copy text. [#439](https://github.com/sharetribe/web-template/pull/439)
+- [add] Add currently available translations for DE, ES, FR.
+  [#445](https://github.com/sharetribe/web-template/pull/445)
 
 ## [v5.4.0] 2024-08-20
 
