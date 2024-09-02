@@ -36,7 +36,7 @@ BlockSocialMediaLink.defaultProps = {
 };
 
 BlockSocialMediaLink.propTypes = {
-  blockId: string.isRequired,
+  blockId: string,
   className: string,
   rootClassName: string,
   link: propTypeLink,
