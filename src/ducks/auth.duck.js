@@ -1,7 +1,8 @@
-import * as log from '../util/log';
-import { storableError } from '../util/errors';
+import isEmpty from 'lodash/isEmpty';
 import { clearCurrentUser, fetchCurrentUser } from './user.duck';
 import { createUserWithIdp } from '../util/api';
+import { storableError } from '../util/errors';
+import * as log from '../util/log';
 
 const authenticated = authInfo => authInfo?.isAnonymous === false;
 const loggedInAs = authInfo => authInfo?.isLoggedInAs === true;
@@ -181,6 +182,7 @@ export const login = (username, password) => (dispatch, getState, sdk) => {
     .login({ username, password })
     .then(() => dispatch(fetchCurrentUser({ afterLogin: true })))
     .then(() => dispatch(loginSuccess()))
+    .then(() => dispatch(fetchCurrentUser()))
     .catch(e => dispatch(loginError(storableError(e))));
 };
 
@@ -209,7 +211,11 @@ export const signup = params => (dispatch, getState, sdk) => {
     return Promise.reject(new Error('Login or logout already in progress'));
   }
   dispatch(signupRequest());
-  // Note: params are already structured on AuthenticationPage (handleSubmitSignup)
+  const { email, password, firstName, lastName, ...rest } = params;
+
+  const createUserParams = isEmpty(rest)
+    ? { email, password, firstName, lastName }
+    : { email, password, firstName, lastName, protectedData: { ...rest } };
 
   // We must login the user if signup succeeds since the API doesn't
   // do that automatically.
