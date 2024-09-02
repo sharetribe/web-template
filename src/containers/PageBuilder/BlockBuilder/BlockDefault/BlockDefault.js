@@ -73,7 +73,7 @@ BlockDefault.defaultProps = {
 };
 
 BlockDefault.propTypes = {
-  blockId: string.isRequired,
+  blockId: string,
   className: string,
   rootClassName: string,
   mediaClassName: string,
