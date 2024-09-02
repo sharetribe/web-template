@@ -14,6 +14,7 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [change] Make the propType blockId optional for all Block types. [#444](https://github.com/sharetribe/web-template/pull/444)
 - [change] Updates to the configuration script. Marketplace name is now prompted in the mandatory
   settings. [#440](https://github.com/sharetribe/web-template/pull/440)
 - [change] Update one copy text. [#439](https://github.com/sharetribe/web-template/pull/439)
