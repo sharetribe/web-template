@@ -224,6 +224,7 @@ export const AuthenticationForms = props => {
     };
 
     submitSignup(params);
+    console.log('params', JSON.stringify(params, null, 2)); 
   };
 
   const loginErrorMessage = (

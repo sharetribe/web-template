@@ -1,7 +1,7 @@
 // This file deals with Marketplace API which will create Stripe Custom Connect accounts
 // from given bank_account tokens.
-import { storableError } from '../util/errors';
 import * as log from '../util/log';
+import { storableError } from '../util/errors';
 
 // ================ Action types ================ //
 
@@ -276,12 +276,17 @@ export const getStripeConnectAccountLink = params => (dispatch, getState, sdk) =
   const { failureURL, successURL, type } = params;
   dispatch(getAccountLinkRequest());
 
+  // Read more from collection_options and verification updates from Stripe's Docs:
+  // https://docs.stripe.com/connect/handle-verification-updates
   return sdk.stripeAccountLinks
     .create({
       failureURL,
       successURL,
       type,
-      collect: 'currently_due',
+      collectionOptions: {
+        fields: 'currently_due',
+        future_requirements: 'include',
+      },
     })
     .then(response => {
       // Return the account link
