@@ -39,6 +39,29 @@ export const priceData = (price, marketplaceCurrency, intl) => {
 };
 
 /**
+ * Converts Money object to number, which is needed for the search schema (for Google etc.)
+ *
+ * @param {Money} price
+ * @returns {Money|null}
+ */
+export const priceForSchemaMaybe = (price, intl) => {
+  try {
+    const schemaPrice = convertMoneyToNumber(price);
+    return schemaPrice
+      ? {
+          price: intl.formatNumber(schemaPrice, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }),
+          priceCurrency: price.currency,
+        }
+      : {};
+  } catch (e) {
+    return {};
+  }
+};
+
+/**
  * Get category's label.
  *
  * @param {Array} categories array of category objects (key & label)
