@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] Currencies that the Stripe does not support should not cause 500 errors.
+  [#447](https://github.com/sharetribe/web-template/pull/447)
+
 ## [v5.5.0] 2024-09-03
 
 - [add] Add currently available translations for DE, ES, FR.
