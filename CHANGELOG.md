@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] EditListingDetailsPanel: fix 0 as value of listing fields.
+  [#448](https://github.com/sharetribe/web-template/pull/448)
 - [fix] Currencies that the Stripe does not support should not cause 500 errors.
   [#447](https://github.com/sharetribe/web-template/pull/447)
 
