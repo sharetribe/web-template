@@ -139,6 +139,7 @@ export const handleContactUser = parameters => () => {
  */
 export const handleSubmitInquiry = parameters => values => {
   const { history, params, getListing, onSendInquiry, routes, setInquiryModalOpen } = parameters;
+
   const listingId = new UUID(params.id);
   const listing = getListing(listingId);
   const { message } = values;
