@@ -4,13 +4,16 @@ import { formatMoney } from '../../../../util/currency';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
 import { injectIntl, intlShape } from '../../../../util/reactIntl';
 import css from './PriceBreakdown.module.css';
+//import defaultConfig from '../../../../config/configDefault';
+import LineItemProviderCommissionMaybe from '../../../../components/OrderBreakdown/LineItemProviderCommissionMaybe';
 
 const { Money } = sdkTypes;
 
 const PriceBreakdownComponent = ({ price, currencyConfig, intl }) => {
-  console.log('PriceBreakdown rendered with price:', price);
-  console.log('Price type:', typeof price);
-
+  //console.log('PriceBreakdown rendered with price:', price);
+  //console.log('config:', defaultConfig);
+  console.log('LineItemProviderCommissionMaybe:', LineItemProviderCommissionMaybe.providerCommissionLineItem);
+  
   if (typeof price !== 'number' || isNaN(price)) {
     return (
       <div className={css.root}>
@@ -20,9 +23,10 @@ const PriceBreakdownComponent = ({ price, currencyConfig, intl }) => {
     );
   }
 
+  const feePercentage = 5;
   const priceInCents = Math.round(price * 100);
   const priceAsMoney = new Money(priceInCents, currencyConfig.currency);
-  const fees = new Money(Math.round(priceInCents * 0.05), currencyConfig.currency); // 5% fees
+  const fees = new Money(Math.round(priceInCents * (feePercentage/100) ), currencyConfig.currency);
   const sellerReceives = new Money(priceInCents - fees.amount, currencyConfig.currency);
 
   const formatMoneyWithIntl = (money) => {
@@ -31,7 +35,7 @@ const PriceBreakdownComponent = ({ price, currencyConfig, intl }) => {
     } catch (error) {
       console.error('Error formatting money:', error);
       return 'N/A';
-    }
+    } 
   };
 
   return (
@@ -42,7 +46,7 @@ const PriceBreakdownComponent = ({ price, currencyConfig, intl }) => {
         <span>{formatMoneyWithIntl(priceAsMoney)}</span>
       </div>
       <div className={css.row}>
-        <span>Processing Fees (5%):</span>
+        <span>Processing Fees ({feePercentage}%):</span>
         <span>{formatMoneyWithIntl(fees)}</span>
       </div>
       <div className={css.row}>
