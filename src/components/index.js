@@ -103,10 +103,10 @@ export { default as StripeBankAccountTokenInputField } from './StripeBankAccount
 // Fields wrapping react-dates
 // NOTE: these are code-splitted since the library is heavy and needed only on couple of pages
 export const FieldDateInput = loadable(() => import(/* webpackChunkName: "FieldDateInput" */ './FieldDateInput/FieldDateInput'));
-export const FieldDateRangeController = loadable(() => import(/* webpackChunkName: "FieldDateRangeController" */ './FieldDateRangeController/FieldDateRangeController'));
 export const FieldDateRangeInput = loadable(() => import(/* webpackChunkName: "FieldDateRangeInput" */ './FieldDateRangeInput/FieldDateRangeInput'));
 export { default as FieldDateRangePicker } from './DatePicker/FieldDateRangePicker/FieldDateRangePicker';
 export { default as FieldSingleDatePicker } from './DatePicker/FieldSingleDatePicker/FieldSingleDatePicker';
+export { default as FieldDateRangeController } from './DatePicker/FieldDateRangeController/FieldDateRangeController';
 
 // Tab navigation
 export { default as TabNav } from './TabNav/TabNav';
