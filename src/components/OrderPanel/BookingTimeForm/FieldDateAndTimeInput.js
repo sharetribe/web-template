@@ -17,14 +17,13 @@ import {
   formatDateIntoPartials,
   monthIdString,
   getStartOf,
-  initialVisibleMonth,
   parseDateFromISO8601,
   stringifyDateToISO8601,
 } from '../../../util/dates';
 import { propTypes } from '../../../util/types';
 import { timeSlotsPerDate } from '../../../util/generators';
 import { bookingDateRequired } from '../../../util/validators';
-import { FieldDateInput, FieldSelect, IconArrowHead } from '../../../components';
+import { FieldSingleDatePicker, FieldSelect } from '../../../components';
 
 import css from './FieldDateAndTimeInput.module.css';
 
@@ -38,10 +37,10 @@ import css from './FieldDateAndTimeInput.module.css';
 
 const TODAY = new Date();
 
-const nextMonthFn = (currentMoment, timeZone) =>
-  getStartOf(currentMoment, 'month', timeZone, 1, 'months');
-const prevMonthFn = (currentMoment, timeZone) =>
-  getStartOf(currentMoment, 'month', timeZone, -1, 'months');
+const nextMonthFn = (currentMoment, timeZone, offset = 1) =>
+  getStartOf(currentMoment, 'month', timeZone, offset, 'months');
+const prevMonthFn = (currentMoment, timeZone, offset = 1) =>
+  getStartOf(currentMoment, 'month', timeZone, -1 * offset, 'months');
 
 const endOfRange = (date, dayCountAvailableForBooking, timeZone) => {
   return getStartOf(date, 'day', timeZone, dayCountAvailableForBooking - 1, 'days');
@@ -268,32 +267,19 @@ const getTimeSlotsOnDate = (monthlyTimeSlots, date, timeZone) => {
   return timeSlotsData[startIdString]?.timeSlots || [];
 };
 
-// IconArrowHead component might not be defined if exposed directly to the file.
-// This component is called before IconArrowHead component in components/index.js
-const PrevIcon = props => (
-  <IconArrowHead {...props} direction="left" rootClassName={css.arrowIcon} />
-);
-const NextIcon = props => (
-  <IconArrowHead {...props} direction="right" rootClassName={css.arrowIcon} />
-);
-
-const Next = props => {
-  const { currentMonth, dayCountAvailableForBooking, timeZone } = props;
+const showNextMonthStepper = (currentMonth, dayCountAvailableForBooking, timeZone) => {
   const nextMonthDate = nextMonthFn(currentMonth, timeZone);
 
-  return isDateSameOrAfter(
+  return !isDateSameOrAfter(
     nextMonthDate,
     endOfRange(TODAY, dayCountAvailableForBooking, timeZone)
-  ) ? null : (
-    <NextIcon />
   );
 };
-const Prev = props => {
-  const { currentMonth, timeZone } = props;
+
+const showPreviousMonthStepper = (currentMonth, timeZone) => {
   const prevMonthDate = prevMonthFn(currentMonth, timeZone);
   const currentMonthDate = getStartOf(TODAY, 'month', timeZone);
-
-  return isDateSameOrAfter(prevMonthDate, currentMonthDate) ? <PrevIcon /> : null;
+  return isDateSameOrAfter(prevMonthDate, currentMonthDate);
 };
 
 const fetchMonthData = (
@@ -324,12 +310,10 @@ const fetchMonthData = (
 const handleMonthClick = (
   currentMonth,
   monthlyTimeSlots,
-  fetchMonthData,
   dayCountAvailableForBooking,
   timeZone,
   listingId,
-  onFetchTimeSlots,
-  setCurrentMonth
+  onFetchTimeSlots
 ) => monthFn => {
   // Callback function after month has been updated.
   // react-dates component has next and previous months ready (but inivisible).
@@ -354,8 +338,6 @@ const handleMonthClick = (
       onFetchTimeSlots
     );
   }
-  // TODO
-  setCurrentMonth(monthFn(currentMonth, timeZone, 1));
 };
 
 const onBookingStartDateChange = (props, setCurrentMonth) => value => {
@@ -460,32 +442,6 @@ const FieldDateAndTimeInput = props => {
 
   const [currentMonth, setCurrentMonth] = useState(getStartOf(TODAY, 'month', timeZone));
 
-  // onMonthClick(monthFn) {
-  //   const { onMonthChanged, timeZone } = this.props;
-
-  //   this.setState(
-  //     prevState => ({ currentMonth: monthFn(prevState.currentMonth, timeZone) }),
-  //     () => {
-  //       // Callback function after month has been updated.
-  //       // react-dates component has next and previous months ready (but inivisible).
-  //       // we try to populate those invisible months before user advances there.
-  //       this.fetchMonthData(monthFn(this.state.currentMonth, timeZone));
-
-  //       // If previous fetch for month data failed, try again.
-  //       const monthId = monthIdString(this.state.currentMonth, timeZone);
-  //       const currentMonthData = this.props.monthlyTimeSlots[monthId];
-  //       if (currentMonthData && currentMonthData.fetchTimeSlotsError) {
-  //         this.fetchMonthData(this.state.currentMonth);
-  //       }
-
-  //       // Call onMonthChanged function if it has been passed in among props.
-  //       if (onMonthChanged) {
-  //         onMonthChanged(monthId);
-  //       }
-  //     }
-  //   );
-  // }
-
   const allTimeSlots = getAllTimeSlots(monthlyTimeSlots);
   const monthId = monthIdString(currentMonth);
   const currentMonthInProgress = monthlyTimeSlots[monthId]?.fetchTimeSlotsInProgress;
@@ -572,13 +528,25 @@ const FieldDateAndTimeInput = props => {
   const onMonthClick = handleMonthClick(
     currentMonth,
     monthlyTimeSlots,
-    fetchMonthData,
     dayCountAvailableForBooking,
     timeZone,
     listingId,
-    onFetchTimeSlots,
-    setCurrentMonth
+    onFetchTimeSlots
   );
+
+  const endOfAvailableRange = dayCountAvailableForBooking;
+  const endOfAvailableRangeDate = getStartOf(TODAY, 'day', timeZone, endOfAvailableRange, 'days');
+  const startOfAvailableRangeDate = getStartOf(TODAY, 'day', timeZone);
+
+  const isOutsideRange = day => {
+    const timeOfDay = timeOfDayFromLocalToTimeZone(day, timeZone);
+    const dayInListingTZ = getStartOf(timeOfDay, 'day', timeZone);
+
+    return (
+      !isDateSameOrAfter(dayInListingTZ, startOfAvailableRangeDate) ||
+      !isDateSameOrAfter(endOfAvailableRangeDate, dayInListingTZ)
+    );
+  };
 
   const isDayBlocked = day => {
     const dateIdString = stringifyDateToISO8601(day, timeZone);
@@ -600,8 +568,10 @@ const FieldDateAndTimeInput = props => {
     <div className={classes}>
       <div className={css.formRow}>
         <div className={classNames(css.field, css.startDate)}>
-          <FieldDateInput
-            className={css.fieldDateInput}
+          <FieldSingleDatePicker
+            className={css.fieldDatePicker}
+            inputClassName={css.fieldDateInput}
+            popupClassName={css.fieldDatePopup}
             name="bookingStartDate"
             id={formId ? `${formId}.bookingStartDate` : 'bookingStartDate'}
             label={startDateInputProps.label}
@@ -612,26 +582,26 @@ const FieldDateAndTimeInput = props => {
             parse={v =>
               v && v.date ? { date: timeOfDayFromLocalToTimeZone(v.date, timeZone) } : v
             }
-            initialVisibleMonth={initialVisibleMonth(bookingStartDate || startOfToday, timeZone)}
-            isDayBlocked={isDayBlocked}
-            onChange={onBookingStartDateChange(props, setCurrentMonth)}
-            onPrevMonthClick={() => onMonthClick(prevMonthFn)}
-            onNextMonthClick={() => onMonthClick(nextMonthFn)}
-            navNext={
-              <Next
-                currentMonth={currentMonth}
-                timeZone={timeZone}
-                dayCountAvailableForBooking={dayCountAvailableForBooking}
-              />
-            }
-            navPrev={<Prev currentMonth={currentMonth} timeZone={timeZone} />}
             useMobileMargins
             validate={bookingDateRequired(
               intl.formatMessage({ id: 'BookingTimeForm.requiredDate' })
             )}
-            onClose={event => {
-              const date = getStartOf(event?.date ?? TODAY, 'month', timeZone);
-              setCurrentMonth(date);
+            isDayBlocked={isDayBlocked}
+            isOutsideRange={isOutsideRange}
+            showPreviousMonthStepper={showPreviousMonthStepper(currentMonth, timeZone)}
+            showNextMonthStepper={showNextMonthStepper(
+              currentMonth,
+              dayCountAvailableForBooking,
+              timeZone
+            )}
+            onMonthChange={date => {
+              const localizedDate = timeOfDayFromLocalToTimeZone(date, timeZone);
+              onMonthClick(localizedDate < currentMonth ? prevMonthFn : nextMonthFn);
+              setCurrentMonth(localizedDate);
+            }}
+            onChange={onBookingStartDateChange(props, setCurrentMonth)}
+            onClose={() => {
+              setCurrentMonth(bookingStartDate || startOfToday);
             }}
           />
         </div>
