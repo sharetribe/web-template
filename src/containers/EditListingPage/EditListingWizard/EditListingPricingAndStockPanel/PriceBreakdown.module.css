@@ -1,0 +1,12 @@
+.root {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: #f8f8f8;
+    border-radius: 4px;
+  }
+  
+  .row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }

@@ -14,6 +14,8 @@ import * as validators from '../../../../util/validators';
 import { formatMoney } from '../../../../util/currency';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
 
+import PriceBreakdown from './PriceBreakdown';
+
 // Import shared components
 import {
   Button,
@@ -97,6 +99,7 @@ export const EditListingPricingAndStockFormComponent = props => (
   <FinalForm
     {...props}
     mutators={{ ...arrayMutators }}
+    subscription={{ values: true, pristine: true, submitting: true, invalid: true }}
     render={formRenderProps => {
       const {
         formId,
@@ -144,6 +147,11 @@ export const EditListingPricingAndStockFormComponent = props => (
         ? intl.formatMessage({ id: 'EditListingPricingAndStockForm.oldStockTotalWasOutOfSync' })
         : intl.formatMessage({ id: 'EditListingPricingAndStockForm.stockUpdateFailed' });
 
+      console.log('Form rendered with price:', values.price);
+      console.log('Price type:', typeof values.price);
+
+      const priceValue = values.price && values.price.amount ? values.price.amount / 100 : 0;
+
       return (
         <Form onSubmit={handleSubmit} className={classes}>
           {updateListingError ? (
@@ -170,6 +178,14 @@ export const EditListingPricingAndStockFormComponent = props => (
             })}
             currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
             validate={priceValidators}
+          />
+
+          <PriceBreakdown
+            price={priceValue}
+            currencyConfig={{
+              currency: marketplaceCurrency,
+              ...appSettings.getCurrencyFormatting(marketplaceCurrency),
+            }}
           />
 
           <UpdateStockToInfinityCheckboxMaybe

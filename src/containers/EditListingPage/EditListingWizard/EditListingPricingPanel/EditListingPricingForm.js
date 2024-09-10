@@ -13,7 +13,7 @@ import { formatMoney } from '../../../../util/currency';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
 
 // Import shared components
-import { Button, Form, FieldCurrencyInput, FieldTextInput } from '../../../../components';
+import { Button, Form, FieldCurrencyInput } from '../../../../components';
 
 // Import modules from this directory
 import css from './EditListingPricingForm.module.css';
