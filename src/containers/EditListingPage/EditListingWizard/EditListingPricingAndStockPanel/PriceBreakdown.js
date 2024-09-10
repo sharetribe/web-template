@@ -22,9 +22,8 @@ const PriceBreakdownComponent = ({ price, currencyConfig, intl }) => {
 
   const priceInCents = Math.round(price * 100);
   const priceAsMoney = new Money(priceInCents, currencyConfig.currency);
-  const commission = new Money(Math.round(priceInCents * 0.10), currencyConfig.currency);
-  const fees = new Money(Math.round(priceInCents * 0.05), currencyConfig.currency);
-  const sellerReceives = new Money(priceInCents - commission.amount - fees.amount, currencyConfig.currency);
+  const fees = new Money(Math.round(priceInCents * 0.05), currencyConfig.currency); // 5% fees
+  const sellerReceives = new Money(priceInCents - fees.amount, currencyConfig.currency);
 
   const formatMoneyWithIntl = (money) => {
     try {
@@ -43,11 +42,7 @@ const PriceBreakdownComponent = ({ price, currencyConfig, intl }) => {
         <span>{formatMoneyWithIntl(priceAsMoney)}</span>
       </div>
       <div className={css.row}>
-        <span>Commission (10%):</span>
-        <span>{formatMoneyWithIntl(commission)}</span>
-      </div>
-      <div className={css.row}>
-        <span>Fees (5%):</span>
+        <span>Processing Fees (5%):</span>
         <span>{formatMoneyWithIntl(fees)}</span>
       </div>
       <div className={css.row}>
