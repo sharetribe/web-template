@@ -128,7 +128,13 @@ const CalendarMonth = props => {
         <thead className={css.calendarHeader}>
           <tr className={css.weekdayRow} aria-hidden="true">
             {weekdays.map(weekday => (
-              <th abbr={weekday[1]} className={css.weekday} key={weekday[0]} scope="col">
+              <th
+                abbr={weekday[1]}
+                className={css.weekday}
+                key={weekday[0]}
+                scope="col"
+                data-testid="weekday"
+              >
                 <span>{weekday[0]}</span>
               </th>
             ))}
@@ -264,7 +270,7 @@ const isDateRangeChanged = (arr1, arr2) => {
 };
 
 const DatePicker = props => {
-  const intl = useIntl();
+  const intl = props.intl || useIntl();
   const config = useConfiguration();
   const defaultFirstDayOfWeek = config.localization.firstDayOfWeek;
   const {
