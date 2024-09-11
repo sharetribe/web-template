@@ -18,7 +18,7 @@ import css from './InquiryForm.module.css';
 
 const ErrorMessage = props => {
   const { error } = props;
-  const userPendingApproval = true || isErrorNoPermissionForUserPendingApproval(error);
+  const userPendingApproval = isErrorNoPermissionForUserPendingApproval(error);
 
   // No transaction process attached to listing
   return error ? (
