@@ -3,6 +3,7 @@ import React from 'react';
 import { IconSpinner, LayoutComposer } from '../../components/index.js';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer.js';
 import FooterContainer from '../FooterContainer/FooterContainer.js';
+import { AdBanner } from '../../components';
 
 import { validProps } from './Field';
 
@@ -96,6 +97,8 @@ const PageBuilder = props => {
     return fallbackPage;
   }
 
+  console.log('options', options);
+  
   // Page asset contains UI info and metadata related to it.
   // - "sections" (data that goes inside <body>)
   // - "meta" (which is data that goes inside <head>)
@@ -117,13 +120,20 @@ const PageBuilder = props => {
               <Topbar as="header" className={css.topbar}>
                 <TopbarContainer currentPage={currentPage} />
               </Topbar>
+              
               <Main as="main" className={css.main}>
                 {sections.length === 0 && inProgress ? (
                   <LoadingSpinner />
                 ) : (
-                  <SectionBuilder sections={sections} options={options} />
+                  <div>
+                    <SectionBuilder sections={sections} options={options} />
+                    {options?.AdBanner?.show && (
+                      <AdBanner phoneNumber="+1-647-689-6072" />
+                    )}
+                  </div>
                 )}
               </Main>
+              
               <Footer>
                 <FooterContainer />
               </Footer>

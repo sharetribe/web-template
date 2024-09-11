@@ -1,7 +1,6 @@
 import React from 'react';
 import { useConfiguration } from '../../context/configurationContext';
 import loadable from '@loadable/component';
-import { AdBanner } from '../../components';
 
 const SectionBuilder = loadable(
   () => import(/* webpackChunkName: "SectionBuilder" */ '../PageBuilder/PageBuilder'),
@@ -30,7 +29,6 @@ const FooterComponent = () => {
 
   return (
     <div>
-      <AdBanner phoneNumber="+1-647-689-6072" />
       <SectionBuilder sections={[footerSection]} />
     </div>
   );
