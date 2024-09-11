@@ -8,18 +8,31 @@
   margin: 0 auto;
   padding: 32px;
   text-align: center;
-}
 
-.baseColumn h1 {
-  background-color: rgba(0,0,0,0.2);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 80px;
-  width: 80px;
-  border-radius: 50%;
-  margin: 0 auto;
-  font-size: 2em;
+  h1 {
+    background-color: rgba(0,0,0,0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80px;
+    width: 80px;
+    border-radius: 50%;
+    margin: 0 auto;
+    font-size: 2em;
+  }
+
+  a{
+    border: 1px solid var(--colorPrimaryButton);
+    padding:8px 10px;
+    border-radius: 4px;
+
+    &:hover{
+      background-color: var(--colorPrimaryButton);
+      color: var(--colorWhite);
+      text-decoration: none;
+    }
+  }
+
 }
 
 .oneColumn {
