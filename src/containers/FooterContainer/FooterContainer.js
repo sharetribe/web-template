@@ -1,6 +1,7 @@
 import React from 'react';
 import { useConfiguration } from '../../context/configurationContext';
 import loadable from '@loadable/component';
+import { AdBanner } from '../../components';
 
 const SectionBuilder = loadable(
   () => import(/* webpackChunkName: "SectionBuilder" */ '../PageBuilder/PageBuilder'),
@@ -27,7 +28,12 @@ const FooterComponent = () => {
     linkLogoToExternalSite: topbar?.logoLink,
   };
 
-  return <SectionBuilder sections={[footerSection]} />;
+  return (
+    <div>
+      <AdBanner phoneNumber="+1-647-689-6072" />
+      <SectionBuilder sections={[footerSection]} />
+    </div>
+  );
 };
 
 // NOTE: if you want to add dynamic data to FooterComponent,
