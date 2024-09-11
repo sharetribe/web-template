@@ -11,6 +11,7 @@ import {
   NO_ACCESS_PAGE_INITIATE_TRANSACTIONS,
   NO_ACCESS_PAGE_POST_LISTINGS,
   NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
+  NO_ACCESS_PAGE_VIEW_LISTINGS,
 } from '../../util/urlHelpers';
 import { generateLinkProps } from '../../util/routes';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
@@ -91,6 +92,7 @@ export const NoAccessPageComponent = props => {
   const isUserPendingApprovalPage = missingAccessRight === NO_ACCESS_PAGE_USER_PENDING_APPROVAL;
   const isPostingRightsPage = missingAccessRight === NO_ACCESS_PAGE_POST_LISTINGS;
   const isInitiateTransactionsPage = missingAccessRight === NO_ACCESS_PAGE_INITIATE_TRANSACTIONS;
+  const isViewingRightsPage = missingAccessRight === NO_ACCESS_PAGE_VIEW_LISTINGS;
 
   // Destructure `callToAction` objects from the config object for ease of reference
   const { accessControl: accessControlConfig } = config || {};
@@ -98,6 +100,7 @@ export const NoAccessPageComponent = props => {
     requireApprovalToJoinOptions: { callToAction: approvalToJoinCTA } = {},
     requirePermissionToInitiateTransactionsOptions: { callToAction: permissionToInitiateCTA } = {},
     requirePermissionToPostListingsOptions: { callToAction: permissionToPostCTA } = {},
+    requirePermissionToReadOptions: { callToAction: permissionToViewCTA } = {},
   } = accessControlConfig?.users || {};
 
   const pageData = isUserPendingApprovalPage
@@ -120,6 +123,13 @@ export const NoAccessPageComponent = props => {
         heading: 'NoAccessPage.initiateTransactions.heading',
         content: 'NoAccessPage.initiateTransactions.content',
         ctaData: permissionToInitiateCTA,
+      }
+    : isViewingRightsPage
+    ? {
+        schemaTitle: 'NoAccessPage.viewListings.schemaTitle',
+        heading: 'NoAccessPage.viewListings.heading',
+        content: 'NoAccessPage.viewListings.content',
+        ctaData: permissionToViewCTA,
       }
     : {};
 
