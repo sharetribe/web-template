@@ -7,7 +7,7 @@ const AdBanner = ({ phoneNumber }) => (
       <img 
         src={adImage} 
         alt={`Call us at ${phoneNumber}`} 
-        style={{ maxWidth: '100%', height: 'auto' }}
+        style={{ maxWidth: '90%', height: 'auto' }}
       />
     </a>
   </div>
