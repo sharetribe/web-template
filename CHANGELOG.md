@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] EmailVerification: enforce that currentUser is fetched after verification.
+  [#451](https://github.com/sharetribe/web-template/pull/451)
 - [fix] ListingPage: fix 0 as value of listing fields.
   [#449](https://github.com/sharetribe/web-template/pull/449)
 - [fix] EditListingDetailsPanel: fix 0 as value of listing fields.
