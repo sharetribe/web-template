@@ -36,11 +36,9 @@
   }
 
  
-    display:none;
   
    /* custom stuff */
     &a:first-child{ 
-      display:block;
     > span{
       display:block;
       margin-top:24px;
