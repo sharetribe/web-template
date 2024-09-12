@@ -4,8 +4,12 @@ import { types as sdkTypes } from '../../util/sdkLoader';
 import { createResourceLocatorString, findRouteByRouteName } from '../../util/routes';
 import { formatMoney } from '../../util/currency';
 import { timestampToDate } from '../../util/dates';
-import { isUserAuthorized } from '../../util/userHelpers';
-import { NO_ACCESS_PAGE_USER_PENDING_APPROVAL, createSlug } from '../../util/urlHelpers';
+import { hasPermissionToInitiateTransactions, isUserAuthorized } from '../../util/userHelpers';
+import {
+  NO_ACCESS_PAGE_INITIATE_TRANSACTIONS,
+  NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
+  createSlug,
+} from '../../util/urlHelpers';
 
 import { Page, LayoutSingleColumn } from '../../components';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
@@ -125,6 +129,10 @@ export const handleContactUser = parameters => () => {
   } else if (!isUserAuthorized(currentUser)) {
     // A user in pending-approval state can't contact the author (the same applies for a banned user)
     const pathParams = { missingAccessRight: NO_ACCESS_PAGE_USER_PENDING_APPROVAL };
+    history.push(createResourceLocatorString('NoAccessPage', routes, pathParams, {}));
+  } else if (!hasPermissionToInitiateTransactions(currentUser)) {
+    // A user in pending-approval state can't contact the author (the same applies for a banned user)
+    const pathParams = { missingAccessRight: NO_ACCESS_PAGE_INITIATE_TRANSACTIONS };
     history.push(createResourceLocatorString('NoAccessPage', routes, pathParams, {}));
   } else {
     setInquiryModalOpen(true);
