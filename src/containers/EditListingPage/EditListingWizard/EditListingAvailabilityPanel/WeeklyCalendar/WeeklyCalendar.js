@@ -8,9 +8,8 @@ import { FormattedDate, FormattedMessage, useIntl } from '../../../../../util/re
 import {
   getStartOf,
   getStartOfWeek,
+  getEndOfWeek,
   getMomentFromDate,
-  getStartOfWeekAsMoment,
-  getEndOfWeekAsMoment,
   isInRange,
   parseDateFromISO8601,
   parseDateTimeString,
@@ -446,9 +445,12 @@ const WeeklyCalendar = props => {
               );
               history.replace(redirectTo);
             }}
-            startDateOffset={day => getStartOfWeekAsMoment(day, timeZone, firstDayOfWeek)}
-            endDateOffset={day => getEndOfWeekAsMoment(day, timeZone, firstDayOfWeek)}
-            onFocusChange={({ focused }) => setWeekPickerFocused(focused)}
+            startDateOffset={day => {
+              return day != null ? getStartOfWeek(day, null, firstDayOfWeek) : null;
+            }}
+            endDateOffset={day => {
+              return day != null ? getEndOfWeek(day, null, firstDayOfWeek) : null;
+            }}
             isOutsideRange={day => !isInRange(day, thisWeek, endOfRange, 'day', timeZone)}
             timeZone={timeZone}
           />
