@@ -396,6 +396,7 @@
   "InquiryForm.messageLabel": "Message to {authorDisplayName}",
   "InquiryForm.messagePlaceholder": "Hello {authorDisplayName}! I'm looking forward to…",
   "InquiryForm.messageRequired": "A message is required",
+  "InquiryForm.noTransactionRightsError": "Oops, something went wrong. You don't have permission to make inquiries. <NoAccessLink>Read more about transaction rights.</NoAccessLink>",
   "InquiryForm.sendInquiryError": "Oops, something went wrong. Please try again.",
   "InquiryForm.sendInquiryErrorNoProcess": "Oops, no transaction process attached to the listing. Please contact support",
   "InquiryForm.submitButtonText": "Send inquiry",
