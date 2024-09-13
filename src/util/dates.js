@@ -885,6 +885,18 @@ export const getStartOfWeek = (date, timeZone, firstDayOfWeek) => {
 };
 
 /**
+ * Get the end of a week as a Date instance.
+ * This is used by react-dates library (e.g. WeeklyCalendar)
+ * @param {Date} date instance
+ * @param {String} timeZone name. It should represent IANA timezone key.
+ * @param {number} firstDayOfWeek (which weekday is the first day?)
+ * @returns a Date object representing the last day of the week where given date belongs to
+ */
+export const getEndOfWeek = (date, timeZone, firstDayOfWeek) => {
+  return getEndOfWeekAsMoment(moment(date).tz(timeZone), timeZone, firstDayOfWeek).toDate();
+};
+
+/**
  * Create moment instance from given Date object
  * This is used by react-dates library (e.g. WeeklyCalendar)
  *
