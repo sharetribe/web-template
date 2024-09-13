@@ -9,7 +9,7 @@ import {
 } from '../../../../util/dates';
 
 // Marketplace API allows fetching exceptions to 366 days into the future.
-const MAX_AVAILABILITY_EXCEPTIONS_RANGE = 366;
+export const MAX_AVAILABILITY_EXCEPTIONS_RANGE = 366;
 const TODAY = new Date();
 
 // Helper for the pickers of react-dates (weekly and monthly calendars)
