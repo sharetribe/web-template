@@ -10,7 +10,7 @@
   text-align: center;
 
   h1 {
-    background-color: rgba(0,0,0,0.2);
+    background-color:rgba(0,0,0,0.08);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -19,6 +19,11 @@
     border-radius: 50%;
     margin: 0 auto;
     font-size: 2em;
+  }
+  ul{
+    text-align: left;
+    width: 70%;
+    margin: 0 auto;
   }
 
   a{
