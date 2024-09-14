@@ -553,7 +553,7 @@ export const ManageListingCardComponent = props => {
           <NamedLink
             className={css.manageLink}
             name="BatchEditListingPage"
-            params={{ id, slug, type: editListingLinkType, tab: 'details' }}
+            params={{ id, slug, type: editListingLinkType, tab: 'upload' }}
           >
             <FormattedMessage id="ManageListingCard.editListing" />
           </NamedLink>
