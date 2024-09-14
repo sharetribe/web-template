@@ -12,40 +12,16 @@ import { createResourceLocatorString } from '../../../util/routes';
 import { propTypes } from '../../../util/types';
 
 // Import modules from this directory
-import EditListingAvailabilityPanel from './EditListingAvailabilityPanel/EditListingAvailabilityPanel';
-import EditListingDetailsPanel from './EditListingDetailsPanel/EditListingDetailsPanel';
-import EditListingDeliveryPanel from './EditListingDeliveryPanel/EditListingDeliveryPanel';
-import EditListingLocationPanel from './EditListingLocationPanel/EditListingLocationPanel';
-import EditListingPricingPanel from './EditListingPricingPanel/EditListingPricingPanel';
-import EditListingPricingAndStockPanel from './EditListingPricingAndStockPanel/EditListingPricingAndStockPanel';
 
 import css from './BatchEditListingWizardTab.module.css';
 import EditListingUploaderPanel from './EditListingUploaderPanel/EditListingUploaderPanel';
-import EditListingPhotosPanel from './EditListingPhotosPanel/EditListingPhotosPanel';
 import { EditListingBatchProductDetails } from './EditListingBatchProductDetails/EditListingBatchProductDetails';
 
-export const DETAILS = 'details';
-export const PRICING = 'pricing';
-export const PRICING_AND_STOCK = 'pricing-and-stock';
-export const DELIVERY = 'delivery';
-export const LOCATION = 'location';
-export const AVAILABILITY = 'availability';
-export const PHOTOS = 'photos';
 export const UPLOAD = 'upload';
 export const PRODUCT_DETAILS = 'product-details';
 
 // EditListingWizardTab component supports these tabs
-export const SUPPORTED_TABS = [
-  DETAILS,
-  PRICING,
-  PRICING_AND_STOCK,
-  DELIVERY,
-  LOCATION,
-  AVAILABILITY,
-  PHOTOS,
-  UPLOAD,
-  PRODUCT_DETAILS,
-];
+export const SUPPORTED_TABS = [UPLOAD, PRODUCT_DETAILS];
 
 const pathParamsToNextTab = (params, tab, marketplaceTabs) => {
   const nextTabIndex = marketplaceTabs.findIndex(s => s === tab) + 1;
@@ -181,8 +157,12 @@ const BatchEditListingWizardTab = props => {
       onSubmit: values => {
         if (tab === UPLOAD) {
           const nextTab = { ...params, tab: PRODUCT_DETAILS };
-          const to = createResourceLocatorString('EditListingPage', routeConfiguration, nextTab, {});
-          console.log(to);
+          const to = createResourceLocatorString(
+            'EditListingPage',
+            routeConfiguration,
+            nextTab,
+            {}
+          );
           history.push(to);
           return;
         }
@@ -191,69 +171,7 @@ const BatchEditListingWizardTab = props => {
     };
   };
 
-  // TODO: add missing cases for supported tabs
   switch (tab) {
-    case DETAILS: {
-      return (
-        <EditListingDetailsPanel
-          {...panelProps(DETAILS)}
-          onListingTypeChange={onListingTypeChange}
-          config={config}
-        />
-      );
-    }
-    case PRICING_AND_STOCK: {
-      return (
-        <EditListingPricingAndStockPanel
-          {...panelProps(PRICING_AND_STOCK)}
-          marketplaceCurrency={config.currency}
-          listingMinimumPriceSubUnits={config.listingMinimumPriceSubUnits}
-        />
-      );
-    }
-    case PRICING: {
-      return (
-        <EditListingPricingPanel
-          {...panelProps(PRICING)}
-          marketplaceCurrency={config.currency}
-          listingMinimumPriceSubUnits={config.listingMinimumPriceSubUnits}
-        />
-      );
-    }
-    case DELIVERY: {
-      return (
-        <EditListingDeliveryPanel {...panelProps(DELIVERY)} marketplaceCurrency={config.currency} />
-      );
-    }
-    case LOCATION: {
-      return <EditListingLocationPanel {...panelProps(LOCATION)} />;
-    }
-    case AVAILABILITY: {
-      return (
-        <EditListingAvailabilityPanel
-          allExceptions={allExceptions}
-          weeklyExceptionQueries={weeklyExceptionQueries}
-          monthlyExceptionQueries={monthlyExceptionQueries}
-          onFetchExceptions={onFetchExceptions}
-          onAddAvailabilityException={onAddAvailabilityException}
-          onDeleteAvailabilityException={onDeleteAvailabilityException}
-          onNextTab={() =>
-            redirectAfterDraftUpdate(
-              listing.id,
-              params,
-              tab,
-              marketplaceTabs,
-              history,
-              routeConfiguration
-            )
-          }
-          config={config}
-          history={history}
-          routeConfiguration={routeConfiguration}
-          {...panelProps(AVAILABILITY)}
-        />
-      );
-    }
     case UPLOAD: {
       return (
         <EditListingUploaderPanel
@@ -263,17 +181,6 @@ const BatchEditListingWizardTab = props => {
           onImageUpload={onImageUpload}
           onRemoveImage={onRemoveImage}
           currentUser={currentUser}
-        />
-      );
-    }
-    case PHOTOS: {
-      return (
-        <EditListingPhotosPanel
-          {...panelProps(PHOTOS)}
-          listingImageConfig={config.layout.listingImage}
-          images={images}
-          onImageUpload={onImageUpload}
-          onRemoveImage={onRemoveImage}
         />
       );
     }

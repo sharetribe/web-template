@@ -125,7 +125,7 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       component: () => (
         <NamedRedirect
           name="BatchEditListingPage"
-          params={{ slug: draftSlug, id: draftId, type: 'new', tab: 'details' }}
+          params={{ slug: draftSlug, id: draftId, type: 'new', tab: 'upload' }}
         />
       ),
     },

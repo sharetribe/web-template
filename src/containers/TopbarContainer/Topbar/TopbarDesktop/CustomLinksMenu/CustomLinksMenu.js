@@ -12,7 +12,7 @@ const createListingLinkConfig = intl => ({
   type: 'internal',
   route: {
     name: 'BatchEditListingPage',
-    params: { slug: 'draft', id: draftId, type: 'new', tab: 'details' },
+    params: { slug: 'draft', id: draftId, type: 'new', tab: 'upload' },
   },
   highlight: true,
 });

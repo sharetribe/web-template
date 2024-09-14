@@ -34,11 +34,7 @@ import {
   pickCategoryFields,
 } from '../../../util/fieldHelpers';
 import { ensureCurrentUser, ensureListing } from '../../../util/data';
-import {
-  INQUIRY_PROCESS_NAME,
-  isBookingProcess,
-  isPurchaseProcess,
-} from '../../../transactions/transaction';
+import { INQUIRY_PROCESS_NAME, PURCHASE_PROCESS_NAME } from '../../../transactions/transaction';
 
 // Import shared components
 import {
@@ -51,30 +47,11 @@ import {
 } from '../../../components';
 
 // Import modules from this directory
-import BatchEditListingWizardTab, {
-  AVAILABILITY,
-  DELIVERY,
-  DETAILS,
-  LOCATION,
-  PHOTOS,
-  PRICING,
-  PRICING_AND_STOCK,
-  PRODUCT_DETAILS,
-  UPLOAD,
-} from './BatchEditListingWizardTab';
+import BatchEditListingWizardTab, { PRODUCT_DETAILS, UPLOAD } from './BatchEditListingWizardTab';
 import css from './BatchEditListingWizard.module.css';
 
-// You can reorder these panels.
-// Note 1: You need to change save button translations for new listing flow
-// Note 2: Ensure that draft listing is created after the first panel
-//         and listing publishing happens after last panel.
-// Note 3: The first tab creates a draft listing and title is mandatory attribute for it.
-//         Details tab asks for "title" and is therefore the first tab in the wizard flow.
-const TABS_DETAILS_ONLY = [DETAILS];
+const TABS_UPLOAD_ONLY = [UPLOAD];
 const TABS_PRODUCT = [UPLOAD, PRODUCT_DETAILS];
-const TABS_BOOKING = [DETAILS, LOCATION, PRICING, AVAILABILITY, PHOTOS];
-const TABS_INQUIRY = [DETAILS, LOCATION, PRICING, PHOTOS];
-const TABS_ALL = [...TABS_PRODUCT, ...TABS_BOOKING, ...TABS_INQUIRY];
 
 // Tabs are horizontal in small screens
 const MAX_HORIZONTAL_NAV_SCREEN_WIDTH = 1023;
@@ -121,31 +98,8 @@ const tabLabelAndSubmit = (intl, tab, isNewListingFlow, isPriceDisabled, process
 
   let labelKey = null;
   let submitButtonKey = null;
-  if (tab === DETAILS) {
-    labelKey = 'EditListingWizard.tabLabelDetails';
-    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveDetails`;
-  } else if (tab === PRICING) {
-    labelKey = 'EditListingWizard.tabLabelPricing';
-    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.savePricing`;
-  } else if (tab === PRICING_AND_STOCK) {
-    labelKey = 'EditListingWizard.tabLabelPricingAndStock';
-    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.savePricingAndStock`;
-  } else if (tab === DELIVERY) {
-    labelKey = 'EditListingWizard.tabLabelDelivery';
-    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveDelivery`;
-  } else if (tab === LOCATION) {
-    labelKey = 'EditListingWizard.tabLabelLocation';
-    submitButtonKey =
-      isPriceDisabled && isNewListingFlow
-        ? `EditListingWizard.${processNameString}${newOrEdit}.saveLocationNoPricingTab`
-        : `EditListingWizard.${processNameString}${newOrEdit}.saveLocation`;
-  } else if (tab === AVAILABILITY) {
-    labelKey = 'EditListingWizard.tabLabelAvailability';
-    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveAvailability`;
-  } else if (tab === PHOTOS) {
-    labelKey = 'EditListingWizard.tabLabelPhotos';
-    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.savePhotos`;
-  } else if (tab === UPLOAD) {
+
+  if (tab === UPLOAD) {
     labelKey = 'EditListingWizard.tabLabelUpload';
     submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveUpload`;
   } else if (tab === PRODUCT_DETAILS) {
@@ -217,44 +171,11 @@ const hasValidListingFieldsInExtendedData = (publicData, privateData, config) =>
  *
  * @return true if tab / step is completed.
  */
-const tabCompleted = (tab, listing, config) => {
-  const {
-    availabilityPlan,
-    description,
-    geolocation,
-    price,
-    title,
-    publicData,
-    privateData,
-  } = listing.attributes;
-  const images = listing.images;
-  const { listingType, transactionProcessAlias, unitType, shippingEnabled, pickupEnabled } =
-    publicData || {};
-  const deliveryOptionPicked = publicData && (shippingEnabled || pickupEnabled);
-
+const tabCompleted = tab => {
   switch (tab) {
-    case DETAILS:
-      return !!(
-        description &&
-        title &&
-        listingType &&
-        transactionProcessAlias &&
-        unitType &&
-        hasValidListingFieldsInExtendedData(publicData, privateData, config)
-      );
-    case PRICING:
-      return !!price;
-    case PRICING_AND_STOCK:
-      return !!price;
-    case DELIVERY:
-      return !!deliveryOptionPicked;
-    case LOCATION:
-      return !!(geolocation && publicData?.location?.address);
-    case AVAILABILITY:
-      return !!availabilityPlan;
-    case PHOTOS:
-      return images && images.length > 0;
     case UPLOAD:
+      return true;
+    case PRODUCT_DETAILS:
       return true;
     default:
       return false;
@@ -271,12 +192,12 @@ const tabCompleted = (tab, listing, config) => {
  *
  * @return object containing activity / editability of different tabs of this wizard
  */
-const tabsActive = (isNew, listing, tabs, config) => {
+const tabsActive = (isNew, listing, tabs) => {
   return tabs.reduce((acc, tab) => {
     const previousTabIndex = tabs.findIndex(t => t === tab) - 1;
     const validTab = previousTabIndex >= 0;
     const hasListingType = !!listing?.attributes?.publicData?.listingType;
-    const prevTabCompletedInNewFlow = tabCompleted(tabs[previousTabIndex], listing, config);
+    const prevTabCompletedInNewFlow = tabCompleted(tabs[previousTabIndex]);
     const isActive =
       validTab && !isNew ? hasListingType : validTab && isNew ? prevTabCompletedInNewFlow : true;
     return { ...acc, [tab]: isActive };
@@ -472,32 +393,25 @@ class BatchEditListingWizard extends Component {
     //       if it's enabled with other processes, translations for "new" flow needs to be updated.
     const isPriceDisabled = !displayPrice(listingTypeConfig);
 
-    // Transaction process alias is used here, because the process defineds whether the listing is supported
+    // Transaction process alias is used here, because the process defined whether the listing is supported
     // I.e. old listings might not be supported through listing types, but client app might still support those processes.
     const processName = transactionProcessAlias
       ? transactionProcessAlias.split('/')[0]
       : validListingTypes.length === 1
       ? validListingTypes[0].transactionType.process
-      : INQUIRY_PROCESS_NAME;
+      : PURCHASE_PROCESS_NAME;
 
     const hasListingTypeSelected =
       existingListingType || this.state.selectedListingType || validListingTypes.length === 1;
 
     // For outdated draft listing, we don't show other tabs but the "details"
-    const tabs =
-      isNewListingFlow && (invalidExistingListingType || !hasListingTypeSelected)
-        ? TABS_DETAILS_ONLY
-        : isBookingProcess(processName)
-        ? tabsForBookingProcess(TABS_BOOKING, listingTypeConfig)
-        : isPurchaseProcess(processName)
-        ? tabsForPurchaseProcess(TABS_PRODUCT, listingTypeConfig)
-        : tabsForInquiryProcess(TABS_INQUIRY, listingTypeConfig);
+    const tabs = TABS_PRODUCT;
 
     // Check if wizard tab is active / linkable.
     // When creating a new listing, we don't allow users to access next tab until the current one is completed.
     const tabsStatus = tabsActive(isNewListingFlow, currentListing, tabs, config);
 
-    // Redirect user to first tab when encoutering outdated draft listings.
+    // Redirect user to first tab when encountering outdated draft listings.
     if (invalidExistingListingType && isNewListingFlow && selectedTab !== tabs[0]) {
       return <NamedRedirect name="BatchEditListingPage" params={{ ...params, tab: tabs[0] }} />;
     }
@@ -514,7 +428,9 @@ class BatchEditListingWizard extends Component {
       console.log(
         `You tried to access an EditListingWizard tab (${selectedTab}), which was not yet activated.`
       );
-      return <NamedRedirect name="BatchEditListingPage" params={{ ...params, tab: nearestActiveTab }} />;
+      return (
+        <NamedRedirect name="BatchEditListingPage" params={{ ...params, tab: nearestActiveTab }} />
+      );
     }
 
     const { width } = viewport;
@@ -719,7 +635,7 @@ BatchEditListingWizard.propTypes = {
     id: string.isRequired,
     slug: string.isRequired,
     type: oneOf(LISTING_PAGE_PARAM_TYPES).isRequired,
-    tab: oneOf(TABS_ALL).isRequired,
+    tab: oneOf(TABS_PRODUCT).isRequired,
   }).isRequired,
   stripeAccount: object,
   stripeAccountFetched: bool,
