@@ -1,0 +1,50 @@
+@import '../../../../../styles/customMediaQueries.css';
+
+.root {
+}
+
+.heading,
+.radioButtons,
+.submitButton {
+  padding-left: 24px;
+  padding-right: 24px;
+
+  @media (--viewportMedium) {
+    padding-left: 60px;
+    padding-right: 60px;
+  }
+}
+
+.heading {
+  margin-bottom: 16px;
+}
+
+/* Exception start and end inputs */
+.section {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 48px;
+
+  @media (--viewportMedium) {
+    margin-bottom: 200px;
+    padding-left: 60px;
+    padding-right: 60px;
+  }
+}
+
+.rootNextMonthIcon,
+.rootPreviousMonthIcon {
+  stroke: var(--colorWhite);
+  fill: var(--colorWhite);
+}
+
+.submitButton {
+  margin-top: auto;
+  flex-shrink: 0;
+  /* Mobile phones introduce bottom-bar, for which we need to give 96px vertical space */
+  padding-bottom: 96px;
+
+  @media (--viewportMedium) {
+    padding-bottom: 0;
+  }
+}

@@ -144,3 +144,9 @@ export const transitionPrivileged = body => {
 export const createUserWithIdp = body => {
   return post('/api/auth/create-user-with-idp', body);
 };
+
+///
+///
+export const createUploadSignature = body => {
+  return post('/api/transloadit-params', body);
+};

@@ -1,0 +1,279 @@
+@import '../../../../../styles/customMediaQueries.css';
+
+.titleWrapper {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: baseline;
+
+  @media (min-width: 435px) {
+    flex-direction: row;
+  }
+
+  @media (--viewportMedium) {
+    padding: 5px 0 3px 0;
+  }
+}
+.weekPicker,
+.sectionTitle {
+  composes: marketplaceSearchFilterSublabelFontStyles from global;
+  color: var(--colorGrey300);
+
+  padding: 3px 0 3px 0;
+  margin-top: 0;
+  margin-bottom: 0;
+
+  @media (--viewportMedium) {
+    padding: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+.sectionTitle {
+  margin-right: 5px;
+}
+
+.weekPickerLabel {
+  composes: marketplaceSearchFilterSublabelFontStyles from global;
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  text-align: left;
+}
+.weekPicker {
+  color: var(--colorGrey700);
+}
+
+.weekRange {
+  display: inline-flex;
+  flex-wrap: wrap;
+}
+
+.rangePart {
+  margin-right: 5px;
+}
+
+.weekPickerIcon {
+  display: flex;
+  align-items: center;
+  height: 18px;
+}
+
+.navigation {
+  display: flex;
+  margin-left: auto;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 8px;
+  border: solid 1px var(--colorGrey100);
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--colorGrey50);
+  }
+
+  @media (--viewportMedium) {
+    padding: 11px 13px;
+  }
+}
+.prev {
+  composes: button;
+  margin-right: -1px;
+
+  &:only-child {
+    margin-right: 0;
+  }
+}
+.next {
+  composes: button;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  border-top: solid 1px var(--colorGrey100);
+  border-right: solid 1px var(--colorGrey100);
+  border-left: solid 1px var(--colorGrey100);
+  border-radius: var(--borderRadiusMedium);
+  margin-top: 17px;
+
+  @media (--viewportMedium) {
+    grid-template-columns: auto 1fr;
+    /* this takes border-top into account */
+    margin-top: 15px;
+  }
+}
+
+.dateLabelContainer {
+  padding: 24px 24px 12px 24px;
+
+  @media (--viewportMedium) {
+    padding: 24px 24px 23px 24px;
+    border-bottom: solid 1px var(--colorGrey100);
+  }
+}
+.dateLabel {
+  margin: 0;
+  composes: p from global;
+  font-weight: var(--fontWeightBold);
+
+  &::first-letter {
+    text-transform: capitalize;
+  }
+
+  @media (--viewportMedium) {
+    margin: 0;
+  }
+}
+.dateAndMonth {
+  composes: h5 from global;
+}
+
+.blockedDateLabel {
+  background-color: #f3f3f3;
+  color: var(--colorGrey300);
+}
+
+.info {
+}
+
+.planEntries {
+  display: flex;
+  flex-direction: column;
+  padding: 4px 0 2px 0;
+
+  @media (--viewportMedium) {
+    padding: 8px 0 0 0;
+  }
+}
+
+.exceptionsContainer {
+  display: flex;
+  flex-direction: column;
+  margin-top: 12px;
+
+  &:only-child {
+    margin-top: 0;
+  }
+
+  @media (--viewportMedium) {
+    margin-top: 16px;
+  }
+}
+
+.exceptionsTitle {
+  composes: marketplaceSmallFontStyles from global;
+  padding: 6px 0 0 0;
+  margin: 0;
+
+  @media (--viewportMedium) {
+    padding: 6px 0 2px 0;
+  }
+}
+
+.exceptionsSubtitle {
+  composes: marketplaceTinyFontStyles from global;
+  text-transform: unset;
+  letter-spacing: 0;
+  margin: 6px 0 0 0;
+  @media (--viewportMedium) {
+    margin: 8px 0 0 0;
+  }
+}
+
+.timeRange {
+  composes: marketplaceTinyFontStyles from global;
+  display: inline-flex;
+  flex-wrap: wrap;
+  color: var(--colorGrey700);
+  transition: color var(--transitionStyleButton);
+  margin: 0;
+
+  @media (--viewportMedium) {
+    padding: 3px 0 5px 0;
+  }
+}
+
+.availabilityDot {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--borderRadiusMedium);
+  align-self: center;
+  justify-self: center;
+  margin: 0 0 2px 0;
+  background-color: var(--colorFail);
+  margin-right: 8px;
+}
+
+.isAvailable {
+  background-color: var(--colorSuccess);
+}
+
+.planEntry {
+  display: inline-flex;
+}
+
+.deleteIconWrapper {
+  position: relative;
+}
+
+.deleteIcon {
+  margin-top: -6px;
+  stroke: var(--colorGrey300);
+  transition: var(--transitionStyleButton);
+}
+
+.deleteButton {
+  border: 0;
+  padding: 0px 8px;
+  cursor: pointer;
+}
+
+.exception {
+  display: inline-flex;
+
+  &:hover > .timeRange {
+    color: var(--colorBlack);
+  }
+  &:hover .deleteIcon {
+    stroke: var(--colorFail);
+  }
+}
+
+.date {
+  composes: marketplaceTabNavHorizontalFontStyles from global;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 24px 23px 24px;
+  border-bottom: solid 1px var(--colorGrey100);
+
+  @media (--viewportMedium) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 24px 24px 23px 24px;
+  }
+}
+
+.blockedDate {
+  background-color: #f3f3f3;
+  color: var(--colorGrey300);
+
+  & .timeRange {
+    color: var(--colorGrey300);
+  }
+
+  &:hover .exceptionsTitle,
+  &:hover .exceptionsSubtitle,
+  &:hover .exception > .timeRange {
+    color: var(--colorGrey700);
+  }
+  &:hover .exception:hover > .timeRange {
+    color: var(--colorBlack);
+  }
+}

@@ -1,0 +1,49 @@
+.root {
+  position: relative;
+  display: block;
+}
+
+.label {
+  color: var(--colorGrey700);
+  width: auto;
+  height: auto;
+  min-height: 0;
+  margin-right: 8px;
+
+  &:hover {
+    text-decoration: none;
+  }
+  &:focus {
+    text-decoration: none;
+  }
+}
+
+.popup {
+  /* By default hide the content */
+  display: block;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+
+  /* Position */
+  position: absolute;
+  z-index: var(--zIndexPopup);
+
+  /* Layout */
+  min-width: 300px;
+  margin-top: 7px;
+  background-color: var(--colorWhite);
+
+  /* Borders */
+  border-top: 1px solid var(--colorGrey100);
+  box-shadow: var(--boxShadowPopup);
+  border-radius: var(--borderRadiusMedium);
+  transition: var(--transitionStyleButton);
+}
+
+.isOpen {
+  display: block;
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}

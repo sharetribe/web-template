@@ -1,0 +1,77 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EditListingDeliveryForm matches snapshot 1`] = `
+<DocumentFragment>
+  <form
+    action="/"
+    class="root"
+    method="post"
+  >
+    <div
+      class="imagesFieldArray"
+    >
+      <div
+        class="addImageWrapper"
+      >
+        <div
+          class="root"
+        >
+          <div
+            class="aspectPadding"
+            style="padding-bottom: 100%;"
+          >
+            <div
+              class="aspectBox"
+            >
+              <input
+                accept="image/*"
+                class="addImageInput"
+                id="addImage"
+                name="addImage"
+                type="file"
+              />
+              <label
+                class="addImage"
+                for="addImage"
+              >
+                <span
+                  class="chooseImageText"
+                >
+                  <span
+                    class="chooseImage"
+                  >
+                    <span>
+                      EditListingPhotosForm.chooseImage
+                    </span>
+                  </span>
+                  <span
+                    class="imageTypes"
+                  >
+                    <span>
+                      EditListingPhotosForm.imageTypes
+                    </span>
+                  </span>
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p
+      class="tip"
+    >
+      <span>
+        EditListingPhotosForm.addImagesTip
+      </span>
+    </p>
+    <button
+      class="root submitButton"
+      disabled=""
+      type="submit"
+    >
+      Save photos
+    </button>
+  </form>
+</DocumentFragment>
+`;

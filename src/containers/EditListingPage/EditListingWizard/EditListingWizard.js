@@ -489,7 +489,7 @@ class EditListingWizard extends Component {
 
     // Redirect user to first tab when encoutering outdated draft listings.
     if (invalidExistingListingType && isNewListingFlow && selectedTab !== tabs[0]) {
-      return <NamedRedirect name="EditListingPage" params={{ ...params, tab: tabs[0] }} />;
+      return <NamedRedirect name="BatchEditListingPage" params={{ ...params, tab: tabs[0] }} />;
     }
 
     // If selectedTab is not active for listing with valid listing type,

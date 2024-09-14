@@ -1,0 +1,76 @@
+@import '../../../../../styles/customMediaQueries.css';
+
+.root {
+  /* Dimensions */
+  width: 100%;
+  height: auto;
+
+  /* Layout */
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+
+  padding-top: 1px;
+
+  @media (--viewportMedium) {
+    padding-top: 2px;
+    margin-top: -16px;
+  }
+}
+
+.subheading {
+  composes: p from global;
+}
+
+.heading,
+.subheading,
+.timezonePicker,
+.submitButton {
+  padding-left: 30px;
+  padding-right: 30px;
+
+  @media (--viewportSmall) {
+    padding-left: 60px;
+    padding-right: 60px;
+  }
+}
+
+.subheading {
+  margin: 0 0 6px 0;
+  padding-top: 19px;
+  padding-bottom: 5px;
+
+  @media (--viewportMedium) {
+    margin: 0 0 8px 0;
+  }
+}
+
+.error {
+  color: var(--colorFail);
+}
+
+.timezonePicker {
+  margin-bottom: 24px;
+}
+
+.week {
+  display: flex;
+  flex-direction: column;
+
+  padding-top: 16px;
+  margin-bottom: 23px;
+
+  @media (--viewportLarge) {
+    margin-bottom: 95px;
+  }
+}
+
+.submitButton {
+  margin-top: auto;
+  flex-shrink: 0;
+  /* Mobile phones introduce bottom-bar, for which we need to give 96px vertical space */
+  padding-bottom: 96px;
+  @media (--viewportMedium) {
+    padding-bottom: unset;
+  }
+}
