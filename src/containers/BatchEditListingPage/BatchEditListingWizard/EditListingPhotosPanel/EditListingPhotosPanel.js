@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { array, bool, func, object, string } from 'prop-types';
 import classNames from 'classnames';
 
@@ -10,33 +10,20 @@ import { LISTING_STATE_DRAFT } from '../../../../util/types';
 import { H3, ListingLink } from '../../../../components';
 
 // Import modules from this directory
-import css from './EditListingUploaderPanel.module.css';
-
-import Uppy from '@uppy/core';
-import { Dashboard } from '@uppy/react';
-import Transloadit from '@uppy/transloadit';
+import EditListingPhotosForm from './EditListingPhotosForm';
+import css from './EditListingPhotosPanel.module.css';
 
 const getInitialValues = params => {
   const { images } = params;
   return { images };
 };
 
-function createUppy(userId) {
-  return new Uppy({ meta: { userId } }).use(Transloadit, {
-    async assemblyOptions(file) {
-      // You can send meta data along for use in your template.
-      // https://transloadit.com/docs/topics/assembly-instructions/#form-fields-in-instructions
-      const body = JSON.stringify({ userId: file.meta.userId });
-      const res = await fetch('/transloadit-params', { method: 'POST', body });
-      return response.json();
-    },
-  });
-}
-
-const EditListingUploaderPanel = props => {
+const EditListingPhotosPanel = props => {
   const {
     className,
     rootClassName,
+    errors,
+    disabled,
     ready,
     listing,
     onImageUpload,
@@ -51,16 +38,6 @@ const EditListingUploaderPanel = props => {
   const rootClass = rootClassName || css.root;
   const classes = classNames(rootClass, className);
   const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
-  // TODO: resolve to the proper user id
-  const userId = '9999';
-  const [uppy] = useState(() => createUppy(userId));
-
-  useEffect(() => {
-    if (userId) {
-      // Adding to global `meta` will add it to every file.
-      uppy.setOptions({ meta: { userId } });
-    }
-  }, [uppy, userId]);
 
   return (
     <div className={classes}>
@@ -77,13 +54,28 @@ const EditListingUploaderPanel = props => {
           />
         )}
       </H3>
-
-      <Dashboard uppy={uppy} />
+      <EditListingPhotosForm
+        className={css.form}
+        disabled={disabled}
+        ready={ready}
+        fetchErrors={errors}
+        initialValues={getInitialValues(props)}
+        onImageUpload={onImageUpload}
+        onSubmit={values => {
+          const { addImage, ...updateValues } = values;
+          onSubmit(updateValues);
+        }}
+        onRemoveImage={onRemoveImage}
+        saveActionMsg={submitButtonText}
+        updated={panelUpdated}
+        updateInProgress={updateInProgress}
+        listingImageConfig={listingImageConfig}
+      />
     </div>
   );
 };
 
-EditListingUploaderPanel.defaultProps = {
+EditListingPhotosPanel.defaultProps = {
   className: null,
   rootClassName: null,
   errors: null,
@@ -91,7 +83,7 @@ EditListingUploaderPanel.defaultProps = {
   listing: null,
 };
 
-EditListingUploaderPanel.propTypes = {
+EditListingPhotosPanel.propTypes = {
   className: string,
   rootClassName: string,
   errors: object,
@@ -111,4 +103,4 @@ EditListingUploaderPanel.propTypes = {
   listingImageConfig: object.isRequired,
 };
 
-export default EditListingUploaderPanel;
+export default EditListingPhotosPanel;

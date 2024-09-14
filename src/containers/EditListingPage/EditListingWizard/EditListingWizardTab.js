@@ -21,7 +21,7 @@ import EditListingPricingPanel from './EditListingPricingPanel/EditListingPricin
 import EditListingPricingAndStockPanel from './EditListingPricingAndStockPanel/EditListingPricingAndStockPanel';
 
 import css from './EditListingWizardTab.module.css';
-import EditListingUploaderPanel from './EditListingUploader/EditListingUploaderPanel';
+
 
 export const DETAILS = 'details';
 export const PRICING = 'pricing';

@@ -1,0 +1,166 @@
+@import '../../../../../styles/customMediaQueries.css';
+
+.weekDay,
+.hasEntries {
+  padding-left: 30px;
+  padding-right: 30px;
+
+  @media (--viewportSmall) {
+    padding-left: 60px;
+    padding-right: 60px;
+  }
+}
+
+.weekDay {
+  composes: marketplaceTabNavHorizontalFontStyles from global;
+
+  /* Layout */
+  /* display: grid;
+  grid-template-columns: 24px 140px minmax(300px, 1fr);
+  grid-template-areas: "checkbox dayOfWeek pickers"; */
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  padding-top: 10px;
+  padding-bottom: 13px;
+  border-top: solid 1px var(--colorGrey100);
+
+  &:last-child {
+    border-bottom: solid 1px var(--colorGrey100);
+  }
+
+  @media (--viewportMedium) {
+    padding-top: 8px;
+    padding-bottom: 16px;
+  }
+}
+
+.hasEntries {
+  background-color: var(--colorWhite);
+}
+
+.dayToggle {
+  padding-top: 3px;
+
+  @media (--viewportMedium) {
+    padding-top: 8px;
+  }
+}
+
+.dayOfWeek {
+  width: 140px;
+  padding-top: 6px;
+
+  @media (--viewportMedium) {
+    width: 140px;
+    padding-top: 8px;
+  }
+}
+.pickerArea {
+  flex-grow: 1;
+}
+.timePicker {
+  width: 100%;
+}
+
+.fieldWrapper {
+  /* This container uses flexbox layout */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+
+  /* parent aka root is flexbox, this container takes all available space */
+  flex-grow: 1;
+  flex-shrink: 0;
+  flex-wrap: nowrap;
+  padding-bottom: 6px;
+
+  position: relative;
+
+  @media (--viewportMedium) {
+    padding-bottom: 8px;
+  }
+}
+
+.formRow {
+  /* parent aka fieldWrapper is flexbox, this container takes all available space */
+  flex-grow: 1;
+  flex-shrink: 0;
+  flex-wrap: nowrap;
+
+  /* This container uses flexbox layout */
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  z-index: 1;
+}
+.formRowHidden {
+  display: none;
+}
+
+.closeIcon {
+  composes: marketplaceModalCloseIcon from global;
+
+  stroke: none;
+  fill: var(--colorGrey300);
+  /* align icon with the select fields */
+  padding: 5px 0 7px 0;
+
+  &:hover {
+    fill: var(--colorGrey700);
+  }
+
+  @media (--viewportMedium) {
+    padding: 6px 0;
+  }
+}
+
+.dashBetweenTimes {
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+.plus1Day {
+  composes: marketplaceTinyFontStyles from global;
+  color: var(--colorGrey300);
+  visibility: hidden;
+  opacity: 0;
+  padding: 5px 0 1px 0;
+  margin: 0 0px 0 8px;
+
+  @media (--viewportMedium) {
+    padding: 6px 0 2px 0;
+    margin: 0 0px 0 8px;
+  }
+}
+.showPlus1Day {
+  visibility: visible;
+  opacity: 1;
+}
+
+.buttonAddNew {
+  composes: h5 from global;
+  color: var(--colorGrey700);
+
+  @media (--viewportMedium) {
+    margin-bottom: 6px;
+  }
+}
+
+.fieldSelect {
+  composes: marketplaceTabNavHorizontalFontStyles from global;
+  background: none;
+  padding: 6px 12px 4px 12px;
+  min-width: 87px;
+  text-align: center;
+
+  &:select {
+    margin-right: 0;
+  }
+}
+.notSelected {
+  color: var(--colorGrey300);
+}

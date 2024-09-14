@@ -1,0 +1,90 @@
+@import '../../../../styles/customMediaQueries.css';
+
+.root {
+  /* Dimensions */
+  width: 100%;
+  height: auto;
+
+  /* Display format */
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+
+  @media (--viewportMedium) {
+    padding-top: 2px;
+  }
+}
+
+.error {
+  color: var(--colorFail);
+}
+
+.deliveryOption {
+  margin-left: 30px;
+  @media (--viewportMedium) {
+    margin-left: 60px;
+  }
+}
+
+.deliveryCheckbox {
+  margin-bottom: 24px;
+}
+
+.disabled {
+  color: var(--colorGrey300);
+}
+
+.hidden {
+  display: none;
+}
+
+.locationAutocompleteInput {
+  /* Safari bugfix: without this Safari will print placeholder to a wrong place */
+  &::-webkit-input-placeholder {
+    line-height: normal;
+  }
+}
+
+.locationAutocompleteInputIcon {
+  display: none;
+}
+
+.predictionsRoot {
+  position: absolute;
+  width: 100%;
+  top: 36px;
+  left: 0;
+  background-color: var(--marketplaceColor);
+  border-bottom-left-radius: var(--borderRadius);
+  border-bottom-right-radius: var(--borderRadius);
+  box-shadow: var(--boxShadowPopup);
+  z-index: calc(var(--zIndexPopup) + 1);
+
+  @media (--viewportMedium) {
+    top: 40px;
+  }
+}
+
+.validLocation {
+  /* border-bottom-color: var(--colorSuccess); */
+}
+
+.input {
+  flex-shrink: 0;
+  margin-bottom: 24px;
+
+  @media (--viewportMedium) {
+    margin-bottom: 32px;
+  }
+}
+
+.submitButton {
+  margin-top: auto;
+  margin-bottom: 24px;
+
+  @media (--viewportLarge) {
+    display: inline-block;
+    width: 241px;
+    margin-top: 100px;
+  }
+}

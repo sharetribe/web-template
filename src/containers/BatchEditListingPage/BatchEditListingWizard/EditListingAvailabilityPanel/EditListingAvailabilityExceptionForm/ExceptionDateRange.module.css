@@ -1,0 +1,60 @@
+@import '../../../../../styles/customMediaQueries.css';
+
+.formRow {
+  /* parent aka root is flexbox, this container takes all available space */
+  flex-grow: 1;
+  flex-shrink: 0;
+
+  /* This container uses flexbox layout */
+  display: flex;
+  justify-content: space-between;
+
+  width: 100%;
+  padding: 0;
+  margin-top: 30px;
+
+  @media (--viewportMedium) {
+    flex-wrap: nowrap;
+    padding: 0;
+    margin-top: 24px;
+  }
+}
+
+.field {
+  display: flex;
+  align-items: flex-end;
+  position: relative;
+  width: 100%;
+
+  &:nth-child(2n) {
+    margin-top: 12px;
+  }
+
+  @media (--viewportMedium) {
+    &:nth-child(2n) {
+      margin-top: unset;
+    }
+  }
+}
+
+.fieldDateInput {
+  flex-grow: 1;
+
+  & :global(.SingleDatePickerInput) {
+    width: calc(100% - 24px);
+    margin: 0 0 0 24px;
+
+    @media (--viewportMedium) {
+      width: 100%;
+      margin: 0;
+    }
+  }
+
+  & :global(.SingleDatePicker_picker__directionLeft) {
+    width: 100vw;
+
+    @media (--viewportMedium) {
+      width: calc(200% + 24px);
+    }
+  }
+}

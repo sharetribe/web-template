@@ -11,7 +11,7 @@ const createListingLinkConfig = intl => ({
   text: intl.formatMessage({ id: 'TopbarDesktop.createListing' }),
   type: 'internal',
   route: {
-    name: 'EditListingPage',
+    name: 'BatchEditListingPage',
     params: { slug: 'draft', id: draftId, type: 'new', tab: 'details' },
   },
   highlight: true,

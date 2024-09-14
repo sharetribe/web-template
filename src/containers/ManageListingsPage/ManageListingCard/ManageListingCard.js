@@ -127,7 +127,7 @@ const ShowFinishDraftOverlayMaybe = props => {
       >
         <NamedLink
           className={css.finishListingDraftLink}
-          name="EditListingPage"
+          name="BatchEditListingPage"
           params={{ id, slug, type: LISTING_PAGE_PARAM_TYPE_DRAFT, tab: 'photos' }}
         >
           <FormattedMessage id="ManageListingCard.finishListingDraft" />
@@ -208,7 +208,7 @@ const ShowOutOfStockOverlayMaybe = props => {
         <>
           <NamedLink
             className={css.finishListingDraftLink}
-            name="EditListingPage"
+            name="BatchEditListingPage"
             params={{ id, slug, type: LISTING_PAGE_PARAM_TYPE_EDIT, tab: 'pricing-and-stock' }}
           >
             <FormattedMessage id="ManageListingCard.setPriceAndStock" />
@@ -279,7 +279,7 @@ const LinkToStockOrAvailabilityTab = props => {
       {isBookable ? (
         <NamedLink
           className={css.manageLink}
-          name="EditListingPage"
+          name="BatchEditListingPage"
           params={{ id, slug, type: editListingLinkType, tab: 'availability' }}
         >
           <FormattedMessage id="ManageListingCard.manageAvailability" />
@@ -287,7 +287,7 @@ const LinkToStockOrAvailabilityTab = props => {
       ) : (
         <NamedLink
           className={css.manageLink}
-          name="EditListingPage"
+          name="BatchEditListingPage"
           params={{ id, slug, type: editListingLinkType, tab: 'pricing-and-stock' }}
         >
           {currentStock == null
@@ -552,7 +552,7 @@ export const ManageListingCardComponent = props => {
         <div className={css.manageLinks}>
           <NamedLink
             className={css.manageLink}
-            name="EditListingPage"
+            name="BatchEditListingPage"
             params={{ id, slug, type: editListingLinkType, tab: 'details' }}
           >
             <FormattedMessage id="ManageListingCard.editListing" />
