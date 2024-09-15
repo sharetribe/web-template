@@ -6,6 +6,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 import omit from 'lodash/omit';
 import classNames from 'classnames';
+import InlineSearchButton from './CustomButton/InlineSearchButton';
 
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
@@ -494,6 +495,7 @@ export class SearchPageComponent extends Component {
                   );
                 })}
               </SearchFiltersPrimary>
+              <InlineSearchButton />
             </MainPanelHeader>
             {isSecondaryFiltersOpen ? (
               <div className={classNames(css.searchFiltersPanel)}>
