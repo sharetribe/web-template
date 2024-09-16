@@ -23,7 +23,7 @@ const SectionDetailsMaybe = props => {
     const { isDetail, label } = showConfig;
     const publicDataValue = publicData[key];
     const metadataValue = metadata[key];
-    const value = typeof publicDataValue != null ? publicDataValue : metadataValue;
+    const value = publicDataValue != null ? publicDataValue : metadataValue;
 
     if (isDetail && isTargetListingType && isTargetCategory && typeof value !== 'undefined') {
       const findSelectedOption = enumValue => enumOptions?.find(o => enumValue === `${o.option}`);
@@ -46,15 +46,25 @@ const SectionDetailsMaybe = props => {
 
   const existingListingFields = listingFieldConfigs.reduce(pickListingFields, []);
 
-  return existingListingFields.length > 0 ? (
+  const parsedListingFields = existingListingFields.map(detail => {
+    const labelMatch = detail.label.match(/^(.*?)\s*(\[.*?\])?\s*$/);
+    const parsedLabel = labelMatch[1];
+    const tooltip = labelMatch[2] ? labelMatch[2].slice(1, -1) : null;
+    return { ...detail, label: parsedLabel, tooltip };
+  });
+
+  return parsedListingFields.length > 0 ? (
     <section className={css.sectionDetails}>
       <Heading as="h2" rootClassName={css.sectionHeading}>
         <FormattedMessage id="ListingPage.detailsTitle" />
       </Heading>
       <ul className={css.details}>
-        {existingListingFields.map(detail => (
+        {parsedListingFields.map(detail => (
           <li key={detail.key} className={css.detailsRow}>
-            <span className={css.detailLabel}>{detail.label}</span>
+            <span className={css.detailLabel}>
+              {detail.label}
+              {detail.tooltip && <span className={css.detailTooltip}> {detail.tooltip}</span>}
+            </span>
             <span>{detail.value}</span>
           </li>
         ))}

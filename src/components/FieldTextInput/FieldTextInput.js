@@ -18,7 +18,7 @@ const FieldTextInputComponent = props => {
     label,
     input,
     meta,
-    onUnmount,
+   // onUnmount,
     isUncontrolled,
     inputRef,
     hideErrorMessage,

@@ -16,11 +16,17 @@ const SectionTextMaybe = props => {
     breakChars: '/',
   });
 
+  const originalLabel = heading || '';
+  const tooltipMatch = originalLabel.match(/\[(.*?)\]/);
+  const newLabel = originalLabel.replace(/\[.*?\]/g, '').trim();
+  const tooltip = tooltipMatch ? tooltipMatch[1] : '';
+
   return text ? (
     <section className={css.sectionText}>
       {heading ? (
         <Heading as="h2" rootClassName={css.sectionHeading}>
-          {heading}
+          {newLabel}
+          {tooltip && <span className={css.detailTooltip}> {tooltip}</span>}
         </Heading>
       ) : null}
       <p className={textClass}>{content}</p>
