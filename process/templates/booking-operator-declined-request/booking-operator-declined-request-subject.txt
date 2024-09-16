@@ -1,1 +1,1 @@
-{{set-translations (asset "content/email-texts.json")}}{{t "BookingOperatorDeclinedRequest.Subject" "A booking request was declined on your behalf" }}
+{{set-translations (asset "content/email-texts.json")}}{{t "BookingOperatorDeclinedRequest.Subject" "Your booking for {listingTitle} is approaching!" listingTitle=transaction.listing.title }}

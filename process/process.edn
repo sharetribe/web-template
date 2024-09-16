@@ -68,6 +68,13 @@
    :actions
    [{:name :action/calculate-full-refund}
     {:name :action/cancel-booking}],
+   :from :state/accepted,
+   :to :state/cancelled}
+  {:name :transition/cancel2,
+   :actor :actor.role/operator,
+   :actions
+   [{:name :action/calculate-full-refund}
+    {:name :action/cancel-booking}],
    :from :state/complete-start,
    :to :state/cancelled}
   {:name :transition/review-1-by-provider,
@@ -140,10 +147,26 @@
    :on :transition/decline,
    :to :actor.role/customer,
    :template :booking-declined-request}
+  {:name :notification/booking-cancelled-customer,
+   :on :transition/cancel,
+   :to :actor.role/customer,
+   :template :booking-cancel-customer}
+  {:name :notification/booking-cancelled-provider,
+   :on :transition/cancel,
+   :to :actor.role/provider,
+   :template :booking-cancel-provider}
+  {:name :notification/booking-cancelled-2-customer,
+   :on :transition/cancel2,
+   :to :actor.role/customer,
+   :template :booking-cancel-customer}
+  {:name :notification/booking-cancelled-2-provider,
+   :on :transition/cancel2,
+   :to :actor.role/provider,
+   :template :booking-cancel-provider}
   {:name :notification/booking-operator-declined-request-to-customer,
    :on :transition/operator-decline,
    :to :actor.role/customer,
-   :template :booking-declined-request}
+   :template :booking-cancel-customer}
   {:name :notification/booking-operator-declined-request-to-provider,
    :on :transition/operator-decline,
    :to :actor.role/provider,
