@@ -623,10 +623,10 @@
 .detailTooltip {
   font-weight: var(--fontWeightRegular);
   letter-spacing: -0.09px;
-  margin-left: 6px;
   font-size:80%;
   font-style: italic;
-
+  display: block;
+  margin-top: -4px;
 }
 
 .inquiryModalContent {
