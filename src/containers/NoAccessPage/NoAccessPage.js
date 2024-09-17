@@ -18,7 +18,12 @@ import {
   Page,
   ResponsiveBackgroundImageContainer,
   LayoutSingleColumn,
+  NamedLink,
+  ExternalLink,
 } from '../../components';
+
+import { generateLinkProps } from '../../util/routes';
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
@@ -28,40 +33,94 @@ import IconDoor from './IconDoor';
 
 import css from './NoAccessPage.module.css';
 
+/**
+ * CTAButtonMaybe component renders a call-to-action (CTA) button if it is enabled.
+ * If the link is internal, a `NamedLink` is rendered, otherwise an `ExternalLink`
+ * is rendered. Uses userData to inject user data into the URL.
+ */
+const CTAButtonMaybe = props => {
+  const { data, routeConfiguration, userId, userEmail } = props;
+  const { type, text, href, enabled } = data;
+
+  // If the call to action button is not enabled, return null and don't render anything
+  if (!enabled) {
+    return null;
+  }
+
+  // Render a spacer if the window object is not available (e.g., during server-side rendering)
+  // Prevents layout shifts on initial page load.
+  if (typeof window === 'undefined') {
+    return <div className={css.modalSpacer}></div>;
+  }
+
+  // Construct a the props for the NamedLink and ExternalLink components dynamically using the CTA data and user info
+  const ctaLink = generateLinkProps(type, href, routeConfiguration, userId, userEmail);
+
+  const isInternalLink = type === 'internal' && ctaLink.route;
+
+  return isInternalLink ? (
+    <NamedLink
+      name={ctaLink.route.name}
+      to={ctaLink.route.to}
+      params={ctaLink.route.params}
+      className={css.ctaButton}
+    >
+      {text}
+    </NamedLink>
+  ) : (
+    <ExternalLink href={ctaLink.link} className={css.ctaButton}>
+      {text}
+    </ExternalLink>
+  );
+};
+
 export const NoAccessPageComponent = props => {
   const config = useConfiguration();
   const intl = useIntl();
 
   const marketplaceName = config.marketplaceName;
-  const { scrollingDisabled, params: pathParams } = props;
+  const { scrollingDisabled, currentUser, params: pathParams } = props;
+
+  const routeConfiguration = useRouteConfiguration();
 
   const missingAccessRight = pathParams?.missingAccessRight;
   const isUserPendingApprovalPage = missingAccessRight === NO_ACCESS_PAGE_USER_PENDING_APPROVAL;
   const isPostingRightsPage = missingAccessRight === NO_ACCESS_PAGE_POST_LISTINGS;
   const isInitiateTransactionsPage = missingAccessRight === NO_ACCESS_PAGE_INITIATE_TRANSACTIONS;
 
-  const messages = isUserPendingApprovalPage
+  // Destructure `callToAction` objects from the config object for ease of reference
+  const { accessControl: accessControlConfig } = config || {};
+  const {
+    requireApprovalToJoinOptions: { callToAction: approvalToJoinCTA } = {},
+    requirePermissionToInitiateTransactionsOptions: { callToAction: permissionToInitiateCTA } = {},
+    requirePermissionToPostListingsOptions: { callToAction: permissionToPostCTA } = {},
+  } = accessControlConfig?.users || {};
+
+  const pageData = isUserPendingApprovalPage
     ? {
         schemaTitle: 'NoAccessPage.userPendingApproval.schemaTitle',
         heading: 'NoAccessPage.userPendingApproval.heading',
         content: 'NoAccessPage.userPendingApproval.content',
+        ctaData: approvalToJoinCTA,
       }
     : isPostingRightsPage
     ? {
         schemaTitle: 'NoAccessPage.postListings.schemaTitle',
         heading: 'NoAccessPage.postListings.heading',
         content: 'NoAccessPage.postListings.content',
+        ctaData: permissionToPostCTA,
       }
     : isInitiateTransactionsPage
     ? {
         schemaTitle: 'NoAccessPage.initiateTransactions.schemaTitle',
         heading: 'NoAccessPage.initiateTransactions.heading',
         content: 'NoAccessPage.initiateTransactions.content',
+        ctaData: permissionToInitiateCTA,
       }
     : {};
 
-  // If missing rights are unknown (no messages), show NotFoundPage
-  if (!(messages.heading && messages.content)) {
+  // If missing rights are unknown (no pageData), show NotFoundPage
+  if (!(pageData.heading && pageData.content)) {
     if (appSettings.dev) {
       console.warn(
         `The missing access right, ${missingAccessRight}, is not handled. Translations missing.`
@@ -72,7 +131,7 @@ export const NoAccessPageComponent = props => {
 
   return (
     <Page
-      title={intl.formatMessage({ id: messages.schemaTitle })}
+      title={intl.formatMessage({ id: pageData.schemaTitle })}
       scrollingDisabled={scrollingDisabled}
     >
       <LayoutSingleColumn
@@ -91,11 +150,17 @@ export const NoAccessPageComponent = props => {
           <div className={css.emailSubmittedContent}>
             <IconDoor className={css.modalIcon} />
             <Heading as="h1" rootClassName={css.modalTitle}>
-              {intl.formatMessage({ id: messages.heading })}
+              {intl.formatMessage({ id: pageData.heading })}
             </Heading>
             <p className={css.modalMessage}>
-              {intl.formatMessage({ id: messages.content }, { marketplaceName })}
+              {intl.formatMessage({ id: pageData.content }, { marketplaceName })}
             </p>
+            <CTAButtonMaybe
+              data={pageData.ctaData}
+              routeConfiguration={routeConfiguration}
+              userId={currentUser?.id?.uuid}
+              userEmail={currentUser?.attributes?.email}
+            />
           </div>
         </ResponsiveBackgroundImageContainer>
       </LayoutSingleColumn>
@@ -110,8 +175,10 @@ NoAccessPageComponent.propTypes = {
 };
 
 const mapStateToProps = state => {
+  const { currentUser } = state.user;
   return {
     scrollingDisabled: isScrollingDisabled(state),
+    currentUser,
   };
 };
 
