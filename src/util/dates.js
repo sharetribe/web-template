@@ -881,7 +881,8 @@ export const getEndOfWeekAsMoment = (dayMoment, timeZone, firstDayOfWeek) => {
  * @returns a Date object representing the first day of the week where given date belongs to
  */
 export const getStartOfWeek = (date, timeZone, firstDayOfWeek) => {
-  return getStartOfWeekAsMoment(moment(date).tz(timeZone), timeZone, firstDayOfWeek).toDate();
+  const m = timeZone ? moment(date).tz(timeZone) : moment(date);
+  return getStartOfWeekAsMoment(m, timeZone, firstDayOfWeek).toDate();
 };
 
 /**
@@ -893,7 +894,8 @@ export const getStartOfWeek = (date, timeZone, firstDayOfWeek) => {
  * @returns a Date object representing the last day of the week where given date belongs to
  */
 export const getEndOfWeek = (date, timeZone, firstDayOfWeek) => {
-  return getEndOfWeekAsMoment(moment(date).tz(timeZone), timeZone, firstDayOfWeek).toDate();
+  const m = timeZone ? moment(date).tz(timeZone) : moment(date);
+  return getEndOfWeekAsMoment(m, timeZone, firstDayOfWeek).toDate();
 };
 
 /**
