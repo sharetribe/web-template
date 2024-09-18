@@ -30,6 +30,13 @@ export const getStartOfNextMonth = (currentMoment, timeZone, offset = 1) =>
 export const getStartOfPrevMonth = (currentMoment, timeZone, offset = 1) =>
   getStartOfMonth(currentMoment, timeZone, -1 * offset);
 
+export const getExclusiveEndDate = (date, timeZone) => {
+  return getStartOf(date, 'day', timeZone, 1, 'days');
+};
+export const getInclusiveEndDate = (date, timeZone) => {
+  return getStartOf(date, 'day', timeZone, -1, 'days');
+};
+
 // React-dates returns wrapped date objects
 export const extractDateFromFieldDateInput = dateValue => dateValue?.date || null;
 
