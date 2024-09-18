@@ -4,7 +4,6 @@ import classNames from 'classnames';
 
 import {
   getStartOf,
-  initialVisibleMonth,
   isDateSameOrAfter,
   timeOfDayFromLocalToTimeZone,
 } from '../../../../../util/dates';
@@ -71,7 +70,7 @@ const handleKeyDown = setIsOpen => e => {
 
 const WeekPicker = props => {
   const [isOpen, setIsOpen] = useState(false);
-  const [currentMonth, setCurrentMonth] = useState(initialVisibleMonth(props.date, props.timeZone));
+  const [currentMonth, setCurrentMonth] = useState(props.date);
 
   const {
     rootClassName,

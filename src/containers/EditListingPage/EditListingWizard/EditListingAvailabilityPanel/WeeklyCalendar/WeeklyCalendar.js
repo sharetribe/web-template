@@ -9,7 +9,6 @@ import {
   getStartOf,
   getStartOfWeek,
   getEndOfWeek,
-  getMomentFromDate,
   isInRange,
   parseDateFromISO8601,
   parseDateTimeString,
@@ -433,7 +432,7 @@ const WeeklyCalendar = props => {
             }
             initialValues={{ dates: { startDate: currentWeek, endDate: endOfCurrentWeek } }}
             firstDayOfWeek={firstDayOfWeek}
-            date={getMomentFromDate(currentWeek)}
+            date={currentWeek}
             onDateChange={date => {
               const updatedDate = getStartOfWeek(date, timeZone, firstDayOfWeek);
               setCurrentWeek(updatedDate);
