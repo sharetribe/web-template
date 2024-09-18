@@ -41,11 +41,11 @@ const TODAY = new Date();
 // Date formatting used for placeholder texts:
 const dateFormattingOptions = { month: 'short', day: 'numeric', weekday: 'short' };
 
-// Format form's value for the react-dates input: convert timeOfDay to the local time
+// Format form's value for the DatePicker input: convert timeOfDay to the local time
 const formatFieldDateInput = timeZone => v =>
   v && v.date ? { date: timeOfDayFromTimeZoneToLocal(v.date, timeZone) } : { date: v };
 
-// Parse react-dates input's value: convert timeOfDay to the given time zone
+// Parse DatePicker input's value: convert timeOfDay to the given time zone
 const parseFieldDateInput = timeZone => v =>
   v && v.date ? { date: timeOfDayFromLocalToTimeZone(v.date, timeZone) } : v;
 
@@ -171,7 +171,7 @@ const getAllTimeValues = ({
   return { startTime, endDate, endTime, selectedSlot };
 };
 
-// Prop function for react-dates component: check if the day is blocked
+// Prop function for DatePicker component: check if the day is blocked
 // For start date, all dates with overlapping availability slots are available
 // For end date, only dates within selected availability slot are available.
 const isDayBlocked = params => day => {
@@ -202,10 +202,10 @@ const isDayBlocked = params => day => {
   return selectedSlot ? !isInSlotRange(localizedDay, selectedSlot) : true;
 };
 
-// Prop function for react-dates component: restrict availability within this range
+// Prop function for DatePicker component: restrict availability within this range
 // By default, it's today ... today+366d
 const isOutsideRange = timeZone => day => {
-  // 'day' is pointing to browser's local time zone (react-dates gives these).
+  // 'day' is pointing to browser's local time zone (DatePicker gives these).
   // However, exceptionStartDay and other times refer to listing's timeZone.
   const localizedDay = timeOfDayFromLocalToTimeZone(day, timeZone);
   const rangeStart = getStartOf(TODAY, 'day', timeZone);
@@ -228,7 +228,7 @@ const onExceptionStartDateChange = (value, availableDates, props) => {
     return;
   }
 
-  // This callback function is called from react-dates component.
+  // This callback function is called from DatePicker component.
   // It gets raw value as a param - browser's local time instead of time in listing's timezone.
   const selectedStartDate = timeOfDayFromLocalToTimeZone(value.date, timeZone);
   const dayData = availableDates[stringifyDateToISO8601(selectedStartDate, timeZone)];
@@ -267,7 +267,7 @@ const onExceptionEndDateChange = (value, availableSlots, props) => {
   const { exceptionStartDate: exceptionStart, exceptionStartTime: selectedStartTime } = values;
   const selectedStartDate = exceptionStart.date;
 
-  // This callback function is called from react-dates component.
+  // This callback function is called from DatePicker component.
   // It gets raw value as a param - browser's local time instead of time in listing's timezone.
   const selectedEndDate = timeOfDayFromLocalToTimeZone(value.date, timeZone);
   const params = {

@@ -167,16 +167,6 @@
   --datepickerSelectedHoveredFgColor: inherit;
   --datepickerSelectedHoveredBgColor: rgba(255, 255, 255, 0.2);
 
-  /* ================ DateInput, DateRangeInput, DateRangeController ================ */
-  --ReactDates_selectionHeight: 36px;
-  --ReactDates_hoveredOverlayColor: rgba(255, 255, 255, 0.2);
-
-  --DateInput_selectionHeight: var(--ReactDates_selectionHeight);
-  --DateInput_hoveredOverlayColor: var(--ReactDates_hoveredOverlayColor);
-  --DateRangeInput_selectionHeight: var(--ReactDates_selectionHeight);
-  --DateRangeInput_hoveredOverlayColor: var(--ReactDates_hoveredOverlayColor);
-  --DateRangeController_selectionHeight: var(--ReactDates_selectionHeight);
-
   /* ================ SectionHero ================ */
   --SectionHero_desktopTitleMaxWidth: 625px;
 
