@@ -36,8 +36,8 @@ import {
   handleWeekClick,
 } from '../availability.helpers';
 
-import Next from '../NextArrow';
-import Prev from '../PrevArrow';
+import Next from './NextArrow';
+import Prev from './PrevArrow';
 import WeekPicker from './WeekPicker';
 import css from './WeeklyCalendar.module.css';
 
