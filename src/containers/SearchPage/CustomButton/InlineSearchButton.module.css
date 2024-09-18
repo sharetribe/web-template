@@ -5,6 +5,12 @@
   align-items: flex-start;
 }
 
+@media (max-width: 768px) {
+  .container {
+    margin-left: 0;
+  }
+}
+
 .searchContainer {
   display: flex;
   align-items: center;
@@ -12,17 +18,19 @@
 
 .input {
   padding: 2px;
-  font-size: 16px;
+  font-size: 13px;
+  line-height: 20px;
   border-radius: 5px;
   margin-right: 10px;
-  width: 120px;
+  width: 100px;
+  height: 36px;  
+  text-align: center;
 }
 
 @media (max-width: 768px) {
   .input {
     width: 120px;
     height: 36px;    
-    text-align: center;
   }
 }
 
@@ -33,14 +41,13 @@
   background-color: blue;
   display: inline-block;
   height: 40px;
-  min-height: 35px;
   padding: 0 18px;
   margin: 0 9px 0 0;
   transition: all var(--transitionStyleButton);
   cursor: pointer;
-  font-weight: var(--fontWeightSemiBold);
+  font-weight: var(--fontWeightSemiMedium);
   font-size: 13px;
-  line-height: 18px;
+  line-height: 20px;
   letter-spacing: 0.2px;
   text-align: center;
   text-decoration: none;
@@ -49,14 +56,19 @@
 
 @media (max-width: 768px) {
   .customButton {
-    height: 36px;
-    margin-right: 20px;
+    height: 35px;
+    font-weight: var(--fontWeightSemiBold);
   }
 }
 
 .searchButton {
-  color: #3b3f45;
+  color: #4a4a4f;
   background-color: var(--colorWhite);
+}
+@media (max-width: 768px) {
+  .searchButton {
+    width: 140px;
+  }
 }
 
 .searchButton:hover {
@@ -65,12 +77,13 @@
 }
 
 .searchButtonSubmit {
-  background-color: #3b3f45;
+  background-color: #4a4a4f;
   color: var(--colorWhite);
+  font-size: 12px;
 }
 
 .searchButtonSubmit:hover {
-  background-color: #3b3f45;
+  background-color: #4a4a4f;
   box-shadow: rgba(0, 0, 0, 0.20) 0px 4px 10px;
 }
 
