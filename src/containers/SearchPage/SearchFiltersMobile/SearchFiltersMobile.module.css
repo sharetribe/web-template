@@ -109,3 +109,14 @@
   display: inline-block;
   border-radius: 3px;
 }
+
+
+.inlineSearchButtonMobile {
+  display: none; /* Hide by default */
+
+  /* Show on mobile */
+  @media (max-width: 768px) {
+    display: flex;
+
+  }
+}

@@ -7,11 +7,17 @@ const InlineSearchButton = () => {
   const [error, setError] = useState('');
 
   const handleSearch = () => {
-    if (searchText.length === 6) {
+    if (searchText === '') {
+      // If no input, revert to the "Search Pincode" button
+      setShowSearch(false);
+      setError(''); // Clear any existing errors
+    } else if (searchText.length < 6) {
+      // If input is less than 6 digits, show error
+      setError('Please enter a 6-digit pincode.');
+    } else {
+      // If valid, proceed with search
       const url = `${window.location.origin}/s?keywords=${encodeURIComponent(searchText)}`;
       window.location.href = url;
-    } else {
-      setError('Please enter a 6-digit pincode.');
     }
   };
 
@@ -19,7 +25,7 @@ const InlineSearchButton = () => {
     const value = e.target.value;
     if (/^\d*$/.test(value) && value.length <= 6) {
       setSearchText(value);
-      setError('');
+      setError(''); // Clear error on valid input
     }
   };
 
@@ -28,7 +34,7 @@ const InlineSearchButton = () => {
       {!showSearch ? (
         <button 
           onClick={() => setShowSearch(true)}
-          className={`${styles.button} ${styles.searchButton}`}
+          className={`${styles.customButton} ${styles.searchButton}`}
         >
           Search Pincode
         </button>
@@ -44,13 +50,13 @@ const InlineSearchButton = () => {
           />
           <button 
             onClick={handleSearch}
-            className={`${styles.button} ${styles.searchButtonSubmit}`}
+            className={`${styles.customButton} ${styles.searchButtonSubmit}`}
           >
             Search
           </button>
-          {error && <p className={styles.error}>{error}</p>}
         </div>
       )}
+      {error && <p className={styles.error}>{error}</p>}
     </div>
   );
 };

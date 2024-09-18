@@ -495,7 +495,6 @@ export class SearchPageComponent extends Component {
                   );
                 })}
               </SearchFiltersPrimary>
-              <InlineSearchButton />
             </MainPanelHeader>
             {isSecondaryFiltersOpen ? (
               <div className={classNames(css.searchFiltersPanel)}>

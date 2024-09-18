@@ -1,7 +1,7 @@
 .container {
   display: flex;
-  margin-top: 10px;
-  flex-direction: column;
+  flex-direction: column; /* Stack items vertically */
+  margin-left: 10px;
   align-items: flex-start;
 }
 
@@ -14,16 +14,24 @@
   padding: 2px;
   font-size: 16px;
   border-radius: 5px;
-  margin-right: 10px; /* Add some space between the input and the button */
+  margin-right: 10px;
   width: 120px;
 }
 
-.button {
+@media (max-width: 768px) {
+  .input {
+    width: 120px;
+    height: 36px;    
+    text-align: center;
+  }
+}
+
+.customButton {
   border: 1px solid var(--colorGrey100);
-  border-radius: var(--borderRadiusMedium);
+  border-radius: 4px;
   background-color: var(--colorWhite);
+  background-color: blue;
   display: inline-block;
-  width: auto;
   height: 40px;
   min-height: 35px;
   padding: 0 18px;
@@ -39,28 +47,35 @@
   font-family: var(--fontFamily);
 }
 
+@media (max-width: 768px) {
+  .customButton {
+    height: 36px;
+    margin-right: 20px;
+  }
+}
+
 .searchButton {
-  background-color: var(--marketplaceColor);
-  color: var(--colorWhite);
-  border: none;
+  color: #3b3f45;
+  background-color: var(--colorWhite);
 }
 
 .searchButton:hover {
-  background-color: var(--marketplaceColorDark);
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 .searchButtonSubmit {
-  background-color: var(--colorSuccess);
+  background-color: #3b3f45;
   color: var(--colorWhite);
-  border: none;
 }
 
 .searchButtonSubmit:hover {
-  background-color: var(--colorSuccessDark);
+  background-color: #3b3f45;
+  box-shadow: rgba(0, 0, 0, 0.20) 0px 4px 10px;
 }
 
 .error {
   color: red;
   font-size: 14px;
-  margin-top: 10px;
+  margin-top: 10px; /* Added for spacing below the button */
 }

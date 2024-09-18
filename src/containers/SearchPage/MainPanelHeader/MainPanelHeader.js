@@ -1,6 +1,7 @@
 import React from 'react';
 import { bool, func, node, number, string } from 'prop-types';
 import classNames from 'classnames';
+import InlineSearchButton from '../CustomButton/InlineSearchButton';
 
 import { FormattedMessage } from '../../../util/reactIntl';
 
@@ -42,6 +43,8 @@ const MainPanelHeader = props => {
               <FormattedMessage id="MainPanelHeader.sortBy" />
             </span>
             {sortByComponent}
+            
+            <InlineSearchButton />
           </div>
         ) : null}
       </div>

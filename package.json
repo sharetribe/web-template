@@ -117,7 +117,8 @@
     "test-server": "jest ./server/**/*.test.js",
     "heroku-postbuild": "yarn run build",
     "postinstall": "patch-package",
-    "translate": "node scripts/translations.js"
+    "translate": "node scripts/translations.js",
+        "dev": "next dev -H 0.0.0.0"
   },
   "browserslist": {
     "production": [

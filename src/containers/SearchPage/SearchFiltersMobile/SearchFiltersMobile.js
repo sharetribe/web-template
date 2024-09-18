@@ -7,6 +7,7 @@ import { useRouteConfiguration } from '../../../context/routeConfigurationContex
 import { FormattedMessage, useIntl, intlShape } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import { createResourceLocatorString } from '../../../util/routes';
+import InlineSearchButton from '../CustomButton/InlineSearchButton';
 
 import { ModalInMobile, Button } from '../../../components';
 
@@ -111,7 +112,14 @@ class SearchFiltersMobileComponent extends Component {
             />
           </PopupOpenerButton>
 
-          {sortByComponent}
+  
+
+          {/* {sortByComponent} * Removed SortBy for Mobile */}
+          <div className={css.inlineSearchButtonMobile}>
+            <InlineSearchButton />
+            </div>
+
+
           {isMapVariant ? (
             <div className={css.mapIcon} onClick={onMapIconClick}>
               <FormattedMessage id="SearchFiltersMobile.openMapView" className={css.mapIconText} />
