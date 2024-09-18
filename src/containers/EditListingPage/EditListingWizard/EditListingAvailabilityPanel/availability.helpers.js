@@ -166,7 +166,7 @@ const getMonthStartInTimeZone = (monthId, timeZone) => {
 export const getMonthlyFetchRange = (monthlyExceptionQueries, timeZone) => {
   const monthStrings = Object.keys(monthlyExceptionQueries);
   const firstMonth = getMonthStartInTimeZone(monthStrings[0], timeZone);
-  const lastMonth = getMonthStartInTimeZone(monthStrings[monthStrings.length - 1]);
+  const lastMonth = getMonthStartInTimeZone(monthStrings[monthStrings.length - 1], timeZone);
   const exclusiveEndMonth = getStartOfNextMonth(lastMonth, timeZone);
   return [firstMonth, exclusiveEndMonth];
 };
