@@ -316,7 +316,7 @@ const handleMonthClick = (
   onFetchTimeSlots
 ) => monthFn => {
   // Callback function after month has been updated.
-  // react-dates component has next and previous months ready (but inivisible).
+  // DatePicker component has next and previous months ready (but inivisible).
   // we try to populate those invisible months before user advances there.
   fetchMonthData(
     monthFn(currentMonth, timeZone, 2),
@@ -354,7 +354,7 @@ const onBookingStartDateChange = (props, setCurrentMonth) => value => {
     return;
   }
 
-  // This callback function (onBookingStartDateChange) is called from react-dates component.
+  // This callback function (onBookingStartDateChange) is called from DatePicker component.
   // It gets raw value as a param - browser's local time instead of time in listing's timezone.
   const startDate = timeOfDayFromLocalToTimeZone(value.date, timeZone);
   const timeSlotsOnSelectedDate = getTimeSlotsOnDate(monthlyTimeSlots, startDate, timeZone);
@@ -400,7 +400,7 @@ const onBookingStartTimeChange = props => value => {
 //     return;
 //   }
 
-//   // This callback function (onBookingStartDateChange) is called from react-dates component.
+//   // This callback function (onBookingStartDateChange) is called from DatePicker component.
 //   // It gets raw value as a param - browser's local time instead of time in listing's timezone.
 //   const endDate = timeOfDayFromLocalToTimeZone(value.date, timeZone);
 

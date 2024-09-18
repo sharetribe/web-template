@@ -1,7 +1,7 @@
 import moment from 'moment-timezone/builds/moment-timezone-with-data-10-year-range.min';
 
 /**
- * Input names for the DateRangePicker from react-dates.
+ * Input names for the DateRangePicker from DatePicker.
  */
 export const START_DATE = 'startDate';
 export const END_DATE = 'endDate';
@@ -177,11 +177,11 @@ export const isInRange = (date, start, end, timeUnit, timeZone) => {
  * Returns true if the day is inside the range or if the time-range
  * starts or ends between start and end of the day.
  *
- * By default react-dates handles dates in the browser's timezone so
+ * By default DatePicker handles dates in the browser's timezone so
  * we need to convert the value `day` to given timezone before comparing it
  * to time-range.
  *
- * This is used with isDayBlocked in react-dates
+ * This is used with isDayBlocked in DatePicker
  *
  * @param {Moment} dayMoment to be checked
  * @param {Date} start start of the range
@@ -773,25 +773,6 @@ export const getEndHours = (startTime, endTime, timeZone, intl) => {
 //////////
 
 /**
- * Return fucntion for react-dates that returns moment of correct initial visible month.
- * The time-of-day is converted to given time zone, since timeSlot query is tied to it.
- *
- * Note:  The moment object we pass to react-dates is without time zone info.
- * Otherwise, react-dates would start to behave erroneously.
- *
- * @param {Date} date
- * @param {String} timeZone name. It should represent IANA timezone key.
- * @returns {Moment} of correct month in the given time zone
- */
-export const initialVisibleMonth = (date, timeZone) => () => {
-  return moment(
-    moment(date)
-      .tz(timeZone)
-      .format('YYYY-MM-DD HH:mm:ss')
-  );
-};
-
-/**
  * Format the given date to month id/string: 'YYYY-MM'.
  *
  * @param {Date} date to be formatted
@@ -841,13 +822,13 @@ export const getDayOfWeek = (date, timeZone) => {
 
 /**
  * Get the start of a week as a Momemnt instance.
- * This is used by react-dates library (e.g. WeeklyCalendar)
+ * This is used by getStartOfWeek function (e.g. WeeklyCalendar)
  * @param {Moment} dayMoment moment instance representing a day
  * @param {String} timeZone name. It should represent IANA timezone key.
  * @param {number} firstDayOfWeek (which weekday is the first day?)
  * @returns return moment object representing the first moment of the week where dayMoment belongs to
  */
-export const getStartOfWeekAsMoment = (dayMoment, timeZone, firstDayOfWeek) => {
+const getStartOfWeekAsMoment = (dayMoment, timeZone, firstDayOfWeek) => {
   const m = timeZone ? dayMoment.clone().tz(timeZone) : dayMoment.clone();
   let d = m.startOf('day');
   const diffToSunday = d.day();
@@ -859,14 +840,14 @@ export const getStartOfWeekAsMoment = (dayMoment, timeZone, firstDayOfWeek) => {
 
 /**
  * Get the end of a week as a Momemnt instance.
- * This is used by react-dates library (e.g. WeeklyCalendar)
+ * This is used by getEndOfWeek function (e.g. WeeklyCalendar)
  *
  * @param {Moment} dayMoment moment instance representing a day
  * @param {String} timeZone name. It should represent IANA timezone key.
  * @param {number} firstDayOfWeek (which weekday is the first day?)
  * @returns return moment object representing the end day of the week where dayMoment belongs to
  */
-export const getEndOfWeekAsMoment = (dayMoment, timeZone, firstDayOfWeek) => {
+const getEndOfWeekAsMoment = (dayMoment, timeZone, firstDayOfWeek) => {
   const startOfWeek = getStartOfWeekAsMoment(dayMoment, timeZone, firstDayOfWeek);
   const endOfWeek = startOfWeek.add(6, 'days').startOf('day');
   return endOfWeek;
@@ -874,7 +855,7 @@ export const getEndOfWeekAsMoment = (dayMoment, timeZone, firstDayOfWeek) => {
 
 /**
  * Get the start of a week as a Date instance.
- * This is used by react-dates library (e.g. WeeklyCalendar)
+ * This is used by WeeklyCalendar
  * @param {Date} date instance
  * @param {String} timeZone name. It should represent IANA timezone key.
  * @param {number} firstDayOfWeek (which weekday is the first day?)
@@ -887,7 +868,7 @@ export const getStartOfWeek = (date, timeZone, firstDayOfWeek) => {
 
 /**
  * Get the end of a week as a Date instance.
- * This is used by react-dates library (e.g. WeeklyCalendar)
+ * This is used by WeeklyCalendar
  * @param {Date} date instance
  * @param {String} timeZone name. It should represent IANA timezone key.
  * @param {number} firstDayOfWeek (which weekday is the first day?)
@@ -897,14 +878,3 @@ export const getEndOfWeek = (date, timeZone, firstDayOfWeek) => {
   const m = timeZone ? moment(date).tz(timeZone) : moment(date);
   return getEndOfWeekAsMoment(m, timeZone, firstDayOfWeek).toDate();
 };
-
-/**
- * Create moment instance from given Date object
- * This is used by react-dates library (e.g. WeeklyCalendar)
- *
- * @param {Date} date instance
- * @param {String} timeZone name. It should represent IANA timezone key.
- * @returns moment instance
- */
-export const getMomentFromDate = (date, timeZone) =>
-  timeZone ? moment(date).tz(timeZone) : moment(date);

@@ -35,7 +35,7 @@ const TODAY = new Date();
 // Date formatting used for placeholder texts:
 const dateFormattingOptions = { month: 'short', day: 'numeric', weekday: 'short' };
 
-// Format form's value for the react-dates input: convert timeOfDay to the local time
+// Format form's value for the DatePicker input: convert timeOfDay to the local time
 const formatFieldDateInput = (isDaily, timeZone) => v => {
   const { startDate, endDate } = v || {};
   // Format the Final Form field's value for the DateRangeInput
@@ -48,7 +48,7 @@ const formatFieldDateInput = (isDaily, timeZone) => v => {
   return v ? { startDate: formattedStart, endDate: formattedEnd } : v;
 };
 
-// Parse react-dates input's value: convert timeOfDay to the given time zone
+// Parse DatePicker input's value: convert timeOfDay to the given time zone
 const parseFieldDateInput = (isDaily, timeZone) => v => {
   const { startDate, endDate } = v || {};
   // Parse the DateRangeInput's value (local noon) for the Final Form
@@ -106,7 +106,7 @@ const isDayBlocked = params => day => {
 };
 
 const isOutsideRange = timeZone => day => {
-  // 'day' is pointing to browser's local time-zone (react-dates gives these).
+  // 'day' is pointing to browser's local time-zone (DatePicker gives these).
   // However, exceptionStartDay and other times refer to listing's timeZone.
   const localizedDay = timeOfDayFromLocalToTimeZone(day, timeZone);
   const rangeStart = getStartOf(TODAY, 'day', timeZone);

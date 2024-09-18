@@ -180,7 +180,7 @@ const getBookableRange = (timeSlotData, startOfAvailableRange, endOfAvailableRan
 
 /**
  * Returns an isOutsideRange function that can be passed to
- * a react-dates DateRangePicker component.
+ * a DateRangePicker component.
  */
 const isOutsideRangeFn = (
   allTimeSlots,
@@ -236,7 +236,7 @@ const isOutsideRangeFn = (
 
 /**
  * Returns an isDayBlocked function that can be passed to
- * a react-dates DateRangePicker component.
+ * a DateRangePicker component.
  */
 const isDayBlockedFn = params => {
   const { allTimeSlots, monthlyTimeSlots, isDaily, startDate, endDate, timeZone } = params || {};
@@ -309,7 +309,7 @@ const handleMonthClick = (
   onFetchTimeSlots
 ) => monthFn => {
   // Callback function after month has been updated.
-  // react-dates component has next and previous months ready (but inivisible).
+  // DatePicker component has next and previous months ready (but inivisible).
   // we try to populate those invisible months before user advances there.
   fetchMonthData(
     monthFn(currentMonth, timeZone, 2),
