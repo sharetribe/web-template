@@ -8,7 +8,6 @@ import {
   isInRange,
   timestampToDate,
   getStartOf,
-  initialVisibleMonth,
   stringifyDateToISO8601,
   timeOfDayFromLocalToTimeZone,
   timeOfDayFromTimeZoneToLocal,
@@ -22,7 +21,7 @@ import {
 } from '../../../../../util/dates';
 import { exceptionFreeSlotsPerDate } from '../../../../../util/generators';
 import { bookingDateRequired } from '../../../../../util/validators';
-import { FieldDateInput, FieldSelect } from '../../../../../components';
+import { FieldSingleDatePicker, FieldSelect } from '../../../../../components';
 
 import {
   getStartOfNextMonth,
@@ -32,9 +31,6 @@ import {
   handleMonthClick,
   getMonthlyFetchRange,
 } from '../availability.helpers';
-
-import Next from '../NextArrow';
-import Prev from '../PrevArrow';
 
 import css from './ExceptionDateTimeRange.module.css';
 
@@ -52,6 +48,19 @@ const formatFieldDateInput = timeZone => v =>
 // Parse react-dates input's value: convert timeOfDay to the given time zone
 const parseFieldDateInput = timeZone => v =>
   v && v.date ? { date: timeOfDayFromLocalToTimeZone(v.date, timeZone) } : v;
+
+const showNextMonthStepper = (currentMonth, timeZone) => {
+  const nextMonthDate = getStartOfNextMonth(currentMonth, timeZone);
+  const endOfRange = endOfAvailabilityExceptionRange(timeZone, TODAY);
+
+  return !isDateSameOrAfter(nextMonthDate, endOfRange);
+};
+
+const showPreviousMonthStepper = (currentMonth, timeZone) => {
+  const prevMonthDate = getStartOfPrevMonth(currentMonth, timeZone);
+  const currentMonthDate = getStartOf(TODAY, 'month', timeZone);
+  return isDateSameOrAfter(prevMonthDate, currentMonthDate);
+};
 
 // Get available start times for new exceptions on given date.
 const getAvailableStartTimes = ({ selectedStartDate, availableSlots, intl, timeZone }) => {
@@ -366,16 +375,27 @@ const ExceptionDateTimeRange = props => {
     <>
       <div className={css.formRow}>
         <div className={css.field}>
-          <FieldDateInput
-            className={css.fieldDateInput}
+          <FieldSingleDatePicker
             name="exceptionStartDate"
             id={`${idPrefix}.exceptionStartDate`}
+            className={css.fieldDatePicker}
+            inputClassName={css.fieldDateInput}
+            popupClassName={css.fieldDatePopup}
             label={intl.formatMessage({
               id: 'EditListingAvailabilityExceptionForm.exceptionStartDateLabel',
             })}
             placeholderText={intl.formatDate(TODAY, dateFormattingOptions)}
             format={formatFieldDateInput(timeZone)}
             parse={parseFieldDateInput(timeZone)}
+            showPreviousMonthStepper={showPreviousMonthStepper(currentMonth, timeZone)}
+            showNextMonthStepper={showNextMonthStepper(currentMonth, timeZone)}
+            onMonthChange={date => {
+              const localizedDate = timeOfDayFromLocalToTimeZone(date, timeZone);
+              onMonthClick(
+                localizedDate < currentMonth ? getStartOfPrevMonth : getStartOfNextMonth
+              );
+              setCurrentMonth(localizedDate);
+            }}
             isDayBlocked={isDayBlocked({
               exceptionStartDay,
               exceptionStartTime,
@@ -386,21 +406,6 @@ const ExceptionDateTimeRange = props => {
             })}
             isOutsideRange={isOutsideRange(timeZone)}
             onChange={value => onExceptionStartDateChange(value, availableDates, props)}
-            onPrevMonthClick={() => onMonthClick(getStartOfPrevMonth)}
-            onNextMonthClick={() => onMonthClick(getStartOfNextMonth)}
-            initialVisibleMonth={initialVisibleMonth(exceptionStartDay || startOfToday, timeZone)}
-            navNext={
-              <Next
-                showUntilDate={endOfAvailabilityExceptionRange(timeZone, TODAY)}
-                startOfNextRange={getStartOfNextMonth(currentMonth, timeZone)}
-              />
-            }
-            navPrev={
-              <Prev
-                showUntilDate={getStartOf(TODAY, 'month', timeZone)}
-                startOfPrevRange={getStartOf(currentMonth, 'month', timeZone, -1, 'months')}
-              />
-            }
             useMobileMargins
             showErrorMessage={false}
             validate={bookingDateRequired('Required')}
@@ -431,10 +436,12 @@ const ExceptionDateTimeRange = props => {
       </div>
       <div className={css.formRow}>
         <div className={css.field}>
-          <FieldDateInput
+          <FieldSingleDatePicker
             name="exceptionEndDate"
             id={`${idPrefix}.exceptionEndDate`}
-            className={css.fieldDateInput}
+            className={css.fieldDatePicker}
+            inputClassName={css.fieldDateInput}
+            popupClassName={css.fieldDatePopup}
             label={intl.formatMessage({
               id: 'EditListingAvailabilityExceptionForm.exceptionEndDateLabel',
             })}
@@ -449,23 +456,9 @@ const ExceptionDateTimeRange = props => {
               timeZone,
               focusedInput: END_DATE,
             })}
-            onChange={value => onExceptionEndDateChange(value, availableSlotsOnSelectedDate, props)}
-            onPrevMonthClick={() => onMonthClick(getStartOfPrevMonth)}
-            onNextMonthClick={() => onMonthClick(getStartOfNextMonth)}
-            initialVisibleMonth={initialVisibleMonth(exceptionStartDay || startOfToday, timeZone)}
-            navNext={
-              <Next
-                lastMonthDate={endOfAvailabilityExceptionRange(timeZone, TODAY)}
-                nextMonthDate={getStartOfNextMonth(currentMonth, timeZone)}
-              />
-            }
-            navPrev={
-              <Prev
-                currentMonthDate={getStartOf(TODAY, 'month', timeZone)}
-                prevMonthDate={getStartOf(currentMonth, 'month', timeZone, -1, 'months')}
-              />
-            }
+            startDate={stringifyDateToISO8601(exceptionEndDay || exceptionStartDay || TODAY)}
             isOutsideRange={isOutsideRange(timeZone)}
+            onChange={value => onExceptionEndDateChange(value, availableSlotsOnSelectedDate, props)}
             useMobileMargins
             showErrorMessage={false}
             validate={bookingDateRequired('Required')}
