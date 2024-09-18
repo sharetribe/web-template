@@ -1077,5 +1077,8 @@
   "UserDisplayName.deleted": "Deleted user",
   "UserNav.accountSettings": "Account settings",
   "UserNav.profileSettings": "Profile settings",
-  "UserNav.yourListings": "Your listings"
+  "UserNav.yourListings": "Your listings",
+  "AddToCartButton.cartLabel": "Cart:",
+  "AddToCartButton.label": "Add to cart"
+
 }

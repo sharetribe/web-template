@@ -1,0 +1,15 @@
+.smallButton {
+    height: 15px;
+    width: 35px;
+    margin: 10px;
+  }
+  
+  .buttonContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+  
+  .countContainer {
+    align-self: center;
+  }

@@ -140,3 +140,4 @@ export { default as LayoutComposer, LayoutSingleColumn, LayoutSideNavigation } f
 export { default as MaintenanceMode } from './MaintenanceMode/MaintenanceMode';
 export { default as ModalMissingInformation } from './ModalMissingInformation/ModalMissingInformation';
 export { default as Topbar } from './Topbar/Topbar';
+export { default as AddToCartButton } from './AddToCartButton/AddToCartButton'
