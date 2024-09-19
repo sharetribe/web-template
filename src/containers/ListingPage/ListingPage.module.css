@@ -725,3 +725,8 @@
     flex-shrink: 0;
   }
 }
+
+.GetDirectionsLink {
+  font-size: 14px;
+}
+

@@ -5,6 +5,8 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@babel/runtime": "^7.17.9",
+    "@fortawesome/free-solid-svg-icons": "^6.6.0",
+    "@fortawesome/react-fontawesome": "^0.2.2",
     "@loadable/component": "^5.15.2",
     "@loadable/server": "^5.15.2",
     "@mapbox/polyline": "^1.1.1",
@@ -118,7 +120,7 @@
     "heroku-postbuild": "yarn run build",
     "postinstall": "patch-package",
     "translate": "node scripts/translations.js",
-        "dev": "next dev -H 0.0.0.0"
+    "dev-frontend-next": "next dev -H 0.0.0.0"
   },
   "browserslist": {
     "production": [

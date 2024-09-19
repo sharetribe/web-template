@@ -16,6 +16,11 @@ const SectionTextMaybe = props => {
     breakChars: '/',
   });
 
+  if (heading === 'Get Directions') {
+    return null;
+  }
+{/* Hide the Listing Title and Value if the heading matches "Get Directions" , this is to avoid duplicate "Get Directions" in Map Section */}
+
   return text ? (
     <section className={css.sectionText}>
       {heading ? (

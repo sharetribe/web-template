@@ -6,6 +6,9 @@ import { propTypes } from '../../util/types';
 import { obfuscatedCoordinates } from '../../util/maps';
 import { Heading, Map } from '../../components';
 
+// Import the GetDirectionsLink component for 
+import GetDirectionsLink from '../../components/GetDirectionsLink/GetDirectionsLink'; 
+
 import css from './ListingPage.module.css';
 
 class SectionMapMaybe extends Component {
@@ -32,9 +35,15 @@ class SectionMapMaybe extends Component {
 
     return (
       <section className={classes} id="listing-location">
-        <Heading as="h2" rootClassName={css.sectionHeadingWithExtraMargin}>
+        <Heading as="h2" rootClassName={css.sectionHeadingWithExtraMargin}>          
           <FormattedMessage id="ListingPage.locationTitle" />
-        </Heading>
+
+          {/* Add a link to the map which get data from the listing, Key = get and Show Get Directions */}
+          {publicData && publicData.get && (
+            <GetDirectionsLink url={publicData.get} />
+          )}
+
+          </Heading>
         {this.state.isStatic ? (
           <button
             className={css.map}
