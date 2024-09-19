@@ -4,7 +4,7 @@ import { FormattedMessage } from '../../util/reactIntl';
 import { isFieldForListingType } from '../../util/fieldHelpers';
 
 import { Heading } from '../../components';
-
+import CustomKeys from '../../components/CustomKeys/CustomKeys'; // Import the CustomKeys component
 import css from './ListingPage.module.css';
 
 const SectionDetailsMaybe = props => {
@@ -54,8 +54,13 @@ const SectionDetailsMaybe = props => {
       <ul className={css.details}>
         {existingListingFields.map(detail => (
           <li key={detail.key} className={css.detailsRow}>
-            <span className={css.detailLabel}>{detail.label}</span>
-            <span>{detail.value}</span>
+                {/*
+                
+                <span className={css.detailLabel}>{detail.label}</span>
+                            <span>{detail.value}</span>
+                
+                            this is default value which show Details Contacting numbers*/}
+            <CustomKeys detail={detail} publicData={publicData} />
           </li>
         ))}
       </ul>

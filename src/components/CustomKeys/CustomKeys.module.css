@@ -1,0 +1,82 @@
+/* CustomKeys.module.css */
+
+/* Base styles */
+.detailValue {
+  display: flex;
+  align-items: center;
+  font-size: 14px; /* Adjust as needed */
+  margin: 8px 0; /* Optional: space above and below the element */
+}
+
+.detailLabel {
+  margin-right: 8px; /* Space between label and colon */
+  font-weight: bold; /* Optional: bold text for label */
+  font-size: 14px; /* Adjust as needed */
+}
+
+.colon {
+  margin-right: 8px; /* Space between colon and value */
+}
+
+.phoneIcon {
+  margin-right: 8px; /* Space between icon and text */
+  color: green; /* Set icon color to green */
+}
+
+.phoneLink {
+  color: #0066cc; /* Link color */
+  text-decoration: none; /* Remove underline from link */
+}
+
+.phoneLink:hover {
+  text-decoration: underline; /* Underline on hover for better visibility */
+}
+
+/* Media Queries */
+@media (--viewportMedium) {
+  .detailValue {
+    font-size: 14px; /* Adjust font size for medium viewports */
+    margin: 6px 0; /* Adjust margin for medium viewports */
+  }
+
+  .detailLabel {
+    font-weight: normal; /* Optionally adjust font weight */
+  }
+
+  .colon {
+    margin-right: 6px; /* Adjust space between colon and value */
+  }
+
+  .phoneIcon {
+    margin-right: 6px; /* Adjust space between icon and text */
+  }
+
+  .phoneLink {
+    font-size: 14px; /* Adjust font size for links */
+  }
+}
+
+@media (--viewportLarge) {
+  .detailValue {
+    font-size: 18px; /* Adjust font size for larger viewports */
+    margin: 10px 0; /* Adjust margin for larger viewports */
+  }
+
+  .detailLabel {
+    font-weight: bold; /* Reinforce bold text for large viewports */
+  }
+
+  .colon {
+    margin-right: 10px; /* Adjust space between colon and value */
+  }
+
+  .phoneIcon {
+    margin-right: 10px; /* Adjust space between icon and text */
+  }
+
+  .phoneLink {
+    font-size: 16px; /* Adjust font size for links */
+  }
+}
+
+/* Optional: Add more media queries if needed */
