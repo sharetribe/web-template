@@ -1496,3 +1496,8 @@ textarea {
     margin-top: 32px;
   }
 }
+
+hr {
+  margin: 30px;
+  opacity: 0.2;
+}
