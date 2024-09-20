@@ -12,40 +12,42 @@ const { LatLng, LatLngBounds } = sdkTypes;
 //       1) help customers to find relevant locations, and
 //       2) reduce the cost of using map providers geocoding API
 const defaultLocations = [
-  // {
-  //   id: 'default-helsinki',
-  //   predictionPlace: {
-  //     address: 'Helsinki, Finland',
-  //     bounds: new LatLngBounds(new LatLng(60.29783, 25.25448), new LatLng(59.92248, 24.78287)),
-  //   },
-  // },
-  // {
-  //   id: 'default-turku',
-  //   predictionPlace: {
-  //     address: 'Turku, Finland',
-  //     bounds: new LatLngBounds(new LatLng(60.53045, 22.38197), new LatLng(60.33361, 22.06644)),
-  //   },
-  // },
-  // {
-  //   id: 'default-tampere',
-  //   predictionPlace: {
-  //     address: 'Tampere, Finland',
-  //     bounds: new LatLngBounds(new LatLng(61.83657, 24.11838), new LatLng(61.42728, 23.5422)),
-  //   },
-  // },
-  // {
-  //   id: 'default-oulu',
-  //   predictionPlace: {
-  //     address: 'Oulu, Finland',
-  //     bounds: new LatLngBounds(new LatLng(65.56434, 26.77069), new LatLng(64.8443, 24.11494)),
-  //   },
-  // },
-  // {
-  //   id: 'default-ruka',
-  //   predictionPlace: {
-  //     address: 'Ruka, Finland',
-  //     bounds: new LatLngBounds(new LatLng(66.16997, 29.16773), new LatLng(66.16095, 29.13572)),
-  //   },
-  // },
+  {
+    id: 'default-delhi',
+    predictionPlace: {
+      address: 'Delhi, India',
+      bounds: new LatLngBounds(new LatLng(28.882121, 77.331936), new LatLng(28.403218, 76.838160)),
+    },
+  },
+  {
+    id: 'default-bangalore',
+    predictionPlace: {
+      address: 'Bangalore, India',
+      bounds: new LatLngBounds(new LatLng(13.139236, 77.739029), new LatLng(12.734288, 77.379376)),
+    },
+  },
+  
+  {
+    id: 'default-mumbai',
+    predictionPlace: {
+      address: 'Mumbai, India',
+      bounds: new LatLngBounds(new LatLng(19.271208, 72.986532), new LatLng(18.892006, 72.775939)),
+    },
+  },
+  {
+    id: 'default-chennai',
+    predictionPlace: {
+      address: 'Chennai, India',
+      bounds: new LatLngBounds(new LatLng(13.232469, 80.335623), new LatLng(12.828569, 80.157191)),
+    },
+  },
+  {
+    id: 'default-hyderabad',
+    predictionPlace: {
+      address: 'Hyderabad, India',
+      bounds: new LatLngBounds(new LatLng(17.615695, 78.609289), new LatLng(17.172481, 78.284196)),
+    },
+  },
+      
 ];
 export default defaultLocations;
