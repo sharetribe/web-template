@@ -45,6 +45,12 @@
   cursor: pointer;
 }
 
+.actionBarWithCTAEnabled {
+  display: inline-flex;
+  flex-wrap: wrap;
+  padding: 0 8px;
+}
+
 .actionBar {
   display: flex;
   justify-content: space-between;
@@ -53,6 +59,7 @@
   color: var(--colorGrey100);
   background-color: var(--colorGrey700);
   z-index: 1; /* bring on top of mobile image */
+  padding: 0 24px;
 
   /* Action bar prevents the image click events going to the parent and
    should not show a pointer */
@@ -95,13 +102,58 @@
   cursor: initial;
 }
 
-.ownListingText {
-  composes: h5 from global;
-  margin: 14px 24px 11px 24px;
+.actionBarCTA {
+  composes: buttonDefault from global;
+  display: inline-block;
+  min-height: 32px;
+  margin: 10px 0px 20px 0px;
+  padding: 4px 16px;
+  border: 1px solid var(--colorGrey100);
+  background-color: var(--colorWhite);
+  color: var(--colorGrey700);
+
+  &:hover,
+  &:focus {
+    background-color: var(--marketplaceColor);
+    border-color: var(--marketplaceColor);
+    color: var(--colorWhite);
+    text-decoration: none;
+  }
 
   @media (--viewportMedium) {
-    margin: 24px 12px 24px 24px;
+    width: auto;
+    margin: 20px 15px;
   }
+}
+
+.linkContainer {
+  display: inline-flex;
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0 8px;
+}
+
+.ownListingText {
+  composes: h5 from global;
+  margin: 14px 24px 0 0;
+
+  @media (--viewportMedium) {
+    margin: 24px 24px 24px 0;
+  }
+
+  &.CTAEnabled {
+    margin-bottom: 0;
+
+    @media (--viewportMedium) {
+      margin: 24px 0 0px 0;
+    }
+  }
+}
+
+.noShrink {
+  display: flex;
+  flex-shrink: 0;
 }
 
 .ownListingTextPendingApproval {
@@ -122,8 +174,7 @@
 .addPayoutDetails,
 .editListingLink {
   composes: h5 from global;
-  flex-shrink: 0;
-  margin: 14px 24px 11px 24px;
+  margin: 23px 24px 11px 0px;
   color: var(--colorGrey100);
 
   transition: var(--transitionStyleButton);
@@ -134,7 +185,11 @@
   }
 
   @media (--viewportMedium) {
-    margin: 24px 24px 24px 12px;
+    margin: 24px 0 0 0;
+  }
+
+  &.CTAEnabled {
+    margin: 24px 0 0 0;
   }
 }
 

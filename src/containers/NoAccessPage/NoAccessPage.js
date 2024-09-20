@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { bool } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
 import { useConfiguration } from '../../context/configurationContext';
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import appSettings from '../../config/settings';
 import { useIntl } from '../../util/reactIntl';
 import {
@@ -11,6 +12,7 @@ import {
   NO_ACCESS_PAGE_POST_LISTINGS,
   NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
 } from '../../util/urlHelpers';
+import { generateLinkProps } from '../../util/routes';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 
 import {
@@ -21,9 +23,6 @@ import {
   NamedLink,
   ExternalLink,
 } from '../../components';
-
-import { generateLinkProps } from '../../util/routes';
-import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
@@ -39,17 +38,23 @@ import css from './NoAccessPage.module.css';
  * is rendered. Uses userData to inject user data into the URL.
  */
 const CTAButtonMaybe = props => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const { data, routeConfiguration, userId, userEmail } = props;
-  const { type, text, href, enabled } = data;
 
   // If the call to action button is not enabled, return null and don't render anything
-  if (!enabled) {
+  if (!data?.enabled) {
     return null;
   }
 
+  const { type, text, href } = data;
   // Render a spacer if the window object is not available (e.g., during server-side rendering)
   // Prevents layout shifts on initial page load.
-  if (typeof window === 'undefined') {
+  if (!mounted) {
     return <div className={css.modalSpacer}></div>;
   }
 
@@ -76,12 +81,11 @@ const CTAButtonMaybe = props => {
 
 export const NoAccessPageComponent = props => {
   const config = useConfiguration();
+  const routeConfiguration = useRouteConfiguration();
   const intl = useIntl();
 
   const marketplaceName = config.marketplaceName;
   const { scrollingDisabled, currentUser, params: pathParams } = props;
-
-  const routeConfiguration = useRouteConfiguration();
 
   const missingAccessRight = pathParams?.missingAccessRight;
   const isUserPendingApprovalPage = missingAccessRight === NO_ACCESS_PAGE_USER_PENDING_APPROVAL;
