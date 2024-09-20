@@ -32,3 +32,11 @@
     margin-top: 0;
   }
 }
+
+.reminder {
+  background: #f9f9f9;
+  padding: 8px;
+  line-height: 1.2;
+  font-size: 12px;
+  margin-bottom: 16px;
+}

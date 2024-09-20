@@ -91,6 +91,11 @@ const InquiryFormComponent = props => (
             placeholder={messagePlaceholder}
             validate={messageRequired}
           />
+          <div className={css.reminder}>
+            Reminder: <strong>Do not share personal contact details. </strong> 
+            To comply with our <a href="/terms-of-service">Terms of Service</a> all communication and transactions must be completed on the site. 
+          </div>
+          
           <div className={submitButtonWrapperClassName}>
             <ErrorMessage error={sendInquiryError} />
             <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
