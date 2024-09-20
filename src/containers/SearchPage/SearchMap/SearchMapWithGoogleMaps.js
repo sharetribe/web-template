@@ -458,8 +458,11 @@ class SearchMapWithGoogleMaps extends Component {
       const { bounds, center, zoom } = this.props;
       const maps = window.google.maps;
       const controlPosition = maps.ControlPosition.LEFT_TOP;
-      const zoomOutToShowEarth = { zoom: 1, center: { lat: 0, lng: 0 } };
-      const zoomAndCenter = !bounds && !center ? zoomOutToShowEarth : { zoom, center };
+      const zoomOutToIndia = { 
+        zoom: 4.8, // Adjuste as per needs
+        center: { lat: 23.0, lng: 78.9629 } // India Zoom
+      };
+      const zoomAndCenter = !bounds && !center ? zoomOutToIndia : { zoom, center };
 
       const mapConfig = {
         // Disable all controls except zoom
