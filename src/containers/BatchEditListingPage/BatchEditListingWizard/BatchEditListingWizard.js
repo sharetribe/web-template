@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { string } from 'prop-types';
 import classNames from 'classnames';
 
@@ -23,7 +23,6 @@ import BatchEditListingWizardTab, { PRODUCT_DETAILS, UPLOAD } from './BatchEditL
 import css from './BatchEditListingWizard.module.css';
 import { useUppy } from '../../../hooks/useUppy';
 
-const TABS_PRODUCT = [UPLOAD, PRODUCT_DETAILS];
 /**
  * Return translations for wizard tab: label and submit button.
  *
@@ -53,45 +52,6 @@ const tabLabelAndSubmit = (intl, tab, isNewListingFlow, isPriceDisabled, process
   };
 };
 
-/**
- * Check if a wizard tab is completed.
- *
- * @param tab wizard's tab
- * @return true if tab / step is completed.
- */
-const tabCompleted = (tab, uppy) => {
-  switch (tab) {
-    case UPLOAD:
-      return uppy.getFiles().length > 0;
-    case PRODUCT_DETAILS:
-      return true;
-    default:
-      return false;
-  }
-};
-
-/**
- * Check which wizard tabs are active and which are not yet available. Tab is active if previous
- * tab is completed. In edit mode all tabs are active.
- *
- * @param isNew flag if a new listing is being created or an old one being edited
- * @param listing data to be checked
- * @param tabs array of tabs used for this listing. These depend on transaction process.
- *
- * @return object containing activity / editability of different tabs of this wizard
- */
-const tabsActive = (isNew, listing, tabs, uppy) => {
-  return tabs.reduce((acc, tab) => {
-    const previousTabIndex = tabs.findIndex(t => t === tab) - 1;
-    const validTab = previousTabIndex >= 0;
-    const hasListingType = !!listing?.attributes?.publicData?.listingType;
-    const prevTabCompletedInNewFlow = tabCompleted(tabs[previousTabIndex], uppy);
-    const isActive =
-      validTab && !isNew ? hasListingType : validTab && isNew ? prevTabCompletedInNewFlow : true;
-    return { ...acc, [tab]: isActive };
-  }, {});
-};
-
 const getListingTypeConfig = (listing, selectedListingType, config) => {
   const existingListingType = listing?.attributes?.publicData?.listingType;
   const validListingTypes = config.listing.listingTypes;
@@ -105,6 +65,13 @@ const getListingTypeConfig = (listing, selectedListingType, config) => {
     ? validListingTypes[0]
     : null;
 };
+
+function getTabsStatus(fileCount) {
+  return {
+    [UPLOAD]: true,
+    [PRODUCT_DETAILS]: fileCount > 0,
+  };
+}
 
 const BatchEditListingWizard = props => {
   const {
@@ -138,13 +105,31 @@ const BatchEditListingWizard = props => {
 
   const { uuid: userId } = currentUser.id;
   const uppy = useUppy({ userId });
+  const [fileCount, setFileCount] = useState(uppy.getFiles().length);
 
-  uppy.on('complete', info => {
-    console.log('complete', info);
+  uppy.on('file-removed', info => {
+    setFileCount(uppy.getFiles().length);
   });
 
   uppy.on('file-added', info => {
-    console.log('file-added', info);
+    const data = info.data;
+    const url = data.thumbnail ? data.thumbnail : URL.createObjectURL(data);
+    const image = new Image();
+    image.src = url;
+    image.onload = () => {
+      uppy.setFileMeta(info.id, { width: image.width, height: image.height });
+      URL.revokeObjectURL(url);
+    };
+    image.onerror = () => {
+      URL.revokeObjectURL(url);
+    };
+
+    setFileCount(uppy.getFiles().length);
+  });
+
+  uppy.on('cancel-all', info => {
+    console.log('canceling....');
+    setFileCount(0);
   });
 
   const [selectedListingType, setSelectedListingType] = useState(null);
@@ -176,11 +161,11 @@ const BatchEditListingWizard = props => {
     : PURCHASE_PROCESS_NAME;
 
   // For outdated draft listing, we don't show other tabs but the "details"
-  const tabs = TABS_PRODUCT;
+  const tabs = [UPLOAD, PRODUCT_DETAILS];
 
   // Check if wizard tab is active / linkable.
   // When creating a new listing, we don't allow users to access next tab until the current one is completed.
-  const tabsStatus = tabsActive(isNewListingFlow, currentListing, tabs, uppy);
+  const tabsStatus = useMemo(() => getTabsStatus(fileCount), [fileCount]);
 
   // Redirect user to first tab when encountering outdated draft listings.
   if (invalidExistingListingType && isNewListingFlow && selectedTab !== tabs[0]) {

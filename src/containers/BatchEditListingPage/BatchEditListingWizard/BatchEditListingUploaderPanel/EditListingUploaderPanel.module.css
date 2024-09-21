@@ -1,5 +1,15 @@
 @import '../../../../styles/customMediaQueries.css';
 
+.root {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 1px 24px;
+  background-color: var(--colorWhite);
+}
+
 .submitButton {
   flex-shrink: 0;
   margin-top: auto;

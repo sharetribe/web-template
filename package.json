@@ -12,6 +12,7 @@
     "@sentry/browser": "^8.26.0",
     "@sentry/node": "^8.26.0",
     "@slack/web-api": "^7.2.0",
+    "@tanstack/react-table": "^8.20.5",
     "@uppy/box": "^3.0.0",
     "@uppy/core": "^4.1.0",
     "@uppy/dashboard": "^4.0.2",

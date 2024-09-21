@@ -1,0 +1,62 @@
+@import '../../../../styles/customMediaQueries.css';
+
+.root {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 1px 24px;
+  overflow: auto;
+  background-color: var(--colorWhite);
+}
+
+.submitButton {
+  margin-top: auto;
+  margin-bottom: 24px;
+  flex-shrink: 0;
+
+  @media (--viewportLarge) {
+    display: inline-block;
+    width: 241px;
+    margin-top: 100px;
+  }
+}
+
+.productsTable {
+  thead {
+    tr {
+      th {
+        white-space: nowrap;
+        text-align: left;
+        padding: 12px 6px;
+        background-color: var(--colorGrey50);
+
+        div {
+          padding: 0 12px;
+          border-right: 1px solid var(--colorGrey100);
+        }
+      }
+      th:last-child {
+        div {
+          border-right: none;
+        }
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      td {
+        padding: 12px;
+        white-space: nowrap;
+        border-bottom: 1px solid var(--colorGrey100);
+
+        input[type=text], input[type=number], select {
+          line-height: 20px;
+          min-width: 200px;
+        }
+      }
+    }
+  }
+}
