@@ -1,40 +1,19 @@
 import React from 'react';
-import classNames from 'classnames';
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { Button, H3 } from '../../../../components';
 import css from './EditListingUploaderPanel.module.css';
 import { Dashboard } from '@uppy/react';
-import { types as sdkTypes } from '../../../../util/sdkLoader';
-import { useUppy } from '../../../../hooks/useUppy';
-
-const { UUID } = sdkTypes;
-
-const getInitialValues = params => {
-  const { images } = params;
-  return { images };
-};
 
 const EditListingUploaderPanel = props => {
-  const {
-    className = null,
-    rootClassName = null,
-    submitButtonText,
-    onSubmit,
-    submitReady,
-    uppy
-  } = props;
-
-  const rootClass = rootClassName || css.root;
-  const classes = classNames(rootClass, className);
-
-
+  const { submitButtonText, onSubmit, submitReady, uppy } = props;
+  const hasFiles = uppy.getFiles().length > 0;
 
   return (
-    <div className={classes}>
+    <div className={css.root}>
       <H3 as="h1">
-        <FormattedMessage id="EditListingUploaderPanel.title" />
+        <FormattedMessage id="BatchEditListingUploaderPanel.title" />
         <p>
-          <FormattedMessage id="EditListingUploaderPanel.subtitle" />
+          <FormattedMessage id="BatchEditListingUploaderPanel.subtitle" />
         </p>
       </H3>
       <Dashboard uppy={uppy} hideUploadButton={true} />
@@ -44,6 +23,7 @@ const EditListingUploaderPanel = props => {
         inProgress={false}
         ready={submitReady}
         onClick={onSubmit}
+        disabled={!hasFiles}
       >
         {submitButtonText}
       </Button>

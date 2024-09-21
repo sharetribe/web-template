@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 // Import configs and util modules
 import {
@@ -9,8 +8,8 @@ import {
 import { createResourceLocatorString } from '../../../util/routes';
 
 import css from './BatchEditListingWizardTab.module.css';
-import EditListingUploaderPanel from './EditListingUploaderPanel/EditListingUploaderPanel';
-import { EditListingBatchProductDetails } from './EditListingBatchProductDetails/EditListingBatchProductDetails';
+import EditListingUploaderPanel from './BatchEditListingUploaderPanel/EditListingUploaderPanel';
+import { EditListingBatchProductDetails } from './BatchEditListingProductDetails/EditListingBatchProductDetails';
 
 export const UPLOAD = 'upload';
 export const PRODUCT_DETAILS = 'product-details';
@@ -68,7 +67,6 @@ const BatchEditListingWizardTab = props => {
     uppy,
   } = props;
 
-
   const onCompleteEditListingWizardTab = (tab, updateValues) => {
     console.log('Save listings');
   };
@@ -119,18 +117,11 @@ const BatchEditListingWizardTab = props => {
       );
     }
     case PRODUCT_DETAILS: {
-      return <EditListingBatchProductDetails />;
+      return <EditListingBatchProductDetails uppy={uppy} />;
     }
     default:
       return null;
   }
 };
-
-BatchEditListingWizardTab.defaultProps = {
-  listing: null,
-  updatedTab: null,
-};
-
-const { array, bool, func, object, oneOf, shape, string } = PropTypes;
 
 export default BatchEditListingWizardTab;
