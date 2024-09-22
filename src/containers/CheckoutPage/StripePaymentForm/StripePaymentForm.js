@@ -21,6 +21,7 @@ import {
   IconSpinner,
   SavedCardDetails,
   StripePaymentAddress,
+  ReminderBox,
 } from '../../../components';
 
 import ShippingDetails from '../ShippingDetails/ShippingDetails';
@@ -637,6 +638,7 @@ class StripePaymentForm extends Component {
               placeholder={messagePlaceholder}
               className={css.message}
             />
+            <ReminderBox/>
           </div>
         ) : null}
         <div className={css.submitContainer}>
