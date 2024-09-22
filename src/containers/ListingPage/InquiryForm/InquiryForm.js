@@ -12,7 +12,7 @@ import {
   isTooManyRequestsError,
 } from '../../../util/errors';
 
-import { Form, PrimaryButton, FieldTextInput, IconInquiry, Heading } from '../../../components';
+import { Form, PrimaryButton, FieldTextInput, IconInquiry, Heading, ReminderBox } from '../../../components';
 
 import css from './InquiryForm.module.css';
 
@@ -91,10 +91,7 @@ const InquiryFormComponent = props => (
             placeholder={messagePlaceholder}
             validate={messageRequired}
           />
-          <div className={css.reminder}>
-            Reminder: <strong>Do not share personal contact details. </strong> 
-            To comply with our <a href="/terms-of-service">Terms of Service</a> all communication and transactions must be completed on the site. 
-          </div>
+          <ReminderBox />
           
           <div className={submitButtonWrapperClassName}>
             <ErrorMessage error={sendInquiryError} />

@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 
-import { Form, FieldTextInput, SecondaryButtonInline } from '../../../components';
+import { Form, FieldTextInput, SecondaryButtonInline, ReminderBox } from '../../../components';
 
 import css from './SendMessageForm.module.css';
 
@@ -85,6 +85,7 @@ class SendMessageFormComponent extends Component {
                 onFocus={this.handleFocus}
                 onBlur={this.handleBlur}
               />
+              <ReminderBox />
               <div className={css.submitContainer}>
                 <div className={css.errorContainer}>
                   {sendMessageError ? (
@@ -103,7 +104,10 @@ class SendMessageFormComponent extends Component {
                   <IconSendMessage />
                   <FormattedMessage id="SendMessageForm.sendMessage" />
                 </SecondaryButtonInline>
+                
+
               </div>
+              
             </Form>
           );
         }}
