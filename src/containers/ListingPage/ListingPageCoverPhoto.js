@@ -21,7 +21,6 @@ import {
 } from '../../util/urlHelpers';
 import { isErrorUserPendingApproval, isForbiddenError } from '../../util/errors.js';
 import { isUserAuthorized } from '../../util/userHelpers.js';
-import { convertMoneyToNumber } from '../../util/currency';
 import {
   ensureListing,
   ensureOwnListing,
