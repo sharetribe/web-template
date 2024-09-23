@@ -7,6 +7,7 @@ import { useConfiguration } from '../../context/configurationContext';
 import appSettings from '../../config/settings';
 import { useIntl } from '../../util/reactIntl';
 import {
+  NO_ACCESS_PAGE_INITIATE_TRANSACTIONS,
   NO_ACCESS_PAGE_POST_LISTINGS,
   NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
 } from '../../util/urlHelpers';
@@ -37,6 +38,7 @@ export const NoAccessPageComponent = props => {
   const missingAccessRight = pathParams?.missingAccessRight;
   const isUserPendingApprovalPage = missingAccessRight === NO_ACCESS_PAGE_USER_PENDING_APPROVAL;
   const isPostingRightsPage = missingAccessRight === NO_ACCESS_PAGE_POST_LISTINGS;
+  const isInitiateTransactionsPage = missingAccessRight === NO_ACCESS_PAGE_INITIATE_TRANSACTIONS;
 
   const messages = isUserPendingApprovalPage
     ? {
@@ -49,6 +51,12 @@ export const NoAccessPageComponent = props => {
         schemaTitle: 'NoAccessPage.postListings.schemaTitle',
         heading: 'NoAccessPage.postListings.heading',
         content: 'NoAccessPage.postListings.content',
+      }
+    : isInitiateTransactionsPage
+    ? {
+        schemaTitle: 'NoAccessPage.initiateTransactions.schemaTitle',
+        heading: 'NoAccessPage.initiateTransactions.heading',
+        content: 'NoAccessPage.initiateTransactions.content',
       }
     : {};
 
