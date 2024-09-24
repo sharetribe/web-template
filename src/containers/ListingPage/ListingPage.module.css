@@ -73,8 +73,12 @@
 }
 
 .actionBarForProductLayout {
-  margin: 24px;
-  width: calc(100% - 48px);
+  margin: 0;
+  width: 100%;
+
+  &:nth-child(even) {
+    margin-top: 24px;
+  }
 
   @media (--viewportMedium) {
     margin: 24px 0 24px 0;
@@ -103,14 +107,10 @@
 }
 
 .actionBarCTA {
-  composes: buttonDefault from global;
+  composes: buttonSmall from global;
   display: inline-block;
-  min-height: 32px;
+  width: 100%;
   margin: 10px 0px 20px 0px;
-  padding: 4px 16px;
-  border: 1px solid var(--colorGrey100);
-  background-color: var(--colorWhite);
-  color: var(--colorGrey700);
 
   &:hover,
   &:focus {
@@ -122,7 +122,7 @@
 
   @media (--viewportMedium) {
     width: auto;
-    margin: 20px 15px;
+    margin: 20px 0 20px 15px;
   }
 }
 
@@ -224,34 +224,12 @@
 }
 
 .viewPhotos {
-  composes: marketplaceTinyFontStyles from global;
-  font-weight: var(--fontWeightMedium);
+  composes: buttonSmall from global;
 
   /* Position and dimensions */
   position: absolute;
   bottom: 19px;
   right: 24px;
-  margin: 0;
-  padding: 8px 13px 6px 13px;
-
-  /* Colors */
-  background-color: var(--colorWhite);
-
-  /* Borders */
-  border: none;
-  border-radius: var(--borderRadius);
-
-  cursor: pointer;
-  transition: var(--transitionStyleButton);
-
-  &:hover {
-    background-color: var(--marketplaceColor);
-    color: var(--colorWhite);
-  }
-
-  @media (--viewportMedium) {
-    margin: 0;
-  }
 }
 
 .carouselModalScrollLayer {
