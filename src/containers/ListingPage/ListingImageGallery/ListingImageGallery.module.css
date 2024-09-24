@@ -57,6 +57,7 @@
   @media (--viewportMedium) {
     border-radius: var(--borderRadiusMedium);
     border: 1px solid var(--colorGrey100);
+    overflow: hidden;
   }
 }
 

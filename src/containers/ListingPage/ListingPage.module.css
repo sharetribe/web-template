@@ -65,10 +65,9 @@
    should not show a pointer */
   cursor: initial;
 
-  border-radius: var(--borderRadius);
-
   @media (--viewportMedium) {
     flex-direction: row;
+    border-radius: var(--borderRadiusMedium);
   }
 }
 
@@ -104,6 +103,7 @@
   /* Action bar prevents the image click events going to the parent and
    should not show a pointer */
   cursor: initial;
+  border-radius: var(--borderRadiusMedium);
 }
 
 .actionBarCTA {
