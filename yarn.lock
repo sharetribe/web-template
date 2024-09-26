@@ -2000,6 +2000,13 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
+"@babel/runtime@^7.12.18":
+  version "7.25.6"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.25.6.tgz#9afc3289f7184d8d7f98b099884c26317b9264d2"
+  integrity sha512-VBj9MYyDb9tuLq7yzqjgzt6Q+IBQLrGZfdjOekyEirZPHxXWoTSGUTMrpsfi58Up73d13NfYLv8HT9vmznjzhQ==
+  dependencies:
+    regenerator-runtime "^0.14.0"
+
 "@babel/runtime@^7.12.5", "@babel/runtime@^7.15.4":
   version "7.16.3"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.16.3.tgz#b86f0db02a04187a3c17caa77de69840165d42d5"
@@ -2027,13 +2034,6 @@
   integrity sha512-28QvEGyQyNkB0/m2B4FU7IEZGK2NUrcMtT6BZEFALTguLk+AUT6ofsHtPk5QyjAdUkpMJ+/Em+quwz4HOt30AQ==
   dependencies:
     regenerator-runtime "^0.13.2"
-
-"@babel/runtime@^7.7.7":
-  version "7.12.13"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.12.13.tgz#0a21452352b02542db0ffb928ac2d3ca7cb6d66d"
-  integrity sha512-8+3UMPBrjFa/6TtKi/7sehPKqfAm4g6K+YQjyyFOLUTxzOngcRZTlAVY8sc2CORJYqdHQY8gRPHmn+qo15rCBw==
-  dependencies:
-    regenerator-runtime "^0.13.4"
 
 "@babel/template@^7.12.13":
   version "7.12.13"
@@ -2680,26 +2680,26 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
-"@loadable/babel-plugin@^5.13.2":
-  version "5.13.2"
-  resolved "https://registry.yarnpkg.com/@loadable/babel-plugin/-/babel-plugin-5.13.2.tgz#373cddc64ee5437814f7dca1c1b6a7b2c1665a9f"
-  integrity sha512-vSZUVeTH1S1sDbk8Tzft0plZSkN7W4zmVR5w/Bmy4UmvBiu9lin7ztrDpoUTUzxpoups+OJbTc/OosvN0aMXWg==
+"@loadable/babel-plugin@^5.16.1":
+  version "5.16.1"
+  resolved "https://registry.yarnpkg.com/@loadable/babel-plugin/-/babel-plugin-5.16.1.tgz#6d0aa6d4b26c5ae2e1a4469b05d77e0438874d96"
+  integrity sha512-y+oKjRTt5XXf907ReFxiZyQtkYiIa4NAPQYlxb2qh5rUO/UsOKPq2PhCSHvfwoZOUJaMsY0FnoAPZ6lhFZkayQ==
   dependencies:
     "@babel/plugin-syntax-dynamic-import" "^7.7.4"
 
-"@loadable/component@^5.15.2":
-  version "5.15.2"
-  resolved "https://registry.yarnpkg.com/@loadable/component/-/component-5.15.2.tgz#b6c418d592e0a64f16b1d614ca9d3b1443d3b498"
-  integrity sha512-ryFAZOX5P2vFkUdzaAtTG88IGnr9qxSdvLRvJySXcUA4B4xVWurUNADu3AnKPksxOZajljqTrDEDcYjeL4lvLw==
+"@loadable/component@^5.16.4":
+  version "5.16.4"
+  resolved "https://registry.yarnpkg.com/@loadable/component/-/component-5.16.4.tgz#583cb65945a5061ca3c6b90eb34835c154283ff4"
+  integrity sha512-fJWxx9b5WHX90QKmizo9B+es2so8DnBthI1mbflwCoOyvzEwxiZ/SVDCTtXEnHG72/kGBdzr297SSIekYtzSOQ==
   dependencies:
-    "@babel/runtime" "^7.7.7"
+    "@babel/runtime" "^7.12.18"
     hoist-non-react-statics "^3.3.1"
     react-is "^16.12.0"
 
-"@loadable/server@^5.15.2":
-  version "5.15.2"
-  resolved "https://registry.yarnpkg.com/@loadable/server/-/server-5.15.2.tgz#2aeefa1604c39fc87a20e567ef3ed8647224dd1a"
-  integrity sha512-Nk/6Plz8qTn+A+u2qg/vrbYZwTmzzjy5bw4Ts80pM/rqW8H37IooKU/HVWSje63RZ4vTqEsHsrdiX97RB9dMjw==
+"@loadable/server@^5.16.5":
+  version "5.16.5"
+  resolved "https://registry.yarnpkg.com/@loadable/server/-/server-5.16.5.tgz#6cbe8a9cb6b96cb09e1cdfa232e161ba2ab8ce38"
+  integrity sha512-y87OMpi43B8mGg/r4Fy6PLkisj0c3SiQqxHqxmCAK1j3UUuYyq1EPLSKTjnrMBUerROA5R0isHobHCNfD20Cnw==
   dependencies:
     lodash "^4.17.15"
 
@@ -11833,15 +11833,15 @@ sharetribe-flex-sdk@^1.21.1:
     lodash "^4.17.10"
     transit-js "^0.8.861"
 
-sharetribe-scripts@6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/sharetribe-scripts/-/sharetribe-scripts-6.0.1.tgz#0d7b3cc5b9f94945364c391a98e0846a88f89432"
-  integrity sha512-BRCs2PAyy6M4ZS03HEypvkX2r69i+eTnA3PJK1s02448rLtzbkZ7g8z5YRPgwVb8mhFxCKcEaNm1vFfWDd4kOg==
+sharetribe-scripts@6.0.2:
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/sharetribe-scripts/-/sharetribe-scripts-6.0.2.tgz#7589afb43a3259252ff2a7de4b1260753ded7bed"
+  integrity sha512-bfFYj+qOqaxSVtPwf0Fh82BqurCEU6RzlmMc/9VDQSP/yinuP+ud4Sgml963K1AQQNU5oBA5v0CiMbwXWopqcw==
   dependencies:
     "@babel/core" "^7.16.0"
     "@babel/plugin-transform-runtime" "7.12.1"
-    "@loadable/babel-plugin" "^5.13.2"
-    "@loadable/component" "^5.15.2"
+    "@loadable/babel-plugin" "^5.16.1"
+    "@loadable/component" "^5.16.4"
     "@loadable/webpack-plugin" "^5.15.2"
     "@pmmmwh/react-refresh-webpack-plugin" "^0.5.3"
     "@svgr/webpack" "^5.5.0"
