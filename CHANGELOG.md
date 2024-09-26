@@ -14,6 +14,18 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] Topbar: malformed custom link causes a 500 error on server.
+  [#457](https://github.com/sharetribe/web-template/pull/457)
+- [fix] ListingPage.shared.js: import for convertMoneyToNumber was not made for priceForSchemaMaybe
+  function. [#456](https://github.com/sharetribe/web-template/pull/456)
+- [add] Access control: Transaction rights
+
+  - When a user does not have the "initiateTransactions" permission in their
+    `effectivePermissionSet` relationship and they try to initiate an order or send an inquiry, they
+    are redirected to the NoAccessPage.
+
+  [#450](https://github.com/sharetribe/web-template/pull/450)
+
 - [fix] InquiryForm: test code was committed earlier.
   [#452](https://github.com/sharetribe/web-template/pull/452)
 - [fix] EmailVerification: enforce that currentUser is fetched after verification.

@@ -8,17 +8,27 @@ import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl
 import * as validators from '../../../util/validators';
 import { propTypes } from '../../../util/types';
 import {
+  isErrorNoPermissionForInitiateTransactions,
   isErrorNoPermissionForUserPendingApproval,
   isTooManyRequestsError,
 } from '../../../util/errors';
 
-import { Form, PrimaryButton, FieldTextInput, IconInquiry, Heading } from '../../../components';
+import {
+  Form,
+  PrimaryButton,
+  FieldTextInput,
+  IconInquiry,
+  Heading,
+  NamedLink,
+} from '../../../components';
 
 import css from './InquiryForm.module.css';
+import { NO_ACCESS_PAGE_INITIATE_TRANSACTIONS } from '../../../util/urlHelpers';
 
 const ErrorMessage = props => {
   const { error } = props;
   const userPendingApproval = isErrorNoPermissionForUserPendingApproval(error);
+  const userHasNoTransactionRights = isErrorNoPermissionForInitiateTransactions(error);
 
   // No transaction process attached to listing
   return error ? (
@@ -29,6 +39,20 @@ const ErrorMessage = props => {
         <FormattedMessage id="InquiryForm.tooManyRequestsError" />
       ) : userPendingApproval ? (
         <FormattedMessage id="InquiryForm.userPendingApprovalError" />
+      ) : userHasNoTransactionRights ? (
+        <FormattedMessage
+          id="InquiryForm.noTransactionRightsError"
+          values={{
+            NoAccessLink: msg => (
+              <NamedLink
+                name="NoAccessPage"
+                params={{ missingAccessRight: NO_ACCESS_PAGE_INITIATE_TRANSACTIONS }}
+              >
+                {msg}
+              </NamedLink>
+            ),
+          }}
+        />
       ) : (
         <FormattedMessage id="InquiryForm.sendInquiryError" />
       )}
