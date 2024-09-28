@@ -12,17 +12,23 @@ import { H3 } from '../../../../components';
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { EditableTableCell } from '../../../../components/EditableTableCell/EditableTableCell';
 
+function getListingFieldOptions(config, listingFieldKey) {
+  const { listing } = config;
+  const { listingFields } = listing;
+  const { enumOptions } = listingFields.find(f => f.key === listingFieldKey);
+  return enumOptions.map(({ label, option }) => ({ value: option, label }));
+}
+
 export const EditListingBatchProductDetails = props => {
-  const { uppy } = props;
+  const { uppy, config } = props;
+
+  const imageryCategoryOptions = getListingFieldOptions(config, 'imageryCategory');
+  const usageOptions = getListingFieldOptions(config, 'usage');
+  const releaseOptions = getListingFieldOptions(config, 'releases');
 
   const [data] = useState(uppy.getFiles());
   const columnHelper = createColumnHelper();
   const fileCount = data.length;
-
-  function updateMyData(index, title, value) {
-    console.log(index, title, value);
-    return value;
-  }
 
   const columns = useMemo(
     () => [
@@ -56,6 +62,8 @@ export const EditListingBatchProductDetails = props => {
         cell: EditableTableCell,
         meta: {
           type: 'select',
+          isMulti: true,
+          options: imageryCategoryOptions,
         },
       }),
       columnHelper.display({
@@ -64,37 +72,15 @@ export const EditListingBatchProductDetails = props => {
         meta: {
           type: 'select',
           defaultValue: 'editorial',
-          options: [
-            {
-              value: 'editorial',
-              label: 'Editorial',
-            },
-            {
-              value: 'commercial',
-              label: 'Commercial',
-            },
-          ],
+          options: usageOptions,
         },
       }),
       columnHelper.display({
         header: 'Do you have releases on file / can you obtain them?',
         cell: EditableTableCell,
-        meta: {
-          type: 'select',
-          defaultValue: 'yes',
-          options: [
-            {
-              value: 'yes',
-              label: 'Yes, I have releases or can obtain them',
-            },
-            {
-              value: 'no',
-              label: 'No, I don’t have releases and cannot obtain them',
-            },
-          ],
-        },
+        meta: releaseOptions,
       }),
-      columnHelper.display({
+      columnHelper.accessor('meta.keywords', {
         header: 'Keywords (max 10)',
         cell: EditableTableCell,
         meta: {
@@ -133,6 +119,10 @@ export const EditListingBatchProductDetails = props => {
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    defaultColumn: {
+      minSize: 100,
+      size: 250,
+    },
   });
 
   return (
@@ -146,13 +136,28 @@ export const EditListingBatchProductDetails = props => {
           <FormattedMessage id="BatchEditListingProductDetails.warningRefresh" />
         </p>
       </H3>
-      <table className={css.productsTable}>
+      <table
+        className={css.productsTable}
+        {...{
+          style: {
+            width: table.getCenterTotalSize(),
+          },
+        }}
+      >
         <thead>
           {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => {
                 return (
-                  <th key={header.id} colSpan={header.colSpan}>
+                  <th
+                    {...{
+                      key: header.id,
+                      colSpan: header.colSpan,
+                      style: {
+                        width: header.getSize(),
+                      },
+                    }}
+                  >
                     {header.isPlaceholder ? null : (
                       <div>{flexRender(header.column.columnDef.header, header.getContext())}</div>
                     )}
@@ -168,7 +173,14 @@ export const EditListingBatchProductDetails = props => {
               <tr key={row.id}>
                 {row.getVisibleCells().map(cell => {
                   return (
-                    <td key={cell.id}>
+                    <td
+                      {...{
+                        key: cell.id,
+                        style: {
+                          width: cell.column.getSize(),
+                        },
+                      }}
+                    >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
                   );
