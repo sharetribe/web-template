@@ -124,13 +124,31 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       auth: true,
       component: () => (
         <NamedRedirect
+          name="EditListingPage"
+          params={{ slug: draftSlug, id: draftId, type: 'new', tab: 'details' }}
+        />
+      ),
+    },
+    {
+      path: '/l/:slug/:id/:type/:tab',
+      name: 'EditListingPage',
+      auth: true,
+      component: EditListingPage,
+      loadData: pageDataLoadingAPI.EditListingPage.loadData,
+    },
+    {
+      path: '/listing/new',
+      name: 'NewListingPage',
+      auth: true,
+      component: () => (
+        <NamedRedirect
           name="BatchEditListingPage"
           params={{ slug: draftSlug, id: draftId, type: 'new', tab: 'upload' }}
         />
       ),
     },
     {
-      path: '/l/:slug/:id/:type/:tab',
+      path: '/listing/:slug/:id/:type/:tab',
       name: 'BatchEditListingPage',
       auth: true,
       component: BatchEditListingPage,
