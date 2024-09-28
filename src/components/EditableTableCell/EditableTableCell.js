@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { CustomSelect } from '../CustomSelect/CustomSelect';
 
 export const EditableTableCell = props => {
   const { getValue, row, column, table } = props;
@@ -17,9 +18,10 @@ export const EditableTableCell = props => {
     table.options.meta?.updateData(row.index, column.id, value);
   };
 
-  const onSelectChange = e => {
-    setValue(e.target.value);
-    tableMeta?.updateData(row.index, column.id, e.target.value);
+  const onSelectChange = option => {
+    console.log(option);
+    setValue(option.value);
+    tableMeta?.updateData(row.index, column.id, option.value);
   };
 
   const controlType = columnMeta?.type || 'input';
@@ -29,13 +31,12 @@ export const EditableTableCell = props => {
       {
         {
           select: (
-            <select onChange={onSelectChange} value={initialValue}>
-              {columnMeta?.options?.map(option => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+            <CustomSelect
+              onChange={onSelectChange}
+              value={initialValue}
+              options={columnMeta?.options}
+              isMulti={columnMeta?.isMulti || false}
+            ></CustomSelect>
           ),
           input: (
             <input

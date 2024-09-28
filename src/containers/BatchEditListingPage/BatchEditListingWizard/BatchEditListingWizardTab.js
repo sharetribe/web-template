@@ -117,7 +117,7 @@ const BatchEditListingWizardTab = props => {
       );
     }
     case PRODUCT_DETAILS: {
-      return <EditListingBatchProductDetails uppy={uppy} />;
+      return <EditListingBatchProductDetails uppy={uppy} config={config} />;
     }
     default:
       return null;

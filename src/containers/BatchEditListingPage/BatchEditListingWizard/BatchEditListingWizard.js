@@ -22,6 +22,7 @@ import { NamedRedirect, Tabs } from '../../../components';
 import BatchEditListingWizardTab, { PRODUCT_DETAILS, UPLOAD } from './BatchEditListingWizardTab';
 import css from './BatchEditListingWizard.module.css';
 import { useUppy } from '../../../hooks/useUppy';
+import { getFileMetadata } from '../../../util/file-metadata';
 
 /**
  * Return translations for wizard tab: label and submit button.
@@ -111,24 +112,15 @@ const BatchEditListingWizard = props => {
     setFileCount(uppy.getFiles().length);
   });
 
-  uppy.on('file-added', info => {
-    const data = info.data;
-    const url = data.thumbnail ? data.thumbnail : URL.createObjectURL(data);
-    const image = new Image();
-    image.src = url;
-    image.onload = () => {
-      uppy.setFileMeta(info.id, { width: image.width, height: image.height });
-      URL.revokeObjectURL(url);
-    };
-    image.onerror = () => {
-      URL.revokeObjectURL(url);
-    };
+  uppy.on('file-added', ({ data, id }) => {
+    getFileMetadata(data, metadata => {
+      uppy.setFileMeta(id, metadata);
+    });
 
     setFileCount(uppy.getFiles().length);
   });
 
   uppy.on('cancel-all', info => {
-    console.log('canceling....');
     setFileCount(0);
   });
 
@@ -235,7 +227,7 @@ const BatchEditListingWizard = props => {
   );
 };
 
-const EnhancedEditListingWizard = props => {
+const EnhancedBatchEditListingWizard = props => {
   const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();
   const intl = useIntl();
@@ -249,4 +241,4 @@ const EnhancedEditListingWizard = props => {
   );
 };
 
-export default withViewport(EnhancedEditListingWizard);
+export default withViewport(EnhancedBatchEditListingWizard);

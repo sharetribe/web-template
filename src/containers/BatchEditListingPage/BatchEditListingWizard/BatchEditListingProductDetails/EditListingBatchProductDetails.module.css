@@ -52,7 +52,7 @@
         white-space: nowrap;
         border-bottom: 1px solid var(--colorGrey100);
 
-        input[type=text], input[type=number], select {
+        input[type=text], input[type=number], .custom-select {
           line-height: 20px;
           min-width: 200px;
         }
