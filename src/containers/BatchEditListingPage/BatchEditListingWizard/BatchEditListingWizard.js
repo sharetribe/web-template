@@ -30,6 +30,7 @@ import { getFileMetadata } from '../../../util/file-metadata';
  * @param {Object} intl
  * @param {string} tab name of the tab/panel in the wizard
  * @param {boolean} isNewListingFlow
+ * @param isPriceDisabled
  * @param {string} processName
  */
 const tabLabelAndSubmit = (intl, tab, isNewListingFlow, isPriceDisabled, processName) => {

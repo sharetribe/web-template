@@ -1,22 +1,84 @@
-import {
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  useReactTable,
-} from '@tanstack/react-table';
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import css from './EditListingBatchProductDetails.module.css';
-import { H3 } from '../../../../components';
+import { Button, H3 } from '../../../../components';
 import { FormattedMessage } from '../../../../util/reactIntl';
-import { EditableTableCell } from '../../../../components/EditableTableCell/EditableTableCell';
+import { Flex, Switch, Table } from 'antd';
+import { EditableCellComponents } from './EditableCellComponents';
 
 function getListingFieldOptions(config, listingFieldKey) {
   const { listing } = config;
   const { listingFields } = listing;
   const { enumOptions } = listingFields.find(f => f.key === listingFieldKey);
   return enumOptions.map(({ label, option }) => ({ value: option, label }));
+}
+
+function getData(uppy) {
+  const uppyFiles = uppy.getFiles();
+  return uppyFiles.map((file, index) => {
+    const { id, meta, name, size, preview } = file;
+    const { keywords, height, width } = meta;
+    let keywordsOptions = [];
+    if (keywords) {
+      keywordsOptions = Array.isArray(keywords) ? keywords : keywords.split(',');
+    }
+
+    return {
+      key: id,
+      id,
+      name,
+      title: name,
+      description: '-',
+      keywords: keywordsOptions,
+      size,
+      preview,
+      category: [],
+      usage: 'editorial',
+      releases: 'no-release',
+      price: 0,
+      height,
+      width,
+      isAi: false,
+      isIllustration: false,
+    };
+  });
+}
+
+function stringSorter(strA, strB) {
+  const a = strA.name.toUpperCase(); // ignore upper and lowercase
+  const b = strB.name.toUpperCase(); // ignore upper and lowercase
+  if (a < b) {
+    return -1;
+  }
+  if (a > b) {
+    return 1;
+  }
+
+  return 0;
+}
+
+function comparePictureDimensions(pictureA, pictureB) {
+  const areaA = pictureA.width * pictureA.height;
+  const areaB = pictureB.width * pictureB.height;
+
+  if (areaA < areaB) {
+    return -1; // pictureA is smaller, should come first
+  } else if (areaA > areaB) {
+    return 1; // pictureB is smaller, should come first
+  }
+
+  if (pictureA.width < pictureB.width) {
+    return -1;
+  } else if (pictureA.width > pictureB.width) {
+    return 1;
+  }
+
+  if (pictureA.height < pictureB.height) {
+    return -1;
+  } else if (pictureA.height > pictureB.height) {
+    return 1;
+  }
+
+  return 0;
 }
 
 export const EditListingBatchProductDetails = props => {
@@ -26,170 +88,202 @@ export const EditListingBatchProductDetails = props => {
   const usageOptions = getListingFieldOptions(config, 'usage');
   const releaseOptions = getListingFieldOptions(config, 'releases');
 
-  const [data] = useState(uppy.getFiles());
-  const columnHelper = createColumnHelper();
-  const fileCount = data.length;
+  const [dataSource, setDataSource] = useState(getData(uppy));
+  const handleSave = row => {
+    const newData = [...dataSource];
+    const index = newData.findIndex(item => row.key === item.key);
+    const item = newData[index];
+    newData.splice(index, 1, { ...item, ...row });
+    setDataSource(newData);
+  };
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
-  const columns = useMemo(
-    () => [
-      columnHelper.accessor('preview', {
-        header: 'Thumbnail',
-        cell: info => <img alt="Thumbnail" src={info.getValue()} />,
-      }),
-      columnHelper.accessor('name', {
-        header: 'File Name',
-        cell: info => info.getValue(),
-      }),
-      columnHelper.accessor('name', {
-        id: 'title',
-        header: 'Title',
-        cell: EditableTableCell,
-        meta: {
-          type: 'input',
-          inputType: 'text',
-        },
-      }),
-      columnHelper.display({
-        header: 'Description',
-        cell: EditableTableCell,
-        meta: {
-          type: 'input',
-          inputType: 'text',
-        },
-      }),
-      columnHelper.display({
-        header: 'Category',
-        cell: EditableTableCell,
-        meta: {
-          type: 'select',
-          isMulti: true,
-          options: imageryCategoryOptions,
-        },
-      }),
-      columnHelper.display({
-        header: 'Usage',
-        cell: EditableTableCell,
-        meta: {
-          type: 'select',
-          defaultValue: 'editorial',
-          options: usageOptions,
-        },
-      }),
-      columnHelper.display({
-        header: 'Do you have releases on file / can you obtain them?',
-        cell: EditableTableCell,
-        meta: releaseOptions,
-      }),
-      columnHelper.accessor('meta.keywords', {
-        header: 'Keywords (max 10)',
-        cell: EditableTableCell,
-        meta: {
-          type: 'input',
-          inputType: 'text',
-        },
-      }),
-      columnHelper.display({
-        header: 'Dimensions',
-        cell: ({ row }) => {
-          if (row.original.meta?.width && row.original.meta?.height) {
-            return `${row.original.meta.width}px x ${row.original.meta.height} px`;
-          }
-          return '';
-        },
-      }),
-      columnHelper.accessor('size', {
-        header: 'Size',
-        cell: info => `${(info.getValue() / 1024).toFixed(2)} KB`,
-      }),
-      columnHelper.display({
-        header: 'Price',
-        cell: EditableTableCell,
-        meta: {
-          type: 'input',
-          inputType: 'number',
-        },
-      }),
-    ],
-    [fileCount]
-  );
-
-  const table = useReactTable({
-    columns,
-    data,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    defaultColumn: {
-      minSize: 100,
-      size: 250,
+  const columns = [
+    {
+      title: 'Thumbnail',
+      dataIndex: 'preview',
+      render: text => <img alt="Thumbnail" src={text} />,
+      fixed: 'left',
     },
+    {
+      title: 'File Name',
+      dataIndex: 'name',
+      width: 300,
+      sorter: stringSorter,
+    },
+    {
+      title: 'Title',
+      width: 400,
+      dataIndex: 'title',
+      editable: true,
+      editControlType: 'text',
+    },
+    {
+      title: 'Description',
+      dataIndex: 'description',
+      editable: true,
+      editControlType: 'text',
+    },
+    {
+      title: 'Is AI',
+      dataIndex: 'isAi',
+      render: (_, record) => {
+        const { isAi } = record;
+        return (
+          <Switch
+            value={isAi}
+            checkedChildren="Yes"
+            unCheckedChildren="No"
+            onChange={value =>
+              handleSave({
+                ...record,
+                isAi: value,
+                isIllustration: value ? false : record.isIllustration,
+              })
+            }
+          />
+        );
+      },
+    },
+    {
+      title: 'Is Illustration',
+      dataIndex: 'isIllustration',
+      render: (_, record) => {
+        const { isIllustration } = record;
+        return (
+          <Switch
+            value={isIllustration}
+            checkedChildren="Yes"
+            unCheckedChildren="No"
+            onChange={value =>
+              handleSave({
+                ...record,
+                isAi: value ? false : record.isAi,
+                isIllustration: value,
+              })
+            }
+          />
+        );
+      },
+    },
+    {
+      title: 'Category',
+      width: 300,
+      dataIndex: 'category',
+      editable: true,
+      editControlType: 'selectMultiple',
+      options: imageryCategoryOptions,
+    },
+    {
+      title: 'Usage',
+      width: 200,
+      dataIndex: 'usage',
+      editable: true,
+      editControlType: 'select',
+      options: usageOptions,
+    },
+    {
+      title: 'Do you have releases on file / can you obtain them?',
+      dataIndex: 'releases',
+      width: 300,
+      editable: true,
+      editControlType: 'select',
+      options: releaseOptions,
+    },
+    {
+      title: 'Keywords',
+      width: 400,
+      dataIndex: 'keywords',
+      editable: true,
+      editControlType: 'tags',
+    },
+    {
+      title: 'Dimensions',
+      dataIndex: 'width',
+      render: (_, record) => {
+        const { width, height } = record;
+        return width && height ? `${width}px x ${height}px` : '';
+      },
+      sorter: comparePictureDimensions,
+    },
+    {
+      title: 'Size',
+      dataIndex: 'size',
+      render: size => `${(size / 1024).toFixed(2)} KB`,
+      sorter: (a, b) => a.size - b.size,
+    },
+    {
+      title: 'Price',
+      dataIndex: 'price',
+      editable: true,
+      editControlType: 'text',
+    },
+  ];
+
+  const editableColumns = columns.map(col => {
+    if (!col.editable) return col;
+
+    return {
+      ...col,
+      onCell: record => ({
+        record,
+        editable: col.editable,
+        dataIndex: col.dataIndex,
+        title: col.title,
+        handleSave,
+        editControlType: col.editControlType,
+        options: col.options,
+        cellClassName: css.editableCellValueWrap,
+      }),
+    };
   });
+
+  const onSelectChange = newSelectedRowKeys => {
+    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
 
   return (
     <div className={css.root}>
-      <H3 as="h1">
-        <FormattedMessage id="BatchEditListingProductDetails.title" />
-        <p>
-          <FormattedMessage id="BatchEditListingProductDetails.subtitle" />
-        </p>
-        <p>
-          <FormattedMessage id="BatchEditListingProductDetails.warningRefresh" />
-        </p>
-      </H3>
-      <table
-        className={css.productsTable}
-        {...{
-          style: {
-            width: table.getCenterTotalSize(),
-          },
-        }}
-      >
-        <thead>
-          {table.getHeaderGroups().map(headerGroup => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => {
-                return (
-                  <th
-                    {...{
-                      key: header.id,
-                      colSpan: header.colSpan,
-                      style: {
-                        width: header.getSize(),
-                      },
-                    }}
-                  >
-                    {header.isPlaceholder ? null : (
-                      <div>{flexRender(header.column.columnDef.header, header.getContext())}</div>
-                    )}
-                  </th>
-                );
-              })}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map(row => {
-            return (
-              <tr key={row.id}>
-                {row.getVisibleCells().map(cell => {
-                  return (
-                    <td
-                      {...{
-                        key: cell.id,
-                        style: {
-                          width: cell.column.getSize(),
-                        },
-                      }}
-                    >
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      <Flex gap="middle">
+        <Flex>
+          <H3 as="h1">
+            <FormattedMessage id="BatchEditListingProductDetails.title" />
+            <p>
+              <FormattedMessage id="BatchEditListingProductDetails.subtitle" />
+            </p>
+            <p>
+              <FormattedMessage id="BatchEditListingProductDetails.warningRefresh" />
+            </p>
+          </H3>
+        </Flex>
+
+        <Flex style={{ alignSelf: 'flex-start', marginTop: 35 }}>
+          <Button className={css.submitButton} type="button" inProgress={false}>
+            Submit for Review
+          </Button>
+        </Flex>
+      </Flex>
+      <div style={{ marginTop: '20px' }}>
+        <Table
+          columns={editableColumns}
+          components={EditableCellComponents}
+          dataSource={dataSource}
+          rowClassName={() => css.editableRow}
+          rowKey="id"
+          pagination={false}
+          scroll={{
+            x: 'max-content',
+          }}
+          className={css.productsTable}
+          rowSelection={rowSelection}
+        />
+      </div>
     </div>
   );
 };

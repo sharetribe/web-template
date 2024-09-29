@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { CustomSelect } from '../CustomSelect/CustomSelect';
+import { TagInput } from '../TagInput/TagInput';
 
 export const EditableTableCell = props => {
   const { getValue, row, column, table } = props;
@@ -15,16 +16,27 @@ export const EditableTableCell = props => {
   }, [initialValue]);
 
   const onBlur = () => {
-    table.options.meta?.updateData(row.index, column.id, value);
+    console.log(value);
+    tableMeta?.updateData(row.index, column.id, value);
   };
 
   const onSelectChange = option => {
-    console.log(option);
     setValue(option.value);
     tableMeta?.updateData(row.index, column.id, option.value);
   };
 
+  const onTagInputChange = values => {
+    const tags = values.map(({ value }) => value);
+    setValue(tags);
+    tableMeta?.updateData(row.index, column.id, tags);
+  };
+
   const controlType = columnMeta?.type || 'input';
+
+  function onTextChange(e) {
+    console.log(e);
+    setValue(e.target.value);
+  }
 
   return (
     <>
@@ -33,18 +45,22 @@ export const EditableTableCell = props => {
           select: (
             <CustomSelect
               onChange={onSelectChange}
-              value={initialValue}
+              value={value}
               options={columnMeta?.options}
               isMulti={columnMeta?.isMulti || false}
             ></CustomSelect>
           ),
+          tagInput: <TagInput initialValue={value} onChange={onTagInputChange}></TagInput>,
           input: (
             <input
               value={value}
-              onChange={e => setValue(e.target.value)}
+              onChange={onTextChange}
               onBlur={onBlur}
               type={columnMeta?.inputType || 'text'}
             />
+          ),
+          textArea: (
+            <textarea value={value} onChange={onTextChange} onBlur={onBlur}></textarea>
           ),
         }[controlType]
       }
