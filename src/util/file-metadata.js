@@ -12,6 +12,7 @@ function getFileResolution(file, onLoad, extraParams = {}) {
     onLoad({
       width: image.width,
       height: image.height,
+      keywords: '',
       ...extraParams,
     });
     URL.revokeObjectURL(fileUrl);
@@ -29,7 +30,7 @@ function readMetadata(metadata, originalFile, onLoad) {
 
   const width = getTagValue(metadata, WIDTH_TAGS, 0);
   const height = getTagValue(metadata, HEIGHT_TAGS, 0);
-  const keywords = getTagValue(metadata, KEYWORDS_TAGS, []);
+  const keywords = getTagValue(metadata, KEYWORDS_TAGS, '');
 
   if (!width || !height) {
     getFileResolution(originalFile, onLoad, { keywords });
