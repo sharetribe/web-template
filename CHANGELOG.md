@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] Add currently available translations for DE, ES, FR.
+  [#458](https://github.com/sharetribe/web-template/pull/458)
 - [fix] Topbar: malformed custom link causes a 500 error on server.
   [#457](https://github.com/sharetribe/web-template/pull/457)
 - [fix] ListingPage.shared.js: import for convertMoneyToNumber was not made for priceForSchemaMaybe
