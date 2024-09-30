@@ -80,6 +80,14 @@ const priceData = (price, currency, intl) => {
   return {};
 };
 
+const formatMoneyIfSupportedCurrency = (price, intl) => {
+  try {
+    return formatMoney(intl, price);
+  } catch (e) {
+    return `(${price.currency})`;
+  }
+};
+
 const openOrderModal = (isOwnListing, isClosed, history, location) => {
   if (isOwnListing || isClosed) {
     window.scrollTo(0, 0);
@@ -146,7 +154,7 @@ const PriceMaybe = props => {
     </div>
   ) : (
     <div className={css.priceContainer}>
-      <p className={css.price}>{formatMoney(intl, price)}</p>
+      <p className={css.price}>{formatMoneyIfSupportedCurrency(price, intl)}</p>
       <div className={css.perUnit}>
         <FormattedMessage id="OrderPanel.perUnit" values={{ unitType }} />
       </div>

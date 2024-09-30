@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "5.4.0",
+  "version": "5.5.0",
   "private": true,
   "license": "Apache-2.0",
   "dependencies": {
@@ -8,8 +8,8 @@
     "@loadable/component": "^5.15.2",
     "@loadable/server": "^5.15.2",
     "@mapbox/polyline": "^1.1.1",
-    "@sentry/browser": "^6.19.7",
-    "@sentry/node": "^6.19.7",
+    "@sentry/browser": "^8.26.0",
+    "@sentry/node": "^8.26.0",
     "autosize": "^5.0.1",
     "basic-auth": "^2.0.1",
     "body-parser": "^1.20.2",
