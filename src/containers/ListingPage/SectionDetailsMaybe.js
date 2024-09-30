@@ -23,7 +23,7 @@ const SectionDetailsMaybe = props => {
     const { isDetail, label } = showConfig;
     const publicDataValue = publicData[key];
     const metadataValue = metadata[key];
-    const value = publicDataValue || metadataValue;
+    const value = typeof publicDataValue != null ? publicDataValue : metadataValue;
 
     if (isDetail && isTargetListingType && isTargetCategory && typeof value !== 'undefined') {
       const findSelectedOption = enumValue => enumOptions?.find(o => enumValue === `${o.option}`);

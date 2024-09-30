@@ -113,7 +113,7 @@ const pickListingFieldsData = (
     const isTargetCategory = isFieldForCategory(targetCategoryIds, fieldConfig);
 
     if (isKnownSchemaType && isTargetScope && isTargetListingType && isTargetCategory) {
-      const fieldValue = data[namespacedKey] || null;
+      const fieldValue = data[namespacedKey] != null ? data[namespacedKey] : null;
       return { ...fields, [key]: fieldValue };
     } else if (isKnownSchemaType && isTargetScope) {
       // Note: this clears extra custom fields
@@ -166,7 +166,7 @@ const initialValuesForListingFields = (
       isTargetCategory &&
       shouldHaveValidEnumOptions
     ) {
-      const fieldValue = data?.[key] || null;
+      const fieldValue = data?.[key] != null ? data[key] : null;
       return { ...fields, [namespacedKey]: fieldValue };
     }
     return fields;
