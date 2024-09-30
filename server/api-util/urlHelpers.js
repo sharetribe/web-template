@@ -9,5 +9,5 @@ function isValidURL(value) {
 }
 
 module.exports = {
-  isValidURL
+  isValidURL,
 };

@@ -1,15 +1,13 @@
 @import '../../styles/customMediaQueries.css';
 
-.root {
-  background-color: var(--colorWhite);
-}
 .content {
-  width: calc(100% - 48px);
-  margin: 12px 24px 24px 24px;
-
   @media (--viewportMedium) {
-    max-width: 565px;
-    margin: 55px auto 56px auto;
+    margin: 32px auto 0 auto;
+    max-width: 564px;
+  }
+
+  @media (--viewportLarge) {
+    margin: 0;
   }
 }
 
@@ -30,4 +28,34 @@
 
   float: right;
   flex-shrink: 0;
+}
+
+.tabs {
+  padding-top: 2px;
+
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+
+  @media (--viewportMedium) {
+    padding-top: 12px;
+    padding-top: 20px;
+  }
+
+  @media (--viewportLarge) {
+    padding-top: 24px;
+    flex-direction: column;
+  }
+}
+
+.tab {
+  margin-left: 16px;
+
+  &:first-child {
+    margin-left: 0;
+  }
+
+  @media (--viewportLarge) {
+    margin-left: 0;
+  }
 }

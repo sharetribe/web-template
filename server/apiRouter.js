@@ -21,7 +21,13 @@ const { authenticateAuth0, authenticateAuth0Callback } = require('./api/auth/aut
 const router = express.Router();
 
 // ================ API router Slack integration manager: ================ //
-router.post('/slack/interactivity', bodyParser.json(), bodyParser.urlencoded({ extended: true }), verifySlackRequestMiddleware, slackInteractivity);
+router.post(
+  '/slack/interactivity',
+  bodyParser.json(),
+  bodyParser.urlencoded({ extended: true }),
+  verifySlackRequestMiddleware,
+  slackInteractivity
+);
 
 // ================ API router middleware: ================ //
 // Parse Transit body first to a string

@@ -6,7 +6,7 @@
 
 const fs = require('fs');
 
-const { loadSecrets } = require('./secretManager')
+const { loadSecrets } = require('./secretManager');
 
 const NODE_ENV = process.env.NODE_ENV;
 

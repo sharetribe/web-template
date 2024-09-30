@@ -2,7 +2,7 @@ const { integrationSdkInit } = require('../api-util/scriptManager');
 
 const SCRIPT_NAME = 'showMarketplace';
 
-function script () {
+function script() {
   console.log(`Loading event script: ${SCRIPT_NAME}`);
   try {
     const integrationSdk = integrationSdkInit();

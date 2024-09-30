@@ -1,6 +1,6 @@
 import { denormalisedResponseEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
-import { currentUserShowSuccess } from '../../ducks/user.duck';
+import { fetchCurrentUser, currentUserShowSuccess } from '../../ducks/user.duck';
 
 // ================ Action types ================ //
 
@@ -159,4 +159,9 @@ export const updateProfile = actionPayload => {
       })
       .catch(e => dispatch(updateProfileError(storableError(e))));
   };
+};
+
+export const loadData = () => {
+  // Since some info might be set on the background and we need to refresh the cache
+  return fetchCurrentUser();
 };

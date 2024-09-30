@@ -124,7 +124,7 @@ module.exports = (err, user, req, res, idpClientId, idpId) => {
           idpId,
           from,
           userType,
-          brandStudioId: user.brandStudioId
+          brandStudioId: user.brandStudioId,
         },
         {
           maxAge: 15 * 60 * 1000, // 15 minutes

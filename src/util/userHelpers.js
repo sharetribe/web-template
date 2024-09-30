@@ -168,21 +168,23 @@ export const isUserAuthorized = (currentUser, permissionsToCheck) => {
     : isActive;
 };
 
-export const isStudioBrand = (userType) => {
+export const isStudioBrand = userType => {
   return userType === USER_TYPES.BRAND;
 };
 
-export const isBuyer = (userType) => {
+export const isBuyer = userType => {
   return userType === USER_TYPES.BUYER;
 };
 
-export const isCreativeSeller = (userType) => {
+export const isCreativeSeller = userType => {
   return userType === USER_TYPES.SELLER;
 };
 
 export const getBrandUserFieldInputs = (userType, isBrandAdmin, fieldKey) => {
   const hideBrandFields = isStudioBrand(userType) && !isBrandAdmin;
-  if (!hideBrandFields) { return true }
+  if (!hideBrandFields) {
+    return true;
+  }
   switch (fieldKey) {
     case 'brandName':
     case 'brandWebsite':
