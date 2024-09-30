@@ -13,7 +13,7 @@ async function loadSecrets() {
   } catch (err) {
     console.error(
       'Error loading secrets - did you set a valid CONFIG_SECRET_NAME environment variable for the Google Cloud Secret manager?',
-      err,
+      err
     );
     process.exit(1);
   }

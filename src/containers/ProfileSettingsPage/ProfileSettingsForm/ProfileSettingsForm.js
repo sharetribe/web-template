@@ -11,7 +11,12 @@ import { ensureCurrentUser } from '../../../util/data';
 import { propTypes, USER_TYPES, SELLER_STATUS } from '../../../util/types';
 import * as validators from '../../../util/validators';
 import { isUploadImageOverLimitError } from '../../../util/errors';
-import { getPropsForCustomUserFieldInputs, getBrandUserFieldInputs, isBuyer, isCreativeSeller } from '../../../util/userHelpers';
+import {
+  getPropsForCustomUserFieldInputs,
+  getBrandUserFieldInputs,
+  isBuyer,
+  isCreativeSeller,
+} from '../../../util/userHelpers';
 
 import {
   Form,
@@ -32,39 +37,23 @@ const UPLOAD_CHANGE_DELAY = 2000; // Show spinner so that browser has time to lo
 
 function getApplyAsSellerFieldConfig(userType, sellerStatus) {
   if (isCreativeSeller(userType)) {
-    const showPendingLabel =  sellerStatus === SELLER_STATUS.APPLIED;
+    const showPendingLabel = sellerStatus === SELLER_STATUS.APPLIED;
     const showWaitlistedLabel = sellerStatus === SELLER_STATUS.WAITLISTED;
     const showToggle = false;
     if (showPendingLabel) {
       const showField = true;
-      return [
-        showField,
-        showToggle,
-        'ProfileSettingsForm.applyAsSellerPendingInfo',
-      ]
+      return [showField, showToggle, 'ProfileSettingsForm.applyAsSellerPendingInfo'];
     }
     if (showWaitlistedLabel) {
       const showField = true;
-      return [
-        showField,
-        showToggle,
-        'ProfileSettingsForm.applyAsSellerWaitlistedInfo',
-      ]
+      return [showField, showToggle, 'ProfileSettingsForm.applyAsSellerWaitlistedInfo'];
     }
     const showField = false;
-    return [
-      showField,
-      showToggle,
-      'ProfileSettingsForm.applyAsSellerWaitlistedInfo',
-    ]
+    return [showField, showToggle, 'ProfileSettingsForm.applyAsSellerWaitlistedInfo'];
   }
   const showField = isBuyer(userType);
   const showToggle = isBuyer(userType);
-  return [
-    showField,
-    showToggle,
-    'ProfileSettingsForm.applyAsSellerInfo',
-  ]
+  return [showField, showToggle, 'ProfileSettingsForm.applyAsSellerInfo'];
 }
 
 const DisplayNameMaybe = props => {
@@ -167,7 +156,7 @@ class ProfileSettingsFormComponent extends Component {
             showApplyAsSellerField,
             showApplyAsSellerToggle,
             applyAsSellerInfoId,
-          ] = getApplyAsSellerFieldConfig(initialUserType, sellerStatus)
+          ] = getApplyAsSellerFieldConfig(initialUserType, sellerStatus);
           const userTypeConfig = userTypes.find(config => config.userType === userType);
           const user = ensureCurrentUser(currentUser);
 
@@ -435,12 +424,17 @@ class ProfileSettingsFormComponent extends Component {
 
               <div className={classNames(css.sectionContainer, css.lastSection)}>
                 {userFieldProps.map(fieldProps => {
-                  const isBrandAdmin = currentUser.attributes.profile.metadata.isBrandAdmin || false
+                  const isBrandAdmin =
+                    currentUser.attributes.profile.metadata.isBrandAdmin || false;
                   const fieldKey = fieldProps.fieldConfig.key;
-                  const showField = getBrandUserFieldInputs(userType, isBrandAdmin, fieldKey)
+                  const showField = getBrandUserFieldInputs(userType, isBrandAdmin, fieldKey);
                   return (
-                    <CustomExtendedDataField {...fieldProps} formId={formId} disabled={!showField}/>
-                  )
+                    <CustomExtendedDataField
+                      {...fieldProps}
+                      formId={formId}
+                      disabled={!showField}
+                    />
+                  );
                 })}
               </div>
               {submitError}

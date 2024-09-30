@@ -15,7 +15,7 @@ import {
 } from '../../util/userHelpers';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 
-import { H3, Page, UserNav, NamedLink, LayoutSingleColumn } from '../../components';
+import { H3, Page, UserNav, NamedLink, LayoutSideNavigation, TabNav } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
@@ -66,8 +66,16 @@ export const ProfileSettingsPageComponent = props => {
 
   const { userFields, userTypes = [] } = config.user;
 
-  const handleSubmit = (values) => {
-    const { firstName, lastName, displayName, bio: rawBio, userType: initialUserType, applyAsSeller, ...rest } = values;
+  const handleSubmit = values => {
+    const {
+      firstName,
+      lastName,
+      displayName,
+      bio: rawBio,
+      userType: initialUserType,
+      applyAsSeller,
+      ...rest
+    } = values;
     const displayNameMaybe = displayName
       ? { displayName: displayName.trim() }
       : { displayName: null };
@@ -153,16 +161,41 @@ export const ProfileSettingsPageComponent = props => {
   ) : null;
 
   const title = intl.formatMessage({ id: 'ProfileSettingsPage.title' });
+  const tabs = [
+    {
+      text: (
+        <span>
+          <FormattedMessage id="ProfileSettingsPage.profileSettingsTabTitle" />
+        </span>
+      ),
+      selected: true,
+      linkProps: {
+        name: 'ProfileSettingsPage',
+      },
+    },
+    {
+      text: (
+        <span>
+          <FormattedMessage id="ProfileSettingsPage.creativeDetailsTabTitle" />
+        </span>
+      ),
+      selected: false,
+      linkProps: {
+        name: 'ProfileSettingsPage',
+      },
+    },
+  ];
 
   return (
-    <Page className={css.root} title={title} scrollingDisabled={scrollingDisabled}>
-      <LayoutSingleColumn
+    <Page title={title} scrollingDisabled={scrollingDisabled}>
+      <LayoutSideNavigation
         topbar={
           <>
             <TopbarContainer />
             <UserNav currentPage="ProfileSettingsPage" />
           </>
         }
+        sideNav={<TabNav rootClassName={css.tabs} tabRootClassName={css.tab} tabs={tabs} />}
         footer={<FooterContainer />}
       >
         <div className={css.content}>
@@ -175,7 +208,7 @@ export const ProfileSettingsPageComponent = props => {
           </div>
           {profileSettingsForm}
         </div>
-      </LayoutSingleColumn>
+      </LayoutSideNavigation>
     </Page>
   );
 };

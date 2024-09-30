@@ -69,6 +69,7 @@ export const SSOButton = ({ isLogin, from, userType, brandStudioId }) => {
       // The preselected userType needs to be saved over the visit to identity provider's service
       ...(userType ? { userType } : {}),
       ...(withBrandStudioId ? { brandStudioId } : {}),
+      screenHint: isLogin ? 'login' : 'signup',
     });
     return { baseUrl, queryParams: queryParams.toString() };
   };
@@ -156,7 +157,12 @@ export const AuthenticationForms = props => {
       <LinkTabNavHorizontal className={css.tabs} tabs={tabs} />
       {loginOrSignupError}
       {isLogin ? <LoginForm /> : <SignupForm />}
-      <SSOButton isLogin={isLogin} brandStudioId={brandStudioId} {...fromMaybe} {...userTypeMaybe} />
+      <SSOButton
+        isLogin={isLogin}
+        brandStudioId={brandStudioId}
+        {...fromMaybe}
+        {...userTypeMaybe}
+      />
     </div>
   );
 };
@@ -185,6 +191,7 @@ const ConfirmIdProviderInfoForm = props => {
       firstName: newFirstName,
       lastName: newLastName,
       displayName,
+      location: newLocation,
       ...rest
     } = values;
     const displayNameMaybe = displayName ? { displayName: displayName.trim() } : {};
@@ -195,25 +202,35 @@ const ConfirmIdProviderInfoForm = props => {
       firstName: newFirstName,
       lastName: newLastName,
     };
+    const location = newLocation && {
+      address: newLocation?.selectedPlace?.address,
+      geolocation: {
+        lat: newLocation?.selectedPlace?.origin?.lat,
+        lng: newLocation?.selectedPlace?.origin?.lng,
+      },
+      building: '',
+    };
     const withHiddenPrivateData = isStudioBrand(userType) && !!brandStudioId;
     // Pass other values as extended data according to user field configuration
-    const extendedDataMaybe = !isEmpty(rest) || withHiddenPrivateData
-      ? {
-          publicData: {
-            userType,
-            ...pickUserFieldsData(rest, 'public', userType, userFields),
-          },
-          privateData: {
-            ...pickUserFieldsData(rest, 'private', userType, userFields),
-            ...(!!brandStudioId && { brandStudioId }),
-          },
-          protectedData: {
-            ...pickUserFieldsData(rest, 'protected', userType, userFields),
-            // If the confirm form has any additional values, pass them forward as user's protected data
-            ...getNonUserFieldParams(rest, userFields),
-          },
-        }
-      : {};
+    const extendedDataMaybe =
+      !isEmpty(rest) || withHiddenPrivateData
+        ? {
+            publicData: {
+              userType,
+              ...pickUserFieldsData(rest, 'public', userType, userFields),
+            },
+            privateData: {
+              ...pickUserFieldsData(rest, 'private', userType, userFields),
+              ...(!!brandStudioId && { brandStudioId }),
+              ...(!!location && { location }),
+            },
+            protectedData: {
+              ...pickUserFieldsData(rest, 'protected', userType, userFields),
+              // If the confirm form has any additional values, pass them forward as user's protected data
+              ...getNonUserFieldParams(rest, userFields),
+            },
+          }
+        : {};
     submitSingupWithIdp({
       idpToken,
       idpId,

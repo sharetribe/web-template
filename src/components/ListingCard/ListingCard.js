@@ -7,7 +7,7 @@ import { useConfiguration } from '../../context/configurationContext';
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import { displayPrice } from '../../util/configHelpers';
 import { lazyLoadWithDimensions } from '../../util/uiHelpers';
-import { propTypes } from '../../util/types';
+import { propTypes, LISTING_TYPES } from '../../util/types';
 import { formatMoney } from '../../util/currency';
 import { ensureListing, ensureUser } from '../../util/data';
 import { richText } from '../../util/richText';
@@ -81,13 +81,19 @@ export const ListingCardComponent = props => {
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureListing(listing);
   const id = currentListing.id.uuid;
-  const { title = '', price, publicData } = currentListing.attributes;
-  const slug = createSlug(title);
+  const { title: listingTitle = '', price, publicData } = currentListing.attributes;
+  const isCreativeProfile = publicData.listingType === LISTING_TYPES.PROFILE;
   const author = ensureUser(listing.author);
-  const authorName = author.attributes.profile.displayName;
-  const firstImage =
-    currentListing.images && currentListing.images.length > 0 ? currentListing.images[0] : null;
-
+  const authorDisplayName = author.attributes.profile.displayName;
+  const title = isCreativeProfile ? authorDisplayName : listingTitle;
+  const slug = createSlug(title);
+  const authorName = isCreativeProfile ? 'Creative Profile' : authorDisplayName;
+  const authorProfileImage = author.profileImage;
+  const firstImage = isCreativeProfile
+    ? authorProfileImage
+    : currentListing.images && currentListing.images.length > 0
+    ? currentListing.images[0]
+    : null;
   const {
     aspectWidth = 1,
     aspectHeight = 1,
