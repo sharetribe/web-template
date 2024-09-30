@@ -9,17 +9,31 @@
 import * as Sentry from '@sentry/browser';
 import appSettings from '../config/settings';
 
+const ingoreErrorsMap = {
+  ['ResizeObserver loop limit exceeded']: true, // Some exotic browsers seems to emit these.
+  ['Error reading']: true, // Ignore file reader errors (ImageFromFile)
+  ['AxiosError: Network Error']: true,
+};
+
+const pickSelectedErrors = (ignored, entry) => {
+  const [key, value] = entry;
+  return value === true ? [...ignored, key] : ignored;
+};
+
 /**
  * Set up error handling. If a Sentry DSN is
  * provided a Sentry client will be installed.
  */
 export const setup = () => {
   if (appSettings.sentryDsn) {
+    const ignoreErrors = Object.entries(ingoreErrorsMap).reduce(pickSelectedErrors, []);
+
     // Configures the Sentry client. Adds a handler for
     // any uncaught exception.
     Sentry.init({
       dsn: appSettings.sentryDsn,
       environment: appSettings.env,
+      ignoreErrors,
     });
   }
 };
@@ -31,9 +45,7 @@ export const setup = () => {
  * @param {String} userId ID of current user
  */
 export const setUserId = userId => {
-  Sentry.configureScope(scope => {
-    scope.setUser({ id: userId });
-  });
+  Sentry.setUser({ id: userId });
 };
 
 /**
@@ -41,9 +53,7 @@ export const setUserId = userId => {
  */
 
 export const clearUserId = () => {
-  Sentry.configureScope(scope => {
-    scope.setUser(null);
-  });
+  Sentry.setUser(null);
 };
 
 const printAPIErrorsAsConsoleTable = apiErrors => {

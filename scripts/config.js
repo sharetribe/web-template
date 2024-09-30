@@ -114,6 +114,10 @@ const mandatoryVariables = settings => {
     settings && settings.REACT_APP_MAPBOX_ACCESS_TOKEN !== ''
       ? { default: settings.REACT_APP_MAPBOX_ACCESS_TOKEN }
       : {};
+  const marketplaceNameDefaultMaybe =
+    settings && settings.REACT_APP_MARKETPLACE_NAME !== ''
+      ? { default: settings.REACT_APP_MARKETPLACE_NAME }
+      : {};
 
   return [
     {
@@ -165,11 +169,20 @@ If you don't set the Stripe key, payments won't work in the application.`
       name: 'REACT_APP_MAPBOX_ACCESS_TOKEN',
       message: `What is your Mapbox access token?
 ${chalk.dim(
-  `Mapbox is the default map provider of the application. Sign up for Mapbox and go the to account page. Then click Create access token. For more information see the: Integrating to map providers documentation.
-If you don't set the Mapbox key, the map components won't work in the application.`
+  `The Mapbox access token should be set via the Sharetribe Console. You can also configure it as an environment variable, which will be used as a fallback value.`
 )}
 `,
       ...mapBoxDefaultMaybe,
+    },
+    {
+      type: 'input',
+      name: 'REACT_APP_MARKETPLACE_NAME',
+      message: `What is the name of your marketplace?
+${chalk.dim(
+  'The marketplace name is needed for the marketplace texts. If not set through environment variables, the name defaults to "Biketribe" (set in src/config/configDefault.js)'
+)}
+`,
+      ...marketplaceNameDefaultMaybe,
     },
   ];
 };
@@ -206,21 +219,6 @@ ${chalk.dim(
 `,
       default: function() {
         return rootUrlDefault ? rootUrlDefault : 'http://localhost:3000';
-      },
-      when: function(answers) {
-        return answers.showAdvancedSettings;
-      },
-    },
-    {
-      type: 'input',
-      name: 'REACT_APP_MARKETPLACE_NAME',
-      message: `What is the name of your marketplace?
-${chalk.dim(
-  'The marketplace name is needed for the marketplace texts. If not set through environment variables, the name defaults to "Biketribe" (set in src/config/configDefault.js)'
-)}
-`,
-      default: function() {
-        return 'MyMarketplace';
       },
       when: function(answers) {
         return answers.showAdvancedSettings;

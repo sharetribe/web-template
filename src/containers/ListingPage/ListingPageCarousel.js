@@ -21,7 +21,6 @@ import {
 } from '../../util/urlHelpers';
 import { isErrorUserPendingApproval, isForbiddenError } from '../../util/errors.js';
 import { isUserAuthorized } from '../../util/userHelpers.js';
-import { convertMoneyToNumber } from '../../util/currency';
 import {
   ensureListing,
   ensureOwnListing,
@@ -73,6 +72,7 @@ import {
   handleSubmitInquiry,
   handleSubmit,
   handleToggleFavorites,
+  priceForSchemaMaybe,
 } from './ListingPage.shared';
 import ActionBarMaybe from './ActionBarMaybe';
 import SectionTextMaybe from './SectionTextMaybe';
@@ -207,7 +207,7 @@ export const ListingPageComponent = props => {
   const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
   const isBooking = isBookingProcess(processName);
   const isPurchase = isPurchaseProcess(processName);
-  const processType = isBooking ? ('booking' ? isPurchase : 'purchase') : 'inquiry';
+  const processType = isBooking ? 'booking' : isPurchase ? 'purchase' : 'inquiry';
 
   const currentAuthor = authorAvailable ? currentListing.author : null;
   const ensuredAuthor = ensureUser(currentAuthor);
@@ -277,15 +277,6 @@ export const ListingPageComponent = props => {
   // Read more about product schema
   // https://developers.google.com/search/docs/advanced/structured-data/product
   const productURL = `${config.marketplaceRootURL}${location.pathname}${location.search}${location.hash}`;
-  const schemaPriceMaybe = price
-    ? {
-        price: intl.formatNumber(convertMoneyToNumber(price), {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        }),
-        priceCurrency: price.currency,
-      }
-    : {};
   const currentStock = currentListing.currentStock?.attributes?.quantity || 0;
   const schemaAvailability = !currentListing.currentStock
     ? null
@@ -320,7 +311,7 @@ export const ListingPageComponent = props => {
         offers: {
           '@type': 'Offer',
           url: productURL,
-          ...schemaPriceMaybe,
+          ...priceForSchemaMaybe(price, intl),
           ...availabilityMaybe,
         },
       }}
