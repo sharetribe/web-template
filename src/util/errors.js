@@ -280,7 +280,7 @@ export const isErrorUserPendingApproval = error =>
 
 /**
  * Check if the given API error (from `sdk.transactions.initiate(params)`
- * is due to denied permission for users in pending-approval state.
+ * is due to denied permission to initiate transactions.
  */
 export const isErrorNoPermissionForInitiateTransactions = error =>
   error &&
