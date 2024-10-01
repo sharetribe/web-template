@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+## [v5.6.0] 2024-10-01
+
 - [add] Add support for CTAs on NoAccessPage
   [#455](https://github.com/sharetribe/web-template/pull/455)
 - [add] Add currently available translations for DE, ES, FR.
@@ -40,6 +42,8 @@ way to update this template, but currently, we follow a pattern:
   [#448](https://github.com/sharetribe/web-template/pull/448)
 - [fix] Currencies that the Stripe does not support should not cause 500 errors.
   [#447](https://github.com/sharetribe/web-template/pull/447)
+
+  [v5.6.0]: https://github.com/sharetribe/web-template/compare/v5.5.0...v5.6.0
 
 ## [v5.5.0] 2024-09-03
 
