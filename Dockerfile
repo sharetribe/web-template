@@ -1,6 +1,7 @@
 # syntax=docker/dockerfile:experimental
 
-FROM node:18.15.0
+FROM node:18.20.1
+# FROM node:18.15.0
 # FROM node:16
 
 # install ssh client and git
