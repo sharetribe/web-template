@@ -1,8 +1,9 @@
 .root {
-    background: #f9f9f9;
     padding: 12px;
     line-height: 1.2;
     font-size: 12px;
-    margin-bottom: 16px;
+    margin: 13px auto;
     border-radius: 4px;
+    border: 1px solid var(--colorAttention);
+    background: var(--colorAttentionLight);
   }
