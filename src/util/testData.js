@@ -71,6 +71,7 @@ export const createCurrentUser = (id, attributes = {}, includes = {}) => ({
     id: new UUID('test-effectivePermissionSet'),
     attributes: {
       postListings: 'permission/allow',
+      read: 'permission/allow',
     },
   },
   ...includes,
