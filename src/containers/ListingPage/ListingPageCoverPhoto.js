@@ -315,6 +315,7 @@ export const ListingPageComponent = props => {
           title={title}
           listing={currentListing}
           isOwnListing={isOwnListing}
+          currentUser={currentUser}
           editParams={{
             id: listingId.uuid,
             slug: listingSlug,

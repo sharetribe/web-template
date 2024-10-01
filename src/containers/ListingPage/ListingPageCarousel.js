@@ -312,6 +312,7 @@ export const ListingPageComponent = props => {
                 isOwnListing={isOwnListing}
                 listing={currentListing}
                 showNoPayoutDetailsSet={noPayoutDetailsSetWithOwnListing}
+                currentUser={currentUser}
               />
             ) : null}
             {currentListing.id ? (
@@ -319,6 +320,7 @@ export const ListingPageComponent = props => {
                 className={css.actionBarForProductLayout}
                 isOwnListing={isOwnListing}
                 listing={currentListing}
+                currentUser={currentUser}
                 editParams={{
                   id: listingId.uuid,
                   slug: listingSlug,
