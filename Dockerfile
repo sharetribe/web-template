@@ -19,17 +19,25 @@ ENV BUILD_SHA ${COMMIT_SHA}
 # RUN yarn build
 # CMD ["yarn", "start"]
 
-WORKDIR /home/node/app
-# COPY package.json ./
-# COPY yarn.lock ./
-# RUN yarn install
+# WORKDIR /home/node/app
+# # COPY package.json ./
+# # COPY yarn.lock ./
+# # RUN yarn install
+
+# COPY . .
+# ENV PORT=8080
+# # ENV NODE_ENV=production
+# EXPOSE 8080
+
+# RUN --mount=type=ssh yarn install
+# RUN yarn run build
+# USER node
+# CMD ["yarn", "start"]
+
+WORKDIR /usr/src/app
 
 COPY . .
-ENV PORT=8080
-# ENV NODE_ENV=production
-EXPOSE 8080
 
 RUN --mount=type=ssh yarn install
-RUN yarn run build
-USER node
+RUN yarn build
 CMD ["yarn", "start"]
