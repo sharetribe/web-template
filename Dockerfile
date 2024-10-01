@@ -1,8 +1,6 @@
 # syntax=docker/dockerfile:experimental
 
 FROM node:18.20.1
-# FROM node:18.15.0
-# FROM node:16
 
 # install ssh client and git
 RUN apt-get update -y && apt-get install -y git openssh-client gcc g++ make
@@ -22,14 +20,14 @@ ENV BUILD_SHA ${COMMIT_SHA}
 # CMD ["yarn", "start"]
 
 WORKDIR /home/node/app
-COPY package.json ./
-COPY yarn.lock ./
-RUN yarn install
+# COPY package.json ./
+# COPY yarn.lock ./
+# RUN yarn install
 
 COPY . .
-ENV PORT=4000
+# ENV PORT=4000
 # ENV NODE_ENV=production
-EXPOSE 4000
+# EXPOSE 4000
 
 RUN --mount=type=ssh yarn install
 RUN yarn run build
