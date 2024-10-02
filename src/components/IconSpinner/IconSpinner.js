@@ -44,8 +44,8 @@ const DelayedSpinner = props => {
   const { delay = 600, ...restOfProps } = props;
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowSpinner(true), delay);
-    return () => clearTimeout(timer);
+    const timer = window?.setTimeout(() => setShowSpinner(true), delay);
+    return () => window?.clearTimeout(timer);
   });
 
   return showSpinner ? <IconSpinner {...restOfProps} /> : null;
