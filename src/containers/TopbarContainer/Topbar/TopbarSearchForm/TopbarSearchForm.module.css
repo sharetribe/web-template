@@ -142,6 +142,10 @@
    text is hidden in Mobile Safari without giving some extra space to
    it. */
   margin-bottom: 100px;
+
+  @media (--viewportMedium) {
+    margin-bottom: 0;
+  }
 }
 
 .desktopPredictions {
