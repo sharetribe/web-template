@@ -10,23 +10,35 @@ import css from './CheckoutPage.module.css';
 
 const CustomTopbar = props => {
   const [isMobile, setIsMobile] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // set initial value
-    const mediaQueryList = window.matchMedia('(max-width: 767px)');
-    setIsMobile(mediaQueryList.matches);
+    setMounted(true);
+  }, []);
 
-    //watch for updates
-    function updateIsMobile(e) {
-      setIsMobile(e.matches);
+  useEffect(() => {
+    let mediaQueryList = null;
+    let updateIsMobile = null;
+
+    if (mounted) {
+      // set initial value
+      mediaQueryList = window.matchMedia('(max-width: 767px)');
+      setIsMobile(mediaQueryList.matches);
+
+      //watch for updates
+      updateIsMobile = e => {
+        setIsMobile(e.matches);
+      };
+      mediaQueryList.addEventListener('change', updateIsMobile);
     }
-    mediaQueryList.addEventListener('change', updateIsMobile);
 
     // clean up after ourselves
-    return function cleanup() {
-      mediaQueryList.removeEventListener('change', updateIsMobile);
+    return () => {
+      if (mediaQueryList && updateIsMobile) {
+        mediaQueryList.removeEventListener('change', updateIsMobile);
+      }
     };
-  });
+  }, [mounted]);
 
   const { className, rootClassName, intl, linkToExternalSite } = props;
   const classes = classNames(rootClassName || css.topbar, className);
