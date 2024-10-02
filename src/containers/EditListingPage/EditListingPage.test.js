@@ -222,19 +222,12 @@ const getConfig = (listingTypes, listingFields, categoryConfig) => {
 };
 
 describe('EditListingPage', () => {
-  const originalWarn = console.warn.bind(console.warn);
   beforeEach(() => {
     // This is not defined by default on test env. Availability panel needs it.
     window.scrollTo = jest.fn();
-    console.warn = msg =>
-      !(
-        msg.toString().includes('componentWillReceiveProps') ||
-        msg.toString().includes('componentWillUpdate')
-      ) && originalWarn(msg);
   });
 
   afterAll(() => {
-    console.warn = originalWarn;
     // Remove window.scrollTo
     jest.clearAllMocks();
   });
