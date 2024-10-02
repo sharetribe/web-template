@@ -205,19 +205,6 @@ const commonProps = {
 };
 
 describe('OrderPanel', () => {
-  const originalWarn = console.warn.bind(console.warn);
-  beforeEach(() => {
-    console.warn = msg =>
-      !(
-        msg.toString().includes('componentWillReceiveProps') ||
-        msg.toString().includes('componentWillUpdate')
-      ) && originalWarn(msg);
-  });
-
-  afterAll(() => {
-    console.warn = originalWarn;
-  });
-
   const config = getConfig();
   const routeConfiguration = getRouteConfiguration(config.layout);
   const stockTypeMaybe = stockType => (stockType ? { stockType } : {});
