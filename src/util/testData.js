@@ -70,6 +70,7 @@ export const createCurrentUser = (id, attributes = {}, includes = {}) => ({
   effectivePermissionSet: {
     id: new UUID('test-effectivePermissionSet'),
     attributes: {
+      initiateTransactions: 'permission/allow',
       postListings: 'permission/allow',
       read: 'permission/allow',
     },
