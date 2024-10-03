@@ -212,6 +212,11 @@ export const ClientApp = props => {
   const { store, hostedTranslations = {}, hostedConfig = {} } = props;
   const appConfig = mergeConfig(hostedConfig, defaultConfig);
 
+  console.warn('\n\n\n...............................');
+  console.warn('\n[ClientApp] - defaultConfig:', defaultConfig);
+  console.warn('\n[ClientApp] - appConfig:', appConfig);
+  console.warn('\n...............................\n\n\n');
+
   // Show warning on the localhost:3000, if the environment variable key contains "SECRET"
   if (appSettings.dev) {
     const envVars = process.env || {};
@@ -271,6 +276,12 @@ ClientApp.propTypes = { store: any.isRequired };
 export const ServerApp = props => {
   const { url, context, helmetContext, store, hostedTranslations = {}, hostedConfig = {} } = props;
   const appConfig = mergeConfig(hostedConfig, defaultConfig);
+
+  console.warn('\n\n\n...............................');
+  console.warn('\n[ServerApp] - defaultConfig:', defaultConfig);
+  console.warn('\n[ServerApp] - appConfig:', appConfig);
+  console.warn('\n...............................\n\n\n');
+
   HelmetProvider.canUseDOM = false;
 
   // Show MaintenanceMode if the mandatory configurations are not available
