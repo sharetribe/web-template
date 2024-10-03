@@ -11,29 +11,6 @@ RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
 ARG COMMIT_SHA
 ENV BUILD_SHA ${COMMIT_SHA}
 
-# WORKDIR /usr/src/app
-
-# COPY . .
-
-# RUN --mount=type=ssh yarn install
-# RUN yarn build
-# CMD ["yarn", "start"]
-
-# WORKDIR /home/node/app
-# # COPY package.json ./
-# # COPY yarn.lock ./
-# # RUN yarn install
-
-# COPY . .
-# ENV PORT=8080
-# # ENV NODE_ENV=production
-# EXPOSE 8080
-
-# RUN --mount=type=ssh yarn install
-# RUN yarn run build
-# USER node
-# CMD ["yarn", "start"]
-
 WORKDIR /usr/src/app
 
 COPY . .

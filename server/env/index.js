@@ -27,6 +27,11 @@ var dotenvFiles = [
 
 const configureEnv = async () => {
   console.warn('\nLoading environment variables..');
+
+  console.warn('\n\n\n...............................');
+  console.warn('\n[ServerApp] - processEnv |REACT_APP_MARKETPLACE_ROOT_URL:', process.env.REACT_APP_MARKETPLACE_ROOT_URL);
+  console.warn('\n[ServerApp] - processEnv | REACT_APP_MARKETPLACE_NAME:', process.env.REACT_APP_MARKETPLACE_NAME);
+
   // Load environment variables from .env* files. Suppress warnings using silent
   // if this file is missing. dotenv will never modify any environment variables
   // that have already been set.
@@ -42,6 +47,14 @@ const configureEnv = async () => {
     }
   });
   const secrets = await loadSecrets();
+
+  console.warn('\n......');
+  console.warn('\n[ServerApp] - secrets | REACT_APP_MARKETPLACE_ROOT_URL:', secrets.REACT_APP_MARKETPLACE_ROOT_URL);
+  console.warn('\n[ServerApp] - secrets | REACT_APP_MARKETPLACE_NAME:', secrets.REACT_APP_MARKETPLACE_NAME);
+  console.warn('\n[ServerApp] - processEnv |REACT_APP_MARKETPLACE_ROOT_URL:', process.env.REACT_APP_MARKETPLACE_ROOT_URL);
+  console.warn('\n[ServerApp] - processEnv | REACT_APP_MARKETPLACE_NAME:', process.env.REACT_APP_MARKETPLACE_NAME);
+  console.warn('\n...............................\n\n\n');
+
   process.env = { ...secrets, ...process.env };
 
   console.warn('Loading environment variables DONE\n');
