@@ -10,15 +10,6 @@ export const apiBaseUrl = marketplaceRootURL => {
   const port = process.env.REACT_APP_DEV_API_SERVER_PORT;
   const useDevApiServer = process.env.NODE_ENV === 'development' && !!port;
 
-  console.warn('\n\n\n*******************************');
-  console.warn('\n[apiBaseUrl] - marketplaceRootURL:', marketplaceRootURL);
-  console.warn('\n[apiBaseUrl] - port:', port);
-  console.warn('\n[apiBaseUrl] - useDevApiServer:', useDevApiServer);
-
-  const isServer = typeof window === 'undefined';
-  console.warn('\n[apiBaseUrl] - isServer:', isServer);
-  console.warn('\n*******************************\n\n\n');
-
   // In development, the dev API server is running in a different port
   if (useDevApiServer) {
     return `http://localhost:${port}`;
