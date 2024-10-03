@@ -1,6 +1,8 @@
 .idea
 .next
 .env
-.env.*
+.env.local
+.env.*.local
+# .env.*
 node_modules
 dist
