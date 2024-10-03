@@ -13,7 +13,9 @@ ENV BUILD_SHA ${COMMIT_SHA}
 
 WORKDIR /usr/src/app
 
+COPY .env.production ./
 COPY . .
+ENV NODE_ENV=production
 
 RUN --mount=type=ssh yarn install
 RUN yarn build
