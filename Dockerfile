@@ -13,7 +13,6 @@ ENV BUILD_SHA ${COMMIT_SHA}
 
 WORKDIR /usr/src/app
 
-# COPY .env.production ./
 COPY . .
 
 ENV PORT=8080
