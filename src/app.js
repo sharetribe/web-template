@@ -212,9 +212,14 @@ export const ClientApp = props => {
   const { store, hostedTranslations = {}, hostedConfig = {} } = props;
   const appConfig = mergeConfig(hostedConfig, defaultConfig);
 
+  const REACT_APP_MARKETPLACE_ROOT_URL = process.env.REACT_APP_MARKETPLACE_ROOT_URL;
+  const REACT_APP_MARKETPLACE_NAME = process.env.REACT_APP_MARKETPLACE_NAME;
+  const { marketplaceRootURL, marketplaceName } = defaultConfig;
   console.warn('\n\n\n...............................');
-  console.warn('\n[ClientApp] - defaultConfig:', defaultConfig);
-  console.warn('\n[ClientApp] - appConfig:', appConfig);
+  console.warn('\n[ClientApp] - REACT_APP_MARKETPLACE_ROOT_URL:', REACT_APP_MARKETPLACE_ROOT_URL);
+  console.warn('\n[ClientApp] - REACT_APP_MARKETPLACE_NAME:', REACT_APP_MARKETPLACE_NAME);
+  console.warn('\n[ClientApp] - marketplaceRootURL:', marketplaceRootURL);
+  console.warn('\n[ClientApp] - marketplaceName:', marketplaceName);
   console.warn('\n...............................\n\n\n');
 
   // Show warning on the localhost:3000, if the environment variable key contains "SECRET"
@@ -277,9 +282,14 @@ export const ServerApp = props => {
   const { url, context, helmetContext, store, hostedTranslations = {}, hostedConfig = {} } = props;
   const appConfig = mergeConfig(hostedConfig, defaultConfig);
 
+  const REACT_APP_MARKETPLACE_ROOT_URL = process.env.REACT_APP_MARKETPLACE_ROOT_URL;
+  const REACT_APP_MARKETPLACE_NAME = process.env.REACT_APP_MARKETPLACE_NAME;
+  const { marketplaceRootURL, marketplaceName } = defaultConfig;
   console.warn('\n\n\n...............................');
-  console.warn('\n[ServerApp] - defaultConfig:', defaultConfig);
-  console.warn('\n[ServerApp] - appConfig:', appConfig);
+  console.warn('\n[ServerApp] - REACT_APP_MARKETPLACE_ROOT_URL:', REACT_APP_MARKETPLACE_ROOT_URL);
+  console.warn('\n[ServerApp] - REACT_APP_MARKETPLACE_NAME:', REACT_APP_MARKETPLACE_NAME);
+  console.warn('\n[ServerApp] - marketplaceRootURL:', marketplaceRootURL);
+  console.warn('\n[ServerApp] - marketplaceName:', marketplaceName);
   console.warn('\n...............................\n\n\n');
 
   HelmetProvider.canUseDOM = false;
