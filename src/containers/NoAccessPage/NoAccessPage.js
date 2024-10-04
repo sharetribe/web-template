@@ -47,7 +47,7 @@ const CTAButtonMaybe = props => {
   const { data, routeConfiguration, userId, userEmail } = props;
 
   // If the call to action button is not enabled, return null and don't render anything
-  if (!data?.enabled) {
+  if (!data?.type || data.type === 'none') {
     return null;
   }
 
