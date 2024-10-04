@@ -1233,6 +1233,42 @@ textarea {
   border-color: var(--colorGrey100);
 }
 
+.buttonSmall {
+  font-family: var(--fontFamily);
+  font-weight: var(--fontWeightMedium);
+
+  font-size: 14px;
+  line-height: 16px;
+  padding: 6px 16px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  /* Colors */
+  background-color: var(--colorWhite);
+  color: var(--colorGrey700);
+
+  /* Borders */
+  border-radius: var(--borderRadius);
+  border: 1px solid var(--colorGrey100);
+  background: var(--colorWhite);
+
+  cursor: pointer;
+  transition: var(--transitionStyleButton);
+
+  @media (--viewportMedium) {
+    padding: 7px 16px;
+  }
+}
+.buttonSmall:focus,
+.buttonSmall:hover {
+  background-color: var(--marketplaceColor);
+  border-color: var(--marketplaceColor);
+  color: var(--colorWhite);
+}
+
 /* ================ Modals ================ */
 
 .marketplaceModalRootStyles {
