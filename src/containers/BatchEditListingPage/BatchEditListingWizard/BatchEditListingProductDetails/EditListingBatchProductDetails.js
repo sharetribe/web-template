@@ -5,6 +5,28 @@ import { FormattedMessage } from '../../../../util/reactIntl';
 import { Flex, Switch, Table } from 'antd';
 import { EditableCellComponents } from './EditableCellComponents';
 
+const SMALL_IMAGE = 'small';
+const MEDIUM_IMAGE = 'medium';
+const LARGE_IMAGE = 'large';
+
+const imageDimensions = {
+  [SMALL_IMAGE]: {
+    value: 'small-image',
+    maxDimension: 1000,
+    label: 'Small (< 1,000px)',
+  },
+  [MEDIUM_IMAGE]: {
+    value: 'medium-image',
+    maxDimension: 2000,
+    label: 'Medium (1,000px-2,000px)',
+  },
+  [LARGE_IMAGE]: {
+    value: 'large-image',
+    maxDimension: 2001,
+    label: 'Large (>2,000px)',
+  },
+};
+
 function getListingFieldOptions(config, listingFieldKey) {
   const { listing } = config;
   const { listingFields } = listing;
@@ -12,11 +34,24 @@ function getListingFieldOptions(config, listingFieldKey) {
   return enumOptions.map(({ label, option }) => ({ value: option, label }));
 }
 
+function getDimensions(width, height) {
+  const largestDimension = Math.max(width, height);
+  if (largestDimension <= imageDimensions.small.maxSize) {
+    return SMALL_IMAGE;
+  }
+  if (largestDimension <= imageDimensions.medium.maxSize) {
+    return MEDIUM_IMAGE;
+  }
+  return LARGE_IMAGE;
+}
+
 function getData(uppy) {
   const uppyFiles = uppy.getFiles();
   return uppyFiles.map((file, index) => {
     const { id, meta, name, size, preview } = file;
     const { keywords, height, width } = meta;
+    const dimensions = getDimensions(width, height);
+
     let keywordsOptions = [];
     if (keywords) {
       keywordsOptions = Array.isArray(keywords) ? keywords : keywords.split(',');
@@ -35,8 +70,7 @@ function getData(uppy) {
       usage: 'editorial',
       releases: 'no-release',
       price: 0,
-      height,
-      width,
+      dimensions: dimensions,
       isAi: false,
       isIllustration: false,
     };
@@ -56,31 +90,6 @@ function stringSorter(strA, strB) {
   return 0;
 }
 
-function comparePictureDimensions(pictureA, pictureB) {
-  const areaA = pictureA.width * pictureA.height;
-  const areaB = pictureB.width * pictureB.height;
-
-  if (areaA < areaB) {
-    return -1; // pictureA is smaller, should come first
-  } else if (areaA > areaB) {
-    return 1; // pictureB is smaller, should come first
-  }
-
-  if (pictureA.width < pictureB.width) {
-    return -1;
-  } else if (pictureA.width > pictureB.width) {
-    return 1;
-  }
-
-  if (pictureA.height < pictureB.height) {
-    return -1;
-  } else if (pictureA.height > pictureB.height) {
-    return 1;
-  }
-
-  return 0;
-}
-
 export const EditListingBatchProductDetails = props => {
   const { uppy, config } = props;
 
@@ -89,13 +98,6 @@ export const EditListingBatchProductDetails = props => {
   const releaseOptions = getListingFieldOptions(config, 'releases');
 
   const [dataSource, setDataSource] = useState(getData(uppy));
-  const handleSave = row => {
-    const newData = [...dataSource];
-    const index = newData.findIndex(item => row.key === item.key);
-    const item = newData[index];
-    newData.splice(index, 1, { ...item, ...row });
-    setDataSource(newData);
-  };
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   const columns = [
@@ -117,12 +119,14 @@ export const EditListingBatchProductDetails = props => {
       dataIndex: 'title',
       editable: true,
       editControlType: 'text',
+      sorter: stringSorter,
     },
     {
       title: 'Description',
       dataIndex: 'description',
       editable: true,
       editControlType: 'text',
+      sorter: stringSorter,
     },
     {
       title: 'Is AI',
@@ -199,12 +203,11 @@ export const EditListingBatchProductDetails = props => {
     },
     {
       title: 'Dimensions',
-      dataIndex: 'width',
-      render: (_, record) => {
-        const { width, height } = record;
-        return width && height ? `${width}px x ${height}px` : '';
+      dataIndex: 'dimensions',
+      render: dimensionsKey => {
+        return imageDimensions[dimensionsKey].label;
       },
-      sorter: comparePictureDimensions,
+      sorter: stringSorter,
     },
     {
       title: 'Size',
@@ -248,6 +251,18 @@ export const EditListingBatchProductDetails = props => {
     onChange: onSelectChange,
   };
 
+  const onSubmit = () => {
+    console.log('Submit for review', dataSource);
+  };
+
+  const handleSave = row => {
+    const newData = [...dataSource];
+    const index = newData.findIndex(item => row.key === item.key);
+    const item = newData[index];
+    newData.splice(index, 1, { ...item, ...row });
+    setDataSource(newData);
+  };
+
   return (
     <div className={css.root}>
       <Flex gap="middle">
@@ -264,7 +279,7 @@ export const EditListingBatchProductDetails = props => {
         </Flex>
 
         <Flex style={{ alignSelf: 'flex-start', marginTop: 35 }}>
-          <Button className={css.submitButton} type="button" inProgress={false}>
+          <Button className={css.submitButton} type="button" inProgress={false} onClick={onSubmit}>
             Submit for Review
           </Button>
         </Flex>
