@@ -13,6 +13,9 @@ way to update this template, but currently, we follow a pattern:
 ---
 
 ## Upcoming version 2024-XX-XX
+
+- [fix] Updated JSON asset schema structure from Console: Removed the enabled field, now using only
+  the type attribute for CTA status.
 - [add] Add currently available translations for DE, ES, FR.
   [#461](https://github.com/sharetribe/web-template/pull/461)
 
