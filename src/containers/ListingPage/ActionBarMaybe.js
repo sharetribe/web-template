@@ -27,7 +27,10 @@ const CTAButtonMaybe = props => {
   const { data, routeConfiguration, userId, userEmail, listingId, isPendingApproval } = props;
 
   // If the call to action button is not enabled, return null and don't render anything
-  if (!(data?.enabled && isPendingApproval)) {
+  const hasValidType = data?.type && data.type !== 'none';
+  const isCTAEnabled = hasValidType && isPendingApproval;
+
+  if (!isCTAEnabled) {
     return null;
   }
 
@@ -105,7 +108,8 @@ export const ActionBarMaybe = props => {
       [css.ownListingTextPendingApproval]: isPendingApproval,
     });
 
-    const isCTAEnabled = approvalToPublishOptions.enabled && isPendingApproval;
+    const hasValidType = approvalToPublishOptions?.type && approvalToPublishOptions.type !== 'none';
+    const isCTAEnabled = hasValidType && isPendingApproval;
 
     return (
       <div
