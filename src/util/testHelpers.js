@@ -697,6 +697,29 @@ export const getRouteConfiguration = (layoutConfiguration = {}) => {
   return routeConfiguration(layoutConfig);
 };
 
+export const createFakeDispatch = (getState, sdk) => {
+  const dispatch = jest.fn(actionOrFn => {
+    if (typeof actionOrFn === 'function') {
+      return actionOrFn(dispatch, getState, sdk);
+    }
+    return actionOrFn;
+  });
+  return dispatch;
+};
+
+// Get the dispatched actions from the fake dispatch function
+export const dispatchedActions = fakeDispatch => {
+  return fakeDispatch.mock.calls.reduce((actions, args) => {
+    if (Array.isArray(args) && args.length === 1) {
+      const action = args[0];
+      return typeof action === 'object' ? actions.concat([action]) : actions;
+    } else {
+      console.error('fake dispatch invalid call args:', args);
+      throw new Error('Fake dispatch function should only be called with a single argument');
+    }
+  }, []);
+};
+
 // Locale should not affect the tests. We ensure this by providing
 // messages with the key as the value of each message.
 const testMessages = mapValues(messages, (val, key) => key);

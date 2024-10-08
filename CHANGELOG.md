@@ -14,6 +14,20 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] Access control: Viewing rights.
+
+  When a user's viewing rights have been revoked:
+
+  - SearchPage redirects to NoAccessPage
+  - ListingPage redirects to NoAccessPage unless the user is viewing their own listing. Reviews are
+    not displayed.
+  - ProfilePage redirects to NoAccessPage unless the user is viewing their own profile. Reviews are
+    not displayed.
+  - TransactionPage does not show the OrderPanel for transactions at the inquiry state of booking or
+    purchase processes.
+
+  [#459](https://github.com/sharetribe/web-template/pull/459)
+
 ## [v5.6.1] 2024-10-07
 
 - [fix] Updated JSON asset schema structure from Console: Removed the enabled field, now using only

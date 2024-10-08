@@ -1,13 +1,19 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 
-import { createListing } from '../../util/testData';
+import { createImageVariantConfig } from '../../util/sdkLoader';
+import { createCurrentUser, createListing } from '../../util/testData';
 import {
   renderWithProviders as render,
   testingLibrary,
   getRouteConfiguration,
   getHostedConfiguration,
+  createFakeDispatch,
+  dispatchedActions,
 } from '../../util/testHelpers';
+
+import { loadData, searchListingsRequest, searchListingsSuccess } from './SearchPage.duck';
+import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 
 const { screen, userEvent, waitFor } = testingLibrary;
 
@@ -206,35 +212,73 @@ const getConfig = (variantType, customListingFields) => {
   };
 };
 
-describe('SearchPage', () => {
-  const l1 = createListing('l1');
-  const l2 = createListing('l2');
+const l1 = createListing('l1');
+const l2 = createListing('l2');
 
-  // We'll initialize the store with relevant listing data
-  const initialState = {
-    SearchPage: {
-      currentPageResultIds: [l1.id, l2.id],
-      pagination: {
-        page: 1,
-        perPage: 1,
-        totalItems: 2,
-        totalPages: 2,
-      },
-      searchInProgress: false,
-      searchListingsError: null,
-      searchParams: null,
-      activeListingId: null,
+// We'll initialize the store with relevant listing data
+const initialState = {
+  SearchPage: {
+    currentPageResultIds: [l1.id, l2.id],
+    pagination: {
+      page: 1,
+      perPage: 1,
+      totalItems: 2,
+      totalPages: 2,
     },
-    marketplaceData: {
-      entities: {
-        listing: {
-          l1,
-          l2,
-        },
+    searchInProgress: false,
+    searchListingsError: null,
+    searchParams: null,
+    activeListingId: null,
+  },
+  marketplaceData: {
+    entities: {
+      listing: {
+        l1,
+        l2,
       },
     },
+  },
+};
+
+const getSearchParams = config => {
+  const {
+    aspectWidth = 1,
+    aspectHeight = 1,
+    variantPrefix = 'listing-card',
+  } = config.layout.listingImage;
+  const aspectRatio = aspectHeight / aspectWidth;
+  return {
+    page: 1,
+    perPage: 24,
+    include: ['author', 'images'],
+    'fields.listing': [
+      'title',
+      'geolocation',
+      'price',
+      'deleted',
+      'state',
+      'publicData.listingType',
+      'publicData.transactionProcessAlias',
+      'publicData.unitType',
+      // These help rendering of 'purchase' listings,
+      // when transitioning from search page to listing page
+      'publicData.pickupEnabled',
+      'publicData.shippingEnabled',
+    ],
+    'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
+    'fields.image': [
+      'variants.scaled-small',
+      'variants.scaled-medium',
+      `variants.${variantPrefix}`,
+      `variants.${variantPrefix}-2x`,
+    ],
+    ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
+    ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
+    'limit.images': 1,
   };
+};
 
+describe('SearchPage', () => {
   const commonProps = {
     scrollingDisabled: false,
     onActivateListing: noop,
@@ -453,5 +497,80 @@ describe('SearchPage', () => {
     expect(getByText('Fish')).toBeInTheDocument();
     expect(queryByText('Freshwater')).not.toBeInTheDocument();
     expect(queryByText('Saltwater')).not.toBeInTheDocument();
+  });
+});
+
+describe('Duck', () => {
+  const defaultConfig = getConfig('map');
+
+  const config = {
+    ...defaultConfig,
+    categoryConfiguration: {
+      categories: [...defaultConfig.categories.categories],
+      categoryLevelKeys: ['categoryLevel1', 'categoryLevel2', 'categoryLevel3'],
+      key: 'categoryLevel',
+      scope: 'public',
+    },
+    listing: {
+      ...defaultConfig.listingFields,
+      ...defaultConfig.listingTypes,
+    },
+    accessControl: { marketplace: { private: true } },
+  };
+  // Shared parameters for viewing rights loadData tests
+  const fakeResponse = resource => ({ data: { data: resource, include: [] } });
+  const sdkFn = response => jest.fn(() => Promise.resolve(response));
+  const currentUser = createCurrentUser('userId');
+
+  it('loadData() for full viewing rights user loads listings', () => {
+    const getState = () => ({
+      ...initialState,
+      user: { currentUser },
+      auth: { isAuthenticated: true },
+    });
+
+    const sdk = {
+      currentUser: { show: sdkFn(fakeResponse(currentUser)) },
+      listings: { query: sdkFn(fakeResponse([l1, l2])) },
+      authInfo: sdkFn({}),
+    };
+
+    const dispatch = createFakeDispatch(getState, sdk);
+
+    const searchParams = getSearchParams(config);
+    const listingFields = config?.listing?.listingFields;
+    const sanitizeConfig = { listingFields };
+
+    // Tests the actions that get dispatched to the Redux store when SearchPage.duck.js
+    // loadData() function is called. If you make customizations to the loadData() logic,
+    // update this test accordingly!
+    return loadData(null, null, config)(dispatch, getState, sdk).then(data => {
+      expect(dispatchedActions(dispatch)).toEqual([
+        searchListingsRequest(searchParams),
+        addMarketplaceEntities(fakeResponse([l1, l2]), sanitizeConfig),
+        searchListingsSuccess(fakeResponse([l1, l2])),
+      ]);
+    });
+  });
+
+  it('loadData() for restricted viewing rights user does not load listings', () => {
+    currentUser.effectivePermissionSet.attributes.read = 'permissions/deny';
+
+    const getState = () => ({
+      ...initialState,
+      user: { currentUser },
+      auth: { isAuthenticated: true },
+    });
+
+    const sdk = {};
+
+    const dispatch = createFakeDispatch(getState, sdk);
+
+    // Tests the actions that get dispatched to the Redux store when SearchPage.duck.js
+    // loadData() function is called. If you make customizations to the loadData() logic,
+    // update this test accordingly!
+    return loadData(null, null, config)(dispatch, getState, sdk).then(data => {
+      expect(dispatchedActions(dispatch)).toEqual([]);
+    });
   });
 });
