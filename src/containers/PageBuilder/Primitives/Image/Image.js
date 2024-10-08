@@ -42,7 +42,8 @@ export const FieldImage = React.forwardRef((props, ref) => {
   const { width: aspectWidth, height: aspectHeight } = firstImageVariant || {};
 
   const classes = classNames(rootClassName || css.fieldImage, className);
-  const imageLinkHref = props.link?.href || null;
+  const imageLinkHref = link?.href || null;
+  const imageLinkFieldType = link?.fieldType || null;
 
   const responsiveImage = (
     <ResponsiveImage
@@ -58,7 +59,7 @@ export const FieldImage = React.forwardRef((props, ref) => {
   return (
     <AspectRatioWrapper className={classes} width={aspectWidth || 1} height={aspectHeight || 1}>
       {imageLinkHref ? (
-        <Link href={imageLinkHref} title={alt}>
+        <Link href={imageLinkHref} title={alt} fieldType={imageLinkFieldType}>
           {responsiveImage}
         </Link>
       ) : (
