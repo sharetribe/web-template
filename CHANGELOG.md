@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+## [v5.7.0] 2024-10-08
+
 - [add] Access control: Viewing rights.
 
   When a user's viewing rights have been revoked:
@@ -27,6 +29,8 @@ way to update this template, but currently, we follow a pattern:
     purchase processes.
 
   [#459](https://github.com/sharetribe/web-template/pull/459)
+
+  [v5.7.0]: https://github.com/sharetribe/web-template/compare/v5.6.1...v5.7.0
 
 ## [v5.6.1] 2024-10-07
 
