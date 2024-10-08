@@ -27,6 +27,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## [v5.7.0] 2024-10-08
 
+- [add] Block images can be wrapped in a link if a link is configured via assets.
+  [#464](https://github.com/sharetribe/web-template/pull/464)
 - [add] Access control: Viewing rights.
 
   When a user's viewing rights have been revoked:
