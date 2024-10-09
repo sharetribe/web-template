@@ -152,7 +152,7 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       name: 'BatchEditListingPage',
       auth: true,
       component: BatchEditListingPage,
-      loadData: pageDataLoadingAPI.EditListingPage.loadData,
+      loadData: pageDataLoadingAPI.BatchEditListingPage.loadData,
     },
     {
       path: '/l/:slug/:id/:type/:tab/:returnURLType',
