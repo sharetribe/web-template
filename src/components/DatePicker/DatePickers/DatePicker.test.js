@@ -26,8 +26,8 @@ const intl = createIntl(
     locale: 'en-US',
     messages: {
       'DatePicker.clearButton': 'Clear value',
-      'DatePicker.nextMonthButton': 'Next month',
-      'DatePicker.previousMonthButton': 'Previous month',
+      'DatePicker.screenreader.nextMonthButton': 'Next month',
+      'DatePicker.screenreader.previousMonthButton': 'Previous month',
       'DatePicker.screenreader.blockedDate': '{date} is not available',
       'DatePicker.screenreader.chooseDate': 'Choose {date}',
       'DatePicker.screenreader.chooseEndDate': 'Choose {date} as an end date',
