@@ -4,7 +4,7 @@ import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoade
 import { PROFILE_PAGE_PENDING_APPROVAL_VARIANT } from '../../util/urlHelpers';
 import { denormalisedResponseEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
-import { isUserAuthorized } from '../../util/userHelpers';
+import { hasPermissionToViewData, isUserAuthorized } from '../../util/userHelpers';
 
 const { UUID } = sdkTypes;
 
@@ -126,7 +126,11 @@ export const queryReviewsError = e => ({
 
 // ================ Thunks ================ //
 
-export const queryUserListings = (userId, config) => (dispatch, getState, sdk) => {
+export const queryUserListings = (userId, config, ownProfileOnly = false) => (
+  dispatch,
+  getState,
+  sdk
+) => {
   dispatch(queryListingsRequest(userId));
 
   const {
@@ -136,14 +140,24 @@ export const queryUserListings = (userId, config) => (dispatch, getState, sdk) =
   } = config.layout.listingImage;
   const aspectRatio = aspectHeight / aspectWidth;
 
-  return sdk.listings
-    .query({
-      author_id: userId,
-      include: ['author', 'images'],
-      'fields.image': [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`],
-      ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
-      ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
-    })
+  const queryParams = {
+    include: ['author', 'images'],
+    'fields.image': [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`],
+    ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
+    ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
+  };
+
+  const listingsPromise = ownProfileOnly
+    ? sdk.ownListings.query({
+        states: ['published'],
+        ...queryParams,
+      })
+    : sdk.listings.query({
+        author_id: userId,
+        ...queryParams,
+      });
+
+  return listingsPromise
     .then(response => {
       // Pick only the id and type properties from the response listings
       const listings = response.data.data;
@@ -230,9 +244,24 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   // Note 2: In private marketplace mode, this page won't fetch data if the user is unauthorized
   const isAuthorized = currentUser && isUserAuthorized(currentUser);
   const isPrivateMarketplace = config.accessControl.marketplace.private === true;
+  const hasNoViewingRights = currentUser && !hasPermissionToViewData(currentUser);
   const canFetchData = !isPrivateMarketplace || (isPrivateMarketplace && isAuthorized);
+  // On a private marketplace, show active (approved) current user's own page
+  // even if they don't have viewing rights
+  const canFetchOwnProfileOnly =
+    isPrivateMarketplace &&
+    isAuthorized &&
+    hasNoViewingRights &&
+    isCurrentUser(userId, currentUser);
+
   if (!canFetchData) {
     return Promise.resolve();
+  } else if (canFetchOwnProfileOnly) {
+    return Promise.all([
+      dispatch(fetchCurrentUser(fetchCurrentUserOptions)),
+      dispatch(queryUserListings(userId, config, canFetchOwnProfileOnly)),
+      dispatch(showUserRequest(userId)),
+    ]);
   }
 
   return Promise.all([
