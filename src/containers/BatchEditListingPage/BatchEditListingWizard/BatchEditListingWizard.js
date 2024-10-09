@@ -17,6 +17,7 @@ import BatchEditListingWizardTab, { PRODUCT_DETAILS, UPLOAD } from './BatchEditL
 import css from './BatchEditListingWizard.module.css';
 import { useUppy } from '../../../hooks/useUppy';
 import { getFileMetadata } from '../../../util/file-metadata';
+import { requestAddFile, requestRemoveFile } from '../BatchEditListingPage.duck';
 
 /**
  * Return translations for wizard tab: label and submit button.
@@ -63,6 +64,7 @@ const BatchEditListingWizard = props => {
     currentUser = {},
     config = {},
     routeConfiguration = {},
+
     ...rest
   } = props;
 
@@ -70,11 +72,13 @@ const BatchEditListingWizard = props => {
   const uppy = useUppy({ userId });
   const [fileCount, setFileCount] = useState(uppy.getFiles().length);
 
-  uppy.on('file-removed', info => {
+  uppy.on('file-removed', () => {
+    requestRemoveFile(uppy.getFiles());
     setFileCount(uppy.getFiles().length);
   });
 
   uppy.on('file-added', ({ data, id }) => {
+    requestRemoveFile(uppy.getFiles());
     getFileMetadata(data, metadata => {
       uppy.setFileMeta(id, metadata);
     });

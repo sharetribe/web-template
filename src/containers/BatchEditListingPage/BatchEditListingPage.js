@@ -15,9 +15,10 @@ import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import EditListingWizard from './BatchEditListingWizard/BatchEditListingWizard';
 import css from './BatchEditListingPage.module.css';
+import { requestImageUpload } from '../EditListingPage/EditListingPage.duck';
 
 export const BatchEditListingPageComponent = props => {
-  const { currentUser, history, intl, params } = props;
+  const { currentUser, history, intl, params, page } = props;
 
   const { type } = params;
   const isNewURI = type === LISTING_PAGE_PARAM_TYPE_NEW;
@@ -64,7 +65,7 @@ export const BatchEditListingPageComponent = props => {
 };
 
 const mapStateToProps = state => {
-  const page = state.BatchEditingListingPage;
+  const page = state.BatchEditListingPage;
 
   return {
     currentUser: state.user.currentUser,
@@ -72,7 +73,11 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+  onFileAdded: (files) =>
+    dispatch(requestAddFile(files)),
+
+});
 
 // Note: it is important that the withRouter HOC is **outside** the
 // connect HOC, otherwise React Router won't rerender any Route
