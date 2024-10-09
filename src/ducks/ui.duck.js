@@ -1,4 +1,4 @@
-import { USD } from '../extensions/common/config/constants/currency.constants';
+import { DEFAULT_CURRENCY } from '../extensions/common/config/constants/currency.constants';
 
 // ================ Action types ================ //
 export const DISABLE_SCROLLING = 'app/ui/DISABLE_SCROLLING';
@@ -9,7 +9,7 @@ export const SET_UI_CURRENCY = 'app/ui/SET_UI_CURRENCY';
 
 const initialState = {
   disableScrollRequests: [],
-  uiCurrency: USD, // default currency
+  uiCurrency: DEFAULT_CURRENCY,
 };
 
 export default function reducer(state = initialState, action = {}) {

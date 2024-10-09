@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useSelector } from 'react-redux';
 
-import { USD } from '../../../common/config/constants/currency.constants';
+import { DEFAULT_CURRENCY } from '../../../common/config/constants/currency.constants';
 
 import css from './CurrencyNote.module.css';
 
@@ -10,7 +10,7 @@ const CurrencyNote = props => {
   const { componentId } = props;
   const { currentUserShowInProgress } = useSelector(state => state.user);
   const { uiCurrency } = useSelector(state => state.ui);
-  if (currentUserShowInProgress || uiCurrency === USD) {
+  if (currentUserShowInProgress || uiCurrency === DEFAULT_CURRENCY) {
     return null;
   }
 
