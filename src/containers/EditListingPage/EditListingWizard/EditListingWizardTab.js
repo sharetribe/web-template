@@ -103,6 +103,7 @@ const EditListingWizardTab = props => {
     tabSubmitButtonText,
     config,
     routeConfiguration,
+    currentUser,
   } = props;
 
   const { type } = params;
@@ -194,6 +195,7 @@ const EditListingWizardTab = props => {
           {...panelProps(PRICING_AND_STOCK)}
           marketplaceCurrency={config.currency}
           listingMinimumPriceSubUnits={config.listingMinimumPriceSubUnits}
+          currentUser={currentUser}
         />
       );
     }

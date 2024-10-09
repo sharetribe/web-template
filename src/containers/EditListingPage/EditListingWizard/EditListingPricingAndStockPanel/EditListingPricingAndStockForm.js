@@ -120,7 +120,10 @@ export const EditListingPricingAndStockFormComponent = props => (
         updateInProgress,
         fetchErrors,
         values,
+        currentUser,
       } = formRenderProps;
+
+      const userCurrency = currentUser?.attributes.profile.publicData.userCurrency;
 
       const priceValidators = getPriceValidators(
         listingMinimumPriceSubUnits,
@@ -187,6 +190,12 @@ export const EditListingPricingAndStockFormComponent = props => (
               ...appSettings.getCurrencyFormatting(marketplaceCurrency),
             }}
           />
+
+          {userCurrency !== 'USD' && (
+            <p className={css.disclaimer}>
+              <FormattedMessage id="EditListingPricingAndStockForm.priceDisclaimer" />
+            </p>
+          )}
 
           <UpdateStockToInfinityCheckboxMaybe
             formId={formId}
