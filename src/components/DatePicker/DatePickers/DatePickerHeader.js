@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import { IconArrowHead } from '../..';
+import { IconArrowHead } from '../../../components';
 
 import { getMonths } from './DatePicker.helpers';
 
@@ -51,7 +51,7 @@ const DatePickerHeader = props => {
 
       {showMonthStepper && showPreviousMonthStepper ? (
         <button
-          aria-label={intl.formatMessage({ id: 'DatePicker.previousMonthButton' })}
+          aria-label={intl.formatMessage({ id: 'DatePicker.screenreader.previousMonthButton' })}
           className={css.previousMonthButton}
           disabled={disabled}
           onClick={previousMonth}
@@ -71,7 +71,7 @@ const DatePickerHeader = props => {
 
       {showMonthStepper && showNextMonthStepper ? (
         <button
-          aria-label={intl.formatMessage({ id: 'DatePicker.nextMonthButton' })}
+          aria-label={intl.formatMessage({ id: 'DatePicker.screenreader.nextMonthButton' })}
           className={css.nextMonthButton}
           disabled={disabled}
           onClick={nextMonth}
