@@ -240,6 +240,11 @@
     display: block;
     /* Dimensions */
     width: 409px;
+  }
+}
+
+.detailsContainer {
+  @media (--viewportLarge) {
     padding-bottom: 36px;
 
     /* Position */
@@ -315,7 +320,6 @@
 
 .orderBreakdown {
   @media (--viewportLarge) {
-    padding-bottom: 20px;
     margin: 0 48px;
   }
 }

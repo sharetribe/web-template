@@ -42,6 +42,7 @@ import { unitDivisor, convertMoneyToNumber, convertUnitToSubUnit } from '../../u
 import { getProcess, TX_TRANSITION_ACTOR_CUSTOMER } from '../../transactions/transaction';
 
 import { OrderBreakdown } from '../../components';
+import CurrencyNote from '../../extensions/MultipleCurrency/components/CurrencyNote/CurrencyNote';
 
 import css from './OrderPanel.module.css';
 
@@ -165,16 +166,19 @@ const EstimatedCustomerBreakdownMaybe = props => {
       : null;
 
   return tx ? (
-    <OrderBreakdown
-      className={css.receipt}
-      userRole="customer"
-      transaction={tx}
-      booking={tx.booking}
-      dateType={dateType}
-      timeZone={timeZone}
-      currency={currency}
-      marketplaceName={marketplaceName}
-    />
+    <>
+      <OrderBreakdown
+        className={css.receipt}
+        userRole="customer"
+        transaction={tx}
+        booking={tx.booking}
+        dateType={dateType}
+        timeZone={timeZone}
+        currency={currency}
+        marketplaceName={marketplaceName}
+      />
+      <CurrencyNote componentId="ListingPage" />
+    </>
   ) : null;
 };
 

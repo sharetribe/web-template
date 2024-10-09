@@ -1,0 +1,6 @@
+.note {
+  color: var(--colorWhite);
+  padding: 12px 16px;
+  background-color: var(--colorBlueNote);
+  border-radius: var(--borderRadiusMedium);
+}

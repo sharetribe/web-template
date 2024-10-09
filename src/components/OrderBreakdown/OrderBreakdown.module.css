@@ -130,11 +130,10 @@
   flex-shrink: 0;
   margin: 0;
   color: var(--colorGrey300);
-  padding-top: 4px;
-  padding-bottom: 14px;
+  padding-top: 8px;
+  padding-bottom: 8px;
 
   @media (--viewportMedium) {
-    padding-top: 11px;
-    padding-bottom: 21px;
+    padding: 12px 0;
   }
 }
