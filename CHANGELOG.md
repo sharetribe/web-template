@@ -13,6 +13,8 @@ way to update this template, but currently, we follow a pattern:
 ---
 
 ## Upcoming version 2024-XX-XX
+- [add] Add currently available translations for DE, ES, FR.
+  [#466](https://github.com/sharetribe/web-template/pull/466)
 
 ## [v5.7.0] 2024-10-08
 
