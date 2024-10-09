@@ -67,12 +67,8 @@ export const ProfileSettingsPageComponent = props => {
       }
     };
 
-    const handleError = error => {
-      console.error(error);
-    };
-
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(fetchCurrency, handleError);
+      navigator.geolocation.getCurrentPosition(fetchCurrency);
     } else {
       console.log('Geolocation is not supported by this browser.');
     }

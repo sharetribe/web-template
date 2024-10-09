@@ -24,7 +24,7 @@ const getSoleUserTypeMaybe = userTypes =>
   Array.isArray(userTypes) && userTypes.length === 1 ? userTypes[0].userType : null;
 
 const SignupFormComponent = props => {
-  const [currency, setCurrency] = useState('');
+  const [currency, setCurrency] = useState(null);
 
   useEffect(() => {
     const fetchCurrency = async position => {
@@ -38,12 +38,8 @@ const SignupFormComponent = props => {
       }
     };
 
-    const handleError = error => {
-      console.error(error);
-    };
-
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(fetchCurrency, handleError);
+      navigator.geolocation.getCurrentPosition(fetchCurrency);
     } else {
       console.log('Geolocation is not supported by this browser.');
     }
