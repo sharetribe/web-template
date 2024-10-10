@@ -237,8 +237,16 @@ class ProfileSettingsFormComponent extends Component {
           const submitInProgress = updateInProgress;
           const submittedOnce = Object.keys(this.submittedValues).length > 0;
           const pristineSinceLastSubmit = submittedOnce && isEqual(values, this.submittedValues);
+          const userCurrency = currentUser.attributes.profile.publicData.userCurrency || '';
+          const currencyBasedOnLocation = values.pub_userCurrency || '';
+          const userCurrencyChanged = userCurrency !== currencyBasedOnLocation;
           const submitDisabled =
-            invalid || pristine || pristineSinceLastSubmit || uploadInProgress || submitInProgress;
+            !userCurrencyChanged &&
+            (invalid ||
+              pristine ||
+              pristineSinceLastSubmit ||
+              uploadInProgress ||
+              submitInProgress);
 
           const userFieldProps = getPropsForCustomUserFieldInputs(
             userFields,
