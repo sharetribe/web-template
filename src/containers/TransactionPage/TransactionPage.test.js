@@ -1,7 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 import Decimal from 'decimal.js';
-import 'react-dates/initialize';
 
 import { types as sdkTypes } from '../../util/sdkLoader';
 import {
@@ -1061,15 +1060,6 @@ describe('TransactionPage', () => {
   // With OrderPanel
   // NOTE: OrderPanel is code-splitted away. Due to async nature, it can't be tested with "test.each()"
   describe('Transaction process with OrderPanel', () => {
-    const originalWarn = console.warn.bind(console.warn);
-    beforeAll(() => {
-      console.warn = msg =>
-        !msg.toString().includes('componentWillReceiveProps') && originalWarn(msg);
-    });
-    afterAll(() => {
-      console.warn = originalWarn;
-    });
-
     const createInquiry = (processName, unitType, lastTransition) =>
       createTransaction({
         id: `id-${processName}-inquiry-order`,

@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
-import { getStartOf, initialVisibleMonth } from '../../../../../util/dates';
 import {
-  endOfAvailabilityExceptionRange,
-  getStartOfNextMonth,
-  getStartOfPrevMonth,
-} from '../availability.helpers';
+  getStartOf,
+  isDateSameOrAfter,
+  timeOfDayFromLocalToTimeZone,
+} from '../../../../../util/dates';
+import { MAX_AVAILABILITY_EXCEPTIONS_RANGE } from '../availability.helpers';
 
 import {
   FieldDateRangeController,
@@ -16,13 +16,32 @@ import {
   OutsideClickHandler,
 } from '../../../../../components';
 
-import Next from '../NextArrow';
-import Prev from '../PrevArrow';
-
 import css from './WeekPicker.module.css';
 
 const KEY_CODE_ESCAPE = 27;
 const TODAY = new Date();
+
+const nextMonthFn = (currentMoment, timeZone, offset = 1) =>
+  getStartOf(currentMoment, 'month', timeZone, offset, 'months');
+const prevMonthFn = (currentMoment, timeZone, offset = 1) =>
+  getStartOf(currentMoment, 'month', timeZone, -1 * offset, 'months');
+const endOfRange = (date, dayCountAvailableForBooking, timeZone) =>
+  getStartOf(date, 'day', timeZone, dayCountAvailableForBooking, 'days');
+
+const showNextMonthStepper = (currentMonth, dayCountAvailableForBooking, timeZone) => {
+  const nextMonthDate = nextMonthFn(currentMonth, timeZone);
+
+  return !isDateSameOrAfter(
+    nextMonthDate,
+    endOfRange(TODAY, dayCountAvailableForBooking, timeZone)
+  );
+};
+
+const showPreviousMonthStepper = (currentMonth, timeZone) => {
+  const prevMonthDate = prevMonthFn(currentMonth, timeZone);
+  const currentMonthDate = getStartOf(TODAY, 'month', timeZone);
+  return isDateSameOrAfter(prevMonthDate, currentMonthDate);
+};
 
 const PickerForm = props => {
   return (
@@ -51,7 +70,7 @@ const handleKeyDown = setIsOpen => e => {
 
 const WeekPicker = props => {
   const [isOpen, setIsOpen] = useState(false);
-  const [currentMonth, setCurrentMonth] = useState(initialVisibleMonth(props.date, props.timeZone));
+  const [currentMonth, setCurrentMonth] = useState(props.date);
 
   const {
     rootClassName,
@@ -85,21 +104,20 @@ const WeekPicker = props => {
                   onDateChange(startDate);
                   setIsOpen(false);
                 }}
-                initialVisibleMonth={initialVisibleMonth(date, timeZone)}
-                onPrevMonthClick={() => onMonthClick(getStartOfPrevMonth(currentMonth, timeZone))}
-                onNextMonthClick={() => onMonthClick(getStartOfNextMonth(currentMonth, timeZone))}
-                navNext={
-                  <Next
-                    showUntilDate={endOfAvailabilityExceptionRange(timeZone, TODAY)}
-                    startOfNextRange={getStartOfNextMonth(currentMonth, timeZone)}
-                  />
-                }
-                navPrev={
-                  <Prev
-                    showUntilDate={getStartOf(TODAY, 'month', timeZone)}
-                    startOfPrevRange={getStartOfPrevMonth(currentMonth, timeZone)}
-                  />
-                }
+                showPreviousMonthStepper={showPreviousMonthStepper(currentMonth, timeZone)}
+                showNextMonthStepper={showNextMonthStepper(
+                  currentMonth,
+                  MAX_AVAILABILITY_EXCEPTIONS_RANGE,
+                  timeZone
+                )}
+                onMonthChange={date => {
+                  const localizedDate = timeOfDayFromLocalToTimeZone(date, timeZone);
+                  onMonthClick(localizedDate < currentMonth ? prevMonthFn : nextMonthFn);
+                  setCurrentMonth(localizedDate);
+                }}
+                onClose={() => {
+                  setCurrentMonth(startDate || endDate || startOfToday);
+                }}
                 {...rest}
               />
             </PickerForm>
