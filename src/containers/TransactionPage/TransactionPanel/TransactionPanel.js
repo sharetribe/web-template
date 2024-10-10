@@ -25,6 +25,7 @@ import FeedSection from './FeedSection';
 import ActionButtonsMaybe from './ActionButtonsMaybe';
 import DiminishedActionButtonMaybe from './DiminishedActionButtonMaybe';
 import PanelHeading from './PanelHeading';
+import CurrencyNote from '../../../extensions/MultipleCurrency/components/CurrencyNote/CurrencyNote';
 
 import css from './TransactionPanel.module.css';
 
@@ -238,6 +239,9 @@ export class TransactionPanelComponent extends Component {
                     orderBreakdown={orderBreakdown}
                     processName={stateData.processName}
                   />
+                  <div className={css.noteContainer}>
+                    <CurrencyNote componentId="TransactionDetailsPage" />
+                  </div>
                   <DiminishedActionButtonMaybe
                     showDispute={stateData.showDispute}
                     onOpenDisputeModal={onOpenDisputeModal}
@@ -345,6 +349,9 @@ export class TransactionPanelComponent extends Component {
                   orderBreakdown={orderBreakdown}
                   processName={stateData.processName}
                 />
+                <div className={css.noteContainer}>
+                  <CurrencyNote componentId="TransactionDetailsPage" />
+                </div>
 
                 {stateData.showActionButtons ? (
                   <div className={css.desktopActionButtons}>{actionButtons}</div>

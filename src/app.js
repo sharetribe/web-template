@@ -35,7 +35,9 @@ import Routes from './routing/Routes';
 
 // Sharetribe Web Template uses English translations as default translations.
 import defaultMessages from './translations/en.json';
+import { getAllExtensionTranslationFile } from './extension';
 
+const extensionTranslations = await getAllExtensionTranslationFile();
 // If you want to change the language of default (fallback) translations,
 // change the imports to match the wanted locale:
 //
@@ -102,9 +104,14 @@ const addMissingTranslations = (sourceLangTranslations, targetLangTranslations) 
 //       messages with the key as the value of each message and discard the value.
 //       { 'My.translationKey1': 'My.translationKey1', 'My.translationKey2': 'My.translationKey2' }
 const isTestEnv = process.env.NODE_ENV === 'test';
+const marketplaceDefaultMessage = {
+  ...defaultMessages,
+  ...extensionTranslations,
+};
+
 const localeMessages = isTestEnv
-  ? mapValues(defaultMessages, (val, key) => key)
-  : addMissingTranslations(defaultMessages, messagesInLocale);
+  ? mapValues(marketplaceDefaultMessage, (val, key) => key)
+  : addMissingTranslations(marketplaceDefaultMessage, messagesInLocale);
 
 // For customized apps, this dynamic loading of locale files is not necessary.
 // It helps locale change from configDefault.js file or hosted configs, but customizers should probably

@@ -59,6 +59,7 @@ const mergeCurrentUser = (oldCurrentUser, newCurrentUser) => {
 
 const initialState = {
   currentUser: null,
+  currentUserShowInProgress: false,
   currentUserShowTimestamp: 0,
   currentUserShowError: null,
   currentUserHasListings: false,
@@ -75,17 +76,18 @@ export default function reducer(state = initialState, action = {}) {
   const { type, payload } = action;
   switch (type) {
     case CURRENT_USER_SHOW_REQUEST:
-      return { ...state, currentUserShowError: null };
+      return { ...state, currentUserShowInProgress: true, currentUserShowError: null };
     case CURRENT_USER_SHOW_SUCCESS:
       return {
         ...state,
         currentUser: mergeCurrentUser(state.currentUser, payload),
         currentUserShowTimestamp: payload ? new Date().getTime() : 0,
+        currentUserShowInProgress: false,
       };
     case CURRENT_USER_SHOW_ERROR:
       // eslint-disable-next-line no-console
       console.error(payload);
-      return { ...state, currentUserShowError: payload };
+      return { ...state, currentUserShowError: payload, currentUserShowInProgress: false };
 
     case CLEAR_CURRENT_USER:
       return {
