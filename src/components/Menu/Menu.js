@@ -59,6 +59,7 @@ class Menu extends Component {
     this.menu = null;
     this.menuContent = null;
   }
+
   componentDidMount() {
     // Menu needs to know about DOM before it can calculate it's size proberly.
     this.setState({ ready: true });
@@ -110,9 +111,9 @@ class Menu extends Component {
       const menuWidth = this.menu.offsetWidth;
       const contentWidthBiggerThanLabel = this.menuContent.offsetWidth - menuWidth;
       const usePositionLeftFromLabel = contentPosition === CONTENT_TO_LEFT;
-      const contentPlacementOffset = this.props.contentPlacementOffset;
+      const { isFullWidthMobile, contentPlacementOffset } = this.props;
 
-      if (windowWidth <= MAX_MOBILE_SCREEN_WIDTH) {
+      if (isFullWidthMobile && windowWidth <= MAX_MOBILE_SCREEN_WIDTH) {
         // Take full screen width on mobile
         return {
           left: -1 * (rect.left - 24),
@@ -213,6 +214,7 @@ Menu.defaultProps = {
   isOpen: null,
   onToggleActive: null,
   useArrow: true,
+  isFullWidthMobile: true,
 };
 
 const { bool, func, node, number, string } = PropTypes;
@@ -226,6 +228,7 @@ Menu.propTypes = {
   useArrow: bool,
   isOpen: bool,
   onToggleActive: func,
+  isFullWidthMobile: bool,
 };
 
 export default Menu;

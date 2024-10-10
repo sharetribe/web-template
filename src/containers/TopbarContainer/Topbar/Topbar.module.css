@@ -12,11 +12,10 @@
   /* Size */
   width: 100%;
   height: var(--topbarHeight);
-
+  position: relative;
   /* Layout for child components */
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
 
   /* fill */
@@ -47,11 +46,10 @@
 
   /* Layout */
   display: flex;
-  width: 66px;
   margin: 0;
   border-width: 0px;
   background-color: transparent;
-
+  z-index: 1;
   /* Hovers */
   &:enabled {
     cursor: pointer;
@@ -76,7 +74,7 @@
   }
 }
 .searchMenu {
-  padding: 12px 24px;
+  padding: 12px;
 
   @media (--viewportMedium) {
     padding: 18px 24px;
@@ -86,6 +84,16 @@
 .menuIcon,
 .searchMenuIcon {
   margin: 9px 0;
+}
+
+.emptySpace {
+  flex-grow: 1;
+}
+
+.websiteLogo {
+  position: absolute;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .notificationDot {

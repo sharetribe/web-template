@@ -3,8 +3,8 @@
 .root {
   display: flex;
   align-items: center;
+  justify-content: center;
   height: 60px;
-  max-width: 370px;
   margin: 0;
 
   @media (--viewportMedium) {
