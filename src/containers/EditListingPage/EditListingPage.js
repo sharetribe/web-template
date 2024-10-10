@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { bool, func, object, shape, string, oneOf } from 'prop-types';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 
 // Import configs and util modules
 import { intlShape, injectIntl } from '../../util/reactIntl';
@@ -47,6 +47,7 @@ import {
 } from './EditListingPage.duck';
 import EditListingWizard from './EditListingWizard/EditListingWizard';
 import css from './EditListingPage.module.css';
+import { fetchExchangeRate } from '../../extensions/exchange-rate/exchangeRate.duck';
 
 const STRIPE_ONBOARDING_RETURN_URL_SUCCESS = 'success';
 const STRIPE_ONBOARDING_RETURN_URL_FAILURE = 'failure';
@@ -88,6 +89,17 @@ const pickRenderableImages = (
 
 // N.B. All the presentational content needs to be extracted to their own components
 export const EditListingPageComponent = props => {
+  const dispatch = useDispatch();
+  const exchangeRate = useSelector(state => state.ExchangeRate.exchangeRate);
+  console.log('🚀 ~ useEffect ~ exchangeRate:', exchangeRate);
+
+  useEffect(() => {
+    if (exchangeRate === null) {
+      dispatch(fetchExchangeRate());
+    }
+    console.log('🚀 ~ useEffect ~ exchangeRate:', exchangeRate);
+  }, [dispatch, exchangeRate]);
+
   const {
     currentUser,
     createStripeAccountError,
