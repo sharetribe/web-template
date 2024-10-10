@@ -11,6 +11,7 @@ import {
   REVIEW_TYPE_OF_CUSTOMER,
   SCHEMA_TYPE_MULTI_ENUM,
   SCHEMA_TYPE_TEXT,
+  SCHEMA_TYPE_YOUTUBE,
   propTypes,
 } from '../../util/types';
 import {
@@ -46,6 +47,7 @@ import css from './ProfilePage.module.css';
 import SectionDetailsMaybe from './SectionDetailsMaybe';
 import SectionTextMaybe from './SectionTextMaybe';
 import SectionMultiEnumMaybe from './SectionMultiEnumMaybe';
+import SectionYoutubeVideoMaybe from './SectionYoutubeVideoMaybe';
 
 const MAX_MOBILE_SCREEN_WIDTH = 768;
 const MIN_LENGTH_FOR_LONG_WORDS = 20;
@@ -177,6 +179,8 @@ export const CustomUserFields = props => {
           <SectionMultiEnumMaybe {...fieldProps} />
         ) : schemaType === SCHEMA_TYPE_TEXT ? (
           <SectionTextMaybe {...fieldProps} />
+        ) : schemaType === SCHEMA_TYPE_YOUTUBE ? (
+          <SectionYoutubeVideoMaybe {...fieldProps} />
         ) : null;
       })}
     </>
