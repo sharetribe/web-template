@@ -100,16 +100,22 @@ const getValidSanitizedImage = image => {
 export const exposeImageProps = data => {
   // Note: data includes also "aspectRatio" key (and "fieldType"),
   //       but image refs can rely on actual image variants
-  const { alt, image } = data;
+  const { alt, image, link } = data;
   const { type } = image || {};
 
   if (type !== 'imageAsset') {
     return {};
   }
+  const { href, fieldType } = link || {};
+
+  const hasCorrectProps = typeof href === 'string' && href.length > 0;
+  const cleanUrl = hasCorrectProps ? sanitizeUrl(href) : null;
+  const linkData = cleanUrl && fieldType !== 'none' ? { href: cleanUrl, fieldType } : null;
 
   const alternativeText = typeof alt === 'string' ? alt : '🖼️';
   const sanitizedImage = getValidSanitizedImage(image);
-  return sanitizedImage ? { alt: alternativeText, image: sanitizedImage } : {};
+
+  return sanitizedImage ? { alt: alternativeText, image: sanitizedImage, link: linkData } : {};
 };
 
 /**
