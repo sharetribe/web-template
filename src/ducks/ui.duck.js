@@ -1,11 +1,15 @@
-// ================ Action types ================ //
+import { DEFAULT_CURRENCY } from '../extensions/common/config/constants/currency.constants';
 
+// ================ Action types ================ //
 export const DISABLE_SCROLLING = 'app/ui/DISABLE_SCROLLING';
+
+export const SET_UI_CURRENCY = 'app/ui/SET_UI_CURRENCY';
 
 // ================ Reducer ================ //
 
 const initialState = {
   disableScrollRequests: [],
+  uiCurrency: DEFAULT_CURRENCY,
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -32,7 +36,11 @@ export default function reducer(state = initialState, action = {}) {
         disableScrollRequests: disableScrollRequestArray,
       };
     }
-
+    case SET_UI_CURRENCY:
+      return {
+        ...state,
+        uiCurrency: payload,
+      };
     default:
       return state;
   }
@@ -45,6 +53,10 @@ export const manageDisableScrolling = (componentId, disableScrolling) => ({
   payload: { componentId, disableScrolling },
 });
 
+export const setUiCurrency = uiCurrency => ({
+  type: SET_UI_CURRENCY,
+  payload: uiCurrency,
+});
 // ================ Selectors ================ //
 
 export const isScrollingDisabled = state => {

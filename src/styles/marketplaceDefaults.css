@@ -43,7 +43,7 @@
   --colorGrey800: hsl(240 3% 20%);
   --colorGrey900: hsl(240 3% 10%);
   --colorBlack: hsl(0 0% 0%);
-
+  --colorBlueNote: #27affb;
   --colorLightTransparent: rgba(255, 255, 255, 0.65);
 
   /**
@@ -72,8 +72,8 @@
   --colorSecondaryButtonLight: var(--colorWhite);
 
   /* ================ Font ================ */
-  --fontFamily: "Nunito", sans-serif, -apple-system, BlinkMacSystemFont, 'Inter', Helvetica, Arial, sans-serif,
-    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  --fontFamily: 'Nunito', sans-serif, -apple-system, BlinkMacSystemFont, 'Inter', Helvetica, Arial,
+    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 
   --fontWeightRegular: 400;
   --fontWeightMedium: 500;

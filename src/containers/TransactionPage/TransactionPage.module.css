@@ -46,7 +46,7 @@
     padding: 3px 0 5px 0;
   }
   @media (--viewportLarge) {
-    margin: 0px 48px 47px 48px;
+    margin: 0px 48px;
     padding: 6px 0 2px 0;
   }
 }

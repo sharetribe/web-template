@@ -588,3 +588,10 @@
     margin-top: 16px;
   }
 }
+
+.noteContainer {
+  margin: 0 24px;
+  @media (--viewportLarge) {
+    margin: 0 48px 24px;
+  }
+}

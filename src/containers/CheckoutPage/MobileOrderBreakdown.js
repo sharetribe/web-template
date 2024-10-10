@@ -1,4 +1,5 @@
 import React from 'react';
+import CurrencyNote from '../../extensions/MultipleCurrency/components/CurrencyNote/CurrencyNote';
 
 import css from './CheckoutPage.module.css';
 
@@ -9,6 +10,7 @@ const MobileOrderBreakdown = props => {
     <div className={css.priceBreakdownContainer}>
       {speculateTransactionErrorMessage}
       {breakdown}
+      <CurrencyNote componentId="CheckoutPage" />
     </div>
   );
 };
