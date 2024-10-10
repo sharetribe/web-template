@@ -143,6 +143,8 @@
   "CustomExtendedDataField.required": "Required",
   "CustomExtendedDataField.numberTooSmall": "The number must be larger than or equal to {min}",
   "CustomExtendedDataField.numberTooBig": "The number must be less than or equal to {max}",
+  "YoutubeVideoUrlDataField.placeholder": "Add Youtube URL",
+  "YoutubeVideoUrlDataField.notValidURL": "The URL you have entered is not a valid Youtube URL",
   "DisputeModal.close": "Close",
   "DisputeModal.description": "If you are not happy with your experience, please let the {marketplaceName} team know what happened. We will try to solve the problem as quickly as possible.",
   "DisputeModal.disputePlaceholder": "There was an issue with...",

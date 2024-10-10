@@ -141,6 +141,14 @@ export const validateInteger = (value, max, min, numberTooSmallMessage, numberTo
   return VALID;
 };
 
+export const validateYoutubeURL = (url, message) => {
+  const pattern = /^.*(?:(?:youtu\.be\/|youtu.*v\/|youtu.*embed\/)|youtu.*(?:\?v=|\&v=))([^#\&\?\)]*).*/;
+  const isValidYoutubeURL = pattern.test(url);
+  if (isValidYoutubeURL) {
+    return VALID;
+  } else return message;
+};
+
 export const ageAtLeast = (message, minYears) => value => {
   const { year, month, day } = value;
   const dayNum = parseNum(day);

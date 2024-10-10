@@ -2,7 +2,7 @@
 // I.e. These are custom fields to data entities. They are added through the Marketplace Console.
 // In the codebase, we also have React Final Form fields, which are wrapper around user inputs.
 
-import { SCHEMA_TYPE_MULTI_ENUM, SCHEMA_TYPE_TEXT } from './types';
+import { SCHEMA_TYPE_MULTI_ENUM, SCHEMA_TYPE_TEXT, SCHEMA_TYPE_YOUTUBE } from './types';
 
 const keyMapping = {
   userType: {
@@ -156,6 +156,16 @@ export const pickCustomFieldProps = (
             key,
             heading: label,
             text: value,
+          },
+        ]
+      : isTargetEntityType && schemaType === SCHEMA_TYPE_YOUTUBE && shouldPick
+      ? [
+          ...pickedElements,
+          {
+            schemaType,
+            key,
+            videoUrl: value,
+            heading: label,
           },
         ]
       : pickedElements;
