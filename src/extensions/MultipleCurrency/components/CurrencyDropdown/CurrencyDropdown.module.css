@@ -1,0 +1,57 @@
+.profileMenuLabel {
+  border-bottom: 0px solid;
+  transition: var(--transitionStyleButton);
+
+  font-weight: var(--fontWeightMedium);
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: 0;
+  color: var(--colorGrey700);
+
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  margin: 0;
+  padding: 0 12px 0 12px;
+
+  &:hover {
+    border-bottom: 4px solid var(--marketplaceColor);
+    border-radius: 0;
+    text-decoration: none;
+  }
+
+  &:active {
+    border-bottom: 0;
+  }
+}
+
+.profileMenuIsOpen {
+  &:hover {
+    border-bottom: 0;
+  }
+}
+
+.avatar {
+  margin: 16px 0;
+}
+
+.profileMenuContent {
+  min-width: 48px;
+  padding-top: 20px;
+}
+
+/* left animated "border" like hover element */
+.menuItemBorder {
+  position: absolute;
+  top: 2px;
+  left: 0px;
+  height: calc(100% - 4px);
+  width: 0;
+  transition: width var(--transitionStyleButton);
+}
+
+.icon {
+  width: 16px;
+  height: 24px;
+}

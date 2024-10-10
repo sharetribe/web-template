@@ -27,6 +27,7 @@ import TopbarMobileMenu from './TopbarMobileMenu/TopbarMobileMenu';
 import TopbarDesktop from './TopbarDesktop/TopbarDesktop';
 
 import css from './Topbar.module.css';
+import CurrencyDropdown from '../../../extensions/MultipleCurrency/components/CurrencyDropdown/CurrencyDropdown';
 
 const MAX_MOBILE_SCREEN_WIDTH = 1024;
 
@@ -306,6 +307,7 @@ class TopbarComponent extends Component {
           >
             <SearchIcon className={css.searchMenuIcon} />
           </Button>
+          <CurrencyDropdown />
         </div>
         <div className={css.desktop}>
           <TopbarDesktop
