@@ -732,7 +732,7 @@ const validUserSaveConfig = config => {
 const validListingFields = (listingFields, listingTypesInUse, categoriesInUse) => {
   const keys = listingFields.map(d => d.key);
   const scopeOptions = ['public', 'private'];
-  const validSchemaTypes = ['enum', 'multi-enum', 'text', 'long', 'boolean'];
+  const validSchemaTypes = ['enum', 'multi-enum', 'text', 'long', 'boolean', 'youtubeVideoUrl'];
 
   return listingFields.reduce((acc, data) => {
     const schemaType = data.schemaType;
