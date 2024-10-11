@@ -100,7 +100,7 @@ const UpdateStockToInfinityCheckboxMaybe = ({ hasInfiniteStock, currentStock, fo
 };
 
 export const EditListingPricingAndStockFormComponent = props => {
-  const [providerCommission, setProviderCommission] = useState(0);
+  const [providerCommission, setProviderCommission] = useState();
 
   useEffect(() => {
     const getProviderCommission = async () => {
@@ -140,8 +140,9 @@ export const EditListingPricingAndStockFormComponent = props => {
           values,
         } = formRenderProps;
 
-        const currentUser = useSelector((state) => state.user.currentUser);
-        const userCurrency = currentUser?.attributes.profile.publicData.userCurrency || DEFAULT_CURRENCY;
+        const currentUser = useSelector(state => state.user.currentUser);
+        const userCurrency =
+          currentUser?.attributes.profile.publicData.userCurrency || DEFAULT_CURRENCY;
 
         const priceValidators = getPriceValidators(
           listingMinimumPriceSubUnits,
@@ -167,9 +168,6 @@ export const EditListingPricingAndStockFormComponent = props => {
         const stockErrorMessage = isOldTotalMismatchStockError(setStockError)
           ? intl.formatMessage({ id: 'EditListingPricingAndStockForm.oldStockTotalWasOutOfSync' })
           : intl.formatMessage({ id: 'EditListingPricingAndStockForm.stockUpdateFailed' });
-
-        console.log('Form rendered with price:', values.price);
-        console.log('Price type:', typeof values.price);
 
         const priceValue = values.price && values.price.amount ? values.price.amount / 100 : 0;
 
