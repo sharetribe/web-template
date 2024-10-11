@@ -4,11 +4,11 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
-    console.log('it gets here');
     const exchangeRate = await getExchangeRate();
-    res.status(200).send(exchangeRate);
+
+    res.status(200).json(exchangeRate);
   } catch (error) {
-    res.status(500).send(error.message);
+    res.status(500).json({ error: error.message });
   }
 });
 

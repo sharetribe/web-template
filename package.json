@@ -26,6 +26,7 @@
     "final-form": "4.20.7",
     "final-form-arrays": "3.0.2",
     "full-icu": "^1.4.0",
+    "glob": "^11.0.0",
     "helmet": "^7.1.0",
     "jose": "5.2.0",
     "lodash": "^4.17.21",

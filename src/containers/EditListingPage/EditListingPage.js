@@ -46,8 +46,10 @@ import {
   savePayoutDetails,
 } from './EditListingPage.duck';
 import EditListingWizard from './EditListingWizard/EditListingWizard';
+
+import { fetchExchangeRate } from '../../extensions/ExchangeRate/ExchangeRate.duck';
+
 import css from './EditListingPage.module.css';
-import { fetchExchangeRate } from '../../extensions/exchange-rate/exchangeRate.duck';
 
 const STRIPE_ONBOARDING_RETURN_URL_SUCCESS = 'success';
 const STRIPE_ONBOARDING_RETURN_URL_FAILURE = 'failure';
@@ -90,14 +92,12 @@ const pickRenderableImages = (
 // N.B. All the presentational content needs to be extracted to their own components
 export const EditListingPageComponent = props => {
   const dispatch = useDispatch();
-  const exchangeRate = useSelector(state => state.ExchangeRate.exchangeRate);
-  console.log('🚀 ~ useEffect ~ exchangeRate:', exchangeRate);
+  const { exchangeRate } = useSelector(state => state.ExchangeRate);
 
   useEffect(() => {
     if (exchangeRate === null) {
       dispatch(fetchExchangeRate());
     }
-    console.log('🚀 ~ useEffect ~ exchangeRate:', exchangeRate);
   }, [dispatch, exchangeRate]);
 
   const {

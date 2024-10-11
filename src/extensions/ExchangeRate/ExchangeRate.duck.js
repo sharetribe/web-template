@@ -1,5 +1,5 @@
-import axios from 'axios';
 import { storableError } from '../../util/errors';
+import { fetchCurrencyExchangeRate } from './api';
 
 // ================ Action types ================ //
 
@@ -53,17 +53,10 @@ export const fetchExchangeRateError = error => ({
 
 export const fetchExchangeRate = () => async dispatch => {
   try {
-    // const response = await fetch('http://localhost:3500/api/exchange-rate');
-    // const data = await response.json();
+    const response = await fetchCurrencyExchangeRate();
 
-    const response = await axios.get('http://localhost:3500/api/exchange-rate');
-    console.log('🚀 ~ fetchExchangeRate ~ response:', response);
-
-    const data = await response.data;
-    console.log('🚀 ~ fetchExchangeRate ~ data:', data);
-
-    if (data) {
-      dispatch(fetchExchangeRateSuccess(data));
+    if (response) {
+      dispatch(fetchExchangeRateSuccess(response));
     }
   } catch (error) {
     console.log('Error fetching exchange rate.', error);
