@@ -21,7 +21,7 @@ const UserNav = props => {
     },
     {
       text: <FormattedMessage id="UserNav.profileSettings" />,
-      selected: currentPage === 'ProfileSettingsPage',
+      selected: currentPage === 'ProfilePage',
       disabled: false,
       linkProps: {
         name: 'ProfileSettingsPage',

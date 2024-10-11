@@ -76,6 +76,5 @@ MenuContent.propTypes = {
   isOpen: bool,
   rootClassName: string,
   style: object,
-};
 
 export default MenuContent;

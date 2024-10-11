@@ -31,11 +31,11 @@
   /* B&W and Grey palette */
 
   --colorWhite: hsl(0 0% 100%);
-  --colorGrey50: hsl(240 3% 98%);
+  --colorGrey50: hsl(0 0% 100%); /* hsl(240 3% 98%) */
   --colorGrey100: hsl(240 3% 90%);
   --colorGrey200: hsl(240 3% 80%);
   --colorGrey300: hsl(240 3% 70%);
-  --colorGrey400: hsl(240 3% 60%);
+  --colorGrey400: hsl(240, 29%, 46%);
   --colorGrey500: hsl(240 3% 50%);
   --colorGrey600: hsl(240 3% 40%);
   --colorGrey700: hsl(240 3% 30%);

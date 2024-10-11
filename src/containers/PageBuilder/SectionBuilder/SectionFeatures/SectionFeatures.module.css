@@ -4,7 +4,7 @@
   max-width: var(--contentMaxWidthPages);
   display: grid;
   grid-template-columns: repeat(1, 1fr);
-  gap: 32px;
+  gap: 5rem;
   margin: 0 auto;
   padding: 32px;
 }
