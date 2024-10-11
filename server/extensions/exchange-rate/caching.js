@@ -9,11 +9,9 @@ const currencyRateCache = new NodeCache({
   stdTTL: CACHE_TIME,
 });
 
-const fetchExchangeRate = async currency => {
+const fetchExchangeRate = async () => {
   try {
-    const response = await axios.get(
-      `${FRANKFURTER_API_URL}/latest?base=${DEFAULT_CURRENCY}&symbols=${currency}`
-    );
+    const response = await axios.get(`${FRANKFURTER_API_URL}/latest?base=${DEFAULT_CURRENCY}`);
     const exchangeRate = response.data.rates;
 
     currencyRateCache.set('exchangeRate', exchangeRate);
@@ -24,13 +22,13 @@ const fetchExchangeRate = async currency => {
   }
 };
 
-const getExchangeRate = async currency => {
+const getExchangeRate = async () => {
   const cachedRate = currencyRateCache.get('exchangeRate');
 
   if (cachedRate) {
     return cachedRate;
   } else {
-    return await fetchExchangeRate(currency);
+    return await fetchExchangeRate();
   }
 };
 
