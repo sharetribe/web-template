@@ -175,9 +175,12 @@ const CustomFieldYoutube = props => {
   const { placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
   const label = getLabel(fieldConfig);
   const placeholder =
-    placeholderMessage || intl.formatMessage({ id: 'YoutubeVideoUrlDataField.placeholder' });
+    placeholderMessage ||
+    intl.formatMessage({ id: 'CustomExtendedDataField.placeholderYoutubeVideoURL' });
 
-  const notValidUrlMessage = intl.formatMessage({ id: 'YoutubeVideoUrlDataField.notValidURL' });
+  const notValidUrlMessage = intl.formatMessage({
+    id: 'CustomExtendedDataField.notValidYoutubeVideoURL',
+  });
 
   const validate = value => {
     const requiredMsg = requiredMessage || defaultRequiredMessage;

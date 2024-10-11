@@ -1,6 +1,7 @@
 import toPairs from 'lodash/toPairs';
 import { types as sdkTypes } from './sdkLoader';
 import { diffInTime } from './dates';
+import { extractYouTubeID } from './string';
 
 const { LatLng, Money } = sdkTypes;
 
@@ -142,11 +143,7 @@ export const validateInteger = (value, max, min, numberTooSmallMessage, numberTo
 };
 
 export const validateYoutubeURL = (url, message) => {
-  const pattern = /^.*(?:(?:youtu\.be\/|youtu.*v\/|youtu.*embed\/)|youtu.*(?:\?v=|\&v=))([^#\&\?\)]*).*/;
-  const isValidYoutubeURL = pattern.test(url);
-  if (isValidYoutubeURL) {
-    return VALID;
-  } else return message;
+  return extractYouTubeID(url) ? VALID : message;
 };
 
 export const ageAtLeast = (message, minYears) => value => {
