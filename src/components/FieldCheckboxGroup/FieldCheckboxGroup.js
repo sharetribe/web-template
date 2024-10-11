@@ -11,11 +11,11 @@ import React from 'react';
 import { arrayOf, bool, node, shape, string } from 'prop-types';
 import classNames from 'classnames';
 import { FieldArray } from 'react-final-form-arrays';
-import { FieldCheckbox, ValidationError } from '../../components';
+import { FieldCheckbox, ValidationError } from '..';
 
 import css from './FieldCheckboxGroup.module.css';
 
-const FieldCheckboxRenderer = props => {
+function FieldCheckboxRenderer(props) {
   const {
     className,
     rootClassName,
@@ -55,7 +55,7 @@ const FieldCheckboxRenderer = props => {
       <ValidationError fieldMeta={{ ...meta }} />
     </fieldset>
   );
-};
+}
 
 FieldCheckboxRenderer.defaultProps = {
   rootClassName: null,
@@ -73,12 +73,14 @@ FieldCheckboxRenderer.propTypes = {
     shape({
       key: string.isRequired,
       label: node.isRequired,
-    })
+    }),
   ).isRequired,
   twoColumns: bool,
 };
 
-const FieldCheckboxGroup = props => <FieldArray component={FieldCheckboxRenderer} {...props} />;
+function FieldCheckboxGroup(props) {
+  return <FieldArray component={FieldCheckboxRenderer} {...props} />;
+}
 
 // Name and component are required fields for FieldArray.
 // Component-prop we define in this file, name needs to be passed in

@@ -5,7 +5,7 @@ import { node, string } from 'prop-types';
 // opened page doesn't have access to the current page.
 //
 // See: https://mathiasbynens.github.io/rel-noopener/
-const ExternalLink = props => {
+function ExternalLink(props) {
   const { children, target, ...rest } = props;
   const targetProp = target || '_blank';
   const anchorProps =
@@ -17,7 +17,7 @@ const ExternalLink = props => {
       {children}
     </a>
   );
-};
+}
 
 ExternalLink.defaultProps = { children: null, target: '_blank' };
 

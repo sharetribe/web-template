@@ -1,15 +1,15 @@
 import React from 'react';
-import { useConfiguration } from '../../context/configurationContext';
 import loadable from '@loadable/component';
+import { useConfiguration } from '../../context/configurationContext';
 
 const SectionBuilder = loadable(
   () => import(/* webpackChunkName: "SectionBuilder" */ '../PageBuilder/PageBuilder'),
   {
-    resolveComponent: components => components.SectionBuilder,
-  }
+    resolveComponent: (components) => components.SectionBuilder,
+  },
 );
 
-const FooterComponent = () => {
+function FooterComponent() {
   const { footer = {}, topbar } = useConfiguration();
 
   // If footer asset is not set, let's not render Footer at all.
@@ -28,7 +28,7 @@ const FooterComponent = () => {
   };
 
   return <SectionBuilder sections={[footerSection]} />;
-};
+}
 
 // NOTE: if you want to add dynamic data to FooterComponent,
 //       you could just connect this FooterContainer to Redux Store

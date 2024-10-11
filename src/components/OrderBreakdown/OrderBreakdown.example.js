@@ -10,18 +10,16 @@ const { UUID, Money } = sdkTypes;
 const CURRENCY = 'USD';
 const marketplaceName = 'MarketplaceX';
 
-const exampleBooking = attributes => {
-  return {
-    id: new UUID('example-booking'),
-    type: 'booking',
-    attributes,
-  };
-};
+const exampleBooking = (attributes) => ({
+  id: new UUID('example-booking'),
+  type: 'booking',
+  attributes,
+});
 
 const processName = 'default-purchase';
 const transitions = getProcess(processName)?.transitions;
 
-const exampleTransaction = params => {
+const exampleTransaction = (params) => {
   const created = new Date(Date.UTC(2017, 1, 1));
   const confirmed = new Date(Date.UTC(2017, 1, 1, 0, 1));
   return {
@@ -64,13 +62,7 @@ export const ProductShippingCustomer = {
     marketplaceName,
     transaction: exampleTransaction({
       payinTotal: new Money(basePrice.plus(shipping), CURRENCY),
-      payoutTotal: new Money(
-        basePrice
-          .plus(shipping)
-          .plus(fee)
-          .toNumber(),
-        CURRENCY
-      ),
+      payoutTotal: new Money(basePrice.plus(shipping).plus(fee).toNumber(), CURRENCY),
       lineItems: [
         {
           code: 'line-item/item',
@@ -108,13 +100,7 @@ export const ProductShippingProvider = {
     marketplaceName,
     transaction: exampleTransaction({
       payinTotal: new Money(basePrice.plus(shipping), CURRENCY),
-      payoutTotal: new Money(
-        basePrice
-          .plus(shipping)
-          .plus(fee)
-          .toNumber(),
-        CURRENCY
-      ),
+      payoutTotal: new Money(basePrice.plus(shipping).plus(fee).toNumber(), CURRENCY),
       lineItems: [
         {
           code: 'line-item/item',

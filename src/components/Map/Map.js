@@ -1,8 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import { useConfiguration } from '../../context/configurationContext';
 import { bool, number, object, string } from 'prop-types';
+import { useConfiguration } from '../../context/configurationContext';
 import { propTypes } from '../../util/types';
 import { getMapProviderApiAccess } from '../../util/maps';
 import * as mapboxMap from './MapboxMap';
@@ -10,7 +10,7 @@ import * as googleMapsMap from './GoogleMap';
 
 import css from './Map.module.css';
 
-export const Map = props => {
+export function Map(props) {
   const config = useConfiguration();
   const {
     className,
@@ -37,7 +37,7 @@ export const Map = props => {
 
   if (mapsConfiguration.fuzzy.enabled && !obfuscatedCenter) {
     throw new Error(
-      'Map: obfuscatedCenter prop is required when config.maps.fuzzy.enabled === true'
+      'Map: obfuscatedCenter prop is required when config.maps.fuzzy.enabled === true',
     );
   }
   if (!mapsConfiguration.fuzzy.enabled && !center) {
@@ -68,7 +68,7 @@ export const Map = props => {
       mapsConfig={mapsConfiguration}
     />
   );
-};
+}
 
 Map.defaultProps = {
   className: null,

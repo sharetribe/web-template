@@ -14,8 +14,8 @@ import { isScrollingDisabled } from '../../ducks/ui.duck';
 
 import { H3, Page, UserNav, LayoutSideNavigation } from '../../components';
 
-import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
-import FooterContainer from '../../containers/FooterContainer/FooterContainer';
+import TopbarContainer from '../TopbarContainer/TopbarContainer';
+import FooterContainer from '../FooterContainer/FooterContainer';
 
 import ContactDetailsForm from './ContactDetailsForm/ContactDetailsForm';
 
@@ -26,7 +26,7 @@ import {
 } from './ContactDetailsPage.duck';
 import css from './ContactDetailsPage.module.css';
 
-export const ContactDetailsPageComponent = props => {
+export function ContactDetailsPageComponent(props) {
   const config = useConfiguration();
   const {
     saveEmailError,
@@ -53,13 +53,13 @@ export const ContactDetailsPageComponent = props => {
   const userType = publicData?.userType;
   const protectedData = user.attributes.profile.protectedData || {};
   const currentPhoneNumber = protectedData.phoneNumber || '';
-  const userTypeConfig = userType && userTypes.find(config => config.userType === userType);
+  const userTypeConfig = userType && userTypes.find((config) => config.userType === userType);
   const isPhoneNumberIncluded = userTypeConfig?.defaultUserFields?.phoneNumber !== false;
   // ContactDetailsForm decides if it's allowed to show the input field.
   const phoneNumberMaybe =
     isPhoneNumberIncluded && currentPhoneNumber ? { phoneNumber: currentPhoneNumber } : {};
 
-  const handleSubmit = values => {
+  const handleSubmit = (values) => {
     const phoneNumber = values.phoneNumber ? values.phoneNumber : null;
     return onSubmitContactDetails({ ...values, phoneNumber, currentEmail, currentPhoneNumber });
   };
@@ -113,7 +113,7 @@ export const ContactDetailsPageComponent = props => {
       </LayoutSideNavigation>
     </Page>
   );
-};
+}
 
 ContactDetailsPageComponent.defaultProps = {
   saveEmailError: null,
@@ -145,7 +145,7 @@ ContactDetailsPageComponent.propTypes = {
   intl: intlShape.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   // Topbar needs user info.
   const { currentUser, sendVerificationEmailInProgress, sendVerificationEmailError } = state.user;
   const {
@@ -170,19 +170,16 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   onChange: () => dispatch(saveContactDetailsClear()),
   onResendVerificationEmail: () => dispatch(sendVerificationEmail()),
-  onSubmitContactDetails: values => dispatch(saveContactDetails(values)),
-  onResetPassword: values => dispatch(resetPassword(values)),
+  onSubmitContactDetails: (values) => dispatch(saveContactDetails(values)),
+  onResetPassword: (values) => dispatch(resetPassword(values)),
 });
 
 const ContactDetailsPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  ),
-  injectIntl
+  connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
 )(ContactDetailsPageComponent);
 
 export default ContactDetailsPage;

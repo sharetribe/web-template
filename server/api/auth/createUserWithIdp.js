@@ -60,7 +60,7 @@ module.exports = (req, res) => {
         idpToken: `${idpToken}`,
       })
     )
-    .then(apiResponse => {
+    .then((apiResponse) => {
       const { status, statusText, data } = apiResponse;
       res
         .clearCookie('st-authinfo')
@@ -75,7 +75,7 @@ module.exports = (req, res) => {
         )
         .end();
     })
-    .catch(e => {
+    .catch((e) => {
       handleError(res, e);
     });
 };

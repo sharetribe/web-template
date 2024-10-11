@@ -12,7 +12,7 @@ import css from './TimeRange.module.css';
 const DASH = '–';
 const BREAK_WORD_MIN_LENGTH = 27;
 
-export const TimeRangeComponent = props => {
+export function TimeRangeComponent(props) {
   const { rootClassName, className, startDate, endDate, dateType, timeZone, intl } = props;
   const start = formatDateIntoPartials(startDate, intl, { timeZone });
   const end = formatDateIntoPartials(endDate, intl, { timeZone });
@@ -28,7 +28,8 @@ export const TimeRangeComponent = props => {
         <span className={css.dateSection}>{`${start.date}`}</span>
       </div>
     );
-  } else if (dateType === DATE_TYPE_DATE) {
+  }
+  if (dateType === DATE_TYPE_DATE) {
     const formatted = intl.formatDateTimeRange(startDate, endDate, dateFormatting);
     // For small words, we use the default from Intl,
     // but for longer words, we add correct word wraps by adding spans.
@@ -44,13 +45,15 @@ export const TimeRangeComponent = props => {
         <span className={css.dateSection}>{formatted}</span>
       );
     return <div className={classes}>{range}</div>;
-  } else if (isSingleDay && dateType === DATE_TYPE_TIME) {
+  }
+  if (isSingleDay && dateType === DATE_TYPE_TIME) {
     return (
       <div className={classes}>
         <span className={css.dateSection}>{`${start.time} - ${end.time}`}</span>
       </div>
     );
-  } else if (dateType === DATE_TYPE_TIME) {
+  }
+  if (dateType === DATE_TYPE_TIME) {
     const timeFormatting = { hour: 'numeric', minute: 'numeric' };
     const formatted = intl.formatDateTimeRange(startDate, endDate, {
       ...dateFormatting,
@@ -70,21 +73,21 @@ export const TimeRangeComponent = props => {
         <span className={css.dateSection}>{formatted}</span>
       );
     return <div className={classes}>{range}</div>;
-  } else if (isSingleDay && dateType === DATE_TYPE_DATETIME) {
+  }
+  if (isSingleDay && dateType === DATE_TYPE_DATETIME) {
     return (
       <div className={classes}>
         <span className={css.dateSection}>{`${start.date}, ${start.time} - ${end.time}`}</span>
       </div>
     );
-  } else {
-    return (
-      <div className={classes}>
-        <span className={css.dateSection}>{`${start.dateAndTime} - `}</span>
-        <span className={css.dateSection}>{`${end.dateAndTime}`}</span>
-      </div>
-    );
   }
-};
+  return (
+    <div className={classes}>
+      <span className={css.dateSection}>{`${start.dateAndTime} - `}</span>
+      <span className={css.dateSection}>{`${end.dateAndTime}`}</span>
+    </div>
+  );
+}
 
 TimeRangeComponent.defaultProps = {
   rootClassName: null,

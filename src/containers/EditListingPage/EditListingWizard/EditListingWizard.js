@@ -81,11 +81,10 @@ const STRIPE_ONBOARDING_RETURN_URL_SUCCESS = 'success';
 const STRIPE_ONBOARDING_RETURN_URL_FAILURE = 'failure';
 
 // Pick only allowed tabs from the given list
-const getTabs = (processTabs, disallowedTabs) => {
-  return disallowedTabs.length > 0
-    ? processTabs.filter(tab => !disallowedTabs.includes(tab))
+const getTabs = (processTabs, disallowedTabs) =>
+  disallowedTabs.length > 0
+    ? processTabs.filter((tab) => !disallowedTabs.includes(tab))
     : processTabs;
-};
 // Pick only allowed booking tabs (location could be omitted)
 const tabsForBookingProcess = (processTabs, listingTypeConfig) => {
   const disallowedTabs = !displayLocation(listingTypeConfig) ? [LOCATION] : [];
@@ -162,13 +161,10 @@ const hasValidListingFieldsInExtendedData = (publicData, privateData, config) =>
   const isValidField = (fieldConfig, fieldData) => {
     const { key, schemaType, enumOptions = [], saveConfig = {} } = fieldConfig;
 
-    const schemaOptionKeys = enumOptions.map(o => `${o.option}`);
-    const hasValidEnumValue = optionData => {
-      return schemaOptionKeys.includes(optionData);
-    };
-    const hasValidMultiEnumValues = savedOptions => {
-      return savedOptions.every(optionData => schemaOptionKeys.includes(optionData));
-    };
+    const schemaOptionKeys = enumOptions.map((o) => `${o.option}`);
+    const hasValidEnumValue = (optionData) => schemaOptionKeys.includes(optionData);
+    const hasValidMultiEnumValues = (savedOptions) =>
+      savedOptions.every((optionData) => schemaOptionKeys.includes(optionData));
 
     const categoryKey = config.categoryConfiguration.key;
     const categoryOptions = config.categoryConfiguration.categories;
@@ -184,14 +180,14 @@ const hasValidListingFieldsInExtendedData = (publicData, privateData, config) =>
       return schemaType === SCHEMA_TYPE_ENUM
         ? typeof savedListingField === 'string' && hasValidEnumValue(savedListingField)
         : schemaType === SCHEMA_TYPE_MULTI_ENUM
-        ? Array.isArray(savedListingField) && hasValidMultiEnumValues(savedListingField)
-        : schemaType === SCHEMA_TYPE_TEXT
-        ? typeof savedListingField === 'string'
-        : schemaType === SCHEMA_TYPE_LONG
-        ? typeof savedListingField === 'number' && Number.isInteger(savedListingField)
-        : schemaType === SCHEMA_TYPE_BOOLEAN
-        ? savedListingField === true || savedListingField === false
-        : false;
+          ? Array.isArray(savedListingField) && hasValidMultiEnumValues(savedListingField)
+          : schemaType === SCHEMA_TYPE_TEXT
+            ? typeof savedListingField === 'string'
+            : schemaType === SCHEMA_TYPE_LONG
+              ? typeof savedListingField === 'number' && Number.isInteger(savedListingField)
+              : schemaType === SCHEMA_TYPE_BOOLEAN
+                ? savedListingField === true || savedListingField === false
+                : false;
     }
     return true;
   };
@@ -210,16 +206,9 @@ const hasValidListingFieldsInExtendedData = (publicData, privateData, config) =>
  * @return true if tab / step is completed.
  */
 const tabCompleted = (tab, listing, config) => {
-  const {
-    availabilityPlan,
-    description,
-    geolocation,
-    price,
-    title,
-    publicData,
-    privateData,
-  } = listing.attributes;
-  const images = listing.images;
+  const { availabilityPlan, description, geolocation, price, title, publicData, privateData } =
+    listing.attributes;
+  const { images } = listing;
   const { listingType, transactionProcessAlias, unitType, shippingEnabled, pickupEnabled } =
     publicData || {};
   const deliveryOptionPicked = publicData && (shippingEnabled || pickupEnabled);
@@ -261,9 +250,9 @@ const tabCompleted = (tab, listing, config) => {
  *
  * @return object containing activity / editability of different tabs of this wizard
  */
-const tabsActive = (isNew, listing, tabs, config) => {
-  return tabs.reduce((acc, tab) => {
-    const previousTabIndex = tabs.findIndex(t => t === tab) - 1;
+const tabsActive = (isNew, listing, tabs, config) =>
+  tabs.reduce((acc, tab) => {
+    const previousTabIndex = tabs.findIndex((t) => t === tab) - 1;
     const validTab = previousTabIndex >= 0;
     const hasListingType = !!listing?.attributes?.publicData?.listingType;
     const prevTabComletedInNewFlow = tabCompleted(tabs[previousTabIndex], listing, config);
@@ -271,7 +260,6 @@ const tabsActive = (isNew, listing, tabs, config) => {
       validTab && !isNew ? hasListingType : validTab && isNew ? prevTabComletedInNewFlow : true;
     return { ...acc, [tab]: isActive };
   }, {});
-};
 
 const scrollToTab = (tabPrefix, tabId) => {
   const el = document.querySelector(`#${tabPrefix}_${tabId}`);
@@ -289,17 +277,17 @@ const createReturnURL = (returnURLType, rootURL, routes, pathParams) => {
     'EditListingStripeOnboardingPage',
     routes,
     { ...pathParams, returnURLType },
-    {}
+    {},
   );
   const root = rootURL.replace(/\/$/, '');
   return `${root}${path}`;
 };
 
 // Get attribute: stripeAccountData
-const getStripeAccountData = stripeAccount => stripeAccount.attributes.stripeAccountData || null;
+const getStripeAccountData = (stripeAccount) => stripeAccount.attributes.stripeAccountData || null;
 
 // Get last 4 digits of bank account returned in Stripe account
-const getBankAccountLast4Digits = stripeAccountData =>
+const getBankAccountLast4Digits = (stripeAccountData) =>
   stripeAccountData && stripeAccountData.external_accounts.data.length > 0
     ? stripeAccountData.external_accounts.data[0].last4
     : null;
@@ -312,18 +300,18 @@ const hasRequirements = (stripeAccountData, requirementType) =>
   stripeAccountData.requirements[requirementType].length > 0;
 
 // Redirect user to Stripe's hosted Connect account onboarding form
-const handleGetStripeConnectAccountLinkFn = (getLinkFn, commonParams) => type => () => {
+const handleGetStripeConnectAccountLinkFn = (getLinkFn, commonParams) => (type) => () => {
   getLinkFn({ type, ...commonParams })
-    .then(url => {
+    .then((url) => {
       window.location.href = url;
     })
-    .catch(err => console.error(err));
+    .catch((err) => console.error(err));
 };
 
-const RedirectToStripe = ({ redirectFn }) => {
+function RedirectToStripe({ redirectFn }) {
   useEffect(redirectFn('custom_account_verification'), []);
   return <FormattedMessage id="EditListingWizard.redirectingToStripe" />;
-};
+}
 
 const getListingTypeConfig = (listing, selectedListingType, config) => {
   const existingListingType = listing?.attributes?.publicData?.listingType;
@@ -331,12 +319,12 @@ const getListingTypeConfig = (listing, selectedListingType, config) => {
   const hasOnlyOneListingType = validListingTypes?.length === 1;
 
   const listingTypeConfig = existingListingType
-    ? validListingTypes.find(conf => conf.listingType === existingListingType)
+    ? validListingTypes.find((conf) => conf.listingType === existingListingType)
     : selectedListingType
-    ? validListingTypes.find(conf => conf.listingType === selectedListingType.listingType)
-    : hasOnlyOneListingType
-    ? validListingTypes[0]
-    : null;
+      ? validListingTypes.find((conf) => conf.listingType === selectedListingType.listingType)
+      : hasOnlyOneListingType
+        ? validListingTypes[0]
+        : null;
   return listingTypeConfig;
 };
 
@@ -438,7 +426,7 @@ class EditListingWizard extends Component {
 
     const selectedTab = params.tab;
     const isNewListingFlow = [LISTING_PAGE_PARAM_TYPE_NEW, LISTING_PAGE_PARAM_TYPE_DRAFT].includes(
-      params.type
+      params.type,
     );
     const rootClasses = rootClassName || css.root;
     const classes = classNames(rootClasses, className);
@@ -454,7 +442,7 @@ class EditListingWizard extends Component {
     const listingTypeConfig = getListingTypeConfig(
       currentListing,
       this.state.selectedListingType,
-      config
+      config,
     );
     const existingListingType = currentListing.attributes?.publicData?.listingType;
     const invalidExistingListingType = existingListingType && !listingTypeConfig;
@@ -467,8 +455,8 @@ class EditListingWizard extends Component {
     const processName = transactionProcessAlias
       ? transactionProcessAlias.split('/')[0]
       : validListingTypes.length === 1
-      ? validListingTypes[0].transactionType.process
-      : INQUIRY_PROCESS_NAME;
+        ? validListingTypes[0].transactionType.process
+        : INQUIRY_PROCESS_NAME;
 
     const hasListingTypeSelected =
       existingListingType || this.state.selectedListingType || validListingTypes.length === 1;
@@ -478,10 +466,10 @@ class EditListingWizard extends Component {
       isNewListingFlow && (invalidExistingListingType || !hasListingTypeSelected)
         ? TABS_DETAILS_ONLY
         : isBookingProcess(processName)
-        ? tabsForBookingProcess(TABS_BOOKING, listingTypeConfig)
-        : isPurchaseProcess(processName)
-        ? tabsForPurchaseProcess(TABS_PRODUCT, listingTypeConfig)
-        : tabsForInquiryProcess(TABS_INQUIRY, listingTypeConfig);
+          ? tabsForBookingProcess(TABS_BOOKING, listingTypeConfig)
+          : isPurchaseProcess(processName)
+            ? tabsForPurchaseProcess(TABS_PRODUCT, listingTypeConfig)
+            : tabsForInquiryProcess(TABS_INQUIRY, listingTypeConfig);
 
     // Check if wizard tab is active / linkable.
     // When creating a new listing, we don't allow users to access next tab until the current one is completed.
@@ -499,10 +487,10 @@ class EditListingWizard extends Component {
       const nearestActiveTab = tabs
         .slice(0, currentTabIndex)
         .reverse()
-        .find(t => tabsStatus[t]);
+        .find((t) => tabsStatus[t]);
 
       console.log(
-        `You tried to access an EditListingWizard tab (${selectedTab}), which was not yet activated.`
+        `You tried to access an EditListingWizard tab (${selectedTab}), which was not yet activated.`,
       );
       return <NamedRedirect name="EditListingPage" params={{ ...params, tab: nearestActiveTab }} />;
     }
@@ -521,9 +509,7 @@ class EditListingWizard extends Component {
       this.hasScrolledToTab = true;
     }
 
-    const tabLink = tab => {
-      return { name: 'EditListingPage', params: { ...params, tab } };
-    };
+    const tabLink = (tab) => ({ name: 'EditListingPage', params: { ...params, tab } });
 
     const formDisabled = getAccountLinkInProgress;
     const ensuredCurrentUser = ensureCurrentUser(currentUser);
@@ -536,13 +522,13 @@ class EditListingWizard extends Component {
       STRIPE_ONBOARDING_RETURN_URL_SUCCESS,
       rootURL,
       routeConfiguration,
-      pathParams
+      pathParams,
     );
     const failureURL = createReturnURL(
       STRIPE_ONBOARDING_RETURN_URL_FAILURE,
       rootURL,
       routeConfiguration,
-      pathParams
+      pathParams,
     );
 
     const accountId = stripeConnected ? stripeAccount.id : null;
@@ -561,7 +547,7 @@ class EditListingWizard extends Component {
         accountId,
         successURL,
         failureURL,
-      }
+      },
     );
 
     const returnedNormallyFromStripe = returnURLType === STRIPE_ONBOARDING_RETURN_URL_SUCCESS;
@@ -580,13 +566,13 @@ class EditListingWizard extends Component {
           navRootClassName={css.nav}
           tabRootClassName={css.tab}
         >
-          {tabs.map(tab => {
+          {tabs.map((tab) => {
             const tabTranslations = tabLabelAndSubmit(
               intl,
               tab,
               isNewListingFlow,
               isPriceDisabled,
-              processName
+              processName,
             );
             return (
               <EditListingWizardTab
@@ -606,7 +592,9 @@ class EditListingWizard extends Component {
                 handleCreateFlowTabScrolling={this.handleCreateFlowTabScrolling}
                 handlePublishListing={this.handlePublishListing}
                 fetchInProgress={fetchInProgress}
-                onListingTypeChange={selectedListingType => this.setState({ selectedListingType })}
+                onListingTypeChange={(selectedListingType) =>
+                  this.setState({ selectedListingType })
+                }
                 onManageDisableScrolling={onManageDisableScrolling}
                 config={config}
                 routeConfiguration={routeConfiguration}
@@ -661,7 +649,7 @@ class EditListingWizard extends Component {
                       type="verificationNeeded"
                       inProgress={getAccountLinkInProgress}
                       onGetStripeConnectAccountLink={handleGetStripeConnectAccountLink(
-                        'custom_account_verification'
+                        'custom_account_verification',
                       )}
                     />
                   ) : stripeConnected && savedCountry && !returnedAbnormallyFromStripe ? (
@@ -670,7 +658,7 @@ class EditListingWizard extends Component {
                       inProgress={getAccountLinkInProgress}
                       disabled={payoutDetailsSaveInProgress}
                       onGetStripeConnectAccountLink={handleGetStripeConnectAccountLink(
-                        'custom_account_update'
+                        'custom_account_update',
                       )}
                     />
                   ) : null}
@@ -763,7 +751,7 @@ EditListingWizard.propTypes = {
   routeConfiguration: arrayOf(propTypes.route).isRequired,
 };
 
-const EnhancedEditListingWizard = props => {
+function EnhancedEditListingWizard(props) {
   const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();
   const intl = useIntl();
@@ -775,6 +763,6 @@ const EnhancedEditListingWizard = props => {
       {...props}
     />
   );
-};
+}
 
 export default withViewport(EnhancedEditListingWizard);

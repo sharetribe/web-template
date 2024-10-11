@@ -17,8 +17,8 @@ import { isScrollingDisabled } from '../../ducks/ui.duck';
 
 import { H3, Page, UserNav, NamedLink, LayoutSingleColumn } from '../../components';
 
-import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
-import FooterContainer from '../../containers/FooterContainer/FooterContainer';
+import TopbarContainer from '../TopbarContainer/TopbarContainer';
+import FooterContainer from '../FooterContainer/FooterContainer';
 
 import ProfileSettingsForm from './ProfileSettingsForm/ProfileSettingsForm';
 
@@ -32,7 +32,7 @@ const onImageUploadHandler = (values, fn) => {
   }
 };
 
-const ViewProfileLink = props => {
+function ViewProfileLink(props) {
   const { userUUID, isUnauthorizedUser } = props;
   return userUUID && isUnauthorizedUser ? (
     <NamedLink
@@ -47,9 +47,9 @@ const ViewProfileLink = props => {
       <FormattedMessage id="ProfileSettingsPage.viewProfileLink" />
     </NamedLink>
   ) : null;
-};
+}
 
-export const ProfileSettingsPageComponent = props => {
+export function ProfileSettingsPageComponent(props) {
   const config = useConfiguration();
   const {
     currentUser,
@@ -103,22 +103,15 @@ export const ProfileSettingsPageComponent = props => {
   };
 
   const user = ensureCurrentUser(currentUser);
-  const {
-    firstName,
-    lastName,
-    displayName,
-    bio,
-    publicData,
-    protectedData,
-    privateData,
-  } = user?.attributes.profile;
+  const { firstName, lastName, displayName, bio, publicData, protectedData, privateData } =
+    user?.attributes.profile;
   // I.e. the status is active, not pending-approval or banned
   const isUnauthorizedUser = currentUser && !isUserAuthorized(currentUser);
 
   const { userType } = publicData || {};
   const profileImageId = user.profileImage ? user.profileImage.id : null;
   const profileImage = image || { imageId: profileImageId };
-  const userTypeConfig = userTypes.find(config => config.userType === userType);
+  const userTypeConfig = userTypes.find((config) => config.userType === userType);
   const isDisplayNameIncluded = userTypeConfig?.defaultUserFields?.displayName !== false;
   // ProfileSettingsForm decides if it's allowed to show the input field.
   const displayNameMaybe = isDisplayNameIncluded && displayName ? { displayName } : {};
@@ -138,12 +131,12 @@ export const ProfileSettingsPageComponent = props => {
         ...initialValuesForUserFields(privateData, 'private', userType, userFields),
       }}
       profileImage={profileImage}
-      onImageUpload={e => onImageUploadHandler(e, onImageUpload)}
+      onImageUpload={(e) => onImageUploadHandler(e, onImageUpload)}
       uploadInProgress={uploadInProgress}
       updateInProgress={updateInProgress}
       uploadImageError={uploadImageError}
       updateProfileError={updateProfileError}
-      onSubmit={values => handleSubmit(values, userType)}
+      onSubmit={(values) => handleSubmit(values, userType)}
       marketplaceName={config.marketplaceName}
       userFields={userFields}
       userTypeConfig={userTypeConfig}
@@ -176,7 +169,7 @@ export const ProfileSettingsPageComponent = props => {
       </LayoutSingleColumn>
     </Page>
   );
-};
+}
 
 ProfileSettingsPageComponent.defaultProps = {
   currentUser: null,
@@ -209,15 +202,10 @@ ProfileSettingsPageComponent.propTypes = {
   intl: intlShape.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { currentUser } = state.user;
-  const {
-    image,
-    uploadImageError,
-    uploadInProgress,
-    updateInProgress,
-    updateProfileError,
-  } = state.ProfileSettingsPage;
+  const { image, uploadImageError, uploadInProgress, updateInProgress, updateProfileError } =
+    state.ProfileSettingsPage;
   return {
     currentUser,
     image,
@@ -229,17 +217,14 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => ({
-  onImageUpload: data => dispatch(uploadImage(data)),
-  onUpdateProfile: data => dispatch(updateProfile(data)),
+const mapDispatchToProps = (dispatch) => ({
+  onImageUpload: (data) => dispatch(uploadImage(data)),
+  onUpdateProfile: (data) => dispatch(updateProfile(data)),
 });
 
 const ProfileSettingsPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  ),
-  injectIntl
+  connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
 )(ProfileSettingsPageComponent);
 
 export default ProfileSettingsPage;

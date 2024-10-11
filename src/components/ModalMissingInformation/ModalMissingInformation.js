@@ -10,7 +10,7 @@ import { propTypes } from '../../util/types';
 import { isUserAuthorized } from '../../util/userHelpers';
 import { pathByRouteName } from '../../util/routes';
 
-import { Modal } from '../../components';
+import { Modal } from '..';
 
 import EmailReminder from './EmailReminder';
 import css from './ModalMissingInformation.module.css';
@@ -44,7 +44,7 @@ class ModalMissingInformation extends Component {
       user,
       currentUserHasListings,
       currentUserHasOrders,
-      location
+      location,
     );
   }
 
@@ -52,11 +52,11 @@ class ModalMissingInformation extends Component {
     currentUser,
     currentUserHasListings,
     currentUserHasOrders,
-    newLocation
+    newLocation,
   ) {
     const routes = this.props.routeConfiguration;
-    const whitelistedPaths = MISSING_INFORMATION_MODAL_WHITELIST.map(page =>
-      pathByRouteName(page, routes)
+    const whitelistedPaths = MISSING_INFORMATION_MODAL_WHITELIST.map((page) =>
+      pathByRouteName(page, routes),
     );
 
     // Is the current page whitelisted?
@@ -165,10 +165,10 @@ ModalMissingInformation.propTypes = {
   routeConfiguration: arrayOf(propTypes.route).isRequired,
 };
 
-const EnhancedModalMissingInformation = props => {
+function EnhancedModalMissingInformation(props) {
   const routeConfiguration = useRouteConfiguration();
 
   return <ModalMissingInformation routeConfiguration={routeConfiguration} {...props} />;
-};
+}
 
 export default EnhancedModalMissingInformation;

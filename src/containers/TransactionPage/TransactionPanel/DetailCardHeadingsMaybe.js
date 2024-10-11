@@ -5,7 +5,7 @@ import css from './TransactionPanel.module.css';
 import { formatMoney } from '../../../util/currency';
 
 // Functional component as a helper to build detail card headings
-const DetailCardHeadingsMaybe = props => {
+function DetailCardHeadingsMaybe(props) {
   const { showDetailCardHeadings, listingTitle, subTitle, showPrice, price, intl } = props;
 
   return showDetailCardHeadings ? (
@@ -23,6 +23,6 @@ const DetailCardHeadingsMaybe = props => {
       {subTitle ? <p className={css.detailCardSubtitle}>{subTitle}</p> : null}
     </div>
   ) : null;
-};
+}
 
 export default DetailCardHeadingsMaybe;

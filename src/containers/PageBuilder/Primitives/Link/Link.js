@@ -25,7 +25,7 @@ export const Link = React.forwardRef((props, ref) => {
 
   if (href.charAt(0) === '/') {
     // Internal link
-    const testURL = new URL('http://my.marketplace.com' + href);
+    const testURL = new URL(`http://my.marketplace.com${href}`);
     const matchedRoutes = matchPathname(testURL.pathname, routes);
     if (matchedRoutes.length > 0) {
       const found = matchedRoutes[0];
@@ -39,8 +39,8 @@ export const Link = React.forwardRef((props, ref) => {
   if (href.charAt(0) === '#') {
     if (typeof window !== 'undefined') {
       const hash = href;
-      let testURL = new URL(
-        `http://my.marketplace.com${location.pathname}${location.hash}${location.search}`
+      const testURL = new URL(
+        `http://my.marketplace.com${location.pathname}${location.hash}${location.search}`,
       );
       testURL.hash = hash;
       const matchedRoutes = matchPathname(testURL.pathname, routes);

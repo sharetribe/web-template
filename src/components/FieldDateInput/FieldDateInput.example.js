@@ -1,53 +1,54 @@
-/* eslint-disable no-console */
 import React from 'react';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
-import { Button } from '../../components';
+import { Button } from '..';
 import { required, bookingDateRequired, composeValidators } from '../../util/validators';
 import FieldDateInput from './FieldDateInput';
 
-const identity = v => v;
+const identity = (v) => v;
 
 const options = { weekday: 'short', month: 'long', day: 'numeric' };
-const formatDate = date => new Intl.DateTimeFormat('en-US', options).format(date);
+const formatDate = (date) => new Intl.DateTimeFormat('en-US', options).format(date);
 const placeholderText = formatDate(new Date());
 
-const FormComponent = props => (
-  <FinalForm
-    {...props}
-    render={fieldRenderProps => {
-      const {
-        style,
-        form,
-        handleSubmit,
-        onChange,
-        pristine,
-        submitting,
-        dateInputProps,
-        values,
-      } = fieldRenderProps;
-      const submitDisabled = pristine || submitting;
-      if (values && values.bookingDates) {
-        onChange(values.bookingDates);
-      }
+function FormComponent(props) {
+  return (
+    <FinalForm
+      {...props}
+      render={(fieldRenderProps) => {
+        const {
+          style,
+          form,
+          handleSubmit,
+          onChange,
+          pristine,
+          submitting,
+          dateInputProps,
+          values,
+        } = fieldRenderProps;
+        const submitDisabled = pristine || submitting;
+        if (values && values.bookingDates) {
+          onChange(values.bookingDates);
+        }
 
-      return (
-        <form
-          style={style}
-          onSubmit={e => {
-            e.preventDefault();
-            handleSubmit(e);
-          }}
-        >
-          <FormSpy onChange={onChange} />
-          <FieldDateInput {...dateInputProps} />
-          <Button type="submit" disabled={submitDisabled} style={{ marginTop: '24px' }}>
-            Select
-          </Button>
-        </form>
-      );
-    }}
-  />
-);
+        return (
+          <form
+            style={style}
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit(e);
+            }}
+          >
+            <FormSpy onChange={onChange} />
+            <FieldDateInput {...dateInputProps} />
+            <Button type="submit" disabled={submitDisabled} style={{ marginTop: '24px' }}>
+              Select
+            </Button>
+          </form>
+        );
+      }}
+    />
+  );
+}
 
 export const Empty = {
   component: FormComponent,
@@ -64,14 +65,14 @@ export const Empty = {
       onBlur: () => console.log('onBlur called from DateInput props.'),
       onFocus: () => console.log('onFocus called from DateInput props.'),
     },
-    onChange: formState => {
+    onChange: (formState) => {
       const { date } = formState.values;
       if (date) {
         const formattedDate = formatDate(date);
         console.log('Changed to', formattedDate);
       }
     },
-    onSubmit: values => {
+    onSubmit: (values) => {
       console.log('Submitting a form with values:', values);
     },
   },

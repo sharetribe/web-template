@@ -4,11 +4,11 @@ import { bool, object, string } from 'prop-types';
 import { intlShape } from '../../util/reactIntl';
 import * as validators from '../../util/validators';
 import getCountryCodes from '../../translations/countryCodes';
-import { FieldTextInput, FieldSelect } from '../../components';
+import { FieldTextInput, FieldSelect } from '..';
 
 import css from './StripePaymentAddress.module.css';
 
-const StripePaymentAddress = props => {
+function StripePaymentAddress(props) {
   const { className, intl, disabled, form, fieldId, card, locale } = props;
 
   const optionalText = intl.formatMessage({
@@ -24,12 +24,12 @@ const StripePaymentAddress = props => {
   const addressLine1Required = validators.required(
     intl.formatMessage({
       id: 'StripePaymentAddress.addressLine1Required',
-    })
+    }),
   );
 
   const addressLine2Label = intl.formatMessage(
     { id: 'StripePaymentAddress.addressLine2Label' },
-    { optionalText: optionalText }
+    { optionalText },
   );
 
   const addressLine2Placeholder = intl.formatMessage({
@@ -43,7 +43,7 @@ const StripePaymentAddress = props => {
   const postalCodeRequired = validators.required(
     intl.formatMessage({
       id: 'StripePaymentAddress.postalCodeRequired',
-    })
+    }),
   );
 
   const cityLabel = intl.formatMessage({ id: 'StripePaymentAddress.cityLabel' });
@@ -51,12 +51,12 @@ const StripePaymentAddress = props => {
   const cityRequired = validators.required(
     intl.formatMessage({
       id: 'StripePaymentAddress.cityRequired',
-    })
+    }),
   );
 
   const stateLabel = intl.formatMessage(
     { id: 'StripePaymentAddress.stateLabel' },
-    { optionalText: optionalText }
+    { optionalText },
   );
   const statePlaceholder = intl.formatMessage({ id: 'StripePaymentAddress.statePlaceholder' });
 
@@ -65,11 +65,11 @@ const StripePaymentAddress = props => {
   const countryRequired = validators.required(
     intl.formatMessage({
       id: 'StripePaymentAddress.countryRequired',
-    })
+    }),
   );
 
-  const handleOnChange = event => {
-    const value = event.target.value;
+  const handleOnChange = (event) => {
+    const { value } = event.target;
     form.change('postal', value);
     card.update({ value: { postalCode: value } });
   };
@@ -78,7 +78,7 @@ const StripePaymentAddress = props => {
   const countryCodes = getCountryCodes(locale);
 
   return (
-    <div className={className ? className : css.root}>
+    <div className={className || css.root}>
       <div className={css.formRow}>
         <FieldTextInput
           id={`${fieldId}.addressLine1`}
@@ -117,7 +117,7 @@ const StripePaymentAddress = props => {
           placeholder={postalCodePlaceholder}
           validate={postalCodeRequired}
           onUnmount={() => form.change('postal', undefined)}
-          onChange={event => handleOnChange(event)}
+          onChange={(event) => handleOnChange(event)}
         />
 
         <FieldTextInput
@@ -157,18 +157,16 @@ const StripePaymentAddress = props => {
           <option disabled value="">
             {countryPlaceholder}
           </option>
-          {countryCodes.map(country => {
-            return (
-              <option key={country.code} value={country.code}>
-                {country.name}
-              </option>
-            );
-          })}
+          {countryCodes.map((country) => (
+            <option key={country.code} value={country.code}>
+              {country.name}
+            </option>
+          ))}
         </FieldSelect>
       </div>
     </div>
   );
-};
+}
 StripePaymentAddress.defaultProps = {
   country: null,
   disabled: false,

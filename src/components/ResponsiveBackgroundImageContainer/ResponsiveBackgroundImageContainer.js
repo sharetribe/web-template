@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { propTypes } from '../../util/types';
 
-import { ResponsiveImage } from '../../components';
+import { ResponsiveImage } from '..';
 
 import css from './ResponsiveBackgroundImageContainer.module.css';
 
@@ -19,23 +19,21 @@ const { UUID } = sdkTypes;
  * @param {string} url to the image.
  * @returns image entity (contains: id, type, attributes.variants)
  */
-const createFakeImageEntity = url => {
-  return {
-    id: new UUID('empty'),
-    type: 'image',
-    attributes: {
-      variants: {
-        scaled: {
-          name: 'scaled',
-          // width and height don't matter since we use the image with object-fit
-          width: 1200,
-          height: 800,
-          url,
-        },
+const createFakeImageEntity = (url) => ({
+  id: new UUID('empty'),
+  type: 'image',
+  attributes: {
+    variants: {
+      scaled: {
+        name: 'scaled',
+        // width and height don't matter since we use the image with object-fit
+        width: 1200,
+        height: 800,
+        url,
       },
     },
-  };
-};
+  },
+});
 
 /**
  * Container component that places ResponsiveImage component into the background
@@ -43,7 +41,7 @@ const createFakeImageEntity = url => {
  *
  * @param {object} props
  */
-const ResponsiveBackgroundImageContainer = props => {
+function ResponsiveBackgroundImageContainer(props) {
   const intl = useIntl();
   const {
     className,
@@ -64,7 +62,7 @@ const ResponsiveBackgroundImageContainer = props => {
   const variantNames = Object.keys(variants);
 
   const classes = classNames(rootClassName || css.root, className);
-  const overlayMaybe = useOverlay ? <div className={css.overlay}></div> : null;
+  const overlayMaybe = useOverlay ? <div className={css.overlay} /> : null;
   const childrenWrapperClassNameMaybe = childrenWrapperClassName
     ? { className: childrenWrapperClassName }
     : {};
@@ -89,7 +87,7 @@ const ResponsiveBackgroundImageContainer = props => {
       <div {...childrenWrapperClassNameMaybe}>{children}</div>
     </Tag>
   );
-};
+}
 
 ResponsiveBackgroundImageContainer.defaultProps = {
   className: null,

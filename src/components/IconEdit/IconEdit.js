@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import css from './IconEdit.module.css';
 
-const IconEdit = props => {
+function IconEdit(props) {
   const { rootClassName, className, pencilClassName } = props;
   const classes = classNames(rootClassName || css.root, className);
   return (
@@ -20,7 +20,7 @@ const IconEdit = props => {
       </g>
     </svg>
   );
-};
+}
 
 IconEdit.defaultProps = {
   rootClassName: null,

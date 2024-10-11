@@ -209,7 +209,10 @@ describe('InboxPage', () => {
             totalItems: 2,
             totalPages: 2,
           },
-          transactionRefs: [{ id: sale1.id, type: sale1.type }, { id: sale2.id, type: sale2.type }],
+          transactionRefs: [
+            { id: sale1.id, type: sale1.type },
+            { id: sale2.id, type: sale2.type },
+          ],
         },
         marketplaceData: {
           entities: {
@@ -284,7 +287,7 @@ describe('InboxPage', () => {
       },
     });
 
-    const inquiries = Object.keys(inquiryTransitions).map(trKey => {
+    const inquiries = Object.keys(inquiryTransitions).map((trKey) => {
       const lineItemsMaybe = trKey !== 'INQUIRE_WITHOUT_PAYMENT' ? lineItems : [];
       return {
         tr: inquiryTransitions[trKey],
@@ -315,7 +318,7 @@ describe('InboxPage', () => {
           intl={fakeIntl}
           stateData={stateDataOrder}
           isBooking={false}
-        />
+        />,
       );
       expect(tree.asFragment().firstChild).toMatchSnapshot();
       const quantityFound = screen.queryAllByText('InboxPage.quantity');
@@ -332,7 +335,7 @@ describe('InboxPage', () => {
       },
     });
 
-    const purchases = Object.keys(purchaseTransitions).map(trKey => {
+    const purchases = Object.keys(purchaseTransitions).map((trKey) => {
       const lineItemsMaybe = trKey !== 'INQUIRE' ? lineItems : [];
       return {
         tr: purchaseTransitions[trKey],
@@ -364,7 +367,7 @@ describe('InboxPage', () => {
           stateData={stateDataOrder}
           isBooking={false}
           stockType="multipleItems"
-        />
+        />,
       );
       expect(tree.asFragment().firstChild).toMatchSnapshot();
       const quantityFound = screen.queryAllByText('InboxPage.quantity');
@@ -399,7 +402,7 @@ describe('InboxPage', () => {
           stateData={stateDataOrder}
           isBooking={false}
           stockType="oneItem"
-        />
+        />,
       );
       expect(tree.asFragment().firstChild).toMatchSnapshot();
       expect(screen.queryByText('InboxPage.quantity')).not.toBeInTheDocument();
@@ -423,7 +426,7 @@ describe('InboxPage', () => {
       reversal: false,
     };
 
-    const bookings = Object.keys(bookingTransitions).map(trKey => {
+    const bookings = Object.keys(bookingTransitions).map((trKey) => {
       const lineItemsMaybe =
         trKey !== 'INQUIRE' ? [lineItemUnitTypeDay, lineItemProviderCommission] : [];
       return {
@@ -458,8 +461,8 @@ describe('InboxPage', () => {
           transactionRole={transactionRole}
           intl={fakeIntl}
           stateData={stateDataBooking}
-          isBooking={true}
-        />
+          isBooking
+        />,
       );
       expect(tree.asFragment().firstChild).toMatchSnapshot();
 
@@ -487,7 +490,7 @@ describe('InboxPage', () => {
       reversal: false,
     };
 
-    const bookings = Object.keys(bookingTransitions).map(trKey => {
+    const bookings = Object.keys(bookingTransitions).map((trKey) => {
       const lineItemsMaybe =
         trKey !== 'INQUIRE' ? [lineItemUnitTypeNight, lineItemProviderCommission] : [];
       return {
@@ -522,8 +525,8 @@ describe('InboxPage', () => {
           transactionRole={transactionRole}
           intl={fakeIntl}
           stateData={stateDataBooking}
-          isBooking={true}
-        />
+          isBooking
+        />,
       );
 
       const quantityFound = screen.queryAllByText('Jun 14 – 16');
@@ -550,7 +553,7 @@ describe('InboxPage', () => {
       reversal: false,
     };
 
-    const bookings = Object.keys(bookingTransitions).map(trKey => {
+    const bookings = Object.keys(bookingTransitions).map((trKey) => {
       const lineItemsMaybe =
         trKey !== 'INQUIRE' ? [lineItemUnitTypeHour, lineItemProviderCommission] : [];
       return {
@@ -585,8 +588,8 @@ describe('InboxPage', () => {
           transactionRole={transactionRole}
           intl={fakeIntl}
           stateData={stateDataBooking}
-          isBooking={true}
-        />
+          isBooking
+        />,
       );
       expect(tree.asFragment().firstChild).toMatchSnapshot();
 

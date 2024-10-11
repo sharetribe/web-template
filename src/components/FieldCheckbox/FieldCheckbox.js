@@ -5,7 +5,7 @@ import { Field } from 'react-final-form';
 
 import css from './FieldCheckbox.module.css';
 
-const IconCheckbox = props => {
+function IconCheckbox(props) {
   const { className, checkedClassName, boxClassName } = props;
   return (
     <svg className={className} width="14" height="14" xmlns="http://www.w3.org/2000/svg">
@@ -28,13 +28,13 @@ const IconCheckbox = props => {
       </g>
     </svg>
   );
-};
+}
 
 IconCheckbox.defaultProps = { className: null, checkedClassName: null, boxClassName: null };
 
 IconCheckbox.propTypes = { className: string, checkedClassName: string, boxClassName: string };
 
-const FieldCheckboxComponent = props => {
+function FieldCheckboxComponent(props) {
   const {
     rootClassName,
     className,
@@ -77,14 +77,14 @@ const FieldCheckboxComponent = props => {
   return (
     <span className={classes}>
       <Field type="checkbox" {...rest}>
-        {props => {
+        {(props) => {
           const { input, disabled } = props;
           return (
             <input
               id={id}
               className={css.input}
               {...input}
-              onChange={event => handleOnChange(input, event)}
+              onChange={(event) => handleOnChange(input, event)}
               disabled={disabled}
             />
           );
@@ -102,7 +102,7 @@ const FieldCheckboxComponent = props => {
       </label>
     </span>
   );
-};
+}
 
 FieldCheckboxComponent.defaultProps = {
   className: null,

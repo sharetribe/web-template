@@ -12,7 +12,7 @@ const BRAND_MASTERCARD = 'mastercard';
 const BRAND_UNIONPAY = 'unionpay';
 const BRAND_VISA = 'visa';
 
-const IconCard = props => {
+function IconCard(props) {
   const { className, rootClassName, brand } = props;
   const classes = classNames(rootClassName || css.root, className);
 
@@ -247,7 +247,7 @@ const IconCard = props => {
         </svg>
       );
   }
-};
+}
 
 IconCard.defaultProps = {
   className: null,

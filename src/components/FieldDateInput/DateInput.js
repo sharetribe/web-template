@@ -75,14 +75,12 @@ const defaultProps = {
   // day presentation and interaction related props
   renderCalendarDay: undefined, // If undefined, renders react-dates/lib/components/CalendarDay
   // day presentation and interaction related props
-  renderDayContents: day => {
-    return <span className="renderedDay">{day.format('D')}</span>;
-  },
+  renderDayContents: (day) => <span className="renderedDay">{day.format('D')}</span>,
   enableOutsideDays: false,
   isDayBlocked: () => false,
 
   // This gets default value at FieldDateInput
-  isOutsideRange: day => false,
+  isOutsideRange: (day) => false,
   isDayHighlighted: () => {},
 
   // Internationalization props
@@ -110,7 +108,7 @@ class DateInputComponent extends Component {
   }
 
   onFocusChange(values) {
-    const focused = values.focused;
+    const { focused } = values;
     // SingleDatePicker requires 'onFocusChange' function and 'focused' boolean
     // but Fields of React-Form deals with onFocus & onBlur instead
     this.setState({ focused });
@@ -123,7 +121,6 @@ class DateInputComponent extends Component {
   }
 
   render() {
-    /* eslint-disable no-unused-vars */
     const {
       className,
       initialDate,
@@ -140,7 +137,6 @@ class DateInputComponent extends Component {
       render,
       ...datePickerProps
     } = this.props;
-    /* eslint-enable no-unused-vars */
 
     const initialMoment = initialDate ? moment(initialDate) : null;
 

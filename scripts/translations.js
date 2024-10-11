@@ -29,7 +29,7 @@ class BreakToRunWithTarget {}
 /**
  * Resolves translation file path for a lang code: en, es, de, etc.
  */
-const filePath = lang => `${PATH}${lang}.json`;
+const filePath = (lang) => `${PATH}${lang}.json`;
 
 /**
  * Resolves name of a target language based on
@@ -37,7 +37,7 @@ const filePath = lang => `${PATH}${lang}.json`;
  *
  * If a lang name is not found, language code is returned.
  */
-const targetLangName = code => {
+const targetLangName = (code) => {
   const name = TARGET_LANG_NAMES[code];
 
   return name || code;
@@ -55,10 +55,10 @@ const targetLangChoices = () => {
   const filenames = fs.readdirSync(folder);
 
   const choices = filenames
-    .filter(name => name.endsWith('.json'))
-    .map(name => name.split('.')[0])
-    .filter(code => code !== SOURCE_LANG.code)
-    .map(code => {
+    .filter((name) => name.endsWith('.json'))
+    .map((name) => name.split('.')[0])
+    .filter((code) => code !== SOURCE_LANG.code)
+    .map((code) => {
       return {
         name: targetLangName(code),
         value: code,
@@ -74,11 +74,11 @@ const targetLangChoices = () => {
  * Relies on an object keeping the order in which entries are added for string keys.
  * See: http://exploringjs.com/es6/ch_oop-besides-classes.html#_traversal-order-of-properties
  */
-const sort = obj => {
+const sort = (obj) => {
   const sorted = {};
   Object.keys(obj)
     .sort()
-    .forEach(key => (sorted[key] = obj[key]));
+    .forEach((key) => (sorted[key] = obj[key]));
 
   return sorted;
 };
@@ -89,7 +89,7 @@ const sort = obj => {
  *
  * @param filepath
  */
-const readFileToJSON = filepath => {
+const readFileToJSON = (filepath) => {
   const rawdata = fs.readFileSync(filepath);
   return JSON.parse(rawdata);
 };
@@ -102,10 +102,10 @@ const run = () => {
   const choices = targetLangChoices();
 
   selectLanguage(choices)
-    .then(answers => {
+    .then((answers) => {
       runWithTarget(answers.lang);
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(chalk.red(`An error occurred due to: ${err.message}`));
     });
 };
@@ -116,7 +116,7 @@ const run = () => {
  *
  * @param {String} targetLang Target language code
  */
-const runWithTarget = targetLang => {
+const runWithTarget = (targetLang) => {
   let key;
   let translation;
 
@@ -145,7 +145,7 @@ const runWithTarget = targetLang => {
  */
 const translateLanguage = (targetLang, source, target, diff) => {
   selectKey(targetLang, diff, source, target)
-    .then(answers => {
+    .then((answers) => {
       key = answers.key;
       if (key === null) {
         throw new BreakToRun();
@@ -154,11 +154,11 @@ const translateLanguage = (targetLang, source, target, diff) => {
         return addTranslation(targetLang, key, source);
       }
     })
-    .then(answers => {
+    .then((answers) => {
       translation = answers.value;
       return confirmTranslation(targetLang, key, translation);
     })
-    .then(answers => {
+    .then((answers) => {
       // y|Y|n|N
       const confirmation = answers.value;
 
@@ -177,7 +177,7 @@ const translateLanguage = (targetLang, source, target, diff) => {
     .then(() => {
       runWithTarget(targetLang);
     })
-    .catch(err => {
+    .catch((err) => {
       if (err instanceof BreakToRun) {
         // break out of Promise chain, start over
         run();
@@ -196,7 +196,7 @@ const translateLanguage = (targetLang, source, target, diff) => {
  *
  * @return a Promise
  */
-const selectLanguage = choices => {
+const selectLanguage = (choices) => {
   return inquirer.prompt([
     {
       type: 'list',
@@ -272,7 +272,7 @@ const confirmTranslation = (targetLang, key, translation) => {
       message: `Do you want to add the ${targetLangName(targetLang)} translation ${chalk.green(
         translation
       )} for the key ${chalk.blueBright(key)}? (y/n)`,
-      validate: value => /y/i.test(value) || /n/i.test(value),
+      validate: (value) => /y/i.test(value) || /n/i.test(value),
     },
   ]);
 };
@@ -287,7 +287,7 @@ const confirmTranslation = (targetLang, key, translation) => {
  */
 const updateTranslationsFile = (data, targetLang) => {
   return new Promise((resolve, reject) => {
-    fs.writeFile(filePath(targetLang), data, err => {
+    fs.writeFile(filePath(targetLang), data, (err) => {
       if (err) {
         reject(err);
       }

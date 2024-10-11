@@ -22,7 +22,7 @@ export const getErrorMessages = (
   isPaymentExpired,
   retrievePaymentIntentError,
   speculateTransactionError,
-  listingLink
+  listingLink,
 ) => {
   let listingNotFoundErrorMessage = null;
   let initiateOrderErrorMessage = null;

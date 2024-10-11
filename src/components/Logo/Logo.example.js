@@ -152,29 +152,31 @@ export const Scaled48h_responsive_desktop = {
   group: 'logo',
 };
 
-const LogoWrapper160w = props => (
-  <div
-    style={{
-      display: 'flex',
-      alignItems: 'center',
-      gap: '10px',
-      backgroundColor: 'tomato',
-      color: 'white',
-    }}
-  >
+function LogoWrapper160w(props) {
+  return (
     <div
       style={{
-        maxWidth: '160px',
-        overflow: 'hidden',
-        border: '1px dotted tomato',
-        backgroundColor: 'white',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '10px',
+        backgroundColor: 'tomato',
+        color: 'white',
       }}
     >
-      <LogoComponent {...props} />
+      <div
+        style={{
+          maxWidth: '160px',
+          overflow: 'hidden',
+          border: '1px dotted tomato',
+          backgroundColor: 'white',
+        }}
+      >
+        <LogoComponent {...props} />
+      </div>
+      Wrapper element has set a max-width for the logo.
     </div>
-    Wrapper element has set a max-width for the logo.
-  </div>
-);
+  );
+}
 
 export const Scaled24h_responsive_mobile160w = {
   component: LogoWrapper160w,

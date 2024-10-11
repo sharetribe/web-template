@@ -20,11 +20,8 @@ const targetPathKey = `st-${CLIENT_ID}-targetPath`;
  * Makes a base64 string URL friendly by
  * replacing unaccepted characters.
  */
-const urlifyBase64 = base64Str =>
-  base64Str
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=/g, '');
+const urlifyBase64 = (base64Str) =>
+  base64Str.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 
 // Initiates an authorization code authentication flow. This authentication flow
 // enables marketplace operators that have an ongoing Console session to log
@@ -49,10 +46,7 @@ module.exports = (req, res) => {
 
   const state = urlifyBase64(crypto.randomBytes(32).toString('base64'));
   const codeVerifier = urlifyBase64(crypto.randomBytes(32).toString('base64'));
-  const hash = crypto
-    .createHash('sha256')
-    .update(codeVerifier)
-    .digest('base64');
+  const hash = crypto.createHash('sha256').update(codeVerifier).digest('base64');
   const codeChallenge = urlifyBase64(hash);
   const authorizeServerUrl = `${CONSOLE_URL}/api/authorize-as`;
   const { target_path: targetPath } = req.query || {};

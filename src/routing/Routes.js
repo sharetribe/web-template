@@ -17,19 +17,19 @@ import NotFoundPage from '../containers/NotFoundPage/NotFoundPage';
 
 import LoadableComponentErrorBoundary from './LoadableComponentErrorBoundary/LoadableComponentErrorBoundary';
 
-const isBanned = currentUser => {
+const isBanned = (currentUser) => {
   const isBrowser = typeof window !== 'undefined';
   // Future todo: currentUser?.attributes?.state === 'banned'
   return isBrowser && currentUser?.attributes?.banned === true;
 };
 
-const canShowComponent = props => {
+const canShowComponent = (props) => {
   const { isAuthenticated, currentUser, route } = props;
   const { auth } = route;
   return !auth || (isAuthenticated && !isBanned(currentUser));
 };
 
-const callLoadData = props => {
+const callLoadData = (props) => {
   const { match, location, route, dispatch, logoutInProgress, config } = props;
   const { loadData, name } = route;
   const shouldLoadData =
@@ -43,7 +43,7 @@ const callLoadData = props => {
           console.log(`loadData success for ${name} route`);
         }
       })
-      .catch(e => {
+      .catch((e) => {
         log.error(e, 'load-data-failed', { routeName: name });
       });
   }
@@ -180,7 +180,7 @@ RouteComponentRenderer.propTypes = {
   dispatch: func.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { isAuthenticated, logoutInProgress } = state.auth;
   const { currentUser } = state.user;
   return { isAuthenticated, logoutInProgress, currentUser };
@@ -197,12 +197,12 @@ const RouteComponentContainer = compose(connect(mapStateToProps))(RouteComponent
  *   <Route render={pageB} />
  * </Switch>
  */
-const Routes = (props, context) => {
+function Routes(props, context) {
   const routeConfiguration = useRouteConfiguration();
   const config = useConfiguration();
   const { isAuthenticated, logoutInProgress, logLoadDataCalls } = props;
 
-  const toRouteComponent = route => {
+  const toRouteComponent = (route) => {
     const renderProps = {
       isAuthenticated,
       logoutInProgress,
@@ -220,7 +220,7 @@ const Routes = (props, context) => {
         key={route.name}
         path={route.path}
         exact={isExact}
-        render={matchProps => (
+        render={(matchProps) => (
           <RouteComponentContainer
             {...renderProps}
             match={matchProps.match}
@@ -238,6 +238,6 @@ const Routes = (props, context) => {
       <Route component={NotFoundPage} />
     </Switch>
   );
-};
+}
 
 export default withRouter(Routes);

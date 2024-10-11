@@ -4,12 +4,12 @@ import classNames from 'classnames';
 
 import css from './NotificationBadge.module.css';
 
-const NotificationBadge = props => {
+function NotificationBadge(props) {
   const { className, rootClassName, count } = props;
   const classes = classNames(rootClassName || css.root, className);
 
   return <span className={classes}>{count}</span>;
-};
+}
 
 const { number, string } = PropTypes;
 

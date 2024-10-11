@@ -1,0 +1,723 @@
+@import '../../styles/customMediaQueries.css';
+
+.surveyContainer {
+  display: flex;
+  align-items: stretch; /* Ensures child elements take the full height */
+  justify-content: center;
+  width: 100%;
+  height: 100%; /* Ensures the container takes the full height */
+}
+
+.emptyDiv {
+  flex: 1;
+}
+
+.emptyText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #ed514a;
+  padding: 50px;
+  margin-top: 80px;
+  mergin-bottom: 100px;
+  margin-left: 20px;
+  line-height: 1.2;
+}
+
+.surveyForm {
+  flex: 1;
+  display: flex;
+  align-items: center; /* Ensures the form content is centered vertically */
+  justify-content: center;
+}
+
+/* Ensure the surveyContainer is split properly on larger screens */
+@media (min-width: 1025px) {
+  .surveyContainer {
+    flex-direction: row;
+  }
+}
+
+/* Maintain the current layout on mobile */
+@media (max-width: 1024px) {
+  .surveyContainer {
+    flex-direction: column;
+  }
+}
+
+.option {
+  font-size: 12px;
+}
+.dropdown {
+  position: relative; /* This makes sure that the dropdownContent positions itself relative to this container */
+}
+.dropdownContent2 {
+  position: absolute;
+  white-space: nowrap;
+  overflow: hidden; /* Prevents overflow */
+  text-overflow: ellipsis;
+  display: flex; /* Add flex display to dropdown content */
+  flex-direction: column; /* Stack items vertically in a column */
+  align-items: flex-start; /* Align items to the start (left) ensuring checkboxes are aligned in a column */
+  z-index: 1000;
+  left: 310px; /* Align to the left edge of the dropdownWrapper */
+  top: 80px; /* Position below the button */
+  width: 45%;
+  background: white;
+  border: 1px solid #ccc; /* Optional: adds a border */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Optional: adds shadow for depth */
+  padding: 10px 0; /* Adds some padding inside the dropdown */
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.dropdownLabel2 {
+  display: grid; /* Changed from flex to grid */
+  grid-template-columns: min-content auto; /* Allocate space for checkbox and label */
+  gap: 10px; /* Space between checkbox and label */
+  align-items: center; /* Align items vertically */
+  padding: 5px 20px; /* Add padding for better touch */
+}
+/* Adjust the checkbox size and margin */
+.dropdownLabel {
+  display: grid; /* Changed from flex to grid */
+  grid-template-columns: min-content auto; /* Allocate space for checkbox and label */
+  gap: 10px; /* Space between checkbox and label */
+  align-items: center; /* Align items vertically */
+  padding: 5px 20px; /* Add padding for better touch */
+}
+
+/* Ensure checkboxes are styled correctly and aligned with the text */
+.dropdownLabel input[type='checkbox'] {
+  width: 25px; /* Set a fixed width */
+  height: 25px; /* Set a fixed height */
+  background: white; /* Background color */
+  border-radius: 5px; /* Rounded borders */
+  border: 2px solid gray; /* Border color and width */
+  justify-self: start;
+  margin-right: 0;
+}
+
+/* Ensure content is in a column and aligned properly */
+.dropdownContent {
+  position: absolute;
+  display: flex; /* Add flex display to dropdown content */
+  flex-direction: column; /* Stack items vertically in a column */
+  align-items: flex-start; /* Align items to the start (left) ensuring checkboxes are aligned in a column */
+  z-index: 1000;
+  left: 50px; /* Align to the left edge of the dropdownWrapper */
+  top: 80px; /* Position below the button */
+  width: 20%;
+  background: white;
+  border: 1px solid #ccc; /* Optional: adds a border */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Optional: adds shadow for depth */
+  padding: 10px 0; /* Adds some padding inside the dropdown */
+}
+
+.landingBarContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  height: 500px;
+  background-color: #fff;
+  background-size: cover;
+  padding-left: 40px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.introText {
+  font-weight: bold;
+  height: auto;
+  margin-bottom: 20px;
+  font-size: 30px;
+  color: #333;
+}
+
+.dateWrapper {
+  border-radius: 20px;
+  height: 40px;
+}
+
+.introText2 {
+  font-weight: lighter;
+  height: auto;
+  margin-bottom: 20px;
+  font-size: 30px;
+  color: #333;
+}
+
+.introText,
+.introText2 {
+  margin-left: 150px;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  width: auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.time .DateRangePicker {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.time .DateInput {
+  margin-right: 8px;
+}
+
+input,
+select,
+.DateRangePicker {
+  height: 46px;
+  margin-bottom: 2px;
+}
+
+.button {
+  width: 100%;
+  padding: 12px 0;
+  background-color: #012fa7;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.button:hover {
+  background-color: #012fa7;
+}
+
+.searchIcon {
+  stroke: var(--colorWhite);
+  fill: #fff;
+  background-color: #012fa7;
+}
+
+.closeButton {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin-top: 15px;
+  padding: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: gray;
+  transition: color 0.3s;
+  font-size: small;
+}
+
+.fieldSearch {
+  /* other styles ... */
+  overflow: hidden; /* Ensure the overflow is hidden */
+  white-space: nowrap; /* Keep the text on a single line */
+  text-overflow: ellipsis; /* Add ellipsis when the text overflows */
+}
+.closeButton:hover {
+  color: #012fa7;
+}
+
+.subContainer {
+  display: flex;
+  flex-direction: column;
+  background-color: red;
+}
+
+@media (min-width: 1025px) {
+  .dropdownContent {
+    position: absolute;
+    display: flex; /* Add flex display to dropdown content */
+    flex-direction: column; /* Stack items vertically in a column */
+    align-items: flex-start; /* Align items to the start (left) ensuring checkboxes are aligned in a column */
+    z-index: 1000;
+    left: 17px; /* Align to the left edge of the dropdownWrapper */
+    top: 80px; /* Position below the button */
+    width: 35%;
+    background: white;
+    border: 1px solid #ccc; /* Optional: adds a border */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Optional: adds shadow for depth */
+    padding: 20px 0; /* Adds some padding inside the dropdown */
+  }
+
+  .introText,
+  .introText2 {
+    margin-left: 150px;
+  }
+
+  .introText {
+    font-size: 32px;
+  }
+  .introText2 {
+    font-size: 16px;
+    font-weight: 0;
+  }
+
+  .closeButton {
+    margin-top: 10px;
+    font-size: small;
+  }
+  .form {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    max-width: 800px;
+    margin-top: 5px;
+    gap: unset;
+    background-color: transparent;
+    box-shadow: unset;
+    & > * {
+      border-radius: unset;
+      box-shadow: unset;
+    }
+  }
+  .button {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    font-size: 16px;
+    transform: translateY(-50%);
+    padding: 10px 20px;
+    background-color: #012fa7;
+    color: white;
+    border: none;
+    border-radius: 40px !important;
+    height: 60px;
+    max-width: 70px;
+    width: 100px;
+    padding: 18px;
+    cursor: pointer;
+  }
+
+  .fieldSearch {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 10px;
+    flex: 1 0 33.33%;
+    height: 60px;
+    font-size: 16px;
+    background-color: #fff;
+    width: 180px;
+    font-weight: lighter;
+    font-family: var(--fontFamily);
+    color: #b0b0b5 !important;
+    border: 1px solid #ccc;
+
+    &:first-child {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      min-width: auto;
+      border-top-left-radius: 30px;
+      border-bottom-left-radius: 30px;
+      appearance: none;
+      border: 1px solid #ccc;
+    }
+    &:nth-child(2) {
+      min-width: auto;
+      border: none;
+      border: 1px solid #ccc;
+      border-right: 2px solid #ccc;
+    }
+    &:nth-child(3) {
+      border: 1px solid #ccc;
+      min-width: auto;
+      border-left: 0;
+      border-right: none;
+    }
+  }
+  .landingBarContainer .fieldSearch {
+    width: 400px; /* Sets the width of input fields when part of the landing bar container */
+  }
+
+  .barContainer {
+    margin-left: 130px;
+    z-index: 2;
+  }
+
+  .container {
+    width: 40vw;
+    z-index: 2;
+  }
+
+  .dropdownContent {
+    top: 80px;
+    width: 200px;
+    left: 50px;
+  }
+
+  .dropdownContent2 {
+  }
+}
+
+@media (min-width: 1800px) {
+  .form {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    max-width: 800px;
+    gap: unset;
+    background-color: transparent;
+    box-shadow: unset;
+    & > * {
+      border-radius: unset;
+      box-shadow: unset;
+    }
+  }
+  .dropdownContent {
+    width: 25%;
+  }
+
+  .introText,
+  .introText2 {
+    margin-left: 180px;
+  }
+  .introText {
+    font-size: 32px;
+  }
+  .introText2 {
+    font-size: 16px;
+  }
+  .barContainer {
+    margin-left: 160px;
+  }
+
+  .button {
+    display: flex;
+    font-size: 16px;
+    align-content: center;
+    justify-content: center;
+    position: absolute;
+    right: -35px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 18px 20px;
+    background-color: #012fa7;
+    color: white;
+    border: none;
+    border-radius: 40px !important;
+    height: 65px;
+    max-width: 100px;
+    width: 100px;
+
+    cursor: pointer;
+  }
+
+  .fieldSearch {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 10px;
+    flex: 1 0 33.33%;
+    height: 60px;
+    font-size: 16px;
+    width: 500px;
+    font-weight: lighter;
+    font-family: var(--fontFamily);
+    color: #b0b0b5 !important;
+    background-color: transparent;
+    border: 1px solid #ccc;
+
+    &:first-child {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      min-width: auto;
+      border-top-left-radius: 30px;
+      border-bottom-left-radius: 30px;
+      appearance: none;
+      border: 1px solid #ccc;
+    }
+    &:nth-child(2) {
+      min-width: auto;
+      border: none;
+      border: 1px solid #ccc;
+      border-right: 2px solid #ccc;
+    }
+    &:nth-child(3) {
+      border: 1px solid #ccc;
+      min-width: auto;
+      border-left: 0;
+    }
+  }
+
+  .dropdownContent {
+    top: 80px;
+    width: 200px;
+    left: 50px;
+  }
+
+  .dropdownContent2 {
+    top: 80px;
+    width: 200px;
+    left: 550px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .landingBarContainer {
+    margin-top: 60px;
+    align-items: center;
+    margin-bottom: 60px;
+    text-align: center;
+    height: auto;
+    padding: 0px;
+    padding-left: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+  }
+
+  .landingBarContainer {
+    margin-top: 60px;
+    margin-bottom: 60px;
+    text-align: center;
+    height: auto;
+  }
+
+  .introText {
+    font-weight: bold;
+    height: auto;
+    margin-top: 250px;
+    font-size: 32px;
+    color: #333;
+  }
+  .introText2 {
+    font-size: 18px;
+  }
+
+  .dateWrapper {
+    border-radius: 20px; /* Adjust as needed */
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .form {
+    background: none;
+    box-shadow: none;
+    margin: 0px;
+  }
+
+  .time .DateRangePicker {
+    border-radius: 20px;
+  }
+
+  .joy,
+  .time,
+  .location,
+  .button,
+  .dateWrapper,
+  .fieldSearch {
+    width: 768px;
+    height: 60px;
+    margin-top: 20px;
+    border-radius: 20px;
+  }
+
+  .joy:first-child {
+    margin-top: 0;
+  }
+
+  .fieldSearch {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 10px;
+    border-radius: 20px;
+    background: #fff;
+    color: #b0b0b5 !important;
+    border: 1px solid #ccc;
+    width: 768px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-weight: 300;
+    font-size: 16px;
+  }
+
+  .button {
+    padding: 10px 0;
+    height: 60px;
+    font-size: 19px;
+  }
+
+  .introText,
+  .introText2 {
+    margin-left: 0px;
+  }
+
+  .dropdownOption {
+    background-color: blue; /* Example property */
+    color: white; /* Example property */
+  }
+
+  .dropdownContent {
+    top: 275px;
+    width: 635px;
+    left: 120px;
+  }
+
+  .dropdownContent2 {
+    top: 600px;
+    width: 635px;
+    left: 120px;
+  }
+}
+
+@media (max-width: 767px) {
+  .landingBarContainer {
+    margin-top: 0px;
+    align-items: center;
+    margin-bottom: 5px;
+    text-align: center;
+    height: auto;
+    padding: 0px;
+    padding-left: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+  }
+
+  .introText {
+    font-weight: bold;
+    height: auto;
+    margin-top: 180px;
+    font-size: 18px;
+    color: #333;
+  }
+  .introText2 {
+    font-size: 12px;
+  }
+
+  .dateWrapper {
+    border-radius: 20px;
+  }
+
+  .form {
+    background: none;
+    box-shadow: none;
+    padding: 10px;
+    width: 90vw;
+    box-sizing: border-box;
+    margin-left: 0px;
+  }
+
+  .introText,
+  .introText2 {
+    margin-left: 0px;
+  }
+
+  .breakpointText {
+    display: inline;
+  }
+  .time .DateRangePicker {
+    border-radius: 20px;
+  }
+
+  .joy,
+  .time,
+  .location,
+  .button,
+  .dateWrapper,
+  .fieldSearch {
+    width: 100%;
+    height: 60px;
+    margin-top: 10px;
+    border-radius: 20px;
+  }
+  .joy:first-child {
+    margin-top: 0;
+  }
+  .fieldSearch {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    box-sizing: border-box;
+    height: 60px;
+    margin-top: 5px;
+    padding-left: 10px;
+    border-radius: 20px;
+    background: #fff;
+    color: #b0b0b5 !important;
+    border: 1px solid #ccc;
+    font-weight: 300;
+    font-size: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .button {
+    padding: 10px 0;
+    height: 60px;
+    font-size: 16px;
+    box-shadow: 0 5px 5px rgba(255, 255, 255, 0.5);
+  }
+
+  .dropdownContent {
+    top: 165px;
+    width: 300px;
+    left: 45px;
+    position: absolute;
+  }
+
+  .dropdownContent2 {
+    top: 450px;
+    width: 300px;
+    left: 45px;
+    position: absolute;
+  }
+}
+
+.isTeamBuildingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translate(-50%, 0); /* No vertical movement at the start and end */
+  }
+  50% {
+    transform: translate(-50%, -10px); /* Moves the tooltip up by 10px */
+  }
+}
+
+.tooltip {
+  position: absolute;
+  top: 100px; /* Adjust to make it appear near the top of the container */
+  left: 50%;
+  transform: translateX(-50%); /* Center the tooltip horizontally */
+  background-color: #fff4cc;
+  padding: 10px;
+  border: 1px solid #f1c40f;
+  border-radius: 4px;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 999;
+  white-space: nowrap;
+  opacity: 1;
+  animation: bounce 1.5s infinite ease-in-out;
+}
+
+.surveyForm {
+  position: relative; /* Ensures the tooltip is positioned correctly relative to this container */
+}
+
+.isTeamBuildingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative; /* This ensures the tooltip is positioned relative to this container */
+}

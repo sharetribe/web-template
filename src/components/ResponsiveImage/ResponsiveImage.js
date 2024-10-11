@@ -42,17 +42,9 @@ import { propTypes } from '../../util/types';
 import NoImageIcon from './NoImageIcon';
 import css from './ResponsiveImage.module.css';
 
-const ResponsiveImage = props => {
-  const {
-    className,
-    rootClassName,
-    alt,
-    noImageMessage,
-    image,
-    variants,
-    dimensions,
-    ...rest
-  } = props;
+function ResponsiveImage(props) {
+  const { className, rootClassName, alt, noImageMessage, image, variants, dimensions, ...rest } =
+    props;
   const classes = classNames(rootClassName || css.root, className);
 
   if (image == null || variants.length === 0) {
@@ -72,7 +64,7 @@ const ResponsiveImage = props => {
   const imageVariants = image.attributes.variants;
 
   const srcSet = variants
-    .map(variantName => {
+    .map((variantName) => {
       const variant = imageVariants[variantName];
 
       if (!variant) {
@@ -81,7 +73,7 @@ const ResponsiveImage = props => {
       }
       return `${variant.url} ${variant.width}w`;
     })
-    .filter(v => v != null)
+    .filter((v) => v != null)
     .join(', ');
 
   const imgProps = {
@@ -91,7 +83,7 @@ const ResponsiveImage = props => {
   };
 
   return <img alt={alt} {...imgProps} />;
-};
+}
 
 ResponsiveImage.defaultProps = {
   className: null,

@@ -39,7 +39,7 @@ export const stateDataShape = shape({
 
 // Transitions are following process.edn format: "transition/my-transtion-name"
 // This extracts the 'my-transtion-name' string if namespace exists
-const getTransitionKey = transitionName => {
+const getTransitionKey = (transitionName) => {
   const [nameSpace, transitionKey] = transitionName.split('/');
   return transitionKey || transitionName;
 };
@@ -104,7 +104,7 @@ export const getStateData = (params, process) => {
         onAction: () => onTransition(transaction?.id, transitionName, {}),
         ...extra,
       },
-      forRole
+      forRole,
     );
 
   const getLeaveReviewProps = getActionButtonPropsMaybe({
@@ -135,11 +135,12 @@ export const getStateData = (params, process) => {
 
   if (processName === PURCHASE_PROCESS_NAME) {
     return getStateDataForPurchaseProcess(params, processInfo());
-  } else if (processName === BOOKING_PROCESS_NAME) {
-    return getStateDataForBookingProcess(params, processInfo());
-  } else if (processName === INQUIRY_PROCESS_NAME) {
-    return getStateDataForInquiryProcess(params, processInfo());
-  } else {
-    return {};
   }
+  if (processName === BOOKING_PROCESS_NAME) {
+    return getStateDataForBookingProcess(params, processInfo());
+  }
+  if (processName === INQUIRY_PROCESS_NAME) {
+    return getStateDataForInquiryProcess(params, processInfo());
+  }
+  return {};
 };

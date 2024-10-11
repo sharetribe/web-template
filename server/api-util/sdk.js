@@ -22,8 +22,8 @@ const typeHandlers = [
   {
     type: sharetribeSdk.types.BigDecimal,
     customType: Decimal,
-    writer: v => new sharetribeSdk.types.BigDecimal(v.toString()),
-    reader: v => new Decimal(v.value),
+    writer: (v) => new sharetribeSdk.types.BigDecimal(v.toString()),
+    reader: (v) => new Decimal(v.value),
   },
 ];
 exports.typeHandlers = typeHandlers;
@@ -43,14 +43,14 @@ const maxSockets = MAX_SOCKETS ? parseInt(MAX_SOCKETS, 10) : MAX_SOCKETS_DEFAULT
 const httpAgent = new http.Agent({ keepAlive: true, maxSockets });
 const httpsAgent = new https.Agent({ keepAlive: true, maxSockets });
 
-const memoryStore = token => {
+const memoryStore = (token) => {
   const store = sharetribeSdk.tokenStore.memoryStore();
   store.setToken(token);
   return store;
 };
 
 // Read the user token from the request cookie
-const getUserToken = req => {
+const getUserToken = (req) => {
   const cookieTokenStore = sharetribeSdk.tokenStore.expressCookieStore({
     clientId: CLIENT_ID,
     req,
@@ -59,11 +59,11 @@ const getUserToken = req => {
   return cookieTokenStore.getToken();
 };
 
-exports.serialize = data => {
+exports.serialize = (data) => {
   return sharetribeSdk.transit.write(data, { typeHandlers, verbose: TRANSIT_VERBOSE });
 };
 
-exports.deserialize = str => {
+exports.deserialize = (str) => {
   return sharetribeSdk.transit.read(str, { typeHandlers });
 };
 
@@ -85,10 +85,7 @@ exports.handleError = (res, error) => {
       })
       .end();
   } else {
-    res
-      .status(500)
-      .json({ error: error.message })
-      .end();
+    res.status(500).json({ error: error.message }).end();
   }
 };
 
@@ -113,7 +110,7 @@ exports.getSdk = (req, res) => {
 };
 
 // Trusted token is powerful, it should not be passed away from the server.
-exports.getTrustedSdk = req => {
+exports.getTrustedSdk = (req) => {
   const userToken = getUserToken(req);
 
   // Initiate an SDK instance for token exchange
@@ -129,7 +126,7 @@ exports.getTrustedSdk = req => {
   });
 
   // Perform a token exchange
-  return sdk.exchangeToken().then(response => {
+  return sdk.exchangeToken().then((response) => {
     // Setup a trusted sdk with the token we got from the exchange:
     const trustedToken = response.data;
 
@@ -152,10 +149,10 @@ exports.getTrustedSdk = req => {
 };
 
 // Fetch commission asset with 'latest' alias.
-exports.fetchCommission = sdk => {
+exports.fetchCommission = (sdk) => {
   return sdk
     .assetsByAlias({ paths: ['transactions/commission.json'], alias: 'latest' })
-    .then(response => {
+    .then((response) => {
       // Let's throw an error if we can't fetch commission for some reason
       const commissionAsset = response?.data?.data?.[0];
       if (!commissionAsset) {
@@ -172,28 +169,30 @@ exports.fetchCommission = sdk => {
 
 // Fetch branding asset with 'latest' alias.
 // This is needed for generating webmanifest on server-side.
-exports.fetchBranding = sdk => {
-  return sdk.assetsByAlias({ paths: ['design/branding.json'], alias: 'latest' }).then(response => {
-    // Let's throw an error if we can't fetch branding for some reason
-    const brandingAsset = response?.data?.data?.[0];
-    if (!brandingAsset) {
-      const message = 'Branding configuration was not available.';
-      const error = new Error(message);
-      error.status = 400;
-      error.statusText = message;
-      error.data = {};
-      throw error;
-    }
-    return response;
-  });
+exports.fetchBranding = (sdk) => {
+  return sdk
+    .assetsByAlias({ paths: ['design/branding.json'], alias: 'latest' })
+    .then((response) => {
+      // Let's throw an error if we can't fetch branding for some reason
+      const brandingAsset = response?.data?.data?.[0];
+      if (!brandingAsset) {
+        const message = 'Branding configuration was not available.';
+        const error = new Error(message);
+        error.status = 400;
+        error.statusText = message;
+        error.data = {};
+        throw error;
+      }
+      return response;
+    });
 };
 
 // Fetch branding asset with 'latest' alias.
 // This is needed for generating webmanifest on server-side.
-exports.fetchAccessControlAsset = sdk => {
+exports.fetchAccessControlAsset = (sdk) => {
   return sdk
     .assetsByAlias({ paths: ['/general/access-control.json'], alias: 'latest' })
-    .then(response => {
+    .then((response) => {
       // Let's throw an error if we can't fetch branding for some reason
       const accessControlAsset = response?.data?.data?.[0];
       if (!accessControlAsset) {

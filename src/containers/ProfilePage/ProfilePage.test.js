@@ -87,7 +87,7 @@ const getInitialState = () => {
       createdAt: new Date(Date.UTC(2024, 2, 19, 11, 34)),
       content: 'Awesome!',
     },
-    { author: createUser('reviewerA') }
+    { author: createUser('reviewerA') },
   );
   return {
     ProfilePage: {
@@ -176,7 +176,7 @@ describe('ProfilePage', () => {
     });
 
     expect(
-      getByRole('heading', { name: 'ProfilePage.reviewsFromMyCustomersTitle' })
+      getByRole('heading', { name: 'ProfilePage.reviewsFromMyCustomersTitle' }),
     ).toBeInTheDocument();
 
     expect(screen.getByText('Awesome!')).toBeInTheDocument();
@@ -193,10 +193,10 @@ describe('Duck', () => {
   };
 
   // Shared parameters for viewing rights loadData tests
-  const fakeResponse = resource => ({ data: { data: resource, include: [] } });
-  const sdkFn = response => jest.fn(() => Promise.resolve(response));
+  const fakeResponse = (resource) => ({ data: { data: resource, include: [] } });
+  const sdkFn = (response) => jest.fn(() => Promise.resolve(response));
   const forbiddenError = new Error({ status: 403, message: 'forbidden' });
-  const errorSdkFn = error => jest.fn(() => Promise.reject(error));
+  const errorSdkFn = (error) => jest.fn(() => Promise.reject(error));
 
   it("loadData() for full viewing rights user loads someone else's profile", () => {
     const initialState = getInitialState();
@@ -228,7 +228,7 @@ describe('Duck', () => {
     // Tests the actions that get dispatched to the Redux store when ProfilePage.duck.js
     // loadData() function is called. If you make customizations to the loadData() logic,
     // update the dispatched actions list in this test accordingly!
-    return loadData({ id: userId }, null, config)(dispatch, getState, sdk).then(data => {
+    return loadData({ id: userId }, null, config)(dispatch, getState, sdk).then((data) => {
       expect(dispatchedActions(dispatch)).toEqual([
         setInitialState(),
         currentUserShowRequest(),
@@ -275,7 +275,7 @@ describe('Duck', () => {
     // Tests the actions that get dispatched to the Redux store when ProfilePage.duck.js
     // loadData() function is called. If you make customizations to the loadData() logic,
     // update the dispatched actions list in this test accordingly!
-    return loadData({ id: 'otherUserId' }, null, config)(dispatch, getState, sdk).then(data => {
+    return loadData({ id: 'otherUserId' }, null, config)(dispatch, getState, sdk).then((data) => {
       expect(dispatchedActions(dispatch)).toEqual([
         setInitialState(),
         currentUserShowRequest(),
@@ -320,7 +320,7 @@ describe('Duck', () => {
     // Tests the actions that get dispatched to the Redux store when ProfilePage.duck.js
     // loadData() function is called. If you make customizations to the loadData() logic,
     // update the dispatched actions list in this test accordingly!
-    return loadData({ id: userId }, null, config)(dispatch, getState, sdk).then(data => {
+    return loadData({ id: userId }, null, config)(dispatch, getState, sdk).then((data) => {
       expect(dispatchedActions(dispatch)).toEqual([
         setInitialState(),
         currentUserShowRequest(),

@@ -64,23 +64,18 @@ export const graph = {
 // Check if a transition is the kind that should be rendered
 // when showing transition history (e.g. ActivityFeed)
 // The first transition and most of the expiration transitions made by system are not relevant
-export const isRelevantPastTransition = transition => {
-  return [transitions.INQUIRE_WITHOUT_PAYMENT].includes(transition);
-};
+export const isRelevantPastTransition = (transition) =>
+  [transitions.INQUIRE_WITHOUT_PAYMENT].includes(transition);
 
 // Processes might be different on how reviews are handled.
 // Default processes use two-sided diamond shape, where either party can make the review first
 // NOTE: this functions is added just for the sake of consistency
-export const isCustomerReview = transition => {
-  return false;
-};
+export const isCustomerReview = (transition) => false;
 
 // Processes might be different on how reviews are handled.
 // Default processes use two-sided diamond shape, where either party can make the review first
 // NOTE: this functions is added just for the sake of consistency
-export const isProviderReview = transition => {
-  return false;
-};
+export const isProviderReview = (transition) => false;
 
 // Check if the given transition is privileged.
 //
@@ -89,22 +84,16 @@ export const isProviderReview = transition => {
 // should go through the local API endpoints, or if using JS SDK is
 // enough.
 // NOTE: this functions is added just for the sake of consistency
-export const isPrivileged = transition => {
-  return false;
-};
+export const isPrivileged = (transition) => false;
 
 // Check when transaction is completed (booking over)
 // NOTE: this functions is added just for the sake of consistency
-export const isCompleted = transition => {
-  return false;
-};
+export const isCompleted = (transition) => false;
 
 // Check when transaction is refunded (booking did not happen)
 // In these transitions action/stripe-refund-payment is called
 // NOTE: this functions is added just for the sake of consistency
-export const isRefunded = transition => {
-  return false;
-};
+export const isRefunded = (transition) => false;
 
 // NOTE: this functions is added just for the sake of consistency
 // We don't know if inquiry is on-going or complete

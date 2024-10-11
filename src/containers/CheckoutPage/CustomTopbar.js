@@ -8,7 +8,7 @@ import { LinkedLogo } from '../../components';
 
 import css from './CheckoutPage.module.css';
 
-const CustomTopbar = props => {
+function CustomTopbar(props) {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -16,7 +16,7 @@ const CustomTopbar = props => {
     const mediaQueryList = window.matchMedia('(max-width: 767px)');
     setIsMobile(mediaQueryList.matches);
 
-    //watch for updates
+    // watch for updates
     function updateIsMobile(e) {
       setIsMobile(e.matches);
     }
@@ -40,7 +40,7 @@ const CustomTopbar = props => {
       />
     </div>
   );
-};
+}
 
 CustomTopbar.defaultProps = {
   className: null,

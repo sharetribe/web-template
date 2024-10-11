@@ -13,12 +13,12 @@ import { H3, ListingLink } from '../../../../components';
 import EditListingPhotosForm from './EditListingPhotosForm';
 import css from './EditListingPhotosPanel.module.css';
 
-const getInitialValues = params => {
+const getInitialValues = (params) => {
   const { images } = params;
   return { images };
 };
 
-const EditListingPhotosPanel = props => {
+function EditListingPhotosPanel(props) {
   const {
     className,
     rootClassName,
@@ -61,7 +61,7 @@ const EditListingPhotosPanel = props => {
         fetchErrors={errors}
         initialValues={getInitialValues(props)}
         onImageUpload={onImageUpload}
-        onSubmit={values => {
+        onSubmit={(values) => {
           const { addImage, ...updateValues } = values;
           onSubmit(updateValues);
         }}
@@ -73,7 +73,7 @@ const EditListingPhotosPanel = props => {
       />
     </div>
   );
-};
+}
 
 EditListingPhotosPanel.defaultProps = {
   className: null,

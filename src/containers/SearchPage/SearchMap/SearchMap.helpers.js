@@ -6,23 +6,21 @@ import reduce from 'lodash/reduce';
  * @param {Node} target - element whose parent might contain given class.
  * @param {String} className - class name string to be found
  */
-export const hasParentWithClassName = (target, className) => {
-  return [...document.querySelectorAll(`.${className}`)].some(
-    el => el !== target && el.contains(target)
+export const hasParentWithClassName = (target, className) =>
+  [...document.querySelectorAll(`.${className}`)].some(
+    (el) => el !== target && el.contains(target),
   );
-};
 
 /**
  * Listings array grouped by geolocation
  * @param {Array} mapListings - listings to be grouped on map
  * @return {Object} - Object where coordinate pair is the key to different listings
  */
-export const groupedByCoordinates = mapListings => {
-  return groupBy(mapListings, l => {
+export const groupedByCoordinates = (mapListings) =>
+  groupBy(mapListings, (l) => {
     const g = l.attributes.geolocation;
     return `${g.lat}-${g.lng}`;
   });
-};
 
 /**
  * Listings (in location based object literal) is mapped to array
@@ -30,6 +28,5 @@ export const groupedByCoordinates = mapListings => {
  * @return {Array} - An array where items are arrays of listings
  *   (They are arrays containing all the listings in that location)
  */
-export const reducedToArray = mapListings => {
-  return reduce(mapListings, (acc, listing) => acc.concat([listing]), []);
-};
+export const reducedToArray = (mapListings) =>
+  reduce(mapListings, (acc, listing) => acc.concat([listing]), []);

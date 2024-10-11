@@ -27,7 +27,7 @@ import css from './ContactDetailsForm.module.css';
 
 const SHOW_EMAIL_SENT_TIMEOUT = 2000;
 
-const PhoneNumberMaybe = props => {
+function PhoneNumberMaybe(props) {
   const { formId, userTypeConfig, intl } = props;
 
   const isDisabled = userTypeConfig?.defaultUserFields?.phoneNumber === false;
@@ -43,7 +43,7 @@ const PhoneNumberMaybe = props => {
         validate: validators.required(
           intl.formatMessage({
             id: 'ContactDetailsForm.phoneRequired',
-          })
+          }),
         ),
       }
     : {};
@@ -60,7 +60,7 @@ const PhoneNumberMaybe = props => {
       {...validateMaybe}
     />
   );
-};
+}
 
 class ContactDetailsFormComponent extends Component {
   constructor(props) {
@@ -89,7 +89,7 @@ class ContactDetailsFormComponent extends Component {
 
   handleResetPassword() {
     this.setState({ showResetPasswordMessage: true });
-    const email = this.props.currentUser.attributes.email;
+    const { email } = this.props.currentUser.attributes;
     this.props.onResetPassword(email);
   }
 
@@ -97,7 +97,7 @@ class ContactDetailsFormComponent extends Component {
     return (
       <FinalForm
         {...this.props}
-        render={fieldRenderProps => {
+        render={(fieldRenderProps) => {
           const {
             rootClassName,
             className,
@@ -146,7 +146,7 @@ class ContactDetailsFormComponent extends Component {
           const emailValid = validators.emailFormatValid(emailInvalidMessage);
 
           const tooManyVerificationRequests = isTooManyEmailVerificationRequestsError(
-            sendVerificationEmailError
+            sendVerificationEmailError,
           );
 
           const emailTouched = this.submittedValues.email !== values.email;
@@ -254,12 +254,12 @@ class ContactDetailsFormComponent extends Component {
             },
             {
               minLength: validators.PASSWORD_MIN_LENGTH,
-            }
+            },
           );
 
           const passwordMinLength = validators.minLength(
             passwordMinLengthMessage,
-            validators.PASSWORD_MIN_LENGTH
+            validators.PASSWORD_MIN_LENGTH,
           );
 
           const passwordValidators = emailChanged
@@ -342,7 +342,7 @@ class ContactDetailsFormComponent extends Component {
           return (
             <Form
               className={classes}
-              onSubmit={e => {
+              onSubmit={(e) => {
                 this.submittedValues = values;
                 handleSubmit(e);
               }}

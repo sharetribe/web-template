@@ -20,7 +20,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import { MenuContent, MenuLabel } from '../../components';
+import { MenuContent, MenuLabel } from '..';
 import css from './Menu.module.css';
 
 const KEY_CODE_ESCAPE = 27;
@@ -29,9 +29,8 @@ const CONTENT_TO_LEFT = 'left';
 const CONTENT_TO_RIGHT = 'right';
 const MAX_MOBILE_SCREEN_WIDTH = 767;
 
-const isControlledMenu = (isOpenProp, onToggleActiveProp) => {
-  return isOpenProp !== null && onToggleActiveProp !== null;
-};
+const isControlledMenu = (isOpenProp, onToggleActiveProp) =>
+  isOpenProp !== null && onToggleActiveProp !== null;
 
 class Menu extends Component {
   constructor(props) {
@@ -45,7 +44,7 @@ class Menu extends Component {
       throw new Error(
         `Menu has invalid props:
           Both isOpen and onToggleActive need to be defined (controlled menu),
-          or neither of them (menu uses its own state management).`
+          or neither of them (menu uses its own state management).`,
       );
     }
 
@@ -59,6 +58,7 @@ class Menu extends Component {
     this.menu = null;
     this.menuContent = null;
   }
+
   componentDidMount() {
     // Menu needs to know about DOM before it can calculate it's size proberly.
     this.setState({ ready: true });
@@ -93,7 +93,7 @@ class Menu extends Component {
       onToggleActive(isMenuOpen);
     } else {
       // If state is handled inside of Menu component, set state
-      this.setState(prevState => {
+      this.setState((prevState) => {
         const isMenuOpen = enforcedState != null ? enforcedState : !prevState.isOpen;
         return { isOpen: isMenuOpen };
       });
@@ -110,7 +110,7 @@ class Menu extends Component {
       const menuWidth = this.menu.offsetWidth;
       const contentWidthBiggerThanLabel = this.menuContent.offsetWidth - menuWidth;
       const usePositionLeftFromLabel = contentPosition === CONTENT_TO_LEFT;
-      const contentPlacementOffset = this.props.contentPlacementOffset;
+      const { contentPlacementOffset } = this.props;
 
       if (windowWidth <= MAX_MOBILE_SCREEN_WIDTH) {
         // Take full screen width on mobile
@@ -137,7 +137,7 @@ class Menu extends Component {
   positionStyleForArrow(isPositionedRight) {
     if (this.menu) {
       const menuWidth = this.menu.offsetWidth;
-      const contentPlacementOffset = this.props.contentPlacementOffset;
+      const { contentPlacementOffset } = this.props;
       return isPositionedRight
         ? Math.floor(menuWidth / 2) - contentPlacementOffset
         : Math.floor(menuWidth / 2);
@@ -150,7 +150,7 @@ class Menu extends Component {
       throw new Error('Menu needs to have two children: MenuLabel and MenuContent.');
     }
 
-    return React.Children.map(this.props.children, child => {
+    return React.Children.map(this.props.children, (child) => {
       const { isOpen: isOpenProp, onToggleActive } = this.props;
       const isOpen = isControlledMenu(isOpenProp, onToggleActive) ? isOpenProp : this.state.isOpen;
 
@@ -161,7 +161,8 @@ class Menu extends Component {
           isOpen,
           onToggleActive: this.toggleOpen,
         });
-      } else if (child.type === MenuContent) {
+      }
+      if (child.type === MenuContent) {
         // MenuContent needs some styling data (width, arrowPosition, and isOpen info)
         // We pass those directly so that component user doesn't need to worry about those.
         const { contentPosition, useArrow } = this.props;
@@ -171,15 +172,14 @@ class Menu extends Component {
           : null;
         return React.cloneElement(child, {
           arrowPosition,
-          contentRef: node => {
+          contentRef: (node) => {
             this.menuContent = node;
           },
           isOpen,
           style: { ...child.props.style, ...positionStyles },
         });
-      } else {
-        throw new Error('Menu has an unknown child. Only MenuLabel and MenuContent are allowed.');
       }
+      throw new Error('Menu has an unknown child. Only MenuLabel and MenuContent are allowed.');
     });
   }
 
@@ -195,7 +195,7 @@ class Menu extends Component {
         className={classes}
         onBlur={this.onBlur}
         onKeyDown={this.onKeyDown}
-        ref={c => {
+        ref={(c) => {
           this.menu = c;
         }}
       >

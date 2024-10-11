@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import css from './StyleguidePage.module.css';
 
-const Font = props => {
+function Font(props) {
   const { component: TextComponent, description } = props;
   return (
     <div className={css.fontCard}>
@@ -15,7 +15,7 @@ const Font = props => {
       </div>
     </div>
   );
-};
+}
 
 const { func, string } = PropTypes;
 
@@ -24,7 +24,7 @@ Font.propTypes = {
   description: string.isRequired,
 };
 
-const Fonts = () => {
+function Fonts() {
   const fontsContainerClasses = classNames(css.fontsContainer, css.baselines);
 
   return (
@@ -118,7 +118,7 @@ changed with 'as' prop.
       </div>
     </div>
   );
-};
+}
 
 export const Typography = {
   component: Fonts,

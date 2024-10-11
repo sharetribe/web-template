@@ -3,7 +3,7 @@ import { NamedLink, AvatarLarge, AvatarMedium } from '../../components';
 
 import css from './ListingPage.module.css';
 
-const SectionAvatar = props => {
+function SectionAvatar(props) {
   const { user, params } = props;
   return (
     <div className={css.sectionAvatar}>
@@ -15,6 +15,6 @@ const SectionAvatar = props => {
       </NamedLink>
     </div>
   );
-};
+}
 
 export default SectionAvatar;

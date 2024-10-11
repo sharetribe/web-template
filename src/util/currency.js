@@ -3,7 +3,7 @@ import trimEnd from 'lodash/trimEnd';
 import Decimal from 'decimal.js';
 
 import appSettings from '../config/settings';
-import { types as sdkTypes } from '../util/sdkLoader';
+import { types as sdkTypes } from './sdkLoader';
 
 const { subUnitDivisors, getCurrencyFormatting } = appSettings;
 const { Money } = sdkTypes;
@@ -14,7 +14,7 @@ const { Money } = sdkTypes;
 export const MIN_SAFE_INTEGER = Number.MIN_SAFE_INTEGER || -1 * (2 ** 53 - 1);
 export const MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER || 2 ** 53 - 1;
 
-export const isSafeNumber = decimalValue => {
+export const isSafeNumber = (decimalValue) => {
   if (!(decimalValue instanceof Decimal)) {
     throw new Error('Value must be a Decimal');
   }
@@ -22,16 +22,16 @@ export const isSafeNumber = decimalValue => {
 };
 
 // Get the minor unit divisor for the given currency
-export const unitDivisor = currency => {
+export const unitDivisor = (currency) => {
   if (!has(subUnitDivisors, currency)) {
     throw new Error(
-      `No minor unit divisor defined for currency: ${currency} in currencySettings.js`
+      `No minor unit divisor defined for currency: ${currency} in currencySettings.js`,
     );
   }
   return subUnitDivisors[currency];
 };
 
-////////// Currency manipulation in string format //////////
+/// /////// Currency manipulation in string format //////////
 
 /**
  * Ensures that the given string uses only dots or commas
@@ -56,9 +56,7 @@ export const ensureSeparator = (str, useComma = false) => {
  *
  * @return {String} converted string
  */
-export const ensureDotSeparator = str => {
-  return ensureSeparator(str, false);
-};
+export const ensureDotSeparator = (str) => ensureSeparator(str, false);
 
 /**
  * Convert string to Decimal object (from Decimal.js math library)
@@ -68,7 +66,7 @@ export const ensureDotSeparator = str => {
  *
  * @return {Decimal} numeral value
  */
-export const convertToDecimal = str => {
+export const convertToDecimal = (str) => {
   const dotFormattedStr = ensureDotSeparator(str);
   return new Decimal(dotFormattedStr);
 };
@@ -89,7 +87,7 @@ export const convertDecimalToString = (decimalValue, useComma = false) => {
 };
 
 // Divisor can be positive value given as Decimal, Number, or String
-const convertDivisorToDecimal = divisor => {
+const convertDivisorToDecimal = (divisor) => {
   try {
     const divisorAsDecimal = new Decimal(divisor);
     if (divisorAsDecimal.isNegative()) {
@@ -133,7 +131,7 @@ export const truncateToSubUnitPrecision = (inputString, subUnitDivisor, useComma
 
   if (!isSafeNumber(amount)) {
     throw new Error(
-      `Cannot represent money minor unit value ${amount.toString()} safely as a number`
+      `Cannot represent money minor unit value ${amount.toString()} safely as a number`,
     );
   }
 
@@ -145,14 +143,13 @@ export const truncateToSubUnitPrecision = (inputString, subUnitDivisor, useComma
     const decimalPrecisionMax2 =
       decimalCount2.length >= inputString.length ? inputString : value.toFixed(2);
     return ensureSeparator(decimalPrecisionMax2, useComma);
-  } else {
-    // truncate strings ('9.999' => '9.99')
-    const truncated = amount.truncated().dividedBy(subUnitDivisorAsDecimal);
-    return convertDecimalToString(truncated, useComma);
   }
+  // truncate strings ('9.999' => '9.99')
+  const truncated = amount.truncated().dividedBy(subUnitDivisorAsDecimal);
+  return convertDecimalToString(truncated, useComma);
 };
 
-////////// Currency - Money helpers //////////
+/// /////// Currency - Money helpers //////////
 
 /**
  * Converts given value to sub unit value and returns it as a number
@@ -179,7 +176,7 @@ export const convertUnitToSubUnit = (value, subUnitDivisor, useComma = false) =>
 
   if (!isSafeNumber(amount)) {
     throw new Error(
-      `Cannot represent money minor unit value ${amount.toString()} safely as a number`
+      `Cannot represent money minor unit value ${amount.toString()} safely as a number`,
     );
   } else if (amount.isInteger()) {
     return amount.toNumber();
@@ -188,16 +185,13 @@ export const convertUnitToSubUnit = (value, subUnitDivisor, useComma = false) =>
   }
 };
 
-const isNumber = value => {
-  return typeof value === 'number' && !isNaN(value);
-};
+const isNumber = (value) => typeof value === 'number' && !isNaN(value);
 
 /* eslint-disable no-underscore-dangle */
 // Detect if the given value is a goog.math.Long object
 // See: https://google.github.io/closure-library/api/goog.math.Long.html
-const isGoogleMathLong = value => {
-  return typeof value === 'object' && isNumber(value.low_) && isNumber(value.high_);
-};
+const isGoogleMathLong = (value) =>
+  typeof value === 'object' && isNumber(value.low_) && isNumber(value.high_);
 /* eslint-enable no-underscore-dangle */
 
 /**
@@ -207,7 +201,7 @@ const isGoogleMathLong = value => {
  *
  * @return {Number} converted value
  */
-export const convertMoneyToNumber = value => {
+export const convertMoneyToNumber = (value) => {
   if (!(value instanceof Money)) {
     throw new Error('Value must be a Money type');
   }
@@ -219,7 +213,6 @@ export const convertMoneyToNumber = value => {
     // the Transit tooling in the Sharetribe JS SDK. This should be
     // removed when the value.amount will be a proper Decimal type.
 
-    // eslint-disable-next-line no-console
     console.warn('goog.math.Long value in money amount:', value.amount, value.amount.toString());
 
     amount = new Decimal(value.amount.toString());
@@ -229,7 +222,7 @@ export const convertMoneyToNumber = value => {
 
   if (!isSafeNumber(amount)) {
     throw new Error(
-      `Cannot represent money minor unit value ${amount.toString()} safely as a number`
+      `Cannot represent money minor unit value ${amount.toString()} safely as a number`,
     );
   }
 

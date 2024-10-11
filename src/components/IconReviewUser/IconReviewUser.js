@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import css from './IconReviewUser.module.css';
 
-const IconReviewUser = props => {
+function IconReviewUser(props) {
   const { className, rootClassName } = props;
   const classes = classNames(rootClassName || css.root, className);
 
@@ -30,7 +30,7 @@ const IconReviewUser = props => {
       </g>
     </svg>
   );
-};
+}
 
 IconReviewUser.defaultProps = { className: null, rootClassName: null };
 

@@ -18,8 +18,8 @@ import {
   LayoutSingleColumn,
 } from '../../components';
 
-import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
-import FooterContainer from '../../containers/FooterContainer/FooterContainer';
+import TopbarContainer from '../TopbarContainer/TopbarContainer';
+import FooterContainer from '../FooterContainer/FooterContainer';
 
 import PasswordRecoveryForm from './PasswordRecoveryForm/PasswordRecoveryForm';
 
@@ -30,7 +30,7 @@ import {
 } from './PasswordRecoveryPage.duck';
 import css from './PasswordRecoveryPage.module.css';
 
-const PasswordRecovery = props => {
+function PasswordRecovery(props) {
   const { initialEmail, onChange, onSubmitEmail, recoveryInProgress, recoveryError } = props;
   return (
     <div className={css.submitEmailContent}>
@@ -44,15 +44,15 @@ const PasswordRecovery = props => {
       <PasswordRecoveryForm
         inProgress={recoveryInProgress}
         onChange={onChange}
-        onSubmit={values => onSubmitEmail(values.email)}
+        onSubmit={(values) => onSubmitEmail(values.email)}
         initialValues={{ email: initialEmail }}
         recoveryError={recoveryError}
       />
     </div>
   );
-};
+}
 
-const GenericError = () => {
+function GenericError() {
   return (
     <div className={css.genericErrorContent}>
       <IconKeys className={css.modalIcon} />
@@ -64,9 +64,9 @@ const GenericError = () => {
       </p>
     </div>
   );
-};
+}
 
-const EmailSubmittedContent = props => {
+function EmailSubmittedContent(props) {
   const {
     passwordRequested,
     initialEmail,
@@ -121,9 +121,9 @@ const EmailSubmittedContent = props => {
       </div>
     </div>
   );
-};
+}
 
-export const PasswordRecoveryPageComponent = props => {
+export function PasswordRecoveryPageComponent(props) {
   const config = useConfiguration();
   const {
     scrollingDisabled,
@@ -188,7 +188,7 @@ export const PasswordRecoveryPageComponent = props => {
       </LayoutSingleColumn>
     </Page>
   );
-};
+}
 
 PasswordRecoveryPageComponent.defaultProps = {
   sendVerificationEmailError: null,
@@ -214,14 +214,9 @@ PasswordRecoveryPageComponent.propTypes = {
   intl: intlShape.isRequired,
 };
 
-const mapStateToProps = state => {
-  const {
-    initialEmail,
-    submittedEmail,
-    recoveryError,
-    recoveryInProgress,
-    passwordRequested,
-  } = state.PasswordRecoveryPage;
+const mapStateToProps = (state) => {
+  const { initialEmail, submittedEmail, recoveryError, recoveryInProgress, passwordRequested } =
+    state.PasswordRecoveryPage;
   return {
     scrollingDisabled: isScrollingDisabled(state),
     initialEmail,
@@ -232,18 +227,15 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   onChange: () => dispatch(clearPasswordRecoveryError()),
-  onSubmitEmail: email => dispatch(recoverPassword(email)),
+  onSubmitEmail: (email) => dispatch(recoverPassword(email)),
   onRetypeEmail: () => dispatch(retypePasswordRecoveryEmail()),
 });
 
 const PasswordRecoveryPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  ),
-  injectIntl
+  connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
 )(PasswordRecoveryPageComponent);
 
 export default PasswordRecoveryPage;

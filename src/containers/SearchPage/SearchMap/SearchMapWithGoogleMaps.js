@@ -65,7 +65,7 @@ export const fitMapToBounds = (map, bounds, options) => {
  *
  * @return {SDKLatLng} - Converted latLng coordinate
  */
-export const googleLatLngToSDKLatLng = googleLatLng => {
+export const googleLatLngToSDKLatLng = (googleLatLng) => {
   if (!googleLatLng) {
     return null;
   }
@@ -79,7 +79,7 @@ export const googleLatLngToSDKLatLng = googleLatLng => {
  *
  * @return {SDKLatLngBounds} - Converted bounds
  */
-export const googleBoundsToSDKBounds = googleBounds => {
+export const googleBoundsToSDKBounds = (googleBounds) => {
   if (!googleBounds) {
     return null;
   }
@@ -88,8 +88,8 @@ export const googleBoundsToSDKBounds = googleBounds => {
   return new SDKLatLngBounds(new SDKLatLng(ne.lat(), ne.lng()), new SDKLatLng(sw.lat(), sw.lng()));
 };
 
-export const getMapBounds = map => googleBoundsToSDKBounds(map.getBounds());
-export const getMapCenter = map => googleLatLngToSDKLatLng(map.getCenter());
+export const getMapBounds = (map) => googleBoundsToSDKBounds(map.getBounds());
+export const getMapCenter = (map) => googleLatLngToSDKLatLng(map.getCenter());
 
 /**
  * Check if map library is loaded
@@ -120,8 +120,8 @@ class CustomOverlayView extends Component {
 
   onRemove() {
     this.containerElement.parentNode.removeChild(this.containerElement);
-    //Remove `unmountComponentAtNode` for react version 16
-    //I decided to keep the code here incase React decides not to give out warning when `unmountComponentAtNode` in newer version
+    // Remove `unmountComponentAtNode` for react version 16
+    // I decided to keep the code here incase React decides not to give out warning when `unmountComponentAtNode` in newer version
     if (!React.version.match(/^16/)) {
       ReactDOM.unmountComponentAtNode(this.containerElement);
     }
@@ -136,7 +136,7 @@ class CustomOverlayView extends Component {
     invariant(
       !!mapPaneName,
       `OverlayView requires either props.mapPaneName or props.defaultMapPaneName but got %s`,
-      mapPaneName
+      mapPaneName,
     );
 
     const mapPanes = this.state.overlayView.getPanes();
@@ -179,9 +179,7 @@ class CustomOverlayView extends Component {
  * Center label so that caret is pointing to correct pixel.
  * (vertical positioning: height + arrow)
  */
-const getPixelPositionOffset = (width, height) => {
-  return { x: -1 * (width / 2), y: -1 * (height + 3) };
-};
+const getPixelPositionOffset = (width, height) => ({ x: -1 * (width / 2), y: -1 * (height + 3) });
 
 /**
  * GoogleMaps need to use Google specific OverlayView components and therefore we need to
@@ -280,7 +278,7 @@ class SearchMapGroupLabelWithOverlay extends Component {
 /**
  * Render price labels or group "markers" based on listings array.
  */
-const PriceLabelsAndGroups = props => {
+const PriceLabelsAndGroups = (props) => {
   const {
     map,
     listings,
@@ -291,16 +289,16 @@ const PriceLabelsAndGroups = props => {
     config,
   } = props;
   const listingArraysInLocations = reducedToArray(groupedByCoordinates(listings));
-  const priceLabels = listingArraysInLocations.reverse().map(listingArr => {
+  const priceLabels = listingArraysInLocations.reverse().map((listingArr) => {
     const isActive = activeListingId
-      ? !!listingArr.find(l => activeListingId.uuid === l.id.uuid)
+      ? !!listingArr.find((l) => activeListingId.uuid === l.id.uuid)
       : false;
     const classes = classNames(css.labelContainer, LABEL_HANDLE, { [css.activeLabel]: isActive });
 
     // If location contains only one listing, print price label
     if (listingArr.length === 1) {
       const listing = listingArr[0];
-      const infoCardOpenIds = Array.isArray(infoCardOpen) ? infoCardOpen.map(l => l.id.uuid) : [];
+      const infoCardOpenIds = Array.isArray(infoCardOpen) ? infoCardOpen.map((l) => l.id.uuid) : [];
 
       // if the listing is open, don't print price label
       if (infoCardOpen != null && infoCardOpenIds.includes(listing.id.uuid)) {
@@ -329,7 +327,7 @@ const PriceLabelsAndGroups = props => {
 
     // Explicit type change to object literal for Google OverlayViews (geolocation is SDK type)
     const firstListing = ensureListing(listingArr[0]);
-    const geolocation = firstListing.attributes.geolocation;
+    const { geolocation } = firstListing.attributes;
     const latLngLiteral = { lat: geolocation.lat, lng: geolocation.lng };
 
     return (
@@ -352,7 +350,7 @@ const PriceLabelsAndGroups = props => {
 /**
  * Render info-card overlay if the card is open.
  */
-const InfoCardComponent = props => {
+function InfoCardComponent(props) {
   const {
     map,
     infoCardOpen,
@@ -368,7 +366,7 @@ const InfoCardComponent = props => {
   }
   // Explicit type change to object literal for Google OverlayViews (geolocation is SDK type)
   const firstListing = ensureListing(listingsArray[0]);
-  const geolocation = firstListing.attributes.geolocation;
+  const { geolocation } = firstListing.attributes;
   const latLngLiteral = { lat: geolocation.lat, lng: geolocation.lng };
 
   return (
@@ -390,7 +388,7 @@ const InfoCardComponent = props => {
       />
     </CustomOverlayView>
   );
-};
+}
 
 /**
  * Render GoogleMaps and add price labels, group "markers" and infocard using OverlayView.
@@ -456,7 +454,7 @@ class SearchMapWithGoogleMaps extends Component {
 
     if (hasDimensions) {
       const { bounds, center, zoom } = this.props;
-      const maps = window.google.maps;
+      const { maps } = window.google;
       const controlPosition = maps.ControlPosition.LEFT_TOP;
       const zoomOutToShowEarth = { zoom: 1, center: { lat: 0, lng: 0 } };
       const zoomAndCenter = !bounds && !center ? zoomOutToShowEarth : { zoom, center };
@@ -498,7 +496,7 @@ class SearchMapWithGoogleMaps extends Component {
       const isHiddenByReusableMap =
         this.props.reusableMapHiddenHandle &&
         this.state.mapContainer.parentElement.classList.contains(
-          this.props.reusableMapHiddenHandle
+          this.props.reusableMapHiddenHandle,
         );
       if (!isHiddenByReusableMap) {
         const viewportMapBounds = getMapBounds(this.map);

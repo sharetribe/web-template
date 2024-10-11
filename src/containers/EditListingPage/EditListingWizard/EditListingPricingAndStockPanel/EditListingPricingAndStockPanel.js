@@ -19,10 +19,10 @@ const BILLIARD = 1000000000000000;
 
 const getListingTypeConfig = (publicData, listingTypes) => {
   const selectedListingType = publicData.listingType;
-  return listingTypes.find(conf => conf.listingType === selectedListingType);
+  return listingTypes.find((conf) => conf.listingType === selectedListingType);
 };
 
-const getInitialValues = props => {
+const getInitialValues = (props) => {
   const { listing, listingTypes } = props;
   const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
   const price = listing?.attributes?.price;
@@ -40,16 +40,16 @@ const getInitialValues = props => {
     currentStockQuantity != null
       ? currentStockQuantity
       : isPublished
-      ? 0
-      : hasInfiniteStock
-      ? BILLIARD
-      : 1;
+        ? 0
+        : hasInfiniteStock
+          ? BILLIARD
+          : 1;
   const stockTypeInfinity = [];
 
   return { price, stock, stockTypeInfinity };
 };
 
-const EditListingPricingAndStockPanel = props => {
+function EditListingPricingAndStockPanel(props) {
   // State is needed since re-rendering would overwrite the values during XHR call.
   const [state, setState] = useState({ initialValues: getInitialValues(props) });
 
@@ -70,11 +70,11 @@ const EditListingPricingAndStockPanel = props => {
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
-  const initialValues = state.initialValues;
+  const { initialValues } = state;
 
   // Form needs to know data from listingType
   const publicData = listing?.attributes?.publicData;
-  const unitType = publicData.unitType;
+  const { unitType } = publicData;
   const listingTypeConfig = getListingTypeConfig(publicData, listingTypes);
 
   const hasInfiniteStock = STOCK_INFINITE_ITEMS.includes(listingTypeConfig?.stockType);
@@ -104,7 +104,7 @@ const EditListingPricingAndStockPanel = props => {
         <EditListingPricingAndStockForm
           className={css.form}
           initialValues={initialValues}
-          onSubmit={values => {
+          onSubmit={(values) => {
             const { price, stock, stockTypeInfinity } = values;
 
             // Update stock only if the value has changed, or stock is infinity in stockType,
@@ -126,13 +126,13 @@ const EditListingPricingAndStockPanel = props => {
                     },
                   }
                 : hasNoCurrentStock || hasStockQuantityChanged
-                ? {
-                    stockUpdate: {
-                      oldTotal,
-                      newTotal: stock,
-                    },
-                  }
-                : {};
+                  ? {
+                      stockUpdate: {
+                        oldTotal,
+                        newTotal: stock,
+                      },
+                    }
+                  : {};
 
             // New values for listing attributes
             const updateValues = {
@@ -171,7 +171,7 @@ const EditListingPricingAndStockPanel = props => {
       )}
     </div>
   );
-};
+}
 
 const { func, object, string, bool } = PropTypes;
 
@@ -192,7 +192,7 @@ EditListingPricingAndStockPanel.propTypes = {
   listingTypes: arrayOf(
     shape({
       stockType: oneOf(STOCK_TYPES),
-    })
+    }),
   ).isRequired,
 
   disabled: bool.isRequired,

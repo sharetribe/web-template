@@ -9,15 +9,15 @@ import { isScrollingDisabled } from '../../ducks/ui.duck';
 
 import { Page, UserNav, H3, LayoutSideNavigation } from '../../components';
 
-import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
-import FooterContainer from '../../containers/FooterContainer/FooterContainer';
+import TopbarContainer from '../TopbarContainer/TopbarContainer';
+import FooterContainer from '../FooterContainer/FooterContainer';
 
 import PasswordChangeForm from './PasswordChangeForm/PasswordChangeForm';
 
 import { changePassword, changePasswordClear, resetPassword } from './PasswordChangePage.duck';
 import css from './PasswordChangePage.module.css';
 
-export const PasswordChangePageComponent = props => {
+export function PasswordChangePageComponent(props) {
   const {
     changePasswordError,
     changePasswordInProgress,
@@ -76,7 +76,7 @@ export const PasswordChangePageComponent = props => {
       </LayoutSideNavigation>
     </Page>
   );
-};
+}
 
 PasswordChangePageComponent.defaultProps = {
   changePasswordError: null,
@@ -102,7 +102,7 @@ PasswordChangePageComponent.propTypes = {
   intl: intlShape.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   // Topbar needs user info.
   const {
     changePasswordError,
@@ -123,18 +123,15 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   onChange: () => dispatch(changePasswordClear()),
-  onSubmitChangePassword: values => dispatch(changePassword(values)),
-  onResetPassword: values => dispatch(resetPassword(values)),
+  onSubmitChangePassword: (values) => dispatch(changePassword(values)),
+  onResetPassword: (values) => dispatch(resetPassword(values)),
 });
 
 const PasswordChangePage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  ),
-  injectIntl
+  connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
 )(PasswordChangePageComponent);
 
 export default PasswordChangePage;

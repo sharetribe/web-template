@@ -17,8 +17,8 @@ import css from './UserCard.module.css';
 const BIO_COLLAPSED_LENGTH = 170;
 const MIN_LENGTH_FOR_LONG_WORDS = 20;
 
-const truncated = s => {
-  return truncate(s, {
+const truncated = (s) =>
+  truncate(s, {
     length: BIO_COLLAPSED_LENGTH,
 
     // Allow truncated text end only in specific characters. This will
@@ -30,9 +30,8 @@ const truncated = s => {
     separator: /\s|,|\.|:|;/,
     omission: '…',
   });
-};
 
-const ExpandableBio = props => {
+function ExpandableBio(props) {
   const [expand, setExpand] = useState(false);
   const { className, bio } = props;
   const bioWithLinks = richText(bio, {
@@ -61,7 +60,7 @@ const ExpandableBio = props => {
       {bio.length >= BIO_COLLAPSED_LENGTH && !expand ? showMore : null}
     </p>
   );
-};
+}
 
 ExpandableBio.defaultProps = { className: null };
 
@@ -70,7 +69,7 @@ ExpandableBio.propTypes = {
   bio: string.isRequired,
 };
 
-const UserCard = props => {
+function UserCard(props) {
   const { rootClassName, className, user, currentUser, onContactUser, showContact } = props;
 
   const userIsCurrentUser = user && user.type === 'currentUser';
@@ -145,7 +144,7 @@ const UserCard = props => {
       {hasBio ? <ExpandableBio className={css.mobileBio} bio={bio} /> : null}
     </div>
   );
-};
+}
 
 UserCard.defaultProps = {
   rootClassName: null,

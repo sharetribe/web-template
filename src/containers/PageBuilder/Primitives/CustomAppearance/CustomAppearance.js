@@ -18,7 +18,7 @@ export const CustomAppearance = React.forwardRef((props, ref) => {
     sizes,
   } = props;
 
-  const getVariantNames = img => {
+  const getVariantNames = (img) => {
     const { variants } = img?.attributes || {};
     return variants ? Object.keys(variants) : [];
   };
@@ -76,7 +76,7 @@ CustomAppearance.propTypes = {
           width: number.isRequired,
           height: number.isRequired,
           url: string.isRequired,
-        })
+        }),
       ).isRequired,
     }).isRequired,
   }),

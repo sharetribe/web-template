@@ -7,16 +7,16 @@ import { useEffect, useState } from 'react';
 //
 // This piece of code is taken from Daishi Kato's blog:
 // https://blog.axlight.com/posts/steps-to-develop-global-state-for-react/
-export const createGlobalState = initialState => {
+export const createGlobalState = (initialState) => {
   let globalState = initialState;
-  const listeners = Object.fromEntries(Object.keys(initialState).map(key => [key, new Set()]));
+  const listeners = Object.fromEntries(Object.keys(initialState).map((key) => [key, new Set()]));
 
   const setGlobalState = (key, nextValue) => {
     globalState = { ...globalState, [key]: nextValue };
-    listeners[key].forEach(listener => listener());
+    listeners[key].forEach((listener) => listener());
   };
 
-  const useGlobalState = key => {
+  const useGlobalState = (key) => {
     const [state, setState] = useState(globalState[key]);
     useEffect(() => {
       const listener = () => {
@@ -26,7 +26,7 @@ export const createGlobalState = initialState => {
       listener(); // in case it's already changed
       return () => listeners[key].delete(listener); // cleanup
     }, []);
-    return [state, nextValue => setGlobalState(key, nextValue)];
+    return [state, (nextValue) => setGlobalState(key, nextValue)];
   };
 
   return {

@@ -18,16 +18,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { TabNav } from '../../components';
+import { TabNav } from '..';
 
 import css from './Tabs.module.css';
 
-const Tabs = props => {
+function Tabs(props) {
   const { children, className, rootClassName, navRootClassName, tabRootClassName } = props;
   const rootClasses = rootClassName || css.root;
   const classes = classNames(rootClasses, className);
 
-  const tabNavTabs = React.Children.map(children, child => {
+  const tabNavTabs = React.Children.map(children, (child) => {
     const { tabId, tabLabel, tabLinkProps } = child.props;
 
     // Child components need to have TabNav props included
@@ -36,7 +36,7 @@ const Tabs = props => {
         `Tabs component: a child component is missing required props.
         tabId: (${tabId})
         tabLabel: (${tabLabel})
-        tabLinkProps: (${tabLinkProps})`
+        tabLinkProps: (${tabLinkProps})`,
       );
     }
 
@@ -50,7 +50,7 @@ const Tabs = props => {
   });
 
   const childArray = React.Children.toArray(children);
-  const selectedTabPanel = childArray.find(c => c.props.selected);
+  const selectedTabPanel = childArray.find((c) => c.props.selected);
 
   // One of the children needs to be selected
   if (!selectedTabPanel) {
@@ -67,7 +67,7 @@ const Tabs = props => {
       {selectedTabPanel}
     </div>
   );
-};
+}
 
 const { node, string } = PropTypes;
 

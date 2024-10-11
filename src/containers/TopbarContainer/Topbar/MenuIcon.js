@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import css from './Topbar.module.css';
 
-const MenuIcon = props => {
+function MenuIcon(props) {
   const { className, rootClassName } = props;
   const classes = classNames(rootClassName || css.rootMenuIcon, className);
 
@@ -23,7 +23,7 @@ const MenuIcon = props => {
       </g>
     </svg>
   );
-};
+}
 
 const { string } = PropTypes;
 

@@ -6,8 +6,8 @@ import PanelHeading from './PanelHeading';
 
 const PROCESS_NAME = 'default-purchase';
 
-const ProcessHeadings = () => {
-  const states = getProcess(PROCESS_NAME).states;
+function ProcessHeadings() {
+  const { states } = getProcess(PROCESS_NAME);
   const processStates = Object.values(states);
   const [formData, setFormData] = useState({
     state: processStates[0],
@@ -15,8 +15,8 @@ const ProcessHeadings = () => {
     listingDeleted: false,
     isCustomerBanned: false,
   });
-  const handleChange = e => {
-    const name = e.target.name;
+  const handleChange = (e) => {
+    const { name } = e.target;
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
     console.log('handleChange:', name, value);
     setFormData({
@@ -30,7 +30,7 @@ const ProcessHeadings = () => {
       <form>
         <p>state: </p>
         <select name="state" value={formData.state} onChange={handleChange}>
-          {processStates.map(s => (
+          {processStates.map((s) => (
             <option key={s} value={s}>
               {s}
             </option>
@@ -76,7 +76,7 @@ const ProcessHeadings = () => {
       />
     </div>
   );
-};
+}
 
 export const ProductProcessHeadings = {
   component: ProcessHeadings,

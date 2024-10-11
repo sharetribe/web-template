@@ -20,7 +20,7 @@ describe('LoginForm', () => {
     // Type the values to the sign up form
     userEvent.type(
       screen.getByRole('textbox', { name: 'LoginForm.emailLabel' }),
-      'joe@example.com'
+      'joe@example.com',
     );
     userEvent.type(screen.getByLabelText('LoginForm.passwordLabel'), 'secret-password');
 

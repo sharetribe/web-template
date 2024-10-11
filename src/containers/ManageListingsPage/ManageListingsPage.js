@@ -22,15 +22,15 @@ import {
   NamedLink,
 } from '../../components';
 
-import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
-import FooterContainer from '../../containers/FooterContainer/FooterContainer';
+import TopbarContainer from '../TopbarContainer/TopbarContainer';
+import FooterContainer from '../FooterContainer/FooterContainer';
 
 import ManageListingCard from './ManageListingCard/ManageListingCard';
 
 import { closeListing, openListing, getOwnListingsById } from './ManageListingsPage.duck';
 import css from './ManageListingsPage.module.css';
 
-const Heading = props => {
+function Heading(props) {
   const { listingsAreLoaded, pagination } = props;
   const hasResults = listingsAreLoaded && pagination.totalItems > 0;
   const hasNoResults = listingsAreLoaded && pagination.totalItems === 0;
@@ -54,9 +54,9 @@ const Heading = props => {
       </p>
     </div>
   ) : null;
-};
+}
 
-const PaginationLinksMaybe = props => {
+function PaginationLinksMaybe(props) {
   const { listingsAreLoaded, pagination, page } = props;
   return listingsAreLoaded && pagination && pagination.totalPages > 1 ? (
     <PaginationLinks
@@ -66,9 +66,9 @@ const PaginationLinksMaybe = props => {
       pagination={pagination}
     />
   ) : null;
-};
+}
 
-export const ManageListingsPageComponent = props => {
+export function ManageListingsPageComponent(props) {
   const [listingMenuOpen, setListingMenuOpen] = useState(null);
   const history = useHistory();
   const routeConfiguration = useRouteConfiguration();
@@ -99,11 +99,11 @@ export const ManageListingsPageComponent = props => {
     }
   }, [openingListingError]);
 
-  const onToggleMenu = listing => {
+  const onToggleMenu = (listing) => {
     setListingMenuOpen(listing);
   };
 
-  const handleOpenListing = listingId => {
+  const handleOpenListing = (listingId) => {
     const hasPostingRights = hasPermissionToPostListings(currentUser);
 
     if (!hasPostingRights) {
@@ -167,7 +167,7 @@ export const ManageListingsPageComponent = props => {
           <Heading listingsAreLoaded={listingsAreLoaded} pagination={pagination} />
 
           <div className={css.listingCards}>
-            {listings.map(l => (
+            {listings.map((l) => (
               <ManageListingCard
                 className={css.listingCard}
                 key={l.id.uuid}
@@ -193,7 +193,7 @@ export const ManageListingsPageComponent = props => {
       </LayoutSingleColumn>
     </Page>
   );
-};
+}
 
 ManageListingsPageComponent.defaultProps = {
   currentUser: null,
@@ -229,7 +229,7 @@ ManageListingsPageComponent.propTypes = {
   scrollingDisabled: bool.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { currentUser } = state.user;
   const {
     currentPageResultIds,
@@ -259,16 +259,13 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => ({
-  onCloseListing: listingId => dispatch(closeListing(listingId)),
-  onOpenListing: listingId => dispatch(openListing(listingId)),
+const mapDispatchToProps = (dispatch) => ({
+  onCloseListing: (listingId) => dispatch(closeListing(listingId)),
+  onOpenListing: (listingId) => dispatch(openListing(listingId)),
 });
 
-const ManageListingsPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(ManageListingsPageComponent);
+const ManageListingsPage = compose(connect(mapStateToProps, mapDispatchToProps))(
+  ManageListingsPageComponent,
+);
 
 export default ManageListingsPage;

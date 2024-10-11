@@ -34,7 +34,7 @@ import { getListingsById } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
 
 import { H3, H5, ModalInMobile, NamedRedirect, Page } from '../../components';
-import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+import TopbarContainer from '../TopbarContainer/TopbarContainer';
 
 import { setActiveListing } from './SearchPage.duck';
 import {
@@ -208,8 +208,8 @@ export class SearchPageComponent extends Component {
 
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
 
-    return updatedURLParams => {
-      const updater = prevState => {
+    return (updatedURLParams) => {
+      const updater = (prevState) => {
         const { address, bounds, keywords } = urlQueryParams;
         const mergedQueryParams = { ...urlQueryParams, ...prevState.currentQueryParams };
 
@@ -227,7 +227,7 @@ export class SearchPageComponent extends Component {
               address,
               bounds,
             },
-            filterConfigs
+            filterConfigs,
           ),
         };
       };
@@ -275,9 +275,9 @@ export class SearchPageComponent extends Component {
     const { listingFields } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
 
-    const activeListingTypes = config?.listing?.listingTypes.map(config => config.listingType);
+    const activeListingTypes = config?.listing?.listingTypes.map((config) => config.listingType);
     const marketplaceCurrency = config.currency;
-    const categoryConfiguration = config.categoryConfiguration;
+    const { categoryConfiguration } = config;
     const listingCategories = categoryConfiguration.categories;
     const listingFieldsConfig = pickListingFieldFilters({
       listingFields,
@@ -298,7 +298,7 @@ export class SearchPageComponent extends Component {
       searchParams,
       filterConfigs,
       sortConfig,
-      isOriginInUse(config)
+      isOriginInUse(config),
     );
 
     const validQueryParams = urlQueryParams;
@@ -309,15 +309,15 @@ export class SearchPageComponent extends Component {
       !isMobileLayout || (isMobileLayout && this.state.isSearchMapOpenOnMobile);
 
     const isKeywordSearch = isMainSearchTypeKeywords(config);
-    const builtInPrimaryFilters = defaultFiltersConfig.filter(f =>
-      ['categoryLevel'].includes(f.key)
+    const builtInPrimaryFilters = defaultFiltersConfig.filter((f) =>
+      ['categoryLevel'].includes(f.key),
     );
     const builtInFilters = isKeywordSearch
-      ? defaultFiltersConfig.filter(f => !['keywords', 'categoryLevel'].includes(f.key))
-      : defaultFiltersConfig.filter(f => !['categoryLevel'].includes(f.key));
+      ? defaultFiltersConfig.filter((f) => !['keywords', 'categoryLevel'].includes(f.key))
+      : defaultFiltersConfig.filter((f) => !['categoryLevel'].includes(f.key));
     const [customPrimaryFilters, customSecondaryFilters] = groupListingFieldConfigs(
       listingFieldsConfig,
-      activeListingTypes
+      activeListingTypes,
     );
     const availablePrimaryFilters = [
       ...builtInPrimaryFilters,
@@ -337,7 +337,7 @@ export class SearchPageComponent extends Component {
     const selectedFilters = validQueryParams;
     const keysOfSelectedFilters = Object.keys(selectedFilters);
     const selectedFiltersCountForMobile = isKeywordSearch
-      ? keysOfSelectedFilters.filter(f => f !== 'keywords').length
+      ? keysOfSelectedFilters.filter((f) => f !== 'keywords').length
       : keysOfSelectedFilters.length;
     const isValidDatesFilter =
       searchParamsInURL.dates == null ||
@@ -357,7 +357,7 @@ export class SearchPageComponent extends Component {
     const propsForSecondaryFiltersToggle = hasSecondaryFilters
       ? {
           isSecondaryFiltersOpen: this.state.isSecondaryFiltersOpen,
-          toggleSecondaryFiltersOpen: isOpen => {
+          toggleSecondaryFiltersOpen: (isOpen) => {
             this.setState({ isSecondaryFiltersOpen: isOpen, currentQueryParams: {} });
           },
           selectedSecondaryFiltersCount,
@@ -369,8 +369,8 @@ export class SearchPageComponent extends Component {
       searchParamsAreInSync && hasPaginationInfo
         ? pagination.totalItems
         : pagination?.paginationUnsupported
-        ? listings.length
-        : 0;
+          ? listings.length
+          : 0;
     const listingsAreLoaded =
       !searchInProgress &&
       searchParamsAreInSync &&
@@ -379,10 +379,10 @@ export class SearchPageComponent extends Component {
     const conflictingFilterActive = isAnyFilterActive(
       sortConfig.conflictingFilters,
       validQueryParams,
-      filterConfigs
+      filterConfigs,
     );
-    const sortBy = mode => {
-      return sortConfig.active ? (
+    const sortBy = (mode) =>
+      sortConfig.active ? (
         <SortBy
           sort={validQueryParams[sortConfig.queryParamName]}
           isConflictingFilterActive={!!conflictingFilterActive}
@@ -394,7 +394,6 @@ export class SearchPageComponent extends Component {
           contentPlacementOffset={FILTER_DROPDOWN_OFFSET}
         />
       ) : null;
-    };
     const noResultsInfo = (
       <NoSearchResultsMaybe
         listingsAreLoaded={listingsAreLoaded}
@@ -410,7 +409,7 @@ export class SearchPageComponent extends Component {
       searchParamsInURL || {},
       intl,
       routeConfiguration,
-      config
+      config,
     );
 
     // Set topbar class based on if a modal is open in
@@ -449,7 +448,7 @@ export class SearchPageComponent extends Component {
               noResultsInfo={noResultsInfo}
               isMapVariant
             >
-              {availableFilters.map(filterConfig => {
+              {availableFilters.map((filterConfig) => {
                 const key = `SearchFiltersMobile.${filterConfig.scope || 'built-in'}.${
                   filterConfig.key
                 }`;
@@ -481,7 +480,7 @@ export class SearchPageComponent extends Component {
               noResultsInfo={noResultsInfo}
             >
               <SearchFiltersPrimary {...propsForSecondaryFiltersToggle}>
-                {availablePrimaryFilters.map(filterConfig => {
+                {availablePrimaryFilters.map((filterConfig) => {
                   const key = `SearchFiltersPrimary.${filterConfig.scope || 'built-in'}.${
                     filterConfig.key
                   }`;
@@ -513,7 +512,7 @@ export class SearchPageComponent extends Component {
                   resetAll={this.resetAll}
                   onClosePanel={() => this.setState({ isSecondaryFiltersOpen: false })}
                 >
-                  {customSecondaryFilters.map(filterConfig => {
+                  {customSecondaryFilters.map((filterConfig) => {
                     const key = `SearchFiltersSecondary.${filterConfig.scope || 'built-in'}.${
                       filterConfig.key
                     }`;
@@ -631,14 +630,14 @@ SearchPageComponent.propTypes = {
   routeConfiguration: arrayOf(propTypes.route).isRequired,
 };
 
-const EnhancedSearchPage = props => {
+function EnhancedSearchPage(props) {
   const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();
   const intl = useIntl();
   const history = useHistory();
   const location = useLocation();
 
-  const searchListingsError = props.searchListingsError;
+  const { searchListingsError } = props;
   if (isForbiddenError(searchListingsError)) {
     // This can happen if private marketplace mode is active
     return (
@@ -663,7 +662,8 @@ const EnhancedSearchPage = props => {
         params={{ missingAccessRight: NO_ACCESS_PAGE_USER_PENDING_APPROVAL }}
       />
     );
-  } else if (hasNoViewingRightsUser || hasNoViewingRightsError) {
+  }
+  if (hasNoViewingRightsUser || hasNoViewingRightsError) {
     return (
       <NamedRedirect
         name="NoAccessPage"
@@ -682,9 +682,9 @@ const EnhancedSearchPage = props => {
       {...restOfProps}
     />
   );
-};
+}
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { currentUser } = state.user;
   const {
     currentPageResultIds,
@@ -708,10 +708,10 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   onManageDisableScrolling: (componentId, disableScrolling) =>
     dispatch(manageDisableScrolling(componentId, disableScrolling)),
-  onActivateListing: listingId => dispatch(setActiveListing(listingId)),
+  onActivateListing: (listingId) => dispatch(setActiveListing(listingId)),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the
@@ -720,11 +720,6 @@ const mapDispatchToProps = dispatch => ({
 // lifecycle hook.
 //
 // See: https://github.com/ReactTraining/react-router/issues/4671
-const SearchPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(EnhancedSearchPage);
+const SearchPage = compose(connect(mapStateToProps, mapDispatchToProps))(EnhancedSearchPage);
 
 export default SearchPage;

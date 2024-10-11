@@ -26,7 +26,7 @@ class DynamicGoogleMap extends Component {
 
     if (hasDimensions) {
       const { center, zoom, address, mapsConfig } = this.props;
-      const maps = window.google.maps;
+      const { maps } = window.google;
       const controlPosition = window.google.maps.ControlPosition.LEFT_TOP;
 
       const mapConfig = {
@@ -56,7 +56,7 @@ class DynamicGoogleMap extends Component {
         // Origin as object literal (LatLngLiteral)
         const origin = { lat: center.lat, lng: center.lng };
         const radius = mapsConfig.fuzzy.offset;
-        const path = circlePolyline(origin, radius).map(c => new GoogleLatLng(c[0], c[1]));
+        const path = circlePolyline(origin, radius).map((c) => new GoogleLatLng(c[0], c[1]));
 
         const circleProps = {
           options: {
@@ -72,7 +72,7 @@ class DynamicGoogleMap extends Component {
         };
 
         // Add a circle. We use Polygon because the default Circle class is not round enough.
-        const Polygon = window.google.maps.Polygon;
+        const { Polygon } = window.google.maps;
         new Polygon(circleProps);
       } else {
         new window.google.maps.Marker({
@@ -88,7 +88,7 @@ class DynamicGoogleMap extends Component {
     const { containerClassName, mapClassName } = this.props;
     return (
       <div className={containerClassName}>
-        <div className={mapClassName} ref={el => (this.mapContainer = el)} />
+        <div className={mapClassName} ref={(el) => (this.mapContainer = el)} />
       </div>
     );
   }

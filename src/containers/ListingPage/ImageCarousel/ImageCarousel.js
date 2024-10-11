@@ -23,56 +23,48 @@ const IMAGE_GALLERY_OPTIONS = {
   slideDuration: 350,
 };
 
-const ImageCarousel = props => {
+function ImageCarousel(props) {
   const [currentIndex, setIndex] = useState(0);
   const { intl, rootClassName, className, images, imageVariants } = props;
 
-  const items = images.map((img, i) => {
-    return {
-      // We will only use the image resource, but react-image-gallery
-      // requires the `original` key from each item.
-      original: '',
-      alt: intl.formatMessage(
-        { id: 'ImageCarousel.imageAltText' },
-        { index: i + 1, count: images.length }
-      ),
-      image: img,
-    };
-  });
-  const renderItem = item => {
-    return (
-      <div className={css.imageWrapper}>
-        <div className={css.itemCentering}>
-          <ResponsiveImage
-            rootClassName={css.item}
-            image={item.image}
-            alt={item.alt}
-            variants={imageVariants}
-            sizes="(max-width: 767px) 100vw, 80vw"
-          />
-        </div>
+  const items = images.map((img, i) => ({
+    // We will only use the image resource, but react-image-gallery
+    // requires the `original` key from each item.
+    original: '',
+    alt: intl.formatMessage(
+      { id: 'ImageCarousel.imageAltText' },
+      { index: i + 1, count: images.length },
+    ),
+    image: img,
+  }));
+  const renderItem = (item) => (
+    <div className={css.imageWrapper}>
+      <div className={css.itemCentering}>
+        <ResponsiveImage
+          rootClassName={css.item}
+          image={item.image}
+          alt={item.alt}
+          variants={imageVariants}
+          sizes="(max-width: 767px) 100vw, 80vw"
+        />
       </div>
-    );
-  };
+    </div>
+  );
 
-  const renderLeftNav = (onClick, disabled) => {
-    return (
-      <button className={css.navLeft} disabled={disabled} onClick={onClick}>
-        <div className={css.navArrowWrapper}>
-          <IconArrowHead direction="left" size="big" className={css.arrowHead} />
-        </div>
-      </button>
-    );
-  };
-  const renderRightNav = (onClick, disabled) => {
-    return (
-      <button className={css.navRight} disabled={disabled} onClick={onClick}>
-        <div className={css.navArrowWrapper}>
-          <IconArrowHead direction="right" size="big" className={css.arrowHead} />
-        </div>
-      </button>
-    );
-  };
+  const renderLeftNav = (onClick, disabled) => (
+    <button className={css.navLeft} disabled={disabled} onClick={onClick}>
+      <div className={css.navArrowWrapper}>
+        <IconArrowHead direction="left" size="big" className={css.arrowHead} />
+      </div>
+    </button>
+  );
+  const renderRightNav = (onClick, disabled) => (
+    <button className={css.navRight} disabled={disabled} onClick={onClick}>
+      <div className={css.navArrowWrapper}>
+        <IconArrowHead direction="right" size="big" className={css.arrowHead} />
+      </div>
+    </button>
+  );
 
   // If no image is given, rendere empty image.
   if (items.length === 0) {
@@ -82,10 +74,10 @@ const ImageCarousel = props => {
 
   // We render index outside of ReactImageGallery.
   // This keeps track of current index aka slide changes happening inside gallery.
-  const handleSlide = currentIndex => {
+  const handleSlide = (currentIndex) => {
     setIndex(currentIndex);
   };
-  const naturalIndex = index => index + 1;
+  const naturalIndex = (index) => index + 1;
 
   // Render image index info. E.g. "4/12"
   const imageIndex =
@@ -111,7 +103,7 @@ const ImageCarousel = props => {
       {imageIndex}
     </>
   );
-};
+}
 
 ImageCarousel.defaultProps = {
   rootClassName: null,

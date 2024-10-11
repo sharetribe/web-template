@@ -1,31 +1,29 @@
 import React, { useState } from 'react';
 import { Form as FinalForm, Field } from 'react-final-form';
 import { propTypes } from '../../util/types';
-import { Button } from '../../components';
+import { Button } from '..';
 import LocationAutocompleteInput from './LocationAutocompleteInput';
 
-const identity = v => v;
+const identity = (v) => v;
 
-const Form = props => {
+function Form(props) {
   return (
     <FinalForm
       {...props}
-      render={({ handleSubmit, pristine }) => {
-        return (
-          <form onSubmit={handleSubmit}>
-            <label htmlFor="location">Select location:</label>
-            <Field name="location" format={identity} component={LocationAutocompleteInput} />
-            <Button type="submit" style={{ marginTop: '24px' }} disabled={pristine}>
-              Submit
-            </Button>
-          </form>
-        );
-      }}
+      render={({ handleSubmit, pristine }) => (
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="location">Select location:</label>
+          <Field name="location" format={identity} component={LocationAutocompleteInput} />
+          <Button type="submit" style={{ marginTop: '24px' }} disabled={pristine}>
+            Submit
+          </Button>
+        </form>
+      )}
     />
   );
-};
+}
 
-const PlaceInfo = props => {
+function PlaceInfo(props) {
   const { place } = props;
   const { address, origin, bounds } = place;
   return (
@@ -40,13 +38,13 @@ const PlaceInfo = props => {
       </ul>
     </div>
   );
-};
+}
 
 PlaceInfo.propTypes = { place: propTypes.place.isRequired };
 
-const FormContainer = props => {
+function FormContainer(props) {
   const [location, setLocation] = useState({});
-  const onSubmit = values => {
+  const onSubmit = (values) => {
     setLocation(values.location);
   };
   const place = location.selectedPlace;
@@ -59,7 +57,7 @@ const FormContainer = props => {
       {place ? <PlaceInfo place={place} /> : null}
     </div>
   );
-};
+}
 
 export const Empty = {
   component: FormContainer,

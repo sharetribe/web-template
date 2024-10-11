@@ -12,62 +12,64 @@ import { FieldTextInput, Form, IconDisputeOrder, Modal, Button } from '../../../
 
 import css from './DisputeModal.module.css';
 
-const DisputeForm = props => (
-  <FinalForm
-    {...props}
-    render={fieldRenderProps => {
-      const {
-        className,
-        rootClassName,
-        disabled,
-        handleSubmit,
-        intl,
-        formId,
-        invalid,
-        disputeSubmitted,
-        disputeError,
-        disputeInProgress,
-      } = fieldRenderProps;
+function DisputeForm(props) {
+  return (
+    <FinalForm
+      {...props}
+      render={(fieldRenderProps) => {
+        const {
+          className,
+          rootClassName,
+          disabled,
+          handleSubmit,
+          intl,
+          formId,
+          invalid,
+          disputeSubmitted,
+          disputeError,
+          disputeInProgress,
+        } = fieldRenderProps;
 
-      const errorMessageMaybe = disputeError ? (
-        <FormattedMessage id="DisputeModal.disputeSubmitFailed" />
-      ) : null;
+        const errorMessageMaybe = disputeError ? (
+          <FormattedMessage id="DisputeModal.disputeSubmitFailed" />
+        ) : null;
 
-      const classes = classNames(rootClassName || css.formRoot, className);
-      const submitInProgress = disputeInProgress;
-      const submitDisabled = invalid || disabled || submitInProgress || disputeSubmitted;
+        const classes = classNames(rootClassName || css.formRoot, className);
+        const submitInProgress = disputeInProgress;
+        const submitDisabled = invalid || disabled || submitInProgress || disputeSubmitted;
 
-      return (
-        <Form className={classes} onSubmit={handleSubmit}>
-          <FieldTextInput
-            className={css.disputeMessage}
-            type="textarea"
-            id={formId ? `${formId}.disputeReason` : 'disputeReason'}
-            name="disputeReason"
-            label={intl.formatMessage({ id: 'DisputeModal.label' })}
-            placeholder={intl.formatMessage({ id: 'DisputeModal.disputePlaceholder' })}
-            validate={required(intl.formatMessage({ id: 'DisputeModal.disputeReasonRequired' }))}
-          />
-          <p className={css.errorPlaceholder}>{errorMessageMaybe}</p>
-          <Button
-            className={css.submitButton}
-            type="submit"
-            inProgress={disputeInProgress}
-            disabled={submitDisabled}
-            ready={disputeSubmitted}
-          >
-            {intl.formatMessage({ id: 'DisputeModal.submit' })}
-          </Button>
-        </Form>
-      );
-    }}
-  />
-);
+        return (
+          <Form className={classes} onSubmit={handleSubmit}>
+            <FieldTextInput
+              className={css.disputeMessage}
+              type="textarea"
+              id={formId ? `${formId}.disputeReason` : 'disputeReason'}
+              name="disputeReason"
+              label={intl.formatMessage({ id: 'DisputeModal.label' })}
+              placeholder={intl.formatMessage({ id: 'DisputeModal.disputePlaceholder' })}
+              validate={required(intl.formatMessage({ id: 'DisputeModal.disputeReasonRequired' }))}
+            />
+            <p className={css.errorPlaceholder}>{errorMessageMaybe}</p>
+            <Button
+              className={css.submitButton}
+              type="submit"
+              inProgress={disputeInProgress}
+              disabled={submitDisabled}
+              ready={disputeSubmitted}
+            >
+              {intl.formatMessage({ id: 'DisputeModal.submit' })}
+            </Button>
+          </Form>
+        );
+      }}
+    />
+  );
+}
 
 // Show dispute form
-const DisputeInfo = props => {
+function DisputeInfo(props) {
   const config = useConfiguration();
-  const marketplaceName = config.marketplaceName;
+  const { marketplaceName } = config;
 
   return (
     <>
@@ -86,25 +88,27 @@ const DisputeInfo = props => {
       />
     </>
   );
-};
+}
 
 // Show info that dispute form has been sent already.
-const DisputeSentInfo = props => (
-  <>
-    <p className={css.modalTitle}>
-      <FormattedMessage id="DisputeModal.sentTitle" />
-    </p>
-    <p className={css.modalMessage}>
-      <FormattedMessage id="DisputeModal.sentMessage" />
-    </p>
-    <p className={css.modalMessage}>
-      <FormattedMessage id="DisputeModal.sentNextStep" />
-    </p>
-  </>
-);
+function DisputeSentInfo(props) {
+  return (
+    <>
+      <p className={css.modalTitle}>
+        <FormattedMessage id="DisputeModal.sentTitle" />
+      </p>
+      <p className={css.modalMessage}>
+        <FormattedMessage id="DisputeModal.sentMessage" />
+      </p>
+      <p className={css.modalMessage}>
+        <FormattedMessage id="DisputeModal.sentNextStep" />
+      </p>
+    </>
+  );
+}
 
 // Dispute modal
-const DisputeModal = props => {
+function DisputeModal(props) {
   const {
     className,
     rootClassName,
@@ -145,7 +149,7 @@ const DisputeModal = props => {
       )}
     </Modal>
   );
-};
+}
 
 DisputeModal.defaultProps = {
   className: null,

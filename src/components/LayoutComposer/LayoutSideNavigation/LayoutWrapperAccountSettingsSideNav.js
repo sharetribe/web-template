@@ -9,7 +9,7 @@ import { compose } from 'redux';
 import { FormattedMessage } from '../../../util/reactIntl';
 import { withViewport } from '../../../util/uiHelpers';
 
-import { TabNav } from '../../../components';
+import { TabNav } from '../..';
 
 import { createGlobalState } from './hookGlobalState';
 
@@ -58,7 +58,7 @@ const scrollToTab = (currentPage, scrollLeft, setScrollLeft) => {
   }
 };
 
-const LayoutWrapperAccountSettingsSideNavComponent = props => {
+function LayoutWrapperAccountSettingsSideNavComponent(props) {
   const [scrollLeft, setScrollLeft] = useGlobalState('scrollLeft');
   useEffect(() => {
     const { currentPage, viewport } = props;
@@ -123,7 +123,7 @@ const LayoutWrapperAccountSettingsSideNavComponent = props => {
   ];
 
   return <TabNav rootClassName={css.tabs} tabRootClassName={css.tab} tabs={tabs} />;
-};
+}
 
 LayoutWrapperAccountSettingsSideNavComponent.defaultProps = {
   className: null,
@@ -146,7 +146,7 @@ LayoutWrapperAccountSettingsSideNavComponent.propTypes = {
 };
 
 const LayoutWrapperAccountSettingsSideNav = compose(withViewport)(
-  LayoutWrapperAccountSettingsSideNavComponent
+  LayoutWrapperAccountSettingsSideNavComponent,
 );
 
 export default LayoutWrapperAccountSettingsSideNav;

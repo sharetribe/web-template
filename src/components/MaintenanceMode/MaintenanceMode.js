@@ -3,19 +3,19 @@ import React from 'react';
 import appSettings from '../../config/settings';
 import { FormattedMessage } from '../../util/reactIntl';
 
-import { LayoutSingleColumn } from '../../components';
+import { LayoutSingleColumn } from '..';
 import css from './MaintenanceMode.module.css';
 
 // MaintenanceMode component is shown when mandatory app-wide configurations are not found from assets.
 // Note 1: this microcopy/translation does not come from translation file.
 //         It needs to be something that is not part of fetched assets but built-in text
 // Note 2: In the LandingPage directory, there's a similar content (FallbackPage.js).
-const MaintenanceMode = props => {
+function MaintenanceMode(props) {
   const isDev = appSettings.dev;
   return (
     <LayoutSingleColumn
       mainColumnClassName={css.layoutWrapperMain}
-      topbar={<div className={css.header} title="Maintenance mode"></div>}
+      topbar={<div className={css.header} title="Maintenance mode" />}
       footer={null}
     >
       <section id="content" className={css.root}>
@@ -49,6 +49,6 @@ const MaintenanceMode = props => {
       </section>
     </LayoutSingleColumn>
   );
-};
+}
 
 export default MaintenanceMode;

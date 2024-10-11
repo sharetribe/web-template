@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import PasswordRecoveryForm from './PasswordRecoveryForm';
 
 export const Empty = {

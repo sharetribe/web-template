@@ -10,9 +10,9 @@ import * as Sentry from '@sentry/browser';
 import appSettings from '../config/settings';
 
 const ingoreErrorsMap = {
-  ['ResizeObserver loop limit exceeded']: true, // Some exotic browsers seems to emit these.
-  ['Error reading']: true, // Ignore file reader errors (ImageFromFile)
-  ['AxiosError: Network Error']: true,
+  'ResizeObserver loop limit exceeded': true, // Some exotic browsers seems to emit these.
+  'Error reading': true, // Ignore file reader errors (ImageFromFile)
+  'AxiosError: Network Error': true,
 };
 
 const pickSelectedErrors = (ignored, entry) => {
@@ -44,7 +44,7 @@ export const setup = () => {
  *
  * @param {String} userId ID of current user
  */
-export const setUserId = userId => {
+export const setUserId = (userId) => {
   Sentry.setUser({ id: userId });
 };
 
@@ -56,19 +56,18 @@ export const clearUserId = () => {
   Sentry.setUser(null);
 };
 
-const printAPIErrorsAsConsoleTable = apiErrors => {
+const printAPIErrorsAsConsoleTable = (apiErrors) => {
   if (apiErrors != null && apiErrors.length > 0 && typeof console.table === 'function') {
     console.log('Errors returned by Marketplace API call:');
-    console.table(apiErrors.map(err => ({ status: err.status, code: err.code, ...err.meta })));
+    console.table(apiErrors.map((err) => ({ status: err.status, code: err.code, ...err.meta })));
   }
 };
 
-const responseAPIErrors = error => {
-  return error && error.data && error.data.errors ? error.data.errors : [];
-};
+const responseAPIErrors = (error) =>
+  error && error.data && error.data.errors ? error.data.errors : [];
 
-const responseApiErrorInfo = err =>
-  responseAPIErrors(err).map(e => ({
+const responseApiErrorInfo = (err) =>
+  responseAPIErrors(err).map((e) => ({
     status: e.status,
     code: e.code,
     meta: e.meta,
@@ -88,9 +87,9 @@ export const error = (e, code, data) => {
   if (appSettings.sentryDsn) {
     const extra = { ...data, apiErrorData: apiErrors };
 
-    Sentry.withScope(scope => {
+    Sentry.withScope((scope) => {
       scope.setTag('code', code);
-      Object.keys(extra).forEach(key => {
+      Object.keys(extra).forEach((key) => {
         scope.setExtra(key, extra[key]);
       });
       Sentry.captureException(e);

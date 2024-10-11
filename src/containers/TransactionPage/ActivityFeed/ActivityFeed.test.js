@@ -19,14 +19,12 @@ const processTransitions = getProcess('default-purchase')?.transitions;
 const { screen, within } = testingLibrary;
 const noop = () => null;
 
-export const createTxTransition = options => {
-  return {
-    createdAt: new Date(Date.UTC(2023, 4, 1)),
-    by: TX_TRANSITION_ACTOR_CUSTOMER,
-    transition: processTransitions.REQUEST_PAYMENT,
-    ...options,
-  };
-};
+export const createTxTransition = (options) => ({
+  createdAt: new Date(Date.UTC(2023, 4, 1)),
+  by: TX_TRANSITION_ACTOR_CUSTOMER,
+  transition: processTransitions.REQUEST_PAYMENT,
+  ...options,
+});
 
 describe('ActivityFeed', () => {
   it('verify that messages and relevant transition are shown', () => {
@@ -38,12 +36,12 @@ describe('ActivityFeed', () => {
         createMessage(
           'msg1',
           { content: 'message 1', createdAt: new Date(Date.UTC(2023, 10, 9, 8, 12)) },
-          { sender: customer }
+          { sender: customer },
         ),
         createMessage(
           'msg2',
           { content: 'message 2', createdAt: new Date(Date.UTC(2023, 10, 10, 8, 12)) },
-          { sender: provider }
+          { sender: provider },
         ),
       ],
       transaction: createTransaction({
@@ -91,7 +89,7 @@ describe('ActivityFeed', () => {
     // The first relevant transition in the process
     const firstLI = within(items[0]);
     expect(
-      firstLI.getByText('TransactionPage.ActivityFeed.default-purchase.purchased')
+      firstLI.getByText('TransactionPage.ActivityFeed.default-purchase.purchased'),
     ).toBeInTheDocument();
     expect(firstLI.getByText('2023-05-01')).toBeInTheDocument();
 

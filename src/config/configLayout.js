@@ -1,8 +1,8 @@
-///////////////////////////////////////////////////////
+/// ////////////////////////////////////////////////////
 // This file contains configs that affect layout     //
 // NOTE: these are just some of the relevant configs //
 // Most of the work happens in components.           //
-///////////////////////////////////////////////////////
+/// ////////////////////////////////////////////////////
 
 // Note: These come from the layout asset nowadays by default.
 //       To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeLayouts func)

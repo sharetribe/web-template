@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React from 'react';
 
 import {
@@ -12,11 +11,13 @@ import ManageListingCard from './ManageListingCard';
 
 const noop = () => null;
 
-const ManageListingCardWrapper = props => (
-  <div style={{ maxWidth: '400px' }}>
-    <ManageListingCard {...props} />
-  </div>
-);
+function ManageListingCardWrapper(props) {
+  return (
+    <div style={{ maxWidth: '400px' }}>
+      <ManageListingCard {...props} />
+    </div>
+  );
+}
 
 export const Published = {
   component: ManageListingCardWrapper,

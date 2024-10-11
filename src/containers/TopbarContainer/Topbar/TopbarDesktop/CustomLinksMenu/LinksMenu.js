@@ -20,12 +20,12 @@ import css from './LinksMenu.module.css';
  * @param {*} props contain keys: linkConfig, currentPage
  * @returns NamedLink or ExternalLink
  */
-const LinkComponent = ({ linkConfig, currentPage }) => {
+function LinkComponent({ linkConfig, currentPage }) {
   const { text, type, href, route } = linkConfig;
-  const getCurrentPageClass = page => {
-    const hasPageName = name => currentPage?.indexOf(name) === 0;
-    const isCMSPage = pageId => hasPageName('CMSPage') && currentPage === `${page}:${pageId}`;
-    const isInboxPage = tab => hasPageName('InboxPage') && currentPage === `${page}:${tab}`;
+  const getCurrentPageClass = (page) => {
+    const hasPageName = (name) => currentPage?.indexOf(name) === 0;
+    const isCMSPage = (pageId) => hasPageName('CMSPage') && currentPage === `${page}:${pageId}`;
+    const isInboxPage = (tab) => hasPageName('InboxPage') && currentPage === `${page}:${tab}`;
     const isCurrentPage = currentPage === page;
     return isCMSPage(route?.params?.pageId) || isInboxPage(route?.params?.tab) || isCurrentPage
       ? css.currentPage
@@ -51,7 +51,7 @@ const LinkComponent = ({ linkConfig, currentPage }) => {
       {text}
     </ExternalLink>
   );
-};
+}
 
 /**
  * When the links menu shows "More" label (instead of "Menu"), the label width needs to be measured.
@@ -59,7 +59,7 @@ const LinkComponent = ({ linkConfig, currentPage }) => {
  * @param {*} props containing: width, setWidth, label
  * @returns div with same styles as the real "More" label or null if width is known.
  */
-const MeasureMoreMenu = props => {
+function MeasureMoreMenu(props) {
   const { width, setWidth, label } = props;
   const moreMenuRef = useRef(null);
   useEffect(() => {
@@ -70,7 +70,7 @@ const MeasureMoreMenu = props => {
 
   const isServer = typeof window === 'undefined';
   // Component is measured outside of the viewport
-  const styleWrapper = !!width
+  const styleWrapper = width
     ? {}
     : {
         style: {
@@ -94,10 +94,10 @@ const MeasureMoreMenu = props => {
         >
           {label}
         </div>,
-        document.body
+        document.body,
       )
     : null;
-};
+}
 
 /**
  * Menu label has text (Menu vs More) and arrow up vs down
@@ -105,14 +105,16 @@ const MeasureMoreMenu = props => {
  * @param {*} props contain keys: showMoreLabel, isOpen, intl
  * @returns span containing menu label text and IconArrowHead
  */
-const MenuLabelContent = ({ showMoreLabel, isOpen, intl }) => (
-  <span className={css.linkMenuLabelWrapper}>
-    {showMoreLabel
-      ? intl.formatMessage({ id: 'TopbarDesktop.LinksMenu.more' })
-      : intl.formatMessage({ id: 'TopbarDesktop.LinksMenu.all' })}
-    <IconArrowHead direction="down" size="small" rootClassName={css.arrowIcon} />
-  </span>
-);
+function MenuLabelContent({ showMoreLabel, isOpen, intl }) {
+  return (
+    <span className={css.linkMenuLabelWrapper}>
+      {showMoreLabel
+        ? intl.formatMessage({ id: 'TopbarDesktop.LinksMenu.more' })
+        : intl.formatMessage({ id: 'TopbarDesktop.LinksMenu.all' })}
+      <IconArrowHead direction="down" size="small" rootClassName={css.arrowIcon} />
+    </span>
+  );
+}
 
 /**
  * Menu that shows custom links with label showing either "Menu" or "More".
@@ -121,7 +123,7 @@ const MenuLabelContent = ({ showMoreLabel, isOpen, intl }) => (
  * @param {*} props contain: id, currentPage, links, showMoreLabel, moreLabelWidth, setMoreLabelWidth, intl
  * @returns menu component
  */
-const LinksMenu = props => {
+function LinksMenu(props) {
   const [isOpen, setIsOpen] = useState(false);
   const { id, currentPage, links, showMoreLabel, moreLabelWidth, setMoreLabelWidth, intl } = props;
   const contentPlacementOffset = moreLabelWidth ? -1 * (moreLabelWidth / 2) : 24;
@@ -138,22 +140,20 @@ const LinksMenu = props => {
           <MenuLabelContent showMoreLabel={showMoreLabel} isOpen={isOpen} intl={intl} />
         </MenuLabel>
         <MenuContent className={css.linkMenuContent}>
-          {links.map(linkConfig => {
-            return (
-              <MenuItem key={linkConfig.text}>
-                <LinkComponent linkConfig={linkConfig} currentPage={currentPage} />
-              </MenuItem>
-            );
-          })}
+          {links.map((linkConfig) => (
+            <MenuItem key={linkConfig.text}>
+              <LinkComponent linkConfig={linkConfig} currentPage={currentPage} />
+            </MenuItem>
+          ))}
         </MenuContent>
       </Menu>
       <MeasureMoreMenu
         width={moreLabelWidth}
         setWidth={setMoreLabelWidth}
-        label={<MenuLabelContent showMoreLabel={true} intl={intl} />}
+        label={<MenuLabelContent showMoreLabel intl={intl} />}
       />
     </>
   );
-};
+}
 
 export default LinksMenu;

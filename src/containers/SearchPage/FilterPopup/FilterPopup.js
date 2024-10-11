@@ -73,7 +73,7 @@ class FilterPopup extends Component {
     if (enforcedState) {
       this.setState({ isOpen: enforcedState });
     } else {
-      this.setState(prevState => ({ isOpen: !prevState.isOpen }));
+      this.setState((prevState) => ({ isOpen: !prevState.isOpen }));
     }
   }
 
@@ -87,7 +87,7 @@ class FilterPopup extends Component {
       const contentWidth = this.filterContent.offsetWidth;
       const contentWidthBiggerThanLabel = contentWidth - labelWidth;
       const renderToRight = distanceToRight > contentWidthBiggerThanLabel;
-      const contentPlacementOffset = this.props.contentPlacementOffset;
+      const { contentPlacementOffset } = this.props;
 
       const offset = renderToRight
         ? { left: contentPlacementOffset }
@@ -125,7 +125,7 @@ class FilterPopup extends Component {
         <div
           className={classes}
           onKeyDown={this.handleKeyDown}
-          ref={node => {
+          ref={(node) => {
             this.filter = node;
           }}
         >
@@ -139,7 +139,7 @@ class FilterPopup extends Component {
           <div
             id={id}
             className={popupClasses}
-            ref={node => {
+            ref={(node) => {
               this.filterContent = node;
             }}
             style={contentStyle}

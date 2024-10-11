@@ -6,12 +6,13 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
-const PageBuilder = loadable(() =>
-  import(/* webpackChunkName: "PageBuilder" */ '../PageBuilder/PageBuilder')
+import NotFoundPage from '../NotFoundPage/NotFoundPage';
+
+const PageBuilder = loadable(
+  () => import(/* webpackChunkName: "PageBuilder" */ '../PageBuilder/PageBuilder'),
 );
 
-export const CMSPageComponent = props => {
+export function CMSPageComponent(props) {
   const { params, pageAssetsData, inProgress, error } = props;
   const pageId = params.pageId || props.pageId;
 
@@ -24,16 +25,17 @@ export const CMSPageComponent = props => {
       pageAssetsData={pageAssetsData?.[pageId]?.data}
       inProgress={inProgress}
       schemaType="Article"
+      pageId={pageId}
     />
   );
-};
+}
 
 CMSPageComponent.propTypes = {
   pageAssetsData: object,
   inProgress: bool,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { pageAssetsData, inProgress, error } = state.hostedAssets || {};
   return { pageAssetsData, inProgress, error };
 };
@@ -44,9 +46,6 @@ const mapStateToProps = state => {
 // lifecycle hook.
 //
 // See: https://github.com/ReactTraining/react-router/issues/4671
-const CMSPage = compose(
-  withRouter,
-  connect(mapStateToProps)
-)(CMSPageComponent);
+const CMSPage = compose(withRouter, connect(mapStateToProps))(CMSPageComponent);
 
 export default CMSPage;

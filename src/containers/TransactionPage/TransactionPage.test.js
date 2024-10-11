@@ -114,8 +114,8 @@ describe('TransactionPage', () => {
     onFetchTransactionLineItems: noop,
     nextTransitions: null,
     monthlyTimeSlots: {},
-    //transaction,
-    //lineItems,
+    // transaction,
+    // lineItems,
   };
 
   // PURCHASE SALE
@@ -123,20 +123,20 @@ describe('TransactionPage', () => {
     const processName = 'default-purchase';
     const process = getProcess(processName);
 
-    const purchases = Object.keys(purchaseTransitions).map(trKey => {
+    const purchases = Object.keys(purchaseTransitions).map((trKey) => {
       const isReversal = process.isRefunded(purchaseTransitions[trKey]);
       const isReceived = process.isCompleted(purchaseTransitions[trKey]);
       const lineItemsMaybe =
         trKey == 'INQUIRE'
           ? []
           : isReversal
-          ? [
-              lineItemUnitTypeItem,
-              lineItemUnitTypeItemReversal,
-              lineItemProviderCommission,
-              lineItemProviderCommissionReversal,
-            ]
-          : [lineItemUnitTypeItem, lineItemProviderCommission];
+            ? [
+                lineItemUnitTypeItem,
+                lineItemUnitTypeItemReversal,
+                lineItemProviderCommission,
+                lineItemProviderCommissionReversal,
+              ]
+            : [lineItemUnitTypeItem, lineItemProviderCommission];
       return {
         tr: purchaseTransitions[trKey],
         tx: createTransaction({
@@ -175,7 +175,7 @@ describe('TransactionPage', () => {
           sendReviewError: null,
           onOpenReviewModal: noop,
         },
-        process
+        process,
       );
 
       const props = {
@@ -199,7 +199,7 @@ describe('TransactionPage', () => {
       // Order breakdown
       const expectedLength = tr !== 'transition/inquire' ? 2 : 0;
       expect(
-        screen.queryAllByText(`TransactionPanel.${processName}.orderBreakdownTitle`)
+        screen.queryAllByText(`TransactionPanel.${processName}.orderBreakdownTitle`),
       ).toHaveLength(expectedLength);
       expect(screen.queryAllByText('OrderBreakdown.baseUnitQuantity')).toHaveLength(expectedLength);
       expect(screen.queryAllByText('OrderBreakdown.subTotal')).toHaveLength(expectedLength);
@@ -216,21 +216,21 @@ describe('TransactionPage', () => {
 
       // Order breakdown: commission refund?
       expect(screen.queryAllByText('OrderBreakdown.refundProviderFee')).toHaveLength(
-        expectedLengthReversal
+        expectedLengthReversal,
       );
 
       // Order breakdown: total (with multiple translation keys)
       const total = isReversal
         ? 'OrderBreakdown.providerTotalRefunded'
         : isReceived
-        ? 'OrderBreakdown.providerTotalReceived'
-        : 'OrderBreakdown.providerTotalDefault';
+          ? 'OrderBreakdown.providerTotalReceived'
+          : 'OrderBreakdown.providerTotalDefault';
       const expectedTotal = isReversal ? expectedLengthReversal : expectedLength;
       expect(screen.queryAllByText(total)).toHaveLength(expectedTotal);
 
       // A note about commission (customer should no see this)
       expect(screen.queryAllByText('OrderBreakdown.commissionFeeNote')).toHaveLength(
-        expectedLength
+        expectedLength,
       );
 
       // Activity feed (here we just check the heading)
@@ -262,20 +262,20 @@ describe('TransactionPage', () => {
     const process = getProcess(processName);
 
     // { EXPIRE_PAYMENT: purchaseTransitions.EXPIRE_PAYMENT }
-    const purchases = Object.keys(purchaseTransitions).map(trKey => {
+    const purchases = Object.keys(purchaseTransitions).map((trKey) => {
       const isReversal = process.isRefunded(purchaseTransitions[trKey]);
       const isReceived = process.isCompleted(purchaseTransitions[trKey]);
       const lineItemsMaybe =
         trKey == 'INQUIRE'
           ? []
           : isReversal
-          ? [
-              lineItemUnitTypeItem,
-              lineItemUnitTypeItemReversal,
-              lineItemProviderCommission,
-              lineItemProviderCommissionReversal,
-            ]
-          : [lineItemUnitTypeItem, lineItemProviderCommission];
+            ? [
+                lineItemUnitTypeItem,
+                lineItemUnitTypeItemReversal,
+                lineItemProviderCommission,
+                lineItemProviderCommissionReversal,
+              ]
+            : [lineItemUnitTypeItem, lineItemProviderCommission];
       return {
         tr: purchaseTransitions[trKey],
         tx: createTransaction({
@@ -315,7 +315,7 @@ describe('TransactionPage', () => {
           sendReviewError: null,
           onOpenReviewModal: noop,
         },
-        process
+        process,
       );
 
       const props = {
@@ -339,14 +339,14 @@ describe('TransactionPage', () => {
       // Order breakdown
       const expectedLength = isInquiry ? 0 : 2;
       expect(
-        screen.queryAllByText(`TransactionPanel.${processName}.orderBreakdownTitle`)
+        screen.queryAllByText(`TransactionPanel.${processName}.orderBreakdownTitle`),
       ).toHaveLength(expectedLength);
       expect(screen.queryAllByText('OrderBreakdown.baseUnitQuantity')).toHaveLength(expectedLength);
       expect(screen.queryAllByText('OrderBreakdown.subTotal')).toHaveLength(
-        isReversal ? expectedLength : 0
+        isReversal ? expectedLength : 0,
       );
       expect(screen.queryAllByText('$10.00')).toHaveLength(
-        isReversal ? expectedLength * 3 : expectedLength * 2
+        isReversal ? expectedLength * 3 : expectedLength * 2,
       ); // base, subtotal, total
 
       // Order breakdown: refund?
@@ -416,20 +416,20 @@ describe('TransactionPage', () => {
       reversal: true,
     };
 
-    const bookings = Object.keys(bookingTransitions).map(trKey => {
+    const bookings = Object.keys(bookingTransitions).map((trKey) => {
       const isReversal = process.isRefunded(bookingTransitions[trKey]);
       const isReceived = process.isCompleted(bookingTransitions[trKey]);
       const lineItemsMaybe =
         trKey == 'INQUIRE'
           ? []
           : isReversal
-          ? [
-              lineItemUnitTypeDay,
-              lineItemUnitTypeDayReversal,
-              lineItemProviderCommission,
-              lineItemProviderCommissionReversal,
-            ]
-          : [lineItemUnitTypeDay, lineItemProviderCommission];
+            ? [
+                lineItemUnitTypeDay,
+                lineItemUnitTypeDayReversal,
+                lineItemProviderCommission,
+                lineItemProviderCommissionReversal,
+              ]
+            : [lineItemUnitTypeDay, lineItemProviderCommission];
       return {
         tr: bookingTransitions[trKey],
         tx: createTransaction({
@@ -473,7 +473,7 @@ describe('TransactionPage', () => {
           sendReviewError: null,
           onOpenReviewModal: noop,
         },
-        process
+        process,
       );
 
       const props = {
@@ -497,15 +497,15 @@ describe('TransactionPage', () => {
       // Order breakdown
       const expectedLength = isInquiry ? 0 : 2;
       expect(
-        screen.queryAllByText(`TransactionPanel.${processName}.orderBreakdownTitle`)
+        screen.queryAllByText(`TransactionPanel.${processName}.orderBreakdownTitle`),
       ).toHaveLength(expectedLength);
 
       expect(screen.queryAllByText('OrderBreakdown.bookingStart')).toHaveLength(expectedLength);
       expect(screen.queryAllByText('Tuesday')).toHaveLength(expectedLength * 2);
       expect(screen.queryAllByText('Jun 14')).toHaveLength(expectedLength * 2);
       expect(screen.queryAllByText('OrderBreakdown.bookingEnd')).toHaveLength(expectedLength);
-      //expect(screen.queryAllByText('Tuesday')).toHaveLength(expectedLength);
-      //expect(screen.queryAllByText('Jun 14')).toHaveLength(expectedLength);
+      // expect(screen.queryAllByText('Tuesday')).toHaveLength(expectedLength);
+      // expect(screen.queryAllByText('Jun 14')).toHaveLength(expectedLength);
 
       expect(screen.queryAllByText('OrderBreakdown.baseUnitDay')).toHaveLength(expectedLength);
       expect(screen.queryAllByText('OrderBreakdown.subTotal')).toHaveLength(expectedLength);
@@ -522,22 +522,22 @@ describe('TransactionPage', () => {
 
       // Order breakdown: commission refund?
       expect(screen.queryAllByText('OrderBreakdown.refundProviderFee')).toHaveLength(
-        expectedLengthReversal
+        expectedLengthReversal,
       );
 
       // Order breakdown: total (with multiple translation keys)
       const total = isReversal
         ? 'OrderBreakdown.providerTotalRefunded'
         : isReceived
-        ? 'OrderBreakdown.providerTotalReceived'
-        : 'OrderBreakdown.providerTotalDefault';
+          ? 'OrderBreakdown.providerTotalReceived'
+          : 'OrderBreakdown.providerTotalDefault';
       const expectedTotal = isReversal ? expectedLengthReversal : expectedLength;
       expect(screen.queryAllByText(total)).toHaveLength(expectedTotal);
       expect(screen.queryAllByText('$9.00')).toHaveLength(expectedTotal);
 
       // A note about commission (customer should no see this)
       expect(screen.queryAllByText('OrderBreakdown.commissionFeeNote')).toHaveLength(
-        expectedLength
+        expectedLength,
       );
 
       // Activity feed (here we just check the heading)
@@ -584,20 +584,20 @@ describe('TransactionPage', () => {
       reversal: true,
     };
 
-    const bookings = Object.keys(bookingTransitions).map(trKey => {
+    const bookings = Object.keys(bookingTransitions).map((trKey) => {
       const isReversal = process.isRefunded(bookingTransitions[trKey]);
       const isReceived = process.isCompleted(bookingTransitions[trKey]);
       const lineItemsMaybe =
         trKey == 'INQUIRE'
           ? []
           : isReversal
-          ? [
-              lineItemUnitTypeDay,
-              lineItemUnitTypeDayReversal,
-              lineItemProviderCommission,
-              lineItemProviderCommissionReversal,
-            ]
-          : [lineItemUnitTypeDay, lineItemProviderCommission];
+            ? [
+                lineItemUnitTypeDay,
+                lineItemUnitTypeDayReversal,
+                lineItemProviderCommission,
+                lineItemProviderCommissionReversal,
+              ]
+            : [lineItemUnitTypeDay, lineItemProviderCommission];
       return {
         tr: bookingTransitions[trKey],
         tx: createTransaction({
@@ -641,7 +641,7 @@ describe('TransactionPage', () => {
           sendReviewError: null,
           onOpenReviewModal: noop,
         },
-        process
+        process,
       );
 
       const props = {
@@ -665,22 +665,22 @@ describe('TransactionPage', () => {
       // Order breakdown
       const expectedLength = isInquiry ? 0 : 2;
       expect(
-        screen.queryAllByText(`TransactionPanel.${processName}.orderBreakdownTitle`)
+        screen.queryAllByText(`TransactionPanel.${processName}.orderBreakdownTitle`),
       ).toHaveLength(expectedLength);
 
       expect(screen.queryAllByText('OrderBreakdown.bookingStart')).toHaveLength(expectedLength);
       expect(screen.queryAllByText('Tuesday')).toHaveLength(expectedLength * 2);
       expect(screen.queryAllByText('Jun 14')).toHaveLength(expectedLength * 2);
       expect(screen.queryAllByText('OrderBreakdown.bookingEnd')).toHaveLength(expectedLength);
-      //expect(screen.queryAllByText('Tuesday')).toHaveLength(expectedLength);
-      //expect(screen.queryAllByText('Jun 14')).toHaveLength(expectedLength);
+      // expect(screen.queryAllByText('Tuesday')).toHaveLength(expectedLength);
+      // expect(screen.queryAllByText('Jun 14')).toHaveLength(expectedLength);
 
       expect(screen.queryAllByText('OrderBreakdown.baseUnitDay')).toHaveLength(expectedLength);
       expect(screen.queryAllByText('OrderBreakdown.subTotal')).toHaveLength(
-        isReversal ? expectedLength : 0
+        isReversal ? expectedLength : 0,
       );
       expect(screen.queryAllByText('$10.00')).toHaveLength(
-        isReversal ? expectedLength * 3 : expectedLength * 2
+        isReversal ? expectedLength * 3 : expectedLength * 2,
       ); // base, subtotal, total
 
       // Order breakdown: refund?
@@ -748,20 +748,20 @@ describe('TransactionPage', () => {
       reversal: true,
     };
 
-    const bookings = Object.keys(bookingTransitions).map(trKey => {
+    const bookings = Object.keys(bookingTransitions).map((trKey) => {
       const isReversal = process.isRefunded(bookingTransitions[trKey]);
       const isReceived = process.isCompleted(bookingTransitions[trKey]);
       const lineItemsMaybe =
         trKey == 'INQUIRE'
           ? []
           : isReversal
-          ? [
-              lineItemUnitTypeHour,
-              lineItemUnitTypeHourReversal,
-              lineItemProviderCommission,
-              lineItemProviderCommissionReversal,
-            ]
-          : [lineItemUnitTypeHour, lineItemProviderCommission];
+            ? [
+                lineItemUnitTypeHour,
+                lineItemUnitTypeHourReversal,
+                lineItemProviderCommission,
+                lineItemProviderCommissionReversal,
+              ]
+            : [lineItemUnitTypeHour, lineItemProviderCommission];
       return {
         tr: bookingTransitions[trKey],
         tx: createTransaction({
@@ -805,7 +805,7 @@ describe('TransactionPage', () => {
           sendReviewError: null,
           onOpenReviewModal: noop,
         },
-        process
+        process,
       );
 
       const props = {
@@ -829,7 +829,7 @@ describe('TransactionPage', () => {
       // Order breakdown
       const expectedLength = isInquiry ? 0 : 2;
       expect(
-        screen.queryAllByText(`TransactionPanel.${processName}.orderBreakdownTitle`)
+        screen.queryAllByText(`TransactionPanel.${processName}.orderBreakdownTitle`),
       ).toHaveLength(expectedLength);
 
       expect(screen.queryAllByText('OrderBreakdown.bookingStart')).toHaveLength(expectedLength);
@@ -853,22 +853,22 @@ describe('TransactionPage', () => {
 
       // Order breakdown: commission refund?
       expect(screen.queryAllByText('OrderBreakdown.refundProviderFee')).toHaveLength(
-        expectedLengthReversal
+        expectedLengthReversal,
       );
 
       // Order breakdown: total (with multiple translation keys)
       const total = isReversal
         ? 'OrderBreakdown.providerTotalRefunded'
         : isReceived
-        ? 'OrderBreakdown.providerTotalReceived'
-        : 'OrderBreakdown.providerTotalDefault';
+          ? 'OrderBreakdown.providerTotalReceived'
+          : 'OrderBreakdown.providerTotalDefault';
       const expectedTotal = isReversal ? expectedLengthReversal : expectedLength;
       expect(screen.queryAllByText(total)).toHaveLength(expectedTotal);
       expect(screen.queryAllByText('$9.00')).toHaveLength(expectedTotal);
 
       // A note about commission (customer should no see this)
       expect(screen.queryAllByText('OrderBreakdown.commissionFeeNote')).toHaveLength(
-        expectedLength
+        expectedLength,
       );
 
       // Activity feed (here we just check the heading)
@@ -915,20 +915,20 @@ describe('TransactionPage', () => {
       reversal: true,
     };
 
-    const bookings = Object.keys(bookingTransitions).map(trKey => {
+    const bookings = Object.keys(bookingTransitions).map((trKey) => {
       const isReversal = process.isRefunded(bookingTransitions[trKey]);
       const isReceived = process.isCompleted(bookingTransitions[trKey]);
       const lineItemsMaybe =
         trKey == 'INQUIRE'
           ? []
           : isReversal
-          ? [
-              lineItemUnitTypeHour,
-              lineItemUnitTypeHourReversal,
-              lineItemProviderCommission,
-              lineItemProviderCommissionReversal,
-            ]
-          : [lineItemUnitTypeHour, lineItemProviderCommission];
+            ? [
+                lineItemUnitTypeHour,
+                lineItemUnitTypeHourReversal,
+                lineItemProviderCommission,
+                lineItemProviderCommissionReversal,
+              ]
+            : [lineItemUnitTypeHour, lineItemProviderCommission];
       return {
         tr: bookingTransitions[trKey],
         tx: createTransaction({
@@ -972,7 +972,7 @@ describe('TransactionPage', () => {
           sendReviewError: null,
           onOpenReviewModal: noop,
         },
-        process
+        process,
       );
 
       const props = {
@@ -996,7 +996,7 @@ describe('TransactionPage', () => {
       // Order breakdown
       const expectedLength = isInquiry ? 0 : 2;
       expect(
-        screen.queryAllByText(`TransactionPanel.${processName}.orderBreakdownTitle`)
+        screen.queryAllByText(`TransactionPanel.${processName}.orderBreakdownTitle`),
       ).toHaveLength(expectedLength);
 
       expect(screen.queryAllByText('OrderBreakdown.bookingStart')).toHaveLength(expectedLength);
@@ -1063,7 +1063,7 @@ describe('TransactionPage', () => {
   describe('Transaction process with OrderPanel', () => {
     const originalWarn = console.warn.bind(console.warn);
     beforeAll(() => {
-      console.warn = msg =>
+      console.warn = (msg) =>
         !msg.toString().includes('componentWillReceiveProps') && originalWarn(msg);
     });
     afterAll(() => {
@@ -1120,7 +1120,7 @@ describe('TransactionPage', () => {
           sendReviewError: null,
           onOpenReviewModal: noop,
         },
-        getProcess(processName)
+        getProcess(processName),
       );
 
       const props = {
@@ -1134,7 +1134,7 @@ describe('TransactionPage', () => {
         },
         lineItems: [],
         monthlyTimeSlots: {
-          ['2022-06']: {
+          '2022-06': {
             fetchTimeSlotsError: null,
             fetchTimeSlotsInProgress: false,
             timeSlots: [],
@@ -1207,7 +1207,7 @@ describe('TransactionPage', () => {
           sendReviewError: null,
           onOpenReviewModal: noop,
         },
-        getProcess(processName)
+        getProcess(processName),
       );
 
       const currentUser = createCurrentUser(customerId);
@@ -1287,7 +1287,7 @@ describe('TransactionPage', () => {
           sendReviewError: null,
           onOpenReviewModal: noop,
         },
-        getProcess(processName)
+        getProcess(processName),
       );
 
       const props = {
@@ -1301,7 +1301,7 @@ describe('TransactionPage', () => {
         },
         lineItems: [],
         monthlyTimeSlots: {
-          ['2022-06']: {
+          '2022-06': {
             fetchTimeSlotsError: null,
             fetchTimeSlotsInProgress: false,
             timeSlots: [],
@@ -1373,7 +1373,7 @@ describe('TransactionPage', () => {
           sendReviewError: null,
           onOpenReviewModal: noop,
         },
-        getProcess(processName)
+        getProcess(processName),
       );
 
       const currentUser = createCurrentUser(customerId);
@@ -1452,7 +1452,7 @@ describe('TransactionPage', () => {
           sendReviewError: null,
           onOpenReviewModal: noop,
         },
-        getProcess(processName)
+        getProcess(processName),
       );
 
       const props = {
@@ -1466,7 +1466,7 @@ describe('TransactionPage', () => {
         },
         lineItems: [],
         monthlyTimeSlots: {
-          ['2022-06']: {
+          '2022-06': {
             fetchTimeSlotsError: null,
             fetchTimeSlotsInProgress: false,
             timeSlots: [],
@@ -1536,7 +1536,7 @@ describe('TransactionPage', () => {
           sendReviewError: null,
           onOpenReviewModal: noop,
         },
-        getProcess(processName)
+        getProcess(processName),
       );
 
       const currentUser = createCurrentUser(customerId);

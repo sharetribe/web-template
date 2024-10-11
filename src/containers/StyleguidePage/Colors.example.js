@@ -3,16 +3,12 @@ import PropTypes from 'prop-types';
 import { NamedLink } from '../../components';
 import css from './StyleguidePage.module.css';
 
-const componentToHex = c =>
-  (+c)
-    .toString(16)
-    .padStart(2, '0')
-    .toUpperCase();
-const rgbToHex = rgb => {
+const componentToHex = (c) => (+c).toString(16).padStart(2, '0').toUpperCase();
+const rgbToHex = (rgb) => {
   const [r, g, b] = rgb.split(',');
-  return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
+  return `#${componentToHex(r)}${componentToHex(g)}${componentToHex(b)}`;
 };
-const getRgb = selector => {
+const getRgb = (selector) => {
   const selectedElem = document.getElementById(selector);
   const elemStyles = getComputedStyle(selectedElem);
   return typeof window !== 'undefined'
@@ -20,7 +16,7 @@ const getRgb = selector => {
     : '0,0,0';
 };
 
-const ColorCard = props => {
+function ColorCard(props) {
   const [hexColor, setHexColor] = useState('#FFFFFF');
 
   useEffect(() => {
@@ -30,8 +26,8 @@ const ColorCard = props => {
   const { mpColor, name, usage } = props;
   const colorClasses = mpColor || css.color;
 
-  const handleChange = e => {
-    const value = e.target.value;
+  const handleChange = (e) => {
+    const { value } = e.target;
     const elem = document.getElementById('styleguide');
     const re = new RegExp('^#([0-9a-f]{3}){1,2}$', 'i');
     const isValidColor = re.test(value);
@@ -61,7 +57,7 @@ const ColorCard = props => {
       </div>
     </div>
   );
-};
+}
 
 const { string } = PropTypes;
 
@@ -77,7 +73,7 @@ ColorCard.propTypes = {
   usage: string.isRequired,
 };
 
-const MarketplaceColors = () => {
+function MarketplaceColors() {
   return (
     <div className={css.content}>
       <p className={css.spacing2x}>
@@ -205,7 +201,7 @@ const MarketplaceColors = () => {
       </div>
     </div>
   );
-};
+}
 
 export const Colors = {
   component: MarketplaceColors,

@@ -18,7 +18,7 @@ const buttonTabs = [
   { text: 'Selected', onClick: noop, selected: true },
 ];
 
-const TabNavHorizontalComponent = () => {
+function TabNavHorizontalComponent() {
   return (
     <div>
       <h3>Horizontal link tab navigation with light skin</h3>
@@ -34,7 +34,7 @@ const TabNavHorizontalComponent = () => {
       <ButtonTabNavHorizontal tabs={buttonTabs} skin="dark" />
     </div>
   );
-};
+}
 
 export const TabNavHorizontal = {
   component: TabNavHorizontalComponent,

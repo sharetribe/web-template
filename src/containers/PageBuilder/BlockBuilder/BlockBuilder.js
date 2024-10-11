@@ -6,9 +6,9 @@ import BlockDefault from './BlockDefault';
 import BlockFooter from './BlockFooter';
 import BlockSocialMediaLink from './BlockSocialMediaLink';
 
-///////////////////////////////////////////
+/// ////////////////////////////////////////
 // Mapping of block types and components //
-///////////////////////////////////////////
+/// ////////////////////////////////////////
 
 const defaultBlockComponents = {
   defaultBlock: { component: BlockDefault },
@@ -16,11 +16,11 @@ const defaultBlockComponents = {
   socialMediaLink: { component: BlockSocialMediaLink },
 };
 
-////////////////////
+/// /////////////////
 // Blocks builder //
-////////////////////
+/// /////////////////
 
-const BlockBuilder = props => {
+function BlockBuilder(props) {
   const { blocks, sectionId, options, ...otherProps } = props;
 
   // Extract block & field component mappings from props
@@ -55,15 +55,14 @@ const BlockBuilder = props => {
               {...otherProps}
             />
           );
-        } else {
-          // If the block type is unknown, the app can't know what to render
-          console.warn(`Unknown block type (${block.blockType}) detected inside (${sectionId}).`);
-          return null;
         }
+        // If the block type is unknown, the app can't know what to render
+        console.warn(`Unknown block type (${block.blockType}) detected inside (${sectionId}).`);
+        return null;
       })}
     </>
   );
-};
+}
 
 const propTypeBlock = shape({
   blockId: string,

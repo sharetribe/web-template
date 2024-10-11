@@ -6,7 +6,7 @@ import PaginationLinks from './PaginationLinks';
 
 const { shape, string } = PropTypes;
 
-const Pagination = props => {
+function Pagination(props) {
   const { history } = props;
   const search = parse(history.location.search || '');
 
@@ -33,7 +33,7 @@ const Pagination = props => {
       <PaginationLinks {...linkProps} />
     </div>
   );
-};
+}
 
 Pagination.propTypes = {
   history: shape({

@@ -14,7 +14,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { Modal } from '../../components';
+import { Modal } from '..';
 import { withViewport } from '../../util/uiHelpers';
 
 import css from './ModalInMobile.module.css';
@@ -129,7 +129,7 @@ ModalInMobileComponent.propTypes = {
   onClose: func,
   showAsModalMaxWidth: number,
   closeButtonMessage: node,
-  // eslint-disable-next-line react/no-unused-prop-types
+
   onManageDisableScrolling: func.isRequired,
 
   // from withViewport

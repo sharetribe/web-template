@@ -47,12 +47,12 @@ const handleSubmit = (values, history) => {
   history.push(`${window.location.pathname}${queryParams}`);
 };
 
-const AmenitiesFilterPopup = withRouter(props => {
+const AmenitiesFilterPopup = withRouter((props) => {
   const { history, location } = props;
 
   const params = parse(location.search);
   const amenities = params[URL_PARAM];
-  const initialValues = { [URL_PARAM]: !!amenities ? amenities : null };
+  const initialValues = { [URL_PARAM]: amenities || null };
 
   return (
     <SelectMultipleFilter
@@ -60,8 +60,8 @@ const AmenitiesFilterPopup = withRouter(props => {
       name="amenities"
       queryParamNames={[URL_PARAM]}
       label="Amenities"
-      onSubmit={values => handleSubmit(values, history)}
-      showAsPopup={true}
+      onSubmit={(values) => handleSubmit(values, history)}
+      showAsPopup
       liveEdit={false}
       options={options}
       schemaType={SCHEMA_TYPE_MULTI_ENUM}
@@ -77,12 +77,12 @@ export const AmenitiesFilterPopupExample = {
   group: 'page:SearchPage',
 };
 
-const AmenitiesFilterPlain = withRouter(props => {
+const AmenitiesFilterPlain = withRouter((props) => {
   const { history, location } = props;
 
   const params = parse(location.search);
   const amenities = params[URL_PARAM];
-  const initialValues = { [URL_PARAM]: !!amenities ? amenities : null };
+  const initialValues = { [URL_PARAM]: amenities || null };
 
   return (
     <SelectMultipleFilter
@@ -90,11 +90,11 @@ const AmenitiesFilterPlain = withRouter(props => {
       name="amenities"
       queryParamNames={[URL_PARAM]}
       label="Amenities"
-      onSubmit={values => {
+      onSubmit={(values) => {
         handleSubmit(values, history);
       }}
       showAsPopup={false}
-      liveEdit={true}
+      liveEdit
       options={options}
       schemaType={SCHEMA_TYPE_MULTI_ENUM}
       initialValues={initialValues}

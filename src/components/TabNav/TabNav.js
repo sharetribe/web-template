@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { NamedLink } from '../../components';
+import { NamedLink } from '..';
 
 import css from './TabNav.module.css';
 
-const Tab = props => {
+function Tab(props) {
   const { className, id, disabled, text, selected, linkProps } = props;
   const linkClasses = classNames(css.link, {
     [css.selectedLink]: selected,
@@ -19,7 +19,7 @@ const Tab = props => {
       </NamedLink>
     </div>
   );
-};
+}
 
 Tab.defaultProps = { className: null, disabled: false, selected: false };
 
@@ -34,7 +34,7 @@ Tab.propTypes = {
   linkProps: object.isRequired,
 };
 
-const TabNav = props => {
+function TabNav(props) {
   const { className, rootClassName, tabRootClassName, tabs } = props;
   const classes = classNames(rootClassName || css.root, className);
   const tabClasses = tabRootClassName || css.tab;
@@ -46,7 +46,7 @@ const TabNav = props => {
       })}
     </nav>
   );
-};
+}
 
 TabNav.defaultProps = {
   className: null,

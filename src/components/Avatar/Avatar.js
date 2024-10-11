@@ -1,7 +1,7 @@
 import React from 'react';
 import { string, oneOfType, bool } from 'prop-types';
-import { injectIntl, intlShape } from '../../util/reactIntl';
 import classNames from 'classnames';
+import { injectIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import {
   ensureUser,
@@ -11,7 +11,7 @@ import {
 } from '../../util/data';
 import { isUserAuthorized } from '../../util/userHelpers';
 
-import { ResponsiveImage, IconBannedUser, NamedLink } from '../../components/';
+import { ResponsiveImage, IconBannedUser, NamedLink } from '..';
 
 import css from './Avatar.module.css';
 
@@ -34,7 +34,7 @@ const AVATAR_IMAGE_VARIANTS = [
   'square-small2x',
 ];
 
-export const AvatarComponent = props => {
+export function AvatarComponent(props) {
   const {
     rootClassName,
     className,
@@ -51,7 +51,7 @@ export const AvatarComponent = props => {
   // I.e. the status is active, not pending-approval or banned
   const isUnauthorizedUser = userIsCurrentUser && !isUserAuthorized(user);
   const variant = user?.attributes?.state;
-  //'pending-approval'
+  // 'pending-approval'
 
   const isBannedUser = avatarUser.attributes.banned;
   const isDeletedUser = avatarUser.attributes.deleted;
@@ -59,8 +59,8 @@ export const AvatarComponent = props => {
   const defaultUserDisplayName = isBannedUser
     ? intl.formatMessage({ id: 'Avatar.bannedUserDisplayName' })
     : isDeletedUser
-    ? intl.formatMessage({ id: 'Avatar.deletedUserDisplayName' })
-    : '';
+      ? intl.formatMessage({ id: 'Avatar.deletedUserDisplayName' })
+      : '';
 
   const defaultUserAbbreviatedName = '';
 
@@ -74,8 +74,8 @@ export const AvatarComponent = props => {
           params: { id: avatarUser.id.uuid, variant },
         }
       : avatarUser.id
-      ? { name: 'ProfilePage', params: { id: avatarUser.id.uuid } }
-      : { name: 'ProfileBasePage' };
+        ? { name: 'ProfilePage', params: { id: avatarUser.id.uuid } }
+        : { name: 'ProfileBasePage' };
   const hasProfileImage = avatarUser.profileImage && avatarUser.profileImage.id;
   const profileLinkEnabled = !disableProfileLink;
 
@@ -85,7 +85,8 @@ export const AvatarComponent = props => {
         <IconBannedUser className={css.bannedUserIcon} />
       </div>
     );
-  } else if (hasProfileImage && profileLinkEnabled) {
+  }
+  if (hasProfileImage && profileLinkEnabled) {
     return (
       <NamedLink {...rootProps} {...linkProps}>
         <ResponsiveImage
@@ -97,7 +98,8 @@ export const AvatarComponent = props => {
         />
       </NamedLink>
     );
-  } else if (hasProfileImage) {
+  }
+  if (hasProfileImage) {
     return (
       <div {...rootProps}>
         <ResponsiveImage
@@ -107,24 +109,24 @@ export const AvatarComponent = props => {
           variants={AVATAR_IMAGE_VARIANTS}
           sizes={renderSizes}
         />
-      </div>
-    );
-  } else if (profileLinkEnabled) {
-    // Placeholder avatar (initials)
-    return (
-      <NamedLink {...rootProps} {...linkProps}>
-        <span className={initialsClassName || css.initials}>{abbreviatedName}</span>
-      </NamedLink>
-    );
-  } else {
-    // Placeholder avatar (initials)
-    return (
-      <div {...rootProps}>
-        <span className={initialsClassName || css.initials}>{abbreviatedName}</span>
       </div>
     );
   }
-};
+  if (profileLinkEnabled) {
+    // Placeholder avatar (initials)
+    return (
+      <NamedLink {...rootProps} {...linkProps}>
+        <span className={initialsClassName || css.initials}>{abbreviatedName}</span>
+      </NamedLink>
+    );
+  }
+  // Placeholder avatar (initials)
+  return (
+    <div {...rootProps}>
+      <span className={initialsClassName || css.initials}>{abbreviatedName}</span>
+    </div>
+  );
+}
 
 AvatarComponent.defaultProps = {
   className: null,
@@ -150,32 +152,38 @@ const Avatar = injectIntl(AvatarComponent);
 
 export default Avatar;
 
-export const AvatarSmall = props => (
-  <Avatar
-    rootClassName={css.smallAvatar}
-    initialsClassName={css.initialsSmall}
-    renderSizes={AVATAR_SIZES_MEDIUM}
-    {...props}
-  />
-);
+export function AvatarSmall(props) {
+  return (
+    <Avatar
+      rootClassName={css.smallAvatar}
+      initialsClassName={css.initialsSmall}
+      renderSizes={AVATAR_SIZES_MEDIUM}
+      {...props}
+    />
+  );
+}
 AvatarSmall.displayName = 'AvatarSmall';
 
-export const AvatarMedium = props => (
-  <Avatar
-    rootClassName={css.mediumAvatar}
-    initialsClassName={css.initialsMedium}
-    renderSizes={AVATAR_SIZES_MEDIUM}
-    {...props}
-  />
-);
+export function AvatarMedium(props) {
+  return (
+    <Avatar
+      rootClassName={css.mediumAvatar}
+      initialsClassName={css.initialsMedium}
+      renderSizes={AVATAR_SIZES_MEDIUM}
+      {...props}
+    />
+  );
+}
 AvatarMedium.displayName = 'AvatarMedium';
 
-export const AvatarLarge = props => (
-  <Avatar
-    rootClassName={css.largeAvatar}
-    initialsClassName={css.initialsLarge}
-    renderSizes={AVATAR_SIZES_LARGE}
-    {...props}
-  />
-);
+export function AvatarLarge(props) {
+  return (
+    <Avatar
+      rootClassName={css.largeAvatar}
+      initialsClassName={css.initialsLarge}
+      renderSizes={AVATAR_SIZES_LARGE}
+      {...props}
+    />
+  );
+}
 AvatarLarge.displayName = 'AvatarLarge';

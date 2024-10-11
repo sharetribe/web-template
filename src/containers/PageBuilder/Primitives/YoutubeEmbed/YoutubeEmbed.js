@@ -11,13 +11,13 @@ import css from './YoutubeEmbed.module.css';
 const RADIX = 10;
 const BLACK_BG = '#000000';
 
-const IFrame = props => {
+function IFrame(props) {
   const { dimensions, ...rest } = props;
   return <iframe {...dimensions} {...rest} />;
-};
+}
 const LazyIFrame = lazyLoadWithDimensions(IFrame);
 
-export const YoutubeEmbed = props => {
+export function YoutubeEmbed(props) {
   const { className, rootClassName, youtubeVideoId, aspectRatio } = props;
   const hasSlash = aspectRatio.indexOf('/') > 0;
   const [aspectWidth, aspectHeight] = hasSlash ? aspectRatio.split('/') : [16, 9];
@@ -38,7 +38,7 @@ export const YoutubeEmbed = props => {
       />
     </AspectRatioWrapper>
   );
-};
+}
 
 YoutubeEmbed.displayName = 'YoutubeEmbed';
 

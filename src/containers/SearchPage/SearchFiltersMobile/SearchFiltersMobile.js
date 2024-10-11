@@ -40,8 +40,8 @@ class SearchFiltersMobileComponent extends Component {
         'SearchPage',
         routeConfiguration,
         {},
-        this.state.initialQueryParams
-      )
+        this.state.initialQueryParams,
+      ),
     );
     onCloseModal();
     this.setState({ isFiltersOpenOnMobile: false, initialQueryParams: null });
@@ -93,7 +93,7 @@ class SearchFiltersMobileComponent extends Component {
 
     const showListingsLabel = intl.formatMessage(
       { id: 'SearchFiltersMobile.showListings' },
-      { count: resultsCount }
+      { count: resultsCount },
     );
 
     return (
@@ -119,7 +119,7 @@ class SearchFiltersMobileComponent extends Component {
           ) : null}
         </div>
 
-        {noResultsInfo ? noResultsInfo : null}
+        {noResultsInfo || null}
 
         <ModalInMobile
           id="SearchFiltersMobile.filters"
@@ -132,8 +132,8 @@ class SearchFiltersMobileComponent extends Component {
         >
           <div className={css.modalHeadingWrapper}>
             <span className={css.modalHeading}>{filtersHeading}</span>
-            <button className={css.resetAllButton} onClick={e => this.resetAll(e)}>
-              <FormattedMessage id={'SearchFiltersMobile.resetAll'} />
+            <button className={css.resetAllButton} onClick={(e) => this.resetAll(e)}>
+              <FormattedMessage id="SearchFiltersMobile.resetAll" />
             </button>
           </div>
           {this.state.isFiltersOpenOnMobile ? (
@@ -191,7 +191,7 @@ SearchFiltersMobileComponent.propTypes = {
   }).isRequired,
 };
 
-const SearchFiltersMobile = props => {
+function SearchFiltersMobile(props) {
   const routeConfiguration = useRouteConfiguration();
   const intl = useIntl();
   const history = useHistory();
@@ -204,6 +204,6 @@ const SearchFiltersMobile = props => {
       {...props}
     />
   );
-};
+}
 
 export default SearchFiltersMobile;

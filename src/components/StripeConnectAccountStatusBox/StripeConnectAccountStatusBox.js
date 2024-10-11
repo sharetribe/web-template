@@ -1,14 +1,14 @@
 import React from 'react';
 import classNames from 'classnames';
 import { FormattedMessage } from '../../util/reactIntl';
-import { IconEdit, IconSuccess, PrimaryButton, InlineTextButton } from '../../components';
+import { IconEdit, IconSuccess, PrimaryButton, InlineTextButton } from '..';
 import css from './StripeConnectAccountStatusBox.module.css';
 
 const STATUS_VERIFICATION_NEEDED = 'verificationNeeded';
 const STATUS_VERIFICATION_SUCCESS = 'verificationSuccess';
 const STATUS_VERIFICATION_ERROR = 'verificationError';
 
-const StripeConnectAccountStatusBox = props => {
+function StripeConnectAccountStatusBox(props) {
   const { type, onGetStripeConnectAccountLink, inProgress, disabled } = props;
 
   if (type === STATUS_VERIFICATION_NEEDED) {
@@ -35,13 +35,14 @@ const StripeConnectAccountStatusBox = props => {
         </PrimaryButton>
       </div>
     );
-  } else if (type === STATUS_VERIFICATION_SUCCESS) {
+  }
+  if (type === STATUS_VERIFICATION_SUCCESS) {
     return (
       <div className={classNames(css.verificiationBox, css.verficiationSuccessBox)}>
         <div
           className={classNames(
             css.verificiationBoxTextWrapper,
-            css.verificationBoxSuccessTextWrapper
+            css.verificationBoxSuccessTextWrapper,
           )}
         >
           <div className={css.verificationBoxTitle}>
@@ -63,7 +64,8 @@ const StripeConnectAccountStatusBox = props => {
         </InlineTextButton>
       </div>
     );
-  } else if (type === STATUS_VERIFICATION_ERROR) {
+  }
+  if (type === STATUS_VERIFICATION_ERROR) {
     return (
       <div className={classNames(css.verificiationBox, css.verficiationErrorBox)}>
         <div className={css.verificiationBoxTextWrapper}>
@@ -87,9 +89,8 @@ const StripeConnectAccountStatusBox = props => {
         </PrimaryButton>
       </div>
     );
-  } else {
-    throw new Error(`Unknown type ${type} for StripeConnectAccountStatusBox`);
   }
-};
+  throw new Error(`Unknown type ${type} for StripeConnectAccountStatusBox`);
+}
 
 export default StripeConnectAccountStatusBox;

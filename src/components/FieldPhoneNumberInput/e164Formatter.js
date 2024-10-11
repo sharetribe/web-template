@@ -10,14 +10,14 @@
  * @param {String} str
  * @returns true if string starts with '+' character.
  */
-const hasLeadingPlus = str => str.match(/^\+/g);
+const hasLeadingPlus = (str) => str.match(/^\+/g);
 
 /**
  * Pick only digits from a string
  * @param {String} str
  * @returns string that contains only numbers
  */
-const pickOnlyDigits = str => str.replace(/[^\d]/g, '');
+const pickOnlyDigits = (str) => str.replace(/[^\d]/g, '');
 
 /**
  * This picks only correct characters for e.164 formatted phone numbers if the phoneNumber starts with a '+' character.
@@ -26,7 +26,7 @@ const pickOnlyDigits = str => str.replace(/[^\d]/g, '');
  * @param {String} phoneNumber
  * @returns formatted E.164 phone number or a string that has not been formatted at all.
  */
-const pickValidCharsForE164 = phoneNumber => {
+const pickValidCharsForE164 = (phoneNumber) => {
   const number = phoneNumber || '';
   const startsWithPlus = !!hasLeadingPlus(number);
   const digitsOnly = pickOnlyDigits(number);
@@ -37,8 +37,8 @@ const pickValidCharsForE164 = phoneNumber => {
   return startsWithPlus && noLeadingZeroDigits.length > 15
     ? `+${noLeadingZeroDigits.slice(0, 15)}`
     : startsWithPlus
-    ? `+${noLeadingZeroDigits}`
-    : number;
+      ? `+${noLeadingZeroDigits}`
+      : number;
 };
 
 /**
@@ -48,7 +48,7 @@ const pickValidCharsForE164 = phoneNumber => {
  * Matches with the following format:
  * +123 55 1234567, which is formatted as +123551234567
  */
-export const format = value => {
+export const format = (value) => {
   if (!value) {
     return '';
   }
@@ -60,6 +60,4 @@ export const format = value => {
  * Parser that handles the input string so that the plain number can be saved.
  * This is executed, when user manually types or copy-pastes a phone number to the input field.
  */
-export const parse = value => {
-  return pickValidCharsForE164(value);
-};
+export const parse = (value) => pickValidCharsForE164(value);

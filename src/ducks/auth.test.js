@@ -30,7 +30,7 @@ import reducer, {
 // Create a dispatch function that correctly calls the thunk functions
 // with itself
 const createFakeDispatch = (getState, sdk) => {
-  const dispatch = jest.fn(actionOrFn => {
+  const dispatch = jest.fn((actionOrFn) => {
     if (typeof actionOrFn === 'function') {
       return actionOrFn(dispatch, getState, sdk);
     }
@@ -40,17 +40,15 @@ const createFakeDispatch = (getState, sdk) => {
 };
 
 // Get the dispatched actions from the fake dispatch function
-const dispatchedActions = fakeDispatch => {
-  return fakeDispatch.mock.calls.reduce((actions, args) => {
+const dispatchedActions = (fakeDispatch) =>
+  fakeDispatch.mock.calls.reduce((actions, args) => {
     if (Array.isArray(args) && args.length === 1) {
       const action = args[0];
       return typeof action === 'object' ? actions.concat([action]) : actions;
-    } else {
-      console.error('fake dispatch invalid call args:', args);
-      throw new Error('Fake dispatch function should only be called with a single argument');
     }
+    console.error('fake dispatch invalid call args:', args);
+    throw new Error('Fake dispatch function should only be called with a single argument');
   }, []);
-};
 
 describe('auth duck', () => {
   describe('reducer', () => {
@@ -250,11 +248,11 @@ describe('auth duck', () => {
         () => {
           throw new Error('should not succeed');
         },
-        e => {
+        (e) => {
           expect(e.message).toEqual('Login or logout already in progress');
           expect(sdk.login.mock.calls.length).toEqual(0);
           expect(dispatch.mock.calls.length).toEqual(0);
-        }
+        },
       );
     });
     it('should reject if logout is in progress', () => {
@@ -270,11 +268,11 @@ describe('auth duck', () => {
         () => {
           throw new Error('should not succeed');
         },
-        e => {
+        (e) => {
           expect(e.message).toEqual('Login or logout already in progress');
           expect(sdk.login.mock.calls.length).toEqual(0);
           expect(dispatch.mock.calls.length).toEqual(0);
-        }
+        },
       );
     });
   });
@@ -322,11 +320,11 @@ describe('auth duck', () => {
         () => {
           throw new Error('should not succeed');
         },
-        e => {
+        (e) => {
           expect(e.message).toEqual('Login or logout already in progress');
           expect(sdk.logout.mock.calls.length).toEqual(0);
           expect(dispatch.mock.calls.length).toEqual(0);
-        }
+        },
       );
     });
     it('should reject if login is in progress', () => {
@@ -340,11 +338,11 @@ describe('auth duck', () => {
         () => {
           throw new Error('should not succeed');
         },
-        e => {
+        (e) => {
           expect(e.message).toEqual('Login or logout already in progress');
           expect(sdk.logout.mock.calls.length).toEqual(0);
           expect(dispatch.mock.calls.length).toEqual(0);
-        }
+        },
       );
     });
   });

@@ -7,11 +7,11 @@ import { propTypes, LINE_ITEM_CUSTOMER_COMMISSION } from '../../util/types';
 
 import css from './OrderBreakdown.module.css';
 
-const LineItemCustomerCommissionRefundMaybe = props => {
+function LineItemCustomerCommissionRefundMaybe(props) {
   const { lineItems, isCustomer, marketplaceName, intl } = props;
 
   const refund = lineItems.find(
-    item => item.code === LINE_ITEM_CUSTOMER_COMMISSION && item.reversal
+    (item) => item.code === LINE_ITEM_CUSTOMER_COMMISSION && item.reversal,
   );
 
   return isCustomer && refund ? (
@@ -22,7 +22,7 @@ const LineItemCustomerCommissionRefundMaybe = props => {
       <span className={css.itemValue}>{formatMoney(intl, refund.lineTotal)}</span>
     </div>
   ) : null;
-};
+}
 
 LineItemCustomerCommissionRefundMaybe.propTypes = {
   lineItems: propTypes.lineItems.isRequired,

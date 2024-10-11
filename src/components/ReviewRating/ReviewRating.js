@@ -3,16 +3,16 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { REVIEW_RATINGS } from '../../util/types';
 
-import { IconReviewStar } from '../../components';
+import { IconReviewStar } from '..';
 
-const ReviewRating = props => {
+function ReviewRating(props) {
   const { className, rootClassName, reviewStarClassName, rating } = props;
   const classes = classNames(rootClassName, className);
 
   const stars = REVIEW_RATINGS;
   return (
     <span className={classes} title={`${rating}/5`}>
-      {stars.map(star => (
+      {stars.map((star) => (
         <IconReviewStar
           key={`star-${star}`}
           className={reviewStarClassName}
@@ -21,7 +21,7 @@ const ReviewRating = props => {
       ))}
     </span>
   );
-};
+}
 
 ReviewRating.defaultProps = {
   rootClassName: null,

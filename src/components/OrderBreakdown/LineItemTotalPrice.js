@@ -7,7 +7,7 @@ import { resolveLatestProcessName, getProcess } from '../../transactions/transac
 
 import css from './OrderBreakdown.module.css';
 
-const LineItemTotalPrice = props => {
+function LineItemTotalPrice(props) {
   const { transaction, isProvider, intl } = props;
   const processName = resolveLatestProcessName(transaction?.attributes?.processName);
   if (!processName) {
@@ -44,7 +44,7 @@ const LineItemTotalPrice = props => {
       </div>
     </>
   );
-};
+}
 
 LineItemTotalPrice.propTypes = {
   transaction: propTypes.transaction.isRequired,

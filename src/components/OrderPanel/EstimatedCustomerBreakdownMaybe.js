@@ -41,7 +41,7 @@ import {
 import { unitDivisor, convertMoneyToNumber, convertUnitToSubUnit } from '../../util/currency';
 import { getProcess, TX_TRANSITION_ACTOR_CUSTOMER } from '../../transactions/transaction';
 
-import { OrderBreakdown } from '../../components';
+import { OrderBreakdown } from '..';
 
 import css from './OrderPanel.module.css';
 
@@ -60,7 +60,7 @@ const estimatedTotalPrice = (lineItems, marketplaceCurrency) => {
 
   return new Money(
     convertUnitToSubUnit(numericTotalPrice.toNumber(), unitDivisor(currency)),
-    currency
+    currency,
   );
 };
 
@@ -90,12 +90,12 @@ const estimatedCustomerTransaction = (
   timeZone,
   process,
   processName,
-  marketplaceCurrency
+  marketplaceCurrency,
 ) => {
   const transitions = process?.transitions;
   const now = new Date();
-  const customerLineItems = lineItems.filter(item => item.includeFor.includes('customer'));
-  const providerLineItems = lineItems.filter(item => item.includeFor.includes('provider'));
+  const customerLineItems = lineItems.filter((item) => item.includeFor.includes('customer'));
+  const providerLineItems = lineItems.filter((item) => item.includeFor.includes('provider'));
   const payinTotal = estimatedTotalPrice(customerLineItems, marketplaceCurrency);
   const payoutTotal = estimatedTotalPrice(providerLineItems, marketplaceCurrency);
 
@@ -127,7 +127,7 @@ const estimatedCustomerTransaction = (
   };
 };
 
-const EstimatedCustomerBreakdownMaybe = props => {
+function EstimatedCustomerBreakdownMaybe(props) {
   const { breakdownData = {}, lineItems, timeZone, currency, marketplaceName, processName } = props;
   const { startDate, endDate } = breakdownData;
 
@@ -143,7 +143,7 @@ const EstimatedCustomerBreakdownMaybe = props => {
   }
 
   const unitLineItem = lineItems?.find(
-    item => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal
+    (item) => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal,
   );
   const lineItemUnitType = unitLineItem?.code;
   const shouldHaveBooking = [LINE_ITEM_DAY, LINE_ITEM_NIGHT].includes(lineItemUnitType);
@@ -160,7 +160,7 @@ const EstimatedCustomerBreakdownMaybe = props => {
           timeZone,
           process,
           processName,
-          currency
+          currency,
         )
       : null;
 
@@ -176,6 +176,6 @@ const EstimatedCustomerBreakdownMaybe = props => {
       marketplaceName={marketplaceName}
     />
   ) : null;
-};
+}
 
 export default EstimatedCustomerBreakdownMaybe;

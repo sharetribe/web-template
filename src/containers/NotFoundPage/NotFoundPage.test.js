@@ -14,12 +14,12 @@ const routeConfiguration = [
   {
     path: '/',
     name: 'LandingPage',
-    component: props => <div />,
+    component: (props) => <div />,
   },
   {
     path: '/about',
     name: 'AboutPage',
-    component: props => <div />,
+    component: (props) => <div />,
   },
 ];
 
@@ -29,13 +29,13 @@ describe('NotFoundPage', () => {
       <NotFoundPageComponent
         scrollingDisabled={false}
         marketplaceName="My Marketplace"
-        isKeywordSearch={true}
+        isKeywordSearch
         intl={fakeIntl}
         routeConfiguration={routeConfiguration}
         history={{
           push: noop,
         }}
-      />
+      />,
     );
     const placeholder = 'NotFoundPage.SearchForm.placeholder';
     expect(screen.getByPlaceholderText(placeholder)).toBeInTheDocument();

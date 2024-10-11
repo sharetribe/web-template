@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import css from './IconDisputeOrder.module.css';
 
-const IconDisputeOrder = props => {
+function IconDisputeOrder(props) {
   const { className, rootClassName } = props;
   const classes = classNames(rootClassName || css.root, className);
 
@@ -23,7 +23,7 @@ const IconDisputeOrder = props => {
       </g>
     </svg>
   );
-};
+}
 
 IconDisputeOrder.defaultProps = { className: null, rootClassName: null };
 

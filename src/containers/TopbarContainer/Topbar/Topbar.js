@@ -40,16 +40,14 @@ const redirectToURLWithModalState = (props, modalStateParam) => {
 const redirectToURLWithoutModalState = (props, modalStateParam) => {
   const { history, location } = props;
   const { pathname, search, state } = location;
-  const queryParams = pickBy(parse(search), (v, k) => {
-    return k !== modalStateParam;
-  });
+  const queryParams = pickBy(parse(search), (v, k) => k !== modalStateParam);
   const stringified = stringify(queryParams);
   const searchString = stringified ? `?${stringified}` : '';
   history.push(`${pathname}${searchString}`, state);
 };
 
-const isPrimary = o => o.group === 'primary';
-const isSecondary = o => o.group === 'secondary';
+const isPrimary = (o) => o.group === 'primary';
+const isSecondary = (o) => o.group === 'secondary';
 const compareGroups = (a, b) => {
   const isAHigherGroupThanB = isPrimary(a) && isSecondary(b);
   const isALesserGroupThanB = isSecondary(a) && isPrimary(b);
@@ -57,7 +55,7 @@ const compareGroups = (a, b) => {
   return isAHigherGroupThanB ? -1 : isALesserGroupThanB ? 1 : 0;
 };
 // Returns links in order where primary links are returned first
-const sortCustomLinks = customLinks => {
+const sortCustomLinks = (customLinks) => {
   const links = Array.isArray(customLinks) ? customLinks : [];
   return links.sort(compareGroups);
 };
@@ -65,13 +63,13 @@ const sortCustomLinks = customLinks => {
 // Resolves in-app links against route configuration
 const getResolvedCustomLinks = (customLinks, routeConfiguration) => {
   const links = Array.isArray(customLinks) ? customLinks : [];
-  return links.map(linkConfig => {
+  return links.map((linkConfig) => {
     const { type, href } = linkConfig;
     const isInternalLink = type === 'internal' || href.charAt(0) === '/';
     if (isInternalLink) {
       // Internal link
       try {
-        const testURL = new URL('http://my.marketplace.com' + href);
+        const testURL = new URL(`http://my.marketplace.com${href}`);
         const matchedRoutes = matchPathname(testURL.pathname, routeConfiguration);
         if (matchedRoutes.length > 0) {
           const found = matchedRoutes[0];
@@ -93,9 +91,9 @@ const getResolvedCustomLinks = (customLinks, routeConfiguration) => {
   });
 };
 
-const isCMSPage = found =>
+const isCMSPage = (found) =>
   found.route?.name === 'CMSPage' ? `CMSPage:${found.params?.pageId}` : null;
-const isInboxPage = found =>
+const isInboxPage = (found) =>
   found.route?.name === 'InboxPage' ? `InboxPage:${found.params?.tab}` : null;
 // Find the name of the current route/pathname.
 // It's used as handle for currentPage check.
@@ -105,11 +103,11 @@ const getResolvedCurrentPage = (location, routeConfiguration) => {
     const found = matchedRoutes[0];
     const cmsPageName = isCMSPage(found);
     const inboxPageName = isInboxPage(found);
-    return cmsPageName ? cmsPageName : inboxPageName ? inboxPageName : `${found.route?.name}`;
+    return cmsPageName || inboxPageName || `${found.route?.name}`;
   }
 };
 
-const GenericError = props => {
+function GenericError(props) {
   const { show } = props;
   const classes = classNames(css.genericError, {
     [css.genericErrorVisible]: show,
@@ -123,7 +121,7 @@ const GenericError = props => {
       </div>
     </div>
   );
-};
+}
 
 GenericError.propTypes = {
   show: bool.isRequired,
@@ -195,7 +193,7 @@ class TopbarComponent extends Component {
         window.location = path;
       }
 
-      console.log('logged out'); // eslint-disable-line
+      console.log('logged out');
     });
   }
 
@@ -299,7 +297,7 @@ class TopbarComponent extends Component {
             {notificationDot}
           </Button>
           <LinkedLogo
-            layout={'mobile'}
+            layout="mobile"
             alt={intl.formatMessage({ id: 'Topbar.logoIcon' })}
             linkToExternalSite={config?.topbar?.logoLink}
           />
@@ -430,7 +428,7 @@ TopbarComponent.propTypes = {
   routeConfiguration: arrayOf(propTypes.route).isRequired,
 };
 
-const Topbar = props => {
+function Topbar(props) {
   const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();
   const intl = useIntl();
@@ -442,6 +440,6 @@ const Topbar = props => {
       {...props}
     />
   );
-};
+}
 
 export default Topbar;

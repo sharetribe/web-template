@@ -18,7 +18,7 @@ import { useConfiguration } from '../../context/configurationContext';
 import { FormattedMessage } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 
-import { IconSpinner } from '../../components';
+import { IconSpinner } from '..';
 
 import IconHourGlass from './IconHourGlass';
 import IconCurrentLocation from './IconCurrentLocation';
@@ -39,19 +39,19 @@ const DIRECTION_DOWN = 'down';
 const TOUCH_TAP_RADIUS = 5; // Movement within 5px from touch start is considered a tap
 
 // Touch devices need to be able to distinguish touches for scrolling and touches to tap
-const getTouchCoordinates = nativeEvent => {
+const getTouchCoordinates = (nativeEvent) => {
   const touch = nativeEvent && nativeEvent.changedTouches ? nativeEvent.changedTouches[0] : null;
   return touch ? { x: touch.screenX, y: touch.screenY } : null;
 };
 
 // Get correct geocoding variant: geocoderGoogleMaps or geocoderMapbox
-const getGeocoderVariant = mapProvider => {
+const getGeocoderVariant = (mapProvider) => {
   const isGoogleMapsInUse = mapProvider === 'googleMaps';
   return isGoogleMapsInUse ? geocoderGoogleMaps : geocoderMapbox;
 };
 
 // Renders the autocompletion prediction results in a list
-const LocationPredictionsList = props => {
+function LocationPredictionsList(props) {
   const {
     rootClassName,
     className,
@@ -77,23 +77,23 @@ const LocationPredictionsList = props => {
       <li
         className={isHighlighted ? css.highlighted : null}
         key={predictionId}
-        onTouchStart={e => {
+        onTouchStart={(e) => {
           e.preventDefault();
           onSelectStart(getTouchCoordinates(e.nativeEvent));
         }}
-        onMouseDown={e => {
+        onMouseDown={(e) => {
           e.preventDefault();
           onSelectStart();
         }}
-        onTouchMove={e => {
+        onTouchMove={(e) => {
           e.preventDefault();
           onSelectMove(getTouchCoordinates(e.nativeEvent));
         }}
-        onTouchEnd={e => {
+        onTouchEnd={(e) => {
           e.preventDefault();
           onSelectEnd(prediction);
         }}
-        onMouseUp={e => {
+        onMouseUp={(e) => {
           e.preventDefault();
           onSelectEnd(prediction);
         }}
@@ -116,7 +116,7 @@ const LocationPredictionsList = props => {
   const classes = classNames(
     rootClassName || css.predictionsRoot,
     predictionRootMapProviderClass,
-    className
+    className,
   );
 
   return (
@@ -125,7 +125,7 @@ const LocationPredictionsList = props => {
       {children}
     </div>
   );
-};
+}
 
 LocationPredictionsList.defaultProps = {
   rootClassName: null,
@@ -148,7 +148,7 @@ LocationPredictionsList.propTypes = {
 
 // Get the current value with defaults from the given
 // LocationAutocompleteInput props.
-const currentValue = props => {
+const currentValue = (props) => {
   const value = props.input.value || {};
   const { search = '', predictions = [], selectedPlace = null } = value;
   return { search, predictions, selectedPlace };
@@ -237,9 +237,10 @@ class LocationAutocompleteInputImplementation extends Component {
     // focuses on the autocomplete input without typing a search. This can
     // be used to reduce typing and Geocoding API calls for common
     // searches.
-    const defaultPredictions = (config.maps.search.suggestCurrentLocation
-      ? [{ id: geocoderVariant.CURRENT_LOCATION_ID, predictionPlace: {} }]
-      : []
+    const defaultPredictions = (
+      config.maps.search.suggestCurrentLocation
+        ? [{ id: geocoderVariant.CURRENT_LOCATION_ID, predictionPlace: {} }]
+        : []
     ).concat(config.maps.search.defaults);
 
     return showDefaultPredictions ? defaultPredictions : fetchedPredictions;
@@ -275,7 +276,7 @@ class LocationAutocompleteInputImplementation extends Component {
 
   // Handle input text change, fetch predictions if the value isn't empty
   onChange(e) {
-    const onChange = this.props.input.onChange;
+    const { onChange } = this.props.input;
     const predictions = this.currentPredictions();
     const newValue = e.target.value;
 
@@ -337,8 +338,8 @@ class LocationAutocompleteInputImplementation extends Component {
   // Select the prediction in the given item. This will fetch/read the
   // place details and set it as the selected place.
   selectPrediction(prediction) {
-    const currentLocationBoundsDistance = this.props.config.maps?.search
-      ?.currentLocationBoundsDistance;
+    const currentLocationBoundsDistance =
+      this.props.config.maps?.search?.currentLocationBoundsDistance;
     this.props.input.onChange({
       ...this.props.input,
       selectedPlace: null,
@@ -348,7 +349,7 @@ class LocationAutocompleteInputImplementation extends Component {
 
     this.getGeocoder()
       .getPlaceDetails(prediction, currentLocationBoundsDistance)
-      .then(place => {
+      .then((place) => {
         if (!this._isMounted) {
           // Ignore if component already unmounted
           return;
@@ -360,9 +361,9 @@ class LocationAutocompleteInputImplementation extends Component {
           selectedPlace: place,
         });
       })
-      .catch(e => {
+      .catch((e) => {
         this.setState({ fetchingPlaceDetails: false });
-        // eslint-disable-next-line no-console
+
         console.error(e);
         this.props.input.onChange({
           ...this.props.input.value,
@@ -370,6 +371,7 @@ class LocationAutocompleteInputImplementation extends Component {
         });
       });
   }
+
   selectItemIfNoneSelected() {
     if (this.state.fetchingPredictions) {
       // No need to select anything since prediction fetch is still going on
@@ -387,14 +389,15 @@ class LocationAutocompleteInputImplementation extends Component {
       }
     }
   }
+
   predict(search) {
-    const config = this.props.config;
-    const onChange = this.props.input.onChange;
+    const { config } = this.props;
+    const { onChange } = this.props.input;
     this.setState({ fetchingPredictions: true });
 
     return this.getGeocoder()
       .getPlacePredictions(search, config.maps.search.countryLimit, config.localization.locale)
-      .then(results => {
+      .then((results) => {
         const { search: currentSearch } = currentValue(this.props);
         this.setState({ fetchingPredictions: false });
 
@@ -414,9 +417,9 @@ class LocationAutocompleteInputImplementation extends Component {
           });
         }
       })
-      .catch(e => {
+      .catch((e) => {
         this.setState({ fetchingPredictions: false });
-        // eslint-disable-next-line no-console
+
         console.error(e);
         const value = currentValue(this.props);
         onChange({
@@ -446,8 +449,8 @@ class LocationAutocompleteInputImplementation extends Component {
   }
 
   handlePredictionsSelectMove(touchCoordinates) {
-    this.setState(prevState => {
-      const touchStartedFrom = prevState.touchStartedFrom;
+    this.setState((prevState) => {
+      const { touchStartedFrom } = prevState;
       const isTouchAction = !!touchStartedFrom;
       const isSwipe = isTouchAction
         ? Math.abs(touchStartedFrom.y - touchCoordinates.y) > TOUCH_TAP_RADIUS
@@ -460,7 +463,7 @@ class LocationAutocompleteInputImplementation extends Component {
   handlePredictionsSelectEnd(prediction) {
     let selectAndFinalize = false;
     this.setState(
-      prevState => {
+      (prevState) => {
         if (!prevState.isSwipe) {
           selectAndFinalize = true;
         }
@@ -471,7 +474,7 @@ class LocationAutocompleteInputImplementation extends Component {
           this.selectPrediction(prediction);
           this.finalizeSelection();
         }
-      }
+      },
     );
   }
 
@@ -498,7 +501,7 @@ class LocationAutocompleteInputImplementation extends Component {
     const isValid = valid && touched;
     const predictions = this.currentPredictions();
 
-    const handleOnFocus = e => {
+    const handleOnFocus = (e) => {
       this.setState({ inputHasFocus: true });
       onFocus(e);
     };
@@ -514,7 +517,7 @@ class LocationAutocompleteInputImplementation extends Component {
     // list will disappear.
     const renderPredictions = this.state.inputHasFocus;
     const geocoderVariant = getGeocoderVariant(config.maps.mapProvider);
-    const GeocoderAttribution = geocoderVariant.GeocoderAttribution;
+    const { GeocoderAttribution } = geocoderVariant;
 
     return (
       <div className={rootClass}>
@@ -538,7 +541,7 @@ class LocationAutocompleteInputImplementation extends Component {
           onBlur={this.handleOnBlur}
           onChange={this.onChange}
           onKeyDown={this.onKeyDown}
-          ref={node => {
+          ref={(node) => {
             this.input = node;
             if (inputRef) {
               inputRef(node);
@@ -567,11 +570,11 @@ class LocationAutocompleteInputImplementation extends Component {
   }
 }
 
-const LocationAutocompleteInputImpl = props => {
+function LocationAutocompleteInputImpl(props) {
   const config = useConfiguration();
 
   return <LocationAutocompleteInputImplementation config={config} {...props} />;
-};
+}
 
 LocationAutocompleteInputImpl.defaultProps = {
   autoFocus: false,

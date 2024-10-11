@@ -13,7 +13,7 @@ describe('marketplaceData duck', () => {
       const listing = createListing('test-id');
       const response = { data: { data: listing } };
       const sanitizeConfig = {};
-      const expected = { marketplaceData: { entities: { listing: { ['test-id']: listing } } } };
+      const expected = { marketplaceData: { entities: { listing: { 'test-id': listing } } } };
       const updatedState = reducer(initialState, addMarketplaceEntities(response, sanitizeConfig));
       expect({ marketplaceData: updatedState }).toEqual(expected);
     });

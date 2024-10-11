@@ -17,12 +17,12 @@ import css from './EditListingDeliveryPanel.module.css';
 
 const { Money } = sdkTypes;
 
-const getInitialValues = props => {
+const getInitialValues = (props) => {
   const { listing, listingTypes, marketplaceCurrency } = props;
   const { geolocation, publicData, price } = listing?.attributes || {};
 
   const listingType = listing?.attributes?.publicData?.listingType;
-  const listingTypeConfig = listingTypes.find(conf => conf.listingType === listingType);
+  const listingTypeConfig = listingTypes.find((conf) => conf.listingType === listingType);
   const displayShipping = displayDeliveryShipping(listingTypeConfig);
   const displayPickup = displayDeliveryPickup(listingTypeConfig);
   const displayMultipleDelivery = displayShipping && displayPickup;
@@ -72,7 +72,7 @@ const getInitialValues = props => {
   };
 };
 
-const EditListingDeliveryPanel = props => {
+function EditListingDeliveryPanel(props) {
   // State is needed since LocationAutocompleteInput doesn't have internal state
   // and therefore re-rendering would overwrite the values during XHR call.
   const [state, setState] = useState({ initialValues: getInitialValues(props) });
@@ -96,7 +96,7 @@ const EditListingDeliveryPanel = props => {
   const isPublished = listing?.id && listing?.attributes.state !== LISTING_STATE_DRAFT;
   const priceCurrencyValid = listing?.attributes?.price?.currency === marketplaceCurrency;
   const listingType = listing?.attributes?.publicData?.listingType;
-  const listingTypeConfig = listingTypes.find(conf => conf.listingType === listingType);
+  const listingTypeConfig = listingTypes.find((conf) => conf.listingType === listingType);
   const hasStockInUse = listingTypeConfig.stockType === STOCK_MULTIPLE_ITEMS;
 
   return (
@@ -118,7 +118,7 @@ const EditListingDeliveryPanel = props => {
         <EditListingDeliveryForm
           className={css.form}
           initialValues={state.initialValues}
-          onSubmit={values => {
+          onSubmit={(values) => {
             const {
               building = '',
               location,
@@ -189,7 +189,7 @@ const EditListingDeliveryPanel = props => {
       )}
     </div>
   );
-};
+}
 
 EditListingDeliveryPanel.defaultProps = {
   className: null,

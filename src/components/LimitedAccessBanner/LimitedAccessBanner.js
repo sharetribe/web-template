@@ -6,14 +6,14 @@ import { FormattedMessage } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { ensureCurrentUser } from '../../util/data';
 
-import { Button } from '../../components';
+import { Button } from '..';
 
 import css from './LimitedAccessBanner.module.css';
 
 // Due to the layout structure, do not render the banner on the following pages
 const disabledPages = ['SearchPage'];
 
-const LimitedAccessBanner = props => {
+function LimitedAccessBanner(props) {
   const {
     rootClassName,
     className,
@@ -57,7 +57,7 @@ const LimitedAccessBanner = props => {
       </Button>
     </div>
   ) : null;
-};
+}
 
 LimitedAccessBanner.defaultProps = {
   rootClassName: null,

@@ -1,11 +1,11 @@
 import React from 'react';
 import { FormattedMessage } from '../../util/reactIntl';
 import { isTooManyEmailVerificationRequestsError } from '../../util/errors';
-import { IconEmailAttention, InlineTextButton, NamedLink } from '../../components';
+import { IconEmailAttention, InlineTextButton, NamedLink } from '..';
 
 import css from './ModalMissingInformation.module.css';
 
-const EmailReminder = props => {
+function EmailReminder(props) {
   const {
     className,
     user,
@@ -29,7 +29,7 @@ const EmailReminder = props => {
   );
 
   const resendErrorTranslationId = isTooManyEmailVerificationRequestsError(
-    sendVerificationEmailError
+    sendVerificationEmailError,
   )
     ? 'ModalMissingInformation.resendFailedTooManyRequests'
     : 'ModalMissingInformation.resendFailed';
@@ -70,6 +70,6 @@ const EmailReminder = props => {
       </div>
     </div>
   );
-};
+}
 
 export default EmailReminder;

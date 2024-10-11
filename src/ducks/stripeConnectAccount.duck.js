@@ -100,12 +100,12 @@ export default function reducer(state = initialState, action = {}) {
 
 export const stripeAccountCreateRequest = () => ({ type: STRIPE_ACCOUNT_CREATE_REQUEST });
 
-export const stripeAccountCreateSuccess = stripeAccount => ({
+export const stripeAccountCreateSuccess = (stripeAccount) => ({
   type: STRIPE_ACCOUNT_CREATE_SUCCESS,
   payload: stripeAccount,
 });
 
-export const stripeAccountCreateError = e => ({
+export const stripeAccountCreateError = (e) => ({
   type: STRIPE_ACCOUNT_CREATE_ERROR,
   payload: e,
   error: true,
@@ -113,12 +113,12 @@ export const stripeAccountCreateError = e => ({
 
 export const stripeAccountUpdateRequest = () => ({ type: STRIPE_ACCOUNT_UPDATE_REQUEST });
 
-export const stripeAccountUpdateSuccess = stripeAccount => ({
+export const stripeAccountUpdateSuccess = (stripeAccount) => ({
   type: STRIPE_ACCOUNT_UPDATE_SUCCESS,
   payload: stripeAccount,
 });
 
-export const stripeAccountUpdateError = e => ({
+export const stripeAccountUpdateError = (e) => ({
   type: STRIPE_ACCOUNT_UPDATE_ERROR,
   payload: e,
   error: true,
@@ -126,12 +126,12 @@ export const stripeAccountUpdateError = e => ({
 
 export const stripeAccountFetchRequest = () => ({ type: STRIPE_ACCOUNT_FETCH_REQUEST });
 
-export const stripeAccountFetchSuccess = stripeAccount => ({
+export const stripeAccountFetchSuccess = (stripeAccount) => ({
   type: STRIPE_ACCOUNT_FETCH_SUCCESS,
   payload: stripeAccount,
 });
 
-export const stripeAccountFetchError = e => ({
+export const stripeAccountFetchError = (e) => ({
   type: STRIPE_ACCOUNT_FETCH_ERROR,
   payload: e,
   error: true,
@@ -144,7 +144,7 @@ export const stripeAccountClearError = () => ({
 export const getAccountLinkRequest = () => ({
   type: GET_ACCOUNT_LINK_REQUEST,
 });
-export const getAccountLinkError = e => ({
+export const getAccountLinkError = (e) => ({
   type: GET_ACCOUNT_LINK_ERROR,
   payload: e,
   error: true,
@@ -155,7 +155,7 @@ export const getAccountLinkSuccess = () => ({
 
 // ================ Thunks ================ //
 
-export const createStripeAccount = params => (dispatch, getState, sdk) => {
+export const createStripeAccount = (params) => (dispatch, getState, sdk) => {
   if (typeof window === 'undefined' || !window.Stripe) {
     throw new Error('Stripe must be loaded for submitting PayoutPreferences');
   }
@@ -185,7 +185,7 @@ export const createStripeAccount = params => (dispatch, getState, sdk) => {
 
   return stripe
     .createToken('account', accountInfo)
-    .then(response => {
+    .then((response) => {
       const accountToken = response.token.id;
       return sdk.stripeAccount.create(
         {
@@ -196,15 +196,15 @@ export const createStripeAccount = params => (dispatch, getState, sdk) => {
           businessProfileMCC,
           businessProfileURL,
         },
-        { expand: true }
+        { expand: true },
       );
     })
-    .then(response => {
+    .then((response) => {
       const stripeAccount = response.data.data;
       dispatch(stripeAccountCreateSuccess(stripeAccount));
       return stripeAccount;
     })
-    .catch(err => {
+    .catch((err) => {
       const e = storableError(err);
       dispatch(stripeAccountCreateError(e));
       const stripeMessage =
@@ -224,21 +224,21 @@ export const createStripeAccount = params => (dispatch, getState, sdk) => {
 // By default the account token will not be used.
 // See API reference for more information:
 // https://www.sharetribe.com/api-reference/?javascript#update-stripe-account
-export const updateStripeAccount = params => (dispatch, getState, sdk) => {
+export const updateStripeAccount = (params) => (dispatch, getState, sdk) => {
   const { bankAccountToken } = params;
 
   dispatch(stripeAccountUpdateRequest());
   return sdk.stripeAccount
     .update(
       { bankAccountToken, requestedCapabilities: ['card_payments', 'transfers'] },
-      { expand: true }
+      { expand: true },
     )
-    .then(response => {
+    .then((response) => {
       const stripeAccount = response.data.data;
       dispatch(stripeAccountUpdateSuccess(stripeAccount));
       return stripeAccount;
     })
-    .catch(err => {
+    .catch((err) => {
       const e = storableError(err);
       dispatch(stripeAccountUpdateError(e));
       const stripeMessage =
@@ -250,17 +250,17 @@ export const updateStripeAccount = params => (dispatch, getState, sdk) => {
     });
 };
 
-export const fetchStripeAccount = params => (dispatch, getState, sdk) => {
+export const fetchStripeAccount = (params) => (dispatch, getState, sdk) => {
   dispatch(stripeAccountFetchRequest());
 
   return sdk.stripeAccount
     .fetch()
-    .then(response => {
+    .then((response) => {
       const stripeAccount = response.data.data;
       dispatch(stripeAccountFetchSuccess(stripeAccount));
       return stripeAccount;
     })
-    .catch(err => {
+    .catch((err) => {
       const e = storableError(err);
       dispatch(stripeAccountFetchError(e));
       const stripeMessage =
@@ -272,7 +272,7 @@ export const fetchStripeAccount = params => (dispatch, getState, sdk) => {
     });
 };
 
-export const getStripeConnectAccountLink = params => (dispatch, getState, sdk) => {
+export const getStripeConnectAccountLink = (params) => (dispatch, getState, sdk) => {
   const { failureURL, successURL, type } = params;
   dispatch(getAccountLinkRequest());
 
@@ -288,11 +288,12 @@ export const getStripeConnectAccountLink = params => (dispatch, getState, sdk) =
         future_requirements: 'include',
       },
     })
-    .then(response => {
-      // Return the account link
-      return response.data.data.attributes.url;
-    })
-    .catch(err => {
+    .then(
+      (response) =>
+        // Return the account link
+        response.data.data.attributes.url,
+    )
+    .catch((err) => {
       const e = storableError(err);
       dispatch(getAccountLinkError(e));
       const stripeMessage =

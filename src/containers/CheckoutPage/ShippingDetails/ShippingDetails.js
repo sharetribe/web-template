@@ -10,7 +10,7 @@ import { FieldSelect, FieldTextInput, Heading } from '../../../components';
 
 import css from './ShippingDetails.module.css';
 
-const ShippingDetails = props => {
+function ShippingDetails(props) {
   const { rootClassName, className, locale, intl, disabled, formApi, fieldId } = props;
   const classes = classNames(rootClassName || css.root, className);
 
@@ -38,7 +38,7 @@ const ShippingDetails = props => {
           id: 'ShippingDetails.recipientNamePlaceholder',
         })}
         validate={validators.required(
-          intl.formatMessage({ id: 'ShippingDetails.recipientNameRequired' })
+          intl.formatMessage({ id: 'ShippingDetails.recipientNameRequired' }),
         )}
         onUnmount={() => formApi.change('recipientName', undefined)}
       />
@@ -51,7 +51,7 @@ const ShippingDetails = props => {
         autoComplete="shipping phoneNumber"
         label={intl.formatMessage(
           { id: 'ShippingDetails.recipientPhoneNumberLabel' },
-          { optionalText: optionalText }
+          { optionalText },
         )}
         placeholder={intl.formatMessage({
           id: 'ShippingDetails.recipientPhoneNumberPlaceholder',
@@ -71,7 +71,7 @@ const ShippingDetails = props => {
             id: 'ShippingDetails.addressLine1Placeholder',
           })}
           validate={validators.required(
-            intl.formatMessage({ id: 'ShippingDetails.addressLine1Required' })
+            intl.formatMessage({ id: 'ShippingDetails.addressLine1Required' }),
           )}
           onUnmount={() => formApi.change('recipientAddressLine1', undefined)}
         />
@@ -83,10 +83,7 @@ const ShippingDetails = props => {
           className={css.field}
           type="text"
           autoComplete="shipping address-line2"
-          label={intl.formatMessage(
-            { id: 'ShippingDetails.addressLine2Label' },
-            { optionalText: optionalText }
-          )}
+          label={intl.formatMessage({ id: 'ShippingDetails.addressLine2Label' }, { optionalText })}
           placeholder={intl.formatMessage({
             id: 'ShippingDetails.addressLine2Placeholder',
           })}
@@ -106,7 +103,7 @@ const ShippingDetails = props => {
             id: 'ShippingDetails.postalCodePlaceholder',
           })}
           validate={validators.required(
-            intl.formatMessage({ id: 'ShippingDetails.postalCodeRequired' })
+            intl.formatMessage({ id: 'ShippingDetails.postalCodeRequired' }),
           )}
           onUnmount={() => formApi.change('recipientPostal', undefined)}
         />
@@ -132,10 +129,7 @@ const ShippingDetails = props => {
           className={css.field}
           type="text"
           autoComplete="shipping address-level1"
-          label={intl.formatMessage(
-            { id: 'ShippingDetails.stateLabel' },
-            { optionalText: optionalText }
-          )}
+          label={intl.formatMessage({ id: 'ShippingDetails.stateLabel' }, { optionalText })}
           placeholder={intl.formatMessage({ id: 'ShippingDetails.statePlaceholder' })}
           onUnmount={() => formApi.change('recipientState', undefined)}
         />
@@ -147,24 +141,22 @@ const ShippingDetails = props => {
           className={css.field}
           label={intl.formatMessage({ id: 'ShippingDetails.countryLabel' })}
           validate={validators.required(
-            intl.formatMessage({ id: 'ShippingDetails.countryRequired' })
+            intl.formatMessage({ id: 'ShippingDetails.countryRequired' }),
           )}
         >
           <option disabled value="">
             {intl.formatMessage({ id: 'ShippingDetails.countryPlaceholder' })}
           </option>
-          {countryCodes.map(country => {
-            return (
-              <option key={country.code} value={country.code}>
-                {country.name}
-              </option>
-            );
-          })}
+          {countryCodes.map((country) => (
+            <option key={country.code} value={country.code}>
+              {country.name}
+            </option>
+          ))}
         </FieldSelect>
       </div>
     </div>
   );
-};
+}
 
 ShippingDetails.defaultProps = {
   rootClassName: null,

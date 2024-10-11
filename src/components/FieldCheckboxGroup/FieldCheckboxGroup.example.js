@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
-import { Button, H3 } from '../../components';
+import { Button, H3 } from '..';
 import FieldCheckboxGroup from './FieldCheckboxGroup';
 import { requiredFieldArrayCheckbox } from '../../util/validators';
 
@@ -11,7 +11,7 @@ const formNameRequired = 'Styleguide.FieldCheckboxGroupRequired';
 const label = <H3>Amenities</H3>;
 
 const commonProps = {
-  label: label,
+  label,
   options: [
     {
       key: 'towels',
@@ -73,43 +73,46 @@ const tosProps = {
   validate: requiredFieldArrayCheckbox('You need to accept Terms of Service'),
 };
 
-const formComponent = country => props => (
-  <FinalForm
-    {...props}
-    mutators={{ ...arrayMutators }}
-    render={fieldRenderProps => {
-      const { handleSubmit, invalid, submitting, componentProps, onChange } = fieldRenderProps;
+const formComponent = (country) =>
+  function (props) {
+    return (
+      <FinalForm
+        {...props}
+        mutators={{ ...arrayMutators }}
+        render={(fieldRenderProps) => {
+          const { handleSubmit, invalid, submitting, componentProps, onChange } = fieldRenderProps;
 
-      const submitDisabled = invalid || submitting;
+          const submitDisabled = invalid || submitting;
 
-      return (
-        <form
-          onSubmit={e => {
-            e.preventDefault();
-            handleSubmit(e);
-          }}
-        >
-          <FormSpy onChange={onChange} subscription={{ values: true, dirty: true }} />
-          <FieldCheckboxGroup {...componentProps} />
+          return (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSubmit(e);
+              }}
+            >
+              <FormSpy onChange={onChange} subscription={{ values: true, dirty: true }} />
+              <FieldCheckboxGroup {...componentProps} />
 
-          <Button style={{ marginTop: 24 }} type="submit" disabled={submitDisabled}>
-            Submit
-          </Button>
-        </form>
-      );
-    }}
-  />
-);
+              <Button style={{ marginTop: 24 }} type="submit" disabled={submitDisabled}>
+                Submit
+              </Button>
+            </form>
+          );
+        }}
+      />
+    );
+  };
 
 export const Optional = {
   component: formComponent(formName),
   props: {
-    onChange: formState => {
+    onChange: (formState) => {
       if (formState.dirty) {
         console.log('form values changed to:', formState.values);
       }
     },
-    onSubmit: values => {
+    onSubmit: (values) => {
       console.log('Submit values: ', values);
     },
     initialValues: { [optionalProps.name]: ['jacuzzi', 'towels'] },
@@ -121,12 +124,12 @@ export const Optional = {
 export const Required = {
   component: formComponent(formNameRequired),
   props: {
-    onChange: formState => {
+    onChange: (formState) => {
       if (formState.dirty) {
         console.log('form values changed to:', formState.values);
       }
     },
-    onSubmit: values => {
+    onSubmit: (values) => {
       console.log('Submit values: ', values);
     },
     componentProps: requiredProps,
@@ -137,12 +140,12 @@ export const Required = {
 export const ToSAccepted = {
   component: formComponent(formNameRequired),
   props: {
-    onChange: formState => {
+    onChange: (formState) => {
       if (formState.dirty) {
         console.log('form values changed to:', formState.values);
       }
     },
-    onSubmit: values => {
+    onSubmit: (values) => {
       console.log('Submit values: ', values);
     },
     componentProps: tosProps,

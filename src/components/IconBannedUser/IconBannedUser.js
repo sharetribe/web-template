@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import css from './IconBannedUser.module.css';
 
-const IconBannedUser = props => {
+function IconBannedUser(props) {
   const { className } = props;
   return (
     <svg
@@ -26,7 +26,7 @@ const IconBannedUser = props => {
       </g>
     </svg>
   );
-};
+}
 
 IconBannedUser.defaultProps = { className: null };
 

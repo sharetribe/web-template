@@ -96,7 +96,7 @@ const listingPageReducer = (state = initialState, action = {}) => {
       return { ...state, monthlyTimeSlots };
     }
     case FETCH_TIME_SLOTS_SUCCESS: {
-      const monthId = payload.monthId;
+      const { monthId } = payload;
       const monthlyTimeSlots = {
         ...state.monthlyTimeSlots,
         [monthId]: {
@@ -108,7 +108,7 @@ const listingPageReducer = (state = initialState, action = {}) => {
       return { ...state, monthlyTimeSlots };
     }
     case FETCH_TIME_SLOTS_ERROR: {
-      const monthId = payload.monthId;
+      const { monthId } = payload;
       const monthlyTimeSlots = {
         ...state.monthlyTimeSlots,
         [monthId]: {
@@ -143,31 +143,31 @@ export default listingPageReducer;
 
 // ================ Action creators ================ //
 
-export const setInitialValues = initialValues => ({
+export const setInitialValues = (initialValues) => ({
   type: SET_INITIAL_VALUES,
   payload: pick(initialValues, Object.keys(initialState)),
 });
 
-export const showListingRequest = id => ({
+export const showListingRequest = (id) => ({
   type: SHOW_LISTING_REQUEST,
   payload: { id },
 });
 
-export const showListingError = e => ({
+export const showListingError = (e) => ({
   type: SHOW_LISTING_ERROR,
   error: true,
   payload: e,
 });
 
 export const fetchReviewsRequest = () => ({ type: FETCH_REVIEWS_REQUEST });
-export const fetchReviewsSuccess = reviews => ({ type: FETCH_REVIEWS_SUCCESS, payload: reviews });
-export const fetchReviewsError = error => ({
+export const fetchReviewsSuccess = (reviews) => ({ type: FETCH_REVIEWS_SUCCESS, payload: reviews });
+export const fetchReviewsError = (error) => ({
   type: FETCH_REVIEWS_ERROR,
   error: true,
   payload: error,
 });
 
-export const fetchTimeSlotsRequest = monthId => ({
+export const fetchTimeSlotsRequest = (monthId) => ({
   type: FETCH_TIME_SLOTS_REQUEST,
   payload: monthId,
 });
@@ -182,11 +182,11 @@ export const fetchTimeSlotsError = (monthId, error) => ({
 });
 
 export const fetchLineItemsRequest = () => ({ type: FETCH_LINE_ITEMS_REQUEST });
-export const fetchLineItemsSuccess = lineItems => ({
+export const fetchLineItemsSuccess = (lineItems) => ({
   type: FETCH_LINE_ITEMS_SUCCESS,
   payload: lineItems,
 });
-export const fetchLineItemsError = error => ({
+export const fetchLineItemsError = (error) => ({
   type: FETCH_LINE_ITEMS_ERROR,
   error: true,
   payload: error,
@@ -194,71 +194,73 @@ export const fetchLineItemsError = error => ({
 
 export const sendInquiryRequest = () => ({ type: SEND_INQUIRY_REQUEST });
 export const sendInquirySuccess = () => ({ type: SEND_INQUIRY_SUCCESS });
-export const sendInquiryError = e => ({ type: SEND_INQUIRY_ERROR, error: true, payload: e });
+export const sendInquiryError = (e) => ({ type: SEND_INQUIRY_ERROR, error: true, payload: e });
 
 // ================ Thunks ================ //
 
-export const showListing = (listingId, config, isOwn = false) => (dispatch, getState, sdk) => {
-  const {
-    aspectWidth = 1,
-    aspectHeight = 1,
-    variantPrefix = 'listing-card',
-  } = config.layout.listingImage;
-  const aspectRatio = aspectHeight / aspectWidth;
+export const showListing =
+  (listingId, config, isOwn = false) =>
+  (dispatch, getState, sdk) => {
+    const {
+      aspectWidth = 1,
+      aspectHeight = 1,
+      variantPrefix = 'listing-card',
+    } = config.layout.listingImage;
+    const aspectRatio = aspectHeight / aspectWidth;
 
-  dispatch(showListingRequest(listingId));
-  // Current user entity is fetched in a bit lazy fashion, since it's not tied to returned Promise chain.
-  const fetchCurrentUserOptions = {
-    updateHasListings: false,
-    updateNotifications: false,
+    dispatch(showListingRequest(listingId));
+    // Current user entity is fetched in a bit lazy fashion, since it's not tied to returned Promise chain.
+    const fetchCurrentUserOptions = {
+      updateHasListings: false,
+      updateNotifications: false,
+    };
+    dispatch(fetchCurrentUser(fetchCurrentUserOptions));
+
+    const params = {
+      id: listingId,
+      include: ['author', 'author.profileImage', 'images', 'currentStock'],
+      'fields.image': [
+        // Scaled variants for large images
+        'variants.scaled-small',
+        'variants.scaled-medium',
+        'variants.scaled-large',
+        'variants.scaled-xlarge',
+
+        // Cropped variants for listing thumbnail images
+        `variants.${variantPrefix}`,
+        `variants.${variantPrefix}-2x`,
+        `variants.${variantPrefix}-4x`,
+        `variants.${variantPrefix}-6x`,
+
+        // Social media
+        'variants.facebook',
+        'variants.twitter',
+
+        // Avatars
+        'variants.square-small',
+        'variants.square-small2x',
+      ],
+      ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
+      ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
+      ...createImageVariantConfig(`${variantPrefix}-4x`, 1600, aspectRatio),
+      ...createImageVariantConfig(`${variantPrefix}-6x`, 2400, aspectRatio),
+    };
+
+    const show = isOwn ? sdk.ownListings.show(params) : sdk.listings.show(params);
+
+    return show
+      .then((data) => {
+        const listingFields = config?.listing?.listingFields;
+        const sanitizeConfig = { listingFields };
+        dispatch(addMarketplaceEntities(data, sanitizeConfig));
+        return data;
+      })
+      .catch((e) => {
+        dispatch(showListingError(storableError(e)));
+      });
   };
-  dispatch(fetchCurrentUser(fetchCurrentUserOptions));
 
-  const params = {
-    id: listingId,
-    include: ['author', 'author.profileImage', 'images', 'currentStock'],
-    'fields.image': [
-      // Scaled variants for large images
-      'variants.scaled-small',
-      'variants.scaled-medium',
-      'variants.scaled-large',
-      'variants.scaled-xlarge',
-
-      // Cropped variants for listing thumbnail images
-      `variants.${variantPrefix}`,
-      `variants.${variantPrefix}-2x`,
-      `variants.${variantPrefix}-4x`,
-      `variants.${variantPrefix}-6x`,
-
-      // Social media
-      'variants.facebook',
-      'variants.twitter',
-
-      // Avatars
-      'variants.square-small',
-      'variants.square-small2x',
-    ],
-    ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
-    ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
-    ...createImageVariantConfig(`${variantPrefix}-4x`, 1600, aspectRatio),
-    ...createImageVariantConfig(`${variantPrefix}-6x`, 2400, aspectRatio),
-  };
-
-  const show = isOwn ? sdk.ownListings.show(params) : sdk.listings.show(params);
-
-  return show
-    .then(data => {
-      const listingFields = config?.listing?.listingFields;
-      const sanitizeConfig = { listingFields };
-      dispatch(addMarketplaceEntities(data, sanitizeConfig));
-      return data;
-    })
-    .catch(e => {
-      dispatch(showListingError(storableError(e)));
-    });
-};
-
-export const fetchReviews = listingId => (dispatch, getState, sdk) => {
+export const fetchReviews = (listingId) => (dispatch, getState, sdk) => {
   dispatch(fetchReviewsRequest());
   return sdk.reviews
     .query({
@@ -267,20 +269,17 @@ export const fetchReviews = listingId => (dispatch, getState, sdk) => {
       include: ['author', 'author.profileImage'],
       'fields.image': ['variants.square-small', 'variants.square-small2x'],
     })
-    .then(response => {
+    .then((response) => {
       const reviews = denormalisedResponseEntities(response);
       dispatch(fetchReviewsSuccess(reviews));
     })
-    .catch(e => {
+    .catch((e) => {
       dispatch(fetchReviewsError(storableError(e)));
     });
 };
 
-const timeSlotsRequest = params => (dispatch, getState, sdk) => {
-  return sdk.timeslots.query(params).then(response => {
-    return denormalisedResponseEntities(response);
-  });
-};
+const timeSlotsRequest = (params) => (dispatch, getState, sdk) =>
+  sdk.timeslots.query(params).then((response) => denormalisedResponseEntities(response));
 
 export const fetchTimeSlots = (listingId, start, end, timeZone) => (dispatch, getState, sdk) => {
   const monthId = monthIdString(start, timeZone);
@@ -294,10 +293,10 @@ export const fetchTimeSlots = (listingId, start, end, timeZone) => (dispatch, ge
   };
 
   return dispatch(timeSlotsRequest({ listingId, start, end, ...extraParams }))
-    .then(timeSlots => {
+    .then((timeSlots) => {
       dispatch(fetchTimeSlotsSuccess(monthId, timeSlots));
     })
-    .catch(e => {
+    .catch((e) => {
       dispatch(fetchTimeSlotsError(monthId, storableError(e)));
     });
 };
@@ -325,7 +324,7 @@ export const sendInquiry = (listing, message) => (dispatch, getState, sdk) => {
   };
   return sdk.transactions
     .initiate(bodyParams)
-    .then(response => {
+    .then((response) => {
       const transactionId = response.data.data.id;
 
       // Send the message to the created transaction
@@ -335,7 +334,7 @@ export const sendInquiry = (listing, message) => (dispatch, getState, sdk) => {
         return transactionId;
       });
     })
-    .catch(e => {
+    .catch((e) => {
       dispatch(sendInquiryError(storableError(e)));
       throw e;
     });
@@ -344,7 +343,7 @@ export const sendInquiry = (listing, message) => (dispatch, getState, sdk) => {
 // Helper function for loadData call.
 const fetchMonthlyTimeSlots = (dispatch, listing) => {
   const hasWindow = typeof window !== 'undefined';
-  const attributes = listing.attributes;
+  const { attributes } = listing;
   // Listing could be ownListing entity too, so we just check if attributes key exists
   const hasTimeZone =
     attributes && attributes.availabilityPlan && attributes.availabilityPlan.timezone;
@@ -369,21 +368,23 @@ const fetchMonthlyTimeSlots = (dispatch, listing) => {
   return Promise.all([]);
 };
 
-export const fetchTransactionLineItems = ({ orderData, listingId, isOwnListing }) => dispatch => {
-  dispatch(fetchLineItemsRequest());
-  transactionLineItems({ orderData, listingId, isOwnListing })
-    .then(response => {
-      const lineItems = response.data;
-      dispatch(fetchLineItemsSuccess(lineItems));
-    })
-    .catch(e => {
-      dispatch(fetchLineItemsError(storableError(e)));
-      log.error(e, 'fetching-line-items-failed', {
-        listingId: listingId.uuid,
-        orderData,
+export const fetchTransactionLineItems =
+  ({ orderData, listingId, isOwnListing }) =>
+  (dispatch) => {
+    dispatch(fetchLineItemsRequest());
+    transactionLineItems({ orderData, listingId, isOwnListing })
+      .then((response) => {
+        const lineItems = response.data;
+        dispatch(fetchLineItemsSuccess(lineItems));
+      })
+      .catch((e) => {
+        dispatch(fetchLineItemsError(storableError(e)));
+        log.error(e, 'fetching-line-items-failed', {
+          listingId: listingId.uuid,
+          orderData,
+        });
       });
-    });
-};
+  };
 
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   const listingId = new UUID(params.id);
@@ -417,7 +418,7 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
     : // For users with viewing rights, fetch the listing and the associated reviews
       [dispatch(showListing(listingId, config)), dispatch(fetchReviews(listingId))];
 
-  return Promise.all(promises).then(response => {
+  return Promise.all(promises).then((response) => {
     const listingResponse = response[0];
     const listing = listingResponse?.data?.data;
     const transactionProcessAlias = listing?.attributes?.publicData?.transactionProcessAlias || '';

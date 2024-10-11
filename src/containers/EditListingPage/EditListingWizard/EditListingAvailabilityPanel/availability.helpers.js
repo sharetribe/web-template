@@ -31,16 +31,14 @@ export const getStartOfPrevMonth = (currentMoment, timeZone, offset = 1) =>
   getStartOfMonth(currentMoment, timeZone, -1 * offset);
 
 // React-dates returns wrapped date objects
-export const extractDateFromFieldDateInput = dateValue => dateValue?.date || null;
+export const extractDateFromFieldDateInput = (dateValue) => dateValue?.date || null;
 
 // React-dates returns wrapped date objects
-export const extractDateFromFieldDateRangeInput = dates => {
-  return dates?.startDate || dates?.endDate ? dates : { startDate: null, endDate: null };
-};
+export const extractDateFromFieldDateRangeInput = (dates) =>
+  dates?.startDate || dates?.endDate ? dates : { startDate: null, endDate: null };
 
-export const endOfAvailabilityExceptionRange = (timeZone, date) => {
-  return getStartOf(date, 'day', timeZone, MAX_AVAILABILITY_EXCEPTIONS_RANGE - 1, 'days');
-};
+export const endOfAvailabilityExceptionRange = (timeZone, date) =>
+  getStartOf(date, 'day', timeZone, MAX_AVAILABILITY_EXCEPTIONS_RANGE - 1, 'days');
 
 const endOfRange = (date, dayCountAvailableForBooking, timeZone) =>
   getStartOf(date, 'day', timeZone, dayCountAvailableForBooking - 1, 'days');
@@ -51,7 +49,7 @@ const fetchExceptionData = (
   timeZone,
   onFetchExceptions,
   firstDayOfWeek,
-  isWeekly = true
+  isWeekly = true,
 ) => {
   const endOfRangeDate = endOfRange(TODAY, MAX_AVAILABILITY_EXCEPTIONS_RANGE, timeZone);
 
@@ -77,7 +75,7 @@ const fetchExceptionData = (
 // Update current week
 // When clicking next or prev buttons on weekly calendar,
 // we fetch data for the week that comes after next week.
-export const handleWeekClick = params => weekFn => {
+export const handleWeekClick = (params) => (weekFn) => {
   const {
     currentWeek,
     setCurrentWeek,
@@ -98,7 +96,7 @@ export const handleWeekClick = params => weekFn => {
     listingId,
     timeZone,
     onFetchExceptions,
-    firstDayOfWeek
+    firstDayOfWeek,
   );
 
   // If previous fetch for the week data failed, try again.
@@ -112,7 +110,7 @@ export const handleWeekClick = params => weekFn => {
 // Update current month and call callback function.
 // When clicking next or prev buttons on monthly calendar,
 // we fetch data for the month that comes after next month.
-export const handleMonthClick = params => monthFn => {
+export const handleMonthClick = (params) => (monthFn) => {
   const {
     currentMonth,
     setCurrentMonth,
@@ -134,7 +132,7 @@ export const handleMonthClick = params => monthFn => {
     timeZone,
     onFetchExceptions,
     undefined,
-    false
+    false,
   );
 
   // If previous fetch for the month data failed, try again.

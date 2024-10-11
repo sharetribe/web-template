@@ -10,12 +10,12 @@ const { waitFor } = testingLibrary;
 describe('PrivacyPolicyPage', () => {
   it('renders the Fallback page on error', async () => {
     const errorMessage = 'PrivacyPolicyPage failed';
-    let e = new Error(errorMessage);
+    const e = new Error(errorMessage);
     e.type = 'error';
     e.name = 'Test';
 
     const { getByText } = render(
-      <PrivacyPolicyPageComponent pageAssetsData={null} inProgress={false} error={e} />
+      <PrivacyPolicyPageComponent pageAssetsData={null} inProgress={false} error={e} />,
     );
 
     await waitFor(() => {

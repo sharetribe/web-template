@@ -5,11 +5,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { MenuItem } from '../../components';
+import { MenuItem } from '..';
 
 import css from './MenuContent.module.css';
 
-const MenuContent = props => {
+function MenuContent(props) {
   const {
     arrowPosition,
     children,
@@ -38,7 +38,7 @@ const MenuContent = props => {
     </div>
   ) : null;
 
-  React.Children.forEach(children, child => {
+  React.Children.forEach(children, (child) => {
     if (child.type !== MenuItem) {
       throw new Error('All children of MenuContent must be MenuItems.');
     }
@@ -53,7 +53,7 @@ const MenuContent = props => {
       <ul className={contentClasses}>{children}</ul>
     </div>
   );
-};
+}
 
 MenuContent.defaultProps = {
   arrowPosition: null,

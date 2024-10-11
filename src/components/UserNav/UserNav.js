@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
+import { FormattedMessage } from '../../util/reactIntl';
 import { ACCOUNT_SETTINGS_PAGES } from '../../routing/routeConfiguration';
-import { LinkTabNavHorizontal } from '../../components';
+import { LinkTabNavHorizontal } from '..';
 
 import css from './UserNav.module.css';
 
-const UserNav = props => {
+function UserNav(props) {
   const { className, rootClassName, currentPage } = props;
   const classes = classNames(rootClassName || css.root, className);
 
@@ -40,7 +40,7 @@ const UserNav = props => {
   return (
     <LinkTabNavHorizontal className={classes} tabRootClassName={css.tab} tabs={tabs} skin="dark" />
   );
-};
+}
 
 UserNav.defaultProps = {
   className: null,

@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 
 import { renderWithProviders as render } from '../../util/testHelpers';
 
-import { MenuItem, MenuLabel, MenuContent } from '../../components';
+import { MenuItem, MenuLabel, MenuContent } from '..';
 import Menu from './Menu';
 
 describe('Menu', () => {
@@ -17,7 +17,7 @@ describe('Menu', () => {
           <MenuItem key="1">Menu item 1</MenuItem>
           <MenuItem key="2">Menu item 2</MenuItem>
         </MenuContent>
-      </Menu>
+      </Menu>,
     );
     expect(tree.asFragment()).toMatchSnapshot();
   });

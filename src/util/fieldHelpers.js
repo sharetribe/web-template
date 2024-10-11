@@ -42,7 +42,7 @@ export const isFieldFor = (entityTypeKey, entityType, fieldConfig) => {
   const { isLimited, limitToIds } = getEntityTypeRestrictions(entityTypeKey, fieldConfig);
 
   if (Array.isArray(entityType)) {
-    return !isLimited || limitToIds.some(cid => entityType.includes(cid));
+    return !isLimited || limitToIds.some((cid) => entityType.includes(cid));
   }
   return !isLimited || limitToIds.includes(entityType);
 };
@@ -83,7 +83,7 @@ export const pickCategoryFields = (data, prefix, level, categoryLevelOptions = [
 
   // Validate the value against category options
   const categoryOptionConfig = categoryLevelOptions.find(
-    category => category.id === currentCategoryValue
+    (category) => category.id === currentCategoryValue,
   );
   const isValidCategoryValue = !!categoryOptionConfig;
   const nextLevelOptions = categoryOptionConfig?.subcategories || [];
@@ -116,16 +116,16 @@ export const pickCustomFieldProps = (
   metadata,
   fieldConfigs,
   entityTypeKey,
-  shouldPickFn
-) => {
-  return fieldConfigs?.reduce((pickedElements, config) => {
+  shouldPickFn,
+) =>
+  fieldConfigs?.reduce((pickedElements, config) => {
     const { key, enumOptions, schemaType, scope = 'public', showConfig } = config;
     const { label, unselectedOptions: showUnselectedOptions } = showConfig || {};
     const entityType = publicData && publicData[entityTypeKey];
     const isTargetEntityType = isFieldFor(entityTypeKey, entityType, config);
 
-    const createFilterOptions = options =>
-      options.map(o => ({ key: `${o.option}`, label: o.label }));
+    const createFilterOptions = (options) =>
+      options.map((o) => ({ key: `${o.option}`, label: o.label }));
 
     const shouldPick = shouldPickFn ? shouldPickFn(config) : true;
 
@@ -133,8 +133,8 @@ export const pickCustomFieldProps = (
       scope === 'public'
         ? getFieldValue(publicData, key)
         : scope === 'metadata'
-        ? getFieldValue(metadata, key)
-        : null;
+          ? getFieldValue(metadata, key)
+          : null;
 
     return isTargetEntityType && schemaType === SCHEMA_TYPE_MULTI_ENUM && shouldPick
       ? [
@@ -149,15 +149,14 @@ export const pickCustomFieldProps = (
           },
         ]
       : isTargetEntityType && !!value && config.schemaType === SCHEMA_TYPE_TEXT && shouldPick
-      ? [
-          ...pickedElements,
-          {
-            schemaType,
-            key,
-            heading: label,
-            text: value,
-          },
-        ]
-      : pickedElements;
+        ? [
+            ...pickedElements,
+            {
+              schemaType,
+              key,
+              heading: label,
+              text: value,
+            },
+          ]
+        : pickedElements;
   }, []);
-};

@@ -9,7 +9,7 @@ import { H2 } from '../../../../components';
  * @param {object} props
  * @returns JSX element containing the error message
  */
-const ErrorMessage = props => {
+function ErrorMessage(props) {
   const { invalidExistingListingType, noListingTypesSet, marketplaceName } = props;
   return invalidExistingListingType ? (
     <div>
@@ -33,6 +33,6 @@ const ErrorMessage = props => {
       </p>
     </div>
   ) : null;
-};
+}
 
 export default ErrorMessage;

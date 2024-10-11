@@ -7,15 +7,7 @@ import { propTypes } from '../../../util/types';
 import { numberAtLeast, required } from '../../../util/validators';
 import { PURCHASE_PROCESS_NAME } from '../../../transactions/transaction';
 
-import {
-  Form,
-  FieldSelect,
-  FieldTextInput,
-  InlineTextButton,
-  PrimaryButton,
-  H3,
-  H6,
-} from '../../../components';
+import { Form, FieldSelect, FieldTextInput, InlineTextButton, PrimaryButton, H3, H6 } from '../..';
 
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
 
@@ -52,7 +44,7 @@ const handleFetchLineItems = ({
   }
 };
 
-const DeliveryMethodMaybe = props => {
+function DeliveryMethodMaybe(props) {
   const {
     displayDeliveryMethod,
     hasMultipleDeliveryMethods,
@@ -74,10 +66,8 @@ const DeliveryMethodMaybe = props => {
       <option disabled value="">
         {intl.formatMessage({ id: 'ProductOrderForm.selectDeliveryMethodOption' })}
       </option>
-      <option value={'pickup'}>
-        {intl.formatMessage({ id: 'ProductOrderForm.pickupOption' })}
-      </option>
-      <option value={'shipping'}>
+      <option value="pickup">{intl.formatMessage({ id: 'ProductOrderForm.pickupOption' })}</option>
+      <option value="shipping">
         {intl.formatMessage({ id: 'ProductOrderForm.shippingOption' })}
       </option>
     </FieldSelect>
@@ -106,9 +96,9 @@ const DeliveryMethodMaybe = props => {
       type="hidden"
     />
   );
-};
+}
 
-const renderForm = formRenderProps => {
+const renderForm = (formRenderProps) => {
   const [mounted, setMounted] = useState(false);
   const {
     // FormRenderProps from final-form
@@ -155,7 +145,7 @@ const renderForm = formRenderProps => {
   }, []);
 
   // If form values change, update line-items for the order breakdown
-  const handleOnChange = formValues => {
+  const handleOnChange = (formValues) => {
     const { quantity, deliveryMethod } = formValues.values;
     if (mounted) {
       handleFetchLineItems({
@@ -171,7 +161,7 @@ const renderForm = formRenderProps => {
 
   // In case quantity and deliveryMethod are missing focus on that select-input.
   // Otherwise continue with the default handleSubmit function.
-  const handleFormSubmit = e => {
+  const handleFormSubmit = (e) => {
     const { quantity, deliveryMethod } = values || {};
     if (!quantity || quantity < 1) {
       e.preventDefault();
@@ -194,7 +184,7 @@ const renderForm = formRenderProps => {
 
   const showContactUser = typeof onContactUser === 'function';
 
-  const onClickContactUser = e => {
+  const onClickContactUser = (e) => {
     e.preventDefault();
     onContactUser();
   };
@@ -213,7 +203,7 @@ const renderForm = formRenderProps => {
   const hasOneItemLeft = currentStock === 1;
   const selectableStock =
     currentStock > MAX_QUANTITY_FOR_DROPDOWN ? MAX_QUANTITY_FOR_DROPDOWN : currentStock;
-  const quantities = hasStock ? [...Array(selectableStock).keys()].map(i => i + 1) : [];
+  const quantities = hasStock ? [...Array(selectableStock).keys()].map((i) => i + 1) : [];
 
   const submitInProgress = fetchLineItemsInProgress;
   const submitDisabled = !hasStock;
@@ -241,7 +231,7 @@ const renderForm = formRenderProps => {
           <option disabled value="">
             {intl.formatMessage({ id: 'ProductOrderForm.selectQuantityOption' })}
           </option>
-          {quantities.map(quantity => (
+          {quantities.map((quantity) => (
             <option key={quantity} value={quantity}>
               {intl.formatMessage({ id: 'ProductOrderForm.quantityOption' }, { quantity })}
             </option>
@@ -284,21 +274,23 @@ const renderForm = formRenderProps => {
         </PrimaryButton>
       </div>
       <p className={css.finePrint}>
-        {payoutDetailsWarning ? (
-          payoutDetailsWarning
-        ) : hasStock && isOwnListing ? (
-          <FormattedMessage id="ProductOrderForm.ownListing" />
-        ) : hasStock ? (
-          <FormattedMessage id="ProductOrderForm.finePrint" />
-        ) : showContactUser ? (
-          <FormattedMessage id="ProductOrderForm.finePrintNoStock" values={{ contactSellerLink }} />
-        ) : null}
+        {payoutDetailsWarning ||
+          (hasStock && isOwnListing ? (
+            <FormattedMessage id="ProductOrderForm.ownListing" />
+          ) : hasStock ? (
+            <FormattedMessage id="ProductOrderForm.finePrint" />
+          ) : showContactUser ? (
+            <FormattedMessage
+              id="ProductOrderForm.finePrintNoStock"
+              values={{ contactSellerLink }}
+            />
+          ) : null)}
       </p>
     </Form>
   );
 };
 
-const ProductOrderForm = props => {
+function ProductOrderForm(props) {
   const intl = useIntl();
   const {
     price,
@@ -326,10 +318,10 @@ const ProductOrderForm = props => {
     shippingEnabled && !pickupEnabled
       ? { deliveryMethod: 'shipping' }
       : !shippingEnabled && pickupEnabled
-      ? { deliveryMethod: 'pickup' }
-      : !shippingEnabled && !pickupEnabled
-      ? { deliveryMethod: 'none' }
-      : {};
+        ? { deliveryMethod: 'pickup' }
+        : !shippingEnabled && !pickupEnabled
+          ? { deliveryMethod: 'none' }
+          : {};
   const hasMultipleDeliveryMethods = pickupEnabled && shippingEnabled;
   const initialValues = { ...quantityMaybe, ...deliveryMethodMaybe };
 
@@ -343,7 +335,7 @@ const ProductOrderForm = props => {
       render={renderForm}
     />
   );
-};
+}
 
 ProductOrderForm.defaultProps = {
   rootClassName: null,

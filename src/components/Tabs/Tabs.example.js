@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Tabs from './Tabs';
 
-const TestPanel = props => {
+function TestPanel(props) {
   return <div>{props.children}</div>;
-};
+}
 
 const { node } = PropTypes;
 
@@ -17,7 +17,7 @@ const selfLinkProps = {
   params: { component: 'Tabs' },
 };
 
-const TabsWrapper = () => {
+function TabsWrapper() {
   return (
     <Tabs>
       <TestPanel tabId="Description" tabLabel="Description" tabLinkProps={selfLinkProps}>
@@ -31,7 +31,7 @@ const TabsWrapper = () => {
       </TestPanel>
     </Tabs>
   );
-};
+}
 
 export const Example = {
   component: TabsWrapper,

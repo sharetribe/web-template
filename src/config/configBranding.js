@@ -4,12 +4,12 @@ import brandImage from '../assets/biketribe-brandImage-1500.jpg';
 import facebookImage from '../assets/biketribe-facebook-sharing-1200x630.jpg';
 import twitterImage from '../assets/biketribe-twitter-sharing-600x314.jpg';
 
-/////////////////////////////////////////////////////////
+/// //////////////////////////////////////////////////////
 // This file contains configs that affect branding     //
 // NOTE: these are just some of the relevant configs   //
 // Most of the work happens in marketplaceDefaults.css //
 // and in components.                                  //
-/////////////////////////////////////////////////////////
+/// //////////////////////////////////////////////////////
 
 // Note: These come from the branding asset nowadays by default.
 //       To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeBranding func)

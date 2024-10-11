@@ -24,7 +24,7 @@ class PasswordRecoveryFormComponent extends Component {
     return (
       <FinalForm
         {...this.props}
-        render={fieldRenderProps => {
+        render={(fieldRenderProps) => {
           const {
             rootClassName,
             className,
@@ -82,7 +82,7 @@ class PasswordRecoveryFormComponent extends Component {
           return (
             <Form
               className={classes}
-              onSubmit={e => {
+              onSubmit={(e) => {
                 this.submittedValues = values;
                 handleSubmit(e);
               }}

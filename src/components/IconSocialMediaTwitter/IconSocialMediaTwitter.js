@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import css from './IconSocialMediaTwitter.module.css';
 
-const IconSocialMediaTwitter = props => {
+function IconSocialMediaTwitter(props) {
   const { rootClassName, className } = props;
   const classes = classNames(rootClassName || css.root, className);
   return (
@@ -21,7 +21,7 @@ const IconSocialMediaTwitter = props => {
       />
     </svg>
   );
-};
+}
 
 IconSocialMediaTwitter.defaultProps = { rootClassName: null, className: null };
 

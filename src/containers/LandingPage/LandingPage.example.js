@@ -1,7 +1,9 @@
 import React from 'react';
 import FallbackPage from './FallbackPage.js';
 
-const FallbackPageComponent = () => <FallbackPage />;
+function FallbackPageComponent() {
+  return <FallbackPage />;
+}
 
 export const FallbackPageExample = {
   component: FallbackPageComponent,

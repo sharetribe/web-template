@@ -8,7 +8,7 @@ import InquiryForm from './InquiryForm/InquiryForm';
 
 import css from './ListingPage.module.css';
 
-const SectionAuthorMaybe = props => {
+function SectionAuthorMaybe(props) {
   const {
     title,
     listing,
@@ -62,6 +62,6 @@ const SectionAuthorMaybe = props => {
       </Modal>
     </section>
   );
-};
+}
 
 export default SectionAuthorMaybe;

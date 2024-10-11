@@ -3,7 +3,7 @@ import { oneOf, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { useConfiguration } from '../../context/configurationContext';
-import { ResponsiveImage } from '../../components/';
+import { ResponsiveImage } from '..';
 
 import css from './Logo.module.css';
 
@@ -13,29 +13,24 @@ const HEIGHT_48 = 48;
 const HEIGHT_OPTIONS = [HEIGHT_24, HEIGHT_36, HEIGHT_48];
 
 // logoSettings property supports only 3 types at this point
-const isValidLogoSettings = settings =>
+const isValidLogoSettings = (settings) =>
   settings?.format === 'image' && HEIGHT_OPTIONS.includes(settings?.height);
-const isImageAsset = logo => logo?.type === 'imageAsset';
+const isImageAsset = (logo) => logo?.type === 'imageAsset';
 
 // Each type can have multiple image variants
-const getVariantNames = variantsObj => {
-  return Object.keys(variantsObj) || [];
-};
+const getVariantNames = (variantsObj) => Object.keys(variantsObj) || [];
 
 // Variant data contains width and height among other things
 // The width is needed for sizes attribute of responsive logo imgs
-const getVariantData = variants => {
+const getVariantData = (variants) =>
   // This assume that "scaled" variant exists
   // If other variants are introduced, this setup might need some tuning.
-  return variants['scaled'];
-};
-
+  variants.scaled;
 // We have maximum heights for each logo type. It's enforced through classes
-const getHeightClassName = height => {
-  return height === HEIGHT_48 ? css.logo48 : height === HEIGHT_36 ? css.logo36 : css.logo24;
-};
+const getHeightClassName = (height) =>
+  height === HEIGHT_48 ? css.logo48 : height === HEIGHT_36 ? css.logo36 : css.logo24;
 
-export const LogoComponent = props => {
+export function LogoComponent(props) {
   const {
     className,
     logoImageClassName,
@@ -51,12 +46,12 @@ export const LogoComponent = props => {
   const logoClasses = className || css.root;
   const logoImageClasses = classNames(
     logoImageClassName || css.logo,
-    getHeightClassName(logoSettings?.height)
+    getHeightClassName(logoSettings?.height),
   );
 
   // Logo from hosted asset
   if (isImageAsset(logoImageDesktop) && hasValidLogoSettings && layout === 'desktop') {
-    const variants = logoImageDesktop.attributes.variants;
+    const { variants } = logoImageDesktop.attributes;
     const variantNames = getVariantNames(variants);
     const { width } = getVariantData(variants);
     return (
@@ -72,8 +67,9 @@ export const LogoComponent = props => {
         />
       </div>
     );
-  } else if (isImageAsset(logoImageMobile) && hasValidLogoSettings && layout === 'mobile') {
-    const variants = logoImageMobile.attributes.variants;
+  }
+  if (isImageAsset(logoImageMobile) && hasValidLogoSettings && layout === 'mobile') {
+    const { variants } = logoImageMobile.attributes;
     const variantNames = getVariantNames(variants);
     const { width } = getVariantData(variants);
 
@@ -95,7 +91,8 @@ export const LogoComponent = props => {
         />
       </div>
     );
-  } else if (layout === 'desktop') {
+  }
+  if (layout === 'desktop') {
     return (
       <div className={logoClasses}>
         <img className={logoImageClasses} src={logoImageDesktop} alt={marketplaceName} {...rest} />
@@ -108,9 +105,9 @@ export const LogoComponent = props => {
       <img className={logoImageClasses} src={logoImageMobile} alt={marketplaceName} {...rest} />
     </div>
   );
-};
+}
 
-const Logo = props => {
+function Logo(props) {
   const config = useConfiguration();
   // NOTE: logo images are set in hosted branding.json asset or src/config/brandingConfig.js
   const { logoImageDesktop, logoImageMobile, logoSettings } = config.branding;
@@ -124,7 +121,7 @@ const Logo = props => {
       marketplaceName={config.marketplaceName}
     />
   );
-};
+}
 
 Logo.defaultProps = {
   className: null,

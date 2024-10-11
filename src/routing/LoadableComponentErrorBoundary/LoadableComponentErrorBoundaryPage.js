@@ -7,7 +7,7 @@ import { InlineTextButton, Logo, Heading, LayoutSingleColumn } from '../../compo
 
 import css from './LoadableComponentErrorBoundary.module.css';
 
-export const LoadableComponentErrorBoundaryPage = () => {
+export function LoadableComponentErrorBoundaryPage() {
   const routeConfiguration = useRouteConfiguration();
   const landingPagePath = pathByRouteName('LandingPage', routeConfiguration);
   const handleOnClick = () => {
@@ -52,4 +52,4 @@ export const LoadableComponentErrorBoundaryPage = () => {
       </LayoutSingleColumn>
     </div>
   );
-};
+}

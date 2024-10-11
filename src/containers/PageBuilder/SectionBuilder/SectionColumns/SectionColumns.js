@@ -15,18 +15,18 @@ const COLUMN_CONFIG = [
   { css: css.threeColumns, responsiveImageSizes: '(max-width: 767px) 100vw, 400px' },
   { css: css.fourColumns, responsiveImageSizes: '(max-width: 767px) 100vw, 265px' },
 ];
-const getIndex = numColumns => numColumns - 1;
-const getColumnCSS = numColumns => {
+const getIndex = (numColumns) => numColumns - 1;
+const getColumnCSS = (numColumns) => {
   const config = COLUMN_CONFIG[getIndex(numColumns)];
   return config ? config.css : COLUMN_CONFIG[0].css;
 };
-const getResponsiveImageSizes = numColumns => {
+const getResponsiveImageSizes = (numColumns) => {
   const config = COLUMN_CONFIG[getIndex(numColumns)];
   return config ? config.responsiveImageSizes : COLUMN_CONFIG[0].responsiveImageSizes;
 };
 
 // Section component that's able to show blocks in multiple different columns (defined by "numColumns" prop)
-const SectionColumns = props => {
+function SectionColumns(props) {
   const {
     sectionId,
     className,
@@ -82,7 +82,7 @@ const SectionColumns = props => {
       ) : null}
     </SectionContainer>
   );
-};
+}
 
 const propTypeOption = shape({
   fieldComponents: shape({ component: node, pickValidProps: func }),

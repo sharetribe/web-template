@@ -38,7 +38,7 @@ import css from './NoAccessPage.module.css';
  * If the link is internal, a `NamedLink` is rendered, otherwise an `ExternalLink`
  * is rendered. Uses userData to inject user data into the URL.
  */
-const CTAButtonMaybe = props => {
+function CTAButtonMaybe(props) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -56,7 +56,7 @@ const CTAButtonMaybe = props => {
   // Render a spacer if the window object is not available (e.g., during server-side rendering)
   // Prevents layout shifts on initial page load.
   if (!mounted) {
-    return <div className={css.modalSpacer}></div>;
+    return <div className={css.modalSpacer} />;
   }
 
   // Construct a the props for the NamedLink and ExternalLink components dynamically using the CTA data and user info
@@ -78,14 +78,14 @@ const CTAButtonMaybe = props => {
       {text}
     </ExternalLink>
   );
-};
+}
 
-export const NoAccessPageComponent = props => {
+export function NoAccessPageComponent(props) {
   const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();
   const intl = useIntl();
 
-  const marketplaceName = config.marketplaceName;
+  const { marketplaceName } = config;
   const { scrollingDisabled, currentUser, params: pathParams } = props;
 
   const missingAccessRight = pathParams?.missingAccessRight;
@@ -111,33 +111,33 @@ export const NoAccessPageComponent = props => {
         ctaData: approvalToJoinCTA,
       }
     : isPostingRightsPage
-    ? {
-        schemaTitle: 'NoAccessPage.postListings.schemaTitle',
-        heading: 'NoAccessPage.postListings.heading',
-        content: 'NoAccessPage.postListings.content',
-        ctaData: permissionToPostCTA,
-      }
-    : isInitiateTransactionsPage
-    ? {
-        schemaTitle: 'NoAccessPage.initiateTransactions.schemaTitle',
-        heading: 'NoAccessPage.initiateTransactions.heading',
-        content: 'NoAccessPage.initiateTransactions.content',
-        ctaData: permissionToInitiateCTA,
-      }
-    : isViewingRightsPage
-    ? {
-        schemaTitle: 'NoAccessPage.viewListings.schemaTitle',
-        heading: 'NoAccessPage.viewListings.heading',
-        content: 'NoAccessPage.viewListings.content',
-        ctaData: permissionToViewCTA,
-      }
-    : {};
+      ? {
+          schemaTitle: 'NoAccessPage.postListings.schemaTitle',
+          heading: 'NoAccessPage.postListings.heading',
+          content: 'NoAccessPage.postListings.content',
+          ctaData: permissionToPostCTA,
+        }
+      : isInitiateTransactionsPage
+        ? {
+            schemaTitle: 'NoAccessPage.initiateTransactions.schemaTitle',
+            heading: 'NoAccessPage.initiateTransactions.heading',
+            content: 'NoAccessPage.initiateTransactions.content',
+            ctaData: permissionToInitiateCTA,
+          }
+        : isViewingRightsPage
+          ? {
+              schemaTitle: 'NoAccessPage.viewListings.schemaTitle',
+              heading: 'NoAccessPage.viewListings.heading',
+              content: 'NoAccessPage.viewListings.content',
+              ctaData: permissionToViewCTA,
+            }
+          : {};
 
   // If missing rights are unknown (no pageData), show NotFoundPage
   if (!(pageData.heading && pageData.content)) {
     if (appSettings.dev) {
       console.warn(
-        `The missing access right, ${missingAccessRight}, is not handled. Translations missing.`
+        `The missing access right, ${missingAccessRight}, is not handled. Translations missing.`,
       );
     }
     return <NotFoundPage staticContext={props.staticContext} />;
@@ -180,7 +180,7 @@ export const NoAccessPageComponent = props => {
       </LayoutSingleColumn>
     </Page>
   );
-};
+}
 
 NoAccessPageComponent.defaultProps = {};
 
@@ -188,7 +188,7 @@ NoAccessPageComponent.propTypes = {
   scrollingDisabled: bool.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { currentUser } = state.user;
   return {
     scrollingDisabled: isScrollingDisabled(state),

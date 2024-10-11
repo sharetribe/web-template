@@ -35,7 +35,7 @@ class FilterPlainComponent extends Component {
   }
 
   toggleIsOpen() {
-    this.setState(prevState => ({ isOpen: !prevState.isOpen }));
+    this.setState((prevState) => ({ isOpen: !prevState.isOpen }));
   }
 
   render() {
@@ -77,7 +77,7 @@ class FilterPlainComponent extends Component {
         <div
           id={id}
           className={classNames(plainClassName, css.plain, { [css.isOpen]: this.state.isOpen })}
-          ref={node => {
+          ref={(node) => {
             this.filterContent = node;
           }}
         >
@@ -91,7 +91,7 @@ class FilterPlainComponent extends Component {
             {children}
           </FilterForm>
           <button className={css.clearButton} onClick={this.handleClear}>
-            <FormattedMessage id={'FilterPlain.clear'} />
+            <FormattedMessage id="FilterPlain.clear" />
           </button>
         </div>
       </div>

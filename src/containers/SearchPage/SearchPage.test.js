@@ -54,26 +54,25 @@ const listingTypes = [
   },
 ];
 
-const capitalizeFirstLetter = str => str.charAt(0).toUpperCase() + str.slice(1);
-const addSpaces = str => str.split('-').join(' ');
-const labelize = str => addSpaces(capitalizeFirstLetter(str));
+const capitalizeFirstLetter = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+const addSpaces = (str) => str.split('-').join(' ');
+const labelize = (str) => addSpaces(capitalizeFirstLetter(str));
 
-const generateCategories = optionStrings => {
-  return optionStrings.reduce((converted, entry) => {
+const generateCategories = (optionStrings) =>
+  optionStrings.reduce((converted, entry) => {
     const isArray = Array.isArray(entry);
     const option = isArray
       ? { id: entry[0], name: labelize(entry[0]), subcategories: generateCategories(entry[1]) }
       : { id: entry, name: labelize(entry) };
     return [...converted, option];
   }, []);
-};
 const categories = generateCategories([
   ['dogs', ['labradors', 'poodles']],
   ['cats', ['burmese', 'egyptian-mau']],
   ['fish', [['freshwater', ['grayling', 'arctic-char', 'pike']], 'saltwater']],
   ['birds', ['parrot', 'macaw']],
 ]);
-//console.log(JSON.stringify(categories, null, 2));
+// console.log(JSON.stringify(categories, null, 2));
 
 const listingFields = [
   {
@@ -89,7 +88,10 @@ const listingFields = [
       categoryIds: ['cats'],
     },
     schemaType: 'enum',
-    enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
+    enumOptions: [
+      { option: 'cat_1', label: 'Cat 1' },
+      { option: 'cat_2', label: 'Cat 2' },
+    ],
     filterConfig: {
       indexForSearch: true,
       label: 'Cat',
@@ -110,7 +112,10 @@ const listingFields = [
       listingTypeIds: ['sell-bicycles'],
     },
     schemaType: 'enum',
-    enumOptions: [{ option: 'enum1', label: 'Enum 1' }, { option: 'enum2', label: 'Enum 2' }],
+    enumOptions: [
+      { option: 'enum1', label: 'Enum 1' },
+      { option: 'enum2', label: 'Enum 2' },
+    ],
     filterConfig: {
       indexForSearch: true,
       filterType: 'SelectSingleFilter',
@@ -132,11 +137,14 @@ const listingFields = [
       listingTypeIds: ['rent-bicycles-daily', 'rent-bicycles-nightly', 'rent-bicycles-hourly'],
     },
     schemaType: 'multi-enum',
-    enumOptions: [{ option: 'dog_1', label: 'Dog 1' }, { option: 'dog_2', label: 'Dog 2' }],
+    enumOptions: [
+      { option: 'dog_1', label: 'Dog 1' },
+      { option: 'dog_2', label: 'Dog 2' },
+    ],
     filterConfig: {
       indexForSearch: true,
       label: 'Amenities',
-      //searchMode: 'has_all',
+      // searchMode: 'has_all',
       group: 'secondary',
     },
     showConfig: {
@@ -203,7 +211,7 @@ const getConfig = (variantType, customListingFields) => {
         searchType: 'location',
       },
       defaultFilters: defaultFiltersConfig,
-      sortConfig: sortConfig,
+      sortConfig,
     },
     layout: {
       ...hostedConfig.layout,
@@ -240,7 +248,7 @@ const initialState = {
   },
 };
 
-const getSearchParams = config => {
+const getSearchParams = (config) => {
   const {
     aspectWidth = 1,
     aspectHeight = 1,
@@ -290,7 +298,7 @@ describe('SearchPage', () => {
     const config = getConfig('grid');
     const routeConfiguration = getRouteConfiguration(config.layout);
     const props = { ...commonProps };
-    const searchRouteConfig = routeConfiguration.find(conf => conf.name === 'SearchPage');
+    const searchRouteConfig = routeConfiguration.find((conf) => conf.name === 'SearchPage');
     const SearchPage = searchRouteConfig.component;
 
     const { getByPlaceholderText, getByText, getAllByText, queryByText, getByRole } = render(
@@ -299,7 +307,7 @@ describe('SearchPage', () => {
         initialState,
         config,
         routeConfiguration,
-      }
+      },
     );
 
     await waitFor(() => {
@@ -367,7 +375,7 @@ describe('SearchPage', () => {
     const config = getConfig('map');
     const routeConfiguration = getRouteConfiguration(config.layout);
     const props = { ...commonProps };
-    const searchRouteConfig = routeConfiguration.find(conf => conf.name === 'SearchPage');
+    const searchRouteConfig = routeConfiguration.find((conf) => conf.name === 'SearchPage');
     const SearchPage = searchRouteConfig.component;
 
     const { getByPlaceholderText, getByText, getAllByText, queryByText, getByRole } = render(
@@ -376,7 +384,7 @@ describe('SearchPage', () => {
         initialState,
         config,
         routeConfiguration,
-      }
+      },
     );
 
     await waitFor(() => {
@@ -454,7 +462,7 @@ describe('SearchPage', () => {
     const config = getConfig('grid');
     const routeConfiguration = getRouteConfiguration(config.layout);
     const props = { ...commonProps };
-    const searchRouteConfig = routeConfiguration.find(conf => conf.name === 'SearchPage');
+    const searchRouteConfig = routeConfiguration.find((conf) => conf.name === 'SearchPage');
     const SearchPage = searchRouteConfig.component;
 
     const { getByPlaceholderText, getByText, getAllByText, queryByText, getByRole } = render(
@@ -463,7 +471,7 @@ describe('SearchPage', () => {
         initialState,
         config,
         routeConfiguration,
-      }
+      },
     );
 
     await waitFor(() => {
@@ -518,8 +526,8 @@ describe('Duck', () => {
     accessControl: { marketplace: { private: true } },
   };
   // Shared parameters for viewing rights loadData tests
-  const fakeResponse = resource => ({ data: { data: resource, include: [] } });
-  const sdkFn = response => jest.fn(() => Promise.resolve(response));
+  const fakeResponse = (resource) => ({ data: { data: resource, include: [] } });
+  const sdkFn = (response) => jest.fn(() => Promise.resolve(response));
   const currentUser = createCurrentUser('userId');
 
   it('loadData() for full viewing rights user loads listings', () => {
@@ -544,7 +552,7 @@ describe('Duck', () => {
     // Tests the actions that get dispatched to the Redux store when SearchPage.duck.js
     // loadData() function is called. If you make customizations to the loadData() logic,
     // update this test accordingly!
-    return loadData(null, null, config)(dispatch, getState, sdk).then(data => {
+    return loadData(null, null, config)(dispatch, getState, sdk).then((data) => {
       expect(dispatchedActions(dispatch)).toEqual([
         searchListingsRequest(searchParams),
         addMarketplaceEntities(fakeResponse([l1, l2]), sanitizeConfig),
@@ -569,7 +577,7 @@ describe('Duck', () => {
     // Tests the actions that get dispatched to the Redux store when SearchPage.duck.js
     // loadData() function is called. If you make customizations to the loadData() logic,
     // update this test accordingly!
-    return loadData(null, null, config)(dispatch, getState, sdk).then(data => {
+    return loadData(null, null, config)(dispatch, getState, sdk).then((data) => {
       expect(dispatchedActions(dispatch)).toEqual([]);
     });
   });

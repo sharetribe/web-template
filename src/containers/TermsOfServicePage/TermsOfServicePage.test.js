@@ -10,12 +10,12 @@ const { waitFor } = testingLibrary;
 describe('TermsOfServicePage', () => {
   it('renders the Fallback page on error', async () => {
     const errorMessage = 'TermsOfServicePage failed';
-    let e = new Error(errorMessage);
+    const e = new Error(errorMessage);
     e.type = 'error';
     e.name = 'Test';
 
     const { getByText } = render(
-      <TermsOfServicePageComponent pageAssetsData={null} inProgress={false} error={e} />
+      <TermsOfServicePageComponent pageAssetsData={null} inProgress={false} error={e} />,
     );
 
     await waitFor(() => {

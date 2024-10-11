@@ -23,15 +23,15 @@ import {
 import * as log from '../../util/log';
 import { propTypes } from '../../util/types';
 
-import { ValidationError } from '../../components';
+import { ValidationError } from '..';
 
 import css from './FieldCurrencyInput.module.css';
 
 const { Money } = sdkTypes;
 
-const allowedInputProps = allProps => {
+const allowedInputProps = (allProps) => {
   // Strip away props that are not passed to input element (or are overwritten)
-  // eslint-disable-next-line no-unused-vars
+
   const { currencyConfig, defaultValue, intl, input, meta, ...inputProps } = allProps;
   return inputProps;
 };
@@ -44,7 +44,7 @@ const getPrice = (unformattedValue, currencyConfig) => {
       ? null
       : new Money(
           convertUnitToSubUnit(unformattedValue, unitDivisor(currencyConfig.currency)),
-          currencyConfig.currency
+          currencyConfig.currency,
         );
   } catch (e) {
     return null;
@@ -78,7 +78,7 @@ class CurrencyInputComponent extends Component {
         ? truncateToSubUnitPrecision(
             ensureSeparator(initialValue.toString(), usesComma),
             unitDivisor(currencyConfig.currency),
-            usesComma
+            usesComma,
           )
         : '';
       // Formatted value fully localized currency string ("$1,000.99")
@@ -120,7 +120,7 @@ class CurrencyInputComponent extends Component {
       currencyConfig,
       input: { onBlur },
     } = this.props;
-    this.setState(prevState => {
+    this.setState((prevState) => {
       if (onBlur) {
         // If parent component has provided onBlur function, call it with current price.
         const price = getPrice(ensureDotSeparator(prevState.unformattedValue), currencyConfig);
@@ -139,7 +139,7 @@ class CurrencyInputComponent extends Component {
       currencyConfig,
       input: { onFocus },
     } = this.props;
-    this.setState(prevState => {
+    this.setState((prevState) => {
       if (onFocus) {
         // If parent component has provided onFocus function, call it with current price.
         const price = getPrice(ensureDotSeparator(prevState.unformattedValue), currencyConfig);
@@ -172,7 +172,7 @@ class CurrencyInputComponent extends Component {
       const truncatedValueString = truncateToSubUnitPrecision(
         valueOrZero,
         unitDivisor(currencyConfig.currency),
-        this.state.usesComma
+        this.state.usesComma,
       );
       const unformattedValue = !isEmptyString ? truncatedValueString : '';
       const formattedValue = !isEmptyString
@@ -187,7 +187,6 @@ class CurrencyInputComponent extends Component {
 
       return { formattedValue, value: unformattedValue, unformattedValue };
     } catch (e) {
-      // eslint-disable-next-line no-console
       console.warn('Not a valid value.', e);
 
       // If an error occurs while filling input field, use previous values
@@ -239,7 +238,7 @@ CurrencyInputComponent.propTypes = {
 
 export const CurrencyInput = injectIntl(CurrencyInputComponent);
 
-const FieldCurrencyInputComponent = props => {
+function FieldCurrencyInputComponent(props) {
   const { rootClassName, className, id, label, input, meta, hideErrorMessage, ...rest } = props;
 
   if (label && !id) {
@@ -266,7 +265,7 @@ const FieldCurrencyInputComponent = props => {
       {hideErrorMessage ? null : <ValidationError fieldMeta={meta} />}
     </div>
   );
-};
+}
 
 FieldCurrencyInputComponent.defaultProps = {
   rootClassName: null,
@@ -291,8 +290,8 @@ FieldCurrencyInputComponent.propTypes = {
   meta: object.isRequired,
 };
 
-const FieldCurrencyInput = props => {
+function FieldCurrencyInput(props) {
   return <Field component={FieldCurrencyInputComponent} {...props} />;
-};
+}
 
 export default FieldCurrencyInput;

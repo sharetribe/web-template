@@ -21,14 +21,14 @@ import SectionTextMaybe from './SectionTextMaybe';
  * @param {*} props include publicData, metadata, listingFieldConfigs, categoryConfiguration
  * @returns React.Fragment containing aforementioned components
  */
-const CustomListingFields = props => {
+function CustomListingFields(props) {
   const { publicData, metadata, listingFieldConfigs, categoryConfiguration } = props;
 
   const { key: categoryPrefix, categories: listingCategoriesConfig } = categoryConfiguration;
   const categoriesObj = pickCategoryFields(publicData, categoryPrefix, 1, listingCategoriesConfig);
   const currentCategories = Object.values(categoriesObj);
 
-  const isFieldForSelectedCategories = fieldConfig => {
+  const isFieldForSelectedCategories = (fieldConfig) => {
     const isTargetCategory = isFieldForCategory(currentCategories, fieldConfig);
     return isTargetCategory;
   };
@@ -38,13 +38,13 @@ const CustomListingFields = props => {
       metadata,
       listingFieldConfigs,
       'listingType',
-      isFieldForSelectedCategories
+      isFieldForSelectedCategories,
     ) || [];
 
   return (
     <>
       <SectionDetailsMaybe {...props} isFieldForCategory={isFieldForSelectedCategories} />
-      {propsForCustomFields.map(customFieldProps => {
+      {propsForCustomFields.map((customFieldProps) => {
         const { schemaType, ...fieldProps } = customFieldProps;
         return schemaType === SCHEMA_TYPE_MULTI_ENUM ? (
           <SectionMultiEnumMaybe {...fieldProps} />
@@ -54,6 +54,6 @@ const CustomListingFields = props => {
       })}
     </>
   );
-};
+}
 
 export default CustomListingFields;

@@ -68,7 +68,7 @@ describe('data utils', () => {
       const listing1 = { id: new UUID('listing1'), type: 'listing' };
       const listing2 = { id: new UUID('listing2'), type: 'listing' };
       expect(() => combinedResourceObjects(listing1, listing2)).toThrow(
-        'Cannot merge resource objects with different ids or types'
+        'Cannot merge resource objects with different ids or types',
       );
     });
 
@@ -76,7 +76,7 @@ describe('data utils', () => {
       const listing1 = { id: new UUID('listing1'), type: 'listing' };
       const author1 = { id: new UUID('author1'), type: 'author' };
       expect(() => combinedResourceObjects(listing1, author1)).toThrow(
-        'Cannot merge resource objects with different ids or types'
+        'Cannot merge resource objects with different ids or types',
       );
     });
 
@@ -171,19 +171,19 @@ describe('data utils', () => {
   });
 
   describe('denormalisedEntities()', () => {
-    const createListing = id => ({
+    const createListing = (id) => ({
       id: new UUID(id),
       type: 'listing',
       attributes: { title: `Listing ${id} title`, description: `Listing ${id} description` },
     });
 
-    const createUser = id => ({
+    const createUser = (id) => ({
       id: new UUID(id),
       type: 'user',
       attributes: { name: `User ${id} name` },
     });
 
-    const createImage = id => ({
+    const createImage = (id) => ({
       id: new UUID(id),
       type: 'image',
       attributes: { url: `https://example.com/${id}.jpg`, width: 300, height: 200 },
@@ -203,7 +203,7 @@ describe('data utils', () => {
       const entities = { listing: { listing1: createListing('listing1') } };
       const user = createUser('user1');
       expect(() => denormalisedEntities(entities, [user])).toThrow(
-        'Entity with type "user" and id "user1" not found'
+        'Entity with type "user" and id "user1" not found',
       );
       // Empty results when error throwIfNotFound=false
       expect(denormalisedEntities(entities, [user], false)).toEqual([]);
@@ -213,7 +213,7 @@ describe('data utils', () => {
       const entities = { listing: { listing1: createListing('listing1') } };
       const listing2 = createListing('listing2');
       expect(() => denormalisedEntities(entities, [listing2])).toThrow(
-        'Entity with type "listing" and id "listing2" not found'
+        'Entity with type "listing" and id "listing2" not found',
       );
       // Empty results when error throwIfNotFound=false
       expect(denormalisedEntities(entities, [listing2], false)).toEqual([]);
@@ -225,7 +225,7 @@ describe('data utils', () => {
       const entities = { listing: { listing1 } };
       const resources = [listing1];
       expect(() => denormalisedEntities(entities, resources)).toThrow(
-        'Entity with type "user" and id "user1" not found'
+        'Entity with type "user" and id "user1" not found',
       );
     });
 
@@ -340,11 +340,11 @@ describe('humanizeLineItemCode', () => {
   });
 
   it('should reject a code with missing namespace', () => {
-    expect(() => humanizeLineItemCode('new-line-item')).toThrowError(Error);
+    expect(() => humanizeLineItemCode('new-line-item')).toThrow(Error);
   });
 
   it('should reject a code with missing code value', () => {
-    expect(() => humanizeLineItemCode('line-item/')).toThrowError(Error);
+    expect(() => humanizeLineItemCode('line-item/')).toThrow(Error);
   });
 });
 

@@ -5,7 +5,7 @@ import { subtractTime } from '../../util/dates';
 
 import css from './OrderBreakdown.module.css';
 
-const BookingPeriod = props => {
+function BookingPeriod(props) {
   const { startDate, endDate, dateType, timeZone } = props;
   const timeZoneMaybe = timeZone ? { timeZone } : null;
 
@@ -26,37 +26,35 @@ const BookingPeriod = props => {
   };
 
   return (
-    <>
-      <div className={css.bookingPeriod}>
-        <div className={css.bookingPeriodSectionLeft}>
-          <div className={css.dayLabel}>
-            <FormattedMessage id="OrderBreakdown.bookingStart" />
-          </div>
-          <div className={css.dayInfo}>
-            <FormattedDate value={startDate} {...timeFormatOptions} {...timeZoneMaybe} />
-          </div>
-          <div className={css.itemLabel}>
-            <FormattedDate value={startDate} {...dateFormatOptions} {...timeZoneMaybe} />
-          </div>
+    <div className={css.bookingPeriod}>
+      <div className={css.bookingPeriodSectionLeft}>
+        <div className={css.dayLabel}>
+          <FormattedMessage id="OrderBreakdown.bookingStart" />
         </div>
-
-        <div className={css.bookingPeriodSectionRight}>
-          <div className={css.dayLabel}>
-            <FormattedMessage id="OrderBreakdown.bookingEnd" />
-          </div>
-          <div className={css.dayInfo}>
-            <FormattedDate value={endDate} {...timeFormatOptions} {...timeZoneMaybe} />
-          </div>
-          <div className={css.itemLabel}>
-            <FormattedDate value={endDate} {...dateFormatOptions} {...timeZoneMaybe} />
-          </div>
+        <div className={css.dayInfo}>
+          <FormattedDate value={startDate} {...timeFormatOptions} {...timeZoneMaybe} />
+        </div>
+        <div className={css.itemLabel}>
+          <FormattedDate value={startDate} {...dateFormatOptions} {...timeZoneMaybe} />
         </div>
       </div>
-    </>
-  );
-};
 
-const LineItemBookingPeriod = props => {
+      <div className={css.bookingPeriodSectionRight}>
+        <div className={css.dayLabel}>
+          <FormattedMessage id="OrderBreakdown.bookingEnd" />
+        </div>
+        <div className={css.dayInfo}>
+          <FormattedDate value={endDate} {...timeFormatOptions} {...timeZoneMaybe} />
+        </div>
+        <div className={css.itemLabel}>
+          <FormattedDate value={endDate} {...dateFormatOptions} {...timeZoneMaybe} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LineItemBookingPeriod(props) {
   const { booking, code, dateType, timeZone } = props;
 
   if (!booking) {
@@ -87,7 +85,7 @@ const LineItemBookingPeriod = props => {
       <hr className={css.totalDivider} />
     </>
   );
-};
+}
 LineItemBookingPeriod.defaultProps = { booking: null, dateType: null };
 
 LineItemBookingPeriod.propTypes = {

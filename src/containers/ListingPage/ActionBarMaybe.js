@@ -23,7 +23,7 @@ import css from './ListingPage.module.css';
  * If the link is internal, a `NamedLink` is rendered, otherwise an `ExternalLink`
  * is rendered. Uses userData to inject user data into the URL.
  */
-const CTAButtonMaybe = props => {
+function CTAButtonMaybe(props) {
   const { data, routeConfiguration, userId, userEmail, listingId, isPendingApproval } = props;
 
   // If the call to action button is not enabled, return null and don't render anything
@@ -55,9 +55,9 @@ const CTAButtonMaybe = props => {
       {text}
     </ExternalLink>
   );
-};
+}
 
-export const ActionBarMaybe = props => {
+export function ActionBarMaybe(props) {
   const {
     rootClassName,
     className,
@@ -69,7 +69,7 @@ export const ActionBarMaybe = props => {
   } = props;
   const classes = classNames(rootClassName || css.actionBar, className);
 
-  const state = listing.attributes.state;
+  const { state } = listing.attributes;
   const isPendingApproval = state === LISTING_STATE_PENDING_APPROVAL;
   const isClosed = state === LISTING_STATE_CLOSED;
   const isDraft = state === LISTING_STATE_DRAFT;
@@ -91,7 +91,8 @@ export const ActionBarMaybe = props => {
         </NamedLink>
       </div>
     );
-  } else if (isOwnListing) {
+  }
+  if (isOwnListing) {
     let ownListingTextTranslationId = 'ListingPage.ownListing';
 
     if (isPendingApproval) {
@@ -140,7 +141,8 @@ export const ActionBarMaybe = props => {
         </span>
       </div>
     );
-  } else if (isClosed) {
+  }
+  if (isClosed) {
     return (
       <div className={classes}>
         <p className={css.closedListingText}>
@@ -150,7 +152,7 @@ export const ActionBarMaybe = props => {
     );
   }
   return null;
-};
+}
 ActionBarMaybe.defaultProps = {
   rootClassName: null,
   className: null,

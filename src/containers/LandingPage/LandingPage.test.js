@@ -10,12 +10,12 @@ const { waitFor } = testingLibrary;
 describe('LandingPage', () => {
   it('renders the Fallback page on error', async () => {
     const errorMessage = 'LandingPage failed';
-    let e = new Error(errorMessage);
+    const e = new Error(errorMessage);
     e.type = 'error';
     e.name = 'Test';
 
     const { getByText } = render(
-      <LandingPageComponent pageAssetsData={null} inProgress={false} error={e} />
+      <LandingPageComponent pageAssetsData={null} inProgress={false} error={e} />,
     );
 
     await waitFor(() => {
@@ -56,7 +56,7 @@ describe('LandingPage', () => {
         pageAssetsData={{ landingPage: { data } }}
         inProgress={false}
         error={null}
-      />
+      />,
     );
 
     await waitFor(() => {

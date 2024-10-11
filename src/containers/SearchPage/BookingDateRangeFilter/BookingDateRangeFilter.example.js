@@ -18,13 +18,13 @@ const handleSubmit = (urlParam, values, history) => {
   history.push(`${window.location.pathname}${queryParams}`);
 };
 
-const BookingDateRangeFilterWrapper = withRouter(props => {
+const BookingDateRangeFilterWrapper = withRouter((props) => {
   const { history, location } = props;
 
   const params = parse(location.search);
   const dates = params[URL_PARAM];
-  const rawValuesFromParams = !!dates ? dates.split(',') : [];
-  const valuesFromParams = rawValuesFromParams.map(v => parseDateFromISO8601(v));
+  const rawValuesFromParams = dates ? dates.split(',') : [];
+  const valuesFromParams = rawValuesFromParams.map((v) => parseDateFromISO8601(v));
   const initialValues =
     !!dates && valuesFromParams.length === 2
       ? {

@@ -44,95 +44,85 @@ const getFirstImageAspectRatio = (firstImage, scaledVariant) => {
   return hasDimensions && aspectRatio >= MAX_LANDSCAPE_ASPECT_RATIO
     ? { aspectWidth: 2, aspectHeight: 1 }
     : hasDimensions && aspectRatio <= MAX_PORTRAIT_ASPECT_RATIO
-    ? { aspectWidth: 4, aspectHeight: 3 }
-    : hasDimensions
-    ? { aspectWidth: w, aspectHeight: h }
-    : { aspectWidth: 1, aspectHeight: 1 };
+      ? { aspectWidth: 4, aspectHeight: 3 }
+      : hasDimensions
+        ? { aspectWidth: w, aspectHeight: h }
+        : { aspectWidth: 1, aspectHeight: 1 };
 };
 
-const ListingImageGallery = props => {
+function ListingImageGallery(props) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const { intl, rootClassName, className, images, imageVariants, thumbnailVariants } = props;
   const thumbVariants = thumbnailVariants || imageVariants;
   // imageVariants are scaled variants.
   const { aspectWidth, aspectHeight } = getFirstImageAspectRatio(images?.[0], imageVariants[0]);
-  const items = images.map((img, i) => {
-    return {
-      // We will only use the image resource, but react-image-gallery
-      // requires the `original` key from each item.
-      original: '',
-      alt: intl.formatMessage(
-        { id: 'ListingImageGallery.imageAltText' },
-        { index: i + 1, count: images.length }
-      ),
-      thumbAlt: intl.formatMessage(
-        { id: 'ListingImageGallery.imageThumbnailAltText' },
-        { index: i + 1, count: images.length }
-      ),
-      thumbnail: img.attributes?.variants?.[thumbVariants[0]],
-      image: img,
-    };
-  });
+  const items = images.map((img, i) => ({
+    // We will only use the image resource, but react-image-gallery
+    // requires the `original` key from each item.
+    original: '',
+    alt: intl.formatMessage(
+      { id: 'ListingImageGallery.imageAltText' },
+      { index: i + 1, count: images.length },
+    ),
+    thumbAlt: intl.formatMessage(
+      { id: 'ListingImageGallery.imageThumbnailAltText' },
+      { index: i + 1, count: images.length },
+    ),
+    thumbnail: img.attributes?.variants?.[thumbVariants[0]],
+    image: img,
+  }));
   const imageSizesMaybe = isFullscreen
     ? {}
     : { sizes: `(max-width: 1024px) 100vw, (max-width: 1200px) calc(100vw - 192px), 708px` };
-  const renderItem = item => {
-    return (
-      <AspectRatioWrapper
-        width={aspectWidth || 1}
-        height={aspectHeight || 1}
-        className={isFullscreen ? css.itemWrapperFullscreen : css.itemWrapper}
-      >
-        <div className={css.itemCentering}>
-          <ResponsiveImage
-            rootClassName={css.item}
-            image={item.image}
-            alt={item.alt}
-            variants={imageVariants}
-            {...imageSizesMaybe}
-          />
-        </div>
-      </AspectRatioWrapper>
-    );
-  };
-  const renderThumbInner = item => {
-    return (
-      <div>
+  const renderItem = (item) => (
+    <AspectRatioWrapper
+      width={aspectWidth || 1}
+      height={aspectHeight || 1}
+      className={isFullscreen ? css.itemWrapperFullscreen : css.itemWrapper}
+    >
+      <div className={css.itemCentering}>
         <ResponsiveImage
-          rootClassName={css.thumb}
+          rootClassName={css.item}
           image={item.image}
-          alt={item.thumbAlt}
-          variants={thumbVariants}
-          sizes="88px"
+          alt={item.alt}
+          variants={imageVariants}
+          {...imageSizesMaybe}
         />
       </div>
-    );
-  };
+    </AspectRatioWrapper>
+  );
+  const renderThumbInner = (item) => (
+    <div>
+      <ResponsiveImage
+        rootClassName={css.thumb}
+        image={item.image}
+        alt={item.thumbAlt}
+        variants={thumbVariants}
+        sizes="88px"
+      />
+    </div>
+  );
 
-  const onScreenChange = isFull => {
+  const onScreenChange = (isFull) => {
     setIsFullscreen(isFull);
   };
 
-  const renderLeftNav = (onClick, disabled) => {
-    return (
-      <button className={css.navLeft} disabled={disabled} onClick={onClick}>
-        <div className={css.navArrowWrapper}>
-          <IconArrowHead direction="left" size="big" />
-        </div>
-      </button>
-    );
-  };
-  const renderRightNav = (onClick, disabled) => {
-    return (
-      <button className={css.navRight} disabled={disabled} onClick={onClick}>
-        <div className={css.navArrowWrapper}>
-          <IconArrowHead direction="right" size="big" />
-        </div>
-      </button>
-    );
-  };
-  const renderFullscreenButton = (onClick, isFullscreen) => {
-    return isFullscreen ? (
+  const renderLeftNav = (onClick, disabled) => (
+    <button className={css.navLeft} disabled={disabled} onClick={onClick}>
+      <div className={css.navArrowWrapper}>
+        <IconArrowHead direction="left" size="big" />
+      </div>
+    </button>
+  );
+  const renderRightNav = (onClick, disabled) => (
+    <button className={css.navRight} disabled={disabled} onClick={onClick}>
+      <div className={css.navArrowWrapper}>
+        <IconArrowHead direction="right" size="big" />
+      </div>
+    </button>
+  );
+  const renderFullscreenButton = (onClick, isFullscreen) =>
+    isFullscreen ? (
       <Button
         onClick={onClick}
         rootClassName={css.close}
@@ -151,7 +141,6 @@ const ListingImageGallery = props => {
         />
       </button>
     );
-  };
 
   if (items.length === 0) {
     return <ResponsiveImage className={css.noImage} image={null} variants={[]} alt="" />;
@@ -172,7 +161,7 @@ const ListingImageGallery = props => {
       {...IMAGE_GALLERY_OPTIONS}
     />
   );
-};
+}
 
 ListingImageGallery.defaultProps = {
   rootClassName: null,

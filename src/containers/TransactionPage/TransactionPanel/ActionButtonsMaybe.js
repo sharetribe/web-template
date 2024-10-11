@@ -6,7 +6,7 @@ import { PrimaryButton, SecondaryButton } from '../../../components';
 import css from './TransactionPanel.module.css';
 
 // Functional component as a helper to build ActionButtons
-const ActionButtonsMaybe = props => {
+function ActionButtonsMaybe(props) {
   const {
     className,
     rootClassName,
@@ -66,6 +66,6 @@ const ActionButtonsMaybe = props => {
       </div>
     </div>
   ) : null;
-};
+}
 
 export default ActionButtonsMaybe;

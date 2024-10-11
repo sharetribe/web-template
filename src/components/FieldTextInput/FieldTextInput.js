@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { bool, func, object, shape, string } from 'prop-types';
 import { Field } from 'react-final-form';
 import classNames from 'classnames';
-import { ValidationError, ExpandingTextarea } from '../../components';
+import { ValidationError, ExpandingTextarea } from '..';
 
 import css from './FieldTextInput.module.css';
 
 const CONTENT_MAX_LENGTH = 5000;
 
-const FieldTextInputComponent = props => {
+function FieldTextInputComponent(props) {
   const {
     rootClassName,
     className,
@@ -66,16 +66,16 @@ const FieldTextInputComponent = props => {
         ...rest,
       }
     : isUncontrolled
-    ? {
-        className: inputClasses,
-        id,
-        type,
-        defaultValue,
-        ...refMaybe,
-        ...inputWithoutValue,
-        ...rest,
-      }
-    : { className: inputClasses, id, type, ...refMaybe, ...input, ...rest };
+      ? {
+          className: inputClasses,
+          id,
+          type,
+          defaultValue,
+          ...refMaybe,
+          ...inputWithoutValue,
+          ...rest,
+        }
+      : { className: inputClasses, id, type, ...refMaybe, ...input, ...rest };
 
   const classes = classNames(rootClassName || css.root, className);
   return (
@@ -85,7 +85,7 @@ const FieldTextInputComponent = props => {
       {hideErrorMessage ? null : <ValidationError fieldMeta={fieldMeta} />}
     </div>
   );
-};
+}
 
 FieldTextInputComponent.defaultProps = {
   rootClassName: null,

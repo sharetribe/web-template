@@ -10,14 +10,12 @@ const imageName4x = 'example-variant-4x';
 const imageName6x = 'example-variant-6x';
 const imageVariants = [imageName, imageName2x, imageName4x, imageName6x];
 
-const variant = (name, width, height) => {
-  return {
-    name,
-    width,
-    height,
-    url: `https://picsum.photos/${width}/${height}/`,
-  };
-};
+const variant = (name, width, height) => ({
+  name,
+  width,
+  height,
+  url: `https://picsum.photos/${width}/${height}/`,
+});
 
 const imageSquare = {
   id: new UUID('image-square'),
@@ -57,11 +55,9 @@ const imageLandscape = {
   },
 };
 
-const repeat = (x, n) => {
-  return Array.from(new Array(n)).map(() => x);
-};
+const repeat = (x, n) => Array.from(new Array(n)).map(() => x);
 
-const Gallery = props => {
+function Gallery(props) {
   const styles = {
     width: '100%',
     maxWidth: 600,
@@ -71,7 +67,7 @@ const Gallery = props => {
       <ListingImageGallery {...props} />
     </div>
   );
-};
+}
 
 export const NoImages = {
   component: Gallery,

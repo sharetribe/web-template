@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import css from './IconInquiry.module.css';
 
-const IconInquiry = props => {
+function IconInquiry(props) {
   const { rootClassName, className } = props;
   const classes = classNames(rootClassName || css.root, className);
   return (
@@ -27,7 +27,7 @@ const IconInquiry = props => {
       </g>
     </svg>
   );
-};
+}
 
 IconInquiry.defaultProps = {
   rootClassName: null,

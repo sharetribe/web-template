@@ -1,8 +1,8 @@
 import React from 'react';
 import loadable from '@loadable/component';
 
-const PageBuilder = loadable(() =>
-  import(/* webpackChunkName: "PageBuilder" */ '../PageBuilder/PageBuilder')
+const PageBuilder = loadable(
+  () => import(/* webpackChunkName: "PageBuilder" */ '../PageBuilder/PageBuilder'),
 );
 
 // NOTE: You could add the actual Privacy Policy here as a fallback
@@ -48,8 +48,8 @@ export const fallbackSections = {
 };
 
 // This is the fallback page, in case there's no Privacy Policy asset defined in Console.
-const FallbackPage = props => {
+function FallbackPage(props) {
   return <PageBuilder pageAssetsData={fallbackSections} {...props} />;
-};
+}
 
 export default FallbackPage;

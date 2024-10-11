@@ -2,7 +2,7 @@ import React from 'react';
 
 import css from './CheckoutPage.module.css';
 
-const MobileOrderBreakdown = props => {
+function MobileOrderBreakdown(props) {
   const { breakdown, speculateTransactionErrorMessage } = props;
 
   return (
@@ -11,6 +11,6 @@ const MobileOrderBreakdown = props => {
       {breakdown}
     </div>
   );
-};
+}
 
 export default MobileOrderBreakdown;

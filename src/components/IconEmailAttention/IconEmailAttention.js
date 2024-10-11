@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import css from './IconEmailAttention.module.css';
 
-const IconEmailAttention = props => {
+function IconEmailAttention(props) {
   const { rootClassName, className } = props;
   const classes = classNames(rootClassName || css.root, className);
   return (
@@ -31,7 +31,7 @@ const IconEmailAttention = props => {
       </g>
     </svg>
   );
-};
+}
 
 IconEmailAttention.defaultProps = { rootClassName: null, className: null };
 

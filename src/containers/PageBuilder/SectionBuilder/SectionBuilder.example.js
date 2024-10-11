@@ -23,9 +23,9 @@ const imagePlaceholder = (width, height) => ({
   },
 });
 
-/////////////////////////////
+/// //////////////////////////
 // SectionColumns examples //
-/////////////////////////////
+/// //////////////////////////
 
 export const SectionArticle = {
   component: SectionBuilder,

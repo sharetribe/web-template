@@ -6,7 +6,7 @@ import { FormattedMessage } from '../../../util/reactIntl';
 
 import css from './MainPanelHeader.module.css';
 
-const MainPanelHeader = props => {
+function MainPanelHeader(props) {
   const {
     rootClassName,
     className,
@@ -48,10 +48,10 @@ const MainPanelHeader = props => {
 
       {children}
 
-      {noResultsInfo ? noResultsInfo : null}
+      {noResultsInfo || null}
     </div>
   );
-};
+}
 
 MainPanelHeader.defaultProps = {
   rootClassName: null,

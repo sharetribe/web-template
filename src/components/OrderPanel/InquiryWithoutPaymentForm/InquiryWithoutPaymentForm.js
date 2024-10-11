@@ -9,7 +9,7 @@ import { Form, PrimaryButton } from '../..';
 
 import css from './InquiryWithoutPaymentForm.module.css';
 
-const renderForm = formRenderProps => {
+const renderForm = (formRenderProps) => {
   // FormRenderProps from final-form
   const { formId, className, rootClassName, handleSubmit } = formRenderProps;
   const classes = classNames(rootClassName || css.root, className);
@@ -25,12 +25,12 @@ const renderForm = formRenderProps => {
   );
 };
 
-const InquiryWithoutPaymentForm = props => {
+function InquiryWithoutPaymentForm(props) {
   const intl = useIntl();
   const initialValues = {};
 
   return <FinalForm initialValues={initialValues} {...props} intl={intl} render={renderForm} />;
-};
+}
 
 InquiryWithoutPaymentForm.defaultProps = {
   rootClassName: null,

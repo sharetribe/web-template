@@ -9,7 +9,7 @@ import { timestampToDate } from '../../../util/dates';
 import { propTypes } from '../../../util/types';
 import { BOOKING_PROCESS_NAME } from '../../../transactions/transaction';
 
-import { Form, H6, PrimaryButton } from '../../../components';
+import { Form, H6, PrimaryButton } from '../..';
 
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
 import FieldDateAndTimeInput from './FieldDateAndTimeInput';
@@ -37,8 +37,8 @@ export class BookingTimeFormComponent extends Component {
     const startDate = bookingStartTime ? timestampToDate(bookingStartTime) : null;
     const endDate = bookingEndTime ? timestampToDate(bookingEndTime) : null;
 
-    const listingId = this.props.listingId;
-    const isOwnListing = this.props.isOwnListing;
+    const { listingId } = this.props;
+    const { isOwnListing } = this.props;
 
     // Note: we expect values bookingStartTime and bookingEndTime to be strings
     // which is the default case when the value has been selected through the form
@@ -74,7 +74,7 @@ export class BookingTimeFormComponent extends Component {
         {...rest}
         unitPrice={unitPrice}
         onSubmit={this.handleFormSubmit}
-        render={fieldRenderProps => {
+        render={(fieldRenderProps) => {
           const {
             endDatePlaceholder,
             startDatePlaceholder,
@@ -117,7 +117,7 @@ export class BookingTimeFormComponent extends Component {
             <Form onSubmit={handleSubmit} className={classes} enforcePagePreloadFor="CheckoutPage">
               <FormSpy
                 subscription={{ values: true }}
-                onChange={values => {
+                onChange={(values) => {
                   this.handleOnChange(values);
                 }}
               />
@@ -174,9 +174,7 @@ export class BookingTimeFormComponent extends Component {
               </div>
 
               <p className={css.finePrint}>
-                {payoutDetailsWarning ? (
-                  payoutDetailsWarning
-                ) : (
+                {payoutDetailsWarning || (
                   <FormattedMessage
                     id={
                       isOwnListing

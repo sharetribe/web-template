@@ -54,21 +54,21 @@ const TEXT_CONTENT = [
   'text',
 ];
 
-////////////////////////
+/// /////////////////////
 // Markdown component //
-////////////////////////
+/// /////////////////////
 
 // Most fields are primitives but markdown is a bit special case.
 // It gets its own "components" mapping that it uses to render the markdown content
 const MarkdownField = ({ content, components }) => renderMarkdown(content, components);
 
-///////////////////////////////////////////
+/// ////////////////////////////////////////
 // Mapping of field types and components //
-///////////////////////////////////////////
+/// ////////////////////////////////////////
 
 // For text content (headings, paragraph, markdown), we don't print warning about empty string
 // as that's expected result after removing previously entered string.
-const omitInvalidPropsWarning = data => !hasContent(data);
+const omitInvalidPropsWarning = (data) => !hasContent(data);
 
 const defaultFieldComponents = {
   heading1: { component: H1, pickValidProps: exposeContentAsChildren, omitInvalidPropsWarning },
@@ -125,20 +125,20 @@ const defaultFieldComponents = {
   openGraphData: { component: null, pickValidProps: exposeOpenGraphData },
 };
 
-//////////////////
+/// ///////////////
 // Props picker //
-//////////////////
+/// ///////////////
 
 const hasExactNumKeys = (obj, num) => Object.keys(obj).length === num;
-const isEmptyObject = obj => hasExactNumKeys(obj, 0);
+const isEmptyObject = (obj) => hasExactNumKeys(obj, 0);
 const hasOnlyProp = (obj, key) => hasExactNumKeys(obj, 1) && obj[key];
-const hasEmptyTextContent = obj =>
+const hasEmptyTextContent = (obj) =>
   hasExactNumKeys(obj, 2) && TEXT_CONTENT.includes(obj?.fieldType) && obj?.content?.length === 0;
 
 const getFieldConfig = (data, defaultFieldComponents, options) => {
   const customFieldComponents = options?.fieldComponents || {};
   const fieldMapping = { ...defaultFieldComponents, ...customFieldComponents };
-  return fieldMapping[(data?.fieldType)];
+  return fieldMapping[data?.fieldType];
 };
 
 // This is also useful for fields that are not used as components on their own
@@ -189,14 +189,14 @@ export const hasDataInFields = (fields, fieldOptions) => {
   return hasData;
 };
 
-////////////////////
+/// /////////////////
 // Field selector //
-////////////////////
+/// /////////////////
 
-const isEmpty = obj => Object.keys(obj).length === 0;
+const isEmpty = (obj) => Object.keys(obj).length === 0;
 
 // Generic field component that picks a specific UI component based on 'fieldType'
-const Field = props => {
+function Field(props) {
   const { data, options: fieldOptions, ...propsFromParent } = props;
 
   // Check the data and pick valid props only
@@ -214,7 +214,7 @@ const Field = props => {
   }
 
   return null;
-};
+}
 
 // Field's prop types:
 const propTypeTextContent = shape({
@@ -243,7 +243,7 @@ const propTypeImageAsset = shape({
         width: number.isRequired,
         height: number.isRequired,
         url: string.isRequired,
-      })
+      }),
     ).isRequired,
   }).isRequired,
 });

@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import css from './Topbar.module.css';
 
-const SearchIcon = props => {
+function SearchIcon(props) {
   const { className, rootClassName } = props;
   const classes = classNames(rootClassName || css.rootSearchIcon, className);
 
@@ -29,7 +29,7 @@ const SearchIcon = props => {
       </g>
     </svg>
   );
-};
+}
 
 const { string } = PropTypes;
 

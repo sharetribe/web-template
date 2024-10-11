@@ -15,14 +15,14 @@ import ExceptionDateRange from './ExceptionDateRange';
 
 import css from './EditListingAvailabilityExceptionForm.module.css';
 
-//////////////////////////////////////////
+/// ///////////////////////////////////////
 // EditListingAvailabilityExceptionForm //
-//////////////////////////////////////////
-const EditListingAvailabilityExceptionForm = props => {
+/// ///////////////////////////////////////
+function EditListingAvailabilityExceptionForm(props) {
   return (
     <FinalForm
       {...props}
-      render={formRenderProps => {
+      render={(formRenderProps) => {
         const {
           className,
           rootClassName,
@@ -70,7 +70,7 @@ const EditListingAvailabilityExceptionForm = props => {
         return (
           <Form
             className={classes}
-            onSubmit={e => {
+            onSubmit={(e) => {
               handleSubmit(e).then(() => {
                 formApi.initialize({
                   exceptionStartDate: null,
@@ -135,7 +135,7 @@ const EditListingAvailabilityExceptionForm = props => {
       }}
     />
   );
-};
+}
 
 EditListingAvailabilityExceptionForm.defaultProps = {
   className: null,

@@ -1,13 +1,12 @@
-import { util as sdkUtil } from '../util/sdkLoader';
 import { denormalisedResponseEntities, ensureOwnListing } from '../util/data';
-import * as log from '../util/log';
-import { LISTING_STATE_DRAFT } from '../util/types';
 import { storableError } from '../util/errors';
-import { isUserAuthorized } from '../util/userHelpers';
+import { LISTING_STATE_DRAFT } from '../util/types';
+import * as log from '../util/log';
 import { getTransitionsNeedingProviderAttention } from '../transactions/transaction';
 
 import { authInfo } from './auth.duck';
 import { stripeAccountCreateSuccess } from './stripeConnectAccount.duck';
+import { util as sdkUtil } from '../util/sdkLoader';
 
 // ================ Action types ================ //
 
@@ -23,11 +22,14 @@ export const FETCH_CURRENT_USER_HAS_LISTINGS_SUCCESS =
   'app/user/FETCH_CURRENT_USER_HAS_LISTINGS_SUCCESS';
 export const FETCH_CURRENT_USER_HAS_LISTINGS_ERROR =
   'app/user/FETCH_CURRENT_USER_HAS_LISTINGS_ERROR';
-
+export const FETCH_CURRENT_USER_TRANSACTIONS_REQUEST =
+  'app/user/FETCH_CURRENT_USER_TRANSACTIONS_REQUEST';
 export const FETCH_CURRENT_USER_NOTIFICATIONS_REQUEST =
   'app/user/FETCH_CURRENT_USER_NOTIFICATIONS_REQUEST';
 export const FETCH_CURRENT_USER_NOTIFICATIONS_SUCCESS =
   'app/user/FETCH_CURRENT_USER_NOTIFICATIONS_SUCCESS';
+export const FETCH_CURRENT_USER_TRANSACTIONS_SUCCESS =
+  'app/user/FETCH_CURRENT_USER_TRANSACTIONS_SUCCESS';
 export const FETCH_CURRENT_USER_NOTIFICATIONS_ERROR =
   'app/user/FETCH_CURRENT_USER_NOTIFICATIONS_ERROR';
 
@@ -53,13 +55,12 @@ const mergeCurrentUser = (oldCurrentUser, newCurrentUser) => {
   return newCurrentUser === null
     ? null
     : oldCurrentUser === null
-    ? newCurrentUser
-    : { id, type, attributes, ...oldRelationships, ...relationships };
+      ? newCurrentUser
+      : { id, type, attributes, ...oldRelationships, ...relationships };
 };
 
 const initialState = {
   currentUser: null,
-  currentUserShowTimestamp: 0,
   currentUserShowError: null,
   currentUserHasListings: false,
   currentUserHasListingsError: null,
@@ -77,13 +78,8 @@ export default function reducer(state = initialState, action = {}) {
     case CURRENT_USER_SHOW_REQUEST:
       return { ...state, currentUserShowError: null };
     case CURRENT_USER_SHOW_SUCCESS:
-      return {
-        ...state,
-        currentUser: mergeCurrentUser(state.currentUser, payload),
-        currentUserShowTimestamp: payload ? new Date().getTime() : 0,
-      };
+      return { ...state, currentUser: mergeCurrentUser(state.currentUser, payload) };
     case CURRENT_USER_SHOW_ERROR:
-      // eslint-disable-next-line no-console
       console.error(payload);
       return { ...state, currentUserShowError: payload };
 
@@ -103,7 +99,7 @@ export default function reducer(state = initialState, action = {}) {
     case FETCH_CURRENT_USER_HAS_LISTINGS_SUCCESS:
       return { ...state, currentUserHasListings: payload.hasListings };
     case FETCH_CURRENT_USER_HAS_LISTINGS_ERROR:
-      console.error(payload); // eslint-disable-line
+      console.error(payload);
       return { ...state, currentUserHasListingsError: payload };
 
     case FETCH_CURRENT_USER_NOTIFICATIONS_REQUEST:
@@ -111,7 +107,7 @@ export default function reducer(state = initialState, action = {}) {
     case FETCH_CURRENT_USER_NOTIFICATIONS_SUCCESS:
       return { ...state, currentUserNotificationCount: payload.transactions.length };
     case FETCH_CURRENT_USER_NOTIFICATIONS_ERROR:
-      console.error(payload); // eslint-disable-line
+      console.error(payload);
       return { ...state, currentUserNotificationCountError: payload };
 
     case FETCH_CURRENT_USER_HAS_ORDERS_REQUEST:
@@ -119,7 +115,7 @@ export default function reducer(state = initialState, action = {}) {
     case FETCH_CURRENT_USER_HAS_ORDERS_SUCCESS:
       return { ...state, currentUserHasOrders: payload.hasOrders };
     case FETCH_CURRENT_USER_HAS_ORDERS_ERROR:
-      console.error(payload); // eslint-disable-line
+      console.error(payload);
       return { ...state, currentUserHasOrdersError: payload };
 
     case SEND_VERIFICATION_EMAIL_REQUEST:
@@ -147,7 +143,7 @@ export default function reducer(state = initialState, action = {}) {
 
 // ================ Selectors ================ //
 
-export const hasCurrentUserErrors = state => {
+export const hasCurrentUserErrors = (state) => {
   const { user } = state;
   return (
     user.currentUserShowError ||
@@ -157,20 +153,18 @@ export const hasCurrentUserErrors = state => {
   );
 };
 
-export const verificationSendingInProgress = state => {
-  return state.user.sendVerificationEmailInProgress;
-};
+export const verificationSendingInProgress = (state) => state.user.sendVerificationEmailInProgress;
 
 // ================ Action creators ================ //
 
 export const currentUserShowRequest = () => ({ type: CURRENT_USER_SHOW_REQUEST });
 
-export const currentUserShowSuccess = user => ({
+export const currentUserShowSuccess = (user) => ({
   type: CURRENT_USER_SHOW_SUCCESS,
   payload: user,
 });
 
-export const currentUserShowError = e => ({
+export const currentUserShowError = (e) => ({
   type: CURRENT_USER_SHOW_ERROR,
   payload: e,
   error: true,
@@ -182,27 +176,36 @@ const fetchCurrentUserHasListingsRequest = () => ({
   type: FETCH_CURRENT_USER_HAS_LISTINGS_REQUEST,
 });
 
-export const fetchCurrentUserHasListingsSuccess = hasListings => ({
+export const fetchCurrentUserHasListingsSuccess = (hasListings) => ({
   type: FETCH_CURRENT_USER_HAS_LISTINGS_SUCCESS,
   payload: { hasListings },
 });
 
-const fetchCurrentUserHasListingsError = e => ({
+const fetchCurrentUserHasListingsError = (e) => ({
   type: FETCH_CURRENT_USER_HAS_LISTINGS_ERROR,
   error: true,
   payload: e,
 });
 
-export const fetchCurrentUserNotificationsRequest = () => ({
+const fetchCurrentUserNotificationsRequest = () => ({
   type: FETCH_CURRENT_USER_NOTIFICATIONS_REQUEST,
 });
 
-export const fetchCurrentUserNotificationsSuccess = transactions => ({
+const fetchCurrentUserTransactionsRequest = () => ({
+  type: FETCH_CURRENT_USER_TRANSACTIONS_REQUEST,
+});
+
+export const fetchCurrentUserTransactionsSuccess = (transactions) => ({
   type: FETCH_CURRENT_USER_NOTIFICATIONS_SUCCESS,
   payload: { transactions },
 });
 
-const fetchCurrentUserNotificationsError = e => ({
+export const fetchCurrentUserNotificationsSuccess = (transactions) => ({
+  type: FETCH_CURRENT_USER_NOTIFICATIONS_SUCCESS,
+  payload: { transactions },
+});
+
+const fetchCurrentUserNotificationsError = (e) => ({
   type: FETCH_CURRENT_USER_NOTIFICATIONS_ERROR,
   error: true,
   payload: e,
@@ -212,12 +215,12 @@ const fetchCurrentUserHasOrdersRequest = () => ({
   type: FETCH_CURRENT_USER_HAS_ORDERS_REQUEST,
 });
 
-export const fetchCurrentUserHasOrdersSuccess = hasOrders => ({
+export const fetchCurrentUserHasOrdersSuccess = (hasOrders) => ({
   type: FETCH_CURRENT_USER_HAS_ORDERS_SUCCESS,
   payload: { hasOrders },
 });
 
-const fetchCurrentUserHasOrdersError = e => ({
+const fetchCurrentUserHasOrdersError = (e) => ({
   type: FETCH_CURRENT_USER_HAS_ORDERS_ERROR,
   error: true,
   payload: e,
@@ -231,7 +234,7 @@ export const sendVerificationEmailSuccess = () => ({
   type: SEND_VERIFICATION_EMAIL_SUCCESS,
 });
 
-export const sendVerificationEmailError = e => ({
+export const sendVerificationEmailError = (e) => ({
   type: SEND_VERIFICATION_EMAIL_ERROR,
   error: true,
   payload: e,
@@ -249,16 +252,15 @@ export const fetchCurrentUserHasListings = () => (dispatch, getState, sdk) => {
   }
 
   const params = {
-    // Since we are only interested in if the user has published
+    // Since we are only interested in if the user has
     // listings, we only need at most one result.
-    states: 'published',
     page: 1,
     perPage: 1,
   };
 
   return sdk.ownListings
     .query(params)
-    .then(response => {
+    .then((response) => {
       const hasListings = response.data.data && response.data.data.length > 0;
 
       const hasPublishedListings =
@@ -266,7 +268,7 @@ export const fetchCurrentUserHasListings = () => (dispatch, getState, sdk) => {
         ensureOwnListing(response.data.data[0]).attributes.state !== LISTING_STATE_DRAFT;
       dispatch(fetchCurrentUserHasListingsSuccess(!!hasPublishedListings));
     })
-    .catch(e => dispatch(fetchCurrentUserHasListingsError(storableError(e))));
+    .catch((e) => dispatch(fetchCurrentUserHasListingsError(storableError(e))));
 };
 
 export const fetchCurrentUserHasOrders = () => (dispatch, getState, sdk) => {
@@ -285,15 +287,53 @@ export const fetchCurrentUserHasOrders = () => (dispatch, getState, sdk) => {
 
   return sdk.transactions
     .query(params)
-    .then(response => {
+    .then((response) => {
       const hasOrders = response.data.data && response.data.data.length > 0;
       dispatch(fetchCurrentUserHasOrdersSuccess(!!hasOrders));
     })
-    .catch(e => dispatch(fetchCurrentUserHasOrdersError(storableError(e))));
+    .catch((e) => dispatch(fetchCurrentUserHasOrdersError(storableError(e))));
 };
 
 // Notificaiton page size is max (100 items on page)
 const NOTIFICATION_PAGE_SIZE = 100;
+
+export const fetchCurrentUserTransactions = () => async (dispatch, getState, sdk) => {
+  const apiQueryParams = {
+    only: 'sale',
+    lastTransitions: ['transition/accept'],
+    include: ['listing', 'booking'],
+  };
+
+  dispatch(fetchCurrentUserTransactionsRequest());
+
+  const fetchPage = async (page = 1) => {
+    const params = {
+      ...apiQueryParams,
+      page,
+    };
+    const response = await sdk.transactions.query(params);
+    return response.data;
+  };
+
+  try {
+    const transactions = await fetchPage();
+    const totalPages = Math.ceil(transactions.meta.totalItems / 100);
+
+    for (let page = 2; page <= totalPages && page <= 5; page++) {
+      const extraTransactions = await fetchPage(page);
+      transactions.data = transactions.data.concat(extraTransactions.data);
+      transactions.included = transactions.included.concat(extraTransactions.included);
+    }
+
+    dispatch(fetchCurrentUserTransactionsSuccess(transactions));
+    console.log('transactions', transactions);
+    return transactions; // Return transactions to enable chaining .then()
+  } catch (e) {
+    const error = storableError(e);
+    dispatch(fetchCurrentUserTransactionsError(error));
+    throw error; // Throw error to handle in .catch() in component
+  }
+};
 
 export const fetchCurrentUserNotifications = () => (dispatch, getState, sdk) => {
   const transitionsNeedingAttention = getTransitionsNeedingProviderAttention();
@@ -312,105 +352,81 @@ export const fetchCurrentUserNotifications = () => (dispatch, getState, sdk) => 
   dispatch(fetchCurrentUserNotificationsRequest());
   sdk.transactions
     .query(apiQueryParams)
-    .then(response => {
+    .then((response) => {
       const transactions = response.data.data;
       dispatch(fetchCurrentUserNotificationsSuccess(transactions));
     })
-    .catch(e => dispatch(fetchCurrentUserNotificationsError(storableError(e))));
+    .catch((e) => dispatch(fetchCurrentUserNotificationsError(storableError(e))));
 };
 
-export const fetchCurrentUser = options => (dispatch, getState, sdk) => {
-  const state = getState();
-  const { currentUserHasListings, currentUserShowTimestamp } = state.user || {};
-  const { isAuthenticated } = state.auth;
-  const {
-    callParams = null,
-    updateHasListings = true,
-    updateNotifications = true,
-    afterLogin,
-    enforce = false, // Automatic emailVerification might be called too fast
-  } = options || {};
+export const fetchCurrentUser =
+  (params = null) =>
+  (dispatch, getState, sdk) => {
+    dispatch(currentUserShowRequest());
+    const { isAuthenticated } = getState().auth;
 
-  // Double fetch might happen when e.g. profile page is making a full page load
-  const aSecondAgo = new Date().getTime() - 1000;
-  if (!enforce && currentUserShowTimestamp > aSecondAgo) {
-    return Promise.resolve({});
-  }
-  // Set in-progress, no errors
-  dispatch(currentUserShowRequest());
+    if (!isAuthenticated) {
+      // Make sure current user is null
+      dispatch(currentUserShowSuccess(null));
+      return Promise.resolve({});
+    }
 
-  if (!isAuthenticated && !afterLogin) {
-    // Make sure current user is null
-    dispatch(currentUserShowSuccess(null));
-    return Promise.resolve({});
-  }
+    const parameters = params || {
+      include: ['profileImage', 'stripeAccount'],
+      'fields.image': [
+        'variants.square-small',
+        'variants.square-small2x',
+        'variants.square-xsmall',
+        'variants.square-xsmall2x',
+      ],
+      'imageVariant.square-xsmall': sdkUtil.objectQueryString({
+        w: 40,
+        h: 40,
+        fit: 'crop',
+      }),
+      'imageVariant.square-xsmall2x': sdkUtil.objectQueryString({
+        w: 80,
+        h: 80,
+        fit: 'crop',
+      }),
+    };
 
-  const parameters = callParams || {
-    include: ['effectivePermissionSet', 'profileImage', 'stripeAccount'],
-    'fields.image': [
-      'variants.square-small',
-      'variants.square-small2x',
-      'variants.square-xsmall',
-      'variants.square-xsmall2x',
-    ],
-    'imageVariant.square-xsmall': sdkUtil.objectQueryString({
-      w: 40,
-      h: 40,
-      fit: 'crop',
-    }),
-    'imageVariant.square-xsmall2x': sdkUtil.objectQueryString({
-      w: 80,
-      h: 80,
-      fit: 'crop',
-    }),
-  };
+    return sdk.currentUser
+      .show(parameters)
+      .then((response) => {
+        const entities = denormalisedResponseEntities(response);
+        if (entities.length !== 1) {
+          throw new Error('Expected a resource in the sdk.currentUser.show response');
+        }
+        const currentUser = entities[0];
 
-  return sdk.currentUser
-    .show(parameters)
-    .then(response => {
-      const entities = denormalisedResponseEntities(response);
-      if (entities.length !== 1) {
-        throw new Error('Expected a resource in the sdk.currentUser.show response');
-      }
-      const currentUser = entities[0];
-
-      // Save stripeAccount to store.stripe.stripeAccount if it exists
-      if (currentUser.stripeAccount) {
-        dispatch(stripeAccountCreateSuccess(currentUser.stripeAccount));
-      }
-
-      // set current user id to the logger
-      log.setUserId(currentUser.id.uuid);
-      dispatch(currentUserShowSuccess(currentUser));
-      return currentUser;
-    })
-    .then(currentUser => {
-      // If currentUser is not active (e.g. in 'pending-approval' state),
-      // then they don't have listings or transactions that we care about.
-      if (isUserAuthorized(currentUser)) {
-        if (currentUserHasListings === false && updateHasListings !== false) {
-          dispatch(fetchCurrentUserHasListings());
+        // Save stripeAccount to store.stripe.stripeAccount if it exists
+        if (currentUser.stripeAccount) {
+          dispatch(stripeAccountCreateSuccess(currentUser.stripeAccount));
         }
 
-        if (updateNotifications !== false) {
-          dispatch(fetchCurrentUserNotifications());
-        }
-
+        // set current user id to the logger
+        log.setUserId(currentUser.id.uuid);
+        dispatch(currentUserShowSuccess(currentUser));
+        return currentUser;
+      })
+      .then((currentUser) => {
+        dispatch(fetchCurrentUserHasListings());
+        dispatch(fetchCurrentUserNotifications());
         if (!currentUser.attributes.emailVerified) {
           dispatch(fetchCurrentUserHasOrders());
         }
-      }
 
-      // Make sure auth info is up to date
-      dispatch(authInfo());
-    })
-    .catch(e => {
-      // Make sure auth info is up to date
-      dispatch(authInfo());
-      log.error(e, 'fetch-current-user-failed');
-      dispatch(currentUserShowError(storableError(e)));
-    });
-};
+        // Make sure auth info is up to date
+        dispatch(authInfo());
+      })
+      .catch((e) => {
+        // Make sure auth info is up to date
+        dispatch(authInfo());
+        log.error(e, 'fetch-current-user-failed');
+        dispatch(currentUserShowError(storableError(e)));
+      });
+  };
 
 export const sendVerificationEmail = () => (dispatch, getState, sdk) => {
   if (verificationSendingInProgress(getState())) {
@@ -420,5 +436,5 @@ export const sendVerificationEmail = () => (dispatch, getState, sdk) => {
   return sdk.currentUser
     .sendVerificationEmail()
     .then(() => dispatch(sendVerificationEmailSuccess()))
-    .catch(e => dispatch(sendVerificationEmailError(storableError(e))));
+    .catch((e) => dispatch(sendVerificationEmailError(storableError(e))));
 };

@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import css from './IconEmailSuccess.module.css';
 
-const IconEmailSuccess = props => {
+function IconEmailSuccess(props) {
   const { rootClassName, className } = props;
   const classes = classNames(rootClassName || css.root, className);
   return (
@@ -41,7 +41,7 @@ const IconEmailSuccess = props => {
       </g>
     </svg>
   );
-};
+}
 
 IconEmailSuccess.defaultProps = { rootClassName: null, className: null };
 

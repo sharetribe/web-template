@@ -110,36 +110,38 @@ const config = {
   ],
 };
 
-const FormComponent = props => (
-  <FinalForm
-    {...props}
-    render={formRenderProps => {
-      const { handleSubmit, invalid, pristine, submitting } = formRenderProps;
-      const submitDisabled = invalid || pristine || submitting;
-      const required = validators.requiredSelectTreeOption('This field is required');
-      return (
-        <form
-          onSubmit={e => {
-            e.preventDefault();
-            handleSubmit(e);
-          }}
-        >
-          <FieldSelectTree
-            label="Nested options"
-            name="nestedLevel"
-            options={config.options}
-            validate={required}
-          />
-          <button style={{ marginTop: 24 }} type="submit" disabled={submitDisabled}>
-            Submit
-          </button>
-        </form>
-      );
-    }}
-  />
-);
+function FormComponent(props) {
+  return (
+    <FinalForm
+      {...props}
+      render={(formRenderProps) => {
+        const { handleSubmit, invalid, pristine, submitting } = formRenderProps;
+        const submitDisabled = invalid || pristine || submitting;
+        const required = validators.requiredSelectTreeOption('This field is required');
+        return (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit(e);
+            }}
+          >
+            <FieldSelectTree
+              label="Nested options"
+              name="nestedLevel"
+              options={config.options}
+              validate={required}
+            />
+            <button style={{ marginTop: 24 }} type="submit" disabled={submitDisabled}>
+              Submit
+            </button>
+          </form>
+        );
+      }}
+    />
+  );
+}
 
-const initialData = {}; //{ nestedLevel1: 'women', nestedLevel2: 'jackets', foo: 'bar' };
+const initialData = {}; // { nestedLevel1: 'women', nestedLevel2: 'jackets', foo: 'bar' };
 
 describe('FieldSelectTree', () => {
   it('matches snapshot', () => {

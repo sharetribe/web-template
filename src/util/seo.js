@@ -1,4 +1,4 @@
-const ensureOpenGraphLocale = locale => {
+const ensureOpenGraphLocale = (locale) => {
   switch (locale) {
     case 'en':
       return 'en_US';
@@ -10,7 +10,7 @@ const ensureOpenGraphLocale = locale => {
 /**
  * These will be used with Helmet <meta {...openGraphMetaProps} />
  */
-export const openGraphMetaProps = data => {
+export const openGraphMetaProps = (data) => {
   const {
     openGraphType,
     socialSharingTitle,
@@ -25,14 +25,13 @@ export const openGraphMetaProps = data => {
   } = data;
 
   if (!(socialSharingTitle && socialSharingDescription && openGraphType && url && facebookImages)) {
-    /* eslint-disable no-console */
     if (console && console.warn) {
       console.warn(
         `Can't create Open Graph meta tags:
-        socialSharingTitle, socialSharingDescription, openGraphType, url, and facebookImages are needed.`
+        socialSharingTitle, socialSharingDescription, openGraphType, url, and facebookImages are needed.`,
       );
     }
-    /* eslint-enable no-console */
+
     return [];
   }
 
@@ -45,7 +44,7 @@ export const openGraphMetaProps = data => {
   ];
 
   if (facebookImages && facebookImages.length > 0) {
-    facebookImages.forEach(i => {
+    facebookImages.forEach((i) => {
       openGraphMeta.push({
         property: 'og:image',
         content: i.url,
@@ -80,7 +79,7 @@ export const openGraphMetaProps = data => {
 /**
  * These will be used with Helmet <meta {...twitterMetaProps} />
  */
-export const twitterMetaProps = data => {
+export const twitterMetaProps = (data) => {
   const {
     socialSharingTitle,
     socialSharingDescription,
@@ -92,14 +91,13 @@ export const twitterMetaProps = data => {
   } = data;
 
   if (!(socialSharingTitle && socialSharingDescription && url)) {
-    /* eslint-disable no-console */
     if (console && console.warn) {
       console.warn(
         `Can't create twitter card meta tags:
-        socialSharingTitle, socialSharingDescription, and url are needed.`
+        socialSharingTitle, socialSharingDescription, and url are needed.`,
       );
     }
-    /* eslint-enable no-console */
+
     return [];
   }
 
@@ -115,7 +113,7 @@ export const twitterMetaProps = data => {
   }
 
   if (twitterImages && twitterImages.length > 0) {
-    twitterImages.forEach(i => {
+    twitterImages.forEach((i) => {
       twitterMeta.push({
         name: 'twitter:image',
         content: i.url,

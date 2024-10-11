@@ -55,14 +55,14 @@ describe('Field helpers', () => {
   describe('exposeLinkProps(data)', () => {
     it('should return only "content" and "href" props containing valid strings"', () => {
       expect(
-        exposeLinkProps({ content: 'Hello world!', href: 'https://my.example.com/some/image.png' })
+        exposeLinkProps({ content: 'Hello world!', href: 'https://my.example.com/some/image.png' }),
       ).toEqual({ children: 'Hello world!', href: 'https://my.example.com/some/image.png' });
       expect(
         exposeLinkProps({
           content: 'Hello world!',
           href: 'https://my.example.com/some/image.png',
           blaa: 'blaa',
-        })
+        }),
       ).toEqual({ children: 'Hello world!', href: 'https://my.example.com/some/image.png' });
     });
     it('should return empty object if data is not valid', () => {
@@ -70,12 +70,12 @@ describe('Field helpers', () => {
     });
     it('should return href as "children" if label is not valid', () => {
       const href = 'https://my.example.com/some/image.png';
-      expect(exposeLinkProps({ href })).toEqual({ children: href, href: href });
-      expect(exposeLinkProps({ content: 0, href })).toEqual({ children: href, href: href });
+      expect(exposeLinkProps({ href })).toEqual({ children: href, href });
+      expect(exposeLinkProps({ content: 0, href })).toEqual({ children: href, href });
     });
     it('should return "about:blank" in href if url in data is not valid', () => {
       expect(
-        exposeLinkProps({ content: 'Hello world!', href: "jav&#x09;ascript:alert('XSS');" })
+        exposeLinkProps({ content: 'Hello world!', href: "jav&#x09;ascript:alert('XSS');" }),
       ).toEqual({ children: 'Hello world!', href: 'about:blank' });
     });
   });
@@ -257,7 +257,7 @@ describe('Field helpers', () => {
       expect(exposeCustomAppearanceProps({ backgroundImage })).toEqual({});
       expect(exposeCustomAppearanceProps({ backgroundImage, alt })).toEqual({});
       expect(exposeCustomAppearanceProps({ backgroundImage, backgroundColor: '#FFAA00' })).toEqual(
-        {}
+        {},
       );
       expect(exposeCustomAppearanceProps({ backgroundImage: backgroundImageNoHeight })).toEqual({});
     });
@@ -271,7 +271,7 @@ describe('Field helpers', () => {
             square1x: {
               url: `https://picsum.photos/100/100`,
               width: 100,
-              //height: 100,
+              // height: 100,
             },
           },
         },
@@ -307,7 +307,7 @@ describe('Field helpers', () => {
   });
 
   describe('exposeYoutubeProps(data)', () => {
-    it('should return "youtubeVideoId" prop ', () => {
+    it('should return "youtubeVideoId" prop', () => {
       const youtubeVideoId = '9RQlikX4vvw';
       expect(exposeYoutubeProps({ youtubeVideoId })).toEqual({ youtubeVideoId });
     });
@@ -320,7 +320,7 @@ describe('Field helpers', () => {
   });
 
   describe('exposeOpenGraphData(data)', () => {
-    it('should return title, description, images1200, and images600 props ', () => {
+    it('should return title, description, images1200, and images600 props', () => {
       const title = 'Title';
       const description = 'Description';
       const imageVariant1200 = {

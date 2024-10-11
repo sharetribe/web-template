@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import css from './Overlay.module.css';
 
-const Overlay = props => {
+function Overlay(props) {
   const { className, rootClassName, message, errorMessage, children } = props;
 
   const classes = classNames(rootClassName || css.root, className);
@@ -12,7 +12,7 @@ const Overlay = props => {
   return (
     <div
       className={classes}
-      onClick={event => {
+      onClick={(event) => {
         event.preventDefault();
         event.stopPropagation();
       }}
@@ -25,7 +25,7 @@ const Overlay = props => {
       </div>
     </div>
   );
-};
+}
 
 Overlay.defaultProps = {
   className: null,

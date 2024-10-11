@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import css from './DoorIcon.module.css';
 
-const DoorIcon = props => {
+function DoorIcon(props) {
   const { className } = props;
   return (
     <svg
@@ -41,7 +41,7 @@ const DoorIcon = props => {
       </g>
     </svg>
   );
-};
+}
 
 DoorIcon.defaultProps = { className: null };
 

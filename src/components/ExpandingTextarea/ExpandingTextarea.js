@@ -8,6 +8,7 @@ class ExpandingTextarea extends Component {
     this.textarea = null;
     this.update = this.update.bind(this);
   }
+
   componentDidMount() {
     // Delay the autosize initialisation so that the autosize can
     // correctly calculate the height with the textarea value
@@ -19,22 +20,26 @@ class ExpandingTextarea extends Component {
       window.addEventListener('resize', this.update);
     }, 100);
   }
+
   componentDidUpdate() {
     this.update();
   }
+
   componentWillUnmount() {
     autosize.destroy(this.textarea);
     window.clearTimeout(this.timeoutId);
     window.removeEventListener('resize', this.update);
   }
+
   update() {
     autosize.update(this.textarea);
   }
+
   render() {
     return (
       <textarea
         {...this.props}
-        ref={textarea => {
+        ref={(textarea) => {
           this.textarea = textarea;
         }}
       />

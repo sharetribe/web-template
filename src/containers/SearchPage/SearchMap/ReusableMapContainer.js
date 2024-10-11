@@ -104,7 +104,7 @@ class ReusableMapContainer extends React.Component {
     return (
       <div
         className={css.reusableMap}
-        ref={node => {
+        ref={(node) => {
           this.mountNode = node;
         }}
       />

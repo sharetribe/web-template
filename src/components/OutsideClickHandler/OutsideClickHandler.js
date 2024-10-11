@@ -30,7 +30,7 @@ export default class OutsideClickHandler extends Component {
     const classes = classNames(rootClassName || css.root, className);
 
     return (
-      <div className={classes} ref={node => (this.node = node)}>
+      <div className={classes} ref={(node) => (this.node = node)}>
         {children}
       </div>
     );

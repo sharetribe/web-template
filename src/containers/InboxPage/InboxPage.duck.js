@@ -5,12 +5,8 @@ import { parse } from '../../util/urlHelpers';
 import { getAllTransitionsForEveryProcess } from '../../transactions/transaction';
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 
-const sortedTransactions = txs =>
-  reverse(
-    sortBy(txs, tx => {
-      return tx.attributes ? tx.attributes.lastTransitionedAt : null;
-    })
-  );
+const sortedTransactions = (txs) =>
+  reverse(sortBy(txs, (tx) => (tx.attributes ? tx.attributes.lastTransitionedAt : null)));
 
 // ================ Action types ================ //
 
@@ -20,8 +16,8 @@ export const FETCH_ORDERS_OR_SALES_ERROR = 'app/InboxPage/FETCH_ORDERS_OR_SALES_
 
 // ================ Reducer ================ //
 
-const entityRefs = entities =>
-  entities.map(entity => ({
+const entityRefs = (entities) =>
+  entities.map((entity) => ({
     id: entity.id,
     type: entity.type,
   }));
@@ -48,7 +44,7 @@ export default function inboxPageReducer(state = initialState, action = {}) {
       };
     }
     case FETCH_ORDERS_OR_SALES_ERROR:
-      console.error(payload); // eslint-disable-line
+      console.error(payload);
       return { ...state, fetchInProgress: false, fetchOrdersOrSalesError: payload };
 
     default:
@@ -59,11 +55,11 @@ export default function inboxPageReducer(state = initialState, action = {}) {
 // ================ Action creators ================ //
 
 const fetchOrdersOrSalesRequest = () => ({ type: FETCH_ORDERS_OR_SALES_REQUEST });
-const fetchOrdersOrSalesSuccess = response => ({
+const fetchOrdersOrSalesSuccess = (response) => ({
   type: FETCH_ORDERS_OR_SALES_SUCCESS,
   payload: response,
 });
-const fetchOrdersOrSalesError = e => ({
+const fetchOrdersOrSalesError = (e) => ({
   type: FETCH_ORDERS_OR_SALES_ERROR,
   error: true,
   payload: e,
@@ -119,12 +115,12 @@ export const loadData = (params, search) => (dispatch, getState, sdk) => {
 
   return sdk.transactions
     .query(apiQueryParams)
-    .then(response => {
+    .then((response) => {
       dispatch(addMarketplaceEntities(response));
       dispatch(fetchOrdersOrSalesSuccess(response));
       return response;
     })
-    .catch(e => {
+    .catch((e) => {
       dispatch(fetchOrdersOrSalesError(storableError(e)));
       throw e;
     });

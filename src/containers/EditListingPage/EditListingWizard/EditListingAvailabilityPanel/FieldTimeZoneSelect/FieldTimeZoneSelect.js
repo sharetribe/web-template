@@ -3,10 +3,10 @@ import { string } from 'prop-types';
 import { getTimeZoneNames } from '../../../../../util/dates';
 import { FieldSelect } from '../../../../../components';
 
-const FieldTimeZoneSelect = props => {
+function FieldTimeZoneSelect(props) {
   // IANA database contains irrelevant time zones too.
   const relevantZonesPattern = new RegExp(
-    '^(Africa|America(?!/(Argentina/ComodRivadavia|Knox_IN|Nuuk))|Antarctica(?!/(DumontDUrville|McMurdo))|Asia(?!/Qostanay)|Atlantic|Australia(?!/(ACT|LHI|NSW))|Europe|Indian|Pacific)'
+    '^(Africa|America(?!/(Argentina/ComodRivadavia|Knox_IN|Nuuk))|Antarctica(?!/(DumontDUrville|McMurdo))|Asia(?!/Qostanay)|Atlantic|Australia(?!/(ACT|LHI|NSW))|Europe|Indian|Pacific)',
   );
 
   return (
@@ -14,14 +14,14 @@ const FieldTimeZoneSelect = props => {
       <option disabled value="">
         Pick something...
       </option>
-      {getTimeZoneNames(relevantZonesPattern).map(tz => (
+      {getTimeZoneNames(relevantZonesPattern).map((tz) => (
         <option key={tz} value={tz}>
           {tz}
         </option>
       ))}
     </FieldSelect>
   );
-};
+}
 
 FieldTimeZoneSelect.defaultProps = {
   rootClassName: null,

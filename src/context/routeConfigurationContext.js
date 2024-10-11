@@ -4,6 +4,4 @@ export const RouteConfigurationContext = createContext();
 
 export const RouteConfigurationProvider = RouteConfigurationContext.Provider;
 
-export const useRouteConfiguration = () => {
-  return useContext(RouteConfigurationContext);
-};
+export const useRouteConfiguration = () => useContext(RouteConfigurationContext);

@@ -6,15 +6,15 @@ import css from './ResponsiveImageExample.module.css';
 
 const { UUID } = sdkTypes;
 
-const ResponsiveImageWrapper = props => {
+function ResponsiveImageWrapper(props) {
   return (
     <div className={css.root}>
       <ResponsiveImage {...props} />
     </div>
   );
-};
+}
 
-const ResponsiveImageWrapperWithAspectRatio = props => {
+function ResponsiveImageWrapperWithAspectRatio(props) {
   return (
     <div className={css.root}>
       <div className={css.aspectWrapper}>
@@ -22,7 +22,7 @@ const ResponsiveImageWrapperWithAspectRatio = props => {
       </div>
     </div>
   );
-};
+}
 
 /* Image without aspect ratio wrapper */
 export const Image2X = {
@@ -166,13 +166,15 @@ export const ImageEmptyWithAspect = {
 };
 
 /* Image without aspect ratio wrapper usign sizes */
-const ResponsiveImageWrapperForSizes = props => (
-  <div className={css.rootForSizes}>
-    <div className={css.aspectWrapper}>
-      <ResponsiveImage {...props} />
+function ResponsiveImageWrapperForSizes(props) {
+  return (
+    <div className={css.rootForSizes}>
+      <div className={css.aspectWrapper}>
+        <ResponsiveImage {...props} />
+      </div>
     </div>
-  </div>
-);
+  );
+}
 
 export const ImageWithSizes = {
   component: ResponsiveImageWrapperForSizes,

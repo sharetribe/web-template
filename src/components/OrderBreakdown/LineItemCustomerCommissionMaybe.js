@@ -11,19 +11,16 @@ const { Money } = sdkTypes;
 
 // Validate the assumption that the commission exists and the amount
 // is zero or positive.
-const isValidCommission = commissionLineItem => {
-  return (
-    commissionLineItem &&
-    commissionLineItem.lineTotal instanceof Money &&
-    commissionLineItem.lineTotal.amount >= 0
-  );
-};
+const isValidCommission = (commissionLineItem) =>
+  commissionLineItem &&
+  commissionLineItem.lineTotal instanceof Money &&
+  commissionLineItem.lineTotal.amount >= 0;
 
-const LineItemCustomerCommissionMaybe = props => {
+function LineItemCustomerCommissionMaybe(props) {
   const { lineItems, isCustomer, marketplaceName, intl } = props;
 
   const customerCommissionLineItem = lineItems.find(
-    item => item.code === LINE_ITEM_CUSTOMER_COMMISSION && !item.reversal
+    (item) => item.code === LINE_ITEM_CUSTOMER_COMMISSION && !item.reversal,
   );
 
   // If commission is passed it will be shown as a fee already added to the total price
@@ -31,7 +28,6 @@ const LineItemCustomerCommissionMaybe = props => {
 
   if (isCustomer && customerCommissionLineItem) {
     if (!isValidCommission(customerCommissionLineItem)) {
-      // eslint-disable-next-line no-console
       console.error('invalid commission line item:', customerCommissionLineItem);
       throw new Error('Commission should be present and the value should be zero or positive');
     }
@@ -53,7 +49,7 @@ const LineItemCustomerCommissionMaybe = props => {
   }
 
   return commissionItem;
-};
+}
 
 LineItemCustomerCommissionMaybe.propTypes = {
   lineItems: propTypes.lineItems.isRequired,

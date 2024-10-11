@@ -6,20 +6,20 @@
  */
 import React from 'react';
 
-import { FieldTextInput } from '../../components';
+import { FieldTextInput } from '..';
 // This formatter formats phone numbers that start with leading '+' sign,
 // but for other inputs it just strips space characters off.
 import { format, parse } from './e164Formatter';
 
-const FieldPhoneNumberInput = props => {
+function FieldPhoneNumberInput(props) {
   const inputProps = {
     type: 'text',
-    format: format,
-    parse: parse,
+    format,
+    parse,
     ...props,
   };
 
   return <FieldTextInput {...inputProps} />;
-};
+}
 
 export default FieldPhoneNumberInput;

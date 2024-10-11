@@ -2,7 +2,7 @@ import React from 'react';
 import { string } from 'prop-types';
 import css from './IconDoor.module.css';
 
-const IconDoor = props => {
+function IconDoor(props) {
   const { className } = props;
   return (
     <svg
@@ -41,7 +41,7 @@ const IconDoor = props => {
       </g>
     </svg>
   );
-};
+}
 
 IconDoor.defaultProps = { className: null };
 

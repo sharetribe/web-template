@@ -16,7 +16,7 @@ const { screen, waitFor } = testingLibrary;
 const { Money } = sdkTypes;
 const noop = () => null;
 
-const getConfig = listingTypes => {
+const getConfig = (listingTypes) => {
   const hostedConfig = getHostedConfiguration();
   return {
     ...hostedConfig,
@@ -71,15 +71,15 @@ describe('ManageListingCard', () => {
         onToggleMenu={noop}
         hasClosingError={false}
         hasOpeningError={false}
-        availabilityEnabled={true}
+        availabilityEnabled
       />,
-      { config }
+      { config },
     );
 
     expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.closeListing')).toBeInTheDocument();
     expect(tree.queryByText('ManageListingCard.priceNotSet')).not.toBeInTheDocument();
-    expect(tree.queryByText('10')).not.toBeInTheDocument(); //fakeIntl
+    expect(tree.queryByText('10')).not.toBeInTheDocument(); // fakeIntl
     expect(tree.getByText(/the Listing/i)).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.editListing')).toBeInTheDocument();
     expect(tree.queryByText('ManageListingCard.manageAvailability')).not.toBeInTheDocument();
@@ -130,15 +130,15 @@ describe('ManageListingCard', () => {
         onToggleMenu={noop}
         hasClosingError={false}
         hasOpeningError={false}
-        availabilityEnabled={true}
+        availabilityEnabled
       />,
-      { config }
+      { config },
     );
 
     expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.closeListing')).toBeInTheDocument();
     expect(tree.queryByText('ManageListingCard.priceNotSet')).not.toBeInTheDocument();
-    expect(tree.queryByText('10')).toBeInTheDocument(); //fakeIntl
+    expect(tree.queryByText('10')).toBeInTheDocument(); // fakeIntl
     expect(tree.getByText(/the Listing/i)).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.editListing')).toBeInTheDocument();
     expect(tree.queryByText('ManageListingCard.manageAvailability')).not.toBeInTheDocument();
@@ -160,7 +160,7 @@ describe('ManageListingCard', () => {
           { dayOfWeek: 'thu', startTime: '00:00', endTime: '00:00', seats: 1 },
           { dayOfWeek: 'fri', startTime: '00:00', endTime: '00:00', seats: 1 },
           { dayOfWeek: 'sat', startTime: '00:00', endTime: '00:00', seats: 1 },
-          //{ dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 1 },
+          // { dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 1 },
         ],
       },
 
@@ -187,12 +187,12 @@ describe('ManageListingCard', () => {
         onToggleMenu={noop}
         hasClosingError={false}
         hasOpeningError={false}
-        availabilityEnabled={true}
-      />
+        availabilityEnabled
+      />,
     );
     expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.closeListing')).toBeInTheDocument();
-    expect(tree.getByText('10')).toBeInTheDocument(); //fakeIntl
+    expect(tree.getByText('10')).toBeInTheDocument(); // fakeIntl
     expect(tree.getByText('ManageListingCard.perUnit')).toBeInTheDocument();
     expect(tree.getByText(/the Listing/i)).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.editListing')).toBeInTheDocument();
@@ -215,7 +215,7 @@ describe('ManageListingCard', () => {
           { dayOfWeek: 'thu', startTime: '00:00', endTime: '00:00', seats: 1 },
           { dayOfWeek: 'fri', startTime: '00:00', endTime: '00:00', seats: 1 },
           { dayOfWeek: 'sat', startTime: '00:00', endTime: '00:00', seats: 1 },
-          //{ dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 1 },
+          // { dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 1 },
         ],
       },
 
@@ -242,12 +242,12 @@ describe('ManageListingCard', () => {
         onToggleMenu={noop}
         hasClosingError={false}
         hasOpeningError={false}
-        availabilityEnabled={true}
-      />
+        availabilityEnabled
+      />,
     );
     expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.closeListing')).toBeInTheDocument();
-    expect(tree.getByText('10')).toBeInTheDocument(); //fakeIntl
+    expect(tree.getByText('10')).toBeInTheDocument(); // fakeIntl
     expect(tree.getByText('ManageListingCard.perUnit')).toBeInTheDocument();
     expect(tree.getByText(/the Listing/i)).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.editListing')).toBeInTheDocument();
@@ -273,7 +273,7 @@ describe('ManageListingCard', () => {
           { dayOfWeek: 'thu', startTime: '00:00', endTime: '00:00', seats: 1 },
           { dayOfWeek: 'fri', startTime: '00:00', endTime: '00:00', seats: 1 },
           { dayOfWeek: 'sat', startTime: '00:00', endTime: '00:00', seats: 1 },
-          //{ dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 1 },
+          // { dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 1 },
         ],
       },
 
@@ -300,12 +300,12 @@ describe('ManageListingCard', () => {
         onToggleMenu={noop}
         hasClosingError={false}
         hasOpeningError={false}
-        availabilityEnabled={true}
-      />
+        availabilityEnabled
+      />,
     );
     expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.closeListing')).toBeInTheDocument();
-    expect(tree.getByText('10')).toBeInTheDocument(); //fakeIntl
+    expect(tree.getByText('10')).toBeInTheDocument(); // fakeIntl
     expect(tree.getByText('ManageListingCard.perUnit')).toBeInTheDocument();
     expect(tree.getByText(/the Listing/i)).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.editListing')).toBeInTheDocument();
@@ -330,7 +330,7 @@ describe('ManageListingCard', () => {
           { dayOfWeek: 'thu', startTime: '00:00', endTime: '00:00', seats: 1 },
           { dayOfWeek: 'fri', startTime: '00:00', endTime: '00:00', seats: 1 },
           { dayOfWeek: 'sat', startTime: '00:00', endTime: '00:00', seats: 1 },
-          //{ dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 1 },
+          // { dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 1 },
         ],
       },
 
@@ -357,13 +357,13 @@ describe('ManageListingCard', () => {
         onToggleMenu={noop}
         hasClosingError={false}
         hasOpeningError={false}
-        availabilityEnabled={true}
-      />
+        availabilityEnabled
+      />,
     );
 
     expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.closeListing')).toBeInTheDocument();
-    expect(tree.getByText('10')).toBeInTheDocument(); //fakeIntl
+    expect(tree.getByText('10')).toBeInTheDocument(); // fakeIntl
     expect(tree.getByText('ManageListingCard.perUnit')).toBeInTheDocument();
     expect(tree.getByText(/the Listing/i)).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.editListing')).toBeInTheDocument();
@@ -388,7 +388,7 @@ describe('ManageListingCard', () => {
           { dayOfWeek: 'thu', startTime: '00:00', endTime: '00:00', seats: 1 },
           { dayOfWeek: 'fri', startTime: '00:00', endTime: '00:00', seats: 1 },
           { dayOfWeek: 'sat', startTime: '00:00', endTime: '00:00', seats: 1 },
-          //{ dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 1 },
+          // { dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 1 },
         ],
       },
 
@@ -415,8 +415,8 @@ describe('ManageListingCard', () => {
         onToggleMenu={noop}
         hasClosingError={false}
         hasOpeningError={false}
-        availabilityEnabled={true}
-      />
+        availabilityEnabled
+      />,
     );
     expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.closeListing')).toBeInTheDocument();
@@ -448,7 +448,7 @@ describe('ManageListingCard', () => {
       },
       {
         currentStock: createStock('stock-id', { quantity: 5 }),
-      }
+      },
     );
     const config = getConfig([
       {
@@ -474,14 +474,14 @@ describe('ManageListingCard', () => {
         onToggleMenu={noop}
         hasClosingError={false}
         hasOpeningError={false}
-        availabilityEnabled={true}
+        availabilityEnabled
       />,
-      { config }
+      { config },
     );
 
     expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.closeListing')).toBeInTheDocument();
-    expect(tree.getByText('10')).toBeInTheDocument(); //fakeIntl
+    expect(tree.getByText('10')).toBeInTheDocument(); // fakeIntl
     expect(tree.getByText(/the Listing/i)).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.editListing')).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.manageStock')).toBeInTheDocument();
@@ -509,7 +509,7 @@ describe('ManageListingCard', () => {
       },
       {
         currentStock: createStock('stock-id', { quantity: 0 }),
-      }
+      },
     );
 
     const config = getConfig([
@@ -536,14 +536,14 @@ describe('ManageListingCard', () => {
         onToggleMenu={noop}
         hasClosingError={false}
         hasOpeningError={false}
-        availabilityEnabled={true}
+        availabilityEnabled
       />,
-      { config }
+      { config },
     );
 
     expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.closeListing')).toBeInTheDocument();
-    expect(tree.getByText('10')).toBeInTheDocument(); //fakeIntl
+    expect(tree.getByText('10')).toBeInTheDocument(); // fakeIntl
     expect(tree.getByText(/the Listing/i)).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.editListing')).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.manageStock')).toBeInTheDocument();
@@ -576,7 +576,7 @@ describe('ManageListingCard', () => {
       },
       {
         currentStock: createStock('stock-id', { quantity: 5 }),
-      }
+      },
     );
 
     const config = getConfig([
@@ -603,14 +603,14 @@ describe('ManageListingCard', () => {
         onToggleMenu={noop}
         hasClosingError={false}
         hasOpeningError={false}
-        availabilityEnabled={true}
+        availabilityEnabled
       />,
-      { config }
+      { config },
     );
 
     expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.closeListing')).toBeInTheDocument();
-    expect(tree.getByText('10')).toBeInTheDocument(); //fakeIntl
+    expect(tree.getByText('10')).toBeInTheDocument(); // fakeIntl
     expect(tree.getByText(/the Listing/i)).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.editListing')).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.manageStock')).toBeInTheDocument();
@@ -641,7 +641,7 @@ describe('ManageListingCard', () => {
       },
       {
         currentStock: createStock('stock-id', { quantity: 5 }),
-      }
+      },
     );
     const config = getConfig([
       {
@@ -667,9 +667,9 @@ describe('ManageListingCard', () => {
         onToggleMenu={noop}
         hasClosingError={false}
         hasOpeningError={false}
-        availabilityEnabled={true}
+        availabilityEnabled
       />,
-      { config }
+      { config },
     );
 
     expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
@@ -722,14 +722,14 @@ describe('ManageListingCard', () => {
         onToggleMenu={noop}
         hasClosingError={false}
         hasOpeningError={false}
-        availabilityEnabled={true}
+        availabilityEnabled
       />,
-      { config }
+      { config },
     );
 
     expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.closeListing')).toBeInTheDocument();
-    expect(tree.getByText('10')).toBeInTheDocument(); //fakeIntl
+    expect(tree.getByText('10')).toBeInTheDocument(); // fakeIntl
     expect(tree.getByText(/the Listing/i)).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.editListing')).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.setPriceAndStock')).toBeInTheDocument();
@@ -777,14 +777,14 @@ describe('ManageListingCard', () => {
         onToggleMenu={noop}
         hasClosingError={false}
         hasOpeningError={false}
-        availabilityEnabled={true}
+        availabilityEnabled
       />,
-      { config }
+      { config },
     );
 
     expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.closeListing')).toBeInTheDocument();
-    expect(tree.getByText('10')).toBeInTheDocument(); //fakeIntl
+    expect(tree.getByText('10')).toBeInTheDocument(); // fakeIntl
     expect(tree.getByText(/the Listing/i)).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.editListing')).toBeInTheDocument();
     expect(tree.queryByText('ManageListingCard.setPriceAndStock')).not.toBeInTheDocument();
@@ -819,9 +819,9 @@ describe('ManageListingCard', () => {
         onToggleMenu={noop}
         hasClosingError={false}
         hasOpeningError={false}
-        availabilityEnabled={true}
+        availabilityEnabled
       />,
-      { config }
+      { config },
     );
     expect(tree.asFragment().firstChild).toMatchSnapshot();
   });

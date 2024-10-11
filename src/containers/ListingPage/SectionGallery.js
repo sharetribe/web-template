@@ -3,9 +3,9 @@ import ListingImageGallery from './ListingImageGallery/ListingImageGallery';
 
 import css from './ListingPage.module.css';
 
-const SectionGallery = props => {
+function SectionGallery(props) {
   const { listing, variantPrefix } = props;
-  const images = listing.images;
+  const { images } = listing;
   const imageVariants = ['scaled-small', 'scaled-medium', 'scaled-large', 'scaled-xlarge'];
   const thumbnailVariants = [variantPrefix, `${variantPrefix}-2x`, `${variantPrefix}-4x`];
   return (
@@ -17,6 +17,6 @@ const SectionGallery = props => {
       />
     </section>
   );
-};
+}
 
 export default SectionGallery;

@@ -28,11 +28,11 @@ const locationBounds = (latlng, distance) => {
   const bounds = new window.mapboxgl.LngLat(latlng.lng, latlng.lat).toBounds(distance);
   return new SDKLatLngBounds(
     new SDKLatLng(bounds.getNorth(), bounds.getEast()),
-    new SDKLatLng(bounds.getSouth(), bounds.getWest())
+    new SDKLatLng(bounds.getSouth(), bounds.getWest()),
   );
 };
 
-const placeOrigin = prediction => {
+const placeOrigin = (prediction) => {
   if (prediction && Array.isArray(prediction.center) && prediction.center.length === 2) {
     // Coordinates in Mapbox features are represented as [longitude, latitude].
     return new SDKLatLng(prediction.center[1], prediction.center[0]);
@@ -40,30 +40,31 @@ const placeOrigin = prediction => {
   return null;
 };
 
-const placeBounds = prediction => {
+const placeBounds = (prediction) => {
   if (prediction) {
     if (Array.isArray(prediction.bbox) && prediction.bbox.length === 4) {
       // Bounds in Mapbox features are represented as [minX, minY, maxX, maxY]
       return new SDKLatLngBounds(
         new SDKLatLng(prediction.bbox[3], prediction.bbox[2]),
-        new SDKLatLng(prediction.bbox[1], prediction.bbox[0])
+        new SDKLatLng(prediction.bbox[1], prediction.bbox[0]),
       );
-    } else {
-      // If bounds are not available, generate them around the origin
-
-      // Resolve bounds distance based on place type
-      const placeType = Array.isArray(prediction.place_type) && prediction.place_type[0];
-
-      const distance =
-        (placeType && PLACE_TYPE_BOUNDS_DISTANCES[placeType]) || GENERATED_BOUNDS_DEFAULT_DISTANCE;
-
-      return locationBounds(placeOrigin(prediction), distance);
     }
+    // If bounds are not available, generate them around the origin
+
+    // Resolve bounds distance based on place type
+    const placeType = Array.isArray(prediction.place_type) && prediction.place_type[0];
+
+    const distance =
+      (placeType && PLACE_TYPE_BOUNDS_DISTANCES[placeType]) || GENERATED_BOUNDS_DEFAULT_DISTANCE;
+
+    return locationBounds(placeOrigin(prediction), distance);
   }
   return null;
 };
 
-export const GeocoderAttribution = () => null;
+export function GeocoderAttribution() {
+  return null;
+}
 
 /**
  * A forward geocoding (place name -> coordinates) implementation
@@ -107,12 +108,10 @@ class GeocoderMapbox {
         language: [locale],
       })
       .send()
-      .then(response => {
-        return {
-          search,
-          predictions: response.body.features,
-        };
-      });
+      .then((response) => ({
+        search,
+        predictions: response.body.features,
+      }));
   }
 
   /**
@@ -143,13 +142,11 @@ class GeocoderMapbox {
    */
   getPlaceDetails(prediction, currentLocationBoundsDistance) {
     if (this.getPredictionId(prediction) === CURRENT_LOCATION_ID) {
-      return userLocation().then(latlng => {
-        return {
-          address: '',
-          origin: latlng,
-          bounds: locationBounds(latlng, currentLocationBoundsDistance),
-        };
-      });
+      return userLocation().then((latlng) => ({
+        address: '',
+        origin: latlng,
+        bounds: locationBounds(latlng, currentLocationBoundsDistance),
+      }));
     }
 
     if (prediction.predictionPlace) {

@@ -78,21 +78,21 @@ export default function reducer(state = initialState, action = {}) {
     case PERSON_CREATE_SUCCESS:
       return {
         ...state,
-        persons: state.persons.map(p => {
-          return p.personToken === payload.personToken
+        persons: state.persons.map((p) =>
+          p.personToken === payload.personToken
             ? { ...payload, createStripePersonInProgress: false }
-            : p;
-        }),
+            : p,
+        ),
       };
     case PERSON_CREATE_ERROR:
       console.error(payload);
       return {
         ...state,
-        persons: state.persons.map(p => {
-          return p.personToken === payload.personToken
+        persons: state.persons.map((p) =>
+          p.personToken === payload.personToken
             ? { ...p, createStripePersonInProgress: false, createStripePersonError: payload.error }
-            : p;
-        }),
+            : p,
+        ),
       };
 
     case HANDLE_CARD_PAYMENT_REQUEST:
@@ -158,12 +158,12 @@ export const confirmCardPaymentRequest = () => ({
   type: HANDLE_CARD_PAYMENT_REQUEST,
 });
 
-export const confirmCardPaymentSuccess = payload => ({
+export const confirmCardPaymentSuccess = (payload) => ({
   type: HANDLE_CARD_PAYMENT_SUCCESS,
   payload,
 });
 
-export const confirmCardPaymentError = payload => ({
+export const confirmCardPaymentError = (payload) => ({
   type: HANDLE_CARD_PAYMENT_ERROR,
   payload,
   error: true,
@@ -173,12 +173,12 @@ export const handleCardSetupRequest = () => ({
   type: HANDLE_CARD_SETUP_REQUEST,
 });
 
-export const handleCardSetupSuccess = payload => ({
+export const handleCardSetupSuccess = (payload) => ({
   type: HANDLE_CARD_SETUP_SUCCESS,
   payload,
 });
 
-export const handleCardSetupError = payload => ({
+export const handleCardSetupError = (payload) => ({
   type: HANDLE_CARD_SETUP_ERROR,
   payload,
   error: true,
@@ -192,12 +192,12 @@ export const retrievePaymentIntentRequest = () => ({
   type: RETRIEVE_PAYMENT_INTENT_REQUEST,
 });
 
-export const retrievePaymentIntentSuccess = payload => ({
+export const retrievePaymentIntentSuccess = (payload) => ({
   type: RETRIEVE_PAYMENT_INTENT_SUCCESS,
   payload,
 });
 
-export const retrievePaymentIntentError = payload => ({
+export const retrievePaymentIntentError = (payload) => ({
   type: RETRIEVE_PAYMENT_INTENT_ERROR,
   payload,
   error: true,
@@ -205,21 +205,20 @@ export const retrievePaymentIntentError = payload => ({
 
 // ================ Thunks ================ //
 
-export const retrievePaymentIntent = params => dispatch => {
+export const retrievePaymentIntent = (params) => (dispatch) => {
   const { stripe, stripePaymentIntentClientSecret } = params;
   dispatch(retrievePaymentIntentRequest());
 
   return stripe
     .retrievePaymentIntent(stripePaymentIntentClientSecret)
-    .then(response => {
+    .then((response) => {
       if (response.error) {
         return Promise.reject(response);
-      } else {
-        dispatch(retrievePaymentIntentSuccess(response.paymentIntent));
-        return response;
       }
+      dispatch(retrievePaymentIntentSuccess(response.paymentIntent));
+      return response;
     })
-    .catch(err => {
+    .catch((err) => {
       // Unwrap Stripe error.
       const e = err.error || storableError(err);
       dispatch(retrievePaymentIntentError(e));
@@ -243,7 +242,7 @@ export const retrievePaymentIntent = params => dispatch => {
     });
 };
 
-export const confirmCardPayment = params => dispatch => {
+export const confirmCardPayment = (params) => (dispatch) => {
   // It's required to use the same instance of Stripe as where the card has been created
   // so that's why Stripe needs to be passed here and we can't create a new instance.
   const { stripe, paymentParams, stripePaymentIntentClientSecret } = params;
@@ -259,32 +258,31 @@ export const confirmCardPayment = params => dispatch => {
     : [stripePaymentIntentClientSecret];
 
   const doConfirmCardPayment = () =>
-    stripe.confirmCardPayment(...args).then(response => {
+    stripe.confirmCardPayment(...args).then((response) => {
       if (response.error) {
         return Promise.reject(response);
-      } else {
-        dispatch(confirmCardPaymentSuccess(response));
-        return { ...response, transactionId };
       }
+      dispatch(confirmCardPaymentSuccess(response));
+      return { ...response, transactionId };
     });
 
   // First, check if the payment intent has already been confirmed and it just requires capture.
   return stripe
     .retrievePaymentIntent(stripePaymentIntentClientSecret)
-    .then(response => {
+    .then((response) => {
       // Handle response.error or response.paymentIntent
       if (response.error) {
         return Promise.reject(response);
-      } else if (STRIPE_PI_HAS_PASSED_CONFIRM.includes(response?.paymentIntent?.status)) {
+      }
+      if (STRIPE_PI_HAS_PASSED_CONFIRM.includes(response?.paymentIntent?.status)) {
         // Payment Intent has been confirmed already, move forward.
         dispatch(confirmCardPaymentSuccess(response));
         return { ...response, transactionId };
-      } else {
-        // If payment intent has not been confirmed yet, confirm it.
-        return doConfirmCardPayment();
       }
+      // If payment intent has not been confirmed yet, confirm it.
+      return doConfirmCardPayment();
     })
-    .catch(err => {
+    .catch((err) => {
       // Unwrap Stripe error.
       const e = err.error || storableError(err);
       dispatch(confirmCardPaymentError(e));
@@ -307,7 +305,7 @@ export const confirmCardPayment = params => dispatch => {
     });
 };
 
-export const handleCardSetup = params => dispatch => {
+export const handleCardSetup = (params) => (dispatch) => {
   // It's required to use the same instance of Stripe as where the card has been created
   // so that's why Stripe needs to be passed here and we can't create a new instance.
   const { stripe, card, setupIntentClientSecret, paymentParams } = params;
@@ -316,15 +314,14 @@ export const handleCardSetup = params => dispatch => {
 
   return stripe
     .handleCardSetup(setupIntentClientSecret, card, paymentParams)
-    .then(response => {
+    .then((response) => {
       if (response.error) {
         return Promise.reject(response);
-      } else {
-        dispatch(handleCardSetupSuccess(response));
-        return response;
       }
+      dispatch(handleCardSetupSuccess(response));
+      return response;
     })
-    .catch(err => {
+    .catch((err) => {
       // Unwrap Stripe error.
       const e = err.error || storableError(err);
       dispatch(handleCardSetupError(e));

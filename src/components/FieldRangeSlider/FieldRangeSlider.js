@@ -1,17 +1,17 @@
 import React from 'react';
 import { Field } from 'react-final-form';
 import classNames from 'classnames';
-import { RangeSlider } from '../../components';
+import { RangeSlider } from '..';
 
-const RangeSliderInput = props => {
+function RangeSliderInput(props) {
   const { input, handles, ...rest } = props;
   const { value, ...inputProps } = input;
 
   const currentHandles = Array.isArray(value) ? value : handles;
   return <RangeSlider {...inputProps} {...rest} handles={currentHandles} />;
-};
+}
 
-const FieldRangeSlider = props => {
+function FieldRangeSlider(props) {
   const { rootClassName, className, id, label, ...rest } = props;
 
   if (label && !id) {
@@ -27,6 +27,6 @@ const FieldRangeSlider = props => {
       <Field component={RangeSliderInput} {...inputProps} />
     </div>
   );
-};
+}
 
 export default FieldRangeSlider;

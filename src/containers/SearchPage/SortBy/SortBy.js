@@ -10,7 +10,7 @@ import SortByPopup from './SortByPopup';
 
 import css from './SortBy.module.css';
 
-const SortBy = props => {
+function SortBy(props) {
   const config = useConfiguration();
   const {
     sort,
@@ -38,7 +38,7 @@ const SortBy = props => {
 
   // Ensure that keywords is included to activeFilter list when needed
   const isMainSearchKeywords = isMainSearchTypeKeywords(config);
-  const hasKeyworsFilter = config.search.defaultFilters.find(df => df.key === relevanceFilter);
+  const hasKeyworsFilter = config.search.defaultFilters.find((df) => df.key === relevanceFilter);
   const isKeywordsFilterEnabled = isMainSearchKeywords || hasKeyworsFilter;
 
   const activeOptions = isKeywordsFilterEnabled
@@ -93,7 +93,7 @@ const SortBy = props => {
     ...rest,
   };
   return showAsPopup ? <SortByPopup {...componentProps} /> : <SortByPlain {...componentProps} />;
-};
+}
 
 SortBy.defaultProps = {
   sort: null,

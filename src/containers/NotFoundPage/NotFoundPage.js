@@ -14,8 +14,8 @@ import { isScrollingDisabled } from '../../ducks/ui.duck';
 
 import { Heading, Page, LayoutSingleColumn } from '../../components';
 
-import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
-import FooterContainer from '../../containers/FooterContainer/FooterContainer';
+import TopbarContainer from '../TopbarContainer/TopbarContainer';
+import FooterContainer from '../FooterContainer/FooterContainer';
 
 import SearchForm from './SearchForm/SearchForm';
 
@@ -45,7 +45,7 @@ export class NotFoundPageComponent extends Component {
       id: 'NotFoundPage.title',
     });
 
-    const handleSearchSubmit = values => {
+    const handleSearchSubmit = (values) => {
       const { keywords, location } = values;
       const { search, selectedPlace } = location || {};
       const { origin, bounds } = selectedPlace || {};
@@ -103,7 +103,7 @@ NotFoundPageComponent.propTypes = {
   }).isRequired,
 };
 
-const EnhancedNotFoundPage = props => {
+function EnhancedNotFoundPage(props) {
   const routeConfiguration = useRouteConfiguration();
   const config = useConfiguration();
   const history = useHistory();
@@ -119,13 +119,11 @@ const EnhancedNotFoundPage = props => {
       {...props}
     />
   );
-};
+}
 
-const mapStateToProps = state => {
-  return {
-    scrollingDisabled: isScrollingDisabled(state),
-  };
-};
+const mapStateToProps = (state) => ({
+  scrollingDisabled: isScrollingDisabled(state),
+});
 
 // Note: it is important that the withRouter HOC is **outside** the
 // connect HOC, otherwise React Router won't rerender any Route

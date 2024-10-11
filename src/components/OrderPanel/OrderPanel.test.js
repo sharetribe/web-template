@@ -69,7 +69,10 @@ const listingFields = [
       listingTypeIds: ['sell-bicycles'],
     },
     schemaType: 'enum',
-    enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
+    enumOptions: [
+      { option: 'cat_1', label: 'Cat 1' },
+      { option: 'cat_2', label: 'Cat 2' },
+    ],
     filterConfig: {
       indexForSearch: true,
       label: 'Cat',
@@ -90,11 +93,14 @@ const listingFields = [
       listingTypeIds: ['rent-bicycles-daily', 'rent-bicycles-nightly', 'rent-bicycles-hourly'],
     },
     schemaType: 'multi-enum',
-    enumOptions: [{ option: 'dog_1', label: 'Dog 1' }, { option: 'dog_2', label: 'Dog 2' }],
+    enumOptions: [
+      { option: 'dog_1', label: 'Dog 1' },
+      { option: 'dog_2', label: 'Dog 2' },
+    ],
     filterConfig: {
       indexForSearch: true,
       label: 'Amenities',
-      //searchMode: 'has_all',
+      // searchMode: 'has_all',
       group: 'secondary',
     },
     showConfig: {
@@ -208,7 +214,7 @@ const commonProps = {
 describe('OrderPanel', () => {
   const originalWarn = console.warn.bind(console.warn);
   beforeEach(() => {
-    console.warn = msg =>
+    console.warn = (msg) =>
       !(
         msg.toString().includes('componentWillReceiveProps') ||
         msg.toString().includes('componentWillUpdate')
@@ -221,7 +227,7 @@ describe('OrderPanel', () => {
 
   const config = getConfig();
   const routeConfiguration = getRouteConfiguration(config.layout);
-  const stockTypeMaybe = stockType => (stockType ? { stockType } : {});
+  const stockTypeMaybe = (stockType) => (stockType ? { stockType } : {});
   const validListingTypes = config.listingTypes.listingTypes.map(({ id, ...rest }) => ({
     listingType: id,
     transactionType: {
@@ -381,7 +387,7 @@ describe('OrderPanel', () => {
     });
   });
 
-  it('Purchase: item ', async () => {
+  it('Purchase: item', async () => {
     const listing = createListing(
       'listing-product',
       {
@@ -403,7 +409,7 @@ describe('OrderPanel', () => {
       },
       {
         currentStock: createStock('stock-id', { quantity: 5 }),
-      }
+      },
     );
 
     const props = { ...commonProps, listing, isOwnListing: false, validListingTypes };
@@ -448,7 +454,7 @@ describe('OrderPanel', () => {
       },
       {
         currentStock: createStock('stock-id', { quantity: 5 }),
-      }
+      },
     );
 
     const props = { ...commonProps, listing, isOwnListing: false, validListingTypes };
@@ -467,7 +473,7 @@ describe('OrderPanel', () => {
     });
   });
 
-  it('Inquiry: inquiry ', async () => {
+  it('Inquiry: inquiry', async () => {
     const listing = createListing('listing-inquiry', {
       title: 'the listing',
       description: 'Lorem ipsum',

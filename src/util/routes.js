@@ -4,7 +4,7 @@ import { compile } from 'path-to-regexp';
 // NOTE: This file imports urlHelpers.js, which may lead to circular dependency
 import { stringify } from './urlHelpers';
 
-const findRouteByName = (nameToFind, routes) => find(routes, route => route.name === nameToFind);
+const findRouteByName = (nameToFind, routes) => find(routes, (route) => route.name === nameToFind);
 
 /**
  * E.g. ```const toListingPath = toPathByRouteName('ListingPage', routes);```
@@ -49,9 +49,7 @@ export const matchPathname = (pathname, routeConfiguration) => {
     return matches;
   }, []);
 
-  const matchedExactRoute = matchedRoutes.find(r => {
-    return r.exact === true || r.exact == null;
-  });
+  const matchedExactRoute = matchedRoutes.find((r) => r.exact === true || r.exact == null);
 
   // We return matched 'exact' path route only if such exists
   // and all matches if no exact flag exists.
@@ -67,7 +65,7 @@ export const createResourceLocatorString = (
   routes,
   pathParams = {},
   searchParams = {},
-  hash = ''
+  hash = '',
 ) => {
   const searchQuery = stringify(searchParams);
   const includeSearchQuery = searchQuery.length > 0 ? `?${searchQuery}` : '';
@@ -128,14 +126,13 @@ export const canonicalRoutePath = (routes, location, pathOnly = false) => {
 
 // Regex that replaces {userId}, {listingId} or {userEmail} in the href string
 // with URI encoded user email and ID
-export const replaceParamsInHref = (href, params) => {
-  return href.replace(/{(userId|userEmail|listingId)}/g, (match, key) => {
+export const replaceParamsInHref = (href, params) =>
+  href.replace(/{(userId|userEmail|listingId)}/g, (match, key) => {
     if (params[key] != null) {
       return encodeURIComponent(params[key]);
     }
     return match;
   });
-};
 
 // This function generates data required to render ExternalLink and InternalLink components.
 // It is given a URL and it replaces the {userId} and {userEmail} placeholders
@@ -150,7 +147,7 @@ export const generateLinkProps = (type, href, routeConfiguration, userId, userEm
   const isInternalLink = type === 'internal' || href.charAt(0) === '/';
 
   if (isInternalLink) {
-    const testURL = new URL('http://my.marketplace.com' + processedLink);
+    const testURL = new URL(`http://my.marketplace.com${processedLink}`);
 
     const matchedRoutes = matchPathname(testURL.pathname, routeConfiguration);
     if (matchedRoutes.length > 0) {

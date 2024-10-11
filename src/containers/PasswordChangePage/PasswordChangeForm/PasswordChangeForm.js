@@ -24,13 +24,14 @@ class PasswordChangeFormComponent extends Component {
     this.submittedValues = {};
     this.handleResetPassword = this.handleResetPassword.bind(this);
   }
+
   componentWillUnmount() {
     window.clearTimeout(this.resetTimeoutId);
   }
 
   handleResetPassword() {
     this.setState({ showResetPasswordMessage: true });
-    const email = this.props.currentUser.attributes.email;
+    const { email } = this.props.currentUser.attributes;
 
     this.props.onResetPassword(email);
   }
@@ -39,7 +40,7 @@ class PasswordChangeFormComponent extends Component {
     return (
       <FinalForm
         {...this.props}
-        render={fieldRenderProps => {
+        render={(fieldRenderProps) => {
           const {
             rootClassName,
             className,
@@ -81,7 +82,7 @@ class PasswordChangeFormComponent extends Component {
             },
             {
               minLength: validators.PASSWORD_MIN_LENGTH,
-            }
+            },
           );
           const passwordMaxLengthMessage = intl.formatMessage(
             {
@@ -89,16 +90,16 @@ class PasswordChangeFormComponent extends Component {
             },
             {
               maxLength: validators.PASSWORD_MAX_LENGTH,
-            }
+            },
           );
 
           const passwordMinLength = validators.minLength(
             passwordMinLengthMessage,
-            validators.PASSWORD_MIN_LENGTH
+            validators.PASSWORD_MIN_LENGTH,
           );
           const passwordMaxLength = validators.maxLength(
             passwordMaxLengthMessage,
-            validators.PASSWORD_MAX_LENGTH
+            validators.PASSWORD_MAX_LENGTH,
           );
 
           // password
@@ -168,7 +169,7 @@ class PasswordChangeFormComponent extends Component {
           return (
             <Form
               className={classes}
-              onSubmit={e => {
+              onSubmit={(e) => {
                 this.submittedValues = values;
                 handleSubmit(e)
                   .then(() => {
@@ -195,7 +196,7 @@ class PasswordChangeFormComponent extends Component {
                   validate={validators.composeValidators(
                     newPasswordRequired,
                     passwordMinLength,
-                    passwordMaxLength
+                    passwordMaxLength,
                   )}
                 />
               </div>
@@ -224,7 +225,7 @@ class PasswordChangeFormComponent extends Component {
                   validate={validators.composeValidators(
                     passwordRequired,
                     passwordMinLength,
-                    passwordMaxLength
+                    passwordMaxLength,
                   )}
                   customErrorText={passwordTouched ? null : passwordErrorText}
                 />

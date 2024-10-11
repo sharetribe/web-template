@@ -13,7 +13,7 @@ import { AspectRatioWrapper, ResponsiveImage } from '../../../components';
 import css from './SearchMapInfoCard.module.css';
 
 // ListingCard is the listing info without overlayview or carousel controls
-const ListingCard = props => {
+function ListingCard(props) {
   const { className, clickHandler, intl, isInCarousel, listing, urlToListing, config } = props;
 
   const { title, price } = listing.attributes;
@@ -21,8 +21,8 @@ const ListingCard = props => {
     price && price.currency === config.currency
       ? formatMoney(intl, price)
       : price?.currency
-      ? price.currency
-      : null;
+        ? price.currency
+        : null;
   const firstImage = listing.images && listing.images.length > 0 ? listing.images[0] : null;
 
   const {
@@ -31,7 +31,7 @@ const ListingCard = props => {
     variantPrefix = 'listing-card',
   } = config.layout.listingImage;
   const variants = firstImage
-    ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
+    ? Object.keys(firstImage?.attributes?.variants).filter((k) => k.startsWith(variantPrefix))
     : [];
 
   // listing card anchor needs sometimes inherited border radius.
@@ -39,7 +39,7 @@ const ListingCard = props => {
     css.anchor,
     css.borderRadiusInheritTop,
     { [css.borderRadiusInheritBottom]: !isInCarousel },
-    className
+    className,
   );
 
   return (
@@ -47,7 +47,7 @@ const ListingCard = props => {
       alt={title}
       className={classes}
       href={urlToListing}
-      onClick={e => {
+      onClick={(e) => {
         e.preventDefault();
         // Use clickHandler from props to call internal router
         clickHandler(listing);
@@ -81,7 +81,7 @@ const ListingCard = props => {
       </div>
     </a>
   );
-};
+}
 
 ListingCard.defaultProps = {
   className: null,
@@ -95,7 +95,7 @@ ListingCard.propTypes = {
   isInCarousel: bool.isRequired,
 };
 
-const SearchMapInfoCard = props => {
+function SearchMapInfoCard(props) {
   const [currentListingIndex, setCurrentListingIndex] = useState(0);
   const {
     className,
@@ -127,11 +127,11 @@ const SearchMapInfoCard = props => {
         <div className={classNames(css.paginationInfo, css.borderRadiusInheritBottom)}>
           <button
             className={css.paginationPrev}
-            onClick={e => {
+            onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               setCurrentListingIndex(
-                prevListingIndex => (prevListingIndex + listings.length - 1) % listings.length
+                (prevListingIndex) => (prevListingIndex + listings.length - 1) % listings.length,
               );
             }}
           />
@@ -140,11 +140,11 @@ const SearchMapInfoCard = props => {
           </div>
           <button
             className={css.paginationNext}
-            onClick={e => {
+            onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               setCurrentListingIndex(
-                prevListingIndex => (prevListingIndex + listings.length + 1) % listings.length
+                (prevListingIndex) => (prevListingIndex + listings.length + 1) % listings.length,
               );
             }}
           />
@@ -153,7 +153,7 @@ const SearchMapInfoCard = props => {
       <div className={caretClass} />
     </div>
   );
-};
+}
 
 SearchMapInfoCard.defaultProps = {
   className: null,

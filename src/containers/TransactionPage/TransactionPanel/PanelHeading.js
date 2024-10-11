@@ -18,14 +18,13 @@ const createListingLink = (listingId, label, listingDeleted, searchParams = {}, 
         {label}
       </NamedLink>
     );
-  } else {
-    return <FormattedMessage id="TransactionPanel.deletedListingOrderTitle" />;
   }
+  return <FormattedMessage id="TransactionPanel.deletedListingOrderTitle" />;
 };
 
 // Component to render the main heading for an order or a sale. Optionally also
 // renders an info message based on the transaction state.
-const PanelHeading = props => {
+function PanelHeading(props) {
   const {
     className,
     rootClassName,
@@ -102,6 +101,6 @@ const PanelHeading = props => {
       ) : null}
     </>
   );
-};
+}
 
 export default PanelHeading;

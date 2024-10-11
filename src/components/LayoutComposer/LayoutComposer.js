@@ -22,29 +22,25 @@ const cache = {};
  * @param {String} areas for CSS Grid
  * @returns object containing generated Area *components* and *gridTemplateAreas*. E.g. "'topbar' 'main' 'footer' "
  */
-const parseAreas = areas => {
+const parseAreas = (areas) => {
   if (cache.hasOwnProperty(areas)) {
     return cache[areas];
   }
 
   // Split areas string to rows from line breaks and remove empty lines.
-  const splitToRows = areasString =>
-    areasString
-      .trim()
-      .split('\n')
-      .filter(Boolean);
+  const splitToRows = (areasString) => areasString.trim().split('\n').filter(Boolean);
   // Split rows to words (area names) from white-space and remove empty strings
-  const splitToAreaNames = rowString => rowString.split(/\s+/).filter(Boolean);
+  const splitToAreaNames = (rowString) => rowString.split(/\s+/).filter(Boolean);
   // kebab-case to camelCase
-  const camelize = s => s.replace(/-(.)/g, l => l[1].toUpperCase());
+  const camelize = (s) => s.replace(/-(.)/g, (l) => l[1].toUpperCase());
   // Capitalize initial letter
-  const capitalizeWord = s => `${s.charAt(0).toUpperCase()}${s.substr(1)}`;
+  const capitalizeWord = (s) => `${s.charAt(0).toUpperCase()}${s.substr(1)}`;
 
   const result = splitToRows(areas)
-    .map(row => splitToAreaNames(row))
+    .map((row) => splitToAreaNames(row))
     .reduce(
       (result, areaNames) => {
-        areaNames.forEach(areaName => {
+        areaNames.forEach((areaName) => {
           const Component = React.forwardRef((props, ref) => {
             const { as, style, ...otherProps } = props;
             const Tag = as || 'div';
@@ -58,7 +54,7 @@ const parseAreas = areas => {
         result.gridTemplateAreas += `'${areaNames.join(' ')}' `;
         return result;
       },
-      { components: {}, gridTemplateAreas: '' }
+      { components: {}, gridTemplateAreas: '' },
     );
 
   cache[areas] = result;
@@ -67,7 +63,7 @@ const parseAreas = areas => {
 
 // Handle resize event:
 // if event matches with the rule set to MediaQueryList, call callback with parsed areas
-const resize = (config, callback) => e => {
+const resize = (config, callback) => (e) => {
   // If media query matches
   if (e.matches) {
     callback(parseAreas(config.areas));
@@ -76,7 +72,7 @@ const resize = (config, callback) => e => {
 
 // Set the current areas according to responsiveAreas config and adds listeners for MediaQueryList changes
 const handleResponsiveAreasOnBrowser = (responsiveAreas, setAreas) => {
-  let resizeListeners = [];
+  const resizeListeners = [];
   const entries = Object.entries(responsiveAreas);
   entries.forEach(([name, config]) => {
     const { mediaQuery, areas } = config;
@@ -96,11 +92,12 @@ const handleResponsiveAreasOnBrowser = (responsiveAreas, setAreas) => {
 };
 
 // Parse default areas for state hook.
-const parseDefaultAreasFromProps = props => {
+const parseDefaultAreasFromProps = (props) => {
   const { areas, responsiveAreas } = props;
   if (areas) {
     return parseAreas(areas);
-  } else if (responsiveAreas) {
+  }
+  if (responsiveAreas) {
     const firstKey = Object.keys(responsiveAreas)[0];
     const firstAreasString = responsiveAreas?.[firstKey]?.areas;
     if (firstAreasString) {
@@ -108,7 +105,7 @@ const parseDefaultAreasFromProps = props => {
     }
   }
   throw new Error(
-    'LayoutComposer needs to have either "areas" or "responsiveAreas" included into props.'
+    'LayoutComposer needs to have either "areas" or "responsiveAreas" included into props.',
   );
 };
 
@@ -185,7 +182,7 @@ const LayoutComposer = React.forwardRef((props, ref) => {
     }
 
     return () => {
-      resizeListeners.forEach(listener => {
+      resizeListeners.forEach((listener) => {
         const { mediaQueryList, resizeListener } = listener;
         mediaQueryList.removeEventListener('change', resizeListener);
       });
@@ -226,7 +223,7 @@ LayoutComposer.propTypes = {
     shape({
       mediaQuery: string.isRequired,
       areas: string.isRequired,
-    })
+    }),
   ),
   display: string,
   as: node,

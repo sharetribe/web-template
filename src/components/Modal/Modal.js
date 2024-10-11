@@ -13,7 +13,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
-import { Button, IconClose } from '../../components';
+import { Button, IconClose } from '..';
 
 import css from './Modal.module.css';
 
@@ -157,7 +157,7 @@ export class ModalComponent extends Component {
     const classes = classNames(modalClass, className);
     const scrollLayerClasses = scrollLayerClassName || css.scrollLayer;
     const containerClasses = containerClassName || css.container;
-    const portalRoot = this.state.portalRoot;
+    const { portalRoot } = this.state;
 
     // If you want to use Portal https://reactjs.org/docs/portals.html
     // you need to use 'userPortal' flag.
@@ -224,7 +224,6 @@ ModalComponent.propTypes = {
   onClose: func.isRequired,
   usePortal: bool,
 
-  // eslint-disable-next-line react/no-unused-prop-types
   onManageDisableScrolling: func.isRequired,
 };
 

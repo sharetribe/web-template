@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import css from './IconAdd.module.css';
 
-const IconAdd = props => {
+function IconAdd(props) {
   const { className, rootClassName } = props;
   const classes = classNames(rootClassName || css.root, className);
 
@@ -16,7 +16,7 @@ const IconAdd = props => {
       />
     </svg>
   );
-};
+}
 
 const { string } = PropTypes;
 

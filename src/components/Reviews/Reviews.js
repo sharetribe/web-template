@@ -5,11 +5,11 @@ import classNames from 'classnames';
 import { injectIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 
-import { Avatar, ReviewRating, UserDisplayName } from '../../components';
+import { Avatar, ReviewRating, UserDisplayName } from '..';
 
 import css from './Reviews.module.css';
 
-const Review = props => {
+function Review(props) {
   const { review, intl } = props;
 
   const date = review.attributes.createdAt;
@@ -41,29 +41,27 @@ const Review = props => {
       </div>
     </div>
   );
-};
+}
 
 Review.propTypes = {
   review: propTypes.review.isRequired,
   intl: intlShape.isRequired,
 };
 
-const ReviewsComponent = props => {
+function ReviewsComponent(props) {
   const { className, rootClassName, reviews, intl } = props;
   const classes = classNames(rootClassName || css.root, className);
 
   return (
     <ul className={classes}>
-      {reviews.map(r => {
-        return (
-          <li key={`Review_${r.id.uuid}`} className={css.reviewItem}>
-            <Review review={r} intl={intl} />
-          </li>
-        );
-      })}
+      {reviews.map((r) => (
+        <li key={`Review_${r.id.uuid}`} className={css.reviewItem}>
+          <Review review={r} intl={intl} />
+        </li>
+      ))}
     </ul>
   );
-};
+}
 
 ReviewsComponent.defaultProps = {
   className: null,

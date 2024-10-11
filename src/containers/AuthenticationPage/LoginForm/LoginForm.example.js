@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import LoginForm from './LoginForm';
 
 export const Empty = {

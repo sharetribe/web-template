@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import css from './IconDelete.module.css';
 
-const IconDelete = props => {
+function IconDelete(props) {
   const { className, rootClassName } = props;
   const classes = classNames(rootClassName || css.root, className);
 
@@ -20,7 +20,7 @@ const IconDelete = props => {
       />
     </svg>
   );
-};
+}
 
 IconDelete.defaultProps = { className: null };
 

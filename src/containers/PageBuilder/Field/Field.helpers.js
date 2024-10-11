@@ -1,11 +1,11 @@
 import { sanitizeUrl } from '../../../util/sanitize';
 import { supportedPlatforms } from '../Primitives/Link/SocialMediaLink';
 
-/////////////////////////////
+/// //////////////////////////
 // Pickers for valid props //
-/////////////////////////////
+/// //////////////////////////
 
-export const hasContent = data => typeof data?.content === 'string' && data?.content.length > 0;
+export const hasContent = (data) => typeof data?.content === 'string' && data?.content.length > 0;
 
 /**
  * Exposes "content" prop as children property, if "content" has type of string.
@@ -13,9 +13,8 @@ export const hasContent = data => typeof data?.content === 'string' && data?.con
  * @param {Object} data E.g. "{ fieldType: 'heading3', content: 'my title' }"
  * @returns object containing content string as value for key: children.
  */
-export const exposeContentAsChildren = data => {
-  return hasContent(data) ? { children: data.content } : {};
-};
+export const exposeContentAsChildren = (data) =>
+  hasContent(data) ? { children: data.content } : {};
 
 /**
  * Exposes "content" property, if the type of the "content" is string.
@@ -23,7 +22,7 @@ export const exposeContentAsChildren = data => {
  * @param {Object} data E.g. "{ fieldType: 'markdown', content: 'my title' }"
  * @returns object containing "content" key if the value is string.
  */
-export const exposeContentString = data => (hasContent(data) ? { content: data.content } : {});
+export const exposeContentString = (data) => (hasContent(data) ? { content: data.content } : {});
 
 /**
  * Exposes "label" and "href" as "children" and "href" props respectively,
@@ -32,7 +31,7 @@ export const exposeContentString = data => (hasContent(data) ? { content: data.c
  * @param {Object} data E.g. "{ fieldType: 'internalButtonLink', content: 'my title', href: 'https://my.domain.com' }"
  * @returns object containing children and href.
  */
-export const exposeLinkProps = data => {
+export const exposeLinkProps = (data) => {
   const { content, href } = data;
   const hasCorrectProps = typeof href === 'string' && href.length > 0;
   // Sanitize the URL. See: src/utl/sanitize.js for more information.
@@ -42,7 +41,7 @@ export const exposeLinkProps = data => {
   return cleanUrl ? { children: linkText, href: cleanUrl } : {};
 };
 
-export const exposeSocialMediaProps = data => {
+export const exposeSocialMediaProps = (data) => {
   const { platform, url } = data;
   const hasCorrectProps = typeof url === 'string' && url.length > 0;
   const cleanUrl = hasCorrectProps ? sanitizeUrl(url) : null;
@@ -50,7 +49,7 @@ export const exposeSocialMediaProps = data => {
   return cleanUrl ? { platform: validPlatform, href: cleanUrl } : {};
 };
 
-const getValidSanitizedImage = image => {
+const getValidSanitizedImage = (image) => {
   const { id, type, attributes } = image || {};
   const variantEntries = Object.entries(attributes?.variants || {});
   const variants = variantEntries.reduce((validVariants, entry) => {
@@ -97,7 +96,7 @@ const getValidSanitizedImage = image => {
  * @param {Object} data E.g. "{ fieldType: 'image', alt: 'my portrait', image: { id, type, attributes } }"
  * @returns object containing alt string and variants.
  */
-export const exposeImageProps = data => {
+export const exposeImageProps = (data) => {
   // Note: data includes also "aspectRatio" key (and "fieldType"),
   //       but image refs can rely on actual image variants
   const { alt, image } = data;
@@ -118,7 +117,7 @@ export const exposeImageProps = data => {
  * @param {String} data E.g. "#FFFFFF"
  * @returns Object containing valid color prop.
  */
-const exposeColorValue = color => {
+const exposeColorValue = (color) => {
   const re = new RegExp('^#([0-9a-f]{3}){1,2}$', 'i');
   const isValidColor = typeof color === 'string' && re.test(color);
   return isValidColor ? color : null;
@@ -132,7 +131,7 @@ const exposeColorValue = color => {
  * @param {Object} data E.g. "{ fieldType: 'customAppearance', backgroundImage: imageAssetRef, backgroundColor: '#000000', textColor: '#FFFFFF' }"
  * @returns object containing valid data.
  */
-export const exposeCustomAppearanceProps = data => {
+export const exposeCustomAppearanceProps = (data) => {
   const { backgroundImage, backgroundImageOverlay, backgroundColor, textColor, alt } = data;
   const { type } = backgroundImage || {};
 
@@ -181,9 +180,9 @@ export const exposeCustomAppearanceProps = data => {
  * @param {Object} data E.g. "{ fieldType: 'youtube', youtubeVideoId: '<video-id>', aspectRatio: '16/9' }"
  * @returns object containing children and href.
  */
-export const exposeYoutubeProps = data => {
+export const exposeYoutubeProps = (data) => {
   const { youtubeVideoId, aspectRatio } = data;
-  const isString = str => typeof str === 'string' && str?.length > 0;
+  const isString = (str) => typeof str === 'string' && str?.length > 0;
 
   const hasYoutubeVideoId =
     isString(youtubeVideoId) &&
@@ -202,7 +201,7 @@ export const exposeYoutubeProps = data => {
     : {};
 };
 
-export const exposeOpenGraphData = data => {
+export const exposeOpenGraphData = (data) => {
   const { title, description, image } = data || {};
   const { type } = image || {};
 
@@ -210,7 +209,7 @@ export const exposeOpenGraphData = data => {
     return {};
   }
 
-  const isString = content => typeof content === 'string' && content.length > 0;
+  const isString = (content) => typeof content === 'string' && content.length > 0;
   const sanitizedImage = getValidSanitizedImage(image);
   const image1200 = sanitizedImage?.attributes?.variants?.social1200;
   const image600 = sanitizedImage?.attributes?.variants?.social600;

@@ -4,8 +4,8 @@ import { types as sdkTypes } from '../../../util/sdkLoader';
 import { injectIntl } from '../../../util/reactIntl';
 import { LINE_ITEM_ITEM } from '../../../util/types';
 
-const ProductOrderForm = loadable(() =>
-  import(/* webpackChunkName: "ProductOrderForm" */ './ProductOrderForm')
+const ProductOrderForm = loadable(
+  () => import(/* webpackChunkName: "ProductOrderForm" */ './ProductOrderForm'),
 );
 
 const CURRENCY = 'USD';
@@ -16,7 +16,7 @@ export const Form = {
   component: injectIntl(ProductOrderForm),
   props: {
     formId: 'OrderPanelProductOrderFormExample',
-    onSubmit: values => {
+    onSubmit: (values) => {
       console.log('Submit ProductOrderForm with values:', values);
     },
     price: new Money(1099, CURRENCY),
@@ -25,10 +25,10 @@ export const Form = {
     shippingEnabled: true,
     listingId: new UUID('listing.id'),
     isOwnListing: false,
-    onFetchTransactionLineItems: params =>
+    onFetchTransactionLineItems: (params) =>
       console.log(
         'onFetchTransactionLineItems called with params:',
-        JSON.stringify(params, null, 2)
+        JSON.stringify(params, null, 2),
       ),
     onContactUser: () => console.log('onContactUser called'),
     lineItems: null,

@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import css from './IconSearch.module.css';
 
-const IconSearch = props => {
+function IconSearch(props) {
   const { rootClassName, className } = props;
   const classes = classNames(rootClassName || css.root, className);
   return (
@@ -28,7 +28,7 @@ const IconSearch = props => {
       </g>
     </svg>
   );
-};
+}
 
 IconSearch.defaultProps = {
   rootClassName: null,

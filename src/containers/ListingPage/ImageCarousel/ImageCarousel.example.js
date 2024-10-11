@@ -107,7 +107,7 @@ const imageLandscape = {
   },
 };
 
-const ImageCarouselWrapper = props => {
+function ImageCarouselWrapper(props) {
   const wrapperStyles = {
     backgroundColor: '#000',
   };
@@ -116,7 +116,7 @@ const ImageCarouselWrapper = props => {
       <ImageCarousel {...props} />
     </div>
   );
-};
+}
 
 export const NoImages = {
   component: ImageCarouselWrapper,

@@ -10,14 +10,14 @@ import css from './TermsAndConditions.module.css';
 
 const KEY_CODE_ENTER = 13;
 
-const TermsAndConditions = props => {
+function TermsAndConditions(props) {
   const { onOpenTermsOfService, onOpenPrivacyPolicy, formId, intl } = props;
 
-  const handleClick = callback => e => {
+  const handleClick = (callback) => (e) => {
     e.preventDefault();
     callback(e);
   };
-  const handleKeyUp = callback => e => {
+  const handleKeyUp = (callback) => (e) => {
     // Allow click action with keyboard like with normal links
     if (e.keyCode === KEY_CODE_ENTER) {
       callback();
@@ -59,17 +59,17 @@ const TermsAndConditions = props => {
             key: 'tos-and-privacy',
             label: intl.formatMessage(
               { id: 'AuthenticationPage.termsAndConditionsAcceptText' },
-              { termsLink, privacyLink }
+              { termsLink, privacyLink },
             ),
           },
         ]}
         validate={requiredFieldArrayCheckbox(
-          intl.formatMessage({ id: 'AuthenticationPage.termsAndConditionsAcceptRequired' })
+          intl.formatMessage({ id: 'AuthenticationPage.termsAndConditionsAcceptRequired' }),
         )}
       />
     </div>
   );
-};
+}
 
 TermsAndConditions.defaultProps = {
   formId: null,

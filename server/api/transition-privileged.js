@@ -32,7 +32,7 @@ module.exports = (req, res) => {
 
       return getTrustedSdk(req);
     })
-    .then(trustedSdk => {
+    .then((trustedSdk) => {
       // Omit listingId from params (transition/request-payment-after-inquiry does not need it)
       const { listingId, ...restParams } = bodyParams?.params || {};
 
@@ -50,7 +50,7 @@ module.exports = (req, res) => {
       }
       return trustedSdk.transactions.transition(body, queryParams);
     })
-    .then(apiResponse => {
+    .then((apiResponse) => {
       const { status, statusText, data } = apiResponse;
       res
         .status(status)
@@ -64,7 +64,7 @@ module.exports = (req, res) => {
         )
         .end();
     })
-    .catch(e => {
+    .catch((e) => {
       handleError(res, e);
     });
 };

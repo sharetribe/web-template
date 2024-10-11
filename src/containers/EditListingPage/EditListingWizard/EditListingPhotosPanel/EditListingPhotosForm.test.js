@@ -20,8 +20,8 @@ describe('EditListingDeliveryForm', () => {
         initialValues={{ country: 'US', images: [] }}
         intl={fakeIntl}
         dispatch={noop}
-        onImageUpload={v => Promise.reject(v)}
-        onSubmit={v => v}
+        onImageUpload={(v) => Promise.reject(v)}
+        onSubmit={(v) => v}
         saveActionMsg={saveActionMsg}
         stripeConnected={false}
         updated={false}
@@ -30,7 +30,7 @@ describe('EditListingDeliveryForm', () => {
         disabled={false}
         onRemoveImage={noop}
         listingImageConfig={{ aspectWidth: 1, aspectHeight: 1, variantPrefix: 'listing-card' }}
-      />
+      />,
     );
     expect(tree.asFragment()).toMatchSnapshot();
   });
@@ -43,28 +43,26 @@ describe('EditListingDeliveryForm', () => {
       <FinalForm
         onSubmit={noop}
         mutators={{ ...arrayMutators }}
-        render={formRenderProps => {
-          return (
-            <form onSubmit={noop}>
-              <FieldAddImage
-                id="addImage"
-                name="addImage"
-                accept={ACCEPT_IMAGES}
-                label={<div>label</div>}
-                type="file"
-                disabled={false}
-                formApi={{
-                  change: noop,
-                  blur: noop,
-                }}
-                onImageUploadHandler={noop}
-                aspectWidth={1}
-                aspectHeight={1}
-              />
-            </form>
-          );
-        }}
-      />
+        render={(formRenderProps) => (
+          <form onSubmit={noop}>
+            <FieldAddImage
+              id="addImage"
+              name="addImage"
+              accept={ACCEPT_IMAGES}
+              label={<div>label</div>}
+              type="file"
+              disabled={false}
+              formApi={{
+                change: noop,
+                blur: noop,
+              }}
+              onImageUploadHandler={noop}
+              aspectWidth={1}
+              aspectHeight={1}
+            />
+          </form>
+        )}
+      />,
     );
 
     // Fill mandatory attributes

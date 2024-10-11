@@ -127,28 +127,29 @@ class PaymentMethodsForm extends Component {
       });
     }
   }
+
   componentWillUnmount() {
     if (this.card) {
       this.card.removeEventListener('change', this.handleCardValueChange);
       this.card.unmount();
     }
   }
+
   handleCardValueChange(event) {
     const { intl } = this.props;
     const { error, complete } = event;
 
-    const postalCode = event.value.postalCode;
+    const { postalCode } = event.value;
     if (this.finalFormAPI) {
       this.finalFormAPI.change('postal', postalCode);
     }
 
-    this.setState(prevState => {
-      return {
-        error: error ? stripeErrorTranslation(intl, error) : null,
-        cardValueValid: complete,
-      };
-    });
+    this.setState((prevState) => ({
+      error: error ? stripeErrorTranslation(intl, error) : null,
+      cardValueValid: complete,
+    }));
   }
+
   handleSubmit(values) {
     const { onSubmit, inProgress, formId } = this.props;
     const cardInputNeedsAttention = !this.state.cardValueValid;
@@ -215,7 +216,7 @@ class PaymentMethodsForm extends Component {
       {
         id: 'PaymentMethodsForm.infoText',
       },
-      { marketplaceName: config.marketplaceName }
+      { marketplaceName: config.marketplaceName },
     );
 
     // Stripe recommends asking billing address.
@@ -241,7 +242,7 @@ class PaymentMethodsForm extends Component {
         <div
           className={cardClasses}
           id={`${formId}-card`}
-          ref={el => {
+          ref={(el) => {
             this.cardContainer = el;
           }}
         />
@@ -321,9 +322,9 @@ PaymentMethodsForm.propTypes = {
   config: object.isRequired,
 };
 
-const EnhancedPaymentMethodsForm = props => {
+function EnhancedPaymentMethodsForm(props) {
   const config = useConfiguration();
   const intl = useIntl();
   return <PaymentMethodsForm config={config} intl={intl} {...props} />;
-};
+}
 export default EnhancedPaymentMethodsForm;

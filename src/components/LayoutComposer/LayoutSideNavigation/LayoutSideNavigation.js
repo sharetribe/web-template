@@ -8,7 +8,7 @@ import LayoutWrapperAccountSettingsSideNav from './LayoutWrapperAccountSettingsS
 import css from './LayoutSideNavigation.module.css';
 
 // Commonly used layout
-const LayoutSideNavigation = props => {
+function LayoutSideNavigation(props) {
   const {
     className,
     rootClassName,
@@ -37,7 +37,7 @@ const LayoutSideNavigation = props => {
 
   return (
     <LayoutComposer areas={layoutAreas} className={classes} {...rest}>
-      {layoutProps => {
+      {(layoutProps) => {
         const { Topbar, Main, Footer } = layoutProps;
         return (
           <>
@@ -59,7 +59,7 @@ const LayoutSideNavigation = props => {
       }}
     </LayoutComposer>
   );
-};
+}
 
 LayoutSideNavigation.displayName = 'LayoutSideNavigation';
 

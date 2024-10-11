@@ -79,7 +79,7 @@ export const createCurrentUser = (id, attributes = {}, includes = {}) => ({
 });
 
 // Create a user that conforms to the util/types user schema
-export const createImage = id => ({
+export const createImage = (id) => ({
   id: new UUID(id),
   type: 'image',
   attributes: {
@@ -152,27 +152,23 @@ export const createOwnListing = (id, attributes = {}, includes = {}) => ({
   ...includes,
 });
 
-export const createStock = (id, attributes = {}) => {
-  return {
-    id: new UUID(id),
-    type: 'stock',
-    attributes: {
-      quantity: 10,
-      ...attributes,
-    },
-  };
-};
+export const createStock = (id, attributes = {}) => ({
+  id: new UUID(id),
+  type: 'stock',
+  attributes: {
+    quantity: 10,
+    ...attributes,
+  },
+});
 
-export const createTxTransition = options => {
-  return {
-    createdAt: new Date(Date.UTC(2017, 4, 1)),
-    by: TX_TRANSITION_ACTOR_CUSTOMER,
-    transition: processTransitions.REQUEST_PAYMENT,
-    ...options,
-  };
-};
+export const createTxTransition = (options) => ({
+  createdAt: new Date(Date.UTC(2017, 4, 1)),
+  by: TX_TRANSITION_ACTOR_CUSTOMER,
+  transition: processTransitions.REQUEST_PAYMENT,
+  ...options,
+});
 
-export const createTransaction = options => {
+export const createTransaction = (options) => {
   const {
     id,
     processName = 'default-purchase',
@@ -202,25 +198,23 @@ export const createTransaction = options => {
   } = options;
 
   const dayCount = booking ? daysBetween(booking.attributes.start, booking.attributes.end) : 1;
-  const lineItems = lineItemsParam
-    ? lineItemsParam
-    : [
-        {
-          code: 'line-item/item',
-          includeFor: ['customer', 'provider'],
-          quantity: new Decimal(dayCount),
-          unitPrice: new Money(total.amount / dayCount, total.currency),
-          lineTotal: total,
-          reversal: false,
-        },
-        {
-          code: 'line-item/provider-commission',
-          includeFor: ['provider'],
-          unitPrice: new Money(commission.amount * -1, commission.currency),
-          lineTotal: new Money(commission.amount * -1, commission.currency),
-          reversal: false,
-        },
-      ];
+  const lineItems = lineItemsParam || [
+    {
+      code: 'line-item/item',
+      includeFor: ['customer', 'provider'],
+      quantity: new Decimal(dayCount),
+      unitPrice: new Money(total.amount / dayCount, total.currency),
+      lineTotal: total,
+      reversal: false,
+    },
+    {
+      code: 'line-item/provider-commission',
+      includeFor: ['provider'],
+      unitPrice: new Money(commission.amount * -1, commission.currency),
+      lineTotal: new Money(commission.amount * -1, commission.currency),
+      reversal: false,
+    },
+  ];
 
   return {
     id: new UUID(id),
@@ -244,34 +238,30 @@ export const createTransaction = options => {
   };
 };
 
-export const createMessage = (id, attributes = {}, includes = {}) => {
-  return {
-    id: new UUID(id),
-    type: 'message',
-    attributes: {
-      createdAt: new Date(Date.UTC(2017, 10, 9, 8, 12)),
-      content: `Message ${id}\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
-      ...attributes,
-    },
-    ...includes,
-  };
-};
+export const createMessage = (id, attributes = {}, includes = {}) => ({
+  id: new UUID(id),
+  type: 'message',
+  attributes: {
+    createdAt: new Date(Date.UTC(2017, 10, 9, 8, 12)),
+    content: `Message ${id}\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
+    ...attributes,
+  },
+  ...includes,
+});
 
-export const createReview = (id, attributes = {}, includes = {}) => {
-  return {
-    id: new UUID(id),
-    attributes: {
-      createdAt: new Date(),
-      content:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      rating: 3,
-      state: 'public',
-      type: 'ofProvider',
-      ...attributes,
-    },
-    ...includes,
-  };
-};
+export const createReview = (id, attributes = {}, includes = {}) => ({
+  id: new UUID(id),
+  attributes: {
+    createdAt: new Date(),
+    content:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    rating: 3,
+    state: 'public',
+    type: 'ofProvider',
+    ...attributes,
+  },
+  ...includes,
+});
 
 /**
  * Creates an array of time slot objects.
@@ -281,19 +271,16 @@ export const createReview = (id, attributes = {}, includes = {}) => {
  *
  * @return {Array} array of time slots
  */
-export const createTimeSlots = (startDate, numberOfDays) => {
-  return Array.from({ length: numberOfDays }, (v, i) => i).map(i => {
-    return {
-      id: new UUID(i),
-      type: 'timeSlot',
-      attributes: {
-        start: getStartOf(startDate, 'day', 'Etc/UTC', i, 'days'),
-        end: getStartOf(startDate, 'day', 'Etc/UTC', i + 1, 'days'),
-        type: TIME_SLOT_TIME,
-      },
-    };
-  });
-};
+export const createTimeSlots = (startDate, numberOfDays) =>
+  Array.from({ length: numberOfDays }, (v, i) => i).map((i) => ({
+    id: new UUID(i),
+    type: 'timeSlot',
+    attributes: {
+      start: getStartOf(startDate, 'day', 'Etc/UTC', i, 'days'),
+      end: getStartOf(startDate, 'day', 'Etc/UTC', i + 1, 'days'),
+      type: TIME_SLOT_TIME,
+    },
+  }));
 
 // Default config for currency formatting in tests and examples.
 export const currencyConfig = {
@@ -305,22 +292,20 @@ export const currencyConfig = {
   maximumFractionDigits: 2,
 };
 
-const pad = num => {
-  return num >= 0 && num < 10 ? `0${num}` : `${num}`;
-};
+const pad = (num) => (num >= 0 && num < 10 ? `0${num}` : `${num}`);
 
 // Create fake Internalization object to help with shallow rendering.
 export const fakeIntl = {
-  formatDate: d => `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`,
+  formatDate: (d) => `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`,
   formatDateTimeRange: (start, end) =>
     `${start.getUTCFullYear()}-${pad(start.getUTCMonth() + 1)}-${pad(
-      start.getUTCDate()
+      start.getUTCDate(),
     )} - ${end.getUTCFullYear()}-${pad(end.getUTCMonth() + 1)}-${pad(end.getUTCDate())}`,
-  formatMessage: msg => msg.id,
-  formatNumber: d => `${d}`,
-  formatPlural: d => d,
-  formatRelativeTime: d => d,
-  formatTime: d => `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}`,
+  formatMessage: (msg) => msg.id,
+  formatNumber: (d) => `${d}`,
+  formatPlural: (d) => d,
+  formatRelativeTime: (d) => d,
+  formatTime: (d) => `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}`,
   now: () => Date.UTC(2017, 10, 23, 12, 59),
   messages: {},
 };

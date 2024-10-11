@@ -45,7 +45,7 @@ export default function reducer(state = initialState, action = {}) {
     case RESET_PASSWORD_SUCCESS:
       return { ...state, resetPasswordInProgress: false };
     case RESET_PASSWORD_ERROR:
-      console.error(payload); // eslint-disable-line no-console
+      console.error(payload);
       return { ...state, resetPasswordInProgress: false, resetPasswordError: payload };
 
     default:
@@ -57,7 +57,7 @@ export default function reducer(state = initialState, action = {}) {
 
 export const changePasswordRequest = () => ({ type: CHANGE_PASSWORD_REQUEST });
 export const changePasswordSuccess = () => ({ type: CHANGE_PASSWORD_SUCCESS });
-export const changePasswordError = error => ({
+export const changePasswordError = (error) => ({
   type: CHANGE_PASSWORD_ERROR,
   payload: error,
   error: true,
@@ -69,7 +69,7 @@ export const resetPasswordRequest = () => ({ type: RESET_PASSWORD_REQUEST });
 
 export const resetPasswordSuccess = () => ({ type: RESET_PASSWORD_SUCCESS });
 
-export const resetPasswordError = e => ({
+export const resetPasswordError = (e) => ({
   type: RESET_PASSWORD_ERROR,
   error: true,
   payload: e,
@@ -77,14 +77,14 @@ export const resetPasswordError = e => ({
 
 // ================ Thunks ================ //
 
-export const changePassword = params => (dispatch, getState, sdk) => {
+export const changePassword = (params) => (dispatch, getState, sdk) => {
   dispatch(changePasswordRequest());
   const { newPassword, currentPassword } = params;
 
   return sdk.currentUser
     .changePassword({ newPassword, currentPassword })
     .then(() => dispatch(changePasswordSuccess()))
-    .catch(e => {
+    .catch((e) => {
       dispatch(changePasswordError(storableError(storableError(e))));
       // This is thrown so that form can be cleared
       // after a timeout on changePassword submit handler
@@ -92,10 +92,10 @@ export const changePassword = params => (dispatch, getState, sdk) => {
     });
 };
 
-export const resetPassword = email => (dispatch, getState, sdk) => {
+export const resetPassword = (email) => (dispatch, getState, sdk) => {
   dispatch(resetPasswordRequest());
   return sdk.passwordReset
     .request({ email })
     .then(() => dispatch(resetPasswordSuccess()))
-    .catch(e => dispatch(resetPasswordError(storableError(e))));
+    .catch((e) => dispatch(resetPasswordError(storableError(e))));
 };

@@ -4,11 +4,11 @@ import classNames from 'classnames';
 
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { findRouteByRouteName } from '../../util/routes';
-import { IconSpinner, IconCheckmark } from '../../components';
+import { IconSpinner, IconCheckmark } from '..';
 
 import css from './Button.module.css';
 
-const PlainButton = props => {
+function PlainButton(props) {
   const [mounted, setMounted] = useState(false);
   const routeConfiguration = useRouteConfiguration();
 
@@ -45,7 +45,7 @@ const PlainButton = props => {
     content = children;
   }
 
-  const onOverButtonFn = enforcePreloadOfPage => () => {
+  const onOverButtonFn = (enforcePreloadOfPage) => () => {
     // Enforce preloading of given page (loadable component)
     const { component: Page } = findRouteByRouteName(enforcePreloadOfPage, routeConfiguration);
     // Loadable Component has a "preload" function.
@@ -72,15 +72,15 @@ const PlainButton = props => {
       {content}
     </button>
   );
-};
+}
 
 // Some buttons are link to other pages.
 // If enforcePagePreloadFor property is given, lets enhance the Button a bit.
-const ButtonWithPagePreload = props => {
+function ButtonWithPagePreload(props) {
   const routeConfiguration = useRouteConfiguration();
   const { enforcePagePreloadFor, ...restProps } = props;
 
-  const onOverButtonFn = enforcePreloadOfPage => () => {
+  const onOverButtonFn = (enforcePreloadOfPage) => () => {
     // Enforce preloading of given page (loadable component)
     const { component: Page } = findRouteByRouteName(enforcePreloadOfPage, routeConfiguration);
     // Loadable Component has a "preload" function.
@@ -98,16 +98,16 @@ const ButtonWithPagePreload = props => {
     : {};
 
   return <PlainButton {...restProps} {...onOverButtonMaybe} />;
-};
+}
 
-const Button = props => {
+function Button(props) {
   const { enforcePagePreloadFor, ...restProps } = props;
   return enforcePagePreloadFor ? (
     <ButtonWithPagePreload {...props} />
   ) : (
     <PlainButton {...restProps} />
   );
-};
+}
 
 Button.defaultProps = {
   rootClassName: null,
@@ -137,42 +137,42 @@ Button.propTypes = {
 
 export default Button;
 
-export const PrimaryButton = props => {
+export function PrimaryButton(props) {
   const classes = classNames(props.rootClassName || css.primaryButtonRoot, css.primaryButton);
   return <Button {...props} rootClassName={classes} />;
-};
+}
 PrimaryButton.displayName = 'PrimaryButton';
 
-export const PrimaryButtonInline = props => {
+export function PrimaryButtonInline(props) {
   const classes = classNames(props.rootClassName || css.primaryButtonInlineRoot, css.primaryButton);
   return <Button {...props} rootClassName={classes} />;
-};
+}
 PrimaryButtonInline.displayName = 'PrimaryButtonInline';
 
-export const SecondaryButton = props => {
+export function SecondaryButton(props) {
   const classes = classNames(props.rootClassName || css.secondaryButtonRoot, css.secondaryButton);
   return <Button {...props} rootClassName={classes} />;
-};
+}
 SecondaryButton.displayName = 'SecondaryButton';
 
-export const SecondaryButtonInline = props => {
+export function SecondaryButtonInline(props) {
   const classes = classNames(
     props.rootClassName || css.secondaryButtonInlineRoot,
-    css.secondaryButtonInline
+    css.secondaryButtonInline,
   );
   return <Button {...props} rootClassName={classes} />;
-};
+}
 SecondaryButton.displayName = 'SecondaryButton';
 
-export const InlineTextButton = props => {
+export function InlineTextButton(props) {
   const classes = classNames(props.rootClassName || css.inlineTextButtonRoot, css.inlineTextButton);
   return <Button {...props} rootClassName={classes} />;
-};
+}
 InlineTextButton.displayName = 'InlineTextButton';
 
-export const SocialLoginButton = props => {
+export function SocialLoginButton(props) {
   const classes = classNames(props.rootClassName || css.socialButtonRoot, css.socialButton);
   return <Button {...props} rootClassName={classes} />;
-};
+}
 
 SocialLoginButton.displayName = 'SocialLoginButton';

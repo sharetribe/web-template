@@ -1,8 +1,8 @@
 import defaultLocationSearches from './configDefaultLocationSearches';
 
-//////////////////////////////////////////////////////
+/// ///////////////////////////////////////////////////
 // Configurations related to maps and map providers //
-//////////////////////////////////////////////////////
+/// ///////////////////////////////////////////////////
 
 // Note: The mapboxAccessToken & googleMapsAPIKey come from map asset nowadays by default.
 //       To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeMapConfig func)

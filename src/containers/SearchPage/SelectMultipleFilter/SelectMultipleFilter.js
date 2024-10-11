@@ -16,12 +16,12 @@ import css from './SelectMultipleFilter.module.css';
 // SelectMultipleFilter doesn't need array mutators since it doesn't require validation.
 // TODO: Live edit didn't work with FieldCheckboxGroup
 //       There's a mutation problem: formstate.dirty is not reliable with it.
-const GroupOfFieldCheckboxes = props => {
+function GroupOfFieldCheckboxes(props) {
   const { id, className, name, options } = props;
   return (
     <fieldset className={className}>
       <ul className={css.list}>
-        {options.map(optionConfig => {
+        {options.map((optionConfig) => {
           const { option, label } = optionConfig;
           const fieldId = `${id}.${option}`;
           return (
@@ -33,11 +33,10 @@ const GroupOfFieldCheckboxes = props => {
       </ul>
     </fieldset>
   );
-};
+}
 
-const getQueryParamName = queryParamNames => {
-  return Array.isArray(queryParamNames) ? queryParamNames[0] : queryParamNames;
-};
+const getQueryParamName = (queryParamNames) =>
+  Array.isArray(queryParamNames) ? queryParamNames[0] : queryParamNames;
 
 // Format URI component's query param: { pub_key: 'has_all:a,b,c' }
 const format = (selectedOptions, queryParamName, schemaType, searchMode) => {
@@ -47,7 +46,7 @@ const format = (selectedOptions, queryParamName, schemaType, searchMode) => {
   return { [queryParamName]: value };
 };
 
-const SelectMultipleFilter = props => {
+function SelectMultipleFilter(props) {
   const intl = useIntl();
   const {
     rootClassName,
@@ -78,14 +77,14 @@ const SelectMultipleFilter = props => {
   const labelForPopup = hasInitialValues
     ? intl.formatMessage(
         { id: 'SelectMultipleFilter.labelSelected' },
-        { labelText: label, count: selectedOptions.length }
+        { labelText: label, count: selectedOptions.length },
       )
     : label;
 
   const labelSelectionForPlain = hasInitialValues
     ? intl.formatMessage(
         { id: 'SelectMultipleFilterPlainForm.labelSelected' },
-        { count: selectedOptions.length }
+        { count: selectedOptions.length },
       )
     : '';
 
@@ -93,7 +92,7 @@ const SelectMultipleFilter = props => {
   // they can be passed to the correct field
   const namedInitialValues = { [name]: selectedOptions };
 
-  const handleSubmit = values => {
+  const handleSubmit = (values) => {
     const usedValue = values ? values[name] : values;
     onSubmit(format(usedValue, queryParamName, schemaType, searchMode));
   };
@@ -141,7 +140,7 @@ const SelectMultipleFilter = props => {
       />
     </FilterPlain>
   );
-};
+}
 
 SelectMultipleFilter.defaultProps = {
   rootClassName: null,

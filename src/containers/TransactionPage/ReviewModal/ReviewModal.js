@@ -10,7 +10,7 @@ import ReviewForm from '../ReviewForm/ReviewForm';
 
 import css from './ReviewModal.module.css';
 
-const ReviewModal = props => {
+function ReviewModal(props) {
   const {
     className,
     rootClassName,
@@ -57,7 +57,7 @@ const ReviewModal = props => {
       />
     </Modal>
   );
-};
+}
 
 const { bool, string } = PropTypes;
 

@@ -8,7 +8,7 @@ import PopupOpenerButton from '../PopupOpenerButton/PopupOpenerButton';
 
 import css from './SearchFiltersPrimary.module.css';
 
-const SearchFiltersPrimaryComponent = props => {
+function SearchFiltersPrimaryComponent(props) {
   const {
     rootClassName,
     className,
@@ -42,7 +42,7 @@ const SearchFiltersPrimaryComponent = props => {
       </div>
     </div>
   );
-};
+}
 
 SearchFiltersPrimaryComponent.defaultProps = {
   rootClassName: null,

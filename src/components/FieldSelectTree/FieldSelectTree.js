@@ -4,7 +4,7 @@ import { Field } from 'react-final-form';
 import classNames from 'classnames';
 
 import { richText } from '../../util/richText';
-import { ValidationError } from '../../components';
+import { ValidationError } from '..';
 
 import css from './FieldSelectTree.module.css';
 
@@ -18,8 +18,8 @@ const MIN_LENGTH_FOR_LONG_WORDS = 16;
  * @returns an array of valid option configurations.
  */
 const pickValidOptions = (options, level = 1) => {
-  const isString = str => typeof str === 'string';
-  const isValidOptions = opts => Array.isArray(opts);
+  const isString = (str) => typeof str === 'string';
+  const isValidOptions = (opts) => Array.isArray(opts);
   return options.reduce((picked, optionConfig) => {
     const { option, label, suboptions } = optionConfig;
     const isValid = isString(option) && isString(label);
@@ -31,8 +31,8 @@ const pickValidOptions = (options, level = 1) => {
   }, []);
 };
 
-const getSuboptions = optionConfig => optionConfig.suboptions;
-const hasSuboptions = optionConfig => getSuboptions(optionConfig)?.length > 0;
+const getSuboptions = (optionConfig) => optionConfig.suboptions;
+const hasSuboptions = (optionConfig) => getSuboptions(optionConfig)?.length > 0;
 
 /**
  * A component that represents a single option.
@@ -40,12 +40,12 @@ const hasSuboptions = optionConfig => getSuboptions(optionConfig)?.length > 0;
  * @param {*} props include: config, level, handleChange, branchPath
  * @returns <li> wrapped elements.
  */
-const Option = props => {
+function Option(props) {
   const { config, level, handleChange, branchPath, ...rest } = props;
   const { option, label, suboptions } = config;
-  const foundFromBranchPath = branchPath.find(bc => bc.option === option);
+  const foundFromBranchPath = branchPath.find((bc) => bc.option === option);
   const isOptSelected = !!foundFromBranchPath;
-  const selectedSuboptions = branchPath.filter(bc => bc.level > foundFromBranchPath?.level);
+  const selectedSuboptions = branchPath.filter((bc) => bc.level > foundFromBranchPath?.level);
   const isSuboptionSelected = selectedSuboptions.length > 0;
   const isClickable = !isOptSelected || (isOptSelected && isSuboptionSelected);
   const cursorMaybe = isClickable ? { cursor: 'pointer' } : { cursor: 'default' };
@@ -64,7 +64,7 @@ const Option = props => {
     <li className={css.option} style={{ paddingLeft: `${12}px`, ...cursorMaybe }}>
       <button
         className={buttonClasses}
-        onClick={e => {
+        onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
           if (isClickable) {
@@ -86,7 +86,7 @@ const Option = props => {
       ) : null}
     </li>
   );
-};
+}
 
 /**
  * Presentational UI component wrapping <ul>.
@@ -94,10 +94,10 @@ const Option = props => {
  * @param {*} props contains properties: hasOptions & children
  * @returns its children wrapped with <ul>
  */
-const OptionList = props => {
+function OptionList(props) {
   const { hasOptions, children } = props;
   return hasOptions ? <ul className={css.optionList}>{children}</ul> : null;
-};
+}
 
 /**
  * Component, which allows user to select one of the options. Selected option might contain suboptions.
@@ -105,16 +105,16 @@ const OptionList = props => {
  * @param {*} props must contain property options, which is an array of option configs.
  * @returns OptionList component.
  */
-const SelectOptions = props => {
+function SelectOptions(props) {
   const { options, ...rest } = props;
   return (
     <OptionList hasOptions={options?.length > 0}>
-      {options.map(config => (
+      {options.map((config) => (
         <Option key={config.option} config={config} {...rest} />
       ))}
     </OptionList>
   );
-};
+}
 
 /**
  * Returns an array of selected nested option configurations.
@@ -135,7 +135,7 @@ const getBranchPath = (primaryOptions, currentSelections) => {
 
     const currentOptions =
       branchPath.length > 0 ? branchPath[branchPath.length - 1].suboptions : primaryOptions;
-    const foundOption = currentOptions.find(o => o.option === selectedOption);
+    const foundOption = currentOptions.find((o) => o.option === selectedOption);
     const foundOptionWithLevelKeyMaybe = foundOption ? [{ ...foundOption, levelKey }] : [];
 
     return [...branchPath, ...foundOptionWithLevelKeyMaybe];
@@ -150,31 +150,29 @@ const getBranchPath = (primaryOptions, currentSelections) => {
  * @param {String} namePrefix like "categoryLevel"
  * @param {Function} onChange Final Form's onChange function.
  */
-const handleChangeFn = (primaryOptions, currentSelections, namePrefix, onChange) => (
-  currentOption,
-  level
-) => {
-  const branchPath = getBranchPath(primaryOptions, currentSelections);
+const handleChangeFn =
+  (primaryOptions, currentSelections, namePrefix, onChange) => (currentOption, level) => {
+    const branchPath = getBranchPath(primaryOptions, currentSelections);
 
-  const updatedCurrentBranchPath = branchPath.reduce((picked, selectedOptionByLevel) => {
-    const { level: branchPathLevel, option: optionByLevel } = selectedOptionByLevel;
-    const levelKey = `${namePrefix}${branchPathLevel}`;
+    const updatedCurrentBranchPath = branchPath.reduce((picked, selectedOptionByLevel) => {
+      const { level: branchPathLevel, option: optionByLevel } = selectedOptionByLevel;
+      const levelKey = `${namePrefix}${branchPathLevel}`;
 
-    return branchPathLevel < level
-      ? { ...picked, [levelKey]: optionByLevel }
-      : branchPathLevel === level
-      ? { ...picked, [levelKey]: currentOption }
-      : picked;
-  }, {});
+      return branchPathLevel < level
+        ? { ...picked, [levelKey]: optionByLevel }
+        : branchPathLevel === level
+          ? { ...picked, [levelKey]: currentOption }
+          : picked;
+    }, {});
 
-  const levelKeyToUpdate = `${namePrefix}${level}`;
-  const isUpdateANewBranchPath = updatedCurrentBranchPath[levelKeyToUpdate] == null;
-  const updatedValue = isUpdateANewBranchPath
-    ? { ...updatedCurrentBranchPath, [levelKeyToUpdate]: currentOption }
-    : updatedCurrentBranchPath;
+    const levelKeyToUpdate = `${namePrefix}${level}`;
+    const isUpdateANewBranchPath = updatedCurrentBranchPath[levelKeyToUpdate] == null;
+    const updatedValue = isUpdateANewBranchPath
+      ? { ...updatedCurrentBranchPath, [levelKeyToUpdate]: currentOption }
+      : updatedCurrentBranchPath;
 
-  onChange(updatedValue);
-};
+    onChange(updatedValue);
+  };
 
 /**
  * Create Final Form field that represents "tree select" component,
@@ -183,7 +181,7 @@ const handleChangeFn = (primaryOptions, currentSelections, namePrefix, onChange)
  * @param {*} props contain properties like className, rootClassName, label, name, options
  * @returns Final Form Field with custom UI.
  */
-const FieldSelectTree = props => {
+function FieldSelectTree(props) {
   const { className, rootClassName, label, name, options, ...rest } = props;
   const namePrefix = name;
   const level = 1;
@@ -193,9 +191,9 @@ const FieldSelectTree = props => {
 
   return (
     <Field name={name} {...rest}>
-      {fieldProps => {
+      {(fieldProps) => {
         const { value, onChange } = fieldProps?.input || {};
-        const fieldValue = value ? value : {};
+        const fieldValue = value || {};
         const branchPath = getBranchPath(validOptions, fieldValue);
         const meta = fieldProps?.meta;
 
@@ -215,7 +213,7 @@ const FieldSelectTree = props => {
       }}
     </Field>
   );
-};
+}
 
 FieldSelectTree.defaultProps = {
   rootClassName: null,

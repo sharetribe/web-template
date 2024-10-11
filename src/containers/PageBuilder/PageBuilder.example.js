@@ -5,9 +5,9 @@ import PageBuilder from './PageBuilder.js';
 
 const hexYellow = '#FFAA00';
 
-////////////////////////////
+/// /////////////////////////
 // Denormalized image ref //
-////////////////////////////
+/// /////////////////////////
 
 const imagePlaceholder = (width, height) => ({
   id: 'image',
@@ -28,23 +28,25 @@ const imagePlaceholder = (width, height) => ({
   },
 });
 
-const Placeholder = props => (
-  <div
-    style={{
-      backgroundColor: hexYellow,
-      width: '100%',
-      height: props?.height || '100%',
-      justifySelf: 'center',
-      alignSelf: 'center',
-      display: 'flex',
-      alignItems: 'center',
-      justifyItems: 'center',
-      border: 'dashed 5px #fff',
-    }}
-  >
-    <H1 style={{ textAlign: 'center', width: '100%' }}>Blaa</H1>
-  </div>
-);
+function Placeholder(props) {
+  return (
+    <div
+      style={{
+        backgroundColor: hexYellow,
+        width: '100%',
+        height: props?.height || '100%',
+        justifySelf: 'center',
+        alignSelf: 'center',
+        display: 'flex',
+        alignItems: 'center',
+        justifyItems: 'center',
+        border: 'dashed 5px #fff',
+      }}
+    >
+      <H1 style={{ textAlign: 'center', width: '100%' }}>Blaa</H1>
+    </div>
+  );
+}
 
 export const PageWithOneSection = {
   component: PageBuilder,
@@ -59,7 +61,7 @@ export const PageWithOneSection = {
     },
     options: {
       sectionComponents: {
-        ['custom-a']: { component: Placeholder },
+        'custom-a': { component: Placeholder },
       },
     },
     description: 'Example page by PageBuilder',
@@ -90,9 +92,9 @@ export const PageWith3Sections = {
     },
     options: {
       sectionComponents: {
-        ['custom-a']: { component: Placeholder },
-        ['custom-b']: { component: Placeholder },
-        ['custom-c']: { component: Placeholder },
+        'custom-a': { component: Placeholder },
+        'custom-b': { component: Placeholder },
+        'custom-c': { component: Placeholder },
       },
     },
     description: 'Example page by PageBuilder',
@@ -102,7 +104,9 @@ export const PageWith3Sections = {
   rawOnly: true,
 };
 
-const PlaceholderTall = () => <Placeholder height="100vh" />;
+function PlaceholderTall() {
+  return <Placeholder height="100vh" />;
+}
 
 export const PageWith3xHeight = {
   component: PageBuilder,
@@ -125,9 +129,9 @@ export const PageWith3xHeight = {
     },
     options: {
       sectionComponents: {
-        ['custom-a']: { component: PlaceholderTall },
-        ['custom-b']: { component: PlaceholderTall },
-        ['custom-c']: { component: PlaceholderTall },
+        'custom-a': { component: PlaceholderTall },
+        'custom-b': { component: PlaceholderTall },
+        'custom-c': { component: PlaceholderTall },
       },
     },
     description: 'Example page by PageBuilder',
@@ -331,7 +335,7 @@ export const PageWithBuildInSectionColumns = {
     },
     options: {
       sectionComponents: {
-        ['custom-c']: { component: PlaceholderTall },
+        'custom-c': { component: PlaceholderTall },
       },
     },
     description: 'Example page by PageBuilder',

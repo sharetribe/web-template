@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
@@ -17,17 +16,16 @@ const currencyConfigEUR = {
   currency: 'EUR',
 };
 
-// eslint-disable-next-line no-console
-const onChange = price => console.log('CurrencyInput - value:', price);
+const onChange = (price) => console.log('CurrencyInput - value:', price);
 
 // Different locales need to be initialized before their currency formatting is in use
-const CurrencyInputWithIntl = ({ locale, ...rest }) => {
+function CurrencyInputWithIntl({ locale, ...rest }) {
   return (
     <IntlProvider locale={locale} textComponent="span">
       <CurrencyInput {...rest} input={{ onChange }} />
     </IntlProvider>
   );
-};
+}
 
 const { object, string } = PropTypes;
 
@@ -74,44 +72,46 @@ export const defaultValueWithFiEUR = {
   group: 'inputs',
 };
 
-const FormComponent = props => (
-  <FinalForm
-    {...props}
-    render={fieldRenderProps => {
-      const { handleSubmit, onChange } = fieldRenderProps;
-      const required = validators.required('This field is required');
+function FormComponent(props) {
+  return (
+    <FinalForm
+      {...props}
+      render={(fieldRenderProps) => {
+        const { handleSubmit, onChange } = fieldRenderProps;
+        const required = validators.required('This field is required');
 
-      return (
-        <form
-          onSubmit={e => {
-            e.preventDefault();
-            handleSubmit(e);
-          }}
-        >
-          <FormSpy onChange={onChange} />
-          <FieldCurrencyInput
-            id="FieldCurrencyInput.price"
-            name="price"
-            label="Set price:"
-            placeholder="Type in amount in EUR..."
-            currencyConfig={currencyConfigEUR}
-            validate={required}
-          />
-        </form>
-      );
-    }}
-  />
-);
+        return (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit(e);
+            }}
+          >
+            <FormSpy onChange={onChange} />
+            <FieldCurrencyInput
+              id="FieldCurrencyInput.price"
+              name="price"
+              label="Set price:"
+              placeholder="Type in amount in EUR..."
+              currencyConfig={currencyConfigEUR}
+              validate={required}
+            />
+          </form>
+        );
+      }}
+    />
+  );
+}
 
 export const FieldInForm = {
   component: FormComponent,
   props: {
-    onChange: formState => {
+    onChange: (formState) => {
       if (formState.values && formState.values.price) {
         console.log('form values changed to:', formState.values);
       }
     },
-    onSubmit: values => {
+    onSubmit: (values) => {
       console.log('FieldInForm submitted values:', values);
       return false;
     },

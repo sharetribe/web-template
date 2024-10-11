@@ -5,13 +5,13 @@ describe('sanitize utils', () => {
   describe('sanitizeUrl', () => {
     it('does not alter http URLs with alphanumeric characters', () => {
       expect(sanitizeUrl('http://example.com/path/to:something')).toBe(
-        'http://example.com/path/to:something'
+        'http://example.com/path/to:something',
       );
     });
 
     it('does not alter http URLs with ports with alphanumeric characters', () => {
       expect(sanitizeUrl('http://example.com:4567/path/to:something')).toBe(
-        'http://example.com:4567/path/to:something'
+        'http://example.com:4567/path/to:something',
       );
     });
 
@@ -21,7 +21,7 @@ describe('sanitize utils', () => {
 
     it('does not alter https URLs with ports with alphanumeric characters', () => {
       expect(sanitizeUrl('https://example.com:4567/path/to:something')).toBe(
-        'https://example.com:4567/path/to:something'
+        'https://example.com:4567/path/to:something',
       );
     });
 
@@ -48,7 +48,7 @@ describe('sanitize utils', () => {
 
     it('does not alter mailto urls with alphanumeric characters', () => {
       expect(sanitizeUrl('mailto:test@example.com?subject=hello+world')).toBe(
-        'mailto:test@example.com?subject=hello+world'
+        'mailto:test@example.com?subject=hello+world',
       );
     });
 
@@ -62,7 +62,7 @@ describe('sanitize utils', () => {
 
     it('strips out ctrl chars', () => {
       expect(sanitizeUrl('www.example.com/\u200D\u0000\u001F\x00\x1F\uFEFFfoo')).toBe(
-        'www.example.com/foo'
+        'www.example.com/foo',
       );
     });
 
@@ -80,7 +80,7 @@ describe('sanitize utils', () => {
 
     it('removes whitespace from urls', () => {
       expect(sanitizeUrl('   http://example.com/path/to:something    ')).toBe(
-        'http://example.com/path/to:something'
+        'http://example.com/path/to:something',
       );
     });
 
@@ -94,7 +94,7 @@ describe('sanitize utils', () => {
         " &#14; javascript:alert('XSS');",
       ];
 
-      attackVectors.forEach(vector => {
+      attackVectors.forEach((vector) => {
         expect(sanitizeUrl(vector)).toBe('about:blank');
       });
 
@@ -103,20 +103,20 @@ describe('sanitize utils', () => {
       // this url is technically sanitized
       expect(
         sanitizeUrl(
-          '&#104;&#116;&#116;&#112;&#115;&#0000058//&#101;&#120;&#97;&#109;&#112;&#108;&#101;&#46;&#99;&#111;&#109;/&#0000106&#0000097&#0000118&#0000097&#0000115&#0000099&#0000114&#0000105&#0000112&#0000116&#0000058&#0000097&#0000108&#0000101&#0000114&#0000116&#0000040&#0000039&#0000088&#0000083&#0000083&#0000039&#0000041'
-        )
+          '&#104;&#116;&#116;&#112;&#115;&#0000058//&#101;&#120;&#97;&#109;&#112;&#108;&#101;&#46;&#99;&#111;&#109;/&#0000106&#0000097&#0000118&#0000097&#0000115&#0000099&#0000114&#0000105&#0000112&#0000116&#0000058&#0000097&#0000108&#0000101&#0000114&#0000116&#0000040&#0000039&#0000088&#0000083&#0000083&#0000039&#0000041',
+        ),
       ).toBe("https://example.com/javascript:alert('XSS')");
     });
 
     describe('invalid protocols', () => {
-      describe.each(['javascript', 'data', 'vbscript'])('%s', protocol => {
+      describe.each(['javascript', 'data', 'vbscript'])('%s', (protocol) => {
         it(`replaces ${protocol} urls with about:blank`, () => {
           expect(sanitizeUrl(`${protocol}:alert(document.domain)`)).toBe('about:blank');
         });
 
         it(`allows ${protocol} urls that start with a letter prefix`, () => {
           expect(sanitizeUrl(`not_${protocol}:alert(document.domain)`)).toBe(
-            `not_${protocol}:alert(document.domain)`
+            `not_${protocol}:alert(document.domain)`,
           );
         });
 
@@ -137,7 +137,7 @@ describe('sanitize utils', () => {
             .join('');
 
           expect(sanitizeUrl(`${mixedCapitalizationProtocol}:alert(document.domain)`)).toBe(
-            'about:blank'
+            'about:blank',
           );
         });
 
@@ -146,9 +146,10 @@ describe('sanitize utils', () => {
             .split('')
             .map((character, index) => {
               if (index === 1) {
-                return character + '%EF%BB%BF%EF%BB%BF';
-              } else if (index === 2) {
-                return character + '%e2%80%8b';
+                return `${character}%EF%BB%BF%EF%BB%BF`;
+              }
+              if (index === 2) {
+                return `${character}%e2%80%8b`;
               }
               return character;
             })
@@ -156,14 +157,14 @@ describe('sanitize utils', () => {
 
           expect(
             sanitizeUrl(
-              decodeURIComponent(`${protocolWithControlCharacters}:alert(document.domain)`)
-            )
+              decodeURIComponent(`${protocolWithControlCharacters}:alert(document.domain)`),
+            ),
           ).toBe('about:blank');
         });
 
         it(`replaces ${protocol} urls with about:blank when url begins with %20`, () => {
           expect(
-            sanitizeUrl(decodeURIComponent(`%20%20%20%20${protocol}:alert(document.domain)`))
+            sanitizeUrl(decodeURIComponent(`%20%20%20%20${protocol}:alert(document.domain)`)),
           ).toBe('about:blank');
         });
 
@@ -173,7 +174,7 @@ describe('sanitize utils', () => {
 
         it(`does not replace ${protocol}: if it is not in the scheme of the URL`, () => {
           expect(sanitizeUrl(`http://example.com#${protocol}:foo`)).toBe(
-            `http://example.com#${protocol}:foo`
+            `http://example.com#${protocol}:foo`,
           );
         });
       });

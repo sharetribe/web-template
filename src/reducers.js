@@ -12,17 +12,15 @@ import * as pageReducers from './containers/reducers';
  */
 const appReducer = combineReducers({ ...globalReducers, ...pageReducers });
 
-const createReducer = () => {
-  return (state, action) => {
-    const appState = action.type === USER_LOGOUT ? undefined : state;
+const createReducer = () => (state, action) => {
+  const appState = action.type === USER_LOGOUT ? undefined : state;
 
-    // Clear sessionStorage when logging out.
-    if (action.type === USER_LOGOUT && typeof window !== 'undefined' && !!window.sessionStorage) {
-      window.sessionStorage.clear();
-    }
+  // Clear sessionStorage when logging out.
+  if (action.type === USER_LOGOUT && typeof window !== 'undefined' && !!window.sessionStorage) {
+    window.sessionStorage.clear();
+  }
 
-    return appReducer(appState, action);
-  };
+  return appReducer(appState, action);
 };
 
 export default createReducer;

@@ -13,13 +13,13 @@ export default function reducer(state = initialState, action = {}) {
   switch (type) {
     case DISABLE_SCROLLING: {
       const { componentId, disableScrolling } = payload;
-      const disableScrollRequests = state.disableScrollRequests;
-      const componentIdExists = disableScrollRequests.find(c => c.componentId === componentId);
+      const { disableScrollRequests } = state;
+      const componentIdExists = disableScrollRequests.find((c) => c.componentId === componentId);
 
       if (componentIdExists) {
-        const disableScrollRequestArray = disableScrollRequests.map(c => {
-          return c.componentId === componentId ? { ...c, disableScrolling } : c;
-        });
+        const disableScrollRequestArray = disableScrollRequests.map((c) =>
+          c.componentId === componentId ? { ...c, disableScrolling } : c,
+        );
         return { ...state, disableScrollRequests: [...disableScrollRequestArray] };
       }
 
@@ -47,7 +47,7 @@ export const manageDisableScrolling = (componentId, disableScrolling) => ({
 
 // ================ Selectors ================ //
 
-export const isScrollingDisabled = state => {
+export const isScrollingDisabled = (state) => {
   const { disableScrollRequests } = state.ui;
-  return disableScrollRequests.some(r => r.disableScrolling);
+  return disableScrollRequests.some((r) => r.disableScrolling);
 };

@@ -4,14 +4,14 @@ import { bool } from 'prop-types';
 import PriceFilterPlain from './PriceFilterPlain';
 import PriceFilterPopup from './PriceFilterPopup';
 
-const PriceFilter = props => {
+function PriceFilter(props) {
   const { showAsPopup, marketplaceCurrency, ...rest } = props;
   return showAsPopup ? (
     <PriceFilterPopup marketplaceCurrency={marketplaceCurrency} {...rest} />
   ) : (
     <PriceFilterPlain marketplaceCurrency={marketplaceCurrency} {...rest} />
   );
-};
+}
 
 PriceFilter.defaultProps = {
   showAsPopup: false,

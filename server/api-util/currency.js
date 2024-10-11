@@ -11,7 +11,7 @@ const { Money } = types;
 const MIN_SAFE_INTEGER = Number.MIN_SAFE_INTEGER || -1 * (2 ** 53 - 1);
 const MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER || 2 ** 53 - 1;
 
-const isSafeNumber = decimalValue => {
+const isSafeNumber = (decimalValue) => {
   if (!(decimalValue instanceof Decimal)) {
     throw new Error('Value must be a Decimal');
   }
@@ -44,7 +44,7 @@ const subUnitDivisors = {
 };
 
 // Get the minor unit divisor for the given currency
-exports.unitDivisor = currency => {
+exports.unitDivisor = (currency) => {
   if (!has(subUnitDivisors, currency)) {
     throw new Error(
       `No minor unit divisor defined for currency: ${currency} in /server/api-util/currency.js`
@@ -54,7 +54,7 @@ exports.unitDivisor = currency => {
 };
 
 // Divisor can be positive value given as Decimal, Number, or String
-const convertDivisorToDecimal = divisor => {
+const convertDivisorToDecimal = (divisor) => {
   try {
     const divisorAsDecimal = new Decimal(divisor);
     if (divisorAsDecimal.isNegative()) {
@@ -67,13 +67,13 @@ const convertDivisorToDecimal = divisor => {
 };
 
 // Check if the value is a number
-const isNumber = value => {
+const isNumber = (value) => {
   return typeof value === 'number' && !isNaN(value);
 };
 
 // Detect if the given value is a goog.math.Long object
 // See: https://google.github.io/closure-library/api/goog.math.Long.html
-const isGoogleMathLong = value => {
+const isGoogleMathLong = (value) => {
   return typeof value === 'object' && isNumber(value.low_) && isNumber(value.high_);
 };
 
@@ -84,7 +84,7 @@ const isGoogleMathLong = value => {
  *
  * @return {Number} converted value
  */
-exports.getAmountAsDecimalJS = value => {
+exports.getAmountAsDecimalJS = (value) => {
   if (!(value instanceof Money)) {
     throw new Error('Value must be a Money type');
   }
@@ -121,7 +121,7 @@ exports.getAmountAsDecimalJS = value => {
  *
  * @return {Number} converted value
  */
-exports.convertDecimalJSToNumber = decimalValue => {
+exports.convertDecimalJSToNumber = (decimalValue) => {
   if (!isSafeNumber(decimalValue)) {
     throw new Error(
       `Cannot represent Decimal.js value ${decimalValue.toString()} safely as a number`

@@ -50,17 +50,17 @@ const onSubmitCallback = () => {
   clearData(STORAGE_KEY);
 };
 
-const getProcessName = pageData => {
+const getProcessName = (pageData) => {
   const { transaction, listing } = pageData || {};
   const processName = transaction?.id
     ? transaction?.attributes?.processName
     : listing?.id
-    ? listing?.attributes?.publicData?.transactionProcessAlias?.split('/')[0]
-    : null;
+      ? listing?.attributes?.publicData?.transactionProcessAlias?.split('/')[0]
+      : null;
   return resolveLatestProcessName(processName);
 };
 
-const EnhancedCheckoutPage = props => {
+function EnhancedCheckoutPage(props) {
   const [pageData, setPageData] = useState({});
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const config = useConfiguration();
@@ -126,20 +126,21 @@ const EnhancedCheckoutPage = props => {
   // Redirect back to ListingPage if data is missing.
   // Redirection must happen before any data format error is thrown (e.g. wrong currency)
   if (shouldRedirect) {
-    // eslint-disable-next-line no-console
     console.error('Missing or invalid data for checkout, redirecting back to listing page.', {
       listing,
     });
     return <NamedRedirect name="ListingPage" params={params} />;
     // Redirect to NoAccessPage if access rights are missing
-  } else if (shouldRedirectUnathorizedUser) {
+  }
+  if (shouldRedirectUnathorizedUser) {
     return (
       <NamedRedirect
         name="NoAccessPage"
         params={{ missingAccessRight: NO_ACCESS_PAGE_USER_PENDING_APPROVAL }}
       />
     );
-  } else if (shouldRedirectNoTransactionRightsUser) {
+  }
+  if (shouldRedirectNoTransactionRightsUser) {
     return (
       <NamedRedirect
         name="NoAccessPage"
@@ -153,7 +154,7 @@ const EnhancedCheckoutPage = props => {
   const title = processName
     ? intl.formatMessage(
         { id: `CheckoutPage.${processName}.title` },
-        { listingTitle, authorDisplayName }
+        { listingTitle, authorDisplayName },
       )
     : 'Checkout page is loading data';
 
@@ -191,9 +192,9 @@ const EnhancedCheckoutPage = props => {
       <CustomTopbar intl={intl} linkToExternalSite={config?.topbar?.logoLink} />
     </Page>
   );
-};
+}
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     listing,
     orderData,
@@ -229,7 +230,7 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   dispatch,
   fetchSpeculatedTransaction: (params, processAlias, txId, transitionName, isPrivileged) =>
     dispatch(speculateTransaction(params, processAlias, txId, transitionName, isPrivileged)),
@@ -238,21 +239,16 @@ const mapDispatchToProps = dispatch => ({
     dispatch(initiateInquiryWithoutPayment(params, processAlias, transitionName)),
   onInitiateOrder: (params, processAlias, transactionId, transitionName, isPrivileged) =>
     dispatch(initiateOrder(params, processAlias, transactionId, transitionName, isPrivileged)),
-  onRetrievePaymentIntent: params => dispatch(retrievePaymentIntent(params)),
-  onConfirmCardPayment: params => dispatch(confirmCardPayment(params)),
+  onRetrievePaymentIntent: (params) => dispatch(retrievePaymentIntent(params)),
+  onConfirmCardPayment: (params) => dispatch(confirmCardPayment(params)),
   onConfirmPayment: (transactionId, transitionName, transitionParams) =>
     dispatch(confirmPayment(transactionId, transitionName, transitionParams)),
-  onSendMessage: params => dispatch(sendMessage(params)),
+  onSendMessage: (params) => dispatch(sendMessage(params)),
   onSavePaymentMethod: (stripeCustomer, stripePaymentMethodId) =>
     dispatch(savePaymentMethod(stripeCustomer, stripePaymentMethodId)),
 });
 
-const CheckoutPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(EnhancedCheckoutPage);
+const CheckoutPage = compose(connect(mapStateToProps, mapDispatchToProps))(EnhancedCheckoutPage);
 
 CheckoutPage.setInitialValues = (initialValues, saveToSessionStorage = false) => {
   if (saveToSessionStorage) {

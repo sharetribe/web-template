@@ -6,7 +6,7 @@ import LinksMenu from './LinksMenu';
 import css from './CustomLinksMenu.module.css';
 
 const draftId = '00000000-0000-0000-0000-000000000000';
-const createListingLinkConfig = intl => ({
+const createListingLinkConfig = (intl) => ({
   group: 'primary',
   text: intl.formatMessage({ id: 'TopbarDesktop.createListing' }),
   type: 'internal',
@@ -29,7 +29,7 @@ const createListingLinkConfig = intl => ({
  */
 const groupMeasuredLinks = (links, containerWidth, menuMoreWidth) => {
   const isMeasured = !!links?.[0]?.width && menuMoreWidth > 0;
-  const hasNoPrimaryLinks = !links.find(l => l.group === 'primary');
+  const hasNoPrimaryLinks = !links.find((l) => l.group === 'primary');
   // - We can't calculate groups, if the width of the rendered links are not measured
   // - We don't need to calculate groups, if links don't contain any 'primary' links
   if (!isMeasured || hasNoPrimaryLinks) {
@@ -58,7 +58,7 @@ const groupMeasuredLinks = (links, containerWidth, menuMoreWidth) => {
             menuLinks: [...pickedLinks.menuLinks, link],
           };
     },
-    { priorityLinks: [], menuLinks: [] }
+    { priorityLinks: [], menuLinks: [] },
   );
   return groupedLinks;
 };
@@ -66,7 +66,7 @@ const groupMeasuredLinks = (links, containerWidth, menuMoreWidth) => {
 const calculateContainerWidth = (containerRefTarget, parentWidth) => {
   // Siblings include logo, search form, (inbox, profile menu || login signup)
   const siblingArray = Array.from(containerRefTarget.parentNode.childNodes).filter(
-    n => n !== containerRefTarget
+    (n) => n !== containerRefTarget,
   );
   const siblingWidthsCombined = siblingArray.reduce((acc, node) => acc + node.offsetWidth, 0);
 
@@ -100,7 +100,7 @@ const calculateContainerWidth = (containerRefTarget, parentWidth) => {
  * @param {*} props contains currentPage, customLinks, intl, and hasClientSideContentReady
  * @returns component to be placed inside TopbarDesktop
  */
-const CustomLinksMenu = ({ currentPage, customLinks = [], hasClientSideContentReady, intl }) => {
+function CustomLinksMenu({ currentPage, customLinks = [], hasClientSideContentReady, intl }) {
   const containerRef = useRef(null);
   const observer = useRef(null);
   const [mounted, setMounted] = useState(false);
@@ -120,7 +120,7 @@ const CustomLinksMenu = ({ currentPage, customLinks = [], hasClientSideContentRe
     let animationFrameId = null;
     if (hasClientSideContentReady && moreLabelWidth > 0) {
       // ResizeObserver sets layout data: grouped priority links and links that go to menuLinks dropdown
-      observer.current = new ResizeObserver(entries => {
+      observer.current = new ResizeObserver((entries) => {
         const containerRefParentWidth = containerRef.current?.parentNode?.offsetWidth;
         const bodyOffsetWidth = document.body.offsetWidth;
 
@@ -194,6 +194,6 @@ const CustomLinksMenu = ({ currentPage, customLinks = [], hasClientSideContentRe
       ) : null}
     </div>
   );
-};
+}
 
 export default CustomLinksMenu;

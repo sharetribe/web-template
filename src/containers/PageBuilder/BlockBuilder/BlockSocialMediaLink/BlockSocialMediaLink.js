@@ -7,7 +7,7 @@ import BlockContainer from '../BlockContainer';
 
 import css from './BlockSocialMediaLink.module.css';
 
-const BlockSocialMediaLink = props => {
+function BlockSocialMediaLink(props) {
   const { blockId, className, rootClassName, link, options } = props;
 
   const classes = classNames(rootClassName || css.root, className);
@@ -17,7 +17,7 @@ const BlockSocialMediaLink = props => {
       <Field data={link} options={options} className={css.link} />
     </BlockContainer>
   );
-};
+}
 
 const propTypeOption = shape({
   fieldComponents: shape({ component: node, pickValidProps: func }),

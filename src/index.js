@@ -56,18 +56,18 @@ const render = (store, shouldHydrate) => {
   // when auth information is present.
   const state = store.getState();
   const cdnAssetsVersion = state.hostedAssets.version;
-  const authInfoLoaded = state.auth.authInfoLoaded;
+  const { authInfoLoaded } = state.auth;
   const info = authInfoLoaded ? Promise.resolve({}) : store.dispatch(authInfo());
   info
-    .then(() => {
+    .then(() =>
       // Ensure that Loadable Components is ready
       // and fetch hosted assets in parallel before initializing the ClientApp
-      return Promise.all([
+      Promise.all([
         loadableReady(),
         store.dispatch(fetchAppAssets(defaultConfig.appCdnAssets, cdnAssetsVersion)),
         store.dispatch(fetchCurrentUser()),
-      ]);
-    })
+      ]),
+    )
     .then(([_, fetchedAppAssets, cu]) => {
       const { translations: translationsRaw, ...rest } = fetchedAppAssets || {};
       // We'll handle translations as a separate data.
@@ -76,29 +76,30 @@ const render = (store, shouldHydrate) => {
 
       // Rest of the assets are considered as hosted configs
       const configEntries = Object.entries(rest);
-      const hostedConfig = configEntries.reduce((collectedData, [name, content]) => {
-        return { ...collectedData, [name]: content.data || {} };
-      }, {});
+      const hostedConfig = configEntries.reduce(
+        (collectedData, [name, content]) => ({ ...collectedData, [name]: content.data || {} }),
+        {},
+      );
 
       if (shouldHydrate) {
         ReactDOM.hydrate(
           <ClientApp store={store} hostedTranslations={translations} hostedConfig={hostedConfig} />,
-          document.getElementById('root')
+          document.getElementById('root'),
         );
       } else {
         ReactDOM.render(
           <ClientApp store={store} hostedTranslations={translations} hostedConfig={hostedConfig} />,
-          document.getElementById('root')
+          document.getElementById('root'),
         );
       }
     })
-    .catch(e => {
+    .catch((e) => {
       log.error(e, 'browser-side-render-failed');
     });
 };
 
-const setupAnalyticsHandlers = googleAnalyticsId => {
-  let handlers = [];
+const setupAnalyticsHandlers = (googleAnalyticsId) => {
+  const handlers = [];
 
   // Log analytics page views and events in dev mode
   if (appSettings.dev) {
@@ -109,7 +110,7 @@ const setupAnalyticsHandlers = googleAnalyticsId => {
   if (googleAnalyticsId) {
     if (googleAnalyticsId.indexOf('G-') !== 0) {
       console.warn(
-        'Google Analytics 4 (GA4) should have measurement id that starts with "G-" prefix'
+        'Google Analytics 4 (GA4) should have measurement id that starts with "G-" prefix',
       );
     } else {
       handlers.push(new GoogleAnalyticsHandler());
@@ -168,11 +169,11 @@ const cspEnabled = CSP === 'block' || CSP === 'report';
 
 if (CSP === 'report' && process.env.REACT_APP_ENV === 'production') {
   console.warn(
-    'Your production environment should use CSP with "block" mode. Read more from: https://www.sharetribe.com/docs/ftw-security/how-to-set-up-csp-for-ftw/'
+    'Your production environment should use CSP with "block" mode. Read more from: https://www.sharetribe.com/docs/ftw-security/how-to-set-up-csp-for-ftw/',
   );
 } else if (!cspEnabled) {
   console.warn(
-    "CSP is currently not enabled! You should add an environment variable REACT_APP_CSP with the value 'report' or 'block'. Read more from: https://www.sharetribe.com/docs/ftw-security/how-to-set-up-csp-for-ftw/"
+    "CSP is currently not enabled! You should add an environment variable REACT_APP_CSP with the value 'report' or 'block'. Read more from: https://www.sharetribe.com/docs/ftw-security/how-to-set-up-csp-for-ftw/",
   );
 }
 

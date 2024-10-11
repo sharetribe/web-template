@@ -21,12 +21,12 @@ import {
 
 import css from './TopbarMobileMenu.module.css';
 
-const CustomLinkComponent = ({ linkConfig, currentPage }) => {
+function CustomLinkComponent({ linkConfig, currentPage }) {
   const { group, text, type, href, route } = linkConfig;
-  const getCurrentPageClass = page => {
-    const hasPageName = name => currentPage?.indexOf(name) === 0;
-    const isCMSPage = pageId => hasPageName('CMSPage') && currentPage === `${page}:${pageId}`;
-    const isInboxPage = tab => hasPageName('InboxPage') && currentPage === `${page}:${tab}`;
+  const getCurrentPageClass = (page) => {
+    const hasPageName = (name) => currentPage?.indexOf(name) === 0;
+    const isCMSPage = (pageId) => hasPageName('CMSPage') && currentPage === `${page}:${pageId}`;
+    const isInboxPage = (tab) => hasPageName('InboxPage') && currentPage === `${page}:${tab}`;
     const isCurrentPage = currentPage === page;
 
     return isCMSPage(route?.params?.pageId) || isInboxPage(route?.params?.tab) || isCurrentPage
@@ -53,9 +53,9 @@ const CustomLinkComponent = ({ linkConfig, currentPage }) => {
       {text}
     </ExternalLink>
   );
-};
+}
 
-const TopbarMobileMenu = props => {
+function TopbarMobileMenu(props) {
   const {
     isAuthenticated,
     currentPage,
@@ -68,15 +68,9 @@ const TopbarMobileMenu = props => {
 
   const user = ensureCurrentUser(currentUser);
 
-  const extraLinks = customLinks.map(linkConfig => {
-    return (
-      <CustomLinkComponent
-        key={linkConfig.text}
-        linkConfig={linkConfig}
-        currentPage={currentPage}
-      />
-    );
-  });
+  const extraLinks = customLinks.map((linkConfig) => (
+    <CustomLinkComponent key={linkConfig.text} linkConfig={linkConfig} currentPage={currentPage} />
+  ));
 
   if (!isAuthenticated) {
     const signup = (
@@ -125,7 +119,7 @@ const TopbarMobileMenu = props => {
     ) : null;
 
   const displayName = user.attributes.profile.firstName;
-  const currentPageClass = page => {
+  const currentPageClass = (page) => {
     const isAccountSettingsPage =
       page === 'AccountSettingsPage' && ACCOUNT_SETTINGS_PAGES.includes(currentPage);
     const isInboxPage = currentPage?.indexOf('InboxPage') === 0 && page?.indexOf('InboxPage') === 0;
@@ -182,7 +176,7 @@ const TopbarMobileMenu = props => {
       </div>
     </div>
   );
-};
+}
 
 TopbarMobileMenu.defaultProps = { currentUser: null, notificationCount: 0, currentPage: null };
 

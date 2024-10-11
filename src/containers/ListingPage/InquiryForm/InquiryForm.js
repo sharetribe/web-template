@@ -25,7 +25,7 @@ import {
 import css from './InquiryForm.module.css';
 import { NO_ACCESS_PAGE_INITIATE_TRANSACTIONS } from '../../../util/urlHelpers';
 
-const ErrorMessage = props => {
+function ErrorMessage(props) {
   const { error } = props;
   const userPendingApproval = isErrorNoPermissionForUserPendingApproval(error);
   const userHasNoTransactionRights = isErrorNoPermissionForInitiateTransactions(error);
@@ -43,7 +43,7 @@ const ErrorMessage = props => {
         <FormattedMessage
           id="InquiryForm.noTransactionRightsError"
           values={{
-            NoAccessLink: msg => (
+            NoAccessLink: (msg) => (
               <NamedLink
                 name="NoAccessPage"
                 params={{ missingAccessRight: NO_ACCESS_PAGE_INITIATE_TRANSACTIONS }}
@@ -58,74 +58,80 @@ const ErrorMessage = props => {
       )}
     </p>
   ) : null;
-};
+}
 
 // NOTE: this InquiryForm is only for booking & purchase processes
 // The default-inquiry process is handled differently
-const InquiryFormComponent = props => (
-  <FinalForm
-    {...props}
-    render={fieldRenderProps => {
-      const {
-        rootClassName,
-        className,
-        submitButtonWrapperClassName,
-        formId,
-        handleSubmit,
-        inProgress,
-        intl,
-        listingTitle,
-        authorDisplayName,
-        sendInquiryError,
-      } = fieldRenderProps;
+function InquiryFormComponent(props) {
+  return (
+    <FinalForm
+      {...props}
+      render={(fieldRenderProps) => {
+        const {
+          rootClassName,
+          className,
+          submitButtonWrapperClassName,
+          formId,
+          handleSubmit,
+          inProgress,
+          intl,
+          listingTitle,
+          authorDisplayName,
+          sendInquiryError,
+        } = fieldRenderProps;
 
-      const messageLabel = intl.formatMessage(
-        {
-          id: 'InquiryForm.messageLabel',
-        },
-        { authorDisplayName }
-      );
-      const messagePlaceholder = intl.formatMessage(
-        {
-          id: 'InquiryForm.messagePlaceholder',
-        },
-        { authorDisplayName }
-      );
-      const messageRequiredMessage = intl.formatMessage({
-        id: 'InquiryForm.messageRequired',
-      });
-      const messageRequired = validators.requiredAndNonEmptyString(messageRequiredMessage);
+        const messageLabel = intl.formatMessage(
+          {
+            id: 'InquiryForm.messageLabel',
+          },
+          { authorDisplayName },
+        );
+        const messagePlaceholder = intl.formatMessage(
+          {
+            id: 'InquiryForm.messagePlaceholder',
+          },
+          { authorDisplayName },
+        );
+        const messageRequiredMessage = intl.formatMessage({
+          id: 'InquiryForm.messageRequired',
+        });
+        const messageRequired = validators.requiredAndNonEmptyString(messageRequiredMessage);
 
-      const classes = classNames(rootClassName || css.root, className);
-      const submitInProgress = inProgress;
-      const submitDisabled = submitInProgress;
+        const classes = classNames(rootClassName || css.root, className);
+        const submitInProgress = inProgress;
+        const submitDisabled = submitInProgress;
 
-      return (
-        <Form className={classes} onSubmit={handleSubmit} enforcePagePreloadFor="OrderDetailsPage">
-          <IconInquiry className={css.icon} />
-          <Heading as="h2" rootClassName={css.heading}>
-            <FormattedMessage id="InquiryForm.heading" values={{ listingTitle }} />
-          </Heading>
-          <FieldTextInput
-            className={css.field}
-            type="textarea"
-            name="message"
-            id={formId ? `${formId}.message` : 'message'}
-            label={messageLabel}
-            placeholder={messagePlaceholder}
-            validate={messageRequired}
-          />
-          <div className={submitButtonWrapperClassName}>
-            <ErrorMessage error={sendInquiryError} />
-            <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
-              <FormattedMessage id="InquiryForm.submitButtonText" />
-            </PrimaryButton>
-          </div>
-        </Form>
-      );
-    }}
-  />
-);
+        return (
+          <Form
+            className={classes}
+            onSubmit={handleSubmit}
+            enforcePagePreloadFor="OrderDetailsPage"
+          >
+            <IconInquiry className={css.icon} />
+            <Heading as="h2" rootClassName={css.heading}>
+              <FormattedMessage id="InquiryForm.heading" values={{ listingTitle }} />
+            </Heading>
+            <FieldTextInput
+              className={css.field}
+              type="textarea"
+              name="message"
+              id={formId ? `${formId}.message` : 'message'}
+              label={messageLabel}
+              placeholder={messagePlaceholder}
+              validate={messageRequired}
+            />
+            <div className={submitButtonWrapperClassName}>
+              <ErrorMessage error={sendInquiryError} />
+              <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
+                <FormattedMessage id="InquiryForm.submitButtonText" />
+              </PrimaryButton>
+            </div>
+          </Form>
+        );
+      }}
+    />
+  );
+}
 
 InquiryFormComponent.defaultProps = {
   rootClassName: null,

@@ -1,21 +1,21 @@
-import { types as sdkTypes } from '../util/sdkLoader';
+import { types as sdkTypes } from './sdkLoader';
 
 const { LatLng: SDKLatLng, LatLngBounds: SDKLatLngBounds } = sdkTypes;
 
-const placeOrigin = place => {
+const placeOrigin = (place) => {
   if (place && place.geometry && place.geometry.location) {
     return new SDKLatLng(place.geometry.location.lat(), place.geometry.location.lng());
   }
   return null;
 };
 
-const placeBounds = place => {
+const placeBounds = (place) => {
   if (place && place.geometry && place.geometry.viewport) {
     const ne = place.geometry.viewport.getNorthEast();
     const sw = place.geometry.viewport.getSouthWest();
     return new SDKLatLngBounds(
       new SDKLatLng(ne.lat(), ne.lng()),
-      new SDKLatLng(sw.lat(), sw.lng())
+      new SDKLatLng(sw.lat(), sw.lng()),
     );
   }
   return null;
@@ -43,7 +43,9 @@ export const getPlaceDetails = (placeId, sessionToken) =>
     service.getDetails({ placeId, fields, ...sessionTokenMaybe }, (place, status) => {
       if (status !== serviceStatus.OK) {
         reject(
-          new Error(`Could not get details for place id "${placeId}", error status was "${status}"`)
+          new Error(
+            `Could not get details for place id "${placeId}", error status was "${status}"`,
+          ),
         );
       } else {
         resolve({
@@ -55,7 +57,7 @@ export const getPlaceDetails = (placeId, sessionToken) =>
     });
   });
 
-const predictionSuccessful = status => {
+const predictionSuccessful = (status) => {
   const { OK, ZERO_RESULTS } = window.google.maps.places.PlacesServiceStatus;
   return status === OK || status === ZERO_RESULTS;
 };
@@ -90,7 +92,7 @@ export const getPlacePredictions = (search, sessionToken, searchConfigurations) 
           };
           resolve(results);
         }
-      }
+      },
     );
   });
 
@@ -105,7 +107,7 @@ export const getPlacePredictions = (search, sessionToken, searchConfigurations) 
  * @return {SDKLatLngBounds} - bounds cut to given fixed precision
  */
 export const sdkBoundsToFixedCoordinates = (sdkBounds, fixedPrecision) => {
-  const fixed = n => Number.parseFloat(n.toFixed(fixedPrecision));
+  const fixed = (n) => Number.parseFloat(n.toFixed(fixedPrecision));
   const ne = new SDKLatLng(fixed(sdkBounds.ne.lat), fixed(sdkBounds.ne.lng));
   const sw = new SDKLatLng(fixed(sdkBounds.sw.lat), fixed(sdkBounds.sw.lng));
 
@@ -171,9 +173,8 @@ export const getOffsetOverride = (containerElement, props) => {
   //
   if (typeof getPixelPositionOffset === 'function') {
     return getPixelPositionOffset(containerElement.offsetWidth, containerElement.offsetHeight);
-  } else {
-    return {};
   }
+  return {};
 };
 
 /**
@@ -239,30 +240,25 @@ const getLayoutStylesByPosition = (mapCanvasProjection, offset, position) => {
  * @return styles to render an area or a single coordinate pair within the projection.
  */
 export const getLayoutStyles = (mapCanvasProjection, offset, props) => {
-  const createLatLng = (inst, Type) => {
-    return new Type(inst.lat, inst.lng);
-  };
+  const createLatLng = (inst, Type) => new Type(inst.lat, inst.lng);
 
-  const createLatLngBounds = (inst, Type) => {
-    return new Type(
+  const createLatLngBounds = (inst, Type) =>
+    new Type(
       new window.google.maps.LatLng(inst.ne.lat, inst.ne.lng),
-      new window.google.maps.LatLng(inst.sw.lat, inst.sw.lng)
+      new window.google.maps.LatLng(inst.sw.lat, inst.sw.lng),
     );
-  };
 
   const ensureOfType = (inst, type, factory) => {
     if (inst instanceof type) {
       return inst;
-    } else {
-      return factory(inst, type);
     }
+    return factory(inst, type);
   };
 
   if (props.bounds) {
     const bounds = ensureOfType(props.bounds, window.google.maps.LatLngBounds, createLatLngBounds);
     return getLayoutStylesByBounds(mapCanvasProjection, offset, bounds);
-  } else {
-    const position = ensureOfType(props.position, window.google.maps.LatLng, createLatLng);
-    return getLayoutStylesByPosition(mapCanvasProjection, offset, position);
   }
+  const position = ensureOfType(props.position, window.google.maps.LatLng, createLatLng);
+  return getLayoutStylesByPosition(mapCanvasProjection, offset, position);
 };

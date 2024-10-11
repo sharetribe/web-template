@@ -1,6 +1,5 @@
-/* eslint-disable no-console */
 import React, { useState } from 'react';
-import { Button } from '../../components';
+import { Button } from '..';
 import ModalInMobile from './ModalInMobile';
 import css from './ModalInMobileExample.module.css';
 
@@ -9,7 +8,7 @@ const onManageDisableScrolling = (componentId, scrollingDisabled = true) => {
   console.log('Toggling ModalInMobile - currently:', componentId, scrollingDisabled);
 };
 
-const ModalInMobileWrapper = props => {
+function ModalInMobileWrapper(props) {
   const [isOpen, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -37,7 +36,7 @@ const ModalInMobileWrapper = props => {
       </div>
     </div>
   );
-};
+}
 
 export const Empty = {
   component: ModalInMobileWrapper,

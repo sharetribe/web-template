@@ -9,7 +9,7 @@ import AddressLinkMaybe from './AddressLinkMaybe';
 import css from './TransactionPanel.module.css';
 
 // Functional component as a helper to build ActivityFeed section
-const BookingLocationMaybe = props => {
+function BookingLocationMaybe(props) {
   const { className, rootClassName, listing, showBookingLocation } = props;
   const classes = classNames(rootClassName || css.bookingLocationContainer, className);
 
@@ -25,13 +25,13 @@ const BookingLocationMaybe = props => {
             linkRootClassName={css.bookingLocationAddress}
             location={location}
             geolocation={listing?.attributes?.geolocation}
-            showAddress={true}
+            showAddress
           />
         </div>
       </div>
     );
   }
   return null;
-};
+}
 
 export default BookingLocationMaybe;

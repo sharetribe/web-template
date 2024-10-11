@@ -17,13 +17,12 @@ const DEBOUNCE_WAIT_TIME = 600;
 // Short search queries (e.g. 2 letters) have a longer timeout before search is made
 const TIMEOUT_FOR_SHORT_QUERIES = 2000;
 
-const getKeywordQueryParam = queryParamNames => {
-  return Array.isArray(queryParamNames)
+const getKeywordQueryParam = (queryParamNames) =>
+  Array.isArray(queryParamNames)
     ? queryParamNames[0]
     : typeof queryParamNames === 'string'
-    ? queryParamNames
-    : 'keywords';
-};
+      ? queryParamNames
+      : 'keywords';
 
 class KeywordFilter extends Component {
   constructor(props) {
@@ -61,7 +60,7 @@ class KeywordFilter extends Component {
     const labelForPopup = hasInitialValues
       ? intl.formatMessage(
           { id: 'KeywordFilter.labelSelected' },
-          { labelText: initialValues[urlParam] }
+          { labelText: initialValues[urlParam] },
         )
       : label;
 
@@ -75,7 +74,7 @@ class KeywordFilter extends Component {
     // they can be passed to the correct field
     const namedInitialValues = { [name]: initialValues[urlParam] };
 
-    const handleSubmit = values => {
+    const handleSubmit = (values) => {
       const usedValue = values ? values[name] : values;
       onSubmit({ [urlParam]: usedValue });
     };
@@ -85,7 +84,7 @@ class KeywordFilter extends Component {
       trailing: true,
     });
     // Use timeout for shart queries and debounce for queries with any length
-    const handleChangeWithDebounce = values => {
+    const handleChangeWithDebounce = (values) => {
       // handleSubmit gets values as params.
       // If this field ("keyword") is short, create timeout
       const hasKeywordValue = values && values[name];
@@ -95,14 +94,15 @@ class KeywordFilter extends Component {
           window.clearTimeout(this.shortKeywordTimeout);
         }
         return debouncedSubmit(values);
-      } else {
-        this.shortKeywordTimeout = window.setTimeout(() => {
-          // if mobileInputRef exists, use the most up-to-date value from there
-          return this.mobileInputRef && this.mobileInputRef.current
-            ? handleSubmit({ ...values, [name]: this.mobileInputRef.current.value })
-            : handleSubmit(values);
-        }, TIMEOUT_FOR_SHORT_QUERIES);
       }
+      this.shortKeywordTimeout = window.setTimeout(
+        () =>
+          // if mobileInputRef exists, use the most up-to-date value from there
+          this.mobileInputRef && this.mobileInputRef.current
+            ? handleSubmit({ ...values, [name]: this.mobileInputRef.current.value })
+            : handleSubmit(values),
+        TIMEOUT_FOR_SHORT_QUERIES,
+      );
     };
 
     // Uncontrolled input needs to be cleared through the reference to DOM element.

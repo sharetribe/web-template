@@ -12,15 +12,14 @@ const { Money } = sdkTypes;
 
 // Validate the assumption that the commission exists and the amount
 // is zero or negative.
-const isValidCommission = commissionLineItem => {
-  return commissionLineItem.lineTotal instanceof Money && commissionLineItem.lineTotal.amount <= 0;
-};
+const isValidCommission = (commissionLineItem) =>
+  commissionLineItem.lineTotal instanceof Money && commissionLineItem.lineTotal.amount <= 0;
 
-const LineItemProviderCommissionMaybe = props => {
+function LineItemProviderCommissionMaybe(props) {
   const { lineItems, isProvider, marketplaceName, intl } = props;
 
   const providerCommissionLineItem = lineItems.find(
-    item => item.code === LINE_ITEM_PROVIDER_COMMISSION && !item.reversal
+    (item) => item.code === LINE_ITEM_PROVIDER_COMMISSION && !item.reversal,
   );
 
   // If commission is passed it will be shown as a fee already reduces from the total price
@@ -32,7 +31,6 @@ const LineItemProviderCommissionMaybe = props => {
   // https://www.sharetribe.com/docs/concepts/transaction-process/
   if (isProvider && providerCommissionLineItem) {
     if (!isValidCommission(providerCommissionLineItem)) {
-      // eslint-disable-next-line no-console
       console.error('invalid commission line item:', providerCommissionLineItem);
       throw new Error('Commission should be present and the value should be zero or negative');
     }
@@ -54,7 +52,7 @@ const LineItemProviderCommissionMaybe = props => {
   }
 
   return commissionItem;
-};
+}
 
 LineItemProviderCommissionMaybe.propTypes = {
   lineItems: propTypes.lineItems.isRequired,

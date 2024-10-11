@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import css from './IconPlus.module.css';
 
-const IconPlus = props => {
+function IconPlus(props) {
   const { className, rootClassName, isOpen } = props;
   const classes = classNames(rootClassName || css.root, className);
 
@@ -21,7 +21,7 @@ const IconPlus = props => {
       />
     </svg>
   );
-};
+}
 
 IconPlus.defaultProps = {
   className: null,

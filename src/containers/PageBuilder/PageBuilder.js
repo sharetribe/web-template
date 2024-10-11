@@ -1,9 +1,13 @@
-import React from 'react';
-
+import React, { useEffect, useState } from 'react';
+import classNames from 'classnames';
+import DynamicLoader from './DynamicLoader.js';
 import { IconSpinner, LayoutComposer } from '../../components/index.js';
-import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer.js';
+import TopbarContainer from '../TopbarContainer/TopbarContainer.js';
 import FooterContainer from '../FooterContainer/FooterContainer.js';
-
+import LandingSearchBarContainer from '../../components/LandingSearchBarContainer/LandingSearchBarContainer.js';
+import Newsletter from '../../components/Newsletter/Newsletter.js';
+import Counter from '../../components/Counter/Counter.js';
+import ToDo from '../../components/ToDo/ToDo.js';
 import { validProps } from './Field';
 
 import SectionBuilder from './SectionBuilder/SectionBuilder.js';
@@ -36,7 +40,7 @@ const getMetadata = (meta, schemaType, fieldOptions) => {
   const pageSchemaForSEO = {
     '@context': 'http://schema.org',
     '@type': schemaType || 'WebPage',
-    description: description,
+    description,
     name: title,
     ...schemaHeadlineMaybe,
     ...schemaImageMaybe,
@@ -50,17 +54,16 @@ const getMetadata = (meta, schemaType, fieldOptions) => {
   };
 };
 
-const LoadingSpinner = () => {
+function LoadingSpinner() {
   return (
     <div className={css.loading}>
       <IconSpinner delay={600} />
     </div>
   );
-};
-
-//////////////////
+}
+/// ///////////////
 // Page Builder //
-//////////////////
+/// ///////////////
 
 /**
  * PageBuilder can be used to build content pages using page-asset.json.
@@ -80,7 +83,7 @@ const LoadingSpinner = () => {
  * @param {Object} props
  * @returns page component
  */
-const PageBuilder = props => {
+function PageBuilder(props) {
   const {
     pageAssetsData,
     inProgress,
@@ -88,6 +91,8 @@ const PageBuilder = props => {
     fallbackPage,
     schemaType,
     options,
+    isLandingPage,
+    pageId,
     currentPage,
     ...pageProps
   } = props;
@@ -95,10 +100,20 @@ const PageBuilder = props => {
   if (!pageAssetsData && fallbackPage && !inProgress && error) {
     return fallbackPage;
   }
+  const isAbout = pageId === 'about';
+  const isTeamBuilding = pageId === 'teambuilding';
+  const isPadma = pageId === 'padma';
 
-  // Page asset contains UI info and metadata related to it.
-  // - "sections" (data that goes inside <body>)
-  // - "meta" (which is data that goes inside <head>)
+  useEffect(() => {
+    if (isPadma) {
+      window.location.href = 'https://www.clubjoy.it/u/668fb70a-dd46-44f6-94f0-eea88dd089a5';
+    }
+  }, [isPadma]);
+
+  if (isPadma) {
+    return null;
+  }
+
   const { sections = [], meta = {} } = pageAssetsData || {};
   const pageMetaProps = getMetadata(meta, schemaType, options?.fieldComponents);
 
@@ -107,10 +122,36 @@ const PageBuilder = props => {
     main
     footer
   `;
+
+  const [searchParams, setSearchParams] = useState({});
+  const [offset, setOffset] = useState(0);
+
+  const desktopClassName = classNames({
+    [css.desktopTopbarLandingPage]: isLandingPage && offset <= 50,
+    [css.desktopTopbarLandingPageWithScroll]: isLandingPage && offset >= 50,
+    [css.desktopTopbar]: !isLandingPage,
+  });
+
+  const handleSearchSubmit = (params) => {
+    setSearchParams(params);
+  };
+
+  useEffect(() => {
+    if (window) {
+      const handleScroll = () => {
+        setOffset(window.scrollY);
+      };
+      window.addEventListener('scroll', handleScroll);
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+      };
+    }
+  }, []);
+
   return (
     <StaticPage {...pageMetaProps} {...pageProps}>
       <LayoutComposer areas={layoutAreas} className={css.layout}>
-        {props => {
+        {(props) => {
           const { Topbar, Main, Footer } = props;
           return (
             <>
@@ -118,10 +159,55 @@ const PageBuilder = props => {
                 <TopbarContainer currentPage={currentPage} />
               </Topbar>
               <Main as="main" className={css.main}>
-                {sections.length === 0 && inProgress ? (
-                  <LoadingSpinner />
-                ) : (
-                  <SectionBuilder sections={sections} options={options} />
+                {DynamicLoader(pageId, {}) || (
+                  <>
+                    {sections.length === 0 && inProgress ? (
+                      <LoadingSpinner />
+                    ) : (
+                      <div className={css.mainContentContainer}>
+                        {isAbout ? (
+                          <div style={{ marginTop: '30px' }}>
+                            <SectionBuilder sections={sections} options={options} />
+                          </div>
+                        ) : isLandingPage ? (
+                          <>
+                            <LandingSearchBarContainer onSearchSubmit={handleSearchSubmit} />
+                            <ToDo />
+                            <Counter />
+                            <SectionBuilder sections={sections} options={options} />
+                            <Newsletter />
+                          </>
+                        ) : isTeamBuilding ? (
+                          <>
+                            <LandingSearchBarContainer
+                              onSearchSubmit={handleSearchSubmit}
+                              isTeamBuilding={isTeamBuilding}
+                            />
+                            <SectionBuilder sections={sections} options={options} />
+                            <div className={css.subContainerWrapper}>
+                              <div className={css.subContainer}>
+                                <div>
+                                  <div className={css.header}>Prenota online</div>
+                                  <div>senza dover aspettare preventivi</div>
+                                </div>
+                                <div>
+                                  <div className={css.header}>Cancella gratuitemente</div>
+                                  <div>fino a 5 giorni dall'evento</div>
+                                </div>
+                                <div>
+                                  <div className={css.header}>Supporto 24/24h</div>
+                                  <div>comodamente su whatsapp</div>
+                                </div>
+                              </div>
+                            </div>
+                            <Newsletter />
+                          </>
+                        ) : (
+                          <SectionBuilder sections={sections} options={options} />
+                        )}
+                      </div>
+                    )}
+                  </>
                 )}
               </Main>
               <Footer>
@@ -133,7 +219,7 @@ const PageBuilder = props => {
       </LayoutComposer>
     </StaticPage>
   );
-};
+}
 
 export { LayoutComposer, StaticPage, SectionBuilder };
 

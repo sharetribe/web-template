@@ -1,8 +1,8 @@
 import React from 'react';
 import { injectIntl, intlShape } from '../../util/reactIntl';
-import { FieldSelect } from '../../components';
+import { FieldSelect } from '..';
 
-const FieldBoolean = props => {
+function FieldBoolean(props) {
   const { placeholder, intl, ...rest } = props;
   const trueLabel = intl.formatMessage({
     id: 'FieldBoolean.yes',
@@ -12,18 +12,20 @@ const FieldBoolean = props => {
   });
   const selectProps = {
     ...rest,
-    format: option => {
+    format: (option) => {
       if (option === true) {
         return 'true';
-      } else if (option === false) {
+      }
+      if (option === false) {
         return 'false';
       }
       return '';
     },
-    parse: value => {
+    parse: (value) => {
       if (value === 'true') {
         return true;
-      } else if (value === 'false') {
+      }
+      if (value === 'false') {
         return false;
       }
       return '';
@@ -36,7 +38,7 @@ const FieldBoolean = props => {
       <option value="false">{falseLabel}</option>
     </FieldSelect>
   );
-};
+}
 
 FieldBoolean.propTypes = {
   intl: intlShape.isRequired,

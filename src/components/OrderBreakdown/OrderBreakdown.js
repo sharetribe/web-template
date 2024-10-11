@@ -29,7 +29,7 @@ import LineItemUnknownItemsMaybe from './LineItemUnknownItemsMaybe';
 
 import css from './OrderBreakdown.module.css';
 
-export const OrderBreakdownComponent = props => {
+export function OrderBreakdownComponent(props) {
   const {
     rootClassName,
     className,
@@ -47,14 +47,14 @@ export const OrderBreakdownComponent = props => {
   const isProvider = userRole === 'provider';
   const allLineItems = transaction.attributes.lineItems || [];
   // We'll show only line-items that are specific for the current userRole (customer vs provider)
-  const lineItems = allLineItems.filter(lineItem => lineItem.includeFor.includes(userRole));
+  const lineItems = allLineItems.filter((lineItem) => lineItem.includeFor.includes(userRole));
   const unitLineItem = lineItems.find(
-    item => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal
+    (item) => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal,
   );
   // Line-item code that matches with base unit: day, night, hour, item
   const lineItemUnitType = unitLineItem?.code;
 
-  const hasCommissionLineItem = lineItems.find(item => {
+  const hasCommissionLineItem = lineItems.find((item) => {
     const hasCustomerCommission = isCustomer && item.code === LINE_ITEM_CUSTOMER_COMMISSION;
     const hasProviderCommission = isProvider && item.code === LINE_ITEM_PROVIDER_COMMISSION;
     return (hasCustomerCommission || hasProviderCommission) && !item.reversal;
@@ -156,7 +156,7 @@ export const OrderBreakdownComponent = props => {
       ) : null}
     </div>
   );
-};
+}
 
 OrderBreakdownComponent.defaultProps = {
   rootClassName: null,

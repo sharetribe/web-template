@@ -4,6 +4,4 @@ export const ConfigurationContext = createContext();
 
 export const ConfigurationProvider = ConfigurationContext.Provider;
 
-export const useConfiguration = () => {
-  return useContext(ConfigurationContext);
-};
+export const useConfiguration = () => useContext(ConfigurationContext);

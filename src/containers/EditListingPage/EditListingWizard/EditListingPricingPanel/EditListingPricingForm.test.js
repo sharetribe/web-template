@@ -17,7 +17,7 @@ describe('EditListingDeliveryForm', () => {
       <EditListingPricingForm
         intl={fakeIntl}
         dispatch={noop}
-        onSubmit={v => v}
+        onSubmit={(v) => v}
         marketplaceCurrency="USD"
         unitType="day"
         listingMinimumPriceSubUnits={0}
@@ -26,7 +26,7 @@ describe('EditListingDeliveryForm', () => {
         updateInProgress={false}
         disabled={false}
         ready={false}
-      />
+      />,
     );
 
     // Test that save button is disabled at first

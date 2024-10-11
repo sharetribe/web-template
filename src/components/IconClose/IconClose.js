@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import css from './IconClose.module.css';
+
 const SIZE_SMALL = 'small';
 
-const IconClose = props => {
+function IconClose(props) {
   const { className, rootClassName, size } = props;
   const classes = classNames(rootClassName || css.root, className);
 
@@ -34,7 +35,7 @@ const IconClose = props => {
       </g>
     </svg>
   );
-};
+}
 
 const { string } = PropTypes;
 

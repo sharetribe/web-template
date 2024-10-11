@@ -5,7 +5,7 @@ import { getFieldValue } from '../../util/fieldHelpers';
 
 import css from './ProfilePage.module.css';
 
-const SectionDetailsMaybe = props => {
+function SectionDetailsMaybe(props) {
   const { publicData, metadata, userFieldConfig, intl } = props;
 
   if (!publicData || !userFieldConfig) {
@@ -15,7 +15,7 @@ const SectionDetailsMaybe = props => {
   const pickUserFields = (filteredConfigs, config) => {
     const { key, schemaType, enumOptions, userTypeConfig = {}, showConfig = {} } = config;
     const { limitToUserTypeIds, userTypeIds } = userTypeConfig;
-    const userType = publicData.userType;
+    const { userType } = publicData;
     const isTargetUserType = !limitToUserTypeIds || userTypeIds.includes(userType);
 
     const { label, displayInProfile } = showConfig;
@@ -24,8 +24,9 @@ const SectionDetailsMaybe = props => {
     const value = publicDataValue !== null ? publicDataValue : metadataValue;
 
     if (displayInProfile && isTargetUserType && value !== null) {
-      const findSelectedOption = enumValue => enumOptions?.find(o => enumValue === `${o.option}`);
-      const getBooleanMessage = value =>
+      const findSelectedOption = (enumValue) =>
+        enumOptions?.find((o) => enumValue === `${o.option}`);
+      const getBooleanMessage = (value) =>
         value
           ? intl.formatMessage({ id: 'ProfilePage.detailYes' })
           : intl.formatMessage({ id: 'ProfilePage.detailNo' });
@@ -34,10 +35,10 @@ const SectionDetailsMaybe = props => {
       return schemaType === 'enum'
         ? filteredConfigs.concat({ key, value: optionConfig?.label, label })
         : schemaType === 'boolean'
-        ? filteredConfigs.concat({ key, value: getBooleanMessage(value), label })
-        : schemaType === 'long'
-        ? filteredConfigs.concat({ key, value, label })
-        : filteredConfigs;
+          ? filteredConfigs.concat({ key, value: getBooleanMessage(value), label })
+          : schemaType === 'long'
+            ? filteredConfigs.concat({ key, value, label })
+            : filteredConfigs;
     }
     return filteredConfigs;
   };
@@ -50,7 +51,7 @@ const SectionDetailsMaybe = props => {
         <FormattedMessage id="ProfilePage.detailsTitle" />
       </Heading>
       <ul className={css.details}>
-        {existingUserFields.map(detail => (
+        {existingUserFields.map((detail) => (
           <li key={detail.key} className={css.detailsRow}>
             <span className={css.detailLabel}>{detail.label}</span>
             <span>{detail.value}</span>
@@ -59,6 +60,6 @@ const SectionDetailsMaybe = props => {
       </ul>
     </div>
   ) : null;
-};
+}
 
 export default SectionDetailsMaybe;

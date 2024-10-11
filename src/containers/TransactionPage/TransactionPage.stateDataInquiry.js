@@ -7,12 +7,14 @@ export const getStateDataForInquiryProcess = (txInfo, processInfo) => {
   const _ = CONDITIONAL_RESOLVER_WILDCARD;
 
   return new ConditionalResolver([processState, transactionRole])
-    .cond([states.FREE_INQUIRY, _], () => {
-      return { processName, processState, showDetailCardHeadings: true };
-    })
-    .default(() => {
+    .cond([states.FREE_INQUIRY, _], () => ({
+      processName,
+      processState,
+      showDetailCardHeadings: true,
+    }))
+    .default(() =>
       // Default values for other states
-      return { processName, processState, showDetailCardHeadings: true };
-    })
+      ({ processName, processState, showDetailCardHeadings: true }),
+    )
     .resolve();
 };

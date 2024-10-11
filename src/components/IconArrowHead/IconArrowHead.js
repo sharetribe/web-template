@@ -11,7 +11,7 @@ const DIRECTION_UP = 'up';
 const SIZE_BIG = 'big';
 const SIZE_SMALL = 'small';
 
-const IconArrowHead = props => {
+function IconArrowHead(props) {
   const { className, rootClassName, direction, size } = props;
   const classes = classNames(rootClassName || css.root, className);
 
@@ -37,7 +37,8 @@ const IconArrowHead = props => {
         />
       </svg>
     );
-  } else if (isLeft && isSmall) {
+  }
+  if (isLeft && isSmall) {
     return (
       <svg
         className={classes}
@@ -52,7 +53,8 @@ const IconArrowHead = props => {
         />
       </svg>
     );
-  } else if (isDown && isSmall) {
+  }
+  if (isDown && isSmall) {
     return (
       <svg
         className={classes}
@@ -67,7 +69,8 @@ const IconArrowHead = props => {
         />
       </svg>
     );
-  } else if (isUp && isSmall) {
+  }
+  if (isUp && isSmall) {
     return (
       <svg
         className={classes}
@@ -82,7 +85,8 @@ const IconArrowHead = props => {
         />
       </svg>
     );
-  } else if (isRight && isBig) {
+  }
+  if (isRight && isBig) {
     return (
       <svg
         className={classes}
@@ -97,7 +101,8 @@ const IconArrowHead = props => {
         />
       </svg>
     );
-  } else if (isLeft && isBig) {
+  }
+  if (isLeft && isBig) {
     return (
       <svg
         className={classes}
@@ -112,7 +117,8 @@ const IconArrowHead = props => {
         />
       </svg>
     );
-  } else if (isDown && isBig) {
+  }
+  if (isDown && isBig) {
     return (
       <svg
         className={classes}
@@ -127,7 +133,8 @@ const IconArrowHead = props => {
         />
       </svg>
     );
-  } else if (isUp && isBig) {
+  }
+  if (isUp && isBig) {
     return (
       <svg
         className={classes}
@@ -143,7 +150,7 @@ const IconArrowHead = props => {
       </svg>
     );
   }
-};
+}
 
 IconArrowHead.defaultProps = {
   className: null,

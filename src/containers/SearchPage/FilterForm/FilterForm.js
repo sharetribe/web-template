@@ -10,7 +10,7 @@ import { Form } from '../../../components';
 
 import css from './FilterForm.module.css';
 
-const FilterFormComponent = props => {
+function FilterFormComponent(props) {
   const { liveEdit, onChange, onSubmit, onCancel, onClear, ...rest } = props;
 
   if (liveEdit && !onChange) {
@@ -19,11 +19,11 @@ const FilterFormComponent = props => {
 
   if (!liveEdit && !(onCancel && onClear && onSubmit)) {
     throw new Error(
-      'FilterForm: if liveEdit is false you need to provide onCancel, onClear, and onSubmit functions'
+      'FilterForm: if liveEdit is false you need to provide onCancel, onClear, and onSubmit functions',
     );
   }
 
-  const handleChange = formState => {
+  const handleChange = (formState) => {
     if (formState.dirty) {
       onChange(formState.values);
     }
@@ -35,18 +35,9 @@ const FilterFormComponent = props => {
       {...rest}
       {...formCallbacks}
       mutators={{ ...arrayMutators }}
-      render={formRenderProps => {
-        const {
-          id,
-          form,
-          handleSubmit,
-          onClear,
-          onCancel,
-          style,
-          paddingClasses,
-          intl,
-          children,
-        } = formRenderProps;
+      render={(formRenderProps) => {
+        const { id, form, handleSubmit, onClear, onCancel, style, paddingClasses, intl, children } =
+          formRenderProps;
 
         const handleCancel = () => {
           // reset the final form to initialValues
@@ -90,7 +81,7 @@ const FilterFormComponent = props => {
       }}
     />
   );
-};
+}
 
 FilterFormComponent.defaultProps = {
   liveEdit: false,

@@ -6,7 +6,7 @@ import renderMarkdown from './markdownProcessor.js';
 
 import PageBuilder from './PageBuilder.js';
 
-const addCodeBlockForSyntax = md => `
+const addCodeBlockForSyntax = (md) => `
 \`\`\`${md}\`\`\`
 
 ${md}
@@ -481,8 +481,8 @@ const SectionCode = {
   ],
 };
 
-const MarkdownPage = props => {
-  const sections = props.sections;
+function MarkdownPage(props) {
+  const { sections } = props;
   const pageAssetsData = { sections };
   return (
     <PageBuilder
@@ -491,7 +491,7 @@ const MarkdownPage = props => {
       title="Styleguide page"
     />
   );
-};
+}
 
 export const Syntax = {
   component: MarkdownPage,
@@ -510,9 +510,9 @@ export const Syntax = {
   group: 'PageBuilder',
 };
 
-/////////////////
+/// //////////////
 // Theme: dark //
-/////////////////
+/// //////////////
 const SectionLinksOnDarkMode = {
   sectionType: 'columns',
   sectionId: 'cms-section-3-dark',
@@ -589,7 +589,9 @@ export const SyntaxOnDarkTheme = {
   group: 'PageBuilder',
 };
 
-const MarkdownDiv = props => <div>{props.renderedMarkdown}</div>;
+function MarkdownDiv(props) {
+  return <div>{props.renderedMarkdown}</div>;
+}
 
 const mdText = `
 \`\`\`
@@ -614,8 +616,12 @@ const Markdown = () => (
 Some _styled_ **text**!
 `;
 
-const MyItalics = props => <em style={{ color: 'tomato', fontStyle: 'italic' }} {...props} />;
-const MyStrong = props => <strong style={{ color: 'tomato', fontWeight: 700 }} {...props} />;
+function MyItalics(props) {
+  return <em style={{ color: 'tomato', fontStyle: 'italic' }} {...props} />;
+}
+function MyStrong(props) {
+  return <strong style={{ color: 'tomato', fontWeight: 700 }} {...props} />;
+}
 
 export const markdownProcessingWithCustomComponents = {
   component: MarkdownDiv,

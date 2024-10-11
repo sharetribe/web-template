@@ -7,7 +7,7 @@ import BlockContainer from '../BlockContainer';
 
 import css from './BlockDefault.module.css';
 
-const FieldMedia = props => {
+function FieldMedia(props) {
   const { className, media, sizes, options } = props;
   const hasMediaField = hasDataInFields([media], options);
   return hasMediaField ? (
@@ -15,9 +15,9 @@ const FieldMedia = props => {
       <Field data={media} sizes={sizes} options={options} />
     </div>
   ) : null;
-};
+}
 
-const BlockDefault = props => {
+function BlockDefault(props) {
   const {
     blockId,
     className,
@@ -52,7 +52,7 @@ const BlockDefault = props => {
       ) : null}
     </BlockContainer>
   );
-};
+}
 
 const propTypeOption = shape({
   fieldComponents: shape({ component: node, pickValidProps: func }),

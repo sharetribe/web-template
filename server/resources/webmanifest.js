@@ -7,9 +7,9 @@ const rootUrl = process.env.REACT_APP_MARKETPLACE_ROOT_URL;
 //       If it's not, then the webmanifest returns dummy data.
 
 // Generate icons with correct syntax for web app manifest
-const generateIcons = variants => {
+const generateIcons = (variants) => {
   const variantArray = Object.values(variants);
-  return variantArray.map(variant => {
+  return variantArray.map((variant) => {
     const { url, width, height } = variant;
     return {
       src: url,
@@ -31,7 +31,7 @@ module.exports = (req, res) => {
   const marketplacePromise = () => sdk.marketplace.show({ 'fields.marketplace': ['name'] });
 
   Promise.all([marketplacePromise(), sdkUtils.fetchBranding(sdk)])
-    .then(response => {
+    .then((response) => {
       const [marketplaceResponse, brandingResponse] = response;
 
       // Get name
@@ -51,7 +51,7 @@ module.exports = (req, res) => {
       // Note: icons can be checked from design/branding.json asset (appIcon property),
       // but in your custom app, you might just hard-code this and remove the extra XHR call.
       const appIconId = data?.appIcon?._ref?.id;
-      const appIcon = included.find(entity => entity.id === appIconId);
+      const appIcon = included.find((entity) => entity.id === appIconId);
       const appIconVariants = appIcon?.attributes?.variants || {};
       const icons = generateIcons(appIconVariants);
 
@@ -73,7 +73,7 @@ module.exports = (req, res) => {
       res.setHeader('Content-Type', 'application/manifest+json');
       res.send(json);
     })
-    .catch(e => {
+    .catch((e) => {
       // Log error
       const is404 = e.status === 404;
       if (is404) {

@@ -44,23 +44,24 @@ import {
   resolveLatestProcessName,
 } from '../../transactions/transaction';
 
-import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2 } from '../../components';
+import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2 } from '..';
 
 import css from './OrderPanel.module.css';
 
-const BookingTimeForm = loadable(() =>
-  import(/* webpackChunkName: "BookingTimeForm" */ './BookingTimeForm/BookingTimeForm')
+const BookingTimeForm = loadable(
+  () => import(/* webpackChunkName: "BookingTimeForm" */ './BookingTimeForm/BookingTimeForm'),
 );
-const BookingDatesForm = loadable(() =>
-  import(/* webpackChunkName: "BookingDatesForm" */ './BookingDatesForm/BookingDatesForm')
+const BookingDatesForm = loadable(
+  () => import(/* webpackChunkName: "BookingDatesForm" */ './BookingDatesForm/BookingDatesForm'),
 );
-const InquiryWithoutPaymentForm = loadable(() =>
-  import(
-    /* webpackChunkName: "InquiryWithoutPaymentForm" */ './InquiryWithoutPaymentForm/InquiryWithoutPaymentForm'
-  )
+const InquiryWithoutPaymentForm = loadable(
+  () =>
+    import(
+      /* webpackChunkName: "InquiryWithoutPaymentForm" */ './InquiryWithoutPaymentForm/InquiryWithoutPaymentForm'
+    ),
 );
-const ProductOrderForm = loadable(() =>
-  import(/* webpackChunkName: "ProductOrderForm" */ './ProductOrderForm/ProductOrderForm')
+const ProductOrderForm = loadable(
+  () => import(/* webpackChunkName: "ProductOrderForm" */ './ProductOrderForm/ProductOrderForm'),
 );
 
 // This defines when ModalInMobile shows content as Modal
@@ -71,7 +72,8 @@ const priceData = (price, currency, intl) => {
   if (price && price.currency === currency) {
     const formattedPrice = formatMoney(intl, price);
     return { formattedPrice, priceTitle: formattedPrice };
-  } else if (price) {
+  }
+  if (price) {
     return {
       formattedPrice: `(${price.currency})`,
       priceTitle: `Unsupported currency (${price.currency})`,
@@ -111,18 +113,16 @@ const handleSubmit = (
   isInquiryWithoutPayment,
   onSubmit,
   history,
-  location
-) => {
+  location,
+) =>
   // TODO: currently, inquiry-process does not have any form to ask more order data.
   // We can submit without opening any inquiry/order modal.
-  return isInquiryWithoutPayment
+  isInquiryWithoutPayment
     ? () => onSubmit({})
     : () => openOrderModal(isOwnListing, isClosed, history, location);
-};
-
 const dateFormattingOptions = { month: 'short', day: 'numeric', weekday: 'short' };
 
-const PriceMaybe = props => {
+function PriceMaybe(props) {
   const {
     price,
     publicData,
@@ -133,7 +133,7 @@ const PriceMaybe = props => {
   } = props;
   const { listingType, unitType } = publicData || {};
 
-  const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
+  const foundListingTypeConfig = validListingTypes.find((conf) => conf.listingType === listingType);
   const showPrice = displayPrice(foundListingTypeConfig);
   if (!showPrice || !price) {
     return null;
@@ -160,9 +160,9 @@ const PriceMaybe = props => {
       </div>
     </div>
   );
-};
+}
 
-const OrderPanel = props => {
+function OrderPanel(props) {
   const {
     rootClassName,
     className,
@@ -202,21 +202,21 @@ const OrderPanel = props => {
   const isPaymentProcess = processName !== INQUIRY_PROCESS_NAME;
 
   const showPriceMissing = isPaymentProcess && !price;
-  const PriceMissing = () => {
+  function PriceMissing() {
     return (
       <p className={css.error}>
         <FormattedMessage id="OrderPanel.listingPriceMissing" />
       </p>
     );
-  };
+  }
   const showInvalidCurrency = isPaymentProcess && price?.currency !== marketplaceCurrency;
-  const InvalidCurrency = () => {
+  function InvalidCurrency() {
     return (
       <p className={css.error}>
         <FormattedMessage id="OrderPanel.listingCurrencyInvalid" />
       </p>
     );
-  };
+  }
 
   const timeZone = listing?.attributes?.availabilityPlan?.timezone;
   const isClosed = listing?.attributes?.state === LISTING_STATE_CLOSED;
@@ -242,15 +242,15 @@ const OrderPanel = props => {
   const showInquiryForm = processName === INQUIRY_PROCESS_NAME;
 
   const supportedProcessesInfo = getSupportedProcessesInfo();
-  const isKnownProcess = supportedProcessesInfo.map(info => info.name).includes(processName);
+  const isKnownProcess = supportedProcessesInfo.map((info) => info.name).includes(processName);
 
   const { pickupEnabled, shippingEnabled } = listing?.attributes?.publicData || {};
 
-  const listingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
+  const listingTypeConfig = validListingTypes.find((conf) => conf.listingType === listingType);
   const displayShipping = displayDeliveryShipping(listingTypeConfig);
   const displayPickup = displayDeliveryPickup(listingTypeConfig);
   const allowOrdersOfMultipleItems = [STOCK_MULTIPLE_ITEMS, STOCK_INFINITE_MULTIPLE_ITEMS].includes(
-    listingTypeConfig?.stockType
+    listingTypeConfig?.stockType,
   );
 
   const showClosedListingHelpText = listing.id && isClosed;
@@ -281,7 +281,7 @@ const OrderPanel = props => {
         </div>
 
         <div className={css.orderHeading}>
-          {titleDesktop ? titleDesktop : <H2 className={titleClasses}>{title}</H2>}
+          {titleDesktop || <H2 className={titleClasses}>{title}</H2>}
           {subTitleText ? <div className={css.orderHelp}>{subTitleText}</div> : null}
         </div>
 
@@ -402,7 +402,7 @@ const OrderPanel = props => {
               showInquiryForm,
               onSubmit,
               history,
-              location
+              location,
             )}
             disabled={isOutOfStock}
           >
@@ -420,7 +420,7 @@ const OrderPanel = props => {
       </div>
     </div>
   );
-};
+}
 
 OrderPanel.defaultProps = {
   rootClassName: null,
@@ -449,7 +449,7 @@ OrderPanel.propTypes = {
         alias: string.isRequired,
         unitType: string.isRequired,
       }).isRequired,
-    })
+    }),
   ).isRequired,
   isOwnListing: bool,
   author: oneOfType([propTypes.user, propTypes.currentUser]).isRequired,
@@ -484,7 +484,4 @@ OrderPanel.propTypes = {
   intl: intlShape.isRequired,
 };
 
-export default compose(
-  withRouter,
-  injectIntl
-)(OrderPanel);
+export default compose(withRouter, injectIntl)(OrderPanel);

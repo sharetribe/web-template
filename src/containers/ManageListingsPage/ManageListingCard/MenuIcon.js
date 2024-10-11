@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import css from './ManageListingCard.module.css';
 
-const MenuIcon = props => {
+function MenuIcon(props) {
   const { className, isActive } = props;
   const classes = classNames(css.menuIcon, className);
   const filter = isActive ? '' : 'url(#a)';
@@ -31,7 +31,7 @@ const MenuIcon = props => {
       </g>
     </svg>
   );
-};
+}
 
 MenuIcon.defaultProps = {
   className: null,

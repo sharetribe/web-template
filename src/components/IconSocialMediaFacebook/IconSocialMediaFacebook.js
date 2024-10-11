@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import css from './IconSocialMediaFacebook.module.css';
 
-const IconSocialMediaFacebook = props => {
+function IconSocialMediaFacebook(props) {
   const { rootClassName, className } = props;
   const classes = classNames(rootClassName || css.root, className);
   return (
@@ -21,7 +21,7 @@ const IconSocialMediaFacebook = props => {
       />
     </svg>
   );
-};
+}
 
 IconSocialMediaFacebook.defaultProps = { rootClassName: null, className: null };
 

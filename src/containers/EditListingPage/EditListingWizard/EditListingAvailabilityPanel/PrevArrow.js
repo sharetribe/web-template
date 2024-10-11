@@ -4,7 +4,7 @@ import { isDateSameOrAfter } from '../../../../util/dates';
 import { IconArrowHead } from '../../../../components';
 
 // Component for the react-dates calendar
-const PrevArrow = props => {
+function PrevArrow(props) {
   const { showUntilDate, startOfPrevRange, size = 'small', onClick, ...rest } = props;
   const canNavigateBack = isDateSameOrAfter(startOfPrevRange, showUntilDate);
 
@@ -15,6 +15,6 @@ const PrevArrow = props => {
   ) : canNavigateBack ? (
     <IconArrowHead direction="left" size={size} />
   ) : null;
-};
+}
 
 export default PrevArrow;

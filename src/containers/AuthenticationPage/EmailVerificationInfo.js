@@ -6,7 +6,7 @@ import { Heading, NamedLink, IconEmailSent, InlineTextButton, IconClose } from '
 
 import css from './AuthenticationPage.module.css';
 
-const EmailVerificationInfo = props => {
+function EmailVerificationInfo(props) {
   const {
     name,
     email,
@@ -58,6 +58,6 @@ const EmailVerificationInfo = props => {
       </div>
     </div>
   );
-};
+}
 
 export default EmailVerificationInfo;

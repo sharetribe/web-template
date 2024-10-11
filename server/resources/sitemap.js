@@ -56,7 +56,7 @@ const defaultPublicPaths = {
 const ttl = 86400; // seconds
 
 // This creates simple (proxied) memory cache
-const createCacheProxy = ttl => {
+const createCacheProxy = (ttl) => {
   const cache = {};
   return new Proxy(cache, {
     // Get data for the property together with timestamp
@@ -118,13 +118,13 @@ const sitemapIndex = (req, res, rootUrl, isPrivateMarketplace) => {
       : ['/sitemap-default.xml', '/sitemap-recent-listings.xml', '/sitemap-recent-pages.xml'];
 
     // Add sitemaps to the index
-    sitemaps.forEach(sitemapPath => {
+    sitemaps.forEach((sitemapPath) => {
       smiStream.write({ url: `${rootUrl}${sitemapPath}` });
     });
 
-    streamToPromise(smiStream).then(sm => (cache.sitemapIndex = sm));
+    streamToPromise(smiStream).then((sm) => (cache.sitemapIndex = sm));
 
-    smiStream.pipe(res).on('error', e => {
+    smiStream.pipe(res).on('error', (e) => {
       throw e;
     });
 
@@ -173,10 +173,10 @@ const sitemapDefault = (req, res, rootUrl, isPrivateMarketplace) => {
     Readable.from(paths).pipe(smStream);
 
     // Save to in-memory cache
-    streamToPromise(smStream).then(sm => (cache.sitemapDefault = sm));
+    streamToPromise(smStream).then((sm) => (cache.sitemapDefault = sm));
 
     // Write the stream to the response
-    smStream.pipe(res).on('error', e => {
+    smStream.pipe(res).on('error', (e) => {
       throw e;
     });
   } catch (e) {
@@ -210,10 +210,10 @@ const sitemapListings = (req, res, rootUrl, sdk) => {
 
   sdk.sitemapData
     .queryListings()
-    .then(response => {
+    .then((response) => {
       const listings = response.data.data || [];
       // Use canonical URL: https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls
-      const ids = listings.map(l => `l/${l.id?.uuid}`);
+      const ids = listings.map((l) => `l/${l.id?.uuid}`);
 
       // If there's no listings, let's just return empty sitemap
       const hasListingIds = ids.length > 0;
@@ -228,14 +228,14 @@ const sitemapListings = (req, res, rootUrl, sdk) => {
       Readable.from(ids).pipe(smStream);
 
       // Save to in-memory cache
-      streamToPromise(smStream).then(sm => (cache.sitemapRecentListings = sm));
+      streamToPromise(smStream).then((sm) => (cache.sitemapRecentListings = sm));
 
       // Write the stream to the response
-      smStream.pipe(res).on('error', e => {
+      smStream.pipe(res).on('error', (e) => {
         throw e;
       });
     })
-    .catch(e => {
+    .catch((e) => {
       // Private marketplace mode might throw
       if (e.status === 403) {
         res.send(
@@ -275,7 +275,7 @@ const sitemapPages = (req, res, rootUrl, sdk) => {
   const pathPrefix = '/content/pages/';
   sdk.sitemapData
     .queryAssets({ pathPrefix })
-    .then(response => {
+    .then((response) => {
       const assets = response.data.data || [];
 
       // If there's no Pages, let's just return empty sitemap
@@ -299,14 +299,14 @@ const sitemapPages = (req, res, rootUrl, sdk) => {
       Readable.from(cmsPagePaths).pipe(smStream);
 
       // Save to in-memory cache
-      streamToPromise(smStream).then(sm => (cache.sitemapRecentPages = sm));
+      streamToPromise(smStream).then((sm) => (cache.sitemapRecentPages = sm));
 
       // stream write the response
-      smStream.pipe(res).on('error', e => {
+      smStream.pipe(res).on('error', (e) => {
         throw e;
       });
     })
-    .catch(e => {
+    .catch((e) => {
       log.error(e, 'sitemap-recent-pages-render-failed');
       res.status(500).end();
     });
@@ -360,7 +360,7 @@ module.exports = (req, res, next) => {
   const sdk = sdkUtils.getSdk(req, res);
   sdkUtils
     .fetchAccessControlAsset(sdk)
-    .then(response => {
+    .then((response) => {
       const accessControlAsset = response.data.data[0];
 
       const { marketplace } =
@@ -368,7 +368,7 @@ module.exports = (req, res, next) => {
       const isPrivateMarketplace = marketplace?.private === true;
       handleSitemaps(req, res, next, sdk, isPrivateMarketplace);
     })
-    .catch(e => {
+    .catch((e) => {
       const is404 = e.status === 404;
       if (is404) {
         // If access-control.json asset is not found, we default to "public" marketplace.

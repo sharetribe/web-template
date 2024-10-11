@@ -12,7 +12,7 @@ const marketplaceRootUrl = marketplaceRootUrlRaw
  * a URL, for example:
  * https://example.com:8080 => example.com:8080
  */
-const domainAndPort = rootURL => {
+const domainAndPort = (rootURL) => {
   if (rootURL.indexOf('//') === -1) {
     return rootURL;
   } else {
@@ -24,7 +24,7 @@ const domainAndPort = rootURL => {
  * Resolves the domain from a URL, for example:
  * https://example.com:8080 => example.com
  */
-const domain = rootURL => {
+const domain = (rootURL) => {
   if (!rootURL) {
     return 'INVALID_URL';
   }
@@ -36,7 +36,7 @@ const domain = rootURL => {
  * Resolves the port number from a URL. If the port
  * can not be found `undefined` will be returned.
  */
-const port = rootURL => {
+const port = (rootURL) => {
   if (!rootURL) {
     return 'INVALID_URL';
   }
@@ -52,7 +52,7 @@ const port = rootURL => {
  * @param {Object} options can contain options like rootURL and useDevApiServerPort. If rootURL is undefined, function uses REACT_APP_MARKETPLACE_ROOT_URL
  * @returns hostname
  */
-exports.getRootURL = options => {
+exports.getRootURL = (options) => {
   const { rootURL, useDevApiServerPort = false } = options || {};
   const protocol = USING_SSL ? 'https' : 'http';
   const rUrl = rootURL || marketplaceRootUrl;
@@ -61,7 +61,7 @@ exports.getRootURL = options => {
     portInRootUrl && useDevApiServer && useDevApiServerPort
       ? `:${DEV_SERVER_PORT}`
       : portInRootUrl
-      ? `:${portInRootUrl}`
-      : '';
+        ? `:${portInRootUrl}`
+        : '';
   return `${protocol}://${domain(rUrl)}${portMaybe}`;
 };

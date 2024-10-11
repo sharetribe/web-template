@@ -1,10 +1,9 @@
-/* eslint-disable no-console */
 import EditListingPricingAndStockForm from './EditListingPricingAndStockForm';
 
 export const InfinityMultipleItems = {
   component: EditListingPricingAndStockForm,
   props: {
-    onSubmit: values => {
+    onSubmit: (values) => {
       console.log('Submit EditListingPricingAndStockForm with (unformatted) values:', values);
     },
     saveActionMsg: 'Save price',
@@ -24,7 +23,7 @@ export const InfinityMultipleItems = {
 export const InfinityOneItem = {
   component: EditListingPricingAndStockForm,
   props: {
-    onSubmit: values => {
+    onSubmit: (values) => {
       console.log('Submit EditListingPricingAndStockForm with (unformatted) values:', values);
     },
     saveActionMsg: 'Save price',
@@ -44,7 +43,7 @@ export const InfinityOneItem = {
 export const InfinityOneItem_stockOf3 = {
   component: EditListingPricingAndStockForm,
   props: {
-    onSubmit: values => {
+    onSubmit: (values) => {
       console.log('Submit EditListingPricingAndStockForm with (unformatted) values:', values);
     },
     saveActionMsg: 'Save price',
@@ -64,7 +63,7 @@ export const InfinityOneItem_stockOf3 = {
 export const MultipleItems = {
   component: EditListingPricingAndStockForm,
   props: {
-    onSubmit: values => {
+    onSubmit: (values) => {
       console.log('Submit EditListingPricingAndStockForm with (unformatted) values:', values);
     },
     saveActionMsg: 'Save price',
@@ -84,7 +83,7 @@ export const MultipleItems = {
 export const OneItem = {
   component: EditListingPricingAndStockForm,
   props: {
-    onSubmit: values => {
+    onSubmit: (values) => {
       console.log('Submit EditListingPricingAndStockForm with (unformatted) values:', values);
     },
     saveActionMsg: 'Save price',

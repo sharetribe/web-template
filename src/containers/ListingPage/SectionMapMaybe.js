@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { string } from 'prop-types';
-import { FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
+import { FormattedMessage } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { obfuscatedCoordinates } from '../../util/maps';
 import { Heading, Map } from '../../components';

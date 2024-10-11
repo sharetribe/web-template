@@ -6,7 +6,7 @@ import css from './ProfilePage.module.css';
 
 const MIN_LENGTH_FOR_LONG_WORDS = 20;
 
-const SectionTextMaybe = props => {
+function SectionTextMaybe(props) {
   const { text, heading, showAsIngress = false } = props;
   const textClass = showAsIngress ? css.ingress : css.text;
   const content = richText(text, {
@@ -26,6 +26,6 @@ const SectionTextMaybe = props => {
       <p className={textClass}>{content}</p>
     </div>
   ) : null;
-};
+}
 
 export default SectionTextMaybe;

@@ -1,0 +1,77 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 50px;
+}
+
+.formTitle {
+  text-align: center;
+  width: 100%;
+  margin-bottom: 20px;
+  margin-top: 50px;
+}
+
+.formSubTitle {
+  text-align: center;
+  width: 100%;
+}
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 20vw;
+  width: 100%;
+  max-width: 100%;
+}
+
+.gridItemName,
+.gridItemCheckbox {
+  display: flex;
+  align-items: center;
+}
+
+.gridItemCheckbox {
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.gridItemCheckbox input[type='checkbox'] {
+  width: 20px;
+  height: 20px;
+  transform: scale(1.3);
+  -webkit-transform: scale(1.3);
+  transform-origin: left;
+  -webkit-transform-origin: left;
+}
+
+@media only screen and (max-width: 480px) {
+  .gridItemCheckbox input[type='checkbox'] {
+    width: 24px;
+    height: 24px;
+    transform: scale(1.3);
+  }
+}
+
+.buttonGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.noContainer {
+  margin-bottom: 20px;
+}
+
+button {
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .gridContainer {
+    column-gap: 10vw;
+  }
+}

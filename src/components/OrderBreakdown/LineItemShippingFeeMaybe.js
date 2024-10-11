@@ -5,11 +5,11 @@ import { LINE_ITEM_SHIPPING_FEE, propTypes } from '../../util/types';
 
 import css from './OrderBreakdown.module.css';
 
-const LineItemShippingFeeMaybe = props => {
+function LineItemShippingFeeMaybe(props) {
   const { lineItems, intl } = props;
 
   const shippingFeeLineItem = lineItems.find(
-    item => item.code === LINE_ITEM_SHIPPING_FEE && !item.reversal
+    (item) => item.code === LINE_ITEM_SHIPPING_FEE && !item.reversal,
   );
 
   return shippingFeeLineItem ? (
@@ -20,7 +20,7 @@ const LineItemShippingFeeMaybe = props => {
       <span className={css.itemValue}>{formatMoney(intl, shippingFeeLineItem.lineTotal)}</span>
     </div>
   ) : null;
-};
+}
 
 LineItemShippingFeeMaybe.propTypes = {
   lineItems: propTypes.lineItems.isRequired,

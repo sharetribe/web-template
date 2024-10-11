@@ -14,7 +14,7 @@ import moment from 'moment';
 
 import { useConfiguration } from '../../context/configurationContext';
 import { START_DATE, END_DATE } from '../../util/dates';
-import { ValidationError } from '../../components';
+import { ValidationError } from '..';
 
 import DateRangeInput from './DateRangeInput';
 import css from './FieldDateRangeInput.module.css';
@@ -54,7 +54,6 @@ class FieldDateRangeInputComponent extends Component {
   }
 
   render() {
-    /* eslint-disable no-unused-vars */
     const {
       className,
       rootClassName,
@@ -72,7 +71,6 @@ class FieldDateRangeInputComponent extends Component {
       onFocusedInputChange,
       ...rest
     } = this.props;
-    /* eslint-disable no-unused-vars */
 
     if (startDateLabel && !startDateId) {
       throw new Error('startDateId required when a startDateLabel is given');
@@ -100,7 +98,6 @@ class FieldDateRangeInputComponent extends Component {
         </div>
       ) : null;
 
-    // eslint-disable-next-line no-unused-vars
     const { onBlur, onFocus, type, checked, ...restOfInput } = input;
     const inputProps = {
       isDaily,
@@ -162,12 +159,12 @@ FieldDateRangeInputComponent.propTypes = {
   firstDayOfWeek: number.isRequired,
 };
 
-const FieldDateRangeInput = props => {
+function FieldDateRangeInput(props) {
   const config = useConfiguration();
   const { isOutsideRange, firstDayOfWeek, ...rest } = props;
 
   // Outside range -><- today ... today+available days -1 -><- outside range
-  const defaultIsOutSideRange = day => {
+  const defaultIsOutSideRange = (day) => {
     const endOfRange = config.stripe.dayCountAvailableForBooking - 1;
     return (
       !isInclusivelyAfterDay(day, moment()) ||
@@ -184,7 +181,7 @@ const FieldDateRangeInput = props => {
       {...rest}
     />
   );
-};
+}
 
 export { DateRangeInput };
 export default FieldDateRangeInput;

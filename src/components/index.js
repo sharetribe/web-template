@@ -63,9 +63,9 @@ export { default as ValidationError } from './ValidationError/ValidationError';
  * These components include other components
  */
 
-//////////////////////////////////////////////////////////
+/// ///////////////////////////////////////////////////////
 // First components that include only atomic components //
-//////////////////////////////////////////////////////////
+/// ///////////////////////////////////////////////////////
 
 export { default as Button, PrimaryButton, PrimaryButtonInline, SecondaryButton, SecondaryButtonInline, InlineTextButton, SocialLoginButton } from './Button/Button';
 export { default as ImageFromFile } from './ImageFromFile/ImageFromFile';
@@ -112,9 +112,9 @@ export { LinkTabNavHorizontal, ButtonTabNavHorizontal } from './TabNavHorizontal
 export { default as Tabs } from './Tabs/Tabs';
 export { default as UserNav } from './UserNav/UserNav';
 
-///////////////////////////////////////////////
+/// ////////////////////////////////////////////
 // These components include other components //
-///////////////////////////////////////////////
+/// ////////////////////////////////////////////
 
 export { default as Avatar, AvatarSmall, AvatarMedium, AvatarLarge } from './Avatar/Avatar';
 export { default as CustomExtendedDataField } from './CustomExtendedDataField/CustomExtendedDataField';
@@ -131,9 +131,9 @@ export { default as StripePaymentAddress } from './StripePaymentAddress/StripePa
 // Forms
 export { default as StripeConnectAccountForm } from './StripeConnectAccountForm/StripeConnectAccountForm';
 
-//////////////////////////////////////////////
+/// ///////////////////////////////////////////
 // Page sections and modal content wrappers //
-//////////////////////////////////////////////
+/// ///////////////////////////////////////////
 
 export { default as LayoutComposer, LayoutSingleColumn, LayoutSideNavigation } from './LayoutComposer';
 export { default as MaintenanceMode } from './MaintenanceMode/MaintenanceMode';

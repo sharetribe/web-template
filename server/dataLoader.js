@@ -3,14 +3,14 @@ const log = require('./log');
 
 const PREVENT_DATA_LOADING_IN_SSR = process.env.PREVENT_DATA_LOADING_IN_SSR === 'true';
 
-const extractHostedConfig = configAssets => {
+const extractHostedConfig = (configAssets) => {
   const configEntries = Object.entries(configAssets);
   return configEntries.reduce((collectedData, [name, content]) => {
     return { ...collectedData, [name]: content?.data || {} };
   }, {});
 };
 
-exports.loadData = function(requestUrl, sdk, appInfo) {
+exports.loadData = function (requestUrl, sdk, appInfo) {
   const {
     matchPathname,
     configureStore,
@@ -37,7 +37,7 @@ exports.loadData = function(requestUrl, sdk, appInfo) {
     });
   }
 
-  const dataLoadingCalls = hostedConfigAsset => {
+  const dataLoadingCalls = (hostedConfigAsset) => {
     const config = mergeConfig(hostedConfigAsset, defaultConfig);
     const matchedRoutes = matchPathname(pathname, routeConfiguration(config.layout));
     return matchedRoutes.reduce((calls, match) => {
@@ -55,7 +55,7 @@ exports.loadData = function(requestUrl, sdk, appInfo) {
   // This order supports other asset (in the future) that should be fetched before data calls.
   return store
     .dispatch(fetchAppAssets(defaultConfig.appCdnAssets))
-    .then(fetchedAppAssets => {
+    .then((fetchedAppAssets) => {
       const { translations: translationsRaw, ...rest } = fetchedAppAssets || {};
 
       // We'll handle translations as a separate data.
@@ -70,7 +70,7 @@ exports.loadData = function(requestUrl, sdk, appInfo) {
     .then(() => {
       return { preloadedState: store.getState(), translations, hostedConfig };
     })
-    .catch(e => {
+    .catch((e) => {
       log.error(e, 'server-side-data-load-failed');
 
       // Call to loadData failed, let client handle the data loading errors.

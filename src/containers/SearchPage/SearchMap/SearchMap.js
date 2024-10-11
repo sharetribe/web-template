@@ -18,28 +18,28 @@ import css from './SearchMap.module.css';
 
 const REUSABLE_MAP_HIDDEN_HANDLE = 'reusableMapHidden';
 
-const getSearchMapVariant = mapProvider => {
+const getSearchMapVariant = (mapProvider) => {
   const isGoogleMapsInUse = mapProvider === 'googleMaps';
   return isGoogleMapsInUse ? searchMapGoogleMaps : searchMapMapbox;
 };
-const getSearchMapVariantHandles = mapProvider => {
+const getSearchMapVariantHandles = (mapProvider) => {
   const searchMapVariant = getSearchMapVariant(mapProvider);
   return {
     labelHandle: searchMapVariant.LABEL_HANDLE,
     infoCardHandle: searchMapVariant.INFO_CARD_HANDLE,
   };
 };
-const getFitMapToBounds = mapProvider => {
+const getFitMapToBounds = (mapProvider) => {
   const searchMapVariant = getSearchMapVariant(mapProvider);
   return searchMapVariant.fitMapToBounds;
 };
-const getSearchMapVariantComponent = mapProvider => {
+const getSearchMapVariantComponent = (mapProvider) => {
   const searchMapVariant = getSearchMapVariant(mapProvider);
   return searchMapVariant.default;
 };
 
-const withCoordinatesObfuscated = (listings, offset) => {
-  return listings.map(listing => {
+const withCoordinatesObfuscated = (listings, offset) =>
+  listings.map((listing) => {
     const { id, attributes, ...rest } = listing;
     const origGeolocation = attributes.geolocation;
     const cacheKey = id ? `${id.uuid}_${origGeolocation.lat}_${origGeolocation.lng}` : null;
@@ -53,7 +53,6 @@ const withCoordinatesObfuscated = (listings, offset) => {
       },
     };
   });
-};
 
 export class SearchMapComponent extends Component {
   constructor(props) {
@@ -105,7 +104,7 @@ export class SearchMapComponent extends Component {
     }
 
     // To avoid full page refresh we need to use internal router
-    const history = this.props.history;
+    const { history } = this.props;
     history.push(this.createURLToListing(listing));
   }
 
@@ -115,7 +114,7 @@ export class SearchMapComponent extends Component {
     const labelClicked = hasParentWithClassName(e.nativeEvent.target, variantHandles.labelHandle);
     const infoCardClicked = hasParentWithClassName(
       e.nativeEvent.target,
-      variantHandles.infoCardHandle
+      variantHandles.infoCardHandle,
     );
     if (this.state.infoCardOpen != null && !labelClicked && !infoCardClicked) {
       this.setState({ infoCardOpen: null });
@@ -150,11 +149,11 @@ export class SearchMapComponent extends Component {
     } = this.props;
     const classes = classNames(rootClassName || css.root, className);
 
-    const listingsWithLocation = originalListings.filter(l => !!l.attributes.geolocation);
+    const listingsWithLocation = originalListings.filter((l) => !!l.attributes.geolocation);
     const listings = config.maps.fuzzy.enabled
       ? withCoordinatesObfuscated(listingsWithLocation, config.maps.fuzzy.offset)
       : listingsWithLocation;
-    const infoCardOpen = this.state.infoCardOpen;
+    const { infoCardOpen } = this.state;
 
     const forceUpdateHandler = () => {
       // Update global reattachement count
@@ -162,7 +161,7 @@ export class SearchMapComponent extends Component {
       // Initiate rerendering
       this.setState({ mapReattachmentCount: window.mapReattachmentCount });
     };
-    const mapProvider = config.maps.mapProvider;
+    const { mapProvider } = config.maps;
     const hasApiAccessForMapProvider = !!getMapProviderApiAccess(config.maps);
     const SearchMapVariantComponent = getSearchMapVariantComponent(mapProvider);
     const isMapProviderAvailable =
@@ -247,7 +246,7 @@ SearchMapComponent.propTypes = {
   }).isRequired,
 };
 
-const SearchMap = props => {
+function SearchMap(props) {
   const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();
   const history = useHistory();
@@ -259,6 +258,6 @@ const SearchMap = props => {
       {...props}
     />
   );
-};
+}
 
 export default SearchMap;

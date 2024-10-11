@@ -44,9 +44,9 @@ import {
   NamedRedirect,
 } from '../../components';
 
-import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
-import FooterContainer from '../../containers/FooterContainer/FooterContainer';
-import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
+import TopbarContainer from '../TopbarContainer/TopbarContainer';
+import FooterContainer from '../FooterContainer/FooterContainer';
+import NotFoundPage from '../NotFoundPage/NotFoundPage';
 
 import css from './ProfilePage.module.css';
 import SectionDetailsMaybe from './SectionDetailsMaybe';
@@ -56,7 +56,7 @@ import SectionMultiEnumMaybe from './SectionMultiEnumMaybe';
 const MAX_MOBILE_SCREEN_WIDTH = 768;
 const MIN_LENGTH_FOR_LONG_WORDS = 20;
 
-export const AsideContent = props => {
+export function AsideContent(props) {
   const { user, displayName, showLinkToProfileSettingsPage } = props;
   return (
     <div className={css.asideContent}>
@@ -78,21 +78,21 @@ export const AsideContent = props => {
       ) : null}
     </div>
   );
-};
+}
 
-export const ReviewsErrorMaybe = props => {
+export function ReviewsErrorMaybe(props) {
   const { queryReviewsError } = props;
   return queryReviewsError ? (
     <p className={css.error}>
       <FormattedMessage id="ProfilePage.loadingReviewsFailed" />
     </p>
   ) : null;
-};
+}
 
-export const MobileReviews = props => {
+export function MobileReviews(props) {
   const { reviews, queryReviewsError } = props;
-  const reviewsOfProvider = reviews.filter(r => r.attributes.type === REVIEW_TYPE_OF_PROVIDER);
-  const reviewsOfCustomer = reviews.filter(r => r.attributes.type === REVIEW_TYPE_OF_CUSTOMER);
+  const reviewsOfProvider = reviews.filter((r) => r.attributes.type === REVIEW_TYPE_OF_PROVIDER);
+  const reviewsOfCustomer = reviews.filter((r) => r.attributes.type === REVIEW_TYPE_OF_CUSTOMER);
   return (
     <div className={css.mobileReviews}>
       <H4 as="h2" className={css.mobileReviewsTitle}>
@@ -113,13 +113,13 @@ export const MobileReviews = props => {
       <Reviews reviews={reviewsOfCustomer} />
     </div>
   );
-};
+}
 
-export const DesktopReviews = props => {
+export function DesktopReviews(props) {
   const [showReviewsType, setShowReviewsType] = useState(REVIEW_TYPE_OF_PROVIDER);
   const { reviews, queryReviewsError } = props;
-  const reviewsOfProvider = reviews.filter(r => r.attributes.type === REVIEW_TYPE_OF_PROVIDER);
-  const reviewsOfCustomer = reviews.filter(r => r.attributes.type === REVIEW_TYPE_OF_CUSTOMER);
+  const reviewsOfProvider = reviews.filter((r) => r.attributes.type === REVIEW_TYPE_OF_PROVIDER);
+  const reviewsOfCustomer = reviews.filter((r) => r.attributes.type === REVIEW_TYPE_OF_CUSTOMER);
   const isReviewTypeProviderSelected = showReviewsType === REVIEW_TYPE_OF_PROVIDER;
   const isReviewTypeCustomerSelected = showReviewsType === REVIEW_TYPE_OF_CUSTOMER;
   const desktopReviewTabs = [
@@ -164,12 +164,12 @@ export const DesktopReviews = props => {
       </div>
     </div>
   );
-};
+}
 
-export const CustomUserFields = props => {
+export function CustomUserFields(props) {
   const { publicData, metadata, userFieldConfig } = props;
 
-  const shouldPickUserField = fieldConfig => fieldConfig?.showConfig?.displayInProfile !== false;
+  const shouldPickUserField = (fieldConfig) => fieldConfig?.showConfig?.displayInProfile !== false;
   const propsForCustomFields =
     pickCustomFieldProps(publicData, metadata, userFieldConfig, 'userType', shouldPickUserField) ||
     [];
@@ -177,7 +177,7 @@ export const CustomUserFields = props => {
   return (
     <>
       <SectionDetailsMaybe {...props} />
-      {propsForCustomFields.map(customFieldProps => {
+      {propsForCustomFields.map((customFieldProps) => {
         const { schemaType, ...fieldProps } = customFieldProps;
         return schemaType === SCHEMA_TYPE_MULTI_ENUM ? (
           <SectionMultiEnumMaybe {...fieldProps} />
@@ -187,9 +187,9 @@ export const CustomUserFields = props => {
       })}
     </>
   );
-};
+}
 
-export const MainContent = props => {
+export function MainContent(props) {
   const {
     userShowError,
     bio,
@@ -251,7 +251,7 @@ export const MainContent = props => {
             <FormattedMessage id="ProfilePage.listingsTitle" values={{ count: listings.length }} />
           </H4>
           <ul className={css.listings}>
-            {listings.map(l => (
+            {listings.map((l) => (
               <li className={css.listing} key={l.id.uuid}>
                 <ListingCard listing={l} showAuthorInfo={false} />
               </li>
@@ -266,9 +266,9 @@ export const MainContent = props => {
       )}
     </div>
   );
-};
+}
 
-export const ProfilePageComponent = props => {
+export function ProfilePageComponent(props) {
   const config = useConfiguration();
   const intl = useIntl();
   const [mounted, setMounted] = useState(false);
@@ -315,24 +315,27 @@ export const ProfilePageComponent = props => {
   const isDataLoaded = isPreview
     ? currentUser != null || userShowError != null
     : hasNoViewingRightsOnPrivateMarketplace
-    ? currentUser != null || userShowError != null
-    : user != null || userShowError != null;
+      ? currentUser != null || userShowError != null
+      : user != null || userShowError != null;
 
   const schemaTitleVars = { name: displayName, marketplaceName: config.marketplaceName };
   const schemaTitle = intl.formatMessage({ id: 'ProfilePage.schemaTitle' }, schemaTitleVars);
 
   if (!isDataLoaded) {
     return null;
-  } else if (!isPreview && isNotFoundError(userShowError)) {
+  }
+  if (!isPreview && isNotFoundError(userShowError)) {
     return <NotFoundPage staticContext={props.staticContext} />;
-  } else if (!isPreview && (isUnauthorizedOnPrivateMarketplace || hasUserPendingApprovalError)) {
+  }
+  if (!isPreview && (isUnauthorizedOnPrivateMarketplace || hasUserPendingApprovalError)) {
     return (
       <NamedRedirect
         name="NoAccessPage"
         params={{ missingAccessRight: NO_ACCESS_PAGE_USER_PENDING_APPROVAL }}
       />
     );
-  } else if (
+  }
+  if (
     (!isPreview && hasNoViewingRightsOnPrivateMarketplace && !isCurrentUser) ||
     isErrorNoViewingPermission(userShowError)
   ) {
@@ -344,7 +347,8 @@ export const ProfilePageComponent = props => {
         params={{ missingAccessRight: NO_ACCESS_PAGE_VIEW_LISTINGS }}
       />
     );
-  } else if (!isPreview && isForbiddenError(userShowError)) {
+  }
+  if (!isPreview && isForbiddenError(userShowError)) {
     // This can happen if private marketplace mode is active, but it's not reflected through asset yet.
     return (
       <NamedRedirect
@@ -352,12 +356,14 @@ export const ProfilePageComponent = props => {
         state={{ from: `${location.pathname}${location.search}${location.hash}` }}
       />
     );
-  } else if (isPreview && mounted && !isCurrentUser) {
+  }
+  if (isPreview && mounted && !isCurrentUser) {
     // Someone is manipulating the URL, redirect to current user's profile page.
     return isCurrentUser === false ? (
       <NamedRedirect name="ProfilePage" params={{ id: currentUser?.id?.uuid }} />
     ) : null;
-  } else if ((isPreview || isPrivateMarketplace) && !mounted) {
+  }
+  if ((isPreview || isPrivateMarketplace) && !mounted) {
     // This preview of the profile page is not rendered on server-side
     // and the first pass on client-side should render the same UI.
     return null;
@@ -399,7 +405,7 @@ export const ProfilePageComponent = props => {
       </LayoutSideNavigation>
     </Page>
   );
-};
+}
 
 ProfilePageComponent.defaultProps = {
   currentUser: null,
@@ -422,16 +428,10 @@ ProfilePageComponent.propTypes = {
   queryReviewsError: propTypes.error,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { currentUser } = state.user;
-  const {
-    userId,
-    userShowError,
-    queryListingsError,
-    userListingRefs,
-    reviews,
-    queryReviewsError,
-  } = state.ProfilePage;
+  const { userId, userShowError, queryListingsError, userListingRefs, reviews, queryReviewsError } =
+    state.ProfilePage;
   const userMatches = getMarketplaceEntities(state, [{ type: 'user', id: userId }]);
   const user = userMatches.length === 1 ? userMatches[0] : null;
 

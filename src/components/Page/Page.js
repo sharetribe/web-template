@@ -15,41 +15,42 @@ import { apiBaseUrl } from '../../util/api';
 
 import css from './Page.module.css';
 
-const preventDefault = e => {
+const preventDefault = (e) => {
   e.preventDefault();
 };
 
-const twitterPageURL = siteTwitterHandle => {
+const twitterPageURL = (siteTwitterHandle) => {
   if (siteTwitterHandle && siteTwitterHandle.charAt(0) === '@') {
     return `https://twitter.com/${siteTwitterHandle.substring(1)}`;
-  } else if (siteTwitterHandle) {
+  }
+  if (siteTwitterHandle) {
     return `https://twitter.com/${siteTwitterHandle}`;
   }
   return null;
 };
 
-const webmanifestURL = marketplaceRootURL => {
+const webmanifestURL = (marketplaceRootURL) => {
   // Note: on localhost (when running "yarn run dev"), the webmanifest is running on apiServer port
   const baseUrl = apiBaseUrl(marketplaceRootURL);
   return `${baseUrl}/site.webmanifest`;
 };
 
-const getFaviconVariants = config => {
+const getFaviconVariants = (config) => {
   // We add favicon through hosted configs
   // NOTE: There's no favicon.ico file. This is an imageAsset object which is used together with <meta> tags.
-  const favicon = config.branding.favicon;
+  const { favicon } = config.branding;
   return favicon?.type === 'imageAsset' ? Object.values(favicon.attributes.variants) : [];
 };
 
-const getAppleTouchIconURL = config => {
+const getAppleTouchIconURL = (config) => {
   // The appIcon is used to pick apple-touch-icon
   // We use 180x180. I.e. we follow the example set by realfavicongenerator
-  const appIcon = config.branding.appIcon;
+  const { appIcon } = config.branding;
   const appIconVariants =
     appIcon?.type === 'imageAsset' ? Object.values(appIcon.attributes.variants) : [];
-  const appleTouchIconVariant = appIconVariants.find(variant => {
-    return variant.width === 180 && variant.height === 180;
-  });
+  const appleTouchIconVariant = appIconVariants.find(
+    (variant) => variant.width === 180 && variant.height === 180,
+  );
   return appleTouchIconVariant?.url;
 };
 
@@ -124,12 +125,12 @@ class PageComponent extends Component {
 
     this.scrollingDisabledChanged(scrollingDisabled);
 
-    const marketplaceRootURL = config.marketplaceRootURL;
+    const { marketplaceRootURL } = config;
     const shouldReturnPathOnly = referrer && referrer !== 'unsafe-url';
     const canonicalPath = canonicalRoutePath(routeConfiguration, location, shouldReturnPathOnly);
     const canonicalUrl = `${marketplaceRootURL}${canonicalPath}`;
 
-    const marketplaceName = config.marketplaceName;
+    const { marketplaceName } = config;
     const schemaTitle = intl.formatMessage({ id: 'Page.schemaTitle' }, { marketplaceName });
     const schemaDescription = intl.formatMessage({ id: 'Page.schemaDescription' });
     const pageTitle = title || schemaTitle;
@@ -179,13 +180,13 @@ class PageComponent extends Component {
         url: canonicalUrl,
         locale: intl.locale,
       },
-      config
+      config,
     );
 
     const facebookPage = config.siteFacebookPage;
     const twitterPage = twitterPageURL(config.siteTwitterHandle);
     const instagramPage = config.siteInstagramPage;
-    const sameOrganizationAs = [facebookPage, twitterPage, instagramPage].filter(v => v != null);
+    const sameOrganizationAs = [facebookPage, twitterPage, instagramPage].filter((v) => v != null);
 
     // Schema for search engines (helps them to understand what this page is about)
     // http://schema.org
@@ -253,17 +254,15 @@ class PageComponent extends Component {
           {referrer ? <meta name="referrer" content={referrer} /> : null}
           <link rel="canonical" href={canonicalUrl} />
 
-          {faviconVariants.map(variant => {
-            return (
-              <link
-                key={`icon_${variant.width}`}
-                rel="icon"
-                type="image/png"
-                sizes={`${variant.width}x${variant.height}`}
-                href={variant.url}
-              />
-            );
-          })}
+          {faviconVariants.map((variant) => (
+            <link
+              key={`icon_${variant.width}`}
+              rel="icon"
+              type="image/png"
+              sizes={`${variant.width}x${variant.height}`}
+              href={variant.url}
+            />
+          ))}
 
           {appleTouchIcon ? (
             <link rel="apple-touch-icon" sizes="180x180" href={appleTouchIcon} />
@@ -283,7 +282,7 @@ class PageComponent extends Component {
         <div
           className={css.content}
           style={scrollPositionStyles}
-          ref={c => {
+          ref={(c) => {
             this.contentDiv = c;
           }}
         >
@@ -329,14 +328,14 @@ PageComponent.propTypes = {
       width: number.isRequired,
       height: number.isRequired,
       url: string.isRequired,
-    })
+    }),
   ),
   twitterImages: arrayOf(
     shape({
       width: number.isRequired,
       height: number.isRequired,
       url: string.isRequired,
-    })
+    }),
   ),
   published: string, // article:published_time
   schema: oneOfType([object, array]), // http://schema.org
@@ -349,7 +348,7 @@ PageComponent.propTypes = {
         width: number.isRequired,
         height: number.isRequired,
         url: string.isRequired,
-      })
+      }),
     ),
     images600: arrayOf(
       // Page asset file can define this
@@ -357,7 +356,7 @@ PageComponent.propTypes = {
         width: number.isRequired,
         height: number.isRequired,
         url: string.isRequired,
-      })
+      }),
     ),
   }),
   title: string, // page title
@@ -381,7 +380,7 @@ PageComponent.propTypes = {
   }).isRequired,
 };
 
-const Page = props => {
+function Page(props) {
   const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();
   const location = useLocation();
@@ -396,6 +395,6 @@ const Page = props => {
       {...props}
     />
   );
-};
+}
 
 export default Page;

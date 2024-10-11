@@ -24,7 +24,7 @@ class MenuLabel extends Component {
 
     // Don't show focus outline if user just clicked the element with mouse
     // tab + enter creates also a click event, but its location is origin.
-    const nativeEvent = e.nativeEvent;
+    const { nativeEvent } = e;
     const isRealClick = !(nativeEvent.clientX === 0 && nativeEvent.clientY === 0);
     if (isRealClick) {
       this.setState({ clickedWithMouse: true });
@@ -32,9 +32,7 @@ class MenuLabel extends Component {
   }
 
   onBlur() {
-    this.setState(() => {
-      return { clickedWithMouse: false };
-    });
+    this.setState(() => ({ clickedWithMouse: false }));
   }
 
   render() {

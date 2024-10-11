@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const NoImageIcon = props => {
+function NoImageIcon(props) {
   const { className } = props;
 
   return (
@@ -26,7 +26,7 @@ const NoImageIcon = props => {
       </g>
     </svg>
   );
-};
+}
 
 const { string } = PropTypes;
 

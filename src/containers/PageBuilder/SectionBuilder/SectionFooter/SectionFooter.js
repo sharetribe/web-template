@@ -19,20 +19,20 @@ const GRID_CONFIG = [
 ];
 const MAX_MOBILE_SCREEN_WIDTH = 1024;
 
-const getIndex = numberOfColumns => numberOfColumns - 1;
+const getIndex = (numberOfColumns) => numberOfColumns - 1;
 
-const getContentCss = numberOfColumns => {
+const getContentCss = (numberOfColumns) => {
   const contentConfig = GRID_CONFIG[getIndex(numberOfColumns)];
   return contentConfig ? contentConfig.contentCss : GRID_CONFIG[0].contentCss;
 };
 
-const getGridCss = numberOfColumns => {
+const getGridCss = (numberOfColumns) => {
   const contentConfig = GRID_CONFIG[getIndex(numberOfColumns)];
   return contentConfig ? contentConfig.gridCss : GRID_CONFIG[0].gridCss;
 };
 
 // Section component that's able to show blocks in multiple different columns (defined by "numberOfColumns" prop)
-const SectionFooter = props => {
+function SectionFooter(props) {
   const {
     sectionId,
     className,
@@ -51,12 +51,10 @@ const SectionFooter = props => {
   // E.g. { h1: { component: MyAwesomeHeader } }
   const fieldComponents = options?.fieldComponents;
   const fieldOptions = { fieldComponents };
-  const linksWithBlockId = socialMediaLinks?.map(sml => {
-    return {
-      ...sml,
-      blockId: sml.link.platform,
-    };
-  });
+  const linksWithBlockId = socialMediaLinks?.map((sml) => ({
+    ...sml,
+    blockId: sml.link.platform,
+  }));
 
   const showSocialMediaLinks = socialMediaLinks?.length > 0;
   const hasMatchMedia = typeof window !== 'undefined' && window?.matchMedia;
@@ -108,7 +106,7 @@ const SectionFooter = props => {
       </div>
     </SectionContainer>
   );
-};
+}
 
 const propTypeOption = shape({
   fieldComponents: shape({ component: node, pickValidProps: func }),

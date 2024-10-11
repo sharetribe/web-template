@@ -59,7 +59,7 @@ export const EXTENDED_DATA_SCHEMA_TYPES = [
 const propTypes = {};
 
 // Fixed value
-propTypes.value = val => oneOf([val]);
+propTypes.value = (val) => oneOf([val]);
 
 // SDK type instances
 propTypes.uuid = instanceOf(UUID);
@@ -104,7 +104,7 @@ propTypes.image = shape({
         width: number.isRequired,
         height: number.isRequired,
         url: string.isRequired,
-      })
+      }),
     ),
   }),
 });
@@ -119,7 +119,7 @@ propTypes.imageAsset = shape({
         width: number.isRequired,
         height: number.isRequired,
         url: string.isRequired,
-      })
+      }),
     ),
   }),
 });
@@ -236,7 +236,7 @@ const availabilityPlan = shape({
       seats: number.isRequired,
       start: string,
       end: string,
-    })
+    }),
   ),
 });
 
@@ -249,7 +249,7 @@ const ownListingAttributes = shape({
   deleted: propTypes.value(false).isRequired,
   state: oneOf(LISTING_STATES).isRequired,
   price: propTypes.money,
-  availabilityPlan: availabilityPlan,
+  availabilityPlan,
   publicData: object.isRequired,
 });
 
@@ -430,7 +430,7 @@ propTypes.lineItems = arrayOf(
     unitPrice: propTypes.money.isRequired,
     lineTotal: propTypes.money.isRequired,
     reversal: bool.isRequired,
-  })
+  }),
 );
 
 // Denormalised transaction object
@@ -486,7 +486,7 @@ propTypes.filterConfig = arrayOf(
     group: oneOf(['primary', 'secondary']).isRequired,
     queryParamNames: arrayOf(string).isRequired,
     config: object,
-  }).isRequired
+  }).isRequired,
 );
 
 // Default search filters definition
@@ -497,7 +497,7 @@ propTypes.defaultFiltersConfig = arrayOf(
     min: number,
     max: number,
     step: number,
-  }).isRequired
+  }).isRequired,
 );
 
 // Extended data config
@@ -523,7 +523,7 @@ propTypes.fieldEnumOptions = arrayOf(
   shape({
     option: oneOfType([string, number]).isRequired,
     label: string.isRequired,
-  })
+  }),
 );
 
 propTypes.userField = shape({

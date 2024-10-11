@@ -3,7 +3,7 @@ import { FieldRadioButton } from '../../../../../components';
 
 import css from './AvailabilityModeSelector.module.css';
 
-const AvailabilityModeSelector = props => {
+function AvailabilityModeSelector(props) {
   const { idPrefix, pristine, intl } = props;
   return (
     <div className={css.radioButtons}>
@@ -27,6 +27,6 @@ const AvailabilityModeSelector = props => {
       />
     </div>
   );
-};
+}
 
 export default AvailabilityModeSelector;

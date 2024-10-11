@@ -10,7 +10,7 @@ import AddressLinkMaybe from './AddressLinkMaybe';
 import css from './TransactionPanel.module.css';
 
 // Functional component as a helper to build ActivityFeed section
-const DeliveryInfoMaybe = props => {
+function DeliveryInfoMaybe(props) {
   const { className, rootClassName, protectedData, listing, locale } = props;
   const classes = classNames(rootClassName || css.deliveryInfoContainer, className);
   const deliveryMethod = protectedData?.deliveryMethod;
@@ -29,15 +29,16 @@ const DeliveryInfoMaybe = props => {
             linkRootClassName={css.pickupAddress}
             location={pickupLocation}
             geolocation={listing?.attributes?.geolocation}
-            showAddress={true}
+            showAddress
           />
         </div>
       </div>
     );
-  } else if (isShipping) {
+  }
+  if (isShipping) {
     const { name, phoneNumber, address } = protectedData?.shippingDetails || {};
     const { line1, line2, city, postalCode, state, country: countryCode } = address || {};
-    const phoneMaybe = !!phoneNumber ? (
+    const phoneMaybe = phoneNumber ? (
       <>
         {phoneNumber}
         <br />
@@ -45,7 +46,7 @@ const DeliveryInfoMaybe = props => {
     ) : null;
 
     const countryCodes = getCountryCodes(locale);
-    const countryInfo = countryCodes.find(c => c.code === countryCode);
+    const countryInfo = countryCodes.find((c) => c.code === countryCode);
     const country = countryInfo?.name;
 
     return (
@@ -70,6 +71,6 @@ const DeliveryInfoMaybe = props => {
     );
   }
   return null;
-};
+}
 
 export default DeliveryInfoMaybe;

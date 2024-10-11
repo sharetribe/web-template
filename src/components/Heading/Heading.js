@@ -5,28 +5,28 @@ import classNames from 'classnames';
 import css from './Heading.module.css';
 
 // Make it possible to use custom styling of H1, while the rendered HTML element is `<h2>`
-export const Heading = props => {
+export function Heading(props) {
   const { className, rootClassName, as, styledAs, tagRef, ...otherProps } = props;
   const Tag = as || 'h2';
-  const rootClass = rootClassName
-    ? rootClassName
-    : styledAs === 'h1'
-    ? css.h1
-    : styledAs === 'h2'
-    ? css.h2
-    : styledAs === 'h3'
-    ? css.h3
-    : styledAs === 'h4'
-    ? css.h4
-    : styledAs === 'h5'
-    ? css.h5
-    : styledAs === 'h6'
-    ? css.h6
-    : null;
+  const rootClass =
+    rootClassName ||
+    (styledAs === 'h1'
+      ? css.h1
+      : styledAs === 'h2'
+        ? css.h2
+        : styledAs === 'h3'
+          ? css.h3
+          : styledAs === 'h4'
+            ? css.h4
+            : styledAs === 'h5'
+              ? css.h5
+              : styledAs === 'h6'
+                ? css.h6
+                : null);
   const classes = classNames(rootClass, className);
 
   return <Tag className={classes} ref={tagRef} {...otherProps} />;
-};
+}
 
 const defaultPropsHeading = {
   rootClassName: null,

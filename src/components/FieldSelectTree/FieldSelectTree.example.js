@@ -1,11 +1,10 @@
-/* eslint-disable no-console */
 import React from 'react';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
 
 import { pickInitialValuesForFieldSelectTree } from '../../util/search';
 import * as validators from '../../util/validators';
 
-import { Button } from '../../components';
+import { Button } from '..';
 
 import FieldSelectTree from './FieldSelectTree';
 
@@ -126,37 +125,39 @@ const config = {
   ],
 };
 
-const FormComponent = props => (
-  <FinalForm
-    {...props}
-    render={formRenderProps => {
-      const { handleSubmit, onChange, invalid, pristine, submitting } = formRenderProps;
-      const submitDisabled = submitting; //invalid || pristine || submitting;
-      const required = validators.requiredSelectTreeOption('This field is required');
-      return (
-        <form
-          onSubmit={e => {
-            e.preventDefault();
-            handleSubmit(e);
-          }}
-        >
-          <FormSpy onChange={onChange} />
-          <FieldSelectTree
-            label="Nested options"
-            name="nestedLevel"
-            options={config.options}
-            validate={required}
-          />
-          <Button style={{ marginTop: 24 }} type="submit" disabled={submitDisabled}>
-            Submit
-          </Button>
-        </form>
-      );
-    }}
-  />
-);
+function FormComponent(props) {
+  return (
+    <FinalForm
+      {...props}
+      render={(formRenderProps) => {
+        const { handleSubmit, onChange, invalid, pristine, submitting } = formRenderProps;
+        const submitDisabled = submitting; // invalid || pristine || submitting;
+        const required = validators.requiredSelectTreeOption('This field is required');
+        return (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit(e);
+            }}
+          >
+            <FormSpy onChange={onChange} />
+            <FieldSelectTree
+              label="Nested options"
+              name="nestedLevel"
+              options={config.options}
+              validate={required}
+            />
+            <Button style={{ marginTop: 24 }} type="submit" disabled={submitDisabled}>
+              Submit
+            </Button>
+          </form>
+        );
+      }}
+    />
+  );
+}
 
-const initialData = {}; //{ nestedLevel1: 'women', nestedLevel2: 'jackets', foo: 'bar' };
+const initialData = {}; // { nestedLevel1: 'women', nestedLevel2: 'jackets', foo: 'bar' };
 
 export const SelectNested = {
   component: FormComponent,
@@ -164,13 +165,13 @@ export const SelectNested = {
     initialValues: {
       nestedLevel: pickInitialValuesForFieldSelectTree('nestedLevel', initialData),
     },
-    onChange: formState => {
+    onChange: (formState) => {
       const nestedLevel = formState.values?.nestedLevel;
       if (nestedLevel && Object.values(nestedLevel)?.length > 0) {
         console.log('field value changed to:', formState.values.nestedLevel);
       }
     },
-    onSubmit: values => {
+    onSubmit: (values) => {
       console.log('submit values:', values);
       return false;
     },

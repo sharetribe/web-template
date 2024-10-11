@@ -14,7 +14,7 @@ import {
 import css from './ListingImage.module.css';
 
 // Cross shaped button on the top-right corner of the image thumbnail
-const RemoveImageButton = props => {
+function RemoveImageButton(props) {
   const { className, rootClassName, onClick } = props;
   const classes = classNames(rootClassName || css.removeImage, className);
   return (
@@ -39,12 +39,12 @@ const RemoveImageButton = props => {
       </svg>
     </button>
   );
-};
+}
 
 // Cropped "thumbnail" of given listing image.
 // The image might be one already uploaded and attached to listing entity
 // or representing local image file (before it's uploaded & attached to listing).
-const ListingImage = props => {
+function ListingImage(props) {
   const {
     className,
     image,
@@ -54,7 +54,7 @@ const ListingImage = props => {
     aspectHeight = 1,
     variantPrefix = 'listing-card',
   } = props;
-  const handleRemoveClick = e => {
+  const handleRemoveClick = (e) => {
     e.stopPropagation();
     onRemoveImage(image.id);
   };
@@ -82,49 +82,48 @@ const ListingImage = props => {
         {uploadingOverlay}
       </ImageFromFile>
     );
-  } else {
-    const classes = classNames(css.root, className);
-
-    const variants = image
-      ? Object.keys(image?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
-      : [];
-    const imgForResponsiveImage = image.imageId ? { ...image, id: image.imageId } : image;
-
-    // This is shown when image is uploaded,
-    // but the new responsive image is not yet downloaded by the browser.
-    // This is absolutely positioned behind the actual image.
-    const fallbackWhileDownloading = image.file ? (
-      <ImageFromFile
-        id={image.id}
-        className={css.fallbackWhileDownloading}
-        file={image.file}
-        aspectWidth={aspectWidth}
-        aspectHeight={aspectHeight}
-      >
-        <div className={css.thumbnailLoading}>
-          <IconSpinner />
-        </div>
-      </ImageFromFile>
-    ) : null;
-
-    return (
-      <div className={classes}>
-        <div className={css.wrapper}>
-          {fallbackWhileDownloading}
-          <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
-            <ResponsiveImage
-              rootClassName={css.rootForImage}
-              image={imgForResponsiveImage}
-              alt={savedImageAltText}
-              variants={variants}
-            />
-          </AspectRatioWrapper>
-          <RemoveImageButton onClick={handleRemoveClick} />
-        </div>
-      </div>
-    );
   }
-};
+  const classes = classNames(css.root, className);
+
+  const variants = image
+    ? Object.keys(image?.attributes?.variants).filter((k) => k.startsWith(variantPrefix))
+    : [];
+  const imgForResponsiveImage = image.imageId ? { ...image, id: image.imageId } : image;
+
+  // This is shown when image is uploaded,
+  // but the new responsive image is not yet downloaded by the browser.
+  // This is absolutely positioned behind the actual image.
+  const fallbackWhileDownloading = image.file ? (
+    <ImageFromFile
+      id={image.id}
+      className={css.fallbackWhileDownloading}
+      file={image.file}
+      aspectWidth={aspectWidth}
+      aspectHeight={aspectHeight}
+    >
+      <div className={css.thumbnailLoading}>
+        <IconSpinner />
+      </div>
+    </ImageFromFile>
+  ) : null;
+
+  return (
+    <div className={classes}>
+      <div className={css.wrapper}>
+        {fallbackWhileDownloading}
+        <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
+          <ResponsiveImage
+            rootClassName={css.rootForImage}
+            image={imgForResponsiveImage}
+            alt={savedImageAltText}
+            variants={variants}
+          />
+        </AspectRatioWrapper>
+        <RemoveImageButton onClick={handleRemoveClick} />
+      </div>
+    </div>
+  );
+}
 
 ListingImage.defaultProps = { className: null };
 

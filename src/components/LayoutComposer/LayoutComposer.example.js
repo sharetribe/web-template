@@ -3,7 +3,7 @@ import React from 'react';
 import LayoutComposer from './LayoutComposer.js';
 
 // Wrapper with some inline styles
-const GridContent = props => {
+function GridContent(props) {
   return (
     <div
       style={{
@@ -22,14 +22,14 @@ const GridContent = props => {
       <h2 style={{ textAlign: 'center', width: '100%', margin: 0 }}>{props.children}</h2>
     </div>
   );
-};
+}
 
 // Component created using LayoutComposer
-const Component = props => {
+function Component(props) {
   const { borderRadius, ...otherProps } = props;
   return (
     <LayoutComposer {...otherProps}>
-      {props => {
+      {(props) => {
         const { Topbar, Main, Extra, Footer } = props;
         return (
           <>
@@ -62,7 +62,7 @@ const Component = props => {
       }}
     </LayoutComposer>
   );
-};
+}
 
 // Simple stacked layout using "areas"
 export const LayoutComposerAreas = {

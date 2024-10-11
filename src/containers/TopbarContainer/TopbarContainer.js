@@ -13,7 +13,7 @@ import { manageDisableScrolling } from '../../ducks/ui.duck';
 
 const Topbar = loadable(() => import(/* webpackChunkName: "Topbar" */ './Topbar/Topbar'));
 
-export const TopbarContainerComponent = props => {
+export function TopbarContainerComponent(props) {
   const {
     authInProgress,
     currentPage,
@@ -59,7 +59,7 @@ export const TopbarContainerComponent = props => {
       {...rest}
     />
   );
-};
+}
 
 TopbarContainerComponent.defaultProps = {
   currentPage: null,
@@ -96,7 +96,7 @@ TopbarContainerComponent.propTypes = {
   location: shape({ state: object }).isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   // Topbar needs isAuthenticated and isLoggedInAs
   const { isAuthenticated, isLoggedInAs, logoutError, authScopes } = state.auth;
   // Topbar needs user info.
@@ -124,8 +124,8 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => ({
-  onLogout: historyPush => dispatch(logout(historyPush)),
+const mapDispatchToProps = (dispatch) => ({
+  onLogout: (historyPush) => dispatch(logout(historyPush)),
   onManageDisableScrolling: (componentId, disableScrolling) =>
     dispatch(manageDisableScrolling(componentId, disableScrolling)),
   onResendVerificationEmail: () => dispatch(sendVerificationEmail()),
@@ -139,10 +139,7 @@ const mapDispatchToProps = dispatch => ({
 // See: https://github.com/ReactTraining/react-router/issues/4671
 const TopbarContainer = compose(
   withRouter,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
+  connect(mapStateToProps, mapDispatchToProps),
 )(TopbarContainerComponent);
 
 export default TopbarContainer;

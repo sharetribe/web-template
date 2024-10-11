@@ -22,61 +22,59 @@ import {
   setInitialValues as TransactionPageInitialValues,
 } from './TransactionPage/TransactionPage.duck';
 
-const getPageDataLoadingAPI = () => {
-  return {
-    AuthenticationPage: {
-      loadData: AuthenticationPageLoader,
-    },
-    LandingPage: {
-      loadData: LandingPageLoader,
-    },
-    CheckoutPage: {
-      setInitialValues: CheckoutPageInitialValues,
-    },
-    CMSPage: {
-      loadData: CMSPageLoader,
-    },
-    ContactDetailsPage: {
-      loadData: ContactDetailsPageLoader,
-    },
-    EditListingPage: {
-      loadData: EditListingPageLoader,
-    },
-    EmailVerificationPage: {
-      loadData: EmailVerificationPageLoader,
-    },
-    InboxPage: {
-      loadData: InboxPageLoader,
-    },
-    ListingPage: {
-      loadData: ListingPageLoader,
-    },
-    ManageListingsPage: {
-      loadData: ManageListingsPageLoader,
-    },
-    PaymentMethodsPage: {
-      loadData: PaymentMethodsPageLoader,
-    },
-    PrivacyPolicyPage: {
-      loadData: PrivacyPolicyPageLoader,
-    },
-    ProfilePage: {
-      loadData: ProfilePageLoader,
-    },
-    SearchPage: {
-      loadData: SearchPageLoader,
-    },
-    StripePayoutPage: {
-      loadData: StripePayoutPageLoader,
-    },
-    TermsOfServicePage: {
-      loadData: TermsOfServicePageLoader,
-    },
-    TransactionPage: {
-      loadData: TransactionPageLoader,
-      setInitialValues: TransactionPageInitialValues,
-    },
-  };
-};
+const getPageDataLoadingAPI = () => ({
+  AuthenticationPage: {
+    loadData: AuthenticationPageLoader,
+  },
+  LandingPage: {
+    loadData: LandingPageLoader,
+  },
+  CheckoutPage: {
+    setInitialValues: CheckoutPageInitialValues,
+  },
+  CMSPage: {
+    loadData: CMSPageLoader,
+  },
+  ContactDetailsPage: {
+    loadData: ContactDetailsPageLoader,
+  },
+  EditListingPage: {
+    loadData: EditListingPageLoader,
+  },
+  EmailVerificationPage: {
+    loadData: EmailVerificationPageLoader,
+  },
+  InboxPage: {
+    loadData: InboxPageLoader,
+  },
+  ListingPage: {
+    loadData: ListingPageLoader,
+  },
+  ManageListingsPage: {
+    loadData: ManageListingsPageLoader,
+  },
+  PaymentMethodsPage: {
+    loadData: PaymentMethodsPageLoader,
+  },
+  PrivacyPolicyPage: {
+    loadData: PrivacyPolicyPageLoader,
+  },
+  ProfilePage: {
+    loadData: ProfilePageLoader,
+  },
+  SearchPage: {
+    loadData: SearchPageLoader,
+  },
+  StripePayoutPage: {
+    loadData: StripePayoutPageLoader,
+  },
+  TermsOfServicePage: {
+    loadData: TermsOfServicePageLoader,
+  },
+  TransactionPage: {
+    loadData: TransactionPageLoader,
+    setInitialValues: TransactionPageInitialValues,
+  },
+});
 
 export default getPageDataLoadingAPI;

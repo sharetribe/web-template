@@ -5,13 +5,13 @@ import classNames from 'classnames';
 import css from './Heading.module.css';
 
 // Make it possible to use styling of H1, while the actual element is `<h2>`
-const Heading = props => {
+function Heading(props) {
   const { className, rootClassName, as, tagRef, ...otherProps } = props;
   const Tag = as || 'h2';
   const classes = classNames(rootClassName, className);
 
   return <Tag className={classes} ref={tagRef} {...otherProps} />;
-};
+}
 
 const defaultPropsHeading = {
   rootClassName: null,

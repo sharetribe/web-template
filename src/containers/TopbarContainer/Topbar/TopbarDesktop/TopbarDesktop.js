@@ -21,7 +21,7 @@ import CustomLinksMenu from './CustomLinksMenu/CustomLinksMenu';
 
 import css from './TopbarDesktop.module.css';
 
-const SignupLink = () => {
+function SignupLink() {
   return (
     <NamedLink name="SignupPage" className={css.topbarLink}>
       <span className={css.topbarLinkLabel}>
@@ -29,9 +29,9 @@ const SignupLink = () => {
       </span>
     </NamedLink>
   );
-};
+}
 
-const LoginLink = () => {
+function LoginLink() {
   return (
     <NamedLink name="LoginPage" className={css.topbarLink}>
       <span className={css.topbarLinkLabel}>
@@ -39,9 +39,9 @@ const LoginLink = () => {
       </span>
     </NamedLink>
   );
-};
+}
 
-const InboxLink = ({ notificationCount, currentUserHasListings }) => {
+function InboxLink({ notificationCount, currentUserHasListings }) {
   const notificationDot = notificationCount > 0 ? <div className={css.notificationDot} /> : null;
   return (
     <NamedLink
@@ -55,10 +55,10 @@ const InboxLink = ({ notificationCount, currentUserHasListings }) => {
       </span>
     </NamedLink>
   );
-};
+}
 
-const ProfileMenu = ({ currentPage, currentUser, onLogout }) => {
-  const currentPageClass = page => {
+function ProfileMenu({ currentPage, currentUser, onLogout }) {
+  const currentPageClass = (page) => {
     const isAccountSettingsPage =
       page === 'AccountSettingsPage' && ACCOUNT_SETTINGS_PAGES.includes(currentPage);
     return currentPage === page || isAccountSettingsPage ? css.currentPage : null;
@@ -106,9 +106,9 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout }) => {
       </MenuContent>
     </Menu>
   );
-};
+}
 
-const TopbarDesktop = props => {
+function TopbarDesktop(props) {
   const {
     className,
     config,
@@ -130,7 +130,7 @@ const TopbarDesktop = props => {
     setMounted(true);
   }, []);
 
-  const marketplaceName = config.marketplaceName;
+  const { marketplaceName } = config;
   const authenticatedOnClientSide = mounted && isAuthenticated;
   const isAuthenticatedOrJustHydrated = isAuthenticated || !mounted;
 
@@ -180,7 +180,7 @@ const TopbarDesktop = props => {
       {loginLinkMaybe}
     </nav>
   );
-};
+}
 
 TopbarDesktop.defaultProps = {
   rootClassName: null,

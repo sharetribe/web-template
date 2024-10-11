@@ -20,7 +20,7 @@ export const stateDataShape = shape({
 });
 
 // Translated name of the state of the given transaction
-export const getStateData = params => {
+export const getStateData = (params) => {
   const { transaction } = params;
   const processName = resolveLatestProcessName(transaction?.attributes?.processName);
   const process = getProcess(processName);
@@ -37,11 +37,12 @@ export const getStateData = params => {
 
   if (processName === PURCHASE_PROCESS_NAME) {
     return getStateDataForPurchaseProcess(params, processInfo());
-  } else if (processName === BOOKING_PROCESS_NAME) {
-    return getStateDataForBookingProcess(params, processInfo());
-  } else if (processName === INQUIRY_PROCESS_NAME) {
-    return getStateDataForInquiryProcess(params, processInfo());
-  } else {
-    return {};
   }
+  if (processName === BOOKING_PROCESS_NAME) {
+    return getStateDataForBookingProcess(params, processInfo());
+  }
+  if (processName === INQUIRY_PROCESS_NAME) {
+    return getStateDataForInquiryProcess(params, processInfo());
+  }
+  return {};
 };

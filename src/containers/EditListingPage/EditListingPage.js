@@ -31,7 +31,7 @@ import {
 
 // Import shared components
 import { NamedRedirect, Page } from '../../components';
-import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+import TopbarContainer from '../TopbarContainer/TopbarContainer';
 
 // Import modules from this directory
 import {
@@ -63,12 +63,12 @@ const pickRenderableImages = (
   currentListing,
   uploadedImages,
   uploadedImageIdsInOrder = [],
-  removedImageIds = []
+  removedImageIds = [],
 ) => {
   // Images are passed to EditListingForm so that it can generate thumbnails out of them
   const currentListingImages = currentListing && currentListing.images ? currentListing.images : [];
   // Images not yet connected to the listing
-  const unattachedImages = uploadedImageIdsInOrder.map(i => uploadedImages[i]);
+  const unattachedImages = uploadedImageIdsInOrder.map((i) => uploadedImages[i]);
   const allImages = currentListingImages.concat(unattachedImages);
 
   const pickImagesAndIds = (imgs, img) => {
@@ -87,7 +87,7 @@ const pickRenderableImages = (
 };
 
 // N.B. All the presentational content needs to be extracted to their own components
-export const EditListingPageComponent = props => {
+export function EditListingPageComponent(props) {
   const {
     currentUser,
     createStripeAccountError,
@@ -146,14 +146,16 @@ export const EditListingPageComponent = props => {
         params={{ missingAccessRight: NO_ACCESS_PAGE_USER_PENDING_APPROVAL }}
       />
     );
-  } else if (shouldRedirectNoPostingRights) {
+  }
+  if (shouldRedirectNoPostingRights) {
     return (
       <NamedRedirect
         name="NoAccessPage"
         params={{ missingAccessRight: NO_ACCESS_PAGE_POST_LISTINGS }}
       />
     );
-  } else if (shouldRedirectAfterPosting) {
+  }
+  if (shouldRedirectAfterPosting) {
     const isPendingApproval =
       currentListing && currentListingState === LISTING_STATE_PENDING_APPROVAL;
 
@@ -179,7 +181,8 @@ export const EditListingPageComponent = props => {
         };
 
     return <NamedRedirect {...redirectProps} />;
-  } else if (showWizard) {
+  }
+  if (showWizard) {
     const {
       createListingDraftError = null,
       publishListingError = null,
@@ -214,7 +217,7 @@ export const EditListingPageComponent = props => {
       currentListing,
       uploadedImages,
       uploadedImagesOrder,
-      removedImageIds
+      removedImageIds,
     );
 
     const title = isNewListingFlow
@@ -271,23 +274,22 @@ export const EditListingPageComponent = props => {
         />
       </Page>
     );
-  } else {
-    // If user has come to this page through a direct link to edit existing listing,
-    // we need to load it first.
-    const loadingPageMsg = {
-      id: 'EditListingPage.loadingListingData',
-    };
-    return (
-      <Page title={intl.formatMessage(loadingPageMsg)} scrollingDisabled={scrollingDisabled}>
-        <TopbarContainer
-          mobileRootClassName={css.mobileTopbar}
-          desktopClassName={css.desktopTopbar}
-          mobileClassName={css.mobileTopbar}
-        />
-      </Page>
-    );
   }
-};
+  // If user has come to this page through a direct link to edit existing listing,
+  // we need to load it first.
+  const loadingPageMsg = {
+    id: 'EditListingPage.loadingListingData',
+  };
+  return (
+    <Page title={intl.formatMessage(loadingPageMsg)} scrollingDisabled={scrollingDisabled}>
+      <TopbarContainer
+        mobileRootClassName={css.mobileTopbar}
+        desktopClassName={css.desktopTopbar}
+        mobileClassName={css.mobileTopbar}
+      />
+    </Page>
+  );
+}
 
 EditListingPageComponent.defaultProps = {
   createStripeAccountError: null,
@@ -348,7 +350,7 @@ EditListingPageComponent.propTypes = {
   intl: intlShape.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const page = state.EditListingPage;
   const {
     getAccountLinkInProgress,
@@ -361,7 +363,7 @@ const mapStateToProps = state => {
     stripeAccountFetched,
   } = state.stripeConnectAccount;
 
-  const getOwnListing = id => {
+  const getOwnListing = (id) => {
     const listings = getMarketplaceEntities(state, [{ id, type: 'ownListing' }]);
     return listings.length === 1 ? listings[0] : null;
   };
@@ -382,14 +384,14 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => ({
-  onFetchExceptions: params => dispatch(requestFetchAvailabilityExceptions(params)),
-  onAddAvailabilityException: params => dispatch(requestAddAvailabilityException(params)),
-  onDeleteAvailabilityException: params => dispatch(requestDeleteAvailabilityException(params)),
+const mapDispatchToProps = (dispatch) => ({
+  onFetchExceptions: (params) => dispatch(requestFetchAvailabilityExceptions(params)),
+  onAddAvailabilityException: (params) => dispatch(requestAddAvailabilityException(params)),
+  onDeleteAvailabilityException: (params) => dispatch(requestDeleteAvailabilityException(params)),
 
   onUpdateListing: (tab, values, config) => dispatch(requestUpdateListing(tab, values, config)),
   onCreateListingDraft: (values, config) => dispatch(requestCreateListingDraft(values, config)),
-  onPublishListingDraft: listingId => dispatch(requestPublishListingDraft(listingId)),
+  onPublishListingDraft: (listingId) => dispatch(requestPublishListingDraft(listingId)),
   onImageUpload: (data, listingImageConfig) =>
     dispatch(requestImageUpload(data, listingImageConfig)),
   onManageDisableScrolling: (componentId, disableScrolling) =>
@@ -397,8 +399,8 @@ const mapDispatchToProps = dispatch => ({
   onPayoutDetailsChange: () => dispatch(stripeAccountClearError()),
   onPayoutDetailsSubmit: (values, isUpdateCall) =>
     dispatch(savePayoutDetails(values, isUpdateCall)),
-  onGetStripeConnectAccountLink: params => dispatch(getStripeConnectAccountLink(params)),
-  onRemoveListingImage: imageId => dispatch(removeListingImage(imageId)),
+  onGetStripeConnectAccountLink: (params) => dispatch(getStripeConnectAccountLink(params)),
+  onRemoveListingImage: (imageId) => dispatch(removeListingImage(imageId)),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the
@@ -409,11 +411,8 @@ const mapDispatchToProps = dispatch => ({
 // See: https://github.com/ReactTraining/react-router/issues/4671
 const EditListingPage = compose(
   withRouter,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  ),
-  injectIntl
+  connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
 )(EditListingPageComponent);
 
 export default EditListingPage;

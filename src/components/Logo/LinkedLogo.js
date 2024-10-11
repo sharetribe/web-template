@@ -2,11 +2,11 @@ import React from 'react';
 import { oneOf, shape, string } from 'prop-types';
 import classNames from 'classnames';
 
-import { ExternalLink, Logo, NamedLink } from '../../components';
+import { ExternalLink, Logo, NamedLink } from '..';
 
 import css from './LinkedLogo.module.css';
 
-const LinkedLogo = props => {
+function LinkedLogo(props) {
   const {
     className,
     rootClassName,
@@ -38,7 +38,7 @@ const LinkedLogo = props => {
       />
     </NamedLink>
   );
-};
+}
 
 LinkedLogo.defaultProps = {
   className: null,

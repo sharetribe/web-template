@@ -48,7 +48,8 @@ export const BANK_ACCOUNT_INPUTS = [
   CLABE,
 ];
 
-export const getSupportedCountryCodes = supportedCountries => supportedCountries.map(c => c.code);
+export const getSupportedCountryCodes = (supportedCountries) =>
+  supportedCountries.map((c) => c.code);
 
 /**
  * Country specific Stripe configurations
@@ -58,7 +59,7 @@ export const getSupportedCountryCodes = supportedCountries => supportedCountries
  * @return {Object} configurations
  */
 export const stripeCountryConfigs = (countryCode, supportedCountries) => {
-  const country = supportedCountries.find(c => c.code === countryCode);
+  const country = supportedCountries.find((c) => c.code === countryCode);
 
   if (!country) {
     throw new Error(`Country code not found in Stripe config ${countryCode}`);
@@ -76,7 +77,7 @@ export const stripeCountryConfigs = (countryCode, supportedCountries) => {
  */
 export const requiredInputs = (countryCode, supportedCountries) => {
   const bankAccountInputs = stripeCountryConfigs(countryCode, supportedCountries).accountConfig;
-  return BANK_ACCOUNT_INPUTS.filter(inputType => bankAccountInputs[inputType]);
+  return BANK_ACCOUNT_INPUTS.filter((inputType) => bankAccountInputs[inputType]);
 };
 
 /**
@@ -90,9 +91,8 @@ export const requiredInputs = (countryCode, supportedCountries) => {
 export const inputTypeToString = (inputType, intl) => {
   if (BANK_ACCOUNT_INPUTS.includes(inputType)) {
     return intl.formatMessage({ id: `StripeBankAccountTokenInputField.${inputType}.inline` });
-  } else {
-    throw new Error(`Unknown inputType (${inputType}) given to validator`);
   }
+  throw new Error(`Unknown inputType (${inputType}) given to validator`);
 };
 
 /**
@@ -106,7 +106,7 @@ export const inputTypeToString = (inputType, intl) => {
  * @return {String} formatted Stripe error
  */
 export const translateStripeError = (country, supportedCountries, intl, stripeError) => {
-  console.error('Stripe error:', stripeError); // eslint-disable-line no-console
+  console.error('Stripe error:', stripeError);
   const inputs = requiredInputs(country, supportedCountries);
   const ibanRequired = inputs[IBAN];
   if (ibanRequired) {
@@ -115,29 +115,28 @@ export const translateStripeError = (country, supportedCountries, intl, stripeEr
         id: 'StripeBankAccountTokenInputField.genericStripeErrorIban',
         defaultMessage: stripeError.message,
       },
-      { country }
-    );
-  } else {
-    const inputsAsStrings = inputs.map(inputType => inputTypeToString(inputType, intl));
-
-    const andTranslated = intl.formatMessage({
-      id: 'StripeBankAccountTokenInputField.andBeforeLastItemInAList',
-    });
-    // Print required inputs (to be included to error message)
-    // e.g. "bank code, branch code and account number"
-    const inputsInString =
-      inputsAsStrings.length > 1
-        ? inputsAsStrings.join(', ').replace(/,([^,]*)$/, `${andTranslated} $1`)
-        : inputsAsStrings[0];
-
-    return intl.formatMessage(
-      {
-        id: 'StripeBankAccountTokenInputField.genericStripeError',
-        defaultMessage: stripeError.message,
-      },
-      { country, inputs: inputsInString }
+      { country },
     );
   }
+  const inputsAsStrings = inputs.map((inputType) => inputTypeToString(inputType, intl));
+
+  const andTranslated = intl.formatMessage({
+    id: 'StripeBankAccountTokenInputField.andBeforeLastItemInAList',
+  });
+  // Print required inputs (to be included to error message)
+  // e.g. "bank code, branch code and account number"
+  const inputsInString =
+    inputsAsStrings.length > 1
+      ? inputsAsStrings.join(', ').replace(/,([^,]*)$/, `${andTranslated} $1`)
+      : inputsAsStrings[0];
+
+  return intl.formatMessage(
+    {
+      id: 'StripeBankAccountTokenInputField.genericStripeError',
+      defaultMessage: stripeError.message,
+    },
+    { country, inputs: inputsInString },
+  );
 };
 
 /**
@@ -201,7 +200,7 @@ export const mapInputsToStripeAccountKeys = (country, values) => {
     case 'CA':
       return {
         routing_number: cleanedString(values[TRANSIT_NUMBER]).concat(
-          cleanedString(values[INSTITUTION_NUMBER])
+          cleanedString(values[INSTITUTION_NUMBER]),
         ),
         account_number: cleanedString(values[ACCOUNT_NUMBER]),
       };
@@ -219,7 +218,7 @@ export const mapInputsToStripeAccountKeys = (country, values) => {
       return {
         routing_number: cleanedString(values[BANK_CODE]).concat(
           '-',
-          cleanedString(values[BRANCH_CODE])
+          cleanedString(values[BRANCH_CODE]),
         ),
         account_number: cleanedString(values[ACCOUNT_NUMBER]),
       };
@@ -227,7 +226,7 @@ export const mapInputsToStripeAccountKeys = (country, values) => {
       return {
         routing_number: cleanedString(values[CLEARING_CODE]).concat(
           '-',
-          cleanedString(values[BRANCH_CODE])
+          cleanedString(values[BRANCH_CODE]),
         ),
         account_number: cleanedString(values[ACCOUNT_NUMBER]),
       };
@@ -280,6 +279,4 @@ export const formatFieldMessage = (intl, inputType, messageType) => {
  *
  * @return {String} cleaned string
  */
-export const cleanedString = str => {
-  return str ? str.replace(/\s/g, '') : '';
-};
+export const cleanedString = (str) => (str ? str.replace(/\s/g, '') : '');

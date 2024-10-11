@@ -7,7 +7,7 @@ const sdkUtils = require('../api-util/sdk.js');
 const dev = process.env.REACT_APP_ENV === 'development';
 
 // Emulate feature that's part of sitemap dependency
-const streamToPromise = stream => {
+const streamToPromise = (stream) => {
   return new Promise((resolve, reject) => {
     const drain = [];
     stream
@@ -34,7 +34,7 @@ const streamToPromise = stream => {
 const ttl = 86400; // seconds
 
 // This creates simple (proxied) memory cache
-const createCacheProxy = ttl => {
+const createCacheProxy = (ttl) => {
   const cache = {};
   return new Proxy(cache, {
     // Get data for the property together with timestamp
@@ -106,9 +106,9 @@ const sendRobotsTxt = (req, res, robotsTxtPath) => {
     const robotsStream = readStream.pipe(modifiedStream);
 
     // Save the data to a variable cache
-    streamToPromise(robotsStream).then(rs => (cache.robotsTxt = rs));
+    streamToPromise(robotsStream).then((rs) => (cache.robotsTxt = rs));
 
-    robotsStream.pipe(res).on('error', e => {
+    robotsStream.pipe(res).on('error', (e) => {
       throw e;
     });
   } catch (e) {
@@ -136,7 +136,7 @@ module.exports = (req, res) => {
   const sdk = sdkUtils.getSdk(req, res);
   sdkUtils
     .fetchAccessControlAsset(sdk)
-    .then(response => {
+    .then((response) => {
       const accessControlAsset = response.data.data[0];
 
       const { marketplace } =
@@ -148,7 +148,7 @@ module.exports = (req, res) => {
 
       sendRobotsTxt(req, res, robotsTxtPath);
     })
-    .catch(e => {
+    .catch((e) => {
       // Log error
       const is404 = e.status === 404;
       if (is404 && dev) {

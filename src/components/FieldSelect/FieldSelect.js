@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Field } from 'react-final-form';
 import classNames from 'classnames';
-import { ValidationError } from '../../components';
+import { ValidationError } from '..';
 
 import css from './FieldSelect.module.css';
 
-const FieldSelectComponent = props => {
+function FieldSelectComponent(props) {
   const {
     rootClassName,
     className,
@@ -34,7 +34,7 @@ const FieldSelectComponent = props => {
     [selectClassName]: selectClassName,
     [css.selectError]: hasError,
   });
-  const handleChange = e => {
+  const handleChange = (e) => {
     input.onChange(e);
     if (onChange) {
       onChange(e.currentTarget.value);
@@ -51,7 +51,7 @@ const FieldSelectComponent = props => {
       <ValidationError fieldMeta={meta} />
     </div>
   );
-};
+}
 
 FieldSelectComponent.defaultProps = {
   rootClassName: null,
@@ -81,8 +81,8 @@ FieldSelectComponent.propTypes = {
   children: node,
 };
 
-const FieldSelect = props => {
+function FieldSelect(props) {
   return <Field component={FieldSelectComponent} {...props} />;
-};
+}
 
 export default FieldSelect;

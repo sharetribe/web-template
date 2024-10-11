@@ -207,13 +207,13 @@ describe('userHelpers', () => {
         userProfile1.publicData,
         'public',
         'a',
-        config
+        config,
       );
       const initialValues2 = initialValuesForUserFields(
         userProfile2.publicData,
         'public',
         'c',
-        config
+        config,
       );
 
       const expectedData1 = {
@@ -232,20 +232,20 @@ describe('userHelpers', () => {
         userProfile1.publicData,
         'public',
         'a',
-        config
+        config,
       );
       const initialValuesPrivate = initialValuesForUserFields(
         userProfile1.privateData,
         'private',
         'a',
-        config
+        config,
       );
 
       const initialValuesProtected = initialValuesForUserFields(
         userProfile2.protectedData,
         'protected',
         'a',
-        config
+        config,
       );
 
       const expectedDataPublic = {
@@ -349,7 +349,7 @@ describe('userHelpers', () => {
       const inputConfig1 = getPropsForCustomUserFieldInputs(config, fakeIntl, 'a');
       const inputConfig2 = getPropsForCustomUserFieldInputs(config, fakeIntl, 'c');
 
-      const filterFn = f => f.fieldConfig.saveConfig.displayInSignUp;
+      const filterFn = (f) => f.fieldConfig.saveConfig.displayInSignUp;
       const filteredConfig1 = expectedUserFieldInput(1, ['a', 'b']).filter(filterFn);
       expect(inputConfig1).toEqual(filteredConfig1);
       const filteredConfig2 = expectedUserFieldInput(2, ['c', 'd']).filter(filterFn);

@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { intlShape, injectIntl } from '../../util/reactIntl';
 import { Field } from 'react-final-form';
 import classNames from 'classnames';
-import { IconReviewStar, ValidationError } from '../../components';
+import { intlShape, injectIntl } from '../../util/reactIntl';
+import { IconReviewStar, ValidationError } from '..';
 
 import css from './FieldReviewRating.module.css';
 
-const FieldReviewRatingComponent = props => {
-  /* eslint-disable no-unused-vars */
+function FieldReviewRatingComponent(props) {
   const {
     rootClassName,
     className,
@@ -21,9 +20,8 @@ const FieldReviewRatingComponent = props => {
     meta,
     ...rest
   } = props;
-  /* eslint-enable no-unused-vars */
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     input.onChange(event.target.value);
   };
 
@@ -36,8 +34,8 @@ const FieldReviewRatingComponent = props => {
 
   const classes = classNames(rootClassName || css.root, className);
 
-  const createStarRating = starCount => {
-    let inputsAndLabels = [];
+  const createStarRating = (starCount) => {
+    const inputsAndLabels = [];
 
     // Star inpu order: reverse order expected (5 -> 1) and also input before label
     // This is due to CSS selectors.
@@ -55,7 +53,7 @@ const FieldReviewRatingComponent = props => {
           value={inputValue}
           checked={typeof checked !== 'undefined' ? checked : value === inputValue}
           {...inputProps}
-        />
+        />,
       );
 
       inputsAndLabels.push(
@@ -66,7 +64,7 @@ const FieldReviewRatingComponent = props => {
           title={intl.formatMessage({ id: `FieldReviewRating.${starId}` })}
         >
           <IconReviewStar rootClassName={css.star} />
-        </label>
+        </label>,
       );
     }
     return inputsAndLabels;
@@ -81,7 +79,7 @@ const FieldReviewRatingComponent = props => {
       <ValidationError fieldMeta={fieldMeta} />
     </div>
   );
-};
+}
 
 FieldReviewRatingComponent.defaultProps = {
   rootClassName: null,
@@ -112,8 +110,8 @@ FieldReviewRatingComponent.propTypes = {
   intl: intlShape.isRequired,
 };
 
-const FieldReviewRating = props => {
+function FieldReviewRating(props) {
   return <Field component={FieldReviewRatingComponent} {...props} />;
-};
+}
 
 export default injectIntl(FieldReviewRating);

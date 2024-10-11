@@ -81,7 +81,7 @@ describe('EditListingDetailsForm', () => {
         intl={fakeIntl}
         dispatch={noop}
         onListingTypeChange={noop}
-        onSubmit={v => v}
+        onSubmit={(v) => v}
         saveActionMsg={saveActionMsg}
         updated={false}
         updateInProgress={false}
@@ -90,11 +90,11 @@ describe('EditListingDetailsForm', () => {
         listingFieldsConfig={listingFieldsConfig}
         categoryPrefix="categoryLevel"
         selectableCategories={[]}
-        pickSelectedCategories={values => pickCategoryFields(values, 'categoryLevel', 1, [])}
+        pickSelectedCategories={(values) => pickCategoryFields(values, 'categoryLevel', 1, [])}
         selectableListingTypes={selectableListingTypes}
-        hasExistingListingType={true}
+        hasExistingListingType
         initialValues={selectableListingTypes[0]}
-      />
+      />,
     );
 
     // Pickup fields

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import css from './IconKeys.module.css';
 
-const IconKeys = props => {
+function IconKeys(props) {
   const { className } = props;
   return (
     <svg
@@ -47,7 +47,7 @@ const IconKeys = props => {
       </g>
     </svg>
   );
-};
+}
 
 IconKeys.defaultProps = { className: null };
 

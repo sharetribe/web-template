@@ -44,16 +44,14 @@ const ONETIME_PAYMENT = 'ONETIME_PAYMENT';
 const PAY_AND_SAVE_FOR_LATER_USE = 'PAY_AND_SAVE_FOR_LATER_USE';
 const USE_SAVED_CARD = 'USE_SAVED_CARD';
 
-const paymentFlow = (selectedPaymentMethod, saveAfterOnetimePayment) => {
+const paymentFlow = (selectedPaymentMethod, saveAfterOnetimePayment) =>
   // Payment mode could be 'replaceCard', but without explicit saveAfterOnetimePayment flag,
   // we'll handle it as one-time payment
-  return selectedPaymentMethod === 'defaultCard'
+  selectedPaymentMethod === 'defaultCard'
     ? USE_SAVED_CARD
     : saveAfterOnetimePayment
-    ? PAY_AND_SAVE_FOR_LATER_USE
-    : ONETIME_PAYMENT;
-};
-
+      ? PAY_AND_SAVE_FOR_LATER_USE
+      : ONETIME_PAYMENT;
 /**
  * Construct orderParams object using pageData from session storage, shipping details, and optional payment params.
  * Note: This is used for both speculate transition and real transition
@@ -125,7 +123,7 @@ const fetchSpeculatedTransactionIfNeeded = (orderParams, pageData, fetchSpeculat
       processAlias,
       transactionId,
       requestTransition,
-      isPrivileged
+      isPrivileged,
     );
   }
 };
@@ -239,8 +237,8 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     selectedPaymentFlow === USE_SAVED_CARD && hasDefaultPaymentMethodSaved
       ? { paymentMethod: stripePaymentMethodId }
       : selectedPaymentFlow === PAY_AND_SAVE_FOR_LATER_USE
-      ? { setupPaymentMethodForSaving: true }
-      : {};
+        ? { setupPaymentMethodForSaving: true }
+        : {};
 
   // These are the order parameters for the first payment-related transition
   // which is either initiate-transition or initiate-transition-after-enquiry
@@ -248,7 +246,7 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
 
   // There are multiple XHR calls that needs to be made against Stripe API and Sharetribe Marketplace API on checkout with payments
   processCheckoutWithPayment(orderParams, requestPaymentParams)
-    .then(response => {
+    .then((response) => {
       const { orderId, messageSuccess, paymentMethodSaved } = response;
       setSubmitting(false);
 
@@ -265,7 +263,7 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
       onSubmitCallback();
       history.push(orderDetailsPath);
     })
-    .catch(err => {
+    .catch((err) => {
       console.error(err);
       setSubmitting(false);
     });
@@ -292,7 +290,7 @@ const onStripeInitialized = (stripe, process, props) => {
   }
 };
 
-export const CheckoutPageWithPayment = props => {
+export function CheckoutPageWithPayment(props) {
   const [submitting, setSubmitting] = useState(false);
   // Initialized stripe library is saved to state - if it's needed at some point here too.
   const [stripe, setStripe] = useState(null);
@@ -362,7 +360,7 @@ export const CheckoutPageWithPayment = props => {
     tx?.attributes?.lineItems?.length > 0 ? getFormattedTotalPrice(tx, intl) : null;
 
   const process = processName ? getProcess(processName) : null;
-  const transitions = process.transitions;
+  const { transitions } = process;
   const isPaymentExpired = hasPaymentExpired(existingTransaction, process, isClockInSync);
 
   // Allow showing page when currentUser is still being downloaded,
@@ -393,11 +391,11 @@ export const CheckoutPageWithPayment = props => {
     isPaymentExpired,
     retrievePaymentIntentError,
     speculateTransactionError,
-    listingLink
+    listingLink,
   );
 
   const txTransitions = existingTransaction?.attributes?.transitions || [];
-  const hasInquireTransition = txTransitions.find(tr => tr.transition === transitions.INQUIRE);
+  const hasInquireTransition = txTransitions.find((tr) => tr.transition === transitions.INQUIRE);
   const showInitialMessageInput = !hasInquireTransition;
 
   // Get first and last name of the current user and use it in the StripePaymentForm to autofill the name field
@@ -453,7 +451,7 @@ export const CheckoutPageWithPayment = props => {
             {showPaymentForm ? (
               <StripePaymentForm
                 className={css.paymentForm}
-                onSubmit={values =>
+                onSubmit={(values) =>
                   handleSubmit(values, process, props, stripe, submitting, setSubmitting)
                 }
                 inProgress={submitting}
@@ -472,7 +470,7 @@ export const CheckoutPageWithPayment = props => {
                     : null
                 }
                 paymentIntent={paymentIntent}
-                onStripeInitialized={stripe => {
+                onStripeInitialized={(stripe) => {
                   setStripe(stripe);
                   return onStripeInitialized(stripe, process, props);
                 }}
@@ -505,7 +503,7 @@ export const CheckoutPageWithPayment = props => {
       </div>
     </Page>
   );
-};
+}
 
 CheckoutPageWithPayment.defaultProps = {
   initiateOrderError: null,

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const EditIcon = props => {
+function EditIcon(props) {
   const { className } = props;
   return (
     <svg
@@ -32,7 +32,7 @@ const EditIcon = props => {
       </g>
     </svg>
   );
-};
+}
 
 EditIcon.defaultProps = { className: null };
 

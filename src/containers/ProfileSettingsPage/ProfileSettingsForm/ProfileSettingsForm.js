@@ -29,7 +29,7 @@ import css from './ProfileSettingsForm.module.css';
 const ACCEPT_IMAGES = 'image/*';
 const UPLOAD_CHANGE_DELAY = 2000; // Show spinner so that browser has time to load img srcset
 
-const DisplayNameMaybe = props => {
+function DisplayNameMaybe(props) {
   const { userTypeConfig, intl } = props;
 
   const isDisabled = userTypeConfig?.defaultUserFields?.displayName === false;
@@ -45,7 +45,7 @@ const DisplayNameMaybe = props => {
         validate: validators.required(
           intl.formatMessage({
             id: 'ProfileSettingsForm.displayNameRequired',
-          })
+          }),
         ),
       }
     : {};
@@ -73,7 +73,7 @@ const DisplayNameMaybe = props => {
       </p>
     </div>
   );
-};
+}
 
 class ProfileSettingsFormComponent extends Component {
   constructor(props) {
@@ -104,7 +104,7 @@ class ProfileSettingsFormComponent extends Component {
       <FinalForm
         {...this.props}
         mutators={{ ...arrayMutators }}
-        render={fieldRenderProps => {
+        render={(fieldRenderProps) => {
           const {
             className,
             currentUser,
@@ -244,13 +244,13 @@ class ProfileSettingsFormComponent extends Component {
             userFields,
             intl,
             userTypeConfig?.userType,
-            false
+            false,
           );
 
           return (
             <Form
               className={classes}
-              onSubmit={e => {
+              onSubmit={(e) => {
                 this.submittedValues = values;
                 handleSubmit(e);
               }}
@@ -269,10 +269,10 @@ class ProfileSettingsFormComponent extends Component {
                   uploadImageError={uploadImageError}
                   disabled={uploadInProgress}
                 >
-                  {fieldProps => {
+                  {(fieldProps) => {
                     const { accept, id, input, label, disabled, uploadImageError } = fieldProps;
                     const { name, type } = input;
-                    const onChange = e => {
+                    const onChange = (e) => {
                       const file = e.target.files[0];
                       form.change(`profileImage`, file);
                       form.blur(`profileImage`);
@@ -368,7 +368,7 @@ class ProfileSettingsFormComponent extends Component {
                 </p>
               </div>
               <div className={classNames(css.sectionContainer, css.lastSection)}>
-                {userFieldProps.map(fieldProps => (
+                {userFieldProps.map((fieldProps) => (
                   <CustomExtendedDataField {...fieldProps} formId={formId} />
                 ))}
               </div>

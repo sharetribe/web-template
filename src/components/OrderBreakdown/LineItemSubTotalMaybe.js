@@ -19,9 +19,10 @@ const { Money } = sdkTypes;
  * Calculates the total price in sub units for multiple line items.
  */
 const lineItemsTotal = (lineItems, marketplaceCurrency) => {
-  const amount = lineItems.reduce((total, item) => {
-    return total.plus(item.lineTotal.amount);
-  }, new Decimal(0));
+  const amount = lineItems.reduce(
+    (total, item) => total.plus(item.lineTotal.amount),
+    new Decimal(0),
+  );
   const currency = lineItems[0] ? lineItems[0].lineTotal.currency : marketplaceCurrency;
   return new Money(amount, currency);
 };
@@ -29,19 +30,15 @@ const lineItemsTotal = (lineItems, marketplaceCurrency) => {
 /**
  * Checks if line item represents commission
  */
-const isCommission = lineItem => {
-  return (
-    lineItem.code === LINE_ITEM_PROVIDER_COMMISSION ||
-    lineItem.code === LINE_ITEM_CUSTOMER_COMMISSION
-  );
-};
+const isCommission = (lineItem) =>
+  lineItem.code === LINE_ITEM_PROVIDER_COMMISSION ||
+  lineItem.code === LINE_ITEM_CUSTOMER_COMMISSION;
 
 /**
  * Returns non-commission, non-reversal line items
  */
-const nonCommissionNonReversalLineItems = lineItems => {
-  return lineItems.filter(item => !isCommission(item) && !item.reversal);
-};
+const nonCommissionNonReversalLineItems = (lineItems) =>
+  lineItems.filter((item) => !isCommission(item) && !item.reversal);
 
 /**
  * Check if there is a commission line-item for the given user role.
@@ -50,17 +47,17 @@ const hasCommission = (lineItems, userRole) => {
   let commissionLineItem = null;
 
   if (userRole === 'customer') {
-    commissionLineItem = lineItems.find(item => item.code === LINE_ITEM_CUSTOMER_COMMISSION);
+    commissionLineItem = lineItems.find((item) => item.code === LINE_ITEM_CUSTOMER_COMMISSION);
   } else if (userRole === 'provider') {
-    commissionLineItem = lineItems.find(item => item.code === LINE_ITEM_PROVIDER_COMMISSION);
+    commissionLineItem = lineItems.find((item) => item.code === LINE_ITEM_PROVIDER_COMMISSION);
   }
   return !!commissionLineItem;
 };
 
-const LineItemSubTotalMaybe = props => {
+function LineItemSubTotalMaybe(props) {
   const { lineItems, code, userRole, intl, marketplaceCurrency } = props;
 
-  const refund = lineItems.find(item => item.code === code && item.reversal);
+  const refund = lineItems.find((item) => item.code === code && item.reversal);
 
   // Show subtotal only if commission line-item is applicable to user or refund is issued.
   const showSubTotal = hasCommission(lineItems, userRole) || refund;
@@ -83,7 +80,7 @@ const LineItemSubTotalMaybe = props => {
       </div>
     </>
   ) : null;
-};
+}
 
 LineItemSubTotalMaybe.propTypes = {
   lineItems: propTypes.lineItems.isRequired,

@@ -28,9 +28,9 @@ const DEFAULT_CLASSES = {
   blockContainer: css.blockContainer,
 };
 
-/////////////////////////////////////////////
+/// //////////////////////////////////////////
 // Mapping of section types and components //
-/////////////////////////////////////////////
+/// //////////////////////////////////////////
 
 const defaultSectionComponents = {
   article: { component: SectionArticle },
@@ -41,11 +41,11 @@ const defaultSectionComponents = {
   hero: { component: SectionHero },
 };
 
-//////////////////////
+/// ///////////////////
 // Section builder //
-//////////////////////
+/// ///////////////////
 
-const SectionBuilder = props => {
+function SectionBuilder(props) {
   const { sections, options } = props;
   const { sectionComponents = {}, isInsideContainer, ...otherOption } = options || {};
 
@@ -56,7 +56,7 @@ const SectionBuilder = props => {
 
   // Selection of Section components
   const components = { ...defaultSectionComponents, ...sectionComponents };
-  const getComponent = sectionType => {
+  const getComponent = (sectionType) => {
     const config = components[sectionType];
     return config?.component;
   };
@@ -72,10 +72,9 @@ const SectionBuilder = props => {
         sequentialCandidate = `${candidate}${i}`;
       }
       return getUniqueSectionId(sequentialCandidate, index);
-    } else {
-      sectionIds.push(candidate);
-      return candidate;
     }
+    sectionIds.push(candidate);
+    return candidate;
   };
 
   return (
@@ -102,17 +101,16 @@ const SectionBuilder = props => {
               sectionId={sectionId}
             />
           );
-        } else {
-          // If the section type is unknown, the app can't know what to render
-          console.warn(
-            `Unknown section type (${section.sectionType}) detected using sectionName (${section.sectionName}).`
-          );
-          return null;
         }
+        // If the section type is unknown, the app can't know what to render
+        console.warn(
+          `Unknown section type (${section.sectionType}) detected using sectionName (${section.sectionName}).`,
+        );
+        return null;
       })}
     </>
   );
-};
+}
 
 const propTypeSection = shape({
   sectionId: string,

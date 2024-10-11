@@ -65,26 +65,25 @@ const listingTypes = [
   },
 ];
 
-const capitalizeFirstLetter = str => str.charAt(0).toUpperCase() + str.slice(1);
-const addSpaces = str => str.split('-').join(' ');
-const labelize = str => addSpaces(capitalizeFirstLetter(str));
+const capitalizeFirstLetter = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+const addSpaces = (str) => str.split('-').join(' ');
+const labelize = (str) => addSpaces(capitalizeFirstLetter(str));
 
-const generateCategories = optionStrings => {
-  return optionStrings.reduce((converted, entry) => {
+const generateCategories = (optionStrings) =>
+  optionStrings.reduce((converted, entry) => {
     const isArray = Array.isArray(entry);
     const option = isArray
       ? { id: entry[0], name: labelize(entry[0]), subcategories: generateCategories(entry[1]) }
       : { id: entry, name: labelize(entry) };
     return [...converted, option];
   }, []);
-};
 const categories = generateCategories([
   ['dogs', ['labradors', 'poodles']],
   ['cats', ['burmese', 'egyptian-mau']],
   ['fish', [['freshwater', ['grayling', 'arctic-char', 'pike']], 'saltwater']],
   ['birds', ['parrot', 'macaw']],
 ]);
-//console.log(JSON.stringify(categories, null, 2));
+// console.log(JSON.stringify(categories, null, 2));
 
 const listingFields = [
   {
@@ -99,7 +98,10 @@ const listingFields = [
       categoryIds: ['cats'],
     },
     schemaType: 'enum',
-    enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
+    enumOptions: [
+      { option: 'cat_1', label: 'Cat 1' },
+      { option: 'cat_2', label: 'Cat 2' },
+    ],
     filterConfig: {
       indexForSearch: true,
     },
@@ -132,7 +134,7 @@ const listingFields = [
   },
 ];
 
-const getConfig = variantType => {
+const getConfig = (variantType) => {
   const hostedConfig = getHostedConfiguration();
   return {
     ...hostedConfig,
@@ -169,7 +171,7 @@ const review = createReview(
     type: 'ofProvider',
     content: 'It was awesome!',
   },
-  { author: createUser('reviewerA'), listing: listing1 }
+  { author: createUser('reviewerA'), listing: listing1 },
 );
 
 // We'll initialize the store with relevant listing data
@@ -222,7 +224,7 @@ describe('ListingPage variants', () => {
     const config = getConfig('coverPhoto');
     const routeConfiguration = getRouteConfiguration(config.layout);
     const props = { ...commonProps };
-    const listingRouteConfig = routeConfiguration.find(conf => conf.name === 'ListingPage');
+    const listingRouteConfig = routeConfiguration.find((conf) => conf.name === 'ListingPage');
     const ListingPage = listingRouteConfig.component;
 
     const { getByPlaceholderText, getByRole, queryAllByRole, getByText } = render(
@@ -231,7 +233,7 @@ describe('ListingPage variants', () => {
         initialState,
         config,
         routeConfiguration,
-      }
+      },
     );
 
     await waitFor(() => {
@@ -278,7 +280,7 @@ describe('ListingPage variants', () => {
     const config = getConfig('carousel');
     const routeConfiguration = getRouteConfiguration(config.layout);
     const props = { ...commonProps };
-    const listingRouteConfig = routeConfiguration.find(conf => conf.name === 'ListingPage');
+    const listingRouteConfig = routeConfiguration.find((conf) => conf.name === 'ListingPage');
     const ListingPage = listingRouteConfig.component;
 
     const { getByPlaceholderText, getByRole, queryAllByRole, getByText } = render(
@@ -287,7 +289,7 @@ describe('ListingPage variants', () => {
         initialState,
         config,
         routeConfiguration,
-      }
+      },
     );
     await waitFor(() => {
       // Has main search in Topbar and it's a location search.
@@ -347,12 +349,12 @@ describe('Duck', () => {
 
   it('showListing() success', () => {
     const id = new UUID('00000000-0000-0000-0000-000000000000');
-    const dispatch = jest.fn(action => action);
+    const dispatch = jest.fn((action) => action);
     const response = { status: 200 };
     const show = jest.fn(() => Promise.resolve(response));
     const sdk = { listings: { show }, currentUser: { show } };
 
-    return showListing(id, config)(dispatch, null, sdk).then(data => {
+    return showListing(id, config)(dispatch, null, sdk).then((data) => {
       expect(data).toEqual(response);
       expect(show.mock.calls).toEqual([
         [
@@ -374,14 +376,14 @@ describe('Duck', () => {
 
   it('showListing() error', () => {
     const id = new UUID('00000000-0000-0000-0000-000000000000');
-    const dispatch = jest.fn(action => action);
+    const dispatch = jest.fn((action) => action);
     const error = new Error('fail');
     const show = jest.fn(() => Promise.reject(error));
     const sdk = { listings: { show } };
 
     // Calling sdk.listings.show is expected to fail now
 
-    return showListing(id, config)(dispatch, null, sdk).then(data => {
+    return showListing(id, config)(dispatch, null, sdk).then((data) => {
       expect(show.mock.calls).toEqual([
         [
           expect.objectContaining({
@@ -401,8 +403,8 @@ describe('Duck', () => {
   });
 
   // Shared parameters for viewing rights loadData tests
-  const fakeResponse = resource => ({ data: { data: resource, include: [] } });
-  const sdkFn = response => jest.fn(() => Promise.resolve(response));
+  const fakeResponse = (resource) => ({ data: { data: resource, include: [] } });
+  const sdkFn = (response) => jest.fn(() => Promise.resolve(response));
 
   const sanitizeConfig = { listingFields };
 
@@ -429,7 +431,7 @@ describe('Duck', () => {
     // Tests the actions that get dispatched to the Redux store when ListingPage.duck.js
     // loadData() function is called. If you make customizations to the loadData() logic,
     // update the dispatched actions list in this test accordingly!
-    return loadData({ id }, null, config)(dispatch, getState, sdk).then(data => {
+    return loadData({ id }, null, config)(dispatch, getState, sdk).then((data) => {
       expect(dispatchedActions(dispatch)).toEqual([
         setInitialValues({ inquiryModalOpenForListingId: null, lineItems: null }),
         showListingRequest(uuid),
@@ -470,7 +472,7 @@ describe('Duck', () => {
     // Tests the actions that get dispatched to the Redux store when ListingPage.duck.js
     // loadData() function is called. If you make customizations to the loadData() logic,
     // update the dispatched actions list in this test accordingly!
-    return loadData({ id }, null, config)(dispatch, getState, sdk).then(data => {
+    return loadData({ id }, null, config)(dispatch, getState, sdk).then((data) => {
       expect(dispatchedActions(dispatch)).toEqual([
         setInitialValues({ inquiryModalOpenForListingId: null, lineItems: null }),
         showListingRequest(uuid),
@@ -507,7 +509,7 @@ describe('Duck', () => {
     // Tests the actions that get dispatched to the Redux store when ListingPage.duck.js
     // loadData() function is called. If you make customizations to the loadData() logic,
     // update the dispatched actions list in this test accordingly!
-    return loadData({ id }, null, config)(dispatch, getState, sdk).then(data => {
+    return loadData({ id }, null, config)(dispatch, getState, sdk).then((data) => {
       expect(dispatchedActions(dispatch)).toEqual([
         setInitialValues({ inquiryModalOpenForListingId: null, lineItems: null }),
         showListingRequest(uuid),
@@ -531,7 +533,7 @@ describe('ActionBarMaybe', () => {
         isOwnListing
         listing={listing}
         editParams={{ id: 'id1', slug: 'asdf', type: 'edit', tab: 'details' }}
-      />
+      />,
     );
 
     expect(screen.getByText('ListingPage.ownListing')).toBeInTheDocument();
@@ -547,7 +549,7 @@ describe('ActionBarMaybe', () => {
         isOwnListing
         listing={listing}
         editParams={{ id: 'id1', slug: 'asdf', type: 'edit', tab: 'details' }}
-      />
+      />,
     );
     expect(screen.getByText('ListingPage.ownListingPendingApproval')).toBeInTheDocument();
     expect(screen.getByText('ListingPage.editListing')).toBeInTheDocument();
@@ -562,7 +564,7 @@ describe('ActionBarMaybe', () => {
         isOwnListing
         listing={listing}
         editParams={{ id: 'id1', slug: 'asdf', type: 'edit', tab: 'details' }}
-      />
+      />,
     );
     expect(screen.getByText('ListingPage.ownClosedListing')).toBeInTheDocument();
     expect(screen.getByText('ListingPage.editListing')).toBeInTheDocument();
@@ -577,7 +579,7 @@ describe('ActionBarMaybe', () => {
         isOwnListing={false}
         listing={listing}
         editParams={{ id: 'id1', slug: 'asdf', type: 'edit', tab: 'details' }}
-      />
+      />,
     );
     expect(screen.getByText('ListingPage.closedListing')).toBeInTheDocument();
   });
@@ -591,7 +593,7 @@ describe('ActionBarMaybe', () => {
         isOwnListing={false}
         listing={listing}
         editParams={{ id: 'id1', slug: 'asdf', type: 'edit', tab: 'details' }}
-      />
+      />,
     );
     expect(actionBar.asFragment().firstChild).toBeNull();
   });

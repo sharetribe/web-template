@@ -12,7 +12,7 @@ import {
   MenuItem,
   MenuContent,
   Modal,
-} from '../../components';
+} from '..';
 
 import IconCard from './IconCard/IconCard';
 import css from './SavedCardDetails.module.css';
@@ -20,7 +20,7 @@ import css from './SavedCardDetails.module.css';
 const DEFAULT_CARD = 'defaultCard';
 const REPLACE_CARD = 'replaceCard';
 
-const SavedCardDetails = props => {
+function SavedCardDetails(props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [active, setActive] = useState(DEFAULT_CARD);
@@ -41,12 +41,12 @@ const SavedCardDetails = props => {
 
   const paymentMethodPlaceholderDesktop = intl.formatMessage(
     { id: 'SavedCardDetails.savedPaymentMethodPlaceholderDesktop' },
-    { last4Digits }
+    { last4Digits },
   );
 
   const paymentMethodPlaceholderMobile = intl.formatMessage(
     { id: 'SavedCardDetails.savedPaymentMethodPlaceholderMobile' },
-    { last4Digits }
+    { last4Digits },
   );
 
   const paymentMethodPlaceholder = (
@@ -67,18 +67,19 @@ const SavedCardDetails = props => {
 
   const expiredCardText = intl.formatMessage(
     { id: 'SavedCardDetails.expiredCardText' },
-    { last4Digits }
+    { last4Digits },
   );
   const expiredText = <div className={css.cardExpiredText}>{expiredCardText}</div>;
 
   const isExpired = (expirationMonth, expirationYear) => {
     const currentTime = new Date();
     const currentYear = currentTime.getFullYear();
-    const currentMonth = currentTime.getMonth() + 1; //getMonth() method returns the month (from 0 to 11)
+    const currentMonth = currentTime.getMonth() + 1; // getMonth() method returns the month (from 0 to 11)
 
     if (expirationYear < currentYear) {
       return true;
-    } else if (expirationYear === currentYear && expirationMonth < currentMonth) {
+    }
+    if (expirationYear === currentYear && expirationMonth < currentMonth) {
       return true;
     }
 
@@ -98,7 +99,7 @@ const SavedCardDetails = props => {
     </div>
   );
 
-  const handleClick = item => e => {
+  const handleClick = (item) => (e) => {
     // Clicking buttons inside a form will call submit
     e.preventDefault();
     e.stopPropagation();
@@ -110,7 +111,7 @@ const SavedCardDetails = props => {
     }
   };
 
-  const onToggleActive = isOpen => {
+  const onToggleActive = (isOpen) => {
     setMenuOpen(isOpen);
   };
 
@@ -124,7 +125,7 @@ const SavedCardDetails = props => {
   const removeCardModalTitle = intl.formatMessage({ id: 'SavedCardDetails.removeCardModalTitle' });
   const removeCardModalContent = intl.formatMessage(
     { id: 'SavedCardDetails.removeCardModalContent' },
-    { last4Digits }
+    { last4Digits },
   );
   const cancel = intl.formatMessage({ id: 'SavedCardDetails.cancel' });
   const removeCard = intl.formatMessage({ id: 'SavedCardDetails.removeCard' });
@@ -208,7 +209,7 @@ const SavedCardDetails = props => {
       ) : null}
     </div>
   );
-};
+}
 
 SavedCardDetails.defaultProps = {
   rootClassName: null,

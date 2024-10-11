@@ -86,14 +86,14 @@ exports.openIdConfiguration = (req, res) => {
 // this document is expected to be found from
 // api/.well-known/jwks.json endpoint as stated in discovery document
  */
-exports.jwksUri = keys => (req, res) => {
-  const jwkKeys = keys.map(key => {
-    return jose.exportJWK(crypto.createPublicKey(key.rsaPublicKey)).then(res => {
+exports.jwksUri = (keys) => (req, res) => {
+  const jwkKeys = keys.map((key) => {
+    return jose.exportJWK(crypto.createPublicKey(key.rsaPublicKey)).then((res) => {
       return { alg: key.alg, kid: key.keyId, ...res };
     });
   });
 
-  Promise.all(jwkKeys).then(resolvedJwkKeys => {
+  Promise.all(jwkKeys).then((resolvedJwkKeys) => {
     res.json({ keys: resolvedJwkKeys });
   });
 };

@@ -33,7 +33,7 @@ const templateWithHtmlAttributes = _.template(indexHtml, {
 
 // Template tags inside given template string (templatedWithHtmlAttributes),
 // which cantains <html> attributes already.
-const templateTags = templatedWithHtmlAttributes =>
+const templateTags = (templatedWithHtmlAttributes) =>
   _.template(templatedWithHtmlAttributes, {
     // Interpolate variables in the HTML template with the following
     // syntax: <!--!variableName-->
@@ -59,7 +59,7 @@ const templateTags = templatedWithHtmlAttributes =>
   });
 
 // Interpolate htmlAttributes and other helmet data into the template
-const template = params => {
+const template = (params) => {
   const htmlAttributes = params.htmlAttributes;
   const tags = _.omit(params, ['htmlAttributes']);
   const templatedWithHtmlAttributes = templateWithHtmlAttributes({ htmlAttributes });
@@ -69,7 +69,7 @@ const template = params => {
 //
 // Clean Error details when stringifying Error.
 //
-const cleanErrorValue = value => {
+const cleanErrorValue = (value) => {
   // This should not happen
   // Pick only selected few values to be stringified if Error object is encountered.
   // Other values might contain circular structures
@@ -90,7 +90,7 @@ const replacer = (key = null, value) => {
   return types.replacer(key, cleanedValue);
 };
 
-exports.render = function(requestUrl, context, data, renderApp, webExtractor) {
+exports.render = function (requestUrl, context, data, renderApp, webExtractor) {
   const { preloadedState, translations, hostedConfig } = data;
 
   // Bind webExtractor as "this" for collectChunks call.

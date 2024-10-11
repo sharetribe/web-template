@@ -25,13 +25,11 @@ const PLATFORM_CONF = {
   youtube: { icon: youtubeIcon, name: 'YouTube' },
 };
 
-const getIconConf = platform => {
+const getIconConf = (platform) => {
   const icon = PLATFORM_CONF[platform]?.icon || null;
   return icon;
 };
-const getIconTitle = platform => {
-  return PLATFORM_CONF[platform]?.name || platform;
-};
+const getIconTitle = (platform) => PLATFORM_CONF[platform]?.name || platform;
 
 export const supportedPlatforms = [
   'facebook',

@@ -1,16 +1,15 @@
-/* eslint-disable no-console */
 import React from 'react';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
 import { injectIntl } from '../../../util/reactIntl';
 import { types as sdkTypes } from '../../../util/sdkLoader';
-import { Button } from '../../../components';
+import { Button } from '../..';
 import { required, bookingDateRequired, composeValidators } from '../../../util/validators';
 import { LINE_ITEM_HOUR, TIME_SLOT_TIME } from '../../../util/types';
 import FieldDateAndTimeInput from './FieldDateAndTimeInput';
 
 const { UUID } = sdkTypes;
 
-const identity = v => v;
+const identity = (v) => v;
 
 const options = { weekday: 'short', month: 'long', day: 'numeric' };
 const placeholderText = new Intl.DateTimeFormat('en-US', options).format(new Date());
@@ -108,61 +107,63 @@ const monthlyTimeSlots = {
   },
 };
 
-const FormComponent = props => (
-  <FinalForm
-    {...props}
-    render={fieldRenderProps => {
-      const {
-        style,
-        form,
-        handleSubmit,
-        onChange,
-        onFetchTimeSlots,
-        pristine,
-        submitting,
-        startDateInputProps,
-        endDateInputProps,
-        timeZone,
-        monthlyTimeSlots,
-        values,
-        intl,
-        dayCountAvailableForBooking,
-      } = fieldRenderProps;
-      const submitDisabled = pristine || submitting;
+function FormComponent(props) {
+  return (
+    <FinalForm
+      {...props}
+      render={(fieldRenderProps) => {
+        const {
+          style,
+          form,
+          handleSubmit,
+          onChange,
+          onFetchTimeSlots,
+          pristine,
+          submitting,
+          startDateInputProps,
+          endDateInputProps,
+          timeZone,
+          monthlyTimeSlots,
+          values,
+          intl,
+          dayCountAvailableForBooking,
+        } = fieldRenderProps;
+        const submitDisabled = pristine || submitting;
 
-      const dateInputProps = {
-        startDateInputProps,
-        endDateInputProps,
-      };
+        const dateInputProps = {
+          startDateInputProps,
+          endDateInputProps,
+        };
 
-      return (
-        <form
-          style={style}
-          onSubmit={e => {
-            e.preventDefault();
-            handleSubmit(e);
-          }}
-        >
-          <FormSpy onChange={onChange} />
-          <FieldDateAndTimeInput
-            {...dateInputProps}
-            monthlyTimeSlots={monthlyTimeSlots}
-            onFetchTimeSlots={onFetchTimeSlots}
-            values={values}
-            intl={intl}
-            form={form}
-            pristine={pristine}
-            timeZone={timeZone}
-            dayCountAvailableForBooking={dayCountAvailableForBooking}
-          />
-          <Button type="submit" disabled={submitDisabled} style={{ marginTop: '24px' }}>
-            Select
-          </Button>
-        </form>
-      );
-    }}
-  />
-);
+        return (
+          <form
+            style={style}
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit(e);
+            }}
+          >
+            <FormSpy onChange={onChange} />
+            <FieldDateAndTimeInput
+              {...dateInputProps}
+              monthlyTimeSlots={monthlyTimeSlots}
+              onFetchTimeSlots={onFetchTimeSlots}
+              values={values}
+              intl={intl}
+              form={form}
+              pristine={pristine}
+              timeZone={timeZone}
+              dayCountAvailableForBooking={dayCountAvailableForBooking}
+            />
+            <Button type="submit" disabled={submitDisabled} style={{ marginTop: '24px' }}>
+              Select
+            </Button>
+          </form>
+        );
+      }}
+    />
+  );
+}
 
 export const Empty = {
   component: injectIntl(FormComponent),
@@ -179,8 +180,8 @@ export const Empty = {
       bookingStartDate: { date: new Date(Date.UTC(currentYear, today.getUTCMonth(), 14)) },
     },
     dayCountAvailableForBooking: 90,
-    onChange: formState => {},
-    onSubmit: values => {
+    onChange: (formState) => {},
+    onSubmit: (values) => {
       console.log('Submitting a form with values:', values);
     },
     onFetchTimeSlots: () => {

@@ -15,7 +15,7 @@ class RangeSliderComponent extends Component {
     handles.forEach((h, index) => {
       if (h < min || h > max || (index < handles.length - 1 && h > handles[index + 1])) {
         throw new Error(
-          'RangeSlider error: handles need to be given in ascending order and they need to be within min and max values'
+          'RangeSlider error: handles need to be given in ascending order and they need to be within min and max values',
         );
       }
     });
@@ -30,7 +30,7 @@ class RangeSliderComponent extends Component {
 
   toPosition(value) {
     const { dimensions, min, max } = this.props;
-    const width = dimensions.width;
+    const { width } = dimensions;
     const valueOffset = value - min;
     const scale = max - min;
     return Math.round((valueOffset / scale) * width);
@@ -38,7 +38,7 @@ class RangeSliderComponent extends Component {
 
   toValue(position) {
     const { dimensions, min, max, step } = this.props;
-    const width = dimensions.width;
+    const { width } = dimensions;
     const scale = max - min;
     const value = Math.round((position / width) * scale) + min;
     return Math.ceil(value / step) * step;
@@ -69,7 +69,7 @@ class RangeSliderComponent extends Component {
               valueToPosition={this.toPosition}
               positionToValue={this.toValue}
               changeActive={() => this.changeActive(index)}
-              onChange={value => this.onChange(value, index)}
+              onChange={(value) => this.onChange(value, index)}
             />
           );
         })}
@@ -97,7 +97,7 @@ RangeSliderComponent.propTypes = {
 
 const RangeSliderComponentWithDimensions = withDimensions(RangeSliderComponent);
 
-const RangeSlider = props => {
+function RangeSlider(props) {
   const { rootClassName, className, ...rest } = props;
   const classes = classNames(rootClassName || css.root, className);
   return (
@@ -105,7 +105,7 @@ const RangeSlider = props => {
       <RangeSliderComponentWithDimensions {...rest} />
     </div>
   );
-};
+}
 
 RangeSlider.defaultProps = {
   rootClassName: null,

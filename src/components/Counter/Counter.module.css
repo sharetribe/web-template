@@ -1,0 +1,65 @@
+.formContainer {
+  background-color: white;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.counterTitle {
+  color: #012fa7;
+  font-size: 18px;
+  text-align: center;
+  padding: 20px;
+}
+
+.counterValue {
+  margin-top: 10px;
+  color: #012fa7;
+  display: inline-flex;
+  font-size: 2em;
+}
+
+.digitBox {
+  background-color: #f0f0f0;
+  width: 50px;
+  height: 50px;
+  margin: 0 5px;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .formContainer {
+    margin-top: 5px;
+  }
+
+  .counterTitle {
+    font-size: 18px;
+  }
+
+  .counterValue {
+    margin-top: 5px;
+    color: #012fa7;
+    display: inline-flex;
+    font-size: 2em;
+  }
+
+  .digitBox {
+    background-color: #f0f0f0;
+    width: 50px;
+    height: 50px;
+    margin: 0 5px;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

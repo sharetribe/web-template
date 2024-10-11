@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import css from './DateInput.module.css';
 
-const NextMonthIcon = props => {
+function NextMonthIcon(props) {
   const { className, rootClassName } = props;
   const classes = classNames(rootClassName || css.rootNextMonthIcon, className);
 
@@ -22,7 +22,7 @@ const NextMonthIcon = props => {
       />
     </svg>
   );
-};
+}
 
 const { string } = PropTypes;
 

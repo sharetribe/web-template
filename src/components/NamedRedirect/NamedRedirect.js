@@ -9,12 +9,12 @@ import { Redirect } from 'react-router-dom';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { pathByRouteName } from '../../util/routes';
 
-const NamedRedirect = props => {
+function NamedRedirect(props) {
   const routeConfiguration = useRouteConfiguration();
   const { name, search, state, params, push } = props;
   const pathname = pathByRouteName(name, routeConfiguration, params);
   return <Redirect to={{ pathname, search, state }} push={push} />;
-};
+}
 
 const { bool, object, string } = PropTypes;
 

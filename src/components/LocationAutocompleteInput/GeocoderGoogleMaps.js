@@ -10,11 +10,11 @@ export const CURRENT_LOCATION_ID = 'current-location';
 // When displaying data from the Google Maps Places API, and
 // attribution is required next to the results.
 // See: https://developers.google.com/places/web-service/policies#powered
-export const GeocoderAttribution = props => {
+export function GeocoderAttribution(props) {
   const { rootClassName, className } = props;
   const classes = classNames(rootClassName || css.poweredByGoogle, className);
   return <div className={classes} />;
-};
+}
 
 /**
  * A forward geocoding (place name -> coordinates) implementation
@@ -24,6 +24,7 @@ class GeocoderGoogleMaps {
   constructor() {
     this.sessionToken = null;
   }
+
   getSessionToken() {
     this.sessionToken =
       this.sessionToken || new window.google.maps.places.AutocompleteSessionToken();
@@ -54,12 +55,10 @@ class GeocoderGoogleMaps {
 
     return googleMapsUtil
       .getPlacePredictions(search, this.getSessionToken(), limitCountriesMaybe)
-      .then(results => {
-        return {
-          search,
-          predictions: results.predictions,
-        };
-      });
+      .then((results) => ({
+        search,
+        predictions: results.predictions,
+      }));
   }
 
   /**
@@ -95,13 +94,11 @@ class GeocoderGoogleMaps {
    */
   getPlaceDetails(prediction, currentLocationBoundsDistance) {
     if (this.getPredictionId(prediction) === CURRENT_LOCATION_ID) {
-      return userLocation().then(latlng => {
-        return {
-          address: '',
-          origin: latlng,
-          bounds: googleMapsUtil.locationBounds(latlng, currentLocationBoundsDistance),
-        };
-      });
+      return userLocation().then((latlng) => ({
+        address: '',
+        origin: latlng,
+        bounds: googleMapsUtil.locationBounds(latlng, currentLocationBoundsDistance),
+      }));
     }
 
     if (prediction.predictionPlace) {
@@ -110,7 +107,7 @@ class GeocoderGoogleMaps {
 
     return googleMapsUtil
       .getPlaceDetails(prediction.place_id, this.getSessionToken())
-      .then(place => {
+      .then((place) => {
         this.sessionToken = null;
         return place;
       });

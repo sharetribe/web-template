@@ -2,7 +2,7 @@ import React from 'react';
 import { FieldTextInput } from '../../../components';
 import FilterForm from './FilterForm';
 
-const field = formId => (
+const field = (formId) => (
   <FieldTextInput
     id={`${formId}.field`}
     name="field"
@@ -19,7 +19,7 @@ export const FilterFormExample = {
     liveEdit: false,
     showAsPopup: true,
     contentPlacementOffset: -14,
-    onSubmit: values => {
+    onSubmit: (values) => {
       console.log(values);
     },
     onCancel: () => {
@@ -41,7 +41,7 @@ export const FilterFormExampleLiveEdit = {
     liveEdit: true,
     showAsPopup: false,
     contentPlacementOffset: -14,
-    onChange: values => {
+    onChange: (values) => {
       console.log(values);
     },
     label: 'Example label',

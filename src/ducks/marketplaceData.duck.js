@@ -41,7 +41,7 @@ export default function marketplaceDataReducer(state = initialState, action = {}
  */
 export const getListingsById = (state, listingIds) => {
   const { entities } = state.marketplaceData;
-  const resources = listingIds.map(id => ({
+  const resources = listingIds.map((id) => ({
     id,
     type: 'listing',
   }));

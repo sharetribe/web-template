@@ -25,12 +25,12 @@ class Promised extends Component {
   componentDidMount() {
     this._isMounted = true;
     this.props.promise
-      .then(value => {
+      .then((value) => {
         if (this._isMounted) {
           this.setState({ value });
         }
       })
-      .catch(error => {
+      .catch((error) => {
         if (this._isMounted) {
           this.setState({ error });
         }
@@ -47,7 +47,7 @@ class Promised extends Component {
   }
 }
 
-Promised.defaultProps = { renderRejected: e => e };
+Promised.defaultProps = { renderRejected: (e) => e };
 
 const { func, shape } = PropTypes;
 

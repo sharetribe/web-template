@@ -2,11 +2,11 @@
 // so, they are not directly calling Marketplace API or Integration API.
 // You can find these api endpoints from 'server/api/...' directory
 
+import Decimal from 'decimal.js';
 import appSettings from '../config/settings';
 import { types as sdkTypes, transit } from './sdkLoader';
-import Decimal from 'decimal.js';
 
-export const apiBaseUrl = marketplaceRootURL => {
+export const apiBaseUrl = (marketplaceRootURL) => {
   const port = process.env.REACT_APP_DEV_API_SERVER_PORT;
   const useDevApiServer = process.env.NODE_ENV === 'development' && !!port;
 
@@ -27,18 +27,15 @@ export const typeHandlers = [
   {
     type: sdkTypes.BigDecimal,
     customType: Decimal,
-    writer: v => new sdkTypes.BigDecimal(v.toString()),
-    reader: v => new Decimal(v.value),
+    writer: (v) => new sdkTypes.BigDecimal(v.toString()),
+    reader: (v) => new Decimal(v.value),
   },
 ];
 
-const serialize = data => {
-  return transit.write(data, { typeHandlers, verbose: appSettings.sdk.transitVerbose });
-};
+const serialize = (data) =>
+  transit.write(data, { typeHandlers, verbose: appSettings.sdk.transitVerbose });
 
-const deserialize = str => {
-  return transit.read(str, { typeHandlers });
-};
+const deserialize = (str) => transit.read(str, { typeHandlers });
 
 const methods = {
   POST: 'POST',
@@ -67,12 +64,12 @@ const request = (path, options = {}) => {
     ...rest,
   };
 
-  return window.fetch(url, fetchOptions).then(res => {
+  return window.fetch(url, fetchOptions).then((res) => {
     const contentTypeHeader = res.headers.get('Content-Type');
     const contentType = contentTypeHeader ? contentTypeHeader.split(';')[0] : null;
 
     if (res.status >= 400) {
-      return res.json().then(data => {
+      return res.json().then((data) => {
         let e = new Error();
         e = Object.assign(e, data);
 
@@ -81,7 +78,8 @@ const request = (path, options = {}) => {
     }
     if (contentType === 'application/transit+json') {
       return res.text().then(deserialize);
-    } else if (contentType === 'application/json') {
+    }
+    if (contentType === 'application/json') {
       return res.json();
     }
     return res.text();
@@ -104,9 +102,7 @@ const post = (path, body, options = {}) => {
 //
 // See `server/api/transaction-line-items.js` to see what data should
 // be sent in the body.
-export const transactionLineItems = body => {
-  return post('/api/transaction-line-items', body);
-};
+export const transactionLineItems = (body) => post('/api/transaction-line-items', body);
 
 // Initiate a privileged transaction.
 //
@@ -116,9 +112,7 @@ export const transactionLineItems = body => {
 //
 // See `server/api/initiate-privileged.js` to see what data should be
 // sent in the body.
-export const initiatePrivileged = body => {
-  return post('/api/initiate-privileged', body);
-};
+export const initiatePrivileged = (body) => post('/api/initiate-privileged', body);
 
 // Transition a transaction with a privileged transition.
 //
@@ -128,9 +122,7 @@ export const initiatePrivileged = body => {
 //
 // See `server/api/transition-privileged.js` to see what data should
 // be sent in the body.
-export const transitionPrivileged = body => {
-  return post('/api/transition-privileged', body);
-};
+export const transitionPrivileged = (body) => post('/api/transition-privileged', body);
 
 // Create user with identity provider (e.g. Facebook or Google)
 //
@@ -141,6 +133,19 @@ export const transitionPrivileged = body => {
 //
 // See `server/api/auth/createUserWithIdp.js` to see what data should
 // be sent in the body.
-export const createUserWithIdp = body => {
-  return post('/api/auth/create-user-with-idp', body);
-};
+export const createUserWithIdp = (body) => post('/api/auth/create-user-with-idp', body);
+
+// Create user uncaptured charge for coupon for the provider
+// See `server/api/stripe.js` to see what data should
+export const createInvoice = (body) => post('/api/brevo/invoice', body);
+
+export const createRefund = (body) => post('/api/stripe/refund', body);
+
+// Check the validity of a coupon code
+export const checkCoupon = (body) => post('/api/stripe/coupon', body);
+
+export const notifyInvoice = (body) => post('/api/brevo/notifyinvoice', body);
+
+export const inquiryEvent = (body) => post('/api/brevo/event', body);
+
+export const newsletter = (body) => post('/api/brevo/newsletter', body);

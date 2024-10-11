@@ -10,7 +10,7 @@ import css from './SectionArticle.module.css';
 
 // Section component that's able to show article content
 // The article content is mainly supposed to be inside a block
-const SectionArticle = props => {
+function SectionArticle(props) {
   const {
     sectionId,
     className,
@@ -64,7 +64,7 @@ const SectionArticle = props => {
       ) : null}
     </SectionContainer>
   );
-};
+}
 
 const propTypeOption = shape({
   fieldComponents: shape({ component: node, pickValidProps: func }),

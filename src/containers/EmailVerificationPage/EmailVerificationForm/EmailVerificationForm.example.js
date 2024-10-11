@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { createCurrentUser } from '../../../util/testData';
 import EmailVerificationForm from './EmailVerificationForm';
 

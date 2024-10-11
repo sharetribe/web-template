@@ -14,7 +14,7 @@ import css from './SectionFeatures.module.css';
 // [image] text
 // text [image]
 // [image] text
-const SectionFeatures = props => {
+function SectionFeatures(props) {
   const {
     sectionId,
     className,
@@ -70,7 +70,7 @@ const SectionFeatures = props => {
       ) : null}
     </SectionContainer>
   );
-};
+}
 
 const propTypeOption = shape({
   fieldComponents: shape({ component: node, pickValidProps: func }),

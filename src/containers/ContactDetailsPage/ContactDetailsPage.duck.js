@@ -59,7 +59,7 @@ export default function reducer(state = initialState, action = {}) {
     case RESET_PASSWORD_SUCCESS:
       return { ...state, resetPasswordInProgress: false };
     case RESET_PASSWORD_ERROR:
-      console.error(payload); // eslint-disable-line no-console
+      console.error(payload);
       return { ...state, resetPasswordInProgress: false, resetPasswordError: payload };
 
     default:
@@ -71,12 +71,12 @@ export default function reducer(state = initialState, action = {}) {
 
 export const saveContactDetailsRequest = () => ({ type: SAVE_CONTACT_DETAILS_REQUEST });
 export const saveContactDetailsSuccess = () => ({ type: SAVE_CONTACT_DETAILS_SUCCESS });
-export const saveEmailError = error => ({
+export const saveEmailError = (error) => ({
   type: SAVE_EMAIL_ERROR,
   payload: error,
   error: true,
 });
-export const savePhoneNumberError = error => ({
+export const savePhoneNumberError = (error) => ({
   type: SAVE_PHONE_NUMBER_ERROR,
   payload: error,
   error: true,
@@ -88,7 +88,7 @@ export const resetPasswordRequest = () => ({ type: RESET_PASSWORD_REQUEST });
 
 export const resetPasswordSuccess = () => ({ type: RESET_PASSWORD_SUCCESS });
 
-export const resetPasswordError = e => ({
+export const resetPasswordError = (e) => ({
   type: RESET_PASSWORD_ERROR,
   error: true,
   payload: e,
@@ -99,8 +99,8 @@ export const resetPasswordError = e => ({
 /**
  * Make a phone number update request to the API and return the current user.
  */
-const requestSavePhoneNumber = params => (dispatch, getState, sdk) => {
-  const phoneNumber = params.phoneNumber;
+const requestSavePhoneNumber = (params) => (dispatch, getState, sdk) => {
+  const { phoneNumber } = params;
 
   return sdk.currentUser
     .updateProfile(
@@ -109,9 +109,9 @@ const requestSavePhoneNumber = params => (dispatch, getState, sdk) => {
         expand: true,
         include: ['profileImage'],
         'fields.image': ['variants.square-small', 'variants.square-small2x'],
-      }
+      },
     )
-    .then(response => {
+    .then((response) => {
       const entities = denormalisedResponseEntities(response);
       if (entities.length !== 1) {
         throw new Error('Expected a resource in the sdk.currentUser.updateProfile response');
@@ -120,7 +120,7 @@ const requestSavePhoneNumber = params => (dispatch, getState, sdk) => {
       const currentUser = entities[0];
       return currentUser;
     })
-    .catch(e => {
+    .catch((e) => {
       dispatch(savePhoneNumberError(storableError(e)));
       // pass the same error so that the SAVE_CONTACT_DETAILS_SUCCESS
       // action will not be fired
@@ -131,7 +131,7 @@ const requestSavePhoneNumber = params => (dispatch, getState, sdk) => {
 /**
  * Make a email update request to the API and return the current user.
  */
-const requestSaveEmail = params => (dispatch, getState, sdk) => {
+const requestSaveEmail = (params) => (dispatch, getState, sdk) => {
   const { email, currentPassword } = params;
 
   return sdk.currentUser
@@ -141,9 +141,9 @@ const requestSaveEmail = params => (dispatch, getState, sdk) => {
         expand: true,
         include: ['profileImage'],
         'fields.image': ['variants.square-small', 'variants.square-small2x'],
-      }
+      },
     )
-    .then(response => {
+    .then((response) => {
       const entities = denormalisedResponseEntities(response);
       if (entities.length !== 1) {
         throw new Error('Expected a resource in the sdk.currentUser.changeEmail response');
@@ -152,7 +152,7 @@ const requestSaveEmail = params => (dispatch, getState, sdk) => {
       const currentUser = entities[0];
       return currentUser;
     })
-    .catch(e => {
+    .catch((e) => {
       dispatch(saveEmailError(storableError(e)));
       // pass the same error so that the SAVE_CONTACT_DETAILS_SUCCESS
       // action will not be fired
@@ -163,37 +163,31 @@ const requestSaveEmail = params => (dispatch, getState, sdk) => {
 /**
  * Save email and update the current user.
  */
-const saveEmail = params => (dispatch, getState, sdk) => {
-  return (
-    dispatch(requestSaveEmail(params))
-      .then(user => {
-        dispatch(currentUserShowSuccess(user));
-        dispatch(saveContactDetailsSuccess());
-      })
-      // error action dispatched in requestSaveEmail
-      .catch(e => null)
-  );
-};
+const saveEmail = (params) => (dispatch, getState, sdk) =>
+  dispatch(requestSaveEmail(params))
+    .then((user) => {
+      dispatch(currentUserShowSuccess(user));
+      dispatch(saveContactDetailsSuccess());
+    })
+    // error action dispatched in requestSaveEmail
+    .catch((e) => null);
 
 /**
  * Save phone number and update the current user.
  */
-const savePhoneNumber = params => (dispatch, getState, sdk) => {
-  return (
-    dispatch(requestSavePhoneNumber(params))
-      .then(user => {
-        dispatch(currentUserShowSuccess(user));
-        dispatch(saveContactDetailsSuccess());
-      })
-      // error action dispatched in requestSavePhoneNumber
-      .catch(e => null)
-  );
-};
+const savePhoneNumber = (params) => (dispatch, getState, sdk) =>
+  dispatch(requestSavePhoneNumber(params))
+    .then((user) => {
+      dispatch(currentUserShowSuccess(user));
+      dispatch(saveContactDetailsSuccess());
+    })
+    // error action dispatched in requestSavePhoneNumber
+    .catch((e) => null);
 
 /**
  * Save email and phone number and update the current user.
  */
-const saveEmailAndPhoneNumber = params => (dispatch, getState, sdk) => {
+const saveEmailAndPhoneNumber = (params) => (dispatch, getState, sdk) => {
   const { email, phoneNumber, currentPassword } = params;
 
   // order of promises: 1. email, 2. phone number
@@ -203,7 +197,7 @@ const saveEmailAndPhoneNumber = params => (dispatch, getState, sdk) => {
   ];
 
   return Promise.all(promises)
-    .then(values => {
+    .then((values) => {
       // Array of two user objects is resolved
       // the first one is from the email update
       // the second one is from the phone number update
@@ -213,20 +207,20 @@ const saveEmailAndPhoneNumber = params => (dispatch, getState, sdk) => {
 
       // merge the protected data from the user object returned
       // by the phone update operation
-      const protectedData = savePhoneNumberUser.attributes.profile.protectedData;
+      const { protectedData } = savePhoneNumberUser.attributes.profile;
       const phoneNumberMergeSource = { attributes: { profile: { protectedData } } };
 
       const currentUser = merge(saveEmailUser, phoneNumberMergeSource);
       dispatch(currentUserShowSuccess(currentUser));
       dispatch(saveContactDetailsSuccess());
     })
-    .catch(e => null);
+    .catch((e) => null);
 };
 
 /**
  * Update contact details, actions depend on which data has changed
  */
-export const saveContactDetails = params => (dispatch, getState, sdk) => {
+export const saveContactDetails = (params) => (dispatch, getState, sdk) => {
   dispatch(saveContactDetailsRequest());
 
   const { email, currentEmail, phoneNumber, currentPhoneNumber, currentPassword } = params;
@@ -235,22 +229,23 @@ export const saveContactDetails = params => (dispatch, getState, sdk) => {
 
   if (emailChanged && phoneNumberChanged) {
     return dispatch(saveEmailAndPhoneNumber({ email, currentPassword, phoneNumber }));
-  } else if (emailChanged) {
+  }
+  if (emailChanged) {
     return dispatch(saveEmail({ email, currentPassword }));
-  } else if (phoneNumberChanged) {
+  }
+  if (phoneNumberChanged) {
     return dispatch(savePhoneNumber({ phoneNumber }));
   }
 };
 
-export const resetPassword = email => (dispatch, getState, sdk) => {
+export const resetPassword = (email) => (dispatch, getState, sdk) => {
   dispatch(resetPasswordRequest());
   return sdk.passwordReset
     .request({ email })
     .then(() => dispatch(resetPasswordSuccess()))
-    .catch(e => dispatch(resetPasswordError(storableError(e))));
+    .catch((e) => dispatch(resetPasswordError(storableError(e))));
 };
 
-export const loadData = () => {
+export const loadData = () =>
   // Since verify email happens in separate tab, current user's data might be updated
-  return fetchCurrentUser();
-};
+  fetchCurrentUser();

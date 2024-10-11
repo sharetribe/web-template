@@ -33,7 +33,7 @@ const MIN_INPUT_COUNT_FOR_TWO_COLUMNS = 6;
 class TokenInputFieldComponent extends Component {
   constructor(props) {
     super(props);
-    const intl = props.intl;
+    const { intl } = props;
 
     // Initial state is needed when country (and currency) changes and values need to be cleared.
     this.initialState = {
@@ -41,7 +41,7 @@ class TokenInputFieldComponent extends Component {
     };
 
     // Fill initialState with input type specific data
-    BANK_ACCOUNT_INPUTS.forEach(inputType => {
+    BANK_ACCOUNT_INPUTS.forEach((inputType) => {
       this.initialState[inputType] = {
         value: '',
         touched: false,
@@ -117,10 +117,10 @@ class TokenInputFieldComponent extends Component {
     // form doesn't submit with an old value.
     onChange('');
 
-    const supportedCountries = config.stripe.supportedCountries;
+    const { supportedCountries } = config.stripe;
     const inputsNeeded = requiredInputs(country, supportedCountries);
-    const missingValues = inputsNeeded.filter(inputType => !values[inputType]);
-    const invalidValues = inputsNeeded.filter(inputType => !!this.state[inputType].error);
+    const missingValues = inputsNeeded.filter((inputType) => !values[inputType]);
+    const invalidValues = inputsNeeded.filter((inputType) => !!this.state[inputType].error);
 
     const numbersMissing = missingValues.length > 0;
     const numbersInvalid = invalidValues.length > 0;
@@ -143,7 +143,7 @@ class TokenInputFieldComponent extends Component {
     // https://stripe.com/docs/stripe-js/reference#collecting-bank-account-details
     this.stripe
       .createToken('bank_account', accountData)
-      .then(result => {
+      .then((result) => {
         if (result.error) {
           const e = new Error(result.error.message);
           e.stripeError = result.error;
@@ -151,23 +151,21 @@ class TokenInputFieldComponent extends Component {
         }
         return result.token.id;
       })
-      .then(token => {
+      .then((token) => {
         // Check if value has changed during async call.
         const changedValues = inputsNeeded.filter(
-          inputType => values[inputType] !== this.state[inputType].value
+          (inputType) => values[inputType] !== this.state[inputType].value,
         );
         const valuesAreUnchanged = changedValues.length === 0;
 
         // Handle response only if the input values haven't changed
         if (this._isMounted && valuesAreUnchanged) {
-          this.setState(prevState => {
-            return { stripeError: null };
-          });
+          this.setState((prevState) => ({ stripeError: null }));
 
           onChange(token);
         }
       })
-      .catch(e => {
+      .catch((e) => {
         if (!e.stripeError) {
           throw e;
         }
@@ -180,7 +178,7 @@ class TokenInputFieldComponent extends Component {
   }
 
   handleInputChange(e, inputType, country, supportedCountries, intl) {
-    const value = e.target.value;
+    const { value } = e.target;
 
     let inputError = null;
 
@@ -192,7 +190,7 @@ class TokenInputFieldComponent extends Component {
     }
 
     // Save changes to the state
-    this.setState(prevState => {
+    this.setState((prevState) => {
       const input = { ...prevState[inputType], value, error: inputError };
       return {
         [inputType]: input,
@@ -203,7 +201,7 @@ class TokenInputFieldComponent extends Component {
     // Request new bank account token
     const unChangedValues = requiredInputs(country, supportedCountries).reduce(
       (acc, iType) => ({ ...acc, [iType]: this.state[iType].value }),
-      {}
+      {},
     );
     this.requestToken({ ...unChangedValues, [inputType]: value });
   }
@@ -213,7 +211,7 @@ class TokenInputFieldComponent extends Component {
   }
 
   handleInputBlur(inputType) {
-    this.setState(prevState => {
+    this.setState((prevState) => {
       const inputData = { ...prevState[inputType], touched: true };
       return { [inputType]: inputData };
     });
@@ -244,11 +242,12 @@ class TokenInputFieldComponent extends Component {
       );
     }
 
-    const supportedCountries = config.stripe.supportedCountries;
+    const { supportedCountries } = config.stripe;
     const inputConfiguration = requiredInputs(country, supportedCountries);
-    const hasInputErrors = inputConfiguration.some(inputType => {
-      return (this.state[inputType].touched || formMeta.touched) && !!this.state[inputType].error;
-    });
+    const hasInputErrors = inputConfiguration.some(
+      (inputType) =>
+        (this.state[inputType].touched || formMeta.touched) && !!this.state[inputType].error,
+    );
 
     // Only show Stripe and form errors when the fields don't have
     // more specific errors.
@@ -267,27 +266,25 @@ class TokenInputFieldComponent extends Component {
 
     return (
       <div className={classNames(rootClassName || css.root, className)}>
-        {inputConfiguration.map(inputType => {
-          return (
-            <StripeBankAccountRequiredInput
-              disabled={disabled}
-              key={inputType}
-              inputType={inputType}
-              formName={formName}
-              value={this.state[inputType].value}
-              placeholder={formatFieldMessage(intl, inputType, 'placeholder')}
-              onChange={e =>
-                this.handleInputChange(e, inputType, country, supportedCountries, intl)
-              }
-              onFocus={this.handleInputFocus}
-              onBlur={() => this.handleInputBlur(inputType)}
-              isTouched={this.state[inputType].touched || formMeta.touched}
-              showStripeError={showStripeError}
-              inputError={this.state[inputType].error}
-              showInColumns={showInColumns}
-            />
-          );
-        })}
+        {inputConfiguration.map((inputType) => (
+          <StripeBankAccountRequiredInput
+            disabled={disabled}
+            key={inputType}
+            inputType={inputType}
+            formName={formName}
+            value={this.state[inputType].value}
+            placeholder={formatFieldMessage(intl, inputType, 'placeholder')}
+            onChange={(e) =>
+              this.handleInputChange(e, inputType, country, supportedCountries, intl)
+            }
+            onFocus={this.handleInputFocus}
+            onBlur={() => this.handleInputBlur(inputType)}
+            isTouched={this.state[inputType].touched || formMeta.touched}
+            showStripeError={showStripeError}
+            inputError={this.state[inputType].error}
+            showInColumns={showInColumns}
+          />
+        ))}
 
         {showStripeError ? <span className={css.error}>{this.state.stripeError}</span> : null}
         {showFormError ? <span className={css.error}>{formMeta.error}</span> : null}
@@ -296,11 +293,11 @@ class TokenInputFieldComponent extends Component {
   }
 }
 
-const EnhancedTokenInputFieldComponent = props => {
+function EnhancedTokenInputFieldComponent(props) {
   const config = useConfiguration();
   const intl = useIntl();
   return <TokenInputFieldComponent config={config} intl={intl} {...props} />;
-};
+}
 
 EnhancedTokenInputFieldComponent.defaultProps = {
   rootClassName: null,
@@ -326,8 +323,8 @@ EnhancedTokenInputFieldComponent.propTypes = {
   }).isRequired,
 };
 
-const StripeBankAccountTokenInputField = props => {
+function StripeBankAccountTokenInputField(props) {
   return <Field component={EnhancedTokenInputFieldComponent} {...props} />;
-};
+}
 
 export default StripeBankAccountTokenInputField;

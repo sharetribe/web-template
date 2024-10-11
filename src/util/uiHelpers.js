@@ -6,7 +6,7 @@ import throttle from 'lodash/throttle';
  * dimensions to the wrapped component as a `viewport` prop that has
  * the shape `{ width: 600, height: 400}`.
  */
-export const withViewport = Component => {
+export const withViewport = (Component) => {
   // The resize event is flooded when the browser is resized. We'll
   // use a small timeout to throttle changing the viewport since it
   // will trigger rerendering.
@@ -19,24 +19,29 @@ export const withViewport = Component => {
       this.handleWindowResize = this.handleWindowResize.bind(this);
       this.setViewport = throttle(this.setViewport.bind(this), WAIT_MS);
     }
+
     componentDidMount() {
       this.setViewport();
       window.addEventListener('resize', this.handleWindowResize);
       window.addEventListener('orientationchange', this.handleWindowResize);
     }
+
     componentWillUnmount() {
       window.removeEventListener('resize', this.handleWindowResize);
       window.removeEventListener('orientationchange', this.handleWindowResize);
     }
+
     handleWindowResize() {
       this.setViewport();
     }
+
     setViewport() {
       this.setState({
         width: window.innerWidth,
         height: window.innerHeight,
       });
     }
+
     render() {
       const viewport = this.state;
       const props = { ...this.props, viewport };
@@ -100,7 +105,7 @@ export const withDimensions = (Component, options = {}) => {
     }
 
     setDimensions() {
-      this.setState(prevState => {
+      this.setState((prevState) => {
         const { clientWidth, clientHeight } = this.element || { clientWidth: 0, clientHeight: 0 };
         return { width: clientWidth, height: clientHeight };
       });
@@ -121,8 +126,8 @@ export const withDimensions = (Component, options = {}) => {
         clientWidth !== 0 && clientHeight !== 0
           ? { width: clientWidth, height: clientHeight }
           : width !== 0 && height !== 0
-          ? { width, height }
-          : {};
+            ? { width, height }
+            : {};
 
       const props = { ...this.props, dimensions: currentDimensions };
 
@@ -138,7 +143,7 @@ export const withDimensions = (Component, options = {}) => {
 
       return (
         <div
-          ref={element => {
+          ref={(element) => {
             this.element = element;
           }}
           style={style}
@@ -149,8 +154,9 @@ export const withDimensions = (Component, options = {}) => {
     }
   }
 
-  WithDimensionsComponent.displayName = `withDimensions(${Component.displayName ||
-    Component.name})`;
+  WithDimensionsComponent.displayName = `withDimensions(${
+    Component.displayName || Component.name
+  })`;
 
   return WithDimensionsComponent;
 };
@@ -202,7 +208,7 @@ export const lazyLoadWithDimensions = (Component, options = {}) => {
         if (this.isElementNearViewport(0)) {
           this.setDimensions();
         } else {
-          const loadAfterInitialRendering = options.loadAfterInitialRendering;
+          const { loadAfterInitialRendering } = options;
           if (typeof loadAfterInitialRendering === 'number') {
             this.afterRenderTimeout = window.setTimeout(() => {
               window.requestAnimationFrame(() => {
@@ -235,7 +241,7 @@ export const lazyLoadWithDimensions = (Component, options = {}) => {
     }
 
     setDimensions() {
-      this.setState(prevState => {
+      this.setState((prevState) => {
         const { clientWidth, clientHeight } = this.element || { clientWidth: 0, clientHeight: 0 };
         return { width: clientWidth, height: clientHeight };
       });
@@ -271,7 +277,7 @@ export const lazyLoadWithDimensions = (Component, options = {}) => {
 
       return (
         <div
-          ref={element => {
+          ref={(element) => {
             this.element = element;
           }}
           style={style}
@@ -282,8 +288,9 @@ export const lazyLoadWithDimensions = (Component, options = {}) => {
     }
   }
 
-  LazyLoadWithDimensionsComponent.displayName = `lazyLoadWithDimensions(${Component.displayName ||
-    Component.name})`;
+  LazyLoadWithDimensionsComponent.displayName = `lazyLoadWithDimensions(${
+    Component.displayName || Component.name
+  })`;
 
   return LazyLoadWithDimensionsComponent;
 };

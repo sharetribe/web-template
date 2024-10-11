@@ -11,15 +11,16 @@ import {
 } from '../../util/types';
 import { required, nonEmptyArray, validateInteger } from '../../util/validators';
 // Import shared components
-import { FieldCheckboxGroup, FieldSelect, FieldTextInput, FieldBoolean } from '../../components';
+import { FieldCheckboxGroup, FieldSelect, FieldTextInput, FieldBoolean } from '..';
 // Import modules from this directory
 import css from './CustomExtendedDataField.module.css';
 
-const createFilterOptions = options => options.map(o => ({ key: `${o.option}`, label: o.label }));
+const createFilterOptions = (options) =>
+  options.map((o) => ({ key: `${o.option}`, label: o.label }));
 
-const getLabel = fieldConfig => fieldConfig?.saveConfig?.label || fieldConfig?.label;
+const getLabel = (fieldConfig) => fieldConfig?.saveConfig?.label || fieldConfig?.label;
 
-const CustomFieldEnum = props => {
+function CustomFieldEnum(props) {
   const { name, fieldConfig, defaultRequiredMessage, formId, intl } = props;
   const { enumOptions = [], saveConfig } = fieldConfig || {};
   const { placeholderMessage, isRequired, requiredMessage } = saveConfig || {};
@@ -44,8 +45,8 @@ const CustomFieldEnum = props => {
       <option disabled value="">
         {placeholder}
       </option>
-      {filterOptions.map(optionConfig => {
-        const key = optionConfig.key;
+      {filterOptions.map((optionConfig) => {
+        const { key } = optionConfig;
         return (
           <option key={key} value={key}>
             {optionConfig.label}
@@ -54,9 +55,9 @@ const CustomFieldEnum = props => {
       })}
     </FieldSelect>
   ) : null;
-};
+}
 
-const CustomFieldMultiEnum = props => {
+function CustomFieldMultiEnum(props) {
   const { name, fieldConfig, defaultRequiredMessage, formId } = props;
   const { enumOptions = [], saveConfig } = fieldConfig || {};
   const { isRequired, requiredMessage } = saveConfig || {};
@@ -75,9 +76,9 @@ const CustomFieldMultiEnum = props => {
       {...validateMaybe}
     />
   ) : null;
-};
+}
 
-const CustomFieldText = props => {
+function CustomFieldText(props) {
   const { name, fieldConfig, defaultRequiredMessage, formId, intl } = props;
   const { placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
   const label = getLabel(fieldConfig);
@@ -98,9 +99,9 @@ const CustomFieldText = props => {
       {...validateMaybe}
     />
   );
-};
+}
 
-const CustomFieldLong = props => {
+function CustomFieldLong(props) {
   const { name, fieldConfig, defaultRequiredMessage, formId, intl } = props;
   const { minimum, maximum, saveConfig } = fieldConfig;
   const { placeholderMessage, isRequired, requiredMessage } = saveConfig || {};
@@ -109,11 +110,11 @@ const CustomFieldLong = props => {
     placeholderMessage || intl.formatMessage({ id: 'CustomExtendedDataField.placeholderLong' });
   const numberTooSmallMessage = intl.formatMessage(
     { id: 'CustomExtendedDataField.numberTooSmall' },
-    { min: minimum }
+    { min: minimum },
   );
   const numberTooBigMessage = intl.formatMessage(
     { id: 'CustomExtendedDataField.numberTooBig' },
-    { max: maximum }
+    { max: maximum },
   );
 
   // Field with schema type 'long' will always be validated against min & max
@@ -131,18 +132,18 @@ const CustomFieldLong = props => {
       name={name}
       type="number"
       step="1"
-      parse={value => {
+      parse={(value) => {
         const parsed = Number.parseInt(value, 10);
         return Number.isNaN(parsed) ? null : parsed;
       }}
       label={label}
       placeholder={placeholder}
-      validate={value => validate(value, minimum, maximum)}
+      validate={(value) => validate(value, minimum, maximum)}
     />
   );
-};
+}
 
-const CustomFieldBoolean = props => {
+function CustomFieldBoolean(props) {
   const { name, fieldConfig, defaultRequiredMessage, formId, intl } = props;
   const { placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
   const label = getLabel(fieldConfig);
@@ -162,7 +163,7 @@ const CustomFieldBoolean = props => {
       {...validateMaybe}
     />
   );
-};
+}
 
 /**
  * Return Final Form field for each configuration according to schema type.
@@ -174,7 +175,7 @@ const CustomFieldBoolean = props => {
  * @param {Object} props should contain fieldConfig that defines schemaType, enumOptions?, and
  * saveConfig for the field.
  */
-const CustomExtendedDataField = props => {
+function CustomExtendedDataField(props) {
   const intl = useIntl();
   const { enumOptions = [], schemaType } = props?.fieldConfig || {};
   const renderFieldComponent = (FieldComponent, props) => <FieldComponent {...props} intl={intl} />;
@@ -182,14 +183,14 @@ const CustomExtendedDataField = props => {
   return schemaType === SCHEMA_TYPE_ENUM && enumOptions
     ? renderFieldComponent(CustomFieldEnum, props)
     : schemaType === SCHEMA_TYPE_MULTI_ENUM && enumOptions
-    ? renderFieldComponent(CustomFieldMultiEnum, props)
-    : schemaType === SCHEMA_TYPE_TEXT
-    ? renderFieldComponent(CustomFieldText, props)
-    : schemaType === SCHEMA_TYPE_LONG
-    ? renderFieldComponent(CustomFieldLong, props)
-    : schemaType === SCHEMA_TYPE_BOOLEAN
-    ? renderFieldComponent(CustomFieldBoolean, props)
-    : null;
-};
+      ? renderFieldComponent(CustomFieldMultiEnum, props)
+      : schemaType === SCHEMA_TYPE_TEXT
+        ? renderFieldComponent(CustomFieldText, props)
+        : schemaType === SCHEMA_TYPE_LONG
+          ? renderFieldComponent(CustomFieldLong, props)
+          : schemaType === SCHEMA_TYPE_BOOLEAN
+            ? renderFieldComponent(CustomFieldBoolean, props)
+            : null;
+}
 
 export default CustomExtendedDataField;

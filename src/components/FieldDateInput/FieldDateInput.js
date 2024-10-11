@@ -12,14 +12,14 @@ import classNames from 'classnames';
 import moment from 'moment';
 
 import { useConfiguration } from '../../context/configurationContext';
-import { ValidationError } from '../../components';
+import { ValidationError } from '..';
 
 import DateInput from './DateInput';
 import css from './FieldDateInput.module.css';
 
 const MAX_MOBILE_SCREEN_WIDTH = 768;
 
-const handleChange = (parentOnChange, inputOnChange) => value => {
+const handleChange = (parentOnChange, inputOnChange) => (value) => {
   // If "onChange" callback is passed through the props,
   // it can notify the parent when the content of the input has changed.
   if (parentOnChange) {
@@ -50,7 +50,7 @@ class FieldDateInputComponent extends Component {
     }
 
     const { touched, invalid, error } = meta;
-    const value = input.value;
+    const { value } = input;
 
     // If startDate is valid label changes color and bottom border changes color too
     const dateIsValid = value && value.date instanceof Date;
@@ -123,12 +123,12 @@ FieldDateInputComponent.propTypes = {
   onChange: func,
 };
 
-const FieldDateInput = props => {
+function FieldDateInput(props) {
   const config = useConfiguration();
   const { isOutsideRange, firstDayOfWeek, ...rest } = props;
 
   // Outside range -><- today ... today+available days -1 -><- outside range
-  const defaultIsOutSideRange = day => {
+  const defaultIsOutSideRange = (day) => {
     const endOfRange = config.stripe?.dayCountAvailableForBooking - 1;
     return (
       !isInclusivelyAfterDay(day, moment()) ||
@@ -144,7 +144,7 @@ const FieldDateInput = props => {
       {...rest}
     />
   );
-};
+}
 
 export { DateInput };
 export default FieldDateInput;

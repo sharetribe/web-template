@@ -18,8 +18,8 @@ import {
   LayoutSingleColumn,
 } from '../../components';
 
-import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
-import FooterContainer from '../../containers/FooterContainer/FooterContainer';
+import TopbarContainer from '../TopbarContainer/TopbarContainer';
+import FooterContainer from '../FooterContainer/FooterContainer';
 
 import EmailVerificationForm from './EmailVerificationForm/EmailVerificationForm';
 
@@ -36,7 +36,7 @@ import css from './EmailVerificationPage.module.css';
   the unwanted result of the `parse` method is that it automatically
   parses the token to number.
 */
-const parseVerificationToken = search => {
+const parseVerificationToken = (search) => {
   const urlParams = parse(search);
   const verificationToken = urlParams.t;
 
@@ -47,7 +47,7 @@ const parseVerificationToken = search => {
   return null;
 };
 
-export const EmailVerificationPageComponent = props => {
+export function EmailVerificationPageComponent(props) {
   const config = useConfiguration();
   const {
     currentUser,
@@ -110,7 +110,7 @@ export const EmailVerificationPageComponent = props => {
       </LayoutSingleColumn>
     </Page>
   );
-};
+}
 
 EmailVerificationPageComponent.defaultProps = {
   currentUser: null,
@@ -134,7 +134,7 @@ EmailVerificationPageComponent.propTypes = {
   intl: intlShape.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { currentUser } = state.user;
   const { isVerified, verificationError, verificationInProgress } = state.emailVerification;
   return {
@@ -146,10 +146,8 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => ({
-  submitVerification: ({ verificationToken }) => {
-    return dispatch(verify(verificationToken));
-  },
+const mapDispatchToProps = (dispatch) => ({
+  submitVerification: ({ verificationToken }) => dispatch(verify(verificationToken)),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the
@@ -160,11 +158,8 @@ const mapDispatchToProps = dispatch => ({
 // See: https://github.com/ReactTraining/react-router/issues/4671
 const EmailVerificationPage = compose(
   withRouter,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  ),
-  injectIntl
+  connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
 )(EmailVerificationPageComponent);
 
 export default EmailVerificationPage;

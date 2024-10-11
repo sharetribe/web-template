@@ -6,7 +6,7 @@ const childStyle = {
   background: '#e7e7e7',
 };
 
-const OutsideClickHandlerWrapper = props => {
+function OutsideClickHandlerWrapper(props) {
   const [message, setMessage] = useState('This is OutsideClickHandler example');
 
   const handleClick = () => {
@@ -20,7 +20,7 @@ const OutsideClickHandlerWrapper = props => {
       </div>
     </OutsideClickHandler>
   );
-};
+}
 
 export const FilterPopupExample = {
   component: OutsideClickHandlerWrapper,

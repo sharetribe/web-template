@@ -18,9 +18,10 @@ const { Money } = sdkTypes;
  * Calculates the total price in sub units for multiple line items.
  */
 const lineItemsTotal = (lineItems, marketplaceCurrency) => {
-  const amount = lineItems.reduce((total, item) => {
-    return total.plus(item.lineTotal.amount);
-  }, new Decimal(0));
+  const amount = lineItems.reduce(
+    (total, item) => total.plus(item.lineTotal.amount),
+    new Decimal(0),
+  );
   const currency = lineItems[0] ? lineItems[0].lineTotal.currency : marketplaceCurrency;
   return new Money(amount, currency);
 };
@@ -28,21 +29,17 @@ const lineItemsTotal = (lineItems, marketplaceCurrency) => {
 /**
  * Checks if line item represents commission
  */
-const isCommission = lineItem => {
-  return (
-    lineItem.code === LINE_ITEM_PROVIDER_COMMISSION ||
-    lineItem.code === LINE_ITEM_CUSTOMER_COMMISSION
-  );
-};
+const isCommission = (lineItem) =>
+  lineItem.code === LINE_ITEM_PROVIDER_COMMISSION ||
+  lineItem.code === LINE_ITEM_CUSTOMER_COMMISSION;
 
 /**
  * Returns non-commission, reversal line items
  */
-const nonCommissionReversalLineItems = lineItems => {
-  return lineItems.filter(item => !isCommission(item) && item.reversal);
-};
+const nonCommissionReversalLineItems = (lineItems) =>
+  lineItems.filter((item) => !isCommission(item) && item.reversal);
 
-const LineItemRefundMaybe = props => {
+function LineItemRefundMaybe(props) {
   const { lineItems, intl, marketplaceCurrency } = props;
 
   // all non-commission, reversal line items
@@ -60,7 +57,7 @@ const LineItemRefundMaybe = props => {
       <span className={css.itemValue}>{formattedRefund}</span>
     </div>
   ) : null;
-};
+}
 
 LineItemRefundMaybe.propTypes = {
   lineItems: propTypes.lineItems.isRequired,

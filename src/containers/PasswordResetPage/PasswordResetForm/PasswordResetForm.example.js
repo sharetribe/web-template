@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import PasswordResetForm from './PasswordResetForm';
 
 export const Empty = {
