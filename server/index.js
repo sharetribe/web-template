@@ -175,7 +175,7 @@ const noCacheHeaders = {
   'Cache-control': 'no-cache, no-store, must-revalidate',
 };
 
-app.get('*', (req, res) => {
+app.get('*', async (req, res) => {
   if (req.url.startsWith('/static/')) {
     // The express.static middleware only handles static resources
     // that it finds, otherwise passes them through. However, we don't
@@ -200,7 +200,7 @@ app.get('*', (req, res) => {
   const { nodeExtractor, webExtractor } = getExtractors();
 
   // Server-side entrypoint provides us the functions for server-side data loading and rendering
-  const nodeEntrypoint = nodeExtractor.requireEntrypoint();
+  const nodeEntrypoint = await nodeExtractor.requireEntrypoint();
   const { default: renderApp, ...appInfo } = nodeEntrypoint;
 
   const sdk = sdkUtils.getSdk(req, res);

@@ -349,13 +349,12 @@ export class TransactionPanelComponent extends Component {
                   orderBreakdown={orderBreakdown}
                   processName={stateData.processName}
                 />
-                <div className={css.noteContainer}>
-                  <CurrencyNote componentId="TransactionDetailsPage" />
-                </div>
-
                 {stateData.showActionButtons ? (
                   <div className={css.desktopActionButtons}>{actionButtons}</div>
                 ) : null}
+              </div>
+              <div className={classNames(css.noteContainer, css.hideOnMobile)}>
+                <CurrencyNote componentId="TransactionDetailsPage" />
               </div>
               <DiminishedActionButtonMaybe
                 showDispute={stateData.showDispute}

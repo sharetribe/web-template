@@ -25,6 +25,7 @@ import SearchIcon from './SearchIcon';
 import TopbarSearchForm from './TopbarSearchForm/TopbarSearchForm';
 import TopbarMobileMenu from './TopbarMobileMenu/TopbarMobileMenu';
 import TopbarDesktop from './TopbarDesktop/TopbarDesktop';
+import CurrencyDropdown from '../../../extensions/MultipleCurrency/components/CurrencyDropdown/CurrencyDropdown';
 
 import css from './Topbar.module.css';
 
@@ -294,7 +295,9 @@ class TopbarComponent extends Component {
             <MenuIcon className={css.menuIcon} />
             {notificationDot}
           </Button>
+          <div className={css.emptySpace} />
           <LinkedLogo
+            className={css.websiteLogo}
             layout={'mobile'}
             alt={intl.formatMessage({ id: 'Topbar.logoIcon' })}
             linkToExternalSite={config?.topbar?.logoLink}
@@ -306,6 +309,7 @@ class TopbarComponent extends Component {
           >
             <SearchIcon className={css.searchMenuIcon} />
           </Button>
+          <CurrencyDropdown />
         </div>
         <div className={css.desktop}>
           <TopbarDesktop

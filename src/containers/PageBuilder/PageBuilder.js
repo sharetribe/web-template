@@ -97,8 +97,6 @@ const PageBuilder = props => {
     return fallbackPage;
   }
 
-  console.log('options', options);
-  
   // Page asset contains UI info and metadata related to it.
   // - "sections" (data that goes inside <body>)
   // - "meta" (which is data that goes inside <head>)
@@ -120,20 +118,18 @@ const PageBuilder = props => {
               <Topbar as="header" className={css.topbar}>
                 <TopbarContainer currentPage={currentPage} />
               </Topbar>
-              
+
               <Main as="main" className={css.main}>
                 {sections.length === 0 && inProgress ? (
                   <LoadingSpinner />
                 ) : (
                   <div>
                     <SectionBuilder sections={sections} options={options} />
-                    {options?.AdBanner?.show && (
-                      <AdBanner phoneNumber="+1-647-689-6072" />
-                    )}
+                    {options?.AdBanner?.show && <AdBanner phoneNumber="+1-647-689-6072" />}
                   </div>
                 )}
               </Main>
-              
+
               <Footer>
                 <FooterContainer />
               </Footer>

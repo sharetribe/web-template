@@ -1,3 +1,2 @@
 export const DEFAULT_CURRENCY = 'USD';
-export const CAD = 'CAD';
-export const USD = 'USD';
+export const SUPPORT_CURRENCIES = ['USD', 'CAD'];

@@ -18,6 +18,7 @@ import {
 
 import TopbarSearchForm from '../TopbarSearchForm/TopbarSearchForm';
 import CustomLinksMenu from './CustomLinksMenu/CustomLinksMenu';
+import CurrencyDropdown from '../../../../extensions/MultipleCurrency/components/CurrencyDropdown/CurrencyDropdown';
 
 import css from './TopbarDesktop.module.css';
 
@@ -178,6 +179,7 @@ const TopbarDesktop = props => {
       {profileMenuMaybe}
       {signupLinkMaybe}
       {loginLinkMaybe}
+      <CurrencyDropdown />
     </nav>
   );
 };
