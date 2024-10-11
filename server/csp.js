@@ -1,4 +1,5 @@
 const helmet = require('helmet');
+const crypto = require('crypto');
 
 const dev = process.env.REACT_APP_ENV === 'development';
 const self = "'self'";
@@ -12,6 +13,20 @@ const baseUrl = process.env.REACT_APP_SHARETRIBE_SDK_BASE_URL || 'https://flex-a
 // cdn.st-api.com
 // If assetCdnBaseUrl is used to initialize SDK (for proxy purposes), then that URL needs to be in CSP
 const assetCdnBaseUrl = process.env.REACT_APP_SHARETRIBE_SDK_ASSET_CDN_BASE_URL;
+
+exports.generateCSPNonce = (req, res, next) => {
+  // Asynchronously generate a unique nonce for each request.
+  crypto.randomBytes(32, (err, randomBytes) => {
+    if (err) {
+      // If there was a problem, bail.
+      next(err);
+    } else {
+      // Save the nonce, as a hex string, to `res.locals` for later.
+      res.locals.cspNonce = randomBytes.toString('hex');
+      next();
+    }
+  });
+};
 
 // Default CSP whitelist.
 //
@@ -96,9 +111,8 @@ const defaultDirectives = {
   ],
   scriptSrc: [
     self,
-    unsafeInline,
+    (req, res) => `'nonce-${res.locals.cspNonce}'`,
     unsafeEval,
-    data,
     'maps.googleapis.com',
     'api.mapbox.com',
     '*.googletagmanager.com',
@@ -121,7 +135,7 @@ const defaultDirectives = {
  * @param {Boolean} reportOnly In the report mode, requests are only
  * reported to the report URL instead of blocked
  */
-module.exports = (reportUri, reportOnly) => {
+exports.csp = (reportUri, reportOnly) => {
   // ================ START CUSTOM CSP URLs ================ //
 
   // Add custom CSP whitelisted URLs here. See commented example
