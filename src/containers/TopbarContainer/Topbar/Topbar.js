@@ -25,6 +25,7 @@ import SearchIcon from './SearchIcon';
 import TopbarSearchForm from './TopbarSearchForm/TopbarSearchForm';
 import TopbarMobileMenu from './TopbarMobileMenu/TopbarMobileMenu';
 import TopbarDesktop from './TopbarDesktop/TopbarDesktop';
+import CurrencyDropdown from '../../../extensions/MultipleCurrency/components/CurrencyDropdown/CurrencyDropdown';
 
 import css from './Topbar.module.css';
 
