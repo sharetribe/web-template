@@ -146,6 +146,12 @@ export const IncludeScripts = props => {
     }
   };
 
-  const allScripts = [...analyticsLibraries, ...mapLibraries];
+  const fontScript = (
+    <style key="font">
+      {`@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..700;1,100..700&display=swap');`}
+    </style>
+  )
+
+  const allScripts = [...analyticsLibraries, ...mapLibraries, fontScript];
   return <Helmet onChangeClientState={onChangeClientState}>{allScripts}</Helmet>;
 };
