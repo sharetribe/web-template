@@ -9,9 +9,10 @@ export const getAllExtensionReducers = async () => {
   // Iterate over each matched module
   return context.keys().reduce((extensionReducers, key) => {
     const module = context(key);
+    const reducers = module.default ? module.default : module;
     return {
       ...extensionReducers,
-      ...module,
+      ...reducers,
     };
   }, {});
 };
