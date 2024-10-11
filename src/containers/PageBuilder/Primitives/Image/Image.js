@@ -41,9 +41,14 @@ export const FieldImage = React.forwardRef((props, ref) => {
   const firstImageVariant = variants[variantNames[0]];
   const { width: aspectWidth, height: aspectHeight } = firstImageVariant || {};
 
-  const classes = classNames(rootClassName || css.fieldImage, className);
   const imageLinkHref = link?.href || null;
   const imageLinkFieldType = link?.fieldType || null;
+
+  const classes = classNames(
+    rootClassName || css.fieldImage,
+    className,
+    { [css.imageHoverEffect]: imageLinkHref } // Add a hover effect for the image if it is wrapped in a link
+  );
 
   const responsiveImage = (
     <ResponsiveImage
