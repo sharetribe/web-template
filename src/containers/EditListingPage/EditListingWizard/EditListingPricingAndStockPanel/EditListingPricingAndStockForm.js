@@ -30,6 +30,7 @@ import { DEFAULT_CURRENCY } from '../../../../extensions/common/config/constants
 
 // Import modules from this directory
 import css from './EditListingPricingAndStockForm.module.css';
+import { useSelector } from 'react-redux';
 
 const { Money } = sdkTypes;
 const MILLION = 1000000;
@@ -137,9 +138,9 @@ export const EditListingPricingAndStockFormComponent = props => {
           updateInProgress,
           fetchErrors,
           values,
-          currentUser,
         } = formRenderProps;
 
+        const currentUser = useSelector((state) => state.user.currentUser);
         const userCurrency = currentUser?.attributes.profile.publicData.userCurrency || DEFAULT_CURRENCY;
 
         const priceValidators = getPriceValidators(
