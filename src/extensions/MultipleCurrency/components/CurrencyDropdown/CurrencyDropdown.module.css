@@ -15,7 +15,7 @@
   align-items: center;
   height: 100%;
   margin: 0;
-  padding: 0 12px 0 12px;
+  padding: 0 12px 0 0;
 
   &:hover {
     border-bottom: 4px solid var(--marketplaceColor);
@@ -25,6 +25,10 @@
 
   &:active {
     border-bottom: 0;
+  } 
+
+  @media (--viewportMedium) {
+    padding: 0 12px 0 12px;
   }
 }
 
@@ -114,4 +118,10 @@
 
 .currencyLabel {
   margin-left: 8px;
+}
+
+.currencyIcon {
+  padding: 6px 8px 8px 8px;
+  border: 1.5px solid var(--colorGrey100);
+  border-radius: 6px;
 }

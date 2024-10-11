@@ -25,8 +25,10 @@ const CurrencyDropdown = props => {
   return (
     <Menu contentPosition="right" isFullWidthMobile={false}>
       <MenuLabel className={css.profileMenuLabel} isOpenClassName={css.profileMenuIsOpen}>
-        {currencyIcons[uiCurrency]({ className: css.icon })}
-        <IconArrowHead direction="down" rootClassName={css.arrowIcon} />
+        <div className={css.currencyIcon}>
+          {currencyIcons[uiCurrency]({ className: css.icon })}
+          <IconArrowHead direction="down" rootClassName={css.arrowIcon} />
+        </div>
       </MenuLabel>
       <MenuContent className={css.profileMenuContent}>
         {SUPPORT_CURRENCIES.map(currency => (
