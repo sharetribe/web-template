@@ -81,15 +81,6 @@ router.get('/auth/google', authenticateGoogle);
 // loginWithIdp endpoint in Sharetribe Auth API to authenticate user to the marketplace
 router.get('/auth/google/callback', authenticateGoogleCallback);
 
-router.get('/exchange-rate', async (req, res) => {
-  try {
-    console.log('it gets here');
-    const exchangeRate = await getExchangeRate();
-
-    res.status(200).json(exchangeRate);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+require('./loadExtensionsRouter')(router);
 
 module.exports = router;
