@@ -16,7 +16,12 @@ const CurrencyNote = props => {
 
   return (
     <div className={css.note}>
-      <FormattedMessage id={`${componentId}.exchangeRateNote`} />
+      <FormattedMessage
+        id={`${componentId}.exchangeRateNote`}
+        values={{
+          b: chunks => <b>{chunks}</b>,
+        }}
+      />
     </div>
   );
 };

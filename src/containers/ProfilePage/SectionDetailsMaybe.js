@@ -44,13 +44,17 @@ const SectionDetailsMaybe = props => {
 
   const existingUserFields = userFieldConfig.reduce(pickUserFields, []);
 
-  return existingUserFields.length > 0 ? (
+  const filteredExistingUserFields = existingUserFields.filter(
+    field => field.key !== 'userCurrency'
+  );
+
+  return filteredExistingUserFields.length > 0 ? (
     <div className={css.sectionDetails}>
       <Heading as="h2" rootClassName={css.sectionHeading}>
         <FormattedMessage id="ProfilePage.detailsTitle" />
       </Heading>
       <ul className={css.details}>
-        {existingUserFields.map(detail => (
+        {filteredExistingUserFields.map(detail => (
           <li key={detail.key} className={css.detailsRow}>
             <span className={css.detailLabel}>{detail.label}</span>
             <span>{detail.value}</span>
