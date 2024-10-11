@@ -16,6 +16,7 @@ import { NamedRedirect } from '../components';
 import NotFoundPage from '../containers/NotFoundPage/NotFoundPage';
 
 import LoadableComponentErrorBoundary from './LoadableComponentErrorBoundary/LoadableComponentErrorBoundary';
+import { fetchExchangeRate } from '../extensions/ExchangeRate/ExchangeRate.duck';
 
 const isBanned = currentUser => {
   const isBrowser = typeof window !== 'undefined';
@@ -108,6 +109,7 @@ class RouteComponentRenderer extends Component {
     // Calling loadData on initial rendering (on client side).
     callLoadData(this.props);
     handleLocationChanged(dispatch, location, routeConfiguration, this.delayed);
+    dispatch(fetchExchangeRate());
   }
 
   componentDidUpdate(prevProps) {

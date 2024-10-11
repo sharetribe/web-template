@@ -80,4 +80,6 @@ router.get('/auth/google', authenticateGoogle);
 // loginWithIdp endpoint in Sharetribe Auth API to authenticate user to the marketplace
 router.get('/auth/google/callback', authenticateGoogleCallback);
 
+require('./loadExtensionsRouter')(router);
+
 module.exports = router;
