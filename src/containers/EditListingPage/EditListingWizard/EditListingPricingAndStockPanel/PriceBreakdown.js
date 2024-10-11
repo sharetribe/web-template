@@ -3,17 +3,12 @@ import PropTypes from 'prop-types';
 import { formatMoney } from '../../../../util/currency';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
 import { injectIntl, intlShape } from '../../../../util/reactIntl';
+
 import css from './PriceBreakdown.module.css';
-//import defaultConfig from '../../../../config/configDefault';
-import LineItemProviderCommissionMaybe from '../../../../components/OrderBreakdown/LineItemProviderCommissionMaybe';
 
 const { Money } = sdkTypes;
 
 const PriceBreakdownComponent = ({ price, currencyConfig, intl }) => {
-  //console.log('PriceBreakdown rendered with price:', price);
-  //console.log('config:', defaultConfig);
-  console.log('LineItemProviderCommissionMaybe:', LineItemProviderCommissionMaybe.providerCommissionLineItem);
-  
   if (typeof price !== 'number' || isNaN(price)) {
     return (
       <div className={css.root}>
@@ -26,16 +21,16 @@ const PriceBreakdownComponent = ({ price, currencyConfig, intl }) => {
   const feePercentage = 5;
   const priceInCents = Math.round(price * 100);
   const priceAsMoney = new Money(priceInCents, currencyConfig.currency);
-  const fees = new Money(Math.round(priceInCents * (feePercentage/100) ), currencyConfig.currency);
+  const fees = new Money(Math.round(priceInCents * (feePercentage / 100)), currencyConfig.currency);
   const sellerReceives = new Money(priceInCents - fees.amount, currencyConfig.currency);
 
-  const formatMoneyWithIntl = (money) => {
+  const formatMoneyWithIntl = money => {
     try {
       return formatMoney(intl, money);
     } catch (error) {
       console.error('Error formatting money:', error);
       return 'N/A';
-    } 
+    }
   };
 
   return (

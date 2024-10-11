@@ -127,6 +127,7 @@ export const EditListingPricingAndStockFormComponent = props => (
         marketplaceCurrency,
         intl
       );
+
       // Note: outdated listings don't have listingType!
       // I.e. listings that are created with previous listing type setup.
       const hasStockManagement = listingType?.stockType === STOCK_MULTIPLE_ITEMS;
@@ -146,9 +147,6 @@ export const EditListingPricingAndStockFormComponent = props => (
       const stockErrorMessage = isOldTotalMismatchStockError(setStockError)
         ? intl.formatMessage({ id: 'EditListingPricingAndStockForm.oldStockTotalWasOutOfSync' })
         : intl.formatMessage({ id: 'EditListingPricingAndStockForm.stockUpdateFailed' });
-
-      console.log('Form rendered with price:', values.price);
-      console.log('Price type:', typeof values.price);
 
       const priceValue = values.price && values.price.amount ? values.price.amount / 100 : 0;
 

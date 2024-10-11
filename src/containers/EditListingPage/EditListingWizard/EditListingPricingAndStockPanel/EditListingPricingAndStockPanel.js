@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes, { arrayOf, number, oneOf, shape } from 'prop-types';
 import classNames from 'classnames';
+import { useSelector } from 'react-redux';
 
 // Import configs and util modules
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { LISTING_STATE_DRAFT, STOCK_INFINITE_ITEMS, STOCK_TYPES } from '../../../../util/types';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
+import { convertToDefaultCurrency } from '../../../../extensions/MultipleCurrency/utils/currency';
+import { DEFAULT_CURRENCY } from '../../../../extensions/common/config/constants/currency.constants';
 
 // Import shared components
 import { H3, ListingLink } from '../../../../components';
@@ -22,15 +25,21 @@ const getListingTypeConfig = (publicData, listingTypes) => {
   return listingTypes.find(conf => conf.listingType === selectedListingType);
 };
 
-const getInitialValues = props => {
+const getInitialValues = (props, userCurrency) => {
   const { listing, listingTypes } = props;
   const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
-  const price = listing?.attributes?.price;
   const currentStock = listing?.currentStock;
 
   const publicData = listing?.attributes?.publicData;
   const listingTypeConfig = getListingTypeConfig(publicData, listingTypes);
   const hasInfiniteStock = STOCK_INFINITE_ITEMS.includes(listingTypeConfig?.stockType);
+  const isDefaultCurrency = userCurrency === DEFAULT_CURRENCY;
+  const currencyPrice = publicData.exchangePrice?.[userCurrency];
+  const price = isDefaultCurrency
+    ? price
+    : currencyPrice
+    ? new Money(currencyPrice.amount, currencyPrice.currency)
+    : null;
 
   // The listing resource has a relationship: `currentStock`,
   // which you should include when making API calls.
@@ -51,8 +60,10 @@ const getInitialValues = props => {
 
 const EditListingPricingAndStockPanel = props => {
   // State is needed since re-rendering would overwrite the values during XHR call.
-  const [state, setState] = useState({ initialValues: getInitialValues(props) });
-
+  const [initialValues, setInitialValues] = useState(getInitialValues(props));
+  const { exchangeRate } = useSelector(state => state.ExchangeRate);
+  const { currentUser } = useSelector(state => state.user);
+  const { userCurrency } = currentUser?.attributes.profile?.publicData || {};
   const {
     className,
     rootClassName,
@@ -69,8 +80,13 @@ const EditListingPricingAndStockPanel = props => {
     errors,
   } = props;
 
+  useEffect(() => {
+    if (currentUser) {
+      setInitialValues(getInitialValues(props, userCurrency));
+    }
+  }, [currentUser]);
+
   const classes = classNames(rootClassName || css.root, className);
-  const initialValues = state.initialValues;
 
   // Form needs to know data from listingType
   const publicData = listing?.attributes?.publicData;
@@ -78,12 +94,13 @@ const EditListingPricingAndStockPanel = props => {
   const listingTypeConfig = getListingTypeConfig(publicData, listingTypes);
 
   const hasInfiniteStock = STOCK_INFINITE_ITEMS.includes(listingTypeConfig?.stockType);
-
+  const listingCurrency = userCurrency || marketplaceCurrency;
   const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
+
   const priceCurrencyValid =
-    marketplaceCurrency && initialValues.price instanceof Money
-      ? initialValues.price?.currency === marketplaceCurrency
-      : !!marketplaceCurrency;
+    listingCurrency && initialValues.price instanceof Money && !updateInProgress
+      ? initialValues.price?.currency === listingCurrency
+      : !!listingCurrency;
 
   return (
     <div className={classes}>
@@ -106,7 +123,10 @@ const EditListingPricingAndStockPanel = props => {
           initialValues={initialValues}
           onSubmit={values => {
             const { price, stock, stockTypeInfinity } = values;
-
+            const isDefaultCurrency = userCurrency === DEFAULT_CURRENCY;
+            const exchangePrice = !isDefaultCurrency
+              ? convertToDefaultCurrency(price, exchangeRate)
+              : null;
             // Update stock only if the value has changed, or stock is infinity in stockType,
             // but not current stock is a small number (might happen with old listings)
             // NOTE: this is going to be used on a separate call to API
@@ -136,22 +156,27 @@ const EditListingPricingAndStockPanel = props => {
 
             // New values for listing attributes
             const updateValues = {
-              price,
+              price: isDefaultCurrency ? price : exchangePrice,
+              publicData: !isDefaultCurrency
+                ? {
+                    exchangePrice: {
+                      [userCurrency]: { amount: price.amount, currency: price.currency },
+                    },
+                  }
+                : {},
               ...stockUpdateMaybe,
             };
             // Save the initialValues to state
             // Otherwise, re-rendering would overwrite the values during XHR call.
-            setState({
-              initialValues: {
-                price,
-                stock: stockUpdateMaybe?.stockUpdate?.newTotal || stock,
-                stockTypeInfinity,
-              },
+            setInitialValues({
+              price: price,
+              stock: stockUpdateMaybe?.stockUpdate?.newTotal || stock,
+              stockTypeInfinity,
             });
             onSubmit(updateValues);
           }}
           listingMinimumPriceSubUnits={listingMinimumPriceSubUnits}
-          marketplaceCurrency={marketplaceCurrency}
+          marketplaceCurrency={listingCurrency}
           listingType={listingTypeConfig}
           unitType={unitType}
           saveActionMsg={submitButtonText}
@@ -165,7 +190,7 @@ const EditListingPricingAndStockPanel = props => {
         <div className={css.priceCurrencyInvalid}>
           <FormattedMessage
             id="EditListingPricingAndStockPanel.listingPriceCurrencyInvalid"
-            values={{ marketplaceCurrency }}
+            values={{ marketplaceCurrency: listingCurrency }}
           />
         </div>
       )}
