@@ -20,7 +20,6 @@ const createUserWithIdp = require('./api/auth/createUserWithIdp');
 
 const { authenticateFacebook, authenticateFacebookCallback } = require('./api/auth/facebook');
 const { authenticateGoogle, authenticateGoogleCallback } = require('./api/auth/google');
-const { getExchangeRate } = require('./extensions/exchange-rate/caching');
 
 const router = express.Router();
 

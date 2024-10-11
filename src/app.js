@@ -36,6 +36,7 @@ import Routes from './routing/Routes';
 // Sharetribe Web Template uses English translations as default translations.
 import defaultMessages from './translations/en.json';
 import { getAllExtensionTranslationFile } from './extension';
+import { GetStoredExchangeRate } from './extensions/util/getStoredExchangeRate';
 
 const extensionTranslations = await getAllExtensionTranslationFile();
 // If you want to change the language of default (fallback) translations,
@@ -266,6 +267,7 @@ export const ClientApp = props => {
             <BrowserRouter>
               <Routes logLoadDataCalls={logLoadDataCalls} />
             </BrowserRouter>
+            <GetStoredExchangeRate />
           </HelmetProvider>
         </Provider>
       </IntlProvider>

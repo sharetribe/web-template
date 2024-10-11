@@ -51,9 +51,9 @@ export const fetchExchangeRateError = error => ({
 
 // ================ Thunks ================ //
 
-export const fetchExchangeRate = () => async dispatch => {
+export const fetchExchangeRate = currency => async dispatch => {
   try {
-    const response = await fetchCurrencyExchangeRate();
+    const response = await fetchCurrencyExchangeRate(currency);
 
     if (response) {
       dispatch(fetchExchangeRateSuccess(response));

@@ -4,7 +4,8 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
-    const exchangeRate = await getExchangeRate();
+    const { currency } = req.query;
+    const exchangeRate = await getExchangeRate(currency);
 
     res.status(200).json(exchangeRate);
   } catch (error) {

@@ -1,5 +1,5 @@
 const { getMethod } = require('../common/api');
 
-export const fetchCurrencyExchangeRate = () => {
-  return getMethod('/api/exchange-rate');
+export const fetchCurrencyExchangeRate = currency => {
+  return getMethod('/api/exchange-rate', { currency });
 };
