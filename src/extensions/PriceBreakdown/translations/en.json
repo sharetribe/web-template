@@ -1,3 +1,8 @@
 {
-    "EditListingPricingAndStockForm.priceDisclaimer": "Note: Pricing is dynamic based on foreign exchange rates to USD. The amount youreceive may not be exactly as show."
+    "EditListingPricingAndStockForm.priceDisclaimer": "Note: Pricing is dynamic based on foreign exchange rates to USD. The amount you receive may not be exactly as show.",
+    "EditListingPriceBreakdown.priceBreakdownTitle": "Price Breakdown",
+    "EditListingPriceBreakdown.priceMissing": "Please enter a valid price to see the breakdown.",
+    "EditListingPriceBreakdown.listingPrice": "Listing Price:",
+    "EditListingPriceBreakdown.processingFees": "Processing Fees ({providerCommission}%):",
+    "EditListingPriceBreakdown.sellerReceives": "You Receive:"
 }

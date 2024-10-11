@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { bool, func, number, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { Field, Form as FinalForm } from 'react-final-form';
@@ -24,6 +24,9 @@ import {
   FieldCheckboxGroup,
   FieldTextInput,
 } from '../../../../components';
+
+import { getCommission } from '../../../../extensions/PriceBreakdown/api';
+import { DEFAULT_CURRENCY } from '../../../../extensions/common/config/constants/currency.constants';
 
 // Import modules from this directory
 import css from './EditListingPricingAndStockForm.module.css';
@@ -95,149 +98,169 @@ const UpdateStockToInfinityCheckboxMaybe = ({ hasInfiniteStock, currentStock, fo
   ) : null;
 };
 
-export const EditListingPricingAndStockFormComponent = props => (
-  <FinalForm
-    {...props}
-    mutators={{ ...arrayMutators }}
-    subscription={{ values: true, pristine: true, submitting: true, invalid: true }}
-    render={formRenderProps => {
-      const {
-        formId,
-        autoFocus,
-        className,
-        disabled,
-        ready,
-        handleSubmit,
-        intl,
-        invalid,
-        pristine,
-        marketplaceCurrency,
-        unitType,
-        listingMinimumPriceSubUnits,
-        listingType,
-        saveActionMsg,
-        updated,
-        updateInProgress,
-        fetchErrors,
-        values,
-        currentUser,
-      } = formRenderProps;
+export const EditListingPricingAndStockFormComponent = props => {
+  const [providerCommission, setProviderCommission] = useState(0);
 
-      const userCurrency = currentUser?.attributes.profile.publicData.userCurrency;
+  useEffect(() => {
+    const getProviderCommission = async () => {
+      const commission = await getCommission();
+      const providerCommission = commission.providerCommission.percentage;
 
-      const priceValidators = getPriceValidators(
-        listingMinimumPriceSubUnits,
-        marketplaceCurrency,
-        intl
-      );
-      // Note: outdated listings don't have listingType!
-      // I.e. listings that are created with previous listing type setup.
-      const hasStockManagement = listingType?.stockType === STOCK_MULTIPLE_ITEMS;
-      const stockValidator = validators.numberAtLeast(
-        intl.formatMessage({ id: 'EditListingPricingAndStockForm.stockIsRequired' }),
-        0
-      );
-      const hasInfiniteStock = STOCK_INFINITE_ITEMS.includes(listingType?.stockType);
-      const currentStock = values.stock;
+      setProviderCommission(providerCommission);
+    };
 
-      const classes = classNames(css.root, className);
-      const submitReady = (updated && pristine) || ready;
-      const submitInProgress = updateInProgress;
-      const submitDisabled = invalid || disabled || submitInProgress;
-      const { updateListingError, showListingsError, setStockError } = fetchErrors || {};
+    getProviderCommission();
+  }, []);
 
-      const stockErrorMessage = isOldTotalMismatchStockError(setStockError)
-        ? intl.formatMessage({ id: 'EditListingPricingAndStockForm.oldStockTotalWasOutOfSync' })
-        : intl.formatMessage({ id: 'EditListingPricingAndStockForm.stockUpdateFailed' });
+  return (
+    <FinalForm
+      {...props}
+      mutators={{ ...arrayMutators }}
+      subscription={{ values: true, pristine: true, submitting: true, invalid: true }}
+      render={formRenderProps => {
+        const {
+          formId,
+          autoFocus,
+          className,
+          disabled,
+          ready,
+          handleSubmit,
+          intl,
+          invalid,
+          pristine,
+          marketplaceCurrency,
+          unitType,
+          listingMinimumPriceSubUnits,
+          listingType,
+          saveActionMsg,
+          updated,
+          updateInProgress,
+          fetchErrors,
+          values,
+          currentUser,
+        } = formRenderProps;
 
-      console.log('Form rendered with price:', values.price);
-      console.log('Price type:', typeof values.price);
+        const userCurrency = currentUser?.attributes.profile.publicData.userCurrency || DEFAULT_CURRENCY;
 
-      const priceValue = values.price && values.price.amount ? values.price.amount / 100 : 0;
+        const priceValidators = getPriceValidators(
+          listingMinimumPriceSubUnits,
+          marketplaceCurrency,
+          intl
+        );
+        // Note: outdated listings don't have listingType!
+        // I.e. listings that are created with previous listing type setup.
+        const hasStockManagement = listingType?.stockType === STOCK_MULTIPLE_ITEMS;
+        const stockValidator = validators.numberAtLeast(
+          intl.formatMessage({ id: 'EditListingPricingAndStockForm.stockIsRequired' }),
+          0
+        );
+        const hasInfiniteStock = STOCK_INFINITE_ITEMS.includes(listingType?.stockType);
+        const currentStock = values.stock;
 
-      return (
-        <Form onSubmit={handleSubmit} className={classes}>
-          {updateListingError ? (
-            <p className={css.error}>
-              <FormattedMessage id="EditListingPricingAndStockForm.updateFailed" />
-            </p>
-          ) : null}
-          {showListingsError ? (
-            <p className={css.error}>
-              <FormattedMessage id="EditListingPricingAndStockForm.showListingFailed" />
-            </p>
-          ) : null}
-          <FieldCurrencyInput
-            id={`${formId}.price`}
-            name="price"
-            className={css.input}
-            autoFocus={autoFocus}
-            label={intl.formatMessage(
-              { id: 'EditListingPricingAndStockForm.pricePerProduct' },
-              { unitType }
-            )}
-            placeholder={intl.formatMessage({
-              id: 'EditListingPricingAndStockForm.priceInputPlaceholder',
-            })}
-            currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
-            validate={priceValidators}
-          />
+        const classes = classNames(css.root, className);
+        const submitReady = (updated && pristine) || ready;
+        const submitInProgress = updateInProgress;
+        const submitDisabled = invalid || disabled || submitInProgress;
+        const { updateListingError, showListingsError, setStockError } = fetchErrors || {};
 
-          <PriceBreakdown
-            price={priceValue}
-            currencyConfig={{
-              currency: marketplaceCurrency,
-              ...appSettings.getCurrencyFormatting(marketplaceCurrency),
-            }}
-          />
+        const stockErrorMessage = isOldTotalMismatchStockError(setStockError)
+          ? intl.formatMessage({ id: 'EditListingPricingAndStockForm.oldStockTotalWasOutOfSync' })
+          : intl.formatMessage({ id: 'EditListingPricingAndStockForm.stockUpdateFailed' });
 
-          {userCurrency !== 'USD' && (
-            <p className={css.disclaimer}>
-              <FormattedMessage id="EditListingPricingAndStockForm.priceDisclaimer" />
-            </p>
-          )}
+        console.log('Form rendered with price:', values.price);
+        console.log('Price type:', typeof values.price);
 
-          <UpdateStockToInfinityCheckboxMaybe
-            formId={formId}
-            hasInfiniteStock={hasInfiniteStock}
-            currentStock={currentStock}
-            intl={intl}
-          />
+        const priceValue = values.price && values.price.amount ? values.price.amount / 100 : 0;
 
-          {hasStockManagement ? (
-            <FieldTextInput
+        return (
+          <Form onSubmit={handleSubmit} className={classes}>
+            {updateListingError ? (
+              <p className={css.error}>
+                <FormattedMessage id="EditListingPricingAndStockForm.updateFailed" />
+              </p>
+            ) : null}
+            {showListingsError ? (
+              <p className={css.error}>
+                <FormattedMessage id="EditListingPricingAndStockForm.showListingFailed" />
+              </p>
+            ) : null}
+            <FieldCurrencyInput
+              id={`${formId}.price`}
+              name="price"
               className={css.input}
-              id={`${formId}.stock`}
-              name="stock"
-              label={intl.formatMessage({ id: 'EditListingPricingAndStockForm.stockLabel' })}
+              autoFocus={autoFocus}
+              label={intl.formatMessage(
+                {
+                  id: 'EditListingPricingAndStockForm.pricePerProduct',
+                },
+                {
+                  providerCommission,
+                }
+              )}
               placeholder={intl.formatMessage({
-                id: 'EditListingPricingAndStockForm.stockPlaceholder',
+                id: 'EditListingPricingAndStockForm.priceInputPlaceholder',
               })}
-              type="number"
-              min={0}
-              validate={stockValidator}
+              currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
+              validate={priceValidators}
             />
-          ) : (
-            <Field id="stock" name="stock" type="hidden" className={css.unitTypeHidden}>
-              {fieldRenderProps => <input {...fieldRenderProps?.input} />}
-            </Field>
-          )}
-          {setStockError ? <p className={css.error}>{stockErrorMessage}</p> : null}
 
-          <Button
-            className={css.submitButton}
-            type="submit"
-            inProgress={submitInProgress}
-            disabled={submitDisabled}
-            ready={submitReady}
-          >
-            {saveActionMsg}
-          </Button>
-        </Form>
-      );
-    }}
-  />
-);
+            <PriceBreakdown
+              price={priceValue}
+              currencyConfig={{
+                currency: marketplaceCurrency,
+                ...appSettings.getCurrencyFormatting(marketplaceCurrency),
+              }}
+              providerCommission={providerCommission}
+            />
+
+            {userCurrency !== DEFAULT_CURRENCY && (
+              <p className={css.disclaimer}>
+                <FormattedMessage id="EditListingPricingAndStockForm.priceDisclaimer" />
+              </p>
+            )}
+
+            <UpdateStockToInfinityCheckboxMaybe
+              formId={formId}
+              hasInfiniteStock={hasInfiniteStock}
+              currentStock={currentStock}
+              intl={intl}
+            />
+
+            {hasStockManagement ? (
+              <FieldTextInput
+                className={css.input}
+                id={`${formId}.stock`}
+                name="stock"
+                label={intl.formatMessage({ id: 'EditListingPricingAndStockForm.stockLabel' })}
+                placeholder={intl.formatMessage({
+                  id: 'EditListingPricingAndStockForm.stockPlaceholder',
+                })}
+                type="number"
+                min={0}
+                validate={stockValidator}
+              />
+            ) : (
+              <Field id="stock" name="stock" type="hidden" className={css.unitTypeHidden}>
+                {fieldRenderProps => <input {...fieldRenderProps?.input} />}
+              </Field>
+            )}
+            {setStockError ? <p className={css.error}>{stockErrorMessage}</p> : null}
+
+            <Button
+              className={css.submitButton}
+              type="submit"
+              inProgress={submitInProgress}
+              disabled={submitDisabled}
+              ready={submitReady}
+            >
+              {saveActionMsg}
+            </Button>
+          </Form>
+        );
+      }}
+    />
+  );
+};
 
 EditListingPricingAndStockFormComponent.defaultProps = {
   fetchErrors: null,

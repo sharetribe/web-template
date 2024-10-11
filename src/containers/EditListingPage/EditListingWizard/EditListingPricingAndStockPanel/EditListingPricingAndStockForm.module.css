@@ -45,7 +45,7 @@
 
 .disclaimer {
   color: var(--colorWhite);
-  background-color: var(--colorBlueDisclaimer);
+  background-color: var(--colorBlueNote);
   border-radius: var(--borderRadiusMedium);
   padding: 16px;
 }
