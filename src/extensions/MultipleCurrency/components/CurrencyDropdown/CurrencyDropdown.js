@@ -15,12 +15,10 @@ const currencyIcons = {
 };
 
 const CurrencyDropdown = props => {
-  const {} = props;
   const dispatch = useDispatch();
   const { uiCurrency } = useSelector(state => state.ui);
 
   const handleChangeCurrency = currency => () => {
-    console.log('debug-goo', currency);
     dispatch(setUiCurrency(currency));
   };
 
