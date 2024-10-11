@@ -699,6 +699,10 @@
   border: 0;
   cursor: pointer;
 
+  img {
+    width: 100%;
+  }
+
   @media (--viewportMedium) {
     height: 75vh;
   }
