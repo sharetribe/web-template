@@ -2,55 +2,69 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { formatMoney } from '../../../../util/currency';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
-import { injectIntl, intlShape } from '../../../../util/reactIntl';
+import { FormattedMessage, injectIntl, intlShape } from '../../../../util/reactIntl';
+
 import css from './PriceBreakdown.module.css';
-//import defaultConfig from '../../../../config/configDefault';
-import LineItemProviderCommissionMaybe from '../../../../components/OrderBreakdown/LineItemProviderCommissionMaybe';
 
 const { Money } = sdkTypes;
 
-const PriceBreakdownComponent = ({ price, currencyConfig, intl }) => {
-  //console.log('PriceBreakdown rendered with price:', price);
-  //console.log('config:', defaultConfig);
-  console.log('LineItemProviderCommissionMaybe:', LineItemProviderCommissionMaybe.providerCommissionLineItem);
-  
+const PriceBreakdownComponent = props => {
+  const { price, currencyConfig, intl, providerCommission } = props;
+
   if (typeof price !== 'number' || isNaN(price)) {
     return (
       <div className={css.root}>
-        <h4>Price Breakdown</h4>
-        <p>Please enter a valid price to see the breakdown.</p>
+        <h4>
+          <FormattedMessage id="EditListingPriceBreakdown.priceBreakdownTitle" />
+        </h4>
+        <p>
+          <FormattedMessage id="EditListingPriceBreakdown.priceMissing" />
+        </p>
       </div>
     );
   }
 
-  const feePercentage = 5;
   const priceInCents = Math.round(price * 100);
   const priceAsMoney = new Money(priceInCents, currencyConfig.currency);
-  const fees = new Money(Math.round(priceInCents * (feePercentage/100) ), currencyConfig.currency);
+  const fees = new Money(
+    Math.round(priceInCents * (providerCommission / 100)),
+    currencyConfig.currency
+  );
   const sellerReceives = new Money(priceInCents - fees.amount, currencyConfig.currency);
 
-  const formatMoneyWithIntl = (money) => {
+  const formatMoneyWithIntl = money => {
     try {
       return formatMoney(intl, money);
     } catch (error) {
       console.error('Error formatting money:', error);
       return 'N/A';
-    } 
+    }
   };
 
   return (
     <div className={css.root}>
-      <h4>Price Breakdown</h4>
+      <h4>
+        <FormattedMessage id="EditListingPriceBreakdown.priceBreakdownTitle" />
+      </h4>
       <div className={css.row}>
-        <span>Listing Price:</span>
+        <span>
+          <FormattedMessage id="EditListingPriceBreakdown.listingPrice" />
+        </span>
         <span>{formatMoneyWithIntl(priceAsMoney)}</span>
       </div>
       <div className={css.row}>
-        <span>Processing Fees ({feePercentage}%):</span>
+        <span>
+          <FormattedMessage
+            id="EditListingPriceBreakdown.processingFees"
+            values={{ providerCommission }}
+          />
+        </span>
         <span>{formatMoneyWithIntl(fees)}</span>
       </div>
       <div className={css.row}>
-        <span>You Receive:</span>
+        <span>
+          <FormattedMessage id="EditListingPriceBreakdown.sellerReceives" />
+        </span>
         <span>{formatMoneyWithIntl(sellerReceives)}</span>
       </div>
     </div>
