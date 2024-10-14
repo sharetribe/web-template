@@ -142,8 +142,9 @@ export const validateInteger = (value, max, min, numberTooSmallMessage, numberTo
   return VALID;
 };
 
+// If URL is passed to this function as null, will return VALID
 export const validateYoutubeURL = (url, message) => {
-  return extractYouTubeID(url) ? VALID : message;
+  return url ? (extractYouTubeID(url) ? VALID : message) : VALID;
 };
 
 export const ageAtLeast = (message, minYears) => value => {
