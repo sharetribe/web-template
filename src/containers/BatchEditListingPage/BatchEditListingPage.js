@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -15,17 +15,23 @@ import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import EditListingWizard from './BatchEditListingWizard/BatchEditListingWizard';
 import css from './BatchEditListingPage.module.css';
-import { requestImageUpload } from '../EditListingPage/EditListingPage.duck';
+import { initializeUppy } from './BatchEditListingPage.duck';
 
 export const BatchEditListingPageComponent = props => {
-  const { currentUser, history, intl, params, page } = props;
-
+  const { currentUser, history, intl, params, page, initializeUppy } = props;
   const { type } = params;
   const isNewURI = type === LISTING_PAGE_PARAM_TYPE_NEW;
   const isDraftURI = type === LISTING_PAGE_PARAM_TYPE_DRAFT;
   const isNewListingFlow = isNewURI || isDraftURI;
   const hasPostingRights = hasPermissionToPostListings(currentUser);
   const shouldRedirectNoPostingRights = !!currentUser?.id && isNewListingFlow && !hasPostingRights;
+  const { uppy, files, listingFieldsOptions } = page;
+
+  useEffect(() => {
+    if(!uppy) {
+      initializeUppy();
+    }
+  }, []);
 
   if (!isUserAuthorized(currentUser)) {
     return (
@@ -53,13 +59,18 @@ export const BatchEditListingPageComponent = props => {
         desktopClassName={css.desktopTopbar}
         mobileClassName={css.mobileTopbar}
       />
-      <EditListingWizard
-        id="EditListingWizard"
-        className={css.wizard}
-        params={params}
-        history={history}
-        currentUser={currentUser}
-      />
+      {uppy && (
+        <EditListingWizard
+          id="EditListingWizard"
+          className={css.wizard}
+          params={params}
+          history={history}
+          currentUser={currentUser}
+          uppy={uppy}
+          files={files}
+          listingFieldsOptions={listingFieldsOptions}
+        />
+      )}
     </Page>
   );
 };
@@ -74,8 +85,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  onFileAdded: (files) =>
-    dispatch(requestAddFile(files)),
+  initializeUppy: uppy => dispatch(initializeUppy(uppy)),
 
 });
 

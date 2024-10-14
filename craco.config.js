@@ -1,3 +1,5 @@
+const { InjectManifest } = require('workbox-webpack-plugin');
+
 module.exports = {
   reactScriptsVersion: 'sharetribe-scripts',
   webpack: {
@@ -13,5 +15,11 @@ module.exports = {
         ],
       },
     },
+    plugins: [
+      new InjectManifest({
+        swSrc: './src/sw.js',
+        swDest: 'sw.js',
+      }),
+    ],
   },
 };

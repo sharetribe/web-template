@@ -26,6 +26,7 @@
     "@uppy/react": "^4.0.1",
     "@uppy/remote-sources": "^2.1.0",
     "@uppy/store-redux": "^4.0.0",
+    "@uppy/thumbnail-generator": "^4.0.0",
     "@uppy/transloadit": "^4.0.1",
     "@uppy/url": "^4.0.0",
     "antd": "^5.21.1",
@@ -103,7 +104,9 @@
     "cross-env": "^7.0.3",
     "inquirer": "^8.2.4",
     "nodemon": "^3.1.4",
-    "prettier": "^1.18.2"
+    "prettier": "^1.18.2",
+    "workbox-precaching": "^7.1.0",
+    "workbox-webpack-plugin": "^7.1.0"
   },
   "resolutions": {
     "moment": "^2.30.1",

@@ -4,8 +4,8 @@ const WIDTH_TAGS = ['ExifImageWidth', 'Width', 'ImageWidth'];
 const HEIGHT_TAGS = ['ExifImageHeight', 'Height', 'ImageHeight'];
 const KEYWORDS_TAGS = ['Keywords', 'Subject', 'dc:subject'];
 
-function getFileResolution(file, onLoad, extraParams = {}) {
-  const fileUrl = URL.createObjectURL(file);
+function getFileResolution(fileOrUrl, onLoad, extraParams = {}) {
+  const fileUrl = typeof fileOrUrl === 'string' ? fileOrUrl : URL.createObjectURL(fileOrUrl);
   const image = new Image();
   image.src = fileUrl;
   image.onload = () => {
@@ -53,9 +53,32 @@ function getTagValue(metadata, possibleTags, defaultValue) {
   return defaultValue;
 }
 
-export const getFileMetadata = (file, onLoad) => {
+export const getFileMetadata = (uppyFile, onLoad) => {
+  const { data, isRemote, source } = uppyFile;
+
+  if (isRemote) {
+    switch (source) {
+      case 'GoogleDrive': {
+        const { imageWidth, imageHeight } = data.custom || {};
+        return onLoad({
+          width: imageWidth || 0,
+          height: imageHeight || 0,
+        });
+      }
+      case 'Url':
+        const fileUrl = uppyFile.remote.body.url;
+        return getFileResolution(fileUrl, ({ width, height }) => {
+          console.log(width, height);
+          return onLoad({ width, height });
+        });
+    }
+
+    onLoad({ width: 0, height: 0, keywords: '' });
+    return;
+  }
+
   exifr
-    .parse(file, {
+    .parse(data, {
       xmp: true,
       icc: true,
       iptc: true,
@@ -63,6 +86,6 @@ export const getFileMetadata = (file, onLoad) => {
       ihdr: true,
       gps: false,
     })
-    .then(output => readMetadata(output, file, onLoad))
-    .catch(() => getFileResolution(file, onLoad));
+    .then(output => readMetadata(output, data, onLoad))
+    .catch(() => getFileResolution(data, onLoad));
 };
