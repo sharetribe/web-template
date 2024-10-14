@@ -269,7 +269,8 @@
 }
 
 .sectionMultiEnum,
-.sectionDetails {
+.sectionDetails,
+.sectionEmbeddedYoutubeVideo {
   padding: 0 24px;
   margin-bottom: 30px;
 
