@@ -511,7 +511,7 @@ const EnhancedSearchPage = props => {
 const mapStateToProps = state => {
   const { currentUser } = state.user;
   const { uiCurrency } = state.ui;
-
+  const { exchangeRate } = state.ExchangeRate;
   const {
     currentPageResultIds,
     pagination,
@@ -520,7 +520,7 @@ const mapStateToProps = state => {
     searchParams,
   } = state.SearchPage;
   const listings = getListingsById(state, currentPageResultIds);
-  const convertedListings = convertListingPrices(listings, state);
+  const convertedListings = convertListingPrices(listings, uiCurrency, exchangeRate);
 
   return {
     currentUser,

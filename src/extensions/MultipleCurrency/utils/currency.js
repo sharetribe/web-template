@@ -15,7 +15,7 @@ export const convertToDefaultCurrency = (price, exchangeRate) => {
   return new Money(defaultCurrencyAmount, DEFAULT_CURRENCY);
 };
 
-const convertListingPriceByCurrency = (price, currency, exchangeRate) => {
+const convertPriceByCurrency = (price, currency, exchangeRate) => {
   const { amount } = price;
   const dailyExchangeRate = exchangeRate?.[currency];
 
@@ -36,13 +36,10 @@ const getListingPrice = (listing, currency, exchangeRate) => {
     return new Money(amount, exChangeCurrency);
   }
 
-  return convertListingPriceByCurrency(price, currency, exchangeRate);
+  return convertPriceByCurrency(price, currency, exchangeRate);
 };
 
-export const convertListingPrices = (listings, state) => {
-  const { uiCurrency } = state.ui;
-  const { exchangeRate } = state.ExchangeRate;
-
+export const convertListingPrices = (listings, uiCurrency, exchangeRate) => {
   if (uiCurrency === DEFAULT_CURRENCY) {
     return listings;
   }
@@ -54,6 +51,21 @@ export const convertListingPrices = (listings, state) => {
         ...listing.attributes,
         price: getListingPrice(listing, uiCurrency, exchangeRate),
       },
+    };
+  });
+};
+
+export const convertProductLineItems = (lineItems, uiCurrency, exchangePrice) => {
+  if (!lineItems || uiCurrency === DEFAULT_CURRENCY) {
+    return lineItems;
+  }
+
+  return lineItems.map(lineItem => {
+    const { unitPrice, lineTotal } = lineItem;
+    return {
+      ...lineItem,
+      unitPrice: convertPriceByCurrency(unitPrice, uiCurrency, exchangePrice),
+      lineTotal: convertPriceByCurrency(lineTotal, uiCurrency, exchangePrice),
     };
   });
 };

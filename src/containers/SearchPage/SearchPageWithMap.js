@@ -86,6 +86,12 @@ export class SearchPageComponent extends Component {
     this.handleSortBy = this.handleSortBy.bind(this);
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.uiCurrency !== this.props.uiCurrency) {
+      this.getHandleChangedValueFn(true)({ price: null, currency: null });
+    }
+  }
+
   // Callback to determine if new search is needed
   // when map is moved by user or viewport has changed
   onMapMoveEnd(viewportBoundsChanged, data) {
@@ -672,6 +678,8 @@ const EnhancedSearchPage = props => {
 const mapStateToProps = state => {
   const { currentUser } = state.user;
   const { uiCurrency } = state.ui;
+  const { exchangeRate } = state.ExchangeRate;
+
   const {
     currentPageResultIds,
     pagination,
@@ -681,7 +689,7 @@ const mapStateToProps = state => {
     activeListingId,
   } = state.SearchPage;
   const listings = getListingsById(state, currentPageResultIds);
-  const convertedListings = convertListingPrices(listings, state);
+  const convertedListings = convertListingPrices(listings, uiCurrency, exchangeRate);
   return {
     currentUser,
     listings: convertedListings,
