@@ -1,8 +1,6 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { string } from 'prop-types';
 import classNames from 'classnames';
-
-import { useConfiguration } from '../../../context/configurationContext';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
 import { useIntl } from '../../../util/reactIntl';
 import {
@@ -15,9 +13,6 @@ import { NamedRedirect, Tabs } from '../../../components';
 
 import BatchEditListingWizardTab, { PRODUCT_DETAILS, UPLOAD } from './BatchEditListingWizardTab';
 import css from './BatchEditListingWizard.module.css';
-import { useUppy } from '../../../hooks/useUppy';
-import { getFileMetadata } from '../../../util/file-metadata';
-import { requestAddFile, requestRemoveFile } from '../BatchEditListingPage.duck';
 
 /**
  * Return translations for wizard tab: label and submit button.
@@ -62,34 +57,13 @@ const BatchEditListingWizard = props => {
     viewport = { width: 0 },
     intl,
     currentUser = {},
-    config = {},
     routeConfiguration = {},
-
+    uppy = null,
+    files = [],
+    listingFieldsOptions = [],
     ...rest
   } = props;
-
-  const { uuid: userId } = currentUser.id;
-  const uppy = useUppy({ userId });
-  const [fileCount, setFileCount] = useState(uppy.getFiles().length);
-
-  uppy.on('file-removed', () => {
-    requestRemoveFile(uppy.getFiles());
-    setFileCount(uppy.getFiles().length);
-  });
-
-  uppy.on('file-added', ({ data, id }) => {
-    requestRemoveFile(uppy.getFiles());
-    getFileMetadata(data, metadata => {
-      uppy.setFileMeta(id, metadata);
-    });
-
-    setFileCount(uppy.getFiles().length);
-  });
-
-  uppy.on('cancel-all', info => {
-    setFileCount(0);
-  });
-
+  const fileCount = uppy.getFiles().length;
   const selectedTab = params.tab;
   const isNewListingFlow = [LISTING_PAGE_PARAM_TYPE_NEW, LISTING_PAGE_PARAM_TYPE_DRAFT].includes(
     params.type
@@ -137,9 +111,10 @@ const BatchEditListingWizard = props => {
               disabled={isNewListingFlow && !tabsStatus[tab]}
               tab={tab}
               params={params}
-              config={config}
               routeConfiguration={routeConfiguration}
               uppy={uppy}
+              files={files}
+              listingFieldsOptions={listingFieldsOptions}
             />
           );
         })}
@@ -149,17 +124,9 @@ const BatchEditListingWizard = props => {
 };
 
 const EnhancedBatchEditListingWizard = props => {
-  const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();
   const intl = useIntl();
-  return (
-    <BatchEditListingWizard
-      config={config}
-      routeConfiguration={routeConfiguration}
-      intl={intl}
-      {...props}
-    />
-  );
+  return <BatchEditListingWizard routeConfiguration={routeConfiguration} intl={intl} {...props} />;
 };
 
 export default withViewport(EnhancedBatchEditListingWizard);

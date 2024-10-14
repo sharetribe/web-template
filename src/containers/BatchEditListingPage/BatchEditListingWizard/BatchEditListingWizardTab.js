@@ -7,7 +7,16 @@ export const UPLOAD = 'upload';
 export const PRODUCT_DETAILS = 'product-details';
 
 const BatchEditListingWizardTab = props => {
-  const { tab, params, history, tabSubmitButtonText, config, routeConfiguration, uppy } = props;
+  const {
+    tab,
+    params,
+    history,
+    tabSubmitButtonText,
+    routeConfiguration,
+    uppy,
+    files,
+    listingFieldsOptions,
+  } = props;
 
   const onCompleteUploadTab = () => {
     const nextTab = { ...params, tab: PRODUCT_DETAILS };
@@ -26,7 +35,7 @@ const BatchEditListingWizardTab = props => {
       );
     }
     case PRODUCT_DETAILS: {
-      return <EditListingBatchProductDetails uppy={uppy} config={config} />;
+      return <EditListingBatchProductDetails  files={files} listingFieldsOptions={listingFieldsOptions} />;
     }
     default:
       return null;

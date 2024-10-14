@@ -6,18 +6,17 @@ import GoogleDrive from '@uppy/google-drive/lib/GoogleDrive';
 import Url from '@uppy/url/lib/Url';
 import OneDrive from '@uppy/onedrive/lib/OneDrive';
 import GoldenRetriever from '@uppy/golden-retriever';
-import { useEffect, useState } from 'react';
-import { createUploadSignature } from '../util/api';
+import { createUploadSignature } from './api';
+import ThumbnailGenerator from '@uppy/thumbnail-generator';
 
-export function useUppy(meta) {
-  const uppyInstance = new Uppy({ ...meta });
-  const [uppy] = useState(uppyInstance);
+export function createUppyInstance(meta) {
+  const uppy = new Uppy({ ...meta });
   const config = {
     companionUrl: COMPANION_URL,
     companionAllowedHosts: COMPANION_ALLOWED_HOSTS,
   };
 
-  uppyInstance
+  uppy
     .use(Transloadit, {
       assemblyOptions: async file => {
         const { params, signature } = await createUploadSignature({ ...meta });
@@ -30,18 +29,23 @@ export function useUppy(meta) {
       },
       autoProceed: false,
     })
-    .use(GoldenRetriever)
+    .use(GoldenRetriever, { serviceWorker: true })
     .use(Dropbox, config)
     .use(Box, config)
     .use(GoogleDrive, config)
     .use(Url, config)
     .use(OneDrive, config);
 
-  useEffect(() => {
-    if (meta) {
-      uppy.setOptions({ ...meta });
-    }
-  }, [uppy, meta]);
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker
+      .register('/sw.js') // Adjust the path if needed
+      .then(registration => {
+        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+      })
+      .catch(error => {
+        console.error('ServiceWorker registration failed: ', error);
+      });
+  }
 
   return uppy;
 }
