@@ -1,5 +1,5 @@
 const express = require('express');
-const { getExchangeRate } = require('../caching');
+const { getExchangeRate } = require('../../common/caching');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
