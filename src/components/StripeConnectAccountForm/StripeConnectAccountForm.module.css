@@ -116,7 +116,6 @@
   text-align: left;
 
   &:hover {
-    cursor: text;
     text-decoration: none;
   }
 }

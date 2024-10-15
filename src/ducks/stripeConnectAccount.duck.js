@@ -162,7 +162,6 @@ export const createStripeAccount = params => (dispatch, getState, sdk) => {
   const {
     country,
     accountType,
-    bankAccountToken,
     businessProfileMCC,
     businessProfileURL,
     stripePublishableKey,
@@ -191,7 +190,6 @@ export const createStripeAccount = params => (dispatch, getState, sdk) => {
         {
           country,
           accountToken,
-          bankAccountToken,
           requestedCapabilities,
           businessProfileMCC,
           businessProfileURL,
@@ -225,14 +223,9 @@ export const createStripeAccount = params => (dispatch, getState, sdk) => {
 // See API reference for more information:
 // https://www.sharetribe.com/api-reference/?javascript#update-stripe-account
 export const updateStripeAccount = params => (dispatch, getState, sdk) => {
-  const { bankAccountToken } = params;
-
   dispatch(stripeAccountUpdateRequest());
   return sdk.stripeAccount
-    .update(
-      { bankAccountToken, requestedCapabilities: ['card_payments', 'transfers'] },
-      { expand: true }
-    )
+    .update({ requestedCapabilities: ['card_payments', 'transfers'] }, { expand: true })
     .then(response => {
       const stripeAccount = response.data.data;
       dispatch(stripeAccountUpdateSuccess(stripeAccount));
