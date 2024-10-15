@@ -83,6 +83,7 @@ import SectionAuthorMaybe from './SectionAuthorMaybe';
 import SectionMapMaybe from './SectionMapMaybe';
 import SectionGallery from './SectionGallery';
 import CustomListingFields from './CustomListingFields';
+import CustomLink from '../../components/CustomKeys/CustomLink';
 
 import css from './ListingPage.module.css';
 
@@ -286,6 +287,28 @@ export const ListingPageComponent = props => {
     : 'https://schema.org/OutOfStock';
 
   const availabilityMaybe = schemaAvailability ? { availability: schemaAvailability } : {};
+ {/* CUSTOM ENQUIRY LINK */}
+  const renderCustomLinks = () => {
+    return listingConfig.listingFields.map(field => {
+      if (field.key === 'phone' || field.showConfig?.isDetail) {
+        const value = publicData[field.key] || metadata[field.key];
+        if (value != null) {
+          return (
+            <CustomLink
+              key={field.key}
+              detail={{
+                key: field.key,
+                label: field.label,
+                value: value
+              }}
+              publicData={publicData}
+            />
+          );
+        }
+      }
+      return null;
+    }).filter(Boolean); // Remove null entries
+  };
 
   return (
     <Page
@@ -412,7 +435,14 @@ export const ListingPageComponent = props => {
               dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
               marketplaceName={config.marketplaceName}
             />
+
+<div className={css.customLinkSection}>
+            {renderCustomLinks()}
           </div>
+          </div>
+
+
+
         </div>
       </LayoutSingleColumn>
     </Page>

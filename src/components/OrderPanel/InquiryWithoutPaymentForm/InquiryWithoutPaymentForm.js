@@ -13,18 +13,16 @@ const renderForm = formRenderProps => {
   const classes = classNames(rootClassName || css.root, className);
 
   return (
-      
-    <PrimaryButton onClick={() => { window.location.href = 'https://justconstruct-leads.vercel.app/EnquiryForm'; }}>
-    <FormattedMessage id="InquiryWithoutPaymentForm.ctaButton" />
-  </PrimaryButton>
-      
+      <div>
+  
+      </div>
   );
 };
 
 
 {/*
 
-OLD LOGICE FOR INQUIRY WITHOUT PAYMENT FORM
+REMOVED ENQUIRE BUTTON 
 
   return (
     <Form id={formId} onSubmit={handleSubmit} className={classes}>
