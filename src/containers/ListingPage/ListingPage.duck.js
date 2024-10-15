@@ -7,7 +7,11 @@ import { transactionLineItems } from '../../util/api';
 import * as log from '../../util/log';
 import { denormalisedResponseEntities } from '../../util/data';
 import { findNextBoundary, getStartOf, monthIdString } from '../../util/dates';
-import { isUserAuthorized } from '../../util/userHelpers';
+import {
+  hasPermissionToInitiateTransactions,
+  hasPermissionToViewData,
+  isUserAuthorized,
+} from '../../util/userHelpers';
 import {
   LISTING_PAGE_DRAFT_VARIANT,
   LISTING_PAGE_PENDING_APPROVAL_VARIANT,
@@ -385,9 +389,10 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   const listingId = new UUID(params.id);
   const state = getState();
   const currentUser = state.user?.currentUser;
-  const inquiryModalOpenForListingId = isUserAuthorized(currentUser)
-    ? state.ListingPage.inquiryModalOpenForListingId
-    : null;
+  const inquiryModalOpenForListingId =
+    isUserAuthorized(currentUser) && hasPermissionToInitiateTransactions(currentUser)
+      ? state.ListingPage.inquiryModalOpenForListingId
+      : null;
 
   // Clear old line-items
   dispatch(setInitialValues({ lineItems: null, inquiryModalOpenForListingId }));
@@ -405,15 +410,19 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
     return Promise.resolve();
   }
 
-  return Promise.all([
-    dispatch(showListing(listingId, config)),
-    dispatch(fetchReviews(listingId)),
-  ]).then(response => {
+  const hasNoViewingRights = currentUser && !hasPermissionToViewData(currentUser);
+  const promises = hasNoViewingRights
+    ? // If user has no viewing rights, only allow fetching their own listing without reviews
+      [dispatch(showListing(listingId, config, true))]
+    : // For users with viewing rights, fetch the listing and the associated reviews
+      [dispatch(showListing(listingId, config)), dispatch(fetchReviews(listingId))];
+
+  return Promise.all(promises).then(response => {
     const listingResponse = response[0];
     const listing = listingResponse?.data?.data;
     const transactionProcessAlias = listing?.attributes?.publicData?.transactionProcessAlias || '';
-    if (isBookingProcessAlias(transactionProcessAlias)) {
-      // Fetch timeSlots.
+    if (isBookingProcessAlias(transactionProcessAlias) && !hasNoViewingRights) {
+      // Fetch timeSlots if the user has viewing rights.
       // This can happen parallel to loadData.
       // We are not interested to return them from loadData call.
       fetchMonthlyTimeSlots(dispatch, listing);

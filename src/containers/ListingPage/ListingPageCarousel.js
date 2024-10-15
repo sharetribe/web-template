@@ -18,10 +18,14 @@ import {
   LISTING_PAGE_PARAM_TYPE_EDIT,
   createSlug,
   NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
+  NO_ACCESS_PAGE_VIEW_LISTINGS,
 } from '../../util/urlHelpers';
-import { isErrorUserPendingApproval, isForbiddenError } from '../../util/errors.js';
-import { isUserAuthorized } from '../../util/userHelpers.js';
-import { convertMoneyToNumber } from '../../util/currency';
+import {
+  isErrorNoViewingPermission,
+  isErrorUserPendingApproval,
+  isForbiddenError,
+} from '../../util/errors.js';
+import { hasPermissionToViewData, isUserAuthorized } from '../../util/userHelpers.js';
 import {
   ensureListing,
   ensureOwnListing,
@@ -118,6 +122,7 @@ export const ListingPageComponent = props => {
     onInitializeCardPaymentData,
     config,
     routeConfiguration,
+    showOwnListingsOnly,
   } = props;
 
   const listingConfig = config.listing;
@@ -125,7 +130,7 @@ export const ListingPageComponent = props => {
   const isPendingApprovalVariant = rawParams.variant === LISTING_PAGE_PENDING_APPROVAL_VARIANT;
   const isDraftVariant = rawParams.variant === LISTING_PAGE_DRAFT_VARIANT;
   const currentListing =
-    isPendingApprovalVariant || isDraftVariant
+    isPendingApprovalVariant || isDraftVariant || showOwnListingsOnly
       ? ensureOwnListing(getOwnListing(listingId))
       : ensureListing(getListing(listingId));
 
@@ -313,6 +318,7 @@ export const ListingPageComponent = props => {
                 isOwnListing={isOwnListing}
                 listing={currentListing}
                 showNoPayoutDetailsSet={noPayoutDetailsSetWithOwnListing}
+                currentUser={currentUser}
               />
             ) : null}
             {currentListing.id ? (
@@ -320,6 +326,7 @@ export const ListingPageComponent = props => {
                 className={css.actionBarForProductLayout}
                 isOwnListing={isOwnListing}
                 listing={currentListing}
+                currentUser={currentUser}
                 editParams={{
                   id: listingId.uuid,
                   slug: listingSlug,
@@ -487,7 +494,8 @@ const EnhancedListingPage = props => {
 
   const showListingError = props.showListingError;
   const isVariant = props.params?.variant?.length > 0;
-  if (isForbiddenError(showListingError) && !isVariant) {
+  const currentUser = props.currentUser;
+  if (isForbiddenError(showListingError) && !isVariant && !currentUser) {
     // This can happen if private marketplace mode is active
     return (
       <NamedRedirect
@@ -497,15 +505,28 @@ const EnhancedListingPage = props => {
     );
   }
 
-  const currentUser = props.currentUser;
   const isPrivateMarketplace = config.accessControl.marketplace.private === true;
   const isUnauthorizedUser = currentUser && !isUserAuthorized(currentUser);
+  const hasNoViewingRights = currentUser && !hasPermissionToViewData(currentUser);
   const hasUserPendingApprovalError = isErrorUserPendingApproval(showListingError);
+
   if ((isPrivateMarketplace && isUnauthorizedUser) || hasUserPendingApprovalError) {
     return (
       <NamedRedirect
         name="NoAccessPage"
         params={{ missingAccessRight: NO_ACCESS_PAGE_USER_PENDING_APPROVAL }}
+      />
+    );
+  } else if (
+    (hasNoViewingRights && isForbiddenError(showListingError)) ||
+    isErrorNoViewingPermission(showListingError)
+  ) {
+    // If the user has no viewing rights, fetching anything but their own listings
+    // will return a 403 error. If that happens, redirect to NoAccessPage.
+    return (
+      <NamedRedirect
+        name="NoAccessPage"
+        params={{ missingAccessRight: NO_ACCESS_PAGE_VIEW_LISTINGS }}
       />
     );
   }
@@ -517,6 +538,7 @@ const EnhancedListingPage = props => {
       intl={intl}
       history={history}
       location={location}
+      showOwnListingsOnly={hasNoViewingRights}
       {...props}
     />
   );

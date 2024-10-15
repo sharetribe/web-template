@@ -136,6 +136,8 @@ export const getPropsForCustomUserFieldInputs = (
 
 /**
  * Check if currentUser has permission to post listings.
+ * Defined in currentUser's effectivePermissionSet relationship:
+ * https://www.sharetribe.com/api-reference/marketplace.html#currentuser-permissionset
  *
  * @param {Object} currentUser API entity
  * @returns {Boolean} true if currentUser has permission to post listings.
@@ -150,20 +152,48 @@ export const hasPermissionToPostListings = currentUser => {
 };
 
 /**
+ * Check if currentUser has permission to initiate transactions.
+ * Defined in currentUser's effectivePermissionSet relationship:
+ * https://www.sharetribe.com/api-reference/marketplace.html#currentuser-permissionset
+ *
+ * @param {Object} currentUser API entity
+ * @returns {Boolean} true if currentUser has permission to initiate transactions.
+ */
+export const hasPermissionToInitiateTransactions = currentUser => {
+  if (currentUser?.id && !currentUser?.effectivePermissionSet?.id) {
+    console.warn(
+      '"effectivePermissionSet" relationship is not defined or included to the fetched currentUser entity.'
+    );
+  }
+  return (
+    currentUser?.effectivePermissionSet?.attributes?.initiateTransactions === 'permission/allow'
+  );
+};
+
+/**
+ * Check if currentUser has permission to view listing and user data on a private marketplace.
+ * Defined in currentUser's effectivePermissionSet relationship:
+ * https://www.sharetribe.com/api-reference/marketplace.html#currentuser-permissionset
+ *
+ * @param {Object} currentUser API entity
+ * @returns {Boolean} true if currentUser has permission to view listing and user data on a private marketplace.
+ */
+export const hasPermissionToViewData = currentUser => {
+  if (currentUser?.id && !currentUser?.effectivePermissionSet?.id) {
+    console.warn(
+      '"effectivePermissionSet" relationship is not defined or included to the fetched currentUser entity.'
+    );
+  }
+  return currentUser?.effectivePermissionSet?.attributes?.read === 'permission/allow';
+};
+
+/**
  * Check if currentUser has been approved to gain access.
- * I.e. they are not in 'pendig-approval' or 'banned' state.
+ * I.e. they are not in 'pending-approval' or 'banned' state.
  *
  * If the user is in 'pending-approval' state, they don't have right to post listings and initiate transactions.
- * User's in 'active' state, they might have right to post listings and initiate transactions. It can be verified by passing permissionsToCheck map.
  *
- * @param {Object} currentUser API entity. It must have effectivePermissionSet included.
- * @param {Object} [permissionsToCheck] E.g. { postListings: true }
- * @returns {Boolean} true if currentUser has been approved (state is 'active'). If the _permissionsToCheck_ map is given, those are also checked.
+ * @param {Object} currentUser API entity.
+ * @returns {Boolean} true if currentUser has been approved (state is 'active').
  */
-export const isUserAuthorized = (currentUser, permissionsToCheck) => {
-  const { postListings } = permissionsToCheck || {};
-  const isActive = currentUser?.attributes?.state === 'active';
-  return permissionsToCheck && postListings
-    ? isActive && hasPermissionToPostListings(currentUser)
-    : isActive;
-};
+export const isUserAuthorized = currentUser => currentUser?.attributes?.state === 'active';

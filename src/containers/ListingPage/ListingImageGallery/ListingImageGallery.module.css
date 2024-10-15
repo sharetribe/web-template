@@ -57,6 +57,7 @@
   @media (--viewportMedium) {
     border-radius: var(--borderRadiusMedium);
     border: 1px solid var(--colorGrey100);
+    overflow: hidden;
   }
 }
 
@@ -178,34 +179,15 @@
      mobile, and mobile doesn't really benefit from fullscreen anyways. */
   display: none;
 
-  composes: marketplaceTinyFontStyles from global;
-  font-weight: var(--fontWeightMedium);
+  composes: buttonSmall from global;
 
   /* Position and dimensions */
   position: absolute;
   bottom: 19px;
   right: 24px;
-  margin: 0;
-  padding: 8px 13px 6px 13px;
-
-  /* Colors */
-  background-color: var(--colorWhite);
-
-  /* Borders */
-  border: 1px solid var(--colorGrey100);
-  border-radius: var(--borderRadius);
-
-  cursor: pointer;
-  transition: var(--transitionStyleButton);
 
   /* Ensure the button is on top of the navRight area */
   z-index: 1;
-
-  &:hover {
-    background-color: var(--marketplaceColor);
-    border-color: var(--marketplaceColor);
-    color: var(--colorWhite);
-  }
 
   @media (--viewportLarge) {
     display: block;
