@@ -2,9 +2,7 @@ import React from 'react';
 import { func, string } from 'prop-types';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
-
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
-
 import { Form, PrimaryButton } from '../..';
 
 import css from './InquiryWithoutPaymentForm.module.css';
@@ -15,6 +13,20 @@ const renderForm = formRenderProps => {
   const classes = classNames(rootClassName || css.root, className);
 
   return (
+      
+    <PrimaryButton onClick={() => { window.location.href = 'https://justconstruct-leads.vercel.app/EnquiryForm'; }}>
+    <FormattedMessage id="InquiryWithoutPaymentForm.ctaButton" />
+  </PrimaryButton>
+      
+  );
+};
+
+
+{/*
+
+OLD LOGICE FOR INQUIRY WITHOUT PAYMENT FORM
+
+  return (
     <Form id={formId} onSubmit={handleSubmit} className={classes}>
       <div className={css.submitButton}>
         <PrimaryButton type="submit">
@@ -23,7 +35,8 @@ const renderForm = formRenderProps => {
       </div>
     </Form>
   );
-};
+*/}
+
 
 const InquiryWithoutPaymentForm = props => {
   const intl = useIntl();
