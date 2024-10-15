@@ -16,6 +16,7 @@ import {
 import loadable from '@loadable/component';
 import classNames from 'classnames';
 import omit from 'lodash/omit';
+import { useSelector } from 'react-redux';
 
 import { intlShape, injectIntl, FormattedMessage } from '../../util/reactIntl';
 import {
@@ -43,10 +44,14 @@ import {
   isPurchaseProcess,
   resolveLatestProcessName,
 } from '../../transactions/transaction';
+import { types as sdkTypes } from '../../util/sdkLoader';
 
 import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2 } from '../../components';
+import { DEFAULT_CURRENCY } from '../../extensions/common/config/constants/currency.constants';
 
 import css from './OrderPanel.module.css';
+
+const { Money } = sdkTypes;
 
 const BookingTimeForm = loadable(() =>
   import(/* webpackChunkName: "BookingTimeForm" */ './BookingTimeForm/BookingTimeForm')
@@ -163,6 +168,7 @@ const PriceMaybe = props => {
 };
 
 const OrderPanel = props => {
+  const { uiCurrency } = useSelector(state => state.ui);
   const {
     rootClassName,
     className,
@@ -195,11 +201,16 @@ const OrderPanel = props => {
   } = props;
 
   const publicData = listing?.attributes?.publicData || {};
-  const { listingType, unitType, transactionProcessAlias = '' } = publicData || {};
+  const { listingType, unitType, transactionProcessAlias = '', exchangePrice } = publicData || {};
   const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
   const lineItemUnitType = lineItemUnitTypeMaybe || `line-item/${unitType}`;
 
-  const price = listing?.attributes?.price;
+  const price =
+    uiCurrency === DEFAULT_CURRENCY
+      ? listing?.attributes?.price
+      : exchangePrice?.[uiCurrency]
+      ? new Money(exchangePrice[uiCurrency].amount, uiCurrency)
+      : null;
   const isPaymentProcess = processName !== INQUIRY_PROCESS_NAME;
 
   const showPriceMissing = isPaymentProcess && !price;

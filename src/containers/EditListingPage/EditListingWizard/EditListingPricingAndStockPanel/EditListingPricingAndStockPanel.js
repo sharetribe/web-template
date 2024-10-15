@@ -36,7 +36,7 @@ const getInitialValues = (props, userCurrency) => {
   const isDefaultCurrency = userCurrency === DEFAULT_CURRENCY;
   const currencyPrice = publicData.exchangePrice?.[userCurrency];
   const price = isDefaultCurrency
-    ? price
+    ? listing.attributes.price
     : currencyPrice
     ? new Money(currencyPrice.amount, currencyPrice.currency)
     : null;
@@ -60,7 +60,7 @@ const getInitialValues = (props, userCurrency) => {
 
 const EditListingPricingAndStockPanel = props => {
   // State is needed since re-rendering would overwrite the values during XHR call.
-  const [initialValues, setInitialValues] = useState(getInitialValues(props));
+  const [initialValues, setInitialValues] = useState({});
   const { exchangeRate } = useSelector(state => state.ExchangeRate);
   const { currentUser } = useSelector(state => state.user);
   const { userCurrency } = currentUser?.attributes.profile?.publicData || {};
@@ -82,6 +82,7 @@ const EditListingPricingAndStockPanel = props => {
 
   useEffect(() => {
     if (currentUser) {
+      const { userCurrency } = currentUser?.attributes.profile?.publicData || {};
       setInitialValues(getInitialValues(props, userCurrency));
     }
   }, [currentUser]);

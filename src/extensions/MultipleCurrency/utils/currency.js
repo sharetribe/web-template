@@ -15,7 +15,7 @@ export const convertToDefaultCurrency = (price, exchangeRate) => {
   return new Money(defaultCurrencyAmount, DEFAULT_CURRENCY);
 };
 
-const convertPriceByCurrency = (price, currency, exchangeRate) => {
+export const convertPriceByCurrency = (price, currency, exchangeRate) => {
   const { amount } = price;
   const dailyExchangeRate = exchangeRate?.[currency];
 
