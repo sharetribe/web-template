@@ -133,10 +133,20 @@ const CreateStripeAccountFields = props => {
 };
 
 const UpdateStripeAccountFields = props => {
-  const { countryLabel, savedCountry, submitInProgress, stripeBankAccountLastDigits } = props;
-
+  const {
+    countryLabel,
+    savedCountry,
+    accountTypeLabel,
+    savedAccountType,
+    submitInProgress,
+    stripeBankAccountLastDigits,
+  } = props;
   return (
     <div className={css.savedInformation}>
+      <label className={css.accountInformationTitle}>{accountTypeLabel}</label>
+      <div className={css.savedCountry}>
+        <FormattedMessage id={`StripeConnectAccountForm.accountTypes.${savedAccountType}`} />
+      </div>
       <label className={css.accountInformationTitle}>{countryLabel}</label>
       <div className={css.savedCountry}>
         <FormattedMessage id={`StripeConnectAccountForm.countryNames.${savedCountry}`} />
@@ -208,6 +218,7 @@ const StripeConnectAccountFormComponent = props => {
           pristine,
           ready,
           savedCountry,
+          savedAccountType,
           stripeAccountFetched,
           stripeBankAccountLastDigits,
           submitButtonText,
@@ -222,6 +233,9 @@ const StripeConnectAccountFormComponent = props => {
         const submitDisabled = pristine || invalid || disabled || submitInProgress;
 
         const countryLabel = intl.formatMessage({ id: 'StripeConnectAccountForm.countryLabel' });
+        const accountTypeLabel = intl.formatMessage({
+          id: 'StripeConnectAccountForm.accountTypeTitle',
+        });
         const classes = classNames(rootClassName || css.root, className, {
           [css.disabled]: disabled,
         });
@@ -251,8 +265,12 @@ const StripeConnectAccountFormComponent = props => {
           <UpdateStripeAccountFields
             countryLabel={countryLabel}
             savedCountry={savedCountry}
+            accountTypeLabel={accountTypeLabel}
+            savedAccountType={savedAccountType}
             stripeBankAccountLastDigits={stripeBankAccountLastDigits}
             submitInProgress={submitInProgress}
+            formApi={formApi}
+            values={values}
           />
         );
 

@@ -111,7 +111,6 @@
 }
 
 .savedBankAccount {
-  composes: marketplaceInputStyles from global;
   color: var(--colorGrey700);
   text-align: left;
 
