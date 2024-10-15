@@ -45,6 +45,7 @@ import {
 } from '../../transactions/transaction';
 
 import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2 } from '../../components';
+import CustomLink from '../../components/CustomKeys/CustomLink';
 
 import css from './OrderPanel.module.css';
 
@@ -191,9 +192,11 @@ const OrderPanel = props => {
     fetchLineItemsInProgress,
     fetchLineItemsError,
     payoutDetailsWarning,
+    config,
   } = props;
 
   const publicData = listing?.attributes?.publicData || {};
+  const metadata = listing?.attributes?.metadata || {};
   const { listingType, unitType, transactionProcessAlias = '' } = publicData || {};
   const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
   const lineItemUnitType = lineItemUnitTypeMaybe || `line-item/${unitType}`;
@@ -264,6 +267,28 @@ const OrderPanel = props => {
 
   const classes = classNames(rootClassName || css.root, className);
   const titleClasses = classNames(titleClassName || css.orderTitle);
+
+  const renderCustomLinks = () => {
+    const listingConfig = config.listing;
+    const phoneField = listingConfig.listingFields.find(field => field.key === 'phone');
+    if (phoneField) {
+      const value = publicData[phoneField.key] || metadata[phoneField.key];
+      if (value != null) {
+        return (
+          <CustomLink
+            key={phoneField.key}
+            detail={{
+              key: phoneField.key,
+              label: phoneField.label,
+              value: value
+            }}
+            publicData={publicData}
+          />
+        );
+      }
+    }
+    return null;
+  };
 
   return (
     <div className={classes}>
@@ -379,6 +404,11 @@ const OrderPanel = props => {
             <FormattedMessage id="OrderPanel.unknownTransactionProcess" />
           </p>
         ) : null}
+
+        {/* Add custom links in PC view */}
+        <div className={css.customLinkSection}>
+          {renderCustomLinks()}
+        </div>
       </ModalInMobile>
       <div className={css.openOrderForm}>
         <PriceMaybe
@@ -390,33 +420,10 @@ const OrderPanel = props => {
           showCurrencyMismatch
         />
 
-        {isClosed ? (
-          <div className={css.closedListingButton}>
-            <FormattedMessage id="OrderPanel.closedListingButtonText" />
-          </div>
-        ) : (
-          <PrimaryButton
-            onClick={handleSubmit(
-              isOwnListing,
-              isClosed,
-              showInquiryForm,
-              onSubmit,
-              history,
-              location
-            )}
-            disabled={isOutOfStock}
-          >
-            {isBooking ? (
-              <FormattedMessage id="OrderPanel.ctaButtonMessageBooking" />
-            ) : isOutOfStock ? (
-              <FormattedMessage id="OrderPanel.ctaButtonMessageNoStock" />
-            ) : isPurchase ? (
-              <FormattedMessage id="OrderPanel.ctaButtonMessagePurchase" />
-            ) : (
-              <FormattedMessage id="OrderPanel.ctaButtonMessageInquiry" />
-            )}
-          </PrimaryButton>
-        )}
+        {/* Add custom links in mobile view */}
+        <div className={css.enquireNowButton}>
+          {renderCustomLinks()}
+        </div>
       </div>
     </div>
   );
@@ -482,6 +489,8 @@ OrderPanel.propTypes = {
 
   // from injectIntl
   intl: intlShape.isRequired,
+
+  config: object.isRequired,
 };
 
 export default compose(

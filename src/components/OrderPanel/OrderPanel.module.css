@@ -288,3 +288,28 @@
     padding: 0;
   }
 }
+
+.enquireNowButton {
+  /* Existing styles */
+
+  /* Updated styles for mobile centering and stretching */
+  @media (max-width: 768px) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 0 ; /* 10% padding on both sides */
+    box-sizing: border-box; /* Ensure padding is included in width calculation */
+  }
+}
+
+/* Ensure the button itself stretches full-width within its container on mobile */
+.enquireNowButton > * {
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+
+  @media (min-width: 769px) {
+    max-width: 300px; /* Or any other max-width you prefer for larger screens */
+  }
+}
