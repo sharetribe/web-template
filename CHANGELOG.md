@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] Add support for the youtubeVideoUrl schema type: listingPage and profilePage can now display
+  an embedded Youtube video [#467](https://github.com/sharetribe/web-template/pull/467)
+
 ## [v5.6.1] 2024-10-07
 
 - [fix] Updated JSON asset schema structure from Console: Removed the enabled field, now using only
