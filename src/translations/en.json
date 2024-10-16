@@ -260,7 +260,7 @@
   "EditListingPhotosPanel.title": "Edit the photos of {listingTitle}",
   "EditListingPricingAndStockForm.oldStockTotalWasOutOfSync": "Oops, the stock of this listing is out of sync. Someone might just have bought this item. Please refresh the page and try again.",
   "EditListingPricingAndStockForm.priceInputPlaceholder": "Add a price…",
-  "EditListingPricingAndStockForm.pricePerProduct": "Price",
+  "EditListingPricingAndStockForm.pricePerProduct": "Price (of which {providerCommission}% goes towards processing)",
   "EditListingPricingAndStockForm.priceRequired": "You need to add a valid price.",
   "EditListingPricingAndStockForm.priceTooLow": "Price should be at least {minPrice}.",
   "EditListingPricingAndStockForm.showListingFailed": "Fetching listing data failed.",
