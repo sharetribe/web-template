@@ -13,6 +13,11 @@ way to update this template, but currently, we follow a pattern:
 ---
 
 ## Upcoming version 2024-XX-XX
+
+- [add] Update caniuselite, which is used by browserlist.
+  [#471](https://github.com/sharetribe/web-template/pull/471)
+- [add] Add support for the youtubeVideoUrl schema type: listingPage and profilePage can now display
+  an embedded Youtube video [#467](https://github.com/sharetribe/web-template/pull/467)
 - [add] Add currently available translations for DE, ES, FR.
   [#466](https://github.com/sharetribe/web-template/pull/466)
 
@@ -33,9 +38,6 @@ way to update this template, but currently, we follow a pattern:
   [#459](https://github.com/sharetribe/web-template/pull/459)
 
   [v5.7.0]: https://github.com/sharetribe/web-template/compare/v5.6.1...v5.7.0
-
-- [add] Add support for the youtubeVideoUrl schema type: listingPage and profilePage can now display
-  an embedded Youtube video [#467](https://github.com/sharetribe/web-template/pull/467)
 
 ## [v5.6.1] 2024-10-07
 
