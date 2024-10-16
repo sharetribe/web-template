@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "5.5.0",
+  "version": "5.7.0",
   "private": true,
   "license": "Apache-2.0",
   "dependencies": {
@@ -36,7 +36,7 @@
     "lodash": "^4.17.21",
     "mapbox-gl-multitouch": "^1.0.3",
     "moment": "^2.30.1",
-    "moment-timezone": "^0.5.45",
+    "moment-timezone": "^0.5.46",
     "patch-package": "^8.0.0",
     "path-to-regexp": "^6.2.1",
     "postinstall-postinstall": "^2.1.0",

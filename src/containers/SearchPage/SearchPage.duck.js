@@ -10,7 +10,7 @@ import {
   getStartOf,
 } from '../../util/dates';
 import { constructQueryParamName, isOriginInUse, isStockInUse } from '../../util/search';
-import { isUserAuthorized } from '../../util/userHelpers';
+import { hasPermissionToViewData, isUserAuthorized } from '../../util/userHelpers';
 import { parse } from '../../util/urlHelpers';
 
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
@@ -281,8 +281,10 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   const state = getState();
   const currentUser = state.user?.currentUser;
   const isAuthorized = currentUser && isUserAuthorized(currentUser);
+  const hasViewingRights = currentUser && hasPermissionToViewData(currentUser);
   const isPrivateMarketplace = config.accessControl.marketplace.private === true;
-  const canFetchData = !isPrivateMarketplace || (isPrivateMarketplace && isAuthorized);
+  const canFetchData =
+    !isPrivateMarketplace || (isPrivateMarketplace && isAuthorized && hasViewingRights);
   if (!canFetchData) {
     return Promise.resolve();
   }
