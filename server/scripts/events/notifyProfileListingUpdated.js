@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const { integrationSdkInit, generateScript } = require('../../api-util/scriptManager');
 const { StudioManagerClient: SMClient } = require('../../api-util/studioHelper');
 
@@ -41,9 +42,9 @@ function script() {
       if (validListing) {
         const studioManagerClient = new SMClient();
         await studioManagerClient.creatorProfileListingUpdate(studioId, {
-          creativeSpecialty: creativeSpecialty.join(', '),
-          genres: genres.join(', '),
-          skills: skills.join(', '),
+          creativeSpecialty: creativeSpecialty.map(entry => _.startCase(entry)).join(', '),
+          genres: genres.map(entry => _.startCase(entry)).join(', '),
+          skills: skills.map(entry => _.startCase(entry)).join(', '),
           location: location?.address,
         });
       }

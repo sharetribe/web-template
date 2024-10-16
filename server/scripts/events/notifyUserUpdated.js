@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const { updateAuth0User } = require('../../api-util/auth0Helper');
 const {
   USER_TYPES,
@@ -165,6 +166,73 @@ function script() {
     }
   }
 
+  async function shouldSyncStudioProfileListing(resource, previousValues) {
+    const userAttributes = resource.attributes;
+    const { profile } = userAttributes;
+    const {
+      birthday,
+      pronouns,
+      mentorship,
+      portfolioURL: website,
+      instagramHandle,
+      linkedinHandle,
+      tiktokHandle,
+      twitterHandle,
+      vimeoHandle,
+      youtubeHandle,
+    } = profile?.publicData || {};
+    const { studioId } = profile.metadata || {};
+    const { profile: previousProfile } = previousValues?.attributes || {};
+    const {
+      birthday: previousBirthday,
+      pronouns: previousPronouns,
+      mentorship: previousMentorship,
+      portfolioURL: previousWebsite,
+      instagramHandle: previousInstagramHandle,
+      linkedinHandle: previousLinkedinHandle,
+      tiktokHandle: previousTiktokHandle,
+      twitterHandle: previousTwitterHandle,
+      vimeoHandle: previousVimeoHandle,
+      youtubeHandle: previousYoutubeHandle,
+    } = previousProfile?.publicData || {};
+    const birthdayUpdated = !!previousBirthday;
+    const pronounsUpdated = !!previousPronouns;
+    const mentorshipUpdated = !!previousMentorship;
+    const websiteUpdated = !!previousWebsite;
+    const instagramHandleUpdated = !!previousInstagramHandle;
+    const linkedinHandleUpdated = !!previousLinkedinHandle;
+    const tiktokHandleUpdated = !!previousTiktokHandle;
+    const twitterHandleUpdated = !!previousTwitterHandle;
+    const vimeoHandleUpdated = !!previousVimeoHandle;
+    const youtubeHandleUpdated = !!previousYoutubeHandle;
+    const profileListingUpdated =
+      birthdayUpdated ||
+      pronounsUpdated ||
+      mentorshipUpdated ||
+      websiteUpdated ||
+      instagramHandleUpdated ||
+      linkedinHandleUpdated ||
+      tiktokHandleUpdated ||
+      twitterHandleUpdated ||
+      vimeoHandleUpdated ||
+      youtubeHandleUpdated;
+    if (profileListingUpdated) {
+      const studioManagerClient = new SMClient();
+      await studioManagerClient.creatorProfileListingUpdate(studioId, {
+        birthday,
+        pronouns,
+        mentorship: mentorship.map(entry => _.startCase(entry)).join(', '),
+        website,
+        instagramHandle,
+        linkedinHandle,
+        tiktokHandle,
+        twitterHandle,
+        vimeoHandle,
+        youtubeHandle,
+      });
+    }
+  }
+
   async function shouldSyncProfileListing(resource, previousValues) {
     const userAttributes = resource.attributes;
     const { profile } = userAttributes;
@@ -190,6 +258,7 @@ function script() {
           title: `${firstName} ${lastName} ${displayName}`,
         });
       }
+      await shouldSyncStudioProfileListing(resource, previousValues);
     }
   }
 
