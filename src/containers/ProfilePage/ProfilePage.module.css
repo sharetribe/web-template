@@ -269,7 +269,8 @@
 }
 
 .sectionMultiEnum,
-.sectionDetails {
+.sectionDetails,
+.sectionEmbeddedYoutubeVideo {
   padding: 0 24px;
   margin-bottom: 30px;
 
@@ -306,4 +307,19 @@
 .detailLabel {
   font-weight: var(--fontWeightSemiBold);
   letter-spacing: -0.09px;
+}
+
+.video {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+}
+.iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
 }
