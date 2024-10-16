@@ -59,3 +59,15 @@
 .helperText {
   composes: marketplaceModalHelperText from global;
 }
+
+.ctaButton {
+  composes: buttonDefault from global;
+  margin-top: 24px;
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.modalSpacer {
+  height: 80px;
+}
