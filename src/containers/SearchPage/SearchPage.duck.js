@@ -19,6 +19,7 @@ import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 // Current design has max 3 columns 12 is divisible by 2 and 3
 // So, there's enough cards to fill all columns on full pagination pages
 const RESULT_PAGE_SIZE = 24;
+const OFFSET_PRICE_PERCENTAGE = 0.05;
 
 // ================ Action types ================ //
 
@@ -47,6 +48,19 @@ const resultIds = data => {
   return listings
     .filter(l => !l.attributes.deleted && l.attributes.state === 'published')
     .map(l => l.id);
+};
+
+const convertPriceParams = (values, exchangeRate) => {
+  //uiCurrency === DEFAULT_CURRENCY => exchangeRate === null
+  const convertedValues =
+    values.length === 2 && exchangeRate
+      ? [
+          Math.floor((values[0] / exchangeRate) * (1 - OFFSET_PRICE_PERCENTAGE)),
+          Math.ceil((values[1] / exchangeRate) * (1 + OFFSET_PRICE_PERCENTAGE)),
+        ]
+      : values;
+
+  return [convertedValues[0], convertedValues[1] + 1].join(',');
 };
 
 const listingPageReducer = (state = initialState, action = {}) => {
@@ -104,8 +118,9 @@ export const searchListingsError = e => ({
 
 export const searchListings = (searchParams, config) => (dispatch, getState, sdk) => {
   dispatch(searchListingsRequest(searchParams));
-
   // SearchPage can enforce listing query to only those listings with valid listingType
+  const { uiCurrency } = getState().ui;
+  const { exchangeRate } = getState().ExchangeRate;
   // NOTE: this only works if you have set 'enum' type search schema to listing's public data fields
   //       - listingType
   //       Same setup could be expanded to 2 other extended data fields:
@@ -154,12 +169,14 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
     return { ...nonCategoryKeys, ...categoryKeys };
   };
 
-  const priceSearchParams = priceParam => {
-    const inSubunits = value => convertUnitToSubUnit(value, unitDivisor(config.currency));
-    const values = priceParam ? priceParam.split(',') : [];
-    return priceParam && values.length === 2
+  const priceSearchParams = (priceParam, uiCurrency) => {
+    const inSubunits = value => convertUnitToSubUnit(value, unitDivisor(uiCurrency));
+    const values = priceParam ? priceParam.split(',').map(inSubunits) : [];
+    const isFilterPrice = priceParam && values.length === 2;
+    const dailyExchangeRate = exchangeRate?.[uiCurrency];
+    return isFilterPrice
       ? {
-          price: [inSubunits(values[0]), inSubunits(values[1]) + 1].join(','),
+          price: convertPriceParams(values, dailyExchangeRate),
         }
       : {};
   };
@@ -235,7 +252,7 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
   };
 
   const { perPage, price, dates, sort, mapSearch, ...restOfParams } = searchParams;
-  const priceMaybe = priceSearchParams(price);
+  const priceMaybe = priceSearchParams(price, uiCurrency);
   const datesMaybe = datesSearchParams(dates);
   const stockMaybe = stockFilters(datesMaybe);
   const sortMaybe = sort === config.search.sortConfig.relevanceKey ? {} : { sort };
@@ -318,6 +335,7 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
         'publicData.listingType',
         'publicData.transactionProcessAlias',
         'publicData.unitType',
+        'publicData.exchangePrice',
         // These help rendering of 'purchase' listings,
         // when transitioning from search page to listing page
         'publicData.pickupEnabled',

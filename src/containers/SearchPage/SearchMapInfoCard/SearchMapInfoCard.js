@@ -14,11 +14,20 @@ import css from './SearchMapInfoCard.module.css';
 
 // ListingCard is the listing info without overlayview or carousel controls
 const ListingCard = props => {
-  const { className, clickHandler, intl, isInCarousel, listing, urlToListing, config } = props;
+  const {
+    className,
+    clickHandler,
+    intl,
+    isInCarousel,
+    listing,
+    urlToListing,
+    config,
+    uiCurrency,
+  } = props;
 
   const { title, price } = listing.attributes;
   const formattedPrice =
-    price && price.currency === config.currency
+    price && price.currency === uiCurrency
       ? formatMoney(intl, price)
       : price?.currency
       ? price.currency
@@ -105,6 +114,7 @@ const SearchMapInfoCard = props => {
     createURLToListing,
     onListingInfoCardClicked,
     config,
+    uiCurrency,
   } = props;
   const currentListing = ensureListing(listings[currentListingIndex]);
   const hasCarousel = listings.length > 1;
@@ -122,6 +132,7 @@ const SearchMapInfoCard = props => {
         intl={intl}
         isInCarousel={hasCarousel}
         config={config}
+        uiCurrency={uiCurrency}
       />
       {hasCarousel ? (
         <div className={classNames(css.paginationInfo, css.borderRadiusInheritBottom)}>
@@ -158,6 +169,7 @@ const SearchMapInfoCard = props => {
 SearchMapInfoCard.defaultProps = {
   className: null,
   rootClassName: null,
+  uiCurrency: 'USD',
 };
 
 SearchMapInfoCard.propTypes = {
@@ -170,6 +182,7 @@ SearchMapInfoCard.propTypes = {
 
   // from injectIntl
   intl: intlShape.isRequired,
+  uiCurrency: string,
 };
 
 export default compose(injectIntl)(SearchMapInfoCard);

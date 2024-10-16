@@ -488,6 +488,7 @@ export const TransactionPageComponent = props => {
           marketplaceCurrency={config.currency}
           dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
           marketplaceName={config.marketplaceName}
+          showCurrencyNotify={false}
         />
       }
     />

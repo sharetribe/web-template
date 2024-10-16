@@ -4,6 +4,7 @@ import { compose } from 'redux';
 import { Field, Form as FinalForm } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
+import { useSelector } from 'react-redux';
 
 // Import configs and util modules
 import appSettings from '../../../../config/settings';
@@ -30,7 +31,6 @@ import { DEFAULT_CURRENCY } from '../../../../extensions/common/config/constants
 
 // Import modules from this directory
 import css from './EditListingPricingAndStockForm.module.css';
-import { useSelector } from 'react-redux';
 
 const { Money } = sdkTypes;
 const MILLION = 1000000;

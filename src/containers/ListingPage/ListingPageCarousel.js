@@ -21,7 +21,6 @@ import {
 } from '../../util/urlHelpers';
 import { isErrorUserPendingApproval, isForbiddenError } from '../../util/errors.js';
 import { isUserAuthorized } from '../../util/userHelpers.js';
-import { convertMoneyToNumber } from '../../util/currency';
 import {
   ensureListing,
   ensureOwnListing,
@@ -118,6 +117,7 @@ export const ListingPageComponent = props => {
     onInitializeCardPaymentData,
     config,
     routeConfiguration,
+    uiCurrency,
   } = props;
 
   const listingConfig = config.listing;
@@ -401,7 +401,7 @@ export const ListingPageComponent = props => {
               fetchLineItemsInProgress={fetchLineItemsInProgress}
               fetchLineItemsError={fetchLineItemsError}
               validListingTypes={config.listing.listingTypes}
-              marketplaceCurrency={config.currency}
+              marketplaceCurrency={uiCurrency}
               dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
               marketplaceName={config.marketplaceName}
             />
@@ -524,6 +524,7 @@ const EnhancedListingPage = props => {
 
 const mapStateToProps = state => {
   const { isAuthenticated } = state.auth;
+  const { uiCurrency } = state.ui;
   const {
     showListingError,
     reviews,
@@ -537,6 +538,7 @@ const mapStateToProps = state => {
     inquiryModalOpenForListingId,
   } = state.ListingPage;
   const { currentUser } = state.user;
+  const { exchangeRate } = state.ExchangeRate;
 
   const getListing = id => {
     const ref = { id, type: 'listing' };
@@ -566,6 +568,7 @@ const mapStateToProps = state => {
     fetchLineItemsError,
     sendInquiryInProgress,
     sendInquiryError,
+    uiCurrency,
   };
 };
 

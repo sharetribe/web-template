@@ -137,7 +137,8 @@ const priceLabelsInLocations = (
   activeListingId,
   infoCardOpen,
   onListingClicked,
-  mapComponentRefreshToken
+  mapComponentRefreshToken,
+  uiCurrency
 ) => {
   const listingArraysInLocations = reducedToArray(groupedByCoordinates(listings));
   const priceLabels = listingArraysInLocations.reverse().map(listingArr => {
@@ -174,6 +175,7 @@ const priceLabelsInLocations = (
           listing,
           onListingClicked,
           mapComponentRefreshToken,
+          uiCurrency,
         },
       };
     }
@@ -207,7 +209,8 @@ const infoCardComponent = (
   infoCardOpen,
   onListingInfoCardClicked,
   createURLToListing,
-  mapComponentRefreshToken
+  mapComponentRefreshToken,
+  uiCurrency
 ) => {
   const listingsArray = Array.isArray(infoCardOpen) ? infoCardOpen : [infoCardOpen];
 
@@ -229,6 +232,7 @@ const infoCardComponent = (
       listings: listingsArray,
       onListingInfoCardClicked,
       createURLToListing,
+      uiCurrency,
     },
   };
 };
@@ -379,6 +383,7 @@ class SearchMapWithMapbox extends Component {
       createURLToListing,
       mapComponentRefreshToken,
       config,
+      uiCurrency,
     } = this.props;
 
     if (this.map) {
@@ -388,7 +393,8 @@ class SearchMapWithMapbox extends Component {
         activeListingId,
         infoCardOpen,
         onListingClicked,
-        mapComponentRefreshToken
+        mapComponentRefreshToken,
+        uiCurrency
       );
 
       // If map has moved or info card opened, unnecessary markers need to be removed
@@ -428,7 +434,8 @@ class SearchMapWithMapbox extends Component {
           infoCardOpen,
           onListingInfoCardClicked,
           createURLToListing,
-          mapComponentRefreshToken
+          mapComponentRefreshToken,
+          uiCurrency
         );
 
         // marker container and its styles

@@ -50,6 +50,7 @@ import SearchFiltersMobile from './SearchFiltersMobile/SearchFiltersMobile';
 import SortBy from './SortBy/SortBy';
 import SearchResultsPanel from './SearchResultsPanel/SearchResultsPanel';
 import NoSearchResultsMaybe from './NoSearchResultsMaybe/NoSearchResultsMaybe';
+import { convertListingPrices } from '../../extensions/MultipleCurrency/utils/currency';
 
 import css from './SearchPage.module.css';
 
@@ -83,6 +84,12 @@ export class SearchPageComponent extends Component {
 
     // SortBy
     this.handleSortBy = this.handleSortBy.bind(this);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.uiCurrency !== this.props.uiCurrency) {
+      this.getHandleChangedValueFn(true)({ price: null, currency: null });
+    }
   }
 
   // Callback to determine if new search is needed
@@ -262,6 +269,7 @@ export class SearchPageComponent extends Component {
       onActivateListing,
       routeConfiguration,
       config,
+      uiCurrency,
     } = this.props;
 
     const { listingFields } = config?.listing || {};
@@ -576,6 +584,7 @@ export class SearchPageComponent extends Component {
                     onManageDisableScrolling('SearchPage.map', false);
                   }}
                   messages={intl.messages}
+                  uiCurrency={uiCurrency}
                 />
               ) : null}
             </div>
@@ -668,6 +677,9 @@ const EnhancedSearchPage = props => {
 
 const mapStateToProps = state => {
   const { currentUser } = state.user;
+  const { uiCurrency } = state.ui;
+  const { exchangeRate } = state.ExchangeRate;
+
   const {
     currentPageResultIds,
     pagination,
@@ -677,16 +689,17 @@ const mapStateToProps = state => {
     activeListingId,
   } = state.SearchPage;
   const listings = getListingsById(state, currentPageResultIds);
-
+  const convertedListings = convertListingPrices(listings, uiCurrency, exchangeRate);
   return {
     currentUser,
-    listings,
+    listings: convertedListings,
     pagination,
     scrollingDisabled: isScrollingDisabled(state),
     searchInProgress,
     searchListingsError,
     searchParams,
     activeListingId,
+    uiCurrency,
   };
 };
 

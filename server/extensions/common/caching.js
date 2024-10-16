@@ -1,6 +1,6 @@
 const NodeCache = require('node-cache');
 const axios = require('axios');
-const { DEFAULT_CURRENCY, CAD } = require('../common/config/constants/currency.constants');
+const { DEFAULT_CURRENCY } = require('./config/constants/currency.constants');
 
 const FRANKFURTER_API_URL = 'https://api.frankfurter.app';
 const CACHE_TIME = 86400;

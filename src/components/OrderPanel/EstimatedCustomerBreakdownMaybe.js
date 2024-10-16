@@ -129,7 +129,15 @@ const estimatedCustomerTransaction = (
 };
 
 const EstimatedCustomerBreakdownMaybe = props => {
-  const { breakdownData = {}, lineItems, timeZone, currency, marketplaceName, processName } = props;
+  const {
+    breakdownData = {},
+    lineItems,
+    timeZone,
+    currency,
+    marketplaceName,
+    processName,
+    showCurrencyNotify,
+  } = props;
   const { startDate, endDate } = breakdownData;
 
   let process = null;
@@ -177,7 +185,7 @@ const EstimatedCustomerBreakdownMaybe = props => {
         currency={currency}
         marketplaceName={marketplaceName}
       />
-      <CurrencyNote componentId="ListingPage" />
+      {showCurrencyNotify && <CurrencyNote componentId="ListingPage" />}
     </>
   ) : null;
 };

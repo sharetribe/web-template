@@ -118,6 +118,7 @@ export const ListingPageComponent = props => {
     onInitializeCardPaymentData,
     config,
     routeConfiguration,
+    uiCurrency,
   } = props;
 
   const listingConfig = config.listing;
@@ -399,7 +400,7 @@ export const ListingPageComponent = props => {
               fetchLineItemsInProgress={fetchLineItemsInProgress}
               fetchLineItemsError={fetchLineItemsError}
               validListingTypes={config.listing.listingTypes}
-              marketplaceCurrency={config.currency}
+              marketplaceCurrency={uiCurrency}
               dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
               marketplaceName={config.marketplaceName}
             />
@@ -535,7 +536,8 @@ const mapStateToProps = state => {
     inquiryModalOpenForListingId,
   } = state.ListingPage;
   const { currentUser } = state.user;
-
+  const { exchangeRate } = state.ExchangeRate;
+  const { uiCurrency } = state.ui;
   const getListing = id => {
     const ref = { id, type: 'listing' };
     const listings = getMarketplaceEntities(state, [ref]);
