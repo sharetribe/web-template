@@ -50,7 +50,7 @@ const generatePriceRelatedProps = ({
 };
 
 const updateListingPrices = async (listings, currency, oldCurrency) => {
-  const exchangeRate = await getExchangeRate(currency);
+  const exchangeRate = await getExchangeRate();
 
   return Promise.all(
     listings.map(listing => {
