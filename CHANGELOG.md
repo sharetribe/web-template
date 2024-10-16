@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] Update moment-timezone library to v0.5.46.
+  [#472](https://github.com/sharetribe/web-template/pull/472)
 - [add] Update caniuselite, which is used by browserlist.
   [#471](https://github.com/sharetribe/web-template/pull/471)
 - [add] Add support for the youtubeVideoUrl schema type: listingPage and profilePage can now display
