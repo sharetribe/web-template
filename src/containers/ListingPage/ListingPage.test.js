@@ -14,6 +14,8 @@ import {
   testingLibrary,
   getRouteConfiguration,
   getHostedConfiguration,
+  createFakeDispatch,
+  dispatchedActions,
 } from '../../util/testHelpers';
 
 import { storableError } from '../../util/errors';
@@ -25,9 +27,20 @@ import {
 } from '../../util/types';
 
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
-import { showListingRequest, showListingError, showListing } from './ListingPage.duck';
+
+import {
+  showListingRequest,
+  showListingError,
+  showListing,
+  loadData,
+  setInitialValues,
+  fetchReviewsRequest,
+  fetchReviewsSuccess,
+} from './ListingPage.duck';
 
 import ActionBarMaybe from './ActionBarMaybe';
+import { currentUserShowRequest, currentUserShowSuccess } from '../../ducks/user.duck';
+import { authInfoRequest, authInfoSuccess } from '../../ducks/auth.duck';
 
 const { UUID } = sdkTypes;
 const { screen, waitFor, within } = testingLibrary;
@@ -137,62 +150,62 @@ const getConfig = variantType => {
   };
 };
 
+const id = 'listing1';
+const slug = 'listing1-title';
+const publicData = {
+  listingType: 'sell-bicycles', // Ensure listing field can be tied to listing type
+  transactionProcessAlias: 'default-purchase/release-1',
+  unitType: 'item',
+  categoryLevel1: 'cats', // Ensure listing field can be tied to category
+  cat: 'cat_1',
+};
+const listing1 = createListing(id, { publicData }, { author: createUser('user-1') });
+const listing1Own = createOwnListing(id, {}, { author: createCurrentUser('user-1') });
+const review = createReview(
+  'review-id',
+  {
+    createdAt: new Date(Date.UTC(2023, 5, 19, 11, 34)),
+    rating: 4,
+    type: 'ofProvider',
+    content: 'It was awesome!',
+  },
+  { author: createUser('reviewerA'), listing: listing1 }
+);
+
+// We'll initialize the store with relevant listing data
+const initialState = {
+  ListingPage: {
+    id: listing1.id,
+    showListingError: null,
+    reviews: [review],
+    fetchReviewsError: null,
+    monthlyTimeSlots: {
+      // '2022-03': {
+      //   timeSlots: [],
+      //   fetchTimeSlotsError: null,
+      //   fetchTimeSlotsInProgress: null,
+      // },
+    },
+    lineItems: null,
+    fetchLineItemsInProgress: false,
+    fetchLineItemsError: null,
+    sendInquiryInProgress: false,
+    sendInquiryError: null,
+    inquiryModalOpenForListingId: null,
+  },
+  marketplaceData: {
+    entities: {
+      listing: {
+        listing1,
+      },
+      ownListing: {
+        listing1: listing1Own,
+      },
+    },
+  },
+};
+
 describe('ListingPage variants', () => {
-  const id = 'listing1';
-  const slug = 'listing1-title';
-  const publicData = {
-    listingType: 'sell-bicycles', // Ensure listing field can be tied to listing type
-    transactionProcessAlias: 'default-purchase/release-1',
-    unitType: 'item',
-    categoryLevel1: 'cats', // Ensure listing field can be tied to category
-    cat: 'cat_1',
-  };
-  const listing1 = createListing(id, { publicData }, { author: createUser('user-1') });
-  const listing1Own = createOwnListing(id, {}, { author: createCurrentUser('user-1') });
-  const review = createReview(
-    'review-id',
-    {
-      createdAt: new Date(Date.UTC(2023, 5, 19, 11, 34)),
-      rating: 4,
-      type: 'ofProvider',
-      content: 'It was awesome!',
-    },
-    { author: createUser('reviewerA'), listing: listing1 }
-  );
-
-  // We'll initialize the store with relevant listing data
-  const initialState = {
-    ListingPage: {
-      id: listing1.id,
-      showListingError: null,
-      reviews: [review],
-      fetchReviewsError: null,
-      monthlyTimeSlots: {
-        // '2022-03': {
-        //   timeSlots: [],
-        //   fetchTimeSlotsError: null,
-        //   fetchTimeSlotsInProgress: null,
-        // },
-      },
-      lineItems: null,
-      fetchLineItemsInProgress: false,
-      fetchLineItemsError: null,
-      sendInquiryInProgress: false,
-      sendInquiryError: null,
-      inquiryModalOpenForListingId: null,
-    },
-    marketplaceData: {
-      entities: {
-        listing: {
-          listing1,
-        },
-        ownListing: {
-          listing1: listing1Own,
-        },
-      },
-    },
-  };
-
   const commonProps = {
     params: { id, slug },
     scrollingDisabled: false,
@@ -329,6 +342,7 @@ describe('Duck', () => {
     listing: {
       listingFields,
     },
+    accessControl: { marketplace: { private: true } },
   };
 
   it('showListing() success', () => {
@@ -382,6 +396,126 @@ describe('Duck', () => {
         [showListingRequest(id)],
         [expect.anything()], // fetchCurrentUser() call
         [showListingError(storableError(error))],
+      ]);
+    });
+  });
+
+  // Shared parameters for viewing rights loadData tests
+  const fakeResponse = resource => ({ data: { data: resource, include: [] } });
+  const sdkFn = response => jest.fn(() => Promise.resolve(response));
+
+  const sanitizeConfig = { listingFields };
+
+  it("loadData() for currentUser with full viewing rights loads someone else's listing", () => {
+    const uuid = new UUID(id);
+    const currentUser = createCurrentUser('currentUser');
+    const getState = () => ({
+      ...initialState,
+      user: { currentUser },
+      auth: { isAuthenticated: true },
+    });
+
+    // For users with full viewing rights, ListingPage.showListing
+    // uses listings.show endpoint
+    const sdk = {
+      listings: { show: sdkFn(fakeResponse(listing1)) },
+      currentUser: { show: sdkFn(fakeResponse(currentUser)) },
+      authInfo: sdkFn({}),
+      reviews: { query: sdkFn(fakeResponse(review)) },
+    };
+
+    const dispatch = createFakeDispatch(getState, sdk);
+
+    // Tests the actions that get dispatched to the Redux store when ListingPage.duck.js
+    // loadData() function is called. If you make customizations to the loadData() logic,
+    // update the dispatched actions list in this test accordingly!
+    return loadData({ id }, null, config)(dispatch, getState, sdk).then(data => {
+      expect(dispatchedActions(dispatch)).toEqual([
+        setInitialValues({ inquiryModalOpenForListingId: null, lineItems: null }),
+        showListingRequest(uuid),
+        currentUserShowRequest(),
+        fetchReviewsRequest(uuid),
+        currentUserShowSuccess(currentUser),
+        addMarketplaceEntities(fakeResponse(listing1), sanitizeConfig),
+        fetchReviewsSuccess([review]),
+        authInfoRequest(),
+        authInfoSuccess({}),
+      ]);
+    });
+  });
+
+  it("loadData() for currentUser with no viewing rights does not load someone else's listing", () => {
+    const uuid = new UUID(id);
+    const currentUser = createCurrentUser('currentUser');
+    currentUser.effectivePermissionSet.attributes.read = 'permission/deny';
+    const getState = () => ({
+      ...initialState,
+      user: { currentUser },
+      auth: { isAuthenticated: true },
+    });
+
+    const error = new Error({ status: 403, message: 'forbidden' });
+
+    // For viewing rights restricted users, ListingPage.showListing
+    // users ownListings.show endpoint, which throws 403 when accessing
+    // a listing that is not the current user's own
+    const sdk = {
+      ownListings: { show: jest.fn(() => Promise.reject(error)) },
+      currentUser: { show: sdkFn(fakeResponse(currentUser)) },
+      authInfo: sdkFn({}),
+    };
+
+    const dispatch = createFakeDispatch(getState, sdk);
+
+    // Tests the actions that get dispatched to the Redux store when ListingPage.duck.js
+    // loadData() function is called. If you make customizations to the loadData() logic,
+    // update the dispatched actions list in this test accordingly!
+    return loadData({ id }, null, config)(dispatch, getState, sdk).then(data => {
+      expect(dispatchedActions(dispatch)).toEqual([
+        setInitialValues({ inquiryModalOpenForListingId: null, lineItems: null }),
+        showListingRequest(uuid),
+        currentUserShowRequest(),
+        currentUserShowSuccess(currentUser),
+        authInfoRequest(),
+        showListingError(storableError(error)),
+        authInfoSuccess({}),
+      ]);
+    });
+  });
+
+  it("loadData() for currentUser with no viewing rights loads the user's own listing", () => {
+    const uuid = new UUID(id);
+    const currentUser = createCurrentUser('currentUser');
+    currentUser.effectivePermissionSet.attributes.read = 'permission/deny';
+    const getState = () => ({
+      ...initialState,
+      user: { currentUser },
+      auth: { isAuthenticated: true },
+    });
+
+    // For viewing rights restricted users, ListingPage.showListing
+    // users ownListings.show endpoint, which fetches the user's
+    // own listings successfully.
+    const sdk = {
+      ownListings: { show: sdkFn(fakeResponse(listing1Own)) },
+      currentUser: { show: sdkFn(fakeResponse(currentUser)) },
+      authInfo: sdkFn({}),
+    };
+
+    const dispatch = createFakeDispatch(getState, sdk);
+
+    // Tests the actions that get dispatched to the Redux store when ListingPage.duck.js
+    // loadData() function is called. If you make customizations to the loadData() logic,
+    // update the dispatched actions list in this test accordingly!
+    return loadData({ id }, null, config)(dispatch, getState, sdk).then(data => {
+      expect(dispatchedActions(dispatch)).toEqual([
+        setInitialValues({ inquiryModalOpenForListingId: null, lineItems: null }),
+        showListingRequest(uuid),
+        currentUserShowRequest(),
+        currentUserShowSuccess(currentUser),
+        addMarketplaceEntities(fakeResponse(listing1Own), sanitizeConfig),
+        authInfoRequest(),
+        authInfoSuccess({}),
       ]);
     });
   });
