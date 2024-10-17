@@ -2,6 +2,8 @@ import * as log from '../util/log';
 import { storableError } from '../util/errors';
 import { clearCurrentUser, fetchCurrentUser } from './user.duck';
 import { createUserWithIdp } from '../util/api';
+import { setUiCurrency } from './ui.duck';
+import { DEFAULT_CURRENCY } from '../extensions/common/config/constants/currency.constants';
 
 const authenticated = authInfo => authInfo?.isAnonymous === false;
 const loggedInAs = authInfo => authInfo?.isLoggedInAs === true;
@@ -180,7 +182,11 @@ export const login = (username, password) => (dispatch, getState, sdk) => {
   return sdk
     .login({ username, password })
     .then(() => dispatch(fetchCurrentUser({ afterLogin: true })))
-    .then(() => dispatch(loginSuccess()))
+    .then(response => {
+      dispatch(loginSuccess());
+      const { userCurrency = DEFAULT_CURRENCY } = response.attributes.profile.publicData || {};
+      dispatch(setUiCurrency(userCurrency));
+    })
     .catch(e => dispatch(loginError(storableError(e))));
 };
 
