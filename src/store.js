@@ -1,16 +1,21 @@
 // We create Redux store directly, instead of using any extra dependencies.
-import { legacy_createStore as createStore, applyMiddleware, compose } from 'redux';
+import { applyMiddleware, compose, legacy_createStore as createStore } from 'redux';
 import thunk from 'redux-thunk';
 import createReducer from './reducers';
 import * as analytics from './analytics/analytics';
 import appSettings from './config/settings';
+import * as uppyReduxStore from '@uppy/store-redux';
 
 /**
  * Create a new store with the given initial state. Adds Redux
  * middleware and enhancers.
  */
 export default function configureStore(initialState = {}, sdk = null, analyticsHandlers = []) {
-  const middlewares = [thunk.withExtraArgument(sdk), analytics.createMiddleware(analyticsHandlers)];
+  const middlewares = [
+    thunk.withExtraArgument(sdk),
+    analytics.createMiddleware(analyticsHandlers),
+    uppyReduxStore.middleware(),
+  ];
 
   // Enable Redux Devtools in client side dev mode.
   const composeEnhancers =

@@ -61,6 +61,8 @@ const BatchEditListingWizard = props => {
     uppy = null,
     files = [],
     listingFieldsOptions = [],
+    onUpdateFileDetails,
+    onSaveBatchListing,
     ...rest
   } = props;
   const fileCount = uppy.getFiles().length;
@@ -115,6 +117,8 @@ const BatchEditListingWizard = props => {
               uppy={uppy}
               files={files}
               listingFieldsOptions={listingFieldsOptions}
+              onUpdateFileDetails={onUpdateFileDetails}
+              onSaveBatchListing={onSaveBatchListing}
             />
           );
         })}

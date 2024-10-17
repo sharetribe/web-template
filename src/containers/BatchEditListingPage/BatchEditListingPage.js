@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { connect, ReactReduxContext } from 'react-redux';
 import { injectIntl } from '../../util/reactIntl';
 import {
   LISTING_PAGE_PARAM_TYPE_DRAFT,
@@ -15,10 +15,24 @@ import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import EditListingWizard from './BatchEditListingWizard/BatchEditListingWizard';
 import css from './BatchEditListingPage.module.css';
-import { initializeUppy } from './BatchEditListingPage.duck';
+import {
+  initializeUppy,
+  requestSaveBatchListings,
+  requestUpdateFileDetails,
+} from './BatchEditListingPage.duck';
+import { createUppyInstance } from '../../util/uppy';
 
 export const BatchEditListingPageComponent = props => {
-  const { currentUser, history, intl, params, page, initializeUppy } = props;
+  const {
+    currentUser,
+    history,
+    intl,
+    params,
+    page,
+    onInitializeUppy,
+    onUpdateFileDetails,
+    onSaveBatchListing,
+  } = props;
   const { type } = params;
   const isNewURI = type === LISTING_PAGE_PARAM_TYPE_NEW;
   const isDraftURI = type === LISTING_PAGE_PARAM_TYPE_DRAFT;
@@ -26,10 +40,12 @@ export const BatchEditListingPageComponent = props => {
   const hasPostingRights = hasPermissionToPostListings(currentUser);
   const shouldRedirectNoPostingRights = !!currentUser?.id && isNewListingFlow && !hasPostingRights;
   const { uppy, files, listingFieldsOptions } = page;
+  const { store } = useContext(ReactReduxContext);
 
   useEffect(() => {
-    if(!uppy) {
-      initializeUppy();
+    if (!uppy) {
+      const uppyInstance = createUppyInstance(store, { userId: currentUser.id?.uuid });
+      onInitializeUppy(uppyInstance);
     }
   }, []);
 
@@ -69,6 +85,8 @@ export const BatchEditListingPageComponent = props => {
           uppy={uppy}
           files={files}
           listingFieldsOptions={listingFieldsOptions}
+          onUpdateFileDetails={onUpdateFileDetails}
+          onSaveBatchListing={onSaveBatchListing}
         />
       )}
     </Page>
@@ -85,8 +103,11 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  initializeUppy: uppy => dispatch(initializeUppy(uppy)),
-
+  onInitializeUppy: uppyInstance => dispatch(initializeUppy(uppyInstance)),
+  onUpdateFileDetails: payload => dispatch(requestUpdateFileDetails(payload)),
+  onSaveBatchListing: () => {
+    dispatch(requestSaveBatchListings());
+  },
 });
 
 // Note: it is important that the withRouter HOC is **outside** the
