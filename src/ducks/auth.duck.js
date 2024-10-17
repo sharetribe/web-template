@@ -182,11 +182,7 @@ export const login = (username, password) => (dispatch, getState, sdk) => {
   return sdk
     .login({ username, password })
     .then(() => dispatch(fetchCurrentUser({ afterLogin: true })))
-    .then(response => {
-      dispatch(loginSuccess());
-      const { userCurrency = DEFAULT_CURRENCY } = response.attributes.profile.publicData || {};
-      dispatch(setUiCurrency(userCurrency));
-    })
+    .then(() => dispatch(loginSuccess()))
     .catch(e => dispatch(loginError(storableError(e))));
 };
 
