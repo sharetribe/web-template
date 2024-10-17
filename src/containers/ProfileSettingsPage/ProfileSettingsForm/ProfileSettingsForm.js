@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { bool, string } from 'prop-types';
 import { compose } from 'redux';
 import { Field, Form as FinalForm } from 'react-final-form';
@@ -128,6 +128,18 @@ class ProfileSettingsFormComponent extends Component {
           } = fieldRenderProps;
 
           const user = ensureCurrentUser(currentUser);
+          const userCurrency = currentUser.attributes.profile.publicData.userCurrency || '';
+          const currencyBasedOnLocation = values.pub_userCurrency || '';
+          
+          const [initialValues] = useState(values);
+          const [formIsPristine, setFormIsPristine] = useState(true);
+
+          useEffect(() => {
+            const isCurrencyPristine = userCurrency === currencyBasedOnLocation;
+            const areOtherFieldsPristine = JSON.stringify(values) === JSON.stringify(initialValues);
+
+            setFormIsPristine(isCurrencyPristine && areOtherFieldsPristine);
+          }, [values, userCurrency, currencyBasedOnLocation, initialValues]);
 
           // First name
           const firstNameLabel = intl.formatMessage({
@@ -237,16 +249,13 @@ class ProfileSettingsFormComponent extends Component {
           const submitInProgress = updateInProgress;
           const submittedOnce = Object.keys(this.submittedValues).length > 0;
           const pristineSinceLastSubmit = submittedOnce && isEqual(values, this.submittedValues);
-          const userCurrency = currentUser.attributes.profile.publicData.userCurrency || '';
-          const currencyBasedOnLocation = values.pub_userCurrency || '';
-          const userCurrencyChanged = userCurrency !== currencyBasedOnLocation;
+
           const submitDisabled =
-            !userCurrencyChanged &&
-            (invalid ||
-              pristine ||
-              pristineSinceLastSubmit ||
-              uploadInProgress ||
-              submitInProgress);
+            invalid ||
+            formIsPristine ||
+            pristineSinceLastSubmit ||
+            uploadInProgress ||
+            submitInProgress;
 
           const userFieldProps = getPropsForCustomUserFieldInputs(
             userFields,
