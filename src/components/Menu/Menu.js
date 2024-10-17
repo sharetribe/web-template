@@ -111,8 +111,9 @@ class Menu extends Component {
       const contentWidthBiggerThanLabel = this.menuContent.offsetWidth - menuWidth;
       const usePositionLeftFromLabel = contentPosition === CONTENT_TO_LEFT;
       const contentPlacementOffset = this.props.contentPlacementOffset;
+      const mobileMaxWidth = this.props.mobileMaxWidth || MAX_MOBILE_SCREEN_WIDTH;
 
-      if (windowWidth <= MAX_MOBILE_SCREEN_WIDTH) {
+      if (windowWidth <= mobileMaxWidth) {
         // Take full screen width on mobile
         return {
           left: -1 * (rect.left - 24),

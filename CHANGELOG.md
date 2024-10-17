@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] Add support for discarding draft listings on ManageListingsPage
+  [474](https://github.com/sharetribe/web-template/pull/474)
 - [add] Block images can be wrapped in a link if a link is configured via assets.
   [#464](https://github.com/sharetribe/web-template/pull/464)
 - [add] Add support for aligning content blocks based on asset

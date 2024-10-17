@@ -27,7 +27,12 @@ import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import ManageListingCard from './ManageListingCard/ManageListingCard';
 
-import { closeListing, openListing, getOwnListingsById } from './ManageListingsPage.duck';
+import {
+  closeListing,
+  openListing,
+  getOwnListingsById,
+  discardDraft,
+} from './ManageListingsPage.duck';
 import css from './ManageListingsPage.module.css';
 
 const Heading = props => {
@@ -80,6 +85,7 @@ export const ManageListingsPageComponent = props => {
     closingListingError,
     listings,
     onCloseListing,
+    onDiscardDraft,
     onOpenListing,
     openingListing,
     openingListingError,
@@ -177,6 +183,7 @@ export const ManageListingsPageComponent = props => {
                 onToggleMenu={onToggleMenu}
                 onCloseListing={onCloseListing}
                 onOpenListing={handleOpenListing}
+                onDiscardDraft={onDiscardDraft}
                 hasOpeningError={openingErrorListingId.uuid === l.id.uuid}
                 hasClosingError={closingErrorListingId.uuid === l.id.uuid}
                 renderSizes={renderSizes}
@@ -262,6 +269,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
   onCloseListing: listingId => dispatch(closeListing(listingId)),
   onOpenListing: listingId => dispatch(openListing(listingId)),
+  onDiscardDraft: listingId => dispatch(discardDraft(listingId)),
 });
 
 const ManageListingsPage = compose(
