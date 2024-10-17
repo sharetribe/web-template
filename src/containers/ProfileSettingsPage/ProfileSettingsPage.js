@@ -86,6 +86,7 @@ export const ProfileSettingsPageComponent = props => {
     uploadImageError,
     uploadInProgress,
     intl,
+    updateProfileInProgress,
   } = props;
 
   const { userFields, userTypes = [] } = config.user;
@@ -173,6 +174,7 @@ export const ProfileSettingsPageComponent = props => {
       marketplaceName={config.marketplaceName}
       userFields={userFields}
       userTypeConfig={userTypeConfig}
+      updateProfileInProgress={updateProfileInProgress}
     />
   ) : null;
 
@@ -236,7 +238,7 @@ ProfileSettingsPageComponent.propTypes = {
 };
 
 const mapStateToProps = state => {
-  const { currentUser } = state.user;
+  const { currentUser, updateProfileInProgress } = state.user;
   const {
     image,
     uploadImageError,
@@ -244,11 +246,13 @@ const mapStateToProps = state => {
     updateInProgress,
     updateProfileError,
   } = state.ProfileSettingsPage;
+
   return {
     currentUser,
     image,
     scrollingDisabled: isScrollingDisabled(state),
     updateInProgress,
+    updateProfileInProgress,
     updateProfileError,
     uploadImageError,
     uploadInProgress,

@@ -116,6 +116,7 @@ class ProfileSettingsFormComponent extends Component {
             profileImage,
             rootClassName,
             updateInProgress,
+            updateProfileInProgress,
             updateProfileError,
             uploadImageError,
             uploadInProgress,
@@ -130,7 +131,7 @@ class ProfileSettingsFormComponent extends Component {
           const user = ensureCurrentUser(currentUser);
           const userCurrency = currentUser.attributes.profile.publicData.userCurrency || '';
           const currencyBasedOnLocation = values.pub_userCurrency || '';
-          
+
           const [initialValues] = useState(values);
           const [formIsPristine, setFormIsPristine] = useState(true);
 
@@ -255,7 +256,7 @@ class ProfileSettingsFormComponent extends Component {
             formIsPristine ||
             pristineSinceLastSubmit ||
             uploadInProgress ||
-            submitInProgress;
+            updateProfileInProgress;
 
           const userFieldProps = getPropsForCustomUserFieldInputs(
             userFields,
