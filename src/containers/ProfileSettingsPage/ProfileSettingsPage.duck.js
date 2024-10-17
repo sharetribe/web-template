@@ -157,7 +157,7 @@ export const updateProfile = actionPayload => {
 
         const entities = denormalisedResponseEntities(response);
         if (entities.length !== 1) {
-          throw new Error('Expected a resource in the sdk.currentUser.updateProfile response');
+          throw new Error('Expected a resource in the updateProfile response');
         }
         const currentUser = entities[0];
         const { userCurrency } = currentUser.attributes.profile.publicData || {};
