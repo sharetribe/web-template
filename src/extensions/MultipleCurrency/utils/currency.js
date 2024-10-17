@@ -20,7 +20,7 @@ export const convertPriceByCurrency = (price, currency, exchangeRate) => {
   const dailyExchangeRate = exchangeRate?.[currency];
 
   if (!dailyExchangeRate) {
-    throw Error(`${currency} exchange rate not supported`);
+    return;
   }
 
   const convertedAmount = Math.round(amount * dailyExchangeRate);
@@ -35,8 +35,8 @@ const getListingPrice = (listing, currency, exchangeRate) => {
     const { amount, currency: exChangeCurrency } = exchangePrice[currency];
     return new Money(amount, exChangeCurrency);
   }
-
-  return convertPriceByCurrency(price, currency, exchangeRate);
+  const convertedPrice = convertPriceByCurrency(price, currency, exchangeRate);
+  return convertedPrice || price;
 };
 
 export const convertListingPrices = (listings, uiCurrency, exchangeRate) => {
