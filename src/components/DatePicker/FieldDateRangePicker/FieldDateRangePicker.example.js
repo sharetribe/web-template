@@ -1,27 +1,28 @@
 /* eslint-disable no-console */
 import React from 'react';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
-import { required, bookingDatesRequired, composeValidators } from '../../util/validators';
-import { LINE_ITEM_NIGHT } from '../../util/types';
-import { getStartOf } from '../../util/dates';
-import { Button } from '../../components';
-import FieldDateRangeInput from './FieldDateRangeInput';
+
+import { required, bookingDatesRequired, composeValidators } from '../../../util/validators';
+import { getStartOf } from '../../../util/dates';
+
+import { Button } from '../../../components';
+
+import FieldDateRangePicker from './FieldDateRangePicker';
 
 const identity = v => v;
 
 const FormComponent = props => (
   <FinalForm
     {...props}
-    render={fieldRenderProps => {
+    render={formRenderProps => {
       const {
         style,
-        form,
         handleSubmit,
         onChange,
         pristine,
         submitting,
         dateInputProps,
-      } = fieldRenderProps;
+      } = formRenderProps;
       const submitDisabled = pristine || submitting;
 
       return (
@@ -33,7 +34,7 @@ const FormComponent = props => (
           }}
         >
           <FormSpy onChange={onChange} />
-          <FieldDateRangeInput {...dateInputProps} />
+          <FieldDateRangePicker {...dateInputProps} />
           <Button type="submit" disabled={submitDisabled} style={{ marginTop: '24px' }}>
             Select
           </Button>
@@ -55,10 +56,10 @@ export const Empty = {
     dateInputProps: {
       name: 'bookingDates',
       isDaily: false,
-      startDateId: 'EmptyDateRange.bookingStartDate',
+      startDateId: 'EmptyDateRange_bookingStartDate',
       startDateLabel: 'Start date',
       startDatePlaceholderText: startDatePlaceholderText,
-      endDateId: 'EmptyDateRangeInputForm.bookingEndDate',
+      endDateId: 'EmptyDateRange_bookingEndDate',
       endDateLabel: 'End date',
       endDatePlaceholderText: endDatePlaceholderText,
       format: identity,
@@ -71,17 +72,22 @@ export const Empty = {
       isBlockedBetween: () => {
         return false;
       },
-      isDayBlocked: () => () => {
+      isDayBlocked: () => {
         return false;
       },
-      isOutsideRange: () => () => {
+      isOutsideRange: () => {
         return false;
       },
     },
     onChange: formState => {
-      const { startDate, endDate } = formState.values;
+      const { startDate, endDate } = formState.values?.bookingDates || {};
       if (startDate || endDate) {
-        console.log('Changed to', formatDate(startDate), formatDate(startDate));
+        console.log(
+          'Changed to',
+          startDate ? formatDate(startDate) : startDate,
+          '-',
+          endDate ? formatDate(endDate) : endDate
+        );
       }
     },
     onSubmit: values => {

@@ -9,10 +9,10 @@ import {
 } from '../../../../util/dates';
 
 // Marketplace API allows fetching exceptions to 366 days into the future.
-const MAX_AVAILABILITY_EXCEPTIONS_RANGE = 366;
+export const MAX_AVAILABILITY_EXCEPTIONS_RANGE = 366;
 const TODAY = new Date();
 
-// Helper for the pickers of react-dates (weekly and monthly calendars)
+// Helper for the pickers of DatePicker (weekly and monthly calendars)
 export const getStartOfWeekFn = (currentMoment, timeZone, firstDayOfWeek, offset = 0) => {
   const startOfWeek = getStartOfWeek(currentMoment, timeZone, firstDayOfWeek);
   return getStartOf(startOfWeek, 'day', timeZone, offset, 'days');
@@ -30,10 +30,17 @@ export const getStartOfNextMonth = (currentMoment, timeZone, offset = 1) =>
 export const getStartOfPrevMonth = (currentMoment, timeZone, offset = 1) =>
   getStartOfMonth(currentMoment, timeZone, -1 * offset);
 
-// React-dates returns wrapped date objects
+export const getExclusiveEndDate = (date, timeZone) => {
+  return getStartOf(date, 'day', timeZone, 1, 'days');
+};
+export const getInclusiveEndDate = (date, timeZone) => {
+  return getStartOf(date, 'day', timeZone, -1, 'days');
+};
+
+// DatePicker returns wrapped date objects
 export const extractDateFromFieldDateInput = dateValue => dateValue?.date || null;
 
-// React-dates returns wrapped date objects
+// DatePicker returns wrapped date objects
 export const extractDateFromFieldDateRangeInput = dates => {
   return dates?.startDate || dates?.endDate ? dates : { startDate: null, endDate: null };
 };
@@ -91,7 +98,7 @@ export const handleWeekClick = params => weekFn => {
   setCurrentWeek(updatedWeek);
 
   // Callback function after the week has been updated.
-  // react-dates component has next and previous months ready (but inivisible).
+  // DatePicker component has next and previous months ready (but inivisible).
   // we try to populate those invisible months before user advances there.
   fetchExceptionData(
     weekFn(currentWeek, timeZone, firstDayOfWeek, 14),
@@ -126,7 +133,7 @@ export const handleMonthClick = params => monthFn => {
   setCurrentMonth(updatedMonth);
 
   // Callback function after month has been updated.
-  // react-dates component has next and previous months ready (but inivisible).
+  // DatePicker component has next and previous months ready (but inivisible).
   // we try to populate those invisible months before user advances there.
   fetchExceptionData(
     monthFn(currentMonth, timeZone, 2),
@@ -159,7 +166,7 @@ const getMonthStartInTimeZone = (monthId, timeZone) => {
 export const getMonthlyFetchRange = (monthlyExceptionQueries, timeZone) => {
   const monthStrings = Object.keys(monthlyExceptionQueries);
   const firstMonth = getMonthStartInTimeZone(monthStrings[0], timeZone);
-  const lastMonth = getMonthStartInTimeZone(monthStrings[monthStrings.length - 1]);
+  const lastMonth = getMonthStartInTimeZone(monthStrings[monthStrings.length - 1], timeZone);
   const exclusiveEndMonth = getStartOfNextMonth(lastMonth, timeZone);
   return [firstMonth, exclusiveEndMonth];
 };

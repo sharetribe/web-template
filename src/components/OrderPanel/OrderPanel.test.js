@@ -1,6 +1,5 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import 'react-dates/initialize';
 
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { createListing, createStock, createUser, fakeIntl } from '../../util/testData';
@@ -206,19 +205,6 @@ const commonProps = {
 };
 
 describe('OrderPanel', () => {
-  const originalWarn = console.warn.bind(console.warn);
-  beforeEach(() => {
-    console.warn = msg =>
-      !(
-        msg.toString().includes('componentWillReceiveProps') ||
-        msg.toString().includes('componentWillUpdate')
-      ) && originalWarn(msg);
-  });
-
-  afterAll(() => {
-    console.warn = originalWarn;
-  });
-
   const config = getConfig();
   const routeConfiguration = getRouteConfiguration(config.layout);
   const stockTypeMaybe = stockType => (stockType ? { stockType } : {});
