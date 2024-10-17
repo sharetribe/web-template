@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] Block images can be wrapped in a link if a link is configured via assets.
+  [#464](https://github.com/sharetribe/web-template/pull/464)
 - [add] Add support for aligning content blocks based on asset
   [#469](https://github.com/sharetribe/web-template/pull/469)
 - [add] Update moment-timezone library to v0.5.46.
