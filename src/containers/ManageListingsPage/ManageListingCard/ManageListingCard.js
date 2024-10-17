@@ -47,6 +47,7 @@ import css from './ManageListingCard.module.css';
 // Menu content needs the same padding
 const MENU_CONTENT_OFFSET = -12;
 const MAX_LENGTH_FOR_WORDS_IN_TITLE = 7;
+const MOBILE_MAX_WIDTH = 550;
 
 const priceData = (price, currency, intl) => {
   if (price?.currency === currency) {
@@ -485,6 +486,7 @@ export const ManageListingCardComponent = props => {
             <Menu
               className={classNames(css.menu, { [css.cardIsOpen]: !isClosed })}
               contentPlacementOffset={MENU_CONTENT_OFFSET}
+              mobileMaxWidth={MOBILE_MAX_WIDTH}
               contentPosition="left"
               useArrow={false}
               onToggleActive={isOpen => {
