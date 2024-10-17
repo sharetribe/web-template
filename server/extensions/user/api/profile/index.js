@@ -7,10 +7,12 @@ const updateProfile = async (req, res) => {
   try {
     const { data, queryParams } = req.body;
     const sdk = getSdk(req, res);
-    const userResponse = await sdk.currentUser.show();
     const response = await sdk.currentUser.updateProfile(data, queryParams);
 
-    await updateUserListings(response, userResponse);
+    // This is the logic code to update exchange price in listings when user changes currency in profile
+    // But this is not needed at the moment
+    // const userResponse = await sdk.currentUser.show();
+    // await updateUserListings(response, userResponse);
     return finalizeTransitResponse(res)({ data: response.data });
   } catch (error) {
     console.error('Update user profile failed', error);
