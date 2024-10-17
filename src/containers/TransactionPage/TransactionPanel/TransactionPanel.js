@@ -239,9 +239,11 @@ export class TransactionPanelComponent extends Component {
                     orderBreakdown={orderBreakdown}
                     processName={stateData.processName}
                   />
-                  <div className={css.noteContainer}>
-                    <CurrencyNote componentId="TransactionDetailsPage" />
-                  </div>
+                  {isProvider && (
+                    <div className={css.noteContainer}>
+                      <CurrencyNote componentId="TransactionDetailsPage" />
+                    </div>
+                  )}
                   <DiminishedActionButtonMaybe
                     showDispute={stateData.showDispute}
                     onOpenDisputeModal={onOpenDisputeModal}
@@ -353,9 +355,11 @@ export class TransactionPanelComponent extends Component {
                   <div className={css.desktopActionButtons}>{actionButtons}</div>
                 ) : null}
               </div>
-              <div className={classNames(css.noteContainer, css.hideOnMobile)}>
-                <CurrencyNote componentId="TransactionDetailsPage" />
-              </div>
+              {isProvider && (
+                <div className={classNames(css.noteContainer, css.hideOnMobile)}>
+                  <CurrencyNote componentId="TransactionDetailsPage" />
+                </div>
+              )}
               <DiminishedActionButtonMaybe
                 showDispute={stateData.showDispute}
                 onOpenDisputeModal={onOpenDisputeModal}
