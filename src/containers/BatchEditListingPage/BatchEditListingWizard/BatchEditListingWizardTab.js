@@ -16,6 +16,8 @@ const BatchEditListingWizardTab = props => {
     uppy,
     files,
     listingFieldsOptions,
+    onUpdateFileDetails,
+    onSaveBatchListing,
   } = props;
 
   const onCompleteUploadTab = () => {
@@ -35,7 +37,14 @@ const BatchEditListingWizardTab = props => {
       );
     }
     case PRODUCT_DETAILS: {
-      return <EditListingBatchProductDetails  files={files} listingFieldsOptions={listingFieldsOptions} />;
+      return (
+        <EditListingBatchProductDetails
+          files={files}
+          listingFieldsOptions={listingFieldsOptions}
+          onUpdateFileDetails={onUpdateFileDetails}
+          onSaveBatchListing={onSaveBatchListing}
+        />
+      );
     }
     default:
       return null;

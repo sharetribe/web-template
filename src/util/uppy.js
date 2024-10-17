@@ -7,10 +7,11 @@ import Url from '@uppy/url/lib/Url';
 import OneDrive from '@uppy/onedrive/lib/OneDrive';
 import GoldenRetriever from '@uppy/golden-retriever';
 import { createUploadSignature } from './api';
-import ThumbnailGenerator from '@uppy/thumbnail-generator';
+import { store } from 'core-js/internals/reflect-metadata';
+import ReduxStore from '@uppy/store-redux';
 
-export function createUppyInstance(meta) {
-  const uppy = new Uppy({ ...meta });
+export function createUppyInstance(store, meta) {
+  const uppy = new Uppy({ store: new ReduxStore({ store }) });
   const config = {
     companionUrl: COMPANION_URL,
     companionAllowedHosts: COMPANION_ALLOWED_HOSTS,
@@ -27,7 +28,9 @@ export function createUppyInstance(meta) {
           signature,
         };
       },
-      autoProceed: false,
+      waitForEncoding: true,
+      waitForMetadata: true,
+      limit: 5,
     })
     .use(GoldenRetriever, { serviceWorker: true })
     .use(Dropbox, config)

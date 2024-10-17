@@ -8,20 +8,11 @@ import { imageDimensions } from '../../BatchEditListingPage.duck';
 import imagePlaceholder from '../../../../assets/image-placeholder.jpg';
 
 function stringSorter(strA, strB) {
-  const a = strA.name.toUpperCase(); // ignore upper and lowercase
-  const b = strB.name.toUpperCase(); // ignore upper and lowercase
-  if (a < b) {
-    return -1;
-  }
-  if (a > b) {
-    return 1;
-  }
-
-  return 0;
+  return strA.name.localeCompare(strB.name, 'en', { sensitivity: 'base' });
 }
 
 export const EditListingBatchProductDetails = props => {
-  const { files, listingFieldsOptions } = props;
+  const { files, listingFieldsOptions, onUpdateFileDetails, onSaveBatchListing } = props;
 
   const {
     categories: imageryCategoryOptions,
@@ -178,7 +169,6 @@ export const EditListingBatchProductDetails = props => {
   });
 
   const onSelectChange = newSelectedRowKeys => {
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
@@ -189,14 +179,12 @@ export const EditListingBatchProductDetails = props => {
 
   const onSubmit = () => {
     console.log('Submit for review', dataSource);
+    
+    onSaveBatchListing();
   };
 
-  const handleSave = row => {
-    const newData = [...dataSource];
-    const index = newData.findIndex(item => row.key === item.key);
-    const item = newData[index];
-    newData.splice(index, 1, { ...item, ...row });
-    setDataSource(newData);
+  const handleSave = updatedData => {
+    onUpdateFileDetails(updatedData);
   };
 
   return (

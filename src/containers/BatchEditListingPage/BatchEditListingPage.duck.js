@@ -1,6 +1,7 @@
 import { fetchCurrentUser } from '../../ducks/user.duck';
 import { getFileMetadata } from '../../util/file-metadata';
-import { createUppyInstance } from '../../util/uppy';
+import axios from 'axios';
+import { Money } from 'sharetribe-flex-sdk/src/types';
 
 const SMALL_IMAGE = 'small';
 const MEDIUM_IMAGE = 'medium';
@@ -73,11 +74,30 @@ function uppyFileToProductFile(file) {
     category: [],
     usage: 'editorial',
     releases: 'no-release',
-    price: 0,
+    price: 1,
     dimensions: dimensions,
     isAi: false,
     isIllustration: false,
   };
+}
+
+function getCategory(file) {
+  const isVideo = file.type.startsWith('video/');
+  if (file.isAi) return isVideo ? 'ai-video' : 'ai-image';
+  if (file.isIllustration) return 'illustrations';
+  return isVideo ? 'videos' : 'photos';
+}
+
+function validateFileProperties(file) {
+  const requiredProperties = ['category', 'title', 'description', 'price'];
+
+  for (let property of requiredProperties) {
+    if (!file[property] || (Array.isArray(file[property]) && file[property].length === 0)) {
+      console.error(`Validation failed: ${property} is missing for file ${file.id}`);
+      return false;
+    }
+  }
+  return true;
 }
 
 // ================ Action types ================ //
@@ -87,6 +107,7 @@ export const REMOVE_FILE = 'app/BatchEditListingPage/REMOVE_FILE';
 export const RESET_FILES = 'app/BatchEditListingPage/RESET_FILES';
 export const PREVIEW_GENERATED = 'app/BatchEditListingPage/PREVIEW_GENERATED';
 export const FETCH_LISTING_OPTIONS = 'app/BatchEditListingPage/FETCH_LISTING_OPTIONS';
+export const UPDATE_FILE_DETAILS = 'app/BatchEditListingPage/UPDATE_FILE_DETAILS';
 
 // ================ Reducer ================ //
 const initialState = {
@@ -104,7 +125,7 @@ export default function reducer(state = initialState, action = {}) {
 
   switch (type) {
     case INITIALIZE_UPPY:
-      return { ...state, uppy: payload, files: payload.getFiles().map(uppyFileToProductFile) };
+      return { ...state, uppy: payload.uppy, files: payload.files };
     case ADD_FILE:
       return { ...state, files: [...state.files, uppyFileToProductFile(payload)] };
     case REMOVE_FILE:
@@ -129,6 +150,13 @@ export default function reducer(state = initialState, action = {}) {
         },
       };
     }
+    case UPDATE_FILE_DETAILS: {
+      const { id, ...values } = payload;
+      return {
+        ...state,
+        files: state.files.map(file => (file.id === id ? { ...file, ...values } : file)),
+      };
+    }
     default:
       return state;
   }
@@ -139,12 +167,68 @@ export const getUppyInstance = state => state.BatchEditListingPage.uppy;
 
 export const getFiles = state => state.BatchEditListingPage.files;
 
+/**
+ * Handles the completion of a Transloadit result.
+ *
+ * @param {function} getState - Function to get the current state.
+ * @param {object} sdk - Instance of Sharetribe's SDK.
+ * @returns {function} - A function to handle the Transloadit result.
+ */
+function handleTransloaditResultComplete(getState, sdk) {
+  return (stepName, result, assembly) => {
+    const { localId, ssl_url } = result;
+    const queryParams = {
+      expand: true,
+    };
+    const uppyInstance = getUppyInstance(getState());
+    const filesDetails = getFiles(getState());
+
+    axios
+      .get(ssl_url, { responseType: 'blob' })
+      .then(response => {
+        return sdk.images.upload({ image: response.data }, queryParams).then(sdkResponse => {
+          const uppyFile = uppyInstance.getFile(localId);
+          const fileDetails = filesDetails.find(file => file.id === localId);
+          const { data: sdkImage } = sdkResponse.data;
+
+          const listingData = {
+            title: fileDetails.title,
+            description: fileDetails.description,
+            publicData: {
+              listingType: 'product-listing',
+              categoryLevel1: getCategory(uppyFile),
+              imageryCategory: fileDetails.category,
+              usage: fileDetails.usage,
+              releases: fileDetails.releases,
+              keywords: fileDetails.keywords,
+              imageSize: fileDetails.dimensions,
+              fileType: '',
+              aiTerms: fileDetails.isAi ? 'yes' : 'no',
+              originalFileName: fileDetails.name,
+            },
+            price: new Money(fileDetails.price, 'USD'),
+            images: [sdkImage.id],
+          };
+
+          sdk.ownListings.create(listingData, {
+            expand: true,
+            include: ['images'],
+          });
+        });
+      })
+      .catch(error => {
+        console.error('Error during image download or upload:', error);
+      });
+  };
+}
+
 // ================ Thunk ================ //
-export function initializeUppy() {
+export function initializeUppy(uppyInstance) {
   return (dispatch, getState, sdk) => {
-    console.log(sdk);
-    const uppyInstance = createUppyInstance();
-    dispatch({ type: INITIALIZE_UPPY, payload: uppyInstance });
+    dispatch({
+      type: INITIALIZE_UPPY,
+      payload: { uppy: uppyInstance, files: uppyInstance.getFiles().map(uppyFileToProductFile) },
+    });
 
     uppyInstance.on('file-removed', file => {
       dispatch({ type: REMOVE_FILE, payload: file });
@@ -170,11 +254,35 @@ export function initializeUppy() {
       const { id } = file;
       dispatch({ type: PREVIEW_GENERATED, payload: { id, preview } });
     });
+
+    uppyInstance.on(
+      'transloadit:result',
+      handleTransloaditResultComplete(getState, sdk, uppyInstance)
+    );
   };
 }
 
-export function requestCreateBatchListings(payload) {
-  return (dispatch, getState, { sdk }) => {};
+export const requestUpdateFileDetails = payload => (dispatch, getState, sdk) => {
+  dispatch({ type: UPDATE_FILE_DETAILS, payload });
+};
+
+export function requestSaveBatchListings() {
+  return (dispatch, getState, sdk) => {
+    const uppy = getUppyInstance(getState());
+    const files = getFiles(getState());
+
+    // Validate required properties before proceeding
+    const allFilesValid = files.every(validateFileProperties);
+
+    if (!allFilesValid) {
+      console.error('Validation failed. Some files are missing required properties.');
+      return;
+    }
+
+    uppy.upload().then(result => {
+      console.info('Successful uploads:', result.successful);
+    });
+  };
 }
 
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
@@ -187,7 +295,11 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   const releaseOptions = getListingFieldOptions(config, 'releases');
   dispatch({
     type: FETCH_LISTING_OPTIONS,
-    payload: { categories: imageryCategoryOptions, usages: usageOptions, releases: releaseOptions },
+    payload: {
+      categories: imageryCategoryOptions,
+      usages: usageOptions,
+      releases: releaseOptions,
+    },
   });
 
   return dispatch(fetchCurrentUser(fetchCurrentUserOptions))

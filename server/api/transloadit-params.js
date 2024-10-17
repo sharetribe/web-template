@@ -3,7 +3,7 @@ const moment = require('moment');
 const { serialize } = require('../api-util/sdk');
 
 module.exports = (req, res) => {
-  const { userId, listingId } = req.body;
+  const { userId } = req.body;
 
   const authKey = process.env.TRANSLOADIT_AUTH_KEY;
   const transloadit = new Transloadit({
@@ -24,7 +24,6 @@ module.exports = (req, res) => {
     template_id: process.env.TRANSLOADIT_UPLOAD_LISTING_ASSETS_TEMPLATE_ID,
     fields: {
       userId,
-      listingId,
     },
   };
 
