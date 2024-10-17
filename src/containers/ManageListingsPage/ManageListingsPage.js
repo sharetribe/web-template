@@ -26,8 +26,9 @@ import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import ManageListingCard from './ManageListingCard/ManageListingCard';
-
 import { closeListing, openListing, getOwnListingsById } from './ManageListingsPage.duck';
+import { convertListingPrices } from '../../extensions/MultipleCurrency/utils/currency.js';
+
 import css from './ManageListingsPage.module.css';
 
 const Heading = props => {
@@ -88,6 +89,7 @@ export const ManageListingsPageComponent = props => {
     queryListingsError,
     queryParams,
     scrollingDisabled,
+    uiCurrency,
   } = props;
 
   useEffect(() => {
@@ -180,6 +182,7 @@ export const ManageListingsPageComponent = props => {
                 hasOpeningError={openingErrorListingId.uuid === l.id.uuid}
                 hasClosingError={closingErrorListingId.uuid === l.id.uuid}
                 renderSizes={renderSizes}
+                uiCurrency={uiCurrency}
               />
             ))}
           </div>
@@ -231,6 +234,8 @@ ManageListingsPageComponent.propTypes = {
 
 const mapStateToProps = state => {
   const { currentUser } = state.user;
+  const { uiCurrency } = state.ui;
+  const { exchangeRate } = state.ExchangeRate;
   const {
     currentPageResultIds,
     pagination,
@@ -243,10 +248,12 @@ const mapStateToProps = state => {
     closingListingError,
   } = state.ManageListingsPage;
   const listings = getOwnListingsById(state, currentPageResultIds);
+  const convertedListings = convertListingPrices(listings, uiCurrency, exchangeRate);
+
   return {
     currentUser,
     currentPageResultIds,
-    listings,
+    listings: convertedListings,
     pagination,
     queryInProgress,
     queryListingsError,
@@ -256,6 +263,7 @@ const mapStateToProps = state => {
     openingListingError,
     closingListing,
     closingListingError,
+    uiCurrency,
   };
 };
 

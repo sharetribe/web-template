@@ -9,7 +9,10 @@ import { getTransitionsNeedingProviderAttention } from '../transactions/transact
 import { authInfo } from './auth.duck';
 import { stripeAccountCreateSuccess } from './stripeConnectAccount.duck';
 import { updateCurrentUserProfile } from '../extensions/MultipleCurrency/api';
+import { setUiCurrency } from './ui.duck';
+import { DEFAULT_CURRENCY } from '../extensions/common/config/constants/currency.constants';
 
+// ======
 // ================ Action types ================ //
 
 export const CURRENT_USER_SHOW_REQUEST = 'app/user/CURRENT_USER_SHOW_REQUEST';
@@ -437,8 +440,10 @@ export const fetchCurrentUser = options => (dispatch, getState, sdk) => {
       }
 
       // Make sure auth info is up to date
+      const { userCurrency = DEFAULT_CURRENCY } = currentUser.attributes.profile.publicData || {};
+      // Make sure auth info is up to date
       dispatch(authInfo());
-      return currentUser;
+      dispatch(setUiCurrency(userCurrency));
     })
     .catch(e => {
       // Make sure auth info is up to date

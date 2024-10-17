@@ -22,7 +22,7 @@ const generatePriceRelatedProps = ({
     if (!dailyExchangeRate) {
       return null;
     }
-    const exchangeAmount = parseInt(price.amount * dailyExchangeRate);
+    const exchangeAmount = Math.round(price.amount * dailyExchangeRate);
 
     return {
       publicData: {
@@ -42,7 +42,7 @@ const generatePriceRelatedProps = ({
     if (!foreignPrice || !dailyExchangeRate) {
       return null;
     }
-    const exchangeAmount = parseInt(foreignPrice.amount / dailyExchangeRate);
+    const exchangeAmount = Math.round(foreignPrice.amount / dailyExchangeRate);
 
     return { price: new Money(exchangeAmount, currency) };
   }
