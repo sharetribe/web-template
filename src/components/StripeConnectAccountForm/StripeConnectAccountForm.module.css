@@ -111,12 +111,10 @@
 }
 
 .savedBankAccount {
-  composes: marketplaceInputStyles from global;
   color: var(--colorGrey700);
   text-align: left;
 
   &:hover {
-    cursor: text;
     text-decoration: none;
   }
 }

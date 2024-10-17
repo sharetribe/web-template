@@ -554,6 +554,14 @@ class EditListingWizard extends Component {
         hasRequirements(stripeAccountData, 'currently_due'));
 
     const savedCountry = stripeAccountData ? stripeAccountData.country : null;
+    const savedAccountType = stripeAccountData ? stripeAccountData.business_type : null;
+
+    const { marketplaceName } = config;
+    const payoutModalInfo = stripeAccountData ? (
+      <FormattedMessage id="EditListingWizard.payoutModalInfo" values={{ marketplaceName }} />
+    ) : (
+      <FormattedMessage id="EditListingWizard.payoutModalInfoNew" values={{ marketplaceName }} />
+    );
 
     const handleGetStripeConnectAccountLink = handleGetStripeConnectAccountLinkFn(
       onGetStripeConnectAccountLink,
@@ -635,9 +643,7 @@ class EditListingWizard extends Component {
               </p>
             ) : (
               <>
-                <p className={css.modalMessage}>
-                  <FormattedMessage id="EditListingWizard.payoutModalInfo" />
-                </p>
+                <p className={css.modalMessage}>{payoutModalInfo}</p>
                 <StripeConnectAccountForm
                   disabled={formDisabled}
                   inProgress={payoutDetailsSaveInProgress}
@@ -645,6 +651,7 @@ class EditListingWizard extends Component {
                   currentUser={currentUser}
                   stripeBankAccountLastDigits={getBankAccountLast4Digits(stripeAccountData)}
                   savedCountry={savedCountry}
+                  savedAccountType={savedAccountType}
                   submitButtonText={intl.formatMessage({
                     id: 'StripePayoutPage.submitButtonText',
                   })}
