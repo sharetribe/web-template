@@ -36,6 +36,10 @@ const exchangeRateBetweenCurrencies = (currency, exChangeCurrency, exchangeRate)
 
 const getListingPrice = (listing, currency, exchangeRate) => {
   const { price, publicData } = listing?.attributes || {};
+  if (!price) {
+    return price;
+  }
+  
   const { exchangePrice = {}, listingCurrency = DEFAULT_CURRENCY } = publicData || {};
 
   if (!exchangeRate || !exchangeRate[currency]) {
