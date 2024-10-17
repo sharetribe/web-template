@@ -157,11 +157,14 @@ const EditListingPricingAndStockPanel = props => {
               price: isDefaultCurrency ? price : exchangePrice,
               publicData: !isDefaultCurrency
                 ? {
+                    listingCurrency: uiCurrency,
                     exchangePrice: {
                       [uiCurrency]: { amount: price.amount, currency: price.currency },
                     },
                   }
-                : {},
+                : {
+                    listingCurrency: uiCurrency,
+                  },
               ...stockUpdateMaybe,
             };
             // Save the initialValues to state
