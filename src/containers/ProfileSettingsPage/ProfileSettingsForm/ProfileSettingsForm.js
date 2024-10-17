@@ -116,6 +116,7 @@ class ProfileSettingsFormComponent extends Component {
             profileImage,
             rootClassName,
             updateInProgress,
+            updateProfileInProgress,
             updateProfileError,
             uploadImageError,
             uploadInProgress,
@@ -246,7 +247,7 @@ class ProfileSettingsFormComponent extends Component {
               pristine ||
               pristineSinceLastSubmit ||
               uploadInProgress ||
-              submitInProgress);
+              updateProfileInProgress);
 
           const userFieldProps = getPropsForCustomUserFieldInputs(
             userFields,

@@ -4,6 +4,7 @@ const {
   calculateTotalFromLineItems,
   calculateShippingFee,
   hasCommissionPercentage,
+  getListingPrice,
 } = require('./lineItemHelpers');
 const { types } = require('sharetribe-flex-sdk');
 const { Money } = types;
@@ -115,15 +116,17 @@ const getDateRangeQuantityAndLineItems = (orderData, code) => {
  * @param {Object} customerCommission
  * @returns {Array} lineItems
  */
-exports.transactionLineItems = (listing, orderData, providerCommission, customerCommission) => {
+exports.transactionLineItems = async (
+  listing,
+  orderData,
+  providerCommission,
+  customerCommission
+) => {
   const calculateCurrency = orderData.currency || DEFAULT_CURRENCY;
-  const { exchangePrice } = listing.attributes.publicData || {};
   const unitPrice =
     calculateCurrency === DEFAULT_CURRENCY
       ? listing.attributes.price
-      : exchangePrice[calculateCurrency]
-      ? new Money(exchangePrice[calculateCurrency].amount, calculateCurrency)
-      : null;
+      : await getListingPrice(listing, calculateCurrency);
   const publicData = listing.attributes.publicData;
 
   /**

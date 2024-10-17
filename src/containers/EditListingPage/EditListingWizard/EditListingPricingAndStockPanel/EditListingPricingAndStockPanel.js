@@ -25,7 +25,7 @@ const getListingTypeConfig = (publicData, listingTypes) => {
   return listingTypes.find(conf => conf.listingType === selectedListingType);
 };
 
-const getInitialValues = (props, userCurrency) => {
+const getInitialValues = (props, uiCurrency) => {
   const { listing, listingTypes } = props;
   const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
   const currentStock = listing?.currentStock;
@@ -33,8 +33,8 @@ const getInitialValues = (props, userCurrency) => {
   const publicData = listing?.attributes?.publicData;
   const listingTypeConfig = getListingTypeConfig(publicData, listingTypes);
   const hasInfiniteStock = STOCK_INFINITE_ITEMS.includes(listingTypeConfig?.stockType);
-  const isDefaultCurrency = userCurrency === DEFAULT_CURRENCY;
-  const currencyPrice = publicData.exchangePrice?.[userCurrency];
+  const isDefaultCurrency = uiCurrency === DEFAULT_CURRENCY;
+  const currencyPrice = publicData.exchangePrice?.[uiCurrency];
   const price = isDefaultCurrency
     ? listing.attributes.price
     : currencyPrice
@@ -62,8 +62,8 @@ const EditListingPricingAndStockPanel = props => {
   // State is needed since re-rendering would overwrite the values during XHR call.
   const [initialValues, setInitialValues] = useState({});
   const { exchangeRate } = useSelector(state => state.ExchangeRate);
-  const { currentUser } = useSelector(state => state.user);
-  const { userCurrency } = currentUser?.attributes.profile?.publicData || {};
+  const { uiCurrency } = useSelector(state => state.ui);
+
   const {
     className,
     rootClassName,
@@ -81,11 +81,8 @@ const EditListingPricingAndStockPanel = props => {
   } = props;
 
   useEffect(() => {
-    if (currentUser) {
-      const { userCurrency } = currentUser?.attributes.profile?.publicData || {};
-      setInitialValues(getInitialValues(props, userCurrency));
-    }
-  }, [currentUser]);
+    setInitialValues(getInitialValues(props, uiCurrency));
+  }, [uiCurrency]);
 
   const classes = classNames(rootClassName || css.root, className);
 
@@ -95,7 +92,7 @@ const EditListingPricingAndStockPanel = props => {
   const listingTypeConfig = getListingTypeConfig(publicData, listingTypes);
 
   const hasInfiniteStock = STOCK_INFINITE_ITEMS.includes(listingTypeConfig?.stockType);
-  const listingCurrency = userCurrency || marketplaceCurrency;
+  const listingCurrency = uiCurrency || marketplaceCurrency;
   const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
 
   const priceCurrencyValid =
@@ -124,7 +121,7 @@ const EditListingPricingAndStockPanel = props => {
           initialValues={initialValues}
           onSubmit={values => {
             const { price, stock, stockTypeInfinity } = values;
-            const isDefaultCurrency = userCurrency === DEFAULT_CURRENCY;
+            const isDefaultCurrency = uiCurrency === DEFAULT_CURRENCY;
             const exchangePrice = !isDefaultCurrency
               ? convertToDefaultCurrency(price, exchangeRate)
               : null;
@@ -161,7 +158,7 @@ const EditListingPricingAndStockPanel = props => {
               publicData: !isDefaultCurrency
                 ? {
                     exchangePrice: {
-                      [userCurrency]: { amount: price.amount, currency: price.currency },
+                      [uiCurrency]: { amount: price.amount, currency: price.currency },
                     },
                   }
                 : {},
