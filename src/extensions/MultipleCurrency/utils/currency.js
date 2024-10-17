@@ -11,7 +11,7 @@ export const convertToDefaultCurrency = (price, exchangeRate) => {
     throw Error(`${currency} exchange rate not supported`);
   }
 
-  const defaultCurrencyAmount = parseInt(amount / dailyExchangeRate);
+  const defaultCurrencyAmount = Math.round(amount / dailyExchangeRate);
   return new Money(defaultCurrencyAmount, DEFAULT_CURRENCY);
 };
 
@@ -23,7 +23,7 @@ export const convertPriceByCurrency = (price, currency, exchangeRate) => {
     throw Error(`${currency} exchange rate not supported`);
   }
 
-  const convertedAmount = parseInt(amount * dailyExchangeRate);
+  const convertedAmount = Math.round(amount * dailyExchangeRate);
   return new Money(convertedAmount, currency);
 };
 

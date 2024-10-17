@@ -300,7 +300,7 @@ const convertPriceByCurrency = (price, currency, exchangeRate) => {
     throw Error(`${currency} exchange rate not supported`);
   }
 
-  const convertedAmount = parseInt(amount * dailyExchangeRate);
+  const convertedAmount = Math.round(amount * dailyExchangeRate);
   return new Money(convertedAmount, currency);
 };
 
