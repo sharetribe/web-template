@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] Add support for aligning content blocks based on asset
+  [#469](https://github.com/sharetribe/web-template/pull/469)
 - [add] Update moment-timezone library to v0.5.46.
   [#472](https://github.com/sharetribe/web-template/pull/472)
 - [add] Update caniuselite, which is used by browserlist.
