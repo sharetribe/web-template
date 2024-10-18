@@ -79,19 +79,13 @@ const slackInteractivity = async (req, res) => {
     switch (action) {
       case SLACK_ACTIONS.approveSeller: {
         console.warn(`--- APPROVE SELLER: ${userId}`);
-        metadata = { sellerStatus: SELLER_STATUS.APPROVED, reviewedAt: reviewedAt.toUTCString() };
-        break;
-      }
-      case SLACK_ACTIONS.rejectSeller: {
-        console.warn(`--- REJECT SELLER: ${userId}`);
-        metadata = { sellerStatus: SELLER_STATUS.WAITLISTED, reviewedAt: reviewedAt.toUTCString() };
-        break;
-      }
-      case SLACK_ACTIONS.approveCommunity: {
-        console.warn(`--- APPROVE COMMUNITY: ${userId}`);
+        await integrationSdk.users.updatePermissions({
+          id: userId,
+          postListings: 'permission/allow',
+        });
         const response = await integrationSdk.users.show({ id: userId });
         const user = response.data.data;
-        const { profile, email, identityProviders } = user.attributes;
+        const { profile } = user.attributes;
         const { creativeSpecialty } = profile.publicData || {};
         const { location } = profile.privateData || {};
         const { firstName, lastName, displayName } = profile;
@@ -119,6 +113,26 @@ const slackInteractivity = async (req, res) => {
         );
         const profileListing = listingResponse.data.data;
         const profileListingId = profileListing?.id?.uuid;
+        metadata = {
+          profileListingId,
+          sellerStatus: SELLER_STATUS.APPROVED,
+          reviewedAt: reviewedAt.toUTCString(),
+        };
+        break;
+      }
+      case SLACK_ACTIONS.rejectSeller: {
+        console.warn(`--- REJECT SELLER: ${userId}`);
+        metadata = { sellerStatus: SELLER_STATUS.WAITLISTED, reviewedAt: reviewedAt.toUTCString() };
+        break;
+      }
+      case SLACK_ACTIONS.approveCommunity: {
+        console.warn(`--- APPROVE COMMUNITY: ${userId}`);
+        const response = await integrationSdk.users.show({ id: userId });
+        const user = response.data.data;
+        const { profile, email, identityProviders } = user.attributes;
+        const { creativeSpecialty } = profile.publicData || {};
+        const { location } = profile.privateData || {};
+        const { firstName, lastName } = profile;
         const studioManagerClient = new SMClient();
         const newCreatorIds = await studioManagerClient.studioCreatorInit({
           attributes: {
@@ -136,7 +150,6 @@ const slackInteractivity = async (req, res) => {
         });
         metadata = {
           ...newCreatorIds,
-          profileListingId,
           communityStatus: COMMUNITY_STATUS.APPROVED,
         };
         break;
