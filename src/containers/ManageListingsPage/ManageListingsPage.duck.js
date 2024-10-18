@@ -24,6 +24,10 @@ export const CLOSE_LISTING_REQUEST = 'app/ManageListingsPage/CLOSE_LISTING_REQUE
 export const CLOSE_LISTING_SUCCESS = 'app/ManageListingsPage/CLOSE_LISTING_SUCCESS';
 export const CLOSE_LISTING_ERROR = 'app/ManageListingsPage/CLOSE_LISTING_ERROR';
 
+export const DISCARD_DRAFT_REQUEST = 'app/ManageListingsPage/DISCARD_DRAFT_REQUEST';
+export const DISCARD_DRAFT_SUCCESS = 'app/ManageListingsPage/DISCARD_DRAFT_SUCCESS';
+export const DISCARD_DRAFT_ERROR = 'app/ManageListingsPage/DISCARD_DRAFT_ERROR';
+
 export const ADD_OWN_ENTITIES = 'app/ManageListingsPage/ADD_OWN_ENTITIES';
 export const CLEAR_OPEN_LISTING_ERROR = 'app/ManageListingsPage/CLEAR_OPEN_LISTING_ERROR';
 
@@ -40,6 +44,8 @@ const initialState = {
   openingListingError: null,
   closingListing: null,
   closingListingError: null,
+  discardingDraft: null,
+  discardingDraftError: null,
 };
 
 const resultIds = data => data.data.map(l => l.id);
@@ -62,6 +68,23 @@ const updateListingAttributes = (state, listingEntity) => {
   return {
     ...state,
     ownEntities: { ...state.ownEntities, ownListing: ownListingEntities },
+  };
+};
+
+const removeDiscardedDraftListing = (state, listingEntity) => {
+  const { ownEntities } = state;
+
+  // To remove the discarded listing from the ownListing state attribute,
+  // we destructure the discarded listing to a non-used variable, and set
+  // the other listings in a new object that we can return as a part of state.
+  const { [listingEntity.id.uuid]: _, ...newOwnListing } = ownEntities.ownListing;
+
+  return {
+    ...state,
+    ownEntities: {
+      ...ownEntities,
+      ownListing: newOwnListing,
+    },
   };
 };
 
@@ -143,6 +166,30 @@ const manageListingsPageReducer = (state = initialState, action = {}) => {
       };
     }
 
+    case DISCARD_DRAFT_REQUEST:
+      return {
+        ...state,
+        discardingDraft: payload.listingId,
+        discardingDraftError: null,
+      };
+    case DISCARD_DRAFT_SUCCESS:
+      return {
+        ...removeDiscardedDraftListing(state, payload.data),
+        discardingDraft: null,
+      };
+    case DISCARD_DRAFT_ERROR: {
+      // eslint-disable-next-line no-console
+      console.error(payload);
+      return {
+        ...state,
+        discardingDraft: null,
+        discardingDraftError: {
+          listingId: state.discardingDraft,
+          error: payload,
+        },
+      };
+    }
+
     case ADD_OWN_ENTITIES:
       return merge(state, payload);
 
@@ -217,6 +264,22 @@ export const closeListingError = e => ({
   payload: e,
 });
 
+export const discardDraftRequest = listingId => ({
+  type: DISCARD_DRAFT_REQUEST,
+  payload: { listingId },
+});
+
+export const discardDraftSuccess = response => ({
+  type: DISCARD_DRAFT_SUCCESS,
+  payload: response.data,
+});
+
+export const discardDraftError = e => ({
+  type: DISCARD_DRAFT_ERROR,
+  error: true,
+  payload: e,
+});
+
 export const queryListingsRequest = queryParams => ({
   type: FETCH_LISTINGS_REQUEST,
   payload: { queryParams },
@@ -278,6 +341,20 @@ export const openListing = listingId => (dispatch, getState, sdk) => {
     })
     .catch(e => {
       dispatch(openListingError(storableError(e)));
+    });
+};
+
+export const discardDraft = listingId => (dispatch, getState, sdk) => {
+  dispatch(discardDraftRequest(listingId));
+
+  return sdk.ownListings
+    .discardDraft({ id: listingId }, { expand: true })
+    .then(response => {
+      dispatch(discardDraftSuccess(response));
+      return response;
+    })
+    .catch(e => {
+      dispatch(discardDraftError(storableError(e)));
     });
 };
 

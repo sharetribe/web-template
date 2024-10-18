@@ -27,7 +27,12 @@ import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import ManageListingCard from './ManageListingCard/ManageListingCard';
 
-import { closeListing, openListing, getOwnListingsById } from './ManageListingsPage.duck';
+import {
+  closeListing,
+  openListing,
+  getOwnListingsById,
+  discardDraft,
+} from './ManageListingsPage.duck';
 import css from './ManageListingsPage.module.css';
 
 const Heading = props => {
@@ -78,8 +83,11 @@ export const ManageListingsPageComponent = props => {
     currentUser,
     closingListing,
     closingListingError,
+    discardingDraft,
+    discardingDraftError,
     listings,
     onCloseListing,
+    onDiscardDraft,
     onOpenListing,
     openingListing,
     openingListingError,
@@ -137,6 +145,7 @@ export const ManageListingsPageComponent = props => {
 
   const closingErrorListingId = !!closingListingError && closingListingError.listingId;
   const openingErrorListingId = !!openingListingError && openingListingError.listingId;
+  const discardingErrorListingId = !!discardingDraftError && discardingDraft.listingId;
 
   const panelWidth = 62.5;
   // Render hints for responsive image
@@ -173,12 +182,14 @@ export const ManageListingsPageComponent = props => {
                 key={l.id.uuid}
                 listing={l}
                 isMenuOpen={!!listingMenuOpen && listingMenuOpen.id.uuid === l.id.uuid}
-                actionsInProgressListingId={openingListing || closingListing}
+                actionsInProgressListingId={openingListing || closingListing || discardingDraft}
                 onToggleMenu={onToggleMenu}
                 onCloseListing={onCloseListing}
                 onOpenListing={handleOpenListing}
+                onDiscardDraft={onDiscardDraft}
                 hasOpeningError={openingErrorListingId.uuid === l.id.uuid}
                 hasClosingError={closingErrorListingId.uuid === l.id.uuid}
+                hasDiscardingError={discardingErrorListingId.uuid === l.id.uuid}
                 renderSizes={renderSizes}
               />
             ))}
@@ -241,6 +252,8 @@ const mapStateToProps = state => {
     openingListingError,
     closingListing,
     closingListingError,
+    discardingDraft,
+    discardingDraftError,
   } = state.ManageListingsPage;
   const listings = getOwnListingsById(state, currentPageResultIds);
   return {
@@ -256,12 +269,15 @@ const mapStateToProps = state => {
     openingListingError,
     closingListing,
     closingListingError,
+    discardingDraft,
+    discardingDraftError,
   };
 };
 
 const mapDispatchToProps = dispatch => ({
   onCloseListing: listingId => dispatch(closeListing(listingId)),
   onOpenListing: listingId => dispatch(openListing(listingId)),
+  onDiscardDraft: listingId => dispatch(discardDraft(listingId)),
 });
 
 const ManageListingsPage = compose(
