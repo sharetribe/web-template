@@ -12729,10 +12729,10 @@ shallowequal@^1.1.0:
   resolved "https://registry.yarnpkg.com/shallowequal/-/shallowequal-1.1.0.tgz#188d521de95b9087404fd4dcb68b13df0ae4e7f8"
   integrity sha512-y0m1JoUZSlPAjXVtPPW70aZWfIL/dSP7AFkRnniLCrK/8MDKog3TySTBmckD+RObVxH0v4Tox67+F14PdED2oQ==
 
-sharetribe-flex-integration-sdk@^1.10.1:
-  version "1.10.1"
-  resolved "https://registry.yarnpkg.com/sharetribe-flex-integration-sdk/-/sharetribe-flex-integration-sdk-1.10.1.tgz#db43ed999faa4a25e7ada98391aa6a4eda6a1555"
-  integrity sha512-/Fa/KsxFLx8db1wPhN3neX80tBYVkV24rmkSUhP/0ndzBVKKMKs3ykatHyxVXOWbwebrrAg0Qib+kVx7NtKAYg==
+sharetribe-flex-integration-sdk@^1.11.0:
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/sharetribe-flex-integration-sdk/-/sharetribe-flex-integration-sdk-1.11.0.tgz#b1a967e5416cd8fd9006a84c248f29c06b7529ee"
+  integrity sha512-oZuiX5u3nDaWinafdEf7c+CdhGyRvpMWuiBrTyXnqt8WpgxiqW1E3PHE3VJvGclW7rVcdZOZVXbZnWQGe1rzHw==
   dependencies:
     axios "^1.5.1"
     bottleneck "^2.19.5"
