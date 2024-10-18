@@ -21,7 +21,7 @@ import {
   unitDivisor,
 } from '../../util/currency';
 import * as log from '../../util/log';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
+import { injectIntl, intlShape } from '../../util/reactIntl';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { propTypes } from '../../util/types';
 
@@ -82,6 +82,7 @@ const parseInputValueToFormattedState = props => {
   const formattedValue = hasInitialValue
     ? intl.formatNumber(ensureDotSeparator(unformattedValue), currencyConfig)
     : '';
+
   return { formattedValue, unformattedValue, usesComma };
 };
 
@@ -99,7 +100,7 @@ class CurrencyInputComponent extends Component {
         usesComma,
       };
     } catch (e) {
-      log.error(e, 'currency-input-init-failed', { currencyConfig, defaultValue, initialValue });
+      log.error(e, 'currency-input-init-failed');
       throw e;
     }
 
