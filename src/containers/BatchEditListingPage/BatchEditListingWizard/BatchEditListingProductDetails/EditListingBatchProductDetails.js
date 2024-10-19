@@ -2,190 +2,103 @@ import React, { useEffect, useState } from 'react';
 import css from './EditListingBatchProductDetails.module.css';
 import { Button, H3 } from '../../../../components';
 import { FormattedMessage } from '../../../../util/reactIntl';
-import { Flex, Switch, Table } from 'antd';
-import { EditableCellComponents } from './EditableCellComponents';
-import { imageDimensions } from '../../BatchEditListingPage.duck';
-import imagePlaceholder from '../../../../assets/image-placeholder.jpg';
+import { Checkbox, Flex, List, Modal } from 'antd';
+import {
+  getAiTermsModalVisibility,
+  getInvalidListings,
+  getListingFieldsOptions,
+  getListings,
+  SET_AI_TERMS_ACCEPTED,
+} from '../../BatchEditListingPage.duck';
+import { useDispatch, useSelector } from 'react-redux';
+import { EditableListingsTable } from './EditableListingsTable';
 
-function stringSorter(strA, strB) {
-  return strA.name.localeCompare(strB.name, 'en', { sensitivity: 'base' });
+function ListingValidationModalContent({ invalidListings }) {
+  return (
+    <div>
+      <p>The following files have missing required information:</p>
+      <List
+        dataSource={invalidListings}
+        size="small"
+        renderItem={item => (
+          <List.Item>
+            <div>{item}</div>
+          </List.Item>
+        )}
+      />
+      <p>
+        Please ensure all files have a valid category, title, description, and price before saving.
+        You can either enter the missing information or deselect the invalid files to proceed.
+      </p>
+    </div>
+  );
+}
+
+function AiTermsModalContent({ onTermsCheckboxChange }) {
+  return (
+    <div>
+      <p>You are listing files marked as AI-generated content.</p>
+      <p>
+        To proceed with listing these products, you must comply with The Luupe's terms for
+        AI-generated content.
+      </p>
+      <Checkbox onChange={onTermsCheckboxChange}>
+        I have read and accept The Luupe's terms for listing AI-generated content.
+      </Checkbox>
+    </div>
+  );
 }
 
 export const EditListingBatchProductDetails = props => {
-  const { files, listingFieldsOptions, onUpdateFileDetails, onSaveBatchListing } = props;
+  const { onUpdateFileDetails, onSaveBatchListing } = props;
+  const listings = useSelector(getListings);
+  const listingFieldsOptions = useSelector(getListingFieldsOptions);
 
-  const {
-    categories: imageryCategoryOptions,
-    usages: usageOptions,
-    releases: releaseOptions,
-  } = listingFieldsOptions;
+  const [dataSource, setDataSource] = useState(listings);
 
-  const [dataSource, setDataSource] = useState(files);
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const invalidListings = useSelector(getInvalidListings);
+  const dispatch = useDispatch();
+  const showAiTermsModal = useSelector(getAiTermsModalVisibility);
+
+  const [termsAcceptedCheckbox, setTermsAcceptedCheckbox] = useState(false);
+  const onTermsCheckboxChange = e => {
+    setTermsAcceptedCheckbox(e.target.checked);
+  };
 
   useEffect(() => {
-    setDataSource(files);
-  }, [files]);
-
-  const columns = [
-    {
-      title: 'Thumbnail',
-      dataIndex: 'preview',
-      render: previewUrl => <img alt="Thumbnail" src={previewUrl || imagePlaceholder} />,
-      fixed: 'left',
-    },
-    {
-      title: 'File Name',
-      dataIndex: 'name',
-      width: 300,
-      sorter: stringSorter,
-    },
-    {
-      title: 'Title',
-      width: 400,
-      dataIndex: 'title',
-      editable: true,
-      editControlType: 'text',
-      sorter: stringSorter,
-    },
-    {
-      title: 'Description',
-      dataIndex: 'description',
-      editable: true,
-      editControlType: 'text',
-      sorter: stringSorter,
-    },
-    {
-      title: 'Is AI',
-      dataIndex: 'isAi',
-      render: (_, record) => {
-        const { isAi } = record;
-        return (
-          <Switch
-            value={isAi}
-            checkedChildren="Yes"
-            unCheckedChildren="No"
-            onChange={value =>
-              handleSave({
-                ...record,
-                isAi: value,
-                isIllustration: value ? false : record.isIllustration,
-              })
-            }
-          />
-        );
-      },
-    },
-    {
-      title: 'Is Illustration',
-      dataIndex: 'isIllustration',
-      render: (_, record) => {
-        const { isIllustration } = record;
-        return (
-          <Switch
-            value={isIllustration}
-            checkedChildren="Yes"
-            unCheckedChildren="No"
-            onChange={value =>
-              handleSave({
-                ...record,
-                isAi: value ? false : record.isAi,
-                isIllustration: value,
-              })
-            }
-          />
-        );
-      },
-    },
-    {
-      title: 'Category',
-      width: 300,
-      dataIndex: 'category',
-      editable: true,
-      editControlType: 'selectMultiple',
-      options: imageryCategoryOptions,
-    },
-    {
-      title: 'Usage',
-      width: 200,
-      dataIndex: 'usage',
-      editable: true,
-      editControlType: 'select',
-      options: usageOptions,
-    },
-    {
-      title: 'Do you have releases on file / can you obtain them?',
-      dataIndex: 'releases',
-      width: 300,
-      editable: true,
-      editControlType: 'select',
-      options: releaseOptions,
-    },
-    {
-      title: 'Keywords',
-      width: 400,
-      dataIndex: 'keywords',
-      editable: true,
-      editControlType: 'tags',
-    },
-    {
-      title: 'Dimensions',
-      dataIndex: 'dimensions',
-      render: dimensionsKey => {
-        return imageDimensions[dimensionsKey].label;
-      },
-      sorter: stringSorter,
-    },
-    {
-      title: 'Size',
-      dataIndex: 'size',
-      render: size => `${(size / 1024).toFixed(2)} KB`,
-      sorter: (a, b) => a.size - b.size,
-    },
-    {
-      title: 'Price',
-      dataIndex: 'price',
-      editable: true,
-      editControlType: 'text',
-    },
-  ];
-
-  const editableColumns = columns.map(col => {
-    if (!col.editable) return col;
-
-    return {
-      ...col,
-      onCell: record => ({
-        record,
-        editable: col.editable,
-        dataIndex: col.dataIndex,
-        title: col.title,
-        handleSave,
-        editControlType: col.editControlType,
-        options: col.options,
-        cellClassName: css.editableCellValueWrap,
-      }),
-    };
-  });
-
-  const onSelectChange = newSelectedRowKeys => {
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
+    setDataSource(listings);
+  }, [listings]);
 
   const onSubmit = () => {
-    console.log('Submit for review', dataSource);
-    
     onSaveBatchListing();
   };
 
-  const handleSave = updatedData => {
-    onUpdateFileDetails(updatedData);
-  };
+  useEffect(() => {
+    if (invalidListings.length > 0) {
+      Modal.error({
+        title: 'Incomplete Information for Selected Files',
+        content: <ListingValidationModalContent invalidListings={invalidListings} />,
+      });
+    }
+  }, [invalidListings, dispatch]);
+
+  useEffect(() => {
+    if (showAiTermsModal) {
+      Modal.warning({
+        title: 'AI Content Listing Compliance',
+        content: <AiTermsModalContent onTermsCheckboxChange={onTermsCheckboxChange} />,
+        onOk() {
+          dispatch({ type: SET_AI_TERMS_ACCEPTED, payload: termsAcceptedCheckbox });
+          if (termsAcceptedCheckbox) {
+            onSaveBatchListing();
+          }
+        },
+        onCancel() {
+          dispatch({ type: SET_AI_TERMS_ACCEPTED, payload: false });
+        },
+      });
+    }
+  }, [showAiTermsModal, dispatch]);
 
   return (
     <div className={css.root}>
@@ -209,19 +122,11 @@ export const EditListingBatchProductDetails = props => {
         </Flex>
       </Flex>
       <div style={{ marginTop: '20px' }}>
-        <Table
-          columns={editableColumns}
-          components={EditableCellComponents}
+        <EditableListingsTable
           dataSource={dataSource}
-          rowClassName={() => css.editableRow}
-          rowKey="id"
-          pagination={false}
-          scroll={{
-            x: 'max-content',
-          }}
-          className={css.productsTable}
-          rowSelection={rowSelection}
-        />
+          onSave={onUpdateFileDetails}
+          listingFieldsOptions={listingFieldsOptions}
+        ></EditableListingsTable>
       </div>
     </div>
   );

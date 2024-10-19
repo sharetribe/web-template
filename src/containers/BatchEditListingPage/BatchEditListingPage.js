@@ -39,7 +39,7 @@ export const BatchEditListingPageComponent = props => {
   const isNewListingFlow = isNewURI || isDraftURI;
   const hasPostingRights = hasPermissionToPostListings(currentUser);
   const shouldRedirectNoPostingRights = !!currentUser?.id && isNewListingFlow && !hasPostingRights;
-  const { uppy, files, listingFieldsOptions } = page;
+  const { uppy, listingFieldsOptions } = page;
   const { store } = useContext(ReactReduxContext);
 
   useEffect(() => {
@@ -83,7 +83,6 @@ export const BatchEditListingPageComponent = props => {
           history={history}
           currentUser={currentUser}
           uppy={uppy}
-          files={files}
           listingFieldsOptions={listingFieldsOptions}
           onUpdateFileDetails={onUpdateFileDetails}
           onSaveBatchListing={onSaveBatchListing}

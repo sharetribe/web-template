@@ -14,8 +14,6 @@ const BatchEditListingWizardTab = props => {
     tabSubmitButtonText,
     routeConfiguration,
     uppy,
-    files,
-    listingFieldsOptions,
     onUpdateFileDetails,
     onSaveBatchListing,
   } = props;
@@ -39,8 +37,6 @@ const BatchEditListingWizardTab = props => {
     case PRODUCT_DETAILS: {
       return (
         <EditListingBatchProductDetails
-          files={files}
-          listingFieldsOptions={listingFieldsOptions}
           onUpdateFileDetails={onUpdateFileDetails}
           onSaveBatchListing={onSaveBatchListing}
         />
