@@ -59,8 +59,6 @@ const BatchEditListingWizard = props => {
     currentUser = {},
     routeConfiguration = {},
     uppy = null,
-    files = [],
-    listingFieldsOptions = [],
     onUpdateFileDetails,
     onSaveBatchListing,
     ...rest
@@ -115,8 +113,6 @@ const BatchEditListingWizard = props => {
               params={params}
               routeConfiguration={routeConfiguration}
               uppy={uppy}
-              files={files}
-              listingFieldsOptions={listingFieldsOptions}
               onUpdateFileDetails={onUpdateFileDetails}
               onSaveBatchListing={onSaveBatchListing}
             />

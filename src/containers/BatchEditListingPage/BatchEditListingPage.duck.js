@@ -51,7 +51,7 @@ function getListingFieldOptions(config, listingFieldKey) {
   return enumOptions.map(({ label, option }) => ({ value: option, label }));
 }
 
-function uppyFileToProductFile(file) {
+function uppyFileToListing(file) {
   const { id, meta, name, size, preview } = file;
 
   const { keywords, height, width } = meta;
@@ -88,16 +88,20 @@ function getCategory(file) {
   return isVideo ? 'videos' : 'photos';
 }
 
-function validateFileProperties(file) {
+function validateListingProperties(listing) {
   const requiredProperties = ['category', 'title', 'description', 'price'];
+  const missingProperties = [];
 
-  for (let property of requiredProperties) {
-    if (!file[property] || (Array.isArray(file[property]) && file[property].length === 0)) {
-      console.error(`Validation failed: ${property} is missing for file ${file.id}`);
-      return false;
+  requiredProperties.forEach(property => {
+    if (
+      !listing[property] ||
+      (Array.isArray(listing[property]) && listing[property].length === 0)
+    ) {
+      missingProperties.push(property);
     }
-  }
-  return true;
+  });
+
+  return missingProperties.length === 0 ? null : { listing, missingProperties };
 }
 
 // ================ Action types ================ //
@@ -108,16 +112,21 @@ export const RESET_FILES = 'app/BatchEditListingPage/RESET_FILES';
 export const PREVIEW_GENERATED = 'app/BatchEditListingPage/PREVIEW_GENERATED';
 export const FETCH_LISTING_OPTIONS = 'app/BatchEditListingPage/FETCH_LISTING_OPTIONS';
 export const UPDATE_FILE_DETAILS = 'app/BatchEditListingPage/UPDATE_FILE_DETAILS';
-
+export const SET_INVALID_LISTINGS = 'app/BatchEditListingPage/SET_INVALID_LISTINGS';
+export const SET_AI_TERMS_ACCEPTED = 'app/BatchEditListingPage/SET_AI_TERMS_ACCEPTED';
+export const SHOW_AI_TERMS_MODAL = 'app/BatchEditListingPage/SHOW_AI_TERMS_MODAL';
 // ================ Reducer ================ //
 const initialState = {
-  files: [],
+  listings: [],
   uppy: null,
   listingFieldsOptions: {
     categories: [],
     usages: [],
     releases: [],
   },
+  invalidListings: [],
+  aiTermsAccepted: false,
+  showAiTerms: false,
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -125,18 +134,18 @@ export default function reducer(state = initialState, action = {}) {
 
   switch (type) {
     case INITIALIZE_UPPY:
-      return { ...state, uppy: payload.uppy, files: payload.files };
+      return { ...state, uppy: payload.uppy, listings: payload.files };
     case ADD_FILE:
-      return { ...state, files: [...state.files, uppyFileToProductFile(payload)] };
+      return { ...state, listings: [...state.listings, uppyFileToListing(payload)] };
     case REMOVE_FILE:
-      return { ...state, files: state.files.filter(file => file.id !== payload.id) };
+      return { ...state, listings: state.listings.filter(file => file.id !== payload.id) };
     case RESET_FILES:
-      return { ...state, files: [] };
+      return { ...state, listings: [] };
     case PREVIEW_GENERATED: {
       const { id, preview } = payload;
       return {
         ...state,
-        files: state.files.map(file => (file.id === id ? { ...file, preview } : file)),
+        files: state.listings.map(file => (file.id === id ? { ...file, preview } : file)),
       };
     }
     case FETCH_LISTING_OPTIONS: {
@@ -154,9 +163,15 @@ export default function reducer(state = initialState, action = {}) {
       const { id, ...values } = payload;
       return {
         ...state,
-        files: state.files.map(file => (file.id === id ? { ...file, ...values } : file)),
+        listings: state.listings.map(file => (file.id === id ? { ...file, ...values } : file)),
       };
     }
+    case SET_INVALID_LISTINGS:
+      return { ...state, invalidListings: payload };
+    case SET_AI_TERMS_ACCEPTED:
+      return { ...state, aiTermsAccepted: payload, showAiTerms: false };
+    case SHOW_AI_TERMS_MODAL:
+      return { ...state, showAiTerms: true };
     default:
       return state;
   }
@@ -164,9 +179,11 @@ export default function reducer(state = initialState, action = {}) {
 
 // ============== Selector =============== //
 export const getUppyInstance = state => state.BatchEditListingPage.uppy;
-
-export const getFiles = state => state.BatchEditListingPage.files;
-
+export const getListings = state => state.BatchEditListingPage.listings;
+export const getInvalidListings = state => state.BatchEditListingPage.invalidListings;
+export const getAiTermsAccepted = state => state.BatchEditListingPage.aiTermsAccepted;
+export const getListingFieldsOptions = state => state.BatchEditListingPage.listingFieldsOptions;
+export const getAiTermsModalVisibility = state => state.BatchEditListingPage.showAiTerms;
 /**
  * Handles the completion of a Transloadit result.
  *
@@ -181,7 +198,7 @@ function handleTransloaditResultComplete(getState, sdk) {
       expand: true,
     };
     const uppyInstance = getUppyInstance(getState());
-    const filesDetails = getFiles(getState());
+    const filesDetails = getListings(getState());
 
     axios
       .get(ssl_url, { responseType: 'blob' })
@@ -227,7 +244,7 @@ export function initializeUppy(uppyInstance) {
   return (dispatch, getState, sdk) => {
     dispatch({
       type: INITIALIZE_UPPY,
-      payload: { uppy: uppyInstance, files: uppyInstance.getFiles().map(uppyFileToProductFile) },
+      payload: { uppy: uppyInstance, files: uppyInstance.getFiles().map(uppyFileToListing) },
     });
 
     uppyInstance.on('file-removed', file => {
@@ -268,17 +285,32 @@ export const requestUpdateFileDetails = payload => (dispatch, getState, sdk) => 
 
 export function requestSaveBatchListings() {
   return (dispatch, getState, sdk) => {
-    const uppy = getUppyInstance(getState());
-    const files = getFiles(getState());
+    const listings = getListings(getState());
 
-    // Validate required properties before proceeding
-    const allFilesValid = files.every(validateFileProperties);
+    // 1. Validate required fields for all listings
+    const invalidListings = listings
+      .map(validateListingProperties)
+      .filter(result => result !== null);
 
-    if (!allFilesValid) {
-      console.error('Validation failed. Some files are missing required properties.');
-      return;
+    if (invalidListings.length > 0) {
+      // Dispatch action to store invalid file names in state and trigger modal
+      dispatch({ type: SET_INVALID_LISTINGS, payload: invalidListings.map(f => f.listing.name) });
+      return; // Abort saving if there are invalid listings
     }
 
+    // 2. Check if any AI content is listed and if terms are accepted
+    const aiListings = listings.filter(listing => listing.isAi);
+    const aiTermsAccepted = getAiTermsAccepted(getState());
+
+    if (aiListings.length > 0 && !aiTermsAccepted) {
+      // Dispatch action to trigger modal for AI terms
+      // Here you would display a different modal if AI listings are present
+      dispatch({ type: SHOW_AI_TERMS_MODAL });
+      return; // Abort saving until terms are accepted
+    }
+
+    // 3. Proceed with saving the listings if all validations pass
+    const uppy = getUppyInstance(getState());
     uppy.upload().then(result => {
       console.info('Successful uploads:', result.successful);
     });
