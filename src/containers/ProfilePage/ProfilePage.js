@@ -37,6 +37,7 @@ import {
   LayoutSideNavigation,
   NamedRedirect,
 } from '../../components';
+import { convertListingPrices } from '../../extensions/MultipleCurrency/utils/currency';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
@@ -407,12 +408,20 @@ const mapStateToProps = state => {
     reviews,
     queryReviewsError,
   } = state.ProfilePage;
+  const { uiCurrency } = state.ui;
+  const { exchangeRate } = state.ExchangeRate;
   const userMatches = getMarketplaceEntities(state, [{ type: 'user', id: userId }]);
   const user = userMatches.length === 1 ? userMatches[0] : null;
 
   // Show currentUser's data if it's not approved yet
   const isCurrentUser = userId?.uuid === currentUser?.id?.uuid;
   const useCurrentUser = isCurrentUser && !isUserAuthorized(currentUser);
+
+  const convertedListings = convertListingPrices(
+    getMarketplaceEntities(state, userListingRefs),
+    uiCurrency,
+    exchangeRate
+  );
 
   return {
     scrollingDisabled: isScrollingDisabled(state),
@@ -421,7 +430,7 @@ const mapStateToProps = state => {
     user,
     userShowError,
     queryListingsError,
-    listings: getMarketplaceEntities(state, userListingRefs),
+    listings: convertedListings,
     reviews,
     queryReviewsError,
   };
