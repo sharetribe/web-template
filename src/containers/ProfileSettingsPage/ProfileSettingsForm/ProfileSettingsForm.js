@@ -132,7 +132,7 @@ class ProfileSettingsFormComponent extends Component {
           const userCurrency = currentUser.attributes.profile.publicData.userCurrency || '';
           const currencyBasedOnLocation = values.pub_userCurrency || '';
 
-          const [initialValues] = useState(values);
+          const [initialValues, setInitialValues] = useState(values);
           const [formIsPristine, setFormIsPristine] = useState(true);
 
           useEffect(() => {
@@ -140,6 +140,10 @@ class ProfileSettingsFormComponent extends Component {
             const areOtherFieldsPristine = JSON.stringify(values) === JSON.stringify(initialValues);
 
             setFormIsPristine(isCurrencyPristine && areOtherFieldsPristine);
+
+            if (userCurrency !== initialValues.pub_userCurrency) {
+              setInitialValues(values);
+            }
           }, [values, userCurrency, currencyBasedOnLocation, initialValues]);
 
           // First name
