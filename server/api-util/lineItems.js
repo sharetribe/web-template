@@ -4,10 +4,12 @@ const {
   calculateTotalFromLineItems,
   calculateShippingFee,
   hasCommissionPercentage,
+  getListingPrice,
 } = require('./lineItemHelpers');
 const { types } = require('sharetribe-flex-sdk');
 const { Money } = types;
 
+const DEFAULT_CURRENCY = 'USD';
 /**
  * Get quantity and add extra line-items that are related to delivery method
  *
@@ -114,10 +116,18 @@ const getDateRangeQuantityAndLineItems = (orderData, code) => {
  * @param {Object} customerCommission
  * @returns {Array} lineItems
  */
-exports.transactionLineItems = (listing, orderData, providerCommission, customerCommission) => {
+exports.transactionLineItems = async (
+  listing,
+  orderData,
+  providerCommission,
+  customerCommission
+) => {
+  const calculateCurrency = orderData.currency || DEFAULT_CURRENCY;
+  const unitPrice =
+    calculateCurrency === DEFAULT_CURRENCY
+      ? listing.attributes.price
+      : await getListingPrice(listing, calculateCurrency);
   const publicData = listing.attributes.publicData;
-  const unitPrice = listing.attributes.price;
-  const currency = unitPrice.currency;
 
   /**
    * Pricing starts with order's base price:
@@ -139,7 +149,7 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
   // E.g. by default, "shipping-fee" is tied to 'item' aka buying products.
   const quantityAndExtraLineItems =
     unitType === 'item'
-      ? getItemQuantityAndLineItems(orderData, publicData, currency)
+      ? getItemQuantityAndLineItems(orderData, publicData, calculateCurrency)
       : unitType === 'hour'
       ? getHourQuantityAndLineItems(orderData)
       : ['day', 'night'].includes(unitType)

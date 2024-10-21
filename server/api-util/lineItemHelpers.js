@@ -5,6 +5,8 @@ const { Money } = types;
 
 const { getAmountAsDecimalJS, convertDecimalJSToNumber } = require('./currency');
 const { nightsBetween, daysBetween } = require('./dates');
+const { getExchangeRate } = require('../extensions/common/caching');
+const { DEFAULT_CURRENCY } = require('../extensions/common/config/constants/currency.constants');
 const LINE_ITEM_NIGHT = 'line-item/night';
 const LINE_ITEM_DAY = 'line-item/day';
 
@@ -289,4 +291,33 @@ exports.hasCommissionPercentage = commission => {
   // Only create a line item if the percentage is set to be more than zero
   const isMoreThanZero = percentage > 0;
   return isDefined && isMoreThanZero;
+};
+const exchangeRateBetweenCurrencies = (currency, exChangeCurrency, exchangeRate) => {
+  if (currency === DEFAULT_CURRENCY) {
+    return 1 / exchangeRate[exChangeCurrency];
+  }
+  return exchangeRate[currency];
+};
+
+exports.getListingPrice = async (listing, currency) => {
+  const { price, publicData } = listing?.attributes || {};
+  const { exchangePrice = {}, listingCurrency = DEFAULT_CURRENCY } = publicData || {};
+  const exchangeRate = await getExchangeRate();
+
+  if (!exchangeRate || !exchangeRate[currency]) {
+    return price;
+  }
+
+  if (currency === listingCurrency) {
+    if (currency === DEFAULT_CURRENCY) {
+      return price;
+    }
+    return exchangePrice[currency] ? new Money(exchangePrice[currency].amount, currency) : price;
+  }
+
+  const dailyExchangeRate = exchangeRateBetweenCurrencies(currency, listingCurrency, exchangeRate);
+  const priceAmount =
+    currency === DEFAULT_CURRENCY ? exchangePrice[currency]?.amount || 0 : price.amount;
+
+  return new Money(priceAmount * dailyExchangeRate, currency);
 };

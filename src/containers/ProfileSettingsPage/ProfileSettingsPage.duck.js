@@ -1,6 +1,8 @@
 import { denormalisedResponseEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
 import { currentUserShowSuccess } from '../../ducks/user.duck';
+import { setUiCurrency } from '../../ducks/ui.duck';
+import { updateCurrentUserProfile } from '../../extensions/MultipleCurrency/api';
 
 // ================ Action types ================ //
 
@@ -135,6 +137,7 @@ export function uploadImage(actionPayload) {
 
 export const updateProfile = actionPayload => {
   return (dispatch, getState, sdk) => {
+    const { uiCurrency } = getState().ui;
     dispatch(updateProfileRequest());
 
     const queryParams = {
@@ -143,19 +146,26 @@ export const updateProfile = actionPayload => {
       'fields.image': ['variants.square-small', 'variants.square-small2x'],
     };
 
-    return sdk.currentUser
-      .updateProfile(actionPayload, queryParams)
+    const bodyParams = {
+      data: actionPayload,
+      queryParams,
+    };
+
+    return updateCurrentUserProfile(bodyParams)
       .then(response => {
         dispatch(updateProfileSuccess(response));
 
         const entities = denormalisedResponseEntities(response);
         if (entities.length !== 1) {
-          throw new Error('Expected a resource in the sdk.currentUser.updateProfile response');
+          throw new Error('Expected a resource in the updateProfile response');
         }
         const currentUser = entities[0];
-
+        const { userCurrency } = currentUser.attributes.profile.publicData || {};
         // Update current user in state.user.currentUser through user.duck.js
         dispatch(currentUserShowSuccess(currentUser));
+        if (uiCurrency !== userCurrency) {
+          dispatch(setUiCurrency(userCurrency));
+        }
       })
       .catch(e => dispatch(updateProfileError(storableError(e))));
   };

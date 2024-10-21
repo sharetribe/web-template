@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { bool, func, object, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -23,6 +23,9 @@ import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 import ProfileSettingsForm from './ProfileSettingsForm/ProfileSettingsForm';
 
 import { updateProfile, uploadImage } from './ProfileSettingsPage.duck';
+
+import { getUserCurrency } from '../../extensions/user-currency/helpers';
+
 import css from './ProfileSettingsPage.module.css';
 
 const onImageUploadHandler = (values, fn) => {
@@ -50,6 +53,27 @@ const ViewProfileLink = props => {
 };
 
 export const ProfileSettingsPageComponent = props => {
+  const [currency, setCurrency] = useState(null);
+
+  useEffect(() => {
+    const fetchCurrency = async position => {
+      try {
+        const userCurrency = await getUserCurrency(position);
+        if (userCurrency) {
+          setCurrency(userCurrency);
+        }
+      } catch (error) {
+        console.error('Error fetching user currency:', error);
+      }
+    };
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(fetchCurrency);
+    } else {
+      console.log('Geolocation is not supported by this browser.');
+    }
+  }, []);
+
   const config = useConfiguration();
   const {
     currentUser,
@@ -62,6 +86,7 @@ export const ProfileSettingsPageComponent = props => {
     uploadImageError,
     uploadInProgress,
     intl,
+    updateProfileInProgress,
   } = props;
 
   const { userFields, userTypes = [] } = config.user;
@@ -112,6 +137,7 @@ export const ProfileSettingsPageComponent = props => {
     protectedData,
     privateData,
   } = user?.attributes.profile;
+  const userCurrency = publicData?.userCurrency || '';
   // I.e. the status is active, not pending-approval or banned
   const isUnauthorizedUser = currentUser && !isUserAuthorized(currentUser);
 
@@ -136,6 +162,7 @@ export const ProfileSettingsPageComponent = props => {
         ...initialValuesForUserFields(publicData, 'public', userType, userFields),
         ...initialValuesForUserFields(protectedData, 'protected', userType, userFields),
         ...initialValuesForUserFields(privateData, 'private', userType, userFields),
+        pub_userCurrency: currency ? currency : userCurrency,
       }}
       profileImage={profileImage}
       onImageUpload={e => onImageUploadHandler(e, onImageUpload)}
@@ -147,6 +174,7 @@ export const ProfileSettingsPageComponent = props => {
       marketplaceName={config.marketplaceName}
       userFields={userFields}
       userTypeConfig={userTypeConfig}
+      updateProfileInProgress={updateProfileInProgress}
     />
   ) : null;
 
@@ -210,7 +238,7 @@ ProfileSettingsPageComponent.propTypes = {
 };
 
 const mapStateToProps = state => {
-  const { currentUser } = state.user;
+  const { currentUser, updateProfileInProgress } = state.user;
   const {
     image,
     uploadImageError,
@@ -218,11 +246,13 @@ const mapStateToProps = state => {
     updateInProgress,
     updateProfileError,
   } = state.ProfileSettingsPage;
+
   return {
     currentUser,
     image,
     scrollingDisabled: isScrollingDisabled(state),
     updateInProgress,
+    updateProfileInProgress,
     updateProfileError,
     uploadImageError,
     uploadInProgress,

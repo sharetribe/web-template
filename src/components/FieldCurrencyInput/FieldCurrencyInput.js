@@ -4,26 +4,26 @@
  * onBlur: formats the given input: "9 999,99 €"
  */
 import React, { Component } from 'react';
-import { bool, func, number, object, oneOfType, shape, string } from 'prop-types';
-import { Field } from 'react-final-form';
 import classNames from 'classnames';
 import Decimal from 'decimal.js';
-
-import { intlShape, injectIntl } from '../../util/reactIntl';
-import { types as sdkTypes } from '../../util/sdkLoader';
-import {
-  isSafeNumber,
-  unitDivisor,
-  convertUnitToSubUnit,
-  convertMoneyToNumber,
-  ensureDotSeparator,
-  ensureSeparator,
-  truncateToSubUnitPrecision,
-} from '../../util/currency';
-import * as log from '../../util/log';
-import { propTypes } from '../../util/types';
+import isEqual from 'lodash/isEqual';
+import { bool, func, number, object, oneOfType, shape, string } from 'prop-types';
+import { Field } from 'react-final-form';
 
 import { ValidationError } from '../../components';
+import {
+  convertMoneyToNumber,
+  convertUnitToSubUnit,
+  ensureDotSeparator,
+  ensureSeparator,
+  isSafeNumber,
+  truncateToSubUnitPrecision,
+  unitDivisor,
+} from '../../util/currency';
+import * as log from '../../util/log';
+import { injectIntl, intlShape } from '../../util/reactIntl';
+import { types as sdkTypes } from '../../util/sdkLoader';
+import { propTypes } from '../../util/types';
 
 import css from './FieldCurrencyInput.module.css';
 
@@ -51,41 +51,48 @@ const getPrice = (unformattedValue, currencyConfig) => {
   }
 };
 
+const parseInputValueToFormattedState = props => {
+  const { currencyConfig, defaultValue, input, intl } = props;
+  const initialValueIsMoney = input.value instanceof Money;
+  //Disable this to display the fake currency inside the input currency filed
+  // if (initialValueIsMoney && input.value.currency !== currencyConfig.currency) {
+  //   const e = new Error('Value currency different from marketplace currency');
+  //   log.error(e, 'currency-input-invalid-currency', { currencyConfig, inputValue: input.value });
+  //   throw e;
+  // }
+
+  const initialValue = initialValueIsMoney ? convertMoneyToNumber(input.value) : defaultValue;
+  const hasInitialValue = typeof initialValue === 'number' && !isNaN(initialValue);
+
+  // We need to handle number format - some locales use dots and some commas as decimal separator
+  // TODO Figure out if this could be digged from React-Intl directly somehow
+  const testSubUnitFormat = intl.formatNumber('1.1', currencyConfig);
+  const usesComma = testSubUnitFormat.indexOf(',') >= 0;
+
+  // whatever is passed as a default value, will be converted to currency string
+  // Unformatted value is digits + localized sub unit separator ("9,99")
+  const unformattedValue = hasInitialValue
+    ? truncateToSubUnitPrecision(
+        ensureSeparator(initialValue.toString(), usesComma),
+        unitDivisor(currencyConfig.currency),
+        usesComma
+      )
+    : '';
+  // Formatted value fully localized currency string ("$1,000.99")
+  const formattedValue = hasInitialValue
+    ? intl.formatNumber(ensureDotSeparator(unformattedValue), currencyConfig)
+    : '';
+
+  return { formattedValue, unformattedValue, usesComma };
+};
+
 class CurrencyInputComponent extends Component {
   constructor(props) {
     super(props);
-    const { currencyConfig, defaultValue, input, intl } = props;
-    const initialValueIsMoney = input.value instanceof Money;
-
-    if (initialValueIsMoney && input.value.currency !== currencyConfig.currency) {
-      const e = new Error('Value currency different from marketplace currency');
-      log.error(e, 'currency-input-invalid-currency', { currencyConfig, inputValue: input.value });
-      throw e;
-    }
-
-    const initialValue = initialValueIsMoney ? convertMoneyToNumber(input.value) : defaultValue;
-    const hasInitialValue = typeof initialValue === 'number' && !isNaN(initialValue);
-
-    // We need to handle number format - some locales use dots and some commas as decimal separator
-    // TODO Figure out if this could be digged from React-Intl directly somehow
-    const testSubUnitFormat = intl.formatNumber('1.1', currencyConfig);
-    const usesComma = testSubUnitFormat.indexOf(',') >= 0;
-
     try {
-      // whatever is passed as a default value, will be converted to currency string
-      // Unformatted value is digits + localized sub unit separator ("9,99")
-      const unformattedValue = hasInitialValue
-        ? truncateToSubUnitPrecision(
-            ensureSeparator(initialValue.toString(), usesComma),
-            unitDivisor(currencyConfig.currency),
-            usesComma
-          )
-        : '';
-      // Formatted value fully localized currency string ("$1,000.99")
-      const formattedValue = hasInitialValue
-        ? intl.formatNumber(ensureDotSeparator(unformattedValue), currencyConfig)
-        : '';
-
+      const { formattedValue, unformattedValue, usesComma } = parseInputValueToFormattedState(
+        props
+      );
       this.state = {
         formattedValue,
         unformattedValue,
@@ -93,7 +100,7 @@ class CurrencyInputComponent extends Component {
         usesComma,
       };
     } catch (e) {
-      log.error(e, 'currency-input-init-failed', { currencyConfig, defaultValue, initialValue });
+      log.error(e, 'currency-input-init-failed');
       throw e;
     }
 
@@ -101,6 +108,25 @@ class CurrencyInputComponent extends Component {
     this.onInputBlur = this.onInputBlur.bind(this);
     this.onInputFocus = this.onInputFocus.bind(this);
     this.updateValues = this.updateValues.bind(this);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!isEqual(prevProps.input.value, this.props.input.value) && !this.props.meta.active) {
+      try {
+        const { formattedValue, unformattedValue, usesComma } = parseInputValueToFormattedState(
+          this.props
+        );
+        this.setState({
+          formattedValue,
+          unformattedValue,
+          value: formattedValue,
+          usesComma,
+        });
+      } catch (e) {
+        log.error(e, 'currency-input-init-failed', { currencyConfig, defaultValue, initialValue });
+        throw e;
+      }
+    }
   }
 
   onInputChange(event) {
@@ -188,7 +214,7 @@ class CurrencyInputComponent extends Component {
       return { formattedValue, value: unformattedValue, unformattedValue };
     } catch (e) {
       // eslint-disable-next-line no-console
-      console.warn('Not a valid value.', e);
+      console.error(e);
 
       // If an error occurs while filling input field, use previous values
       // This ensures that string like '12.3r' doesn't end up to a state.
@@ -240,7 +266,18 @@ CurrencyInputComponent.propTypes = {
 export const CurrencyInput = injectIntl(CurrencyInputComponent);
 
 const FieldCurrencyInputComponent = props => {
-  const { rootClassName, className, id, label, input, meta, hideErrorMessage, ...rest } = props;
+  const {
+    rootClassName,
+    className,
+    id,
+    label,
+    input,
+    meta,
+    hideErrorMessage,
+    isRequired,
+    inputClassName,
+    ...rest
+  } = props;
 
   if (label && !id) {
     throw new Error('id required when a label is given');
@@ -252,13 +289,14 @@ const FieldCurrencyInputComponent = props => {
   // field has been touched and the validation has failed.
   const hasError = touched && invalid && error;
 
-  const inputClasses = classNames(css.input, {
+  const inputClasses = classNames(css.input, inputClassName, {
     [css.inputSuccess]: valid,
     [css.inputError]: hasError,
   });
 
-  const inputProps = { className: inputClasses, id, input, ...rest };
+  const inputProps = { className: inputClasses, id, input, meta, ...rest };
   const classes = classNames(rootClassName, className);
+
   return (
     <div className={classes}>
       {label ? <label htmlFor={id}>{label}</label> : null}

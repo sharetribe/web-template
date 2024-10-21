@@ -21,7 +21,6 @@ import {
 } from '../../util/urlHelpers';
 import { isErrorUserPendingApproval, isForbiddenError } from '../../util/errors.js';
 import { isUserAuthorized } from '../../util/userHelpers.js';
-import { convertMoneyToNumber } from '../../util/currency';
 import {
   ensureListing,
   ensureOwnListing,
@@ -79,6 +78,7 @@ import SectionAuthorMaybe from './SectionAuthorMaybe';
 import SectionMapMaybe from './SectionMapMaybe';
 import SectionGallery from './SectionGallery';
 import CustomListingFields from './CustomListingFields';
+import { convertListingPrices } from '../../extensions/MultipleCurrency/utils/currency.js';
 
 import css from './ListingPage.module.css';
 
@@ -118,6 +118,8 @@ export const ListingPageComponent = props => {
     onInitializeCardPaymentData,
     config,
     routeConfiguration,
+    convertListingPrice,
+    uiCurrency,
   } = props;
 
   const listingConfig = config.listing;
@@ -126,8 +128,8 @@ export const ListingPageComponent = props => {
   const isDraftVariant = rawParams.variant === LISTING_PAGE_DRAFT_VARIANT;
   const currentListing =
     isPendingApprovalVariant || isDraftVariant
-      ? ensureOwnListing(getOwnListing(listingId))
-      : ensureListing(getListing(listingId));
+      ? ensureOwnListing(convertListingPrice(getOwnListing(listingId)))
+      : ensureListing(convertListingPrice(getListing(listingId)));
 
   const listingSlug = rawParams.slug || createSlug(currentListing.attributes.title || '');
   const params = { slug: listingSlug, ...rawParams };
@@ -401,7 +403,7 @@ export const ListingPageComponent = props => {
               fetchLineItemsInProgress={fetchLineItemsInProgress}
               fetchLineItemsError={fetchLineItemsError}
               validListingTypes={config.listing.listingTypes}
-              marketplaceCurrency={config.currency}
+              marketplaceCurrency={uiCurrency}
               dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
               marketplaceName={config.marketplaceName}
             />
@@ -524,6 +526,7 @@ const EnhancedListingPage = props => {
 
 const mapStateToProps = state => {
   const { isAuthenticated } = state.auth;
+  const { uiCurrency } = state.ui;
   const {
     showListingError,
     reviews,
@@ -537,6 +540,7 @@ const mapStateToProps = state => {
     inquiryModalOpenForListingId,
   } = state.ListingPage;
   const { currentUser } = state.user;
+  const { exchangeRate } = state.ExchangeRate;
 
   const getListing = id => {
     const ref = { id, type: 'listing' };
@@ -548,6 +552,15 @@ const mapStateToProps = state => {
     const ref = { id, type: 'ownListing' };
     const listings = getMarketplaceEntities(state, [ref]);
     return listings.length === 1 ? listings[0] : null;
+  };
+
+  const convertListingPrice = listing => {
+    if (!listing) {
+      return null;
+    }
+
+    const convertedListings = convertListingPrices([listing], uiCurrency, exchangeRate);
+    return convertedListings ? convertedListings[0] : null;
   };
 
   return {
@@ -566,6 +579,8 @@ const mapStateToProps = state => {
     fetchLineItemsError,
     sendInquiryInProgress,
     sendInquiryError,
+    convertListingPrice,
+    uiCurrency,
   };
 };
 

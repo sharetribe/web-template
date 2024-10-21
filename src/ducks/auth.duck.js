@@ -2,6 +2,8 @@ import * as log from '../util/log';
 import { storableError } from '../util/errors';
 import { clearCurrentUser, fetchCurrentUser } from './user.duck';
 import { createUserWithIdp } from '../util/api';
+import { setUiCurrency } from './ui.duck';
+import { DEFAULT_CURRENCY } from '../extensions/common/config/constants/currency.constants';
 
 const authenticated = authInfo => authInfo?.isAnonymous === false;
 const loggedInAs = authInfo => authInfo?.isLoggedInAs === true;

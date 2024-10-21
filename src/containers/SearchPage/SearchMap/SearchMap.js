@@ -14,6 +14,7 @@ import { hasParentWithClassName } from './SearchMap.helpers.js';
 import * as searchMapMapbox from './SearchMapWithMapbox';
 import * as searchMapGoogleMaps from './SearchMapWithGoogleMaps';
 import ReusableMapContainer from './ReusableMapContainer';
+
 import css from './SearchMap.module.css';
 
 const REUSABLE_MAP_HIDDEN_HANDLE = 'reusableMapHidden';
@@ -147,6 +148,7 @@ export class SearchMapComponent extends Component {
       config,
       activeListingId,
       messages,
+      uiCurrency,
     } = this.props;
     const classes = classNames(rootClassName || css.root, className);
 
@@ -195,6 +197,7 @@ export class SearchMapComponent extends Component {
           reusableMapHiddenHandle={REUSABLE_MAP_HIDDEN_HANDLE}
           zoom={zoom}
           config={config}
+          uiCurrency={uiCurrency}
         />
       </ReusableMapContainer>
     ) : (
@@ -215,10 +218,12 @@ SearchMapComponent.defaultProps = {
   listings: [],
   onCloseAsModal: null,
   zoom: 11,
+  uiCurrency: 'USD',
 };
 
 SearchMapComponent.propTypes = {
   id: string,
+  uiCurrency: string,
   className: string,
   rootClassName: string,
   mapRootClassName: string,

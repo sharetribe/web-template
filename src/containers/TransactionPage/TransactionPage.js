@@ -61,6 +61,8 @@ import {
   fetchTimeSlots,
   fetchTransactionLineItems,
 } from './TransactionPage.duck';
+import { convertListingPrices } from '../../extensions/MultipleCurrency/utils/currency.js';
+
 import css from './TransactionPage.module.css';
 
 // Submit dispute and close the review modal
@@ -126,6 +128,8 @@ export const TransactionPageComponent = props => {
     lineItems,
     fetchLineItemsInProgress,
     fetchLineItemsError,
+    convertListingPrice,
+    uiCurrency,
   } = props;
 
   const { listing, provider, customer, booking } = transaction || {};
@@ -457,7 +461,7 @@ export const TransactionPageComponent = props => {
         <OrderPanel
           className={css.orderPanel}
           titleClassName={css.orderTitle}
-          listing={listing}
+          listing={convertListingPrice(listing)}
           isOwnListing={isOwnSale}
           lineItemUnitType={lineItemUnitType}
           title={listingTitle}
@@ -485,9 +489,10 @@ export const TransactionPageComponent = props => {
           fetchLineItemsInProgress={fetchLineItemsInProgress}
           fetchLineItemsError={fetchLineItemsError}
           validListingTypes={config.listing.listingTypes}
-          marketplaceCurrency={config.currency}
+          marketplaceCurrency={uiCurrency}
           dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
           marketplaceName={config.marketplaceName}
+          showCurrencyNotify={false}
         />
       }
     />
@@ -627,10 +632,19 @@ const mapStateToProps = state => {
     fetchLineItemsError,
   } = state.TransactionPage;
   const { currentUser } = state.user;
+  const { uiCurrency } = state.ui;
+  const { exchangeRate } = state.ExchangeRate;
 
   const transactions = getMarketplaceEntities(state, transactionRef ? [transactionRef] : []);
   const transaction = transactions.length > 0 ? transactions[0] : null;
+  const convertListingPrice = listing => {
+    if (!listing) {
+      return null;
+    }
 
+    const convertedListings = convertListingPrices([listing], uiCurrency, exchangeRate);
+    return convertedListings ? convertedListings[0] : null;
+  };
   return {
     currentUser,
     fetchTransactionError,
@@ -654,6 +668,8 @@ const mapStateToProps = state => {
     lineItems,
     fetchLineItemsInProgress,
     fetchLineItemsError,
+    convertListingPrice,
+    uiCurrency,
   };
 };
 

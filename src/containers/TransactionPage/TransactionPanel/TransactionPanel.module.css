@@ -555,7 +555,7 @@
 
   @media (--viewportLarge) {
     display: block;
-    margin-bottom: 48px;
+    margin-bottom: 36px;
   }
 }
 
@@ -586,5 +586,21 @@
   @media (--viewportLarge) {
     padding: 0px 75px;
     margin-top: 16px;
+  }
+}
+
+.noteContainer {
+  margin: 0 24px;
+
+  @media (--viewportLarge) {
+    margin: 24px 0 0;
+  }
+}
+
+.hideOnMobile {
+  display: none;
+
+  @media (--viewportLarge) {
+    display: block;
   }
 }

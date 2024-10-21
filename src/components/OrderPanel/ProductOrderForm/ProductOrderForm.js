@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { bool, func, number, string } from 'prop-types';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
+import { useSelector } from 'react-redux';
 
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
@@ -34,6 +35,7 @@ const handleFetchLineItems = ({
   isOwnListing,
   fetchLineItemsInProgress,
   onFetchTransactionLineItems,
+  uiCurrency,
 }) => {
   const stockReservationQuantity = Number.parseInt(quantity, 10);
   const deliveryMethodMaybe = deliveryMethod ? { deliveryMethod } : {};
@@ -45,7 +47,7 @@ const handleFetchLineItems = ({
     !fetchLineItemsInProgress
   ) {
     onFetchTransactionLineItems({
-      orderData: { stockReservationQuantity, ...deliveryMethodMaybe },
+      orderData: { stockReservationQuantity, currency: uiCurrency, ...deliveryMethodMaybe },
       listingId,
       isOwnListing,
     });
@@ -110,6 +112,7 @@ const DeliveryMethodMaybe = props => {
 
 const renderForm = formRenderProps => {
   const [mounted, setMounted] = useState(false);
+  const { uiCurrency } = useSelector(state => state.ui);
   const {
     // FormRenderProps from final-form
     handleSubmit,
@@ -133,6 +136,7 @@ const renderForm = formRenderProps => {
     payoutDetailsWarning,
     marketplaceName,
     values,
+    showCurrencyNotify,
   } = formRenderProps;
 
   // Note: don't add custom logic before useEffect
@@ -150,9 +154,10 @@ const renderForm = formRenderProps => {
         isOwnListing,
         fetchLineItemsInProgress,
         onFetchTransactionLineItems,
+        uiCurrency,
       });
     }
-  }, []);
+  }, [uiCurrency]);
 
   // If form values change, update line-items for the order breakdown
   const handleOnChange = formValues => {
@@ -270,6 +275,7 @@ const renderForm = formRenderProps => {
             currency={price.currency}
             marketplaceName={marketplaceName}
             processName={PURCHASE_PROCESS_NAME}
+            showCurrencyNotify={showCurrencyNotify}
           />
         </div>
       ) : null}

@@ -300,7 +300,7 @@ const LinkToStockOrAvailabilityTab = props => {
 };
 
 const PriceMaybe = props => {
-  const { price, publicData, config, intl } = props;
+  const { price, publicData, config, intl, uiCurrency } = props;
   const { listingType } = publicData || {};
   const validListingTypes = config.listing.listingTypes;
   const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
@@ -317,7 +317,7 @@ const PriceMaybe = props => {
   }
 
   const isBookable = isBookingProcessAlias(publicData?.transactionProcessAlias);
-  const { formattedPrice, priceTitle } = priceData(price, config.currency, intl);
+  const { formattedPrice, priceTitle } = priceData(price, uiCurrency, intl);
   return (
     <div className={css.price}>
       <div className={css.priceValue} title={priceTitle}>
@@ -352,6 +352,7 @@ export const ManageListingCardComponent = props => {
     onOpenListing,
     onToggleMenu,
     renderSizes,
+    uiCurrency,
   } = props;
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureOwnListing(listing);
@@ -532,7 +533,13 @@ export const ManageListingCardComponent = props => {
       </div>
 
       <div className={css.info}>
-        <PriceMaybe price={price} publicData={publicData} config={config} intl={intl} />
+        <PriceMaybe
+          price={price}
+          publicData={publicData}
+          config={config}
+          intl={intl}
+          uiCurrency={uiCurrency}
+        />
 
         <div className={css.mainInfo}>
           <div className={css.titleWrapper}>

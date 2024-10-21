@@ -42,3 +42,10 @@
     margin-top: 100px;
   }
 }
+
+.disclaimer {
+  color: var(--colorWhite);
+  background-color: var(--colorBlueNote);
+  border-radius: var(--borderRadiusMedium);
+  padding: 16px;
+}

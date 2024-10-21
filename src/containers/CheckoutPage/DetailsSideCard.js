@@ -14,6 +14,7 @@ import {
   NamedLink,
   ResponsiveImage,
 } from '../../components';
+import CurrencyNote from '../../extensions/MultipleCurrency/components/CurrencyNote/CurrencyNote';
 
 import css from './CheckoutPage.module.css';
 
@@ -42,55 +43,58 @@ const DetailsSideCard = props => {
 
   return (
     <div className={css.detailsContainerDesktop}>
-      <AspectRatioWrapper
-        width={aspectWidth}
-        height={aspectHeight}
-        className={css.detailsAspectWrapper}
-      >
-        <ResponsiveImage
-          rootClassName={css.rootForImage}
-          alt={listingTitle}
-          image={firstImage}
-          variants={variants}
-        />
-      </AspectRatioWrapper>
-      <div className={css.listingDetailsWrapper}>
-        <div className={css.avatarWrapper}>
-          <AvatarMedium user={author} disableProfileLink />
-        </div>
-        <div className={css.detailsHeadings}>
-          <H4 as="h2">
-            <NamedLink
-              name="ListingPage"
-              params={{ id: listing?.id?.uuid, slug: createSlug(listingTitle) }}
-            >
-              {listingTitle}
-            </NamedLink>
-          </H4>
-          {showPrice ? (
-            <div className={css.priceContainer}>
-              <p className={css.price}>{formatMoney(intl, price)}</p>
-              <div className={css.perUnit}>
-                <FormattedMessage
-                  id="CheckoutPageWithInquiryProcess.perUnit"
-                  values={{ unitType }}
-                />
+      <div className={css.detailsContainer}>
+        <AspectRatioWrapper
+          width={aspectWidth}
+          height={aspectHeight}
+          className={css.detailsAspectWrapper}
+        >
+          <ResponsiveImage
+            rootClassName={css.rootForImage}
+            alt={listingTitle}
+            image={firstImage}
+            variants={variants}
+          />
+        </AspectRatioWrapper>
+        <div className={css.listingDetailsWrapper}>
+          <div className={css.avatarWrapper}>
+            <AvatarMedium user={author} disableProfileLink />
+          </div>
+          <div className={css.detailsHeadings}>
+            <H4 as="h2">
+              <NamedLink
+                name="ListingPage"
+                params={{ id: listing?.id?.uuid, slug: createSlug(listingTitle) }}
+              >
+                {listingTitle}
+              </NamedLink>
+            </H4>
+            {showPrice ? (
+              <div className={css.priceContainer}>
+                <p className={css.price}>{formatMoney(intl, price)}</p>
+                <div className={css.perUnit}>
+                  <FormattedMessage
+                    id="CheckoutPageWithInquiryProcess.perUnit"
+                    values={{ unitType }}
+                  />
+                </div>
               </div>
-            </div>
-          ) : null}
+            ) : null}
+          </div>
+          {speculateTransactionErrorMessage}
         </div>
-        {speculateTransactionErrorMessage}
-      </div>
 
-      {!!breakdown ? (
-        <div className={css.orderBreakdownHeader}>
-          <H6 as="h3" className={css.orderBreakdownTitle}>
-            <FormattedMessage id={`CheckoutPage.${processName}.orderBreakdown`} />
-          </H6>
-          <hr className={css.totalDivider} />
-        </div>
-      ) : null}
-      {breakdown}
+        {!!breakdown ? (
+          <div className={css.orderBreakdownHeader}>
+            <H6 as="h3" className={css.orderBreakdownTitle}>
+              <FormattedMessage id={`CheckoutPage.${processName}.orderBreakdown`} />
+            </H6>
+            <hr className={css.totalDivider} />
+          </div>
+        ) : null}
+        {breakdown}
+      </div>
+      <CurrencyNote componentId="CheckoutPage" />
     </div>
   );
 };

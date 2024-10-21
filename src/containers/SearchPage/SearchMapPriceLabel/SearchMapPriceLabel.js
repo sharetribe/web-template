@@ -30,14 +30,14 @@ class SearchMapPriceLabel extends Component {
       listing,
       onListingClicked,
       isActive,
-      config,
+      uiCurrency,
     } = this.props;
     const currentListing = ensureListing(listing);
     const { price } = currentListing.attributes;
 
     // Create formatted price if currency is known or alternatively show just the unknown currency.
     const formattedPrice =
-      price && price.currency === config.currency
+      price && price.currency === uiCurrency
         ? formatMoney(intl, price)
         : price?.currency
         ? price.currency
@@ -63,11 +63,13 @@ class SearchMapPriceLabel extends Component {
 SearchMapPriceLabel.defaultProps = {
   className: null,
   rootClassName: null,
+  uiCurrency: 'USD',
 };
 
 SearchMapPriceLabel.propTypes = {
   className: string,
   rootClassName: string,
+  uiCurrency: string,
   listing: propTypes.listing.isRequired,
   onListingClicked: func.isRequired,
   config: object.isRequired,

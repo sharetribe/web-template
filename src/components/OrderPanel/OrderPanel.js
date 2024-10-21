@@ -191,6 +191,7 @@ const OrderPanel = props => {
     fetchLineItemsInProgress,
     fetchLineItemsError,
     payoutDetailsWarning,
+    showCurrencyNotify,
   } = props;
 
   const publicData = listing?.attributes?.publicData || {};
@@ -371,6 +372,7 @@ const OrderPanel = props => {
             fetchLineItemsInProgress={fetchLineItemsInProgress}
             fetchLineItemsError={fetchLineItemsError}
             payoutDetailsWarning={payoutDetailsWarning}
+            showCurrencyNotify={showCurrencyNotify}
           />
         ) : showInquiryForm ? (
           <InquiryWithoutPaymentForm formId="OrderPanelInquiryForm" onSubmit={onSubmit} />
@@ -434,6 +436,7 @@ OrderPanel.defaultProps = {
   monthlyTimeSlots: null,
   lineItems: null,
   fetchLineItemsError: null,
+  showCurrencyNotify: true,
 };
 
 OrderPanel.propTypes = {
@@ -471,6 +474,7 @@ OrderPanel.propTypes = {
   marketplaceCurrency: string.isRequired,
   dayCountAvailableForBooking: number.isRequired,
   marketplaceName: string.isRequired,
+  showCurrencyNotify: bool,
 
   // from withRouter
   history: shape({

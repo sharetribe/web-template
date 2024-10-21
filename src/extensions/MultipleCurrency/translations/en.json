@@ -1,0 +1,5 @@
+{
+  "ListingPage.exchangeRateNote": "<b>Note: </b>Pricing is dynamic based on foreign exchange rates to USD and may not be exactly as shown after purchase",
+  "CheckoutPage.exchangeRateNote": "<b>Note: </b>Pricing is dynamic based on the current foreign exchange rates to USD. The final price may differ slightly at the time of purchase.",
+  "TransactionDetailsPage.exchangeRateNote": "<b>Note: </b>Pricing is dynamic based on the current foreign exchange rates to USD. The final price may differ slightly at the time of purchase."
+}

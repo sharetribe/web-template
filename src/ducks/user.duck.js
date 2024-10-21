@@ -8,7 +8,11 @@ import { getTransitionsNeedingProviderAttention } from '../transactions/transact
 
 import { authInfo } from './auth.duck';
 import { stripeAccountCreateSuccess } from './stripeConnectAccount.duck';
+import { updateCurrentUserProfile } from '../extensions/MultipleCurrency/api';
+import { setUiCurrency } from './ui.duck';
+import { DEFAULT_CURRENCY } from '../extensions/common/config/constants/currency.constants';
 
+// ======
 // ================ Action types ================ //
 
 export const CURRENT_USER_SHOW_REQUEST = 'app/user/CURRENT_USER_SHOW_REQUEST';
@@ -41,6 +45,10 @@ export const SEND_VERIFICATION_EMAIL_REQUEST = 'app/user/SEND_VERIFICATION_EMAIL
 export const SEND_VERIFICATION_EMAIL_SUCCESS = 'app/user/SEND_VERIFICATION_EMAIL_SUCCESS';
 export const SEND_VERIFICATION_EMAIL_ERROR = 'app/user/SEND_VERIFICATION_EMAIL_ERROR';
 
+export const UPDATE_PROFILE_REQUEST = 'app/user/UPDATE_PROFILE_REQUEST';
+export const UPDATE_PROFILE_SUCCESS = 'app/user/UPDATE_PROFILE_SUCCESS';
+export const UPDATE_PROFILE_ERROR = 'app/user/UPDATE_PROFILE_ERROR';
+
 // ================ Reducer ================ //
 
 const mergeCurrentUser = (oldCurrentUser, newCurrentUser) => {
@@ -59,6 +67,7 @@ const mergeCurrentUser = (oldCurrentUser, newCurrentUser) => {
 
 const initialState = {
   currentUser: null,
+  currentUserShowInProgress: false,
   currentUserShowTimestamp: 0,
   currentUserShowError: null,
   currentUserHasListings: false,
@@ -69,23 +78,26 @@ const initialState = {
   currentUserHasOrdersError: null,
   sendVerificationEmailInProgress: false,
   sendVerificationEmailError: null,
+  updateProfileInProgress: false,
+  updateProfileError: null,
 };
 
 export default function reducer(state = initialState, action = {}) {
   const { type, payload } = action;
   switch (type) {
     case CURRENT_USER_SHOW_REQUEST:
-      return { ...state, currentUserShowError: null };
+      return { ...state, currentUserShowInProgress: true, currentUserShowError: null };
     case CURRENT_USER_SHOW_SUCCESS:
       return {
         ...state,
         currentUser: mergeCurrentUser(state.currentUser, payload),
         currentUserShowTimestamp: payload ? new Date().getTime() : 0,
+        currentUserShowInProgress: false,
       };
     case CURRENT_USER_SHOW_ERROR:
       // eslint-disable-next-line no-console
       console.error(payload);
-      return { ...state, currentUserShowError: payload };
+      return { ...state, currentUserShowError: payload, currentUserShowInProgress: false };
 
     case CLEAR_CURRENT_USER:
       return {
@@ -139,7 +151,23 @@ export default function reducer(state = initialState, action = {}) {
         sendVerificationEmailInProgress: false,
         sendVerificationEmailError: payload,
       };
-
+    case UPDATE_PROFILE_REQUEST:
+      return {
+        ...state,
+        updateProfileInProgress: true,
+        updateProfileError: null,
+      };
+    case UPDATE_PROFILE_SUCCESS:
+      return {
+        ...state,
+        updateProfileInProgress: false,
+      };
+    case UPDATE_PROFILE_ERROR:
+      return {
+        ...state,
+        updateProfileInProgress: false,
+        updateProfileError: payload,
+      };
     default:
       return state;
   }
@@ -233,6 +261,21 @@ export const sendVerificationEmailSuccess = () => ({
 
 export const sendVerificationEmailError = e => ({
   type: SEND_VERIFICATION_EMAIL_ERROR,
+  error: true,
+  payload: e,
+});
+
+export const updateProfileRequest = () => ({
+  type: UPDATE_PROFILE_REQUEST,
+});
+
+export const updateProfileSuccess = result => ({
+  type: UPDATE_PROFILE_SUCCESS,
+  payload: result.data,
+});
+
+export const updateProfileError = e => ({
+  type: UPDATE_PROFILE_ERROR,
   error: true,
   payload: e,
 });
@@ -397,7 +440,10 @@ export const fetchCurrentUser = options => (dispatch, getState, sdk) => {
       }
 
       // Make sure auth info is up to date
+      const { userCurrency = DEFAULT_CURRENCY } = currentUser.attributes.profile.publicData || {};
+      // Make sure auth info is up to date
       dispatch(authInfo());
+      dispatch(setUiCurrency(userCurrency));
     })
     .catch(e => {
       // Make sure auth info is up to date
@@ -416,4 +462,36 @@ export const sendVerificationEmail = () => (dispatch, getState, sdk) => {
     .sendVerificationEmail()
     .then(() => dispatch(sendVerificationEmailSuccess()))
     .catch(e => dispatch(sendVerificationEmailError(storableError(e))));
+};
+
+export const updateUserCurrency = currency => (dispatch, getState, sdk) => {
+  dispatch(updateProfileRequest());
+
+  const queryParams = {
+    expand: true,
+    include: ['profileImage'],
+    'fields.image': ['variants.square-small', 'variants.square-small2x'],
+  };
+
+  const bodyParams = {
+    data: { publicData: { userCurrency: currency } },
+    queryParams,
+  };
+
+  return updateCurrentUserProfile(bodyParams)
+    .then(response => {
+      dispatch(updateProfileSuccess(response));
+
+      const entities = denormalisedResponseEntities(response);
+      if (entities.length !== 1) {
+        throw new Error('Expected a resource in the updateProfile response');
+      }
+      const currentUser = entities[0];
+      // Update current user in state.user.currentUser through user.duck.js
+      dispatch(currentUserShowSuccess(currentUser));
+    })
+    .catch(e => {
+      log.error(e, 'update-user-currency-failed');
+      dispatch(updateProfileError(storableError(e)));
+    });
 };

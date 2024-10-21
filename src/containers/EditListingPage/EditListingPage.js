@@ -46,6 +46,7 @@ import {
   savePayoutDetails,
 } from './EditListingPage.duck';
 import EditListingWizard from './EditListingWizard/EditListingWizard';
+
 import css from './EditListingPage.module.css';
 
 const STRIPE_ONBOARDING_RETURN_URL_SUCCESS = 'success';

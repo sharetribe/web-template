@@ -48,9 +48,14 @@ class PriceFilterPlainComponent extends Component {
   }
 
   handleChange(values) {
-    const { onSubmit, queryParamNames } = this.props;
+    const { onSubmit, queryParamNames, marketplaceCurrency } = this.props;
     const priceQueryParamName = getPriceQueryParamName(queryParamNames);
-    onSubmit(format(values, priceQueryParamName));
+    const updateParams = {
+      ...format(values, priceQueryParamName),
+      currency: marketplaceCurrency,
+    };
+
+    onSubmit(updateParams);
   }
 
   handleClear() {

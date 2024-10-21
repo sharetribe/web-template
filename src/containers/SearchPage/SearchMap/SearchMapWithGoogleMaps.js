@@ -211,6 +211,7 @@ class SearchMapPriceLabelWithOverlay extends Component {
       onListingClicked,
       mapComponentRefreshToken,
       config,
+      uiCurrency,
     } = this.props;
 
     return (
@@ -227,6 +228,7 @@ class SearchMapPriceLabelWithOverlay extends Component {
           onListingClicked={onListingClicked}
           mapComponentRefreshToken={mapComponentRefreshToken}
           config={config}
+          uiCurrency={uiCurrency}
         />
       </CustomOverlayView>
     );
@@ -289,6 +291,7 @@ const PriceLabelsAndGroups = props => {
     onListingClicked,
     mapComponentRefreshToken,
     config,
+    uiCurrency,
   } = props;
   const listingArraysInLocations = reducedToArray(groupedByCoordinates(listings));
   const priceLabels = listingArraysInLocations.reverse().map(listingArr => {
@@ -323,6 +326,7 @@ const PriceLabelsAndGroups = props => {
           onListingClicked={onListingClicked}
           mapComponentRefreshToken={mapComponentRefreshToken}
           config={config}
+          uiCurrency={uiCurrency}
         />
       );
     }
@@ -360,6 +364,7 @@ const InfoCardComponent = props => {
     createURLToListing,
     mapComponentRefreshToken,
     config,
+    uiCurrency,
   } = props;
   const listingsArray = Array.isArray(infoCardOpen) ? infoCardOpen : [infoCardOpen];
 
@@ -387,6 +392,7 @@ const InfoCardComponent = props => {
         onListingInfoCardClicked={onListingInfoCardClicked}
         createURLToListing={createURLToListing}
         config={config}
+        uiCurrency={uiCurrency}
       />
     </CustomOverlayView>
   );
@@ -532,6 +538,7 @@ class SearchMapWithGoogleMaps extends Component {
       onListingInfoCardClicked,
       createURLToListing,
       config,
+      uiCurrency,
     } = this.props;
     return (
       <div
@@ -549,6 +556,7 @@ class SearchMapWithGoogleMaps extends Component {
             onListingClicked={onListingClicked}
             mapComponentRefreshToken={mapComponentRefreshToken}
             config={config}
+            uiCurrency={uiCurrency}
           />
         ) : null}
         {this.map ? (
@@ -574,10 +582,12 @@ SearchMapWithGoogleMaps.defaultProps = {
   activeListingId: null,
   zoom: 11,
   reusableMapHiddenHandle: null,
+  uiCurrency: 'USD',
 };
 
 SearchMapWithGoogleMaps.propTypes = {
   id: string,
+  uiCurrency: string,
   center: propTypes.latlng,
   location: shape({
     search: string.isRequired,
