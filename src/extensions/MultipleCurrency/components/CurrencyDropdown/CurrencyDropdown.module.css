@@ -98,6 +98,8 @@
   padding: 6px 8px 8px 8px;
   border: 1.5px solid var(--colorGrey100);
   border-radius: 6px;
+  display: flex;
+  align-items: center;
 }
 
 .disabledDropdown {
