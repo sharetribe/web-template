@@ -45,7 +45,7 @@ const scrollToTab = (currentPage, scrollLeft, setScrollLeft) => {
 
     const needsSmoothScroll = scrollPositionCurrent !== scrollPositionNew;
 
-    if (!hasParentScrolled || (hasParentScrolled && needsSmoothScroll)) {
+    if (parent.scrollTo && (!hasParentScrolled || (hasParentScrolled && needsSmoothScroll))) {
       // Ensure that smooth scroll animation uses old position as starting point after navigation.
       parent.scrollTo({ left: scrollPositionCurrent });
       // Scroll to new position
