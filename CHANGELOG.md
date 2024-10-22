@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+## [v5.8.0] 2024-10-22
+
 - [add] Add currently available translations for DE, ES, FR.
   [#475](https://github.com/sharetribe/web-template/pull/475)
 - [add] Block images can be wrapped in a link if a link is configured via assets.
@@ -28,6 +30,8 @@ way to update this template, but currently, we follow a pattern:
   an embedded Youtube video [#467](https://github.com/sharetribe/web-template/pull/467)
 - [add] Add currently available translations for DE, ES, FR.
   [#466](https://github.com/sharetribe/web-template/pull/466)
+
+  [v5.8.0]: https://github.com/sharetribe/web-template/compare/v5.7.0...v5.8.0
 
 ## [v5.7.0] 2024-10-08
 
