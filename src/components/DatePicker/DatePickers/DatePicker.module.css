@@ -1,0 +1,371 @@
+@import '../../../styles/customMediaQueries.css';
+
+.root {
+  display: block;
+  width: 100%;
+  min-width: 272px;
+  border-right: 1px solid var(--datepickerBorderColor);
+  border-bottom: 1px solid var(--datepickerBorderColor);
+  border-left: 1px solid var(--datepickerBorderColor);
+  border-radius: 0 0 6px 6px;
+  color: var(--datepickerFgColor);
+  background-color: var(--datepickerBgColor);
+}
+
+.light {
+  --datepickerFgColor: var(--colorGrey700);
+  --datepickerBgColor: transparent;
+  --datepickerBorderColor: transparent;
+  --datepickerDisabledFgColor: var(--colorGrey300);
+  --datepickerDisabledTextDeco: line-through;
+  --datepickerHoveredFgColor: inherit;
+  --datepickerHoveredBgColor: var(--colorGrey100);
+  --datepickerHeaderFgColor: var(--colorGrey700);
+  --datepickerHeaderFgColorDisabled: var(--colorGrey300);
+  --datepickerHeaderArrowColor: var(--marketplaceColor);
+  --datepickerDateOutline: auto;
+  --datepickerButtonOutlineColor: var(--colorGrey600);
+  --datepickerSelectedFgColor: var(--colorWhite);
+  --datepickerSelectedBgColor: var(--colorSuccess);
+  --datepickerSelectedBorder: solid 1px var(--colorSuccess);
+  --datepickerSelectedHoveredFgColor: var(--colorWhite);
+  --datepickerSelectedHoveredBgColor: var(--colorSuccess);
+}
+
+.datepicker {
+  display: block;
+  width: min-content;
+  min-width: 272px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.disabled *:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.disabled {
+  .weekday {
+    color: var(--datepickerHeaderFgColorDisabled);
+  }
+
+  .date {
+    cursor: default;
+    opacity: 0.5;
+  }
+
+  .date:hover > * {
+    background-color: transparent;
+  }
+
+  .dateInRange:hover {
+    .renderedDay {
+      background-color: var(--datepickerHoveredBgColor);
+      color: var(--datepickerHoveredFgColor);
+    }
+  }
+
+  .dateSelected:hover > * {
+    color: var(--colorWhite);
+    background-color: #0000ff;
+  }
+}
+
+.header {
+  display: flex;
+  padding: 22px 1px 12px 1px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.currentMonth {
+  display: block;
+  text-align: center;
+}
+
+.monthName {
+  text-transform: capitalize;
+  font-size: 21px;
+  line-height: 32px;
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+}
+.monthSlideEffect {
+  opacity: 0.4;
+  transition: opacity 0.1s ease-in-out 0.1s;
+}
+
+.previousMonthButton,
+.nextMonthButton {
+  display: inline-flex;
+  width: 30px;
+  height: 32px;
+  padding: 6px;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 2px;
+  background-color: transparent;
+  cursor: pointer;
+
+  &:focus {
+    outline: var(--datepickerButtonOutlineColor) solid 1px;
+  }
+}
+.previousMonthSpacer,
+.nextMonthSpacer {
+  width: 30px;
+  height: 32px;
+}
+
+.arrowIcon {
+  stroke: var(--datepickerHeaderArrowColor);
+  fill: var(--datepickerHeaderArrowColor);
+}
+
+.body {
+  padding: 0 1px 12px 1px;
+}
+
+.calendarViewport {
+  display: block;
+  width: 270px;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+.calendars {
+  display: flex;
+  width: calc(3 * 266px);
+  position: relative;
+  top: 0;
+  transform: translateX(-264px);
+}
+
+.slide {
+  transition: transform 0.2s ease-out, height 0.2s ease-out;
+}
+
+.calendarMonth {
+}
+
+.calendarTable {
+  table-layout: fixed;
+  border-collapse: collapse;
+  width: 266px;
+}
+
+.weekday > span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 16px;
+  aspect-ratio: 1;
+}
+
+.date {
+  text-align: center;
+  cursor: pointer;
+  padding: 0;
+  width: 38px;
+  height: 38px;
+  font-size: 15px;
+  line-height: 24px;
+  position: relative;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:hover > * {
+    background-color: var(--datepickerHoveredBgColor);
+    color: var(--datepickerHoveredFgColor);
+  }
+
+  & > * {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: 1;
+  }
+}
+.keyboardUsed .date:focus {
+  outline: var(--datepickerDateOutline);
+}
+
+.dateOffset {
+  & .renderedDay {
+    background-color: var(--datepickerHoveredBgColor);
+    color: var(--datepickerHoveredFgColor);
+  }
+}
+
+.dateCurrent {
+  & .renderedDay {
+  }
+}
+
+.dateOverflowing {
+  visibility: hidden;
+}
+
+.dateToday {
+  & .renderedDay:after {
+    content: '';
+    width: 14px;
+    height: 2px;
+    position: absolute;
+    bottom: 6px;
+    background-color: var(--datepickerFgColor);
+  }
+}
+
+.renderedDay {
+  width: 100%;
+  height: 37px;
+}
+
+.dateSelected {
+  &:hover .renderedDay,
+  & .renderedDay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--datepickerSelectedBgColor);
+    border-radius: calc(37px / 2);
+    color: var(--datepickerFgColor);
+  }
+}
+
+.dateEnd {
+  &:hover .renderedDay,
+  & .renderedDay {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: calc(37px / 2);
+    border-bottom-right-radius: calc(37px / 2);
+    color: var(--colorWhite);
+  }
+
+  &:hover .renderedDay {
+    background-color: var(--datepickerSelectedHoveredBgColor);
+    color: var(--datepickerSelectedHoveredFgColor);
+  }
+}
+
+.dateStart {
+  &:hover .renderedDay,
+  & .renderedDay {
+    border-top-left-radius: calc(37px / 2);
+    border-bottom-left-radius: calc(37px / 2);
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    color: var(--colorWhite);
+  }
+
+  &:hover .renderedDay {
+    background-color: var(--datepickerSelectedHoveredBgColor);
+    color: var(--datepickerSelectedHoveredFgColor);
+  }
+}
+
+.dateStart.dateEnd {
+  & .renderedDay {
+    border-radius: calc(37px / 2);
+  }
+}
+
+.dateInRange {
+  & .renderedDay {
+    background-color: var(--datepickerSelectedBgColor);
+    color: var(--datepickerSelectedFgColor);
+  }
+
+  &:hover .renderedDay {
+    background-color: var(--datepickerSelectedHoveredBgColor);
+    color: var(--datepickerSelectedHoveredFgColor);
+  }
+}
+
+.dateSelected.dateToday,
+.dateStart.dateToday,
+.dateEnd.dateToday,
+.dateInRange.dateToday {
+  & .renderedDay:after {
+    background-color: var(--datepickerSelectedFgColor);
+  }
+}
+
+.dateDisabled {
+  cursor: default;
+
+  &:hover .renderedDay,
+  & .renderedDay {
+    background-color: transparent;
+    color: var(--datepickerDisabledFgColor);
+    text-decoration: var(--datepickerDisabledTextDeco);
+  }
+
+  &.dateCurrent {
+    &.renderedDay {
+      color: var(--datepickerDisabledFgColor);
+      text-decoration: var(--datepickerDisabledTextDeco);
+    }
+  }
+}
+.keyboardUsed .dateDisabled.dateCurrent {
+  outline: var(--datepickerDateOutline);
+}
+
+.dateDisabled:not(.dateSelected):not(.dateInRange):hover > * {
+  background-color: transparent;
+}
+
+.dateDisabled.dateInRange:not(.dateSelected):not(.dateInRange) > * {
+  background-color: transparent;
+}
+
+.dateMinimumNights {
+  & .renderedDay {
+    background-color: var(--datepickerSelectedBgColor);
+    color: var(--datepickerDisabledFgColor);
+    opacity: 0.8;
+  }
+}
+
+.footer {
+  display: flex;
+  padding: 0 1px 12px 1px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.clearButton,
+.todayButton {
+  color: var(--datepickerFgColor);
+  padding: 4px 8px;
+  border-radius: 2px;
+
+  &:focus {
+    outline: var(--datepickerButtonOutlineColor) solid 1px;
+  }
+}
+
+.visuallyHidden {
+  visibility: hidden;
+}
+
+.hidden {
+  position: absolute;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  white-space: nowrap;
+  clip: rect(0 0 0 0);
+  -webkit-clip-path: inset(50%);
+  clip-path: inset(50%);
+}

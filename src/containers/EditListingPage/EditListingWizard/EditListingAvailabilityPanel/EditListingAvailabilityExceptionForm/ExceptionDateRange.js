@@ -2,10 +2,8 @@ import React, { useState, useEffect } from 'react';
 
 import appSettings from '../../../../../config/settings';
 import {
-  END_DATE,
-  START_DATE,
   getStartOf,
-  initialVisibleMonth,
+  isDateSameOrAfter,
   isInRange,
   isSameDay,
   stringifyDateToISO8601,
@@ -15,7 +13,7 @@ import {
 } from '../../../../../util/dates';
 import { exceptionFreeSlotsPerDate } from '../../../../../util/generators';
 import { required, bookingDatesRequired, composeValidators } from '../../../../../util/validators';
-import { FieldDateRangeInput } from '../../../../../components';
+import { FieldDateRangePicker } from '../../../../../components';
 
 import {
   getStartOfNextMonth,
@@ -24,10 +22,9 @@ import {
   endOfAvailabilityExceptionRange,
   handleMonthClick,
   getMonthlyFetchRange,
+  getInclusiveEndDate,
+  getExclusiveEndDate,
 } from '../availability.helpers';
-
-import Next from '../NextArrow';
-import Prev from '../PrevArrow';
 
 import css from './ExceptionDateRange.module.css';
 
@@ -38,18 +35,21 @@ const TODAY = new Date();
 // Date formatting used for placeholder texts:
 const dateFormattingOptions = { month: 'short', day: 'numeric', weekday: 'short' };
 
-// Format form's value for the react-dates input: convert timeOfDay to the local time
-const formatFieldDateInput = timeZone => v => {
+// Format form's value for the DatePicker input: convert timeOfDay to the local time
+const formatFieldDateInput = (isDaily, timeZone) => v => {
   const { startDate, endDate } = v || {};
   // Format the Final Form field's value for the DateRangeInput
   // DateRangeInput operates on local time zone, but the form uses listing's time zone
   const formattedStart = startDate ? timeOfDayFromTimeZoneToLocal(startDate, timeZone) : startDate;
-  const formattedEnd = endDate ? timeOfDayFromTimeZoneToLocal(endDate, timeZone) : endDate;
+  const endDateForPicker = isDaily && endDate ? getInclusiveEndDate(endDate, timeZone) : endDate;
+  const formattedEnd = endDateForPicker
+    ? timeOfDayFromTimeZoneToLocal(endDateForPicker, timeZone)
+    : endDateForPicker;
   return v ? { startDate: formattedStart, endDate: formattedEnd } : v;
 };
 
-// Parse react-dates input's value: convert timeOfDay to the given time zone
-const parseFieldDateInput = timeZone => v => {
+// Parse DatePicker input's value: convert timeOfDay to the given time zone
+const parseFieldDateInput = (isDaily, timeZone) => v => {
   const { startDate, endDate } = v || {};
   // Parse the DateRangeInput's value (local noon) for the Final Form
   // The form expects listing's time zone and start of day aka 00:00
@@ -59,104 +59,54 @@ const parseFieldDateInput = timeZone => v => {
   const parsedEnd = endDate
     ? getStartOf(timeOfDayFromLocalToTimeZone(endDate, timeZone), 'day', timeZone)
     : endDate;
-  return v ? { startDate: parsedStart, endDate: parsedEnd } : v;
+  const endDateForAPI = parsedEnd && isDaily ? getExclusiveEndDate(parsedEnd, timeZone) : parsedEnd;
+  return v ? { startDate: parsedStart, endDate: endDateForAPI } : v;
 };
 
-const isBlockedIfStartIsSelected = params => {
-  const {
-    exceptionStartDay,
-    availableDates,
-    isDaily,
-    timeZone,
-    localizedDay,
-    focusedInput,
-  } = params;
-  const exceptionStart = timeOfDayFromLocalToTimeZone(exceptionStartDay, timeZone);
-  const dayData = availableDates[stringifyDateToISO8601(exceptionStart, timeZone)];
+const showNextMonthStepper = (currentMonth, timeZone) => {
+  const nextMonthDate = getStartOfNextMonth(currentMonth, timeZone);
+  const endOfRange = endOfAvailabilityExceptionRange(timeZone, TODAY);
 
-  // The day is blocked, if no dayData found
-  if (dayData == null) {
-    return true;
-  }
-  const slot = dayData.slots[0];
-  if (!slot) {
-    console.log(params, 'exceptionStart', exceptionStart);
-  }
-  // The range end is longer with night booking: excluded range end should be selectable as range end.
-  const rangeEnd =
-    !isDaily && focusedInput === END_DATE
-      ? getStartOf(slot.end, 'day', timeZone, 1, 'day')
-      : getStartOf(slot.end, 'day', timeZone);
-  const isOutsideRange = !isInRange(localizedDay, exceptionStart, rangeEnd);
-  return isOutsideRange;
+  return !isDateSameOrAfter(nextMonthDate, endOfRange);
 };
 
-const isBlockedIfEndIsSelected = params => {
-  const { exceptionEndDay, availableDates, timeZone, localizedDay } = params;
-  const exceptionEnd = timeOfDayFromLocalToTimeZone(exceptionEndDay, timeZone);
-  const lastIncludedDay = getStartOf(exceptionEnd, 'day', timeZone, -1, 'day');
-  const dayData = availableDates[stringifyDateToISO8601(lastIncludedDay, timeZone)];
-
-  // The day is blocked, if no dayData found or dayData doesn't have availability slots
-  if (dayData == null || dayData.slots?.length === 0) {
-    return true;
-  }
-
-  const slot = dayData.slots[0];
-  const rangeStart = getStartOf(slot.start, 'day', timeZone);
-  const isOutsideRange = !isInRange(localizedDay, rangeStart, exceptionEnd);
-  return isOutsideRange;
+const showPreviousMonthStepper = (currentMonth, timeZone) => {
+  const prevMonthDate = getStartOfPrevMonth(currentMonth, timeZone);
+  const currentMonthDate = getStartOf(TODAY, 'month', timeZone);
+  return isDateSameOrAfter(prevMonthDate, currentMonthDate);
 };
 
-const isDayBlocked = params => focusedInput => day => {
+const isDayBlocked = params => day => {
   const { exceptionStartDay, exceptionEndDay, availableDates, isDaily, timeZone } = params;
   const localizedDay = timeOfDayFromLocalToTimeZone(day, timeZone);
 
-  if (exceptionStartDay && exceptionEndDay == null) {
-    // Handle case, where only start day is selected
-    return isBlockedIfStartIsSelected({
-      exceptionStartDay,
-      availableDates,
-      isDaily,
-      timeZone,
-      localizedDay,
-      focusedInput,
-    });
-  } else if (exceptionEndDay && exceptionStartDay == null) {
-    // Handle case, where only end day is selected
-    return isBlockedIfEndIsSelected({ exceptionEndDay, availableDates, timeZone, localizedDay });
+  const dayData = availableDates[stringifyDateToISO8601(localizedDay, timeZone)];
+  const hasAvailabilityOnDay = dayData == null ? false : dayData?.slots?.length > 0;
+
+  if (!isDaily && exceptionStartDay) {
+    // Nightly
+    // For the unit type night, we check that the available range of the selected exceptionStartDay
+    // ends on a given _day_
+    const startDayIdString = stringifyDateToISO8601(exceptionStartDay, timeZone);
+    const startDayData = availableDates[startDayIdString];
+    const startDayException = startDayData == null ? true : startDayData?.slots?.[0];
+    const { start, end } = startDayException || {};
+    // If both exceptionStartDay and exceptionEndDay have been selected, we allow selecting other ranges
+    const hasAvailability =
+      exceptionStartDay && exceptionEndDay
+        ? hasAvailabilityOnDay
+        : isInRange(localizedDay, start, end, 'day', timeZone);
+    const exceptionEndsOnThisDay = end && isSameDay(localizedDay, end, timeZone);
+
+    return !(hasAvailability || exceptionEndsOnThisDay);
+  } else {
+    // Daily
+    return !hasAvailabilityOnDay;
   }
-
-  // If focused input is START_DATE, we rely on the existence of availability slots.
-  if (focusedInput === START_DATE) {
-    const dayData = availableDates[stringifyDateToISO8601(localizedDay, timeZone)];
-    return dayData == null ? true : dayData.slots?.length === 0;
-  }
-
-  // If focused input is END_DATE, we only allow selection within a slot
-  // found on target date (e.g. start day of a new exception)
-  // Note: this just avoids closing of date range picker prematurely.
-  const targetDate = exceptionStartDay
-    ? exceptionStartDay
-    : isDaily
-    ? localizedDay
-    : getStartOf(localizedDay, 'day', timeZone, -1, 'days');
-
-  const dayData = availableDates[stringifyDateToISO8601(targetDate, timeZone)];
-  const slot = dayData?.slots?.[0];
-
-  const isInSlotRange = (date, slot, isDaily) => {
-    const rangeStart = exceptionStartDay || slot.start;
-    const isDayInRange = isInRange(date, rangeStart, slot.end);
-    const isExcludedEnd = isSameDay(date, slot.end, timeZone);
-    return isDaily ? isDayInRange : isDayInRange || isExcludedEnd;
-  };
-
-  return slot ? !isInSlotRange(localizedDay, slot, isDaily) : true;
 };
 
-const isOutsideRange = timeZone => focusedInput => day => {
-  // 'day' is pointing to browser's local time-zone (react-dates gives these).
+const isOutsideRange = timeZone => day => {
+  // 'day' is pointing to browser's local time-zone (DatePicker gives these).
   // However, exceptionStartDay and other times refer to listing's timeZone.
   const localizedDay = timeOfDayFromLocalToTimeZone(day, timeZone);
   const rangeStart = getStartOf(TODAY, 'day', timeZone);
@@ -166,7 +116,7 @@ const isOutsideRange = timeZone => focusedInput => day => {
   return isOutsideRange;
 };
 
-const isBlockedBetween = (availableDates, isDaily, timeZone) => (startDate, endDate) => {
+const isBlockedBetween = (availableDates, isDaily, timeZone) => ([startDate, endDate]) => {
   const localizedStartDay = timeOfDayFromLocalToTimeZone(startDate, timeZone);
   const localizedEndDay = timeOfDayFromLocalToTimeZone(endDate, timeZone);
   const dayData = availableDates[stringifyDateToISO8601(localizedStartDay, timeZone)];
@@ -249,7 +199,7 @@ const ExceptionDateRange = props => {
     <>
       <div className={css.formRow}>
         <div className={css.field}>
-          <FieldDateRangeInput
+          <FieldDateRangePicker
             className={css.fieldDateInput}
             name="exceptionRange"
             isDaily={isDaily}
@@ -263,10 +213,9 @@ const ExceptionDateRange = props => {
               id: 'EditListingAvailabilityExceptionForm.exceptionEndDateLabel',
             })}
             endDatePlaceholderText={intl.formatDate(TODAY, dateFormattingOptions)}
-            focusedInput={focusedInput}
             onFocusedInputChange={handleFocusedInputChange(setFocusedInput)}
-            format={formatFieldDateInput(timeZone)}
-            parse={parseFieldDateInput(timeZone)}
+            format={formatFieldDateInput(isDaily, timeZone)}
+            parse={parseFieldDateInput(isDaily, timeZone)}
             validate={composeValidators(
               required(
                 intl.formatMessage({
@@ -282,21 +231,16 @@ const ExceptionDateRange = props => {
                 })
               )
             )}
-            initialVisibleMonth={initialVisibleMonth(exceptionStartDay || startOfToday, timeZone)}
-            navNext={
-              <Next
-                showUntilDate={endOfAvailabilityExceptionRange(timeZone, TODAY)}
-                startOfNextRange={getStartOfNextMonth(currentMonth, timeZone)}
-              />
-            }
-            navPrev={
-              <Prev
-                showUntilDate={getStartOf(TODAY, 'month', timeZone)}
-                startOfPrevRange={getStartOf(currentMonth, 'month', timeZone, -1, 'months')}
-              />
-            }
-            onPrevMonthClick={() => onMonthClick(getStartOfPrevMonth)}
-            onNextMonthClick={() => onMonthClick(getStartOfNextMonth)}
+            showPreviousMonthStepper={showPreviousMonthStepper(currentMonth, timeZone)}
+            showNextMonthStepper={showNextMonthStepper(currentMonth, timeZone)}
+            onMonthChange={date => {
+              const localizedDate = timeOfDayFromLocalToTimeZone(date, timeZone);
+              onMonthClick(
+                localizedDate < currentMonth ? getStartOfPrevMonth : getStartOfNextMonth
+              );
+              setCurrentMonth(localizedDate);
+            }}
+            isOutsideRange={isOutsideRange(timeZone)}
             isDayBlocked={isDayBlocked({
               exceptionStartDay,
               exceptionEndDay,
@@ -304,11 +248,10 @@ const ExceptionDateRange = props => {
               isDaily,
               timeZone,
             })}
-            isOutsideRange={isOutsideRange(timeZone)}
             isBlockedBetween={isBlockedBetween(availableDates, isDaily, timeZone)}
-            onClose={event =>
-              setCurrentMonth(getStartOf(event?.startDate ?? startOfToday, 'month', timeZone))
-            }
+            onClose={() => {
+              setCurrentMonth(exceptionStartDay || exceptionEndDay || startOfToday);
+            }}
             useMobileMargins
           />
         </div>

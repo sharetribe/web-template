@@ -1,6 +1,5 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import 'react-dates/initialize';
 import Decimal from 'decimal.js';
 
 import { types as sdkTypes } from '../../../util/sdkLoader';
