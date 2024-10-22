@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] Add currently available translations for DE, ES, FR.
+  [#475](https://github.com/sharetribe/web-template/pull/475)
 - [add] Block images can be wrapped in a link if a link is configured via assets.
   [#464](https://github.com/sharetribe/web-template/pull/464)
 - [add] Add support for aligning content blocks based on asset
