@@ -653,7 +653,6 @@ class EditListingWizard extends Component {
                   stripeAccountLinkError={stripeAccountLinkError}
                   onChange={onPayoutDetailsChange}
                   onSubmit={rest.onPayoutDetailsSubmit}
-                  onGetStripeConnectAccountLink={handleGetStripeConnectAccountLink}
                   stripeConnected={stripeConnected}
                 >
                   {stripeConnected && !returnedAbnormallyFromStripe && showVerificationNeeded ? (

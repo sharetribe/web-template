@@ -43,7 +43,7 @@ const sitemapResourceRoute = require('./resources/sitemap');
 const { getExtractors } = require('./importer');
 const renderer = require('./renderer');
 const dataLoader = require('./dataLoader');
-const csp = require('./csp');
+const { generateCSPNonce, csp } = require('./csp');
 const sdkUtils = require('./api-util/sdk');
 
 const buildPath = path.resolve(__dirname, '..', 'build');
@@ -74,6 +74,8 @@ app.use(
 );
 
 if (cspEnabled) {
+  app.use(generateCSPNonce);
+
   // When a CSP directive is violated, the browser posts a JSON body
   // to the defined report URL and we need to parse this body.
   app.use(
@@ -208,7 +210,8 @@ app.get('*', (req, res) => {
   dataLoader
     .loadData(req.url, sdk, appInfo)
     .then(data => {
-      const html = renderer.render(req.url, context, data, renderApp, webExtractor);
+      const cspNonce = cspEnabled ? res.locals.cspNonce : null;
+      const html = renderer.render(req.url, context, data, renderApp, webExtractor, cspNonce);
 
       if (dev) {
         const debugData = {

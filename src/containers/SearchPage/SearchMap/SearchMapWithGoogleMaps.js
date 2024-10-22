@@ -122,7 +122,7 @@ class CustomOverlayView extends Component {
     this.containerElement.parentNode.removeChild(this.containerElement);
     //Remove `unmountComponentAtNode` for react version 16
     //I decided to keep the code here incase React decides not to give out warning when `unmountComponentAtNode` in newer version
-    if (!React.version.match(/^16/)) {
+    if (typeof ReactDOM.unmountComponentAtNode !== 'undefined') {
       ReactDOM.unmountComponentAtNode(this.containerElement);
     }
     this.containerElement = null;
@@ -168,7 +168,7 @@ class CustomOverlayView extends Component {
   }
 
   render() {
-    if (React.version.match(/^16/) && this.containerElement) {
+    if (this.containerElement) {
       return ReactDOM.createPortal(React.Children.only(this.props.children), this.containerElement);
     }
     return false;
