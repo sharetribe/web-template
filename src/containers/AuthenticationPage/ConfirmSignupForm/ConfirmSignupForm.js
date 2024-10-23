@@ -19,7 +19,6 @@ import {
   CustomExtendedDataField,
   FieldLocationAutocompleteInput,
 } from '../../../components';
-import FieldSelectUserType from '../FieldSelectUserType';
 import UserFieldDisplayName from '../UserFieldDisplayName';
 import UserFieldPhoneNumber from '../UserFieldPhoneNumber';
 
@@ -47,7 +46,6 @@ const ConfirmSignupFormComponent = props => (
         termsAndConditions,
         authInfo,
         idp,
-        preselectedUserType,
         userTypes,
         userFields,
         values,
@@ -100,13 +98,6 @@ const ConfirmSignupFormComponent = props => (
 
       return (
         <Form className={classes} onSubmit={handleSubmit}>
-          <FieldSelectUserType
-            name="userType"
-            userTypes={userTypes}
-            hasExistingUserType={!!preselectedUserType}
-            intl={intl}
-          />
-
           {showDefaultUserFields ? (
             <div className={css.defaultUserFields}>
               <FieldTextInput

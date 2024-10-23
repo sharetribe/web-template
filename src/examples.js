@@ -85,9 +85,7 @@ import * as UserDisplayName from './components/UserDisplayName/UserDisplayName.e
 import * as LayoutComposer from './components/LayoutComposer/LayoutComposer.example';
 
 // components under containers
-import * as SignupForm from './containers/AuthenticationPage/SignupForm/SignupForm.example';
 import * as ConfirmSignupForm from './containers/AuthenticationPage/ConfirmSignupForm/ConfirmSignupForm.example';
-import * as LoginForm from './containers/AuthenticationPage/LoginForm/LoginForm.example';
 import * as StripePaymentForm from './containers/CheckoutPage/StripePaymentForm/StripePaymentForm.example';
 import * as FieldTimeZoneSelect from './containers/EditListingPage/EditListingWizard/EditListingAvailabilityPanel/FieldTimeZoneSelect/FieldTimeZoneSelect.example';
 import * as EditListingAvailabilityPlanForm from './containers/EditListingPage/EditListingWizard/EditListingAvailabilityPanel/EditListingAvailabilityPlanForm/EditListingAvailabilityPlanForm.example';
@@ -197,7 +195,6 @@ export {
   ListingCard,
   ListingImageGallery,
   LocationAutocompleteInput,
-  LoginForm,
   Logo,
   ManageListingCard,
   Map,
@@ -222,7 +219,6 @@ export {
   SavedCardDetails,
   SelectMultipleFilter,
   SendMessageForm,
-  SignupForm,
   StripeBankAccountTokenInputField,
   StripePaymentForm,
   TabNav,

@@ -1,0 +1,75 @@
+@import '../../../styles/customMediaQueries.css';
+
+.root {
+  flex: 1 0 auto;
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: column;
+  text-align: center;
+  gap: 48px;
+
+  @media (--viewportMedium) {
+    flex-direction: row;
+    text-align: left;
+    gap: 64px;
+  }
+}
+
+.line {
+  background-color: var(--colorBlack);
+  margin: 0 50px;
+  height: 1px;
+
+  @media (--viewportMedium) {
+    margin: 100px 0;
+    height: auto;
+    width: 1.5px;
+  }
+}
+
+.content {
+  align-content: center;
+
+  @media (--viewportMedium) {
+    flex: 0 1 500px;
+  }
+}
+
+.title {
+  color: var(--colorBlack);
+  font-size: 40px;
+  font-style: normal;
+  font-weight: var(--fontWeightSemiBold);
+  line-height: 120%; /* 48px */
+  margin-bottom: 48px;
+}
+
+.subtitle {
+  color: var(--colorBlack);
+  font-size: 25px;
+  font-style: normal;
+  font-weight: var(--fontWeightRegular);
+  line-height: 120%;
+  margin-bottom: 48px;
+}
+
+/* ================ Brand Signup ================ */
+.brandSignup {
+  .content {
+    @media (--viewportMedium) {
+      flex: 0 1 680px;
+    }
+  }
+
+  .imageContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .imageContainer img {
+    max-width: 100%; /* Max width of the image is 100% of its container */
+    height: auto;    /* Maintain aspect ratio */
+    object-fit: contain; /* Prevent the image from overflowing */
+  }
+}

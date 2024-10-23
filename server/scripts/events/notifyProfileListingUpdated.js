@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const { LISTING_TYPES } = require('../../api-util/metadataHelper');
 const { integrationSdkInit, generateScript } = require('../../api-util/scriptManager');
 const { StudioManagerClient: SMClient } = require('../../api-util/studioHelper');
 
@@ -59,7 +60,11 @@ function script() {
       const listingId = resourceId.uuid;
       const author = listing?.relationships?.author?.data;
       const authorId = author?.id?.uuid;
-      await profileListingSync(listingId, authorId, listing, previousValues);
+      const { listingType } = listing?.attributes?.publicData || {};
+      const isValidListingType = listingType === LISTING_TYPES.PROFILE;
+      if (isValidListingType) {
+        await profileListingSync(listingId, authorId, listing, previousValues);
+      }
     }
   };
 

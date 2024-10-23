@@ -1,6 +1,6 @@
 const { WebClient } = require('@slack/web-api');
 
-const { COMMUNITY_STATUS, SELLER_STATUS } = require('../api-util/metadataHelper');
+const { COMMUNITY_STATUS, SELLER_STATUS, LISTING_TYPES } = require('../api-util/metadataHelper');
 const { integrationSdkInit } = require('../api-util/scriptManager');
 const { StudioManagerClient: SMClient, STUDIO_USER_TYPE } = require('../api-util/studioHelper');
 
@@ -101,7 +101,7 @@ const slackInteractivity = async (req, res) => {
                 address: location?.address,
                 building: location?.building,
               },
-              listingType: 'profile-listing',
+              listingType: LISTING_TYPES.PROFILE,
               categoryLevel1: 'creatives',
               creativeSpecialty,
               // DEFAULT VALUES

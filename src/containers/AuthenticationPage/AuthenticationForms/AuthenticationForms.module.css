@@ -1,0 +1,61 @@
+@import '../../../styles/customMediaQueries.css';
+
+.confirmForm {
+  composes: marketplaceModalBaseStyles from global;
+  padding-top: 29px;
+  flex-basis: 600px;
+  border: 0;
+
+  @media (--viewportMedium) {
+    margin-top: 5vh;
+    margin-bottom: 7.5vh;
+    min-height: 700px;
+  }
+}
+
+.signupForm {
+  composes: marketplaceModalBaseStyles from global;
+  flex-basis: 100%;
+  margin: 0;
+  border: 0;
+
+  @media (--viewportMedium) {
+    min-height: 700px;
+  }
+}
+
+/* ================ Form ================ */
+.form {
+  margin-top: 24px;
+
+  @media (--viewportMedium) {
+    margin-top: 30px;
+    padding-top: 2px;
+  }
+}
+
+/* ================ Social logins & SSO ================ */
+.signupWithIdpTitle {
+  composes: marketplaceModalTitleStyles from global;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 16px;
+  color: var(--colorBlack);
+
+  @media (--viewportMedium) {
+    padding: 0;
+    margin-top: 6px;
+  }
+}
+
+.confirmInfoText {
+}
+
+/* ================ Errors ================ */
+.error {
+  background-color: var(--colorFailLight);
+  text-align: center;
+  padding: 24px;
+  max-width: 750px;
+  margin: auto;
+}
