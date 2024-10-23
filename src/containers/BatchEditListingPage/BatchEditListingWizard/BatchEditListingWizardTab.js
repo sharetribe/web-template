@@ -7,16 +7,7 @@ export const UPLOAD = 'upload';
 export const PRODUCT_DETAILS = 'product-details';
 
 const BatchEditListingWizardTab = props => {
-  const {
-    tab,
-    params,
-    history,
-    tabSubmitButtonText,
-    routeConfiguration,
-    uppy,
-    onUpdateFileDetails,
-    onSaveBatchListing,
-  } = props;
+  const { tab, params, history, routeConfiguration, uppy } = props;
 
   const onCompleteUploadTab = () => {
     const nextTab = { ...params, tab: PRODUCT_DETAILS };
@@ -26,21 +17,10 @@ const BatchEditListingWizardTab = props => {
 
   switch (tab) {
     case UPLOAD: {
-      return (
-        <EditListingUploaderPanel
-          onSubmit={onCompleteUploadTab}
-          submitButtonText={tabSubmitButtonText}
-          uppy={uppy}
-        />
-      );
+      return <EditListingUploaderPanel onSubmit={onCompleteUploadTab} uppy={uppy} />;
     }
     case PRODUCT_DETAILS: {
-      return (
-        <EditListingBatchProductDetails
-          onUpdateFileDetails={onUpdateFileDetails}
-          onSaveBatchListing={onSaveBatchListing}
-        />
-      );
+      return <EditListingBatchProductDetails />;
     }
     default:
       return null;

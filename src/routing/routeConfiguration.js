@@ -148,7 +148,7 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       ),
     },
     {
-      path: '/listing/:slug/:id/:type/:tab',
+      path: '/listing/:tab',
       name: 'BatchEditListingPage',
       auth: true,
       component: BatchEditListingPage,

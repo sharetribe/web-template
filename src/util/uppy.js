@@ -10,8 +10,8 @@ import { createUploadSignature } from './api';
 import { store } from 'core-js/internals/reflect-metadata';
 import ReduxStore from '@uppy/store-redux';
 
-export function createUppyInstance(store, meta) {
-  const uppy = new Uppy({ store: new ReduxStore({ store }) });
+export function createUppyInstance(store, meta, onBeforeUpload) {
+  const uppy = new Uppy({ store: new ReduxStore({ store }), onBeforeUpload });
   const config = {
     companionUrl: COMPANION_URL,
     companionAllowedHosts: COMPANION_ALLOWED_HOSTS,

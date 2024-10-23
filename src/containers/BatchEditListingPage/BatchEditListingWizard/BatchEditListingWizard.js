@@ -1,45 +1,18 @@
-import React, { useMemo } from 'react';
-import { string } from 'prop-types';
+import React, { useEffect, useMemo } from 'react';
 import classNames from 'classnames';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
 import { useIntl } from '../../../util/reactIntl';
-import {
-  LISTING_PAGE_PARAM_TYPE_DRAFT,
-  LISTING_PAGE_PARAM_TYPE_NEW,
-} from '../../../util/urlHelpers';
+import { LISTING_PAGE_PARAM_TYPE_NEW } from '../../../util/urlHelpers';
 import { withViewport } from '../../../util/uiHelpers';
 
 import { NamedRedirect, Tabs } from '../../../components';
 
 import BatchEditListingWizardTab, { PRODUCT_DETAILS, UPLOAD } from './BatchEditListingWizardTab';
 import css from './BatchEditListingWizard.module.css';
-
-/**
- * Return translations for wizard tab: label and submit button.
- *
- * @param {Object} intl
- * @param {string} tab name of the tab/panel in the wizard
- * @param {boolean} isNewListingFlow
- */
-const tabLabelAndSubmit = (intl, tab, isNewListingFlow) => {
-  const newOrEdit = isNewListingFlow ? 'new' : 'edit';
-
-  let labelKey = null;
-  let submitButtonKey = null;
-
-  if (tab === UPLOAD) {
-    labelKey = 'BatchEditListingWizard.tabLabelUpload';
-    submitButtonKey = `BatchEditListingWizard.${newOrEdit}.saveUpload`;
-  } else if (tab === PRODUCT_DETAILS) {
-    labelKey = 'BatchEditListingWizard.tabLabelDetails';
-    submitButtonKey = `BatchEditListingWizard.${newOrEdit}.saveProductDetails`;
-  }
-
-  return {
-    label: intl.formatMessage({ id: labelKey }),
-    submitButton: intl.formatMessage({ id: submitButtonKey }),
-  };
-};
+import { createResourceLocatorString } from '../../../util/routes';
+import { getCreateListingsError, getCreateListingsSuccess } from '../BatchEditListingPage.duck';
+import { useSelector } from 'react-redux';
+import { notification } from 'antd';
 
 function getTabsStatus(fileCount) {
   return {
@@ -59,19 +32,35 @@ const BatchEditListingWizard = props => {
     currentUser = {},
     routeConfiguration = {},
     uppy = null,
-    onUpdateFileDetails,
     onSaveBatchListing,
+    history,
     ...rest
   } = props;
   const fileCount = uppy.getFiles().length;
   const selectedTab = params.tab;
-  const isNewListingFlow = [LISTING_PAGE_PARAM_TYPE_NEW, LISTING_PAGE_PARAM_TYPE_DRAFT].includes(
-    params.type
-  );
   const rootClasses = rootClassName || css.root;
   const classes = classNames(rootClasses, className);
   const tabs = [UPLOAD, PRODUCT_DETAILS];
   const tabsStatus = useMemo(() => getTabsStatus(fileCount), [fileCount]);
+  const publishListingsSuccess = useSelector(getCreateListingsSuccess);
+  const publishListingError = useSelector(getCreateListingsError);
+  const [api, contextHolder] = notification.useNotification();
+
+  useEffect(() => {
+    if (publishListingsSuccess) {
+      const to = createResourceLocatorString('ManageListingsPage', routeConfiguration);
+      history.push(to);
+    }
+  }, [publishListingsSuccess]);
+
+  useEffect(() => {
+    if (publishListingError) {
+      api.error({
+        message: 'Error',
+        description: 'One or more listings failed to publish. Please try again.',
+      });
+    }
+  }, [publishListingError]);
 
   // If selectedTab is not active for listing with valid listing type,
   // redirect to the beginning of wizard
@@ -96,25 +85,30 @@ const BatchEditListingWizard = props => {
 
   return (
     <div className={classes}>
+      {contextHolder}
       <Tabs rootClassName={css.tabsContainer} navRootClassName={css.nav} tabRootClassName={css.tab}>
         {tabs.map(tab => {
-          const tabTranslations = tabLabelAndSubmit(intl, tab, isNewListingFlow);
+          const tabLabelId =
+            tab === UPLOAD
+              ? 'BatchEditListingWizard.tabLabelUpload'
+              : 'BatchEditListingWizard.tabLabelDetails';
+          const tabLabel = intl.formatMessage({ id: tabLabelId });
+
           return (
             <BatchEditListingWizardTab
               {...rest}
               key={tab}
               tabId={`${id}_${tab}`}
-              tabLabel={tabTranslations.label}
-              tabSubmitButtonText={tabTranslations.submitButton}
+              tabLabel={tabLabel}
               tabLinkProps={tabLink(tab)}
               selected={selectedTab === tab}
-              disabled={isNewListingFlow && !tabsStatus[tab]}
+              disabled={!tabsStatus[tab]}
               tab={tab}
               params={params}
               routeConfiguration={routeConfiguration}
               uppy={uppy}
-              onUpdateFileDetails={onUpdateFileDetails}
               onSaveBatchListing={onSaveBatchListing}
+              history={history}
             />
           );
         })}

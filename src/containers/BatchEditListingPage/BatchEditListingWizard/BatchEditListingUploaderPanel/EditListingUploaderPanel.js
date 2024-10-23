@@ -5,7 +5,7 @@ import css from './EditListingUploaderPanel.module.css';
 import { Dashboard } from '@uppy/react';
 
 const EditListingUploaderPanel = props => {
-  const { submitButtonText, onSubmit, submitReady, uppy } = props;
+  const { onSubmit, submitReady, uppy } = props;
   const hasFiles = uppy.getFiles().length > 0;
 
   return (
@@ -25,7 +25,7 @@ const EditListingUploaderPanel = props => {
         onClick={onSubmit}
         disabled={!hasFiles}
       >
-        {submitButtonText}
+        <FormattedMessage id="BatchEditListingWizard.new.saveUpload"></FormattedMessage>
       </Button>
     </div>
   );

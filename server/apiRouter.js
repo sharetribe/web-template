@@ -18,6 +18,7 @@ const transitionPrivileged = require('./api/transition-privileged');
 const createUserWithIdp = require('./api/auth/createUserWithIdp');
 const { authenticateAuth0, authenticateAuth0Callback } = require('./api/auth/auth0');
 const transloaditParams = require('./api/transloadit-params');
+const uploadAssets = require('./api/storage-manager');
 
 const router = express.Router();
 
@@ -60,6 +61,7 @@ router.post('/transaction-line-items', transactionLineItems);
 router.post('/initiate-privileged', initiatePrivileged);
 router.post('/transition-privileged', transitionPrivileged);
 router.post('/transloadit-params', transloaditParams);
+router.post('/storage-manager/upload-original', uploadAssets);
 
 // Create user with identity provider (e.g. Facebook or Google)
 // This endpoint is called to create a new user after user has confirmed

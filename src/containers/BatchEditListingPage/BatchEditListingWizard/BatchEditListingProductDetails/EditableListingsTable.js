@@ -1,8 +1,8 @@
 import imagePlaceholder from '../../../../assets/image-placeholder.jpg';
-import { Switch, Table } from 'antd';
+import { Image, Switch, Table } from 'antd';
 import { imageDimensions } from '../../BatchEditListingPage.duck';
 import css from './EditListingBatchProductDetails.module.css';
-import React, { useState } from 'react';
+import React from 'react';
 import { EditableCellComponents } from './EditableCellComponents';
 
 function stringSorter(strA, strB) {
@@ -10,8 +10,7 @@ function stringSorter(strA, strB) {
 }
 
 export const EditableListingsTable = props => {
-  const { onSave, dataSource, listingFieldsOptions } = props;
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const { onSave, dataSource, listingFieldsOptions, onSelectChange, selectedRowKeys } = props;
 
   const {
     categories: imageryCategoryOptions,
@@ -27,7 +26,9 @@ export const EditableListingsTable = props => {
     {
       title: 'Thumbnail',
       dataIndex: 'preview',
-      render: previewUrl => <img alt="Thumbnail" src={previewUrl || imagePlaceholder} />,
+      render: previewUrl => (
+        <Image alt="Thumbnail" src={previewUrl} fallback={imagePlaceholder} width={200} />
+      ),
       fixed: 'left',
     },
     {
@@ -164,15 +165,6 @@ export const EditableListingsTable = props => {
     };
   });
 
-  const onSelectChange = newSelectedRowKeys => {
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
-
   return (
     <Table
       columns={editableColumns}
@@ -184,7 +176,10 @@ export const EditableListingsTable = props => {
       scroll={{
         x: 'max-content',
       }}
-      rowSelection={rowSelection}
+      rowSelection={{
+        selectedRowKeys,
+        onChange: onSelectChange,
+      }}
     />
   );
 };

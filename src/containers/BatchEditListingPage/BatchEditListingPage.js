@@ -1,7 +1,7 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
-import { connect, ReactReduxContext } from 'react-redux';
+import { connect } from 'react-redux';
 import { injectIntl } from '../../util/reactIntl';
 import {
   LISTING_PAGE_PARAM_TYPE_DRAFT,
@@ -15,24 +15,11 @@ import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import EditListingWizard from './BatchEditListingWizard/BatchEditListingWizard';
 import css from './BatchEditListingPage.module.css';
-import {
-  initializeUppy,
-  requestSaveBatchListings,
-  requestUpdateFileDetails,
-} from './BatchEditListingPage.duck';
-import { createUppyInstance } from '../../util/uppy';
+import { initializeUppy, requestSaveBatchListings } from './BatchEditListingPage.duck';
+import BatchEditListingWizard from './BatchEditListingWizard/BatchEditListingWizard';
 
 export const BatchEditListingPageComponent = props => {
-  const {
-    currentUser,
-    history,
-    intl,
-    params,
-    page,
-    onInitializeUppy,
-    onUpdateFileDetails,
-    onSaveBatchListing,
-  } = props;
+  const { currentUser, history, intl, params, page, onInitializeUppy, onSaveBatchListing } = props;
   const { type } = params;
   const isNewURI = type === LISTING_PAGE_PARAM_TYPE_NEW;
   const isDraftURI = type === LISTING_PAGE_PARAM_TYPE_DRAFT;
@@ -40,12 +27,10 @@ export const BatchEditListingPageComponent = props => {
   const hasPostingRights = hasPermissionToPostListings(currentUser);
   const shouldRedirectNoPostingRights = !!currentUser?.id && isNewListingFlow && !hasPostingRights;
   const { uppy, listingFieldsOptions } = page;
-  const { store } = useContext(ReactReduxContext);
 
   useEffect(() => {
     if (!uppy) {
-      const uppyInstance = createUppyInstance(store, { userId: currentUser.id?.uuid });
-      onInitializeUppy(uppyInstance);
+      onInitializeUppy({ userId: currentUser.id?.uuid });
     }
   }, []);
 
@@ -76,7 +61,7 @@ export const BatchEditListingPageComponent = props => {
         mobileClassName={css.mobileTopbar}
       />
       {uppy && (
-        <EditListingWizard
+        <BatchEditListingWizard
           id="EditListingWizard"
           className={css.wizard}
           params={params}
@@ -84,7 +69,6 @@ export const BatchEditListingPageComponent = props => {
           currentUser={currentUser}
           uppy={uppy}
           listingFieldsOptions={listingFieldsOptions}
-          onUpdateFileDetails={onUpdateFileDetails}
           onSaveBatchListing={onSaveBatchListing}
         />
       )}
@@ -103,7 +87,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   onInitializeUppy: uppyInstance => dispatch(initializeUppy(uppyInstance)),
-  onUpdateFileDetails: payload => dispatch(requestUpdateFileDetails(payload)),
   onSaveBatchListing: () => {
     dispatch(requestSaveBatchListings());
   },
