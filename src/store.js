@@ -6,6 +6,7 @@ import * as analytics from './analytics/analytics';
 import appSettings from './config/settings';
 import * as uppyReduxStore from '@uppy/store-redux';
 
+let storeInstance = null;
 /**
  * Create a new store with the given initial state. Adds Redux
  * middleware and enhancers.
@@ -25,7 +26,8 @@ export default function configureStore(initialState = {}, sdk = null, analyticsH
 
   const enhancer = composeEnhancers(applyMiddleware(...middlewares));
 
-  const store = createStore(createReducer(), initialState, enhancer);
-
-  return store;
+  storeInstance = createStore(createReducer(), initialState, enhancer);
+  return storeInstance;
 }
+
+export const getStore = () => storeInstance;

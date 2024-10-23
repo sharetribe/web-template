@@ -1,6 +1,5 @@
 const Transloadit = require('transloadit');
 const moment = require('moment');
-const { serialize } = require('../api-util/sdk');
 
 module.exports = (req, res) => {
   const { userId } = req.body;
