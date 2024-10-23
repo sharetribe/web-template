@@ -133,7 +133,7 @@ export const AuthenticationPageComponent = props => {
         userType={preselectedUserType}
         brandStudioId={brandStudioId}
       />
-    )
+    );
   }
 
   const resendErrorTranslationId = isTooManyEmailVerificationRequestsError(
@@ -147,8 +147,14 @@ export const AuthenticationPageComponent = props => {
     </p>
   ) : null;
   const marketplaceName = config.marketplaceName;
-  const schemaTitle = intl.formatMessage({ id: 'AuthenticationPage.schemaTitleSignup' }, { marketplaceName });
-  const schemaDescription = intl.formatMessage({ id: 'AuthenticationPage.schemaDescriptionSignup' }, { marketplaceName });
+  const schemaTitle = intl.formatMessage(
+    { id: 'AuthenticationPage.schemaTitleSignup' },
+    { marketplaceName }
+  );
+  const schemaDescription = intl.formatMessage(
+    { id: 'AuthenticationPage.schemaDescriptionSignup' },
+    { marketplaceName }
+  );
   const topbarClasses = classNames({
     [css.hideOnMobile]: showEmailVerification,
   });

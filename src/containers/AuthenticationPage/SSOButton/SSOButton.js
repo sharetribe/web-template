@@ -9,7 +9,14 @@ import { isStudioBrand, isCreativeSeller } from '../../../util/userHelpers';
 import { SocialLoginButton } from '../../../components';
 import css from './SSOButton.module.css';
 
-const getDataForAuth0Routes = ({ isLogin, defaultReturn, defaultConfirm, from, userType, brandStudioId }) => {
+const getDataForAuth0Routes = ({
+  isLogin,
+  defaultReturn,
+  defaultConfirm,
+  from,
+  userType,
+  brandStudioId,
+}) => {
   const baseUrl = apiBaseUrl();
   const withBrandStudioId = isStudioBrand(userType) && !!brandStudioId;
   const queryParamsObject = new URLSearchParams({
@@ -31,11 +38,20 @@ const getDataForAuth0Routes = ({ isLogin, defaultReturn, defaultConfirm, from, u
 
 export const SSOButton = ({ isLogin, from, userType, brandStudioId, forceRedirect = false }) => {
   const routeConfiguration = useRouteConfiguration();
-  const signupMsg = isCreativeSeller(userType) ? "AuthenticationPage.signupSellerWithAuth0" : "AuthenticationPage.signupWithAuth0";
+  const signupMsg = isCreativeSeller(userType)
+    ? 'AuthenticationPage.signupSellerWithAuth0'
+    : 'AuthenticationPage.signupWithAuth0';
   const authWithAuth0 = () => {
     const defaultReturn = pathByRouteName('LandingPage', routeConfiguration);
     const defaultConfirm = pathByRouteName('ConfirmPage', routeConfiguration);
-    const { auth0Route } = getDataForAuth0Routes({ isLogin, defaultReturn, defaultConfirm, from, userType, brandStudioId });
+    const { auth0Route } = getDataForAuth0Routes({
+      isLogin,
+      defaultReturn,
+      defaultConfirm,
+      from,
+      userType,
+      brandStudioId,
+    });
     window.location.href = auth0Route;
   };
   if (forceRedirect) {

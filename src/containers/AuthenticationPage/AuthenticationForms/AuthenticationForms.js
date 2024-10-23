@@ -5,9 +5,7 @@ import { useConfiguration } from '../../../context/configurationContext';
 import { FormattedMessage } from '../../../util/reactIntl';
 import { isSignupEmailTakenError } from '../../../util/errors';
 import { pickUserFieldsData, addScopePrefix, isStudioBrand } from '../../../util/userHelpers';
-import {
-  Heading,
-} from '../../../components';
+import { Heading } from '../../../components';
 
 import ConfirmSignupForm from '../ConfirmSignupForm/ConfirmSignupForm';
 import BaseSignup from '../Signup/BaseSignup';
@@ -45,14 +43,7 @@ const AuthenticationForms = props => {
       ) : (
         <>
           <BaseSignup from={from} />
-          {userType && (
-            <SSOButton
-            isLogin={false}
-            forceRedirect
-            from={from}
-            userType={userType}
-          />
-          )}
+          {userType && <SSOButton isLogin={false} forceRedirect from={from} userType={userType} />}
         </>
       )}
     </div>
@@ -199,4 +190,4 @@ const AuthenticationOrConfirmInfoForm = props => {
   );
 };
 
-export default AuthenticationOrConfirmInfoForm
+export default AuthenticationOrConfirmInfoForm;

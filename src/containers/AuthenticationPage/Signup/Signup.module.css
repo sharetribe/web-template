@@ -69,7 +69,7 @@
 
   .imageContainer img {
     max-width: 100%; /* Max width of the image is 100% of its container */
-    height: auto;    /* Maintain aspect ratio */
+    height: auto; /* Maintain aspect ratio */
     object-fit: contain; /* Prevent the image from overflowing */
   }
 }

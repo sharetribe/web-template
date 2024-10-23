@@ -10,7 +10,7 @@ import { SSOButton } from '../SSOButton/SSOButton';
 import css from './Signup.module.css';
 
 const BrandSignup = ({ from, brandStudioId }) => {
-  const IMG_URL = `https://storage.googleapis.com/${process.env.REACT_APP_MARKETPLACE_BRANDING_BUCKET}/assets/img/marketplace/6446ca8583d63a9bae7ecfc45b0eb4be.png`
+  const IMG_URL = `https://storage.googleapis.com/${process.env.REACT_APP_MARKETPLACE_BRANDING_BUCKET}/assets/img/marketplace/6446ca8583d63a9bae7ecfc45b0eb4be.png`;
   const fromMaybe = from ? { from } : null;
   return (
     <div className={css.brandSignup}>
@@ -22,7 +22,12 @@ const BrandSignup = ({ from, brandStudioId }) => {
           <Heading as="h3" rootClassName={css.subtitle}>
             <FormattedMessage id="AuthenticationPage.signupBrandDescription" />
           </Heading>
-          <SSOButton isLogin={false} brandStudioId={brandStudioId} userType={USER_TYPES.BRAND} {...fromMaybe} />
+          <SSOButton
+            isLogin={false}
+            brandStudioId={brandStudioId}
+            userType={USER_TYPES.BRAND}
+            {...fromMaybe}
+          />
         </div>
 
         <div className={classNames(css.content, css.imageContainer)}>
@@ -30,7 +35,7 @@ const BrandSignup = ({ from, brandStudioId }) => {
         </div>
       </div>
     </div>
-  )
+  );
 };
 
 export default BrandSignup;

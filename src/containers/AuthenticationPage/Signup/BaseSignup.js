@@ -22,8 +22,7 @@ const BaseSignup = ({ from }) => {
         <SSOButton isLogin={false} userType={USER_TYPES.BUYER} {...fromMaybe} />
       </div>
 
-      <div className={css.line}>
-      </div>
+      <div className={css.line}></div>
       <div className={css.content}>
         <Heading as="h1" rootClassName={css.title}>
           <FormattedMessage id="AuthenticationPage.signupSellerTile" />
@@ -34,7 +33,7 @@ const BaseSignup = ({ from }) => {
         <SSOButton isLogin={false} userType={USER_TYPES.SELLER} {...fromMaybe} />
       </div>
     </div>
-  )
+  );
 };
 
 export default BaseSignup;
