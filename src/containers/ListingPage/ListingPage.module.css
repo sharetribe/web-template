@@ -589,7 +589,8 @@
 }
 
 .sectionDetails,
-.sectionMultiEnum {
+.sectionMultiEnum,
+.sectionEmbeddedYoutubeVideo {
   padding: 0 24px;
   margin-bottom: 32px;
 
@@ -757,6 +758,21 @@
     flex-basis: 312px;
     flex-shrink: 0;
   }
+}
+
+.video {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+}
+.iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .GetDirectionsLink {

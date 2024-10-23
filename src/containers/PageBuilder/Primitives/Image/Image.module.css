@@ -1,3 +1,5 @@
+@import '../../../../styles/customMediaQueries.css';
+
 .markdownImage {
   /**
    * Note: markdown images might be too small for filling the space.
@@ -13,4 +15,13 @@
   height: 100%;
   border-radius: 8px;
   object-fit: cover;
+  transition: 0.2s;
+}
+
+.imageHoverEffect {
+  @media (--viewportMedium) {
+    &:hover {
+      filter: brightness(1.05) contrast(1.05);
+    }
+  }
 }
