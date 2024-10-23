@@ -5,31 +5,20 @@ import { connect } from 'react-redux';
 import { withRouter, Redirect } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import classNames from 'classnames';
-import isEmpty from 'lodash/isEmpty';
 
 import { useConfiguration } from '../../context/configurationContext';
-import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { camelize } from '../../util/string';
-import { pathByRouteName } from '../../util/routes';
-import { apiBaseUrl } from '../../util/api';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { ensureCurrentUser } from '../../util/data';
-import {
-  isSignupEmailTakenError,
-  isTooManyEmailVerificationRequestsError,
-} from '../../util/errors';
-import { pickUserFieldsData, addScopePrefix, isStudioBrand } from '../../util/userHelpers';
+import { isTooManyEmailVerificationRequestsError } from '../../util/errors';
 import { authenticationInProgress, signupWithIdp } from '../../ducks/auth.duck';
 import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
 import { sendVerificationEmail } from '../../ducks/user.duck';
 
 import {
   Page,
-  Heading,
   NamedRedirect,
-  LinkTabNavHorizontal,
-  SocialLoginButton,
   ResponsiveBackgroundImageContainer,
   Modal,
   LayoutSingleColumn,
@@ -41,273 +30,14 @@ import { TermsOfServiceContent } from '../../containers/TermsOfServicePage/Terms
 // We need to get PrivacyPolicy asset and get it rendered for the modal on this page.
 import { PrivacyPolicyContent } from '../../containers/PrivacyPolicyPage/PrivacyPolicyPage';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
-import TermsAndConditions from './TermsAndConditions/TermsAndConditions';
-import ConfirmSignupForm from './ConfirmSignupForm/ConfirmSignupForm';
-import LoginForm from './LoginForm/LoginForm';
-import SignupForm from './SignupForm/SignupForm';
+
+import AuthenticationOrConfirmInfoForm from './AuthenticationForms/AuthenticationForms';
 import EmailVerificationInfo from './EmailVerificationInfo';
+import { SSOButton } from './SSOButton/SSOButton';
+import TermsAndConditions from './TermsAndConditions/TermsAndConditions';
+
 import { TOS_ASSET_NAME, PRIVACY_POLICY_ASSET_NAME } from './AuthenticationPage.duck';
 import css from './AuthenticationPage.module.css';
-import { Auth0Logo } from './socialLoginLogos';
-
-// SSO (Auth0) buttons are needed by AuthenticationForms
-export const SSOButton = ({ isLogin, from, userType, brandStudioId }) => {
-  const routeConfiguration = useRouteConfiguration();
-  const getDataForSSORoutes = () => {
-    const baseUrl = apiBaseUrl();
-    // Default route where user is returned after successfull authentication
-    const defaultReturn = pathByRouteName('LandingPage', routeConfiguration);
-    // Route for confirming user data before creating a new user
-    const defaultConfirm = pathByRouteName('ConfirmPage', routeConfiguration);
-    const withBrandStudioId = isStudioBrand(userType) && !!brandStudioId;
-    const queryParams = new URLSearchParams({
-      ...(defaultReturn ? { defaultReturn } : {}),
-      ...(defaultConfirm ? { defaultConfirm } : {}),
-      // Route where the user should be returned after authentication
-      // This is used e.g. with EditListingPage and ListingPage
-      ...(from ? { from } : {}),
-      // The preselected userType needs to be saved over the visit to identity provider's service
-      ...(userType ? { userType } : {}),
-      ...(withBrandStudioId ? { brandStudioId } : {}),
-      screenHint: isLogin ? 'login' : 'signup',
-    });
-    return { baseUrl, queryParams: queryParams.toString() };
-  };
-
-  const authWithAuth0 = () => {
-    const { baseUrl, queryParams } = getDataForSSORoutes();
-    window.location.href = `${baseUrl}/api/auth/auth0/login?${queryParams}`;
-  };
-
-  return (
-    <div className={css.idpButtons}>
-      <div className={css.socialButtonWrapper}>
-        <SocialLoginButton onClick={() => authWithAuth0()}>
-          <span className={css.buttonIcon}>{Auth0Logo}</span>
-          {isLogin ? (
-            <FormattedMessage id="AuthenticationPage.loginWithAuth0" />
-          ) : (
-            <FormattedMessage id="AuthenticationPage.signupWithAuth0" />
-          )}
-        </SocialLoginButton>
-      </div>
-    </div>
-  );
-};
-
-const getNonUserFieldParams = (values, userFieldConfigs) => {
-  const userFieldKeys = userFieldConfigs.map(({ scope, key }) => addScopePrefix(scope, key));
-  return Object.entries(values).reduce((picked, [key, value]) => {
-    const isUserFieldKey = userFieldKeys.includes(key);
-    return isUserFieldKey
-      ? picked
-      : {
-          ...picked,
-          [key]: value,
-        };
-  }, {});
-};
-
-// Tabs for SignupForm and LoginForm
-export const AuthenticationForms = props => {
-  const { isLogin, userType, from, idpAuthError, brandStudioId } = props;
-  const config = useConfiguration();
-  const { userTypes = [] } = config.user;
-  const preselectedUserType = userTypes.find(conf => conf.userType === userType)?.userType || null;
-  const fromMaybe = from ? { from } : null;
-  const signupRouteName = !!preselectedUserType ? 'SignupForUserTypePage' : 'SignupPage';
-  const userTypeMaybe = preselectedUserType ? { userType: preselectedUserType } : null;
-  const fromState = { state: { ...fromMaybe, ...userTypeMaybe } };
-  const tabs = [
-    {
-      text: (
-        <Heading as={!isLogin ? 'h1' : 'h2'} rootClassName={css.tab}>
-          <FormattedMessage id="AuthenticationPage.signupLinkText" />
-        </Heading>
-      ),
-      selected: !isLogin,
-      linkProps: {
-        name: signupRouteName,
-        params: userTypeMaybe,
-        to: fromState,
-      },
-    },
-    {
-      text: (
-        <Heading as={isLogin ? 'h1' : 'h2'} rootClassName={css.tab}>
-          <FormattedMessage id="AuthenticationPage.loginLinkText" />
-        </Heading>
-      ),
-      selected: isLogin,
-      linkProps: {
-        name: 'LoginPage',
-        to: fromState,
-      },
-    },
-  ];
-  const idpAuthErrorMessage = (
-    <div className={css.error}>
-      <FormattedMessage id="AuthenticationPage.idpAuthFailed" />
-    </div>
-  );
-  const loginOrSignupError = isLogin && !!idpAuthError ? idpAuthErrorMessage : null;
-
-  return (
-    <div className={css.content}>
-      <LinkTabNavHorizontal className={css.tabs} tabs={tabs} />
-      {loginOrSignupError}
-      {isLogin ? <LoginForm /> : <SignupForm />}
-      <SSOButton
-        isLogin={isLogin}
-        brandStudioId={brandStudioId}
-        {...fromMaybe}
-        {...userTypeMaybe}
-      />
-    </div>
-  );
-};
-
-// Form for confirming information from IdP (e.g. Auth0)
-// This is shown before new user is created to Marketplace API
-const ConfirmIdProviderInfoForm = props => {
-  const {
-    userType,
-    authInfo,
-    authInProgress,
-    confirmError,
-    submitSingupWithIdp,
-    termsAndConditions,
-  } = props;
-  const config = useConfiguration();
-  const { userFields, userTypes } = config.user;
-  const preselectedUserType = userTypes.find(conf => conf.userType === userType)?.userType || null;
-  const idp = authInfo ? authInfo.idpId.replace(/^./, str => str.toUpperCase()) : null;
-
-  const handleSubmitConfirm = values => {
-    const { idpToken, email, brandStudioId, idpId } = authInfo;
-    const {
-      userType,
-      email: newEmail,
-      firstName: newFirstName,
-      lastName: newLastName,
-      displayName,
-      location: newLocation,
-      ...rest
-    } = values;
-    const displayNameMaybe = displayName ? { displayName: displayName.trim() } : {};
-    // Pass email, fistName or lastName to Marketplace API only if user has edited them
-    // and they can't be fetched directly from idp provider (e.g. Facebook)
-    const authParams = {
-      ...(newEmail !== email && { email: newEmail }),
-      firstName: newFirstName,
-      lastName: newLastName,
-    };
-    const location = newLocation && {
-      address: newLocation?.selectedPlace?.address,
-      geolocation: {
-        lat: newLocation?.selectedPlace?.origin?.lat,
-        lng: newLocation?.selectedPlace?.origin?.lng,
-      },
-      building: '',
-    };
-    const withHiddenPrivateData = isStudioBrand(userType) && !!brandStudioId;
-    // Pass other values as extended data according to user field configuration
-    const extendedDataMaybe =
-      !isEmpty(rest) || withHiddenPrivateData
-        ? {
-            publicData: {
-              userType,
-              ...pickUserFieldsData(rest, 'public', userType, userFields),
-            },
-            privateData: {
-              ...pickUserFieldsData(rest, 'private', userType, userFields),
-              ...(!!brandStudioId && { brandStudioId }),
-              ...(!!location && { location }),
-            },
-            protectedData: {
-              ...pickUserFieldsData(rest, 'protected', userType, userFields),
-              // If the confirm form has any additional values, pass them forward as user's protected data
-              ...getNonUserFieldParams(rest, userFields),
-            },
-          }
-        : {};
-    submitSingupWithIdp({
-      idpToken,
-      idpId,
-      ...authParams,
-      ...displayNameMaybe,
-      ...extendedDataMaybe,
-    });
-  };
-
-  const confirmErrorMessage = confirmError ? (
-    <div className={css.error}>
-      {isSignupEmailTakenError(confirmError) ? (
-        <FormattedMessage id="AuthenticationPage.signupFailedEmailAlreadyTaken" />
-      ) : (
-        <FormattedMessage id="AuthenticationPage.signupFailed" />
-      )}
-    </div>
-  ) : null;
-
-  return (
-    <div className={css.content}>
-      <Heading as="h1" rootClassName={css.signupWithIdpTitle}>
-        <FormattedMessage id="AuthenticationPage.confirmSignupWithIdpTitle" values={{ idp }} />
-      </Heading>
-      <p className={css.confirmInfoText}>
-        <FormattedMessage id="AuthenticationPage.confirmSignupInfoText" />
-      </p>
-      {confirmErrorMessage}
-      <ConfirmSignupForm
-        className={css.form}
-        onSubmit={handleSubmitConfirm}
-        inProgress={authInProgress}
-        termsAndConditions={termsAndConditions}
-        authInfo={authInfo}
-        idp={idp}
-        preselectedUserType={preselectedUserType}
-        userTypes={userTypes}
-        userFields={userFields}
-      />
-    </div>
-  );
-};
-
-export const AuthenticationOrConfirmInfoForm = props => {
-  const {
-    tab,
-    userType,
-    authInfo,
-    from,
-    submitSingupWithIdp,
-    authInProgress,
-    idpAuthError,
-    confirmError,
-    termsAndConditions,
-    brandStudioId,
-  } = props;
-  const isConfirm = tab === 'confirm';
-  const isLogin = tab === 'login';
-  return isConfirm ? (
-    <ConfirmIdProviderInfoForm
-      userType={userType}
-      authInfo={authInfo}
-      submitSingupWithIdp={submitSingupWithIdp}
-      authInProgress={authInProgress}
-      confirmError={confirmError}
-      termsAndConditions={termsAndConditions}
-    />
-  ) : (
-    <AuthenticationForms
-      isLogin={isLogin}
-      userType={userType}
-      from={from}
-      idpAuthError={idpAuthError}
-      brandStudioId={brandStudioId}
-    ></AuthenticationForms>
-  );
-};
 
 const getAuthInfoFromCookies = () => {
   return Cookies.get('st-authinfo')
@@ -393,6 +123,19 @@ export const AuthenticationPageComponent = props => {
     return <NotFoundPage staticContext={props.staticContext} />;
   }
 
+  // We won't have a LoginPage anymore, instead redirect directly to Auth0
+  if (isLogin) {
+    return (
+      <SSOButton
+        isLogin
+        forceRedirect
+        from={from}
+        userType={preselectedUserType}
+        brandStudioId={brandStudioId}
+      />
+    );
+  }
+
   const resendErrorTranslationId = isTooManyEmailVerificationRequestsError(
     sendVerificationEmailError
   )
@@ -404,12 +147,14 @@ export const AuthenticationPageComponent = props => {
     </p>
   ) : null;
   const marketplaceName = config.marketplaceName;
-  const schemaTitle = isLogin
-    ? intl.formatMessage({ id: 'AuthenticationPage.schemaTitleLogin' }, { marketplaceName })
-    : intl.formatMessage({ id: 'AuthenticationPage.schemaTitleSignup' }, { marketplaceName });
-  const schemaDescription = isLogin
-    ? intl.formatMessage({ id: 'AuthenticationPage.schemaDescriptionLogin' }, { marketplaceName })
-    : intl.formatMessage({ id: 'AuthenticationPage.schemaDescriptionSignup' }, { marketplaceName });
+  const schemaTitle = intl.formatMessage(
+    { id: 'AuthenticationPage.schemaTitleSignup' },
+    { marketplaceName }
+  );
+  const schemaDescription = intl.formatMessage(
+    { id: 'AuthenticationPage.schemaDescriptionSignup' },
+    { marketplaceName }
+  );
   const topbarClasses = classNames({
     [css.hideOnMobile]: showEmailVerification,
   });
