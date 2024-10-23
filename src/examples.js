@@ -76,7 +76,6 @@ import * as ResponsiveImage from './components/ResponsiveImage/ResponsiveImage.e
 import * as ReviewRating from './components/ReviewRating/ReviewRating.example';
 import * as Reviews from './components/Reviews/Reviews.example';
 import * as SavedCardDetails from './components/SavedCardDetails/SavedCardDetails.example';
-import * as StripeBankAccountTokenInputField from './components/StripeBankAccountTokenInputField/StripeBankAccountTokenInputField.example';
 import * as TabNav from './components/TabNav/TabNav.example';
 import * as TabNavHorizontal from './components/TabNavHorizontal/TabNavHorizontal.example';
 import * as Tabs from './components/Tabs/Tabs.example';
@@ -227,7 +226,6 @@ export {
   SelectMultipleFilter,
   SendMessageForm,
   SignupForm,
-  StripeBankAccountTokenInputField,
   StripePaymentForm,
   TabNav,
   TabNavHorizontal,

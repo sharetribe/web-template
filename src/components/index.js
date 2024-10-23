@@ -98,8 +98,6 @@ export { default as FieldBoolean } from './FieldBoolean/FieldBoolean';
 export { default as FieldCheckboxGroup } from './FieldCheckboxGroup/FieldCheckboxGroup';
 export { default as FieldPhoneNumberInput } from './FieldPhoneNumberInput/FieldPhoneNumberInput';
 export { default as LocationAutocompleteInput, FieldLocationAutocompleteInput } from './LocationAutocompleteInput/LocationAutocompleteInput';
-// Fields and inputs using old naming pattern
-export { default as StripeBankAccountTokenInputField } from './StripeBankAccountTokenInputField/StripeBankAccountTokenInputField';
 // Fields wrapping react-dates
 // NOTE: these are code-splitted since the library is heavy and needed only on couple of pages
 export const FieldDateInput = loadable(() => import(/* webpackChunkName: "FieldDateInput" */ './FieldDateInput/FieldDateInput'));
