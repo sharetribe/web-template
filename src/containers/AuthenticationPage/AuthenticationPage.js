@@ -20,6 +20,7 @@ import {
   Page,
   NamedRedirect,
   ResponsiveBackgroundImageContainer,
+  Marquee,
   Modal,
   LayoutSingleColumn,
 } from '../../components';
@@ -212,6 +213,7 @@ export const AuthenticationPageComponent = props => {
             />
           )}
         </ResponsiveBackgroundImageContainer>
+        <Marquee />
       </LayoutSingleColumn>
       <Modal
         id="AuthenticationPage.tos"

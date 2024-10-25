@@ -6,11 +6,12 @@ import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
-import { propTypes, USER_TYPES } from '../../../util/types';
+import { propTypes } from '../../../util/types';
 import * as validators from '../../../util/validators';
 import {
   getPropsForCustomUserFieldInputs,
   getBrandUserFieldInputs,
+  isCreativeSeller,
 } from '../../../util/userHelpers';
 import {
   Form,
@@ -83,7 +84,7 @@ const ConfirmSignupFormComponent = props => (
       const userTypeConfig = userTypes.find(config => config.userType === userType);
       const showDefaultUserFields = userType || noUserTypes;
       const showCustomUserFields = (userType || noUserTypes) && userFieldProps?.length > 0;
-      const showSellerLocationFields = userType && userType === USER_TYPES.SELLER;
+      const showSellerLocationFields = isCreativeSeller(userType);
       const classes = classNames(rootClassName || css.root, className);
       const submitInProgress = inProgress;
       const submitDisabled = invalid || submitInProgress;

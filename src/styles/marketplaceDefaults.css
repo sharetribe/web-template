@@ -55,7 +55,7 @@
   --marketplaceColorLight: #7748d5; /* hsl(260, 63%, 56%), +10L from marketplaceColor */
   --marketplaceColorDark: #492296; /* hsl(260, 63%, 26%), -10L from marketplaceColor */
 
-  /** 
+  /**
    * The fill color used by <PrimaryButton>
    * These might be overwritten by values from hosted assets
    */
@@ -63,7 +63,7 @@
   --colorPrimaryButtonDark: var(--colorSuccessDark);
   --colorPrimaryButtonLight: var(--colorSuccessLight);
 
-  /** 
+  /**
    * The fill color used by <SecondaryButton>
    */
   --colorSecondaryButton: var(--colorWhite);
@@ -180,6 +180,10 @@
   /* ================ PageBuilder ================ */
   /* --carouselWidth will be updated dynamically through JS */
   --carouselWidth: 100vw;
+
+  /* ================ The Luupe Marquee related ================ */
+
+  --marqueeHeight: 48px;
 }
 
 /* ================ Global element styles ================ */
@@ -578,7 +582,7 @@ textarea {
 /* ================ Plain global CSS glasses ================ */
 
 /**
- * Note: even though these reflect element styles, 
+ * Note: even though these reflect element styles,
  * these are below element styles to allow overwrites using classes.
  */
 
@@ -947,7 +951,7 @@ textarea {
  * For actual buttons, use components: <Button>, <PrimaryButton>, <SecondaryButton>
  *
  * To create button look-and-feel for links, etc. combine button classes in CSS Modules:
- * 
+ *
  * <Button>:
  *   composes: buttonDefault from global;
  * <PrimaryButton>:

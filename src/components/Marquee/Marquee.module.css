@@ -1,0 +1,13 @@
+@import '../../styles/customMediaQueries.css';
+
+.root {
+  width: 100vw;
+  height: var(--marqueeHeight);
+  background-color: #e0ff00;
+  font-weight: 600;
+}
+
+.marqueeIcon {
+  margin-left: 40px;
+  margin-right: 11px;
+}
