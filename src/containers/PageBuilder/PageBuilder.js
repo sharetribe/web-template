@@ -125,7 +125,7 @@ const PageBuilder = props => {
                 ) : (
                   <div>
                     <SectionBuilder sections={sections} options={options} />
-                    {options?.AdBanner?.show && <AdBanner phoneNumber="+1-647-689-6072" />}
+                    {options?.AdBanner?.show && <AdBanner link="mailto:jamie@nayax.com" />}
                   </div>
                 )}
               </Main>

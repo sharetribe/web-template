@@ -14,9 +14,26 @@
   }
 }
 
-.createListingLink,
-.resetAllFiltersButton {
+.links{
+  padding:20px 0;
   composes: h5 from global;
+  
+  > span {
+    display:inline-block;
+    margin:2px 12px 2px 0%;
+    padding:2px 12px 2px 0;
+    border-right:1px solid var(--colorGrey700);
+
+    &:last-child{
+      border:none;
+    }
+  }
+}
+
+.createListingLink,
+.resetAllFiltersButton,
+.openLeadForm {
+  
   font-weight: var(--fontWeightMedium);
   color: var(--marketplaceColor);
 
@@ -34,9 +51,14 @@
   &:focus,
   &:hover {
     color: var(--colorGrey700);
+    text-decoration: none;
   }
 
   @media (--viewportMedium) {
     padding: 3px 0 5px 0;
   }
+}
+
+.modal{
+  border:none;
 }
