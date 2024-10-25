@@ -19,14 +19,8 @@
   composes: h5 from global;
   
   > span {
-    display:inline-block;
     margin:2px 12px 2px 0%;
-    padding:2px 12px 2px 0;
-    border-right:1px solid var(--colorGrey700);
 
-    &:last-child{
-      border:none;
-    }
   }
 }
 
@@ -40,22 +34,27 @@
   /* Layout */
   display: inline;
   margin: 0;
-  padding: 0;
+  border-radius: 4px;
+  padding: 6px 9px;
+  line-height: 20px;
 
   /* Override button styles */
   outline: none;
   text-align: left;
-  border: none;
   cursor: pointer;
+  border:none;
 
   &:focus,
   &:hover {
     color: var(--colorGrey700);
     text-decoration: none;
   }
-
-  @media (--viewportMedium) {
-    padding: 3px 0 5px 0;
+}
+.openLeadForm{
+  border: 1px solid var(--marketplaceColor);
+  &:focus,
+  &:hover {
+    background-color: white;
   }
 }
 
