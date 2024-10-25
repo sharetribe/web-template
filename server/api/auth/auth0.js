@@ -21,7 +21,7 @@ const configParams = {
   idpLogout: true,
   authRequired: false,
   baseURL: baseURL,
-  issuerBaseURL: `https://${process.env.AUTH0_API_DOMAIN}`,
+  issuerBaseURL: `https://${process.env.AUTH0_DOMAIN}`,
   clientID,
   clientSecret: process.env.AUTH0_MARKETPLACE_CLIENT_SECRET,
   secret: process.env.AUTH0_COOKIE_SECRET,

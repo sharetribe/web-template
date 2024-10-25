@@ -199,15 +199,15 @@ export const hasPermissionToViewData = currentUser => {
 export const isUserAuthorized = currentUser => currentUser?.attributes?.state === 'active';
 
 export const isStudioBrand = userType => {
-  return userType === USER_TYPES.BRAND;
+  return userType && userType === USER_TYPES.BRAND;
 };
 
 export const isBuyer = userType => {
-  return userType === USER_TYPES.BUYER;
+  return userType && userType === USER_TYPES.BUYER;
 };
 
 export const isCreativeSeller = userType => {
-  return userType === USER_TYPES.SELLER;
+  return userType && userType === USER_TYPES.SELLER;
 };
 
 export const getBrandUserFieldInputs = (userType, isBrandAdmin, fieldKey) => {

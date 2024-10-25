@@ -1,10 +1,16 @@
 import React from 'react';
 import isEmpty from 'lodash/isEmpty';
+import classNames from 'classnames';
 
 import { useConfiguration } from '../../../context/configurationContext';
 import { FormattedMessage } from '../../../util/reactIntl';
 import { isSignupEmailTakenError } from '../../../util/errors';
-import { pickUserFieldsData, addScopePrefix, isStudioBrand } from '../../../util/userHelpers';
+import {
+  pickUserFieldsData,
+  addScopePrefix,
+  isStudioBrand,
+  isCreativeSeller,
+} from '../../../util/userHelpers';
 import { Heading } from '../../../components';
 
 import ConfirmSignupForm from '../ConfirmSignupForm/ConfirmSignupForm';
@@ -65,6 +71,13 @@ const ConfirmIdProviderInfoForm = props => {
   const { userFields, userTypes } = config.user;
   const preselectedUserType = userTypes.find(conf => conf.userType === userType)?.userType || null;
   const idp = authInfo ? authInfo.idpId.replace(/^./, str => str.toUpperCase()) : null;
+  const showBrandExperience = isStudioBrand(preselectedUserType);
+  const showSellerExperience = isCreativeSeller(preselectedUserType);
+  const showInfoSection = showBrandExperience || showSellerExperience;
+  const rootStyles = classNames(css.confirmFormRoot, {
+    [css.forBrand]: showBrandExperience,
+    [css.forSeller]: showSellerExperience,
+  });
 
   const handleSubmitConfirm = values => {
     const { idpToken, email, brandStudioId, idpId } = authInfo;
@@ -133,27 +146,54 @@ const ConfirmIdProviderInfoForm = props => {
     </div>
   ) : null;
 
-  return (
-    <div className={css.confirmForm}>
-      <Heading as="h1" rootClassName={css.signupWithIdpTitle}>
-        <FormattedMessage id="AuthenticationPage.confirmSignupWithIdpTitle" values={{ idp }} />
+  const infoSection = showInfoSection ? (
+    <div className={css.infoSection}>
+      <Heading as="h1" rootClassName={css.infoTitle}>
+        <FormattedMessage
+          id={`ConfirmSignupForm.${showBrandExperience ? 'brandInfoTitle' : 'sellerInfoTitle'}`}
+        />
       </Heading>
-      <p className={css.confirmInfoText}>
-        <FormattedMessage id="AuthenticationPage.confirmSignupInfoText" />
-      </p>
-      {confirmErrorMessage}
-      <ConfirmSignupForm
-        className={css.form}
-        onSubmit={handleSubmitConfirm}
-        inProgress={authInProgress}
-        termsAndConditions={termsAndConditions}
-        authInfo={authInfo}
-        idp={idp}
-        preselectedUserType={preselectedUserType}
-        userTypes={userTypes}
-        userFields={userFields}
-      />
+      <Heading as="h3" rootClassName={css.infoSubtitle}>
+        <FormattedMessage
+          id={`ConfirmSignupForm.${
+            showBrandExperience ? 'brandInfoDescription' : 'sellerInfoDescription'
+          }`}
+          values={{
+            lineBreak: (
+              <>
+                <br /> <br />
+              </>
+            ),
+          }}
+        />
+      </Heading>
     </div>
+  ) : null;
+
+  return (
+    <section className={rootStyles}>
+      {infoSection}
+      <div className={css.confirmForm}>
+        <Heading as="h1" rootClassName={css.signupWithIdpTitle}>
+          <FormattedMessage id="AuthenticationPage.confirmSignupWithIdpTitle" values={{ idp }} />
+        </Heading>
+        <p className={css.confirmInfoText}>
+          <FormattedMessage id="AuthenticationPage.confirmSignupInfoText" />
+        </p>
+        {confirmErrorMessage}
+        <ConfirmSignupForm
+          className={css.form}
+          onSubmit={handleSubmitConfirm}
+          inProgress={authInProgress}
+          termsAndConditions={termsAndConditions}
+          authInfo={authInfo}
+          idp={idp}
+          preselectedUserType={preselectedUserType}
+          userTypes={userTypes}
+          userFields={userFields}
+        />
+      </div>
+    </section>
   );
 };
 

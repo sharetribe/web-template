@@ -6,7 +6,7 @@
 
 .contentContainer {
   composes: marketplaceModalRootStyles from global;
-  min-height: calc(100vh - 60px);
+  min-height: calc(100vh - var(--topbarHeight) - var(--marqueeHeight));
   height: auto;
 
   @media (--viewportMedium) {
