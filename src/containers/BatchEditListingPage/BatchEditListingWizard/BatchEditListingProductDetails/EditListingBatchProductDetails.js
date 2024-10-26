@@ -18,6 +18,8 @@ import {
 } from '../../BatchEditListingPage.duck';
 import { useDispatch, useSelector } from 'react-redux';
 import { EditableListingsTable } from './EditableListingsTable';
+import useStickyHeader from '../hooks/useStickyHeader';
+import Paragraph from 'antd/es/typography/Paragraph';
 
 function ListingValidationModalContent({ invalidListings }) {
   return (
@@ -123,22 +125,26 @@ export const EditListingBatchProductDetails = () => {
     }
   }, [aiTermsRequired, listingsCreationInProgress]);
 
+  useStickyHeader(css);
+
   return (
     <div className={css.root}>
-      <Flex gap="middle">
-        <Flex>
+      <Flex className={css.stickyHeader}>
+        <Flex vertical>
           <H3 as="h1">
             <FormattedMessage id="BatchEditListingProductDetails.title" />
-            <p>
-              <FormattedMessage id="BatchEditListingProductDetails.subtitle" />
-            </p>
-            <p>
-              <FormattedMessage id="BatchEditListingProductDetails.warningRefresh" />
-            </p>
           </H3>
-        </Flex>
 
-        <Flex style={{ alignSelf: 'flex-start', marginTop: 35 }}>
+          <Flex className={css.subTitle} vertical>
+            <Paragraph>
+              <FormattedMessage id="BatchEditListingProductDetails.subtitle" />
+            </Paragraph>
+            <Paragraph>
+              <FormattedMessage id="BatchEditListingProductDetails.warningRefresh" />
+            </Paragraph>
+          </Flex>
+        </Flex>
+        <Flex className={css.buttonWrapper}>
           <Button
             className={css.submitButton}
             type="button"
@@ -150,7 +156,8 @@ export const EditListingBatchProductDetails = () => {
           </Button>
         </Flex>
       </Flex>
-      <div style={{ marginTop: '20px' }}>
+
+      <div>
         <EditableListingsTable
           dataSource={dataSource}
           onSave={handleUpdateFileDetails}

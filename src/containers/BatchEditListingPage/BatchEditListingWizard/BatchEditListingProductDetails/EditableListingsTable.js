@@ -30,6 +30,7 @@ export const EditableListingsTable = props => {
         <Image alt="Thumbnail" src={previewUrl} fallback={imagePlaceholder} width={200} />
       ),
       fixed: 'left',
+      width: 210,
     },
     {
       title: 'File Name',
@@ -48,6 +49,7 @@ export const EditableListingsTable = props => {
     {
       title: 'Description',
       dataIndex: 'description',
+      width: 300,
       editable: true,
       editControlType: 'text',
       sorter: stringSorter,
@@ -55,6 +57,7 @@ export const EditableListingsTable = props => {
     {
       title: 'Is AI',
       dataIndex: 'isAi',
+      width: 150,
       render: (_, record) => {
         const { isAi } = record;
         return (
@@ -76,6 +79,7 @@ export const EditableListingsTable = props => {
     {
       title: 'Is Illustration',
       dataIndex: 'isIllustration',
+      width: 150,
       render: (_, record) => {
         const { isIllustration } = record;
         return (
@@ -128,6 +132,7 @@ export const EditableListingsTable = props => {
     {
       title: 'Dimensions',
       dataIndex: 'dimensions',
+      width: 200,
       render: dimensionsKey => {
         return imageDimensions[dimensionsKey].label;
       },
@@ -136,12 +141,14 @@ export const EditableListingsTable = props => {
     {
       title: 'Size',
       dataIndex: 'size',
+      width: 200,
       render: size => `${(size / 1024).toFixed(2)} KB`,
       sorter: (a, b) => a.size - b.size,
     },
     {
       title: 'Price',
       dataIndex: 'price',
+      width: 200,
       editable: true,
       editControlType: 'text',
     },
@@ -180,6 +187,8 @@ export const EditableListingsTable = props => {
         selectedRowKeys,
         onChange: onSelectChange,
       }}
-    />
+      sticky={{ offsetHeader: 80 }}
+      summary={() => <Table.Summary fixed="top"></Table.Summary>}
+    ></Table>
   );
 };

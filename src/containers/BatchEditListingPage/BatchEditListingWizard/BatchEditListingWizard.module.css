@@ -29,7 +29,6 @@
 .nav {
   /* Layout */
   display: flex;
-  flex-direction: row;
   padding: 0;
   flex-shrink: 0;
   background-color: var(--colorWhite);
@@ -77,28 +76,5 @@
     &:last-child {
       padding-right: 0;
     }
-  }
-}
-
-.modalTitle {
-  composes: marketplaceModalTitleStyles from global;
-}
-
-.modalPayoutDetailsWrapper {
-  @media (--viewportMedium) {
-    width: 604px;
-    padding-top: 11px;
-  }
-}
-
-.modalMessage {
-  composes: marketplaceModalParagraphStyles from global;
-}
-
-.customFieldMultiEnum {
-  margin-bottom: 24px;
-
-  @media (--viewportMedium) {
-    margin-bottom: 40px;
   }
 }

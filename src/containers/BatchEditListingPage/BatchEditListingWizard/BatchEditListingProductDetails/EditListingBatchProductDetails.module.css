@@ -1,13 +1,12 @@
 @import '../../../../styles/customMediaQueries.css';
 
 .root {
-  width: 100%;
+  width: 80%;
   height: auto;
   display: flex;
   flex: 1;
   flex-direction: column;
   padding: 1px 24px;
-  overflow: auto;
   background-color: var(--colorWhite);
 }
 
@@ -30,4 +29,36 @@
 .editableCellValueWrap {
   padding: 5px 12px;
   cursor: pointer;
+}
+
+.stickyHeader {
+  position: sticky;
+  top: 0;
+  background-color: var(--colorWhite);
+  z-index: 100;
+  justify-content: space-between;
+}
+
+.stickyTitle {
+  margin: 0;
+}
+
+.stickyHeader .subTitle {
+  transition: opacity 0.3s ease, max-height 0.3s ease;
+  opacity: 1;
+  overflow: hidden;
+}
+
+.subTitle.hidden {
+  opacity: 0;
+  max-height: 0; /* Collapse subtitle */
+}
+
+.buttonWrapper {
+  justify-content: center;
+  align-self: center;
+}
+
+.stickyHeader.scrolled .submitButton {
+  transform: scale(0.8); /* Shrink button */
 }
