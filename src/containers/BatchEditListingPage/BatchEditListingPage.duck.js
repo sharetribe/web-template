@@ -81,7 +81,7 @@ function uppyFileToListing(file) {
     category: [],
     usage: 'editorial',
     releases: 'no-release',
-    price: 1,
+    price: '-',
     dimensions: dimensions,
     isAi: false,
     isIllustration: false,
