@@ -516,7 +516,7 @@
   "NoAccessPage.initiateTransactions.content": "To start a transaction, you need to receive transaction rights from the {marketplaceName} team.",
   "NoAccessPage.postListings.schemaTitle": "No posting rights",
   "NoAccessPage.postListings.heading": "You don't have posting rights",
-  "NoAccessPage.postListings.content": "To publish listings, you need to receive posting rights from the {marketplaceName} team.",
+  "NoAccessPage.postListings.content": "To post listings, you need to receive posting rights from the {marketplaceName} team.",
   "NoAccessPage.viewListings.schemaTitle": "No viewing rights",
   "NoAccessPage.viewListings.heading": "You don't have viewing rights",
   "NoAccessPage.viewListings.content": "To view this content, you need to receive viewing rights from the {marketplaceName} team.",
