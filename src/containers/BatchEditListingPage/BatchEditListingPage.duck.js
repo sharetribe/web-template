@@ -166,7 +166,11 @@ export default function reducer(state = initialState, action = {}) {
     case INITIALIZE_UPPY:
       return { ...state, uppy: payload.uppy, listings: payload.files };
     case ADD_FILE:
-      return { ...state, listings: [...state.listings, payload] };
+      return {
+        ...state,
+        listings: [...state.listings, payload],
+        selectedRowsKeys: [...state.selectedRowsKeys, payload.id],
+      };
     case REMOVE_FILE:
       return { ...state, listings: state.listings.filter(file => file.id !== payload.id) };
     case RESET_FILES:

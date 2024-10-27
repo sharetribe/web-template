@@ -16,7 +16,7 @@ const EditableCell = props => {
     editControlType,
     options,
     cellClassName,
-    onBeforeSave = record => {},
+    onBeforeSave = null,
     placeholder = '',
     ...restProps
   } = props;
