@@ -17,6 +17,12 @@ const NoSearchResultsMaybe = props => {
   const [iframeUrl, setIframeUrl] = useState('');
   const [formId, setFormId] = useState(''); // State for formId
 
+  //are we in a mobile experience?
+  const MODAL_BREAKPOINT = 768; 
+  const isWindowDefined = typeof window !== 'undefined';
+  const isMobileLayout = isWindowDefined && window.innerWidth < MODAL_BREAKPOINT;
+
+
   // Effect to update formId based on category
   useEffect(() => {
     let newFormId = '';
@@ -39,8 +45,14 @@ const NoSearchResultsMaybe = props => {
   }, [category]); // Dependency array to watch for changes in category
 
   const handleButtonClick = () => {
-    setIframeUrl('https://form.jotform.com/' + formId);
-    setModalOpen(true);
+
+    const url = 'https://form.jotform.com/' + formId;
+    if(isMobileLayout){
+      window.open(url);
+    } else {
+      setIframeUrl( url );
+      setModalOpen(true);
+    }
   };
 
   const getCategoryLabel = (category) => {
@@ -90,6 +102,7 @@ const NoSearchResultsMaybe = props => {
       <ModalInMobile
         id="iframeModal"
         isModalOpen={isModalOpen}
+        
         onClose={() => {
           setModalOpen(false);
           onManageDisableScrolling(false); // Allow scrolling when modal is closed
@@ -98,7 +111,7 @@ const NoSearchResultsMaybe = props => {
         onManageDisableScrolling={onManageDisableScrolling} // Pass the function to manage scrolling
         isModalOpenOnMobile={isModalOpen} // Pass the modal open state
       >
-        <iframe src={iframeUrl} className={css.modal} border="0" width="100%" height="100%" title="Modal Content" />
+        <iframe src={iframeUrl} className={css.modal} border="0" width="100%" title="Modal Content" />
 
       </ModalInMobile>
     </div>

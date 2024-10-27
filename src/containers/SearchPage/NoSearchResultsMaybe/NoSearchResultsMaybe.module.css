@@ -19,7 +19,6 @@
   
   > span {
     margin:2px 12px 2px 0%;
-
   }
 }
 
@@ -33,6 +32,7 @@
   /* Layout */
   display: inline;
   margin: 0;
+  margin-bottom:20px;
   border-radius: 4px;
   padding: 6px 9px;
   line-height: 20px;
@@ -59,4 +59,5 @@
 
 .modal{
   border:none;
+  height:100vh;
 }
