@@ -1,13 +1,17 @@
 import imagePlaceholder from '../../../../assets/image-placeholder.jpg';
-import { Image, Switch, Table } from 'antd';
+import { Image, Table } from 'antd';
 import { imageDimensions } from '../../BatchEditListingPage.duck';
 import css from './EditListingBatchProductDetails.module.css';
 import React from 'react';
 import { EditableCellComponents } from './EditableCellComponents';
 
-function stringSorter(strA, strB) {
+const stringSorter = (strA, strB) => {
   return strA.name.localeCompare(strB.name, 'en', { sensitivity: 'base' });
-}
+};
+
+const numberSorter = (a, b) => {
+  return a.size - b.size;
+};
 
 export const EditableListingsTable = props => {
   const { onSave, dataSource, listingFieldsOptions, onSelectChange, selectedRowKeys } = props;
@@ -45,58 +49,38 @@ export const EditableListingsTable = props => {
       editable: true,
       editControlType: 'text',
       sorter: stringSorter,
+      placeholder: 'The listing title',
     },
     {
       title: 'Description',
       dataIndex: 'description',
       width: 300,
       editable: true,
-      editControlType: 'text',
+      editControlType: 'textarea',
       sorter: stringSorter,
+      placeholder: 'The listing description',
     },
     {
       title: 'Is AI',
       dataIndex: 'isAi',
       width: 150,
-      render: (_, record) => {
-        const { isAi } = record;
-        return (
-          <Switch
-            value={isAi}
-            checkedChildren="Yes"
-            unCheckedChildren="No"
-            onChange={value =>
-              handleSave({
-                ...record,
-                isAi: value,
-                isIllustration: value ? false : record.isIllustration,
-              })
-            }
-          />
-        );
-      },
+      editable: true,
+      editControlType: 'switch',
+      onBeforeSave: record => ({
+        ...record,
+        isIllustration: record.isAi ? false : record.isIllustration,
+      }),
     },
     {
       title: 'Is Illustration',
       dataIndex: 'isIllustration',
       width: 150,
-      render: (_, record) => {
-        const { isIllustration } = record;
-        return (
-          <Switch
-            value={isIllustration}
-            checkedChildren="Yes"
-            unCheckedChildren="No"
-            onChange={value =>
-              handleSave({
-                ...record,
-                isAi: value ? false : record.isAi,
-                isIllustration: value,
-              })
-            }
-          />
-        );
-      },
+      editable: true,
+      editControlType: 'switch',
+      onBeforeSave: record => ({
+        ...record,
+        isAi: record.isIllustration ? false : record.isAi,
+      }),
     },
     {
       title: 'Category',
@@ -105,6 +89,7 @@ export const EditableListingsTable = props => {
       editable: true,
       editControlType: 'selectMultiple',
       options: imageryCategoryOptions,
+      placeholder: 'Select a category',
     },
     {
       title: 'Usage',
@@ -113,14 +98,14 @@ export const EditableListingsTable = props => {
       editable: true,
       editControlType: 'select',
       options: usageOptions,
+      placeholder: 'Select the usage',
     },
     {
       title: 'Do you have releases on file / can you obtain them?',
       dataIndex: 'releases',
       width: 300,
       editable: true,
-      editControlType: 'select',
-      options: releaseOptions,
+      editControlType: 'switch',
     },
     {
       title: 'Keywords',
@@ -128,6 +113,7 @@ export const EditableListingsTable = props => {
       dataIndex: 'keywords',
       editable: true,
       editControlType: 'tags',
+      placeholder: 'Up to 30 keywords',
     },
     {
       title: 'Dimensions',
@@ -143,14 +129,16 @@ export const EditableListingsTable = props => {
       dataIndex: 'size',
       width: 200,
       render: size => `${(size / 1024).toFixed(2)} KB`,
-      sorter: (a, b) => a.size - b.size,
+      sorter: numberSorter,
     },
     {
       title: 'Price',
       dataIndex: 'price',
       width: 200,
       editable: true,
-      editControlType: 'text',
+      editControlType: 'money',
+      placeholder: 'Enter the price',
+      sorter: numberSorter,
     },
   ];
 
@@ -168,6 +156,8 @@ export const EditableListingsTable = props => {
         editControlType: col.editControlType,
         options: col.options,
         cellClassName: css.editableCellValueWrap,
+        onBeforeSave: col.onBeforeSave,
+        placeholder: col.placeholder,
       }),
     };
   });

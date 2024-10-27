@@ -12,7 +12,7 @@ import {
   getListings,
   getSelectedRowsKeys,
   requestSaveBatchListings,
-  requestUpdateFileDetails,
+  requestUpdateListing,
   SET_AI_TERMS_ACCEPTED,
   SET_SELECTED_ROWS,
 } from '../../BatchEditListingPage.duck';
@@ -84,8 +84,8 @@ export const EditListingBatchProductDetails = () => {
     dispatch(requestSaveBatchListings());
   };
 
-  const handleUpdateFileDetails = updatedData => {
-    dispatch(requestUpdateFileDetails(updatedData));
+  const handleUpdateListing = updatedData => {
+    dispatch(requestUpdateListing(updatedData));
   };
 
   const handleCancelValidationModal = () => {
@@ -160,7 +160,7 @@ export const EditListingBatchProductDetails = () => {
       <div>
         <EditableListingsTable
           dataSource={dataSource}
-          onSave={handleUpdateFileDetails}
+          onSave={handleUpdateListing}
           listingFieldsOptions={listingFieldsOptions}
           onSelectChange={onSelectChange}
           selectedRowKeys={selectedRowKeys}

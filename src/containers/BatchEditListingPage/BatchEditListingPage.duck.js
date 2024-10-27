@@ -74,14 +74,14 @@ function uppyFileToListing(file) {
     id,
     name,
     title: name,
-    description: '-',
+    description: null,
     keywords: keywordsOptions,
     size,
     preview,
     category: [],
     usage: 'editorial',
     releases: 'no-release',
-    price: '-',
+    price: null,
     dimensions: dimensions,
     isAi: false,
     isIllustration: false,
@@ -119,7 +119,7 @@ export const SET_USER_ID = 'app/BatchEditListingPage/SET_USER_ID';
 export const ADD_FILE = 'app/BatchEditListingPage/ADD_FILE';
 export const REMOVE_FILE = 'app/BatchEditListingPage/REMOVE_FILE';
 export const RESET_FILES = 'app/BatchEditListingPage/RESET_FILES';
-export const UPDATE_FILE_DETAILS = 'app/BatchEditListingPage/UPDATE_FILE_DETAILS';
+export const UPDATE_LISTING = 'app/BatchEditListingPage/UPDATE_LISTING';
 
 export const PREVIEW_GENERATED = 'app/BatchEditListingPage/PREVIEW_GENERATED';
 export const FETCH_LISTING_OPTIONS = 'app/BatchEditListingPage/FETCH_LISTING_OPTIONS';
@@ -196,7 +196,7 @@ export default function reducer(state = initialState, action = {}) {
         },
       };
     }
-    case UPDATE_FILE_DETAILS: {
+    case UPDATE_LISTING: {
       const { id, ...values } = payload;
       return {
         ...state,
@@ -251,6 +251,8 @@ export default function reducer(state = initialState, action = {}) {
 // ============== Selector =============== //
 export const getUppyInstance = state => state.BatchEditListingPage.uppy;
 export const getListings = state => state.BatchEditListingPage.listings;
+export const getSingleListing = (state, id) =>
+  state.BatchEditListingPage.listings.find(l => l.id === id);
 export const getInvalidListings = state => state.BatchEditListingPage.invalidListings;
 export const getListingFieldsOptions = state => state.BatchEditListingPage.listingFieldsOptions;
 export const getSelectedRowsKeys = state => state.BatchEditListingPage.selectedRowsKeys;
@@ -424,7 +426,7 @@ export function initializeUppy(meta) {
 
     uppyInstance.on('thumbnail:generated', (file, preview) => {
       const { id } = file;
-      const listing = getListings(getState()).find(listing => listing.id === id);
+      const listing = getSingleListing(getState(), id);
       if (!listing.preview) {
         dispatch({ type: PREVIEW_GENERATED, payload: { id, preview } });
       }
@@ -434,8 +436,8 @@ export function initializeUppy(meta) {
   };
 }
 
-export const requestUpdateFileDetails = payload => (dispatch, getState, sdk) => {
-  dispatch({ type: UPDATE_FILE_DETAILS, payload });
+export const requestUpdateListing = payload => (dispatch, getState, sdk) => {
+  dispatch({ type: UPDATE_LISTING, payload });
 };
 
 export function requestSaveBatchListings() {
