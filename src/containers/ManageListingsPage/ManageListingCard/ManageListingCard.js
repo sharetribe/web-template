@@ -114,7 +114,17 @@ const formatTitle = (title, maxLength) => {
 };
 
 const ShowFinishDraftOverlayMaybe = props => {
-  const { isDraft, title, id, slug, hasImage, intl } = props;
+  const {
+    isDraft,
+    title,
+    id,
+    slug,
+    hasImage,
+    intl,
+    actionsInProgressListingId,
+    currentListingId,
+    onDiscardDraft,
+  } = props;
 
   return isDraft ? (
     <React.Fragment>
@@ -132,6 +142,27 @@ const ShowFinishDraftOverlayMaybe = props => {
         >
           <FormattedMessage id="ManageListingCard.finishListingDraft" />
         </NamedLink>
+        <div className={css.alternativeActionText}>
+          {intl.formatMessage(
+            { id: 'ManageListingCard.discardDraftText' },
+            {
+              discardDraftLink: (
+                <InlineTextButton
+                  key="discardDraftLink"
+                  rootClassName={css.alternativeActionLink}
+                  disabled={!!actionsInProgressListingId}
+                  onClick={() => {
+                    if (!actionsInProgressListingId) {
+                      onDiscardDraft(currentListingId);
+                    }
+                  }}
+                >
+                  <FormattedMessage id="ManageListingCard.discardDraftLinkText" />
+                </InlineTextButton>
+              ),
+            }
+          )}
+        </div>
       </Overlay>
     </React.Fragment>
   ) : null;
@@ -214,14 +245,14 @@ const ShowOutOfStockOverlayMaybe = props => {
             <FormattedMessage id="ManageListingCard.setPriceAndStock" />
           </NamedLink>
 
-          <div className={css.closeListingText}>
+          <div className={css.alternativeActionText}>
             {intl.formatMessage(
               { id: 'ManageListingCard.closeListingTextOr' },
               {
                 closeListingLink: (
                   <InlineTextButton
                     key="closeListingLink"
-                    className={css.closeListingText}
+                    className={css.alternativeActionLink}
                     disabled={!!actionsInProgressListingId}
                     onClick={() => {
                       if (!actionsInProgressListingId) {
@@ -237,10 +268,10 @@ const ShowOutOfStockOverlayMaybe = props => {
           </div>
         </>
       ) : (
-        <div className={css.closeListingText}>
+        <div className={css.alternativeActionText}>
           <InlineTextButton
             key="closeListingLink"
-            className={css.closeListingText}
+            className={css.alternativeActionText}
             disabled={!!actionsInProgressListingId}
             onClick={() => {
               if (!actionsInProgressListingId) {
@@ -342,6 +373,7 @@ export const ManageListingCardComponent = props => {
     className,
     rootClassName,
     hasClosingError,
+    hasDiscardingError,
     hasOpeningError,
     history,
     intl,
@@ -350,6 +382,7 @@ export const ManageListingCardComponent = props => {
     listing,
     onCloseListing,
     onOpenListing,
+    onDiscardDraft,
     onToggleMenu,
     renderSizes,
   } = props;
@@ -383,7 +416,7 @@ export const ManageListingCardComponent = props => {
     [css.menuItemDisabled]: !!actionsInProgressListingId,
   });
 
-  const hasError = hasOpeningError || hasClosingError;
+  const hasError = hasOpeningError || hasClosingError || hasDiscardingError;
   const thisListingInProgress =
     actionsInProgressListingId && actionsInProgressListingId.uuid === id;
 
@@ -493,6 +526,9 @@ export const ManageListingCardComponent = props => {
           slug={slug}
           hasImage={!!firstImage}
           intl={intl}
+          actionsInProgressListingId={actionsInProgressListingId}
+          currentListingId={currentListing.id}
+          onDiscardDraft={onDiscardDraft}
         />
 
         <ShowClosedOverlayMaybe
