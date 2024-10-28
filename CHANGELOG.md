@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] CheckoutPage.duck.js: fix minor typo with handleSuccess function.
+  [#483](https://github.com/sharetribe/web-template/pull/483)
 - [add] Filter out bot requests that scan websites for vulnerabilities before they reach React app.
   [#479](https://github.com/sharetribe/web-template/pull/479)
 - [change] Update copy text for Publishing listing permission to Posting listing.
