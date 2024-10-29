@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] CSP: start using nonce with script-src. This also removes data from script-src.
+  [#485](https://github.com/sharetribe/web-template/pull/485)
 - [add] Remove React Dates datepicker library and add a new built-in DatePicker.
 
   There are 3 new datepicker fields to be used with React Final Forms:
