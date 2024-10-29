@@ -1,9 +1,8 @@
-/* eslint-disable no-console */
 import React from 'react';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
-import { Button } from '../../components';
-import { required, bookingDateRequired, composeValidators } from '../../util/validators';
-import FieldDateInput from './FieldDateInput';
+import { Button } from '../../../components';
+import { required, bookingDateRequired, composeValidators } from '../../../util/validators';
+import FieldSingleDatePicker from './FieldSingleDatePicker';
 
 const identity = v => v;
 
@@ -14,17 +13,17 @@ const placeholderText = formatDate(new Date());
 const FormComponent = props => (
   <FinalForm
     {...props}
-    render={fieldRenderProps => {
+    render={formRenderProps => {
       const {
         style,
-        form,
+        //form: formApi,
         handleSubmit,
         onChange,
         pristine,
         submitting,
         dateInputProps,
         values,
-      } = fieldRenderProps;
+      } = formRenderProps;
       const submitDisabled = pristine || submitting;
       if (values && values.bookingDates) {
         onChange(values.bookingDates);
@@ -39,7 +38,7 @@ const FormComponent = props => (
           }}
         >
           <FormSpy onChange={onChange} />
-          <FieldDateInput {...dateInputProps} />
+          <FieldSingleDatePicker {...dateInputProps} />
           <Button type="submit" disabled={submitDisabled} style={{ marginTop: '24px' }}>
             Select
           </Button>

@@ -124,7 +124,7 @@ const validateStripeCurrency = stripe => {
 const mergeLocalizations = (hostedLocalization, defaultLocalization) => {
   // This defaults to 'en', if no locale is set.
   const locale = hostedLocalization?.locale || defaultLocalization.locale || 'en';
-  // NOTE: We use this with react-dates and moment, the range should be 0 - 6 instead of 1-7.
+  // NOTE: We use this with DatePicker and moment, the range should be 0 - 6 instead of 1-7.
   const firstDay = hostedLocalization?.firstDayOfWeek || defaultLocalization.firstDayOfWeek || 1;
   const firstDayInMomentRange = firstDay % 7;
   return { locale, firstDayOfWeek: firstDayInMomentRange };
