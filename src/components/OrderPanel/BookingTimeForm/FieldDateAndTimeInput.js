@@ -341,7 +341,7 @@ const handleMonthClick = (
 };
 
 const onBookingStartDateChange = (props, setCurrentMonth) => value => {
-  const { monthlyTimeSlots, timeZone, intl, form: formApi } = props;
+  const { monthlyTimeSlots, timeZone, intl, form: formApi, handleFetchLineItems } = props;
   if (!value || !value.date) {
     formApi.batch(() => {
       formApi.change('bookingStartTime', null);
@@ -371,10 +371,19 @@ const onBookingStartDateChange = (props, setCurrentMonth) => value => {
     formApi.change('bookingEndDate', { date: endDate });
     formApi.change('bookingEndTime', endTime);
   });
+
+  handleFetchLineItems({
+    values: {
+      bookingStartDate: value,
+      bookingStartTime: startTime,
+      bookingEndDate: { date: endDate },
+      bookingEndTime: endTime,
+    },
+  });
 };
 
 const onBookingStartTimeChange = props => value => {
-  const { monthlyTimeSlots, timeZone, intl, form: formApi, values } = props;
+  const { monthlyTimeSlots, timeZone, intl, form: formApi, values, handleFetchLineItems } = props;
   const startDate = values.bookingStartDate.date;
   const timeSlotsOnSelectedDate = getTimeSlotsOnDate(monthlyTimeSlots, startDate, timeZone);
 
@@ -389,6 +398,27 @@ const onBookingStartTimeChange = props => value => {
   formApi.batch(() => {
     formApi.change('bookingEndDate', { date: endDate });
     formApi.change('bookingEndTime', endTime);
+  });
+  handleFetchLineItems({
+    values: {
+      bookingStartDate: values.bookingStartDate,
+      bookingStartTime: value,
+      bookingEndDate: { date: endDate },
+      bookingEndTime: endTime,
+    },
+  });
+};
+
+const onBookingEndTimeChange = props => value => {
+  const { values, handleFetchLineItems } = props;
+
+  handleFetchLineItems({
+    values: {
+      bookingStartDate: values.bookingStartDate,
+      bookingStartTime: values.bookingStartTime,
+      bookingEndDate: values.bookingEndDate,
+      bookingEndTime: value,
+    },
   });
 };
 
@@ -418,6 +448,13 @@ const onBookingStartTimeChange = props => value => {
 //   );
 
 //   formApi.change('bookingEndTime', endTime);
+//   handleFetchLineItems({ values: {
+//     bookingStartDate: values.bookingStartDate,
+//     bookingStartTime: values.bookingStartTime,
+//     bookingEndDate: value,
+//     bookingEndTime: endTime,
+//   }});
+
 // };
 
 /////////////////////////////////////
@@ -639,6 +676,7 @@ const FieldDateAndTimeInput = props => {
             selectClassName={bookingStartDate ? css.select : css.selectDisabled}
             label={intl.formatMessage({ id: 'FieldDateAndTimeInput.endTime' })}
             disabled={!bookingEndTimeAvailable}
+            onChange={onBookingEndTimeChange(props)}
           >
             {bookingEndTimeAvailable ? (
               availableEndTimes.map(p => (
