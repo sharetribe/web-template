@@ -93,6 +93,7 @@ bottom of the container.
 
   @media (--viewportMedium) {
     background-position: center left 36px;
+    margin-bottom: 0;
   }
 }
 
