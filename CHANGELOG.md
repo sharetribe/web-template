@@ -13,8 +13,34 @@ way to update this template, but currently, we follow a pattern:
 ---
 
 ## Upcoming version 2024-XX-XX
+
+- [fix] UserCard: make the styles of contact link consistent with the other links.
+  [#484](https://github.com/sharetribe/web-template/pull/484)
+- [fix] CheckoutPage.duck.js: fix minor typo with handleSuccess function.
+  [#483](https://github.com/sharetribe/web-template/pull/483)
+- [add] Filter out bot requests that scan websites for vulnerabilities before they reach React app.
+  [#479](https://github.com/sharetribe/web-template/pull/479)
+- [change] Update copy text for Publishing listing permission to Posting listing.
+  [#482](https://github.com/sharetribe/web-template/pull/482)
+
+## [v5.8.0] 2024-10-22
+
+- [add] Add currently available translations for DE, ES, FR.
+  [#475](https://github.com/sharetribe/web-template/pull/475)
+- [add] Block images can be wrapped in a link if a link is configured via assets.
+  [#464](https://github.com/sharetribe/web-template/pull/464)
+- [add] Add support for aligning content blocks based on asset
+  [#469](https://github.com/sharetribe/web-template/pull/469)
+- [add] Update moment-timezone library to v0.5.46.
+  [#472](https://github.com/sharetribe/web-template/pull/472)
+- [add] Update caniuselite, which is used by browserlist.
+  [#471](https://github.com/sharetribe/web-template/pull/471)
+- [add] Add support for the youtubeVideoUrl schema type: listingPage and profilePage can now display
+  an embedded Youtube video [#467](https://github.com/sharetribe/web-template/pull/467)
 - [add] Add currently available translations for DE, ES, FR.
   [#466](https://github.com/sharetribe/web-template/pull/466)
+
+  [v5.8.0]: https://github.com/sharetribe/web-template/compare/v5.7.0...v5.8.0
 
 ## [v5.7.0] 2024-10-08
 
