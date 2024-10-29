@@ -14,6 +14,18 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [change] This updates Sharetribe Web Template to use React v17.0.2.
+
+  Some highlights:
+
+  - The callback functions of **_useEffect_ hook** has become asynchronous!
+  - There has been changes to event delegation on React component tree.
+
+    - https://legacy.reactjs.org/blog/2020/10/20/react-v17.html#changes-to-event-delegation
+    - This change didn't seem to have practical consequences on this repository.
+
+  [#477](https://github.com/sharetribe/web-template/pull/477)
+
 - [add] CSP: start using nonce with script-src. This also removes data from script-src.
   [#485](https://github.com/sharetribe/web-template/pull/485)
 - [add] Remove React Dates datepicker library and add a new built-in DatePicker.
