@@ -1,7 +1,7 @@
 @import '../../../styles/customMediaQueries.css';
 
 .popupSize {
-  padding: 0 10px 7px 10px;
+  padding: 0 20px 7px 20px;
 }
 
 .filterLabel,

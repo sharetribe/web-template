@@ -78,7 +78,9 @@ const LayoutWrapperAccountSettingsSideNavComponent = props => {
     return () => {
       // Update scroll position when unmounting
       const el = document.querySelector(`#${currentPage}Tab`);
-      setScrollLeft(el.parentElement.scrollLeft);
+      if (el?.parentElement) {
+        setScrollLeft(el?.parentElement.scrollLeft);
+      }
       if (scrollTimeout) {
         clearTimeout(scrollTimeout);
       }

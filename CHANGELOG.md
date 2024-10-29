@@ -14,6 +14,19 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] Remove React Dates datepicker library and add a new built-in DatePicker.
+
+  There are 3 new datepicker fields to be used with React Final Forms:
+
+  - FieldDateRangePicker
+  - FieldSingleDatePicker
+  - FieldDateRangeController
+
+  This swap is done because componentWillReceiveProps & componentWillUpdate functions, which are
+  used by the outdated React Dates library, are deprecated and removed from future React versions.
+
+  [#453](https://github.com/sharetribe/web-template/pull/453)
+
 - [fix] UserCard: make the styles of contact link consistent with the other links.
   [#484](https://github.com/sharetribe/web-template/pull/484)
 - [fix] CheckoutPage.duck.js: fix minor typo with handleSuccess function.
