@@ -14,6 +14,20 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+## [v6.0.0] 2024-10-29
+
+This major release takes the React v17.0.2 into use.
+
+The biggest change is taking a new DatePicker into use and removing the outdated datepicker library:
+React Dates. The change was necessary as the React Dates still uses deprecated React life cycle
+functions componentWillReceiveProps & componentWillUpdate.
+
+Another notable change with the React v17 was with the callback functions of useEffect hook, which
+became asynchronous. You should to check other v17 changes from v17 changelog to verify if your
+customizations are affected somehow.
+
+The last highlight is that we started to use nonce for script-src on Content Security Policy.
+
 - [change] This updates Sharetribe Web Template to use React v17.0.2.
 
   Some highlights:
@@ -49,6 +63,8 @@ way to update this template, but currently, we follow a pattern:
   [#479](https://github.com/sharetribe/web-template/pull/479)
 - [change] Update copy text for Publishing listing permission to Posting listing.
   [#482](https://github.com/sharetribe/web-template/pull/482)
+
+  [v6.0.0]: https://github.com/sharetribe/web-template/compare/v5.8.0...v6.0.0
 
 ## [v5.8.0] 2024-10-22
 
