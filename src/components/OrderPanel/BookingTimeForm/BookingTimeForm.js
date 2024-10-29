@@ -1,7 +1,7 @@
 import React from 'react';
 import { array, bool, func, number, object, string } from 'prop-types';
 import { compose } from 'redux';
-import { Form as FinalForm, FormSpy } from 'react-final-form';
+import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
 import { FormattedMessage, intlShape, injectIntl } from '../../../util/reactIntl';
@@ -20,7 +20,7 @@ import css from './BookingTimeForm.module.css';
 // lineItems from this template's backend for the EstimatedTransactionMaybe
 // In case you add more fields to the form, make sure you add
 // the values here to the orderData object.
-const handleOnChange = props => formValues => {
+const handleFetchLineItems = props => formValues => {
   const { listingId, isOwnListing, fetchLineItemsInProgress, onFetchTransactionLineItems } = props;
   const { bookingStartTime, bookingEndTime } = formValues.values;
   const startDate = bookingStartTime ? timestampToDate(bookingStartTime) : null;
@@ -96,7 +96,6 @@ export const BookingTimeFormComponent = props => {
 
         return (
           <Form onSubmit={handleSubmit} className={classes} enforcePagePreloadFor="CheckoutPage">
-            <FormSpy subscription={{ values: true }} onChange={handleOnChange(props)} />
             {monthlyTimeSlots && timeZone ? (
               <FieldDateAndTimeInput
                 startDateInputProps={{
@@ -117,6 +116,7 @@ export const BookingTimeFormComponent = props => {
                 pristine={pristine}
                 timeZone={timeZone}
                 dayCountAvailableForBooking={dayCountAvailableForBooking}
+                handleFetchLineItems={handleFetchLineItems(props)}
               />
             ) : null}
 
