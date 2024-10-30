@@ -50,7 +50,7 @@
 
 .fieldDisabled {
   background: none;
-  color: --colorGrey100;
+  color: var(--colorGrey100);
 }
 
 .fieldDatePicker {

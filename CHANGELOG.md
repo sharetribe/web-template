@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] FieldDateTimeInput.module.css: fix typo.
+  [#487](https://github.com/sharetribe/web-template/pull/487)
 - [change] Update default email templates to use ICU's `j` pattern for datetimes.
   [#478](https://github.com/sharetribe/web-template/pull/478)
 - [change] Update default email templates to get link and button colors from asset.
