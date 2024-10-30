@@ -10,8 +10,12 @@ import { NamedRedirect, Tabs } from '../../../components';
 import BatchEditListingWizardTab, { PRODUCT_DETAILS, UPLOAD } from './BatchEditListingWizardTab';
 import css from './BatchEditListingWizard.module.css';
 import { createResourceLocatorString } from '../../../util/routes';
-import { getCreateListingsError, getCreateListingsSuccess } from '../BatchEditListingPage.duck';
-import { useSelector } from 'react-redux';
+import {
+  getCreateListingsError,
+  getCreateListingsSuccess,
+  RESET_STATE,
+} from '../BatchEditListingPage.duck';
+import { useDispatch, useSelector } from 'react-redux';
 import { notification } from 'antd';
 
 function getTabsStatus(fileCount) {
@@ -45,9 +49,11 @@ const BatchEditListingWizard = props => {
   const publishListingsSuccess = useSelector(getCreateListingsSuccess);
   const publishListingError = useSelector(getCreateListingsError);
   const [api, contextHolder] = notification.useNotification();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (publishListingsSuccess) {
+      dispatch({ type: RESET_STATE });
       const to = createResourceLocatorString('ManageListingsPage', routeConfiguration);
       history.push(to);
     }

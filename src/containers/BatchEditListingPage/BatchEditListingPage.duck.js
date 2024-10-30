@@ -1,10 +1,8 @@
 import { fetchCurrentUser } from '../../ducks/user.duck';
 import { getFileMetadata } from '../../util/file-metadata';
-import axios from 'axios';
 import { Money } from 'sharetribe-flex-sdk/src/types';
 import { createUppyInstance } from '../../util/uppy';
 import { getStore } from '../../store';
-import { uploadOriginalAsset } from '../../util/api';
 
 const SMALL_IMAGE = 'small';
 const MEDIUM_IMAGE = 'medium';
@@ -137,6 +135,8 @@ export const SET_SELECTED_ROWS = 'app/BatchEditListingPage/SET_SELECTED_ROWS';
 export const ADD_FAILED_LISTING = 'app/BatchEditListingPage/ADD_FAILED_LISTING';
 export const ADD_SUCCESSFUL_LISTING = 'app/BatchEditListingPage/ADD_SUCCESSFUL_LISTING';
 
+export const RESET_STATE = 'app/BatchEditListingPage/RESET_STATE';
+
 // ================ Reducer ================ //
 const initialState = {
   listings: [],
@@ -247,6 +247,8 @@ export default function reducer(state = initialState, action = {}) {
       return { ...state, failedListings: [...state.failedListings, payload] };
     case ADD_SUCCESSFUL_LISTING:
       return { ...state, successfulListings: [...state.successfulListings, payload] };
+    case RESET_STATE:
+      return initialState;
     default:
       return state;
   }
@@ -270,7 +272,6 @@ export const getAiTermsAccepted = state =>
 
 export const getCreateListingsSuccess = state => state.BatchEditListingPage.createListingsSuccess;
 export const getCreateListingsError = state => state.BatchEditListingPage.createListingsError;
-export const getUserId = state => state.BatchEditListingPage.userId;
 export const getFailedListings = state => state.BatchEditListingPage.failedListings;
 export const getPublishingData = state => {
   const { failedListings, successfulListings, selectedRowsKeys } = state.BatchEditListingPage;
@@ -292,24 +293,20 @@ export const getPublishingData = state => {
 function handleTransloaditResultComplete(dispatch, getState, sdk) {
   return async (stepName, result, assembly) => {
     const { localId, ssl_url } = result;
-    const queryParams = { expand: true };
     const uppyInstance = getUppyInstance(getState());
-    const listings = getListings(getState());
-    const userId = getUserId(getState());
-
-    const listing = listings.find(file => file.id === localId);
+    const listing = getSingleListing(getState(), localId);
 
     try {
       // Get the uploaded image from Transloadit
-      const response = await axios.get(ssl_url, { responseType: 'blob' });
+      // const response = await axios.get(ssl_url, { responseType: 'blob' });
 
       // Upload the image to Sharetribe
-      const sdkResponse = await sdk.images.upload({ image: response.data }, queryParams);
+      // const sdkResponse = await sdk.images.upload({ image: response.data }, queryParams);
 
       const uppyFile = uppyInstance.getFile(localId);
+      // const { data: sdkImage } = sdkResponse.data;
 
-      const { data: sdkImage } = sdkResponse.data;
-
+      const price = Number(listing.price) * 100;
       const listingData = {
         title: listing.title,
         description: listing.description,
@@ -325,36 +322,37 @@ function handleTransloaditResultComplete(dispatch, getState, sdk) {
           aiTerms: listing.isAi ? 'yes' : 'no',
           originalFileName: listing.name,
         },
-        price: new Money(listing.price, 'USD'),
-        images: [sdkImage.id],
+        privateData: {
+          transloaditSslUrl: ssl_url,
+        },
+        price: new Money(price, 'USD'),
       };
 
       // Create the listing, so we have the listing ID
-      const draftResponse = await sdk.ownListings.create(listingData, {
+      await sdk.ownListings.create(listingData, {
         expand: true,
-        include: ['images'],
       });
-      const listingId = draftResponse.data.data.id;
+      //const listingId = draftResponse.data.data.id;
 
-      // Upload the original asset using the storage manager
-      const data = await uploadOriginalAsset({
-        userId: userId.uuid,
-        listingId: listingId.uuid,
-        fileUrl: ssl_url,
-        metadata: {},
-      });
-      console.log(data);
-
-      // Finally, update the listing with the reference to the original asset
-      await sdk.ownListings.update(
-        {
-          id: listingId,
-          privateData: {
-            originalAsset: data.source,
-          },
-        },
-        { expand: true }
-      );
+      // // Upload the original asset using the storage manager
+      // const data = await uploadOriginalAsset({
+      //   userId: userId.uuid,
+      //   listingId: listingId.uuid,
+      //   fileUrl: ssl_url,
+      //   metadata: {},
+      // });
+      // console.log(data);
+      //
+      // // Finally, update the listing with the reference to the original asset
+      // await sdk.ownListings.update(
+      //   {
+      //     id: listingId,
+      //     privateData: {
+      //       originalAsset: data.source,
+      //     },
+      //   },
+      //   { expand: true }
+      // );
       dispatch({ type: ADD_SUCCESSFUL_LISTING, payload: listing });
     } catch (error) {
       dispatch({ type: ADD_FAILED_LISTING, payload: listing });
@@ -437,6 +435,13 @@ export function initializeUppy(meta) {
     });
 
     uppyInstance.on('transloadit:result', handleTransloaditResultComplete(dispatch, getState, sdk));
+    uppyInstance.on('error', error => {
+      console.log(error);
+      if (error.assembly) {
+        console.log(`Assembly ID ${error.assembly.assembly_id} failed!`);
+        console.log(error.assembly);
+      }
+    });
   };
 }
 
