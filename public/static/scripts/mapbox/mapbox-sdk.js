@@ -1099,6 +1099,9 @@
    * @property {Blob|ArrayBuffer|string|ReadStream} file - A file to
    *   send with the request. The browser client accepts Blobs and ArrayBuffers;
    *   the Node client accepts strings (filepaths) and ReadStreams.
+   * @property {string} encoding - The encoding of the response.
+   * @property {string} sendFileAs - The method to send the `file`. Options are
+   * `data` (x-www-form-urlencoded) or `form` (multipart/form-data).
    */
 
   /**
@@ -1113,6 +1116,7 @@
    * @param {Object} [options.headers]
    * @param {Object} [options.body=null]
    * @param {Blob|ArrayBuffer|string|ReadStream} [options.file=null]
+   * @param {string} [options.encoding=utf8]
    */
   function MapiRequest(client, options) {
     if (!client) {
@@ -1154,6 +1158,8 @@
     this.params = options.params || {};
     this.body = options.body || null;
     this.file = options.file || null;
+    this.encoding = options.encoding || 'utf8';
+    this.sendFileAs = options.sendFileAs || null;
     this.headers = headers;
   }
 
@@ -1386,6 +1392,10 @@
    */
   v.assert = function(rootValidator, options) {
     options = options || {};
+    if (typeof options === 'string') {
+      options = { description: options };
+    }
+    var description = options.description || options.apiName;
     return function(value) {
       var message = validate(rootValidator, value);
       // all good
@@ -1395,8 +1405,8 @@
 
       var errorMessage = processMessage(message, options);
 
-      if (options.apiName) {
-        errorMessage = options.apiName + ': ' + errorMessage;
+      if (description) {
+        errorMessage = description + ': ' + errorMessage;
       }
 
       throw new Error(errorMessage);
@@ -1432,31 +1442,34 @@
         }
       }
 
-      if (errorMessages.length < 2) {
-        return errorMessages[0];
-      }
+      return renderObjectErrorMessages(errorMessages);
+    };
+  };
 
-      // enumerate all the error messages
-      return function(options) {
-        errorMessages = errorMessages.map(function(message) {
-          var key = message[0];
-          var renderedMessage = processMessage(message, options)
-            .split('\n')
-            .join(NEWLINE_INDENT); // indents any inner nesting
-          return '- ' + key + ': ' + renderedMessage;
-        });
+  function renderObjectErrorMessages(errorMessages) {
+    if (errorMessages.length < 2) {
+      return errorMessages[0];
+    }
 
-        var objectId = options.path.join('.');
-        var ofPhrase = objectId === DEFAULT_ERROR_PATH ? '' : ' of ' + objectId;
+    return function(options) {
+      const list = errorMessages.map(function(message) {
+        var key = message[0];
+        var renderedMessage = processMessage(message, options)
+          .split('\n')
+          .join(NEWLINE_INDENT); // indents any inner nesting
+        return '- ' + key + ': ' + renderedMessage;
+      });
 
-        return (
-          'The following properties' +
-          ofPhrase +
-          ' have invalid values:' +
-          NEWLINE_INDENT +
-          errorMessages.join(NEWLINE_INDENT)
-        );
-      };
+      var objectId = options.path.join('.');
+      var ofPhrase = objectId === DEFAULT_ERROR_PATH ? '' : ' of ' + objectId;
+
+      return (
+        'The following properties' +
+        ofPhrase +
+        ' have invalid values:' +
+        NEWLINE_INDENT +
+        list.join(NEWLINE_INDENT)
+      );
     };
   };
 
@@ -1617,6 +1630,14 @@
     };
   };
 
+  v.instanceOf = function instanceOf(compareWith) {
+    return function instaceOfValidator(value) {
+      if (value instanceof compareWith === false) {
+        return 'instance of ' + (compareWith.name || '<<anonymous>>');
+      }
+    };
+  };
+
   /**
    * Primitive validators
    *
@@ -1638,6 +1659,12 @@
     }
   };
 
+  v.finite = function finite(value) {
+    if (!Number.isFinite(value)) {
+      return 'finite';
+    }
+  };
+
   v.plainArray = function plainArray(value) {
     if (!Array.isArray(value)) {
       return 'array';
@@ -1656,9 +1683,21 @@
     }
   };
 
+  v.nonEmptyString = function nonEmptyString(value) {
+    if (typeof value !== 'string' || value === '') {
+      return 'non-empty string';
+    }
+  };
+
   v.func = function func(value) {
     if (typeof value !== 'function') {
       return 'function';
+    }
+  };
+
+  v.date = function date(value) {
+    if (value instanceof Date === false || value.toString() === 'Invalid Date') {
+      return 'valid date';
     }
   };
 
@@ -1866,10 +1905,15 @@
    *     // Handle error or response and call next.
    *   });
    */
-  Datasets.listDatasets = function() {
+  Datasets.listDatasets = function(config) {
+    validator.assertShape({
+      sortby: validator.oneOf('created', 'modified')
+    })(config);
+
     return this.client.createRequest({
       method: 'GET',
-      path: '/datasets/v1/:ownerId'
+      path: '/datasets/v1/:ownerId',
+      query: config ? pick_1(config, ['sortby']) : {}
     });
   };
 
@@ -2223,6 +2267,24 @@
    * @param {boolean} [config.steps=false] - Whether to return steps and turn-by-turn instructions.
    * @param {boolean} [config.voiceInstructions=false] - Whether or not to return SSML marked-up text for voice guidance along the route.
    * @param {'imperial'|'metric'} [config.voiceUnits="imperial"] - Which type of units to return in the text for voice instructions.
+   * @param {'electric_no_recharge'|'electric'} [config.engine="electric_no_recharge"] - Set to electric to enable electric vehicle routing.
+   * @param {number} [config.ev_initial_charge] - Optional parameter to specify initial charge of vehicle in Wh (watt-hours) at the beginning of the route.
+   * @param {number} [config.ev_max_charge] - Required parameter that defines the maximum possible charge of vehicle in Wh (watt-hours).
+   * @param {'ccs_combo_type1'|'ccs_combo_type1'|'tesla'} [config.ev_connector_types] - Required parameter that defines the compatible connector-types for the vehicle.
+   * @param {String} [config.energy_consumption_curve] - Required parameter that specifies in pairs the energy consumption in watt-hours per kilometer at a certain speed in kph.
+   * @param {String} [config.ev_charging_curve] - Required parameter that specifies the maximum battery charging rate (W) at a given charge level (Wh) in a list of pairs.
+   * @param {String} [config.ev_unconditioned_charging_curve] - Optional parameter that specifies the maximum battery charging rate (W) at a given charge level (Wh) in a list of pairs when the battery is in an unconditioned state (eg: cold).
+   * @param {number} [config.ev_pre_conditioning_time] - Optional parameter that defines the time in minutes it would take for the vehicle's battery to condition.
+   * @param {number} [config.ev_max_ac_charging_power] - Optional parameter to specify maximum AC charging power(W) that can be delivered by the onboard vehicle charger.
+   * @param {number} [config.ev_min_charge_at_destination] - Optional parameter to define the minimum battery charge required at the final route destination (Wh).
+   * @param {number} [config.ev_min_charge_at_charging_station] - Optional parameter to define the minimum charge when arriving at the charging station (Wh).
+   * @param {number} [config.auxiliary_consumption] - Optional parameter to define the measure of the continuous power draw of the auxiliary systems in watts (E.G heating or AC).
+   * @param {number} [config.maxHeight=1.6] - Optional parameter to define the max vehicle height in meters.
+   * @param {number} [config.maxWidth=1.9] - Optional parameter to define the max vehicle width in meters.
+   * @param {number} [config.maxWeight=2.5] - Optional parameter to define the max vehicle weight in metric tons.
+   * @param {String} [config.notifications="all"] - Returns notification metadata associated with the route leg of the route object.
+   * @param {String} [config.departAt] - Optional parameter to define the departure time, formatted as a timestamp in ISO-8601 format in the local time at the route origin.
+   * @param {String} [config.arriveBy] - Optional parameter to define the desired arrival time, formatted as a timestamp in ISO-8601 format in the local time at the route destination.
    * @return {MapiRequest}
    *
    * @example
@@ -2263,7 +2325,16 @@
       ),
       alternatives: validator.boolean,
       annotations: validator.arrayOf(
-        validator.oneOf('duration', 'distance', 'speed', 'congestion')
+        validator.oneOf(
+          'duration',
+          'distance',
+          'speed',
+          'congestion',
+          'congestion_numeric',
+          'maxspeed',
+          'closure',
+          'state_of_charge'
+        )
       ),
       bannerInstructions: validator.boolean,
       continueStraight: validator.boolean,
@@ -2274,7 +2345,25 @@
       roundaboutExits: validator.boolean,
       steps: validator.boolean,
       voiceInstructions: validator.boolean,
-      voiceUnits: validator.string
+      voiceUnits: validator.string,
+      engine: validator.string,
+      ev_initial_charge: validator.number,
+      ev_max_charge: validator.number,
+      ev_connector_types: validator.string,
+      energy_consumption_curve: validator.string,
+      ev_charging_curve: validator.string,
+      ev_unconditioned_charging_curve: validator.string,
+      ev_pre_conditioning_time: validator.number,
+      ev_max_ac_charging_power: validator.number,
+      ev_min_charge_at_destination: validator.number,
+      ev_min_charge_at_charging_station: validator.number,
+      auxiliary_consumption: validator.number,
+      maxHeight: validator.number,
+      maxWidth: validator.number,
+      maxWeight: validator.number,
+      notifications: validator.string,
+      departAt: validator.string,
+      arriveBy: validator.string
     })(config);
 
     config.profile = config.profile || 'driving';
@@ -2354,7 +2443,25 @@
       approaches: path.approach,
       bearings: path.bearing,
       radiuses: path.radius,
-      waypoint_names: path.waypointName
+      waypoint_names: path.waypointName,
+      engine: config.engine,
+      ev_initial_charge: config.ev_initial_charge,
+      ev_max_charge: config.ev_max_charge,
+      ev_connector_types: config.ev_connector_types,
+      energy_consumption_curve: config.energy_consumption_curve,
+      ev_charging_curve: config.ev_charging_curve,
+      ev_unconditioned_charging_curve: config.ev_unconditioned_charging_curve,
+      ev_pre_conditioning_time: config.ev_pre_conditioning_time,
+      ev_max_ac_charging_power: config.ev_max_ac_charging_power,
+      ev_min_charge_at_destination: config.ev_min_charge_at_destination,
+      ev_min_charge_at_charging_station: config.ev_min_charge_at_charging_station,
+      auxiliary_consumption: config.auxiliary_consumption,
+      max_height: config.maxHeight,
+      max_width: config.maxWidth,
+      max_weight: config.maxWeight,
+      notifications: config.notifications,
+      depart_at: config.departAt,
+      arrive_by: config.arriveBy
     });
 
     return this.client.createRequest({
@@ -2409,6 +2516,11 @@
    * @param {Array<string>} [config.language] - Specify the language to use for response text and, for forward geocoding, query result weighting.
    *  Options are [IETF language tags](https://en.wikipedia.org/wiki/IETF_language_tag) comprised of a mandatory
    *  [ISO 639-1 language code](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) and optionally one or more IETF subtags for country or script.
+   * @param {boolean} [config.routing=false] - Specify whether to request additional metadata about the recommended navigation destination. Only applicable for address features.
+   * @param {boolean} [config.fuzzyMatch=true] - Specify whether the Geocoding API should attempt approximate, as well as exact, matching.
+   * @param {String} [config.worldview="us"] - Filter results to geographic features whose characteristics are defined differently by audiences belonging to various regional, cultural, or political groups.
+   * @param {String} [config.session_token] - A unique session identifier generated by the client.
+   * 
    * @return {MapiRequest}
    *
    * @example
@@ -2462,7 +2574,11 @@
       autocomplete: validator.boolean,
       bbox: validator.arrayOf(validator.number),
       limit: validator.number,
-      language: validator.arrayOf(validator.string)
+      language: validator.arrayOf(validator.string),
+      routing: validator.boolean,
+      fuzzyMatch: validator.boolean,
+      worldview: validator.string,
+      session_token: validator.string
     })(config);
 
     config.mode = config.mode || 'mapbox.places';
@@ -2476,7 +2592,11 @@
           'autocomplete',
           'bbox',
           'limit',
-          'language'
+          'language',
+          'routing',
+          'fuzzyMatch',
+          'worldview',
+          'session_token'
         ])
       )
     );
@@ -2528,7 +2648,10 @@
       bbox: validator.arrayOf(validator.number),
       limit: validator.number,
       language: validator.arrayOf(validator.string),
-      reverseMode: validator.oneOf('distance', 'score')
+      reverseMode: validator.oneOf('distance', 'score'),
+      routing: validator.boolean,
+      worldview: validator.string,
+      session_token: validator.string
     })(config);
 
     config.mode = config.mode || 'mapbox.places';
@@ -2542,7 +2665,11 @@
           'bbox',
           'limit',
           'language',
-          'reverseMode'
+          'reverseMode',
+          'reverseMode',
+          'routing',
+          'worldview',
+          'session_token'
         ])
       )
     );
@@ -2556,6 +2683,253 @@
   };
 
   var geocoding = createServiceFactory_1(Geocoding);
+
+  /**
+   * Geocoding API service.
+   *
+   * Learn more about this service and its responses in
+   * [the HTTP service documentation](https://docs.mapbox.com/api/search/geocoding-v6/).
+   */
+  var GeocodingV6 = {};
+
+  var featureTypesV6 = [
+    'street',
+    'country',
+    'region',
+    'postcode',
+    'district',
+    'place',
+    'locality',
+    'neighborhood',
+    'address',
+    'secondary_address'
+  ];
+
+  /**
+   * Search for a place.
+   *
+   * See the [public documentation](https://docs.mapbox.com/api/search/geocoding-v6/#forward-geocoding).
+   *
+   * @param {Object} config
+   * @param {string} config.query - A place name.
+   * @param {'standard'|'structured'} [config.mode="standard"] - Either `standard` for common forward geocoding, or `structured` for increasing the accuracy of results. To use Structured Input, the query parameter must be dropped in favor of a separate parameter for individual feature components.
+   * @param {Array<string>|string} [config.countries] - Limits results to the specified countries.
+   *   Each item in the array should be an [ISO 3166 alpha 2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
+   *   [OR] if used with input mode="structured" denotes single country in free form.
+   * @param {Coordinates|'ip'} [config.proximity] - Bias local results based on a provided coordinate location or a user's IP address.
+   * @param {Array<'street'|'country'|'region'|'postcode'|'district'|'place'|'locality'|'neighborhood'|'address'|'secondary_address'>} [config.types] - Filter results by feature types.
+   * @param {BoundingBox} [config.bbox] - Limit results to a bounding box.
+   * @param {number} [config.limit=5] - Limit the number of results returned.
+   * @param {'geojson'|'v5'} [config.format='geojson'] - Specify the desired response format of results (geojson, default) or for backwards compatibility (v5).
+   * @param {String} [config.language] - Specify the language to use for response text and, for forward geocoding, query result weighting.
+   *  Options are [IETF language tags](https://en.wikipedia.org/wiki/IETF_language_tag) comprised of a mandatory
+   *  [ISO 639-1 language code](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) and optionally one or more IETF subtags for country or script.
+   * @param {String} [config.address_line1] - A string including address_number and street. These values can alternatively be provided as separate parameters. (Stuctured Input specific field)
+   * @param {String} [config.address_number] - The number associated with the house (Stuctured Input specific field)
+   * @param {String} [config.street] - The name of the street in the address (Stuctured Input specific field)
+   * @param {String} [config.block] - In some countries like Japan, the block is a component in the address (Stuctured Input specific field)
+   * @param {String} [config.place] - Typically these are cities, villages, municipalities, etc. (Stuctured Input specific field)
+   * @param {String} [config.region] - Top-level sub-national administrative features, such as states in the United States or provinces in Canada or China. (Stuctured Input specific field)
+   * @param {String} [config.neighborhood] - Colloquial sub-city features often referred to in local parlance (Stuctured Input specific field)
+   * @param {String} [config.postcode] - Postal codes used in country-specific national addressing systems. (Stuctured Input specific field)
+   * @param {String} [config.locality] - Official sub-city features (Stuctured Input specific field)
+   * @param {boolean} [config.autocomplete=true] - Return autocomplete results or not.
+   * @param {boolean} [config.permanent=false] - Specify whether you intend to store the results of the query (true) or not (false, default). Temporary results are not allowed to be cached, while Permanent results are allowed to be cached and stored indefinitely.
+   * @param {String} [config.worldview="us"] - Filter results to geographic features whose characteristics are defined differently by audiences belonging to various regional, cultural, or political groups.
+   * @param {String} [config.session_token] - A unique session identifier generated by the client.
+   * @return {MapiRequest}
+   *
+   * @example
+   * geocodingClient.forwardGeocode({
+   *   query: 'Paris, France',
+   *   limit: 2
+   * })
+   *   .send()
+   *   .then(response => {
+   *     const match = response.body;
+   *   });
+   *
+   * @example
+   * // geocoding in structured input mode
+   * geocodingClient.forwardGeocode({
+   *   mode: 'structured',
+   *   address_number: '12',
+   *   street: 'Main str.'
+   * })
+   *   .send()
+   *   .then(response => {
+   *     const match = response.body;
+   *   });
+   *
+   * @example
+   * // geocoding with proximity
+   * geocodingClient.forwardGeocode({
+   *   query: 'Paris, France',
+   *   proximity: [-95.4431142, 33.6875431]
+   * })
+   *   .send()
+   *   .then(response => {
+   *     const match = response.body;
+   *   });
+   *
+   * // geocoding with countries
+   * geocodingClient.forwardGeocode({
+   *   query: 'Paris, France',
+   *   countries: ['fr']
+   * })
+   *   .send()
+   *   .then(response => {
+   *     const match = response.body;
+   *   });
+   *
+   * // geocoding with bounding box
+   * geocodingClient.forwardGeocode({
+   *   query: 'Paris, France',
+   *   bbox: [2.14, 48.72, 2.55, 48.96]
+   * })
+   *   .send()
+   *   .then(response => {
+   *     const match = response.body;
+   *   });
+   */
+  GeocodingV6.forwardGeocode = function(config) {
+    config.mode = config.mode || 'standard';
+
+    validator.assertShape(
+      immutable(config.mode === 'standard' ? { query: validator.required(validator.string) } : {}, {
+        mode: validator.oneOf('standard', 'structured'),
+        countries: config.mode === 'standard' ? validator.arrayOf(validator.string) : validator.string,
+        proximity: validator.oneOf(validator.coordinates, 'ip'),
+        types: validator.arrayOf(validator.oneOf(featureTypesV6)),
+        bbox: validator.arrayOf(validator.number),
+        format: validator.oneOf('geojson', 'v5'),
+        language: validator.string,
+        limit: validator.number,
+        worldview: validator.string,
+        autocomplete: validator.boolean,
+        permanent: validator.boolean,
+        session_token: validator.string,
+
+        // structured input fields
+        address_line1: validator.string,
+        address_number: validator.string,
+        street: validator.string,
+        block: validator.string,
+        place: validator.string,
+        region: validator.string,
+        neighborhood: validator.string,
+        postcode: validator.string,
+        locality: validator.string
+      })
+    )(config);
+
+    var query = stringifyBooleans(
+      immutable(
+        config.mode === 'standard'
+          ? { q: config.query }
+          : pick_1(config, [
+              'address_line1',
+              'address_number',
+              'street',
+              'block',
+              'place',
+              'region',
+              'neighborhood',
+              'postcode',
+              'locality'
+            ]),
+        { country: config.countries },
+        pick_1(config, [
+          'proximity',
+          'types',
+          'bbox',
+          'format',
+          'language',
+          'limit',
+          'worldview',
+          'autocomplete',
+          'permanent',
+          'session_token'
+        ])
+      )
+    );
+
+    return this.client.createRequest({
+      method: 'GET',
+      path: '/search/geocode/v6/forward',
+      query: query
+    });
+  };
+
+  var geocodingv6 = createServiceFactory_1(GeocodingV6);
+
+  /**
+   * Search for places near coordinates.
+   *
+   * See the [public documentation](https://docs.mapbox.com/api/search/geocoding-v6/#reverse-geocoding).
+   *
+   * @param {Object} config
+   * @param {number} config.longitude - longitude coordinate at which features will be searched.
+   * @param {number} config.latitude - latitude coordinate at which features will be searched.
+   * @param {Array<string>} [config.countries] - Limits results to the specified countries.
+   *   Each item in the array should be an [ISO 3166 alpha 2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
+   * @param {Array<'street'|'country'|'region'|'postcode'|'district'|'place'|'locality'|'neighborhood'|'address'>} [config.types] - Filter results by feature types.
+   * @param {BoundingBox} [config.bbox] - Limit results to a bounding box.
+   * @param {number} [config.limit=1] - Limit the number of results returned. If using this option, you must provide a single item for `types`.
+   * @param {string} [config.language] - Specify the language to use for response text and, for forward geocoding, query result weighting.
+   *  Options are [IETF language tags](https://en.wikipedia.org/wiki/IETF_language_tag) comprised of a mandatory
+   *  [ISO 639-1 language code](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) and optionally one or more IETF subtags for country or script.
+   * @param {boolean} [config.permanent=false] - Specify whether you intend to store the results of the query (true) or not (false, default). Temporary results are not allowed to be cached, while Permanent results are allowed to be cached and stored indefinitely.
+   * @param {String} [config.worldview="us"] - Filter results to geographic features whose characteristics are defined differently by audiences belonging to various regional, cultural, or political groups.
+   * @param {String} [config.session_token] - A unique session identifier generated by the client.
+   * @return {MapiRequest}
+   *
+   * @example
+   * geocodingClient.reverseGeocode({
+   *   longitude: -73.990593,
+   *   latitude: 40.740121
+   * })
+   *   .send()
+   *   .then(response => {
+   *     // GeoJSON document with geocoding matches
+   *     const match = response.body;
+   *   });
+   */
+  GeocodingV6.reverseGeocode = function(config) {
+    validator.assertShape({
+      longitude: validator.required(validator.number),
+      latitude: validator.required(validator.number),
+      countries: validator.arrayOf(validator.string),
+      types: validator.arrayOf(validator.oneOf(featureTypes)),
+      limit: validator.number,
+      language: validator.string,
+      worldview: validator.string,
+      permanent: validator.boolean,
+      session_token: validator.string
+    })(config);
+
+    var query = stringifyBooleans(
+      immutable(
+        { country: config.countries },
+        pick_1(config, [
+          'longitude',
+          'latitude',
+          'types',
+          'limit',
+          'language',
+          'worldview',
+          'permanent',
+          'session_token'
+        ])
+      )
+    );
+
+    return this.client.createRequest({
+      method: 'GET',
+      path: '/search/geocode/v6/reverse',
+      query: query
+    });
+  };
 
   /**
    * Map Matching API service.
@@ -2662,7 +3036,7 @@
      * @property {number} [radius=5] - A number in meters indicating the assumed precision of the used tracking device.
      * @property {boolean} [isWaypoint=true] - Whether this coordinate is waypoint or not. The first and last coordinates will always be waypoints.
      * @property {string} [waypointName] - Custom name for the waypoint used for the arrival instruction in banners and voice instructions. Will be ignored unless `isWaypoint` is `true`.
-     * @property {tring | number | Date} [timestamp] - Datetime corresponding to the coordinate.
+     * @property {string | number | Date} [timestamp] - Datetime corresponding to the coordinate.
      */
     config.points.forEach(function(obj) {
       path.coordinates.push(obj.coordinates[0] + ',' + obj.coordinates[1]);
@@ -2719,6 +3093,9 @@
       path.isWaypoint = path.isWaypoint
         .map(function(val, i) {
           return val === true ? i : '';
+        })
+        .filter(function(x) {
+          return x === 0 || Boolean(x);
         })
         .join(';');
     }
@@ -2907,7 +3284,7 @@
    */
   Optimization.getOptimization = function(config) {
     validator.assertShape({
-      profile: validator.oneOf('driving', 'walking', 'cycling'),
+      profile: validator.oneOf('driving', 'driving-traffic', 'walking', 'cycling'),
       waypoints: validator.required(
         validator.arrayOf(
           validator.shape({
@@ -2943,9 +3320,9 @@
     };
 
     var waypointCount = config.waypoints.length;
-    if (waypointCount < 2 || waypointCount > 12) {
+    if (waypointCount < 2) {
       throw new Error(
-        'waypoints must include between 2 and 12 OptimizationWaypoints'
+        'waypoints must include at least 2 OptimizationWaypoints'
       );
     }
 
@@ -3220,6 +3597,8 @@
    *   `zoom` (required): Between 0 and 20.
    *   `bearing` (optional): Between 0 and 360.
    *   `pitch` (optional): Between 0 and 60.
+   * @param {string} config.padding - A string value that denotes the minimum padding per side of the image. 
+   *   This can only be used with auto or bbox. The value resembles the CSS specification for padding and accepts 1-4 integers without units
    *
    * @param {Array<Overlay>} [config.overlays] - Overlays should be in z-index
    *   order: the first in the array will be on the bottom; the last will be on
@@ -3230,8 +3609,11 @@
    *   [`GeoJsonOverlay`](#geojsonoverlay)
    *
    * @param {boolean} [config.highRes=false]
-   * @param {string} [config.insertOverlayBeforeLayer] - The ID of the style layer
+   * @param {string} [config.before_layer] - The ID of the style layer
    *   that overlays should be inserted *before*.
+   * @param {Object} [config.addlayer] - Adds a Mapbox style layer to the map's style at render time. Can be combined with before_layer.
+   * @param {Array} [config.setfilter] - Applies a filter to an existing layer in a style using Mapbox's expression syntax. Must be used with layer_id.
+   * @param {string} [config.layer_id] - Denotes the layer in the style that the filter specified in setfilter is applied to.
    * @param {boolean} [config.attribution=true] - Whether there is attribution
    *   on the map image.
    * @param {boolean} [config.logo=true] - Whether there is a Mapbox logo
@@ -3316,6 +3698,41 @@
    *   });
    * const staticImageUrl = request.url();
    * // Now you can open staticImageUrl in a browser.
+   *  * @example
+   * // Filter all buildings that have a height value that is less than 300 meters
+   * const request = staticClient
+   *   .getStaticImage({
+   *     ownerId: 'mapbox',
+   *     styleId: 'streets-v11',
+   *     width: 200,
+   *     height: 300,
+   *     position: {
+   *       coordinates: [12, 13],
+   *       zoom: 4
+   *     },
+   *     setfilter: [">","height",300],
+   *     layer_id: 'building',
+   *   });
+   * const staticImageUrl = request.url();
+   * // Now you can open staticImageUrl in a browser.
+   *
+   * @example
+   * // Paint all the state and province level boundaries associated with the US worldview with a dashed line and insert it below the road-label layer
+   * const request = staticClient
+   *   .getStaticImage({
+   *     ownerId: 'mapbox',
+   *     styleId: 'streets-v11',
+   *     width: 200,
+   *     height: 300,
+   *     position: {
+   *       coordinates: [12, 13],
+   *       zoom: 4
+   *     },
+   *     addlayer: {"id":"better-boundary","type":"line","source":"composite","source-layer":"admin","filter":["all",["==",["get","admin_level"],1],["==",["get","maritime"],"false"],["match",["get","worldview"],["all","US"],true,false]],"layout":{"line-join":"bevel"},"paint":{"line-color":"%236898B3","line-width":1.5,"line-dasharray":[1.5,1]}},
+   *    before_layer: 'road-label',
+   *   });
+   * const staticImageUrl = request.url();
+   * // Now you can open staticImageUrl in a browser.
    */
   Static.getStaticImage = function(config) {
     validator.assertShape({
@@ -3334,9 +3751,13 @@
           })
         )
       ),
+      padding: validator.string,
       overlays: validator.arrayOf(validator.plainObject),
       highRes: validator.boolean,
-      insertOverlayBeforeLayer: validator.string,
+      before_layer: v.string,
+      addlayer: v.plainObject,
+      setfilter: v.plainArray,
+      layer_id: v.string,
       attribution: validator.boolean,
       logo: validator.boolean
     })(config);
@@ -3373,21 +3794,78 @@
     if (config.insertOverlayBeforeLayer !== undefined) {
       query.before_layer = config.insertOverlayBeforeLayer;
     }
+    if (config.before_layer !== undefined) {
+      query.before_layer = config.before_layer;
+    }
+    if (config.addlayer !== undefined) {
+      query.addlayer = JSON.stringify(config.addlayer); // stringify to retain object shape
+    }
+    if (config.setfilter !== undefined) {
+      query.setfilter = JSON.stringify(config.setfilter); // stringify to retain array shape
+    }
+    if (config.layer_id !== undefined) {
+      query.layer_id = config.layer_id;
+    }
+    if (config.padding !== undefined) {
+      query.padding = config.padding;
+    }
+  
+    if (config.setfilter !== undefined && config.layer_id === undefined) {
+      throw new Error('Must include layer_id in setfilter request');
+    }
+  
+    if (
+      (config.setfilter !== undefined || config.addlayer !== undefined) &&
+      config.position === 'auto' &&
+      config.overlays === undefined
+    ) {
+      throw new Error(
+        'Auto extent cannot be used with style parameters and no overlay'
+      );
+    }
+  
+    if (config.addlayer !== undefined && config.setfilter !== undefined) {
+      throw new Error(
+        'addlayer and setfilter cannot be used in the same request'
+      );
+    }
+  
+    if (
+      config.padding !== undefined &&
+      config.position !== 'auto' &&
+      config.position.bbox === undefined
+    ) {
+      throw new Error(
+        'Padding can only be used with auto or bbox as the position.'
+      );
+    }
+  
+    if (config.position.bbox !== undefined && config.position.bbox.length !== 4) {
+      throw new Error('bbox must be four coordinates');
+    }
 
     return this.client.createRequest({
       method: 'GET',
       path: '/styles/v1/:ownerId/:styleId/static/' + preEncodedUrlParts,
       params: pick_1(config, ['ownerId', 'styleId']),
-      query: query
+      query: query,
+      encoding: 'binary',
     });
   };
 
   function encodePosition(position) {
     if (position === 'auto') return 'auto';
+    if (position.bbox) return JSON.stringify(position.bbox);
 
     return position.coordinates
-      .concat([position.zoom, position.bearing, position.pitch])
-      .filter(Boolean)
+      .concat([
+        position.zoom,
+        position.pitch && !position.bearing ? 0 : position.bearing, // if pitch is set, but bearing is not, bearing must be 0
+        position.pitch === 0 ? undefined : position.pitch
+      ])
+      .filter(function(el) {
+        return el === 0 || el; // filter out undefined and allow 0 values
+      })
       .join(',');
   }
 
@@ -3540,6 +4018,9 @@
    * @param {Object} config
    * @param {string} config.styleId
    * @param {string} [config.ownerId]
+   * @param {boolean} [config.metadata=false] - If true, `mapbox:` specific metadata will be preserved
+   * @param {boolean} [config.draft=false] - If `true` will retrieve the draft style, otherwise will retrieve the published style.
+   * @param {boolean} [config.fresh=false] - If `true`, will bypass the cached version of the style. Fresh style requests have a lower rate limit than cached requests and may have a higher latency. `fresh=true` should never be used in production or high concurrency environments.
    * @return {MapiRequest}
    *
    * @example
@@ -3554,13 +4035,25 @@
   Styles.getStyle = function(config) {
     validator.assertShape({
       styleId: validator.required(validator.string),
-      ownerId: validator.string
+      ownerId: validator.string,
+      metadata: validator.boolean,
+      draft: validator.boolean,
+      fresh: validator.boolean
     })(config);
+
+    var query = {};
+    if (config.metadata) {
+      query.metadata = config.metadata;
+    }
+    if (config.fresh) {
+      query.fresh = 'true';
+    }
 
     return this.client.createRequest({
       method: 'GET',
       path: '/styles/v1/:ownerId/:styleId',
-      params: config
+      params: config,
+      query: query
     });
   };
 
@@ -3706,12 +4199,16 @@
     config = config || {};
     validator.assertShape({
       start: validator.string,
-      ownerId: validator.string
+      ownerId: validator.string,
+      fresh: validator.boolean
     })(config);
 
     var query = {};
     if (config.start) {
       query.start = config.start;
+    }
+    if (config.fresh) {
+      query.fresh = 'true';
     }
     return this.client.createRequest({
       method: 'GET',
@@ -3767,6 +4264,7 @@
    * @param {string} config.styleId
    * @param {string} config.iconId
    * @param {string} [config.ownerId]
+   * @param {boolean} [config.draft=false] - If `true` will remove the icon from the draft style, otherwise will remove the icon from the published style.
    * @return {MapiRequest}
    *
    * @example
@@ -3783,12 +4281,16 @@
     validator.assertShape({
       styleId: validator.required(validator.string),
       iconId: validator.required(validator.string),
-      ownerId: validator.string
+      ownerId: validator.string,
+      draft: v.boolean
     })(config);
 
     return this.client.createRequest({
       method: 'DELETE',
-      path: '/styles/v1/:ownerId/:styleId/sprite/:iconId',
+      path:
+        '/styles/v1/:ownerId/:styleId' +
+        (config.draft ? '/draft' : '') +
+        '/sprite/:iconId',
       params: config
     });
   };
@@ -3804,6 +4306,8 @@
    * @param {boolean} [config.highRes] - If true, returns spritesheet with 2x
    *   resolution.
    * @param {string} [config.ownerId]
+   * @param {boolean} [config.draft=false] - If `true` will retrieve the draft style sprite, otherwise will retrieve the published style sprite.
+   * @param {boolean} [config.fresh=false] - If `true`, will bypass the cached resource. Fresh requests have a lower rate limit than cached requests and may have a higher latency. `fresh=true` should never be used in high concurrency environments.
    * @return {MapiRequest}
    *
    * @example
@@ -3816,25 +4320,51 @@
    *   .then(response => {
    *     const sprite = response.body;
    *   });
+   * 
+   * @example
+   * stylesClient.getStyleSprite({
+   *   format: 'png',
+   *   styleId: 'foo',
+   *   highRes: true
+   * })
+   *   .send()
+   *   .then(response => {
+   *     const sprite = response.body;
+   *     fs.writeFileSync('sprite.png', sprite, 'binary');
+   *   });
    */
   Styles.getStyleSprite = function(config) {
     validator.assertShape({
       styleId: validator.required(validator.string),
       format: validator.oneOf('json', 'png'),
       highRes: validator.boolean,
-      ownerId: validator.string
+      ownerId: validator.string,
+      draft: validator.boolean,
+      fresh: validator.boolean
     })(config);
 
     var format = config.format || 'json';
     var fileName = 'sprite' + (config.highRes ? '@2x' : '') + '.' + format;
 
-    return this.client.createRequest({
-      method: 'GET',
-      path: '/styles/v1/:ownerId/:styleId/:fileName',
-      params: immutable(pick_1(config, ['ownerId', 'styleId']), {
-        fileName: fileName
-      })
-    });
+    var query = {};
+    if (config.fresh) {
+      query.fresh = 'true';
+    }  
+
+    return this.client.createRequest(
+      immutable(
+        {
+          method: 'GET',
+          path:
+            '/styles/v1/:ownerId/:styleId' +
+            (config.draft ? '/draft' : '') +
+            fileName,
+          params: pick(config, ['ownerId', 'styleId']),
+          query: query
+        },
+        format === 'png' ? { encoding: 'binary' } : {}
+      )
+    );
   };
 
   /**
@@ -3877,7 +4407,8 @@
       params: immutable(pick_1(config, ['ownerId']), {
         fontList: [].concat(config.fonts),
         fileName: fileName
-      })
+      }),
+      encoding: 'binary'
     });
   };
 
@@ -3892,17 +4423,24 @@
    *   be disabled.
    * @param {boolean} [title=false] - If `true`, the map's title and owner is displayed
    *   in the upper right corner of the map.
-   * @param {ownerId} [ownerId]
-   */
+   * @param {boolean} [config.fallback=false] - If `true`, serve a fallback raster map.
+   * @param {string} [config.mapboxGLVersion] - Specify a version of [Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/api/) to use to render the map.
+   * @param {string} [config.mapboxGLGeocoderVersion] - Specify a version of the [Mapbox GL geocoder plugin](https://github.com/mapbox/mapbox-gl-geocoder) to use to render the map search box.
+   * @param {string} [config.ownerId]
+   * @param {boolean} [config.draft=false] - If `true` will retrieve the draft style, otherwise will retrieve the published style.   */
   Styles.getEmbeddableHtml = function(config) {
     validator.assertShape({
       styleId: validator.required(validator.string),
       scrollZoom: validator.boolean,
       title: validator.boolean,
-      ownerId: validator.string
+      fallback: validator.boolean,
+      mapboxGLVersion: validator.string,
+      mapboxGLGeocoderVersion: validator.string,
+      ownerId: validator.string,
+      draft: validator.boolean
     })(config);
 
-    var fileName = config.styleId + '.html';
+    var fileName = config.styleId + (config.draft ? '/draft' : '') + '.html';
     var query = {};
     if (config.scrollZoom !== undefined) {
       query.zoomwheel = String(config.scrollZoom);
@@ -3910,13 +4448,21 @@
     if (config.title !== undefined) {
       query.title = String(config.title);
     }
+    if (config.fallback !== undefined) {
+      query.fallback = String(config.fallback);
+    }
+    if (config.mapboxGLVersion !== undefined) {
+      query.mapboxGLVersion = String(config.mapboxGLVersion);
+    }
+    if (config.mapboxGLGeocoderVersion !== undefined) {
+      query.mapboxGLGeocoderVersion = String(config.mapboxGLGeocoderVersion);
+    }
+  
 
     return this.client.createRequest({
       method: 'GET',
-      path: '/styles/v1/:ownerId/:fileName',
-      params: immutable(pick_1(config, ['ownerId']), {
-        fileName: fileName
-      }),
+      path: '/styles/v1/:ownerId/' + fileName,
+      params: pick_1(config, ['ownerId']),
       query: query
     });
   };
@@ -3963,6 +4509,7 @@
       radius: validator.number,
       limit: validator.range([1, 50]),
       dedupe: validator.boolean,
+      geometry: validator.oneOf('polygon', 'linestring', 'point'),
       layers: validator.arrayOf(validator.string)
     })(config);
 
@@ -3973,7 +4520,7 @@
         mapIds: config.mapIds,
         coordinates: config.coordinates
       },
-      query: pick_1(config, ['radius', 'limit', 'dedupe', 'layers'])
+      query: pick_1(config, ['radius', 'limit', 'dedupe', 'layers', 'geometry'])
     });
   };
 
@@ -3992,6 +4539,12 @@
    *
    * @param {Object} [config]
    * @param {string} [config.ownerId]
+   * @param {'raster'|'vector'} [config.type] - Filter results by tileset type, either `raster` or `vector`.
+   * @param {number} [config.limit=100] - The maximum number of tilesets to return, from 1 to 500.
+   * @param {'created'|'modified'} [config.sortBy] - Sort the listings by their `created` or `modified` timestamps.
+   * @param {string} [config.start] - The tileset after which to start the listing.
+   * @param {'public'|'private'} [config.visibility] - Filter results by visibility, either `public` or `private`
+
    * @return {MapiRequest}
    *
    * @example
@@ -4008,13 +4561,549 @@
    */
   Tilesets.listTilesets = function(config) {
     validator.assertShape({
-      ownerId: validator.string
+      ownerId: validator.string,
+      limit: validator.range([1, 500]),
+      sortBy: validator.oneOf('created', 'modified'),
+      start: validator.string,
+      type: validator.oneOf('raster', 'vector'),
+      visibility: validator.oneOf('public', 'private')
     })(config);
 
     return this.client.createRequest({
       method: 'GET',
       path: '/tilesets/v1/:ownerId',
-      params: config
+      params: config ? pick_1(config, ['ownerId']) : {},
+      query: config
+      ? pick_1(config, ['limit', 'sortBy', 'start', 'type', 'visibility'])
+      : {}
+    });
+  };
+
+  /**
+   * Delete a tileset
+   * 
+   * @param {Object} config
+   * @param {string} config.tilesetId ID of the tileset to be deleted in the form `username.tileset_id`.
+   * @return {MapiRequest}
+   * 
+   * @example
+   * tilesetsClient.deleteTileset({
+   *     tilesetId: 'username.tileset_id'
+   *   })
+   * .send()
+   * .then(response => {
+   *   const deleted = response.statusCode === 204;
+   * });
+   */
+  Tilesets.deleteTileset = function(config) {
+    validator.assertShape({
+      tilesetId: validator.required(validator.string)
+    })(config);
+
+    return this.client.createRequest({
+      method: 'DELETE',
+      path: '/tilesets/v1/:tilesetId',
+      params: pick_1(config, ['tilesetId'])
+    });
+  };
+
+
+  /**
+   * Retrieve metadata about a tileset.
+   * 
+   * @param {Object} [config]
+   * @param {string} [config.tilesetId] - Unique identifier for the tileset in the format `username.id`.
+   * 
+   * @return {MapiRequest}
+   */
+  Tilesets.tileJSONMetadata = function(config) {
+    validator.assertShape({
+      tilesetId: validator.required(validator.string)
+    })(config);
+
+    return this.client.createRequest({
+      method: 'GET',
+      path: '/v4/:tilesetId.json',
+      params: pick_1(config, ['tilesetId'])
+    });
+  };
+
+
+  /**
+   * Create a tileset source
+   * 
+   * @param {Object} config
+   * @param {string} config.id ID of the tileset source to be created.
+   * @param {UploadableFile} config.file Line-delimeted GeoJSON file.
+   * @param {string} [config.ownerId]
+   * @return {MapiRequest}
+   * 
+   * @example
+   * tilesetsClient.createTilesetSource({
+   *      id: 'tileset_source_id',
+   *      // The string filename value works in Node.
+   *      // In the browser, provide a Blob.
+   *      file: 'path/to/file.geojson.ld'
+   *   })
+   *   .send()
+   *   .then(response => {
+   *     const tilesetSource = response.body;
+   *   });
+   */
+  Tilesets.createTilesetSource = function(config) {
+    validator.assertShape({
+      id: validator.required(validator.string),
+      file: validator.required(validator.file),
+      ownerId: validator.string
+    })(config);
+
+    return this.client.createRequest({
+      method: 'POST',
+      path: '/tilesets/v1/sources/:ownerId/:id',
+      params: pick_1(config, ['ownerId', 'id']),
+      file: config.file,
+      sendFileAs: 'form'
+    });
+  };
+
+  /**
+   * Retrieve a tileset source information
+   *
+   * @param {Object} config
+   * @param {string} config.id ID of the tileset source.
+   * @param {string} [config.ownerId]
+   * @return {MapiRequest}
+   *
+   * @example
+   * tilesetsClient.getTilesetSource({
+   *      id: 'tileset_source_id'
+   *   })
+   *   .send()
+   *   .then(response => {
+   *     const tilesetSource = response.body;
+   *   });
+   */
+  Tilesets.getTilesetSource = function(config) {
+    validator.assertShape({
+      id: validator.required(validator.string),
+      ownerId: validator.string
+    })(config);
+
+    return this.client.createRequest({
+      method: 'GET',
+      path: '/tilesets/v1/sources/:ownerId/:id',
+      params: pick_1(config, ['ownerId', 'id'])
+    });
+  };
+
+  /**
+   * List tileset sources
+   *
+   * @param {Object} [config]
+   * @param {string} [config.ownerId]
+   * @param {number} [config.limit=100] - The maximum number of tilesets to return, from 1 to 500.
+   * @param {string} [config.start] - The tileset after which to start the listing.
+   * @return {MapiRequest}
+   *
+   * @example
+   * tilesetsClient.listTilesetSources()
+   *   .send()
+   *   .then(response => {
+   *     const tilesetSources = response.body;
+   *   });
+   */
+  Tilesets.listTilesetSources = function(config) {
+    validator.assertShape({
+      ownerId: validator.string,
+      limit: validator.range([1, 500]),
+      start: validator.string
+    })(config);
+
+    return this.client.createRequest({
+      method: 'GET',
+      path: '/tilesets/v1/sources/:ownerId',
+      params: config ? pick_1(config, ['ownerId']) : {},
+      query: config ? pick_1(config, ['limit', 'start']) : {}
+    });
+  };
+
+
+  /**
+   * Delete a tileset source
+   *
+   * @param {Object} config
+   * @param {string} config.id ID of the tileset source to be deleted.
+   * @param {string} [config.ownerId]
+   * @return {MapiRequest}
+   *
+   * @example
+   * tilesetsClient.deleteTilesetSource({
+   *     id: 'tileset_source_id'
+   *   })
+   *   .send()
+   *   .then(response => {
+   *     const deleted = response.statusCode === 201;
+   *   });
+   */
+  Tilesets.deleteTilesetSource = function(config) {
+    validator.assertShape({
+      id: validator.required(validator.string),
+      ownerId: validator.string
+    })(config);
+
+    return this.client.createRequest({
+      method: 'DELETE',
+      path: '/tilesets/v1/sources/:ownerId/:id',
+      params: pick_1(config, ['ownerId', 'id'])
+    });
+  };
+
+  /**
+   * Create a tileset
+   *
+   * @param {Object} config
+   * @param {string} config.tilesetId ID of the tileset to be created in the form `username.tileset_name`.
+   * @param {Object} config.recipe The [tileset recipe](https://docs.mapbox.com/help/troubleshooting/tileset-recipe-reference/) to use in JSON format.
+   * @param {string} config.name Name of the tileset.
+   * @param {boolean} [config.private=true] A private tileset must be used with an access token from your account.
+   * @param {string} [config.description] Description of the tileset.
+   * @return {MapiRequest}
+   *
+   * @example
+   * tilesetsClient.createTileset({
+   *     tilesetId: 'username.tileset_id',
+   *     recipe: {
+   *       version: 1,
+   *       layers: {
+   *         my_new_layer: {
+   *           source: "mapbox://tileset-source/{username}/{id}",
+   *           minzoom: 0,
+   *           maxzoom: 8
+   *         }
+   *       }
+   *     },
+   *     name: 'My Tileset'
+   *   })
+   *   .send()
+   *   .then(response => {
+   *     const message = response.body.message;
+   *   });
+   */
+  Tilesets.createTileset = function(config) {
+    validator.assertShape({
+      tilesetId: validator.required(validator.string),
+      recipe: validator.required(validator.plainObject),
+      name: validator.required(validator.string),
+      private: validator.boolean,
+      description: validator.string
+    })(config);
+
+    return this.client.createRequest({
+      method: 'POST',
+      path: '/tilesets/v1/:tilesetId',
+      params: pick_1(config, ['tilesetId']),
+      body: pick_1(config, ['recipe', 'name', 'private', 'description'])
+    });
+  };
+
+  /**
+   * Publish a tileset
+   *
+   * @param {Object} config
+   * @param {string} config.tilesetId ID of the tileset to publish in the form `username.tileset_name`.
+   * @return {MapiRequest}
+   *
+   * @example
+   * tilesetsClient.publishTileset({
+   *     tilesetId: 'username.tileset_id'
+   *   })
+   *   .send()
+   *   .then(response => {
+   *     const tilesetPublishJob = response.body;
+   *   });
+   */
+  Tilesets.publishTileset = function(config) {
+    validator.assertShape({
+      tilesetId: validator.required(validator.string)
+    })(config);
+
+    return this.client.createRequest({
+      method: 'POST',
+      path: '/tilesets/v1/:tilesetId/publish',
+      params: pick_1(config, ['tilesetId'])
+    });
+  };
+
+  /**
+   * Update a tileset
+   *
+   * @param {Object} config
+   * @param {string} config.tilesetId ID of the tileset in the form `username.tileset_name`.
+   * @param {string} [config.name]
+   * @param {string} [config.description]
+   * @param {boolean} [config.private]
+   * @param {Array} [config.attribution]
+   * @param {string} [config.attribution[].text]
+   * @param {string} [config.attribution[].link]
+   * @return {MapiRequest}
+   *
+   * @example
+   * tilesetsClient.updateTileset({
+   *     tilesetId: 'username.tileset_name',
+   *     name: 'Tileset Name',
+   *     private: true,
+   *     attribution: [
+   *      {
+   *        text: 'Source Name',
+   *        link: 'https://example.com'
+   *      }
+   *     ]
+   *   })
+   *   .send()
+   *   .then(response => {
+   *     const updated = response.statusCode === 204;
+   *   });
+   */
+  Tilesets.updateTileset = function(config) {
+    validator.assertShape({
+      tilesetId: validator.required(validator.string),
+      name: validator.string,
+      description: validator.string,
+      private: validator.boolean,
+      attribution: validator.arrayOf(
+        validator.strictShape({
+          text: validator.required(validator.string),
+          link: validator.required(validator.string)
+        })
+      )
+    })(config);
+
+    return this.client.createRequest({
+      method: 'PATCH',
+      path: '/tilesets/v1/:tilesetId',
+      params: pick_1(config, ['tilesetId']),
+      body: config
+        ? pick_1(config, ['name', 'description', 'private', 'attribution'])
+        : {}
+    });
+  };
+  
+  /**
+   * Retrieve the status of a tileset
+   *
+   * @param {Object} config
+   * @param {string} config.tilesetId ID of the tileset in the form `username.tileset_name`.
+   * @return {MapiRequest}
+   *
+   * @example
+   * tilesetsClient.tilesetStatus({
+   *     tilesetId: 'username.tileset_name'
+   *   })
+   *   .send()
+   *   .then(response => {
+   *     const tilesetStatus = response.body;
+   *   });
+   */
+  Tilesets.tilesetStatus = function(config) {
+    validator.assertShape({
+      tilesetId: validator.required(validator.string)
+    })(config);
+
+    return this.client.createRequest({
+      method: 'GET',
+      path: '/tilesets/v1/:tilesetId/status',
+      params: pick_1(config, ['tilesetId'])
+    });
+  };
+  
+  /**
+   * Retrieve information about a single tileset job
+   *
+   * @param {Object} config
+   * @param {string} config.tilesetId ID of the tileset in the form `username.tileset_name`.
+   * @param {string} config.jobId The publish job's ID.
+   * @return {MapiRequest}
+   *
+   * @example
+   * tilesetsClient.tilesetJob({
+   *     tilesetId: 'username.tileset_name'
+   *     jobId: 'job_id'
+   *   })
+   *   .send()
+   *   .then(response => {
+   *     const tilesetJob = response.body;
+   *   });
+   */
+  Tilesets.tilesetJob = function(config) {
+    validator.assertShape({
+      tilesetId: validator.required(validator.string),
+      jobId: validator.required(validator.string)
+    })(config);
+
+    return this.client.createRequest({
+      method: 'GET',
+      path: '/tilesets/v1/:tilesetId/jobs/:jobId',
+      params: pick_1(config, ['tilesetId', 'jobId'])
+    });
+  };
+  
+  /**
+   * List information about all jobs for a tileset
+   *
+   * @param {Object} config
+   * @param {string} config.tilesetId ID of the tileset in the form `username.tileset_name`.
+   * @param {'processing'|'queued'|'success'|'failed'} [config.stage]
+   * @param {number} [config.limit=100] - The maximum number of tilesets to return, from 1 to 500.
+   * @param {string} [config.start] - The tileset after which to start the listing.
+   * @return {MapiRequest}
+   *
+   * @example
+   * tilesetsClient.listTilesetJobs({
+   *     tilesetId: 'username.tileset_name'
+   *   })
+   *   .send()
+   *   .then(response => {
+   *     const jobs = response.body;
+   *   });
+   */
+  Tilesets.listTilesetJobs = function(config) {
+    validator.assertShape({
+      tilesetId: validator.required(validator.string),
+      stage: validator.oneOf('processing', 'queued', 'success', 'failed'),
+      limit: validator.range([1, 500]),
+      start: validator.string
+    })(config);
+
+    return this.client.createRequest({
+      method: 'GET',
+      path: '/tilesets/v1/:tilesetId/jobs',
+      params: pick_1(config, ['tilesetId']),
+      query: pick_1(config, ['stage', 'limit', 'start'])
+    });
+  };
+  
+  /**
+   * View Tilesets API global queue
+   *
+   * @return {MapiRequest}
+   *
+   * @example
+   * tilesetsClient.getTilesetsQueue()
+   *   .send()
+   *   .then(response => {
+   *     const queue = response.body;
+   *   });
+   */
+  Tilesets.getTilesetsQueue = function() {
+    return this.client.createRequest({
+      method: 'PUT',
+      path: '/tilesets/v1/queue'
+    });
+  };
+
+  /**
+   * Validate a recipe
+   *
+   * @param {Object} config
+   * @param {Object} config.recipe The [tileset recipe](https://docs.mapbox.com/help/troubleshooting/tileset-recipe-reference/) to validate in JSON format.
+   * @return {MapiRequest}
+   *
+   * @example
+   * tilesetsClient.validateRecipe({
+   *     recipe: {
+   *       version: 1,
+   *       layers: {
+   *         my_new_layer: {
+   *           source: "mapbox://tileset-source/{username}/{id}",
+   *           minzoom: 0,
+   *           maxzoom: 8
+   *         }
+   *       }
+   *     }
+   *   })
+   *   .send()
+   *   .then(response => {
+   *     const validation = response.body;
+   *   });
+   */
+  Tilesets.validateRecipe = function(config) {
+    v.assertShape({
+      recipe: v.required(v.plainObject)
+    })(config);
+
+    return this.client.createRequest({
+      method: 'PUT',
+      path: '/tilesets/v1/validateRecipe',
+      body: config.recipe
+    });
+  };
+
+  /**
+   * Retrieve a recipe
+   *
+   * @param {Object} config
+   * @param {string} config.tilesetId ID of the tileset in the form `username.tileset_name`.
+   * @return {MapiRequest}
+   *
+   * @example
+   * tilesetsClient.getRecipe({
+   *     tilesetId: 'username.tileset_name'
+   *   })
+   *   .send()
+   *   .then(response => {
+   *     const recipe = response.body;
+   *   });
+   */
+  Tilesets.getRecipe = function(config) {
+    validator.assertShape({
+      tilesetId: validator.required(validator.string)
+    })(config);
+
+    return this.client.createRequest({
+      method: 'GET',
+      path: '/tilesets/v1/:tilesetId/recipe',
+      params: pick_1(config, ['tilesetId'])
+    });
+  };
+
+  /**
+   * Update a tileset recipe
+   *
+   * @param {Object} config
+   * @param {string} config.tilesetId ID of the tileset in the form `username.tileset_name`.
+   * @param {Object} config.recipe The [tileset recipe](https://docs.mapbox.com/help/troubleshooting/tileset-recipe-reference/) in JSON format.
+   * @return {MapiRequest}
+   *
+   * @example
+   * tilesetsClient.updateRecipe({
+   *     tilesetId: 'username.tileset_name',
+   *     recipe: {
+   *       version: 1,
+   *       layers: {
+   *         my_new_layer: {
+   *           source: "mapbox://tileset-source/{username}/{id}",
+   *           minzoom: 0,
+   *           maxzoom: 8
+   *         }
+   *       }
+   *     }
+   *   })
+   *   .send()
+   *   .then(response => {
+   *     const updated = response.statusCode === 204;
+   *   });
+   */
+  Tilesets.updateRecipe = function(config) {
+    validator.assertShape({
+      tilesetId: validator.required(validator.string),
+      recipe: validator.required(validator.plainObject)
+    })(config);
+
+    return this.client.createRequest({
+      method: 'PATCH',
+      path: '/tilesets/v1/:tilesetId/recipe',
+      params: pick_1(config, ['tilesetId']),
+      body: config.recipe
     });
   };
 
@@ -4346,13 +5435,10 @@
    * See the [corresponding HTTP service documentation](https://www.mapbox.com/api-documentation/maps/#create-an-upload).
    *
    * @param {Object} config
-   * @param {string} config.mapId - The map ID to create or replace in the format `username.nameoftileset`.
+   * @param {string} config.tileset - The tileset ID to create or replace, in the format `username.nameoftileset`.
    *   Limited to 32 characters (only `-` and `_` special characters allowed; limit does not include username).
-   * @param {string} config.url - Either of the following:
-   *   - HTTPS URL of the S3 object provided by [`createUploadCredentials`](#createuploadcredentials)
-   *   - The `mapbox://` URL of an existing dataset that you'd like to export to a tileset.
-   *     This should be in the format `mapbox://datasets/{username}/{datasetId}`.
-   * @param {string} [config.tilesetName] - Name for the tileset. Limited to 64 characters.
+   * @param {string} config.url - HTTPS URL of the S3 object provided by [`createUploadCredentials`](#createuploadcredentials)
+   * @param {string} [config.name] - The name of the tileset. Limited to 64 characters.
    * @return {MapiRequest}
    *
    * @example
@@ -4366,8 +5452,9 @@
    *   url: '{s3 url}'
    * };
    * uploadsClient.createUpload({
-   *   mapId: `${myUsername}.${myTileset}`,
-   *   url: credentials.url
+   *   tileset: `${myUsername}.${myTileset}`,
+   *   url: credentials.url,
+   *   name: 'my uploads name',
    * })
    *   .send()
    *   .then(response => {
@@ -4376,19 +5463,36 @@
    */
   Uploads.createUpload = function(config) {
     validator.assertShape({
-      mapId: validator.required(validator.string),
       url: validator.required(validator.string),
+      tileset: validator.string,
+      name: validator.string,
+      mapId: validator.string,
       tilesetName: validator.string
     })(config);
+
+    if (!config.tileset && !config.mapId) {
+      throw new Error('tileset or mapId must be defined');
+    }
+  
+    if (!config.name && !config.tilesetName) {
+      throw new Error('name or tilesetName must be defined');
+    }
+  
+    // Support old mapId option
+    if (config.mapId) {
+      config.tileset = config.mapId;
+    }
+  
+    // Support old tilesetName option
+    if (config.tilesetName) {
+      config.name = config.tilesetName;
+    }
 
     return this.client.createRequest({
       method: 'POST',
       path: '/uploads/v1/:ownerId',
-      body: {
-        tileset: config.mapId,
-        url: config.url,
-        name: config.tilesetName
-      }
+      body: pick_1(config, ['tileset', 'url', 'name'])
+
     });
   };
 
@@ -4454,12 +5558,127 @@
 
   var uploads = createServiceFactory_1(Uploads);
 
+  /**
+   * Isochrone API service.
+   *
+   * Learn more about this service and its responses in
+   * [the HTTP service documentation](https://docs.mapbox.com/api/navigation/#isochrone).
+   */
+  var Isochrone = {};
+
+  /**
+   * Given a location and a routing profile, retrieve up to four isochrone contours
+   * @param {Object} config
+   * @param {'driving'|'driving-traffic'|'walking'|'cycling'} [config.profile="driving"] - 	A Mapbox Directions routing profile ID.
+   * @param {Coordinates} config.coordinates - A  {longitude,latitude} coordinate pair around which to center the isochrone lines.
+   * @param {Array<number>} [config.minutes] - The times in minutes to use for each isochrone contour. You can specify up to four contours. Times must be in increasing order. The maximum time that can be specified is 60 minutes. Setting minutes and meters in the same time is an error.
+   * @param {Array<number>} [config.meters] - The distances in meters to use for each isochrone contour. You can specify up to four contours. Distances must be in increasing order. The maximum distance that can be specified is 100000 meters. Setting minutes and meters in the same time is an error.
+   * @param {Array<string>} [config.colors] - The colors to use for each isochrone contour, specified as hex values without a leading # (for example, ff0000 for red). If this parameter is used, there must be the same number of colors as there are entries in contours_minutes or contours_meters. If no colors are specified, the Isochrone API will assign a default rainbow color scheme to the output.
+   * @param {boolean} [config.polygons] - Specify whether to return the contours as GeoJSON polygons (true) or linestrings (false, default). When polygons=true, any contour that forms a ring is returned as a polygon.
+   * @param {number} [config.denoise] - A floating point value from 0.0 to 1.0 that can be used to remove smaller contours. The default is 1.0. A value of 1.0 will only return the largest contour for a given time value. A value of 0.5 drops any contours that are less than half the area of the largest contour in the set of contours for that same time value.
+   * @param {number} [config.generalize] - A positive floating point value in meters used as the tolerance for Douglas-Peucker generalization. There is no upper bound. If no value is specified in the request, the Isochrone API will choose the most optimized generalization to use for the request. Note that the generalization of contours can lead to self-intersections, as well as intersections of adjacent contours.
+
+   * @return {MapiRequest}
+   */
+  Isochrone.getContours = function(config) {
+    validator.assertShape({
+      profile: validator.oneOf('driving', 'driving-traffic', 'walking', 'cycling'),
+      coordinates: validator.coordinates,
+      minutes: validator.arrayOf(validator.number),
+      meters: validator.arrayOf(validator.number),
+      colors: validator.arrayOf(validator.string),
+      polygons: validator.boolean,
+      denoise: validator.number,
+      generalize: validator.number,
+      depart_at: validator.string
+    })(config);
+
+    config.profile = config.profile || 'driving';
+
+    if (config.minutes !== undefined && config.meters !== undefined) {
+      throw new Error("minutes and meters can't be specified at the same time");
+    }
+    var contours = config.minutes ? config.minutes : config.meters;
+    var contours_name = config.minutes ? 'minutes' : 'meters';
+    var contoursCount = contours.length;
+
+    if (contoursCount < 1 || contoursCount > 4) {
+      throw new Error(
+        contours_name + ' must contain between 1 and 4 contour values'
+      );
+    }
+
+    if (
+      config.colors !== undefined &&
+      contours !== undefined &&
+      config.colors.length !== contoursCount
+    ) {
+      throw new Error(
+        'colors should have the same number of entries as ' + contours_name
+      );
+    }
+
+    if (
+      config.minutes !== undefined &&
+      !config.minutes.every(function(minute) {
+        return minute <= 60;
+      })
+    ) {
+      throw new Error('minutes must be less than 60');
+    }
+
+    var MAX_METERS = 100000;
+    if (
+      config.meters !== undefined &&
+      !config.meters.every(function(meter) {
+        return meter <= MAX_METERS;
+      })
+    ) {
+      throw new Error('meters must be less than ' + MAX_METERS);
+    }
+
+    if (config.generalize && config.generalize < 0) {
+      throw new Error('generalize tolerance must be a positive number');
+    }
+
+    // Strip "#" from colors.
+    if (config.colors) {
+      config.colors = config.colors.map(function(color) {
+        if (color[0] === '#') return color.substring(1);
+        return color;
+      });
+    }
+
+    var query = stringifyBooleans({
+      contours_minutes: config.minutes ? config.minutes.join(',') : null,
+      contours_meters: config.meters ? config.meters.join(',') : null,
+      contours_colors: config.colors ? config.colors.join(',') : null,
+      polygons: config.polygons,
+      denoise: config.denoise,
+      generalize: config.generalize,
+      depart_at: config.depart_at
+    });
+
+    return this.client.createRequest({
+      method: 'GET',
+      path: '/isochrone/v1/mapbox/:profile/:coordinates',
+      params: {
+        profile: config.profile,
+        coordinates: config.coordinates.join(',')
+      },
+      query: objectClean(query)
+    });
+  };
+
+  var isochrone = createServiceFactory_1(Isochrone);
+
   function mapboxSdk(options) {
     var client = browserClient(options);
 
     client.datasets = datasets(client);
     client.directions = directions(client);
     client.geocoding = geocoding(client);
+    client.geocodingV6 = geocodingv6(client);
     client.mapMatching = mapMatching(client);
     client.matrix = matrix(client);
     client.optimization = optimization(client);
@@ -4469,6 +5688,7 @@
     client.tilesets = tilesets(client);
     client.tokens = tokens(client);
     client.uploads = uploads(client);
+    client.isochrone = isochrone(client);
 
     return client;
   }
