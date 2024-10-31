@@ -1,12 +1,27 @@
 import React from 'react';
+import classNames from 'classnames';
+
 import { FieldRadioButton } from '../../../../../components';
 
-import css from './AvailabilityModeSelector.module.css';
+import css from './AvailabilitySingleSeatSelector.module.css';
 
-const AvailabilityModeSelector = props => {
-  const { idPrefix, pristine, intl } = props;
+/**
+ * A Form Field that allows marking singleSeat availability (allow/block)
+ *
+ * @param {Object} props
+ * @param {string?} props.className
+ * @param {string?} props.rootClassName
+ * @param {string?} props.idPrefix
+ * @param {boolean?} props.pristine
+ * @param {ReactIntl} props.intl
+ * @returns {JSX.Element} Form Field looking like a radio button
+ */
+const AvailabilitySingleSeatSelector = props => {
+  const { rootClassName, className, idPrefix, pristine, intl } = props;
+  const classes = classNames(rootClassName || css.root, className);
+
   return (
-    <div className={css.radioButtons}>
+    <div className={classes}>
       <FieldRadioButton
         id={`${idPrefix}.available`}
         name="availability"
@@ -29,4 +44,4 @@ const AvailabilityModeSelector = props => {
   );
 };
 
-export default AvailabilityModeSelector;
+export default AvailabilitySingleSeatSelector;

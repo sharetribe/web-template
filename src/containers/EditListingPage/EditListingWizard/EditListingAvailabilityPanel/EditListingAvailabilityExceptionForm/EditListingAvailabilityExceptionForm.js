@@ -9,7 +9,7 @@ import { propTypes } from '../../../../../util/types';
 
 import { Form, H3, PrimaryButton } from '../../../../../components';
 
-import AvailabilityModeSelector from './AvailabilityModeSelector';
+import AvailabilitySingleSeatSelector from './AvailabilitySingleSeatSelector';
 import ExceptionDateTimeRange from './ExceptionDateTimeRange';
 import ExceptionDateRange from './ExceptionDateRange';
 
@@ -85,9 +85,12 @@ const EditListingAvailabilityExceptionForm = props => {
               <FormattedMessage id="EditListingAvailabilityExceptionForm.title" />
             </H3>
 
-            <div className={css.radioButtons}>
-              <AvailabilityModeSelector idPrefix={idPrefix} pristine={pristine} intl={intl} />
-            </div>
+            <AvailabilityModeSelector 
+              idPrefix={idPrefix}
+              rootClassName={css.radioButtons}
+              pristine={pristine}
+              intl={intl}
+            />
 
             <div className={css.section}>
               {useFullDays ? (
