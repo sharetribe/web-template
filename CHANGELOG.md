@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+## [v6.0.1] 2024-11-01
+
 - [fix] GA4 integration had a copy-paste bug.
   [#489](https://github.com/sharetribe/web-template/pull/489)
 - [fix] FieldDateTimeInput.module.css: fix typo.
@@ -22,6 +24,8 @@ way to update this template, but currently, we follow a pattern:
   [#478](https://github.com/sharetribe/web-template/pull/478)
 - [change] Update default email templates to get link and button colors from asset.
   [#478](https://github.com/sharetribe/web-template/pull/478)
+
+  [v6.0.1]: https://github.com/sharetribe/web-template/compare/v6.0.0...v6.0.1
 
 ## [v6.0.0] 2024-10-29
 
