@@ -84,11 +84,12 @@ export const IncludeScripts = props => {
 
     if (typeof window !== 'undefined') {
       window.dataLayer = window.dataLayer || [];
-      function gtag() {
+      // Ensure that gtag function is found from window scope
+      window.gtag = function gtag() {
         dataLayer.push(arguments);
-      }
+      };
       gtag('js', new Date());
-      gtag('config', '${googleAnalyticsId}', {
+      gtag('config', googleAnalyticsId, {
         cookie_flags: 'SameSite=None;Secure',
       });
     }
