@@ -338,6 +338,10 @@ export const STOCK_TYPES = [
   STOCK_INFINITE_MULTIPLE_ITEMS,
 ];
 
+export const AVAILABILITY_ONE_SEAT = 'oneItem';
+export const AVAILABILITY_MULTIPLE_SEATS = 'multipleSeats';
+export const AVAILABILITY_TYPES = [AVAILABILITY_ONE_SEAT, AVAILABILITY_MULTIPLE_SEATS];
+
 propTypes.transition = shape({
   createdAt: instanceOf(Date).isRequired,
   by: oneOf(TX_TRANSITION_ACTORS).isRequired,

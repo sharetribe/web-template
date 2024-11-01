@@ -108,6 +108,7 @@ const EditListingAvailabilityPanel = props => {
     params,
     locationSearch,
     listing,
+    listingTypes,
     monthlyExceptionQueries,
     weeklyExceptionQueries,
     allExceptions,
@@ -134,7 +135,9 @@ const EditListingAvailabilityPanel = props => {
   const firstDayOfWeek = config.localization.firstDayOfWeek;
   const classes = classNames(rootClassName || css.root, className);
   const listingAttributes = listing?.attributes;
-  const unitType = listingAttributes?.publicData?.unitType;
+  const { listingType, unitType } = listingAttributes?.publicData || {};
+  const listingTypeConfig = listingTypes.find(conf => conf.listingType === listingType);
+
   const useFullDays = isFullDay(unitType);
   const hasAvailabilityPlan = !!listingAttributes?.availabilityPlan;
   const isPublished = listing?.id && listingAttributes?.state !== LISTING_STATE_DRAFT;
@@ -333,6 +336,7 @@ const EditListingAvailabilityPanel = props => {
             isDaily={unitType === DAY}
             updateInProgress={updateInProgress}
             useFullDays={useFullDays}
+            listingTypeConfig={listingTypeConfig}
           />
         </Modal>
       ) : null}
