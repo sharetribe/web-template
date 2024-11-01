@@ -5,7 +5,7 @@ import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
 import { intlShape, injectIntl, FormattedMessage } from '../../../../../util/reactIntl';
-import { propTypes } from '../../../../../util/types';
+import { AVAILABILITY_MULTIPLE_SEATS, propTypes } from '../../../../../util/types';
 
 import { Form, H3, PrimaryButton } from '../../../../../components';
 
@@ -39,6 +39,7 @@ const EditListingAvailabilityExceptionForm = props => {
           allExceptions,
           onFetchExceptions,
           useFullDays,
+          listingTypeConfig,
           isDaily,
           timeZone,
           updateInProgress,
@@ -55,6 +56,7 @@ const EditListingAvailabilityExceptionForm = props => {
           exceptionEndTime,
           exceptionRange,
         } = values;
+        const hasMultipleSeatsInUSe = listingTypeConfig.availabilityType === AVAILABILITY_MULTIPLE_SEATS;
 
         const { updateListingError } = fetchErrors || {};
 
@@ -85,12 +87,14 @@ const EditListingAvailabilityExceptionForm = props => {
               <FormattedMessage id="EditListingAvailabilityExceptionForm.title" />
             </H3>
 
-            <AvailabilityModeSelector 
-              idPrefix={idPrefix}
-              rootClassName={css.radioButtons}
-              pristine={pristine}
-              intl={intl}
-            />
+            {!hasMultipleSeatsInUSe ? (
+              <AvailabilitySingleSeatSelector 
+                idPrefix={idPrefix}
+                rootClassName={css.radioButtons}
+                pristine={pristine}
+                intl={intl}
+              />
+            ) : null}
 
             <div className={css.section}>
               {useFullDays ? (
