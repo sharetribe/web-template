@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] GA4 integration had a copy-paste bug.
+  [#489](https://github.com/sharetribe/web-template/pull/489)
 - [fix] FieldDateTimeInput.module.css: fix typo.
   [#487](https://github.com/sharetribe/web-template/pull/487)
 - [change] Update default email templates to use ICU's `j` pattern for datetimes.
