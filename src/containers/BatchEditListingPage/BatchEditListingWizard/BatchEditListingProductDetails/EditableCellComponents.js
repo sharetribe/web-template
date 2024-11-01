@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { Form, Input, InputNumber, Select, Switch } from 'antd';
 import css from './EditListingBatchProductDetails.module.css';
+import { MAX_KEYWORDS } from '../../BatchEditListingPage.duck';
 
 const { TextArea } = Input;
 
@@ -80,6 +81,7 @@ const EditableCell = props => {
                     onChange={save}
                     onDeselect={save}
                     placeholder={placeholder}
+                    maxTagCount={MAX_KEYWORDS}
                   />
                 ),
                 switch: (

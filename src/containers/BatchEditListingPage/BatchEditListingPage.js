@@ -13,7 +13,6 @@ import { hasPermissionToPostListings, isUserAuthorized } from '../../util/userHe
 import { NamedRedirect, Page } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
-import EditListingWizard from './BatchEditListingWizard/BatchEditListingWizard';
 import css from './BatchEditListingPage.module.css';
 import { initializeUppy, requestSaveBatchListings } from './BatchEditListingPage.duck';
 import BatchEditListingWizard from './BatchEditListingWizard/BatchEditListingWizard';

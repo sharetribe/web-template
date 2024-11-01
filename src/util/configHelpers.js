@@ -17,7 +17,10 @@ const printErrorIfHostedAssetIsMissing = props => {
 // Functions to create built-in specs for category setup.
 const depthFirstSearch = (category, iterator, depth = 0) => {
   const { subcategories = [] } = category;
-  return iterator(depth, subcategories.map(cat => depthFirstSearch(cat, iterator, depth + 1)));
+  return iterator(
+    depth,
+    subcategories.map(cat => depthFirstSearch(cat, iterator, depth + 1))
+  );
 };
 // Pick maximum depth from subcategories or default to given depth parameter
 const getMaxDepth = (depth, subcategories) =>

@@ -3,15 +3,20 @@ import { getFileMetadata } from '../../util/file-metadata';
 import { Money } from 'sharetribe-flex-sdk/src/types';
 import { createUppyInstance } from '../../util/uppy';
 import { getStore } from '../../store';
+import _ from 'lodash';
 
 const SMALL_IMAGE = 'small';
 const MEDIUM_IMAGE = 'medium';
 const LARGE_IMAGE = 'large';
 const UNAVAILABLE_IMAGE_RESOLUTION = 'unavailable';
+const USAGE_EDITORIAL = 'editorial';
+const NO_RELEASES = 'no-release';
 
 const AI_TERMS_STATUS_ACCEPTED = 'accepted';
 const AI_TERMS_STATUS_REQUIRED = 'required';
 const AI_TERMS_STATUS_NOT_REQUIRED = 'not-required';
+
+export const MAX_KEYWORDS = 30;
 
 export const imageDimensions = {
   [SMALL_IMAGE]: {
@@ -73,12 +78,12 @@ function uppyFileToListing(file) {
     name,
     title: name,
     description: null,
-    keywords: keywordsOptions,
+    keywords: keywordsOptions.slice(0, MAX_KEYWORDS),
     size,
     preview,
     category: [],
-    usage: 'editorial',
-    releases: 'no-release',
+    usage: USAGE_EDITORIAL,
+    releases: NO_RELEASES,
     price: null,
     dimensions: dimensions,
     isAi: false,
@@ -169,7 +174,7 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         listings: [...state.listings, payload],
-        selectedRowsKeys: [...state.selectedRowsKeys, payload.id],
+        selectedRowsKeys: _.uniq([...state.selectedRowsKeys, payload.id]),
       };
     case REMOVE_FILE:
       return { ...state, listings: state.listings.filter(file => file.id !== payload.id) };
@@ -297,15 +302,7 @@ function handleTransloaditResultComplete(dispatch, getState, sdk) {
     const listing = getSingleListing(getState(), localId);
 
     try {
-      // Get the uploaded image from Transloadit
-      // const response = await axios.get(ssl_url, { responseType: 'blob' });
-
-      // Upload the image to Sharetribe
-      // const sdkResponse = await sdk.images.upload({ image: response.data }, queryParams);
-
       const uppyFile = uppyInstance.getFile(localId);
-      // const { data: sdkImage } = sdkResponse.data;
-
       const price = Number(listing.price) * 100;
       const listingData = {
         title: listing.title,
@@ -328,31 +325,10 @@ function handleTransloaditResultComplete(dispatch, getState, sdk) {
         price: new Money(price, 'USD'),
       };
 
-      // Create the listing, so we have the listing ID
       await sdk.ownListings.create(listingData, {
         expand: true,
       });
-      //const listingId = draftResponse.data.data.id;
 
-      // // Upload the original asset using the storage manager
-      // const data = await uploadOriginalAsset({
-      //   userId: userId.uuid,
-      //   listingId: listingId.uuid,
-      //   fileUrl: ssl_url,
-      //   metadata: {},
-      // });
-      // console.log(data);
-      //
-      // // Finally, update the listing with the reference to the original asset
-      // await sdk.ownListings.update(
-      //   {
-      //     id: listingId,
-      //     privateData: {
-      //       originalAsset: data.source,
-      //     },
-      //   },
-      //   { expand: true }
-      // );
       dispatch({ type: ADD_SUCCESSFUL_LISTING, payload: listing });
     } catch (error) {
       dispatch({ type: ADD_FAILED_LISTING, payload: listing });

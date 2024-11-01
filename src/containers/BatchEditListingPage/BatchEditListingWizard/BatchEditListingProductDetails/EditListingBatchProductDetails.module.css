@@ -6,7 +6,7 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  padding: 36px;
+  padding: 24px 36px;
   background-color: var(--colorWhite);
 
   @media (--viewportLarge) {
@@ -80,3 +80,12 @@
   box-shadow: none;
 }
 
+.modalContent {
+  padding: var(--modalPadding);
+  margin: 1rem;
+  padding-bottom: 24px;
+}
+
+.modalContent .modalBottom {
+  margin-top: 48px;
+}

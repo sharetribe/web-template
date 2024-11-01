@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import css from './EditListingBatchProductDetails.module.css';
 import { Button, H3 } from '../../../../components';
 import { FormattedMessage } from '../../../../util/reactIntl';
-import { Checkbox, Flex, List, Modal } from 'antd';
+import { Checkbox, Flex, List, Modal, Progress, Space, Typography } from 'antd';
 import {
   CREATE_LISTINGS_ABORTED,
   getAiTermsRequired,
@@ -10,6 +10,7 @@ import {
   getListingCreationInProgress,
   getListingFieldsOptions,
   getListings,
+  getPublishingData,
   getSelectedRowsKeys,
   requestSaveBatchListings,
   requestUpdateListing,
@@ -19,40 +20,50 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { EditableListingsTable } from './EditableListingsTable';
 import useStickyHeader from '../hooks/useStickyHeader';
-import Paragraph from 'antd/es/typography/Paragraph';
+import {
+  ExclamationCircleOutlined,
+  FileExclamationOutlined,
+  WarningOutlined,
+} from '@ant-design/icons';
+
+const { Text, Paragraph } = Typography;
 
 function ListingValidationModalContent({ invalidListings }) {
   return (
-    <div>
-      <p>The following files have missing required information:</p>
-      <List
-        dataSource={invalidListings}
-        size="small"
-        renderItem={item => (
-          <List.Item>
-            <div>{item}</div>
-          </List.Item>
-        )}
-      />
-      <p>
-        Please ensure all files have a valid category, title, description, and price before saving.
-        You can either enter the missing information or deselect the invalid files to proceed.
-      </p>
+    <div className={css.modalContent}>
+      <Paragraph>
+        <FormattedMessage id="BatchEditListingProductDetails.validationModal.header"></FormattedMessage>
+      </Paragraph>
+      <Paragraph>
+        <List
+          dataSource={invalidListings}
+          renderItem={item => (
+            <List.Item>
+              <Space size="middle">
+                <FileExclamationOutlined /> {item}
+              </Space>
+            </List.Item>
+          )}
+        />
+      </Paragraph>
+      <Paragraph className={css.modalBottom}>
+        <FormattedMessage id="BatchEditListingProductDetails.validationModal.content"></FormattedMessage>
+      </Paragraph>
     </div>
   );
 }
 
 function AiTermsModalContent({ onTermsCheckboxChange }) {
   return (
-    <div>
-      <p>You are listing files marked as AI-generated content.</p>
-      <p>
-        To proceed with listing these products, you must comply with The Luupe's terms for
-        AI-generated content.
-      </p>
-      <Checkbox onChange={onTermsCheckboxChange}>
-        I have read and accept The Luupe's terms for listing AI-generated content.
-      </Checkbox>
+    <div className={css.modalContent}>
+      <Paragraph>
+        <FormattedMessage id="BatchEditListingProductDetails.aiContentModal.content"></FormattedMessage>
+      </Paragraph>
+      <Paragraph className={css.modalBottom}>
+        <Checkbox onChange={onTermsCheckboxChange}>
+          <FormattedMessage id="BatchEditListingProductDetails.aiContentModal.optIn"></FormattedMessage>
+        </Checkbox>
+      </Paragraph>
     </div>
   );
 }
@@ -66,11 +77,13 @@ export const EditListingBatchProductDetails = () => {
   const invalidListings = useSelector(getInvalidListings);
   const aiTermsRequired = useSelector(getAiTermsRequired);
   const selectedRowKeys = useSelector(getSelectedRowsKeys);
+  const { failedListings, successfulListings, selectedRowsKeys } = useSelector(getPublishingData);
 
   const [dataSource, setDataSource] = useState(listings);
   const [termsAcceptedCheckbox, setTermsAcceptedCheckbox] = useState(false); // Use state to track checkbox value
   const [showValidationModal, setShowValidationModal] = useState(false);
   const [showAiTermsModal, setShowAiTermsModal] = useState(false);
+  const [showProgressModal, setShowProgressModal] = useState(false);
 
   const onTermsCheckboxChange = e => {
     setTermsAcceptedCheckbox(e.target.checked);
@@ -101,12 +114,13 @@ export const EditListingBatchProductDetails = () => {
   const handleOkAiTermsModal = () => {
     if (termsAcceptedCheckbox) {
       dispatch({ type: SET_AI_TERMS_ACCEPTED });
-      setShowAiTermsModal(false);
+      dispatch({ type: CREATE_LISTINGS_ABORTED });
       onSubmit();
     } else {
-      setShowAiTermsModal(false);
       dispatch({ type: CREATE_LISTINGS_ABORTED });
     }
+
+    setShowAiTermsModal(false);
   };
 
   useEffect(() => {
@@ -114,16 +128,25 @@ export const EditListingBatchProductDetails = () => {
   }, [listings]);
 
   useEffect(() => {
-    if (listingsCreationInProgress && invalidListings.length > 0) {
-      setShowValidationModal(true);
+    if (invalidListings.length > 0) {
+      setShowValidationModal(listingsCreationInProgress);
+      return;
     }
-  }, [invalidListings, listingsCreationInProgress]);
 
-  useEffect(() => {
-    if (listingsCreationInProgress && aiTermsRequired && listings.some(listing => listing.isAi)) {
-      setShowAiTermsModal(true);
+    if (aiTermsRequired && listings.some(listing => listing.isAi)) {
+      setShowAiTermsModal(listingsCreationInProgress);
+      return;
     }
-  }, [aiTermsRequired, listingsCreationInProgress]);
+
+    setShowProgressModal(listingsCreationInProgress);
+  }, [
+    invalidListings,
+    aiTermsRequired,
+    listingsCreationInProgress,
+    failedListings,
+    successfulListings,
+    selectedRowsKeys,
+  ]);
 
   useStickyHeader(css);
 
@@ -148,11 +171,10 @@ export const EditListingBatchProductDetails = () => {
           <Button
             className={css.submitButton}
             type="button"
-            inProgress={listingsCreationInProgress}
             onClick={onSubmit}
             disabled={selectedRowKeys.length === 0 || listingsCreationInProgress}
           >
-            Submit for Review
+            <FormattedMessage id="BatchEditListingProductDetails.progressModal.submitButtonText"></FormattedMessage>
           </Button>
         </Flex>
       </Flex>
@@ -168,23 +190,59 @@ export const EditListingBatchProductDetails = () => {
       </div>
 
       <Modal
-        title="Incomplete Information for Selected Files"
+        title={
+          <Space size="large">
+            <Text type="danger">
+              <ExclamationCircleOutlined />
+            </Text>
+            <FormattedMessage id="BatchEditListingProductDetails.validationModal.title"></FormattedMessage>
+          </Space>
+        }
         open={showValidationModal}
         onOk={handleCancelValidationModal}
         onCancel={handleCancelValidationModal}
         cancelButtonProps={{ hidden: true }}
+        width={800}
       >
         <ListingValidationModalContent invalidListings={invalidListings} />
       </Modal>
 
       <Modal
-        title="AI Content Listing Compliance"
+        title={
+          <Space size="large">
+            <Text type="warning">
+              <WarningOutlined />
+            </Text>
+            <FormattedMessage id="BatchEditListingProductDetails.aiContentModal.title"></FormattedMessage>
+          </Space>
+        }
         open={showAiTermsModal}
         onOk={handleOkAiTermsModal}
         onCancel={handleCancelAiTermsModal}
         okButtonProps={{ disabled: !termsAcceptedCheckbox }}
+        width={800}
       >
         <AiTermsModalContent onTermsCheckboxChange={onTermsCheckboxChange} />
+      </Modal>
+
+      <Modal
+        title="Creating listings"
+        open={showProgressModal}
+        footer={null}
+        keyboard={false}
+        closeIcon={null}
+      >
+        <H3>
+          <FormattedMessage id="BatchEditListingProductDetails.progressModal.title"></FormattedMessage>
+        </H3>
+        <Paragraph>
+          <Progress
+            percent={(successfulListings.length / selectedRowsKeys.length) * 100}
+            type="line"
+            showInfo={false}
+          />
+        </Paragraph>
+        {failedListings?.length > 0 && <Paragraph>{failedListings.length} files failed</Paragraph>}
       </Modal>
     </div>
   );

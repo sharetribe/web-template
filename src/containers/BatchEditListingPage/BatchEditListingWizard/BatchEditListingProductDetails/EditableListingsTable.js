@@ -4,6 +4,7 @@ import { imageDimensions } from '../../BatchEditListingPage.duck';
 import css from './EditListingBatchProductDetails.module.css';
 import React from 'react';
 import { EditableCellComponents } from './EditableCellComponents';
+import { useIntl } from 'react-intl';
 
 const stringSorter = (strA, strB) => {
   return strA.name.localeCompare(strB.name, 'en', { sensitivity: 'base' });
@@ -15,6 +16,7 @@ const numberSorter = (a, b) => {
 
 export const EditableListingsTable = props => {
   const { onSave, dataSource, listingFieldsOptions, onSelectChange, selectedRowKeys } = props;
+  const intl = useIntl();
 
   const {
     categories: imageryCategoryOptions,
@@ -28,7 +30,10 @@ export const EditableListingsTable = props => {
 
   const columns = [
     {
-      title: 'Thumbnail',
+      title: intl.formatMessage({
+        id: 'EditableListingsTable.columnThumbnail',
+        defaultMessage: 'Thumbnail',
+      }),
       dataIndex: 'preview',
       render: previewUrl => (
         <Image alt="Thumbnail" src={previewUrl} fallback={imagePlaceholder} width={200} />
@@ -37,31 +42,49 @@ export const EditableListingsTable = props => {
       width: 210,
     },
     {
-      title: 'File Name',
+      title: intl.formatMessage({
+        id: 'EditableListingsTable.fileName',
+        defaultMessage: 'File Name',
+      }),
       dataIndex: 'name',
       width: 300,
       sorter: stringSorter,
     },
     {
-      title: 'Title',
+      title: intl.formatMessage({
+        id: 'EditableListingsTable.title',
+        defaultMessage: 'Title',
+      }),
       width: 400,
       dataIndex: 'title',
       editable: true,
       editControlType: 'text',
       sorter: stringSorter,
-      placeholder: 'The listing title',
+      placeholder: intl.formatMessage({
+        id: 'EditableListingsTable.titlePlaceholder',
+        defaultMessage: 'The listing title',
+      }),
     },
     {
-      title: 'Description',
+      title: intl.formatMessage({
+        id: 'EditableListingsTable.description',
+        defaultMessage: 'Description',
+      }),
       dataIndex: 'description',
       width: 300,
       editable: true,
       editControlType: 'textarea',
       sorter: stringSorter,
-      placeholder: 'The listing description',
+      placeholder: intl.formatMessage({
+        id: 'EditableListingsTable.descriptionPlaceholder',
+        defaultMessage: 'The listing description',
+      }),
     },
     {
-      title: 'Is AI',
+      title: intl.formatMessage({
+        id: 'EditableListingsTable.isAi',
+        defaultMessage: 'Is AI',
+      }),
       dataIndex: 'isAi',
       width: 150,
       editable: true,
@@ -72,7 +95,10 @@ export const EditableListingsTable = props => {
       }),
     },
     {
-      title: 'Is Illustration',
+      title: intl.formatMessage({
+        id: 'EditableListingsTable.isIllustration',
+        defaultMessage: 'Is Illustration',
+      }),
       dataIndex: 'isIllustration',
       width: 150,
       editable: true,
@@ -83,40 +109,64 @@ export const EditableListingsTable = props => {
       }),
     },
     {
-      title: 'Category',
+      title: intl.formatMessage({
+        id: 'EditableListingsTable.category',
+        defaultMessage: 'Category',
+      }),
       width: 300,
       dataIndex: 'category',
       editable: true,
       editControlType: 'selectMultiple',
       options: imageryCategoryOptions,
-      placeholder: 'Select a category',
+      placeholder: intl.formatMessage({
+        id: 'EditableListingsTable.categoryPlaceholder',
+        defaultMessage: 'Select a category',
+      }),
     },
     {
-      title: 'Usage',
+      title: intl.formatMessage({
+        id: 'EditableListingsTable.usage',
+        defaultMessage: 'Usage',
+      }),
       width: 200,
       dataIndex: 'usage',
       editable: true,
       editControlType: 'select',
       options: usageOptions,
-      placeholder: 'Select the usage',
+      placeholder: intl.formatMessage({
+        id: 'EditableListingsTable.usagePlaceholder',
+        defaultMessage: 'Select the usage',
+      }),
     },
     {
-      title: 'Do you have releases on file / can you obtain them?',
+      title: intl.formatMessage({
+        id: 'EditableListingsTable.releases',
+        defaultMessage: 'Do you have releases on file / can you obtain them?',
+      }),
       dataIndex: 'releases',
       width: 300,
       editable: true,
       editControlType: 'switch',
     },
     {
-      title: 'Keywords',
+      title: intl.formatMessage({
+        id: 'EditableListingsTable.keywords',
+        defaultMessage: 'Keywords',
+      }),
       width: 400,
       dataIndex: 'keywords',
       editable: true,
       editControlType: 'tags',
-      placeholder: 'Up to 30 keywords',
+      placeholder: intl.formatMessage({
+        id: 'EditableListingsTable.keywordsPlaceholder',
+        defaultMessage: 'Up to 30 keywords',
+      }),
     },
     {
-      title: 'Dimensions',
+      title: intl.formatMessage({
+        id: 'EditableListingsTable.dimensions',
+        defaultMessage: 'Dimensions',
+      }),
       dataIndex: 'dimensions',
       width: 200,
       render: dimensionsKey => {
@@ -125,19 +175,28 @@ export const EditableListingsTable = props => {
       sorter: stringSorter,
     },
     {
-      title: 'Size',
+      title: intl.formatMessage({
+        id: 'EditableListingsTable.size',
+        defaultMessage: 'Size',
+      }),
       dataIndex: 'size',
       width: 200,
       render: size => `${(size / 1024).toFixed(2)} KB`,
       sorter: numberSorter,
     },
     {
-      title: 'Price',
+      title: intl.formatMessage({
+        id: 'EditableListingsTable.price',
+        defaultMessage: 'Price',
+      }),
       dataIndex: 'price',
       width: 200,
       editable: true,
       editControlType: 'money',
-      placeholder: 'Enter the price',
+      placeholder: intl.formatMessage({
+        id: 'EditableListingsTable.pricePlaceholder',
+        defaultMessage: 'Enter the price',
+      }),
       sorter: numberSorter,
     },
   ];
