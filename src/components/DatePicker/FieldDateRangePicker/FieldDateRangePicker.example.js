@@ -9,6 +9,9 @@ import { Button } from '../../../components';
 
 import FieldDateRangePicker from './FieldDateRangePicker';
 
+const TODAY = new Date();
+const OVERMORROW = new Date(TODAY.getTime() + 2 * 24 * 60 * 60 * 1000);
+const DAY_AFTER_OVERMORROW = new Date(TODAY.getTime() + 3 * 24 * 60 * 60 * 1000);
 const identity = v => v;
 
 const FormComponent = props => (
@@ -92,6 +95,57 @@ export const Empty = {
     },
     onSubmit: values => {
       console.log('Submitting a form with values:', values);
+    },
+  },
+  group: 'inputs',
+};
+
+export const InitialData = {
+  component: FormComponent,
+  props: {
+    style: { marginBottom: '140px' },
+    dateInputProps: {
+      name: 'bookingDates',
+      isDaily: false,
+      startDateId: 'EmptyDateRange_bookingStartDate',
+      startDateLabel: 'Start date',
+      startDatePlaceholderText: startDatePlaceholderText,
+      endDateId: 'EmptyDateRange_bookingEndDate',
+      endDateLabel: 'End date',
+      endDatePlaceholderText: endDatePlaceholderText,
+      format: identity,
+      validate: composeValidators(
+        required('Required'),
+        bookingDatesRequired('Start date is not valid', 'End date is not valid')
+      ),
+      onBlur: () => console.log('onBlur called from DateRangeInput props.'),
+      onFocus: () => console.log('onFocus called from DateRangeInput props.'),
+      isBlockedBetween: () => {
+        return false;
+      },
+      isDayBlocked: () => {
+        return false;
+      },
+      isOutsideRange: () => {
+        return false;
+      },
+    },
+    onChange: formState => {
+      const { startDate, endDate } = formState.values?.bookingDates || {};
+      if (startDate || endDate) {
+        console.log(
+          'Changed to',
+          startDate ? formatDate(startDate) : startDate,
+          '-',
+          endDate ? formatDate(endDate) : endDate
+        );
+      }
+    },
+    onSubmit: values => {
+      console.log('Submitting a form with values:', values);
+    },
+    initialValues: {
+      bookingDates: { startDate: OVERMORROW, endDate: DAY_AFTER_OVERMORROW },
     },
   },
   group: 'inputs',
