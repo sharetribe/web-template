@@ -9,14 +9,16 @@ import { NamedRedirect, Tabs } from '../../../components';
 
 import BatchEditListingWizardTab, { PRODUCT_DETAILS, UPLOAD } from './BatchEditListingWizardTab';
 import css from './BatchEditListingWizard.module.css';
-import { createResourceLocatorString } from '../../../util/routes';
 import {
   getCreateListingsError,
   getCreateListingsSuccess,
+  getPublishingData,
   RESET_STATE,
 } from '../BatchEditListingPage.duck';
 import { useDispatch, useSelector } from 'react-redux';
-import { notification } from 'antd';
+import { Button, notification, Result } from 'antd';
+import { createResourceLocatorString } from '../../../util/routes';
+import * as PropTypes from 'prop-types';
 
 function getTabsStatus(fileCount) {
   return {
@@ -25,6 +27,61 @@ function getTabsStatus(fileCount) {
   };
 }
 
+function BatchEditListingResult(props) {
+  const { routeConfiguration, history } = props;
+  const dispatch = useDispatch();
+  const { failedListings, successfulListings, selectedRowsKeys } = useSelector(getPublishingData);
+
+  const { status, title, subtitle } = useMemo(() => {
+    if (successfulListings.length > 0 && failedListings.length > 0) {
+      return {
+        status: 'warning',
+        title: 'Some listings failed to publish',
+        subtitle: 'Please check the listings and try again.',
+      };
+    }
+
+    if (successfulListings.length === selectedRowsKeys.length) {
+      return {
+        status: 'success',
+        title: 'All Set! Listings Submitted for Review',
+        subtitle:
+          'Thank you for submitting your listings. Our team will review them shortly. You can check the status in your dashboard.',
+      };
+    }
+
+    return {
+      status: 'error',
+      title: 'All listings failed to publish',
+      subtitle: 'Please check the listings and try again.',
+    };
+  }, [successfulListings, failedListings, selectedRowsKeys]);
+
+  const redirectTo = (destination = 'ManageListingsPage') => {
+    dispatch({ type: RESET_STATE });
+    const to = createResourceLocatorString(destination, routeConfiguration);
+    history.push(to);
+  };
+
+  return (
+    <Result
+      className={css.results}
+      status={status}
+      title={title}
+      subTitle={subtitle}
+      extra={[
+        <Button type="primary" key="console" onClick={() => redirectTo('ManageListingsPage')}>
+          View listings
+        </Button>,
+        <Button key="buy" onClick={() => redirectTo('BatchEditListingsPage')}>
+          Create more listings
+        </Button>,
+      ]}
+    />
+  );
+}
+
+BatchEditListingResult.propTypes = { publishListingsSuccess: PropTypes.any };
 const BatchEditListingWizard = props => {
   const {
     id = '',
@@ -49,15 +106,6 @@ const BatchEditListingWizard = props => {
   const publishListingsSuccess = useSelector(getCreateListingsSuccess);
   const publishListingError = useSelector(getCreateListingsError);
   const [api, contextHolder] = notification.useNotification();
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (publishListingsSuccess) {
-      dispatch({ type: RESET_STATE });
-      const to = createResourceLocatorString('ManageListingsPage', routeConfiguration);
-      history.push(to);
-    }
-  }, [publishListingsSuccess]);
 
   useEffect(() => {
     if (publishListingError) {
@@ -88,6 +136,10 @@ const BatchEditListingWizard = props => {
   const tabLink = tab => {
     return { name: 'BatchEditListingPage', params: { ...params, tab } };
   };
+
+  if (publishListingsSuccess || publishListingError) {
+    return <BatchEditListingResult routeConfiguration={routeConfiguration} history={history} />;
+  }
 
   return (
     <div className={classes}>

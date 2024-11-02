@@ -78,3 +78,9 @@
     }
   }
 }
+
+.results {
+  background-color: var(--colorWhite);
+  margin: 64px auto;
+  padding: 128px;
+}

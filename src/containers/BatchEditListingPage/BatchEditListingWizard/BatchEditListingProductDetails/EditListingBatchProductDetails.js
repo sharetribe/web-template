@@ -19,7 +19,7 @@ import {
 } from '../../BatchEditListingPage.duck';
 import { useDispatch, useSelector } from 'react-redux';
 import { EditableListingsTable } from './EditableListingsTable';
-import useStickyHeader from '../hooks/useStickyHeader';
+import useStickyHeader from '../useStickyHeader';
 import {
   ExclamationCircleOutlined,
   FileExclamationOutlined,
