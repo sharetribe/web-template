@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import loadable from '@loadable/component';
 
 import getPageDataLoadingAPI from '../containers/pageDataLoadingAPI';
@@ -30,7 +30,24 @@ const PaymentMethodsPage = loadable(() => import(/* webpackChunkName: "PaymentMe
 const PrivacyPolicyPage = loadable(() => import(/* webpackChunkName: "PrivacyPolicyPage" */ '../containers/PrivacyPolicyPage/PrivacyPolicyPage'));
 const ProfilePage = loadable(() => import(/* webpackChunkName: "ProfilePage" */ '../containers/ProfilePage/ProfilePage'));
 const ProfileSettingsPage = loadable(() => import(/* webpackChunkName: "ProfileSettingsPage" */ '../containers/ProfileSettingsPage/ProfileSettingsPage'));
-const SearchPageWithMap = loadable(() => import(/* webpackChunkName: "SearchPageWithMap" */ /* webpackPrefetch: true */  '../containers/SearchPage/SearchPageWithMap'));
+const SearchPageWithMap = loadable(() => import('../containers/SearchPage/SearchPageWithMap'), {
+  fallback: <div>Loading...</div>,  // Fallback while loading
+});
+
+const SearchPageWrapper = () => {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);  // Ensures it only runs on the client
+  }, []);
+
+  // Return fallback during SSR or before the client is ready
+  if (!isClient) {
+    return <div>Loading...</div>;
+  }
+
+  return <SearchPageWithMap />;
+};
 const SearchPageWithGrid = loadable(() => import(/* webpackChunkName: "SearchPageWithGrid" */ /* webpackPrefetch: true */  '../containers/SearchPage/SearchPageWithGrid'));
 const StripePayoutPage = loadable(() => import(/* webpackChunkName: "StripePayoutPage" */ '../containers/StripePayoutPage/StripePayoutPage'));
 const TermsOfServicePage = loadable(() => import(/* webpackChunkName: "TermsOfServicePage" */ '../containers/TermsOfServicePage/TermsOfServicePage'));
@@ -51,9 +68,7 @@ export const ACCOUNT_SETTINGS_PAGES = [
 const draftId = '00000000-0000-0000-0000-000000000000';
 const draftSlug = 'draft';
 
-function RedirectToLandingPage() {
-  return <NamedRedirect name="LandingPage" />
-}
+const RedirectToLandingPage = () => <NamedRedirect name="LandingPage" />;
 
 // NOTE: Most server-side endpoints are prefixed with /api. Requests to those
 // endpoints are indended to be handled in the server instead of the browser and
@@ -65,14 +80,16 @@ function RedirectToLandingPage() {
 // See behaviour from Routes.js where Route is created.
 const routeConfiguration = (layoutConfig, accessControlConfig) => {
   const SearchPage = layoutConfig.searchPage?.variantType === 'map' 
+  ? SearchPageWrapper  // Use the wrapper that ensures client-side rendering
+  : SearchPageWithGrid;
+  const teamSearchPage = layoutConfig.searchPage?.variantType === 'map' 
     ? SearchPageWithMap 
     : SearchPageWithGrid;
   const ListingPage = layoutConfig.listingPage?.variantType === 'carousel' 
     ? ListingPageCarousel 
     : ListingPageCoverPhoto;
-
-  const isPrivateMarketplace = accessControlConfig?.marketplace?.private === true;
-  const authForPrivateMarketplace = isPrivateMarketplace ? { auth: true } : {};
+    const isPrivateMarketplace = accessControlConfig?.marketplace?.private === true;
+    const authForPrivateMarketplace = isPrivateMarketplace ? { auth: true } : {};
   
   return [
     {
@@ -88,8 +105,21 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       loadData: pageDataLoadingAPI.CMSPage.loadData,
     },
     {
+      path: '/p/teambuilding',
+      name: 'TeambuildingPage',
+      component: CMSPage,
+      loadData: pageDataLoadingAPI.CMSPage.loadData,
+    },
+    {
       path: '/s',
       name: 'SearchPage',
+      ...authForPrivateMarketplace,
+      component: SearchPage,
+      loadData: pageDataLoadingAPI.SearchPage.loadData,
+    },
+    {
+      path: '/ts',
+      name: 'teamSearchPage',
       ...authForPrivateMarketplace,
       component: SearchPage,
       loadData: pageDataLoadingAPI.SearchPage.loadData,
@@ -147,7 +177,7 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       loadData: pageDataLoadingAPI.EditListingPage.loadData,
     },
 
-    // Canonical path should be after the `/l/new` path since they
+  // Canonical path should be after the `/l/new` path since they
     // conflict and `new` is not a valid listing UUID.
     {
       path: '/l/:id',
@@ -197,6 +227,20 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       name: 'SignupPage',
       component: AuthenticationPage,
       extraProps: { tab: 'signup' },
+      loadData: pageDataLoadingAPI.AuthenticationPage.loadData,
+    },
+    {
+      path: '/signup/provider',
+      name: 'SignupPage',
+      component: AuthenticationPage,
+      extraProps: { role: 'provider' },
+      loadData: pageDataLoadingAPI.AuthenticationPage.loadData,
+    },
+    {
+      path: '/bsignup',
+      name: 'bSignupPage',
+      component: AuthenticationPage,
+      extraProps: { tab: 'bsignup' },
       loadData: pageDataLoadingAPI.AuthenticationPage.loadData,
     },
     {

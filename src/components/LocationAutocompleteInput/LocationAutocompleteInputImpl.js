@@ -116,7 +116,7 @@ function LocationPredictionsList(props) {
   const classes = classNames(
     rootClassName || css.predictionsRoot,
     predictionRootMapProviderClass,
-    className,
+    className
   );
 
   return (
@@ -474,7 +474,7 @@ class LocationAutocompleteInputImplementation extends Component {
           this.selectPrediction(prediction);
           this.finalizeSelection();
         }
-      },
+      }
     );
   }
 

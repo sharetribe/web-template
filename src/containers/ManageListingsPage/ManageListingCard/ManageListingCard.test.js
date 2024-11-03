@@ -73,7 +73,7 @@ describe('ManageListingCard', () => {
         hasOpeningError={false}
         availabilityEnabled
       />,
-      { config },
+      { config }
     );
 
     expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
@@ -132,7 +132,7 @@ describe('ManageListingCard', () => {
         hasOpeningError={false}
         availabilityEnabled
       />,
-      { config },
+      { config }
     );
 
     expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
@@ -188,7 +188,7 @@ describe('ManageListingCard', () => {
         hasClosingError={false}
         hasOpeningError={false}
         availabilityEnabled
-      />,
+      />
     );
     expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.closeListing')).toBeInTheDocument();
@@ -243,7 +243,7 @@ describe('ManageListingCard', () => {
         hasClosingError={false}
         hasOpeningError={false}
         availabilityEnabled
-      />,
+      />
     );
     expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.closeListing')).toBeInTheDocument();
@@ -301,7 +301,7 @@ describe('ManageListingCard', () => {
         hasClosingError={false}
         hasOpeningError={false}
         availabilityEnabled
-      />,
+      />
     );
     expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.closeListing')).toBeInTheDocument();
@@ -358,7 +358,7 @@ describe('ManageListingCard', () => {
         hasClosingError={false}
         hasOpeningError={false}
         availabilityEnabled
-      />,
+      />
     );
 
     expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
@@ -416,7 +416,7 @@ describe('ManageListingCard', () => {
         hasClosingError={false}
         hasOpeningError={false}
         availabilityEnabled
-      />,
+      />
     );
     expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.closeListing')).toBeInTheDocument();
@@ -448,7 +448,7 @@ describe('ManageListingCard', () => {
       },
       {
         currentStock: createStock('stock-id', { quantity: 5 }),
-      },
+      }
     );
     const config = getConfig([
       {
@@ -476,7 +476,7 @@ describe('ManageListingCard', () => {
         hasOpeningError={false}
         availabilityEnabled
       />,
-      { config },
+      { config }
     );
 
     expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
@@ -509,7 +509,7 @@ describe('ManageListingCard', () => {
       },
       {
         currentStock: createStock('stock-id', { quantity: 0 }),
-      },
+      }
     );
 
     const config = getConfig([
@@ -538,7 +538,7 @@ describe('ManageListingCard', () => {
         hasOpeningError={false}
         availabilityEnabled
       />,
-      { config },
+      { config }
     );
 
     expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
@@ -576,7 +576,7 @@ describe('ManageListingCard', () => {
       },
       {
         currentStock: createStock('stock-id', { quantity: 5 }),
-      },
+      }
     );
 
     const config = getConfig([
@@ -605,7 +605,7 @@ describe('ManageListingCard', () => {
         hasOpeningError={false}
         availabilityEnabled
       />,
-      { config },
+      { config }
     );
 
     expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
@@ -641,7 +641,7 @@ describe('ManageListingCard', () => {
       },
       {
         currentStock: createStock('stock-id', { quantity: 5 }),
-      },
+      }
     );
     const config = getConfig([
       {
@@ -669,7 +669,7 @@ describe('ManageListingCard', () => {
         hasOpeningError={false}
         availabilityEnabled
       />,
-      { config },
+      { config }
     );
 
     expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
@@ -724,7 +724,7 @@ describe('ManageListingCard', () => {
         hasOpeningError={false}
         availabilityEnabled
       />,
-      { config },
+      { config }
     );
 
     expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
@@ -779,7 +779,7 @@ describe('ManageListingCard', () => {
         hasOpeningError={false}
         availabilityEnabled
       />,
-      { config },
+      { config }
     );
 
     expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
@@ -821,7 +821,7 @@ describe('ManageListingCard', () => {
         hasOpeningError={false}
         availabilityEnabled
       />,
-      { config },
+      { config }
     );
     expect(tree.asFragment().firstChild).toMatchSnapshot();
   });

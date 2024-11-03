@@ -14,7 +14,7 @@ import moment from 'moment';
 
 import { useConfiguration } from '../../context/configurationContext';
 import { START_DATE, END_DATE } from '../../util/dates';
-import { ValidationError } from '..';
+import { FieldSelect, ValidationError } from '../../components';
 
 import DateRangeInput from './DateRangeInput';
 import css from './FieldDateRangeInput.module.css';
@@ -52,8 +52,28 @@ class FieldDateRangeInputComponent extends Component {
     this.setState({ focusedInput });
     this.props.input.onFocus(focusedInput);
   }
+  componentDidMount() {
+    this.handleSeatsArrayUpdate();
+  }
 
+  componentDidUpdate(prevProps) {
+    // Check if seatsArray has changed
+    if (this.props.seatsArray !== prevProps.seatsArray) {
+      this.handleSeatsArrayUpdate();
+    }
+  }
+
+  handleSeatsArrayUpdate() {
+    // Check if seatsArray exists and its length is greater than 1
+    if (this.props.seatsArray?.length > 1) {
+      // If setShowSeatNames function is passed as prop, call it
+      if (typeof this.props.setShowSeatNames === 'function') {
+        this.props.setShowSeatNames(true);
+      }
+    }
+  }
   render() {
+    /* eslint-disable no-unused-vars */
     const {
       className,
       rootClassName,
@@ -69,8 +89,12 @@ class FieldDateRangeInputComponent extends Component {
       // the same values will not be passed on to subcomponents.
       focusedInput,
       onFocusedInputChange,
+      seatsArray,
+      seatsLabel,
+      setShowSeatNames,
       ...rest
     } = this.props;
+    /* eslint-disable no-unused-vars */
 
     if (startDateLabel && !startDateId) {
       throw new Error('startDateId required when a startDateLabel is given');
@@ -98,6 +122,7 @@ class FieldDateRangeInputComponent extends Component {
         </div>
       ) : null;
 
+    // eslint-disable-next-line no-unused-vars
     const { onBlur, onFocus, type, checked, ...restOfInput } = input;
     const inputProps = {
       isDaily,
@@ -115,11 +140,23 @@ class FieldDateRangeInputComponent extends Component {
     const classes = classNames(rootClassName || css.fieldRoot, className);
     const errorClasses = classNames({ [css.mobileMargins]: useMobileMargins });
 
+    const seatsSelectionMaybe =
+      seatsArray?.length > 1 ? (
+        <FieldSelect name="seats" id="seats" label={seatsLabel}>
+          {seatsArray.map(s => (
+            <option value={s} key={s}>
+              {s}
+            </option>
+          ))}
+        </FieldSelect>
+      ) : null;
+
     return (
       <div className={classes}>
         {label}
         <DateRangeInput {...inputProps} />
         <ValidationError className={errorClasses} fieldMeta={meta} />
+        {seatsSelectionMaybe}
       </div>
     );
   }
@@ -159,12 +196,12 @@ FieldDateRangeInputComponent.propTypes = {
   firstDayOfWeek: number.isRequired,
 };
 
-function FieldDateRangeInput(props) {
+const FieldDateRangeInput = props => {
   const config = useConfiguration();
   const { isOutsideRange, firstDayOfWeek, ...rest } = props;
 
   // Outside range -><- today ... today+available days -1 -><- outside range
-  const defaultIsOutSideRange = (day) => {
+  const defaultIsOutSideRange = day => {
     const endOfRange = config.stripe.dayCountAvailableForBooking - 1;
     return (
       !isInclusivelyAfterDay(day, moment()) ||
@@ -181,7 +218,7 @@ function FieldDateRangeInput(props) {
       {...rest}
     />
   );
-}
+};
 
 export { DateRangeInput };
 export default FieldDateRangeInput;

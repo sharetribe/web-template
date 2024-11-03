@@ -33,7 +33,7 @@ const getPageNumbersArray = (page, totalPages) => {
       (v) =>
         // Filter numbers that are next to current page and pick also first and last page
         // E.g. [1, 4, 5, 6, 9], where current page = 5 and totalPages = 9.
-        v === 1 || Math.abs(v - page) <= 1 || v === totalPages,
+        v === 1 || Math.abs(v - page) <= 1 || v === totalPages
     )
     .reduce((newArray, p) => {
       // Create a new array where gaps between consecutive numbers is filled with ellipsis character
@@ -142,7 +142,7 @@ export function PaginationLinksComponent(props) {
   // Maximum length of pageNumbersNavLinks is 7 (e.g. [1, '…', 4, 5, 6, '…', 9])
   const pageNumberListClassNames = classNames(
     css.pageNumberList,
-    css[`pageNumberList${pageNumbersNavLinks.length}Items`],
+    css[`pageNumberList${pageNumbersNavLinks.length}Items`]
   );
 
   return (

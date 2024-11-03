@@ -1,6 +1,7 @@
 import { bool, shape, string } from 'prop-types';
 import {
   BOOKING_PROCESS_NAME,
+  isBookingProcess,
   INQUIRY_PROCESS_NAME,
   PURCHASE_PROCESS_NAME,
   resolveLatestProcessName,
@@ -20,7 +21,7 @@ export const stateDataShape = shape({
 });
 
 // Translated name of the state of the given transaction
-export const getStateData = (params) => {
+export const getStateData = params => {
   const { transaction } = params;
   const processName = resolveLatestProcessName(transaction?.attributes?.processName);
   const process = getProcess(processName);
@@ -37,12 +38,11 @@ export const getStateData = (params) => {
 
   if (processName === PURCHASE_PROCESS_NAME) {
     return getStateDataForPurchaseProcess(params, processInfo());
-  }
-  if (processName === BOOKING_PROCESS_NAME) {
+  } else if (isBookingProcess(processName)) {
     return getStateDataForBookingProcess(params, processInfo());
-  }
-  if (processName === INQUIRY_PROCESS_NAME) {
+  } else if (processName === INQUIRY_PROCESS_NAME) {
     return getStateDataForInquiryProcess(params, processInfo());
+  } else {
+    return {};
   }
-  return {};
 };

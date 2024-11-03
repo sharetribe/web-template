@@ -43,7 +43,7 @@ const endOfRange = (date, dayCountAvailableForBooking, timeZone) =>
  */
 const timeSlotsContain = (timeSlots, date, timeZone) => {
   const foundIndex = timeSlots.findIndex((slot) =>
-    isInRange(date, slot.attributes.start, slot.attributes.end, 'hour', timeZone),
+    isInRange(date, slot.attributes.start, slot.attributes.end, 'hour', timeZone)
   );
   return foundIndex > -1;
 };
@@ -106,12 +106,12 @@ const isBlockedBetween = (monthlyTimeSlots, timeZone) => (startDate, endDate) =>
   const startInListingTZ = getStartOf(
     timeOfDayFromLocalToTimeZone(startDate, timeZone),
     'day',
-    timeZone,
+    timeZone
   );
   const endInListingTZ = getStartOf(
     timeOfDayFromLocalToTimeZone(endDate, timeZone),
     'day',
-    timeZone,
+    timeZone
   );
   return !!firstBlockedBetween(monthlyTimeSlots, startInListingTZ, endInListingTZ, timeZone);
 };
@@ -151,7 +151,7 @@ const isOutsideRangeFn =
       monthlyTimeSlots,
       startDate,
       endDate,
-      focusedInput,
+      focusedInput
     );
     const endOfBookableRange = startDateSelected
       ? firstBlockedBetween(monthlyTimeSlots, startDate, outOfBookableDate, timeZone)
@@ -167,7 +167,7 @@ const isOutsideRangeFn =
         const lastDayToEndBooking = endDateToPickerDate(
           lineItemUnitType,
           endOfBookableRange,
-          timeZone,
+          timeZone
         );
         return (
           !isDateSameOrAfter(dayInListingTZ, startOfStartDay) ||
@@ -231,7 +231,7 @@ const isDayBlockedFn =
       timeSlotsOnSelectedMonth,
       startDate,
       endDate,
-      focusedInput,
+      focusedInput
     );
 
     // Find the end of bookable range after a start date
@@ -276,7 +276,7 @@ const fetchMonthData = (
   listingId,
   dayCountAvailableForBooking,
   timeZone,
-  onFetchTimeSlots,
+  onFetchTimeSlots
 ) => {
   const endOfRangeDate = endOfRange(TODAY, dayCountAvailableForBooking, timeZone);
 
@@ -304,7 +304,7 @@ const handleMonthClick =
     dayCountAvailableForBooking,
     timeZone,
     listingId,
-    onFetchTimeSlots,
+    onFetchTimeSlots
   ) =>
   (monthFn) => {
     // Callback function after month has been updated.
@@ -315,7 +315,7 @@ const handleMonthClick =
       listingId,
       dayCountAvailableForBooking,
       timeZone,
-      onFetchTimeSlots,
+      onFetchTimeSlots
     );
 
     // If previous fetch for month data failed, try again.
@@ -327,7 +327,7 @@ const handleMonthClick =
         listingId,
         dayCountAvailableForBooking,
         timeZone,
-        onFetchTimeSlots,
+        onFetchTimeSlots
       );
     }
   };
@@ -392,7 +392,7 @@ function Next(props) {
 
   return isDateSameOrAfter(
     nextMonthDate,
-    endOfRange(TODAY, dayCountAvailableForBooking, timeZone),
+    endOfRange(TODAY, dayCountAvailableForBooking, timeZone)
   ) ? null : (
     <NextIcon />
   );
@@ -439,7 +439,7 @@ export function BookingDatesFormComponent(props) {
     listingId,
     isOwnListing,
     fetchLineItemsInProgress,
-    onFetchTransactionLineItems,
+    onFetchTransactionLineItems
   );
   return (
     <FinalForm
@@ -505,7 +505,7 @@ export function BookingDatesFormComponent(props) {
           dayCountAvailableForBooking,
           timeZone,
           listingId,
-          onFetchTimeSlots,
+          onFetchTimeSlots
         );
         const isDayBlocked = isDayBlockedFn(
           monthlyTimeSlots,
@@ -513,7 +513,7 @@ export function BookingDatesFormComponent(props) {
           endDate,
           lineItemUnitType,
           dayCountAvailableForBooking,
-          timeZone,
+          timeZone
         );
         const isOutsideRange = isOutsideRangeFn(
           monthlyTimeSlots,
@@ -521,7 +521,7 @@ export function BookingDatesFormComponent(props) {
           endDate,
           lineItemUnitType,
           dayCountAvailableForBooking,
-          timeZone,
+          timeZone
         );
 
         return (
@@ -572,9 +572,9 @@ export function BookingDatesFormComponent(props) {
                 required(
                   intl.formatMessage({
                     id: 'BookingDatesForm.requiredDate',
-                  }),
+                  })
                 ),
-                bookingDatesRequired(startDateErrorMessage, endDateErrorMessage),
+                bookingDatesRequired(startDateErrorMessage, endDateErrorMessage)
               )}
               initialVisibleMonth={initialVisibleMonth(startDate || startOfToday, timeZone)}
               navNext={

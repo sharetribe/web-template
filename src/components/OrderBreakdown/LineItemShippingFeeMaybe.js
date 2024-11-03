@@ -9,7 +9,7 @@ function LineItemShippingFeeMaybe(props) {
   const { lineItems, intl } = props;
 
   const shippingFeeLineItem = lineItems.find(
-    (item) => item.code === LINE_ITEM_SHIPPING_FEE && !item.reversal,
+    (item) => item.code === LINE_ITEM_SHIPPING_FEE && !item.reversal
   );
 
   return shippingFeeLineItem ? (

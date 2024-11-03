@@ -4,7 +4,7 @@ import DynamicLoader from './DynamicLoader.js';
 import { IconSpinner, LayoutComposer } from '../../components/index.js';
 import TopbarContainer from '../TopbarContainer/TopbarContainer.js';
 import FooterContainer from '../FooterContainer/FooterContainer.js';
-import LandingSearchBarContainer from '../../components/LandingSearchBarContainer/LandingSearchBarContainer.js';
+import LandingPageSection from '../../components/LandingPageSection/LandingPageSection.js';
 import Newsletter from '../../components/Newsletter/Newsletter.js';
 import Counter from '../../components/Counter/Counter.js';
 import ToDo from '../../components/ToDo/ToDo.js';
@@ -96,7 +96,7 @@ function PageBuilder(props) {
     currentPage,
     ...pageProps
   } = props;
-
+ 
   if (!pageAssetsData && fallbackPage && !inProgress && error) {
     return fallbackPage;
   }
@@ -171,7 +171,7 @@ function PageBuilder(props) {
                           </div>
                         ) : isLandingPage ? (
                           <>
-                            <LandingSearchBarContainer onSearchSubmit={handleSearchSubmit} />
+                            <LandingPageSection onSearchSubmit={handleSearchSubmit} />
                             <ToDo />
                             <Counter />
                             <SectionBuilder sections={sections} options={options} />
@@ -179,8 +179,7 @@ function PageBuilder(props) {
                           </>
                         ) : isTeamBuilding ? (
                           <>
-                            <LandingSearchBarContainer
-                              onSearchSubmit={handleSearchSubmit}
+                             <LandingPageSection onSearchSubmit={handleSearchSubmit}
                               isTeamBuilding={isTeamBuilding}
                             />
                             <SectionBuilder sections={sections} options={options} />

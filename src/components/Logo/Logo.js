@@ -46,7 +46,7 @@ export function LogoComponent(props) {
   const logoClasses = className || css.root;
   const logoImageClasses = classNames(
     logoImageClassName || css.logo,
-    getHeightClassName(logoSettings?.height),
+    getHeightClassName(logoSettings?.height)
   );
 
   // Logo from hosted asset

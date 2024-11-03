@@ -41,12 +41,12 @@ function SavedCardDetails(props) {
 
   const paymentMethodPlaceholderDesktop = intl.formatMessage(
     { id: 'SavedCardDetails.savedPaymentMethodPlaceholderDesktop' },
-    { last4Digits },
+    { last4Digits }
   );
 
   const paymentMethodPlaceholderMobile = intl.formatMessage(
     { id: 'SavedCardDetails.savedPaymentMethodPlaceholderMobile' },
-    { last4Digits },
+    { last4Digits }
   );
 
   const paymentMethodPlaceholder = (
@@ -67,7 +67,7 @@ function SavedCardDetails(props) {
 
   const expiredCardText = intl.formatMessage(
     { id: 'SavedCardDetails.expiredCardText' },
-    { last4Digits },
+    { last4Digits }
   );
   const expiredText = <div className={css.cardExpiredText}>{expiredCardText}</div>;
 
@@ -125,7 +125,7 @@ function SavedCardDetails(props) {
   const removeCardModalTitle = intl.formatMessage({ id: 'SavedCardDetails.removeCardModalTitle' });
   const removeCardModalContent = intl.formatMessage(
     { id: 'SavedCardDetails.removeCardModalContent' },
-    { last4Digits },
+    { last4Digits }
   );
   const cancel = intl.formatMessage({ id: 'SavedCardDetails.cancel' });
   const removeCard = intl.formatMessage({ id: 'SavedCardDetails.removeCard' });

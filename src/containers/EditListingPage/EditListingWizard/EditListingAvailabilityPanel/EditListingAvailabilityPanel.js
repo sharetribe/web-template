@@ -24,22 +24,23 @@ const WEEKDAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 
 // This is the order of days as JavaScript understands them
 // The number returned by "new Date().getDay()" refers to day of week starting from sunday.
-const rotateDays = (days, startOfWeek) =>
-  startOfWeek === 0 ? days : days.slice(startOfWeek).concat(days.slice(0, startOfWeek));
+const rotateDays = (days, startOfWeek) => {
+  return startOfWeek === 0 ? days : days.slice(startOfWeek).concat(days.slice(0, startOfWeek));
+};
 
 const defaultTimeZone = () =>
   typeof window !== 'undefined' ? getDefaultTimeZoneOnBrowser() : 'Etc/UTC';
 
-/// ////////////////////////////////////////////////
+///////////////////////////////////////////////////
 // EditListingAvailabilityExceptionPanel - utils //
-/// ////////////////////////////////////////////////
+///////////////////////////////////////////////////
 
 // Create initial entry mapping for form's initial values
 const createEntryDayGroups = (entries = {}) => {
   // Collect info about which days are active in the availability plan form:
   let activePlanDays = [];
   return entries.reduce((groupedEntries, entry) => {
-    const { startTime, endTime: endHour, dayOfWeek } = entry;
+    const { startTime, endTime: endHour, seats, dayOfWeek } = entry;
     const dayGroup = groupedEntries[dayOfWeek] || [];
     activePlanDays = activePlanDays.includes(dayOfWeek)
       ? activePlanDays
@@ -51,6 +52,7 @@ const createEntryDayGroups = (entries = {}) => {
         {
           startTime,
           endTime: endHour === '00:00' ? '24:00' : endHour,
+          seats,
         },
       ],
       activePlanDays,
@@ -59,7 +61,7 @@ const createEntryDayGroups = (entries = {}) => {
 };
 
 // Create initial values
-const createInitialValues = (availabilityPlan) => {
+const createInitialValues = availabilityPlan => {
   const { timezone, entries } = availabilityPlan || {};
   const tz = timezone || defaultTimeZone();
   return {
@@ -69,38 +71,51 @@ const createInitialValues = (availabilityPlan) => {
 };
 
 // Create entries from submit values
-const createEntriesFromSubmitValues = (values) =>
+const createEntriesFromSubmitValues = values =>
   WEEKDAYS.reduce((allEntries, dayOfWeek) => {
     const dayValues = values[dayOfWeek] || [];
-    const dayEntries = dayValues.map((dayValue) => {
-      const { startTime, endTime } = dayValue;
+    const dayEntries = dayValues.map(dayValue => {
+      const { startTime, endTime, seats } = dayValue;
+      const seatsValue = seats ? seats : 0;
       // Note: This template doesn't support seats yet.
       return startTime && endTime
         ? {
             dayOfWeek,
-            seats: 1,
+            seats: seatsValue,
             startTime,
             endTime: endTime === '24:00' ? '00:00' : endTime,
           }
         : null;
     });
 
-    return allEntries.concat(dayEntries.filter((e) => !!e));
+    return allEntries.concat(dayEntries.filter(e => !!e));
   }, []);
 
 // Create availabilityPlan from submit values
-const createAvailabilityPlan = (values) => ({
-  availabilityPlan: {
-    type: 'availability-plan/time',
-    timezone: values.timezone,
-    entries: createEntriesFromSubmitValues(values),
-  },
-});
+const createAvailabilityPlan = values => {
+  // Get all seat values from the entries
+  const allEntries = createEntriesFromSubmitValues(values);
 
-/// ///////////////////////////////
+  // Ensure that seat values are numbers before calculating maxSeats
+  const maxSeats = Math.max(...allEntries.map(entry => Number(entry.seats))); // Convert to number
+
+  return {
+    availabilityPlan: {
+      type: 'availability-plan/time',
+      timezone: values.timezone,
+      entries: allEntries,
+    },
+    min: values.min,
+    max: maxSeats, // Set max equal to the highest seats value
+  };
+};
+
+
+
+//////////////////////////////////
 // EditListingAvailabilityPanel //
-/// ///////////////////////////////
-function EditListingAvailabilityPanel(props) {
+//////////////////////////////////
+const EditListingAvailabilityPanel = props => {
   const {
     className,
     rootClassName,
@@ -124,13 +139,16 @@ function EditListingAvailabilityPanel(props) {
     config,
     routeConfiguration,
     history,
+    isTeamBuilding,
   } = props;
   // Hooks
+
+
   const [isEditPlanModalOpen, setIsEditPlanModalOpen] = useState(false);
   const [isEditExceptionsModalOpen, setIsEditExceptionsModalOpen] = useState(false);
   const [valuesFromLastSubmit, setValuesFromLastSubmit] = useState(null);
 
-  const { firstDayOfWeek } = config.localization;
+  const firstDayOfWeek = config.localization.firstDayOfWeek;
   const classes = classNames(rootClassName || css.root, className);
   const listingAttributes = listing?.attributes;
   const unitType = listingAttributes?.publicData?.unitType;
@@ -151,17 +169,18 @@ function EditListingAvailabilityPanel(props) {
     ],
   };
   const availabilityPlan = listingAttributes?.availabilityPlan || defaultAvailabilityPlan;
-  const initialValues = valuesFromLastSubmit || createInitialValues(availabilityPlan);
+  const initialValues = valuesFromLastSubmit
+    ? valuesFromLastSubmit
+    : createInitialValues(availabilityPlan);
 
-  const handleSubmit = (values) => {
+  const handleSubmit = values => {
     setValuesFromLastSubmit(values);
-
     // Final Form can wait for Promises to return.
     return onSubmit(createAvailabilityPlan(values))
       .then(() => {
         setIsEditPlanModalOpen(false);
       })
-      .catch((e) => {
+      .catch(e => {
         // Don't close modal if there was an error
       });
   };
@@ -169,11 +188,16 @@ function EditListingAvailabilityPanel(props) {
   const sortedAvailabilityExceptions = allExceptions;
 
   // Save exception click handler
-  const saveException = (values) => {
-    const { availability, exceptionStartTime, exceptionEndTime, exceptionRange } = values;
+  const saveException = values => {
+    const {
+      availability,
+      exceptionStartTime,
+      exceptionEndTime,
+      exceptionRange,
+      seats: rawSeats,
+    } = values;
 
-    // TODO: add proper seat handling
-    const seats = availability === 'available' ? 1 : 0;
+    const seats = availability === 'available' ? rawSeats : 0;
 
     // Exception date/time range is given through FieldDateRangeInput or
     // separate time fields.
@@ -197,7 +221,7 @@ function EditListingAvailabilityPanel(props) {
       .then(() => {
         setIsEditExceptionsModalOpen(false);
       })
-      .catch((e) => {
+      .catch(e => {
         // Don't close modal if there was an error
       });
   };
@@ -305,6 +329,7 @@ function EditListingAvailabilityPanel(props) {
             initialValues={initialValues}
             inProgress={updateInProgress}
             fetchErrors={errors}
+            isTeamBuilding={isTeamBuilding}
           />
         </Modal>
       ) : null}
@@ -330,12 +355,13 @@ function EditListingAvailabilityPanel(props) {
             isDaily={unitType === DAY}
             updateInProgress={updateInProgress}
             useFullDays={useFullDays}
+            isTeamBuilding={isTeamBuilding}
           />
         </Modal>
       ) : null}
     </main>
   );
-}
+};
 
 EditListingAvailabilityPanel.defaultProps = {
   className: null,

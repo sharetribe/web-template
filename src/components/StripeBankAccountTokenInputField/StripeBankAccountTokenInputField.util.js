@@ -115,7 +115,7 @@ export const translateStripeError = (country, supportedCountries, intl, stripeEr
         id: 'StripeBankAccountTokenInputField.genericStripeErrorIban',
         defaultMessage: stripeError.message,
       },
-      { country },
+      { country }
     );
   }
   const inputsAsStrings = inputs.map((inputType) => inputTypeToString(inputType, intl));
@@ -135,7 +135,7 @@ export const translateStripeError = (country, supportedCountries, intl, stripeEr
       id: 'StripeBankAccountTokenInputField.genericStripeError',
       defaultMessage: stripeError.message,
     },
-    { country, inputs: inputsInString },
+    { country, inputs: inputsInString }
   );
 };
 
@@ -200,7 +200,7 @@ export const mapInputsToStripeAccountKeys = (country, values) => {
     case 'CA':
       return {
         routing_number: cleanedString(values[TRANSIT_NUMBER]).concat(
-          cleanedString(values[INSTITUTION_NUMBER]),
+          cleanedString(values[INSTITUTION_NUMBER])
         ),
         account_number: cleanedString(values[ACCOUNT_NUMBER]),
       };
@@ -218,7 +218,7 @@ export const mapInputsToStripeAccountKeys = (country, values) => {
       return {
         routing_number: cleanedString(values[BANK_CODE]).concat(
           '-',
-          cleanedString(values[BRANCH_CODE]),
+          cleanedString(values[BRANCH_CODE])
         ),
         account_number: cleanedString(values[ACCOUNT_NUMBER]),
       };
@@ -226,7 +226,7 @@ export const mapInputsToStripeAccountKeys = (country, values) => {
       return {
         routing_number: cleanedString(values[CLEARING_CODE]).concat(
           '-',
-          cleanedString(values[BRANCH_CODE]),
+          cleanedString(values[BRANCH_CODE])
         ),
         account_number: cleanedString(values[ACCOUNT_NUMBER]),
       };

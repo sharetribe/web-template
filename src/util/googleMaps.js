@@ -15,7 +15,7 @@ const placeBounds = (place) => {
     const sw = place.geometry.viewport.getSouthWest();
     return new SDKLatLngBounds(
       new SDKLatLng(ne.lat(), ne.lng()),
-      new SDKLatLng(sw.lat(), sw.lng()),
+      new SDKLatLng(sw.lat(), sw.lng())
     );
   }
   return null;
@@ -43,9 +43,7 @@ export const getPlaceDetails = (placeId, sessionToken) =>
     service.getDetails({ placeId, fields, ...sessionTokenMaybe }, (place, status) => {
       if (status !== serviceStatus.OK) {
         reject(
-          new Error(
-            `Could not get details for place id "${placeId}", error status was "${status}"`,
-          ),
+          new Error(`Could not get details for place id "${placeId}", error status was "${status}"`)
         );
       } else {
         resolve({
@@ -92,7 +90,7 @@ export const getPlacePredictions = (search, sessionToken, searchConfigurations) 
           };
           resolve(results);
         }
-      },
+      }
     );
   });
 
@@ -245,7 +243,7 @@ export const getLayoutStyles = (mapCanvasProjection, offset, props) => {
   const createLatLngBounds = (inst, Type) =>
     new Type(
       new window.google.maps.LatLng(inst.ne.lat, inst.ne.lng),
-      new window.google.maps.LatLng(inst.sw.lat, inst.sw.lng),
+      new window.google.maps.LatLng(inst.sw.lat, inst.sw.lng)
     );
 
   const ensureOfType = (inst, type, factory) => {

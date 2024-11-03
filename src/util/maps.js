@@ -142,13 +142,13 @@ export const circlePolyline = (latlng, radius) => {
     const brng = (i * pi) / 180;
 
     let pLat = Math.asin(
-      Math.sin(_lat) * Math.cos(d) + Math.cos(_lat) * Math.sin(d) * Math.cos(brng),
+      Math.sin(_lat) * Math.cos(d) + Math.cos(_lat) * Math.sin(d) * Math.cos(brng)
     );
     const pLng =
       ((_lng +
         Math.atan2(
           Math.sin(brng) * Math.sin(d) * Math.cos(_lat),
-          Math.cos(d) - Math.sin(_lat) * Math.sin(pLat),
+          Math.cos(d) - Math.sin(_lat) * Math.sin(pLat)
         )) *
         180) /
       pi;

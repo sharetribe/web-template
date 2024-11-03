@@ -32,7 +32,7 @@ describe('EstimatedBreakdownMaybe', () => {
         currency="USD"
         marketplaceName="MarketplaceX"
         processName="default-booking"
-      />,
+      />
     );
     expect(tree.asFragment().firstChild).toBeFalsy();
   });
@@ -47,7 +47,7 @@ describe('EstimatedBreakdownMaybe', () => {
         currency="USD"
         marketplaceName="MarketplaceX"
         processName="default-booking"
-      />,
+      />
     );
     expect(tree.asFragment().firstChild).toBeFalsy();
   });
@@ -64,7 +64,7 @@ describe('EstimatedBreakdownMaybe', () => {
         timeZone="Etc/UTC"
         marketplaceName="MarketplaceX"
         processName="default-booking"
-      />,
+      />
     );
 
     const bookingStart = screen.getByText('OrderBreakdown.bookingStart');

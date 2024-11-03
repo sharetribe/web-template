@@ -16,7 +16,7 @@ const fuzzyCircleOverlay = (center, mapsConfig) => {
 
   const path = circlePolyline(center, mapsConfig.fuzzy.offset);
   const styles = `-${strokeWeight}+${formatColor(strokeColor)}-${strokeOpacity}+${formatColor(
-    fillColor,
+    fillColor
   )}-${fillOpacity}`;
   return `path${styles}(${encodeURIComponent(polyline.encode(path))})`;
 };

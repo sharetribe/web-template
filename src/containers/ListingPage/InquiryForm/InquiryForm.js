@@ -84,13 +84,13 @@ function InquiryFormComponent(props) {
           {
             id: 'InquiryForm.messageLabel',
           },
-          { authorDisplayName },
+          { authorDisplayName }
         );
         const messagePlaceholder = intl.formatMessage(
           {
             id: 'InquiryForm.messagePlaceholder',
           },
-          { authorDisplayName },
+          { authorDisplayName }
         );
         const messageRequiredMessage = intl.formatMessage({
           id: 'InquiryForm.messageRequired',

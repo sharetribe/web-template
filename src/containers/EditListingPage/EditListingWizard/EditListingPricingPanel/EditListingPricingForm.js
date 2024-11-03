@@ -31,7 +31,7 @@ const getPriceValidators = (listingMinimumPriceSubUnits, marketplaceCurrency, in
   const priceTooLowMsg = intl.formatMessage(priceTooLowMsgId, { minPrice });
   const minPriceRequired = validators.moneySubUnitAmountAtLeast(
     priceTooLowMsg,
-    listingMinimumPriceSubUnits,
+    listingMinimumPriceSubUnits
   );
 
   return listingMinimumPriceSubUnits
@@ -39,85 +39,92 @@ const getPriceValidators = (listingMinimumPriceSubUnits, marketplaceCurrency, in
     : priceRequired;
 };
 
-export function EditListingPricingFormComponent(props) {
-  return (
-    <FinalForm
-      {...props}
-      render={(formRenderProps) => {
-        const {
-          formId,
-          autoFocus,
-          className,
-          disabled,
-          ready,
-          handleSubmit,
-          marketplaceCurrency,
-          unitType,
-          listingMinimumPriceSubUnits,
-          intl,
-          invalid,
-          pristine,
-          saveActionMsg,
-          updated,
-          updateInProgress,
-          fetchErrors,
-        } = formRenderProps;
+export const EditListingPricingFormComponent = props => (
+  <FinalForm
+    {...props}
+    render={formRenderProps => {
+      const {
+        formId,
+        autoFocus,
+        className,
+        disabled,
+        ready,
+        handleSubmit,
+        marketplaceCurrency,
+        unitType,
+        listingMinimumPriceSubUnits,
+        intl,
+        invalid,
+        pristine,
+        saveActionMsg,
+        updated,
+        updateInProgress,
+        fetchErrors,
+        isTeamBuilding,
+      } = formRenderProps;
+      const priceValidators = getPriceValidators(
+        listingMinimumPriceSubUnits,
+        marketplaceCurrency,
+        intl
+      );
 
-        const priceValidators = getPriceValidators(
-          listingMinimumPriceSubUnits,
-          marketplaceCurrency,
-          intl,
-        );
+      const classes = classNames(css.root, className);
+      const submitReady = (updated && pristine) || ready;
+      const submitInProgress = updateInProgress;
+      const submitDisabled = invalid || disabled || submitInProgress;
+      const { updateListingError, showListingsError } = fetchErrors || {};
 
-        const classes = classNames(css.root, className);
-        const submitReady = (updated && pristine) || ready;
-        const submitInProgress = updateInProgress;
-        const submitDisabled = invalid || disabled || submitInProgress;
-        const { updateListingError, showListingsError } = fetchErrors || {};
-
-        return (
-          <Form onSubmit={handleSubmit} className={classes}>
-            {updateListingError ? (
-              <p className={css.error}>
-                <FormattedMessage id="EditListingPricingForm.updateFailed" />
+      return (
+        <Form onSubmit={handleSubmit} className={classes}>
+          {updateListingError ? (
+            <p className={css.error}>
+              <FormattedMessage id="EditListingPricingForm.updateFailed" />
+            </p>
+          ) : null}
+          {showListingsError ? (
+            <p className={css.error}>
+              <FormattedMessage id="EditListingPricingForm.showListingFailed" />
+            </p>
+          ) : null}
+          <FieldCurrencyInput
+            id={`${formId}price`}
+            name="price"
+            className={css.input}
+            autoFocus={autoFocus}
+            label={intl.formatMessage(
+              { id: 'EditListingPricingForm.pricePerProduct' },
+              { unitType }
+            )}
+            placeholder={intl.formatMessage({ id: 'EditListingPricingForm.priceInputPlaceholder' })}
+            currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
+            validate={priceValidators}
+          />
+          {isTeamBuilding === 'teambuilding' ? (
+            <>
+              <p>
+              <FormattedMessage id="EditListingPricingForm.teambuilding.priceDirection" />
+                <br />
+                <FormattedMessage id="EditListingPricingForm.teambuilding.priceDirection2" />
               </p>
-            ) : null}
-            {showListingsError ? (
-              <p className={css.error}>
-                <FormattedMessage id="EditListingPricingForm.showListingFailed" />
-              </p>
-            ) : null}
-            <FieldCurrencyInput
-              id={`${formId}price`}
-              name="price"
-              className={css.input}
-              autoFocus={autoFocus}
-              label={intl.formatMessage(
-                { id: 'EditListingPricingForm.pricePerProduct' },
-                { unitType },
-              )}
-              placeholder={intl.formatMessage({
-                id: 'EditListingPricingForm.priceInputPlaceholder',
-              })}
-              currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
-              validate={priceValidators}
-            />
+            </>
+          ) : isTeamBuilding === 'free-booking' ? (
+            <FormattedMessage id="EditListingPricingForm.teambuilding.priceDirection3" />
+          ) : null}
 
-            <Button
-              className={css.submitButton}
-              type="submit"
-              inProgress={submitInProgress}
-              disabled={submitDisabled}
-              ready={submitReady}
-            >
-              {saveActionMsg}
-            </Button>
-          </Form>
-        );
-      }}
-    />
-  );
-}
+          <Button
+            className={css.submitButton}
+            type="submit"
+            inProgress={submitInProgress}
+            disabled={submitDisabled}
+            ready={submitReady}
+          >
+            {saveActionMsg}
+          </Button>
+        </Form>
+      );
+    }}
+  />
+);
 
 EditListingPricingFormComponent.defaultProps = {
   fetchErrors: null,

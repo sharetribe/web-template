@@ -73,7 +73,7 @@ FieldCheckboxRenderer.propTypes = {
     shape({
       key: string.isRequired,
       label: node.isRequired,
-    }),
+    })
   ).isRequired,
   twoColumns: bool,
 };

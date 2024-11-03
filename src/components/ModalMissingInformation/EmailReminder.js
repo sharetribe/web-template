@@ -29,7 +29,7 @@ function EmailReminder(props) {
   );
 
   const resendErrorTranslationId = isTooManyEmailVerificationRequestsError(
-    sendVerificationEmailError,
+    sendVerificationEmailError
   )
     ? 'ModalMissingInformation.resendFailedTooManyRequests'
     : 'ModalMissingInformation.resendFailed';

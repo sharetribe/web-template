@@ -1,0 +1,10 @@
+.fieldTextInput {
+    flex-grow: 1;
+    padding: 20px;
+    margin-top: 24px;
+}
+
+.voucherTitleBox {
+    font-size: 13px;
+    font-weight: 600;
+}

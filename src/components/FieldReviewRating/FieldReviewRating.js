@@ -53,7 +53,7 @@ function FieldReviewRatingComponent(props) {
           value={inputValue}
           checked={typeof checked !== 'undefined' ? checked : value === inputValue}
           {...inputProps}
-        />,
+        />
       );
 
       inputsAndLabels.push(
@@ -64,7 +64,7 @@ function FieldReviewRatingComponent(props) {
           title={intl.formatMessage({ id: `FieldReviewRating.${starId}` })}
         >
           <IconReviewStar rootClassName={css.star} />
-        </label>,
+        </label>
       );
     }
     return inputsAndLabels;

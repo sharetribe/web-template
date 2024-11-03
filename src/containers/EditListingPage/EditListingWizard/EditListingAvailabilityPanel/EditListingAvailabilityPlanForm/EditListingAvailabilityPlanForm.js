@@ -30,16 +30,17 @@ const sortEntries = () => (a, b) => {
  * @param {Redux Thunk} onSubmit promise fn.
  * @param {Array<string>} weekdays ['mon', 'tue', etc.]
  */
-const submit = (onSubmit, weekdays) => (values) => {
+const submit = (onSubmit, weekdays) => values => {
   const sortedValues = weekdays.reduce(
-    (submitValues, day) =>
-      submitValues[day]
+    (submitValues, day) => {
+      return submitValues[day]
         ? {
             ...submitValues,
             [day]: submitValues[day].sort(sortEntries()),
           }
-        : submitValues,
-    { ...values },
+        : submitValues;
+    },
+    { ...values }
   );
 
   onSubmit(sortedValues);
@@ -49,8 +50,9 @@ const submit = (onSubmit, weekdays) => (values) => {
  * Create and edit availability plan of the listing.
  * This is essentially the weekly schedule.
  */
-function EditListingAvailabilityPlanFormComponent(props) {
+const EditListingAvailabilityPlanFormComponent = props => {
   const { onSubmit, ...restOfprops } = props;
+
   return (
     <FinalForm
       {...restOfprops}
@@ -58,7 +60,7 @@ function EditListingAvailabilityPlanFormComponent(props) {
       mutators={{
         ...arrayMutators,
       }}
-      render={(fieldRenderProps) => {
+      render={fieldRenderProps => {
         const {
           rootClassName,
           className,
@@ -81,7 +83,7 @@ function EditListingAvailabilityPlanFormComponent(props) {
           values[day] ? entries.concat(values[day]) : entries;
         const hasUnfinishedEntries = !!weekdays
           .reduce(concatDayEntriesReducer, [])
-          .find((e) => !e.startTime || !e.endTime);
+          .find(e => !e.startTime || !e.endTime);
 
         const { updateListingError } = fetchErrors || {};
 
@@ -105,16 +107,19 @@ function EditListingAvailabilityPlanFormComponent(props) {
               <FormattedMessage id="EditListingAvailabilityPlanForm.hoursOfOperationTitle" />
             </Heading>
             <div className={css.week}>
-              {weekdays.map((w) => (
-                <AvailabilityPlanEntries
-                  dayOfWeek={w}
-                  useFullDays={useFullDays}
-                  key={w}
-                  values={values}
-                  formApi={formApi}
-                  intl={intl}
-                />
-              ))}
+              {weekdays.map(w => {
+                return (
+                  <AvailabilityPlanEntries
+                    dayOfWeek={w}
+                    useFullDays={useFullDays}
+                    key={w}
+                    values={values}
+                    formApi={formApi}
+                    intl={intl}
+                    isTeamBuilding={props.isTeamBuilding}
+                  />
+                );
+              })}
             </div>
 
             <div className={css.submitButton}>
@@ -132,7 +137,7 @@ function EditListingAvailabilityPlanFormComponent(props) {
       }}
     />
   );
-}
+};
 
 EditListingAvailabilityPlanFormComponent.defaultProps = {
   rootClassName: null,
@@ -156,9 +161,10 @@ EditListingAvailabilityPlanFormComponent.propTypes = {
 };
 
 const EditListingAvailabilityPlanForm = compose(injectIntl)(
-  EditListingAvailabilityPlanFormComponent,
+  EditListingAvailabilityPlanFormComponent
 );
 
 EditListingAvailabilityPlanForm.displayName = 'EditListingAvailabilityPlanForm';
 
 export default EditListingAvailabilityPlanForm;
+

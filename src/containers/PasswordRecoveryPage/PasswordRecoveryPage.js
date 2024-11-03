@@ -235,7 +235,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 const PasswordRecoveryPage = compose(
   connect(mapStateToProps, mapDispatchToProps),
-  injectIntl,
+  injectIntl
 )(PasswordRecoveryPageComponent);
 
 export default PasswordRecoveryPage;

@@ -240,8 +240,8 @@ export const handleSubmit = (parameters) => (values) => {
       'CheckoutPage',
       routes,
       { id: listing.id.uuid, slug: createSlug(listing.attributes.title) },
-      {},
-    ),
+      {}
+    )
   );
 };
 

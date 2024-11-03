@@ -155,7 +155,7 @@ export function EditListingDeliveryFormComponent(props) {
                   pickupEnabled
                     ? composeValidators(
                         autocompleteSearchRequired(addressRequiredMessage),
-                        autocompletePlaceSelected(addressNotRecognizedMessage),
+                        autocompletePlaceSelected(addressNotRecognizedMessage)
                       )
                     : () => {}
                 }
@@ -176,7 +176,7 @@ export function EditListingDeliveryFormComponent(props) {
                 id={formId ? `${formId}.building` : 'building'}
                 label={intl.formatMessage(
                   { id: 'EditListingDeliveryForm.building' },
-                  { optionalText },
+                  { optionalText }
                 )}
                 placeholder={intl.formatMessage({
                   id: 'EditListingDeliveryForm.buildingPlaceholder',
@@ -217,7 +217,7 @@ export function EditListingDeliveryFormComponent(props) {
                     ? required(
                         intl.formatMessage({
                           id: 'EditListingDeliveryForm.shippingOneItemRequired',
-                        }),
+                        })
                       )
                     : null
                 }
@@ -253,7 +253,7 @@ export function EditListingDeliveryFormComponent(props) {
                       ? required(
                           intl.formatMessage({
                             id: 'EditListingDeliveryForm.shippingAdditionalItemsRequired',
-                          }),
+                          })
                         )
                       : null
                   }

@@ -39,7 +39,7 @@ function ListingCard(props) {
     css.anchor,
     css.borderRadiusInheritTop,
     { [css.borderRadiusInheritBottom]: !isInCarousel },
-    className,
+    className
   );
 
   return (
@@ -131,7 +131,7 @@ function SearchMapInfoCard(props) {
               e.preventDefault();
               e.stopPropagation();
               setCurrentListingIndex(
-                (prevListingIndex) => (prevListingIndex + listings.length - 1) % listings.length,
+                (prevListingIndex) => (prevListingIndex + listings.length - 1) % listings.length
               );
             }}
           />
@@ -144,7 +144,7 @@ function SearchMapInfoCard(props) {
               e.preventDefault();
               e.stopPropagation();
               setCurrentListingIndex(
-                (prevListingIndex) => (prevListingIndex + listings.length + 1) % listings.length,
+                (prevListingIndex) => (prevListingIndex + listings.length + 1) % listings.length
               );
             }}
           />

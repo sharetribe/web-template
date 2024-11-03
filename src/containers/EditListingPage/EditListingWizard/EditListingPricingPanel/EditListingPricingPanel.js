@@ -16,14 +16,14 @@ import css from './EditListingPricingPanel.module.css';
 
 const { Money } = sdkTypes;
 
-const getInitialValues = (params) => {
+const getInitialValues = params => {
   const { listing } = params;
   const { price } = listing?.attributes || {};
 
   return { price };
 };
 
-function EditListingPricingPanel(props) {
+const EditListingPricingPanel = props => {
   const {
     className,
     rootClassName,
@@ -37,6 +37,7 @@ function EditListingPricingPanel(props) {
     panelUpdated,
     updateInProgress,
     errors,
+    isTeamBuilding,
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
@@ -47,6 +48,10 @@ function EditListingPricingPanel(props) {
       ? initialValues.price.currency === marketplaceCurrency
       : !!marketplaceCurrency;
   const unitType = listing?.attributes?.publicData?.unitType;
+
+  // Set listingMinimumPriceSubUnits to 0 if isTeamBuilding is 'free-booking'
+  const adjustedListingMinimumPriceSubUnits =
+    isTeamBuilding === 'free-booking' ? 0 : listingMinimumPriceSubUnits;
 
   return (
     <div className={classes}>
@@ -67,7 +72,7 @@ function EditListingPricingPanel(props) {
         <EditListingPricingForm
           className={css.form}
           initialValues={initialValues}
-          onSubmit={(values) => {
+          onSubmit={values => {
             const { price } = values;
 
             // New values for listing attributes
@@ -78,13 +83,14 @@ function EditListingPricingPanel(props) {
           }}
           marketplaceCurrency={marketplaceCurrency}
           unitType={unitType}
-          listingMinimumPriceSubUnits={listingMinimumPriceSubUnits}
+          listingMinimumPriceSubUnits={adjustedListingMinimumPriceSubUnits}
           saveActionMsg={submitButtonText}
           disabled={disabled}
           ready={ready}
           updated={panelUpdated}
           updateInProgress={updateInProgress}
           fetchErrors={errors}
+          isTeamBuilding={isTeamBuilding}
         />
       ) : (
         <div className={css.priceCurrencyInvalid}>
@@ -96,7 +102,7 @@ function EditListingPricingPanel(props) {
       )}
     </div>
   );
-}
+};
 
 const { func, object, string, bool } = PropTypes;
 

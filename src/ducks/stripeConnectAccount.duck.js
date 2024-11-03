@@ -196,7 +196,7 @@ export const createStripeAccount = (params) => (dispatch, getState, sdk) => {
           businessProfileMCC,
           businessProfileURL,
         },
-        { expand: true },
+        { expand: true }
       );
     })
     .then((response) => {
@@ -231,7 +231,7 @@ export const updateStripeAccount = (params) => (dispatch, getState, sdk) => {
   return sdk.stripeAccount
     .update(
       { bankAccountToken, requestedCapabilities: ['card_payments', 'transfers'] },
-      { expand: true },
+      { expand: true }
     )
     .then((response) => {
       const stripeAccount = response.data.data;
@@ -291,7 +291,7 @@ export const getStripeConnectAccountLink = (params) => (dispatch, getState, sdk)
     .then(
       (response) =>
         // Return the account link
-        response.data.data.attributes.url,
+        response.data.data.attributes.url
     )
     .catch((err) => {
       const e = storableError(err);

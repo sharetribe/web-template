@@ -132,7 +132,7 @@ const TransitionMessage = (props) => {
   // However, in practice, transitions leading to same state have had the same message.
   const message = intl.formatMessage(
     { id: `TransactionPage.ActivityFeed.${processName}.${nextState}` },
-    { actor, otherUsersName, listingTitle, reviewLink, deliveryMethod, stateStatus },
+    { actor, otherUsersName, listingTitle, reviewLink, deliveryMethod, stateStatus }
   );
 
   return message;
@@ -220,7 +220,7 @@ export function ActivityFeedComponent(props) {
   const process = getProcess(processName);
   const transitions = transaction?.attributes?.transitions || [];
   const relevantTransitions = transitions.filter((t) =>
-    process.isRelevantPastTransition(t.transition),
+    process.isRelevantPastTransition(t.transition)
   );
   const todayString = intl.formatMessage({ id: 'TransactionPage.ActivityFeed.today' });
 

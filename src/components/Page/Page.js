@@ -49,7 +49,7 @@ const getAppleTouchIconURL = (config) => {
   const appIconVariants =
     appIcon?.type === 'imageAsset' ? Object.values(appIcon.attributes.variants) : [];
   const appleTouchIconVariant = appIconVariants.find(
-    (variant) => variant.width === 180 && variant.height === 180,
+    (variant) => variant.width === 180 && variant.height === 180
   );
   return appleTouchIconVariant?.url;
 };
@@ -180,7 +180,7 @@ class PageComponent extends Component {
         url: canonicalUrl,
         locale: intl.locale,
       },
-      config,
+      config
     );
 
     const facebookPage = config.siteFacebookPage;
@@ -328,14 +328,14 @@ PageComponent.propTypes = {
       width: number.isRequired,
       height: number.isRequired,
       url: string.isRequired,
-    }),
+    })
   ),
   twitterImages: arrayOf(
     shape({
       width: number.isRequired,
       height: number.isRequired,
       url: string.isRequired,
-    }),
+    })
   ),
   published: string, // article:published_time
   schema: oneOfType([object, array]), // http://schema.org
@@ -348,7 +348,7 @@ PageComponent.propTypes = {
         width: number.isRequired,
         height: number.isRequired,
         url: string.isRequired,
-      }),
+      })
     ),
     images600: arrayOf(
       // Page asset file can define this
@@ -356,7 +356,7 @@ PageComponent.propTypes = {
         width: number.isRequired,
         height: number.isRequired,
         url: string.isRequired,
-      }),
+      })
     ),
   }),
   title: string, // page title

@@ -527,7 +527,7 @@ export function AuthenticationPageComponent(props) {
   }
 
   const resendErrorTranslationId = isTooManyEmailVerificationRequestsError(
-    sendVerificationEmailError,
+    sendVerificationEmailError
   )
     ? 'AuthenticationPage.resendFailedTooManyRequests'
     : 'AuthenticationPage.resendFailed';
@@ -746,7 +746,7 @@ const mapDispatchToProps = (dispatch) => ({
 const AuthenticationPage = compose(
   withRouter,
   connect(mapStateToProps, mapDispatchToProps),
-  injectIntl,
+  injectIntl
 )(AuthenticationPageComponent);
 
 export default AuthenticationPage;

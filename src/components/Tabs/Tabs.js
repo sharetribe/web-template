@@ -36,7 +36,7 @@ function Tabs(props) {
         `Tabs component: a child component is missing required props.
         tabId: (${tabId})
         tabLabel: (${tabLabel})
-        tabLinkProps: (${tabLinkProps})`,
+        tabLinkProps: (${tabLinkProps})`
       );
     }
 

@@ -181,7 +181,7 @@ class DateRangeInputComponent extends Component {
       // between previous start date and new start date
       const clearEndDate = isBlockedBetween(
         startDate,
-        moment(this.state.currentStartDate).add(1, 'days'),
+        moment(this.state.currentStartDate).add(1, 'days')
       );
       endDateAsDate = clearEndDate ? null : pickerEndDateToApiDate(isDaily, endDate);
     }

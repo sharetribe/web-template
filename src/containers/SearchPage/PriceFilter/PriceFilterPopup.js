@@ -147,7 +147,7 @@ class PriceFilterPopup extends Component {
           {
             minPrice: formatCurrencyMajorUnit(intl, marketplaceCurrency, minPrice),
             maxPrice: formatCurrencyMajorUnit(intl, marketplaceCurrency, maxPrice),
-          },
+          }
         )
       : label || intl.formatMessage({ id: 'PriceFilter.label' });
 

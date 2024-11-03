@@ -70,7 +70,7 @@ describe('OrderBreakdown', () => {
           ],
         })}
         intl={fakeIntl}
-      />,
+      />
     );
 
     // Base price
@@ -125,7 +125,7 @@ describe('OrderBreakdown', () => {
         })}
         intl={fakeIntl}
         timeZone="Etc/UTC"
-      />,
+      />
     );
 
     // Booking: start
@@ -194,7 +194,7 @@ describe('OrderBreakdown', () => {
         })}
         intl={fakeIntl}
         timeZone="Etc/UTC"
-      />,
+      />
     );
 
     // Booking: start

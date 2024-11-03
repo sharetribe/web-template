@@ -51,12 +51,12 @@ function SignupFormComponent(props) {
         const emailRequired = validators.required(
           intl.formatMessage({
             id: 'SignupForm.emailRequired',
-          }),
+          })
         );
         const emailValid = validators.emailFormatValid(
           intl.formatMessage({
             id: 'SignupForm.emailInvalid',
-          }),
+          })
         );
 
         // password
@@ -69,7 +69,7 @@ function SignupFormComponent(props) {
           },
           {
             minLength: validators.PASSWORD_MIN_LENGTH,
-          },
+          }
         );
         const passwordMaxLengthMessage = intl.formatMessage(
           {
@@ -77,21 +77,21 @@ function SignupFormComponent(props) {
           },
           {
             maxLength: validators.PASSWORD_MAX_LENGTH,
-          },
+          }
         );
         const passwordMinLength = validators.minLength(
           passwordMinLengthMessage,
-          validators.PASSWORD_MIN_LENGTH,
+          validators.PASSWORD_MIN_LENGTH
         );
         const passwordMaxLength = validators.maxLength(
           passwordMaxLengthMessage,
-          validators.PASSWORD_MAX_LENGTH,
+          validators.PASSWORD_MAX_LENGTH
         );
         const passwordRequired = validators.requiredStringNoTrim(passwordRequiredMessage);
         const passwordValidators = validators.composeValidators(
           passwordRequired,
           passwordMinLength,
-          passwordMaxLength,
+          passwordMaxLength
         );
 
         // Custom user fields. Since user types are not supported here,
@@ -147,7 +147,7 @@ function SignupFormComponent(props) {
                     validate={validators.required(
                       intl.formatMessage({
                         id: 'SignupForm.firstNameRequired',
-                      }),
+                      })
                     )}
                   />
                   <FieldTextInput
@@ -165,7 +165,7 @@ function SignupFormComponent(props) {
                     validate={validators.required(
                       intl.formatMessage({
                         id: 'SignupForm.lastNameRequired',
-                      }),
+                      })
                     )}
                   />
                 </div>

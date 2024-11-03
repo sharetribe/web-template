@@ -25,7 +25,7 @@ function UserFieldPhoneNumber(props) {
         validate: validators.required(
           intl.formatMessage({
             id: `${formName}.phoneNumberRequired`,
-          }),
+          })
         ),
       }
     : {};

@@ -36,7 +36,7 @@ p {
 }
 
 .card {
-  background-color: rgba(255, 255, 255, 0.3); /* Increased transparency */
+  background-color: rgba(255, 255, 255, 0.3); 
   border: 2px solid #ddd;
   border-radius: 10px;
   padding: 20px;
@@ -66,14 +66,14 @@ p {
 }
 
 .emoji {
-  font-size: 24px; /* Adjust the size as needed */
-  margin-bottom: 10px; /* Space between emoji and text */
+  font-size: 24px; 
+  margin-bottom: 10px; 
 }
 
 .placeholder {
-  font-size: 16px; /* Adjust the size as needed */
-  color: #888; /* Placeholder text color */
-  margin-top: 5px; /* Space between main text and placeholder */
+  font-size: 16px; 
+  color: #888; 
+  margin-top: 5px; 
 }
 
 .nextButton,
@@ -102,16 +102,16 @@ p {
   cursor: not-allowed;
 }
 .card img {
-  width: 36px; /* Same size as the .emoji class */
-  height: 36px; /* Ensure the image is constrained */
-  margin-bottom: 10px; /* Same margin as .emoji */
-  object-fit: contain; /* Ensures the image maintains aspect ratio */
+  width: 36px; 
+  height: 36px; 
+  margin-bottom: 10px; 
+  object-fit: contain; 
 }
 
 .emojiImage {
-  width: 36px; /* Adjust size to match .emoji font size */
+  width: 36px; 
   height: 36px;
-  margin-bottom: 10px; /* Same margin as .emoji */
+  margin-bottom: 10px; 
 }
 
 .emailLink {
@@ -124,7 +124,7 @@ p {
   color: #003399;
 }
 
-/* Media Queries for Mobile Devices */
+
 @media (max-width: 768px) {
   .surveyForm {
     padding: 10px;

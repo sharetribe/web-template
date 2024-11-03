@@ -77,14 +77,14 @@ function SelectMultipleFilter(props) {
   const labelForPopup = hasInitialValues
     ? intl.formatMessage(
         { id: 'SelectMultipleFilter.labelSelected' },
-        { labelText: label, count: selectedOptions.length },
+        { labelText: label, count: selectedOptions.length }
       )
     : label;
 
   const labelSelectionForPlain = hasInitialValues
     ? intl.formatMessage(
         { id: 'SelectMultipleFilterPlainForm.labelSelected' },
-        { count: selectedOptions.length },
+        { count: selectedOptions.length }
       )
     : '';
 

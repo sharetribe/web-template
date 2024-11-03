@@ -42,7 +42,7 @@ function PriceFilterFormComponent(props) {
 
   if (!liveEdit && !(onCancel && onClear && onSubmit)) {
     throw new Error(
-      'PriceFilterForm: if liveEdit is false you need to provide onCancel, onClear, and onSubmit functions',
+      'PriceFilterForm: if liveEdit is false you need to provide onCancel, onClear, and onSubmit functions'
     );
   }
 
@@ -58,7 +58,7 @@ function PriceFilterFormComponent(props) {
       }
     },
     DEBOUNCE_WAIT_TIME,
-    { leading: false, trailing: true },
+    { leading: false, trailing: true }
   );
 
   const handleSubmit = (values) => {

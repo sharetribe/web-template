@@ -60,7 +60,7 @@ class KeywordFilter extends Component {
     const labelForPopup = hasInitialValues
       ? intl.formatMessage(
           { id: 'KeywordFilter.labelSelected' },
-          { labelText: initialValues[urlParam] },
+          { labelText: initialValues[urlParam] }
         )
       : label;
 
@@ -101,7 +101,7 @@ class KeywordFilter extends Component {
           this.mobileInputRef && this.mobileInputRef.current
             ? handleSubmit({ ...values, [name]: this.mobileInputRef.current.value })
             : handleSubmit(values),
-        TIMEOUT_FOR_SHORT_QUERIES,
+        TIMEOUT_FOR_SHORT_QUERIES
       );
     };
 

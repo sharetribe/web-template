@@ -55,14 +55,14 @@ describe('Field helpers', () => {
   describe('exposeLinkProps(data)', () => {
     it('should return only "content" and "href" props containing valid strings"', () => {
       expect(
-        exposeLinkProps({ content: 'Hello world!', href: 'https://my.example.com/some/image.png' }),
+        exposeLinkProps({ content: 'Hello world!', href: 'https://my.example.com/some/image.png' })
       ).toEqual({ children: 'Hello world!', href: 'https://my.example.com/some/image.png' });
       expect(
         exposeLinkProps({
           content: 'Hello world!',
           href: 'https://my.example.com/some/image.png',
           blaa: 'blaa',
-        }),
+        })
       ).toEqual({ children: 'Hello world!', href: 'https://my.example.com/some/image.png' });
     });
     it('should return empty object if data is not valid', () => {
@@ -75,7 +75,7 @@ describe('Field helpers', () => {
     });
     it('should return "about:blank" in href if url in data is not valid', () => {
       expect(
-        exposeLinkProps({ content: 'Hello world!', href: "jav&#x09;ascript:alert('XSS');" }),
+        exposeLinkProps({ content: 'Hello world!', href: "jav&#x09;ascript:alert('XSS');" })
       ).toEqual({ children: 'Hello world!', href: 'about:blank' });
     });
   });
@@ -257,7 +257,7 @@ describe('Field helpers', () => {
       expect(exposeCustomAppearanceProps({ backgroundImage })).toEqual({});
       expect(exposeCustomAppearanceProps({ backgroundImage, alt })).toEqual({});
       expect(exposeCustomAppearanceProps({ backgroundImage, backgroundColor: '#FFAA00' })).toEqual(
-        {},
+        {}
       );
       expect(exposeCustomAppearanceProps({ backgroundImage: backgroundImageNoHeight })).toEqual({});
     });

@@ -161,6 +161,25 @@
     margin-right: 0;
   }
 }
+
+.fieldTextInput {
+  composes: marketplaceTabNavHorizontalFontStyles from global;
+  display: block;
+  width: 100%;
+  margin: 0;
+  max-width: 87px;
+  height: 34px;
+  border-radius: 6px;
+  border: 1px solid #d8dce6;
+  outline: none;
+  transition: all ease-in-out 100ms;
+  padding: 6px 24px 4px 12px;
+  box-shadow: 0 2px 3px 0 rgba(216, 220, 230, 0.7);
+  appearance: none;
+  background-position: center right 12px;
+  background-size: 8px 14px;
+}
+
 .notSelected {
   color: var(--colorGrey300);
 }

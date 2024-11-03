@@ -28,7 +28,7 @@ export const openGraphMetaProps = (data) => {
     if (console && console.warn) {
       console.warn(
         `Can't create Open Graph meta tags:
-        socialSharingTitle, socialSharingDescription, openGraphType, url, and facebookImages are needed.`,
+        socialSharingTitle, socialSharingDescription, openGraphType, url, and facebookImages are needed.`
       );
     }
 
@@ -94,7 +94,7 @@ export const twitterMetaProps = (data) => {
     if (console && console.warn) {
       console.warn(
         `Can't create twitter card meta tags:
-        socialSharingTitle, socialSharingDescription, and url are needed.`,
+        socialSharingTitle, socialSharingDescription, and url are needed.`
       );
     }
 

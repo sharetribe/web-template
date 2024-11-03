@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useIntl } from 'react-intl';
-import css from './LandingSearchBar.module.css';
+import css from './LandingPageSection.module.css';
 import landingCoverR from '../../media/landingCoverR.JPG';
 import landingPE from '../../media/landingPE.JPG';
-import SurveyForm from './SurveyForm';
+import SurveyForm from '../SurveyForm/SurveyForm';
+import { FormattedMessage } from '../../util/reactIntl';
 import { NamedLink } from '..';
 
-function LandingSearchBarContainer({ onSearchSubmit }) {
+function LandingPageSection({ onSearchSubmit }) {
   const intl = useIntl();
   const [isMobile, setIsMobile] = useState(
-    typeof window !== 'undefined' ? window.innerWidth < 1024 : null,
+    typeof window !== 'undefined' ? window.innerWidth < 1024 : null
   );
   const location = useLocation();
   const isTeamBuilding = location.pathname === '/p/teambuilding';
-  console.log('Tooltip Mefssage:', intl.formatMessage({ id: 'Counter.title' }));
 
   useEffect(() => {
     const handleResize = () => {
@@ -82,11 +82,11 @@ function LandingSearchBarContainer({ onSearchSubmit }) {
 
   const tooltipLink = isTeamBuilding ? (
     <NamedLink name="LandingPage" to="/" className={css.tooltipLink}>
-      Clicca qui!
+      <FormattedMessage id="LandingPageSection.action" />
     </NamedLink>
   ) : (
     <NamedLink name="TeambuildingPage" to="/p/teambuilding" className={css.tooltipLink}>
-      Clicca qui!
+      <FormattedMessage id="LandingPageSection.action" />
     </NamedLink>
   );
 
@@ -138,4 +138,4 @@ function LandingSearchBarContainer({ onSearchSubmit }) {
   );
 }
 
-export default LandingSearchBarContainer;
+export default LandingPageSection;

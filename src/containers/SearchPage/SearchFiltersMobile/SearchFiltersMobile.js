@@ -40,8 +40,8 @@ class SearchFiltersMobileComponent extends Component {
         'SearchPage',
         routeConfiguration,
         {},
-        this.state.initialQueryParams,
-      ),
+        this.state.initialQueryParams
+      )
     );
     onCloseModal();
     this.setState({ isFiltersOpenOnMobile: false, initialQueryParams: null });
@@ -93,7 +93,7 @@ class SearchFiltersMobileComponent extends Component {
 
     const showListingsLabel = intl.formatMessage(
       { id: 'SearchFiltersMobile.showListings' },
-      { count: resultsCount },
+      { count: resultsCount }
     );
 
     return (

@@ -131,7 +131,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 const PasswordChangePage = compose(
   connect(mapStateToProps, mapDispatchToProps),
-  injectIntl,
+  injectIntl
 )(PasswordChangePageComponent);
 
 export default PasswordChangePage;

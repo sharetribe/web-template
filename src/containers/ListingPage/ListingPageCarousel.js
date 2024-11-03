@@ -92,7 +92,7 @@ const { UUID } = sdkTypes;
 
 export function ListingPageComponent(props) {
   const [inquiryModalOpen, setInquiryModalOpen] = useState(
-    props.inquiryModalOpenForListingId === props.params.id,
+    props.inquiryModalOpenForListingId === props.params.id
   );
 
   const {
@@ -269,12 +269,12 @@ export function ListingPageComponent(props) {
   const twitterImages = listingImages(currentListing, 'twitter');
   const schemaImages = listingImages(
     currentListing,
-    `${config.layout.listingImage.variantPrefix}-2x`,
+    `${config.layout.listingImage.variantPrefix}-2x`
   ).map((img) => img.url);
   const { marketplaceName } = config;
   const schemaTitle = intl.formatMessage(
     { id: 'ListingPage.schemaTitle' },
-    { title, price: formattedPrice, marketplaceName },
+    { title, price: formattedPrice, marketplaceName }
   );
   // You could add reviews, sku, etc. into page schema
   // Read more about product schema

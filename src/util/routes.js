@@ -65,7 +65,7 @@ export const createResourceLocatorString = (
   routes,
   pathParams = {},
   searchParams = {},
-  hash = '',
+  hash = ''
 ) => {
   const searchQuery = stringify(searchParams);
   const includeSearchQuery = searchQuery.length > 0 ? `?${searchQuery}` : '';

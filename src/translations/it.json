@@ -299,6 +299,9 @@
     "EditListingPricingForm.priceRequired": "È necessario aggiungere un prezzo valido.",
     "EditListingPricingForm.priceTooLow": "Il prezzo deve essere almeno di {minPrice}.",
     "EditListingPricingForm.showListingFailed": "Il recupero dei dati dell'inserzione è fallito.",
+    "EditListingPricingForm.teambuilding.priceDirection":" Indicare prezzo per singola persona.",
+    "EditListingPricingForm.teambuilding.priceDirection2":"Nella prossima schermata sceglierete il min e max numero di partecipanti al vostro evento.",
+    "EditListingPricingForm.teambuilding.priceDirection3":"Indicare il prezzo a 0,00 €.",
     "EditListingPricingForm.updateFailed": "Aggiornamento dell'inserzione fallito. Si prega di riprovare.",
     "EditListingPricingPanel.createListingTitle": "Prezzi",
     "EditListingPricingPanel.listingPriceCurrencyInvalid": "La valuta dell'inserzione è diversa dalla valuta del marketplace ({marketplaceCurrency}). Non puoi modificare il prezzo.",
@@ -466,6 +469,7 @@
     "KeywordFilter.placeholder": "Inserisci una parola chiave…",
     "LandingPage.schemaDescription": "Un marketplace online.",
     "LandingPage.schemaTitle": "{marketplaceName}",
+    "LandingPageSection.action": "Clicca qui!",
     "LayoutWrapperAccountSettingsSideNav.contactDetailsTabTitle": "Dettagli di contatto",
     "LayoutWrapperAccountSettingsSideNav.passwordTabTitle": "Password",
     "LayoutWrapperAccountSettingsSideNav.paymentMethodsTabTitle": "Metodi di pagamento",
@@ -567,7 +571,7 @@
     "NotFoundPage.heading": "Spiacenti, non siamo riusciti a trovare quella pagina.",
     "NotFoundPage.title": "Pagina non trovata",
     "OrderBreakdown.baseUnitDay": "{unitPrice} x {quantity, number} {quantity, plural, one {giorno} other {giorni}}",
-    "OrderBreakdown.baseUnitHour": "{unitPrice} x {quantity, number} {quantity, plural, one {ora} other {ore}}",
+    "OrderBreakdown.baseUnitHour": "{unitPrice} x {quantity, number} {quantity, plural, one {posto} other {posti}}",
     "OrderBreakdown.baseUnitNight": "{unitPrice} x {quantity, number} {quantity, plural, one {notte} other {notti}}",
     "OrderBreakdown.baseUnitQuantity": "{quantity, plural, one {Prezzo unitario} other {{unitPrice} x #}}",
     "OrderBreakdown.bookingEnd": "Fine prenotazione",
@@ -1257,8 +1261,8 @@
     "TransactionPanel.sendMessagePlaceholder": "Invia un messaggio a {name}…",
     "TransactionPanel.sendingMessageNotAllowed": "Questo utente è stato rimosso. Non è più possibile inviare messaggi all'utente.",
     "TransactionPanel.shippingInfoHeading": "Indirizzo di spedizione",
-    "Tooltip.public":" Cerchi un Workshop per te e il tuo gruppo di amici? ",
-    "Tooltip.private":"Cerchi un Workshop per la tua azienda? ",
+    "Tooltip.public":" Cerchi un workshop per te e alcuni amici?",
+    "Tooltip.private":"Cerchi un team building per la tua azienda? ",
     "UserCard.contactUser": "Contatta",
     "UserCard.heading": "Ciao, sono {name}.",
     "UserCard.showFullBioLink": "altro",
@@ -1269,3 +1273,4 @@
     "UserNav.profileSettings": "Impostazioni profilo",
     "UserNav.yourListings": "Le tue inserzioni"
 }
+      

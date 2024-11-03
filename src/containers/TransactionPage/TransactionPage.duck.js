@@ -443,7 +443,7 @@ export const fetchTransaction = (id, txRole, config) => (dispatch, getState, sdk
         ],
         ...getImageVariants(config.layout.listingImage),
       },
-      { expand: true },
+      { expand: true }
     )
     .then((response) => {
       const listingId = listingRelationship(response).id;
@@ -629,7 +629,7 @@ const sendReviewAsSecond = (txId, transition, params, dispatch, sdk, config) => 
   return sdk.transactions
     .transition(
       { id: txId, transition, params },
-      { expand: true, include, ...getImageVariants(config.layout.listingImage) },
+      { expand: true, include, ...getImageVariants(config.layout.listingImage) }
     )
     .then((response) => {
       dispatch(addMarketplaceEntities(response));
@@ -656,7 +656,7 @@ const sendReviewAsFirst = (txId, transition, params, dispatch, sdk, config) => {
   return sdk.transactions
     .transition(
       { id: txId, transition, params },
-      { expand: true, include, ...getImageVariants(config.layout.listingImage) },
+      { expand: true, include, ...getImageVariants(config.layout.listingImage) }
     )
     .then((response) => {
       dispatch(addMarketplaceEntities(response));

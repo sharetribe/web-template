@@ -14,7 +14,13 @@ import {
 } from '../../util/urlHelpers';
 import { hasPermissionToInitiateTransactions, isUserAuthorized } from '../../util/userHelpers';
 import { isErrorNoPermissionForInitiateTransactions } from '../../util/errors';
-import { INQUIRY_PROCESS_NAME, resolveLatestProcessName } from '../../transactions/transaction';
+import {
+  INQUIRY_PROCESS_NAME,
+  FREE_BOOKING_PROCESS_NAME,
+  BOOKING_PROCESS_NAME,
+  PURCHASE_PROCESS_NAME,
+  resolveLatestProcessName,
+} from '../../transactions/transaction';
 
 // Import global thunk functions
 import { isScrollingDisabled } from '../../ducks/ui.duck';
@@ -43,6 +49,7 @@ import CheckoutPageWithPayment, {
   loadInitialDataForStripePayments,
 } from './CheckoutPageWithPayment';
 import CheckoutPageWithInquiryProcess from './CheckoutPageWithInquiryProcess';
+import { CheckoutPageWithoutPayment, loadInitialData } from './CheckoutPageWithoutPayment';
 
 const STORAGE_KEY = 'CheckoutPage';
 
@@ -50,17 +57,17 @@ const onSubmitCallback = () => {
   clearData(STORAGE_KEY);
 };
 
-const getProcessName = (pageData) => {
+const getProcessName = pageData => {
   const { transaction, listing } = pageData || {};
   const processName = transaction?.id
     ? transaction?.attributes?.processName
     : listing?.id
-      ? listing?.attributes?.publicData?.transactionProcessAlias?.split('/')[0]
-      : null;
+    ? listing?.attributes?.publicData?.transactionProcessAlias?.split('/')[0]
+    : null;
   return resolveLatestProcessName(processName);
 };
 
-function EnhancedCheckoutPage(props) {
+const EnhancedCheckoutPage = props => {
   const [pageData, setPageData] = useState({});
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const config = useConfiguration();
@@ -70,32 +77,46 @@ function EnhancedCheckoutPage(props) {
 
   useEffect(() => {
     const {
-      currentUser,
       orderData,
       listing,
       transaction,
       fetchSpeculatedTransaction,
       fetchStripeCustomer,
+      currentUser, 
     } = props;
+  
     const initialData = { orderData, listing, transaction };
     const data = handlePageData(initialData, STORAGE_KEY, history);
     setPageData(data || {});
     setIsDataLoaded(true);
-
-    // Do not fetch extra data if user is not active (E.g. they are in pending-approval state.)
     if (isUserAuthorized(currentUser)) {
-      // This is for processes using payments with Stripe integration
-      if (getProcessName(data) !== INQUIRY_PROCESS_NAME) {
-        // Fetch StripeCustomer and speculateTransition for transactions that include Stripe payments
-        loadInitialDataForStripePayments({
-          pageData: data || {},
-          fetchSpeculatedTransaction,
-          fetchStripeCustomer,
-          config,
-        });
-      }
+    const customerEmail = currentUser?.attributes?.email; // Retrieve customerEmail here
+  
+    if (getProcessName(data) === FREE_BOOKING_PROCESS_NAME) {
+      loadInitialData({
+        pageData: data || {},
+        fetchSpeculatedTransaction,
+        config,
+      });
     }
+  
+    // This is for processes using payments with Stripe integration
+    // if (getProcessName(data) !== INQUIRY_PROCESS_NAME) {
+    if (
+      getProcessName(data) === BOOKING_PROCESS_NAME ||
+      getProcessName(data) === PURCHASE_PROCESS_NAME
+    ) {
+      loadInitialDataForStripePayments({
+        pageData: data || {},
+        fetchSpeculatedTransaction,
+        fetchStripeCustomer,
+        config,
+        customerEmail, 
+      });
+    }
+  }
   }, []);
+  
 
   const {
     currentUser,
@@ -107,6 +128,7 @@ function EnhancedCheckoutPage(props) {
   } = props;
   const processName = getProcessName(pageData);
   const isInquiryProcess = processName === INQUIRY_PROCESS_NAME;
+  const isFreeBooking = processName === FREE_BOOKING_PROCESS_NAME;
 
   // Handle redirection to ListingPage, if this is own listing or if required data is not available
   const listing = pageData?.listing;
@@ -126,6 +148,7 @@ function EnhancedCheckoutPage(props) {
   // Redirect back to ListingPage if data is missing.
   // Redirection must happen before any data format error is thrown (e.g. wrong currency)
   if (shouldRedirect) {
+    // eslint-disable-next-line no-console
     console.error('Missing or invalid data for checkout, redirecting back to listing page.', {
       listing,
     });
@@ -148,13 +171,21 @@ function EnhancedCheckoutPage(props) {
       />
     );
   }
+  if (shouldRedirectNoTransactionRightsUser) {
+    return (
+      <NamedRedirect
+        name="NoAccessPage"
+        params={{ missingAccessRight: NO_ACCESS_PAGE_INITIATE_TRANSACTIONS }}
+      />
+    );
+  }
 
   const listingTitle = listing?.attributes?.title;
   const authorDisplayName = userDisplayNameAsString(listing?.author, '');
   const title = processName
     ? intl.formatMessage(
         { id: `CheckoutPage.${processName}.title` },
-        { listingTitle, authorDisplayName },
+        { listingTitle, authorDisplayName }
       )
     : 'Checkout page is loading data';
 
@@ -172,7 +203,7 @@ function EnhancedCheckoutPage(props) {
       onSubmitCallback={onSubmitCallback}
       {...props}
     />
-  ) : processName && !isInquiryProcess && !speculateTransactionInProgress ? (
+  ) : processName && !isFreeBooking && !isInquiryProcess && !speculateTransactionInProgress ? (
     <CheckoutPageWithPayment
       config={config}
       routeConfiguration={routeConfiguration}
@@ -187,14 +218,30 @@ function EnhancedCheckoutPage(props) {
       onSubmitCallback={onSubmitCallback}
       {...props}
     />
+  ) : processName && isFreeBooking && !isInquiryProcess && !speculateTransactionInProgress ? (
+    <CheckoutPageWithoutPayment
+      config={config}
+      routeConfiguration={routeConfiguration}
+      intl={intl}
+      history={history}
+      processName={processName}
+      sessionStorageKey={STORAGE_KEY}
+      pageData={pageData}
+      setPageData={setPageData}
+      listingTitle={listingTitle}
+      title={title}
+      customerEmail={currentUser?.attributes?.email}
+      onSubmitCallback={onSubmitCallback}
+      {...props}
+    />
   ) : (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
-      <CustomTopbar intl={intl} linkToExternalSite={config?.topbar?.logoLink} />
+      <CustomTopbar intl={intl} />
     </Page>
   );
-}
+};
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const {
     listing,
     orderData,
@@ -230,7 +277,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   dispatch,
   fetchSpeculatedTransaction: (params, processAlias, txId, transitionName, isPrivileged) =>
     dispatch(speculateTransaction(params, processAlias, txId, transitionName, isPrivileged)),
@@ -239,11 +286,11 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(initiateInquiryWithoutPayment(params, processAlias, transitionName)),
   onInitiateOrder: (params, processAlias, transactionId, transitionName, isPrivileged) =>
     dispatch(initiateOrder(params, processAlias, transactionId, transitionName, isPrivileged)),
-  onRetrievePaymentIntent: (params) => dispatch(retrievePaymentIntent(params)),
-  onConfirmCardPayment: (params) => dispatch(confirmCardPayment(params)),
+  onRetrievePaymentIntent: params => dispatch(retrievePaymentIntent(params)),
+  onConfirmCardPayment: params => dispatch(confirmCardPayment(params)),
   onConfirmPayment: (transactionId, transitionName, transitionParams) =>
     dispatch(confirmPayment(transactionId, transitionName, transitionParams)),
-  onSendMessage: (params) => dispatch(sendMessage(params)),
+  onSendMessage: params => dispatch(sendMessage(params)),
   onSavePaymentMethod: (stripeCustomer, stripePaymentMethodId) =>
     dispatch(savePaymentMethod(stripeCustomer, stripePaymentMethodId)),
 });

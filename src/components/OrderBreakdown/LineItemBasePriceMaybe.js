@@ -22,8 +22,7 @@ function LineItemBasePriceMaybe(props) {
   // It should be one of the following: 'line-item/night, 'line-item/day', 'line-item/hour', or 'line-item/item'
   // These are defined in '../../util/types';
   const unitPurchase = lineItems.find((item) => item.code === code && !item.reversal);
-
-  const quantity = unitPurchase ? unitPurchase.quantity.toString() : null;
+  const quantity = unitPurchase && unitPurchase.quantity != null ? unitPurchase.quantity.toString() : null;
   const unitPrice = unitPurchase ? formatMoney(intl, unitPurchase.unitPrice) : null;
   const total = unitPurchase ? formatMoney(intl, unitPurchase.lineTotal) : null;
 

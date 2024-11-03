@@ -308,7 +308,7 @@ export const isStripeError = (error) =>
     (apiError) =>
       // Stripe doesn't seem to give an error code for this specific
       // case, so we have to recognize it from the message.
-      !!(apiError.meta && apiError.meta.stripeMessage),
+      !!(apiError.meta && apiError.meta.stripeMessage)
   );
 
 /**

@@ -184,7 +184,7 @@ const examplesFor = (examples, group, componentName, exampleName) =>
     (ex) =>
       (group === ALL || ex.group === group) &&
       (componentName === ALL || ex.componentName === componentName) &&
-      (exampleName === ALL || ex.exampleName === exampleName),
+      (exampleName === ALL || ex.exampleName === exampleName)
   );
 
 function StyleguidePage(props) {

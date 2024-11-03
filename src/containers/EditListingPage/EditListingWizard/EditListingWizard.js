@@ -277,7 +277,7 @@ const createReturnURL = (returnURLType, rootURL, routes, pathParams) => {
     'EditListingStripeOnboardingPage',
     routes,
     { ...pathParams, returnURLType },
-    {},
+    {}
   );
   const root = rootURL.replace(/\/$/, '');
   return `${root}${path}`;
@@ -426,7 +426,7 @@ class EditListingWizard extends Component {
 
     const selectedTab = params.tab;
     const isNewListingFlow = [LISTING_PAGE_PARAM_TYPE_NEW, LISTING_PAGE_PARAM_TYPE_DRAFT].includes(
-      params.type,
+      params.type
     );
     const rootClasses = rootClassName || css.root;
     const classes = classNames(rootClasses, className);
@@ -442,7 +442,7 @@ class EditListingWizard extends Component {
     const listingTypeConfig = getListingTypeConfig(
       currentListing,
       this.state.selectedListingType,
-      config,
+      config
     );
     const existingListingType = currentListing.attributes?.publicData?.listingType;
     const invalidExistingListingType = existingListingType && !listingTypeConfig;
@@ -490,7 +490,7 @@ class EditListingWizard extends Component {
         .find((t) => tabsStatus[t]);
 
       console.log(
-        `You tried to access an EditListingWizard tab (${selectedTab}), which was not yet activated.`,
+        `You tried to access an EditListingWizard tab (${selectedTab}), which was not yet activated.`
       );
       return <NamedRedirect name="EditListingPage" params={{ ...params, tab: nearestActiveTab }} />;
     }
@@ -522,13 +522,13 @@ class EditListingWizard extends Component {
       STRIPE_ONBOARDING_RETURN_URL_SUCCESS,
       rootURL,
       routeConfiguration,
-      pathParams,
+      pathParams
     );
     const failureURL = createReturnURL(
       STRIPE_ONBOARDING_RETURN_URL_FAILURE,
       rootURL,
       routeConfiguration,
-      pathParams,
+      pathParams
     );
 
     const accountId = stripeConnected ? stripeAccount.id : null;
@@ -547,7 +547,7 @@ class EditListingWizard extends Component {
         accountId,
         successURL,
         failureURL,
-      },
+      }
     );
 
     const returnedNormallyFromStripe = returnURLType === STRIPE_ONBOARDING_RETURN_URL_SUCCESS;
@@ -572,7 +572,7 @@ class EditListingWizard extends Component {
               tab,
               isNewListingFlow,
               isPriceDisabled,
-              processName,
+              processName
             );
             return (
               <EditListingWizardTab
@@ -649,7 +649,7 @@ class EditListingWizard extends Component {
                       type="verificationNeeded"
                       inProgress={getAccountLinkInProgress}
                       onGetStripeConnectAccountLink={handleGetStripeConnectAccountLink(
-                        'custom_account_verification',
+                        'custom_account_verification'
                       )}
                     />
                   ) : stripeConnected && savedCountry && !returnedAbnormallyFromStripe ? (
@@ -658,7 +658,7 @@ class EditListingWizard extends Component {
                       inProgress={getAccountLinkInProgress}
                       disabled={payoutDetailsSaveInProgress}
                       onGetStripeConnectAccountLink={handleGetStripeConnectAccountLink(
-                        'custom_account_update',
+                        'custom_account_update'
                       )}
                     />
                   ) : null}

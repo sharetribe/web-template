@@ -12,6 +12,63 @@ const LINE_ITEM_DAY = 'line-item/day';
 
 const isNumber = (value) => {
   return typeof value === 'number' && !isNaN(value);
+}
+
+exports.resolveSizeFeePrice = (feeArray) => {
+
+  
+  // Define the price for each fee type
+  const feePrices = {
+    smallFee: 0,  
+    mediumFee: 1500,  // Price in cents
+    largeFee: 4000    // Price in cents
+  };
+
+  // Calculate the total amount by summing up the prices of each fee type in the array
+  const totalAmount = feeArray.reduce((total, feeType) => {
+    const feePrice = feePrices[feeType] || 0; // Use 0 if fee type is not found
+    return total + feePrice;
+  }, 0);
+
+  // If there is any amount, return it wrapped in a Money object
+  if (totalAmount > 0) {
+    return new Money(totalAmount, 'EUR'); // Assuming EUR is the currency
+  }
+
+  // If no fees were added, return null
+  return null; 
+};
+
+
+
+exports.resolveVoucherFeePrice = (voucherFee, estimatedTotal) => {
+  let discountAmount = 0;
+  if (voucherFee) {
+    if (voucherFee.percent_off) {
+      discountAmount = (estimatedTotal * voucherFee.percent_off) / 100;
+    } 
+    else if (voucherFee.amount_off) {
+      discountAmount = voucherFee.amount_off;
+    }
+    return new Money(discountAmount * -1, 'EUR');
+  }
+  return null;
+};
+
+exports.resolveVoucherFeeDiscount = (voucherFee, total) => {
+  let discountedPrice = (total * voucherFee) / 100;
+  const voucherDiscount = {
+    amount: discountedPrice,
+    currency: 'EUR',
+  };
+
+  const { amount, currency } = voucherDiscount;
+
+  if (amount && currency) {
+    return new Money(amount * -1, currency);
+  }
+
+  return null;
 };
 
 /**
@@ -184,9 +241,8 @@ exports.calculateQuantityFromHours = (startDate, endDate) => {
  * @return {Money} lineTotal
  *
  */
-exports.calculateLineTotal = (lineItem) => {
+exports.calculateLineTotal = lineItem => {
   const { code, unitPrice, quantity, percentage, seats, units } = lineItem;
-
   if (quantity) {
     return this.calculateTotalPriceFromQuantity(unitPrice, quantity);
   } else if (percentage != null) {
@@ -206,7 +262,8 @@ exports.calculateLineTotal = (lineItem) => {
  * @param {Array} lineItems
  * @retuns {Money} total sum
  */
-exports.calculateTotalFromLineItems = (lineItems) => {
+
+exports.calculateTotalFromLineItems = lineItems => {
   const totalPrice = lineItems.reduce((sum, lineItem) => {
     const lineTotal = this.calculateLineTotal(lineItem);
     return getAmountAsDecimalJS(lineTotal).add(sum);
@@ -224,10 +281,8 @@ exports.calculateTotalFromLineItems = (lineItems) => {
  * @param {*} lineItems
  * @returns {Money} total sum
  */
-exports.calculateTotalForProvider = (lineItems) => {
-  const providerLineItems = lineItems.filter((lineItem) =>
-    lineItem.includeFor.includes('provider')
-  );
+exports.calculateTotalForProvider = lineItems => {
+  const providerLineItems = lineItems.filter(lineItem => lineItem.includeFor.includes('provider'));
   return this.calculateTotalFromLineItems(providerLineItems);
 };
 
@@ -236,10 +291,8 @@ exports.calculateTotalForProvider = (lineItems) => {
  * @param {*} lineItems
  * @returns {Money} total sum
  */
-exports.calculateTotalForCustomer = (lineItems) => {
-  const providerLineItems = lineItems.filter((lineItem) =>
-    lineItem.includeFor.includes('customer')
-  );
+exports.calculateTotalForCustomer = lineItems => {
+  const providerLineItems = lineItems.filter(lineItem => lineItem.includeFor.includes('customer'));
   return this.calculateTotalFromLineItems(providerLineItems);
 };
 
@@ -254,8 +307,8 @@ exports.calculateTotalForCustomer = (lineItems) => {
  * @returns {Array} lineItems with lineTotal and reversal info
  *
  */
-exports.constructValidLineItems = (lineItems) => {
-  const lineItemsWithTotals = lineItems.map((lineItem) => {
+exports.constructValidLineItems = lineItems => {
+  const lineItemsWithTotals = lineItems.map(lineItem => {
     const { code, quantity, percentage } = lineItem;
 
     if (!/^line-item\/.+/.test(code)) {
@@ -282,7 +335,7 @@ exports.constructValidLineItems = (lineItems) => {
  * @param {Object} commission object potentially containing percentage property.
  * @returns boolean
  */
-exports.hasCommissionPercentage = (commission) => {
+exports.hasCommissionPercentage = commission => {
   const percentage = commission?.percentage;
   const isDefined = percentage != null;
   const isNumber = typeof percentage === 'number' && !isNaN(percentage);

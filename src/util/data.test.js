@@ -68,7 +68,7 @@ describe('data utils', () => {
       const listing1 = { id: new UUID('listing1'), type: 'listing' };
       const listing2 = { id: new UUID('listing2'), type: 'listing' };
       expect(() => combinedResourceObjects(listing1, listing2)).toThrow(
-        'Cannot merge resource objects with different ids or types',
+        'Cannot merge resource objects with different ids or types'
       );
     });
 
@@ -76,7 +76,7 @@ describe('data utils', () => {
       const listing1 = { id: new UUID('listing1'), type: 'listing' };
       const author1 = { id: new UUID('author1'), type: 'author' };
       expect(() => combinedResourceObjects(listing1, author1)).toThrow(
-        'Cannot merge resource objects with different ids or types',
+        'Cannot merge resource objects with different ids or types'
       );
     });
 
@@ -203,7 +203,7 @@ describe('data utils', () => {
       const entities = { listing: { listing1: createListing('listing1') } };
       const user = createUser('user1');
       expect(() => denormalisedEntities(entities, [user])).toThrow(
-        'Entity with type "user" and id "user1" not found',
+        'Entity with type "user" and id "user1" not found'
       );
       // Empty results when error throwIfNotFound=false
       expect(denormalisedEntities(entities, [user], false)).toEqual([]);
@@ -213,7 +213,7 @@ describe('data utils', () => {
       const entities = { listing: { listing1: createListing('listing1') } };
       const listing2 = createListing('listing2');
       expect(() => denormalisedEntities(entities, [listing2])).toThrow(
-        'Entity with type "listing" and id "listing2" not found',
+        'Entity with type "listing" and id "listing2" not found'
       );
       // Empty results when error throwIfNotFound=false
       expect(denormalisedEntities(entities, [listing2], false)).toEqual([]);
@@ -225,7 +225,7 @@ describe('data utils', () => {
       const entities = { listing: { listing1 } };
       const resources = [listing1];
       expect(() => denormalisedEntities(entities, resources)).toThrow(
-        'Entity with type "user" and id "user1" not found',
+        'Entity with type "user" and id "user1" not found'
       );
     });
 

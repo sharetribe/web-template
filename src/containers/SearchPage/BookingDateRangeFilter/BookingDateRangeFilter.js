@@ -92,7 +92,7 @@ export class BookingDateRangeFilterComponent extends Component {
           { id: 'BookingDateRangeFilter.labelSelectedPlain' },
           {
             dates: `${formattedStartDate} - ${formattedEndDate}`,
-          },
+          }
         )
       : label || intl.formatMessage({ id: 'BookingDateRangeFilter.labelPlain' });
 
@@ -101,7 +101,7 @@ export class BookingDateRangeFilterComponent extends Component {
           { id: 'BookingDateRangeFilter.labelSelectedPopup' },
           {
             dates: `${formattedStartDate} - ${formattedEndDate}`,
-          },
+          }
         )
       : label || intl.formatMessage({ id: 'BookingDateRangeFilter.labelPopup' });
 
@@ -110,7 +110,7 @@ export class BookingDateRangeFilterComponent extends Component {
           { id: 'BookingDateRangeFilter.labelSelectedPopup' },
           {
             dates: `${formattedStartDate} - ${formattedEndDate}`,
-          },
+          }
         )
       : null;
 

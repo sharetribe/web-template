@@ -137,7 +137,7 @@ class TopbarSearchFormComponent extends Component {
 
           const keywordSearchWrapperClasses = classNames(
             css.keywordSearchWrapper,
-            isMobile ? css.mobileInputRoot : desktopInputRootClass,
+            isMobile ? css.mobileInputRoot : desktopInputRootClass
           );
 
           return (

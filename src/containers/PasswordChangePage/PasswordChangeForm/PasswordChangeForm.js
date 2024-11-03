@@ -82,7 +82,7 @@ class PasswordChangeFormComponent extends Component {
             },
             {
               minLength: validators.PASSWORD_MIN_LENGTH,
-            },
+            }
           );
           const passwordMaxLengthMessage = intl.formatMessage(
             {
@@ -90,16 +90,16 @@ class PasswordChangeFormComponent extends Component {
             },
             {
               maxLength: validators.PASSWORD_MAX_LENGTH,
-            },
+            }
           );
 
           const passwordMinLength = validators.minLength(
             passwordMinLengthMessage,
-            validators.PASSWORD_MIN_LENGTH,
+            validators.PASSWORD_MIN_LENGTH
           );
           const passwordMaxLength = validators.maxLength(
             passwordMaxLengthMessage,
-            validators.PASSWORD_MAX_LENGTH,
+            validators.PASSWORD_MAX_LENGTH
           );
 
           // password
@@ -196,7 +196,7 @@ class PasswordChangeFormComponent extends Component {
                   validate={validators.composeValidators(
                     newPasswordRequired,
                     passwordMinLength,
-                    passwordMaxLength,
+                    passwordMaxLength
                   )}
                 />
               </div>
@@ -225,7 +225,7 @@ class PasswordChangeFormComponent extends Component {
                   validate={validators.composeValidators(
                     passwordRequired,
                     passwordMinLength,
-                    passwordMaxLength,
+                    passwordMaxLength
                   )}
                   customErrorText={passwordTouched ? null : passwordErrorText}
                 />

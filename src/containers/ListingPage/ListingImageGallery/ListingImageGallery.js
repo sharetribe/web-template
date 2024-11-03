@@ -62,11 +62,11 @@ function ListingImageGallery(props) {
     original: '',
     alt: intl.formatMessage(
       { id: 'ListingImageGallery.imageAltText' },
-      { index: i + 1, count: images.length },
+      { index: i + 1, count: images.length }
     ),
     thumbAlt: intl.formatMessage(
       { id: 'ListingImageGallery.imageThumbnailAltText' },
-      { index: i + 1, count: images.length },
+      { index: i + 1, count: images.length }
     ),
     thumbnail: img.attributes?.variants?.[thumbVariants[0]],
     image: img,

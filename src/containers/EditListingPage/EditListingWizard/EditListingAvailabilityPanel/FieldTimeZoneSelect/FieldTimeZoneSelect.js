@@ -6,7 +6,7 @@ import { FieldSelect } from '../../../../../components';
 function FieldTimeZoneSelect(props) {
   // IANA database contains irrelevant time zones too.
   const relevantZonesPattern = new RegExp(
-    '^(Africa|America(?!/(Argentina/ComodRivadavia|Knox_IN|Nuuk))|Antarctica(?!/(DumontDUrville|McMurdo))|Asia(?!/Qostanay)|Atlantic|Australia(?!/(ACT|LHI|NSW))|Europe|Indian|Pacific)',
+    '^(Africa|America(?!/(Argentina/ComodRivadavia|Knox_IN|Nuuk))|Antarctica(?!/(DumontDUrville|McMurdo))|Asia(?!/Qostanay)|Atlantic|Australia(?!/(ACT|LHI|NSW))|Europe|Indian|Pacific)'
   );
 
   return (

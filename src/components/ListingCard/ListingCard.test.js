@@ -42,7 +42,7 @@ describe('ListingCard', () => {
     const listing = createListing(
       'listing1',
       { publicData: { listingType: 'free-inquiry' } },
-      { author: createUser('user1') },
+      { author: createUser('user1') }
     );
     const tree = render(<ListingCardComponent listing={listing} intl={fakeIntl} />, { config });
     expect(tree.asFragment().firstChild).toMatchSnapshot();

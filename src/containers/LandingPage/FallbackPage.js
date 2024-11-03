@@ -4,7 +4,7 @@ import loadable from '@loadable/component';
 import css from './FallbackPage.module.css';
 
 const PageBuilder = loadable(
-  () => import(/* webpackChunkName: "PageBuilder" */ '../PageBuilder/PageBuilder'),
+  () => import(/* webpackChunkName: "PageBuilder" */ '../PageBuilder/PageBuilder')
 );
 
 // Create fallback content (array of sections) in page asset format:

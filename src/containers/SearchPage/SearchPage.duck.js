@@ -12,7 +12,6 @@ import {
 import { constructQueryParamName, isOriginInUse, isStockInUse } from '../../util/search';
 import { hasPermissionToViewData, isUserAuthorized } from '../../util/userHelpers';
 import { parse } from '../../util/urlHelpers';
-
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 
 // Pagination page size might need to be dynamic on responsive page layouts
@@ -68,6 +67,7 @@ const listingPageReducer = (state = initialState, action = {}) => {
         searchInProgress: false,
       };
     case SEARCH_LISTINGS_ERROR:
+      // eslint-disable-next-line no-console
       console.error(payload);
       return { ...state, searchInProgress: false, searchListingsError: payload };
 
@@ -85,17 +85,17 @@ export default listingPageReducer;
 
 // ================ Action creators ================ //
 
-export const searchListingsRequest = (searchParams) => ({
+export const searchListingsRequest = searchParams => ({
   type: SEARCH_LISTINGS_REQUEST,
   payload: { searchParams },
 });
 
-export const searchListingsSuccess = (response) => ({
+export const searchListingsSuccess = response => ({
   type: SEARCH_LISTINGS_SUCCESS,
   payload: { data: response.data },
 });
 
-export const searchListingsError = (e) => ({
+export const searchListingsError = e => ({
   type: SEARCH_LISTINGS_ERROR,
   error: true,
   payload: e,
@@ -113,15 +113,15 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
   //       ...and then turned enforceValidListingType config to true in configListing.js
   // Read More:
   // https://www.sharetribe.com/docs/how-to/manage-search-schemas-with-flex-cli/#adding-listing-search-schemas
-  const searchValidListingTypes = (listingTypes) =>
-    config.listing.enforceValidListingType
+  const searchValidListingTypes = listingTypes => {
+    return config.listing.enforceValidListingType
       ? {
-          pub_listingType: listingTypes.map((l) => l.listingType),
+          pub_listingType: listingTypes.map(l => l.listingType),
           // pub_transactionProcessAlias: listingTypes.map(l => l.transactionType.alias),
           // pub_unitType: listingTypes.map(l => l.transactionType.unitType),
         }
       : {};
-
+  };
   const omitInvalidCategoryParams = (params) => {
     const categoryConfig = config.search.defaultFilters?.find((f) => f.schemaType === 'category');
     const { categories } = config.categoryConfiguration;
@@ -151,9 +151,8 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
 
     return { ...nonCategoryKeys, ...categoryKeys };
   };
-
-  const priceSearchParams = (priceParam) => {
-    const inSubunits = (value) => convertUnitToSubUnit(value, unitDivisor(config.currency));
+  const priceSearchParams = priceParam => {
+    const inSubunits = value => convertUnitToSubUnit(value, unitDivisor(config.currency));
     const values = priceParam ? priceParam.split(',') : [];
     return priceParam && values.length === 2
       ? {
@@ -162,9 +161,9 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
       : {};
   };
 
-  const datesSearchParams = (datesParam) => {
+  const datesSearchParams = datesParam => {
     const searchTZ = 'Etc/UTC';
-    const datesFilter = config.search.defaultFilters.find((f) => f.key === 'dates');
+    const datesFilter = config.search.defaultFilters.find(f => f.key === 'dates');
     const values = datesParam ? datesParam.split(',') : [];
     const hasValues = datesFilter && datesParam && values.length === 2;
     const { dateRangeMode, availability } = datesFilter || {};
@@ -180,8 +179,8 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
     //   3) Make exact dates filtering against that specific time zone
     //   This setup would be better for dates filter,
     //   but it enforces a UX where location is always asked first and therefore configurability
-    const getProlongedStart = (date) => subtractTime(date, 14, 'hours', searchTZ);
-    const getProlongedEnd = (date) => addTime(date, 12, 'hours', searchTZ);
+    const getProlongedStart = date => subtractTime(date, 14, 'hours', searchTZ);
+    const getProlongedEnd = date => addTime(date, 12, 'hours', searchTZ);
 
     const startDate = hasValues ? parseDateFromISO8601(values[0], searchTZ) : null;
     const endRaw = hasValues ? parseDateFromISO8601(values[1], searchTZ) : null;
@@ -189,8 +188,8 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
       hasValues && isNightlyMode
         ? endRaw
         : hasValues
-          ? getExclusiveEndDate(endRaw, searchTZ)
-          : null;
+        ? getExclusiveEndDate(endRaw, searchTZ)
+        : null;
 
     const today = getStartOf(new Date(), 'day', searchTZ);
     const possibleStartDate = subtractTime(today, 14, 'hours', searchTZ);
@@ -221,7 +220,7 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
       : {};
   };
 
-  const stockFilters = (datesMaybe) => {
+  const stockFilters = datesMaybe => {
     const hasDatesFilterInUse = Object.keys(datesMaybe).length > 0;
 
     // If dates filter is not in use,
@@ -250,12 +249,25 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
     perPage,
   };
 
+  const modifyPubJoyToHasAny = params => {
+    if (params.pub_joy) {
+      params.pub_joy = params.pub_joy.replace('has_all', 'has_any');
+    }
+
+    if (params.pub_language) {
+      params.pub_language = params.pub_language.replace('has_all', 'has_any');
+    }
+
+    return params;
+  };
+
+  const updatedParams = modifyPubJoyToHasAny(params);
+
   return sdk.listings
-    .query(params)
-    .then((response) => {
+    .query(updatedParams)
+    .then(response => {
       const listingFields = config?.listing?.listingFields;
       const sanitizeConfig = { listingFields };
-
       dispatch(addMarketplaceEntities(response, sanitizeConfig));
       dispatch(searchListingsSuccess(response));
       return response;
@@ -269,7 +281,7 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
     });
 };
 
-export const setActiveListing = (listingId) => ({
+export const setActiveListing = listingId => ({
   type: SEARCH_MAP_SET_ACTIVE_LISTING,
   payload: listingId,
 });
@@ -286,7 +298,6 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   if (!canFetchData) {
     return Promise.resolve();
   }
-
   const queryParams = parse(search, {
     latlng: ['origin'],
     latlngBounds: ['bounds'],
@@ -307,7 +318,7 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
       ...rest,
       ...originMaybe,
       page,
-      perPage: RESULT_PAGE_SIZE,
+      perPage: 50, //RESULT_PAGE_SIZE,
       include: ['author', 'images'],
       'fields.listing': [
         'title',
@@ -318,12 +329,17 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
         'publicData.listingType',
         'publicData.transactionProcessAlias',
         'publicData.unitType',
+        'publicData.min',
+        'publicData.max',
+        'publicData.joy',
+        'publicData.language',
+        'publicData.loc',
         // These help rendering of 'purchase' listings,
         // when transitioning from search page to listing page
         'publicData.pickupEnabled',
         'publicData.shippingEnabled',
       ],
-      'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
+      'fields.user': ['profile.displayName', 'profile.abbreviatedName', 'profile.publicData'],
       'fields.image': [
         'variants.scaled-small',
         'variants.scaled-medium',
@@ -334,7 +350,7 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
       ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
       'limit.images': 1,
     },
-    config,
+    config
   );
   return dispatch(searchListingsCall);
 };

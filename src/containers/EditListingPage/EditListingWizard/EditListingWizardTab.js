@@ -42,7 +42,7 @@ export const SUPPORTED_TABS = [
 ];
 
 const pathParamsToNextTab = (params, tab, marketplaceTabs) => {
-  const nextTabIndex = marketplaceTabs.findIndex((s) => s === tab) + 1;
+  const nextTabIndex = marketplaceTabs.findIndex(s => s === tab) + 1;
   const nextTab =
     nextTabIndex < marketplaceTabs.length
       ? marketplaceTabs[nextTabIndex]
@@ -72,7 +72,7 @@ const redirectAfterDraftUpdate = (listingId, params, tab, marketplaceTabs, histo
   history.push(to);
 };
 
-function EditListingWizardTab(props) {
+const EditListingWizardTab = props => {
   const {
     tab,
     marketplaceTabs,
@@ -111,7 +111,7 @@ function EditListingWizardTab(props) {
   const isNewListingFlow = isNewURI || isDraftURI;
 
   const currentListing = ensureListing(listing);
-
+  const isTeamBuilding = props?.listing?.attributes?.publicData?.listingType;
   // New listing flow has automatic redirects to new tab on the wizard
   // and the last panel calls publishListing API endpoint.
   const automaticRedirectsForNewListingFlow = (tab, listingId) => {
@@ -126,7 +126,7 @@ function EditListingWizardTab(props) {
         tab,
         marketplaceTabs,
         history,
-        routeConfiguration,
+        routeConfiguration
       );
     } else {
       handlePublishListing(listingId);
@@ -143,7 +143,7 @@ function EditListingWizardTab(props) {
       : { ...updateValues, id: currentListing.id };
 
     return onUpdateListingOrCreateListingDraft(tab, updateListingValues)
-      .then((r) => {
+      .then(r => {
         // In Availability tab, the submitted data (plan) is inside a modal
         // We don't redirect provider immediately after plan is set
         if (isNewListingFlow && tab !== AVAILABILITY) {
@@ -151,27 +151,31 @@ function EditListingWizardTab(props) {
           automaticRedirectsForNewListingFlow(tab, listingId);
         }
       })
-      .catch((e) => {
+      .catch(e => {
         // No need for extra actions
       });
   };
 
-  const panelProps = (tab) => ({
-    className: css.panel,
-    errors,
-    listing,
-    panelUpdated: updatedTab === tab,
-    params,
-    locationSearch,
-    updateInProgress,
-    // newListingPublished and fetchInProgress are flags for the last wizard tab
-    ready: newListingPublished,
-    disabled: fetchInProgress,
-    submitButtonText: tabSubmitButtonText,
-    listingTypes: config.listing.listingTypes,
-    onManageDisableScrolling,
-    onSubmit: (values) => onCompleteEditListingWizardTab(tab, values),
-  });
+  const panelProps = tab => {
+    return {
+      className: css.panel,
+      errors,
+      listing,
+      panelUpdated: updatedTab === tab,
+      params,
+      locationSearch,
+      updateInProgress,
+      // newListingPublished and fetchInProgress are flags for the last wizard tab
+      ready: newListingPublished,
+      disabled: fetchInProgress,
+      submitButtonText: tabSubmitButtonText,
+      listingTypes: config.listing.listingTypes,
+      onManageDisableScrolling,
+      onSubmit: values => {
+        return onCompleteEditListingWizardTab(tab, values);
+      },
+    };
+  };
 
   // TODO: add missing cases for supported tabs
   switch (tab) {
@@ -199,6 +203,7 @@ function EditListingWizardTab(props) {
           {...panelProps(PRICING)}
           marketplaceCurrency={config.currency}
           listingMinimumPriceSubUnits={config.listingMinimumPriceSubUnits}
+          isTeamBuilding={isTeamBuilding}
         />
       );
     }
@@ -226,12 +231,13 @@ function EditListingWizardTab(props) {
               tab,
               marketplaceTabs,
               history,
-              routeConfiguration,
+              routeConfiguration
             )
           }
           config={config}
           history={history}
           routeConfiguration={routeConfiguration}
+          isTeamBuilding={isTeamBuilding}
           {...panelProps(AVAILABILITY)}
         />
       );
@@ -250,7 +256,7 @@ function EditListingWizardTab(props) {
     default:
       return null;
   }
-}
+};
 
 EditListingWizardTab.defaultProps = {
   listing: null,

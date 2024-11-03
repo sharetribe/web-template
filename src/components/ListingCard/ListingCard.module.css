@@ -47,6 +47,10 @@
   margin-bottom: 4px;
 }
 
+.priceContainer {
+  display: flex;
+}
+
 .priceValue {
   /* Font */
   composes: textSmall from global;
@@ -91,7 +95,8 @@
   /* Font */
   composes: textSmall from global;
   font-weight: var(--fontWeightBold);
-  color: var(--colorGrey700);
+  /*color: var(--colorGrey700);*/
+  color:black;
   margin: 0;
 }
 
@@ -120,4 +125,16 @@
   /* use break-word if available */
   word-break: break-word;
   hyphens: auto;
+}
+
+.teamBuilding {
+  display: flex;
+  align-items: center; 
+  margin-left: auto; 
+  padding-left: 10px; 
+  margin-top: -12px; 
+}
+
+.da {
+  display: flex;
 }

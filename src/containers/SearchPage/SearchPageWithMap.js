@@ -6,7 +6,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 import omit from 'lodash/omit';
 import classNames from 'classnames';
-
+import {filterListings} from '../../util/listingsHelpers';
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 
@@ -227,7 +227,7 @@ export class SearchPageComponent extends Component {
               address,
               bounds,
             },
-            filterConfigs,
+            filterConfigs
           ),
         };
       };
@@ -275,6 +275,7 @@ export class SearchPageComponent extends Component {
     const { listingFields } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
 
+    const filteredListings = filterListings(location, listings);
     const activeListingTypes = config?.listing?.listingTypes.map((config) => config.listingType);
     const marketplaceCurrency = config.currency;
     const { categoryConfiguration } = config;
@@ -298,7 +299,7 @@ export class SearchPageComponent extends Component {
       searchParams,
       filterConfigs,
       sortConfig,
-      isOriginInUse(config),
+      isOriginInUse(config)
     );
 
     const validQueryParams = urlQueryParams;
@@ -310,14 +311,14 @@ export class SearchPageComponent extends Component {
 
     const isKeywordSearch = isMainSearchTypeKeywords(config);
     const builtInPrimaryFilters = defaultFiltersConfig.filter((f) =>
-      ['categoryLevel'].includes(f.key),
+      ['categoryLevel'].includes(f.key)
     );
     const builtInFilters = isKeywordSearch
       ? defaultFiltersConfig.filter((f) => !['keywords', 'categoryLevel'].includes(f.key))
       : defaultFiltersConfig.filter((f) => !['categoryLevel'].includes(f.key));
     const [customPrimaryFilters, customSecondaryFilters] = groupListingFieldConfigs(
       listingFieldsConfig,
-      activeListingTypes,
+      activeListingTypes
     );
     const availablePrimaryFilters = [
       ...builtInPrimaryFilters,
@@ -365,12 +366,15 @@ export class SearchPageComponent extends Component {
       : {};
 
     const hasPaginationInfo = !!pagination && pagination.totalItems != null;
+    /*
     const totalItems =
       searchParamsAreInSync && hasPaginationInfo
         ? pagination.totalItems
         : pagination?.paginationUnsupported
-          ? listings.length
+          ? filteredListings.length
           : 0;
+    */
+    const totalItems = filteredListings.length || 0;
     const listingsAreLoaded =
       !searchInProgress &&
       searchParamsAreInSync &&
@@ -379,7 +383,7 @@ export class SearchPageComponent extends Component {
     const conflictingFilterActive = isAnyFilterActive(
       sortConfig.conflictingFilters,
       validQueryParams,
-      filterConfigs,
+      filterConfigs
     );
     const sortBy = (mode) =>
       sortConfig.active ? (
@@ -405,11 +409,11 @@ export class SearchPageComponent extends Component {
 
     const { bounds, origin } = searchParamsInURL || {};
     const { title, description, schema } = createSearchResultSchema(
-      listings,
+      filteredListings,
       searchParamsInURL || {},
       intl,
       routeConfiguration,
-      config,
+      config
     );
 
     // Set topbar class based on if a modal is open in
@@ -551,10 +555,11 @@ export class SearchPageComponent extends Component {
                 ) : null}
                 <SearchResultsPanel
                   className={css.searchListingsPanel}
-                  listings={listings}
+                  listings={filteredListings}
                   pagination={listingsAreLoaded ? pagination : null}
                   search={parse(location.search)}
                   setActiveListing={onActivateListing}
+                  location={this.props.location}
                   isMapVariant
                 />
               </div>
@@ -577,7 +582,7 @@ export class SearchPageComponent extends Component {
                   center={origin}
                   isSearchMapOpenOnMobile={this.state.isSearchMapOpenOnMobile}
                   location={location}
-                  listings={listings || []}
+                  listings={filteredListings || []}
                   onMapMoveEnd={this.onMapMoveEnd}
                   onCloseAsModal={() => {
                     onManageDisableScrolling('SearchPage.map', false);

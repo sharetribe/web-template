@@ -318,7 +318,7 @@ describe('InboxPage', () => {
           intl={fakeIntl}
           stateData={stateDataOrder}
           isBooking={false}
-        />,
+        />
       );
       expect(tree.asFragment().firstChild).toMatchSnapshot();
       const quantityFound = screen.queryAllByText('InboxPage.quantity');
@@ -367,7 +367,7 @@ describe('InboxPage', () => {
           stateData={stateDataOrder}
           isBooking={false}
           stockType="multipleItems"
-        />,
+        />
       );
       expect(tree.asFragment().firstChild).toMatchSnapshot();
       const quantityFound = screen.queryAllByText('InboxPage.quantity');
@@ -402,7 +402,7 @@ describe('InboxPage', () => {
           stateData={stateDataOrder}
           isBooking={false}
           stockType="oneItem"
-        />,
+        />
       );
       expect(tree.asFragment().firstChild).toMatchSnapshot();
       expect(screen.queryByText('InboxPage.quantity')).not.toBeInTheDocument();
@@ -462,7 +462,7 @@ describe('InboxPage', () => {
           intl={fakeIntl}
           stateData={stateDataBooking}
           isBooking
-        />,
+        />
       );
       expect(tree.asFragment().firstChild).toMatchSnapshot();
 
@@ -526,7 +526,7 @@ describe('InboxPage', () => {
           intl={fakeIntl}
           stateData={stateDataBooking}
           isBooking
-        />,
+        />
       );
 
       const quantityFound = screen.queryAllByText('Jun 14 – 16');
@@ -589,7 +589,7 @@ describe('InboxPage', () => {
           intl={fakeIntl}
           stateData={stateDataBooking}
           isBooking
-        />,
+        />
       );
       expect(tree.asFragment().firstChild).toMatchSnapshot();
 

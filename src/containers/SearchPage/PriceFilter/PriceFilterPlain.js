@@ -91,7 +91,7 @@ class PriceFilterPlainComponent extends Component {
           {
             minPrice: formatCurrencyMajorUnit(intl, marketplaceCurrency, minPrice),
             maxPrice: formatCurrencyMajorUnit(intl, marketplaceCurrency, maxPrice),
-          },
+          }
         )
       : null;
     return (

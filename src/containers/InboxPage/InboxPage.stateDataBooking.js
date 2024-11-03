@@ -42,7 +42,7 @@ export const getStateDataForBookingProcess = (txInfo, processInfo) => {
     .cond([states.REVIEWED, _], () => ({ processName, processState, isFinal: true }))
     .default(() =>
       // Default values for other states
-      ({ processName, processState }),
+      ({ processName, processState })
     )
     .resolve();
 };

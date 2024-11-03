@@ -10,7 +10,7 @@ export const getStateDataForInquiryProcess = (txInfo, processInfo) => {
     .cond([states.FREE_INQUIRY, _], () => ({ processName, processState, actionNeeded: true }))
     .default(() =>
       // Default values for other states
-      ({ processName, processState }),
+      ({ processName, processState })
     )
     .resolve();
 };

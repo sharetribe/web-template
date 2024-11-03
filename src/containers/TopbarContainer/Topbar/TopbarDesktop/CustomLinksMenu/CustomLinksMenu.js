@@ -58,7 +58,7 @@ const groupMeasuredLinks = (links, containerWidth, menuMoreWidth) => {
             menuLinks: [...pickedLinks.menuLinks, link],
           };
     },
-    { priorityLinks: [], menuLinks: [] },
+    { priorityLinks: [], menuLinks: [] }
   );
   return groupedLinks;
 };
@@ -66,7 +66,7 @@ const groupMeasuredLinks = (links, containerWidth, menuMoreWidth) => {
 const calculateContainerWidth = (containerRefTarget, parentWidth) => {
   // Siblings include logo, search form, (inbox, profile menu || login signup)
   const siblingArray = Array.from(containerRefTarget.parentNode.childNodes).filter(
-    (n) => n !== containerRefTarget,
+    (n) => n !== containerRefTarget
   );
   const siblingWidthsCombined = siblingArray.reduce((acc, node) => acc + node.offsetWidth, 0);
 

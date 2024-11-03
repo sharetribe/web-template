@@ -10,7 +10,7 @@ const LocationAutocompleteInputImpl = loadable(
   () =>
     import(
       /* webpackChunkName: "LocationAutocompleteInputImpl" */ './LocationAutocompleteInputImpl'
-    ),
+    )
 );
 
 class LocationAutocompleteInputComponent extends Component {

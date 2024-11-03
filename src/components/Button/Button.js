@@ -158,7 +158,7 @@ SecondaryButton.displayName = 'SecondaryButton';
 export function SecondaryButtonInline(props) {
   const classes = classNames(
     props.rootClassName || css.secondaryButtonInlineRoot,
-    css.secondaryButtonInline,
+    css.secondaryButtonInline
   );
   return <Button {...props} rootClassName={classes} />;
 }

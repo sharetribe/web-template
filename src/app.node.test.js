@@ -21,7 +21,7 @@ const render = (url, context) => {
       helmetContext={helmetContext}
       store={store}
       hostedConfig={getHostedConfiguration()}
-    />,
+    />
   );
 
   const { helmet: head } = helmetContext;

@@ -38,30 +38,30 @@ import { parse, stringify } from '../../util/urlHelpers';
 import { userDisplayNameAsString } from '../../util/data';
 import {
   INQUIRY_PROCESS_NAME,
+  FREE_BOOKING_PROCESS_NAME,
   getSupportedProcessesInfo,
   isBookingProcess,
   isPurchaseProcess,
   resolveLatestProcessName,
 } from '../../transactions/transaction';
 
-import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2 } from '..';
+import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2 } from '../../components';
 
 import css from './OrderPanel.module.css';
 
-const BookingTimeForm = loadable(
-  () => import(/* webpackChunkName: "BookingTimeForm" */ './BookingTimeForm/BookingTimeForm'),
+const BookingTimeForm = loadable(() =>
+  import(/* webpackChunkName: "BookingTimeForm" */ './BookingTimeForm/BookingTimeForm')
 );
-const BookingDatesForm = loadable(
-  () => import(/* webpackChunkName: "BookingDatesForm" */ './BookingDatesForm/BookingDatesForm'),
+const BookingDatesForm = loadable(() =>
+  import(/* webpackChunkName: "BookingDatesForm" */ './BookingDatesForm/BookingDatesForm')
 );
-const InquiryWithoutPaymentForm = loadable(
-  () =>
-    import(
-      /* webpackChunkName: "InquiryWithoutPaymentForm" */ './InquiryWithoutPaymentForm/InquiryWithoutPaymentForm'
-    ),
+const InquiryWithoutPaymentForm = loadable(() =>
+  import(
+    /* webpackChunkName: "InquiryWithoutPaymentForm" */ './InquiryWithoutPaymentForm/InquiryWithoutPaymentForm'
+  )
 );
-const ProductOrderForm = loadable(
-  () => import(/* webpackChunkName: "ProductOrderForm" */ './ProductOrderForm/ProductOrderForm'),
+const ProductOrderForm = loadable(() =>
+  import(/* webpackChunkName: "ProductOrderForm" */ './ProductOrderForm/ProductOrderForm')
 );
 
 // This defines when ModalInMobile shows content as Modal
@@ -72,8 +72,7 @@ const priceData = (price, currency, intl) => {
   if (price && price.currency === currency) {
     const formattedPrice = formatMoney(intl, price);
     return { formattedPrice, priceTitle: formattedPrice };
-  }
-  if (price) {
+  } else if (price) {
     return {
       formattedPrice: `(${price.currency})`,
       priceTitle: `Unsupported currency (${price.currency})`,
@@ -81,7 +80,6 @@ const priceData = (price, currency, intl) => {
   }
   return {};
 };
-
 const formatMoneyIfSupportedCurrency = (price, intl) => {
   try {
     return formatMoney(intl, price);
@@ -113,16 +111,18 @@ const handleSubmit = (
   isInquiryWithoutPayment,
   onSubmit,
   history,
-  location,
-) =>
+  location
+) => {
   // TODO: currently, inquiry-process does not have any form to ask more order data.
   // We can submit without opening any inquiry/order modal.
-  isInquiryWithoutPayment
+  return isInquiryWithoutPayment
     ? () => onSubmit({})
     : () => openOrderModal(isOwnListing, isClosed, history, location);
+};
+
 const dateFormattingOptions = { month: 'short', day: 'numeric', weekday: 'short' };
 
-function PriceMaybe(props) {
+const PriceMaybe = props => {
   const {
     price,
     publicData,
@@ -133,7 +133,7 @@ function PriceMaybe(props) {
   } = props;
   const { listingType, unitType } = publicData || {};
 
-  const foundListingTypeConfig = validListingTypes.find((conf) => conf.listingType === listingType);
+  const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
   const showPrice = displayPrice(foundListingTypeConfig);
   if (!showPrice || !price) {
     return null;
@@ -154,15 +154,21 @@ function PriceMaybe(props) {
     </div>
   ) : (
     <div className={css.priceContainer}>
-      <p className={css.price}>{formatMoneyIfSupportedCurrency(price, intl)}</p>
+      <p className={css.price}>
+      {price.amount === 0 ? (
+      <span>FREE</span>
+    ) : (
+      formatMoneyIfSupportedCurrency(price, intl)
+    )}
+        </p>
       <div className={css.perUnit}>
         <FormattedMessage id="OrderPanel.perUnit" values={{ unitType }} />
       </div>
     </div>
   );
-}
+};
 
-function OrderPanel(props) {
+const OrderPanel = props => {
   const {
     rootClassName,
     className,
@@ -191,32 +197,35 @@ function OrderPanel(props) {
     fetchLineItemsInProgress,
     fetchLineItemsError,
     payoutDetailsWarning,
+    currentUser,
   } = props;
-
   const publicData = listing?.attributes?.publicData || {};
   const { listingType, unitType, transactionProcessAlias = '' } = publicData || {};
   const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
   const lineItemUnitType = lineItemUnitTypeMaybe || `line-item/${unitType}`;
+  const isAuthorDefined = !!author;
+  const providerName = isAuthorDefined ? author.attributes.profile.publicData?.providerName : '';
 
   const price = listing?.attributes?.price;
   const isPaymentProcess = processName !== INQUIRY_PROCESS_NAME;
+  const isFreeBooking = processName === FREE_BOOKING_PROCESS_NAME;
 
   const showPriceMissing = isPaymentProcess && !price;
-  function PriceMissing() {
+  const PriceMissing = () => {
     return (
       <p className={css.error}>
         <FormattedMessage id="OrderPanel.listingPriceMissing" />
       </p>
     );
-  }
+  };
   const showInvalidCurrency = isPaymentProcess && price?.currency !== marketplaceCurrency;
-  function InvalidCurrency() {
+  const InvalidCurrency = () => {
     return (
       <p className={css.error}>
         <FormattedMessage id="OrderPanel.listingCurrencyInvalid" />
       </p>
     );
-  }
+  };
 
   const timeZone = listing?.attributes?.availabilityPlan?.timezone;
   const isClosed = listing?.attributes?.state === LISTING_STATE_CLOSED;
@@ -242,15 +251,15 @@ function OrderPanel(props) {
   const showInquiryForm = processName === INQUIRY_PROCESS_NAME;
 
   const supportedProcessesInfo = getSupportedProcessesInfo();
-  const isKnownProcess = supportedProcessesInfo.map((info) => info.name).includes(processName);
+  const isKnownProcess = supportedProcessesInfo.map(info => info.name).includes(processName);
 
   const { pickupEnabled, shippingEnabled } = listing?.attributes?.publicData || {};
 
-  const listingTypeConfig = validListingTypes.find((conf) => conf.listingType === listingType);
+  const listingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
   const displayShipping = displayDeliveryShipping(listingTypeConfig);
   const displayPickup = displayDeliveryPickup(listingTypeConfig);
   const allowOrdersOfMultipleItems = [STOCK_MULTIPLE_ITEMS, STOCK_INFINITE_MULTIPLE_ITEMS].includes(
-    listingTypeConfig?.stockType,
+    listingTypeConfig?.stockType
   );
 
   const showClosedListingHelpText = listing.id && isClosed;
@@ -281,7 +290,7 @@ function OrderPanel(props) {
         </div>
 
         <div className={css.orderHeading}>
-          {titleDesktop || <H2 className={titleClasses}>{title}</H2>}
+          {titleDesktop ? titleDesktop : <H2 className={titleClasses}>{title}</H2>}
           {subTitleText ? <div className={css.orderHelp}>{subTitleText}</div> : null}
         </div>
 
@@ -296,16 +305,17 @@ function OrderPanel(props) {
         <div className={css.author}>
           <AvatarSmall user={author} className={css.providerAvatar} />
           <span className={css.providerNameLinked}>
-            <FormattedMessage id="OrderPanel.author" values={{ name: authorLink }} />
+           
+            <FormattedMessage id="OrderPanel.author" values={{ name: authorLink }}  />
           </span>
           <span className={css.providerNamePlain}>
             <FormattedMessage id="OrderPanel.author" values={{ name: authorDisplayName }} />
           </span>
         </div>
 
-        {showPriceMissing ? (
+        {showPriceMissing && !isFreeBooking ? (
           <PriceMissing />
-        ) : showInvalidCurrency ? (
+        ) : showInvalidCurrency && !isFreeBooking ? (
           <InvalidCurrency />
         ) : showBookingTimeForm ? (
           <BookingTimeForm
@@ -329,6 +339,9 @@ function OrderPanel(props) {
             fetchLineItemsInProgress={fetchLineItemsInProgress}
             fetchLineItemsError={fetchLineItemsError}
             payoutDetailsWarning={payoutDetailsWarning}
+            author={author}
+            publicData={publicData}
+            currentUser={currentUser}
           />
         ) : showBookingDatesForm ? (
           <BookingDatesForm
@@ -402,7 +415,7 @@ function OrderPanel(props) {
               showInquiryForm,
               onSubmit,
               history,
-              location,
+              location
             )}
             disabled={isOutOfStock}
           >
@@ -420,7 +433,7 @@ function OrderPanel(props) {
       </div>
     </div>
   );
-}
+};
 
 OrderPanel.defaultProps = {
   rootClassName: null,
@@ -449,7 +462,7 @@ OrderPanel.propTypes = {
         alias: string.isRequired,
         unitType: string.isRequired,
       }).isRequired,
-    }),
+    })
   ).isRequired,
   isOwnListing: bool,
   author: oneOfType([propTypes.user, propTypes.currentUser]).isRequired,

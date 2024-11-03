@@ -40,7 +40,7 @@ export const Link = React.forwardRef((props, ref) => {
     if (typeof window !== 'undefined') {
       const hash = href;
       const testURL = new URL(
-        `http://my.marketplace.com${location.pathname}${location.hash}${location.search}`,
+        `http://my.marketplace.com${location.pathname}${location.hash}${location.search}`
       );
       testURL.hash = hash;
       const matchedRoutes = matchPathname(testURL.pathname, routes);

@@ -76,7 +76,7 @@ CustomAppearance.propTypes = {
           width: number.isRequired,
           height: number.isRequired,
           url: string.isRequired,
-        }),
+        })
       ).isRequired,
     }).isRequired,
   }),

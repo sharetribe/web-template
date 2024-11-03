@@ -1,8 +1,4 @@
-/**
- *  TopbarMobileMenu prints the menu content for authenticated user or
- * shows login actions for those who are not authenticated.
- */
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -13,7 +9,6 @@ import { ensureCurrentUser } from '../../../../util/data';
 
 import {
   AvatarLarge,
-  ExternalLink,
   InlineTextButton,
   NamedLink,
   NotificationBadge,
@@ -21,41 +16,7 @@ import {
 
 import css from './TopbarMobileMenu.module.css';
 
-function CustomLinkComponent({ linkConfig, currentPage }) {
-  const { group, text, type, href, route } = linkConfig;
-  const getCurrentPageClass = (page) => {
-    const hasPageName = (name) => currentPage?.indexOf(name) === 0;
-    const isCMSPage = (pageId) => hasPageName('CMSPage') && currentPage === `${page}:${pageId}`;
-    const isInboxPage = (tab) => hasPageName('InboxPage') && currentPage === `${page}:${tab}`;
-    const isCurrentPage = currentPage === page;
-
-    return isCMSPage(route?.params?.pageId) || isInboxPage(route?.params?.tab) || isCurrentPage
-      ? css.currentPage
-      : null;
-  };
-
-  // Note: if the config contains 'route' keyword,
-  // then in-app linking config has been resolved already.
-  if (type === 'internal' && route) {
-    // Internal link
-    const { name, params, to } = route || {};
-    const className = classNames(css.navigationLink, getCurrentPageClass(name));
-    return (
-      <NamedLink name={name} params={params} to={to} className={className}>
-        <span className={css.menuItemBorder} />
-        {text}
-      </NamedLink>
-    );
-  }
-  return (
-    <ExternalLink href={href} className={css.navigationLink}>
-      <span className={css.menuItemBorder} />
-      {text}
-    </ExternalLink>
-  );
-}
-
-function TopbarMobileMenu(props) {
+const TopbarMobileMenu = (props) => {
   const {
     isAuthenticated,
     currentPage,
@@ -67,6 +28,19 @@ function TopbarMobileMenu(props) {
   } = props;
 
   const user = ensureCurrentUser(currentUser);
+  const userRole = currentUser?.attributes?.profile?.publicData?.role;
+
+  const [language, setLanguage] = useState('it');
+  const handleLanguageChange = (event) => {
+    const selectedLanguage = event.target.value;
+    setLanguage(selectedLanguage);
+
+    if (selectedLanguage === 'en') {
+      window.location.href = 'https://clubjoy.co';
+    } else {
+      window.location.href = 'https://clubjoy.it';
+    }
+  };
 
   const extraLinks = customLinks.map((linkConfig) => (
     <CustomLinkComponent key={linkConfig.text} linkConfig={linkConfig} currentPage={currentPage} />
@@ -90,6 +64,7 @@ function TopbarMobileMenu(props) {
         <FormattedMessage id="TopbarMobileMenu.signupOrLogin" values={{ signup, login }} />
       </span>
     );
+
     return (
       <div className={css.root}>
         <div className={css.content}>
@@ -99,20 +74,39 @@ function TopbarMobileMenu(props) {
               values={{ lineBreak: <br />, signupOrLogin }}
             />
           </div>
-
-          <div className={css.customLinksWrapper}>{extraLinks}</div>
-
-          <div className={css.spacer} />
+          <div className={css.otherGreeting}>
+            Oppure:
+            <br />
+            <NamedLink name="TeambuildingPage">
+              <FormattedMessage id="TopbarDesktop.provider" />
+            </NamedLink>
+            <br />
+            <NamedLink name="TeambuildingPage">
+              <FormattedMessage id="TopbarDesktop.team" />
+            </NamedLink>
+          </div>
         </div>
+
         <div className={css.footer}>
           <NamedLink className={css.createNewListingLink} name="NewListingPage">
             <FormattedMessage id="TopbarMobileMenu.newListingLink" />
           </NamedLink>
         </div>
+
+        {/* Language Selector for Unauthenticated Users 
+        <div className={css.languageSelectorContainer}>
+        <select
+  className={classNames(css.languageSelector, css.smallLanguageSelector)} // Add a new class here
+  value={language}
+  onChange={handleLanguageChange}
+>
+  <option value="it">It</option>
+  <option value="en">Eng</option>
+</select>
+        </div>*/}
       </div>
     );
   }
-
   const notificationCountBadge =
     notificationCount > 0 ? (
       <NotificationBadge className={css.notificationBadge} count={notificationCount} />
@@ -137,46 +131,74 @@ function TopbarMobileMenu(props) {
         <InlineTextButton rootClassName={css.logoutButton} onClick={onLogout}>
           <FormattedMessage id="TopbarMobileMenu.logoutLink" />
         </InlineTextButton>
-
-        <div className={css.accountLinksWrapper}>
+        {userRole === 'provider' && (
           <NamedLink
-            className={classNames(css.inbox, currentPageClass(`InboxPage:${inboxTab}`))}
-            name="InboxPage"
-            params={{ tab: inboxTab }}
+            className={classNames(css.navigationLink, currentPageClass('CMSPage'))}
+            name="CMSPage"
+            params={{ pageId: 'overview' }}
           >
-            <FormattedMessage id="TopbarMobileMenu.inboxLink" />
-            {notificationCountBadge}
+            <FormattedMessage id="TopbarMobileMenu.overview" />
           </NamedLink>
+        )}
+        <NamedLink
+          className={classNames(css.inbox, currentPageClass(`InboxPage:${inboxTab}`))}
+          name="InboxPage"
+          params={{ tab: currentUserHasListings ? 'sales' : 'orders' }}
+        >
+          <FormattedMessage id="TopbarMobileMenu.inboxLink" />
+          {notificationCountBadge}
+        </NamedLink>
+        {userRole === 'provider' && (
           <NamedLink
             className={classNames(css.navigationLink, currentPageClass('ManageListingsPage'))}
             name="ManageListingsPage"
           >
             <FormattedMessage id="TopbarMobileMenu.yourListingsLink" />
           </NamedLink>
-          <NamedLink
-            className={classNames(css.navigationLink, currentPageClass('ProfileSettingsPage'))}
-            name="ProfileSettingsPage"
+        )}
+        <NamedLink
+          className={classNames(css.navigationLink, currentPageClass('ProfileSettingsPage'))}
+          name="ProfileSettingsPage"
+        >
+          <FormattedMessage id="TopbarMobileMenu.profileSettingsLink" />
+        </NamedLink>
+        <NamedLink
+          className={classNames(css.navigationLink, currentPageClass('AccountSettingsPage'))}
+          name="AccountSettingsPage"
+        >
+          <FormattedMessage id="TopbarMobileMenu.accountSettingsLink" />
+        </NamedLink>
+
+        <NamedLink
+          className={classNames(css.navigationLink, currentPageClass('TeambuildingPage'))}
+          name="TeambuildingPage"
+        >
+          <FormattedMessage id="TopbarDesktop.team" />
+        </NamedLink>
+
+        <div className={css.languageSelectorContainer}>
+          <select
+            className={classNames(css.languageSelector, css.smallLanguageSelector)} // Add a new class here
+            value={language}
+            onChange={handleLanguageChange}
           >
-            <FormattedMessage id="TopbarMobileMenu.profileSettingsLink" />
-          </NamedLink>
-          <NamedLink
-            className={classNames(css.navigationLink, currentPageClass('AccountSettingsPage'))}
-            name="AccountSettingsPage"
-          >
-            <FormattedMessage id="TopbarMobileMenu.accountSettingsLink" />
-          </NamedLink>
+            <option value="it">IT</option>
+            <option value="en">EN</option>
+          </select>
         </div>
-        <div className={css.customLinksWrapper}>{extraLinks}</div>
+
         <div className={css.spacer} />
       </div>
-      <div className={css.footer}>
-        <NamedLink className={css.createNewListingLink} name="NewListingPage">
-          <FormattedMessage id="TopbarMobileMenu.newListingLink" />
-        </NamedLink>
-      </div>
+      {userRole === 'provider' && (
+        <div className={css.footer}>
+          <NamedLink className={css.createNewListingLink} name="NewListingPage">
+            <FormattedMessage id="TopbarMobileMenu.newListingLink" />
+          </NamedLink>
+        </div>
+      )}
     </div>
   );
-}
+};
 
 TopbarMobileMenu.defaultProps = { currentUser: null, notificationCount: 0, currentPage: null };
 

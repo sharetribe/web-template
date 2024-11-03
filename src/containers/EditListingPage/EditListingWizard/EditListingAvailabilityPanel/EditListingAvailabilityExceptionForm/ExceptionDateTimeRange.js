@@ -305,7 +305,7 @@ function ExceptionDateTimeRange(props) {
       console.log(
         `Fetched months: ${monthIdString(startMonth)} - exclusive(${monthIdString(endMonth)})`,
         '\nExceptions found:',
-        allExceptions,
+        allExceptions
       );
       console.log('Dates with availability info:', availableDates);
     }

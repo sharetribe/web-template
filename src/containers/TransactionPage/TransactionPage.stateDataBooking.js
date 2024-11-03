@@ -93,7 +93,7 @@ export const getStateDataForBookingProcess = (txInfo, processInfo) => {
     }))
     .default(() =>
       // Default values for other states
-      ({ processName, processState, showDetailCardHeadings: true }),
+      ({ processName, processState, showDetailCardHeadings: true })
     )
     .resolve();
 };

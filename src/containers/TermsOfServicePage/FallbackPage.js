@@ -2,7 +2,7 @@ import React from 'react';
 import loadable from '@loadable/component';
 
 const PageBuilder = loadable(
-  () => import(/* webpackChunkName: "PageBuilder" */ '../PageBuilder/PageBuilder'),
+  () => import(/* webpackChunkName: "PageBuilder" */ '../PageBuilder/PageBuilder')
 );
 
 // NOTE: You could add the actual Terms of Service here as a fallback

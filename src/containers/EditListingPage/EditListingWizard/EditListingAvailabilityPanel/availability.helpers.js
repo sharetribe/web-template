@@ -49,7 +49,7 @@ const fetchExceptionData = (
   timeZone,
   onFetchExceptions,
   firstDayOfWeek,
-  isWeekly = true,
+  isWeekly = true
 ) => {
   const endOfRangeDate = endOfRange(TODAY, MAX_AVAILABILITY_EXCEPTIONS_RANGE, timeZone);
 
@@ -96,7 +96,7 @@ export const handleWeekClick = (params) => (weekFn) => {
     listingId,
     timeZone,
     onFetchExceptions,
-    firstDayOfWeek,
+    firstDayOfWeek
   );
 
   // If previous fetch for the week data failed, try again.
@@ -132,7 +132,7 @@ export const handleMonthClick = (params) => (monthFn) => {
     timeZone,
     onFetchExceptions,
     undefined,
-    false,
+    false
   );
 
   // If previous fetch for the month data failed, try again.

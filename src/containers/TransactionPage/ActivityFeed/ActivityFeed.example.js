@@ -173,12 +173,12 @@ export const WithMessagesTransitionsAndReviews = {
         createReview(
           'review1',
           { createdAt: new Date(Date.UTC(2017, 10, 9, 11, 34)), rating: 3, type: 'ofCustomer' },
-          { author: createUser('user2'), subject: createUser('user1') },
+          { author: createUser('user2'), subject: createUser('user1') }
         ),
         createReview(
           'review2',
           { createdAt: new Date(Date.UTC(2017, 10, 9, 12, 34)), rating: 5, type: 'ofProvider' },
-          { author: createUser('user1'), subject: createUser('user2') },
+          { author: createUser('user1'), subject: createUser('user2') }
         ),
       ],
     }),
@@ -186,22 +186,22 @@ export const WithMessagesTransitionsAndReviews = {
       createMessage(
         'msg1',
         { createdAt: new Date(Date.UTC(2017, 10, 9, 8, 11)) },
-        { sender: createUser('user1') },
+        { sender: createUser('user1') }
       ),
       createMessage(
         'msg2',
         { createdAt: new Date(Date.UTC(2017, 10, 9, 8, 14)) },
-        { sender: createUser('user1') },
+        { sender: createUser('user1') }
       ),
       createMessage(
         'msg3',
         { createdAt: new Date(Date.UTC(2017, 10, 9, 8, 17)) },
-        { sender: createUser('user2') },
+        { sender: createUser('user2') }
       ),
       createMessage(
         'msg4',
         { createdAt: new Date(Date.UTC(2017, 10, 12, 13, 20)) },
-        { sender: createUser('user2') },
+        { sender: createUser('user2') }
       ),
     ],
     hasOlderMessages: false,
@@ -228,12 +228,12 @@ export const WithAReviewFromBothUsers = {
         createReview(
           'review1',
           { createdAt: new Date(Date.UTC(2017, 10, 9, 8, 10)), rating: 3, type: 'ofProvider' },
-          { author: createUser('user1'), subject: createUser('user2') },
+          { author: createUser('user1'), subject: createUser('user2') }
         ),
         createReview(
           'review2',
           { createdAt: new Date(Date.UTC(2017, 10, 10, 8, 10)), rating: 5, type: 'ofCustomer' },
-          { author: createUser('user2'), subject: createUser('user1') },
+          { author: createUser('user2'), subject: createUser('user1') }
         ),
       ],
       lastTransition: transitions.REVIEW_2_BY_PROVIDER,

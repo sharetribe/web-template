@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { array, arrayOf, bool, func, number, object, shape, string } from 'prop-types';
 import pickBy from 'lodash/pickBy';
 import classNames from 'classnames';
-
+import landingCoverMobile from '../../../media/landingCoverMobile.jpg';
+import SocialBar from '../../../components/SocialBar/SocialBar';
 import appSettings from '../../../config/settings';
 import { useConfiguration } from '../../../context/configurationContext';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
@@ -193,7 +194,7 @@ class TopbarComponent extends Component {
         window.location = path;
       }
 
-      console.log('logged out');
+      console.log('logged out'); // eslint-disable-line
     });
   }
 
@@ -221,14 +222,17 @@ class TopbarComponent extends Component {
       sendVerificationEmailError,
       showGenericError,
       config,
+      searchParams,
       routeConfiguration,
     } = this.props;
+
+    const isTeamBuilding = this.props.location.pathname === '/p/teambuilding';
+    const isTeamBuildingOnTop = this.props.location.pathname.startsWith('/ts');
 
     const { mobilemenu, mobilesearch, keywords, address, origin, bounds } = parse(location.search, {
       latlng: ['origin'],
       latlngBounds: ['bounds'],
     });
-
     // Custom links are sorted so that group="primary" are always at the beginning of the list.
     const sortedCustomLinks = sortCustomLinks(config.topbar?.customLinks);
     const customLinks = getResolvedCustomLinks(sortedCustomLinks, routeConfiguration);
@@ -321,8 +325,10 @@ class TopbarComponent extends Component {
             notificationCount={notificationCount}
             onLogout={this.handleLogout}
             onSearchSubmit={this.handleSubmit}
+            appConfig={config}
             config={config}
             customLinks={customLinks}
+            searchParams={searchParams}
           />
         </div>
         <Modal
@@ -344,15 +350,18 @@ class TopbarComponent extends Component {
           onManageDisableScrolling={onManageDisableScrolling}
         >
           <div className={css.searchContainer}>
-            <TopbarSearchForm
-              onSubmit={this.handleSubmit}
-              initialValues={initialSearchFormValues}
-              isMobile
-              appConfig={config}
+            <LinkedLogo layout={'mobile'} alt={intl.formatMessage({ id: 'Topbar.logoIcon' })} />
+            <img
+              src={landingCoverMobile}
+              alt="Mobile Landing Cover"
+              className={css.landingCoverMobil}
             />
-            <p className={css.mobileHelp}>
-              <FormattedMessage id="Topbar.mobileSearchHelp" />
-            </p>
+            <div className={css.socialContainer}>
+              <div className={css.socialTitle}>
+                {intl.formatMessage({ id: 'Topbar.socialTitle' })}
+              </div>
+              <SocialBar />
+            </div>
           </div>
         </Modal>
         <ModalMissingInformation

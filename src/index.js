@@ -66,7 +66,7 @@ const render = (store, shouldHydrate) => {
         loadableReady(),
         store.dispatch(fetchAppAssets(defaultConfig.appCdnAssets, cdnAssetsVersion)),
         store.dispatch(fetchCurrentUser()),
-      ]),
+      ])
     )
     .then(([_, fetchedAppAssets, cu]) => {
       const { translations: translationsRaw, ...rest } = fetchedAppAssets || {};
@@ -78,18 +78,18 @@ const render = (store, shouldHydrate) => {
       const configEntries = Object.entries(rest);
       const hostedConfig = configEntries.reduce(
         (collectedData, [name, content]) => ({ ...collectedData, [name]: content.data || {} }),
-        {},
+        {}
       );
 
       if (shouldHydrate) {
         ReactDOM.hydrate(
           <ClientApp store={store} hostedTranslations={translations} hostedConfig={hostedConfig} />,
-          document.getElementById('root'),
+          document.getElementById('root')
         );
       } else {
         ReactDOM.render(
           <ClientApp store={store} hostedTranslations={translations} hostedConfig={hostedConfig} />,
-          document.getElementById('root'),
+          document.getElementById('root')
         );
       }
     })
@@ -110,7 +110,7 @@ const setupAnalyticsHandlers = (googleAnalyticsId) => {
   if (googleAnalyticsId) {
     if (googleAnalyticsId.indexOf('G-') !== 0) {
       console.warn(
-        'Google Analytics 4 (GA4) should have measurement id that starts with "G-" prefix',
+        'Google Analytics 4 (GA4) should have measurement id that starts with "G-" prefix'
       );
     } else {
       handlers.push(new GoogleAnalyticsHandler());
@@ -169,11 +169,11 @@ const cspEnabled = CSP === 'block' || CSP === 'report';
 
 if (CSP === 'report' && process.env.REACT_APP_ENV === 'production') {
   console.warn(
-    'Your production environment should use CSP with "block" mode. Read more from: https://www.sharetribe.com/docs/ftw-security/how-to-set-up-csp-for-ftw/',
+    'Your production environment should use CSP with "block" mode. Read more from: https://www.sharetribe.com/docs/ftw-security/how-to-set-up-csp-for-ftw/'
   );
 } else if (!cspEnabled) {
   console.warn(
-    "CSP is currently not enabled! You should add an environment variable REACT_APP_CSP with the value 'report' or 'block'. Read more from: https://www.sharetribe.com/docs/ftw-security/how-to-set-up-csp-for-ftw/",
+    "CSP is currently not enabled! You should add an environment variable REACT_APP_CSP with the value 'report' or 'block'. Read more from: https://www.sharetribe.com/docs/ftw-security/how-to-set-up-csp-for-ftw/"
   );
 }
 

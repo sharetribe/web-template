@@ -1,0 +1,11 @@
+/* SocialBar.module.css */
+/* Source: https://www.svgviewer.dev/*/
+
+.customClass {
+  flex-direction: row;
+  margin: 2px;
+  height: 30px;
+  width: 60px;
+  color: #012fa7;
+  cursor: pointer;
+}

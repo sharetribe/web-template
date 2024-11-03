@@ -23,30 +23,25 @@ describe('util/routes.js', () => {
 
     it('should return meaningful strings with path parameters', () => {
       expect(
-        createResourceLocatorString(
-          'ListingPage',
-          routes,
-          { id: '1234', slug: 'nice-listing' },
-          {},
-        ),
+        createResourceLocatorString('ListingPage', routes, { id: '1234', slug: 'nice-listing' }, {})
       ).toEqual('/l/nice-listing/1234');
       expect(() => createResourceLocatorString('ListingPage', routes, {}, {})).toThrow(
-        TypeError('Expected "slug" to be a string'),
+        TypeError('Expected "slug" to be a string')
       );
       expect(() => createResourceLocatorString('ListingPage', routes, { id: '1234' }, {})).toThrow(
-        TypeError('Expected "slug" to be a string'),
+        TypeError('Expected "slug" to be a string')
       );
       expect(() =>
-        createResourceLocatorString('ListingPage', routes, { slug: 'nice-listing' }, {}),
+        createResourceLocatorString('ListingPage', routes, { slug: 'nice-listing' }, {})
       ).toThrow(TypeError('Expected "id" to be a string'));
     });
 
     it('should return meaningful strings with search parameters', () => {
       expect(createResourceLocatorString('SearchPage', routes, {}, { page: 2 })).toEqual(
-        '/s?page=2',
+        '/s?page=2'
       );
       expect(
-        createResourceLocatorString('SearchPage', routes, {}, { address: 'Helsinki', page: 2 }),
+        createResourceLocatorString('SearchPage', routes, {}, { address: 'Helsinki', page: 2 })
       ).toEqual('/s?address=Helsinki&page=2');
     });
 
@@ -56,8 +51,8 @@ describe('util/routes.js', () => {
           'ListingPage',
           routes,
           { id: '1234', slug: 'nice-listing' },
-          { extrainfo: true },
-        ),
+          { extrainfo: true }
+        )
       ).toEqual('/l/nice-listing/1234?extrainfo=true');
     });
   });
@@ -71,7 +66,7 @@ describe('util/routes.js', () => {
 
     it('should throw exception for non-existing route (BlaaBlaaPage)', () => {
       expect(() => findRouteByRouteName('BlaaBlaaPage', routes)).toThrow(
-        'Component "BlaaBlaaPage" was not found.',
+        'Component "BlaaBlaaPage" was not found.'
       );
     });
   });
@@ -92,7 +87,7 @@ describe('util/routes.js', () => {
         hash: '',
       };
       expect(canonicalRoutePath(routes, location)).toEqual(
-        '/l/00000000-0000-0000-0000-000000000000',
+        '/l/00000000-0000-0000-0000-000000000000'
       );
     });
     it('handles ListingPage book', () => {
@@ -102,7 +97,7 @@ describe('util/routes.js', () => {
         hash: '',
       };
       expect(canonicalRoutePath(routes, location)).toEqual(
-        '/l/00000000-0000-0000-0000-000000000000?book=true',
+        '/l/00000000-0000-0000-0000-000000000000?book=true'
       );
     });
     it('handles ListingBasePage', () => {
@@ -120,7 +115,7 @@ describe('util/routes.js', () => {
         hash: '',
       };
       expect(canonicalRoutePath(routes, location)).toEqual(
-        '/l/some-slug-here/00000000-0000-0000-0000-000000000000/checkout',
+        '/l/some-slug-here/00000000-0000-0000-0000-000000000000/checkout'
       );
     });
     it('handles NewListingPage', () => {
@@ -138,7 +133,7 @@ describe('util/routes.js', () => {
         hash: '',
       };
       expect(canonicalRoutePath(routes, location)).toEqual(
-        '/l/00000000-0000-0000-0000-000000000000',
+        '/l/00000000-0000-0000-0000-000000000000'
       );
     });
   });
@@ -151,7 +146,7 @@ describe('util/routes.js', () => {
       const href1 = 'https://buy.example.com/{userId}?prefilled_email={userEmail}';
       const result1 = replaceParamsInHref(href1, { userId, userEmail });
       expect(result1).toEqual(
-        'https://buy.example.com/00000000-aaaa-bbbb-cccc-ffffffffffff?prefilled_email=user%40example.com',
+        'https://buy.example.com/00000000-aaaa-bbbb-cccc-ffffffffffff?prefilled_email=user%40example.com'
       );
     });
 
@@ -164,7 +159,7 @@ describe('util/routes.js', () => {
         'https://buy.example.com/path?client_reference_id={listingId}&prefilled_email={userEmail}';
       const result2 = replaceParamsInHref(href2, { listingId, userEmail });
       expect(result2).toEqual(
-        'https://buy.example.com/path?client_reference_id=11111111-bbbb-cccc-dddd-eeeeeeeeeeee&prefilled_email=user%40example.com',
+        'https://buy.example.com/path?client_reference_id=11111111-bbbb-cccc-dddd-eeeeeeeeeeee&prefilled_email=user%40example.com'
       );
     });
 
@@ -177,7 +172,7 @@ describe('util/routes.js', () => {
         'https://buy.example.com/path?client_reference_id={userId}&prefilled_email={userEmail}&prefilled_userId={userId}';
       const result3 = replaceParamsInHref(href3, { userId, userEmail });
       expect(result3).toEqual(
-        'https://buy.example.com/path?client_reference_id=00000000-aaaa-bbbb-cccc-ffffffffffff&prefilled_email=user%40example.com&prefilled_userId=00000000-aaaa-bbbb-cccc-ffffffffffff',
+        'https://buy.example.com/path?client_reference_id=00000000-aaaa-bbbb-cccc-ffffffffffff&prefilled_email=user%40example.com&prefilled_userId=00000000-aaaa-bbbb-cccc-ffffffffffff'
       );
     });
   });

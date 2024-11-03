@@ -44,7 +44,7 @@ const getPrice = (unformattedValue, currencyConfig) => {
       ? null
       : new Money(
           convertUnitToSubUnit(unformattedValue, unitDivisor(currencyConfig.currency)),
-          currencyConfig.currency,
+          currencyConfig.currency
         );
   } catch (e) {
     return null;
@@ -78,7 +78,7 @@ class CurrencyInputComponent extends Component {
         ? truncateToSubUnitPrecision(
             ensureSeparator(initialValue.toString(), usesComma),
             unitDivisor(currencyConfig.currency),
-            usesComma,
+            usesComma
           )
         : '';
       // Formatted value fully localized currency string ("$1,000.99")
@@ -172,7 +172,7 @@ class CurrencyInputComponent extends Component {
       const truncatedValueString = truncateToSubUnitPrecision(
         valueOrZero,
         unitDivisor(currencyConfig.currency),
-        this.state.usesComma,
+        this.state.usesComma
       );
       const unformattedValue = !isEmptyString ? truncatedValueString : '';
       const formattedValue = !isEmptyString

@@ -82,7 +82,7 @@ SortByPlain.propTypes = {
     shape({
       key: string.isRequired,
       label: string.isRequired,
-    }),
+    })
   ).isRequired,
   initialValue: string,
 };

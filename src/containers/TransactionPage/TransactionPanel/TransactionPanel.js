@@ -23,6 +23,8 @@ import BookingLocationMaybe from './BookingLocationMaybe';
 import InquiryMessageMaybe from './InquiryMessageMaybe';
 import FeedSection from './FeedSection';
 import ActionButtonsMaybe from './ActionButtonsMaybe';
+import TeamButtonsMaybe from './TeamButtonsMaybe';
+import ProviderButtonsMaybe from './ProviderButtonsMaybe';
 import DiminishedActionButtonMaybe from './DiminishedActionButtonMaybe';
 import PanelHeading from './PanelHeading';
 
@@ -95,11 +97,11 @@ export class TransactionPanelComponent extends Component {
       return;
     }
     onSendMessage(transactionId, message, config)
-      .then((messageId) => {
+      .then(messageId => {
         form.reset();
         this.scrollToMessage(messageId);
       })
-      .catch((e) => {
+      .catch(e => {
         // Ignore, Redux handles the error
       });
   }
@@ -140,24 +142,25 @@ export class TransactionPanelComponent extends Component {
       isInquiryProcess,
       orderBreakdown,
       orderPanel,
+      customerObj,
       config,
-      hasViewingRights,
+      transactionId,
+      onSendMessage, // Add onSendMessage prop
     } = this.props;
-
+   
     const isCustomer = transactionRole === 'customer';
     const isProvider = transactionRole === 'provider';
-
     const listingDeleted = !!listing?.attributes?.deleted;
     const isCustomerBanned = !!customer?.attributes?.banned;
     const isCustomerDeleted = !!customer?.attributes?.deleted;
     const isProviderBanned = !!provider?.attributes?.banned;
     const isProviderDeleted = !!provider?.attributes?.deleted;
-
+    const providerEmail = isProvider ? currentUser.attributes?.email : null;
     const { authorDisplayName, customerDisplayName, otherUserDisplayNameString } = displayNames(
       currentUser,
       provider,
       customer,
-      intl,
+      intl
     );
 
     const deletedListingTitle = intl.formatMessage({
@@ -166,6 +169,30 @@ export class TransactionPanelComponent extends Component {
 
     const listingTitle = listingDeleted ? deletedListingTitle : listing?.attributes?.title;
     const firstImage = listing?.images?.length > 0 ? listing?.images[0] : null;
+    const listingType = listing?.attributes?.publicData?.listingType;
+    const tId = transactionId?.uuid;
+    const start = orderBreakdown?.props?.booking?.attributes?.start;
+
+    const bookingState = stateData.processState;
+    const bookingRequestDate =
+      this.props?.activityFeed?.props?.transaction?.attributes?.transitions?.find(
+        t => t.transition === 'transition/accept'
+      )?.createdAt || null;
+
+    const updatedCustomerObj = { ...customerObj, providerEmail };
+   
+    const teamButtons = (
+      <TeamButtonsMaybe
+        start={start}
+        customerObj={customerObj}
+        transactionId={tId}
+        onSendMessage={onSendMessage} 
+      />
+    );
+
+    const providerButtons = (
+      <ProviderButtonsMaybe start={start} customerObj={updatedCustomerObj} transactionId={tId} />
+    );
 
     const actionButtons = (
       <ActionButtonsMaybe
@@ -174,21 +201,16 @@ export class TransactionPanelComponent extends Component {
         secondaryButtonProps={stateData?.secondaryButtonProps}
         isListingDeleted={listingDeleted}
         isProvider={isProvider}
+        customerObj={updatedCustomerObj}
       />
     );
 
-    const listingType = listing?.attributes?.publicData?.listingType;
     const listingTypeConfigs = config.listing.listingTypes;
-    const listingTypeConfig = listingTypeConfigs.find((conf) => conf.listingType === listingType);
+    const listingTypeConfig = listingTypeConfigs.find(conf => conf.listingType === listingType);
     const showPrice = isInquiryProcess && displayPrice(listingTypeConfig);
 
     const showSendMessageForm =
       !isCustomerBanned && !isCustomerDeleted && !isProviderBanned && !isProviderDeleted;
-
-    // Only show order panel for users who have listing viewing rights, otherwise
-    // show the detail card heading.
-    const showOrderPanel = stateData.showOrderPanel && hasViewingRights;
-    const showDetailCardHeadings = stateData.showDetailCardHeadings || !hasViewingRights;
 
     const deliveryMethod = protectedData?.deliveryMethod || 'none';
 
@@ -236,7 +258,7 @@ export class TransactionPanelComponent extends Component {
               showInquiryMessage={isInquiryProcess}
               isCustomer={isCustomer}
             />
-
+    
             {!isInquiryProcess ? (
               <div className={css.orderDetails}>
                 <div className={css.orderDetailsMobileSection}>
@@ -277,6 +299,74 @@ export class TransactionPanelComponent extends Component {
                 />
               </div>
             ) : null}
+{this.props.listing.id.uuid === '66dac9f8-e2e3-4611-a30c-64df1ef9ff68' ? (
+  <div className={css.feedContainer}>
+    {/* Current logic for listing id 66dac9f8-e2e3-4611-a30c-64df1ef9ff68 */}
+    {this.props.protectedData.fee?.length > 0 ? (
+      <div>
+        <strong>Taglie tappeto richieste:</strong>
+        <ul>
+          {this.props.protectedData.fee.map((fee, index) => {
+            let feeLabel = '';
+            switch (fee) {
+              case 'smallFee':
+                feeLabel = 'Tappeto Small';
+                break;
+              case 'mediumFee':
+                feeLabel = 'Tappeto Medium';
+                break;
+              case 'largeFee':
+                feeLabel = 'Tappeto Large';
+                break;
+              default:
+                feeLabel = ''; // Fallback in case there's an unexpected fee value
+            }
+            return <li key={index}>{feeLabel}</li>;
+          })}
+        </ul>
+      </div>
+    ) : (
+      <p></p>
+    )}
+
+    {this.props.protectedData.seatNames?.length > 0 ? (
+      <div>
+        <strong>Nomi prenotazione:</strong>
+        <ul>
+          {this.props.protectedData.seatNames.map((seat, index) => {
+            // Handle case where seat is an empty string or an array with an empty string
+            let seatName = seat && typeof seat === 'string' && seat.trim() !== '' ? seat : 'Cliente senza nome';
+            return <li key={index}>{seatName}</li>;
+          })}
+        </ul>
+      </div>
+    ) : (
+      <p>Nessun nome disponibile</p>
+    )}
+  </div>
+) : (
+  <div className={css.feedContainer}>
+    {/* For all other listings, just display seat names */}
+    {this.props.protectedData.seatNames?.length > 0 ? (
+      <div>
+        <strong>Nomi prenotazione:</strong>
+        <ul>
+          {this.props.protectedData.seatNames.map((seat, index) => {
+            // Handle case where seat is an empty string or an array with an empty string
+            let seatName = seat && typeof seat === 'string' && seat.trim() !== '' ? seat : 'Cliente senza nome';
+            return <li key={index}>{seatName}</li>;
+          })}
+        </ul>
+      </div>
+    ) : (
+      <p>Nessun nome disponibile</p>
+    )}
+  </div>
+)}
+
+
+
+
 
             <FeedSection
               rootClassName={css.feedContainer}
@@ -287,13 +377,14 @@ export class TransactionPanelComponent extends Component {
               activityFeed={activityFeed}
               isConversation={isInquiryProcess}
             />
+
             {showSendMessageForm ? (
               <SendMessageForm
                 formId={this.sendMessageFormName}
                 rootClassName={css.sendMessageForm}
                 messagePlaceholder={intl.formatMessage(
                   { id: 'TransactionPanel.sendMessagePlaceholder' },
-                  { name: otherUserDisplayNameString },
+                  { name: otherUserDisplayNameString }
                 )}
                 inProgress={sendMessageInProgress}
                 sendMessageError={sendMessageError}
@@ -306,11 +397,26 @@ export class TransactionPanelComponent extends Component {
                 <FormattedMessage id="TransactionPanel.sendingMessageNotAllowed" />
               </div>
             )}
-
             {stateData.showActionButtons ? (
               <>
-                <div className={css.mobileActionButtonSpacer} />
+                <div className={css.mobileActionButtonSpacer}></div>
                 <div className={css.mobileActionButtons}>{actionButtons}</div>
+              </>
+            ) : null}
+            {(stateData?.processState == 'accepted') &
+            !isProvider &
+            (listingType == 'teambuilding') ? (
+              <>
+                <div className={css.mobileActionButtonSpacer}></div>
+                <div className={css.mobileActionButtons}>{teamButtons}</div>
+              </>
+            ) : null}
+            {(stateData?.processState == 'accepted') &
+            isProvider &
+            (listingType == 'teambuilding') ? (
+              <>
+                <div className={css.mobileActionButtonSpacer}></div>
+                <div className={css.mobileActionButtons}>{providerButtons}</div>
               </>
             ) : null}
           </div>
@@ -328,7 +434,7 @@ export class TransactionPanelComponent extends Component {
                 />
 
                 <DetailCardHeadingsMaybe
-                  showDetailCardHeadings={showDetailCardHeadings}
+                  showDetailCardHeadings={stateData.showDetailCardHeadings}
                   listingTitle={
                     listingDeleted ? (
                       listingTitle
@@ -345,13 +451,22 @@ export class TransactionPanelComponent extends Component {
                   price={listing?.attributes?.price}
                   intl={intl}
                 />
-                {showOrderPanel ? orderPanel : null}
+                {stateData.showOrderPanel ? orderPanel : null}
                 <BreakdownMaybe
                   className={css.breakdownContainer}
                   orderBreakdown={orderBreakdown}
                   processName={stateData.processName}
                 />
-
+                {(stateData?.processState == 'accepted') &
+                !isProvider &
+                (listingType == 'teambuilding') ? (
+                  <div className={css.desktopActionButtons}>{teamButtons}</div>
+                ) : null}
+                {(stateData?.processState == 'accepted') &
+                isProvider &
+                (listingType == 'teambuilding') ? (
+                  <div className={css.desktopActionButtons}>{providerButtons}</div>
+                ) : null}
                 {stateData.showActionButtons ? (
                   <div className={css.desktopActionButtons}>{actionButtons}</div>
                 ) : null}

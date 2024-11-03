@@ -224,7 +224,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 const ProfileSettingsPage = compose(
   connect(mapStateToProps, mapDispatchToProps),
-  injectIntl,
+  injectIntl
 )(ProfileSettingsPageComponent);
 
 export default ProfileSettingsPage;

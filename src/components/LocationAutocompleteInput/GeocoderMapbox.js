@@ -28,7 +28,7 @@ const locationBounds = (latlng, distance) => {
   const bounds = new window.mapboxgl.LngLat(latlng.lng, latlng.lat).toBounds(distance);
   return new SDKLatLngBounds(
     new SDKLatLng(bounds.getNorth(), bounds.getEast()),
-    new SDKLatLng(bounds.getSouth(), bounds.getWest()),
+    new SDKLatLng(bounds.getSouth(), bounds.getWest())
   );
 };
 
@@ -46,7 +46,7 @@ const placeBounds = (prediction) => {
       // Bounds in Mapbox features are represented as [minX, minY, maxX, maxY]
       return new SDKLatLngBounds(
         new SDKLatLng(prediction.bbox[3], prediction.bbox[2]),
-        new SDKLatLng(prediction.bbox[1], prediction.bbox[0]),
+        new SDKLatLng(prediction.bbox[1], prediction.bbox[0])
       );
     }
     // If bounds are not available, generate them around the origin

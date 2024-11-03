@@ -137,7 +137,7 @@ export function NoAccessPageComponent(props) {
   if (!(pageData.heading && pageData.content)) {
     if (appSettings.dev) {
       console.warn(
-        `The missing access right, ${missingAccessRight}, is not handled. Translations missing.`,
+        `The missing access right, ${missingAccessRight}, is not handled. Translations missing.`
       );
     }
     return <NotFoundPage staticContext={props.staticContext} />;

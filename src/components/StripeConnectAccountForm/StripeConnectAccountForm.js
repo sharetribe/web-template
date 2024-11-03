@@ -140,7 +140,7 @@ function CreateStripeAccountFields(props) {
         validate={validators.required(
           intl.formatMessage({
             id: 'StripeConnectAccountForm.countryRequired',
-          }),
+          })
         )}
       >
         <option disabled value="">

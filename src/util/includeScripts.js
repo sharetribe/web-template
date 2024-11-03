@@ -35,7 +35,7 @@ export function IncludeScripts(props) {
     // NOTE: remember to update mapbox-sdk.min.js to a new version regularly.
     // mapbox-sdk.min.js is included from static folder for CSP purposes.
     mapLibraries.push(
-      <script key="mapboxSDK" src={`${rootURL}/static/scripts/mapbox/mapbox-sdk.min.js`} />,
+      <script key="mapboxSDK" src={`${rootURL}/static/scripts/mapbox/mapbox-sdk.min.js`} />
     );
     // Add CSS for Mapbox map
     mapLibraries.push(
@@ -44,7 +44,7 @@ export function IncludeScripts(props) {
         href="https://api.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css"
         rel="stylesheet"
         crossOrigin
-      />,
+      />
     );
     // Add Mapbox library
     mapLibraries.push(
@@ -53,7 +53,7 @@ export function IncludeScripts(props) {
         key="mapbox_GL_JS"
         src="https://api.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.js"
         crossOrigin
-      />,
+      />
     );
   } else if (isGoogleMapsInUse) {
     // Add Google Maps library
@@ -63,7 +63,7 @@ export function IncludeScripts(props) {
         key="GoogleMapsApi"
         src={`https://maps.googleapis.com/maps/api/js?key=${googleMapsAPIKey}&libraries=places`}
         crossOrigin
-      />,
+      />
     );
   }
 
@@ -79,7 +79,7 @@ export function IncludeScripts(props) {
         async
         src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}
         crossOrigin
-      />,
+      />
     );
 
     analyticsLibraries.push(
@@ -93,7 +93,7 @@ export function IncludeScripts(props) {
           cookie_flags: 'SameSite=None;Secure',
         });
         `}
-      </script>,
+      </script>
     );
   }
 
@@ -106,7 +106,7 @@ export function IncludeScripts(props) {
         src="https://plausible.io/js/script.js"
         data-domain={plausibleDomains}
         crossOrigin
-      />,
+      />
     );
   }
 
@@ -138,7 +138,7 @@ export function IncludeScripts(props) {
   const onChangeClientState = (newState, addedTags) => {
     if (addedTags && addedTags.scriptTags) {
       const foundScript = addedTags.scriptTags.find((s) =>
-        [MAPBOX_SCRIPT_ID, GOOGLE_MAPS_SCRIPT_ID].includes(s.id),
+        [MAPBOX_SCRIPT_ID, GOOGLE_MAPS_SCRIPT_ID].includes(s.id)
       );
       if (foundScript) {
         foundScript.addEventListener('load', onMapLibLoaded, { once: true });

@@ -44,7 +44,7 @@ class ModalMissingInformation extends Component {
       user,
       currentUserHasListings,
       currentUserHasOrders,
-      location,
+      location
     );
   }
 
@@ -52,11 +52,11 @@ class ModalMissingInformation extends Component {
     currentUser,
     currentUserHasListings,
     currentUserHasOrders,
-    newLocation,
+    newLocation
   ) {
     const routes = this.props.routeConfiguration;
     const whitelistedPaths = MISSING_INFORMATION_MODAL_WHITELIST.map((page) =>
-      pathByRouteName(page, routes),
+      pathByRouteName(page, routes)
     );
 
     // Is the current page whitelisted?

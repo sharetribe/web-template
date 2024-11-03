@@ -15,7 +15,7 @@ class RangeSliderComponent extends Component {
     handles.forEach((h, index) => {
       if (h < min || h > max || (index < handles.length - 1 && h > handles[index + 1])) {
         throw new Error(
-          'RangeSlider error: handles need to be given in ascending order and they need to be within min and max values',
+          'RangeSlider error: handles need to be given in ascending order and they need to be within min and max values'
         );
       }
     });

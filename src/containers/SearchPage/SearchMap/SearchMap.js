@@ -114,7 +114,7 @@ export class SearchMapComponent extends Component {
     const labelClicked = hasParentWithClassName(e.nativeEvent.target, variantHandles.labelHandle);
     const infoCardClicked = hasParentWithClassName(
       e.nativeEvent.target,
-      variantHandles.infoCardHandle,
+      variantHandles.infoCardHandle
     );
     if (this.state.infoCardOpen != null && !labelClicked && !infoCardClicked) {
       this.setState({ infoCardOpen: null });

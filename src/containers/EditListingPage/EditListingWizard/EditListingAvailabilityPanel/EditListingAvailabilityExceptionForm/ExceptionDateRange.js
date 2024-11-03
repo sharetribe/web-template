@@ -215,7 +215,7 @@ function ExceptionDateRange(props) {
       console.log(
         `Fetched months: ${monthIdString(startMonth)} ... ${monthIdString(lastFetchedMonth)}`,
         '\nExceptions found:',
-        allExceptions,
+        allExceptions
       );
       console.log('Dates with availability info:', availableDates);
     }
@@ -261,7 +261,7 @@ function ExceptionDateRange(props) {
             required(
               intl.formatMessage({
                 id: 'BookingDatesForm.requiredDate',
-              }),
+              })
             ),
             bookingDatesRequired(
               intl.formatMessage({
@@ -269,8 +269,8 @@ function ExceptionDateRange(props) {
               }),
               intl.formatMessage({
                 id: 'FieldDateRangeInput.invalidEndDate',
-              }),
-            ),
+              })
+            )
           )}
           initialVisibleMonth={initialVisibleMonth(exceptionStartDay || startOfToday, timeZone)}
           navNext={

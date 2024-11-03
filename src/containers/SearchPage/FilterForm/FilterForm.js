@@ -19,7 +19,7 @@ function FilterFormComponent(props) {
 
   if (!liveEdit && !(onCancel && onClear && onSubmit)) {
     throw new Error(
-      'FilterForm: if liveEdit is false you need to provide onCancel, onClear, and onSubmit functions',
+      'FilterForm: if liveEdit is false you need to provide onCancel, onClear, and onSubmit functions'
     );
   }
 

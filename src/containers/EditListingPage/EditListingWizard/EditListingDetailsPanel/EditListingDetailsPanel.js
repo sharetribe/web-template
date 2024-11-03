@@ -99,7 +99,7 @@ const pickListingFieldsData = (
   targetScope,
   targetListingType,
   targetCategories,
-  listingFieldConfigs,
+  listingFieldConfigs
 ) => {
   const targetCategoryIds = Object.values(targetCategories);
 
@@ -143,7 +143,7 @@ const initialValuesForListingFields = (
   targetScope,
   targetListingType,
   targetCategories,
-  listingFieldConfigs,
+  listingFieldConfigs
 ) => {
   const targetCategoryIds = Object.values(targetCategories);
 
@@ -220,7 +220,7 @@ const getInitialValues = (
   listingTypes,
   listingFields,
   listingCategories,
-  categoryKey,
+  categoryKey
 ) => {
   const { description, title, publicData, privateData } = props?.listing?.attributes || {};
   const { listingType } = publicData;
@@ -238,14 +238,14 @@ const getInitialValues = (
       'public',
       listingType,
       nestedCategories,
-      listingFields,
+      listingFields
     ),
     ...initialValuesForListingFields(
       privateData,
       'private',
       listingType,
       nestedCategories,
-      listingFields,
+      listingFields
     ),
   };
 };
@@ -288,7 +288,7 @@ function EditListingDetailsPanel(props) {
     listingTypes,
     listingFields,
     listingCategories,
-    categoryKey,
+    categoryKey
   );
 
   const noListingTypesSet = listingTypes?.length === 0;
@@ -333,14 +333,14 @@ function EditListingDetailsPanel(props) {
               'public',
               listingType,
               nestedCategories,
-              listingFields,
+              listingFields
             );
             const privateListingFields = pickListingFieldsData(
               rest,
               'private',
               listingType,
               nestedCategories,
-              listingFields,
+              listingFields
             );
             // New values for listing attributes
             const updateValues = {

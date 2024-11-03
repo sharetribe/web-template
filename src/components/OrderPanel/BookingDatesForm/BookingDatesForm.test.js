@@ -30,7 +30,7 @@ describe('EstimatedCustomerBreakdownMaybe', () => {
         currency="USD"
         marketplaceName="MarketplaceX"
         processName="default-booking"
-      />,
+      />
     );
     expect(tree.asFragment().firstChild).toBeFalsy();
   });
@@ -46,7 +46,7 @@ describe('EstimatedCustomerBreakdownMaybe', () => {
         currency="USD"
         marketplaceName="MarketplaceX"
         processName="default-booking"
-      />,
+      />
     );
     expect(tree.asFragment().firstChild).toBeFalsy();
   });

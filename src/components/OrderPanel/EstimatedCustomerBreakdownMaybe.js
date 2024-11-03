@@ -60,7 +60,7 @@ const estimatedTotalPrice = (lineItems, marketplaceCurrency) => {
 
   return new Money(
     convertUnitToSubUnit(numericTotalPrice.toNumber(), unitDivisor(currency)),
-    currency,
+    currency
   );
 };
 
@@ -90,7 +90,7 @@ const estimatedCustomerTransaction = (
   timeZone,
   process,
   processName,
-  marketplaceCurrency,
+  marketplaceCurrency
 ) => {
   const transitions = process?.transitions;
   const now = new Date();
@@ -143,7 +143,7 @@ function EstimatedCustomerBreakdownMaybe(props) {
   }
 
   const unitLineItem = lineItems?.find(
-    (item) => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal,
+    (item) => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal
   );
   const lineItemUnitType = unitLineItem?.code;
   const shouldHaveBooking = [LINE_ITEM_DAY, LINE_ITEM_NIGHT].includes(lineItemUnitType);
@@ -160,7 +160,7 @@ function EstimatedCustomerBreakdownMaybe(props) {
           timeZone,
           process,
           processName,
-          currency,
+          currency
         )
       : null;
 

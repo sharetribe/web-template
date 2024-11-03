@@ -216,7 +216,7 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
                   // Find the matched booking for the activity
                   const matchedBooking = mergedBookings.find((booking) => {
                     const activityDateTime = moment(
-                      `${moment(selectedEventDate).format('YYYY-MM-DD')}T${activity.startTime}`,
+                      `${moment(selectedEventDate).format('YYYY-MM-DD')}T${activity.startTime}`
                     );
                     return (
                       activityDateTime.isSame(moment(booking.start), 'minute') &&

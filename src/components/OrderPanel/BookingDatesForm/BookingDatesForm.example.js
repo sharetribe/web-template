@@ -5,7 +5,7 @@ import { injectIntl } from '../../../util/reactIntl';
 import { LINE_ITEM_DAY, LINE_ITEM_NIGHT, TIME_SLOT_TIME } from '../../../util/types';
 
 const BookingDatesForm = loadable(
-  () => import(/* webpackChunkName: "BookingDatesForm" */ './BookingDatesForm'),
+  () => import(/* webpackChunkName: "BookingDatesForm" */ './BookingDatesForm')
 );
 
 const CURRENCY = 'USD';
@@ -110,7 +110,7 @@ export const FormWithNightBooking = {
     onFetchTransactionLineItems: (params) =>
       console.log(
         'onFetchTransactionLineItems called with params:',
-        JSON.stringify(params, null, 2),
+        JSON.stringify(params, null, 2)
       ),
     onFetchTimeSlots: (listingId, start, end, timeZone) =>
       console.log('onFetchTimeSlots called with args:', listingId, start, end, timeZone),
@@ -143,7 +143,7 @@ export const FormWithDayBooking = {
     onFetchTransactionLineItems: (params) =>
       console.log(
         'onFetchTransactionLineItems called with params:',
-        JSON.stringify(params, null, 2),
+        JSON.stringify(params, null, 2)
       ),
     onFetchTimeSlots: (listingId, start, end, timeZone) =>
       console.log('onFetchTimeSlots called with args:', listingId, start, end, timeZone),

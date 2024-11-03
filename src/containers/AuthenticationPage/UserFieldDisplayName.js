@@ -25,7 +25,7 @@ function UserFieldDisplayName(props) {
         validate: validators.required(
           intl.formatMessage({
             id: `${formName}.displayNameRequired`,
-          }),
+          })
         ),
       }
     : {};

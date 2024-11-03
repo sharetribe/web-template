@@ -45,7 +45,7 @@ const createReturnURL = (returnURLType, rootURL, routes) => {
     'StripePayoutOnboardingPage',
     routes,
     { returnURLType },
-    {},
+    {}
   );
   const root = rootURL.replace(/\/$/, '');
   return `${root}${path}`;
@@ -126,7 +126,7 @@ export function StripePayoutPageComponent(props) {
       accountId,
       successURL,
       failureURL,
-    },
+    }
   );
 
   const returnedNormallyFromStripe = returnURLType === STRIPE_ONBOARDING_RETURN_URL_SUCCESS;
@@ -196,7 +196,7 @@ export function StripePayoutPageComponent(props) {
                   type="verificationNeeded"
                   inProgress={getAccountLinkInProgress}
                   onGetStripeConnectAccountLink={handleGetStripeConnectAccountLink(
-                    'custom_account_verification',
+                    'custom_account_verification'
                   )}
                 />
               ) : stripeConnected && savedCountry && !returnedAbnormallyFromStripe ? (
@@ -205,7 +205,7 @@ export function StripePayoutPageComponent(props) {
                   inProgress={getAccountLinkInProgress}
                   disabled={payoutDetailsSaveInProgress}
                   onGetStripeConnectAccountLink={handleGetStripeConnectAccountLink(
-                    'custom_account_update',
+                    'custom_account_update'
                   )}
                 />
               ) : null}
@@ -289,7 +289,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 const StripePayoutPage = compose(
   connect(mapStateToProps, mapDispatchToProps),
-  injectIntl,
+  injectIntl
 )(StripePayoutPageComponent);
 
 export default StripePayoutPage;

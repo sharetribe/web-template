@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { DateRangePicker } from 'react-dates';
 import { useHistory } from 'react-router-dom';
 import { useIntl } from 'react-intl';
-import css from './LandingSearchBar.module.css';
+import css from './LandingPageSection.module.css';
 import { createResourceLocatorString } from '../../util/routes';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 
@@ -67,7 +67,7 @@ function LandingSearchBarForm({ onSearchSubmit, className, isTeamBuilding }) {
     if (!inputLocation) return; // Don't fetch if input is empty
 
     const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-      inputLocation,
+      inputLocation
     )}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`;
 
     try {

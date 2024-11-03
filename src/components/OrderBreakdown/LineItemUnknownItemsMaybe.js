@@ -22,7 +22,7 @@ function LineItemUnknownItemsMaybe(props) {
 
   // resolve unknown non-reversal line items
   const allItems = lineItems.filter(
-    (item) => LINE_ITEMS.indexOf(item.code) === -1 && !item.reversal,
+    (item) => LINE_ITEMS.indexOf(item.code) === -1 && !item.reversal
   );
 
   const items = isProvider

@@ -33,6 +33,7 @@ export function TopbarContainerComponent(props) {
     sendVerificationEmailInProgress,
     sendVerificationEmailError,
     onResendVerificationEmail,
+    searchParams,
     ...rest
   } = props;
 
@@ -56,6 +57,7 @@ export function TopbarContainerComponent(props) {
       sendVerificationEmailInProgress={sendVerificationEmailInProgress}
       sendVerificationEmailError={sendVerificationEmailError}
       showGenericError={hasGenericError}
+      searchParams={searchParams}
       {...rest}
     />
   );
@@ -139,7 +141,7 @@ const mapDispatchToProps = (dispatch) => ({
 // See: https://github.com/ReactTraining/react-router/issues/4671
 const TopbarContainer = compose(
   withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, mapDispatchToProps)
 )(TopbarContainerComponent);
 
 export default TopbarContainer;

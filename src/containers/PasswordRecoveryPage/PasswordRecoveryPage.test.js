@@ -30,7 +30,7 @@ describe('PasswordRecoveryPageComponent', () => {
         onSubmitEmail={noop}
         onRetypeEmail={noop}
         intl={fakeIntl}
-      />,
+      />
     );
 
     const emailLabel = 'PasswordRecoveryForm.emailLabel';
@@ -39,7 +39,7 @@ describe('PasswordRecoveryPageComponent', () => {
 
     // Save button is disabled
     expect(
-      screen.getByRole('button', { name: 'PasswordRecoveryForm.sendInstructions' }),
+      screen.getByRole('button', { name: 'PasswordRecoveryForm.sendInstructions' })
     ).toBeDisabled();
 
     // There's a too short password, there is error text visible
@@ -56,7 +56,7 @@ describe('PasswordRecoveryPageComponent', () => {
 
     // Save button is enabled
     expect(
-      screen.getByRole('button', { name: 'PasswordRecoveryForm.sendInstructions' }),
+      screen.getByRole('button', { name: 'PasswordRecoveryForm.sendInstructions' })
     ).toBeEnabled();
   });
 });

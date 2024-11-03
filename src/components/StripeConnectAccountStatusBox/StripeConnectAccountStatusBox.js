@@ -42,7 +42,7 @@ function StripeConnectAccountStatusBox(props) {
         <div
           className={classNames(
             css.verificiationBoxTextWrapper,
-            css.verificationBoxSuccessTextWrapper,
+            css.verificationBoxSuccessTextWrapper
           )}
         >
           <div className={css.verificationBoxTitle}>

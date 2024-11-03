@@ -1,7 +1,7 @@
 import React from 'react';
-import { string, func, bool, oneOfType } from 'prop-types';
+import { string, func, bool } from 'prop-types';
 import classNames from 'classnames';
-
+import IconsPerson from '../../media/icons/iconsPerson';
 import { useConfiguration } from '../../context/configurationContext';
 
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
@@ -14,7 +14,7 @@ import { richText } from '../../util/richText';
 import { createSlug } from '../../util/urlHelpers';
 import { isBookingProcessAlias } from '../../transactions/transaction';
 
-import { AspectRatioWrapper, NamedLink, ResponsiveImage } from '..';
+import { AspectRatioWrapper, NamedLink, ResponsiveImage } from '../../components';
 
 import css from './ListingCard.module.css';
 
@@ -24,16 +24,15 @@ const priceData = (price, currency, intl) => {
   if (price && price.currency === currency) {
     const formattedPrice = formatMoney(intl, price);
     return { formattedPrice, priceTitle: formattedPrice };
-  }
-  if (price) {
+  } else if (price) {
     return {
       formattedPrice: intl.formatMessage(
         { id: 'ListingCard.unsupportedPrice' },
-        { currency: price.currency },
+        { currency: price.currency }
       ),
       priceTitle: intl.formatMessage(
         { id: 'ListingCard.unsupportedPriceTitle' },
-        { currency: price.currency },
+        { currency: price.currency }
       ),
     };
   }
@@ -42,11 +41,11 @@ const priceData = (price, currency, intl) => {
 
 const LazyImage = lazyLoadWithDimensions(ResponsiveImage, { loadAfterInitialRendering: 3000 });
 
-function PriceMaybe(props) {
+const PriceMaybe = props => {
   const { price, publicData, config, intl } = props;
   const { listingType } = publicData || {};
   const validListingTypes = config.listing.listingTypes;
-  const foundListingTypeConfig = validListingTypes.find((conf) => conf.listingType === listingType);
+  const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
   const showPrice = displayPrice(foundListingTypeConfig);
   if (!showPrice && price) {
     return null;
@@ -58,6 +57,7 @@ function PriceMaybe(props) {
     <div className={css.price}>
       <div className={css.priceValue} title={priceTitle}>
         {formattedPrice}
+        {listingType === 'teambuilding' ? <>/persona</> : null}
       </div>
       {isBookable ? (
         <div className={css.perUnit}>
@@ -66,12 +66,14 @@ function PriceMaybe(props) {
       ) : null}
     </div>
   );
-}
+};
 
-export function ListingCardComponent(props) {
+export const ListingCardComponent = props => {
   const config = useConfiguration();
   const { className, rootClassName, intl, listing, renderSizes, setActiveListing, showAuthorInfo } =
-    props;
+  props;
+  const min =listing.attributes.publicData?.min
+  const max = listing.attributes.publicData?.max
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureListing(listing);
   const id = currentListing.id.uuid;
@@ -79,6 +81,7 @@ export function ListingCardComponent(props) {
   const slug = createSlug(title);
   const author = ensureUser(listing.author);
   const authorName = author.attributes.profile.displayName;
+  const providerName = author.attributes.profile.publicData?.providerName || '';
   const firstImage =
     currentListing.images && currentListing.images.length > 0 ? currentListing.images[0] : null;
 
@@ -88,7 +91,7 @@ export function ListingCardComponent(props) {
     variantPrefix = 'listing-card',
   } = config.layout.listingImage;
   const variants = firstImage
-    ? Object.keys(firstImage?.attributes?.variants).filter((k) => k.startsWith(variantPrefix))
+    ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
     : [];
 
   const setActivePropsMaybe = setActiveListing
@@ -115,7 +118,19 @@ export function ListingCardComponent(props) {
         />
       </AspectRatioWrapper>
       <div className={css.info}>
-        <PriceMaybe price={price} publicData={publicData} config={config} intl={intl} />
+        <div className={css.priceContainer}>
+        {price && price.amount === 0 ? (
+      <span>FREE</span>
+    ) : (
+      <PriceMaybe price={price} publicData={publicData} config={config} intl={intl} />
+    )}
+          {listing.attributes.publicData.listingType === 'teambuilding' ? (
+            <div className={css.teamBuilding}>
+              <IconsPerson size="14px" color="blu" />
+              {max !== undefined && max !== null ? `${min}-${max}` : `${min}+`}
+            </div>
+          ) : null}
+        </div>
         <div className={css.mainInfo}>
           <div className={css.title}>
             {richText(title, {
@@ -125,14 +140,14 @@ export function ListingCardComponent(props) {
           </div>
           {showAuthorInfo ? (
             <div className={css.authorInfo}>
-              <FormattedMessage id="ListingCard.author" values={{ authorName }} />
+              {providerName} by <FormattedMessage id="ListingCard.author" values={{ authorName }} />
             </div>
           ) : null}
         </div>
       </div>
     </NamedLink>
   );
-}
+};
 
 ListingCardComponent.defaultProps = {
   className: null,
@@ -146,7 +161,7 @@ ListingCardComponent.propTypes = {
   className: string,
   rootClassName: string,
   intl: intlShape.isRequired,
-  listing: oneOfType([propTypes.listing, propTypes.ownListing]).isRequired,
+  listing: propTypes.listing.isRequired,
   showAuthorInfo: bool,
 
   // Responsive image sizes hint

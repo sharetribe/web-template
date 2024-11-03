@@ -20,7 +20,7 @@ function LineItemCustomerCommissionMaybe(props) {
   const { lineItems, isCustomer, marketplaceName, intl } = props;
 
   const customerCommissionLineItem = lineItems.find(
-    (item) => item.code === LINE_ITEM_CUSTOMER_COMMISSION && !item.reversal,
+    (item) => item.code === LINE_ITEM_CUSTOMER_COMMISSION && !item.reversal
   );
 
   // If commission is passed it will be shown as a fee already added to the total price

@@ -186,10 +186,10 @@ describe('ProfileSettingsForm', () => {
           firstName,
           lastName,
         }}
-      />,
+      />
     );
     expect(
-      screen.getByRole('heading', { name: 'ProfileSettingsForm.yourName' }),
+      screen.getByRole('heading', { name: 'ProfileSettingsForm.yourName' })
     ).toBeInTheDocument();
     expect(screen.getByText('ProfileSettingsForm.firstNameLabel')).toBeInTheDocument();
     expect(screen.getByDisplayValue(firstName)).toBeInTheDocument();
@@ -214,10 +214,10 @@ describe('ProfileSettingsForm', () => {
         initialValues={{
           bio,
         }}
-      />,
+      />
     );
     expect(
-      screen.getByRole('heading', { name: 'ProfileSettingsForm.bioHeading' }),
+      screen.getByRole('heading', { name: 'ProfileSettingsForm.bioHeading' })
     ).toBeInTheDocument();
     expect(screen.getByText('ProfileSettingsForm.bioLabel')).toBeInTheDocument();
     expect(screen.getByDisplayValue(bio)).toBeInTheDocument();
@@ -239,7 +239,7 @@ describe('ProfileSettingsForm', () => {
         initialValues={{
           ...initialValuesForUserFields(publicData, 'public', 'a', userFieldConfig),
         }}
-      />,
+      />
     );
 
     expect(screen.getByRole('combobox', { name: 'Enum Field 1' })).toBeInTheDocument();
@@ -262,7 +262,7 @@ describe('ProfileSettingsForm', () => {
         initialValues={{
           ...initialValuesForUserFields(publicData, 'public', 'c', userFieldConfig),
         }}
-      />,
+      />
     );
 
     expect(screen.getByRole('combobox', { name: 'Boolean Field' })).toBeInTheDocument();
@@ -285,7 +285,7 @@ describe('ProfileSettingsForm', () => {
         initialValues={{
           ...initialValuesForUserFields(publicData, 'public', 'a', userFieldConfig),
         }}
-      />,
+      />
     );
 
     const longInput = screen.getByRole('spinbutton', { name: 'Long Field' });
@@ -309,7 +309,7 @@ describe('ProfileSettingsForm', () => {
         initialValues={{
           ...initialValuesForUserFields(privateData, 'private', 'a', userFieldConfig),
         }}
-      />,
+      />
     );
 
     const textFieldInput = screen.getByRole('textbox', { name: 'Text Field' });
@@ -333,7 +333,7 @@ describe('ProfileSettingsForm', () => {
         initialValues={{
           ...initialValuesForUserFields(publicData, 'public', 'a', userFieldConfig),
         }}
-      />,
+      />
     );
 
     const multiEnumFieldInput = screen.getByRole('group', { name: 'Multi-enum Field' });
@@ -360,7 +360,7 @@ describe('ProfileSettingsForm', () => {
         initialValues={{
           ...initialValuesForUserFields(publicData, 'public', 'a', userFieldConfig),
         }}
-      />,
+      />
     );
 
     expect(screen.getByText('Enum Field 1')).toBeInTheDocument();
@@ -390,7 +390,7 @@ describe('ProfileSettingsForm', () => {
           ...initialValuesForUserFields(publicData, 'public', null, userFieldConfig),
           ...initialValuesForUserFields(privateData, 'private', null, userFieldConfig),
         }}
-      />,
+      />
     );
 
     expect(screen.getByText('Text Field')).toBeInTheDocument();
@@ -435,7 +435,7 @@ describe('ProfileSettingsForm', () => {
           lastName,
           ...initialValuesForUserFields(publicData, 'public', 'e', userFieldConfig),
         }}
-      />,
+      />
     );
 
     // Save button should be disabled before changes.

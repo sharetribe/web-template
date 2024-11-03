@@ -194,7 +194,7 @@ const mapDispatchToProps = (dispatch) => ({
 const PasswordResetPage = compose(
   withRouter,
   connect(mapStateToProps, mapDispatchToProps),
-  injectIntl,
+  injectIntl
 )(PasswordResetPageComponent);
 
 export default PasswordResetPage;

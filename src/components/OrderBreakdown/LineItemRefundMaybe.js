@@ -20,7 +20,7 @@ const { Money } = sdkTypes;
 const lineItemsTotal = (lineItems, marketplaceCurrency) => {
   const amount = lineItems.reduce(
     (total, item) => total.plus(item.lineTotal.amount),
-    new Decimal(0),
+    new Decimal(0)
   );
   const currency = lineItems[0] ? lineItems[0].lineTotal.currency : marketplaceCurrency;
   return new Money(amount, currency);

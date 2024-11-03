@@ -97,7 +97,7 @@ export function EditListingLocationFormComponent(props) {
               valueFromForm={values.location}
               validate={composeValidators(
                 autocompleteSearchRequired(addressRequiredMessage),
-                autocompletePlaceSelected(addressNotRecognizedMessage),
+                autocompletePlaceSelected(addressNotRecognizedMessage)
               )}
             />
 
@@ -108,7 +108,7 @@ export function EditListingLocationFormComponent(props) {
               id={`${formId}building`}
               label={intl.formatMessage(
                 { id: 'EditListingLocationForm.building' },
-                { optionalText },
+                { optionalText }
               )}
               placeholder={intl.formatMessage({
                 id: 'EditListingLocationForm.buildingPlaceholder',

@@ -24,7 +24,7 @@ const validateProperties = (obj, validPropTypes) =>
       }
       return false;
     },
-    true,
+    true
   );
 
 // Validate content of booking dates object received from SessionStore
@@ -55,7 +55,7 @@ export const isValidTransaction = (transaction) => {
     process = getProcess(processName);
   } catch (e) {
     console.error(
-      'Transaction, found from sessionStorage, was following unsupported transaction process.',
+      'Transaction, found from sessionStorage, was following unsupported transaction process.'
     );
     return false;
   }

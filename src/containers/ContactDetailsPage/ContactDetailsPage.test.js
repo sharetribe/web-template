@@ -31,7 +31,7 @@ describe('ContactDetailsPageComponent', () => {
           saveContactDetailsInProgress={false}
           contactDetailsChanged={false}
           intl={fakeIntl}
-        />,
+        />
       );
     });
 

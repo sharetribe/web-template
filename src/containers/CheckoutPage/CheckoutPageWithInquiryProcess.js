@@ -217,12 +217,12 @@ export function CheckoutPageWithInquiryProcess(props) {
                           {
                             id: 'CheckoutPageWithInquiryProcess.messagePlaceholder',
                           },
-                          { authorDisplayName },
+                          { authorDisplayName }
                         )}
                         validate={validators.requiredAndNonEmptyString(
                           intl.formatMessage({
                             id: 'CheckoutPageWithInquiryProcess.messageRequired',
-                          }),
+                          })
                         )}
                       />
                     </div>

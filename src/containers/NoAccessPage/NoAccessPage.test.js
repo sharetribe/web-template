@@ -17,7 +17,7 @@ describe('NoAccessPageComponent', () => {
         params={{ missingAccessRight: 'posting-rights' }}
         scrollingDisabled={false}
         intl={fakeIntl}
-      />,
+      />
     );
 
     const postListingsHeading = 'NoAccessPage.postListings.heading';
@@ -34,7 +34,7 @@ describe('NoAccessPageComponent', () => {
         params={{ missingAccessRight: 'transaction-rights' }}
         scrollingDisabled={false}
         intl={fakeIntl}
-      />,
+      />
     );
 
     const initiateTransactionsHeading = 'NoAccessPage.initiateTransactions.heading';
@@ -51,7 +51,7 @@ describe('NoAccessPageComponent', () => {
         params={{ missingAccessRight: 'asdf' }}
         scrollingDisabled={false}
         intl={fakeIntl}
-      />,
+      />
     );
 
     const theNotFoundHeading = '404';

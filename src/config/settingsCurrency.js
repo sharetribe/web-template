@@ -35,8 +35,8 @@ export const currencyFormatting = (currency, options) => {
     const currencies = Object.keys(subUnitDivisors);
     throw new Error(
       `Configuration missing for currency: ${currency}. Supported currencies: ${currencies.join(
-        ', ',
-      )}.`,
+        ', '
+      )}.`
     );
   }
 

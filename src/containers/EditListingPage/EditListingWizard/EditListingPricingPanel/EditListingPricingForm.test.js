@@ -26,7 +26,7 @@ describe('EditListingDeliveryForm', () => {
         updateInProgress={false}
         disabled={false}
         ready={false}
-      />,
+      />
     );
 
     // Test that save button is disabled at first

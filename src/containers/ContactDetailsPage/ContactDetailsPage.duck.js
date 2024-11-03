@@ -109,7 +109,7 @@ const requestSavePhoneNumber = (params) => (dispatch, getState, sdk) => {
         expand: true,
         include: ['profileImage'],
         'fields.image': ['variants.square-small', 'variants.square-small2x'],
-      },
+      }
     )
     .then((response) => {
       const entities = denormalisedResponseEntities(response);
@@ -141,7 +141,7 @@ const requestSaveEmail = (params) => (dispatch, getState, sdk) => {
         expand: true,
         include: ['profileImage'],
         'fields.image': ['variants.square-small', 'variants.square-small2x'],
-      },
+      }
     )
     .then((response) => {
       const entities = denormalisedResponseEntities(response);
