@@ -53,20 +53,6 @@ async function startServer() {
     const { generateCSPNonce, csp } = require('./csp');
     const sdkUtils = require('./api-util/sdk');
 
-    const errorPage500 = fs.readFileSync(path.join(buildPath, '500.html'), 'utf-8');
-    const errorPage404 = fs.readFileSync(path.join(buildPath, '404.html'), 'utf-8');
-
-    // Filter out bot requests that scan websites for php vulnerabilities
-    // from paths like /asdf/index.php, //cms/wp-includes/wlwmanifest.xml, etc.
-    // There's no need to pass those to React app rendering as it causes unnecessary asset fetches.
-    // Note: you might want to do this on the edge server instead.
-    app.use(
-      /.*(\.php|\.php7|\/wp-.*\/.*|cgi-bin.*|htdocs\.rar|htdocs\.zip|root\.7z|root\.rar|root\.zip|www\.7z|www\.rar|wwwroot\.7z)$/,
-      (req, res) => {
-        return res.status(404).send(errorPage404);
-      }
-    );
-
     const buildPath = path.resolve(__dirname, '..', 'build');
     const dev = process.env.REACT_APP_ENV === 'development';
     const PORT = parseInt(process.env.PORT, 10);
@@ -80,6 +66,20 @@ async function startServer() {
     const cspReportUrl = '/csp-report';
     const cspEnabled = CSP === 'block' || CSP === 'report';
     const app = express();
+
+    const errorPage500 = fs.readFileSync(path.join(buildPath, '500.html'), 'utf-8');
+    const errorPage404 = fs.readFileSync(path.join(buildPath, '404.html'), 'utf-8');
+
+    // Filter out bot requests that scan websites for php vulnerabilities
+    // from paths like /asdf/index.php, //cms/wp-includes/wlwmanifest.xml, etc.
+    // There's no need to pass those to React app rendering as it causes unnecessary asset fetches.
+    // Note: you might want to do this on the edge server instead.
+    app.use(
+      /.*(\.php|\.php7|\/wp-.*\/.*|cgi-bin.*|htdocs\.rar|htdocs\.zip|root\.7z|root\.rar|root\.zip|www\.7z|www\.rar|wwwroot\.7z)$/,
+      (req, res) => {
+        return res.status(404).send(errorPage404);
+      }
+    );
 
     // The helmet middleware sets various HTTP headers to improve security.
     // See: https://www.npmjs.com/package/helmet
