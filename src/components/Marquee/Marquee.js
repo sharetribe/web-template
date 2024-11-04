@@ -14,7 +14,7 @@ const JoinTheLuupeMarquee = () => {
   const content = [];
   for (let i = 0; i < 20; i++) {
     content.push(
-      <div key={`marquee-item-${i}`}>
+      <div key={`marquee-item-${i}`} className={css.item}>
         {isOdd(i) ? <IconArrow /> : <IconCircle />}
         IN THE LUUPE
       </div>

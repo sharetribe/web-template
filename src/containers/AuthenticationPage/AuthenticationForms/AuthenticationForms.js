@@ -78,7 +78,6 @@ const ConfirmIdProviderInfoForm = props => {
     [css.forBrand]: showBrandExperience,
     [css.forSeller]: showSellerExperience,
   });
-
   const handleSubmitConfirm = values => {
     const { idpToken, email, brandStudioId, idpId } = authInfo;
     const {
@@ -95,8 +94,8 @@ const ConfirmIdProviderInfoForm = props => {
     // and they can't be fetched directly from idp provider (e.g. Facebook)
     const authParams = {
       ...(newEmail !== email && { email: newEmail }),
-      firstName: newFirstName,
-      lastName: newLastName,
+      firstName: newFirstName.trim(),
+      lastName: newLastName.trim(),
     };
     const location = newLocation && {
       address: newLocation?.selectedPlace?.address,

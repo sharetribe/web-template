@@ -12,6 +12,7 @@
     "@sentry/browser": "^8.26.0",
     "@sentry/node": "^8.26.0",
     "@slack/web-api": "^7.2.0",
+    "antd": "^5.21.6",
     "auth0": "^4.8.0",
     "autosize": "^5.0.1",
     "axios": "^1.7.7",

@@ -126,5 +126,8 @@
   text-align: center;
   padding: 24px;
   max-width: 750px;
-  margin: auto;
+
+  @media (--viewportMedium) {
+    margin: auto;
+  }
 }

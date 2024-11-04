@@ -74,12 +74,19 @@ export const ProfileSettingsPageComponent = props => {
       bio: rawBio,
       userType: initialUserType,
       applyAsSeller,
+      location: newLocation,
       ...rest
     } = values;
-    const displayNameMaybe = displayName
-      ? { displayName: displayName.trim() }
-      : { displayName: null };
+    const displayNameMaybe = displayName ? { displayName: displayName.trim() } : {};
     const userType = applyAsSeller ? USER_TYPES.SELLER : initialUserType.trim();
+    const location = newLocation && {
+      address: newLocation?.selectedPlace?.address,
+      geolocation: {
+        lat: newLocation?.selectedPlace?.origin?.lat,
+        lng: newLocation?.selectedPlace?.origin?.lng,
+      },
+      building: '',
+    };
     // Ensure that the optional bio is a string
     const bio = rawBio || '';
     const profile = {
@@ -88,14 +95,15 @@ export const ProfileSettingsPageComponent = props => {
       ...displayNameMaybe,
       bio,
       publicData: {
-        ...pickUserFieldsData(rest, 'public', userType, userFields),
         userType,
-      },
-      protectedData: {
-        ...pickUserFieldsData(rest, 'protected', userType, userFields),
+        ...pickUserFieldsData(rest, 'public', userType, userFields),
       },
       privateData: {
         ...pickUserFieldsData(rest, 'private', userType, userFields),
+        ...(!!location && { location }),
+      },
+      protectedData: {
+        ...pickUserFieldsData(rest, 'protected', userType, userFields),
       },
     };
     const uploadedImage = props.image;
