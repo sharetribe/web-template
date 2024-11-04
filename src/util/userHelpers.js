@@ -210,9 +210,8 @@ export const isCreativeSeller = userType => {
   return userType && userType === USER_TYPES.SELLER;
 };
 
-export const getBrandUserFieldInputs = (userType, isBrandAdmin, fieldKey) => {
-  const hideBrandFields = isStudioBrand(userType) && !isBrandAdmin;
-  if (!hideBrandFields) {
+export const getBrandUserFieldInputs = (fieldKey, isBrandAdmin) => {
+  if (isBrandAdmin) {
     return true;
   }
   switch (fieldKey) {
@@ -224,4 +223,26 @@ export const getBrandUserFieldInputs = (userType, isBrandAdmin, fieldKey) => {
     default:
       return true;
   }
+};
+
+export const getSellerUserFieldInputs = (fieldKey, isSellerApplication) => {
+  if (isSellerApplication) {
+    return true;
+  }
+  switch (fieldKey) {
+    case 'creativeSpecialty':
+      return false;
+    default:
+      return true;
+  }
+};
+
+export const getUserTypeFieldInputs = (userType, fieldKey, isBrandAdmin, isSellerApplication) => {
+  if (isStudioBrand(userType)) {
+    return getBrandUserFieldInputs(fieldKey, isBrandAdmin);
+  }
+  if (isCreativeSeller(userType)) {
+    return getSellerUserFieldInputs(fieldKey, isSellerApplication);
+  }
+  return true;
 };

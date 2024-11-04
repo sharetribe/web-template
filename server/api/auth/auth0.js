@@ -92,5 +92,5 @@ exports.authenticateAuth0Callback = (req, res) => {
     ...(userType ? { userType } : {}),
     ...(brandStudioId ? { brandStudioId } : {}),
   };
-  loginWithIdp(null, userProfile, req, res, clientID, 'auth0dev');
+  loginWithIdp(null, userProfile, req, res, clientID, process.env.AUTH0_IDP_ID);
 };

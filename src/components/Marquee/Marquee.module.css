@@ -7,6 +7,12 @@
   font-weight: 600;
 }
 
+.item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .marqueeIcon {
   margin-left: 40px;
   margin-right: 11px;
