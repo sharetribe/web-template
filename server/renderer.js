@@ -90,7 +90,7 @@ const replacer = (key = null, value) => {
   return types.replacer(key, cleanedValue);
 };
 
-exports.render = function(requestUrl, context, data, renderApp, webExtractor) {
+exports.render = function(requestUrl, context, data, renderApp, webExtractor, nonce) {
   const { preloadedState, translations, hostedConfig } = data;
 
   // Bind webExtractor as "this" for collectChunks call.
@@ -116,9 +116,14 @@ exports.render = function(requestUrl, context, data, renderApp, webExtractor) {
   // JSON.stringify wraps it within double quotes and escapes the
   // contents properly so the value can be injected in the script tag
   // as a string.
+  const nonceMaybe = nonce ? `nonce="${nonce}"` : '';
   const preloadedStateScript = `
-      <script>window.__PRELOADED_STATE__ = ${JSON.stringify(serializedState)};</script>
+      <script ${nonceMaybe}>window.__PRELOADED_STATE__ = ${JSON.stringify(
+    serializedState
+  )};</script>
   `;
+  // Add nonce to server-side rendered script tags
+  const nonceParamMaybe = nonce ? { nonce } : {};
 
   return template({
     htmlAttributes: head.htmlAttributes.toString(),
@@ -129,7 +134,7 @@ exports.render = function(requestUrl, context, data, renderApp, webExtractor) {
     preloadedStateScript,
     ssrStyles: webExtractor.getStyleTags(),
     ssrLinks: webExtractor.getLinkTags(),
-    ssrScripts: webExtractor.getScriptTags(),
+    ssrScripts: webExtractor.getScriptTags(nonceParamMaybe),
     body,
   });
 };
