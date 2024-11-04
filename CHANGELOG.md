@@ -14,6 +14,79 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+## [v6.0.1] 2024-11-01
+
+- [fix] GA4 integration had a copy-paste bug.
+  [#489](https://github.com/sharetribe/web-template/pull/489)
+- [fix] FieldDateTimeInput.module.css: fix typo.
+  [#487](https://github.com/sharetribe/web-template/pull/487)
+- [change] Update default email templates to use ICU's `j` pattern for datetimes.
+  [#478](https://github.com/sharetribe/web-template/pull/478)
+- [change] Update default email templates to get link and button colors from asset.
+  [#478](https://github.com/sharetribe/web-template/pull/478)
+
+  [v6.0.1]: https://github.com/sharetribe/web-template/compare/v6.0.0...v6.0.1
+
+## [v6.0.0] 2024-10-29
+
+This major release takes the React v17.0.2 into use.
+
+The biggest change is taking a new DatePicker into use and removing the outdated datepicker library:
+React Dates. The change was necessary as the React Dates still uses deprecated React life cycle
+functions componentWillReceiveProps & componentWillUpdate.
+
+Another notable change with the React v17 was with the callback functions of useEffect hook, which
+became asynchronous. You should to check other v17 changes from v17 changelog to verify if your
+customizations are affected somehow.
+
+The last highlight is that we started to use nonce for script-src on Content Security Policy.
+
+- [change] This updates Sharetribe Web Template to use React v17.0.2.
+
+  Some highlights:
+
+  - The callback functions of **_useEffect_ hook** has become asynchronous!
+  - There has been changes to event delegation on React component tree.
+
+    - https://legacy.reactjs.org/blog/2020/10/20/react-v17.html#changes-to-event-delegation
+    - This change didn't seem to have practical consequences on this repository.
+
+  [#477](https://github.com/sharetribe/web-template/pull/477)
+
+- [add] CSP: start using nonce with script-src. This also removes data from script-src.
+  [#485](https://github.com/sharetribe/web-template/pull/485)
+- [add] Remove React Dates datepicker library and add a new built-in DatePicker.
+
+  There are 3 new datepicker fields to be used with React Final Forms:
+
+  - FieldDateRangePicker
+  - FieldSingleDatePicker
+  - FieldDateRangeController
+
+  This swap is done because componentWillReceiveProps & componentWillUpdate functions, which are
+  used by the outdated React Dates library, are deprecated and removed from future React versions.
+
+  [#453](https://github.com/sharetribe/web-template/pull/453)
+
+- [fix] UserCard: make the styles of contact link consistent with the other links.
+  [#484](https://github.com/sharetribe/web-template/pull/484)
+- [fix] CheckoutPage.duck.js: fix minor typo with handleSuccess function.
+  [#483](https://github.com/sharetribe/web-template/pull/483)
+- [add] Filter out bot requests that scan websites for vulnerabilities before they reach React app.
+  [#479](https://github.com/sharetribe/web-template/pull/479)
+- [change] Update copy text for Publishing listing permission to Posting listing.
+  [#482](https://github.com/sharetribe/web-template/pull/482)
+
+  [v6.0.0]: https://github.com/sharetribe/web-template/compare/v5.8.0...v6.0.0
+
+## [v5.8.0] 2024-10-22
+
+- [add] Add currently available translations for DE, ES, FR.
+  [#475](https://github.com/sharetribe/web-template/pull/475)
+- [add] Block images can be wrapped in a link if a link is configured via assets.
+  [#464](https://github.com/sharetribe/web-template/pull/464)
+- [add] Add support for aligning content blocks based on asset
+  [#469](https://github.com/sharetribe/web-template/pull/469)
 - [add] Update moment-timezone library to v0.5.46.
   [#472](https://github.com/sharetribe/web-template/pull/472)
 - [add] Update caniuselite, which is used by browserlist.
@@ -22,6 +95,8 @@ way to update this template, but currently, we follow a pattern:
   an embedded Youtube video [#467](https://github.com/sharetribe/web-template/pull/467)
 - [add] Add currently available translations for DE, ES, FR.
   [#466](https://github.com/sharetribe/web-template/pull/466)
+
+  [v5.8.0]: https://github.com/sharetribe/web-template/compare/v5.7.0...v5.8.0
 
 ## [v5.7.0] 2024-10-08
 

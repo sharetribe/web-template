@@ -152,32 +152,6 @@
 }
 
 .contact {
-  /* Position and dimensions */
-  display: inline;
-  padding: 0;
-
-  /* Borders */
-  border: none;
-
-  /* Colors */
-  color: var(--marketplaceColor);
-
-  /* Text size should be inherited */
-  text-decoration: none;
-
+  composes: a from global;
   font-weight: var(--fontWeightMedium);
-  font-size: 15px;
-  line-height: 24px;
-  letter-spacing: 0;
-  margin: 0;
-
-  &:hover {
-    text-decoration: underline;
-    cursor: pointer;
-  }
-
-  @media (--viewportMedium) {
-    font-weight: var(--fontWeightMedium);
-    margin: 0;
-  }
 }
