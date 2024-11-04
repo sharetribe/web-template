@@ -31,9 +31,18 @@ const BlockDefault = props => {
     media,
     responsiveImageSizes,
     options,
+    alignment,
   } = props;
   const classes = classNames(rootClassName || css.root, className);
   const hasTextComponentFields = hasDataInFields([title, text, callToAction], options);
+
+  const alignmentClasses = {
+    left: css.alignLeft,
+    center: css.alignCenter,
+    right: css.alignRight,
+  };
+
+  const alignmentClass = alignmentClasses[alignment];
 
   return (
     <BlockContainer id={blockId} className={classes}>
@@ -44,7 +53,7 @@ const BlockDefault = props => {
         options={options}
       />
       {hasTextComponentFields ? (
-        <div className={classNames(textClassName, css.text)}>
+        <div className={classNames(textClassName, alignmentClass, css.text)}>
           <Field data={title} options={options} />
           <Field data={text} options={options} />
           <Field data={callToAction} className={ctaButtonClass} options={options} />

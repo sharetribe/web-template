@@ -1,6 +1,5 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import 'react-dates/initialize';
 
 import { types as sdkTypes } from '../../util/sdkLoader';
 import {
@@ -223,19 +222,12 @@ const getConfig = (listingTypes, listingFields, categoryConfig) => {
 };
 
 describe('EditListingPage', () => {
-  const originalWarn = console.warn.bind(console.warn);
   beforeEach(() => {
     // This is not defined by default on test env. Availability panel needs it.
     window.scrollTo = jest.fn();
-    console.warn = msg =>
-      !(
-        msg.toString().includes('componentWillReceiveProps') ||
-        msg.toString().includes('componentWillUpdate')
-      ) && originalWarn(msg);
   });
 
   afterAll(() => {
-    console.warn = originalWarn;
     // Remove window.scrollTo
     jest.clearAllMocks();
   });
@@ -1881,7 +1873,7 @@ describe('EditListingPage', () => {
       getByText('EditListingAvailabilityExceptionForm.exceptionEndDateLabel')
     ).toBeInTheDocument();
 
-    // TODO Testing react-dates / date pickers needs more work
+    // TODO Testing date pickers needs more work
 
     // submit button
     expect(

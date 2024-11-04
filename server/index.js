@@ -50,8 +50,22 @@ async function startServer() {
     const { getExtractors } = require('./importer');
     const renderer = require('./renderer');
     const dataLoader = require('./dataLoader');
-    const csp = require('./csp');
+    const { generateCSPNonce, csp } = require('./csp');
     const sdkUtils = require('./api-util/sdk');
+
+    const errorPage500 = fs.readFileSync(path.join(buildPath, '500.html'), 'utf-8');
+    const errorPage404 = fs.readFileSync(path.join(buildPath, '404.html'), 'utf-8');
+
+    // Filter out bot requests that scan websites for php vulnerabilities
+    // from paths like /asdf/index.php, //cms/wp-includes/wlwmanifest.xml, etc.
+    // There's no need to pass those to React app rendering as it causes unnecessary asset fetches.
+    // Note: you might want to do this on the edge server instead.
+    app.use(
+      /.*(\.php|\.php7|\/wp-.*\/.*|cgi-bin.*|htdocs\.rar|htdocs\.zip|root\.7z|root\.rar|root\.zip|www\.7z|www\.rar|wwwroot\.7z)$/,
+      (req, res) => {
+        return res.status(404).send(errorPage404);
+      }
+    );
 
     const buildPath = path.resolve(__dirname, '..', 'build');
     const dev = process.env.REACT_APP_ENV === 'development';
@@ -67,8 +81,6 @@ async function startServer() {
     const cspEnabled = CSP === 'block' || CSP === 'report';
     const app = express();
 
-    const errorPage = fs.readFileSync(path.join(buildPath, '500.html'), 'utf-8');
-
     // The helmet middleware sets various HTTP headers to improve security.
     // See: https://www.npmjs.com/package/helmet
     // Helmet 4 doesn't disable CSP by default so we need to do that explicitly.
@@ -81,6 +93,8 @@ async function startServer() {
     );
 
     if (cspEnabled) {
+      app.use(generateCSPNonce);
+
       // When a CSP directive is violated, the browser posts a JSON body
       // to the defined report URL and we need to parse this body.
       app.use(
@@ -214,7 +228,8 @@ async function startServer() {
       dataLoader
         .loadData(req.url, sdk, appInfo)
         .then(data => {
-          const html = renderer.render(req.url, context, data, renderApp, webExtractor);
+          const cspNonce = cspEnabled ? res.locals.cspNonce : null;
+          const html = renderer.render(req.url, context, data, renderApp, webExtractor, cspNonce);
 
           if (dev) {
             const debugData = {
@@ -254,7 +269,7 @@ async function startServer() {
         })
         .catch(e => {
           log.error(e, 'server-side-render-failed');
-          res.status(500).send(errorPage);
+          res.status(500).send(errorPage500);
         });
     });
 

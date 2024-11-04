@@ -82,19 +82,17 @@ export const IncludeScripts = props => {
       ></script>
     );
 
-    analyticsLibraries.push(
-      <script key="gtag dataLayer">
-        {`
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-      
-        gtag('config', '${googleAnalyticsId}', {
-          cookie_flags: 'SameSite=None;Secure',
-        });
-        `}
-      </script>
-    );
+    if (typeof window !== 'undefined') {
+      window.dataLayer = window.dataLayer || [];
+      // Ensure that gtag function is found from window scope
+      window.gtag = function gtag() {
+        dataLayer.push(arguments);
+      };
+      gtag('js', new Date());
+      gtag('config', googleAnalyticsId, {
+        cookie_flags: 'SameSite=None;Secure',
+      });
+    }
   }
 
   if (plausibleDomains) {
