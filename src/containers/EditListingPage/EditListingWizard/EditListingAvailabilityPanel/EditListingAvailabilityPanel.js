@@ -333,7 +333,7 @@ const EditListingAvailabilityPanel = props => {
             onFetchExceptions={onFetchExceptions}
             onSubmit={saveException}
             timeZone={availabilityPlan.timezone}
-            isDaily={unitType === DAY}
+            unitType={unitType}
             updateInProgress={updateInProgress}
             useFullDays={useFullDays}
             listingTypeConfig={listingTypeConfig}

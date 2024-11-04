@@ -1,14 +1,16 @@
 import React from 'react';
-import { array, arrayOf, bool, func, object, shape, string } from 'prop-types';
+import { array, arrayOf, bool, func, object, oneOf, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
 import { intlShape, injectIntl, FormattedMessage } from '../../../../../util/reactIntl';
 import { AVAILABILITY_MULTIPLE_SEATS, propTypes } from '../../../../../util/types';
+import { DAY } from '../../../../../transactions/transaction';
 
 import { Form, H3, PrimaryButton } from '../../../../../components';
 
+import FieldSeatsInput from '../FieldSeatsInput/FieldSeatsInput';
 import AvailabilitySingleSeatSelector from './AvailabilitySingleSeatSelector';
 import ExceptionDateTimeRange from './ExceptionDateTimeRange';
 import ExceptionDateRange from './ExceptionDateRange';
@@ -40,7 +42,7 @@ const EditListingAvailabilityExceptionForm = props => {
           onFetchExceptions,
           useFullDays,
           listingTypeConfig,
-          isDaily,
+          unitType,
           timeZone,
           updateInProgress,
           fetchErrors,
@@ -48,6 +50,8 @@ const EditListingAvailabilityExceptionForm = props => {
         } = formRenderProps;
 
         const idPrefix = `${formId}` || 'EditListingAvailabilityExceptionForm';
+        const isDaily = unitType === DAY;
+
         const {
           availability,
           exceptionStartDate,
@@ -55,14 +59,17 @@ const EditListingAvailabilityExceptionForm = props => {
           exceptionEndDate,
           exceptionEndTime,
           exceptionRange,
+          seats,
         } = values;
-        const hasMultipleSeatsInUSe = listingTypeConfig.availabilityType === AVAILABILITY_MULTIPLE_SEATS;
+        const hasMultipleSeatsInUSe =
+          listingTypeConfig.availabilityType === AVAILABILITY_MULTIPLE_SEATS;
+        const hasSeats = hasMultipleSeatsInUSe ? seats != null : availability;
 
         const { updateListingError } = fetchErrors || {};
 
         const submitInProgress = updateInProgress;
         const hasData =
-          availability &&
+          hasSeats &&
           (exceptionRange ||
             (exceptionStartDate && exceptionStartTime && exceptionEndDate && exceptionEndTime));
         const submitDisabled = !hasData || invalid || disabled || submitInProgress;
@@ -88,7 +95,7 @@ const EditListingAvailabilityExceptionForm = props => {
             </H3>
 
             {!hasMultipleSeatsInUSe ? (
-              <AvailabilitySingleSeatSelector 
+              <AvailabilitySingleSeatSelector
                 idPrefix={idPrefix}
                 rootClassName={css.radioButtons}
                 pristine={pristine}
@@ -127,6 +134,17 @@ const EditListingAvailabilityExceptionForm = props => {
               )}
             </div>
 
+            {hasMultipleSeatsInUSe ? (
+              <FieldSeatsInput
+                id={`${idPrefix}.seats`}
+                name="seats"
+                rootClassName={css.seatsInput}
+                pristine={pristine}
+                unitType={unitType}
+                intl={intl}
+              />
+            ) : null}
+
             <div className={css.submitButton}>
               {updateListingError ? (
                 <p className={css.error}>
@@ -161,7 +179,10 @@ EditListingAvailabilityExceptionForm.propTypes = {
   allExceptions: arrayOf(propTypes.availabilityException),
   intl: intlShape.isRequired,
   onSubmit: func.isRequired,
-  isDaily: bool.isRequired,
+  listingTypeConfig: shape({
+    availabilityType: oneOf(['oneSeat', 'multipleSeats']).isRequired,
+  }).isRequired,
+  unitType: string.isRequired,
   useFullDays: bool.isRequired,
   timeZone: string.isRequired,
   updateInProgress: bool.isRequired,
