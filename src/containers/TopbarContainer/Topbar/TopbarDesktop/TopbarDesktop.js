@@ -59,7 +59,7 @@ function InboxLink({ notificationCount, currentUserHasListings }) {
   );
 }
 
-const ProfileMenu = ({ currentPage, currentUser, onLogout }) => {
+const ProfileMenu = ({ currentPage, currentUser, onLogout, userRole }) => {
   const currentPageClass = (page) => {
     const isAccountSettingsPage =
       page === 'AccountSettingsPage' && ACCOUNT_SETTINGS_PAGES.includes(currentPage);
@@ -72,7 +72,22 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout }) => {
         <Avatar className={css.avatar} user={currentUser} disableProfileLink />
       </MenuLabel>
       <MenuContent className={css.profileMenuContent}>
+      <MenuItem key="CMSPage">
+  {userRole === 'provider' && (
+   
+      <NamedLink
+        className={classNames(css.menuLink, currentPageClass('CMSPage'))}
+        name="CMSPage"
+        params={{ pageId: 'overview' }}
+      >
+        <span className={css.menuItemBorder} />
+        <FormattedMessage id="TopbarDesktop.overview" />
+      </NamedLink>
+
+  )}
+    </MenuItem>
         <MenuItem key="ManageListingsPage">
+        {userRole === 'provider' && (
           <NamedLink
             className={classNames(css.menuLink, currentPageClass('ManageListingsPage'))}
             name="ManageListingsPage"
@@ -80,6 +95,7 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout }) => {
             <span className={css.menuItemBorder} />
             <FormattedMessage id="TopbarDesktop.yourListingsLink" />
           </NamedLink>
+        )}
         </MenuItem>
         <MenuItem key="ProfileSettingsPage">
           <NamedLink
@@ -199,63 +215,6 @@ const TopbarDesktop = (props) => {
     return currentPage === page || isAccountSettingsPage ? css.currentPage : null;
   };
 
-  const profileMenu = authenticatedOnClientSide ? (
-    <Menu>
-      <MenuLabel className={css.profileMenuLabel} isOpenClassName={css.profileMenuIsOpen}>
-        <Avatar className={css.avatar} user={currentUser} disableProfileLink />
-      </MenuLabel>
-      <MenuContent className={css.profileMenuContent}>
-        {userRole === 'provider' && (
-          <MenuItem key="CMSPage">
-            <NamedLink
-              className={classNames(css.OverviewLink, currentPageClass('CMSPage'))}
-              name="CMSPage"
-              params={{ pageId: 'overview' }}
-            >
-              <span className={css.menuItemBorder} />
-              <FormattedMessage id="TopbarDesktop.overview" />
-            </NamedLink>
-          </MenuItem>
-        )}
-        {userRole === 'provider' && (
-          <MenuItem key="ManageListingsPage">
-            <NamedLink
-              className={classNames(css.yourListingsLink, currentPageClass('ManageListingsPage'))}
-              name="ManageListingsPage"
-            >
-              <span className={css.menuItemBorder} />
-              <FormattedMessage id="TopbarDesktop.yourListingsLink" />
-            </NamedLink>
-          </MenuItem>
-        )}
-        <MenuItem key="ProfileSettingsPage">
-          <NamedLink
-            className={classNames(css.profileSettingsLink, currentPageClass('ProfileSettingsPage'))}
-            name="ProfileSettingsPage"
-          >
-            <span className={css.menuItemBorder} />
-            <FormattedMessage id="TopbarDesktop.profileSettingsLink" />
-          </NamedLink>
-        </MenuItem>
-        <MenuItem key="AccountSettingsPage">
-          <NamedLink
-            className={classNames(css.yourListingsLink, currentPageClass('AccountSettingsPage'))}
-            name="AccountSettingsPage"
-          >
-            <span className={css.menuItemBorder} />
-            <FormattedMessage id="TopbarDesktop.accountSettingsLink" />
-          </NamedLink>
-        </MenuItem>
-        <MenuItem key="logout">
-          <InlineTextButton rootClassName={css.logoutButton} onClick={onLogout}>
-            <span className={css.menuItemBorder} />
-            <FormattedMessage id="TopbarDesktop.logout" />
-          </InlineTextButton>
-        </MenuItem>
-      </MenuContent>
-    </Menu>
-  ) : null;
-
   const inboxLinkMaybe = authenticatedOnClientSide ? (
     <InboxLink
       notificationCount={notificationCount}
@@ -264,7 +223,7 @@ const TopbarDesktop = (props) => {
   ) : null;
 
   const profileMenuMaybe = authenticatedOnClientSide ? (
-    <ProfileMenu currentPage={currentPage} currentUser={currentUser} onLogout={onLogout} />
+    <ProfileMenu currentPage={currentPage} currentUser={currentUser} onLogout={onLogout} userRole={userRole}/>
   ) : null;
   const signupLinkMaybe = isAuthenticatedOrJustHydrated ? null : <SignupLink />;
   const loginLinkMaybe = isAuthenticatedOrJustHydrated ? null : <LoginLink />;

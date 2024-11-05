@@ -26,7 +26,7 @@ function mergeTransactionsAndBookings(response) {
     return map;
   }, {});
 
-  // Map transactions to a simplified structure for merging
+  // Map transactions to a simplified structure for each booking
   const mergedData = transactions
     .map((transaction) => {
       const { unitType, seatNames } = transaction.attributes.protectedData;
@@ -54,60 +54,36 @@ function mergeTransactionsAndBookings(response) {
     })
     .filter(Boolean);
 
-  // Group by listing ID
-  const groupedByListing = mergedData.reduce((acc, curr) => {
-    const key = curr.listingId;
-    if (!acc[key]) {
-      acc[key] = [];
-    }
-    acc[key].push(curr);
-    return acc;
-  }, {});
-  console.log('groupedByListing', groupedByListing);
+  // Group by listing ID and start date to merge bookings with the same start date for each listing
+  const groupedByListingAndDate = Object.values(
+    mergedData.reduce((acc, curr) => {
+      const listingKey = curr.listingId;
+      const startDateKey = moment(curr.start).format('YYYY-MM-DD');
 
-  // Merge entries in each group
-  const mergedByListing = Object.values(groupedByListing).map((group) => {
-    if (group.length === 1) {
-      const { protectedData, ...rest } = group[0];
-      return {
-        ...rest,
-        protectedData: {
-          names: protectedData.seatNames,
-        },
-      };
-    }
-    return group.reduce((merged, booking, index) => {
-      if (index === 0) {
-        return {
-          id: booking.id,
-          listingId: booking.listingId,
-          seats: booking.seats,
-          start: booking.start,
-          end: booking.end,
+      const key = `${listingKey}-${startDateKey}`;
+
+      if (!acc[key]) {
+        acc[key] = {
+          id: curr.id,
+          listingId: curr.listingId,
+          seats: curr.seats,
+          start: curr.start,
+          end: curr.end,
           protectedData: {
-            names: booking.protectedData.seatNames || [],
+            names: [...(curr.protectedData.seatNames || [])],
           },
         };
+      } else {
+        // Merge the seats and names if multiple bookings on the same date for the same listing
+        acc[key].seats += curr.seats;
+        acc[key].protectedData.names.push(...(curr.protectedData.seatNames || []));
       }
-      const totalSeats = merged.seats + booking.seats;
-      const mergedNames = merged.protectedData.names;
-      const bookingNames = booking.protectedData.seatNames || [];
 
-      const combinedNames = [...mergedNames, ...bookingNames];
-      return {
-        id: `${merged.id},${booking.id}`,
-        listingId: merged.listingId,
-        seats: totalSeats,
-        start: merged.start,
-        end: merged.end,
-        protectedData: {
-          names: combinedNames,
-        },
-      };
-    }, {});
-  });
-  console.log('mergedByListing', mergedByListing);
-  return mergedByListing;
+      return acc;
+    }, {})
+  );
+
+  return groupedByListingAndDate;
 }
 
 function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransactions }) {
@@ -131,7 +107,7 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
       });
   }, [fetchOwnListings, fetchCurrentUserTransactions, currentMonth]);
 
-  // Instead of transformListingsToEvents, directly use mergedBookings as events
+  // Map mergedBookings to events to ensure only one event per date per listing
   const events = mergedBookings.map((booking) => {
     const listing = ownListings.find((listing) => listing.id.uuid === booking.listingId);
     return {
@@ -148,11 +124,11 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
     setSelectedListing(calendarEvent.resource);
     setSelectedEventDate(calendarEvent.start);
 
-    // Find the matched booking from mergedBookings by both listingId and start date
-    const matchedBooking = mergedBookings.find((booking) => {
-      const isSameDay = moment(booking.start).isSame(moment(calendarEvent.start), 'day');
-      return isSameDay && booking.listingId === calendarEvent.resource.id.uuid;
-    });
+    const matchedBooking = mergedBookings.find(
+      (booking) =>
+        moment(booking.start).isSame(moment(calendarEvent.start), 'day') &&
+        booking.listingId === calendarEvent.resource.id.uuid
+    );
 
     if (matchedBooking) {
       const eventIdentifier = `${calendarEvent.title}-${moment(calendarEvent.start).format('YYYY-MM-DD')}`;
@@ -161,7 +137,7 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
           ...calendarEvent,
           eventIdentifier,
         },
-        bookingData: matchedBooking, // Directly use matched booking
+        bookingData: matchedBooking,
       });
     } else {
       setSelectedActivity({ resource: calendarEvent.resource, bookingData: null });
@@ -206,25 +182,15 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
                   id: 'Calendar.activity',
                 })}
               </h4>
-              {selectedListing.attributes.availabilityPlan.entries
+              {(selectedListing.attributes.availabilityPlan.entries || [])
                 .filter((activity) => {
                   const eventDate = moment(selectedEventDate).format('YYYY-MM-DD');
                   const activityDateTime = moment(`${eventDate}T${activity.startTime}`);
                   return moment(selectedEventDate).isSame(activityDateTime, 'day');
                 })
                 .map((activity) => {
-                  // Find the matched booking for the activity
-                  const matchedBooking = mergedBookings.find((booking) => {
-                    const activityDateTime = moment(
-                      `${moment(selectedEventDate).format('YYYY-MM-DD')}T${activity.startTime}`
-                    );
-                    return (
-                      activityDateTime.isSame(moment(booking.start), 'minute') &&
-                      booking.listingId === selectedListing.id.uuid
-                    );
-                  });
+                  const matchedBooking = selectedActivity.bookingData;
 
-                  // If a matched booking is found, use its seats and names
                   const seatCount = matchedBooking ? matchedBooking.seats : activity.seats;
                   const seatAttendees = matchedBooking
                     ? matchedBooking.protectedData.names.length
@@ -240,14 +206,14 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
                             ...activity,
                             eventIdentifier: `${selectedListing.attributes.title}-${moment(selectedEventDate).format('YYYY-MM-DD')}`,
                           },
-                          bookingData: matchedBooking, // Directly pass the matched booking data here
+                          bookingData: matchedBooking,
                         });
                         handleSelectActivity();
                       }}
                       className={css.listItem}
                     >
-                      {activity.startTime} {selectedListing.attributes.title}{' '}
-                      {/* Seats: {selectedActivity}/{seatCount} */}
+                      {activity.startTime} {selectedListing.attributes.title} 
+                      {/* Seats: {seatAttendees}/{seatCount} */}
                     </li>
                   );
                 })}

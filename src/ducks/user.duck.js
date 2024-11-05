@@ -334,7 +334,6 @@ export const fetchCurrentUserTransactions = () => async (dispatch, getState, sdk
     }
 
     dispatch(fetchCurrentUserTransactionsSuccess(transactions));
-    console.log('transactions', transactions);
     return transactions; // Return transactions to enable chaining .then()
   } catch (e) {
     const error = storableError(e);

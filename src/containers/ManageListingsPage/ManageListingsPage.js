@@ -31,9 +31,15 @@ import { closeListing, openListing, getOwnListingsById } from './ManageListingsP
 import css from './ManageListingsPage.module.css';
 
 function Heading(props) {
-  const { listingsAreLoaded, pagination } = props;
+  const { listingsAreLoaded, pagination, user } = props;
+
   const hasResults = listingsAreLoaded && pagination.totalItems > 0;
   const hasNoResults = listingsAreLoaded && pagination.totalItems === 0;
+  const role = user?.attributes?.profile?.publicData?.role;
+
+  if (role === 'customer') {
+    return null;
+  }
 
   return hasResults ? (
     <H3 as="h1" className={css.heading}>
@@ -155,7 +161,7 @@ export function ManageListingsPageComponent(props) {
         topbar={
           <>
             <TopbarContainer />
-            <UserNav currentPage="ManageListingsPage" />
+            <UserNav currentPage="ManageListingsPage" user={currentUser} />
           </>
         }
         footer={<FooterContainer />}
@@ -164,7 +170,7 @@ export function ManageListingsPageComponent(props) {
         {queryListingsError ? queryError : null}
 
         <div className={css.listingPanel}>
-          <Heading listingsAreLoaded={listingsAreLoaded} pagination={pagination} />
+          <Heading listingsAreLoaded={listingsAreLoaded} pagination={pagination} user={currentUser} />
 
           <div className={css.listingCards}>
             {listings.map((l) => (
