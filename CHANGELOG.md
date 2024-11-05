@@ -14,6 +14,10 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [change] Refactor SingleDatePicker and DateRangePicker by combining date and its formatting. It
+  updates dateData if passed-in input value changes.
+  [#492](https://github.com/sharetribe/web-template/pull/492)
+
 ## [v6.0.1] 2024-11-01
 
 - [fix] GA4 integration had a copy-paste bug.

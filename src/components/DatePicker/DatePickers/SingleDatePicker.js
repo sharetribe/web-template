@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames';
 
@@ -17,18 +17,21 @@ const dateFormatOptions = {
 
 export const SingleDatePicker = props => {
   const intl = useIntl();
+  const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [date, setDate] = useState(props.value || null);
-  const [rawValue, setRawValue] = useState(
-    props.value ? intl.formatDate(props.value, dateFormatOptions) : ''
-  );
+  const [dateData, setDateData] = useState({
+    date: props.value || null,
+    formatted: props.value ? intl.formatDate(props.value, dateFormatOptions) : '',
+  });
   const element = useRef(null);
+
   const {
     className,
     rootClassName,
     inputClassName,
     popupClassName,
     id,
+    name,
     placeholderText,
     isDayBlocked,
     onChange,
@@ -36,16 +39,33 @@ export const SingleDatePicker = props => {
     readOnly,
     ...rest
   } = props;
+
+  // If value has changed, update internal state
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      // If mounted, changes to value should be reflected to 'date' state
+      setDateData({
+        date: value,
+        formatted: value ? intl.formatDate(value, dateFormatOptions) : '',
+      });
+    }
+  }, [mounted, value]);
+
   const pickerId = `${id}_SingleDatePicker`;
 
   const classes = classNames(rootClassName || css.root, className, css.outsideClickWrapper);
   const startDateMaybe =
-    date instanceof Date && !isNaN(date) ? { startDate: getISODateString(date) } : {};
+    dateData.date instanceof Date && !isNaN(dateData.date)
+      ? { startDate: getISODateString(dateData.date) }
+      : {};
 
   const handleChange = value => {
     const startOfDay = getStartOfDay(value);
-    setDate(startOfDay);
-    setRawValue(intl.formatDate(startOfDay, dateFormatOptions));
+    setDateData({ date: startOfDay, formatted: intl.formatDate(startOfDay, dateFormatOptions) });
     setIsOpen(false);
 
     if (element.current) {
@@ -60,24 +80,22 @@ export const SingleDatePicker = props => {
   const handleOnChangeOnInput = e => {
     const inputStr = e.target.value;
     if (!inputStr) {
-      setDate(null);
-    }
-
-    const d = new Date(inputStr);
-    if (d instanceof Date && !isNaN(d)) {
-      handleChange(d);
+      setDateData({ date: null, formatted: inputStr });
+      return;
     }
 
     if (isValidDateString(inputStr)) {
       const d = new Date(inputStr);
       if (isDayBlocked(d)) {
-        setRawValues('');
-        handleChange(d);
+        setDateData({ date: dateData.date, formatted: '' });
+        return;
+      } else {
+        setDateData({ date: d, formatted: intl.formatDate(d, dateFormatOptions) });
         return;
       }
     }
 
-    setRawValue(inputStr);
+    setDateData({ date: dateData.date, formatted: inputStr });
   };
 
   const handleBlur = () => {
@@ -125,9 +143,9 @@ export const SingleDatePicker = props => {
         >
           <input
             id={id}
-            className={css.input}
+            className={classNames(css.input, { [css.inputPlaceholder]: !value })}
             placeholder={placeholderText}
-            value={rawValue}
+            value={dateData.formatted}
             {...inputProps}
           />
         </div>
@@ -139,7 +157,7 @@ export const SingleDatePicker = props => {
               showMonthStepper={true}
               onChange={handleChange}
               isDayBlocked={isDayBlocked}
-              value={date}
+              value={dateData.date}
               {...startDateMaybe}
               {...rest}
             />
