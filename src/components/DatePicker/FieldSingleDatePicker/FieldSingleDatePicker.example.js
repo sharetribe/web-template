@@ -1,14 +1,18 @@
 import React from 'react';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
-import { Button } from '../../../components';
+
 import { required, bookingDateRequired, composeValidators } from '../../../util/validators';
+import { Button } from '../../../components';
+
 import FieldSingleDatePicker from './FieldSingleDatePicker';
 
+const TODAY = new Date();
+const OVERMORROW = new Date(TODAY.getTime() + 2 * 24 * 60 * 60 * 1000);
 const identity = v => v;
 
 const options = { weekday: 'short', month: 'long', day: 'numeric' };
 const formatDate = date => new Intl.DateTimeFormat('en-US', options).format(date);
-const placeholderText = formatDate(new Date());
+const placeholderText = formatDate(TODAY);
 
 const FormComponent = props => (
   <FinalForm
@@ -72,6 +76,38 @@ export const Empty = {
     },
     onSubmit: values => {
       console.log('Submitting a form with values:', values);
+    },
+  },
+  group: 'inputs',
+};
+
+export const InitialData = {
+  component: FormComponent,
+  props: {
+    style: { marginBottom: '140px' },
+    dateInputProps: {
+      name: 'bookingDate',
+      useMobileMargins: false,
+      id: `EmptyDateInputForm.bookingDate`,
+      label: 'Date',
+      placeholderText,
+      format: identity,
+      validate: composeValidators(required('Required'), bookingDateRequired('Date is not valid')),
+      onBlur: () => console.log('onBlur called from DateInput props.'),
+      onFocus: () => console.log('onFocus called from DateInput props.'),
+    },
+    onChange: formState => {
+      const { date } = formState.values;
+      if (date) {
+        const formattedDate = formatDate(date);
+        console.log('Changed to', formattedDate);
+      }
+    },
+    onSubmit: values => {
+      console.log('Submitting a form with values:', values);
+    },
+    initialValues: {
+      bookingDate: { date: OVERMORROW },
     },
   },
   group: 'inputs',
