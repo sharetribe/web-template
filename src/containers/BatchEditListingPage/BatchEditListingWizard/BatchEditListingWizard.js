@@ -57,9 +57,9 @@ function BatchEditListingResult(props) {
     };
   }, [successfulListings, failedListings, selectedRowsKeys]);
 
-  const redirectTo = (destination = 'ManageListingsPage') => {
+  const redirectTo = (destination = 'ManageListingsPage', params = {}) => {
     dispatch({ type: RESET_STATE });
-    const to = createResourceLocatorString(destination, routeConfiguration);
+    const to = createResourceLocatorString(destination, routeConfiguration, params);
     history.push(to);
   };
 
@@ -73,7 +73,7 @@ function BatchEditListingResult(props) {
         <Button type="primary" key="console" onClick={() => redirectTo('ManageListingsPage')}>
           View listings
         </Button>,
-        <Button key="buy" onClick={() => redirectTo('BatchEditListingsPage')}>
+        <Button key="buy" onClick={() => redirectTo('BatchEditListingPage', { tab: 'upload' })}>
           Create more listings
         </Button>,
       ]}

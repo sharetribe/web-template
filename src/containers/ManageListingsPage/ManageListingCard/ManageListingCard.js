@@ -6,36 +6,36 @@ import classNames from 'classnames';
 
 import { useConfiguration } from '../../../context/configurationContext';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
-import { FormattedMessage, intlShape, injectIntl } from '../../../util/reactIntl';
+import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { displayPrice } from '../../../util/configHelpers';
 import {
-  LISTING_STATE_PENDING_APPROVAL,
   LISTING_STATE_CLOSED,
   LISTING_STATE_DRAFT,
+  LISTING_STATE_PENDING_APPROVAL,
   propTypes,
   STOCK_MULTIPLE_ITEMS,
 } from '../../../util/types';
 import { formatMoney } from '../../../util/currency';
 import { ensureOwnListing } from '../../../util/data';
 import {
-  LISTING_PAGE_PENDING_APPROVAL_VARIANT,
+  createSlug,
   LISTING_PAGE_DRAFT_VARIANT,
   LISTING_PAGE_PARAM_TYPE_DRAFT,
   LISTING_PAGE_PARAM_TYPE_EDIT,
-  createSlug,
+  LISTING_PAGE_PENDING_APPROVAL_VARIANT,
 } from '../../../util/urlHelpers';
 import { createResourceLocatorString, findRouteByRouteName } from '../../../util/routes';
 import { isBookingProcessAlias, isPurchaseProcessAlias } from '../../../transactions/transaction';
 
 import {
   AspectRatioWrapper,
+  IconSpinner,
   InlineTextButton,
   Menu,
-  MenuLabel,
   MenuContent,
   MenuItem,
+  MenuLabel,
   NamedLink,
-  IconSpinner,
   PrimaryButtonInline,
   ResponsiveImage,
 } from '../../../components';
@@ -339,24 +339,24 @@ export const ManageListingCardComponent = props => {
   const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();
   const {
-    className,
-    rootClassName,
+    className = null,
+    rootClassName = null,
     hasClosingError,
     hasOpeningError,
     history,
     intl,
     isMenuOpen,
-    actionsInProgressListingId,
+    actionsInProgressListingId = null,
     listing,
     onCloseListing,
     onOpenListing,
     onToggleMenu,
-    renderSizes,
+    renderSizes = null,
   } = props;
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureOwnListing(listing);
   const id = currentListing.id.uuid;
-  const { title = '', price, state, publicData } = currentListing.attributes;
+  const { title = '', price, state, publicData, description } = currentListing.attributes;
   const slug = createSlug(title);
   const isPendingApproval = state === LISTING_STATE_PENDING_APPROVAL;
   const isClosed = state === LISTING_STATE_CLOSED;
@@ -532,32 +532,11 @@ export const ManageListingCardComponent = props => {
       </div>
 
       <div className={css.info}>
-        <PriceMaybe price={price} publicData={publicData} config={config} intl={intl} />
-
         <div className={css.mainInfo}>
-          <div className={css.titleWrapper}>
-            <InlineTextButton
-              rootClassName={titleClasses}
-              onClick={event => {
-                event.preventDefault();
-                event.stopPropagation();
-                history.push(createListingURL(routeConfiguration, listing));
-              }}
-            >
-              {formatTitle(title, MAX_LENGTH_FOR_WORDS_IN_TITLE)}
-            </InlineTextButton>
-          </div>
+          <div className={css.titleWrapper}>{description}</div>
         </div>
 
         <div className={css.manageLinks}>
-          <NamedLink
-            className={css.manageLink}
-            name="BatchEditListingPage"
-            params={{ id, slug, type: editListingLinkType, tab: 'upload' }}
-          >
-            <FormattedMessage id="ManageListingCard.editListing" />
-          </NamedLink>
-
           <LinkToStockOrAvailabilityTab
             id={id}
             slug={slug}
@@ -572,13 +551,6 @@ export const ManageListingCardComponent = props => {
       </div>
     </div>
   );
-};
-
-ManageListingCardComponent.defaultProps = {
-  className: null,
-  rootClassName: null,
-  actionsInProgressListingId: null,
-  renderSizes: null,
 };
 
 const { bool, func, shape, string } = PropTypes;
@@ -605,7 +577,4 @@ ManageListingCardComponent.propTypes = {
   }).isRequired,
 };
 
-export default compose(
-  withRouter,
-  injectIntl
-)(ManageListingCardComponent);
+export default compose(withRouter, injectIntl)(ManageListingCardComponent);

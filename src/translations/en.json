@@ -529,7 +529,7 @@
   "ManageListingsPage.loadingOwnListings": "Loading listings…",
   "ManageListingsPage.noResults": "You haven't listed any listings.",
   "ManageListingsPage.queryError": "Query failed. Please try again.",
-  "ManageListingsPage.title": "Manage your listings",
+  "ManageListingsPage.title": "Manage your market",
   "ManageListingsPage.youHaveListings": "You have {count} {count, plural, one {listing} other {listings}}",
   "Modal.close": "CLOSE",
   "Modal.closeModal": "Close modal",
@@ -1028,7 +1028,7 @@
   "TopbarDesktop.logout": "Log out",
   "TopbarDesktop.profileSettingsLink": "Profile settings",
   "TopbarDesktop.signup": "Sign up",
-  "TopbarDesktop.yourListingsLink": "Your listings",
+  "TopbarDesktop.yourListingsLink": "Manage your market",
   "TopbarMobileMenu.accountSettingsLink": "Account settings",
   "TopbarMobileMenu.greeting": "Hello {displayName}",
   "TopbarMobileMenu.inboxLink": "Inbox",
@@ -1039,7 +1039,7 @@
   "TopbarMobileMenu.signupLink": "Sign up",
   "TopbarMobileMenu.signupOrLogin": "{signup} or {login}",
   "TopbarMobileMenu.unauthorizedGreeting": "Hello there,{lineBreak}would you like to {signupOrLogin}?",
-  "TopbarMobileMenu.yourListingsLink": "Your listings",
+  "TopbarMobileMenu.yourListingsLink": "Manage your market",
   "TopbarSearchForm.placeholder": "Search listings…",
   "TransactionPage.ActivityFeed.default-booking.accepted": "{actor, select, you {You accepted the booking request.} operator {The booking request was accepted.} other {{otherUsersName} accepted the booking request.}}",
   "TransactionPage.ActivityFeed.default-booking.canceled": "The booking was canceled.",
@@ -1172,5 +1172,5 @@
   "UserDisplayName.deleted": "Deleted user",
   "UserNav.accountSettings": "Account settings",
   "UserNav.profileSettings": "Profile settings",
-  "UserNav.yourListings": "Your listings"
+  "UserNav.yourListings": "Manage your market"
 }

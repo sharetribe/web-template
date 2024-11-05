@@ -12,20 +12,13 @@ const UserNav = props => {
   const classes = classNames(rootClassName || css.root, className);
 
   const tabs = [
-    {
-      text: <FormattedMessage id="UserNav.yourListings" />,
-      selected: currentPage === 'ManageListingsPage',
-      linkProps: {
-        name: 'ManageListingsPage',
-      },
-    },
-    {
-      text: <FormattedMessage id="UserNav.favoriteListings" />,
-      selected: currentPage === 'FavoriteListingsPage',
-      linkProps: {
-        name: 'FavoriteListingsPage',
-      },
-    },
+    // {
+    //   text: <FormattedMessage id="UserNav.favoriteListings" />,
+    //   selected: currentPage === 'FavoriteListingsPage',
+    //   linkProps: {
+    //     name: 'FavoriteListingsPage',
+    //   },
+    // },
     {
       text: <FormattedMessage id="UserNav.profileSettings" />,
       selected: currentPage === 'ProfileSettingsPage',
@@ -40,6 +33,13 @@ const UserNav = props => {
       disabled: false,
       linkProps: {
         name: 'ContactDetailsPage',
+      },
+    },
+    {
+      text: <FormattedMessage id="UserNav.yourListings" />,
+      selected: currentPage === 'ManageListingsPage',
+      linkProps: {
+        name: 'ManageListingsPage',
       },
     },
   ];
