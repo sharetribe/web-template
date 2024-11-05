@@ -1,0 +1,32 @@
+@import '../../../styles/customMediaQueries.css';
+@import '../ProfileSettingsForm/Base.module.css';
+
+.root {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
+}
+
+.infoSection {
+  flex: 0 1 auto;
+
+  .withToggle {
+    flex-basis: 365px;
+  }
+}
+
+.sectionTitle {
+  align-items: baseline;
+  display: flex;
+  gap: 14px;
+
+  .withToggle {
+    display: block;
+  }
+}
+
+.statusLabel {
+  color: var(--colorLink);
+  font-size: 12px;
+}

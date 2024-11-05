@@ -1,125 +1,41 @@
 import React, { Component } from 'react';
 import { bool, string } from 'prop-types';
 import { compose } from 'redux';
-import { Field, Form as FinalForm } from 'react-final-form';
+import { Form as FinalForm } from 'react-final-form';
 import isEqual from 'lodash/isEqual';
 import classNames from 'classnames';
 import arrayMutators from 'final-form-arrays';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { ensureCurrentUser } from '../../../util/data';
-import { propTypes, USER_TYPES, SELLER_STATUS } from '../../../util/types';
+import { propTypes, USER_TYPES } from '../../../util/types';
 import * as validators from '../../../util/validators';
-import { isUploadImageOverLimitError } from '../../../util/errors';
 import {
   getPropsForCustomUserFieldInputs,
-  getBrandUserFieldInputs,
-  isBuyer,
+  getUserTypeFieldInputs,
   isCreativeSeller,
 } from '../../../util/userHelpers';
 
 import {
   Form,
-  Avatar,
   Button,
-  ImageFromFile,
-  IconSpinner,
-  FieldBoolean,
   FieldTextInput,
   H4,
   CustomExtendedDataField,
+  FieldLocationAutocompleteInput,
 } from '../../../components';
+import ApplyAsSellerToggle from '../ApplyAsSellerToggle/ApplyAsSellerToggle';
+import AvatarField from '../AvatarField/AvatarField';
+import DisplayNameMaybe from '../DisplayNameMaybe/DisplayNameMaybe';
 
 import css from './ProfileSettingsForm.module.css';
 
-const ACCEPT_IMAGES = 'image/*';
-const UPLOAD_CHANGE_DELAY = 2000; // Show spinner so that browser has time to load img srcset
-
-function getApplyAsSellerFieldConfig(userType, sellerStatus) {
-  if (isCreativeSeller(userType)) {
-    const showPendingLabel = sellerStatus === SELLER_STATUS.APPLIED;
-    const showWaitlistedLabel = sellerStatus === SELLER_STATUS.WAITLISTED;
-    const showToggle = false;
-    if (showPendingLabel) {
-      const showField = true;
-      return [showField, showToggle, 'ProfileSettingsForm.applyAsSellerPendingInfo'];
-    }
-    if (showWaitlistedLabel) {
-      const showField = true;
-      return [showField, showToggle, 'ProfileSettingsForm.applyAsSellerWaitlistedInfo'];
-    }
-    const showField = false;
-    return [showField, showToggle, 'ProfileSettingsForm.applyAsSellerWaitlistedInfo'];
-  }
-  const showField = isBuyer(userType);
-  const showToggle = isBuyer(userType);
-  return [showField, showToggle, 'ProfileSettingsForm.applyAsSellerInfo'];
-}
-
-const DisplayNameMaybe = props => {
-  const { userTypeConfig, intl } = props;
-  const isDisabled = userTypeConfig?.defaultUserFields?.displayName === false;
-  if (isDisabled) {
-    return null;
-  }
-  const { required } = userTypeConfig?.displayNameSettings || {};
-  const isRequired = required === true;
-  const validateMaybe = isRequired
-    ? {
-        validate: validators.required(
-          intl.formatMessage({
-            id: 'ProfileSettingsForm.displayNameRequired',
-          })
-        ),
-      }
-    : {};
-  return (
-    <div className={css.sectionContainer}>
-      <H4 as="h2" className={css.sectionTitle}>
-        <FormattedMessage id="ProfileSettingsForm.displayNameHeading" />
-      </H4>
-      <FieldTextInput
-        className={css.row}
-        type="text"
-        id="displayName"
-        name="displayName"
-        label={intl.formatMessage({
-          id: 'ProfileSettingsForm.displayNameLabel',
-        })}
-        placeholder={intl.formatMessage({
-          id: 'ProfileSettingsForm.displayNamePlaceholder',
-        })}
-        {...validateMaybe}
-      />
-      <p className={css.extraInfo}>
-        <FormattedMessage id="ProfileSettingsForm.displayNameInfo" />
-      </p>
-    </div>
-  );
-};
+const identity = v => v;
 
 class ProfileSettingsFormComponent extends Component {
   constructor(props) {
     super(props);
-
-    this.uploadDelayTimeoutId = null;
-    this.state = { uploadDelay: false };
     this.submittedValues = {};
-  }
-
-  componentDidUpdate(prevProps) {
-    // Upload delay is additional time window where Avatar is added to the DOM,
-    // but not yet visible (time to load image URL from srcset)
-    if (prevProps.uploadInProgress && !this.props.uploadInProgress) {
-      this.setState({ uploadDelay: true });
-      this.uploadDelayTimeoutId = window.setTimeout(() => {
-        this.setState({ uploadDelay: false });
-      }, UPLOAD_CHANGE_DELAY);
-    }
-  }
-
-  componentWillUnmount() {
-    window.clearTimeout(this.uploadDelayTimeoutId);
   }
 
   render() {
@@ -152,11 +68,6 @@ class ProfileSettingsFormComponent extends Component {
           } = fieldRenderProps;
           const { applyAsSeller, userType: initialUserType } = values || {};
           const userType = applyAsSeller ? USER_TYPES.SELLER : initialUserType;
-          const [
-            showApplyAsSellerField,
-            showApplyAsSellerToggle,
-            applyAsSellerInfoId,
-          ] = getApplyAsSellerFieldConfig(initialUserType, sellerStatus);
           const userTypeConfig = userTypes.find(config => config.userType === userType);
           const user = ensureCurrentUser(currentUser);
 
@@ -189,79 +100,17 @@ class ProfileSettingsFormComponent extends Component {
           const bioPlaceholder = intl.formatMessage({
             id: 'ProfileSettingsForm.bioPlaceholder',
           });
-          // Apply as seller
-          const applyAsSellerLabel = intl.formatMessage({
-            id: 'ProfileSettingsForm.applyAsSellerLabel',
-          });
-          const applyAsSellerFieldPlaceholder = intl.formatMessage({
-            id: 'CustomExtendedDataField.placeholderBoolean',
-          });
-
-          const uploadingOverlay =
-            uploadInProgress || this.state.uploadDelay ? (
-              <div className={css.uploadingImageOverlay}>
-                <IconSpinner />
-              </div>
-            ) : null;
-
-          const hasUploadError = !!uploadImageError && !uploadInProgress;
-          const errorClasses = classNames({ [css.avatarUploadError]: hasUploadError });
-          const transientUserProfileImage = profileImage.uploadedImage || user.profileImage;
-          const transientUser = { ...user, profileImage: transientUserProfileImage };
-
-          // Ensure that file exists if imageFromFile is used
-          const fileExists = !!profileImage.file;
-          const fileUploadInProgress = uploadInProgress && fileExists;
-          const delayAfterUpload = profileImage.imageId && this.state.uploadDelay;
-          const imageFromFile =
-            fileExists && (fileUploadInProgress || delayAfterUpload) ? (
-              <ImageFromFile
-                id={profileImage.id}
-                className={errorClasses}
-                rootClassName={css.uploadingImage}
-                aspectWidth={1}
-                aspectHeight={1}
-                file={profileImage.file}
-              >
-                {uploadingOverlay}
-              </ImageFromFile>
-            ) : null;
-
-          // Avatar is rendered in hidden during the upload delay
-          // Upload delay smoothes image change process:
-          // responsive img has time to load srcset stuff before it is shown to user.
-          const avatarClasses = classNames(errorClasses, css.avatar, {
-            [css.avatarInvisible]: this.state.uploadDelay,
-          });
-          const avatarComponent =
-            !fileUploadInProgress && profileImage.imageId ? (
-              <Avatar
-                className={avatarClasses}
-                renderSizes="(max-width: 767px) 96px, 240px"
-                user={transientUser}
-                disableProfileLink
-              />
-            ) : null;
-
-          const chooseAvatarLabel =
-            profileImage.imageId || fileUploadInProgress ? (
-              <div className={css.avatarContainer}>
-                {imageFromFile}
-                {avatarComponent}
-                <div className={css.changeAvatar}>
-                  <FormattedMessage id="ProfileSettingsForm.changeAvatar" />
-                </div>
-              </div>
-            ) : (
-              <div className={css.avatarPlaceholder}>
-                <div className={css.avatarPlaceholderText}>
-                  <FormattedMessage id="ProfileSettingsForm.addYourProfilePicture" />
-                </div>
-                <div className={css.avatarPlaceholderTextMobile}>
-                  <FormattedMessage id="ProfileSettingsForm.addYourProfilePictureMobile" />
-                </div>
-              </div>
-            );
+          // Location
+          const addressRequired = validators.autocompleteSearchRequired(
+            intl.formatMessage({
+              id: 'ConfirmSignupForm.addressRequired',
+            })
+          );
+          const addressValid = validators.autocompletePlaceSelected(
+            intl.formatMessage({
+              id: 'ConfirmSignupForm.addressNotRecognized',
+            })
+          );
 
           const submitError = updateProfileError ? (
             <div className={css.error}>
@@ -290,75 +139,14 @@ class ProfileSettingsFormComponent extends Component {
                 handleSubmit(e);
               }}
             >
-              <div className={css.sectionContainer}>
-                <H4 as="h2" className={css.sectionTitle}>
-                  <FormattedMessage id="ProfileSettingsForm.yourProfilePicture" />
-                </H4>
-                <Field
-                  accept={ACCEPT_IMAGES}
-                  id="profileImage"
-                  name="profileImage"
-                  label={chooseAvatarLabel}
-                  type="file"
-                  form={null}
-                  uploadImageError={uploadImageError}
-                  disabled={uploadInProgress}
-                >
-                  {fieldProps => {
-                    const { accept, id, input, label, disabled, uploadImageError } = fieldProps;
-                    const { name, type } = input;
-                    const onChange = e => {
-                      const file = e.target.files[0];
-                      form.change(`profileImage`, file);
-                      form.blur(`profileImage`);
-                      if (file != null) {
-                        const tempId = `${file.name}_${Date.now()}`;
-                        onImageUpload({ id: tempId, file });
-                      }
-                    };
-
-                    let error = null;
-
-                    if (isUploadImageOverLimitError(uploadImageError)) {
-                      error = (
-                        <div className={css.error}>
-                          <FormattedMessage id="ProfileSettingsForm.imageUploadFailedFileTooLarge" />
-                        </div>
-                      );
-                    } else if (uploadImageError) {
-                      error = (
-                        <div className={css.error}>
-                          <FormattedMessage id="ProfileSettingsForm.imageUploadFailed" />
-                        </div>
-                      );
-                    }
-
-                    return (
-                      <div className={css.uploadAvatarWrapper}>
-                        <label className={css.label} htmlFor={id}>
-                          {label}
-                        </label>
-                        <input
-                          accept={accept}
-                          id={id}
-                          name={name}
-                          className={css.uploadAvatarInput}
-                          disabled={disabled}
-                          onChange={onChange}
-                          type={type}
-                        />
-                        {error}
-                      </div>
-                    );
-                  }}
-                </Field>
-                <div className={css.tip}>
-                  <FormattedMessage id="ProfileSettingsForm.tip" />
-                </div>
-                <div className={css.fileInfo}>
-                  <FormattedMessage id="ProfileSettingsForm.fileInfo" />
-                </div>
-              </div>
+              <AvatarField
+                user={user}
+                onImageUpload={onImageUpload}
+                profileImage={profileImage}
+                uploadImageError={uploadImageError}
+                uploadInProgress={uploadInProgress}
+                form={form}
+              />
               <div className={css.sectionContainer}>
                 <H4 as="h2" className={css.sectionTitle}>
                   <FormattedMessage id="ProfileSettingsForm.yourName" />
@@ -403,38 +191,48 @@ class ProfileSettingsFormComponent extends Component {
                 </p>
               </div>
 
-              {showApplyAsSellerField && (
-                <div className={classNames(css.sectionContainer)}>
-                  <H4 as="h2" className={css.sectionTitle}>
-                    <FormattedMessage id="ProfileSettingsForm.applyAsSellerHeading" />
-                  </H4>
-                  {showApplyAsSellerToggle && (
-                    <FieldBoolean
-                      id="applyAsSeller"
-                      name="applyAsSeller"
-                      label={applyAsSellerLabel}
-                      placeholder={applyAsSellerFieldPlaceholder}
-                    />
-                  )}
-                  <p className={css.extraInfo}>
-                    <FormattedMessage id={applyAsSellerInfoId} values={{ marketplaceName }} />
-                  </p>
-                </div>
-              )}
+              <ApplyAsSellerToggle userType={initialUserType} sellerStatus={sellerStatus} />
 
               <div className={classNames(css.sectionContainer, css.lastSection)}>
+                {applyAsSeller ? (
+                  <div className={css.customFields}>
+                    <FieldLocationAutocompleteInput
+                      rootClassName={css.locationAddress}
+                      inputClassName={css.locationAutocompleteInput}
+                      iconClassName={css.locationAutocompleteInputIcon}
+                      predictionsClassName={css.predictionsRoot}
+                      validClassName={css.validLocation}
+                      name="location"
+                      label={intl.formatMessage({ id: 'ConfirmSignupForm.address' })}
+                      placeholder={intl.formatMessage({
+                        id: 'ConfirmSignupForm.addressPlaceholder',
+                      })}
+                      useDefaultPredictions={false}
+                      format={identity}
+                      valueFromForm={values.location?.address}
+                      validate={validators.composeValidators(addressRequired, addressValid)}
+                    />
+                  </div>
+                ) : null}
+
                 {userFieldProps.map(fieldProps => {
                   const isBrandAdmin =
                     currentUser.attributes.profile.metadata.isBrandAdmin || false;
                   const fieldKey = fieldProps.fieldConfig.key;
-                  const showField = getBrandUserFieldInputs(userType, isBrandAdmin, fieldKey);
-                  return (
+                  const enableField = getUserTypeFieldInputs(
+                    userType,
+                    fieldKey,
+                    isBrandAdmin,
+                    !!applyAsSeller
+                  );
+                  const showField = isCreativeSeller(userType) ? enableField : true;
+                  return showField ? (
                     <CustomExtendedDataField
                       {...fieldProps}
                       formId={formId}
-                      disabled={!showField}
+                      disabled={!enableField}
                     />
-                  );
+                  ) : null;
                 })}
               </div>
               {submitError}

@@ -1,0 +1,6 @@
+.root {
+}
+
+.selectError {
+  border: var(--borderErrorField);
+}

@@ -50,11 +50,35 @@
 
 .fieldDisabled {
   background: none;
-  color: --colorGrey100;
+  color: var(--colorGrey100);
+}
+
+.fieldDatePicker {
+  flex-grow: 1;
 }
 
 .fieldDateInput {
-  flex-grow: 1;
+  width: calc(100% - 48px);
+  margin: 0 0 0 24px;
+
+  @media (--viewportMedium) {
+    width: 100%;
+    margin: 0;
+  }
+}
+.fieldDatePopup {
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+
+  @media (min-width: 320px) {
+    width: calc(100% - 48px);
+    margin: 0 24px;
+  }
+  @media (--viewportMedium) {
+    width: 100%;
+    margin: 0;
+  }
 }
 
 .fieldSelect {

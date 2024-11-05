@@ -216,7 +216,9 @@ function script() {
       twitterHandleUpdated ||
       vimeoHandleUpdated ||
       youtubeHandleUpdated;
-    if (profileListingUpdated) {
+    const withStudioAccess = !!studioId;
+    const shouldUpdateStudio = withStudioAccess && profileListingUpdated;
+    if (shouldUpdateStudio) {
       const studioManagerClient = new SMClient();
       await studioManagerClient.creatorProfileListingUpdate(studioId, {
         birthday,

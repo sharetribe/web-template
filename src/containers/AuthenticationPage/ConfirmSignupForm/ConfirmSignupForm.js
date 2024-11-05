@@ -12,6 +12,7 @@ import {
   getPropsForCustomUserFieldInputs,
   getBrandUserFieldInputs,
   isCreativeSeller,
+  isStudioBrand,
 } from '../../../util/userHelpers';
 import {
   Form,
@@ -178,11 +179,9 @@ const ConfirmSignupFormComponent = props => (
                 const { brandStudioId } = authInfo;
                 const isBrandAdmin = !brandStudioId;
                 const fieldKey = fieldProps.fieldConfig.key;
-                const showField = getBrandUserFieldInputs(
-                  preselectedUserType,
-                  isBrandAdmin,
-                  fieldKey
-                );
+                const showField = isStudioBrand(preselectedUserType)
+                  ? getBrandUserFieldInputs(fieldKey, isBrandAdmin)
+                  : true;
                 return showField ? (
                   <CustomExtendedDataField {...fieldProps} formId={formId} />
                 ) : null;
@@ -214,7 +213,7 @@ const ConfirmSignupFormComponent = props => (
           <div className={css.bottomWrapper}>
             {termsAndConditions}
             <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
-              <FormattedMessage id="ConfirmSignupForm.signUp" values={{ idp: idp }} />
+              <FormattedMessage id="ConfirmSignupForm.signUp" />
             </PrimaryButton>
           </div>
         </Form>
