@@ -218,6 +218,9 @@ export const DateRangePicker = props => {
     onKeyDown: handleOnKeyDownOnInput,
     ...(readOnly ? { readOnly } : {}),
   };
+  const inputClasses = classNames(css.input, inputClassName, {
+    [css.inputPlaceholder]: !value || value.length === 0,
+  });
 
   return (
     <OutsideClickHandler className={classes} onOutsideClick={handleBlur}>
@@ -226,7 +229,7 @@ export const DateRangePicker = props => {
           <div className={css.inputs}>
             <input
               id={startDateId}
-              className={classNames(css.input, inputClassName)}
+              className={inputClasses}
               placeholder={startDatePlaceholderText}
               value={dateRangeData.formatted[0] || ''}
               data-type={INPUT_START}
@@ -234,7 +237,7 @@ export const DateRangePicker = props => {
             />
             <input
               id={endDateId}
-              className={classNames(css.input, inputClassName)}
+              className={inputClasses}
               placeholder={endDatePlaceholderText}
               value={dateRangeData.formatted[1] || ''}
               data-type={INPUT_END}

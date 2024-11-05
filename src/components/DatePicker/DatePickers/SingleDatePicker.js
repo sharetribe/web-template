@@ -143,7 +143,7 @@ export const SingleDatePicker = props => {
         >
           <input
             id={id}
-            className={css.input}
+            className={classNames(css.input, { [css.inputPlaceholder]: !value })}
             placeholder={placeholderText}
             value={dateData.formatted}
             {...inputProps}
