@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+## [v6.1.0] 2024-11-06
+
 - [add] Add currently available translations for DE, ES, FR.
   [#495](https://github.com/sharetribe/web-template/pull/495)
 - [add] Add support for discarding draft listings on ManageListingsPage
@@ -24,6 +26,8 @@ way to update this template, but currently, we follow a pattern:
 - [change] Refactor SingleDatePicker and DateRangePicker by combining date and its formatting. It
   updates dateData if passed-in input value changes.
   [#492](https://github.com/sharetribe/web-template/pull/492)
+
+  [v6.1.0]: https://github.com/sharetribe/web-template/compare/v6.0.1...v6.1.0
 
 ## [v6.0.1] 2024-11-01
 
