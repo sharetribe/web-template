@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] Add support for discarding draft listings on ManageListingsPage
+  [474](https://github.com/sharetribe/web-template/pull/474)
 - [fix] ManageListingCard: Menu has a regression bug on mobile layout. Note: if Menu component needs
   to use full screenwidth on mobile, add preferScreenWidthOnMobile.
   [#494](https://github.com/sharetribe/web-template/pull/494)
