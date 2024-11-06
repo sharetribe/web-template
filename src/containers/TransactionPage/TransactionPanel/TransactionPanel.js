@@ -145,9 +145,9 @@ export class TransactionPanelComponent extends Component {
       customerObj,
       config,
       transactionId,
-      onSendMessage, // Add onSendMessage prop
+      onSendMessage, 
     } = this.props;
-   
+
     const isCustomer = transactionRole === 'customer';
     const isProvider = transactionRole === 'provider';
     const listingDeleted = !!listing?.attributes?.deleted;
@@ -301,7 +301,6 @@ export class TransactionPanelComponent extends Component {
             ) : null}
 {this.props.listing.id.uuid === '66dac9f8-e2e3-4611-a30c-64df1ef9ff68' ? (
   <div className={css.feedContainer}>
-    {/* Current logic for listing id 66dac9f8-e2e3-4611-a30c-64df1ef9ff68 */}
     {this.props.protectedData.fee?.length > 0 ? (
       <div>
         <strong>Taglie tappeto richieste:</strong>
@@ -319,7 +318,7 @@ export class TransactionPanelComponent extends Component {
                 feeLabel = 'Tappeto Large';
                 break;
               default:
-                feeLabel = ''; // Fallback in case there's an unexpected fee value
+                feeLabel = ''; 
             }
             return <li key={index}>{feeLabel}</li>;
           })}
@@ -331,13 +330,16 @@ export class TransactionPanelComponent extends Component {
 
     {this.props.protectedData.seatNames?.length > 0 ? (
       <div>
-        <strong>Nomi prenotazione:</strong>
+        <strong>Nomi prenotazione</strong>
         <ul>
-          {this.props.protectedData.seatNames.map((seat, index) => {
-            // Handle case where seat is an empty string or an array with an empty string
-            let seatName = seat && typeof seat === 'string' && seat.trim() !== '' ? seat : 'Cliente senza nome';
-            return <li key={index}>{seatName}</li>;
-          })}
+          {listingType === 'teambuilding' ? (
+            <li key={0}>{this.props.protectedData.seatNames[0] || ''}</li>
+          ) : (
+            this.props.protectedData.seatNames.map((seat, index) => {
+              let seatName = seat && typeof seat === 'string' && seat.trim() !== '' ? seat : 'Cliente senza nome';
+              return <li key={index}>{seatName}</li>;
+            })
+          )}
         </ul>
       </div>
     ) : (
@@ -351,11 +353,14 @@ export class TransactionPanelComponent extends Component {
       <div>
         <strong>Nomi prenotazione:</strong>
         <ul>
-          {this.props.protectedData.seatNames.map((seat, index) => {
-            // Handle case where seat is an empty string or an array with an empty string
-            let seatName = seat && typeof seat === 'string' && seat.trim() !== '' ? seat : 'Cliente senza nome';
-            return <li key={index}>{seatName}</li>;
-          })}
+          {listingType === 'teambuilding' ? (
+            <li key={0}>{this.props.protectedData.seatNames[0] || ''}</li>
+          ) : (
+            this.props.protectedData.seatNames.map((seat, index) => {
+              let seatName = seat && typeof seat === 'string' && seat.trim() !== '' ? seat : 'Cliente senza nome';
+              return <li key={index}>{seatName}</li>;
+            })
+          )}
         </ul>
       </div>
     ) : (
@@ -363,6 +368,7 @@ export class TransactionPanelComponent extends Component {
     )}
   </div>
 )}
+
 
 
 

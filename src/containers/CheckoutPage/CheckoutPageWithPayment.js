@@ -117,7 +117,6 @@ const getOrderParams = (pageData, shippingDetails, optionalPaymentParams, config
     ...optionalPaymentParams,
   };
 
-  console.log(orderParams);
   return orderParams;
 };
 

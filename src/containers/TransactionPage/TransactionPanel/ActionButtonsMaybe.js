@@ -30,21 +30,24 @@ const ActionButtonsMaybe = props => {
   const buttonsDisabled = primaryButtonProps?.inProgress || secondaryButtonProps?.inProgress;
 
   const insertBooking = async obj => {
+
+  
     const { eventgeoLocation = { lat: null, lng: null }, ...rest } = obj;
     const { lat, lng } = eventgeoLocation;
-
+  
     const newObj = {
       ...rest,
       latitude: lat,
       longitude: lng,
     };
-
-    const { data, error } = await supabase.from('bookings').insert([newObj]); // Note: We're passing newObj here
-
-    if (error) {
-      console.error('Error inserting booking into Supabase:', error);
+  
+    try {
+      const { data, error } = await supabase.from('bookings').insert([newObj]);
+    } catch (err) {
+      console.error('Unexpected error inserting booking:', err);
     }
   };
+  
 
   const handlePrimaryButtonClick = () => {
     if (isProvider) {
