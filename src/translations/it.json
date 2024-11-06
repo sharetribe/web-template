@@ -824,6 +824,8 @@
     "ShippingDetails.stateLabel": "Stato {optionalText}",
     "ShippingDetails.statePlaceholder": "Inserisci il tuo stato",
     "ShippingDetails.title": "Indirizzo di spedizione",
+    "SignupForm.displayNameLabel": "Nome del Business",
+    "SignupForm.displayNamePlaceholder":"Arts&Pants",
     "SignupForm.emailInvalid": "È richiesto un indirizzo email valido.",
     "SignupForm.emailLabel": "Email",
     "SignupForm.emailPlaceholder": "jane.doe@example.com",
