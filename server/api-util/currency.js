@@ -21,26 +21,25 @@ const isSafeNumber = decimalValue => {
 // See: https://en.wikipedia.org/wiki/ISO_4217
 // See: https://stripe.com/docs/currencies
 const subUnitDivisors = {
-  AUD: 100,
-  BGN: 100,
-  CAD: 100,
-  CHF: 100,
-  CNY: 100,
-  CZK: 100,
-  DKK: 100,
-  EUR: 100,
-  GBP: 100,
-  HKD: 100,
-  INR: 100,
-  JPY: 1,
-  MXN: 100,
-  NOK: 100,
-  NZD: 100,
-  PLN: 100,
-  RON: 100,
-  SEK: 100,
-  SGD: 100,
-  USD: 100,
+  AUD: 100, // Australian dollar
+  BGN: 100, // Bulgarian lev
+  CAD: 100, // Canadian dollar
+  CHF: 100, // Swiss franc
+  CZK: 100, // Czech koruna
+  DKK: 100, // Danish krone
+  EUR: 100, // Euro
+  GBP: 100, // British pound
+  HKD: 100, // Hong Kong dollar
+  INR: 100, // Indian rupee
+  JPY: 1, // Japanese yen
+  MXN: 100, // Mexican peso
+  NOK: 100, // Norwegian krone
+  NZD: 100, // New Zealand dollar
+  PLN: 100, // Polish złoty
+  RON: 100, // Romanian leu
+  SEK: 100, // Swedish krona
+  SGD: 100, // Singapore dollar
+  USD: 100, // United States dollar
 };
 
 // Get the minor unit divisor for the given currency
