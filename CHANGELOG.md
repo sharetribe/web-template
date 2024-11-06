@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] ManageListingCard: Menu has a regression bug on mobile layout. Note: if Menu component needs
+  to use full screenwidth on mobile, add preferScreenWidthOnMobile.
+  [#494](https://github.com/sharetribe/web-template/pull/494)
 - [change] Refactor SingleDatePicker and DateRangePicker by combining date and its formatting. It
   updates dateData if passed-in input value changes.
   [#492](https://github.com/sharetribe/web-template/pull/492)
