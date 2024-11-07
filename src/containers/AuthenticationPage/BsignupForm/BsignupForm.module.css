@@ -10,9 +10,6 @@
   }
 }
 
-.defaultUserFields {
-}
-
 .name {
   display: flex;
   justify-content: space-between;
@@ -23,13 +20,19 @@
   }
 }
 
-.row,
-.customFields {
-  margin-top: 24px;
+.successMessage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+  font-size: 24px;
+}
 
-  @media (--viewportMedium) {
-    margin-top: 32px;
-  }
+.successContent {
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
 }
 
 .firstNameRoot {
@@ -46,11 +49,4 @@
 
 .bottomWrapper {
   composes: marketplaceModalBottomWrapper from global;
-}
-
-.finePrint {
-  composes: marketplaceModalHelperLink from global;
-  padding: 3px 0 5px 0;
-  text-align: left;
-  margin-bottom: 10px;
 }

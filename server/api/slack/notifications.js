@@ -6,12 +6,18 @@ const SLACK_WEBHOOK_URL = process.env.REACT_APP_SLACK_WEBHOOK_URL;
 
 module.exports = async (req, res) => {
   try {
-    const { firstName, lastName, email, role, isNewsletter } = req.body;
-    console.log('Sending notification to Slack:', firstName, lastName, email, role, isNewsletter);
-
-    const slackMessage = {
+    let slackMessage;
+    const { firstName, lastName, name, email, website, role, isNewsletter, isProvider } = req.body;
+    
+    if(isProvider){
+    slackMessage = {
+        text: `New Business request: \nCompany Name:${name}\nEmail: ${email}\n`,
+    };
+    }else{
+    slackMessage = {
       text: `New signup: \nFirstName:${firstName} \nLastName:${lastName}\nEmail: ${email}\nRole: ${role}\nSubscribed to Newsletter: ${isNewsletter ? 'Yes' : 'No'}`,
     };
+    }
 
     const response = await axios.post(SLACK_WEBHOOK_URL, slackMessage);
 

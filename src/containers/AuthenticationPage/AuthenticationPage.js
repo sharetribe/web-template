@@ -43,7 +43,7 @@ import TermsAndConditions from './TermsAndConditions/TermsAndConditions';
 import ConfirmSignupForm from './ConfirmSignupForm/ConfirmSignupForm';
 import LoginForm from './LoginForm/LoginForm';
 import SignupForm from './SignupForm/SignupForm';
-//import BSignupForm from './BSignupForm/BSignupForm';
+import BsignupForm from './BsignupForm/BsignupForm';
 import EmailVerificationInfo from './EmailVerificationInfo';
 
 // We need to get ToS asset and get it rendered for the modal on this page.
@@ -205,16 +205,6 @@ export function AuthenticationForms(props) {
         to: fromState,
       },
     },
-    /*
-    {
-      text: <Heading as='h2' rootClassName={css.tab}>Business Sign up</Heading>,
-      selected: tab === 'bsignup', 
-      linkProps: {
-        name: 'bSignupPage',
-        to: fromState,
-      },
-    },
-    */
   ];
 
   const handleSubmitSignup = async (values) => {
@@ -332,7 +322,6 @@ export function AuthenticationForms(props) {
 
   return (
     <div className={css.content}>
-      {/* Conditionally render navigation tabs only for regular signup or login, not for bsignup */}
       {tab !== 'bsignup' && <LinkTabNavHorizontal className={css.tabs} tabs={tabs} />}
 
       {loginOrSignupError}
@@ -350,16 +339,15 @@ export function AuthenticationForms(props) {
         userFields={userFields}
       />
       ) : tab === 'bsignup' ? (
-        {/*<BSignupForm
+        <BsignupForm
           className={css.bsignupForm}
           onSubmit={values => handleSubmitSignup(values)}
           inProgress={authInProgress}
           termsAndConditions={termsAndConditions}
-        />*/}
+        />
   
       ) : null}
 
-      {/* Conditionally render SocialLoginButtonsMaybe only if not bsignup */}
       {tab !== 'bsignup' && (
        <SocialLoginButtonsMaybe
        isLogin={isLogin}
