@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] Add support for currencies not supported by Stripe in inquiry processes.
+  [#493](https://github.com/sharetribe/web-template/pull/493)
 - SingeDatePicker: don't update value to dateData if it has the same timestamp has not changed.
   [#507](https://github.com/sharetribe/web-template/pull/507)
 - [change] Node v23.2 is failing. This adds engine rule for node (">=18.20.1 <23.2.0") for now.
@@ -37,6 +39,7 @@ way to update this template, but currently, we follow a pattern:
 - [fix] Open discard modal on ManageListingsPage only if scrolling is disabled. Fixes an issue where
   opening the discard draft modal on mobile scrolled the page to the very bottom.
   [#497](https://github.com/sharetribe/web-template/pull/497)
+
 
 ## [v6.1.0] 2024-11-06
 
