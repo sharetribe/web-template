@@ -18,6 +18,7 @@ const transitionPrivileged = require('./api/transition-privileged');
 const moment = require('moment');
 const createUserWithIdp = require('./api/auth/createUserWithIdp');
 const invoice = require('./api/brevo/invoice');
+const notifications = require('./api/slack/notifications.js');
 const notifyInvoice = require('./api/brevo/notifyinvoice');
 const inquiryEvent = require('./api/brevo/event');
 const newsLetter = require('./api/brevo/newsletter');
@@ -65,6 +66,7 @@ router.post('/brevo/newsletter', newsLetter);
 router.post('/brevo/event', inquiryEvent);
 router.post('/brevo/invoice', invoice);
 router.post('/stripe/refund', refund);
+router.post('/slack/notifications', notifications);
 // Create user with identity provider (e.g. Facebook or Google)
 // This endpoint is called to create a new user after user has confirmed
 // they want to continue with the data fetched from IdP (e.g. name and email)

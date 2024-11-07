@@ -6,7 +6,7 @@ import { withRouter, Redirect } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import classNames from 'classnames';
 import isEmpty from 'lodash/isEmpty';
-
+import { slackNotifications } from '../../util/api';
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { camelize } from '../../util/string';
@@ -36,28 +36,31 @@ import {
   LayoutSingleColumn,
 } from '../../components';
 
-import TopbarContainer from '../TopbarContainer/TopbarContainer';
-import FooterContainer from '../FooterContainer/FooterContainer';
+import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import TermsAndConditions from './TermsAndConditions/TermsAndConditions';
 import ConfirmSignupForm from './ConfirmSignupForm/ConfirmSignupForm';
 import LoginForm from './LoginForm/LoginForm';
 import SignupForm from './SignupForm/SignupForm';
+//import BSignupForm from './BSignupForm/BSignupForm';
 import EmailVerificationInfo from './EmailVerificationInfo';
 
 // We need to get ToS asset and get it rendered for the modal on this page.
-import { TermsOfServiceContent } from '../TermsOfServicePage/TermsOfServicePage';
+import { TermsOfServiceContent } from '../../containers/TermsOfServicePage/TermsOfServicePage';
 
 // We need to get PrivacyPolicy asset and get it rendered for the modal on this page.
-import { PrivacyPolicyContent } from '../PrivacyPolicyPage/PrivacyPolicyPage';
-
+import { PrivacyPolicyContent } from '../../containers/PrivacyPolicyPage/PrivacyPolicyPage';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
-
 import { TOS_ASSET_NAME, PRIVACY_POLICY_ASSET_NAME } from './AuthenticationPage.duck';
-
+import { createClient } from '@supabase/supabase-js';
 import css from './AuthenticationPage.module.css';
 import { FacebookLogo, GoogleLogo } from './socialLoginLogos';
+import { newsletter } from '../../util/api';
 
+const supabaseUrl = 'https://tivsrbykzsmbrkmqqwwd.supabase.co';
+const supabaseKey = process.env.REACT_APP_SUPABASE_KEY; 
+const supabase = createClient(supabaseUrl, supabaseKey);
 // Social login buttons are needed by AuthenticationForms
 export function SocialLoginButtonsMaybe(props) {
   const routeConfiguration = useRouteConfiguration();
@@ -131,6 +134,7 @@ export function SocialLoginButtonsMaybe(props) {
       ) : null}
     </div>
   ) : null;
+  
 }
 
 const getNonUserFieldParams = (values, userFieldConfigs) => {
@@ -151,6 +155,7 @@ const getNonUserFieldParams = (values, userFieldConfigs) => {
 // Tabs for SignupForm and LoginForm
 export function AuthenticationForms(props) {
   const {
+    tab,
     isLogin,
     showFacebookLogin,
     showGoogleLogin,
@@ -173,6 +178,7 @@ export function AuthenticationForms(props) {
   const signupRouteName = preselectedUserType ? 'SignupForUserTypePage' : 'SignupPage';
   const userTypeMaybe = preselectedUserType ? { userType: preselectedUserType } : null;
   const fromState = { state: { ...fromMaybe, ...userTypeMaybe } };
+
   const tabs = [
     {
       text: (
@@ -199,17 +205,41 @@ export function AuthenticationForms(props) {
         to: fromState,
       },
     },
+    /*
+    {
+      text: <Heading as='h2' rootClassName={css.tab}>Business Sign up</Heading>,
+      selected: tab === 'bsignup', 
+      linkProps: {
+        name: 'bSignupPage',
+        to: fromState,
+      },
+    },
+    */
   ];
 
-  const handleSubmitSignup = (values) => {
-    const { userType, email, password, fname, lname, displayName, ...rest } = values;
-    const displayNameMaybe = displayName ? { displayName: displayName.trim() } : {};
+  const handleSubmitSignup = async (values) => {
+    const role = tab === 'bsignup' ? 'provider' : 'customer';
 
+    const {
+      userType,
+      email,
+      password,
+      fname = '', 
+      lname = '', 
+      iNL: isNewsletter,
+      displayName,
+      ...rest
+    } = values;
+
+    const firstName = typeof fname === 'string' ? fname.trim() : '';
+    const lastName = typeof lname === 'string' ? lname.trim() : '';
+    const displayNameMaybe = displayName ? { displayName: displayName.trim() } : {};
+  
     const params = {
       email,
       password,
-      firstName: fname.trim(),
-      lastName: lname.trim(),
+      firstName,
+      lastName,
       ...displayNameMaybe,
       publicData: {
         userType,
@@ -224,15 +254,56 @@ export function AuthenticationForms(props) {
       },
     };
 
-    submitSignup(params);
-  };
+    try {
+      const payloadMessage = {
+        firstName,
+        lastName,
+        email,
+        role,
+        isNewsletter,
+        isSignup: true,
+      };
+      await slackNotifications(payloadMessage)
+        .then(() => {
+          console.log('Slack message sent');
+        })
+        .catch((error) => {
+          alert(`Failed to send Slack message: ${error.message}`);
+          throw error; 
+        });
+      if (isNewsletter) {
+        await newsletter(payloadMessage)
+          .then(() => {
+            console.log('Newsletter sent');
+          })
+          .catch((error) => {
+            alert(`Failed to send newsletter: ${error.message}`);
+            throw error; 
+          });
+        const { data, error } = await supabase
+          .from('newsletter')
+          .insert([{ email }])
+          .select();
+    
+        if (error) {
+          alert(`Error inserting email into Supabase: ${error.message}`);
+          throw new Error(error.message); 
+        } else {
+          console.log('Inserted email into Supabase');
+        }
+      }
+      submitSignup(params);
+    } catch (error) {
+      alert(`An error occurred during the signup process: ${error.message}`);
+    }
+    
+  }
 
   const loginErrorMessage = (
     <div className={css.error}>
       <FormattedMessage id="AuthenticationPage.loginFailed" />
     </div>
   );
-
   const idpAuthErrorMessage = (
     <div className={css.error}>
       <FormattedMessage id="AuthenticationPage.idpAuthFailed" />
@@ -249,6 +320,7 @@ export function AuthenticationForms(props) {
     </div>
   );
 
+
   const loginOrSignupError =
     isLogin && !!idpAuthError
       ? idpAuthErrorMessage
@@ -260,37 +332,50 @@ export function AuthenticationForms(props) {
 
   return (
     <div className={css.content}>
-      <LinkTabNavHorizontal className={css.tabs} tabs={tabs} />
+      {/* Conditionally render navigation tabs only for regular signup or login, not for bsignup */}
+      {tab !== 'bsignup' && <LinkTabNavHorizontal className={css.tabs} tabs={tabs} />}
+
       {loginOrSignupError}
 
       {isLogin ? (
         <LoginForm className={css.loginForm} onSubmit={submitLogin} inProgress={authInProgress} />
-      ) : (
+      ) : tab === 'signup' ? (
         <SignupForm
-          className={css.signupForm}
-          onSubmit={handleSubmitSignup}
+        className={css.signupForm}
+        onSubmit={handleSubmitSignup}
+        inProgress={authInProgress}
+        termsAndConditions={termsAndConditions}
+        preselectedUserType={preselectedUserType}
+        userTypes={userTypes}
+        userFields={userFields}
+      />
+      ) : tab === 'bsignup' ? (
+        {/*<BSignupForm
+          className={css.bsignupForm}
+          onSubmit={values => handleSubmitSignup(values)}
           inProgress={authInProgress}
           termsAndConditions={termsAndConditions}
-          preselectedUserType={preselectedUserType}
-          userTypes={userTypes}
-          userFields={userFields}
-        />
-      )}
+        />*/}
+  
+      ) : null}
 
-      <SocialLoginButtonsMaybe
-        isLogin={isLogin}
-        showFacebookLogin={showFacebookLogin}
-        showGoogleLogin={showGoogleLogin}
-        {...fromMaybe}
-        {...userTypeMaybe}
-      />
+      {/* Conditionally render SocialLoginButtonsMaybe only if not bsignup */}
+      {tab !== 'bsignup' && (
+       <SocialLoginButtonsMaybe
+       isLogin={isLogin}
+       showFacebookLogin={showFacebookLogin}
+       showGoogleLogin={showGoogleLogin}
+       {...fromMaybe}
+       {...userTypeMaybe}
+     />
+      )}
     </div>
   );
-}
+};
 
 // Form for confirming information from IdP (e.g. Facebook)
 // This is shown before new user is created to Marketplace API
-function ConfirmIdProviderInfoForm(props) {
+const ConfirmIdProviderInfoForm = props => {
   const {
     userType,
     authInfo,
@@ -303,49 +388,41 @@ function ConfirmIdProviderInfoForm(props) {
   const { userFields, userTypes } = config.user;
   const preselectedUserType =
     userTypes.find((conf) => conf.userType === userType)?.userType || null;
+  const idp = authInfo ? authInfo.idpId.replace(/^./, str => str.toUpperCase()) : null;
 
-  const idp = authInfo ? authInfo.idpId.replace(/^./, (str) => str.toUpperCase()) : null;
-
-  const handleSubmitConfirm = (values) => {
+  const handleSubmitConfirm = values => {
     const { idpToken, email, firstName, lastName, idpId } = authInfo;
-
-    const {
-      userType,
-      email: newEmail,
-      firstName: newFirstName,
-      lastName: newLastName,
-      displayName,
-      ...rest
-    } = values;
-
+    const {  userType,      displayName, email: newEmail, firstName: newFirstName, lastName: newLastName, ...rest } = values;
     const displayNameMaybe = displayName ? { displayName: displayName.trim() } : {};
 
     // Pass email, fistName or lastName to Marketplace API only if user has edited them
-    // and they can't be fetched directly from idp provider (e.g. Facebook)
+    // sand they can't be fetched directly from idp provider (e.g. Facebook)
 
     const authParams = {
       ...(newEmail !== email && { email: newEmail }),
       ...(newFirstName !== firstName && { firstName: newFirstName }),
       ...(newLastName !== lastName && { lastName: newLastName }),
     };
+        // Pass other values as extended data according to user field configuration
+        const extendedDataMaybe = !isEmpty(rest)
+        ? {
+            publicData: {
+              userType,
+              ...pickUserFieldsData(rest, 'public', userType, userFields),
+            },
+            privateData: {
+              ...pickUserFieldsData(rest, 'private', userType, userFields),
+            },
+            protectedData: {
+              ...pickUserFieldsData(rest, 'protected', userType, userFields),
+              // If the confirm form has any additional values, pass them forward as user's protected data
+              ...getNonUserFieldParams(rest, userFields),
+            },
+          }
+        : {};
 
-    // Pass other values as extended data according to user field configuration
-    const extendedDataMaybe = !isEmpty(rest)
-      ? {
-          publicData: {
-            userType,
-            ...pickUserFieldsData(rest, 'public', userType, userFields),
-          },
-          privateData: {
-            ...pickUserFieldsData(rest, 'private', userType, userFields),
-          },
-          protectedData: {
-            ...pickUserFieldsData(rest, 'protected', userType, userFields),
-            // If the confirm form has any additional values, pass them forward as user's protected data
-            ...getNonUserFieldParams(rest, userFields),
-          },
-        }
-      : {};
+    // If the confirm form has any additional values, pass them forward as user's protected data
+    const protectedData = !isEmpty(rest) ? { ...rest } : null;
 
     submitSingupWithIdp({
       idpToken,
@@ -389,9 +466,9 @@ function ConfirmIdProviderInfoForm(props) {
       />
     </div>
   );
-}
+};
 
-export function AuthenticationOrConfirmInfoForm(props) {
+export const AuthenticationOrConfirmInfoForm = props => {
   const {
     tab,
     userType,
@@ -413,38 +490,39 @@ export function AuthenticationOrConfirmInfoForm(props) {
   const isLogin = tab === 'login';
 
   return isConfirm ? (
-    <ConfirmIdProviderInfoForm
-      userType={userType}
-      authInfo={authInfo}
-      submitSingupWithIdp={submitSingupWithIdp}
-      authInProgress={authInProgress}
-      confirmError={confirmError}
-      termsAndConditions={termsAndConditions}
+    <ConfirmIdProviderInfoForm      
+    userType={userType}
+    authInfo={authInfo}
+    submitSingupWithIdp={submitSingupWithIdp}
+    authInProgress={authInProgress}
+    confirmError={confirmError}
+    termsAndConditions={termsAndConditions}
     />
   ) : (
     <AuthenticationForms
-      isLogin={isLogin}
-      showFacebookLogin={showFacebookLogin}
-      showGoogleLogin={showGoogleLogin}
-      userType={userType}
-      from={from}
-      loginError={loginError}
-      idpAuthError={idpAuthError}
-      signupError={signupError}
-      submitLogin={submitLogin}
-      authInProgress={authInProgress}
-      submitSignup={submitSignup}
-      termsAndConditions={termsAndConditions}
-    />
+    tab={tab}
+    isLogin={isLogin}
+    showFacebookLogin={showFacebookLogin}
+    showGoogleLogin={showGoogleLogin}
+    userType={userType}
+    from={from}
+    loginError={loginError}
+    idpAuthError={idpAuthError}
+    signupError={signupError}
+    submitLogin={submitLogin}
+    authInProgress={authInProgress}
+    submitSignup={submitSignup}
+    termsAndConditions={termsAndConditions}
+  />
   );
-}
+};
 
 const getAuthInfoFromCookies = () =>
   Cookies.get('st-authinfo') ? JSON.parse(Cookies.get('st-authinfo').replace('j:', '')) : null;
 const getAuthErrorFromCookies = () =>
   Cookies.get('st-autherror') ? JSON.parse(Cookies.get('st-autherror').replace('j:', '')) : null;
 
-export function AuthenticationPageComponent(props) {
+export const AuthenticationPageComponent = props => {
   const [tosModalOpen, setTosModalOpen] = useState(false);
   const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
   const [authInfo, setAuthInfo] = useState(getAuthInfoFromCookies());
@@ -508,6 +586,7 @@ export function AuthenticationPageComponent(props) {
   const user = ensureCurrentUser(currentUser);
   const currentUserLoaded = !!user.id;
   const isLogin = tab === 'login';
+  const userRole = currentUser?.attributes?.profile?.publicData?.role;
 
   // We only want to show the email verification dialog in the signup
   // tab if the user isn't being redirected somewhere else
@@ -583,20 +662,20 @@ export function AuthenticationPageComponent(props) {
             />
           ) : (
             <AuthenticationOrConfirmInfoForm
-              tab={tab}
-              userType={userType}
-              authInfo={authInfo}
-              from={from}
-              showFacebookLogin={!!process.env.REACT_APP_FACEBOOK_APP_ID}
-              showGoogleLogin={!!process.env.REACT_APP_GOOGLE_CLIENT_ID}
-              submitLogin={submitLogin}
-              submitSignup={submitSignup}
-              submitSingupWithIdp={submitSingupWithIdp}
-              authInProgress={authInProgress}
-              loginError={loginError}
-              idpAuthError={authError}
-              signupError={signupError}
-              confirmError={confirmError}
+            tab={tab}
+            userType={userType}
+            authInfo={authInfo}
+            from={from}
+            showFacebookLogin={!!process.env.REACT_APP_FACEBOOK_APP_ID}
+            showGoogleLogin={!!process.env.REACT_APP_GOOGLE_CLIENT_ID}
+            submitLogin={submitLogin}
+            submitSignup={submitSignup}
+            submitSingupWithIdp={submitSingupWithIdp}
+            authInProgress={authInProgress}
+            loginError={loginError}
+            idpAuthError={authError}
+            signupError={signupError}
+            confirmError={confirmError}
               termsAndConditions={
                 <TermsAndConditions
                   onOpenTermsOfService={() => setTosModalOpen(true)}
@@ -640,7 +719,7 @@ export function AuthenticationPageComponent(props) {
       </Modal>
     </Page>
   );
-}
+};
 
 AuthenticationPageComponent.defaultProps = {
   currentUser: null,
@@ -669,7 +748,7 @@ AuthenticationPageComponent.propTypes = {
 
   submitLogin: func.isRequired,
   submitSignup: func.isRequired,
-  tab: oneOf(['login', 'signup', 'confirm']),
+  tab: oneOf(['login', 'signup', 'confirm', 'bsignup']),
 
   sendVerificationEmailInProgress: bool.isRequired,
   sendVerificationEmailError: propTypes.error,
@@ -728,10 +807,10 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   submitLogin: ({ email, password }) => dispatch(login(email, password)),
-  submitSignup: (params) => dispatch(signup(params)),
-  submitSingupWithIdp: (params) => dispatch(signupWithIdp(params)),
+  submitSignup: params => dispatch(signup(params)),
+  submitSingupWithIdp: params => dispatch(signupWithIdp(params)),
   onResendVerificationEmail: () => dispatch(sendVerificationEmail()),
   onManageDisableScrolling: (componentId, disableScrolling) =>
     dispatch(manageDisableScrolling(componentId, disableScrolling)),
