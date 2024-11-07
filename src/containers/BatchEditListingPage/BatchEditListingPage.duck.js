@@ -91,13 +91,6 @@ function uppyFileToListing(file) {
   };
 }
 
-function getCategory(file) {
-  const isVideo = file.type.startsWith('video/');
-  if (file.isAi) return isVideo ? 'ai-video' : 'ai-image';
-  if (file.isIllustration) return 'illustrations';
-  return isVideo ? 'videos' : 'photos';
-}
-
 function validateListingProperties(listing) {
   const requiredProperties = ['category', 'title', 'description', 'price'];
   const missingProperties = [];
@@ -141,6 +134,8 @@ export const ADD_FAILED_LISTING = 'app/BatchEditListingPage/ADD_FAILED_LISTING';
 export const ADD_SUCCESSFUL_LISTING = 'app/BatchEditListingPage/ADD_SUCCESSFUL_LISTING';
 
 export const RESET_STATE = 'app/BatchEditListingPage/RESET_STATE';
+export const SET_CURRENT_LISTINGS_CATEGORY =
+  'app/BatchEditListingPage/SET_CURRENT_LISTINGS_CATEGORY';
 
 // ================ Reducer ================ //
 const initialState = {
@@ -160,6 +155,7 @@ const initialState = {
   userId: null,
   failedListings: [],
   successfulListings: [],
+  listingCategory: null,
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -168,6 +164,8 @@ export default function reducer(state = initialState, action = {}) {
   switch (type) {
     case SET_USER_ID:
       return { ...state, userId: payload };
+    case SET_CURRENT_LISTINGS_CATEGORY:
+      return { ...state, listingCategory: payload };
     case INITIALIZE_UPPY:
       return { ...state, uppy: payload.uppy, listings: payload.files };
     case ADD_FILE:
@@ -261,6 +259,7 @@ export default function reducer(state = initialState, action = {}) {
 
 // ============== Selector =============== //
 export const getUppyInstance = state => state.BatchEditListingPage.uppy;
+export const getListingCategory = state => state.BatchEditListingPage.listingCategory;
 export const getListings = state => state.BatchEditListingPage.listings;
 export const getSingleListing = (state, id) =>
   state.BatchEditListingPage.listings.find(l => l.id === id);
@@ -302,14 +301,15 @@ function handleTransloaditResultComplete(dispatch, getState, sdk) {
     const listing = getSingleListing(getState(), localId);
 
     try {
-      const uppyFile = uppyInstance.getFile(localId);
       const price = Number(listing.price) * 100;
+      const category = getListingCategory(getState());
+
       const listingData = {
         title: listing.title,
         description: listing.description,
         publicData: {
           listingType: 'product-listing',
-          categoryLevel1: getCategory(uppyFile),
+          categoryLevel1: category,
           imageryCategory: listing.category,
           usage: listing.usage,
           releases: listing.releases,
@@ -477,9 +477,8 @@ export function requestSaveBatchListings() {
 }
 
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
-  const fetchCurrentUserOptions = {
-    updateNotifications: false,
-  };
+  const { category } = params;
+  dispatch({ type: SET_CURRENT_LISTINGS_CATEGORY, payload: category });
 
   const imageryCategoryOptions = getListingFieldOptions(config, 'imageryCategory');
   const usageOptions = getListingFieldOptions(config, 'usage');
@@ -493,6 +492,9 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
     },
   });
 
+  const fetchCurrentUserOptions = {
+    updateNotifications: false,
+  };
   return dispatch(fetchCurrentUser(fetchCurrentUserOptions))
     .then(response => {
       dispatch({ type: SET_USER_ID, payload: response.id });

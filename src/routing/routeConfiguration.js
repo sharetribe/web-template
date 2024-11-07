@@ -137,18 +137,7 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       loadData: pageDataLoadingAPI.EditListingPage.loadData,
     },
     {
-      path: '/listing/new',
-      name: 'NewListingPage',
-      auth: true,
-      component: () => (
-        <NamedRedirect
-          name="BatchEditListingPage"
-          params={{ slug: draftSlug, id: draftId, type: 'new', tab: 'upload' }}
-        />
-      ),
-    },
-    {
-      path: '/listing/:tab',
+      path: '/listing/:category/:type/:tab',
       name: 'BatchEditListingPage',
       auth: true,
       component: BatchEditListingPage,

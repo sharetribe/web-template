@@ -28,8 +28,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { closeListing, getOwnListingsById, openListing } from './ManageListingsPage.duck';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
-
-const { TabPane } = Tabs;
+import { LISTING_TYPES } from '../../util/types';
 
 const Heading = props => {
   const { listingsAreLoaded, pagination } = props;
@@ -61,7 +60,7 @@ const PaginationLinksMaybe = props => {
   ) : null;
 };
 
-function getSearch(category, listingType = 'product-listing') {
+function getSearch(category, listingType = LISTING_TYPES.PRODUCT) {
   const params = new URLSearchParams();
   params.set('pub_categoryLevel1', category);
   params.set('pub_listingType', listingType);
@@ -90,7 +89,9 @@ export const ManageListingsPageComponent = props => {
     scrollingDisabled,
     categories,
   } = props;
-  const currentListingType = queryParams.pub_listingType || 'product-listing';
+  const currentListingType = queryParams.pub_listingType || LISTING_TYPES.PRODUCT;
+  const currentCategoryType = queryParams.pub_categoryLevel1 || categories[0].id;
+
   useEffect(() => {
     if (isErrorNoPermissionToPostListings(openingListingError?.error)) {
       const noAccessPagePath = pathByRouteName('NoAccessPage', routeConfiguration, {
@@ -159,6 +160,8 @@ export const ManageListingsPageComponent = props => {
 
   const goToCreateListing = () => {
     const destination = createResourceLocatorString('BatchEditListingPage', routeConfiguration, {
+      category: currentCategoryType,
+      type: 'new',
       tab: 'upload',
     });
     history.push(destination);
@@ -172,14 +175,14 @@ export const ManageListingsPageComponent = props => {
             direction="horizontal"
             size="middle"
             className={css.productTypeFilters}
-            hidden={currentListingType !== 'product-listing'}
+            hidden={currentListingType !== LISTING_TYPES.PRODUCT}
           >
             {categories.map(category => (
               <NamedLink
                 name="ManageListingsPage"
-                active={queryParams.pub_categoryLevel1 === category.id}
+                active={currentCategoryType === category.id}
                 activeClassName={css.filterLinkActive}
-                to={{ search: getSearch(category.id, queryParams.pub_listingType) }}
+                to={{ search: getSearch(category.id, currentListingType) }}
               >
                 {category.name}
               </NamedLink>
@@ -245,9 +248,9 @@ export const ManageListingsPageComponent = props => {
               defaultActiveKey={currentListingType}
               onChange={onTabChange}
               items={[
-                { key: 'product-listing', label: 'Shop', children: listingRenderer },
-                { key: 'service-listing', label: 'Services', children: listingRenderer },
-                { key: 'portfolio-showcase', label: 'Portfolio', children: listingRenderer },
+                { key: LISTING_TYPES.PRODUCT, label: 'Shop', children: listingRenderer },
+                { key: LISTING_TYPES.SERVICE, label: 'Services', children: listingRenderer },
+                { key: LISTING_TYPES.PORTFOLIO, label: 'Portfolio', children: listingRenderer },
               ]}
             ></Tabs>
           </div>

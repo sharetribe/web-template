@@ -1,6 +1,7 @@
 const { generateScript, integrationSdkInit } = require('../../api-util/scriptManager');
 const { StorageManagerClient } = require('../../api-util/storageManagerHelper');
 const { httpFileUrlToStream } = require('../../api-util/httpHelpers');
+const { LISTING_TYPES } = require('../../api-util/metadataHelper');
 
 const SCRIPT_NAME = 'notifyProductListingCreated';
 const EVENT_TYPES = 'listing/created';
@@ -14,8 +15,9 @@ const processEvent = async (integrationSdk, event, storageManagerClient) => {
   const userId = relationships?.author?.data?.id?.uuid;
   const listingId = resourceId?.uuid;
   const imageUrl = listing?.privateData?.transloaditSslUrl;
+  const isProductListing = listing?.publicData?.listingType === LISTING_TYPES.PRODUCT;
 
-  if (!imageUrl || !userId || !listingId) return;
+  if (!imageUrl || !userId || !listingId || !isProductListing) return;
 
   try {
     const originalAssetData = await storageManagerClient.uploadOriginalAsset(

@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button, notification, Result } from 'antd';
 import { createResourceLocatorString } from '../../../util/routes';
 import * as PropTypes from 'prop-types';
+import { useParams } from 'react-router-dom';
 
 function getTabsStatus(fileCount) {
   return {
@@ -31,6 +32,7 @@ function BatchEditListingResult(props) {
   const { routeConfiguration, history } = props;
   const dispatch = useDispatch();
   const { failedListings, successfulListings, selectedRowsKeys } = useSelector(getPublishingData);
+  const { category: currentCategory } = useParams();
 
   const { status, title, subtitle } = useMemo(() => {
     if (successfulListings.length > 0 && failedListings.length > 0) {
@@ -72,10 +74,7 @@ function BatchEditListingResult(props) {
       extra={[
         <Button type="primary" key="console" onClick={() => redirectTo('ManageListingsPage')}>
           View listings
-        </Button>,
-        <Button key="buy" onClick={() => redirectTo('BatchEditListingPage', { tab: 'upload' })}>
-          Create more listings
-        </Button>,
+        </Button>
       ]}
     />
   );

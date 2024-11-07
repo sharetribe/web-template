@@ -4,8 +4,6 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { injectIntl } from '../../util/reactIntl';
 import {
-  LISTING_PAGE_PARAM_TYPE_DRAFT,
-  LISTING_PAGE_PARAM_TYPE_NEW,
   NO_ACCESS_PAGE_POST_LISTINGS,
   NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
 } from '../../util/urlHelpers';
@@ -19,12 +17,8 @@ import BatchEditListingWizard from './BatchEditListingWizard/BatchEditListingWiz
 
 export const BatchEditListingPageComponent = props => {
   const { currentUser, history, intl, params, page, onInitializeUppy, onSaveBatchListing } = props;
-  const { type } = params;
-  const isNewURI = type === LISTING_PAGE_PARAM_TYPE_NEW;
-  const isDraftURI = type === LISTING_PAGE_PARAM_TYPE_DRAFT;
-  const isNewListingFlow = isNewURI || isDraftURI;
   const hasPostingRights = hasPermissionToPostListings(currentUser);
-  const shouldRedirectNoPostingRights = !!currentUser?.id && isNewListingFlow && !hasPostingRights;
+  const shouldRedirectNoPostingRights = !!currentUser?.id && !hasPostingRights;
   const { uppy, listingFieldsOptions } = page;
 
   useEffect(() => {
@@ -48,12 +42,12 @@ export const BatchEditListingPageComponent = props => {
       />
     );
   }
-  const title = isNewListingFlow
-    ? intl.formatMessage({ id: 'EditListingPage.titleCreateListing' })
-    : intl.formatMessage({ id: 'EditListingPage.titleEditListing' });
 
   return (
-    <Page title={title} scrollingDisabled={false}>
+    <Page
+      title={intl.formatMessage({ id: 'EditListingPage.titleCreateListing' })}
+      scrollingDisabled={false}
+    >
       <TopbarContainer
         mobileRootClassName={css.mobileTopbar}
         desktopClassName={css.desktopTopbar}
