@@ -213,7 +213,6 @@ export const isValidCurrencyForTransactionProcess = (
   // Determine if the listing currency is supported by Stripe
   const isStripeSupportedCurrency = stripeSupportedCurrencies.includes(listingCurrency);
 
-
   if (paymentProcessor === 'stripe') {
     // If using Stripe, only return true if both process and currency are compatible with Stripe
     return isStripeRelatedProcess && isStripeSupportedCurrency;
