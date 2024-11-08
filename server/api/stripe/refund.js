@@ -1,7 +1,7 @@
 const axios = require('axios');
 const { createClient } = require('@supabase/supabase-js');
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
-const supabaseUrl = 'https://tivsrbykzsmbrkmqqwwd.supabase.co';
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
 const supabaseKey = process.env.REACT_APP_SUPABASE_KEY; // Ensure this is correctly set in your .env file
 const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -15,7 +15,6 @@ apiKey.apiKey = process.env.BREVO_API_KEY;
 let sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
 
 module.exports = async (req, res) => {
-  console.log(req.body);
   const transactionId = req.body.transactionId;
   const customerId = req.body.customerObj.cid;
   let bookingRecord;
@@ -104,14 +103,14 @@ module.exports = async (req, res) => {
             sendSmtpEmail.sender = { name: 'Club Joy Team', email: 'hello@clubjoy.it' };
             sendSmtpEmail.to = [
               { email: `${bookingRecord.providerEmail}`, name: `${bookingRecord.providername}` },
-            ]; //bookingRecord.providerEmail
+            ]; 
             sendSmtpEmail.templateId = 26;
             sendSmtpEmail.params = {
               providername: bookingRecord.providername,
               username: bookingRecord.username,
               startDate: formattedDate,
               reason: req.body.selectedOptionText,
-              amount: refund.amount,
+              amount: refund.amount / 100,
             };
             const emailResponse = await brevoClient.sendTransacEmail(sendSmtpEmail);
             console.log('Email sent successfully to customer', emailResponse);
@@ -122,17 +121,21 @@ module.exports = async (req, res) => {
           console.error('Error sending email:', emailError);
         }
       } catch (refundError) {
-        if (
-          refundError.response &&
-          refundError.response.data.error.code === 'charge_already_refunded'
-        ) {
-          console.log('Refund already exists for this payment intent.');
-          res.status(400).json({
+        console.error('Error creating refund:', refundError.response?.data?.error);
+  
+        const errorCode = refundError.response?.data?.error?.code;
+        const errorMessage = refundError.response?.data?.error?.message || 'Unknown refund error';
+      
+        if (errorCode === 'charge_already_refunded') {
+          return res.status(400).json({
             message: 'Refund already exists for this payment intent',
-            error: refundError.response.data.error,
+            details: errorMessage,  // Pass specific message to frontend
           });
         } else {
-          throw refundError;
+          return res.status(500).json({
+            message: 'Error processing refund',
+            details: errorMessage,
+          });
         }
       }
     } else {

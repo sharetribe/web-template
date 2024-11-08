@@ -7,7 +7,7 @@ import { useIntl } from 'react-intl';
 import PopUp from '../../../components/PopUp/PopUp';
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = 'https://tivsrbykzsmbrkmqqwwd.supabase.co';
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
 const supabaseKey = process.env.REACT_APP_SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -20,14 +20,17 @@ const TeamButtonsMaybe = props => {
   const [showForm, setShowForm] = useState(false);
 
   const startDate = new Date(start);
-  const currentDate = new Date();
-  currentDate.setHours(0, 0, 0, 0);
+startDate.setHours(0, 0, 0, 0);
 
-  const timeDiff = startDate - currentDate;
-  const daysDiff = timeDiff / (1000 * 60 * 60 * 24);
+const currentDate = new Date();
+currentDate.setHours(0, 0, 0, 0);
 
-  const isWithinFiveDays = daysDiff >= 0 && daysDiff <= 5;
-  const isAfterFiveDays = daysDiff < -5;
+const timeDiff = startDate - currentDate;
+const daysDiff = timeDiff / (1000 * 60 * 60 * 24);
+
+// Use absolute value to determine if the difference is within 5 days
+const isWithinFiveDays = Math.abs(daysDiff) <= 5;
+const isAfterOrOnStartDate = currentDate >= startDate;
 
   useEffect(() => {
     const checkFileExists = async () => {
@@ -101,17 +104,35 @@ const TeamButtonsMaybe = props => {
         onSendMessage(transactionId, message);
       });
     } else if (flow === 2) {
-      createRefund({ customerObj, transactionId, selectedOptionText });
+      createRefund({ customerObj, transactionId, selectedOptionText })
+    .then(response => {
+      if (!response.ok) {
+     
+        return response.json().then(errorData => {
+          throw new Error(errorData.details || errorData.message || 'Refund processing error');
+        });
+      }
+      return response.json();
+    })
+    .then(res => {
+      console.log('Refund success:', res);
+
+    })
+    .catch(error => {
+      console.error('Refund already requeste', error);
+      alert(`Refund already requested: ${error.message}`);
+    });
     }
     setShowForm(false);
   };
+  
 
   const classes = classNames(rootClassName || css.actionButtons, className);
 
   return (
     <div className={css.actionButtonWrapper}>
       <div className={classes}>
-        <PrimaryButton disabled={!isAfterFiveDays} onClick={handlePrimaryButtonClick}>
+        <PrimaryButton disabled={!isAfterOrOnStartDate} onClick={handlePrimaryButtonClick}>
           {fileExists
             ? intl.formatMessage({ id: 'TeamButtons.button.receipt.download' })
             : intl.formatMessage({ id: 'TeamButtons.button.receipt' })}

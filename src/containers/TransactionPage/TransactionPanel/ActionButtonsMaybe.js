@@ -5,7 +5,7 @@ import { PrimaryButton, SecondaryButton } from '../../../components';
 import { createClient } from '@supabase/supabase-js';
 import css from './TransactionPanel.module.css';
 
-const supabaseUrl = 'https://tivsrbykzsmbrkmqqwwd.supabase.co';
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
 const supabaseKey = process.env.REACT_APP_SUPABASE_KEY; // Ensure this is correctly set in your .env file
 const supabase = createClient(supabaseUrl, supabaseKey);
 

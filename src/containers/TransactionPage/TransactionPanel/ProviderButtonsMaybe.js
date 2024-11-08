@@ -6,7 +6,7 @@ import css from './TransactionPanel.module.css';
 import { useIntl } from 'react-intl';
 import { createClient } from '@supabase/supabase-js';
 import PopUpMessage from '../../../components/PopUpMessage/PopUpMessage';
-const supabaseUrl = 'https://tivsrbykzsmbrkmqqwwd.supabase.co';
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
 const supabaseKey = process.env.REACT_APP_SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -22,14 +22,17 @@ const ProviderButtonsMaybe = props => {
   const fileInputRef = useRef(null);
 
   const startDate = new Date(start);
-  const currentDate = new Date();
-  currentDate.setHours(0, 0, 0, 0);
+startDate.setHours(0, 0, 0, 0);
 
-  const timeDiff = startDate - currentDate;
-  const daysDiff = timeDiff / (1000 * 60 * 60 * 24);
+const currentDate = new Date();
+currentDate.setHours(0, 0, 0, 0);
 
-  const isWithinFiveDays = daysDiff >= 0 && daysDiff <= 5;
-  const isAfterFiveDays = daysDiff < -5;
+const timeDiff = startDate - currentDate;
+const daysDiff = timeDiff / (1000 * 60 * 60 * 24);
+
+
+const isWithinFiveDays = Math.abs(daysDiff) <= 5;
+const isAfterOrOnStartDate = currentDate >= startDate;
 
   const handlePrimaryButtonClick = () => {
     fileInputRef.current.click();
@@ -99,7 +102,7 @@ const ProviderButtonsMaybe = props => {
           ref={fileInputRef}
           style={{ display: 'none' }}
         />
-        <PrimaryButton onClick={handlePrimaryButtonClick} disabled={!isAfterFiveDays}>
+        <PrimaryButton onClick={handlePrimaryButtonClick} disabled={!isAfterOrOnStartDate}>
           {loading ? (
             <div className={css.loader}>Caricamento...</div>
           ) : (

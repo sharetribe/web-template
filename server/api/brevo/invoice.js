@@ -1,21 +1,17 @@
 const axios = require('axios');
 const { createClient } = require('@supabase/supabase-js');
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
-const supabaseUrl = 'https://tivsrbykzsmbrkmqqwwd.supabase.co';
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
 const supabaseKey = process.env.REACT_APP_SUPABASE_KEY; // Ensure this is correctly set in your .env file
 const supabase = createClient(supabaseUrl, supabaseKey);
-const sdkUtils = require('../../api-util/sdk');
 
-const SibApiV3Sdk = require('@getbrevo/brevo');
-const brevoClient = new SibApiV3Sdk.TransactionalEmailsApi();
-
+const brevo = require('@getbrevo/brevo');
+let brevoClient = new brevo.TransactionalEmailsApi();
 
 let apiKey = brevoClient.authentications['apiKey'];
 apiKey.apiKey = process.env.BREVO_API_KEY;
 
-let sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
-
-
+let sendSmtpEmail = new brevo.SendSmtpEmail();
 
 module.exports = async (req, res) => {
   try {
@@ -44,7 +40,7 @@ module.exports = async (req, res) => {
     if (bookingRecord) {
       sendSmtpEmail.sender = { name: 'Club Joy Team', email: 'hello@clubjoy.it' };
       sendSmtpEmail.to = [
-        { email: `${bookingRecord.providerEmail}`, name: `${bookingRecord.providername}` },
+        { email: '`${bookingRecord.providerEmail}`', name: `${bookingRecord.providername}` },
       ];
       sendSmtpEmail.templateId = 28;
       sendSmtpEmail.params = {
@@ -60,12 +56,12 @@ module.exports = async (req, res) => {
           sendSmtpEmail.to = [{ email: `${bookingRecord.email}`, name: `${bookingRecord.name}` }];
           sendSmtpEmail.templateId = 29;
           sendSmtpEmail.params = {
-            providerName: bookingRecord.providername,
+            providername: bookingRecord.providername,
             username: bookingRecord.name,
             startDate: formattedDate,
           };
           const emailResponse = await brevoClient.sendTransacEmail(sendSmtpEmail);
-          res.json({ message: 'Email sent successfully to customer', data: emailResponse });
+          res.status(200).json({ message: 'Email sent successfully to customer', data: emailResponse });
         } catch {
           console.error('Failed to send customer email', emailError);
         }

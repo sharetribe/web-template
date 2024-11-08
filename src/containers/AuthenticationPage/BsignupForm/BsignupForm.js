@@ -14,7 +14,7 @@ import { useHistory } from 'react-router-dom'; // Use useHistory for react-route
 import css from './BsignupForm.module.css';
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = 'https://tivsrbykzsmbrkmqqwwd.supabase.co';
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
 const supabaseKey = process.env.REACT_APP_SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
