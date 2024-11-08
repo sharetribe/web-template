@@ -28,7 +28,6 @@ export const stripeSupportedCurrencies = [
 // If you add support for currencies with a subunit divisor of 1000, be sure to
 // update the email templates to correctly format these currencies.
 export const subUnitDivisors = {
-  // Stripe supported currencies
   AUD: 100, // Australian dollar
   BGN: 100, // Bulgarian lev
   CAD: 100, // Canadian dollar
@@ -38,7 +37,6 @@ export const subUnitDivisors = {
   EUR: 100, // Euro
   GBP: 100, // British pound
   HKD: 100, // Hong Kong dollar
-  INR: 100, // Indian rupee
   JPY: 1, // Japanese yen
   MXN: 100, // Mexican peso
   NOK: 100, // Norwegian krone
@@ -61,7 +59,7 @@ export const subUnitDivisors = {
   BAM: 100, // Bosnia and Herzegovina convertible mark
   BBD: 100, // Barbadian dollar
   BDT: 100, // Bangladeshi taka
-  BIF: 100, // Burundian franc
+  BIF: 1, // Burundian franc
   BMD: 100, // Bermudian dollar
   BND: 100, // Brunei dollar
   BOB: 100, // Bolivian boliviano
@@ -72,13 +70,13 @@ export const subUnitDivisors = {
   BYN: 100, // Belarusian ruble
   BZD: 100, // Belize dollar
   CDF: 100, // Congolese franc
-  CLP: 100, // Chilean peso
-  CNY: 10, // Renminbi
+  CLP: 1, // Chilean peso
+  CNY: 100, // Renminbi
   COP: 100, // Colombian peso
   CRC: 100, // Costa Rican colón
   CUP: 100, // Cuban peso
   CVE: 100, // Cape Verdean escudo
-  DJF: 100, // Djiboutian franc
+  DJF: 1, // Djiboutian franc
   DOP: 100, // Dominican peso
   DZD: 100, // Algerian dinar
   EGP: 100, // Egyptian pound
@@ -90,7 +88,7 @@ export const subUnitDivisors = {
   GHS: 100, // Ghanaian cedi
   GIP: 100, // Gibraltar pound
   GMD: 100, // Gambian dalasi
-  GNF: 100, // Guinean franc
+  GNF: 1, // Guinean franc
   GTQ: 100, // Guatemalan quetzal
   GYD: 100, // Guyanese dollar
   HNL: 100, // Honduran lempira
@@ -98,16 +96,17 @@ export const subUnitDivisors = {
   HUF: 100, // Hungarian forint
   IDR: 100, // Indonesian rupiah
   ILS: 100, // Israeli new shekel
-  IRR: 1, // Iranian rial
-  ISK: 100, // Icelandic króna
+  INR: 100, // Indian rupee
+  IRR: 100, // Iranian rial
+  ISK: 1, // Icelandic króna
   JMD: 100, // Jamaican dollar
   JOD: 100, // Jordanian dinar
   KES: 100, // Kenyan shilling
   KGS: 100, // Kyrgyz som
   KHR: 100, // Cambodian riel
-  KMF: 100, // Comorian franc
+  KMF: 1, // Comorian franc
   KPW: 100, // North Korean won
-  KRW: 100, // South Korean won
+  KRW: 1, // South Korean won
   KYD: 100, // Cayman Islands dollar
   KZT: 100, // Kazakhstani tenge
   LAK: 100, // Lao kip
@@ -135,11 +134,11 @@ export const subUnitDivisors = {
   PGK: 100, // Papua New Guinean kina
   PHP: 100, // Philippine peso
   PKR: 100, // Pakistani rupee
-  PYG: 100, // Paraguayan guaraní
+  PYG: 1, // Paraguayan guaraní
   QAR: 100, // Qatari riyal
   RSD: 100, // Serbian dinar
   RUB: 100, // Russian ruble
-  RWF: 100, // Rwandan franc
+  RWF: 1, // Rwandan franc
   SAR: 100, // Saudi riyal
   SBD: 100, // Solomon Islands dollar
   SCR: 100, // Seychellois rupee
@@ -166,13 +165,16 @@ export const subUnitDivisors = {
   UZS: 100, // Uzbekistani sum
   VED: 100, // Venezuelan digital bolívar
   VES: 100, // Venezuelan sovereign bolívar
-  VND: 10, // Vietnamese đồng
-  VUV: 100, // Vanuatu vatu
+  VND: 1, // Vietnamese đồng
+  VUV: 1, // Vanuatu vatu
   WST: 100, // Samoan tālā
-  XAF: 100, // Central African CFA franc
+  XAF: 1, // Central African CFA franc
   XCD: 100, // Eastern Caribbean dollar
-  XOF: 100, // West African CFA franc
-  XPF: 100, // CFP franc
+  XOF: 1, // West African CFA franc
+  XPF: 1, // CFP franc
+  YER: 100, // Yemeni rial
+  ZAR: 100, // South African rand
+  ZMW: 100, // Zambian kwacha
 };
 
 /**
