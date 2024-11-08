@@ -261,20 +261,20 @@ export const listingFields = [
  *                        providers who have not set payout details and contact them to ensure that they add the details.
  */
 
-  export const listingTypes = [
-    {
-      listingType: 'free-booking',
-      label: 'Workshop pubblico gratuito',
-      transactionType: {
-        process: 'free-booking',
-        alias: 'free-booking/release-1',
-        unitType: 'hour',
-      },
-      defaultListingFields: {
-        location: true,
-        payoutDetails: false,
-      },
+export const listingTypes = [
+  {
+    listingType: 'free-booking',
+    label: 'Workshop pubblico gratuito',
+    transactionType: {
+      process: 'free-booking',
+      alias: 'free-booking/release-1',
+      unitType: 'hour',
     },
+    defaultListingFields: {
+      location: true,
+      payoutDetails: false,
+    },
+  },
   // // Here are some examples for other listingTypes
   // // TODO: SearchPage does not work well if both booking and product selling are used at the same time
   // {

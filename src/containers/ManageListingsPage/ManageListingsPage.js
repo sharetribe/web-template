@@ -170,7 +170,11 @@ export function ManageListingsPageComponent(props) {
         {queryListingsError ? queryError : null}
 
         <div className={css.listingPanel}>
-          <Heading listingsAreLoaded={listingsAreLoaded} pagination={pagination} user={currentUser} />
+          <Heading
+            listingsAreLoaded={listingsAreLoaded}
+            pagination={pagination}
+            user={currentUser}
+          />
 
           <div className={css.listingCards}>
             {listings.map((l) => (

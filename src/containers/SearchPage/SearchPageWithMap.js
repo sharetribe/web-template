@@ -6,7 +6,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 import omit from 'lodash/omit';
 import classNames from 'classnames';
-import {filterListings} from '../../util/listingsHelpers';
+import { filterListings } from '../../util/listingsHelpers';
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 

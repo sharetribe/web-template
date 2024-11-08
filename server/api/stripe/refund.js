@@ -8,7 +8,6 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 const SibApiV3Sdk = require('@getbrevo/brevo');
 const brevoClient = new SibApiV3Sdk.TransactionalEmailsApi();
 
-
 let apiKey = brevoClient.authentications['apiKey'];
 apiKey.apiKey = process.env.BREVO_API_KEY;
 
@@ -40,7 +39,7 @@ module.exports = async (req, res) => {
     return res.status(500).json({ error: 'Error fetching booking' });
   }
 
-  const formattedDate = (dateString => {
+  const formattedDate = ((dateString) => {
     const date = new Date(dateString);
     date.setUTCDate(date.getUTCDate() - 5);
     return date.toLocaleDateString('it-IT', { timeZone: 'UTC' }).replace(/\//g, '-');
@@ -58,7 +57,7 @@ module.exports = async (req, res) => {
 
     const paymentIntents = paymentIntentsResponse.data.data;
     const foundPaymentIntent = paymentIntents.find(
-      paymentIntent =>
+      (paymentIntent) =>
         paymentIntent.metadata &&
         paymentIntent.metadata['sharetribe-transaction-id'] === transactionId &&
         paymentIntent.metadata['sharetribe-customer-id'] === customerId
@@ -103,7 +102,7 @@ module.exports = async (req, res) => {
             sendSmtpEmail.sender = { name: 'Club Joy Team', email: 'hello@clubjoy.it' };
             sendSmtpEmail.to = [
               { email: `${bookingRecord.providerEmail}`, name: `${bookingRecord.providername}` },
-            ]; 
+            ];
             sendSmtpEmail.templateId = 26;
             sendSmtpEmail.params = {
               providername: bookingRecord.providername,
@@ -122,14 +121,14 @@ module.exports = async (req, res) => {
         }
       } catch (refundError) {
         console.error('Error creating refund:', refundError.response?.data?.error);
-  
+
         const errorCode = refundError.response?.data?.error?.code;
         const errorMessage = refundError.response?.data?.error?.message || 'Unknown refund error';
-      
+
         if (errorCode === 'charge_already_refunded') {
           return res.status(400).json({
             message: 'Refund already exists for this payment intent',
-            details: errorMessage,  // Pass specific message to frontend
+            details: errorMessage, // Pass specific message to frontend
           });
         } else {
           return res.status(500).json({

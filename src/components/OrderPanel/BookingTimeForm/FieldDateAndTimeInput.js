@@ -125,16 +125,14 @@ const getAvailableEndTimes = (
   return [
     {
       timeOfDay: formatDateIntoPartials(endLimit, intl, { timeZone })?.time,
-      timestamp: moment(endLimit)
-        .tz(timeZone)
-        .valueOf(),
+      timestamp: moment(endLimit).tz(timeZone).valueOf(),
     },
   ];
 };
 
 const getTimeSlots = (timeSlots, date, timeZone) => {
   return timeSlots && timeSlots[0]
-    ? timeSlots.filter(t => {
+    ? timeSlots.filter((t) => {
         return isInRange(date, t.attributes.start, t.attributes.end, 'day', timeZone);
       })
     : [];
@@ -166,8 +164,8 @@ const getAllTimeValues = (
   const startTime = selectedStartTime
     ? selectedStartTime
     : startTimes.length > 0 && startTimes[0] && startTimes[0].timestamp
-    ? startTimes[0].timestamp.toString()
-    : null;
+      ? startTimes[0].timestamp.toString()
+      : null;
 
   const startTimeAsDate = startTime ? timestampToDate(startTime) : null;
 
@@ -178,10 +176,10 @@ const getAllTimeValues = (
   const endDate = selectedEndDate
     ? selectedEndDate
     : startTimeAsDate
-    ? new Date(findNextBoundary(startTimeAsDate, 'hour', timeZone).getTime() - 1)
-    : null;
+      ? new Date(findNextBoundary(startTimeAsDate, 'hour', timeZone).getTime() - 1)
+      : null;
 
-  const selectedTimeSlot = timeSlots.find(t =>
+  const selectedTimeSlot = timeSlots.find((t) =>
     isInRange(startTimeAsDate, t.attributes.start, t.attributes.end)
   );
 
@@ -204,20 +202,20 @@ const getMonthlyTimeSlots = (monthlyTimeSlots, date, timeZone) => {
   return !monthlyTimeSlots || Object.keys(monthlyTimeSlots).length === 0
     ? []
     : monthlyTimeSlots[monthId] && monthlyTimeSlots[monthId].timeSlots
-    ? monthlyTimeSlots[monthId].timeSlots
-    : [];
+      ? monthlyTimeSlots[monthId].timeSlots
+      : [];
 };
 
 // IconArrowHead component might not be defined if exposed directly to the file.
 // This component is called before IconArrowHead component in components/index.js
-const PrevIcon = props => (
+const PrevIcon = (props) => (
   <IconArrowHead {...props} direction="left" rootClassName={css.arrowIcon} />
 );
-const NextIcon = props => (
+const NextIcon = (props) => (
   <IconArrowHead {...props} direction="right" rootClassName={css.arrowIcon} />
 );
 
-const Next = props => {
+const Next = (props) => {
   const { currentMonth, dayCountAvailableForBooking, timeZone } = props;
   const nextMonthDate = nextMonthFn(currentMonth, timeZone);
 
@@ -228,15 +226,13 @@ const Next = props => {
     <NextIcon />
   );
 };
-const Prev = props => {
+const Prev = (props) => {
   const { currentMonth, timeZone } = props;
   const prevMonthDate = prevMonthFn(currentMonth, timeZone);
   const currentMonthDate = getStartOf(TODAY, 'month', timeZone);
 
   return isDateSameOrAfter(prevMonthDate, currentMonthDate) ? <PrevIcon /> : null;
 };
-
-
 
 /////////////////////////////////////
 // FieldDateAndTimeInput component //
@@ -282,7 +278,7 @@ class FieldDateAndTimeInput extends Component {
     const { onMonthChanged, timeZone } = this.props;
 
     this.setState(
-      prevState => ({ currentMonth: monthFn(prevState.currentMonth, timeZone) }),
+      (prevState) => ({ currentMonth: monthFn(prevState.currentMonth, timeZone) }),
       () => {
         // Callback function after month has been updated.
         // react-dates component has next and previous months ready (but inivisible).
@@ -304,7 +300,7 @@ class FieldDateAndTimeInput extends Component {
     );
   }
 
-  onBookingStartDateChange = value => {
+  onBookingStartDateChange = (value) => {
     const { monthlyTimeSlots, timeZone, intl, form, values } = this.props;
     if (!value || !value.date) {
       form.batch(() => {
@@ -343,7 +339,7 @@ class FieldDateAndTimeInput extends Component {
     });
   };
 
-  onBookingStartTimeChange = value => {
+  onBookingStartTimeChange = (value) => {
     const { monthlyTimeSlots, timeZone, intl, form, values } = this.props;
     const timeSlots = getMonthlyTimeSlots(monthlyTimeSlots, this.state.currentMonth, timeZone);
     const startDate = values.bookingStartDate.date;
@@ -363,7 +359,7 @@ class FieldDateAndTimeInput extends Component {
     });
   };
 
-  onBookingEndDateChange = value => {
+  onBookingEndDateChange = (value) => {
     const { monthlyTimeSlots, timeZone, intl, form, values } = this.props;
     if (!value || !value.date) {
       form.change('bookingEndTime', null);
@@ -478,8 +474,8 @@ class FieldDateAndTimeInput extends Component {
     );
 
     const isDayBlocked = timeSlotsOnSelectedMonth
-      ? day =>
-          !timeSlotsOnSelectedMonth.find(timeSlot =>
+      ? (day) =>
+          !timeSlotsOnSelectedMonth.find((timeSlot) =>
             isDayMomentInsideRange(
               day,
               timeSlot.attributes.start,
@@ -497,7 +493,7 @@ class FieldDateAndTimeInput extends Component {
       // No need to handle error
     }
 
-    const isSeatDisabled = seatNumber => {
+    const isSeatDisabled = (seatNumber) => {
       const isSpecialListing =
         this.props.listingId &&
         this.props.listingId.uuid === '65fc542d-96ee-422d-b0e6-0075f9a1c683' &&
@@ -510,50 +506,55 @@ class FieldDateAndTimeInput extends Component {
       return isSpecialListing || isBelowMinimum;
     };
 
-    const seatsArray = selectedTimeSlot ? Array(selectedTimeSlot.attributes.seats).fill().map((_, i) => i + 1) : [];
+    const seatsArray = selectedTimeSlot
+      ? Array(selectedTimeSlot.attributes.seats)
+          .fill()
+          .map((_, i) => i + 1)
+      : [];
     //65fc542d-96ee-422d-b0e6-0075f9a1c683
-    const visibleSeats = seatsArray.filter(seat => !isSeatDisabled(seat));
-    
-    const seatsSelectionMaybe = visibleSeats.length > 0 ? (
-      <>
+    const visibleSeats = seatsArray.filter((seat) => !isSeatDisabled(seat));
+
+    const seatsSelectionMaybe =
+      visibleSeats.length > 0 ? (
+        <>
+          <FieldSelect
+            className={css.fieldDateInput}
+            onChange={(value) => {
+              form.batch(() => {
+                form.change('guestNames', []);
+                if (value > 0) {
+                  for (let index = 0; index < value; index++) {
+                    form.mutators.push(`guestNames[${index}]`, '');
+                  }
+                }
+              });
+            }}
+            name="seats"
+            id="seats"
+            label="In quanti siete?"
+          >
+            <option value="" key="default">
+              -
+            </option>
+            {visibleSeats.map((s) => (
+              <option value={s} key={s}>
+                {s}
+              </option>
+            ))}
+          </FieldSelect>
+        </>
+      ) : (
         <FieldSelect
           className={css.fieldDateInput}
-          onChange={value => {
-            form.batch(() => {
-              form.change('guestNames', []);
-              if (value > 0) {
-                for (let index = 0; index < value; index++) {
-                  form.mutators.push(`guestNames[${index}]`, '');
-                }
-              }
-            });
-          }}
           name="seats"
           id="seats"
-          label="In quanti siete?"
+          label="In quanti siete?" //TITLES
         >
           <option value="" key="default">
-            - 
+            -
           </option>
-          {visibleSeats.map(s => (
-            <option value={s} key={s}>
-              {s}
-            </option>
-          ))}
         </FieldSelect>
-      </>
-    ) : (
-      <FieldSelect
-        className={css.fieldDateInput}
-        name="seats"
-        id="seats"
-        label="In quanti siete?" //TITLES
-      >
-        <option value="" key="default">
-          - 
-        </option>
-      </FieldSelect>
-    );
+      );
     const startOfToday = getStartOf(TODAY, 'day', timeZone);
     const bookingEndTimeAvailable = bookingStartDate && (bookingStartTime || startTime);
 
@@ -581,10 +582,10 @@ class FieldDateAndTimeInput extends Component {
               id={formId ? `${formId}.bookingStartDate` : 'bookingStartDate'}
               label={startDateInputProps.label}
               placeholderText={startDateInputProps.placeholderText}
-              format={v =>
+              format={(v) =>
                 v && v.date ? { date: timeOfDayFromTimeZoneToLocal(v.date, timeZone) } : v
               }
-              parse={v =>
+              parse={(v) =>
                 v && v.date ? { date: timeOfDayFromLocalToTimeZone(v.date, timeZone) } : v
               }
               initialVisibleMonth={initialVisibleMonth(bookingStartDate || startOfToday, timeZone)}
@@ -604,7 +605,7 @@ class FieldDateAndTimeInput extends Component {
               validate={bookingDateRequired(
                 intl.formatMessage({ id: 'BookingTimeForm.requiredDate' })
               )}
-              onClose={event =>
+              onClose={(event) =>
                 this.setState({
                   currentMonth: getStartOf(event?.date ?? TODAY, 'month', this.props.timeZone),
                 })
@@ -624,7 +625,7 @@ class FieldDateAndTimeInput extends Component {
               onChange={this.onBookingStartTimeChange}
             >
               {bookingStartDate ? (
-                availableStartTimes.map(p => (
+                availableStartTimes.map((p) => (
                   <option key={p.timeOfDay} value={p.timestamp}>
                     {p.timeOfDay}
                   </option>
@@ -647,7 +648,7 @@ class FieldDateAndTimeInput extends Component {
               disabled={true}
             >
               {bookingEndTimeAvailable ? (
-                availableEndTimes.map(p => (
+                availableEndTimes.map((p) => (
                   <option key={p.timeOfDay === '00:00' ? '24:00' : p.timeOfDay} value={p.timestamp}>
                     {p.timeOfDay === '00:00' ? '24:00' : p.timeOfDay}
                   </option>
@@ -666,25 +667,25 @@ class FieldDateAndTimeInput extends Component {
               if (this.props.publicData?.listingType === 'teambuilding') {
                 return (
                   <>
-                  <FieldTextInput
-                    id="teamName"
-                    name="guestNames[0]" // Ensure it's part of the guestNames array
-                    key={0}
-                    className={css.extras}
-                    type="text"
-                    label={intl.formatMessage(
-                      {
-                        id: 'FieldDateAndTimeInput.teamNameLabel',
-                      },
-                      { number: 1 }
-                    )}
-                    placeholder="-" //{intl.formatMessage( {id: 'FieldDateAndTimeInput.teamNamePlaceholder',  }, { number: 1 } )}
-                    validate={validators.required(
-                      intl.formatMessage({
-                        id: 'FieldDateAndTimeInput.requiredGuestName',
-                      })
-                    )}
-                  />
+                    <FieldTextInput
+                      id="teamName"
+                      name="guestNames[0]" // Ensure it's part of the guestNames array
+                      key={0}
+                      className={css.extras}
+                      type="text"
+                      label={intl.formatMessage(
+                        {
+                          id: 'FieldDateAndTimeInput.teamNameLabel',
+                        },
+                        { number: 1 }
+                      )}
+                      placeholder="-" //{intl.formatMessage( {id: 'FieldDateAndTimeInput.teamNamePlaceholder',  }, { number: 1 } )}
+                      validate={validators.required(
+                        intl.formatMessage({
+                          id: 'FieldDateAndTimeInput.requiredGuestName',
+                        })
+                      )}
+                    />
                   </>
                 );
               }
@@ -707,60 +708,59 @@ class FieldDateAndTimeInput extends Component {
 
                 return (
                   <>
-                  <FieldTextInput
-                    id={name}
-                    name={name}
-                    key={index}
-                    className={css.extras}
-                    type="text"
-                    label={intl.formatMessage(
-                      {
-                        id:
-                          this.props.listingId?.uuid === '65fc542d-96ee-422d-b0e6-0075f9a1c683'
-                            ? 'FieldDateAndTimeInput.coupleNameLabel'
-                            : 'FieldDateAndTimeInput.guestNameLabel',
-                      },
-                      { number: index + 1 }
+                    <FieldTextInput
+                      id={name}
+                      name={name}
+                      key={index}
+                      className={css.extras}
+                      type="text"
+                      label={intl.formatMessage(
+                        {
+                          id:
+                            this.props.listingId?.uuid === '65fc542d-96ee-422d-b0e6-0075f9a1c683'
+                              ? 'FieldDateAndTimeInput.coupleNameLabel'
+                              : 'FieldDateAndTimeInput.guestNameLabel',
+                        },
+                        { number: index + 1 }
+                      )}
+                      placeholder={intl.formatMessage(
+                        {
+                          id:
+                            this.props.listingId?.uuid === '65fc542d-96ee-422d-b0e6-0075f9a1c683'
+                              ? 'FieldDateAndTimeInput.coupleNamePlaceholder'
+                              : 'FieldDateAndTimeInput.guestNamePlaceholder',
+                        },
+                        { number: index + 1 }
+                      )}
+                      validate={validators.required(
+                        intl.formatMessage({
+                          id: 'FieldDateAndTimeInput.requiredGuestName',
+                        })
+                      )}
+                    />
+                    {this.props.listingId?.uuid === '66dac9f8-e2e3-4611-a30c-64df1ef9ff68' && (
+                      <div className={css.extras}>
+                        <FieldRadioButton
+                          id={`${formId}.fee${index}1`}
+                          name={`fee[${index}]`}
+                          label="Tappeto Small"
+                          value="smallFee"
+                        />
+                        <FieldRadioButton
+                          id={`${formId}.fee${index}2`}
+                          name={`fee[${index}]`}
+                          label="Tappeto Medium"
+                          value="mediumFee"
+                        />
+                        <FieldRadioButton
+                          id={`${formId}.fee${index}3`}
+                          name={`fee[${index}]`}
+                          label="Tappeto Large"
+                          value="largeFee"
+                        />
+                      </div>
                     )}
-                    placeholder={intl.formatMessage(
-                      {
-                        id:
-                          this.props.listingId?.uuid === '65fc542d-96ee-422d-b0e6-0075f9a1c683'
-                            ? 'FieldDateAndTimeInput.coupleNamePlaceholder'
-                            : 'FieldDateAndTimeInput.guestNamePlaceholder',
-                      },
-                      { number: index + 1 }
-                    )}
-                    validate={validators.required(
-                      intl.formatMessage({
-                        id: 'FieldDateAndTimeInput.requiredGuestName',
-                      })
-                    )}
-                  />
-               {this.props.listingId?.uuid === '66dac9f8-e2e3-4611-a30c-64df1ef9ff68' && (
-            <div className={css.extras}>
-              <FieldRadioButton
-                id={`${formId}.fee${index}1`}
-                name={`fee[${index}]`} 
-                label="Tappeto Small"
-                value="smallFee"
-              />
-              <FieldRadioButton
-                 id={`${formId}.fee${index}2`}
-                name={`fee[${index}]`} 
-                label="Tappeto Medium"
-                value="mediumFee"
-              />
-              <FieldRadioButton
-                 id={`${formId}.fee${index}3`}
-                name={`fee[${index}]`} 
-                label="Tappeto Large"
-                value="largeFee"
-              />
-            </div>
-          )}
-
-                </>
+                  </>
                 );
               });
             }}
@@ -770,7 +770,7 @@ class FieldDateAndTimeInput extends Component {
         {publicData?.listingType === 'teambuilding' && !!seatsSelectionMaybe && (
           <FieldSelect
             className={css.extras}
-            onChange={value => {
+            onChange={(value) => {
               form.batch(() => {
                 form.change('location', []);
                 if (value > 0) {
@@ -787,7 +787,7 @@ class FieldDateAndTimeInput extends Component {
             <option value="" key="default">
               Seleziona Location
             </option>
-            {publicData.loc.map(s => (
+            {publicData.loc.map((s) => (
               <option value={s} key={s}>
                 {locationMapping[s] || s}
               </option>
@@ -798,7 +798,7 @@ class FieldDateAndTimeInput extends Component {
         {publicData?.listingType === 'teambuilding' && !!seatsSelectionMaybe && (
           <FieldSelect
             className={css.extras}
-            onChange={value => {
+            onChange={(value) => {
               form.batch(() => {
                 form.change('language', []);
                 if (value > 0) {
@@ -815,7 +815,7 @@ class FieldDateAndTimeInput extends Component {
             <option value="" key="default">
               Seleziona Lingua
             </option>
-            {publicData.language.map(s => (
+            {publicData.language.map((s) => (
               <option value={s} key={s}>
                 {languageMapping[s] || s}
               </option>

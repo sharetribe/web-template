@@ -39,10 +39,10 @@ const getPriceValidators = (listingMinimumPriceSubUnits, marketplaceCurrency, in
     : priceRequired;
 };
 
-export const EditListingPricingFormComponent = props => (
+export const EditListingPricingFormComponent = (props) => (
   <FinalForm
     {...props}
-    render={formRenderProps => {
+    render={(formRenderProps) => {
       const {
         formId,
         autoFocus,
@@ -102,7 +102,7 @@ export const EditListingPricingFormComponent = props => (
           {isTeamBuilding === 'teambuilding' ? (
             <>
               <p>
-              <FormattedMessage id="EditListingPricingForm.teambuilding.priceDirection" />
+                <FormattedMessage id="EditListingPricingForm.teambuilding.priceDirection" />
                 <br />
                 <FormattedMessage id="EditListingPricingForm.teambuilding.priceDirection2" />
               </p>

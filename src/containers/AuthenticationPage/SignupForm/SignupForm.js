@@ -5,11 +5,17 @@ import { Form as FinalForm } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
-import { useLocation } from 'react-router-dom'; 
+import { useLocation } from 'react-router-dom';
 import { propTypes } from '../../../util/types';
 import * as validators from '../../../util/validators';
 import { getPropsForCustomUserFieldInputs } from '../../../util/userHelpers';
-import { Form, PrimaryButton, FieldTextInput, FieldCheckbox, CustomExtendedDataField } from '../../../components';
+import {
+  Form,
+  PrimaryButton,
+  FieldTextInput,
+  FieldCheckbox,
+  CustomExtendedDataField,
+} from '../../../components';
 import { FieldCheckboxGroup } from '../../../components';
 import FieldSelectUserType from '../FieldSelectUserType';
 import UserFieldDisplayName from '../UserFieldDisplayName';
@@ -36,7 +42,7 @@ function SignupFormComponent(props) {
           inProgress,
           invalid,
           intl,
-           termsAndConditions,
+          termsAndConditions,
           preselectedUserType,
           userTypes,
           userFields,
@@ -91,16 +97,15 @@ function SignupFormComponent(props) {
           passwordMinLength,
           passwordMaxLength
         );
-         // Custom user fields. Since user types are not supported here,
+        // Custom user fields. Since user types are not supported here,
         // only fields with no user type id limitation are selected.
         const userFieldProps = getPropsForCustomUserFieldInputs(userFields, intl, userType);
 
         const noUserTypes = !userType && !(userTypes?.length > 0);
         const userTypeConfig = userTypes.find((config) => config.userType === userType);
-        const showDefaultUserFields = 'customer' // userType || noUserTypes;
+        const showDefaultUserFields = 'customer'; // userType || noUserTypes;
 
         const showCustomUserFields = (userType || noUserTypes) && userFieldProps?.length > 0;
-
 
         const classes = classNames(rootClassName || css.root, className);
         const submitInProgress = inProgress;
@@ -114,80 +119,80 @@ function SignupFormComponent(props) {
               hasExistingUserType={!!preselectedUserType}
               intl={intl}
             />
-         {showDefaultUserFields ? (
+            {showDefaultUserFields ? (
               <div className={css.defaultUserFields}>
-              <FieldTextInput
-                type="email"
-                id={formId ? `${formId}.email` : 'email'}
-                name="email"
-                autoComplete="email"
-                label={intl.formatMessage({
-                  id: 'SignupForm.emailLabel',
-                })}
-                placeholder={intl.formatMessage({
-                  id: 'SignupForm.emailPlaceholder',
-                })}
-                validate={validators.composeValidators(emailRequired, emailValid)}
-              />
-              <div className={css.name}>
                 <FieldTextInput
-                  className={css.firstNameRoot}
-                  type="text"
-                  id={formId ? `${formId}.fname` : 'fname'}
-                  name="fname"
-                  autoComplete="given-name"
+                  type="email"
+                  id={formId ? `${formId}.email` : 'email'}
+                  name="email"
+                  autoComplete="email"
                   label={intl.formatMessage({
-                    id: 'SignupForm.firstNameLabel',
+                    id: 'SignupForm.emailLabel',
                   })}
                   placeholder={intl.formatMessage({
-                    id: 'SignupForm.firstNamePlaceholder',
+                    id: 'SignupForm.emailPlaceholder',
                   })}
-                  validate={validators.required(
-                    intl.formatMessage({
-                      id: 'SignupForm.firstNameRequired',
-                    })
-                  )}
+                  validate={validators.composeValidators(emailRequired, emailValid)}
                 />
-                <FieldTextInput
-                  className={css.lastNameRoot}
-                  type="text"
-                  id={formId ? `${formId}.lname` : 'lname'}
-                  name="lname"
-                  autoComplete="family-name"
-                  label={intl.formatMessage({
-                    id: 'SignupForm.lastNameLabel',
-                  })}
-                  placeholder={intl.formatMessage({
-                    id: 'SignupForm.lastNamePlaceholder',
-                  })}
-                  validate={validators.required(
-                    intl.formatMessage({
-                      id: 'SignupForm.lastNameRequired',
-                    })
-                  )}
-                />
-              </div>
-              <UserFieldDisplayName
+                <div className={css.name}>
+                  <FieldTextInput
+                    className={css.firstNameRoot}
+                    type="text"
+                    id={formId ? `${formId}.fname` : 'fname'}
+                    name="fname"
+                    autoComplete="given-name"
+                    label={intl.formatMessage({
+                      id: 'SignupForm.firstNameLabel',
+                    })}
+                    placeholder={intl.formatMessage({
+                      id: 'SignupForm.firstNamePlaceholder',
+                    })}
+                    validate={validators.required(
+                      intl.formatMessage({
+                        id: 'SignupForm.firstNameRequired',
+                      })
+                    )}
+                  />
+                  <FieldTextInput
+                    className={css.lastNameRoot}
+                    type="text"
+                    id={formId ? `${formId}.lname` : 'lname'}
+                    name="lname"
+                    autoComplete="family-name"
+                    label={intl.formatMessage({
+                      id: 'SignupForm.lastNameLabel',
+                    })}
+                    placeholder={intl.formatMessage({
+                      id: 'SignupForm.lastNamePlaceholder',
+                    })}
+                    validate={validators.required(
+                      intl.formatMessage({
+                        id: 'SignupForm.lastNameRequired',
+                      })
+                    )}
+                  />
+                </div>
+                <UserFieldDisplayName
                   formName="SignupForm"
                   className={css.row}
                   userTypeConfig={userTypeConfig}
                   intl={intl}
                 />
-              <FieldTextInput
-                className={css.password}
-                type="password"
-                id={formId ? `${formId}.password` : 'password'}
-                name="password"
-                autoComplete="new-password"
-                label={intl.formatMessage({
-                  id: 'SignupForm.passwordLabel',
-                })}
-                placeholder={intl.formatMessage({
-                  id: 'SignupForm.passwordPlaceholder',
-                })}
-                validate={passwordValidators}
-              />
-            <UserFieldPhoneNumber
+                <FieldTextInput
+                  className={css.password}
+                  type="password"
+                  id={formId ? `${formId}.password` : 'password'}
+                  name="password"
+                  autoComplete="new-password"
+                  label={intl.formatMessage({
+                    id: 'SignupForm.passwordLabel',
+                  })}
+                  placeholder={intl.formatMessage({
+                    id: 'SignupForm.passwordPlaceholder',
+                  })}
+                  validate={passwordValidators}
+                />
+                <UserFieldPhoneNumber
                   formName="SignupForm"
                   className={css.row}
                   userTypeConfig={userTypeConfig}
@@ -225,7 +230,7 @@ function SignupFormComponent(props) {
       }}
     />
   );
-};
+}
 
 SignupFormComponent.defaultProps = {
   rootClassName: null,

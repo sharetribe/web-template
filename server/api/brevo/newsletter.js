@@ -19,7 +19,6 @@ module.exports = async (req, res) => {
     LASTNAME: lastName,
   };
 
-  
   try {
     const data = await apiInstance.createContact(createContact);
     res.status(200).send(data);
@@ -29,14 +28,14 @@ module.exports = async (req, res) => {
       res.status(400).send({
         code: 'CONTACT_ALREADY_EXISTS',
         message: 'Unable to create contact, email is already associated with another Contact',
-        details: error.body.message
+        details: error.body.message,
       });
     } else {
       console.error('An unexpected error occurred:', error);
       res.status(error.statusCode || 500).send({
         code: 'INTERNAL_ERROR',
         message: 'An unexpected error occurred while creating the contact.',
-        details: error.body || error
+        details: error.body || error,
       });
     }
   }

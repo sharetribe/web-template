@@ -43,7 +43,13 @@ import css from './CheckoutPage.module.css';
  * @param {Object} config app-wide configs. This contains hosted configs too.
  * @returns orderParams.
  */
-const getOrderParams = (pageData, shippingDetails, optionalPaymentParams, config, customerEmail) => {
+const getOrderParams = (
+  pageData,
+  shippingDetails,
+  optionalPaymentParams,
+  config,
+  customerEmail
+) => {
   const quantity = pageData.orderData?.quantity;
   const quantityMaybe = quantity ? { quantity } : {};
   const seats = pageData.orderData?.seats;
@@ -59,7 +65,7 @@ const getOrderParams = (pageData, shippingDetails, optionalPaymentParams, config
       ...deliveryMethodMaybe,
       ...shippingDetails,
       ...guestsNameMaybe,
-      email: customerEmail,  
+      email: customerEmail,
     },
   };
 
@@ -76,7 +82,6 @@ const getOrderParams = (pageData, shippingDetails, optionalPaymentParams, config
   };
   return orderParams;
 };
-
 
 const fetchSpeculatedTransactionIfNeeded = (orderParams, pageData, fetchSpeculatedTransaction) => {
   const tx = pageData ? pageData.transaction : null;
@@ -143,7 +148,6 @@ const handleSubmit = (values, process, props, submitting, setSubmitting) => {
   }
   setSubmitting(true);
 
-
   const {
     history,
     config,
@@ -181,7 +185,7 @@ const handleSubmit = (values, process, props, submitting, setSubmitting) => {
 
   // There are multiple XHR calls that needs to be made against the Sharetribe Marketplace API on checkout with payments
   processCheckoutWithoutPayment(orderParams, requestPaymentParams)
-    .then(response => {
+    .then((response) => {
       const { orderId, messageSuccess } = response;
       setSubmitting(false);
 
@@ -197,13 +201,13 @@ const handleSubmit = (values, process, props, submitting, setSubmitting) => {
       onSubmitCallback();
       history.push(orderDetailsPath);
     })
-    .catch(err => {
+    .catch((err) => {
       console.error(err);
       setSubmitting(false);
     });
 };
 
-export const CheckoutPageWithoutPayment = props => {
+export const CheckoutPageWithoutPayment = (props) => {
   const [submitting, setSubmitting] = useState(false);
   // Initialized stripe library is saved to state - if it's needed at some point here too.
 
@@ -298,7 +302,7 @@ export const CheckoutPageWithoutPayment = props => {
   );
 
   const txTransitions = existingTransaction?.attributes?.transitions || [];
-  const hasInquireTransition = txTransitions.find(tr => tr.transition === transitions.INQUIRE);
+  const hasInquireTransition = txTransitions.find((tr) => tr.transition === transitions.INQUIRE);
   const showInitialMessageInput = !hasInquireTransition;
 
   // Get first and last name of the current user and use it in the StripePaymentForm to autofill the name field
@@ -349,7 +353,9 @@ export const CheckoutPageWithoutPayment = props => {
             {showPaymentForm ? (
               <SimpleOrderForm
                 className={css.paymentForm}
-                onSubmit={values => handleSubmit(values, process, props, submitting, setSubmitting)}
+                onSubmit={(values) =>
+                  handleSubmit(values, process, props, submitting, setSubmitting)
+                }
                 inProgress={submitting}
                 formId="CheckoutPagePaymentForm"
                 authorDisplayName={listing?.author?.attributes?.profile?.displayName}

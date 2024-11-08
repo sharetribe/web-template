@@ -14,14 +14,15 @@ apiKey.apiKey = process.env.BREVO_API_KEY;
 let sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
 
 module.exports = async (req, res) => {
-
-  const formattedDate = (dateString =>
+  const formattedDate = ((dateString) =>
     new Date(dateString).toLocaleDateString('it-IT', { timeZone: 'UTC' }).replace(/\//g, '-'))(
     req.body.customerObj.startdate
   );
   try {
     sendSmtpEmail.sender = { name: 'Club Joy Team', email: 'hello@clubjoy.it' };
-    sendSmtpEmail.to = [{ email: `${req.body.customerObj.email}`, name: `${req.body.customerObj.name}` }]; //bookingRecord.providerEmail
+    sendSmtpEmail.to = [
+      { email: `${req.body.customerObj.email}`, name: `${req.body.customerObj.name}` },
+    ]; //bookingRecord.providerEmail
     sendSmtpEmail.templateId = 31;
     sendSmtpEmail.params = {
       providerName: req.body.customerObj.providername,

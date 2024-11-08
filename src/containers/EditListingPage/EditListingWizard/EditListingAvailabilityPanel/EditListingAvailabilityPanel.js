@@ -61,7 +61,7 @@ const createEntryDayGroups = (entries = {}) => {
 };
 
 // Create initial values
-const createInitialValues = availabilityPlan => {
+const createInitialValues = (availabilityPlan) => {
   const { timezone, entries } = availabilityPlan || {};
   const tz = timezone || defaultTimeZone();
   return {
@@ -71,10 +71,10 @@ const createInitialValues = availabilityPlan => {
 };
 
 // Create entries from submit values
-const createEntriesFromSubmitValues = values =>
+const createEntriesFromSubmitValues = (values) =>
   WEEKDAYS.reduce((allEntries, dayOfWeek) => {
     const dayValues = values[dayOfWeek] || [];
-    const dayEntries = dayValues.map(dayValue => {
+    const dayEntries = dayValues.map((dayValue) => {
       const { startTime, endTime, seats } = dayValue;
       const seatsValue = seats ? seats : 0;
       // Note: This template doesn't support seats yet.
@@ -88,16 +88,16 @@ const createEntriesFromSubmitValues = values =>
         : null;
     });
 
-    return allEntries.concat(dayEntries.filter(e => !!e));
+    return allEntries.concat(dayEntries.filter((e) => !!e));
   }, []);
 
 // Create availabilityPlan from submit values
-const createAvailabilityPlan = values => {
+const createAvailabilityPlan = (values) => {
   // Get all seat values from the entries
   const allEntries = createEntriesFromSubmitValues(values);
 
   // Ensure that seat values are numbers before calculating maxSeats
-  const maxSeats = Math.max(...allEntries.map(entry => Number(entry.seats))); // Convert to number
+  const maxSeats = Math.max(...allEntries.map((entry) => Number(entry.seats))); // Convert to number
 
   return {
     availabilityPlan: {
@@ -110,12 +110,10 @@ const createAvailabilityPlan = values => {
   };
 };
 
-
-
 //////////////////////////////////
 // EditListingAvailabilityPanel //
 //////////////////////////////////
-const EditListingAvailabilityPanel = props => {
+const EditListingAvailabilityPanel = (props) => {
   const {
     className,
     rootClassName,
@@ -142,7 +140,6 @@ const EditListingAvailabilityPanel = props => {
     isTeamBuilding,
   } = props;
   // Hooks
-
 
   const [isEditPlanModalOpen, setIsEditPlanModalOpen] = useState(false);
   const [isEditExceptionsModalOpen, setIsEditExceptionsModalOpen] = useState(false);
@@ -173,14 +170,14 @@ const EditListingAvailabilityPanel = props => {
     ? valuesFromLastSubmit
     : createInitialValues(availabilityPlan);
 
-  const handleSubmit = values => {
+  const handleSubmit = (values) => {
     setValuesFromLastSubmit(values);
     // Final Form can wait for Promises to return.
     return onSubmit(createAvailabilityPlan(values))
       .then(() => {
         setIsEditPlanModalOpen(false);
       })
-      .catch(e => {
+      .catch((e) => {
         // Don't close modal if there was an error
       });
   };
@@ -188,7 +185,7 @@ const EditListingAvailabilityPanel = props => {
   const sortedAvailabilityExceptions = allExceptions;
 
   // Save exception click handler
-  const saveException = values => {
+  const saveException = (values) => {
     const {
       availability,
       exceptionStartTime,
@@ -221,7 +218,7 @@ const EditListingAvailabilityPanel = props => {
       .then(() => {
         setIsEditExceptionsModalOpen(false);
       })
-      .catch(e => {
+      .catch((e) => {
         // Don't close modal if there was an error
       });
   };

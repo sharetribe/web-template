@@ -64,9 +64,9 @@ const SurveyForm = ({ className, isTeamBuilding }) => {
     false: '👤',
   };
 
-  const handleJoyChange = value => {
+  const handleJoyChange = (value) => {
     if (joy.includes(value)) {
-      setJoy(joy.filter(item => item !== value));
+      setJoy(joy.filter((item) => item !== value));
     } else {
       setJoy([...joy, value]);
     }
@@ -80,20 +80,20 @@ const SurveyForm = ({ className, isTeamBuilding }) => {
 
   const mapJoyToPubJoy = () => {
     const pubJoyMapping = {
-      '1': '2,3,5',
-      '2': '4',
-      '3': '1,3,5,6,7',
-      '4': '1,2,3,4,5,6,7',
+      1: '2,3,5',
+      2: '4',
+      3: '1,3,5,6,7',
+      4: '1,2,3,4,5,6,7',
     };
 
     const selectedPubJoys = joy
-      .filter(option => pubJoyMapping[option])
-      .map(option => pubJoyMapping[option]);
+      .filter((option) => pubJoyMapping[option])
+      .map((option) => pubJoyMapping[option]);
 
     return selectedPubJoys.join(',');
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (joy.length === 0) {
       alert('Please select at least one joy preference.');
@@ -151,12 +151,8 @@ const SurveyForm = ({ className, isTeamBuilding }) => {
     end: getToday().endOf('month'),
   });
   const getNextMonth = () => ({
-    start: getToday()
-      .add(1, 'months')
-      .startOf('month'),
-    end: getToday()
-      .add(1, 'months')
-      .endOf('month'),
+    start: getToday().add(1, 'months').startOf('month'),
+    end: getToday().add(1, 'months').endOf('month'),
   });
 
   const renderStep = () => {
@@ -192,40 +188,40 @@ const SurveyForm = ({ className, isTeamBuilding }) => {
           </div>
         ) : (
           <div className={css.step}>
-          {!isTeamBuilding ? (
-            <>
-              {isMobile && <p>{intl.formatMessage({ id: 'Survey.step01.subtitle' })}</p>}
-              <h2>{intl.formatMessage({ id: 'Survey.step01.title' })}</h2>
-            </>
-          ) : (
-            <>
-              <h2>{intl.formatMessage({ id: 'Survey.step1.title' })}</h2>
-              <p>{intl.formatMessage({ id: 'Survey.step1.subtitle' })}</p>
-            </>
-          )}
-          <div className={css.cardContainer}>
-            {['1', '2', '3', '4'].map(option => (
-              <div
-                key={option}
-                className={`${css.card} ${joy.includes(option) ? css.selected : ''}`}
-                onClick={() => handleJoyChange(option)}
-              >
-                <span className={css.emoji}>{emojiSets[option]}</span>
-                <div className={css.placeholder}>{placeholders[option]}</div>
-              </div>
-            ))}
+            {!isTeamBuilding ? (
+              <>
+                {isMobile && <p>{intl.formatMessage({ id: 'Survey.step01.subtitle' })}</p>}
+                <h2>{intl.formatMessage({ id: 'Survey.step01.title' })}</h2>
+              </>
+            ) : (
+              <>
+                <h2>{intl.formatMessage({ id: 'Survey.step1.title' })}</h2>
+                <p>{intl.formatMessage({ id: 'Survey.step1.subtitle' })}</p>
+              </>
+            )}
+            <div className={css.cardContainer}>
+              {['1', '2', '3', '4'].map((option) => (
+                <div
+                  key={option}
+                  className={`${css.card} ${joy.includes(option) ? css.selected : ''}`}
+                  onClick={() => handleJoyChange(option)}
+                >
+                  <span className={css.emoji}>{emojiSets[option]}</span>
+                  <div className={css.placeholder}>{placeholders[option]}</div>
+                </div>
+              ))}
+            </div>
+            <button onClick={() => setCurrentStep(1)} className={css.backButton}>
+              {intl.formatMessage({ id: 'Survey.back' })}
+            </button>
+            <button
+              onClick={() => setCurrentStep(3)}
+              className={css.nextButton}
+              disabled={joy.length < 2}
+            >
+              {intl.formatMessage({ id: 'Survey.next' })}
+            </button>
           </div>
-          <button onClick={() => setCurrentStep(1)} className={css.backButton}>
-            {intl.formatMessage({ id: 'Survey.back' })}
-          </button>
-          <button
-            onClick={() => setCurrentStep(3)}
-            className={css.nextButton}
-            disabled={joy.length < 2}
-          >
-            {intl.formatMessage({ id: 'Survey.next' })}
-          </button>
-        </div>
         );
       case 2:
         return (
@@ -242,7 +238,7 @@ const SurveyForm = ({ className, isTeamBuilding }) => {
               </>
             )}
             <div className={css.cardContainer}>
-              {['1', '2', '3', '4'].map(option => (
+              {['1', '2', '3', '4'].map((option) => (
                 <div
                   key={option}
                   className={`${css.card} ${joy.includes(option) ? css.selected : ''}`}

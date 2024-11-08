@@ -11,10 +11,10 @@ module.exports = (req, res) => {
         Authorization: `Bearer ${STRIPE_SECRET_KEY}`,
       },
     })
-    .then(response => {
+    .then((response) => {
       res.status(200).json(response.data);
     })
-    .catch(error => {
+    .catch((error) => {
       res.status(400).json({ message: 'Coupon code is not valid.' });
     });
 };

@@ -41,11 +41,11 @@ const priceData = (price, currency, intl) => {
 
 const LazyImage = lazyLoadWithDimensions(ResponsiveImage, { loadAfterInitialRendering: 3000 });
 
-const PriceMaybe = props => {
+const PriceMaybe = (props) => {
   const { price, publicData, config, intl } = props;
   const { listingType } = publicData || {};
   const validListingTypes = config.listing.listingTypes;
-  const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
+  const foundListingTypeConfig = validListingTypes.find((conf) => conf.listingType === listingType);
   const showPrice = displayPrice(foundListingTypeConfig);
   if (!showPrice && price) {
     return null;
@@ -68,12 +68,12 @@ const PriceMaybe = props => {
   );
 };
 
-export const ListingCardComponent = props => {
+export const ListingCardComponent = (props) => {
   const config = useConfiguration();
   const { className, rootClassName, intl, listing, renderSizes, setActiveListing, showAuthorInfo } =
-  props;
-  const min =listing.attributes.publicData?.min
-  const max = listing.attributes.publicData?.max
+    props;
+  const min = listing.attributes.publicData?.min;
+  const max = listing.attributes.publicData?.max;
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureListing(listing);
   const id = currentListing.id.uuid;
@@ -91,7 +91,7 @@ export const ListingCardComponent = props => {
     variantPrefix = 'listing-card',
   } = config.layout.listingImage;
   const variants = firstImage
-    ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
+    ? Object.keys(firstImage?.attributes?.variants).filter((k) => k.startsWith(variantPrefix))
     : [];
 
   const setActivePropsMaybe = setActiveListing
@@ -119,11 +119,11 @@ export const ListingCardComponent = props => {
       </AspectRatioWrapper>
       <div className={css.info}>
         <div className={css.priceContainer}>
-        {price && price.amount === 0 ? (
-      <span>FREE</span>
-    ) : (
-      <PriceMaybe price={price} publicData={publicData} config={config} intl={intl} />
-    )}
+          {price && price.amount === 0 ? (
+            <span>FREE</span>
+          ) : (
+            <PriceMaybe price={price} publicData={publicData} config={config} intl={intl} />
+          )}
           {listing.attributes.publicData.listingType === 'teambuilding' ? (
             <div className={css.teamBuilding}>
               <IconsPerson size="14px" color="blu" />

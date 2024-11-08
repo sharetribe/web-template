@@ -11,7 +11,7 @@ const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
 const supabaseKey = process.env.REACT_APP_SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const TeamButtonsMaybe = props => {
+const TeamButtonsMaybe = (props) => {
   const intl = useIntl();
   const [fileExists, setFileExists] = useState(false);
   const { className, rootClassName, customerObj, transactionId, start, onSendMessage } = props;
@@ -20,17 +20,17 @@ const TeamButtonsMaybe = props => {
   const [showForm, setShowForm] = useState(false);
 
   const startDate = new Date(start);
-startDate.setHours(0, 0, 0, 0);
+  startDate.setHours(0, 0, 0, 0);
 
-const currentDate = new Date();
-currentDate.setHours(0, 0, 0, 0);
+  const currentDate = new Date();
+  currentDate.setHours(0, 0, 0, 0);
 
-const timeDiff = startDate - currentDate;
-const daysDiff = timeDiff / (1000 * 60 * 60 * 24);
+  const timeDiff = startDate - currentDate;
+  const daysDiff = timeDiff / (1000 * 60 * 60 * 24);
 
-// Use absolute value to determine if the difference is within 5 days
-const isWithinFiveDays = Math.abs(daysDiff) <= 5;
-const isAfterOrOnStartDate = currentDate >= startDate;
+  // Use absolute value to determine if the difference is within 5 days
+  const isWithinFiveDays = Math.abs(daysDiff) <= 5;
+  const isAfterOrOnStartDate = currentDate >= startDate;
 
   useEffect(() => {
     const checkFileExists = async () => {
@@ -80,7 +80,7 @@ const isAfterOrOnStartDate = currentDate >= startDate;
     setShowForm(false);
   };
 
-  const handlePopUpFlow = data => {
+  const handlePopUpFlow = (data) => {
     const { selectedOptionText, receiver, email, address, code, vat, sr, fiscalCode, flow } = data;
     if (flow === 1) {
       createInvoice({
@@ -105,27 +105,24 @@ const isAfterOrOnStartDate = currentDate >= startDate;
       });
     } else if (flow === 2) {
       createRefund({ customerObj, transactionId, selectedOptionText })
-    .then(response => {
-      if (!response.ok) {
-     
-        return response.json().then(errorData => {
-          throw new Error(errorData.details || errorData.message || 'Refund processing error');
+        .then((response) => {
+          if (!response.ok) {
+            return response.json().then((errorData) => {
+              throw new Error(errorData.details || errorData.message || 'Refund processing error');
+            });
+          }
+          return response.json();
+        })
+        .then((res) => {
+          console.log('Refund success:', res);
+        })
+        .catch((error) => {
+          console.error('Refund already requeste', error);
+          alert(`Refund already requested: ${error.message}`);
         });
-      }
-      return response.json();
-    })
-    .then(res => {
-      console.log('Refund success:', res);
-
-    })
-    .catch(error => {
-      console.error('Refund already requeste', error);
-      alert(`Refund already requested: ${error.message}`);
-    });
     }
     setShowForm(false);
   };
-  
 
   const classes = classNames(rootClassName || css.actionButtons, className);
 

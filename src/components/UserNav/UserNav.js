@@ -13,15 +13,17 @@ function UserNav(props) {
   const role = user?.attributes?.profile?.publicData?.role;
 
   const tabs = [
-    ...(role !== 'customer' ? [
-      {
-        text: <FormattedMessage id="UserNav.yourListings" />,
-        selected: currentPage === 'ManageListingsPage',
-        linkProps: {
-          name: 'ManageListingsPage',
-        },
-      }
-    ] : []),
+    ...(role !== 'customer'
+      ? [
+          {
+            text: <FormattedMessage id="UserNav.yourListings" />,
+            selected: currentPage === 'ManageListingsPage',
+            linkProps: {
+              name: 'ManageListingsPage',
+            },
+          },
+        ]
+      : []),
     {
       text: <FormattedMessage id="UserNav.profileSettings" />,
       selected: currentPage === 'ProfileSettingsPage',

@@ -7,7 +7,8 @@ const SLACK_WEBHOOK_URL = process.env.REACT_APP_SLACK_WEBHOOK_URL;
 module.exports = async (req, res) => {
   try {
     let slackMessage;
-    const { firstName, lastName, name, email, website, role, isNewsletter, userType, isProvider } = req.body;
+    const { firstName, lastName, name, email, website, role, isNewsletter, userType, isProvider } =
+      req.body;
     if (isProvider) {
       slackMessage = {
         text: `New Business request: \nCompany Name:${name}\nEmail: ${email}\n`,
@@ -36,4 +37,3 @@ module.exports = async (req, res) => {
     res.status(500).json({ error: 'Failed to send notification to Slack' });
   }
 };
-

@@ -5,7 +5,7 @@ import { compose } from 'redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import omit from 'lodash/omit';
 import classNames from 'classnames';
-import {filterListings} from '../../util/listingsHelpers';
+import { filterListings } from '../../util/listingsHelpers';
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 
@@ -256,7 +256,7 @@ export class SearchPageComponent extends Component {
       : keysOfSelectedFilters.length;
 
     const hasPaginationInfo = !!pagination && pagination.totalItems != null;
-      /*
+    /*
     const totalItems =
       searchParamsAreInSync && hasPaginationInfo
         ? pagination.totalItems

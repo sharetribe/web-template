@@ -103,7 +103,7 @@ export const getPropsForCustomUserFieldInputs = (
   userFieldsConfig,
   intl,
   userType = null,
-  isSignup = true,
+  isSignup = true
 ) =>
   userFieldsConfig?.reduce((pickedFields, fieldConfig) => {
     const { key, userTypeConfig, schemaType, scope, saveConfig = {} } = fieldConfig || {};
@@ -141,7 +141,7 @@ export const getPropsForCustomUserFieldInputs = (
 export const hasPermissionToPostListings = (currentUser) => {
   if (currentUser?.id && !currentUser?.effectivePermissionSet?.id) {
     console.warn(
-      '"effectivePermissionSet" relationship is not defined or included to the fetched currentUser entity.',
+      '"effectivePermissionSet" relationship is not defined or included to the fetched currentUser entity.'
     );
   }
   return currentUser?.effectivePermissionSet?.attributes?.postListings === 'permission/allow';
@@ -158,7 +158,7 @@ export const hasPermissionToPostListings = (currentUser) => {
 export const hasPermissionToInitiateTransactions = (currentUser) => {
   if (currentUser?.id && !currentUser?.effectivePermissionSet?.id) {
     console.warn(
-      '"effectivePermissionSet" relationship is not defined or included to the fetched currentUser entity.',
+      '"effectivePermissionSet" relationship is not defined or included to the fetched currentUser entity.'
     );
   }
   return (
@@ -177,7 +177,7 @@ export const hasPermissionToInitiateTransactions = (currentUser) => {
 export const hasPermissionToViewData = (currentUser) => {
   if (currentUser?.id && !currentUser?.effectivePermissionSet?.id) {
     console.warn(
-      '"effectivePermissionSet" relationship is not defined or included to the fetched currentUser entity.',
+      '"effectivePermissionSet" relationship is not defined or included to the fetched currentUser entity.'
     );
   }
   return currentUser?.effectivePermissionSet?.attributes?.read === 'permission/allow';

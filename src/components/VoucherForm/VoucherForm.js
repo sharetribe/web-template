@@ -13,35 +13,37 @@ class VoucherForm extends Component {
     this.state = {
       currentMonth: getStartOf(new Date(), 'month', props.timeZone),
       voucherCode: '',
-      errorMessage: '', 
+      errorMessage: '',
     };
   }
 
-  handleVoucherChange = event => {
-    this.setState({ voucherCode: event.target.value, errorMessage: '' }); 
+  handleVoucherChange = (event) => {
+    this.setState({ voucherCode: event.target.value, errorMessage: '' });
   };
 
   handleVoucherSubmit = () => {
     const { voucherCode } = this.state;
     if (!voucherCode) {
-      this.setState({ 
+      this.setState({
         errorMessage: (
           <p>{this.props.intl.formatMessage({ id: 'BookingTimeForm.coupon.empty' })}</p>
-        )
+        ),
       });
       return;
     }
-  
+
     const requestBody = {
       code: voucherCode,
     };
-  
+
     checkCoupon(requestBody)
-      .then(response => {
+      .then((response) => {
         if (!response.valid) {
           this.setState({
             errorMessage: (
-              <p className={css.voucherTitleBox}>{this.props.intl.formatMessage({ id: 'BookingTimeForm.coupon.notValid' })}</p>
+              <p className={css.voucherTitleBox}>
+                {this.props.intl.formatMessage({ id: 'BookingTimeForm.coupon.notValid' })}
+              </p>
             ),
           });
           return;
@@ -51,17 +53,19 @@ class VoucherForm extends Component {
         });
         this.setState({ errorMessage: '' });
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error checking voucher:', error);
         let errorMessage = (
-          <p className={css.voucherTitleBox}>{this.props.intl.formatMessage({ id: 'BookingTimeForm.coupon.notValid' })}</p>
+          <p className={css.voucherTitleBox}>
+            {this.props.intl.formatMessage({ id: 'BookingTimeForm.coupon.notValid' })}
+          </p>
         );
         if (error && error.response && error.response.status === 400) {
           errorMessage = (
             <p>{this.props.intl.formatMessage({ id: 'BookingTimeForm.coupon.serverError' })}</p>
           );
         }
-  
+
         this.setState({
           errorMessage,
         });
@@ -70,8 +74,7 @@ class VoucherForm extends Component {
         this.setState({ voucherCode: '' });
       });
   };
-  
- 
+
   render() {
     const { rootClassName, className, formId, form, values, intl } = this.props;
     const { errorMessage, voucherCode } = this.state;

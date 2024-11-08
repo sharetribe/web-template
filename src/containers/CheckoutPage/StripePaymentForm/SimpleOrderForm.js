@@ -11,7 +11,7 @@ import ShippingDetails from '../ShippingDetails/ShippingDetails';
 
 import css from './StripePaymentForm.module.css';
 
-const LocationOrShippingDetails = props => {
+const LocationOrShippingDetails = (props) => {
   const {
     askShippingDetails,
     showPickUplocation,
@@ -26,8 +26,8 @@ const LocationOrShippingDetails = props => {
   const locationDetails = listingLocation?.building
     ? `${listingLocation.building}, ${listingLocation.address}`
     : listingLocation?.address
-    ? listingLocation.address
-    : intl.formatMessage({ id: 'StripePaymentForm.locationUnknown' });
+      ? listingLocation.address
+      : intl.formatMessage({ id: 'StripePaymentForm.locationUnknown' });
 
   return askShippingDetails ? (
     <ShippingDetails intl={intl} formApi={formApi} locale={locale} />

@@ -32,7 +32,7 @@ export class BookingTimeFormComponent extends Component {
     this.props.onSubmit(e);
   }
 
-  handleSeatsInputValidChange = isValid => {
+  handleSeatsInputValidChange = (isValid) => {
     this.setState({ isSeatsInputValid: isValid });
   };
 
@@ -41,23 +41,33 @@ export class BookingTimeFormComponent extends Component {
   // In case you add more fields to the form, make sure you add
   // the values here to the orderData object.
   handleOnChange(formValues) {
-    const { bookingStartTime, bookingEndTime, seats = 1, voucherFee = {}, fee = [] } = formValues.values;
+    const {
+      bookingStartTime,
+      bookingEndTime,
+      seats = 1,
+      voucherFee = {},
+      fee = [],
+    } = formValues.values;
     const startDate = bookingStartTime ? timestampToDate(bookingStartTime) : null;
     const endDate = bookingEndTime ? timestampToDate(bookingEndTime) : null;
-  
+
     const listingId = this.props.listingId;
     const isOwnListing = this.props.isOwnListing;
-  
+
     const isStartBeforeEnd = bookingStartTime < bookingEndTime;
 
-    
-    if (bookingStartTime && bookingEndTime && isStartBeforeEnd && !this.props.fetchLineItemsInProgress) {
+    if (
+      bookingStartTime &&
+      bookingEndTime &&
+      isStartBeforeEnd &&
+      !this.props.fetchLineItemsInProgress
+    ) {
       const orderData = {
         bookingStart: startDate,
         bookingEnd: endDate,
         seats: parseInt(seats, 10),
-        voucherFee: voucherFee,  
-        fee: fee 
+        voucherFee: voucherFee,
+        fee: fee,
       };
       this.props.onFetchTransactionLineItems({
         orderData,
@@ -66,7 +76,6 @@ export class BookingTimeFormComponent extends Component {
       });
     }
   }
-  
 
   render() {
     const {
@@ -92,7 +101,7 @@ export class BookingTimeFormComponent extends Component {
         unitPrice={unitPrice}
         mutators={{ ...arrayMutators }}
         onSubmit={this.handleFormSubmit}
-        render={fieldRenderProps => {
+        render={(fieldRenderProps) => {
           const {
             endDatePlaceholder,
             startDatePlaceholder,
@@ -138,7 +147,7 @@ export class BookingTimeFormComponent extends Component {
             <Form onSubmit={handleSubmit} className={classes} enforcePagePreloadFor="CheckoutPage">
               <FormSpy
                 subscription={{ values: true }}
-                onChange={values => {
+                onChange={(values) => {
                   this.handleOnChange(values);
                 }}
               />
@@ -197,9 +206,8 @@ export class BookingTimeFormComponent extends Component {
 
               {showEstimatedBreakdown ? (
                 <div className={css.priceBreakdownContainer}>
-                  
-                {processName !== 'free-booking' && (
-                  <VoucherForm
+                  {processName !== 'free-booking' && (
+                    <VoucherForm
                       className={css.bookingDates}
                       listingId={listingId}
                       onFetchTimeSlots={onFetchTimeSlots}
@@ -216,44 +224,46 @@ export class BookingTimeFormComponent extends Component {
                 </div>
               ) : null}
 
-        <FormSpy
-          subscription={{ values: true }}
-          onChange={formState => {
-            const { guestNames, fee, seats } = formState.values;
-            const listingId = this.props.listingId.uuid;
-            //EXCEPTION FOR PRIVATE EVENTS
-            // Ensure seats is a number
-            const numberOfSeats = parseInt(seats, 10);
+              <FormSpy
+                subscription={{ values: true }}
+                onChange={(formState) => {
+                  const { guestNames, fee, seats } = formState.values;
+                  const listingId = this.props.listingId.uuid;
+                  //EXCEPTION FOR PRIVATE EVENTS
+                  // Ensure seats is a number
+                  const numberOfSeats = parseInt(seats, 10);
 
-            // Adjust guestNames validation: check if all names are valid non-empty strings
-            //const isGuestNamesValid = guestNames && guestNames.length === numberOfSeats && guestNames.every(name => typeof name === 'string' && name.trim().length > 0);
+                  // Adjust guestNames validation: check if all names are valid non-empty strings
+                  //const isGuestNamesValid = guestNames && guestNames.length === numberOfSeats && guestNames.every(name => typeof name === 'string' && name.trim().length > 0);
 
-            // Validate fees only for the specific listing ID
-            const isFeeValid = listingId === '66dac9f8-e2e3-4611-a30c-64df1ef9ff68'
-              ? fee && fee.length === numberOfSeats && fee.every(f => typeof f === 'string' && f.trim().length > 0)
-              : true;
+                  // Validate fees only for the specific listing ID
+                  const isFeeValid =
+                    listingId === '66dac9f8-e2e3-4611-a30c-64df1ef9ff68'
+                      ? fee &&
+                        fee.length === numberOfSeats &&
+                        fee.every((f) => typeof f === 'string' && f.trim().length > 0)
+                      : true;
 
-            // Disable the button if any of the following conditions are met:
-            // 1. If guest names are not filled out properly.
-            // 2. If the fee array has an empty value or doesn't match the number of guests (only for the specific listing).
-            const shouldDisableSubmit = !(isFeeValid);
+                  // Disable the button if any of the following conditions are met:
+                  // 1. If guest names are not filled out properly.
+                  // 2. If the fee array has an empty value or doesn't match the number of guests (only for the specific listing).
+                  const shouldDisableSubmit = !isFeeValid;
 
-            // Update the state to reflect the disable status
-            this.setState({ disableSubmit: shouldDisableSubmit });
-          }}
-        />
+                  // Update the state to reflect the disable status
+                  this.setState({ disableSubmit: shouldDisableSubmit });
+                }}
+              />
 
-    {/* PrimaryButton for submission */}
-    <div className={css.submitButton}>
-      <PrimaryButton
-        type="submit"
-        inProgress={fetchLineItemsInProgress}
-        disabled={this.state.disableSubmit}  
-      >
-        <FormattedMessage id="BookingTimeForm.requestToBook" />
-      </PrimaryButton>
-    </div>
-
+              {/* PrimaryButton for submission */}
+              <div className={css.submitButton}>
+                <PrimaryButton
+                  type="submit"
+                  inProgress={fetchLineItemsInProgress}
+                  disabled={this.state.disableSubmit}
+                >
+                  <FormattedMessage id="BookingTimeForm.requestToBook" />
+                </PrimaryButton>
+              </div>
 
               <p className={css.finePrint}>
                 {payoutDetailsWarning ? (

@@ -97,11 +97,11 @@ export class TransactionPanelComponent extends Component {
       return;
     }
     onSendMessage(transactionId, message, config)
-      .then(messageId => {
+      .then((messageId) => {
         form.reset();
         this.scrollToMessage(messageId);
       })
-      .catch(e => {
+      .catch((e) => {
         // Ignore, Redux handles the error
       });
   }
@@ -145,7 +145,7 @@ export class TransactionPanelComponent extends Component {
       customerObj,
       config,
       transactionId,
-      onSendMessage, 
+      onSendMessage,
     } = this.props;
 
     const isCustomer = transactionRole === 'customer';
@@ -176,17 +176,17 @@ export class TransactionPanelComponent extends Component {
     const bookingState = stateData.processState;
     const bookingRequestDate =
       this.props?.activityFeed?.props?.transaction?.attributes?.transitions?.find(
-        t => t.transition === 'transition/accept'
+        (t) => t.transition === 'transition/accept'
       )?.createdAt || null;
 
     const updatedCustomerObj = { ...customerObj, providerEmail };
-   
+
     const teamButtons = (
       <TeamButtonsMaybe
         start={start}
         customerObj={customerObj}
         transactionId={tId}
-        onSendMessage={onSendMessage} 
+        onSendMessage={onSendMessage}
       />
     );
 
@@ -206,7 +206,7 @@ export class TransactionPanelComponent extends Component {
     );
 
     const listingTypeConfigs = config.listing.listingTypes;
-    const listingTypeConfig = listingTypeConfigs.find(conf => conf.listingType === listingType);
+    const listingTypeConfig = listingTypeConfigs.find((conf) => conf.listingType === listingType);
     const showPrice = isInquiryProcess && displayPrice(listingTypeConfig);
 
     const showSendMessageForm =
@@ -258,7 +258,7 @@ export class TransactionPanelComponent extends Component {
               showInquiryMessage={isInquiryProcess}
               isCustomer={isCustomer}
             />
-    
+
             {!isInquiryProcess ? (
               <div className={css.orderDetails}>
                 <div className={css.orderDetailsMobileSection}>
@@ -299,80 +299,81 @@ export class TransactionPanelComponent extends Component {
                 />
               </div>
             ) : null}
-{this.props.listing.id.uuid === '66dac9f8-e2e3-4611-a30c-64df1ef9ff68' ? (
-  <div className={css.feedContainer}>
-    {this.props.protectedData.fee?.length > 0 ? (
-      <div>
-        <strong>Taglie tappeto richieste:</strong>
-        <ul>
-          {this.props.protectedData.fee.map((fee, index) => {
-            let feeLabel = '';
-            switch (fee) {
-              case 'smallFee':
-                feeLabel = 'Tappeto Small';
-                break;
-              case 'mediumFee':
-                feeLabel = 'Tappeto Medium';
-                break;
-              case 'largeFee':
-                feeLabel = 'Tappeto Large';
-                break;
-              default:
-                feeLabel = ''; 
-            }
-            return <li key={index}>{feeLabel}</li>;
-          })}
-        </ul>
-      </div>
-    ) : (
-      <p></p>
-    )}
+            {this.props.listing.id.uuid === '66dac9f8-e2e3-4611-a30c-64df1ef9ff68' ? (
+              <div className={css.feedContainer}>
+                {this.props.protectedData.fee?.length > 0 ? (
+                  <div>
+                    <strong>Taglie tappeto richieste:</strong>
+                    <ul>
+                      {this.props.protectedData.fee.map((fee, index) => {
+                        let feeLabel = '';
+                        switch (fee) {
+                          case 'smallFee':
+                            feeLabel = 'Tappeto Small';
+                            break;
+                          case 'mediumFee':
+                            feeLabel = 'Tappeto Medium';
+                            break;
+                          case 'largeFee':
+                            feeLabel = 'Tappeto Large';
+                            break;
+                          default:
+                            feeLabel = '';
+                        }
+                        return <li key={index}>{feeLabel}</li>;
+                      })}
+                    </ul>
+                  </div>
+                ) : (
+                  <p></p>
+                )}
 
-    {this.props.protectedData.seatNames?.length > 0 ? (
-      <div>
-        <strong>Nomi prenotazione</strong>
-        <ul>
-          {listingType === 'teambuilding' ? (
-            <li key={0}>{this.props.protectedData.seatNames[0] || ''}</li>
-          ) : (
-            this.props.protectedData.seatNames.map((seat, index) => {
-              let seatName = seat && typeof seat === 'string' && seat.trim() !== '' ? seat : 'Cliente senza nome';
-              return <li key={index}>{seatName}</li>;
-            })
-          )}
-        </ul>
-      </div>
-    ) : (
-      <p>Nessun nome disponibile</p>
-    )}
-  </div>
-) : (
-  <div className={css.feedContainer}>
-    {/* For all other listings, just display seat names */}
-    {this.props.protectedData.seatNames?.length > 0 ? (
-      <div>
-        <strong>Nomi prenotazione:</strong>
-        <ul>
-          {listingType === 'teambuilding' ? (
-            <li key={0}>{this.props.protectedData.seatNames[0] || ''}</li>
-          ) : (
-            this.props.protectedData.seatNames.map((seat, index) => {
-              let seatName = seat && typeof seat === 'string' && seat.trim() !== '' ? seat : 'Cliente senza nome';
-              return <li key={index}>{seatName}</li>;
-            })
-          )}
-        </ul>
-      </div>
-    ) : (
-      <p>Nessun nome disponibile</p>
-    )}
-  </div>
-)}
-
-
-
-
-
+                {this.props.protectedData.seatNames?.length > 0 ? (
+                  <div>
+                    <strong>Nomi prenotazione</strong>
+                    <ul>
+                      {listingType === 'teambuilding' ? (
+                        <li key={0}>{this.props.protectedData.seatNames[0] || ''}</li>
+                      ) : (
+                        this.props.protectedData.seatNames.map((seat, index) => {
+                          let seatName =
+                            seat && typeof seat === 'string' && seat.trim() !== ''
+                              ? seat
+                              : 'Cliente senza nome';
+                          return <li key={index}>{seatName}</li>;
+                        })
+                      )}
+                    </ul>
+                  </div>
+                ) : (
+                  <p>Nessun nome disponibile</p>
+                )}
+              </div>
+            ) : (
+              <div className={css.feedContainer}>
+                {/* For all other listings, just display seat names */}
+                {this.props.protectedData.seatNames?.length > 0 ? (
+                  <div>
+                    <strong>Nomi prenotazione:</strong>
+                    <ul>
+                      {listingType === 'teambuilding' ? (
+                        <li key={0}>{this.props.protectedData.seatNames[0] || ''}</li>
+                      ) : (
+                        this.props.protectedData.seatNames.map((seat, index) => {
+                          let seatName =
+                            seat && typeof seat === 'string' && seat.trim() !== ''
+                              ? seat
+                              : 'Cliente senza nome';
+                          return <li key={index}>{seatName}</li>;
+                        })
+                      )}
+                    </ul>
+                  </div>
+                ) : (
+                  <p>Nessun nome disponibile</p>
+                )}
+              </div>
+            )}
 
             <FeedSection
               rootClassName={css.feedContainer}

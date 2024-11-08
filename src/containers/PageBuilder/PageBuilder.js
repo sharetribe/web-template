@@ -96,7 +96,7 @@ function PageBuilder(props) {
     currentPage,
     ...pageProps
   } = props;
- 
+
   if (!pageAssetsData && fallbackPage && !inProgress && error) {
     return fallbackPage;
   }
@@ -179,7 +179,8 @@ function PageBuilder(props) {
                           </>
                         ) : isTeamBuilding ? (
                           <>
-                             <LandingPageSection onSearchSubmit={handleSearchSubmit}
+                            <LandingPageSection
+                              onSearchSubmit={handleSearchSubmit}
                               isTeamBuilding={isTeamBuilding}
                             />
                             <SectionBuilder sections={sections} options={options} />

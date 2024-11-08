@@ -57,8 +57,8 @@ const mergeCurrentUser = (oldCurrentUser, newCurrentUser) => {
   return newCurrentUser === null
     ? null
     : oldCurrentUser === null
-    ? newCurrentUser
-    : { id, type, attributes, ...oldRelationships, ...relationships };
+      ? newCurrentUser
+      : { id, type, attributes, ...oldRelationships, ...relationships };
 };
 
 const initialState = {
@@ -151,7 +151,7 @@ export default function reducer(state = initialState, action = {}) {
 
 // ================ Selectors ================ //
 
-export const hasCurrentUserErrors = state => {
+export const hasCurrentUserErrors = (state) => {
   const { user } = state;
   return (
     user.currentUserShowError ||
@@ -161,7 +161,7 @@ export const hasCurrentUserErrors = state => {
   );
 };
 
-export const verificationSendingInProgress = state => {
+export const verificationSendingInProgress = (state) => {
   return state.user.sendVerificationEmailInProgress;
 };
 
@@ -169,12 +169,12 @@ export const verificationSendingInProgress = state => {
 
 export const currentUserShowRequest = () => ({ type: CURRENT_USER_SHOW_REQUEST });
 
-export const currentUserShowSuccess = user => ({
+export const currentUserShowSuccess = (user) => ({
   type: CURRENT_USER_SHOW_SUCCESS,
   payload: user,
 });
 
-export const currentUserShowError = e => ({
+export const currentUserShowError = (e) => ({
   type: CURRENT_USER_SHOW_ERROR,
   payload: e,
   error: true,
@@ -186,12 +186,12 @@ const fetchCurrentUserHasListingsRequest = () => ({
   type: FETCH_CURRENT_USER_HAS_LISTINGS_REQUEST,
 });
 
-export const fetchCurrentUserHasListingsSuccess = hasListings => ({
+export const fetchCurrentUserHasListingsSuccess = (hasListings) => ({
   type: FETCH_CURRENT_USER_HAS_LISTINGS_SUCCESS,
   payload: { hasListings },
 });
 
-const fetchCurrentUserHasListingsError = e => ({
+const fetchCurrentUserHasListingsError = (e) => ({
   type: FETCH_CURRENT_USER_HAS_LISTINGS_ERROR,
   error: true,
   payload: e,
@@ -208,12 +208,12 @@ export const fetchCurrentUserTransactionsSuccess = (transactions) => ({
   payload: { transactions },
 });
 
-export const fetchCurrentUserNotificationsSuccess = transactions => ({
+export const fetchCurrentUserNotificationsSuccess = (transactions) => ({
   type: FETCH_CURRENT_USER_NOTIFICATIONS_SUCCESS,
   payload: { transactions },
 });
 
-const fetchCurrentUserNotificationsError = e => ({
+const fetchCurrentUserNotificationsError = (e) => ({
   type: FETCH_CURRENT_USER_NOTIFICATIONS_ERROR,
   error: true,
   payload: e,
@@ -223,12 +223,12 @@ const fetchCurrentUserHasOrdersRequest = () => ({
   type: FETCH_CURRENT_USER_HAS_ORDERS_REQUEST,
 });
 
-export const fetchCurrentUserHasOrdersSuccess = hasOrders => ({
+export const fetchCurrentUserHasOrdersSuccess = (hasOrders) => ({
   type: FETCH_CURRENT_USER_HAS_ORDERS_SUCCESS,
   payload: { hasOrders },
 });
 
-const fetchCurrentUserHasOrdersError = e => ({
+const fetchCurrentUserHasOrdersError = (e) => ({
   type: FETCH_CURRENT_USER_HAS_ORDERS_ERROR,
   error: true,
   payload: e,
@@ -242,7 +242,7 @@ export const sendVerificationEmailSuccess = () => ({
   type: SEND_VERIFICATION_EMAIL_SUCCESS,
 });
 
-export const sendVerificationEmailError = e => ({
+export const sendVerificationEmailError = (e) => ({
   type: SEND_VERIFICATION_EMAIL_ERROR,
   error: true,
   payload: e,
@@ -269,7 +269,7 @@ export const fetchCurrentUserHasListings = () => (dispatch, getState, sdk) => {
 
   return sdk.ownListings
     .query(params)
-    .then(response => {
+    .then((response) => {
       const hasListings = response.data.data && response.data.data.length > 0;
 
       const hasPublishedListings =
@@ -277,7 +277,7 @@ export const fetchCurrentUserHasListings = () => (dispatch, getState, sdk) => {
         ensureOwnListing(response.data.data[0]).attributes.state !== LISTING_STATE_DRAFT;
       dispatch(fetchCurrentUserHasListingsSuccess(!!hasPublishedListings));
     })
-    .catch(e => dispatch(fetchCurrentUserHasListingsError(storableError(e))));
+    .catch((e) => dispatch(fetchCurrentUserHasListingsError(storableError(e))));
 };
 
 export const fetchCurrentUserHasOrders = () => (dispatch, getState, sdk) => {
@@ -296,11 +296,11 @@ export const fetchCurrentUserHasOrders = () => (dispatch, getState, sdk) => {
 
   return sdk.transactions
     .query(params)
-    .then(response => {
+    .then((response) => {
       const hasOrders = response.data.data && response.data.data.length > 0;
       dispatch(fetchCurrentUserHasOrdersSuccess(!!hasOrders));
     })
-    .catch(e => dispatch(fetchCurrentUserHasOrdersError(storableError(e))));
+    .catch((e) => dispatch(fetchCurrentUserHasOrdersError(storableError(e))));
 };
 
 // Notificaiton page size is max (100 items on page)
@@ -359,14 +359,14 @@ export const fetchCurrentUserNotifications = () => (dispatch, getState, sdk) => 
   dispatch(fetchCurrentUserNotificationsRequest());
   sdk.transactions
     .query(apiQueryParams)
-    .then(response => {
+    .then((response) => {
       const transactions = response.data.data;
       dispatch(fetchCurrentUserNotificationsSuccess(transactions));
     })
-    .catch(e => dispatch(fetchCurrentUserNotificationsError(storableError(e))));
+    .catch((e) => dispatch(fetchCurrentUserNotificationsError(storableError(e))));
 };
 
-export const fetchCurrentUser = options => (dispatch, getState, sdk) => {
+export const fetchCurrentUser = (options) => (dispatch, getState, sdk) => {
   const state = getState();
   const { currentUserHasListings, currentUserShowTimestamp } = state.user || {};
   const { isAuthenticated } = state.auth;
@@ -414,7 +414,7 @@ export const fetchCurrentUser = options => (dispatch, getState, sdk) => {
 
   return sdk.currentUser
     .show(parameters)
-    .then(response => {
+    .then((response) => {
       const entities = denormalisedResponseEntities(response);
       if (entities.length !== 1) {
         throw new Error('Expected a resource in the sdk.currentUser.show response');
@@ -431,7 +431,7 @@ export const fetchCurrentUser = options => (dispatch, getState, sdk) => {
       dispatch(currentUserShowSuccess(currentUser));
       return currentUser;
     })
-    .then(currentUser => {
+    .then((currentUser) => {
       // If currentUser is not active (e.g. in 'pending-approval' state),
       // then they don't have listings or transactions that we care about.
       if (isUserAuthorized(currentUser)) {
@@ -451,7 +451,7 @@ export const fetchCurrentUser = options => (dispatch, getState, sdk) => {
       // Make sure auth info is up to date
       dispatch(authInfo());
     })
-    .catch(e => {
+    .catch((e) => {
       // Make sure auth info is up to date
       dispatch(authInfo());
       log.error(e, 'fetch-current-user-failed');
@@ -467,5 +467,5 @@ export const sendVerificationEmail = () => (dispatch, getState, sdk) => {
   return sdk.currentUser
     .sendVerificationEmail()
     .then(() => dispatch(sendVerificationEmailSuccess()))
-    .catch(e => dispatch(sendVerificationEmailError(storableError(e))));
+    .catch((e) => dispatch(sendVerificationEmailError(storableError(e))));
 };

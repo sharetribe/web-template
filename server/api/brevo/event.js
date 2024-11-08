@@ -3,10 +3,8 @@ const { createClient } = require('@supabase/supabase-js');
 const brevo = require('@getbrevo/brevo');
 
 module.exports = async (req, res) => {
-
   const brevoClient = new brevo.TransactionalEmailsApi();
   brevoClient.authentications['apiKey'].apiKey = process.env.BREVO_API_KEY;
-
 
   const sendSmtpEmail = new brevo.SendSmtpEmail({
     subject: 'Richiesta Di Evento',
@@ -17,11 +15,10 @@ module.exports = async (req, res) => {
       <p>Email: ${req.body.email}</p><br/>
       <p>Company: ${req.body.company}</p><br/>
       <p>Tipo Di evento: ${req.body.eventType}</p><br/>
-      </body></html>`
+      </body></html>`,
   });
 
   try {
-
     const data = await brevoClient.sendTransacEmail(sendSmtpEmail);
     console.log('Email sent successfully:', data);
     res.json({ message: 'Email sent successfully', data });

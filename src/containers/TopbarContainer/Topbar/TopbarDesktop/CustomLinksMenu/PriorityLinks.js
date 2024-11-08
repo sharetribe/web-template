@@ -17,7 +17,7 @@ import css from './PriorityLinks.module.css';
 export function CreateListingMenuLink(props) {
   return (
     <div className={props.customLinksMenuClass}>
-    {/* <NamedLink name="NewListingPage" className={classNames(css.priorityLink, css.highlight)}>
+      {/* <NamedLink name="NewListingPage" className={classNames(css.priorityLink, css.highlight)}>
         <span className={css.priorityLinkLabel}>
           <FormattedMessage id="TopbarDesktop.createListing" />
         </span>

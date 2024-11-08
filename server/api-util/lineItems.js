@@ -25,7 +25,8 @@ const getItemQuantityAndLineItems = (orderData, publicData, currency) => {
   const deliveryMethod = orderData && orderData.deliveryMethod;
   const isShipping = deliveryMethod === 'shipping';
   const isPickup = deliveryMethod === 'pickup';
-  const { shippingPriceInSubunitsOneItem, shippingPriceInSubunitsAdditionalItems } = publicData || {};
+  const { shippingPriceInSubunitsOneItem, shippingPriceInSubunitsAdditionalItems } =
+    publicData || {};
 
   // Calculate shipping fee if applicable
   const shippingFee = isShipping
@@ -49,15 +50,15 @@ const getItemQuantityAndLineItems = (orderData, publicData, currency) => {
         },
       ]
     : isPickup
-    ? [
-        {
-          code: 'line-item/pickup-fee',
-          unitPrice: new Money(0, currency),
-          quantity: 1,
-          includeFor: ['customer', 'provider'],
-        },
-      ]
-    : [];
+      ? [
+          {
+            code: 'line-item/pickup-fee',
+            unitPrice: new Money(0, currency),
+            quantity: 1,
+            includeFor: ['customer', 'provider'],
+          },
+        ]
+      : [];
 
   return { quantity, extraLineItems: deliveryLineItem };
 };
@@ -67,9 +68,10 @@ const getItemQuantityAndLineItems = (orderData, publicData, currency) => {
  *
  * @param {*} orderData should contain quantity
  */
-const getHourQuantityAndLineItems = orderData => {
+const getHourQuantityAndLineItems = (orderData) => {
   const { bookingStart, bookingEnd } = orderData || {};
-  const quantity = bookingStart && bookingEnd ? calculateQuantityFromHours(bookingStart, bookingEnd) : null;
+  const quantity =
+    bookingStart && bookingEnd ? calculateQuantityFromHours(bookingStart, bookingEnd) : null;
 
   return { quantity, extraLineItems: [] };
 };
@@ -83,7 +85,8 @@ const getHourQuantityAndLineItems = orderData => {
 const getDateRangeQuantityAndLineItems = (orderData, code) => {
   // bookingStart & bookingend are used with day-based bookings (how many days / nights)
   const { bookingStart, bookingEnd } = orderData || {};
-  const quantity = bookingStart && bookingEnd ? calculateQuantityFromDates(bookingStart, bookingEnd, code) : null;
+  const quantity =
+    bookingStart && bookingEnd ? calculateQuantityFromDates(bookingStart, bookingEnd, code) : null;
 
   return { quantity, extraLineItems: [] };
 };
@@ -97,7 +100,8 @@ const getDateRangeQuantityAndLineItems = (orderData, code) => {
 const getDateRangeUnitsSeatsLineItems = (orderData, code) => {
   const { bookingStart, bookingEnd, seats } = orderData;
 
-  const units = bookingStart && bookingEnd ? calculateQuantityFromDates(bookingStart, bookingEnd, code) : null;
+  const units =
+    bookingStart && bookingEnd ? calculateQuantityFromDates(bookingStart, bookingEnd, code) : null;
 
   return { units, seats, extraLineItems: [] };
 };
@@ -107,7 +111,7 @@ const getDateRangeUnitsSeatsLineItems = (orderData, code) => {
  *
  * @param {*} orderData should contain quantity
  */
-const getHourUnitsSeatsAndLineItems = orderData => {
+const getHourUnitsSeatsAndLineItems = (orderData) => {
   const { bookingStart, bookingEnd, seats } = orderData || {};
 
   const units = bookingStart && bookingEnd ? 1 : null;
@@ -142,7 +146,6 @@ const getHourUnitsSeatsAndLineItems = orderData => {
  * @returns {Array} lineItems
  */
 exports.transactionLineItems = (listing, orderData, providerCommission, customerCommission) => {
-
   const publicData = listing.attributes.publicData;
   const unitPrice = listing.attributes.price;
   const currency = unitPrice.currency;
@@ -172,12 +175,12 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
     unitType === 'item'
       ? getItemQuantityAndLineItems(orderData, publicData, currency)
       : unitType === 'hour'
-      ? getHourUnitsSeatsAndLineItems(orderData) // Adjusted to use the new function
-      : ['day', 'night'].includes(unitType) && !!orderData.seats
-      ? getDateRangeUnitsSeatsLineItems(orderData, code)
-      : ['day', 'night'].includes(unitType)
-      ? getDateRangeQuantityAndLineItems(orderData, code)
-      : {};
+        ? getHourUnitsSeatsAndLineItems(orderData) // Adjusted to use the new function
+        : ['day', 'night'].includes(unitType) && !!orderData.seats
+          ? getDateRangeUnitsSeatsLineItems(orderData, code)
+          : ['day', 'night'].includes(unitType)
+            ? getDateRangeQuantityAndLineItems(orderData, code)
+            : {};
 
   const { quantity, units, seats, extraLineItems } = quantityAndExtraLineItems;
 
@@ -213,22 +216,22 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
   };
   const estimatedTotal = order?.unitPrice.amount * order?.seats;
   const voucherFeePrice = orderData?.voucherFee
-  ? resolveVoucherFeePrice(orderData.voucherFee, estimatedTotal)
-  : null;
+    ? resolveVoucherFeePrice(orderData.voucherFee, estimatedTotal)
+    : null;
 
-  const sizeFeePrice = orderData.fee && orderData.fee.length >0 ? resolveSizeFeePrice(orderData.fee) : null;
+  const sizeFeePrice =
+    orderData.fee && orderData.fee.length > 0 ? resolveSizeFeePrice(orderData.fee) : null;
 
   const sizeFee = sizeFeePrice
-  ? [
-      {
-        code: 'line-item/tappeto-Size-fees', 
-        unitPrice: sizeFeePrice,
-        quantity: 1,
-        includeFor: ['provider', 'customer'],
-      },
-    ]
-  : [];
-  
+    ? [
+        {
+          code: 'line-item/tappeto-Size-fees',
+          unitPrice: sizeFeePrice,
+          quantity: 1,
+          includeFor: ['provider', 'customer'],
+        },
+      ]
+    : [];
 
   const voucherFee = voucherFeePrice
     ? [
@@ -241,8 +244,8 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
       ]
     : [];
 
-  const getNegation = percentage => {
-      return -1 * percentage;
+  const getNegation = (percentage) => {
+    return -1 * percentage;
   };
 
   // Adjusted commission percentage basing on total
@@ -302,9 +305,7 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
         {
           code: 'line-item/provider-commission',
           unitPrice: calculateTotalFromLineItems([order, ...voucherFee, ...sizeFee]),
-          percentage: getNegation(
-            providerCommission.percentage,
-          ),
+          percentage: getNegation(providerCommission.percentage),
           includeFor: ['provider'],
         },
       ]

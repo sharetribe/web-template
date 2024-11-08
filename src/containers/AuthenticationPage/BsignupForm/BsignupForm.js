@@ -18,9 +18,9 @@ const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
 const supabaseKey = process.env.REACT_APP_SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const BsignupFormComponent = props => {
+const BsignupFormComponent = (props) => {
   const intl = useIntl();
-  const history = useHistory(); 
+  const history = useHistory();
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -31,15 +31,15 @@ const BsignupFormComponent = props => {
     businessType: '',
   });
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
 
-  const handleFormSubmit = async values => {
+  const handleFormSubmit = async (values) => {
     try {
       const payloadMessage = {
         name: formData.name,
@@ -72,7 +72,6 @@ const BsignupFormComponent = props => {
       }, 2000);
 
       return { success: true, data };
-
     } catch (error) {
       console.error('Error:', error.message);
       alert(`An error occurred: ${error.message}`);
@@ -85,7 +84,7 @@ const BsignupFormComponent = props => {
       {...props}
       mutators={{ ...arrayMutators }}
       onSubmit={handleFormSubmit}
-      render={fieldRenderProps => {
+      render={(fieldRenderProps) => {
         const { handleSubmit, termsAndConditions } = fieldRenderProps;
 
         return (

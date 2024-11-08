@@ -65,25 +65,21 @@ import css from './TransactionPage.module.css';
 import { hasPermissionToViewData } from '../../util/userHelpers.js';
 
 // Submit dispute and close the review modal
-const onDisputeOrder = (
-  currentTransactionId,
-  transitionName,
-  onTransition,
-  setDisputeSubmitted
-) => values => {
-  const { disputeReason } = values;
-  const params = disputeReason ? { protectedData: { disputeReason } } : {};
-  onTransition(currentTransactionId, transitionName, params)
-    .then(r => {
-      return setDisputeSubmitted(true);
-    })
-    .catch(e => {
-      // Do nothing.
-    });
-};
+const onDisputeOrder =
+  (currentTransactionId, transitionName, onTransition, setDisputeSubmitted) => (values) => {
+    const { disputeReason } = values;
+    const params = disputeReason ? { protectedData: { disputeReason } } : {};
+    onTransition(currentTransactionId, transitionName, params)
+      .then((r) => {
+        return setDisputeSubmitted(true);
+      })
+      .catch((e) => {
+        // Do nothing.
+      });
+  };
 
 // TransactionPage handles data loading for Sale and Order views to transaction pages in Inbox.
-export const TransactionPageComponent = props => {
+export const TransactionPageComponent = (props) => {
   const [isDisputeModalOpen, setDisputeModalOpen] = useState(false);
   const [disputeSubmitted, setDisputeSubmitted] = useState(false);
   const [isReviewModalOpen, setReviewModalOpen] = useState(false);
@@ -138,7 +134,7 @@ export const TransactionPageComponent = props => {
   const customerObj = {
     bookingid: transaction?.booking?.id?.uuid,
     name: transaction?.customer.attributes?.profile?.displayName,
-    email: transaction?.attributes?.protectedData?.email ,
+    email: transaction?.attributes?.protectedData?.email,
     eventname: transaction?.listing.attributes?.title,
     seats: transaction?.booking?.attributes?.seats,
     seatnames: transaction?.attributes?.protectedData?.seatNames,
@@ -146,7 +142,8 @@ export const TransactionPageComponent = props => {
     enddate: transaction?.booking?.attributes?.end,
     eventlocation: transaction?.listing.attributes.publicData?.location?.address,
     eventgeoLocation: transaction?.listing.attributes?.geolocation,
-    providername: transaction?.listing?.author?.attributes?.profile?.publicData?.providerName ?? ' ',
+    providername:
+      transaction?.listing?.author?.attributes?.profile?.publicData?.providerName ?? ' ',
     cid: transaction?.customer.id?.uuid,
   };
 
@@ -158,7 +155,7 @@ export const TransactionPageComponent = props => {
     // Process was not recognized!
   }
 
-  const isTxOnPaymentPending = tx => {
+  const isTxOnPaymentPending = (tx) => {
     return process ? process.getState(tx) === process.states.PENDING_PAYMENT : null;
   };
 
@@ -209,7 +206,7 @@ export const TransactionPageComponent = props => {
   }
 
   // Customer can create a booking, if the tx is in "inquiry" state.
-  const handleSubmitOrderRequest = values => {
+  const handleSubmitOrderRequest = (values) => {
     const {
       bookingDates,
       bookingStartTime,
@@ -227,13 +224,13 @@ export const TransactionPageComponent = props => {
           },
         }
       : bookingStartTime && bookingEndTime
-      ? {
-          bookingDates: {
-            bookingStart: timestampToDate(bookingStartTime),
-            bookingEnd: timestampToDate(bookingEndTime),
-          },
-        }
-      : {};
+        ? {
+            bookingDates: {
+              bookingStart: timestampToDate(bookingStartTime),
+              bookingEnd: timestampToDate(bookingEndTime),
+            },
+          }
+        : {};
 
     const quantity = Number.parseInt(quantityRaw, 10);
     const quantityMaybe = Number.isInteger(quantity) ? { quantity } : {};
@@ -262,7 +259,7 @@ export const TransactionPageComponent = props => {
   };
 
   // Submit review and close the review modal
-  const onSubmitReview = values => {
+  const onSubmitReview = (values) => {
     const { reviewRating, reviewContent } = values;
     const rating = Number.parseInt(reviewRating, 10);
     const { states, transitions } = process;
@@ -285,11 +282,11 @@ export const TransactionPageComponent = props => {
     const params = { reviewRating: rating, reviewContent };
 
     onSendReview(transaction, transitionOptions, params, config)
-      .then(r => {
+      .then((r) => {
         setReviewModalOpen(false);
         setReviewSubmitted(true);
       })
-      .catch(e => {
+      .catch((e) => {
         // Do nothing.
       });
   };
@@ -386,7 +383,7 @@ export const TransactionPageComponent = props => {
   const hasLineItems = transaction?.attributes?.lineItems?.length > 0;
   const unitLineItem = hasLineItems
     ? transaction.attributes?.lineItems?.find(
-        item => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal
+        (item) => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal
       )
     : null;
 
@@ -402,8 +399,8 @@ export const TransactionPageComponent = props => {
   const lineItemUnitType = unitLineItem
     ? unitLineItem.code
     : isDataAvailable
-    ? formatLineItemUnitType(transaction, listing)
-    : null;
+      ? formatLineItemUnitType(transaction, listing)
+      : null;
 
   const timeZone = listing?.attributes?.availabilityPlan?.timezone;
   const dateType = lineItemUnitType === LINE_ITEM_HOUR ? DATE_TYPE_DATETIME : DATE_TYPE_DATE;
@@ -624,7 +621,7 @@ TransactionPageComponent.propTypes = {
   intl: intlShape.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     fetchTransactionError,
     transitionInProgress,
@@ -678,7 +675,7 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     onTransition: (txId, transitionName, params) =>
       dispatch(makeTransition(txId, transitionName, params)),

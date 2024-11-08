@@ -39,7 +39,7 @@ export const stateDataShape = shape({
 
 // Transitions are following process.edn format: "transition/my-transtion-name"
 // This extracts the 'my-transtion-name' string if namespace exists
-const getTransitionKey = transitionName => {
+const getTransitionKey = (transitionName) => {
   const [nameSpace, transitionKey] = transitionName.split('/');
   return transitionKey || transitionName;
 };

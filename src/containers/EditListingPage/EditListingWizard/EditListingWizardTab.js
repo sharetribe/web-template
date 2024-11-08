@@ -42,7 +42,7 @@ export const SUPPORTED_TABS = [
 ];
 
 const pathParamsToNextTab = (params, tab, marketplaceTabs) => {
-  const nextTabIndex = marketplaceTabs.findIndex(s => s === tab) + 1;
+  const nextTabIndex = marketplaceTabs.findIndex((s) => s === tab) + 1;
   const nextTab =
     nextTabIndex < marketplaceTabs.length
       ? marketplaceTabs[nextTabIndex]
@@ -72,7 +72,7 @@ const redirectAfterDraftUpdate = (listingId, params, tab, marketplaceTabs, histo
   history.push(to);
 };
 
-const EditListingWizardTab = props => {
+const EditListingWizardTab = (props) => {
   const {
     tab,
     marketplaceTabs,
@@ -143,7 +143,7 @@ const EditListingWizardTab = props => {
       : { ...updateValues, id: currentListing.id };
 
     return onUpdateListingOrCreateListingDraft(tab, updateListingValues)
-      .then(r => {
+      .then((r) => {
         // In Availability tab, the submitted data (plan) is inside a modal
         // We don't redirect provider immediately after plan is set
         if (isNewListingFlow && tab !== AVAILABILITY) {
@@ -151,12 +151,12 @@ const EditListingWizardTab = props => {
           automaticRedirectsForNewListingFlow(tab, listingId);
         }
       })
-      .catch(e => {
+      .catch((e) => {
         // No need for extra actions
       });
   };
 
-  const panelProps = tab => {
+  const panelProps = (tab) => {
     return {
       className: css.panel,
       errors,
@@ -171,7 +171,7 @@ const EditListingWizardTab = props => {
       submitButtonText: tabSubmitButtonText,
       listingTypes: config.listing.listingTypes,
       onManageDisableScrolling,
-      onSubmit: values => {
+      onSubmit: (values) => {
         return onCompleteEditListingWizardTab(tab, values);
       },
     };

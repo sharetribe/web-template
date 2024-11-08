@@ -236,7 +236,7 @@ export const exceptionFreeSlotsPerDate = (start, end, exceptions, timeZone) => {
   return pipe(
     generateDates(s, e, timeZone),
     map(toExceptionFreeSlotsPerDate(availableSlots, timeZone)),
-    toHashMap(({ id, ...rest }) => [id, rest]),
+    toHashMap(({ id, ...rest }) => [id, rest])
   );
 };
 
@@ -258,7 +258,7 @@ const getExceptionsOnDate = (dateRange, exceptions, timeZone) => {
       inclusiveEndTime(dayEnd),
       ...exceptionRange,
       undefined,
-      timeZone,
+      timeZone
     );
     const dayIsInsideException = dayStartInsideException && dayEndInsideException;
 
@@ -266,7 +266,7 @@ const getExceptionsOnDate = (dateRange, exceptions, timeZone) => {
     const exceptionEndIsInsideDate = isInRange(
       inclusiveEndTime(e.attributes.end),
       ...dateRange,
-      timeZone,
+      timeZone
     );
     // Pick slots that overlap with the 'day'.
     return dayIsInsideException || exceptionStartIsInsideDate || exceptionEndIsInsideDate;
@@ -465,6 +465,6 @@ export const availabilityPerDate = (start, end, plan, exceptions) => {
   return pipe(
     generateDates(s, e, timeZone),
     map(toAvailabilityPerDate(plan, exceptions, timeZone)),
-    toHashMap((x) => [x.id, x]),
+    toHashMap((x) => [x.id, x])
   );
 };

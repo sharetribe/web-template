@@ -9,7 +9,7 @@ const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
 const supabaseKey = process.env.REACT_APP_SUPABASE_KEY; // Ensure this is correctly set in your .env file
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const ActionButtonsMaybe = props => {
+const ActionButtonsMaybe = (props) => {
   const {
     className,
     rootClassName,
@@ -29,25 +29,22 @@ const ActionButtonsMaybe = props => {
 
   const buttonsDisabled = primaryButtonProps?.inProgress || secondaryButtonProps?.inProgress;
 
-  const insertBooking = async obj => {
-
-  
+  const insertBooking = async (obj) => {
     const { eventgeoLocation = { lat: null, lng: null }, ...rest } = obj;
     const { lat, lng } = eventgeoLocation;
-  
+
     const newObj = {
       ...rest,
       latitude: lat,
       longitude: lng,
     };
-  
+
     try {
       const { data, error } = await supabase.from('bookings').insert([newObj]);
     } catch (err) {
       console.error('Unexpected error inserting booking:', err);
     }
   };
-  
 
   const handlePrimaryButtonClick = () => {
     if (isProvider) {

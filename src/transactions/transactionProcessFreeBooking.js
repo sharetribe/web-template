@@ -169,7 +169,7 @@ export const graph = {
 // Check if a transition is the kind that should be rendered
 // when showing transition history (e.g. ActivityFeed)
 // The first transition and most of the expiration transitions made by system are not relevant
-export const isRelevantPastTransition = transition => {
+export const isRelevantPastTransition = (transition) => {
   return [
     transitions.ACCEPT,
     transitions.OPERATOR_ACCEPT,
@@ -189,13 +189,13 @@ export const isRelevantPastTransition = transition => {
 
 // Processes might be different on how reviews are handled.
 // Default processes use two-sided diamond shape, where either party can make the review first
-export const isCustomerReview = transition => {
+export const isCustomerReview = (transition) => {
   return [transitions.REVIEW_1_BY_CUSTOMER, transitions.REVIEW_2_BY_CUSTOMER].includes(transition);
 };
 
 // Processes might be different on how reviews are handled.
 // Default processes use two-sided diamond shape, where either party can make the review first
-export const isProviderReview = transition => {
+export const isProviderReview = (transition) => {
   return [transitions.REVIEW_1_BY_PROVIDER, transitions.REVIEW_2_BY_PROVIDER].includes(transition);
 };
 
@@ -205,14 +205,14 @@ export const isProviderReview = transition => {
 // i.e. the backend. This helper is used to check if the transition
 // should go through the local API endpoints, or if using JS SDK is
 // enough.
-export const isPrivileged = transition => {
+export const isPrivileged = (transition) => {
   return [transitions.REQUEST_PAYMENT, transitions.REQUEST_PAYMENT_AFTER_INQUIRY].includes(
     transition
   );
 };
 
 // Check when transaction is completed (booking over)
-export const isCompleted = transition => {
+export const isCompleted = (transition) => {
   const txCompletedTransitions = [
     transitions.COMPLETE,
     transitions.OPERATOR_COMPLETE,
@@ -229,7 +229,7 @@ export const isCompleted = transition => {
 
 // Check when transaction is refunded (booking did not happen)
 // In these transitions action/stripe-refund-payment is called
-export const isRefunded = transition => {
+export const isRefunded = (transition) => {
   const txRefundedTransitions = [
     transitions.EXPIRE_PAYMENT,
     transitions.EXPIRE,

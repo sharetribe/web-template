@@ -12,7 +12,7 @@ import css from './TimeRange.module.css';
 const DASH = '–';
 const BREAK_WORD_MIN_LENGTH = 27;
 
-export const TimeRangeComponent = props => {
+export const TimeRangeComponent = (props) => {
   const { rootClassName, className, startDate, endDate, seats, dateType, timeZone, intl } = props;
 
   const start = formatDateIntoPartials(startDate, intl, { timeZone });
@@ -98,7 +98,7 @@ TimeRangeComponent.defaultProps = {
   className: null,
   dateType: null,
   timeZone: null,
-}; 
+};
 
 TimeRangeComponent.propTypes = {
   rootClassName: string,

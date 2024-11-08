@@ -30,7 +30,7 @@ const sortEntries = () => (a, b) => {
  * @param {Redux Thunk} onSubmit promise fn.
  * @param {Array<string>} weekdays ['mon', 'tue', etc.]
  */
-const submit = (onSubmit, weekdays) => values => {
+const submit = (onSubmit, weekdays) => (values) => {
   const sortedValues = weekdays.reduce(
     (submitValues, day) => {
       return submitValues[day]
@@ -50,7 +50,7 @@ const submit = (onSubmit, weekdays) => values => {
  * Create and edit availability plan of the listing.
  * This is essentially the weekly schedule.
  */
-const EditListingAvailabilityPlanFormComponent = props => {
+const EditListingAvailabilityPlanFormComponent = (props) => {
   const { onSubmit, ...restOfprops } = props;
 
   return (
@@ -60,7 +60,7 @@ const EditListingAvailabilityPlanFormComponent = props => {
       mutators={{
         ...arrayMutators,
       }}
-      render={fieldRenderProps => {
+      render={(fieldRenderProps) => {
         const {
           rootClassName,
           className,
@@ -83,7 +83,7 @@ const EditListingAvailabilityPlanFormComponent = props => {
           values[day] ? entries.concat(values[day]) : entries;
         const hasUnfinishedEntries = !!weekdays
           .reduce(concatDayEntriesReducer, [])
-          .find(e => !e.startTime || !e.endTime);
+          .find((e) => !e.startTime || !e.endTime);
 
         const { updateListingError } = fetchErrors || {};
 
@@ -107,7 +107,7 @@ const EditListingAvailabilityPlanFormComponent = props => {
               <FormattedMessage id="EditListingAvailabilityPlanForm.hoursOfOperationTitle" />
             </Heading>
             <div className={css.week}>
-              {weekdays.map(w => {
+              {weekdays.map((w) => {
                 return (
                   <AvailabilityPlanEntries
                     dayOfWeek={w}
@@ -167,4 +167,3 @@ const EditListingAvailabilityPlanForm = compose(injectIntl)(
 EditListingAvailabilityPlanForm.displayName = 'EditListingAvailabilityPlanForm';
 
 export default EditListingAvailabilityPlanForm;
-

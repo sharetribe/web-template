@@ -10,7 +10,7 @@ const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
 const supabaseKey = process.env.REACT_APP_SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const ProviderButtonsMaybe = props => {
+const ProviderButtonsMaybe = (props) => {
   const intl = useIntl();
   const { className, rootClassName, customerObj, transactionId, start } = props;
 
@@ -22,17 +22,16 @@ const ProviderButtonsMaybe = props => {
   const fileInputRef = useRef(null);
 
   const startDate = new Date(start);
-startDate.setHours(0, 0, 0, 0);
+  startDate.setHours(0, 0, 0, 0);
 
-const currentDate = new Date();
-currentDate.setHours(0, 0, 0, 0);
+  const currentDate = new Date();
+  currentDate.setHours(0, 0, 0, 0);
 
-const timeDiff = startDate - currentDate;
-const daysDiff = timeDiff / (1000 * 60 * 60 * 24);
+  const timeDiff = startDate - currentDate;
+  const daysDiff = timeDiff / (1000 * 60 * 60 * 24);
 
-
-const isWithinFiveDays = Math.abs(daysDiff) <= 5;
-const isAfterOrOnStartDate = currentDate >= startDate;
+  const isWithinFiveDays = Math.abs(daysDiff) <= 5;
+  const isAfterOrOnStartDate = currentDate >= startDate;
 
   const handlePrimaryButtonClick = () => {
     fileInputRef.current.click();
@@ -43,7 +42,7 @@ const isAfterOrOnStartDate = currentDate >= startDate;
     notifyInvoice({ customerObj });
   };
 
-  const handleFileChange = async event => {
+  const handleFileChange = async (event) => {
     const selectedFile = event.target.files[0];
     setFile(selectedFile);
 
@@ -87,7 +86,7 @@ const isAfterOrOnStartDate = currentDate >= startDate;
     setShowPopUp(true);
   };
 
-  const handleConfirmRefund = selectedOption => {
+  const handleConfirmRefund = (selectedOption) => {
     createRefund({ customerObj, transactionId, selectedOption });
   };
 

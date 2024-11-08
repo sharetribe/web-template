@@ -49,19 +49,20 @@ import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2 } from '../../compone
 
 import css from './OrderPanel.module.css';
 
-const BookingTimeForm = loadable(() =>
-  import(/* webpackChunkName: "BookingTimeForm" */ './BookingTimeForm/BookingTimeForm')
+const BookingTimeForm = loadable(
+  () => import(/* webpackChunkName: "BookingTimeForm" */ './BookingTimeForm/BookingTimeForm')
 );
-const BookingDatesForm = loadable(() =>
-  import(/* webpackChunkName: "BookingDatesForm" */ './BookingDatesForm/BookingDatesForm')
+const BookingDatesForm = loadable(
+  () => import(/* webpackChunkName: "BookingDatesForm" */ './BookingDatesForm/BookingDatesForm')
 );
-const InquiryWithoutPaymentForm = loadable(() =>
-  import(
-    /* webpackChunkName: "InquiryWithoutPaymentForm" */ './InquiryWithoutPaymentForm/InquiryWithoutPaymentForm'
-  )
+const InquiryWithoutPaymentForm = loadable(
+  () =>
+    import(
+      /* webpackChunkName: "InquiryWithoutPaymentForm" */ './InquiryWithoutPaymentForm/InquiryWithoutPaymentForm'
+    )
 );
-const ProductOrderForm = loadable(() =>
-  import(/* webpackChunkName: "ProductOrderForm" */ './ProductOrderForm/ProductOrderForm')
+const ProductOrderForm = loadable(
+  () => import(/* webpackChunkName: "ProductOrderForm" */ './ProductOrderForm/ProductOrderForm')
 );
 
 // This defines when ModalInMobile shows content as Modal
@@ -122,7 +123,7 @@ const handleSubmit = (
 
 const dateFormattingOptions = { month: 'short', day: 'numeric', weekday: 'short' };
 
-const PriceMaybe = props => {
+const PriceMaybe = (props) => {
   const {
     price,
     publicData,
@@ -133,7 +134,7 @@ const PriceMaybe = props => {
   } = props;
   const { listingType, unitType } = publicData || {};
 
-  const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
+  const foundListingTypeConfig = validListingTypes.find((conf) => conf.listingType === listingType);
   const showPrice = displayPrice(foundListingTypeConfig);
   if (!showPrice || !price) {
     return null;
@@ -155,12 +156,8 @@ const PriceMaybe = props => {
   ) : (
     <div className={css.priceContainer}>
       <p className={css.price}>
-      {price.amount === 0 ? (
-      <span>FREE</span>
-    ) : (
-      formatMoneyIfSupportedCurrency(price, intl)
-    )}
-        </p>
+        {price.amount === 0 ? <span>FREE</span> : formatMoneyIfSupportedCurrency(price, intl)}
+      </p>
       <div className={css.perUnit}>
         <FormattedMessage id="OrderPanel.perUnit" values={{ unitType }} />
       </div>
@@ -168,7 +165,7 @@ const PriceMaybe = props => {
   );
 };
 
-const OrderPanel = props => {
+const OrderPanel = (props) => {
   const {
     rootClassName,
     className,
@@ -251,11 +248,11 @@ const OrderPanel = props => {
   const showInquiryForm = processName === INQUIRY_PROCESS_NAME;
 
   const supportedProcessesInfo = getSupportedProcessesInfo();
-  const isKnownProcess = supportedProcessesInfo.map(info => info.name).includes(processName);
+  const isKnownProcess = supportedProcessesInfo.map((info) => info.name).includes(processName);
 
   const { pickupEnabled, shippingEnabled } = listing?.attributes?.publicData || {};
 
-  const listingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
+  const listingTypeConfig = validListingTypes.find((conf) => conf.listingType === listingType);
   const displayShipping = displayDeliveryShipping(listingTypeConfig);
   const displayPickup = displayDeliveryPickup(listingTypeConfig);
   const allowOrdersOfMultipleItems = [STOCK_MULTIPLE_ITEMS, STOCK_INFINITE_MULTIPLE_ITEMS].includes(
@@ -305,8 +302,7 @@ const OrderPanel = props => {
         <div className={css.author}>
           <AvatarSmall user={author} className={css.providerAvatar} />
           <span className={css.providerNameLinked}>
-           
-            <FormattedMessage id="OrderPanel.author" values={{ name: authorLink }}  />
+            <FormattedMessage id="OrderPanel.author" values={{ name: authorLink }} />
           </span>
           <span className={css.providerNamePlain}>
             <FormattedMessage id="OrderPanel.author" values={{ name: authorDisplayName }} />

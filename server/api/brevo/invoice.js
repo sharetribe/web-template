@@ -33,7 +33,7 @@ module.exports = async (req, res) => {
 
     const bookingRecord = data[0];
     console.log('Booking record:', bookingRecord);
-    const formattedDate = (dateString =>
+    const formattedDate = ((dateString) =>
       new Date(dateString).toLocaleDateString('it-IT', { timeZone: 'UTC' }).replace(/\//g, '-'))(
       bookingRecord.startdate
     );
@@ -61,7 +61,9 @@ module.exports = async (req, res) => {
             startDate: formattedDate,
           };
           const emailResponse = await brevoClient.sendTransacEmail(sendSmtpEmail);
-          res.status(200).json({ message: 'Email sent successfully to customer', data: emailResponse });
+          res
+            .status(200)
+            .json({ message: 'Email sent successfully to customer', data: emailResponse });
         } catch {
           console.error('Failed to send customer email', emailError);
         }
@@ -75,5 +77,3 @@ module.exports = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
-
-

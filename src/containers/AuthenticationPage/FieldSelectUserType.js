@@ -32,8 +32,8 @@ function FieldSelectUserType(props) {
   const hasMultipleUserTypes = userTypes?.length > 1;
   const classes = classNames(rootClassName || css.userTypeSelect, className);
 
-return <FieldHidden name={'customer'} />
-/* 
+  return <FieldHidden name={'customer'} />;
+  /* 
   return hasMultipleUserTypes && !hasExistingUserType ? (
     <FieldSelect
       id={name}

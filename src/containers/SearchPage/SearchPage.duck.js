@@ -85,17 +85,17 @@ export default listingPageReducer;
 
 // ================ Action creators ================ //
 
-export const searchListingsRequest = searchParams => ({
+export const searchListingsRequest = (searchParams) => ({
   type: SEARCH_LISTINGS_REQUEST,
   payload: { searchParams },
 });
 
-export const searchListingsSuccess = response => ({
+export const searchListingsSuccess = (response) => ({
   type: SEARCH_LISTINGS_SUCCESS,
   payload: { data: response.data },
 });
 
-export const searchListingsError = e => ({
+export const searchListingsError = (e) => ({
   type: SEARCH_LISTINGS_ERROR,
   error: true,
   payload: e,
@@ -113,10 +113,10 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
   //       ...and then turned enforceValidListingType config to true in configListing.js
   // Read More:
   // https://www.sharetribe.com/docs/how-to/manage-search-schemas-with-flex-cli/#adding-listing-search-schemas
-  const searchValidListingTypes = listingTypes => {
+  const searchValidListingTypes = (listingTypes) => {
     return config.listing.enforceValidListingType
       ? {
-          pub_listingType: listingTypes.map(l => l.listingType),
+          pub_listingType: listingTypes.map((l) => l.listingType),
           // pub_transactionProcessAlias: listingTypes.map(l => l.transactionType.alias),
           // pub_unitType: listingTypes.map(l => l.transactionType.unitType),
         }
@@ -146,13 +146,13 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
     const categoryKeys = validURLParamForCategoryData(prefix, categories, 1, params);
     const nonCategoryKeys = Object.entries(params).reduce(
       (picked, [k, v]) => (k.startsWith(categoryParamPrefix) ? picked : { ...picked, [k]: v }),
-      {},
+      {}
     );
 
     return { ...nonCategoryKeys, ...categoryKeys };
   };
-  const priceSearchParams = priceParam => {
-    const inSubunits = value => convertUnitToSubUnit(value, unitDivisor(config.currency));
+  const priceSearchParams = (priceParam) => {
+    const inSubunits = (value) => convertUnitToSubUnit(value, unitDivisor(config.currency));
     const values = priceParam ? priceParam.split(',') : [];
     return priceParam && values.length === 2
       ? {
@@ -161,9 +161,9 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
       : {};
   };
 
-  const datesSearchParams = datesParam => {
+  const datesSearchParams = (datesParam) => {
     const searchTZ = 'Etc/UTC';
-    const datesFilter = config.search.defaultFilters.find(f => f.key === 'dates');
+    const datesFilter = config.search.defaultFilters.find((f) => f.key === 'dates');
     const values = datesParam ? datesParam.split(',') : [];
     const hasValues = datesFilter && datesParam && values.length === 2;
     const { dateRangeMode, availability } = datesFilter || {};
@@ -179,8 +179,8 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
     //   3) Make exact dates filtering against that specific time zone
     //   This setup would be better for dates filter,
     //   but it enforces a UX where location is always asked first and therefore configurability
-    const getProlongedStart = date => subtractTime(date, 14, 'hours', searchTZ);
-    const getProlongedEnd = date => addTime(date, 12, 'hours', searchTZ);
+    const getProlongedStart = (date) => subtractTime(date, 14, 'hours', searchTZ);
+    const getProlongedEnd = (date) => addTime(date, 12, 'hours', searchTZ);
 
     const startDate = hasValues ? parseDateFromISO8601(values[0], searchTZ) : null;
     const endRaw = hasValues ? parseDateFromISO8601(values[1], searchTZ) : null;
@@ -188,8 +188,8 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
       hasValues && isNightlyMode
         ? endRaw
         : hasValues
-        ? getExclusiveEndDate(endRaw, searchTZ)
-        : null;
+          ? getExclusiveEndDate(endRaw, searchTZ)
+          : null;
 
     const today = getStartOf(new Date(), 'day', searchTZ);
     const possibleStartDate = subtractTime(today, 14, 'hours', searchTZ);
@@ -220,7 +220,7 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
       : {};
   };
 
-  const stockFilters = datesMaybe => {
+  const stockFilters = (datesMaybe) => {
     const hasDatesFilterInUse = Object.keys(datesMaybe).length > 0;
 
     // If dates filter is not in use,
@@ -249,7 +249,7 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
     perPage,
   };
 
-  const modifyPubJoyToHasAny = params => {
+  const modifyPubJoyToHasAny = (params) => {
     if (params.pub_joy) {
       params.pub_joy = params.pub_joy.replace('has_all', 'has_any');
     }
@@ -265,7 +265,7 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
 
   return sdk.listings
     .query(updatedParams)
-    .then(response => {
+    .then((response) => {
       const listingFields = config?.listing?.listingFields;
       const sanitizeConfig = { listingFields };
       dispatch(addMarketplaceEntities(response, sanitizeConfig));
@@ -281,7 +281,7 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
     });
 };
 
-export const setActiveListing = listingId => ({
+export const setActiveListing = (listingId) => ({
   type: SEARCH_MAP_SET_ACTIVE_LISTING,
   payload: listingId,
 });

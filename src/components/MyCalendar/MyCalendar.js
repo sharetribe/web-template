@@ -212,7 +212,7 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
                       }}
                       className={css.listItem}
                     >
-                      {activity.startTime} {selectedListing.attributes.title} 
+                      {activity.startTime} {selectedListing.attributes.title}
                       {/* Seats: {seatAttendees}/{seatCount} */}
                     </li>
                   );

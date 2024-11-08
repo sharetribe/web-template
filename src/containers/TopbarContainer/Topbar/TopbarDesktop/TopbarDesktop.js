@@ -51,7 +51,7 @@ function InboxLink({ notificationCount, currentUserHasListings }) {
       name="InboxPage"
       params={{ tab: currentUserHasListings ? 'sales' : 'orders' }}
     >
-       <span className={css.login}>
+      <span className={css.login}>
         <FormattedMessage id="TopbarDesktop.inbox" />
         {notificationDot}
       </span>
@@ -72,30 +72,28 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout, userRole }) => {
         <Avatar className={css.avatar} user={currentUser} disableProfileLink />
       </MenuLabel>
       <MenuContent className={css.profileMenuContent}>
-      <MenuItem key="CMSPage">
-  {userRole === 'provider' && (
-   
-      <NamedLink
-        className={classNames(css.menuLink, currentPageClass('CMSPage'))}
-        name="CMSPage"
-        params={{ pageId: 'overview' }}
-      >
-        <span className={css.menuItemBorder} />
-        <FormattedMessage id="TopbarDesktop.overview" />
-      </NamedLink>
-
-  )}
-    </MenuItem>
+        <MenuItem key="CMSPage">
+          {userRole === 'provider' && (
+            <NamedLink
+              className={classNames(css.menuLink, currentPageClass('CMSPage'))}
+              name="CMSPage"
+              params={{ pageId: 'overview' }}
+            >
+              <span className={css.menuItemBorder} />
+              <FormattedMessage id="TopbarDesktop.overview" />
+            </NamedLink>
+          )}
+        </MenuItem>
         <MenuItem key="ManageListingsPage">
-        {userRole === 'provider' && (
-          <NamedLink
-            className={classNames(css.menuLink, currentPageClass('ManageListingsPage'))}
-            name="ManageListingsPage"
-          >
-            <span className={css.menuItemBorder} />
-            <FormattedMessage id="TopbarDesktop.yourListingsLink" />
-          </NamedLink>
-        )}
+          {userRole === 'provider' && (
+            <NamedLink
+              className={classNames(css.menuLink, currentPageClass('ManageListingsPage'))}
+              name="ManageListingsPage"
+            >
+              <span className={css.menuItemBorder} />
+              <FormattedMessage id="TopbarDesktop.yourListingsLink" />
+            </NamedLink>
+          )}
         </MenuItem>
         <MenuItem key="ProfileSettingsPage">
           <NamedLink
@@ -223,7 +221,12 @@ const TopbarDesktop = (props) => {
   ) : null;
 
   const profileMenuMaybe = authenticatedOnClientSide ? (
-    <ProfileMenu currentPage={currentPage} currentUser={currentUser} onLogout={onLogout} userRole={userRole}/>
+    <ProfileMenu
+      currentPage={currentPage}
+      currentUser={currentUser}
+      onLogout={onLogout}
+      userRole={userRole}
+    />
   ) : null;
   const signupLinkMaybe = isAuthenticatedOrJustHydrated ? null : <SignupLink />;
   const loginLinkMaybe = isAuthenticatedOrJustHydrated ? null : <LoginLink />;

@@ -96,7 +96,7 @@
   composes: textSmall from global;
   font-weight: var(--fontWeightBold);
   /*color: var(--colorGrey700);*/
-  color:black;
+  color: black;
   margin: 0;
 }
 
@@ -129,10 +129,10 @@
 
 .teamBuilding {
   display: flex;
-  align-items: center; 
-  margin-left: auto; 
-  padding-left: 10px; 
-  margin-top: -12px; 
+  align-items: center;
+  margin-left: auto;
+  padding-left: 10px;
+  margin-top: -12px;
 }
 
 .da {
