@@ -210,13 +210,15 @@ export const ManageListingsPageComponent = props => {
               />
             ))}
           </div>
-          <DiscardDraftModal
-            id="ManageListingsPage"
-            isOpen={discardDraftModalOpen}
-            onManageDisableScrolling={onManageDisableScrolling}
-            onCloseModal={() => setDiscardDraftModalOpen(false)}
-            onDiscardDraft={handleDiscardDraft}
-          />
+          {onManageDisableScrolling && discardDraftModalOpen ? (
+            <DiscardDraftModal
+              id="ManageListingsPage"
+              isOpen={discardDraftModalOpen}
+              onManageDisableScrolling={onManageDisableScrolling}
+              onCloseModal={() => setDiscardDraftModalOpen(false)}
+              onDiscardDraft={handleDiscardDraft}
+            />
+          ) : null}
 
           <PaginationLinksMaybe
             listingsAreLoaded={listingsAreLoaded}
