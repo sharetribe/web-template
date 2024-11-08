@@ -82,6 +82,9 @@ app.use(
 app.use(
   helmet({
     contentSecurityPolicy: false,
+    referrerPolicy: {
+      policy: 'origin',
+    },
   })
 );
 
