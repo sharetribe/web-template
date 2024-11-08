@@ -14,7 +14,7 @@ apiKey.apiKey = process.env.BREVO_API_KEY;
 let sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
 
 module.exports = async (req, res) => {
-  console.log('req.body', req.body);
+
   const formattedDate = (dateString =>
     new Date(dateString).toLocaleDateString('it-IT', { timeZone: 'UTC' }).replace(/\//g, '-'))(
     req.body.customerObj.startdate

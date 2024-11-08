@@ -97,7 +97,8 @@ function SignupFormComponent(props) {
 
         const noUserTypes = !userType && !(userTypes?.length > 0);
         const userTypeConfig = userTypes.find((config) => config.userType === userType);
-        const showDefaultUserFields = userType || noUserTypes;
+        const showDefaultUserFields = 'customer' // userType || noUserTypes;
+
         const showCustomUserFields = (userType || noUserTypes) && userFieldProps?.length > 0;
 
 

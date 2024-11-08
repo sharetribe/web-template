@@ -230,13 +230,6 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       loadData: pageDataLoadingAPI.AuthenticationPage.loadData,
     },
     {
-      path: '/signup/provider',
-      name: 'SignupPage',
-      component: AuthenticationPage,
-      extraProps: { role: 'provider' },
-      loadData: pageDataLoadingAPI.AuthenticationPage.loadData,
-    },
-    {
       path: '/bsignup',
       name: 'bSignupPage',
       component: AuthenticationPage,

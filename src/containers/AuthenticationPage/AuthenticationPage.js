@@ -58,6 +58,7 @@ import css from './AuthenticationPage.module.css';
 import { FacebookLogo, GoogleLogo } from './socialLoginLogos';
 import { newsletter } from '../../util/api';
 
+
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
 const supabaseKey = process.env.REACT_APP_SUPABASE_KEY; 
 const supabase = createClient(supabaseUrl, supabaseKey);
@@ -252,6 +253,7 @@ export function AuthenticationForms(props) {
         role,
         isNewsletter,
         isSignup: true,
+        userType,
       };
       await slackNotifications(payloadMessage)
         .then(() => {
