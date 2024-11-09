@@ -19,7 +19,7 @@ function Counter() {
         console.error('Error fetching counter', error);
       } else {
         // setCounter(data.value);
-        setCounter(101);
+        setCounter(493);
       }
     };
 

@@ -26,7 +26,7 @@ import { mergeConfig } from './util/configHelpers';
 import { IntlProvider } from './util/reactIntl';
 import { includeCSSProperties } from './util/style';
 import { IncludeScripts } from './util/includeScripts';
-
+import WhatsappIcon from './components/Icons/whatsapp';
 import { MaintenanceMode } from './components';
 
 // routing
@@ -261,6 +261,7 @@ export function ClientApp(props) {
           <HelmetProvider>
             <IncludeScripts config={appConfig} />
             <BrowserRouter>
+              <WhatsappIcon />
               <Routes logLoadDataCalls={logLoadDataCalls} />
             </BrowserRouter>
           </HelmetProvider>

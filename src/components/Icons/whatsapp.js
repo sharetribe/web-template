@@ -1,4 +1,5 @@
 import React from 'react';
+import css from './WhatsappIcon.module.css'; 
 
 const whatsappNumber = '3757765898';
 
@@ -9,6 +10,7 @@ const WhatsappIcon = (props) => (
       width="1em"
       height="1em"
       viewBox="0 0 256 258"
+      className={css.customClass}
       {...props}
     >
       <defs>
