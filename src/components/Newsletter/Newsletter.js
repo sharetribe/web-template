@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { createClient } from '@supabase/supabase-js';
 import { useHistory } from 'react-router-dom'; // Import useHistory
@@ -16,8 +16,13 @@ function Newsletter() {
   const [name, setName] = useState('');
   const [lastname, setLastname] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isClient, setIsClient] = useState(false); // New state for client-side rendering
   const intl = useIntl();
   const history = useHistory(); // Initialize history
+
+  useEffect(() => {
+    setIsClient(true); // Set to true on client side
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -64,14 +69,16 @@ function Newsletter() {
   return (
     <div className={css.formContainer}>
       <div className={css.buttonContainer}>
-        <PopupButton
-          url="https://calendly.com/hello-epym"
-          rootElement={document.getElementById('root')}
-          text="☎️ Experience Planner gratis"
-          className={css.calendlyButton} 
-        />
+        {isClient && ( // Only render PopupButton on the client side
+          <PopupButton
+            url="https://calendly.com/hello-epym"
+            rootElement={document.getElementById('root')}
+            text="☎️ Experience Planner gratis"
+            className={css.calendlyButton} 
+          />
+        )}
         <PrimaryButton
-          onClick={handleNavigate} // Use the navigation function on click
+          onClick={handleNavigate}
           className={css.button}
         >
           Prenota il tuo evento
