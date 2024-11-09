@@ -10184,6 +10184,11 @@ react-big-calendar@^1.15.0:
     react-overlays "^5.2.1"
     uncontrollable "^7.2.1"
 
+react-calendly@^4.3.1:
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/react-calendly/-/react-calendly-4.3.1.tgz#3775d468eecfdc3cb32d6cc81aac5779df129cb1"
+  integrity sha512-poyUH3NOUOlsotr8ho5WzbsbPuRAppaY+Jvu+C/PkwTP6WT807pNFI8+HrbbuRknXZbd75zpzysOJQvcu3P8Pg==
+
 react-dates@^21.8.0:
   version "21.8.0"
   resolved "https://registry.yarnpkg.com/react-dates/-/react-dates-21.8.0.tgz#355c3c7a243a7c29568fe00aca96231e171a5e94"

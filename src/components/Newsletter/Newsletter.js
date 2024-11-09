@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useIntl } from 'react-intl';
 import { createClient } from '@supabase/supabase-js';
+import { useHistory } from 'react-router-dom'; // Import useHistory
 import css from './Newsletter.module.css';
 import { PrimaryButton } from '../Button/Button';
+import { PopupButton } from 'react-calendly';
 import { newsletter } from '../../util/api';
 
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
@@ -12,10 +14,10 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 function Newsletter() {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-
   const [lastname, setLastname] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const intl = useIntl();
+  const history = useHistory(); // Initialize history
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -50,6 +52,10 @@ function Newsletter() {
     }
   };
 
+  const handleNavigate = () => {
+    history.push('/ts'); 
+  };
+
   const heartStyle = {
     color: 'red',
     margin: '2px',
@@ -57,6 +63,21 @@ function Newsletter() {
 
   return (
     <div className={css.formContainer}>
+      <div className={css.buttonContainer}>
+        <PopupButton
+          url="https://calendly.com/hello-epym"
+          rootElement={document.getElementById('root')}
+          text="☎️ Experience Planner gratis"
+          className={css.calendlyButton} 
+        />
+        <PrimaryButton
+          onClick={handleNavigate} // Use the navigation function on click
+          className={css.button}
+        >
+          Prenota il tuo evento
+        </PrimaryButton>
+      </div>
+
       <form onSubmit={handleSubmit} className={css.form}>
         <p style={{ textAlign: 'center' }}>
           {intl.formatMessage({ id: 'Newsletter.header' })}
