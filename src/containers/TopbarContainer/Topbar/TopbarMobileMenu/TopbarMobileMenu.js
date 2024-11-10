@@ -16,6 +16,40 @@ import {
 
 import css from './TopbarMobileMenu.module.css';
 
+const CustomLinkComponent = ({ linkConfig, currentPage }) => {
+  const { group, text, type, href, route } = linkConfig;
+  const getCurrentPageClass = page => {
+    const hasPageName = name => currentPage?.indexOf(name) === 0;
+    const isCMSPage = pageId => hasPageName('CMSPage') && currentPage === `${page}:${pageId}`;
+    const isInboxPage = tab => hasPageName('InboxPage') && currentPage === `${page}:${tab}`;
+    const isCurrentPage = currentPage === page;
+
+    return isCMSPage(route?.params?.pageId) || isInboxPage(route?.params?.tab) || isCurrentPage
+      ? css.currentPage
+      : null;
+  };
+
+  // Note: if the config contains 'route' keyword,
+  // then in-app linking config has been resolved already.
+  if (type === 'internal' && route) {
+    // Internal link
+    const { name, params, to } = route || {};
+    const className = classNames(css.navigationLink, getCurrentPageClass(name));
+    return (
+      <NamedLink name={name} params={params} to={to} className={className}>
+        <span className={css.menuItemBorder} />
+        {text}
+      </NamedLink>
+    );
+  }
+  return (
+    <ExternalLink href={href} className={css.navigationLink}>
+      <span className={css.menuItemBorder} />
+      {text}
+    </ExternalLink>
+  );
+};
+
 const TopbarMobileMenu = (props) => {
   const {
     isAuthenticated,
