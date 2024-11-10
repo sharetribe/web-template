@@ -17,7 +17,8 @@ const initiatePrivileged = require('./api/initiate-privileged');
 const transitionPrivileged = require('./api/transition-privileged');
 const moment = require('moment');
 const createUserWithIdp = require('./api/auth/createUserWithIdp');
-const invoice = require('./api/brevo/invoice');
+const invoice = require('./api/brevo/invoice')
+const gift = require('./api/brevo/gift');
 const notifications = require('./api/slack/notifications.js');
 const notifyInvoice = require('./api/brevo/notifyinvoice');
 const inquiryEvent = require('./api/brevo/event');
@@ -62,6 +63,7 @@ router.post('/initiate-privileged', initiatePrivileged);
 router.post('/transition-privileged', transitionPrivileged);
 router.post('/stripe/coupon', coupon);
 router.post('/brevo/notifyinvoice', notifyInvoice);
+router.post('/brevo/gift', gift);
 router.post('/brevo/newsletter', newsLetter);
 router.post('/brevo/event', inquiryEvent);
 router.post('/brevo/invoice', invoice);

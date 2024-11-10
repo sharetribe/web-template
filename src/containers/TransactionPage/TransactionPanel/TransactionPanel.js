@@ -8,7 +8,7 @@ import { propTypes } from '../../../util/types';
 import { userDisplayNameAsString } from '../../../util/data';
 import { isMobileSafari } from '../../../util/userAgent';
 import { createSlug } from '../../../util/urlHelpers';
-
+import GiftCardsMailBox from '../../../components/GiftCardsMailBox/GiftCardsMailBox';
 import { AvatarLarge, NamedLink, UserDisplayName } from '../../../components';
 
 import { stateDataShape } from '../TransactionPage.stateData';
@@ -351,27 +351,32 @@ export class TransactionPanelComponent extends Component {
               </div>
             ) : (
               <div className={css.feedContainer}>
-                {/* For all other listings, just display seat names */}
+    
                 {this.props.protectedData.seatNames?.length > 0 ? (
-                  <div>
-                    <strong>Nomi prenotazione:</strong>
-                    <ul>
-                      {listingType === 'teambuilding' ? (
-                        <li key={0}>{this.props.protectedData.seatNames[0] || ''}</li>
-                      ) : (
-                        this.props.protectedData.seatNames.map((seat, index) => {
-                          let seatName =
-                            seat && typeof seat === 'string' && seat.trim() !== ''
-                              ? seat
-                              : 'Cliente senza nome';
-                          return <li key={index}>{seatName}</li>;
-                        })
-                      )}
-                    </ul>
-                  </div>
-                ) : (
-                  <p>Nessun nome disponibile</p>
-                )}
+  <div>
+    <strong>Nomi prenotazione:</strong>
+    <ul>
+      {listingType === 'teambuilding' ? (
+        <li key={0}>{this.props.protectedData.seatNames[0] || ''}</li>
+      ) : (
+        this.props.protectedData.seatNames.map((seat, index) => {
+          let seatName =
+            seat && typeof seat === 'string' && seat.trim() !== ''
+              ? seat
+              : 'Cliente senza nome';
+          return <li key={index}>{seatName}</li>;
+        })
+      )}
+    </ul>
+  </div>
+) : listingType === 'gift' ? (
+  <div>
+  <GiftCardsMailBox/>
+  </div>
+) : (
+  <p>Nessun nome disponibile</p>
+)}
+
               </div>
             )}
 
