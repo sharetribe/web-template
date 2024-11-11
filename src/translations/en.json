@@ -204,6 +204,7 @@
   "EditListingAvailabilityPlanForm.hoursOfOperationTitle": "Weekly default schedule",
   "EditListingAvailabilityPlanForm.plus1Day": "+1 day",
   "EditListingAvailabilityPlanForm.saveSchedule": "Save schedule",
+  "EditListingAvailabilityPlanForm.selectTime": "Select",
   "EditListingAvailabilityPlanForm.startTimePlaceholder": "Start",
   "EditListingAvailabilityPlanForm.timezonePickerTitle": "Select a time zone",
   "EditListingAvailabilityPlanForm.title": "Edit default schedule for {listingTitle}",
