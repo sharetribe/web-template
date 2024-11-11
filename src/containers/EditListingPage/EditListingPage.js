@@ -348,7 +348,7 @@ EditListingPageComponent.propTypes = {
   intl: intlShape.isRequired,
 };
 
-  const mapStateToProps = state => {
+const mapStateToProps = state => {
   const page = state.EditListingPage;
   const {
     getAccountLinkInProgress,
@@ -409,10 +409,7 @@ const mapDispatchToProps = dispatch => ({
 // See: https://github.com/ReactTraining/react-router/issues/4671
 const EditListingPage = compose(
   withRouter,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  ),
+  connect(mapStateToProps, mapDispatchToProps),
   injectIntl
 )(EditListingPageComponent);
 

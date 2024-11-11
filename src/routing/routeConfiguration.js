@@ -17,6 +17,7 @@ const AuthenticationPage = loadable(() => import(/* webpackChunkName: "Authentic
 const CheckoutPage = loadable(() => import(/* webpackChunkName: "CheckoutPage" */ '../containers/CheckoutPage/CheckoutPage'));
 const CMSPage = loadable(() => import(/* webpackChunkName: "CMSPage" */ '../containers/CMSPage/CMSPage'));
 const ContactDetailsPage = loadable(() => import(/* webpackChunkName: "ContactDetailsPage" */ '../containers/ContactDetailsPage/ContactDetailsPage'));
+const CreativeDetailsPage = loadable(() => import(/* webpackChunkName: "CreativeDetailsPage" */ '../containers/CreativeDetailsPage/CreativeDetailsPage'));
 const EditListingPage = loadable(() => import(/* webpackChunkName: "EditListingPage" */ '../containers/EditListingPage/EditListingPage'));
 const BatchEditListingPage = loadable(() => import(/* webpackChunkName: "BatchEditListingPage" */ '../containers/BatchEditListingPage/BatchEditListingPage'));
 const EmailVerificationPage = loadable(() => import(/* webpackChunkName: "EmailVerificationPage" */ '../containers/EmailVerificationPage/EmailVerificationPage'));
@@ -194,6 +195,14 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       authPage: 'LoginPage',
       component: ProfileSettingsPage,
       loadData: pageDataLoadingAPI.ProfileSettingsPage.loadData,
+    },
+    {
+      path: '/creative-details',
+      name: 'CreativeDetailsPage',
+      auth: true,
+      authPage: 'LoginPage',
+      component: CreativeDetailsPage,
+      loadData: pageDataLoadingAPI.CreativeDetailsPage.loadData,
     },
 
     // Note: authenticating with IdP (e.g. Facebook) expects that /login path exists

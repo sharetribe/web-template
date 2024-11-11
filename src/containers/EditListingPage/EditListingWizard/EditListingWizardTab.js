@@ -22,7 +22,6 @@ import EditListingPricingAndStockPanel from './EditListingPricingAndStockPanel/E
 
 import css from './EditListingWizardTab.module.css';
 
-
 export const DETAILS = 'details';
 export const PRICING = 'pricing';
 export const PRICING_AND_STOCK = 'pricing-and-stock';

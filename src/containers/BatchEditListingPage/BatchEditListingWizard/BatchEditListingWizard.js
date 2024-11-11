@@ -74,7 +74,7 @@ function BatchEditListingResult(props) {
       extra={[
         <Button type="primary" key="console" onClick={() => redirectTo('ManageListingsPage')}>
           View listings
-        </Button>
+        </Button>,
       ]}
     />
   );

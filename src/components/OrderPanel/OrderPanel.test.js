@@ -68,7 +68,10 @@ const listingFields = [
       listingTypeIds: ['sell-bicycles'],
     },
     schemaType: 'enum',
-    enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
+    enumOptions: [
+      { option: 'cat_1', label: 'Cat 1' },
+      { option: 'cat_2', label: 'Cat 2' },
+    ],
     filterConfig: {
       indexForSearch: true,
       label: 'Cat',
@@ -89,7 +92,10 @@ const listingFields = [
       listingTypeIds: ['rent-bicycles-daily', 'rent-bicycles-nightly', 'rent-bicycles-hourly'],
     },
     schemaType: 'multi-enum',
-    enumOptions: [{ option: 'dog_1', label: 'Dog 1' }, { option: 'dog_2', label: 'Dog 2' }],
+    enumOptions: [
+      { option: 'dog_1', label: 'Dog 1' },
+      { option: 'dog_2', label: 'Dog 2' },
+    ],
     filterConfig: {
       indexForSearch: true,
       label: 'Amenities',

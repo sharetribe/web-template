@@ -41,7 +41,7 @@ export const NamedLinkComponent = props => {
   const { to = {}, children = null } = props;
   const pathname = pathByRouteName(name, routeConfiguration, params);
   const { match = {} } = props;
-  const isActive = active !== null ? active : (match.url && match.url === pathname);
+  const isActive = active !== null ? active : match.url && match.url === pathname;
 
   // <a> element props
   const { className = '', style = {}, activeClassName = 'NamedLink_active' } = props;

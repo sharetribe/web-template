@@ -101,7 +101,10 @@ const sdkBoundsToMapboxBounds = bounds => {
   // is less than -180
   const swLng = sw.lng > ne.lng ? -360 + sw.lng : sw.lng;
 
-  return [[swLng, sw.lat], [ne.lng, ne.lat]];
+  return [
+    [swLng, sw.lat],
+    [ne.lng, ne.lat],
+  ];
 };
 
 /**

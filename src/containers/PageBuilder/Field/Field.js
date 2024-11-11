@@ -138,7 +138,7 @@ const hasEmptyTextContent = obj =>
 const getFieldConfig = (data, defaultFieldComponents, options) => {
   const customFieldComponents = options?.fieldComponents || {};
   const fieldMapping = { ...defaultFieldComponents, ...customFieldComponents };
-  return fieldMapping[(data?.fieldType)];
+  return fieldMapping[data?.fieldType];
 };
 
 // This is also useful for fields that are not used as components on their own

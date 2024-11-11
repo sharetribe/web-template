@@ -4,6 +4,7 @@ import classNames from 'classnames';
 
 import LayoutComposer from '../LayoutComposer';
 import LayoutWrapperAccountSettingsSideNav from './LayoutWrapperAccountSettingsSideNav';
+import LayoutWrapperProfileSettingsSideNav from './LayoutWrapperProfileSettingsSideNav';
 
 import css from './LayoutSideNavigation.module.css';
 
@@ -20,6 +21,8 @@ const LayoutSideNavigation = props => {
     footer: footerContent,
     sideNav: sideNavContent,
     useAccountSettingsNav,
+    useProfileSettingsNav,
+    withCreativeProfile,
     currentPage,
     ...rest
   } = props;
@@ -49,6 +52,12 @@ const LayoutSideNavigation = props => {
                 {useAccountSettingsNav ? (
                   <LayoutWrapperAccountSettingsSideNav currentPage={currentPage} />
                 ) : null}
+                {useProfileSettingsNav ? (
+                  <LayoutWrapperProfileSettingsSideNav
+                    currentPage={currentPage}
+                    withCreativeProfile={withCreativeProfile}
+                  />
+                ) : null}
                 {sideNavContent}
               </aside>
               <main className={classNames(css.main, mainColumnClassName)}>{children}</main>
@@ -69,6 +78,8 @@ LayoutSideNavigation.defaultProps = {
   sideNav: null,
   footer: null,
   useAccountSettingsNav: false,
+  useProfileSettingsNav: false,
+  withCreativeProfile: false,
   currentPage: null,
 };
 
@@ -80,6 +91,8 @@ LayoutSideNavigation.propTypes = {
   sideNav: node,
   footer: node,
   useAccountSettingsNav: bool,
+  useProfileSettingsNav: bool,
+  withCreativeProfile: bool,
   currentPage: string,
 };
 

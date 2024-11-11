@@ -12,10 +12,11 @@ import {
   initialValuesForUserFields,
   isUserAuthorized,
   pickUserFieldsData,
+  isCreativeSeller,
 } from '../../util/userHelpers';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 
-import { H3, Page, UserNav, NamedLink, LayoutSideNavigation, TabNav } from '../../components';
+import { H3, Page, UserNav, NamedLink, LayoutSideNavigation } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
@@ -137,7 +138,10 @@ export const ProfileSettingsPageComponent = props => {
   const isDisplayNameIncluded = userTypeConfig?.defaultUserFields?.displayName !== false;
   // ProfileSettingsForm decides if it's allowed to show the input field.
   const displayNameMaybe = isDisplayNameIncluded && displayName ? { displayName } : {};
+  const withProfileListing = !!metadata?.profileListingId;
+  const withCreativeProfile = isCreativeSeller(userType) && withProfileListing;
 
+  const title = intl.formatMessage({ id: 'ProfileSettingsPage.title' });
   const profileSettingsForm = user.id ? (
     <ProfileSettingsForm
       className={css.form}
@@ -168,32 +172,6 @@ export const ProfileSettingsPageComponent = props => {
     />
   ) : null;
 
-  const title = intl.formatMessage({ id: 'ProfileSettingsPage.title' });
-  const tabs = [
-    {
-      text: (
-        <span>
-          <FormattedMessage id="ProfileSettingsPage.profileSettingsTabTitle" />
-        </span>
-      ),
-      selected: true,
-      linkProps: {
-        name: 'ProfileSettingsPage',
-      },
-    },
-    {
-      text: (
-        <span>
-          <FormattedMessage id="ProfileSettingsPage.creativeDetailsTabTitle" />
-        </span>
-      ),
-      selected: false,
-      linkProps: {
-        name: 'ProfileSettingsPage',
-      },
-    },
-  ];
-
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
       <LayoutSideNavigation
@@ -203,7 +181,10 @@ export const ProfileSettingsPageComponent = props => {
             <UserNav currentPage="ProfileSettingsPage" />
           </>
         }
-        sideNav={<TabNav rootClassName={css.tabs} tabRootClassName={css.tab} tabs={tabs} />}
+        sideNav={null}
+        useProfileSettingsNav
+        withCreativeProfile={withCreativeProfile}
+        currentPage="ProfileSettingsPage"
         footer={<FooterContainer />}
       >
         <div className={css.content}>
@@ -278,10 +259,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const ProfileSettingsPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  ),
+  connect(mapStateToProps, mapDispatchToProps),
   injectIntl
 )(ProfileSettingsPageComponent);
 

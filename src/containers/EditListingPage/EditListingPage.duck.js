@@ -603,7 +603,7 @@ const updateStockOfListingMaybe = (listingId, stockTotals, dispatch) => {
 // create, set stock, show listing (to get updated currentStock entity)
 export function requestCreateListingDraft(data, config) {
   return (dispatch, getState, sdk) => {
-      dispatch(createListingDraftRequest(data));
+    dispatch(createListingDraftRequest(data));
     const { stockUpdate, images, ...rest } = data;
 
     // If images should be saved, create array out of the image UUIDs for the API call
