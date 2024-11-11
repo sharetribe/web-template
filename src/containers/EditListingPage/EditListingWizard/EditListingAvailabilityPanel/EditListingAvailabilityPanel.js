@@ -5,7 +5,11 @@ import classNames from 'classnames';
 // Import configs and util modules
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { getDefaultTimeZoneOnBrowser, timestampToDate } from '../../../../util/dates';
-import { LISTING_STATE_DRAFT, propTypes } from '../../../../util/types';
+import {
+  AVAILABILITY_MULTIPLE_SEATS,
+  LISTING_STATE_DRAFT,
+  propTypes,
+} from '../../../../util/types';
 import { DAY, isFullDay } from '../../../../transactions/transaction';
 
 // Import shared components
@@ -40,7 +44,7 @@ const createEntryDayGroups = (entries = {}) => {
   // Collect info about which days are active in the availability plan form:
   let activePlanDays = [];
   return entries.reduce((groupedEntries, entry) => {
-    const { startTime, endTime: endHour, dayOfWeek } = entry;
+    const { startTime, endTime: endHour, dayOfWeek, seats } = entry;
     const dayGroup = groupedEntries[dayOfWeek] || [];
     activePlanDays = activePlanDays.includes(dayOfWeek)
       ? activePlanDays
@@ -52,6 +56,7 @@ const createEntryDayGroups = (entries = {}) => {
         {
           startTime,
           endTime: endHour === '00:00' ? '24:00' : endHour,
+          seats,
         },
       ],
       activePlanDays,
@@ -74,12 +79,12 @@ const createEntriesFromSubmitValues = values =>
   WEEKDAYS.reduce((allEntries, dayOfWeek) => {
     const dayValues = values[dayOfWeek] || [];
     const dayEntries = dayValues.map(dayValue => {
-      const { startTime, endTime } = dayValue;
+      const { startTime, endTime, seats } = dayValue;
       // Note: This template doesn't support seats yet.
       return startTime && endTime
         ? {
             dayOfWeek,
-            seats: 1,
+            seats: seats ?? 1,
             startTime,
             endTime: endTime === '24:00' ? '00:00' : endTime,
           }
@@ -139,6 +144,8 @@ const EditListingAvailabilityPanel = props => {
   const listingTypeConfig = listingTypes.find(conf => conf.listingType === listingType);
 
   const useFullDays = isFullDay(unitType);
+  const useMultipleSeats = listingTypeConfig.availabilityType === AVAILABILITY_MULTIPLE_SEATS;
+
   const hasAvailabilityPlan = !!listingAttributes?.availabilityPlan;
   const isPublished = listing?.id && listingAttributes?.state !== LISTING_STATE_DRAFT;
   const defaultAvailabilityPlan = {
@@ -176,10 +183,9 @@ const EditListingAvailabilityPanel = props => {
 
   // Save exception click handler
   const saveException = values => {
-    const { availability, exceptionStartTime, exceptionEndTime, exceptionRange } = values;
+    const { availability, exceptionStartTime, exceptionEndTime, exceptionRange, seats } = values;
 
-    // TODO: add proper seat handling
-    const seats = availability === 'available' ? 1 : 0;
+    const seatCount = seats != null ? seats : availability === 'available' ? 1 : 0;
 
     // Exception date/time range is given through FieldDateRangeInput or
     // separate time fields.
@@ -195,7 +201,7 @@ const EditListingAvailabilityPanel = props => {
 
     const params = {
       listingId: listing.id,
-      seats,
+      seats: seatCount,
       ...range,
     };
 
@@ -306,11 +312,14 @@ const EditListingAvailabilityPanel = props => {
             listingTitle={listingAttributes?.title}
             availabilityPlan={availabilityPlan}
             weekdays={rotateDays(WEEKDAYS, firstDayOfWeek)}
-            useFullDays={useFullDays}
             onSubmit={handlePlanSubmit}
             initialValues={initialPlanValues}
             inProgress={updateInProgress}
             fetchErrors={errors}
+            useFullDays={useFullDays}
+            useMultipleSeats={useMultipleSeats}
+            listingTypeConfig={listingTypeConfig}
+            unitType={unitType}
           />
         </Modal>
       ) : null}
