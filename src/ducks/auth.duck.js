@@ -124,8 +124,8 @@ export default function reducer(state = initialState, action = {}) {
 // ================ Selectors ================ //
 
 export const authenticationInProgress = state => {
-  const { loginInProgress, logoutInProgress, signupInProgress } = state.auth;
-  return loginInProgress || logoutInProgress || signupInProgress;
+  const { loginInProgress, logoutInProgress, signupInProgress, confirmInProgress } = state.auth;
+  return loginInProgress || logoutInProgress || signupInProgress || confirmInProgress;
 };
 
 // ================ Action creators ================ //
