@@ -1,4 +1,4 @@
-import { updatedEntities, denormalisedEntities } from '../../util/data';
+import { denormalisedEntities, updatedEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
 import { createImageVariantConfig } from '../../util/sdkLoader';
 import { parse } from '../../util/urlHelpers';
@@ -11,6 +11,7 @@ import { fetchCurrentUser } from '../../ducks/user.duck';
 const RESULT_PAGE_SIZE = 42;
 
 // ================ Action types ================ //
+export const SET_CATEGORIES = 'app/ManageListingsPage/SET_CATEGORIES';
 
 export const FETCH_LISTINGS_REQUEST = 'app/ManageListingsPage/FETCH_LISTINGS_REQUEST';
 export const FETCH_LISTINGS_SUCCESS = 'app/ManageListingsPage/FETCH_LISTINGS_SUCCESS';
@@ -40,6 +41,7 @@ const initialState = {
   openingListingError: null,
   closingListing: null,
   closingListingError: null,
+  categories: [],
 };
 
 const resultIds = data => data.data.map(l => l.id);
@@ -145,6 +147,9 @@ const manageListingsPageReducer = (state = initialState, action = {}) => {
 
     case ADD_OWN_ENTITIES:
       return merge(state, payload);
+
+    case SET_CATEGORIES:
+      return { ...state, categories: payload };
 
     default:
       return state;
@@ -293,6 +298,8 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   } = config.layout.listingImage;
   const aspectRatio = aspectHeight / aspectWidth;
 
+  dispatch({ type: SET_CATEGORIES, payload: config.categoryConfiguration.categories });
+
   return Promise.all([
     dispatch(fetchCurrentUser()),
     dispatch(
@@ -310,8 +317,7 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   ])
     .then(response => {
       // const currentUser = response[0]?.data?.data;
-      const ownListings = response[1]?.data?.data;
-      return ownListings;
+      return response[1]?.data?.data;
     })
     .catch(e => {
       throw e;

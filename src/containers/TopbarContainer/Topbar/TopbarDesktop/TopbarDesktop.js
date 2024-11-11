@@ -76,7 +76,7 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout }) => {
             name="ManageListingsPage"
           >
             <span className={css.menuItemBorder} />
-            <FormattedMessage id="TopbarDesktop.yourListingsLink" />
+            <FormattedMessage id="TopbarDesktop.yourListingsLink"  />
           </NamedLink>
         </MenuItem>
         <MenuItem key="ProfileSettingsPage">

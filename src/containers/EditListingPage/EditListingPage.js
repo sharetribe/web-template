@@ -348,7 +348,7 @@ EditListingPageComponent.propTypes = {
   intl: intlShape.isRequired,
 };
 
-const mapStateToProps = state => {
+  const mapStateToProps = state => {
   const page = state.EditListingPage;
   const {
     getAccountLinkInProgress,

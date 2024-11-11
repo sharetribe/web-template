@@ -1,34 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import { arrayOf, bool, func, object, shape, string } from 'prop-types';
 import { useHistory } from 'react-router-dom';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
 
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
-import { pathByRouteName } from '../../util/routes';
+import { createResourceLocatorString, pathByRouteName } from '../../util/routes';
 import { hasPermissionToPostListings } from '../../util/userHelpers';
 import { NO_ACCESS_PAGE_POST_LISTINGS } from '../../util/urlHelpers';
-import { propTypes } from '../../util/types';
 import { isErrorNoPermissionToPostListings } from '../../util/errors';
-import { isScrollingDisabled } from '../../ducks/ui.duck';
 
 import {
+  Button,
   H3,
+  LayoutSingleColumn,
+  NamedLink,
   Page,
   PaginationLinks,
   UserNav,
-  LayoutSingleColumn,
-  NamedLink,
 } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import ManageListingCard from './ManageListingCard/ManageListingCard';
-
-import { closeListing, openListing, getOwnListingsById } from './ManageListingsPage.duck';
 import css from './ManageListingsPage.module.css';
+import { Flex, Space, Tabs } from 'antd';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { closeListing, getOwnListingsById, openListing } from './ManageListingsPage.duck';
+import { isScrollingDisabled } from '../../ducks/ui.duck';
+import { LISTING_TYPES } from '../../util/types';
 
 const Heading = props => {
   const { listingsAreLoaded, pagination } = props;
@@ -37,21 +37,13 @@ const Heading = props => {
 
   return hasResults ? (
     <H3 as="h1" className={css.heading}>
-      <FormattedMessage
-        id="ManageListingsPage.youHaveListings"
-        values={{ count: pagination.totalItems }}
-      />
+      <FormattedMessage id="ManageListingsPage.title" defaultMessage="Manage your market" />
     </H3>
   ) : hasNoResults ? (
     <div className={css.noResultsContainer}>
       <H3 as="h1" className={css.headingNoListings}>
         <FormattedMessage id="ManageListingsPage.noResults" />
       </H3>
-      <p className={css.createListingParagraph}>
-        <NamedLink className={css.createListingLink} name="NewListingPage">
-          <FormattedMessage id="ManageListingsPage.createListing" />
-        </NamedLink>
-      </p>
     </div>
   ) : null;
 };
@@ -68,6 +60,13 @@ const PaginationLinksMaybe = props => {
   ) : null;
 };
 
+function getSearch(category, listingType = LISTING_TYPES.PRODUCT) {
+  const params = new URLSearchParams();
+  params.set('pub_categoryLevel1', category);
+  params.set('pub_listingType', listingType);
+  return params.toString();
+}
+
 export const ManageListingsPageComponent = props => {
   const [listingMenuOpen, setListingMenuOpen] = useState(null);
   const history = useHistory();
@@ -75,20 +74,23 @@ export const ManageListingsPageComponent = props => {
   const intl = useIntl();
 
   const {
-    currentUser,
-    closingListing,
-    closingListingError,
-    listings,
+    currentUser = null,
+    closingListing = null,
+    closingListingError = null,
+    listings = [],
     onCloseListing,
     onOpenListing,
-    openingListing,
-    openingListingError,
-    pagination,
+    openingListing = null,
+    openingListingError = null,
+    pagination = null,
     queryInProgress,
     queryListingsError,
     queryParams,
     scrollingDisabled,
+    categories,
   } = props;
+  const currentListingType = queryParams.pub_listingType || LISTING_TYPES.PRODUCT;
+  const currentCategoryType = queryParams.pub_categoryLevel1 || categories[0].id;
 
   useEffect(() => {
     if (isErrorNoPermissionToPostListings(openingListingError?.error)) {
@@ -146,6 +148,82 @@ export const ManageListingsPageComponent = props => {
     `${panelWidth / 3}vw`,
   ].join(', ');
 
+  const onTabChange = key => {
+    const destination = createResourceLocatorString(
+      'ManageListingsPage',
+      routeConfiguration,
+      {},
+      { pub_listingType: key }
+    );
+    history.push(destination);
+  };
+
+  const goToCreateListing = () => {
+    const destination = createResourceLocatorString('BatchEditListingPage', routeConfiguration, {
+      category: currentCategoryType,
+      type: 'new',
+      tab: 'upload',
+    });
+    history.push(destination);
+  };
+
+  const listingRenderer = (
+    <>
+      <Flex className={css.filters}>
+        <Flex className={css.categories}>
+          <Space
+            direction="horizontal"
+            size="middle"
+            className={css.productTypeFilters}
+            hidden={currentListingType !== LISTING_TYPES.PRODUCT}
+          >
+            {categories.map(category => (
+              <NamedLink
+                name="ManageListingsPage"
+                active={currentCategoryType === category.id}
+                activeClassName={css.filterLinkActive}
+                to={{ search: getSearch(category.id, currentListingType) }}
+              >
+                {category.name}
+              </NamedLink>
+            ))}
+          </Space>
+        </Flex>
+        <Flex align="flex-end" style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <Space size="middle">
+            <Button style={{ width: 200 }} onClick={goToCreateListing}>
+              Add New Photo(s)
+            </Button>
+          </Space>
+        </Flex>
+      </Flex>
+
+      <div className={css.listingCards}>
+        {listings.map(l => (
+          <ManageListingCard
+            className={css.listingCard}
+            key={l.id.uuid}
+            listing={l}
+            isMenuOpen={!!listingMenuOpen && listingMenuOpen.id.uuid === l.id.uuid}
+            actionsInProgressListingId={openingListing || closingListing}
+            onToggleMenu={onToggleMenu}
+            onCloseListing={onCloseListing}
+            onOpenListing={handleOpenListing}
+            hasOpeningError={openingErrorListingId.uuid === l.id.uuid}
+            hasClosingError={closingErrorListingId.uuid === l.id.uuid}
+            renderSizes={renderSizes}
+          />
+        ))}
+      </div>
+
+      <PaginationLinksMaybe
+        listingsAreLoaded={listingsAreLoaded}
+        pagination={pagination}
+        page={queryParams ? queryParams.page : 1}
+      />
+    </>
+  );
+
   return (
     <Page
       title={intl.formatMessage({ id: 'ManageListingsPage.title' })}
@@ -165,68 +243,21 @@ export const ManageListingsPageComponent = props => {
 
         <div className={css.listingPanel}>
           <Heading listingsAreLoaded={listingsAreLoaded} pagination={pagination} />
-
-          <div className={css.listingCards}>
-            {listings.map(l => (
-              <ManageListingCard
-                className={css.listingCard}
-                key={l.id.uuid}
-                listing={l}
-                isMenuOpen={!!listingMenuOpen && listingMenuOpen.id.uuid === l.id.uuid}
-                actionsInProgressListingId={openingListing || closingListing}
-                onToggleMenu={onToggleMenu}
-                onCloseListing={onCloseListing}
-                onOpenListing={handleOpenListing}
-                hasOpeningError={openingErrorListingId.uuid === l.id.uuid}
-                hasClosingError={closingErrorListingId.uuid === l.id.uuid}
-                renderSizes={renderSizes}
-              />
-            ))}
+          <div className={css.listingCardsTabs}>
+            <Tabs
+              defaultActiveKey={currentListingType}
+              onChange={onTabChange}
+              items={[
+                { key: LISTING_TYPES.PRODUCT, label: 'Shop', children: listingRenderer },
+                { key: LISTING_TYPES.SERVICE, label: 'Services', children: listingRenderer },
+                { key: LISTING_TYPES.PORTFOLIO, label: 'Portfolio', children: listingRenderer },
+              ]}
+            ></Tabs>
           </div>
-
-          <PaginationLinksMaybe
-            listingsAreLoaded={listingsAreLoaded}
-            pagination={pagination}
-            page={queryParams ? queryParams.page : 1}
-          />
         </div>
       </LayoutSingleColumn>
     </Page>
   );
-};
-
-ManageListingsPageComponent.defaultProps = {
-  currentUser: null,
-  listings: [],
-  pagination: null,
-  queryListingsError: null,
-  queryParams: null,
-  closingListing: null,
-  closingListingError: null,
-  openingListing: null,
-  openingListingError: null,
-};
-
-ManageListingsPageComponent.propTypes = {
-  currentUser: propTypes.currentUser,
-  closingListing: shape({ uuid: string.isRequired }),
-  closingListingError: shape({
-    listingId: propTypes.uuid.isRequired,
-    error: propTypes.error.isRequired,
-  }),
-  listings: arrayOf(propTypes.ownListing),
-  onCloseListing: func.isRequired,
-  onOpenListing: func.isRequired,
-  openingListing: shape({ uuid: string.isRequired }),
-  openingListingError: shape({
-    listingId: propTypes.uuid.isRequired,
-    error: propTypes.error.isRequired,
-  }),
-  pagination: propTypes.pagination,
-  queryInProgress: bool.isRequired,
-  queryListingsError: propTypes.error,
-  queryParams: object,
-  scrollingDisabled: bool.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -241,6 +272,7 @@ const mapStateToProps = state => {
     openingListingError,
     closingListing,
     closingListingError,
+    categories,
   } = state.ManageListingsPage;
   const listings = getOwnListingsById(state, currentPageResultIds);
   return {
@@ -256,6 +288,7 @@ const mapStateToProps = state => {
     openingListingError,
     closingListing,
     closingListingError,
+    categories,
   };
 };
 
@@ -264,11 +297,8 @@ const mapDispatchToProps = dispatch => ({
   onOpenListing: listingId => dispatch(openListing(listingId)),
 });
 
-const ManageListingsPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(ManageListingsPageComponent);
+const ManageListingsPage = compose(connect(mapStateToProps, mapDispatchToProps))(
+  ManageListingsPageComponent
+);
 
 export default ManageListingsPage;
