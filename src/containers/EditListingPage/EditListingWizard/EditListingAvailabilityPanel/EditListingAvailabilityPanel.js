@@ -59,8 +59,8 @@ const createEntryDayGroups = (entries = {}) => {
   }, {});
 };
 
-// Create initial values
-const createInitialValues = availabilityPlan => {
+// Create initial values for the availability plan
+const createInitialPlanValues = availabilityPlan => {
   const { timezone, entries } = availabilityPlan || {};
   const tz = timezone || defaultTimeZone();
   return {
@@ -155,11 +155,11 @@ const EditListingAvailabilityPanel = props => {
     ],
   };
   const availabilityPlan = listingAttributes?.availabilityPlan || defaultAvailabilityPlan;
-  const initialValues = valuesFromLastSubmit
+  const initialPlanValues = valuesFromLastSubmit
     ? valuesFromLastSubmit
-    : createInitialValues(availabilityPlan);
+    : createInitialPlanValues(availabilityPlan);
 
-  const handleSubmit = values => {
+  const handlePlanSubmit = values => {
     setValuesFromLastSubmit(values);
 
     // Final Form can wait for Promises to return.
@@ -307,8 +307,8 @@ const EditListingAvailabilityPanel = props => {
             availabilityPlan={availabilityPlan}
             weekdays={rotateDays(WEEKDAYS, firstDayOfWeek)}
             useFullDays={useFullDays}
-            onSubmit={handleSubmit}
-            initialValues={initialValues}
+            onSubmit={handlePlanSubmit}
+            initialValues={initialPlanValues}
             inProgress={updateInProgress}
             fetchErrors={errors}
           />
