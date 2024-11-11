@@ -18,16 +18,16 @@
  * the one in the generated pathname of the link.
  */
 import React from 'react';
-import { object, string, shape, any } from 'prop-types';
+import { any, object, shape, string } from 'prop-types';
 import { Link, withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 
-import { pathByRouteName, findRouteByRouteName } from '../../util/routes';
+import { findRouteByRouteName, pathByRouteName } from '../../util/routes';
 
 export const NamedLinkComponent = props => {
   const routeConfiguration = useRouteConfiguration();
-  const { name, params, title } = props;
+  const { name, params = {}, title = null, active = null } = props;
 
   const onOver = () => {
     const { component: Page } = findRouteByRouteName(name, routeConfiguration);
@@ -38,15 +38,15 @@ export const NamedLinkComponent = props => {
   };
 
   // Link props
-  const { to, children } = props;
+  const { to = {}, children = null } = props;
   const pathname = pathByRouteName(name, routeConfiguration, params);
-  const { match } = props;
-  const active = match.url && match.url === pathname;
+  const { match = {} } = props;
+  const isActive = active !== null ? active : match.url && match.url === pathname;
 
   // <a> element props
-  const { className, style, activeClassName } = props;
+  const { className = '', style = {}, activeClassName = 'NamedLink_active' } = props;
   const aElemProps = {
-    className: classNames(className, { [activeClassName]: active }),
+    className: classNames(className, { [activeClassName]: isActive }),
     style,
     title,
   };
@@ -56,17 +56,6 @@ export const NamedLinkComponent = props => {
       {children}
     </Link>
   );
-};
-
-NamedLinkComponent.defaultProps = {
-  params: {},
-  to: {},
-  children: null,
-  className: '',
-  style: {},
-  activeClassName: 'NamedLink_active',
-  title: null,
-  match: {},
 };
 
 // This ensures a nice display name in snapshots etc.

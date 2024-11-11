@@ -473,7 +473,7 @@ OrderPanel.propTypes = {
   dayCountAvailableForBooking: number.isRequired,
   marketplaceName: string.isRequired,
   onToggleFavorites: func.isRequired,
-  currentUser: propTypes.currentUser.isRequired,
+  currentUser: propTypes.currentUser,
   // from withRouter
   history: shape({
     push: func.isRequired,
@@ -485,7 +485,4 @@ OrderPanel.propTypes = {
   intl: intlShape.isRequired,
 };
 
-export default compose(
-  withRouter,
-  injectIntl
-)(OrderPanel);
+export default compose(withRouter, injectIntl)(OrderPanel);

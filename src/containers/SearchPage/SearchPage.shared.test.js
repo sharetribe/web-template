@@ -43,7 +43,10 @@ const listingFieldsConfig = [
       listingTypeIds: ['sell-bicycles'],
     },
     schemaType: 'enum',
-    enumOptions: [{ option: 'smoke', label: 'Smoke' }, { option: 'wood', label: 'Wood' }],
+    enumOptions: [
+      { option: 'smoke', label: 'Smoke' },
+      { option: 'wood', label: 'Wood' },
+    ],
     filterConfig: {
       indexForSearch: true,
       label: 'Test',
@@ -58,7 +61,10 @@ const listingFieldsConfig = [
       listingTypeIds: ['rent-bicycles-daily', 'rent-bicycles-nightly', 'rent-bicycles-hourly'],
     },
     schemaType: 'multi-enum',
-    enumOptions: [{ option: 'towels', label: 'Towels' }, { option: 'bathroom', label: 'Bathroom' }],
+    enumOptions: [
+      { option: 'towels', label: 'Towels' },
+      { option: 'bathroom', label: 'Bathroom' },
+    ],
     filterConfig: {
       indexForSearch: true,
       label: 'Amenities',

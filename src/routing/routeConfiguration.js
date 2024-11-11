@@ -10,6 +10,7 @@ import PreviewResolverPage from '../containers/PreviewResolverPage/PreviewResolv
 // at that point css bundling / imports will happen in wrong order.
 import { NamedRedirect } from '../components';
 
+
 const pageDataLoadingAPI = getPageDataLoadingAPI();
 
 const AuthenticationPage = loadable(() => import(/* webpackChunkName: "AuthenticationPage" */ '../containers/AuthenticationPage/AuthenticationPage'));
@@ -18,6 +19,7 @@ const CMSPage = loadable(() => import(/* webpackChunkName: "CMSPage" */ '../cont
 const ContactDetailsPage = loadable(() => import(/* webpackChunkName: "ContactDetailsPage" */ '../containers/ContactDetailsPage/ContactDetailsPage'));
 const CreativeDetailsPage = loadable(() => import(/* webpackChunkName: "CreativeDetailsPage" */ '../containers/CreativeDetailsPage/CreativeDetailsPage'));
 const EditListingPage = loadable(() => import(/* webpackChunkName: "EditListingPage" */ '../containers/EditListingPage/EditListingPage'));
+const BatchEditListingPage = loadable(() => import(/* webpackChunkName: "BatchEditListingPage" */ '../containers/BatchEditListingPage/BatchEditListingPage'));
 const EmailVerificationPage = loadable(() => import(/* webpackChunkName: "EmailVerificationPage" */ '../containers/EmailVerificationPage/EmailVerificationPage'));
 const FavoriteListingsPage = loadable(() => import(/* webpackChunkName: "FavoriteListingsPage" */ '../containers/FavoriteListingsPage/FavoriteListingsPage'));
 const InboxPage = loadable(() => import(/* webpackChunkName: "InboxPage" */ '../containers/InboxPage/InboxPage'));
@@ -134,6 +136,13 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       auth: true,
       component: EditListingPage,
       loadData: pageDataLoadingAPI.EditListingPage.loadData,
+    },
+    {
+      path: '/listing/:category/:type/:tab',
+      name: 'BatchEditListingPage',
+      auth: true,
+      component: BatchEditListingPage,
+      loadData: pageDataLoadingAPI.BatchEditListingPage.loadData,
     },
     {
       path: '/l/:slug/:id/:type/:tab/:returnURLType',
@@ -258,7 +267,10 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       component: TransactionPage,
       extraProps: { transactionRole: 'customer' },
       loadData: (params, ...rest) =>
-        pageDataLoadingAPI.TransactionPage.loadData({ ...params, transactionRole: 'customer' }, ...rest),
+        pageDataLoadingAPI.TransactionPage.loadData({
+          ...params,
+          transactionRole: 'customer',
+        }, ...rest),
       setInitialValues: pageDataLoadingAPI.TransactionPage.setInitialValues,
     },
     {
@@ -266,7 +278,8 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       name: 'OrderDetailsPageRedirect',
       auth: true,
       authPage: 'LoginPage',
-      component: props => <NamedRedirect name="OrderDetailsPage" params={{ id: props.params?.id }} />,
+      component: props => <NamedRedirect name="OrderDetailsPage"
+                                         params={{ id: props.params?.id }} />,
     },
     {
       path: '/sale/:id',
@@ -282,7 +295,8 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       name: 'SaleDetailsPageRedirect',
       auth: true,
       authPage: 'LoginPage',
-      component: props => <NamedRedirect name="SaleDetailsPage" params={{ id: props.params?.id }} />,
+      component: props => <NamedRedirect name="SaleDetailsPage"
+                                         params={{ id: props.params?.id }} />,
     },
     {
       path: '/listings',
@@ -411,7 +425,7 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
     {
       path: '/preview',
       name: 'PreviewResolverPage',
-      component: PreviewResolverPage ,
+      component: PreviewResolverPage,
     },
   ];
 };

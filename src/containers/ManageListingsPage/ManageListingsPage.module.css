@@ -90,9 +90,47 @@
   }
 }
 
-.listingCards {
+.listingCardsTabs {
   padding: 0 24px;
+  @media (--viewportLarge) {
+    padding: 0 36px;
+  }
+}
 
+.productTypeFilters {
+  padding: 12px 0;
+}
+
+.filters {
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.categories {
+  padding-right: 12px;
+}
+
+.productTypeFilters button:first-child {
+}
+
+.productTypeFilters a {
+  color: var(--colorGrey700);
+  text-decoration: none;
+  font-size: 14px;
+  text-wrap: nowrap;
+}
+
+.productTypeFilters a:hover {
+  color: var(--marketplaceColorDark);
+}
+
+.productTypeFilters .filterLinkActive {
+  color: var(--marketplaceColor);
+  font-weight: bold;
+}
+
+.listingCards {
+  padding-top: 24px;
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   gap: 24px;
@@ -108,7 +146,6 @@
 
   @media (--viewportLarge) {
     grid-template-columns: repeat(3, 1fr);
-    padding: 0 36px;
   }
 }
 

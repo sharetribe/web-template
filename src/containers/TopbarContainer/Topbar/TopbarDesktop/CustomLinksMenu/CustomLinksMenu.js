@@ -64,6 +64,10 @@ const groupMeasuredLinks = (links, containerWidth, menuMoreWidth) => {
 };
 
 const calculateContainerWidth = (containerRefTarget, parentWidth) => {
+  if (!containerRefTarget) {
+    return;
+  }
+
   // Siblings include logo, search form, (inbox, profile menu || login signup)
   const siblingArray = containerRefTarget?.parentNode?.childNodes
     ? Array.from(containerRefTarget.parentNode.childNodes).filter(n => n !== containerRefTarget)

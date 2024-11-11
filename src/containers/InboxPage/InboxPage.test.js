@@ -209,7 +209,10 @@ describe('InboxPage', () => {
             totalItems: 2,
             totalPages: 2,
           },
-          transactionRefs: [{ id: sale1.id, type: sale1.type }, { id: sale2.id, type: sale2.type }],
+          transactionRefs: [
+            { id: sale1.id, type: sale1.type },
+            { id: sale2.id, type: sale2.type },
+          ],
         },
         marketplaceData: {
           entities: {

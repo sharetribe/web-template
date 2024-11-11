@@ -31,6 +31,8 @@ import Routes from './routing/Routes';
 
 // Sharetribe Web Template uses English translations as default translations.
 import defaultMessages from './translations/en.json';
+import { ConfigProvider } from 'antd';
+import { createTheme, marketplaceTheme } from './styles/antDesignTokens';
 
 // If you want to change the language of default (fallback) translations,
 // change the imports to match the wanted locale:
@@ -207,6 +209,7 @@ const EnvironmentVariableWarning = props => {
 export const ClientApp = props => {
   const { store, hostedTranslations = {}, hostedConfig = {} } = props;
   const appConfig = mergeConfig(hostedConfig, defaultConfig);
+  const marketplaceTheme = createTheme(appConfig.branding);
 
   // Show warning on the localhost:3000, if the environment variable key contains "SECRET"
   if (appSettings.dev) {
@@ -253,7 +256,9 @@ export const ClientApp = props => {
           <HelmetProvider>
             <IncludeScripts config={appConfig} />
             <BrowserRouter>
-              <Routes logLoadDataCalls={logLoadDataCalls} />
+              <ConfigProvider theme={marketplaceTheme}>
+                <Routes logLoadDataCalls={logLoadDataCalls} />
+              </ConfigProvider>
             </BrowserRouter>
           </HelmetProvider>
         </Provider>
@@ -267,6 +272,7 @@ ClientApp.propTypes = { store: any.isRequired };
 export const ServerApp = props => {
   const { url, context, helmetContext, store, hostedTranslations = {}, hostedConfig = {} } = props;
   const appConfig = mergeConfig(hostedConfig, defaultConfig);
+  const marketplaceTheme = createTheme(appConfig.branding);
   HelmetProvider.canUseDOM = false;
 
   // Show MaintenanceMode if the mandatory configurations are not available
@@ -291,7 +297,9 @@ export const ServerApp = props => {
           <HelmetProvider context={helmetContext}>
             <IncludeScripts config={appConfig} />
             <StaticRouter location={url} context={context}>
-              <Routes />
+              <ConfigProvider theme={marketplaceTheme}>
+                <Routes />
+              </ConfigProvider>
             </StaticRouter>
           </HelmetProvider>
         </Provider>

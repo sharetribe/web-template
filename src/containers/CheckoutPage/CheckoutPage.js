@@ -247,12 +247,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(savePaymentMethod(stripeCustomer, stripePaymentMethodId)),
 });
 
-const CheckoutPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(EnhancedCheckoutPage);
+const CheckoutPage = compose(connect(mapStateToProps, mapDispatchToProps))(EnhancedCheckoutPage);
 
 CheckoutPage.setInitialValues = (initialValues, saveToSessionStorage = false) => {
   if (saveToSessionStorage) {

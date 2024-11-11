@@ -3,7 +3,7 @@
 // You can find these api endpoints from 'server/api/...' directory
 
 import appSettings from '../config/settings';
-import { types as sdkTypes, transit } from './sdkLoader';
+import { transit, types as sdkTypes } from './sdkLoader';
 import Decimal from 'decimal.js';
 
 export const apiBaseUrl = marketplaceRootURL => {
@@ -143,4 +143,12 @@ export const transitionPrivileged = body => {
 // be sent in the body.
 export const createUserWithIdp = body => {
   return post('/api/auth/create-user-with-idp', body);
+};
+
+export const createUploadSignature = body => {
+  return post('/api/transloadit-params', body);
+};
+
+export const uploadOriginalAsset = async body => {
+  return post('/api/storage-manager/upload-original', body);
 };

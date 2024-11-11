@@ -553,11 +553,6 @@ const mapDispatchToProps = dispatch => ({
 // lifecycle hook.
 //
 // See: https://github.com/ReactTraining/react-router/issues/4671
-const SearchPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(EnhancedSearchPage);
+const SearchPage = compose(connect(mapStateToProps, mapDispatchToProps))(EnhancedSearchPage);
 
 export default SearchPage;
