@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] ConfirmSignupForm: show spinner. (Handling for confirmInProgress state was missing.)
+  [#504](https://github.com/sharetribe/web-template/pull/504)
 - [fix] Topbar: if multiple custom links has the same text, the virtual DOM is confused.
   [#502](https://github.com/sharetribe/web-template/pull/502)
 - [fix] PaymentMethodsPage: full page load did not fetch defaultPaymentMethod.
