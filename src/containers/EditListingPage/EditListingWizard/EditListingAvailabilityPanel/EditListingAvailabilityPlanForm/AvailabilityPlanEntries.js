@@ -157,11 +157,10 @@ const filterEndHours = (availableEndHours, entries, index) => {
  * Find all the entries that boundaries are already reserved.
  *
  * @param {Array<AvailabilityPlanEntry>} entries look like this [{ startTime: '13:00', endTime: '17:00' }]
- * @param {ReactIntl} intl
  * @param {Boolean} findStartHours find start hours (00:00 ... 23:00) or else (01:00 ... 24:00)
  * @returns array of reserved sharp hours. E.g. ['13:00', '14:00', '15:00', '16:00']
  */
-const getEntryBoundaries = (entries, intl, findStartHours) => index => {
+const getEntryBoundaries = (entries, findStartHours) => index => {
   const boundaryDiff = findStartHours ? 0 : 1;
 
   return entries.reduce((allHours, entry, i) => {
@@ -371,8 +370,8 @@ const AvailabilityPlanEntries = props => {
   const { dayOfWeek, useFullDays, useMultipleSeats, unitType, values, formApi, intl } = props;
   const entries = values[dayOfWeek];
   const hasEntries = entries && entries[0];
-  const getEntryStartTimes = getEntryBoundaries(entries, intl, true);
-  const getEntryEndTimes = getEntryBoundaries(entries, intl, false);
+  const getEntryStartTimes = getEntryBoundaries(entries, true);
+  const getEntryEndTimes = getEntryBoundaries(entries, false);
 
   const checkboxName = `checkbox_${dayOfWeek}`;
   return (
