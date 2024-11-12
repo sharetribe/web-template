@@ -14,6 +14,7 @@ import {
   LISTING_PAGE_PENDING_APPROVAL_VARIANT,
   NO_ACCESS_PAGE_POST_LISTINGS,
   NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
+  NO_ACCESS_PAGE_FORBIDDEN_LISTING_TYPE,
   createSlug,
   parse,
 } from '../../util/urlHelpers';
@@ -138,6 +139,17 @@ export const EditListingPageComponent = props => {
 
   const hasStripeOnboardingDataIfNeeded = returnURLType ? !!currentUser?.id : true;
   const showWizard = hasStripeOnboardingDataIfNeeded && (isNewURI || currentListing.id);
+
+  // Should match all the Listing types that have their custom upload and edit flows
+  const isForbiddenListingTypePage = true;
+  if (isForbiddenListingTypePage) {
+    return (
+      <NamedRedirect
+        name="NoAccessPage"
+        params={{ missingAccessRight: NO_ACCESS_PAGE_FORBIDDEN_LISTING_TYPE }}
+      />
+    );
+  }
 
   if (!isUserAuthorized(currentUser)) {
     return (

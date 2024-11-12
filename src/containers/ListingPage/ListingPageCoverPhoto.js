@@ -9,7 +9,12 @@ import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 // Utils
 import { FormattedMessage, intlShape, useIntl } from '../../util/reactIntl';
-import { LISTING_STATE_PENDING_APPROVAL, LISTING_STATE_CLOSED, propTypes } from '../../util/types';
+import {
+  LISTING_STATE_PENDING_APPROVAL,
+  LISTING_STATE_CLOSED,
+  LISTING_TYPES,
+  propTypes,
+} from '../../util/types';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import {
   LISTING_PAGE_DRAFT_VARIANT,
@@ -19,6 +24,7 @@ import {
   createSlug,
   NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
   NO_ACCESS_PAGE_VIEW_LISTINGS,
+  NO_ACCESS_PAGE_FORBIDDEN_LISTING_TYPE,
 } from '../../util/urlHelpers';
 import {
   isErrorNoViewingPermission,
@@ -168,6 +174,26 @@ export const ListingPageComponent = props => {
   }
 
   const topbar = <TopbarContainer />;
+  const {
+    description = '',
+    geolocation = null,
+    price = null,
+    title = '',
+    publicData = {},
+    metadata = {},
+  } = currentListing.attributes;
+  const { listingType } = publicData;
+  const isPortfolioListing = listingType === LISTING_TYPES.PORTFOLIO;
+  const isProfileListing = listingType === LISTING_TYPES.PROFILE;
+
+  if (isPortfolioListing || isProfileListing) {
+    return (
+      <NamedRedirect
+        name="NoAccessPage"
+        params={{ missingAccessRight: NO_ACCESS_PAGE_FORBIDDEN_LISTING_TYPE }}
+      />
+    );
+  }
 
   if (showListingError && showListingError.status === 404) {
     // 404 listing not found
@@ -179,15 +205,6 @@ export const ListingPageComponent = props => {
     // Still loading the listing
     return <LoadingPage topbar={topbar} scrollingDisabled={scrollingDisabled} intl={intl} />;
   }
-
-  const {
-    description = '',
-    geolocation = null,
-    price = null,
-    title = '',
-    publicData = {},
-    metadata = {},
-  } = currentListing.attributes;
 
   const richTitle = (
     <span>
@@ -203,7 +220,7 @@ export const ListingPageComponent = props => {
   const isOwnListing =
     userAndListingAuthorAvailable && currentListing.author.id.uuid === currentUser.id.uuid;
 
-  const { listingType, transactionProcessAlias, unitType } = publicData;
+  const { transactionProcessAlias, unitType } = publicData;
   if (!(listingType && transactionProcessAlias && unitType)) {
     // Listing should always contain listingType, transactionProcessAlias and unitType)
     return (

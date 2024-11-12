@@ -24,6 +24,8 @@ export const NO_ACCESS_PAGE_INITIATE_TRANSACTIONS = 'transaction-rights';
 export const NO_ACCESS_PAGE_USER_PENDING_APPROVAL = 'user-approval';
 // If user account has no viewing rights on a private marketplace, they can only see their own listings
 export const NO_ACCESS_PAGE_VIEW_LISTINGS = 'viewing-rights';
+// For certain listings they have their own flow to view, edit and create them
+export const NO_ACCESS_PAGE_FORBIDDEN_LISTING_TYPE = 'forbidden-listing-type';
 
 // Create slug from random texts
 // From Gist thread: https://gist.github.com/mathewbyrne/1280286

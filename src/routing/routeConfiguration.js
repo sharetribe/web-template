@@ -92,6 +92,10 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       component: SearchPage,
       loadData: pageDataLoadingAPI.SearchPage.loadData,
     },
+
+    /**
+     * Listing Routes
+     */
     {
       path: '/l',
       name: 'ListingBasePage',
@@ -131,18 +135,18 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       ),
     },
     {
+      path: '/l/new/:category/:type/:tab',
+      name: 'BatchEditListingPage',
+      auth: true,
+      component: BatchEditListingPage,
+      loadData: pageDataLoadingAPI.BatchEditListingPage.loadData,
+    },
+    {
       path: '/l/:slug/:id/:type/:tab',
       name: 'EditListingPage',
       auth: true,
       component: EditListingPage,
       loadData: pageDataLoadingAPI.EditListingPage.loadData,
-    },
-    {
-      path: '/listing/:category/:type/:tab',
-      name: 'BatchEditListingPage',
-      auth: true,
-      component: BatchEditListingPage,
-      loadData: pageDataLoadingAPI.BatchEditListingPage.loadData,
     },
     {
       path: '/l/:slug/:id/:type/:tab/:returnURLType',
@@ -161,6 +165,10 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       component: ListingPage,
       loadData: pageDataLoadingAPI.ListingPage.loadData,
     },
+
+    /**
+     * Listing management routes
+     */
     {
       path: '/favorites',
       name: 'FavoriteListingsPage',
@@ -169,6 +177,18 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       component: FavoriteListingsPage,
       loadData: pageDataLoadingAPI.FavoriteListingsPage.loadData,
     },
+    {
+      path: '/listings',
+      name: 'ManageListingsPage',
+      auth: true,
+      authPage: 'LoginPage',
+      component: ManageListingsPage,
+      loadData: pageDataLoadingAPI.ManageListingsPage.loadData,
+    },
+
+    /**
+     * User routes
+     */
     {
       path: '/u',
       name: 'ProfileBasePage',
@@ -188,6 +208,10 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       component: ProfilePage,
       loadData: pageDataLoadingAPI.ProfilePage.loadData,
     },
+
+    /**
+     * Settings routes
+     */
     {
       path: '/profile-settings',
       name: 'ProfileSettingsPage',
@@ -203,108 +227,6 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       authPage: 'LoginPage',
       component: CreativeDetailsPage,
       loadData: pageDataLoadingAPI.CreativeDetailsPage.loadData,
-    },
-
-    // Note: authenticating with IdP (e.g. Facebook) expects that /login path exists
-    // so that in the error case users can be redirected back to the LoginPage
-    // In case you change this, remember to update the route in server/api/auth/loginWithIdp.js
-    {
-      path: '/login',
-      name: 'LoginPage',
-      component: AuthenticationPage,
-      extraProps: { tab: 'login' },
-    },
-    {
-      path: '/signup',
-      name: 'SignupPage',
-      component: AuthenticationPage,
-      extraProps: { tab: 'signup' },
-      loadData: pageDataLoadingAPI.AuthenticationPage.loadData,
-    },
-    {
-      path: '/signup/:userType',
-      name: 'SignupForUserTypePage',
-      component: AuthenticationPage,
-      extraProps: { tab: 'signup' },
-      loadData: pageDataLoadingAPI.AuthenticationPage.loadData,
-    },
-    // Add BrandUser to an existing Brand
-    {
-      path: '/signup/:userType/:brandStudioId',
-      name: 'SignupForUserTypePage',
-      component: AuthenticationPage,
-      extraProps: { tab: 'signup' },
-      loadData: pageDataLoadingAPI.AuthenticationPage.loadData,
-    },
-    {
-      path: '/confirm',
-      name: 'ConfirmPage',
-      component: AuthenticationPage,
-      extraProps: { tab: 'confirm' },
-      loadData: pageDataLoadingAPI.AuthenticationPage.loadData,
-    },
-
-    {
-      path: '/inbox',
-      name: 'InboxBasePage',
-      auth: true,
-      authPage: 'LoginPage',
-      component: () => <NamedRedirect name="InboxPage" params={{ tab: 'sales' }} />,
-    },
-    {
-      path: '/inbox/:tab',
-      name: 'InboxPage',
-      auth: true,
-      authPage: 'LoginPage',
-      component: InboxPage,
-      loadData: pageDataLoadingAPI.InboxPage.loadData,
-    },
-    {
-      path: '/order/:id',
-      name: 'OrderDetailsPage',
-      auth: true,
-      authPage: 'LoginPage',
-      component: TransactionPage,
-      extraProps: { transactionRole: 'customer' },
-      loadData: (params, ...rest) =>
-        pageDataLoadingAPI.TransactionPage.loadData({
-          ...params,
-          transactionRole: 'customer',
-        }, ...rest),
-      setInitialValues: pageDataLoadingAPI.TransactionPage.setInitialValues,
-    },
-    {
-      path: '/order/:id/details',
-      name: 'OrderDetailsPageRedirect',
-      auth: true,
-      authPage: 'LoginPage',
-      component: props => <NamedRedirect name="OrderDetailsPage"
-                                         params={{ id: props.params?.id }} />,
-    },
-    {
-      path: '/sale/:id',
-      name: 'SaleDetailsPage',
-      auth: true,
-      authPage: 'LoginPage',
-      component: TransactionPage,
-      extraProps: { transactionRole: 'provider' },
-      loadData: pageDataLoadingAPI.TransactionPage.loadData,
-    },
-    {
-      path: '/sale/:id/details',
-      name: 'SaleDetailsPageRedirect',
-      auth: true,
-      authPage: 'LoginPage',
-      component: props => <NamedRedirect name="SaleDetailsPage"
-                                         params={{ id: props.params?.id }} />,
-    },
-    {
-      path: '/listings',
-      name: 'ManageListingsPage',
-      auth: true,
-      authPage: 'LoginPage',
-      component: ManageListingsPage,
-      loadData: pageDataLoadingAPI.ManageListingsPage.loadData,
     },
     {
       path: '/account',
@@ -345,6 +267,114 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       component: PaymentMethodsPage,
       loadData: pageDataLoadingAPI.PaymentMethodsPage.loadData,
     },
+
+    /**
+     * Auth routes
+     */
+    // Note: authenticating with IdP (e.g. Facebook) expects that /login path exists
+    // so that in the error case users can be redirected back to the LoginPage
+    // In case you change this, remember to update the route in server/api/auth/loginWithIdp.js
+    {
+      path: '/login',
+      name: 'LoginPage',
+      component: AuthenticationPage,
+      extraProps: { tab: 'login' },
+    },
+    {
+      path: '/signup',
+      name: 'SignupPage',
+      component: AuthenticationPage,
+      extraProps: { tab: 'signup' },
+      loadData: pageDataLoadingAPI.AuthenticationPage.loadData,
+    },
+    {
+      path: '/signup/:userType',
+      name: 'SignupForUserTypePage',
+      component: AuthenticationPage,
+      extraProps: { tab: 'signup' },
+      loadData: pageDataLoadingAPI.AuthenticationPage.loadData,
+    },
+    // Add BrandUser to an existing Brand
+    {
+      path: '/signup/:userType/:brandStudioId',
+      name: 'SignupForUserTypePage',
+      component: AuthenticationPage,
+      extraProps: { tab: 'signup' },
+      loadData: pageDataLoadingAPI.AuthenticationPage.loadData,
+    },
+    {
+      path: '/confirm',
+      name: 'ConfirmPage',
+      component: AuthenticationPage,
+      extraProps: { tab: 'confirm' },
+      loadData: pageDataLoadingAPI.AuthenticationPage.loadData,
+    },
+
+    /**
+     * Inbox routes
+     */
+    {
+      path: '/inbox',
+      name: 'InboxBasePage',
+      auth: true,
+      authPage: 'LoginPage',
+      component: () => <NamedRedirect name="InboxPage" params={{ tab: 'sales' }} />,
+    },
+    {
+      path: '/inbox/:tab',
+      name: 'InboxPage',
+      auth: true,
+      authPage: 'LoginPage',
+      component: InboxPage,
+      loadData: pageDataLoadingAPI.InboxPage.loadData,
+    },
+
+    /**
+     * Order & Sales routes
+     */
+    {
+      path: '/order/:id',
+      name: 'OrderDetailsPage',
+      auth: true,
+      authPage: 'LoginPage',
+      component: TransactionPage,
+      extraProps: { transactionRole: 'customer' },
+      loadData: (params, ...rest) =>
+        pageDataLoadingAPI.TransactionPage.loadData({
+          ...params,
+          transactionRole: 'customer',
+        }, ...rest),
+      setInitialValues: pageDataLoadingAPI.TransactionPage.setInitialValues,
+    },
+    {
+      path: '/order/:id/details',
+      name: 'OrderDetailsPageRedirect',
+      auth: true,
+      authPage: 'LoginPage',
+      component: props => <NamedRedirect name="OrderDetailsPage"
+                                         params={{ id: props.params?.id }} />,
+    },
+    {
+      path: '/sale/:id',
+      name: 'SaleDetailsPage',
+      auth: true,
+      authPage: 'LoginPage',
+      component: TransactionPage,
+      extraProps: { transactionRole: 'provider' },
+      loadData: pageDataLoadingAPI.TransactionPage.loadData,
+    },
+    {
+      path: '/sale/:id/details',
+      name: 'SaleDetailsPageRedirect',
+      auth: true,
+      authPage: 'LoginPage',
+      component: props => <NamedRedirect name="SaleDetailsPage"
+                                         params={{ id: props.params?.id }} />,
+    },
+
+    /**
+     * Static routes
+     */
     {
       path: '/terms-of-service',
       name: 'TermsOfServicePage',
@@ -357,6 +387,10 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       component: PrivacyPolicyPage,
       loadData: pageDataLoadingAPI.PrivacyPolicyPage.loadData,
     },
+
+    /**
+     * Styleguide routes
+     */
     {
       path: '/styleguide',
       name: 'Styleguide',
@@ -388,6 +422,10 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       component: StyleguidePage,
       extraProps: { raw: true },
     },
+
+    /**
+     * Error pages
+     */
     {
       path: '/no-:missingAccessRight',
       name: 'NoAccessPage',
