@@ -20,7 +20,7 @@ const defaultConfig = {
   // It should match one of the currencies listed in currencySettings.js
   // Note: The currency comes from localization asset nowadays by default.
   //       To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeCurrency func)
-  currency: 'USD',
+  currency: 'BGN',
 
   // Listing minimum price in currency sub units, e.g. cents.
   // By default, always try to take the value of listingMinimumPriceSubUnits from the transaction-size.json asset.
@@ -33,7 +33,7 @@ const defaultConfig = {
   listingMinimumPriceSubUnits: 500,
 
   // Marketplace name is needed for microcopy (aka marketplace texts) and in meta tags (bots and social media sharing reads those)
-  marketplaceName: process.env.REACT_APP_MARKETPLACE_NAME || 'Biketribe',
+  marketplaceName: process.env.REACT_APP_MARKETPLACE_NAME || 'Preloved',
 
   // Modify Stripe configuration in configStripe.js
   // - picks REACT_APP_STRIPE_PUBLISHABLE_KEY from environment variables

@@ -59,7 +59,10 @@ const SectionColumns = props => {
       options={fieldOptions}
     >
       {hasHeaderFields ? (
-        <header className={defaultClasses.sectionDetails}>
+        <header 
+        id={css.columnsHome}
+        className={defaultClasses.sectionDetails}
+        >
           <Field data={title} className={defaultClasses.title} options={fieldOptions} />
           <Field data={description} className={defaultClasses.description} options={fieldOptions} />
           <Field data={callToAction} className={defaultClasses.ctaButton} options={fieldOptions} />
@@ -67,7 +70,10 @@ const SectionColumns = props => {
       ) : null}
       {hasBlocks ? (
         <div
-          className={classNames(defaultClasses.blockContainer, getColumnCSS(numColumns), {
+          className={classNames(
+            defaultClasses.blockContainer, 
+            getColumnCSS(numColumns), 
+            css.decreasePadding, {
             [css.noSidePaddings]: isInsideContainer,
           })}
         >

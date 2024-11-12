@@ -37,17 +37,24 @@ const SectionHero = props => {
       appearance={appearance}
       options={fieldOptions}
     >
-      {/* <div className={css.backgroundImage}></div> */}
-      {hasHeaderFields ? (
-        <header 
-          id={css.heroHome}
-          className={`${defaultClasses.sectionDetails} ${css.heroInfoBlock}`}
-        >
-          <Field data={title} className={defaultClasses.title} options={fieldOptions} />
-          <Field data={description} className={defaultClasses.description} options={fieldOptions} />
-          <Field data={callToAction} className={`${defaultClasses.ctaButton} ${css.heroInfoBlock__button}`} options={fieldOptions} />
-        </header>
-      ) : null}
+      <div className={css.heroContainer}>
+        <div 
+          className={css.backgroundImage} 
+          style={{ backgroundImage: `url(${backgroundImageUrl})` }}
+          aria-hidden="true"
+        />
+        
+        {hasHeaderFields ? (
+          <header 
+            id={css.heroHome}
+            className={`${defaultClasses.sectionDetails} ${css.heroInfoBlock}`}
+          >
+            <Field data={title} className={defaultClasses.title} options={fieldOptions} />
+            <Field data={description} className={defaultClasses.description} options={fieldOptions} />
+            <Field data={callToAction} className={`${defaultClasses.ctaButton} ${css.heroInfoBlock__button}`} options={fieldOptions} />
+          </header>
+        ) : null}
+      </div>
     </SectionContainer>
   );
 };

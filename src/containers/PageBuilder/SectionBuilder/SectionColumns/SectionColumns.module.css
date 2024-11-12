@@ -36,3 +36,14 @@
   padding-left: 0;
   padding-right: 0;
 }
+
+/* test styles */
+#columnsHome {
+  justify-content: flex-start;
+}
+#columnsHome h2 {
+  color: #422f32;
+}
+.decreasePadding {
+  padding: 32px;
+}

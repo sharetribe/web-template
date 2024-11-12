@@ -7,8 +7,27 @@
   position: relative;
 
   /* Hero specific */
-  min-height: 80vh;
+  min-height: 70vh;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+}
+
+/* test styles */
+#heroHome {
+  margin-left: 10%;
+  padding: 2rem 0;
+  background: rgba(46, 30, 33,.9);
+}
+#heroHome h1 {
+  font-size: 42px;
+  font-weight: var(--fontWeightBold);
+  line-height: 1.1;
+}
+#heroHome p {
+  font-weight: 400;
+  line-height: 1.4;
+}
+#heroHome a {
+  text-transform: uppercase;
 }

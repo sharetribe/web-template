@@ -124,7 +124,7 @@
 
 .title {
   composes: align;
-  max-width: 30ch;
+  max-width: 50vw;
 }
 
 .description {
@@ -135,7 +135,7 @@
 .ctaButton {
   composes: align;
   display: inline-block;
-  padding: 8px 20px;
+  padding: 1rem 1.5rem;
   font-size: 15px;
   background-color: var(--marketplaceColor);
   border-radius: 4px;

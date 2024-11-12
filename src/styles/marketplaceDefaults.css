@@ -1,6 +1,7 @@
 @import '../assets/sanitize.css';
 @import './customMediaQueries.css';
-
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&family=Roboto:wght@300;400;500;700;900&display=swap');
 /* ================ Custom Properties aka CSS variables ================ */
 
 /**
@@ -71,9 +72,12 @@
   --colorSecondaryButtonLight: var(--colorWhite);
 
   /* ================ Font ================ */
-  --fontFamily: -apple-system, BlinkMacSystemFont, 'Inter', Helvetica, Arial, sans-serif,
-    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  /* --fontFamily: -apple-system, BlinkMacSystemFont, 'Inter', Helvetica, Arial, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; */
+  --fontFamilyTitles: "Roboto Serif", serif;
+  --fontFamily: "Roboto", sans-serif;
 
+  --fontWeightThin: 300;
   --fontWeightRegular: 400;
   --fontWeightMedium: 500;
   --fontWeightSemiBold: 600;
@@ -254,9 +258,10 @@ a:hover {
 }
 
 h1 {
+  font-family: var( --fontFamilyTitles);
   font-size: 24px;
-  line-height: 24px;
-  font-weight: var(--fontWeightBlack);
+  line-height: 1.2;
+  font-weight: var(--fontWeightBold);
   padding: 3px 0 3px 0;
   /* margin-top + n * line-height + margin-bottom => x * 6px */
   margin-top: 18px;
@@ -273,9 +278,10 @@ h1 {
 }
 
 h2 {
+  font-family: var( --fontFamilyTitles);
   font-size: 21px;
   line-height: 24px;
-  font-weight: var(--fontWeightBold);
+  font-weight: var(--fontWeightRegular);
 
   padding: 4px 0 2px 0;
   /* x * 6px */
@@ -284,7 +290,7 @@ h2 {
 
   @media (--viewportMedium) {
     font-size: 40px;
-    line-height: 56px;
+    line-height: 1.2;
     padding: 5px 0 3px 0;
     /* x * 8px */
     margin-top: 24px;
@@ -293,9 +299,10 @@ h2 {
 }
 
 h3 {
-  font-weight: var(--fontWeightBold);
+  font-family: var( --fontFamilyTitles);
+  font-weight: var(--fontWeightRegular) !important;
   font-size: 18px;
-  line-height: 24px;
+  line-height: 1.2;
   /* x * 6px */
   margin-top: 18px;
   margin-bottom: 12px;
@@ -791,13 +798,13 @@ textarea {
 }
 
 .textSmall {
-  font-size: 14px;
-  line-height: 18px;
+  font-size: 13px;
+  line-height: 1.2;
   font-weight: var(--fontWeightMedium);
-  letter-spacing: -0.1px;
+  /* letter-spacing: -0.1px; */
 
   @media (--viewportMedium) {
-    line-height: 16px;
+    line-height: 1.2;
   }
 }
 
