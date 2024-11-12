@@ -12,6 +12,7 @@ import {
   NO_ACCESS_PAGE_POST_LISTINGS,
   NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
   NO_ACCESS_PAGE_VIEW_LISTINGS,
+  NO_ACCESS_PAGE_FORBIDDEN_LISTING_TYPE,
 } from '../../util/urlHelpers';
 import { generateLinkProps } from '../../util/routes';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
@@ -93,6 +94,7 @@ export const NoAccessPageComponent = props => {
   const isPostingRightsPage = missingAccessRight === NO_ACCESS_PAGE_POST_LISTINGS;
   const isInitiateTransactionsPage = missingAccessRight === NO_ACCESS_PAGE_INITIATE_TRANSACTIONS;
   const isViewingRightsPage = missingAccessRight === NO_ACCESS_PAGE_VIEW_LISTINGS;
+  const isForbiddenListingTypePage = missingAccessRight === NO_ACCESS_PAGE_FORBIDDEN_LISTING_TYPE;
 
   // Destructure `callToAction` objects from the config object for ease of reference
   const { accessControl: accessControlConfig } = config || {};
@@ -129,6 +131,13 @@ export const NoAccessPageComponent = props => {
         schemaTitle: 'NoAccessPage.viewListings.schemaTitle',
         heading: 'NoAccessPage.viewListings.heading',
         content: 'NoAccessPage.viewListings.content',
+        ctaData: permissionToViewCTA,
+      }
+    : isForbiddenListingTypePage
+    ? {
+        schemaTitle: 'NoAccessPage.forbiddenListingType.schemaTitle',
+        heading: 'NoAccessPage.forbiddenListingType.heading',
+        content: 'NoAccessPage.forbiddenListingType.content',
         ctaData: permissionToViewCTA,
       }
     : {};

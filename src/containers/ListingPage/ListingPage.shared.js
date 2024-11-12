@@ -11,7 +11,7 @@ import {
   createSlug,
 } from '../../util/urlHelpers';
 
-import { LayoutSingleColumn, Page } from '../../components';
+import { H2, LayoutSingleColumn, Page } from '../../components';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import css from './ListingPage.module.css';
@@ -269,12 +269,19 @@ export const ErrorPage = props => {
       topbar={topbar}
       scrollingDisabled={scrollingDisabled}
     >
-      <p className={css.errorText}>
-        {invalidListing ? (
-          <FormattedMessage id="ListingPage.errorInvalidListingMessage" />
-        ) : (
-          <FormattedMessage id="ListingPage.errorLoadingListingMessage" />
-        )}
+      <p>
+        <div className={css.errorWrapper}>
+          <H2>
+            <FormattedMessage id="ListingPage.errorListingTitle" />
+          </H2>
+          <p className={css.errorText}>
+            {invalidListing ? (
+              <FormattedMessage id="ListingPage.errorInvalidListingMessage" />
+            ) : (
+              <FormattedMessage id="ListingPage.errorLoadingListingMessage" />
+            )}
+          </p>
+        </div>
       </p>
     </PlainPage>
   );

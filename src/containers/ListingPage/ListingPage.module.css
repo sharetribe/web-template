@@ -15,6 +15,10 @@
   margin: 24px;
 }
 
+.errorWrapper {
+  text-align: center;
+}
+
 .errorText {
   color: var(--colorFail);
   margin: 24px;
