@@ -19,6 +19,8 @@ way to update this template, but currently, we follow a pattern:
 - [fix] Open discard modal on ManageListingsPage only if scrolling is disabled. Fixes an issue where
   opening the discard draft modal on mobile scrolled the page to the very bottom.
   [#497](https://github.com/sharetribe/web-template/pull/497)
+- [change] Update default email template copy texts
+  [#501](https://github.com/sharetribe/web-template/pull/501)
 
 ## [v6.1.0] 2024-11-06
 
