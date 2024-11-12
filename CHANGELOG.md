@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] PaymentMethodsPage: full page load did not fetch defaultPaymentMethod.
+  [#500](https://github.com/sharetribe/web-template/pull/500)
 - [change] Relax the Referrer-Policy to "origin".
   [#498](https://github.com/sharetribe/web-template/pull/498)
 - [fix] Open discard modal on ManageListingsPage only if scrolling is disabled. Fixes an issue where
