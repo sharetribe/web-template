@@ -260,6 +260,7 @@ const EditListingAvailabilityPanel = props => {
             weeklyExceptionQueries={weeklyExceptionQueries}
             isDaily={unitType === DAY}
             useFullDays={useFullDays}
+            useMultipleSeats={useMultipleSeats}
             onDeleteAvailabilityException={onDeleteAvailabilityException}
             onFetchExceptions={onFetchExceptions}
             params={params}

@@ -179,7 +179,6 @@
   "EditListingAvailabilityExceptionForm.notAvailable": "Non disponible",
   "EditListingAvailabilityExceptionForm.title": "Ajouter une exception de disponibilité",
   "EditListingAvailabilityPanel.WeeklyCalendar.available": "Disponible",
-  "EditListingAvailabilityPanel.WeeklyCalendar.exceptions": "Exceptions",
   "EditListingAvailabilityPanel.WeeklyCalendar.fetchExceptionsError": "Échec de la récupération des données d'exception de disponibilité",
   "EditListingAvailabilityPanel.WeeklyCalendar.notAvailable": "Non disponible",
   "EditListingAvailabilityPanel.WeeklyCalendar.scheduleTitle": "Calendrier du",
