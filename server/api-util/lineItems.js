@@ -9,6 +9,8 @@ const {
 const { types } = require('sharetribe-flex-sdk');
 const { Money } = types;
 
+const { hasFlatFee } = require('../extensions/line-items/utils');
+
 const DEFAULT_CURRENCY = 'USD';
 /**
  * Get quantity and add extra line-items that are related to delivery method
@@ -120,7 +122,8 @@ exports.transactionLineItems = async (
   listing,
   orderData,
   providerCommission,
-  customerCommission
+  customerCommission,
+  providerFlatFee
 ) => {
   const calculateCurrency = orderData.currency || DEFAULT_CURRENCY;
   const unitPrice =
@@ -223,6 +226,17 @@ exports.transactionLineItems = async (
       ]
     : [];
 
+  const providerFlatFeeMaybe = hasFlatFee(providerFlatFee)
+    ? [
+        {
+          code: 'line-item/provider-flat-fee',
+          unitPrice: new Money(-1 * providerFlatFee, calculateCurrency),
+          quantity: 1,
+          includeFor: ['provider'],
+        },
+      ]
+    : [];
+
   // Let's keep the base price (order) as first line item and provider and customer commissions as last.
   // Note: the order matters only if OrderBreakdown component doesn't recognize line-item.
   const lineItems = [
@@ -230,6 +244,7 @@ exports.transactionLineItems = async (
     ...extraLineItems,
     ...providerCommissionMaybe,
     ...customerCommissionMaybe,
+    ...providerFlatFeeMaybe,
   ];
 
   return lineItems;
