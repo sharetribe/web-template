@@ -9,10 +9,8 @@ const getListingCategory = listing => {
   return get(listing, 'attributes.publicData.categoryLevel1', null);
 };
 
-const ensurePositivePercentage = percentage => {
-  if (percentage === null || typeof percentage !== 'number') return null;
-  return percentage;
-};
+const ensurePositivePercentage = percentage =>
+  typeof percentage !== 'number' && percentage >= 0 ? percentage : null;
 
 const retrieveCommission = listing => {
   const category = getListingCategory(listing);
@@ -34,10 +32,10 @@ const retrieveCommission = listing => {
   );
   return {
     overrideProviderCommission: {
-      percentage: pCommission ?? null,
+      percentage: pCommission,
     },
     overrideCustomerCommission: {
-      percentage: cCommission ?? null,
+      percentage: cCommission,
     },
   };
 };
@@ -54,7 +52,8 @@ const getListingCurrency = listing => {
 const calculateFlatFeeInCurrency = async (listing, currency) => {
   const exchangeRate = await getExchangeRate();
   const flatFee = retrieveProviderFlatFeeRawValue(listing);
-  const dailyExchangeRate = 1 / exchangeRate[currency];
+  const currencyExchangeRate = exchangeRate[currency] ?? 1;
+  const dailyExchangeRate = 1 / currencyExchangeRate;
 
   const flatFeeInExchangeCurrency = Math.round(flatFee * dailyExchangeRate);
   return flatFeeInExchangeCurrency;
