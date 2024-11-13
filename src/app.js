@@ -36,6 +36,7 @@ import Routes from './routing/Routes';
 // Sharetribe Web Template uses English translations as default translations.
 import defaultMessages from './translations/en.json';
 import { getAllExtensionTranslationFile } from './extension';
+import { attachCategoryConfigToAppConfig } from './extensions/categoryConfig/utils';
 
 const extensionTranslations = await getAllExtensionTranslationFile();
 // If you want to change the language of default (fallback) translations,
@@ -216,8 +217,9 @@ const EnvironmentVariableWarning = props => {
 };
 
 export const ClientApp = props => {
-  const { store, hostedTranslations = {}, hostedConfig = {} } = props;
+  const { store, hostedTranslations = {}, hostedConfig = {}, categoryCustomConfig = {} } = props;
   const appConfig = mergeConfig(hostedConfig, defaultConfig);
+  attachCategoryConfigToAppConfig(appConfig, categoryCustomConfig);
 
   // Show warning on the localhost:3000, if the environment variable key contains "SECRET"
   if (appSettings.dev) {
