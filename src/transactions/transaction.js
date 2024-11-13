@@ -220,6 +220,8 @@ export const resolveLatestProcessName = (processName) => {
     case 'flex-default-process':
     case 'flex-hourly-default-process':
     case 'flex-booking-default-process':
+    case FREE_BOOKING_PROCESS_NAME:
+    return FREE_BOOKING_PROCESS_NAME;
     case BOOKING_PROCESS_NAME:
       return BOOKING_PROCESS_NAME;
     case INQUIRY_PROCESS_NAME:

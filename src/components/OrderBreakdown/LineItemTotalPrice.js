@@ -4,8 +4,10 @@ import { FormattedMessage, intlShape } from '../../util/reactIntl';
 import { formatMoney } from '../../util/currency';
 import { propTypes } from '../../util/types';
 import { resolveLatestProcessName, getProcess } from '../../transactions/transaction';
+import { normalizeAmount } from '../../util/listingsHelpers';
 
 import css from './OrderBreakdown.module.css';
+
 
 function LineItemTotalPrice(props) {
   const { transaction, isProvider, intl } = props;
@@ -30,9 +32,11 @@ function LineItemTotalPrice(props) {
     <FormattedMessage id="OrderBreakdown.total" />
   );
 
+  // Normalize the total price to ensure it’s non-negative
   const totalPrice = isProvider
-    ? transaction.attributes.payoutTotal
-    : transaction.attributes.payinTotal;
+    ? normalizeAmount(transaction.attributes.payoutTotal)
+    : normalizeAmount(transaction.attributes.payinTotal);
+
   const formattedTotalPrice = formatMoney(intl, totalPrice);
 
   return (

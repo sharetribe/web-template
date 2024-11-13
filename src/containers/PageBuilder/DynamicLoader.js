@@ -1,10 +1,9 @@
 import React from 'react';
 import MyCalendar from '../../components/MyCalendar/MyCalendar';
-
+import CodeChecker from '../../components/CodeChecker/CodeChecker';
 const pageComponentMap = {
   overview: MyCalendar,
-  // overview: AttendanceForm,
-  // Add other pageId to component mappings here
+  gift: CodeChecker,
 };
 
 /**
