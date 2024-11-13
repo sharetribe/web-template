@@ -10,7 +10,7 @@ const getListingCategory = listing => {
 };
 
 const ensurePositivePercentage = percentage =>
-  typeof percentage !== 'number' && percentage >= 0 ? percentage : null;
+  typeof percentage === 'number' && percentage >= 0 ? percentage : null;
 
 const retrieveCommission = listing => {
   const category = getListingCategory(listing);
@@ -66,6 +66,7 @@ const retrieveCommissionAndFlatFee = async (listing, commissionAsset) => {
   } = commissionAsset?.type === 'jsonAsset' ? commissionAsset.attributes.data : {};
 
   const { overrideProviderCommission, overrideCustomerCommission } = retrieveCommission(listing);
+
   const providerFlatFee = retrieveProviderFlatFeeRawValue(listing);
   const listingCurrency = getListingCurrency(listing);
 
