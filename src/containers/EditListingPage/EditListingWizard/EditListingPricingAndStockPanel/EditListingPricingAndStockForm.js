@@ -26,7 +26,6 @@ import {
   FieldTextInput,
 } from '../../../../components';
 
-import { getCommission } from '../../../../extensions/PriceBreakdown/api';
 import { DEFAULT_CURRENCY } from '../../../../extensions/common/config/constants/currency.constants';
 
 // Import modules from this directory
@@ -100,19 +99,6 @@ const UpdateStockToInfinityCheckboxMaybe = ({ hasInfiniteStock, currentStock, fo
 };
 
 export const EditListingPricingAndStockFormComponent = props => {
-  const [providerCommission, setProviderCommission] = useState();
-
-  useEffect(() => {
-    const getProviderCommission = async () => {
-      const commission = await getCommission();
-      const providerCommission = commission.providerCommission.percentage;
-
-      setProviderCommission(providerCommission);
-    };
-
-    getProviderCommission();
-  }, []);
-
   return (
     <FinalForm
       {...props}
@@ -138,6 +124,10 @@ export const EditListingPricingAndStockFormComponent = props => {
           updateInProgress,
           fetchErrors,
           values,
+
+          // Custom props
+          providerCommission,
+          providerFlatFee,
         } = formRenderProps;
 
         const currentUser = useSelector(state => state.user.currentUser);
@@ -210,6 +200,7 @@ export const EditListingPricingAndStockFormComponent = props => {
                 ...appSettings.getCurrencyFormatting(marketplaceCurrency),
               }}
               providerCommission={providerCommission}
+              providerFlatFee={providerFlatFee}
             />
 
             {userCurrency !== DEFAULT_CURRENCY && (

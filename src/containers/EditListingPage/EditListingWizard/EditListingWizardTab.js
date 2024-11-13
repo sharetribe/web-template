@@ -10,6 +10,11 @@ import {
 import { ensureListing } from '../../../util/data';
 import { createResourceLocatorString } from '../../../util/routes';
 import { propTypes } from '../../../util/types';
+import {
+  retrieveListingMinimumPrice,
+  retrieveProviderCommission,
+  retrieveProviderFlatFee,
+} from '../../../extensions/categoryConfig/utils';
 
 // Import modules from this directory
 import EditListingAvailabilityPanel from './EditListingAvailabilityPanel/EditListingAvailabilityPanel';
@@ -193,7 +198,12 @@ const EditListingWizardTab = props => {
         <EditListingPricingAndStockPanel
           {...panelProps(PRICING_AND_STOCK)}
           marketplaceCurrency={config.currency}
-          listingMinimumPriceSubUnits={config.listingMinimumPriceSubUnits}
+          listingMinimumPriceSubUnits={
+            retrieveListingMinimumPrice(listing, config) || config.listingMinimumPriceSubUnits
+          }
+          // Custom props
+          providerCommission={retrieveProviderCommission(listing, config)}
+          providerFlatFee={retrieveProviderFlatFee(listing, config)}
         />
       );
     }

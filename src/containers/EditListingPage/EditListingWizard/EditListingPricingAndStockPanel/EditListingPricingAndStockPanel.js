@@ -78,6 +78,10 @@ const EditListingPricingAndStockPanel = props => {
     panelUpdated,
     updateInProgress,
     errors,
+    
+    // Custom props
+    providerCommission,
+    providerFlatFee,
   } = props;
 
   useEffect(() => {
@@ -186,6 +190,10 @@ const EditListingPricingAndStockPanel = props => {
           updated={panelUpdated}
           updateInProgress={updateInProgress}
           fetchErrors={errors}
+
+          // Custom props
+          providerCommission={providerCommission}
+          providerFlatFee={providerFlatFee}
         />
       ) : (
         <div className={css.priceCurrencyInvalid}>
