@@ -49,6 +49,7 @@ import { fetchCurrentUser } from './ducks/user.duck';
 import routeConfiguration from './routing/routeConfiguration';
 // App it self
 import { ClientApp, renderApp } from './app';
+import { fetchCustomCategoryConfiguration } from './extensions/categoryConfig/duck';
 
 const render = (store, shouldHydrate) => {
   // If the server already loaded the auth information, render the app
@@ -66,9 +67,10 @@ const render = (store, shouldHydrate) => {
         loadableReady(),
         store.dispatch(fetchAppAssets(defaultConfig.appCdnAssets, cdnAssetsVersion)),
         store.dispatch(fetchCurrentUser()),
+        store.dispatch(fetchCustomCategoryConfiguration()),
       ]);
     })
-    .then(([_, fetchedAppAssets, cu]) => {
+    .then(([_, fetchedAppAssets, cu, categoryCustomConfig]) => {
       const { translations: translationsRaw, ...rest } = fetchedAppAssets || {};
       // We'll handle translations as a separate data.
       // It's given to React Intl instead of pushing to config Context
@@ -82,12 +84,12 @@ const render = (store, shouldHydrate) => {
 
       if (shouldHydrate) {
         ReactDOM.hydrate(
-          <ClientApp store={store} hostedTranslations={translations} hostedConfig={hostedConfig} />,
+          <ClientApp store={store} hostedTranslations={translations} hostedConfig={hostedConfig} categoryCustomConfig={categoryCustomConfig} />,
           document.getElementById('root')
         );
       } else {
         ReactDOM.render(
-          <ClientApp store={store} hostedTranslations={translations} hostedConfig={hostedConfig} />,
+          <ClientApp store={store} hostedTranslations={translations} hostedConfig={hostedConfig} categoryCustomConfig={categoryCustomConfig} />,
           document.getElementById('root')
         );
       }

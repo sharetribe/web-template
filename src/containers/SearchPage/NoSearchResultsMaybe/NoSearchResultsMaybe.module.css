@@ -5,38 +5,59 @@
 
   /* Reserves 48px of vertical space */
   line-height: 24px;
-  margin-top: 18px;
-  margin-bottom: 18px;
+  margin-top: 36px;
+  margin-bottom: 36px;
 
   @media (--viewportMedium) {
-    margin-top: 8px;
     margin-bottom: 8px;
   }
 }
 
-.createListingLink,
-.resetAllFiltersButton {
+.links{
+  padding:20px 0;
   composes: h5 from global;
+  
+  > span {
+    margin:2px 12px 2px 0%;
+  }
+}
+
+.createListingLink,
+.resetAllFiltersButton,
+.openLeadForm {
+  
   font-weight: var(--fontWeightMedium);
   color: var(--marketplaceColor);
 
   /* Layout */
   display: inline;
   margin: 0;
-  padding: 0;
+  margin-bottom:20px;
+  border-radius: 4px;
+  padding: 6px 9px;
+  line-height: 20px;
 
   /* Override button styles */
   outline: none;
   text-align: left;
-  border: none;
   cursor: pointer;
+  border:none;
 
   &:focus,
   &:hover {
     color: var(--colorGrey700);
+    text-decoration: none;
   }
+}
+.openLeadForm{
+  border: 1px solid var(--marketplaceColor);
+  &:focus,
+  &:hover {
+    background-color: white;
+  }
+}
 
-  @media (--viewportMedium) {
-    padding: 3px 0 5px 0;
-  }
+.modal{
+  border:none;
+  height:100vh;
 }
