@@ -14,6 +14,14 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [change] Update mapbox-gl-js (v1.0.0 => v3.7.0) and mapbox-sdk-js (0.6.0 => 0.16.1) Note: Mapbox
+  license changed in v2 (and pricing for non-mapbox related map tiles)
+  https://github.com/mapbox/mapbox-gl-js/releases/tag/v2.0.0
+
+  [#488](https://github.com/sharetribe/web-template/pull/488)
+
+- [change] Update default email template copy texts
+  [#501](https://github.com/sharetribe/web-template/pull/501)
 - [fix] ConfirmSignupForm: show spinner. (Handling for confirmInProgress state was missing.)
   [#504](https://github.com/sharetribe/web-template/pull/504)
 - [fix] Topbar: if multiple custom links has the same text, the virtual DOM is confused.
@@ -25,8 +33,6 @@ way to update this template, but currently, we follow a pattern:
 - [fix] Open discard modal on ManageListingsPage only if scrolling is disabled. Fixes an issue where
   opening the discard draft modal on mobile scrolled the page to the very bottom.
   [#497](https://github.com/sharetribe/web-template/pull/497)
-- [change] Update default email template copy texts
-  [#501](https://github.com/sharetribe/web-template/pull/501)
 
 ## [v6.1.0] 2024-11-06
 
