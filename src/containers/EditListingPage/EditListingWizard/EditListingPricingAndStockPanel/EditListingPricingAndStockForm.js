@@ -12,7 +12,7 @@ import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactI
 import { STOCK_INFINITE_ITEMS, STOCK_MULTIPLE_ITEMS, propTypes } from '../../../../util/types';
 import { isOldTotalMismatchStockError } from '../../../../util/errors';
 import * as validators from '../../../../util/validators';
-import { formatMoney } from '../../../../util/currency';
+import { formatMoney, unitDivisor } from '../../../../util/currency';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
 
 import PriceBreakdown from './PriceBreakdown';
@@ -159,7 +159,22 @@ export const EditListingPricingAndStockFormComponent = props => {
           ? intl.formatMessage({ id: 'EditListingPricingAndStockForm.oldStockTotalWasOutOfSync' })
           : intl.formatMessage({ id: 'EditListingPricingAndStockForm.stockUpdateFailed' });
 
-        const priceValue = values.price && values.price.amount ? values.price.amount / 100 : 0;
+        const priceValue =
+          values.price && values.price.amount
+            ? values.price.amount / unitDivisor(marketplaceCurrency)
+            : 0;
+
+        const priceBreakdownRenderMaybe = !invalid ? (
+          <PriceBreakdown
+            price={priceValue}
+            currencyConfig={{
+              currency: marketplaceCurrency,
+              ...appSettings.getCurrencyFormatting(marketplaceCurrency),
+            }}
+            providerCommission={providerCommission}
+            providerFlatFee={providerFlatFee}
+          />
+        ) : null;
 
         return (
           <Form onSubmit={handleSubmit} className={classes}>
@@ -193,15 +208,7 @@ export const EditListingPricingAndStockFormComponent = props => {
               validate={priceValidators}
             />
 
-            <PriceBreakdown
-              price={priceValue}
-              currencyConfig={{
-                currency: marketplaceCurrency,
-                ...appSettings.getCurrencyFormatting(marketplaceCurrency),
-              }}
-              providerCommission={providerCommission}
-              providerFlatFee={providerFlatFee}
-            />
+            {priceBreakdownRenderMaybe}
 
             {userCurrency !== DEFAULT_CURRENCY && (
               <p className={css.disclaimer}>
