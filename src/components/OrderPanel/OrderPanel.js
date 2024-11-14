@@ -194,7 +194,8 @@ const OrderPanel = props => {
   } = props;
 
   const publicData = listing?.attributes?.publicData || {};
-  const { listingType, unitType, transactionProcessAlias = '' } = publicData || {};
+  const { listingType, unitType, transactionProcessAlias = '', availabilityType } =
+    publicData || {};
   const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
   const lineItemUnitType = lineItemUnitTypeMaybe || `line-item/${unitType}`;
 
@@ -309,6 +310,7 @@ const OrderPanel = props => {
           <InvalidCurrency />
         ) : showBookingTimeForm ? (
           <BookingTimeForm
+            availabilityType={availabilityType}
             className={css.bookingForm}
             formId="OrderPanelBookingTimeForm"
             lineItemUnitType={lineItemUnitType}
@@ -332,6 +334,7 @@ const OrderPanel = props => {
           />
         ) : showBookingDatesForm ? (
           <BookingDatesForm
+            availabilityType={availabilityType}
             className={css.bookingForm}
             formId="OrderPanelBookingDatesForm"
             lineItemUnitType={lineItemUnitType}
