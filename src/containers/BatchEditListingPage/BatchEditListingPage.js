@@ -48,15 +48,15 @@ export const BatchEditListingPageComponent = props => {
         mobileClassName={css.mobileTopbar}
       />
 
-        <BatchEditListingWizard
-          id="EditListingWizard"
-          className={css.wizard}
-          params={params}
-          history={history}
-          currentUser={currentUser}
-          listingFieldsOptions={listingFieldsOptions}
-          onSaveBatchListing={onSaveBatchListing}
-        />
+      <BatchEditListingWizard
+        id="EditListingWizard"
+        className={css.wizard}
+        params={params}
+        history={history}
+        currentUser={currentUser}
+        listingFieldsOptions={listingFieldsOptions}
+        onSaveBatchListing={onSaveBatchListing}
+      />
     </Page>
   );
 };
