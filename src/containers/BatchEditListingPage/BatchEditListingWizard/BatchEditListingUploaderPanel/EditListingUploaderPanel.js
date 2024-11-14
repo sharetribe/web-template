@@ -6,7 +6,7 @@ import { Dashboard } from '@uppy/react';
 
 const EditListingUploaderPanel = props => {
   const { onSubmit, submitReady, uppy } = props;
-  const hasFiles = uppy.getFiles().length > 0;
+  const hasFiles = uppy ? uppy.getFiles().length > 0 : uppy;
 
   return (
     <div className={css.root}>
@@ -16,7 +16,7 @@ const EditListingUploaderPanel = props => {
           <FormattedMessage id="BatchEditListingUploaderPanel.subtitle" />
         </p>
       </H3>
-      <Dashboard uppy={uppy} hideUploadButton={true} />
+      {uppy && <Dashboard uppy={uppy} hideUploadButton={true} />}
       <Button
         className={css.submitButton}
         type="button"

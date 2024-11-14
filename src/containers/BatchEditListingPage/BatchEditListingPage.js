@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -12,20 +12,14 @@ import { NamedRedirect, Page } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import css from './BatchEditListingPage.module.css';
-import { initializeUppy, requestSaveBatchListings } from './BatchEditListingPage.duck';
+import { requestSaveBatchListings } from './BatchEditListingPage.duck';
 import BatchEditListingWizard from './BatchEditListingWizard/BatchEditListingWizard';
 
 export const BatchEditListingPageComponent = props => {
-  const { currentUser, history, intl, params, page, onInitializeUppy, onSaveBatchListing } = props;
+  const { currentUser, history, intl, params, page, onSaveBatchListing } = props;
   const hasPostingRights = hasPermissionToPostListings(currentUser);
   const shouldRedirectNoPostingRights = !!currentUser?.id && !hasPostingRights;
-  const { uppy, listingFieldsOptions } = page;
-
-  useEffect(() => {
-    if (!uppy) {
-      onInitializeUppy({ userId: currentUser.id?.uuid });
-    }
-  }, []);
+  const { listingFieldsOptions } = page;
 
   if (!isUserAuthorized(currentUser)) {
     return (
@@ -53,18 +47,16 @@ export const BatchEditListingPageComponent = props => {
         desktopClassName={css.desktopTopbar}
         mobileClassName={css.mobileTopbar}
       />
-      {uppy && (
+
         <BatchEditListingWizard
           id="EditListingWizard"
           className={css.wizard}
           params={params}
           history={history}
           currentUser={currentUser}
-          uppy={uppy}
           listingFieldsOptions={listingFieldsOptions}
           onSaveBatchListing={onSaveBatchListing}
         />
-      )}
     </Page>
   );
 };
@@ -79,7 +71,6 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  onInitializeUppy: uppyInstance => dispatch(initializeUppy(uppyInstance)),
   onSaveBatchListing: () => {
     dispatch(requestSaveBatchListings());
   },
