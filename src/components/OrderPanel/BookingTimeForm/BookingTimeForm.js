@@ -47,6 +47,7 @@ export class BookingTimeFormComponent extends Component {
       seats = 1,
       voucherFee = {},
       fee = [],
+      lineItems = [],
     } = formValues.values;
     const startDate = bookingStartTime ? timestampToDate(bookingStartTime) : null;
     const endDate = bookingEndTime ? timestampToDate(bookingEndTime) : null;
@@ -67,6 +68,7 @@ export class BookingTimeFormComponent extends Component {
         bookingEnd: endDate,
         seats: parseInt(seats, 10),
         voucherFee: voucherFee,
+        lineItems: lineItems,
         fee: fee,
       };
       this.props.onFetchTransactionLineItems({
@@ -174,7 +176,6 @@ export class BookingTimeFormComponent extends Component {
                   timeZone={timeZone}
                   dayCountAvailableForBooking={dayCountAvailableForBooking}
                   onSeatsInputValidChange={this.handleSeatsInputValidChange}
-                  voucherFee={voucherFee}
                   publicData={publicData}
                 />
               ) : null}
@@ -219,6 +220,7 @@ export class BookingTimeFormComponent extends Component {
                       timeZone={timeZone}
                       voucherFee={voucherFee}
                       publicData={publicData}
+                      lineItems={lineItems}
                     />
                   )}
                 </div>

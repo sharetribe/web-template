@@ -37,7 +37,7 @@ class VoucherForm extends Component {
     checkCoupon(requestBody)
       .then((response) => {
         if (!response.valid) {
-          const { codeType, message } = response;
+          const { codeType } = response;
           let errorMessage;
   
           if (codeType === 'gift card') {
@@ -64,9 +64,10 @@ class VoucherForm extends Component {
           return;
         }
   
-        // If valid, set the voucher fee and clear any error message
+
         this.props.form.batch(() => {
           this.props.form.change('voucherFee', response);
+          this.props.form.change('lineItems', this.props.lineItems); 
         });
         this.setState({ errorMessage: '' });
       })
@@ -86,6 +87,7 @@ class VoucherForm extends Component {
         this.setState({ voucherCode: '' });
       });
   };
+  
   
 
   render() {
