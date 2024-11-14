@@ -1,5 +1,4 @@
 import React from 'react';
-import { bool, object, oneOf, shape, string } from 'prop-types';
 import { Form as FinalForm } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
@@ -46,10 +45,32 @@ const submit = (onSubmit, weekdays) => values => {
 };
 
 /**
+ * @typedef {'sun'|'mon'|'tue'|'wed'|'thu'|'fri'|'sat'} Weekday
+ */
+
+/**
  * Create and edit availability plan of the listing.
  * This is essentially the weekly schedule.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className
+ * @param {string?} props.rootClassName
+ * @param {string?} props.formId
+ * @param {Object} props.form form API from React Final Form
+ * @param {Function} props.handleSubmit
+ * @param {boolean} props.inProgress
+ * @param {string} props.listingTitle
+ * @param {Array<Weekday>} props.weekdays
+ * @param {boolean} props.useFullDays
+ * @param {boolean} props.useMultipleSeats
+ * @param {'hour'|'day'|'night'} props.unitType
+ * @param {boolean} props.fetchErrors
+ * @param {Object|null} props.fetchErrors.updateListingError
+ * @param {Object} props.values form's values
+ * @returns {JSX.Element} containing form that allows adding availability exceptions
  */
-const EditListingAvailabilityPlanFormComponent = props => {
+const EditListingAvailabilityPlanForm = props => {
   const intl = useIntl();
   const { onSubmit, ...restOfprops } = props;
   return (
@@ -144,31 +165,5 @@ const EditListingAvailabilityPlanFormComponent = props => {
     />
   );
 };
-
-EditListingAvailabilityPlanFormComponent.defaultProps = {
-  rootClassName: null,
-  className: null,
-  submitButtonWrapperClassName: null,
-  inProgress: false,
-};
-
-EditListingAvailabilityPlanFormComponent.propTypes = {
-  rootClassName: string,
-  className: string,
-  submitButtonWrapperClassName: string,
-
-  inProgress: bool,
-  fetchErrors: object.isRequired,
-
-  listingTitle: string.isRequired,
-
-  listingTypeConfig: shape({
-    availabilityType: oneOf(['oneSeat', 'multipleSeats']).isRequired,
-  }).isRequired,
-};
-
-const EditListingAvailabilityPlanForm = EditListingAvailabilityPlanFormComponent;
-
-EditListingAvailabilityPlanForm.displayName = 'EditListingAvailabilityPlanForm';
 
 export default EditListingAvailabilityPlanForm;
