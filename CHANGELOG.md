@@ -40,7 +40,6 @@ way to update this template, but currently, we follow a pattern:
   opening the discard draft modal on mobile scrolled the page to the very bottom.
   [#497](https://github.com/sharetribe/web-template/pull/497)
 
-
 ## [v6.1.0] 2024-11-06
 
 - [add] Add currently available translations for DE, ES, FR.
