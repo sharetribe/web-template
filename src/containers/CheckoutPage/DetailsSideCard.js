@@ -94,7 +94,7 @@ const DetailsSideCard = props => {
         ) : null}
         {breakdown}
       </div>
-      <CurrencyNote componentId="CheckoutPage" />
+      {/* <CurrencyNote componentId="CheckoutPage" /> */}
     </div>
   );
 };

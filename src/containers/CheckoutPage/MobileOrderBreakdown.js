@@ -10,7 +10,7 @@ const MobileOrderBreakdown = props => {
     <div className={css.priceBreakdownContainer}>
       {speculateTransactionErrorMessage}
       {breakdown}
-      <CurrencyNote componentId="CheckoutPage" />
+      {/* <CurrencyNote componentId="CheckoutPage" /> */}
     </div>
   );
 };
