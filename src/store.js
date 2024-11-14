@@ -4,19 +4,13 @@ import thunk from 'redux-thunk';
 import createReducer from './reducers';
 import * as analytics from './analytics/analytics';
 import appSettings from './config/settings';
-import * as uppyReduxStore from '@uppy/store-redux';
 
-let storeInstance = null;
 /**
  * Create a new store with the given initial state. Adds Redux
  * middleware and enhancers.
  */
 export default function configureStore(initialState = {}, sdk = null, analyticsHandlers = []) {
-  const middlewares = [
-    thunk.withExtraArgument(sdk),
-    analytics.createMiddleware(analyticsHandlers),
-    uppyReduxStore.middleware(),
-  ];
+  const middlewares = [thunk.withExtraArgument(sdk), analytics.createMiddleware(analyticsHandlers)];
 
   // Enable Redux Devtools in client side dev mode.
   const composeEnhancers =
@@ -26,8 +20,5 @@ export default function configureStore(initialState = {}, sdk = null, analyticsH
 
   const enhancer = composeEnhancers(applyMiddleware(...middlewares));
 
-  storeInstance = createStore(createReducer(), initialState, enhancer);
-  return storeInstance;
+  return createStore(createReducer(), initialState, enhancer);
 }
-
-export const getStore = () => storeInstance;

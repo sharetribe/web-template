@@ -123,7 +123,8 @@ const defaultDirectives = {
     // Plausible analytics
     'plausible.io',
   ],
-  styleSrc: [self, unsafeInline, 'fonts.googleapis.com', 'api.mapbox.com'],
+  styleSrc: [self, unsafeInline, 'fonts.googleapis.com', 'api.mapbox.com', 'releases.transloadit.com'],
+  workerSrc: [self]
 };
 
 /**

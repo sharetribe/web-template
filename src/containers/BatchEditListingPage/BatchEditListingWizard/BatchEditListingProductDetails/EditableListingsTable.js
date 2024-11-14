@@ -1,6 +1,6 @@
 import imagePlaceholder from '../../../../assets/image-placeholder.jpg';
 import { Image, Table } from 'antd';
-import { imageDimensions } from '../../BatchEditListingPage.duck';
+import { IMAGE_DIMENSIONS_MAP } from '../../BatchEditListingPage.duck';
 import css from './EditListingBatchProductDetails.module.css';
 import React from 'react';
 import { EditableCellComponents } from './EditableCellComponents';
@@ -170,7 +170,7 @@ export const EditableListingsTable = props => {
       dataIndex: 'dimensions',
       width: 200,
       render: dimensionsKey => {
-        return imageDimensions[dimensionsKey].label;
+        return IMAGE_DIMENSIONS_MAP[dimensionsKey].label;
       },
       sorter: stringSorter,
     },
