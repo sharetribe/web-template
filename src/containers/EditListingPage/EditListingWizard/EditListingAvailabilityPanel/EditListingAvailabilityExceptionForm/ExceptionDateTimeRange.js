@@ -286,6 +286,37 @@ const onExceptionEndDateChange = (value, availableSlots, props) => {
 //////////////////////////////////////////
 // EditListingAvailabilityExceptionForm //
 //////////////////////////////////////////
+/**
+ * @typedef {Object} AvailabilityException
+ * @property {string} id
+ * @property {'availabilityException'} type 'availabilityException'
+ * @property {Object} attributes            API entity's attributes
+ * @property {Date} attributes.start        The start of availability exception (inclusive)
+ * @property {Date} attributes.end          The end of availability exception (exclusive)
+ * @property {Number} attributes.seats      The number of seats available (0 means 'unavailable')
+ */
+/**
+ * @typedef {Object} MonthlyExceptionQueryInfo
+ * @property {Object?} fetchExceptionsError
+ * @property {boolean} fetchExceptionsInProgress
+ */
+
+/**
+ * A DateRange field for the form
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.formId
+ * @param {UUID?} props.listingId listing's id
+ * @param {ReactIntl} props.intl
+ * @param {Array<AvailabilityException>} props.allExceptions
+ * @param {Object.<string, MonthlyExceptionQueryInfo>?} props.monthlyExceptionQueries E.g. '2022-12': { fetchExceptionsError, fetchExceptionsInProgress }
+ * @param {Function} props.onFetchExceptions Redux Thunk function to fetch AvailabilityExceptions
+ * @param {Function} props.onMonthChanged Redux Thunk function to fetch AvailabilityExceptions
+ * @param {string} props.timeZone IANA time zone key (listing's time zone)
+ * @param {Object} props.values form's values
+ * @returns {JSX.Element} containing form that allows adding availability exceptions
+ */
 const ExceptionDateTimeRange = props => {
   const [currentMonth, setCurrentMonth] = useState(getStartOf(TODAY, 'month', props.timeZone));
   const {
