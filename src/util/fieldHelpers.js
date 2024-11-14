@@ -2,9 +2,11 @@
 // I.e. These are custom fields to data entities. They are added through the Marketplace Console.
 // In the codebase, we also have React Final Form fields, which are wrapper around user inputs.
 
+import { isPurchaseProcessAlias, isBookingProcessAlias } from '../transactions/transaction';
 import { SCHEMA_TYPE_MULTI_ENUM, SCHEMA_TYPE_TEXT, SCHEMA_TYPE_YOUTUBE } from './types';
-import { BOOKING_PROCESS_NAME, PURCHASE_PROCESS_NAME } from '../transactions/transaction';
-import { stripeSupportedCurrencies, subUnitDivisors } from '../config/settingsCurrency.js';
+import appSettings from '../config/settings';
+
+const { stripeSupportedCurrencies, subUnitDivisors } = appSettings;
 
 const keyMapping = {
   userType: {
@@ -201,14 +203,10 @@ export const isValidCurrencyForTransactionProcess = (
   listingCurrency,
   paymentProcessor = null
 ) => {
-  // Define aliases for process names with versioning
-  const bookingProcessAlias = `${BOOKING_PROCESS_NAME}/release-1`;
-  const purchaseProcessAlias = `${PURCHASE_PROCESS_NAME}/release-1`;
-
   // booking and purchase processes use Stripe actions.
   const isStripeRelatedProcess =
-    transactionProcessAlias === bookingProcessAlias ||
-    transactionProcessAlias === purchaseProcessAlias;
+    isPurchaseProcessAlias(transactionProcessAlias) ||
+    isBookingProcessAlias(transactionProcessAlias);
 
   // Determine if the listing currency is supported by Stripe
   const isStripeSupportedCurrency = stripeSupportedCurrencies.includes(listingCurrency);
