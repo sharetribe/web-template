@@ -35,8 +35,7 @@
 }
 
 .listingCards {
-  padding: 0 24px;
-
+  padding-top: 24px;
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   gap: 24px;
@@ -52,7 +51,6 @@
 
   @media (--viewportLarge) {
     grid-template-columns: repeat(3, 1fr);
-    padding: 0 36px;
   }
 }
 
@@ -85,5 +83,12 @@
 
   @media (--viewportLarge) {
     margin: auto 36px 0 36px;
+  }
+}
+
+.favoriteCardsTabs {
+  padding: 0 24px;
+  @media (--viewportLarge) {
+    padding: 0 36px;
   }
 }

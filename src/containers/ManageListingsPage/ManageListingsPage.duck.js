@@ -244,6 +244,11 @@ export const queryOwnListings = queryParams => (dispatch, getState, sdk) => {
 
   const { perPage, ...rest } = queryParams;
   const params = { ...rest, perPage };
+  const validListingType = !!queryParams.pub_listingType;
+  const validCategoryType = !!queryParams.pub_categoryLevel1;
+  const validRequestParams = validListingType || validCategoryType;
+
+  if (!validRequestParams) return;
 
   return sdk.ownListings
     .query(params)

@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { Flex, Space, Tabs } from 'antd';
 
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
@@ -7,6 +10,8 @@ import { createResourceLocatorString, pathByRouteName } from '../../util/routes'
 import { hasPermissionToPostListings } from '../../util/userHelpers';
 import { NO_ACCESS_PAGE_POST_LISTINGS } from '../../util/urlHelpers';
 import { isErrorNoPermissionToPostListings } from '../../util/errors';
+import { isScrollingDisabled } from '../../ducks/ui.duck';
+import { LISTING_TYPES } from '../../util/types';
 
 import {
   Button,
@@ -16,6 +21,7 @@ import {
   Page,
   PaginationLinks,
   UserNav,
+  NamedRedirect,
 } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
@@ -23,12 +29,7 @@ import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import ManageListingCard from './ManageListingCard/ManageListingCard';
 import css from './ManageListingsPage.module.css';
-import { Flex, Space, Tabs } from 'antd';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
 import { closeListing, getOwnListingsById, openListing } from './ManageListingsPage.duck';
-import { isScrollingDisabled } from '../../ducks/ui.duck';
-import { LISTING_TYPES } from '../../util/types';
 
 const Heading = props => {
   const { listingsAreLoaded, pagination } = props;
@@ -69,8 +70,8 @@ function getSearch(category, listingType = LISTING_TYPES.PRODUCT) {
 
 export const ManageListingsPageComponent = props => {
   const [listingMenuOpen, setListingMenuOpen] = useState(null);
-  const history = useHistory();
   const routeConfiguration = useRouteConfiguration();
+  const history = useHistory();
   const intl = useIntl();
 
   const {
@@ -89,8 +90,30 @@ export const ManageListingsPageComponent = props => {
     scrollingDisabled,
     categories,
   } = props;
-  const currentListingType = queryParams.pub_listingType || LISTING_TYPES.PRODUCT;
-  const currentCategoryType = queryParams.pub_categoryLevel1 || categories[0].id;
+  const defaultListingType = LISTING_TYPES.PRODUCT;
+  const defaultCategoryType = categories[0].id;
+  const currentListingType = queryParams.pub_listingType || defaultListingType;
+  const currentCategoryType = queryParams.pub_categoryLevel1 || defaultCategoryType;
+
+  useEffect(() => {
+    const validListingType = !queryParams.pub_listingType;
+    const validCategoryType = !queryParams.pub_categoryLevel1;
+    const shouldUpdateRoute = validListingType || validCategoryType;
+    if (shouldUpdateRoute) {
+      const pathParams = {};
+      const queryParams = {
+        pub_listingType: defaultListingType,
+        pub_categoryLevel1: defaultCategoryType,
+      };
+      const destination = createResourceLocatorString(
+        'ManageListingsPage',
+        routeConfiguration,
+        pathParams,
+        queryParams
+      );
+      history.replace(destination);
+    }
+  }, []);
 
   useEffect(() => {
     if (isErrorNoPermissionToPostListings(openingListingError?.error)) {
@@ -101,13 +124,21 @@ export const ManageListingsPageComponent = props => {
     }
   }, [openingListingError]);
 
+  const hasPostingRights = hasPermissionToPostListings(currentUser);
+  if (!hasPostingRights) {
+    return (
+      <NamedRedirect
+        name="NoAccessPage"
+        params={{ missingAccessRight: NO_ACCESS_PAGE_POST_LISTINGS }}
+      />
+    );
+  }
+
   const onToggleMenu = listing => {
     setListingMenuOpen(listing);
   };
 
   const handleOpenListing = listingId => {
-    const hasPostingRights = hasPermissionToPostListings(currentUser);
-
     if (!hasPostingRights) {
       const noAccessPagePath = pathByRouteName('NoAccessPage', routeConfiguration, {
         missingAccessRight: NO_ACCESS_PAGE_POST_LISTINGS,
@@ -179,6 +210,7 @@ export const ManageListingsPageComponent = props => {
           >
             {categories.map(category => (
               <NamedLink
+                key={category.id}
                 name="ManageListingsPage"
                 active={currentCategoryType === category.id}
                 activeClassName={css.filterLinkActive}
