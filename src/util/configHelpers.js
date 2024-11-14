@@ -873,7 +873,7 @@ const validListingTypes = listingTypes => {
             unitType,
             ...restOfTransactionType,
           },
-          // e.g. stockType
+          // e.g. stockType, availabilityType,...
           ...restOfListingType,
         },
       ];
