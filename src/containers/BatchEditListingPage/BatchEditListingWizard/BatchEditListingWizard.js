@@ -13,6 +13,8 @@ import {
   getCreateListingsError,
   getCreateListingsSuccess,
   getPublishingData,
+  getUppyInstance,
+  initializeUppy,
   RESET_STATE,
 } from '../BatchEditListingPage.duck';
 import { useDispatch, useSelector } from 'react-redux';
@@ -91,20 +93,29 @@ const BatchEditListingWizard = props => {
     intl,
     currentUser = {},
     routeConfiguration = {},
-    uppy = null,
     onSaveBatchListing,
     history,
     ...rest
   } = props;
-  const fileCount = uppy.getFiles().length;
   const selectedTab = params.tab;
   const rootClasses = rootClassName || css.root;
   const classes = classNames(rootClasses, className);
   const tabs = [UPLOAD, PRODUCT_DETAILS];
-  const tabsStatus = useMemo(() => getTabsStatus(fileCount), [fileCount]);
   const publishListingsSuccess = useSelector(getCreateListingsSuccess);
   const publishListingError = useSelector(getCreateListingsError);
+  const uppyInstance = useSelector(getUppyInstance);
+
+  const fileCount = uppyInstance ? uppyInstance.getFiles().length : 0;
+  const tabsStatus = useMemo(() => getTabsStatus(fileCount), [fileCount]);
+
   const [api, contextHolder] = notification.useNotification();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (currentUser.id?.uuid && !uppyInstance) {
+      dispatch(initializeUppy({ userId: currentUser.id?.uuid }));
+    }
+  }, [currentUser.id, dispatch]);
 
   useEffect(() => {
     if (publishListingError) {
@@ -163,7 +174,7 @@ const BatchEditListingWizard = props => {
               tab={tab}
               params={params}
               routeConfiguration={routeConfiguration}
-              uppy={uppy}
+              uppy={uppyInstance}
               onSaveBatchListing={onSaveBatchListing}
               history={history}
             />
