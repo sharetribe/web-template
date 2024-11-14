@@ -297,6 +297,10 @@
   margin-bottom: 0;
 }
 
+.itemSeats {
+  margin-top: 3px;
+}
+
 .itemState {
   grid-area: state;
 

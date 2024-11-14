@@ -121,6 +121,7 @@ export const InboxItem = props => {
     intl,
     stateData,
     isBooking,
+    availabilityType,
     stockType = STOCK_MULTIPLE_ITEMS,
   } = props;
   const { customer, provider, listing } = tx;
@@ -132,7 +133,6 @@ export const InboxItem = props => {
   const unitLineItem = getUnitLineItem(lineItems);
   const quantity = hasPricingData && !isBooking ? unitLineItem.quantity.toString() : null;
   const showStock = stockType === STOCK_MULTIPLE_ITEMS || (quantity && unitLineItem.quantity > 1);
-
   const otherUser = isCustomer ? provider : customer;
   const otherUserDisplayName = <UserDisplayName user={otherUser} intl={intl} />;
   const isOtherUserBanned = otherUser.attributes.banned;
@@ -166,6 +166,11 @@ export const InboxItem = props => {
             <BookingTimeInfoMaybe transaction={tx} />
           ) : hasPricingData && showStock ? (
             <FormattedMessage id="InboxPage.quantity" values={{ quantity }} />
+          ) : null}
+          {availabilityType == 'multipleSeats' ? (
+            <div className={css.itemSeats}>
+              <FormattedMessage id="InboxPage.seats" values={{ seats: unitLineItem.seats }} />
+            </div>
           ) : null}
         </div>
         <div className={css.itemState}>
@@ -236,11 +241,14 @@ export const InboxPageComponent = props => {
     const transactionProcess = resolveLatestProcessName(process);
     const isBooking = isBookingProcess(transactionProcess);
 
+    const { availabilityType } = foundListingTypeConfig || {};
+
     // Render InboxItem only if the latest transition of the transaction is handled in the `txState` function.
     return stateData ? (
       <li key={tx.id.uuid} className={css.listItem}>
         <InboxItem
           transactionRole={transactionRole}
+          availabilityType={availabilityType}
           tx={tx}
           intl={intl}
           stateData={stateData}
