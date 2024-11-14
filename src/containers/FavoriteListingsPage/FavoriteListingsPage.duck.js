@@ -1,7 +1,9 @@
 import { storableError } from '../../util/errors';
 import { createImageVariantConfig } from '../../util/sdkLoader';
 import { parse } from '../../util/urlHelpers';
+
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
+import { fetchCurrentUser } from '../../ducks/user.duck';
 
 // Pagination page size might need to be dynamic on responsive page layouts
 // Current design has max 3 columns 42 is divisible by 2 and 3
@@ -82,11 +84,13 @@ export const queryFavoriteListings = queryParams => (dispatch, getState, sdk) =>
   dispatch(queryFavoritesRequest(queryParams));
   const { currentUser } = getState().user;
   const favorites = currentUser?.attributes.profile.privateData?.favorites || {};
-  const allFavorites = [];
-  for (const category in favorites) {
-    allFavorites.push(...favorites[category]);
-  }
-  const favoritesMaybe = !!allFavorites ? { ids: allFavorites } : {};
+  const listingType = queryParams.pub_listingType;
+  const validRequestParams = !!listingType;
+
+  if (!validRequestParams) return;
+
+  const parsedFavorites = favorites[listingType];
+  const favoritesMaybe = !!parsedFavorites ? { ids: parsedFavorites } : {};
   const { perPage, ...rest } = queryParams;
   const params = { ...favoritesMaybe, ...rest, perPage };
   return sdk.listings
@@ -102,7 +106,7 @@ export const queryFavoriteListings = queryParams => (dispatch, getState, sdk) =>
     });
 };
 
-export const loadData = (params, search, config) => {
+export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   const queryParams = parse(search);
   const page = queryParams.page || 1;
   const {
@@ -111,14 +115,21 @@ export const loadData = (params, search, config) => {
     variantPrefix = 'listing-card',
   } = config.layout.listingImage;
   const aspectRatio = aspectHeight / aspectWidth;
-  return queryFavoriteListings({
-    ...queryParams,
-    page,
-    perPage: RESULT_PAGE_SIZE,
-    include: ['images'],
-    'fields.image': [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`],
-    ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
-    ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
-    'limit.images': 1,
-  });
+
+  return Promise.all([
+    dispatch(fetchCurrentUser()),
+    dispatch(
+      queryFavoriteListings({
+        ...queryParams,
+        page,
+        perPage: RESULT_PAGE_SIZE,
+        include: ['author', 'author.profileImage', 'images'],
+        'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
+        'fields.image': [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`],
+        ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
+        ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
+        'limit.images': 1,
+      })
+    ),
+  ]);
 };

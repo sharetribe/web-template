@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { Tabs } from 'antd';
 
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
-import { propTypes } from '../../util/types';
+import { createResourceLocatorString } from '../../util/routes';
+import { LISTING_TYPES, propTypes } from '../../util/types';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 
 import {
@@ -32,9 +36,40 @@ export const FavoriteListingsPageComponent = props => {
     scrollingDisabled,
     intl,
   } = props;
-
+  const routeConfiguration = useRouteConfiguration();
+  const history = useHistory();
   const hasPaginationInfo = !!pagination && pagination.totalItems != null;
   const listingsAreLoaded = !queryInProgress && hasPaginationInfo;
+  const defaultListingType = LISTING_TYPES.PRODUCT;
+  const currentListingType = queryParams.pub_listingType || defaultListingType;
+
+  useEffect(() => {
+    const validListingType = !queryParams.pub_listingType;
+    const shouldUpdateRoute = validListingType;
+    if (shouldUpdateRoute) {
+      const pathParams = {};
+      const queryParams = { pub_listingType: defaultListingType };
+      const destination = createResourceLocatorString(
+        'FavoriteListingsPage',
+        routeConfiguration,
+        pathParams,
+        queryParams
+      );
+      history.replace(destination);
+    }
+  }, []);
+
+  const onTabChange = key => {
+    const pathParams = {};
+    const queryParams = { pub_listingType: key };
+    const destination = createResourceLocatorString(
+      'FavoriteListingsPage',
+      routeConfiguration,
+      pathParams,
+      queryParams
+    );
+    history.push(destination);
+  };
 
   const loadingResults = (
     <div className={css.messagePanel}>
@@ -92,6 +127,19 @@ export const FavoriteListingsPageComponent = props => {
     `${panelWidth / 3}vw`,
   ].join(', ');
 
+  const listingRenderer = (
+    <div className={css.listingCards}>
+      {listings.map(l => (
+        <ListingCard
+          className={css.listingCard}
+          key={l.id.uuid}
+          listing={l}
+          renderSizes={renderSizes}
+        />
+      ))}
+    </div>
+  );
+
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
       <LayoutSingleColumn
@@ -107,17 +155,17 @@ export const FavoriteListingsPageComponent = props => {
         {queryFavoritesError ? queryError : null}
         <div className={css.listingPanel}>
           {heading}
-          <div className={css.listingCards}>
-            {listings.map(l => (
-              <ListingCard
-                className={css.listingCard}
-                key={l.id.uuid}
-                listing={l}
-                renderSizes={renderSizes}
-              />
-            ))}
+          <div className={css.favoriteCardsTabs}>
+            <Tabs
+              defaultActiveKey={currentListingType}
+              onChange={onTabChange}
+              items={[
+                { key: LISTING_TYPES.PRODUCT, label: 'Shop', children: listingRenderer },
+                { key: LISTING_TYPES.PROFILE, label: 'Creatives', children: listingRenderer },
+              ]}
+            />
+            {paginationLinks}
           </div>
-          {paginationLinks}
         </div>
       </LayoutSingleColumn>
     </Page>

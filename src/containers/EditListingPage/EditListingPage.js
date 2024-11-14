@@ -142,14 +142,6 @@ export const EditListingPageComponent = props => {
 
   // Should match all the Listing types that have their custom upload and edit flows
   const isForbiddenListingTypePage = true;
-  if (isForbiddenListingTypePage) {
-    return (
-      <NamedRedirect
-        name="NoAccessPage"
-        params={{ missingAccessRight: NO_ACCESS_PAGE_FORBIDDEN_LISTING_TYPE }}
-      />
-    );
-  }
 
   if (!isUserAuthorized(currentUser)) {
     return (
@@ -163,6 +155,13 @@ export const EditListingPageComponent = props => {
       <NamedRedirect
         name="NoAccessPage"
         params={{ missingAccessRight: NO_ACCESS_PAGE_POST_LISTINGS }}
+      />
+    );
+  } else if (isForbiddenListingTypePage) {
+    return (
+      <NamedRedirect
+        name="NoAccessPage"
+        params={{ missingAccessRight: NO_ACCESS_PAGE_FORBIDDEN_LISTING_TYPE }}
       />
     );
   } else if (shouldRedirectAfterPosting) {
