@@ -13,6 +13,7 @@ import loadable from '@loadable/component';
 
 // Icons
 export { default as IconAdd } from './IconAdd/IconAdd';
+export { default as IconAlert } from './IconAlert/IconAlert';
 export { default as IconArrowHead } from './IconArrowHead/IconArrowHead';
 export { default as IconBannedUser } from './IconBannedUser/IconBannedUser';
 export { default as IconCheckmark } from './IconCheckmark/IconCheckmark';
@@ -100,11 +101,11 @@ export { default as FieldPhoneNumberInput } from './FieldPhoneNumberInput/FieldP
 export { default as LocationAutocompleteInput, FieldLocationAutocompleteInput } from './LocationAutocompleteInput/LocationAutocompleteInput';
 // Fields and inputs using old naming pattern
 export { default as StripeBankAccountTokenInputField } from './StripeBankAccountTokenInputField/StripeBankAccountTokenInputField';
-// Fields wrapping react-dates
-// NOTE: these are code-splitted since the library is heavy and needed only on couple of pages
-export const FieldDateInput = loadable(() => import(/* webpackChunkName: "FieldDateInput" */ './FieldDateInput/FieldDateInput'));
-export const FieldDateRangeController = loadable(() => import(/* webpackChunkName: "FieldDateRangeController" */ './FieldDateRangeController/FieldDateRangeController'));
-export const FieldDateRangeInput = loadable(() => import(/* webpackChunkName: "FieldDateRangeInput" */ './FieldDateRangeInput/FieldDateRangeInput'));
+
+// NOTE: these are code-splitted since these components are heavy and needed only on couple of pages
+export const FieldDateRangePicker = loadable(() => import(/* webpackChunkName: "FieldDateRangePicker" */ './DatePicker/FieldDateRangePicker/FieldDateRangePicker'));
+export const FieldSingleDatePicker = loadable(() => import(/* webpackChunkName: "FieldSingleDatePicker" */ './DatePicker/FieldSingleDatePicker/FieldSingleDatePicker'));
+export const FieldDateRangeController = loadable(() => import(/* webpackChunkName: "FieldDateRangeController" */ './DatePicker/FieldDateRangeController/FieldDateRangeController'));
 
 // Tab navigation
 export { default as TabNav } from './TabNav/TabNav';

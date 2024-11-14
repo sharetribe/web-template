@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { isDateSameOrAfter } from '../../../../util/dates';
-import { IconArrowHead } from '../../../../components';
+import { isDateSameOrAfter } from '../../../../../util/dates';
+import { IconArrowHead } from '../../../../../components';
 
-// Component for the react-dates calendar
+// Component for the DatePicker calendar
 const NextArrow = props => {
   const { showUntilDate, startOfNextRange, size = 'small', onClick, ...rest } = props;
   const canNavigateForward = isDateSameOrAfter(showUntilDate, startOfNextRange);

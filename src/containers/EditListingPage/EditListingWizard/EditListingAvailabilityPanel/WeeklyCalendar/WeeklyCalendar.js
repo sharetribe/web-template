@@ -8,9 +8,7 @@ import { FormattedDate, FormattedMessage, useIntl } from '../../../../../util/re
 import {
   getStartOf,
   getStartOfWeek,
-  getMomentFromDate,
-  getStartOfWeekAsMoment,
-  getEndOfWeekAsMoment,
+  getEndOfWeek,
   isInRange,
   parseDateFromISO8601,
   parseDateTimeString,
@@ -37,8 +35,8 @@ import {
   handleWeekClick,
 } from '../availability.helpers';
 
-import Next from '../NextArrow';
-import Prev from '../PrevArrow';
+import Next from './NextArrow';
+import Prev from './PrevArrow';
 import WeekPicker from './WeekPicker';
 import css from './WeeklyCalendar.module.css';
 
@@ -434,7 +432,7 @@ const WeeklyCalendar = props => {
             }
             initialValues={{ dates: { startDate: currentWeek, endDate: endOfCurrentWeek } }}
             firstDayOfWeek={firstDayOfWeek}
-            date={getMomentFromDate(currentWeek)}
+            date={currentWeek}
             onDateChange={date => {
               const updatedDate = getStartOfWeek(date, timeZone, firstDayOfWeek);
               setCurrentWeek(updatedDate);
@@ -446,9 +444,12 @@ const WeeklyCalendar = props => {
               );
               history.replace(redirectTo);
             }}
-            startDateOffset={day => getStartOfWeekAsMoment(day, timeZone, firstDayOfWeek)}
-            endDateOffset={day => getEndOfWeekAsMoment(day, timeZone, firstDayOfWeek)}
-            onFocusChange={({ focused }) => setWeekPickerFocused(focused)}
+            startDateOffset={day => {
+              return day != null ? getStartOfWeek(day, null, firstDayOfWeek) : null;
+            }}
+            endDateOffset={day => {
+              return day != null ? getEndOfWeek(day, null, firstDayOfWeek) : null;
+            }}
             isOutsideRange={day => !isInRange(day, thisWeek, endOfRange, 'day', timeZone)}
             timeZone={timeZone}
           />

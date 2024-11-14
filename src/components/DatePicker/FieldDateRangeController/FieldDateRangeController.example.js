@@ -1,27 +1,27 @@
 /* eslint-disable no-console */
 import React from 'react';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
-import { required, bookingDatesRequired, composeValidators } from '../../util/validators';
-import { LINE_ITEM_NIGHT } from '../../util/types';
-import { getStartOf } from '../../util/dates';
-import { Button } from '../../components';
-import FieldDateRangeInput from './FieldDateRangeInput';
+
+import { required, bookingDatesRequired, composeValidators } from '../../../util/validators';
+
+import { Button } from '../../../components';
+
+import FieldDateRangeController from './FieldDateRangeController';
 
 const identity = v => v;
 
 const FormComponent = props => (
   <FinalForm
     {...props}
-    render={fieldRenderProps => {
+    render={formRenderProps => {
       const {
         style,
-        form,
         handleSubmit,
         onChange,
         pristine,
         submitting,
         dateInputProps,
-      } = fieldRenderProps;
+      } = formRenderProps;
       const submitDisabled = pristine || submitting;
 
       return (
@@ -33,7 +33,7 @@ const FormComponent = props => (
           }}
         >
           <FormSpy onChange={onChange} />
-          <FieldDateRangeInput {...dateInputProps} />
+          <FieldDateRangeController {...dateInputProps} />
           <Button type="submit" disabled={submitDisabled} style={{ marginTop: '24px' }}>
             Select
           </Button>
@@ -45,22 +45,13 @@ const FormComponent = props => (
 
 const options = { weekday: 'short', month: 'long', day: 'numeric' };
 const formatDate = date => new Intl.DateTimeFormat('en-US', options).format(date);
-const startDatePlaceholderText = formatDate(new Date());
-const endDatePlaceholderText = formatDate(getStartOf(new Date(), 'day', 'Etc/UTC', 1, 'days'));
 
 export const Empty = {
   component: FormComponent,
   props: {
     style: { marginBottom: '140px' },
     dateInputProps: {
-      name: 'bookingDates',
-      isDaily: false,
-      startDateId: 'EmptyDateRange.bookingStartDate',
-      startDateLabel: 'Start date',
-      startDatePlaceholderText: startDatePlaceholderText,
-      endDateId: 'EmptyDateRangeInputForm.bookingEndDate',
-      endDateLabel: 'End date',
-      endDatePlaceholderText: endDatePlaceholderText,
+      name: 'dates',
       format: identity,
       validate: composeValidators(
         required('Required'),
@@ -71,17 +62,22 @@ export const Empty = {
       isBlockedBetween: () => {
         return false;
       },
-      isDayBlocked: () => () => {
+      isDayBlocked: () => {
         return false;
       },
-      isOutsideRange: () => () => {
+      isOutsideRange: () => {
         return false;
       },
     },
     onChange: formState => {
-      const { startDate, endDate } = formState.values;
+      const { startDate, endDate } = formState.values?.bookingDates || {};
       if (startDate || endDate) {
-        console.log('Changed to', formatDate(startDate), formatDate(startDate));
+        console.log(
+          'Changed to',
+          startDate ? formatDate(startDate) : startDate,
+          '-',
+          endDate ? formatDate(endDate) : endDate
+        );
       }
     },
     onSubmit: values => {

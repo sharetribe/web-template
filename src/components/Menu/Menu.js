@@ -17,7 +17,7 @@
  */
 
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { bool, func, node, number, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { MenuContent, MenuLabel } from '../../components';
@@ -111,8 +111,9 @@ class Menu extends Component {
       const contentWidthBiggerThanLabel = this.menuContent.offsetWidth - menuWidth;
       const usePositionLeftFromLabel = contentPosition === CONTENT_TO_LEFT;
       const contentPlacementOffset = this.props.contentPlacementOffset;
+      const mobileMaxWidth = this.props.mobileMaxWidth || MAX_MOBILE_SCREEN_WIDTH;
 
-      if (windowWidth <= MAX_MOBILE_SCREEN_WIDTH) {
+      if (this.props.preferScreenWidthOnMobile && windowWidth <= mobileMaxWidth) {
         // Take full screen width on mobile
         return {
           left: -1 * (rect.left - 24),
@@ -213,9 +214,8 @@ Menu.defaultProps = {
   isOpen: null,
   onToggleActive: null,
   useArrow: true,
+  preferScreenWidthOnMobile: false,
 };
-
-const { bool, func, node, number, string } = PropTypes;
 
 Menu.propTypes = {
   children: node.isRequired,
@@ -226,6 +226,7 @@ Menu.propTypes = {
   useArrow: bool,
   isOpen: bool,
   onToggleActive: func,
+  preferScreenWidthOnMobile: bool,
 };
 
 export default Menu;

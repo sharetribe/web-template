@@ -91,6 +91,7 @@ export const stripeCustomer = () => (dispatch, getState, sdk) => {
     callParams: { include: ['stripeCustomer.defaultPaymentMethod'] },
     updateHasListings: false,
     updateNotifications: false,
+    enforce: true,
   };
 
   return dispatch(fetchCurrentUser(fetchCurrentUserOptions))
