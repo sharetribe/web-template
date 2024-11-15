@@ -27,7 +27,7 @@ const PriceBreakdownComponent = props => {
   const priceInCents = Math.round(price * 100);
   const priceAsMoney = new Money(priceInCents, currencyConfig.currency);
   const providerCommissionAsMoney = new Money(
-    Math.round(priceInCents * (providerCommission / 100)),
+    Math.round(priceInCents * (providerCommission.percentage / 100)),
     currencyConfig.currency
   );
   const flatFeeAsMoney = new Money(providerFlatFee, currencyConfig.currency);
@@ -61,7 +61,7 @@ const PriceBreakdownComponent = props => {
         <span>
           <FormattedMessage
             id="EditListingPriceBreakdown.processingFees"
-            values={{ providerCommission }}
+            values={{ providerCommission: providerCommission.percentage }}
           />
         </span>
         <span>{formatMoneyWithIntl(providerCommissionAsMoney)}</span>

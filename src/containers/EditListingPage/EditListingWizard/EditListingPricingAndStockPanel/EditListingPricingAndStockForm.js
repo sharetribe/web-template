@@ -198,7 +198,7 @@ export const EditListingPricingAndStockFormComponent = props => {
                   id: 'EditListingPricingAndStockForm.pricePerProduct',
                 },
                 {
-                  providerCommission,
+                  providerCommission: providerCommission.percentage,
                 }
               )}
               placeholder={intl.formatMessage({
