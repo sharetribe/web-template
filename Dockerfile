@@ -13,6 +13,7 @@ RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
 
 ARG COMMIT_SHA
 ENV BUILD_SHA ${COMMIT_SHA}
+ENV ENV_VARS ${ENV_VARS}
 
 WORKDIR /usr/src/app
 
@@ -22,5 +23,5 @@ ENV PORT=8080
 ENV NODE_ENV=production
 
 RUN --mount=type=ssh yarn install
-RUN REACT_APP_SECRET_TEST=$ENV_VARS yarn build
+RUN REACT_APP_SECRET_TEST=${ENV_VARS} yarn build
 CMD ["yarn", "start"]
