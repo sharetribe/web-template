@@ -46,6 +46,13 @@ const PriceBreakdownComponent = props => {
     }
   };
 
+  const flatFeeRenderMaybe = providerFlatFee ? (
+    <div className={css.row}>
+      <FormattedMessage id="EditListingPriceBreakdown.providerFlatFee" />
+      <span>{formatMoneyWithIntl(flatFeeAsMoney)}</span>
+    </div>
+  ) : null;
+
   return (
     <div className={css.root}>
       <h4>
@@ -66,10 +73,7 @@ const PriceBreakdownComponent = props => {
         </span>
         <span>{formatMoneyWithIntl(providerCommissionAsMoney)}</span>
       </div>
-      <div className={css.row}>
-        <FormattedMessage id="EditListingPriceBreakdown.providerFlatFee" />
-        <span>{formatMoneyWithIntl(flatFeeAsMoney)}</span>
-      </div>
+      {flatFeeRenderMaybe}
       <div className={css.row}>
         <span>
           <FormattedMessage id="EditListingPriceBreakdown.sellerReceives" />
