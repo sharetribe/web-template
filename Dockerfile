@@ -23,5 +23,5 @@ ENV PORT=8080
 ENV NODE_ENV=production
 
 RUN --mount=type=ssh yarn install
-RUN REACT_APP_SECRET_TEST=${ENV_VARS} yarn build
+RUN yarn build
 CMD ["yarn", "start"]
