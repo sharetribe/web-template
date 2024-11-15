@@ -4,7 +4,6 @@ import { node, object, string } from 'prop-types';
 import { IntlProvider } from '../../../util/reactIntl';
 
 import css from './SearchMap.module.css';
-import { createRoot } from 'react-dom/client';
 
 /**
  * ReusableMapContainer makes Google Map usage more effective. This improves:
@@ -65,9 +64,8 @@ class ReusableMapContainer extends React.Component {
         </IntlProvider>
       );
 
-      const root = createRoot(this.el);
+      ReactDOM.render(children, this.el);
       // Render children to created element
-      root.render(children);
     };
 
     const targetDomNode = document.getElementById(this.el.id);
