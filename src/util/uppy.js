@@ -2,7 +2,6 @@ import { createUploadSignature } from './api';
 
 export async function createUppyInstance(meta, onBeforeUpload) {
   try {
-
     console.warn('\n\n\n*******************************');
     console.warn('\n[createUppyInstance] - process.env.NODE_ENV:', process.env.NODE_ENV);
     console.warn('\n*******************************\n\n\n');
