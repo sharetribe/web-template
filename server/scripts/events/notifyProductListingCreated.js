@@ -2,6 +2,7 @@ const { generateScript, integrationSdkInit } = require('../../api-util/scriptMan
 const { StorageManagerClient } = require('../../api-util/storageManagerHelper');
 const { httpFileUrlToStream } = require('../../api-util/httpHelpers');
 const { LISTING_TYPES } = require('../../api-util/metadataHelper');
+const { slackProductListingsCreatedWorkflow } = require('../../api-util/slackHelper');
 
 const SCRIPT_NAME = 'notifyProductListingCreated';
 const EVENT_TYPES = 'listing/created';
@@ -41,6 +42,18 @@ const processEvent = async (integrationSdk, event, storageManagerClient) => {
   }
 };
 
+const analyzeEventGroup = events => {
+  try {
+    const totalListings = events.length;
+    const withValidEvents = !!totalListings;
+    if (withValidEvents) {
+      slackProductListingsCreatedWorkflow(totalListings);
+    }
+  } catch (error) {
+    console.error('Error processing events group:', error);
+  }
+};
+
 function script() {
   const integrationSdk = integrationSdkInit();
   const storageManagerClient = new StorageManagerClient();
@@ -48,7 +61,7 @@ function script() {
   const queryEvents = args => integrationSdk.events.query({ ...args, eventTypes: EVENT_TYPES });
   const analyzeEvent = event => processEvent(integrationSdk, event, storageManagerClient);
 
-  generateScript(SCRIPT_NAME, queryEvents, analyzeEvent);
+  generateScript(SCRIPT_NAME, queryEvents, analyzeEvent, analyzeEventGroup);
 }
 
 module.exports = script;
