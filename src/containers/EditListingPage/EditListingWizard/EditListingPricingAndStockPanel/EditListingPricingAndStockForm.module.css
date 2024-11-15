@@ -44,8 +44,9 @@
 }
 
 .disclaimer {
-  color: var(--colorWhite);
-  background-color: var(--colorBlueNote);
-  border-radius: var(--borderRadiusMedium);
-  padding: 16px;
+    background-color: var(--colorLightOrange);
+    border-radius: var(--borderRadiusMedium);
+    color: var(--marketplaceColorDark);
+    padding: 16px;
+    font-size: small;
 }

@@ -43,6 +43,7 @@
   --colorGrey900: hsl(240 3% 10%);
   --colorBlack: hsl(0 0% 0%);
   --colorBlueNote: #27affb;
+  --colorLightOrange:#fff0ea;
   --colorLightTransparent: rgba(255, 255, 255, 0.65);
 
   /**
