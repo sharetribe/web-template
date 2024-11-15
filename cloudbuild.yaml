@@ -64,10 +64,9 @@ steps:
         'gcr.io/$PROJECT_ID/marketplace:$SHORT_SHA',
         '--build-arg',
         'COMMIT_SHA=$COMMIT_SHA',
-        'ENV_VARS=$$ENV_VARS',
+        'ENV_VARS=HOLA',
         '.',
       ]
-    secretEnv: ['ENV_VARS']
     env:
       - 'DOCKER_BUILDKIT=1'
     volumes:
