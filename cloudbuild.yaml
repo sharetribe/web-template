@@ -64,6 +64,7 @@ steps:
         'gcr.io/$PROJECT_ID/marketplace:$SHORT_SHA',
         '--build-arg',
         'COMMIT_SHA=$COMMIT_SHA',
+        '--build-arg',
         'ENV_VARS=${_ENV_VARS}',
         '.',
       ]
