@@ -237,7 +237,6 @@ export const EditableListingsTable = props => {
         onChange: onSelectChange,
       }}
       sticky={{ offsetHeader: 80 }}
-      summary={() => <Table.Summary fixed="top"></Table.Summary>}
     ></Table>
   );
 };

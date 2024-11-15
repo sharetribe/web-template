@@ -108,7 +108,7 @@ function validateListingProperties(listing) {
   return missingProperties.length === 0 ? null : { listing, missingProperties };
 }
 
-function getCategory(listing) {
+function getListingCategory(listing) {
   const isVideo = listing.type.startsWith('video/');
   if (listing.isAi) return isVideo ? 'ai-video' : 'ai-image';
   if (listing.isIllustration) return 'illustrations';
@@ -162,7 +162,6 @@ const initialState = {
   userId: null,
   failedListings: [],
   successfulListings: [],
-  listingCategory: null,
   listingDefaults: {
     currency: 'USD',
     transactionType: {
@@ -274,7 +273,6 @@ export default function reducer(state = initialState, action = {}) {
 
 // ============== Selector =============== //
 export const getUppyInstance = state => state.BatchEditListingPage.uppy;
-export const getListingCategory = state => state.BatchEditListingPage.listingCategory;
 export const getListings = state => state.BatchEditListingPage.listings;
 export const getSingleListing = (state, id) =>
   state.BatchEditListingPage.listings.find(l => l.id === id);
@@ -318,15 +316,14 @@ function handleTransloaditResultComplete(dispatch, getState, sdk) {
 
     try {
       const price = convertUnitToSubUnit(listing.price, unitDivisor(currency));
-      const category = getListingCategory(getState());
 
       const listingData = {
         title: listing.title,
         description: listing.description,
         publicData: {
           listingType: LISTING_TYPES.PRODUCT,
-          categoryLevel1: category,
-          imageryCategory: getCategory(listing),
+          categoryLevel1: getListingCategory(listing),
+          imageryCategory: listing.category,
           usage: listing.usage,
           releases: listing.releases,
           keywords: listing.keywords,
