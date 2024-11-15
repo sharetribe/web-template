@@ -4,6 +4,7 @@ export async function createUppyInstance(meta, onBeforeUpload) {
   try {
     console.warn('\n\n\n*******************************');
     console.warn('\n[createUppyInstance] - process.env.NODE_ENV:', process.env.NODE_ENV);
+    console.warn('\n[createUppyInstance] - process.env.REACT_APP_QA_ONLY:', process.env.REACT_APP_QA_ONLY);
     console.warn('\n*******************************\n\n\n');
 
     // Dynamically import Uppy modules, so they don't break server bundle
