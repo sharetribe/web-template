@@ -19,6 +19,7 @@ import 'raf/polyfill';
 
 // Dependency libs
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { loadableReady } from '@loadable/component';
 
 // Import default styles before other CSS-related modules are imported
@@ -48,7 +49,6 @@ import { fetchCurrentUser } from './ducks/user.duck';
 import routeConfiguration from './routing/routeConfiguration';
 // App it self
 import { ClientApp, renderApp } from './app';
-import { createRoot, hydrateRoot } from 'react-dom/client';
 
 const render = (store, shouldHydrate) => {
   // If the server already loaded the auth information, render the app
@@ -80,15 +80,15 @@ const render = (store, shouldHydrate) => {
         return { ...collectedData, [name]: content.data || {} };
       }, {});
 
-      const rootElement = document.getElementById('root');
       if (shouldHydrate) {
-        hydrateRoot(
-          rootElement,
-          <ClientApp store={store} hostedTranslations={translations} hostedConfig={hostedConfig} />
+        ReactDOM.hydrate(
+          <ClientApp store={store} hostedTranslations={translations} hostedConfig={hostedConfig} />,
+          document.getElementById('root')
         );
       } else {
-        createRoot(rootElement).render(
-          <ClientApp store={store} hostedTranslations={translations} hostedConfig={hostedConfig} />
+        ReactDOM.render(
+          <ClientApp store={store} hostedTranslations={translations} hostedConfig={hostedConfig} />,
+          document.getElementById('root')
         );
       }
     })
