@@ -1,6 +1,7 @@
 const { transactionLineItems } = require('../api-util/lineItems');
 const { getSdk, handleError, serialize, fetchCommission } = require('../api-util/sdk');
 const { constructValidLineItems } = require('../api-util/lineItemHelpers');
+const { retrieveCommissionAndFlatFee } = require('../extensions/line-items/utils');
 
 module.exports = async (req, res) => {
   const { isOwnListing, listingId, orderData } = req.body;
@@ -18,14 +19,18 @@ module.exports = async (req, res) => {
     const listing = showListingResponse.data.data;
     const commissionAsset = fetchAssetsResponse.data.data[0];
 
-    const { providerCommission, customerCommission } =
-      commissionAsset?.type === 'jsonAsset' ? commissionAsset.attributes.data : {};
+    const {
+      providerCommission,
+      customerCommission,
+      providerFlatFee,
+    } = await retrieveCommissionAndFlatFee(listing, commissionAsset);
 
     const lineItems = await transactionLineItems(
       listing,
       orderData,
       providerCommission,
-      customerCommission
+      customerCommission,
+      providerFlatFee
     );
 
     // Because we are using returned lineItems directly in this template we need to use the helper function

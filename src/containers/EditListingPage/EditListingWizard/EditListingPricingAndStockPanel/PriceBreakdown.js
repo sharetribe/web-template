@@ -9,7 +9,7 @@ import css from './PriceBreakdown.module.css';
 const { Money } = sdkTypes;
 
 const PriceBreakdownComponent = props => {
-  const { price, currencyConfig, intl, providerCommission } = props;
+  const { price, currencyConfig, intl, providerCommission, providerFlatFee } = props;
 
   if (typeof price !== 'number' || isNaN(price)) {
     return (
@@ -26,11 +26,16 @@ const PriceBreakdownComponent = props => {
 
   const priceInCents = Math.round(price * 100);
   const priceAsMoney = new Money(priceInCents, currencyConfig.currency);
-  const fees = new Money(
-    Math.round(priceInCents * (providerCommission / 100)),
+  const providerCommissionAsMoney = new Money(
+    Math.round(priceInCents * (providerCommission.percentage / 100)),
     currencyConfig.currency
   );
-  const sellerReceives = new Money(priceInCents - fees.amount, currencyConfig.currency);
+  const flatFeeAsMoney = new Money(providerFlatFee, currencyConfig.currency);
+
+  const sellerReceives = new Money(
+    priceAsMoney.amount - providerCommissionAsMoney.amount - flatFeeAsMoney.amount,
+    currencyConfig.currency
+  );
 
   const formatMoneyWithIntl = money => {
     try {
@@ -40,6 +45,13 @@ const PriceBreakdownComponent = props => {
       return 'N/A';
     }
   };
+
+  const flatFeeRenderMaybe = providerFlatFee ? (
+    <div className={css.row}>
+      <FormattedMessage id="EditListingPriceBreakdown.providerFlatFee" />
+      <span>{formatMoneyWithIntl(flatFeeAsMoney)}</span>
+    </div>
+  ) : null;
 
   return (
     <div className={css.root}>
@@ -56,11 +68,12 @@ const PriceBreakdownComponent = props => {
         <span>
           <FormattedMessage
             id="EditListingPriceBreakdown.processingFees"
-            values={{ providerCommission }}
+            values={{ providerCommission: providerCommission.percentage }}
           />
         </span>
-        <span>{formatMoneyWithIntl(fees)}</span>
+        <span>{formatMoneyWithIntl(providerCommissionAsMoney)}</span>
       </div>
+      {flatFeeRenderMaybe}
       <div className={css.row}>
         <span>
           <FormattedMessage id="EditListingPriceBreakdown.sellerReceives" />

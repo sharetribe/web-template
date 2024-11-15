@@ -4,5 +4,6 @@
     "EditListingPriceBreakdown.priceMissing": "Please enter a valid price to see the breakdown.",
     "EditListingPriceBreakdown.listingPrice": "Listing Price:",
     "EditListingPriceBreakdown.processingFees": "Processing Fees ({providerCommission}%):",
-    "EditListingPriceBreakdown.sellerReceives": "You Receive:"
+    "EditListingPriceBreakdown.sellerReceives": "You Receive:",
+    "EditListingPriceBreakdown.providerFlatFee": "Flat fee:"
 }

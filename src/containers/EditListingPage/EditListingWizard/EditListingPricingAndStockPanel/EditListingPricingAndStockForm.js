@@ -12,7 +12,7 @@ import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactI
 import { STOCK_INFINITE_ITEMS, STOCK_MULTIPLE_ITEMS, propTypes } from '../../../../util/types';
 import { isOldTotalMismatchStockError } from '../../../../util/errors';
 import * as validators from '../../../../util/validators';
-import { formatMoney } from '../../../../util/currency';
+import { formatMoney, unitDivisor } from '../../../../util/currency';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
 
 import PriceBreakdown from './PriceBreakdown';
@@ -26,7 +26,6 @@ import {
   FieldTextInput,
 } from '../../../../components';
 
-import { getCommission } from '../../../../extensions/PriceBreakdown/api';
 import { DEFAULT_CURRENCY } from '../../../../extensions/common/config/constants/currency.constants';
 
 // Import modules from this directory
@@ -100,19 +99,6 @@ const UpdateStockToInfinityCheckboxMaybe = ({ hasInfiniteStock, currentStock, fo
 };
 
 export const EditListingPricingAndStockFormComponent = props => {
-  const [providerCommission, setProviderCommission] = useState();
-
-  useEffect(() => {
-    const getProviderCommission = async () => {
-      const commission = await getCommission();
-      const providerCommission = commission.providerCommission.percentage;
-
-      setProviderCommission(providerCommission);
-    };
-
-    getProviderCommission();
-  }, []);
-
   return (
     <FinalForm
       {...props}
@@ -138,6 +124,10 @@ export const EditListingPricingAndStockFormComponent = props => {
           updateInProgress,
           fetchErrors,
           values,
+
+          // Custom props
+          providerCommission,
+          providerFlatFee,
         } = formRenderProps;
 
         const currentUser = useSelector(state => state.user.currentUser);
@@ -169,7 +159,22 @@ export const EditListingPricingAndStockFormComponent = props => {
           ? intl.formatMessage({ id: 'EditListingPricingAndStockForm.oldStockTotalWasOutOfSync' })
           : intl.formatMessage({ id: 'EditListingPricingAndStockForm.stockUpdateFailed' });
 
-        const priceValue = values.price && values.price.amount ? values.price.amount / 100 : 0;
+        const priceValue =
+          values.price && values.price.amount
+            ? values.price.amount / unitDivisor(marketplaceCurrency)
+            : 0;
+
+        const priceBreakdownRenderMaybe = !invalid ? (
+          <PriceBreakdown
+            price={priceValue}
+            currencyConfig={{
+              currency: marketplaceCurrency,
+              ...appSettings.getCurrencyFormatting(marketplaceCurrency),
+            }}
+            providerCommission={providerCommission}
+            providerFlatFee={providerFlatFee}
+          />
+        ) : null;
 
         return (
           <Form onSubmit={handleSubmit} className={classes}>
@@ -193,7 +198,7 @@ export const EditListingPricingAndStockFormComponent = props => {
                   id: 'EditListingPricingAndStockForm.pricePerProduct',
                 },
                 {
-                  providerCommission,
+                  providerCommission: providerCommission.percentage,
                 }
               )}
               placeholder={intl.formatMessage({
@@ -203,14 +208,7 @@ export const EditListingPricingAndStockFormComponent = props => {
               validate={priceValidators}
             />
 
-            <PriceBreakdown
-              price={priceValue}
-              currencyConfig={{
-                currency: marketplaceCurrency,
-                ...appSettings.getCurrencyFormatting(marketplaceCurrency),
-              }}
-              providerCommission={providerCommission}
-            />
+            {priceBreakdownRenderMaybe}
 
             {userCurrency !== DEFAULT_CURRENCY && (
               <p className={css.disclaimer}>
