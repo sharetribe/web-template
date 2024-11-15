@@ -1,5 +1,5 @@
 .note {
-  color: var(--colorLightOrange);
+  background-color: var(--colorLightOrange);
   border-radius: var(--borderRadiusMedium);
   color: var(--marketplaceColorDark);
   padding: 16px;
