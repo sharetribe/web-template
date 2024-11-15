@@ -141,7 +141,6 @@
 }
 
 .seatsInput {
-  composes: marketplaceTabNavHorizontalFontStyles from global;
   height: 36px;
   padding: 5px 12px;
 }
