@@ -3,7 +3,7 @@
     "EditListingPriceBreakdown.priceBreakdownTitle": "Price Breakdown",
     "EditListingPriceBreakdown.priceMissing": "Please enter a valid price to see the breakdown.",
     "EditListingPriceBreakdown.listingPrice": "Listing Price:",
-    "EditListingPriceBreakdown.processingFees": "Processing Fees ({providerCommission}%):",
+    "EditListingPriceBreakdown.processingFees": "Processing Fee ({providerCommission}%):",
     "EditListingPriceBreakdown.sellerReceives": "You Receive:",
-    "EditListingPriceBreakdown.providerFlatFee": "Flat fee:"
+    "EditListingPriceBreakdown.providerFlatFee": "Platform Fee:"
 }
