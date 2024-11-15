@@ -23,10 +23,11 @@ export const retrieveListingMinimumPrice = (listing, config) => {
 
 export const retrieveProviderCommission = (listing, config) => {
   const category = getListingCategory(listing);
-  return (
-    config.categoryCustomConfiguration.config[category]?.providerCommissionPercentage ??
-    getProviderDefaultCommission(config)
-  );
+  return {
+    percentage:
+      config.categoryCustomConfiguration.config[category]?.providerCommissionPercentage ??
+      getProviderDefaultCommission(config).percentage,
+  };
 };
 
 export const retrieveProviderFlatFee = (listing, config) => {
@@ -36,8 +37,9 @@ export const retrieveProviderFlatFee = (listing, config) => {
 
 export const retrieveCustomerCommission = (listing, config) => {
   const category = getListingCategory(listing);
-  return (
-    config.categoryCustomConfiguration.config[category]?.customerCommissionPercentage ??
-    getCustomerDefaultCommission(config)
-  );
+  return {
+    percentage:
+      config.categoryCustomConfiguration.config[category]?.customerCommissionPercentage ??
+      getCustomerDefaultCommission(config),
+  };
 };
