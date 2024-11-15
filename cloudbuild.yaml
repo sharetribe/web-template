@@ -92,12 +92,6 @@ steps:
       - '--platform'
       - 'managed'
       - '--allow-unauthenticated'
-
-availableSecrets:
-  secretManager:
-  - versionName: projects/$PROJECT_ID/secrets/webapp-config/versions/latest
-    env: 'ENV_VARS'
-
 substitutions:
   _ENCRYPTED_KEY_PATH: etc/keys/cloudbuild_rsa.enc
 timeout: 900s
