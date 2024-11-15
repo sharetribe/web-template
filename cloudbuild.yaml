@@ -64,8 +64,10 @@ steps:
         'gcr.io/$PROJECT_ID/marketplace:$SHORT_SHA',
         '--build-arg',
         'COMMIT_SHA=$COMMIT_SHA',
+        'ENV_VARS=$ENV_VARS',
         '.',
       ]
+    secretEnv: ['ENV_VARS']
     env:
       - 'DOCKER_BUILDKIT=1'
     volumes:
@@ -92,9 +94,10 @@ steps:
       - 'managed'
       - '--allow-unauthenticated'
 
-secrets:
-    secretEnv:
-      _ENV_VARS: "projects/$PROJECT_ID/secrets/webapp-config/versions/latest"
+availableSecrets:
+  secretManager:
+  - versionName: projects/$PROJECT_ID/secrets/webapp-config/versions/latest
+    env: 'ENV_VARS'
 
 substitutions:
   _ENCRYPTED_KEY_PATH: etc/keys/cloudbuild_rsa.enc
