@@ -32,7 +32,7 @@ function integrationSdkInit() {
   return INTEGRATION_SDK;
 }
 
-function generateScript(SCRIPT_NAME, queryEvents, analyzeEvent) {
+function generateScript(SCRIPT_NAME, queryEvents, analyzeEvent, analyzeEventGroup) {
   console.log(`Loading event script: ${SCRIPT_NAME}`);
   try {
     const dev = process.env.REACT_APP_ENV === 'development';
@@ -84,6 +84,10 @@ function generateScript(SCRIPT_NAME, queryEvents, analyzeEvent) {
         const fullPage = events.length === res.data.meta.perPage;
         const delay = fullPage ? pollWait : pollIdleWait;
         const lastSequenceId = lastEvent ? lastEvent.attributes.sequenceId : sequenceId;
+        const withEventGroupHandler = !!analyzeEventGroup
+        if (withEventGroupHandler) {
+          analyzeEventGroup(events);
+        }
         events.forEach(e => {
           analyzeEvent(e);
         });
