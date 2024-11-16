@@ -49,6 +49,10 @@ const ActionButtonsMaybe = (props) => {
   const handlePrimaryButtonClick = () => {
     if (isProvider) {
       insertBooking(customerObj);
+console.log('here 2')
+/// CALL DB FOR GIFTCARD SUBTRACTION
+
+
     }
     if (primaryButtonProps?.onAction) {
       primaryButtonProps.onAction();

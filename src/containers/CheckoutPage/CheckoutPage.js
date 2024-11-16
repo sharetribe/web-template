@@ -3,7 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { useIntl } from 'react-intl';
-
+import FreeCheckout from './FreeCheckout';
 // Import contexts and util modules
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
@@ -117,6 +117,7 @@ const EnhancedCheckoutPage = (props) => {
       }
     }
   }, []);
+  
 
   const {
     currentUser,
@@ -189,7 +190,25 @@ const EnhancedCheckoutPage = (props) => {
       )
     : 'Checkout page is loading data';
 
-  return processName && isInquiryProcess ? (
+  const isFreeWithGift = pageData?.orderData?.lineItems?.some(
+    (item) =>
+      item.code === "line-item/provider-commission" &&
+      item.lineTotal?.amount < 0
+  );
+
+  return processName && isFreeWithGift && !isFreeBooking && !isInquiryProcess && !speculateTransactionInProgress ? (
+    <FreeCheckout
+      config={config}
+      routeConfiguration={routeConfiguration}
+      intl={intl}
+      history={history}
+      pageData={pageData}
+      listingTitle={listing?.attributes?.title}
+      title={title}
+      onSubmitCallback={onSubmitCallback}
+      {...props}
+    />
+  ) : processName && isInquiryProcess ? (
     <CheckoutPageWithInquiryProcess
       config={config}
       routeConfiguration={routeConfiguration}
@@ -197,7 +216,7 @@ const EnhancedCheckoutPage = (props) => {
       history={history}
       processName={processName}
       pageData={pageData}
-      listingTitle={listingTitle}
+      listingTitle={listing?.attributes?.title}
       title={title}
       onInquiryWithoutPayment={onInquiryWithoutPayment}
       onSubmitCallback={onSubmitCallback}
@@ -213,7 +232,7 @@ const EnhancedCheckoutPage = (props) => {
       sessionStorageKey={STORAGE_KEY}
       pageData={pageData}
       setPageData={setPageData}
-      listingTitle={listingTitle}
+      listingTitle={listing?.attributes?.title}
       title={title}
       onSubmitCallback={onSubmitCallback}
       {...props}
@@ -228,7 +247,7 @@ const EnhancedCheckoutPage = (props) => {
       sessionStorageKey={STORAGE_KEY}
       pageData={pageData}
       setPageData={setPageData}
-      listingTitle={listingTitle}
+      listingTitle={listing?.attributes?.title}
       title={title}
       customerEmail={currentUser?.attributes?.email}
       onSubmitCallback={onSubmitCallback}

@@ -61,7 +61,27 @@ export const getStateDataForBookingProcess = (txInfo, processInfo) => {
         secondaryButtonProps: secondary,
       };
     })
+    .cond([states.PREAUTHORIZED_GIFT, PROVIDER], () => {
+      const primary = isCustomerBanned ? null : actionButtonProps(transitions.ACCEPT_GIFT, PROVIDER);
+      const secondary = isCustomerBanned ? null : actionButtonProps(transitions.DECLINE_GIFT, PROVIDER);
+      return {
+        processName,
+        processState,
+        showDetailCardHeadings: true,
+        showActionButtons: true,
+        primaryButtonProps: primary,
+        secondaryButtonProps: secondary,
+      };
+    })
     .cond([states.DELIVERED, _], () => ({
+      processName,
+      processState,
+      showDetailCardHeadings: true,
+      showReviewAsFirstLink: true,
+      showActionButtons: true,
+      primaryButtonProps: leaveReviewProps,
+    }))
+    .cond([states.COMPLETED, _], () => ({
       processName,
       processState,
       showDetailCardHeadings: true,

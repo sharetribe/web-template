@@ -186,6 +186,7 @@ export const loadInitialDataForStripePayments = ({
   config,
   customerEmail,
 }) => {
+
   // Fetch currentUser with stripeCustomer entity
   // Note: since there's need for data loading in "componentWillMount" function,
   //       this is added here instead of loadData static function.
