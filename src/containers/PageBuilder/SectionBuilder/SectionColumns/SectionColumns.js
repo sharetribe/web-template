@@ -72,8 +72,7 @@ const SectionColumns = props => {
         <div
           className={classNames(
             defaultClasses.blockContainer, 
-            getColumnCSS(numColumns), 
-            css.decreasePadding, {
+            getColumnCSS(numColumns), {
             [css.noSidePaddings]: isInsideContainer,
           })}
         >

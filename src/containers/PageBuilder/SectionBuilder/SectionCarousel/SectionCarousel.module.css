@@ -100,6 +100,27 @@
   scroll-snap-align: center;
 
   transform: translateX(32px);
+  img {
+    transition: all .25s ease-out;
+  }
+
+  a {
+    color: var(--colorText);
+    text-decoration: none;
+  }
+
+  &:hover {
+    img {
+      border: 3px solid var(--colorPrimary);
+    }
+    h3 {
+      color: var(--colorPrimary);
+    }
+    a {
+      color: var(--colorPrimary);
+    }
+    
+  }
 
   &:last-of-type {
     padding-right: 32px;
@@ -180,5 +201,5 @@
   justify-content: flex-start;
 }
 #carouselHome h2 {
-  color: #422f32;
+  color: var(--colorSecondary);
 }

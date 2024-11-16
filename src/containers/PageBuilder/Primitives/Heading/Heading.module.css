@@ -10,8 +10,8 @@
   margin-top: 0;
   margin-bottom: 0;
   line-height: 1.33;
-  font-weight: bold;
-  color: var(--colorGrey900);
+  /* font-weight: bold; */
+  /* color: var(--colorGrey900); */
 
   /* fallback option */
   word-break: break-all;

@@ -193,7 +193,7 @@
 
 /* button on dark theme */
 .darkTheme .ctaButton {
-  border: 1px solid var(--marketplaceColorDark);
+  /* border: 1px solid var(--marketplaceColorDark); */
   text-decoration: none;
 
   &:hover {

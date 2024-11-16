@@ -41,9 +41,6 @@
 #columnsHome {
   justify-content: flex-start;
 }
-#columnsHome h2 {
-  color: #422f32;
-}
-.decreasePadding {
-  padding: 32px;
+#columnsHome h2, #columnsHome h3 {
+  color: var(--colorSecondary);
 }

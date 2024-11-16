@@ -12,3 +12,8 @@
   padding-left: 0;
   padding-right: 0;
 }
+
+/* test styles */
+header h2 {
+  color: var(--colorSecondary);
+}

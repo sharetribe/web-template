@@ -16,17 +16,19 @@
 /* test styles */
 #heroHome {
   margin-left: 10%;
-  padding: 2rem 0;
-  background: rgba(46, 30, 33,.9);
+  padding: 2rem;
+  background: rgba(255,255,255,.9);
 }
 #heroHome h1 {
   font-size: 42px;
   font-weight: var(--fontWeightBold);
   line-height: 1.1;
+  color: var(--colorSecondary);
 }
 #heroHome p {
-  font-weight: 400;
+  font-weight: 300;
   line-height: 1.4;
+  color: var(--colorSecondary);
 }
 #heroHome a {
   text-transform: uppercase;

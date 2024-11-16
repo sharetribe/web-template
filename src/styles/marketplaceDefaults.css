@@ -18,7 +18,10 @@
   /* ================ Colors ================ */
 
   /* Colors used for different functions (like error texts) */
-
+  --colorPrimary: #fe1b00;
+  --colorSecondary: #2e293a;
+  --colorText: #2e293a;
+  /* end custom colors */
   --colorSuccess: #2ecc72;
   --colorSuccessDark: #239954;
   --colorSuccessLight: #f0fff6;
@@ -281,7 +284,7 @@ h2 {
   font-family: var( --fontFamilyTitles);
   font-size: 21px;
   line-height: 24px;
-  font-weight: var(--fontWeightRegular);
+  font-weight: var(--fontWeightSemiBold);
 
   padding: 4px 0 2px 0;
   /* x * 6px */
