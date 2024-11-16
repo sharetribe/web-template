@@ -208,7 +208,6 @@ export class TransactionPanelComponent extends Component {
     const listingTypeConfigs = config.listing.listingTypes;
     const listingTypeConfig = listingTypeConfigs.find((conf) => conf.listingType === listingType);
     const showPrice = isInquiryProcess && displayPrice(listingTypeConfig);
-    console.log(this.props.protectedData.seatNames)
     const showSendMessageForm =
       !isCustomerBanned && !isCustomerDeleted && !isProviderBanned && !isProviderDeleted;
 

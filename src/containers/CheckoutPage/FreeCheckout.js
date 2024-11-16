@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { initiateOrder } from './CheckoutPage.duck'; 
 import { useHistory } from 'react-router-dom';
 import CustomTopbar from './CustomTopbar';
+import {updateTransaction} from '../../util/api';
 
 const FreeCheckout = ({
   intl,
@@ -14,6 +15,7 @@ const FreeCheckout = ({
   const history = useHistory(); 
 
   const handleConfirmBooking = () => {
+   
     const customerEmail = currentUser?.attributes?.email;
     const seats = pageData.orderData?.seats ? Number(pageData.orderData.seats) : null;
     const seatNames = pageData.orderData?.guestNames;
@@ -21,7 +23,7 @@ const FreeCheckout = ({
     const guestsNameMaybe = seatNames ? { seatNames } : {};
     const fee = pageData.orderData?.fee || [''];
     const voucherFee = pageData.orderData?.voucherFee || 0;
-    const languageMaybe = pageData.orderData.Language
+    const languageMaybe = pageData.orderData.Language  
       ? { Language: pageData.orderData.Language }
       : {};
     const locationMaybe = pageData.orderData.Location
@@ -52,13 +54,24 @@ const FreeCheckout = ({
 
     onInitiateOrder(orderParams, processAlias, null, transitionName, isPrivileged)
       .then((order) => {
-        console.log('Order initiated successfully:', order);
-        // Navigate to /order/{transactionId}
-        history.push(`/order/${order.id.uuid}`);
-      })
-      .catch((error) => {
-        console.error('Failed to initiate order:', error);
-      });
+        const updatePayload = {
+          transactionId: order.id.uuid,
+          pageData: pageData,
+          total: order.attributes.payinTotal.amount,
+        };
+        return updateTransaction(updatePayload)
+        .then(() => {
+          // Navigate to /order/{transactionId} after successful update
+          history.push(`/order/${order.id.uuid}`);
+        })
+        .catch((error) => {
+          console.error('Failed to update transaction:', error);
+          // Optional: Handle update transaction error
+        });
+    })
+    .catch((error) => {
+      console.error('Failed to initiate order:', error);
+    });
   };
 
   return (

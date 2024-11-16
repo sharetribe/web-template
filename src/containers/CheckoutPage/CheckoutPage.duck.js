@@ -283,6 +283,7 @@ export const confirmPayment =
       .transition(bodyParams, queryParams)
       .then((response) => {
         const order = response.data.data;
+        console.log('confirmPayment response', response);
         dispatch(confirmPaymentSuccess(order.id));
         return order;
       })

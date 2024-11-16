@@ -25,6 +25,7 @@ const inquiryEvent = require('./api/brevo/event');
 const newsLetter = require('./api/brevo/newsletter');
 const coupon = require('./api/stripe/coupon');
 const refund = require('./api/stripe/refund');
+const updateTransaction = require('./api/update-transaction');
 const { authenticateFacebook, authenticateFacebookCallback } = require('./api/auth/facebook');
 const { authenticateGoogle, authenticateGoogleCallback } = require('./api/auth/google');
 
@@ -62,6 +63,7 @@ router.post('/transaction-line-items', transactionLineItems);
 router.post('/initiate-privileged', initiatePrivileged);
 router.post('/transition-privileged', transitionPrivileged);
 router.post('/stripe/coupon', coupon);
+router.post('/update-transaction', updateTransaction);
 router.post('/brevo/notifyinvoice', notifyInvoice);
 router.post('/brevo/gift', gift);
 router.post('/brevo/newsletter', newsLetter);
