@@ -130,16 +130,9 @@ export const graph = {
   states: {
     [states.INITIAL]: {
       on: {
-        [transitions.INQUIRE]: states.INQUIRY,
         [transitions.REQUEST_PAYMENT]: states.PENDING_PAYMENT,
       },
     },
-    [states.INQUIRY]: {
-      on: {
-        [transitions.REQUEST_PAYMENT_AFTER_INQUIRY]: states.PENDING_PAYMENT,
-      },
-    },
-
     [states.PENDING_PAYMENT]: {
       on: {
         [transitions.EXPIRE_PAYMENT]: states.PAYMENT_EXPIRED,
@@ -153,7 +146,6 @@ export const graph = {
         [transitions.MARK_DELIVERED]: states.DELIVERED,
         [transitions.OPERATOR_MARK_DELIVERED]: states.DELIVERED,
         [transitions.MARK_RECEIVED_FROM_PURCHASED]: states.RECEIVED,
-        [transitions.AUTO_CANCEL]: states.CANCELED,
         [transitions.CANCEL]: states.CANCELED,
       },
     },
@@ -213,7 +205,6 @@ export const graph = {
 export const isRelevantPastTransition = transition => {
   return [
     transitions.CONFIRM_PAYMENT,
-    transitions.AUTO_CANCEL,
     transitions.CANCEL,
     transitions.MARK_DELIVERED,
     transitions.OPERATOR_MARK_DELIVERED,
