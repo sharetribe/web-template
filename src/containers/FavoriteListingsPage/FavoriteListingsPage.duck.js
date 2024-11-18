@@ -83,11 +83,17 @@ export const queryFavoritesError = e => ({
 export const queryFavoriteListings = queryParams => (dispatch, getState, sdk) => {
   dispatch(queryFavoritesRequest(queryParams));
   const { currentUser } = getState().user;
-  const favorites = currentUser?.attributes.profile.privateData?.favorites || {};
+  const favorites = currentUser?.attributes.profile.privateData?.favorites;
   const listingType = queryParams.pub_listingType;
   const validRequestParams = !!listingType;
+  const withFavorites = !!favorites;
+  const shouldRequest = withFavorites && validRequestParams;
 
-  if (!validRequestParams) return;
+  if (!shouldRequest) {
+    const emptyObject = { data: { data: [] } };
+    dispatch(queryFavoritesSuccess(emptyObject));
+    return emptyObject;
+  };
 
   const parsedFavorites = favorites[listingType];
   const favoritesMaybe = !!parsedFavorites ? { ids: parsedFavorites } : {};

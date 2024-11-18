@@ -26,6 +26,61 @@ import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 import css from './FavoriteListingsPage.module.css';
 import { getListingsById } from '../../ducks/marketplaceData.duck';
 
+
+
+
+
+
+
+
+
+
+
+// console.warn('\n\n\n*******************************');
+// console.warn('\n[createUppyInstance] - process.env.REACT_APP_TRANSLOADIT_SERVICE_URL:', process.env.REACT_APP_TRANSLOADIT_SERVICE_URL);
+// console.warn('\n*******************************\n\n\n');
+
+
+
+
+
+
+
+// rafael+seller+2024+11+13+1@theluupe.com
+// rafael+buyer+2024+11+13+1@theluupe.com
+// TheLuupe_123
+
+
+
+
+
+/**
+ * [TODO:]
+ *  - Revisar los links en los menus y poner favoritos y quitar el raro de agregar listing.....
+ *  - Poner vista de "VACIO" en la vista de favoritos!
+ *
+ *
+ *  - Hacer perfil de comprador y vendedor
+ *    - Trabajar en el componente para la navegacion de listing types
+ *      - Reutilizar en:
+ *          - Perfil vendedor
+ *          - Mis Listings (vendedor unicamente)
+ *          - Favoritos
+ *
+ *  - Revisar que no pueda abrir la vista de editar ni de mis listings ni de otros
+ *  - Revisar que SI pueda abrir la vista de detalle de todos los productos (SOLAMENTE LOS PRODUCTOS)
+ *
+ *  - Revisar problemas del build. Probablemente tenga que ver con la version de React
+ *
+ *  - Leer los chats - ProdSupport
+ */
+
+
+
+
+
+
+
 export const FavoriteListingsPageComponent = props => {
   const {
     listings,
