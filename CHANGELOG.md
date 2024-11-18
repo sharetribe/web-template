@@ -14,7 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
-- [change] Node v23.2 is failing. Add engine rule for node (">=18.20.1 <23.2.0") for now.
+- SingeDatePicker: don't update value to dateData if it has the same timestamp has not changed.
+  [#507](https://github.com/sharetribe/web-template/pull/507)
+- [change] Node v23.2 is failing. This adds engine rule for node (">=18.20.1 <23.2.0") for now.
   [#505](https://github.com/sharetribe/web-template/pull/505)
 - [change] Update mapbox-gl-js (v1.0.0 => v3.7.0) and mapbox-sdk-js (0.6.0 => 0.16.1) Note: Mapbox
   license changed in v2 (and pricing for non-mapbox related map tiles)
