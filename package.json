@@ -135,7 +135,7 @@
     ]
   },
   "engines": {
-    "node": "23.1.0"
+    "node": ">=18.20.1 <23.2.0"
   },
   "prettier": {
     "singleQuote": true,
