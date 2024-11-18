@@ -31,6 +31,7 @@ import Routes from './routing/Routes';
 
 // Sharetribe Web Template uses English translations as default translations.
 import defaultMessages from './translations/en.json';
+import messagesInLocale from './translations/it.json'
 
 // If you want to change the language of default (fallback) translations,
 // change the imports to match the wanted locale:
@@ -69,7 +70,7 @@ import defaultMessages from './translations/en.json';
 //
 // I.e. remove "const messagesInLocale" and add import for the correct locale:
 // import messagesInLocale from './translations/fr.json';
-const messagesInLocale = {};
+// const messagesInLocale = {};
 
 // If translation key is missing from `messagesInLocale` (e.g. fr.json),
 // corresponding key will be added to messages from `defaultMessages` (en.json)

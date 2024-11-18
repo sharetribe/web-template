@@ -1,0 +1,169 @@
+import React from 'react';
+import { string, bool } from 'prop-types';
+import { compose } from 'redux';
+import { Form as FinalForm } from 'react-final-form';
+import classNames from 'classnames';
+
+import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import * as validators from '../../../util/validators';
+import { propTypes } from '../../../util/types';
+import {
+  isErrorNoPermissionForInitiateTransactions,
+  isErrorNoPermissionForUserPendingApproval,
+  isTooManyRequestsError,
+} from '../../../util/errors';
+
+import {
+  Form,
+  PrimaryButton,
+  FieldTextInput,
+  IconInquiry,
+  Heading,
+  NamedLink,
+  FieldCurrencyInput,
+} from '../../../components';
+
+import css from './CustomInquiryForm.module.css';
+import { NO_ACCESS_PAGE_INITIATE_TRANSACTIONS } from '../../../util/urlHelpers';
+import appSettings from '../../../config/settings';
+
+const ErrorMessage = props => {
+  const { error } = props;
+  const userPendingApproval = isErrorNoPermissionForUserPendingApproval(error);
+  const userHasNoTransactionRights = isErrorNoPermissionForInitiateTransactions(error);
+
+  // No transaction process attached to listing
+  return error ? (
+    <p className={css.error}>
+      {error.message === 'No transaction process attached to listing' ? (
+        <FormattedMessage id="InquiryForm.sendInquiryErrorNoProcess" />
+      ) : isTooManyRequestsError(error) ? (
+        <FormattedMessage id="InquiryForm.tooManyRequestsError" />
+      ) : userPendingApproval ? (
+        <FormattedMessage id="InquiryForm.userPendingApprovalError" />
+      ) : userHasNoTransactionRights ? (
+        <FormattedMessage
+          id="InquiryForm.noTransactionRightsError"
+          values={{
+            NoAccessLink: msg => (
+              <NamedLink
+                name="NoAccessPage"
+                params={{ missingAccessRight: NO_ACCESS_PAGE_INITIATE_TRANSACTIONS }}
+              >
+                {msg}
+              </NamedLink>
+            ),
+          }}
+        />
+      ) : (
+        <FormattedMessage id="InquiryForm.sendInquiryError" />
+      )}
+    </p>
+  ) : null;
+};
+
+// NOTE: this InquiryForm is only for booking & purchase processes
+// The default-inquiry process is handled differently
+const CustomInquiryFormComponent = props => (
+  <FinalForm
+    {...props}
+    render={fieldRenderProps => {
+      const {
+        rootClassName,
+        className,
+        submitButtonWrapperClassName,
+        formId,
+        handleSubmit,
+        inProgress,
+        intl,
+        listingTitle,
+        authorDisplayName,
+        sendInquiryError,
+        marketplaceCurrency,
+      } = fieldRenderProps;
+
+      const messageLabel = intl.formatMessage(
+        {
+          id: 'CustomInquiryForm.messageLabel',
+        },
+        { authorDisplayName }
+      );
+      const messagePlaceholder = intl.formatMessage(
+        {
+          id: 'CustomInquiryForm.messagePlaceholder',
+        },
+        { authorDisplayName }
+      );
+      const messageRequiredMessage = intl.formatMessage({
+        id: 'InquiryForm.messageRequired',
+      });
+      const messageRequired = validators.requiredAndNonEmptyString(messageRequiredMessage);
+
+      const classes = classNames(rootClassName || css.root, className);
+      const submitInProgress = inProgress;
+      const submitDisabled = submitInProgress;
+
+      return (
+        <Form className={classes} onSubmit={handleSubmit} enforcePagePreloadFor="OrderDetailsPage">
+          <IconInquiry className={css.icon} />
+          <Heading as="h2" rootClassName={css.heading}>
+            <FormattedMessage id="CustomInquiryForm.heading" />
+          </Heading>
+          {/* <FieldTextInput
+            className={css.field}
+            type="textarea"
+            name="message"
+            id={formId ? `${formId}.message` : 'message'}
+            label={messageLabel}
+            placeholder={messagePlaceholder}
+            validate={messageRequired}
+          /> */}
+          <FieldCurrencyInput
+            className={css.field}
+            name="message"
+            id={formId ? `${formId}.message` : 'message'}
+            label={messageLabel}
+            placeholder={messagePlaceholder}
+            // validate={messageRequired}
+            currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
+          />
+          <div className={submitButtonWrapperClassName}>
+            <ErrorMessage error={sendInquiryError} />
+            <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
+              <FormattedMessage id="InquiryForm.submitButtonText" />
+            </PrimaryButton>
+          </div>
+        </Form>
+      );
+    }}
+  />
+);
+
+CustomInquiryFormComponent.defaultProps = {
+  rootClassName: null,
+  className: null,
+  submitButtonWrapperClassName: null,
+  inProgress: false,
+  sendInquiryError: null,
+};
+
+CustomInquiryFormComponent.propTypes = {
+  rootClassName: string,
+  className: string,
+  submitButtonWrapperClassName: string,
+
+  inProgress: bool,
+
+  listingTitle: string.isRequired,
+  authorDisplayName: string.isRequired,
+  sendInquiryError: propTypes.error,
+
+  // from injectIntl
+  intl: intlShape.isRequired,
+};
+
+const CustomInquiryForm = compose(injectIntl)(CustomInquiryFormComponent);
+
+CustomInquiryForm.displayName = 'CustomInquiryForm';
+
+export default CustomInquiryForm;

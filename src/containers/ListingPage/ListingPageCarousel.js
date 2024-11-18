@@ -52,6 +52,7 @@ import {
   NamedRedirect,
   OrderPanel,
   LayoutSingleColumn,
+  Modal,
 } from '../../components';
 
 // Related components and modules
@@ -85,6 +86,8 @@ import SectionGallery from './SectionGallery';
 import CustomListingFields from './CustomListingFields';
 
 import css from './ListingPage.module.css';
+import InquiryForm from './InquiryForm/InquiryForm.js';
+import CustomInquiryForm from './CustomInquiryForm/CustomInquiryForm.js';
 
 const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
 
@@ -94,6 +97,8 @@ export const ListingPageComponent = props => {
   const [inquiryModalOpen, setInquiryModalOpen] = useState(
     props.inquiryModalOpenForListingId === props.params.id
   );
+
+  const [customInquiryModalOpen, setCustomInquiryModalOpen] = useState(false);
 
   const {
     isAuthenticated,
@@ -411,8 +416,28 @@ export const ListingPageComponent = props => {
               marketplaceCurrency={config.currency}
               dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
               marketplaceName={config.marketplaceName}
+              setInquiryModalOpen={setCustomInquiryModalOpen}
             />
           </div>
+          <Modal
+            id="ListingPage.inquiry"
+            contentClassName={css.inquiryModalContent}
+            isOpen={isAuthenticated && customInquiryModalOpen}
+            onClose={() => setCustomInquiryModalOpen(false)}
+            usePortal
+            onManageDisableScrolling={onManageDisableScrolling}
+          >
+            <CustomInquiryForm
+              className={css.inquiryForm}
+              submitButtonWrapperClassName={css.inquirySubmitButtonWrapper}
+              listingTitle={title}
+              authorDisplayName={authorDisplayName}
+              sendInquiryError={sendInquiryError}
+              onSubmit={onSubmitInquiry}
+              inProgress={sendInquiryInProgress}
+              marketplaceCurrency={config.currency}
+            />
+          </Modal>
         </div>
       </LayoutSingleColumn>
     </Page>
