@@ -25,6 +25,7 @@ import {
 } from '../../util/configHelpers';
 import {
   propTypes,
+  AVAILABILITY_MULTIPLE_SEATS,
   LISTING_STATE_CLOSED,
   LINE_ITEM_NIGHT,
   LINE_ITEM_DAY,
@@ -194,8 +195,8 @@ const OrderPanel = props => {
   } = props;
 
   const publicData = listing?.attributes?.publicData || {};
-  const { listingType, unitType, transactionProcessAlias = '', availabilityType } =
-    publicData || {};
+  const { listingType, unitType, transactionProcessAlias = '' } = publicData || {};
+
   const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
   const lineItemUnitType = lineItemUnitTypeMaybe || `line-item/${unitType}`;
 
@@ -253,6 +254,7 @@ const OrderPanel = props => {
   const allowOrdersOfMultipleItems = [STOCK_MULTIPLE_ITEMS, STOCK_INFINITE_MULTIPLE_ITEMS].includes(
     listingTypeConfig?.stockType
   );
+  const seatsEnabled = [AVAILABILITY_MULTIPLE_SEATS].includes(listingTypeConfig?.availabilityType);
 
   const showClosedListingHelpText = listing.id && isClosed;
   const isOrderOpen = !!parse(location.search).orderOpen;
@@ -310,7 +312,7 @@ const OrderPanel = props => {
           <InvalidCurrency />
         ) : showBookingTimeForm ? (
           <BookingTimeForm
-            availabilityType={availabilityType}
+            seatsEnabled={seatsEnabled}
             className={css.bookingForm}
             formId="OrderPanelBookingTimeForm"
             lineItemUnitType={lineItemUnitType}
@@ -334,7 +336,7 @@ const OrderPanel = props => {
           />
         ) : showBookingDatesForm ? (
           <BookingDatesForm
-            availabilityType={availabilityType}
+            seatsEnabled={seatsEnabled}
             className={css.bookingForm}
             formId="OrderPanelBookingDatesForm"
             lineItemUnitType={lineItemUnitType}

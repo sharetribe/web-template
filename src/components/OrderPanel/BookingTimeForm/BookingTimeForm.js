@@ -26,7 +26,7 @@ const handleFetchLineItems = props => formValues => {
     isOwnListing,
     fetchLineItemsInProgress,
     onFetchTransactionLineItems,
-    availabilityType,
+    seatsEnabled,
   } = props;
   const { bookingStartTime, bookingEndTime, seats } = formValues.values;
   const startDate = bookingStartTime ? timestampToDate(bookingStartTime) : null;
@@ -35,19 +35,13 @@ const handleFetchLineItems = props => formValues => {
   // Note: we expect values bookingStartTime and bookingEndTime to be strings
   // which is the default case when the value has been selected through the form
   const isStartBeforeEnd = bookingStartTime < bookingEndTime;
+  const seatsMaybe = seatsEnabled && seats > 0 ? { seats: parseInt(seats, 10) } : {};
 
-  if (
-    bookingStartTime &&
-    bookingEndTime &&
-    isStartBeforeEnd &&
-    (availabilityType !== 'multipleSeats' || seats) &&
-    !fetchLineItemsInProgress
-  ) {
+  if (bookingStartTime && bookingEndTime && isStartBeforeEnd && !fetchLineItemsInProgress) {
     const orderData = {
       bookingStart: startDate,
       bookingEnd: endDate,
-      ...(availabilityType &&
-        availabilityType === 'multipleSeats' && { seats: parseInt(seats, 10) }),
+      ...seatsMaybe,
     };
     onFetchTransactionLineItems({
       orderData,
@@ -64,7 +58,7 @@ export const BookingTimeFormComponent = props => {
     price: unitPrice,
     dayCountAvailableForBooking,
     marketplaceName,
-    availabilityType,
+    seatsEnabled,
     ...rest
   } = props;
 
@@ -121,7 +115,7 @@ export const BookingTimeFormComponent = props => {
           <Form onSubmit={handleSubmit} className={classes} enforcePagePreloadFor="CheckoutPage">
             {monthlyTimeSlots && timeZone ? (
               <FieldDateAndTimeInput
-                availabilityType={availabilityType}
+                seatsEnabled={seatsEnabled}
                 setSeatsOptions={setSeatsOptions}
                 startDateInputProps={{
                   label: intl.formatMessage({ id: 'BookingTimeForm.bookingStartTitle' }),
@@ -144,11 +138,11 @@ export const BookingTimeFormComponent = props => {
                 handleFetchLineItems={onHandleFetchLineItems}
               />
             ) : null}
-            {availabilityType == 'multipleSeats' ? (
+            {seatsEnabled ? (
               <FieldSelect
                 name="seats"
                 id="seats"
-                disabled={!(startTime && endTime)}
+                disabled={!startTime}
                 label={intl.formatMessage({ id: 'BookingTimeForm.seatsTitle' })}
                 className={css.fieldSeats}
                 onChange={values => {
@@ -252,8 +246,6 @@ BookingTimeFormComponent.propTypes = {
   lineItems: array,
   fetchLineItemsInProgress: bool.isRequired,
   fetchLineItemsError: propTypes.error,
-
-  availabilityType: string,
 
   // from injectIntl
   intl: intlShape.isRequired,
