@@ -155,23 +155,30 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
   const quantityAndExtraLineItems =
     unitType === 'item'
       ? getItemQuantityAndLineItems(orderData, publicData, currency)
-      : unitType === 'hour' && !orderData.seats
-      ? getHourQuantityAndLineItems(orderData)
-      : unitType === 'hour'
+      : unitType === 'hour' && orderData.seats
       ? getHoursWithSeatsAndLineItems(orderData)
-      : ['day', 'night'].includes(unitType) && !orderData.seats
-      ? getDateRangeQuantityAndLineItems(orderData, code)
-      : ['day', 'night'].includes(unitType)
+      : unitType === 'hour'
+      ? getHourQuantityAndLineItems(orderData)
+      : ['day', 'night'].includes(unitType) && orderData.seats
       ? getDateRangeWithSeatsAndLineItems(orderData, code)
+      : ['day', 'night'].includes(unitType)
+      ? getDateRangeQuantityAndLineItems(orderData, code)
       : {};
 
   const { quantity, units, seats, extraLineItems } = quantityAndExtraLineItems;
 
-  // TODO: We could use a better error message here.
   // Throw error if there is no quantity information given
   if (!quantity && !(units && seats)) {
-    const message = `Error: transition should contain quantity information: 
-       stockReservationQuantity, quantity, units & seats, or bookingStart & bookingEnd (if "line-item/day" or "line-item/night" is used)`;
+    const missingFields = [];
+
+    if (!quantity) missingFields.push('quantity');
+    if (!units) missingFields.push('units');
+    if (!seats) missingFields.push('seats');
+
+    const message = `Error: orderData is missing the following information: ${missingFields.join(
+      ', '
+    )}. Quantity or either units & seats is required.`;
+
     const error = new Error(message);
     error.status = 400;
     error.statusText = message;

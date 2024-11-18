@@ -343,24 +343,19 @@ const calculateLineItems = (
   isOwnListing,
   fetchLineItemsInProgress,
   onFetchTransactionLineItems,
-  availabilityType
+  seatsEnabled
 ) => formValues => {
-  const startDate = formValues.values && formValues.values.startDate;
-  const endDate = formValues.values && formValues.values.endDate;
-  const seats = formValues.values && formValues.values.seats;
+  const { startDate, endDate, seats } = formValues?.values || {};
+
+  const seatCount = seats ? parseInt(seats, 10) : 1;
 
   const orderData = {
     bookingStart: startDate,
     bookingEnd: endDate,
-    ...(availabilityType && availabilityType === 'multipleSeats' && { seats: parseInt(seats, 10) }),
+    ...(seatsEnabled && { seats: seatCount }),
   };
 
-  if (
-    startDate &&
-    endDate &&
-    (availabilityType !== 'multipleSeats' || seats) &&
-    !fetchLineItemsInProgress
-  ) {
+  if (startDate && endDate && !fetchLineItemsInProgress) {
     onFetchTransactionLineItems({
       orderData,
       listingId,
@@ -384,6 +379,23 @@ const showPreviousMonthStepper = (currentMonth, timeZone) => {
   return isDateSameOrAfter(prevMonthDate, currentMonthDate);
 };
 
+const getStartAndEndOnTimeZone = (startDate, endDate, isDaily, timeZone) => {
+  // Parse the startDate and endDate into the target time zone
+  const parsedStart = startDate
+    ? getStartOf(timeOfDayFromLocalToTimeZone(startDate, timeZone), 'day', timeZone)
+    : startDate;
+
+  const parsedEnd = endDate
+    ? getStartOf(timeOfDayFromLocalToTimeZone(endDate, timeZone), 'day', timeZone)
+    : endDate;
+
+  // Adjust endDate for API if isDaily is true
+  const endDateForAPI = parsedEnd && isDaily ? getExclusiveEndDate(parsedEnd, timeZone) : parsedEnd;
+
+  // Return the processed dates
+  return { startDate: parsedStart, endDate: endDateForAPI };
+};
+
 // return a list of timeslots that exist between startDate and endDate
 const filterTimeSlotsByDate = (allTimeSlots, startDate, endDate) => {
   return Object.values(allTimeSlots).filter(
@@ -405,11 +417,17 @@ const findMinSeatsTimeSlot = timeSlots => {
 
 // Main function to get the seat options based on the minimum seats available in the date range
 const getMinSeatsOptions = (allTimeSlots, startDate, endDate) => {
+  if (!startDate || !endDate) {
+    return [];
+  }
   const filteredTimeSlots = filterTimeSlotsByDate(allTimeSlots, startDate, endDate);
   const minSeatsSlot = findMinSeatsTimeSlot(filteredTimeSlots);
 
-  // Return the array of seat options from 1 to the minimum seats available
-  return minSeatsSlot ? Array.from({ length: minSeatsSlot.seats }, (_, i) => i + 1) : [];
+  // Return the array of seat options from 1 to the minimum seats available, capped at 100
+  const maxOptions = 100;
+  return minSeatsSlot
+    ? Array.from({ length: Math.min(minSeatsSlot.seats, maxOptions) }, (_, i) => i + 1)
+    : [];
 };
 
 // Checks if two timeslots are consequtive
@@ -438,8 +456,8 @@ const combineConsecutiveTimeSlots = (slots, startDate) => {
     return startDate.getTime() >= startTime && startDate.getTime() < endTime;
   });
 
-  // Return null if no timeslot matches startDate
-  if (startIndex === -1) return null;
+  // Return empty array if no timeslot matches startDate
+  if (startIndex === -1) return [];
 
   // Determine the full range of consecutive timeslots
   const indexOfFirstTimeSlot = findIndexOfFirstConsecutiveTimeSlot(slots, startIndex);
@@ -473,7 +491,7 @@ export const BookingDatesFormComponent = props => {
     payoutDetailsWarning,
     monthlyTimeSlots,
     onMonthChanged,
-    availabilityType,
+    seatsEnabled,
     ...rest
   } = props;
 
@@ -529,7 +547,7 @@ export const BookingDatesFormComponent = props => {
     isOwnListing,
     fetchLineItemsInProgress,
     onFetchTransactionLineItems,
-    availabilityType
+    seatsEnabled
   );
 
   return (
@@ -559,7 +577,6 @@ export const BookingDatesFormComponent = props => {
           id: 'FieldDateRangeInput.invalidEndDate',
         });
 
-        // TODO: Ask vesa if this comment is relevant??
         // This is the place to collect breakdown estimation data.
         // Note: lineItems are calculated and fetched from this Template's backend
         // so we need to pass only booking data that is needed otherwise
@@ -588,11 +605,9 @@ export const BookingDatesFormComponent = props => {
         const endDatePlaceholderText =
           endDatePlaceholder || intl.formatDate(tomorrow, dateFormatOptions);
 
-        const realTimeSlots =
-          availabilityType === 'multipleSeats' && startDate
-            ? !endDate
-              ? combineConsecutiveTimeSlots(allTimeSlots, startDate)
-              : allTimeSlots
+        const relevantTimeSlots =
+          seatsEnabled && startDate && !endDate
+            ? combineConsecutiveTimeSlots(allTimeSlots, startDate)
             : allTimeSlots;
 
         const onMonthClick = handleMonthClick(
@@ -604,7 +619,7 @@ export const BookingDatesFormComponent = props => {
           onFetchTimeSlots
         );
         const isDayBlocked = isDayBlockedFn({
-          allTimeSlots: realTimeSlots,
+          allTimeSlots: relevantTimeSlots,
           monthlyTimeSlots,
           isDaily: lineItemUnitType === LINE_ITEM_DAY,
           startDate,
@@ -612,18 +627,18 @@ export const BookingDatesFormComponent = props => {
           timeZone,
         });
         const isOutsideRange = isOutsideRangeFn(
-          realTimeSlots,
+          relevantTimeSlots,
           monthlyTimeSlots,
           startDate,
           endDate,
           lineItemUnitType,
           dayCountAvailableForBooking,
           timeZone,
-          availabilityType
+          seatsEnabled
         );
 
         const seatsOptions = getMinSeatsOptions(
-          realTimeSlots,
+          relevantTimeSlots,
           values?.bookingDates?.startDate,
           values?.bookingDates?.endDate
         );
@@ -662,17 +677,7 @@ export const BookingDatesFormComponent = props => {
               }}
               parse={v => {
                 const { startDate, endDate } = v || {};
-                // Parse the DateRangePicker's value (local 00:00) for the Final Form
-                // The form expects listing's time zone and start of day aka 00:00
-                const parsedStart = startDate
-                  ? getStartOf(timeOfDayFromLocalToTimeZone(startDate, timeZone), 'day', timeZone)
-                  : startDate;
-                const parsedEnd = endDate
-                  ? getStartOf(timeOfDayFromLocalToTimeZone(endDate, timeZone), 'day', timeZone)
-                  : endDate;
-                const endDateForAPI =
-                  parsedEnd && isDaily ? getExclusiveEndDate(parsedEnd, timeZone) : parsedEnd;
-                return v ? { startDate: parsedStart, endDate: endDateForAPI } : v;
+                return v ? getStartAndEndOnTimeZone(startDate, endDate, isDaily, timeZone) : v;
               }}
               useMobileMargins
               validate={composeValidators(
@@ -685,7 +690,7 @@ export const BookingDatesFormComponent = props => {
               )}
               isDayBlocked={isDayBlocked}
               isOutsideRange={isOutsideRange}
-              isBlockedBetween={isBlockedBetween(realTimeSlots, timeZone)}
+              isBlockedBetween={isBlockedBetween(relevantTimeSlots, timeZone)}
               disabled={fetchLineItemsInProgress}
               showPreviousMonthStepper={showPreviousMonthStepper(currentMonth, timeZone)}
               showNextMonthStepper={showNextMonthStepper(
@@ -702,29 +707,29 @@ export const BookingDatesFormComponent = props => {
                 setCurrentMonth(startDate || endDate || startOfToday);
               }}
               onChange={values => {
-                const { startDate, endDate } = values || {};
-                const parsedStart = startDate
-                  ? getStartOf(timeOfDayFromLocalToTimeZone(startDate, timeZone), 'day', timeZone)
-                  : startDate;
-                const parsedEnd = endDate
-                  ? getStartOf(timeOfDayFromLocalToTimeZone(endDate, timeZone), 'day', timeZone)
-                  : endDate;
-                const endDateForAPI =
-                  parsedEnd && isDaily ? getExclusiveEndDate(parsedEnd, timeZone) : parsedEnd;
-                if (availabilityType && availabilityType == 'multipleSeats') {
+                const { startDate: startDateFromValues, endDate: endDateFromValues } = values || {};
+                const { startDate, endDate } = values
+                  ? getStartAndEndOnTimeZone(
+                      startDateFromValues,
+                      endDateFromValues,
+                      isDaily,
+                      timeZone
+                    )
+                  : {};
+                if (seatsEnabled) {
                   formApi.change('seats', 1);
                 }
                 onHandleFetchLineItems({
                   values: {
-                    startDate: parsedStart,
-                    endDate: endDateForAPI,
-                    seats: availabilityType && availabilityType === 'multipleSeats' ? 1 : undefined,
+                    startDate,
+                    endDate,
+                    seats: seatsEnabled ? 1 : undefined,
                   },
                 });
               }}
             />
 
-            {availabilityType == 'multipleSeats' ? (
+            {seatsEnabled ? (
               <FieldSelect
                 name="seats"
                 id="seats"
