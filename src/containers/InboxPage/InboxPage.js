@@ -15,6 +15,7 @@ import {
   LINE_ITEM_HOUR,
   LISTING_UNIT_TYPES,
   STOCK_MULTIPLE_ITEMS,
+  AVAILABILITY_MULTIPLE_SEATS,
 } from '../../util/types';
 import { subtractTime } from '../../util/dates';
 import {
@@ -167,12 +168,12 @@ export const InboxItem = props => {
           ) : hasPricingData && showStock ? (
             <FormattedMessage id="InboxPage.quantity" values={{ quantity }} />
           ) : null}
-          {availabilityType == 'multipleSeats' ? (
-            <div className={css.itemSeats}>
-              <FormattedMessage id="InboxPage.seats" values={{ seats: unitLineItem.seats }} />
-            </div>
-          ) : null}
         </div>
+        {availabilityType == AVAILABILITY_MULTIPLE_SEATS ? (
+          <div className={css.itemSeats}>
+            <FormattedMessage id="InboxPage.seats" values={{ seats: unitLineItem.seats }} />
+          </div>
+        ) : null}
         <div className={css.itemState}>
           <div className={stateClasses}>
             <FormattedMessage
@@ -236,23 +237,21 @@ export const InboxPageComponent = props => {
 
     const publicData = tx?.listing?.attributes?.publicData || {};
     const foundListingTypeConfig = findListingTypeConfig(publicData);
-    const { transactionType, stockType } = foundListingTypeConfig || {};
+    const { transactionType, stockType, availabilityType } = foundListingTypeConfig || {};
     const process = tx?.attributes?.processName || transactionType?.transactionType;
     const transactionProcess = resolveLatestProcessName(process);
     const isBooking = isBookingProcess(transactionProcess);
-
-    const { availabilityType } = foundListingTypeConfig || {};
 
     // Render InboxItem only if the latest transition of the transaction is handled in the `txState` function.
     return stateData ? (
       <li key={tx.id.uuid} className={css.listItem}>
         <InboxItem
           transactionRole={transactionRole}
-          availabilityType={availabilityType}
           tx={tx}
           intl={intl}
           stateData={stateData}
           stockType={stockType}
+          availabilityType={availabilityType}
           isBooking={isBooking}
         />
       </li>

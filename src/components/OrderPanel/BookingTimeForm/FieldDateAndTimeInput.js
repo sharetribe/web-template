@@ -203,7 +203,7 @@ const getAllTimeValues = (
   selectedStartTime,
   selectedEndDate,
   selectedEndTime,
-  availabilityType
+  seatsEnabled
 ) => {
   const startTimes = selectedStartTime
     ? []
@@ -262,14 +262,14 @@ const getAllTimeValues = (
       : index;
   };
 
-  const combineTimeSlots = (currentTimeSlotIndex, timeSlots, availabilityType) => {
+  const combineTimeSlots = (currentTimeSlotIndex, timeSlots, seatsEnabled) => {
     if (!timeSlots) {
       return null;
     }
-    if (timeSlots.length <= 1 || availabilityType !== 'multipleSeats') {
+
+    if (timeSlots.length <= 1 || seatsEnabled === false) {
       return timeSlots[0];
     }
-
     const lastIndex = findLastAdjacent(currentTimeSlotIndex);
     const firstIndex = findFirstAdjacent(currentTimeSlotIndex);
 
@@ -285,10 +285,7 @@ const getAllTimeValues = (
     return combinedTimeSlot;
   };
 
-  const combinedTimeSlot =
-    combineTimeSlots(selectedTimeSlotIndex, timeSlots, availabilityType) || {};
-
-  console.log(combinedTimeSlot);
+  const combinedTimeSlot = combineTimeSlots(selectedTimeSlotIndex, timeSlots, seatsEnabled) || {};
 
   const endTimes = getAvailableEndTimes(intl, timeZone, startTime, endDate, combinedTimeSlot);
 
@@ -334,12 +331,9 @@ const getAllTimeValues = (
     return minSeats;
   };
 
-  const smallestSeats =
-    availabilityType == 'multipleSeats'
-      ? findMinimumAvailableSeats(selectedEndTimeAsDateObject, timeSlots, selectedTimeSlotIndex)
-      : 1;
-
-  // }
+  const smallestSeats = seatsEnabled
+    ? findMinimumAvailableSeats(selectedEndTimeAsDateObject, timeSlots, selectedTimeSlotIndex)
+    : 1;
 
   // We need to convert the timestamp we use as a default value
   // for endTime to string for consistency. This is expected later when we
@@ -349,7 +343,7 @@ const getAllTimeValues = (
       ? endTimes[0].timestamp.toString()
       : null;
 
-  const finalTimeSlots = availabilityType == 'multipleSeats' ? combinedTimeSlot : selectedTimeSlot;
+  const finalTimeSlots = seatsEnabled ? combinedTimeSlot : selectedTimeSlot;
 
   return { startTime, endDate, endTime, selectedTimeSlot: finalTimeSlots, smallestSeats };
 };
@@ -450,14 +444,14 @@ const onBookingStartDateChange = (props, setCurrentMonth) => value => {
     intl,
     form: formApi,
     handleFetchLineItems,
-    availabilityType,
+    seatsEnabled,
   } = props;
   if (!value || !value.date) {
     formApi.batch(() => {
       formApi.change('bookingStartTime', null);
       formApi.change('bookingEndDate', { date: null });
       formApi.change('bookingEndTime', null);
-      if (availabilityType && availabilityType === 'multipleSeats') {
+      if (seatsEnabled) {
         formApi.change('seats', 1);
       }
     });
@@ -483,7 +477,7 @@ const onBookingStartDateChange = (props, setCurrentMonth) => value => {
     formApi.change('bookingStartTime', startTime);
     formApi.change('bookingEndDate', { date: endDate });
     formApi.change('bookingEndTime', endTime);
-    if (availabilityType && availabilityType === 'multipleSeats') {
+    if (seatsEnabled) {
       formApi.change('seats', 1);
     }
   });
@@ -494,7 +488,7 @@ const onBookingStartDateChange = (props, setCurrentMonth) => value => {
       bookingStartTime: startTime,
       bookingEndDate: { date: endDate },
       bookingEndTime: endTime,
-      seats: availabilityType && availabilityType === 'multipleSeats' ? 1 : undefined,
+      seats: seatsEnabled ? 1 : undefined,
     },
   });
 };
@@ -507,7 +501,7 @@ const onBookingStartTimeChange = props => value => {
     form: formApi,
     values,
     handleFetchLineItems,
-    availabilityType,
+    seatsEnabled,
   } = props;
   const startDate = values.bookingStartDate.date;
   const timeSlotsOnSelectedDate = getTimeSlotsOnDate(monthlyTimeSlots, startDate, timeZone);
@@ -523,7 +517,7 @@ const onBookingStartTimeChange = props => value => {
   formApi.batch(() => {
     formApi.change('bookingEndDate', { date: endDate });
     formApi.change('bookingEndTime', endTime);
-    if (availabilityType && availabilityType === 'multipleSeats') {
+    if (seatsEnabled) {
       formApi.change('seats', 1);
     }
   });
@@ -533,15 +527,15 @@ const onBookingStartTimeChange = props => value => {
       bookingStartTime: value,
       bookingEndDate: { date: endDate },
       bookingEndTime: endTime,
-      seats: availabilityType && availabilityType === 'multipleSeats' ? 1 : undefined,
+      seats: seatsEnabled ? 1 : undefined,
     },
   });
 };
 
 const onBookingEndTimeChange = props => value => {
-  const { values, handleFetchLineItems, form: formApi, availabilityType } = props;
+  const { values, handleFetchLineItems, form: formApi, seatsEnabled } = props;
 
-  if (availabilityType && availabilityType === 'multipleSeats') {
+  if (seatsEnabled) {
     formApi.change('seats', 1);
   }
 
@@ -551,7 +545,7 @@ const onBookingEndTimeChange = props => value => {
       bookingStartTime: values.bookingStartTime,
       bookingEndDate: values.bookingEndDate,
       bookingEndTime: value,
-      seats: availabilityType && availabilityType === 'multipleSeats' ? 1 : undefined,
+      seats: seatsEnabled ? 1 : undefined,
     },
   });
 };
@@ -608,7 +602,7 @@ const FieldDateAndTimeInput = props => {
     onMonthChanged,
     timeZone,
     setSeatsOptions,
-    availabilityType,
+    seatsEnabled,
     intl,
     dayCountAvailableForBooking,
   } = props;
@@ -654,10 +648,10 @@ const FieldDateAndTimeInput = props => {
     bookingStartTime || firstAvailableStartTime,
     bookingEndDate || bookingStartDate,
     bookingEndTime,
-    availabilityType
+    seatsEnabled
   );
 
-  const seatsOppies = smallestSeats ? Array.from({ length: smallestSeats }, (_, i) => i + 1) : [];
+  const seatsOptions = smallestSeats ? Array.from({ length: smallestSeats }, (_, i) => i + 1) : [];
 
   useEffect(() => {
     // Call onMonthChanged function if it has been passed in among props.
@@ -696,7 +690,7 @@ const FieldDateAndTimeInput = props => {
   }, [currentMonth, currentMonthInProgress, nextMonthInProgress, monthlyTimeSlots, timeZone]);
 
   useEffect(() => {
-    setSeatsOptions(seatsOppies);
+    setSeatsOptions(seatsOptions);
   }, [smallestSeats]);
 
   const availableEndTimes = getAvailableEndTimes(
