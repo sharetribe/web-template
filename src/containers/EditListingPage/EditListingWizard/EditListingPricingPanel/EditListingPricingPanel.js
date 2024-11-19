@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { LISTING_STATE_DRAFT } from '../../../../util/types';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
+import { isValidCurrencyForTransactionProcess } from '../../../../util/fieldHelpers';
 
 // Import shared components
 import { H3, ListingLink } from '../../../../components';
@@ -23,6 +24,11 @@ const getInitialValues = params => {
   return { price };
 };
 
+const getListingTypeConfig = (publicData, listingTypes) => {
+  const selectedListingType = publicData.listingType;
+  return listingTypes.find(conf => conf.listingType === selectedListingType);
+};
+
 const EditListingPricingPanel = props => {
   const {
     className,
@@ -34,6 +40,7 @@ const EditListingPricingPanel = props => {
     ready,
     onSubmit,
     submitButtonText,
+    listingTypes,
     panelUpdated,
     updateInProgress,
     errors,
@@ -42,10 +49,21 @@ const EditListingPricingPanel = props => {
   const classes = classNames(rootClassName || css.root, className);
   const initialValues = getInitialValues(props);
   const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
-  const priceCurrencyValid =
-    marketplaceCurrency && initialValues.price instanceof Money
-      ? initialValues.price.currency === marketplaceCurrency
-      : !!marketplaceCurrency;
+
+  const publicData = listing?.attributes?.publicData;
+  const listingTypeConfig = getListingTypeConfig(publicData, listingTypes);
+  const transactionProcessAlias = listingTypeConfig.transactionType.alias;
+
+  const isCompatibleCurrency = isValidCurrencyForTransactionProcess(
+    transactionProcessAlias,
+    marketplaceCurrency
+  );
+
+  const priceCurrencyValid = !isCompatibleCurrency
+    ? false
+    : marketplaceCurrency && initialValues.price instanceof Money
+    ? initialValues.price.currency === marketplaceCurrency
+    : !!marketplaceCurrency;
   const unitType = listing?.attributes?.publicData?.unitType;
 
   return (
