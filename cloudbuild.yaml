@@ -6,10 +6,8 @@ steps:
       - '-c'
       - |
         # Access the secret from the environment variable
+        echo HOLA
         echo "_MYSECRET: $_MYSECRET"
-        # Proceed with your build commands
-        npm install
-        npm run build
     secretEnv: ['_MYSECRET']
 
   - id: 'decrypt'
