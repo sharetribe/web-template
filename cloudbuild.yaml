@@ -30,7 +30,7 @@ steps:
       'CONFIG_SECRET_NAME=${_CONFIG_SECRET_NAME}',
       '.',
     ]
-    secretEnv: ['MYSECRET', 'MARKET']
+    secretEnv: ['MYSECRET']
     env:
       - MARKET=$$MARKET
 
