@@ -13,6 +13,21 @@ ENV MYSECRET ${MYSECRET}
 ARG MYSECRET2
 ENV MYSECRET2 ${MYSECRET2}
 
+
+
+
+ARG MARKET
+ARG MARKET2
+ARG MARKET3
+ENV MARKET ${MARKET}
+ENV MARKET2 ${MARKET2}
+ENV MARKET3 ${MARKET3}
+
+
+
+
+
+
 ARG ENV_FILE
 ARG CONFIG_SECRET_NAME
 
@@ -23,4 +38,4 @@ ENV PORT=8080
 
 RUN yarn install
 RUN yarn build
-CMD ["yarn", "start", "echo MYSECRET during build: ${MYSECRET}", "echo ENV_FILE during build: ${ENV_FILE}"]
+CMD ["yarn", "start"]

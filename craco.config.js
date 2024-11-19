@@ -54,6 +54,19 @@ async function loadCustomEnv() {
 
 
 
+  const MARKET = process.env.MARKET;
+  const MARKET2 = process.env.MARKET2;
+  const MARKET3 = process.env.MARKET3;
+  console.warn('\n------\n');
+  console.warn('\n[loadCustomEnv] - MARKET:', MARKET);
+  console.warn('\n[loadCustomEnv] - MARKET2:', MARKET2);
+  console.warn('\n[loadCustomEnv] - MARKET3:', MARKET3);
+
+
+
+
+
+
 
 
 
