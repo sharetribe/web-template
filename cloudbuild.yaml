@@ -9,6 +9,7 @@ steps:
         # Access the secret from the environment variable
         echo HOLA
         echo "MYSECRET: $$MYSECRET"
+        echo "ENV_FILE: ${_ENV_FILE}"
     secretEnv: ['MYSECRET']
 
   - id: 'build'
