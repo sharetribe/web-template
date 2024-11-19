@@ -41,13 +41,15 @@ async function loadCustomEnv() {
 
   const NODE_ENV = process.env.NODE_ENV
   const CONFIG_SECRET_NAME = process.env.CONFIG_SECRET_NAME
-  const MYSECRET = process.env.MYSECRET
+  const MYSECRET = process.env.MYSECRET || {};
+  const MYSECRET2 = process.env.MYSECRET2 || {};
   console.warn('\n------\n');
   console.warn('\n[loadCustomEnv] - NODE_ENV:', NODE_ENV);
   console.warn('\n[loadCustomEnv] - ENV_FILE:', ENV_FILE);
   console.warn('\n[loadCustomEnv] - CONFIG_SECRET_NAME:', CONFIG_SECRET_NAME);
   console.warn('\n------\n');
   console.warn('\n[loadCustomEnv] - MYSECRET:', MYSECRET);
+  console.warn('\n[loadCustomEnv] - MYSECRET2:', MYSECRET2);
 
 
 
