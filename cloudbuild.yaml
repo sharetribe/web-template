@@ -32,7 +32,7 @@ steps:
     ]
     secretEnv: ['MYSECRET', 'MARKET']
     env:
-      - MARKET
+      - MARKET=$$MARKET
 
   - id: 'push'
     waitFor: ['build']
