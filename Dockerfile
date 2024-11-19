@@ -23,5 +23,4 @@ ENV PORT=8080
 
 RUN yarn install
 RUN yarn build
-CMD ["yarn", "start", echo "MYSECRET during build: ${MYSECRET}", echo "ENV_FILE during build: ${ENV_FILE}"
-]
+CMD ["yarn", "start", "echo MYSECRET during build: ${MYSECRET}", "echo ENV_FILE during build: ${ENV_FILE}"]
