@@ -57,7 +57,8 @@ steps:
 
 
   - id: 'build'
-    waitFor: ['init-ssh']
+    # waitFor: ['init-ssh']
+    waitFor: ['init']
     name: 'gcr.io/cloud-builders/docker'
     args: [
       'build',
