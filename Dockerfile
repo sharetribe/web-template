@@ -13,8 +13,9 @@ WORKDIR /usr/src/app
 
 COPY . .
 
-ARG MYSECRET
-ENV MYSECRET ${MYSECRET}
+# ARG MYSECRET
+# ENV MYSECRET ${MYSECRET}
+ENV MY_SECRET=$MY_SECRET
 
 ARG ENV_FILE
 ARG CONFIG_SECRET_NAME
@@ -24,7 +25,6 @@ ENV CONFIG_SECRET_NAME ${CONFIG_SECRET_NAME}
 ENV NODE_ENV=production
 ENV PORT=8080
 
-# RUN --mount=type=ssh yarn install
 RUN yarn install
 RUN yarn build
 CMD ["yarn", "start"]

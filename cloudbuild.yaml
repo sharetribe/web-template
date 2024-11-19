@@ -11,38 +11,46 @@ steps:
         echo "MYSECRET: $$MYSECRET"
     secretEnv: ['MYSECRET']
 
-  - id: 'decrypt'
-    waitFor: ['init']
-    name: 'gcr.io/cloud-builders/gcloud'
-    args:
-      - kms
-      - decrypt
-      - --ciphertext-file=${_ENCRYPTED_KEY_PATH}
-      - --plaintext-file=/root/.ssh/id_rsa
-      - --location=us-east4
-      - --keyring=deploy
-      - --key=github-key
-    volumes:
-      - name: 'ssh'
-        path: /root/.ssh
 
-  # Set up git with key and domain
-  - id: 'init-ssh'
-    waitFor: ['decrypt']
-    name: 'gcr.io/cloud-builders/git'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        chmod 600 /root/.ssh/id_rsa
-        mv etc/keys/ssh_config /root/.ssh/config
-        ssh-keyscan github.com >> /root/.ssh/known_hosts
-        chmod 600 /root/.ssh/known_hosts
-        eval `ssh-agent`
-        ssh-add /root/.ssh/id_rsa
-    volumes:
-      - name: 'ssh'
-        path: /root/.ssh
+
+
+
+
+
+
+
+  # - id: 'decrypt'
+  #   waitFor: ['init']
+  #   name: 'gcr.io/cloud-builders/gcloud'
+  #   args:
+  #     - kms
+  #     - decrypt
+  #     - --ciphertext-file=${_ENCRYPTED_KEY_PATH}
+  #     - --plaintext-file=/root/.ssh/id_rsa
+  #     - --location=us-east4
+  #     - --keyring=deploy
+  #     - --key=github-key
+  #   volumes:
+  #     - name: 'ssh'
+  #       path: /root/.ssh
+
+  # # Set up git with key and domain
+  # - id: 'init-ssh'
+  #   waitFor: ['decrypt']
+  #   name: 'gcr.io/cloud-builders/git'
+  #   entrypoint: 'bash'
+  #   args:
+  #     - '-c'
+  #     - |
+  #       chmod 600 /root/.ssh/id_rsa
+  #       mv etc/keys/ssh_config /root/.ssh/config
+  #       ssh-keyscan github.com >> /root/.ssh/known_hosts
+  #       chmod 600 /root/.ssh/known_hosts
+  #       eval `ssh-agent`
+  #       ssh-add /root/.ssh/id_rsa
+  #   volumes:
+  #     - name: 'ssh'
+  #       path: /root/.ssh
 
 
 
@@ -68,9 +76,9 @@ steps:
       '.',
     ]
     secretEnv: ['MYSECRET']
-    volumes:
-      - name: 'ssh'
-        path: /root/.ssh
+    # volumes:
+    #   - name: 'ssh'
+    #     path: /root/.ssh
 
 
 
@@ -155,7 +163,7 @@ availableSecrets:
   - versionName: projects/62947188208/secrets/webapp-config/versions/latest
     env: 'MYSECRET'
 substitutions:
-  _ENCRYPTED_KEY_PATH: etc/keys/cloudbuild_rsa.enc
+  _ENCRYPTED_KEY_PATH: etc/keys/cloudbuild_rsa.enc # Borrar!!!
   _ENV_FILE: production
   _CONFIG_SECRET_NAME: path/to/secret
 timeout: 900s
