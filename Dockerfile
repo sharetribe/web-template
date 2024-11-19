@@ -24,7 +24,7 @@ ENV CONFIG_SECRET_NAME ${CONFIG_SECRET_NAME}
 ENV NODE_ENV=production
 ENV PORT=8080
 
-RUN echo "MYSECRET during build: ${MYSECRET}"
+RUN echo "MYSECRET during build: $$MYSECRET"
 
 RUN yarn install
 RUN yarn build
