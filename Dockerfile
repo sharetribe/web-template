@@ -15,8 +15,9 @@ WORKDIR /usr/src/app
 
 COPY . .
 
-ARG NODE_ENV
-ENV NODE_ENV ${NODE_ENV}
+ARG ENV_FILE
+ENV ENV_FILE ${ENV_FILE}
+ENV NODE_ENV=production
 ENV PORT=8080
 
 RUN --mount=type=ssh yarn install

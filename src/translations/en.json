@@ -402,7 +402,6 @@
   "FavoriteListingsPage.noResults": "You haven't liked any listing.",
   "FavoriteListingsPage.queryError": "Query failed. Please try again.",
   "FavoriteListingsPage.title": "View your favorite listings",
-  "FavoriteListingsPage.youHaveListings": "You have {count} favorite {count, plural, one {listing} other {listings}}",
   "FieldBoolean.no": "No",
   "FieldBoolean.yes": "Yes",
   "FieldDateAndTimeInput.endTime": "End time",

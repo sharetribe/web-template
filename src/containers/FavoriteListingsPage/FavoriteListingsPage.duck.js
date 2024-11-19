@@ -90,7 +90,18 @@ export const queryFavoriteListings = queryParams => (dispatch, getState, sdk) =>
   const shouldRequest = withFavorites && validRequestParams;
 
   if (!shouldRequest) {
-    const emptyObject = { data: { data: [] } };
+    const emptyObject = {
+      data: {
+        data: [],
+        meta: {
+          totalItems: 0,
+          totalPages: 1,
+          page: 1,
+          paginationLimit: 1,
+          perPage: 42
+        }
+      },
+    }
     dispatch(queryFavoritesSuccess(emptyObject));
     return emptyObject;
   };

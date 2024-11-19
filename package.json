@@ -130,6 +130,8 @@
     "dev": "yarn run config-check&&cross-env NODE_ENV=development REACT_APP_DEV_API_SERVER_PORT=3500 concurrently --kill-others \"yarn run dev-frontend\" \"yarn run dev-backend\"",
     "dev:debug": "yarn run config-check&&cross-env NODE_ENV=development REACT_APP_DEV_API_SERVER_PORT=3500 concurrently --kill-others \"yarn run dev-frontend\" \"yarn run dev-backend:debug\"",
     "build": "yarn build-web&&yarn build-server",
+    "build:development": "ENV_FILE=development yarn build",
+    "build:test": "ENV_FILE=test yarn build",
     "build-web": "craco build",
     "build-server": "sharetribe-scripts build-server",
     "format": "prettier --write '**/*.{js,css}'",

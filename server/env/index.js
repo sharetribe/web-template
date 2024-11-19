@@ -9,19 +9,35 @@ const fs = require('fs');
 const { loadSecrets } = require('./secretManager');
 
 const NODE_ENV = process.env.NODE_ENV;
+const ENV_FILE = process.env.ENV_FILE || NODE_ENV || 'production';
 
 if (!NODE_ENV) {
   throw new Error('The NODE_ENV environment variable is required but was not specified.');
 }
 
+
+
+
+
+
+console.warn('\n\n\n*******************************');
+console.warn('\n[configureEnv] - ENV_FILE:', ENV_FILE);
+console.warn('\n*******************************\n\n\n');
+
+
+
+
+
+
+
 // https://github.com/bkeepers/dotenv#what-other-env-files-can-i-use
 var dotenvFiles = [
-  `.env.${NODE_ENV}.local`,
+  `.env.${ENV_FILE}.local`,
   // Don't include `.env.local` for `test` environment
   // since normally you expect tests to produce the same
   // results for everyone
-  NODE_ENV !== 'test' && `.env.local`,
-  `.env.${NODE_ENV}`,
+  ENV_FILE !== 'test' && `.env.local`,
+  `.env.${ENV_FILE}`,
   '.env',
 ].filter(Boolean);
 
@@ -42,8 +58,7 @@ const configureEnv = async () => {
     }
   });
   const secrets = await loadSecrets();
-  process.env = { ...secrets, ...process.env };
-
+  require('dotenv-expand')({ parsed: secrets });
   console.warn('Loading environment variables DONE\n');
 };
 
