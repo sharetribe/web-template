@@ -35,6 +35,23 @@ async function loadCustomEnv() {
     }
   });
 
+
+
+
+
+  const NODE_ENV = process.env.NODE_ENV
+  const CONFIG_SECRET_NAME = process.env.CONFIG_SECRET_NAME
+  console.warn('\n------\n');
+  console.warn('\n[loadCustomEnv] - NODE_ENV:', NODE_ENV);
+  console.warn('\n[loadCustomEnv] - ENV_FILE:', ENV_FILE);
+  console.warn('\n[loadCustomEnv] - CONFIG_SECRET_NAME:', CONFIG_SECRET_NAME);
+
+
+
+
+
+
+
   const secrets = await loadSecrets();
   expand({ parsed: secrets });
   console.warn('Loading environment variables DONE\n');
@@ -46,13 +63,10 @@ async function loadCustomEnv() {
 
 
 
-  const NODE_ENV = process.env.NODE_ENV
   const REACT_APP_MARKETPLACE_ROOT_URL = process.env.REACT_APP_MARKETPLACE_ROOT_URL
   const REACT_APP_SHARETRIBE_SDK_CLIENT_ID = process.env.REACT_APP_SHARETRIBE_SDK_CLIENT_ID
   const WEBAPP_URL = process.env.WEBAPP_URL
   console.warn('\n------\n');
-  console.warn('\n[loadCustomEnv] - NODE_ENV:', NODE_ENV);
-  console.warn('\n[loadCustomEnv] - ENV_FILE:', ENV_FILE);
   console.warn('\n[loadCustomEnv] - REACT_APP_MARKETPLACE_ROOT_URL:', REACT_APP_MARKETPLACE_ROOT_URL);
   console.warn('\n[loadCustomEnv] - REACT_APP_SHARETRIBE_SDK_CLIENT_ID:', REACT_APP_SHARETRIBE_SDK_CLIENT_ID);
   console.warn('\n[loadCustomEnv] - WEBAPP_URL:', WEBAPP_URL);

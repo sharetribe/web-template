@@ -66,6 +66,8 @@ steps:
         'COMMIT_SHA=$COMMIT_SHA',
         '--build-arg',
         'ENV_FILE=${_ENV_FILE}',
+        '--build-arg',
+        'CONFIG_SECRET_NAME=${_CONFIG_SECRET_NAME}',
         '.',
       ]
     env:
@@ -96,4 +98,5 @@ steps:
 substitutions:
   _ENCRYPTED_KEY_PATH: etc/keys/cloudbuild_rsa.enc
   _ENV_FILE: production
+  _CONFIG_SECRET_NAME: -
 timeout: 900s
