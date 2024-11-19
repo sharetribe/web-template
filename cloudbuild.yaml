@@ -1,6 +1,7 @@
 # Decrypt the file containing the key
 steps:
-  - name: 'node:14'
+  - id: 'init'
+    name: 'node:18.20.1'
     entrypoint: 'bash'
     args:
       - '-c'
@@ -11,7 +12,7 @@ steps:
     secretEnv: ['_MYSECRET']
 
   - id: 'decrypt'
-    waitFor: ['-']
+    waitFor: ['init']
     name: 'gcr.io/cloud-builders/gcloud'
     args:
       - kms
@@ -61,7 +62,8 @@ steps:
       - 'DOCKER_BUILDKIT=1'
 
   - id: 'build'
-    name: 'docker:20.10.12'
+    # name: 'docker:20.10.12'
+    name: 'gcr.io/cloud-builders/docker'
     waitFor: ['pull-experimental', 'pull-node']
     args:
       [
