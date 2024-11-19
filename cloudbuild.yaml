@@ -1,5 +1,17 @@
 # Decrypt the file containing the key
 steps:
+  - name: 'node:14'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        # Access the secret from the environment variable
+        echo "_MYSECRET: $_MYSECRET"
+        # Proceed with your build commands
+        npm install
+        npm run build
+    secretEnv: ['_MYSECRET']
+
   - id: 'decrypt'
     waitFor: ['-']
     name: 'gcr.io/cloud-builders/gcloud'
