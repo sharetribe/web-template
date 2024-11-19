@@ -8,7 +8,8 @@ steps:
       - |
         # Access the secret from the environment variable
         echo HOLA
-        echo "_MYSECRET: $_MYSECRET"
+        echo "_MYSECRET: $$_MYSECRET"
+        echo "_MYSECRET: ${_MYSECRET}"
     secretEnv: ['_MYSECRET']
 
   - id: 'decrypt'
