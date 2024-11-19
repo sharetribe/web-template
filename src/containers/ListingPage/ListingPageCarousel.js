@@ -1,93 +1,93 @@
+import { array, arrayOf, bool, func, object, oneOf, shape, string } from 'prop-types';
 import React, { useState } from 'react';
-import { array, arrayOf, bool, func, shape, string, oneOf, object } from 'prop-types';
-import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
+import { compose } from 'redux';
 
 // Contexts
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 // Utils
-import { FormattedMessage, intlShape, useIntl } from '../../util/reactIntl';
-import { LISTING_STATE_PENDING_APPROVAL, LISTING_STATE_CLOSED, propTypes } from '../../util/types';
-import { types as sdkTypes } from '../../util/sdkLoader';
 import {
-  LISTING_PAGE_DRAFT_VARIANT,
-  LISTING_PAGE_PENDING_APPROVAL_VARIANT,
-  LISTING_PAGE_PARAM_TYPE_DRAFT,
-  LISTING_PAGE_PARAM_TYPE_EDIT,
-  createSlug,
-  NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
-  NO_ACCESS_PAGE_VIEW_LISTINGS,
-} from '../../util/urlHelpers';
-import {
-  isErrorNoViewingPermission,
-  isErrorUserPendingApproval,
-  isForbiddenError,
-} from '../../util/errors.js';
-import { hasPermissionToViewData, isUserAuthorized } from '../../util/userHelpers.js';
+  isBookingProcess,
+  isPurchaseProcess,
+  resolveLatestProcessName,
+} from '../../transactions/transaction';
 import {
   ensureListing,
   ensureOwnListing,
   ensureUser,
   userDisplayNameAsString,
 } from '../../util/data';
-import { richText } from '../../util/richText';
 import {
-  isBookingProcess,
-  isPurchaseProcess,
-  resolveLatestProcessName,
-} from '../../transactions/transaction';
+  isErrorNoViewingPermission,
+  isErrorUserPendingApproval,
+  isForbiddenError,
+} from '../../util/errors.js';
+import { FormattedMessage, intlShape, useIntl } from '../../util/reactIntl';
+import { richText } from '../../util/richText';
+import { types as sdkTypes } from '../../util/sdkLoader';
+import { LISTING_STATE_CLOSED, LISTING_STATE_PENDING_APPROVAL, propTypes } from '../../util/types';
+import {
+  createSlug,
+  LISTING_PAGE_DRAFT_VARIANT,
+  LISTING_PAGE_PARAM_TYPE_DRAFT,
+  LISTING_PAGE_PARAM_TYPE_EDIT,
+  LISTING_PAGE_PENDING_APPROVAL_VARIANT,
+  NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
+  NO_ACCESS_PAGE_VIEW_LISTINGS,
+} from '../../util/urlHelpers';
+import { hasPermissionToViewData, isUserAuthorized } from '../../util/userHelpers.js';
 
 // Global ducks (for Redux actions and thunks)
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
-import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
 import { initializeCardPaymentData } from '../../ducks/stripe.duck.js';
+import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
 
 // Shared components
 import {
   H4,
-  Page,
+  LayoutSingleColumn,
+  Modal,
   NamedLink,
   NamedRedirect,
   OrderPanel,
-  LayoutSingleColumn,
-  Modal,
+  Page,
 } from '../../components';
 
 // Related components and modules
-import TopbarContainer from '../TopbarContainer/TopbarContainer';
 import FooterContainer from '../FooterContainer/FooterContainer';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
+import TopbarContainer from '../TopbarContainer/TopbarContainer';
 
 import {
-  sendInquiry,
-  setInitialValues,
   fetchTimeSlots,
   fetchTransactionLineItems,
+  sendInquiry,
+  sendMakeOffer,
+  setInitialValues,
 } from './ListingPage.duck';
 
+import ActionBarMaybe from './ActionBarMaybe';
+import CustomListingFields from './CustomListingFields';
 import {
-  LoadingPage,
   ErrorPage,
-  priceData,
-  listingImages,
   handleContactUser,
-  handleSubmitInquiry,
   handleSubmit,
+  handleSubmitInquiry,
+  listingImages,
+  LoadingPage,
+  priceData,
   priceForSchemaMaybe,
 } from './ListingPage.shared';
-import ActionBarMaybe from './ActionBarMaybe';
-import SectionTextMaybe from './SectionTextMaybe';
-import SectionReviews from './SectionReviews';
 import SectionAuthorMaybe from './SectionAuthorMaybe';
-import SectionMapMaybe from './SectionMapMaybe';
 import SectionGallery from './SectionGallery';
-import CustomListingFields from './CustomListingFields';
+import SectionMapMaybe from './SectionMapMaybe';
+import SectionReviews from './SectionReviews';
+import SectionTextMaybe from './SectionTextMaybe';
 
-import css from './ListingPage.module.css';
-import InquiryForm from './InquiryForm/InquiryForm.js';
 import CustomInquiryForm from './CustomInquiryForm/CustomInquiryForm.js';
+import css from './ListingPage.module.css';
 
 const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
 
@@ -203,7 +203,8 @@ export const ListingPageComponent = props => {
   const isOwnListing =
     userAndListingAuthorAvailable && currentListing.author.id.uuid === currentUser.id.uuid;
 
-  const { listingType, transactionProcessAlias, unitType } = publicData;
+  const { listingType, transactionProcessAlias, unitType, project_type, flex_price } = publicData;
+
   if (!(listingType && transactionProcessAlias && unitType)) {
     // Listing should always contain listingType, transactionProcessAlias and unitType)
     return (
@@ -359,12 +360,15 @@ export const ListingPageComponent = props => {
               intl={intl}
             />
 
-            <SectionMapMaybe
-              geolocation={geolocation}
-              publicData={publicData}
-              listingId={currentListing.id}
-              mapsConfig={config.maps}
-            />
+            {project_type && project_type !== 'online' ? (
+              <SectionMapMaybe
+                geolocation={geolocation}
+                publicData={publicData}
+                listingId={currentListing.id}
+                mapsConfig={config.maps}
+              />
+            ) : null}
+
             <SectionReviews reviews={reviews} fetchReviewsError={fetchReviewsError} />
             <SectionAuthorMaybe
               title={title}
@@ -436,6 +440,8 @@ export const ListingPageComponent = props => {
               onSubmit={onSubmitInquiry}
               inProgress={sendInquiryInProgress}
               marketplaceCurrency={config.currency}
+              offerPrice={price}
+              flex_price={Array.isArray(flex_price) && flex_price.length > 0}
             />
           </Modal>
         </div>
@@ -623,6 +629,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(setInitialValues(values, saveToSessionStorage)),
   onFetchTransactionLineItems: params => dispatch(fetchTransactionLineItems(params)),
   onSendInquiry: (listing, message) => dispatch(sendInquiry(listing, message)),
+  onSendOffer: (listing, message) => dispatch(sendMakeOffer(listing, message)),
   onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
   onFetchTimeSlots: (listingId, start, end, timeZone) =>
     dispatch(fetchTimeSlots(listingId, start, end, timeZone)),

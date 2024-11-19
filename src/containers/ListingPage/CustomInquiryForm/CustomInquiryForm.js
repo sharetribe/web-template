@@ -1,31 +1,31 @@
-import React from 'react';
-import { string, bool } from 'prop-types';
-import { compose } from 'redux';
-import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
+import { bool, string } from 'prop-types';
+import React, { useState } from 'react';
+import { Form as FinalForm } from 'react-final-form';
+import { compose } from 'redux';
 
-import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
-import * as validators from '../../../util/validators';
-import { propTypes } from '../../../util/types';
 import {
   isErrorNoPermissionForInitiateTransactions,
   isErrorNoPermissionForUserPendingApproval,
   isTooManyRequestsError,
 } from '../../../util/errors';
+import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import { propTypes } from '../../../util/types';
+import * as validators from '../../../util/validators';
 
 import {
-  Form,
-  PrimaryButton,
-  FieldTextInput,
-  IconInquiry,
-  Heading,
-  NamedLink,
   FieldCurrencyInput,
+  FieldTextInput,
+  Form,
+  Heading,
+  IconBack,
+  NamedLink,
+  PrimaryButton,
 } from '../../../components';
 
-import css from './CustomInquiryForm.module.css';
-import { NO_ACCESS_PAGE_INITIATE_TRANSACTIONS } from '../../../util/urlHelpers';
 import appSettings from '../../../config/settings';
+import { NO_ACCESS_PAGE_INITIATE_TRANSACTIONS } from '../../../util/urlHelpers';
+import css from './CustomInquiryForm.module.css';
 
 const ErrorMessage = props => {
   const { error } = props;
@@ -62,82 +62,170 @@ const ErrorMessage = props => {
   ) : null;
 };
 
+const getInitialValues = props => {
+  const { offerPrice } = props;
+
+  return { offerPrice };
+};
+
 // NOTE: this InquiryForm is only for booking & purchase processes
 // The default-inquiry process is handled differently
-const CustomInquiryFormComponent = props => (
-  <FinalForm
-    {...props}
-    render={fieldRenderProps => {
-      const {
-        rootClassName,
-        className,
-        submitButtonWrapperClassName,
-        formId,
-        handleSubmit,
-        inProgress,
-        intl,
-        listingTitle,
-        authorDisplayName,
-        sendInquiryError,
-        marketplaceCurrency,
-      } = fieldRenderProps;
+const CustomInquiryFormComponent = props => {
+  const [page, setPage] = useState(1);
 
-      const messageLabel = intl.formatMessage(
-        {
-          id: 'CustomInquiryForm.messageLabel',
-        },
-        { authorDisplayName }
-      );
-      const messagePlaceholder = intl.formatMessage(
-        {
-          id: 'CustomInquiryForm.messagePlaceholder',
-        },
-        { authorDisplayName }
-      );
-      const messageRequiredMessage = intl.formatMessage({
-        id: 'InquiryForm.messageRequired',
-      });
-      const messageRequired = validators.requiredAndNonEmptyString(messageRequiredMessage);
+  const initialValues = getInitialValues(props);
+  const { flex_price, offerPrice } = props;
+  const [offerPriceValue, setOfferPriceValue] = useState(offerPrice);
 
-      const classes = classNames(rootClassName || css.root, className);
-      const submitInProgress = inProgress;
-      const submitDisabled = submitInProgress;
+  return (
+    <FinalForm
+      {...props}
+      initialValues={initialValues}
+      validate={() => {
+        const errors = {};
+        if (!offerPriceValue) {
+          console.log(offerPriceValue);
+          const emailTakenMessage = props.intl.formatMessage({
+            id: 'CustomInquiryForm.offerPriceRequired',
+          });
+          errors.offerPrice = emailTakenMessage;
+        }
+        return errors;
+      }}
+      render={fieldRenderProps => {
+        const {
+          rootClassName,
+          className,
+          submitButtonWrapperClassName,
+          formId,
+          handleSubmit,
+          inProgress,
+          intl,
+          listingTitle,
+          authorDisplayName,
+          sendInquiryError,
+          marketplaceCurrency,
+          form,
+          values,
+        } = fieldRenderProps;
 
-      return (
-        <Form className={classes} onSubmit={handleSubmit} enforcePagePreloadFor="OrderDetailsPage">
-          <IconInquiry className={css.icon} />
-          <Heading as="h2" rootClassName={css.heading}>
-            <FormattedMessage id="CustomInquiryForm.heading" />
-          </Heading>
-          {/* <FieldTextInput
-            className={css.field}
-            type="textarea"
-            name="message"
-            id={formId ? `${formId}.message` : 'message'}
-            label={messageLabel}
-            placeholder={messagePlaceholder}
-            validate={messageRequired}
-          /> */}
-          <FieldCurrencyInput
-            className={css.field}
-            name="message"
-            id={formId ? `${formId}.message` : 'message'}
-            label={messageLabel}
-            placeholder={messagePlaceholder}
-            // validate={messageRequired}
-            currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
-          />
-          <div className={submitButtonWrapperClassName}>
-            <ErrorMessage error={sendInquiryError} />
-            <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
-              <FormattedMessage id="InquiryForm.submitButtonText" />
-            </PrimaryButton>
-          </div>
-        </Form>
-      );
-    }}
-  />
-);
+        const messageLabel = intl.formatMessage(
+          {
+            id: 'CustomInquiryForm.messageLabel',
+          },
+          { authorDisplayName }
+        );
+        const messagePlaceholder = intl.formatMessage(
+          {
+            id: 'CustomInquiryForm.messagePlaceholder',
+          },
+          { authorDisplayName }
+        );
+        const messageRequiredMessage = intl.formatMessage({
+          id: 'InquiryForm.messageRequired',
+        });
+
+        const offerPriceLabel = intl.formatMessage(
+          {
+            id: 'CustomInquiryForm.offePriceLabel',
+          },
+          { authorDisplayName }
+        );
+        const offerPricePlaceholder = intl.formatMessage(
+          {
+            id: 'CustomInquiryForm.offerPricePlaceholder',
+          },
+          { authorDisplayName }
+        );
+        const offerPriceRequiredMessage = intl.formatMessage({
+          id: 'CustomInquiryForm.offerPriceRequired',
+        });
+        const messageRequired = validators.requiredAndNonEmptyString(messageRequiredMessage);
+
+        // const offerPriceRequired = validators.requiredAndNonEmptyString(offerPriceRequiredMessage);
+
+        const classes = classNames(rootClassName || css.root, className);
+        const submitInProgress = inProgress;
+        const submitDisabled = submitInProgress;
+        setOfferPriceValue(values.offerPrice);
+
+        return (
+          <Form
+            className={classes}
+            onSubmit={handleSubmit}
+            enforcePagePreloadFor="OrderDetailsPage"
+          >
+            {page === 2 ? (
+              <div onClick={() => setPage(1)}>
+                {' '}
+                <IconBack />
+              </div>
+            ) : null}
+            <Heading as="h2" rootClassName={css.heading}>
+              <FormattedMessage id="CustomInquiryForm.heading" />
+            </Heading>
+            {page === 1 ? (
+              <div>
+                <FieldCurrencyInput
+                  className={css.field}
+                  name="offerPrice"
+                  id={formId ? `${formId}.offerPrice` : 'offerPrice'}
+                  label={offerPriceLabel}
+                  placeholder={offerPricePlaceholder}
+                  currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
+                  disabled={!flex_price}
+                />
+                <div className={submitButtonWrapperClassName}>
+                  <PrimaryButton
+                    type="button"
+                    inProgress={submitInProgress}
+                    disabled={submitDisabled}
+                    onClick={() => {
+                      // form.validate();
+                      if (offerPrice) setPage(2);
+                    }}
+                  >
+                    <FormattedMessage id="InquiryForm.submitButtonText" />
+                  </PrimaryButton>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <FieldTextInput
+                  className={css.field}
+                  type="textarea"
+                  name="message"
+                  id={formId ? `${formId}.message` : 'message'}
+                  label={messageLabel}
+                  placeholder={messagePlaceholder}
+                  validate={messageRequired}
+                />
+                <div className={css.emailNoti}>
+                  <FormattedMessage
+                    id="CustomInquiryForm.emailNoti"
+                    values={{
+                      boldText: <span style={{ fontWeight: 'bold' }}>Cosa succede dopo?</span>,
+                    }}
+                  />
+                </div>
+                <div className={submitButtonWrapperClassName}>
+                  <ErrorMessage error={sendInquiryError} />
+                  <PrimaryButton
+                    type="submit"
+                    inProgress={submitInProgress}
+                    disabled={submitDisabled}
+                  >
+                    <FormattedMessage id="InquiryForm.submitButtonText" />
+                  </PrimaryButton>
+                </div>
+              </div>
+            )}
+          </Form>
+        );
+      }}
+    />
+  );
+};
 
 CustomInquiryFormComponent.defaultProps = {
   rootClassName: null,

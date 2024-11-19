@@ -159,3 +159,16 @@
     margin-top: 100px;
   }
 }
+
+.formMargins {
+  margin-bottom: 24px;
+
+  @media (--viewportMedium) {
+    margin-bottom: 32px;
+  }
+}
+
+.description {
+  composes: formMargins;
+  flex-shrink: 0;
+}

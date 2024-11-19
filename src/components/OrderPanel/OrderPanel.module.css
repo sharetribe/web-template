@@ -320,4 +320,8 @@
   font-size: 14px;
   font-weight: 400;
   color: #4b4b4f;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
 }

@@ -44,7 +44,7 @@ import {
 } from '../../util/types';
 import { parse, stringify } from '../../util/urlHelpers';
 
-import { ModalInMobile, PrimaryButton } from '../../components';
+import { IconCheckmark, IconClose, ModalInMobile, PrimaryButton } from '../../components';
 
 import css from './OrderPanel.module.css';
 
@@ -195,7 +195,7 @@ const OrderPanel = props => {
   } = props;
 
   const publicData = listing?.attributes?.publicData || {};
-  const { listingType, unitType, transactionProcessAlias = '' } = publicData || {};
+  const { listingType, unitType, transactionProcessAlias = '', flex_price } = publicData || {};
   const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
   const lineItemUnitType = lineItemUnitTypeMaybe || `line-item/${unitType}`;
 
@@ -382,14 +382,14 @@ const OrderPanel = props => {
             <div className={css.customInquiryPrice}>{formattedPrice}</div>
 
             <div className={css.customInquiryBudgetFlex}>
-              {' '}
+              {flex_price && flex_price.length > 0 ? <IconCheckmark /> : <IconClose />}
               <FormattedMessage id="OrderPanel.customInquiryBudgetFlex" />
             </div>
 
             <FormattedMessage id="OrderPanel.customInquiryFormPriceDescription" />
             <PrimaryButton
               onClick={() => {
-                setInquiryModalOpen(true);
+                if (!isOwnListing) setInquiryModalOpen(true);
               }}
             >
               <FormattedMessage id="OrderPanel.customInquiryform" />

@@ -13,7 +13,13 @@ import { formatMoney } from '../../../../util/currency';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
 
 // Import shared components
-import { Button, Form, FieldCurrencyInput, FieldTextInput } from '../../../../components';
+import {
+  Button,
+  Form,
+  FieldCurrencyInput,
+  FieldTextInput,
+  FieldCheckbox,
+} from '../../../../components';
 
 // Import modules from this directory
 import css from './EditListingPricingForm.module.css';
@@ -98,6 +104,14 @@ export const EditListingPricingFormComponent = props => (
             placeholder={intl.formatMessage({ id: 'EditListingPricingForm.priceInputPlaceholder' })}
             currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
             validate={priceValidators}
+          />
+
+          <FieldCheckbox
+            id={formId ? `${formId}.flex_price` : 'flex_price'}
+            className={classNames(css.deliveryCheckbox)}
+            name="flex_price"
+            label={intl.formatMessage({ id: 'EditListingPricingForm.isFlexPrice' })}
+            value="true"
           />
 
           <Button

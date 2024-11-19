@@ -327,7 +327,7 @@ export const sendInquiry = (listing, message) => (dispatch, getState, sdk) => {
     .initiate(bodyParams)
     .then(response => {
       const transactionId = response.data.data.id;
-
+     
       // Send the message to the created transaction
       return sdk.messages.send({ transactionId, content: message }).then(() => {
         dispatch(sendInquirySuccess());
@@ -382,6 +382,56 @@ export const fetchTransactionLineItems = ({ orderData, listingId, isOwnListing }
         listingId: listingId.uuid,
         orderData,
       });
+    });
+};
+
+
+export const sendMakeOffer = (listing, message) => (dispatch, getState, sdk) => {
+  dispatch(sendInquiryRequest());
+  const processAlias = listing?.attributes?.publicData?.transactionProcessAlias;
+  if (!processAlias) {
+    const error = new Error('No transaction process attached to listing');
+    log.error(error, 'listing-process-missing', {
+      listingId: listing?.id?.uuid,
+    });
+    dispatch(sendInquiryError(storableError(error)));
+    return Promise.reject(error);
+  }
+
+  const listingId = listing?.id;
+  const [processName, alias] = processAlias.split('/');
+  const transitions = getProcess(processName)?.transitions;
+
+// const purchaseTransitions = getProcess('default-purchase')?.transitions;
+
+  const bodyParams = {
+    transition: transitions.INQUIRE,
+    processAlias,
+    params: { listingId },
+  };
+  return sdk.transactions
+    .initiate(bodyParams)
+    .then(response => {
+      const transactionId = response.data.data.id;
+      
+      // const sellerBodyParams ={
+      //   transition: transitions.REQUEST_PAYMENT,
+      //   processAlias:"default-purchase/release-1",
+      //   params:{
+      //     listingId
+      //   }
+      // }
+
+      // Send the message to the created transaction
+      return sdk.messages.send({ transactionId, content: message }).then(() => {
+        dispatch(sendInquirySuccess());
+        dispatch(fetchCurrentUserHasOrdersSuccess(true));
+        return transactionId;
+      });
+    })
+    .catch(e => {
+      dispatch(sendInquiryError(storableError(e)));
+      throw e;
     });
 };
 
