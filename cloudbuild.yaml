@@ -30,8 +30,8 @@ steps:
       'CONFIG_SECRET_NAME=${_CONFIG_SECRET_NAME}',
       '--build-arg',
       'MARKET2=$$MARKET',
-      '--build-arg',
-      'MARKET3=${MARKET}',
+      # '--build-arg',
+      # 'MARKET3=${MARKET}',
       '.',
     ]
     secretEnv: ['MYSECRET', 'MARKET']
