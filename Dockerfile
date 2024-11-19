@@ -1,10 +1,10 @@
 FROM node:18.20.1
 
 # install ssh client and git
-RUN apt-get update -y && apt-get install -y git openssh-client gcc g++ make
+# RUN apt-get update -y && apt-get install -y git openssh-client gcc g++ make
 
-# download public key for github.com
-RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
+# # download public key for github.com
+# RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
 
 ARG COMMIT_SHA
 ENV BUILD_SHA ${COMMIT_SHA}
@@ -24,6 +24,7 @@ ENV CONFIG_SECRET_NAME ${CONFIG_SECRET_NAME}
 ENV NODE_ENV=production
 ENV PORT=8080
 
-RUN --mount=type=ssh yarn install
+# RUN --mount=type=ssh yarn install
+RUN yarn install
 RUN yarn build
 CMD ["yarn", "start"]
