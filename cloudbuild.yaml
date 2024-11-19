@@ -11,51 +11,6 @@ steps:
         echo "MYSECRET: $$MYSECRET"
     secretEnv: ['MYSECRET']
 
-
-
-
-
-
-
-
-
-  # - id: 'decrypt'
-  #   waitFor: ['init']
-  #   name: 'gcr.io/cloud-builders/gcloud'
-  #   args:
-  #     - kms
-  #     - decrypt
-  #     - --ciphertext-file=${_ENCRYPTED_KEY_PATH}
-  #     - --plaintext-file=/root/.ssh/id_rsa
-  #     - --location=us-east4
-  #     - --keyring=deploy
-  #     - --key=github-key
-  #   volumes:
-  #     - name: 'ssh'
-  #       path: /root/.ssh
-
-  # # Set up git with key and domain
-  # - id: 'init-ssh'
-  #   waitFor: ['decrypt']
-  #   name: 'gcr.io/cloud-builders/git'
-  #   entrypoint: 'bash'
-  #   args:
-  #     - '-c'
-  #     - |
-  #       chmod 600 /root/.ssh/id_rsa
-  #       mv etc/keys/ssh_config /root/.ssh/config
-  #       ssh-keyscan github.com >> /root/.ssh/known_hosts
-  #       chmod 600 /root/.ssh/known_hosts
-  #       eval `ssh-agent`
-  #       ssh-add /root/.ssh/id_rsa
-  #   volumes:
-  #     - name: 'ssh'
-  #       path: /root/.ssh
-
-
-
-
-
   - id: 'build'
     # waitFor: ['init-ssh']
     waitFor: ['init']
@@ -74,71 +29,11 @@ steps:
       'ENV_FILE=${_ENV_FILE}',
       '--build-arg',
       'CONFIG_SECRET_NAME=${_CONFIG_SECRET_NAME}',
+      '--build-arg',
+      'MYSECRET=$MYSECRET',
       '.',
     ]
     secretEnv: ['MYSECRET']
-    # volumes:
-    #   - name: 'ssh'
-    #     path: /root/.ssh
-
-
-
-
-
-  # - id: 'pull-experimental'
-  #   waitFor: ['init-ssh']
-  #   name: 'docker:20.10.12'
-  #   args: ['pull', 'docker.io/docker/dockerfile:experimental']
-  #   env:
-  #     - 'DOCKER_BUILDKIT=1'
-
-  # # For some reason the GCP Docker Hub mirror is not compatible with Buildkit,
-  # # so we have to pre-cache these things outside of BuildKit for now
-  # # see: https://github.com/moby/buildkit/issues/606#issuecomment-453959632
-  # - id: 'pull-node'
-  #   waitFor: ['init-ssh']
-  #   name: 'docker:20.10.12'
-  #   args: ['pull', 'docker.io/library/node:18.15.0']
-  #   env:
-  #     - 'DOCKER_BUILDKIT=1'
-
-  # - id: 'build'
-  #   # name: 'docker:20.10.12'
-  #   name: 'gcr.io/cloud-builders/docker'
-  #   waitFor: ['pull-experimental', 'pull-node']
-  #   args:
-  #     [
-  #       'build',
-  #       '--ssh',
-  #       'default=/root/.ssh/id_rsa',
-  #       '-t',
-  #       'gcr.io/$PROJECT_ID/marketplace:latest',
-  #       '-t',
-  #       'gcr.io/$PROJECT_ID/marketplace:$SHORT_SHA',
-  #       '--build-arg',
-  #       'COMMIT_SHA=$COMMIT_SHA',
-  #       '--build-arg',
-  #       'ENV_FILE=${_ENV_FILE}',
-  #       '--build-arg',
-  #       'CONFIG_SECRET_NAME=${_CONFIG_SECRET_NAME}',
-  #       '--build-arg',
-  #       'MYSECRET=$$MYSECRET',
-  #       '.',
-  #     ]
-  #   secretEnv: ['MYSECRET']
-  #   env:
-  #     - 'DOCKER_BUILDKIT=1'
-  #   volumes:
-  #     - name: 'ssh'
-  #       path: /root/.ssh
-
-
-
-
-
-
-
-
 
   - id: 'push'
     waitFor: ['build']
@@ -164,7 +59,7 @@ availableSecrets:
   - versionName: projects/62947188208/secrets/webapp-config/versions/latest
     env: 'MYSECRET'
 substitutions:
-  _ENCRYPTED_KEY_PATH: etc/keys/cloudbuild_rsa.enc # Borrar!!!
+  # _ENCRYPTED_KEY_PATH: etc/keys/cloudbuild_rsa.enc
   _ENV_FILE: production
   _CONFIG_SECRET_NAME: path/to/secret
 timeout: 900s
