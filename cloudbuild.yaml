@@ -9,7 +9,6 @@ steps:
         # Access the secret from the environment variable
         echo HOLA
         echo "_MYSECRET: $$_MYSECRET"
-        echo "_MYSECRET: ${_MYSECRET}"
     secretEnv: ['_MYSECRET']
 
   - id: 'decrypt'
@@ -82,7 +81,7 @@ steps:
         '--build-arg',
         'CONFIG_SECRET_NAME=${_CONFIG_SECRET_NAME}',
         '--build-arg',
-        'MYSECRET=${_MYSECRET}',
+        'MYSECRET=$$_MYSECRET',
         '.',
       ]
     secretEnv: ['_MYSECRET']
