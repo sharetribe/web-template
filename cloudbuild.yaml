@@ -13,13 +13,10 @@ steps:
     secretEnv: ['MYSECRET']
 
   - id: 'build'
-    # waitFor: ['init-ssh']
     waitFor: ['init']
     name: 'gcr.io/cloud-builders/docker'
     args: [
       'build',
-      '--ssh',
-      'default=/root/.ssh/id_rsa',
       '-t',
       'gcr.io/$PROJECT_ID/marketplace:latest',
       '-t',

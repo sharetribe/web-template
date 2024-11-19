@@ -25,6 +25,7 @@ ENV NODE_ENV=production
 ENV PORT=8080
 
 RUN echo "MYSECRET during build: $$MYSECRET"
+RUN echo "ENV_FILE during build: $$ENV_FILE"
 
 RUN yarn install
 RUN yarn build
