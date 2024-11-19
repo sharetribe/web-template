@@ -30,7 +30,7 @@ steps:
       '--build-arg',
       'CONFIG_SECRET_NAME=${_CONFIG_SECRET_NAME}',
       '--build-arg',
-      'MYSECRET=$MYSECRET',
+      'MYSECRET=$$MYSECRET',
       '.',
     ]
     secretEnv: ['MYSECRET']
