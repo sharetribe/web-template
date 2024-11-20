@@ -63,7 +63,7 @@ async function loadCustomEnv() {
 
 
   const MARKET = process.env.MARKET;
-  const MYSECRET = process.env.MYSECRET || {};
+  const MYSECRET = process.env.MYSECRET;
   console.warn('\n------\n');
   console.warn('\n[loadCustomEnv] - MYSECRET:', MYSECRET);
   console.warn('\n[loadCustomEnv] - MARKET:', MARKET);
