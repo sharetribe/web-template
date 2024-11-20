@@ -152,9 +152,21 @@ const Configurations = props => {
 
 
 
+
+  const ENV_FILE = process.env.ENV_FILE
+  const NODE_ENV = process.env.NODE_ENV
+  const APP_ENV = process.env.APP_ENV
+  const REACT_APP_ENV = process.env.REACT_APP_ENV
+
   const REACT_APP_MARKETPLACE_ROOT_URL = process.env.REACT_APP_MARKETPLACE_ROOT_URL
   const REACT_APP_SHARETRIBE_SDK_CLIENT_ID = process.env.REACT_APP_SHARETRIBE_SDK_CLIENT_ID
+
   console.warn('\n\n\n*******************************');
+  console.warn('\n[loadCustomEnv] - NODE_ENV:', NODE_ENV);
+  console.warn('\n[loadCustomEnv] - ENV_FILE:', ENV_FILE);
+  console.warn('\n[loadCustomEnv] - APP_ENV:', APP_ENV);
+  console.warn('\n[loadCustomEnv] - REACT_APP_ENV:', REACT_APP_ENV);
+  console.warn('\n------\n');
   console.warn('\n[Configurations] - REACT_APP_MARKETPLACE_ROOT_URL:', REACT_APP_MARKETPLACE_ROOT_URL);
   console.warn('\n[Configurations] - REACT_APP_SHARETRIBE_SDK_CLIENT_ID:', REACT_APP_SHARETRIBE_SDK_CLIENT_ID);
   console.warn('\n------\n');
