@@ -17,7 +17,7 @@ steps:
       - |
         echo "Appending secrets to .env.production..."
         echo "$$MARKET_CONFIG" > ./.env.production
-    secretEnv: ['MY_SECRET', 'ANOTHER_SECRET']
+    secretEnv: ['MARKET_CONFIG']
 
   - id: 'debug-secrets'
     waitFor: ['store-market-secrets']
