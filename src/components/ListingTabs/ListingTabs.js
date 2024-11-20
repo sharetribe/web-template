@@ -40,12 +40,12 @@ export const ListingTabs = props => {
 
 
 
-  const REACT_APP_MARKETPLACE_ROOT_URL = process.env.REACT_APP_MARKETPLACE_ROOT_URL
-  const REACT_APP_SHARETRIBE_SDK_CLIENT_ID = process.env.REACT_APP_SHARETRIBE_SDK_CLIENT_ID
-  console.warn('\n\n\n*******************************');
-  console.warn('\n[ListingTabs] - REACT_APP_MARKETPLACE_ROOT_URL:', REACT_APP_MARKETPLACE_ROOT_URL);
-  console.warn('\n[ListingTabs] - REACT_APP_SHARETRIBE_SDK_CLIENT_ID:', REACT_APP_SHARETRIBE_SDK_CLIENT_ID);
-  console.warn('\n*******************************\n\n\n');
+  // const REACT_APP_MARKETPLACE_ROOT_URL = process.env.REACT_APP_MARKETPLACE_ROOT_URL
+  // const REACT_APP_SHARETRIBE_SDK_CLIENT_ID = process.env.REACT_APP_SHARETRIBE_SDK_CLIENT_ID
+  // console.warn('\n\n\n*******************************');
+  // console.warn('\n[ListingTabs] - REACT_APP_MARKETPLACE_ROOT_URL:', REACT_APP_MARKETPLACE_ROOT_URL);
+  // console.warn('\n[ListingTabs] - REACT_APP_SHARETRIBE_SDK_CLIENT_ID:', REACT_APP_SHARETRIBE_SDK_CLIENT_ID);
+  // console.warn('\n*******************************\n\n\n');
 
 
 
