@@ -148,6 +148,7 @@ const Configurations = props => {
   const { appConfig, children } = props;
   const routeConfig = routeConfiguration(appConfig.layout, appConfig?.accessControl);
   const locale = isTestEnv ? 'en' : appConfig.localization.locale;
+
   return (
     <ConfigurationProvider value={appConfig}>
       <MomentLocaleLoader locale={locale}>

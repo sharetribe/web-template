@@ -31,29 +31,6 @@ export const ListingTabs = props => {
   const hasNoResults = listingsAreLoaded && pagination.totalItems === 0;
   const enableGrid = listingsAreLoaded && !queryFavoritesError;
 
-
-
-
-
-
-
-
-
-
-  // const REACT_APP_MARKETPLACE_ROOT_URL = process.env.REACT_APP_MARKETPLACE_ROOT_URL
-  // const REACT_APP_SHARETRIBE_SDK_CLIENT_ID = process.env.REACT_APP_SHARETRIBE_SDK_CLIENT_ID
-  // console.warn('\n\n\n*******************************');
-  // console.warn('\n[ListingTabs] - REACT_APP_MARKETPLACE_ROOT_URL:', REACT_APP_MARKETPLACE_ROOT_URL);
-  // console.warn('\n[ListingTabs] - REACT_APP_SHARETRIBE_SDK_CLIENT_ID:', REACT_APP_SHARETRIBE_SDK_CLIENT_ID);
-  // console.warn('\n*******************************\n\n\n');
-
-
-
-
-
-
-
-
   const loadingResults = (
     <div className={css.messagePanel}>
       <H3 as="h2" className={css.heading}>
