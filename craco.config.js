@@ -19,6 +19,11 @@ async function loadCustomEnv() {
   ].filter(Boolean);
 
 
+
+
+
+
+
   /**
    * [TODO:]
    *  - En el local tengo lo del localhost que me lo va a romper todo... no deberia cargarlo sino en development
@@ -62,11 +67,16 @@ async function loadCustomEnv() {
 
 
 
-  const MARKET = process.env.MARKET;
-  const MYSECRET = process.env.MYSECRET;
+  const WEBAPP_CONFIG = process.env.WEBAPP_CONFIG;
   console.warn('\n------\n');
-  console.warn('\n[loadCustomEnv] - MYSECRET:', MYSECRET);
-  console.warn('\n[loadCustomEnv] - MARKET:', MARKET);
+  console.warn('\n[loadCustomEnv] - WEBAPP_CONFIG:', WEBAPP_CONFIG);
+
+
+
+
+  const parsedSecrets = WEBAPP_CONFIG ? dotenv.parse(WEBAPP_CONFIG) : {};
+  console.warn('\n------\n');
+  console.warn('\n[loadCustomEnv] - parsedSecrets:', parsedSecrets);
 
 
 

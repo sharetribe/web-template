@@ -1,40 +1,12 @@
-# Decrypt the file containing the key
 steps:
-  # - id: 'init'
-  #   name: 'node:18.20.1'
-  #   entrypoint: 'bash'
-  #   args:
-  #     - '-c'
-  #     - |
-  #       # Access the secret from the environment variable
-  #       echo HOLA
-  #       echo "MYSECRET: $$MYSECRET"
-  #       echo "ENV_FILE: ${_ENV_FILE}"
-  #       echo "MARKET: $$MARKET"
-  #   secretEnv: ['MYSECRET', 'MARKET']
-
-
-
-
-
-
-
   - id: 'build'
-    # waitFor: ['init']
     name: 'gcr.io/cloud-builders/docker'
     entrypoint: bash
     args:
      - -c
      - |
-        docker build -t gcr.io/$PROJECT_ID/marketplace:latest -t gcr.io/$PROJECT_ID/marketplace:$SHORT_SHA --build-arg COMMIT_SHA=$COMMIT_SHA --build-arg ENV_FILE=${_ENV_FILE} --build-arg CONFIG_SECRET_NAME=${_CONFIG_SECRET_NAME} --build-arg MYSECRET="$$MYSECRET" --build-arg MARKET=$$MARKET .
-    secretEnv: ['MYSECRET', 'MARKET']
-
-
-
-
-
-
-
+        docker build -t gcr.io/$PROJECT_ID/marketplace:latest -t gcr.io/$PROJECT_ID/marketplace:$SHORT_SHA --build-arg COMMIT_SHA=$COMMIT_SHA --build-arg ENV_FILE=${_ENV_FILE} --build-arg CONFIG_SECRET_NAME=${_CONFIG_SECRET_NAME} --build-arg WEBAPP_CONFIG="$$WEBAPP_CONFIG" .
+    secretEnv: ['WEBAPP_CONFIG']
 
   - id: 'push'
     waitFor: ['build']
@@ -58,9 +30,7 @@ steps:
 availableSecrets:
   secretManager:
   - versionName: projects/62947188208/secrets/webapp-config/versions/latest
-    env: 'MYSECRET'
-  - versionName: projects/62947188208/secrets/MARKET/versions/latest
-    env: 'MARKET'
+    env: 'WEBAPP_CONFIG'
 substitutions:
   # _ENCRYPTED_KEY_PATH: etc/keys/cloudbuild_rsa.enc
   _ENV_FILE: production
