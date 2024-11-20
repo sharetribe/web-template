@@ -153,7 +153,6 @@ const Configurations = props => {
 
 
 
-  const ENV_FILE = process.env.ENV_FILE
   const NODE_ENV = process.env.NODE_ENV
   const APP_ENV = process.env.APP_ENV
   const REACT_APP_ENV = process.env.REACT_APP_ENV
@@ -166,7 +165,6 @@ const Configurations = props => {
   console.warn('\n[loadCustomEnv] - REACT_APP_ENV_FILE:', REACT_APP_ENV_FILE);
   console.warn('\n------\n');
   console.warn('\n[loadCustomEnv] - NODE_ENV:', NODE_ENV);
-  console.warn('\n[loadCustomEnv] - ENV_FILE:', ENV_FILE);
   console.warn('\n[loadCustomEnv] - APP_ENV:', APP_ENV);
   console.warn('\n[loadCustomEnv] - REACT_APP_ENV:', REACT_APP_ENV);
   console.warn('\n------\n');

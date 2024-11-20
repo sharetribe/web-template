@@ -9,18 +9,16 @@ const fs = require('fs');
 const { loadSecrets } = require('./secretManager');
 
 const NODE_ENV = process.env.NODE_ENV;
-const ENV_FILE = process.env.ENV_FILE || NODE_ENV || 'production';
-
 if (!NODE_ENV) {
   throw new Error('The NODE_ENV environment variable is required but was not specified.');
 }
 
 // https://github.com/bkeepers/dotenv#what-other-env-files-can-i-use
 var dotenvFiles = [
-  `.env.${ENV_FILE}.local`,
+  `.env.${NODE_ENV}.local`,
   // Only include `.env.local` for `development` environment
-  ENV_FILE === 'development' && `.env.local`,
-  `.env.${ENV_FILE}`,
+  NODE_ENV === 'development' && `.env.local`,
+  `.env.${NODE_ENV}`,
   '.env',
 ].filter(Boolean);
 
@@ -62,7 +60,6 @@ const REACT_APP_SHARETRIBE_SDK_CLIENT_ID = process.env.REACT_APP_SHARETRIBE_SDK_
 const WEBAPP_URL = process.env.WEBAPP_URL
 
 console.warn('\n\n\n*******************************');
-console.warn('\n[configureEnv] - ENV_FILE:', ENV_FILE);
 console.warn('\n[configureEnv] - NODE_ENV:', NODE_ENV);
 console.warn('\n[configureEnv] - APP_ENV:', APP_ENV);
 console.warn('\n[configureEnv] - REACT_APP_ENV:', REACT_APP_ENV);

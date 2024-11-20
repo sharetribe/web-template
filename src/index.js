@@ -124,31 +124,6 @@ if (typeof window !== 'undefined') {
   // set up logger with Sentry DSN client key and environment
   log.setup();
 
-
-
-
-
-
-
-
-  console.warn('\n\n\n+++++++++++++++++++++++++++++++');
-  console.warn('\n[INDEX] - appSettings:', appSettings);
-  console.warn('\n+++++++++++++++++++++++++++++++\n\n\n');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   const baseUrl = appSettings.sdk.baseUrl ? { baseUrl: appSettings.sdk.baseUrl } : {};
   const assetCdnBaseUrl = appSettings.sdk.assetCdnBaseUrl
     ? { assetCdnBaseUrl: appSettings.sdk.assetCdnBaseUrl }

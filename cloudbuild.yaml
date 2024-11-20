@@ -40,13 +40,29 @@ steps:
 
 
   - id: 'build'
+    waitFor: ['store-market-secrets', 'debug-secrets']
     name: 'gcr.io/cloud-builders/docker'
-    entrypoint: bash
     args:
-     - -c
-     - |
-        docker build -t gcr.io/$PROJECT_ID/marketplace:latest -t gcr.io/$PROJECT_ID/marketplace:$SHORT_SHA --build-arg COMMIT_SHA=$COMMIT_SHA --build-arg ENV_FILE=${_ENV_FILE} --build-arg CONFIG_SECRET_NAME=${_CONFIG_SECRET_NAME} --build-arg WEBAPP_CONFIG="$$WEBAPP_CONFIG" .
-    secretEnv: ['WEBAPP_CONFIG']
+      [
+        'build',
+        '-t',
+        'gcr.io/$PROJECT_ID/marketplace:latest',
+        '-t',
+        'gcr.io/$PROJECT_ID/marketplace:$SHORT_SHA',
+        '--build-arg',
+        'COMMIT_SHA=$COMMIT_SHA',
+        '.',
+      ]
+
+
+
+
+
+
+
+
+
+
 
   - id: 'push'
     waitFor: ['build']
@@ -69,11 +85,9 @@ steps:
       - '--allow-unauthenticated'
 availableSecrets:
   secretManager:
-  - versionName: projects/62947188208/secrets/webapp-config/versions/latest
-    env: 'WEBAPP_CONFIG'
   - versionName: projects/62947188208/secrets/market-config/versions/latest
+  # - versionName: ${_CONFIG_MARKET_SECRET_NAME}
     env: 'MARKET_CONFIG'
-substitutions:
-  _ENV_FILE: production
-  _CONFIG_SECRET_NAME: path/to/secret
+# substitutions:
+  # _CONFIG_MARKET_SECRET_NAME: path/to/market-secret
 timeout: 900s
