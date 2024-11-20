@@ -26,24 +26,6 @@ async function loadCustomEnv() {
 
 
 
-  const _MARKET = process.env._MARKET;
-  const MARKET = process.env.MARKET;
-  const MARKET1 = process.env.MARKET1;
-  const MARKET2 = process.env.MARKET2;
-  const MARKET3 = process.env.MARKET3;
-  const MARKET4 = process.env.MARKET4;
-  const MARKET5 = process.env.MARKET5;
-  console.warn('\n------\n');
-  console.warn('\n[loadCustomEnv] - _MARKET:', _MARKET);
-  console.warn('\n[loadCustomEnv] - MARKET:', MARKET);
-  console.warn('\n[loadCustomEnv] - MARKET1:', MARKET1);
-  console.warn('\n[loadCustomEnv] - MARKET2:', MARKET2);
-  console.warn('\n[loadCustomEnv] - MARKET3:', MARKET3);
-  console.warn('\n[loadCustomEnv] - MARKET4:', MARKET4);
-  console.warn('\n[loadCustomEnv] - MARKET5:', MARKET5);
-
-
-
 
 
 
@@ -71,19 +53,20 @@ async function loadCustomEnv() {
 
   const NODE_ENV = process.env.NODE_ENV
   const CONFIG_SECRET_NAME = process.env.CONFIG_SECRET_NAME
-  const MYSECRET = process.env.MYSECRET || {};
-  const MYSECRET2 = process.env.MYSECRET2 || {};
+
   console.warn('\n------\n');
   console.warn('\n[loadCustomEnv] - NODE_ENV:', NODE_ENV);
   console.warn('\n[loadCustomEnv] - ENV_FILE:', ENV_FILE);
   console.warn('\n[loadCustomEnv] - CONFIG_SECRET_NAME:', CONFIG_SECRET_NAME);
+
+
+
+
+  const MARKET = process.env.MARKET;
+  const MYSECRET = process.env.MYSECRET || {};
   console.warn('\n------\n');
   console.warn('\n[loadCustomEnv] - MYSECRET:', MYSECRET);
-  console.warn('\n[loadCustomEnv] - MYSECRET2:', MYSECRET2);
-
-
-
-
+  console.warn('\n[loadCustomEnv] - MARKET:', MARKET);
 
 
 
