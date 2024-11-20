@@ -15,6 +15,39 @@ if (!NODE_ENV) {
   throw new Error('The NODE_ENV environment variable is required but was not specified.');
 }
 
+// https://github.com/bkeepers/dotenv#what-other-env-files-can-i-use
+var dotenvFiles = [
+  `.env.${ENV_FILE}.local`,
+  // Only include `.env.local` for `development` environment
+  ENV_FILE === 'development' && `.env.local`,
+  `.env.${ENV_FILE}`,
+  '.env',
+].filter(Boolean);
+
+const configureEnv = async () => {
+  console.warn('\nLoading environment variables..');
+  // Load environment variables from .env* files. Suppress warnings using silent
+  // if this file is missing. dotenv will never modify any environment variables
+  // that have already been set.
+  // https://github.com/motdotla/dotenv
+  dotenvFiles.forEach(dotenvFile => {
+    if (fs.existsSync(dotenvFile)) {
+      console.log('Loading env from file:' + dotenvFile);
+      require('dotenv-expand')(
+        require('dotenv').config({
+          path: dotenvFile,
+        })
+      );
+    }
+  });
+  const secrets = await loadSecrets();
+  require('dotenv-expand')({ parsed: secrets });
+  console.warn('Loading environment variables DONE\n');
+
+
+
+
+
 
 
 
@@ -46,34 +79,7 @@ console.warn('\n*******************************\n\n\n');
 
 
 
-// https://github.com/bkeepers/dotenv#what-other-env-files-can-i-use
-var dotenvFiles = [
-  `.env.${ENV_FILE}.local`,
-  // Only include `.env.local` for `development` environment
-  ENV_FILE === 'development' && `.env.local`,
-  `.env.${ENV_FILE}`,
-  '.env',
-].filter(Boolean);
 
-const configureEnv = async () => {
-  console.warn('\nLoading environment variables..');
-  // Load environment variables from .env* files. Suppress warnings using silent
-  // if this file is missing. dotenv will never modify any environment variables
-  // that have already been set.
-  // https://github.com/motdotla/dotenv
-  dotenvFiles.forEach(dotenvFile => {
-    if (fs.existsSync(dotenvFile)) {
-      console.log('Loading env from file:' + dotenvFile);
-      require('dotenv-expand')(
-        require('dotenv').config({
-          path: dotenvFile,
-        })
-      );
-    }
-  });
-  const secrets = await loadSecrets();
-  require('dotenv-expand')({ parsed: secrets });
-  console.warn('Loading environment variables DONE\n');
 };
 
 module.exports = {
