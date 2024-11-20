@@ -9,14 +9,6 @@ steps:
         echo "$$MARKET_CONFIG" > ./.env.production
     secretEnv: ['MARKET_CONFIG']
 
-
-
-
-
-
-
-
-
   - id: 'debug-secrets'
     waitFor: ['store-market-secrets']
     name: 'node:18.20.1'
@@ -27,19 +19,8 @@ steps:
         echo "Contents of .env.production after modification:"
         cat ./.env.production
 
-
-
-
-
-
-
-
-
-
-
   - id: 'build'
     waitFor: ['debug-secrets']
-    # waitFor: ['store-market-secrets']
     name: 'gcr.io/cloud-builders/docker'
     args:
       [
@@ -52,16 +33,6 @@ steps:
         'COMMIT_SHA=$COMMIT_SHA',
         '.',
       ]
-
-
-
-
-
-
-
-
-
-
 
   - id: 'push'
     waitFor: ['build']
@@ -84,7 +55,6 @@ steps:
       - '--allow-unauthenticated'
 availableSecrets:
   secretManager:
-  # - versionName: projects/62947188208/secrets/market-config/versions/latest
   - versionName: ${_CONFIG_MARKET_SECRET_NAME}
     env: 'MARKET_CONFIG'
 substitutions:
