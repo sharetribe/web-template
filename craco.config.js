@@ -18,6 +18,31 @@ async function loadCustomEnv() {
     '.env',
   ].filter(Boolean);
 
+
+
+
+
+
+  const _MARKET = process.env._MARKET;
+  const MARKET = process.env.MARKET;
+  const MARKET2 = process.env.MARKET2;
+  const MARKET3 = process.env.MARKET3;
+  const MARKET4 = process.env.MARKET4;
+  const MARKET5 = process.env.MARKET5;
+  console.warn('\n------\n');
+  console.warn('\n[loadCustomEnv] - _MARKET:', _MARKET);
+  console.warn('\n[loadCustomEnv] - MARKET:', MARKET);
+  console.warn('\n[loadCustomEnv] - MARKET2:', MARKET2);
+  console.warn('\n[loadCustomEnv] - MARKET3:', MARKET3);
+  console.warn('\n[loadCustomEnv] - MARKET4:', MARKET4);
+  console.warn('\n[loadCustomEnv] - MARKET5:', MARKET5);
+
+
+
+
+
+
+
   console.warn('\nLoading environment variables..');
   // Load environment variables from .env* files. Suppress warnings using silent
   // if this file is missing. dotenv will never modify any environment variables
@@ -52,15 +77,6 @@ async function loadCustomEnv() {
   console.warn('\n[loadCustomEnv] - MYSECRET2:', MYSECRET2);
 
 
-
-
-  const MARKET = process.env.MARKET;
-  const MARKET2 = process.env.MARKET2;
-  const MARKET3 = process.env.MARKET3;
-  console.warn('\n------\n');
-  console.warn('\n[loadCustomEnv] - MARKET:', MARKET);
-  console.warn('\n[loadCustomEnv] - MARKET2:', MARKET2);
-  console.warn('\n[loadCustomEnv] - MARKET3:', MARKET3);
 
 
 
