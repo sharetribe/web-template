@@ -7,7 +7,6 @@ WORKDIR /usr/src/app
 
 COPY . .
 
-ENV CLOUD_BUILD=true
 ENV NODE_ENV=production
 ENV PORT=8080
 

@@ -1,14 +1,4 @@
 steps:
-
-  - id: 'debug-init-secrets'
-    name: 'node:18.20.1'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        echo "Contents of .env.production before modification:"
-        cat ./.env.production
-
   - id: 'store-market-secrets'
     name: 'node:18.20.1'
     entrypoint: 'bash'
@@ -18,6 +8,14 @@ steps:
         echo "Appending secrets to .env.production..."
         echo "$$MARKET_CONFIG" > ./.env.production
     secretEnv: ['MARKET_CONFIG']
+
+
+
+
+
+
+
+
 
   - id: 'debug-secrets'
     waitFor: ['store-market-secrets']
@@ -40,7 +38,8 @@ steps:
 
 
   - id: 'build'
-    waitFor: ['store-market-secrets', 'debug-secrets']
+    waitFor: ['debug-secrets']
+    # waitFor: ['store-market-secrets']
     name: 'gcr.io/cloud-builders/docker'
     args:
       [
@@ -85,9 +84,9 @@ steps:
       - '--allow-unauthenticated'
 availableSecrets:
   secretManager:
-  - versionName: projects/62947188208/secrets/market-config/versions/latest
-  # - versionName: ${_CONFIG_MARKET_SECRET_NAME}
+  # - versionName: projects/62947188208/secrets/market-config/versions/latest
+  - versionName: ${_CONFIG_MARKET_SECRET_NAME}
     env: 'MARKET_CONFIG'
-# substitutions:
-  # _CONFIG_MARKET_SECRET_NAME: path/to/market-secret
+substitutions:
+  _CONFIG_MARKET_SECRET_NAME: path/to/market-secret
 timeout: 900s
