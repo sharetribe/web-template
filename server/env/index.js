@@ -41,44 +41,6 @@ const configureEnv = async () => {
   const secrets = await loadSecrets();
   require('dotenv-expand')({ parsed: secrets });
   console.warn('Loading environment variables DONE\n');
-
-
-
-
-
-
-
-
-
-
-const APP_ENV = process.env.APP_ENV
-const REACT_APP_ENV = process.env.REACT_APP_ENV
-const CONFIG_SECRET_NAME = process.env.CONFIG_SECRET_NAME
-const CONFIG_MARKET_SECRET_NAME = process.env.CONFIG_MARKET_SECRET_NAME
-
-const REACT_APP_MARKETPLACE_ROOT_URL = process.env.REACT_APP_MARKETPLACE_ROOT_URL
-const REACT_APP_SHARETRIBE_SDK_CLIENT_ID = process.env.REACT_APP_SHARETRIBE_SDK_CLIENT_ID
-const WEBAPP_URL = process.env.WEBAPP_URL
-
-console.warn('\n\n\n*******************************');
-console.warn('\n[configureEnv] - NODE_ENV:', NODE_ENV);
-console.warn('\n[configureEnv] - APP_ENV:', APP_ENV);
-console.warn('\n[configureEnv] - REACT_APP_ENV:', REACT_APP_ENV);
-console.warn('\n[configureEnv] - CONFIG_SECRET_NAME:', CONFIG_SECRET_NAME);
-console.warn('\n[configureEnv] - CONFIG_MARKET_SECRET_NAME:', CONFIG_MARKET_SECRET_NAME);
-console.warn('\n------\n');
-console.warn('\n[configureEnv] - REACT_APP_MARKETPLACE_ROOT_URL:', REACT_APP_MARKETPLACE_ROOT_URL);
-console.warn('\n[configureEnv] - REACT_APP_SHARETRIBE_SDK_CLIENT_ID:', REACT_APP_SHARETRIBE_SDK_CLIENT_ID);
-console.warn('\n[configureEnv] - WEBAPP_URL:', WEBAPP_URL);
-console.warn('\n*******************************\n\n\n');
-
-
-
-
-
-
-
-
 };
 
 module.exports = {
