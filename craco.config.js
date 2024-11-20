@@ -11,7 +11,7 @@ async function loadCustomEnv() {
   const isDev = ENV_FILE === 'development';
   const dotenvFiles = [
     `.env.${ENV_FILE}.local`,
-    // Only include `.env.local` for `development` environment
+    // Only include `.env.local` for local `development` environment
     ENV_FILE === 'development' && `.env.local`,
     `.env.${ENV_FILE}`,
     '.env',
