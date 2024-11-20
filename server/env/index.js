@@ -33,10 +33,8 @@ console.warn('\n*******************************\n\n\n');
 // https://github.com/bkeepers/dotenv#what-other-env-files-can-i-use
 var dotenvFiles = [
   `.env.${ENV_FILE}.local`,
-  // Don't include `.env.local` for `test` environment
-  // since normally you expect tests to produce the same
-  // results for everyone
-  ENV_FILE !== 'test' && `.env.local`,
+  // Only include `.env.local` for `development` environment
+  ENV_FILE === 'development' && `.env.local`,
   `.env.${ENV_FILE}`,
   '.env',
 ].filter(Boolean);

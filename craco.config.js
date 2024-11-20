@@ -7,33 +7,15 @@ const { loadSecrets } = require('./server/env/secretManager');
 
 async function loadCustomEnv() {
   const ENV_FILE = process.env.ENV_FILE || process.env.NODE_ENV || 'production';
+  const isCloudBuild = process.env.CLOUD_BUILD === 'true';
   const isDev = ENV_FILE === 'development';
   const dotenvFiles = [
     `.env.${ENV_FILE}.local`,
-    // Don't include `.env.local` for `test` environment
-    // since normally you expect tests to produce the same
-    // results for everyone
-    ENV_FILE !== 'test' && `.env.local`,
+    // Only include `.env.local` for `development` environment
+    ENV_FILE === 'development' && `.env.local`,
     `.env.${ENV_FILE}`,
     '.env',
   ].filter(Boolean);
-
-
-
-
-
-
-
-  /**
-   * [TODO:]
-   *  - En el local tengo lo del localhost que me lo va a romper todo... no deberia cargarlo sino en development
-   */
-
-
-
-
-
-
 
   console.warn('\nLoading environment variables..');
   // Load environment variables from .env* files. Suppress warnings using silent
@@ -56,6 +38,53 @@ async function loadCustomEnv() {
 
 
 
+
+
+
+  /**
+   * [TODO:]
+   *  - En el local tengo lo del localhost que me lo va a romper todo... no deberia cargarlo sino en development
+   */
+
+
+
+
+  if (isCloudBuild) {
+    console.log('isCloudBuild - Loading env WEBAPP_CONFIG');
+    const WEBAPP_CONFIG = process.env.WEBAPP_CONFIG;
+    const secrets = WEBAPP_CONFIG ? dotenv.parse(WEBAPP_CONFIG) : {};
+
+
+
+
+    // console.warn('\n------\n');
+    // console.warn('\n[loadCustomEnv] - WEBAPP_CONFIG:', WEBAPP_CONFIG);
+    // console.warn('\n------\n');
+    // console.warn('\n[loadCustomEnv] - secrets:', secrets);
+
+
+
+
+
+
+    expand({ parsed: secrets });
+  } else {
+    const secrets = await loadSecrets();
+    expand({ parsed: secrets });
+  }
+  console.warn('Loading environment variables DONE\n');
+
+
+
+
+
+
+
+
+
+
+
+
   const NODE_ENV = process.env.NODE_ENV
   const CONFIG_SECRET_NAME = process.env.CONFIG_SECRET_NAME
 
@@ -63,35 +92,6 @@ async function loadCustomEnv() {
   console.warn('\n[loadCustomEnv] - NODE_ENV:', NODE_ENV);
   console.warn('\n[loadCustomEnv] - ENV_FILE:', ENV_FILE);
   console.warn('\n[loadCustomEnv] - CONFIG_SECRET_NAME:', CONFIG_SECRET_NAME);
-
-
-
-
-  const WEBAPP_CONFIG = process.env.WEBAPP_CONFIG;
-  console.warn('\n------\n');
-  console.warn('\n[loadCustomEnv] - WEBAPP_CONFIG:', WEBAPP_CONFIG);
-
-
-
-
-  const parsedSecrets = WEBAPP_CONFIG ? dotenv.parse(WEBAPP_CONFIG) : {};
-  console.warn('\n------\n');
-  console.warn('\n[loadCustomEnv] - parsedSecrets:', parsedSecrets);
-
-
-
-
-
-
-
-  const secrets = await loadSecrets();
-  expand({ parsed: secrets });
-  console.warn('Loading environment variables DONE\n');
-
-
-
-
-
 
 
 
@@ -103,6 +103,9 @@ async function loadCustomEnv() {
   console.warn('\n[loadCustomEnv] - REACT_APP_SHARETRIBE_SDK_CLIENT_ID:', REACT_APP_SHARETRIBE_SDK_CLIENT_ID);
   console.warn('\n[loadCustomEnv] - WEBAPP_URL:', WEBAPP_URL);
   console.warn('\n-------------------------------\n\n\n');
+
+
+
 
 
 
