@@ -16,27 +16,18 @@ steps:
   - id: 'build'
     # waitFor: ['init']
     name: 'gcr.io/cloud-builders/docker'
-    args: [
-      'build',
-      '-t',
-      'gcr.io/$PROJECT_ID/marketplace:latest',
-      '-t',
-      'gcr.io/$PROJECT_ID/marketplace:$SHORT_SHA',
-      '--build-arg',
-      'COMMIT_SHA=$COMMIT_SHA',
-      '--build-arg',
-      'ENV_FILE=${_ENV_FILE}',
-      '--build-arg',
-      'CONFIG_SECRET_NAME=${_CONFIG_SECRET_NAME}',
-      '--build-arg',
-      'MARKET1=_MARKET',
-      'MARKET2=$$_MARKET',
-      '--build-arg',
-      'MARKET3=${_MARKET}',
-      '--build-arg',
-      'MARKET4=HI!',
-      '.',
-    ]
+
+#  \
+
+
+# Working version
+  - name: gcr.io/cloud-builders/docker
+    secretEnv: ["GITHUB_USER","GITHUB_TOKEN"]
+    entrypoint: bash
+    args:
+     - -c
+     - |
+        docker build -t gcr.io/$PROJECT_ID/marketplace:latest -t gcr.io/$PROJECT_ID/marketplace:$SHORT_SHA --build-arg COMMIT_SHA=$COMMIT_SHA --build-arg ENV_FILE=${_ENV_FILE} --build-arg CONFIG_SECRET_NAME=${_CONFIG_SECRET_NAME} --build-arg MARKET1=_MARKET .
     secretEnv: ['MYSECRET', '_MARKET']
 
   - id: 'push'
