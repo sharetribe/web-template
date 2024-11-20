@@ -53,20 +53,6 @@ async function loadCustomEnv() {
     console.log('isCloudBuild - Loading env WEBAPP_CONFIG');
     const WEBAPP_CONFIG = process.env.WEBAPP_CONFIG;
     const secrets = WEBAPP_CONFIG ? dotenv.parse(WEBAPP_CONFIG) : {};
-
-
-
-
-    // console.warn('\n------\n');
-    // console.warn('\n[loadCustomEnv] - WEBAPP_CONFIG:', WEBAPP_CONFIG);
-    // console.warn('\n------\n');
-    // console.warn('\n[loadCustomEnv] - secrets:', secrets);
-
-
-
-
-
-
     expand({ parsed: secrets });
   } else {
     const secrets = await loadSecrets();
