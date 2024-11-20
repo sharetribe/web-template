@@ -19,12 +19,16 @@ async function loadCustomEnv() {
   ].filter(Boolean);
 
 
-
+  /**
+   * [TODO:]
+   *  - En el local tengo lo del localhost que me lo va a romper todo... no deberia cargarlo sino en development
+   */
 
 
 
   const _MARKET = process.env._MARKET;
   const MARKET = process.env.MARKET;
+  const MARKET1 = process.env.MARKET1;
   const MARKET2 = process.env.MARKET2;
   const MARKET3 = process.env.MARKET3;
   const MARKET4 = process.env.MARKET4;
@@ -32,6 +36,7 @@ async function loadCustomEnv() {
   console.warn('\n------\n');
   console.warn('\n[loadCustomEnv] - _MARKET:', _MARKET);
   console.warn('\n[loadCustomEnv] - MARKET:', MARKET);
+  console.warn('\n[loadCustomEnv] - MARKET1:', MARKET1);
   console.warn('\n[loadCustomEnv] - MARKET2:', MARKET2);
   console.warn('\n[loadCustomEnv] - MARKET3:', MARKET3);
   console.warn('\n[loadCustomEnv] - MARKET4:', MARKET4);
