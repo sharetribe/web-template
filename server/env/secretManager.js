@@ -49,4 +49,6 @@ async function loadSecrets() {
 
 module.exports = {
   loadSecrets: loadSecrets,
+  loadMarketSecrets: loadMarketSecrets,
+  loadPlatformSecrets: loadPlatformSecrets,
 };
