@@ -29,7 +29,7 @@ steps:
       '--build-arg',
       'CONFIG_SECRET_NAME=${_CONFIG_SECRET_NAME}',
       '--build-arg',
-      'MARKET1=$_MARKET',
+      'MARKET1=_MARKET',
       'MARKET2=$$_MARKET',
       '--build-arg',
       'MARKET3=${_MARKET}',
