@@ -71,10 +71,10 @@ const getInitialValues = props => {
 // NOTE: this InquiryForm is only for booking & purchase processes
 // The default-inquiry process is handled differently
 const CustomInquiryFormComponent = props => {
-  const [page, setPage] = useState(1);
-
   const initialValues = getInitialValues(props);
-  const { flex_price, offerPrice } = props;
+  const { flex_price, offerPrice, listing } = props;
+
+  const [inquiryFormPage, setInquiryFormPage] = useState(1);
   const [offerPriceValue, setOfferPriceValue] = useState(offerPrice);
 
   return (
@@ -84,7 +84,6 @@ const CustomInquiryFormComponent = props => {
       validate={() => {
         const errors = {};
         if (!offerPriceValue) {
-          console.log(offerPriceValue);
           const emailTakenMessage = props.intl.formatMessage({
             id: 'CustomInquiryForm.offerPriceRequired',
           });
@@ -101,7 +100,7 @@ const CustomInquiryFormComponent = props => {
           handleSubmit,
           inProgress,
           intl,
-          listingTitle,
+          // listingTitle,
           authorDisplayName,
           sendInquiryError,
           marketplaceCurrency,
@@ -155,8 +154,8 @@ const CustomInquiryFormComponent = props => {
             onSubmit={handleSubmit}
             enforcePagePreloadFor="OrderDetailsPage"
           >
-            {page === 2 ? (
-              <div onClick={() => setPage(1)}>
+            {inquiryFormPage === 2 ? (
+              <div onClick={() => setInquiryFormPage(1)}>
                 {' '}
                 <IconBack />
               </div>
@@ -164,7 +163,7 @@ const CustomInquiryFormComponent = props => {
             <Heading as="h2" rootClassName={css.heading}>
               <FormattedMessage id="CustomInquiryForm.heading" />
             </Heading>
-            {page === 1 ? (
+            {inquiryFormPage === 1 ? (
               <div>
                 <FieldCurrencyInput
                   className={css.field}
@@ -182,7 +181,7 @@ const CustomInquiryFormComponent = props => {
                     disabled={submitDisabled}
                     onClick={() => {
                       // form.validate();
-                      if (offerPrice) setPage(2);
+                      if (offerPrice) setInquiryFormPage(2);
                     }}
                   >
                     <FormattedMessage id="InquiryForm.submitButtonText" />
@@ -242,7 +241,7 @@ CustomInquiryFormComponent.propTypes = {
 
   inProgress: bool,
 
-  listingTitle: string.isRequired,
+  // listingTitle: string.isRequired,
   authorDisplayName: string.isRequired,
   sendInquiryError: propTypes.error,
 

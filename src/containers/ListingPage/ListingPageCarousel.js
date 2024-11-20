@@ -61,10 +61,10 @@ import NotFoundPage from '../NotFoundPage/NotFoundPage';
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
 
 import {
+  createSellerListing,
   fetchTimeSlots,
   fetchTransactionLineItems,
   sendInquiry,
-  sendMakeOffer,
   setInitialValues,
 } from './ListingPage.duck';
 
@@ -74,6 +74,7 @@ import {
   ErrorPage,
   handleContactUser,
   handleSubmit,
+  handleSubmitCheckoutPageWithInquiry,
   handleSubmitInquiry,
   listingImages,
   LoadingPage,
@@ -86,6 +87,9 @@ import SectionMapMaybe from './SectionMapMaybe';
 import SectionReviews from './SectionReviews';
 import SectionTextMaybe from './SectionTextMaybe';
 
+import { initiateInquiryWithoutPayment } from '../CheckoutPage/CheckoutPage.duck.js';
+import { onSubmitCallback, STORAGE_KEY } from '../CheckoutPage/CheckoutPage.js';
+import { handlePageData } from '../CheckoutPage/CheckoutPageSessionHelpers.js';
 import CustomInquiryForm from './CustomInquiryForm/CustomInquiryForm.js';
 import css from './ListingPage.module.css';
 
@@ -128,6 +132,8 @@ export const ListingPageComponent = props => {
     config,
     routeConfiguration,
     showOwnListingsOnly,
+    onInquiryWithoutPayment,
+    onCreateSellerListing,
   } = props;
 
   const listingConfig = config.listing;
@@ -292,6 +298,20 @@ export const ListingPageComponent = props => {
     : 'https://schema.org/OutOfStock';
 
   const availabilityMaybe = schemaAvailability ? { availability: schemaAvailability } : {};
+  const orderData = {};
+  const transaction = null;
+  const initialData = { orderData, listing: currentListing, transaction };
+  const pageData = handlePageData(initialData, STORAGE_KEY, history);
+
+  const handleInquiryFormSubmit = handleSubmitCheckoutPageWithInquiry({
+    ...commonParams,
+    config,
+    processName,
+    pageData,
+    onInquiryWithoutPayment,
+    onSubmitCallback,
+    onCreateSellerListing,
+  });
 
   return (
     <Page
@@ -437,11 +457,12 @@ export const ListingPageComponent = props => {
               listingTitle={title}
               authorDisplayName={authorDisplayName}
               sendInquiryError={sendInquiryError}
-              onSubmit={onSubmitInquiry}
+              onSubmit={handleInquiryFormSubmit}
               inProgress={sendInquiryInProgress}
               marketplaceCurrency={config.currency}
               offerPrice={price}
               flex_price={Array.isArray(flex_price) && flex_price.length > 0}
+              listing={currentListing}
             />
           </Modal>
         </div>
@@ -629,10 +650,13 @@ const mapDispatchToProps = dispatch => ({
     dispatch(setInitialValues(values, saveToSessionStorage)),
   onFetchTransactionLineItems: params => dispatch(fetchTransactionLineItems(params)),
   onSendInquiry: (listing, message) => dispatch(sendInquiry(listing, message)),
-  onSendOffer: (listing, message) => dispatch(sendMakeOffer(listing, message)),
   onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
   onFetchTimeSlots: (listingId, start, end, timeZone) =>
     dispatch(fetchTimeSlots(listingId, start, end, timeZone)),
+  onInquiryWithoutPayment: (params, processAlias, transitionName) =>
+    dispatch(initiateInquiryWithoutPayment(params, processAlias, transitionName)),
+  onCreateSellerListing: (createParams, queryParams) =>
+    dispatch(createSellerListing(createParams, queryParams)),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the

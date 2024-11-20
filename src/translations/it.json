@@ -1147,5 +1147,6 @@
   "UserNav.accountSettings": "Impostazioni account",
   "UserNav.profileSettings": "Impostazioni profilo",
   "UserNav.yourListings": "I tuoi annunci",
-  "CustomInquiryForm.emailNoti": "{boldText} Se la tua offerta viene accettata, riceverai una notifica via email e potrai comunicare direttamente con Alessandro P. per i dettagli."
+  "CustomInquiryForm.emailNoti": "{boldText} Se la tua offerta viene accettata, riceverai una notifica via email e potrai comunicare direttamente con Alessandro P. per i dettagli.",
+  "CustomInquiryForm.offerPriceRequired":"Please fill in your offer price"
 }

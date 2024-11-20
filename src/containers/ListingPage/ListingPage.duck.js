@@ -1,23 +1,23 @@
 import pick from 'lodash/pick';
 
-import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
-import { storableError } from '../../util/errors';
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
+import { fetchCurrentUser, fetchCurrentUserHasOrdersSuccess } from '../../ducks/user.duck';
+import { getProcess, isBookingProcessAlias } from '../../transactions/transaction';
 import { transactionLineItems } from '../../util/api';
-import * as log from '../../util/log';
 import { denormalisedResponseEntities } from '../../util/data';
 import { findNextBoundary, getStartOf, monthIdString } from '../../util/dates';
+import { storableError } from '../../util/errors';
+import * as log from '../../util/log';
+import { createImageVariantConfig, types as sdkTypes } from '../../util/sdkLoader';
+import {
+  LISTING_PAGE_DRAFT_VARIANT,
+  LISTING_PAGE_PENDING_APPROVAL_VARIANT,
+} from '../../util/urlHelpers';
 import {
   hasPermissionToInitiateTransactions,
   hasPermissionToViewData,
   isUserAuthorized,
 } from '../../util/userHelpers';
-import {
-  LISTING_PAGE_DRAFT_VARIANT,
-  LISTING_PAGE_PENDING_APPROVAL_VARIANT,
-} from '../../util/urlHelpers';
-import { getProcess, isBookingProcessAlias } from '../../transactions/transaction';
-import { fetchCurrentUser, fetchCurrentUserHasOrdersSuccess } from '../../ducks/user.duck';
 
 const { UUID } = sdkTypes;
 
@@ -44,6 +44,10 @@ export const SEND_INQUIRY_REQUEST = 'app/ListingPage/SEND_INQUIRY_REQUEST';
 export const SEND_INQUIRY_SUCCESS = 'app/ListingPage/SEND_INQUIRY_SUCCESS';
 export const SEND_INQUIRY_ERROR = 'app/ListingPage/SEND_INQUIRY_ERROR';
 
+export const INITIATE_CREATE_SELLER_LISTING = 'app/ListingPage/INITIATE_CREATE_SELLER_LISTING';
+export const INITIATE_CREATE_SELLER_SUCCESS = 'app/ListingPage/INITIATE_CREATE_SELLER_SUCCESS';
+export const INITIATE_CREATE_SELLER_ERROR = 'app/ListingPage/INITIATE_CREATE_SELLER_ERROR';
+
 // ================ Reducer ================ //
 
 const initialState = {
@@ -64,6 +68,8 @@ const initialState = {
   sendInquiryInProgress: false,
   sendInquiryError: null,
   inquiryModalOpenForListingId: null,
+  initiateSellerListingInProgress: false,
+  fetchCreateSellerListingError: null,
 };
 
 const listingPageReducer = (state = initialState, action = {}) => {
@@ -134,6 +140,21 @@ const listingPageReducer = (state = initialState, action = {}) => {
     case SEND_INQUIRY_ERROR:
       return { ...state, sendInquiryInProgress: false, sendInquiryError: payload };
 
+    case INITIATE_CREATE_SELLER_LISTING:
+      return {
+        ...state,
+        initiateSellerListingInProgress: true,
+        fetchCreateSellerListingError: null,
+      };
+    case INITIATE_CREATE_SELLER_SUCCESS:
+      return { ...state, initiateSellerListingInProgress: false };
+    case INITIATE_CREATE_SELLER_ERROR:
+      return {
+        ...state,
+        initiateSellerListingInProgress: false,
+        fetchCreateSellerListingError: payload,
+      };
+
     default:
       return state;
   }
@@ -195,6 +216,10 @@ export const fetchLineItemsError = error => ({
 export const sendInquiryRequest = () => ({ type: SEND_INQUIRY_REQUEST });
 export const sendInquirySuccess = () => ({ type: SEND_INQUIRY_SUCCESS });
 export const sendInquiryError = e => ({ type: SEND_INQUIRY_ERROR, error: true, payload: e });
+
+export const initiateCreateSellerListing = () => ({ type: INITIATE_CREATE_SELLER_LISTING });
+export const initiateCreateSellerSuccess = () => ({ type: INITIATE_CREATE_SELLER_SUCCESS });
+export const initiateCreateSellerError = () => ({ type: INITIATE_CREATE_SELLER_ERROR });
 
 // ================ Thunks ================ //
 
@@ -327,7 +352,7 @@ export const sendInquiry = (listing, message) => (dispatch, getState, sdk) => {
     .initiate(bodyParams)
     .then(response => {
       const transactionId = response.data.data.id;
-     
+
       // Send the message to the created transaction
       return sdk.messages.send({ transactionId, content: message }).then(() => {
         dispatch(sendInquirySuccess());
@@ -385,52 +410,23 @@ export const fetchTransactionLineItems = ({ orderData, listingId, isOwnListing }
     });
 };
 
+export const createSellerListing = (createParams, queryParams) => (dispatch, getState, sdk) => {
+  dispatch(initiateCreateSellerListing());
 
-export const sendMakeOffer = (listing, message) => (dispatch, getState, sdk) => {
-  dispatch(sendInquiryRequest());
-  const processAlias = listing?.attributes?.publicData?.transactionProcessAlias;
-  if (!processAlias) {
-    const error = new Error('No transaction process attached to listing');
-    log.error(error, 'listing-process-missing', {
-      listingId: listing?.id?.uuid,
-    });
-    dispatch(sendInquiryError(storableError(error)));
-    return Promise.reject(error);
-  }
-
-  const listingId = listing?.id;
-  const [processName, alias] = processAlias.split('/');
-  const transitions = getProcess(processName)?.transitions;
-
-// const purchaseTransitions = getProcess('default-purchase')?.transitions;
-
-  const bodyParams = {
-    transition: transitions.INQUIRE,
-    processAlias,
-    params: { listingId },
-  };
-  return sdk.transactions
-    .initiate(bodyParams)
+  console.log('redux duck')
+  console.log(createParams);
+  console.log(queryParams);
+  return sdk.ownListings
+    .create(createParams, queryParams)
     .then(response => {
+      console.log(response);
       const transactionId = response.data.data.id;
-      
-      // const sellerBodyParams ={
-      //   transition: transitions.REQUEST_PAYMENT,
-      //   processAlias:"default-purchase/release-1",
-      //   params:{
-      //     listingId
-      //   }
-      // }
-
-      // Send the message to the created transaction
-      return sdk.messages.send({ transactionId, content: message }).then(() => {
-        dispatch(sendInquirySuccess());
-        dispatch(fetchCurrentUserHasOrdersSuccess(true));
-        return transactionId;
-      });
+      dispatch(initiateCreateSellerSuccess());
+      return transactionId;
     })
     .catch(e => {
-      dispatch(sendInquiryError(storableError(e)));
+      console.log(e);
+      dispatch(initiateCreateSellerError(storableError(e)));
       throw e;
     });
 };

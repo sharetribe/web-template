@@ -235,8 +235,8 @@ const tabCompleted = (tab, listing, config) => {
     case DETAILS:
       return !!// description &&
       (title && listingType && transactionProcessAlias && unitType && selectedOption);
-      // &&
-      // hasValidListingFieldsInExtendedData(publicData, privateData, config)
+    // &&
+    // hasValidListingFieldsInExtendedData(publicData, privateData, config)
     case PRICING:
       return !!price;
     case PRICING_AND_STOCK:
@@ -356,7 +356,14 @@ class EditListingWizard extends Component {
     this.state = {
       draftId: null,
       showPayoutDetails: false,
-      selectedListingType: null,
+      // selectedListingType: null,
+      /* setup inquiry as default selectedListingType */
+      selectedListingType: {
+        listingType: 'progetto',
+        transactionProcessAlias: 'default-inquiry/release-1',
+        unitType: 'inquiry',
+        label: 'Progetto',
+      },
     };
     this.handleCreateFlowTabScrolling = this.handleCreateFlowTabScrolling.bind(this);
     this.handlePublishListing = this.handlePublishListing.bind(this);

@@ -54,7 +54,7 @@ const BookingTimeForm = loadable(() =>
 const BookingDatesForm = loadable(() =>
   import(/* webpackChunkName: "BookingDatesForm" */ './BookingDatesForm/BookingDatesForm')
 );
-const InquiryWithoutPaymentForm = loadable(() =>
+export const InquiryWithoutPaymentForm = loadable(() =>
   import(
     /* webpackChunkName: "InquiryWithoutPaymentForm" */ './InquiryWithoutPaymentForm/InquiryWithoutPaymentForm'
   )
@@ -375,6 +375,7 @@ const OrderPanel = props => {
             payoutDetailsWarning={payoutDetailsWarning}
           />
         ) : showInquiryForm ? (
+          // <InquiryWithoutPaymentForm formId="OrderPanelInquiryForm" onSubmit={onSubmit} />
           <div className={css.customInquiryForm}>
             <div className={css.customInquiryBudget}>
               <FormattedMessage id="OrderPanel.customInquiryFormBudget" />

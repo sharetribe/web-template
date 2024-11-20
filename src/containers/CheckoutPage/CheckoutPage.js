@@ -1,56 +1,56 @@
 import React, { useEffect, useState } from 'react';
-import { compose } from 'redux';
+import { useIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { useIntl } from 'react-intl';
+import { compose } from 'redux';
 
 // Import contexts and util modules
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
+import { INQUIRY_PROCESS_NAME, resolveLatestProcessName } from '../../transactions/transaction';
 import { userDisplayNameAsString } from '../../util/data';
+import { isErrorNoPermissionForInitiateTransactions } from '../../util/errors';
 import {
   NO_ACCESS_PAGE_INITIATE_TRANSACTIONS,
   NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
 } from '../../util/urlHelpers';
 import { hasPermissionToInitiateTransactions, isUserAuthorized } from '../../util/userHelpers';
-import { isErrorNoPermissionForInitiateTransactions } from '../../util/errors';
-import { INQUIRY_PROCESS_NAME, resolveLatestProcessName } from '../../transactions/transaction';
 
 // Import global thunk functions
-import { isScrollingDisabled } from '../../ducks/ui.duck';
-import { confirmCardPayment, retrievePaymentIntent } from '../../ducks/stripe.duck';
 import { savePaymentMethod } from '../../ducks/paymentMethods.duck';
+import { confirmCardPayment, retrievePaymentIntent } from '../../ducks/stripe.duck';
+import { isScrollingDisabled } from '../../ducks/ui.duck';
 
 // Import shared components
 import { NamedRedirect, Page } from '../../components';
 
 // Session helpers file needs to be imported before CheckoutPageWithPayment and CheckoutPageWithInquiryProcess
-import { storeData, clearData, handlePageData } from './CheckoutPageSessionHelpers';
+import { clearData, handlePageData, storeData } from './CheckoutPageSessionHelpers';
 
 // Import modules from this directory
 import {
+  confirmPayment,
+  initiateInquiryWithoutPayment,
   initiateOrder,
+  sendMessage,
   setInitialValues,
   speculateTransaction,
   stripeCustomer,
-  confirmPayment,
-  sendMessage,
-  initiateInquiryWithoutPayment,
 } from './CheckoutPage.duck';
 
-import CustomTopbar from './CustomTopbar';
+import CheckoutPageWithInquiryProcess from './CheckoutPageWithInquiryProcess';
 import CheckoutPageWithPayment, {
   loadInitialDataForStripePayments,
 } from './CheckoutPageWithPayment';
-import CheckoutPageWithInquiryProcess from './CheckoutPageWithInquiryProcess';
+import CustomTopbar from './CustomTopbar';
 
-const STORAGE_KEY = 'CheckoutPage';
+export const STORAGE_KEY = 'CheckoutPage';
 
-const onSubmitCallback = () => {
+export const onSubmitCallback = () => {
   clearData(STORAGE_KEY);
 };
 
-const getProcessName = pageData => {
+export const getProcessName = pageData => {
   const { transaction, listing } = pageData || {};
   const processName = transaction?.id
     ? transaction?.attributes?.processName
