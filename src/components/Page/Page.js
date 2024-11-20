@@ -29,8 +29,29 @@ const twitterPageURL = siteTwitterHandle => {
 };
 
 const webmanifestURL = marketplaceRootURL => {
+
+
+
+
+  console.warn('\n\n\n*******************************');
+  console.warn('\n[configureEnv] - marketplaceRootURL:', marketplaceRootURL);
+
+
+
   // Note: on localhost (when running "yarn run dev"), the webmanifest is running on apiServer port
   const baseUrl = apiBaseUrl(marketplaceRootURL);
+
+
+
+
+
+  console.warn('\n[configureEnv] - baseUrl:', baseUrl);
+  console.warn('\n*******************************\n\n\n');
+
+
+
+
+
   return `${baseUrl}/site.webmanifest`;
 };
 
