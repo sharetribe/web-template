@@ -13,20 +13,20 @@ steps:
     name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/$PROJECT_ID/marketplace:$SHORT_SHA']
 
-  # - id: 'deploy'
-  #   waitFor: ['push']
-  #   name: 'gcr.io/cloud-builders/gcloud'
-  #   args:
-  #     - 'run'
-  #     - 'deploy'
-  #     - 'marketplace'
-  #     - '--image'
-  #     - 'gcr.io/$PROJECT_ID/marketplace:$SHORT_SHA'
-  #     - '--region'
-  #     - 'us-east4'
-  #     - '--platform'
-  #     - 'managed'
-  #     - '--allow-unauthenticated'
+  - id: 'deploy'
+    waitFor: ['push']
+    name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'marketplace'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/marketplace:$SHORT_SHA'
+      - '--region'
+      - 'us-east4'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
 availableSecrets:
   secretManager:
   - versionName: projects/62947188208/secrets/webapp-config/versions/latest
