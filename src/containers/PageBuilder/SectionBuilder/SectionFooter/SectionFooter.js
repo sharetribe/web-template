@@ -105,6 +105,12 @@ const SectionFooter = props => {
             <BlockBuilder blocks={blocks} sectionId={sectionId} options={options} />
           </div>
         </div>
+        <div className={css.footerLegalInfo}>
+          <p>© 2024 Ketchup. All rights reserved.</p>
+          <a href='/terms-of-service' target='blank'>Условия за ползване</a>
+          <a href='/privacy-policy' target='blank'>Политика за Лични Данни</a>
+          <a href='/cookie-policy' target='blank'>Политика за Бисквитки</a>
+        </div>
       </div>
     </SectionContainer>
   );

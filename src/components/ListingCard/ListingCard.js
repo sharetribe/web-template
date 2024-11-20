@@ -82,6 +82,9 @@ export const ListingCardComponent = props => {
   const currentListing = ensureListing(listing);
   const id = currentListing.id.uuid;
   const { title = '', price, publicData } = currentListing.attributes;
+  // test condition
+  const { condition } = publicData || {};
+  
   const slug = createSlug(title);
   const author = ensureUser(listing.author);
   const authorName = author.attributes.profile.displayName;
@@ -135,6 +138,12 @@ export const ListingCardComponent = props => {
             </div>
           ) : null}
         </div>
+        {/* Add condition here */}
+        {condition && (
+          <div className={css.condition}>
+            <FormattedMessage id="ListingCard.condition" values={{ condition }} />
+          </div>
+        )}
       </div>
     </NamedLink>
   );

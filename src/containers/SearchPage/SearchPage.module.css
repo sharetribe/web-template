@@ -19,7 +19,7 @@
 /* Can be given to Topbar when a modal is opened
  * so that the Topbar is not rendered on top of it.*/
 .topbarBehindModal {
-  z-index: initial;
+  z-index: 10;
 }
 
 .container {

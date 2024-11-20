@@ -21,6 +21,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  margin-top: 3rem;
 }
 .accountLinksWrapper {
   margin-bottom: 36px;
@@ -148,16 +149,22 @@
 .createNewListingLink {
   composes: buttonPrimary from global;
 }
-
+.halfLine {
+  width: 100%;
+  height: 1px;
+  background: var(--colorSecondary);
+  opacity: .25;
+}
 .authenticationGreeting {
   /* Font */
   composes: h1 from global;
+  line-height: 1.4;
 
   margin-bottom: 48px;
   margin-top: var(--TopbarMobileMenu_topMargin);
 }
 .authenticationLinks {
-  white-space: nowrap;
+  /* white-space: nowrap; */
 }
 
 .signupLink {

@@ -44,7 +44,7 @@
 }
 
 .search {
-  font-weight: var(--fontWeightMedium);
+  font-weight: var(--fontWeightRegular);
   font-size: 15px;
   line-height: 24px;
   letter-spacing: 0;
@@ -55,8 +55,11 @@
   text-decoration: inherit;
 
   @media (--viewportMedium) {
-    font-weight: var(--fontWeightMedium);
+    font-weight: var(--fontWeightRegular);
   }
+}
+.desktopInput {
+  font-weight: 300;
 }
 
 .takeAvailableSpace {

@@ -1,7 +1,7 @@
 @import '../assets/sanitize.css';
 @import './customMediaQueries.css';
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&family=Roboto:wght@300;400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&family=Roboto:wght@300;400;500;700;900&display=swap'); */
 /* ================ Custom Properties aka CSS variables ================ */
 
 /**
@@ -19,8 +19,11 @@
 
   /* Colors used for different functions (like error texts) */
   --colorPrimary: #fe1b00;
+  --colorPrimaryHover: #fe5000;
   --colorSecondary: #2e293a;
   --colorText: #2e293a;
+  --colorTextFade: #f0eef3;
+  --colorBtnCtaText: #ffffff;
   /* end custom colors */
   --colorSuccess: #2ecc72;
   --colorSuccessDark: #239954;
@@ -78,7 +81,7 @@
   /* --fontFamily: -apple-system, BlinkMacSystemFont, 'Inter', Helvetica, Arial, sans-serif,
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; */
   --fontFamilyTitles: "Roboto Serif", serif;
-  --fontFamily: "Roboto", sans-serif;
+  --fontFamily: "Inter", sans-serif;
 
   --fontWeightThin: 300;
   --fontWeightRegular: 400;

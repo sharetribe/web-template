@@ -9,6 +9,10 @@
   padding: 0 32px;
   position: relative;
 
+  @media (--viewportMobile) {
+    padding: 0 20px;
+  }
+
   & h1 + p,
   & h1 + a,
   & h1 + ul,
@@ -110,6 +114,10 @@
   &:first-child {
     padding: 0 32px;
   }
+
+  @media (--viewportMobile) {
+    padding: 40px 20px 0 20px;
+  }
 }
 
 .align {
@@ -124,7 +132,7 @@
 
 .title {
   composes: align;
-  max-width: 50vw;
+  /* max-width: 50vw; */
 }
 
 .description {
@@ -193,11 +201,12 @@
 
 /* button on dark theme */
 .darkTheme .ctaButton {
-  /* border: 1px solid var(--marketplaceColorDark); */
+  /*  border: 1px solid var(--marketplaceColorDark); */
   text-decoration: none;
-
+  transition: all .25s cubic-bezier(0.075, 0.82, 0.165, 1);
   &:hover {
     color: white;
+    background: var(--colorPrimaryHover);
   }
 }
 

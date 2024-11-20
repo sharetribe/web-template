@@ -10,9 +10,6 @@
   margin-top: 0;
   margin-bottom: 0;
   line-height: 1.33;
-  /* font-weight: bold; */
-  /* color: var(--colorGrey900); */
-
   /* fallback option */
   word-break: break-all;
   /* use break-word if available */
@@ -53,6 +50,10 @@
 
 .h2 {
   font-size: 32px;
+
+  @media (--viewportMobile) {
+    font-size: 28px;
+  }
 
   /* If ´& + *´ if used, margin-top needs !important to overwrite */
   /* Handle margin-top of next adjacent element against this heading element */

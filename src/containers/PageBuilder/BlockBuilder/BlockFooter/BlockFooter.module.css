@@ -36,12 +36,19 @@
 
   & li {
     font-size: 14px;
+    font-weight: 400;
     color: var(--colorGrey700);
-    padding: 0px;
+    padding: .25rem 0;
     list-style-position: inside;
   }
 
   & p {
+    margin-bottom: 1rem;
     padding: 0px;
+    font-size: .75rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    color: var(--colorText);
+    opacity: .85;
   }
 }

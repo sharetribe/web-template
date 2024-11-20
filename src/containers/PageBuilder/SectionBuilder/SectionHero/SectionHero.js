@@ -32,16 +32,15 @@ const SectionHero = props => {
   return (
     <SectionContainer
       id={sectionId}
-      className={className}
+      className={`${className} ${css.heroContainerHome}`}
       rootClassName={classNames(rootClassName || css.root)}
       appearance={appearance}
       options={fieldOptions}
     >
-      {/* <div className={css.backgroundImage}></div> */}
       {hasHeaderFields ? (
         <header 
           id={css.heroHome}
-          className={`${defaultClasses.sectionDetails} ${css.heroInfoBlock}`}
+          className={defaultClasses.sectionDetails}
         >
           <Field data={title} className={defaultClasses.title} options={fieldOptions} />
           <Field data={description} className={defaultClasses.description} options={fieldOptions} />

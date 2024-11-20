@@ -30,27 +30,27 @@
   justify-content: center;
   align-items: center;
   position: absolute;
+  top: 45%;
   z-index: 2;
 
   width: 48px;
   height: 48px;
   padding: 0px 0 4px 0;
-  margin-top: -100px;
   border-radius: 100%;
   border: none;
-
-  /* background-color: lightgrey; */
-  background-color: #413a3a;
+  background-color: rgba(255,255,255,0.75);
+  /* border: 1px solid var(--colorSecondary); */
   opacity: 0.9;
   font-size: 30px;
-  color: black;
+  color: var(--colorPrimary);
   transition: all ease-in-out 100ms;
 
   &:hover {
     opacity: 1;
     cursor: pointer;
-    background: #201414;
+    background: var(--colorPrimary);
     color: white;
+    opacity: .75;
   }
 }
 
@@ -130,6 +130,12 @@
 
   @media (--viewportMedium) {
     margin-right: 32px;
+  }
+
+  @media (--viewportMobile) {
+    transform: translateX(20px);
+    width: calc(min(var(--contentMaxWidthPages), var(--carouselWidth)) - 180px);
+    margin-right: 20px;
   }
 
   @media (min-width: 1200px) {

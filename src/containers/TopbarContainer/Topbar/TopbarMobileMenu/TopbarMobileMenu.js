@@ -106,6 +106,8 @@ const TopbarMobileMenu = props => {
             />
           </div>
 
+          <div className={css.halfLine}></div>
+
           <div className={css.customLinksWrapper}>{extraLinks}</div>
 
           <div className={css.spacer} />

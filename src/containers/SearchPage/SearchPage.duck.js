@@ -315,6 +315,7 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
         'title',
         'geolocation',
         'price',
+        'condition',
         'deleted',
         'state',
         'publicData.listingType',

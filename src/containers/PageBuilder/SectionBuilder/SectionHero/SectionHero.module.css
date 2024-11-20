@@ -14,11 +14,26 @@
 }
 
 /* test styles */
+@media (min-width:200px) and (max-width:800px) {
+  .heroContainerHome {
+    height: 95vh;
+  } 
+}
 #heroHome {
-  margin-left: 10%;
+  max-width: 80%;
+  margin-left: 20%;
   padding: 2rem;
   background: rgba(255,255,255,.9);
 }
+
+/* container parent at bottom on mobile 
+@media (min-width:200px) and (max-width:800px) {
+  #heroHome  {
+    align-self: flex-end;
+  } 
+}
+*/
+
 #heroHome h1 {
   font-size: 42px;
   font-weight: var(--fontWeightBold);
@@ -32,4 +47,23 @@
 }
 #heroHome a {
   text-transform: uppercase;
+}
+@media (min-width:200px) and (max-width:800px) {
+  #heroHome {
+    max-width: 90%;
+    margin: 0 auto;
+  }
+  #heroHome h1 {
+    font-size: 32px;
+    line-height: 1.1;
+    text-align: center;
+    color: var(--colorSecondary);
+  }
+  #heroHome p {
+    text-align: center;
+  }
+  #heroHome a {
+    width: 100%;
+    text-align: center;
+  }
 }

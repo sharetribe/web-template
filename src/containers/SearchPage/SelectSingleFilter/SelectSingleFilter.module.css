@@ -4,5 +4,8 @@
 }
 
 .labelPlainSelected {
-  color: var(--marketplaceColor);
+  font-size: 12px;
+  font-weight: var(--fontWeightMedium);
+  color: var(--colorText);
+  text-transform: uppercase;
 }

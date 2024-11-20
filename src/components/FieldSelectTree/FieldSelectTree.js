@@ -61,7 +61,7 @@ const Option = props => {
     [css.optionBtnSelectedLowest]: isOptSelected && !isSuboptionSelected,
   });
   return (
-    <li className={css.option} style={{ paddingLeft: `${12}px`, ...cursorMaybe }}>
+    <li className={css.option} style={{ paddingLeft: `${6}px`, ...cursorMaybe }}>
       <button
         className={buttonClasses}
         onClick={e => {
