@@ -1,4 +1,44 @@
 steps:
+
+  - id: 'debug-init-secrets'
+    name: 'node:18.20.1'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "Contents of .env.production before modification:"
+        cat ./.env.production
+
+  - id: 'store-market-secrets'
+    name: 'node:18.20.1'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "Appending secrets to .env.production..."
+        echo "$$MARKET_CONFIG" > ./.env.production
+    secretEnv: ['MY_SECRET', 'ANOTHER_SECRET']
+
+  - id: 'debug-secrets'
+    waitFor: ['store-market-secrets']
+    name: 'node:18.20.1'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "Contents of .env.production after modification:"
+        cat ./.env.production
+
+
+
+
+
+
+
+
+
+
+
   - id: 'build'
     name: 'gcr.io/cloud-builders/docker'
     entrypoint: bash
@@ -31,6 +71,8 @@ availableSecrets:
   secretManager:
   - versionName: projects/62947188208/secrets/webapp-config/versions/latest
     env: 'WEBAPP_CONFIG'
+  - versionName: projects/62947188208/secrets/webapp-config/versions/latest
+    env: 'MARKET_CONFIG'
 substitutions:
   # _ENCRYPTED_KEY_PATH: etc/keys/cloudbuild_rsa.enc
   _ENV_FILE: production
