@@ -187,6 +187,7 @@ export const handleSubmit = parameters => values => {
     onInitializeCardPaymentData,
     routes,
   } = parameters;
+
   const listingId = new UUID(params.id);
   const listing = getListing(listingId);
 
@@ -240,7 +241,6 @@ export const handleSubmit = parameters => values => {
 
   // Clear previous Stripe errors from store if there is any
   onInitializeCardPaymentData();
-
   // Redirect to CheckoutPage
   history.push(
     createResourceLocatorString(
@@ -356,9 +356,11 @@ export const handleSubmitCheckoutPageWithInquiry = props => values => {
           type: 'availability-plan/time',
         },
         publicData: {
-          custom: true,
+          isOffer: true,
           transactionProcessAlias: 'default-purchase/release-1',
           listingType: 'booking',
+          unitType: 'item',
+          linkedListing: pageData?.listing?.id.uuid,
         },
       };
       const queryParams = {
@@ -513,4 +515,79 @@ export const handleSubmitCheckoutPageWithInquiry = props => values => {
       console.error(err);
       // setSubmitting(false);
     });
+};
+
+export const handleCustomSubmit = parameters => values => {
+  const {
+    history,
+    params,
+    currentUser,
+    callSetInitialValues,
+    onInitializeCardPaymentData,
+    routes,
+    listing,
+  } = parameters;
+
+  const listingId = new UUID(params.id);
+  const {
+    bookingDates,
+    bookingStartTime,
+    bookingEndTime,
+    bookingStartDate, // not relevant (omit)
+    bookingEndDate, // not relevant (omit)
+    quantity: quantityRaw,
+    deliveryMethod,
+    ...otherOrderData
+  } = values;
+
+  const bookingMaybe = bookingDates
+    ? {
+        bookingDates: {
+          bookingStart: bookingDates.startDate,
+          bookingEnd: bookingDates.endDate,
+        },
+      }
+    : bookingStartTime && bookingEndTime
+    ? {
+        bookingDates: {
+          bookingStart: timestampToDate(bookingStartTime),
+          bookingEnd: timestampToDate(bookingEndTime),
+        },
+      }
+    : {};
+  const quantity = Number.parseInt(quantityRaw, 10);
+  const quantityMaybe = Number.isInteger(quantity) ? { quantity } : {};
+  const deliveryMethodMaybe = deliveryMethod ? { deliveryMethod } : {};
+
+  const initialValues = {
+    listing,
+    orderData: {
+      ...bookingMaybe,
+      ...quantityMaybe,
+      ...deliveryMethodMaybe,
+      ...otherOrderData,
+    },
+    confirmPaymentError: null,
+  };
+
+  console.log(initialValues);
+  const saveToSessionStorage = !currentUser;
+
+  // Customize checkout page state with current listing and selected orderData
+  const { setInitialValues } = findRouteByRouteName('CheckoutPage', routes);
+
+  callSetInitialValues(setInitialValues, initialValues, saveToSessionStorage);
+
+  // Clear previous Stripe errors from store if there is any
+  onInitializeCardPaymentData();
+
+  // Redirect to CheckoutPage
+  history.push(
+    createResourceLocatorString(
+      'CheckoutPage',
+      routes,
+      { id: listing.id.uuid, slug: createSlug(listing.attributes.title) },
+      {}
+    )
+  );
 };

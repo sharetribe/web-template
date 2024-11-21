@@ -144,3 +144,8 @@ export const transitionPrivileged = body => {
 export const createUserWithIdp = body => {
   return post('/api/auth/create-user-with-idp', body);
 };
+
+
+export const getOfferListingbyListingId = body => {
+  return post(`/api/offer-listing-page`, body);
+};

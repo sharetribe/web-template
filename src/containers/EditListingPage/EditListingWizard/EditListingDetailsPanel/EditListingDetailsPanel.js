@@ -45,7 +45,7 @@ export const getTransactionInfo = (
 
   if (listingType && transactionProcessAlias && unitType) {
     return { listingType, transactionProcessAlias, unitType };
-  } else if (listingTypes.length === 1) {
+  } else {
     const { listingType: type, label, transactionType } = listingTypes[0];
     const { alias, unitType: configUnitType } = transactionType;
     const labelMaybe = inlcudeLabel ? { label: label || type } : {};
@@ -299,6 +299,8 @@ const EditListingDetailsPanel = props => {
     categoryKey
   );
 
+  console.log(initialValues);
+
   const noListingTypesSet = listingTypes?.length === 0;
   const hasListingTypesSet = listingTypes?.length > 0;
   const canShowEditListingDetailsForm =
@@ -367,7 +369,8 @@ const EditListingDetailsPanel = props => {
                 transactionProcessAlias,
                 unitType,
                 selectedOption,
-                selectedDate: selectedDate?.toString(),
+                selectedDate:
+                  selectedOption !== 'Sono flessibile' ? selectedDate?.toString() : null,
                 ...cleanedNestedCategories,
                 ...publicListingFields,
               },

@@ -1,41 +1,41 @@
-import React, { useEffect, useState } from 'react';
 import { arrayOf, bool, func, object, shape, string } from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { compose } from 'redux';
-import { connect } from 'react-redux';
 
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
+import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
+import { isErrorNoPermissionToPostListings } from '../../util/errors';
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { pathByRouteName } from '../../util/routes';
-import { hasPermissionToPostListings } from '../../util/userHelpers';
-import { NO_ACCESS_PAGE_POST_LISTINGS } from '../../util/urlHelpers';
 import { propTypes } from '../../util/types';
-import { isErrorNoPermissionToPostListings } from '../../util/errors';
-import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
+import { NO_ACCESS_PAGE_POST_LISTINGS } from '../../util/urlHelpers';
+import { hasPermissionToPostListings } from '../../util/userHelpers';
 
 import {
   H3,
+  LayoutSingleColumn,
+  NamedLink,
   Page,
   PaginationLinks,
   UserNav,
-  LayoutSingleColumn,
-  NamedLink,
-  Modal,
 } from '../../components';
 
-import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
+import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import ManageListingCard from './ManageListingCard/ManageListingCard';
 
+import _ from 'lodash';
+import DiscardDraftModal from './DiscardDraftModal/DiscardDraftModal';
 import {
   closeListing,
-  openListing,
-  getOwnListingsById,
   discardDraft,
+  getOwnListingsById,
+  openListing,
 } from './ManageListingsPage.duck';
 import css from './ManageListingsPage.module.css';
-import DiscardDraftModal from './DiscardDraftModal/DiscardDraftModal';
 
 const Heading = props => {
   const { listingsAreLoaded, pagination } = props;
@@ -269,7 +269,7 @@ const mapStateToProps = state => {
   const { currentUser } = state.user;
   const {
     currentPageResultIds,
-    pagination,
+    pagination: paginationFromServer,
     queryInProgress,
     queryListingsError,
     queryParams,
@@ -280,7 +280,25 @@ const mapStateToProps = state => {
     discardingDraft,
     discardingDraftError,
   } = state.ManageListingsPage;
-  const listings = getOwnListingsById(state, currentPageResultIds);
+  const listingsFromServer = getOwnListingsById(state, currentPageResultIds);
+  const listings = _.filter(
+    listingsFromServer,
+    listing => listing.attributes.publicData.isOffer !== true
+  );
+
+  const listingIsOffer = _.filter(
+    listingsFromServer,
+    listing => listing.attributes.publicData.isOffer === true
+  );
+
+  const pagination =
+    listingIsOffer && Array.isArray(listingIsOffer) && listingIsOffer.length > 0
+      ? {
+          ...paginationFromServer,
+          totalItems: paginationFromServer.totalItems - listingIsOffer.length,
+        }
+      : paginationFromServer;
+
   return {
     currentUser,
     currentPageResultIds,

@@ -60,6 +60,7 @@ import SearchResultsPanel from './SearchResultsPanel/SearchResultsPanel';
 import NoSearchResultsMaybe from './NoSearchResultsMaybe/NoSearchResultsMaybe';
 
 import css from './SearchPage.module.css';
+import _ from 'lodash';
 
 const MODAL_BREAKPOINT = 768; // Search is in modal on mobile layout
 const SEARCH_WITH_MAP_DEBOUNCE = 300; // Little bit of debounce before search is initiated.
@@ -694,7 +695,11 @@ const mapStateToProps = state => {
     searchParams,
     activeListingId,
   } = state.SearchPage;
-  const listings = getListingsById(state, currentPageResultIds);
+  const listingsfromEndpoint = getListingsById(state, currentPageResultIds);
+  const listings = _.filter(
+    listingsfromEndpoint,
+    listing => listing.attributes.publicData.isOffer !== true
+  );
 
   return {
     currentUser,

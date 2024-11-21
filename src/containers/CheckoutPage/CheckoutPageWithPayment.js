@@ -422,12 +422,12 @@ export const CheckoutPageWithPayment = props => {
     <Page title={title} scrollingDisabled={scrollingDisabled}>
       <CustomTopbar intl={intl} linkToExternalSite={config?.topbar?.logoLink} />
       <div className={css.contentContainer}>
-        <MobileListingImage
+        {/* <MobileListingImage
           listingTitle={listingTitle}
           author={listing?.author}
           firstImage={firstImage}
           layoutListingImageConfig={config.layout.listingImage}
-        />
+        /> */}
         <div className={css.orderFormContainer}>
           <div className={css.headingContainer}>
             <H3 as="h1" className={css.heading}>

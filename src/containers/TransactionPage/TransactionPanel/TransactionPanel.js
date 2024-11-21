@@ -9,7 +9,7 @@ import { userDisplayNameAsString } from '../../../util/data';
 import { isMobileSafari } from '../../../util/userAgent';
 import { createSlug } from '../../../util/urlHelpers';
 
-import { AvatarLarge, NamedLink, UserDisplayName } from '../../../components';
+import { AvatarLarge, AvatarSmall, NamedLink, UserDisplayName } from '../../../components';
 
 import { stateDataShape } from '../TransactionPage.stateData';
 import SendMessageForm from '../SendMessageForm/SendMessageForm';
@@ -198,7 +198,7 @@ export class TransactionPanelComponent extends Component {
       <div className={classes}>
         <div className={css.container}>
           <div className={css.txInfo}>
-            <DetailCardImage
+            {/* <DetailCardImage
               rootClassName={css.imageWrapperMobile}
               avatarWrapperClassName={css.avatarWrapperMobile}
               listingTitle={listingTitle}
@@ -206,7 +206,7 @@ export class TransactionPanelComponent extends Component {
               provider={provider}
               isCustomer={isCustomer}
               listingImageConfig={config.layout.listingImage}
-            />
+            /> */}
             {isProvider ? (
               <div className={css.avatarWrapperProviderDesktop}>
                 <AvatarLarge user={customer} className={css.avatarDesktop} />
@@ -318,14 +318,15 @@ export class TransactionPanelComponent extends Component {
           <div className={css.asideDesktop}>
             <div className={css.stickySection}>
               <div className={css.detailCard}>
-                <DetailCardImage
+                {/* <DetailCardImage
                   avatarWrapperClassName={css.avatarWrapperDesktop}
                   listingTitle={listingTitle}
                   image={firstImage}
                   provider={provider}
                   isCustomer={isCustomer}
                   listingImageConfig={config.layout.listingImage}
-                />
+                /> */}
+                <AvatarSmall user={listing.author}/>
 
                 <DetailCardHeadingsMaybe
                   showDetailCardHeadings={showDetailCardHeadings}

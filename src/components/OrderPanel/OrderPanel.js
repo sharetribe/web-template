@@ -67,7 +67,7 @@ const ProductOrderForm = loadable(() =>
 const MODAL_BREAKPOINT = 1023;
 const TODAY = new Date();
 
-const priceData = (price, currency, intl) => {
+export const priceData = (price, currency, intl) => {
   if (price && price.currency === currency) {
     const formattedPrice = formatMoney(intl, price);
     return { formattedPrice, priceTitle: formattedPrice };

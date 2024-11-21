@@ -1148,5 +1148,10 @@
   "UserNav.profileSettings": "Impostazioni profilo",
   "UserNav.yourListings": "I tuoi annunci",
   "CustomInquiryForm.emailNoti": "{boldText} Se la tua offerta viene accettata, riceverai una notifica via email e potrai comunicare direttamente con Alessandro P. per i dettagli.",
-  "CustomInquiryForm.offerPriceRequired":"Please fill in your offer price"
+  "CustomInquiryForm.offerPriceRequired": "Please fill in your offer price",
+  "ListingPage.ListingPageCarousel.working": "Posizione",
+  "ListingPage.ListingPageCarousel.date": "Da completare",
+  "ListingPage.ListingPageCarousel.detailsTitle": "Dettagli",
+  "ListingPage.SectionOfferListingsMaybe.title":"Offerte ({value})",
+  "ListingPage.acceptOfferButton":"Accetta offerta"
 }

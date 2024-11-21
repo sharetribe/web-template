@@ -56,7 +56,7 @@ import SectionMultiEnumMaybe from './SectionMultiEnumMaybe';
 import SectionYoutubeVideoMaybe from './SectionYoutubeVideoMaybe';
 
 const MAX_MOBILE_SCREEN_WIDTH = 768;
-const MIN_LENGTH_FOR_LONG_WORDS = 20;
+export const MIN_LENGTH_FOR_LONG_WORDS = 20;
 
 export const AsideContent = props => {
   const { user, displayName, showLinkToProfileSettingsPage } = props;
