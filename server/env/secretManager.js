@@ -23,7 +23,9 @@ async function loadPlatformSecrets() {
 async function loadMarketSecrets() {
   try {
     console.warn('Loading MARKET env from Google Cloud Secret manager');
-    const [version] = await client.accessSecretVersion({ name: process.env.CONFIG_MARKET_SECRET_NAME });
+    const [version] = await client.accessSecretVersion({
+      name: process.env.CONFIG_MARKET_SECRET_NAME,
+    });
     const payload = version?.payload?.data?.toString();
     const env = payload ? parse(payload) : {};
     return env;
@@ -37,14 +39,13 @@ async function loadMarketSecrets() {
   return false;
 }
 
-
 async function loadSecrets() {
   const platformSecrets = await loadPlatformSecrets();
   const marketSecrets = await loadMarketSecrets();
   return {
     ...platformSecrets,
     ...marketSecrets,
-  }
+  };
 }
 
 module.exports = {

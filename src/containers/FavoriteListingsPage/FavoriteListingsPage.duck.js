@@ -98,13 +98,13 @@ export const queryFavoriteListings = queryParams => (dispatch, getState, sdk) =>
           totalPages: 1,
           page: 1,
           paginationLimit: 1,
-          perPage: 42
-        }
+          perPage: 42,
+        },
       },
-    }
+    };
     dispatch(queryFavoritesSuccess(emptyObject));
     return emptyObject;
-  };
+  }
 
   const parsedFavorites = favorites[listingType];
   const favoritesMaybe = !!parsedFavorites ? { ids: parsedFavorites } : {};

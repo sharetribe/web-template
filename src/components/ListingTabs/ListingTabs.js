@@ -5,11 +5,7 @@ import { Tabs } from 'antd';
 import { FormattedMessage } from '../../util/reactIntl';
 import { LISTING_TYPES, propTypes } from '../../util/types';
 
-import {
-  H3,
-  PaginationLinks,
-  ListingCard,
-} from '../';
+import { H3, PaginationLinks, ListingCard } from '../';
 
 import css from './ListingTabs.module.css';
 
@@ -89,7 +85,7 @@ export const ListingTabs = props => {
       {queryFavoritesError && queryError}
       {enableGrid && listingGridRenderer}
     </div>
-  )
+  );
 
   return (
     <div className={css.root}>
@@ -116,8 +112,8 @@ ListingTabs.defaultProps = {
   pagination: null,
   queryFavoritesError: null,
   queryParams: null,
-  loadingMessageId: "ManageListingsPage.loadingOwnListings",
-  errorMessageId: "ManageListingsPage.queryError",
+  loadingMessageId: 'ManageListingsPage.loadingOwnListings',
+  errorMessageId: 'ManageListingsPage.queryError',
 };
 
 ListingTabs.propTypes = {

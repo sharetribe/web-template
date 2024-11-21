@@ -10,12 +10,7 @@ import { createResourceLocatorString } from '../../util/routes';
 import { LISTING_TYPES, propTypes } from '../../util/types';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 
-import {
-  Page,
-  UserNav,
-  LayoutSingleColumn,
-  ListingTabs,
-} from '../../components';
+import { Page, UserNav, LayoutSingleColumn, ListingTabs } from '../../components';
 
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';

@@ -135,7 +135,6 @@ export const ManageListingsPageComponent = props => {
   const listingsAreLoaded = !queryInProgress && hasPaginationInfo;
   const hasNoResults = listingsAreLoaded && pagination.totalItems === 0;
 
-
   const loadingResults = (
     <div className={css.messagePanel}>
       <H3 as="h2" className={css.heading}>

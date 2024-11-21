@@ -55,7 +55,7 @@ const slackUserUpdateWarningWorkflow = async (userId, displayName, email, warnin
   }
 };
 
-const slackProductListingsCreatedWorkflow = async (totalListings) => {
+const slackProductListingsCreatedWorkflow = async totalListings => {
   const slackListingManagerChannelId = process.env.SLACK_LISTING_MANAGER_CHANNEL_ID;
   const slackBotToken = process.env.SLACK_BOT_TOKEN;
   try {
