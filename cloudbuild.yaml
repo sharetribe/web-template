@@ -1,78 +1,38 @@
-# Decrypt the file containing the key
 steps:
-  - id: 'decrypt'
-    waitFor: ['-']
-    name: 'gcr.io/cloud-builders/gcloud'
-    args:
-      - kms
-      - decrypt
-      - --ciphertext-file=${_ENCRYPTED_KEY_PATH}
-      - --plaintext-file=/root/.ssh/id_rsa
-      - --location=us-east4
-      - --keyring=deploy
-      - --key=github-key
-    volumes:
-      - name: 'ssh'
-        path: /root/.ssh
-
-  # Set up git with key and domain
-  - id: 'init-ssh'
-    waitFor: ['decrypt']
-    name: 'gcr.io/cloud-builders/git'
+  - id: 'store-market-secrets'
+    name: 'node:18.20.1'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        chmod 600 /root/.ssh/id_rsa
-        mv etc/keys/ssh_config /root/.ssh/config
-        ssh-keyscan github.com >> /root/.ssh/known_hosts
-        chmod 600 /root/.ssh/known_hosts
-        eval `ssh-agent`
-        ssh-add /root/.ssh/id_rsa
-    volumes:
-      - name: 'ssh'
-        path: /root/.ssh
+        echo "Appending secrets to .env.production..."
+        echo "$$MARKET_CONFIG" > ./.env.production
+    secretEnv: ['MARKET_CONFIG']
 
-  - id: 'pull-experimental'
-    waitFor: ['init-ssh']
-    name: 'docker:20.10.12'
-    args: ['pull', 'docker.io/docker/dockerfile:experimental']
-    env:
-      - 'DOCKER_BUILDKIT=1'
-
-  # For some reason the GCP Docker Hub mirror is not compatible with Buildkit,
-  # so we have to pre-cache these things outside of BuildKit for now
-  # see: https://github.com/moby/buildkit/issues/606#issuecomment-453959632
-  - id: 'pull-node'
-    waitFor: ['init-ssh']
-    name: 'docker:20.10.12'
-    args: ['pull', 'docker.io/library/node:18.15.0']
-    env:
-      - 'DOCKER_BUILDKIT=1'
+  - id: 'debug-secrets'
+    waitFor: ['store-market-secrets']
+    name: 'node:18.20.1'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "Contents of .env.production after modification:"
+        cat ./.env.production
 
   - id: 'build'
-    name: 'docker:20.10.12'
-    waitFor: ['pull-experimental', 'pull-node']
+    waitFor: ['debug-secrets']
+    name: 'gcr.io/cloud-builders/docker'
     args:
       [
         'build',
-        '--ssh',
-        'default=/root/.ssh/id_rsa',
         '-t',
         'gcr.io/$PROJECT_ID/marketplace:latest',
         '-t',
         'gcr.io/$PROJECT_ID/marketplace:$SHORT_SHA',
         '--build-arg',
         'COMMIT_SHA=$COMMIT_SHA',
-        '--build-arg',
-        'NODE_ENV=${_NODE_ENV}',
         '.',
       ]
-    env:
-      - 'DOCKER_BUILDKIT=1'
-    volumes:
-      - name: 'ssh'
-        path: /root/.ssh
 
   - id: 'push'
     waitFor: ['build']
@@ -93,7 +53,10 @@ steps:
       - '--platform'
       - 'managed'
       - '--allow-unauthenticated'
+availableSecrets:
+  secretManager:
+  - versionName: ${_CONFIG_MARKET_SECRET_NAME}
+    env: 'MARKET_CONFIG'
 substitutions:
-  _ENCRYPTED_KEY_PATH: etc/keys/cloudbuild_rsa.enc
-  _NODE_ENV: production
+  _CONFIG_MARKET_SECRET_NAME: path/to/market-secret
 timeout: 900s

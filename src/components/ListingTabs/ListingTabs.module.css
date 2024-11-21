@@ -1,12 +1,9 @@
 @import '../../styles/customMediaQueries.css';
 
 .root {
-}
-
-.messagePanel,
-.listingPanel {
   width: 100%;
   margin: 24px auto 0 auto;
+  padding: 0 24px;
 
   @media (--viewportMedium) {
     margin: 48px auto 0 auto;
@@ -15,6 +12,7 @@
   @media (--viewportLarge) {
     margin: 72px auto 0 auto;
     max-width: calc(var(--contentMaxWidth) + 72px);
+    padding: 0 36px;
   }
 
   @media (--viewportXLarge) {
@@ -23,19 +21,19 @@
 }
 
 .heading {
-  margin: 0 24px 24px 24px;
+  margin: 0;
+  margin-bottom: 24px;
 
   @media (--viewportMedium) {
-    margin: 0 24px 32px 24px;
-  }
-
-  @media (--viewportLarge) {
-    margin: 0 36px 32px 36px;
+    margin-bottom: 32px;
   }
 }
 
-.listingCards {
+.listingPanel {
   padding-top: 24px;
+}
+
+.listingCards {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   gap: 24px;
@@ -83,12 +81,5 @@
 
   @media (--viewportLarge) {
     margin: auto 36px 0 36px;
-  }
-}
-
-.favoriteCardsTabs {
-  padding: 0 24px;
-  @media (--viewportLarge) {
-    padding: 0 36px;
   }
 }

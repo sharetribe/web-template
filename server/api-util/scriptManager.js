@@ -84,7 +84,7 @@ function generateScript(SCRIPT_NAME, queryEvents, analyzeEvent, analyzeEventGrou
         const fullPage = events.length === res.data.meta.perPage;
         const delay = fullPage ? pollWait : pollIdleWait;
         const lastSequenceId = lastEvent ? lastEvent.attributes.sequenceId : sequenceId;
-        const withEventGroupHandler = !!analyzeEventGroup
+        const withEventGroupHandler = !!analyzeEventGroup;
         if (withEventGroupHandler) {
           analyzeEventGroup(events);
         }

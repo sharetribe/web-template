@@ -31,24 +31,6 @@ import ManageListingCard from './ManageListingCard/ManageListingCard';
 import css from './ManageListingsPage.module.css';
 import { closeListing, getOwnListingsById, openListing } from './ManageListingsPage.duck';
 
-const Heading = props => {
-  const { listingsAreLoaded, pagination } = props;
-  const hasResults = listingsAreLoaded && pagination.totalItems > 0;
-  const hasNoResults = listingsAreLoaded && pagination.totalItems === 0;
-
-  return hasResults ? (
-    <H3 as="h1" className={css.heading}>
-      <FormattedMessage id="ManageListingsPage.title" defaultMessage="Manage your market" />
-    </H3>
-  ) : hasNoResults ? (
-    <div className={css.noResultsContainer}>
-      <H3 as="h1" className={css.headingNoListings}>
-        <FormattedMessage id="ManageListingsPage.noResults" />
-      </H3>
-    </div>
-  ) : null;
-};
-
 const PaginationLinksMaybe = props => {
   const { listingsAreLoaded, pagination, page } = props;
   return listingsAreLoaded && pagination && pagination.totalPages > 1 ? (
@@ -151,6 +133,7 @@ export const ManageListingsPageComponent = props => {
 
   const hasPaginationInfo = !!pagination && pagination.totalItems != null;
   const listingsAreLoaded = !queryInProgress && hasPaginationInfo;
+  const hasNoResults = listingsAreLoaded && pagination.totalItems === 0;
 
   const loadingResults = (
     <div className={css.messagePanel}>
@@ -230,23 +213,31 @@ export const ManageListingsPageComponent = props => {
         </Flex>
       </Flex>
 
-      <div className={css.listingCards}>
-        {listings.map(l => (
-          <ManageListingCard
-            className={css.listingCard}
-            key={l.id.uuid}
-            listing={l}
-            isMenuOpen={!!listingMenuOpen && listingMenuOpen.id.uuid === l.id.uuid}
-            actionsInProgressListingId={openingListing || closingListing}
-            onToggleMenu={onToggleMenu}
-            onCloseListing={onCloseListing}
-            onOpenListing={handleOpenListing}
-            hasOpeningError={openingErrorListingId.uuid === l.id.uuid}
-            hasClosingError={closingErrorListingId.uuid === l.id.uuid}
-            renderSizes={renderSizes}
-          />
-        ))}
-      </div>
+      {hasNoResults ? (
+        <div className={css.noResultsContainer}>
+          <H3 as="h2" className={css.headingNoListings}>
+            <FormattedMessage id="ManageListingsPage.noResults" />
+          </H3>
+        </div>
+      ) : (
+        <div className={css.listingCards}>
+          {listings.map(l => (
+            <ManageListingCard
+              className={css.listingCard}
+              key={l.id.uuid}
+              listing={l}
+              isMenuOpen={!!listingMenuOpen && listingMenuOpen.id.uuid === l.id.uuid}
+              actionsInProgressListingId={openingListing || closingListing}
+              onToggleMenu={onToggleMenu}
+              onCloseListing={onCloseListing}
+              onOpenListing={handleOpenListing}
+              hasOpeningError={openingErrorListingId.uuid === l.id.uuid}
+              hasClosingError={closingErrorListingId.uuid === l.id.uuid}
+              renderSizes={renderSizes}
+            />
+          ))}
+        </div>
+      )}
 
       <PaginationLinksMaybe
         listingsAreLoaded={listingsAreLoaded}
@@ -274,7 +265,9 @@ export const ManageListingsPageComponent = props => {
         {queryListingsError ? queryError : null}
 
         <div className={css.listingPanel}>
-          <Heading listingsAreLoaded={listingsAreLoaded} pagination={pagination} />
+          <H3 as="h1" className={css.heading}>
+            <FormattedMessage id="ManageListingsPage.title" defaultMessage="Manage your market" />
+          </H3>
           <div className={css.listingCardsTabs}>
             <Tabs
               defaultActiveKey={currentListingType}
