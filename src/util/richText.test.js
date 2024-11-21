@@ -67,7 +67,7 @@ describe('richText', () => {
 
     it('should add zwsp to strings with given chars (",/"): multiple occurrences', () => {
       expect(
-        zwspAroundSpecialCharsSplit('word/another/third,fourth and fifth,sixth', ',/')
+        zwspAroundSpecialCharsSplit('word/another/third,fourth and fifth,sixth', ',/'),
       ).toEqual([
         'word',
         slashWithZWSP,
@@ -116,7 +116,7 @@ describe('richText', () => {
       const wrapper = render(
         <span>
           {wrapLongWord('word', 'key', { longWordMinLength: 10, longWordClass: 'longWord' })}
-        </span>
+        </span>,
       );
       const htmlString = wrapper.asFragment().firstChild.outerHTML;
       expect(htmlString).toEqual('<span>word</span>');
@@ -128,11 +128,11 @@ describe('richText', () => {
             longWordMinLength: 10,
             longWordClass: 'longWord',
           })}
-        </span>
+        </span>,
       );
       const htmlString = wrapper.asFragment().firstChild.outerHTML;
       expect(htmlString).toEqual(
-        '<span><span class="longWord">Pneumonoultramicroscopicsilicovolcanoconiosis</span></span>'
+        '<span><span class="longWord">Pneumonoultramicroscopicsilicovolcanoconiosis</span></span>',
       );
     });
   });
@@ -142,7 +142,7 @@ describe('richText', () => {
       const wrapper = render(
         <span>
           {linkifyOrWrapLinkSplit('word', 'key', { linkify: true, linkClass: 'linkClass' })}
-        </span>
+        </span>,
       );
       const htmlString = wrapper.asFragment().firstChild.outerHTML;
       expect(htmlString).toEqual('<span>word</span>');
@@ -154,11 +154,11 @@ describe('richText', () => {
             linkify: true,
             linkClass: 'linkClass',
           })}
-        </span>
+        </span>,
       );
       const htmlString = wrapper.asFragment().firstChild.outerHTML;
       expect(htmlString).toEqual(
-        '<span><a href="http://www.example.com" class="linkClass" target="_blank" rel="noopener noreferrer">http://www.example.com</a></span>'
+        '<span><a href="http://www.example.com" class="linkClass" target="_blank" rel="noopener noreferrer">http://www.example.com</a></span>',
       );
     });
     it('should add link around words that are links even inside parenthesis', () => {
@@ -168,11 +168,11 @@ describe('richText', () => {
             linkify: true,
             linkClass: 'linkClass',
           })}
-        </span>
+        </span>,
       );
       const htmlString = wrapper.asFragment().firstChild.outerHTML;
       expect(htmlString).toEqual(
-        '<span>(<a href="http://www.example.com" class="linkClass" target="_blank" rel="noopener noreferrer">http://www.example.com</a>)</span>'
+        '<span>(<a href="http://www.example.com" class="linkClass" target="_blank" rel="noopener noreferrer">http://www.example.com</a>)</span>',
       );
     });
     it('should add link around words that are links even inside brackets', () => {
@@ -182,11 +182,11 @@ describe('richText', () => {
             linkify: true,
             linkClass: 'linkClass',
           })}
-        </span>
+        </span>,
       );
       const htmlString = wrapper.asFragment().firstChild.outerHTML;
       expect(htmlString).toEqual(
-        '<span>[<a href="http://www.example.com" class="linkClass" target="_blank" rel="noopener noreferrer">http://www.example.com</a>]</span>'
+        '<span>[<a href="http://www.example.com" class="linkClass" target="_blank" rel="noopener noreferrer">http://www.example.com</a>]</span>',
       );
     });
   });
@@ -205,13 +205,13 @@ describe('richText', () => {
         <span>
           {richText(
             'word Pneumonoultramicroscopicsilicovolcanoconiosis is the longest word',
-            options
+            options,
           )}
-        </span>
+        </span>,
       );
       const htmlString = wrapper.asFragment().firstChild.outerHTML;
       expect(htmlString).toEqual(
-        '<span>word <span class="longWord">Pneumonoultramicroscopicsilicovolcanoconiosis</span> is the longest word</span>'
+        '<span>word <span class="longWord">Pneumonoultramicroscopicsilicovolcanoconiosis</span> is the longest word</span>',
       );
     });
     it('should add span around a string with multiple long words', () => {
@@ -219,39 +219,39 @@ describe('richText', () => {
         <span>
           {richText(
             'word Pneumonoultramicroscopicsilicovolcanoconiosis is the longest word - Pseudopseudohypoparathyroidism is shorter',
-            options
+            options,
           )}
-        </span>
+        </span>,
       );
       const htmlString = wrapper.asFragment().firstChild.outerHTML;
       expect(htmlString).toEqual(
-        '<span>word <span class="longWord">Pneumonoultramicroscopicsilicovolcanoconiosis</span> is the longest word - <span class="longWord">Pseudopseudohypoparathyroidism</span> is shorter</span>'
+        '<span>word <span class="longWord">Pneumonoultramicroscopicsilicovolcanoconiosis</span> is the longest word - <span class="longWord">Pseudopseudohypoparathyroidism</span> is shorter</span>',
       );
     });
 
     it('should add span around a string with multiple long words and containing slashes', () => {
       const wrapper = render(
-        <span>{richText('Chars one/two/three - count until exhaustion…', options)}</span>
+        <span>{richText('Chars one/two/three - count until exhaustion…', options)}</span>,
       );
       // <span>
       //   Chars one​/​two​/​three - count until <span class=\"classX\">exhaustion…</span>
       // </span>
       const htmlString = wrapper.asFragment().firstChild.outerHTML;
       expect(htmlString).toEqual(
-        `<span>Chars one${slashWithZWSP}two${slashWithZWSP}three - count until <span class="longWord">exhaustion…</span></span>`
+        `<span>Chars one${slashWithZWSP}two${slashWithZWSP}three - count until <span class="longWord">exhaustion…</span></span>`,
       );
     });
 
     it('should add span around a string with a long word and containing slashes and commas', () => {
       const wrapper = render(
-        <span>{richText('Chars one/two/three, count until exhaustion…', options)}</span>
+        <span>{richText('Chars one/two/three, count until exhaustion…', options)}</span>,
       );
       // <span>
       //   Chars one​/​two​/​three​,​ count until <span class=\"classX\">exhaustion…</span>
       // </span>
       const htmlString = wrapper.asFragment().firstChild.outerHTML;
       expect(htmlString).toEqual(
-        `<span>Chars one${slashWithZWSP}two${slashWithZWSP}three${commaWithZWSP} count until <span class="longWord">exhaustion…</span></span>`
+        `<span>Chars one${slashWithZWSP}two${slashWithZWSP}three${commaWithZWSP} count until <span class="longWord">exhaustion…</span></span>`,
       );
     });
 
@@ -260,28 +260,28 @@ describe('richText', () => {
         <span>
           {richText(
             'Chars one/two/three - count until exhaustion… and a random link: http://www.example.com',
-            { ...options, linkify: true, linkClass: 'link' }
+            { ...options, linkify: true, linkClass: 'link' },
           )}
-        </span>
+        </span>,
       );
       // <span>
       //   Chars one​/​two​/​three - count until <span class=\"classX\">exhaustion…</span> and a random link: <a href=\"http://www.example.com\" target=\"_blank\" rel=\"noopener noreferrer\">http://www.example.com</a>
       // </span>
       const htmlString = wrapper.asFragment().firstChild.outerHTML;
       expect(htmlString).toEqual(
-        `<span>Chars one${slashWithZWSP}two${slashWithZWSP}three - count until <span class="longWord">exhaustion…</span> and a random link: <a href="http://www.example.com" class="link" target="_blank" rel="noopener noreferrer">http://www.example.com</a></span>`
+        `<span>Chars one${slashWithZWSP}two${slashWithZWSP}three - count until <span class="longWord">exhaustion…</span> and a random link: <a href="http://www.example.com" class="link" target="_blank" rel="noopener noreferrer">http://www.example.com</a></span>`,
       );
     });
     it('should add link inside non-whitespace-sequence (http://example.com)', () => {
       const wrapper = render(
-        <span>{richText('Link: (http://example.com)', { ...options, linkify: true })}</span>
+        <span>{richText('Link: (http://example.com)', { ...options, linkify: true })}</span>,
       );
       // <span>
       //   Link: (<a href=\"http://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">http://example.com</a>)
       // </span>
       const htmlString = wrapper.asFragment().firstChild.outerHTML;
       expect(htmlString).toEqual(
-        `<span>Link: (<a href="http://example.com" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com</a>)</span>`
+        `<span>Link: (<a href="http://example.com" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com</a>)</span>`,
       );
     });
 
@@ -289,14 +289,14 @@ describe('richText', () => {
       const wrapper = render(
         <span>
           {richText('Link: ((http://example.com/path_(etc))) asdf', { ...options, linkify: true })}
-        </span>
+        </span>,
       );
       // <span>
       //   Link: (<a href=\"http://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">http://example.com</a>)
       // </span>
       const htmlString = wrapper.asFragment().firstChild.outerHTML;
       expect(htmlString).toEqual(
-        `<span>Link: ((<a href="http://example.com/path_(etc)" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com/path_(etc)</a>)) asdf</span>`
+        `<span>Link: ((<a href="http://example.com/path_(etc)" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com/path_(etc)</a>)) asdf</span>`,
       );
     });
 
@@ -304,14 +304,14 @@ describe('richText', () => {
       const wrapper = render(
         <span>
           {richText('Link: ((http://example.com/path_(etc) asdf', { ...options, linkify: true })}
-        </span>
+        </span>,
       );
       // <span>
       //   Link: (<a href=\"http://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">http://example.com</a>)
       // </span>
       const htmlString = wrapper.asFragment().firstChild.outerHTML;
       expect(htmlString).toEqual(
-        `<span>Link: ((<a href="http://example.com/path_(etc)" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com/path_(etc)</a> asdf</span>`
+        `<span>Link: ((<a href="http://example.com/path_(etc)" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com/path_(etc)</a> asdf</span>`,
       );
     });
 
@@ -319,14 +319,14 @@ describe('richText', () => {
       const wrapper = render(
         <span>
           {richText('Link: ((http://example.com/path_(etc asdf', { ...options, linkify: true })}
-        </span>
+        </span>,
       );
       // <span>
       //   Link: (<a href=\"http://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">http://example.com</a>)
       // </span>
       const htmlString = wrapper.asFragment().firstChild.outerHTML;
       expect(htmlString).toEqual(
-        `<span>Link: ((<a href="http://example.com/path_(etc" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com/path_(etc</a> asdf</span>`
+        `<span>Link: ((<a href="http://example.com/path_(etc" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com/path_(etc</a> asdf</span>`,
       );
     });
 
@@ -334,14 +334,14 @@ describe('richText', () => {
       const wrapper = render(
         <span>
           {richText('Link: ((http://example.com/path_etc) asdf', { ...options, linkify: true })}
-        </span>
+        </span>,
       );
       // <span>
       //   Link: (<a href=\"http://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">http://example.com</a>)
       // </span>
       const htmlString = wrapper.asFragment().firstChild.outerHTML;
       expect(htmlString).toEqual(
-        `<span>Link: ((<a href="http://example.com/path_etc" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com/path_etc</a>) asdf</span>`
+        `<span>Link: ((<a href="http://example.com/path_etc" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com/path_etc</a>) asdf</span>`,
       );
     });
 
@@ -349,14 +349,14 @@ describe('richText', () => {
       const wrapper = render(
         <span>
           {richText('Link: ((http://example.com/path_(etc)) asdf', { ...options, linkify: true })}
-        </span>
+        </span>,
       );
       // <span>
       //   Link: (<a href=\"http://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">http://example.com</a>)
       // </span>
       const htmlString = wrapper.asFragment().firstChild.outerHTML;
       expect(htmlString).toEqual(
-        `<span>Link: ((<a href="http://example.com/path_(etc)" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com/path_(etc)</a>) asdf</span>`
+        `<span>Link: ((<a href="http://example.com/path_(etc)" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com/path_(etc)</a>) asdf</span>`,
       );
     });
 
@@ -364,38 +364,38 @@ describe('richText', () => {
       const wrapper = render(
         <span>
           {richText('Link: ((http://example.com/path(_(etc)) asdf', { ...options, linkify: true })}
-        </span>
+        </span>,
       );
       // <span>
       //   Link: (<a href=\"http://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">http://example.com</a>)
       // </span>
       const htmlString = wrapper.asFragment().firstChild.outerHTML;
       expect(htmlString).toEqual(
-        `<span>Link: ((<a href="http://example.com/path(_(etc))" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com/path(_(etc))</a> asdf</span>`
+        `<span>Link: ((<a href="http://example.com/path(_(etc))" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com/path(_(etc))</a> asdf</span>`,
       );
     });
 
     it('should add link inside non-whitespace-sequence that ends to common puctuation (!:,.;)', () => {
       // !
       const wrapper = render(
-        <span>{richText('Check this http://example.com!', { ...options, linkify: true })}</span>
+        <span>{richText('Check this http://example.com!', { ...options, linkify: true })}</span>,
       );
       // <span>
       //   Check this <a href=\"http://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">http://example.com</a>!
       // </span>
       const htmlString = wrapper.asFragment().firstChild.outerHTML;
       expect(htmlString).toEqual(
-        `<span>Check this <a href="http://example.com" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com</a>!</span>`
+        `<span>Check this <a href="http://example.com" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com</a>!</span>`,
       );
 
       // :
       const colon = render(
         <span>
           {richText('Check this http://example.com: asdf', { ...options, linkify: true })}
-        </span>
+        </span>,
       );
       expect(colon.asFragment().firstChild.outerHTML).toEqual(
-        `<span>Check this <a href="http://example.com" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com</a>: asdf</span>`
+        `<span>Check this <a href="http://example.com" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com</a>: asdf</span>`,
       );
 
       // ,
@@ -403,20 +403,20 @@ describe('richText', () => {
       const comma = render(
         <span>
           {richText('Check this http://example.com, asdf', { ...options, linkify: true })}
-        </span>
+        </span>,
       );
       expect(comma.asFragment().firstChild.outerHTML).toEqual(
-        `<span>Check this <a href=\"http://example.com\" class=\"longWord\" target=\"_blank\" rel=\"noopener noreferrer\">http://example.com</a>​,​ asdf</span>`
+        `<span>Check this <a href=\"http://example.com\" class=\"longWord\" target=\"_blank\" rel=\"noopener noreferrer\">http://example.com</a>​,​ asdf</span>`,
       );
 
       // .
       const dot = render(
         <span>
           {richText('Check this http://example.com. Asdf', { ...options, linkify: true })}
-        </span>
+        </span>,
       );
       expect(dot.asFragment().firstChild.outerHTML).toEqual(
-        `<span>Check this <a href="http://example.com" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com</a>. Asdf</span>`
+        `<span>Check this <a href="http://example.com" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com</a>. Asdf</span>`,
       );
 
       // ;
@@ -426,47 +426,47 @@ describe('richText', () => {
             ...options,
             linkify: true,
           })}
-        </span>
+        </span>,
       );
       expect(semicolon.asFragment().firstChild.outerHTML).toEqual(
-        `<span>Check this <a href=\"http://example.com\" class=\"longWord\" target=\"_blank\" rel=\"noopener noreferrer\">http://example.com</a>; and this <a href=\"http://example.com\" class=\"longWord\" target=\"_blank\" rel=\"noopener noreferrer\">http://example.com</a></span>`
+        `<span>Check this <a href=\"http://example.com\" class=\"longWord\" target=\"_blank\" rel=\"noopener noreferrer\">http://example.com</a>; and this <a href=\"http://example.com\" class=\"longWord\" target=\"_blank\" rel=\"noopener noreferrer\">http://example.com</a></span>`,
       );
     });
 
     it('should not include quote chars to link (http://example.com")', () => {
       const wrapper = render(
-        <span>{richText('Link: (http://example.com")', { ...options, linkify: true })}</span>
+        <span>{richText('Link: (http://example.com")', { ...options, linkify: true })}</span>,
       );
       // <span>
       //   Link: (<a href=\"http://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">http://example.com</a>)
       // </span>
       const htmlString = wrapper.asFragment().firstChild.outerHTML;
       expect(htmlString).toEqual(
-        `<span>Link: (<a href="http://example.com" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com</a>\")</span>`
+        `<span>Link: (<a href="http://example.com" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com</a>\")</span>`,
       );
 
       const singleQuote = render(
-        <span>{richText("Link: (http://example.com')", { ...options, linkify: true })}</span>
+        <span>{richText("Link: (http://example.com')", { ...options, linkify: true })}</span>,
       );
       expect(singleQuote.asFragment().firstChild.outerHTML).toEqual(
-        `<span>Link: (<a href="http://example.com" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com</a>\')</span>`
+        `<span>Link: (<a href="http://example.com" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com</a>\')</span>`,
       );
 
       const singleQuote2 = render(
-        <span>{richText("Link: (http://example.com')", { ...options, linkify: true })}</span>
+        <span>{richText("Link: (http://example.com')", { ...options, linkify: true })}</span>,
       );
       expect(singleQuote2.asFragment().firstChild.outerHTML).toEqual(
-        `<span>Link: (<a href="http://example.com" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com</a>\')</span>`
+        `<span>Link: (<a href="http://example.com" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com</a>\')</span>`,
       );
     });
     it('should not include closing anchor tag to a link (http://example.com</a>")', () => {
       // Note: the slash ('/') is part of break chars by default, therefore zero-width-space is added there
       const wrapper = render(
-        <span>{richText('Link: (http://example.com</a>)', { ...options, linkify: true })}</span>
+        <span>{richText('Link: (http://example.com</a>)', { ...options, linkify: true })}</span>,
       );
       const htmlString = wrapper.asFragment().firstChild.outerHTML;
       expect(htmlString).toEqual(
-        `<span>Link: (<a href="http://example.com" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com</a>&lt;​/​a&gt;)</span>`
+        `<span>Link: (<a href="http://example.com" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com</a>&lt;​/​a&gt;)</span>`,
       );
     });
 
@@ -475,16 +475,16 @@ describe('richText', () => {
         <span>
           {richText(
             'Chars one/two/three - count until exhaustion… and a random link: http://www.example.com',
-            options
+            options,
           )}
-        </span>
+        </span>,
       );
       // <span>
       //   Chars one​/​two​/​three - count until <span class=\"classX\">exhaustion…</span> and a random link: http:​/​​/​<span class=\"longWord\">www.example.com</span>
       // </span>
       const htmlString = wrapper.asFragment().firstChild.outerHTML;
       expect(htmlString).toEqual(
-        `<span>Chars one${slashWithZWSP}two${slashWithZWSP}three - count until <span class="longWord">exhaustion…</span> and a random link: <span class="longWord">http://www.example.com</span></span>`
+        `<span>Chars one${slashWithZWSP}two${slashWithZWSP}three - count until <span class="longWord">exhaustion…</span> and a random link: <span class="longWord">http://www.example.com</span></span>`,
       );
     });
   });

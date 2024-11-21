@@ -129,14 +129,14 @@ describe('ConfirmSignupForm', () => {
         userFields={userFields}
         onSubmit={noop}
         onOpenTermsOfService={noop}
-      />
+      />,
     );
 
     // Simulate user interaction and select parent level category
     await waitFor(() => {
       userEvent.selectOptions(
         screen.getByRole('combobox'),
-        screen.getByRole('option', { name: 'Seller' })
+        screen.getByRole('option', { name: 'Seller' }),
       );
     });
 
@@ -145,13 +145,13 @@ describe('ConfirmSignupForm', () => {
 
     // Check that auth info details are in the form already
     expect(screen.getByRole('textbox', { name: 'ConfirmSignupForm.emailLabel' })).toHaveValue(
-      authInfo.email
+      authInfo.email,
     );
     expect(screen.getByRole('textbox', { name: 'ConfirmSignupForm.firstNameLabel' })).toHaveValue(
-      authInfo.firstName
+      authInfo.firstName,
     );
     expect(screen.getByRole('textbox', { name: 'ConfirmSignupForm.lastNameLabel' })).toHaveValue(
-      authInfo.lastName
+      authInfo.lastName,
     );
 
     // Type a value in the required text field
@@ -175,14 +175,14 @@ describe('ConfirmSignupForm', () => {
         userFields={userFields}
         onSubmit={noop}
         onOpenTermsOfService={noop}
-      />
+      />,
     );
 
     // Simulate user interaction and select parent level category
     await waitFor(() => {
       userEvent.selectOptions(
         screen.getByRole('combobox'),
-        screen.getByRole('option', { name: 'Seller' })
+        screen.getByRole('option', { name: 'Seller' }),
       );
     });
 

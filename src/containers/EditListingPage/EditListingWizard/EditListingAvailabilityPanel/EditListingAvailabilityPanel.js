@@ -24,16 +24,15 @@ const WEEKDAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 
 // This is the order of days as JavaScript understands them
 // The number returned by "new Date().getDay()" refers to day of week starting from sunday.
-const rotateDays = (days, startOfWeek) => {
-  return startOfWeek === 0 ? days : days.slice(startOfWeek).concat(days.slice(0, startOfWeek));
-};
+const rotateDays = (days, startOfWeek) =>
+  startOfWeek === 0 ? days : days.slice(startOfWeek).concat(days.slice(0, startOfWeek));
 
 const defaultTimeZone = () =>
   typeof window !== 'undefined' ? getDefaultTimeZoneOnBrowser() : 'Etc/UTC';
 
-///////////////////////////////////////////////////
+/// ////////////////////////////////////////////////
 // EditListingAvailabilityExceptionPanel - utils //
-///////////////////////////////////////////////////
+/// ////////////////////////////////////////////////
 
 // Create initial entry mapping for form's initial values
 const createEntryDayGroups = (entries = {}) => {
@@ -76,7 +75,7 @@ const createEntriesFromSubmitValues = (values) =>
     const dayValues = values[dayOfWeek] || [];
     const dayEntries = dayValues.map((dayValue) => {
       const { startTime, endTime, seats } = dayValue;
-      const seatsValue = seats ? seats : 0;
+      const seatsValue = seats || 0;
       // Note: This template doesn't support seats yet.
       return startTime && endTime
         ? {
@@ -110,10 +109,10 @@ const createAvailabilityPlan = (values) => {
   };
 };
 
-//////////////////////////////////
+/// ///////////////////////////////
 // EditListingAvailabilityPanel //
-//////////////////////////////////
-const EditListingAvailabilityPanel = (props) => {
+/// ///////////////////////////////
+function EditListingAvailabilityPanel(props) {
   const {
     className,
     rootClassName,
@@ -145,7 +144,7 @@ const EditListingAvailabilityPanel = (props) => {
   const [isEditExceptionsModalOpen, setIsEditExceptionsModalOpen] = useState(false);
   const [valuesFromLastSubmit, setValuesFromLastSubmit] = useState(null);
 
-  const firstDayOfWeek = config.localization.firstDayOfWeek;
+  const { firstDayOfWeek } = config.localization;
   const classes = classNames(rootClassName || css.root, className);
   const listingAttributes = listing?.attributes;
   const unitType = listingAttributes?.publicData?.unitType;
@@ -166,9 +165,7 @@ const EditListingAvailabilityPanel = (props) => {
     ],
   };
   const availabilityPlan = listingAttributes?.availabilityPlan || defaultAvailabilityPlan;
-  const initialValues = valuesFromLastSubmit
-    ? valuesFromLastSubmit
-    : createInitialValues(availabilityPlan);
+  const initialValues = valuesFromLastSubmit || createInitialValues(availabilityPlan);
 
   const handleSubmit = (values) => {
     setValuesFromLastSubmit(values);
@@ -358,7 +355,7 @@ const EditListingAvailabilityPanel = (props) => {
       ) : null}
     </main>
   );
-};
+}
 
 EditListingAvailabilityPanel.defaultProps = {
   className: null,

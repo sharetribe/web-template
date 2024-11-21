@@ -62,8 +62,12 @@ export const getStateDataForBookingProcess = (txInfo, processInfo) => {
       };
     })
     .cond([states.PREAUTHORIZED_GIFT, PROVIDER], () => {
-      const primary = isCustomerBanned ? null : actionButtonProps(transitions.ACCEPT_GIFT, PROVIDER);
-      const secondary = isCustomerBanned ? null : actionButtonProps(transitions.DECLINE_GIFT, PROVIDER);
+      const primary = isCustomerBanned
+        ? null
+        : actionButtonProps(transitions.ACCEPT_GIFT, PROVIDER);
+      const secondary = isCustomerBanned
+        ? null
+        : actionButtonProps(transitions.DECLINE_GIFT, PROVIDER);
       return {
         processName,
         processState,
@@ -113,7 +117,7 @@ export const getStateDataForBookingProcess = (txInfo, processInfo) => {
     }))
     .default(() =>
       // Default values for other states
-      ({ processName, processState, showDetailCardHeadings: true })
+      ({ processName, processState, showDetailCardHeadings: true }),
     )
     .resolve();
 };

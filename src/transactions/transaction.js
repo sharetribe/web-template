@@ -111,9 +111,7 @@ const getStateAfterTransition = (process) => (transition) => {
  * @returns {function} Returns a function to check the current state of transaction entity against
  * given process.
  */
-const getProcessState = (process) => (tx) => {
-  return getStateAfterTransition(process)(txLastTransition(tx));
-};
+const getProcessState = (process) => (tx) => getStateAfterTransition(process)(txLastTransition(tx));
 
 /**
  * Pick transition names that lead to target state from given entries.
@@ -129,12 +127,11 @@ const getProcessState = (process) => (tx) => {
  * @param {String} targetState
  * @param {Array} initialTransitions
  */
-const pickTransitionsToTargetState = (transitionEntries, targetState, initialTransitions) => {
-  return transitionEntries.reduce((pickedTransitions, transitionEntry) => {
+const pickTransitionsToTargetState = (transitionEntries, targetState, initialTransitions) =>
+  transitionEntries.reduce((pickedTransitions, transitionEntry) => {
     const [transition, nextState] = transitionEntry;
     return nextState === targetState ? [...pickedTransitions, transition] : pickedTransitions;
   }, initialTransitions);
-};
 
 /**
  * Get all the transitions that lead to specified state.
@@ -169,7 +166,7 @@ const getTransitionsToState = (process, targetState) => {
     return pickTransitionsToTargetState(
       transitionEntriesForward,
       targetState,
-      collectedTransitions
+      collectedTransitions,
     );
   }, []);
 };
@@ -180,11 +177,14 @@ const getTransitionsToState = (process, targetState) => {
  * @param {Object} process against which transitions and states are checked.
  * @returns {function} Returns a function to get the transitions that lead to given states.
  */
-const getTransitionsToStates = (process) => (stateNames) => {
-  return stateNames.reduce((pickedTransitions, stateName) => {
-    return [...pickedTransitions, ...getTransitionsToState(process, stateName)];
-  }, []);
-};
+const getTransitionsToStates = (process) => (stateNames) =>
+  stateNames.reduce(
+    (pickedTransitions, stateName) => [
+      ...pickedTransitions,
+      ...getTransitionsToState(process, stateName),
+    ],
+    [],
+  );
 
 /**
  * Helper functions to figure out if transaction has passed a given state.
@@ -221,7 +221,7 @@ export const resolveLatestProcessName = (processName) => {
     case 'flex-hourly-default-process':
     case 'flex-booking-default-process':
     case FREE_BOOKING_PROCESS_NAME:
-    return FREE_BOOKING_PROCESS_NAME;
+      return FREE_BOOKING_PROCESS_NAME;
     case BOOKING_PROCESS_NAME:
       return BOOKING_PROCESS_NAME;
     case INQUIRY_PROCESS_NAME:
@@ -249,11 +249,10 @@ export const getProcess = (processName) => {
       getTransitionsToStates: getTransitionsToStates(processInfo.process),
       hasPassedState: hasPassedState(processInfo.process),
     };
-  } else {
-    const error = new Error(`Unknown transaction process name: ${processName}`);
-    log.error(error, 'unknown-transaction-process', { processName });
-    throw error;
   }
+  const error = new Error(`Unknown transaction process name: ${processName}`);
+  log.error(error, 'unknown-transaction-process', { processName });
+  throw error;
 };
 
 /**
@@ -268,11 +267,14 @@ export const getSupportedProcessesInfo = () =>
 /**
  * Get all the transitions for every supported process
  */
-export const getAllTransitionsForEveryProcess = () => {
-  return PROCESSES.reduce((accTransitions, processInfo) => {
-    return [...accTransitions, ...Object.values(processInfo.process.transitions)];
-  }, []);
-};
+export const getAllTransitionsForEveryProcess = () =>
+  PROCESSES.reduce(
+    (accTransitions, processInfo) => [
+      ...accTransitions,
+      ...Object.values(processInfo.process.transitions),
+    ],
+    [],
+  );
 
 /**
  * Check if the process is purchase process
@@ -323,31 +325,29 @@ export const isBookingProcessAlias = (processAlias) => {
  *
  * @param {String} unitType
  */
-export const isFullDay = (unitType) => {
-  return [DAY, NIGHT].includes(unitType);
-};
+export const isFullDay = (unitType) => [DAY, NIGHT].includes(unitType);
 
 /**
  * Get transitions that need provider's attention for every supported process
  */
-export const getTransitionsNeedingProviderAttention = () => {
-  return PROCESSES.reduce((accTransitions, processInfo) => {
+export const getTransitionsNeedingProviderAttention = () =>
+  PROCESSES.reduce((accTransitions, processInfo) => {
     const statesNeedingProviderAttention = Object.values(
-      processInfo.process.statesNeedingProviderAttention
+      processInfo.process.statesNeedingProviderAttention,
     );
-    const process = processInfo.process;
+    const { process } = processInfo;
     const processTransitions = statesNeedingProviderAttention.reduce(
-      (pickedTransitions, stateName) => {
-        return [...pickedTransitions, ...getTransitionsToState(process, stateName)];
-      },
-      []
+      (pickedTransitions, stateName) => [
+        ...pickedTransitions,
+        ...getTransitionsToState(process, stateName),
+      ],
+      [],
     );
     // Return only unique transitions names
     // TODO: this setup is subject to problems if one process has important transition named
     // similarly as unimportant transition in another process.
     return [...new Set([...accTransitions, ...processTransitions])];
   }, []);
-};
 
 /**
  * Actors
@@ -413,6 +413,7 @@ export class ConditionalResolver {
     this.resolver = null;
     this.defaultResolver = null;
   }
+
   cond(conditions, resolver) {
     if (conditions?.length === this.data.length && this.resolver == null) {
       const isDefined = (item) => typeof item !== 'undefined';
@@ -420,16 +421,18 @@ export class ConditionalResolver {
       const isMatch = conditions.reduce(
         (isPartialMatch, item, i) =>
           isPartialMatch && isDefined(item) && (isWildcard(item) || item === this.data[i]),
-        true
+        true,
       );
       this.resolver = isMatch ? resolver : null;
     }
     return this;
   }
+
   default(defaultResolver) {
     this.defaultResolver = defaultResolver;
     return this;
   }
+
   resolve() {
     // This resolves the output against current conditions.
     // Therefore, call for resolve() must be the last call in method chain.

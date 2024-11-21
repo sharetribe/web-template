@@ -51,7 +51,7 @@ function AttendanceForm({ activity, onBack }) {
 
   const handleCheck = (name) => {
     setCheckedNames((prevState) =>
-      prevState.includes(name) ? prevState.filter((n) => n !== name) : [...prevState, name]
+      prevState.includes(name) ? prevState.filter((n) => n !== name) : [...prevState, name],
     );
   };
 

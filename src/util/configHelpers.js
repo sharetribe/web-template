@@ -19,7 +19,7 @@ const depthFirstSearch = (category, iterator, depth = 0) => {
   const { subcategories = [] } = category;
   return iterator(
     depth,
-    subcategories.map((cat) => depthFirstSearch(cat, iterator, depth + 1))
+    subcategories.map((cat) => depthFirstSearch(cat, iterator, depth + 1)),
   );
 };
 // Pick maximum depth from subcategories or default to given depth parameter
@@ -69,7 +69,7 @@ const hasClashWithBuiltInPublicDataKey = (listingFields) => {
     if (builtInPublicDataKeys.includes(field.key)) {
       hasClash = true;
       console.error(
-        `The id of a listing field ("${field.key}") clashes with the built-in keys that this app uses in public data.`
+        `The id of a listing field ("${field.key}") clashes with the built-in keys that this app uses in public data.`,
       );
     }
   });
@@ -100,7 +100,7 @@ const mergeCurrency = (hostedCurrency, defaultCurrency) => {
   }
   console.error(
     `The given currency (${currency}) is not supported.
-      There's a missing entry on subUnitDivisors`
+      There's a missing entry on subUnitDivisors`,
   );
   return null;
 };
@@ -114,7 +114,7 @@ const validateStripeCurrency = (stripe) => {
     if (!isSupported) {
       console.error(
         `Stripe configuration contained currency that was not supported by the client app.
-        There's a missing entry on subUnitDivisors for ${country.currency}.`
+        There's a missing entry on subUnitDivisors for ${country.currency}.`,
       );
     }
 
@@ -297,21 +297,21 @@ const mergeLayouts = (layoutConfig, defaultLayout) => {
     layoutConfig?.searchPage,
     defaultLayout?.searchPage,
     ['map', 'grid'],
-    { variantType: 'grid' }
+    { variantType: 'grid' },
   );
 
   const listingPage = validVariantConfig(
     layoutConfig?.listingPage,
     defaultLayout?.listingPage,
     ['coverPhoto', 'carousel'],
-    { variantType: 'carousel' }
+    { variantType: 'carousel' },
   );
 
   const listingImage = validVariantConfig(
     layoutConfig?.listingImage,
     defaultLayout?.listingImage,
     ['cropImage'],
-    { variantType: 'cropImage', aspectWidth: 1, aspectHeight: 1, variantPrefix: 'listing-card' }
+    { variantType: 'cropImage', aspectWidth: 1, aspectHeight: 1, variantPrefix: 'listing-card' },
   );
 
   return {
@@ -547,7 +547,7 @@ const validFilterConfig = (config, schemaType) => {
   const [isValidIndexForSearch, indexForSearch] = validBoolean(
     'indexForSearch',
     config.indexForSearch,
-    false
+    false,
   );
   const [isValidLabel, label] = validLabel(config.label);
   const [isValidFilterType, filterType] = validFilterType(config.filterType, schemaType);
@@ -582,7 +582,7 @@ const validShowConfig = (config) => {
   const [isValidUnselectedOptions, unselectedOptions] = validBoolean(
     'unselectedOptions',
     config.unselectedOptions,
-    true
+    true,
   );
 
   const isValid = isValidLabel && isValidIsDetail && isValidUnselectedOptions;
@@ -634,12 +634,12 @@ const validUserShowConfig = (config) => {
   const [isValidDisplayInProfile, displayInProfile] = validBoolean(
     'displayInProfile',
     config.displayInProfile,
-    true
+    true,
   );
   const [isValidUnselectedOptions, unselectedOptions] = validBoolean(
     'unselectedOptions',
     config.unselectedOptions,
-    true
+    true,
   );
 
   const isValid = isValidLabel && isValidDisplayInProfile && isValidUnselectedOptions;
@@ -677,7 +677,7 @@ const validSaveConfig = (config) => {
   // Validate: label, placeholderMessage, required, requiredMessage
   const [isValidLabel, label] = validLabel(config.label);
   const [isValidPlaceholder, placeholderMessage] = validPlaceholderMessage(
-    config.placeholderMessage
+    config.placeholderMessage,
   );
   const [isValidIsRequired, isRequired] = validBoolean('isRequired', config.isRequired, false);
   const [isValidRequiredMessage, requiredMessage] = validRequiredMessage(config.requiredMessage);
@@ -701,7 +701,7 @@ const validUserSaveConfig = (config) => {
   // Validate: label, placeholderMessage, required, displayInSignUp, requiredMessage
   const [isValidLabel, label] = validLabel(config.label);
   const [isValidPlaceholder, placeholderMessage] = validPlaceholderMessage(
-    config.placeholderMessage
+    config.placeholderMessage,
   );
 
   // At this point, all user fields are required by default, and shown in signup by default.
@@ -709,7 +709,7 @@ const validUserSaveConfig = (config) => {
   const [isValidDisplayInSignUp, displayInSignUp] = validBoolean(
     'displayInSignUp',
     config.displayInSignUp,
-    true
+    true,
   );
   const [isValidRequiredMessage, requiredMessage] = validRequiredMessage(config.requiredMessage);
 
@@ -774,13 +774,13 @@ const validListingFields = (listingFields, listingTypesInUse, categoriesInUse) =
         if (isValid === false) {
           console.warn(
             `Unsupported listing extended data configurations detected (${name}) in`,
-            data
+            data,
           );
         }
 
         return { config: { ...acc.config, ...prop }, isValid: hasFoundValid };
       },
-      { config: {}, isValid: true }
+      { config: {}, isValid: true },
     );
 
     if (validationData.isValid) {
@@ -839,7 +839,7 @@ const validUserFields = (userFields, userTypesInUse) => {
 
         return { config: { ...acc.config, ...prop }, isValid: hasFoundValid };
       },
-      { config: {}, isValid: true }
+      { config: {}, isValid: true },
     );
 
     return validationData.isValid ? [...acc, validationData.config] : acc;
@@ -1324,7 +1324,7 @@ const mergeMapConfig = (hostedMapConfig, defaultMapConfig) => {
     mapProviderPicked === 'googleMaps' ? !!googleMapsAPIKeyPicked : !!mapboxAccessTokenPicked;
   if (!hasApiAccess) {
     console.error(
-      `The access tokens are not in place for the selected map provider (${mapProviderPicked})`
+      `The access tokens are not in place for the selected map provider (${mapProviderPicked})`,
     );
   }
 

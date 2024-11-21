@@ -33,7 +33,7 @@ function ImageCarousel(props) {
     original: '',
     alt: intl.formatMessage(
       { id: 'ImageCarousel.imageAltText' },
-      { index: i + 1, count: images.length }
+      { index: i + 1, count: images.length },
     ),
     image: img,
   }));

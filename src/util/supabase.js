@@ -6,7 +6,9 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 const generateGiftCardCode = () => {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const code = Array.from({ length: 10 }, () => chars.charAt(Math.floor(Math.random() * chars.length))).join('');
+  const code = Array.from({ length: 10 }, () =>
+    chars.charAt(Math.floor(Math.random() * chars.length)),
+  ).join('');
   return `GC${code}`;
 };
 
@@ -16,10 +18,7 @@ const createUniqueGiftCardCode = async () => {
 
   while (!isUnique) {
     code = generateGiftCardCode();
-    const { data, error } = await supabase
-      .from('giftcard')
-      .select('code')
-      .eq('code', code);
+    const { data, error } = await supabase.from('giftcard').select('code').eq('code', code);
 
     if (error) {
       console.error('Error checking for existing code:', error);
@@ -31,7 +30,7 @@ const createUniqueGiftCardCode = async () => {
   return code;
 };
 
-export const createGiftCard = async ({ user, amount, gifter, isWellfare, listingId, recipient }) => {
+export const createGiftCard = async ({ customerId, amount, transactionId }) => {
   const code = await createUniqueGiftCardCode();
 
   try {
@@ -40,12 +39,14 @@ export const createGiftCard = async ({ user, amount, gifter, isWellfare, listing
       .insert([
         {
           code,
-          user,
+          user: customerId,
           amount,
-          gifter,
-          isWellfare,
-          listingId,
-          recipient,
+          gifter: null,
+          isWellfare: false,
+          listingId: null,
+          recipient: null,
+          used: false,
+          transactionId,
         },
       ])
       .select();
@@ -62,26 +63,76 @@ export const createGiftCard = async ({ user, amount, gifter, isWellfare, listing
   }
 };
 
-// =============== Test Function =============== //
-
-const testCreateGiftCard = async () => {
-  const giftCardData = {
-    user: 'testUser',
-    amount: 100.0,
-    gifter: true,
-    isWellfare: false,
-    listing: 'testListing',
-    recipient: 'testRecipient',
-  };
+export const updateGiftCard = async (giftCardProps) => {
+  const { giftCardType, giftCardAmount, bookingTotal, giftCardCode } = giftCardProps;
 
   try {
-    const result = await createGiftCard(giftCardData);
-    console.log('Test result:', result);
+    if (giftCardType === 'giftCard') {
+      const remainingAmount = Math.max(0, parseFloat(giftCardAmount) - parseFloat(bookingTotal));
+      const usedStatus = remainingAmount === 0;
+
+      const { data, error } = await supabase
+        .from('giftcard')
+        .update({
+          amount: remainingAmount > 0 ? remainingAmount : 0,
+          used: usedStatus,
+        })
+        .eq('code', giftCardCode)
+        .select();
+
+      if (error) {
+        throw error;
+      }
+
+      console.log('Gift card updated:', data);
+      return data;
+    }
+
+    if (giftCardType === 'welfareCard') {
+      const { data, error } = await supabase
+        .from('giftcard')
+        .update({
+          used: true,
+        })
+        .eq('code', giftCardCode)
+        .select();
+
+      if (error) {
+        throw error;
+      }
+
+      console.log('Welfare card updated:', data);
+      return data;
+    }
+
+    throw new Error('Unsupported gift card type');
   } catch (error) {
-    console.error('Test failed:', error);
+    console.error('Error updating gift card:', error);
+    return null;
   }
 };
 
-// Uncomment the line below to run the test when the file is executed
-// testCreateGiftCard();
+export const fetchGiftCard = async (userId, transactionId) => {
+  try {
+    if (!userId || !transactionId) {
+      throw new Error('Both userId and transactionId are required to fetch gift cards.');
+    }
 
+    const { data, error } = await supabase
+      .from('giftcard')
+      .select('*') // Select all columns; adjust as needed
+      .eq('user', userId)
+      .eq('transactionId', transactionId);
+
+    if (error) {
+      console.error('Error fetching gift cards:', error);
+      throw error;
+    }
+
+    console.log('Fetched gift cards:', data);
+    return data || [];
+  } catch (error) {
+    console.error('Error in fetchGiftCard:', error);
+    return [];
+  }
+};

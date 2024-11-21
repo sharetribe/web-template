@@ -131,7 +131,7 @@ export const isStockInUse = (config) => {
   const { listingTypes } = config.listing;
   const stockProcesses = ['default-purchase'];
   const hasStockProcessesInUse = !!listingTypes.find((conf) =>
-    stockProcesses.includes(conf.transactionType.process)
+    stockProcesses.includes(conf.transactionType.process),
   );
 
   // Note: these are active processes!

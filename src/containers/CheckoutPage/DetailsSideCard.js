@@ -92,7 +92,11 @@ function DetailsSideCard(props) {
           </H6>
           <hr className={css.totalDivider} />
         </div>
-      ) : null}
+      ) : (
+        <div className={css.orderBreakdownHeader}>
+          <p className={css.orderBreakdownTitle}>Hai utilizzato un codice sconto💙</p>
+        </div>
+      )}
       {breakdown}
     </div>
   );
@@ -110,7 +114,7 @@ DetailsSideCard.propTypes = {
   firstImage: propTypes.image.isRequired,
   layoutListingImageConfig: object.isRequired,
   speculateTransactionErrorMessage: node,
-  processName: string.isRequired,
+  processName: string.isRequired || null,
   breakdown: node,
 };
 

@@ -59,12 +59,12 @@ function TermsAndConditions(props) {
             key: 'tos-and-privacy',
             label: intl.formatMessage(
               { id: 'AuthenticationPage.termsAndConditionsAcceptText' },
-              { termsLink, privacyLink }
+              { termsLink, privacyLink },
             ),
           },
         ]}
         validate={requiredFieldArrayCheckbox(
-          intl.formatMessage({ id: 'AuthenticationPage.termsAndConditionsAcceptRequired' })
+          intl.formatMessage({ id: 'AuthenticationPage.termsAndConditionsAcceptRequired' }),
         )}
       />
     </div>

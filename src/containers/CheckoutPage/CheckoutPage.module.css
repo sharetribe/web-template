@@ -423,3 +423,12 @@
   composes: p from global;
   font-weight: var(--fontWeightBold);
 }
+
+/* FreechekoutPsge */
+.submitContainer {
+  margin-top: auto;
+
+  @media (--viewportLarge) {
+    margin-top: 72px;
+  }
+}

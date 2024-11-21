@@ -23,7 +23,7 @@ const getInitialValues = (params) => {
   return { price };
 };
 
-const EditListingPricingPanel = (props) => {
+function EditListingPricingPanel(props) {
   const {
     className,
     rootClassName,
@@ -102,7 +102,7 @@ const EditListingPricingPanel = (props) => {
       )}
     </div>
   );
-};
+}
 
 const { func, object, string, bool } = PropTypes;
 

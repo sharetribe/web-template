@@ -136,7 +136,7 @@ class CustomOverlayView extends Component {
     invariant(
       !!mapPaneName,
       `OverlayView requires either props.mapPaneName or props.defaultMapPaneName but got %s`,
-      mapPaneName
+      mapPaneName,
     );
 
     const mapPanes = this.state.overlayView.getPanes();
@@ -496,7 +496,7 @@ class SearchMapWithGoogleMaps extends Component {
       const isHiddenByReusableMap =
         this.props.reusableMapHiddenHandle &&
         this.state.mapContainer.parentElement.classList.contains(
-          this.props.reusableMapHiddenHandle
+          this.props.reusableMapHiddenHandle,
         );
       if (!isHiddenByReusableMap) {
         const viewportMapBounds = getMapBounds(this.map);

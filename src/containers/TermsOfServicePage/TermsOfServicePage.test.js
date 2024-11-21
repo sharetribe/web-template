@@ -15,7 +15,7 @@ describe('TermsOfServicePage', () => {
     e.name = 'Test';
 
     const { getByText } = render(
-      <TermsOfServicePageComponent pageAssetsData={null} inProgress={false} error={e} />
+      <TermsOfServicePageComponent pageAssetsData={null} inProgress={false} error={e} />,
     );
 
     await waitFor(() => {

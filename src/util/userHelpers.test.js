@@ -207,13 +207,13 @@ describe('userHelpers', () => {
         userProfile1.publicData,
         'public',
         'a',
-        config
+        config,
       );
       const initialValues2 = initialValuesForUserFields(
         userProfile2.publicData,
         'public',
         'c',
-        config
+        config,
       );
 
       const expectedData1 = {
@@ -232,20 +232,20 @@ describe('userHelpers', () => {
         userProfile1.publicData,
         'public',
         'a',
-        config
+        config,
       );
       const initialValuesPrivate = initialValuesForUserFields(
         userProfile1.privateData,
         'private',
         'a',
-        config
+        config,
       );
 
       const initialValuesProtected = initialValuesForUserFields(
         userProfile2.protectedData,
         'protected',
         'a',
-        config
+        config,
       );
 
       const expectedDataPublic = {

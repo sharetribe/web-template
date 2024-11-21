@@ -37,7 +37,7 @@ export function Map(props) {
 
   if (mapsConfiguration.fuzzy.enabled && !obfuscatedCenter) {
     throw new Error(
-      'Map: obfuscatedCenter prop is required when config.maps.fuzzy.enabled === true'
+      'Map: obfuscatedCenter prop is required when config.maps.fuzzy.enabled === true',
     );
   }
   if (!mapsConfiguration.fuzzy.enabled && !center) {

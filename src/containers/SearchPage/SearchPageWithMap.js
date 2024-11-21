@@ -227,7 +227,7 @@ export class SearchPageComponent extends Component {
               address,
               bounds,
             },
-            filterConfigs
+            filterConfigs,
           ),
         };
       };
@@ -299,7 +299,7 @@ export class SearchPageComponent extends Component {
       searchParams,
       filterConfigs,
       sortConfig,
-      isOriginInUse(config)
+      isOriginInUse(config),
     );
 
     const validQueryParams = urlQueryParams;
@@ -311,14 +311,14 @@ export class SearchPageComponent extends Component {
 
     const isKeywordSearch = isMainSearchTypeKeywords(config);
     const builtInPrimaryFilters = defaultFiltersConfig.filter((f) =>
-      ['categoryLevel'].includes(f.key)
+      ['categoryLevel'].includes(f.key),
     );
     const builtInFilters = isKeywordSearch
       ? defaultFiltersConfig.filter((f) => !['keywords', 'categoryLevel'].includes(f.key))
       : defaultFiltersConfig.filter((f) => !['categoryLevel'].includes(f.key));
     const [customPrimaryFilters, customSecondaryFilters] = groupListingFieldConfigs(
       listingFieldsConfig,
-      activeListingTypes
+      activeListingTypes,
     );
     const availablePrimaryFilters = [
       ...builtInPrimaryFilters,
@@ -383,7 +383,7 @@ export class SearchPageComponent extends Component {
     const conflictingFilterActive = isAnyFilterActive(
       sortConfig.conflictingFilters,
       validQueryParams,
-      filterConfigs
+      filterConfigs,
     );
     const sortBy = (mode) =>
       sortConfig.active ? (
@@ -413,7 +413,7 @@ export class SearchPageComponent extends Component {
       searchParamsInURL || {},
       intl,
       routeConfiguration,
-      config
+      config,
     );
 
     // Set topbar class based on if a modal is open in

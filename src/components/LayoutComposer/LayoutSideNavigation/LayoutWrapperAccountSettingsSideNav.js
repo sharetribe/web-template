@@ -146,7 +146,7 @@ LayoutWrapperAccountSettingsSideNavComponent.propTypes = {
 };
 
 const LayoutWrapperAccountSettingsSideNav = compose(withViewport)(
-  LayoutWrapperAccountSettingsSideNavComponent
+  LayoutWrapperAccountSettingsSideNavComponent,
 );
 
 export default LayoutWrapperAccountSettingsSideNav;

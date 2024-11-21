@@ -119,14 +119,14 @@ describe('SignupForm', () => {
         userTypes={userTypes}
         userFields={userFields}
         onSubmit={noop}
-      />
+      />,
     );
 
     // Simulate user interaction and select parent level category
     await waitFor(() => {
       userEvent.selectOptions(
         screen.getByRole('combobox'),
-        screen.getByRole('option', { name: 'Seller' })
+        screen.getByRole('option', { name: 'Seller' }),
       );
     });
 
@@ -136,7 +136,7 @@ describe('SignupForm', () => {
     // Type the values to the sign up form
     userEvent.type(
       screen.getByRole('textbox', { name: 'SignupForm.emailLabel' }),
-      'joe@example.com'
+      'joe@example.com',
     );
     userEvent.type(screen.getByRole('textbox', { name: 'SignupForm.firstNameLabel' }), 'Joe');
     userEvent.type(screen.getByRole('textbox', { name: 'SignupForm.lastNameLabel' }), 'Dunphy');
@@ -159,14 +159,14 @@ describe('SignupForm', () => {
         userTypes={userTypes}
         userFields={userFields}
         onSubmit={noop}
-      />
+      />,
     );
 
     // Simulate user interaction and select parent level category
     await waitFor(() => {
       userEvent.selectOptions(
         screen.getByRole('combobox'),
-        screen.getByRole('option', { name: 'Seller' })
+        screen.getByRole('option', { name: 'Seller' }),
       );
     });
 

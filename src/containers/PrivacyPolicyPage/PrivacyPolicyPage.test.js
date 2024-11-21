@@ -15,7 +15,7 @@ describe('PrivacyPolicyPage', () => {
     e.name = 'Test';
 
     const { getByText } = render(
-      <PrivacyPolicyPageComponent pageAssetsData={null} inProgress={false} error={e} />
+      <PrivacyPolicyPageComponent pageAssetsData={null} inProgress={false} error={e} />,
     );
 
     await waitFor(() => {

@@ -56,10 +56,10 @@ describe('AuthenticationPage', () => {
     // so if you want to make an assertion that an element is not present in the DOM,
     // you can use queryBy APIs instead:
     expect(
-      screen.queryByRole('button', { name: 'AuthenticationPage.loginWithFacebook' })
+      screen.queryByRole('button', { name: 'AuthenticationPage.loginWithFacebook' }),
     ).not.toBeInTheDocument();
     expect(
-      screen.queryByRole('button', { name: 'AuthenticationPage.loginWithGoogle' })
+      screen.queryByRole('button', { name: 'AuthenticationPage.loginWithGoogle' }),
     ).not.toBeInTheDocument();
   });
 
@@ -79,7 +79,7 @@ describe('AuthenticationPage', () => {
 
     // Then we can check that login sign up button is in the document
     waitFor(() =>
-      expect(screen.findByRole('button', { name: 'SignupForm.signUp' })).toBeInTheDocument()
+      expect(screen.findByRole('button', { name: 'SignupForm.signUp' })).toBeInTheDocument(),
     );
   });
 });
@@ -104,10 +104,10 @@ describe('AuthenticationPage with SSO', () => {
     render(<AuthenticationPage {...props} />);
 
     expect(
-      screen.getByRole('button', { name: 'AuthenticationPage.loginWithFacebook' })
+      screen.getByRole('button', { name: 'AuthenticationPage.loginWithFacebook' }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: 'AuthenticationPage.loginWithGoogle' })
+      screen.getByRole('button', { name: 'AuthenticationPage.loginWithGoogle' }),
     ).toBeInTheDocument();
   });
 });

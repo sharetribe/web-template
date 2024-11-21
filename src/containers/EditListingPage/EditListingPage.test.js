@@ -330,7 +330,7 @@ describe('EditListingPage', () => {
         initialState: initialState(),
         config,
         routeConfiguration,
-      }
+      },
     );
 
     await waitFor(() => {
@@ -347,13 +347,13 @@ describe('EditListingPage', () => {
       // Simulate user selecting options
       userEvent.selectOptions(
         screen.getByRole('combobox'),
-        screen.getByRole('option', { name: 'Sneakers' })
+        screen.getByRole('option', { name: 'Sneakers' }),
       );
     });
 
     // Assert that the selected option is as expected
     expect(
-      queryAllByRole('option', { name: 'EditListingDetailsForm.categoryPlaceholder' })[0].selected
+      queryAllByRole('option', { name: 'EditListingDetailsForm.categoryPlaceholder' })[0].selected,
     ).toBe(false);
     expect(getByRole('option', { name: 'Sneakers' }).selected).toBe(true);
     expect(queryAllByText('EditListingDetailsForm.categoryLabel')).toHaveLength(2);
@@ -370,18 +370,18 @@ describe('EditListingPage', () => {
       expect(getByRole('textbox', { name: 'EditListingDetailsForm.title' })).toBeInTheDocument();
       //
       expect(
-        getByRole('textbox', { name: 'EditListingDetailsForm.description' })
+        getByRole('textbox', { name: 'EditListingDetailsForm.description' }),
       ).toBeInTheDocument();
       expect(getByLabelText('Cat')).toBeInTheDocument();
       //
       expect(
-        getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected
+        getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected,
       ).toBe(true);
       //
       expect(getByRole('option', { name: 'Cat 1' }).selected).toBe(false);
       //
       expect(
-        getByRole('button', { name: 'EditListingWizard.default-purchase.new.saveDetails' })
+        getByRole('button', { name: 'EditListingWizard.default-purchase.new.saveDetails' }),
       ).toBeInTheDocument();
     });
   });
@@ -407,7 +407,7 @@ describe('EditListingPage', () => {
         initialState: initialState(),
         config,
         routeConfiguration,
-      }
+      },
     );
 
     await waitFor(() => {
@@ -420,18 +420,18 @@ describe('EditListingPage', () => {
       expect(getByRole('textbox', { name: 'EditListingDetailsForm.title' })).toBeInTheDocument();
       // Check description exists
       expect(
-        getByRole('textbox', { name: 'EditListingDetailsForm.description' })
+        getByRole('textbox', { name: 'EditListingDetailsForm.description' }),
       ).toBeInTheDocument();
       expect(getByLabelText('Cat')).toBeInTheDocument();
       // Check custom extended data field exists
       expect(
-        getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected
+        getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected,
       ).toBe(true);
       // Check there is no selection
       expect(getByRole('option', { name: 'Cat 1' }).selected).toBe(false);
       // Check the submit button exists
       expect(
-        getByRole('button', { name: 'EditListingWizard.default-purchase.new.saveDetails' })
+        getByRole('button', { name: 'EditListingWizard.default-purchase.new.saveDetails' }),
       ).toBeInTheDocument();
     });
   });
@@ -465,7 +465,7 @@ describe('EditListingPage', () => {
         initialState: initialState(listing),
         config,
         routeConfiguration,
-      }
+      },
     );
     await waitFor(() => {
       // Navigation to tab
@@ -480,12 +480,12 @@ describe('EditListingPage', () => {
     await waitFor(() => {
       userEvent.selectOptions(
         screen.getByRole('combobox'),
-        screen.getByRole('option', { name: 'Sneakers' })
+        screen.getByRole('option', { name: 'Sneakers' }),
       );
     });
 
     expect(
-      queryAllByRole('option', { name: 'EditListingDetailsForm.categoryPlaceholder' })[0].selected
+      queryAllByRole('option', { name: 'EditListingDetailsForm.categoryPlaceholder' })[0].selected,
     ).toBe(false);
     expect(getByRole('option', { name: 'Sneakers' }).selected).toBe(true);
     expect(queryAllByText('EditListingDetailsForm.categoryLabel')).toHaveLength(2);
@@ -497,11 +497,11 @@ describe('EditListingPage', () => {
     });
     expect(getByRole('option', { name: 'Adidas' }).selected).toBe(true);
     expect(
-      getByRole('textbox', { name: 'EditListingDetailsForm.description' })
+      getByRole('textbox', { name: 'EditListingDetailsForm.description' }),
     ).toBeInTheDocument();
     expect(getByLabelText('Cat')).toBeInTheDocument();
     expect(
-      getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected
+      getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected,
     ).toBe(true);
     //
     expect(getByRole('option', { name: 'Cat 1' }).selected).toBe(false);
@@ -513,7 +513,7 @@ describe('EditListingPage', () => {
     const config = getConfig(
       listingTypesPurchase,
       listingFieldsPurchase,
-      categoryConfigWithoutSubcategories
+      categoryConfigWithoutSubcategories,
     );
     const routeConfiguration = getRouteConfiguration(config.layout);
 
@@ -533,7 +533,7 @@ describe('EditListingPage', () => {
         initialState: initialState(),
         config,
         routeConfiguration,
-      }
+      },
     );
     await waitFor(() => {
       // Navigation to tab
@@ -548,12 +548,12 @@ describe('EditListingPage', () => {
     await waitFor(() => {
       userEvent.selectOptions(
         screen.getByRole('combobox'),
-        screen.getByRole('option', { name: 'Sneakers' })
+        screen.getByRole('option', { name: 'Sneakers' }),
       );
     });
 
     expect(
-      queryAllByRole('option', { name: 'EditListingDetailsForm.categoryPlaceholder' })[0].selected
+      queryAllByRole('option', { name: 'EditListingDetailsForm.categoryPlaceholder' })[0].selected,
     ).toBe(false);
     expect(getByRole('option', { name: 'Sneakers' }).selected).toBe(true);
 
@@ -561,18 +561,18 @@ describe('EditListingPage', () => {
       expect(getByRole('textbox', { name: 'EditListingDetailsForm.title' })).toBeInTheDocument();
 
       expect(
-        getByRole('textbox', { name: 'EditListingDetailsForm.description' })
+        getByRole('textbox', { name: 'EditListingDetailsForm.description' }),
       ).toBeInTheDocument();
       expect(getByLabelText('Cat')).toBeInTheDocument();
 
       expect(
-        getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected
+        getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected,
       ).toBe(true);
 
       expect(getByRole('option', { name: 'Cat 1' }).selected).toBe(false);
 
       expect(
-        getByRole('button', { name: 'EditListingWizard.default-purchase.new.saveDetails' })
+        getByRole('button', { name: 'EditListingWizard.default-purchase.new.saveDetails' }),
       ).toBeInTheDocument();
     });
   });
@@ -616,23 +616,23 @@ describe('EditListingPage', () => {
 
       // Tab/form: form title
       expect(getByRole('textbox', { name: 'EditListingDetailsForm.title' })).toHaveValue(
-        'the listing'
+        'the listing',
       );
 
       // Tab/form: description
       expect(getByRole('textbox', { name: 'EditListingDetailsForm.description' })).toHaveValue(
-        'Lorem ipsum'
+        'Lorem ipsum',
       );
 
       // Tab/form: listing field
       expect(getByLabelText('Cat')).toBeInTheDocument();
       expect(
-        getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected
+        getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected,
       ).toBe(true);
       expect(getByRole('option', { name: 'Cat 1' }).selected).toBe(false);
 
       expect(
-        getByRole('button', { name: 'EditListingWizard.edit.saveDetails' })
+        getByRole('button', { name: 'EditListingWizard.edit.saveDetails' }),
       ).toBeInTheDocument();
     });
 
@@ -640,11 +640,11 @@ describe('EditListingPage', () => {
     await waitFor(() => {
       userEvent.selectOptions(
         screen.getByRole('combobox'),
-        screen.getByRole('option', { name: 'Cat 1' })
+        screen.getByRole('option', { name: 'Cat 1' }),
       );
     });
     expect(
-      getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected
+      getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected,
     ).toBe(false);
     expect(getByRole('option', { name: 'Cat 1' }).selected).toBe(true);
   });
@@ -667,7 +667,7 @@ describe('EditListingPage', () => {
       },
       {
         currentStock: createStock('stock-id', { quantity: 5 }),
-      }
+      },
     );
 
     const props = {
@@ -696,16 +696,16 @@ describe('EditListingPage', () => {
 
       // Tab/form: price
       expect(
-        getByRole('textbox', { name: 'EditListingPricingAndStockForm.pricePerProduct' })
+        getByRole('textbox', { name: 'EditListingPricingAndStockForm.pricePerProduct' }),
       ).toHaveValue('$55.00');
 
       // Tab/form: stock
       expect(
-        getByRole('spinbutton', { name: 'EditListingPricingAndStockForm.stockLabel' })
+        getByRole('spinbutton', { name: 'EditListingPricingAndStockForm.stockLabel' }),
       ).toHaveValue(5);
 
       expect(
-        getByRole('button', { name: 'EditListingWizard.edit.savePricingAndStock' })
+        getByRole('button', { name: 'EditListingWizard.edit.savePricingAndStock' }),
       ).toBeInTheDocument();
     });
 
@@ -735,7 +735,7 @@ describe('EditListingPage', () => {
       },
       {
         currentStock: createStock('stock-id', { quantity: 5 }),
-      }
+      },
     );
 
     const props = {
@@ -754,7 +754,7 @@ describe('EditListingPage', () => {
         initialState: initialState(listing),
         config,
         routeConfiguration,
-      }
+      },
     );
 
     await waitFor(() => {
@@ -769,24 +769,24 @@ describe('EditListingPage', () => {
 
       // Tab/form: pickup
       expect(
-        getByRole('checkbox', { name: /EditListingDeliveryForm.pickupLabel/i })
+        getByRole('checkbox', { name: /EditListingDeliveryForm.pickupLabel/i }),
       ).not.toBeChecked();
       expect(queryByPlaceholderText('EditListingDeliveryForm.addressPlaceholder')).toBeDisabled();
       expect(getByRole('textbox', { name: 'EditListingDeliveryForm.building' })).toBeDisabled();
 
       // Tab/form: shipping
       expect(
-        getByRole('checkbox', { name: /EditListingDeliveryForm.shippingLabel/i })
+        getByRole('checkbox', { name: /EditListingDeliveryForm.shippingLabel/i }),
       ).not.toBeChecked();
       expect(
-        getByRole('textbox', { name: 'EditListingDeliveryForm.shippingOneItemLabel' })
+        getByRole('textbox', { name: 'EditListingDeliveryForm.shippingOneItemLabel' }),
       ).toBeDisabled();
       expect(
-        getByRole('textbox', { name: 'EditListingDeliveryForm.shippingAdditionalItemsLabel' })
+        getByRole('textbox', { name: 'EditListingDeliveryForm.shippingAdditionalItemsLabel' }),
       ).toBeDisabled();
 
       expect(
-        getByRole('button', { name: 'EditListingWizard.edit.saveDelivery' })
+        getByRole('button', { name: 'EditListingWizard.edit.saveDelivery' }),
       ).toBeInTheDocument();
     });
 
@@ -796,10 +796,10 @@ describe('EditListingPage', () => {
     });
     expect(getByRole('checkbox', { name: /EditListingDeliveryForm.shippingLabel/i })).toBeChecked();
     expect(
-      getByRole('textbox', { name: 'EditListingDeliveryForm.shippingOneItemLabel' })
+      getByRole('textbox', { name: 'EditListingDeliveryForm.shippingOneItemLabel' }),
     ).toBeEnabled();
     expect(
-      getByRole('textbox', { name: 'EditListingDeliveryForm.shippingAdditionalItemsLabel' })
+      getByRole('textbox', { name: 'EditListingDeliveryForm.shippingAdditionalItemsLabel' }),
     ).toBeEnabled();
   });
 
@@ -823,7 +823,7 @@ describe('EditListingPage', () => {
       },
       {
         currentStock: createStock('stock-id', { quantity: 5 }),
-      }
+      },
     );
 
     const props = {
@@ -880,7 +880,7 @@ describe('EditListingPage', () => {
       },
       {
         currentStock: createStock('stock-id', { quantity: 5 }),
-      }
+      },
     );
 
     const props = {
@@ -909,12 +909,12 @@ describe('EditListingPage', () => {
 
       // Tab/form: price
       expect(
-        getByRole('textbox', { name: 'EditListingPricingAndStockForm.pricePerProduct' })
+        getByRole('textbox', { name: 'EditListingPricingAndStockForm.pricePerProduct' }),
       ).toHaveValue('$55.00');
 
       // Tab/form: infinity stock warning
       expect(
-        getByRole('checkbox', { name: /EditListingPricingAndStockForm.updateToInfinite/i })
+        getByRole('checkbox', { name: /EditListingPricingAndStockForm.updateToInfinite/i }),
       ).not.toBeChecked();
 
       const saveButton = getByRole('button', {
@@ -926,7 +926,7 @@ describe('EditListingPage', () => {
     // Test intercation
     await waitFor(() => {
       userEvent.click(
-        getByRole('checkbox', { name: /EditListingPricingAndStockForm.updateToInfinite/i })
+        getByRole('checkbox', { name: /EditListingPricingAndStockForm.updateToInfinite/i }),
       );
     });
     const saveButton = getByRole('button', { name: 'EditListingWizard.edit.savePricingAndStock' });
@@ -956,7 +956,7 @@ describe('EditListingPage', () => {
       },
       {
         currentStock: createStock('stock-id', { quantity: 5 }),
-      }
+      },
     );
 
     const props = {
@@ -975,7 +975,7 @@ describe('EditListingPage', () => {
         initialState: initialState(listing),
         config,
         routeConfiguration,
-      }
+      },
     );
 
     await waitFor(() => {
@@ -991,13 +991,13 @@ describe('EditListingPage', () => {
       // Tab/form: pickup
       expect(getByRole('checkbox', { name: /EditListingDeliveryForm.pickupLabel/i })).toBeChecked();
       expect(
-        queryByPlaceholderText('EditListingDeliveryForm.addressPlaceholder')
+        queryByPlaceholderText('EditListingDeliveryForm.addressPlaceholder'),
       ).not.toBeDisabled();
       expect(getByRole('textbox', { name: 'EditListingDeliveryForm.building' })).not.toBeDisabled();
 
       // Tab/form: no shipping
       expect(
-        queryByRole('checkbox', { name: /EditListingDeliveryForm.shippingLabel/i }).parentNode
+        queryByRole('checkbox', { name: /EditListingDeliveryForm.shippingLabel/i }).parentNode,
       ).toHaveClass('hidden');
     });
   });
@@ -1022,7 +1022,7 @@ describe('EditListingPage', () => {
       },
       {
         currentStock: createStock('stock-id', { quantity: 5 }),
-      }
+      },
     );
 
     const props = {
@@ -1053,22 +1053,22 @@ describe('EditListingPage', () => {
 
       // Tab/form: pickup
       expect(
-        getByRole('checkbox', { name: /EditListingDeliveryForm.pickupLabel/i }).parentNode
+        getByRole('checkbox', { name: /EditListingDeliveryForm.pickupLabel/i }).parentNode,
       ).toHaveClass('hidden');
 
       // Tab/form: no shipping
       expect(
-        getByRole('checkbox', { name: /EditListingDeliveryForm.shippingLabel/i })
+        getByRole('checkbox', { name: /EditListingDeliveryForm.shippingLabel/i }),
       ).toBeChecked();
       expect(
-        getByRole('textbox', { name: 'EditListingDeliveryForm.shippingOneItemLabel' })
+        getByRole('textbox', { name: 'EditListingDeliveryForm.shippingOneItemLabel' }),
       ).toBeInTheDocument();
       expect(
-        getByRole('textbox', { name: 'EditListingDeliveryForm.shippingAdditionalItemsLabel' })
+        getByRole('textbox', { name: 'EditListingDeliveryForm.shippingAdditionalItemsLabel' }),
       ).toBeInTheDocument();
 
       expect(
-        getByRole('button', { name: 'EditListingWizard.edit.saveDelivery' })
+        getByRole('button', { name: 'EditListingWizard.edit.saveDelivery' }),
       ).toBeInTheDocument();
     });
   });
@@ -1096,7 +1096,7 @@ describe('EditListingPage', () => {
       },
       {
         currentStock: createStock('stock-id', { quantity: 5 }),
-      }
+      },
     );
 
     const props = {
@@ -1164,12 +1164,12 @@ describe('EditListingPage', () => {
 
       // Tab/form: form title
       expect(getByRole('textbox', { name: 'EditListingDetailsForm.title' })).toHaveValue(
-        'the listing'
+        'the listing',
       );
 
       // Tab/form: description
       expect(getByRole('textbox', { name: 'EditListingDetailsForm.description' })).toHaveValue(
-        'Lorem ipsum'
+        'Lorem ipsum',
       );
 
       // Tab/form: listing field
@@ -1178,7 +1178,7 @@ describe('EditListingPage', () => {
       expect(getByRole('checkbox', { name: /Dog 2/i })).not.toBeChecked();
 
       expect(
-        getByRole('button', { name: 'EditListingWizard.edit.saveDetails' })
+        getByRole('button', { name: 'EditListingWizard.edit.saveDetails' }),
       ).toBeInTheDocument();
     });
 
@@ -1224,7 +1224,7 @@ describe('EditListingPage', () => {
         initialState: initialState(listing),
         config,
         routeConfiguration,
-      }
+      },
     );
 
     await waitFor(() => {
@@ -1237,14 +1237,14 @@ describe('EditListingPage', () => {
 
       // Tab/form: existing address
       expect(getByPlaceholderText('EditListingLocationForm.addressPlaceholder')).toHaveValue(
-        'Main Street 123'
+        'Main Street 123',
       );
 
       // Tab/form: existing building
       expect(getByLabelText('EditListingLocationForm.building')).toHaveValue('A 1');
 
       expect(
-        getByRole('button', { name: 'EditListingWizard.edit.saveLocation' })
+        getByRole('button', { name: 'EditListingWizard.edit.saveLocation' }),
       ).toBeInTheDocument();
     });
 
@@ -1293,7 +1293,7 @@ describe('EditListingPage', () => {
         initialState: initialState(listing),
         config,
         routeConfiguration,
-      }
+      },
     );
 
     await waitFor(() => {
@@ -1306,22 +1306,22 @@ describe('EditListingPage', () => {
 
       // Tab/form: price
       expect(getByRole('textbox', { name: 'EditListingPricingForm.pricePerProduct' })).toHaveValue(
-        '$10.00'
+        '$10.00',
       );
 
       expect(
-        getByRole('button', { name: 'EditListingWizard.edit.savePricing' })
+        getByRole('button', { name: 'EditListingWizard.edit.savePricing' }),
       ).toBeInTheDocument();
     });
 
     // Test intercation
     await waitFor(async () => {
       await userEvent.clear(
-        getByRole('textbox', { name: 'EditListingPricingForm.pricePerProduct' })
+        getByRole('textbox', { name: 'EditListingPricingForm.pricePerProduct' }),
       );
       userEvent.type(
         getByRole('textbox', { name: 'EditListingPricingForm.pricePerProduct' }),
-        '12'
+        '12',
       );
       userEvent.click(queryAllByRole('heading')[0]); // create blur event
     });
@@ -1390,29 +1390,29 @@ describe('EditListingPage', () => {
 
       // Tab/form: edit availability
       expect(
-        getByRole('button', { name: /EditListingAvailabilityPanel.editAvailabilityPlan/i })
+        getByRole('button', { name: /EditListingAvailabilityPanel.editAvailabilityPlan/i }),
       ).toBeInTheDocument();
 
       expect(
         getByRole('heading', {
           name: /EditListingAvailabilityPanel.WeeklyCalendar.scheduleTitle/i,
-        })
+        }),
       ).toBeInTheDocument();
 
       // Expect mon - sat to be available (6 days) and sunday to be blocked.
       expect(queryAllByText('EditListingAvailabilityPanel.WeeklyCalendar.available')).toHaveLength(
-        6
+        6,
       );
       const sunday = getByText('Sunday');
       const cell = sunday.parentNode.parentNode;
       const siblingContent = within(cell.nextElementSibling); // next cell in the grid
       expect(
-        siblingContent.queryAllByText('EditListingAvailabilityPanel.WeeklyCalendar.notAvailable')
+        siblingContent.queryAllByText('EditListingAvailabilityPanel.WeeklyCalendar.notAvailable'),
       ).toHaveLength(1);
 
       // button to add an exception
       expect(
-        getByRole('button', { name: 'EditListingAvailabilityPanel.addException' })
+        getByRole('button', { name: 'EditListingAvailabilityPanel.addException' }),
       ).toBeInTheDocument();
     });
   });
@@ -1470,7 +1470,7 @@ describe('EditListingPage', () => {
     // Test intercation: open plan modal
     await waitFor(async () => {
       userEvent.click(
-        getByRole('button', { name: /EditListingAvailabilityPanel.editAvailabilityPlan/i })
+        getByRole('button', { name: /EditListingAvailabilityPanel.editAvailabilityPlan/i }),
       );
     });
 
@@ -1487,17 +1487,17 @@ describe('EditListingPage', () => {
 
     // save button for the plan
     expect(
-      getByRole('button', { name: 'EditListingAvailabilityPlanForm.saveSchedule' })
+      getByRole('button', { name: 'EditListingAvailabilityPlanForm.saveSchedule' }),
     ).toBeInTheDocument();
 
     // Test intercation: plan modal form
     await waitFor(async () => {
       await userEvent.click(
-        getByRole('checkbox', { name: /EditListingAvailabilityPlanForm.dayOfWeek.mon/i })
+        getByRole('checkbox', { name: /EditListingAvailabilityPlanForm.dayOfWeek.mon/i }),
       );
     });
     expect(
-      getByRole('checkbox', { name: /EditListingAvailabilityPlanForm.dayOfWeek.mon/i })
+      getByRole('checkbox', { name: /EditListingAvailabilityPlanForm.dayOfWeek.mon/i }),
     ).not.toBeChecked();
 
     // Test intercation: close plan modal
@@ -1561,7 +1561,7 @@ describe('EditListingPage', () => {
     // Test intercation: open availability exception modal
     await waitFor(async () => {
       await userEvent.click(
-        getByRole('button', { name: /EditListingAvailabilityPanel.addException/i })
+        getByRole('button', { name: /EditListingAvailabilityPanel.addException/i }),
       );
     });
     expect(getByText('EditListingAvailabilityExceptionForm.title')).toBeInTheDocument();
@@ -1570,14 +1570,14 @@ describe('EditListingPage', () => {
     expect(getByText('EditListingAvailabilityExceptionForm.notAvailable')).toBeInTheDocument();
     // date range picker
     expect(
-      getByText('EditListingAvailabilityExceptionForm.exceptionStartDateLabel')
+      getByText('EditListingAvailabilityExceptionForm.exceptionStartDateLabel'),
     ).toBeInTheDocument();
     expect(
-      getByText('EditListingAvailabilityExceptionForm.exceptionEndDateLabel')
+      getByText('EditListingAvailabilityExceptionForm.exceptionEndDateLabel'),
     ).toBeInTheDocument();
     // submit button
     expect(
-      getByRole('button', { name: 'EditListingAvailabilityExceptionForm.addException' })
+      getByRole('button', { name: 'EditListingAvailabilityExceptionForm.addException' }),
     ).toBeInTheDocument();
   }, 10000);
 
@@ -1641,36 +1641,36 @@ describe('EditListingPage', () => {
 
       // Tab/form: edit availability
       expect(
-        getByRole('button', { name: /EditListingAvailabilityPanel.editAvailabilityPlan/i })
+        getByRole('button', { name: /EditListingAvailabilityPanel.editAvailabilityPlan/i }),
       ).toBeInTheDocument();
 
       expect(
         getByRole('heading', {
           name: /EditListingAvailabilityPanel.WeeklyCalendar.scheduleTitle/i,
-        })
+        }),
       ).toBeInTheDocument();
 
       // Expect mon - sat to be available (6 days) and sunday to be blocked.
       expect(queryAllByText('EditListingAvailabilityPanel.WeeklyCalendar.available')).toHaveLength(
-        6
+        6,
       );
       const sunday = getByText('Sunday');
       const cell = sunday.parentNode.parentNode;
       const siblingContent = within(cell.nextElementSibling); // next cell in the grid
       expect(
-        siblingContent.queryAllByText('EditListingAvailabilityPanel.WeeklyCalendar.notAvailable')
+        siblingContent.queryAllByText('EditListingAvailabilityPanel.WeeklyCalendar.notAvailable'),
       ).toHaveLength(1);
 
       // button to add an exception
       expect(
-        getByRole('button', { name: 'EditListingAvailabilityPanel.addException' })
+        getByRole('button', { name: 'EditListingAvailabilityPanel.addException' }),
       ).toBeInTheDocument();
     });
 
     // Test intercation: open plan modal
     await waitFor(async () => {
       await userEvent.click(
-        getByRole('button', { name: /EditListingAvailabilityPanel.editAvailabilityPlan/i })
+        getByRole('button', { name: /EditListingAvailabilityPanel.editAvailabilityPlan/i }),
       );
     });
     expect(getByText('EditListingAvailabilityPlanForm.title')).toBeInTheDocument();
@@ -1686,17 +1686,17 @@ describe('EditListingPage', () => {
 
     // save button for the plan
     expect(
-      getByRole('button', { name: 'EditListingAvailabilityPlanForm.saveSchedule' })
+      getByRole('button', { name: 'EditListingAvailabilityPlanForm.saveSchedule' }),
     ).toBeInTheDocument();
 
     // Test intercation: plan modal form
     await waitFor(async () => {
       await userEvent.click(
-        getByRole('checkbox', { name: /EditListingAvailabilityPlanForm.dayOfWeek.mon/i })
+        getByRole('checkbox', { name: /EditListingAvailabilityPlanForm.dayOfWeek.mon/i }),
       );
     });
     expect(
-      getByRole('checkbox', { name: /EditListingAvailabilityPlanForm.dayOfWeek.mon/i })
+      getByRole('checkbox', { name: /EditListingAvailabilityPlanForm.dayOfWeek.mon/i }),
     ).not.toBeChecked();
 
     // Test intercation: close plan modal
@@ -1708,7 +1708,7 @@ describe('EditListingPage', () => {
     // Test intercation: open availability exception modal
     await waitFor(async () => {
       await userEvent.click(
-        getByRole('button', { name: /EditListingAvailabilityPanel.addException/i })
+        getByRole('button', { name: /EditListingAvailabilityPanel.addException/i }),
       );
     });
     expect(getByText('EditListingAvailabilityExceptionForm.title')).toBeInTheDocument();
@@ -1717,14 +1717,14 @@ describe('EditListingPage', () => {
     expect(getByText('EditListingAvailabilityExceptionForm.notAvailable')).toBeInTheDocument();
     // date range picker
     expect(
-      getByText('EditListingAvailabilityExceptionForm.exceptionStartDateLabel')
+      getByText('EditListingAvailabilityExceptionForm.exceptionStartDateLabel'),
     ).toBeInTheDocument();
     expect(
-      getByText('EditListingAvailabilityExceptionForm.exceptionEndDateLabel')
+      getByText('EditListingAvailabilityExceptionForm.exceptionEndDateLabel'),
     ).toBeInTheDocument();
     // submit button
     expect(
-      getByRole('button', { name: 'EditListingAvailabilityExceptionForm.addException' })
+      getByRole('button', { name: 'EditListingAvailabilityExceptionForm.addException' }),
     ).toBeInTheDocument();
   }, 10000);
 
@@ -1788,13 +1788,13 @@ describe('EditListingPage', () => {
 
       // Tab/form: edit availability
       expect(
-        getByRole('button', { name: /EditListingAvailabilityPanel.editAvailabilityPlan/i })
+        getByRole('button', { name: /EditListingAvailabilityPanel.editAvailabilityPlan/i }),
       ).toBeInTheDocument();
 
       expect(
         getByRole('heading', {
           name: /EditListingAvailabilityPanel.WeeklyCalendar.scheduleTitle/i,
-        })
+        }),
       ).toBeInTheDocument();
 
       // Expect mon - sat to be available (6 days) and sunday to be blocked.
@@ -1802,7 +1802,7 @@ describe('EditListingPage', () => {
       const cellMon = monday.parentNode.parentNode;
       expect(cellMon.nextElementSibling.getElementsByClassName('availabilityDot')).toHaveLength(1);
       expect(cellMon.nextElementSibling.getElementsByClassName('availabilityDot')[0]).toHaveClass(
-        'isAvailable'
+        'isAvailable',
       );
       const sunday = getByText('Sunday');
       const cellSun = sunday.parentNode.parentNode;
@@ -1810,14 +1810,14 @@ describe('EditListingPage', () => {
 
       // button to add an exception
       expect(
-        getByRole('button', { name: 'EditListingAvailabilityPanel.addException' })
+        getByRole('button', { name: 'EditListingAvailabilityPanel.addException' }),
       ).toBeInTheDocument();
     });
 
     // Test intercation: open plan modal
     await waitFor(async () => {
       await userEvent.click(
-        getByRole('button', { name: /EditListingAvailabilityPanel.editAvailabilityPlan/i })
+        getByRole('button', { name: /EditListingAvailabilityPanel.editAvailabilityPlan/i }),
       );
     });
     expect(getByText('EditListingAvailabilityPlanForm.title')).toBeInTheDocument();
@@ -1855,13 +1855,13 @@ describe('EditListingPage', () => {
 
     // save button for the plan
     expect(
-      getByRole('button', { name: 'EditListingAvailabilityPlanForm.saveSchedule' })
+      getByRole('button', { name: 'EditListingAvailabilityPlanForm.saveSchedule' }),
     ).toBeInTheDocument();
 
     // Test intercation: plan modal form
     await waitFor(async () => {
       userEvent.click(
-        getByRole('checkbox', { name: /EditListingAvailabilityPlanForm.dayOfWeek.mon/i })
+        getByRole('checkbox', { name: /EditListingAvailabilityPlanForm.dayOfWeek.mon/i }),
       );
     });
     expect(monday).not.toBeChecked();
@@ -1869,7 +1869,7 @@ describe('EditListingPage', () => {
     expect(
       monDataContainerAfterUncheck.queryByRole('option', {
         name: 'EditListingAvailabilityPlanForm.startTimePlaceholder',
-      })
+      }),
     ).not.toBeInTheDocument();
 
     // Test intercation: close plan modal
@@ -1888,17 +1888,17 @@ describe('EditListingPage', () => {
     expect(getByText('EditListingAvailabilityExceptionForm.notAvailable')).toBeInTheDocument();
     // time range pickers
     expect(
-      getByText('EditListingAvailabilityExceptionForm.exceptionStartDateLabel')
+      getByText('EditListingAvailabilityExceptionForm.exceptionStartDateLabel'),
     ).toBeInTheDocument();
     expect(
-      getByText('EditListingAvailabilityExceptionForm.exceptionEndDateLabel')
+      getByText('EditListingAvailabilityExceptionForm.exceptionEndDateLabel'),
     ).toBeInTheDocument();
 
     // TODO Testing react-dates / date pickers needs more work
 
     // submit button
     expect(
-      getByRole('button', { name: 'EditListingAvailabilityExceptionForm.addException' })
+      getByRole('button', { name: 'EditListingAvailabilityExceptionForm.addException' }),
     ).toBeInTheDocument();
   }, 10000);
 
@@ -2069,23 +2069,23 @@ describe('EditListingPage', () => {
 
       // Tab/form: form title
       expect(getByRole('textbox', { name: 'EditListingDetailsForm.title' })).toHaveValue(
-        'the listing'
+        'the listing',
       );
 
       // Tab/form: description
       expect(getByRole('textbox', { name: 'EditListingDetailsForm.description' })).toHaveValue(
-        'Lorem ipsum'
+        'Lorem ipsum',
       );
 
       // Tab/form: listing field
       expect(getByLabelText('Cat')).toBeInTheDocument();
       expect(
-        getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected
+        getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected,
       ).toBe(true);
       expect(getByRole('option', { name: 'Cat 1' }).selected).toBe(false);
 
       expect(
-        getByRole('button', { name: 'EditListingWizard.edit.saveDetails' })
+        getByRole('button', { name: 'EditListingWizard.edit.saveDetails' }),
       ).toBeInTheDocument();
     });
 
@@ -2093,11 +2093,11 @@ describe('EditListingPage', () => {
     await waitFor(() => {
       userEvent.selectOptions(
         screen.getByRole('combobox'),
-        screen.getByRole('option', { name: 'Cat 1' })
+        screen.getByRole('option', { name: 'Cat 1' }),
       );
     });
     expect(
-      getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected
+      getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected,
     ).toBe(false);
     expect(getByRole('option', { name: 'Cat 1' }).selected).toBe(true);
   });
@@ -2219,7 +2219,7 @@ describe('EditListingPage', () => {
         initialState: initialState(listing),
         config,
         routeConfiguration,
-      }
+      },
     );
 
     await waitFor(() => {
@@ -2232,14 +2232,14 @@ describe('EditListingPage', () => {
 
       // Tab/form: existing address
       expect(getByPlaceholderText('EditListingLocationForm.addressPlaceholder')).toHaveValue(
-        'Main Street 123'
+        'Main Street 123',
       );
 
       // Tab/form: existing building
       expect(getByLabelText('EditListingLocationForm.building')).toHaveValue('A 1');
 
       expect(
-        getByRole('button', { name: 'EditListingWizard.edit.saveLocation' })
+        getByRole('button', { name: 'EditListingWizard.edit.saveLocation' }),
       ).toBeInTheDocument();
     });
 
@@ -2287,7 +2287,7 @@ describe('EditListingPage', () => {
         initialState: initialState(listing),
         config,
         routeConfiguration,
-      }
+      },
     );
 
     await waitFor(() => {
@@ -2300,11 +2300,11 @@ describe('EditListingPage', () => {
 
       // Tab/form: existing address
       expect(getByPlaceholderText('EditListingPricingForm.priceInputPlaceholder')).toHaveValue(
-        '$55.00'
+        '$55.00',
       );
 
       expect(
-        getByRole('button', { name: 'EditListingWizard.edit.savePricing' })
+        getByRole('button', { name: 'EditListingWizard.edit.savePricing' }),
       ).toBeInTheDocument();
     });
   });
@@ -2400,7 +2400,7 @@ describe('EditListingPageComponent', () => {
         scrollingDisabled={false}
         sendVerificationEmailInProgress={false}
         onResendVerificationEmail={noop}
-      />
+      />,
     );
 
     const tabLabelDetails = 'EditListingWizard.tabLabelDetails';
@@ -2412,7 +2412,7 @@ describe('EditListingPageComponent', () => {
 
     userEvent.selectOptions(
       screen.getByLabelText('EditListingDetailsForm.listingTypeLabel'),
-      'product-selling'
+      'product-selling',
     );
 
     // Tabs not in use

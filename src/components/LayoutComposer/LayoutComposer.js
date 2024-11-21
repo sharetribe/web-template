@@ -54,7 +54,7 @@ const parseAreas = (areas) => {
         result.gridTemplateAreas += `'${areaNames.join(' ')}' `;
         return result;
       },
-      { components: {}, gridTemplateAreas: '' }
+      { components: {}, gridTemplateAreas: '' },
     );
 
   cache[areas] = result;
@@ -105,7 +105,7 @@ const parseDefaultAreasFromProps = (props) => {
     }
   }
   throw new Error(
-    'LayoutComposer needs to have either "areas" or "responsiveAreas" included into props.'
+    'LayoutComposer needs to have either "areas" or "responsiveAreas" included into props.',
   );
 };
 
@@ -223,7 +223,7 @@ LayoutComposer.propTypes = {
     shape({
       mediaQuery: string.isRequired,
       areas: string.isRequired,
-    })
+    }),
   ),
   display: string,
   as: node,

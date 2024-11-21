@@ -179,7 +179,7 @@ describe('SearchPage.helpers', () => {
         'pub_rider',
         'women',
         listingFieldsConfig,
-        []
+        [],
       );
       expect(validParam).toEqual({ pub_rider: 'women' });
     });
@@ -189,7 +189,7 @@ describe('SearchPage.helpers', () => {
         'price',
         '5,200',
         listingFieldsConfig,
-        defaultFiltersConfig
+        defaultFiltersConfig,
       );
       expect(validParam).toEqual({ price: '5,200' });
     });
@@ -199,7 +199,7 @@ describe('SearchPage.helpers', () => {
         'price',
         '-5,2000',
         listingFieldsConfig,
-        defaultFiltersConfig
+        defaultFiltersConfig,
       );
       expect(validParam).toEqual({ price: '0,1000' });
     });
@@ -214,7 +214,7 @@ describe('SearchPage.helpers', () => {
         'pub_rider',
         'invalid',
         listingFieldsConfig,
-        []
+        [],
       );
       expect(validParam).toEqual({});
     });
@@ -224,7 +224,7 @@ describe('SearchPage.helpers', () => {
         'pub_invalid',
         'towels',
         listingFieldsConfig,
-        []
+        [],
       );
       expect(validParam).toEqual({});
     });
@@ -473,7 +473,7 @@ describe('SearchPage.helpers', () => {
         searchParamsInProps,
         filterConfigs,
         sortConfig,
-        isOriginInUse
+        isOriginInUse,
       );
 
       expect(paramsInfo).toEqual({
@@ -492,7 +492,7 @@ describe('SearchPage.helpers', () => {
         searchParamsInProps,
         filterConfigs,
         sortConfig,
-        isOriginInUse
+        isOriginInUse,
       );
 
       expect(paramsInfo).toEqual({
@@ -513,7 +513,7 @@ describe('SearchPage.helpers', () => {
         searchParamsInProps,
         filterConfigs,
         sortConfig,
-        isOriginInUse
+        isOriginInUse,
       );
 
       expect(paramsInfo).toEqual({
@@ -532,7 +532,7 @@ describe('SearchPage.helpers', () => {
         searchParamsInProps,
         filterConfigs,
         sortConfig,
-        isOriginInUse
+        isOriginInUse,
       );
 
       expect(paramsInfo).toEqual({
@@ -557,7 +557,7 @@ describe('SearchPage.helpers', () => {
       ];
       const [primary, secondary] = groupListingFieldConfigs(
         listingFieldsConfig,
-        activeListingTypes
+        activeListingTypes,
       );
       expect(primary).toEqual([listingFieldsConfig[0], listingFieldsConfig[3]]);
       expect(secondary).toEqual([listingFieldsConfig[1], listingFieldsConfig[2]]);

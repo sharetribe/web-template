@@ -1,67 +1,62 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import css from './CodeChecker.module.css';
 import { checkCoupon } from '../../util/api';
+import css from './CodeChecker.module.css';
+import { PrimaryButton } from '../Button/Button';
 
-const CodeChecker = () => {
+function CodeChecker() {
   const [code, setCode] = useState('');
   const [message, setMessage] = useState('');
   const [amount, setAmount] = useState(null);
 
   const handleCheckCode = async () => {
-    setMessage(''); // Reset message
-    setAmount(null); // Reset amount
+    setMessage('');
+    setAmount(null);
 
     if (!code) {
-      setMessage('Please enter a code.');
+      setMessage('Per favore, inserisci un codice.');
       return;
     }
+
     const requestBody = {
-      code: code,
+      code,
       listingId: null,
     };
 
     try {
-      // Make a request to your backend API endpoint that checks the code
-      const response = await checkCoupon(requestBody)
+      const response = await checkCoupon(requestBody);
 
-
-      if (code.startsWith('GC')) {
-        // Display the amount left if it’s a valid GC gift card
+      if (code.startsWith('GC') && response.amount_off) {
         setAmount(response.amount_off);
-        setMessage(`This is a valid gift card. Amount left: $${response.amount.off}`);
+        setMessage(`Questo è un buono regalo valido.`);
       } else if (code.startsWith('WF')) {
-        // Display a message indicating WF is not a gift card
-        setMessage('This code starts with WF and is not a gift card.');
+        setMessage('Questo è un codice Welfare usalo nel listing appropriato.');
       } else {
-        // Display an invalid code message if neither GC nor WF
-        setMessage('Invalid code.');
+        setMessage('Codice non valido.');
       }
     } catch (error) {
-      // Display error message if the code is not valid
-      setMessage('Invalid code or error checking code.');
+      setMessage('Codice non valido o errore durante la verifica.');
     }
   };
 
   return (
     <div className={css.container}>
-      <h2 className={css.heading}>Check Gift Card Code</h2>
+      <h2 className={css.heading}>Verifica il codice gift card</h2>
       <input
         type="text"
         value={code}
         onChange={(e) => setCode(e.target.value)}
-        placeholder="Enter gift card or coupon code"
+        placeholder="Inserisci il codice della tua gift card"
         className={css.input}
       />
-      <button onClick={handleCheckCode} className={css.button}>
-        Check Code
-      </button>
+      <PrimaryButton onClick={handleCheckCode} className={css.button}>
+        Verifica
+      </PrimaryButton>
       <div className={css.message}>
         {message && <p>{message}</p>}
-        {amount !== null && <p className={css.amount}>Remaining Balance: ${amount}</p>}
+        {amount !== null && <p className={css.amount}>Saldo residuo: €{amount / 100}</p>}
       </div>
     </div>
   );
-};
+}
 
 export default CodeChecker;

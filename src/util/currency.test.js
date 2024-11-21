@@ -99,10 +99,10 @@ describe('currency utils', () => {
       expect(convertDecimalToString(new Decimal('-0'))).toEqual('0');
       expect(convertDecimalToString(new Decimal('1.23'))).toEqual('1.23');
       expect(convertDecimalToString(new Decimal('999999999.99999999'))).toEqual(
-        '999999999.99999999'
+        '999999999.99999999',
       );
       expect(convertDecimalToString(new Decimal('-999999999.99999999'))).toEqual(
-        '-999999999.99999999'
+        '-999999999.99999999',
       );
     });
 
@@ -117,7 +117,7 @@ describe('currency utils', () => {
     it('Throws exceptions if string formatted parameter is not a number', () => {
       expect(() => convertDecimalToString('asdf')).toThrow('[DecimalError] Invalid argument: asdf');
       expect(() => convertDecimalToString('123asdf')).toThrow(
-        '[DecimalError] Invalid argument: 123asdf'
+        '[DecimalError] Invalid argument: 123asdf',
       );
     });
   });
@@ -142,22 +142,22 @@ describe('currency utils', () => {
 
     it('negative values to throw errors', () => {
       expect(() => truncateToSubUnitPrecision('-0', subUnitDivisor)).toThrow(
-        'Parameter (-0) must be a positive number'
+        'Parameter (-0) must be a positive number',
       );
       expect(() => truncateToSubUnitPrecision('-1', subUnitDivisor)).toThrow(
-        'Parameter (-1) must be a positive number'
+        'Parameter (-1) must be a positive number',
       );
       expect(() => truncateToSubUnitPrecision('-10000', subUnitDivisor)).toThrow(
-        'Parameter (-10000) must be a positive number'
+        'Parameter (-10000) must be a positive number',
       );
       expect(() => truncateToSubUnitPrecision('-99.99', subUnitDivisor)).toThrow(
-        'Parameter (-99.99) must be a positive number'
+        'Parameter (-99.99) must be a positive number',
       );
       expect(() => truncateToSubUnitPrecision('-99.99999', subUnitDivisor)).toThrow(
-        'Parameter (-99.99999) must be a positive number'
+        'Parameter (-99.99999) must be a positive number',
       );
       expect(() => truncateToSubUnitPrecision('-1.111', subUnitDivisor)).toThrow(
-        'Parameter (-1.111) must be a positive number'
+        'Parameter (-1.111) must be a positive number',
       );
     });
 
@@ -194,13 +194,13 @@ describe('currency utils', () => {
 
     it('wrong type', () => {
       expect(() => convertUnitToSubUnit({}, subUnitDivisor)).toThrow(
-        'Value must be either number or string'
+        'Value must be either number or string',
       );
       expect(() => convertUnitToSubUnit([], subUnitDivisor)).toThrow(
-        'Value must be either number or string'
+        'Value must be either number or string',
       );
       expect(() => convertUnitToSubUnit(null, subUnitDivisor)).toThrow(
-        'Value must be either number or string'
+        'Value must be either number or string',
       );
     });
 
@@ -223,7 +223,7 @@ describe('currency utils', () => {
       expect(() => convertMoneyToNumber(true)).toThrow('Value must be a Money type');
       expect(() => convertMoneyToNumber({})).toThrow('Value must be a Money type');
       expect(() => convertMoneyToNumber(new Money('asdf', 'USD'))).toThrow(
-        '[DecimalError] Invalid argument'
+        '[DecimalError] Invalid argument',
       );
     });
   });

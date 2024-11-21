@@ -38,11 +38,12 @@ export const getStateData = (params) => {
 
   if (processName === PURCHASE_PROCESS_NAME) {
     return getStateDataForPurchaseProcess(params, processInfo());
-  } else if (isBookingProcess(processName)) {
-    return getStateDataForBookingProcess(params, processInfo());
-  } else if (processName === INQUIRY_PROCESS_NAME) {
-    return getStateDataForInquiryProcess(params, processInfo());
-  } else {
-    return {};
   }
+  if (isBookingProcess(processName)) {
+    return getStateDataForBookingProcess(params, processInfo());
+  }
+  if (processName === INQUIRY_PROCESS_NAME) {
+    return getStateDataForInquiryProcess(params, processInfo());
+  }
+  return {};
 };

@@ -5,7 +5,7 @@ import { injectIntl } from '../../../util/reactIntl';
 import { LINE_ITEM_ITEM } from '../../../util/types';
 
 const ProductOrderForm = loadable(
-  () => import(/* webpackChunkName: "ProductOrderForm" */ './ProductOrderForm')
+  () => import(/* webpackChunkName: "ProductOrderForm" */ './ProductOrderForm'),
 );
 
 const CURRENCY = 'USD';
@@ -28,7 +28,7 @@ export const Form = {
     onFetchTransactionLineItems: (params) =>
       console.log(
         'onFetchTransactionLineItems called with params:',
-        JSON.stringify(params, null, 2)
+        JSON.stringify(params, null, 2),
       ),
     onContactUser: () => console.log('onContactUser called'),
     lineItems: null,

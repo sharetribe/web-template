@@ -34,7 +34,7 @@ const SearchPageWithMap = loadable(() => import('../containers/SearchPage/Search
   fallback: <div>Loading...</div>,  // Fallback while loading
 });
 
-const SearchPageWrapper = () => {
+function SearchPageWrapper() {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -47,7 +47,7 @@ const SearchPageWrapper = () => {
   }
 
   return <SearchPageWithMap />;
-};
+}
 const SearchPageWithGrid = loadable(() => import(/* webpackChunkName: "SearchPageWithGrid" */ /* webpackPrefetch: true */  '../containers/SearchPage/SearchPageWithGrid'));
 const StripePayoutPage = loadable(() => import(/* webpackChunkName: "StripePayoutPage" */ '../containers/StripePayoutPage/StripePayoutPage'));
 const TermsOfServicePage = loadable(() => import(/* webpackChunkName: "TermsOfServicePage" */ '../containers/TermsOfServicePage/TermsOfServicePage'));
@@ -68,7 +68,9 @@ export const ACCOUNT_SETTINGS_PAGES = [
 const draftId = '00000000-0000-0000-0000-000000000000';
 const draftSlug = 'draft';
 
-const RedirectToLandingPage = () => <NamedRedirect name="LandingPage" />;
+function RedirectToLandingPage() {
+  return <NamedRedirect name="LandingPage" />
+}
 
 // NOTE: Most server-side endpoints are prefixed with /api. Requests to those
 // endpoints are indended to be handled in the server instead of the browser and

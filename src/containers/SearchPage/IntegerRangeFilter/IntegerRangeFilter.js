@@ -78,8 +78,8 @@ function IntegerRangeFilter(props) {
           minValue,
           maxValue,
         },
-        queryParamNames
-      )
+        queryParamNames,
+      ),
     );
   };
 
@@ -101,7 +101,7 @@ function IntegerRangeFilter(props) {
       handleSubmit(values);
     },
     400,
-    { leading: false, trailing: true }
+    { leading: false, trailing: true },
   );
 
   // If we don't have a specific function here, there will be a delay when pressing clear

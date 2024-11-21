@@ -29,7 +29,7 @@ import LineItemUnknownItemsMaybe from './LineItemUnknownItemsMaybe';
 
 import css from './OrderBreakdown.module.css';
 
-export const OrderBreakdownComponent = (props) => {
+export function OrderBreakdownComponent(props) {
   const {
     rootClassName,
     className,
@@ -49,7 +49,7 @@ export const OrderBreakdownComponent = (props) => {
   // We'll show only line-items that are specific for the current userRole (customer vs provider)
   const lineItems = allLineItems.filter((lineItem) => lineItem.includeFor.includes(userRole));
   const unitLineItem = lineItems.find(
-    (item) => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal
+    (item) => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal,
   );
   // Line-item code that matches with base unit: day, night, hour, item
   const lineItemUnitType = unitLineItem?.code;
@@ -161,7 +161,7 @@ export const OrderBreakdownComponent = (props) => {
       ) : null}
     </div>
   );
-};
+}
 
 OrderBreakdownComponent.defaultProps = {
   rootClassName: null,

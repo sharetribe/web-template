@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import classNames from 'classnames';
+import { useIntl } from 'react-intl';
+import { createClient } from '@supabase/supabase-js';
 import { createInvoice, createRefund } from '../../../util/api';
 import { PrimaryButton, SecondaryButton } from '../../../components';
 import css from './TransactionPanel.module.css';
-import { useIntl } from 'react-intl';
 import PopUp from '../../../components/PopUp/PopUp';
-import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
 const supabaseKey = process.env.REACT_APP_SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const TeamButtonsMaybe = (props) => {
+function TeamButtonsMaybe(props) {
   const intl = useIntl();
   const [fileExists, setFileExists] = useState(false);
   const { className, rootClassName, customerObj, transactionId, start, onSendMessage } = props;
@@ -158,6 +158,6 @@ const TeamButtonsMaybe = (props) => {
       )}
     </div>
   );
-};
+}
 
 export default TeamButtonsMaybe;

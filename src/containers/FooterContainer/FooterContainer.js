@@ -6,7 +6,7 @@ const SectionBuilder = loadable(
   () => import(/* webpackChunkName: "SectionBuilder" */ '../PageBuilder/PageBuilder'),
   {
     resolveComponent: (components) => components.SectionBuilder,
-  }
+  },
 );
 
 function FooterComponent() {

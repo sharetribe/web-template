@@ -192,7 +192,7 @@ EditListingPricingAndStockPanel.propTypes = {
   listingTypes: arrayOf(
     shape({
       stockType: oneOf(STOCK_TYPES),
-    })
+    }),
   ).isRequired,
 
   disabled: bool.isRequired,

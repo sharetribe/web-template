@@ -19,7 +19,7 @@ function LineItemProviderCommissionMaybe(props) {
   const { lineItems, isProvider, marketplaceName, intl } = props;
 
   const providerCommissionLineItem = lineItems.find(
-    (item) => item.code === LINE_ITEM_PROVIDER_COMMISSION && !item.reversal
+    (item) => item.code === LINE_ITEM_PROVIDER_COMMISSION && !item.reversal,
   );
 
   // If commission is passed it will be shown as a fee already reduces from the total price

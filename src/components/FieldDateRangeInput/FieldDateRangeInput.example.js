@@ -58,7 +58,7 @@ export const Empty = {
       format: identity,
       validate: composeValidators(
         required('Required'),
-        bookingDatesRequired('Start date is not valid', 'End date is not valid')
+        bookingDatesRequired('Start date is not valid', 'End date is not valid'),
       ),
       onBlur: () => console.log('onBlur called from DateRangeInput props.'),
       onFocus: () => console.log('onFocus called from DateRangeInput props.'),

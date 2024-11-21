@@ -179,7 +179,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 const ContactDetailsPage = compose(
   connect(mapStateToProps, mapDispatchToProps),
-  injectIntl
+  injectIntl,
 )(ContactDetailsPageComponent);
 
 export default ContactDetailsPage;

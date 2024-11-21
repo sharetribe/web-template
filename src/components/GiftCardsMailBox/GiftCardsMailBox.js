@@ -1,73 +1,140 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import { createClient } from '@supabase/supabase-js';
 import css from './GiftCardsMailBox.module.css';
 import { sendGiftCard } from '../../util/api';
-import { createClient } from '@supabase/supabase-js';
+import { PrimaryButton } from '../Button/Button';
 
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
 const supabaseKey = process.env.REACT_APP_SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const GiftCardsMailBox = () => {
+function GiftCardsMailBox({ user, giftCardCodes }) {
   const [email, setEmail] = useState('');
+  const [giftee, setGiftee] = useState('');
   const [statusMessage, setStatusMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleGifteeChange = (event) => {
+    setGiftee(event.target.value);
+  };
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
   };
 
   const checkIfAlreadyGifted = async (email) => {
-    const { data, error } = await supabase
-      .from('giftcard')
-      .select('gifted, recipient')
-      .eq('recipient', email)
-      .single();
+    try {
+      const { data, error } = await supabase
+        .from('giftcard')
+        .select('gifted, recipient')
+        .eq('recipient', email)
+        .single();
 
-    if (error) {
-      console.error('Error checking gifted status:', error);
+      if (error) {
+        console.error('Error checking gifted status:', error);
+        return { gifted: false, recipient: null }; // Default if there's an error
+      }
+
+      return data
+        ? { gifted: data.gifted, recipient: data.recipient }
+        : { gifted: false, recipient: null };
+    } catch (error) {
+      console.error('Error in Supabase query:', error);
       throw new Error('Error checking gifted status.');
     }
-
-    return data ? { gifted: data.gifted, recipient: data.recipient } : { gifted: false, recipient: null };
   };
 
   const handleSend = async () => {
+    if (!email || !giftee) {
+      setStatusMessage("Per favore, inserisci sia il nome che l'email del destinatario.");
+      return;
+    }
+
     try {
+      setLoading(true);
+      setStatusMessage('');
+
       const { gifted, recipient } = await checkIfAlreadyGifted(email);
 
       if (gifted) {
-        setStatusMessage(`You have already gifted this card to ${recipient}.`);
+        setStatusMessage(`Hai già inviato questa carta regalo a ${recipient}.`);
+        setLoading(false);
         return;
       }
 
-      await sendGiftCard({ email });
-      setStatusMessage(`Notification successfully sent to ${email}!`);
+      if (giftCardCodes.length === 0) {
+        setStatusMessage('Non ci sono codici di carte regalo disponibili da inviare.');
+        setLoading(false);
+        return;
+      }
+
+      const giftCardCode = giftCardCodes[0]; // Use the first gift card code
+
+      await sendGiftCard({
+        email,
+        giftee,
+        sender: user.attributes?.profile?.firstName || 'Club Joy',
+        giftCardCode,
+        emailer: user.attributes?.email,
+      });
+
+      setStatusMessage(`Notifica inviata con successo a ${giftee}!`);
       setEmail('');
+      setGiftee('');
     } catch (error) {
-      setStatusMessage('There was an error sending the notification. Please try again.');
+      setStatusMessage("C'è stato un errore nell'invio della notifica. Per favore, riprova.");
       console.error('Error sending gift card notification:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className={css.mailboxContainer}>
+      <h4 className={css.title}>Manda la tua Carta Regalo</h4>
       <p className={css.caption}>
-        Send a surprise to a friend! Enter their email, and we’ll let them know about the wonderful gift you've sent.
+        Fai una sorpresa a un amico! Inserisci il suo nome e email, e gli faremo sapere del
+        meraviglioso regalo che hai inviato 💙!
       </p>
       <div className={css.inputContainer}>
         <input
+          type="text"
+          placeholder="Nome dell'amico"
+          value={giftee}
+          onChange={handleGifteeChange}
+          className={css.input}
+        />
+        <input
           type="email"
-          placeholder="Enter friend's email"
+          placeholder="Email dell'amico"
           value={email}
           onChange={handleEmailChange}
           className={css.input}
         />
-        <button onClick={handleSend} className={css.sendButton}>
-          Send
-        </button>
+        <PrimaryButton onClick={handleSend} className={css.sendButton} disabled={loading}>
+          {loading ? 'Invio in corso...' : 'Invia'}
+        </PrimaryButton>
       </div>
       {statusMessage && <p className={css.statusMessage}>{statusMessage}</p>}
     </div>
   );
+}
+
+GiftCardsMailBox.propTypes = {
+  user: PropTypes.shape({
+    attributes: PropTypes.shape({
+      email: PropTypes.string.isRequired,
+      profile: PropTypes.shape({
+        firstName: PropTypes.string,
+      }),
+    }).isRequired,
+  }).isRequired,
+  giftCardCodes: PropTypes.arrayOf(PropTypes.string),
+};
+
+GiftCardsMailBox.defaultProps = {
+  giftCardCodes: [],
 };
 
 export default GiftCardsMailBox;

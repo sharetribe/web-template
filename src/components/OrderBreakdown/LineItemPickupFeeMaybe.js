@@ -9,7 +9,7 @@ function LineItemPickupFeeMaybe(props) {
   const { lineItems, intl } = props;
 
   const pickupFeeLineItem = lineItems.find(
-    (item) => item.code === LINE_ITEM_PICKUP_FEE && !item.reversal
+    (item) => item.code === LINE_ITEM_PICKUP_FEE && !item.reversal,
   );
 
   return pickupFeeLineItem ? (

@@ -16,12 +16,12 @@ import {
 
 import css from './TopbarMobileMenu.module.css';
 
-const CustomLinkComponent = ({ linkConfig, currentPage }) => {
+function CustomLinkComponent({ linkConfig, currentPage }) {
   const { group, text, type, href, route } = linkConfig;
-  const getCurrentPageClass = page => {
-    const hasPageName = name => currentPage?.indexOf(name) === 0;
-    const isCMSPage = pageId => hasPageName('CMSPage') && currentPage === `${page}:${pageId}`;
-    const isInboxPage = tab => hasPageName('InboxPage') && currentPage === `${page}:${tab}`;
+  const getCurrentPageClass = (page) => {
+    const hasPageName = (name) => currentPage?.indexOf(name) === 0;
+    const isCMSPage = (pageId) => hasPageName('CMSPage') && currentPage === `${page}:${pageId}`;
+    const isInboxPage = (tab) => hasPageName('InboxPage') && currentPage === `${page}:${tab}`;
     const isCurrentPage = currentPage === page;
 
     return isCMSPage(route?.params?.pageId) || isInboxPage(route?.params?.tab) || isCurrentPage
@@ -48,9 +48,9 @@ const CustomLinkComponent = ({ linkConfig, currentPage }) => {
       {text}
     </ExternalLink>
   );
-};
+}
 
-const TopbarMobileMenu = (props) => {
+function TopbarMobileMenu(props) {
   const {
     isAuthenticated,
     currentPage,
@@ -137,7 +137,7 @@ const TopbarMobileMenu = (props) => {
   <option value="it">It</option>
   <option value="en">Eng</option>
 </select>
-        </div>*/}
+        </div> */}
       </div>
     );
   }
@@ -232,7 +232,7 @@ const TopbarMobileMenu = (props) => {
       )}
     </div>
   );
-};
+}
 
 TopbarMobileMenu.defaultProps = { currentUser: null, notificationCount: 0, currentPage: null };
 

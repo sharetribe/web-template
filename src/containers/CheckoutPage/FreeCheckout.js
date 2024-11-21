@@ -1,21 +1,40 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { initiateOrder } from './CheckoutPage.duck'; 
 import { useHistory } from 'react-router-dom';
+import { initiateOrder } from './CheckoutPage.duck';
 import CustomTopbar from './CustomTopbar';
-import {updateTransaction} from '../../util/api';
+import { updateTransaction } from '../../util/api';
+import DetailsSideCard from './DetailsSideCard';
+import { H3, H4, NamedLink, OrderBreakdown, Page, PrimaryButton } from '../../components';
+import css from './CheckoutPage.module.css';
+import MobileListingImage from './MobileListingImage';
+import MobileOrderBreakdown from './MobileOrderBreakdown';
+import { FormattedMessage, intlShape } from '../../util/reactIntl';
 
-const FreeCheckout = ({
+function FreeCheckout({
   intl,
   pageData,
   title,
   onInitiateOrder,
   currentUser,
-}) => {
-  const history = useHistory(); 
+  listing,
+  listingTitle,
+  errorMessages,
+  processName,
+  breakdown,
+  scrollingDisabled,
+}) {
+  const history = useHistory();
+  const firstImage = listing?.images?.[0];
+  const customImageConfig = {
+    variantType: 'cropImage',
+    aspectRatio: '1/1',
+    aspectWidth: 1,
+    aspectHeight: 1,
+    variantPrefix: 'listing-card',
+  };
 
   const handleConfirmBooking = () => {
-   
     const customerEmail = currentUser?.attributes?.email;
     const seats = pageData.orderData?.seats ? Number(pageData.orderData.seats) : null;
     const seatNames = pageData.orderData?.guestNames;
@@ -23,7 +42,7 @@ const FreeCheckout = ({
     const guestsNameMaybe = seatNames ? { seatNames } : {};
     const fee = pageData.orderData?.fee || [''];
     const voucherFee = pageData.orderData?.voucherFee || 0;
-    const languageMaybe = pageData.orderData.Language  
+    const languageMaybe = pageData.orderData.Language
       ? { Language: pageData.orderData.Language }
       : {};
     const locationMaybe = pageData.orderData.Location
@@ -35,7 +54,7 @@ const FreeCheckout = ({
         ...guestsNameMaybe,
         ...languageMaybe,
         ...locationMaybe,
-        fee: fee,
+        fee,
         email: customerEmail,
       },
     };
@@ -56,35 +75,69 @@ const FreeCheckout = ({
       .then((order) => {
         const updatePayload = {
           transactionId: order.id.uuid,
-          pageData: pageData,
+          pageData,
           total: order.attributes.payinTotal.amount,
+          isPending: true,
         };
         return updateTransaction(updatePayload)
-        .then(() => {
-          // Navigate to /order/{transactionId} after successful update
-          history.push(`/order/${order.id.uuid}`);
-        })
-        .catch((error) => {
-          console.error('Failed to update transaction:', error);
-          // Optional: Handle update transaction error
-        });
-    })
-    .catch((error) => {
-      console.error('Failed to initiate order:', error);
-    });
+          .then(() => {
+            // Navigate to /order/{transactionId} after successful update
+            history.push(`/order/${order.id.uuid}`);
+          })
+          .catch((error) => {
+            console.error('Failed to update transaction:', error);
+            // Optional: Handle update transaction error
+          });
+      })
+      .catch((error) => {
+        console.error('Failed to initiate order:', error);
+      });
   };
 
   return (
-    <>
+    <Page title={title} scrollingDisabled={scrollingDisabled}>
       <CustomTopbar intl={intl} />
-      <div className="free-checkout-container">
-        <h1>{title}</h1>
-        <p>Your booking with a gift voucher has been applied!</p>
-        <button onClick={handleConfirmBooking}>Confirm Booking</button>
+      <div className={css.contentContainer}>
+        <MobileListingImage
+          listingTitle={listingTitle}
+          author={listing?.author}
+          firstImage={firstImage}
+          layoutListingImageConfig={customImageConfig}
+        />
+        <div className={css.orderFormContainer}>
+          <div className={css.headingContainer}>
+            <H3 as="h1" className={css.heading}>
+              {title}
+            </H3>
+            <H4 as="h2" className={css.detailsHeadingMobile}>
+              <FormattedMessage id="CheckoutPage.listingTitle" values={{ listingTitle }} />
+            </H4>
+            <p>La tua prenotazione con un buono regalo è stata applicata!</p>
+            <p>Procedi per completare la prenotazione.</p>
+          </div>
+
+          <MobileOrderBreakdown speculateTransactionErrorMessage={null} breakdown={breakdown} />
+
+          <div className={css.submitContainer}>
+            <PrimaryButton onClick={handleConfirmBooking}> Completa l'operazione</PrimaryButton>
+          </div>
+        </div>
+        <DetailsSideCard
+          listing={listing}
+          listingTitle={listingTitle}
+          author={listing?.author}
+          firstImage={firstImage}
+          layoutListingImageConfig={customImageConfig}
+          speculateTransactionErrorMessage={null}
+          isInquiryProcess={false}
+          processName={processName}
+          breakdown={breakdown}
+          intl={intl}
+        />
       </div>
-    </>
+    </Page>
   );
-};
+}
 
 const mapDispatchToProps = { initiateOrder };
 

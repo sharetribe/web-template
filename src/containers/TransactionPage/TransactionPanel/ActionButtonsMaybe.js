@@ -1,15 +1,16 @@
 import React from 'react';
 import classNames from 'classnames';
-
-import { PrimaryButton, SecondaryButton } from '../../../components';
 import { createClient } from '@supabase/supabase-js';
+import { updateGiftCard } from '../../../util/supabase';
+import { PrimaryButton, SecondaryButton } from '../../../components';
 import css from './TransactionPanel.module.css';
+import { updateTransaction } from '../../../util/api';
 
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
 const supabaseKey = process.env.REACT_APP_SUPABASE_KEY; // Ensure this is correctly set in your .env file
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const ActionButtonsMaybe = (props) => {
+function ActionButtonsMaybe(props) {
   const {
     className,
     rootClassName,
@@ -19,6 +20,8 @@ const ActionButtonsMaybe = (props) => {
     isListingDeleted,
     isProvider,
     customerObj,
+    giftCardProps,
+    transactionId,
   } = props;
   // In default processes default processes need special handling
   // Booking: provider should not be able to accept on-going transactions
@@ -46,16 +49,41 @@ const ActionButtonsMaybe = (props) => {
     }
   };
 
-  const handlePrimaryButtonClick = () => {
-    if (isProvider) {
-      insertBooking(customerObj);
-console.log('here 2')
-/// CALL DB FOR GIFTCARD SUBTRACTION
+  const handlePrimaryButtonClick = async () => {
+    try {
+      if (isProvider) {
+        // Step 1: Insert the booking
+        await insertBooking(customerObj);
 
+        // Step 2: Check if there are gift card properties to update
+        if (giftCardProps && giftCardProps.giftCardCode) {
+          const dataArray = await updateGiftCard({ ...giftCardProps, isPending: false });
 
-    }
-    if (primaryButtonProps?.onAction) {
-      primaryButtonProps.onAction();
+          // Ensure the response is an array and has data
+          if (Array.isArray(dataArray) && dataArray.length > 0) {
+            const data = dataArray[0]; // Extract the first object from the array
+
+            const cardUpdatePayload = {
+              transactionId,
+              cardAmount: data.amount,
+              cardType: data.isWellfare ? 'welfareCard' : 'giftCard',
+              isPending: false,
+            };
+
+            await updateTransaction(cardUpdatePayload);
+          } else {
+            console.error('Unexpected data format from updateGiftCard:', dataArray);
+          }
+        }
+      }
+
+      // Step 4: Call primary button action if it exists
+      if (primaryButtonProps?.onAction) {
+        primaryButtonProps.onAction();
+      }
+    } catch (err) {
+      // Log any errors that occur in the process
+      console.error('Error handling primary button click:', err);
     }
   };
 
@@ -99,6 +127,6 @@ console.log('here 2')
       </div>
     </div>
   ) : null;
-};
+}
 
 export default ActionButtonsMaybe;

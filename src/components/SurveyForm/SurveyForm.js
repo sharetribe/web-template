@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import css from './SurveyForm.module.css';
 import { useHistory } from 'react-router-dom';
-import { createResourceLocatorString } from '../../util/routes';
-import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { useIntl } from 'react-intl';
 import moment from 'moment';
+import css from './SurveyForm.module.css';
+import { createResourceLocatorString } from '../../util/routes';
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 
 // Import the images
 import DuomoImage from '../../media/duomo.svg';
 import MoleImage from '../../media/mole.svg';
 
-const SurveyForm = ({ className, isTeamBuilding }) => {
+function SurveyForm({ className, isTeamBuilding }) {
   const [isMobile, setIsMobile] = useState(
-    typeof window !== 'undefined' ? window.innerWidth < 1024 : null
+    typeof window !== 'undefined' ? window.innerWidth < 1024 : null,
   );
   const routeConfiguration = useRouteConfiguration();
   const intl = useIntl();
@@ -100,7 +100,7 @@ const SurveyForm = ({ className, isTeamBuilding }) => {
       return;
     }
 
-    let queryParts = [];
+    const queryParts = [];
     const pubJoy = mapJoyToPubJoy();
 
     if (pubJoy) {
@@ -124,7 +124,7 @@ const SurveyForm = ({ className, isTeamBuilding }) => {
       queryParts.push('bounds=45.25790687%2C7.90646554%2C44.86359069%2C7.469759');
     }
 
-    let searchParams = queryParts.join('&');
+    const searchParams = queryParts.join('&');
     if (routeConfiguration) {
       const queryString = `?${searchParams}`;
       const searchPageUrl = `${searchPagePath}${queryString}`;
@@ -303,6 +303,6 @@ const SurveyForm = ({ className, isTeamBuilding }) => {
   };
 
   return <div className={`${css.surveyForm} ${className || ''}`}>{renderStep()}</div>;
-};
+}
 
 export default SurveyForm;

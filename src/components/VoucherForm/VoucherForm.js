@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { func, number, object, string } from 'prop-types';
 import classNames from 'classnames';
 import { checkCoupon } from '../../util/api';
-import { FieldTextInput, SecondaryButton } from '../../components';
+import { FieldTextInput, SecondaryButton } from '..';
 import css from './VoucherForm.module.css';
 
 class VoucherForm extends Component {
@@ -28,28 +28,30 @@ class VoucherForm extends Component {
       });
       return;
     }
-  
+
     const requestBody = {
       code: voucherCode,
       listingId: this.props.listingId.uuid,
     };
-  
+
     checkCoupon(requestBody)
       .then((response) => {
         if (!response.valid) {
           const { codeType } = response;
           let errorMessage;
-  
-          if (codeType === 'gift card') {
+
+          if (codeType === 'giftCard') {
             errorMessage = (
               <p className={css.voucherTitleBox}>
                 {this.props.intl.formatMessage({ id: 'BookingTimeForm.coupon.notValidGiftCard' })}
               </p>
             );
-          } else if (codeType === 'welfare card') {
+          } else if (codeType === 'welfareCard') {
             errorMessage = (
               <p className={css.voucherTitleBox}>
-                {this.props.intl.formatMessage({ id: 'BookingTimeForm.coupon.notValidWelfareCard' })}
+                {this.props.intl.formatMessage({
+                  id: 'BookingTimeForm.coupon.notValidWelfareCard',
+                })}
               </p>
             );
           } else {
@@ -59,15 +61,14 @@ class VoucherForm extends Component {
               </p>
             );
           }
-  
+
           this.setState({ errorMessage });
           return;
         }
-  
 
         this.props.form.batch(() => {
           this.props.form.change('voucherFee', response);
-          this.props.form.change('lineItems', this.props.lineItems); 
+          this.props.form.change('lineItems', this.props.lineItems);
         });
         this.setState({ errorMessage: '' });
       })
@@ -78,7 +79,7 @@ class VoucherForm extends Component {
             {this.props.intl.formatMessage({ id: 'BookingTimeForm.coupon.notValid' })}
           </p>
         );
-  
+
         this.setState({
           errorMessage,
         });
@@ -87,8 +88,6 @@ class VoucherForm extends Component {
         this.setState({ voucherCode: '' });
       });
   };
-  
-  
 
   render() {
     const { rootClassName, className, formId, form, values, intl } = this.props;
@@ -106,7 +105,11 @@ class VoucherForm extends Component {
             value={voucherCode}
             onChange={this.handleVoucherChange}
           />
-          <SecondaryButton type="button" onClick={this.handleVoucherSubmit} style={{ width: '100%' }}>
+          <SecondaryButton
+            type="button"
+            onClick={this.handleVoucherSubmit}
+            style={{ width: '100%' }}
+          >
             {intl.formatMessage({ id: 'BookingTimeForm.coupon.button' })}
           </SecondaryButton>
           {errorMessage && <p className={css.errorMessage}>{errorMessage}</p>}

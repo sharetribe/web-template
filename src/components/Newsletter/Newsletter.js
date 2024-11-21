@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { createClient } from '@supabase/supabase-js';
 import { useHistory } from 'react-router-dom'; // Import useHistory
+import { PopupButton } from 'react-calendly';
 import css from './Newsletter.module.css';
 import { PrimaryButton } from '../Button/Button';
-import { PopupButton } from 'react-calendly';
 import { newsletter } from '../../util/api';
 
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
@@ -58,7 +58,7 @@ function Newsletter() {
   };
 
   const handleNavigate = () => {
-    history.push('/ts'); 
+    history.push('/ts');
   };
 
   const heartStyle = {
@@ -74,13 +74,10 @@ function Newsletter() {
             url="https://calendly.com/hello-epym"
             rootElement={document.getElementById('root')}
             text="☎️ Experience Planner gratis"
-            className={css.calendlyButton} 
+            className={css.calendlyButton}
           />
         )}
-        <PrimaryButton
-          onClick={handleNavigate}
-          className={css.button}
-        >
+        <PrimaryButton onClick={handleNavigate} className={css.button}>
           Prenota il tuo evento
         </PrimaryButton>
       </div>

@@ -63,7 +63,7 @@ const getOpenedParenthesisCount = (str) =>
   Array.from(str).reduce(
     (opened, currentChar) =>
       currentChar === '(' ? ++opened : currentChar === ')' ? --opened : opened,
-    0
+    0,
   );
 // Split extra parentheses from a (partial) string containing URL
 const splitExtraParentheses = (str) => {
@@ -75,7 +75,7 @@ const splitExtraParentheses = (str) => {
       .reduce(
         (count, currentChar) =>
           currentChar === ')' && parenthesesCount + count < 0 ? ++count : count,
-        0
+        0,
       );
 
     // return an array of splitted strings, where 1st item is URL with balanced number of trailing parentheses
@@ -170,7 +170,7 @@ export const richText = (text, options) => {
     const parts = flow([
       (v) =>
         flatMap(v, (w) =>
-          linkifyOrWrapLinkSplit(w, i, { linkify, linkClass: linkOrLongWordClass })
+          linkifyOrWrapLinkSplit(w, i, { linkify, linkClass: linkOrLongWordClass }),
         ),
       (v) => flatMap(v, (w) => zwspAroundSpecialCharsSplit(w, breakCharsConfig)),
       (v) => map(v, (w, j) => wrapLongWord(w, `${i}${j}`, { longWordMinLength, longWordClass })),

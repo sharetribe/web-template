@@ -38,7 +38,7 @@ function ShippingDetails(props) {
           id: 'ShippingDetails.recipientNamePlaceholder',
         })}
         validate={validators.required(
-          intl.formatMessage({ id: 'ShippingDetails.recipientNameRequired' })
+          intl.formatMessage({ id: 'ShippingDetails.recipientNameRequired' }),
         )}
         onUnmount={() => formApi.change('recipientName', undefined)}
       />
@@ -51,7 +51,7 @@ function ShippingDetails(props) {
         autoComplete="shipping phoneNumber"
         label={intl.formatMessage(
           { id: 'ShippingDetails.recipientPhoneNumberLabel' },
-          { optionalText }
+          { optionalText },
         )}
         placeholder={intl.formatMessage({
           id: 'ShippingDetails.recipientPhoneNumberPlaceholder',
@@ -71,7 +71,7 @@ function ShippingDetails(props) {
             id: 'ShippingDetails.addressLine1Placeholder',
           })}
           validate={validators.required(
-            intl.formatMessage({ id: 'ShippingDetails.addressLine1Required' })
+            intl.formatMessage({ id: 'ShippingDetails.addressLine1Required' }),
           )}
           onUnmount={() => formApi.change('recipientAddressLine1', undefined)}
         />
@@ -103,7 +103,7 @@ function ShippingDetails(props) {
             id: 'ShippingDetails.postalCodePlaceholder',
           })}
           validate={validators.required(
-            intl.formatMessage({ id: 'ShippingDetails.postalCodeRequired' })
+            intl.formatMessage({ id: 'ShippingDetails.postalCodeRequired' }),
           )}
           onUnmount={() => formApi.change('recipientPostal', undefined)}
         />
@@ -141,7 +141,7 @@ function ShippingDetails(props) {
           className={css.field}
           label={intl.formatMessage({ id: 'ShippingDetails.countryLabel' })}
           validate={validators.required(
-            intl.formatMessage({ id: 'ShippingDetails.countryRequired' })
+            intl.formatMessage({ id: 'ShippingDetails.countryRequired' }),
           )}
         >
           <option disabled value="">

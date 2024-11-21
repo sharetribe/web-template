@@ -25,7 +25,7 @@ function Tab(props) {
       [css.selectedTabContent]: selected,
       [css.disabled]: disabled,
     },
-    darkSkinClasses
+    darkSkinClasses,
   );
 
   const buttonClasses = classNames(
@@ -35,7 +35,7 @@ function Tab(props) {
       [css.selectedTabContent]: selected,
       [css.disabled]: disabled,
     },
-    darkSkinClasses
+    darkSkinClasses,
   );
 
   const isButton = !!onClick;
@@ -108,7 +108,7 @@ ButtonTabNavHorizontal.propTypes = {
       disabled: bool,
       selected: bool,
       onClick: func.isRequired,
-    })
+    }),
   ).isRequired,
   skin: oneOf([LIGHT_SKIN, DARK_SKIN]),
 };
@@ -139,7 +139,7 @@ LinkTabNavHorizontal.propTypes = {
       disabled: bool,
       selected: bool,
       linkProps: object.isRequired,
-    })
+    }),
   ).isRequired,
   skin: oneOf([LIGHT_SKIN, DARK_SKIN]),
 };

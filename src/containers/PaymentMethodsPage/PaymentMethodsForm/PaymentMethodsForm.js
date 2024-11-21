@@ -216,7 +216,7 @@ class PaymentMethodsForm extends Component {
       {
         id: 'PaymentMethodsForm.infoText',
       },
-      { marketplaceName: config.marketplaceName }
+      { marketplaceName: config.marketplaceName },
     );
 
     // Stripe recommends asking billing address.

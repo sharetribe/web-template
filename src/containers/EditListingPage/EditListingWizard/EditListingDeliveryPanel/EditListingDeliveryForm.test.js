@@ -24,7 +24,7 @@ describe('EditListingDeliveryForm', () => {
         updateInProgress={false}
         disabled={false}
         ready={false}
-      />
+      />,
     );
 
     // Pickup fields

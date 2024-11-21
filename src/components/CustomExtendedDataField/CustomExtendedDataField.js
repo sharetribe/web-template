@@ -110,11 +110,11 @@ function CustomFieldLong(props) {
     placeholderMessage || intl.formatMessage({ id: 'CustomExtendedDataField.placeholderLong' });
   const numberTooSmallMessage = intl.formatMessage(
     { id: 'CustomExtendedDataField.numberTooSmall' },
-    { min: minimum }
+    { min: minimum },
   );
   const numberTooBigMessage = intl.formatMessage(
     { id: 'CustomExtendedDataField.numberTooBig' },
-    { max: maximum }
+    { max: maximum },
   );
 
   // Field with schema type 'long' will always be validated against min & max

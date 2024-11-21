@@ -1,4 +1,5 @@
 import { types as sdkTypes } from './sdkLoader';
+
 const { Money } = sdkTypes;
 
 /**
@@ -11,12 +12,10 @@ export const filterListings = (location, listings) => {
 
     if (isTeamBuilding) {
       return listingType === 'teambuilding';
-    } else {
-      return listingType !== 'teambuilding';
     }
+    return listingType !== 'teambuilding';
   });
 };
-
 
 /**
  * Normalizes the amount to ensure it is not negative.

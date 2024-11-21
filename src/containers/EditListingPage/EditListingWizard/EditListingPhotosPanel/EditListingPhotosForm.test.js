@@ -30,7 +30,7 @@ describe('EditListingDeliveryForm', () => {
         disabled={false}
         onRemoveImage={noop}
         listingImageConfig={{ aspectWidth: 1, aspectHeight: 1, variantPrefix: 'listing-card' }}
-      />
+      />,
     );
     expect(tree.asFragment()).toMatchSnapshot();
   });
@@ -62,7 +62,7 @@ describe('EditListingDeliveryForm', () => {
             />
           </form>
         )}
-      />
+      />,
     );
 
     // Fill mandatory attributes

@@ -67,7 +67,6 @@ const listingPageReducer = (state = initialState, action = {}) => {
         searchInProgress: false,
       };
     case SEARCH_LISTINGS_ERROR:
-      // eslint-disable-next-line no-console
       console.error(payload);
       return { ...state, searchInProgress: false, searchListingsError: payload };
 
@@ -113,15 +112,14 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
   //       ...and then turned enforceValidListingType config to true in configListing.js
   // Read More:
   // https://www.sharetribe.com/docs/how-to/manage-search-schemas-with-flex-cli/#adding-listing-search-schemas
-  const searchValidListingTypes = (listingTypes) => {
-    return config.listing.enforceValidListingType
+  const searchValidListingTypes = (listingTypes) =>
+    config.listing.enforceValidListingType
       ? {
           pub_listingType: listingTypes.map((l) => l.listingType),
           // pub_transactionProcessAlias: listingTypes.map(l => l.transactionType.alias),
           // pub_unitType: listingTypes.map(l => l.transactionType.unitType),
         }
       : {};
-  };
   const omitInvalidCategoryParams = (params) => {
     const categoryConfig = config.search.defaultFilters?.find((f) => f.schemaType === 'category');
     const { categories } = config.categoryConfiguration;
@@ -146,7 +144,7 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
     const categoryKeys = validURLParamForCategoryData(prefix, categories, 1, params);
     const nonCategoryKeys = Object.entries(params).reduce(
       (picked, [k, v]) => (k.startsWith(categoryParamPrefix) ? picked : { ...picked, [k]: v }),
-      {}
+      {},
     );
 
     return { ...nonCategoryKeys, ...categoryKeys };
@@ -318,7 +316,7 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
       ...rest,
       ...originMaybe,
       page,
-      perPage: 50, //RESULT_PAGE_SIZE,
+      perPage: 50, // RESULT_PAGE_SIZE,
       include: ['author', 'images'],
       'fields.listing': [
         'title',
@@ -350,7 +348,7 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
       ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
       'limit.images': 1,
     },
-    config
+    config,
   );
   return dispatch(searchListingsCall);
 };

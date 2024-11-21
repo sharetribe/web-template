@@ -109,7 +109,7 @@ describe('CheckoutPage', () => {
     const listing = createListing(
       'listing1',
       { publicData: { transactionProcessAlias: 'default-purchase', unitType: 'item' } },
-      { author: createUser('author'), images: [createImage('first-image')] }
+      { author: createUser('author'), images: [createImage('first-image')] },
     );
 
     const shippingFeeLineItem = [
@@ -175,7 +175,7 @@ describe('CheckoutPage', () => {
     expect(getTextbox('StripePaymentForm.messageLabel')).toBeInTheDocument();
 
     expect(
-      screen.getByRole('button', { name: 'StripePaymentForm.submitPaymentInfo' })
+      screen.getByRole('button', { name: 'StripePaymentForm.submitPaymentInfo' }),
     ).toBeInTheDocument();
   });
 
@@ -183,7 +183,7 @@ describe('CheckoutPage', () => {
     const listing = createListing(
       'listing1',
       { publicData: { transactionProcessAlias: 'default-booking', unitType: 'day' } },
-      { author: createUser('author'), images: [createImage('first-image')] }
+      { author: createUser('author'), images: [createImage('first-image')] },
     );
 
     const props = {
@@ -229,7 +229,7 @@ describe('CheckoutPage', () => {
     expect(getTextbox('StripePaymentForm.messageLabel')).toBeInTheDocument();
 
     expect(
-      screen.getByRole('button', { name: 'StripePaymentForm.submitPaymentInfo' })
+      screen.getByRole('button', { name: 'StripePaymentForm.submitPaymentInfo' }),
     ).toBeInTheDocument();
   });
 
@@ -243,7 +243,7 @@ describe('CheckoutPage', () => {
           unitType: 'inquiry',
         },
       },
-      { author: createUser('author'), images: [createImage('first-image')] }
+      { author: createUser('author'), images: [createImage('first-image')] },
     );
 
     const defaultConfig = getDefaultConfiguration();
@@ -307,7 +307,7 @@ describe('CheckoutPage', () => {
     expect(screen.queryByRole('heading', { name: billingDetails })).not.toBeInTheDocument();
 
     expect(
-      screen.queryByRole('button', { name: 'StripePaymentForm.submitPaymentInfo' })
+      screen.queryByRole('button', { name: 'StripePaymentForm.submitPaymentInfo' }),
     ).not.toBeInTheDocument();
   });
 
@@ -321,7 +321,7 @@ describe('CheckoutPage', () => {
           unitType: 'inquiry',
         },
       },
-      { author: createUser('author'), images: [createImage('first-image')] }
+      { author: createUser('author'), images: [createImage('first-image')] },
     );
 
     const defaultConfig = getDefaultConfiguration();
@@ -377,7 +377,7 @@ describe('CheckoutPage', () => {
         {},
         {
           author: createUser('author1'),
-        }
+        },
       );
       const orderData = { quantity: 3, deliveryMethod: 'shipping' };
       const expectedAction = {
@@ -414,7 +414,7 @@ describe('CheckoutPage', () => {
           {},
           {
             author: createUser('author1'),
-          }
+          },
         );
         const orderData = { quantity: 3, deliveryMethod: 'shipping' };
         const payload = { listing, orderData };

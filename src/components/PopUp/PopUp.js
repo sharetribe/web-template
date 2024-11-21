@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import css from './PopUp.module.css';
 import { useIntl } from 'react-intl';
+import css from './PopUp.module.css';
 import { PrimaryButton, SecondaryButton } from '../Button/Button';
 
-const PopUp = ({ message, onConfirm, onCancel, showForm }) => {
+function PopUp({ message, onConfirm, onCancel, showForm }) {
   const intl = useIntl();
   const [selectedOption, setSelectedOption] = useState('');
   const [selectedOptionText, setSelectedOptionText] = useState('');
@@ -146,7 +146,7 @@ const PopUp = ({ message, onConfirm, onCancel, showForm }) => {
       </div>
     </div>
   );
-};
+}
 
 PopUp.propTypes = {
   message: PropTypes.string.isRequired,

@@ -17,7 +17,7 @@ describe('Menu', () => {
           <MenuItem key="1">Menu item 1</MenuItem>
           <MenuItem key="2">Menu item 2</MenuItem>
         </MenuContent>
-      </Menu>
+      </Menu>,
     );
     expect(tree.asFragment()).toMatchSnapshot();
   });

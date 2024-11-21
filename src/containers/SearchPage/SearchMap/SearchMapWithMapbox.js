@@ -140,7 +140,7 @@ const priceLabelsInLocations = (
   activeListingId,
   infoCardOpen,
   onListingClicked,
-  mapComponentRefreshToken
+  mapComponentRefreshToken,
 ) => {
   const listingArraysInLocations = reducedToArray(groupedByCoordinates(listings));
   const priceLabels = listingArraysInLocations.reverse().map((listingArr) => {
@@ -210,7 +210,7 @@ const infoCardComponent = (
   infoCardOpen,
   onListingInfoCardClicked,
   createURLToListing,
-  mapComponentRefreshToken
+  mapComponentRefreshToken,
 ) => {
   const listingsArray = Array.isArray(infoCardOpen) ? infoCardOpen : [infoCardOpen];
 
@@ -292,7 +292,7 @@ class SearchMapWithMapbox extends Component {
   componentWillUnmount() {
     this.currentInfoCard.markerContainer.removeEventListener(
       'dblclick',
-      this.handleDoubleClickOnInfoCard
+      this.handleDoubleClickOnInfoCard,
     );
     document.removeEventListener('gesturestart', this.handleMobilePinchZoom, false);
     document.removeEventListener('gesturechange', this.handleMobilePinchZoom, false);
@@ -316,14 +316,14 @@ class SearchMapWithMapbox extends Component {
       const isHiddenByReusableMap =
         this.props.reusableMapHiddenHandle &&
         this.state.mapContainer.parentElement.classList.contains(
-          this.props.reusableMapHiddenHandle
+          this.props.reusableMapHiddenHandle,
         );
       if (!isHiddenByReusableMap) {
         const viewportMapBounds = getMapBounds(this.map);
         const viewportMapCenter = getMapCenter(this.map);
         const viewportBounds = sdkBoundsToFixedCoordinates(
           viewportMapBounds,
-          BOUNDS_FIXED_PRECISION
+          BOUNDS_FIXED_PRECISION,
         );
 
         // ViewportBounds from (previous) rendering differ from viewportBounds currently set to map
@@ -391,7 +391,7 @@ class SearchMapWithMapbox extends Component {
         activeListingId,
         infoCardOpen,
         onListingClicked,
-        mapComponentRefreshToken
+        mapComponentRefreshToken,
       );
 
       // If map has moved or info card opened, unnecessary markers need to be removed
@@ -410,7 +410,7 @@ class SearchMapWithMapbox extends Component {
         .filter((v) => v != null)
         .map((m) => {
           const existingMarkerId = this.currentMarkers.findIndex(
-            (marker) => m.markerId === marker.markerId && marker.marker
+            (marker) => m.markerId === marker.markerId && marker.marker,
           );
 
           if (existingMarkerId >= 0) {
@@ -430,7 +430,7 @@ class SearchMapWithMapbox extends Component {
           infoCardOpen,
           onListingInfoCardClicked,
           createURLToListing,
-          mapComponentRefreshToken
+          mapComponentRefreshToken,
         );
 
         // marker container and its styles
@@ -448,7 +448,7 @@ class SearchMapWithMapbox extends Component {
         if (this.currentInfoCard) {
           this.currentInfoCard.markerContainer.removeEventListener(
             'dblclick',
-            this.handleDoubleClickOnInfoCard
+            this.handleDoubleClickOnInfoCard,
           );
         }
         this.currentInfoCard = null;
@@ -479,13 +479,13 @@ class SearchMapWithMapbox extends Component {
           if (isMapReadyForMarkers && m.type === 'price') {
             return ReactDOM.createPortal(
               <SearchMapPriceLabel {...m.componentProps} config={config} />,
-              portalDOMContainer
+              portalDOMContainer,
             );
           }
           if (isMapReadyForMarkers && m.type === 'group') {
             return ReactDOM.createPortal(
               <SearchMapGroupLabel {...m.componentProps} />,
-              portalDOMContainer
+              portalDOMContainer,
             );
           }
           return null;
@@ -493,7 +493,7 @@ class SearchMapWithMapbox extends Component {
         {this.state.mapContainer && this.currentInfoCard
           ? ReactDOM.createPortal(
               <SearchMapInfoCard {...this.currentInfoCard.componentProps} config={config} />,
-              this.currentInfoCard.markerContainer
+              this.currentInfoCard.markerContainer,
             )
           : null}
       </div>

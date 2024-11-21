@@ -24,12 +24,12 @@ function StripePaymentAddress(props) {
   const addressLine1Required = validators.required(
     intl.formatMessage({
       id: 'StripePaymentAddress.addressLine1Required',
-    })
+    }),
   );
 
   const addressLine2Label = intl.formatMessage(
     { id: 'StripePaymentAddress.addressLine2Label' },
-    { optionalText }
+    { optionalText },
   );
 
   const addressLine2Placeholder = intl.formatMessage({
@@ -43,7 +43,7 @@ function StripePaymentAddress(props) {
   const postalCodeRequired = validators.required(
     intl.formatMessage({
       id: 'StripePaymentAddress.postalCodeRequired',
-    })
+    }),
   );
 
   const cityLabel = intl.formatMessage({ id: 'StripePaymentAddress.cityLabel' });
@@ -51,12 +51,12 @@ function StripePaymentAddress(props) {
   const cityRequired = validators.required(
     intl.formatMessage({
       id: 'StripePaymentAddress.cityRequired',
-    })
+    }),
   );
 
   const stateLabel = intl.formatMessage(
     { id: 'StripePaymentAddress.stateLabel' },
-    { optionalText }
+    { optionalText },
   );
   const statePlaceholder = intl.formatMessage({ id: 'StripePaymentAddress.statePlaceholder' });
 
@@ -65,7 +65,7 @@ function StripePaymentAddress(props) {
   const countryRequired = validators.required(
     intl.formatMessage({
       id: 'StripePaymentAddress.countryRequired',
-    })
+    }),
   );
 
   const handleOnChange = (event) => {

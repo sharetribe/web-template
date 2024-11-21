@@ -29,7 +29,7 @@ export const getStateDataForBookingProcess = (txInfo, processInfo) => {
       processName,
       processState,
       actionNeeded: true,
-      //isSaleNotification: true,
+      // isSaleNotification: true,
     }))
     .cond([states.ACCEPTED_GIFT, _], () => ({ processName, processState, actionNeeded: true }))
     .cond([states.DECLINED_GIFT, _], () => ({ processName, processState, isFinal: true }))
@@ -51,7 +51,7 @@ export const getStateDataForBookingProcess = (txInfo, processInfo) => {
     .cond([states.REVIEWED, _], () => ({ processName, processState, isFinal: true }))
     .default(() =>
       // Default values for other states
-      ({ processName, processState })
+      ({ processName, processState }),
     )
     .resolve();
 };

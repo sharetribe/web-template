@@ -57,11 +57,11 @@ const priceData = (price, currency, intl) => {
     return {
       formattedPrice: intl.formatMessage(
         { id: 'ManageListingCard.unsupportedPrice' },
-        { currency: price.currency }
+        { currency: price.currency },
       ),
       priceTitle: intl.formatMessage(
         { id: 'ManageListingCard.unsupportedPriceTitle' },
-        { currency: price.currency }
+        { currency: price.currency },
       ),
     };
   }
@@ -110,7 +110,7 @@ const formatTitle = (title, maxLength) => {
       </span>
     ) : (
       word
-    )
+    ),
   );
 };
 
@@ -123,7 +123,7 @@ function ShowFinishDraftOverlayMaybe(props) {
       <Overlay
         message={intl.formatMessage(
           { id: 'ManageListingCard.draftOverlayText' },
-          { listingTitle: title }
+          { listingTitle: title },
         )}
       >
         <NamedLink
@@ -146,7 +146,7 @@ function ShowClosedOverlayMaybe(props) {
     <Overlay
       message={intl.formatMessage(
         { id: 'ManageListingCard.closedListing' },
-        { listingTitle: title }
+        { listingTitle: title },
       )}
     >
       <PrimaryButtonInline
@@ -173,7 +173,7 @@ function ShowPendingApprovalOverlayMaybe(props) {
     <Overlay
       message={intl.formatMessage(
         { id: 'ManageListingCard.pendingApproval' },
-        { listingTitle: title }
+        { listingTitle: title },
       )}
     />
   ) : null;
@@ -196,7 +196,7 @@ function ShowOutOfStockOverlayMaybe(props) {
     <Overlay
       message={intl.formatMessage(
         { id: 'ManageListingCard.outOfStockOverlayText' },
-        { listingTitle: title }
+        { listingTitle: title },
       )}
     >
       {hasStockManagementInUse ? (
@@ -227,7 +227,7 @@ function ShowOutOfStockOverlayMaybe(props) {
                     <FormattedMessage id="ManageListingCard.closeListingText" />
                   </InlineTextButton>
                 ),
-              }
+              },
             )}
           </div>
         </>

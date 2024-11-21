@@ -40,7 +40,7 @@ const getPriceValidators = (listingMinimumPriceSubUnits, marketplaceCurrency, in
   const priceTooLowMsg = intl.formatMessage(priceTooLowMsgId, { minPrice });
   const minPriceRequired = validators.moneySubUnitAmountAtLeast(
     priceTooLowMsg,
-    listingMinimumPriceSubUnits
+    listingMinimumPriceSubUnits,
   );
 
   return listingMinimumPriceSubUnits
@@ -86,7 +86,7 @@ function UpdateStockToInfinityCheckboxMaybe({ hasInfiniteStock, currentStock, fo
         validate={validators.requiredFieldArrayCheckbox(
           intl.formatMessage({
             id: 'EditListingPricingAndStockForm.updateToInfiniteRequired',
-          })
+          }),
         )}
       />
     </div>
@@ -123,14 +123,14 @@ export function EditListingPricingAndStockFormComponent(props) {
         const priceValidators = getPriceValidators(
           listingMinimumPriceSubUnits,
           marketplaceCurrency,
-          intl
+          intl,
         );
         // Note: outdated listings don't have listingType!
         // I.e. listings that are created with previous listing type setup.
         const hasStockManagement = listingType?.stockType === STOCK_MULTIPLE_ITEMS;
         const stockValidator = validators.numberAtLeast(
           intl.formatMessage({ id: 'EditListingPricingAndStockForm.stockIsRequired' }),
-          0
+          0,
         );
         const hasInfiniteStock = STOCK_INFINITE_ITEMS.includes(listingType?.stockType);
         const currentStock = values.stock;
@@ -164,7 +164,7 @@ export function EditListingPricingAndStockFormComponent(props) {
               autoFocus={autoFocus}
               label={intl.formatMessage(
                 { id: 'EditListingPricingAndStockForm.pricePerProduct' },
-                { unitType }
+                { unitType },
               )}
               placeholder={intl.formatMessage({
                 id: 'EditListingPricingAndStockForm.priceInputPlaceholder',

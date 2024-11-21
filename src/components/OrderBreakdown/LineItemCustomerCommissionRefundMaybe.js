@@ -11,7 +11,7 @@ function LineItemCustomerCommissionRefundMaybe(props) {
   const { lineItems, isCustomer, marketplaceName, intl } = props;
 
   const refund = lineItems.find(
-    (item) => item.code === LINE_ITEM_CUSTOMER_COMMISSION && item.reversal
+    (item) => item.code === LINE_ITEM_CUSTOMER_COMMISSION && item.reversal,
   );
 
   return isCustomer && refund ? (

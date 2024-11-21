@@ -30,7 +30,7 @@ describe('generators and iterators', () => {
       const ret = pipe(
         4,
         (x) => x * 2,
-        (x) => x * 3
+        (x) => x * 3,
       );
       expect(ret).toEqual(24);
     });
@@ -40,7 +40,7 @@ describe('generators and iterators', () => {
       const arr = [1, 2, 3, 4, 5, 6];
       const iterable = pipe(
         arr,
-        map((x) => x * 2)
+        map((x) => x * 2),
       );
       const ret = [...iterable];
       const expectedResult = JSON.stringify([2, 4, 6, 8, 10, 12]);
@@ -73,7 +73,7 @@ describe('generators and iterators', () => {
       const exceptionFreeSlots = availableRanges(
         new Date(Date.UTC(2022, 11, 24, 0, 0, 0)),
         new Date(Date.UTC(2023, 0, 30, 0, 0, 0)),
-        exceptions
+        exceptions,
       );
       const expectedResult = JSON.stringify([
         { start: '2022-12-24T00:00:00.000Z', end: '2023-01-01T00:00:00.000Z' },
@@ -90,7 +90,7 @@ describe('generators and iterators', () => {
       const arrayOfDateStrings = generateDates(
         parseDateFromISO8601('2022-12-01', 'Etc/UTC'),
         parseDateFromISO8601('2022-12-05', 'Etc/UTC'),
-        'Etc/UTC'
+        'Etc/UTC',
       );
 
       const expectedResult = JSON.stringify([
@@ -106,7 +106,7 @@ describe('generators and iterators', () => {
       const arrayOfDateStrings = generateDates(
         parseDateFromISO8601('2022-12-01', 'Europe/Helsinki'),
         parseDateFromISO8601('2022-12-05', 'Europe/Helsinki'),
-        'Europe/Helsinki'
+        'Europe/Helsinki',
       );
 
       // Helsinki is -2 hours off from UTC on winter
@@ -125,7 +125,7 @@ describe('generators and iterators', () => {
       const arrayOfDateStrings = generateMonths(
         parseDateFromISO8601('2022-12-01', 'Etc/UTC'),
         parseDateFromISO8601('2023-03-05', 'Etc/UTC'),
-        'Etc/UTC'
+        'Etc/UTC',
       );
 
       const expectedResult = JSON.stringify([
@@ -141,7 +141,7 @@ describe('generators and iterators', () => {
       const arrayOfDateStrings = generateMonths(
         parseDateFromISO8601('2022-12-01', 'Europe/Helsinki'),
         parseDateFromISO8601('2023-03-05', 'Europe/Helsinki'),
-        'Europe/Helsinki'
+        'Europe/Helsinki',
       );
 
       // Helsinki is -2 hours off from UTC on winter
@@ -182,7 +182,7 @@ describe('generators and iterators', () => {
         parseDateFromISO8601('2023-01-02', 'Europe/Helsinki'),
         parseDateFromISO8601('2023-01-10', 'Europe/Helsinki'),
         exceptions,
-        'Europe/Helsinki'
+        'Europe/Helsinki',
       );
 
       // Helsinki is -2 hours off from UTC on winter

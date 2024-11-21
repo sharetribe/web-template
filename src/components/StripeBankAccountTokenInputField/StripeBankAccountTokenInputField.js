@@ -154,7 +154,7 @@ class TokenInputFieldComponent extends Component {
       .then((token) => {
         // Check if value has changed during async call.
         const changedValues = inputsNeeded.filter(
-          (inputType) => values[inputType] !== this.state[inputType].value
+          (inputType) => values[inputType] !== this.state[inputType].value,
         );
         const valuesAreUnchanged = changedValues.length === 0;
 
@@ -201,7 +201,7 @@ class TokenInputFieldComponent extends Component {
     // Request new bank account token
     const unChangedValues = requiredInputs(country, supportedCountries).reduce(
       (acc, iType) => ({ ...acc, [iType]: this.state[iType].value }),
-      {}
+      {},
     );
     this.requestToken({ ...unChangedValues, [inputType]: value });
   }
@@ -246,7 +246,7 @@ class TokenInputFieldComponent extends Component {
     const inputConfiguration = requiredInputs(country, supportedCountries);
     const hasInputErrors = inputConfiguration.some(
       (inputType) =>
-        (this.state[inputType].touched || formMeta.touched) && !!this.state[inputType].error
+        (this.state[inputType].touched || formMeta.touched) && !!this.state[inputType].error,
     );
 
     // Only show Stripe and form errors when the fields don't have

@@ -104,7 +104,7 @@ function SectionBuilder(props) {
         }
         // If the section type is unknown, the app can't know what to render
         console.warn(
-          `Unknown section type (${section.sectionType}) detected using sectionName (${section.sectionName}).`
+          `Unknown section type (${section.sectionType}) detected using sectionName (${section.sectionName}).`,
         );
         return null;
       })}

@@ -87,7 +87,6 @@ export default function reducer(state = initialState, action = {}) {
         currentUserShowTimestamp: payload ? new Date().getTime() : 0,
       };
     case CURRENT_USER_SHOW_ERROR:
-      // eslint-disable-next-line no-console
       console.error(payload);
       return { ...state, currentUserShowError: payload };
 
@@ -107,7 +106,7 @@ export default function reducer(state = initialState, action = {}) {
     case FETCH_CURRENT_USER_HAS_LISTINGS_SUCCESS:
       return { ...state, currentUserHasListings: payload.hasListings };
     case FETCH_CURRENT_USER_HAS_LISTINGS_ERROR:
-      console.error(payload); // eslint-disable-line
+      console.error(payload);
       return { ...state, currentUserHasListingsError: payload };
 
     case FETCH_CURRENT_USER_NOTIFICATIONS_REQUEST:
@@ -115,7 +114,7 @@ export default function reducer(state = initialState, action = {}) {
     case FETCH_CURRENT_USER_NOTIFICATIONS_SUCCESS:
       return { ...state, currentUserNotificationCount: payload.transactions.length };
     case FETCH_CURRENT_USER_NOTIFICATIONS_ERROR:
-      console.error(payload); // eslint-disable-line
+      console.error(payload);
       return { ...state, currentUserNotificationCountError: payload };
 
     case FETCH_CURRENT_USER_HAS_ORDERS_REQUEST:
@@ -123,7 +122,7 @@ export default function reducer(state = initialState, action = {}) {
     case FETCH_CURRENT_USER_HAS_ORDERS_SUCCESS:
       return { ...state, currentUserHasOrders: payload.hasOrders };
     case FETCH_CURRENT_USER_HAS_ORDERS_ERROR:
-      console.error(payload); // eslint-disable-line
+      console.error(payload);
       return { ...state, currentUserHasOrdersError: payload };
 
     case SEND_VERIFICATION_EMAIL_REQUEST:
@@ -161,9 +160,7 @@ export const hasCurrentUserErrors = (state) => {
   );
 };
 
-export const verificationSendingInProgress = (state) => {
-  return state.user.sendVerificationEmailInProgress;
-};
+export const verificationSendingInProgress = (state) => state.user.sendVerificationEmailInProgress;
 
 // ================ Action creators ================ //
 

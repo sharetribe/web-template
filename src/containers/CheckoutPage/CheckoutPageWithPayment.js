@@ -44,16 +44,14 @@ const ONETIME_PAYMENT = 'ONETIME_PAYMENT';
 const PAY_AND_SAVE_FOR_LATER_USE = 'PAY_AND_SAVE_FOR_LATER_USE';
 const USE_SAVED_CARD = 'USE_SAVED_CARD';
 
-const paymentFlow = (selectedPaymentMethod, saveAfterOnetimePayment) => {
+const paymentFlow = (selectedPaymentMethod, saveAfterOnetimePayment) =>
   // Payment mode could be 'replaceCard', but without explicit saveAfterOnetimePayment flag,
   // we'll handle it as one-time payment
-  return selectedPaymentMethod === 'defaultCard'
+  selectedPaymentMethod === 'defaultCard'
     ? USE_SAVED_CARD
     : saveAfterOnetimePayment
       ? PAY_AND_SAVE_FOR_LATER_USE
       : ONETIME_PAYMENT;
-};
-
 /**
  * Construct orderParams object using pageData from session storage, shipping details, and optional payment params.
  * Note: This is used for both speculate transition and real transition
@@ -72,15 +70,17 @@ const getOrderParams = (
   optionalPaymentParams,
   config,
   currentUser,
-  customerEmail
+  customerEmail,
 ) => {
   const quantity = pageData.orderData?.quantity;
   const quantityMaybe = quantity ? { quantity } : {};
-
-  // Cast seats to a number to ensure it is not a string
+  const customerId = currentUser?.id?.uuid;
+  const total =
+    pageData.orderData?.lineItems?.find((item) => item.code === 'line-item/provider-commission')
+      ?.unitPrice?.amount || 0;
   const seats = pageData.orderData?.seats ? Number(pageData.orderData.seats) : null;
   const seatNames = pageData.orderData?.guestNames;
-  const seatsMaybe = seats ? { seats } : {}; // Include only if seats exist
+  const seatsMaybe = seats ? { seats } : {};
 
   const deliveryMethod = pageData.orderData?.deliveryMethod;
   const deliveryMethodMaybe = deliveryMethod ? { deliveryMethod } : {};
@@ -88,6 +88,17 @@ const getOrderParams = (
 
   const { listingType, unitType } = pageData?.listing?.attributes?.publicData || {};
   const voucherFee = pageData.orderData?.voucherFee || 0;
+  const giftCardMaybe =
+    listingType === 'gift'
+      ? {
+          customerId,
+          listingType,
+        }
+      : {
+          voucherFee,
+          isPending: true,
+          total,
+        };
   const fee = pageData.orderData?.fee || [''];
 
   const languageMaybe = pageData.orderData.Language
@@ -105,7 +116,8 @@ const getOrderParams = (
       ...guestsNameMaybe,
       ...languageMaybe,
       ...locationMaybe,
-      fee: fee,
+      ...giftCardMaybe,
+      fee,
       email: customerEmail,
     },
   };
@@ -158,7 +170,7 @@ const fetchSpeculatedTransactionIfNeeded = (orderParams, pageData, fetchSpeculat
       processAlias,
       transactionId,
       requestTransition,
-      isPrivileged
+      isPrivileged,
     );
   }
 };
@@ -186,7 +198,6 @@ export const loadInitialDataForStripePayments = ({
   config,
   customerEmail,
 }) => {
-
   // Fetch currentUser with stripeCustomer entity
   // Note: since there's need for data loading in "componentWillMount" function,
   //       this is added here instead of loadData static function.
@@ -202,7 +213,7 @@ export const loadInitialDataForStripePayments = ({
     shippingDetails,
     optionalPaymentParams,
     config,
-    customerEmail
+    customerEmail,
   );
 
   fetchSpeculatedTransactionIfNeeded(orderParams, pageData, fetchSpeculatedTransaction);
@@ -234,8 +245,7 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     sessionStorageKey,
   } = props;
 
-  const customerEmail = currentUser?.attributes?.email; // Extract customerEmail from currentUser
-
+  const customerEmail = currentUser?.attributes?.email;
   const { card, message, paymentMethod: selectedPaymentMethod, formValues } = values;
   const { saveAfterOnetimePayment: saveAfterOnetimePaymentRaw } = formValues;
   const saveAfterOnetimePayment =
@@ -289,7 +299,7 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     optionalPaymentParams,
     config,
     currentUser, // Pass currentUser here if you need it
-    customerEmail // Pass customerEmail here
+    customerEmail, // Pass customerEmail here
   );
 
   processCheckoutWithPayment(orderParams, requestPaymentParams)
@@ -336,7 +346,7 @@ const onStripeInitialized = (stripe, process, props) => {
   }
 };
 
-export const CheckoutPageWithPayment = (props) => {
+export function CheckoutPageWithPayment(props) {
   const [submitting, setSubmitting] = useState(false);
   // Initialized stripe library is saved to state - if it's needed at some point here too.
   const [stripe, setStripe] = useState(null);
@@ -406,7 +416,7 @@ export const CheckoutPageWithPayment = (props) => {
     tx?.attributes?.lineItems?.length > 0 ? getFormattedTotalPrice(tx, intl) : null;
 
   const process = processName ? getProcess(processName) : null;
-  const transitions = process.transitions;
+  const { transitions } = process;
   const isPaymentExpired = hasPaymentExpired(existingTransaction, process);
 
   // Allow showing page when currentUser is still being downloaded,
@@ -437,7 +447,7 @@ export const CheckoutPageWithPayment = (props) => {
     isPaymentExpired,
     retrievePaymentIntentError,
     speculateTransactionError,
-    listingLink
+    listingLink,
   );
 
   const txTransitions = existingTransaction?.attributes?.transitions || [];
@@ -553,7 +563,7 @@ export const CheckoutPageWithPayment = (props) => {
       </div>
     </Page>
   );
-};
+}
 
 CheckoutPageWithPayment.defaultProps = {
   initiateOrderError: null,

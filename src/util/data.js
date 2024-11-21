@@ -112,7 +112,7 @@ export const denormalisedEntities = (entities, resources, throwIfNotFound = true
           }
           return ent;
         },
-        entityData
+        entityData,
       );
     }
     return entityData;
@@ -372,7 +372,7 @@ export const userDisplayNameAsString = (user, defaultUserDisplayName) => {
 export const userDisplayName = (user, bannedUserDisplayName) => {
   console.warn(
     `Function userDisplayName is deprecated!
-User function userDisplayNameAsString or component UserDisplayName instead.`
+User function userDisplayNameAsString or component UserDisplayName instead.`,
   );
 
   return userDisplayNameAsString(user, bannedUserDisplayName);

@@ -175,7 +175,7 @@ describe('TransactionPage', () => {
           sendReviewError: null,
           onOpenReviewModal: noop,
         },
-        process
+        process,
       );
 
       const props = {
@@ -199,7 +199,7 @@ describe('TransactionPage', () => {
       // Order breakdown
       const expectedLength = tr !== 'transition/inquire' ? 2 : 0;
       expect(
-        screen.queryAllByText(`TransactionPanel.${processName}.orderBreakdownTitle`)
+        screen.queryAllByText(`TransactionPanel.${processName}.orderBreakdownTitle`),
       ).toHaveLength(expectedLength);
       expect(screen.queryAllByText('OrderBreakdown.baseUnitQuantity')).toHaveLength(expectedLength);
       expect(screen.queryAllByText('OrderBreakdown.subTotal')).toHaveLength(expectedLength);
@@ -216,7 +216,7 @@ describe('TransactionPage', () => {
 
       // Order breakdown: commission refund?
       expect(screen.queryAllByText('OrderBreakdown.refundProviderFee')).toHaveLength(
-        expectedLengthReversal
+        expectedLengthReversal,
       );
 
       // Order breakdown: total (with multiple translation keys)
@@ -230,7 +230,7 @@ describe('TransactionPage', () => {
 
       // A note about commission (customer should no see this)
       expect(screen.queryAllByText('OrderBreakdown.commissionFeeNote')).toHaveLength(
-        expectedLength
+        expectedLength,
       );
 
       // Activity feed (here we just check the heading)
@@ -315,7 +315,7 @@ describe('TransactionPage', () => {
           sendReviewError: null,
           onOpenReviewModal: noop,
         },
-        process
+        process,
       );
 
       const props = {
@@ -339,14 +339,14 @@ describe('TransactionPage', () => {
       // Order breakdown
       const expectedLength = isInquiry ? 0 : 2;
       expect(
-        screen.queryAllByText(`TransactionPanel.${processName}.orderBreakdownTitle`)
+        screen.queryAllByText(`TransactionPanel.${processName}.orderBreakdownTitle`),
       ).toHaveLength(expectedLength);
       expect(screen.queryAllByText('OrderBreakdown.baseUnitQuantity')).toHaveLength(expectedLength);
       expect(screen.queryAllByText('OrderBreakdown.subTotal')).toHaveLength(
-        isReversal ? expectedLength : 0
+        isReversal ? expectedLength : 0,
       );
       expect(screen.queryAllByText('$10.00')).toHaveLength(
-        isReversal ? expectedLength * 3 : expectedLength * 2
+        isReversal ? expectedLength * 3 : expectedLength * 2,
       ); // base, subtotal, total
 
       // Order breakdown: refund?
@@ -473,7 +473,7 @@ describe('TransactionPage', () => {
           sendReviewError: null,
           onOpenReviewModal: noop,
         },
-        process
+        process,
       );
 
       const props = {
@@ -497,7 +497,7 @@ describe('TransactionPage', () => {
       // Order breakdown
       const expectedLength = isInquiry ? 0 : 2;
       expect(
-        screen.queryAllByText(`TransactionPanel.${processName}.orderBreakdownTitle`)
+        screen.queryAllByText(`TransactionPanel.${processName}.orderBreakdownTitle`),
       ).toHaveLength(expectedLength);
 
       expect(screen.queryAllByText('OrderBreakdown.bookingStart')).toHaveLength(expectedLength);
@@ -522,7 +522,7 @@ describe('TransactionPage', () => {
 
       // Order breakdown: commission refund?
       expect(screen.queryAllByText('OrderBreakdown.refundProviderFee')).toHaveLength(
-        expectedLengthReversal
+        expectedLengthReversal,
       );
 
       // Order breakdown: total (with multiple translation keys)
@@ -537,7 +537,7 @@ describe('TransactionPage', () => {
 
       // A note about commission (customer should no see this)
       expect(screen.queryAllByText('OrderBreakdown.commissionFeeNote')).toHaveLength(
-        expectedLength
+        expectedLength,
       );
 
       // Activity feed (here we just check the heading)
@@ -641,7 +641,7 @@ describe('TransactionPage', () => {
           sendReviewError: null,
           onOpenReviewModal: noop,
         },
-        process
+        process,
       );
 
       const props = {
@@ -665,7 +665,7 @@ describe('TransactionPage', () => {
       // Order breakdown
       const expectedLength = isInquiry ? 0 : 2;
       expect(
-        screen.queryAllByText(`TransactionPanel.${processName}.orderBreakdownTitle`)
+        screen.queryAllByText(`TransactionPanel.${processName}.orderBreakdownTitle`),
       ).toHaveLength(expectedLength);
 
       expect(screen.queryAllByText('OrderBreakdown.bookingStart')).toHaveLength(expectedLength);
@@ -677,10 +677,10 @@ describe('TransactionPage', () => {
 
       expect(screen.queryAllByText('OrderBreakdown.baseUnitDay')).toHaveLength(expectedLength);
       expect(screen.queryAllByText('OrderBreakdown.subTotal')).toHaveLength(
-        isReversal ? expectedLength : 0
+        isReversal ? expectedLength : 0,
       );
       expect(screen.queryAllByText('$10.00')).toHaveLength(
-        isReversal ? expectedLength * 3 : expectedLength * 2
+        isReversal ? expectedLength * 3 : expectedLength * 2,
       ); // base, subtotal, total
 
       // Order breakdown: refund?
@@ -805,7 +805,7 @@ describe('TransactionPage', () => {
           sendReviewError: null,
           onOpenReviewModal: noop,
         },
-        process
+        process,
       );
 
       const props = {
@@ -829,7 +829,7 @@ describe('TransactionPage', () => {
       // Order breakdown
       const expectedLength = isInquiry ? 0 : 2;
       expect(
-        screen.queryAllByText(`TransactionPanel.${processName}.orderBreakdownTitle`)
+        screen.queryAllByText(`TransactionPanel.${processName}.orderBreakdownTitle`),
       ).toHaveLength(expectedLength);
 
       expect(screen.queryAllByText('OrderBreakdown.bookingStart')).toHaveLength(expectedLength);
@@ -853,7 +853,7 @@ describe('TransactionPage', () => {
 
       // Order breakdown: commission refund?
       expect(screen.queryAllByText('OrderBreakdown.refundProviderFee')).toHaveLength(
-        expectedLengthReversal
+        expectedLengthReversal,
       );
 
       // Order breakdown: total (with multiple translation keys)
@@ -868,7 +868,7 @@ describe('TransactionPage', () => {
 
       // A note about commission (customer should no see this)
       expect(screen.queryAllByText('OrderBreakdown.commissionFeeNote')).toHaveLength(
-        expectedLength
+        expectedLength,
       );
 
       // Activity feed (here we just check the heading)
@@ -972,7 +972,7 @@ describe('TransactionPage', () => {
           sendReviewError: null,
           onOpenReviewModal: noop,
         },
-        process
+        process,
       );
 
       const props = {
@@ -996,7 +996,7 @@ describe('TransactionPage', () => {
       // Order breakdown
       const expectedLength = isInquiry ? 0 : 2;
       expect(
-        screen.queryAllByText(`TransactionPanel.${processName}.orderBreakdownTitle`)
+        screen.queryAllByText(`TransactionPanel.${processName}.orderBreakdownTitle`),
       ).toHaveLength(expectedLength);
 
       expect(screen.queryAllByText('OrderBreakdown.bookingStart')).toHaveLength(expectedLength);
@@ -1120,7 +1120,7 @@ describe('TransactionPage', () => {
           sendReviewError: null,
           onOpenReviewModal: noop,
         },
-        getProcess(processName)
+        getProcess(processName),
       );
 
       const props = {
@@ -1207,7 +1207,7 @@ describe('TransactionPage', () => {
           sendReviewError: null,
           onOpenReviewModal: noop,
         },
-        getProcess(processName)
+        getProcess(processName),
       );
 
       const currentUser = createCurrentUser(customerId);
@@ -1287,7 +1287,7 @@ describe('TransactionPage', () => {
           sendReviewError: null,
           onOpenReviewModal: noop,
         },
-        getProcess(processName)
+        getProcess(processName),
       );
 
       const props = {
@@ -1373,7 +1373,7 @@ describe('TransactionPage', () => {
           sendReviewError: null,
           onOpenReviewModal: noop,
         },
-        getProcess(processName)
+        getProcess(processName),
       );
 
       const currentUser = createCurrentUser(customerId);
@@ -1452,7 +1452,7 @@ describe('TransactionPage', () => {
           sendReviewError: null,
           onOpenReviewModal: noop,
         },
-        getProcess(processName)
+        getProcess(processName),
       );
 
       const props = {
@@ -1536,7 +1536,7 @@ describe('TransactionPage', () => {
           sendReviewError: null,
           onOpenReviewModal: noop,
         },
-        getProcess(processName)
+        getProcess(processName),
       );
 
       const currentUser = createCurrentUser(customerId);

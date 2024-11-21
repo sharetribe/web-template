@@ -8,7 +8,6 @@ import { normalizeAmount } from '../../util/listingsHelpers';
 
 import css from './OrderBreakdown.module.css';
 
-
 function LineItemTotalPrice(props) {
   const { transaction, isProvider, intl } = props;
   const processName = resolveLatestProcessName(transaction?.attributes?.processName);

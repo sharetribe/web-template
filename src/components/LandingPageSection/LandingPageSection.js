@@ -11,7 +11,7 @@ import { NamedLink } from '..';
 function LandingPageSection({ onSearchSubmit }) {
   const intl = useIntl();
   const [isMobile, setIsMobile] = useState(
-    typeof window !== 'undefined' ? window.innerWidth < 1024 : null
+    typeof window !== 'undefined' ? window.innerWidth < 1024 : null,
   );
   const location = useLocation();
   const isTeamBuilding = location.pathname === '/p/teambuilding';

@@ -94,7 +94,7 @@ function MeasureMoreMenu(props) {
         >
           {label}
         </div>,
-        document.body
+        document.body,
       )
     : null;
 }

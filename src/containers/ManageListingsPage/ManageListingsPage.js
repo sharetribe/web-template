@@ -275,7 +275,7 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const ManageListingsPage = compose(connect(mapStateToProps, mapDispatchToProps))(
-  ManageListingsPageComponent
+  ManageListingsPageComponent,
 );
 
 export default ManageListingsPage;

@@ -28,7 +28,7 @@ export const WithBannedUser = {
       createReview(
         'review_1',
         { rating: 1 },
-        { author: createUser('author_1', { banned: true, deleted: false, profile: null }) }
+        { author: createUser('author_1', { banned: true, deleted: false, profile: null }) },
       ),
     ],
   },
@@ -42,7 +42,7 @@ export const WithDeletedUser = {
       createReview(
         'review_1',
         { rating: 2 },
-        { author: createUser('author_1', { banned: false, deleted: true, profile: null }) }
+        { author: createUser('author_1', { banned: false, deleted: true, profile: null }) },
       ),
     ],
   },

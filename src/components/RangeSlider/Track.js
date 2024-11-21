@@ -28,7 +28,7 @@ function Track(props) {
                 />,
               ]
             : ranges,
-        []
+        [],
       )}
 
       {children}

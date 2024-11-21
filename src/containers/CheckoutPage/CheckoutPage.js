@@ -58,7 +58,7 @@ const onSubmitCallback = () => {
 };
 
 const getProcessName = (pageData) => {
-  //HERE
+  // HERE
   const { transaction, listing } = pageData || {};
   const processName = transaction?.id
     ? transaction?.attributes?.processName
@@ -68,7 +68,7 @@ const getProcessName = (pageData) => {
   return resolveLatestProcessName(processName);
 };
 
-const EnhancedCheckoutPage = (props) => {
+function EnhancedCheckoutPage(props) {
   const [pageData, setPageData] = useState({});
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const config = useConfiguration();
@@ -117,7 +117,6 @@ const EnhancedCheckoutPage = (props) => {
       }
     }
   }, []);
-  
 
   const {
     currentUser,
@@ -149,7 +148,6 @@ const EnhancedCheckoutPage = (props) => {
   // Redirect back to ListingPage if data is missing.
   // Redirection must happen before any data format error is thrown (e.g. wrong currency)
   if (shouldRedirect) {
-    // eslint-disable-next-line no-console
     console.error('Missing or invalid data for checkout, redirecting back to listing page.', {
       listing,
     });
@@ -186,17 +184,22 @@ const EnhancedCheckoutPage = (props) => {
   const title = processName
     ? intl.formatMessage(
         { id: `CheckoutPage.${processName}.title` },
-        { listingTitle, authorDisplayName }
+        { listingTitle, authorDisplayName },
       )
     : 'Checkout page is loading data';
 
   const isFreeWithGift = pageData?.orderData?.lineItems?.some(
     (item) =>
-      item.code === "line-item/provider-commission" &&
-      item.lineTotal?.amount < 0
+      (item.code === 'line-item/provider-commission' &&
+        item.unitPrice?.amount < pageData?.orderData?.voucherFee.amount_off) ||
+      pageData?.orderData?.voucherFee.percent_off === 100,
   );
 
-  return processName && isFreeWithGift && !isFreeBooking && !isInquiryProcess && !speculateTransactionInProgress ? (
+  return processName &&
+    isFreeWithGift &&
+    !isFreeBooking &&
+    !isInquiryProcess &&
+    !speculateTransactionInProgress ? (
     <FreeCheckout
       config={config}
       routeConfiguration={routeConfiguration}
@@ -258,7 +261,7 @@ const EnhancedCheckoutPage = (props) => {
       <CustomTopbar intl={intl} />
     </Page>
   );
-};
+}
 
 const mapStateToProps = (state) => {
   const {

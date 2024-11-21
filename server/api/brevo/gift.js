@@ -15,65 +15,56 @@ let sendSmtpEmail = new brevo.SendSmtpEmail();
 
 module.exports = async (req, res) => {
   try {
-    console.log(req.body);
-    // Query Supabase to find the record by bookingid
+
+    sendSmtpEmail.sender = { name: 'Club Joy Team', email: 'hello@clubjoy.it' };
+    sendSmtpEmail.to = [
+      { email: `${req.body.email}`, name: `${req.body.giftee}` },
+    ];
+    sendSmtpEmail.templateId = 52;
+    sendSmtpEmail.params = {
+      giftee: req.body.giftee,
+      gifter: req.body.sender,
+      code: req.body.giftCardCode,
+    };
+    const emailResponse52 = await brevoClient.sendTransacEmail(sendSmtpEmail);
+    console.log('Template 52 email sent successfully:', emailResponse52);
+
+ 
     const { data, error } = await supabase
-      .from('bookings')
-      .select('*')
-      .eq('bookingid', req.body.customerObj.bookingid);
+      .from('giftcard')
+      .update({ recipient: req.body.email, gifted: true })
+      .eq('code', req.body.giftCardCode)
+      .select();
 
     if (error) {
-      console.error('Error fetching booking:', error);
-      return res.status(500).json({ error: 'Error fetching booking' });
+      console.error('Error updating gift card record:', error);
+      return res.status(500).json({ error: 'Failed to update gift card record', supabaseError: error });
     }
 
-    if (data.length === 0) {
-      return res.status(404).json({ error: 'Booking not found' });
-    }
+    console.log('Gift card record updated successfully:', data);
 
-    const bookingRecord = data[0];
-    console.log('Booking record:', bookingRecord);
-    const formattedDate = ((dateString) =>
-      new Date(dateString).toLocaleDateString('it-IT', { timeZone: 'UTC' }).replace(/\//g, '-'))(
-      bookingRecord.startdate
-    );
-    if (bookingRecord) {
-      sendSmtpEmail.sender = { name: 'Club Joy Team', email: 'hello@clubjoy.it' };
-      sendSmtpEmail.to = [
-        { email: '`${bookingRecord.providerEmail}`', name: `${bookingRecord.providername}` },
-      ];
-      sendSmtpEmail.templateId = 28;
-      sendSmtpEmail.params = {
-        providername: bookingRecord.providername,
-        username: bookingRecord.name,
-        startDate: formattedDate,
-      };
+  
+    sendSmtpEmail.sender = { name: 'Club Joy Team', email: 'hello@clubjoy.it' };
+    sendSmtpEmail.to = [
+      { email: `${req.body.emailer}`, name: `${req.body.sender}` },
+    ];
+    sendSmtpEmail.templateId = 51;
+    sendSmtpEmail.params = {
+      giftee: req.body.giftee,
+      gifter: req.body.sender,
+      code: req.body.giftCardCode,
+    };
+    const emailResponse51 = await brevoClient.sendTransacEmail(sendSmtpEmail);
+    console.log('Template 51 email sent successfully:', emailResponse51);
 
-      try {
-        const emailResponse = await brevoClient.sendTransacEmail(sendSmtpEmail);
-        try {
-          sendSmtpEmail.sender = { name: 'Club Joy Team', email: 'hello@clubjoy.it' };
-          sendSmtpEmail.to = [{ email: `${bookingRecord.email}`, name: `${bookingRecord.name}` }];
-          sendSmtpEmail.templateId = 29;
-          sendSmtpEmail.params = {
-            providername: bookingRecord.providername,
-            username: bookingRecord.name,
-            startDate: formattedDate,
-          };
-          const emailResponse = await brevoClient.sendTransacEmail(sendSmtpEmail);
-          res
-            .status(200)
-            .json({ message: 'Email sent successfully to customer', data: emailResponse });
-        } catch {
-          console.error('Failed to send customer email', emailError);
-        }
-      } catch (emailError) {
-        console.error('Error sending email:', emailError);
-        res.status(500).json({ error: 'Failed to send provider email', emailError });
-      }
-    }
-  } catch (err) {
-    console.error('Error:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(200).json({
+      message: 'Emails sent and gift card updated successfully',
+      emailResponse52,
+      emailResponse51,
+      updatedRecord: data,
+    });
+  } catch (error) {
+    console.error('Error occurred:', error);
+    return res.status(500).json({ error: 'An error occurred', details: error });
   }
 };
