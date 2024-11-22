@@ -311,7 +311,7 @@ export const ListingPageComponent = props => {
     : 'https://schema.org/OutOfStock';
 
   const availabilityMaybe = schemaAvailability ? { availability: schemaAvailability } : {};
-  const orderData = {};
+  const orderData = {deliveryMethod: 'none'};
   const transaction = null;
   const initialData = { orderData, listing: currentListing, transaction };
   const pageData = handlePageData(initialData, STORAGE_KEY, history);

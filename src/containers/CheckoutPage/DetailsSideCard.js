@@ -40,7 +40,7 @@ const DetailsSideCard = props => {
     ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
     : [];
 
-  const {linkedListing} = publicData || {};
+  const { linkedListing } = publicData || {};
 
   return (
     <div className={css.detailsContainerDesktop}>
@@ -64,7 +64,7 @@ const DetailsSideCard = props => {
           <H4 as="h2">
             <NamedLink
               name="ListingPage"
-              params={{ id: linkedListing, slug: createSlug(listingTitle) }}
+              params={{ id: linkedListing ?? listing?.id.uuid, slug: createSlug(listingTitle) }}
             >
               {listingTitle}
             </NamedLink>

@@ -2,10 +2,7 @@ import React from 'react';
 import { convertMoneyToNumber, formatMoney } from '../../util/currency';
 import { timestampToDate } from '../../util/dates';
 import { FormattedMessage } from '../../util/reactIntl';
-import {
-  createResourceLocatorString,
-  findRouteByRouteName
-} from '../../util/routes';
+import { createResourceLocatorString, findRouteByRouteName } from '../../util/routes';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import {
   NO_ACCESS_PAGE_INITIATE_TRANSACTIONS,
@@ -60,12 +57,12 @@ export const priceForSchemaMaybe = (price, intl) => {
     const schemaPrice = convertMoneyToNumber(price);
     return schemaPrice
       ? {
-        price: intl.formatNumber(schemaPrice, {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        }),
-        priceCurrency: price.currency,
-      }
+          price: intl.formatNumber(schemaPrice, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }),
+          priceCurrency: price.currency,
+        }
       : {};
   } catch (e) {
     return {};
@@ -203,19 +200,19 @@ export const handleSubmit = parameters => values => {
 
   const bookingMaybe = bookingDates
     ? {
-      bookingDates: {
-        bookingStart: bookingDates.startDate,
-        bookingEnd: bookingDates.endDate,
-      },
-    }
+        bookingDates: {
+          bookingStart: bookingDates.startDate,
+          bookingEnd: bookingDates.endDate,
+        },
+      }
     : bookingStartTime && bookingEndTime
-      ? {
+    ? {
         bookingDates: {
           bookingStart: timestampToDate(bookingStartTime),
           bookingEnd: timestampToDate(bookingEndTime),
         },
       }
-      : {};
+    : {};
   const quantity = Number.parseInt(quantityRaw, 10);
   const quantityMaybe = Number.isInteger(quantity) ? { quantity } : {};
   const deliveryMethodMaybe = deliveryMethod ? { deliveryMethod } : {};
@@ -340,14 +337,13 @@ export const handleSubmitCheckoutPageWithInquiry = props => values => {
   // This makes a single transition directly to the API endpoint
   // (unlike in the payment-related processes, where call is proxied through the server to make privileged transition)
   onInquiryWithoutPayment(inquiryParams, transactionProcessAlias, transition)
-    .then(transactionId => {
+    .then(async transactionId => {
       // setSubmitting(false);
       onSubmitCallback();
       const { title, geolocation } = pageData?.listing.attributes || {};
-      const createParams = {
+      let createParams = {
         title: title,
         description: message,
-        geolocation: geolocation,
         price: new Money(offerPrice.amount, offerPrice.currency),
         availabilityPlan: {
           entries: [],
@@ -362,11 +358,12 @@ export const handleSubmitCheckoutPageWithInquiry = props => values => {
           linkedListing: pageData?.listing?.id.uuid,
         },
       };
+      if (geolocation) createParams.geolocation = geolocation;
       const queryParams = {
         expand: true,
         include: ['author', 'images', 'currentStock'],
       };
-      onCreateSellerListing(createParams, queryParams);
+      await onCreateSellerListing(createParams, queryParams);
 
       // Navigate to the current path
       history.push(history.location.pathname);
@@ -404,19 +401,19 @@ export const handleCustomSubmit = parameters => values => {
 
   const bookingMaybe = bookingDates
     ? {
-      bookingDates: {
-        bookingStart: bookingDates.startDate,
-        bookingEnd: bookingDates.endDate,
-      },
-    }
+        bookingDates: {
+          bookingStart: bookingDates.startDate,
+          bookingEnd: bookingDates.endDate,
+        },
+      }
     : bookingStartTime && bookingEndTime
-      ? {
+    ? {
         bookingDates: {
           bookingStart: timestampToDate(bookingStartTime),
           bookingEnd: timestampToDate(bookingEndTime),
         },
       }
-      : {};
+    : {};
   const quantity = Number.parseInt(quantityRaw, 10);
   const quantityMaybe = Number.isInteger(quantity) ? { quantity } : {};
   const deliveryMethodMaybe = deliveryMethod ? { deliveryMethod } : {};
