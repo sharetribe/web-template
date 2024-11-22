@@ -140,7 +140,6 @@ export const ListingPageComponent = props => {
     onInquiryWithoutPayment,
     onCreateSellerListing,
     offerListingItems,
-    transactionItems,
   } = props;
 
   const listingConfig = config.listing;
@@ -382,11 +381,11 @@ export const ListingPageComponent = props => {
                 }}
               />
             ) : null}
-            <div className={css.mobileHeading}>
+            {/* <div className={css.mobileHeading}>
               <H4 as="h1" className={css.orderPanelTitle}>
                 <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
               </H4>
-            </div>
+            </div> */}
             <SectionTextMaybe text={title} showAsIngress />
             {/* <SectionTextMaybe text={description} showAsIngress /> */}
 
@@ -510,7 +509,7 @@ export const ListingPageComponent = props => {
                 currentUser={currentUser}
                 callSetInitialValues={callSetInitialValues}
                 getListing={getListing}
-                transactionItems={transactionItems}
+                isOwnListing={isOwnListing}
               />
             ) : null}
           </div>
@@ -722,7 +721,6 @@ const mapStateToProps = state => {
     offerListingItems: stateOfferListingItems,
     listingOfferEntities,
     id: listingId,
-    transactionItems,
   } = state.ListingPage;
 
   const { currentUser } = state.user;
@@ -763,7 +761,6 @@ const mapStateToProps = state => {
     sendInquiryInProgress,
     sendInquiryError,
     offerListingItems,
-    transactionItems,
   };
 };
 

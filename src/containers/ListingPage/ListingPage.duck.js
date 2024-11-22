@@ -556,7 +556,7 @@ export const listingPageOffer = (config, id) => async dispatch => {
   dispatch({
     type: FETCH_LISTING_PAGE_REQUEST,
   });
-  
+
   try {
     const listings = await getOfferListingbyListingId({
       pub_isOffer: true,
@@ -577,26 +577,26 @@ export const listingPageOffer = (config, id) => async dispatch => {
   }
 };
 
-export const showTransactions = currentUser => (dispatch, getState, sdk) => {
-  const show = sdk.transactions.query({
-    userId: currentUser.id.uuid,
-    lastTransitions: ['transition/confirm-payment'],
-  });
+// export const showTransactions = currentUser => (dispatch, getState, sdk) => {
+//   const show = sdk.transactions.query({
+//     userId: currentUser.id.uuid,
+//     lastTransitions: ['transition/confirm-payment'],
+//   });
 
-  return show
-    .then(data => {
-      console.log(data);
-      const returnData = data.data;
-      dispatch(fetchTransactionItems(returnData));
-      // const listingFields = config?.listing?.listingFields;
-      // const sanitizeConfig = { listingFields };
-      // dispatch(addMarketplaceEntities(data, sanitizeConfig));
-      return data;
-    })
-    .catch(e => {
-      dispatch(showListingError(storableError(e)));
-    });
-};
+//   return show
+//     .then(data => {
+//       console.log(data);
+//       const returnData = data.data;
+//       dispatch(fetchTransactionItems(returnData));
+//       // const listingFields = config?.listing?.listingFields;
+//       // const sanitizeConfig = { listingFields };
+//       // dispatch(addMarketplaceEntities(data, sanitizeConfig));
+//       return data;
+//     })
+//     .catch(e => {
+//       dispatch(showListingError(storableError(e)));
+//     });
+// };
 
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   const listingId = new UUID(params.id);
@@ -625,13 +625,12 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   const hasNoViewingRights = currentUser && !hasPermissionToViewData(currentUser);
   const promises = hasNoViewingRights
     ? // If user has no viewing rights, only allow fetching their own listing without reviews
-      [dispatch(showListing(listingId, config, true)), dispatch(showTransactions(currentUser))]
+    [dispatch(showListing(listingId, config, true)),]
     : // For users with viewing rights, fetch the listing and the associated reviews
-      [
-        dispatch(showListing(listingId, config)),
-        dispatch(fetchReviews(listingId)),
-        dispatch(showTransactions(currentUser)),
-      ];
+    [
+      dispatch(showListing(listingId, config)),
+      dispatch(fetchReviews(listingId)),
+    ];
 
   return Promise.all(promises).then(response => {
     const listingResponse = response[0];

@@ -1153,5 +1153,6 @@
   "ListingPage.ListingPageCarousel.date": "Da completare",
   "ListingPage.ListingPageCarousel.detailsTitle": "Dettagli",
   "ListingPage.SectionOfferListingsMaybe.title":"Offerte ({value})",
-  "ListingPage.acceptOfferButton":"Accetta offerta"
+  "ListingPage.acceptOfferButton":"Accetta offerta",
+  "TransactionPanel.default-purchase.reviewed.status":"Task Completed"
 }

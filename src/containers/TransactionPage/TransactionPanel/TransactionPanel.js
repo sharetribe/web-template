@@ -1,29 +1,28 @@
-import React, { Component } from 'react';
-import { arrayOf, bool, func, node, object, oneOf, string } from 'prop-types';
 import classNames from 'classnames';
+import { arrayOf, bool, func, node, object, oneOf, string } from 'prop-types';
+import React, { Component } from 'react';
 
-import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { displayPrice } from '../../../util/configHelpers';
-import { propTypes } from '../../../util/types';
 import { userDisplayNameAsString } from '../../../util/data';
-import { isMobileSafari } from '../../../util/userAgent';
+import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import { propTypes } from '../../../util/types';
 import { createSlug } from '../../../util/urlHelpers';
+import { isMobileSafari } from '../../../util/userAgent';
 
 import { AvatarLarge, AvatarSmall, NamedLink, UserDisplayName } from '../../../components';
 
-import { stateDataShape } from '../TransactionPage.stateData';
 import SendMessageForm from '../SendMessageForm/SendMessageForm';
+import { stateDataShape } from '../TransactionPage.stateData';
 
 // These are internal components that make this file more readable.
-import BreakdownMaybe from './BreakdownMaybe';
-import DetailCardHeadingsMaybe from './DetailCardHeadingsMaybe';
-import DetailCardImage from './DetailCardImage';
-import DeliveryInfoMaybe from './DeliveryInfoMaybe';
-import BookingLocationMaybe from './BookingLocationMaybe';
-import InquiryMessageMaybe from './InquiryMessageMaybe';
-import FeedSection from './FeedSection';
 import ActionButtonsMaybe from './ActionButtonsMaybe';
+import BookingLocationMaybe from './BookingLocationMaybe';
+import BreakdownMaybe from './BreakdownMaybe';
+import DeliveryInfoMaybe from './DeliveryInfoMaybe';
+import DetailCardHeadingsMaybe from './DetailCardHeadingsMaybe';
 import DiminishedActionButtonMaybe from './DiminishedActionButtonMaybe';
+import FeedSection from './FeedSection';
+import InquiryMessageMaybe from './InquiryMessageMaybe';
 import PanelHeading from './PanelHeading';
 
 import css from './TransactionPanel.module.css';
@@ -194,6 +193,9 @@ export class TransactionPanelComponent extends Component {
 
     const classes = classNames(rootClassName || css.root, className);
 
+    const { processName, processState } = stateData;
+    const { linkedListing } = listing?.attributes?.publicData || {};
+
     return (
       <div className={classes}>
         <div className={css.container}>
@@ -229,6 +231,8 @@ export class TransactionPanelComponent extends Component {
               listingId={listing?.id?.uuid}
               listingTitle={listingTitle}
               listingDeleted={listingDeleted}
+              user={listing.author}
+              userDisplayName={listing.author.attributes.profile.displayName}
             />
 
             <InquiryMessageMaybe
@@ -326,7 +330,11 @@ export class TransactionPanelComponent extends Component {
                   isCustomer={isCustomer}
                   listingImageConfig={config.layout.listingImage}
                 /> */}
-                <AvatarSmall user={listing.author}/>
+                <div className={css.rightDisplayAvatar}>
+                  <AvatarSmall user={listing.author} />
+                  <div>{listing.author.attributes.profile.displayName}</div>
+                </div>
+
 
                 <DetailCardHeadingsMaybe
                   showDetailCardHeadings={showDetailCardHeadings}
@@ -336,13 +344,13 @@ export class TransactionPanelComponent extends Component {
                     ) : (
                       <NamedLink
                         name="ListingPage"
-                        params={{ id: listing.id?.uuid, slug: createSlug(listingTitle) }}
+                        params={{ id: linkedListing ?? listing.id?.uuid, slug: createSlug(listingTitle) }}
                       >
                         {listingTitle}
                       </NamedLink>
                     )
                   }
-                  showPrice={showPrice}
+                  showPrice={true}
                   price={listing?.attributes?.price}
                   intl={intl}
                 />
@@ -352,6 +360,8 @@ export class TransactionPanelComponent extends Component {
                   orderBreakdown={orderBreakdown}
                   processName={stateData.processName}
                 />
+
+                {processState === "reviewed" ? <div className={css.taskCompleted}><FormattedMessage id={`TransactionPanel.${processName}.${processState}.status`} /></div> : null}
 
                 {stateData.showActionButtons ? (
                   <div className={css.desktopActionButtons}>{actionButtons}</div>

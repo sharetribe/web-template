@@ -49,6 +49,7 @@ export const getTransactionInfo = (
     const { listingType: type, label, transactionType } = listingTypes[0];
     const { alias, unitType: configUnitType } = transactionType;
     const labelMaybe = inlcudeLabel ? { label: label || type } : {};
+
     return {
       listingType: type,
       transactionProcessAlias: alias,
@@ -231,7 +232,7 @@ const getInitialValues = (
   const { listingType, selectedOption, selectedDate } = publicData;
 
   const nestedCategories = pickCategoryFields(publicData, categoryKey, 1, listingCategories);
-
+  
   // Initial values for the form
   return {
     title,
@@ -298,8 +299,6 @@ const EditListingDetailsPanel = props => {
     listingCategories,
     categoryKey
   );
-
-  console.log(initialValues);
 
   const noListingTypesSet = listingTypes?.length === 0;
   const hasListingTypesSet = listingTypes?.length > 0;
@@ -377,7 +376,6 @@ const EditListingDetailsPanel = props => {
               privateData: privateListingFields,
               ...setNoAvailabilityForUnbookableListings(transactionProcessAlias),
             };
-
             onSubmit(updateValues);
           }}
           selectableListingTypes={listingTypes.map(conf => getTransactionInfo([conf], {}, true))}

@@ -531,11 +531,11 @@
 }
 
 .sectionText {
-  padding: 0 24px;
+  padding: 24px;
   margin-bottom: 36px;
 
   @media (--viewportMedium) {
-    padding: 0;
+    padding: 24px 0px;
     margin-bottom: 40px;
   }
 }
@@ -793,12 +793,14 @@
 }
 
 .providerAvatar {
-  display: none;
+  display: flex;
+  margin-right: 10px;
+  /* display: none;
 
   @media (--viewportLarge) {
     display: flex;
     margin-right: 10px;
-  }
+  } */
 }
 
 .providerNamePlain {
@@ -857,7 +859,11 @@
   display: flex;
   gap: 20px;
   align-items: center;
-  margin: 20px 0px;
+  margin: 20px;
+
+  @media (--viewportMedium) {
+    margin: 20px 0px;
+  }
 }
 
 .projectTypeTopic {
@@ -872,7 +878,11 @@
 }
 
 .marginContent {
-  margin: 20px 0px;
+  margin: 24px;
+
+  @media (--viewportMedium) {
+    margin: 24px 0px;
+  }
 }
 
 .bio {
@@ -910,4 +920,12 @@
 
 .disableOfferListingAcceptOfferButton {
   color: grey !important;
+}
+
+.sectionOfferListingContent{
+  margin: 24px;
+
+  @media (--viewportMedium) {
+    margin: 0px;
+  }
 }

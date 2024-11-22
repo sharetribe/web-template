@@ -418,14 +418,26 @@ const OrderPanel = props => {
           </div>
         ) : (
           <PrimaryButton
-            onClick={handleSubmit(
-              isOwnListing,
-              isClosed,
-              showInquiryForm,
-              onSubmit,
-              history,
-              location
-            )}
+            onClick={() => {
+
+              if (!isOwnListing) {
+                console.log('ss', author);
+                setInquiryModalOpen(true);
+              }
+              else {
+
+                handleSubmit(
+                  isOwnListing,
+                  isClosed,
+                  showInquiryForm,
+                  onSubmit,
+                  history,
+                  location
+                )
+              }
+            }
+
+            }
             disabled={isOutOfStock}
           >
             {isBooking ? (

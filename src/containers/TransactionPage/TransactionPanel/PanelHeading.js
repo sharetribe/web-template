@@ -1,13 +1,13 @@
-import React from 'react';
 import classNames from 'classnames';
+import React from 'react';
 
 import { FormattedMessage } from '../../../util/reactIntl';
 import { createSlug, stringify } from '../../../util/urlHelpers';
 
-import { H1, H2, NamedLink } from '../../../components';
+import { AvatarMedium, AvatarSmall, H1, H2, NamedLink } from '../../../components';
 
-import css from './TransactionPanel.module.css';
 import { formatMoney } from '../../../util/currency';
+import css from './TransactionPanel.module.css';
 
 const createListingLink = (listingId, label, listingDeleted, searchParams = {}, className = '') => {
   if (!listingDeleted) {
@@ -44,6 +44,8 @@ const PanelHeading = props => {
     listingTitle,
     listingDeleted,
     isCustomerBanned,
+    user,
+    userDisplayName,
   } = props;
 
   const isProvider = transactionRole === 'provider';
@@ -56,6 +58,11 @@ const PanelHeading = props => {
 
   return (
     <>
+      {user ? <div className={css.panelHeadingAvatar}>
+        <AvatarMedium user={user} />
+        <div>{userDisplayName}</div>
+      </div> : null}
+
       <H1 className={titleClasses}>
         <span className={css.mainTitle}>
           <FormattedMessage

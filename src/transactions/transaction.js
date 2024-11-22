@@ -37,18 +37,28 @@ const PROCESSES = [
     process: purchaseProcess,
     unitTypes: [ITEM],
   },
-  // {
-  //   name: BOOKING_PROCESS_NAME,
-  //   alias: `${BOOKING_PROCESS_NAME}/release-1`,
-  //   process: bookingProcess,
-  //   unitTypes: [DAY, NIGHT, HOUR],
-  // },
-  // {
-  //   name: INQUIRY_PROCESS_NAME,
-  //   alias: `${INQUIRY_PROCESS_NAME}/release-1`,
-  //   process: inquiryProcess,
-  //   unitTypes: [INQUIRY],
-  // },
+  {
+    name: BOOKING_PROCESS_NAME,
+    alias: `${BOOKING_PROCESS_NAME}/release-1`,
+    process: bookingProcess,
+    unitTypes: [DAY, NIGHT, HOUR],
+  },
+  {
+    name: INQUIRY_PROCESS_NAME,
+    alias: `${INQUIRY_PROCESS_NAME}/release-1`,
+    process: inquiryProcess,
+    unitTypes: [INQUIRY],
+  },
+];
+
+
+const INBOX_PROCESSES = [
+  {
+    name: PURCHASE_PROCESS_NAME,
+    alias: `${PURCHASE_PROCESS_NAME}/release-1`,
+    process: purchaseProcess,
+    unitTypes: [ITEM],
+  }
 ];
 
 /**
