@@ -25,6 +25,7 @@ module.exports = async (req, res) => {
       giftee: req.body.giftee,
       gifter: req.body.sender,
       code: req.body.giftCardCode,
+      amount: req.body.amount,
     };
     const emailResponse52 = await brevoClient.sendTransacEmail(sendSmtpEmail);
     console.log('Template 52 email sent successfully:', emailResponse52);
@@ -53,6 +54,7 @@ module.exports = async (req, res) => {
       giftee: req.body.giftee,
       gifter: req.body.sender,
       code: req.body.giftCardCode,
+      amount: req.body.amount,
     };
     const emailResponse51 = await brevoClient.sendTransacEmail(sendSmtpEmail);
     console.log('Template 51 email sent successfully:', emailResponse51);

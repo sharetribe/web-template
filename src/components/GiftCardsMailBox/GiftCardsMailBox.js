@@ -23,28 +23,30 @@ function GiftCardsMailBox({ user, giftCardCodes }) {
     setEmail(event.target.value);
   };
 
-  const checkIfAlreadyGifted = async (email) => {
+  // Check if the gift card has already been gifted
+  const checkIfAlreadyGifted = async (email, giftCardCode) => {
     try {
       const { data, error } = await supabase
         .from('giftcard')
-        .select('gifted, recipient')
-        .eq('recipient', email)
-        .single();
+        .select('gifted, recipient, amount') // Include amount in the query
+        .eq('code', giftCardCode)
+        .single(); // Retrieve only the matching record for the code
 
       if (error) {
-        console.error('Error checking gifted status:', error);
-        return { gifted: false, recipient: null }; // Default if there's an error
+        console.warn('No previous recipient found for this gift card. Proceeding.');
+        return { gifted: false, recipient: null, amount: 0 }; // Default if no match or error
       }
 
       return data
-        ? { gifted: data.gifted, recipient: data.recipient }
-        : { gifted: false, recipient: null };
+        ? { gifted: data.gifted, recipient: data.recipient, amount: data.amount }
+        : { gifted: false, recipient: null, amount: 0 };
     } catch (error) {
       console.error('Error in Supabase query:', error);
-      throw new Error('Error checking gifted status.');
+      return { gifted: false, recipient: null, amount: 0 }; // Safe fallback
     }
   };
 
+  // Handle sending the gift card
   const handleSend = async () => {
     if (!email || !giftee) {
       setStatusMessage("Per favore, inserisci sia il nome che l'email del destinatario.");
@@ -55,31 +57,31 @@ function GiftCardsMailBox({ user, giftCardCodes }) {
       setLoading(true);
       setStatusMessage('');
 
-      const { gifted, recipient } = await checkIfAlreadyGifted(email);
-
-      if (gifted) {
-        setStatusMessage(`Hai già inviato questa carta regalo a ${recipient}.`);
-        setLoading(false);
-        return;
-      }
-
       if (giftCardCodes.length === 0) {
         setStatusMessage('Non ci sono codici di carte regalo disponibili da inviare.');
         setLoading(false);
         return;
       }
 
-      const giftCardCode = giftCardCodes[0]; // Use the first gift card code
+      const giftCardCode = giftCardCodes[0]; // Use the first available gift card code
+
+      // Check if already gifted
+      const { gifted, recipient, amount } = await checkIfAlreadyGifted(email, giftCardCode);
+
+      if (gifted) {
+        setStatusMessage(`Attenzione: questa carta regalo è già stata inviata a ${recipient}. Puoi comunque cambiarne il destinatario.`);
+      }
 
       await sendGiftCard({
         email,
         giftee,
         sender: user.attributes?.profile?.firstName || 'Club Joy',
         giftCardCode,
+        amount, 
         emailer: user.attributes?.email,
       });
 
-      setStatusMessage(`Notifica inviata con successo a ${giftee}!`);
+      setStatusMessage(`Gift Card inviata con successo a ${giftee}!`);
       setEmail('');
       setGiftee('');
     } catch (error) {
@@ -130,11 +132,11 @@ GiftCardsMailBox.propTypes = {
       }),
     }).isRequired,
   }).isRequired,
-  giftCardCodes: PropTypes.arrayOf(PropTypes.string),
+  giftCardCodes: PropTypes.arrayOf(PropTypes.string), // Array of gift card codes
 };
 
 GiftCardsMailBox.defaultProps = {
-  giftCardCodes: [],
+  giftCardCodes: [], // Default to an empty array
 };
 
 export default GiftCardsMailBox;

@@ -41,12 +41,11 @@ export const createGiftCard = async ({ customerId, amount, transactionId }) => {
           code,
           user: customerId,
           amount,
-          gifter: null,
           isWellfare: false,
           listingId: null,
           recipient: null,
           used: false,
-          transactionId,
+          purchaseId: transactionId,
         },
       ])
       .select();
@@ -54,8 +53,6 @@ export const createGiftCard = async ({ customerId, amount, transactionId }) => {
     if (error) {
       throw error;
     }
-
-    console.log('Gift card created:', data);
     return data;
   } catch (error) {
     console.error('Error creating gift card:', error);
@@ -83,8 +80,6 @@ export const updateGiftCard = async (giftCardProps) => {
       if (error) {
         throw error;
       }
-
-      console.log('Gift card updated:', data);
       return data;
     }
 
@@ -101,7 +96,6 @@ export const updateGiftCard = async (giftCardProps) => {
         throw error;
       }
 
-      console.log('Welfare card updated:', data);
       return data;
     }
 
@@ -117,19 +111,19 @@ export const fetchGiftCard = async (userId, transactionId) => {
     if (!userId || !transactionId) {
       throw new Error('Both userId and transactionId are required to fetch gift cards.');
     }
-
+    
     const { data, error } = await supabase
       .from('giftcard')
       .select('*') // Select all columns; adjust as needed
       .eq('user', userId)
-      .eq('transactionId', transactionId);
+      .eq('purchaseId', transactionId);
 
     if (error) {
       console.error('Error fetching gift cards:', error);
       throw error;
     }
 
-    console.log('Fetched gift cards:', data);
+
     return data || [];
   } catch (error) {
     console.error('Error in fetchGiftCard:', error);
