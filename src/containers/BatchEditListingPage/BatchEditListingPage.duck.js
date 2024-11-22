@@ -1,5 +1,5 @@
 import { fetchCurrentUser } from '../../ducks/user.duck';
-import { getFileMetadata } from '../../util/file-metadata';
+import { readFileMetadataAsync } from '../../util/file-metadata';
 import _ from 'lodash';
 import { createUppyInstance } from '../../util/uppy';
 import { convertUnitToSubUnit, unitDivisor } from '../../util/currency';
@@ -8,9 +8,9 @@ import { parse } from '../../util/urlHelpers';
 import { queryListingsError } from '../ManageListingsPage/ManageListingsPage.duck';
 import { storableError } from '../../util/errors';
 
-const SMALL_IMAGE = 'small';
-const MEDIUM_IMAGE = 'medium';
-const LARGE_IMAGE = 'large';
+const SMALL_IMAGE = 'small-image';
+const MEDIUM_IMAGE = 'medium-image';
+const LARGE_IMAGE = 'large-image';
 const UNAVAILABLE_IMAGE_RESOLUTION = 'unavailable';
 const USAGE_EDITORIAL = 'editorial';
 const NO_RELEASES = 'no-release';
@@ -20,26 +20,24 @@ const AI_TERMS_STATUS_REQUIRED = 'required';
 const AI_TERMS_STATUS_NOT_REQUIRED = 'not-required';
 const RESULT_PAGE_SIZE = 30;
 
+export const PAGE_MODE_CREATE = 'create';
 export const MAX_KEYWORDS = 30;
+export const MAX_CATEGORIES = 5;
 
 export const IMAGE_DIMENSIONS_MAP = {
   [SMALL_IMAGE]: {
-    value: 'small-image',
     maxDimension: 1000,
     label: 'Small (< 1,000px)',
   },
   [MEDIUM_IMAGE]: {
-    value: 'medium-image',
     maxDimension: 2000,
     label: 'Medium (1,000px-2,000px)',
   },
   [LARGE_IMAGE]: {
-    value: 'large-image',
     maxDimension: 2001,
     label: 'Large (>2,000px)',
   },
   [UNAVAILABLE_IMAGE_RESOLUTION]: {
-    value: 'unavailable',
     label: 'Unavailable',
   },
 };
@@ -49,10 +47,10 @@ function getDimensions(width, height) {
     return UNAVAILABLE_IMAGE_RESOLUTION;
   }
   const largestDimension = Math.max(width, height);
-  if (largestDimension <= IMAGE_DIMENSIONS_MAP.small.maxDimension) {
+  if (largestDimension <= IMAGE_DIMENSIONS_MAP[SMALL_IMAGE].maxDimension) {
     return SMALL_IMAGE;
   }
-  if (largestDimension <= IMAGE_DIMENSIONS_MAP.medium.maxDimension) {
+  if (largestDimension <= IMAGE_DIMENSIONS_MAP[MEDIUM_IMAGE].maxDimension) {
     return MEDIUM_IMAGE;
   }
   return LARGE_IMAGE;
@@ -185,7 +183,6 @@ const initialState = {
   listingFieldsOptions: {
     categories: [],
     usages: [],
-    releases: [],
   },
   invalidListings: [],
   selectedRowsKeys: [],
@@ -384,7 +381,7 @@ function handleTransloaditResultComplete(dispatch, getState, sdk) {
           usage: listing.usage,
           releases: listing.releases,
           keywords: listing.keywords,
-          imageSize: IMAGE_DIMENSIONS_MAP[listing.dimensions].value,
+          imageSize: listing.dimensions,
           fileType: listing.type,
           aiTerms: listing.isAi ? 'yes' : 'no',
           originalFileName: listing.name,
@@ -464,9 +461,14 @@ export function initializeUppy(meta) {
         const { id } = file;
         const uppy = getUppyInstance(getState());
 
-        getFileMetadata(file, metadata => {
-          // set the metadata using Uppy interface and then retrieve it again with the updated info
+        readFileMetadataAsync(file).then(metadata => {
           uppy.setFileMeta(id, metadata);
+          if (metadata.thumbnail) {
+            document.getElementById('uppy_' + id).style.border = 'solid 2px red';
+            uppy.setFileState(id, {
+              preview: metadata.thumbnail,
+            });
+          }
 
           const newFile = uppy.getFile(id);
           const listing = uppyFileToListing(newFile);
@@ -593,9 +595,9 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
       transactionType,
     },
   });
-  const { type } = params;
 
-  if (type !== 'new') {
+  const { mode } = params;
+  if (mode !== PAGE_MODE_CREATE) {
     const queryParams = parse(search);
     const page = queryParams.page || 1;
 
@@ -613,14 +615,12 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
 
   const imageryCategoryOptions = getListingFieldOptions(config, 'imageryCategory');
   const usageOptions = getListingFieldOptions(config, 'usage');
-  const releaseOptions = getListingFieldOptions(config, 'releases');
 
   dispatch({
     type: FETCH_LISTING_OPTIONS,
     payload: {
       categories: imageryCategoryOptions,
       usages: usageOptions,
-      releases: releaseOptions,
     },
   });
 

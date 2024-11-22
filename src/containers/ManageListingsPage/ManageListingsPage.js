@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { Flex, Space, Tabs } from 'antd';
+import { Flex, Space, Tabs, Button as AntButton, Col, Row } from 'antd';
 
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
@@ -30,6 +30,8 @@ import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 import ManageListingCard from './ManageListingCard/ManageListingCard';
 import css from './ManageListingsPage.module.css';
 import { closeListing, getOwnListingsById, openListing } from './ManageListingsPage.duck';
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import ScrollableLinks from '../../components/ScrollableLinks/ScrollableLinks';
 
 const PaginationLinksMaybe = props => {
   const { listingsAreLoaded, pagination, page } = props;
@@ -172,46 +174,55 @@ export const ManageListingsPageComponent = props => {
     history.push(destination);
   };
 
-  const goToCreateListing = () => {
-    const destination = createResourceLocatorString('BatchEditListingPage', routeConfiguration, {
-      category: currentCategoryType,
-      type: 'new',
-      tab: 'upload',
-    });
+  const goToCreateListing = (mode = 'create', searchParams = {}) => {
+    const destination = createResourceLocatorString(
+      'BatchEditListingPage',
+      routeConfiguration,
+      {
+        mode,
+        tab: 'upload',
+      },
+      searchParams
+    );
     history.push(destination);
   };
 
+  const links = useMemo(
+    () =>
+      categories.map(category => ({
+        id: category.id,
+        name: 'ManageListingsPage',
+        displayText: category.name,
+        to: { search: getSearch(category.id, currentListingType) },
+      })),
+    [categories]
+  );
+
   const listingRenderer = (
     <>
-      <Flex className={css.filters}>
-        <Flex className={css.categories}>
-          <Space
-            direction="horizontal"
-            size="middle"
-            className={css.productTypeFilters}
-            hidden={currentListingType !== LISTING_TYPES.PRODUCT}
-          >
-            {categories.map(category => (
-              <NamedLink
-                key={category.id}
-                name="ManageListingsPage"
-                active={currentCategoryType === category.id}
-                activeClassName={css.filterLinkActive}
-                to={{ search: getSearch(category.id, currentListingType) }}
-              >
-                {category.name}
-              </NamedLink>
-            ))}
-          </Space>
-        </Flex>
-        <Flex align="flex-end" style={{ justifyContent: 'center', alignItems: 'center' }}>
+      <Row gutter={[16, 16]} align="middle" justify="space-between">
+        <Col xs={24} sm={16}>
+          <ScrollableLinks links={links} selectedLinkId={currentCategoryType} />
+        </Col>
+        <Col xs={24} sm={8} style={{ textAlign: 'right' }}>
           <Space size="middle">
-            <Button style={{ width: 200 }} onClick={goToCreateListing}>
+            <AntButton
+              type="text"
+              className={css.actionButton}
+              onClick={() => goToCreateListing('edit', queryParams)}
+            >
+              Manage {currentCategoryType}
+            </AntButton>
+            <AntButton
+              type="primary"
+              className={css.actionButton}
+              onClick={() => goToCreateListing()}
+            >
               Add New Photo(s)
-            </Button>
+            </AntButton>
           </Space>
-        </Flex>
-      </Flex>
+        </Col>
+      </Row>
 
       {hasNoResults ? (
         <div className={css.noResultsContainer}>

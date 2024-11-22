@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Form, Input, InputNumber, Select, Switch } from 'antd';
 import css from './EditListingBatchProductDetails.module.css';
-import { MAX_KEYWORDS } from '../../BatchEditListingPage.duck';
+import { MAX_CATEGORIES, MAX_KEYWORDS } from '../../BatchEditListingPage.duck';
 
 const { TextArea } = Input;
 
@@ -20,6 +20,7 @@ const EditableCell = props => {
     onBeforeSave = null,
     placeholder = '',
     rowIndex,
+    maxSelection,
     ...restProps
   } = props;
   const form = useContext(EditableContext);
@@ -38,7 +39,8 @@ const EditableCell = props => {
       console.log('Save failed:', errInfo);
     }
   };
-  
+
+
   return (
     <td {...restProps}>
       {editable ? (
@@ -52,8 +54,22 @@ const EditableCell = props => {
           >
             {
               {
-                text: <Input id={`${dataIndex}-${rowIndex}`} onPressEnter={save} onBlur={save} placeholder={placeholder} />,
-                textarea: <TextArea id={`${dataIndex}-${rowIndex}`} autoSize onBlur={save} placeholder={placeholder}></TextArea>,
+                text: (
+                  <Input
+                    id={`${dataIndex}-${rowIndex}`}
+                    onPressEnter={save}
+                    onBlur={save}
+                    placeholder={placeholder}
+                  />
+                ),
+                textarea: (
+                  <TextArea
+                    id={`${dataIndex}-${rowIndex}`}
+                    autoSize
+                    onBlur={save}
+                    placeholder={placeholder}
+                  ></TextArea>
+                ),
                 selectMultiple: (
                   <Select
                     id={`${dataIndex}-${rowIndex}`}
@@ -64,6 +80,7 @@ const EditableCell = props => {
                     onChange={save}
                     onDeselect={save}
                     placeholder={placeholder}
+                    maxCount={maxSelection}
                   />
                 ),
                 select: (

@@ -50,7 +50,7 @@
 }
 
 .listingDetails {
-  background-color: var(--colorLightTransparent);
+  background-color: var(--colorWhite);
   padding: 48px;
   width: 100%;
 }

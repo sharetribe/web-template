@@ -15,6 +15,7 @@ import css from './BatchEditListingPage.module.css';
 import {
   getIsQueryInProgress,
   initializeUppy,
+  PAGE_MODE_CREATE,
   requestSaveBatchListings,
 } from './BatchEditListingPage.duck';
 import BatchEditListingWizard from './BatchEditListingWizard/BatchEditListingWizard';
@@ -25,8 +26,8 @@ export const BatchEditListingPageComponent = props => {
   const hasPostingRights = hasPermissionToPostListings(currentUser);
   const shouldRedirectNoPostingRights = !!currentUser?.id && !hasPostingRights;
   const { listingFieldsOptions } = page;
-  const { type } = useParams();
-  const isNew = type === 'new';
+  const { mode } = useParams();
+  const isNew = mode === PAGE_MODE_CREATE;
   const isQueryLoading = useSelector(getIsQueryInProgress);
 
   if (!isUserAuthorized(currentUser)) {
@@ -67,7 +68,7 @@ export const BatchEditListingPageComponent = props => {
         />
       ) : (
         <div className={css.editRoot}>
-          <EditListingBatchProductDetails cssRoot={css.listingDetails} loading={isQueryLoading} />
+          <EditListingBatchProductDetails cssRoot={css.listingDetails} loading={isQueryLoading} editMode />
         </div>
       )}
     </Page>

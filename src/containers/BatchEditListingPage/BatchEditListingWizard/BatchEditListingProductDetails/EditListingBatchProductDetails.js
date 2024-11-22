@@ -12,6 +12,7 @@ import {
   getListings,
   getPublishingData,
   getSelectedRowsKeys,
+  PAGE_MODE_CREATE,
   requestSaveBatchListings,
   requestUpdateListing,
   SET_AI_TERMS_ACCEPTED,
@@ -69,7 +70,7 @@ function AiTermsModalContent({ onTermsCheckboxChange }) {
 }
 
 export const EditListingBatchProductDetails = props => {
-  const { cssRoot = css.root, loading = false } = props;
+  const { cssRoot = css.root, loading = false, editMode = false } = props;
   const dispatch = useDispatch();
 
   const listings = useSelector(getListings);
@@ -151,6 +152,10 @@ export const EditListingBatchProductDetails = props => {
 
   useStickyHeader(css);
 
+  const buttonTitleId = editMode
+    ? 'BatchEditListingProductDetails.progressModal.submitButtonTextEditMode'
+    : 'BatchEditListingProductDetails.progressModal.submitButtonText';
+
   return (
     <div className={cssRoot}>
       <Flex className={css.stickyHeader}>
@@ -175,7 +180,7 @@ export const EditListingBatchProductDetails = props => {
             onClick={onSubmit}
             disabled={selectedRowKeys.length === 0 || listingsCreationInProgress}
           >
-            <FormattedMessage id="BatchEditListingProductDetails.progressModal.submitButtonText"></FormattedMessage>
+            <FormattedMessage id={buttonTitleId}></FormattedMessage>
           </Button>
         </Flex>
       </Flex>
