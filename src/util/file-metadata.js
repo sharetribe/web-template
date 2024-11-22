@@ -1,4 +1,4 @@
-import exifr, { thumbnail } from 'exifr';
+import exifr from 'exifr';
 import { getMetadata, getThumbnails } from 'video-metadata-thumbnails';
 
 const WIDTH_TAGS = ['ExifImageWidth', 'Width', 'ImageWidth'];
@@ -105,12 +105,19 @@ export const readFileMetadataAsync = uppyFile => {
             quality: 0.6,
           }),
         ]);
+
         videoInfo.then(([metadata, thumbnails]) => {
           const { width, height } = metadata;
-          blobToDataURL(thumbnails[0].blob).then(dataUrl => {
-            resolve({ width, height, thumbnail: dataUrl });
-          });
+          const thumbnailBlob = thumbnails[0].blob;
 
+          // Add play icon to the thumbnail
+          addPlayIconToThumbnail(thumbnailBlob)
+            .then(dataUrl => {
+              resolve({ width, height, thumbnail: dataUrl });
+            })
+            .catch(() => {
+              resolve({ width, height, thumbnail: null });
+            });
         });
 
         break;
@@ -135,3 +142,45 @@ export const readFileMetadataAsync = uppyFile => {
     }
   });
 };
+
+/**
+ * Draws a play icon on a thumbnail image.
+ * @param {Blob} thumbnailBlob - The thumbnail blob from the video.
+ * @returns {Promise<string>} - A promise that resolves to the data URL of the thumbnail with the play icon.
+ */
+function addPlayIconToThumbnail(thumbnailBlob) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.src = URL.createObjectURL(thumbnailBlob);
+
+    img.onload = () => {
+      // Create a canvas and set its dimensions
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      canvas.width = img.width;
+      canvas.height = img.height;
+
+      // Draw the thumbnail image on the canvas
+      context.drawImage(img, 0, 0);
+
+      // Add the play icon overlay
+      const iconSize = canvas.width * 0.2; // Adjust size as needed
+      context.font = `${iconSize}px sans-serif`;
+      context.fillStyle = 'rgba(255, 255, 255, 0.8)';
+      context.textAlign = 'center';
+      context.textBaseline = 'middle';
+      context.fillText('▶', canvas.width / 2, canvas.height / 2);
+
+      // Convert the canvas to a data URL
+      const dataUrl = canvas.toDataURL('image/png');
+      resolve(dataUrl);
+
+      URL.revokeObjectURL(img.src); // Clean up
+    };
+
+    img.onerror = () => {
+      URL.revokeObjectURL(img.src);
+      reject(new Error('Failed to load thumbnail image.'));
+    };
+  });
+}

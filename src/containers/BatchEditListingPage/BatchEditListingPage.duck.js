@@ -2,7 +2,7 @@ import { fetchCurrentUser } from '../../ducks/user.duck';
 import { readFileMetadataAsync } from '../../util/file-metadata';
 import _ from 'lodash';
 import { createUppyInstance } from '../../util/uppy';
-import { convertUnitToSubUnit, unitDivisor } from '../../util/currency';
+import { convertUnitToSubUnit, truncateToSubUnitPrecision, unitDivisor } from '../../util/currency';
 import { LISTING_TYPES } from '../../util/types';
 import { parse } from '../../util/urlHelpers';
 import { queryListingsError } from '../ManageListingsPage/ManageListingsPage.duck';
@@ -161,7 +161,7 @@ export const SET_AI_TERMS_REQUIRED = 'app/BatchEditListingPage/SET_AI_TERMS_REQU
 export const SET_AI_TERMS_NOT_REQUIRED = 'app/BatchEditListingPage/SET_AI_TERMS_NOT_REQUIRED';
 
 export const CREATE_LISTINGS_REQUEST = 'app/BatchEditListingPage/CREATE_LISTINGS_REQUEST';
-export const CREATE_LISTINGS_ERROR = 'app/BatchEditListingPage/CREATE_LISTINGS_REQUEST';
+export const CREATE_LISTINGS_ERROR = 'app/BatchEditListingPage/CREATE_LISTINGS_ERROR';
 export const CREATE_LISTINGS_ABORTED = 'app/BatchEditListingPage/CREATE_LISTINGS_ABORTED';
 export const CREATE_LISTINGS_SUCCESS = 'app/BatchEditListingPage/CREATE_LISTINGS_SUCCESS';
 
@@ -188,7 +188,6 @@ const initialState = {
   selectedRowsKeys: [],
   aiTermsStatus: AI_TERMS_STATUS_NOT_REQUIRED,
   createListingsInProgress: false,
-  createListingsError: null,
   createListingsSuccess: null,
   userId: null,
   failedListings: [],
@@ -277,13 +276,12 @@ export default function reducer(state = initialState, action = {}) {
       return { ...state, selectedRowsKeys: payload };
 
     case CREATE_LISTINGS_REQUEST:
-      return { ...state, createListingsInProgress: true, createListingsError: null };
+      return { ...state, createListingsInProgress: true };
     case CREATE_LISTINGS_ERROR:
       return {
         ...state,
         createListingsSuccess: false,
         createListingsInProgress: false,
-        createListingsError: payload,
       };
     case CREATE_LISTINGS_ABORTED:
       return {
@@ -297,7 +295,6 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         createListingsSuccess: true,
         createListingsInProgress: false,
-        createListingsError: null,
       };
     case ADD_FAILED_LISTING:
       return { ...state, failedListings: [...state.failedListings, payload] };
@@ -341,7 +338,6 @@ export const getAiTermsAccepted = state =>
   state.BatchEditListingPage.aiTermsStatus === AI_TERMS_STATUS_ACCEPTED;
 
 export const getCreateListingsSuccess = state => state.BatchEditListingPage.createListingsSuccess;
-export const getCreateListingsError = state => state.BatchEditListingPage.createListingsError;
 export const getFailedListings = state => state.BatchEditListingPage.failedListings;
 export const getPublishingData = state => {
   const { failedListings, successfulListings, selectedRowsKeys } = state.BatchEditListingPage;
@@ -353,72 +349,6 @@ export const getPublishingData = state => {
 };
 export const getListingsDefaults = state => state.BatchEditListingPage.listingDefaults;
 export const getIsQueryInProgress = state => state.BatchEditListingPage.queryInProgress;
-
-/**
- * Handles the completion of a Transloadit result.
- *
- * @param dispatch
- * @param {function} getState - Function to get the current state.
- * @param {object} sdk - Instance of Sharetribe's SDK.
- * @returns {function} - A function to handle the Transloadit result.
- */
-function handleTransloaditResultComplete(dispatch, getState, sdk) {
-  return async (stepName, result) => {
-    const { localId, ssl_url } = result;
-    const listing = getSingleListing(getState(), localId);
-    const { currency, transactionType } = getListingsDefaults(getState());
-
-    try {
-      const price = convertUnitToSubUnit(listing.price, unitDivisor(currency));
-
-      const listingData = {
-        title: listing.title,
-        description: listing.description,
-        publicData: {
-          listingType: LISTING_TYPES.PRODUCT,
-          categoryLevel1: getListingCategory(listing),
-          imageryCategory: listing.category,
-          usage: listing.usage,
-          releases: listing.releases,
-          keywords: listing.keywords,
-          imageSize: listing.dimensions,
-          fileType: listing.type,
-          aiTerms: listing.isAi ? 'yes' : 'no',
-          originalFileName: listing.name,
-          transactionProcessAlias: transactionType.alias,
-          unitType: transactionType.unitType,
-        },
-        privateData: {
-          transloaditSslUrl: ssl_url,
-        },
-        price: {
-          amount: price,
-          currency: currency,
-        },
-      };
-
-      await sdk.ownListings.create(listingData, {
-        expand: true,
-      });
-
-      dispatch({ type: ADD_SUCCESSFUL_LISTING, payload: listing });
-    } catch (error) {
-      dispatch({ type: ADD_FAILED_LISTING, payload: listing });
-      console.error('Error during image download or upload:', error);
-    } finally {
-      const { successfulListings, failedListings, selectedRowsKeys } = getPublishingData(
-        getState()
-      );
-      const totalListingsProcessed = successfulListings.length + failedListings.length;
-
-      if (totalListingsProcessed === selectedRowsKeys.length) {
-        const actionType =
-          failedListings.length > 0 ? CREATE_LISTINGS_ERROR : CREATE_LISTINGS_SUCCESS;
-        dispatch({ type: actionType });
-      }
-    }
-  };
-}
 
 function updateAiTermsStatus(getState, dispatch) {
   if (getAiTermsAccepted(getState())) {
@@ -464,7 +394,6 @@ export function initializeUppy(meta) {
         readFileMetadataAsync(file).then(metadata => {
           uppy.setFileMeta(id, metadata);
           if (metadata.thumbnail) {
-            document.getElementById('uppy_' + id).style.border = 'solid 2px red';
             uppy.setFileState(id, {
               preview: metadata.thumbnail,
             });
@@ -489,27 +418,94 @@ export function initializeUppy(meta) {
         }
       });
 
-      uppyInstance.on(
-        'transloadit:result',
-        handleTransloaditResultComplete(dispatch, getState, sdk)
-      );
+      uppyInstance.on('transloadit:result', (_, result) => {
+        const { localId, ssl_url } = result;
+        dispatch({ type: UPDATE_LISTING, payload: { id: localId, previewUrl: ssl_url } });
+      });
+
+      uppyInstance.on('complete', async result => {
+        console.log(result);
+        const listingsDefaults = getListingsDefaults(getState());
+
+        if (result.failed?.length) {
+          result.failed.forEach(failed => {
+            const failedListing = getSingleListing(getState(), failed.id);
+            dispatch({ type: ADD_FAILED_LISTING, payload: failedListing });
+          });
+        }
+
+        for (let successfulUpload of result.successful) {
+          const { uploadURL } = successfulUpload;
+          const listing = getSingleListing(getState(), successfulUpload.id);
+          try {
+            const { currency, transactionType } = listingsDefaults;
+            const truncatedPrice = truncateToSubUnitPrecision(listing.price, unitDivisor(currency));
+            const price = convertUnitToSubUnit(truncatedPrice, unitDivisor(currency));
+
+            const listingData = {
+              title: listing.title,
+              description: listing.description,
+              publicData: {
+                listingType: LISTING_TYPES.PRODUCT,
+                categoryLevel1: getListingCategory(listing),
+                imageryCategory: listing.category,
+                usage: listing.usage,
+                releases: listing.releases,
+                keywords: listing.keywords,
+                imageSize: listing.dimensions,
+                fileType: listing.type,
+                aiTerms: listing.isAi ? 'yes' : 'no',
+                originalFileName: listing.name,
+                transactionProcessAlias: transactionType.alias,
+                unitType: transactionType.unitType,
+              },
+              privateData: {
+                previewAssetUrl: listing.previewUrl,
+                originalAssetUrl: uploadURL,
+              },
+              price: {
+                amount: price,
+                currency: currency,
+              },
+            };
+
+            await sdk.ownListings.create(listingData, {
+              expand: true,
+            });
+            dispatch({ type: ADD_SUCCESSFUL_LISTING, payload: listing });
+          } catch (error) {
+            dispatch({ type: ADD_FAILED_LISTING, payload: listing });
+            console.error('Error during image upload:', error);
+          }
+        }
+
+        const { successfulListings, failedListings, selectedRowsKeys } = getPublishingData(
+          getState()
+        );
+
+        const totalListingsProcessed = successfulListings.length + failedListings.length;
+        if (totalListingsProcessed === selectedRowsKeys.length) {
+          dispatch({
+            type: failedListings.length > 0 ? CREATE_LISTINGS_ERROR : CREATE_LISTINGS_SUCCESS,
+          });
+        }
+      });
+
       uppyInstance.on('error', error => {
-        console.log(error);
         if (error.assembly) {
-          console.log(`Assembly ID ${error.assembly.assembly_id} failed!`);
-          console.log(error.assembly);
+          console.error(`Assembly ID ${error.assembly.assembly_id} failed!`);
         }
       });
     });
   };
 }
 
-export const requestUpdateListing = payload => (dispatch, getState, sdk) => {
+export const requestUpdateListing = payload => dispatch => {
   dispatch({ type: UPDATE_LISTING, payload });
 };
 
 export function requestSaveBatchListings() {
-  return (dispatch, getState, sdk) => {
+  return (dispatch, getState) => {
     dispatch({ type: CREATE_LISTINGS_REQUEST });
 
     const selectedFilesIds = getSelectedRowsKeys(getState());
@@ -517,7 +513,7 @@ export function requestSaveBatchListings() {
       selectedFilesIds.includes(listing.id)
     );
 
-    // 1. Validate required fields for all listings
+    // Validate required fields for all listings
     const invalidListings = listings
       .map(validateListingProperties)
       .filter(result => result !== null);
@@ -528,7 +524,7 @@ export function requestSaveBatchListings() {
       return; // Abort saving if there are invalid listings
     }
 
-    // 2. Check if any AI content is listed and if terms are accepted
+    // Check if any AI content is listed and if terms are accepted
     const aiListings = listings.filter(listing => listing.isAi);
     const aiTermsAccepted = getAiTermsAccepted(getState());
     if (aiListings.length > 0 && !aiTermsAccepted) {
@@ -538,24 +534,10 @@ export function requestSaveBatchListings() {
       return; // Abort saving until terms are accepted
     }
 
-    // 3. Proceed with saving the listings if all validations pass
+    // Proceed with saving the listings if all validations pass
     const uppy = getUppyInstance(getState());
 
-    uppy
-      .upload()
-      .then(result => {
-        const failedListings = getFailedListings(getState());
-        if (failedListings.length > 0) {
-          dispatch({ type: CREATE_LISTINGS_ERROR });
-        } else {
-          //dispatch({ type: CREATE_LISTINGS_SUCCESS });
-        }
-
-        console.info('Successful uploads:', result.successful);
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    uppy.upload();
   };
 }
 

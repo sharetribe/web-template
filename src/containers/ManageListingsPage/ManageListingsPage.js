@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { Flex, Space, Tabs, Button as AntButton, Col, Row } from 'antd';
+import { Button as AntButton, Col, Row, Space, Tabs } from 'antd';
 
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
@@ -14,14 +14,12 @@ import { isScrollingDisabled } from '../../ducks/ui.duck';
 import { LISTING_TYPES } from '../../util/types';
 
 import {
-  Button,
   H3,
   LayoutSingleColumn,
-  NamedLink,
+  NamedRedirect,
   Page,
   PaginationLinks,
   UserNav,
-  NamedRedirect,
 } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
@@ -30,7 +28,6 @@ import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 import ManageListingCard from './ManageListingCard/ManageListingCard';
 import css from './ManageListingsPage.module.css';
 import { closeListing, getOwnListingsById, openListing } from './ManageListingsPage.duck';
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import ScrollableLinks from '../../components/ScrollableLinks/ScrollableLinks';
 
 const PaginationLinksMaybe = props => {

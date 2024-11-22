@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { Form, Input, InputNumber, Select, Switch } from 'antd';
 import css from './EditListingBatchProductDetails.module.css';
-import { MAX_CATEGORIES, MAX_KEYWORDS } from '../../BatchEditListingPage.duck';
+import { MAX_KEYWORDS } from '../../BatchEditListingPage.duck';
 
 const { TextArea } = Input;
 
@@ -25,6 +25,14 @@ const EditableCell = props => {
   } = props;
   const form = useContext(EditableContext);
   const value = record ? record[dataIndex] : '';
+  const isMounted = useRef(true);
+
+  // Cleanup to avoid state updates on unmounted components
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   const save = async () => {
     try {
@@ -34,12 +42,13 @@ const EditableCell = props => {
         form.setFieldsValue(values);
       }
 
-      handleSave({ ...record, ...values });
+      if (isMounted.current) {
+        handleSave({ ...record, ...values });
+      }
     } catch (errInfo) {
       console.log('Save failed:', errInfo);
     }
   };
-
 
   return (
     <td {...restProps}>
