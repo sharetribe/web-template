@@ -4,6 +4,9 @@ import _ from 'lodash';
 import { createUppyInstance } from '../../util/uppy';
 import { convertUnitToSubUnit, unitDivisor } from '../../util/currency';
 import { LISTING_TYPES } from '../../util/types';
+import { parse } from '../../util/urlHelpers';
+import { queryListingsError } from '../ManageListingsPage/ManageListingsPage.duck';
+import { storableError } from '../../util/errors';
 
 const SMALL_IMAGE = 'small';
 const MEDIUM_IMAGE = 'medium';
@@ -15,6 +18,7 @@ const NO_RELEASES = 'no-release';
 const AI_TERMS_STATUS_ACCEPTED = 'accepted';
 const AI_TERMS_STATUS_REQUIRED = 'required';
 const AI_TERMS_STATUS_NOT_REQUIRED = 'not-required';
+const RESULT_PAGE_SIZE = 30;
 
 export const MAX_KEYWORDS = 30;
 
@@ -59,6 +63,31 @@ function getListingFieldOptions(config, listingFieldKey) {
   const { listingFields } = listing;
   const { enumOptions } = listingFields.find(f => f.key === listingFieldKey);
   return enumOptions.map(({ label, option }) => ({ value: option, label }));
+}
+
+function listingsFromSdkResponse(sdkResponse) {
+  const { data, included } = sdkResponse;
+  return data.map(ownListing => {
+    const images = ownListing.relationships.images;
+    const image =
+      images.data.length > 0 ? included.find(img => img.id.uuid === images.data[0].id.uuid) : null;
+    const preview = image?.attributes?.variants?.default?.url;
+
+    return {
+      id: ownListing.id.uuid,
+      name: ownListing.attributes.publicData.originalFileName,
+      title: ownListing.attributes.title,
+      description: ownListing.attributes.description,
+      keywords: ownListing.attributes.publicData.keywords,
+      category: ownListing.attributes.publicData.imageryCategory,
+      usage: ownListing.attributes.publicData.usage,
+      releases: ownListing.attributes.publicData.releases,
+      dimensions: ownListing.attributes.publicData.imageSize,
+      price: ownListing.attributes.price.amount / 100,
+      isAi: ownListing.attributes.publicData.aiTerms === 'yes',
+      preview,
+    };
+  });
 }
 
 function uppyFileToListing(file) {
@@ -144,6 +173,11 @@ export const ADD_SUCCESSFUL_LISTING = 'app/BatchEditListingPage/ADD_SUCCESSFUL_L
 
 export const RESET_STATE = 'app/BatchEditListingPage/RESET_STATE';
 
+export const FETCH_LISTINGS_FOR_EDIT_REQUEST =
+  'app/BatchEditListingPage/FETCH_LISTINGS_FOR_EDIT_REQUEST';
+export const FETCH_LISTINGS_FOR_EDIT_REQUEST_SUCCESS =
+  'app/BatchEditListingPage/FETCH_LISTINGS_FOR_EDIT_REQUEST_SUCCESS';
+
 // ================ Reducer ================ //
 const initialState = {
   listings: [],
@@ -162,6 +196,10 @@ const initialState = {
   userId: null,
   failedListings: [],
   successfulListings: [],
+  listingCategory: null,
+  queryParams: [],
+  queryInProgress: false,
+  queryListingsError: null,
   listingDefaults: {
     currency: 'USD',
     transactionType: {
@@ -189,9 +227,13 @@ export default function reducer(state = initialState, action = {}) {
         selectedRowsKeys: _.uniq([...state.selectedRowsKeys, payload.id]),
       };
     case REMOVE_FILE:
-      return { ...state, listings: state.listings.filter(file => file.id !== payload.id) };
+      return {
+        ...state,
+        listings: state.listings.filter(file => file.id !== payload.id),
+        selectedRowsKeys: state.selectedRowsKeys.filter(key => key !== payload.id),
+      };
     case RESET_FILES:
-      return { ...state, listings: [] };
+      return { ...state, listings: [], selectedRowsKeys: [] };
     case PREVIEW_GENERATED: {
       const { id, preview } = payload;
       return {
@@ -266,6 +308,20 @@ export default function reducer(state = initialState, action = {}) {
       return { ...state, successfulListings: [...state.successfulListings, payload] };
     case RESET_STATE:
       return initialState;
+    case FETCH_LISTINGS_FOR_EDIT_REQUEST:
+      return {
+        ...state,
+        queryParams: payload.queryParams,
+        queryInProgress: true,
+        queryListingsError: null,
+      };
+    case FETCH_LISTINGS_FOR_EDIT_REQUEST_SUCCESS:
+      return {
+        ...state,
+        queryInProgress: false,
+        queryListingsError: null,
+        listings: listingsFromSdkResponse(payload.data),
+      };
     default:
       return state;
   }
@@ -299,6 +355,7 @@ export const getPublishingData = state => {
   };
 };
 export const getListingsDefaults = state => state.BatchEditListingPage.listingDefaults;
+export const getIsQueryInProgress = state => state.BatchEditListingPage.queryInProgress;
 
 /**
  * Handles the completion of a Transloadit result.
@@ -500,6 +557,31 @@ export function requestSaveBatchListings() {
   };
 }
 
+export const queryOwnListings = queryParams => (dispatch, getState, sdk) => {
+  dispatch({
+    type: FETCH_LISTINGS_FOR_EDIT_REQUEST,
+    payload: { queryParams },
+  });
+
+  const { perPage, ...rest } = queryParams;
+  const params = { ...rest, perPage };
+
+  return sdk.ownListings
+    .query(params)
+    .then(response => {
+      dispatch({
+        type: FETCH_LISTINGS_FOR_EDIT_REQUEST_SUCCESS,
+        payload: response,
+      });
+
+      return response;
+    })
+    .catch(e => {
+      dispatch(queryListingsError(storableError(e)));
+      throw e;
+    });
+};
+
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   const { transactionType } = config.listing.listingTypes.find(
     ({ listingType }) => listingType === LISTING_TYPES.PRODUCT
@@ -511,6 +593,23 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
       transactionType,
     },
   });
+  const { type } = params;
+
+  if (type !== 'new') {
+    const queryParams = parse(search);
+    const page = queryParams.page || 1;
+
+    dispatch(
+      queryOwnListings({
+        ...queryParams,
+        page,
+        perPage: RESULT_PAGE_SIZE,
+        include: ['images'],
+        'fields.image': ['variants.default'],
+        'limit.images': 1,
+      })
+    );
+  }
 
   const imageryCategoryOptions = getListingFieldOptions(config, 'imageryCategory');
   const usageOptions = getListingFieldOptions(config, 'usage');

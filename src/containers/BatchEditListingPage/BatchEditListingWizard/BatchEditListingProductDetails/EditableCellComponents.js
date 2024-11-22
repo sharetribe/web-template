@@ -19,6 +19,7 @@ const EditableCell = props => {
     cellClassName,
     onBeforeSave = null,
     placeholder = '',
+    rowIndex,
     ...restProps
   } = props;
   const form = useContext(EditableContext);
@@ -37,7 +38,7 @@ const EditableCell = props => {
       console.log('Save failed:', errInfo);
     }
   };
-
+  
   return (
     <td {...restProps}>
       {editable ? (
@@ -45,15 +46,17 @@ const EditableCell = props => {
           <Form.Item
             initialValue={value}
             name={dataIndex}
+            id={`${dataIndex}-${record.id}`}
             className={css.formItem}
             rules={[{ required: editControlType !== 'switch', message: `${title} is required.` }]}
           >
             {
               {
-                text: <Input onPressEnter={save} onBlur={save} placeholder={placeholder} />,
-                textarea: <TextArea autoSize onBlur={save} placeholder={placeholder}></TextArea>,
+                text: <Input id={`${dataIndex}-${rowIndex}`} onPressEnter={save} onBlur={save} placeholder={placeholder} />,
+                textarea: <TextArea id={`${dataIndex}-${rowIndex}`} autoSize onBlur={save} placeholder={placeholder}></TextArea>,
                 selectMultiple: (
                   <Select
+                    id={`${dataIndex}-${rowIndex}`}
                     style={{ width: '100%' }}
                     mode="multiple"
                     options={options}
@@ -65,6 +68,7 @@ const EditableCell = props => {
                 ),
                 select: (
                   <Select
+                    id={`${dataIndex}-${rowIndex}`}
                     style={{ width: '100%' }}
                     options={options}
                     onSelect={save}
@@ -75,6 +79,7 @@ const EditableCell = props => {
                 ),
                 tags: (
                   <Select
+                    id={`${dataIndex}-${rowIndex}`}
                     mode="tags"
                     style={{ width: '100%' }}
                     onSelect={save}
@@ -86,6 +91,7 @@ const EditableCell = props => {
                 ),
                 switch: (
                   <Switch
+                    id={`${dataIndex}-${rowIndex}`}
                     checkedChildren="Yes"
                     unCheckedChildren="No"
                     onChange={save}
@@ -94,6 +100,7 @@ const EditableCell = props => {
                 ),
                 money: (
                   <InputNumber
+                    id={`${dataIndex}-${rowIndex}`}
                     addonBefore="$"
                     onPressEnter={save}
                     onBlur={save}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { compose } from 'redux';
-import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { useParams, withRouter } from 'react-router-dom';
+import { connect, useSelector } from 'react-redux';
 import { injectIntl } from '../../util/reactIntl';
 import {
   NO_ACCESS_PAGE_POST_LISTINGS,
@@ -12,14 +12,22 @@ import { NamedRedirect, Page } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import css from './BatchEditListingPage.module.css';
-import { requestSaveBatchListings } from './BatchEditListingPage.duck';
+import {
+  getIsQueryInProgress,
+  initializeUppy,
+  requestSaveBatchListings,
+} from './BatchEditListingPage.duck';
 import BatchEditListingWizard from './BatchEditListingWizard/BatchEditListingWizard';
+import { EditListingBatchProductDetails } from './BatchEditListingWizard/BatchEditListingProductDetails/EditListingBatchProductDetails';
 
 export const BatchEditListingPageComponent = props => {
   const { currentUser, history, intl, params, page, onSaveBatchListing } = props;
   const hasPostingRights = hasPermissionToPostListings(currentUser);
   const shouldRedirectNoPostingRights = !!currentUser?.id && !hasPostingRights;
   const { listingFieldsOptions } = page;
+  const { type } = useParams();
+  const isNew = type === 'new';
+  const isQueryLoading = useSelector(getIsQueryInProgress);
 
   if (!isUserAuthorized(currentUser)) {
     return (
@@ -47,16 +55,21 @@ export const BatchEditListingPageComponent = props => {
         desktopClassName={css.desktopTopbar}
         mobileClassName={css.mobileTopbar}
       />
-
-      <BatchEditListingWizard
-        id="EditListingWizard"
-        className={css.wizard}
-        params={params}
-        history={history}
-        currentUser={currentUser}
-        listingFieldsOptions={listingFieldsOptions}
-        onSaveBatchListing={onSaveBatchListing}
-      />
+      {isNew ? (
+        <BatchEditListingWizard
+          id="EditListingWizard"
+          className={css.wizard}
+          params={params}
+          history={history}
+          currentUser={currentUser}
+          listingFieldsOptions={listingFieldsOptions}
+          onSaveBatchListing={onSaveBatchListing}
+        />
+      ) : (
+        <div className={css.editRoot}>
+          <EditListingBatchProductDetails cssRoot={css.listingDetails} loading={isQueryLoading} />
+        </div>
+      )}
     </Page>
   );
 };

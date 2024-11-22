@@ -68,7 +68,8 @@ function AiTermsModalContent({ onTermsCheckboxChange }) {
   );
 }
 
-export const EditListingBatchProductDetails = () => {
+export const EditListingBatchProductDetails = props => {
+  const { cssRoot = css.root, loading = false } = props;
   const dispatch = useDispatch();
 
   const listings = useSelector(getListings);
@@ -151,7 +152,7 @@ export const EditListingBatchProductDetails = () => {
   useStickyHeader(css);
 
   return (
-    <div className={css.root}>
+    <div className={cssRoot}>
       <Flex className={css.stickyHeader}>
         <Flex vertical>
           <H3 as="h1">
@@ -186,6 +187,7 @@ export const EditListingBatchProductDetails = () => {
           listingFieldsOptions={listingFieldsOptions}
           onSelectChange={onSelectChange}
           selectedRowKeys={selectedRowKeys}
+          loading={loading || showProgressModal}
         ></EditableListingsTable>
       </div>
 

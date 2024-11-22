@@ -15,7 +15,7 @@ const numberSorter = (a, b) => {
 };
 
 export const EditableListingsTable = props => {
-  const { onSave, dataSource, listingFieldsOptions, onSelectChange, selectedRowKeys } = props;
+  const { onSave, dataSource, listingFieldsOptions, onSelectChange, selectedRowKeys, loading = false } = props;
   const intl = useIntl();
 
   const {
@@ -206,7 +206,7 @@ export const EditableListingsTable = props => {
 
     return {
       ...col,
-      onCell: record => ({
+      onCell: (record, rowIndex) => ({
         record,
         editable: col.editable,
         dataIndex: col.dataIndex,
@@ -217,6 +217,7 @@ export const EditableListingsTable = props => {
         cellClassName: css.editableCellValueWrap,
         onBeforeSave: col.onBeforeSave,
         placeholder: col.placeholder,
+        rowIndex: rowIndex
       }),
     };
   });
@@ -237,6 +238,7 @@ export const EditableListingsTable = props => {
         onChange: onSelectChange,
       }}
       sticky={{ offsetHeader: 80 }}
+      loading={loading}
     ></Table>
   );
 };

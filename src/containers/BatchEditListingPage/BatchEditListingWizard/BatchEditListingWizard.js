@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo } from 'react';
-import classNames from 'classnames';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
 import { useIntl } from '../../../util/reactIntl';
 import { LISTING_PAGE_PARAM_TYPE_NEW } from '../../../util/urlHelpers';
@@ -12,6 +11,7 @@ import css from './BatchEditListingWizard.module.css';
 import {
   getCreateListingsError,
   getCreateListingsSuccess,
+  getListings,
   getPublishingData,
   getUppyInstance,
   initializeUppy,
@@ -86,8 +86,6 @@ BatchEditListingResult.propTypes = { publishListingsSuccess: PropTypes.any };
 const BatchEditListingWizard = props => {
   const {
     id = '',
-    className = '',
-    rootClassName = css.root,
     params = { id: '', type: LISTING_PAGE_PARAM_TYPE_NEW, tab: UPLOAD },
     viewport = { width: 0 },
     intl,
@@ -97,16 +95,15 @@ const BatchEditListingWizard = props => {
     history,
     ...rest
   } = props;
+  const listings = useSelector(getListings);
+  const hasFiles = listings.length;
+
   const selectedTab = params.tab;
-  const rootClasses = rootClassName || css.root;
-  const classes = classNames(rootClasses, className);
   const tabs = [UPLOAD, PRODUCT_DETAILS];
+  const tabsStatus = useMemo(() => getTabsStatus(hasFiles), [hasFiles]);
   const publishListingsSuccess = useSelector(getCreateListingsSuccess);
   const publishListingError = useSelector(getCreateListingsError);
   const uppyInstance = useSelector(getUppyInstance);
-
-  const fileCount = uppyInstance ? uppyInstance.getFiles().length : 0;
-  const tabsStatus = useMemo(() => getTabsStatus(fileCount), [fileCount]);
 
   const [api, contextHolder] = notification.useNotification();
   const dispatch = useDispatch();
@@ -152,7 +149,7 @@ const BatchEditListingWizard = props => {
   }
 
   return (
-    <div className={classes}>
+    <div className={css.root}>
       {contextHolder}
       <Tabs rootClassName={css.tabsContainer} navRootClassName={css.nav} tabRootClassName={css.tab}>
         {tabs.map(tab => {
