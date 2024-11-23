@@ -4,17 +4,17 @@ import { Button, H3 } from '../../../../components';
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { Checkbox, Flex, List, Modal, Progress, Space, Typography } from 'antd';
 import {
-  CREATE_LISTINGS_ABORTED,
   getAiTermsRequired,
   getInvalidListings,
   getListingCreationInProgress,
   getListingFieldsOptions,
   getListings,
-  getPublishingData,
+  getSaveListingData,
   getSelectedRowsKeys,
   PAGE_MODE_CREATE,
   requestSaveBatchListings,
   requestUpdateListing,
+  SAVE_LISTINGS_ABORTED,
   SET_AI_TERMS_ACCEPTED,
   SET_SELECTED_ROWS,
 } from '../../BatchEditListingPage.duck';
@@ -26,6 +26,7 @@ import {
   FileExclamationOutlined,
   WarningOutlined,
 } from '@ant-design/icons';
+import { useParams } from 'react-router-dom';
 
 const { Text, Paragraph } = Typography;
 
@@ -79,13 +80,15 @@ export const EditListingBatchProductDetails = props => {
   const invalidListings = useSelector(getInvalidListings);
   const aiTermsRequired = useSelector(getAiTermsRequired);
   const selectedRowKeys = useSelector(getSelectedRowsKeys);
-  const { failedListings, successfulListings, selectedRowsKeys } = useSelector(getPublishingData);
+  const { failedListings, successfulListings, selectedRowsKeys } = useSelector(getSaveListingData);
 
   const [dataSource, setDataSource] = useState(listings);
   const [termsAcceptedCheckbox, setTermsAcceptedCheckbox] = useState(false); // Use state to track checkbox value
   const [showValidationModal, setShowValidationModal] = useState(false);
   const [showAiTermsModal, setShowAiTermsModal] = useState(false);
   const [showProgressModal, setShowProgressModal] = useState(false);
+
+  const { mode } = useParams();
 
   const onTermsCheckboxChange = e => {
     setTermsAcceptedCheckbox(e.target.checked);
@@ -96,7 +99,7 @@ export const EditListingBatchProductDetails = props => {
   };
 
   const onSubmit = () => {
-    dispatch(requestSaveBatchListings());
+    dispatch(requestSaveBatchListings(mode));
   };
 
   const handleUpdateListing = updatedData => {
@@ -105,21 +108,21 @@ export const EditListingBatchProductDetails = props => {
 
   const handleCancelValidationModal = () => {
     setShowValidationModal(false);
-    dispatch({ type: CREATE_LISTINGS_ABORTED });
+    dispatch({ type: SAVE_LISTINGS_ABORTED });
   };
 
   const handleCancelAiTermsModal = () => {
     setShowAiTermsModal(false);
-    dispatch({ type: CREATE_LISTINGS_ABORTED });
+    dispatch({ type: SAVE_LISTINGS_ABORTED });
   };
 
   const handleOkAiTermsModal = () => {
     if (termsAcceptedCheckbox) {
       dispatch({ type: SET_AI_TERMS_ACCEPTED });
-      dispatch({ type: CREATE_LISTINGS_ABORTED });
+      dispatch({ type: SAVE_LISTINGS_ABORTED });
       onSubmit();
     } else {
-      dispatch({ type: CREATE_LISTINGS_ABORTED });
+      dispatch({ type: SAVE_LISTINGS_ABORTED });
     }
 
     setShowAiTermsModal(false);
@@ -140,7 +143,9 @@ export const EditListingBatchProductDetails = props => {
       return;
     }
 
-    setShowProgressModal(listingsCreationInProgress);
+    if (mode === PAGE_MODE_CREATE) {
+      setShowProgressModal(listingsCreationInProgress);
+    }
   }, [
     invalidListings,
     aiTermsRequired,

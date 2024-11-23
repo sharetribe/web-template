@@ -7,6 +7,7 @@ import { LISTING_TYPES } from '../../util/types';
 import { parse } from '../../util/urlHelpers';
 import { queryListingsError } from '../ManageListingsPage/ManageListingsPage.duck';
 import { storableError } from '../../util/errors';
+import { types as sdkTypes } from '../../util/sdkLoader';
 
 const SMALL_IMAGE = 'small-image';
 const MEDIUM_IMAGE = 'medium-image';
@@ -23,6 +24,8 @@ const RESULT_PAGE_SIZE = 30;
 export const PAGE_MODE_CREATE = 'create';
 export const MAX_KEYWORDS = 30;
 export const MAX_CATEGORIES = 5;
+
+const { UUID } = sdkTypes;
 
 export const IMAGE_DIMENSIONS_MAP = {
   [SMALL_IMAGE]: {
@@ -71,13 +74,19 @@ function listingsFromSdkResponse(sdkResponse) {
       images.data.length > 0 ? included.find(img => img.id.uuid === images.data[0].id.uuid) : null;
     const preview = image?.attributes?.variants?.default?.url;
 
+    const keywords = ownListing.attributes.publicData.keywords;
+    const keywordsArray = Array.isArray(keywords) ? keywords : keywords.split(',');
+
+    const categories = ownListing.attributes.publicData.imageryCategory;
+    const categoriesArray = Array.isArray(categories) ? categories : categories.split(',');
+
     return {
       id: ownListing.id.uuid,
       name: ownListing.attributes.publicData.originalFileName,
       title: ownListing.attributes.title,
       description: ownListing.attributes.description,
-      keywords: ownListing.attributes.publicData.keywords,
-      category: ownListing.attributes.publicData.imageryCategory,
+      keywords: keywordsArray,
+      category: categoriesArray,
       usage: ownListing.attributes.publicData.usage,
       releases: ownListing.attributes.publicData.releases,
       dimensions: ownListing.attributes.publicData.imageSize,
@@ -160,10 +169,10 @@ export const SET_AI_TERMS_ACCEPTED = 'app/BatchEditListingPage/SET_AI_TERMS_ACCE
 export const SET_AI_TERMS_REQUIRED = 'app/BatchEditListingPage/SET_AI_TERMS_REQUIRED';
 export const SET_AI_TERMS_NOT_REQUIRED = 'app/BatchEditListingPage/SET_AI_TERMS_NOT_REQUIRED';
 
-export const CREATE_LISTINGS_REQUEST = 'app/BatchEditListingPage/CREATE_LISTINGS_REQUEST';
-export const CREATE_LISTINGS_ERROR = 'app/BatchEditListingPage/CREATE_LISTINGS_ERROR';
-export const CREATE_LISTINGS_ABORTED = 'app/BatchEditListingPage/CREATE_LISTINGS_ABORTED';
-export const CREATE_LISTINGS_SUCCESS = 'app/BatchEditListingPage/CREATE_LISTINGS_SUCCESS';
+export const SAVE_LISTINGS_REQUEST = 'app/BatchEditListingPage/SAVE_LISTINGS_REQUEST';
+export const SAVE_LISTINGS_ERROR = 'app/BatchEditListingPage/SAVE_LISTINGS_ERROR';
+export const SAVE_LISTINGS_ABORTED = 'app/BatchEditListingPage/SAVE_LISTINGS_ABORTED';
+export const SAVE_LISTINGS_SUCCESS = 'app/BatchEditListingPage/SAVE_LISTINGS_SUCCESS';
 
 export const SET_SELECTED_ROWS = 'app/BatchEditListingPage/SET_SELECTED_ROWS';
 export const ADD_FAILED_LISTING = 'app/BatchEditListingPage/ADD_FAILED_LISTING';
@@ -187,7 +196,7 @@ const initialState = {
   invalidListings: [],
   selectedRowsKeys: [],
   aiTermsStatus: AI_TERMS_STATUS_NOT_REQUIRED,
-  createListingsInProgress: false,
+  saveListingsInProgress: false,
   createListingsSuccess: null,
   userId: null,
   failedListings: [],
@@ -275,26 +284,29 @@ export default function reducer(state = initialState, action = {}) {
     case SET_SELECTED_ROWS:
       return { ...state, selectedRowsKeys: payload };
 
-    case CREATE_LISTINGS_REQUEST:
-      return { ...state, createListingsInProgress: true };
-    case CREATE_LISTINGS_ERROR:
+    case SAVE_LISTINGS_REQUEST:
+      return { ...state, saveListingsInProgress: true };
+
+    case SAVE_LISTINGS_ERROR:
       return {
         ...state,
         createListingsSuccess: false,
-        createListingsInProgress: false,
+        saveListingsInProgress: false,
+        selectedRowsKeys: [],
       };
-    case CREATE_LISTINGS_ABORTED:
+    case SAVE_LISTINGS_ABORTED:
       return {
         ...state,
         createListingsSuccess: null,
-        createListingsInProgress: false,
+        saveListingsInProgress: false,
         invalidListings: [],
       };
-    case CREATE_LISTINGS_SUCCESS:
+    case SAVE_LISTINGS_SUCCESS:
       return {
         ...state,
         createListingsSuccess: true,
-        createListingsInProgress: false,
+        saveListingsInProgress: false,
+        selectedRowsKeys: [],
       };
     case ADD_FAILED_LISTING:
       return { ...state, failedListings: [...state.failedListings, payload] };
@@ -331,7 +343,7 @@ export const getListingFieldsOptions = state => state.BatchEditListingPage.listi
 export const getSelectedRowsKeys = state => state.BatchEditListingPage.selectedRowsKeys;
 
 export const getListingCreationInProgress = state =>
-  state.BatchEditListingPage.createListingsInProgress;
+  state.BatchEditListingPage.saveListingsInProgress;
 export const getAiTermsRequired = state =>
   state.BatchEditListingPage.aiTermsStatus === AI_TERMS_STATUS_REQUIRED;
 export const getAiTermsAccepted = state =>
@@ -339,12 +351,18 @@ export const getAiTermsAccepted = state =>
 
 export const getCreateListingsSuccess = state => state.BatchEditListingPage.createListingsSuccess;
 export const getFailedListings = state => state.BatchEditListingPage.failedListings;
-export const getPublishingData = state => {
-  const { failedListings, successfulListings, selectedRowsKeys } = state.BatchEditListingPage;
+export const getSaveListingData = state => {
+  const {
+    failedListings,
+    successfulListings,
+    selectedRowsKeys,
+    saveListingsInProgress,
+  } = state.BatchEditListingPage;
   return {
     failedListings,
     successfulListings,
     selectedRowsKeys,
+    saveListingsInProgress,
   };
 };
 export const getListingsDefaults = state => state.BatchEditListingPage.listingDefaults;
@@ -424,7 +442,6 @@ export function initializeUppy(meta) {
       });
 
       uppyInstance.on('complete', async result => {
-        console.log(result);
         const listingsDefaults = getListingsDefaults(getState());
 
         if (result.failed?.length) {
@@ -479,14 +496,14 @@ export function initializeUppy(meta) {
           }
         }
 
-        const { successfulListings, failedListings, selectedRowsKeys } = getPublishingData(
+        const { successfulListings, failedListings, selectedRowsKeys } = getSaveListingData(
           getState()
         );
 
         const totalListingsProcessed = successfulListings.length + failedListings.length;
         if (totalListingsProcessed === selectedRowsKeys.length) {
           dispatch({
-            type: failedListings.length > 0 ? CREATE_LISTINGS_ERROR : CREATE_LISTINGS_SUCCESS,
+            type: failedListings.length > 0 ? SAVE_LISTINGS_ERROR : SAVE_LISTINGS_SUCCESS,
           });
         }
       });
@@ -504,13 +521,13 @@ export const requestUpdateListing = payload => dispatch => {
   dispatch({ type: UPDATE_LISTING, payload });
 };
 
-export function requestSaveBatchListings() {
-  return (dispatch, getState) => {
-    dispatch({ type: CREATE_LISTINGS_REQUEST });
+export function requestSaveBatchListings(pageMode = PAGE_MODE_CREATE) {
+  return (dispatch, getState, sdk) => {
+    dispatch({ type: SAVE_LISTINGS_REQUEST });
 
-    const selectedFilesIds = getSelectedRowsKeys(getState());
+    const selectedListingsIds = getSelectedRowsKeys(getState());
     const listings = getListings(getState()).filter(listing =>
-      selectedFilesIds.includes(listing.id)
+      selectedListingsIds.includes(listing.id)
     );
 
     // Validate required fields for all listings
@@ -534,10 +551,58 @@ export function requestSaveBatchListings() {
       return; // Abort saving until terms are accepted
     }
 
-    // Proceed with saving the listings if all validations pass
-    const uppy = getUppyInstance(getState());
+    if (pageMode === PAGE_MODE_CREATE) {
+      // Proceed with saving the listings if all validations pass
+      const uppy = getUppyInstance(getState());
+      uppy.upload();
+    } else {
+      const listingsDefaults = getListingsDefaults(getState());
+      const { currency } = listingsDefaults;
 
-    uppy.upload();
+      const listingPromises = listings.map(listing => {
+        return new Promise((resolve, reject) => {
+          const truncatedPrice = truncateToSubUnitPrecision(listing.price, unitDivisor(currency));
+          const price = convertUnitToSubUnit(truncatedPrice, unitDivisor(currency));
+          const id = new UUID(listing.id);
+          sdk.ownListings
+            .update(
+              {
+                id,
+                title: listing.title,
+                description: listing.description,
+                publicData: {
+                  imageryCategory: listing.category,
+                  usage: listing.usage,
+                  releases: listing.releases,
+                  keywords: listing.keywords,
+                  imageSize: listing.dimensions,
+                  aiTerms: listing.isAi ? 'yes' : 'no',
+                },
+                price: {
+                  amount: price,
+                  currency: currency,
+                },
+              },
+              {
+                expand: true,
+              }
+            )
+            .then(() => {
+              dispatch({ type: ADD_SUCCESSFUL_LISTING, payload: listing });
+              resolve();
+            })
+            .catch(ex => {
+              console.error('Failed saving listing', ex);
+              dispatch({ type: ADD_FAILED_LISTING, payload: listing });
+              reject();
+            });
+        });
+      });
+
+      Promise.all(listingPromises)
+        .then(() => dispatch({ type: SAVE_LISTINGS_SUCCESS }))
+        .catch(() => dispatch({ type: SAVE_LISTINGS_ERROR }));
+    }
   };
 }
 
@@ -580,8 +645,15 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
 
   const { mode } = params;
   if (mode !== PAGE_MODE_CREATE) {
-    const queryParams = parse(search);
-    const page = queryParams.page || 1;
+    const pageQueryParams = parse(search);
+    const page = pageQueryParams.page || 1;
+    const queryParams = new URLSearchParams();
+    if (pageQueryParams.category) {
+      queryParams.set('pub_categoryLevel1', pageQueryParams.category);
+    }
+    if (pageQueryParams.type) {
+      queryParams.set('pub_listingType', pageQueryParams.type);
+    }
 
     dispatch(
       queryOwnListings({

@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { getPublishingData, RESET_STATE } from '../../BatchEditListingPage.duck';
+import { getSaveListingData, RESET_STATE } from '../../BatchEditListingPage.duck';
 import React, { useEffect, useMemo } from 'react';
 import { createResourceLocatorString } from '../../../../util/routes';
 import { Button, Result } from 'antd';
@@ -8,7 +8,7 @@ import css from '../BatchEditListingWizard.module.css';
 export const BatchEditListingResult = props => {
   const { routeConfiguration, history } = props;
   const dispatch = useDispatch();
-  const { failedListings, successfulListings, selectedRowsKeys } = useSelector(getPublishingData);
+  const { failedListings, successfulListings, selectedRowsKeys } = useSelector(getSaveListingData);
 
   useEffect(() => {
     // Reset state when component unmounts

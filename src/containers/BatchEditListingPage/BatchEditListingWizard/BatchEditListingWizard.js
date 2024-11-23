@@ -33,7 +33,6 @@ const BatchEditListingWizard = props => {
     intl,
     currentUser = {},
     routeConfiguration = {},
-    onSaveBatchListing,
     history,
     ...rest
   } = props;
@@ -104,7 +103,6 @@ const BatchEditListingWizard = props => {
               params={params}
               routeConfiguration={routeConfiguration}
               uppy={uppyInstance}
-              onSaveBatchListing={onSaveBatchListing}
               history={history}
             />
           );

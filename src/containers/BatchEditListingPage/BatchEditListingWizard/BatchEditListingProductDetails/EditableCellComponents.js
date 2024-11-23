@@ -139,7 +139,7 @@ const EditableCell = props => {
           </Form.Item>
         </div>
       ) : (
-        <div className={css.displayCell}>{children}</div>
+        <div>{children}</div>
       )}
     </td>
   );

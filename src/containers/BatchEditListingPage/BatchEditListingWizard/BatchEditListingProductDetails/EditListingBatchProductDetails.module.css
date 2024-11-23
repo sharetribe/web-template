@@ -72,9 +72,6 @@
   margin-left: auto; /* Keeps alignment to the right */
 }
 
-.displayCell {
-  margin-bottom: 24px;
-}
 
 .formItem input:focus,
 .formItem textarea:focus,

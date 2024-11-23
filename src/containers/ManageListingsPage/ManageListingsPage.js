@@ -206,7 +206,12 @@ export const ManageListingsPageComponent = props => {
             <AntButton
               type="text"
               className={css.actionButton}
-              onClick={() => goToCreateListing('edit', queryParams)}
+              onClick={() =>
+                goToCreateListing('edit', {
+                  category: currentCategoryType,
+                  type: currentListingType,
+                })
+              }
             >
               Manage {currentCategoryType}
             </AntButton>
