@@ -107,19 +107,23 @@ function FreeCheckout({
         <div className={css.orderFormContainer}>
           <div className={css.headingContainer}>
             <H3 as="h1" className={css.heading}>
-              {title}
+              La tua gift card è pronta per esser usata!
             </H3>
             <H4 as="h2" className={css.detailsHeadingMobile}>
               <FormattedMessage id="CheckoutPage.listingTitle" values={{ listingTitle }} />
             </H4>
-            <p>La tua prenotazione con un buono regalo è stata applicata!</p>
-            <p>Procedi per completare la prenotazione.</p>
+            <p>
+              Sei a pochi passi da pura gioia! La persona speciale che ti ha regalato la gift card
+              ti vuole proprio bene
+            </p>
           </div>
 
           <MobileOrderBreakdown speculateTransactionErrorMessage={null} breakdown={breakdown} />
 
           <div className={css.submitContainer}>
-            <PrimaryButton onClick={handleConfirmBooking}> Completa l'operazione</PrimaryButton>
+            <PrimaryButton onClick={handleConfirmBooking}>
+              Conferma uso del credito gift card
+            </PrimaryButton>
           </div>
         </div>
         <DetailsSideCard

@@ -205,6 +205,13 @@ function TopbarMobileMenu(props) {
 
         <NamedLink
           className={classNames(css.navigationLink, currentPageClass('TeambuildingPage'))}
+          name="GiftCardsPage"
+        >
+          Gift cards
+        </NamedLink>
+
+        <NamedLink
+          className={classNames(css.navigationLink, currentPageClass('TeambuildingPage'))}
           name="TeambuildingPage"
         >
           <FormattedMessage id="TopbarDesktop.team" />

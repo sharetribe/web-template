@@ -69,7 +69,9 @@ function GiftCardsMailBox({ user, giftCardCodes }) {
       const { gifted, recipient, amount } = await checkIfAlreadyGifted(email, giftCardCode);
 
       if (gifted) {
-        setStatusMessage(`Attenzione: questa carta regalo è già stata inviata a ${recipient}. Puoi comunque cambiarne il destinatario.`);
+        setStatusMessage(
+          `Attenzione: questa carta regalo è già stata inviata a ${recipient}. Puoi comunque cambiarne il destinatario.`,
+        );
       }
 
       await sendGiftCard({
@@ -77,7 +79,7 @@ function GiftCardsMailBox({ user, giftCardCodes }) {
         giftee,
         sender: user.attributes?.profile?.firstName || 'Club Joy',
         giftCardCode,
-        amount, 
+        amount,
         emailer: user.attributes?.email,
       });
 
@@ -94,22 +96,23 @@ function GiftCardsMailBox({ user, giftCardCodes }) {
 
   return (
     <div className={css.mailboxContainer}>
-      <h4 className={css.title}>Manda la tua Carta Regalo</h4>
+      <h4 className={css.title}> 💙 Regala la gift card di Club Joy 🎁</h4>
       <p className={css.caption}>
-        Fai una sorpresa a un amico! Inserisci il suo nome e email, e gli faremo sapere del
-        meraviglioso regalo che hai inviato 💙!
+        Stai per fare la sorpresa più bella dell'anno. Inserisci il nome e la mail della tua persona
+        speciale, e faremo sapere loro del tuo bellissimo pensiero, con istruzioni su come usarlo.
+        Non stiamo nella pelle!
       </p>
       <div className={css.inputContainer}>
         <input
           type="text"
-          placeholder="Nome dell'amico"
+          placeholder="Persona Speciale"
           value={giftee}
           onChange={handleGifteeChange}
           className={css.input}
         />
         <input
           type="email"
-          placeholder="Email dell'amico"
+          placeholder="Email"
           value={email}
           onChange={handleEmailChange}
           className={css.input}

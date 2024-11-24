@@ -1,32 +1,48 @@
 .container {
-  max-width: 400px;
-  margin: auto;
+  margin: 40px ;
   padding: 20px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+ 
+  flex-direction: row;
+  gap: 24px; /* Increase spacing between elements */
 }
 
 .heading {
-  font-size: 1.5rem;
+  font-size: 2rem;
   margin-bottom: 3rem;
+  text-align: center
 }
 
-.input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+.heading1 {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  text-align: left; /* Align "Gift cards" to the left */
+}
+
+.listings {
+  display: flex;
+  flex-direction: column;
+
+}
+
+.listingCards {
+  display: flex;
+  flex-wrap: wrap; /* Allow wrapping for responsiveness */
+  gap: 16px;
+  margin-bottom: 20px;
+  justify-content: space-between; /* Distribute cards evenly */
 }
 
 .button {
-  padding: 10px 20px;
+  width: 100%; /* Make the button match the width of the input */
+  max-width: 500px; /* Set a shorter maximum width for the button */
   cursor: pointer;
+  padding: 10px;
   background-color: #4caf50;
   color: white;
   border: none;
   border-radius: 4px;
+  margin-top: 10px; /* Add some space between the input and button */
+  font-size: 1rem; /* Adjust font size */
   transition: background-color 0.3s ease;
 }
 
@@ -39,7 +55,45 @@
   font-size: 1rem;
 }
 
+.checkBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center content horizontally */
+  gap: 16px; /* Adjust spacing between elements */
+  margin: 0 auto; /* Center the checkBox container */
+  width: 100%; /* Make the checkBox container take the full width */
+  background-color: #c1c0c0;
+  border-radius: 20px;
+}
+
+.input {
+  width: 100%; /* Make the input take the full width of the container */
+  max-width: 500px; /* Limit the maximum width */
+
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem; /* Adjust font size for better readability */
+}
+
 .amount {
   font-weight: bold;
   color: #333;
+}
+
+@media (max-width: 767px) {
+  .listingCards {
+    flex-direction: column; /* Stacks cards vertically on mobile */
+    align-items: center; /* Center-align cards */
+  }
+}
+
+@media (max-width: 767px) {
+  .container {
+    text-align: center; /* Center-align everything on mobile */
+  }
+}
+@media (min-width: 768px) {
+  .listingCards {
+    flex-direction: row; /* Horizontal layout on desktop */
+  }
 }
