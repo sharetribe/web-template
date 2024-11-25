@@ -243,7 +243,7 @@ export const queryOwnListings = queryParams => (dispatch, getState, sdk) => {
   dispatch(queryListingsRequest(queryParams));
 
   const { perPage, ...rest } = queryParams;
-  const params = { ...rest, perPage, pub_listingType: 'product-listing' };
+  const params = { ...rest, perPage };
   const validListingType = !!queryParams.pub_listingType;
   const validCategoryType = !!queryParams.pub_categoryLevel1;
   const validRequestParams = validListingType || validCategoryType;
