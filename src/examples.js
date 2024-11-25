@@ -26,6 +26,7 @@ import * as FieldCurrencyInput from './components/FieldCurrencyInput/FieldCurren
 import * as FieldSingleDatePicker from './components/DatePicker/FieldSingleDatePicker/FieldSingleDatePicker.example';
 import * as FieldDateRangeController from './components/DatePicker/FieldDateRangeController/FieldDateRangeController.example';
 import * as FieldDateRangePicker from './components/DatePicker/FieldDateRangePicker/FieldDateRangePicker.example';
+import * as FieldNumber from './components/FieldNumber/FieldNumber.example';
 import * as FieldPhoneNumberInput from './components/FieldPhoneNumberInput/FieldPhoneNumberInput.example';
 import * as FieldRadioButton from './components/FieldRadioButton/FieldRadioButton.example';
 import * as FieldRangeSlider from './components/FieldRangeSlider/FieldRangeSlider.example';
@@ -159,6 +160,7 @@ export {
   FieldDateAndTimeInput,
   FieldDateRangeController,
   FieldDateRangePicker,
+  FieldNumber,
   FieldPhoneNumberInput,
   FieldRadioButton,
   FieldRangeSlider,
