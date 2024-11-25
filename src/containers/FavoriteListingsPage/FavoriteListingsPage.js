@@ -69,7 +69,7 @@ export const FavoriteListingsPageComponent = props => {
         listing={listing}
         renderSizes={renderSizes}
       />
-    )
+    );
   };
 
   return (

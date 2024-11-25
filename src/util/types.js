@@ -743,14 +743,45 @@ export const LISTING_TYPES = {
 
 export const LISTING_GRID_DEFAULTS = {
   TYPE: LISTING_TYPES.PRODUCT,
-  CATEGORY: categories => categories && categories[0].id,
+  CATEGORY: categories => (categories && categories.length ? categories[0].id : null),
 };
 
 export const LISTING_GRID_ROLE = {
   FAVORITE: 'FAVORITE',
   MANAGE: 'MANAGE',
-  PROFILE: 'PROFILE'
-}
+  PROFILE: 'PROFILE',
+};
+
+export const LISTING_GRID_CATEGORIES = {
+  'product-listing': [
+    {
+      name: 'Photos',
+      id: 'photos',
+      subcategories: [],
+    },
+    {
+      name: 'Videos',
+      id: 'videos',
+      subcategories: [],
+    },
+    {
+      name: 'Illustrations',
+      id: 'illustrations',
+      subcategories: [],
+    },
+    {
+      name: 'AI Images',
+      id: 'ai-image',
+      subcategories: [],
+    },
+    {
+      name: 'AI Videos',
+      id: 'ai-video',
+      subcategories: [],
+    },
+  ],
+  'portfolio-showcase': [],
+};
 
 propTypes.sellerStatus = oneOfType(SELLER_STATUS);
 

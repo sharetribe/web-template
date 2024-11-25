@@ -15,9 +15,9 @@ export function getTabsFeaturesForRole(role) {
         enableListingManagement: false,
         pageName: 'FavoriteListingsPage',
         tabs: [
-          { key: LISTING_TYPES.PRODUCT, label: 'Shop'},
-          { key: LISTING_TYPES.PROFILE, label: 'Creatives'},
-        ]
+          { key: LISTING_TYPES.PRODUCT, label: 'Shop' },
+          { key: LISTING_TYPES.PROFILE, label: 'Creatives' },
+        ],
       };
     case LISTING_GRID_ROLE.PROFILE:
       return {
@@ -27,7 +27,7 @@ export function getTabsFeaturesForRole(role) {
         tabs: [
           { key: LISTING_TYPES.PRODUCT, label: 'Shop' },
           { key: LISTING_TYPES.PORTFOLIO, label: 'Portfolio' },
-        ]
+        ],
       };
     case LISTING_GRID_ROLE.MANAGE:
     default:
@@ -38,7 +38,7 @@ export function getTabsFeaturesForRole(role) {
         tabs: [
           { key: LISTING_TYPES.PRODUCT, label: 'Shop' },
           { key: LISTING_TYPES.PORTFOLIO, label: 'Portfolio' },
-        ]
+        ],
       };
   }
 }
@@ -72,11 +72,11 @@ export const Error = ({ messageId }) => {
 
 export const Pagination = ({ pageName, pageSearchParams, pagination }) => {
   return (
-      <PaginationLinks
-        className={css.pagination}
-        pageName={pageName}
-        pageSearchParams={pageSearchParams}
-        pagination={pagination}
-      />
-    );
+    <PaginationLinks
+      className={css.pagination}
+      pageName={pageName}
+      pageSearchParams={pageSearchParams}
+      pagination={pagination}
+    />
+  );
 };

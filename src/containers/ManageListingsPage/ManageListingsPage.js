@@ -1,44 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { Flex, Space, Tabs } from 'antd';
 
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
-import { FormattedMessage, useIntl } from '../../util/reactIntl';
+import { useIntl } from '../../util/reactIntl';
 import { createResourceLocatorString, pathByRouteName } from '../../util/routes';
 import { hasPermissionToPostListings } from '../../util/userHelpers';
 import { NO_ACCESS_PAGE_POST_LISTINGS } from '../../util/urlHelpers';
-import { isErrorNoPermissionToPostListings } from '../../util/errors';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
-import { LISTING_GRID_DEFAULTS, LISTING_GRID_ROLE } from '../../util/types';
-
 import {
-  Button,
-  H3,
-  LayoutSingleColumn,
-  NamedLink,
-  Page,
-  PaginationLinks,
-  UserNav,
-  NamedRedirect,
-  ListingTabs,
-} from '../../components';
+  LISTING_GRID_DEFAULTS,
+  LISTING_GRID_ROLE,
+  LISTING_GRID_CATEGORIES,
+  LISTING_TYPES,
+} from '../../util/types';
+
+import { LayoutSingleColumn, Page, UserNav, NamedRedirect, ListingTabs } from '../../components';
+import { getSearch } from '../../components/ListingTabs/GridHelpers';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import ManageListingCard from './ManageListingCard/ManageListingCard';
 import { closeListing, getOwnListingsById, openListing } from './ManageListingsPage.duck';
-
-
-
-
-
-
-
-
-
 
 export const ManageListingsPageComponent = props => {
   const [listingMenuOpen, setListingMenuOpen] = useState(null);
@@ -60,58 +45,51 @@ export const ManageListingsPageComponent = props => {
     queryListingsError,
     queryParams,
     scrollingDisabled,
-    categories,
   } = props;
   const defaultListingType = LISTING_GRID_DEFAULTS.TYPE;
-  const defaultCategoryType = LISTING_GRID_DEFAULTS.CATEGORY(categories);
+  const currentListingType = queryParams.pub_listingType || defaultListingType;
+  const listingTypeCategories = LISTING_GRID_CATEGORIES[currentListingType];
 
+  function createManageLocatorString(queryParams) {
+    const pathParams = {};
+    const destination = createResourceLocatorString(
+      'ManageListingsPage',
+      routeConfiguration,
+      pathParams,
+      queryParams
+    );
+    history.replace(destination);
+  }
 
+  function updateProductRoute() {
+    const queryParams = {
+      pub_listingType: LISTING_TYPES.PRODUCT,
+      pub_categoryLevel1: LISTING_GRID_DEFAULTS.CATEGORY(
+        LISTING_GRID_CATEGORIES[LISTING_TYPES.PRODUCT]
+      ),
+    };
+    createManageLocatorString(queryParams);
+  }
 
-
-
-
+  function updatePortfolioRoute() {
+    const queryParams = {
+      pub_listingType: LISTING_TYPES.PORTFOLIO,
+    };
+    createManageLocatorString(queryParams);
+  }
 
   useEffect(() => {
-    const validListingType = !queryParams.pub_listingType;
-    const validCategoryType = !queryParams.pub_categoryLevel1;
-    const shouldUpdateRoute = validListingType || validCategoryType;
+    const listingTypeParamValue = queryParams.pub_listingType;
+    const invalidListingType = !(
+      listingTypeParamValue && Object.values(LISTING_TYPES).includes(listingTypeParamValue)
+    );
+    const invalidCategoryType =
+      listingTypeParamValue === LISTING_TYPES.PRODUCT && !queryParams.pub_categoryLevel1;
+    const shouldUpdateRoute = invalidListingType || invalidCategoryType;
     if (shouldUpdateRoute) {
-      const pathParams = {};
-      const queryParams = {
-        pub_listingType: defaultListingType,
-        pub_categoryLevel1: defaultCategoryType,
-      };
-      const destination = createResourceLocatorString(
-        'ManageListingsPage',
-        routeConfiguration,
-        pathParams,
-        queryParams
-      );
-      history.replace(destination);
+      updateProductRoute();
     }
   }, []);
-
-
-
-
-
-
-
-
-
-
-  /**
-   * [TODO:]
-   *    - Ver si estos dos hacen lo mismo....
-   */
-  useEffect(() => {
-    if (isErrorNoPermissionToPostListings(openingListingError?.error)) {
-      const noAccessPagePath = pathByRouteName('NoAccessPage', routeConfiguration, {
-        missingAccessRight: NO_ACCESS_PAGE_POST_LISTINGS,
-      });
-      history.push(noAccessPagePath);
-    }
-  }, [openingListingError]);
 
   const hasPostingRights = hasPermissionToPostListings(currentUser);
   if (!hasPostingRights) {
@@ -122,20 +100,6 @@ export const ManageListingsPageComponent = props => {
       />
     );
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   const onToggleMenu = listing => {
     setListingMenuOpen(listing);
@@ -168,28 +132,31 @@ export const ManageListingsPageComponent = props => {
         hasOpeningError={openingErrorListingId.uuid === listingId}
         hasClosingError={closingErrorListingId.uuid === listingId}
       />
-    )
+    );
   };
-
-
-
-
-
-
-
-
-
-
 
   const onTabChange = key => {
-    const destination = createResourceLocatorString(
-      'ManageListingsPage',
-      routeConfiguration,
-      {},
-      { pub_listingType: key }
-    );
-    history.push(destination);
+    switch (key) {
+      case LISTING_TYPES.PORTFOLIO:
+        updatePortfolioRoute();
+        break;
+      case LISTING_TYPES.PRODUCT:
+      default:
+        updateProductRoute();
+        break;
+    }
   };
+
+  const links = useMemo(
+    () =>
+      listingTypeCategories.map(category => ({
+        id: category.id,
+        name: 'ManageListingsPage',
+        displayText: category.name,
+        to: { search: getSearch(category.id, currentListingType) },
+      })),
+    [listingTypeCategories]
+  );
 
   return (
     <Page
@@ -212,7 +179,7 @@ export const ManageListingsPageComponent = props => {
           queryListingsError={queryListingsError}
           queryParams={queryParams}
           onTabChange={onTabChange}
-          categories={categories}
+          categories={links}
           role={LISTING_GRID_ROLE.MANAGE}
           titleMessageId="ManageListingsPage.title"
           noResultsMessageId="ManageListingsPage.noResults"
@@ -224,36 +191,6 @@ export const ManageListingsPageComponent = props => {
     </Page>
   );
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 const mapStateToProps = state => {
   const { currentUser } = state.user;
@@ -267,7 +204,6 @@ const mapStateToProps = state => {
     openingListingError,
     closingListing,
     closingListingError,
-    categories,
   } = state.ManageListingsPage;
   const listings = getOwnListingsById(state, currentPageResultIds);
   return {
@@ -283,7 +219,6 @@ const mapStateToProps = state => {
     openingListingError,
     closingListing,
     closingListingError,
-    categories,
   };
 };
 

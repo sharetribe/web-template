@@ -1,13 +1,12 @@
-import { getFileMetadata } from './file-metadata';
+import { readFileMetadataAsync } from './file-metadata';
 import exifr from 'exifr';
 import { waitFor } from '@testing-library/react';
 
 jest.mock('exifr');
 
-describe('getFileMetadata', () => {
-  it('should call onLoad with metadata width, height, and keywords', async () => {
+describe('readFileMetadataAsync', () => {
+  it('should return metadata with width, height, and keywords', async () => {
     const file = new File([''], 'test.jpg');
-    const onLoad = jest.fn();
 
     const metadata = {
       ExifImageWidth: 100,
@@ -17,18 +16,17 @@ describe('getFileMetadata', () => {
 
     exifr.parse.mockResolvedValue(metadata);
 
-    await getFileMetadata(file, onLoad);
+    const result = await readFileMetadataAsync({ data: file, type: 'image/jpeg', isRemote: false });
 
-    expect(onLoad).toHaveBeenCalledWith({
+    expect(result).toEqual({
       width: 100,
       height: 200,
       keywords: ['test', 'image'],
     });
   });
 
-  it('should call getFileResolution if exifr.parse fails', async () => {
+  it('should use getImageResolution if exifr.parse fails', async () => {
     const file = new File([''], 'test.jpg');
-    const onLoad = jest.fn();
 
     exifr.parse.mockRejectedValue(new Error('Error reading metadata'));
 
@@ -39,8 +37,8 @@ describe('getFileMetadata', () => {
     global.Image = class {
       constructor() {
         setTimeout(() => {
-          window.setTimeout(this.onload, 10); // Trigger the load event after creation
-        }, 0);
+          this.onload();
+        }, 10); // Trigger the load event after creation
       }
 
       set src(value) {
@@ -49,21 +47,19 @@ describe('getFileMetadata', () => {
       }
     };
 
-    await getFileMetadata(file, onLoad);
+    const result = await readFileMetadataAsync({ data: file, type: 'image/jpeg', isRemote: false });
 
-    await waitFor(() => {
-      expect(onLoad).toHaveBeenCalledWith({
-        width: 300,
-        height: 400,
-      });
+    expect(result).toEqual({
+      width: 300,
+      height: 400,
+      keywords: '',
     });
   });
 });
 
-describe('readMetadata', () => {
+describe('readFileMetadataAsync with alternative metadata tags', () => {
   it('should correctly handle alternative metadata tags', async () => {
     const file = new File([''], 'test.jpg');
-    const onLoad = jest.fn();
 
     const metadata = {
       Width: 300,
@@ -73,12 +69,50 @@ describe('readMetadata', () => {
 
     exifr.parse.mockResolvedValue(metadata);
 
-    await getFileMetadata(file, onLoad);
+    const result = await readFileMetadataAsync({ data: file, type: 'image/jpeg', isRemote: false });
 
-    expect(onLoad).toHaveBeenCalledWith({
+    expect(result).toEqual({
       width: 300,
       height: 400,
       keywords: ['keyword1', 'keyword2'],
+    });
+  });
+});
+
+describe('readFileMetadataAsync for remote files', () => {
+  it('should resolve metadata for remote files', async () => {
+    const file = {
+      isRemote: true,
+      source: 'Url',
+      remote: {
+        body: {
+          url: 'http://example.com/image.jpg',
+        },
+      },
+    };
+
+    // Mocking Image object
+    global.URL.createObjectURL = jest.fn(() => 'test-url');
+    global.URL.revokeObjectURL = jest.fn();
+
+    global.Image = class {
+      constructor() {
+        setTimeout(() => {
+          this.onload();
+        }, 10); // Trigger the load event after creation
+      }
+
+      set src(value) {
+        this.width = 500;
+        this.height = 600;
+      }
+    };
+
+    const result = await readFileMetadataAsync(file);
+
+    expect(result).toEqual({
+      width: 500,
+      height: 600,
     });
   });
 });

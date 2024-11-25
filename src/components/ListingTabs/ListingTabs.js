@@ -1,20 +1,16 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { arrayOf, oneOfType, bool, object, string, func } from 'prop-types';
-import { Flex, Space, Tabs } from 'antd';
+import { Button as AntButton, Col, Row, Space, Tabs } from 'antd';
 
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { FormattedMessage } from '../../util/reactIntl';
-import { createResourceLocatorString, pathByRouteName } from '../../util/routes';
-import { LISTING_TYPES, LISTING_GRID_ROLE, LISTING_GRID_DEFAULTS, propTypes } from '../../util/types';
+import { createResourceLocatorString } from '../../util/routes';
+import { LISTING_GRID_ROLE, LISTING_GRID_DEFAULTS, propTypes } from '../../util/types';
+import { PAGE_MODE_EDIT, PAGE_MODE_NEW } from '../../containers/BatchEditListingPage/constants';
 
-import {
-  Button,
-  H3,
-  NamedLink,
-} from '../';
-
-import { Loader, Error, Pagination, getSearch, getTabsFeaturesForRole } from './GridHelpers'
+import { H3, ScrollableLinks } from '../';
+import { Loader, Error, Pagination, getTabsFeaturesForRole } from './GridHelpers';
 
 import css from './ListingTabs.module.css';
 
@@ -43,32 +39,26 @@ export const ListingTabs = ({
   const currentListingType = queryParams.pub_listingType || defaultListingType;
   const currentCategoryType = queryParams.pub_categoryLevel1 || defaultCategoryType;
   const hasNoResults = listingsAreLoaded && pagination.totalItems === 0;
+  const withLinks = !!(categories && categories.length);
   const enableGrid = listingsAreLoaded && !queryListingsError;
-  const enablePagination = listingsAreLoaded && pagination && pagination.totalPages > 1
+  const enablePagination = listingsAreLoaded && pagination && pagination.totalPages > 1;
   const page = queryParams ? queryParams.page : 1;
-  const { pageName, tabs, enableCategoryTabs, enableListingManagement } = getTabsFeaturesForRole(role);
+  const { pageName, tabs, enableCategoryTabs, enableListingManagement } = getTabsFeaturesForRole(
+    role
+  );
 
-
-
-
-
-
-
-
-
-  const goToCreateListing = () => {
-    const destination = createResourceLocatorString('BatchEditListingPage', routeConfiguration, {
-      category: currentCategoryType,
-      type: 'new',
-      tab: 'upload',
-    });
+  const goToManageListing = (mode = PAGE_MODE_NEW, searchParams = {}) => {
+    const destination = createResourceLocatorString(
+      'BatchEditListingPage',
+      routeConfiguration,
+      {
+        mode,
+        tab: 'upload',
+      },
+      searchParams
+    );
     history.push(destination);
   };
-
-
-
-
-
 
   const panelWidth = 62.5;
   // Render hints for responsive image
@@ -86,59 +76,45 @@ export const ListingTabs = ({
     </div>
   ) : (
     <div className={css.listingCards}>
-      {listings.map(listing => (
-        listingRenderer(listing, css.listingCard, renderSizes)
-      ))}
+      {listings.map(listing => listingRenderer(listing, css.listingCard, renderSizes))}
     </div>
   );
 
   const contentRenderer = (
     <div>
       {enableCategoryTabs && (
-        <Flex className={css.filters}>
-          <Flex className={css.categories}>
-            <Space
-              direction="horizontal"
-              size="middle"
-              className={css.productTypeFilters}
-              hidden={currentListingType !== LISTING_TYPES.PRODUCT}
-            >
-              {categories.map(category => (
-                <NamedLink
-                  key={category.id}
-                  name={pageName}
-                  active={currentCategoryType === category.id}
-                  activeClassName={css.filterLinkActive}
-                  to={{ search: getSearch(category.id, currentListingType) }}
-                >
-                  {category.name}
-                </NamedLink>
-              ))}
-            </Space>
-          </Flex>
+        <Row gutter={[16, 16]} align="middle" justify="space-between">
+          <Col xs={24} sm={16}>
+            {withLinks && (
+              <ScrollableLinks links={categories} selectedLinkId={currentCategoryType} />
+            )}
+          </Col>
           {enableListingManagement && (
-            <Flex align="flex-end" style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <Col xs={24} sm={8} style={{ textAlign: 'right' }}>
               <Space size="middle">
-                <Button style={{ width: 200 }} onClick={goToCreateListing}>
-
-
-
-
-
-
-
+                <AntButton
+                  type="text"
+                  className={css.actionButton}
+                  onClick={() =>
+                    goToManageListing(PAGE_MODE_EDIT, {
+                      category: currentCategoryType,
+                      type: currentListingType,
+                    })
+                  }
+                >
+                  Manage {currentCategoryType}
+                </AntButton>
+                <AntButton
+                  type="primary"
+                  className={css.actionButton}
+                  onClick={() => goToManageListing()}
+                >
                   Add New Photo(s)
-
-
-
-
-
-
-                </Button>
+                </AntButton>
               </Space>
-            </Flex>
+            </Col>
           )}
-        </Flex>
+        </Row>
       )}
       <div className={css.listingPanel}>
         {queryInProgress && <Loader messageId={loadingMessageId} />}
@@ -147,21 +123,6 @@ export const ListingTabs = ({
       </div>
     </div>
   );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   return (
     <div className={css.root}>
@@ -175,11 +136,7 @@ export const ListingTabs = ({
           items={tabs.map(tab => ({ ...tab, children: contentRenderer }))}
         />
         {enablePagination && (
-          <Pagination
-            pageName={pageName}
-            pageSearchParams={{ page }}
-            pagination={pagination}
-          />
+          <Pagination pageName={pageName} pageSearchParams={{ page }} pagination={pagination} />
         )}
       </div>
     </div>

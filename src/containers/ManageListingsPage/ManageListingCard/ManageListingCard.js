@@ -414,33 +414,6 @@ export const ManageListingCardComponent = props => {
     ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
     : [];
 
-
-
-
-
-
-
-
-
-
-  // console.warn('\n\n\n*******************************');
-  // console.warn('\n[ManageListingCardComponent] - listing:', listing);
-  // console.warn('\n*******************************\n\n\n');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   return (
     <div className={classes}>
       <div
@@ -560,21 +533,8 @@ export const ManageListingCardComponent = props => {
 
       <div className={css.info}>
         <div className={css.mainInfo}>
-
-
-
-
-
-
           {/* <div className={css.titleWrapper}>{description}</div> */}
           <div className={css.titleWrapper}>{listingType}</div>
-
-
-
-
-
-
-
         </div>
 
         <div className={css.manageLinks}>

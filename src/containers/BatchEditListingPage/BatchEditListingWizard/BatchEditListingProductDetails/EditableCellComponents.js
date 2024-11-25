@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { Form, Input, InputNumber, Select, Switch } from 'antd';
 import css from './EditListingBatchProductDetails.module.css';
-import { MAX_KEYWORDS } from '../../BatchEditListingPage.duck';
+import { MAX_KEYWORDS } from '../../constants';
 
 const { TextArea } = Input;
 
@@ -19,10 +19,20 @@ const EditableCell = props => {
     cellClassName,
     onBeforeSave = null,
     placeholder = '',
+    rowIndex,
+    maxSelection,
     ...restProps
   } = props;
   const form = useContext(EditableContext);
   const value = record ? record[dataIndex] : '';
+  const isMounted = useRef(true);
+
+  // Cleanup to avoid state updates on unmounted components
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   const save = async () => {
     try {
@@ -32,7 +42,9 @@ const EditableCell = props => {
         form.setFieldsValue(values);
       }
 
-      handleSave({ ...record, ...values });
+      if (isMounted.current) {
+        handleSave({ ...record, ...values });
+      }
     } catch (errInfo) {
       console.log('Save failed:', errInfo);
     }
@@ -45,15 +57,31 @@ const EditableCell = props => {
           <Form.Item
             initialValue={value}
             name={dataIndex}
+            id={`${dataIndex}-${record.id}`}
             className={css.formItem}
             rules={[{ required: editControlType !== 'switch', message: `${title} is required.` }]}
           >
             {
               {
-                text: <Input onPressEnter={save} onBlur={save} placeholder={placeholder} />,
-                textarea: <TextArea autoSize onBlur={save} placeholder={placeholder}></TextArea>,
+                text: (
+                  <Input
+                    id={`${dataIndex}-${rowIndex}`}
+                    onPressEnter={save}
+                    onBlur={save}
+                    placeholder={placeholder}
+                  />
+                ),
+                textarea: (
+                  <TextArea
+                    id={`${dataIndex}-${rowIndex}`}
+                    autoSize
+                    onBlur={save}
+                    placeholder={placeholder}
+                  ></TextArea>
+                ),
                 selectMultiple: (
                   <Select
+                    id={`${dataIndex}-${rowIndex}`}
                     style={{ width: '100%' }}
                     mode="multiple"
                     options={options}
@@ -61,10 +89,12 @@ const EditableCell = props => {
                     onChange={save}
                     onDeselect={save}
                     placeholder={placeholder}
+                    maxCount={maxSelection}
                   />
                 ),
                 select: (
                   <Select
+                    id={`${dataIndex}-${rowIndex}`}
                     style={{ width: '100%' }}
                     options={options}
                     onSelect={save}
@@ -75,6 +105,7 @@ const EditableCell = props => {
                 ),
                 tags: (
                   <Select
+                    id={`${dataIndex}-${rowIndex}`}
                     mode="tags"
                     style={{ width: '100%' }}
                     onSelect={save}
@@ -86,6 +117,7 @@ const EditableCell = props => {
                 ),
                 switch: (
                   <Switch
+                    id={`${dataIndex}-${rowIndex}`}
                     checkedChildren="Yes"
                     unCheckedChildren="No"
                     onChange={save}
@@ -94,6 +126,7 @@ const EditableCell = props => {
                 ),
                 money: (
                   <InputNumber
+                    id={`${dataIndex}-${rowIndex}`}
                     addonBefore="$"
                     onPressEnter={save}
                     onBlur={save}
@@ -106,7 +139,7 @@ const EditableCell = props => {
           </Form.Item>
         </div>
       ) : (
-        <div className={css.displayCell}>{children}</div>
+        <div>{children}</div>
       )}
     </td>
   );

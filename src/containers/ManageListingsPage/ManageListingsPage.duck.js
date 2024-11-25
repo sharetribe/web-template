@@ -243,38 +243,16 @@ export const queryOwnListings = queryParams => (dispatch, getState, sdk) => {
   dispatch(queryListingsRequest(queryParams));
 
   const { perPage, ...rest } = queryParams;
-  const params = { ...rest, perPage, 'pub_listingType': 'product-listing' };
+  const params = { ...rest, perPage, pub_listingType: 'product-listing' };
   const validListingType = !!queryParams.pub_listingType;
   const validCategoryType = !!queryParams.pub_categoryLevel1;
   const validRequestParams = validListingType || validCategoryType;
-
-
-
-
-  console.warn('\n\n\n*******************************');
-  console.warn('\n[queryOwnListings] - params:', params);
-  console.warn('\n[queryOwnListings] - validRequestParams:', validRequestParams);
-  console.warn('\n*******************************\n\n\n');
-
-
-
-
 
   if (!validRequestParams) return;
 
   return sdk.ownListings
     .query(params)
     .then(response => {
-
-
-
-    console.warn('\n\n\n-------------------------------');
-    console.warn('\n[queryOwnListings] - response:', response);
-    console.warn('\n-------------------------------\n\n\n');
-
-
-
-
       dispatch(addOwnEntities(response));
       dispatch(queryListingsSuccess(response));
       return response;

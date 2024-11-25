@@ -1,64 +1,63 @@
 import { fetchCurrentUser } from '../../ducks/user.duck';
-import { getFileMetadata } from '../../util/file-metadata';
+import { readFileMetadataAsync } from '../../util/file-metadata';
 import _ from 'lodash';
 import { createUppyInstance } from '../../util/uppy';
-import { convertUnitToSubUnit, unitDivisor } from '../../util/currency';
+import { convertUnitToSubUnit, truncateToSubUnitPrecision, unitDivisor } from '../../util/currency';
 import { LISTING_TYPES } from '../../util/types';
+import { parse } from '../../util/urlHelpers';
+import { queryListingsError } from '../ManageListingsPage/ManageListingsPage.duck';
+import { storableError } from '../../util/errors';
+import { types as sdkTypes } from '../../util/sdkLoader';
+import {
+  AI_TERMS_STATUS_ACCEPTED,
+  AI_TERMS_STATUS_NOT_REQUIRED,
+  AI_TERMS_STATUS_REQUIRED,
+  MAX_KEYWORDS,
+  NO_RELEASES,
+  PAGE_MODE_NEW,
+  RESULT_PAGE_SIZE,
+  USAGE_EDITORIAL,
+} from './constants';
+import { getDimensions } from './imageHelpers';
 
-const SMALL_IMAGE = 'small';
-const MEDIUM_IMAGE = 'medium';
-const LARGE_IMAGE = 'large';
-const UNAVAILABLE_IMAGE_RESOLUTION = 'unavailable';
-const USAGE_EDITORIAL = 'editorial';
-const NO_RELEASES = 'no-release';
-
-const AI_TERMS_STATUS_ACCEPTED = 'accepted';
-const AI_TERMS_STATUS_REQUIRED = 'required';
-const AI_TERMS_STATUS_NOT_REQUIRED = 'not-required';
-
-export const MAX_KEYWORDS = 30;
-
-export const IMAGE_DIMENSIONS_MAP = {
-  [SMALL_IMAGE]: {
-    value: 'small-image',
-    maxDimension: 1000,
-    label: 'Small (< 1,000px)',
-  },
-  [MEDIUM_IMAGE]: {
-    value: 'medium-image',
-    maxDimension: 2000,
-    label: 'Medium (1,000px-2,000px)',
-  },
-  [LARGE_IMAGE]: {
-    value: 'large-image',
-    maxDimension: 2001,
-    label: 'Large (>2,000px)',
-  },
-  [UNAVAILABLE_IMAGE_RESOLUTION]: {
-    value: 'unavailable',
-    label: 'Unavailable',
-  },
-};
-
-function getDimensions(width, height) {
-  if (!width && !height) {
-    return UNAVAILABLE_IMAGE_RESOLUTION;
-  }
-  const largestDimension = Math.max(width, height);
-  if (largestDimension <= IMAGE_DIMENSIONS_MAP.small.maxDimension) {
-    return SMALL_IMAGE;
-  }
-  if (largestDimension <= IMAGE_DIMENSIONS_MAP.medium.maxDimension) {
-    return MEDIUM_IMAGE;
-  }
-  return LARGE_IMAGE;
-}
+const { UUID } = sdkTypes;
 
 function getListingFieldOptions(config, listingFieldKey) {
   const { listing } = config;
   const { listingFields } = listing;
   const { enumOptions } = listingFields.find(f => f.key === listingFieldKey);
   return enumOptions.map(({ label, option }) => ({ value: option, label }));
+}
+
+function listingsFromSdkResponse(sdkResponse) {
+  const { data, included } = sdkResponse;
+  return data.map(ownListing => {
+    const images = ownListing.relationships.images;
+    const image =
+      images.data.length > 0 ? included.find(img => img.id.uuid === images.data[0].id.uuid) : null;
+    const preview = image?.attributes?.variants?.default?.url;
+
+    const keywords = ownListing.attributes.publicData.keywords;
+    const keywordsArray = Array.isArray(keywords) ? keywords : keywords.split(',');
+
+    const categories = ownListing.attributes.publicData.imageryCategory;
+    const categoriesArray = Array.isArray(categories) ? categories : categories.split(',');
+
+    return {
+      id: ownListing.id.uuid,
+      name: ownListing.attributes.publicData.originalFileName,
+      title: ownListing.attributes.title,
+      description: ownListing.attributes.description,
+      keywords: keywordsArray,
+      category: categoriesArray,
+      usage: ownListing.attributes.publicData.usage,
+      releases: ownListing.attributes.publicData.releases,
+      dimensions: ownListing.attributes.publicData.imageSize,
+      price: ownListing.attributes.price.amount / 100,
+      isAi: ownListing.attributes.publicData.aiTerms === 'yes',
+      preview,
+    };
+  });
 }
 
 function uppyFileToListing(file) {
@@ -94,18 +93,11 @@ function uppyFileToListing(file) {
 
 function validateListingProperties(listing) {
   const requiredProperties = ['category', 'title', 'description', 'price'];
-  const missingProperties = [];
-
-  requiredProperties.forEach(property => {
-    if (
-      !listing[property] ||
-      (Array.isArray(listing[property]) && listing[property].length === 0)
-    ) {
-      missingProperties.push(property);
-    }
-  });
-
-  return missingProperties.length === 0 ? null : { listing, missingProperties };
+  const missingProperties = requiredProperties.filter(
+    property =>
+      !listing[property] || (Array.isArray(listing[property]) && !listing[property].length)
+  );
+  return missingProperties.length ? { listing, missingProperties } : null;
 }
 
 function getListingCategory(listing) {
@@ -133,16 +125,21 @@ export const SET_AI_TERMS_ACCEPTED = 'app/BatchEditListingPage/SET_AI_TERMS_ACCE
 export const SET_AI_TERMS_REQUIRED = 'app/BatchEditListingPage/SET_AI_TERMS_REQUIRED';
 export const SET_AI_TERMS_NOT_REQUIRED = 'app/BatchEditListingPage/SET_AI_TERMS_NOT_REQUIRED';
 
-export const CREATE_LISTINGS_REQUEST = 'app/BatchEditListingPage/CREATE_LISTINGS_REQUEST';
-export const CREATE_LISTINGS_ERROR = 'app/BatchEditListingPage/CREATE_LISTINGS_REQUEST';
-export const CREATE_LISTINGS_ABORTED = 'app/BatchEditListingPage/CREATE_LISTINGS_ABORTED';
-export const CREATE_LISTINGS_SUCCESS = 'app/BatchEditListingPage/CREATE_LISTINGS_SUCCESS';
+export const SAVE_LISTINGS_REQUEST = 'app/BatchEditListingPage/SAVE_LISTINGS_REQUEST';
+export const SAVE_LISTINGS_ERROR = 'app/BatchEditListingPage/SAVE_LISTINGS_ERROR';
+export const SAVE_LISTINGS_ABORTED = 'app/BatchEditListingPage/SAVE_LISTINGS_ABORTED';
+export const SAVE_LISTINGS_SUCCESS = 'app/BatchEditListingPage/SAVE_LISTINGS_SUCCESS';
 
 export const SET_SELECTED_ROWS = 'app/BatchEditListingPage/SET_SELECTED_ROWS';
 export const ADD_FAILED_LISTING = 'app/BatchEditListingPage/ADD_FAILED_LISTING';
 export const ADD_SUCCESSFUL_LISTING = 'app/BatchEditListingPage/ADD_SUCCESSFUL_LISTING';
 
 export const RESET_STATE = 'app/BatchEditListingPage/RESET_STATE';
+
+export const FETCH_LISTINGS_FOR_EDIT_REQUEST =
+  'app/BatchEditListingPage/FETCH_LISTINGS_FOR_EDIT_REQUEST';
+export const FETCH_LISTINGS_FOR_EDIT_REQUEST_SUCCESS =
+  'app/BatchEditListingPage/FETCH_LISTINGS_FOR_EDIT_REQUEST_SUCCESS';
 
 // ================ Reducer ================ //
 const initialState = {
@@ -151,17 +148,19 @@ const initialState = {
   listingFieldsOptions: {
     categories: [],
     usages: [],
-    releases: [],
   },
   invalidListings: [],
   selectedRowsKeys: [],
   aiTermsStatus: AI_TERMS_STATUS_NOT_REQUIRED,
-  createListingsInProgress: false,
-  createListingsError: null,
+  saveListingsInProgress: false,
   createListingsSuccess: null,
   userId: null,
   failedListings: [],
   successfulListings: [],
+  listingCategory: null,
+  queryParams: [],
+  queryInProgress: false,
+  queryListingsError: null,
   listingDefaults: {
     currency: 'USD',
     transactionType: {
@@ -189,9 +188,13 @@ export default function reducer(state = initialState, action = {}) {
         selectedRowsKeys: _.uniq([...state.selectedRowsKeys, payload.id]),
       };
     case REMOVE_FILE:
-      return { ...state, listings: state.listings.filter(file => file.id !== payload.id) };
+      return {
+        ...state,
+        listings: state.listings.filter(file => file.id !== payload.id),
+        selectedRowsKeys: state.selectedRowsKeys.filter(key => key !== payload.id),
+      };
     case RESET_FILES:
-      return { ...state, listings: [] };
+      return { ...state, listings: [], selectedRowsKeys: [] };
     case PREVIEW_GENERATED: {
       const { id, preview } = payload;
       return {
@@ -237,28 +240,29 @@ export default function reducer(state = initialState, action = {}) {
     case SET_SELECTED_ROWS:
       return { ...state, selectedRowsKeys: payload };
 
-    case CREATE_LISTINGS_REQUEST:
-      return { ...state, createListingsInProgress: true, createListingsError: null };
-    case CREATE_LISTINGS_ERROR:
+    case SAVE_LISTINGS_REQUEST:
+      return { ...state, saveListingsInProgress: true };
+
+    case SAVE_LISTINGS_ERROR:
       return {
         ...state,
         createListingsSuccess: false,
-        createListingsInProgress: false,
-        createListingsError: payload,
+        saveListingsInProgress: false,
+        selectedRowsKeys: [],
       };
-    case CREATE_LISTINGS_ABORTED:
+    case SAVE_LISTINGS_ABORTED:
       return {
         ...state,
         createListingsSuccess: null,
-        createListingsInProgress: false,
+        saveListingsInProgress: false,
         invalidListings: [],
       };
-    case CREATE_LISTINGS_SUCCESS:
+    case SAVE_LISTINGS_SUCCESS:
       return {
         ...state,
         createListingsSuccess: true,
-        createListingsInProgress: false,
-        createListingsError: null,
+        saveListingsInProgress: false,
+        selectedRowsKeys: [],
       };
     case ADD_FAILED_LISTING:
       return { ...state, failedListings: [...state.failedListings, payload] };
@@ -266,6 +270,20 @@ export default function reducer(state = initialState, action = {}) {
       return { ...state, successfulListings: [...state.successfulListings, payload] };
     case RESET_STATE:
       return initialState;
+    case FETCH_LISTINGS_FOR_EDIT_REQUEST:
+      return {
+        ...state,
+        queryParams: payload.queryParams,
+        queryInProgress: true,
+        queryListingsError: null,
+      };
+    case FETCH_LISTINGS_FOR_EDIT_REQUEST_SUCCESS:
+      return {
+        ...state,
+        queryInProgress: false,
+        queryListingsError: null,
+        listings: listingsFromSdkResponse(payload.data),
+      };
     default:
       return state;
   }
@@ -281,90 +299,30 @@ export const getListingFieldsOptions = state => state.BatchEditListingPage.listi
 export const getSelectedRowsKeys = state => state.BatchEditListingPage.selectedRowsKeys;
 
 export const getListingCreationInProgress = state =>
-  state.BatchEditListingPage.createListingsInProgress;
+  state.BatchEditListingPage.saveListingsInProgress;
 export const getAiTermsRequired = state =>
   state.BatchEditListingPage.aiTermsStatus === AI_TERMS_STATUS_REQUIRED;
 export const getAiTermsAccepted = state =>
   state.BatchEditListingPage.aiTermsStatus === AI_TERMS_STATUS_ACCEPTED;
 
 export const getCreateListingsSuccess = state => state.BatchEditListingPage.createListingsSuccess;
-export const getCreateListingsError = state => state.BatchEditListingPage.createListingsError;
 export const getFailedListings = state => state.BatchEditListingPage.failedListings;
-export const getPublishingData = state => {
-  const { failedListings, successfulListings, selectedRowsKeys } = state.BatchEditListingPage;
+export const getSaveListingData = state => {
+  const {
+    failedListings,
+    successfulListings,
+    selectedRowsKeys,
+    saveListingsInProgress,
+  } = state.BatchEditListingPage;
   return {
     failedListings,
     successfulListings,
     selectedRowsKeys,
+    saveListingsInProgress,
   };
 };
 export const getListingsDefaults = state => state.BatchEditListingPage.listingDefaults;
-
-/**
- * Handles the completion of a Transloadit result.
- *
- * @param dispatch
- * @param {function} getState - Function to get the current state.
- * @param {object} sdk - Instance of Sharetribe's SDK.
- * @returns {function} - A function to handle the Transloadit result.
- */
-function handleTransloaditResultComplete(dispatch, getState, sdk) {
-  return async (stepName, result) => {
-    const { localId, ssl_url } = result;
-    const listing = getSingleListing(getState(), localId);
-    const { currency, transactionType } = getListingsDefaults(getState());
-
-    try {
-      const price = convertUnitToSubUnit(listing.price, unitDivisor(currency));
-
-      const listingData = {
-        title: listing.title,
-        description: listing.description,
-        publicData: {
-          listingType: LISTING_TYPES.PRODUCT,
-          categoryLevel1: getListingCategory(listing),
-          imageryCategory: listing.category,
-          usage: listing.usage,
-          releases: listing.releases,
-          keywords: listing.keywords,
-          imageSize: IMAGE_DIMENSIONS_MAP[listing.dimensions].value,
-          fileType: listing.type,
-          aiTerms: listing.isAi ? 'yes' : 'no',
-          originalFileName: listing.name,
-          transactionProcessAlias: transactionType.alias,
-          unitType: transactionType.unitType,
-        },
-        privateData: {
-          transloaditSslUrl: ssl_url,
-        },
-        price: {
-          amount: price,
-          currency: currency,
-        },
-      };
-
-      await sdk.ownListings.create(listingData, {
-        expand: true,
-      });
-
-      dispatch({ type: ADD_SUCCESSFUL_LISTING, payload: listing });
-    } catch (error) {
-      dispatch({ type: ADD_FAILED_LISTING, payload: listing });
-      console.error('Error during image download or upload:', error);
-    } finally {
-      const { successfulListings, failedListings, selectedRowsKeys } = getPublishingData(
-        getState()
-      );
-      const totalListingsProcessed = successfulListings.length + failedListings.length;
-
-      if (totalListingsProcessed === selectedRowsKeys.length) {
-        const actionType =
-          failedListings.length > 0 ? CREATE_LISTINGS_ERROR : CREATE_LISTINGS_SUCCESS;
-        dispatch({ type: actionType });
-      }
-    }
-  };
-}
+export const getIsQueryInProgress = state => state.BatchEditListingPage.queryInProgress;
 
 function updateAiTermsStatus(getState, dispatch) {
   if (getAiTermsAccepted(getState())) {
@@ -407,9 +365,13 @@ export function initializeUppy(meta) {
         const { id } = file;
         const uppy = getUppyInstance(getState());
 
-        getFileMetadata(file, metadata => {
-          // set the metadata using Uppy interface and then retrieve it again with the updated info
+        readFileMetadataAsync(file).then(metadata => {
           uppy.setFileMeta(id, metadata);
+          if (metadata.thumbnail) {
+            uppy.setFileState(id, {
+              preview: metadata.thumbnail,
+            });
+          }
 
           const newFile = uppy.getFile(id);
           const listing = uppyFileToListing(newFile);
@@ -430,35 +392,101 @@ export function initializeUppy(meta) {
         }
       });
 
-      uppyInstance.on(
-        'transloadit:result',
-        handleTransloaditResultComplete(dispatch, getState, sdk)
-      );
+      uppyInstance.on('transloadit:result', (_, result) => {
+        const { localId, ssl_url } = result;
+        dispatch({ type: UPDATE_LISTING, payload: { id: localId, previewUrl: ssl_url } });
+      });
+
+      uppyInstance.on('complete', async result => {
+        const listingsDefaults = getListingsDefaults(getState());
+
+        if (result.failed?.length) {
+          result.failed.forEach(failed => {
+            const failedListing = getSingleListing(getState(), failed.id);
+            dispatch({ type: ADD_FAILED_LISTING, payload: failedListing });
+          });
+        }
+
+        for (let successfulUpload of result.successful) {
+          const { uploadURL } = successfulUpload;
+          const listing = getSingleListing(getState(), successfulUpload.id);
+          try {
+            const { currency, transactionType } = listingsDefaults;
+            const truncatedPrice = truncateToSubUnitPrecision(listing.price, unitDivisor(currency));
+            const price = convertUnitToSubUnit(truncatedPrice, unitDivisor(currency));
+
+            const listingData = {
+              title: listing.title,
+              description: listing.description,
+              publicData: {
+                listingType: LISTING_TYPES.PRODUCT,
+                categoryLevel1: getListingCategory(listing),
+                imageryCategory: listing.category,
+                usage: listing.usage,
+                releases: listing.releases,
+                keywords: listing.keywords,
+                imageSize: listing.dimensions,
+                fileType: listing.type,
+                aiTerms: listing.isAi ? 'yes' : 'no',
+                originalFileName: listing.name,
+                transactionProcessAlias: transactionType.alias,
+                unitType: transactionType.unitType,
+              },
+              privateData: {
+                previewAssetUrl: listing.previewUrl,
+                originalAssetUrl: uploadURL,
+              },
+              price: {
+                amount: price,
+                currency: currency,
+              },
+            };
+
+            await sdk.ownListings.create(listingData, {
+              expand: true,
+            });
+            dispatch({ type: ADD_SUCCESSFUL_LISTING, payload: listing });
+          } catch (error) {
+            dispatch({ type: ADD_FAILED_LISTING, payload: listing });
+            console.error('Error during image upload:', error);
+          }
+        }
+
+        const { successfulListings, failedListings, selectedRowsKeys } = getSaveListingData(
+          getState()
+        );
+
+        const totalListingsProcessed = successfulListings.length + failedListings.length;
+        if (totalListingsProcessed === selectedRowsKeys.length) {
+          dispatch({
+            type: failedListings.length > 0 ? SAVE_LISTINGS_ERROR : SAVE_LISTINGS_SUCCESS,
+          });
+        }
+      });
+
       uppyInstance.on('error', error => {
-        console.log(error);
         if (error.assembly) {
-          console.log(`Assembly ID ${error.assembly.assembly_id} failed!`);
-          console.log(error.assembly);
+          console.error(`Assembly ID ${error.assembly.assembly_id} failed!`);
         }
       });
     });
   };
 }
 
-export const requestUpdateListing = payload => (dispatch, getState, sdk) => {
+export const requestUpdateListing = payload => dispatch => {
   dispatch({ type: UPDATE_LISTING, payload });
 };
 
-export function requestSaveBatchListings() {
+export function requestSaveBatchListings(pageMode = PAGE_MODE_NEW) {
   return (dispatch, getState, sdk) => {
-    dispatch({ type: CREATE_LISTINGS_REQUEST });
+    dispatch({ type: SAVE_LISTINGS_REQUEST });
 
-    const selectedFilesIds = getSelectedRowsKeys(getState());
+    const selectedListingsIds = getSelectedRowsKeys(getState());
     const listings = getListings(getState()).filter(listing =>
-      selectedFilesIds.includes(listing.id)
+      selectedListingsIds.includes(listing.id)
     );
 
-    // 1. Validate required fields for all listings
+    // Validate required fields for all listings
     const invalidListings = listings
       .map(validateListingProperties)
       .filter(result => result !== null);
@@ -469,7 +497,7 @@ export function requestSaveBatchListings() {
       return; // Abort saving if there are invalid listings
     }
 
-    // 2. Check if any AI content is listed and if terms are accepted
+    // Check if any AI content is listed and if terms are accepted
     const aiListings = listings.filter(listing => listing.isAi);
     const aiTermsAccepted = getAiTermsAccepted(getState());
     if (aiListings.length > 0 && !aiTermsAccepted) {
@@ -479,26 +507,85 @@ export function requestSaveBatchListings() {
       return; // Abort saving until terms are accepted
     }
 
-    // 3. Proceed with saving the listings if all validations pass
-    const uppy = getUppyInstance(getState());
+    if (pageMode === PAGE_MODE_NEW) {
+      // Proceed with saving the listings if all validations pass
+      const uppy = getUppyInstance(getState());
+      uppy.upload();
+    } else {
+      const listingsDefaults = getListingsDefaults(getState());
+      const { currency } = listingsDefaults;
 
-    uppy
-      .upload()
-      .then(result => {
-        const failedListings = getFailedListings(getState());
-        if (failedListings.length > 0) {
-          dispatch({ type: CREATE_LISTINGS_ERROR });
-        } else {
-          //dispatch({ type: CREATE_LISTINGS_SUCCESS });
-        }
-
-        console.info('Successful uploads:', result.successful);
-      })
-      .catch(error => {
-        console.error(error);
+      const listingPromises = listings.map(listing => {
+        return new Promise((resolve, reject) => {
+          const truncatedPrice = truncateToSubUnitPrecision(listing.price, unitDivisor(currency));
+          const price = convertUnitToSubUnit(truncatedPrice, unitDivisor(currency));
+          const id = new UUID(listing.id);
+          sdk.ownListings
+            .update(
+              {
+                id,
+                title: listing.title,
+                description: listing.description,
+                publicData: {
+                  imageryCategory: listing.category,
+                  usage: listing.usage,
+                  releases: listing.releases,
+                  keywords: listing.keywords,
+                  imageSize: listing.dimensions,
+                  aiTerms: listing.isAi ? 'yes' : 'no',
+                },
+                price: {
+                  amount: price,
+                  currency: currency,
+                },
+              },
+              {
+                expand: true,
+              }
+            )
+            .then(() => {
+              dispatch({ type: ADD_SUCCESSFUL_LISTING, payload: listing });
+              resolve();
+            })
+            .catch(ex => {
+              console.error('Failed saving listing', ex);
+              dispatch({ type: ADD_FAILED_LISTING, payload: listing });
+              reject();
+            });
+        });
       });
+
+      Promise.all(listingPromises)
+        .then(() => dispatch({ type: SAVE_LISTINGS_SUCCESS }))
+        .catch(() => dispatch({ type: SAVE_LISTINGS_ERROR }));
+    }
   };
 }
+
+export const queryOwnListings = queryParams => (dispatch, getState, sdk) => {
+  dispatch({
+    type: FETCH_LISTINGS_FOR_EDIT_REQUEST,
+    payload: { queryParams },
+  });
+
+  const { perPage, ...rest } = queryParams;
+  const params = { ...rest, perPage };
+
+  return sdk.ownListings
+    .query(params)
+    .then(response => {
+      dispatch({
+        type: FETCH_LISTINGS_FOR_EDIT_REQUEST_SUCCESS,
+        payload: response,
+      });
+
+      return response;
+    })
+    .catch(e => {
+      dispatch(queryListingsError(storableError(e)));
+      throw e;
+    });
+};
 
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   const { transactionType } = config.listing.listingTypes.find(
@@ -512,16 +599,38 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
     },
   });
 
+  const { mode } = params;
+  if (mode !== PAGE_MODE_NEW) {
+    const pageQueryParams = parse(search);
+    const page = pageQueryParams.page || 1;
+    const queryParams = new URLSearchParams();
+    if (pageQueryParams.category) {
+      queryParams.set('pub_categoryLevel1', pageQueryParams.category);
+    }
+    if (pageQueryParams.type) {
+      queryParams.set('pub_listingType', pageQueryParams.type);
+    }
+
+    dispatch(
+      queryOwnListings({
+        ...queryParams,
+        page,
+        perPage: RESULT_PAGE_SIZE,
+        include: ['images'],
+        'fields.image': ['variants.default'],
+        'limit.images': 1,
+      })
+    );
+  }
+
   const imageryCategoryOptions = getListingFieldOptions(config, 'imageryCategory');
   const usageOptions = getListingFieldOptions(config, 'usage');
-  const releaseOptions = getListingFieldOptions(config, 'releases');
 
   dispatch({
     type: FETCH_LISTING_OPTIONS,
     payload: {
       categories: imageryCategoryOptions,
       usages: usageOptions,
-      releases: releaseOptions,
     },
   });
 

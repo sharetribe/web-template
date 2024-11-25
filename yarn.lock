@@ -13669,6 +13669,11 @@ vfile@^4.0.0:
     unist-util-stringify-position "^2.0.0"
     vfile-message "^2.0.0"
 
+video-metadata-thumbnails@^1.0.22:
+  version "1.0.22"
+  resolved "https://registry.yarnpkg.com/video-metadata-thumbnails/-/video-metadata-thumbnails-1.0.22.tgz#3971365ccb4e3a3ccf16d6783b4dcf70141d0267"
+  integrity sha512-4ezjm5wpHV8jun/g9rOq6LWZZ/D8pMTuDBbO6UtJX0lARy26o6fs0r7LIaKheFK2T0BencGyLp+pWdoiYaqwyw==
+
 w3c-hr-time@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/w3c-hr-time/-/w3c-hr-time-1.0.2.tgz#0a89cdf5cc15822df9c360543676963e0cc308cd"
