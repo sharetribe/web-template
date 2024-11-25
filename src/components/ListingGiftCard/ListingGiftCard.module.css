@@ -14,10 +14,11 @@
 .aspectRatioWrapper {
   transition: var(--transitionStyleButton);
   background: var(--colorGrey100); 
-  border-radius: var(--borderRadiusMedium);
+  border-radius: 60px;
   width: 500px; 
-  height: 250px; 
+  height: 350px; 
   overflow: hidden; 
+  object-fit: contain;
   margin: 20px 0; 
 
   @media (--viewportMedium) {
@@ -144,8 +145,9 @@
 .image {
   width: 100%; 
   height: auto; 
-  border-radius: var(--borderRadiusMedium); 
+  border-radius: 60px; 
   margin-bottom: 8px; 
+  object-fit: contain;
 }
 
 .title {
