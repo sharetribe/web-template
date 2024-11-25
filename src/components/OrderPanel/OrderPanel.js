@@ -421,7 +421,6 @@ const OrderPanel = props => {
             onClick={() => {
 
               if (!isOwnListing) {
-                console.log('ss', author);
                 setInquiryModalOpen(true);
               }
               else {

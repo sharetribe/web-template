@@ -489,7 +489,6 @@ export function compareAndSetStock(listingId, oldTotal, newTotal) {
     return sdk.stock
       .compareAndSet({ listingId, oldTotal, newTotal }, { expand: true })
       .then(response => {
-        console.log(response);
         // NOTE: compareAndSet returns the stock resource of the listing.
         // We update client app's internal state with these updated API entities.
         dispatch(addMarketplaceEntities(response));
@@ -576,27 +575,6 @@ export const listingPageOffer = (config, id) => async dispatch => {
     dispatch(fetchListingPageError(err));
   }
 };
-
-// export const showTransactions = currentUser => (dispatch, getState, sdk) => {
-//   const show = sdk.transactions.query({
-//     userId: currentUser.id.uuid,
-//     lastTransitions: ['transition/confirm-payment'],
-//   });
-
-//   return show
-//     .then(data => {
-//       console.log(data);
-//       const returnData = data.data;
-//       dispatch(fetchTransactionItems(returnData));
-//       // const listingFields = config?.listing?.listingFields;
-//       // const sanitizeConfig = { listingFields };
-//       // dispatch(addMarketplaceEntities(data, sanitizeConfig));
-//       return data;
-//     })
-//     .catch(e => {
-//       dispatch(showListingError(storableError(e)));
-//     });
-// };
 
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   const listingId = new UUID(params.id);

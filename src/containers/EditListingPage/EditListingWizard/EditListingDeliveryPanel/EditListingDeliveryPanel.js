@@ -57,7 +57,6 @@ const getInitialValues = props => {
     shippingPriceInSubunitsAdditionalItems != null
       ? new Money(shippingPriceInSubunitsAdditionalItems, currency)
       : null;
-  console.log(publicData);
 
   // Initial values for the form
   return {
@@ -100,7 +99,7 @@ const EditListingDeliveryPanel = props => {
   const priceCurrencyValid = listing?.attributes?.price?.currency === marketplaceCurrency;
   const listingType = listing?.attributes?.publicData?.listingType;
   const listingTypeConfig = listingTypes.find(conf => conf.listingType === listingType);
-  console.log(listingTypeConfig);
+
   const hasStockInUse = listingTypeConfig.stockType === STOCK_MULTIPLE_ITEMS;
 
   return (
