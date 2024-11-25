@@ -91,7 +91,7 @@ function CodeChecker() {
   return (
     <div className={css.container}>
       <h1 className={css.heading}>Gift card</h1>
-      <h4 className={css.heading1}>IN PRIMO PIANO</h4>
+      <h4 className={css.heading2}>IN PRIMO PIANO</h4>
       <div className={css.listings}>
         {loading && <p>Loading listings...</p>}
         {queryListingsError && <p>Error fetching listings: {queryListingsError.message}</p>}
