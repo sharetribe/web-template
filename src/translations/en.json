@@ -523,6 +523,7 @@
   "ListingPage.reviewsTitle": "Reviews ({count})",
   "ListingPage.schemaTitle": "{title} | {marketplaceName}",
   "ListingPage.viewImagesButton": "View photos ({count})",
+  "ListingTabs.addButton": "Add New Photo(s)",
   "LoadableComponentErrorBoundaryPage.description": "It looks like the app needs to be updated! Please refresh the page or go back to {link}.",
   "LoadableComponentErrorBoundaryPage.heading": "Oops, we couldn't fetch the page.",
   "LoadableComponentErrorBoundaryPage.landingPageLink": "landing page",

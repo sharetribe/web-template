@@ -89,13 +89,13 @@ export const FavoriteListingsPageComponent = props => {
           queryInProgress={queryInProgress}
           queryListingsError={queryFavoritesError}
           queryParams={queryParams}
-          onTabChange={onTabChange}
-          role={LISTING_GRID_ROLE.FAVORITE}
           titleMessageId="FavoriteListingsPage.title"
           noResultsMessageId="FavoriteListingsPage.noResults"
           loadingMessageId="FavoriteListingsPage.loadingFavoriteListings"
           errorMessageId="FavoriteListingsPage.queryError"
+          onTabChange={onTabChange}
           listingRenderer={listingRenderer}
+          role={LISTING_GRID_ROLE.FAVORITE}
         />
       </LayoutSingleColumn>
     </Page>

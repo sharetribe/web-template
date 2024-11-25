@@ -179,7 +179,7 @@ export const ManageListingsPageComponent = props => {
           queryListingsError={queryListingsError}
           queryParams={queryParams}
           onTabChange={onTabChange}
-          categories={links}
+          links={links}
           role={LISTING_GRID_ROLE.MANAGE}
           titleMessageId="ManageListingsPage.title"
           noResultsMessageId="ManageListingsPage.noResults"

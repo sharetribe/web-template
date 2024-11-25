@@ -92,15 +92,6 @@
   }
 }
 
-.filters {
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
-
-.categories {
-  padding-right: 12px;
-}
-
 .actionButton {
   font-size: 14px;
   width: 200px;

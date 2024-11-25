@@ -25,7 +25,7 @@ export const ListingTabs = ({
   loadingMessageId,
   errorMessageId,
   onTabChange,
-  categories,
+  links,
   listingRenderer,
   role = LISTING_GRID_ROLE.MANAGE,
 }) => {
@@ -35,11 +35,11 @@ export const ListingTabs = ({
   const hasPaginationInfo = !!pagination && pagination.totalItems != null;
   const listingsAreLoaded = !queryInProgress && hasPaginationInfo;
   const defaultListingType = LISTING_GRID_DEFAULTS.TYPE;
-  const defaultCategoryType = LISTING_GRID_DEFAULTS.CATEGORY(categories);
+  const defaultCategoryType = LISTING_GRID_DEFAULTS.CATEGORY(links);
   const currentListingType = queryParams.pub_listingType || defaultListingType;
   const currentCategoryType = queryParams.pub_categoryLevel1 || defaultCategoryType;
   const hasNoResults = listingsAreLoaded && pagination.totalItems === 0;
-  const withLinks = !!(categories && categories.length);
+  const withLinks = !!(links && links.length);
   const enableGrid = listingsAreLoaded && !queryListingsError;
   const enablePagination = listingsAreLoaded && pagination && pagination.totalPages > 1;
   const page = queryParams ? queryParams.page : 1;
@@ -85,9 +85,7 @@ export const ListingTabs = ({
       {enableCategoryTabs && (
         <Row gutter={[16, 16]} align="middle" justify="space-between">
           <Col xs={24} sm={16}>
-            {withLinks && (
-              <ScrollableLinks links={categories} selectedLinkId={currentCategoryType} />
-            )}
+            {withLinks && <ScrollableLinks links={links} selectedLinkId={currentCategoryType} />}
           </Col>
           {enableListingManagement && (
             <Col xs={24} sm={8} style={{ textAlign: 'right' }}>
@@ -109,7 +107,7 @@ export const ListingTabs = ({
                   className={css.actionButton}
                   onClick={() => goToManageListing()}
                 >
-                  Add New Photo(s)
+                  <FormattedMessage id="ListingTabs.addButton" />
                 </AntButton>
               </Space>
             </Col>
@@ -148,6 +146,8 @@ ListingTabs.defaultProps = {
   pagination: null,
   queryListingsError: null,
   queryParams: null,
+  titleMessageId: 'ManageListingsPage.title',
+  noResultsMessageId: 'ManageListingsPage.noResults',
   loadingMessageId: 'ManageListingsPage.loadingOwnListings',
   errorMessageId: 'ManageListingsPage.queryError',
 };
@@ -158,6 +158,8 @@ ListingTabs.propTypes = {
   queryInProgress: bool.isRequired,
   queryListingsError: propTypes.error,
   queryParams: object,
+  titleMessageId: string,
+  noResultsMessageId: string,
   loadingMessageId: string,
   errorMessageId: string,
   onTabChange: func,
