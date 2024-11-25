@@ -484,8 +484,6 @@ export function compareAndSetStock(listingId, oldTotal, newTotal) {
   return (dispatch, getState, sdk) => {
     dispatch(setStockRequest());
 
-    console.log(newTotal);
-
     return sdk.stock
       .compareAndSet({ listingId, oldTotal, newTotal }, { expand: true })
       .then(response => {
