@@ -91,6 +91,7 @@
     "transloadit": "^3.0.2",
     "unified": "^9.2.2",
     "url": "^0.11.0",
+    "video-metadata-thumbnails": "^1.0.22",
     "workbox-precaching": "^7.3.0",
     "workbox-webpack-plugin": "^7.3.0"
   },

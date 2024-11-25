@@ -1,6 +1,6 @@
 import React from 'react';
 import { compose } from 'redux';
-import { withRouter } from 'react-router-dom';
+import { useParams, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { injectIntl } from '../../util/reactIntl';
 import {
@@ -12,14 +12,17 @@ import { NamedRedirect, Page } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import css from './BatchEditListingPage.module.css';
-import { requestSaveBatchListings } from './BatchEditListingPage.duck';
+import { PAGE_MODE_NEW } from './constants';
 import BatchEditListingWizard from './BatchEditListingWizard/BatchEditListingWizard';
+import { ProductsListingEditMode } from './ProductListingsEditMode/ProductsListingEditMode';
 
 export const BatchEditListingPageComponent = props => {
-  const { currentUser, history, intl, params, page, onSaveBatchListing } = props;
+  const { currentUser, history, intl, params, page } = props;
   const hasPostingRights = hasPermissionToPostListings(currentUser);
   const shouldRedirectNoPostingRights = !!currentUser?.id && !hasPostingRights;
   const { listingFieldsOptions } = page;
+  const { mode } = useParams();
+  const isNew = mode === PAGE_MODE_NEW;
 
   if (!isUserAuthorized(currentUser)) {
     return (
@@ -47,16 +50,18 @@ export const BatchEditListingPageComponent = props => {
         desktopClassName={css.desktopTopbar}
         mobileClassName={css.mobileTopbar}
       />
-
-      <BatchEditListingWizard
-        id="EditListingWizard"
-        className={css.wizard}
-        params={params}
-        history={history}
-        currentUser={currentUser}
-        listingFieldsOptions={listingFieldsOptions}
-        onSaveBatchListing={onSaveBatchListing}
-      />
+      {isNew ? (
+        <BatchEditListingWizard
+          id="EditListingWizard"
+          className={css.wizard}
+          params={params}
+          history={history}
+          currentUser={currentUser}
+          listingFieldsOptions={listingFieldsOptions}
+        />
+      ) : (
+        <ProductsListingEditMode></ProductsListingEditMode>
+      )}
     </Page>
   );
 };
@@ -70,12 +75,6 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => ({
-  onSaveBatchListing: () => {
-    dispatch(requestSaveBatchListings());
-  },
-});
-
 // Note: it is important that the withRouter HOC is **outside** the
 // connect HOC, otherwise React Router won't rerender any Route
 // components since connect implements a shouldComponentUpdate
@@ -84,7 +83,7 @@ const mapDispatchToProps = dispatch => ({
 // See: https://github.com/ReactTraining/react-router/issues/4671
 const BatchEditListingPage = compose(
   withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps),
   injectIntl
 )(BatchEditListingPageComponent);
 

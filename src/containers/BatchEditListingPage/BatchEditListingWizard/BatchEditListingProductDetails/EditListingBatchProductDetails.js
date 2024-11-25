@@ -4,16 +4,16 @@ import { Button, H3 } from '../../../../components';
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { Checkbox, Flex, List, Modal, Progress, Space, Typography } from 'antd';
 import {
-  CREATE_LISTINGS_ABORTED,
   getAiTermsRequired,
   getInvalidListings,
   getListingCreationInProgress,
   getListingFieldsOptions,
   getListings,
-  getPublishingData,
+  getSaveListingData,
   getSelectedRowsKeys,
   requestSaveBatchListings,
   requestUpdateListing,
+  SAVE_LISTINGS_ABORTED,
   SET_AI_TERMS_ACCEPTED,
   SET_SELECTED_ROWS,
 } from '../../BatchEditListingPage.duck';
@@ -25,6 +25,8 @@ import {
   FileExclamationOutlined,
   WarningOutlined,
 } from '@ant-design/icons';
+import { useParams } from 'react-router-dom';
+import { PAGE_MODE_NEW } from '../../constants';
 
 const { Text, Paragraph } = Typography;
 
@@ -68,7 +70,8 @@ function AiTermsModalContent({ onTermsCheckboxChange }) {
   );
 }
 
-export const EditListingBatchProductDetails = () => {
+export const EditListingBatchProductDetails = props => {
+  const { cssRoot = css.root, loading = false, editMode = false } = props;
   const dispatch = useDispatch();
 
   const listings = useSelector(getListings);
@@ -77,13 +80,15 @@ export const EditListingBatchProductDetails = () => {
   const invalidListings = useSelector(getInvalidListings);
   const aiTermsRequired = useSelector(getAiTermsRequired);
   const selectedRowKeys = useSelector(getSelectedRowsKeys);
-  const { failedListings, successfulListings, selectedRowsKeys } = useSelector(getPublishingData);
+  const { failedListings, successfulListings, selectedRowsKeys } = useSelector(getSaveListingData);
 
   const [dataSource, setDataSource] = useState(listings);
   const [termsAcceptedCheckbox, setTermsAcceptedCheckbox] = useState(false); // Use state to track checkbox value
   const [showValidationModal, setShowValidationModal] = useState(false);
   const [showAiTermsModal, setShowAiTermsModal] = useState(false);
   const [showProgressModal, setShowProgressModal] = useState(false);
+
+  const { mode } = useParams();
 
   const onTermsCheckboxChange = e => {
     setTermsAcceptedCheckbox(e.target.checked);
@@ -94,7 +99,7 @@ export const EditListingBatchProductDetails = () => {
   };
 
   const onSubmit = () => {
-    dispatch(requestSaveBatchListings());
+    dispatch(requestSaveBatchListings(mode));
   };
 
   const handleUpdateListing = updatedData => {
@@ -103,21 +108,21 @@ export const EditListingBatchProductDetails = () => {
 
   const handleCancelValidationModal = () => {
     setShowValidationModal(false);
-    dispatch({ type: CREATE_LISTINGS_ABORTED });
+    dispatch({ type: SAVE_LISTINGS_ABORTED });
   };
 
   const handleCancelAiTermsModal = () => {
     setShowAiTermsModal(false);
-    dispatch({ type: CREATE_LISTINGS_ABORTED });
+    dispatch({ type: SAVE_LISTINGS_ABORTED });
   };
 
   const handleOkAiTermsModal = () => {
     if (termsAcceptedCheckbox) {
       dispatch({ type: SET_AI_TERMS_ACCEPTED });
-      dispatch({ type: CREATE_LISTINGS_ABORTED });
+      dispatch({ type: SAVE_LISTINGS_ABORTED });
       onSubmit();
     } else {
-      dispatch({ type: CREATE_LISTINGS_ABORTED });
+      dispatch({ type: SAVE_LISTINGS_ABORTED });
     }
 
     setShowAiTermsModal(false);
@@ -138,7 +143,9 @@ export const EditListingBatchProductDetails = () => {
       return;
     }
 
-    setShowProgressModal(listingsCreationInProgress);
+    if (mode === PAGE_MODE_NEW) {
+      setShowProgressModal(listingsCreationInProgress);
+    }
   }, [
     invalidListings,
     aiTermsRequired,
@@ -150,8 +157,12 @@ export const EditListingBatchProductDetails = () => {
 
   useStickyHeader(css);
 
+  const buttonTitleId = editMode
+    ? 'BatchEditListingProductDetails.progressModal.submitButtonTextEditMode'
+    : 'BatchEditListingProductDetails.progressModal.submitButtonText';
+
   return (
-    <div className={css.root}>
+    <div className={cssRoot}>
       <Flex className={css.stickyHeader}>
         <Flex vertical>
           <H3 as="h1">
@@ -174,7 +185,7 @@ export const EditListingBatchProductDetails = () => {
             onClick={onSubmit}
             disabled={selectedRowKeys.length === 0 || listingsCreationInProgress}
           >
-            <FormattedMessage id="BatchEditListingProductDetails.progressModal.submitButtonText"></FormattedMessage>
+            <FormattedMessage id={buttonTitleId}></FormattedMessage>
           </Button>
         </Flex>
       </Flex>
@@ -186,6 +197,7 @@ export const EditListingBatchProductDetails = () => {
           listingFieldsOptions={listingFieldsOptions}
           onSelectChange={onSelectChange}
           selectedRowKeys={selectedRowKeys}
+          loading={loading || showProgressModal}
         ></EditableListingsTable>
       </div>
 

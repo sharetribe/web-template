@@ -19,6 +19,7 @@
   flex-shrink: 0;
   text-wrap: nowrap;
   padding: 12px;
+  min-width: 200px;
 
   @media (--viewportLarge) {
     display: inline-block;
@@ -40,7 +41,7 @@
   position: sticky;
   top: 0;
   background-color: var(--colorWhite);
-  z-index: 100;
+  z-index: calc(var(--zIndexTopbar) - 1);
   justify-content: space-between;
 }
 
@@ -52,6 +53,7 @@
   transition: opacity 0.3s ease, max-height 0.3s ease;
   opacity: 1;
   overflow: hidden;
+  padding-right: 24px;
 }
 
 .subTitle.hidden {
@@ -62,16 +64,14 @@
 .buttonWrapper {
   justify-content: center;
   align-self: center;
-  padding: 0 24px;
 }
 
 .stickyHeader.scrolled .submitButton {
   transform: scale(0.8); /* Shrink button */
+  transform-origin: right; /* Ensures scaling happens from the right edge */
+  margin-left: auto; /* Keeps alignment to the right */
 }
 
-.displayCell {
-  margin-bottom: 24px;
-}
 
 .formItem input:focus,
 .formItem textarea:focus,

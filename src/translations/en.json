@@ -46,6 +46,7 @@
   "BatchEditListingProductDetails.aiContentModal.optIn": "I have read and accept The Luupe's terms for listing AI-generated content.",
   "BatchEditListingProductDetails.aiContentModal.title": "You are listing files marked as AI-generated content.",
   "BatchEditListingProductDetails.progressModal.submitButtonText": "Submit for Review",
+  "BatchEditListingProductDetails.progressModal.submitButtonTextEditMode": "Save",
   "BatchEditListingProductDetails.progressModal.title": "Upload is in Progress",
   "BatchEditListingProductDetails.subtitle": "Please note: if any images feature identifiable people or places, you must have releases or be able to obtain them. If you don’t indicate that you do, your photo(s) will not be approved.",
   "BatchEditListingProductDetails.title": "Manage your market",

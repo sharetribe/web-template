@@ -1,28 +1,32 @@
 import imagePlaceholder from '../../../../assets/image-placeholder.jpg';
 import { Image, Table } from 'antd';
-import { IMAGE_DIMENSIONS_MAP } from '../../BatchEditListingPage.duck';
+import { MAX_CATEGORIES } from '../../constants';
 import css from './EditListingBatchProductDetails.module.css';
 import React from 'react';
 import { EditableCellComponents } from './EditableCellComponents';
 import { useIntl } from 'react-intl';
+import { getImageDimensionLabel } from '../../imageHelpers';
 
 const stringSorter = (strA, strB) => {
   return strA.name.localeCompare(strB.name, 'en', { sensitivity: 'base' });
 };
 
 const numberSorter = (a, b) => {
-  return a.size - b.size;
+  return a - b;
 };
 
 export const EditableListingsTable = props => {
-  const { onSave, dataSource, listingFieldsOptions, onSelectChange, selectedRowKeys } = props;
+  const {
+    onSave,
+    dataSource,
+    listingFieldsOptions,
+    onSelectChange,
+    selectedRowKeys,
+    loading = false,
+  } = props;
   const intl = useIntl();
 
-  const {
-    categories: imageryCategoryOptions,
-    usages: usageOptions,
-    releases: releaseOptions,
-  } = listingFieldsOptions;
+  const { categories: imageryCategoryOptions, usages: usageOptions } = listingFieldsOptions;
 
   const handleSave = updatedData => {
     onSave(updatedData);
@@ -118,9 +122,10 @@ export const EditableListingsTable = props => {
       editable: true,
       editControlType: 'selectMultiple',
       options: imageryCategoryOptions,
+      maxSelection: MAX_CATEGORIES,
       placeholder: intl.formatMessage({
         id: 'EditableListingsTable.categoryPlaceholder',
-        defaultMessage: 'Select a category',
+        defaultMessage: 'Up to 5 categories',
       }),
     },
     {
@@ -169,20 +174,8 @@ export const EditableListingsTable = props => {
       }),
       dataIndex: 'dimensions',
       width: 200,
-      render: dimensionsKey => {
-        return IMAGE_DIMENSIONS_MAP[dimensionsKey].label;
-      },
+      render: getImageDimensionLabel,
       sorter: stringSorter,
-    },
-    {
-      title: intl.formatMessage({
-        id: 'EditableListingsTable.size',
-        defaultMessage: 'Size',
-      }),
-      dataIndex: 'size',
-      width: 200,
-      render: size => `${(size / 1024).toFixed(2)} KB`,
-      sorter: numberSorter,
     },
     {
       title: intl.formatMessage({
@@ -206,7 +199,7 @@ export const EditableListingsTable = props => {
 
     return {
       ...col,
-      onCell: record => ({
+      onCell: (record, rowIndex) => ({
         record,
         editable: col.editable,
         dataIndex: col.dataIndex,
@@ -217,6 +210,8 @@ export const EditableListingsTable = props => {
         cellClassName: css.editableCellValueWrap,
         onBeforeSave: col.onBeforeSave,
         placeholder: col.placeholder,
+        rowIndex: rowIndex,
+        maxSelection: col.maxSelection,
       }),
     };
   });
@@ -237,6 +232,7 @@ export const EditableListingsTable = props => {
         onChange: onSelectChange,
       }}
       sticky={{ offsetHeader: 80 }}
+      loading={loading}
     ></Table>
   );
 };
