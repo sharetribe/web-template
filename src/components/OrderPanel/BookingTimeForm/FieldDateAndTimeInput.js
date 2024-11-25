@@ -262,6 +262,51 @@ const getAllTimeValues = (
       : index;
   };
 
+    /**
+   * Finds the smallest number of seats in time slots that meet the specified conditions.
+   */
+    const findMinimumAvailableSeats = (
+      selectedEndTimeAsDateObject,
+      timeSlots,
+      selectedTimeSlotIndex
+    ) => {
+      // Retrieve the selected time slot from the list.
+      const selectedTimeSlot = timeSlots[selectedTimeSlotIndex];
+      if (!selectedTimeSlot) {
+        return null; // Return null if the selected time slot is invalid.
+      }
+
+  
+      // Check if the selected end time falls within the selected time slot.
+      const endTimeIsWithinSelected = isInRange(
+        selectedEndTimeAsDateObject - 1,
+        selectedTimeSlot.attributes.start,
+        selectedTimeSlot.attributes.end,
+      );
+
+      if (endTimeIsWithinSelected) {
+        return selectedTimeSlot.attributes.seats; // Return the seats for the selected time slot if end time and start time are within the same timeslot.
+      }
+
+  
+      const lastIndex = findLastAdjacent(selectedTimeSlotIndex);
+  
+      // Extract the relevant time slots to check (we choose all slots between the first )
+      const relevantTimeSlots = timeSlots.slice(selectedTimeSlotIndex, lastIndex + 1);
+  
+      // Find the smallest number of seats in the relevant time slots.
+      const minSeats = relevantTimeSlots.reduce((smallest, timeslot) => {
+        const seats = timeslot.attributes.seats;
+  
+        // Update the smallest seats found so far.
+        const newSmallest = Math.min(smallest, seats);
+  
+        return newSmallest;
+      }, 100); // Max seats value is 100
+  
+      return minSeats;
+    };
+
   const combineTimeSlots = (currentTimeSlotIndex, timeSlots, seatsEnabled) => {
     if (!timeSlots) {
       return null;
@@ -273,12 +318,17 @@ const getAllTimeValues = (
     const lastIndex = findLastAdjacent(currentTimeSlotIndex);
     const firstIndex = findFirstAdjacent(currentTimeSlotIndex);
 
+    const smallestSeats = seatsEnabled
+    ? findMinimumAvailableSeats(selectedEndTimeAsDateObject, timeSlots, currentTimeSlotIndex)
+    : 1;
+
     const combinedTimeSlot = {
       ...timeSlots[currentTimeSlotIndex],
       attributes: {
         ...timeSlots[currentTimeSlotIndex].attributes,
         start: timeSlots[firstIndex].attributes.start,
         end: timeSlots[lastIndex].attributes.end,
+        seats: smallestSeats,
       },
     };
 
@@ -289,51 +339,9 @@ const getAllTimeValues = (
 
   const endTimes = getAvailableEndTimes(intl, timeZone, startTime, endDate, combinedTimeSlot);
 
-  /**
-   * Finds the smallest number of seats in time slots that meet the specified conditions.
-   */
-  const findMinimumAvailableSeats = (
-    selectedEndTimeAsDateObject,
-    timeSlots,
-    selectedTimeSlotIndex
-  ) => {
-    // Retrieve the selected time slot from the list.
-    const selectedTimeSlot = timeSlots[selectedTimeSlotIndex];
-    if (!selectedTimeSlot) {
-      return null; // Return null if the selected time slot is invalid.
-    }
 
-    // Check if the selected end time falls within the selected time slot.
-    const endTimeIsWithinSelected = isInRange(
-      selectedEndTimeAsDateObject,
-      selectedTimeSlot.attributes.start,
-      selectedTimeSlot.attributes.end
-    );
-    if (endTimeIsWithinSelected) {
-      return selectedTimeSlot.attributes.seats; // Return the seats for the selected time slot if end time and start time are within the same timeslot.
-    }
 
-    const lastIndex = findLastAdjacent(selectedTimeSlotIndex);
 
-    // Extract the relevant time slots to check (we choose all slots between the first )
-    const relevantTimeSlots = timeSlots.slice(selectedTimeSlotIndex, lastIndex + 1);
-
-    // Find the smallest number of seats in the relevant time slots.
-    const minSeats = relevantTimeSlots.reduce((smallest, timeslot) => {
-      const seats = timeslot.attributes.seats;
-
-      // Update the smallest seats found so far.
-      const newSmallest = Math.min(smallest, seats);
-
-      return newSmallest;
-    }, 100); // Max seats value is 100
-
-    return minSeats;
-  };
-
-  const smallestSeats = seatsEnabled
-    ? findMinimumAvailableSeats(selectedEndTimeAsDateObject, timeSlots, selectedTimeSlotIndex)
-    : 1;
 
   // We need to convert the timestamp we use as a default value
   // for endTime to string for consistency. This is expected later when we
@@ -345,7 +353,7 @@ const getAllTimeValues = (
 
   const finalTimeSlots = seatsEnabled ? combinedTimeSlot : selectedTimeSlot;
 
-  return { startTime, endDate, endTime, selectedTimeSlot: finalTimeSlots, smallestSeats };
+  return { startTime, endDate, endTime, selectedTimeSlot: finalTimeSlots };
 };
 
 /**
@@ -640,7 +648,7 @@ const FieldDateAndTimeInput = props => {
       ? availableStartTimes[0].timestamp
       : null;
 
-  const { startTime, endDate, selectedTimeSlot, smallestSeats } = getAllTimeValues(
+  const { startTime, endDate, selectedTimeSlot } = getAllTimeValues(
     intl,
     timeZone,
     timeSlotsOnSelectedDate,
@@ -651,7 +659,7 @@ const FieldDateAndTimeInput = props => {
     seatsEnabled
   );
 
-  const seatsOptions = smallestSeats ? Array.from({ length: smallestSeats }, (_, i) => i + 1) : [];
+  const seatsOptions = selectedTimeSlot?.attributes?.seats ? Array.from({ length: selectedTimeSlot.attributes.seats }, (_, i) => i + 1) : [];
 
   useEffect(() => {
     // Call onMonthChanged function if it has been passed in among props.
@@ -691,7 +699,7 @@ const FieldDateAndTimeInput = props => {
 
   useEffect(() => {
     setSeatsOptions(seatsOptions);
-  }, [smallestSeats]);
+  }, [selectedTimeSlot?.attributes?.seats]);
 
   const availableEndTimes = getAvailableEndTimes(
     intl,
