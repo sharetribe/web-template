@@ -42,9 +42,9 @@ const getInitialValues = (
     building,
     location: locationFieldsPresent
       ? {
-          search: address,
-          selectedPlace: { address, origin: geolocation },
-        }
+        search: address,
+        selectedPlace: { address, origin: geolocation },
+      }
       : null,
     ...nestedCategories,
     // Transaction type info: listingType, transactionProcessAlias, unitType
@@ -150,12 +150,12 @@ const EditListingLocationPanel = props => {
           );
 
           const setLocation = { address, building };
-
+          
           // New values for listing attributes
           const updateValues = {
             geolocation: origin,
             publicData: {
-              location: setLocation,
+              location: publicListingFields.project_type !== 'online' ? setLocation : null,
               ...cleanedNestedCategories,
               ...publicListingFields,
             },

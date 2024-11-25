@@ -15,6 +15,7 @@ import SendMessageForm from '../SendMessageForm/SendMessageForm';
 import { stateDataShape } from '../TransactionPage.stateData';
 
 // These are internal components that make this file more readable.
+import TaskCompletedSVG from '../../../assets/clipboard-tick.svg';
 import ActionButtonsMaybe from './ActionButtonsMaybe';
 import BookingLocationMaybe from './BookingLocationMaybe';
 import BreakdownMaybe from './BreakdownMaybe';
@@ -361,7 +362,7 @@ export class TransactionPanelComponent extends Component {
                   processName={stateData.processName}
                 />
 
-                {processState === "reviewed" ? <div className={css.taskCompleted}><FormattedMessage id={`TransactionPanel.${processName}.${processState}.status`} /></div> : null}
+                {processState === "reviewed" ? <div className={css.taskCompleted}><img src={TaskCompletedSVG} /><FormattedMessage id={`TransactionPanel.${processName}.${processState}.status`} /></div> : null}
 
                 {stateData.showActionButtons ? (
                   <div className={css.desktopActionButtons}>{actionButtons}</div>

@@ -434,3 +434,21 @@ export class ConditionalResolver {
     return this.resolver ? this.resolver() : this.defaultResolver ? this.defaultResolver() : null;
   }
 }
+
+export const getCustomProcess = processName => {
+  const latestProcessName = resolveLatestProcessName(processName);
+  const processInfo = INBOX_PROCESSES.find(process => process.name === latestProcessName);
+  if (processInfo) {
+    return {
+      ...processInfo.process,
+      getState: getProcessState(processInfo.process),
+      getStateAfterTransition: getStateAfterTransition(processInfo.process),
+      getTransitionsToStates: getTransitionsToStates(processInfo.process),
+      hasPassedState: hasPassedState(processInfo.process),
+    };
+  } else {
+    const error = new Error(`Unknown transaction process name: ${processName}`);
+    log.error(error, 'unknown-transaction-process', { processName });
+    throw error;
+  }
+};

@@ -922,10 +922,32 @@
   color: grey !important;
 }
 
-.sectionOfferListingContent{
+.sectionOfferListingContent {
   margin: 24px;
 
   @media (--viewportMedium) {
     margin: 0px;
   }
+}
+
+.reviewStars {
+  display: block;
+  margin-top: 4px;
+
+  @media (--viewportMedium) {
+    margin: 5px 0;
+  }
+}
+
+.reviewStar {
+  width: 12px;
+  height: 12px;
+  margin-right: 2px;
+  font-styles: initial;
+}
+
+.showFlex{
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }

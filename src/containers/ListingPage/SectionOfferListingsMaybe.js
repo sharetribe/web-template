@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Form as FinalForm } from 'react-final-form';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
-import { AvatarSmall, Form, H4 } from '../../components';
+import { AvatarSmall, Form, H4, ReviewRating } from '../../components';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { formatMoney } from '../../util/currency';
 import { ensureUser } from '../../util/data';
@@ -12,7 +12,6 @@ import { types as sdkTypes } from '../../util/sdkLoader';
 import { MIN_LENGTH_FOR_LONG_WORDS } from '../ProfilePage/ProfilePage';
 import css from './ListingPage.module.css';
 import { handleCustomSubmit } from './ListingPage.shared';
-import _ from 'lodash';
 const { Money } = sdkTypes;
 
 const maxLength = 100;
@@ -45,10 +44,13 @@ const SectionOfferListingsMaybe = props => {
       {isOwnListing && listings
         ? listings.map(listing => {
           const [isExpanded, setIsExpanded] = useState(false);
-          const { attributes, author, id } = listing || {};
+          const { attributes, author, id, review } = listing || {};
           const { description, price, title } = attributes || {};
+          const { attributes: reviewAttributes } = review || {};
 
+          const { rating } = reviewAttributes || {};
           const ensuredAuthor = ensureUser(author);
+          const { displayName } = ensuredAuthor?.attributes?.profile || {};
           const convertPrice = new Money(price.amount, price.currency);
           const formattedPrice = formatMoney(intl, convertPrice);
 
@@ -111,7 +113,17 @@ const SectionOfferListingsMaybe = props => {
                   >
                     <div key={listing.id.uuid} className={css.offerListingContent}>
                       <div className={css.offerListingAvatarContent}>
-                        <AvatarSmall user={ensuredAuthor} />
+                        <div className={css.showFlex}>
+                          <AvatarSmall user={ensuredAuthor} />
+                          <div>
+                            {displayName}
+                            {rating ? <ReviewRating
+                              reviewStarClassName={css.reviewStar}
+                              className={css.reviewStars}
+                              rating={rating}
+                            /> : null}
+                          </div>
+                        </div>
                         <div className={css.offerListingAcceptOfferContent}>
                           <div
                             className={

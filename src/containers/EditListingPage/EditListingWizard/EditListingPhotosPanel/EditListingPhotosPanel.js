@@ -121,7 +121,7 @@ const EditListingPhotosPanel = props => {
           if(images && Array.isArray(images) && images.length>0){
             updateValues.images = images;
           }
-          console.log(updateValues);
+
           onSubmit(updateValues);
         }}
         onRemoveImage={onRemoveImage}

@@ -37,19 +37,53 @@ module.exports = async (req, res) => {
     });
 
     if (response.status === 200) {
-      console.log(response.data.data);
-      // await sdk.reviews.query({
-      //   subjectId: new UUID("c6ff7190-bdf7-47a0-8a2b-e3136e74334f'")
-      // }).then(res => {
-      //   // res.data contains the response data
-      // });
-      res
-        .status(200)
-        .set('Content-Type', 'application/json')
-        .json({
-          data: response,
-        })
-        .end();
+
+      const { data, included, meta } = response?.data || {};
+      let newData = {
+        status: response.status,
+        statusText: response.statusText,
+      }
+      if (data && Array.isArray(data) && data.length > 0) {
+        let newArray = [];
+        for (var i = 0; i < data.length; i++) {
+          const authorId = data[i].relationships.author.data.id.uuid;
+          const listingId = data[i].id.uuid;
+          await sdk.reviews.query({
+            // subjectId: authorId,
+            listingId: listingId
+          }).then(async res => {
+            // res.data contains the response data
+            let newObject = data[i];
+            if (res) {
+              if (res?.data?.data && data.length > 0) {
+                newObject.review = res.data.data[0];
+              }
+            }
+            newArray.push(newObject);
+          });
+        }
+
+        newData.data = {
+          data: newArray,
+          included: included, meta: meta
+        }
+
+        res
+          .status(200)
+          .set('Content-Type', 'application/json')
+          .json({
+            data: newData,
+          })
+          .end();
+      } else {
+        res
+          .status(200)
+          .set('Content-Type', 'application/json')
+          .json({
+            data: response,
+          })
+          .end();
+      }
     }
   } catch (e) {
     handleError(res, e);
