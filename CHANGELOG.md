@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] Add currently available translations for DE, ES, FR.
+  [#508](https://github.com/sharetribe/web-template/pull/508)
 - [add] Add support for currencies not supported by Stripe in inquiry processes.
   [#493](https://github.com/sharetribe/web-template/pull/493)
 - SingeDatePicker: don't update value to dateData if it has the same timestamp has not changed.
