@@ -531,11 +531,11 @@
 }
 
 .sectionText {
-  padding: 0 24px;
+  padding: 24px;
   margin-bottom: 36px;
 
   @media (--viewportMedium) {
-    padding: 0;
+    padding: 24px 0px;
     margin-bottom: 40px;
   }
 }
@@ -579,6 +579,8 @@
 .ingress {
   composes: p from global;
   margin: 0;
+  font-size: 32px;
+  font-weight: bold;
 
   /* Preserve newlines, but collapse other whitespace */
   white-space: pre-line;
@@ -773,4 +775,179 @@
   right: 0;
   width: 100%;
   height: 100%;
+}
+
+.author {
+  composes: p from global;
+  margin: 0px 24px 32px 24px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  @media (--viewportMedium) {
+    width: 100%;
+    margin: 12px 0 36px 0;
+    color: var(--colorGrey700);
+  }
+}
+
+.providerAvatar {
+  display: flex;
+  margin-right: 10px;
+  /* display: none;
+
+  @media (--viewportLarge) {
+    display: flex;
+    margin-right: 10px;
+  } */
+}
+
+.providerNamePlain {
+  display: inline;
+
+  @media (--viewportLarge) {
+    display: none;
+  }
+}
+
+.providerNameLinked {
+  display: none;
+
+  @media (--viewportLarge) {
+    display: inline;
+  }
+}
+
+.offerListingContent {
+  margin: 20px 0px;
+}
+
+.offerListingAvatarContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.offerListingAcceptOfferButton {
+  color: #1f57c3 !important;
+  cursor: pointer;
+}
+
+.offerListingAcceptOfferContent {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.offerListingPrice {
+  font-weight: 700;
+  font-size: 28px;
+}
+
+.offerListingDescriptionContent {
+  border: 1px solid #d6d6d6;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 15.4px;
+}
+
+.projectTypeContent {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin: 20px;
+
+  @media (--viewportMedium) {
+    margin: 20px 0px;
+  }
+}
+
+.projectTypeTopic {
+  font-size: 12px;
+  font-family: sans-serif;
+  color: #4b4b4f;
+}
+
+.projectTypeTitle {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.marginContent {
+  margin: 24px;
+
+  @media (--viewportMedium) {
+    margin: 24px 0px;
+  }
+}
+
+.bio {
+  /* Preserve newlines, but collapse other whitespace */
+  white-space: pre-line;
+  margin: 5px 0 24px 0;
+
+  @media (--viewportMedium) {
+    margin: 4px 0 51px 0;
+  }
+  @media (--viewportLarge) {
+    margin: 0 0 56px 0;
+    max-width: 600px;
+  }
+}
+
+.expandButton {
+  color: #1f57c3 !important;
+  cursor: pointer;
+}
+
+.offerListingBio {
+  /* Preserve newlines, but collapse other whitespace */
+  white-space: pre-line;
+  margin: 6px 0 6px 0;
+
+  /* @media (--viewportMedium) {
+    margin: 4px 0 51px 0;
+  }
+  @media (--viewportLarge) {
+    margin: 0 0 56px 0;
+    max-width: 600px;
+  } */
+}
+
+.disableOfferListingAcceptOfferButton {
+  color: grey !important;
+}
+
+.sectionOfferListingContent {
+  margin: 24px;
+
+  @media (--viewportMedium) {
+    margin: 0px;
+  }
+}
+
+.reviewStars {
+  display: block;
+  margin-top: 4px;
+
+  @media (--viewportMedium) {
+    margin: 5px 0;
+  }
+}
+
+.reviewStar {
+  width: 12px;
+  height: 12px;
+  margin-right: 2px;
+  font-styles: initial;
+}
+
+.showFlex{
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }

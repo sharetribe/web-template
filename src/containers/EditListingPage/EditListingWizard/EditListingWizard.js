@@ -1,11 +1,15 @@
-import React, { Component, useEffect } from 'react';
-import { array, arrayOf, bool, func, number, object, oneOf, shape, string } from 'prop-types';
 import classNames from 'classnames';
+import { array, arrayOf, bool, func, number, object, oneOf, shape, string } from 'prop-types';
+import React, { Component, useEffect } from 'react';
 
 // Import configs and util modules
 import { useConfiguration } from '../../../context/configurationContext';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
-import { FormattedMessage, intlShape, useIntl } from '../../../util/reactIntl';
+import {
+  INQUIRY_PROCESS_NAME,
+  isBookingProcess,
+  isPurchaseProcess,
+} from '../../../transactions/transaction';
 import {
   displayDeliveryPickup,
   displayDeliveryShipping,
@@ -13,54 +17,50 @@ import {
   displayPrice,
   requirePayoutDetails,
 } from '../../../util/configHelpers';
-import {
-  LISTING_PAGE_PARAM_TYPE_DRAFT,
-  LISTING_PAGE_PARAM_TYPE_NEW,
-  LISTING_PAGE_PARAM_TYPES,
-} from '../../../util/urlHelpers';
-import { createResourceLocatorString } from '../../../util/routes';
-import { withViewport } from '../../../util/uiHelpers';
-import {
-  SCHEMA_TYPE_ENUM,
-  SCHEMA_TYPE_MULTI_ENUM,
-  SCHEMA_TYPE_TEXT,
-  SCHEMA_TYPE_LONG,
-  SCHEMA_TYPE_BOOLEAN,
-  propTypes,
-} from '../../../util/types';
+import { ensureCurrentUser, ensureListing } from '../../../util/data';
 import {
   isFieldForCategory,
   isFieldForListingType,
   pickCategoryFields,
 } from '../../../util/fieldHelpers';
-import { ensureCurrentUser, ensureListing } from '../../../util/data';
+import { FormattedMessage, intlShape, useIntl } from '../../../util/reactIntl';
+import { createResourceLocatorString } from '../../../util/routes';
 import {
-  INQUIRY_PROCESS_NAME,
-  isBookingProcess,
-  isPurchaseProcess,
-} from '../../../transactions/transaction';
+  propTypes,
+  SCHEMA_TYPE_BOOLEAN,
+  SCHEMA_TYPE_ENUM,
+  SCHEMA_TYPE_LONG,
+  SCHEMA_TYPE_MULTI_ENUM,
+  SCHEMA_TYPE_TEXT,
+} from '../../../util/types';
+import { withViewport } from '../../../util/uiHelpers';
+import {
+  LISTING_PAGE_PARAM_TYPE_DRAFT,
+  LISTING_PAGE_PARAM_TYPE_NEW,
+  LISTING_PAGE_PARAM_TYPES,
+} from '../../../util/urlHelpers';
 
 // Import shared components
 import {
   Heading,
   Modal,
   NamedRedirect,
-  Tabs,
-  StripeConnectAccountStatusBox,
   StripeConnectAccountForm,
+  StripeConnectAccountStatusBox,
+  Tabs,
 } from '../../../components';
 
 // Import modules from this directory
+import css from './EditListingWizard.module.css';
 import EditListingWizardTab, {
+  AVAILABILITY,
+  DELIVERY,
   DETAILS,
+  LOCATION,
+  PHOTOS,
   PRICING,
   PRICING_AND_STOCK,
-  DELIVERY,
-  LOCATION,
-  AVAILABILITY,
-  PHOTOS,
 } from './EditListingWizardTab';
-import css from './EditListingWizard.module.css';
 
 // You can reorder these panels.
 // Note 1: You need to change save button translations for new listing flow
@@ -71,7 +71,7 @@ import css from './EditListingWizard.module.css';
 const TABS_DETAILS_ONLY = [DETAILS];
 const TABS_PRODUCT = [DETAILS, PRICING_AND_STOCK, DELIVERY, PHOTOS];
 const TABS_BOOKING = [DETAILS, LOCATION, PRICING, AVAILABILITY, PHOTOS];
-const TABS_INQUIRY = [DETAILS, LOCATION, PRICING, PHOTOS];
+const TABS_INQUIRY = [DETAILS, LOCATION, PHOTOS, PRICING];
 const TABS_ALL = [...TABS_PRODUCT, ...TABS_BOOKING, ...TABS_INQUIRY];
 
 // Tabs are horizontal in small screens
@@ -220,20 +220,23 @@ const tabCompleted = (tab, listing, config) => {
     privateData,
   } = listing.attributes;
   const images = listing.images;
-  const { listingType, transactionProcessAlias, unitType, shippingEnabled, pickupEnabled } =
-    publicData || {};
+  const {
+    listingType,
+    transactionProcessAlias,
+    unitType,
+    shippingEnabled,
+    pickupEnabled,
+    selectedOption,
+    selectedDate,
+  } = publicData || {};
   const deliveryOptionPicked = publicData && (shippingEnabled || pickupEnabled);
 
   switch (tab) {
     case DETAILS:
-      return !!(
-        description &&
-        title &&
-        listingType &&
-        transactionProcessAlias &&
-        unitType &&
-        hasValidListingFieldsInExtendedData(publicData, privateData, config)
-      );
+      return !!// description &&
+      (title && listingType && transactionProcessAlias && unitType && selectedOption);
+    // &&
+    // hasValidListingFieldsInExtendedData(publicData, privateData, config)
     case PRICING:
       return !!price;
     case PRICING_AND_STOCK:
@@ -241,11 +244,13 @@ const tabCompleted = (tab, listing, config) => {
     case DELIVERY:
       return !!deliveryOptionPicked;
     case LOCATION:
-      return !!(geolocation && publicData?.location?.address);
+      // return !!(geolocation && publicData?.location?.address);
+      return !!hasValidListingFieldsInExtendedData(publicData, privateData, config);
     case AVAILABILITY:
       return !!availabilityPlan;
     case PHOTOS:
-      return images && images.length > 0;
+      // return  images && images.length > 0;
+      return !!description;
     default:
       return false;
   }
@@ -351,7 +356,14 @@ class EditListingWizard extends Component {
     this.state = {
       draftId: null,
       showPayoutDetails: false,
-      selectedListingType: null,
+      // selectedListingType: null,
+      /* setup inquiry as default selectedListingType */
+      selectedListingType: {
+        listingType: 'progetto',
+        transactionProcessAlias: 'default-inquiry/release-1',
+        unitType: 'inquiry',
+        label: 'Progetto',
+      },
     };
     this.handleCreateFlowTabScrolling = this.handleCreateFlowTabScrolling.bind(this);
     this.handlePublishListing = this.handlePublishListing.bind(this);

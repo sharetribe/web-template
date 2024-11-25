@@ -258,7 +258,7 @@
 
   @media (--viewportLarge) {
     display: block;
-    margin: 24px 48px 32px 48px;
+    margin: 0px 48px 32px 48px;
   }
 }
 
@@ -588,3 +588,32 @@
     margin-top: 16px;
   }
 }
+
+.rightDisplayAvatar {
+  display: none;
+  gap: 8px;
+  padding: 24px 48px;
+
+  @media (--viewportLarge) {
+    display: flex;
+  }
+}
+
+.taskCompleted {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  gap: 8px;
+}
+
+.panelHeadingAvatar {
+  display: flex;
+  gap: 8px;
+  padding: 12px 24px;
+  align-items: center;
+
+  @media (--viewportLarge) {
+    display: none;
+  }
+}
+

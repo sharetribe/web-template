@@ -1,25 +1,25 @@
-import React, { useState } from 'react';
-import { bool, func, object, shape, string } from 'prop-types';
-import { compose } from 'redux';
-import { ARRAY_ERROR } from 'final-form';
-import { Form as FinalForm, Field } from 'react-final-form';
-import arrayMutators from 'final-form-arrays';
-import { FieldArray } from 'react-final-form-arrays';
-import isEqual from 'lodash/isEqual';
 import classNames from 'classnames';
+import { ARRAY_ERROR } from 'final-form';
+import arrayMutators from 'final-form-arrays';
+import isEqual from 'lodash/isEqual';
+import { bool, func, object, shape, string } from 'prop-types';
+import React, { useState } from 'react';
+import { Field, Form as FinalForm } from 'react-final-form';
+import { FieldArray } from 'react-final-form-arrays';
+import { compose } from 'redux';
 
 // Import configs and util modules
-import { FormattedMessage, intlShape, injectIntl } from '../../../../util/reactIntl';
-import { propTypes } from '../../../../util/types';
-import { nonEmptyArray, composeValidators } from '../../../../util/validators';
 import { isUploadImageOverLimitError } from '../../../../util/errors';
+import { FormattedMessage, injectIntl, intlShape } from '../../../../util/reactIntl';
+import { propTypes } from '../../../../util/types';
+import { composeValidators, nonEmptyArray, required } from '../../../../util/validators';
 
 // Import shared components
-import { Button, Form, AspectRatioWrapper } from '../../../../components';
+import { AspectRatioWrapper, Button, FieldTextInput, Form } from '../../../../components';
 
 // Import modules from this directory
-import ListingImage from './ListingImage';
 import css from './EditListingPhotosForm.module.css';
+import ListingImage from './ListingImage';
 
 const ACCEPT_IMAGES = 'image/*';
 
@@ -152,9 +152,11 @@ export const EditListingPhotosFormComponent = props => {
           errors,
           values,
           listingImageConfig,
+          selectableCategories,
+          formId,
         } = formRenderProps;
 
-        const images = values.images;
+        const { images, listingType } = values;
         const { aspectWidth = 1, aspectHeight = 1, variantPrefix } = listingImageConfig;
 
         const { publishListingError, showListingsError, updateListingError, uploadImageError } =
@@ -175,6 +177,10 @@ export const EditListingPhotosFormComponent = props => {
           invalid || disabled || submitInProgress || state.imageUploadRequested || ready;
         const imagesError = touched.images && errors?.images && errors.images[ARRAY_ERROR];
 
+        const [allCategoriesChosen, setAllCategoriesChosen] = useState(false);
+        const hasCategories = selectableCategories && selectableCategories.length > 0;
+        const showDescription = hasCategories ? allCategoriesChosen : listingType;
+
         const classes = classNames(css.root, className);
 
         return (
@@ -185,6 +191,23 @@ export const EditListingPhotosFormComponent = props => {
               handleSubmit(e);
             }}
           >
+            {showDescription ? (
+              <FieldTextInput
+                id={`${formId}description`}
+                name="description"
+                className={css.description}
+                type="textarea"
+                label={intl.formatMessage({ id: 'EditListingDetailsForm.description' })}
+                placeholder={intl.formatMessage({
+                  id: 'EditListingDetailsForm.descriptionPlaceholder',
+                })}
+                validate={required(
+                  intl.formatMessage({
+                    id: 'EditListingDetailsForm.descriptionRequired',
+                  })
+                )}
+              />
+            ) : null}
             {updateListingError ? (
               <p className={css.error}>
                 <FormattedMessage id="EditListingPhotosForm.updateFailed" />
@@ -194,13 +217,13 @@ export const EditListingPhotosFormComponent = props => {
             <div className={css.imagesFieldArray}>
               <FieldArray
                 name="images"
-                validate={composeValidators(
-                  nonEmptyArray(
-                    intl.formatMessage({
-                      id: 'EditListingPhotosForm.imageRequired',
-                    })
-                  )
-                )}
+                // validate={composeValidators(
+                //   nonEmptyArray(
+                //     intl.formatMessage({
+                //       id: 'EditListingPhotosForm.imageRequired',
+                //     })
+                //   )
+                // )}
               >
                 {({ fields }) =>
                   fields.map((name, index) => (
@@ -273,7 +296,10 @@ export const EditListingPhotosFormComponent = props => {
   );
 };
 
-EditListingPhotosFormComponent.defaultProps = { fetchErrors: null };
+EditListingPhotosFormComponent.defaultProps = {
+  fetchErrors: null,
+  formId: 'EditListingPhotosForm',
+};
 
 EditListingPhotosFormComponent.propTypes = {
   fetchErrors: shape({
@@ -292,6 +318,7 @@ EditListingPhotosFormComponent.propTypes = {
   updateInProgress: bool.isRequired,
   onRemoveImage: func.isRequired,
   listingImageConfig: object.isRequired,
+  formId: string,
 };
 
 export default compose(injectIntl)(EditListingPhotosFormComponent);

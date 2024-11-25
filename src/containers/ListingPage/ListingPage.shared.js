@@ -1,20 +1,24 @@
 import React from 'react';
-import { FormattedMessage } from '../../util/reactIntl';
-import { types as sdkTypes } from '../../util/sdkLoader';
-import { createResourceLocatorString, findRouteByRouteName } from '../../util/routes';
 import { convertMoneyToNumber, formatMoney } from '../../util/currency';
 import { timestampToDate } from '../../util/dates';
-import { hasPermissionToInitiateTransactions, isUserAuthorized } from '../../util/userHelpers';
+import { FormattedMessage } from '../../util/reactIntl';
+import { createResourceLocatorString, findRouteByRouteName } from '../../util/routes';
+import { types as sdkTypes } from '../../util/sdkLoader';
 import {
   NO_ACCESS_PAGE_INITIATE_TRANSACTIONS,
   NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
   createSlug,
 } from '../../util/urlHelpers';
+import { hasPermissionToInitiateTransactions, isUserAuthorized } from '../../util/userHelpers';
 
-import { Page, LayoutSingleColumn } from '../../components';
+import { LayoutSingleColumn, Page } from '../../components';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
+import { getProcess } from '../../transactions/transaction';
+import { getTransactionTypeData } from '../CheckoutPage/CheckoutPageTransactionHelpers';
 import css from './ListingPage.module.css';
+const { types } = require('sharetribe-flex-sdk');
+const { Money } = types;
 
 /**
  * This file contains shared functions from each ListingPage variants.
@@ -179,6 +183,7 @@ export const handleSubmit = parameters => values => {
     onInitializeCardPaymentData,
     routes,
   } = parameters;
+
   const listingId = new UUID(params.id);
   const listing = getListing(listingId);
 
@@ -232,7 +237,6 @@ export const handleSubmit = parameters => values => {
 
   // Clear previous Stripe errors from store if there is any
   onInitializeCardPaymentData();
-
   // Redirect to CheckoutPage
   history.push(
     createResourceLocatorString(
@@ -294,5 +298,153 @@ export const LoadingPage = props => {
         <FormattedMessage id="ListingPage.loadingListingMessage" />
       </p>
     </PlainPage>
+  );
+};
+
+export const handleSubmitCheckoutPageWithInquiry = props => values => {
+  const {
+    history,
+    config,
+    routes,
+    pageData,
+    processName,
+    onInquiryWithoutPayment,
+    onSubmitCallback,
+    onCreateSellerListing,
+  } = props;
+
+  const { message, offerPrice } = values;
+  const { listingType, transactionProcessAlias, unitType, location } =
+    pageData?.listing?.attributes?.publicData || {};
+
+  const process = processName ? getProcess(processName) : null;
+  const transitions = process.transitions;
+  const transition = transitions.INQUIRE_WITHOUT_PAYMENT;
+
+  // These are the inquiry parameters for the (one and only) transition
+  const inquiryParams = {
+    listingId: pageData?.listing?.id,
+    protectedData: {
+      inquiryMessage: message,
+      offerPrice: {
+        currency: offerPrice.currency,
+        amount: offerPrice.amount,
+      },
+      ...getTransactionTypeData(listingType, unitType, config),
+    },
+  };
+
+  // This makes a single transition directly to the API endpoint
+  // (unlike in the payment-related processes, where call is proxied through the server to make privileged transition)
+  onInquiryWithoutPayment(inquiryParams, transactionProcessAlias, transition)
+    .then(async transactionId => {
+      // setSubmitting(false);
+      onSubmitCallback();
+      const { title, geolocation } = pageData?.listing.attributes || {};
+      let createParams = {
+        title: title,
+        description: message,
+        price: new Money(offerPrice.amount, offerPrice.currency),
+        availabilityPlan: {
+          entries: [],
+          timezone: 'Etc/UTC',
+          type: 'availability-plan/time',
+        },
+        publicData: {
+          isOffer: true,
+          transactionProcessAlias: 'default-purchase/release-1',
+          listingType: 'booking',
+          unitType: 'item',
+          linkedListing: pageData?.listing?.id.uuid,
+        },
+      };
+      if (geolocation) createParams.geolocation = geolocation;
+      const queryParams = {
+        expand: true,
+        include: ['author', 'images', 'currentStock'],
+      };
+      await onCreateSellerListing(createParams, queryParams);
+
+      // Navigate to the current path
+      history.push(history.location.pathname);
+      // Force a reload
+      window.location.reload();
+    })
+    .catch(err => {
+      console.error(err);
+      // setSubmitting(false);
+    });
+};
+
+export const handleCustomSubmit = parameters => values => {
+  const {
+    history,
+    params,
+    currentUser,
+    callSetInitialValues,
+    onInitializeCardPaymentData,
+    routes,
+    listing,
+  } = parameters;
+
+  const listingId = new UUID(params.id);
+  const {
+    bookingDates,
+    bookingStartTime,
+    bookingEndTime,
+    bookingStartDate, // not relevant (omit)
+    bookingEndDate, // not relevant (omit)
+    quantity: quantityRaw,
+    deliveryMethod,
+    ...otherOrderData
+  } = values;
+
+  const bookingMaybe = bookingDates
+    ? {
+        bookingDates: {
+          bookingStart: bookingDates.startDate,
+          bookingEnd: bookingDates.endDate,
+        },
+      }
+    : bookingStartTime && bookingEndTime
+    ? {
+        bookingDates: {
+          bookingStart: timestampToDate(bookingStartTime),
+          bookingEnd: timestampToDate(bookingEndTime),
+        },
+      }
+    : {};
+  const quantity = Number.parseInt(quantityRaw, 10);
+  const quantityMaybe = Number.isInteger(quantity) ? { quantity } : {};
+  const deliveryMethodMaybe = deliveryMethod ? { deliveryMethod } : {};
+
+  const initialValues = {
+    listing,
+    orderData: {
+      ...bookingMaybe,
+      ...quantityMaybe,
+      ...deliveryMethodMaybe,
+      ...otherOrderData,
+    },
+    confirmPaymentError: null,
+  };
+  const saveToSessionStorage = !currentUser;
+
+  // Customize checkout page state with current listing and selected orderData
+  const { setInitialValues } = findRouteByRouteName('CheckoutPage', routes);
+
+  callSetInitialValues(setInitialValues, initialValues, saveToSessionStorage);
+
+  // Clear previous Stripe errors from store if there is any
+  onInitializeCardPaymentData();
+
+  // Redirect to CheckoutPage
+  history.push(
+    createResourceLocatorString(
+      'CheckoutPage',
+      routes,
+      { id: listing.id.uuid, slug: createSlug(listing.attributes.title) },
+      {}
+    )
   );
 };

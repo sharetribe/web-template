@@ -1,24 +1,24 @@
-import React from 'react';
 import PropTypes, { arrayOf } from 'prop-types';
+import React from 'react';
 
 // Import configs and util modules
+import { ensureListing } from '../../../util/data';
+import { createResourceLocatorString } from '../../../util/routes';
+import { propTypes } from '../../../util/types';
 import {
   LISTING_PAGE_PARAM_TYPE_DRAFT,
   LISTING_PAGE_PARAM_TYPE_NEW,
   LISTING_PAGE_PARAM_TYPES,
 } from '../../../util/urlHelpers';
-import { ensureListing } from '../../../util/data';
-import { createResourceLocatorString } from '../../../util/routes';
-import { propTypes } from '../../../util/types';
 
 // Import modules from this directory
 import EditListingAvailabilityPanel from './EditListingAvailabilityPanel/EditListingAvailabilityPanel';
-import EditListingDetailsPanel from './EditListingDetailsPanel/EditListingDetailsPanel';
 import EditListingDeliveryPanel from './EditListingDeliveryPanel/EditListingDeliveryPanel';
+import EditListingDetailsPanel from './EditListingDetailsPanel/EditListingDetailsPanel';
 import EditListingLocationPanel from './EditListingLocationPanel/EditListingLocationPanel';
 import EditListingPhotosPanel from './EditListingPhotosPanel/EditListingPhotosPanel';
-import EditListingPricingPanel from './EditListingPricingPanel/EditListingPricingPanel';
 import EditListingPricingAndStockPanel from './EditListingPricingAndStockPanel/EditListingPricingAndStockPanel';
+import EditListingPricingPanel from './EditListingPricingPanel/EditListingPricingPanel';
 
 import css from './EditListingWizardTab.module.css';
 
@@ -212,7 +212,7 @@ const EditListingWizardTab = props => {
       );
     }
     case LOCATION: {
-      return <EditListingLocationPanel {...panelProps(LOCATION)} />;
+      return <EditListingLocationPanel {...panelProps(LOCATION)} config={config} />;
     }
     case AVAILABILITY: {
       return (
@@ -248,6 +248,7 @@ const EditListingWizardTab = props => {
           images={images}
           onImageUpload={onImageUpload}
           onRemoveImage={onRemoveImage}
+          config ={config}
         />
       );
     }

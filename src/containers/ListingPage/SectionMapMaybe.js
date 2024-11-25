@@ -32,9 +32,9 @@ class SectionMapMaybe extends Component {
 
     return (
       <section className={classes} id="listing-location">
-        <Heading as="h2" rootClassName={css.sectionHeadingWithExtraMargin}>
+        {/* <Heading as="h2" rootClassName={css.sectionHeadingWithExtraMargin}>
           <FormattedMessage id="ListingPage.locationTitle" />
-        </Heading>
+        </Heading> */}
         {this.state.isStatic ? (
           <button
             className={css.map}

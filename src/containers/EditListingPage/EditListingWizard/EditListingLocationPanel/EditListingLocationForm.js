@@ -1,27 +1,28 @@
-import React from 'react';
-import { bool, func, shape, string } from 'prop-types';
-import { compose } from 'redux';
-import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
+import { bool, func, shape, string } from 'prop-types';
+import React, { useState } from 'react';
+import { Form as FinalForm } from 'react-final-form';
+import { compose } from 'redux';
 
 // Import configs and util modules
-import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactIntl';
+import { FormattedMessage, injectIntl, intlShape } from '../../../../util/reactIntl';
 import { propTypes } from '../../../../util/types';
 import {
-  autocompleteSearchRequired,
   autocompletePlaceSelected,
+  autocompleteSearchRequired,
   composeValidators,
 } from '../../../../util/validators';
 
 // Import shared components
 import {
-  Form,
-  FieldLocationAutocompleteInput,
   Button,
+  FieldLocationAutocompleteInput,
   FieldTextInput,
+  Form,
 } from '../../../../components';
 
 // Import modules from this directory
+import { AddListingFields } from '../EditListingDetailsPanel/EditListingDetailsForm';
 import css from './EditListingLocationForm.module.css';
 
 const identity = v => v;
@@ -44,9 +45,15 @@ export const EditListingLocationFormComponent = props => (
         updated,
         updateInProgress,
         fetchErrors,
+        pickSelectedCategories,
+        listingFieldsConfig,
+        selectableCategories,
         values,
       } = formRenderProps;
 
+      const [allCategoriesChosen, setAllCategoriesChosen] = useState(false);
+
+      const { listingType, location, pub_project_type } = values;
       const addressRequiredMessage = intl.formatMessage({
         id: 'EditListingLocationForm.addressRequired',
       });
@@ -64,6 +71,9 @@ export const EditListingLocationFormComponent = props => (
       const submitReady = (updated && pristine) || ready;
       const submitInProgress = updateInProgress;
       const submitDisabled = invalid || disabled || submitInProgress;
+      const hasCategories = selectableCategories && selectableCategories.length > 0;
+
+      const showListingFields = hasCategories ? allCategoriesChosen : listingType;
 
       return (
         <Form className={classes} onSubmit={handleSubmit}>
@@ -79,28 +89,40 @@ export const EditListingLocationFormComponent = props => (
             </p>
           ) : null}
 
-          <FieldLocationAutocompleteInput
-            rootClassName={css.locationAddress}
-            inputClassName={css.locationAutocompleteInput}
-            iconClassName={css.locationAutocompleteInputIcon}
-            predictionsClassName={css.predictionsRoot}
-            validClassName={css.validLocation}
-            autoFocus={autoFocus}
-            name="location"
-            label={intl.formatMessage({ id: 'EditListingLocationForm.address' })}
-            placeholder={intl.formatMessage({
-              id: 'EditListingLocationForm.addressPlaceholder',
-            })}
-            useDefaultPredictions={false}
-            format={identity}
-            valueFromForm={values.location}
-            validate={composeValidators(
-              autocompleteSearchRequired(addressRequiredMessage),
-              autocompletePlaceSelected(addressNotRecognizedMessage)
-            )}
-          />
+          {showListingFields ? (
+            <AddListingFields
+              listingType={listingType}
+              listingFieldsConfig={listingFieldsConfig}
+              selectedCategories={pickSelectedCategories(values)}
+              formId={formId}
+              intl={intl}
+            />
+          ) : null}
 
-          <FieldTextInput
+          {pub_project_type && pub_project_type !== 'online' ? (
+            <FieldLocationAutocompleteInput
+              rootClassName={css.locationAddress}
+              inputClassName={css.locationAutocompleteInput}
+              iconClassName={css.locationAutocompleteInputIcon}
+              predictionsClassName={css.predictionsRoot}
+              validClassName={css.validLocation}
+              autoFocus={autoFocus}
+              name="location"
+              label={intl.formatMessage({ id: 'EditListingLocationForm.address' })}
+              placeholder={intl.formatMessage({
+                id: 'EditListingLocationForm.addressPlaceholder',
+              })}
+              useDefaultPredictions={false}
+              format={identity}
+              valueFromForm={location}
+              validate={composeValidators(
+                autocompleteSearchRequired(addressRequiredMessage),
+                autocompletePlaceSelected(addressNotRecognizedMessage)
+              )}
+            />
+          ) : null}
+
+          {/* <FieldTextInput
             className={css.building}
             type="text"
             name="building"
@@ -109,7 +131,7 @@ export const EditListingLocationFormComponent = props => (
             placeholder={intl.formatMessage({
               id: 'EditListingLocationForm.buildingPlaceholder',
             })}
-          />
+          /> */}
 
           <Button
             className={css.submitButton}
@@ -142,6 +164,7 @@ EditListingLocationFormComponent.propTypes = {
   ready: bool.isRequired,
   updated: bool.isRequired,
   updateInProgress: bool.isRequired,
+  pickSelectedCategories: func.isRequired,
   fetchErrors: shape({
     showListingsError: propTypes.error,
     updateListingError: propTypes.error,

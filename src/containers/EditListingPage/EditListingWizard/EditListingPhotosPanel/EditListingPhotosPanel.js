@@ -1,6 +1,6 @@
-import React from 'react';
-import { array, bool, func, object, string } from 'prop-types';
 import classNames from 'classnames';
+import { array, bool, func, object, string } from 'prop-types';
+import React from 'react';
 
 // Import configs and util modules
 import { FormattedMessage } from '../../../../util/reactIntl';
@@ -10,12 +10,48 @@ import { LISTING_STATE_DRAFT } from '../../../../util/types';
 import { H3, ListingLink } from '../../../../components';
 
 // Import modules from this directory
+import { pickCategoryFields } from '../../../../util/fieldHelpers';
+import {
+  getTransactionInfo,
+  hasSetListingType,
+  initialValuesForListingFields,
+} from '../EditListingDetailsPanel/EditListingDetailsPanel';
 import EditListingPhotosForm from './EditListingPhotosForm';
 import css from './EditListingPhotosPanel.module.css';
 
-const getInitialValues = params => {
-  const { images } = params;
-  return { images };
+const getInitialValues = (
+  props,
+  existingListingTypeInfo,
+  listingTypes,
+  listingFields,
+  listingCategories,
+  categoryKey
+) => {
+  const { images, listing } = props;
+  const { publicData, privateData,description } = listing?.attributes || {};
+  const { listingType } = publicData;
+  const nestedCategories = pickCategoryFields(publicData, categoryKey, 1, listingCategories);
+  return {
+    images,
+    description,
+    ...nestedCategories,
+    // Transaction type info: listingType, transactionProcessAlias, unitType
+    ...getTransactionInfo(listingTypes, existingListingTypeInfo),
+    ...initialValuesForListingFields(
+      publicData,
+      'public',
+      listingType,
+      nestedCategories,
+      listingFields
+    ),
+    ...initialValuesForListingFields(
+      privateData,
+      'private',
+      listingType,
+      nestedCategories,
+      listingFields
+    ),
+  };
 };
 
 const EditListingPhotosPanel = props => {
@@ -33,11 +69,27 @@ const EditListingPhotosPanel = props => {
     onSubmit,
     onRemoveImage,
     listingImageConfig,
+    config,
   } = props;
+
+  const listingTypes = config.listing.listingTypes;
+  const listingFields = config.listing.listingFields;
+  const listingCategories = config.categoryConfiguration.categories;
+  const categoryKey = config.categoryConfiguration.key;
+  const { publicData } = listing?.attributes || {};
+  const { hasExistingListingType, existingListingTypeInfo } = hasSetListingType(publicData);
 
   const rootClass = rootClassName || css.root;
   const classes = classNames(rootClass, className);
   const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
+  const initialValues = getInitialValues(
+    props,
+    existingListingTypeInfo,
+    listingTypes,
+    listingFields,
+    listingCategories,
+    categoryKey
+  );
 
   return (
     <div className={classes}>
@@ -59,10 +111,17 @@ const EditListingPhotosPanel = props => {
         disabled={disabled}
         ready={ready}
         fetchErrors={errors}
-        initialValues={getInitialValues(props)}
+        initialValues={initialValues}
         onImageUpload={onImageUpload}
         onSubmit={values => {
-          const { addImage, ...updateValues } = values;
+          const { addImage, description, images,...rest } = values;
+          const updateValues = {
+            description,
+          };
+          if(images && Array.isArray(images) && images.length>0){
+            updateValues.images = images;
+          }
+
           onSubmit(updateValues);
         }}
         onRemoveImage={onRemoveImage}
@@ -70,6 +129,7 @@ const EditListingPhotosPanel = props => {
         updated={panelUpdated}
         updateInProgress={updateInProgress}
         listingImageConfig={listingImageConfig}
+        selectableCategories={listingCategories}
       />
     </div>
   );

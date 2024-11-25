@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 
 // Import configs and util modules
 import { FormattedMessage } from '../../../../util/reactIntl';
@@ -10,13 +10,28 @@ import { LISTING_STATE_DRAFT } from '../../../../util/types';
 import { H3, ListingLink } from '../../../../components';
 
 // Import modules from this directory
+import { pickCategoryFields } from '../../../../util/fieldHelpers';
+import {
+  getTransactionInfo,
+  hasSetListingType,
+  initialValuesForListingFields,
+  pickListingFieldsData,
+} from '../EditListingDetailsPanel/EditListingDetailsPanel';
 import EditListingLocationForm from './EditListingLocationForm';
 import css from './EditListingLocationPanel.module.css';
 
-const getInitialValues = props => {
+const getInitialValues = (
+  props,
+  existingListingTypeInfo,
+  listingTypes,
+  listingFields,
+  listingCategories,
+  categoryKey
+) => {
   const { listing } = props;
-  const { geolocation, publicData } = listing?.attributes || {};
-
+  const { geolocation, publicData, privateData } = listing?.attributes || {};
+  const { listingType } = publicData;
+  const nestedCategories = pickCategoryFields(publicData, categoryKey, 1, listingCategories);
   // Only render current search if full place object is available in the URL params
   // TODO bounds are missing - those need to be queried directly from Google Places
   const locationFieldsPresent = publicData?.location?.address && geolocation;
@@ -27,17 +42,33 @@ const getInitialValues = props => {
     building,
     location: locationFieldsPresent
       ? {
-          search: address,
-          selectedPlace: { address, origin: geolocation },
-        }
+        search: address,
+        selectedPlace: { address, origin: geolocation },
+      }
       : null,
+    ...nestedCategories,
+    // Transaction type info: listingType, transactionProcessAlias, unitType
+    ...getTransactionInfo(listingTypes, existingListingTypeInfo),
+    ...initialValuesForListingFields(
+      publicData,
+      'public',
+      listingType,
+      nestedCategories,
+      listingFields
+    ),
+    ...initialValuesForListingFields(
+      privateData,
+      'private',
+      listingType,
+      nestedCategories,
+      listingFields
+    ),
   };
 };
 
 const EditListingLocationPanel = props => {
   // State is needed since LocationAutocompleteInput doesn't have internal state
   // and therefore re-rendering would overwrite the values during XHR call.
-  const [state, setState] = useState({ initialValues: getInitialValues(props) });
   const {
     className,
     rootClassName,
@@ -49,7 +80,26 @@ const EditListingLocationPanel = props => {
     panelUpdated,
     updateInProgress,
     errors,
+    config,
   } = props;
+
+  const listingTypes = config.listing.listingTypes;
+  const listingFields = config.listing.listingFields;
+  const listingCategories = config.categoryConfiguration.categories;
+  const categoryKey = config.categoryConfiguration.key;
+  const { publicData } = listing?.attributes || {};
+  const { hasExistingListingType, existingListingTypeInfo } = hasSetListingType(publicData);
+
+  const initialValues = getInitialValues(
+    props,
+    existingListingTypeInfo,
+    listingTypes,
+    listingFields,
+    listingCategories,
+    categoryKey
+  );
+
+  const [state, setState] = useState({ initialValues });
 
   const classes = classNames(rootClassName || css.root, className);
   const isPublished = listing?.id && listing?.attributes.state !== LISTING_STATE_DRAFT;
@@ -73,17 +123,43 @@ const EditListingLocationPanel = props => {
         className={css.form}
         initialValues={state.initialValues}
         onSubmit={values => {
-          const { building = '', location } = values;
-          const {
-            selectedPlace: { address, origin },
-          } = location;
+          const { building = '', location = '', listingType, ...rest } = values;
+          const { selectedPlace } = location || {};
 
+          const { address, origin } = selectedPlace || {};
+
+          const nestedCategories = pickCategoryFields(rest, categoryKey, 1, listingCategories);
+          // Remove old categories by explicitly saving null for them.
+          const cleanedNestedCategories = {
+            ...[1, 2, 3].reduce((a, i) => ({ ...a, [`${categoryKey}${i}`]: null }), {}),
+            ...nestedCategories,
+          };
+          const publicListingFields = pickListingFieldsData(
+            rest,
+            'public',
+            listingType,
+            nestedCategories,
+            listingFields
+          );
+          const privateListingFields = pickListingFieldsData(
+            rest,
+            'private',
+            listingType,
+            nestedCategories,
+            listingFields
+          );
+
+          const setLocation = { address, building };
+          
           // New values for listing attributes
           const updateValues = {
             geolocation: origin,
             publicData: {
-              location: { address, building },
+              location: publicListingFields.project_type !== 'online' ? setLocation : null,
+              ...cleanedNestedCategories,
+              ...publicListingFields,
             },
+            privateData: privateListingFields,
           };
           // Save the initialValues to state
           // LocationAutocompleteInput doesn't have internal state
@@ -103,6 +179,11 @@ const EditListingLocationPanel = props => {
         updateInProgress={updateInProgress}
         fetchErrors={errors}
         autoFocus
+        listingFieldsConfig={listingFields}
+        pickSelectedCategories={values =>
+          pickCategoryFields(values, categoryKey, 1, listingCategories)
+        }
+        selectableCategories={listingCategories}
       />
     </div>
   );

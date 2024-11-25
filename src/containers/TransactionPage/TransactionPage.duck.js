@@ -741,7 +741,7 @@ export const loadData = (params, search, config) => (dispatch, getState) => {
   // and non-empty values which may have been set from a previous page.
   const initialValues = txRef ? {} : pickBy(state, isNonEmpty);
   dispatch(setInitialValues(initialValues));
-
+  
   // Sale / order (i.e. transaction entity in API)
   return Promise.all([
     dispatch(fetchTransaction(txId, txRole, config)),

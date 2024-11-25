@@ -1,6 +1,6 @@
-import React from 'react';
-import { compose } from 'redux';
-import { withRouter } from 'react-router-dom';
+import loadable from '@loadable/component';
+import classNames from 'classnames';
+import omit from 'lodash/omit';
 import {
   array,
   arrayOf,
@@ -13,29 +13,10 @@ import {
   shape,
   string,
 } from 'prop-types';
-import loadable from '@loadable/component';
-import classNames from 'classnames';
-import omit from 'lodash/omit';
+import React from 'react';
+import { withRouter } from 'react-router-dom';
+import { compose } from 'redux';
 
-import { intlShape, injectIntl, FormattedMessage } from '../../util/reactIntl';
-import {
-  displayDeliveryPickup,
-  displayDeliveryShipping,
-  displayPrice,
-} from '../../util/configHelpers';
-import {
-  propTypes,
-  LISTING_STATE_CLOSED,
-  LINE_ITEM_NIGHT,
-  LINE_ITEM_DAY,
-  LINE_ITEM_ITEM,
-  LINE_ITEM_HOUR,
-  STOCK_MULTIPLE_ITEMS,
-  STOCK_INFINITE_MULTIPLE_ITEMS,
-} from '../../util/types';
-import { formatMoney } from '../../util/currency';
-import { parse, stringify } from '../../util/urlHelpers';
-import { userDisplayNameAsString } from '../../util/data';
 import {
   INQUIRY_PROCESS_NAME,
   getSupportedProcessesInfo,
@@ -43,8 +24,27 @@ import {
   isPurchaseProcess,
   resolveLatestProcessName,
 } from '../../transactions/transaction';
+import {
+  displayDeliveryPickup,
+  displayDeliveryShipping,
+  displayPrice,
+} from '../../util/configHelpers';
+import { formatMoney } from '../../util/currency';
+import { userDisplayNameAsString } from '../../util/data';
+import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
+import {
+  LINE_ITEM_DAY,
+  LINE_ITEM_HOUR,
+  LINE_ITEM_ITEM,
+  LINE_ITEM_NIGHT,
+  LISTING_STATE_CLOSED,
+  STOCK_INFINITE_MULTIPLE_ITEMS,
+  STOCK_MULTIPLE_ITEMS,
+  propTypes,
+} from '../../util/types';
+import { parse, stringify } from '../../util/urlHelpers';
 
-import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2 } from '../../components';
+import { IconCheckmark, IconClose, ModalInMobile, PrimaryButton } from '../../components';
 
 import css from './OrderPanel.module.css';
 
@@ -54,7 +54,7 @@ const BookingTimeForm = loadable(() =>
 const BookingDatesForm = loadable(() =>
   import(/* webpackChunkName: "BookingDatesForm" */ './BookingDatesForm/BookingDatesForm')
 );
-const InquiryWithoutPaymentForm = loadable(() =>
+export const InquiryWithoutPaymentForm = loadable(() =>
   import(
     /* webpackChunkName: "InquiryWithoutPaymentForm" */ './InquiryWithoutPaymentForm/InquiryWithoutPaymentForm'
   )
@@ -67,7 +67,7 @@ const ProductOrderForm = loadable(() =>
 const MODAL_BREAKPOINT = 1023;
 const TODAY = new Date();
 
-const priceData = (price, currency, intl) => {
+export const priceData = (price, currency, intl) => {
   if (price && price.currency === currency) {
     const formattedPrice = formatMoney(intl, price);
     return { formattedPrice, priceTitle: formattedPrice };
@@ -191,10 +191,11 @@ const OrderPanel = props => {
     fetchLineItemsInProgress,
     fetchLineItemsError,
     payoutDetailsWarning,
+    setInquiryModalOpen,
   } = props;
 
   const publicData = listing?.attributes?.publicData || {};
-  const { listingType, unitType, transactionProcessAlias = '' } = publicData || {};
+  const { listingType, unitType, transactionProcessAlias = '', flex_price } = publicData || {};
   const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
   const lineItemUnitType = lineItemUnitTypeMaybe || `line-item/${unitType}`;
 
@@ -264,6 +265,7 @@ const OrderPanel = props => {
 
   const classes = classNames(rootClassName || css.root, className);
   const titleClasses = classNames(titleClassName || css.orderTitle);
+  const formattedPrice = formatMoney(intl, price);
 
   return (
     <div className={classes}>
@@ -276,24 +278,24 @@ const OrderPanel = props => {
         onManageDisableScrolling={onManageDisableScrolling}
         usePortal
       >
-        <div className={css.modalHeading}>
+        {/* <div className={css.modalHeading}>
           <H1 className={css.heading}>{title}</H1>
         </div>
 
         <div className={css.orderHeading}>
           {titleDesktop ? titleDesktop : <H2 className={titleClasses}>{title}</H2>}
           {subTitleText ? <div className={css.orderHelp}>{subTitleText}</div> : null}
-        </div>
+        </div> */}
 
-        <PriceMaybe
+        {/* <PriceMaybe
           price={price}
           publicData={publicData}
           validListingTypes={validListingTypes}
           intl={intl}
           marketplaceCurrency={marketplaceCurrency}
-        />
+        /> */}
 
-        <div className={css.author}>
+        {/* <div className={css.author}>
           <AvatarSmall user={author} className={css.providerAvatar} />
           <span className={css.providerNameLinked}>
             <FormattedMessage id="OrderPanel.author" values={{ name: authorLink }} />
@@ -301,7 +303,7 @@ const OrderPanel = props => {
           <span className={css.providerNamePlain}>
             <FormattedMessage id="OrderPanel.author" values={{ name: authorDisplayName }} />
           </span>
-        </div>
+        </div> */}
 
         {showPriceMissing ? (
           <PriceMissing />
@@ -373,7 +375,27 @@ const OrderPanel = props => {
             payoutDetailsWarning={payoutDetailsWarning}
           />
         ) : showInquiryForm ? (
-          <InquiryWithoutPaymentForm formId="OrderPanelInquiryForm" onSubmit={onSubmit} />
+          // <InquiryWithoutPaymentForm formId="OrderPanelInquiryForm" onSubmit={onSubmit} />
+          <div className={css.customInquiryForm}>
+            <div className={css.customInquiryBudget}>
+              <FormattedMessage id="OrderPanel.customInquiryFormBudget" />
+            </div>
+            <div className={css.customInquiryPrice}>{formattedPrice}</div>
+
+            <div className={css.customInquiryBudgetFlex}>
+              {flex_price && flex_price.length > 0 ? <IconCheckmark /> : <IconClose />}
+              <FormattedMessage id="OrderPanel.customInquiryBudgetFlex" />
+            </div>
+
+            <FormattedMessage id="OrderPanel.customInquiryFormPriceDescription" />
+            <PrimaryButton
+              onClick={() => {
+                if (!isOwnListing) setInquiryModalOpen(true);
+              }}
+            >
+              <FormattedMessage id="OrderPanel.customInquiryform" />
+            </PrimaryButton>
+          </div>
         ) : !isKnownProcess ? (
           <p className={css.errorSidebar}>
             <FormattedMessage id="OrderPanel.unknownTransactionProcess" />
@@ -396,14 +418,25 @@ const OrderPanel = props => {
           </div>
         ) : (
           <PrimaryButton
-            onClick={handleSubmit(
-              isOwnListing,
-              isClosed,
-              showInquiryForm,
-              onSubmit,
-              history,
-              location
-            )}
+            onClick={() => {
+
+              if (!isOwnListing) {
+                setInquiryModalOpen(true);
+              }
+              else {
+
+                handleSubmit(
+                  isOwnListing,
+                  isClosed,
+                  showInquiryForm,
+                  onSubmit,
+                  history,
+                  location
+                )
+              }
+            }
+
+            }
             disabled={isOutOfStock}
           >
             {isBooking ? (
@@ -434,6 +467,7 @@ OrderPanel.defaultProps = {
   monthlyTimeSlots: null,
   lineItems: null,
   fetchLineItemsError: null,
+  setInquiryModalOpen: null,
 };
 
 OrderPanel.propTypes = {
@@ -471,6 +505,7 @@ OrderPanel.propTypes = {
   marketplaceCurrency: string.isRequired,
   dayCountAvailableForBooking: number.isRequired,
   marketplaceName: string.isRequired,
+  setInquiryModalOpen: func,
 
   // from withRouter
   history: shape({

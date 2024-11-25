@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { func, object, string, bool } from 'prop-types';
 import classNames from 'classnames';
+import { bool, func, object, string } from 'prop-types';
+import React, { useState } from 'react';
 
 // Import configs and util modules
-import { FormattedMessage } from '../../../../util/reactIntl';
-import { LISTING_STATE_DRAFT, STOCK_MULTIPLE_ITEMS } from '../../../../util/types';
 import { displayDeliveryPickup, displayDeliveryShipping } from '../../../../util/configHelpers';
+import { FormattedMessage } from '../../../../util/reactIntl';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
+import { LISTING_STATE_DRAFT, STOCK_MULTIPLE_ITEMS } from '../../../../util/types';
 
 // Import shared components
 import { H3, ListingLink } from '../../../../components';
@@ -37,6 +37,7 @@ const getInitialValues = props => {
     pickupEnabled,
     shippingPriceInSubunitsOneItem,
     shippingPriceInSubunitsAdditionalItems,
+    selectedOption,
   } = publicData;
   const deliveryOptions = [];
 
@@ -69,6 +70,7 @@ const getInitialValues = props => {
     deliveryOptions,
     shippingPriceInSubunitsOneItem: shippingOneItemAsMoney,
     shippingPriceInSubunitsAdditionalItems: shippingAdditionalItemsAsMoney,
+    selectedOption: selectedOption,
   };
 };
 
@@ -97,6 +99,7 @@ const EditListingDeliveryPanel = props => {
   const priceCurrencyValid = listing?.attributes?.price?.currency === marketplaceCurrency;
   const listingType = listing?.attributes?.publicData?.listingType;
   const listingTypeConfig = listingTypes.find(conf => conf.listingType === listingType);
+
   const hasStockInUse = listingTypeConfig.stockType === STOCK_MULTIPLE_ITEMS;
 
   return (
@@ -125,6 +128,8 @@ const EditListingDeliveryPanel = props => {
               shippingPriceInSubunitsOneItem,
               shippingPriceInSubunitsAdditionalItems,
               deliveryOptions,
+              selectedOption,
+              selectedDate,
             } = values;
 
             const shippingEnabled = deliveryOptions.includes('shipping');
@@ -151,6 +156,8 @@ const EditListingDeliveryPanel = props => {
               geolocation: origin,
               publicData: {
                 pickupEnabled,
+                selectedOption,
+                selectedDate,
                 ...pickupDataMaybe,
                 shippingEnabled,
                 ...shippingDataMaybe,

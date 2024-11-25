@@ -311,10 +311,12 @@ export const isSameDay = (date1, date2) => {
     return false;
   }
 
+  const convertedDate1 = new Date(date1);
+  const convertedDate2 = new Date(date2);
   return (
-    date1.getFullYear() === date2.getFullYear() &&
-    date1.getMonth() === date2.getMonth() &&
-    date1.getDate() === date2.getDate()
+    convertedDate1.getFullYear() === convertedDate2.getFullYear() &&
+    convertedDate1.getMonth() === convertedDate2.getMonth() &&
+    convertedDate1.getDate() === convertedDate2.getDate()
   );
 };
 

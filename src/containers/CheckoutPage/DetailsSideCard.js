@@ -40,9 +40,11 @@ const DetailsSideCard = props => {
     ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
     : [];
 
+  const { linkedListing } = publicData || {};
+
   return (
     <div className={css.detailsContainerDesktop}>
-      <AspectRatioWrapper
+      {/* <AspectRatioWrapper
         width={aspectWidth}
         height={aspectHeight}
         className={css.detailsAspectWrapper}
@@ -53,7 +55,7 @@ const DetailsSideCard = props => {
           image={firstImage}
           variants={variants}
         />
-      </AspectRatioWrapper>
+      </AspectRatioWrapper> */}
       <div className={css.listingDetailsWrapper}>
         <div className={css.avatarWrapper}>
           <AvatarMedium user={author} disableProfileLink />
@@ -62,7 +64,7 @@ const DetailsSideCard = props => {
           <H4 as="h2">
             <NamedLink
               name="ListingPage"
-              params={{ id: listing?.id?.uuid, slug: createSlug(listingTitle) }}
+              params={{ id: linkedListing ?? listing?.id.uuid, slug: createSlug(listingTitle) }}
             >
               {listingTitle}
             </NamedLink>

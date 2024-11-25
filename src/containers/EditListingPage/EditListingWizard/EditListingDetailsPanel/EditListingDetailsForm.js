@@ -1,26 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import { arrayOf, bool, func, shape, string } from 'prop-types';
-import { compose } from 'redux';
-import { Field, Form as FinalForm } from 'react-final-form';
-import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
+import arrayMutators from 'final-form-arrays';
+import { arrayOf, bool, func, shape, string } from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import { Field, Form as FinalForm } from 'react-final-form';
+import { compose } from 'redux';
 
 // Import util modules
-import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactIntl';
-import { EXTENDED_DATA_SCHEMA_TYPES, propTypes } from '../../../../util/types';
 import { isFieldForCategory, isFieldForListingType } from '../../../../util/fieldHelpers';
-import { maxLength, required, composeValidators } from '../../../../util/validators';
+import { FormattedMessage, injectIntl, intlShape } from '../../../../util/reactIntl';
+import { EXTENDED_DATA_SCHEMA_TYPES, propTypes } from '../../../../util/types';
+import {
+  bookingDateRequired,
+  composeValidators,
+  maxLength,
+  required,
+} from '../../../../util/validators';
 
 // Import shared components
 import {
-  Form,
   Button,
+  CustomExtendedDataField,
+  FieldNormalDateInput,
   FieldSelect,
   FieldTextInput,
+  Form,
   Heading,
-  CustomExtendedDataField,
+  IconArrowHead,
 } from '../../../../components';
 // Import modules from this directory
+import moment from 'moment/moment';
+import { getStartOf, isDateSameOrAfter } from '../../../../util/dates';
 import css from './EditListingDetailsForm.module.css';
 
 const TITLE_MAX_LENGTH = 60;
@@ -240,7 +249,7 @@ const FieldSelectCategory = props => {
 };
 
 // Add collect data for listing fields (both publicData and privateData) based on configuration
-const AddListingFields = props => {
+export const AddListingFields = props => {
   const { listingType, listingFieldsConfig, selectedCategories, formId, intl } = props;
   const targetCategoryIds = Object.values(selectedCategories);
 
@@ -272,6 +281,38 @@ const AddListingFields = props => {
   return <>{fields}</>;
 };
 
+const nextMonthFn = (currentMoment, timeZone) =>
+  getStartOf(currentMoment, 'month', timeZone, 1, 'months');
+const prevMonthFn = (currentMoment, timeZone) =>
+  getStartOf(currentMoment, 'month', timeZone, -1, 'months');
+
+// IconArrowHead component might not be defined if exposed directly to the file.
+// This component is called before IconArrowHead component in components/index.js
+const PrevIcon = props => (
+  <IconArrowHead {...props} direction="left" rootClassName={css.arrowIcon} />
+);
+const NextIcon = props => (
+  <IconArrowHead {...props} direction="right" rootClassName={css.arrowIcon} />
+);
+
+export const Next = props => {
+  const { currentMonth, timeZone } = props;
+  const nextMonthDate = nextMonthFn(currentMonth, timeZone);
+  const currentMonthDate = getStartOf(TODAY, 'month', timeZone);
+
+  return isDateSameOrAfter(currentMonthDate, nextMonthDate) ? null : <NextIcon />;
+};
+export const Prev = props => {
+  const { currentMonth, timeZone } = props;
+  const prevMonthDate = prevMonthFn(currentMonth, timeZone);
+  const currentMonthDate = getStartOf(TODAY, 'month', timeZone);
+
+  return isDateSameOrAfter(prevMonthDate, currentMonthDate) ? <PrevIcon /> : null;
+};
+
+export const TODAY = new Date();
+export const dateFormattingOptions = { month: 'short', day: 'numeric', weekday: 'short' };
+
 // Form that asks title, description, transaction process and unit type for pricing
 // In addition, it asks about custom fields according to marketplace-custom-config.js
 const EditListingDetailsFormComponent = props => (
@@ -301,10 +342,11 @@ const EditListingDetailsFormComponent = props => (
         updateInProgress,
         fetchErrors,
         listingFieldsConfig,
+        showListingType,
         values,
       } = formRenderProps;
 
-      const { listingType, transactionProcessAlias, unitType } = values;
+      const { listingType, transactionProcessAlias, unitType, selectedOption } = values;
       const [allCategoriesChosen, setAllCategoriesChosen] = useState(false);
 
       const titleRequiredMessage = intl.formatMessage({
@@ -322,29 +364,67 @@ const EditListingDetailsFormComponent = props => (
       const showCategories = listingType && hasCategories;
 
       const showTitle = hasCategories ? allCategoriesChosen : listingType;
-      const showDescription = hasCategories ? allCategoriesChosen : listingType;
+      // const showDescription = hasCategories ? allCategoriesChosen : listingType;
+      const showDescription = false;
       const showListingFields = hasCategories ? allCategoriesChosen : listingType;
 
       const classes = classNames(css.root, className);
       const submitReady = (updated && pristine) || ready;
       const submitInProgress = updateInProgress;
+
       const hasMandatoryListingTypeData = listingType && transactionProcessAlias && unitType;
       const submitDisabled =
         invalid || disabled || submitInProgress || !hasMandatoryListingTypeData;
+
+      const chooseSelectOption = [
+        { key: 'Alla data', label: 'Alla data' },
+        { key: 'Prima della data', label: 'Prima della data' },
+        { key: 'Sono flessibile', label: 'Sono flessibile' },
+      ];
+
+      const [currentMonth, setCurrentMonth] = useState(moment.tz('Etc/UTC').startOf('month'));
+
+      // Function to add one month
+      const addMonth = () => {
+        const newDate = currentMonth
+          .clone()
+          .startOf('month')
+          .add(1, 'month');
+        setCurrentMonth(newDate);
+      };
+
+      // Function to subtract one month
+      const subtractMonth = () => {
+        const newDate = currentMonth
+          .clone()
+          .startOf('month')
+          .subtract(1, 'month');
+        setCurrentMonth(newDate);
+      };
+
+      const validateDate = value => {
+        if (!value) {
+          return intl.formatMessage({ id: 'BookingTimeForm.requiredDate' });
+        }
+        const date = new Date(value);
+        return isNaN(date.getTime()) ? 'Invalid date' : undefined;
+      };
 
       return (
         <Form className={classes} onSubmit={handleSubmit}>
           <ErrorMessage fetchErrors={fetchErrors} />
 
-          <FieldSelectListingType
-            name="listingType"
-            listingTypes={selectableListingTypes}
-            hasExistingListingType={hasExistingListingType}
-            onListingTypeChange={onListingTypeChange}
-            formApi={formApi}
-            formId={formId}
-            intl={intl}
-          />
+          {showListingType ? (
+            <FieldSelectListingType
+              name="listingType"
+              listingTypes={selectableListingTypes}
+              hasExistingListingType={hasExistingListingType}
+              onListingTypeChange={onListingTypeChange}
+              formApi={formApi}
+              formId={formId}
+              intl={intl}
+            />
+          ) : null}
 
           {showCategories ? (
             <FieldSelectCategory
@@ -390,7 +470,49 @@ const EditListingDetailsFormComponent = props => (
             />
           ) : null}
 
-          {showListingFields ? (
+          <FieldSelect
+            className={css.customField}
+            name="selectedOption"
+            id={`${formId}selectedOption`}
+            label={'Quando hai bisogno che venga fatto?'}
+            validate={required(
+              intl.formatMessage({
+                id: 'EditListingDetailsForm.chooseRequired',
+              })
+            )}
+          >
+            <option disabled value="">
+              {intl.formatMessage({
+                id: 'EditListingDetailsForm.choosePlaceHolder',
+              })}
+            </option>
+            {chooseSelectOption.map(optionConfig => {
+              const key = optionConfig.key;
+              return (
+                <option key={key} value={key}>
+                  {optionConfig.label}
+                </option>
+              );
+            })}
+          </FieldSelect>
+
+          {selectedOption && selectedOption !== 'Sono flessibile' ? (
+            <FieldNormalDateInput
+              className={css.fieldDateInput}
+              name="selectedDate"
+              id={`${formId}selectedDate`}
+              label={intl.formatMessage({ id: 'EditListingDetailsForm.selectedDateLabel' })}
+              placeholderText={intl.formatDate(TODAY, dateFormattingOptions)}
+              showErrorMessage={true} // Optional: whether to show validation error messages
+              navNext={<Next currentMonth={currentMonth} timeZone={'Etc/UTC'} />}
+              navPrev={<Prev currentMonth={currentMonth} timeZone={'Etc/UTC'} />}
+              onNextMonthClick={addMonth}
+              onPrevMonthClick={subtractMonth}
+              validate={validateDate}
+            />
+          ) : null}
+
+          {/* {showListingFields ? (
             <AddListingFields
               listingType={listingType}
               listingFieldsConfig={listingFieldsConfig}
@@ -398,7 +520,7 @@ const EditListingDetailsFormComponent = props => (
               formId={formId}
               intl={intl}
             />
-          ) : null}
+          ) : null} */}
 
           <Button
             className={css.submitButton}
@@ -421,6 +543,7 @@ EditListingDetailsFormComponent.defaultProps = {
   fetchErrors: null,
   hasExistingListingType: false,
   listingFieldsConfig: [],
+  showListingType: true,
 };
 
 EditListingDetailsFormComponent.propTypes = {
@@ -449,6 +572,7 @@ EditListingDetailsFormComponent.propTypes = {
   ).isRequired,
   hasExistingListingType: bool,
   listingFieldsConfig: propTypes.listingFields,
+  showListingType: bool,
 };
 
 export default compose(injectIntl)(EditListingDetailsFormComponent);
