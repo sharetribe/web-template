@@ -555,6 +555,8 @@
   "NoAccessPage.userPendingApproval.schemaTitle": "No user approval",
   "NoAccessPage.userPendingApproval.heading": "Your account is waiting for approval",
   "NoAccessPage.userPendingApproval.content": "You need approval from the {marketplaceName} team to get access to the marketplace.",
+  "NumberInput.decrementButton": "Decrement the value by one",
+  "NumberInput.incrementButton": "Increment the value by one",
   "OrderBreakdown.baseUnitDay": "{unitPrice} x {quantity, number} {quantity, plural, one {day} other {days}}",
   "OrderBreakdown.baseUnitDaySeats": "{unitPrice} x {quantity, number} {quantity, plural, one {day} other {days}} x { seats, number } { seats, plural, one {seat} other {seats} }",
   "OrderBreakdown.baseUnitNight": "{unitPrice} x {quantity, number} {quantity, plural, one {night} other {nights}}",
