@@ -102,6 +102,13 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       component: RedirectToLandingPage,
     },
     {
+      path: '/l/products/:mode/:tab',
+      name: 'BatchEditListingPage',
+      auth: true,
+      component: BatchEditListingPage,
+      loadData: pageDataLoadingAPI.BatchEditListingPage.loadData,
+    },
+    {
       path: '/l/:slug/:id',
       name: 'ListingPage',
       ...authForPrivateMarketplace,
@@ -133,13 +140,6 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
           params={{ slug: draftSlug, id: draftId, type: 'new', tab: 'details' }}
         />
       ),
-    },
-    {
-      path: '/l/new/products/:mode/:tab',
-      name: 'BatchEditListingPage',
-      auth: true,
-      component: BatchEditListingPage,
-      loadData: pageDataLoadingAPI.BatchEditListingPage.loadData,
     },
     {
       path: '/l/:slug/:id/:type/:tab',

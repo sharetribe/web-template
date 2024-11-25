@@ -8,56 +8,19 @@ import { parse } from '../../util/urlHelpers';
 import { queryListingsError } from '../ManageListingsPage/ManageListingsPage.duck';
 import { storableError } from '../../util/errors';
 import { types as sdkTypes } from '../../util/sdkLoader';
-
-const SMALL_IMAGE = 'small-image';
-const MEDIUM_IMAGE = 'medium-image';
-const LARGE_IMAGE = 'large-image';
-const UNAVAILABLE_IMAGE_RESOLUTION = 'unavailable';
-const USAGE_EDITORIAL = 'editorial';
-const NO_RELEASES = 'no-release';
-
-const AI_TERMS_STATUS_ACCEPTED = 'accepted';
-const AI_TERMS_STATUS_REQUIRED = 'required';
-const AI_TERMS_STATUS_NOT_REQUIRED = 'not-required';
-const RESULT_PAGE_SIZE = 30;
-
-export const PAGE_MODE_CREATE = 'create';
-export const MAX_KEYWORDS = 30;
-export const MAX_CATEGORIES = 5;
+import {
+  AI_TERMS_STATUS_ACCEPTED,
+  AI_TERMS_STATUS_NOT_REQUIRED,
+  AI_TERMS_STATUS_REQUIRED,
+  MAX_KEYWORDS,
+  NO_RELEASES,
+  PAGE_MODE_NEW,
+  RESULT_PAGE_SIZE,
+  USAGE_EDITORIAL,
+} from './constants';
+import { getDimensions } from './imageHelpers';
 
 const { UUID } = sdkTypes;
-
-export const IMAGE_DIMENSIONS_MAP = {
-  [SMALL_IMAGE]: {
-    maxDimension: 1000,
-    label: 'Small (< 1,000px)',
-  },
-  [MEDIUM_IMAGE]: {
-    maxDimension: 2000,
-    label: 'Medium (1,000px-2,000px)',
-  },
-  [LARGE_IMAGE]: {
-    maxDimension: 2001,
-    label: 'Large (>2,000px)',
-  },
-  [UNAVAILABLE_IMAGE_RESOLUTION]: {
-    label: 'Unavailable',
-  },
-};
-
-function getDimensions(width, height) {
-  if (!width && !height) {
-    return UNAVAILABLE_IMAGE_RESOLUTION;
-  }
-  const largestDimension = Math.max(width, height);
-  if (largestDimension <= IMAGE_DIMENSIONS_MAP[SMALL_IMAGE].maxDimension) {
-    return SMALL_IMAGE;
-  }
-  if (largestDimension <= IMAGE_DIMENSIONS_MAP[MEDIUM_IMAGE].maxDimension) {
-    return MEDIUM_IMAGE;
-  }
-  return LARGE_IMAGE;
-}
 
 function getListingFieldOptions(config, listingFieldKey) {
   const { listing } = config;
@@ -130,18 +93,11 @@ function uppyFileToListing(file) {
 
 function validateListingProperties(listing) {
   const requiredProperties = ['category', 'title', 'description', 'price'];
-  const missingProperties = [];
-
-  requiredProperties.forEach(property => {
-    if (
-      !listing[property] ||
-      (Array.isArray(listing[property]) && listing[property].length === 0)
-    ) {
-      missingProperties.push(property);
-    }
-  });
-
-  return missingProperties.length === 0 ? null : { listing, missingProperties };
+  const missingProperties = requiredProperties.filter(
+    property =>
+      !listing[property] || (Array.isArray(listing[property]) && !listing[property].length)
+  );
+  return missingProperties.length ? { listing, missingProperties } : null;
 }
 
 function getListingCategory(listing) {
@@ -521,7 +477,7 @@ export const requestUpdateListing = payload => dispatch => {
   dispatch({ type: UPDATE_LISTING, payload });
 };
 
-export function requestSaveBatchListings(pageMode = PAGE_MODE_CREATE) {
+export function requestSaveBatchListings(pageMode = PAGE_MODE_NEW) {
   return (dispatch, getState, sdk) => {
     dispatch({ type: SAVE_LISTINGS_REQUEST });
 
@@ -551,7 +507,7 @@ export function requestSaveBatchListings(pageMode = PAGE_MODE_CREATE) {
       return; // Abort saving until terms are accepted
     }
 
-    if (pageMode === PAGE_MODE_CREATE) {
+    if (pageMode === PAGE_MODE_NEW) {
       // Proceed with saving the listings if all validations pass
       const uppy = getUppyInstance(getState());
       uppy.upload();
@@ -644,7 +600,7 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   });
 
   const { mode } = params;
-  if (mode !== PAGE_MODE_CREATE) {
+  if (mode !== PAGE_MODE_NEW) {
     const pageQueryParams = parse(search);
     const page = pageQueryParams.page || 1;
     const queryParams = new URLSearchParams();

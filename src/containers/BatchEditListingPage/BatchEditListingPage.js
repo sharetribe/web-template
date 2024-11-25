@@ -12,7 +12,7 @@ import { NamedRedirect, Page } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import css from './BatchEditListingPage.module.css';
-import { PAGE_MODE_CREATE } from './BatchEditListingPage.duck';
+import { PAGE_MODE_NEW } from './constants';
 import BatchEditListingWizard from './BatchEditListingWizard/BatchEditListingWizard';
 import { ProductsListingEditMode } from './ProductListingsEditMode/ProductsListingEditMode';
 
@@ -22,7 +22,7 @@ export const BatchEditListingPageComponent = props => {
   const shouldRedirectNoPostingRights = !!currentUser?.id && !hasPostingRights;
   const { listingFieldsOptions } = page;
   const { mode } = useParams();
-  const isNew = mode === PAGE_MODE_CREATE;
+  const isNew = mode === PAGE_MODE_NEW;
 
   if (!isUserAuthorized(currentUser)) {
     return (

@@ -29,6 +29,7 @@ import ManageListingCard from './ManageListingCard/ManageListingCard';
 import css from './ManageListingsPage.module.css';
 import { closeListing, getOwnListingsById, openListing } from './ManageListingsPage.duck';
 import ScrollableLinks from '../../components/ScrollableLinks/ScrollableLinks';
+import { PAGE_MODE_EDIT, PAGE_MODE_NEW } from '../BatchEditListingPage/constants';
 
 const PaginationLinksMaybe = props => {
   const { listingsAreLoaded, pagination, page } = props;
@@ -171,7 +172,7 @@ export const ManageListingsPageComponent = props => {
     history.push(destination);
   };
 
-  const goToCreateListing = (mode = 'create', searchParams = {}) => {
+  const goToCreateListing = (mode = PAGE_MODE_NEW, searchParams = {}) => {
     const destination = createResourceLocatorString(
       'BatchEditListingPage',
       routeConfiguration,
@@ -207,7 +208,7 @@ export const ManageListingsPageComponent = props => {
               type="text"
               className={css.actionButton}
               onClick={() =>
-                goToCreateListing('edit', {
+                goToCreateListing(PAGE_MODE_EDIT, {
                   category: currentCategoryType,
                   type: currentListingType,
                 })

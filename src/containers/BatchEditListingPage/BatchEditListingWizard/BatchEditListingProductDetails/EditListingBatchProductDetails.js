@@ -11,7 +11,6 @@ import {
   getListings,
   getSaveListingData,
   getSelectedRowsKeys,
-  PAGE_MODE_CREATE,
   requestSaveBatchListings,
   requestUpdateListing,
   SAVE_LISTINGS_ABORTED,
@@ -27,6 +26,7 @@ import {
   WarningOutlined,
 } from '@ant-design/icons';
 import { useParams } from 'react-router-dom';
+import { PAGE_MODE_NEW } from '../../constants';
 
 const { Text, Paragraph } = Typography;
 
@@ -143,7 +143,7 @@ export const EditListingBatchProductDetails = props => {
       return;
     }
 
-    if (mode === PAGE_MODE_CREATE) {
+    if (mode === PAGE_MODE_NEW) {
       setShowProgressModal(listingsCreationInProgress);
     }
   }, [

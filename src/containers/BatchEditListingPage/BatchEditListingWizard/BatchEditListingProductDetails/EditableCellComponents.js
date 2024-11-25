@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import { Form, Input, InputNumber, Select, Switch } from 'antd';
 import css from './EditListingBatchProductDetails.module.css';
-import { MAX_KEYWORDS } from '../../BatchEditListingPage.duck';
+import { MAX_KEYWORDS } from '../../constants';
 
 const { TextArea } = Input;
 

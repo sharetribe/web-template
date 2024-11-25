@@ -1,10 +1,11 @@
 import imagePlaceholder from '../../../../assets/image-placeholder.jpg';
 import { Image, Table } from 'antd';
-import { IMAGE_DIMENSIONS_MAP, MAX_CATEGORIES } from '../../BatchEditListingPage.duck';
+import { MAX_CATEGORIES } from '../../constants';
 import css from './EditListingBatchProductDetails.module.css';
 import React from 'react';
 import { EditableCellComponents } from './EditableCellComponents';
 import { useIntl } from 'react-intl';
+import { getImageDimensionLabel } from '../../imageHelpers';
 
 const stringSorter = (strA, strB) => {
   return strA.name.localeCompare(strB.name, 'en', { sensitivity: 'base' });
@@ -173,9 +174,7 @@ export const EditableListingsTable = props => {
       }),
       dataIndex: 'dimensions',
       width: 200,
-      render: dimensionsKey => {
-        return IMAGE_DIMENSIONS_MAP[dimensionsKey].label;
-      },
+      render: getImageDimensionLabel,
       sorter: stringSorter,
     },
     {
