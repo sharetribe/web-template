@@ -11,7 +11,7 @@ import { hasPermissionToPostListings } from '../../util/userHelpers';
 import { NO_ACCESS_PAGE_POST_LISTINGS } from '../../util/urlHelpers';
 import { isErrorNoPermissionToPostListings } from '../../util/errors';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
-import { LISTING_TYPES } from '../../util/types';
+import { LISTING_GRID_DEFAULTS, LISTING_GRID_ROLE } from '../../util/types';
 
 import {
   Button,
@@ -22,33 +22,23 @@ import {
   PaginationLinks,
   UserNav,
   NamedRedirect,
+  ListingTabs,
 } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import ManageListingCard from './ManageListingCard/ManageListingCard';
-import css from './ManageListingsPage.module.css';
 import { closeListing, getOwnListingsById, openListing } from './ManageListingsPage.duck';
 
-const PaginationLinksMaybe = props => {
-  const { listingsAreLoaded, pagination, page } = props;
-  return listingsAreLoaded && pagination && pagination.totalPages > 1 ? (
-    <PaginationLinks
-      className={css.pagination}
-      pageName="ManageListingsPage"
-      pageSearchParams={{ page }}
-      pagination={pagination}
-    />
-  ) : null;
-};
 
-function getSearch(category, listingType = LISTING_TYPES.PRODUCT) {
-  const params = new URLSearchParams();
-  params.set('pub_categoryLevel1', category);
-  params.set('pub_listingType', listingType);
-  return params.toString();
-}
+
+
+
+
+
+
+
 
 export const ManageListingsPageComponent = props => {
   const [listingMenuOpen, setListingMenuOpen] = useState(null);
@@ -72,10 +62,14 @@ export const ManageListingsPageComponent = props => {
     scrollingDisabled,
     categories,
   } = props;
-  const defaultListingType = LISTING_TYPES.PRODUCT;
-  const defaultCategoryType = categories[0].id;
-  const currentListingType = queryParams.pub_listingType || defaultListingType;
-  const currentCategoryType = queryParams.pub_categoryLevel1 || defaultCategoryType;
+  const defaultListingType = LISTING_GRID_DEFAULTS.TYPE;
+  const defaultCategoryType = LISTING_GRID_DEFAULTS.CATEGORY(categories);
+
+
+
+
+
+
 
   useEffect(() => {
     const validListingType = !queryParams.pub_listingType;
@@ -97,6 +91,19 @@ export const ManageListingsPageComponent = props => {
     }
   }, []);
 
+
+
+
+
+
+
+
+
+
+  /**
+   * [TODO:]
+   *    - Ver si estos dos hacen lo mismo....
+   */
   useEffect(() => {
     if (isErrorNoPermissionToPostListings(openingListingError?.error)) {
       const noAccessPagePath = pathByRouteName('NoAccessPage', routeConfiguration, {
@@ -116,10 +123,23 @@ export const ManageListingsPageComponent = props => {
     );
   }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   const onToggleMenu = listing => {
     setListingMenuOpen(listing);
   };
-
   const handleOpenListing = listingId => {
     if (!hasPostingRights) {
       const noAccessPagePath = pathByRouteName('NoAccessPage', routeConfiguration, {
@@ -130,37 +150,36 @@ export const ManageListingsPageComponent = props => {
       onOpenListing(listingId);
     }
   };
-
-  const hasPaginationInfo = !!pagination && pagination.totalItems != null;
-  const listingsAreLoaded = !queryInProgress && hasPaginationInfo;
-  const hasNoResults = listingsAreLoaded && pagination.totalItems === 0;
-
-  const loadingResults = (
-    <div className={css.messagePanel}>
-      <H3 as="h2" className={css.heading}>
-        <FormattedMessage id="ManageListingsPage.loadingOwnListings" />
-      </H3>
-    </div>
-  );
-
-  const queryError = (
-    <div className={css.messagePanel}>
-      <H3 as="h2" className={css.heading}>
-        <FormattedMessage id="ManageListingsPage.queryError" />
-      </H3>
-    </div>
-  );
-
   const closingErrorListingId = !!closingListingError && closingListingError.listingId;
   const openingErrorListingId = !!openingListingError && openingListingError.listingId;
+  const listingRenderer = (listing, className, renderSizes) => {
+    const listingId = listing.id.uuid;
+    return (
+      <ManageListingCard
+        key={listingId}
+        className={className}
+        listing={listing}
+        renderSizes={renderSizes}
+        isMenuOpen={!!listingMenuOpen && listingMenuOpen.id.uuid === listingId}
+        actionsInProgressListingId={openingListing || closingListing}
+        onToggleMenu={onToggleMenu}
+        onCloseListing={onCloseListing}
+        onOpenListing={handleOpenListing}
+        hasOpeningError={openingErrorListingId.uuid === listingId}
+        hasClosingError={closingErrorListingId.uuid === listingId}
+      />
+    )
+  };
 
-  const panelWidth = 62.5;
-  // Render hints for responsive image
-  const renderSizes = [
-    `(max-width: 767px) 100vw`,
-    `(max-width: 1920px) ${panelWidth / 2}vw`,
-    `${panelWidth / 3}vw`,
-  ].join(', ');
+
+
+
+
+
+
+
+
+
 
   const onTabChange = key => {
     const destination = createResourceLocatorString(
@@ -171,81 +190,6 @@ export const ManageListingsPageComponent = props => {
     );
     history.push(destination);
   };
-
-  const goToCreateListing = () => {
-    const destination = createResourceLocatorString('BatchEditListingPage', routeConfiguration, {
-      category: currentCategoryType,
-      type: 'new',
-      tab: 'upload',
-    });
-    history.push(destination);
-  };
-
-  const listingRenderer = (
-    <>
-      <Flex className={css.filters}>
-        <Flex className={css.categories}>
-          <Space
-            direction="horizontal"
-            size="middle"
-            className={css.productTypeFilters}
-            hidden={currentListingType !== LISTING_TYPES.PRODUCT}
-          >
-            {categories.map(category => (
-              <NamedLink
-                key={category.id}
-                name="ManageListingsPage"
-                active={currentCategoryType === category.id}
-                activeClassName={css.filterLinkActive}
-                to={{ search: getSearch(category.id, currentListingType) }}
-              >
-                {category.name}
-              </NamedLink>
-            ))}
-          </Space>
-        </Flex>
-        <Flex align="flex-end" style={{ justifyContent: 'center', alignItems: 'center' }}>
-          <Space size="middle">
-            <Button style={{ width: 200 }} onClick={goToCreateListing}>
-              Add New Photo(s)
-            </Button>
-          </Space>
-        </Flex>
-      </Flex>
-
-      {hasNoResults ? (
-        <div className={css.noResultsContainer}>
-          <H3 as="h2" className={css.headingNoListings}>
-            <FormattedMessage id="ManageListingsPage.noResults" />
-          </H3>
-        </div>
-      ) : (
-        <div className={css.listingCards}>
-          {listings.map(l => (
-            <ManageListingCard
-              className={css.listingCard}
-              key={l.id.uuid}
-              listing={l}
-              isMenuOpen={!!listingMenuOpen && listingMenuOpen.id.uuid === l.id.uuid}
-              actionsInProgressListingId={openingListing || closingListing}
-              onToggleMenu={onToggleMenu}
-              onCloseListing={onCloseListing}
-              onOpenListing={handleOpenListing}
-              hasOpeningError={openingErrorListingId.uuid === l.id.uuid}
-              hasClosingError={closingErrorListingId.uuid === l.id.uuid}
-              renderSizes={renderSizes}
-            />
-          ))}
-        </div>
-      )}
-
-      <PaginationLinksMaybe
-        listingsAreLoaded={listingsAreLoaded}
-        pagination={pagination}
-        page={queryParams ? queryParams.page : 1}
-      />
-    </>
-  );
 
   return (
     <Page
@@ -261,29 +205,55 @@ export const ManageListingsPageComponent = props => {
         }
         footer={<FooterContainer />}
       >
-        {queryInProgress ? loadingResults : null}
-        {queryListingsError ? queryError : null}
-
-        <div className={css.listingPanel}>
-          <H3 as="h1" className={css.heading}>
-            <FormattedMessage id="ManageListingsPage.title" defaultMessage="Manage your market" />
-          </H3>
-          <div className={css.listingCardsTabs}>
-            <Tabs
-              defaultActiveKey={currentListingType}
-              onChange={onTabChange}
-              items={[
-                { key: LISTING_TYPES.PRODUCT, label: 'Shop', children: listingRenderer },
-                { key: LISTING_TYPES.SERVICE, label: 'Services', children: listingRenderer },
-                { key: LISTING_TYPES.PORTFOLIO, label: 'Portfolio', children: listingRenderer },
-              ]}
-            ></Tabs>
-          </div>
-        </div>
+        <ListingTabs
+          listings={listings}
+          pagination={pagination}
+          queryInProgress={queryInProgress}
+          queryListingsError={queryListingsError}
+          queryParams={queryParams}
+          onTabChange={onTabChange}
+          categories={categories}
+          role={LISTING_GRID_ROLE.MANAGE}
+          titleMessageId="ManageListingsPage.title"
+          noResultsMessageId="ManageListingsPage.noResults"
+          loadingMessageId="ManageListingsPage.loadingOwnListings"
+          errorMessageId="ManageListingsPage.queryError"
+          listingRenderer={listingRenderer}
+        />
       </LayoutSingleColumn>
     </Page>
   );
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const mapStateToProps = state => {
   const { currentUser } = state.user;

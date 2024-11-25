@@ -741,6 +741,17 @@ export const LISTING_TYPES = {
   PROFILE: 'profile-listing',
 };
 
+export const LISTING_GRID_DEFAULTS = {
+  TYPE: LISTING_TYPES.PRODUCT,
+  CATEGORY: categories => categories && categories[0].id,
+};
+
+export const LISTING_GRID_ROLE = {
+  FAVORITE: 'FAVORITE',
+  MANAGE: 'MANAGE',
+  PROFILE: 'PROFILE'
+}
+
 propTypes.sellerStatus = oneOfType(SELLER_STATUS);
 
 export { propTypes };

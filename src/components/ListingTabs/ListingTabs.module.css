@@ -29,6 +29,14 @@
   }
 }
 
+.messagePanel {
+  margin: 36px 0;
+
+  @media (--viewportLarge) {
+    margin: 48px 0;
+  }
+}
+
 .listingPanel {
   padding-top: 24px;
 }
@@ -82,4 +90,29 @@
   @media (--viewportLarge) {
     margin: auto 36px 0 36px;
   }
+}
+
+.filters {
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.categories {
+  padding-right: 12px;
+}
+
+.productTypeFilters a {
+  color: var(--colorGrey700);
+  text-decoration: none;
+  font-size: 14px;
+  text-wrap: nowrap;
+}
+
+.productTypeFilters a:hover {
+  color: var(--marketplaceColorDark);
+}
+
+.productTypeFilters .filterLinkActive {
+  color: var(--marketplaceColor);
+  font-weight: bold;
 }
