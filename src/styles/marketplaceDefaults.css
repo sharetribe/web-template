@@ -73,7 +73,7 @@
 
   /* ================ Font ================ */
   --fontFamily: -apple-system, BlinkMacSystemFont, 'Inter', Helvetica, Arial, sans-serif,
-  'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 
   --fontWeightRegular: 400;
   --fontWeightMedium: 500;
@@ -1591,4 +1591,3 @@ textarea {
 .uppy-Dashboard-Item.is-video .video-overlay {
   display: block;
 }
-

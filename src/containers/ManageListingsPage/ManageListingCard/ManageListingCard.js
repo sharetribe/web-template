@@ -534,6 +534,7 @@ export const ManageListingCardComponent = props => {
       <div className={css.info}>
         <div className={css.mainInfo}>
           <div className={css.titleWrapper}>{description}</div>
+          <div className={css.titleWrapper}>{listingType}</div>
         </div>
 
         <div className={css.manageLinks}>

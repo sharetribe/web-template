@@ -29,6 +29,14 @@
   }
 }
 
+.messagePanel {
+  margin: 36px 0;
+
+  @media (--viewportLarge) {
+    margin: 48px 0;
+  }
+}
+
 .listingPanel {
   padding-top: 24px;
 }
@@ -82,4 +90,10 @@
   @media (--viewportLarge) {
     margin: auto 36px 0 36px;
   }
+}
+
+.actionButton {
+  font-size: 14px;
+  width: 200px;
+  padding: 24px;
 }

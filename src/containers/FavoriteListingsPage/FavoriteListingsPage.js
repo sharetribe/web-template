@@ -7,10 +7,10 @@ import { connect } from 'react-redux';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { injectIntl, intlShape } from '../../util/reactIntl';
 import { createResourceLocatorString } from '../../util/routes';
-import { LISTING_TYPES, propTypes } from '../../util/types';
+import { LISTING_TYPES, LISTING_GRID_ROLE, propTypes } from '../../util/types';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 
-import { Page, UserNav, LayoutSingleColumn, ListingTabs } from '../../components';
+import { Page, UserNav, LayoutSingleColumn, ListingTabs, ListingCard } from '../../components';
 
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
@@ -60,6 +60,18 @@ export const FavoriteListingsPageComponent = props => {
     history.push(destination);
   };
 
+  const listingRenderer = (listing, className, renderSizes) => {
+    const listingId = listing.id.uuid;
+    return (
+      <ListingCard
+        key={listingId}
+        className={className}
+        listing={listing}
+        renderSizes={renderSizes}
+      />
+    );
+  };
+
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
       <LayoutSingleColumn
@@ -75,11 +87,15 @@ export const FavoriteListingsPageComponent = props => {
           listings={listings}
           pagination={pagination}
           queryInProgress={queryInProgress}
-          queryFavoritesError={queryFavoritesError}
+          queryListingsError={queryFavoritesError}
           queryParams={queryParams}
-          onTabChange={onTabChange}
+          titleMessageId="FavoriteListingsPage.title"
+          noResultsMessageId="FavoriteListingsPage.noResults"
           loadingMessageId="FavoriteListingsPage.loadingFavoriteListings"
           errorMessageId="FavoriteListingsPage.queryError"
+          onTabChange={onTabChange}
+          listingRenderer={listingRenderer}
+          role={LISTING_GRID_ROLE.FAVORITE}
         />
       </LayoutSingleColumn>
     </Page>
