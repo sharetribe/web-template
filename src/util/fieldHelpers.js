@@ -2,7 +2,11 @@
 // I.e. These are custom fields to data entities. They are added through the Marketplace Console.
 // In the codebase, we also have React Final Form fields, which are wrapper around user inputs.
 
+import { isPurchaseProcessAlias, isBookingProcessAlias } from '../transactions/transaction';
 import { SCHEMA_TYPE_MULTI_ENUM, SCHEMA_TYPE_TEXT, SCHEMA_TYPE_YOUTUBE } from './types';
+import appSettings from '../config/settings';
+
+const { stripeSupportedCurrencies, subUnitDivisors } = appSettings;
 
 const keyMapping = {
   userType: {
@@ -170,4 +174,51 @@ export const pickCustomFieldProps = (
         ]
       : pickedElements;
   }, []);
+};
+
+/**
+ * Validates if the specified currency is compatible with the transaction process
+ * and the payment processor being used.
+ *
+ * @param {string} transactionProcessAlias - The alias of the transaction process. Expected to be in the format
+ *                               of "PROCESS_NAME/version" (e.g., "booking-default/release-1").
+ * @param {string} listingCurrency - A currency code (e.g., "USD", "EUR").
+ * @param {string|null} paymentProcessor - (Optional) The name of the payment processor, such as "stripe".
+ *                                         Defaults to null if no payment processor is specified.
+ *
+ * @returns {boolean} - Returns true if the currency is valid for the specified transaction process
+ *                      and payment processor, otherwise false.
+ *
+ * Notes:
+ * - The function checks if the specified currency is compatible with Stripe (for booking or purchase processes).
+ * - Stripe only supports certain currencies. You can use other currencies on your marketplace for transactions that
+ * - don't utilise Stripe. This function performs a check that the currency and transaction process provided are compatible
+ * - with each other.
+ * - When the paymentProcessor flag is passed as null, this function ensures either:
+ *    a) the currency is listed in the subUnitDivisors list (in settingsCurrency.js)
+ *    b) The process is Stripe-compatible with a Stripe-supported currency.
+ */
+export const isValidCurrencyForTransactionProcess = (
+  transactionProcessAlias,
+  listingCurrency,
+  paymentProcessor = null
+) => {
+  // booking and purchase processes use Stripe actions.
+  const isStripeRelatedProcess =
+    isPurchaseProcessAlias(transactionProcessAlias) ||
+    isBookingProcessAlias(transactionProcessAlias);
+
+  // Determine if the listing currency is supported by Stripe
+  const isStripeSupportedCurrency = stripeSupportedCurrencies.includes(listingCurrency);
+
+  if (paymentProcessor === 'stripe') {
+    // If using Stripe, only return true if both process and currency are compatible with Stripe
+    return isStripeRelatedProcess && isStripeSupportedCurrency;
+  } else if (paymentProcessor === null) {
+    // If payment processor is not specified, allow any non-stripe related process with valid subunits or Stripe-related processes with supported currency
+    return (
+      (isStripeRelatedProcess && isStripeSupportedCurrency) ||
+      (!isStripeRelatedProcess && Object.keys(subUnitDivisors).includes(listingCurrency))
+    );
+  }
 };

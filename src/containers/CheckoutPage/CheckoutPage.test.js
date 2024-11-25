@@ -108,7 +108,7 @@ describe('CheckoutPage', () => {
   it('Check that purchase has relevant info', () => {
     const listing = createListing(
       'listing1',
-      { publicData: { transactionProcessAlias: 'default-purchase', unitType: 'item' } },
+      { publicData: { transactionProcessAlias: 'default-purchase/release-1', unitType: 'item' } },
       { author: createUser('author'), images: [createImage('first-image')] }
     );
 
@@ -182,7 +182,7 @@ describe('CheckoutPage', () => {
   it('Check that booking has relevant info', () => {
     const listing = createListing(
       'listing1',
-      { publicData: { transactionProcessAlias: 'default-booking', unitType: 'day' } },
+      { publicData: { transactionProcessAlias: 'default-booking/release-1', unitType: 'day' } },
       { author: createUser('author'), images: [createImage('first-image')] }
     );
 
@@ -239,7 +239,7 @@ describe('CheckoutPage', () => {
       {
         publicData: {
           listingType: 'inquiry',
-          transactionProcessAlias: 'default-inquiry',
+          transactionProcessAlias: 'default-inquiry/release-1',
           unitType: 'inquiry',
         },
       },
@@ -317,7 +317,7 @@ describe('CheckoutPage', () => {
       {
         publicData: {
           listingType: 'inquiry',
-          transactionProcessAlias: 'default-inquiry',
+          transactionProcessAlias: 'default-inquiry/release-1',
           unitType: 'inquiry',
         },
       },
