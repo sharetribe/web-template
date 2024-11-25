@@ -1,0 +1,21 @@
+name: build-and-deploy-sharetribe
+run-name: Build and deploy Sharetribe
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - stage
+      - main
+    paths:
+      - src/**
+      - server/**
+      - package.json
+      - yarn.lock
+      - .github/workflows/build-and-deploy-sharetribe.yaml
+      - Dockerfile
+jobs:
+  build-and-deploy-sharetribe:
+    uses: mindset-swiss/github-workflows/.github/workflows/build-and-deploy-sharetribe.yaml@main
+    with:
+      docker-image-name: italiaworks
+    secrets: inherit
