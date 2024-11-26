@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+## [v6.2.0] 2024-11-26
+
 - [add] Remove bank account collection from the template, so that it is collected in the
   Stripe Onboarding flow instead.
   [#470](https://github.com/sharetribe/web-template/pull/470)
@@ -44,6 +46,8 @@ way to update this template, but currently, we follow a pattern:
 - [fix] Open discard modal on ManageListingsPage only if scrolling is disabled. Fixes an issue where
   opening the discard draft modal on mobile scrolled the page to the very bottom.
   [#497](https://github.com/sharetribe/web-template/pull/497)
+
+  [v6.2.0]: https://github.com/sharetribe/web-template/compare/v6.1.0...v6.2.0
 
 ## [v6.1.0] 2024-11-06
 
