@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] Remove bank account collection from the template, so that it is collected in the
+  Stripe Onboarding flow instead.
+  [#470](https://github.com/sharetribe/web-template/pull/470)
 - [add] Add currently available translations for DE, ES, FR.
   [#508](https://github.com/sharetribe/web-template/pull/508)
 - [add] Add support for currencies not supported by Stripe in inquiry processes.
