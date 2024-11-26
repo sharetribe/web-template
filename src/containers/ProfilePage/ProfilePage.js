@@ -446,7 +446,7 @@ const mapStateToProps = state => {
     isCurrentUser && !(isUserAuthorized(currentUser) && hasPermissionToViewData(currentUser));
 
   const listingsData = getMarketplaceEntities(state, userListingRefs);
-  const listings = _.filter(listingsData, listing => listing.attributes.processName === "default-purchase");
+  const listings = _.filter(listingsData, listing => listing.attributes.publicData.transactionProcessAlias !== "default-purchase/release-1");
 
   return {
     scrollingDisabled: isScrollingDisabled(state),
