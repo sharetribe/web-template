@@ -19,6 +19,8 @@ export const transitions = {
   // After this transition, the actual payment must be made on client-side directly to Stripe.
   REQUEST_PAYMENT: 'transition/request-payment',
 
+  REQUEST_PAYMENT_GIFT: 'transition/request-payment-gift',
+
   // A customer can also initiate a transaction with an inquiry, and
   // then transition that with a request.
   INQUIRE: 'transition/inquire',
@@ -37,6 +39,8 @@ export const transitions = {
   // SalePage, it is transitioned with the accept or decline transition.
   ACCEPT: 'transition/accept',
   DECLINE: 'transition/decline',
+  ACCEPT_GIFT: 'transition/accept-gift',
+  DECLINE_GIFT: 'transition/decline-gift',
 
   // The operator can accept or decline the offer on behalf of the provider
   OPERATOR_ACCEPT: 'transition/operator-accept',
@@ -48,16 +52,22 @@ export const transitions = {
   // Admin can also cancel the transition.
   CANCEL: 'transition/cancel',
 
+  // Admin can also cancel the transition.
+  CANCEL_BOOKING: 'transition/cancel-booking',
+
   // The backend will mark the transaction completed.
   COMPLETE: 'transition/complete',
+  COMPLETE_BOOKING: 'transition/complete-booking',
   OPERATOR_COMPLETE: 'transition/operator-complete',
 
   // Reviews are given through transaction transitions. Review 1 can be
   // by provider or customer, and review 2 will be the other party of
   // the transaction.
+  REVIEW_1_BY_PROVIDER_GIFT: 'transition/review-1-by-provider-gift',
   REVIEW_1_BY_PROVIDER: 'transition/review-1-by-provider',
   REVIEW_2_BY_PROVIDER: 'transition/review-2-by-provider',
   REVIEW_1_BY_CUSTOMER: 'transition/review-1-by-customer',
+  REVIEW_1_BY_CUSTOMER_GIFT: 'transition/review-1-by-customer-gift',
   REVIEW_2_BY_CUSTOMER: 'transition/review-2-by-customer',
   EXPIRE_CUSTOMER_REVIEW_PERIOD: 'transition/expire-customer-review-period',
   EXPIRE_PROVIDER_REVIEW_PERIOD: 'transition/expire-provider-review-period',
@@ -79,10 +89,14 @@ export const states = {
   PENDING_PAYMENT: 'pending-payment',
   PAYMENT_EXPIRED: 'payment-expired',
   PREAUTHORIZED: 'preauthorized',
+  PREAUTHORIZED_GIFT: 'preauthorized-gift',
   DECLINED: 'declined',
+  DECLINED_GIFT: 'declined-gift',
   ACCEPTED: 'accepted',
+  ACCEPTED_GIFT: 'accepted-gift',
   EXPIRED: 'expired',
   CANCELED: 'canceled',
+  COMPLETED: 'completed',
   DELIVERED: 'delivered',
   REVIEWED: 'reviewed',
   REVIEWED_BY_CUSTOMER: 'reviewed-by-customer',
@@ -113,6 +127,7 @@ export const graph = {
       on: {
         [transitions.INQUIRE]: states.INQUIRY,
         [transitions.REQUEST_PAYMENT]: states.PENDING_PAYMENT,
+        [transitions.REQUEST_PAYMENT_GIFT]: states.PREAUTHORIZED_GIFT,
       },
     },
     [states.INQUIRY]: {
@@ -129,6 +144,13 @@ export const graph = {
     },
 
     [states.PAYMENT_EXPIRED]: {},
+    [states.PREAUTHORIZED_GIFT]: {
+      on: {
+        [transitions.DECLINE_GIFT]: states.DECLINED_GIFT,
+        [transitions.EXPIRE]: states.EXPIRED,
+        [transitions.ACCEPT_GIFT]: states.ACCEPTED_GIFT,
+      },
+    },
     [states.PREAUTHORIZED]: {
       on: {
         [transitions.DECLINE]: states.DECLINED,
@@ -148,7 +170,19 @@ export const graph = {
         [transitions.OPERATOR_COMPLETE]: states.DELIVERED,
       },
     },
-
+    [states.ACCEPTED_GIFT]: {
+      on: {
+        [transitions.CANCEL_BOOKING]: states.CANCELED,
+        [transitions.COMPLETE_BOOKING]: states.COMPLETED,
+      },
+    },
+    [states.COMPLETED]: {
+      on: {
+        [transitions.EXPIRE_REVIEW_PERIOD]: states.REVIEWED,
+        [transitions.REVIEW_1_BY_CUSTOMER_GIFT]: states.REVIEWED_BY_CUSTOMER,
+        [transitions.REVIEW_1_BY_PROVIDER_GIFT]: states.REVIEWED_BY_PROVIDER,
+      },
+    },
     [states.CANCELED]: {},
     [states.DELIVERED]: {
       on: {
@@ -180,16 +214,22 @@ export const graph = {
 export const isRelevantPastTransition = (transition) =>
   [
     transitions.ACCEPT,
+    transitions.ACCEPT_GIFT,
     transitions.OPERATOR_ACCEPT,
     transitions.CANCEL,
+    transitions.CANCEL_BOOKING,
     transitions.COMPLETE,
+    transitions.COMPLETE_BOOKING,
     transitions.OPERATOR_COMPLETE,
     transitions.CONFIRM_PAYMENT,
     transitions.DECLINE,
+    transitions.DECLINE_GIFT,
     transitions.OPERATOR_DECLINE,
     transitions.EXPIRE,
     transitions.REVIEW_1_BY_CUSTOMER,
     transitions.REVIEW_1_BY_PROVIDER,
+    transitions.REVIEW_1_BY_CUSTOMER_GIFT,
+    transitions.REVIEW_1_BY_PROVIDER_GIFT,
     transitions.REVIEW_2_BY_CUSTOMER,
     transitions.REVIEW_2_BY_PROVIDER,
   ].includes(transition);
@@ -197,12 +237,20 @@ export const isRelevantPastTransition = (transition) =>
 // Processes might be different on how reviews are handled.
 // Default processes use two-sided diamond shape, where either party can make the review first
 export const isCustomerReview = (transition) =>
-  [transitions.REVIEW_1_BY_CUSTOMER, transitions.REVIEW_2_BY_CUSTOMER].includes(transition);
+  [
+    transitions.REVIEW_1_BY_CUSTOMER,
+    transitions.REVIEW_1_BY_CUSTOMER_GIFT,
+    transitions.REVIEW_2_BY_CUSTOMER,
+  ].includes(transition);
 
 // Processes might be different on how reviews are handled.
 // Default processes use two-sided diamond shape, where either party can make the review first
 export const isProviderReview = (transition) =>
-  [transitions.REVIEW_1_BY_PROVIDER, transitions.REVIEW_2_BY_PROVIDER].includes(transition);
+  [
+    transitions.REVIEW_1_BY_PROVIDER,
+    transitions.REVIEW_1_BY_PROVIDER_GIFT,
+    transitions.REVIEW_2_BY_PROVIDER,
+  ].includes(transition);
 
 // Check if the given transition is privileged.
 //
@@ -211,15 +259,22 @@ export const isProviderReview = (transition) =>
 // should go through the local API endpoints, or if using JS SDK is
 // enough.
 export const isPrivileged = (transition) =>
-  [transitions.REQUEST_PAYMENT, transitions.REQUEST_PAYMENT_AFTER_INQUIRY].includes(transition);
+  [
+    transitions.REQUEST_PAYMENT,
+    transitions.REQUEST_PAYMENT_AFTER_INQUIRY,
+    transitions.REQUEST_PAYMENT_GIFT,
+  ].includes(transition);
 
 // Check when transaction is completed (booking over)
 export const isCompleted = (transition) => {
   const txCompletedTransitions = [
     transitions.COMPLETE,
+    transitions.COMPLETE_BOOKING,
     transitions.OPERATOR_COMPLETE,
     transitions.REVIEW_1_BY_CUSTOMER,
     transitions.REVIEW_1_BY_PROVIDER,
+    transitions.REVIEW_1_BY_CUSTOMER_GIFT,
+    transitions.REVIEW_1_BY_PROVIDER_GIFT,
     transitions.REVIEW_2_BY_CUSTOMER,
     transitions.REVIEW_2_BY_PROVIDER,
     transitions.EXPIRE_REVIEW_PERIOD,

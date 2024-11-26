@@ -22,14 +22,12 @@ function CodeChecker() {
 
   const imageUrls = [giftCard150,giftCard100, giftCard50];
   const updatedListings = listings
-  .filter((listing) => listing.attributes?.publicData?.listingType === 'gift') // Filter only 'gift' listings
+  .filter((listing) => listing.attributes?.publicData?.listingType === 'gift') 
   .map((listing, index) => ({
     ...listing,
     imageUrl: imageUrls[index % imageUrls.length],
   }))
   .reverse()
-
-  console.log(updatedListings);
 
   useEffect(() => {
     setLoading(true);

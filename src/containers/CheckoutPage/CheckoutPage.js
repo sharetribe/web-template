@@ -3,7 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { useIntl } from 'react-intl';
-
+import FreeCheckout from './FreeCheckout';
 // Import contexts and util modules
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
@@ -58,6 +58,7 @@ const onSubmitCallback = () => {
 };
 
 const getProcessName = (pageData) => {
+  // HERE
   const { transaction, listing } = pageData || {};
   const processName = transaction?.id
     ? transaction?.attributes?.processName
@@ -67,7 +68,7 @@ const getProcessName = (pageData) => {
   return resolveLatestProcessName(processName);
 };
 
-const EnhancedCheckoutPage = (props) => {
+function EnhancedCheckoutPage(props) {
   const [pageData, setPageData] = useState({});
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const config = useConfiguration();
@@ -147,7 +148,6 @@ const EnhancedCheckoutPage = (props) => {
   // Redirect back to ListingPage if data is missing.
   // Redirection must happen before any data format error is thrown (e.g. wrong currency)
   if (shouldRedirect) {
-    // eslint-disable-next-line no-console
     console.error('Missing or invalid data for checkout, redirecting back to listing page.', {
       listing,
     });
@@ -184,11 +184,34 @@ const EnhancedCheckoutPage = (props) => {
   const title = processName
     ? intl.formatMessage(
         { id: `CheckoutPage.${processName}.title` },
-        { listingTitle, authorDisplayName }
+        { listingTitle, authorDisplayName },
       )
     : 'Checkout page is loading data';
 
-  return processName && isInquiryProcess ? (
+  const isFreeWithGift = pageData?.orderData?.lineItems?.some(
+    (item) =>
+      (item.code === 'line-item/provider-commission' &&
+        item.unitPrice?.amount < pageData?.orderData?.voucherFee.amount_off) ||
+      pageData?.orderData?.voucherFee.percent_off === 100,
+  );
+
+  return processName &&
+    isFreeWithGift &&
+    !isFreeBooking &&
+    !isInquiryProcess &&
+    !speculateTransactionInProgress ? (
+    <FreeCheckout
+      config={config}
+      routeConfiguration={routeConfiguration}
+      intl={intl}
+      history={history}
+      pageData={pageData}
+      listingTitle={listing?.attributes?.title}
+      title={title}
+      onSubmitCallback={onSubmitCallback}
+      {...props}
+    />
+  ) : processName && isInquiryProcess ? (
     <CheckoutPageWithInquiryProcess
       config={config}
       routeConfiguration={routeConfiguration}
@@ -196,7 +219,7 @@ const EnhancedCheckoutPage = (props) => {
       history={history}
       processName={processName}
       pageData={pageData}
-      listingTitle={listingTitle}
+      listingTitle={listing?.attributes?.title}
       title={title}
       onInquiryWithoutPayment={onInquiryWithoutPayment}
       onSubmitCallback={onSubmitCallback}
@@ -212,7 +235,7 @@ const EnhancedCheckoutPage = (props) => {
       sessionStorageKey={STORAGE_KEY}
       pageData={pageData}
       setPageData={setPageData}
-      listingTitle={listingTitle}
+      listingTitle={listing?.attributes?.title}
       title={title}
       onSubmitCallback={onSubmitCallback}
       {...props}
@@ -227,7 +250,7 @@ const EnhancedCheckoutPage = (props) => {
       sessionStorageKey={STORAGE_KEY}
       pageData={pageData}
       setPageData={setPageData}
-      listingTitle={listingTitle}
+      listingTitle={listing?.attributes?.title}
       title={title}
       customerEmail={currentUser?.attributes?.email}
       onSubmitCallback={onSubmitCallback}
@@ -238,7 +261,7 @@ const EnhancedCheckoutPage = (props) => {
       <CustomTopbar intl={intl} />
     </Page>
   );
-};
+}
 
 const mapStateToProps = (state) => {
   const {
