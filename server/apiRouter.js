@@ -21,6 +21,7 @@ const createUserWithIdp = require('./api/auth/createUserWithIdp');
 const { authenticateFacebook, authenticateFacebookCallback } = require('./api/auth/facebook');
 const { authenticateGoogle, authenticateGoogleCallback } = require('./api/auth/google');
 const offerListingPage = require('./api/offer-listing-page');
+const ping = require('./api/ping');
 
 const router = express.Router();
 
@@ -82,5 +83,6 @@ router.get('/auth/google', authenticateGoogle);
 router.get('/auth/google/callback', authenticateGoogleCallback);
 
 router.post('/offer-listing-page', offerListingPage);
+router.get('/ping', ping);
 
 module.exports = router;
