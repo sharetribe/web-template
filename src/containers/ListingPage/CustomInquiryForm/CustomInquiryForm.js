@@ -24,8 +24,11 @@ import {
 } from '../../../components';
 
 import appSettings from '../../../config/settings';
+import { formatMoney } from '../../../util/currency';
 import { NO_ACCESS_PAGE_INITIATE_TRANSACTIONS } from '../../../util/urlHelpers';
 import css from './CustomInquiryForm.module.css';
+const { types } = require('sharetribe-flex-sdk');
+const { Money } = types;
 
 const ErrorMessage = props => {
   const { error } = props;
@@ -146,8 +149,15 @@ const CustomInquiryFormComponent = props => {
         const classes = classNames(rootClassName || css.root, className);
         const submitInProgress = inProgress;
         const submitDisabled = submitInProgress;
-        setOfferPriceValue(values.offerPrice);
-
+        const { offerPrice } = values || {};
+        setOfferPriceValue(offerPrice);
+        const commissionPrice = new Money(offerPrice.amount / 10, offerPrice.currency);
+        const formattedCommissionPrice = formatMoney(intl, commissionPrice);
+        const earnPrice = new Money(
+          offerPrice.amount - commissionPrice.amount,
+          offerPrice.currency
+        );
+        const formattedEarnPrice = formatMoney(intl, earnPrice);
         return (
           <Form
             className={classes}
@@ -174,6 +184,20 @@ const CustomInquiryFormComponent = props => {
                   currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
                   disabled={!flex_price}
                 />
+
+                <div className={classNames(css.flexContent, css.commissionContent)}>
+                  <FormattedMessage id="CustomInquiryForm.commission" />
+                  <div>- {formattedCommissionPrice}</div>
+                </div>
+                <div className={classNames(css.flexContent, css.earnContent)}>
+                  <FormattedMessage id="CustomInquiryForm.earn" />
+                  <div>{formattedEarnPrice}</div>
+                </div>
+
+                <div className={css.emailNoti}>
+                  <FormattedMessage id="CustomInquiryForm.commissionNoti" />
+                </div>
+
                 <div className={submitButtonWrapperClassName}>
                   <PrimaryButton
                     type="button"
