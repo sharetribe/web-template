@@ -3,7 +3,9 @@ const { createClient } = require('@supabase/supabase-js');
 
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
-const supabaseKey = process.env.REACT_APP_SUPABASE_KEY; // Ensure this is correctly set in your .env file
+
+const supabaseKey = process.env.REACT_APP_SUPABASE_KEY; 
+
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 module.exports = async (req, res) => {
@@ -13,7 +15,7 @@ module.exports = async (req, res) => {
     return res.status(400).json({ message: 'Coupon code is required.', codeType: 'missing', valid: false });
   }
 
-  // Check if the code is a gift card or welfare card (prefix GC or WF)
+
   if (code.startsWith('GC') || code.startsWith('WF')) {
     try {
       const query = supabase.from('giftcard').select('*').eq('code', code);
@@ -27,7 +29,7 @@ module.exports = async (req, res) => {
         });
       }
 
-      // Check if the gift card has already been used
+
     if (data.used) {
       return res.status(200).json({
         message: 'Gift card has already been used.',
@@ -37,10 +39,11 @@ module.exports = async (req, res) => {
     }
 
       if (code.startsWith('GC')) {
-        // Gift card logic
+
+
         return res.status(200).json({ amount_off: data.amount, code:data.code, codeType: 'giftCard', valid: true });
       } else if (code.startsWith('WF')) {
-        // Welfare card logic: Check listingId and isWellfare status
+ 
 
         if (data.listingId === listingId && data.isWellfare) {
           return res.status(200).json({ percent_off: 100, code:data.code,  codeType: 'welfareCard', valid: true });

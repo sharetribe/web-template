@@ -69,4 +69,7 @@ module.exports = async (req, res) => {
     console.error('Error occurred:', error);
     return res.status(500).json({ error: 'An error occurred', details: error });
   }
+
 };
+
+

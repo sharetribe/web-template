@@ -415,6 +415,9 @@
     "ImageCarousel.imageAltText": "foto dell'inserzione {index}/{count}",
     "ImageFromFile.couldNotReadFile": "Impossibile leggere il file",
     "InboxPage.default-booking.accepted.status": "Accettato",
+
+    "InboxPage.default-booking.completed.status": "Completato",
+
 "InboxPage.default-booking.accepted-gift.status": "Accettato con buono",
 "InboxPage.default-booking.canceled.status": "Cancellato",
 "InboxPage.default-booking.canceled-gift.status": "Cancellato con buono",
@@ -1230,7 +1233,9 @@
     "TransactionPage.default-purchase.customer.inquiry.title": "Hai richiesto informazioni su un'inserzione.",
     "TransactionPage.default-purchase.customer.payment-expired.title": "{customerName}, non hai confermato il pagamento in tempo.",
     "TransactionPage.default-purchase.customer.pending-payment.title": "{customerName}, non hai ancora confermato il pagamento.",
-    "TransactionPage.default-purchase.customer.purchased.extraInfo": "{deliveryMethod, select, shipping {Sarai notificato quando {providerName} spedisce l'articolo.} other {Usa la funzione di chat qui sotto per domande sul tuo ordine}}",
+
+    "TransactionPage.default-purchase.customer.purchased.extraInfo": "{deliveryMethod, select, shipping {Sarai notificato quando {providerName} spedisce l'articolo.} other {scrivici qui sotto in chat per qualsiasi cosa}}",
+
     "TransactionPage.default-purchase.customer.purchased.title": "Il tuo pagamento è stato un successo!",
     "TransactionPage.default-purchase.customer.received.title": "Hai ricevuto il tuo ordine!",
     "TransactionPage.default-purchase.customer.reviewed-by-customer.title": "Hai ricevuto il tuo ordine!",

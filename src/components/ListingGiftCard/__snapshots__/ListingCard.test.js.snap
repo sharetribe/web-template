@@ -1,0 +1,99 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ListingCard matches snapshot 1`] = `
+<a
+  class="root"
+  href="/l/listing1-title/listing1"
+>
+  <div
+    class="root aspectRatioWrapper"
+  >
+    <div
+      class="aspectPadding"
+      style="padding-bottom: 100%;"
+    >
+      <div
+        class="aspectBox"
+      >
+        <div
+          style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    class="info"
+  >
+    <div
+      class="price"
+    >
+      <div
+        class="priceValue"
+        title="55"
+      >
+        55
+      </div>
+    </div>
+    <div
+      class="mainInfo"
+    >
+      <div
+        class="title"
+      >
+        listing1 title
+      </div>
+      <div
+        class="authorInfo"
+      >
+        <span>
+          ListingCard.author
+        </span>
+      </div>
+    </div>
+  </div>
+</a>
+`;
+
+exports[`ListingCard matches snapshot without price 1`] = `
+<a
+  class="root"
+  href="/l/listing1-title/listing1"
+>
+  <div
+    class="root aspectRatioWrapper"
+  >
+    <div
+      class="aspectPadding"
+      style="padding-bottom: 100%;"
+    >
+      <div
+        class="aspectBox"
+      >
+        <div
+          style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    class="info"
+  >
+    <div
+      class="mainInfo"
+    >
+      <div
+        class="title"
+      >
+        listing1 title
+      </div>
+      <div
+        class="authorInfo"
+      >
+        <span>
+          ListingCard.author
+        </span>
+      </div>
+    </div>
+  </div>
+</a>
+`;

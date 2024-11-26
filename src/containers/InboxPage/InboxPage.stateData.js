@@ -46,4 +46,6 @@ export const getStateData = (params) => {
     return getStateDataForInquiryProcess(params, processInfo());
   }
   return {};
+
 };
+

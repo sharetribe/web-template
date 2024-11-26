@@ -23,18 +23,20 @@ function GiftCardsMailBox({ user, giftCardCodes }) {
     setEmail(event.target.value);
   };
 
-  // Check if the gift card has already been gifted
+
   const checkIfAlreadyGifted = async (email, giftCardCode) => {
     try {
       const { data, error } = await supabase
         .from('giftcard')
-        .select('gifted, recipient, amount') // Include amount in the query
+
+        .select('gifted, recipient, amount') 
         .eq('code', giftCardCode)
-        .single(); // Retrieve only the matching record for the code
+        .single(); 
 
       if (error) {
         console.warn('No previous recipient found for this gift card. Proceeding.');
-        return { gifted: false, recipient: null, amount: 0 }; // Default if no match or error
+        return { gifted: false, recipient: null, amount: 0 }; 
+
       }
 
       return data
@@ -42,11 +44,13 @@ function GiftCardsMailBox({ user, giftCardCodes }) {
         : { gifted: false, recipient: null, amount: 0 };
     } catch (error) {
       console.error('Error in Supabase query:', error);
-      return { gifted: false, recipient: null, amount: 0 }; // Safe fallback
+
+      return { gifted: false, recipient: null, amount: 0 }; 
     }
   };
 
-  // Handle sending the gift card
+
+
   const handleSend = async () => {
     if (!email || !giftee) {
       setStatusMessage("Per favore, inserisci sia il nome che l'email del destinatario.");
@@ -63,13 +67,16 @@ function GiftCardsMailBox({ user, giftCardCodes }) {
         return;
       }
 
-      const giftCardCode = giftCardCodes[0]; // Use the first available gift card code
+      const giftCardCode = giftCardCodes[0]; 
 
-      // Check if already gifted
+
       const { gifted, recipient, amount } = await checkIfAlreadyGifted(email, giftCardCode);
 
       if (gifted) {
-        setStatusMessage(`Attenzione: questa carta regalo è già stata inviata a ${recipient}. Puoi comunque cambiarne il destinatario.`);
+        setStatusMessage(
+          `Attenzione: questa carta regalo è già stata inviata a ${recipient}. Puoi comunque cambiarne il destinatario.`,
+        );
+
       }
 
       await sendGiftCard({
@@ -77,11 +84,13 @@ function GiftCardsMailBox({ user, giftCardCodes }) {
         giftee,
         sender: user.attributes?.profile?.firstName || 'Club Joy',
         giftCardCode,
-        amount, 
+
+        amount,
         emailer: user.attributes?.email,
       });
 
-      setStatusMessage(`Gift Card inviata con successo a ${giftee}!`);
+      setStatusMessage(`Gift card inviata con successo a ${giftee}!`);
+
       setEmail('');
       setGiftee('');
     } catch (error) {
@@ -94,22 +103,29 @@ function GiftCardsMailBox({ user, giftCardCodes }) {
 
   return (
     <div className={css.mailboxContainer}>
-      <h4 className={css.title}>Manda la tua Carta Regalo</h4>
+
+      <h4 className={css.title}> 💙 Regala la gift card di Club Joy 🎁</h4>
       <p className={css.caption}>
-        Fai una sorpresa a un amico! Inserisci il suo nome e email, e gli faremo sapere del
-        meraviglioso regalo che hai inviato 💙!
+        Stai per fare la sorpresa più bella dell'anno. Inserisci il nome e la mail della tua persona
+        speciale, e faremo sapere loro del tuo bellissimo pensiero, con istruzioni su come usarlo.
+        Non stiamo nella pelle!
+
       </p>
       <div className={css.inputContainer}>
         <input
           type="text"
-          placeholder="Nome dell'amico"
+
+          placeholder="Persona Speciale"
+
           value={giftee}
           onChange={handleGifteeChange}
           className={css.input}
         />
         <input
           type="email"
-          placeholder="Email dell'amico"
+
+          placeholder="Email"
+
           value={email}
           onChange={handleEmailChange}
           className={css.input}
@@ -132,11 +148,13 @@ GiftCardsMailBox.propTypes = {
       }),
     }).isRequired,
   }).isRequired,
-  giftCardCodes: PropTypes.arrayOf(PropTypes.string), // Array of gift card codes
+
+  giftCardCodes: PropTypes.arrayOf(PropTypes.string), 
 };
 
 GiftCardsMailBox.defaultProps = {
-  giftCardCodes: [], // Default to an empty array
+  giftCardCodes: [], 
 };
 
 export default GiftCardsMailBox;
+

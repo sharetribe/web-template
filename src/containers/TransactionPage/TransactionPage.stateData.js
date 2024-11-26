@@ -143,4 +143,6 @@ export const getStateData = (params, process) => {
     return getStateDataForInquiryProcess(params, processInfo());
   }
   return {};
+
 };
+

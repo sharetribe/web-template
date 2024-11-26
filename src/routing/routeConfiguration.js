@@ -107,6 +107,12 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       loadData: pageDataLoadingAPI.CMSPage.loadData,
     },
     {
+      path: '/p/gift',
+      name: 'GiftCardsPage',
+      component: CMSPage,
+      loadData: pageDataLoadingAPI.CMSPage.loadData,
+    },
+    {
       path: '/p/teambuilding',
       name: 'TeambuildingPage',
       component: CMSPage,

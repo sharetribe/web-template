@@ -1,4 +1,5 @@
 import React from 'react';
+import { types as sdkTypes } from '../../../src/util/sdkLoader';
 import { bool } from 'prop-types';
 import { FormattedMessage, intlShape } from '../../util/reactIntl';
 import { formatMoney } from '../../util/currency';
@@ -8,8 +9,10 @@ import { normalizeAmount } from '../../util/listingsHelpers';
 
 import css from './OrderBreakdown.module.css';
 
+
 function LineItemTotalPrice(props) {
   const { transaction, isProvider, intl } = props;
+  const { Money } = sdkTypes;
   const processName = resolveLatestProcessName(transaction?.attributes?.processName);
   if (!processName) {
     return null;
@@ -31,10 +34,14 @@ function LineItemTotalPrice(props) {
     <FormattedMessage id="OrderBreakdown.total" />
   );
 
-  // Normalize the total price to ensure it’s non-negative
-  const totalPrice = isProvider
-    ? normalizeAmount(transaction.attributes.payoutTotal)
-    : normalizeAmount(transaction.attributes.payinTotal);
+
+  let totalPrice = isProvider
+    ? transaction.attributes.payoutTotal
+    : transaction.attributes.payinTotal;
+  
+    if (totalPrice.amount <= 0) {
+      totalPrice = new Money(0, totalPrice.currency);
+    }
 
   const formattedTotalPrice = formatMoney(intl, totalPrice);
 
