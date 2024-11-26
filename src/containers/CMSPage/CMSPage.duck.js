@@ -103,7 +103,7 @@ export const loadData = (params, search) => (dispatch) => {
 };
 
 export const queryUserListings = () => (dispatch, getState, sdk) => {
-  const userId = '65e30f93-52f8-4eed-b68c-e19719cc0c6c';
+  const userId = '66d9da86-90a0-4f0f-8be1-f472e0b6bc78';
   dispatch(queryListingsRequest(userId));
 
   const variantPrefix = 'listing-card';
