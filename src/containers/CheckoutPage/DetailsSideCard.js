@@ -32,7 +32,7 @@ function DetailsSideCard(props) {
   } = props;
 
   const { price, publicData } = listing?.attributes || {};
-  const unitType = publicData.unitType || 'unknown';
+  const unitType = processName ? (publicData.unitType || 'unknown') : 'hour';
 
   const {
     aspectWidth = 1,

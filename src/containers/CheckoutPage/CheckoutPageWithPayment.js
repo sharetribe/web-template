@@ -78,7 +78,7 @@ const getOrderParams = (
   const total =
     pageData.orderData?.lineItems?.find((item) => item.code === 'line-item/provider-commission')
       ?.unitPrice?.amount || 0;
-  const seats = pageData.orderData?.seats ? Number(pageData.orderData.seats) : null;
+  const seats = pageData.orderData?.seats ? parseInt(pageData?.orderData?.seats) : null;
   const seatNames = pageData.orderData?.guestNames;
   const seatsMaybe = seats ? { seats } : {};
 
