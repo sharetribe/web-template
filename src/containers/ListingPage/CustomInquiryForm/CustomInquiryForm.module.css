@@ -42,3 +42,22 @@
   border-radius: 12px;
   margin: 32px 0px;
 }
+
+.flexContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding:8px 0px;
+}
+
+.earnContent {
+  font-size: 20px;
+  font-family: sans-serif;
+  font-weight: bold;
+}
+
+.commissionContent {
+  font-size: 12px;
+  font-family: sans-serif;
+  color: #4B4B4F;
+}
