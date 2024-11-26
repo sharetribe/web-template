@@ -25,9 +25,18 @@ export const getStateDataForBookingProcess = (txInfo, processInfo) => {
       actionNeeded: true,
       isSaleNotification: true,
     }))
+    .cond([states.PREAUTHORIZED_GIFT, PROVIDER], () => ({
+      processName,
+      processState,
+      actionNeeded: true,
+      // isSaleNotification: true,
+    }))
+    .cond([states.ACCEPTED_GIFT, _], () => ({ processName, processState, actionNeeded: true }))
+    .cond([states.DECLINED_GIFT, _], () => ({ processName, processState, isFinal: true }))
     .cond([states.ACCEPTED, _], () => ({ processName, processState, actionNeeded: true }))
     .cond([states.DECLINED, _], () => ({ processName, processState, isFinal: true }))
     .cond([states.EXPIRED, _], () => ({ processName, processState, isFinal: true }))
+    .cond([states.COMPLETED, _], () => ({ processName, processState, isFinal: true }))
     .cond([states.DELIVERED, _], () => ({ processName, processState, actionNeeded: true }))
     .cond([states.REVIEWED_BY_PROVIDER, CUSTOMER], () => ({
       processName,
@@ -42,7 +51,7 @@ export const getStateDataForBookingProcess = (txInfo, processInfo) => {
     .cond([states.REVIEWED, _], () => ({ processName, processState, isFinal: true }))
     .default(() =>
       // Default values for other states
-      ({ processName, processState })
+      ({ processName, processState }),
     )
     .resolve();
 };

@@ -415,6 +415,7 @@
     "ImageCarousel.imageAltText": "foto dell'inserzione {index}/{count}",
     "ImageFromFile.couldNotReadFile": "Impossibile leggere il file",
     "InboxPage.default-booking.accepted.status": "Accettato",
+    "InboxPage.default-booking.completed.status": "Completato",
 "InboxPage.default-booking.accepted-gift.status": "Accettato con buono",
 "InboxPage.default-booking.canceled.status": "Cancellato",
 "InboxPage.default-booking.canceled-gift.status": "Cancellato con buono",
