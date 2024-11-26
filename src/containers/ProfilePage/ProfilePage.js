@@ -1,14 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { bool, arrayOf, oneOfType } from 'prop-types';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
 import classNames from 'classnames';
+import { arrayOf, bool, oneOfType } from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 
 import { useConfiguration } from '../../context/configurationContext';
-import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import {
-  REVIEW_TYPE_OF_PROVIDER,
+  isErrorNoViewingPermission,
+  isErrorUserPendingApproval,
+  isForbiddenError,
+  isNotFoundError,
+} from '../../util/errors';
+import { pickCustomFieldProps } from '../../util/fieldHelpers';
+import { FormattedMessage, useIntl } from '../../util/reactIntl';
+import { richText } from '../../util/richText';
+import {
   REVIEW_TYPE_OF_CUSTOMER,
+  REVIEW_TYPE_OF_PROVIDER,
   SCHEMA_TYPE_MULTI_ENUM,
   SCHEMA_TYPE_TEXT,
   SCHEMA_TYPE_YOUTUBE,
@@ -19,41 +27,34 @@ import {
   NO_ACCESS_PAGE_VIEW_LISTINGS,
   PROFILE_PAGE_PENDING_APPROVAL_VARIANT,
 } from '../../util/urlHelpers';
-import {
-  isErrorNoViewingPermission,
-  isErrorUserPendingApproval,
-  isForbiddenError,
-  isNotFoundError,
-} from '../../util/errors';
-import { pickCustomFieldProps } from '../../util/fieldHelpers';
 import { hasPermissionToViewData, isUserAuthorized } from '../../util/userHelpers';
-import { richText } from '../../util/richText';
 
-import { isScrollingDisabled } from '../../ducks/ui.duck';
-import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import {
-  Heading,
+  AvatarLarge,
+  ButtonTabNavHorizontal,
   H2,
   H4,
-  Page,
-  AvatarLarge,
-  NamedLink,
-  ListingCard,
-  Reviews,
-  ButtonTabNavHorizontal,
+  Heading,
   LayoutSideNavigation,
+  ListingCard,
+  NamedLink,
   NamedRedirect,
+  Page,
+  Reviews,
 } from '../../components';
+import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
+import { isScrollingDisabled } from '../../ducks/ui.duck';
 
-import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
+import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import css from './ProfilePage.module.css';
 import SectionDetailsMaybe from './SectionDetailsMaybe';
-import SectionTextMaybe from './SectionTextMaybe';
 import SectionMultiEnumMaybe from './SectionMultiEnumMaybe';
+import SectionTextMaybe from './SectionTextMaybe';
 import SectionYoutubeVideoMaybe from './SectionYoutubeVideoMaybe';
+import _ from 'lodash';
 
 const MAX_MOBILE_SCREEN_WIDTH = 768;
 export const MIN_LENGTH_FOR_LONG_WORDS = 20;
@@ -444,6 +445,9 @@ const mapStateToProps = state => {
   const useCurrentUser =
     isCurrentUser && !(isUserAuthorized(currentUser) && hasPermissionToViewData(currentUser));
 
+  const listingsData = getMarketplaceEntities(state, userListingRefs);
+  const listings = _.filter(listingsData, listing => listing.attributes.processName === "default-purchase");
+
   return {
     scrollingDisabled: isScrollingDisabled(state),
     currentUser,
@@ -451,7 +455,7 @@ const mapStateToProps = state => {
     user,
     userShowError,
     queryListingsError,
-    listings: getMarketplaceEntities(state, userListingRefs),
+    listings,
     reviews,
     queryReviewsError,
   };
