@@ -110,7 +110,7 @@ DetailsSideCard.propTypes = {
   firstImage: propTypes.image.isRequired,
   layoutListingImageConfig: object.isRequired,
   speculateTransactionErrorMessage: node,
-  processName: string.isRequired,
+  processName: string.isRequired || null,
   breakdown: node,
 };
 

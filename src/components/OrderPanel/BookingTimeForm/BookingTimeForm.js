@@ -3,20 +3,18 @@ import { array, bool, func, number, object, string } from 'prop-types';
 import { compose } from 'redux';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
 import classNames from 'classnames';
-import { NamedLink } from '../../../components';
+import arrayMutators from 'final-form-arrays';
+import { size } from 'lodash';
+import { NamedLink, Form, H6, PrimaryButton, FieldCheckbox } from '../..';
 import { FormattedMessage, intlShape, injectIntl } from '../../../util/reactIntl';
 import { timestampToDate } from '../../../util/dates';
 import { propTypes } from '../../../util/types';
 import { BOOKING_PROCESS_NAME, FREE_BOOKING_PROCESS_NAME } from '../../../transactions/transaction';
-import { Form, H6, PrimaryButton } from '../../../components';
-import { FieldCheckbox } from '../../../components';
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
 import FieldDateAndTimeInput from './FieldDateAndTimeInput';
-import arrayMutators from 'final-form-arrays';
 import VoucherForm from '../../VoucherForm/VoucherForm';
 
 import css from './BookingTimeForm.module.css';
-import { size } from 'lodash';
 
 export class BookingTimeFormComponent extends Component {
   constructor(props) {
@@ -47,12 +45,13 @@ export class BookingTimeFormComponent extends Component {
       seats = 1,
       voucherFee = {},
       fee = [],
+      lineItems = [],
     } = formValues.values;
     const startDate = bookingStartTime ? timestampToDate(bookingStartTime) : null;
     const endDate = bookingEndTime ? timestampToDate(bookingEndTime) : null;
 
-    const listingId = this.props.listingId;
-    const isOwnListing = this.props.isOwnListing;
+    const { listingId } = this.props;
+    const { isOwnListing } = this.props;
 
     const isStartBeforeEnd = bookingStartTime < bookingEndTime;
 
@@ -66,8 +65,9 @@ export class BookingTimeFormComponent extends Component {
         bookingStart: startDate,
         bookingEnd: endDate,
         seats: parseInt(seats, 10),
-        voucherFee: voucherFee,
-        fee: fee,
+        voucherFee,
+        lineItems,
+        fee,
       };
       this.props.onFetchTransactionLineItems({
         orderData,
@@ -174,7 +174,6 @@ export class BookingTimeFormComponent extends Component {
                   timeZone={timeZone}
                   dayCountAvailableForBooking={dayCountAvailableForBooking}
                   onSeatsInputValidChange={this.handleSeatsInputValidChange}
-                  voucherFee={voucherFee}
                   publicData={publicData}
                 />
               ) : null}
@@ -219,6 +218,7 @@ export class BookingTimeFormComponent extends Component {
                       timeZone={timeZone}
                       voucherFee={voucherFee}
                       publicData={publicData}
+                      lineItems={lineItems}
                     />
                   )}
                 </div>
@@ -229,12 +229,12 @@ export class BookingTimeFormComponent extends Component {
                 onChange={(formState) => {
                   const { guestNames, fee, seats } = formState.values;
                   const listingId = this.props.listingId.uuid;
-                  //EXCEPTION FOR PRIVATE EVENTS
+                  // EXCEPTION FOR PRIVATE EVENTS
                   // Ensure seats is a number
                   const numberOfSeats = parseInt(seats, 10);
 
                   // Adjust guestNames validation: check if all names are valid non-empty strings
-                  //const isGuestNamesValid = guestNames && guestNames.length === numberOfSeats && guestNames.every(name => typeof name === 'string' && name.trim().length > 0);
+                  // const isGuestNamesValid = guestNames && guestNames.length === numberOfSeats && guestNames.every(name => typeof name === 'string' && name.trim().length > 0);
 
                   // Validate fees only for the specific listing ID
                   const isFeeValid =
@@ -266,9 +266,7 @@ export class BookingTimeFormComponent extends Component {
               </div>
 
               <p className={css.finePrint}>
-                {payoutDetailsWarning ? (
-                  payoutDetailsWarning
-                ) : (
+                {payoutDetailsWarning || (
                   <FormattedMessage
                     id={
                       isOwnListing
