@@ -8,9 +8,9 @@ import { propTypes } from '../../../util/types';
 import { userDisplayNameAsString } from '../../../util/data';
 import { isMobileSafari } from '../../../util/userAgent';
 import { createSlug } from '../../../util/urlHelpers';
-
+import GiftCardsMailBox from '../../../components/GiftCardsMailBox/GiftCardsMailBox';
 import { AvatarLarge, NamedLink, UserDisplayName } from '../../../components';
-
+import FetchGiftCodes from '../../../components/FetchGiftCodes/FetchGiftCodes';
 import { stateDataShape } from '../TransactionPage.stateData';
 import SendMessageForm from '../SendMessageForm/SendMessageForm';
 
@@ -63,6 +63,7 @@ export class TransactionPanelComponent extends Component {
     super(props);
     this.state = {
       sendMessageFormFocused: false,
+      giftCardCodes: [],
     };
     this.isMobSaf = false;
     this.sendMessageFormName = 'TransactionPanel.SendMessageForm';
@@ -71,6 +72,11 @@ export class TransactionPanelComponent extends Component {
     this.onSendMessageFormBlur = this.onSendMessageFormBlur.bind(this);
     this.onMessageSubmit = this.onMessageSubmit.bind(this);
     this.scrollToMessage = this.scrollToMessage.bind(this);
+    this.handleGiftCardCodes = this.handleGiftCardCodes.bind(this);
+  }
+
+  handleGiftCardCodes(codes) {
+    this.setState({ giftCardCodes: codes });
   }
 
   componentDidMount() {
@@ -160,7 +166,7 @@ export class TransactionPanelComponent extends Component {
       currentUser,
       provider,
       customer,
-      intl
+      intl,
     );
 
     const deletedListingTitle = intl.formatMessage({
@@ -172,11 +178,11 @@ export class TransactionPanelComponent extends Component {
     const listingType = listing?.attributes?.publicData?.listingType;
     const tId = transactionId?.uuid;
     const start = orderBreakdown?.props?.booking?.attributes?.start;
-
+    const giftCardProps = this.props?.activityFeed?.props?.transaction?.attributes?.metadata;
     const bookingState = stateData.processState;
     const bookingRequestDate =
       this.props?.activityFeed?.props?.transaction?.attributes?.transitions?.find(
-        (t) => t.transition === 'transition/accept'
+        (t) => t.transition === 'transition/accept',
       )?.createdAt || null;
 
     const updatedCustomerObj = { ...customerObj, providerEmail };
@@ -202,13 +208,14 @@ export class TransactionPanelComponent extends Component {
         isListingDeleted={listingDeleted}
         isProvider={isProvider}
         customerObj={updatedCustomerObj}
+        giftCardProps={giftCardProps}
+        transactionId={tId}
       />
     );
 
     const listingTypeConfigs = config.listing.listingTypes;
     const listingTypeConfig = listingTypeConfigs.find((conf) => conf.listingType === listingType);
     const showPrice = isInquiryProcess && displayPrice(listingTypeConfig);
-
     const showSendMessageForm =
       !isCustomerBanned && !isCustomerDeleted && !isProviderBanned && !isProviderDeleted;
 
@@ -265,6 +272,9 @@ export class TransactionPanelComponent extends Component {
                   <BreakdownMaybe
                     orderBreakdown={orderBreakdown}
                     processName={stateData.processName}
+                    processState={stateData.processState}
+                    role={provider}
+                    transactionRole={transactionRole}
                   />
                   <DiminishedActionButtonMaybe
                     showDispute={stateData.showDispute}
@@ -325,7 +335,7 @@ export class TransactionPanelComponent extends Component {
                     </ul>
                   </div>
                 ) : (
-                  <p></p>
+                  <p />
                 )}
 
                 {this.props.protectedData.seatNames?.length > 0 ? (
@@ -336,7 +346,7 @@ export class TransactionPanelComponent extends Component {
                         <li key={0}>{this.props.protectedData.seatNames[0] || ''}</li>
                       ) : (
                         this.props.protectedData.seatNames.map((seat, index) => {
-                          let seatName =
+                          const seatName =
                             seat && typeof seat === 'string' && seat.trim() !== ''
                               ? seat
                               : 'Cliente senza nome';
@@ -351,7 +361,6 @@ export class TransactionPanelComponent extends Component {
               </div>
             ) : (
               <div className={css.feedContainer}>
-                {/* For all other listings, just display seat names */}
                 {this.props.protectedData.seatNames?.length > 0 ? (
                   <div>
                     <strong>Nomi prenotazione:</strong>
@@ -360,7 +369,7 @@ export class TransactionPanelComponent extends Component {
                         <li key={0}>{this.props.protectedData.seatNames[0] || ''}</li>
                       ) : (
                         this.props.protectedData.seatNames.map((seat, index) => {
-                          let seatName =
+                          const seatName =
                             seat && typeof seat === 'string' && seat.trim() !== ''
                               ? seat
                               : 'Cliente senza nome';
@@ -368,6 +377,15 @@ export class TransactionPanelComponent extends Component {
                         })
                       )}
                     </ul>
+                  </div>
+                ) : listingType === 'gift' ? (
+                  <div>
+                    <FetchGiftCodes
+                      user={currentUser}
+                      transactionId={tId}
+                      onGiftCardCodesFetched={this.handleGiftCardCodes}
+                    />
+                    <GiftCardsMailBox user={currentUser} giftCardCodes={this.state.giftCardCodes} />
                   </div>
                 ) : (
                   <p>Nessun nome disponibile</p>
@@ -391,7 +409,7 @@ export class TransactionPanelComponent extends Component {
                 rootClassName={css.sendMessageForm}
                 messagePlaceholder={intl.formatMessage(
                   { id: 'TransactionPanel.sendMessagePlaceholder' },
-                  { name: otherUserDisplayNameString }
+                  { name: otherUserDisplayNameString },
                 )}
                 inProgress={sendMessageInProgress}
                 sendMessageError={sendMessageError}
@@ -406,7 +424,7 @@ export class TransactionPanelComponent extends Component {
             )}
             {stateData.showActionButtons ? (
               <>
-                <div className={css.mobileActionButtonSpacer}></div>
+                <div className={css.mobileActionButtonSpacer} />
                 <div className={css.mobileActionButtons}>{actionButtons}</div>
               </>
             ) : null}
@@ -414,7 +432,7 @@ export class TransactionPanelComponent extends Component {
             !isProvider &
             (listingType == 'teambuilding') ? (
               <>
-                <div className={css.mobileActionButtonSpacer}></div>
+                <div className={css.mobileActionButtonSpacer} />
                 <div className={css.mobileActionButtons}>{teamButtons}</div>
               </>
             ) : null}
@@ -422,7 +440,7 @@ export class TransactionPanelComponent extends Component {
             isProvider &
             (listingType == 'teambuilding') ? (
               <>
-                <div className={css.mobileActionButtonSpacer}></div>
+                <div className={css.mobileActionButtonSpacer} />
                 <div className={css.mobileActionButtons}>{providerButtons}</div>
               </>
             ) : null}
@@ -463,6 +481,9 @@ export class TransactionPanelComponent extends Component {
                   className={css.breakdownContainer}
                   orderBreakdown={orderBreakdown}
                   processName={stateData.processName}
+                  processState={stateData.processState}
+                  role={provider}
+                  transactionRole={transactionRole}
                 />
                 {(stateData?.processState == 'accepted') &
                 !isProvider &

@@ -1,7 +1,9 @@
 import pick from 'lodash/pick';
-import { initiatePrivileged, transitionPrivileged } from '../../util/api';
+import { initiatePrivileged, transitionPrivileged, updateTransaction } from '../../util/api';
 import { denormalisedResponseEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
+import { createGiftCard } from '../../util/supabase';
+
 import * as log from '../../util/log';
 import { fetchCurrentUserHasOrdersSuccess, fetchCurrentUser } from '../../ducks/user.duck';
 
@@ -281,15 +283,45 @@ export const confirmPayment =
 
     return sdk.transactions
       .transition(bodyParams, queryParams)
-      .then((response) => {
+      .then(async (response) => {
         const order = response.data.data;
+
         dispatch(confirmPaymentSuccess(order.id));
+
+        // Extract relevant data from the response
+        const { payinTotal, protectedData } = order.attributes;
+
+        // Check if listingType is "gift" in protectedData
+        if (protectedData.listingType === 'gift') {
+          const { customerId } = protectedData;
+          const { amount } = payinTotal;
+
+          try {
+            // Call createGiftCard with extracted parameters
+            await createGiftCard({ customerId, amount, transactionId: order.id.uuid });
+          } catch (e) {
+            console.error('Error creating gift card:', e);
+            // Handle gift card creation error (optional)
+          }
+        } else if (
+          protectedData?.voucherFee?.codeType === 'giftCard' ||
+          protectedData?.voucherFee?.codeType === 'welfareCard'
+        ) {
+          const updateParams = {
+            transactionId: order.id.uuid,
+            voucherFee: protectedData.voucherFee,
+            total: protectedData.total,
+            isPending: protectedData.isPending,
+          };
+          updateTransaction(updateParams);
+        }
+
         return order;
       })
       .catch((e) => {
         dispatch(confirmPaymentError(storableError(e)));
         const transactionIdMaybe = transactionId ? { transactionId: transactionId.uuid } : {};
-        log.error(e, 'initiate-order-failed', {
+        log.error(e, 'confirm-payment-failed', {
           ...transactionIdMaybe,
         });
         throw e;

@@ -111,7 +111,7 @@ export const fetchGiftCard = async (userId, transactionId) => {
     if (!userId || !transactionId) {
       throw new Error('Both userId and transactionId are required to fetch gift cards.');
     }
-
+    
     const { data, error } = await supabase
       .from('giftcard')
       .select('*') // Select all columns; adjust as needed
@@ -122,6 +122,7 @@ export const fetchGiftCard = async (userId, transactionId) => {
       console.error('Error fetching gift cards:', error);
       throw error;
     }
+
 
     return data || [];
   } catch (error) {

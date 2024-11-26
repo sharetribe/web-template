@@ -259,7 +259,7 @@ function TopbarDesktop(props) {
             )}
             <SocialBar />
             <NamedLink className={css.createListingLink} name="GiftCardsPage">
-              <span className={css.createListing}>Gift cards</span>
+              <span className={css.createListing}>Gift card</span>
             </NamedLink>
 
             <CustomLinksMenu
@@ -301,7 +301,7 @@ function TopbarDesktop(props) {
           </div>
           <div className={css.rightContent}>
             <NamedLink className={css.createListingLink} name="GiftCardsPage">
-              <span className={css.createListing}>Gift cards</span>
+              <span className={css.createListing}>Gift card</span>
             </NamedLink>
             {userRole === 'provider' && (
               <NamedLink className={css.createListingLink} name="NewListingPage">

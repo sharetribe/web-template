@@ -44,7 +44,7 @@ function FetchGiftCodes({ user, transactionId, onGiftCardCodesFetched }) {
 
   return (
     <div className={css.giftCodesContainer}>
-      <h4 className={css.heading}>Il tuo codice Gift card:</h4>
+      <h4 className={css.heading}>Il tuo codice gift card:</h4>
       {giftCodes.length > 0 ? (
         <ul className={css.giftCodesList}>
           {giftCodes.map((gift, index) => (

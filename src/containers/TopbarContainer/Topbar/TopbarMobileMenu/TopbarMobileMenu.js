@@ -207,7 +207,7 @@ function TopbarMobileMenu(props) {
           className={classNames(css.navigationLink, currentPageClass('TeambuildingPage'))}
           name="GiftCardsPage"
         >
-          Gift cards
+          Gift card
         </NamedLink>
 
         <NamedLink
