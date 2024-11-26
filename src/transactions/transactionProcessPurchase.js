@@ -152,7 +152,7 @@ export const graph = {
       on: {
         [transitions.MARK_DELIVERED]: states.DELIVERED,
         [transitions.OPERATOR_MARK_DELIVERED]: states.DELIVERED,
-        [transitions.MARK_RECEIVED_FROM_PURCHASED]: states.RECEIVED,
+        // [transitions.MARK_RECEIVED_FROM_PURCHASED]: states.RECEIVED,
         [transitions.AUTO_CANCEL]: states.CANCELED,
         [transitions.CANCEL]: states.CANCELED,
       },

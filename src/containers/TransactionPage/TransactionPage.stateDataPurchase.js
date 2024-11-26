@@ -49,7 +49,7 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
       showDetailCardHeadings: true,
       showActionButtons: true,
       showExtraInfo: true,
-      primaryButtonProps: actionButtonProps(transitions.MARK_RECEIVED_FROM_PURCHASED, CUSTOMER),
+      // primaryButtonProps: actionButtonProps(transitions.MARK_RECEIVED_FROM_PURCHASED, CUSTOMER),
     }))
     .cond([states.PURCHASED, PROVIDER], () => {
       const actionButtonTranslationId = isShippable
@@ -106,7 +106,7 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
     }))
     .default(() =>
       // Default values for other states
-      ({ processName, processState, showDetailCardHeadings: true })
+      ({ processName, processState, showDetailCardHeadings: true }),
     )
     .resolve();
 };

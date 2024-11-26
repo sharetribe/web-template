@@ -83,7 +83,7 @@ function GiftCardsMailBox({ user, giftCardCodes }) {
         emailer: user.attributes?.email,
       });
 
-      setStatusMessage(`Gift Card inviata con successo a ${giftee}!`);
+      setStatusMessage(`Gift card inviata con successo a ${giftee}!`);
       setEmail('');
       setGiftee('');
     } catch (error) {
