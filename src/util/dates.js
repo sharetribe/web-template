@@ -44,7 +44,7 @@ export const isTimeZoneSupported = () => {
 export const getDefaultTimeZoneOnBrowser = () => {
   if (typeof window === 'undefined') {
     throw new Error(
-      'Utility function: getDefaultTimeZoneOnBrowser() should be called on client-side only.'
+      'Utility function: getDefaultTimeZoneOnBrowser() should be called on client-side only.',
     );
   }
 
@@ -57,7 +57,7 @@ export const getDefaultTimeZoneOnBrowser = () => {
   }
 
   console.error(
-    'Utility function: getDefaultTimeZoneOnBrowser() was not able to detect time zone.'
+    'Utility function: getDefaultTimeZoneOnBrowser() was not able to detect time zone.',
   );
   return 'Etc/UTC';
 };
@@ -646,7 +646,7 @@ export const findNextBoundary = (currentMomentOrDate, timeUnit, timeZone) =>
 export const getSharpHours = (startTime, endTime, timeZone, intl) => {
   if (!moment.tz.zone(timeZone)) {
     throw new Error(
-      'Time zones are not loaded into moment-timezone. "getSharpHours" function uses time zones.'
+      'Time zones are not loaded into moment-timezone. "getSharpHours" function uses time zones.',
     );
   }
 

@@ -44,7 +44,7 @@ class Menu extends Component {
       throw new Error(
         `Menu has invalid props:
           Both isOpen and onToggleActive need to be defined (controlled menu),
-          or neither of them (menu uses its own state management).`
+          or neither of them (menu uses its own state management).`,
       );
     }
 

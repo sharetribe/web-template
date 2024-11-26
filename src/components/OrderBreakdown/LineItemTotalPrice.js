@@ -5,6 +5,7 @@ import { FormattedMessage, intlShape } from '../../util/reactIntl';
 import { formatMoney } from '../../util/currency';
 import { propTypes } from '../../util/types';
 import { resolveLatestProcessName, getProcess } from '../../transactions/transaction';
+import { normalizeAmount } from '../../util/listingsHelpers';
 
 import css from './OrderBreakdown.module.css';
 
@@ -33,6 +34,7 @@ function LineItemTotalPrice(props) {
     <FormattedMessage id="OrderBreakdown.total" />
   );
 
+
   let totalPrice = isProvider
     ? transaction.attributes.payoutTotal
     : transaction.attributes.payinTotal;
@@ -40,6 +42,7 @@ function LineItemTotalPrice(props) {
     if (totalPrice.amount <= 0) {
       totalPrice = new Money(0, totalPrice.currency);
     }
+
   const formattedTotalPrice = formatMoney(intl, totalPrice);
 
   return (

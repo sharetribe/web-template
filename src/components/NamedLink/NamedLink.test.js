@@ -27,7 +27,7 @@ describe('NamedLink', () => {
       <div>
         <NamedLink {...landingPageProps}>link to a</NamedLink>
         <NamedLink {...searchPageProps}>link to b</NamedLink>
-      </div>
+      </div>,
     );
     expect(screen.getByRole('link', { name: 'link to a' })).toHaveClass(activeClassName);
     expect(screen.getByRole('link', { name: 'link to b' })).not.toHaveClass(activeClassName);
@@ -39,7 +39,7 @@ describe('NamedLink', () => {
     const tree = render(
       <NamedLink name="ListingPageCanonical" params={{ id }}>
         to ListingPage
-      </NamedLink>
+      </NamedLink>,
     );
     const link = screen.getByRole('link', { name: 'to ListingPage' });
     expect(link.getAttribute('href')).toEqual(`/l/${id}`);

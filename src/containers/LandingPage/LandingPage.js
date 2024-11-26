@@ -12,7 +12,7 @@ import FallbackPage from './FallbackPage';
 import { ASSET_NAME } from './LandingPage.duck';
 
 const PageBuilder = loadable(
-  () => import(/* webpackChunkName: "PageBuilder" */ '../PageBuilder/PageBuilder')
+  () => import(/* webpackChunkName: "PageBuilder" */ '../PageBuilder/PageBuilder'),
 );
 
 export function LandingPageComponent(props) {
@@ -24,7 +24,7 @@ export function LandingPageComponent(props) {
       inProgress={inProgress}
       error={error}
       fallbackPage={<FallbackPage error={error} />}
-      isLandingPage={true}
+      isLandingPage
     />
   );
 }

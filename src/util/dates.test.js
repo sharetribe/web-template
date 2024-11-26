@@ -29,7 +29,7 @@ describe('date utils', () => {
       locale: 'en-US',
       messages: {},
     },
-    cache
+    cache,
   );
   // Tests inject now() function to intl wich returns predefined date
   // Note: fakeIntl uses this same moment
@@ -213,31 +213,31 @@ describe('date utils', () => {
     it('formats a date today', () => {
       const d = new Date(Date.UTC(2017, 10, 23, 13, 51));
       expect(formatDateWithProximity(d, intl, 'Today', { timeZone: 'Etc/UTC' })).toEqual(
-        'Today, 1:51 PM'
+        'Today, 1:51 PM',
       );
     });
     it('formats a date on same week', () => {
       const d = new Date(Date.UTC(2017, 10, 22, 13, 51));
       expect(formatDateWithProximity(d, intl, 'Today', { timeZone: 'Etc/UTC' })).toEqual(
-        'Wed 1:51 PM'
+        'Wed 1:51 PM',
       );
     });
     it('formats a date on same year', () => {
       const d = new Date(Date.UTC(2017, 10, 2, 13, 51));
       expect(formatDateWithProximity(d, intl, 'Today', { timeZone: 'Etc/UTC' })).toEqual(
-        'Nov 2, 1:51 PM'
+        'Nov 2, 1:51 PM',
       );
     });
     it('formats a date on different year', () => {
       const d = new Date(Date.UTC(2020, 10, 2, 13, 51));
       expect(formatDateWithProximity(d, intl, 'Today', { timeZone: 'Etc/UTC' })).toEqual(
-        'Nov 2, 2020, 1:51 PM'
+        'Nov 2, 2020, 1:51 PM',
       );
     });
     it('formats 2017-11-23 00:00 UTC as "Wed 7:00 PM" in New York tz. (I.e. not as "Today, 12:00 AM")', () => {
       const d = new Date(Date.UTC(2017, 10, 23, 0, 0));
       expect(formatDateWithProximity(d, intl, 'Today', { timeZone: 'America/New_York' })).toEqual(
-        'Wed 7:00 PM'
+        'Wed 7:00 PM',
       );
     });
   });
@@ -261,13 +261,13 @@ describe('date utils', () => {
 
     it('should read ISO 8601 date as date in Etc/UTC and return date and time in UTC formatted ISO 8601', () => {
       expect(parseDateFromISO8601('2020-04-07', 'Etc/UTC').toISOString()).toEqual(
-        '2020-04-07T00:00:00.000Z'
+        '2020-04-07T00:00:00.000Z',
       );
     });
 
     it('should read ISO 8601 date as date in Europe/Helsinki and return date and time in UTC formetted ISO 8601', () => {
       expect(parseDateFromISO8601('2020-02-07', 'Europe/Helsinki').toISOString()).toEqual(
-        '2020-02-06T22:00:00.000Z'
+        '2020-02-06T22:00:00.000Z',
       );
     });
   });
@@ -281,13 +281,13 @@ describe('date utils', () => {
 
     it('should read ISO 8601 date as date in Etc/UTC and return date and time in UTC formatted ISO 8601', () => {
       expect(parseDateTimeString('2020-04-07 01:00', 'Etc/UTC').toISOString()).toEqual(
-        '2020-04-07T01:00:00.000Z'
+        '2020-04-07T01:00:00.000Z',
       );
     });
 
     it('should read ISO 8601 date as date in Europe/Helsinki and return date and time in UTC formetted ISO 8601', () => {
       expect(parseDateTimeString('2020-02-07 01:00', 'Europe/Helsinki').toISOString()).toEqual(
-        '2020-02-06T23:00:00.000Z'
+        '2020-02-06T23:00:00.000Z',
       );
     });
   });
@@ -300,13 +300,13 @@ describe('date utils', () => {
 
     it('should read given date in Etc/UTC and return ISO 8601 date string', () => {
       expect(stringifyDateToISO8601(new Date('2020-04-07T00:00:00.000Z'), 'Etc/UTC')).toEqual(
-        '2020-04-07'
+        '2020-04-07',
       );
     });
 
     it('should read given date in Europe/Helsinki and return ISO 8601 date string', () => {
       expect(
-        stringifyDateToISO8601(new Date('2020-02-06T22:00:00.000Z'), 'Europe/Helsinki')
+        stringifyDateToISO8601(new Date('2020-02-06T22:00:00.000Z'), 'Europe/Helsinki'),
       ).toEqual('2020-02-07');
     });
 
@@ -320,12 +320,12 @@ describe('date utils', () => {
   describe('findNextBoundary()', () => {
     it('should return 01:00 as next boundary when starting from 00:45', () => {
       expect(findNextBoundary(new Date('2019-09-18T00:45:00.000Z'), 'hour', 'Etc/UTC')).toEqual(
-        new Date('2019-09-18T01:00:00.000Z')
+        new Date('2019-09-18T01:00:00.000Z'),
       );
     });
     it('should return 02:00 as next boundary when starting from 01:00', () => {
       expect(findNextBoundary(new Date('2019-09-18T01:00:00.000Z'), 'hour', 'Etc/UTC')).toEqual(
-        new Date('2019-09-18T02:00:00.000Z')
+        new Date('2019-09-18T02:00:00.000Z'),
       );
     });
   });
@@ -395,7 +395,7 @@ describe('date utils', () => {
       const date = new Date(2018, 10, 23);
       const pad = (num) => (num >= 0 && num < 10 ? `0${num}` : `${num}`);
       expect(monthIdString(date, 'Etc/UTC')).toEqual(
-        `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}`
+        `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}`,
       );
     });
   });
@@ -406,7 +406,7 @@ describe('date utils', () => {
       let startOfWeek = getStartOfWeek(
         new Date('2023-01-01T08:30:00.000Z'),
         'Etc/UTC',
-        firstDayOfWeek
+        firstDayOfWeek,
       );
       const expectedMonday = new Date('2022-12-26T00:00:00.000Z');
       expect(startOfWeek).toEqual(expectedMonday);

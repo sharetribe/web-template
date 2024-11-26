@@ -135,7 +135,7 @@ function MomentLocaleLoader(props) {
               : ['nl', 'nl-NL'].includes(locale)
                 ? loadable.lib(() => import(/* webpackChunkName: "nl" */ 'moment/locale/nl'))
                 : loadable.lib(
-                    () => import(/* webpackChunkName: "locales" */ 'moment/min/locales.min')
+                    () => import(/* webpackChunkName: "locales" */ 'moment/min/locales.min'),
                   );
 
   return (
@@ -222,7 +222,7 @@ export function ClientApp(props) {
     const envVarKeys = Object.keys(envVars);
     const containsSECRET = (str) => str.toUpperCase().includes('SECRET');
     const suspiciousSECRETKey = envVarKeys.find(
-      (key) => key.startsWith('REACT_APP_') && containsSECRET(key)
+      (key) => key.startsWith('REACT_APP_') && containsSECRET(key),
     );
 
     if (suspiciousSECRETKey) {
@@ -327,7 +327,7 @@ export const renderApp = (
   preloadedState,
   hostedTranslations,
   hostedConfig,
-  collectChunks
+  collectChunks,
 ) => {
   // Don't pass an SDK instance since we're only rendering the
   // component tree with the preloaded store state and components
@@ -347,7 +347,7 @@ export const renderApp = (
       store={store}
       hostedTranslations={hostedTranslations}
       hostedConfig={hostedConfig}
-    />
+    />,
   );
   const body = ReactDOMServer.renderToString(WithChunks);
   const { helmet: head } = helmetContext;

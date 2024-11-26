@@ -409,7 +409,7 @@ describe('OrderPanel', () => {
       },
       {
         currentStock: createStock('stock-id', { quantity: 5 }),
-      }
+      },
     );
 
     const props = { ...commonProps, listing, isOwnListing: false, validListingTypes };
@@ -454,7 +454,7 @@ describe('OrderPanel', () => {
       },
       {
         currentStock: createStock('stock-id', { quantity: 5 }),
-      }
+      },
     );
 
     const props = { ...commonProps, listing, isOwnListing: false, validListingTypes };

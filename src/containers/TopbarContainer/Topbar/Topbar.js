@@ -194,7 +194,7 @@ class TopbarComponent extends Component {
         window.location = path;
       }
 
-      console.log('logged out'); // eslint-disable-line
+      console.log('logged out');
     });
   }
 
@@ -350,7 +350,7 @@ class TopbarComponent extends Component {
           onManageDisableScrolling={onManageDisableScrolling}
         >
           <div className={css.searchContainer}>
-            <LinkedLogo layout={'mobile'} alt={intl.formatMessage({ id: 'Topbar.logoIcon' })} />
+            <LinkedLogo layout="mobile" alt={intl.formatMessage({ id: 'Topbar.logoIcon' })} />
             <img
               src={landingCoverMobile}
               alt="Mobile Landing Cover"

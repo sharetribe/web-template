@@ -35,7 +35,7 @@ describe('NotFoundPage', () => {
         history={{
           push: noop,
         }}
-      />
+      />,
     );
     const placeholder = 'NotFoundPage.SearchForm.placeholder';
     expect(screen.getByPlaceholderText(placeholder)).toBeInTheDocument();

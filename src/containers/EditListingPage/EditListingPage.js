@@ -26,7 +26,7 @@ import {
 
 // Import shared components
 import { NamedRedirect, Page } from '../../components';
-import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+import TopbarContainer from '../TopbarContainer/TopbarContainer';
 
 // Import modules from this directory
 import {
@@ -58,7 +58,7 @@ const pickRenderableImages = (
   currentListing,
   uploadedImages,
   uploadedImageIdsInOrder = [],
-  removedImageIds = []
+  removedImageIds = [],
 ) => {
   // Images are passed to EditListingForm so that it can generate thumbnails out of them
   const currentListingImages = currentListing && currentListing.images ? currentListing.images : [];
@@ -82,7 +82,7 @@ const pickRenderableImages = (
 };
 
 // N.B. All the presentational content needs to be extracted to their own components
-export const EditListingPageComponent = (props) => {
+export function EditListingPageComponent(props) {
   const {
     currentUser,
     createStripeAccountError,
@@ -159,7 +159,8 @@ export const EditListingPageComponent = (props) => {
         };
 
     return <NamedRedirect {...redirectProps} />;
-  } else if (showForm) {
+  }
+  if (showForm) {
     const {
       createListingDraftError = null,
       publishListingError = null,
@@ -194,7 +195,7 @@ export const EditListingPageComponent = (props) => {
       currentListing,
       uploadedImages,
       uploadedImagesOrder,
-      removedImageIds
+      removedImageIds,
     );
 
     const title = isNewListingFlow
@@ -251,23 +252,22 @@ export const EditListingPageComponent = (props) => {
         />
       </Page>
     );
-  } else {
-    // If user has come to this page through a direct linkto edit existing listing,
-    // we need to load it first.
-    const loadingPageMsg = {
-      id: 'EditListingPage.loadingListingData',
-    };
-    return (
-      <Page title={intl.formatMessage(loadingPageMsg)} scrollingDisabled={scrollingDisabled}>
-        <TopbarContainer
-          mobileRootClassName={css.mobileTopbar}
-          desktopClassName={css.desktopTopbar}
-          mobileClassName={css.mobileTopbar}
-        />
-      </Page>
-    );
   }
-};
+  // If user has come to this page through a direct linkto edit existing listing,
+  // we need to load it first.
+  const loadingPageMsg = {
+    id: 'EditListingPage.loadingListingData',
+  };
+  return (
+    <Page title={intl.formatMessage(loadingPageMsg)} scrollingDisabled={scrollingDisabled}>
+      <TopbarContainer
+        mobileRootClassName={css.mobileTopbar}
+        desktopClassName={css.desktopTopbar}
+        mobileClassName={css.mobileTopbar}
+      />
+    </Page>
+  );
+}
 
 EditListingPageComponent.defaultProps = {
   createStripeAccountError: null,
@@ -391,7 +391,7 @@ const mapDispatchToProps = (dispatch) => ({
 const EditListingPage = compose(
   withRouter,
   connect(mapStateToProps, mapDispatchToProps),
-  injectIntl
+  injectIntl,
 )(EditListingPageComponent);
 
 export default EditListingPage;

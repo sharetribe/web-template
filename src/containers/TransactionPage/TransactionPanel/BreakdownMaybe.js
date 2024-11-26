@@ -14,12 +14,15 @@ function BreakdownMaybe(props) {
   if (processState === 'preauthorized-gift' || processState === 'accept-gift') {
     return (
       <div className={classes}>
+
         <H6 as="h3" className={css.orderBreakdownTitle} style={{ marginBottom: '50px' }}>
+
           <FormattedMessage
             id="TransactionPanel.preauthorizedGift.paidWithBuonoTitle"
             defaultMessage="Pagato con Gift Card"
           />
         </H6>
+
       </div>
     );
   }
@@ -43,8 +46,10 @@ function BreakdownMaybe(props) {
   if (processState === 'accepted-gift') {
     return (
       <div className={classes}>
+
         <H6 as="h3" className={css.orderBreakdownTitle} style={{ marginBottom: '50px' }}>
           "Pagato con Gift dard"
+
         </H6>
         <hr className={css.totalDivider} />
       </div>

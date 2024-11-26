@@ -11,7 +11,7 @@ import ShippingDetails from '../ShippingDetails/ShippingDetails';
 
 import css from './StripePaymentForm.module.css';
 
-const LocationOrShippingDetails = (props) => {
+function LocationOrShippingDetails(props) {
   const {
     askShippingDetails,
     showPickUplocation,
@@ -46,7 +46,7 @@ const LocationOrShippingDetails = (props) => {
       <p className={css.locationDetails}>{locationDetails}</p>
     </div>
   ) : null;
-};
+}
 
 const initialState = {
   error: null,
@@ -121,7 +121,7 @@ class SimpleOrderForm extends Component {
 
     const messagePlaceholder = intl.formatMessage(
       { id: 'StripePaymentForm.messagePlaceholder' },
-      { name: authorDisplayName }
+      { name: authorDisplayName },
     );
 
     const messageOptionalText = intl.formatMessage({
@@ -130,7 +130,7 @@ class SimpleOrderForm extends Component {
 
     const initialMessageLabel = intl.formatMessage(
       { id: 'StripePaymentForm.messageLabel' },
-      { messageOptionalText: messageOptionalText }
+      { messageOptionalText },
     );
 
     const isBookingYesNo = isBooking ? 'yes' : 'no';

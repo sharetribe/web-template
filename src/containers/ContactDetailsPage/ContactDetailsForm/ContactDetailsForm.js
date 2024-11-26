@@ -43,7 +43,7 @@ function PhoneNumberMaybe(props) {
         validate: validators.required(
           intl.formatMessage({
             id: 'ContactDetailsForm.phoneRequired',
-          })
+          }),
         ),
       }
     : {};
@@ -146,7 +146,7 @@ class ContactDetailsFormComponent extends Component {
           const emailValid = validators.emailFormatValid(emailInvalidMessage);
 
           const tooManyVerificationRequests = isTooManyEmailVerificationRequestsError(
-            sendVerificationEmailError
+            sendVerificationEmailError,
           );
 
           const emailTouched = this.submittedValues.email !== values.email;
@@ -254,12 +254,12 @@ class ContactDetailsFormComponent extends Component {
             },
             {
               minLength: validators.PASSWORD_MIN_LENGTH,
-            }
+            },
           );
 
           const passwordMinLength = validators.minLength(
             passwordMinLengthMessage,
-            validators.PASSWORD_MIN_LENGTH
+            validators.PASSWORD_MIN_LENGTH,
           );
 
           const passwordValidators = emailChanged

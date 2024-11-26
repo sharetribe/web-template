@@ -25,7 +25,7 @@ export const isSafeNumber = (decimalValue) => {
 export const unitDivisor = (currency) => {
   if (!has(subUnitDivisors, currency)) {
     throw new Error(
-      `No minor unit divisor defined for currency: ${currency} in currencySettings.js`
+      `No minor unit divisor defined for currency: ${currency} in currencySettings.js`,
     );
   }
   return subUnitDivisors[currency];
@@ -131,7 +131,7 @@ export const truncateToSubUnitPrecision = (inputString, subUnitDivisor, useComma
 
   if (!isSafeNumber(amount)) {
     throw new Error(
-      `Cannot represent money minor unit value ${amount.toString()} safely as a number`
+      `Cannot represent money minor unit value ${amount.toString()} safely as a number`,
     );
   }
 
@@ -176,7 +176,7 @@ export const convertUnitToSubUnit = (value, subUnitDivisor, useComma = false) =>
 
   if (!isSafeNumber(amount)) {
     throw new Error(
-      `Cannot represent money minor unit value ${amount.toString()} safely as a number`
+      `Cannot represent money minor unit value ${amount.toString()} safely as a number`,
     );
   } else if (amount.isInteger()) {
     return amount.toNumber();
@@ -222,7 +222,7 @@ export const convertMoneyToNumber = (value) => {
 
   if (!isSafeNumber(amount)) {
     throw new Error(
-      `Cannot represent money minor unit value ${amount.toString()} safely as a number`
+      `Cannot represent money minor unit value ${amount.toString()} safely as a number`,
     );
   }
 

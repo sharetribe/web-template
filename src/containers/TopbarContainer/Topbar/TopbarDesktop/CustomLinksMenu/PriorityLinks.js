@@ -21,7 +21,7 @@ export function CreateListingMenuLink(props) {
         <span className={css.priorityLinkLabel}>
           <FormattedMessage id="TopbarDesktop.createListing" />
         </span>
-      </NamedLink>*/}
+      </NamedLink> */}
     </div>
   );
 }
@@ -112,7 +112,7 @@ function PriorityLinks(props) {
           <PriorityLink key={linkConfig.text} linkConfig={linkConfig} />
         ))}
       </div>,
-      document.body
+      document.body,
     )
   );
 }

@@ -1,4 +1,5 @@
 .container {
+
   margin: 40px ;
   padding: 20px;
  
@@ -48,8 +49,10 @@
   color: white;
   border: none;
   border-radius: 4px;
+
   margin-top: 10px; /* Add some space between the input and button */
   font-size: 1rem; /* Adjust font size */
+
   transition: background-color 0.3s ease;
 }
 
@@ -61,6 +64,7 @@
   margin-top: 20px;
   font-size: 1rem;
 }
+
 
 .checkBox {
   display: flex;
@@ -83,10 +87,12 @@
   font-size: 1rem; /* Adjust font size for better readability */
 }
 
+
 .amount {
   font-weight: bold;
   color: #333;
 }
+
 
 @media (max-width: 767px) {
   .listingCards {
@@ -105,3 +111,4 @@
     flex-direction: row; /* Horizontal layout on desktop */
   }
 }
+

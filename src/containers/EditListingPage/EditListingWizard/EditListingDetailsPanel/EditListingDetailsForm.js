@@ -85,7 +85,7 @@ function FieldSelectListingType(props) {
         className={css.listingTypeSelect}
         label={intl.formatMessage({ id: 'EditListingDetailsForm.listingTypeLabel' })}
         validate={required(
-          intl.formatMessage({ id: 'EditListingDetailsForm.listingTypeRequired' })
+          intl.formatMessage({ id: 'EditListingDetailsForm.listingTypeRequired' }),
         )}
         onChange={handleOnChange}
       >
@@ -150,19 +150,19 @@ function CategoryField(props) {
           onChange={(event) => handleCategoryChange(event, level, currentCategoryOptions)}
           label={intl.formatMessage(
             { id: 'EditListingDetailsForm.categoryLabel' },
-            { categoryLevel: currentCategoryKey }
+            { categoryLevel: currentCategoryKey },
           )}
           validate={required(
             intl.formatMessage(
               { id: 'EditListingDetailsForm.categoryRequired' },
-              { categoryLevel: currentCategoryKey }
-            )
+              { categoryLevel: currentCategoryKey },
+            ),
           )}
         >
           <option disabled value="">
             {intl.formatMessage(
               { id: 'EditListingDetailsForm.categoryPlaceholder' },
-              { categoryLevel: currentCategoryKey }
+              { categoryLevel: currentCategoryKey },
             )}
           </option>
 
@@ -306,7 +306,7 @@ function EditListingDetailsFormComponent(props) {
           { id: 'EditListingDetailsForm.maxLength' },
           {
             maxLength: TITLE_MAX_LENGTH,
-          }
+          },
         );
         const maxLength60Message = maxLength(maxLengthMessage, TITLE_MAX_LENGTH);
 
@@ -377,7 +377,7 @@ function EditListingDetailsFormComponent(props) {
                 validate={required(
                   intl.formatMessage({
                     id: 'EditListingDetailsForm.descriptionRequired',
-                  })
+                  }),
                 )}
               />
             ) : null}
@@ -438,7 +438,7 @@ EditListingDetailsFormComponent.propTypes = {
       listingType: string.isRequired,
       transactionProcessAlias: string.isRequired,
       unitType: string.isRequired,
-    })
+    }),
   ).isRequired,
   hasExistingListingType: bool,
   listingFieldsConfig: propTypes.listingFields,

@@ -252,7 +252,7 @@ describe('auth duck', () => {
           expect(e.message).toEqual('Login or logout already in progress');
           expect(sdk.login.mock.calls.length).toEqual(0);
           expect(dispatch.mock.calls.length).toEqual(0);
-        }
+        },
       );
     });
     it('should reject if logout is in progress', () => {
@@ -272,7 +272,7 @@ describe('auth duck', () => {
           expect(e.message).toEqual('Login or logout already in progress');
           expect(sdk.login.mock.calls.length).toEqual(0);
           expect(dispatch.mock.calls.length).toEqual(0);
-        }
+        },
       );
     });
   });
@@ -324,7 +324,7 @@ describe('auth duck', () => {
           expect(e.message).toEqual('Login or logout already in progress');
           expect(sdk.logout.mock.calls.length).toEqual(0);
           expect(dispatch.mock.calls.length).toEqual(0);
-        }
+        },
       );
     });
     it('should reject if login is in progress', () => {
@@ -342,7 +342,7 @@ describe('auth duck', () => {
           expect(e.message).toEqual('Login or logout already in progress');
           expect(sdk.logout.mock.calls.length).toEqual(0);
           expect(dispatch.mock.calls.length).toEqual(0);
-        }
+        },
       );
     });
   });

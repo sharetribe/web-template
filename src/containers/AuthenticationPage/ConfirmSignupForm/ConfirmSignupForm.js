@@ -53,12 +53,12 @@ function ConfirmSignupFormComponent(props) {
         const emailRequired = validators.required(
           intl.formatMessage({
             id: 'ConfirmSignupForm.emailRequired',
-          })
+          }),
         );
         const emailValid = validators.emailFormatValid(
           intl.formatMessage({
             id: 'ConfirmSignupForm.emailInvalid',
-          })
+          }),
         );
 
         // Custom user fields. Since user types are not supported here,
@@ -124,7 +124,7 @@ function ConfirmSignupFormComponent(props) {
                     validate={validators.required(
                       intl.formatMessage({
                         id: 'ConfirmSignupForm.firstNameRequired',
-                      })
+                      }),
                     )}
                   />
                   <FieldTextInput
@@ -143,7 +143,7 @@ function ConfirmSignupFormComponent(props) {
                     validate={validators.required(
                       intl.formatMessage({
                         id: 'ConfirmSignupForm.lastNameRequired',
-                      })
+                      }),
                     )}
                   />
                 </div>

@@ -754,7 +754,7 @@ export function TestProvider({ children, initialState, config, routeConfiguratio
 
 export const renderWithProviders = (
   ui,
-  { initialState, config, routeConfiguration, withPortals, ...renderOptions } = {}
+  { initialState, config, routeConfiguration, withPortals, ...renderOptions } = {},
 ) => {
   function Wrapper({ children }) {
     return (

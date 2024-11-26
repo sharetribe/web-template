@@ -14,6 +14,7 @@ module.exports = async (req, res) => {
     const { transactionId, pageData, total, cardAmount, cardType, isPending, voucherFee } = req.body;
 
 
+
     // Retrieve current transaction metadata
     const transaction = await integrationSdk.transactions.show({ id: transactionId });
     const currentMetadata = transaction?.data?.attributes?.protectedData || {};
@@ -99,4 +100,6 @@ module.exports = async (req, res) => {
     console.error('Unexpected error:', err);
     res.status(500).json({ error: 'Unexpected error occurred' });
   }
+
 };
+

@@ -14,7 +14,7 @@ import moment from 'moment';
 
 import { useConfiguration } from '../../context/configurationContext';
 import { START_DATE, END_DATE } from '../../util/dates';
-import { FieldSelect, ValidationError } from '../../components';
+import { FieldSelect, ValidationError } from '..';
 
 import DateRangeInput from './DateRangeInput';
 import css from './FieldDateRangeInput.module.css';
@@ -52,6 +52,7 @@ class FieldDateRangeInputComponent extends Component {
     this.setState({ focusedInput });
     this.props.input.onFocus(focusedInput);
   }
+
   componentDidMount() {
     this.handleSeatsArrayUpdate();
   }
@@ -72,8 +73,8 @@ class FieldDateRangeInputComponent extends Component {
       }
     }
   }
+
   render() {
-    /* eslint-disable no-unused-vars */
     const {
       className,
       rootClassName,
@@ -94,7 +95,6 @@ class FieldDateRangeInputComponent extends Component {
       setShowSeatNames,
       ...rest
     } = this.props;
-    /* eslint-disable no-unused-vars */
 
     if (startDateLabel && !startDateId) {
       throw new Error('startDateId required when a startDateLabel is given');
@@ -122,7 +122,6 @@ class FieldDateRangeInputComponent extends Component {
         </div>
       ) : null;
 
-    // eslint-disable-next-line no-unused-vars
     const { onBlur, onFocus, type, checked, ...restOfInput } = input;
     const inputProps = {
       isDaily,
@@ -196,7 +195,7 @@ FieldDateRangeInputComponent.propTypes = {
   firstDayOfWeek: number.isRequired,
 };
 
-const FieldDateRangeInput = (props) => {
+function FieldDateRangeInput(props) {
   const config = useConfiguration();
   const { isOutsideRange, firstDayOfWeek, ...rest } = props;
 
@@ -218,7 +217,7 @@ const FieldDateRangeInput = (props) => {
       {...rest}
     />
   );
-};
+}
 
 export { DateRangeInput };
 export default FieldDateRangeInput;

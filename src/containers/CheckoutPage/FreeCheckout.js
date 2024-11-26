@@ -20,7 +20,9 @@ function FreeCheckout({
   listing,
   listingTitle,
   errorMessages,
+
   isFreeWithGift,
+
   processName,
   breakdown,
   scrollingDisabled,
@@ -37,15 +39,19 @@ function FreeCheckout({
 
   const handleConfirmBooking = () => {
     const customerEmail = currentUser?.attributes?.email;
+
     const total =
     pageData.orderData?.lineItems?.find((item) => item.code === 'line-item/provider-commission')
       ?.unitPrice?.amount || 0;
+
     const seats = pageData.orderData?.seats ? Number(pageData.orderData.seats) : null;
     const seatNames = pageData.orderData?.guestNames;
     const seatsMaybe = seats ? { seats } : {};
     const guestsNameMaybe = seatNames ? { seatNames } : {};
     const fee = pageData.orderData?.fee || [''];
+
     const { listingType, unitType } = pageData?.listing?.attributes?.publicData || {};
+
     const voucherFee = pageData.orderData?.voucherFee || 0;
     const languageMaybe = pageData.orderData.Language
       ? { Language: pageData.orderData.Language }
@@ -53,6 +59,7 @@ function FreeCheckout({
     const locationMaybe = pageData.orderData.Location
       ? { Location: pageData.orderData.Location }
       : {};
+
     const giftCardMaybe =
       listingType === 'gift'
         ? {
@@ -65,23 +72,28 @@ function FreeCheckout({
             total,
           };
 
+
     const protectedDataMaybe = {
       protectedData: {
         ...guestsNameMaybe,
         ...languageMaybe,
         ...locationMaybe,
+
         ...giftCardMaybe,
         fee,
         isFreeWithGift,
+
         email: customerEmail,
       },
     };
 
     const orderParams = {
+
       listingId: pageData?.listing?.id,
       bookingStart: pageData?.orderData?.bookingDates?.bookingStart,
       bookingEnd: pageData?.orderData?.bookingDates?.bookingEnd,
       seats: parseInt(pageData?.orderData?.seats) || 1,
+
       ...protectedDataMaybe,
     };
 
@@ -125,23 +137,29 @@ function FreeCheckout({
         <div className={css.orderFormContainer}>
           <div className={css.headingContainer}>
             <H3 as="h1" className={css.heading}>
+
               La tua gift card è pronta per esser usata!
+
             </H3>
             <H4 as="h2" className={css.detailsHeadingMobile}>
               <FormattedMessage id="CheckoutPage.listingTitle" values={{ listingTitle }} />
             </H4>
+
             <p>
               Sei a pochi passi da pura gioia! La persona speciale che ti ha regalato la gift card
               ti vuole proprio bene
             </p>
+
           </div>
 
           <MobileOrderBreakdown speculateTransactionErrorMessage={null} breakdown={breakdown} />
 
           <div className={css.submitContainer}>
+
             <PrimaryButton onClick={handleConfirmBooking}>
               Conferma uso del credito gift card
             </PrimaryButton>
+
           </div>
         </div>
         <DetailsSideCard
@@ -163,4 +181,6 @@ function FreeCheckout({
 
 const mapDispatchToProps = { initiateOrder };
 
+
 export default connect(null, mapDispatchToProps)(FreeCheckout);
+

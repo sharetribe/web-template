@@ -196,7 +196,7 @@ export const fetchPageAssets = (assets, hasFallback) => (dispatch, getState, sdk
   const version = getState()?.hostedAssets?.version;
   if (typeof version === 'undefined') {
     throw new Error(
-      'App-wide assets were not fetched first. Asset version missing from Redux store.'
+      'App-wide assets were not fetched first. Asset version missing from Redux store.',
     );
   }
 
@@ -225,7 +225,7 @@ export const fetchPageAssets = (assets, hasFallback) => (dispatch, getState, sdk
           const cmsPageData = rest[pa];
           return cmsPageData ? { ...collected, [pa]: cmsPageData } : collected;
         },
-        {}
+        {},
       );
       // Returned value looks like this for a single asset with name: "about-page":
       // {
@@ -242,7 +242,7 @@ export const fetchPageAssets = (assets, hasFallback) => (dispatch, getState, sdk
           const assetData = denormalizeAssetData(responses[i].data);
           return { ...collectedAssets, [name]: { path, data: assetData } };
         },
-        { ...fixedPageAssets, ...pickLatestPageAssetData }
+        { ...fixedPageAssets, ...pickLatestPageAssetData },
       );
       dispatch(pageAssetsSuccess(pageAssets));
       return pageAssets;

@@ -4,7 +4,7 @@ import { injectIntl } from '../../../util/reactIntl';
 import { LINE_ITEM_HOUR, TIME_SLOT_TIME } from '../../../util/types';
 
 const BookingTimeForm = loadable(
-  () => import(/* webpackChunkName: "BookingTimeForm" */ './BookingTimeForm')
+  () => import(/* webpackChunkName: "BookingTimeForm" */ './BookingTimeForm'),
 );
 
 const { UUID, Money } = sdkTypes;
@@ -91,7 +91,7 @@ export const Form = {
     onFetchTransactionLineItems: (params) => {
       console.log(
         'Call to onFetchTransactionLineItems with params:',
-        JSON.stringify(params, null, 2)
+        JSON.stringify(params, null, 2),
       );
     },
     price: new Money(1099, 'USD'),

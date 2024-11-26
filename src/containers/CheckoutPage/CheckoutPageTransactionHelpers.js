@@ -22,7 +22,7 @@ export const getTransactionTypeData = (listingType, unitTypeInPublicData, config
   }
 
   const listingTypeConfig = config.listing.listingTypes.find(
-    (lt) => lt.listingType === listingType
+    (lt) => lt.listingType === listingType,
   );
 
   if (!listingTypeConfig) {
@@ -46,9 +46,7 @@ export const getTransactionTypeData = (listingType, unitTypeInPublicData, config
  * @param {Object} bookingDates
  * @returns object containing bookingDates or an empty object.
  */
-export const bookingDatesMaybe = (bookingDates) => {
-  return bookingDates ? { bookingDates } : {};
-};
+export const bookingDatesMaybe = (bookingDates) => (bookingDates ? { bookingDates } : {});
 
 /**
  * Construct billing details (JSON-like object) for the Stripe API
@@ -68,8 +66,8 @@ export const getBillingDetails = (formValues, currentUser) => {
     addressLine1 && postal
       ? {
           address: {
-            city: city,
-            country: country,
+            city,
+            country,
             line1: addressLine1,
             line2: addressLine2,
             postal_code: postal,
@@ -170,9 +168,8 @@ export const hasPaymentExpired = (existingTransaction, process) => {
  * @param {Object} process
  * @returns true if the transaction has passed that state
  */
-export const hasTransactionPassedPendingPayment = (tx, process) => {
-  return process.hasPassedState(process.states.PENDING_PAYMENT, tx);
-};
+export const hasTransactionPassedPendingPayment = (tx, process) =>
+  process.hasPassedState(process.states.PENDING_PAYMENT, tx);
 
 const persistTransaction = (order, pageData, storeData, setPageData, sessionStorageKey) => {
   // Store the returned transaction (order)
@@ -217,10 +214,10 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
 
   let createdPaymentIntent = null;
 
-  ////////////////////////////////////////////////
+  /// /////////////////////////////////////////////
   // Step 1: initiate order                     //
   // by requesting payment from Marketplace API //
-  ////////////////////////////////////////////////
+  /// /////////////////////////////////////////////
   const fnRequestPayment = (fnParams) => {
     // fnParams should be { listingId, deliveryMethod?, quantity?, bookingDates?, paymentMethod?.setupPaymentMethodForSaving?, protectedData }
     const hasPaymentIntents = storedTx.attributes.protectedData?.stripePaymentIntents;
@@ -244,9 +241,9 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
     return orderPromise;
   };
 
-  //////////////////////////////////
+  /// ///////////////////////////////
   // Step 2: pay using Stripe SDK //
-  //////////////////////////////////
+  /// ///////////////////////////////
   const fnConfirmCardPayment = (fnParams) => {
     // fnParams should be returned transaction entity
     const order = fnParams;
@@ -254,7 +251,7 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
     const hasPaymentIntents = order?.attributes?.protectedData?.stripePaymentIntents;
     if (!hasPaymentIntents) {
       throw new Error(
-        `Missing StripePaymentIntents key in transaction's protectedData. Check that your transaction process is configured to use payment intents.`
+        `Missing StripePaymentIntents key in transaction's protectedData. Check that your transaction process is configured to use payment intents.`,
       );
     }
 
@@ -289,15 +286,15 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
       : onConfirmCardPayment(params);
   };
 
-  ///////////////////////////////////////////////////
+  /// ////////////////////////////////////////////////
   // Step 3: complete order                        //
   // by confirming payment against Marketplace API //
-  ///////////////////////////////////////////////////
+  /// ////////////////////////////////////////////////
   const fnConfirmPayment = (fnParams) => {
     // fnParams should contain { paymentIntent, transactionId } returned in step 2
     // Remember the created PaymentIntent for step 5
     createdPaymentIntent = fnParams.paymentIntent;
-    const transactionId = fnParams.transactionId;
+    const { transactionId } = fnParams;
     const transitionName = process.transitions.CONFIRM_PAYMENT;
     const isTransitionedAlready = storedTx?.attributes?.lastTransition === transitionName;
     const orderPromise = isTransitionedAlready
@@ -312,17 +309,17 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
     return orderPromise;
   };
 
-  //////////////////////////////////
+  /// ///////////////////////////////
   // Step 4: send initial message //
-  //////////////////////////////////
+  /// ///////////////////////////////
   const fnSendMessage = (fnParams) => {
     const orderId = fnParams?.id;
     return onSendMessage({ id: orderId, message });
   };
 
-  //////////////////////////////////////////////////////////
+  /// ///////////////////////////////////////////////////////
   // Step 5: optionally save card as defaultPaymentMethod //
-  //////////////////////////////////////////////////////////
+  /// ///////////////////////////////////////////////////////
   const fnSavePaymentMethod = (fnParams) => {
     const pi = createdPaymentIntent || paymentIntent;
 
@@ -334,13 +331,12 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
           }
           return { ...fnParams, paymentMethodSaved: true };
         })
-        .catch((e) => {
+        .catch((e) =>
           // Real error cases are catched already in paymentMethods page.
-          return { ...fnParams, paymentMethodSaved: false };
-        });
-    } else {
-      return Promise.resolve({ ...fnParams, paymentMethodSaved: true });
+          ({ ...fnParams, paymentMethodSaved: false }),
+        );
     }
+    return Promise.resolve({ ...fnParams, paymentMethodSaved: true });
   };
 
   // Here we create promise calls in sequence
@@ -358,7 +354,7 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
     fnConfirmCardPayment,
     fnConfirmPayment,
     fnSendMessage,
-    fnSavePaymentMethod
+    fnSavePaymentMethod,
   );
 
   return handlePaymentIntentCreation(orderParams);
@@ -394,10 +390,10 @@ export const processCheckoutWithoutPayment = (orderParams, extraParams) => {
 
   const processAlias = pageData?.listing?.attributes?.publicData?.transactionProcessAlias;
 
-  ////////////////////////////////////////////////
+  /// /////////////////////////////////////////////
   // Step 1: initiate order                     //
   // by requesting booking from Marketplace API //
-  ////////////////////////////////////////////////
+  /// /////////////////////////////////////////////
   const fnRequest = (fnParams) => {
     // fnParams should be { listingId, deliveryMethod, quantity?, bookingDates?, protectedData }
 
@@ -412,7 +408,7 @@ export const processCheckoutWithoutPayment = (orderParams, extraParams) => {
       processAlias,
       storedTx.id,
       requestTransition,
-      isPrivileged
+      isPrivileged,
     );
 
     orderPromise.then((order) => {
@@ -423,17 +419,17 @@ export const processCheckoutWithoutPayment = (orderParams, extraParams) => {
     return orderPromise;
   };
 
-  //////////////////////////////////
+  /// ///////////////////////////////
   // Step 2: send initial message //
-  //////////////////////////////////
+  /// ///////////////////////////////
   const fnSendMessage = (fnParams) => {
     const orderId = fnParams?.id;
     return onSendMessage({ id: orderId, message });
   };
 
-  /////////////////////////////////
+  /// //////////////////////////////
   // Call each step in sequence //
-  ////////////////////////////////
+  /// /////////////////////////////
 
   return fnRequest(orderParams).then((res) => fnSendMessage({ ...res }));
 };

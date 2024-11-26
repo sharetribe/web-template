@@ -159,7 +159,7 @@ const mapDispatchToProps = (dispatch) => ({
 const EmailVerificationPage = compose(
   withRouter,
   connect(mapStateToProps, mapDispatchToProps),
-  injectIntl
+  injectIntl,
 )(EmailVerificationPageComponent);
 
 export default EmailVerificationPage;

@@ -14,13 +14,13 @@ import FallbackPage, { fallbackSections } from './FallbackPage';
 import { ASSET_NAME } from './TermsOfServicePage.duck';
 
 const PageBuilder = loadable(
-  () => import(/* webpackChunkName: "PageBuilder" */ '../PageBuilder/PageBuilder')
+  () => import(/* webpackChunkName: "PageBuilder" */ '../PageBuilder/PageBuilder'),
 );
 const SectionBuilder = loadable(
   () => import(/* webpackChunkName: "SectionBuilder" */ '../PageBuilder/PageBuilder'),
   {
     resolveComponent: (components) => components.SectionBuilder,
-  }
+  },
 );
 
 // This "content-only" component can be used in modals etc.

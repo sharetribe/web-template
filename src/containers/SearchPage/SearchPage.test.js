@@ -307,7 +307,7 @@ describe('SearchPage', () => {
         initialState,
         config,
         routeConfiguration,
-      }
+      },
     );
 
     await waitFor(() => {
@@ -384,7 +384,7 @@ describe('SearchPage', () => {
         initialState,
         config,
         routeConfiguration,
-      }
+      },
     );
 
     await waitFor(() => {
@@ -471,7 +471,7 @@ describe('SearchPage', () => {
         initialState,
         config,
         routeConfiguration,
-      }
+      },
     );
 
     await waitFor(() => {

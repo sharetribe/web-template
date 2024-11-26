@@ -28,6 +28,7 @@ function GiftCardsMailBox({ user, giftCardCodes }) {
     try {
       const { data, error } = await supabase
         .from('giftcard')
+
         .select('gifted, recipient, amount') 
         .eq('code', giftCardCode)
         .single(); 
@@ -35,6 +36,7 @@ function GiftCardsMailBox({ user, giftCardCodes }) {
       if (error) {
         console.warn('No previous recipient found for this gift card. Proceeding.');
         return { gifted: false, recipient: null, amount: 0 }; 
+
       }
 
       return data
@@ -42,9 +44,11 @@ function GiftCardsMailBox({ user, giftCardCodes }) {
         : { gifted: false, recipient: null, amount: 0 };
     } catch (error) {
       console.error('Error in Supabase query:', error);
+
       return { gifted: false, recipient: null, amount: 0 }; 
     }
   };
+
 
 
   const handleSend = async () => {
@@ -72,6 +76,7 @@ function GiftCardsMailBox({ user, giftCardCodes }) {
         setStatusMessage(
           `Attenzione: questa carta regalo è già stata inviata a ${recipient}. Puoi comunque cambiarne il destinatario.`,
         );
+
       }
 
       await sendGiftCard({
@@ -79,11 +84,13 @@ function GiftCardsMailBox({ user, giftCardCodes }) {
         giftee,
         sender: user.attributes?.profile?.firstName || 'Club Joy',
         giftCardCode,
+
         amount,
         emailer: user.attributes?.email,
       });
 
       setStatusMessage(`Gift card inviata con successo a ${giftee}!`);
+
       setEmail('');
       setGiftee('');
     } catch (error) {
@@ -96,23 +103,29 @@ function GiftCardsMailBox({ user, giftCardCodes }) {
 
   return (
     <div className={css.mailboxContainer}>
+
       <h4 className={css.title}> 💙 Regala la gift card di Club Joy 🎁</h4>
       <p className={css.caption}>
         Stai per fare la sorpresa più bella dell'anno. Inserisci il nome e la mail della tua persona
         speciale, e faremo sapere loro del tuo bellissimo pensiero, con istruzioni su come usarlo.
         Non stiamo nella pelle!
+
       </p>
       <div className={css.inputContainer}>
         <input
           type="text"
+
           placeholder="Persona Speciale"
+
           value={giftee}
           onChange={handleGifteeChange}
           className={css.input}
         />
         <input
           type="email"
+
           placeholder="Email"
+
           value={email}
           onChange={handleEmailChange}
           className={css.input}
@@ -135,6 +148,7 @@ GiftCardsMailBox.propTypes = {
       }),
     }).isRequired,
   }).isRequired,
+
   giftCardCodes: PropTypes.arrayOf(PropTypes.string), 
 };
 
@@ -143,3 +157,4 @@ GiftCardsMailBox.defaultProps = {
 };
 
 export default GiftCardsMailBox;
+

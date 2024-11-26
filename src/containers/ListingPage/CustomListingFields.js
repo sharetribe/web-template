@@ -38,7 +38,7 @@ function CustomListingFields(props) {
       metadata,
       listingFieldConfigs,
       'listingType',
-      isFieldForSelectedCategories
+      isFieldForSelectedCategories,
     ) || [];
 
   return (

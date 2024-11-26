@@ -199,8 +199,8 @@ export function EditListingPhotosFormComponent(props) {
                   nonEmptyArray(
                     intl.formatMessage({
                       id: 'EditListingPhotosForm.imageRequired',
-                    })
-                  )
+                    }),
+                  ),
                 )}
               >
                 {({ fields }) =>

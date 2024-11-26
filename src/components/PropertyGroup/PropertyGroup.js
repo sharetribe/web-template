@@ -93,7 +93,7 @@ PropertyGroup.propTypes = {
     shape({
       key: string.isRequired,
       label: node.isRequired,
-    })
+    }),
   ),
   selectedOptions: arrayOf(string),
   twoColumns: bool,

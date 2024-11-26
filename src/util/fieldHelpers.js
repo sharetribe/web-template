@@ -83,7 +83,7 @@ export const pickCategoryFields = (data, prefix, level, categoryLevelOptions = [
 
   // Validate the value against category options
   const categoryOptionConfig = categoryLevelOptions.find(
-    (category) => category.id === currentCategoryValue
+    (category) => category.id === currentCategoryValue,
   );
   const isValidCategoryValue = !!categoryOptionConfig;
   const nextLevelOptions = categoryOptionConfig?.subcategories || [];
@@ -116,7 +116,7 @@ export const pickCustomFieldProps = (
   metadata,
   fieldConfigs,
   entityTypeKey,
-  shouldPickFn
+  shouldPickFn,
 ) =>
   fieldConfigs?.reduce((pickedElements, config) => {
     const { key, enumOptions, schemaType, scope = 'public', showConfig } = config;

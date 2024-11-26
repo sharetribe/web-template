@@ -92,7 +92,11 @@ function DetailsSideCard(props) {
           </H6>
           <hr className={css.totalDivider} />
         </div>
-      ) : null}
+      ) : (
+        <div className={css.orderBreakdownHeader}>
+          <p className={css.orderBreakdownTitle}>Hai utilizzato un codice sconto💙</p>
+        </div>
+      )}
       {breakdown}
     </div>
   );

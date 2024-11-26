@@ -80,7 +80,7 @@ function mergeTransactionsAndBookings(response) {
       }
 
       return acc;
-    }, {})
+    }, {}),
   );
 
   return groupedByListingAndDate;
@@ -127,7 +127,7 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
     const matchedBooking = mergedBookings.find(
       (booking) =>
         moment(booking.start).isSame(moment(calendarEvent.start), 'day') &&
-        booking.listingId === calendarEvent.resource.id.uuid
+        booking.listingId === calendarEvent.resource.id.uuid,
     );
 
     if (matchedBooking) {

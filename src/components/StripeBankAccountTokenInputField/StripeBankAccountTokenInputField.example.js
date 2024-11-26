@@ -17,7 +17,7 @@ const formComponent = (country) =>
           const { formName, handleSubmit, onChange } = fieldRenderProps;
           const { currency } = stripeCountryConfigs(
             country,
-            defaultConfig.stripe.supportedCountries
+            defaultConfig.stripe.supportedCountries,
           );
 
           return (

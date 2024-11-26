@@ -171,7 +171,7 @@ const review = createReview(
     type: 'ofProvider',
     content: 'It was awesome!',
   },
-  { author: createUser('reviewerA'), listing: listing1 }
+  { author: createUser('reviewerA'), listing: listing1 },
 );
 
 // We'll initialize the store with relevant listing data
@@ -233,7 +233,7 @@ describe('ListingPage variants', () => {
         initialState,
         config,
         routeConfiguration,
-      }
+      },
     );
 
     await waitFor(() => {
@@ -289,7 +289,7 @@ describe('ListingPage variants', () => {
         initialState,
         config,
         routeConfiguration,
-      }
+      },
     );
     await waitFor(() => {
       // Has main search in Topbar and it's a location search.
@@ -533,7 +533,7 @@ describe('ActionBarMaybe', () => {
         isOwnListing
         listing={listing}
         editParams={{ id: 'id1', slug: 'asdf', type: 'edit', tab: 'details' }}
-      />
+      />,
     );
 
     expect(screen.getByText('ListingPage.ownListing')).toBeInTheDocument();
@@ -549,7 +549,7 @@ describe('ActionBarMaybe', () => {
         isOwnListing
         listing={listing}
         editParams={{ id: 'id1', slug: 'asdf', type: 'edit', tab: 'details' }}
-      />
+      />,
     );
     expect(screen.getByText('ListingPage.ownListingPendingApproval')).toBeInTheDocument();
     expect(screen.getByText('ListingPage.editListing')).toBeInTheDocument();
@@ -564,7 +564,7 @@ describe('ActionBarMaybe', () => {
         isOwnListing
         listing={listing}
         editParams={{ id: 'id1', slug: 'asdf', type: 'edit', tab: 'details' }}
-      />
+      />,
     );
     expect(screen.getByText('ListingPage.ownClosedListing')).toBeInTheDocument();
     expect(screen.getByText('ListingPage.editListing')).toBeInTheDocument();
@@ -579,7 +579,7 @@ describe('ActionBarMaybe', () => {
         isOwnListing={false}
         listing={listing}
         editParams={{ id: 'id1', slug: 'asdf', type: 'edit', tab: 'details' }}
-      />
+      />,
     );
     expect(screen.getByText('ListingPage.closedListing')).toBeInTheDocument();
   });
@@ -593,7 +593,7 @@ describe('ActionBarMaybe', () => {
         isOwnListing={false}
         listing={listing}
         editParams={{ id: 'id1', slug: 'asdf', type: 'edit', tab: 'details' }}
-      />
+      />,
     );
     expect(actionBar.asFragment().firstChild).toBeNull();
   });

@@ -72,7 +72,7 @@ const redirectAfterDraftUpdate = (listingId, params, tab, marketplaceTabs, histo
   history.push(to);
 };
 
-const EditListingWizardTab = (props) => {
+function EditListingWizardTab(props) {
   const {
     tab,
     marketplaceTabs,
@@ -126,7 +126,7 @@ const EditListingWizardTab = (props) => {
         tab,
         marketplaceTabs,
         history,
-        routeConfiguration
+        routeConfiguration,
       );
     } else {
       handlePublishListing(listingId);
@@ -156,26 +156,22 @@ const EditListingWizardTab = (props) => {
       });
   };
 
-  const panelProps = (tab) => {
-    return {
-      className: css.panel,
-      errors,
-      listing,
-      panelUpdated: updatedTab === tab,
-      params,
-      locationSearch,
-      updateInProgress,
-      // newListingPublished and fetchInProgress are flags for the last wizard tab
-      ready: newListingPublished,
-      disabled: fetchInProgress,
-      submitButtonText: tabSubmitButtonText,
-      listingTypes: config.listing.listingTypes,
-      onManageDisableScrolling,
-      onSubmit: (values) => {
-        return onCompleteEditListingWizardTab(tab, values);
-      },
-    };
-  };
+  const panelProps = (tab) => ({
+    className: css.panel,
+    errors,
+    listing,
+    panelUpdated: updatedTab === tab,
+    params,
+    locationSearch,
+    updateInProgress,
+    // newListingPublished and fetchInProgress are flags for the last wizard tab
+    ready: newListingPublished,
+    disabled: fetchInProgress,
+    submitButtonText: tabSubmitButtonText,
+    listingTypes: config.listing.listingTypes,
+    onManageDisableScrolling,
+    onSubmit: (values) => onCompleteEditListingWizardTab(tab, values),
+  });
 
   // TODO: add missing cases for supported tabs
   switch (tab) {
@@ -231,7 +227,7 @@ const EditListingWizardTab = (props) => {
               tab,
               marketplaceTabs,
               history,
-              routeConfiguration
+              routeConfiguration,
             )
           }
           config={config}
@@ -256,7 +252,7 @@ const EditListingWizardTab = (props) => {
     default:
       return null;
   }
-};
+}
 
 EditListingWizardTab.defaultProps = {
   listing: null,

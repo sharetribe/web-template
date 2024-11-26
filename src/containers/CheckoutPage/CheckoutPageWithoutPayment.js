@@ -48,7 +48,7 @@ const getOrderParams = (
   shippingDetails,
   optionalPaymentParams,
   config,
-  customerEmail
+  customerEmail,
 ) => {
   const quantity = pageData.orderData?.quantity;
   const quantityMaybe = quantity ? { quantity } : {};
@@ -111,7 +111,7 @@ const fetchSpeculatedTransactionIfNeeded = (orderParams, pageData, fetchSpeculat
       processAlias,
       transactionId,
       requestTransition,
-      isPrivileged
+      isPrivileged,
     );
   }
 };
@@ -207,7 +207,7 @@ const handleSubmit = (values, process, props, submitting, setSubmitting) => {
     });
 };
 
-export const CheckoutPageWithoutPayment = (props) => {
+export function CheckoutPageWithoutPayment(props) {
   const [submitting, setSubmitting] = useState(false);
   // Initialized stripe library is saved to state - if it's needed at some point here too.
 
@@ -270,7 +270,7 @@ export const CheckoutPageWithoutPayment = (props) => {
     tx?.attributes?.lineItems?.length > 0 ? getFormattedTotalPrice(tx, intl) : null;
 
   const process = processName ? getProcess(processName) : null;
-  const transitions = process.transitions;
+  const { transitions } = process;
 
   // Allow showing page when currentUser is still being downloaded,
   // but show payment form only when user info is loaded.
@@ -298,7 +298,7 @@ export const CheckoutPageWithoutPayment = (props) => {
     null,
     null,
     speculateTransactionError,
-    listingLink
+    listingLink,
   );
 
   const txTransitions = existingTransaction?.attributes?.transitions || [];
@@ -390,7 +390,7 @@ export const CheckoutPageWithoutPayment = (props) => {
       </div>
     </Page>
   );
-};
+}
 
 CheckoutPageWithoutPayment.defaultProps = {
   initiateOrderError: null,

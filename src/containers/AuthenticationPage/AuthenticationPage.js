@@ -6,12 +6,12 @@ import { withRouter, Redirect } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import classNames from 'classnames';
 import isEmpty from 'lodash/isEmpty';
-import { slackNotifications } from '../../util/api';
+import { createClient } from '@supabase/supabase-js';
+import { slackNotifications, apiBaseUrl, newsletter } from '../../util/api';
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { camelize } from '../../util/string';
 import { pathByRouteName } from '../../util/routes';
-import { apiBaseUrl } from '../../util/api';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { ensureCurrentUser } from '../../util/data';
@@ -36,8 +36,8 @@ import {
   LayoutSingleColumn,
 } from '../../components';
 
-import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
-import FooterContainer from '../../containers/FooterContainer/FooterContainer';
+import TopbarContainer from '../TopbarContainer/TopbarContainer';
+import FooterContainer from '../FooterContainer/FooterContainer';
 
 import TermsAndConditions from './TermsAndConditions/TermsAndConditions';
 import ConfirmSignupForm from './ConfirmSignupForm/ConfirmSignupForm';
@@ -47,16 +47,14 @@ import BsignupForm from './BsignupForm/BsignupForm';
 import EmailVerificationInfo from './EmailVerificationInfo';
 
 // We need to get ToS asset and get it rendered for the modal on this page.
-import { TermsOfServiceContent } from '../../containers/TermsOfServicePage/TermsOfServicePage';
+import { TermsOfServiceContent } from '../TermsOfServicePage/TermsOfServicePage';
 
 // We need to get PrivacyPolicy asset and get it rendered for the modal on this page.
-import { PrivacyPolicyContent } from '../../containers/PrivacyPolicyPage/PrivacyPolicyPage';
+import { PrivacyPolicyContent } from '../PrivacyPolicyPage/PrivacyPolicyPage';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
 import { TOS_ASSET_NAME, PRIVACY_POLICY_ASSET_NAME } from './AuthenticationPage.duck';
-import { createClient } from '@supabase/supabase-js';
 import css from './AuthenticationPage.module.css';
 import { FacebookLogo, GoogleLogo } from './socialLoginLogos';
-import { newsletter } from '../../util/api';
 
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
 const supabaseKey = process.env.REACT_APP_SUPABASE_KEY;
@@ -357,7 +355,7 @@ export function AuthenticationForms(props) {
 
 // Form for confirming information from IdP (e.g. Facebook)
 // This is shown before new user is created to Marketplace API
-const ConfirmIdProviderInfoForm = (props) => {
+function ConfirmIdProviderInfoForm(props) {
   const {
     userType,
     authInfo,
@@ -455,9 +453,9 @@ const ConfirmIdProviderInfoForm = (props) => {
       />
     </div>
   );
-};
+}
 
-export const AuthenticationOrConfirmInfoForm = (props) => {
+export function AuthenticationOrConfirmInfoForm(props) {
   const {
     tab,
     userType,
@@ -504,14 +502,14 @@ export const AuthenticationOrConfirmInfoForm = (props) => {
       termsAndConditions={termsAndConditions}
     />
   );
-};
+}
 
 const getAuthInfoFromCookies = () =>
   Cookies.get('st-authinfo') ? JSON.parse(Cookies.get('st-authinfo').replace('j:', '')) : null;
 const getAuthErrorFromCookies = () =>
   Cookies.get('st-autherror') ? JSON.parse(Cookies.get('st-autherror').replace('j:', '')) : null;
 
-export const AuthenticationPageComponent = (props) => {
+export function AuthenticationPageComponent(props) {
   const [tosModalOpen, setTosModalOpen] = useState(false);
   const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
   const [authInfo, setAuthInfo] = useState(getAuthInfoFromCookies());
@@ -595,7 +593,7 @@ export const AuthenticationPageComponent = (props) => {
   }
 
   const resendErrorTranslationId = isTooManyEmailVerificationRequestsError(
-    sendVerificationEmailError
+    sendVerificationEmailError,
   )
     ? 'AuthenticationPage.resendFailedTooManyRequests'
     : 'AuthenticationPage.resendFailed';
@@ -708,7 +706,7 @@ export const AuthenticationPageComponent = (props) => {
       </Modal>
     </Page>
   );
-};
+}
 
 AuthenticationPageComponent.defaultProps = {
   currentUser: null,
@@ -814,7 +812,7 @@ const mapDispatchToProps = (dispatch) => ({
 const AuthenticationPage = compose(
   withRouter,
   connect(mapStateToProps, mapDispatchToProps),
-  injectIntl
+  injectIntl,
 )(AuthenticationPageComponent);
 
 export default AuthenticationPage;

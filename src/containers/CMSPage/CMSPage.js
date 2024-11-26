@@ -9,7 +9,7 @@ import { withRouter } from 'react-router-dom';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
 
 const PageBuilder = loadable(
-  () => import(/* webpackChunkName: "PageBuilder" */ '../PageBuilder/PageBuilder')
+  () => import(/* webpackChunkName: "PageBuilder" */ '../PageBuilder/PageBuilder'),
 );
 
 export function CMSPageComponent(props) {

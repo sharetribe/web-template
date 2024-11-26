@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import css from './PopUpMessage.module.css';
 import { useIntl } from 'react-intl';
+import css from './PopUpMessage.module.css';
 import { PrimaryButton, SecondaryButton } from '../Button/Button';
 
-const PopUp = ({ message, onCancel }) => {
+function PopUp({ message, onCancel }) {
   const intl = useIntl();
 
   return (
@@ -18,6 +18,6 @@ const PopUp = ({ message, onCancel }) => {
       </div>
     </div>
   );
-};
+}
 
 export default PopUp;

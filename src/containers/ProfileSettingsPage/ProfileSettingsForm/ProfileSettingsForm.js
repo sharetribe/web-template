@@ -45,7 +45,7 @@ function DisplayNameMaybe(props) {
         validate: validators.required(
           intl.formatMessage({
             id: 'ProfileSettingsForm.displayNameRequired',
-          })
+          }),
         ),
       }
     : {};
@@ -244,7 +244,7 @@ class ProfileSettingsFormComponent extends Component {
             userFields,
             intl,
             userTypeConfig?.userType,
-            false
+            false,
           );
 
           return (

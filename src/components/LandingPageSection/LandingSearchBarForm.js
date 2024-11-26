@@ -67,7 +67,7 @@ function LandingSearchBarForm({ onSearchSubmit, className, isTeamBuilding }) {
     if (!inputLocation) return; // Don't fetch if input is empty
 
     const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-      inputLocation
+      inputLocation,
     )}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`;
 
     try {

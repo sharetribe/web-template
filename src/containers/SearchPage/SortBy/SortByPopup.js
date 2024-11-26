@@ -112,7 +112,7 @@ SortByPopup.propTypes = {
     shape({
       key: string.isRequired,
       label: string.isRequired,
-    })
+    }),
   ).isRequired,
   initialValue: string,
   contentPlacementOffset: number,

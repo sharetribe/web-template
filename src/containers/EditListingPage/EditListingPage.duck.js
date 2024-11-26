@@ -1,5 +1,6 @@
 import omit from 'lodash/omit';
 
+import { values } from 'lodash';
 import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
 import { denormalisedResponseEntities } from '../../util/data';
 import {
@@ -24,7 +25,6 @@ import {
   fetchStripeAccount,
 } from '../../ducks/stripeConnectAccount.duck';
 import { fetchCurrentUser } from '../../ducks/user.duck';
-import { values } from 'lodash';
 
 const { UUID } = sdkTypes;
 
@@ -36,12 +36,10 @@ const getArrayOfNItems = (n) =>
     .slice(1);
 
 // Return an array of image ids
-const imageIds = (images) => {
+const imageIds = (images) =>
   // For newly uploaded image the UUID can be found from "img.imageId"
   // and for existing listing images the id is "img.id"
-  return images ? images.map((img) => img.imageId || img.id) : null;
-};
-
+  images ? images.map((img) => img.imageId || img.id) : null;
 // After listing creation & update, we want to make sure that uploadedImages state is cleaned
 const updateUploadedImagesState = (state, payload) => {
   const { uploadedImages, uploadedImagesOrder } = state;
@@ -53,7 +51,7 @@ const updateUploadedImagesState = (state, payload) => {
   // Uploaded images (which are propably not yet attached to listing)
   const unattachedImages = Object.values(state.uploadedImages);
   const duplicateImageEntities = unattachedImages.filter((unattachedImg) =>
-    attachedImageUUIDStrings.includes(unattachedImg.imageId?.uuid)
+    attachedImageUUIDStrings.includes(unattachedImg.imageId?.uuid),
   );
   return duplicateImageEntities.length > 0
     ? {
@@ -80,14 +78,13 @@ const getImageVariantInfo = (listingImageConfig) => {
   };
 };
 
-const sortExceptionsByStartTime = (a, b) => {
-  return a.attributes.start.getTime() - b.attributes.start.getTime();
-};
+const sortExceptionsByStartTime = (a, b) =>
+  a.attributes.start.getTime() - b.attributes.start.getTime();
 
 // When navigating through weekly calendar,
 // we want to merge new week-related data (inProgres, error) to weeklyExceptionQueries hashmap.
-const mergeToWeeklyExceptionQueries = (weeklyExceptionQueries, weekStartId, newDataProps) => {
-  return weekStartId
+const mergeToWeeklyExceptionQueries = (weeklyExceptionQueries, weekStartId, newDataProps) =>
+  weekStartId
     ? {
         weeklyExceptionQueries: {
           ...weeklyExceptionQueries,
@@ -98,11 +95,10 @@ const mergeToWeeklyExceptionQueries = (weeklyExceptionQueries, weekStartId, newD
         },
       }
     : {};
-};
 // When navigating through monthly calendar (e.g. when adding a new AvailabilityException),
 // we want to merge new month-related data (inProgres, error) to monthlyExceptionQueries hashmap.
-const mergeToMonthlyExceptionQueries = (monthlyExceptionQueries, monthId, newDataProps) => {
-  return monthId
+const mergeToMonthlyExceptionQueries = (monthlyExceptionQueries, monthId, newDataProps) =>
+  monthId
     ? {
         monthlyExceptionQueries: {
           ...monthlyExceptionQueries,
@@ -113,7 +109,6 @@ const mergeToMonthlyExceptionQueries = (monthlyExceptionQueries, monthId, newDat
         },
       }
     : {};
-};
 
 const requestAction = (actionType) => (params) => ({ type: actionType, payload: { params } });
 
@@ -265,7 +260,6 @@ export default function reducer(state = initialState, action = {}) {
         updateInProgress: false,
       };
     case PUBLISH_LISTING_ERROR: {
-      // eslint-disable-next-line no-console
       console.error(payload);
       return {
         ...state,
@@ -305,7 +299,6 @@ export default function reducer(state = initialState, action = {}) {
         : { ...initialState, listingId: listingIdFromPayload };
     }
     case SHOW_LISTINGS_ERROR:
-      // eslint-disable-next-line no-console
       console.error(payload);
       return { ...state, showListingsError: payload, redirectToListing: false };
 
@@ -419,7 +412,6 @@ export default function reducer(state = initialState, action = {}) {
       return { ...state, uploadedImages };
     }
     case UPLOAD_IMAGE_ERROR: {
-      // eslint-disable-next-line no-console
       const { id, error } = payload;
       const uploadedImagesOrder = state.uploadedImagesOrder.filter((i) => i !== id);
       const uploadedImages = omit(state.uploadedImages, id);
@@ -524,7 +516,7 @@ export const fetchAvailabilityExceptionsSuccess = successAction(FETCH_EXCEPTIONS
 export const fetchAvailabilityExceptionsError = errorAction(FETCH_EXCEPTIONS_ERROR);
 // Add extra data from additional pages
 export const fetchExtraAvailabilityExceptionsSuccess = successAction(
-  FETCH_EXTRA_EXCEPTIONS_SUCCESS
+  FETCH_EXTRA_EXCEPTIONS_SUCCESS,
 );
 
 // SDK method: availabilityExceptions.create
@@ -653,8 +645,8 @@ export function requestUpdateListing(tab, data, config) {
       getState().marketplaceData.entities.ownListing[id.uuid]?.attributes.publicData;
     const updatedPublicData = {
       ...existingPublicData, // Spread existing data to maintain other properties
-      ...(min !== undefined && { min: min }),
-      ...(max !== undefined && { max: max }),
+      ...(min !== undefined && { min }),
+      ...(max !== undefined && { max }),
     };
     // If images should be saved, create array out of the image UUIDs for the API call
     const imageProperty = typeof images !== 'undefined' ? { images: imageIds(images) } : {};
@@ -685,7 +677,7 @@ export function requestUpdateListing(tab, data, config) {
         // since week and month boundaries might have changed.
         if (!!includedTimeZone && includedTimeZone !== existingTimeZone) {
           const searchString = '';
-          const firstDayOfWeek = config.localization.firstDayOfWeek;
+          const { firstDayOfWeek } = config.localization;
           const listing = response.data.data;
           fetchLoadDataExceptions(dispatch, listing, searchString, firstDayOfWeek);
         }
@@ -718,7 +710,7 @@ export const requestPublishListingDraft = (listingId) => (dispatch, getState, sd
 // Images return imageId which we need to map with previously generated temporary id
 export function requestImageUpload(actionPayload, listingImageConfig) {
   return (dispatch, getState, sdk) => {
-    const id = actionPayload.id;
+    const { id } = actionPayload;
     const imageVariantInfo = getImageVariantInfo(listingImageConfig);
     const queryParams = {
       expand: true,
@@ -734,7 +726,7 @@ export function requestImageUpload(actionPayload, listingImageConfig) {
         // Uploaded image has an existing id that refers to file
         // The UUID was created as a consequence of this upload call - it's saved to imageId property
         return dispatch(
-          uploadImageSuccess({ data: { ...img, id, imageId: img.id, file: actionPayload.file } })
+          uploadImageSuccess({ data: { ...img, id, imageId: img.id, file: actionPayload.file } }),
         );
       })
       .catch((e) => dispatch(uploadImageError({ id, error: storableError(e) })));
@@ -787,7 +779,7 @@ export const requestFetchAvailabilityExceptions = (params) => (dispatch, getStat
       // Fetch potential extra exceptions pagination pages per month.
       // In theory, there could be several pagination pages worth of exceptions,
       // if range is month and unit is 'hour': 31 days * 24 hour = 744 slots for exceptions.
-      const totalPages = response.data.meta.totalPages;
+      const { totalPages } = response.data.meta;
       if (totalPages > 1 && !page) {
         const extraPages = getArrayOfNItems(totalPages);
 
@@ -797,16 +789,14 @@ export const requestFetchAvailabilityExceptions = (params) => (dispatch, getStat
         //    (This is very unlikely with this query and 'hour' unit.)
         //  - TODO: this doesn't take care of failures of those extra calls
         Promise.all(
-          extraPages.map((page) => {
-            return sdk.availabilityExceptions.query({ ...fetchParams, page });
-          })
+          extraPages.map((page) => sdk.availabilityExceptions.query({ ...fetchParams, page })),
         ).then((responses) => {
           const denormalizedFlatResults = (all, r) => all.concat(denormalisedResponseEntities(r));
           const exceptions = responses.reduce(denormalizedFlatResults, []);
           dispatch(
             fetchExtraAvailabilityExceptionsSuccess({
               data: { ...timeUnitIdProp, exceptions },
-            })
+            }),
           );
         });
       }
@@ -814,14 +804,12 @@ export const requestFetchAvailabilityExceptions = (params) => (dispatch, getStat
       return dispatch(
         fetchAvailabilityExceptionsSuccess({
           data: { ...timeUnitIdProp, exceptions: availabilityExceptions },
-        })
+        }),
       );
     })
-    .catch((e) => {
-      return dispatch(
-        fetchAvailabilityExceptionsError({ ...timeUnitIdProp, error: storableError(e) })
-      );
-    });
+    .catch((e) =>
+      dispatch(fetchAvailabilityExceptionsError({ ...timeUnitIdProp, error: storableError(e) })),
+    );
 };
 
 // Helper function for loadData call.
@@ -867,7 +855,7 @@ const fetchLoadDataExceptions = (dispatch, listing, search, firstDayOfWeek) => {
           isWeekly: true,
           start: prevWeek,
           end: startOfWeek,
-        })
+        }),
       ),
       dispatch(
         requestFetchAvailabilityExceptions({
@@ -875,7 +863,7 @@ const fetchLoadDataExceptions = (dispatch, listing, search, firstDayOfWeek) => {
           isWeekly: true,
           start: startOfWeek,
           end: nextWeek,
-        })
+        }),
       ),
       dispatch(
         requestFetchAvailabilityExceptions({
@@ -883,21 +871,21 @@ const fetchLoadDataExceptions = (dispatch, listing, search, firstDayOfWeek) => {
           isWeekly: true,
           start: nextWeek,
           end: nextAfterNextWeek,
-        })
+        }),
       ),
       dispatch(
         requestFetchAvailabilityExceptions({
           ...sharedData,
           start: todayInListingsTZ,
           end: nextMonth,
-        })
+        }),
       ),
       dispatch(
         requestFetchAvailabilityExceptions({
           ...sharedData,
           start: nextMonth,
           end: nextAfterNextMonth,
-        })
+        }),
       ),
     ]);
   }
@@ -928,7 +916,7 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
     // No need to listing data when creating a new listing
     return Promise.all([dispatch(fetchCurrentUser())])
       .then((response) => {
-        const currentUser = getState().user.currentUser;
+        const { currentUser } = getState().user;
         if (currentUser && currentUser.stripeAccount) {
           dispatch(fetchStripeAccount());
         }
@@ -942,7 +930,7 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   const payload = { id: new UUID(id) };
   return Promise.all([dispatch(requestShowListing(payload, config)), dispatch(fetchCurrentUser())])
     .then((response) => {
-      const currentUser = getState().user.currentUser;
+      const { currentUser } = getState().user;
       if (currentUser && currentUser.stripeAccount) {
         dispatch(fetchStripeAccount());
       }

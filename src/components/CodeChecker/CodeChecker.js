@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { queryUserListings } from '../../containers/CMSPage/CMSPage.duck';
@@ -9,10 +10,12 @@ import giftCard50 from '../../media/giftcards/50.png';
 import giftCard100 from '../../media/giftcards/100.png';
 import giftCard150 from '../../media/giftcards/150.png';
 
+
 function CodeChecker() {
   const [code, setCode] = useState('');
   const [message, setMessage] = useState('');
   const [amount, setAmount] = useState(null);
+
   const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
@@ -36,6 +39,7 @@ function CodeChecker() {
       .catch(() => setLoading(false));
   }, [dispatch]);
 
+
   const handleCheckCode = async () => {
     setMessage('');
     setAmount(null);
@@ -55,7 +59,9 @@ function CodeChecker() {
 
       if (code.startsWith('GC') && response.amount_off) {
         setAmount(response.amount_off);
+
         setMessage(`Gift card valida.`);
+
       } else if (code.startsWith('WF')) {
         setMessage('Questo è un codice Welfare usalo nel listing appropriato.');
       } else {
@@ -65,6 +71,7 @@ function CodeChecker() {
       setMessage('Codice non valido o errore durante la verifica.');
     }
   };
+
 
   const cardRenderSizes = (isMapVariant) => {
     if (isMapVariant) {
@@ -132,9 +139,12 @@ function CodeChecker() {
 
         </div>
        
+
       </div>
     </div>
   );
 }
 
+
 export default CodeChecker;
+

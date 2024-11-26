@@ -32,15 +32,14 @@ const sortEntries = () => (a, b) => {
  */
 const submit = (onSubmit, weekdays) => (values) => {
   const sortedValues = weekdays.reduce(
-    (submitValues, day) => {
-      return submitValues[day]
+    (submitValues, day) =>
+      submitValues[day]
         ? {
             ...submitValues,
             [day]: submitValues[day].sort(sortEntries()),
           }
-        : submitValues;
-    },
-    { ...values }
+        : submitValues,
+    { ...values },
   );
 
   onSubmit(sortedValues);
@@ -50,7 +49,7 @@ const submit = (onSubmit, weekdays) => (values) => {
  * Create and edit availability plan of the listing.
  * This is essentially the weekly schedule.
  */
-const EditListingAvailabilityPlanFormComponent = (props) => {
+function EditListingAvailabilityPlanFormComponent(props) {
   const { onSubmit, ...restOfprops } = props;
 
   return (
@@ -107,19 +106,17 @@ const EditListingAvailabilityPlanFormComponent = (props) => {
               <FormattedMessage id="EditListingAvailabilityPlanForm.hoursOfOperationTitle" />
             </Heading>
             <div className={css.week}>
-              {weekdays.map((w) => {
-                return (
-                  <AvailabilityPlanEntries
-                    dayOfWeek={w}
-                    useFullDays={useFullDays}
-                    key={w}
-                    values={values}
-                    formApi={formApi}
-                    intl={intl}
-                    isTeamBuilding={props.isTeamBuilding}
-                  />
-                );
-              })}
+              {weekdays.map((w) => (
+                <AvailabilityPlanEntries
+                  dayOfWeek={w}
+                  useFullDays={useFullDays}
+                  key={w}
+                  values={values}
+                  formApi={formApi}
+                  intl={intl}
+                  isTeamBuilding={props.isTeamBuilding}
+                />
+              ))}
             </div>
 
             <div className={css.submitButton}>
@@ -137,7 +134,7 @@ const EditListingAvailabilityPlanFormComponent = (props) => {
       }}
     />
   );
-};
+}
 
 EditListingAvailabilityPlanFormComponent.defaultProps = {
   rootClassName: null,
@@ -161,7 +158,7 @@ EditListingAvailabilityPlanFormComponent.propTypes = {
 };
 
 const EditListingAvailabilityPlanForm = compose(injectIntl)(
-  EditListingAvailabilityPlanFormComponent
+  EditListingAvailabilityPlanFormComponent,
 );
 
 EditListingAvailabilityPlanForm.displayName = 'EditListingAvailabilityPlanForm';

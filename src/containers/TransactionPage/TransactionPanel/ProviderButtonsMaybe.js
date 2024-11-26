@@ -1,16 +1,17 @@
 import React, { useState, useRef } from 'react';
 import classNames from 'classnames';
+import { useIntl } from 'react-intl';
+import { createClient } from '@supabase/supabase-js';
 import { createRefund, notifyInvoice } from '../../../util/api';
 import { PrimaryButton, SecondaryButton } from '../../../components';
 import css from './TransactionPanel.module.css';
-import { useIntl } from 'react-intl';
-import { createClient } from '@supabase/supabase-js';
 import PopUpMessage from '../../../components/PopUpMessage/PopUpMessage';
+
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
 const supabaseKey = process.env.REACT_APP_SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const ProviderButtonsMaybe = (props) => {
+function ProviderButtonsMaybe(props) {
   const intl = useIntl();
   const { className, rootClassName, customerObj, transactionId, start } = props;
 
@@ -71,7 +72,7 @@ const ProviderButtonsMaybe = (props) => {
         setErrorMessage('Error uploading file.');
         setSuccessMessage('');
       } else {
-        setSuccessMessage(''); //File uploaded successfully
+        setSuccessMessage(''); // File uploaded successfully
         setErrorMessage('');
         setShowPopUp(true);
       }
@@ -121,6 +122,6 @@ const ProviderButtonsMaybe = (props) => {
       )}
     </div>
   );
-};
+}
 
 export default ProviderButtonsMaybe;

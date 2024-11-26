@@ -8,7 +8,7 @@ import reduce from 'lodash/reduce';
  */
 export const hasParentWithClassName = (target, className) =>
   [...document.querySelectorAll(`.${className}`)].some(
-    (el) => el !== target && el.contains(target)
+    (el) => el !== target && el.contains(target),
   );
 
 /**

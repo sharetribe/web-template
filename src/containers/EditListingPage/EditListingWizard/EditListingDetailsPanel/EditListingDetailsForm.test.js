@@ -94,7 +94,7 @@ describe('EditListingDetailsForm', () => {
         selectableListingTypes={selectableListingTypes}
         hasExistingListingType
         initialValues={selectableListingTypes[0]}
-      />
+      />,
     );
 
     // Pickup fields

@@ -50,6 +50,7 @@
   "BookingDatesForm.timeSlotsError": "We encountered an error when loading the available dates. Please refresh the page. ",
   "BookingDatesForm.youWontBeChargedInfo": "You won't be charged yet",
   "BookingDatesForm.youWontBeChargedInfoEvents": "Your card will only be charged when Jon D accepts the booking request. No stress - free cancellation up to 5 days before the event.  ",
+  "BookingTimeForm.coupon.notValidGiftCard": "The code is not valid",
   "BookingTimeForm.bookingEndTitle": "End date",
   "BookingTimeForm.bookingStartTitle": "Pick a date",
   "BookingTimeForm.coupon.title": "Do you have a coupon code?",

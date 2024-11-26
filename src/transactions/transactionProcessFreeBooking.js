@@ -169,8 +169,8 @@ export const graph = {
 // Check if a transition is the kind that should be rendered
 // when showing transition history (e.g. ActivityFeed)
 // The first transition and most of the expiration transitions made by system are not relevant
-export const isRelevantPastTransition = (transition) => {
-  return [
+export const isRelevantPastTransition = (transition) =>
+  [
     transitions.ACCEPT,
     transitions.OPERATOR_ACCEPT,
     transitions.CANCEL,
@@ -185,19 +185,16 @@ export const isRelevantPastTransition = (transition) => {
     transitions.REVIEW_2_BY_CUSTOMER,
     transitions.REVIEW_2_BY_PROVIDER,
   ].includes(transition);
-};
 
 // Processes might be different on how reviews are handled.
 // Default processes use two-sided diamond shape, where either party can make the review first
-export const isCustomerReview = (transition) => {
-  return [transitions.REVIEW_1_BY_CUSTOMER, transitions.REVIEW_2_BY_CUSTOMER].includes(transition);
-};
+export const isCustomerReview = (transition) =>
+  [transitions.REVIEW_1_BY_CUSTOMER, transitions.REVIEW_2_BY_CUSTOMER].includes(transition);
 
 // Processes might be different on how reviews are handled.
 // Default processes use two-sided diamond shape, where either party can make the review first
-export const isProviderReview = (transition) => {
-  return [transitions.REVIEW_1_BY_PROVIDER, transitions.REVIEW_2_BY_PROVIDER].includes(transition);
-};
+export const isProviderReview = (transition) =>
+  [transitions.REVIEW_1_BY_PROVIDER, transitions.REVIEW_2_BY_PROVIDER].includes(transition);
 
 // Check if the given transition is privileged.
 //
@@ -205,11 +202,8 @@ export const isProviderReview = (transition) => {
 // i.e. the backend. This helper is used to check if the transition
 // should go through the local API endpoints, or if using JS SDK is
 // enough.
-export const isPrivileged = (transition) => {
-  return [transitions.REQUEST_PAYMENT, transitions.REQUEST_PAYMENT_AFTER_INQUIRY].includes(
-    transition
-  );
-};
+export const isPrivileged = (transition) =>
+  [transitions.REQUEST_PAYMENT, transitions.REQUEST_PAYMENT_AFTER_INQUIRY].includes(transition);
 
 // Check when transaction is completed (booking over)
 export const isCompleted = (transition) => {

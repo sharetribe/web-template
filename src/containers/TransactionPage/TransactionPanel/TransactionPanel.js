@@ -10,7 +10,9 @@ import { isMobileSafari } from '../../../util/userAgent';
 import { createSlug } from '../../../util/urlHelpers';
 import GiftCardsMailBox from '../../../components/GiftCardsMailBox/GiftCardsMailBox';
 import { AvatarLarge, NamedLink, UserDisplayName } from '../../../components';
+
 import FetchGiftCodes from '../../../components/FetchGiftCodes/FetchGiftCodes';
+
 import { stateDataShape } from '../TransactionPage.stateData';
 import SendMessageForm from '../SendMessageForm/SendMessageForm';
 

@@ -87,7 +87,7 @@ const getInitialState = () => {
       createdAt: new Date(Date.UTC(2024, 2, 19, 11, 34)),
       content: 'Awesome!',
     },
-    { author: createUser('reviewerA') }
+    { author: createUser('reviewerA') },
   );
   return {
     ProfilePage: {
@@ -176,7 +176,7 @@ describe('ProfilePage', () => {
     });
 
     expect(
-      getByRole('heading', { name: 'ProfilePage.reviewsFromMyCustomersTitle' })
+      getByRole('heading', { name: 'ProfilePage.reviewsFromMyCustomersTitle' }),
     ).toBeInTheDocument();
 
     expect(screen.getByText('Awesome!')).toBeInTheDocument();

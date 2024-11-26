@@ -30,7 +30,7 @@ describe('PasswordChangePageComponent', () => {
         changePasswordInProgress={false}
         passwordChanged={false}
         intl={fakeIntl}
-      />
+      />,
     );
 
     const newPasswordLabel = 'PasswordChangeForm.newPasswordLabel';

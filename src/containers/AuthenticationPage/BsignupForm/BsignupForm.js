@@ -4,21 +4,21 @@ import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
-import { slackNotifications } from '../../../util/api';
 import { useIntl } from 'react-intl';
+import { useHistory } from 'react-router-dom'; // Use useHistory for react-router v5
+import { createClient } from '@supabase/supabase-js';
+import { slackNotifications } from '../../../util/api';
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import * as validators from '../../../util/validators';
 import { Form, PrimaryButton, FieldTextInput } from '../../../components';
-import { useHistory } from 'react-router-dom'; // Use useHistory for react-router v5
 
 import css from './BsignupForm.module.css';
-import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
 const supabaseKey = process.env.REACT_APP_SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const BsignupFormComponent = (props) => {
+function BsignupFormComponent(props) {
   const intl = useIntl();
   const history = useHistory();
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -211,7 +211,7 @@ const BsignupFormComponent = (props) => {
       }}
     />
   );
-};
+}
 
 BsignupFormComponent.defaultProps = { inProgress: false };
 

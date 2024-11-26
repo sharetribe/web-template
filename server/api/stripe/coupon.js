@@ -3,7 +3,9 @@ const { createClient } = require('@supabase/supabase-js');
 
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
+
 const supabaseKey = process.env.REACT_APP_SUPABASE_KEY; 
+
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 module.exports = async (req, res) => {
@@ -27,6 +29,7 @@ module.exports = async (req, res) => {
         });
       }
 
+
     if (data.used) {
       return res.status(200).json({
         message: 'Gift card has already been used.',
@@ -36,6 +39,7 @@ module.exports = async (req, res) => {
     }
 
       if (code.startsWith('GC')) {
+
 
         return res.status(200).json({ amount_off: data.amount, code:data.code, codeType: 'giftCard', valid: true });
       } else if (code.startsWith('WF')) {
@@ -57,6 +61,7 @@ module.exports = async (req, res) => {
     }
   }
 
+  // Default to Stripe API if code is neither GC nor WF
   axios
     .get(`https://api.stripe.com/v1/coupons/${code}`, {
       headers: { Authorization: `Bearer ${STRIPE_SECRET_KEY}` },
