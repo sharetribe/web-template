@@ -150,4 +150,8 @@ export const inquiryEvent = (body) => post('/api/brevo/event', body);
 
 export const newsletter = (body) => post('/api/brevo/newsletter', body);
 
+export const sendGiftCard = (body) => post('/api/brevo/gift', body);
+
 export const slackNotifications = (body) => post('/api/slack/notifications', body);
+
+export const updateTransaction = (body) => post(`/api/update-transaction`, body);

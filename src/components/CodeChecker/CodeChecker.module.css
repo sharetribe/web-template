@@ -14,6 +14,13 @@
 
 .heading1 {
   font-size: 1rem;
+  color: white;
+  margin-bottom: 1rem;
+  text-align: left; /* Align "Gift cards" to the left */
+}
+
+.heading2 {
+  font-size: 1rem;
   margin-bottom: 1rem;
   text-align: left; /* Align "Gift cards" to the left */
 }
@@ -57,12 +64,13 @@
 
 .checkBox {
   display: flex;
+  padding: 40px;
   flex-direction: column;
   align-items: center; /* Center content horizontally */
   gap: 16px; /* Adjust spacing between elements */
   margin: 0 auto; /* Center the checkBox container */
   width: 100%; /* Make the checkBox container take the full width */
-  background-color: #c1c0c0;
+  background-color: #0056b3;
   border-radius: 20px;
 }
 

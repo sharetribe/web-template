@@ -5,6 +5,9 @@ import css from './CodeChecker.module.css';
 import { PrimaryButton } from '../Button/Button';
 import ListingGiftCard from '../ListingGiftCard/ListingGiftCard';
 import { checkCoupon } from '../../util/api';
+import giftCard50 from '../../media/giftcards/50.png';
+import giftCard100 from '../../media/giftcards/100.png';
+import giftCard150 from '../../media/giftcards/150.png';
 
 function CodeChecker() {
   const [code, setCode] = useState('');
@@ -17,16 +20,16 @@ function CodeChecker() {
   const listings = useSelector((state) => state.CMSPage.userListingRefs || []);
   const queryListingsError = useSelector((state) => state.CMSPage.queryListingsError);
 
-  const imageUrls = [
-    'https://www.heyhoney.com/cdn/shop/products/hey-honey-skin-care-e-gift-card-349569.jpg?v=1703079364&width=2000',
-    'https://www.heyhoney.com/cdn/shop/products/hey-honey-skin-care-e-gift-card-349569.jpg?v=1703079364&width=2000',
-    'https://www.heyhoney.com/cdn/shop/products/hey-honey-skin-care-e-gift-card-349569.jpg?v=1703079364&width=2000',
-  ];
-
-  const updatedListings = listings.map((listing, index) => ({
+  const imageUrls = [giftCard150,giftCard100, giftCard50];
+  const updatedListings = listings
+  .filter((listing) => listing.attributes?.publicData?.listingType === 'gift') // Filter only 'gift' listings
+  .map((listing, index) => ({
     ...listing,
     imageUrl: imageUrls[index % imageUrls.length],
-  }));
+  }))
+  .reverse()
+
+  console.log(updatedListings);
 
   useEffect(() => {
     setLoading(true);
@@ -91,8 +94,6 @@ function CodeChecker() {
 
   return (
     <div className={css.container}>
-      <h1 className={css.heading}>Gift cards</h1>
-      <h4 className={css.heading1}>IN PRIMO PIANO</h4>
       <div className={css.listings}>
         {loading && <p>Loading listings...</p>}
         {queryListingsError && <p>Error fetching listings: {queryListingsError.message}</p>}
@@ -111,7 +112,7 @@ function CodeChecker() {
 
         <div className={css.checkBox}>
           <p className={css.heading1}>
-            Hai Ricevuto una gift card? Inserisci il codice qui sotto per verificarne il saldo.
+            Hai ricevuto una gift card? Inserisci il codice qui sotto per verificarne il saldo.
           </p>
           
           <input
@@ -124,7 +125,13 @@ function CodeChecker() {
           <button onClick={handleCheckCode} className={css.button}>
             Verifica
           </button>
-          {amount? <p>Saldo residuo: €{amount / 100}</p> : <p>{''}</p>}
+          {amount ? (
+  <p style={{ color: 'white' }}>Saldo residuo: €{amount / 100}</p>
+) : (
+  <p>{''}</p>
+)}
+
+
         </div>
        
       </div>
