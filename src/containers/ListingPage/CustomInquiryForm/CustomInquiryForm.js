@@ -149,7 +149,7 @@ const CustomInquiryFormComponent = props => {
         const classes = classNames(rootClassName || css.root, className);
         const submitInProgress = inProgress;
         const submitDisabled = submitInProgress;
-        const { offerPrice } = values;
+        const { offerPrice } = values || {};
         setOfferPriceValue(offerPrice);
         const commissionPrice = new Money(offerPrice.amount / 10, offerPrice.currency);
         const formattedCommissionPrice = formatMoney(intl, commissionPrice);
