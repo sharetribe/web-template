@@ -59,7 +59,7 @@ function InboxLink({ notificationCount, currentUserHasListings }) {
   );
 }
 
-const ProfileMenu = ({ currentPage, currentUser, onLogout, userRole }) => {
+function ProfileMenu({ currentPage, currentUser, onLogout, userRole }) {
   const currentPageClass = (page) => {
     const isAccountSettingsPage =
       page === 'AccountSettingsPage' && ACCOUNT_SETTINGS_PAGES.includes(currentPage);
@@ -122,9 +122,9 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout, userRole }) => {
       </MenuContent>
     </Menu>
   );
-};
+}
 
-const TopbarDesktop = (props) => {
+function TopbarDesktop(props) {
   const {
     className,
     config,
@@ -191,7 +191,7 @@ const TopbarDesktop = (props) => {
   // Determine if the current page is the landing page based on the pathname
   const isLandingPage = location.pathname === '/';
 
-  //const search = !isLandingPage ? <LandingSearchBarForm onSearchSubmit={onSearchSubmit} /> : null; // Only render TopbarSearchForm if not on landing page
+  // const search = !isLandingPage ? <LandingSearchBarForm onSearchSubmit={onSearchSubmit} /> : null; // Only render TopbarSearchForm if not on landing page
 
   const notificationDot = notificationCount > 0 ? <div className={css.notificationDot} /> : null;
   const inboxLink = authenticatedOnClientSide ? (
@@ -258,6 +258,9 @@ const TopbarDesktop = (props) => {
               </NamedLink>
             )}
             <SocialBar />
+            <NamedLink className={css.createListingLink} name="GiftCardsPage">
+              <span className={css.createListing}>Gift cards</span>
+            </NamedLink>
 
             <CustomLinksMenu
               currentPage={currentPage}
@@ -294,10 +297,12 @@ const TopbarDesktop = (props) => {
               layout="desktop"
               alt={intl.formatMessage({ id: 'TopbarDesktop.logo' }, { marketplaceName })}
             />
-            {/*search*/}
+            {/* search */}
           </div>
           <div className={css.rightContent}>
-            <SocialBar />
+            <NamedLink className={css.createListingLink} name="GiftCardsPage">
+              <span className={css.createListing}>Gift cards</span>
+            </NamedLink>
             {userRole === 'provider' && (
               <NamedLink className={css.createListingLink} name="NewListingPage">
                 <span className={css.createListing}>
@@ -326,7 +331,7 @@ const TopbarDesktop = (props) => {
       )}
     </nav>
   );
-};
+}
 
 TopbarDesktop.defaultProps = {
   rootClassName: null,

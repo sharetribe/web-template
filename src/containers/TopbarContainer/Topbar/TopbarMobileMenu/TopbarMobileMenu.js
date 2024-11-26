@@ -16,7 +16,41 @@ import {
 
 import css from './TopbarMobileMenu.module.css';
 
-const TopbarMobileMenu = (props) => {
+function CustomLinkComponent({ linkConfig, currentPage }) {
+  const { group, text, type, href, route } = linkConfig;
+  const getCurrentPageClass = (page) => {
+    const hasPageName = (name) => currentPage?.indexOf(name) === 0;
+    const isCMSPage = (pageId) => hasPageName('CMSPage') && currentPage === `${page}:${pageId}`;
+    const isInboxPage = (tab) => hasPageName('InboxPage') && currentPage === `${page}:${tab}`;
+    const isCurrentPage = currentPage === page;
+
+    return isCMSPage(route?.params?.pageId) || isInboxPage(route?.params?.tab) || isCurrentPage
+      ? css.currentPage
+      : null;
+  };
+
+  // Note: if the config contains 'route' keyword,
+  // then in-app linking config has been resolved already.
+  if (type === 'internal' && route) {
+    // Internal link
+    const { name, params, to } = route || {};
+    const className = classNames(css.navigationLink, getCurrentPageClass(name));
+    return (
+      <NamedLink name={name} params={params} to={to} className={className}>
+        <span className={css.menuItemBorder} />
+        {text}
+      </NamedLink>
+    );
+  }
+  return (
+    <ExternalLink href={href} className={css.navigationLink}>
+      <span className={css.menuItemBorder} />
+      {text}
+    </ExternalLink>
+  );
+}
+
+function TopbarMobileMenu(props) {
   const {
     isAuthenticated,
     currentPage,
@@ -103,7 +137,7 @@ const TopbarMobileMenu = (props) => {
   <option value="it">It</option>
   <option value="en">Eng</option>
 </select>
-        </div>*/}
+        </div> */}
       </div>
     );
   }
@@ -171,6 +205,13 @@ const TopbarMobileMenu = (props) => {
 
         <NamedLink
           className={classNames(css.navigationLink, currentPageClass('TeambuildingPage'))}
+          name="GiftCardsPage"
+        >
+          Gift cards
+        </NamedLink>
+
+        <NamedLink
+          className={classNames(css.navigationLink, currentPageClass('TeambuildingPage'))}
           name="TeambuildingPage"
         >
           <FormattedMessage id="TopbarDesktop.team" />
@@ -198,7 +239,7 @@ const TopbarMobileMenu = (props) => {
       )}
     </div>
   );
-};
+}
 
 TopbarMobileMenu.defaultProps = { currentUser: null, notificationCount: 0, currentPage: null };
 
