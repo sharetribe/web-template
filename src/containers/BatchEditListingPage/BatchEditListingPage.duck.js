@@ -2,7 +2,12 @@ import { fetchCurrentUser } from '../../ducks/user.duck';
 import { readFileMetadataAsync } from '../../util/file-metadata';
 import _ from 'lodash';
 import { createUppyInstance } from '../../util/uppy';
-import { convertUnitToSubUnit, truncateToSubUnitPrecision, unitDivisor } from '../../util/currency';
+import {
+  convertMoneyToNumber,
+  convertUnitToSubUnit,
+  truncateToSubUnitPrecision,
+  unitDivisor,
+} from '../../util/currency';
 import { LISTING_TYPES } from '../../util/types';
 import { parse } from '../../util/urlHelpers';
 import { queryListingsError } from '../ManageListingsPage/ManageListingsPage.duck';
@@ -19,8 +24,9 @@ import {
   USAGE_EDITORIAL,
 } from './constants';
 import { getDimensions } from './imageHelpers';
+import { stringToArray } from '../../util/string';
 
-const { UUID } = sdkTypes;
+const { UUID, Money } = sdkTypes;
 
 function getListingFieldOptions(config, listingFieldKey) {
   const { listing } = config;
@@ -29,31 +35,29 @@ function getListingFieldOptions(config, listingFieldKey) {
   return enumOptions.map(({ label, option }) => ({ value: option, label }));
 }
 
-function listingsFromSdkResponse(sdkResponse) {
+function listingsFromSdkResponse(sdkResponse, listingDefaults) {
   const { data, included } = sdkResponse;
+  const { currency } = listingDefaults;
   return data.map(ownListing => {
     const images = ownListing.relationships.images;
     const image =
       images.data.length > 0 ? included.find(img => img.id.uuid === images.data[0].id.uuid) : null;
     const preview = image?.attributes?.variants?.default?.url;
-
-    const keywords = ownListing.attributes.publicData.keywords;
-    const keywordsArray = Array.isArray(keywords) ? keywords : keywords.split(',');
-
-    const categories = ownListing.attributes.publicData.imageryCategory;
-    const categoriesArray = Array.isArray(categories) ? categories : categories.split(',');
+    const keywords = stringToArray(ownListing.attributes.publicData.keywords);
+    const category = stringToArray(ownListing.attributes.publicData.imageryCategory);
+    const price = convertMoneyToNumber(ownListing.attributes.price || new Money(0, currency));
 
     return {
       id: ownListing.id.uuid,
       name: ownListing.attributes.publicData.originalFileName,
       title: ownListing.attributes.title,
       description: ownListing.attributes.description,
-      keywords: keywordsArray,
-      category: categoriesArray,
+      keywords,
+      category,
       usage: ownListing.attributes.publicData.usage,
       releases: ownListing.attributes.publicData.releases,
       dimensions: ownListing.attributes.publicData.imageSize,
-      price: ownListing.attributes.price.amount / 100,
+      price,
       isAi: ownListing.attributes.publicData.aiTerms === 'yes',
       preview,
     };
@@ -282,7 +286,7 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         queryInProgress: false,
         queryListingsError: null,
-        listings: listingsFromSdkResponse(payload.data),
+        listings: listingsFromSdkResponse(payload.data, state.listingDefaults),
       };
     default:
       return state;
