@@ -84,7 +84,7 @@ export const FavoriteListingsPageComponent = props => {
         footer={<FooterContainer />}
       >
         <ListingTabs
-          listings={listings}
+          items={listings}
           pagination={pagination}
           queryInProgress={queryInProgress}
           queryListingsError={queryFavoritesError}

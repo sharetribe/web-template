@@ -9,21 +9,17 @@ import { createResourceLocatorString, pathByRouteName } from '../../util/routes'
 import { hasPermissionToPostListings } from '../../util/userHelpers';
 import { NO_ACCESS_PAGE_POST_LISTINGS } from '../../util/urlHelpers';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
-import {
-  LISTING_GRID_DEFAULTS,
-  LISTING_GRID_ROLE,
-  LISTING_GRID_CATEGORIES,
-  LISTING_TYPES,
-} from '../../util/types';
+import { LISTING_GRID_DEFAULTS, LISTING_GRID_ROLE, LISTING_TYPES } from '../../util/types';
 
 import { LayoutSingleColumn, Page, UserNav, NamedRedirect, ListingTabs } from '../../components';
-import { getSearch } from '../../components/ListingTabs/GridHelpers';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import ManageListingCard from './ManageListingCard/ManageListingCard';
+import PortfolioListingCard from './ManageListingCard/PortfolioListingCard';
 import { closeListing, getOwnListingsById, openListing } from './ManageListingsPage.duck';
+import { getLinks, getItems, getCurrentCategory, routeHandler } from './utils';
 
 export const ManageListingsPageComponent = props => {
   const [listingMenuOpen, setListingMenuOpen] = useState(null);
@@ -48,7 +44,20 @@ export const ManageListingsPageComponent = props => {
   } = props;
   const defaultListingType = LISTING_GRID_DEFAULTS.TYPE;
   const currentListingType = queryParams.pub_listingType || defaultListingType;
-  const listingTypeCategories = LISTING_GRID_CATEGORIES[currentListingType];
+
+  const currentCategory = useMemo(
+    () => getCurrentCategory(listings, currentListingType, queryParams),
+    [listings, currentListingType, queryParams]
+  );
+  const links = useMemo(() => getLinks(listings, currentListingType), [
+    listings,
+    currentListingType,
+  ]);
+  const items = useMemo(() => getItems(listings, currentListingType, currentCategory), [
+    listings,
+    currentListingType,
+    currentCategory,
+  ]);
 
   function createManageLocatorString(queryParams) {
     const pathParams = {};
@@ -60,36 +69,34 @@ export const ManageListingsPageComponent = props => {
     );
     history.replace(destination);
   }
-
-  function updateProductRoute() {
-    const queryParams = {
-      pub_listingType: LISTING_TYPES.PRODUCT,
-      pub_categoryLevel1: LISTING_GRID_DEFAULTS.CATEGORY(
-        LISTING_GRID_CATEGORIES[LISTING_TYPES.PRODUCT]
-      ),
-    };
-    createManageLocatorString(queryParams);
-  }
-
-  function updatePortfolioRoute() {
-    const queryParams = {
-      pub_listingType: LISTING_TYPES.PORTFOLIO,
-    };
-    createManageLocatorString(queryParams);
-  }
+  const { updateProductRoute, updatePortfolioRoute } = routeHandler(createManageLocatorString);
 
   useEffect(() => {
     const listingTypeParamValue = queryParams.pub_listingType;
-    const invalidListingType = !(
-      listingTypeParamValue && Object.values(LISTING_TYPES).includes(listingTypeParamValue)
-    );
-    const invalidCategoryType =
-      listingTypeParamValue === LISTING_TYPES.PRODUCT && !queryParams.pub_categoryLevel1;
-    const shouldUpdateRoute = invalidListingType || invalidCategoryType;
-    if (shouldUpdateRoute) {
-      updateProductRoute();
+    switch (listingTypeParamValue) {
+      case LISTING_TYPES.PORTFOLIO: {
+        const invalidCategoryType = !queryParams.pub_listingId;
+        const listingsAvailable = !queryInProgress && !!currentCategory;
+        const shouldUpdate = invalidCategoryType && listingsAvailable;
+        if (shouldUpdate) {
+          updatePortfolioRoute(currentCategory);
+        }
+        break;
+      }
+      default: {
+        const invalidListingType = !(
+          listingTypeParamValue && Object.values(LISTING_TYPES).includes(listingTypeParamValue)
+        );
+        const invalidCategoryType =
+          listingTypeParamValue === LISTING_TYPES.PRODUCT && !queryParams.pub_categoryLevel1;
+        const shouldUpdateRoute = invalidListingType || invalidCategoryType;
+        if (shouldUpdateRoute) {
+          updateProductRoute();
+        }
+        break;
+      }
     }
-  }, []);
+  }, [queryInProgress]);
 
   const hasPostingRights = hasPermissionToPostListings(currentUser);
   if (!hasPostingRights) {
@@ -101,38 +108,53 @@ export const ManageListingsPageComponent = props => {
     );
   }
 
-  const onToggleMenu = listing => {
-    setListingMenuOpen(listing);
-  };
-  const handleOpenListing = listingId => {
-    if (!hasPostingRights) {
-      const noAccessPagePath = pathByRouteName('NoAccessPage', routeConfiguration, {
-        missingAccessRight: NO_ACCESS_PAGE_POST_LISTINGS,
-      });
-      history.push(noAccessPagePath);
-    } else {
-      onOpenListing(listingId);
+  const listingRenderer = (item, className, renderSizes, index) => {
+    switch (currentListingType) {
+      case LISTING_TYPES.PORTFOLIO: {
+        return (
+          <PortfolioListingCard
+            key={`${currentCategory}-${index}`}
+            className={className}
+            image={item}
+            renderSizes={renderSizes}
+          />
+        );
+      }
+      case LISTING_TYPES.PRODUCT:
+      default: {
+        const onToggleMenu = listing => {
+          setListingMenuOpen(listing);
+        };
+        const handleOpenListing = listingId => {
+          if (!hasPostingRights) {
+            const noAccessPagePath = pathByRouteName('NoAccessPage', routeConfiguration, {
+              missingAccessRight: NO_ACCESS_PAGE_POST_LISTINGS,
+            });
+            history.push(noAccessPagePath);
+          } else {
+            onOpenListing(listingId);
+          }
+        };
+        const closingErrorListingId = !!closingListingError && closingListingError.listingId;
+        const openingErrorListingId = !!openingListingError && openingListingError.listingId;
+        const listingId = item.id.uuid;
+        return (
+          <ManageListingCard
+            key={listingId}
+            className={className}
+            listing={item}
+            renderSizes={renderSizes}
+            isMenuOpen={!!listingMenuOpen && listingMenuOpen.id.uuid === listingId}
+            actionsInProgressListingId={openingListing || closingListing}
+            onToggleMenu={onToggleMenu}
+            onCloseListing={onCloseListing}
+            onOpenListing={handleOpenListing}
+            hasOpeningError={openingErrorListingId.uuid === listingId}
+            hasClosingError={closingErrorListingId.uuid === listingId}
+          />
+        );
+      }
     }
-  };
-  const closingErrorListingId = !!closingListingError && closingListingError.listingId;
-  const openingErrorListingId = !!openingListingError && openingListingError.listingId;
-  const listingRenderer = (listing, className, renderSizes) => {
-    const listingId = listing.id.uuid;
-    return (
-      <ManageListingCard
-        key={listingId}
-        className={className}
-        listing={listing}
-        renderSizes={renderSizes}
-        isMenuOpen={!!listingMenuOpen && listingMenuOpen.id.uuid === listingId}
-        actionsInProgressListingId={openingListing || closingListing}
-        onToggleMenu={onToggleMenu}
-        onCloseListing={onCloseListing}
-        onOpenListing={handleOpenListing}
-        hasOpeningError={openingErrorListingId.uuid === listingId}
-        hasClosingError={closingErrorListingId.uuid === listingId}
-      />
-    );
   };
 
   const onTabChange = key => {
@@ -146,17 +168,6 @@ export const ManageListingsPageComponent = props => {
         break;
     }
   };
-
-  const links = useMemo(
-    () =>
-      listingTypeCategories.map(category => ({
-        id: category.id,
-        name: 'ManageListingsPage',
-        displayText: category.name,
-        to: { search: getSearch(category.id, currentListingType) },
-      })),
-    [listingTypeCategories]
-  );
 
   return (
     <Page
@@ -173,13 +184,14 @@ export const ManageListingsPageComponent = props => {
         footer={<FooterContainer />}
       >
         <ListingTabs
-          listings={listings}
+          items={items}
           pagination={pagination}
           queryInProgress={queryInProgress}
           queryListingsError={queryListingsError}
           queryParams={queryParams}
           onTabChange={onTabChange}
-          links={links}
+          categories={links}
+          currentCategory={currentCategory}
           role={LISTING_GRID_ROLE.MANAGE}
           titleMessageId="ManageListingsPage.title"
           noResultsMessageId="ManageListingsPage.noResults"

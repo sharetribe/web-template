@@ -1,6 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { arrayOf, oneOfType, bool, object, string, func } from 'prop-types';
+import { bool, object, string, func } from 'prop-types';
 import { Button as AntButton, Col, Row, Space, Tabs } from 'antd';
 
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
@@ -15,7 +15,7 @@ import { Loader, Error, Pagination, getTabsFeaturesForRole } from './GridHelpers
 import css from './ListingTabs.module.css';
 
 export const ListingTabs = ({
-  listings = [],
+  items = [],
   pagination,
   queryInProgress,
   queryListingsError,
@@ -25,7 +25,8 @@ export const ListingTabs = ({
   loadingMessageId,
   errorMessageId,
   onTabChange,
-  links,
+  categories,
+  currentCategory,
   listingRenderer,
   role = LISTING_GRID_ROLE.MANAGE,
 }) => {
@@ -35,11 +36,9 @@ export const ListingTabs = ({
   const hasPaginationInfo = !!pagination && pagination.totalItems != null;
   const listingsAreLoaded = !queryInProgress && hasPaginationInfo;
   const defaultListingType = LISTING_GRID_DEFAULTS.TYPE;
-  const defaultCategoryType = LISTING_GRID_DEFAULTS.CATEGORY(links);
   const currentListingType = queryParams.pub_listingType || defaultListingType;
-  const currentCategoryType = queryParams.pub_categoryLevel1 || defaultCategoryType;
   const hasNoResults = listingsAreLoaded && pagination.totalItems === 0;
-  const withLinks = !!(links && links.length);
+  const withCategories = !!(categories && categories.length);
   const enableGrid = listingsAreLoaded && !queryListingsError;
   const enablePagination = listingsAreLoaded && pagination && pagination.totalPages > 1;
   const page = queryParams ? queryParams.page : 1;
@@ -76,7 +75,7 @@ export const ListingTabs = ({
     </div>
   ) : (
     <div className={css.listingCards}>
-      {listings.map(listing => listingRenderer(listing, css.listingCard, renderSizes))}
+      {items.map((item, index) => listingRenderer(item, css.listingCard, renderSizes, index))}
     </div>
   );
 
@@ -85,7 +84,9 @@ export const ListingTabs = ({
       {enableCategoryTabs && (
         <Row gutter={[16, 16]} align="middle" justify="space-between">
           <Col xs={24} sm={16}>
-            {withLinks && <ScrollableLinks links={links} selectedLinkId={currentCategoryType} />}
+            {withCategories && (
+              <ScrollableLinks links={categories} selectedLinkId={currentCategory} />
+            )}
           </Col>
           {enableListingManagement && (
             <Col xs={24} sm={8} style={{ textAlign: 'right' }}>
@@ -95,12 +96,12 @@ export const ListingTabs = ({
                   className={css.actionButton}
                   onClick={() =>
                     goToManageListing(PAGE_MODE_EDIT, {
-                      category: currentCategoryType,
+                      category: currentCategory,
                       type: currentListingType,
                     })
                   }
                 >
-                  Manage {currentCategoryType}
+                  <FormattedMessage id="ListingTabs.manageButton" />
                 </AntButton>
                 <AntButton
                   type="primary"
@@ -142,7 +143,7 @@ export const ListingTabs = ({
 };
 
 ListingTabs.defaultProps = {
-  listings: [],
+  items: [],
   pagination: null,
   queryListingsError: null,
   queryParams: null,
@@ -153,7 +154,6 @@ ListingTabs.defaultProps = {
 };
 
 ListingTabs.propTypes = {
-  listings: arrayOf(oneOfType([propTypes.listing, propTypes.ownListing])),
   pagination: propTypes.pagination,
   queryInProgress: bool.isRequired,
   queryListingsError: propTypes.error,
