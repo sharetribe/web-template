@@ -230,7 +230,12 @@ const StripeConnectAccountFormComponent = props => {
 
         const accountDataLoaded = stripeConnected && stripeAccountFetched && savedCountry;
         const submitInProgress = inProgress;
-        const submitDisabled = pristine || invalid || disabled || submitInProgress;
+        const submitDisabled =
+          pristine ||
+          invalid ||
+          disabled ||
+          submitInProgress ||
+          (!stripeConnected && !values?.accountType);
 
         const countryLabel = intl.formatMessage({ id: 'StripeConnectAccountForm.countryLabel' });
         const accountTypeLabel = intl.formatMessage({
