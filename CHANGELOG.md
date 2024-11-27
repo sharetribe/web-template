@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] Add currently available translations for DE, ES, FR.
+  [#511](https://github.com/sharetribe/web-template/pull/511)
+
 ## [v6.2.0] 2024-11-26
 
 - [add] Remove bank account collection from the template, so that it is collected in the
