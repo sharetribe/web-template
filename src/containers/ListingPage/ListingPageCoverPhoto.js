@@ -376,6 +376,8 @@ export const ListingPageComponent = props => {
             <OrderPanel
               className={css.orderPanel}
               listing={currentListing}
+              currentUser={currentUser}
+              routes={routeConfiguration}
               isOwnListing={isOwnListing}
               onSubmit={handleOrderSubmit}
               authorLink={

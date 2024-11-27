@@ -517,6 +517,8 @@ export const ListingPageComponent = props => {
             <OrderPanel
               className={css.productOrderPanel}
               listing={currentListing}
+              currentUser={currentUser}
+              routes={routeConfiguration}
               isOwnListing={isOwnListing}
               onSubmit={handleOrderSubmit}
               authorLink={

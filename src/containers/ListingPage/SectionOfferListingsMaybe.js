@@ -41,20 +41,18 @@ const SectionOfferListingsMaybe = props => {
           }}
         />
       </H4>
-      {isOwnListing && listings
+      {listings
         ? listings.map(listing => {
           const [isExpanded, setIsExpanded] = useState(false);
-          const { attributes, author, id, review } = listing || {};
+          const { attributes, author, id, reviews } = listing || {};
           const { description, price, title } = attributes || {};
-          const { attributes: reviewAttributes } = review || {};
-
-          const { rating } = reviewAttributes || {};
+          const rating = reviews.map(review => review.attributes.rating).reduce((a, b) => a + b, 0) / reviews.length
           const ensuredAuthor = ensureUser(author);
           const { displayName } = ensuredAuthor?.attributes?.profile || {};
           const convertPrice = new Money(price.amount, price.currency);
           const formattedPrice = formatMoney(intl, convertPrice);
 
-          const isOwnListing = currentUser ? author.id.uuid === currentUser.id.uuid : true;
+          const listingIsPublishedByUser = currentUser ? author.id.uuid === currentUser.id.uuid : true;
 
           const displayText = isExpanded ? description : `${description.slice(0, maxLength)}...`;
 
@@ -65,6 +63,10 @@ const SectionOfferListingsMaybe = props => {
           });
 
           const descriptionLength = description.length;
+
+          if (!isOwnListing) {
+            if (!listingIsPublishedByUser) return null
+          }
 
           return (
             <FinalForm
@@ -127,11 +129,11 @@ const SectionOfferListingsMaybe = props => {
                         <div className={css.offerListingAcceptOfferContent}>
                           <div
                             className={
-                              isOwnListing
+                              listingIsPublishedByUser
                                 ? css.disableOfferListingAcceptOfferButton
                                 : css.offerListingAcceptOfferButton
                             }
-                            onClick={isOwnListing ? () => { } : handleSubmit}
+                            onClick={listingIsPublishedByUser ? () => { } : handleSubmit}
                           >
                             <FormattedMessage id="ListingPage.acceptOfferButton" />
                           </div>
