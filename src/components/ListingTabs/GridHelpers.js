@@ -43,13 +43,6 @@ export function getTabsFeaturesForRole(role) {
   }
 }
 
-export function getSearch(category, listingType = LISTING_TYPES.PRODUCT) {
-  const params = new URLSearchParams();
-  params.set('pub_categoryLevel1', category);
-  params.set('pub_listingType', listingType);
-  return params.toString();
-}
-
 export const Loader = ({ messageId }) => {
   return (
     <div className={css.messagePanel}>

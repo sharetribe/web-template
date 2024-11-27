@@ -2,6 +2,7 @@ import { denormalisedEntities, updatedEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
 import { createImageVariantConfig } from '../../util/sdkLoader';
 import { parse } from '../../util/urlHelpers';
+import { LISTING_TYPES } from '../../util/types';
 
 import { fetchCurrentUser } from '../../ducks/user.duck';
 
@@ -242,11 +243,12 @@ export const queryListingsError = e => ({
 export const queryOwnListings = queryParams => (dispatch, getState, sdk) => {
   dispatch(queryListingsRequest(queryParams));
 
-  const { perPage, ...rest } = queryParams;
-  const params = { ...rest, perPage };
+  const { perPage, pub_listingId, ...rest } = queryParams;
   const validListingType = !!queryParams.pub_listingType;
   const validCategoryType = !!queryParams.pub_categoryLevel1;
   const validRequestParams = validListingType || validCategoryType;
+  const withImageLimit = queryParams.pub_listingType !== LISTING_TYPES.PORTFOLIO;
+  const params = { ...rest, perPage, ...(withImageLimit ? { 'limit.images': 1 } : {}) };
 
   if (!validRequestParams) return;
 
@@ -316,7 +318,6 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
         'fields.image': [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`],
         ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
         ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
-        'limit.images': 1,
       })
     ),
   ])

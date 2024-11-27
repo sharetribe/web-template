@@ -13,7 +13,6 @@ export const ScrollableLinks = props => {
   const updateScrollState = () => {
     if (scrollContainerRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
-
       // Check if scrolling is possible to the left or right
       setCanScrollLeft(scrollLeft > 0);
       setCanScrollRight(scrollLeft + clientWidth < scrollWidth);
@@ -34,14 +33,12 @@ export const ScrollableLinks = props => {
 
   useEffect(() => {
     updateScrollState(); // Check on mount
-
     const container = scrollContainerRef.current;
     if (container) {
       // Update scroll state on scroll and resize
       container.addEventListener('scroll', updateScrollState);
       window.addEventListener('resize', updateScrollState);
     }
-
     return () => {
       if (container) {
         container.removeEventListener('scroll', updateScrollState);
@@ -62,9 +59,6 @@ export const ScrollableLinks = props => {
 
       <div ref={scrollContainerRef} className={css.linksContainer}>
         {links.map((link, index) => {
-          const isFirstVisible = index === 0 && canScrollLeft;
-          const isLastVisible = index === links.length - 1 && canScrollRight;
-
           return (
             <NamedLink
               key={link.id}

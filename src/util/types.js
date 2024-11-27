@@ -752,37 +752,6 @@ export const LISTING_GRID_ROLE = {
   PROFILE: 'PROFILE',
 };
 
-export const LISTING_GRID_CATEGORIES = {
-  'product-listing': [
-    {
-      name: 'Photos',
-      id: 'photos',
-      subcategories: [],
-    },
-    {
-      name: 'Videos',
-      id: 'videos',
-      subcategories: [],
-    },
-    {
-      name: 'Illustrations',
-      id: 'illustrations',
-      subcategories: [],
-    },
-    {
-      name: 'AI Images',
-      id: 'ai-image',
-      subcategories: [],
-    },
-    {
-      name: 'AI Videos',
-      id: 'ai-video',
-      subcategories: [],
-    },
-  ],
-  'portfolio-showcase': [],
-};
-
 propTypes.sellerStatus = oneOfType(SELLER_STATUS);
 
 export { propTypes };
