@@ -7,3 +7,15 @@ export const extractYouTubeID = url => {
 
   return match ? match[1] : null;
 };
+
+export function stringToArray(value, separator = ',') {
+  if (Array.isArray(value)) {
+    return value;
+  }
+
+  if (typeof value === 'string') {
+    return value.split(separator);
+  }
+
+  return [];
+}

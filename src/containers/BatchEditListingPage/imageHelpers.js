@@ -18,7 +18,8 @@ const IMAGE_DIMENSIONS_MAP = {
   },
 };
 
-export const getImageDimensionLabel = dimensionsKey => IMAGE_DIMENSIONS_MAP[dimensionsKey].label;
+export const getImageDimensionLabel = dimensionsKey =>
+  IMAGE_DIMENSIONS_MAP[dimensionsKey || UNAVAILABLE_IMAGE_RESOLUTION].label;
 
 export const getDimensions = (width, height) => {
   if (!width && !height) {
