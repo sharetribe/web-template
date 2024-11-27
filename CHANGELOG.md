@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [change] Require account type when creating a Stripe account 
+  [#512](https://github.com/sharetribe/web-template/pull/512)
 - [add] Add currently available translations for DE, ES, FR.
   [#511](https://github.com/sharetribe/web-template/pull/511)
 
