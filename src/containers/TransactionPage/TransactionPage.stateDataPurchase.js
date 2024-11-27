@@ -46,9 +46,7 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
         processName,
         processState,
         showDetailCardHeadings: true,
-        showActionButtons: true,
         showExtraInfo: true,
-        primaryButtonProps: actionButtonProps(transitions.MARK_RECEIVED_FROM_PURCHASED, CUSTOMER),
       };
     })
     .cond([states.PURCHASED, PROVIDER], () => {
@@ -61,9 +59,7 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
         processState,
         showDetailCardHeadings: true,
         showActionButtons: true,
-        primaryButtonProps: actionButtonProps(transitions.MARK_DELIVERED, PROVIDER, {
-          actionButtonTranslationId,
-        }),
+        primaryButtonProps: leaveReviewProps(PROVIDER),
       };
     })
     .cond([states.DELIVERED, CUSTOMER], () => {
@@ -73,7 +69,7 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
         showDetailCardHeadings: true,
         showDispute: true,
         showActionButtons: true,
-        primaryButtonProps: actionButtonProps(transitions.MARK_RECEIVED, CUSTOMER),
+        primaryButtonProps: leaveReviewProps(CUSTOMER),
       };
     })
     .cond([states.COMPLETED, _], () => {
@@ -82,26 +78,6 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
         processState,
         showDetailCardHeadings: true,
         showReviewAsFirstLink: true,
-        showActionButtons: true,
-        primaryButtonProps: leaveReviewProps,
-      };
-    })
-    .cond([states.REVIEWED_BY_PROVIDER, CUSTOMER], () => {
-      return {
-        processName,
-        processState,
-        showDetailCardHeadings: true,
-        showReviewAsSecondLink: true,
-        showActionButtons: true,
-        primaryButtonProps: leaveReviewProps,
-      };
-    })
-    .cond([states.REVIEWED_BY_CUSTOMER, PROVIDER], () => {
-      return {
-        processName,
-        processState,
-        showDetailCardHeadings: true,
-        showReviewAsSecondLink: true,
         showActionButtons: true,
         primaryButtonProps: leaveReviewProps,
       };

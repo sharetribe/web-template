@@ -182,7 +182,6 @@ const CustomInquiryFormComponent = props => {
                   label={offerPriceLabel}
                   placeholder={offerPricePlaceholder}
                   currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
-                  disabled={!flex_price}
                 />
 
                 <div className={classNames(css.flexContent, css.commissionContent)}>

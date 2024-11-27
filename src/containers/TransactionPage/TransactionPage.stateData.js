@@ -107,7 +107,7 @@ export const getStateData = (params, process) => {
       forRole
     );
 
-  const getLeaveReviewProps = getActionButtonPropsMaybe({
+  const getLeaveReviewProps = (role) => getActionButtonPropsMaybe({
     processName,
     transitionName: 'leaveReview',
     transactionRole,
@@ -115,7 +115,7 @@ export const getStateData = (params, process) => {
     inProgress: sendReviewInProgress,
     transitionError: sendReviewError,
     onAction: onOpenReviewModal,
-    actionButtonTranslationId: 'TransactionPage.leaveReview.actionButton',
+    actionButtonTranslationId: `TransactionPage.leaveReview.${role}.actionButton`,
     actionButtonTranslationErrorId: 'TransactionPage.leaveReview.actionError',
   });
 

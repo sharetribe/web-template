@@ -1,6 +1,6 @@
 {:format :v3,
  :transitions
- [  {:name :transition/request-payment,
+ [{:name :transition/request-payment,
    :actor :actor.role/customer,
    :privileged? true,
    :actions
@@ -30,14 +30,9 @@
     {:name :action/decline-stock-reservation}],
    :from :state/pending-payment,
    :to :state/payment-expired}
-  {:name :transition/mark-received-from-purchased,
-   :actor :actor.role/customer,
-   :actions [{:name :action/stripe-create-payout}],
-   :from :state/purchased,
-   :to :state/received}
   {:name :transition/mark-delivered,
    :actor :actor.role/provider,
-   :actions [],
+   :actions [{:name :action/post-review-by-provider}],
    :from :state/purchased,
    :to :state/delivered}
   {:name :transition/operator-mark-delivered,
@@ -47,7 +42,7 @@
    :to :state/delivered}
   {:name :transition/mark-received,
    :actor :actor.role/customer,
-   :actions [{:name :action/stripe-create-payout}],
+   :actions [{:name :action/stripe-create-payout}, {:name :action/post-review-by-customer}],
    :from :state/delivered,
    :to :state/received}
   {:name :transition/auto-mark-received,
@@ -70,7 +65,8 @@
    :to :state/disputed}
   {:name :transition/mark-received-from-disputed,
    :actor :actor.role/operator,
-   :actions [{:name :action/stripe-create-payout}],
+   :actions [{:name :action/stripe-create-payout},
+             {:name :action/post-review-by-customer}],
    :from :state/disputed,
    :to :state/received}
   {:name :transition/cancel,
@@ -108,56 +104,8 @@
    :to :state/canceled}
   {:name :transition/auto-complete,
    :at {:fn/timepoint [:time/first-entered-state :state/received]},
-   :actions [],
+   :actions [{:name :action/publish-reviews}],
    :from :state/received,
-   :to :state/completed}
-  {:name :transition/review-1-by-provider,
-   :actor :actor.role/provider,
-   :actions [{:name :action/post-review-by-provider}],
-   :from :state/completed,
-   :to :state/reviewed-by-provider}
-  {:name :transition/review-2-by-provider,
-   :actor :actor.role/provider,
-   :actions
-   [{:name :action/post-review-by-provider}
-    {:name :action/publish-reviews}],
-   :from :state/reviewed-by-customer,
-   :to :state/reviewed}
-  {:name :transition/review-1-by-customer,
-   :actor :actor.role/customer,
-   :actions [{:name :action/post-review-by-customer}],
-   :from :state/completed,
-   :to :state/reviewed-by-customer}
-  {:name :transition/review-2-by-customer,
-   :actor :actor.role/customer,
-   :actions
-   [{:name :action/post-review-by-customer}
-    {:name :action/publish-reviews}],
-   :from :state/reviewed-by-provider,
-   :to :state/reviewed}
-  {:name :transition/expire-review-period,
-   :at
-   {:fn/plus
-    [{:fn/timepoint [:time/first-entered-state :state/received]}
-     {:fn/period ["P7D"]}]},
-   :actions [],
-   :from :state/completed,
-   :to :state/reviewed}
-  {:name :transition/expire-provider-review-period,
-   :at
-   {:fn/plus
-    [{:fn/timepoint [:time/first-entered-state :state/received]}
-     {:fn/period ["P7D"]}]},
-   :actions [{:name :action/publish-reviews}],
-   :from :state/reviewed-by-customer,
-   :to :state/reviewed}
-  {:name :transition/expire-customer-review-period,
-   :at
-   {:fn/plus
-    [{:fn/timepoint [:time/first-entered-state :state/received]}
-     {:fn/period ["P7D"]}]},
-   :actions [{:name :action/publish-reviews}],
-   :from :state/reviewed-by-provider,
    :to :state/reviewed}],
  :notifications
  [{:name :notification/order-receipt,
@@ -196,10 +144,6 @@
      {:fn/period ["P12D"]}]},
    :to :actor.role/customer,
    :template :purchase-mark-order-received-reminder}
-  {:name :notification/order-marked-as-received-from-purchased,
-   :on :transition/mark-received-from-purchased,
-   :to :actor.role/provider,
-   :template :purchase-order-marked-as-received}
   {:name :notification/order-marked-as-received,
    :on :transition/mark-received,
    :to :actor.role/provider,
@@ -255,28 +199,4 @@
   {:name :notification/auto-canceled-from-disputed-provider,
    :on :transition/auto-cancel-from-disputed,
    :to :actor.role/provider,
-   :template :purchase-order-auto-canceled-from-disputed-provider}
-  {:name :notification/review-period-start-provider,
-   :on :transition/auto-complete,
-   :to :actor.role/provider,
-   :template :purchase-order-review-by-provider-wanted}
-  {:name :notification/review-period-start-customer,
-   :on :transition/auto-complete,
-   :to :actor.role/customer,
-   :template :purchase-order-review-by-customer-wanted}
-  {:name :notification/review-by-provider-first,
-   :on :transition/review-1-by-provider,
-   :to :actor.role/customer,
-   :template :purchase-review-by-other-party-unpublished}
-  {:name :notification/review-by-customer-first,
-   :on :transition/review-1-by-customer,
-   :to :actor.role/provider,
-   :template :purchase-review-by-other-party-unpublished}
-  {:name :notification/review-by-provider-second,
-   :on :transition/review-2-by-provider,
-   :to :actor.role/customer,
-   :template :purchase-review-by-other-party-published}
-  {:name :notification/review-by-customer-second,
-   :on :transition/review-2-by-customer,
-   :to :actor.role/provider,
-   :template :purchase-review-by-other-party-published}]}
+   :template :purchase-order-auto-canceled-from-disputed-provider}]}

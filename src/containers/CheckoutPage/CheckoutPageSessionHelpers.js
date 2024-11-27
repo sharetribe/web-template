@@ -75,7 +75,7 @@ export const isValidTransaction = transaction => {
 
 // Stores given bookinData, listing and transaction to sessionStorage
 export const storeData = (orderData, listing, transaction, storageKey) => {
-  if (window && window.sessionStorage && listing && orderData) {
+  if (typeof window !== 'undefined' && window && window.sessionStorage && listing && orderData) {
     const data = {
       orderData,
       listing,
@@ -83,7 +83,7 @@ export const storeData = (orderData, listing, transaction, storageKey) => {
       storedAt: new Date(),
     };
 
-    const replacer = function(k, v) {
+    const replacer = function (k, v) {
       if (this[k] instanceof Date) {
         return { date: v, _serializedType: 'SerializableDate' };
       }
@@ -100,7 +100,7 @@ export const storeData = (orderData, listing, transaction, storageKey) => {
 
 // Get stored data
 export const storedData = storageKey => {
-  if (window && window.sessionStorage) {
+  if (typeof window !== 'undefined' && window.sessionStorage) {
     const checkoutPageData = window.sessionStorage.getItem(storageKey);
 
     const reviver = (k, v) => {
@@ -148,7 +148,7 @@ export const storedData = storageKey => {
 };
 
 export const clearData = storageKey => {
-  if (window && window.sessionStorage) {
+  if (typeof window !== 'undefined' && window && window.sessionStorage) {
     window.sessionStorage.removeItem(storageKey);
   }
 };

@@ -47,6 +47,7 @@ import { parse, stringify } from '../../util/urlHelpers';
 import { IconCheckmark, IconClose, ModalInMobile, PrimaryButton } from '../../components';
 
 import css from './OrderPanel.module.css';
+import { createResourceLocatorString } from '../../util/routes';
 
 const BookingTimeForm = loadable(() =>
   import(/* webpackChunkName: "BookingTimeForm" */ './BookingTimeForm/BookingTimeForm')
@@ -192,6 +193,8 @@ const OrderPanel = props => {
     fetchLineItemsError,
     payoutDetailsWarning,
     setInquiryModalOpen,
+    currentUser,
+    routes,
   } = props;
 
   const publicData = listing?.attributes?.publicData || {};
@@ -383,14 +386,24 @@ const OrderPanel = props => {
             <div className={css.customInquiryPrice}>{formattedPrice}</div>
 
             <div className={css.customInquiryBudgetFlex}>
-              {flex_price && flex_price.length > 0 ? <IconCheckmark /> : <IconClose />}
-              <FormattedMessage id="OrderPanel.customInquiryBudgetFlex" />
-            </div>
+              {flex_price && flex_price.length > 0 ? <><IconCheckmark /> <FormattedMessage id="OrderPanel.customInquiryBudgetFlex" /></> : null}
 
+            </div>
+            {console.log(currentUser)}
             <FormattedMessage id="OrderPanel.customInquiryFormPriceDescription" />
             <PrimaryButton
               onClick={() => {
-                if (!isOwnListing) setInquiryModalOpen(true);
+                if (!isOwnListing) {
+                  if (currentUser) {
+                    setInquiryModalOpen(true);
+                  } else {
+                    const state = { from: `${location.pathname}${location.search}${location.hash}` };
+
+
+                    // signup and return back to listingPage.
+                    history.push(createResourceLocatorString('SignupPage', routes, {}, {}), state);
+                  }
+                }
               }}
             >
               <FormattedMessage id="OrderPanel.customInquiryform" />

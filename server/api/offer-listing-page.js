@@ -49,14 +49,12 @@ module.exports = async (req, res) => {
           const authorId = data[i].relationships.author.data.id.uuid;
           const listingId = data[i].id.uuid;
           await sdk.reviews.query({
-            // subjectId: authorId,
             listingId: listingId
           }).then(async res => {
-            // res.data contains the response data
             let newObject = data[i];
             if (res) {
               if (res?.data?.data && data.length > 0) {
-                newObject.review = res.data.data[0];
+                newObject.reviews = res.data.data.filter(review => review?.attributes?.state == "public");
               }
             }
             newArray.push(newObject);
