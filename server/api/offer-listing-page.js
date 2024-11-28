@@ -7,7 +7,7 @@ module.exports = async (req, res) => {
 
     const response = await sdk.listings.query({
       ...req.body,
-      include: ['author', 'images'],
+      include: ['author', 'author.profileImage',, 'images'],
       'fields.listing': [
         'title',
         'geolocation',
@@ -24,12 +24,10 @@ module.exports = async (req, res) => {
         'description',
       ],
       'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
-      'fields.image': [
-        'variants.scaled-small',
-        'variants.scaled-medium',
-        'variants.listing-card',
-        'variants.listing-card-2x',
-      ],
+     'fields.image': [
+      'variants.square-small',
+      'variants.square-small2x',
+    ],
       'imageVariant.listing-card': 'w:400;h:300;fit:crop',
       'imageVariant.listing-card-2x': 'w:800;h:600;fit:crop',
       minStock: 1,
