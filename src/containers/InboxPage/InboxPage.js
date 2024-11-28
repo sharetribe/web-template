@@ -373,8 +373,7 @@ InboxPageComponent.propTypes = {
 const mapStateToProps = state => {
   const { fetchInProgress, fetchOrdersOrSalesError, pagination, transactionRefs } = state.InboxPage;
   const { currentUser, currentUserNotificationCount: providerNotificationCount } = state.user;
-  const transactionsData = getMarketplaceEntities(state, transactionRefs);
-  const transactions = _.filter(transactionsData, transaction => transaction.attributes.processName === "default-purchase");
+  const transactions = getMarketplaceEntities(state, transactionRefs);
 
   return {
     currentUser,
