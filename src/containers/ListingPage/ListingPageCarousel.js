@@ -307,11 +307,11 @@ export const ListingPageComponent = props => {
   const schemaAvailability = !currentListing.currentStock
     ? null
     : currentStock > 0
-    ? 'https://schema.org/InStock'
-    : 'https://schema.org/OutOfStock';
+      ? 'https://schema.org/InStock'
+      : 'https://schema.org/OutOfStock';
 
   const availabilityMaybe = schemaAvailability ? { availability: schemaAvailability } : {};
-  const orderData = {deliveryMethod: 'none'};
+  const orderData = { deliveryMethod: 'none' };
   const transaction = null;
   const initialData = { orderData, listing: currentListing, transaction };
   const pageData = handlePageData(initialData, STORAGE_KEY, history);
@@ -500,8 +500,8 @@ export const ListingPageComponent = props => {
             /> */}
 
             {offerListingItems &&
-            Array.isArray(offerListingItems) &&
-            offerListingItems.length > 0 ? (
+              Array.isArray(offerListingItems) &&
+              offerListingItems.length > 0 ? (
               <SectionOfferListingsMaybe
                 listings={offerListingItems}
                 intl={intl}
@@ -511,7 +511,14 @@ export const ListingPageComponent = props => {
                 getListing={getListing}
                 isOwnListing={isOwnListing}
               />
-            ) : null}
+            ) : <H4>
+              <FormattedMessage
+                id="ListingPage.SectionOfferListingsMaybe.title"
+                values={{
+                  value: <span style={{ fontWeight: 'bold' }}>0</span>,
+                }}
+              />
+            </H4>}
           </div>
           <div className={css.orderColumnForProductLayout}>
             <OrderPanel
@@ -732,7 +739,7 @@ const mapStateToProps = state => {
       ? getListingsOffeListingById(listingOfferEntities, stateOfferListingItems)
       : null;
 
-  
+
 
   const getListing = id => {
     const ref = { id, type: 'listing' };

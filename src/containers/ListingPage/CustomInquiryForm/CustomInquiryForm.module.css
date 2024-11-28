@@ -36,7 +36,7 @@
 
 .emailNoti {
   font-size: 12px;
-  font-family: sans-serif;
+  /* font-family: sans-serif; */
   padding: 20px;
   background-color: aliceblue;
   border-radius: 12px;
@@ -52,12 +52,12 @@
 
 .earnContent {
   font-size: 20px;
-  font-family: sans-serif;
+  /* font-family: sans-serif; */
   font-weight: bold;
 }
 
 .commissionContent {
   font-size: 12px;
-  font-family: sans-serif;
+  /* font-family: sans-serif; */
   color: #4B4B4F;
 }

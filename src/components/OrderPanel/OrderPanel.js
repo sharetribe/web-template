@@ -389,25 +389,26 @@ const OrderPanel = props => {
               {flex_price && flex_price.length > 0 ? <><IconCheckmark /> <FormattedMessage id="OrderPanel.customInquiryBudgetFlex" /></> : null}
 
             </div>
-            {console.log(currentUser)}
-            <FormattedMessage id="OrderPanel.customInquiryFormPriceDescription" />
-            <PrimaryButton
-              onClick={() => {
-                if (!isOwnListing) {
-                  if (currentUser) {
-                    setInquiryModalOpen(true);
-                  } else {
-                    const state = { from: `${location.pathname}${location.search}${location.hash}` };
+            {!isOwnListing && <>
+              <FormattedMessage id="OrderPanel.customInquiryFormPriceDescription" />
+              <PrimaryButton
+                onClick={() => {
+                  if (!isOwnListing) {
+                    if (currentUser) {
+                      setInquiryModalOpen(true);
+                    } else {
+                      const state = { from: `${location.pathname}${location.search}${location.hash}` };
 
 
-                    // signup and return back to listingPage.
-                    history.push(createResourceLocatorString('SignupPage', routes, {}, {}), state);
+                      // signup and return back to listingPage.
+                      history.push(createResourceLocatorString('SignupPage', routes, {}, {}), state);
+                    }
                   }
-                }
-              }}
-            >
-              <FormattedMessage id="OrderPanel.customInquiryform" />
-            </PrimaryButton>
+                }}
+              >
+                <FormattedMessage id="OrderPanel.customInquiryform" />
+              </PrimaryButton>
+            </>}
           </div>
         ) : !isKnownProcess ? (
           <p className={css.errorSidebar}>
