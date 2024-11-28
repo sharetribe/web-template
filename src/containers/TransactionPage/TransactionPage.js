@@ -199,6 +199,7 @@ export const TransactionPageComponent = props => {
       bookingStartTime,
       bookingEndTime,
       quantity: quantityRaw,
+      seats: seatsRaw,
       deliveryMethod,
       ...otherOrderData
     } = values;
@@ -221,6 +222,8 @@ export const TransactionPageComponent = props => {
 
     const quantity = Number.parseInt(quantityRaw, 10);
     const quantityMaybe = Number.isInteger(quantity) ? { quantity } : {};
+    const seats = Number.parseInt(seatsRaw, 10);
+    const seatsMaybe = Number.isInteger(seats) ? { seats } : {};
     const deliveryMethodMaybe = deliveryMethod ? { deliveryMethod } : {};
 
     const initialValues = {
@@ -230,6 +233,7 @@ export const TransactionPageComponent = props => {
       orderData: {
         ...bookingMaybe,
         ...quantityMaybe,
+        ...seatsMaybe,
         ...deliveryMethodMaybe,
         ...otherOrderData,
       },
