@@ -84,6 +84,13 @@ const getOrderParams = (pageData, shippingDetails, optionalPaymentParams, config
     },
   };
 
+  // Note: Avoid misinterpreting the following logic as allowing arbitrary mixing of `quantity` and `seats`.
+  // You can only pass either quantity OR seats and units to the orderParams object
+  // Quantity represents the total booked units for the line item (e.g. days, hours).
+  // When quantity is not passed, we pass seats and units.
+  // If `bookingDatesMaybe` is provided, it determines `units`, and `seats` defaults to 1
+  // (implying quantity = units)
+
   // These are the order parameters for the first payment-related transition
   // which is either initiate-transition or initiate-transition-after-enquiry
   const orderParams = {
