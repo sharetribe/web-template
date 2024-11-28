@@ -307,7 +307,7 @@
 }
 
 .customInquiryBudget {
-  font-family:sans-serif;
+  /* font-family:sans-serif; */
   text-align: center;
   font-size: 16px;
   font-weight: 700;
@@ -315,7 +315,7 @@
 }
 
 .customInquiryBudgetFlex {
-  font-family:sans-serif;
+  /* font-family:sans-serif; */
   text-align: center;
   font-size: 14px;
   font-weight: 400;
