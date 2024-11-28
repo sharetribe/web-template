@@ -7,6 +7,7 @@ import landingPE from '../../media/landingPE.JPG';
 import SurveyForm from '../SurveyForm/SurveyForm';
 import { FormattedMessage } from '../../util/reactIntl';
 import { NamedLink } from '..';
+import ActionTeamButtons from '../ActionTeamButtons/ActionTeamButtons';
 
 function LandingPageSection({ onSearchSubmit }) {
   const intl = useIntl();
@@ -119,17 +120,18 @@ function LandingPageSection({ onSearchSubmit }) {
       ) : (
         <div className={css.surveyContainer}>
           {!isMobile && (
-            <div className={css.emptyDiv}>
+            <div className={css.emptyDiv2}>
               <h1 className={css.emptyText}>
-                Scopri le migliori esperienze creative
-                <br /> per il tuo gruppo,
-                <br /> in pochi click
+              Boost Creativity in Your Workplace Team Building with Club Joy
+Take team-building to the next level with creative, hands-on workshops that come straight to your office. Whether it’s pottery or painting, our experiences are designed to help your team collaborate, unwind, and reignite their creativity.
+With hassle-free planning and engaging activities, we make sure your event is fun, memorable, and completely stress-free—all while delivering real results.
               </h1>
+              <ActionTeamButtons />
             </div>
           )}
           <div className={css.surveyForm} style={containerStyle2}>
-            <div style={{ paddingTop: '50px' }}>
-              <SurveyForm isTeamBuilding={isTeamBuilding} />
+            <div style={{ paddingTop: '50px', background: 'white' }}>
+             VIDEO
             </div>
           </div>
         </div>

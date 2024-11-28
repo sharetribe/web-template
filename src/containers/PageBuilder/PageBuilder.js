@@ -6,6 +6,9 @@ import TopbarContainer from '../TopbarContainer/TopbarContainer.js';
 import FooterContainer from '../FooterContainer/FooterContainer.js';
 import LandingPageSection from '../../components/LandingPageSection/LandingPageSection.js';
 import Newsletter from '../../components/Newsletter/Newsletter.js';
+import HowItWorks from '../../components/HowItWorks/HowItWorks.js';
+import WhyUs from '../../components/WhyUs/WhyUs.js';
+import Sponsors from '../../components/Sponsors/Sponsors.js';
 import Counter from '../../components/Counter/Counter.js';
 import ToDo from '../../components/ToDo/ToDo.js';
 import { validProps } from './Field';
@@ -14,6 +17,7 @@ import SectionBuilder from './SectionBuilder/SectionBuilder.js';
 import StaticPage from './StaticPage.js';
 
 import css from './PageBuilder.module.css';
+import ActionTeamButtons from '../../components/ActionTeamButtons/ActionTeamButtons.js';
 
 const getMetadata = (meta, schemaType, fieldOptions) => {
   const { pageTitle, pageDescription, socialSharing } = meta;
@@ -200,7 +204,11 @@ function PageBuilder(props) {
                                 </div>
                               </div>
                             </div>
-                            <Newsletter />
+                            <HowItWorks />
+                            <WhyUs />
+                            <ActionTeamButtons />
+                            <Newsletter isTeamBuilding={isTeamBuilding}/>
+                            <Sponsors />
                           </>
                         ) : (
                           <SectionBuilder sections={sections} options={options} />

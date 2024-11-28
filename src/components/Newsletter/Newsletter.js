@@ -11,7 +11,7 @@ const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
 const supabaseKey = process.env.REACT_APP_SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-function Newsletter() {
+function Newsletter({isTeamBuilding}) {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [lastname, setLastname] = useState('');
@@ -57,10 +57,6 @@ function Newsletter() {
     }
   };
 
-  const handleNavigate = () => {
-    history.push('/ts');
-  };
-
   const heartStyle = {
     color: 'red',
     margin: '2px',
@@ -68,20 +64,6 @@ function Newsletter() {
 
   return (
     <div className={css.formContainer}>
-      <div className={css.buttonContainer}>
-        {isClient && ( // Only render PopupButton on the client side
-          <PopupButton
-            url="https://calendly.com/hello-epym"
-            rootElement={document.getElementById('root')}
-            text="☎️ Experience Planner gratis"
-            className={css.calendlyButton}
-          />
-        )}
-        <PrimaryButton onClick={handleNavigate} className={css.button}>
-          Prenota il tuo evento
-        </PrimaryButton>
-      </div>
-
       <form onSubmit={handleSubmit} className={css.form}>
         <p style={{ textAlign: 'center' }}>
           {intl.formatMessage({ id: 'Newsletter.header' })}

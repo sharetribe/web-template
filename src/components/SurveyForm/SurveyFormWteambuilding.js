@@ -158,7 +158,7 @@ function SurveyForm({ className, isTeamBuilding }) {
   const renderStep = () => {
     switch (currentStep) {
       case 1:
-        return (
+        return !isTeamBuilding ? (
           <div className={css.step}>
             {isMobile && <p>{intl.formatMessage({ id: 'Survey.step0.subtitle' })}</p>}
             <h2>{intl.formatMessage({ id: 'Survey.step00.title' })}</h2>
@@ -186,12 +186,57 @@ function SurveyForm({ className, isTeamBuilding }) {
               </div>
             </div>
           </div>
+        ) : (
+          <div className={css.step}>
+            {!isTeamBuilding ? (
+              <>
+                {isMobile && <p>{intl.formatMessage({ id: 'Survey.step01.subtitle' })}</p>}
+                <h2>{intl.formatMessage({ id: 'Survey.step01.title' })}</h2>
+              </>
+            ) : (
+              <>
+                <h2>{intl.formatMessage({ id: 'Survey.step1.title' })}</h2>
+                <p>{intl.formatMessage({ id: 'Survey.step1.subtitle' })}</p>
+              </>
+            )}
+            <div className={css.cardContainer}>
+              {['1', '2', '3', '4'].map((option) => (
+                <div
+                  key={option}
+                  className={`${css.card} ${joy.includes(option) ? css.selected : ''}`}
+                  onClick={() => handleJoyChange(option)}
+                >
+                  <span className={css.emoji}>{emojiSets[option]}</span>
+                  <div className={css.placeholder}>{placeholders[option]}</div>
+                </div>
+              ))}
+            </div>
+            <button onClick={() => setCurrentStep(1)} className={css.backButton}>
+              {intl.formatMessage({ id: 'Survey.back' })}
+            </button>
+            <button
+              onClick={() => setCurrentStep(3)}
+              className={css.nextButton}
+              disabled={joy.length < 2}
+            >
+              {intl.formatMessage({ id: 'Survey.next' })}
+            </button>
+          </div>
         );
       case 2:
         return (
           <div className={css.step}>
-            {isMobile && <p>{intl.formatMessage({ id: 'Survey.step01.subtitle' })}</p>}
-            <h2>{intl.formatMessage({ id: 'Survey.step01.title' })}</h2>
+            {!isTeamBuilding ? (
+              <>
+                {isMobile && <p>{intl.formatMessage({ id: 'Survey.step01.subtitle' })}</p>}
+                <h2>{intl.formatMessage({ id: 'Survey.step01.title' })}</h2>
+              </>
+            ) : (
+              <>
+                <h2>{intl.formatMessage({ id: 'Survey.step1.title' })}</h2>
+                <p>{intl.formatMessage({ id: 'Survey.step1.subtitle' })}</p>
+              </>
+            )}
             <div className={css.cardContainer}>
               {['1', '2', '3', '4'].map((option) => (
                 <div
@@ -225,6 +270,7 @@ function SurveyForm({ className, isTeamBuilding }) {
                 className={`${css.card} ${location === 'Milano' ? css.selected : ''}`}
                 onClick={() => setLocation('Milano')}
               >
+                {/* The image will automatically take the new styling */}
                 <img src={DuomoImage} alt="Duomo in Milan" />
                 {intl.formatMessage({ id: 'Survey.city.milan' })}
               </div>
@@ -232,11 +278,12 @@ function SurveyForm({ className, isTeamBuilding }) {
                 className={`${css.card} ${location === 'Torino' ? css.selected : ''}`}
                 onClick={() => setLocation('Torino')}
               >
+                {/* The image will automatically take the new styling */}
                 <img src={MoleImage} alt="Mole in Turin" />
                 {intl.formatMessage({ id: 'Survey.city.turin' })}
               </div>
             </div>
-  
+
             <p>
               <a href="mailto:hello@clubjoy.it" className={css.emailLink}>
                 {intl.formatMessage({ id: 'Survey.findCity' })}
@@ -254,9 +301,8 @@ function SurveyForm({ className, isTeamBuilding }) {
         return null;
     }
   };
-  
+
   return <div className={`${css.surveyForm} ${className || ''}`}>{renderStep()}</div>;
-  
 }
 
 export default SurveyForm;
