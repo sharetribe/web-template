@@ -84,7 +84,8 @@ export const ListingCardComponent = props => {
   const { title = '', price, publicData } = currentListing.attributes;
   // test condition
   const { condition } = publicData || {};
-  
+  console.log(condition);
+    
   const slug = createSlug(title);
   const author = ensureUser(listing.author);
   const authorName = author.attributes.profile.displayName;
@@ -124,8 +125,8 @@ export const ListingCardComponent = props => {
         />
       </AspectRatioWrapper>
       <div className={css.info}>
-        <PriceMaybe price={price} publicData={publicData} config={config} intl={intl} />
         <div className={css.mainInfo}>
+          <PriceMaybe price={price} publicData={publicData} config={config} intl={intl} />
           <div className={css.title}>
             {richText(title, {
               longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
@@ -137,13 +138,15 @@ export const ListingCardComponent = props => {
               <FormattedMessage id="ListingCard.author" values={{ authorName }} />
             </div>
           ) : null}
+          {/* Add condition here */}
+          {condition && (
+            <div className={css.condition}>
+              {condition}
+              
+              {/* <FormattedMessage id="ListingCard.condition" values={{ condition }} /> */}
+            </div>
+          )}
         </div>
-        {/* Add condition here */}
-        {condition && (
-          <div className={css.condition}>
-            <FormattedMessage id="ListingCard.condition" values={{ condition }} />
-          </div>
-        )}
       </div>
     </NamedLink>
   );

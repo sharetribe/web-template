@@ -12,7 +12,17 @@ import css from './FilterPlain.module.css';
 class FilterPlainComponent extends Component {
   constructor(props) {
     super(props);
-    this.state = { isOpen: true };
+
+    // Filters to initialize as closed
+    const closedFilters = [
+      'SearchFiltersDesktop.marki.plain',
+      'SearchFiltersDesktop.cvetove.plain',
+    ];
+
+    // Set the initial state dynamically
+    this.state = {
+      isOpen: !closedFilters.includes(props.id), // Closed if id is in the list
+    };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleClear = this.handleClear.bind(this);
