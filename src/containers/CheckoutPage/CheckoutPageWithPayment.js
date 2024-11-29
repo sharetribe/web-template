@@ -4,6 +4,7 @@ import { arrayOf, bool, func, object, oneOfType, shape, string } from 'prop-type
 // Import contexts and util modules
 import { FormattedMessage, intlShape } from '../../util/reactIntl';
 import { pathByRouteName } from '../../util/routes';
+import { isValidCurrencyForTransactionProcess } from '../../util/fieldHelpers.js';
 import { propTypes, LINE_ITEM_HOUR, DATE_TYPE_DATE, DATE_TYPE_DATETIME } from '../../util/types';
 import { ensureTransaction } from '../../util/data';
 import { createSlug } from '../../util/urlHelpers';
@@ -418,6 +419,33 @@ export const CheckoutPageWithPayment = props => {
     orderData?.deliveryMethod === 'shipping' &&
     !hasTransactionPassedPendingPayment(existingTransaction, process);
 
+  // Check if the listing currency is compatible with Stripe for the specified transaction process.
+  // This function validates the currency against the transaction process requirements and
+  // ensures it is supported by Stripe, as indicated by the 'stripe' parameter.
+  // If using a transaction process without any stripe actions, leave out the 'stripe' parameter.
+  const isStripeCompatibleCurrency = isValidCurrencyForTransactionProcess(
+    transactionProcessAlias,
+    listing.attributes.price.currency,
+    'stripe'
+  );
+
+  // Render an error message if the listing is using a non Stripe supported currency
+  // and is using a transaction process with Stripe actions (default-booking or default-purchase)
+  if (!isStripeCompatibleCurrency) {
+    return (
+      <Page title={title} scrollingDisabled={scrollingDisabled}>
+        <CustomTopbar intl={intl} linkToExternalSite={config?.topbar?.logoLink} />
+        <div className={css.contentContainer}>
+          <section className={css.incompatibleCurrency}>
+            <H4 as="h1" className={css.heading}>
+              <FormattedMessage id="CheckoutPage.incompatibleCurrency" />
+            </H4>
+          </section>
+        </div>
+      </Page>
+    );
+  }
+
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
       <CustomTopbar intl={intl} linkToExternalSite={config?.topbar?.logoLink} />
@@ -437,12 +465,10 @@ export const CheckoutPageWithPayment = props => {
               <FormattedMessage id="CheckoutPage.listingTitle" values={{ listingTitle }} />
             </H4>
           </div>
-
           <MobileOrderBreakdown
             speculateTransactionErrorMessage={errorMessages.speculateTransactionErrorMessage}
             breakdown={breakdown}
           />
-
           <section className={css.paymentContainer}>
             {errorMessages.initiateOrderErrorMessage}
             {errorMessages.listingNotFoundErrorMessage}

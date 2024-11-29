@@ -34,6 +34,7 @@ import * as FieldSelect from './components/FieldSelect/FieldSelect.example';
 import * as FieldSelectTree from './components/FieldSelectTree/FieldSelectTree.example';
 import * as FieldTextInput from './components/FieldTextInput/FieldTextInput.example';
 import * as IconAdd from './components/IconAdd/IconAdd.example';
+import * as IconAlert from './components/IconAlert/IconAlert.example';
 import * as IconBannedUser from './components/IconBannedUser/IconBannedUser.example';
 import * as IconCheckmark from './components/IconCheckmark/IconCheckmark.example';
 import * as IconClose from './components/IconClose/IconClose.example';
@@ -77,7 +78,6 @@ import * as ResponsiveImage from './components/ResponsiveImage/ResponsiveImage.e
 import * as ReviewRating from './components/ReviewRating/ReviewRating.example';
 import * as Reviews from './components/Reviews/Reviews.example';
 import * as SavedCardDetails from './components/SavedCardDetails/SavedCardDetails.example';
-import * as StripeBankAccountTokenInputField from './components/StripeBankAccountTokenInputField/StripeBankAccountTokenInputField.example';
 import * as TabNav from './components/TabNav/TabNav.example';
 import * as TabNavHorizontal from './components/TabNavHorizontal/TabNavHorizontal.example';
 import * as Tabs from './components/Tabs/Tabs.example';
@@ -172,6 +172,7 @@ export {
   FilterPlain,
   FilterPopup,
   IconAdd,
+  IconAlert,
   IconBannedUser,
   IconCheckmark,
   IconClose,
@@ -229,7 +230,6 @@ export {
   SelectMultipleFilter,
   SendMessageForm,
   SignupForm,
-  StripeBankAccountTokenInputField,
   StripePaymentForm,
   TabNav,
   TabNavHorizontal,

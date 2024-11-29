@@ -138,9 +138,9 @@ const LinksMenu = props => {
           <MenuLabelContent showMoreLabel={showMoreLabel} isOpen={isOpen} intl={intl} />
         </MenuLabel>
         <MenuContent className={css.linkMenuContent}>
-          {links.map(linkConfig => {
+          {links.map((linkConfig, index) => {
             return (
-              <MenuItem key={linkConfig.text}>
+              <MenuItem key={`${linkConfig.text}_${index}`}>
                 <LinkComponent linkConfig={linkConfig} currentPage={currentPage} />
               </MenuItem>
             );

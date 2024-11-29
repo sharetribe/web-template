@@ -13,6 +13,7 @@ import loadable from '@loadable/component';
 
 // Icons
 export { default as IconAdd } from './IconAdd/IconAdd';
+export { default as IconAlert } from './IconAlert/IconAlert';
 export { default as IconArrowHead } from './IconArrowHead/IconArrowHead';
 export { default as IconBannedUser } from './IconBannedUser/IconBannedUser';
 export { default as IconCheckmark } from './IconCheckmark/IconCheckmark';
@@ -98,8 +99,6 @@ export { default as FieldBoolean } from './FieldBoolean/FieldBoolean';
 export { default as FieldCheckboxGroup } from './FieldCheckboxGroup/FieldCheckboxGroup';
 export { default as FieldPhoneNumberInput } from './FieldPhoneNumberInput/FieldPhoneNumberInput';
 export { default as LocationAutocompleteInput, FieldLocationAutocompleteInput } from './LocationAutocompleteInput/LocationAutocompleteInput';
-// Fields and inputs using old naming pattern
-export { default as StripeBankAccountTokenInputField } from './StripeBankAccountTokenInputField/StripeBankAccountTokenInputField';
 
 // NOTE: these are code-splitted since these components are heavy and needed only on couple of pages
 export const FieldDateRangePicker = loadable(() => import(/* webpackChunkName: "FieldDateRangePicker" */ './DatePicker/FieldDateRangePicker/FieldDateRangePicker'));

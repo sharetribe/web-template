@@ -101,15 +101,15 @@ const PriorityLinks = props => {
 
   return isMeasured || isServer ? (
     <div className={css.priorityLinkWrapper} {...styleWrapper} ref={containerRef}>
-      {linkConfigs.map(linkConfig => {
-        return <PriorityLink key={linkConfig.text} linkConfig={linkConfig} />;
+      {linkConfigs.map((linkConfig, index) => {
+        return <PriorityLink key={`${linkConfig.text}_${index}`} linkConfig={linkConfig} />;
       })}
     </div>
   ) : (
     ReactDOM.createPortal(
       <div className={css.priorityLinkWrapper} {...styleWrapper} ref={containerRef}>
-        {linkConfigs.map(linkConfig => {
-          return <PriorityLink key={linkConfig.text} linkConfig={linkConfig} />;
+        {linkConfigs.map((linkConfig, index) => {
+          return <PriorityLink key={`${linkConfig.text}_${index}`} linkConfig={linkConfig} />;
         })}
       </div>,
       document.body

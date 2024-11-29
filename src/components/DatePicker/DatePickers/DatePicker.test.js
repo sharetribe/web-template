@@ -230,10 +230,13 @@ describe('SingleDatePicker', () => {
     const inputDateFormatOptions = { day: 'numeric', month: 'short', weekday: 'short' };
     const todayInputString = intl.formatDate(startDay, inputDateFormatOptions);
     userEvent.click(screen.getByDisplayValue(todayInputString));
-    const calendarDate = screen.getByRole('button', { name: `${calendarDateString} is selected` });
-    expect(calendarDate).toBeInTheDocument();
-    expect(calendarDate).toHaveAttribute('tabIndex', '0');
-    expect(calendarDate).toHaveClass('dateSelected');
+
+    const calendarDateBtn = screen.getByRole('button', {
+      name: `${calendarDateString} is selected`,
+    });
+    expect(calendarDateBtn).toBeInTheDocument();
+    expect(calendarDateBtn).toHaveAttribute('tabIndex', '0');
+    expect(calendarDateBtn).toHaveClass('dateSelected');
 
     userEvent.keyboard('[ArrowRight][Enter]');
     const nextDayInputString = intl.formatDate(addDays(startDay, 1), inputDateFormatOptions);

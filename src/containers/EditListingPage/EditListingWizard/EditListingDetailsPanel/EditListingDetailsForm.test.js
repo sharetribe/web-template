@@ -94,6 +94,7 @@ describe('EditListingDetailsForm', () => {
         selectableListingTypes={selectableListingTypes}
         hasExistingListingType={true}
         initialValues={selectableListingTypes[0]}
+        marketplaceCurrency="EUR"
       />
     );
 
