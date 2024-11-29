@@ -17,7 +17,11 @@ import {
   isForbiddenError,
   isNotFoundError,
 } from '../../util/errors';
-import { hasPermissionToViewData, isUserAuthorized, isCreativeSeller } from '../../util/userHelpers';
+import {
+  hasPermissionToViewData,
+  isUserAuthorized,
+  isCreativeSeller,
+} from '../../util/userHelpers';
 
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
