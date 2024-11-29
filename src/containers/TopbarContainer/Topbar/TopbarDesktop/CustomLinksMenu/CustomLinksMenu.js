@@ -105,7 +105,7 @@ function CustomLinksMenu({ currentPage, customLinks = [], hasClientSideContentRe
   const observer = useRef(null);
   const [mounted, setMounted] = useState(false);
   const [moreLabelWidth, setMoreLabelWidth] = useState(0);
-  const [links, setLinks] = useState([createListingLinkConfig(intl), ...customLinks]);
+  const [links, setLinks] = useState([...customLinks]);
   const [layoutData, setLayoutData] = useState({
     priorityLinks: links,
     menuLinks: links,
