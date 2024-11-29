@@ -1,30 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import { Image } from 'antd';
 
+import imagePlaceholder from '../../../assets/image-placeholder.jpg';
 import { useConfiguration } from '../../../context/configurationContext';
-import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
-import { findRouteByRouteName } from '../../../util/routes';
-
-import { AspectRatioWrapper, ResponsiveImage } from '../../../components';
+import { AspectRatioWrapper } from '../../../components';
 
 import css from './ManageListingCard.module.css';
 
 export const PortfolioListingCard = props => {
   const config = useConfiguration();
-  const routeConfiguration = useRouteConfiguration();
   const { className = null, rootClassName = null, image, renderSizes = null } = props;
   const classes = classNames(rootClassName || css.root, className);
   const title = image?.attributes?.title || 'portfolio-image';
-
-  const onOverListingLink = () => {
-    // Enforce preloading of ListingPage (loadable component)
-    const { component: Page } = findRouteByRouteName('ListingPage', routeConfiguration);
-    // Loadable Component has a "preload" function.
-    if (Page.preload) {
-      Page.preload();
-    }
-  };
 
   const {
     aspectWidth = 1,
@@ -34,27 +23,31 @@ export const PortfolioListingCard = props => {
   const variants = Object.keys(image?.attributes?.variants).filter(k =>
     k.startsWith(variantPrefix)
   );
+  const imageVariants = image.attributes.variants;
+  const srcSet = variants
+    .map(variantName => {
+      const variant = imageVariants[variantName];
+
+      if (!variant) {
+        // Variant not available (most like just not loaded yet)
+        return null;
+      }
+      return `${variant.url} ${variant.width}w`;
+    })
+    .filter(v => v != null)
+    .join(', ');
+
+  const imgProps = {
+    sizes: renderSizes,
+    alt: title,
+    srcSet,
+  };
 
   return (
     <div className={classes}>
-      <div
-        className={css.clickWrapper}
-        tabIndex={0}
-        onClick={event => {
-          event.preventDefault();
-          event.stopPropagation();
-        }}
-        onMouseOver={onOverListingLink}
-        onTouchStart={onOverListingLink}
-      >
+      <div>
         <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
-          <ResponsiveImage
-            rootClassName={css.rootForImage}
-            alt={title}
-            image={image}
-            variants={variants}
-            sizes={renderSizes}
-          />
+          <Image {...imgProps} fallback={imagePlaceholder} />
         </AspectRatioWrapper>
       </div>
     </div>
