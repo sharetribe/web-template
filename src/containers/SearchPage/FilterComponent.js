@@ -41,6 +41,14 @@ function FilterComponent(props) {
   const name = key.replace(/\s+/g, '-');
 
   // Default filters: price, keywords, dates
+  const currentUrl = window.location.href;
+
+  if (key === 'guests' && !currentUrl.startsWith('ts')
+  || key === 'language' && !currentUrl.startsWith('ts')
+  ) {
+    return null;
+  }
+
   switch (schemaType) {
     case 'category': {
       const { scope, isNestedEnum, nestedParams } = config;
@@ -104,7 +112,6 @@ function FilterComponent(props) {
       );
     }
   }
-
   // Custom extended data filters
   switch (schemaType) {
     case SCHEMA_TYPE_ENUM: {

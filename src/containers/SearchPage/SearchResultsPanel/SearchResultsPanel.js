@@ -48,6 +48,7 @@ function SearchResultsPanel(props) {
 
   return (
     <div className={classes}>
+      {/*<TeamBuildingResultsFilter listing={l}/>*/}
       <div className={isMapVariant ? css.listingCardsMapVariant : css.listingCards}>
         {listings.map((l) => (
           <ListingCard
