@@ -370,11 +370,16 @@ export function initializeUppy(meta) {
         const uppy = getUppyInstance(getState());
 
         readFileMetadataAsync(file).then(metadata => {
-          uppy.setFileMeta(id, metadata);
           if (metadata.thumbnail) {
+            // Avoid adding the thumbnail as metadata for the file, as it will be included in
+            // the Transloadit resumable/files/ endpoint request, causing a CORS policy violation.
+            const { thumbnail, ...otherMetadata } = metadata;
             uppy.setFileState(id, {
-              preview: metadata.thumbnail,
+              preview: thumbnail,
             });
+            uppy.setFileMeta(id, otherMetadata);
+          } else {
+            uppy.setFileMeta(id, metadata);
           }
 
           const newFile = uppy.getFile(id);

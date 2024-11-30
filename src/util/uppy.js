@@ -13,7 +13,12 @@ export async function createUppyInstance(meta, onBeforeUpload) {
     const { default: Url } = await import('@uppy/url/lib/Url');
     const { default: OneDrive } = await import('@uppy/onedrive/lib/OneDrive');
     const { default: GoldenRetriever } = await import('@uppy/golden-retriever');
-    const uppy = new Uppy({ onBeforeUpload });
+    const uppy = new Uppy({
+      onBeforeUpload,
+      restrictions: {
+        allowedFileTypes: ['image/*', 'video/*'],
+      },
+    });
 
     const config = {
       companionUrl: COMPANION_URL,
