@@ -1,8 +1,8 @@
 diff --git a/node_modules/final-form/dist/final-form.es.js b/node_modules/final-form/dist/final-form.es.js
-index a1fa14f..72011ef 100644
+index e31d7f3..0757644 100644
 --- a/node_modules/final-form/dist/final-form.es.js
 +++ b/node_modules/final-form/dist/final-form.es.js
-@@ -1,6 +1,17 @@
+@@ -1,6 +1,16 @@
 -import _extends from '@babel/runtime/helpers/esm/extends';
  import _objectWithoutPropertiesLoose from '@babel/runtime/helpers/esm/objectWithoutPropertiesLoose';
  
@@ -10,14 +10,13 @@ index a1fa14f..72011ef 100644
 +  for (var i = 1; i < arguments.length; i++) {
 +    var source = arguments[i];
 +    for (var key in source) {
-+     if (Object.prototype.hasOwnProperty.call(source, key)) {
-+       target[key] = source[key];
-+     }
-+   }
++      if (Object.prototype.hasOwnProperty.call(source, key)) {
++        target[key] = source[key];
++      }
++    }
 +  }
 +  return target;
-+};
-+
++}
  //      
+ 
  var charCodeOfDot = ".".charCodeAt(0);
- var reEscapeChar = /\\(\\)?/g;
