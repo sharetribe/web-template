@@ -1,0 +1,59 @@
+@import '../../../styles/customMediaQueries.css';
+
+.root {
+  position: relative;
+  display: inline-block;
+}
+
+.labelPlain {
+  color: var(--colorGrey700);
+}
+
+.labelPlainSelected {
+  color: var(--marketplaceColor);
+}
+
+.labelText {
+  display: inline-block;
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.field {
+  composes: h4 from global;
+  margin: 0;
+  border: none;
+}
+
+.fieldPlain {
+  composes: h4 from global;
+  margin: 0;
+  padding: 16px 0 30px 12px;
+  border: none;
+
+  @media (--viewportMedium) {
+    padding: 16px 0 24px 12px;
+  }
+}
+
+.fieldPopup {
+  composes: h4 from global;
+  margin: 0;
+  border: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 1px 0 13px 0;
+}
+
+.fieldPlainLabel {
+  padding: 4px 0 4px 0;
+}
+
+.fieldPopupLabel {
+  padding: 4px 0 4px 0;
+  display: flex;
+  align-items: center;
+}
