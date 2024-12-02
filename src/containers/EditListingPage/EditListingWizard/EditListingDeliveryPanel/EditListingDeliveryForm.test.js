@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { act } from 'react';
 import '@testing-library/jest-dom';
 
 import { fakeIntl } from '../../../../util/testData';
@@ -6,12 +6,12 @@ import { renderWithProviders as render, testingLibrary } from '../../../../util/
 
 import EditListingDeliveryForm from './EditListingDeliveryForm';
 
-const { screen, userEvent, fireEvent } = testingLibrary;
+const { screen, userEvent } = testingLibrary;
 
 const noop = () => null;
 
 describe('EditListingDeliveryForm', () => {
-  it('Check that shipping fees can be given and submit button activates', () => {
+  it('Check that shipping fees can be given and submit button activates', async () => {
     const saveActionMsg = 'Save location';
     render(
       <EditListingDeliveryForm
@@ -37,9 +37,10 @@ describe('EditListingDeliveryForm', () => {
     // Test that save button is disabled at first
     expect(screen.getByRole('button', { name: saveActionMsg })).toBeDisabled();
 
-    // Add shipping price
-    fireEvent.click(screen.getByLabelText(/EditListingDeliveryForm.shippingLabel/i));
-
+    await act(async () => {
+      // Add shipping price
+      userEvent.click(screen.getByLabelText(/EditListingDeliveryForm.shippingLabel/i));
+    });
     const shippingOneItemLabel = 'EditListingDeliveryForm.shippingOneItemLabel';
     const shippingAdditionalItemsLabel = 'EditListingDeliveryForm.shippingAdditionalItemsLabel';
     userEvent.type(screen.getByRole('textbox', { name: shippingOneItemLabel }), '10');
