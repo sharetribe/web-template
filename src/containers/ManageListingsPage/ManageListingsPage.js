@@ -4,25 +4,34 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
+import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
 import { useIntl } from '../../util/reactIntl';
+
 import { createResourceLocatorString, pathByRouteName } from '../../util/routes';
+import { LISTING_GRID_DEFAULTS, LISTING_GRID_ROLE, LISTING_TYPES } from '../../util/types';
 import { hasPermissionToPostListings } from '../../util/userHelpers';
 import { NO_ACCESS_PAGE_POST_LISTINGS } from '../../util/urlHelpers';
-import { isScrollingDisabled } from '../../ducks/ui.duck';
-import { LISTING_GRID_DEFAULTS, LISTING_GRID_ROLE, LISTING_TYPES } from '../../util/types';
 
 import { LayoutSingleColumn, Page, UserNav, NamedRedirect, ListingTabs } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
+import DiscardDraftModal from './DiscardDraftModal/DiscardDraftModal';
 import ManageListingCard from './ManageListingCard/ManageListingCard';
 import PortfolioListingCard from './ManageListingCard/PortfolioListingCard';
-import { closeListing, getOwnListingsById, openListing } from './ManageListingsPage.duck';
+import {
+  closeListing,
+  openListing,
+  getOwnListingsById,
+  discardDraft,
+} from './ManageListingsPage.duck';
 import { getLinks, getItems, getCurrentCategory, routeHandler } from './utils';
 
 export const ManageListingsPageComponent = props => {
   const [listingMenuOpen, setListingMenuOpen] = useState(null);
+  const [discardDraftModalOpen, setDiscardDraftModalOpen] = useState(null);
+  const [discardDraftModalId, setDiscardDraftModalId] = useState(null);
   const routeConfiguration = useRouteConfiguration();
   const history = useHistory();
   const intl = useIntl();
@@ -31,8 +40,11 @@ export const ManageListingsPageComponent = props => {
     currentUser = null,
     closingListing = null,
     closingListingError = null,
+    discardingDraft,
+    discardingDraftError,
     listings = [],
     onCloseListing,
+    onDiscardDraft,
     onOpenListing,
     openingListing = null,
     openingListingError = null,
@@ -41,6 +53,7 @@ export const ManageListingsPageComponent = props => {
     queryListingsError,
     queryParams,
     scrollingDisabled,
+    onManageDisableScrolling,
   } = props;
   const defaultListingType = LISTING_GRID_DEFAULTS.TYPE;
   const currentListingType = queryParams.pub_listingType || defaultListingType;
@@ -98,6 +111,17 @@ export const ManageListingsPageComponent = props => {
     }
   }, [queryInProgress]);
 
+  const openDiscardDraftModal = listingId => {
+    setDiscardDraftModalId(listingId);
+    setDiscardDraftModalOpen(true);
+  };
+
+  const handleDiscardDraft = () => {
+    onDiscardDraft(discardDraftModalId);
+    setDiscardDraftModalOpen(false);
+    setDiscardDraftModalId(null);
+  };
+
   const hasPostingRights = hasPermissionToPostListings(currentUser);
   if (!hasPostingRights) {
     return (
@@ -137,6 +161,7 @@ export const ManageListingsPageComponent = props => {
         };
         const closingErrorListingId = !!closingListingError && closingListingError.listingId;
         const openingErrorListingId = !!openingListingError && openingListingError.listingId;
+        const discardingErrorListingId = !!discardingDraftError && discardingDraft.listingId;
         const listingId = item.id.uuid;
         return (
           <ManageListingCard
@@ -145,12 +170,14 @@ export const ManageListingsPageComponent = props => {
             listing={item}
             renderSizes={renderSizes}
             isMenuOpen={!!listingMenuOpen && listingMenuOpen.id.uuid === listingId}
-            actionsInProgressListingId={openingListing || closingListing}
+            actionsInProgressListingId={openingListing || closingListing || discardingDraft}
             onToggleMenu={onToggleMenu}
             onCloseListing={onCloseListing}
             onOpenListing={handleOpenListing}
+            onDiscardDraft={openDiscardDraftModal}
             hasOpeningError={openingErrorListingId.uuid === listingId}
             hasClosingError={closingErrorListingId.uuid === listingId}
+            hasDiscardingError={discardingErrorListingId.uuid === listingId}
           />
         );
       }
@@ -199,6 +226,16 @@ export const ManageListingsPageComponent = props => {
           errorMessageId="ManageListingsPage.queryError"
           listingRenderer={listingRenderer}
         />
+
+        {onManageDisableScrolling && discardDraftModalOpen ? (
+          <DiscardDraftModal
+            id="ManageListingsPage"
+            isOpen={discardDraftModalOpen}
+            onManageDisableScrolling={onManageDisableScrolling}
+            onCloseModal={() => setDiscardDraftModalOpen(false)}
+            onDiscardDraft={handleDiscardDraft}
+          />
+        ) : null}
       </LayoutSingleColumn>
     </Page>
   );
@@ -216,6 +253,8 @@ const mapStateToProps = state => {
     openingListingError,
     closingListing,
     closingListingError,
+    discardingDraft,
+    discardingDraftError,
   } = state.ManageListingsPage;
   const listings = getOwnListingsById(state, currentPageResultIds);
   return {
@@ -231,12 +270,17 @@ const mapStateToProps = state => {
     openingListingError,
     closingListing,
     closingListingError,
+    discardingDraft,
+    discardingDraftError,
   };
 };
 
 const mapDispatchToProps = dispatch => ({
   onCloseListing: listingId => dispatch(closeListing(listingId)),
   onOpenListing: listingId => dispatch(openListing(listingId)),
+  onDiscardDraft: listingId => dispatch(discardDraft(listingId)),
+  onManageDisableScrolling: (componentId, disableScrolling) =>
+    dispatch(manageDisableScrolling(componentId, disableScrolling)),
 });
 
 const ManageListingsPage = compose(connect(mapStateToProps, mapDispatchToProps))(

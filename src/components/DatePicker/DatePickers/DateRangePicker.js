@@ -18,21 +18,20 @@ const dateFormatOptions = {
   day: 'numeric',
 };
 
+const stringify = arr => (arr ? arr.map(v => (v ? v.getTime() : '')).join(',') : '');
+
 export const DateRangePicker = props => {
   const intl = useIntl();
+  const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [dateRange, setDateRange] = useState(props.value || null);
-  const [rawValues, setRawValues] = useState(
-    props.value ? props.value.map(value => intl.formatDate(value, dateFormatOptions)) : ['', '']
-  );
-  const element = useRef(null);
+  const [dateRangeData, setDateRangeData] = useState({
+    dateRange: props.value || null,
+    formatted: props.value
+      ? props.value.map(value => intl.formatDate(value, dateFormatOptions))
+      : ['', ''],
+  });
 
-  useEffect(() => {
-    // Call onMonthChanged function if it has been passed in among props.
-    if (!isOpen && props.onClose) {
-      props.onClose();
-    }
-  }, [isOpen]);
+  const element = useRef(null);
 
   const {
     className,
@@ -53,11 +52,35 @@ export const DateRangePicker = props => {
     ...rest
   } = props;
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // If value has changed, update internal state
+  useEffect(() => {
+    if (mounted && stringify(value) !== stringify(dateRangeData.dateRange)) {
+      // If mounted, changes to value should be reflected to 'dateRange' state
+      setDateRangeData({
+        dateRange: value,
+        formatted: value.map(value => intl.formatDate(value, dateFormatOptions)),
+      });
+    }
+  }, [mounted, value]);
+
+  useEffect(() => {
+    // Call onClose function if it has been passed in among props.
+    if (!isOpen && props.onClose) {
+      props.onClose();
+    }
+  }, [isOpen]);
+
   const id = `${formId}_DateRangePicker`;
   const classes = classNames(rootClassName || css.root, className, css.outsideClickWrapper);
   const startDateMaybe =
-    Array.isArray(dateRange) && dateRange[0] instanceof Date && !isNaN(dateRange[0])
-      ? { startDate: getISODateString(dateRange[0]) }
+    Array.isArray(dateRangeData.dateRange) &&
+    dateRangeData.dateRange[0] instanceof Date &&
+    !isNaN(dateRangeData.dateRange[0])
+      ? { startDate: getISODateString(dateRangeData.dateRange[0]) }
       : {};
 
   const handleChange = value => {
@@ -66,15 +89,21 @@ export const DateRangePicker = props => {
     }
 
     const cleanedValues = value.map(d => getStartOfDay(d));
-    setDateRange(cleanedValues);
 
     if (cleanedValues.length === 1) {
-      setRawValues([intl.formatDate(cleanedValues[0], dateFormatOptions), '']);
+      setDateRangeData({
+        dateRange: cleanedValues,
+        formatted: [intl.formatDate(cleanedValues[0], dateFormatOptions), ''],
+      });
+
       if (onChange) {
         onChange(cleanedValues);
       }
     } else if (cleanedValues.length === 2) {
-      setRawValues(cleanedValues.map(value => intl.formatDate(value, dateFormatOptions)));
+      setDateRangeData({
+        dateRange: cleanedValues,
+        formatted: cleanedValues.map(value => intl.formatDate(value, dateFormatOptions)),
+      });
 
       setIsOpen(false);
 
@@ -87,6 +116,12 @@ export const DateRangePicker = props => {
       if (onChange) {
         onChange(cleanedValues);
       }
+    } else {
+      // This should not be reached, unless the range is empty.
+      setDateRangeData({
+        dateRange: cleanedValues,
+        formatted: cleanedValues.map(value => intl.formatDate(value, dateFormatOptions)),
+      });
     }
   };
 
@@ -100,40 +135,53 @@ export const DateRangePicker = props => {
 
     if (!inputStr) {
       const newDateRange =
-        inputType === INPUT_START && rawValues[1] && dateRange[1]
-          ? [dateRange[1]]
-          : inputType !== INPUT_START && rawValues[0] && dateRange[0]
-          ? [dateRange[0]]
+        inputType === INPUT_START && dateRangeData.formatted[1] && dateRangeData.dateRange[1]
+          ? [dateRangeData.dateRange[1]]
+          : inputType !== INPUT_START && dateRangeData.formatted[0] && dateRangeData.dateRange[0]
+          ? [dateRangeData.dateRange[0]]
           : [];
-      setDateRange(newDateRange);
+      setDateRangeData({
+        dateRange: newDateRange,
+        formatted: getUpdatedRange(inputStr, dateRangeData.formatted),
+      });
 
       if (onChange) {
-        const newRawValues = getUpdatedRange(null, rawValues);
+        const newFormattedValues = getUpdatedRange(null, dateRangeData.formatted);
         const boundaryMaybe = newDateRange[0];
-        const valuesForParent = newRawValues.map(v => (v && boundaryMaybe ? boundaryMaybe : null));
+        const valuesForParent = newFormattedValues.map(v =>
+          v && boundaryMaybe ? boundaryMaybe : null
+        );
         onChange(valuesForParent);
       }
-    }
-
-    if (isValidDateString(inputStr)) {
+      return;
+    } else if (isValidDateString(inputStr)) {
       const d = new Date(inputStr);
-      const updatedRange = getUpdatedRange(d, dateRange);
+      const updatedRange = getUpdatedRange(d, dateRangeData.dateRange);
       if (updatedRange?.[0] && updatedRange?.[1]) {
         if (isBlockedBetween(updatedRange)) {
-          setRawValues([updatedRange[0], '']);
-          handleChange([updatedRange[0]]);
+          // Delete end date
+          setDateRangeData({
+            dateRange: [updatedRange[0]],
+            formatted: [intl.formatDate(updatedRange[0], dateFormatOptions), ''],
+          });
+
           return;
         } else {
-          handleChange(updatedRange);
+          handleChange(updatedRange.sort((d1, d2) => d1 - d2));
           return;
         }
       } else if (updatedRange?.[0] || updatedRange?.[1]) {
-        setRawValues([updatedRange[0], '']);
+        // If only 1 date has been selected, create array with 1 item
         handleChange([updatedRange?.[0] || updatedRange?.[1]]);
+        return;
       }
     }
 
-    setRawValues(getUpdatedRange(inputStr, rawValues));
+    // If code execution ends up here, then the dateRange is empty or malformed
+    setDateRangeData({
+      dateRange: dateRangeData.dateRange,
+      formatted: getUpdatedRange(inputStr, dateRangeData.formatted),
+    });
   };
 
   const handleBlur = () => {
@@ -170,6 +218,9 @@ export const DateRangePicker = props => {
     onKeyDown: handleOnKeyDownOnInput,
     ...(readOnly ? { readOnly } : {}),
   };
+  const inputClasses = classNames(css.input, inputClassName, {
+    [css.inputPlaceholder]: !value || value.length === 0,
+  });
 
   return (
     <OutsideClickHandler className={classes} onOutsideClick={handleBlur}>
@@ -178,17 +229,17 @@ export const DateRangePicker = props => {
           <div className={css.inputs}>
             <input
               id={startDateId}
-              className={classNames(css.input, inputClassName)}
+              className={inputClasses}
               placeholder={startDatePlaceholderText}
-              value={rawValues[0] || ''}
+              value={dateRangeData.formatted[0] || ''}
               data-type={INPUT_START}
               {...inputProps}
             />
             <input
               id={endDateId}
-              className={classNames(css.input, inputClassName)}
+              className={inputClasses}
               placeholder={endDatePlaceholderText}
-              value={rawValues[1] || ''}
+              value={dateRangeData.formatted[1] || ''}
               data-type={INPUT_END}
               {...inputProps}
             />
@@ -202,9 +253,9 @@ export const DateRangePicker = props => {
               showMonthStepper={true}
               onChange={handleChange}
               isBlockedBetween={isBlockedBetween}
-              value={dateRange}
-              rangeStartHasValue={rawValues?.[0]?.length > 0}
-              rangeEndHasValue={rawValues?.[1]?.length > 0}
+              value={dateRangeData.dateRange}
+              rangeStartHasValue={dateRangeData.formatted?.[0]?.length > 0}
+              rangeEndHasValue={dateRangeData.formatted?.[1]?.length > 0}
               {...startDateMaybe}
               {...rest}
             />

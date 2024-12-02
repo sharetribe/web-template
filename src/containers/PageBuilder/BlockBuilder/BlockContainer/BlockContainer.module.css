@@ -1,7 +1,7 @@
 @import '../../../../styles/customMediaQueries.css';
 
 .root {
-  &:target {
+  &[id] {
     scroll-margin-top: calc(var(--topbarHeight) + 24px);
 
     @media (--viewportMedium) {

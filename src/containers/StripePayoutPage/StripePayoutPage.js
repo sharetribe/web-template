@@ -119,6 +119,7 @@ export const StripePayoutPageComponent = props => {
       hasRequirements(stripeAccountData, 'currently_due'));
 
   const savedCountry = stripeAccountData ? stripeAccountData.country : null;
+  const savedAccountType = stripeAccountData ? stripeAccountData.business_type : null;
 
   const handleGetStripeConnectAccountLink = handleGetStripeConnectAccountLinkFn(
     onGetStripeConnectAccountLink,
@@ -178,6 +179,7 @@ export const StripePayoutPageComponent = props => {
               currentUser={ensuredCurrentUser}
               stripeBankAccountLastDigits={getBankAccountLast4Digits(stripeAccountData)}
               savedCountry={savedCountry}
+              savedAccountType={savedAccountType}
               submitButtonText={intl.formatMessage({
                 id: 'StripePayoutPage.submitButtonText',
               })}

@@ -423,3 +423,7 @@
   composes: p from global;
   font-weight: var(--fontWeightBold);
 }
+
+.incompatibleCurrency {
+  margin-top: 20px;
+}
