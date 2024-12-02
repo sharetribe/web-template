@@ -46,6 +46,7 @@ import {
   createSearchResultSchema,
   pickListingFieldFilters,
   omitLimitedListingFieldParams,
+  getDatesAndSeatsMaybe,
 } from './SearchPage.shared';
 
 import FilterComponent from './FilterComponent';
@@ -135,12 +136,14 @@ export class SearchPageComponent extends Component {
         // We should always trust urlQueryParams with those.
         // The same applies to keywords, if the main search type is keyword search.
         const keywordsMaybe = isMainSearchTypeKeywords(config) ? { keywords } : {};
+        const datesAndSeatsMaybe = getDatesAndSeatsMaybe(mergedQueryParams, updatedURLParams);
         return {
           currentQueryParams: omitLimitedListingFieldParams(
             {
               ...mergedQueryParams,
               ...updatedURLParams,
               ...keywordsMaybe,
+              ...datesAndSeatsMaybe,
               address,
               bounds,
             },
