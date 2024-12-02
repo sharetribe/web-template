@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { LISTING_STATE_DRAFT, STOCK_INFINITE_ITEMS, STOCK_TYPES } from '../../../../util/types';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
+import { isValidCurrencyForTransactionProcess } from '../../../../util/fieldHelpers';
 
 // Import shared components
 import { H3, ListingLink } from '../../../../components';
@@ -76,14 +77,24 @@ const EditListingPricingAndStockPanel = props => {
   const publicData = listing?.attributes?.publicData;
   const unitType = publicData.unitType;
   const listingTypeConfig = getListingTypeConfig(publicData, listingTypes);
+  const transactionProcessAlias = listingTypeConfig.transactionType.alias;
 
   const hasInfiniteStock = STOCK_INFINITE_ITEMS.includes(listingTypeConfig?.stockType);
 
   const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
-  const priceCurrencyValid =
-    marketplaceCurrency && initialValues.price instanceof Money
-      ? initialValues.price?.currency === marketplaceCurrency
-      : !!marketplaceCurrency;
+
+  // Don't render the form if the assigned currency is different from the marketplace currency
+  // or if transaction process is incompatible with selected currency
+  const isStripeCompatibleCurrency = isValidCurrencyForTransactionProcess(
+    transactionProcessAlias,
+    marketplaceCurrency,
+    'stripe'
+  );
+  const priceCurrencyValid = !isStripeCompatibleCurrency
+    ? false
+    : marketplaceCurrency && initialValues.price instanceof Money
+    ? initialValues.price?.currency === marketplaceCurrency
+    : !!marketplaceCurrency;
 
   return (
     <div className={classes}>

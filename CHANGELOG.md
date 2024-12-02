@@ -14,6 +14,62 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] target element didn't seem to work well with scroll-margin.
+  [#513](https://github.com/sharetribe/web-template/pull/513)
+- [change] Require account type when creating a Stripe account
+  [#512](https://github.com/sharetribe/web-template/pull/512)
+- [add] Add currently available translations for DE, ES, FR.
+  [#511](https://github.com/sharetribe/web-template/pull/511)
+
+## [v6.2.0] 2024-11-26
+
+- [add] Remove bank account collection from the template, so that it is collected in the Stripe
+  Onboarding flow instead. [#470](https://github.com/sharetribe/web-template/pull/470)
+- [add] Add currently available translations for DE, ES, FR.
+  [#508](https://github.com/sharetribe/web-template/pull/508)
+- [add] Add support for currencies not supported by Stripe in inquiry processes.
+  [#493](https://github.com/sharetribe/web-template/pull/493)
+- SingeDatePicker: don't update value to dateData if it has the same timestamp has not changed.
+  [#507](https://github.com/sharetribe/web-template/pull/507)
+- [change] Node v23.2 is failing. This adds engine rule for node (">=18.20.1 <23.2.0") for now.
+  [#505](https://github.com/sharetribe/web-template/pull/505)
+- [change] Update mapbox-gl-js (v1.0.0 => v3.7.0) and mapbox-sdk-js (0.6.0 => 0.16.1) Note: Mapbox
+  license changed in v2 (and pricing for non-mapbox related map tiles)
+  https://github.com/mapbox/mapbox-gl-js/releases/tag/v2.0.0
+
+  [#488](https://github.com/sharetribe/web-template/pull/488)
+
+- [change] Update default email template copy texts
+  [#501](https://github.com/sharetribe/web-template/pull/501)
+- [fix] ConfirmSignupForm: show spinner. (Handling for confirmInProgress state was missing.)
+  [#504](https://github.com/sharetribe/web-template/pull/504)
+- [fix] Topbar: if multiple custom links has the same text, the virtual DOM is confused.
+  [#502](https://github.com/sharetribe/web-template/pull/502)
+- [fix] PaymentMethodsPage: full page load did not fetch defaultPaymentMethod.
+  [#500](https://github.com/sharetribe/web-template/pull/500)
+- [change] Relax the Referrer-Policy to "origin".
+  [#498](https://github.com/sharetribe/web-template/pull/498)
+- [fix] Open discard modal on ManageListingsPage only if scrolling is disabled. Fixes an issue where
+  opening the discard draft modal on mobile scrolled the page to the very bottom.
+  [#497](https://github.com/sharetribe/web-template/pull/497)
+
+  [v6.2.0]: https://github.com/sharetribe/web-template/compare/v6.1.0...v6.2.0
+
+## [v6.1.0] 2024-11-06
+
+- [add] Add currently available translations for DE, ES, FR.
+  [#495](https://github.com/sharetribe/web-template/pull/495)
+- [add] Add support for discarding draft listings on ManageListingsPage
+  [474](https://github.com/sharetribe/web-template/pull/474)
+- [fix] ManageListingCard: Menu has a regression bug on mobile layout. Note: if Menu component needs
+  to use full screenwidth on mobile, add preferScreenWidthOnMobile.
+  [#494](https://github.com/sharetribe/web-template/pull/494)
+- [change] Refactor SingleDatePicker and DateRangePicker by combining date and its formatting. It
+  updates dateData if passed-in input value changes.
+  [#492](https://github.com/sharetribe/web-template/pull/492)
+
+  [v6.1.0]: https://github.com/sharetribe/web-template/compare/v6.0.1...v6.1.0
+
 ## [v6.0.1] 2024-11-01
 
 - [fix] GA4 integration had a copy-paste bug.

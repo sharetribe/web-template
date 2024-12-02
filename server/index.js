@@ -85,10 +85,12 @@ async function startServer() {
     // See: https://www.npmjs.com/package/helmet
     // Helmet 4 doesn't disable CSP by default so we need to do that explicitly.
     // If csp is enabled we will add that separately.
-
     app.use(
       helmet({
         contentSecurityPolicy: false,
+        referrerPolicy: {
+          policy: 'origin',
+        },
       })
     );
 
