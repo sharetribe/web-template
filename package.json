@@ -6,7 +6,7 @@
   "dependencies": {
     "@loadable/component": "^5.16.4",
     "@loadable/server": "^5.16.5",
-    "@mapbox/polyline": "^1.1.1",
+    "@mapbox/polyline": "^1.2.1",
     "@sentry/browser": "^8.26.0",
     "@sentry/node": "^8.26.0",
     "autosize": "^5.0.1",
