@@ -108,6 +108,7 @@ import * as SelectMultipleFilter from './containers/SearchPage/SelectMultipleFil
 import * as BookingDateRangeFilter from './containers/SearchPage/BookingDateRangeFilter/BookingDateRangeFilter.example';
 import * as KeywordFilter from './containers/SearchPage/KeywordFilter/KeywordFilter.example';
 import * as PriceFilter from './containers/SearchPage/PriceFilter/PriceFilter.example';
+import * as SeatsFilter from './containers/SearchPage/SeatsFilter/SeatsFilter.example';
 import * as FilterForm from './containers/SearchPage/FilterForm/FilterForm.example';
 import * as FilterPlain from './containers/SearchPage/FilterPlain/FilterPlain.example';
 import * as FilterPopup from './containers/SearchPage/FilterPopup/FilterPopup.example';
@@ -229,6 +230,7 @@ export {
   ReviewRating,
   Reviews,
   SavedCardDetails,
+  SeatsFilter,
   SelectMultipleFilter,
   SendMessageForm,
   SignupForm,
