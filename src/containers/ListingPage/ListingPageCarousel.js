@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { array, arrayOf, bool, func, shape, string, oneOf, object } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -94,6 +94,11 @@ export const ListingPageComponent = props => {
   const [inquiryModalOpen, setInquiryModalOpen] = useState(
     props.inquiryModalOpenForListingId === props.params.id
   );
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const {
     isAuthenticated,
@@ -313,7 +318,7 @@ export const ListingPageComponent = props => {
       <LayoutSingleColumn className={css.pageRoot} topbar={topbar} footer={<FooterContainer />}>
         <div className={css.contentWrapperForProductLayout}>
           <div className={css.mainColumnForProductLayout}>
-            {currentListing.id && noPayoutDetailsSetWithOwnListing ? (
+            {mounted && currentListing.id && noPayoutDetailsSetWithOwnListing ? (
               <ActionBarMaybe
                 className={css.actionBarForProductLayout}
                 isOwnListing={isOwnListing}
@@ -322,7 +327,7 @@ export const ListingPageComponent = props => {
                 currentUser={currentUser}
               />
             ) : null}
-            {currentListing.id ? (
+            {mounted && currentListing.id ? (
               <ActionBarMaybe
                 className={css.actionBarForProductLayout}
                 isOwnListing={isOwnListing}
