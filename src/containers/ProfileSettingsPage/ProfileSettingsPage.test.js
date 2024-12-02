@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { act } from 'react';
 import '@testing-library/jest-dom';
 
 import { createCurrentUser, fakeIntl } from '../../util/testData';
@@ -11,7 +11,7 @@ const { screen } = testingLibrary;
 const noop = () => null;
 
 describe('ProfileSettingsPage', () => {
-  it('Check that there is a link to ProfilePage', () => {
+  it('Check that there is a link to ProfilePage', async () => {
     const props = {
       authInProgress: false,
       currentUser: createCurrentUser('userId'),
@@ -32,7 +32,9 @@ describe('ProfileSettingsPage', () => {
       intl: fakeIntl,
     };
 
-    render(<ProfileSettingsPageComponent {...props} />);
+    await act(async () => {
+      render(<ProfileSettingsPageComponent {...props} />);
+    });
 
     const viewProfileLink = 'ProfileSettingsPage.viewProfileLink';
     expect(screen.getByText(viewProfileLink)).toBeInTheDocument();

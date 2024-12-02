@@ -180,13 +180,13 @@ export const CustomUserFields = props => {
     <>
       <SectionDetailsMaybe {...props} />
       {propsForCustomFields.map(customFieldProps => {
-        const { schemaType, ...fieldProps } = customFieldProps;
+        const { schemaType, key, ...fieldProps } = customFieldProps;
         return schemaType === SCHEMA_TYPE_MULTI_ENUM ? (
-          <SectionMultiEnumMaybe {...fieldProps} />
+          <SectionMultiEnumMaybe key={key} {...fieldProps} />
         ) : schemaType === SCHEMA_TYPE_TEXT ? (
-          <SectionTextMaybe {...fieldProps} />
+          <SectionTextMaybe key={key} {...fieldProps} />
         ) : schemaType === SCHEMA_TYPE_YOUTUBE ? (
-          <SectionYoutubeVideoMaybe {...fieldProps} />
+          <SectionYoutubeVideoMaybe key={key} {...fieldProps} />
         ) : null;
       })}
     </>
