@@ -119,29 +119,29 @@ export function ListingCardComponent(props) {
         />
       </AspectRatioWrapper>
       <div className={css.info}>
-        <div className={css.priceContainer}>
-          {price && price.amount === 0 ? (
-            <span>FREE</span>
-          ) : (
-            <PriceMaybe price={price} publicData={publicData} config={config} intl={intl} />
-          )}
-          {listing.attributes.publicData.listingType === 'teambuilding' ? (
-            <div className={css.teamBuilding}>
-              <IconsPerson size="14px" color="blu" />
-              {max !== undefined && max !== null ? `${min}-${max}` : `${min}+`}
-            </div>
-          ) : null}
-        </div>
-        <div className={css.mainInfo}>
+      <div className={css.mainInfo}>
           <div className={css.title}>
             {richText(title, {
               longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
               longWordClass: css.longWord,
             })}
           </div>
-          {showAuthorInfo ? (
+          {/*showAuthorInfo ? (
             <div className={css.authorInfo}>
               {providerName} by <FormattedMessage id="ListingCard.author" values={{ authorName }} />
+            </div>
+          ) : null*/}
+        </div>
+        <div className={css.priceContainer}>
+          {price && price.amount === 0 ? (
+            <span>FREE</span>
+          ) : (
+            <PriceMaybe price={price} publicData={publicData} config={config} intl={intl} />
+          )}
+                    {listing.attributes.publicData.listingType === 'teambuilding' ? (
+            <div className={css.teamBuilding}>
+              <IconsPerson size="14px" color="blu" />
+              {max !== undefined && max !== null ? `${min} +` : `${min}+`}
             </div>
           ) : null}
         </div>
