@@ -145,6 +145,10 @@ export const FETCH_LISTINGS_FOR_EDIT_REQUEST =
 export const FETCH_LISTINGS_FOR_EDIT_REQUEST_SUCCESS =
   'app/BatchEditListingPage/FETCH_LISTINGS_FOR_EDIT_REQUEST_SUCCESS';
 
+export const CSV_UPLOAD_REQUEST = 'app/BatchEditListingPage/CSV_UPLOAD_REQUEST';
+export const CSV_UPLOAD_SUCCESS = 'app/BatchEditListingPage/CSV_UPLOAD_SUCCESS';
+export const CSV_UPLOAD_ERROR = 'app/BatchEditListingPage/CSV_UPLOAD_ERROR';
+
 // ================ Reducer ================ //
 const initialState = {
   listings: [],
@@ -173,6 +177,8 @@ const initialState = {
       unitType: 'item',
     },
   },
+  csvUploadInProgress: false,
+  csvUploadError: null,
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -228,7 +234,9 @@ export default function reducer(state = initialState, action = {}) {
       const { id, ...values } = payload;
       return {
         ...state,
-        listings: state.listings.map(file => (file.id === id ? { ...file, ...values } : file)),
+        listings: state.listings.map(listing =>
+          listing.id === id ? { ...listing, ...values } : listing
+        ),
       };
     }
     case SET_INVALID_LISTINGS:
@@ -288,6 +296,12 @@ export default function reducer(state = initialState, action = {}) {
         queryListingsError: null,
         listings: listingsFromSdkResponse(payload.data, state.listingDefaults),
       };
+    case CSV_UPLOAD_REQUEST:
+      return { ...state, csvUploadInProgress: true, csvUploadError: null };
+    case CSV_UPLOAD_SUCCESS:
+      return { ...state, csvUploadInProgress: false, csvUploadError: null };
+    case CSV_UPLOAD_ERROR:
+      return { ...state, csvUploadInProgress: false, csvUploadError: payload };
     default:
       return state;
   }
@@ -327,6 +341,10 @@ export const getSaveListingData = state => {
 };
 export const getListingsDefaults = state => state.BatchEditListingPage.listingDefaults;
 export const getIsQueryInProgress = state => state.BatchEditListingPage.queryInProgress;
+export const getCsvUploadState = state => {
+  const { csvUploadInProgress, csvUploadError } = state.BatchEditListingPage;
+  return { csvUploadInProgress, csvUploadError };
+};
 
 function updateAiTermsStatus(getState, dispatch) {
   if (getAiTermsAccepted(getState())) {

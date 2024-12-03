@@ -1,160 +1,119 @@
-import React, { useContext, useEffect, useRef } from 'react';
-import { Form, Input, InputNumber, Select, Switch } from 'antd';
-import css from './EditListingBatchProductDetails.module.css';
+import React from 'react';
+import { Input, InputNumber, Select, Switch } from 'antd';
 import { MAX_KEYWORDS } from '../../constants';
+import css from './EditListingBatchProductDetails.module.css';
 
 const { TextArea } = Input;
 
-const EditableContext = React.createContext(null);
-const EditableCell = props => {
-  const {
-    title,
-    editable,
-    children,
-    dataIndex,
-    record,
-    handleSave,
-    editControlType,
-    options,
-    cellClassName,
-    onBeforeSave = null,
-    placeholder = '',
-    rowIndex,
-    maxSelection,
-    ...restProps
-  } = props;
-  const form = useContext(EditableContext);
-  const value = record ? record[dataIndex] : '';
-  const isMounted = useRef(true);
+const EditableCell = ({
+  title,
+  editable,
+  dataIndex,
+  record = {}, // Default to an empty object to avoid undefined errors
+  handleSave,
+  editControlType,
+  options,
+  placeholder = '',
+  maxSelection,
+  children, // Content for non-editable cells
+  ...restProps
+}) => {
+  const value = record[dataIndex] !== undefined ? record[dataIndex] : '';
 
-  // Cleanup to avoid state updates on unmounted components
-  useEffect(() => {
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
-
-  const save = async () => {
-    try {
-      let values = await form.getFieldsValue();
-      if (onBeforeSave) {
-        values = onBeforeSave(values);
-        form.setFieldsValue(values);
-      }
-
-      if (isMounted.current) {
-        handleSave({ ...record, ...values });
-      }
-    } catch (errInfo) {
-      console.log('Save failed:', errInfo);
+  const handleChange = newValue => {
+    if (handleSave) {
+      handleSave({ ...record, [dataIndex]: newValue });
     }
   };
 
-  return (
-    <td {...restProps}>
-      {editable ? (
-        <div>
-          <Form.Item
-            initialValue={value}
-            name={dataIndex}
-            id={`${dataIndex}-${record.id}`}
+  const renderEditableField = () => {
+    switch (editControlType) {
+      case 'text':
+        return (
+          <Input
+            value={value}
+            onChange={e => handleChange(e.target.value)}
+            onBlur={() => handleChange(value)}
+            placeholder={placeholder}
             className={css.formItem}
-            rules={[{ required: editControlType !== 'switch', message: `${title} is required.` }]}
-          >
-            {
-              {
-                text: (
-                  <Input
-                    id={`${dataIndex}-${rowIndex}`}
-                    onPressEnter={save}
-                    onBlur={save}
-                    placeholder={placeholder}
-                  />
-                ),
-                textarea: (
-                  <TextArea
-                    id={`${dataIndex}-${rowIndex}`}
-                    autoSize
-                    onBlur={save}
-                    placeholder={placeholder}
-                  ></TextArea>
-                ),
-                selectMultiple: (
-                  <Select
-                    id={`${dataIndex}-${rowIndex}`}
-                    style={{ width: '100%' }}
-                    mode="multiple"
-                    options={options}
-                    onSelect={save}
-                    onChange={save}
-                    onDeselect={save}
-                    placeholder={placeholder}
-                    maxCount={maxSelection}
-                  />
-                ),
-                select: (
-                  <Select
-                    id={`${dataIndex}-${rowIndex}`}
-                    style={{ width: '100%' }}
-                    options={options}
-                    onSelect={save}
-                    onChange={save}
-                    onDeselect={save}
-                    placeholder={placeholder}
-                  />
-                ),
-                tags: (
-                  <Select
-                    id={`${dataIndex}-${rowIndex}`}
-                    mode="tags"
-                    style={{ width: '100%' }}
-                    onSelect={save}
-                    onChange={save}
-                    onDeselect={save}
-                    placeholder={placeholder}
-                    maxTagCount={MAX_KEYWORDS}
-                  />
-                ),
-                switch: (
-                  <Switch
-                    id={`${dataIndex}-${rowIndex}`}
-                    checkedChildren="Yes"
-                    unCheckedChildren="No"
-                    onChange={save}
-                    value={value}
-                  ></Switch>
-                ),
-                money: (
-                  <InputNumber
-                    id={`${dataIndex}-${rowIndex}`}
-                    addonBefore="$"
-                    onPressEnter={save}
-                    onBlur={save}
-                    type="number"
-                    placeholder={placeholder}
-                  />
-                ),
-              }[editControlType]
-            }
-          </Form.Item>
-        </div>
-      ) : (
-        <div>{children}</div>
-      )}
-    </td>
-  );
+          />
+        );
+      case 'textarea':
+        return (
+          <TextArea
+            value={value}
+            onChange={e => handleChange(e.target.value)}
+            autoSize
+            placeholder={placeholder}
+            className={css.formItem}
+          />
+        );
+      case 'selectMultiple':
+        return (
+          <Select
+            value={value}
+            mode="multiple"
+            options={options}
+            onChange={handleChange}
+            placeholder={placeholder}
+            maxTagCount={maxSelection}
+            className={css.formItem}
+            style={{ width: '100%' }}
+          />
+        );
+      case 'select':
+        return (
+          <Select
+            value={value}
+            options={options}
+            onChange={handleChange}
+            placeholder={placeholder}
+            className={css.formItem}
+            style={{ width: '100%' }}
+          />
+        );
+      case 'tags':
+        return (
+          <Select
+            mode="tags"
+            value={value}
+            onChange={handleChange}
+            placeholder={placeholder}
+            maxTagCount={MAX_KEYWORDS}
+            className={css.formItem}
+            style={{ width: '100%' }}
+          />
+        );
+      case 'switch':
+        return (
+          <Switch
+            checked={!!value} // Ensure the value is a boolean
+            onChange={checked => handleChange(checked)}
+            checkedChildren="Yes"
+            unCheckedChildren="No"
+            className={css.formItem}
+          />
+        );
+      case 'money':
+        return (
+          <InputNumber
+            value={value}
+            onChange={handleChange}
+            placeholder={placeholder}
+            formatter={val => `$ ${val}`}
+            className={css.formItem}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
+  return <td {...restProps}>{editable ? renderEditableField() : children}</td>;
 };
 
 const EditableRow = ({ index, ...props }) => {
-  const [form] = Form.useForm();
-
-  return (
-    <Form form={form} component={false}>
-      <EditableContext.Provider value={form}>
-        <tr {...props} />
-      </EditableContext.Provider>
-    </Form>
-  );
+  return <tr {...props} />;
 };
 
 export const EditableCellComponents = {

@@ -1,11 +1,14 @@
 import imagePlaceholder from '../../../../assets/image-placeholder.jpg';
-import { Image, Table } from 'antd';
+import { Flex, Image, Table } from 'antd';
 import { MAX_CATEGORIES } from '../../constants';
 import css from './EditListingBatchProductDetails.module.css';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { EditableCellComponents } from './EditableCellComponents';
 import { useIntl } from 'react-intl';
 import { getImageDimensionLabel } from '../../imageHelpers';
+import { CsvUpload } from '../CsvUpload/CsvUpload';
+import { useSelector } from 'react-redux';
+import { getListings } from '../../BatchEditListingPage.duck';
 
 const stringSorter = (strA, strB) => {
   return strA.name.localeCompare(strB.name, 'en', { sensitivity: 'base' });
@@ -16,16 +19,8 @@ const numberSorter = (a, b) => {
 };
 
 export const EditableListingsTable = props => {
-  const {
-    onSave,
-    dataSource,
-    listingFieldsOptions,
-    onSelectChange,
-    selectedRowKeys,
-    loading = false,
-  } = props;
+  const { onSave, listingFieldsOptions, onSelectChange, selectedRowKeys, listings, loading = false } = props;
   const intl = useIntl();
-
   const { categories: imageryCategoryOptions, usages: usageOptions } = listingFieldsOptions;
 
   const handleSave = updatedData => {
@@ -217,22 +212,27 @@ export const EditableListingsTable = props => {
   });
 
   return (
-    <Table
-      columns={editableColumns}
-      components={EditableCellComponents}
-      dataSource={dataSource}
-      rowClassName={() => css.editableRow}
-      rowKey="id"
-      pagination={false}
-      scroll={{
-        x: 'max-content',
-      }}
-      rowSelection={{
-        selectedRowKeys,
-        onChange: onSelectChange,
-      }}
-      sticky={{ offsetHeader: 80 }}
-      loading={loading}
-    ></Table>
+    <div>
+      <Flex className={css.csvUploadWrapper}>
+        <CsvUpload categories={imageryCategoryOptions} usageOptions={usageOptions} onSaveListing={onSave}></CsvUpload>
+      </Flex>
+      <Table
+        columns={editableColumns}
+        components={EditableCellComponents}
+        dataSource={listings}
+        rowClassName={() => css.editableRow}
+        rowKey="id"
+        pagination={false}
+        scroll={{
+          x: 'max-content',
+        }}
+        rowSelection={{
+          selectedRowKeys,
+          onChange: onSelectChange,
+        }}
+        sticky={{ offsetHeader: 80 }}
+        loading={loading}
+      ></Table>
+    </div>
   );
 };

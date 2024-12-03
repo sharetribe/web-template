@@ -5,6 +5,7 @@ import { FormattedMessage } from '../../../../util/reactIntl';
 import { Checkbox, Flex, List, Modal, Progress, Space, Typography } from 'antd';
 import {
   getAiTermsRequired,
+  getCsvUploadState,
   getInvalidListings,
   getListingCreationInProgress,
   getListingFieldsOptions,
@@ -73,16 +74,16 @@ function AiTermsModalContent({ onTermsCheckboxChange }) {
 export const EditListingBatchProductDetails = props => {
   const { cssRoot = css.root, loading = false, editMode = false } = props;
   const dispatch = useDispatch();
-
   const listings = useSelector(getListings);
+
   const listingFieldsOptions = useSelector(getListingFieldsOptions);
   const listingsCreationInProgress = useSelector(getListingCreationInProgress);
   const invalidListings = useSelector(getInvalidListings);
   const aiTermsRequired = useSelector(getAiTermsRequired);
   const selectedRowKeys = useSelector(getSelectedRowsKeys);
   const { failedListings, successfulListings, selectedRowsKeys } = useSelector(getSaveListingData);
+  const { csvUploadInProgress } = useSelector(getCsvUploadState);
 
-  const [dataSource, setDataSource] = useState(listings);
   const [termsAcceptedCheckbox, setTermsAcceptedCheckbox] = useState(false); // Use state to track checkbox value
   const [showValidationModal, setShowValidationModal] = useState(false);
   const [showAiTermsModal, setShowAiTermsModal] = useState(false);
@@ -127,10 +128,6 @@ export const EditListingBatchProductDetails = props => {
 
     setShowAiTermsModal(false);
   };
-
-  useEffect(() => {
-    setDataSource(listings);
-  }, [listings]);
 
   useEffect(() => {
     if (invalidListings.length > 0) {
@@ -192,12 +189,12 @@ export const EditListingBatchProductDetails = props => {
 
       <div>
         <EditableListingsTable
-          dataSource={dataSource}
           onSave={handleUpdateListing}
           listingFieldsOptions={listingFieldsOptions}
           onSelectChange={onSelectChange}
           selectedRowKeys={selectedRowKeys}
-          loading={loading || showProgressModal}
+          loading={loading || showProgressModal || csvUploadInProgress}
+          listings={listings}
         ></EditableListingsTable>
       </div>
 
