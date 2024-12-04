@@ -9,12 +9,17 @@ import {
   CSV_UPLOAD_SUCCESS,
   getListings,
 } from '../../BatchEditListingPage.duck';
-import { normalizeBoolean, normalizeCategory, normalizeUsage } from './CsvParsingHelpers';
+import {
+  getCsvFieldValue,
+  normalizeBoolean,
+  normalizeCategory,
+  normalizeUsage,
+} from './CsvParsingHelpers';
 
-export const CsvUpload = props => {
-  const { categories, usageOptions, onSaveListing } = props;
+export const CsvUpload = ({ categories, usageOptions, onSaveListing }) => {
   const listings = useSelector(getListings);
   const dispatch = useDispatch();
+
   const beforeUpload = file => {
     const isCsv = file.type === 'text/csv';
     if (!isCsv) {
@@ -29,8 +34,9 @@ export const CsvUpload = props => {
 
     Papa.parse(file, {
       header: true,
+      skipEmptyLines: true,
       complete: result => {
-        handleCsvData(result.data);
+        processCsvData(result.data, result.meta.fields);
         dispatch({ type: CSV_UPLOAD_SUCCESS });
       },
       error: error => {
@@ -41,35 +47,63 @@ export const CsvUpload = props => {
     return false;
   };
 
-  const handleCsvData = data => {
-    const updatedListings = listings.map(listing => {
-      const csvRow = data.find(row => row['File Name'] === listing.name);
+  const processCsvData = (data, headers) => {
+    if (!data.length) {
+      message.warning('CSV file is empty or invalid.');
+      return;
+    }
 
-      if (csvRow) {
-        return {
-          ...listing,
-          title: csvRow['Title'] || listing.title,
-          description: csvRow['Description'] || listing.description,
-          isAi: normalizeBoolean(csvRow['Is AI'], listing.isAi),
-          isIllustration: normalizeBoolean(csvRow['Is Illustration'], listing.isIllustration),
-          category: csvRow['Category']
-            ? normalizeCategory(csvRow['Category'], categories, listing.category)
-            : listing.category,
-          usage: csvRow['Usage'] ? normalizeUsage(csvRow['Usage'], usageOptions) : listing.usage,
-          releases: normalizeBoolean(csvRow['Release'], listing.releases === 'yes') ? 'yes' : 'no',
-          keywords: csvRow['Keywords']
-            ? csvRow['Keywords'].split(',').map(keyword => keyword.trim())
-            : listing.keywords,
-          price: csvRow['Price'] ? parseFloat(csvRow['Price']) : listing.price,
-        };
+    // Build a lookup map for quick matching
+    const listingsMap = new Map(listings.map(listing => [listing.name, listing]));
+
+    const updatedListings = [];
+
+    data.forEach(row => {
+      const fallbackRow = Object.values(row); // Convert row to an array for positional access
+      const fileName = getCsvFieldValue(row, headers, 'fileName', fallbackRow);
+
+      if (fileName) {
+        const listing = listingsMap.get(fileName.trim());
+        if (listing) {
+          updatedListings.push({
+            ...listing,
+            imageType:
+              getCsvFieldValue(row, headers, 'imageType', fallbackRow) || listing.imageType,
+            title: getCsvFieldValue(row, headers, 'title', fallbackRow) || listing.title,
+            description:
+              getCsvFieldValue(row, headers, 'description', fallbackRow) || listing.description,
+            isAi: normalizeBoolean(
+              getCsvFieldValue(row, headers, 'ethicalAi', fallbackRow),
+              listing.isAi
+            ),
+            category: normalizeCategory(
+              getCsvFieldValue(row, headers, 'category', fallbackRow),
+              categories,
+              listing.category
+            ),
+            usage:
+              normalizeUsage(getCsvFieldValue(row, headers, 'usage', fallbackRow), usageOptions) ||
+              listing.usage,
+            releases: normalizeBoolean(
+              getCsvFieldValue(row, headers, 'released', fallbackRow),
+              listing.releases === 'yes'
+            )
+              ? 'yes'
+              : 'no',
+            keywords: getCsvFieldValue(row, headers, 'keywords', fallbackRow)
+              ? getCsvFieldValue(row, headers, 'keywords', fallbackRow)
+                  .split(',')
+                  .map(keyword => keyword.trim())
+              : listing.keywords,
+            price: getCsvFieldValue(row, headers, 'price', fallbackRow)
+              ? parseFloat(getCsvFieldValue(row, headers, 'price', fallbackRow))
+              : listing.price,
+          });
+        }
       }
-
-      return listing;
     });
 
-    updatedListings.forEach(listing => {
-      onSaveListing(listing);
-    });
+    updatedListings.forEach(listing => onSaveListing(listing));
 
     void message.success('CSV processed successfully!');
   };

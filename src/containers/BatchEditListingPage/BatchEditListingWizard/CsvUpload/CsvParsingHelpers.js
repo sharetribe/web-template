@@ -1,5 +1,42 @@
 import { MAX_CATEGORIES } from '../../constants';
 
+// Define column mappings, including the fallback positions
+const fieldMapping = {
+  fileName: { aliases: ['File Name'], position: 0 },
+  imageType: { aliases: ['Image Type'], position: 1 },
+  title: { aliases: ['Title'], position: 2 },
+  description: { aliases: ['Description'], position: 3 },
+  category: { aliases: ['Category (1-2 max)'], position: 4 },
+  usage: { aliases: ['Usage'], position: 5 },
+  released: { aliases: ['Released?'], position: 6 },
+  keywords: {
+    aliases: ['Keywords (30 max, separate by commas)'],
+    position: 7,
+  },
+  ethicalAi: {
+    aliases: ['Please confirm any AI images were generated ethically'],
+    position: 8,
+  },
+};
+
+export const getCsvFieldValue = (row, headers, fieldKey, fallbackRow) => {
+  const field = fieldMapping[fieldKey];
+
+  // Try to find the column by its aliases
+  const columnName = field.aliases.find(alias => headers.includes(alias));
+  if (columnName) {
+    return row[columnName];
+  }
+
+  // If no alias matches, fall back to the position
+  const position = field.position;
+  if (position !== undefined && position < fallbackRow.length) {
+    return fallbackRow[position];
+  }
+
+  return undefined; // Return undefined if not found
+};
+
 export const normalizeBoolean = (value, currentValue) => {
   if (value === undefined || value === null) {
     return currentValue; // Keep the current value if not provided
