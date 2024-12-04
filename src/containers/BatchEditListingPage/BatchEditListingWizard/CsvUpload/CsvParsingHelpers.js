@@ -8,35 +8,23 @@ export const normalizeBoolean = (value, currentValue) => {
 };
 
 export const normalizeCategory = (value, categories, currentCategories = []) => {
-         const inputCategories = value ? value.split(',').map(cat => cat.trim().toLowerCase()) : [];
+  const inputCategories = value ? value.split(',').map(cat => cat.trim().toLowerCase()) : [];
 
-         const normalizedCategories = inputCategories
-           .map(cat => {
-             const match = categories.find(({ label, value }) => {
-               // Normalize and split label and value into words
-               const normalizedLabel = label.toLowerCase().replace(/[^a-z0-9 ]/g, '');
-               const normalizedValue = value.toLowerCase().replace(/[^a-z0-9 ]/g, '');
+  const normalizedCategories = inputCategories
+    .map(cat => {
+      const match = categories.find(({ label, value }) =>
+        [label.toLowerCase(), value.toLowerCase()].includes(cat)
+      );
+      return match ? match.value : null;
+    })
+    .filter(id => id !== null); // Remove unmatched categories
 
-               const labelWords = normalizedLabel.split(/\s+/);
-               const valueWords = normalizedValue.split(/\s+/);
-
-               // Check if any word in the category matches part of the label or value
-               return (
-                 labelWords.some(word => cat.includes(word)) ||
-                 valueWords.some(word => cat.includes(word))
-               );
-             });
-
-             return match ? match.value : null;
-           })
-           .filter(id => id !== null); // Remove unmatched categories
-
-         // Merge existing categories and new ones (limit to MAX_CATEGORIES unique values)
-         return Array.from(new Set([...currentCategories, ...normalizedCategories])).slice(
-           0,
-           MAX_CATEGORIES
-         );
-       };
+  // Merge existing categories and new ones (limit to MAX_CATEGORIES unique values)
+  return Array.from(new Set([...currentCategories, ...normalizedCategories])).slice(
+    0,
+    MAX_CATEGORIES
+  );
+};
 
 export const normalizeUsage = (value, usageOptions) => {
   const normalizedValue = String(value || '').toLowerCase();
