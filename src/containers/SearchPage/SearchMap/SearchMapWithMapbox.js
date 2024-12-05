@@ -461,9 +461,11 @@ class SearchMapWithMapbox extends Component {
         onClick={this.props.onClick}
       >
         {this.currentMarkers.map(m => {
+          const { key, ...compProps } = m.componentProps || {};
+
           // Remove existing activeLabel classes and add it only to the correct container
           m.markerContainer.classList.remove(css.activeLabel);
-          if (activeListingId && activeListingId.uuid === m.componentProps.key) {
+          if (activeListingId && activeListingId.uuid === key) {
             m.markerContainer.classList.add(css.activeLabel);
           }
 
@@ -476,12 +478,12 @@ class SearchMapWithMapbox extends Component {
           // Create component portals for correct marker containers
           if (isMapReadyForMarkers && m.type === 'price') {
             return ReactDOM.createPortal(
-              <SearchMapPriceLabel {...m.componentProps} config={config} />,
+              <SearchMapPriceLabel key={key} {...compProps} config={config} />,
               portalDOMContainer
             );
           } else if (isMapReadyForMarkers && m.type === 'group') {
             return ReactDOM.createPortal(
-              <SearchMapGroupLabel {...m.componentProps} />,
+              <SearchMapGroupLabel key={key} {...compProps} />,
               portalDOMContainer
             );
           }
