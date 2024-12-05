@@ -8,6 +8,14 @@
   flex-direction: column;
 }
 
+.heading {
+  padding: 0;
+  margin-bottom: 24px;
+  @media (--viewportMedium) {
+    margin-bottom: 16px;
+  }
+}
+
 .sectionHeader {
   display: flex;
   flex-direction: row;
@@ -18,25 +26,34 @@
 
   @media (--viewportMedium) {
     align-items: baseline;
-    padding: 5px 0 3px 0;
+    padding: 3px 0 5px 0;
     gap: 8px;
     margin-top: 0;
   }
 }
 
 .planInfo {
+  margin-bottom: 24px;
+
   @media (--viewportMedium) {
-    padding: 1px 0 7px 0;
+    padding: 6px 0 2px 0;
+    margin-bottom: 8px;
   }
 }
 
 .section {
-  margin: 24px 0 0 0;
+  margin: 0 0 24px 0;
+
+  @media (--viewportMedium) {
+    margin: 0 0 32px 0;
+  }
 }
 
 .editPlanButton {
+  display: block;
+  padding: 4px 0 2px 0;
   margin: 0;
-  padding: 1px 0 5px 0;
+
   @media (--viewportMedium) {
     padding: 5px 0 3px 0;
   }
@@ -48,7 +65,8 @@
   margin: 0 0 24px 0;
 
   @media (--viewportMedium) {
-    padding: 3px 0 5px 0;
+    display: block;
+    padding: 1px 0 7px 0;
     margin: 0 0 72px 0;
   }
 }

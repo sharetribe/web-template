@@ -444,8 +444,8 @@ label {
     line-height: 16px;
     margin-top: 0;
     margin-bottom: 0;
-    padding-top: 3px;
-    padding-bottom: 13px;
+    padding-top: 4px;
+    padding-bottom: 12px;
   }
 }
 
@@ -481,7 +481,6 @@ select {
   transition: all ease-in-out 100ms;
 
   padding: 6px 24px 4px 12px;
-  box-shadow: 0 2px 3px 0 rgba(216, 220, 230, 0.7);
 
   /* Unset user agent styles */
   appearance: none;

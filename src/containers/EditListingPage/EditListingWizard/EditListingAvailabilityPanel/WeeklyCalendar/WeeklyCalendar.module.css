@@ -68,7 +68,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 6px 8px;
+  padding: 6.5px 8.5px;
   border: solid 1px var(--colorGrey100);
   cursor: pointer;
 
@@ -77,7 +77,7 @@
   }
 
   @media (--viewportMedium) {
-    padding: 11px 13px;
+    padding: 11.5px 13px;
   }
 }
 .prev {
@@ -99,12 +99,11 @@
   border-right: solid 1px var(--colorGrey100);
   border-left: solid 1px var(--colorGrey100);
   border-radius: var(--borderRadiusMedium);
-  margin-top: 17px;
+  margin-top: 24px;
 
   @media (--viewportMedium) {
     grid-template-columns: auto 1fr;
-    /* this takes border-top into account */
-    margin-top: 15px;
+    margin-top: 16px;
   }
 }
 
@@ -135,19 +134,21 @@
 
 .blockedDateLabel {
   background-color: #f3f3f3;
+  background-color: var(--colorGrey50);
   color: var(--colorGrey300);
 }
 
 .info {
+  flex-grow: 1;
 }
 
-.planEntries {
+.dayEntries {
   display: flex;
   flex-direction: column;
   padding: 4px 0 2px 0;
 
   @media (--viewportMedium) {
-    padding: 8px 0 0 0;
+    padding: 0;
   }
 }
 
@@ -162,26 +163,7 @@
 
   @media (--viewportMedium) {
     margin-top: 16px;
-  }
-}
-
-.exceptionsTitle {
-  composes: marketplaceSmallFontStyles from global;
-  padding: 6px 0 0 0;
-  margin: 0;
-
-  @media (--viewportMedium) {
-    padding: 6px 0 2px 0;
-  }
-}
-
-.exceptionsSubtitle {
-  composes: marketplaceTinyFontStyles from global;
-  text-transform: unset;
-  letter-spacing: 0;
-  margin: 6px 0 0 0;
-  @media (--viewportMedium) {
-    margin: 8px 0 0 0;
+    padding-left: 16px;
   }
 }
 
@@ -194,7 +176,7 @@
   margin: 0;
 
   @media (--viewportMedium) {
-    padding: 3px 0 5px 0;
+    padding: 0;
   }
 }
 
@@ -203,19 +185,25 @@
   width: 8px;
   height: 8px;
   border-radius: var(--borderRadiusMedium);
-  align-self: center;
+  align-self: flex-start;
   justify-self: center;
-  margin: 0 0 2px 0;
+  margin: 8px 8px 2px 0;
   background-color: var(--colorFail);
-  margin-right: 8px;
 }
 
 .isAvailable {
   background-color: var(--colorSuccess);
 }
 
-.planEntry {
+.dayEntry {
   display: inline-flex;
+  padding: 3px 0 3px 0;
+  margin-bottom: 6px;
+
+  @media (--viewportMedium) {
+    padding: 6px 0 2px 0;
+    margin-bottom: 8px;
+  }
 }
 
 .deleteIconWrapper {
@@ -232,10 +220,12 @@
   border: 0;
   padding: 0px 8px;
   cursor: pointer;
+  display: inline-block;
 }
 
 .exception {
   display: inline-flex;
+  align-items: baseline;
 
   &:hover > .timeRange {
     color: var(--colorBlack);
@@ -262,18 +252,49 @@
 
 .blockedDate {
   background-color: #f3f3f3;
+  background-color: var(--colorGrey50);
   color: var(--colorGrey300);
 
   & .timeRange {
     color: var(--colorGrey300);
   }
 
-  &:hover .exceptionsTitle,
-  &:hover .exceptionsSubtitle,
   &:hover .exception > .timeRange {
     color: var(--colorGrey700);
   }
   &:hover .exception:hover > .timeRange {
     color: var(--colorBlack);
   }
+}
+
+.daySchedule {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    'timeRange'
+    'seats'
+    'source';
+  width: 100%;
+
+  /* 
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    'timeRange seats'
+    'source source';
+  */
+}
+.entryRange {
+  grid-area: timeRange;
+}
+.seats {
+  grid-area: seats;
+  text-align: left;
+}
+.sourceMaybe {
+  grid-area: source;
+  color: var(--colorGrey300);
+}
+
+.exceptionMsg {
+  color: var(--colorGrey300);
 }
