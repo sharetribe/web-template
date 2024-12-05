@@ -1,6 +1,5 @@
 import React from 'react';
 import { any, string } from 'prop-types';
-import ReactDOMServer from 'react-dom/server';
 
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter, StaticRouter } from 'react-router-dom';
@@ -340,7 +339,12 @@ export const renderApp = (
       hostedConfig={hostedConfig}
     />
   );
-  const body = ReactDOMServer.renderToString(WithChunks);
-  const { helmet: head } = helmetContext;
-  return { head, body };
+
+  // Let's keep react-dom/server out of the main code-chunk.
+  return import('react-dom/server').then(mod => {
+    const { default: ReactDOMServer } = mod;
+    const body = ReactDOMServer.renderToString(WithChunks);
+    const { helmet: head } = helmetContext;
+    return { head, body };
+  });
 };
