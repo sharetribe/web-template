@@ -83,6 +83,7 @@ describe('InboxPage', () => {
         listing,
         lastTransitionedAt: new Date(Date.UTC(2023, 0, 15)),
         lineItems,
+        availabilityType: 'oneSeat',
       });
       const order2 = createTransaction({
         id: 'order2',
@@ -93,6 +94,7 @@ describe('InboxPage', () => {
         booking,
         lastTransitionedAt: new Date(Date.UTC(2022, 0, 15)),
         lineItems,
+        availabilityType: 'oneSeat',
       });
 
       // We'll initialize the store with relevant data for Inbox

@@ -15,6 +15,7 @@ import {
   LINE_ITEM_HOUR,
   LISTING_UNIT_TYPES,
   STOCK_MULTIPLE_ITEMS,
+  AVAILABILITY_MULTIPLE_SEATS,
 } from '../../util/types';
 import { subtractTime } from '../../util/dates';
 import {
@@ -121,6 +122,7 @@ export const InboxItem = props => {
     intl,
     stateData,
     isBooking,
+    availabilityType,
     stockType = STOCK_MULTIPLE_ITEMS,
   } = props;
   const { customer, provider, listing } = tx;
@@ -132,7 +134,6 @@ export const InboxItem = props => {
   const unitLineItem = getUnitLineItem(lineItems);
   const quantity = hasPricingData && !isBooking ? unitLineItem.quantity.toString() : null;
   const showStock = stockType === STOCK_MULTIPLE_ITEMS || (quantity && unitLineItem.quantity > 1);
-
   const otherUser = isCustomer ? provider : customer;
   const otherUserDisplayName = <UserDisplayName user={otherUser} intl={intl} />;
   const isOtherUserBanned = otherUser.attributes.banned;
@@ -168,6 +169,11 @@ export const InboxItem = props => {
             <FormattedMessage id="InboxPage.quantity" values={{ quantity }} />
           ) : null}
         </div>
+        {availabilityType == AVAILABILITY_MULTIPLE_SEATS && unitLineItem?.seats ? (
+          <div className={css.itemSeats}>
+            <FormattedMessage id="InboxPage.seats" values={{ seats: unitLineItem.seats }} />
+          </div>
+        ) : null}
         <div className={css.itemState}>
           <div className={stateClasses}>
             <FormattedMessage
@@ -231,7 +237,7 @@ export const InboxPageComponent = props => {
 
     const publicData = tx?.listing?.attributes?.publicData || {};
     const foundListingTypeConfig = findListingTypeConfig(publicData);
-    const { transactionType, stockType } = foundListingTypeConfig || {};
+    const { transactionType, stockType, availabilityType } = foundListingTypeConfig || {};
     const process = tx?.attributes?.processName || transactionType?.transactionType;
     const transactionProcess = resolveLatestProcessName(process);
     const isBooking = isBookingProcess(transactionProcess);
@@ -245,6 +251,7 @@ export const InboxPageComponent = props => {
           intl={intl}
           stateData={stateData}
           stockType={stockType}
+          availabilityType={availabilityType}
           isBooking={isBooking}
         />
       </li>
