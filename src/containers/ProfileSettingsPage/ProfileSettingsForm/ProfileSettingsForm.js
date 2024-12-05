@@ -368,7 +368,7 @@ class ProfileSettingsFormComponent extends Component {
                 </p>
               </div>
               <div className={classNames(css.sectionContainer, css.lastSection)}>
-                {userFieldProps.map(({ key, ...fieldProps}) => (
+                {userFieldProps.map(({ key, ...fieldProps }) => (
                   <CustomExtendedDataField key={key} {...fieldProps} formId={formId} />
                 ))}
               </div>
