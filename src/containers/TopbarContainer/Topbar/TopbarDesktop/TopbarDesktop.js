@@ -40,6 +40,16 @@ const LoginLink = () => {
   );
 };
 
+const newListingLink = ( userRole) => {
+  return userRole === 'provider' ? (
+    <NamedLink name="NewListingPage" className={css.topbarLink}>
+      <span className={css.topbarLinkLabel}>
+        <FormattedMessage id="TopbarDesktop.createListing" />
+      </span>
+    </NamedLink>
+  ) : null;
+};
+
 const InboxLink = ({ notificationCount, currentUserHasListings }) => {
   const notificationDot = notificationCount > 0 ? <div className={css.notificationDot} /> : null;
   return (
@@ -56,19 +66,33 @@ const InboxLink = ({ notificationCount, currentUserHasListings }) => {
   );
 };
 
-function ProfileMenu({ currentPage, currentUser, onLogout, userRole }) {
+function ProfileMenu({ currentPage, currentUser, onLogout }) {
   const currentPageClass = page => {
     const isAccountSettingsPage =
       page === 'AccountSettingsPage' && ACCOUNT_SETTINGS_PAGES.includes(currentPage);
     return currentPage === page || isAccountSettingsPage ? css.currentPage : null;
   };
 
+
+  const userRole = currentUser?.attributes?.profile?.publicData?.role;
   return (
     <Menu>
       <MenuLabel className={css.profileMenuLabel} isOpenClassName={css.profileMenuIsOpen}>
         <Avatar className={css.avatar} user={currentUser} disableProfileLink />
       </MenuLabel>
       <MenuContent className={css.profileMenuContent}>
+      <MenuItem  key="OverviewListingsPage">
+      {userRole === 'provider' && (
+          <NamedLink
+            className={classNames(css.menuLink, currentPageClass('CMSPage'))}
+            name="CMSPage"
+            params={{ pageId: 'overview' }}
+          >
+             <span className={css.menuItemBorder} />
+            <FormattedMessage id="TopbarMobileMenu.overview" />
+          </NamedLink>
+        )}
+        </MenuItem>
         <MenuItem key="ManageListingsPage">
           <NamedLink
             className={classNames(css.menuLink, currentPageClass('ManageListingsPage'))}
@@ -168,14 +192,7 @@ const TopbarDesktop = props => {
         intl={intl}
         hasClientSideContentReady={authenticatedOnClientSide || !isAuthenticatedOrJustHydrated}
       />
-
-      {userRole === 'provider' && (
-              <NamedLink className={css.createListingLink} name="NewListingPage">
-                 <span className={css.topbarLinkLabel}>
-                  <FormattedMessage id="TopbarDesktop.createListing" />
-                </span>
-              </NamedLink>
-            )}
+      {newListingLink(userRole)}
       {inboxLinkMaybe}
       {signupLinkMaybe}
       {loginLinkMaybe}
