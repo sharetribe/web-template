@@ -2,13 +2,11 @@ import imagePlaceholder from '../../../../assets/image-placeholder.jpg';
 import { Flex, Image, Table } from 'antd';
 import { MAX_CATEGORIES } from '../../constants';
 import css from './EditListingBatchProductDetails.module.css';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { EditableCellComponents } from './EditableCellComponents';
 import { useIntl } from 'react-intl';
 import { getImageDimensionLabel } from '../../imageHelpers';
 import { CsvUpload } from '../CsvUpload/CsvUpload';
-import { useSelector } from 'react-redux';
-import { getListings } from '../../BatchEditListingPage.duck';
 
 const stringSorter = (strA, strB) => {
   return strA.name.localeCompare(strB.name, 'en', { sensitivity: 'base' });
@@ -19,7 +17,14 @@ const numberSorter = (a, b) => {
 };
 
 export const EditableListingsTable = props => {
-  const { onSave, listingFieldsOptions, onSelectChange, selectedRowKeys, listings, loading = false } = props;
+  const {
+    onSave,
+    listingFieldsOptions,
+    onSelectChange,
+    selectedRowKeys,
+    listings,
+    loading = false,
+  } = props;
   const intl = useIntl();
   const { categories: imageryCategoryOptions, usages: usageOptions } = listingFieldsOptions;
 
@@ -90,7 +95,7 @@ export const EditableListingsTable = props => {
       editControlType: 'switch',
       onBeforeSave: record => ({
         ...record,
-        isIllustration: record.isAi ? false : record.isIllustration,
+        isIllustration: record.isAi,
       }),
     },
     {
@@ -102,10 +107,7 @@ export const EditableListingsTable = props => {
       width: 150,
       editable: true,
       editControlType: 'switch',
-      onBeforeSave: record => ({
-        ...record,
-        isAi: record.isIllustration ? false : record.isAi,
-      }),
+      disabled: record => record.isAi,
     },
     {
       title: intl.formatMessage({
@@ -207,6 +209,7 @@ export const EditableListingsTable = props => {
         placeholder: col.placeholder,
         rowIndex: rowIndex,
         maxSelection: col.maxSelection,
+        disabled: col.disabled,
       }),
     };
   });
@@ -214,7 +217,11 @@ export const EditableListingsTable = props => {
   return (
     <div>
       <Flex className={css.csvUploadWrapper}>
-        <CsvUpload categories={imageryCategoryOptions} usageOptions={usageOptions} onSaveListing={onSave}></CsvUpload>
+        <CsvUpload
+          categories={imageryCategoryOptions}
+          usageOptions={usageOptions}
+          onSaveListing={onSave}
+        ></CsvUpload>
       </Flex>
       <Table
         columns={editableColumns}
