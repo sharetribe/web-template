@@ -6,7 +6,6 @@
   
   .title {
     font-size: 1.5rem;
-    color: #ff4500; /* Orange color for the title */
     font-weight: bold;
     margin-bottom: 20px;
   }
@@ -22,13 +21,18 @@
   }
   
   .logo {
-    font-size: 1rem;
-    font-weight: bold;
-    color: #555; /* Grey color for the logos */
-    text-transform: uppercase;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: 10px;
+    background-color: #fff; /* Optional: white background for logos */
     border: 1px solid #ddd; /* Optional: border for each logo block */
     border-radius: 5px; /* Optional: rounded corners */
-    background-color: #fff; /* Optional: white background for logos */
   }
+  
+  .logoImage {
+    max-width: 100%; /* Ensure images are responsive */
+    max-height: 100px; /* Limit the height of the logos */
+    object-fit: contain; /* Ensure the image fits without distortion */
+  }
+  

@@ -16,7 +16,7 @@
   /* fill */
   background-color: var(--colorWhite);
 
-  border-bottom: 2px solid;
+  border-bottom: 0.5px solid;
   /* shadows
   box-shadow: var(--boxShadowLight);
   */

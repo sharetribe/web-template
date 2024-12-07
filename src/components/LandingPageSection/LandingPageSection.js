@@ -121,17 +121,24 @@ function LandingPageSection({ onSearchSubmit }) {
         <div className={css.surveyContainer}>
           {!isMobile && (
             <div className={css.emptyDiv2}>
-              <h1 className={css.emptyText}>
+              <p className={css.emptyText}>
               Boost Creativity in Your Workplace Team Building with Club Joy
-Take team-building to the next level with creative, hands-on workshops that come straight to your office. Whether it’s pottery or painting, our experiences are designed to help your team collaborate, unwind, and reignite their creativity.
-With hassle-free planning and engaging activities, we make sure your event is fun, memorable, and completely stress-free—all while delivering real results.
-              </h1>
+Take team-building to the next level with creative, hands-on workshops that come straight to your office.<br/> Whether it’s pottery or painting, our experiences are designed to help your team collaborate, unwind, and reignite their creativity.
+<br/>With hassle-free planning and engaging activities, we make sure your event is fun, memorable, and completely stress-free—all while delivering real results.
+              </p>
               <ActionTeamButtons />
             </div>
           )}
-          <div className={css.surveyForm} style={containerStyle2}>
-            <div style={{ paddingTop: '50px', background: 'white' }}>
-             VIDEO
+          <div className={css.surveyForm}>
+          <div style={{ padding: '50px', marginLeft: '50px', background: 'white' }}>
+              <iframe
+                width="100%"
+                height="500px"
+                src="https://drive.google.com/file/d/1fDHvBfCx51WdVLjqbI3tg7nFIzK1hJfC/preview"
+                allow="autoplay; encrypted-media"
+                allowFullScreen
+                title="Team Building Video"
+              ></iframe>
             </div>
           </div>
         </div>

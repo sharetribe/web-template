@@ -22,12 +22,12 @@ const ActionTeamButtons = () => {
         <PopupButton
           url="https://calendly.com/hello-epym"
           rootElement={document.getElementById('root')}
-          text="☎️ Experience Planner gratis"
+          text="Parla con noi"
           className={css.calendlyButton}
         />
       )}
       <PrimaryButton onClick={handleNavigate} className={css.button}>
-        Prenota il tuo evento
+        Prenota la tua esperienza
       </PrimaryButton>
     </div>
   );

@@ -1,31 +1,30 @@
 import React from 'react';
 import css from './Sponsors.module.css';
+
+// Import images
+import doubleYouLogo from '../../media/partners/doubleyou.png';
+import coverFlexLogo from '../../media/partners/coverflex.jpg';
+
 const Sponsors = () => {
+  // Array of sponsors with their respective image paths and alt text
   const sponsors = [
-    'La Repubblica',
-    'Forbes',
-    'Il Sole 24 Ore',
-    'Corriere della Sera',
-    'ANSA',
-    'Sky TG24',
-    'StartupItalia!',
-    'WIRED',
-    'Digital Health Italia',
-    'TechCrunch',
-    'Bloomberg',
-    'The Guardian',
+    { src: doubleYouLogo, alt: 'Double You' },
+    { src: coverFlexLogo, alt: 'CoverFlex' }
   ];
+
   return (
     <div className={css.container}>
-      <h2 className={css.title}>PRESS & PARTNERS</h2>
+      <h2 className={css.title}>Press & Partners</h2>
       <div className={css.logoGrid}>
         {sponsors.map((sponsor, index) => (
           <div key={index} className={css.logo}>
-            {sponsor}
+            {/* Render sponsor logo */}
+            <img src={sponsor.src} alt={sponsor.alt} className={css.logoImage} />
           </div>
         ))}
       </div>
     </div>
   );
 };
+
 export default Sponsors;

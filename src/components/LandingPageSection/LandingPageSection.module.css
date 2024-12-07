@@ -2,11 +2,39 @@
 
 .surveyContainer {
   display: flex;
-  align-items: stretch;
-  justify-content: center;
+  flex-direction: row;
   width: 100%;
-  height: 100%;
-  flex-direction: column; /* Default to column for smaller screens */
+  height: auto;
+}
+
+.videoContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 2 1 67%;
+}
+
+.emptyDiv2 {
+  flex: 1 1 33%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1024px) {
+  .surveyContainer {
+    flex-direction: column;
+  }
+
+  .videoContainer {
+    flex: 1 1 auto;
+    width: 100%;
+    height: 300px; /* Adjust height for smaller screens */
+  }
+
+  .emptyDiv2 {
+    flex: 1 1 auto;
+    text-align: center;
+  }
 }
 
 .emptyDiv {
@@ -21,12 +49,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: #ed514a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  white-space: wrap;
   padding: 50px;
-  margin-top: 80px;
-  margin-bottom: 100px;
-  margin-left: 20px;
-  line-height: 1.2;
+  font-size: 2rem;
+  line-height: 1.5;
+  margin-top: 50px;
 }
 
 .surveyForm,
