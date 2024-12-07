@@ -14,7 +14,7 @@ import { richText } from '../../util/richText';
 import { createSlug } from '../../util/urlHelpers';
 import { isBookingProcessAlias } from '../../transactions/transaction';
 
-import { AspectRatioWrapper, NamedLink, ResponsiveImage } from '../../components';
+import { AspectRatioWrapper, NamedLink, ResponsiveImage } from '..';
 
 import css from './ListingCard.module.css';
 
@@ -78,14 +78,27 @@ export const ListingCardComponent = props => {
     setActiveListing,
     showAuthorInfo,
   } = props;
+
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureListing(listing);
   const id = currentListing.id.uuid;
   const { title = '', price, publicData } = currentListing.attributes;
-  // test condition
+
+  // Extract condition ID from publicData
   const { condition } = publicData || {};
-  console.log(condition);
-    
+  
+  // Access listingConfig and listingFields
+  const listingConfig = config.listing; // Explicitly get the listing configuration
+  const listingFields = listingConfig.listingFields; // Extract listingFields from listingConfig
+  
+  
+  // Map condition ID to its human-readable name
+  const conditionField = listingFields.find(field => field.id === 'condition'); // Find the 'condition' field
+  const conditionOption = conditionField?.options?.find(option => option.key === condition); // Match the ID to the options
+  const conditionName = conditionOption ? conditionOption.label : condition; // Use the label if available, fallback to the ID
+  console.log('Condition Key from publicData:', condition);
+  
+
   const slug = createSlug(title);
   const author = ensureUser(listing.author);
   const authorName = author.attributes.profile.displayName;
@@ -126,26 +139,19 @@ export const ListingCardComponent = props => {
       </AspectRatioWrapper>
       <div className={css.info}>
         <div className={css.mainInfo}>
-          <PriceMaybe price={price} publicData={publicData} config={config} intl={intl} />
           <div className={css.title}>
             {richText(title, {
               longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
               longWordClass: css.longWord,
             })}
           </div>
+          
+          <PriceMaybe price={price} publicData={publicData} config={config} intl={intl} />
           {showAuthorInfo ? (
             <div className={css.authorInfo}>
               <FormattedMessage id="ListingCard.author" values={{ authorName }} />
             </div>
           ) : null}
-          {/* Add condition here */}
-          {condition && (
-            <div className={css.condition}>
-              {condition}
-              
-              {/* <FormattedMessage id="ListingCard.condition" values={{ condition }} /> */}
-            </div>
-          )}
         </div>
       </div>
     </NamedLink>

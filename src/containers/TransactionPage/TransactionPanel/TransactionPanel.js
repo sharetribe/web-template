@@ -351,7 +351,9 @@ export class TransactionPanelComponent extends Component {
                   orderBreakdown={orderBreakdown}
                   processName={stateData.processName}
                 />
-
+                
+                {/* insert tracking code here */}
+                
                 {stateData.showActionButtons ? (
                   <div className={css.desktopActionButtons}>{actionButtons}</div>
                 ) : null}

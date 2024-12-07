@@ -1553,3 +1553,21 @@ textarea {
     margin-top: 32px;
   }
 }
+
+/* add-ons */
+#privacy header,
+#terms header {
+  justify-content: flex-start;
+  h1, p {
+    text-align: left;
+    justify-self: flex-start;
+  }
+  .description {
+    max-width: 100%;
+  }
+}
+#privacy ul,
+#terms ul {
+  margin-top: 0;
+  padding: 0 1rem;
+}

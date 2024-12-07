@@ -44,7 +44,7 @@
   flex-direction: row;
   justify-content: flex-start;
   flex-shrink: 0;
-  margin-bottom: 4px;
+  margin: 4px 0;
 }
 
 .priceValue {
@@ -92,14 +92,14 @@
   composes: textSmall from global;
   font-weight: var(--fontWeightBold);
   color: var(--colorGrey700);
-  margin: 0;
+  margin: 2px 0;
 }
 
 .authorInfo {
   /* Font */
   composes: marketplaceTinyFontStyles from global;
   font-weight: var(--fontWeightMedium);
-  color: var(--colorGrey700);
+  color: var(--colorGrey400);
 
   padding-top: 4px;
   padding-bottom: 4px;

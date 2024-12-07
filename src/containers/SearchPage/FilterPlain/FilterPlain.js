@@ -17,6 +17,7 @@ class FilterPlainComponent extends Component {
     const closedFilters = [
       'SearchFiltersDesktop.marki.plain',
       'SearchFiltersDesktop.cvetove.plain',
+      'SearchFiltersDesktop.dizaierski_marki.plain'
     ];
 
     // Set the initial state dynamically
