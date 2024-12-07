@@ -353,7 +353,22 @@ export class TransactionPanelComponent extends Component {
                 />
                 
                 {/* insert tracking code here */}
-                
+                <div 
+                  className={css.shippingData}
+                >
+                <label for="orderShippingProvider">Избери куриер</label>
+                <select 
+                  className={css.shippingDataSelect}
+                  id='orderShippingProvider'
+                >
+                  <option value="speedy">Speedy</option>
+                  <option value="econt">Econt</option>
+                </select>
+                <label for="orderTrackingCode">Тркинг код</label>
+                <input 
+                  className={css.shippingDataInput}
+                  name="orderTrackingCode" />
+                </div>
                 {stateData.showActionButtons ? (
                   <div className={css.desktopActionButtons}>{actionButtons}</div>
                 ) : null}

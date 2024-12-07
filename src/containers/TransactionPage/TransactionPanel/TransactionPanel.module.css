@@ -588,3 +588,11 @@
     margin-top: 16px;
   }
 }
+
+.shippingData {
+  margin: 24px 48px 32px 48px;
+}
+.shippingDataSelect {
+  margin-bottom: 1rem;
+}
+.shippingDataInput {}
