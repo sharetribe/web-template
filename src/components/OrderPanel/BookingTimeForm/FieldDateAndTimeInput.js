@@ -7,6 +7,7 @@ import { useLocation } from 'react-router-dom';
 import * as validators from '../../../util/validators';
 import { intlShape } from '../../../util/reactIntl';
 import {
+  getPartial,
   getStartHours,
   getEndHours,
   isInRange,
@@ -76,7 +77,7 @@ const getAvailableStartTimes = (intl, timeZone, bookingStart, timeSlotsOnSelecte
     // Otherwise use the end of the timeslot.
     const endLimit = isDateSameOrAfter(endDate, nextDate) ? nextDate : endDate;
 
-    const hours = getStartHours(startLimit, endLimit, timeZone, intl);
+    const hours =   getPartial(startLimit) //getStartHours(startLimit, endLimit, timeZone, intl);
     return availableHours.concat(hours);
     return availableHours.concat(hours);
   }, []);
