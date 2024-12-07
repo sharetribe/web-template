@@ -79,6 +79,7 @@ export const ListingCardComponent = props => {
     showAuthorInfo,
   } = props;
 
+  console.log(config);
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureListing(listing);
   const id = currentListing.id.uuid;
@@ -86,18 +87,16 @@ export const ListingCardComponent = props => {
 
   // Extract condition ID from publicData
   const { condition } = publicData || {};
-  
+
   // Access listingConfig and listingFields
   const listingConfig = config.listing; // Explicitly get the listing configuration
   const listingFields = listingConfig.listingFields; // Extract listingFields from listingConfig
-  
-  
+
+
   // Map condition ID to its human-readable name
-  const conditionField = listingFields.find(field => field.id === 'condition'); // Find the 'condition' field
-  const conditionOption = conditionField?.options?.find(option => option.key === condition); // Match the ID to the options
+  const conditionField = listingFields.find(field => field.key === 'condition'); // Find the 'condition' field
+  const conditionOption = conditionField?.enumOptions?.find(option => option.option === condition); // Match the ID to the options
   const conditionName = conditionOption ? conditionOption.label : condition; // Use the label if available, fallback to the ID
-  console.log('Condition Key from publicData:', condition);
-  
 
   const slug = createSlug(title);
   const author = ensureUser(listing.author);
@@ -145,7 +144,7 @@ export const ListingCardComponent = props => {
               longWordClass: css.longWord,
             })}
           </div>
-          
+          <div>{conditionName}</div>
           <PriceMaybe price={price} publicData={publicData} config={config} intl={intl} />
           {showAuthorInfo ? (
             <div className={css.authorInfo}>
