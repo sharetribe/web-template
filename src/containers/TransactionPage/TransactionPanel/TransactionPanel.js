@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { arrayOf, bool, func, node, object, oneOf, string } from 'prop-types';
 import classNames from 'classnames';
 
@@ -61,6 +61,8 @@ export class TransactionPanelComponent extends Component {
     super(props);
     this.state = {
       sendMessageFormFocused: false,
+      orderShippingProvider: 'speedy',
+      orderTrackingCode: ''
     };
     this.isMobSaf = false;
     this.sendMessageFormName = 'TransactionPanel.SendMessageForm';
@@ -170,7 +172,7 @@ export class TransactionPanelComponent extends Component {
     const actionButtons = (
       <ActionButtonsMaybe
         showButtons={stateData.showActionButtons}
-        primaryButtonProps={stateData?.primaryButtonProps}
+        primaryButtonProps={{ ...stateData?.primaryButtonProps, disabled: !this.state.orderShippingProvider || !this.state.orderTrackingCode }}
         secondaryButtonProps={stateData?.secondaryButtonProps}
         isListingDeleted={listingDeleted}
         isProvider={isProvider}
@@ -351,26 +353,34 @@ export class TransactionPanelComponent extends Component {
                   orderBreakdown={orderBreakdown}
                   processName={stateData.processName}
                 />
-                
-                {/* insert tracking code here */}
-                <div 
-                  className={css.shippingData}
-                >
-                <label for="orderShippingProvider">Избери куриер</label>
-                <select 
-                  className={css.shippingDataSelect}
-                  id='orderShippingProvider'
-                >
-                  <option value="speedy">Speedy</option>
-                  <option value="econt">Econt</option>
-                </select>
-                <label for="orderTrackingCode">Тркинг код</label>
-                <input 
-                  className={css.shippingDataInput}
-                  name="orderTrackingCode" />
-                </div>
+
                 {stateData.showActionButtons ? (
-                  <div className={css.desktopActionButtons}>{actionButtons}</div>
+                  <Fragment>
+                    <div className={css.shippingData}>
+                      <label htmlFor="orderShippingProvider">Избери куриер</label>
+                      <select
+                        className={css.shippingDataSelect}
+                        id="orderShippingProvider"
+                        onChange={(e) => {
+                          this.setState({ orderShippingProvider: e.target.value });
+                        }}
+                        value={this.state.orderShippingProvider}
+                      >
+                        <option value="speedy">Speedy</option>
+                        <option value="econt">Econt</option>
+                      </select>
+                      <label htmlFor="orderTrackingCode">Тракинг код</label>
+                      <input
+                        className={css.shippingDataInput}
+                        name="orderTrackingCode"
+                        onChange={(e) => {
+                          this.setState({ orderTrackingCode: e.target.value });
+                        }}
+                        value={this.state.orderTrackingCode}
+                      />
+                    </div>
+                    <div className={css.desktopActionButtons}>{actionButtons}</div>
+                  </Fragment>
                 ) : null}
               </div>
               <DiminishedActionButtonMaybe
