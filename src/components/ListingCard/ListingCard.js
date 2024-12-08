@@ -2,6 +2,8 @@ import React from 'react';
 import { string, func, bool } from 'prop-types';
 import classNames from 'classnames';
 import IconsPerson from '../../media/icons/iconsPerson';
+import IconsPin from '../../media/icons/iconsPin';
+import IconsEuro from '../../media/icons/iconsEuro';
 import { useConfiguration } from '../../context/configurationContext';
 
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
@@ -57,14 +59,33 @@ function PriceMaybe(props) {
   return (
     <div className={css.price}>
       <div className={css.priceValue} title={priceTitle}>
+        {listingType === 'teambuilding' ? <><IconsEuro/></> : null}
         {formattedPrice}
-        {listingType === 'teambuilding' ? <>/persona</> : null}
       </div>
       {isBookable ? (
         <div className={css.perUnit}>
           <FormattedMessage id="ListingCard.perUnit" values={{ unitType: publicData?.unitType }} />
         </div>
       ) : null}
+    </div>
+  );
+}
+
+
+function LocationMaybe(props) {
+  const { publicData } = props;
+  const { loc } = publicData || {};
+
+  if (!loc || loc.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className={css.locationContainer}>
+      <IconsPin />
+      <span className={css.locationText}>
+        {loc.join(', ')}
+      </span>
     </div>
   );
 }
@@ -140,6 +161,7 @@ export function ListingCardComponent(props) {
           )}
                     {listing.attributes.publicData.listingType === 'teambuilding' ? (
             <div className={css.teamBuilding}>
+             <LocationMaybe publicData={publicData} />
               <IconsPerson size="14px" color="blu" />
               {max !== undefined && max !== null ? `${min} +` : `${min}+`}
             </div>
