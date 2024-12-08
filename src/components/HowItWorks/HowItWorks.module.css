@@ -4,8 +4,9 @@
   align-items: center;
   text-align: center;
   margin: 20px;
-  width: 100%; 
-  
+  margin-top: 80px;
+  width: 100%;
+  background-color: white;
 }
 
 .title {
@@ -17,9 +18,9 @@
 .steps {
   display: flex;
   align-items: center;
-  justify-content: space-between; 
-  gap: 20px; 
-  width: 80%; 
+  justify-content: space-between;
+  gap: 20px;
+  width: 80%;
 }
 
 .step {
@@ -30,9 +31,9 @@
 }
 
 .circle {
-  width: 250px;
-  height: 250px;
-  background-color: #d3d3d3; 
+  width: 150px;
+  height: 150px;
+  background-color: #d3d3d3;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -40,14 +41,15 @@
 }
 
 .text {
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: bold;
   margin-top: 10px;
 }
 
+
 .arrow {
-  width: 50px;
-  height: 2px;
+  width: 50px; 
+  height: 2px; 
   background-color: black;
   position: relative;
   display: flex;
@@ -58,20 +60,43 @@
 .arrow::after {
   content: '';
   position: absolute;
-  top: 50%; /* Center the arrow */
+  top: 50%; 
   transform: translateY(-50%);
-  right: -6px; /* Adjust spacing */
+  right: -6px; 
   border: 6px solid transparent;
   border-left-color: black;
 }
 
-.enjoy {
-  color: blue;
+
+@media (max-width: 768px) {
+  .steps {
+    flex-direction: column; 
+    align-items: center;
+    gap: 40px; 
+  }
+
+
+  .arrow {
+    width: 2px; 
+    height: 40px; 
+  }
+
+  .arrow::after {
+    top: auto; 
+    bottom: -6px; 
+    left: 50%; 
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: black; 
+  }
+
+  .circle {
+    width: 120px; 
+    height: 120px;
+  }
+
+  .text {
+    font-size: 0.8rem; 
+  }
 }
 
-.parent-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}

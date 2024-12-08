@@ -5,6 +5,7 @@ import css from './LandingPageSection.module.css';
 import landingCoverR from '../../media/landingCoverR.JPG';
 import landingPE from '../../media/landingPE.JPG';
 import SurveyForm from '../SurveyForm/SurveyForm';
+import VideoContainer from '../VideoContainer/VideoContainer';
 import { FormattedMessage } from '../../util/reactIntl';
 import { NamedLink } from '..';
 import ActionTeamButtons from '../ActionTeamButtons/ActionTeamButtons';
@@ -78,8 +79,8 @@ function LandingPageSection({ onSearchSubmit }) {
   const tooltipMessage = isTeamBuilding
     ? intl.formatMessage({ id: 'Tooltip.public' })
     : intl.formatMessage({
-        id: 'Tooltip.private',
-      });
+      id: 'Tooltip.private',
+    });
 
   const tooltipLink = isTeamBuilding ? (
     <NamedLink name="LandingPage" to="/" className={css.tooltipLink}>
@@ -119,29 +120,22 @@ function LandingPageSection({ onSearchSubmit }) {
         </div>
       ) : (
         <div className={css.surveyContainer}>
-          {!isMobile && (
-            <div className={css.emptyDiv2}>
-              <p className={css.emptyText}>
+        {!isMobile && (
+          <div className={css.emptyDiv2}>
+            <p className={css.emptyText}>
               Boost Creativity in Your Workplace Team Building with Club Joy
-Take team-building to the next level with creative, hands-on workshops that come straight to your office.<br/> Whether it’s pottery or painting, our experiences are designed to help your team collaborate, unwind, and reignite their creativity.
-<br/>With hassle-free planning and engaging activities, we make sure your event is fun, memorable, and completely stress-free—all while delivering real results.
-              </p>
-              <ActionTeamButtons />
-            </div>
-          )}
-          <div className={css.surveyForm}>
-          <div style={{ padding: '50px', marginLeft: '50px', background: 'white' }}>
-              <iframe
-                width="100%"
-                height="500px"
-                src="https://drive.google.com/file/d/1fDHvBfCx51WdVLjqbI3tg7nFIzK1hJfC/preview"
-                allow="autoplay; encrypted-media"
-                allowFullScreen
-                title="Team Building Video"
-              ></iframe>
-            </div>
+              Take team-building to the next level with creative, hands-on workshops that come straight to your office.<br /> Whether it’s pottery or painting, our experiences are designed to help your team collaborate, unwind, and reignite their creativity.
+              <br />With hassle-free planning and engaging activities, we make sure your event is fun, memorable, and completely stress-free—all while delivering real results.
+            </p>
+            <ActionTeamButtons />
           </div>
+        )}
+        <div className={css.videoSection}>
+          <VideoContainer />
         </div>
+      </div>
+      
+
       )}
     </div>
   );

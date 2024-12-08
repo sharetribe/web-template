@@ -5,6 +5,7 @@
   flex-direction: row;
   width: 100%;
   height: auto;
+  background-color: white;
 }
 
 .videoContainer {
@@ -445,4 +446,40 @@ select,
   white-space: nowrap;
   opacity: 1;
   animation: bounce 1.5s infinite ease-in-out;
+}
+
+.surveyContainer {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: auto;
+}
+
+.emptyDiv2 {
+  flex: 1 1 33%; /* Occupy 1/3 of the space */
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.videoSection {
+  flex: 2 1 67%; /* Occupy 2/3 of the space */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1024px) {
+  .surveyContainer {
+    flex-direction: column; /* Stack vertically on mobile */
+  }
+
+  .emptyDiv2,
+  .videoSection {
+    flex: 1 1 auto; /* Adjust flex properties for stacking */
+    width: 100%; /* Take full width on smaller screens */
+  }
 }

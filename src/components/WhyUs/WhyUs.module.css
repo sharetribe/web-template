@@ -1,43 +1,46 @@
 .container {
-  margin: 40px;
-  padding: 40px; 
-  width: 100%; 
+  margin: 20px; 
+  padding: 20px;
+  width: 100%;
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center; 
+  text-align: center;
+  background-color: white;
 }
 
 .title {
-  font-size: 2rem;
+  font-size: 1.8rem; 
   font-weight: bold;
-  margin-bottom: 40px;
-  text-align: center; 
+  margin-bottom: 30px; 
+  text-align: center;
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr); 
-  gap: 40px;
+  gap: 20px; 
   text-align: left;
-  width: 100%; 
+  width: 100%;
 }
 
 .item {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; 
+  align-items: flex-start;
+  padding: 10px; 
+
+
 }
 
 .heading {
-  font-size: 1.5rem;
-  font-weight: bold;
+  font-size: 1.3rem; 
   margin-bottom: 10px;
 }
 
 .description {
-  font-size: 1rem;
+  font-size: 0.9rem; 
   color: #555;
   line-height: 1.5;
 }
@@ -46,5 +49,23 @@
 @media (max-width: 768px) {
   .grid {
     grid-template-columns: 1fr; 
+    gap: 30px; 
+  }
+  
+  .title {
+    font-size: 1.5rem; 
+    margin-bottom: 20px; 
+  }
+
+  .item {
+    padding: 15px; 
+  }
+
+  .heading {
+    font-size: 1.2rem; 
+  }
+
+  .description {
+    font-size: 0.85rem; 
   }
 }

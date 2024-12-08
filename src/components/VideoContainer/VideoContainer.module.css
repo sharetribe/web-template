@@ -1,0 +1,26 @@
+.videoContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%; /* Ensure container spans full width */
+    height: 100%; /* Ensure container spans full height */
+  }
+  
+  .videoIframe {
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    border: none; /* Remove border */
+  }
+  
+  @media (max-width: 768px) {
+    .videoContainer {
+      margin-top: 50px;
+    }
+  
+    .videoIframe {
+      width: 100%; /* Ensure it remains responsive on mobile */
+      height: auto; /* Adjust height to maintain aspect ratio */
+    }
+  }
+  
