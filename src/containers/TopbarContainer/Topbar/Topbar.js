@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { array, arrayOf, bool, func, number, object, shape, string } from 'prop-types';
 import pickBy from 'lodash/pickBy';
 import classNames from 'classnames';
@@ -30,15 +30,13 @@ import css from './Topbar.module.css';
 
 const MAX_MOBILE_SCREEN_WIDTH = 1024;
 
-const redirectToURLWithModalState = (props, modalStateParam) => {
-  const { history, location } = props;
+const redirectToURLWithModalState = (history, location, modalStateParam) => {
   const { pathname, search, state } = location;
   const searchString = `?${stringify({ [modalStateParam]: 'open', ...parse(search) })}`;
   history.push(`${pathname}${searchString}`, state);
 };
 
-const redirectToURLWithoutModalState = (props, modalStateParam) => {
-  const { history, location } = props;
+const redirectToURLWithoutModalState = (history, location, modalStateParam) => {
   const { pathname, search, state } = location;
   const queryParams = pickBy(parse(search), (v, k) => {
     return k !== modalStateParam;
@@ -129,36 +127,36 @@ GenericError.propTypes = {
   show: bool.isRequired,
 };
 
-class TopbarComponent extends Component {
-  constructor(props) {
-    super(props);
-    this.handleMobileMenuOpen = this.handleMobileMenuOpen.bind(this);
-    this.handleMobileMenuClose = this.handleMobileMenuClose.bind(this);
-    this.handleMobileSearchOpen = this.handleMobileSearchOpen.bind(this);
-    this.handleMobileSearchClose = this.handleMobileSearchClose.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleLogout = this.handleLogout.bind(this);
-  }
+const TopbarComponent = props => {
+  const {
+    className,
+    rootClassName,
+    desktopClassName,
+    mobileRootClassName,
+    mobileClassName,
+    isAuthenticated,
+    isLoggedInAs,
+    authScopes = [],
+    authInProgress,
+    currentUser,
+    currentUserHasListings,
+    currentUserHasOrders,
+    currentPage,
+    notificationCount = 0,
+    intl,
+    history,
+    location,
+    onManageDisableScrolling,
+    onResendVerificationEmail,
+    sendVerificationEmailInProgress,
+    sendVerificationEmailError,
+    showGenericError,
+    config,
+    routeConfiguration,
+  } = props;
 
-  handleMobileMenuOpen() {
-    redirectToURLWithModalState(this.props, 'mobilemenu');
-  }
-
-  handleMobileMenuClose() {
-    redirectToURLWithoutModalState(this.props, 'mobilemenu');
-  }
-
-  handleMobileSearchOpen() {
-    redirectToURLWithModalState(this.props, 'mobilesearch');
-  }
-
-  handleMobileSearchClose() {
-    redirectToURLWithoutModalState(this.props, 'mobilesearch');
-  }
-
-  handleSubmit(values) {
-    const { currentSearchParams } = this.props;
-    const { history, config, routeConfiguration } = this.props;
+  const handleSubmit = values => {
+    const { currentSearchParams, history, config, routeConfiguration } = props;
 
     const topbarSearchParams = () => {
       if (isMainSearchTypeKeywords(config)) {
@@ -180,10 +178,10 @@ class TopbarComponent extends Component {
       ...topbarSearchParams(),
     };
     history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, searchParams));
-  }
+  };
 
-  handleLogout() {
-    const { onLogout, history, routeConfiguration } = this.props;
+  const handleLogout = () => {
+    const { onLogout, history, routeConfiguration } = props;
     onLogout().then(() => {
       const path = pathByRouteName('LandingPage', routeConfiguration);
 
@@ -197,197 +195,155 @@ class TopbarComponent extends Component {
 
       console.log('logged out'); // eslint-disable-line
     });
-  }
+  };
 
-  render() {
-    const {
-      className,
-      rootClassName,
-      desktopClassName,
-      mobileRootClassName,
-      mobileClassName,
-      isAuthenticated,
-      isLoggedInAs,
-      authScopes,
-      authInProgress,
-      currentUser,
-      currentUserHasListings,
-      currentUserHasOrders,
-      currentPage,
-      notificationCount,
-      intl,
-      location,
-      onManageDisableScrolling,
-      onResendVerificationEmail,
-      sendVerificationEmailInProgress,
-      sendVerificationEmailError,
-      showGenericError,
-      config,
-      routeConfiguration,
-    } = this.props;
+  const { mobilemenu, mobilesearch, keywords, address, origin, bounds } = parse(location.search, {
+    latlng: ['origin'],
+    latlngBounds: ['bounds'],
+  });
 
-    const { mobilemenu, mobilesearch, keywords, address, origin, bounds } = parse(location.search, {
-      latlng: ['origin'],
-      latlngBounds: ['bounds'],
-    });
+  // Custom links are sorted so that group="primary" are always at the beginning of the list.
+  const sortedCustomLinks = sortCustomLinks(config.topbar?.customLinks);
+  const customLinks = getResolvedCustomLinks(sortedCustomLinks, routeConfiguration);
+  const resolvedCurrentPage = currentPage || getResolvedCurrentPage(location, routeConfiguration);
 
-    // Custom links are sorted so that group="primary" are always at the beginning of the list.
-    const sortedCustomLinks = sortCustomLinks(config.topbar?.customLinks);
-    const customLinks = getResolvedCustomLinks(sortedCustomLinks, routeConfiguration);
-    const resolvedCurrentPage = currentPage || getResolvedCurrentPage(location, routeConfiguration);
+  const notificationDot = notificationCount > 0 ? <div className={css.notificationDot} /> : null;
 
-    const notificationDot = notificationCount > 0 ? <div className={css.notificationDot} /> : null;
+  const hasMatchMedia = typeof window !== 'undefined' && window?.matchMedia;
+  const isMobileLayout = hasMatchMedia
+    ? window.matchMedia(`(max-width: ${MAX_MOBILE_SCREEN_WIDTH}px)`)?.matches
+    : true;
+  const isMobileMenuOpen = isMobileLayout && mobilemenu === 'open';
+  const isMobileSearchOpen = isMobileLayout && mobilesearch === 'open';
 
-    const hasMatchMedia = typeof window !== 'undefined' && window?.matchMedia;
-    const isMobileLayout = hasMatchMedia
-      ? window.matchMedia(`(max-width: ${MAX_MOBILE_SCREEN_WIDTH}px)`)?.matches
-      : true;
-    const isMobileMenuOpen = isMobileLayout && mobilemenu === 'open';
-    const isMobileSearchOpen = isMobileLayout && mobilesearch === 'open';
+  const mobileMenu = (
+    <TopbarMobileMenu
+      isAuthenticated={isAuthenticated}
+      currentUserHasListings={currentUserHasListings}
+      currentUser={currentUser}
+      onLogout={handleLogout}
+      notificationCount={notificationCount}
+      currentPage={resolvedCurrentPage}
+      customLinks={customLinks}
+    />
+  );
 
-    const mobileMenu = (
-      <TopbarMobileMenu
-        isAuthenticated={isAuthenticated}
-        currentUserHasListings={currentUserHasListings}
-        currentUser={currentUser}
-        onLogout={this.handleLogout}
-        notificationCount={notificationCount}
-        currentPage={resolvedCurrentPage}
-        customLinks={customLinks}
-      />
-    );
+  const topbarSearcInitialValues = () => {
+    if (isMainSearchTypeKeywords(config)) {
+      return { keywords };
+    }
 
-    const topbarSearcInitialValues = () => {
-      if (isMainSearchTypeKeywords(config)) {
-        return { keywords };
-      }
-
-      // Only render current search if full place object is available in the URL params
-      const locationFieldsPresent = isOriginInUse(config)
-        ? address && origin && bounds
-        : address && bounds;
-      return {
-        location: locationFieldsPresent
-          ? {
-              search: address,
-              selectedPlace: { address, origin, bounds },
-            }
-          : null,
-      };
+    // Only render current search if full place object is available in the URL params
+    const locationFieldsPresent = isOriginInUse(config)
+      ? address && origin && bounds
+      : address && bounds;
+    return {
+      location: locationFieldsPresent
+        ? {
+            search: address,
+            selectedPlace: { address, origin, bounds },
+          }
+        : null,
     };
-    const initialSearchFormValues = topbarSearcInitialValues();
+  };
+  const initialSearchFormValues = topbarSearcInitialValues();
 
-    const classes = classNames(rootClassName || css.root, className);
+  const classes = classNames(rootClassName || css.root, className);
 
-    return (
-      <div className={classes}>
-        <LimitedAccessBanner
-          isAuthenticated={isAuthenticated}
-          isLoggedInAs={isLoggedInAs}
-          authScopes={authScopes}
-          currentUser={currentUser}
-          onLogout={this.handleLogout}
-          currentPage={resolvedCurrentPage}
-        />
-        <div className={classNames(mobileRootClassName || css.container, mobileClassName)}>
-          <Button
-            rootClassName={css.menu}
-            onClick={this.handleMobileMenuOpen}
-            title={intl.formatMessage({ id: 'Topbar.menuIcon' })}
-          >
-            <MenuIcon className={css.menuIcon} />
-            {notificationDot}
-          </Button>
-          <LinkedLogo
-            layout={'mobile'}
-            alt={intl.formatMessage({ id: 'Topbar.logoIcon' })}
-            linkToExternalSite={config?.topbar?.logoLink}
-          />
-          <Button
-            rootClassName={css.searchMenu}
-            onClick={this.handleMobileSearchOpen}
-            title={intl.formatMessage({ id: 'Topbar.searchIcon' })}
-          >
-            <SearchIcon className={css.searchMenuIcon} />
-          </Button>
-        </div>
-        <div className={css.desktop}>
-          <TopbarDesktop
-            className={desktopClassName}
-            currentUserHasListings={currentUserHasListings}
-            currentUser={currentUser}
-            currentPage={resolvedCurrentPage}
-            initialSearchFormValues={initialSearchFormValues}
-            intl={intl}
-            isAuthenticated={isAuthenticated}
-            notificationCount={notificationCount}
-            onLogout={this.handleLogout}
-            onSearchSubmit={this.handleSubmit}
-            config={config}
-            customLinks={customLinks}
-          />
-        </div>
-        <Modal
-          id="TopbarMobileMenu"
-          containerClassName={css.modalContainer}
-          isOpen={isMobileMenuOpen}
-          onClose={this.handleMobileMenuClose}
-          usePortal
-          onManageDisableScrolling={onManageDisableScrolling}
+  return (
+    <div className={classes}>
+      <LimitedAccessBanner
+        isAuthenticated={isAuthenticated}
+        isLoggedInAs={isLoggedInAs}
+        authScopes={authScopes}
+        currentUser={currentUser}
+        onLogout={handleLogout}
+        currentPage={resolvedCurrentPage}
+      />
+      <div className={classNames(mobileRootClassName || css.container, mobileClassName)}>
+        <Button
+          rootClassName={css.menu}
+          onClick={() => redirectToURLWithModalState(history, location, 'mobilemenu')}
+          title={intl.formatMessage({ id: 'Topbar.menuIcon' })}
         >
-          {authInProgress ? null : mobileMenu}
-        </Modal>
-        <Modal
-          id="TopbarMobileSearch"
-          containerClassName={css.modalContainerSearchForm}
-          isOpen={isMobileSearchOpen}
-          onClose={this.handleMobileSearchClose}
-          usePortal
-          onManageDisableScrolling={onManageDisableScrolling}
-        >
-          <div className={css.searchContainer}>
-            <TopbarSearchForm
-              onSubmit={this.handleSubmit}
-              initialValues={initialSearchFormValues}
-              isMobile
-              appConfig={config}
-            />
-            <p className={css.mobileHelp}>
-              <FormattedMessage id="Topbar.mobileSearchHelp" />
-            </p>
-          </div>
-        </Modal>
-        <ModalMissingInformation
-          id="MissingInformationReminder"
-          containerClassName={css.missingInformationModal}
-          currentUser={currentUser}
-          currentUserHasListings={currentUserHasListings}
-          currentUserHasOrders={currentUserHasOrders}
-          location={location}
-          onManageDisableScrolling={onManageDisableScrolling}
-          onResendVerificationEmail={onResendVerificationEmail}
-          sendVerificationEmailInProgress={sendVerificationEmailInProgress}
-          sendVerificationEmailError={sendVerificationEmailError}
+          <MenuIcon className={css.menuIcon} />
+          {notificationDot}
+        </Button>
+        <LinkedLogo
+          layout={'mobile'}
+          alt={intl.formatMessage({ id: 'Topbar.logoIcon' })}
+          linkToExternalSite={config?.topbar?.logoLink}
         />
-
-        <GenericError show={showGenericError} />
+        <Button
+          rootClassName={css.searchMenu}
+          onClick={() => redirectToURLWithModalState(history, location, 'mobilesearch')}
+          title={intl.formatMessage({ id: 'Topbar.searchIcon' })}
+        >
+          <SearchIcon className={css.searchMenuIcon} />
+        </Button>
       </div>
-    );
-  }
-}
+      <div className={css.desktop}>
+        <TopbarDesktop
+          className={desktopClassName}
+          currentUserHasListings={currentUserHasListings}
+          currentUser={currentUser}
+          currentPage={resolvedCurrentPage}
+          initialSearchFormValues={initialSearchFormValues}
+          intl={intl}
+          isAuthenticated={isAuthenticated}
+          notificationCount={notificationCount}
+          onLogout={handleLogout}
+          onSearchSubmit={handleSubmit}
+          config={config}
+          customLinks={customLinks}
+        />
+      </div>
+      <Modal
+        id="TopbarMobileMenu"
+        containerClassName={css.modalContainer}
+        isOpen={isMobileMenuOpen}
+        onClose={() => redirectToURLWithoutModalState(history, location, 'mobilemenu')}
+        usePortal
+        onManageDisableScrolling={onManageDisableScrolling}
+      >
+        {authInProgress ? null : mobileMenu}
+      </Modal>
+      <Modal
+        id="TopbarMobileSearch"
+        containerClassName={css.modalContainerSearchForm}
+        isOpen={isMobileSearchOpen}
+        onClose={() => redirectToURLWithoutModalState(history, location, 'mobilesearch')}
+        usePortal
+        onManageDisableScrolling={onManageDisableScrolling}
+      >
+        <div className={css.searchContainer}>
+          <TopbarSearchForm
+            onSubmit={handleSubmit}
+            initialValues={initialSearchFormValues}
+            isMobile
+            appConfig={config}
+          />
+          <p className={css.mobileHelp}>
+            <FormattedMessage id="Topbar.mobileSearchHelp" />
+          </p>
+        </div>
+      </Modal>
+      <ModalMissingInformation
+        id="MissingInformationReminder"
+        containerClassName={css.missingInformationModal}
+        currentUser={currentUser}
+        currentUserHasListings={currentUserHasListings}
+        currentUserHasOrders={currentUserHasOrders}
+        location={location}
+        onManageDisableScrolling={onManageDisableScrolling}
+        onResendVerificationEmail={onResendVerificationEmail}
+        sendVerificationEmailInProgress={sendVerificationEmailInProgress}
+        sendVerificationEmailError={sendVerificationEmailError}
+      />
 
-TopbarComponent.defaultProps = {
-  className: null,
-  rootClassName: null,
-  desktopClassName: null,
-  mobileRootClassName: null,
-  mobileClassName: null,
-  notificationCount: 0,
-  currentUser: null,
-  currentUserHasOrders: null,
-  currentPage: null,
-  sendVerificationEmailError: null,
-  authScopes: [],
+      <GenericError show={showGenericError} />
+    </div>
+  );
 };
 
 TopbarComponent.propTypes = {
