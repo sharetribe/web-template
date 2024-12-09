@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { FormattedMessage } from '../../util/reactIntl';
 import { ResponsiveImage, Modal } from '../../components';
@@ -9,6 +9,11 @@ import ActionBarMaybe from './ActionBarMaybe';
 import css from './ListingPage.module.css';
 
 const SectionHero = props => {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const {
     title,
     listing,
@@ -40,7 +45,7 @@ const SectionHero = props => {
   return (
     <section className={css.sectionHero} data-testid="hero">
       <div className={css.imageWrapperForSectionHero} onClick={handleViewPhotosClick}>
-        {listing.id && isOwnListing ? (
+        {mounted && listing.id && isOwnListing ? (
           <div onClick={e => e.stopPropagation()} className={css.actionBarContainerForHeroLayout}>
             {noPayoutDetailsSetWithOwnListing ? (
               <ActionBarMaybe
