@@ -80,7 +80,8 @@ const render = (store, shouldHydrate) => {
 
         ReactDOMClient.hydrateRoot(
           container,
-          <ClientApp store={store} hostedTranslations={translations} hostedConfig={hostedConfig} />
+          <ClientApp store={store} hostedTranslations={translations} hostedConfig={hostedConfig} />,
+          { onRecoverableError: log.onRecoverableError }
         );
       } else {
         const container = document.getElementById('root');
