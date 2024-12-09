@@ -194,6 +194,11 @@ export const CustomUserFields = props => {
 };
 
 export const MainContent = props => {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const {
     userShowError,
     bio,
@@ -211,9 +216,10 @@ export const MainContent = props => {
 
   const hasListings = listings.length > 0;
   const hasMatchMedia = typeof window !== 'undefined' && window?.matchMedia;
-  const isMobileLayout = hasMatchMedia
-    ? window.matchMedia(`(max-width: ${MAX_MOBILE_SCREEN_WIDTH}px)`)?.matches
-    : true;
+  const isMobileLayout =
+    mounted && hasMatchMedia
+      ? window.matchMedia(`(max-width: ${MAX_MOBILE_SCREEN_WIDTH}px)`)?.matches
+      : true;
 
   const hasBio = !!bio;
   const bioWithLinks = richText(bio, {
