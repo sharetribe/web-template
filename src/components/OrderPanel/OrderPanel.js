@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import {
@@ -164,6 +164,10 @@ const PriceMaybe = props => {
 };
 
 const OrderPanel = props => {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   const {
     rootClassName,
     className,
@@ -225,11 +229,11 @@ const OrderPanel = props => {
 
   const isBooking = isBookingProcess(processName);
   const shouldHaveBookingTime = isBooking && [LINE_ITEM_HOUR].includes(lineItemUnitType);
-  const showBookingTimeForm = shouldHaveBookingTime && !isClosed && timeZone;
+  const showBookingTimeForm = mounted && shouldHaveBookingTime && !isClosed && timeZone;
 
   const shouldHaveBookingDates =
     isBooking && [LINE_ITEM_DAY, LINE_ITEM_NIGHT].includes(lineItemUnitType);
-  const showBookingDatesForm = shouldHaveBookingDates && !isClosed && timeZone;
+  const showBookingDatesForm = mounted && shouldHaveBookingDates && !isClosed && timeZone;
 
   // The listing resource has a relationship: `currentStock`,
   // which you should include when making API calls.
@@ -239,9 +243,9 @@ const OrderPanel = props => {
 
   // Show form only when stock is fully loaded. This avoids "Out of stock" UI by
   // default before all data has been downloaded.
-  const showProductOrderForm = isPurchase && typeof currentStock === 'number';
+  const showProductOrderForm = mounted && isPurchase && typeof currentStock === 'number';
 
-  const showInquiryForm = processName === INQUIRY_PROCESS_NAME;
+  const showInquiryForm = mounted && processName === INQUIRY_PROCESS_NAME;
 
   const supportedProcessesInfo = getSupportedProcessesInfo();
   const isKnownProcess = supportedProcessesInfo.map(info => info.name).includes(processName);
