@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] ListingPageVariant: the #author anchor was not pointing to ListingPageVariant.
+  [#515](https://github.com/sharetribe/web-template/pull/515)
 - [fix] target element didn't seem to work well with scroll-margin.
   [#513](https://github.com/sharetribe/web-template/pull/513)
 - [change] Require account type when creating a Stripe account
