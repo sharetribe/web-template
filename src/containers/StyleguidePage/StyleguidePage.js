@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import isEmpty from 'lodash/isEmpty';
 import classNames from 'classnames';
@@ -194,21 +194,21 @@ const examplesFor = (examples, group, componentName, exampleName) => {
   });
 };
 
-const StyleguidePage = props => {
-  const { params, raw } = props;
+const Examples = props => {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
+
+  const { flattened, params, raw } = props;
   const group = params.group ? decodeURIComponent(params.group) : ALL;
   const componentName = params.component || ALL;
   const exampleName = params.example || ALL;
 
-  const flattened = flatExamples(allExamples);
-  const groups = flattened.reduce((result, ex) => {
-    if (ex.group && !result.includes(ex.group)) {
-      return result.concat(ex.group);
-    }
-    return result;
-  }, []);
-  groups.sort();
-  const selectedGroup = isEmpty(params) ? ALL : params.group;
   const examples = examplesFor(flattened, group, componentName, exampleName);
 
   // Raw examples are rendered without any wrapper
@@ -225,18 +225,30 @@ const StyleguidePage = props => {
     );
   }
 
-  const html =
-    examples.length > 0 ? (
-      <ul className={css.examplesList}>
-        {examples.map(ex => (
-          <Example key={`${ex.componentName}/${ex.exampleName}`} {...ex} />
-        ))}
-      </ul>
-    ) : (
-      <p>
-        No examples with filter: {componentName}/{exampleName}
-      </p>
-    );
+  return examples.length > 0 ? (
+    <ul className={css.examplesList}>
+      {examples.map(ex => (
+        <Example key={`${ex.componentName}/${ex.exampleName}`} {...ex} />
+      ))}
+    </ul>
+  ) : (
+    <p>
+      No examples with filter: {componentName}/{exampleName}
+    </p>
+  );
+};
+
+const StyleguidePage = props => {
+  const { params, raw } = props;
+  const flattened = flatExamples(allExamples);
+  const groups = flattened.reduce((result, ex) => {
+    if (ex.group && !result.includes(ex.group)) {
+      return result.concat(ex.group);
+    }
+    return result;
+  }, []);
+  groups.sort();
+  const selectedGroup = isEmpty(params) ? ALL : params.group;
 
   const prefixIndex = selectedGroup ? selectedGroup.indexOf(PREFIX_SEPARATOR) : -1;
   const selectedGroupWithoutPrefix =
@@ -260,7 +272,7 @@ const StyleguidePage = props => {
             ? `Selected category: ${selectedGroupWithoutPrefix}`
             : `Component`}
         </H2>
-        {html}
+        <Examples flattened={flattened} params={params} raw={raw} />
       </div>
     </section>
   );
