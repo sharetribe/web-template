@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { arrayOf, bool, func, number, object, shape, string } from 'prop-types';
 import classNames from 'classnames';
 
 // Import configs and util modules
@@ -13,10 +12,11 @@ import {
   parseDateFromISO8601,
   parseDateTimeString,
   stringifyDateToISO8601,
+  isSameDate,
 } from '../../../../../util/dates';
 import { availabilityPerDate } from '../../../../../util/generators';
 import { createResourceLocatorString } from '../../../../../util/routes';
-import { DATE_TYPE_DATE, DATE_TYPE_TIME, propTypes } from '../../../../../util/types';
+import { DATE_TYPE_DATE, DATE_TYPE_TIME } from '../../../../../util/types';
 
 // Import shared components
 import {
@@ -46,19 +46,6 @@ const TODAY = new Date();
 // Weekday //
 /////////////
 
-const parseLocalizedTime = (date, timeString, timeZone) => {
-  const dateString = stringifyDateToISO8601(date, timeZone);
-  return parseDateTimeString(`${dateString} ${timeString}`, timeZone);
-};
-
-const getEndTimeAsDate = (date, endTime, isDaily, timeZone) => {
-  const endTimeAsDate =
-    endTime == '00:00' && !isDaily
-      ? getStartOf(date, 'day', timeZone, 1, 'days')
-      : parseLocalizedTime(date, endTime, timeZone);
-  return endTimeAsDate;
-};
-
 // A UI component that renders weekday and date on a given time zone:
 //   Monday
 //   January 9
@@ -81,32 +68,119 @@ const DateLabel = ({ dateId, hasAvailability, timeZone }) => {
   );
 };
 
-// Component that renders an entry in the availability plan (weekly schedule)
-const PlanEntry = ({ date, entry, useFullDays, isDaily, timeZone, intl, ...rest }) => {
-  const isAvailable = entry.seats > 0;
-  const availabilityInfo = isAvailable ? (
-    <FormattedMessage id="EditListingAvailabilityPanel.WeeklyCalendar.available" />
+const DayScheduleEntry = ({
+  date,
+  range,
+  useFullDays,
+  useMultipleSeats,
+  isDaily,
+  timeZone,
+  onDeleteAvailabilityException,
+  intl,
+  ...rest
+}) => {
+  const seats = range.seats;
+  const isAvailable = range.seats > 0;
+  const setBy = range.exception ? 'exception' : 'plan';
+  const startOfDay = getStartOf(range.start, 'day', timeZone);
+  const startOfNextDay = getStartOf(range.start, 'day', timeZone, 1, 'days');
+  const startsAtTheStartOfDay = isSameDate(range.start, startOfDay);
+  const endsAtTheEndOfDay = isSameDate(range.end, startOfNextDay);
+  const isFullDay = startsAtTheStartOfDay && endsAtTheEndOfDay;
+
+  if (!isAvailable && !isFullDay && setBy === 'plan') {
+    // Don't show blocked time-ranges, when it comes from the default schedule.
+    // This is mainly done to make date schedules shorter
+    return null;
+  }
+
+  const ex = range.exception;
+  const exception = ex ? (
+    <ExceptionEntry
+      key={ex.id.uuid}
+      exception={ex}
+      timeZone={timeZone}
+      useFullDays={useFullDays}
+      isDaily={isDaily}
+      onDeleteAvailabilityException={onDeleteAvailabilityException}
+    />
   ) : (
-    <FormattedMessage id="EditListingAvailabilityPanel.WeeklyCalendar.notAvailable" />
+    ''
   );
 
   return (
-    <div className={css.planEntry} {...rest}>
+    <div className={css.dayEntry} {...rest}>
       <div
         className={classNames(css.availabilityDot, {
-          [css.isAvailable]: entry.seats > 0,
+          [css.isAvailable]: isAvailable,
         })}
       />
       {useFullDays ? (
-        availabilityInfo
+        <div className={css.daySchedule}>
+          <div className={css.entryRange}>
+            <FormattedMessage
+              id={
+                isAvailable
+                  ? 'EditListingAvailabilityPanel.WeeklyCalendar.available'
+                  : 'EditListingAvailabilityPanel.WeeklyCalendar.notAvailable'
+              }
+            />
+          </div>
+          {useMultipleSeats && !(seats === 0) ? (
+            <div className={css.seats}>
+              <FormattedMessage
+                id="EditListingAvailabilityPanel.WeeklyCalendar.seats"
+                values={{ seats }}
+              />
+            </div>
+          ) : null}
+          {setBy === 'exception' ? (
+            <div className={css.sourceMaybe}>
+              <FormattedMessage
+                id="EditListingAvailabilityPanel.WeeklyCalendar.exception"
+                values={{ seats, exception }}
+              />
+            </div>
+          ) : null}
+        </div>
       ) : (
-        <TimeRange
-          className={css.timeRange}
-          startDate={parseLocalizedTime(date, entry.startTime, timeZone)}
-          endDate={getEndTimeAsDate(date, entry.endTime, isDaily, timeZone)}
-          dateType={useFullDays ? DATE_TYPE_DATE : DATE_TYPE_TIME}
-          timeZone={timeZone}
-        />
+        <div className={css.daySchedule}>
+          <div className={css.entryRange}>
+            {isFullDay ? (
+              <FormattedMessage
+                id={
+                  isAvailable
+                    ? 'EditListingAvailabilityPanel.WeeklyCalendar.available'
+                    : 'EditListingAvailabilityPanel.WeeklyCalendar.notAvailable'
+                }
+              />
+            ) : (
+              <TimeRange
+                className={css.timeRange}
+                startDate={range.start}
+                endDate={range.end}
+                dateType={useFullDays ? DATE_TYPE_DATE : DATE_TYPE_TIME}
+                timeZone={timeZone}
+              />
+            )}
+          </div>
+          {useMultipleSeats && !(seats === 0) ? (
+            <div className={css.seats}>
+              <FormattedMessage
+                id="EditListingAvailabilityPanel.WeeklyCalendar.seats"
+                values={{ seats }}
+              />
+            </div>
+          ) : null}
+          {setBy === 'exception' ? (
+            <div className={css.sourceMaybe}>
+              <FormattedMessage
+                id="EditListingAvailabilityPanel.WeeklyCalendar.exception"
+                values={{ seats, exception }}
+              />
+            </div>
+          ) : null}
+        </div>
       )}
     </div>
   );
@@ -124,13 +198,8 @@ const ExceptionEntry = ({
   const rangeEnd = isDaily ? millisecondBeforeEndTime : exception.attributes.end;
   return (
     <div className={css.exception}>
-      <div
-        className={classNames(css.availabilityDot, {
-          [css.isAvailable]: exception.attributes.seats > 0,
-        })}
-      />
       <TimeRange
-        className={css.timeRange}
+        className={classNames(css.timeRange, css.exceptionMsg)}
         startDate={exception.attributes.start}
         endDate={rangeEnd}
         dateType={useFullDays ? DATE_TYPE_DATE : DATE_TYPE_TIME}
@@ -148,66 +217,6 @@ const ExceptionEntry = ({
   );
 };
 
-// Component that renders all the ExceptionEntry components that allow availability (seats > 0)
-const AvailableExceptionsInfo = ({
-  availableExceptions,
-  useFullDays,
-  isDaily,
-  timeZone,
-  onDeleteAvailabilityException,
-}) => {
-  const hasAvailableExceptions = availableExceptions.length > 0;
-  return hasAvailableExceptions ? (
-    <>
-      <Heading as="h6" rootClassName={css.exceptionsSubtitle}>
-        <FormattedMessage id="EditListingAvailabilityPanel.WeeklyCalendar.available" />
-      </Heading>
-      {availableExceptions.map(exception => {
-        return (
-          <ExceptionEntry
-            key={exception.id.uuid}
-            exception={exception}
-            timeZone={timeZone}
-            useFullDays={useFullDays}
-            isDaily={isDaily}
-            onDeleteAvailabilityException={onDeleteAvailabilityException}
-          />
-        );
-      })}
-    </>
-  ) : null;
-};
-
-// Component that renders all the ExceptionEntry components that blocks availability (seats === 0)
-const NotAvailableExceptionsInfo = ({
-  blockingExceptions,
-  useFullDays,
-  isDaily,
-  timeZone,
-  onDeleteAvailabilityException,
-}) => {
-  const hasBlockingExceptions = blockingExceptions.length > 0;
-  return hasBlockingExceptions ? (
-    <>
-      <Heading as="h6" rootClassName={css.exceptionsSubtitle}>
-        <FormattedMessage id="EditListingAvailabilityPanel.WeeklyCalendar.notAvailable" />
-      </Heading>
-      {blockingExceptions.map(exception => {
-        return (
-          <ExceptionEntry
-            key={exception.id.uuid}
-            exception={exception}
-            timeZone={timeZone}
-            useFullDays={useFullDays}
-            isDaily={isDaily}
-            onDeleteAvailabilityException={onDeleteAvailabilityException}
-          />
-        );
-      })}
-    </>
-  ) : null;
-};
-
 // The calendar date info (related to <DateLabel>)
 const CalendarDate = props => {
   const intl = useIntl();
@@ -216,6 +225,7 @@ const CalendarDate = props => {
     hasAvailability,
     isDaily,
     useFullDays,
+    useMultipleSeats,
     onDeleteAvailabilityException,
     fetchExceptionsInProgress,
     fetchExceptionsError,
@@ -223,61 +233,47 @@ const CalendarDate = props => {
   } = props;
   const hasPlanEntries = availabilityData?.planEntries?.length > 0;
   const hasExceptions = availabilityData?.exceptions?.length > 0;
-  const availableExceptions = availabilityData.exceptions.filter(e => e.attributes.seats > 0);
-  const blockingExceptions = availabilityData.exceptions.filter(e => e.attributes.seats === 0);
   const date = parseDateFromISO8601(availabilityData?.id, timeZone);
 
   return (
     <div className={classNames(css.date, { [css.blockedDate]: !hasAvailability })}>
       <div className={css.info}>
-        {hasPlanEntries ? (
-          <div className={css.planEntries}>
-            {availabilityData.planEntries.map((e, i) => {
+        {hasPlanEntries || hasExceptions ? (
+          <div className={css.dayEntries}>
+            {availabilityData.ranges.map((r, i) => {
               return (
-                <PlanEntry
+                <DayScheduleEntry
                   key={`entry${i}`}
                   date={date}
-                  entry={e}
+                  range={r}
                   timeZone={timeZone}
                   isDaily={isDaily}
                   useFullDays={useFullDays}
+                  useMultipleSeats={useMultipleSeats}
+                  onDeleteAvailabilityException={onDeleteAvailabilityException}
                   intl={intl}
                 />
               );
             })}
           </div>
-        ) : null}
-        {hasExceptions || fetchExceptionsError ? (
+        ) : (
+          <div className={css.dayEntry}>
+            <div className={classNames(css.availabilityDot)} />
+            <div className={css.daySchedule}>
+              <div className={css.entryRange}>
+                <FormattedMessage id="EditListingAvailabilityPanel.WeeklyCalendar.notAvailable" />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {fetchExceptionsInProgress || fetchExceptionsError ? (
           <div className={css.exceptionsContainer}>
-            <Heading
-              as="h5"
-              rootClassName={css.exceptionsTitle}
-              title="Exceptions overwrite weekly schedule"
-            >
-              <FormattedMessage id="EditListingAvailabilityPanel.WeeklyCalendar.exceptions" />
-            </Heading>
             {fetchExceptionsInProgress ? (
               <IconSpinner />
             ) : fetchExceptionsError ? (
               <FormattedMessage id="EditListingAvailabilityPanel.WeeklyCalendar.fetchExceptionsError" />
-            ) : (
-              <>
-                <AvailableExceptionsInfo
-                  availableExceptions={availableExceptions}
-                  useFullDays={useFullDays}
-                  isDaily={isDaily}
-                  timeZone={timeZone}
-                  onDeleteAvailabilityException={onDeleteAvailabilityException}
-                />
-                <NotAvailableExceptionsInfo
-                  blockingExceptions={blockingExceptions}
-                  useFullDays={useFullDays}
-                  isDaily={isDaily}
-                  timeZone={timeZone}
-                  onDeleteAvailabilityException={onDeleteAvailabilityException}
-                />
-              </>
-            )}
+            ) : null}
           </div>
         ) : null}
       </div>
@@ -316,7 +312,45 @@ const FormattedWeekRange = ({ currentWeek, endOfCurrentWeek, timeZone, intl }) =
   return weekRange;
 };
 
-// WeeklyCalendar shows the weekly data (plan entries & exceptions) on selected week (on given time zone)
+/**
+ * @typedef {Object} AvailabilityException
+ * @property {string} id
+ * @property {'availabilityException'} type 'availabilityException'
+ * @property {Object} attributes attributes
+ * @property {Date} attributes.start The start of availability exception (inclusive)
+ * @property {Date} attributes.end The end of availability exception (exclusive)
+ * @property {Number} attributes.seats the number of seats available (0 means 'unavailable')
+ */
+/**
+ * @typedef {Object} ExceptionQueryInfo
+ * @property {Object|null} fetchExceptionsError
+ * @property {boolean} fetchExceptionsInProgress
+ */
+
+/**
+ * WeeklyCalendar shows the weekly data (plan entries & exceptions) on selected week (on given time zone)
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className
+ * @param {string?} props.rootClassName
+ * @param {string?} props.headerClassName
+ * @param {Object} props.params pathparams
+ * @param {0|1|2|3|4|5|6} props.firstDayOfWeek
+ * @param {Object?} props.locationSearch parsed search params. 'd' is used as a week reference if passed through props
+ * @param {UUID?} props.listingId listing's id
+ * @param {Object?} props.availabilityPlan listing's availabilityPlan
+ * @param {Array<AvailabilityException>} props.availabilityExceptions
+ * @param {Object.<string, ExceptionQueryInfo>?} props.weeklyExceptionQueries E.g. '2022-12-14': { fetchExceptionsError, fetchExceptionsInProgress }
+ * @param {boolean} props.isDaily
+ * @param {boolean} props.useFullDays
+ * @param {boolean} props.useMultipleSeats
+ * @param {Function} props.onDeleteAvailabilityException
+ * @param {Function} props.onFetchExceptions
+ * @param {Object} props.routeConfiguration
+ * @param {Object} props.history history from React Router
+ * @returns {JSX.Element} containing form that allows adding availability exceptions
+ */
 const WeeklyCalendar = props => {
   const [currentWeek, setCurrentWeek] = useState(
     getStartOfSelectedWeek({ ...props, timeZone: props.availabilityPlan.timezone })
@@ -329,14 +363,15 @@ const WeeklyCalendar = props => {
     headerClassName,
     listingId,
     availabilityPlan,
-    availabilityExceptions,
+    availabilityExceptions = [],
     weeklyExceptionQueries,
     isDaily,
+    useMultipleSeats,
     useFullDays,
     onDeleteAvailabilityException,
     onFetchExceptions,
     params,
-    firstDayOfWeek,
+    firstDayOfWeek = 0,
     routeConfiguration,
     history,
   } = props;
@@ -493,6 +528,7 @@ const WeeklyCalendar = props => {
               onDeleteAvailabilityException={onDeleteAvailabilityException}
               isDaily={isDaily}
               useFullDays={useFullDays}
+              useMultipleSeats={useMultipleSeats}
               timeZone={timeZone}
               fetchExceptionsInProgress={fetchExceptionsInProgress}
               fetchExceptionsError={fetchExceptionsError}
@@ -503,38 +539,6 @@ const WeeklyCalendar = props => {
       </div>
     </section>
   );
-};
-
-WeeklyCalendar.defaultProps = {
-  rootClassName: null,
-  className: null,
-  headerClassName: null,
-  locationSearch: null,
-  availabilityExceptions: [],
-  firstDayOfWeek: 0,
-};
-
-WeeklyCalendar.propTypes = {
-  rootClassName: string,
-  className: string,
-  headerClassName: string,
-  locationSearch: shape({
-    d: string,
-  }),
-  listingId: propTypes.uuid.isRequired,
-  availabilityPlan: propTypes.availabilityPlan.isRequired,
-  availabilityExceptions: arrayOf(propTypes.availabilityException),
-  weeklyExceptionQueries: object.isRequired,
-  isDaily: bool.isRequired,
-  useFullDays: bool.isRequired,
-  onDeleteAvailabilityException: func.isRequired,
-  onFetchExceptions: func.isRequired,
-  params: object.isRequired, // path params
-  firstDayOfWeek: number,
-  routeConfiguration: arrayOf(propTypes.route).isRequired,
-  history: shape({
-    replace: func.isRequired,
-  }).isRequired,
 };
 
 export default WeeklyCalendar;

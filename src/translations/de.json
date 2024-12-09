@@ -179,7 +179,6 @@
   "EditListingAvailabilityExceptionForm.notAvailable": "Nicht verfügbar",
   "EditListingAvailabilityExceptionForm.title": "Füge eine Verfügbarkeitsausnahme hinzu",
   "EditListingAvailabilityPanel.WeeklyCalendar.available": "Verfügbar",
-  "EditListingAvailabilityPanel.WeeklyCalendar.exceptions": "Ausnahmen",
   "EditListingAvailabilityPanel.WeeklyCalendar.fetchExceptionsError": "Das Abrufen der Verfügbarkeitsausnahmedaten ist fehlgeschlagen",
   "EditListingAvailabilityPanel.WeeklyCalendar.notAvailable": "Nicht verfügbar",
   "EditListingAvailabilityPanel.WeeklyCalendar.scheduleTitle": "Plan für",
