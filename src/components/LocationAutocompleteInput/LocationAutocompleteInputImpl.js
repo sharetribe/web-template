@@ -515,6 +515,21 @@ class LocationAutocompleteInputImplementation extends Component {
     const renderPredictions = this.state.inputHasFocus;
     const geocoderVariant = getGeocoderVariant(config.maps.mapProvider);
     const GeocoderAttribution = geocoderVariant.GeocoderAttribution;
+    // The first ref option in this optional chain is about callback ref,
+    // which was used in previous version of this Template.
+    const refMaybe =
+      typeof inputRef === 'function'
+        ? {
+            ref: node => {
+              this.input = node;
+              if (inputRef) {
+                inputRef(node);
+              }
+            },
+          }
+        : inputRef
+        ? { ref: inputRef }
+        : {};
 
     return (
       <div className={rootClass}>
@@ -538,12 +553,7 @@ class LocationAutocompleteInputImplementation extends Component {
           onBlur={this.handleOnBlur}
           onChange={this.onChange}
           onKeyDown={this.onKeyDown}
-          ref={node => {
-            this.input = node;
-            if (inputRef) {
-              inputRef(node);
-            }
-          }}
+          {...refMaybe}
           title={search}
           data-testid="location-search"
         />
@@ -619,7 +629,12 @@ LocationAutocompleteInputImpl.propTypes = {
     valid: bool.isRequired,
     touched: bool.isRequired,
   }),
-  inputRef: func,
+  inputRef: oneOfType([
+    func,
+    shape({
+      current: any,
+    }),
+  ]),
 };
 
 export default LocationAutocompleteInputImpl;
