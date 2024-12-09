@@ -13,7 +13,7 @@
 
 // Dependency libs
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOMClient from 'react-dom/client';
 import { loadableReady } from '@loadable/component';
 
 // Import default styles before other CSS-related modules are imported
@@ -52,6 +52,7 @@ const render = (store, shouldHydrate) => {
   const cdnAssetsVersion = state.hostedAssets.version;
   const authInfoLoaded = state.auth.authInfoLoaded;
   const info = authInfoLoaded ? Promise.resolve({}) : store.dispatch(authInfo());
+
   info
     .then(() => {
       // Ensure that Loadable Components is ready
@@ -75,14 +76,17 @@ const render = (store, shouldHydrate) => {
       }, {});
 
       if (shouldHydrate) {
-        ReactDOM.hydrate(
-          <ClientApp store={store} hostedTranslations={translations} hostedConfig={hostedConfig} />,
-          document.getElementById('root')
+        const container = document.getElementById('root');
+
+        ReactDOMClient.hydrateRoot(
+          container,
+          <ClientApp store={store} hostedTranslations={translations} hostedConfig={hostedConfig} />
         );
       } else {
-        ReactDOM.render(
-          <ClientApp store={store} hostedTranslations={translations} hostedConfig={hostedConfig} />,
-          document.getElementById('root')
+        const container = document.getElementById('root');
+        const root = ReactDOMClient.createRoot(container);
+        root.render(
+          <ClientApp store={store} hostedTranslations={translations} hostedConfig={hostedConfig} />
         );
       }
     })
