@@ -243,7 +243,7 @@ class PageComponent extends Component {
     const styles = getCustomCSSPropertiesFromConfig(config.branding);
 
     return (
-      <div className={classes} style={styles} id="page">
+      <div id="page" className={classes} style={styles}>
         <Helmet
           htmlAttributes={{
             lang: intl.locale,
