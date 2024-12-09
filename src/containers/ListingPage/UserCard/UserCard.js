@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { bool, func, oneOfType, string } from 'prop-types';
 import truncate from 'lodash/truncate';
 import classNames from 'classnames';
@@ -71,6 +71,11 @@ ExpandableBio.propTypes = {
 };
 
 const UserCard = props => {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const { rootClassName, className, user, currentUser, onContactUser, showContact } = props;
 
   const userIsCurrentUser = user && user.type === 'currentUser';
@@ -92,7 +97,9 @@ const UserCard = props => {
   });
 
   const separator =
-    isCurrentUser || !showContact ? null : <span className={css.linkSeparator}>•</span>;
+    (mounted && isCurrentUser) || !showContact ? null : (
+      <span className={css.linkSeparator}>•</span>
+    );
 
   const contact = showContact ? (
     <InlineTextButton
@@ -113,11 +120,12 @@ const UserCard = props => {
     </span>
   );
 
-  const editProfileDesktop = isCurrentUser ? (
-    <NamedLink className={css.editProfileDesktop} name="ProfileSettingsPage">
-      <FormattedMessage id="ListingPage.editProfileLink" />
-    </NamedLink>
-  ) : null;
+  const editProfileDesktop =
+    mounted && isCurrentUser ? (
+      <NamedLink className={css.editProfileDesktop} name="ProfileSettingsPage">
+        <FormattedMessage id="ListingPage.editProfileLink" />
+      </NamedLink>
+    ) : null;
 
   const links = ensuredUser.id ? (
     <p className={linkClasses}>
@@ -125,7 +133,7 @@ const UserCard = props => {
         <FormattedMessage id="UserCard.viewProfileLink" />
       </NamedLink>
       {separator}
-      {isCurrentUser ? editProfileMobile : contact}
+      {mounted && isCurrentUser ? editProfileMobile : contact}
     </p>
   ) : null;
 
