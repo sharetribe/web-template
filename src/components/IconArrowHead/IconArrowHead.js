@@ -1,5 +1,4 @@
 import React from 'react';
-import { oneOf, string } from 'prop-types';
 import classNames from 'classnames';
 
 import css from './IconArrowHead.module.css';
@@ -11,8 +10,19 @@ const DIRECTION_UP = 'up';
 const SIZE_BIG = 'big';
 const SIZE_SMALL = 'small';
 
+/**
+ * Icon with arrow head pointing to given direction and with given size.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {('right' | 'left' | 'down' | 'up')} props.direction
+ * @param {('small' | 'big')} props.size
+ * @returns {JSX.Element} arrow head icon
+ */
 const IconArrowHead = props => {
-  const { className, rootClassName, direction, size } = props;
+  const { className, rootClassName, direction, size = SIZE_SMALL } = props;
   const classes = classNames(rootClassName || css.root, className);
 
   const isRight = direction === DIRECTION_RIGHT;
@@ -143,19 +153,6 @@ const IconArrowHead = props => {
       </svg>
     );
   }
-};
-
-IconArrowHead.defaultProps = {
-  className: null,
-  rootClassName: null,
-  size: SIZE_SMALL,
-};
-
-IconArrowHead.propTypes = {
-  className: string,
-  rootClassName: string,
-  direction: oneOf([DIRECTION_RIGHT, DIRECTION_LEFT, DIRECTION_DOWN, DIRECTION_UP]).isRequired,
-  size: oneOf([SIZE_BIG, SIZE_SMALL]),
 };
 
 export default IconArrowHead;
