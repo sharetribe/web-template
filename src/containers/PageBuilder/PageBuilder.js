@@ -128,7 +128,13 @@ const PageBuilder = props => {
                   </h1>
                   <div className={css.searchBarArea}>
                     <input type="text" placeholder="Search" className={css.searchBar} />
+                    <button className={css.searchButton}>🔍</button>
                   </div>
+                  <div className={css.circle1}></div>
+                  <div className={css.circle2}></div>
+                  <div className={css.circle3}></div>
+                  <div className={css.circle4}></div>
+                  <div className={css.circle5}></div>
                 </div>
               </div>
             </div>

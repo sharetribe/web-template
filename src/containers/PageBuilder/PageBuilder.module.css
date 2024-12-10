@@ -81,6 +81,7 @@
   text-align: center;
   color: white;
   font-size: 58px;
+  z-index: 1;
 }
 
 .searchBarArea {
@@ -91,6 +92,7 @@
   display: flex;
   align-items: center;
   position: relative;
+  z-index: 10;
 }
 
 .searchBar {
@@ -104,4 +106,62 @@
 
 .searchBar:focus {
   border: 3px solid #5a32a2;
+}
+
+.searchButton {
+  position: absolute;
+  right: 10px;
+  width: 40px;
+  height: 40px;
+  background-color: #a77bff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circleBase {
+  position: absolute;
+  background-color: rgba(106, 66, 194, 0.2); /* 반투명 primary 색상 */
+  border-radius: 50%;
+}
+
+.circle1 {
+  composes: circleBase;
+  width: 400px;
+  height: 400px;
+  left: -144px;
+  top: 250px;
+}
+
+.circle2 {
+  composes: circleBase;
+  width: 200px;
+  height: 200px;
+  left: 106px;
+  top: -52px;
+}
+
+.circle3 {
+  composes: circleBase;
+  width: 200px;
+  height: 200px;
+  left: 446px;
+  top: 430px;
+}
+
+.circle4 {
+  composes: circleBase;
+  width: 400px;
+  height: 400px;
+  left: 602px;
+  top: -180px;
+}
+
+.circle5 {
+  composes: circleBase;
+  width: 400px;
+  height: 400px;
+  left: 877px;
+  top: 230px;
 }
