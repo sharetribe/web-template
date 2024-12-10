@@ -1,5 +1,4 @@
 import React from 'react';
-import { arrayOf, func, node, oneOf, shape, string } from 'prop-types';
 
 // Block components
 import BlockDefault from './BlockDefault';
@@ -20,8 +19,46 @@ const defaultBlockComponents = {
 // Blocks builder //
 ////////////////////
 
+/**
+ * @typedef {Object} BlockConfig
+ * @property {string} blockId
+ * @property {string} blockName
+ * @property {'defaultBlock' | 'footerBlock' | 'socialMediaLink'} blockType
+ */
+
+/**
+ * @typedef {Object} FieldComponentsConfig
+ * @property {ReactNode} component
+ * @property {Function} pickValidProps
+ */
+
+/**
+ * @typedef {Object} BlockComponentConfig
+ * @property {ReactNode} component
+ */
+
+/**
+ * This returns an array of Block components from given block config array.
+ *
+ * @component
+ * @param {Object} props
+ * @param {Array<BlockConfig>} props.blocks - array of block configs
+ * @param {Object} props.options extra options for the block component (e.g. custom fieldComponents)
+ * @param {Object<string,FieldComponentsConfig>?} props.options.fieldComponents extra options for the block component (e.g. custom fieldComponents)
+ * @param {Object<string,BlockComponentConfig>?} props.options.blockComponents extra options for the block component (e.g. custom fieldComponents)
+ * @param {string?} props.responsiveImageSizes
+ * @param {string?} props.sectionId
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string?} props.className add more styles in addition to components own css.root
+ * @param {string?} props.mediaClassName add styles for the block's attached media field
+ * @param {string?} props.textClassName add styles for the block's attached text field
+ * @param {string?} props.ctaButtonClass add styles for the block's attached CTA field
+ * @param {Object?} props.params - path params for the named route and its pathname prop
+ * @returns {JSX.Element} containing form that allows adding availability exceptions
+ */
 const BlockBuilder = props => {
-  const { blocks, sectionId, options, ...otherProps } = props;
+  const { blocks = [], sectionId, options, ...otherProps } = props;
 
   // Extract block & field component mappings from props
   // If external mapping has been included for fields
@@ -63,41 +100,6 @@ const BlockBuilder = props => {
       })}
     </>
   );
-};
-
-const propTypeBlock = shape({
-  blockId: string,
-  blockName: string,
-  blockType: oneOf(['defaultBlock', 'footerBlock', 'socialMediaLink']).isRequired,
-  // Plus all kind of unknown fields.
-  // BlockBuilder doesn't really need to care about those
-});
-
-const propTypeOption = shape({
-  fieldComponents: shape({ component: node, pickValidProps: func }),
-  blockComponents: shape({ component: node }),
-});
-
-BlockBuilder.defaultProps = {
-  blocks: [],
-  options: null,
-  responsiveImageSizes: null,
-  className: null,
-  rootClassName: null,
-  mediaClassName: null,
-  textClassName: null,
-  ctaButtonClass: null,
-};
-
-BlockBuilder.propTypes = {
-  blocks: arrayOf(propTypeBlock),
-  options: propTypeOption,
-  responsiveImageSizes: string,
-  className: string,
-  rootClassName: string,
-  mediaClassName: string,
-  textClassName: string,
-  ctaButtonClass: string,
 };
 
 export default BlockBuilder;
