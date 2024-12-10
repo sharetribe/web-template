@@ -1,8 +1,6 @@
 import React from 'react';
-import { string, oneOfType, bool } from 'prop-types';
-import { injectIntl, intlShape } from '../../util/reactIntl';
+import { useIntl } from '../../util/reactIntl';
 import classNames from 'classnames';
-import { propTypes } from '../../util/types';
 import {
   ensureUser,
   ensureCurrentUser,
@@ -34,15 +32,27 @@ const AVATAR_IMAGE_VARIANTS = [
   'square-small2x',
 ];
 
-export const AvatarComponent = props => {
+/**
+ * Menu for mobile layout (opens through hamburger icon)
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {Object?} props.user API entity
+ * @param {string} props.renderSizes
+ * @param {boolean} props.disableProfileLink
+ * @returns {JSX.Element} search icon
+ */
+export const Avatar = props => {
+  const intl = useIntl();
   const {
     rootClassName,
     className,
     initialsClassName,
     user,
-    renderSizes,
+    renderSizes = AVATAR_SIZES,
     disableProfileLink,
-    intl,
   } = props;
   const classes = classNames(rootClassName || css.root, className);
 
@@ -125,28 +135,6 @@ export const AvatarComponent = props => {
     );
   }
 };
-
-AvatarComponent.defaultProps = {
-  className: null,
-  rootClassName: null,
-  user: null,
-  renderSizes: AVATAR_SIZES,
-  disableProfileLink: false,
-};
-
-AvatarComponent.propTypes = {
-  rootClassName: string,
-  className: string,
-  user: oneOfType([propTypes.user, propTypes.currentUser]),
-
-  renderSizes: string,
-  disableProfileLink: bool,
-
-  // from injectIntl
-  intl: intlShape.isRequired,
-};
-
-const Avatar = injectIntl(AvatarComponent);
 
 export default Avatar;
 
