@@ -121,6 +121,16 @@ const PageBuilder = props => {
                 </div>
                 <button className={css.button}>Login</button>
               </div>
+              <div className={css.contents}>
+                <div className={css.banner}>
+                  <h1 className={css.bannerTitle}>
+                    We empower collaboration to turn ideas into reality.
+                  </h1>
+                  <div className={css.searchBarArea}>
+                    <input type="text" placeholder="Search" className={css.searchBar} />
+                  </div>
+                </div>
+              </div>
             </div>
           );
         }}

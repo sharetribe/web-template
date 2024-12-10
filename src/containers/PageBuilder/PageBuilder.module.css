@@ -53,3 +53,55 @@
 .button:hover {
   background-color: #523696;
 }
+
+.contents {
+  width: 100%;
+  height: 100%;
+  padding: 40px 100px 300px;
+  box-sizing: border-box;
+}
+
+.banner {
+  width: 100%;
+  height: 500px;
+  border-radius: 4rem;
+  border: 3px solid black;
+  padding: 0 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 70px;
+  overflow: hidden;
+  position: relative;
+  background-color: #a77bff;
+}
+
+.bannerTitle {
+  text-align: center;
+  color: white;
+  font-size: 58px;
+}
+
+.searchBarArea {
+  width: 592px;
+  height: 60px;
+  background-color: white;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.searchBar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50px;
+  padding: 0 22px 0 40px;
+  transition: 0.3s ease-in-out;
+  border: 0.01px solid #5a32a2;
+}
+
+.searchBar:focus {
+  border: 3px solid #5a32a2;
+}
