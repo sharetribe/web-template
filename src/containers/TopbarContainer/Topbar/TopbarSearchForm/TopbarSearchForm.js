@@ -1,5 +1,4 @@
 import React, { useRef } from 'react';
-import { bool, func, object, string } from 'prop-types';
 import { Form as FinalForm, Field } from 'react-final-form';
 import classNames from 'classnames';
 
@@ -82,7 +81,20 @@ const LocationSearchField = props => {
   );
 };
 
-const TopbarSearchFormComponent = props => {
+/**
+ * The main search form for the Topbar.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string?} props.desktopInputRoot root class for desktop form input
+ * @param {Function} props.onSubmit
+ * @param {boolean} props.isMobile
+ * @param {Object} props.appConfig
+ * @returns {JSX.Element} search form element
+ */
+const TopbarSearchForm = props => {
   const searchInpuRef = useRef(null);
   const intl = useIntl();
   const { appConfig, onSubmit, ...restOfProps } = props;
@@ -158,23 +170,5 @@ const TopbarSearchFormComponent = props => {
     />
   );
 };
-
-TopbarSearchFormComponent.defaultProps = {
-  rootClassName: null,
-  className: null,
-  desktopInputRoot: null,
-  isMobile: false,
-};
-
-TopbarSearchFormComponent.propTypes = {
-  rootClassName: string,
-  className: string,
-  desktopInputRoot: string,
-  onSubmit: func.isRequired,
-  isMobile: bool,
-  appConfig: object.isRequired,
-};
-
-const TopbarSearchForm = TopbarSearchFormComponent;
 
 export default TopbarSearchForm;
