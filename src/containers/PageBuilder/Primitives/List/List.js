@@ -1,20 +1,18 @@
 import React from 'react';
-import { node, string } from 'prop-types';
 import classNames from 'classnames';
 
 import css from './List.module.css';
 
-const defaultPropsList = {
-  rootClassName: null,
-  className: null,
-};
-
-const propTypesList = {
-  rootClassName: string,
-  className: string,
-  children: node.isRequired,
-};
-
+/**
+ * Unordered list.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {ReactNode} props.children
+ * @returns {JSX.Element} <ul> element
+ */
 export const Ul = React.forwardRef((props, ref) => {
   const { className, rootClassName, ...otherProps } = props;
   const classes = classNames(rootClassName || css.ul, className);
@@ -22,9 +20,17 @@ export const Ul = React.forwardRef((props, ref) => {
   return <ul className={classes} {...otherProps} ref={ref} />;
 });
 Ul.displayName = 'Ul';
-Ul.defaultProps = defaultPropsList;
-Ul.propTypes = propTypesList;
 
+/**
+ * Ordered list.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {ReactNode} props.children
+ * @returns {JSX.Element} <ol> element
+ */
 export const Ol = React.forwardRef((props, ref) => {
   const { className, rootClassName, ...otherProps } = props;
   const classes = classNames(rootClassName || css.ol, className);
@@ -32,9 +38,17 @@ export const Ol = React.forwardRef((props, ref) => {
   return <ol className={classes} {...otherProps} ref={ref} />;
 });
 Ol.displayName = 'Ol';
-Ol.defaultProps = defaultPropsList;
-Ol.propTypes = propTypesList;
 
+/**
+ * List item.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {ReactNode} props.children
+ * @returns {JSX.Element} <li> element
+ */
 export const Li = React.forwardRef((props, ref) => {
   const { className, rootClassName, ...otherProps } = props;
   const classes = classNames(rootClassName || css.li, className);
@@ -42,5 +56,3 @@ export const Li = React.forwardRef((props, ref) => {
   return <li className={classes} {...otherProps} ref={ref} />;
 });
 Li.displayName = 'Li';
-Li.defaultProps = defaultPropsList;
-Li.propTypes = propTypesList;
