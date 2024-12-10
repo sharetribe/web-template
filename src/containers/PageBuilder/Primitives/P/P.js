@@ -1,9 +1,18 @@
 import React from 'react';
-import { node, string } from 'prop-types';
 import classNames from 'classnames';
 
 import css from './P.module.css';
 
+/**
+ * Paragraph <p>
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {ReactNode} props.children
+ * @returns {JSX.Element} <p> element
+ */
 export const P = React.forwardRef((props, ref) => {
   const { className, rootClassName, ...otherProps } = props;
   const classes = classNames(rootClassName || css.p, className);
@@ -12,15 +21,3 @@ export const P = React.forwardRef((props, ref) => {
 });
 
 P.displayName = 'P';
-
-P.defaultProps = {
-  rootClassName: null,
-  className: null,
-  children: null,
-};
-
-P.propTypes = {
-  rootClassName: string,
-  className: string,
-  children: node,
-};
