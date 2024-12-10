@@ -1,5 +1,4 @@
 import React from 'react';
-import { bool, func, node, object, shape, string } from 'prop-types';
 import classNames from 'classnames';
 
 import Field, { hasDataInFields } from '../../Field';
@@ -7,8 +6,35 @@ import Field, { hasDataInFields } from '../../Field';
 import SectionContainer from '../SectionContainer';
 import css from './SectionHero.module.css';
 
-// Section component for a website's hero section
-// The Section Hero doesn't have any Blocks by default, all the configurations are made in the Section Hero settings
+/**
+ * @typedef {Object} FieldComponentConfig
+ * @property {ReactNode} component
+ * @property {Function} pickValidProps
+ */
+
+/**
+ * Section component for a website's hero section
+ * The Section Hero doesn't have any Blocks by default, all the configurations are made in the Section Hero settings
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {Object} props.defaultClasses
+ * @param {string} props.defaultClasses.sectionDetails
+ * @param {string} props.defaultClasses.title
+ * @param {string} props.defaultClasses.description
+ * @param {string} props.defaultClasses.ctaButton
+ * @param {string} props.sectionId id of the section
+ * @param {'hero'} props.sectionType
+ * @param {Object?} props.title
+ * @param {Object?} props.description
+ * @param {Object?} props.appearance
+ * @param {Object?} props.callToAction
+ * @param {Object} props.options extra options for the section component (e.g. custom fieldComponents)
+ * @param {Object<string,FieldComponentConfig>?} props.options.fieldComponents custom fields
+ * @returns {JSX.Element} Section for article content
+ */
 const SectionHero = props => {
   const {
     sectionId,
@@ -46,41 +72,6 @@ const SectionHero = props => {
       ) : null}
     </SectionContainer>
   );
-};
-
-const propTypeOption = shape({
-  fieldComponents: shape({ component: node, pickValidProps: func }),
-});
-
-SectionHero.defaultProps = {
-  className: null,
-  rootClassName: null,
-  defaultClasses: null,
-  textClassName: null,
-  title: null,
-  description: null,
-  appearance: null,
-  callToAction: null,
-  isInsideContainer: false,
-  options: null,
-};
-
-SectionHero.propTypes = {
-  sectionId: string.isRequired,
-  className: string,
-  rootClassName: string,
-  defaultClasses: shape({
-    sectionDetails: string,
-    title: string,
-    description: string,
-    ctaButton: string,
-  }),
-  title: object,
-  description: object,
-  appearance: object,
-  callToAction: object,
-  isInsideContainer: bool,
-  options: propTypeOption,
 };
 
 export default SectionHero;
