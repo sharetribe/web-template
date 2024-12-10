@@ -1,5 +1,4 @@
-import React, { Component, useEffect, useState } from 'react';
-import { array, arrayOf, bool, func, number, object, shape, string } from 'prop-types';
+import React from 'react';
 import pickBy from 'lodash/pickBy';
 import classNames from 'classnames';
 
@@ -7,11 +6,10 @@ import appSettings from '../../../config/settings';
 import { useConfiguration } from '../../../context/configurationContext';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
 
-import { FormattedMessage, intlShape, useIntl } from '../../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { isMainSearchTypeKeywords, isOriginInUse } from '../../../util/search';
 import { parse, stringify } from '../../../util/urlHelpers';
 import { createResourceLocatorString, matchPathname, pathByRouteName } from '../../../util/routes';
-import { propTypes } from '../../../util/types';
 import {
   Button,
   LimitedAccessBanner,
@@ -121,10 +119,6 @@ const GenericError = props => {
       </div>
     </div>
   );
-};
-
-GenericError.propTypes = {
-  show: bool.isRequired,
 };
 
 const TopbarComponent = props => {
@@ -346,46 +340,35 @@ const TopbarComponent = props => {
   );
 };
 
-TopbarComponent.propTypes = {
-  className: string,
-  rootClassName: string,
-  desktopClassName: string,
-  mobileRootClassName: string,
-  mobileClassName: string,
-  isAuthenticated: bool.isRequired,
-  isLoggedInAs: bool.isRequired,
-  authScopes: array,
-  authInProgress: bool.isRequired,
-  currentUser: propTypes.currentUser,
-  currentUserHasListings: bool.isRequired,
-  currentUserHasOrders: bool,
-  currentPage: string,
-  notificationCount: number,
-  onLogout: func.isRequired,
-  onManageDisableScrolling: func.isRequired,
-  onResendVerificationEmail: func.isRequired,
-  sendVerificationEmailInProgress: bool.isRequired,
-  sendVerificationEmailError: propTypes.error,
-  showGenericError: bool.isRequired,
-
-  // These are passed from Page to keep Topbar rendering aware of location changes
-  history: shape({
-    push: func.isRequired,
-  }).isRequired,
-  location: shape({
-    search: string.isRequired,
-  }).isRequired,
-
-  // from useIntl
-  intl: intlShape.isRequired,
-
-  // from useConfiguration
-  config: object.isRequired,
-
-  // from useRouteConfiguration
-  routeConfiguration: arrayOf(propTypes.route).isRequired,
-};
-
+/**
+ * Topbar containing logo, main search and navigation links.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {Object} props.desktopClassName add more style rules for TopbarDesktop
+ * @param {Object} props.mobileRootClassName overwrite mobile layout root classes
+ * @param {Object} props.mobileClassName add more style rules for mobile layout
+ * @param {boolean} props.isAuthenticated
+ * @param {boolean} props.isLoggedInAs
+ * @param {Object} props.currentUser
+ * @param {boolean} props.currentUserHasListings
+ * @param {boolean} props.currentUserHasOrders
+ * @param {string} props.currentPage
+ * @param {number} props.notificationCount
+ * @param {Function} props.onLogout
+ * @param {Function} props.onManageDisableScrolling
+ * @param {Function} props.onResendVerificationEmail
+ * @param {Object} props.sendVerificationEmailInProgress
+ * @param {Object} props.sendVerificationEmailError
+ * @param {boolean} props.showGenericError
+ * @param {Object} props.history
+ * @param {Function} props.history.push
+ * @param {Object} props.location
+ * @param {string} props.location.search '?foo=bar'
+ * @returns {JSX.Element} topbar component
+ */
 const Topbar = props => {
   const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();
