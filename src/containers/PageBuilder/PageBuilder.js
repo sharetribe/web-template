@@ -1,8 +1,6 @@
 import React from 'react';
 
 import { IconSpinner, LayoutComposer } from '../../components/index.js';
-import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer.js';
-import FooterContainer from '../FooterContainer/FooterContainer.js';
 
 import { validProps } from './Field';
 
@@ -10,6 +8,8 @@ import SectionBuilder from './SectionBuilder/SectionBuilder.js';
 import StaticPage from './StaticPage.js';
 
 import css from './PageBuilder.module.css';
+
+import Logo from '../../styles/icons/logo/colablogo.png';
 
 const getMetadata = (meta, schemaType, fieldOptions) => {
   const { pageTitle, pageDescription, socialSharing } = meta;
@@ -110,21 +110,18 @@ const PageBuilder = props => {
     <StaticPage {...pageMetaProps} {...pageProps}>
       <LayoutComposer areas={layoutAreas} className={css.layout}>
         {props => {
-          const { Topbar, Main, Footer } = props;
           return (
-            <>
-              <Topbar as="header" className={css.topbar}>
-                <TopbarContainer />
-              </Topbar>
-              <Main as="main" className={css.main}>
-                {sections.length === 0 && inProgress ? (
-                  <LoadingSpinner />
-                ) : (
-                  <SectionBuilder sections={sections} options={options} />
-                )}
-              </Main>
-              <FooterContainer />
-            </>
+            <div className={css.container}>
+              <div className={css.header}>
+                <div className={css.wrapper}>
+                  <img src={Logo} alt="logo" sizes="100" />
+                  <span>Explore</span>
+                  <span>Dashboard</span>
+                  <span>Contact Us</span>
+                </div>
+                <button className={css.button}>Login</button>
+              </div>
+            </div>
           );
         }}
       </LayoutComposer>

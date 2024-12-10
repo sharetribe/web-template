@@ -1,9 +1,10 @@
-.root {
-  padding: 20vh 36px;
+.container {
+  width: 100vw;
+  height: inherit;
 }
 
-.content {
-  text-align: center;
-  max-width: 650px;
-  margin: 0 auto;
+.header {
+  width: 100vw;
+  height: 100px;
+  background-color: #d2d2d2;
 }
