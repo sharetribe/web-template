@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-import { arrayOf, bool, func, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 
 import { FormattedMessage } from '../../util/reactIntl';
 import { ensureCurrentUser } from '../../util/data';
-import { propTypes } from '../../util/types';
 import { isUserAuthorized } from '../../util/userHelpers';
 import { pathByRouteName } from '../../util/routes';
 
@@ -144,27 +142,22 @@ class ModalMissingInformation extends Component {
   }
 }
 
-ModalMissingInformation.defaultProps = {
-  className: null,
-  rootClassName: null,
-  currentUser: null,
-};
-
-ModalMissingInformation.propTypes = {
-  id: string.isRequired,
-  className: string,
-  rootClassName: string,
-  containerClassName: string,
-
-  currentUser: propTypes.currentUser,
-  onManageDisableScrolling: func.isRequired,
-  sendVerificationEmailError: propTypes.error,
-  sendVerificationEmailInProgress: bool.isRequired,
-
-  // from useRouteConfiguration
-  routeConfiguration: arrayOf(propTypes.route).isRequired,
-};
-
+/**
+ * Modal that tells user that they have not saved all the information the service needs.
+ * This is used to remind user that they need to verify their email address.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string?} props.containerClassName overwrite components own css.container
+ * @param {string} props.id
+ * @param {Object} props.currentUser API entity
+ * @param {Function} props.onManageDisableScrolling
+ * @param {Object?} props.sendVerificationEmailError
+ * @param {boolean} props.sendVerificationEmailInProgress
+ * @returns {JSX.Element} Modal element if user needs to be reminded
+ */
 const EnhancedModalMissingInformation = props => {
   const routeConfiguration = useRouteConfiguration();
 
