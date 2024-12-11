@@ -80,6 +80,11 @@ const LoadingSpinner = () => {
  * @param {Object} props
  * @returns page component
  */
+
+const A = () => {
+  return <h1>Hello</h1>;
+};
+
 const PageBuilder = props => {
   const {
     pageAssetsData,
@@ -100,6 +105,7 @@ const PageBuilder = props => {
   // - "meta" (which is data that goes inside <head>)
   const { sections = [], meta = {} } = pageAssetsData || {};
   const pageMetaProps = getMetadata(meta, schemaType, options?.fieldComponents);
+  const populars = ['popular1', 'popular2', 'popular3', 'popular4'];
 
   const layoutAreas = `
     topbar
@@ -112,20 +118,23 @@ const PageBuilder = props => {
         {props => {
           return (
             <div className={css.container}>
-              <div className={css.header}>
+              <header className={css.header}>
                 <div className={css.wrapper}>
                   <img src={Logo} alt="logo" sizes="100" />
-                  <a href="/s">Explore</a>
-                  <span>Dashboard</span>
-                  <span>Contact Us</span>
+                  <nav>
+                    <a href="/s">Explore</a>
+                    <span>Dashboard</span>
+                    <span>Contact Us</span>
+                  </nav>
                 </div>
-                <div className={css.wrapper} style={{ height: '100%' }}>
+                <div className={css.wrapper}>
                   <button className={css.button}>Sign Up</button>
                   <button className={css.button}>Login</button>
                 </div>
-              </div>
-              <div className={css.contents}>
-                <div className={css.banner}>
+              </header>
+
+              <main className={css.contents}>
+                <section className={css.banner}>
                   <h1 className={css.bannerTitle}>
                     We empower collaboration to turn ideas into reality.
                   </h1>
@@ -133,32 +142,38 @@ const PageBuilder = props => {
                     <input type="text" placeholder="Search" className={css.searchBar} />
                     <button className={css.searchButton}>🔍</button>
                   </div>
-                  <div className={css.circle1}></div>
-                  <div className={css.circle2}></div>
-                  <div className={css.circle3}></div>
-                  <div className={css.circle4}></div>
-                  <div className={css.circle5}></div>
-                </div>
-                <ul className={css.carousells}>
-                  <li className={css.carousellContent}>Popular</li>
-                  <li className={css.carousellContent}>Popular</li>
-                  <li className={css.carousellContent}>Popular</li>
-                  <li className={css.carousellContent}>Popular</li>
+                  <div className={css.circles}>
+                    <div className={css.circle1}></div>
+                    <div className={css.circle2}></div>
+                    <div className={css.circle3}></div>
+                    <div className={css.circle4}></div>
+                    <div className={css.circle5}></div>
+                  </div>
+                </section>
+
+                <ul className={css.carousels}>
+                  {populars.map((element, index) => (
+                    <li key={index} className={css.carouselContent}>
+                      {element}
+                    </li>
+                  ))}
                 </ul>
-                <div className={css.description}>
+
+                <section className={css.description}>
                   <h1 className={css.heading}>
                     Unite innovators to bring groundbreaking ideas to life.
                   </h1>
-                  <p style={{ width: '85%', fontSize: '20px' }}>
+                  <p className={css.text}>
                     At Colab, connect with like-minded creators to explore, build, and grow
                     together. Join collaborative projects, contribute your unique skills, and shape
                     a future where innovation thrives through teamwork. Start building your journey
                     today!
                   </p>
-                </div>
-                <div>
-                  <div className={css.bentoContainer}>
-                    <div className={`${css.card} ${css.card1}`}>
+                </section>
+
+                <section className={css.bentoContainer}>
+                  {[...Array(5)].map((_, index) => (
+                    <div key={index} className={`${css.card} ${css[`card${index + 1}`]}`}>
                       <h3>Title</h3>
                       <p>
                         At Colab, connect with like-minded creators to explore, build, and grow
@@ -167,45 +182,9 @@ const PageBuilder = props => {
                         your journey today!
                       </p>
                     </div>
-                    <div className={`${css.card} ${css.card2}`}>
-                      <h3>Title</h3>
-                      <p>
-                        At Colab, connect with like-minded creators to explore, build, and grow
-                        together. Join collaborative projects, contribute your unique skills, and
-                        shape a future where innovation thrives through teamwork. Start building
-                        your journey today!
-                      </p>
-                    </div>
-                    <div className={`${css.card} ${css.card3}`}>
-                      <h3>Title</h3>
-                      <p>
-                        At Colab, connect with like-minded creators to explore, build, and grow
-                        together. Join collaborative projects, contribute your unique skills, and
-                        shape a future where innovation thrives through teamwork. Start building
-                        your journey today!
-                      </p>
-                    </div>
-                    <div className={`${css.card} ${css.card4}`}>
-                      <h3>Title</h3>
-                      <p>
-                        At Colab, connect with like-minded creators to explore, build, and grow
-                        together. Join collaborative projects, contribute your unique skills, and
-                        shape a future where innovation thrives through teamwork. Start building
-                        your journey today!
-                      </p>
-                    </div>
-                    <div className={`${css.card} ${css.card5}`}>
-                      <h3>Title</h3>
-                      <p>
-                        At Colab, connect with like-minded creators to explore, build, and grow
-                        together. Join collaborative projects, contribute your unique skills, and
-                        shape a future where innovation thrives through teamwork. Start building
-                        your journey today!
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                  ))}
+                </section>
+              </main>
             </div>
           );
         }}

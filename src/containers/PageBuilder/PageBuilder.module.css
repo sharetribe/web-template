@@ -166,13 +166,13 @@
   top: 230px;
 }
 
-.carousells {
+.carousels {
   display: flex;
   height: 160px;
   gap: 15px;
 }
 
-.carousellContent {
+.carouselContent {
   width: 25%;
   background-color: #d2d2d2;
   border-radius: 25px;
