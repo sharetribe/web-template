@@ -120,16 +120,19 @@ const PageBuilder = props => {
             <div className={css.container}>
               <header className={css.header}>
                 <div className={css.wrapper}>
-                  <img src={Logo} alt="logo" sizes="100" />
-                  <nav>
-                    <a href="/s">Explore</a>
-                    <span>Dashboard</span>
-                    <span>Contact Us</span>
-                  </nav>
+                  <a href="/">
+                    <img src={Logo} alt="logo" sizes="100" />
+                  </a>
+                  <a href="/explore">Explore</a>
+                  <a href="/signup">List Up Profile</a>
                 </div>
-                <div className={css.wrapper}>
-                  <button className={css.button}>Sign Up</button>
-                  <button className={css.button}>Login</button>
+                <div className={css.wrapper} style={{ height: '100%' }}>
+                  <a href="/signup" className={css.button}>
+                    Sign Up
+                  </a>
+                  <a href="/login" className={css.button}>
+                    Login
+                  </a>
                 </div>
               </header>
 
