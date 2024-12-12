@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { arrayOf, number, shape, string } from 'prop-types';
 import classNames from 'classnames';
 import { withDimensions } from '../../util/uiHelpers';
 
@@ -29,7 +28,7 @@ class RangeSliderComponent extends Component {
   }
 
   toPosition(value) {
-    const { dimensions, min, max } = this.props;
+    const { dimensions, min = 0, max = 10000000 } = this.props;
     const width = dimensions.width;
     const valueOffset = value - min;
     const scale = max - min;
@@ -37,7 +36,7 @@ class RangeSliderComponent extends Component {
   }
 
   toValue(position) {
-    const { dimensions, min, max, step } = this.props;
+    const { dimensions, min = 0, max = 10000000, step = 1 } = this.props;
     const width = dimensions.width;
     const scale = max - min;
     const value = Math.round((position / width) * scale) + min;
@@ -53,7 +52,7 @@ class RangeSliderComponent extends Component {
   }
 
   render() {
-    const { handles, min, max } = this.props;
+    const { handles, min = 0, max = 10000000 } = this.props;
 
     return (
       <Track handles={handles} valueToPosition={this.toPosition}>
@@ -78,25 +77,21 @@ class RangeSliderComponent extends Component {
   }
 }
 
-RangeSliderComponent.defaultProps = {
-  min: 0,
-  max: 10000000,
-  step: 1,
-};
-
-RangeSliderComponent.propTypes = {
-  handles: arrayOf(number),
-  min: number,
-  max: number,
-  step: number,
-  dimensions: shape({
-    height: number.isRequired,
-    width: number.isRequired,
-  }).isRequired,
-};
-
 const RangeSliderComponentWithDimensions = withDimensions(RangeSliderComponent);
 
+/**
+ * A component that renders a range slider.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {Array<number>} props.handles - The handles to render
+ * @param {number} props.min - The minimum value of the range slider
+ * @param {number} props.max - The maximum value of the range slider
+ * @param {number} props.step - The step value of the range slider
+ * @returns {JSX.Element}
+ */
 const RangeSlider = props => {
   const { rootClassName, className, ...rest } = props;
   const classes = classNames(rootClassName || css.root, className);
@@ -105,16 +100,6 @@ const RangeSlider = props => {
       <RangeSliderComponentWithDimensions {...rest} />
     </div>
   );
-};
-
-RangeSlider.defaultProps = {
-  rootClassName: null,
-  className: null,
-};
-
-RangeSlider.propTypes = {
-  rootClassName: string,
-  className: string,
 };
 
 export default RangeSlider;
