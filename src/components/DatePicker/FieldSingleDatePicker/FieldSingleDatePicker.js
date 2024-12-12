@@ -6,7 +6,6 @@
  */
 
 import React from 'react';
-import { bool, func, object, string } from 'prop-types';
 import { Field } from 'react-final-form';
 import classNames from 'classnames';
 
@@ -87,36 +86,29 @@ const FieldSingleDatePickerComponent = props => {
   );
 };
 
-FieldSingleDatePickerComponent.defaultProps = {
-  className: null,
-  rootClassName: null,
-  inputClassName: null,
-  popupClassName: null,
-  id: null,
-  label: null,
-  useMobileMargins: false,
-  showErrorMessage: true,
-  showLabelAsDisabled: false,
-  placeholderText: null,
-  onChange: null,
-};
-
-FieldSingleDatePickerComponent.propTypes = {
-  className: string,
-  rootClassName: string,
-  inputClassName: string,
-  popupClassName: string,
-  id: string,
-  label: string,
-  useMobileMargins: bool,
-  showErrorMessage: bool,
-  showLabelAsDisabled: bool,
-  placeholderText: string,
-  input: object.isRequired,
-  meta: object.isRequired,
-  onChange: func,
-};
-
+/**
+ * A component that provides a single date picker for Final Forms.
+ *
+ * NOTE: On mobile screens, this puts the input on read-only mode.
+ * Trying to enter date string (ISO formatted or US) on mobile browsers is more confusing that just tapping a date.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} [props.inputClassName] - Custom class that extends the default class for the container of the input element
+ * @param {string} [props.popupClassName] - Custom class that over the default class for the popup element css.poup
+ * @param {string} [props.id] - The ID of the input
+ * @param {string} [props.label] - The label of the input
+ * @param {boolean} [props.showLabelAsDisabled] - Whether to show the label as disabled
+ * @param {string} [props.placeholderText] - The placeholder text of the input
+ * @param {boolean} [props.useMobileMargins] - Whether to use mobile margins (allowing the input to expand to the full width of the screen)
+ * @param {Function} [props.isOutsideRange] - The function to check if a day is outside the range
+ * @param {Function} [props.isDayBlocked] - The function to check if a day is blocked
+ * @param {Function} [props.onChange] - The function to handle the change of the input
+ * @param {number} [props.firstDayOfWeek] - The first day of the week (0-6, default to value set in configuration)
+ * @returns {JSX.Element} FieldSingleDatePicker component
+ */
 const FieldSingleDatePicker = props => {
   const config = useConfiguration();
   const { isOutsideRange, firstDayOfWeek, ...rest } = props;
