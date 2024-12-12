@@ -1,9 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import css from './IconAdd.module.css';
 
+/**
+ * Add icon: "+"
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own root class
+ * @param {string?} props.rootClassName overwrite components own root class
+ * @returns {JSX.Element} "add" icon
+ */
 const IconAdd = props => {
   const { className, rootClassName } = props;
   const classes = classNames(rootClassName || css.root, className);
@@ -16,18 +24,6 @@ const IconAdd = props => {
       />
     </svg>
   );
-};
-
-const { string } = PropTypes;
-
-IconAdd.defaultProps = {
-  className: null,
-  rootClassName: null,
-};
-
-IconAdd.propTypes = {
-  className: string,
-  rootClassName: string,
 };
 
 export default IconAdd;
