@@ -1,3 +1,11 @@
+import React from 'react';
+import { intlShape } from '../../util/reactIntl';
+import { formatMoney } from '../../util/currency';
+import { humanizeLineItemCode } from '../../util/data';
+import { LINE_ITEMS, propTypes } from '../../util/types';
+
+import css from './OrderBreakdown.module.css';
+
 /**
  * Renders non-reversal line items that are not listed in the
  * `LINE_ITEMS` array in util/types.js
@@ -8,15 +16,14 @@
  * If you require another kind of presentation for your line items, add them to
  * the `LINE_ITEMS` array in util/types.js and create a specific line item
  * component for them that can be used in the `OrderBreakdown` component.
+ *
+ * @component
+ * @param {Object} props
+ * @param {Array<propTypes.lineItem>} props.lineItems - The line items to render
+ * @param {boolean} props.isProvider - Whether the provider is the one receiving the commission
+ * @param {intlShape} props.intl - The intl object
+ * @returns {JSX.Element}
  */
-import React from 'react';
-import { intlShape } from '../../util/reactIntl';
-import { formatMoney } from '../../util/currency';
-import { humanizeLineItemCode } from '../../util/data';
-import { LINE_ITEMS, propTypes } from '../../util/types';
-
-import css from './OrderBreakdown.module.css';
-
 const LineItemUnknownItemsMaybe = props => {
   const { lineItems, isProvider, intl } = props;
 
@@ -47,11 +54,6 @@ const LineItemUnknownItemsMaybe = props => {
       })}
     </React.Fragment>
   ) : null;
-};
-
-LineItemUnknownItemsMaybe.propTypes = {
-  lineItems: propTypes.lineItems.isRequired,
-  intl: intlShape.isRequired,
 };
 
 export default LineItemUnknownItemsMaybe;
