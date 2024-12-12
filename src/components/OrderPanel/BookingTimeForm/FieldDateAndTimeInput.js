@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { func, number, object, string } from 'prop-types';
 import classNames from 'classnames';
 
 import appSettings from '../../../config/settings';
-import { intlShape } from '../../../util/reactIntl';
 import {
   getStartHours,
   getEndHours,
@@ -590,6 +588,34 @@ const onBookingEndTimeChange = props => value => {
 /////////////////////////////////////
 // FieldDateAndTimeInput component //
 /////////////////////////////////////
+
+/**
+ * @typedef {Object} MonthlyTimeSlotData
+ * @property {Array<propTypes.timeSlot>} timeSlots - The time slots for the month
+ * @property {propTypes.error} fetchTimeSlotsError - The error for the time slots
+ * @property {boolean} fetchTimeSlotsInProgress - Whether the time slots are being fetched
+ */
+/**
+ * A component that provides a date and time input for Final Forms.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.formId] - The ID of the form
+ * @param {Object} [props.startDateInputProps] - The props for the start date input
+ * @param {Object} [props.startTimeInputProps] - The props for the start time input
+ * @param {Object} [props.endTimeInputProps] - The props for the end time input
+ * @param {Object} props.form - The formApi object from Final Form
+ * @param {Object} props.values - The values object from Final Form
+ * @param {propTypes.uuid} [props.listingId] - The ID of the listing
+ * @param {Object<string, MonthlyTimeSlotData>} [props.monthlyTimeSlots] - The monthly time slots object
+ * @param {Function} [props.onFetchTimeSlots] - The function to handle the fetching of time slots
+ * @param {string} [props.timeZone] - The time zone of the listing
+ * @param {number} [props.dayCountAvailableForBooking] - The number of days available for booking
+ * @param {Object} [props.intl] - The intl object from react-intl
+ * @returns {JSX.Element} FieldDateAndTimeInput component
+ */
 const FieldDateAndTimeInput = props => {
   const {
     rootClassName,
@@ -835,38 +861,6 @@ const FieldDateAndTimeInput = props => {
       </div>
     </div>
   );
-};
-
-FieldDateAndTimeInput.defaultProps = {
-  rootClassName: null,
-  className: null,
-  startDateInputProps: null,
-  endDateInputProps: null,
-  startTimeInputProps: null,
-  endTimeInputProps: null,
-  listingId: null,
-  monthlyTimeSlots: null,
-  timeZone: null,
-};
-
-FieldDateAndTimeInput.propTypes = {
-  rootClassName: string,
-  className: string,
-  formId: string,
-  startDateInputProps: object,
-  endDateInputProps: object,
-  startTimeInputProps: object,
-  endTimeInputProps: object,
-  form: object.isRequired,
-  values: object.isRequired,
-  listingId: propTypes.uuid,
-  monthlyTimeSlots: object,
-  onFetchTimeSlots: func.isRequired,
-  timeZone: string,
-  dayCountAvailableForBooking: number,
-
-  // from injectIntl
-  intl: intlShape.isRequired,
 };
 
 export default FieldDateAndTimeInput;

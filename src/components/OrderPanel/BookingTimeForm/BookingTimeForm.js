@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
-import { FormattedMessage, intlShape, injectIntl } from '../../../util/reactIntl';
+import { FormattedMessage, intlShape, injectIntl, useIntl } from '../../../util/reactIntl';
 import { timestampToDate } from '../../../util/dates';
 import { propTypes } from '../../../util/types';
 import { BOOKING_PROCESS_NAME } from '../../../transactions/transaction';
@@ -51,7 +51,31 @@ const handleFetchLineItems = props => formValues => {
   }
 };
 
-export const BookingTimeFormComponent = props => {
+/**
+ * A form for selecting booking time.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {propTypes.money} props.price - The unit price of the listing
+ * @param {boolean} props.isOwnListing - Whether the listing is owned by the current user
+ * @param {propTypes.uuid} props.listingId - The ID of the listing
+ * @param {Object} props.monthlyTimeSlots - The monthly time slots
+ * @param {Function} props.onFetchTimeSlots - The function to fetch the time slots
+ * @param {string} props.timeZone - The time zone of the listing (e.g. "America/New_York")
+ * @param {Function} props.onFetchTransactionLineItems - The function to fetch the transaction line items
+ * @param {Object} props.lineItems - The line items
+ * @param {boolean} props.fetchLineItemsInProgress - Whether line items are being fetched
+ * @param {propTypes.error} props.fetchLineItemsError - The error for fetching line items
+ * @param {string} [props.startDatePlaceholder] - The placeholder text for the start date
+ * @param {string} [props.endDatePlaceholder] - The placeholder text for the end date
+ * @param {number} props.dayCountAvailableForBooking - Number of days available for booking
+ * @param {string} props.marketplaceName - Name of the marketplace
+ * @returns {JSX.Element}
+ */
+export const BookingTimeForm = props => {
+  const intl = useIntl();
   const {
     rootClassName,
     className,
@@ -77,7 +101,6 @@ export const BookingTimeFormComponent = props => {
           form,
           pristine,
           handleSubmit,
-          intl,
           isOwnListing,
           listingId,
           values,
@@ -216,48 +239,5 @@ export const BookingTimeFormComponent = props => {
     />
   );
 };
-
-BookingTimeFormComponent.defaultProps = {
-  rootClassName: null,
-  className: null,
-  price: null,
-  isOwnListing: false,
-  listingId: null,
-  startDatePlaceholder: null,
-  endDatePlaceholder: null,
-  monthlyTimeSlots: null,
-  lineItems: null,
-  fetchLineItemsError: null,
-};
-
-BookingTimeFormComponent.propTypes = {
-  rootClassName: string,
-  className: string,
-
-  marketplaceName: string.isRequired,
-  price: propTypes.money,
-  isOwnListing: bool,
-  listingId: propTypes.uuid,
-  monthlyTimeSlots: object,
-  onFetchTimeSlots: func.isRequired,
-  timeZone: string.isRequired,
-
-  onFetchTransactionLineItems: func.isRequired,
-  lineItems: array,
-  fetchLineItemsInProgress: bool.isRequired,
-  fetchLineItemsError: propTypes.error,
-
-  // from injectIntl
-  intl: intlShape.isRequired,
-
-  // for tests
-  startDatePlaceholder: string,
-  endDatePlaceholder: string,
-
-  dayCountAvailableForBooking: number.isRequired,
-};
-
-const BookingTimeForm = compose(injectIntl)(BookingTimeFormComponent);
-BookingTimeForm.displayName = 'BookingTimeForm';
 
 export default BookingTimeForm;
