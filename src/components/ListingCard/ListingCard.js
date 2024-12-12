@@ -1,13 +1,11 @@
 import React from 'react';
-import { string, func, bool, oneOfType } from 'prop-types';
 import classNames from 'classnames';
 
 import { useConfiguration } from '../../context/configurationContext';
 
-import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { displayPrice } from '../../util/configHelpers';
 import { lazyLoadWithDimensions } from '../../util/uiHelpers';
-import { propTypes } from '../../util/types';
 import { formatMoney } from '../../util/currency';
 import { ensureListing, ensureUser } from '../../util/data';
 import { richText } from '../../util/richText';
@@ -67,16 +65,29 @@ const PriceMaybe = props => {
   );
 };
 
-export const ListingCardComponent = props => {
+/**
+ * ListingCard
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to component's own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {Object} props.listing API entity: listing or ownListing
+ * @param {string?} props.renderSizes for img/srcset
+ * @param {Function?} props.setActiveListing
+ * @param {boolean?} props.showAuthorInfo
+ * @returns {JSX.Element} listing card to be used in search result panel etc.
+ */
+export const ListingCard = props => {
   const config = useConfiguration();
+  const intl = props.intl || useIntl();
   const {
     className,
     rootClassName,
-    intl,
     listing,
     renderSizes,
     setActiveListing,
-    showAuthorInfo,
+    showAuthorInfo = true,
   } = props;
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureListing(listing);
@@ -140,25 +151,4 @@ export const ListingCardComponent = props => {
   );
 };
 
-ListingCardComponent.defaultProps = {
-  className: null,
-  rootClassName: null,
-  renderSizes: null,
-  setActiveListing: null,
-  showAuthorInfo: true,
-};
-
-ListingCardComponent.propTypes = {
-  className: string,
-  rootClassName: string,
-  intl: intlShape.isRequired,
-  listing: oneOfType([propTypes.listing, propTypes.ownListing]).isRequired,
-  showAuthorInfo: bool,
-
-  // Responsive image sizes hint
-  renderSizes: string,
-
-  setActiveListing: func,
-};
-
-export default injectIntl(ListingCardComponent);
+export default ListingCard;
