@@ -138,6 +138,7 @@ export const ListingPageComponent = props => {
 
   const listingConfig = config.listing;
   const listingId = new UUID(rawParams.id);
+  const isVariant = rawParams.variant != null;
   const isPendingApprovalVariant = rawParams.variant === LISTING_PAGE_PENDING_APPROVAL_VARIANT;
   const isDraftVariant = rawParams.variant === LISTING_PAGE_DRAFT_VARIANT;
   const currentListing =
@@ -415,7 +416,7 @@ export const ListingPageComponent = props => {
               authorLink={
                 <NamedLink
                   className={css.authorNameLink}
-                  name="ListingPage"
+                  name={isVariant ? 'ListingPageVariant' : 'ListingPage'}
                   params={params}
                   to={{ hash: '#author' }}
                 >
@@ -526,7 +527,7 @@ const EnhancedListingPage = props => {
   const location = useLocation();
 
   const showListingError = props.showListingError;
-  const isVariant = props.params?.variant?.length > 0;
+  const isVariant = props.params?.variant != null;
   const currentUser = props.currentUser;
   if (isForbiddenError(showListingError) && !isVariant && !currentUser) {
     // This can happen if private marketplace mode is active
