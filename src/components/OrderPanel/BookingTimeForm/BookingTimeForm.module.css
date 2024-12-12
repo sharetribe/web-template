@@ -77,3 +77,13 @@
     margin-top: 72px;
   }
 }
+
+.fieldSeats {
+  width: calc(100% - 48px);
+  margin: 30px 24px 6px 24px;
+
+  @media (--viewportMedium) {
+    width: 100%;
+    margin: 24px 0;
+  }
+}
