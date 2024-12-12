@@ -17,7 +17,7 @@ import loadable from '@loadable/component';
 import classNames from 'classnames';
 import omit from 'lodash/omit';
 
-import { intlShape, injectIntl, FormattedMessage } from '../../util/reactIntl';
+import { intlShape, injectIntl, FormattedMessage, useIntl } from '../../util/reactIntl';
 import {
   displayDeliveryPickup,
   displayDeliveryShipping,
@@ -163,8 +163,53 @@ const PriceMaybe = props => {
   );
 };
 
+/**
+ * @typedef {Object} ListingTypeConfig
+ * @property {string} listingType - The type of the listing
+ * @property {string} transactionType - The type of the transaction
+ * @property {string} transactionType.process - The process descriptionof the transaction
+ * @property {string} transactionType.alias - The alias of the transaction process
+ * @property {string} transactionType.unitType - The unit type of the transaction
+ */
+
+/**
+ * OrderPanel is a component that renders a panel for making bookings, purchases, or inquiries for a listing.
+ * It handles different transaction processes and displays appropriate forms based on the listing type.
+ *
+ * @param {Object} props
+ * @param {string} [props.rootClassName] - Custom class that overwrites the default class for the root element
+ * @param {string} [props.className] - Custom class that extends
+ * @param {string} [props.titleClassName] - Custom class name for the title
+ * @param {propTypes.listing} props.listing - The listing data (either regular or own listing)
+ * @param {Array<ListingTypeConfig>} props.validListingTypes - Array of valid listing type configurations
+ * @param {boolean} [props.isOwnListing=false] - Whether the listing belongs to the current user
+ * @param {listingType.user|listingType.currentUser} props.author - The listing author's user data
+ * @param {ReactNode} [props.authorLink] - Custom component for rendering the author link
+ * @param {ReactNode} [props.payoutDetailsWarning] - Warning message about payout details
+ * @param {Function} props.onSubmit - Handler for form submission
+ * @param {ReactNode|string} props.title - Title of the panel
+ * @param {ReactNode} [props.titleDesktop] - Alternative title for desktop view
+ * @param {ReactNode|string} [props.subTitle] - Subtitle text
+ * @param {Function} props.onManageDisableScrolling - Handler for managing scroll behavior
+ * @param {Function} props.onFetchTimeSlots - Handler for fetching available time slots
+ * @param {Object} [props.monthlyTimeSlots] - Available time slots by month
+ * @param {Function} props.onFetchTransactionLineItems - Handler for fetching transaction line items
+ * @param {Function} [props.onContactUser] - Handler for contacting the listing author
+ * @param {Array} [props.lineItems] - Array of line items for the transaction
+ * @param {boolean} props.fetchLineItemsInProgress - Whether line items are being fetched
+ * @param {Object} [props.fetchLineItemsError] - Error object if line items fetch failed
+ * @param {string} props.marketplaceCurrency - The currency used in the marketplace
+ * @param {number} props.dayCountAvailableForBooking - Number of days available for booking
+ * @param {string} props.marketplaceName - Name of the marketplace
+ * @param {Object} props.history - React Router history object
+ * @param {Object} props.location - React Router location object
+ *
+ * @returns {JSX.Element} Component that displays the order panel with appropriate form
+ */
 const OrderPanel = props => {
   const [mounted, setMounted] = useState(false);
+  const intl = useIntl();
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -186,7 +231,6 @@ const OrderPanel = props => {
     monthlyTimeSlots,
     history,
     location,
-    intl,
     onFetchTransactionLineItems,
     onContactUser,
     lineItems,
@@ -431,69 +475,4 @@ const OrderPanel = props => {
   );
 };
 
-OrderPanel.defaultProps = {
-  rootClassName: null,
-  className: null,
-  titleClassName: null,
-  isOwnListing: false,
-  authorLink: null,
-  payoutDetailsWarning: null,
-  titleDesktop: null,
-  subTitle: null,
-  monthlyTimeSlots: null,
-  lineItems: null,
-  fetchLineItemsError: null,
-};
-
-OrderPanel.propTypes = {
-  rootClassName: string,
-  className: string,
-  titleClassName: string,
-  listing: oneOfType([propTypes.listing, propTypes.ownListing]),
-  validListingTypes: arrayOf(
-    shape({
-      listingType: string.isRequired,
-      transactionType: shape({
-        process: string.isRequired,
-        alias: string.isRequired,
-        unitType: string.isRequired,
-      }).isRequired,
-    })
-  ).isRequired,
-  isOwnListing: bool,
-  author: oneOfType([propTypes.user, propTypes.currentUser]).isRequired,
-  authorLink: node,
-  payoutDetailsWarning: node,
-  onSubmit: func.isRequired,
-  title: oneOfType([node, string]).isRequired,
-  titleDesktop: node,
-  subTitle: oneOfType([node, string]),
-  onManageDisableScrolling: func.isRequired,
-
-  onFetchTimeSlots: func.isRequired,
-  monthlyTimeSlots: object,
-  onFetchTransactionLineItems: func.isRequired,
-  onContactUser: func,
-  lineItems: array,
-  fetchLineItemsInProgress: bool.isRequired,
-  fetchLineItemsError: propTypes.error,
-  marketplaceCurrency: string.isRequired,
-  dayCountAvailableForBooking: number.isRequired,
-  marketplaceName: string.isRequired,
-
-  // from withRouter
-  history: shape({
-    push: func.isRequired,
-  }).isRequired,
-  location: shape({
-    search: string,
-  }).isRequired,
-
-  // from injectIntl
-  intl: intlShape.isRequired,
-};
-
-export default compose(
-  withRouter,
-  injectIntl
-)(OrderPanel);
+export default compose(withRouter)(OrderPanel);
