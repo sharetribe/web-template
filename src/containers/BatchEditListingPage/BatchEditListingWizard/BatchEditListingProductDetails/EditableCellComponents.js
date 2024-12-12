@@ -15,14 +15,19 @@ const EditableCell = ({
   options,
   placeholder = '',
   maxSelection,
+  onBeforeSave,
+  disabled = () => false,
   children, // Content for non-editable cells
   ...restProps
 }) => {
   const value = record[dataIndex] !== undefined ? record[dataIndex] : '';
 
   const handleChange = newValue => {
+    const values = { ...record, [dataIndex]: newValue };
+    const updatedValues = onBeforeSave ? onBeforeSave(values) : values;
+
     if (handleSave) {
-      handleSave({ ...record, [dataIndex]: newValue });
+      handleSave(updatedValues);
     }
   };
 
@@ -92,6 +97,7 @@ const EditableCell = ({
             checkedChildren="Yes"
             unCheckedChildren="No"
             className={css.formItem}
+            disabled={disabled(record)}
           />
         );
       case 'money':

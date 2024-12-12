@@ -14,3 +14,4 @@ export const PAGE_MODE_NEW = 'new';
 export const PAGE_MODE_EDIT = 'edit';
 export const MAX_KEYWORDS = 30;
 export const MAX_CATEGORIES = 5;
+export const DEFAULT_PRODUCT_LISTING_PRICE = 150.0;

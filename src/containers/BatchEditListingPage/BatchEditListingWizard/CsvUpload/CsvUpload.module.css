@@ -1,0 +1,7 @@
+.downloadLink {
+  font-size: 14px;
+}
+
+.downloadLink:hover {
+  text-decoration: none;
+}
