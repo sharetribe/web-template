@@ -5,6 +5,16 @@ import { LINE_ITEM_NIGHT, LINE_ITEM_DAY, propTypes, LINE_ITEM_HOUR } from '../..
 
 import css from './OrderBreakdown.module.css';
 
+/**
+ * A component that renders the base price as a line item.
+ *
+ * @component
+ * @param {Object} props
+ * @param {Array<propTypes.lineItem>} props.lineItems - The line items to render
+ * @param {propTypes.lineItemUnitType} props.code - The code of the line item
+ * @param {intlShape} props.intl - The intl object
+ * @returns {JSX.Element}
+ */
 const LineItemBasePriceMaybe = props => {
   const { lineItems, code, intl } = props;
   const isNightly = code === LINE_ITEM_NIGHT;
@@ -46,12 +56,6 @@ const LineItemBasePriceMaybe = props => {
       <span className={css.itemValue}>{total}</span>
     </div>
   ) : null;
-};
-
-LineItemBasePriceMaybe.propTypes = {
-  lineItems: propTypes.lineItems.isRequired,
-  code: propTypes.lineItemUnitType.isRequired,
-  intl: intlShape.isRequired,
 };
 
 export default LineItemBasePriceMaybe;
