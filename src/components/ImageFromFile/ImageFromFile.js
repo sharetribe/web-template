@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { any, node, number, string } from 'prop-types';
 import { FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
 
@@ -25,10 +24,24 @@ const readImage = file =>
     reader.readAsDataURL(file);
   });
 
-// Create elements out of given thumbnail file
+/**
+ * Create image component from the given image file.
+ * Note: currently this relies on dataURL.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string?} props.id
+ * @param {number?} props.aspectWidth
+ * @param {number?} props.aspectHeight
+ * @param {File?} props.file from <input type="file" />
+ * @param {ReactNode?} props.children
+ * @returns {JSX.Element} SVG icon
+ */
 const ImageFromFile = props => {
   const [promisedImage, setPromisedImage] = useState(readImage(props.file));
-  const { className, rootClassName, aspectWidth, aspectHeight, file, id, children } = props;
+  const { className, rootClassName, aspectWidth = 1, aspectHeight = 1, file, id, children } = props;
   const classes = classNames(rootClassName || css.root, className);
 
   return (
@@ -52,24 +65,6 @@ const ImageFromFile = props => {
       )}
     />
   );
-};
-
-ImageFromFile.defaultProps = {
-  className: null,
-  children: null,
-  rootClassName: null,
-  aspectWidth: 1,
-  aspectHeight: 1,
-};
-
-ImageFromFile.propTypes = {
-  className: string,
-  rootClassName: string,
-  aspectWidth: number,
-  aspectHeight: number,
-  file: any.isRequired,
-  id: string.isRequired,
-  children: node,
 };
 
 export default ImageFromFile;
