@@ -1,12 +1,22 @@
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { fetchCurrentUser } from '../../ducks/user.duck';
 import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
-import { PROFILE_PAGE_PENDING_APPROVAL_VARIANT } from '../../util/urlHelpers';
+import { PROFILE_PAGE_PENDING_APPROVAL_VARIANT, parse } from '../../util/urlHelpers';
 import { denormalisedResponseEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
-import { hasPermissionToViewData, isUserAuthorized } from '../../util/userHelpers';
+import {
+  hasPermissionToViewData,
+  isUserAuthorized,
+  isCreativeSeller,
+} from '../../util/userHelpers';
+import { LISTING_TAB_TYPES } from '../../util/types';
 
+// Pagination page size might need to be dynamic on responsive page layouts
+// Current design has max 3 columns 42 is divisible by 2 and 3
+// So, there's enough cards to fill all columns on full pagination pages
+const RESULT_PAGE_SIZE = 42;
 const { UUID } = sdkTypes;
+const isCurrentUser = (userId, cu) => userId?.uuid === cu?.id?.uuid;
 
 // ================ Action types ================ //
 
@@ -15,6 +25,10 @@ export const SET_INITIAL_STATE = 'app/ProfilePage/SET_INITIAL_STATE';
 export const SHOW_USER_REQUEST = 'app/ProfilePage/SHOW_USER_REQUEST';
 export const SHOW_USER_SUCCESS = 'app/ProfilePage/SHOW_USER_SUCCESS';
 export const SHOW_USER_ERROR = 'app/ProfilePage/SHOW_USER_ERROR';
+
+export const QUERY_CREATIVE_PROFILE_REQUEST = 'app/ProfilePage/QUERY_CREATIVE_PROFILE_REQUEST';
+export const QUERY_CREATIVE_PROFILE_SUCCESS = 'app/ProfilePage/QUERY_CREATIVE_PROFILE_SUCCESS';
+export const QUERY_CREATIVE_PROFILE_ERROR = 'app/ProfilePage/QUERY_CREATIVE_PROFILE_ERROR';
 
 export const QUERY_LISTINGS_REQUEST = 'app/ProfilePage/QUERY_LISTINGS_REQUEST';
 export const QUERY_LISTINGS_SUCCESS = 'app/ProfilePage/QUERY_LISTINGS_SUCCESS';
@@ -28,11 +42,19 @@ export const QUERY_REVIEWS_ERROR = 'app/ProfilePage/QUERY_REVIEWS_ERROR';
 
 const initialState = {
   userId: null,
-  userListingRefs: [],
+  userShowInProgress: false,
   userShowError: null,
+  creativeProfileListingId: null,
+  queryCreativeProfileInProgress: false,
+  queryCreativeProfileError: null,
+  pagination: null,
+  queryParams: null,
+  queryInProgress: false,
   queryListingsError: null,
-  reviews: [],
+  currentPageResultIds: [],
+  queryReviewsInProgress: false,
   queryReviewsError: null,
+  reviews: [],
 };
 
 export default function profilePageReducer(state = initialState, action = {}) {
@@ -40,32 +62,74 @@ export default function profilePageReducer(state = initialState, action = {}) {
   switch (type) {
     case SET_INITIAL_STATE:
       return { ...initialState };
+
     case SHOW_USER_REQUEST:
-      return { ...state, userShowError: null, userId: payload.userId };
+      return {
+        ...state,
+        userShowInProgress: true,
+        userShowError: null,
+      };
     case SHOW_USER_SUCCESS:
-      return state;
+      return {
+        ...state,
+        userId: payload.userId,
+        userShowInProgress: false,
+      };
     case SHOW_USER_ERROR:
-      return { ...state, userShowError: payload };
+      return { ...state, userShowInProgress: false, userShowError: payload };
+
+    case QUERY_CREATIVE_PROFILE_REQUEST:
+      return {
+        ...state,
+        queryCreativeProfileInProgress: true,
+        queryCreativeProfileError: null,
+      };
+    case QUERY_CREATIVE_PROFILE_SUCCESS:
+      return {
+        ...state,
+        creativeProfileListingId: payload.data.data.id,
+        queryCreativeProfileInProgress: false,
+      };
+    case QUERY_CREATIVE_PROFILE_ERROR:
+      return {
+        ...state,
+        queryCreativeProfileInProgress: false,
+        queryCreativeProfileError: payload,
+      };
 
     case QUERY_LISTINGS_REQUEST:
       return {
         ...state,
-
-        // Empty listings only when user id changes
-        userListingRefs: payload.userId === state.userId ? state.userListingRefs : [],
-
+        currentPageResultIds: [],
+        queryParams: payload.queryParams,
+        queryInProgress: true,
         queryListingsError: null,
       };
     case QUERY_LISTINGS_SUCCESS:
-      return { ...state, userListingRefs: payload.listingRefs };
+      return {
+        ...state,
+        currentPageResultIds: payload.listingRefs,
+        pagination: payload.meta,
+        queryInProgress: false,
+      };
     case QUERY_LISTINGS_ERROR:
-      return { ...state, userListingRefs: [], queryListingsError: payload };
+      return { ...state, queryInProgress: false, queryListingsError: payload };
+
     case QUERY_REVIEWS_REQUEST:
-      return { ...state, queryReviewsError: null };
+      return {
+        ...state,
+        queryReviewsInProgress: true,
+        queryReviewsError: null,
+        reviews: [],
+      };
     case QUERY_REVIEWS_SUCCESS:
-      return { ...state, reviews: payload };
+      return {
+        ...state,
+        reviews: payload,
+        queryReviewsInProgress: false,
+      };
     case QUERY_REVIEWS_ERROR:
-      return { ...state, reviews: [], queryReviewsError: payload };
+      return { ...state, queryReviewsInProgress: false, queryReviewsError: payload };
 
     default:
       return state;
@@ -78,31 +142,40 @@ export const setInitialState = () => ({
   type: SET_INITIAL_STATE,
 });
 
-export const showUserRequest = userId => ({
+export const showUserRequest = () => ({
   type: SHOW_USER_REQUEST,
+});
+export const showUserSuccess = userId => ({
+  type: SHOW_USER_SUCCESS,
   payload: { userId },
 });
-
-export const showUserSuccess = () => ({
-  type: SHOW_USER_SUCCESS,
-});
-
 export const showUserError = e => ({
   type: SHOW_USER_ERROR,
   error: true,
   payload: e,
 });
 
-export const queryListingsRequest = userId => ({
+export const queryCreativeProfileRequest = () => ({
+  type: QUERY_CREATIVE_PROFILE_REQUEST,
+});
+export const queryCreativeProfileSuccess = data => ({
+  type: QUERY_CREATIVE_PROFILE_SUCCESS,
+  payload: data,
+});
+export const queryCreativeProfileError = e => ({
+  type: QUERY_CREATIVE_PROFILE_ERROR,
+  error: true,
+  payload: e,
+});
+
+export const queryListingsRequest = queryParams => ({
   type: QUERY_LISTINGS_REQUEST,
-  payload: { userId },
+  payload: { queryParams },
 });
-
-export const queryListingsSuccess = listingRefs => ({
+export const queryListingsSuccess = data => ({
   type: QUERY_LISTINGS_SUCCESS,
-  payload: { listingRefs },
+  payload: data,
 });
-
 export const queryListingsError = e => ({
   type: QUERY_LISTINGS_ERROR,
   error: true,
@@ -112,12 +185,10 @@ export const queryListingsError = e => ({
 export const queryReviewsRequest = () => ({
   type: QUERY_REVIEWS_REQUEST,
 });
-
 export const queryReviewsSuccess = reviews => ({
   type: QUERY_REVIEWS_SUCCESS,
   payload: reviews,
 });
-
 export const queryReviewsError = e => ({
   type: QUERY_REVIEWS_ERROR,
   error: true,
@@ -126,47 +197,53 @@ export const queryReviewsError = e => ({
 
 // ================ Thunks ================ //
 
-export const queryUserListings = (userId, config, ownProfileOnly = false) => (
+export const queryUserListings = (userId, initQueryParams, config, ownProfileOnly = false) => (
   dispatch,
   getState,
   sdk
 ) => {
-  dispatch(queryListingsRequest(userId));
-
   const {
     aspectWidth = 1,
     aspectHeight = 1,
     variantPrefix = 'listing-card',
   } = config.layout.listingImage;
   const aspectRatio = aspectHeight / aspectWidth;
-
   const queryParams = {
+    ...initQueryParams,
     include: ['author', 'images'],
     'fields.image': [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`],
     ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
     ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
-    'limit.images': 1,
   };
+  dispatch(queryListingsRequest(queryParams));
+  const { perPage, pub_listingId, ...rest } = queryParams;
+  const listingType = queryParams.pub_listingType;
+  const validListingType = !!listingType && listingType !== LISTING_TAB_TYPES.REVIEWS;
+  const validCategoryType = !!queryParams.pub_categoryLevel1;
+  const validRequestParams = validListingType || validCategoryType;
+  const withImageLimit = listingType !== LISTING_TAB_TYPES.PORTFOLIO;
+  const params = { ...rest, perPage, ...(withImageLimit ? { 'limit.images': 1 } : {}) };
 
+  if (!validRequestParams) return;
   const listingsPromise = ownProfileOnly
     ? sdk.ownListings.query({
         states: ['published'],
-        ...queryParams,
+        ...params,
       })
     : sdk.listings.query({
         author_id: userId,
-        ...queryParams,
+        ...params,
       });
-
   return listingsPromise
     .then(response => {
+      const meta = response.data.meta;
       // Pick only the id and type properties from the response listings
       const listings = response.data.data;
       const listingRefs = listings
         .filter(l => l => !l.attributes.deleted && l.attributes.state === 'published')
         .map(({ id, type }) => ({ id, type }));
       dispatch(addMarketplaceEntities(response));
-      dispatch(queryListingsSuccess(listingRefs));
+      dispatch(queryListingsSuccess({ meta, listingRefs }));
       return response;
     })
     .catch(e => dispatch(queryListingsError(storableError(e))));
@@ -188,7 +265,7 @@ export const queryUserReviews = userId => (dispatch, getState, sdk) => {
 };
 
 export const showUser = (userId, config) => (dispatch, getState, sdk) => {
-  dispatch(showUserRequest(userId));
+  dispatch(showUserRequest());
   return sdk.users
     .show({
       id: userId,
@@ -196,16 +273,44 @@ export const showUser = (userId, config) => (dispatch, getState, sdk) => {
       'fields.image': ['variants.square-small', 'variants.square-small2x'],
     })
     .then(response => {
+      const { publicData, metadata } = response?.data?.data?.attributes?.profile || {};
+      const { userType } = publicData || {};
+      const profileListingId = metadata?.profileListingId;
+      const withProfileListing = !!profileListingId;
+      const withCreativeProfile = isCreativeSeller(userType) && withProfileListing;
+      if (withCreativeProfile) {
+        dispatch(requestShowCreativeProfile(profileListingId, config));
+      }
       const userFields = config?.user?.userFields;
       const sanitizeConfig = { userFields };
       dispatch(addMarketplaceEntities(response, sanitizeConfig));
-      dispatch(showUserSuccess());
+      dispatch(showUserSuccess(userId));
       return response;
     })
     .catch(e => dispatch(showUserError(storableError(e))));
 };
 
-const isCurrentUser = (userId, cu) => userId?.uuid === cu?.id?.uuid;
+export function requestShowCreativeProfile(creativeProfileListingId, config) {
+  return (dispatch, getState, sdk) => {
+    dispatch(queryCreativeProfileRequest());
+    const params = {
+      id: creativeProfileListingId,
+      include: ['author'],
+    };
+    return sdk.listings
+      .show(params)
+      .then(data => {
+        const listingFields = config?.listing?.listingFields;
+        const sanitizeConfig = { listingFields };
+        dispatch(addMarketplaceEntities(data, sanitizeConfig));
+        dispatch(queryCreativeProfileSuccess(data));
+        return data;
+      })
+      .catch(e => {
+        dispatch(queryCreativeProfileError(storableError(e)));
+      });
+  };
+}
 
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   const userId = new UUID(params.id);
@@ -215,18 +320,21 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
     updateHasListings: false,
     updateNotifications: false,
   };
-
-  // Clear state so that previously loaded data is not visible
-  // in case this page load fails.
+  const originalQueryParams = parse(search);
+  const page = originalQueryParams.page || 1;
+  const queryParams = {
+    ...originalQueryParams,
+    page,
+    perPage: RESULT_PAGE_SIZE,
+  };
   dispatch(setInitialState());
-
   if (isPreviewForCurrentUser) {
     return dispatch(fetchCurrentUser(fetchCurrentUserOptions)).then(() => {
       if (isCurrentUser(userId, currentUser) && isUserAuthorized(currentUser)) {
         // Scenario: 'active' user somehow tries to open a link for "variant" profile
         return Promise.all([
           dispatch(showUser(userId, config)),
-          dispatch(queryUserListings(userId, config)),
+          dispatch(queryUserListings(userId, queryParams, config)),
           dispatch(queryUserReviews(userId)),
         ]);
       } else if (isCurrentUser(userId, currentUser)) {
@@ -239,7 +347,6 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
       }
     });
   }
-
   // Fetch data for plain profile page.
   // Note 1: returns 404s if user is not 'active'.
   // Note 2: In private marketplace mode, this page won't fetch data if the user is unauthorized
@@ -254,21 +361,19 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
     isAuthorized &&
     hasNoViewingRights &&
     isCurrentUser(userId, currentUser);
-
   if (!canFetchData) {
     return Promise.resolve();
   } else if (canFetchOwnProfileOnly) {
     return Promise.all([
       dispatch(fetchCurrentUser(fetchCurrentUserOptions)),
-      dispatch(queryUserListings(userId, config, canFetchOwnProfileOnly)),
+      dispatch(queryUserListings(userId, queryParams, config, canFetchOwnProfileOnly)),
       dispatch(showUserRequest(userId)),
     ]);
   }
-
   return Promise.all([
     dispatch(fetchCurrentUser(fetchCurrentUserOptions)),
     dispatch(showUser(userId, config)),
-    dispatch(queryUserListings(userId, config)),
+    dispatch(queryUserListings(userId, queryParams, config)),
     dispatch(queryUserReviews(userId)),
   ]);
 };

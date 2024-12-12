@@ -741,8 +741,13 @@ export const LISTING_TYPES = {
   PROFILE: 'profile-listing',
 };
 
+export const LISTING_TAB_TYPES = {
+  ...LISTING_TYPES,
+  REVIEWS: 'reviews',
+};
+
 export const LISTING_GRID_DEFAULTS = {
-  TYPE: LISTING_TYPES.PRODUCT,
+  TYPE: LISTING_TAB_TYPES.PRODUCT,
   CATEGORY: categories => (categories && categories.length ? categories[0].id : null),
 };
 
@@ -751,6 +756,29 @@ export const LISTING_GRID_ROLE = {
   MANAGE: 'MANAGE',
   PROFILE: 'PROFILE',
 };
+
+export const LISTING_TABS_PRODUCT_CATEGORIES = [
+  {
+    name: 'Photos',
+    id: 'photos',
+  },
+  {
+    name: 'Videos',
+    id: 'videos',
+  },
+  {
+    name: 'Illustrations',
+    id: 'illustrations',
+  },
+  {
+    name: 'AI Images',
+    id: 'ai-image',
+  },
+  {
+    name: 'AI Videos',
+    id: 'ai-video',
+  },
+];
 
 propTypes.sellerStatus = oneOfType(SELLER_STATUS);
 

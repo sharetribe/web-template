@@ -2,7 +2,7 @@ import { denormalisedEntities, updatedEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
 import { createImageVariantConfig } from '../../util/sdkLoader';
 import { parse } from '../../util/urlHelpers';
-import { LISTING_TYPES } from '../../util/types';
+import { LISTING_TAB_TYPES } from '../../util/types';
 
 import { fetchCurrentUser } from '../../ducks/user.duck';
 
@@ -12,8 +12,6 @@ import { fetchCurrentUser } from '../../ducks/user.duck';
 const RESULT_PAGE_SIZE = 42;
 
 // ================ Action types ================ //
-export const SET_CATEGORIES = 'app/ManageListingsPage/SET_CATEGORIES';
-
 export const FETCH_LISTINGS_REQUEST = 'app/ManageListingsPage/FETCH_LISTINGS_REQUEST';
 export const FETCH_LISTINGS_SUCCESS = 'app/ManageListingsPage/FETCH_LISTINGS_SUCCESS';
 export const FETCH_LISTINGS_ERROR = 'app/ManageListingsPage/FETCH_LISTINGS_ERROR';
@@ -46,7 +44,6 @@ const initialState = {
   openingListingError: null,
   closingListing: null,
   closingListingError: null,
-  categories: [],
   discardingDraft: null,
   discardingDraftError: null,
 };
@@ -179,9 +176,6 @@ const manageListingsPageReducer = (state = initialState, action = {}) => {
     case ADD_OWN_ENTITIES:
       return merge(state, payload);
 
-    case SET_CATEGORIES:
-      return { ...state, categories: payload };
-
     default:
       return state;
   }
@@ -292,7 +286,7 @@ export const queryOwnListings = queryParams => (dispatch, getState, sdk) => {
   const validListingType = !!queryParams.pub_listingType;
   const validCategoryType = !!queryParams.pub_categoryLevel1;
   const validRequestParams = validListingType || validCategoryType;
-  const withImageLimit = queryParams.pub_listingType !== LISTING_TYPES.PORTFOLIO;
+  const withImageLimit = queryParams.pub_listingType !== LISTING_TAB_TYPES.PORTFOLIO;
   const params = { ...rest, perPage, ...(withImageLimit ? { 'limit.images': 1 } : {}) };
 
   if (!validRequestParams) return;
@@ -371,8 +365,6 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
     variantPrefix = 'listing-card',
   } = config.layout.listingImage;
   const aspectRatio = aspectHeight / aspectWidth;
-
-  dispatch({ type: SET_CATEGORIES, payload: config.categoryConfiguration.categories });
 
   return Promise.all([
     dispatch(fetchCurrentUser()),

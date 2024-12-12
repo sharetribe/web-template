@@ -186,13 +186,17 @@ export const ListingPageComponent = props => {
   const isPortfolioListing = listingType === LISTING_TYPES.PORTFOLIO;
   const isProfileListing = listingType === LISTING_TYPES.PROFILE;
 
-  if (isPortfolioListing || isProfileListing) {
+  const authorId = currentListing?.author?.id?.uuid;
+  if (isPortfolioListing) {
     return (
       <NamedRedirect
         name="NoAccessPage"
         params={{ missingAccessRight: NO_ACCESS_PAGE_FORBIDDEN_LISTING_TYPE }}
       />
     );
+  }
+  if (isProfileListing) {
+    return <NamedRedirect name="ProfilePage" params={{ id: authorId }} />;
   }
 
   if (showListingError && showListingError.status === 404) {

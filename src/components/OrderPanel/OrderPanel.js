@@ -50,8 +50,8 @@ import {
   AvatarSmall,
   H1,
   H2,
-  Button, // add these rows to the
-  SecondaryButton, // existing import from '../../components'
+  Button,
+  SecondaryButton,
 } from '../../components';
 
 import css from './OrderPanel.module.css';

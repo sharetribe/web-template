@@ -19,7 +19,14 @@ const numberSorter = (a, b) => {
 };
 
 export const EditableListingsTable = props => {
-  const { onSave, listingFieldsOptions, onSelectChange, selectedRowKeys, listings, loading = false } = props;
+  const {
+    onSave,
+    listingFieldsOptions,
+    onSelectChange,
+    selectedRowKeys,
+    listings,
+    loading = false,
+  } = props;
   const intl = useIntl();
   const { categories: imageryCategoryOptions, usages: usageOptions } = listingFieldsOptions;
 
@@ -214,7 +221,11 @@ export const EditableListingsTable = props => {
   return (
     <div>
       <Flex className={css.csvUploadWrapper}>
-        <CsvUpload categories={imageryCategoryOptions} usageOptions={usageOptions} onSaveListing={onSave}></CsvUpload>
+        <CsvUpload
+          categories={imageryCategoryOptions}
+          usageOptions={usageOptions}
+          onSaveListing={onSave}
+        ></CsvUpload>
       </Flex>
       <Table
         columns={editableColumns}
