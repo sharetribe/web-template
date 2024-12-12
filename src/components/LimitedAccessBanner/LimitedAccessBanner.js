@@ -12,7 +12,7 @@ import css from './LimitedAccessBanner.module.css';
 const disabledPages = ['SearchPage'];
 
 /**
- * This component returns a Page component which is connected to Redux store.
+ * This component returns a limited-access banner.
  *
  * @component
  * @param {Object} props
