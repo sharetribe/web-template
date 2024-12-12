@@ -1,12 +1,12 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { bool, object, string, func } from 'prop-types';
 import { Button as AntButton, Col, Row, Space, Tabs } from 'antd';
+import classNames from 'classnames';
 
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { FormattedMessage } from '../../util/reactIntl';
 import { createResourceLocatorString } from '../../util/routes';
-import { LISTING_GRID_ROLE, LISTING_GRID_DEFAULTS, propTypes } from '../../util/types';
+import { LISTING_GRID_ROLE, LISTING_GRID_DEFAULTS, LISTING_TAB_TYPES } from '../../util/types';
 import { PAGE_MODE_EDIT, PAGE_MODE_NEW } from '../../containers/BatchEditListingPage/constants';
 
 import { H3, ScrollableLinks } from '../';
@@ -20,30 +20,31 @@ export const ListingTabs = ({
   queryInProgress,
   queryListingsError,
   queryParams,
-  titleMessageId,
-  noResultsMessageId,
-  loadingMessageId,
-  errorMessageId,
   onTabChange,
   categories,
   currentCategory,
   listingRenderer,
   role = LISTING_GRID_ROLE.MANAGE,
+  hideReviews = false,
+  title,
+  noResultsMessageId,
+  loadingMessageId,
+  errorMessageId,
 }) => {
   const routeConfiguration = useRouteConfiguration();
   const history = useHistory();
 
-  const hasPaginationInfo = !!pagination && pagination.totalItems != null;
-  const listingsAreLoaded = !queryInProgress && hasPaginationInfo;
+  const listingsAreLoaded = !queryInProgress;
   const defaultListingType = LISTING_GRID_DEFAULTS.TYPE;
   const currentListingType = queryParams.pub_listingType || defaultListingType;
-  const hasNoResults = listingsAreLoaded && pagination.totalItems === 0;
+  const hasNoResults = listingsAreLoaded && !items.length;
   const withCategories = !!(categories && categories.length);
   const enableGrid = listingsAreLoaded && !queryListingsError;
   const enablePagination = listingsAreLoaded && pagination && pagination.totalPages > 1;
   const page = queryParams ? queryParams.page : 1;
   const { pageName, tabs, enableCategoryTabs, enableListingManagement } = getTabsFeaturesForRole(
-    role
+    role,
+    hideReviews
   );
 
   const goToManageListing = (mode = PAGE_MODE_NEW, searchParams = {}) => {
@@ -67,6 +68,11 @@ export const ListingTabs = ({
     `${panelWidth / 3}vw`,
   ].join(', ');
 
+  const gridClassname = classNames({
+    [css.listingCards]:
+      role !== LISTING_GRID_ROLE.PROFILE ||
+      ![LISTING_TAB_TYPES.REVIEWS, LISTING_TAB_TYPES.PROFILE].includes(currentListingType),
+  });
   const listingGridRenderer = hasNoResults ? (
     <div className={css.messagePanel}>
       <H3 as="h1" className={css.heading}>
@@ -74,7 +80,7 @@ export const ListingTabs = ({
       </H3>
     </div>
   ) : (
-    <div className={css.listingCards}>
+    <div className={gridClassname}>
       {items.map((item, index) => listingRenderer(item, css.listingCard, renderSizes, index))}
     </div>
   );
@@ -125,9 +131,7 @@ export const ListingTabs = ({
 
   return (
     <div className={css.root}>
-      <H3 as="h1" className={css.heading}>
-        <FormattedMessage id={titleMessageId} />
-      </H3>
+      {title}
       <div>
         <Tabs
           defaultActiveKey={currentListingType}
@@ -140,29 +144,6 @@ export const ListingTabs = ({
       </div>
     </div>
   );
-};
-
-ListingTabs.defaultProps = {
-  items: [],
-  pagination: null,
-  queryListingsError: null,
-  queryParams: null,
-  titleMessageId: 'ManageListingsPage.title',
-  noResultsMessageId: 'ManageListingsPage.noResults',
-  loadingMessageId: 'ManageListingsPage.loadingOwnListings',
-  errorMessageId: 'ManageListingsPage.queryError',
-};
-
-ListingTabs.propTypes = {
-  pagination: propTypes.pagination,
-  queryInProgress: bool.isRequired,
-  queryListingsError: propTypes.error,
-  queryParams: object,
-  titleMessageId: string,
-  noResultsMessageId: string,
-  loadingMessageId: string,
-  errorMessageId: string,
-  onTabChange: func,
 };
 
 export default ListingTabs;

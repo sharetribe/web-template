@@ -187,13 +187,17 @@ export const ListingPageComponent = props => {
   const isPortfolioListing = listingType === LISTING_TYPES.PORTFOLIO;
   const isProfileListing = listingType === LISTING_TYPES.PROFILE;
 
-  if (isPortfolioListing || isProfileListing) {
+  const authorId = currentListing?.author?.id?.uuid;
+  if (isPortfolioListing) {
     return (
       <NamedRedirect
         name="NoAccessPage"
         params={{ missingAccessRight: NO_ACCESS_PAGE_FORBIDDEN_LISTING_TYPE }}
       />
     );
+  }
+  if (isProfileListing) {
+    return <NamedRedirect name="ProfilePage" params={{ id: authorId }} />;
   }
 
   if (showListingError && showListingError.status === 404) {
@@ -343,6 +347,12 @@ export const ListingPageComponent = props => {
       <LayoutSingleColumn className={css.pageRoot} topbar={topbar} footer={<FooterContainer />}>
         <div className={css.contentWrapperForProductLayout}>
           <div className={css.mainColumnForProductLayout}>
+            {/* [TODO:] REMOVE ONCE THE NEW FLOW IS IMPLEMENTED */}
+            <H4 as="h1">
+              Under Construction — we’re in pre-launch mode, so if something looks off, that’s why.
+              Thanks for your patience — exciting things are coming!
+            </H4>
+
             {currentListing.id && noPayoutDetailsSetWithOwnListing ? (
               <ActionBarMaybe
                 className={css.actionBarForProductLayout}

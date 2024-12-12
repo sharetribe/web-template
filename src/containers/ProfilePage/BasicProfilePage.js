@@ -1,16 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { bool, arrayOf, oneOfType } from 'prop-types';
 
-import { useConfiguration } from '../../context/configurationContext';
-import { FormattedMessage, useIntl } from '../../util/reactIntl';
-import {
-  REVIEW_TYPE_OF_CUSTOMER,
-  SCHEMA_TYPE_MULTI_ENUM,
-  SCHEMA_TYPE_TEXT,
-  SCHEMA_TYPE_YOUTUBE,
-  propTypes,
-} from '../../util/types';
-import { pickCustomFieldProps } from '../../util/fieldHelpers';
+import { FormattedMessage } from '../../util/reactIntl';
+import { REVIEW_TYPE_OF_CUSTOMER, propTypes } from '../../util/types';
 import { richText } from '../../util/richText';
 
 import {
@@ -28,10 +20,6 @@ import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import css from './ProfilePage.module.css';
-import SectionDetailsMaybe from './SectionDetailsMaybe';
-import SectionTextMaybe from './SectionTextMaybe';
-import SectionMultiEnumMaybe from './SectionMultiEnumMaybe';
-import SectionYoutubeVideoMaybe from './SectionYoutubeVideoMaybe';
 
 const MAX_MOBILE_SCREEN_WIDTH = 768;
 const MIN_LENGTH_FOR_LONG_WORDS = 20;
@@ -114,39 +102,12 @@ const DesktopReviews = props => {
   );
 };
 
-const CustomUserFields = props => {
-  const { publicData, metadata, userFieldConfig } = props;
-  const shouldPickUserField = fieldConfig => fieldConfig?.showConfig?.displayInProfile !== false;
-  const propsForCustomFields =
-    pickCustomFieldProps(publicData, metadata, userFieldConfig, 'userType', shouldPickUserField) ||
-    [];
-  return (
-    <>
-      <SectionDetailsMaybe {...props} />
-      {propsForCustomFields.map(customFieldProps => {
-        const { schemaType, ...fieldProps } = customFieldProps;
-        return schemaType === SCHEMA_TYPE_MULTI_ENUM ? (
-          <SectionMultiEnumMaybe {...fieldProps} />
-        ) : schemaType === SCHEMA_TYPE_TEXT ? (
-          <SectionTextMaybe {...fieldProps} />
-        ) : schemaType === SCHEMA_TYPE_YOUTUBE ? (
-          <SectionYoutubeVideoMaybe {...fieldProps} />
-        ) : null;
-      })}
-    </>
-  );
-};
-
 const MainContent = ({
   userShowError,
   bio,
   displayName,
   reviews,
   queryReviewsError,
-  publicData,
-  metadata,
-  userFieldConfig,
-  intl,
   hideReviews,
 }) => {
   const hasMatchMedia = typeof window !== 'undefined' && window?.matchMedia;
@@ -174,16 +135,6 @@ const MainContent = ({
         <FormattedMessage id="ProfilePage.desktopHeading" values={{ name: displayName }} />
       </H2>
       {hasBio ? <p className={css.bio}>{bioWithLinks}</p> : null}
-
-      {displayName ? (
-        <CustomUserFields
-          publicData={publicData}
-          metadata={metadata}
-          userFieldConfig={userFieldConfig}
-          intl={intl}
-        />
-      ) : null}
-
       {hideReviews ? null : isMobileLayout ? (
         <MobileReviews reviews={reviews} queryReviewsError={queryReviewsError} />
       ) : (
@@ -202,11 +153,8 @@ function BasicProfilePage({
   userShowError,
 }) {
   const [mounted, setMounted] = useState(false);
-  const config = useConfiguration();
-  const intl = useIntl();
 
-  const { bio, displayName, publicData, metadata } = profileUser?.attributes?.profile || {};
-  const { userFields } = config.user;
+  const { bio, displayName } = profileUser?.attributes?.profile || {};
 
   useEffect(() => {
     setMounted(true);
@@ -229,11 +177,7 @@ function BasicProfilePage({
         bio={bio}
         displayName={displayName}
         userShowError={userShowError}
-        publicData={publicData}
-        metadata={metadata}
-        userFieldConfig={userFields}
         hideReviews={hideReviews}
-        intl={intl}
         reviews={reviews}
         queryReviewsError={queryReviewsError}
       />

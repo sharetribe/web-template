@@ -5,21 +5,28 @@ import { connect } from 'react-redux';
 
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
-import { useIntl } from '../../util/reactIntl';
+import { useIntl, FormattedMessage } from '../../util/reactIntl';
 
 import { createResourceLocatorString, pathByRouteName } from '../../util/routes';
-import { LISTING_GRID_DEFAULTS, LISTING_GRID_ROLE, LISTING_TYPES } from '../../util/types';
+import { LISTING_GRID_DEFAULTS, LISTING_GRID_ROLE, LISTING_TAB_TYPES } from '../../util/types';
 import { hasPermissionToPostListings } from '../../util/userHelpers';
 import { NO_ACCESS_PAGE_POST_LISTINGS } from '../../util/urlHelpers';
 
-import { LayoutSingleColumn, Page, UserNav, NamedRedirect, ListingTabs } from '../../components';
+import {
+  H3,
+  LayoutSingleColumn,
+  Page,
+  UserNav,
+  NamedRedirect,
+  ListingTabs,
+  PortfolioListingCard,
+} from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import DiscardDraftModal from './DiscardDraftModal/DiscardDraftModal';
 import ManageListingCard from './ManageListingCard/ManageListingCard';
-import PortfolioListingCard from './ManageListingCard/PortfolioListingCard';
 import {
   closeListing,
   openListing,
@@ -27,6 +34,8 @@ import {
   discardDraft,
 } from './ManageListingsPage.duck';
 import { getLinks, getItems, getCurrentCategory, routeHandler } from './utils';
+
+import css from './ManageListingsPage.module.css';
 
 export const ManageListingsPageComponent = props => {
   const [listingMenuOpen, setListingMenuOpen] = useState(null);
@@ -87,7 +96,7 @@ export const ManageListingsPageComponent = props => {
   useEffect(() => {
     const listingTypeParamValue = queryParams.pub_listingType;
     switch (listingTypeParamValue) {
-      case LISTING_TYPES.PORTFOLIO: {
+      case LISTING_TAB_TYPES.PORTFOLIO: {
         const invalidCategoryType = !queryParams.pub_listingId;
         const listingsAvailable = !queryInProgress && !!currentCategory;
         const shouldUpdate = invalidCategoryType && listingsAvailable;
@@ -98,10 +107,10 @@ export const ManageListingsPageComponent = props => {
       }
       default: {
         const invalidListingType = !(
-          listingTypeParamValue && Object.values(LISTING_TYPES).includes(listingTypeParamValue)
+          listingTypeParamValue && Object.values(LISTING_TAB_TYPES).includes(listingTypeParamValue)
         );
         const invalidCategoryType =
-          listingTypeParamValue === LISTING_TYPES.PRODUCT && !queryParams.pub_categoryLevel1;
+          listingTypeParamValue === LISTING_TAB_TYPES.PRODUCT && !queryParams.pub_categoryLevel1;
         const shouldUpdateRoute = invalidListingType || invalidCategoryType;
         if (shouldUpdateRoute) {
           updateProductRoute();
@@ -134,7 +143,7 @@ export const ManageListingsPageComponent = props => {
 
   const listingRenderer = (item, className, renderSizes, index) => {
     switch (currentListingType) {
-      case LISTING_TYPES.PORTFOLIO: {
+      case LISTING_TAB_TYPES.PORTFOLIO: {
         return (
           <PortfolioListingCard
             key={`${currentCategory}-${index}`}
@@ -144,7 +153,7 @@ export const ManageListingsPageComponent = props => {
           />
         );
       }
-      case LISTING_TYPES.PRODUCT:
+      case LISTING_TAB_TYPES.PRODUCT:
       default: {
         const onToggleMenu = listing => {
           setListingMenuOpen(listing);
@@ -184,12 +193,18 @@ export const ManageListingsPageComponent = props => {
     }
   };
 
+  const titleRenderer = (
+    <H3 as="h1" className={css.heading}>
+      <FormattedMessage id="ManageListingsPage.title" />
+    </H3>
+  );
+
   const onTabChange = key => {
     switch (key) {
-      case LISTING_TYPES.PORTFOLIO:
+      case LISTING_TAB_TYPES.PORTFOLIO:
         updatePortfolioRoute();
         break;
-      case LISTING_TYPES.PRODUCT:
+      case LISTING_TAB_TYPES.PRODUCT:
       default:
         updateProductRoute();
         break;
@@ -219,12 +234,12 @@ export const ManageListingsPageComponent = props => {
           onTabChange={onTabChange}
           categories={links}
           currentCategory={currentCategory}
+          listingRenderer={listingRenderer}
           role={LISTING_GRID_ROLE.MANAGE}
-          titleMessageId="ManageListingsPage.title"
+          title={titleRenderer}
           noResultsMessageId="ManageListingsPage.noResults"
           loadingMessageId="ManageListingsPage.loadingOwnListings"
           errorMessageId="ManageListingsPage.queryError"
-          listingRenderer={listingRenderer}
         />
 
         {onManageDisableScrolling && discardDraftModalOpen ? (
@@ -244,11 +259,11 @@ export const ManageListingsPageComponent = props => {
 const mapStateToProps = state => {
   const { currentUser } = state.user;
   const {
-    currentPageResultIds,
     pagination,
+    queryParams,
+    currentPageResultIds,
     queryInProgress,
     queryListingsError,
-    queryParams,
     openingListing,
     openingListingError,
     closingListing,

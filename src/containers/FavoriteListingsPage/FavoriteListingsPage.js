@@ -5,17 +5,19 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
-import { injectIntl, intlShape } from '../../util/reactIntl';
+import { injectIntl, intlShape, FormattedMessage } from '../../util/reactIntl';
 import { createResourceLocatorString } from '../../util/routes';
-import { LISTING_TYPES, LISTING_GRID_ROLE, propTypes } from '../../util/types';
+import { LISTING_GRID_DEFAULTS, LISTING_GRID_ROLE, propTypes } from '../../util/types';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 
-import { Page, UserNav, LayoutSingleColumn, ListingTabs, ListingCard } from '../../components';
+import { H3, Page, UserNav, LayoutSingleColumn, ListingTabs, ListingCard } from '../../components';
 
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import { getListingsById } from '../../ducks/marketplaceData.duck';
+
+import css from './FavoriteListingsPage.module.css';
 
 export const FavoriteListingsPageComponent = props => {
   const {
@@ -30,7 +32,7 @@ export const FavoriteListingsPageComponent = props => {
   const history = useHistory();
   const routeConfiguration = useRouteConfiguration();
   const title = intl.formatMessage({ id: 'FavoriteListingsPage.title' });
-  const defaultListingType = LISTING_TYPES.PRODUCT;
+  const defaultListingType = LISTING_GRID_DEFAULTS.TYPE;
 
   useEffect(() => {
     const validListingType = !queryParams.pub_listingType;
@@ -72,6 +74,12 @@ export const FavoriteListingsPageComponent = props => {
     );
   };
 
+  const titleRenderer = (
+    <H3 as="h1" className={css.heading}>
+      <FormattedMessage id="FavoriteListingsPage.title" />
+    </H3>
+  );
+
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
       <LayoutSingleColumn
@@ -89,13 +97,13 @@ export const FavoriteListingsPageComponent = props => {
           queryInProgress={queryInProgress}
           queryListingsError={queryFavoritesError}
           queryParams={queryParams}
-          titleMessageId="FavoriteListingsPage.title"
-          noResultsMessageId="FavoriteListingsPage.noResults"
-          loadingMessageId="FavoriteListingsPage.loadingFavoriteListings"
-          errorMessageId="FavoriteListingsPage.queryError"
           onTabChange={onTabChange}
           listingRenderer={listingRenderer}
           role={LISTING_GRID_ROLE.FAVORITE}
+          title={titleRenderer}
+          noResultsMessageId="FavoriteListingsPage.noResults"
+          loadingMessageId="FavoriteListingsPage.loadingFavoriteListings"
+          errorMessageId="FavoriteListingsPage.queryError"
         />
       </LayoutSingleColumn>
     </Page>

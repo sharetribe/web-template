@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Image } from 'antd';
 
-import imagePlaceholder from '../../../assets/image-placeholder.jpg';
-import { useConfiguration } from '../../../context/configurationContext';
-import { AspectRatioWrapper } from '../../../components';
+import imagePlaceholder from '../../assets/image-placeholder.jpg';
+import { useConfiguration } from '../../context/configurationContext';
+import { AspectRatioWrapper } from '../../components';
 
-import css from './ManageListingCard.module.css';
+import css from './PortfolioListingCard.module.css';
 
 export const PortfolioListingCard = props => {
   const config = useConfiguration();

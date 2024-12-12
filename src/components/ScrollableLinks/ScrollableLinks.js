@@ -66,6 +66,7 @@ export const ScrollableLinks = props => {
               active={selectedLinkId === link.id}
               activeClassName={css.activeLink}
               to={link.to}
+              params={link.params}
               className={css.defaultLink}
             >
               {link.displayText}

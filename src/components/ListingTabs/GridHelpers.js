@@ -1,13 +1,13 @@
 import React from 'react';
 
 import { FormattedMessage } from '../../util/reactIntl';
-import { LISTING_TYPES, LISTING_GRID_ROLE } from '../../util/types';
+import { LISTING_TAB_TYPES, LISTING_GRID_ROLE } from '../../util/types';
 
 import { H3, PaginationLinks } from '../';
 
 import css from './ListingTabs.module.css';
 
-export function getTabsFeaturesForRole(role) {
+export function getTabsFeaturesForRole(role, hideReviews) {
   switch (role) {
     case LISTING_GRID_ROLE.FAVORITE:
       return {
@@ -15,18 +15,20 @@ export function getTabsFeaturesForRole(role) {
         enableListingManagement: false,
         pageName: 'FavoriteListingsPage',
         tabs: [
-          { key: LISTING_TYPES.PRODUCT, label: 'Shop' },
-          { key: LISTING_TYPES.PROFILE, label: 'Creatives' },
+          { key: LISTING_TAB_TYPES.PRODUCT, label: 'Shop' },
+          { key: LISTING_TAB_TYPES.PROFILE, label: 'Creatives' },
         ],
       };
     case LISTING_GRID_ROLE.PROFILE:
       return {
         enableCategoryTabs: true,
-        enableListingManagement: true,
+        enableListingManagement: false,
         pageName: 'ManageListingsPage',
         tabs: [
-          { key: LISTING_TYPES.PRODUCT, label: 'Shop' },
-          { key: LISTING_TYPES.PORTFOLIO, label: 'Portfolio' },
+          { key: LISTING_TAB_TYPES.PRODUCT, label: 'Shop' },
+          { key: LISTING_TAB_TYPES.PORTFOLIO, label: 'Portfolio' },
+          { key: LISTING_TAB_TYPES.PROFILE, label: 'About' },
+          ...(hideReviews ? [] : [{ key: LISTING_TAB_TYPES.REVIEWS, label: 'Reviews' }]),
         ],
       };
     case LISTING_GRID_ROLE.MANAGE:
@@ -36,8 +38,8 @@ export function getTabsFeaturesForRole(role) {
         enableListingManagement: true,
         pageName: 'ManageListingsPage',
         tabs: [
-          { key: LISTING_TYPES.PRODUCT, label: 'Shop' },
-          { key: LISTING_TYPES.PORTFOLIO, label: 'Portfolio' },
+          { key: LISTING_TAB_TYPES.PRODUCT, label: 'Shop' },
+          { key: LISTING_TAB_TYPES.PORTFOLIO, label: 'Portfolio' },
         ],
       };
   }

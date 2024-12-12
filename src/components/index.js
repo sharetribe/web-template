@@ -119,13 +119,14 @@ export { default as ListingTabs } from './ListingTabs/ListingTabs';
 // These components include other components //
 ///////////////////////////////////////////////
 
-export { default as Avatar, AvatarSmall, AvatarMedium, AvatarLarge } from './Avatar/Avatar';
+export { default as Avatar, AvatarSmall, AvatarMedium, AvatarLarge, AvatarExtraLarge } from './Avatar/Avatar';
 export { default as CustomExtendedDataField } from './CustomExtendedDataField/CustomExtendedDataField';
 export { default as OrderBreakdown } from './OrderBreakdown/OrderBreakdown';
 export { default as OrderPanel } from './OrderPanel/OrderPanel';
 export { default as ListingCard } from './ListingCard/ListingCard';
 export { default as Map } from './Map/Map';
 export { default as Page } from './Page/Page';
+export { default as PortfolioListingCard } from './PortfolioListingCard/PortfolioListingCard';
 export { default as Reviews } from './Reviews/Reviews';
 export { default as SavedCardDetails } from './SavedCardDetails/SavedCardDetails';
 export { default as StripeConnectAccountStatusBox } from './StripeConnectAccountStatusBox/StripeConnectAccountStatusBox';

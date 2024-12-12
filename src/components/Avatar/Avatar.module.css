@@ -83,8 +83,28 @@
     padding: 0;
   }
 }
-
 .initialsLarge {
+  composes: h3 from global;
+  padding: 0;
+}
+
+/* Extra-Large Avatar */
+
+.extraLargeAvatar {
+  composes: avatarBase;
+  border-radius: 12px;
+  background-image: unset;
+  padding: 0;
+
+  /* Fixed dimensions */
+  width: 220px;
+  height: 220px;
+
+  @media (--viewportMedium) {
+    padding: 0;
+  }
+}
+.initialsExtraLarge {
   composes: h3 from global;
   padding: 0;
 }

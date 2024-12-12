@@ -19,6 +19,7 @@ import css from './Avatar.module.css';
 const AVATAR_SIZES = '40px';
 const AVATAR_SIZES_MEDIUM = '60px';
 const AVATAR_SIZES_LARGE = '96px';
+const AVATAR_SIZES_EXTRA_LARGE = '220px';
 
 const AVATAR_IMAGE_VARIANTS = [
   // 40x40
@@ -179,3 +180,13 @@ export const AvatarLarge = props => (
   />
 );
 AvatarLarge.displayName = 'AvatarLarge';
+
+export const AvatarExtraLarge = props => (
+  <Avatar
+    rootClassName={css.extraLargeAvatar}
+    initialsClassName={css.initialsExtraLarge}
+    renderSizes={AVATAR_SIZES_EXTRA_LARGE}
+    {...props}
+  />
+);
+AvatarExtraLarge.displayName = 'AvatarExtraLarge';
