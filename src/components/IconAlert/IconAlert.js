@@ -1,9 +1,17 @@
 import React from 'react';
-import { string } from 'prop-types';
 import classNames from 'classnames';
 
 import css from './IconAlert.module.css';
 
+/**
+ * Alert icon.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own root class
+ * @param {string?} props.rootClassName overwrite components own root class
+ * @returns {JSX.Element} SVG icon
+ */
 const IconAlert = props => {
   const { className, rootClassName } = props;
   const classes = classNames(rootClassName || css.root, className);
@@ -32,13 +40,6 @@ const IconAlert = props => {
       </g>
     </svg>
   );
-};
-
-IconAlert.defaultProps = { className: null, rootClassName: null };
-
-IconAlert.propTypes = {
-  className: string,
-  rootClassName: string,
 };
 
 export default IconAlert;
