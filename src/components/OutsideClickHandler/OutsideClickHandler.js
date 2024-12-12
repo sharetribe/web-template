@@ -1,9 +1,19 @@
 import React, { Component } from 'react';
-import { func, node, string } from 'prop-types';
 import classNames from 'classnames';
 
 import css from './OutsideClickHandler.module.css';
 
+/**
+ * A component that handles outside clicks.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {Function} props.onOutsideClick - The function to handle the outside click
+ * @param {ReactNode} props.children - The children to render
+ * @returns {JSX.Element}
+ */
 export default class OutsideClickHandler extends Component {
   constructor(props) {
     super(props);
@@ -36,15 +46,3 @@ export default class OutsideClickHandler extends Component {
     );
   }
 }
-
-OutsideClickHandler.defaultProps = {
-  rootClassName: null,
-  className: null,
-};
-
-OutsideClickHandler.propTypes = {
-  rootClassName: string,
-  className: string,
-  onOutsideClick: func.isRequired,
-  children: node.isRequired,
-};
