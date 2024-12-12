@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { func, node, objectOf, shape, string } from 'prop-types';
 
 // We are standing on the shoulders of giants.
 // This component is adapted from the great work done
@@ -114,8 +113,8 @@ const parseDefaultAreasFromProps = props => {
 
 /**
  * LayoutComposer creates container and area wrappers using CSS Grid Template Areas.
- * Example:
  *
+ * @example
  * const layoutAreas = `
  *   topbar
  *   main
@@ -145,7 +144,9 @@ const parseDefaultAreasFromProps = props => {
  *
  * Note: "areas" and "responsiveAreas" are alternative props.
  * For the "responsiveAreas", the content should look like this:
- *  {
+ *
+ * @example
+ * {
  *    areasSmall: {
  *      mediaQuery: '(max-width: 767px)',
  *      areas: `
@@ -172,8 +173,17 @@ const parseDefaultAreasFromProps = props => {
  *    },
  * }
  *
- * @param {Props} props for LayoutComposer (at least: children, style, areas, display, as)
- * @return LayoutComposer that expects children to be a function.
+ * @component
+ * @param {Object} props
+ * @param {string?} props.display
+ * @param {string?} props.areas
+ * @param {Object} props.responsiveAreas
+ * @param {string} props.responsiveAreas.mediaQuery
+ * @param {string} props.responsiveAreas.areas
+ * @param {ReactNode?} props.children
+ * @param {ReactNode} props.as tag for the container. Defaults to 'div'
+ * @param {Object} props.style
+ * @returns {JSX.Element} LayoutComposer that expects children to be a function.
  */
 const LayoutComposer = React.forwardRef((props, ref) => {
   const [mounted, setMounted] = useState(false);
@@ -198,7 +208,15 @@ const LayoutComposer = React.forwardRef((props, ref) => {
   }, [mounted]);
 
   const { components, gridTemplateAreas } = currentAreas;
-  const { children, style = {}, areas, responsiveAreas, display, as, ...otherProps } = props;
+  const {
+    children,
+    style = {},
+    areas,
+    responsiveAreas,
+    display = 'grid',
+    as,
+    ...otherProps
+  } = props;
   const Tag = as || 'div';
 
   return (
@@ -216,25 +234,5 @@ const LayoutComposer = React.forwardRef((props, ref) => {
   );
 });
 LayoutComposer.displayName = 'LayoutComposer';
-
-LayoutComposer.defaultProps = {
-  areas: null,
-  responsiveAreas: null,
-  display: 'grid',
-  as: null,
-};
-
-LayoutComposer.propTypes = {
-  children: func.isRequired,
-  areas: string,
-  responsiveAreas: objectOf(
-    shape({
-      mediaQuery: string.isRequired,
-      areas: string.isRequired,
-    })
-  ),
-  display: string,
-  as: node,
-};
 
 export default LayoutComposer;
