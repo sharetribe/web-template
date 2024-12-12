@@ -1,14 +1,13 @@
 import imagePlaceholder from '../../../../assets/image-placeholder.jpg';
 import { Flex, Image, Table } from 'antd';
-import { MAX_CATEGORIES } from '../../constants';
+import { DEFAULT_PRODUCT_LISTING_PRICE, MAX_CATEGORIES } from '../../constants';
 import css from './EditListingBatchProductDetails.module.css';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { EditableCellComponents } from './EditableCellComponents';
-import { useIntl } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { getImageDimensionLabel } from '../../imageHelpers';
 import { CsvUpload } from '../CsvUpload/CsvUpload';
-import { useSelector } from 'react-redux';
-import { getListings } from '../../BatchEditListingPage.duck';
+import { TableHeaderTitle } from './TableHeaderTitle';
 
 const stringSorter = (strA, strB) => {
   return strA.name.localeCompare(strB.name, 'en', { sensitivity: 'base' });
@@ -57,10 +56,11 @@ export const EditableListingsTable = props => {
       sorter: stringSorter,
     },
     {
-      title: intl.formatMessage({
-        id: 'EditableListingsTable.title',
-        defaultMessage: 'Title',
-      }),
+      title: (
+        <TableHeaderTitle helperText="Provide the main title of the listing. This will be prominently displayed.">
+          <FormattedMessage id="EditableListingsTable.title" defaultMessage="Title" />
+        </TableHeaderTitle>
+      ),
       width: 400,
       dataIndex: 'title',
       editable: true,
@@ -72,10 +72,11 @@ export const EditableListingsTable = props => {
       }),
     },
     {
-      title: intl.formatMessage({
-        id: 'EditableListingsTable.description',
-        defaultMessage: 'Description',
-      }),
+      title: (
+        <TableHeaderTitle helperText="Enter a detailed description of the listing to inform potential buyers.">
+          <FormattedMessage id="EditableListingsTable.description" defaultMessage="Description" />
+        </TableHeaderTitle>
+      ),
       dataIndex: 'description',
       width: 300,
       editable: true,
@@ -87,38 +88,43 @@ export const EditableListingsTable = props => {
       }),
     },
     {
-      title: intl.formatMessage({
-        id: 'EditableListingsTable.isAi',
-        defaultMessage: 'Is AI',
-      }),
+      title: (
+        <TableHeaderTitle helperText="Indicate if the listing was generated using artificial intelligence.">
+          <FormattedMessage id="EditableListingsTable.isAi" defaultMessage="Is AI" />
+        </TableHeaderTitle>
+      ),
       dataIndex: 'isAi',
       width: 150,
       editable: true,
       editControlType: 'switch',
       onBeforeSave: record => ({
         ...record,
-        isIllustration: record.isAi ? false : record.isIllustration,
+        isIllustration: record.isAi,
       }),
     },
     {
-      title: intl.formatMessage({
-        id: 'EditableListingsTable.isIllustration',
-        defaultMessage: 'Is Illustration',
-      }),
+      title: (
+        <TableHeaderTitle helperText="Specify if this listing is an illustration. This option will be disabled if marked as AI-generated.">
+          <FormattedMessage
+            id="EditableListingsTable.isIllustration"
+            defaultMessage="Is Illustration"
+          />
+        </TableHeaderTitle>
+      ),
       dataIndex: 'isIllustration',
       width: 150,
       editable: true,
       editControlType: 'switch',
-      onBeforeSave: record => ({
-        ...record,
-        isAi: record.isIllustration ? false : record.isAi,
-      }),
+      disabled: record => record.isAi,
     },
     {
-      title: intl.formatMessage({
-        id: 'EditableListingsTable.category',
-        defaultMessage: 'Category',
-      }),
+      title: (
+        <TableHeaderTitle
+          helperText={`Select up to ${MAX_CATEGORIES} categories to classify the listing for better discoverability.`}
+        >
+          <FormattedMessage id="EditableListingsTable.category" defaultMessage="Category" />
+        </TableHeaderTitle>
+      ),
       width: 300,
       dataIndex: 'category',
       editable: true,
@@ -131,10 +137,11 @@ export const EditableListingsTable = props => {
       }),
     },
     {
-      title: intl.formatMessage({
-        id: 'EditableListingsTable.usage',
-        defaultMessage: 'Usage',
-      }),
+      title: (
+        <TableHeaderTitle helperText="Choose a use case for the listing from the options provided.">
+          <FormattedMessage id="EditableListingsTable.usage" defaultMessage="Usage" />
+        </TableHeaderTitle>
+      ),
       width: 200,
       dataIndex: 'usage',
       editable: true,
@@ -146,20 +153,27 @@ export const EditableListingsTable = props => {
       }),
     },
     {
-      title: intl.formatMessage({
-        id: 'EditableListingsTable.releases',
-        defaultMessage: 'Do you have releases on file / can you obtain them?',
-      }),
+      title: (
+        <TableHeaderTitle helperText="Indicate whether you have or can obtain the necessary releases for this listing">
+          <FormattedMessage
+            id="EditableListingsTable.releases"
+            defaultMessage="Do you have releases on file / can you obtain them?"
+          />
+        </TableHeaderTitle>
+      ),
       dataIndex: 'releases',
       width: 300,
       editable: true,
       editControlType: 'switch',
     },
     {
-      title: intl.formatMessage({
-        id: 'EditableListingsTable.keywords',
-        defaultMessage: 'Keywords',
-      }),
+      title: (
+        <TableHeaderTitle
+          helperText={`Enter up to ${MAX_CATEGORIES} keywords to enhance searchability of the listing`}
+        >
+          <FormattedMessage id="EditableListingsTable.keywords" defaultMessage="Keywords" />
+        </TableHeaderTitle>
+      ),
       width: 400,
       dataIndex: 'keywords',
       editable: true,
@@ -170,20 +184,24 @@ export const EditableListingsTable = props => {
       }),
     },
     {
-      title: intl.formatMessage({
-        id: 'EditableListingsTable.dimensions',
-        defaultMessage: 'Dimensions',
-      }),
+      title: (
+        <TableHeaderTitle>
+          <FormattedMessage id="EditableListingsTable.dimensions" defaultMessage="Dimensions" />
+        </TableHeaderTitle>
+      ),
       dataIndex: 'dimensions',
       width: 200,
       render: getImageDimensionLabel,
       sorter: stringSorter,
     },
     {
-      title: intl.formatMessage({
-        id: 'EditableListingsTable.price',
-        defaultMessage: 'Price',
-      }),
+      title: (
+        <TableHeaderTitle
+          helperText={`Set the listing price, default is ${DEFAULT_PRODUCT_LISTING_PRICE} USD but adjustable as needed`}
+        >
+          <FormattedMessage id="EditableListingsTable.price" defaultMessage="Price" />
+        </TableHeaderTitle>
+      ),
       dataIndex: 'price',
       width: 200,
       editable: true,
@@ -214,6 +232,7 @@ export const EditableListingsTable = props => {
         placeholder: col.placeholder,
         rowIndex: rowIndex,
         maxSelection: col.maxSelection,
+        disabled: col.disabled,
       }),
     };
   });
@@ -243,6 +262,7 @@ export const EditableListingsTable = props => {
         }}
         sticky={{ offsetHeader: 80 }}
         loading={loading}
+        showSorterTooltip={false}
       ></Table>
     </div>
   );

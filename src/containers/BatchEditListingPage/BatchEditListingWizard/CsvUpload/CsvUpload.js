@@ -1,7 +1,7 @@
 import React from 'react';
-import { Button, message, Upload } from 'antd';
+import { Button, message, Space, Tooltip, Upload } from 'antd';
 import Papa from 'papaparse';
-import { UploadOutlined } from '@ant-design/icons';
+import { DownloadOutlined, InfoCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   CSV_UPLOAD_ERROR,
@@ -15,6 +15,8 @@ import {
   normalizeCategory,
   normalizeUsage,
 } from './CsvParsingHelpers';
+import { Link } from 'react-router-dom';
+import css from './CsvUpload.module.css';
 
 export const CsvUpload = ({ categories, usageOptions, onSaveListing }) => {
   const listings = useSelector(getListings);
@@ -109,14 +111,28 @@ export const CsvUpload = ({ categories, usageOptions, onSaveListing }) => {
   };
 
   return (
-    <Upload
-      accept=".csv"
-      beforeUpload={beforeUpload}
-      customRequest={request => handleCsvFile(request)} // Custom handling
-      maxCount={1}
-      showUploadList={false}
-    >
-      <Button icon={<UploadOutlined />}>Upload CSV</Button>
-    </Upload>
+    <Space size="middle">
+      <Link
+        to="/static/assets/LuupeMarketplaceUploadTemplate.xlsx"
+        target="_blank"
+        download
+        className={css.downloadLink}
+      >
+        <DownloadOutlined /> Download Template
+      </Link>
+
+      <Upload
+        accept=".csv"
+        beforeUpload={beforeUpload}
+        customRequest={request => handleCsvFile(request)} // Custom handling
+        maxCount={1}
+        showUploadList={false}
+      >
+        <Button icon={<UploadOutlined />}>Upload CSV</Button>
+      </Upload>
+      <Tooltip title="You can fill the product listing table by uploading a CSV file. Download the spreadsheet template from the provided link to get started.">
+        <InfoCircleOutlined />
+      </Tooltip>
+    </Space>
   );
 };
