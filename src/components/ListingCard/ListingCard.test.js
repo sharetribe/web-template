@@ -4,7 +4,7 @@ import '@testing-library/jest-dom';
 import { getHostedConfiguration, renderWithProviders as render } from '../../util/testHelpers';
 import { createUser, createListing, fakeIntl } from '../../util/testData';
 
-import { ListingCardComponent } from './ListingCard';
+import { ListingCard } from './ListingCard';
 
 const getConfig = () => {
   const hostedConfig = getHostedConfiguration();
@@ -33,7 +33,7 @@ describe('ListingCard', () => {
     // This is quite small component what comes to rendered HTML
     // For now, we rely on snapshot-testing.
     const listing = createListing('listing1', {}, { author: createUser('user1') });
-    const tree = render(<ListingCardComponent listing={listing} intl={fakeIntl} />);
+    const tree = render(<ListingCard listing={listing} intl={fakeIntl} />);
     expect(tree.asFragment().firstChild).toMatchSnapshot();
   });
 
@@ -44,7 +44,7 @@ describe('ListingCard', () => {
       { publicData: { listingType: 'free-inquiry' } },
       { author: createUser('user1') }
     );
-    const tree = render(<ListingCardComponent listing={listing} intl={fakeIntl} />, { config });
+    const tree = render(<ListingCard listing={listing} intl={fakeIntl} />, { config });
     expect(tree.asFragment().firstChild).toMatchSnapshot();
   });
 });
