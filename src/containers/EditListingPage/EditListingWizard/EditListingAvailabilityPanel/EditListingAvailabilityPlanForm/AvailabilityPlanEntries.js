@@ -393,18 +393,22 @@ const AvailabilityPlanEntries = props => {
             // 'day' and 'night' units use full days
             if (useFullDays) {
               if (isChecked) {
-                const seats = useMultipleSeats ? { seats: null } : { seats: 1 };
-                formApi.mutators.push(dayOfWeek, { startTime: '00:00', endTime: '24:00', seats });
+                const seats = useMultipleSeats ? { seats: 1 } : { seats: 1 };
+                formApi.mutators.push(dayOfWeek, {
+                  startTime: '00:00',
+                  endTime: '24:00',
+                  ...seats,
+                });
               } else {
                 formApi.mutators.remove(dayOfWeek, 0);
               }
             } else {
               const shouldAddEntry = isChecked && !hasEntries;
               if (shouldAddEntry) {
-                const seats = useMultipleSeats ? { seats: null } : { seats: 1 };
+                const seats = useMultipleSeats ? { seats: 1 } : { seats: 1 };
                 // The 'hour' unit is not initialized with any value,
                 // because user need to pick them themselves.
-                formApi.mutators.push(dayOfWeek, { startTime: null, endTime: null, seats });
+                formApi.mutators.push(dayOfWeek, { startTime: null, endTime: null, ...seats });
               } else if (!isChecked) {
                 // If day of week checkbox is unchecked,
                 // we'll remove all the entries for that day.
