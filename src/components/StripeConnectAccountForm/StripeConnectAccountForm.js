@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { bool, func, object, shape, string } from 'prop-types';
-import { compose } from 'redux';
+import React, { useEffect } from 'react';
 import { Field, Form as FinalForm } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
 
 import { useConfiguration } from '../../context/configurationContext';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { createResourceLocatorString } from '../../util/routes';
 import { isStripeError } from '../../util/errors';
@@ -189,8 +187,29 @@ const ErrorsMaybe = props => {
   return errorMessage ? <div className={css.error}>{errorMessage}</div> : null;
 };
 
-const StripeConnectAccountFormComponent = props => {
+/**
+ * A component that renders a Stripe connect account form.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {function} props.onSubmit - The function to call when the form is submitted
+ * @param {Object} props.fieldRenderProps - The field render props
+ * @param {propTypes.currentUser} props.currentUser - The current user
+ * @param {Object} props.stripeAccountError - The Stripe account error
+ * @param {boolean} props.disabled - Whether the form is disabled
+ * @param {boolean} props.inProgress - Whether the form is in progress
+ * @param {boolean} props.ready - Whether the form is ready
+ * @param {string} props.savedCountry - The saved country
+ * @param {string} props.stripeBankAccountLastDigits - The last digits of the Stripe bank account
+ * @param {boolean} props.stripeAccountFetched - Whether the Stripe account data is fetched
+ * @param {string} props.submitButtonText - The text for the submit button
+ * @param {Object} props.fieldRenderProps - The field render props
+ * @returns {JSX.Element}
+ */
+const StripeConnectAccountForm = props => {
   const config = useConfiguration();
+  const intl = useIntl();
   const { onSubmit, ...restOfProps } = props;
   const isUpdate = props.stripeConnected;
   const stripePublishableKey = config.stripe.publishableKey;
@@ -213,7 +232,6 @@ const StripeConnectAccountFormComponent = props => {
           disabled,
           handleSubmit,
           inProgress,
-          intl,
           invalid,
           pristine,
           ready,
@@ -338,42 +356,5 @@ const StripeConnectAccountFormComponent = props => {
     />
   );
 };
-
-StripeConnectAccountFormComponent.defaultProps = {
-  className: null,
-  currentUser: null,
-  stripeAccountError: null,
-  disabled: false,
-  inProgress: false,
-  ready: false,
-  savedCountry: null,
-  stripeBankAccountLastDigits: null,
-  submitButtonText: null,
-  fieldRenderProps: null,
-};
-
-StripeConnectAccountFormComponent.propTypes = {
-  currentUser: propTypes.currentUser,
-  className: string,
-  stripeAccountError: object,
-  disabled: bool,
-  inProgress: bool,
-  ready: bool,
-  savedCountry: string,
-  stripeBankAccountLastDigits: string,
-  stripeAccountFetched: bool.isRequired,
-  submitButtonText: string,
-  fieldRenderProps: shape({
-    handleSubmit: func,
-    invalid: bool,
-    pristine: bool,
-    values: object,
-  }),
-
-  // from injectIntl
-  intl: intlShape.isRequired,
-};
-
-const StripeConnectAccountForm = compose(injectIntl)(StripeConnectAccountFormComponent);
 
 export default StripeConnectAccountForm;
