@@ -1,9 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import css from './IconEdit.module.css';
 
+/**
+ * Edit icon. (pencil)
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string?} props.pencilClassName overwrite components own css.pencil
+ * @returns {JSX.Element} SVG icon
+ */
 const IconEdit = props => {
   const { rootClassName, className, pencilClassName } = props;
   const classes = classNames(rootClassName || css.root, className);
@@ -20,20 +29,6 @@ const IconEdit = props => {
       </g>
     </svg>
   );
-};
-
-IconEdit.defaultProps = {
-  rootClassName: null,
-  className: null,
-  pencilClassName: null,
-};
-
-const { string } = PropTypes;
-
-IconEdit.propTypes = {
-  rootClassName: string,
-  className: string,
-  pencilClassName: string,
 };
 
 export default IconEdit;
