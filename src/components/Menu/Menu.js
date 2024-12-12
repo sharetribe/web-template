@@ -1,23 +1,4 @@
-/**
- * Menu is component that shows extra content when it is clicked.
- * Clicking it toggles visibility of MenuContent.
- *
- * Example:
- *  <Menu>
- *    <MenuLabel>
- *      <span>Open menu</span>
- *    </MenuLabel>
- *    <MenuContent>
- *      <MenuItem key="first item">
- *        <Button onClick={onClick}>Click this</Button>
- *      </MenuItem>
- *    </MenuContent>
- *  </Menu>
- *
- */
-
 import React, { Component } from 'react';
-import { bool, func, node, number, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { MenuContent, MenuLabel } from '../../components';
@@ -33,13 +14,42 @@ const isControlledMenu = (isOpenProp, onToggleActiveProp) => {
   return isOpenProp !== null && onToggleActiveProp !== null;
 };
 
+/**
+ * Menu is component that shows extra content when it is clicked.
+ * Clicking it toggles visibility of MenuContent.
+ *
+ * @example
+ *  <Menu>
+ *    <MenuLabel>
+ *      <span>Open menu</span>
+ *    </MenuLabel>
+ *    <MenuContent>
+ *      <MenuItem key="first item">
+ *        <Button onClick={onClick}>Click this</Button>
+ *      </MenuItem>
+ *    </MenuContent>
+ *  </Menu>
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {ReactNode} props.children
+ * @param {boolean} props.isOpen
+ * @param {('left' | 'right')} props.contentPosition
+ * @param {number?} props.contentPlacementOffset
+ * @param {boolean} props.useArrow
+ * @param {boolean} props.preferScreenWidthOnMobile
+ * @param {Function?} props.onToggleActive
+ * @returns {JSX.Element} menu component
+ */
 class Menu extends Component {
   constructor(props) {
     super(props);
 
     this.state = { isOpen: false, ready: false };
 
-    const { isOpen, onToggleActive } = props;
+    const { isOpen = null, onToggleActive = null } = props;
     const isIndependentMenu = isOpen === null && onToggleActive === null;
     if (!(isIndependentMenu || isControlledMenu(isOpen, onToggleActive))) {
       throw new Error(
@@ -68,7 +78,7 @@ class Menu extends Component {
     // FocusEvent is fired faster than the link elements native click handler
     // gets its own event. Therefore, we need to check the origin of this FocusEvent.
     if (!this.menu.contains(event.relatedTarget)) {
-      const { isOpen, onToggleActive } = this.props;
+      const { isOpen = null, onToggleActive = null } = this.props;
 
       if (isControlledMenu(isOpen, onToggleActive)) {
         onToggleActive(false);
@@ -87,7 +97,7 @@ class Menu extends Component {
 
   toggleOpen(enforcedState) {
     // If state is handled outside of Menu component, we call a passed in onToggleActive func
-    const { isOpen, onToggleActive } = this.props;
+    const { isOpen = null, onToggleActive = null } = this.props;
     if (isControlledMenu(isOpen, onToggleActive)) {
       const isMenuOpen = enforcedState != null ? enforcedState : !isOpen;
       onToggleActive(isMenuOpen);
@@ -110,7 +120,7 @@ class Menu extends Component {
       const menuWidth = this.menu.offsetWidth;
       const contentWidthBiggerThanLabel = this.menuContent.offsetWidth - menuWidth;
       const usePositionLeftFromLabel = contentPosition === CONTENT_TO_LEFT;
-      const contentPlacementOffset = this.props.contentPlacementOffset;
+      const contentPlacementOffset = this.props.contentPlacementOffset ?? CONTENT_PLACEMENT_OFFSET;
       const mobileMaxWidth = this.props.mobileMaxWidth || MAX_MOBILE_SCREEN_WIDTH;
 
       if (this.props.preferScreenWidthOnMobile && windowWidth <= mobileMaxWidth) {
@@ -138,7 +148,7 @@ class Menu extends Component {
   positionStyleForArrow(isPositionedRight) {
     if (this.menu) {
       const menuWidth = this.menu.offsetWidth;
-      const contentPlacementOffset = this.props.contentPlacementOffset;
+      const contentPlacementOffset = this.props.contentPlacementOffset ?? CONTENT_PLACEMENT_OFFSET;
       return isPositionedRight
         ? Math.floor(menuWidth / 2) - contentPlacementOffset
         : Math.floor(menuWidth / 2);
@@ -152,8 +162,10 @@ class Menu extends Component {
     }
 
     return React.Children.map(this.props.children, child => {
-      const { isOpen: isOpenProp, onToggleActive } = this.props;
-      const isOpen = isControlledMenu(isOpenProp, onToggleActive) ? isOpenProp : this.state.isOpen;
+      const { isOpen: isOpenProp, onToggleActive = null } = this.props;
+      const isOpen = isControlledMenu(isOpenProp || null, onToggleActive)
+        ? isOpenProp
+        : this.state.isOpen;
 
       if (child.type === MenuLabel) {
         // MenuLabel needs toggleOpen function
@@ -165,7 +177,7 @@ class Menu extends Component {
       } else if (child.type === MenuContent) {
         // MenuContent needs some styling data (width, arrowPosition, and isOpen info)
         // We pass those directly so that component user doesn't need to worry about those.
-        const { contentPosition, useArrow } = this.props;
+        const { contentPosition = CONTENT_TO_RIGHT, useArrow } = this.props;
         const positionStyles = this.positionStyleForMenuContent(contentPosition);
         const arrowPosition = useArrow
           ? this.positionStyleForArrow(positionStyles.right != null)
@@ -205,28 +217,5 @@ class Menu extends Component {
     );
   }
 }
-
-Menu.defaultProps = {
-  className: null,
-  rootClassName: '',
-  contentPlacementOffset: CONTENT_PLACEMENT_OFFSET,
-  contentPosition: CONTENT_TO_RIGHT,
-  isOpen: null,
-  onToggleActive: null,
-  useArrow: true,
-  preferScreenWidthOnMobile: false,
-};
-
-Menu.propTypes = {
-  children: node.isRequired,
-  className: string,
-  rootClassName: string,
-  contentPosition: string,
-  contentPlacementOffset: number,
-  useArrow: bool,
-  isOpen: bool,
-  onToggleActive: func,
-  preferScreenWidthOnMobile: bool,
-};
 
 export default Menu;

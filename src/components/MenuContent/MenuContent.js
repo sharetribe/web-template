@@ -1,14 +1,25 @@
-/**
- * MenuContent is a immediate child of Menu component sibling to MenuLabel.
- * Clicking MenuLabel toggles visibility of MenuContent.
- */
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { MenuItem } from '../../components';
 
 import css from './MenuContent.module.css';
 
+/**
+ * MenuContent is a immediate child of Menu component sibling to MenuLabel.
+ * Clicking MenuLabel toggles visibility of MenuContent.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string?} props.contentClassName overwrite components own css.content, which is given to <ul>
+ * @param {ReactNode} props.children
+ * @param {number?} props.arrowPosition
+ * @param {Function} props.contentRef
+ * @param {boolean} props.isOpen
+ * @param {Object?} props.style
+ * @returns {JSX.Element} content container
+ */
 const MenuContent = props => {
   const {
     arrowPosition,
@@ -53,29 +64,6 @@ const MenuContent = props => {
       <ul className={contentClasses}>{children}</ul>
     </div>
   );
-};
-
-MenuContent.defaultProps = {
-  arrowPosition: null,
-  className: null,
-  contentClassName: null,
-  contentRef: null,
-  isOpen: false,
-  rootClassName: '',
-  style: null,
-};
-
-const { bool, func, node, number, object, string } = PropTypes;
-
-MenuContent.propTypes = {
-  arrowPosition: number,
-  children: node.isRequired,
-  className: string,
-  contentClassName: string,
-  contentRef: func,
-  isOpen: bool,
-  rootClassName: string,
-  style: object,
 };
 
 export default MenuContent;
