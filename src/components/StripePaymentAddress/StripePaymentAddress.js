@@ -1,5 +1,4 @@
 import React from 'react';
-import { bool, object, string } from 'prop-types';
 
 import { intlShape } from '../../util/reactIntl';
 import * as validators from '../../util/validators';
@@ -8,6 +7,20 @@ import { FieldTextInput, FieldSelect } from '../../components';
 
 import css from './StripePaymentAddress.module.css';
 
+/**
+ * A component that renders a Stripe payment address.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {intlShape} props.intl - The intl object
+ * @param {boolean} props.disabled - Whether the form is disabled
+ * @param {Object} props.form - The form object
+ * @param {string} props.fieldId - The field id
+ * @param {Object} props.card - The card object
+ * @param {string} props.locale - The locale
+ * @returns {JSX.Element}
+ */
 const StripePaymentAddress = props => {
   const { className, intl, disabled, form, fieldId, card, locale } = props;
 
@@ -168,22 +181,6 @@ const StripePaymentAddress = props => {
       </div>
     </div>
   );
-};
-StripePaymentAddress.defaultProps = {
-  country: null,
-  disabled: false,
-  fieldId: null,
-};
-
-StripePaymentAddress.propTypes = {
-  country: string,
-  disabled: bool,
-  form: object.isRequired,
-  fieldId: string,
-  locale: string.isRequired,
-
-  // from injectIntl
-  intl: intlShape.isRequired,
 };
 
 export default StripePaymentAddress;
