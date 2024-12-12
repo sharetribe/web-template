@@ -1,11 +1,22 @@
 import React from 'react';
-import { array, node, string } from 'prop-types';
 import classNames from 'classnames';
 
 import css from './Track.module.css';
 
+/**
+ * A component that renders a track for a range slider.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {ReactNode} props.children - The children to render
+ * @param {Array<number>} props.handles - The handles to render
+ * @param {Function} props.valueToPosition - The function to convert the value to the position
+ * @returns {JSX.Element} the track component that has the handles and the range between them
+ */
 const Track = props => {
-  const { rootClassName, className, children, handles, valueToPosition } = props;
+  const { rootClassName, className, children, handles = [], valueToPosition } = props;
   const positionFromIndex = index => valueToPosition(handles[index]);
 
   const classes = classNames(rootClassName || css.root, className);
@@ -32,20 +43,6 @@ const Track = props => {
       {children}
     </div>
   );
-};
-
-Track.defaultProps = {
-  rootClassName: null,
-  className: null,
-  children: null,
-  handles: [],
-};
-
-Track.propTypes = {
-  rootClassName: string,
-  className: string,
-  children: node,
-  handles: array,
 };
 
 export default Track;
