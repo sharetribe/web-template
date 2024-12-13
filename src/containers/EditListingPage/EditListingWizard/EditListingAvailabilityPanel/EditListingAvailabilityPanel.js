@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { arrayOf, bool, func, object, string } from 'prop-types';
 import classNames from 'classnames';
 
 // Import configs and util modules
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { getDefaultTimeZoneOnBrowser, timestampToDate } from '../../../../util/dates';
-import { LISTING_STATE_DRAFT, propTypes } from '../../../../util/types';
+import { AVAILABILITY_MULTIPLE_SEATS, LISTING_STATE_DRAFT } from '../../../../util/types';
 import { DAY, isFullDay } from '../../../../transactions/transaction';
 
 // Import shared components
@@ -40,7 +39,7 @@ const createEntryDayGroups = (entries = {}) => {
   // Collect info about which days are active in the availability plan form:
   let activePlanDays = [];
   return entries.reduce((groupedEntries, entry) => {
-    const { startTime, endTime: endHour, dayOfWeek } = entry;
+    const { startTime, endTime: endHour, dayOfWeek, seats } = entry;
     const dayGroup = groupedEntries[dayOfWeek] || [];
     activePlanDays = activePlanDays.includes(dayOfWeek)
       ? activePlanDays
@@ -52,6 +51,7 @@ const createEntryDayGroups = (entries = {}) => {
         {
           startTime,
           endTime: endHour === '00:00' ? '24:00' : endHour,
+          seats,
         },
       ],
       activePlanDays,
@@ -59,8 +59,8 @@ const createEntryDayGroups = (entries = {}) => {
   }, {});
 };
 
-// Create initial values
-const createInitialValues = availabilityPlan => {
+// Create initial values for the availability plan
+const createInitialPlanValues = availabilityPlan => {
   const { timezone, entries } = availabilityPlan || {};
   const tz = timezone || defaultTimeZone();
   return {
@@ -74,12 +74,12 @@ const createEntriesFromSubmitValues = values =>
   WEEKDAYS.reduce((allEntries, dayOfWeek) => {
     const dayValues = values[dayOfWeek] || [];
     const dayEntries = dayValues.map(dayValue => {
-      const { startTime, endTime } = dayValue;
+      const { startTime, endTime, seats } = dayValue;
       // Note: This template doesn't support seats yet.
       return startTime && endTime
         ? {
             dayOfWeek,
-            seats: 1,
+            seats: seats ?? 1,
             startTime,
             endTime: endTime === '24:00' ? '00:00' : endTime,
           }
@@ -101,6 +101,54 @@ const createAvailabilityPlan = values => ({
 //////////////////////////////////
 // EditListingAvailabilityPanel //
 //////////////////////////////////
+
+/**
+ * @typedef {Object} AvailabilityException
+ * @property {string} id
+ * @property {'availabilityException'} type 'availabilityException'
+ * @property {Object} attributes attributes
+ * @property {Date} attributes.start The start of availability exception (inclusive)
+ * @property {Date} attributes.end The end of availability exception (exclusive)
+ * @property {Number} attributes.seats the number of seats available (0 means 'unavailable')
+ */
+/**
+ * @typedef {Object} ExceptionQueryInfo
+ * @property {Object|null} fetchExceptionsError
+ * @property {boolean} fetchExceptionsInProgress
+ */
+
+/**
+ * A panel where provider can set availabilityPlan (weekly default schedule)
+ * and AvailabilityExceptions.
+ * In addition, it combines the set values of both of those and shows a weekly schedule.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className
+ * @param {string?} props.rootClassName
+ * @param {Object} props.params pathparams
+ * @param {Object?} props.locationSearch parsed search params
+ * @param {Object?} props.listing listing entity from API (draft/published/etc.)
+ * @param {Array<Object>} props.listingTypes listing type config from asset delivery API
+ * @param {boolean} props.disabled
+ * @param {boolean} props.ready
+ * @param {Object.<string, ExceptionQueryInfo>?} props.monthlyExceptionQueries E.g. '2022-12': { fetchExceptionsError, fetchExceptionsInProgress }
+ * @param {Object.<string, ExceptionQueryInfo>?} props.weeklyExceptionQueries E.g. '2022-12-14': { fetchExceptionsError, fetchExceptionsInProgress }
+ * @param {Array<AvailabilityException>} props.allExceptions
+ * @param {Function} props.onAddAvailabilityException
+ * @param {Function} props.onDeleteAvailabilityException
+ * @param {Function} props.onFetchExceptions
+ * @param {Function} props.onSubmit
+ * @param {Function} props.onManageDisableScrolling
+ * @param {Function} props.onNextTab
+ * @param {string} props.submitButtonText
+ * @param {boolean} props.updateInProgress
+ * @param {Object} props.errors
+ * @param {Object} props.config app config
+ * @param {Object} props.routeConfiguration
+ * @param {Object} props.history history from React Router
+ * @returns {JSX.Element} containing form that allows adding availability exceptions
+ */
 const EditListingAvailabilityPanel = props => {
   const {
     className,
@@ -108,9 +156,10 @@ const EditListingAvailabilityPanel = props => {
     params,
     locationSearch,
     listing,
+    listingTypes,
     monthlyExceptionQueries,
     weeklyExceptionQueries,
-    allExceptions,
+    allExceptions = [],
     onAddAvailabilityException,
     onDeleteAvailabilityException,
     disabled,
@@ -134,8 +183,12 @@ const EditListingAvailabilityPanel = props => {
   const firstDayOfWeek = config.localization.firstDayOfWeek;
   const classes = classNames(rootClassName || css.root, className);
   const listingAttributes = listing?.attributes;
-  const unitType = listingAttributes?.publicData?.unitType;
+  const { listingType, unitType } = listingAttributes?.publicData || {};
+  const listingTypeConfig = listingTypes.find(conf => conf.listingType === listingType);
+
   const useFullDays = isFullDay(unitType);
+  const useMultipleSeats = listingTypeConfig?.availabilityType === AVAILABILITY_MULTIPLE_SEATS;
+
   const hasAvailabilityPlan = !!listingAttributes?.availabilityPlan;
   const isPublished = listing?.id && listingAttributes?.state !== LISTING_STATE_DRAFT;
   const defaultAvailabilityPlan = {
@@ -152,11 +205,11 @@ const EditListingAvailabilityPanel = props => {
     ],
   };
   const availabilityPlan = listingAttributes?.availabilityPlan || defaultAvailabilityPlan;
-  const initialValues = valuesFromLastSubmit
+  const initialPlanValues = valuesFromLastSubmit
     ? valuesFromLastSubmit
-    : createInitialValues(availabilityPlan);
+    : createInitialPlanValues(availabilityPlan);
 
-  const handleSubmit = values => {
+  const handlePlanSubmit = values => {
     setValuesFromLastSubmit(values);
 
     // Final Form can wait for Promises to return.
@@ -173,10 +226,9 @@ const EditListingAvailabilityPanel = props => {
 
   // Save exception click handler
   const saveException = values => {
-    const { availability, exceptionStartTime, exceptionEndTime, exceptionRange } = values;
+    const { availability, exceptionStartTime, exceptionEndTime, exceptionRange, seats } = values;
 
-    // TODO: add proper seat handling
-    const seats = availability === 'available' ? 1 : 0;
+    const seatCount = seats != null ? seats : availability === 'available' ? 1 : 0;
 
     // Exception date/time range is given through FieldDateRangeInput or
     // separate time fields.
@@ -192,7 +244,7 @@ const EditListingAvailabilityPanel = props => {
 
     const params = {
       listingId: listing.id,
-      seats,
+      seats: seatCount,
       ...range,
     };
 
@@ -207,7 +259,7 @@ const EditListingAvailabilityPanel = props => {
 
   return (
     <main className={classes}>
-      <H3 as="h1">
+      <H3 as="h1" className={css.heading}>
         {isPublished ? (
           <FormattedMessage
             id="EditListingAvailabilityPanel.title"
@@ -251,6 +303,7 @@ const EditListingAvailabilityPanel = props => {
             weeklyExceptionQueries={weeklyExceptionQueries}
             isDaily={unitType === DAY}
             useFullDays={useFullDays}
+            useMultipleSeats={useMultipleSeats}
             onDeleteAvailabilityException={onDeleteAvailabilityException}
             onFetchExceptions={onFetchExceptions}
             params={params}
@@ -303,11 +356,13 @@ const EditListingAvailabilityPanel = props => {
             listingTitle={listingAttributes?.title}
             availabilityPlan={availabilityPlan}
             weekdays={rotateDays(WEEKDAYS, firstDayOfWeek)}
-            useFullDays={useFullDays}
-            onSubmit={handleSubmit}
-            initialValues={initialValues}
+            onSubmit={handlePlanSubmit}
+            initialValues={initialPlanValues}
             inProgress={updateInProgress}
             fetchErrors={errors}
+            useFullDays={useFullDays}
+            useMultipleSeats={useMultipleSeats}
+            unitType={unitType}
           />
         </Modal>
       ) : null}
@@ -330,44 +385,15 @@ const EditListingAvailabilityPanel = props => {
             onFetchExceptions={onFetchExceptions}
             onSubmit={saveException}
             timeZone={availabilityPlan.timezone}
-            isDaily={unitType === DAY}
+            unitType={unitType}
             updateInProgress={updateInProgress}
             useFullDays={useFullDays}
+            listingTypeConfig={listingTypeConfig}
           />
         </Modal>
       ) : null}
     </main>
   );
-};
-
-EditListingAvailabilityPanel.defaultProps = {
-  className: null,
-  rootClassName: null,
-  listing: null,
-  monthlyExceptionQueries: null,
-  weeklyExceptionQueries: null,
-  allExceptions: [],
-};
-
-EditListingAvailabilityPanel.propTypes = {
-  className: string,
-  rootClassName: string,
-
-  // We cannot use propTypes.listing since the listing might be a draft.
-  listing: object,
-  disabled: bool.isRequired,
-  ready: bool.isRequired,
-  monthlyExceptionQueries: object,
-  weeklyExceptionQueries: object,
-  allExceptions: arrayOf(propTypes.availabilityException),
-  onAddAvailabilityException: func.isRequired,
-  onDeleteAvailabilityException: func.isRequired,
-  onSubmit: func.isRequired,
-  onManageDisableScrolling: func.isRequired,
-  onNextTab: func.isRequired,
-  submitButtonText: string.isRequired,
-  updateInProgress: bool.isRequired,
-  errors: object.isRequired,
 };
 
 export default EditListingAvailabilityPanel;
