@@ -600,6 +600,7 @@ export const queryOwnListings = queryParams => (dispatch, getState, sdk) => {
   const { perPage, ...rest } = queryParams;
   const params = { ...rest, perPage };
 
+  // noinspection JSCheckFunctionSignatures
   return sdk.ownListings
     .query(params)
     .then(response => {
@@ -632,12 +633,12 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   if (mode !== PAGE_MODE_NEW) {
     const pageQueryParams = parse(search);
     const page = pageQueryParams.page || 1;
-    const queryParams = new URLSearchParams();
+    const queryParams = {};
     if (pageQueryParams.category) {
-      queryParams.set('pub_categoryLevel1', pageQueryParams.category);
+      queryParams.pub_categoryLevel1 = pageQueryParams.category;
     }
     if (pageQueryParams.type) {
-      queryParams.set('pub_listingType', pageQueryParams.type);
+      queryParams.pub_listingType = pageQueryParams.type;
     }
 
     dispatch(
