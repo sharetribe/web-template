@@ -23,6 +23,7 @@ import {
   PAGE_MODE_NEW,
   RESULT_PAGE_SIZE,
   USAGE_EDITORIAL,
+  YES_RELEASES,
 } from './constants';
 import { getDimensions } from './imageHelpers';
 import { stringToArray } from '../../util/string';
@@ -87,7 +88,7 @@ function uppyFileToListing(file) {
     preview,
     category: [],
     usage: USAGE_EDITORIAL,
-    releases: NO_RELEASES,
+    releases: false,
     price: DEFAULT_PRODUCT_LISTING_PRICE,
     dimensions: dimensions,
     isAi: false,
@@ -451,7 +452,7 @@ export function initializeUppy(meta) {
                 categoryLevel1: getListingCategory(listing),
                 imageryCategory: listing.category,
                 usage: listing.usage,
-                releases: listing.releases,
+                releases: listing.releases ? YES_RELEASES : NO_RELEASES,
                 keywords: listing.keywords,
                 imageSize: listing.dimensions,
                 fileType: listing.type,
@@ -557,7 +558,7 @@ export function requestSaveBatchListings(pageMode = PAGE_MODE_NEW) {
                 publicData: {
                   imageryCategory: listing.category,
                   usage: listing.usage,
-                  releases: listing.releases,
+                  releases: listing.releases ? YES_RELEASES : NO_RELEASES,
                   keywords: listing.keywords,
                   imageSize: listing.dimensions,
                   aiTerms: listing.isAi ? 'yes' : 'no',
