@@ -73,30 +73,6 @@ function CodeChecker() {
   };
 
 
-  const cardRenderSizes = (isMapVariant) => {
-    if (isMapVariant) {
-      // Panel width relative to the viewport
-      const panelMediumWidth = 50;
-      const panelLargeWidth = 62.5;
-      return [
-        '(max-width: 767px) 100vw',
-        `(max-width: 1023px) ${panelMediumWidth}vw`,
-        `(max-width: 1920px) ${panelLargeWidth / 2}vw`,
-        `${panelLargeWidth / 3}vw`,
-      ].join(', ');
-    }
-    // Panel width relative to the viewport
-    const panelMediumWidth = 50;
-    const panelLargeWidth = 62.5;
-    return [
-      '(max-width: 549px) 100vw',
-      '(max-width: 767px) 50vw',
-      `(max-width: 1439px) 26vw`,
-      `(max-width: 1920px) 18vw`,
-      `14vw`,
-    ].join(', ');
-  };
-
   return (
     <div className={css.container}>
       <div className={css.listings}>
@@ -108,7 +84,7 @@ function CodeChecker() {
               className={css.listingCard}
               key={l.id.uuid}
               listing={l}
-              renderSizes={cardRenderSizes(false)}
+              renderSizes={null}
               imageUrl={l.imageUrl}
               setActiveListing={null}
             />

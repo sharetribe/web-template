@@ -118,7 +118,7 @@ export function ListingGiftCardComponent(props) {
         ) : null}
       </AspectRatioWrapper>
 
-      <div className={css.info}>
+      <>
         <div className={css.priceContainer}>
           <PriceMaybe price={price} publicData={publicData} config={config} intl={intl} />
         </div>
@@ -138,7 +138,7 @@ export function ListingGiftCardComponent(props) {
             ) : null}
           </div>
         )}
-      </div>
+      </>
     </NamedLink>
   );
 }
