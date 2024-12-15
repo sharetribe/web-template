@@ -101,7 +101,11 @@ export const getStateData = (params, process) => {
         intl,
         inProgress: transitionInProgress === transitionName,
         transitionError,
-        onAction: () => onTransition(transaction?.id, transitionName, {}),
+        onAction: (orderShippingProvider, orderTrackingCode) => {
+          onTransition(transaction?.id, transitionName, orderShippingProvider && orderTrackingCode ? {
+            protectedData: { orderShippingProvider, orderTrackingCode }
+          } : {});
+        },
         ...extra,
       },
       forRole

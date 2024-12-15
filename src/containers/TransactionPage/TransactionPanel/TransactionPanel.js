@@ -172,7 +172,7 @@ export class TransactionPanelComponent extends Component {
     const actionButtons = (
       <ActionButtonsMaybe
         showButtons={stateData.showActionButtons}
-        primaryButtonProps={{ ...stateData?.primaryButtonProps, disabled: !this.state.orderShippingProvider || !this.state.orderTrackingCode }}
+        primaryButtonProps={{ ...stateData?.primaryButtonProps, orderShippingProvider: this.state.orderShippingProvider, orderTrackingCode: this.state.orderTrackingCode }}
         secondaryButtonProps={stateData?.secondaryButtonProps}
         isListingDeleted={listingDeleted}
         isProvider={isProvider}
@@ -354,7 +354,7 @@ export class TransactionPanelComponent extends Component {
                   processName={stateData.processName}
                 />
 
-                {stateData.showActionButtons ? (
+                {stateData.showOrderInfo ? (
                   <Fragment>
                     <div className={css.shippingData}>
                       <label htmlFor="orderShippingProvider">Избери куриер</label>
@@ -379,8 +379,11 @@ export class TransactionPanelComponent extends Component {
                         value={this.state.orderTrackingCode}
                       />
                     </div>
-                    <div className={css.desktopActionButtons}>{actionButtons}</div>
                   </Fragment>
+                ) : null}
+
+                {stateData.showActionButtons ? (
+                   <div className={css.desktopActionButtons}>{actionButtons}</div>
                 ) : null}
               </div>
               <DiminishedActionButtonMaybe

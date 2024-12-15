@@ -61,6 +61,7 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
         processState,
         showDetailCardHeadings: true,
         showActionButtons: true,
+        showOrderInfo: true,
         primaryButtonProps: actionButtonProps(transitions.MARK_DELIVERED, PROVIDER, {
           actionButtonTranslationId,
         }),

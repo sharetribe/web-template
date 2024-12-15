@@ -29,8 +29,8 @@ const ActionButtonsMaybe = props => {
   const primaryButton = primaryButtonProps ? (
     <PrimaryButton
       inProgress={primaryButtonProps.inProgress}
-      disabled={buttonsDisabled || primaryButtonProps.disabled}
-      onClick={primaryButtonProps.onAction}
+      disabled={buttonsDisabled || !primaryButtonProps.orderShippingProvider || !primaryButtonProps.orderTrackingCode}
+      onClick={() => primaryButtonProps.onAction(primaryButtonProps.orderShippingProvider, primaryButtonProps.orderTrackingCode)}
     >
       {primaryButtonProps.buttonText}
     </PrimaryButton>
