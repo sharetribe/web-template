@@ -65,13 +65,12 @@
 }
 
 .submitButton {
-  margin-top: auto;
+  margin-top: 1rem;
   margin-bottom: 24px;
   flex-shrink: 0;
 
   @media (--viewportLarge) {
     display: inline-block;
     width: 241px;
-    margin-top: 100px;
   }
 }

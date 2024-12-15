@@ -350,11 +350,8 @@
 }
 
 .shippingInfoContent {
-  padding: 0px 0 0px 13px;
   margin-top: 12px;
-
   @media (--viewportMedium) {
-    padding: 4px 0 4px 13px;
     margin-top: 8px;
   }
 }
@@ -374,7 +371,6 @@
 .feedContent {
   padding: 0;
   margin-top: 12px;
-
   @media (--viewportMedium) {
     margin-top: 8px;
   }
