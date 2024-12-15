@@ -100,7 +100,7 @@ function CodeChecker() {
             type="text"
             value={code}
             onChange={(e) => setCode(e.target.value)}
-            placeholder="Inserisci il codice della tua gift card"
+            placeholder="Inserisci il codice gift card"
             className={css.input}
           />
           <button onClick={handleCheckCode} className={css.button}>
