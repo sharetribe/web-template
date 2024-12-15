@@ -307,3 +307,75 @@
   font-weight: var(--fontWeightSemiBold);
   letter-spacing: -0.09px;
 }
+
+
+
+/*REVIEW WIDGET */
+.reviewWidget {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
+
+.summary {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.totalReviews {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.averageRating {
+  font-size: 24px;
+  font-weight: bold;
+  color: #007bff;
+}
+
+.star {
+  font-size: 18px;
+  color: #007bff;
+}
+
+.reviewList {
+  margin-top: 16px;
+}
+
+.review {
+  border-bottom: 1px solid #ddd;
+  padding: 8px 0;
+}
+
+.reviewHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.authorName {
+  font-weight: bold;
+}
+
+.rating {
+  color: #ffc107;
+}
+
+.reviewContent {
+  font-size: 14px;
+  color: #555;
+}
+
+.error {
+  color: red;
+  text-align: center;
+}
+
+.noReviews {
+  text-align: center;
+  color: #555;
+}

@@ -120,21 +120,26 @@ function LandingPageSection({ onSearchSubmit }) {
         </div>
       ) : (
         <div className={css.surveyContainer}>
-        {!isMobile && (
-          <div className={css.emptyDiv2}>
-            <p className={css.emptyText}>
-              Boost Creativity in Your Workplace Team Building with Club Joy
-              Take team-building to the next level with creative, hands-on workshops that come straight to your office.<br /> Whether it’s pottery or painting, our experiences are designed to help your team collaborate, unwind, and reignite their creativity.
-              <br />With hassle-free planning and engaging activities, we make sure your event is fun, memorable, and completely stress-free—all while delivering real results.
-            </p>
-            <ActionTeamButtons />
+          {!isMobile && (
+            <div className={css.emptyDiv2}>
+              <p className={css.emptyText}>
+              <h1>
+              Creatività che fa la differenza
+              </h1>
+              I nostri workshop creativi aiutano il tuo team a riscoprire collaborazione,<br/>
+              pensiero critico e empatia - competenze che l’AI non può replicare. <br/><br/>
+              Rafforziamo ciò che rende i tuoi dipendenti unici, stimolando un pensiero laterale che nessun algoritmo può imitare. 
+              Riportiamo i dipendenti al centro della creatività aziendale, trasformando idee in innovazioni concrete.<br/><br/>
+              Prepara il tuo team per un futuro dove l’unicità umana fa la differenza.
+              </p>
+              <ActionTeamButtons />
+            </div>
+          )}
+          <div className={css.videoSection}>
+            <VideoContainer />
           </div>
-        )}
-        <div className={css.videoSection}>
-          <VideoContainer />
         </div>
-      </div>
-      
+
 
       )}
     </div>

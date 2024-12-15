@@ -42,6 +42,7 @@ import {
   ButtonTabNavHorizontal,
   LayoutSideNavigation,
   NamedRedirect,
+  InlineTextButton,
 } from '../../components';
 
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
@@ -114,6 +115,58 @@ export function MobileReviews(props) {
     </div>
   );
 }
+
+export function ReviewWidget(props) {
+  const { reviews, queryReviewsError } = props;
+
+  if (queryReviewsError) {
+    return <div className={css.error}>Error loading reviews.</div>;
+  }
+
+  if (!reviews || reviews.length === 0) {
+    return <div className={css.noReviews}>No reviews yet.</div>;
+  }
+
+  const totalReviews = reviews.length;
+  const averageRating =
+    reviews.reduce((sum, review) => sum + review.attributes.rating, 0) /
+    totalReviews;
+
+  return (
+    <div className={css.reviewWidget}>
+      <div className={css.summary}>
+        <div>
+          <span className={css.totalReviews}>{totalReviews}</span>
+          <span> Reviews</span>
+        </div>
+        <div>
+          <span className={css.averageRating}>{averageRating.toFixed(1)}</span>
+          <span className={css.star}>★ Rating</span>
+        </div>
+      </div>
+      <div className={css.reviewList}>
+        {reviews.map((review) => (
+          <div key={review.id.uuid} className={css.review}>
+            <div className={css.reviewHeader}>
+              <span className={css.authorName}>
+                {review.author.attributes.profile.displayName || "Anonymous"}
+              </span>
+              <span className={css.rating}>
+                {Array(review.attributes.rating)
+                  .fill("★")
+                  .join("")}
+              </span>
+            </div>
+            <div className={css.reviewContent}>
+              <p>{review.attributes.content}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 
 export function DesktopReviews(props) {
   const [showReviewsType, setShowReviewsType] = useState(REVIEW_TYPE_OF_PROVIDER);
@@ -247,6 +300,11 @@ export function MainContent(props) {
 
       {hasListings ? (
         <div className={listingsContainerClasses}>
+                {hideReviews ? null : isMobileLayout ? (
+        <MobileReviews reviews={reviews} queryReviewsError={queryReviewsError} />
+      ) : (
+        <DesktopReviews reviews={reviews} queryReviewsError={queryReviewsError} />
+      )}
           <H4 as="h2" className={css.listingsTitle}>
             <FormattedMessage id="ProfilePage.listingsTitle" values={{ count: listings.length }} />
           </H4>
@@ -259,11 +317,6 @@ export function MainContent(props) {
           </ul>
         </div>
       ) : null}
-      {hideReviews ? null : isMobileLayout ? (
-        <MobileReviews reviews={reviews} queryReviewsError={queryReviewsError} />
-      ) : (
-        <DesktopReviews reviews={reviews} queryReviewsError={queryReviewsError} />
-      )}
     </div>
   );
 }
@@ -369,6 +422,11 @@ export function ProfilePageComponent(props) {
     return null;
   }
   // This is rendering normal profile page (not preview for pending-approval)
+
+  const handleContactUserClick = () => {
+    onContactUser(user);
+  };
+  
   return (
     <Page
       scrollingDisabled={scrollingDisabled}
@@ -382,15 +440,22 @@ export function ProfilePageComponent(props) {
       <LayoutSideNavigation
         sideNavClassName={css.aside}
         topbar={<TopbarContainer />}
-        sideNav={
-          <AsideContent
+        sideNav={null}
+        footer={<FooterContainer />}
+      >
+        <AsideContent
             user={profileUser}
             showLinkToProfileSettingsPage={mounted && isCurrentUser}
             displayName={displayName}
-          />
-        }
-        footer={<FooterContainer />}
-      >
+        />
+        <ReviewWidget {...rest} />
+        <InlineTextButton
+      rootClassName={css.contact}
+      onClick={handleContactUserClick}
+      enforcePagePreloadFor="SignupPage"
+    >
+      <FormattedMessage id="UserCard.contactUser" />
+    </InlineTextButton>
         <MainContent
           bio={bio}
           displayName={displayName}

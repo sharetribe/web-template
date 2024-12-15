@@ -1,38 +1,84 @@
 import React from 'react';
 import css from './WhyUs.module.css';
+
 const WhyUs = () => {
   return (
     <div className={css.container}>
-      <h2 className={css.title}>Why Us?</h2>
+      <h2 className={css.title}>Perchè Club Joy</h2>
       <div className={css.grid}>
+
         <div className={css.item}>
-          <h3 className={css.heading}>Imagination</h3>
-          <p className={css.description}>
-            Envisioning how things could be, unencumbered by how they currently are.
-          </p>
+          <div className={css.left}>
+            <h3 className={css.heading}>Creato per le sfide HR</h3>
+          </div>
+          <div className={css.center}>
+            <span className={css.checkmark}>✔</span>
+          </div>
+          <div className={css.right}>
+            <p className={css.description}>
+              Unisci generazioni, risveglia soft skills e prepara il team a un futuro dove l’umano fa la differenza
+            </p>
+          </div>
         </div>
+
         <div className={css.item}>
-          <h3 className={css.heading}>Logic</h3>
-          <p className={css.description}>
-            Reasoning from first principles, and structuring ideas sharply.
-          </p>
+          <div className={css.left}>
+            <h3 className={css.headingHighlight}>Creatività che fa bene</h3>
+          </div>
+          <div className={css.center}>
+            <span className={css.checkmark}>✔</span>
+          </div>
+          <div className={css.right}>
+            <p className={css.description}>
+              Empatia, collaborazione e pensiero critico senza stress da performance
+            </p>
+          </div>
         </div>
+  
         <div className={css.item}>
-          <h3 className={css.heading}>Meritocracy</h3>
-          <p className={css.description}>
-            Assigning responsibilities solely based on people’s ability to carry them out, and
-            evaluating ideas regardless of where or whom they came from.
-          </p>
+          <div className={css.left}>
+            <h3 className={css.heading}>Risultati a prova di scienza</h3>
+          </div>
+          <div className={css.center}>
+            <span className={css.checkmark}>✔</span>
+          </div>
+          <div className={css.right}>
+            <p className={css.description}>
+              Team più motivati, connessi e pronti a innovare
+            </p>
+          </div>
         </div>
+
         <div className={css.item}>
-          <h3 className={css.heading}>Pragmatism</h3>
-          <p className={css.description}>
-            Optimizing for impact, finding the right scope—and the ideal balance between speed and
-            sophistication—at all times.
-          </p>
+          <div className={css.left}>
+            <h3 className={css.heading}>Supporto 24/7</h3>
+          </div>
+          <div className={css.center}>
+            <span className={css.checkmark}>✔</span>
+          </div>
+          <div className={css.right}>
+            <p className={css.description}>
+              Sempre al tuo fianco – cancella gratis fino a 5 giorni prima
+            </p>
+          </div>
+        </div>
+ 
+        <div className={css.item}>
+          <div className={css.left}>
+            <h3 className={css.heading}>Esperienze pratiche, no stress</h3>
+          </div>
+          <div className={css.center}>
+            <span className={css.checkmark}>✔</span>
+          </div>
+          <div className={css.right}>
+            <p className={css.description}>
+              Portiamo tutto noi, direttamente da voi
+            </p>
+          </div>
         </div>
       </div>
     </div>
   );
 };
+
 export default WhyUs;

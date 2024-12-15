@@ -11,7 +11,7 @@ const Sponsors = () => {
 
   return (
     <div className={css.container}>
-      <h2 className={css.title}>Press & Partners</h2>
+      <h2 className={css.title}>Ci trovi su</h2>
       <div className={css.logoGrid}>
         {sponsors.map((sponsor, index) => (
           <div key={index} className={css.logo}>

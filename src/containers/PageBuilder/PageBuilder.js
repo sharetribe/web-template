@@ -191,8 +191,8 @@ function PageBuilder(props) {
                             <HowItWorks />
                             <WhyUs />
                             <ActionTeamButtons />
-                            <Newsletter isTeamBuilding={isTeamBuilding} />
                             <Sponsors />
+                            <Newsletter isTeamBuilding={isTeamBuilding} />
                           </>
                         ) : (
                           <SectionBuilder sections={sections} options={options} />

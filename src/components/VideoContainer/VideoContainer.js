@@ -26,30 +26,38 @@ function VideoContainer({ className, isTeamBuilding }) {
   }, []);
 
   return (
-    <div className={`${css.videoContainer} ${className || ''}`}>
-        {isMobile ?
-              <iframe
-                width="100%"
-                height="500px"
-                src="https://drive.google.com/file/d/1fDHvBfCx51WdVLjqbI3tg7nFIzK1hJfC/preview"
-                allow="autoplay; encrypted-media"
-                allowFullScreen
-                title="Team Building Video"
-              >   </iframe>
-              : 
-              <iframe
-        className={css.videoIframe}
-        src="https://drive.google.com/file/d/1fDHvBfCx51WdVLjqbI3tg7nFIzK1hJfC/preview"
-        allow="autoplay; encrypted-media"
-        allowFullScreen
-        title="Team Building Video"
-      ></iframe>}
-            
-              {isMobile &&  <p >
-                Boost Creativity in Your Workplace Team Building with Club Joy
-                Take team-building to the next level with creative, hands-on workshops that come straight to your office. Whether it’s pottery or painting, our experiences are designed to help your team collaborate, unwind, and reignite their creativity.
-          With hassle-free planning and engaging activities, we make sure your event is fun, memorable, and completely stress-free—all while delivering real results.
-              </p>}
+    <div
+      className={`${!isMobile ? css.videoContainer : css.videoContainerMobile} ${className || ''}`}
+    >
+      {isMobile ? (
+        <>
+          <iframe
+            width="100%"
+            height="500px"
+            src="https://drive.google.com/file/d/1fDHvBfCx51WdVLjqbI3tg7nFIzK1hJfC/preview"
+            allow="autoplay; encrypted-media"
+            allowFullScreen
+            title="Team Building Video"
+          ></iframe>
+          <p>
+            Boost Creativity in Your Workplace Team Building with Club Joy Take
+            team-building to the next level with creative, hands-on workshops
+            that come straight to your office. Whether it’s pottery or painting,
+            our experiences are designed to help your team collaborate, unwind,
+            and reignite their creativity. With hassle-free planning and
+            engaging activities, we make sure your event is fun, memorable, and
+            completely stress-free—all while delivering real results.
+          </p>
+        </>
+      ) : (
+        <iframe
+          className={css.videoIframe}
+          src="https://drive.google.com/file/d/1fDHvBfCx51WdVLjqbI3tg7nFIzK1hJfC/preview"
+          allow="autoplay; encrypted-media"
+          allowFullScreen
+          title="Team Building Video"
+        ></iframe>
+      )}
     </div>
   );
 }
