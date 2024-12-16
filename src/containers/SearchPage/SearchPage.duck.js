@@ -12,6 +12,7 @@ import {
 import { constructQueryParamName, isOriginInUse, isStockInUse } from '../../util/search';
 import { hasPermissionToViewData, isUserAuthorized } from '../../util/userHelpers';
 import { parse } from '../../util/urlHelpers';
+import { LISTING_TAB_TYPES } from '../../util/types';
 
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 
@@ -115,9 +116,10 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
   // Read More:
   // https://www.sharetribe.com/docs/how-to/manage-search-schemas-with-flex-cli/#adding-listing-search-schemas
   const searchValidListingTypes = listingTypes => {
+    const validListingTypes = listingTypes.filter(l => l.listingType!== LISTING_TAB_TYPES.PORTFOLIO);
     return config.listing.enforceValidListingType
       ? {
-          pub_listingType: listingTypes.map(l => l.listingType),
+          pub_listingType: validListingTypes.map(l =>l.listingType),
           // pub_transactionProcessAlias: listingTypes.map(l => l.transactionType.alias),
           // pub_unitType: listingTypes.map(l => l.transactionType.unitType),
         }
