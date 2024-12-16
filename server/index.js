@@ -170,8 +170,13 @@ async function startServer() {
     // even if you have enabled basic authentication e.g. in staging environment.
     app.use('/.well-known', wellKnownRouter);
 
-    console.warn('\n\n\n*******************************');
-    console.warn('\n[SERVER] - dev:', dev);
+    // Initialize the authentication middleware for Node.js
+    // We use this to enable authenticating with
+    // a 3rd party identity provider (Auth0)
+    app.use(auth0RequestHandler);
+
+    // Server-side routes that do not render the application
+    app.use('/api', apiRouter);
 
     // Use basic authentication when not in dev mode. This is
     // intentionally after the static middleware and /.well-known
@@ -182,28 +187,11 @@ async function startServer() {
       const hasUsername = typeof USERNAME === 'string' && USERNAME.length > 0;
       const hasPassword = typeof PASSWORD === 'string' && PASSWORD.length > 0;
 
-      const validationAux = hasUsername && hasPassword
-      console.warn('\n[SERVER] - USERNAME:', USERNAME);
-      console.warn('\n[SERVER] - PASSWORD:', PASSWORD);
-      console.warn('\n[SERVER] - hasUsername:', hasUsername);
-      console.warn('\n[SERVER] - hasPassword:', hasPassword);
-      console.warn('\n[SERVER] - validationAux:', validationAux);
-
       // If BASIC_AUTH_USERNAME and BASIC_AUTH_PASSWORD have been set - let's use them
       if (hasUsername && hasPassword) {
         app.use(auth.basicAuth(USERNAME, PASSWORD));
       }
     }
-
-    console.warn('\n*******************************\n\n\n');
-
-    // Initialize the authentication middleware for Node.js
-    // We use this to enable authenticating with
-    // a 3rd party identity provider (Auth0)
-    app.use(auth0RequestHandler);
-
-    // Server-side routes that do not render the application
-    app.use('/api', apiRouter);
 
     const noCacheHeaders = {
       'Cache-control': 'no-cache, no-store, must-revalidate',

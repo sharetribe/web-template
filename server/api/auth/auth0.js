@@ -14,7 +14,7 @@ const clientID = process.env.AUTH0_MARKETPLACE_CLIENT_ID;
 const authorizationParams = {
   response_type: 'code',
   scope: 'openid email profile',
-  audience: process.env.AUTH0_MARKETPLACE_AUDIENCE,
+  audience: process.env.AUTH0_AUDIENCE,
 };
 
 const configParams = {
