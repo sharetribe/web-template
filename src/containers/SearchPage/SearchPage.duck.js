@@ -116,10 +116,12 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
   // Read More:
   // https://www.sharetribe.com/docs/how-to/manage-search-schemas-with-flex-cli/#adding-listing-search-schemas
   const searchValidListingTypes = listingTypes => {
-    const validListingTypes = listingTypes.filter(l => l.listingType!== LISTING_TAB_TYPES.PORTFOLIO);
+    const validListingTypes = listingTypes.filter(
+      l => l.listingType !== LISTING_TAB_TYPES.PORTFOLIO
+    );
     return config.listing.enforceValidListingType
       ? {
-          pub_listingType: validListingTypes.map(l =>l.listingType),
+          pub_listingType: validListingTypes.map(l => l.listingType),
           // pub_transactionProcessAlias: listingTypes.map(l => l.transactionType.alias),
           // pub_unitType: listingTypes.map(l => l.transactionType.unitType),
         }
