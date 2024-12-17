@@ -288,3 +288,43 @@
     padding: 0;
   }
 }
+
+.buttonGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.contactSellerButton {
+  font-weight: var(--fontWeightMedium);
+  color: var(--colorGrey700);
+  padding: 12px 12px;
+  border-radius: 4px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border:1px solid var(--colorGrey100)
+}
+
+.contactSellerButton:hover {
+  background-color: var(--marketplaceColorDark);
+  color:white;
+  text-decoration: none;
+  border-color:var(--marketplaceColor)
+}
+
+.sendIcon {
+  flex-shrink: 0;
+}
+
+.strokeMatter {
+  stroke: currentColor;
+}
+
+.sendMessageText {
+  margin-left: 4px;
+}
