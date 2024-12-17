@@ -130,6 +130,7 @@ const SearchMapInfoCard = props => {
         intl={intl}
         isInCarousel={hasCarousel}
         config={config}
+        hidePrice
       />
       {hasCarousel ? (
         <div className={classNames(css.paginationInfo, css.borderRadiusInheritBottom)}>

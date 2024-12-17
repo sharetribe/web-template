@@ -42,11 +42,11 @@ const priceData = (price, currency, intl) => {
 const LazyImage = lazyLoadWithDimensions(ResponsiveImage, { loadAfterInitialRendering: 3000 });
 
 const PriceMaybe = props => {
-  const { price, publicData, config, intl } = props;
+  const { hidePrice, price, publicData, config, intl } = props;
   const { listingType } = publicData || {};
   const validListingTypes = config.listing.listingTypes;
   const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
-  const showPrice = displayPrice(foundListingTypeConfig);
+  const showPrice = !hidePrice && displayPrice(foundListingTypeConfig);
   if (!showPrice && price) {
     return null;
   }
@@ -77,6 +77,7 @@ export const ListingCardComponent = props => {
     renderSizes,
     setActiveListing,
     showAuthorInfo,
+    hidePrice,
   } = props;
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureListing(listing);
@@ -127,7 +128,13 @@ export const ListingCardComponent = props => {
         />
       </AspectRatioWrapper>
       <div className={css.info}>
-        <PriceMaybe price={price} publicData={publicData} config={config} intl={intl} />
+        <PriceMaybe
+          price={price}
+          publicData={publicData}
+          config={config}
+          intl={intl}
+          hidePrice={hidePrice}
+        />
         <div className={css.mainInfo}>
           <div className={css.title}>
             {richText(title, {
@@ -152,6 +159,7 @@ ListingCardComponent.defaultProps = {
   renderSizes: null,
   setActiveListing: null,
   showAuthorInfo: true,
+  hidePrice: false,
 };
 
 ListingCardComponent.propTypes = {
@@ -160,6 +168,7 @@ ListingCardComponent.propTypes = {
   intl: intlShape.isRequired,
   listing: oneOfType([propTypes.listing, propTypes.ownListing]).isRequired,
   showAuthorInfo: bool,
+  hidePrice: bool,
 
   // Responsive image sizes hint
   renderSizes: string,
