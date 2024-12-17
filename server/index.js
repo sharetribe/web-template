@@ -170,6 +170,14 @@ async function startServer() {
     // even if you have enabled basic authentication e.g. in staging environment.
     app.use('/.well-known', wellKnownRouter);
 
+    // Initialize the authentication middleware for Node.js
+    // We use this to enable authenticating with
+    // a 3rd party identity provider (Auth0)
+    app.use(auth0RequestHandler);
+
+    // Server-side routes that do not render the application
+    app.use('/api', apiRouter);
+
     // Use basic authentication when not in dev mode. This is
     // intentionally after the static middleware and /.well-known
     // endpoints as those will bypass basic auth.
@@ -184,14 +192,6 @@ async function startServer() {
         app.use(auth.basicAuth(USERNAME, PASSWORD));
       }
     }
-
-    // Initialize the authentication middleware for Node.js
-    // We use this to enable authenticating with
-    // a 3rd party identity provider (Auth0)
-    app.use(auth0RequestHandler);
-
-    // Server-side routes that do not render the application
-    app.use('/api', apiRouter);
 
     const noCacheHeaders = {
       'Cache-control': 'no-cache, no-store, must-revalidate',

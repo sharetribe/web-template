@@ -45,7 +45,17 @@ const processEvent = async (integrationSdk, event, storageManagerClient) => {
 
 const analyzeEventGroup = events => {
   try {
-    const totalListings = events.length;
+    const parsedEvents = []
+    events.forEach(event => {
+      const { resourceType, eventType, resource } = event.attributes;
+      if (resourceType !== RESOURCE_TYPE || eventType !== EVENT_TYPES) return;
+      const { attributes: listing } = resource;
+      const isProductListing = listing?.publicData?.listingType === LISTING_TYPES.PRODUCT;
+      if (isProductListing) {
+        parsedEvents.push(event)
+      }
+    });
+    const totalListings = parsedEvents.length;
     const withValidEvents = !!totalListings;
     if (withValidEvents) {
       slackProductListingsCreatedWorkflow(totalListings);

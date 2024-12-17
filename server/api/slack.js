@@ -206,6 +206,7 @@ const verifySlackRequest = (req, res) => {
   if (validSignature) {
     return true;
   } else {
+    console.debug(`Slack interactivity: Invalid Signature`);
     return res.status(400).send('Verification failed');
   }
 };
