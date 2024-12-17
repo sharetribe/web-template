@@ -275,7 +275,7 @@ const tabsActive = (isNew, listing, tabs, config) => {
 
 const scrollToTab = (tabPrefix, tabId) => {
   const el = document.querySelector(`#${tabPrefix}_${tabId}`);
-  if (el) {
+  if (el && el.scrollIntoView) {
     el.scrollIntoView({
       block: 'start',
       behavior: 'smooth',
