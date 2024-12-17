@@ -70,22 +70,12 @@ const slackInteractivity = async (req, res) => {
   const userId = payload.actions[0].value;
   console.warn(`--- action:`, action);
   console.warn(`--- userId:`, userId);
-
-
-  console.warn('\n\n\n*******************************');
-  console.warn('\n[slackInteractivity] - action:', action);
-  console.warn('\n[slackInteractivity] - userId:', userId);
-
   try {
     const channel = payload.channel.id;
     const { ts: messageTimestamp, blocks } = payload.message;
     const integrationSdk = integrationSdkInit();
     const reviewedAt = new Date();
     let metadata;
-
-    console.warn('\n[slackInteractivity] - channel:', channel);
-    console.warn('\n*******************************\n\n\n');
-
     switch (action) {
       case SLACK_ACTIONS.approveSeller: {
         console.warn(`--- APPROVE SELLER: ${userId}`);
@@ -193,10 +183,6 @@ const slackInteractivity = async (req, res) => {
 
 const verifySlackRequest = (req, res) => {
   const slackVerificationToken = process.env.SLACK_BOT_VERIFICATION_TOKEN;
-
-  console.warn('\n\n\n*******************************');
-  console.warn('\n[verifySlackRequest] - slackVerificationToken:', slackVerificationToken);
-
   const reqHeaders = req.headers;
   const requestTimestamp = reqHeaders['x-slack-request-timestamp'];
   const slackSignature = reqHeaders['x-slack-signature'];
@@ -217,11 +203,6 @@ const verifySlackRequest = (req, res) => {
   const payload = JSON.parse(req.body.payload);
   const requestToken = payload.token;
   const validSignature = requestToken === slackVerificationToken;
-
-  console.warn('\n[verifySlackRequest] - requestToken:', requestToken);
-  console.warn('\n[verifySlackRequest] - validSignature:', validSignature);
-  console.warn('\n*******************************\n\n\n');
-
   if (validSignature) {
     return true;
   } else {
@@ -236,9 +217,6 @@ const verifySlackRequestMiddleware = (req, res, next) => {
     next();
   } catch (e) {
     console.debug(`Slack interactivity: ${e}`);
-
-    console.warn('\n*******************************\n\n\n');
-
     res.status(400).send('Verification failed');
   }
 };
