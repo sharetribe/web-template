@@ -71,7 +71,7 @@
 }
 
 .ownMessageContent {
-  background-color: var(--marketplaceColor);
+  background-color: var(--colorBlueNote);
   color: var(--colorWhite);
   float: right;
 }
