@@ -1,6 +1,7 @@
+import { currentUserShowSuccess } from '../../ducks/user.duck';
+import { postUploadToS3 } from '../../util/api';
 import { denormalisedResponseEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
-import { currentUserShowSuccess } from '../../ducks/user.duck';
 
 // ================ Action types ================ //
 
@@ -134,9 +135,18 @@ export function uploadImage(actionPayload) {
 }
 
 export const updateProfile = actionPayload => {
-  return (dispatch, getState, sdk) => {
+  return async (dispatch, getState, sdk) => {
     dispatch(updateProfileRequest());
+    const { images, publicData = {}, certifications, ...rest } = actionPayload;
 
+    if (images && Array.isArray(images) && images.length > 0) {
+      const url = await postUploadToS3(images);
+      publicData.certifications = certifications ? certifications.concat(url) : url;
+    } else if (images && Array.isArray(images) && images.length === 0 && certifications) {
+      publicData.certifications = certifications;
+    }
+    const updateValues = { publicData, ...rest };
+    console.log(updateValues);
     const queryParams = {
       expand: true,
       include: ['profileImage'],
@@ -144,7 +154,7 @@ export const updateProfile = actionPayload => {
     };
 
     return sdk.currentUser
-      .updateProfile(actionPayload, queryParams)
+      .updateProfile(updateValues, queryParams)
       .then(response => {
         dispatch(updateProfileSuccess(response));
 

@@ -142,4 +142,7 @@ export { default as MaintenanceMode } from './MaintenanceMode/MaintenanceMode';
 export { default as ModalMissingInformation } from './ModalMissingInformation/ModalMissingInformation';
 
 export const FieldNormalDateInput = loadable(() => import(/* webpackChunkName: "FieldNormalDateInput" */ './FieldNormalDateInput/FieldNormalDateInput'));
+export { default as FieldDropzone } from './FieldDropzone/FieldDropzone';
+export { default as IconLink } from './IconLink/IconLink';
+export { default as ImageFromS3 } from './ImageFromS3/ImageFromS3';
 
