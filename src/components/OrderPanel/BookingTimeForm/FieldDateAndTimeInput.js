@@ -201,7 +201,9 @@ const getAllTimeValues = (
   timeSlots,
   startDate,
   selectedStartTime,
-  selectedEndDate
+  selectedEndDate,
+  selectedEndTime,
+  seatsEnabled
 ) => {
   const startTimes = selectedStartTime
     ? []
@@ -234,11 +236,106 @@ const getAllTimeValues = (
     ? new Date(findNextBoundary(startTimeAsDate, 'hour', timeZone).getTime() - 1)
     : null;
 
+  const selectedEndTimeAsDateObject = selectedEndTime ? timestampToDate(selectedEndTime) : null;
+
   const selectedTimeSlot = timeSlots.find(t =>
     isInRange(startTimeAsDate, t.attributes.start, t.attributes.end)
   );
 
-  const endTimes = getAvailableEndTimes(intl, timeZone, startTime, endDate, selectedTimeSlot);
+  const selectedTimeSlotIndex = timeSlots.findIndex(t =>
+    isInRange(startTimeAsDate, t.attributes.start, t.attributes.end)
+  );
+
+  const findLastAdjacent = index => {
+    const current = timeSlots[index];
+    const next = timeSlots[index + 1];
+    return next && isSameDate(current.attributes.end, next.attributes.start)
+      ? findLastAdjacent(index + 1)
+      : index;
+  };
+
+  const findFirstAdjacent = index => {
+    const current = timeSlots[index];
+    const previous = timeSlots[index - 1];
+    return previous && isSameDate(current.attributes.start, previous.attributes.end)
+      ? findFirstAdjacent(index - 1)
+      : index;
+  };
+
+  /**
+   * Finds the smallest number of seats in time slots that meet the specified conditions.
+   */
+  const findMinimumAvailableSeats = (
+    selectedEndTimeAsDateObject,
+    timeSlots,
+    selectedTimeSlotIndex
+  ) => {
+    // Retrieve the selected time slot from the list.
+    const selectedTimeSlot = timeSlots[selectedTimeSlotIndex];
+    if (!selectedTimeSlot) {
+      return null; // Return null if the selected time slot is invalid.
+    }
+
+    // Check if the selected end time falls within the selected time slot.
+    const endTimeIsWithinSelected = isInRange(
+      selectedEndTimeAsDateObject - 1,
+      selectedTimeSlot.attributes.start,
+      selectedTimeSlot.attributes.end
+    );
+
+    if (endTimeIsWithinSelected) {
+      return selectedTimeSlot.attributes.seats; // Return the seats for the selected time slot if end time and start time are within the same timeslot.
+    }
+
+    const lastIndex = findLastAdjacent(selectedTimeSlotIndex);
+
+    // Extract the relevant time slots to check (we choose all slots between the first )
+    const relevantTimeSlots = timeSlots.slice(selectedTimeSlotIndex, lastIndex + 1);
+
+    // Find the smallest number of seats in the relevant time slots.
+    const minSeats = relevantTimeSlots.reduce((smallest, timeslot) => {
+      const seats = timeslot.attributes.seats;
+
+      // Update the smallest seats found so far.
+      const newSmallest = Math.min(smallest, seats);
+
+      return newSmallest;
+    }, 100); // Max seats value is 100
+
+    return minSeats;
+  };
+
+  const combineTimeSlots = (currentTimeSlotIndex, timeSlots, seatsEnabled) => {
+    if (!timeSlots) {
+      return null;
+    }
+
+    if (timeSlots.length <= 1 || seatsEnabled === false) {
+      return timeSlots[0];
+    }
+    const lastIndex = findLastAdjacent(currentTimeSlotIndex);
+    const firstIndex = findFirstAdjacent(currentTimeSlotIndex);
+
+    const smallestSeats = seatsEnabled
+      ? findMinimumAvailableSeats(selectedEndTimeAsDateObject, timeSlots, currentTimeSlotIndex)
+      : 1;
+
+    const combinedTimeSlot = {
+      ...timeSlots[currentTimeSlotIndex],
+      attributes: {
+        ...timeSlots[currentTimeSlotIndex].attributes,
+        start: timeSlots[firstIndex].attributes.start,
+        end: timeSlots[lastIndex].attributes.end,
+        seats: smallestSeats,
+      },
+    };
+
+    return combinedTimeSlot;
+  };
+
+  const combinedTimeSlot = combineTimeSlots(selectedTimeSlotIndex, timeSlots, seatsEnabled) || {};
+
+  const endTimes = getAvailableEndTimes(intl, timeZone, startTime, endDate, combinedTimeSlot);
 
   // We need to convert the timestamp we use as a default value
   // for endTime to string for consistency. This is expected later when we
@@ -248,7 +345,9 @@ const getAllTimeValues = (
       ? endTimes[0].timestamp.toString()
       : null;
 
-  return { startTime, endDate, endTime, selectedTimeSlot };
+  const finalTimeSlots = seatsEnabled ? combinedTimeSlot : selectedTimeSlot;
+
+  return { startTime, endDate, endTime, selectedTimeSlot: finalTimeSlots };
 };
 
 /**
@@ -341,12 +440,22 @@ const handleMonthClick = (
 };
 
 const onBookingStartDateChange = (props, setCurrentMonth) => value => {
-  const { monthlyTimeSlots, timeZone, intl, form: formApi, handleFetchLineItems } = props;
+  const {
+    monthlyTimeSlots,
+    timeZone,
+    intl,
+    form: formApi,
+    handleFetchLineItems,
+    seatsEnabled,
+  } = props;
   if (!value || !value.date) {
     formApi.batch(() => {
       formApi.change('bookingStartTime', null);
       formApi.change('bookingEndDate', { date: null });
       formApi.change('bookingEndTime', null);
+      if (seatsEnabled) {
+        formApi.change('seats', 1);
+      }
     });
     // Reset the currentMonth too if bookingStartDate is cleared
     setCurrentMonth(getStartOf(TODAY, 'month', timeZone));
@@ -370,6 +479,9 @@ const onBookingStartDateChange = (props, setCurrentMonth) => value => {
     formApi.change('bookingStartTime', startTime);
     formApi.change('bookingEndDate', { date: endDate });
     formApi.change('bookingEndTime', endTime);
+    if (seatsEnabled) {
+      formApi.change('seats', 1);
+    }
   });
 
   handleFetchLineItems({
@@ -378,12 +490,21 @@ const onBookingStartDateChange = (props, setCurrentMonth) => value => {
       bookingStartTime: startTime,
       bookingEndDate: { date: endDate },
       bookingEndTime: endTime,
+      seats: seatsEnabled ? 1 : undefined,
     },
   });
 };
 
 const onBookingStartTimeChange = props => value => {
-  const { monthlyTimeSlots, timeZone, intl, form: formApi, values, handleFetchLineItems } = props;
+  const {
+    monthlyTimeSlots,
+    timeZone,
+    intl,
+    form: formApi,
+    values,
+    handleFetchLineItems,
+    seatsEnabled,
+  } = props;
   const startDate = values.bookingStartDate.date;
   const timeSlotsOnSelectedDate = getTimeSlotsOnDate(monthlyTimeSlots, startDate, timeZone);
 
@@ -398,6 +519,9 @@ const onBookingStartTimeChange = props => value => {
   formApi.batch(() => {
     formApi.change('bookingEndDate', { date: endDate });
     formApi.change('bookingEndTime', endTime);
+    if (seatsEnabled) {
+      formApi.change('seats', 1);
+    }
   });
   handleFetchLineItems({
     values: {
@@ -405,12 +529,17 @@ const onBookingStartTimeChange = props => value => {
       bookingStartTime: value,
       bookingEndDate: { date: endDate },
       bookingEndTime: endTime,
+      seats: seatsEnabled ? 1 : undefined,
     },
   });
 };
 
 const onBookingEndTimeChange = props => value => {
-  const { values, handleFetchLineItems } = props;
+  const { values, handleFetchLineItems, form: formApi, seatsEnabled } = props;
+
+  if (seatsEnabled) {
+    formApi.change('seats', 1);
+  }
 
   handleFetchLineItems({
     values: {
@@ -418,6 +547,7 @@ const onBookingEndTimeChange = props => value => {
       bookingStartTime: values.bookingStartTime,
       bookingEndDate: values.bookingEndDate,
       bookingEndTime: value,
+      seats: seatsEnabled ? 1 : undefined,
     },
   });
 };
@@ -473,9 +603,13 @@ const FieldDateAndTimeInput = props => {
     monthlyTimeSlots,
     onMonthChanged,
     timeZone,
+    setSeatsOptions,
+    seatsEnabled,
     intl,
     dayCountAvailableForBooking,
   } = props;
+
+  const classes = classNames(rootClassName || css.root, className);
 
   const [currentMonth, setCurrentMonth] = useState(getStartOf(TODAY, 'month', timeZone));
 
@@ -484,6 +618,44 @@ const FieldDateAndTimeInput = props => {
   const currentMonthInProgress = monthlyTimeSlots[monthId]?.fetchTimeSlotsInProgress;
   const nextMonthId = monthIdString(nextMonthFn(currentMonth, timeZone));
   const nextMonthInProgress = monthlyTimeSlots[nextMonthId]?.fetchTimeSlotsInProgress;
+
+  const bookingStartDate = values.bookingStartDate?.date || null;
+  const bookingStartTime = values.bookingStartTime || null;
+  const bookingEndDate = values.bookingEndDate?.date || null;
+  const bookingEndTime = values.bookingEndTime || null;
+
+  // Currently available monthly data
+  const [startMonth, endMonth] = getMonthlyFetchRange(monthlyTimeSlots, timeZone);
+  const timeSlotsData = timeSlotsPerDate(startMonth, endMonth, allTimeSlots, timeZone);
+  const bookingStartIdString = stringifyDateToISO8601(bookingStartDate, timeZone);
+  const timeSlotsOnSelectedDate = timeSlotsData[bookingStartIdString]?.timeSlots || [];
+
+  const availableStartTimes = getAvailableStartTimes(
+    intl,
+    timeZone,
+    bookingStartDate,
+    timeSlotsOnSelectedDate
+  );
+
+  const firstAvailableStartTime =
+    availableStartTimes.length > 0 && availableStartTimes[0] && availableStartTimes[0].timestamp
+      ? availableStartTimes[0].timestamp
+      : null;
+
+  const { startTime, endDate, selectedTimeSlot } = getAllTimeValues(
+    intl,
+    timeZone,
+    timeSlotsOnSelectedDate,
+    bookingStartDate,
+    bookingStartTime || firstAvailableStartTime,
+    bookingEndDate || bookingStartDate,
+    bookingEndTime,
+    seatsEnabled
+  );
+
+  const seatsOptions = selectedTimeSlot?.attributes?.seats
+    ? Array.from({ length: selectedTimeSlot.attributes.seats }, (_, i) => i + 1)
+    : [];
 
   useEffect(() => {
     // Call onMonthChanged function if it has been passed in among props.
@@ -521,38 +693,9 @@ const FieldDateAndTimeInput = props => {
     }
   }, [currentMonth, currentMonthInProgress, nextMonthInProgress, monthlyTimeSlots, timeZone]);
 
-  const classes = classNames(rootClassName || css.root, className);
-
-  const bookingStartDate = values.bookingStartDate?.date || null;
-  const bookingStartTime = values.bookingStartTime || null;
-  const bookingEndDate = values.bookingEndDate?.date || null;
-
-  // Currently available monthly data
-  const [startMonth, endMonth] = getMonthlyFetchRange(monthlyTimeSlots, timeZone);
-  const timeSlotsData = timeSlotsPerDate(startMonth, endMonth, allTimeSlots, timeZone);
-  const bookingStartIdString = stringifyDateToISO8601(bookingStartDate, timeZone);
-  const timeSlotsOnSelectedDate = timeSlotsData[bookingStartIdString]?.timeSlots || [];
-
-  const availableStartTimes = getAvailableStartTimes(
-    intl,
-    timeZone,
-    bookingStartDate,
-    timeSlotsOnSelectedDate
-  );
-
-  const firstAvailableStartTime =
-    availableStartTimes.length > 0 && availableStartTimes[0] && availableStartTimes[0].timestamp
-      ? availableStartTimes[0].timestamp
-      : null;
-
-  const { startTime, endDate, selectedTimeSlot } = getAllTimeValues(
-    intl,
-    timeZone,
-    timeSlotsOnSelectedDate,
-    bookingStartDate,
-    bookingStartTime || firstAvailableStartTime,
-    bookingEndDate || bookingStartDate
-  );
+  useEffect(() => {
+    setSeatsOptions(seatsOptions);
+  }, [selectedTimeSlot?.attributes?.seats]);
 
   const availableEndTimes = getAvailableEndTimes(
     intl,

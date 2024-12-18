@@ -11,6 +11,7 @@ import FieldDateAndTimeInput from './FieldDateAndTimeInput';
 const { UUID } = sdkTypes;
 
 const identity = v => v;
+const noop = () => {};
 
 const options = { weekday: 'short', month: 'long', day: 'numeric' };
 const placeholderText = new Intl.DateTimeFormat('en-US', options).format(new Date());
@@ -153,6 +154,7 @@ const FormComponent = props => (
             form={form}
             pristine={pristine}
             timeZone={timeZone}
+            setSeatsOptions={noop}
             dayCountAvailableForBooking={dayCountAvailableForBooking}
           />
           <Button type="submit" disabled={submitDisabled} style={{ marginTop: '24px' }}>
