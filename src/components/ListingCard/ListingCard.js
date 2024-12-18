@@ -16,6 +16,8 @@ import { createSlug } from '../../util/urlHelpers';
 import { isBookingProcessAlias } from '../../transactions/transaction';
 
 import { AspectRatioWrapper, NamedLink, ResponsiveImage } from '../../components';
+import { getCategoryLabel } from '../../config/categories';
+
 
 import css from './ListingCard.module.css';
 
@@ -90,6 +92,8 @@ export const ListingCardComponent = props => {
   const firstImage =
     currentListing.images && currentListing.images.length > 0 ? currentListing.images[0] : null;
 
+    //console.log("CURRENT LISTING", currentListing)
+
   const {
     aspectWidth = 1,
     aspectHeight = 1,
@@ -105,6 +109,8 @@ export const ListingCardComponent = props => {
         onMouseLeave: () => setActiveListing(null),
       }
     : null;
+
+  const categoryLabel = getCategoryLabel(listing?.attributes?.publicData?.categoryLevel1);
 
   return (
     <NamedLink className={classes} name="ListingPage" params={{ id, slug }}>
@@ -122,29 +128,42 @@ export const ListingCardComponent = props => {
           sizes={renderSizes}
         />
       </AspectRatioWrapper>
+      
+      
+
       <div className={css.info}>
-        <PriceMaybe
-          price={price}
-          publicData={publicData}
-          config={config}
-          intl={intl}
-          uiCurrency={uiCurrency}
-        />
+       
+        <div className={css.priceInfo}>
+          <PriceMaybe
+            price={price}
+            publicData={publicData}
+            config={config}
+            intl={intl}
+            uiCurrency={uiCurrency}
+          />
+          {categoryLabel && (<h6 className={css.category}>{categoryLabel}</h6>)}
+        </div>
+
         <div className={css.mainInfo}>
+          
           <div className={css.title}>
             {richText(title, {
               longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
               longWordClass: css.longWord,
             })}
           </div>
+          
           {showAuthorInfo ? (
             <div className={css.authorInfo}>
               <FormattedMessage id="ListingCard.author" values={{ authorName }} />
             </div>
           ) : null}
         </div>
+        
       </div>
+      
     </NamedLink>
+    
   );
 };
 

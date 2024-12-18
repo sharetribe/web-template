@@ -408,6 +408,7 @@ const OrderPanel = props => {
               fetchLineItemsError={fetchLineItemsError}
               payoutDetailsWarning={payoutDetailsWarning}
               showCurrencyNotify={showCurrencyNotify}
+              listing={listing}
             />
           </>
         ) : showInquiryForm ? (

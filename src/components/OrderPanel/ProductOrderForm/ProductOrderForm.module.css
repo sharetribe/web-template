@@ -86,3 +86,13 @@
     padding: 0;
   }
 }
+
+.category {
+  margin-top:24px;
+}
+.categoryLabel{
+  padding:0 0 5px 0
+}
+.categoryValue{
+  margin:0;
+}
