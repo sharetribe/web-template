@@ -1159,5 +1159,7 @@
   "UserNav.profileSettings": "Impostazioni profilo",
   "UserNav.yourListings": "I tuoi annunci",
   "TransactionPage.leaveReview.provider.actionButton":"Concludi il lavoro ",
-  "TransactionPage.leaveReview.customer.actionButton":"Rilascia il pagamento"
+  "TransactionPage.leaveReview.customer.actionButton":"Rilascia il pagamento",
+  "FieldDropzone.addImagesMessage":"Upload Files",
+  "FieldDropzone.browseMessage":"browse"
 }

@@ -1,27 +1,28 @@
-import React, { Component } from 'react';
-import { bool, string } from 'prop-types';
-import { compose } from 'redux';
-import { Field, Form as FinalForm } from 'react-final-form';
-import isEqual from 'lodash/isEqual';
 import classNames from 'classnames';
 import arrayMutators from 'final-form-arrays';
+import isEqual from 'lodash/isEqual';
+import { bool, string } from 'prop-types';
+import React, { Component } from 'react';
+import { Field, Form as FinalForm } from 'react-final-form';
+import { compose } from 'redux';
 
-import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { ensureCurrentUser } from '../../../util/data';
-import { propTypes } from '../../../util/types';
-import * as validators from '../../../util/validators';
 import { isUploadImageOverLimitError } from '../../../util/errors';
+import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import { propTypes } from '../../../util/types';
 import { getPropsForCustomUserFieldInputs } from '../../../util/userHelpers';
+import * as validators from '../../../util/validators';
 
 import {
-  Form,
   Avatar,
   Button,
-  ImageFromFile,
-  IconSpinner,
-  FieldTextInput,
-  H4,
   CustomExtendedDataField,
+  FieldDropzone,
+  FieldTextInput,
+  Form,
+  H4,
+  IconSpinner,
+  ImageFromFile,
 } from '../../../components';
 
 import css from './ProfileSettingsForm.module.css';
@@ -78,10 +79,18 @@ const DisplayNameMaybe = props => {
 class ProfileSettingsFormComponent extends Component {
   constructor(props) {
     super(props);
-
+    const { initialValues } = props;
+    
+    const {pub_certifications} = initialValues || {};
     this.uploadDelayTimeoutId = null;
-    this.state = { uploadDelay: false };
+    this.state = { uploadDelay: false, files:pub_certifications?? [] };
     this.submittedValues = {};
+
+    this.setFiles = this.setFiles.bind(this);
+  }
+
+  setFiles(newFiles) {
+    this.setState({ files: newFiles });
   }
 
   componentDidUpdate(prevProps) {
@@ -372,6 +381,16 @@ class ProfileSettingsFormComponent extends Component {
                   <CustomExtendedDataField {...fieldProps} formId={formId} />
                 ))}
               </div>
+
+
+              <label><FormattedMessage id="ProfileSettingsForm.uploadfiles" /></label>
+              <FieldDropzone
+                id={`${formId}.images`}
+                className={css.imagesField}
+                name="images"
+                files={this.state.files}
+                setFiles={this.setFiles}
+              />
               {submitError}
               <Button
                 className={css.submitButton}
