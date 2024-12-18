@@ -1,24 +1,24 @@
-import { bool, func, object, shape, string } from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
+import { bool, func, object, shape, string } from 'prop-types';
 import { compose } from 'redux';
+import { connect } from 'react-redux';
 
 import { useConfiguration } from '../../context/configurationContext';
-import { isScrollingDisabled } from '../../ducks/ui.duck';
-import { ensureCurrentUser } from '../../util/data';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { PROFILE_PAGE_PENDING_APPROVAL_VARIANT } from '../../util/urlHelpers';
+import { ensureCurrentUser } from '../../util/data';
 import {
   initialValuesForUserFields,
   isUserAuthorized,
   pickUserFieldsData,
 } from '../../util/userHelpers';
+import { isScrollingDisabled } from '../../ducks/ui.duck';
 
-import { H3, LayoutSingleColumn, NamedLink, Page, UserNav } from '../../components';
+import { H3, Page, UserNav, NamedLink, LayoutSingleColumn } from '../../components';
 
-import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import ProfileSettingsForm from './ProfileSettingsForm/ProfileSettingsForm';
 
@@ -67,7 +67,8 @@ export const ProfileSettingsPageComponent = props => {
   const { userFields, userTypes = [] } = config.user;
 
   const handleSubmit = (values, userType) => {
-    const { firstName, lastName, displayName, bio: rawBio, images, ...rest } = values;
+    const { firstName, lastName, displayName, bio: rawBio, ...rest } = values;
+
     const displayNameMaybe = displayName
       ? { displayName: displayName.trim() }
       : { displayName: null };
@@ -93,17 +94,11 @@ export const ProfileSettingsPageComponent = props => {
     const uploadedImage = props.image;
 
     // Update profileImage only if file system has been accessed
-    let updatedValues =
+    const updatedValues =
       uploadedImage && uploadedImage.imageId && uploadedImage.file
         ? { ...profile, profileImageId: uploadedImage.imageId }
         : profile;
-    if (images) {
-      const uploadFile = images.filter(image => image instanceof File);
-      const uploadedFile = images.filter(image => typeof image === 'string');
-      updatedValues.images = uploadFile;
-      updatedValues.certifications = uploadedFile;
-    }
-    
+
     onUpdateProfile(updatedValues);
   };
 
@@ -120,7 +115,7 @@ export const ProfileSettingsPageComponent = props => {
   // I.e. the status is active, not pending-approval or banned
   const isUnauthorizedUser = currentUser && !isUserAuthorized(currentUser);
 
-  const { userType, certifications } = publicData || {};
+  const { userType } = publicData || {};
   const profileImageId = user.profileImage ? user.profileImage.id : null;
   const profileImage = image || { imageId: profileImageId };
   const userTypeConfig = userTypes.find(config => config.userType === userType);
@@ -138,7 +133,6 @@ export const ProfileSettingsPageComponent = props => {
         ...displayNameMaybe,
         bio,
         profileImage: user.profileImage,
-        pub_certifications: certifications,
         ...initialValuesForUserFields(publicData, 'public', userType, userFields),
         ...initialValuesForUserFields(protectedData, 'protected', userType, userFields),
         ...initialValuesForUserFields(privateData, 'private', userType, userFields),
@@ -241,7 +235,10 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const ProfileSettingsPage = compose(
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  ),
   injectIntl
 )(ProfileSettingsPageComponent);
 
