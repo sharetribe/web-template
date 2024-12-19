@@ -25,12 +25,15 @@ const ACCEPT_FILES = {
   'image/jpeg': [],
   'image/png': [],
   'image/gif': [],
+  'application/msword': [],
+  'application/pdf': [],
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document': [],
 };
-const FILE_DOCUMENT_TYPES = ['pdf', 'doc', 'docx'];
+export const FILE_DOCUMENT_TYPES = ['pdf', 'doc', 'docx'];
 const USE_FC_ACCESS_API = false;
 const MAX_SIZE = 20 * 1024 * 1024; // 20MB in bytes
 
-const checkFileType = url => {
+export const checkFileType = url => {
   try {
     const urlObj = new URL(url);
     const pathname = urlObj.pathname;
@@ -53,7 +56,7 @@ const checkFileType = url => {
     } else {
       fileType = 'unknown'; // Return "unknown" for unsupported file types
     }
-    return `${fileName}, ${fileType}`;
+    return `${fileName},${fileType}`;
   } catch (err) {
     console.error('Invalid URL:', err);
     return ''; // Return an empty string on error
@@ -83,7 +86,7 @@ const RemoveButton = props => {
   );
 };
 
-const PreviewLink = props => {
+export const PreviewLink = props => {
   const { file } = props;
   return file?.link ? (
     <ExternalLink className={css.previewLink} href={file}>
@@ -100,13 +103,13 @@ const Thumb = props => {
   }
   let getFileType = '';
   let getFileName = '';
-  if (file && typeof input === 'string') {
+  if (file && typeof file === 'string') {
     getFileType = checkFileType(file).split(',')[1];
     getFileName = checkFileType(file).split(',')[0];
   }
 
   const fileExtension = file?.name?.split('.').reverse()[0];
-  const isFileDocument = FILE_DOCUMENT_TYPES.includes(getFileType);
+  const isFileDocument = FILE_DOCUMENT_TYPES.includes(getFileType.toString());
 
   const renderDocument = (
     <div className={css.thumbFile}>
@@ -114,7 +117,7 @@ const Thumb = props => {
     </div>
   );
 
-  const renderPreviewImage = <img src={file?.preview} className={css.thumbImage} />;
+  const renderPreviewImage = <img src={file?.preview} className={css.thumbImage} alt={file?.name}/>;
   const renderImage = (
     <ImageFromS3
       id={file}
@@ -128,8 +131,8 @@ const Thumb = props => {
   const renderFile = isFileDocument
     ? renderDocument
     : file?.preview
-    ? renderPreviewImage
-    : renderImage;
+      ? renderPreviewImage
+      : renderImage;
 
   return (
     <li className={css.thumb} key={file?.name}>
@@ -192,7 +195,7 @@ const FieldDropzoneComponent = props => {
     //       : file.id !== fileIndexOrImgId
     //     : file.index !== fileIndexOrImgId
     // );
-    const newFiles = files.filter(file=> file !==fileIndexOrImgId);
+    const newFiles = files.filter(file => file !== fileIndexOrImgId);
     setFiles(newFiles);
   };
 

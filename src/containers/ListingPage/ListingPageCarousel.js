@@ -68,6 +68,7 @@ import {
   getListingsOffeListingById,
   sendInquiry,
   setInitialValues,
+  updateOfferForm,
 } from './ListingPage.duck';
 
 import ActionBarMaybe from './ActionBarMaybe';
@@ -77,6 +78,7 @@ import {
   handleSubmit,
   handleSubmitCheckoutPageWithInquiry,
   handleSubmitInquiry,
+  handleUpdateOffer,
   listingImages,
   LoadingPage,
   priceData,
@@ -97,6 +99,7 @@ import locationSVG from '../../assets/location.svg';
 import { MIN_LENGTH_FOR_LONG_WORDS } from '../ProfilePage/ProfilePage.js';
 import SectionGallery from './SectionGallery.js';
 import SectionOfferListingsMaybe from './SectionOfferListingsMaybe.js';
+import UpdateOfferForm from './UpdateOfferForm/UpdateOfferForm.js';
 
 const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
 
@@ -108,6 +111,8 @@ export const ListingPageComponent = props => {
   );
 
   const [customInquiryModalOpen, setCustomInquiryModalOpen] = useState(false);
+  const [updateOfferModalOpen, setUpdateOfferModalOpen] = useState(false);
+  const [selectedListing, setSelectedListing] = useState(null);
 
   const {
     isAuthenticated,
@@ -140,6 +145,7 @@ export const ListingPageComponent = props => {
     onInquiryWithoutPayment,
     onCreateSellerListing,
     offerListingItems,
+    onUpdateOffer,
   } = props;
 
   const listingConfig = config.listing;
@@ -238,7 +244,7 @@ export const ListingPageComponent = props => {
   const currentAuthor = authorAvailable ? currentListing.author : null;
   const ensuredAuthor = ensureUser(currentAuthor);
   const noPayoutDetailsSetWithOwnListing =
-    isOwnListing && (processType !== 'inquiry' && !currentUser?.attributes?.stripeConnected);
+    isOwnListing && processType !== 'inquiry' && !currentUser?.attributes?.stripeConnected;
   const payoutDetailsWarning = noPayoutDetailsSetWithOwnListing ? (
     <span className={css.payoutDetailsWarning}>
       <FormattedMessage id="ListingPage.payoutDetailsWarning" values={{ processType }} />
@@ -307,8 +313,8 @@ export const ListingPageComponent = props => {
   const schemaAvailability = !currentListing.currentStock
     ? null
     : currentStock > 0
-      ? 'https://schema.org/InStock'
-      : 'https://schema.org/OutOfStock';
+    ? 'https://schema.org/InStock'
+    : 'https://schema.org/OutOfStock';
 
   const availabilityMaybe = schemaAvailability ? { availability: schemaAvailability } : {};
   const orderData = { deliveryMethod: 'none' };
@@ -324,6 +330,10 @@ export const ListingPageComponent = props => {
     onInquiryWithoutPayment,
     onSubmitCallback,
     onCreateSellerListing,
+  });
+
+  const handleUpdateOffeSubmit = handleUpdateOffer({
+    onUpdateOffer,
   });
 
   const displayDate = selectedDate ? moment(selectedDate).format('dddd, MMMM Do YYYY') : null;
@@ -500,8 +510,8 @@ export const ListingPageComponent = props => {
             /> */}
 
             {offerListingItems &&
-              Array.isArray(offerListingItems) &&
-              offerListingItems.length > 0 ? (
+            Array.isArray(offerListingItems) &&
+            offerListingItems.length > 0 ? (
               <SectionOfferListingsMaybe
                 listings={offerListingItems}
                 intl={intl}
@@ -510,15 +520,19 @@ export const ListingPageComponent = props => {
                 callSetInitialValues={callSetInitialValues}
                 getListing={getListing}
                 isOwnListing={isOwnListing}
+                setUpdateOfferModalOpen={setUpdateOfferModalOpen}
+                setSelectedListing={setSelectedListing}
               />
-            ) : <H4>
-              <FormattedMessage
-                id="ListingPage.SectionOfferListingsMaybe.title"
-                values={{
-                  value: <span style={{ fontWeight: 'bold' }}>0</span>,
-                }}
-              />
-            </H4>}
+            ) : (
+              <H4>
+                <FormattedMessage
+                  id="ListingPage.SectionOfferListingsMaybe.title"
+                  values={{
+                    value: <span style={{ fontWeight: 'bold' }}>0</span>,
+                  }}
+                />
+              </H4>
+            )}
           </div>
           <div className={css.orderColumnForProductLayout}>
             <OrderPanel
@@ -582,6 +596,30 @@ export const ListingPageComponent = props => {
               flex_price={Array.isArray(flex_price) && flex_price.length > 0}
               listing={currentListing}
             />
+          </Modal>
+
+          <Modal
+            id="ListingPage.editOffer"
+            contentClassName={css.inquiryModalContent}
+            isOpen={isAuthenticated && updateOfferModalOpen}
+            onClose={() => setUpdateOfferModalOpen(false)}
+            usePortal
+            onManageDisableScrolling={onManageDisableScrolling}
+          >
+            {selectedListing ? (
+              <UpdateOfferForm
+                className={css.inquiryForm}
+                submitButtonWrapperClassName={css.inquirySubmitButtonWrapper}
+                listingTitle={title}
+                authorDisplayName={authorDisplayName}
+                sendInquiryError={sendInquiryError}
+                onSubmit={handleUpdateOffeSubmit}
+                inProgress={sendInquiryInProgress}
+                marketplaceCurrency={config.currency}
+                listing={selectedListing}
+                flex_price={Array.isArray(flex_price) && flex_price.length > 0}
+              />
+            ) : null}
           </Modal>
         </div>
       </LayoutSingleColumn>
@@ -739,8 +777,6 @@ const mapStateToProps = state => {
       ? getListingsOffeListingById(listingOfferEntities, stateOfferListingItems)
       : null;
 
-
-
   const getListing = id => {
     const ref = { id, type: 'listing' };
     const listings = getMarketplaceEntities(state, [ref]);
@@ -787,6 +823,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(initiateInquiryWithoutPayment(params, processAlias, transitionName)),
   onCreateSellerListing: (createParams, queryParams) =>
     dispatch(createSellerListing(createParams, queryParams)),
+  onUpdateOffer: params => dispatch(updateOfferForm(params)),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the
@@ -795,11 +832,6 @@ const mapDispatchToProps = dispatch => ({
 // lifecycle hook.
 //
 // See: https://github.com/ReactTraining/react-router/issues/4671
-const ListingPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(EnhancedListingPage);
+const ListingPage = compose(connect(mapStateToProps, mapDispatchToProps))(EnhancedListingPage);
 
 export default ListingPage;

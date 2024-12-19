@@ -448,3 +448,15 @@ export const handleCustomSubmit = parameters => values => {
     )
   );
 };
+
+export const handleUpdateOffer = props => async values => {
+  const { onUpdateOffer } = props;
+  const {offerPrice,message,offerId} = values;
+  const updateValue = {
+    price: offerPrice,
+    description: message,
+    id: new UUID(offerId),
+  };
+
+  await onUpdateOffer(updateValue);
+};

@@ -22,8 +22,9 @@ const { authenticateFacebook, authenticateFacebookCallback } = require('./api/au
 const { authenticateGoogle, authenticateGoogleCallback } = require('./api/auth/google');
 const offerListingPage = require('./api/offer-listing-page');
 const ping = require('./api/ping');
-const { upload, uploadS3 } = require("./AWS/uploadFile");
-const uploadS3Endpoint= require('./api/upload-s3');
+const { upload, uploadS3 } = require('./AWS/uploadFile');
+const uploadS3Endpoint = require('./api/upload-s3');
+const updateOfferListing = require('./api/update-offer-listing');
 
 const router = express.Router();
 
@@ -86,6 +87,7 @@ router.get('/auth/google/callback', authenticateGoogleCallback);
 
 router.post('/offer-listing-page', offerListingPage);
 router.get('/ping', ping);
-router.post('/upload-s3',upload.array('files'),uploadS3,uploadS3Endpoint);
+router.post('/upload-s3', upload.array('files'), uploadS3, uploadS3Endpoint);
+router.post('/update-offer-listing', updateOfferListing);
 
 module.exports = router;

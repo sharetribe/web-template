@@ -1153,5 +1153,6 @@
   "UserNav.accountSettings": "Account settings",
   "UserNav.profileSettings": "Profile settings",
   "UserNav.yourListings": "Your listings",
-  "ProfileSettingsForm.uploadfiles":"Certification"
+  "ProfileSettingsForm.uploadfiles":"Certification",
+  "ProfilePage.certification":"Certification"
 }
