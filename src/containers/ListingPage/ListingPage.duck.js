@@ -3,7 +3,11 @@ import pick from 'lodash/pick';
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { fetchCurrentUser, fetchCurrentUserHasOrdersSuccess } from '../../ducks/user.duck';
 import { getProcess, isBookingProcessAlias } from '../../transactions/transaction';
-import { getOfferListingbyListingId, transactionLineItems } from '../../util/api';
+import {
+  getOfferListingbyListingId,
+  transactionLineItems,
+  updateOfferListing,
+} from '../../util/api';
 import {
   denormalisedEntities,
   denormalisedResponseEntities,
@@ -64,6 +68,10 @@ export const ADD_LISTING_OFFER = 'app/ListingPage/ADD_LISTING_OFFER';
 
 export const FETCH_TRANSACTIONS = 'app/ListingPage/FETCH_TRANSACTIONS';
 
+export const FETCH_UPDATE_OFFER_REQUEST = 'app/ListingPage/FETCH_UPDATE_OFFER_REQUEST';
+export const FETCH_UPDATE_OFFER_SUCCESS = 'app/ListingPage/FETCH_UPDATE_OFFER_SUCCESS';
+export const FETCH_UPDATE_OFFER_ERROR = 'app/ListingPage/FETCH_UPDATE_OFFER_ERROR';
+
 // ================ Reducer ================ //
 
 const initialState = {
@@ -93,6 +101,8 @@ const initialState = {
   offerListingItems: null,
   listingOfferEntities: null,
   transactionItems: null,
+  updateOfferInProgess: false,
+  fetchUpdateOfferError: null,
 };
 
 const listingPageReducer = (state = initialState, action = {}) => {
@@ -192,6 +202,13 @@ const listingPageReducer = (state = initialState, action = {}) => {
     case FETCH_LISTING_PAGE_ERROR:
       return { ...state, fetchListingPageInProgress: false, fetchListingPageError: payload };
 
+    case FETCH_UPDATE_OFFER_REQUEST:
+      return { ...state, updateOfferInProgess: true, fetchUpdateOfferError: null };
+    case FETCH_UPDATE_OFFER_SUCCESS:
+      return { ...state, updateOfferInProgess: false, offerListingItems: payload };
+    case FETCH_UPDATE_OFFER_ERROR:
+      return { ...state, updateOfferInProgess: false, fetchUpdateOfferError: payload };
+
     case ADD_LISTING_OFFER:
       return merge(state, payload);
 
@@ -289,6 +306,11 @@ export const fetchTransactionItems = e => ({
   payload: { e },
 });
 
+export const fetchUpdateOfferPageError = e => ({
+  type: FETCH_UPDATE_OFFER_ERROR,
+  error: true,
+  payload: e,
+});
 // ================ Thunks ================ //
 
 export const showListing = (listingId, config, isOwn = false) => (dispatch, getState, sdk) => {
@@ -574,6 +596,25 @@ export const listingPageOffer = (config, id) => async dispatch => {
   }
 };
 
+export const updateOfferForm = params => async (dispatch, getState, sdk) => {
+  dispatch({
+    type: FETCH_UPDATE_OFFER_REQUEST,
+  });
+
+  try {
+    const listings = await updateOfferListing(params);
+    if (listings.updated) {
+      window.location.reload();
+    } else {
+      dispatch(fetchUpdateOfferPageError('update failed'));
+    }
+
+    return null;
+  } catch (err) {
+    dispatch(fetchListingPageError(err));
+  }
+};
+
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   const listingId = new UUID(params.id);
   const state = getState();
@@ -601,12 +642,9 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   const hasNoViewingRights = currentUser && !hasPermissionToViewData(currentUser);
   const promises = hasNoViewingRights
     ? // If user has no viewing rights, only allow fetching their own listing without reviews
-    [dispatch(showListing(listingId, config, true)),]
+      [dispatch(showListing(listingId, config, true))]
     : // For users with viewing rights, fetch the listing and the associated reviews
-    [
-      dispatch(showListing(listingId, config)),
-      dispatch(fetchReviews(listingId)),
-    ];
+      [dispatch(showListing(listingId, config)), dispatch(fetchReviews(listingId))];
 
   return Promise.all(promises).then(response => {
     const listingResponse = response[0];

@@ -61,3 +61,7 @@
   /* font-family: sans-serif; */
   color: #4B4B4F;
 }
+
+.offerId{
+  display: none;
+}

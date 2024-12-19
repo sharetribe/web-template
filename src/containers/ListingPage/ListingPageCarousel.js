@@ -68,6 +68,7 @@ import {
   getListingsOffeListingById,
   sendInquiry,
   setInitialValues,
+  updateOfferForm,
 } from './ListingPage.duck';
 
 import ActionBarMaybe from './ActionBarMaybe';
@@ -77,6 +78,7 @@ import {
   handleSubmit,
   handleSubmitCheckoutPageWithInquiry,
   handleSubmitInquiry,
+  handleUpdateOffer,
   listingImages,
   LoadingPage,
   priceData,
@@ -110,8 +112,7 @@ export const ListingPageComponent = props => {
 
   const [customInquiryModalOpen, setCustomInquiryModalOpen] = useState(false);
   const [updateOfferModalOpen, setUpdateOfferModalOpen] = useState(false);
-  const [selectedListing,setSelectedListing] = useState(null);
-  const [selectedPrice, setSelectedPrice] = useState(null);
+  const [selectedListing, setSelectedListing] = useState(null);
 
   const {
     isAuthenticated,
@@ -144,6 +145,7 @@ export const ListingPageComponent = props => {
     onInquiryWithoutPayment,
     onCreateSellerListing,
     offerListingItems,
+    onUpdateOffer,
   } = props;
 
   const listingConfig = config.listing;
@@ -258,7 +260,7 @@ export const ListingPageComponent = props => {
   const authorDisplayName = userDisplayNameAsString(ensuredAuthor, '');
 
   const { formattedPrice } = priceData(price, config.currency, intl);
-  setSelectedPrice(price);
+
   const commonParams = { params, history, routes: routeConfiguration };
   const onContactUser = handleContactUser({
     ...commonParams,
@@ -328,6 +330,10 @@ export const ListingPageComponent = props => {
     onInquiryWithoutPayment,
     onSubmitCallback,
     onCreateSellerListing,
+  });
+
+  const handleUpdateOffeSubmit = handleUpdateOffer({
+    onUpdateOffer,
   });
 
   const displayDate = selectedDate ? moment(selectedDate).format('dddd, MMMM Do YYYY') : null;
@@ -516,7 +522,6 @@ export const ListingPageComponent = props => {
                 isOwnListing={isOwnListing}
                 setUpdateOfferModalOpen={setUpdateOfferModalOpen}
                 setSelectedListing={setSelectedListing}
-                setSelectedPrice={setSelectedPrice}
               />
             ) : (
               <H4>
@@ -601,18 +606,20 @@ export const ListingPageComponent = props => {
             usePortal
             onManageDisableScrolling={onManageDisableScrolling}
           >
-            <UpdateOfferForm
-              className={css.inquiryForm}
-              submitButtonWrapperClassName={css.inquirySubmitButtonWrapper}
-              listingTitle={title}
-              authorDisplayName={authorDisplayName}
-              sendInquiryError={sendInquiryError}
-              onSubmit={handleInquiryFormSubmit}
-              inProgress={sendInquiryInProgress}
-              marketplaceCurrency={config.currency}
-              listing={selectedListing}
-              selectedPrice={selectedPrice}
-            />
+            {selectedListing ? (
+              <UpdateOfferForm
+                className={css.inquiryForm}
+                submitButtonWrapperClassName={css.inquirySubmitButtonWrapper}
+                listingTitle={title}
+                authorDisplayName={authorDisplayName}
+                sendInquiryError={sendInquiryError}
+                onSubmit={handleUpdateOffeSubmit}
+                inProgress={sendInquiryInProgress}
+                marketplaceCurrency={config.currency}
+                listing={selectedListing}
+                flex_price={Array.isArray(flex_price) && flex_price.length > 0}
+              />
+            ) : null}
           </Modal>
         </div>
       </LayoutSingleColumn>
@@ -816,6 +823,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(initiateInquiryWithoutPayment(params, processAlias, transitionName)),
   onCreateSellerListing: (createParams, queryParams) =>
     dispatch(createSellerListing(createParams, queryParams)),
+  onUpdateOffer: params => dispatch(updateOfferForm(params)),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the

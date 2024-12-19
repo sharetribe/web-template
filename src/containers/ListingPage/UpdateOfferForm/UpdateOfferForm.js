@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { bool, string } from 'prop-types';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form as FinalForm } from 'react-final-form';
 import { compose } from 'redux';
 
@@ -65,31 +65,30 @@ const ErrorMessage = props => {
   ) : null;
 };
 
-const getInitialValues = (description, convertedSharetribePrice) => {
+const getInitialValues = (description, convertedSharetribePrice, id) => {
   const offerPrice = convertedSharetribePrice;
-  return { message: description, offerPrice };
+  return { message: description, offerPrice, offerId: id };
 };
 
 // NOTE: this InquiryForm is only for booking & purchase processes
 // The default-inquiry process is handled differently
 const UpdateOfferFormComponent = props => {
-  const { listing } = props || {};
+  const { flex_price, listing } = props || {};
 
-  const { attributes } = listing || {};
+  const { attributes, id } = listing || {};
   const { description, price } = attributes || {};
   const defaultPrice = new Money(price?.amount ?? 0, price?.currency ?? 'EUR');
   const [inquiryFormPage, setInquiryFormPage] = useState(1);
   const [offerPriceValue, setOfferPriceValue] = useState(defaultPrice);
   const [initialValues, setInitialValues] = useState({ offerPrice: defaultPrice });
   useEffect(() => {
-    if(listing){
+    if (listing) {
       const convertedSharetribePrice = new Money(price?.amount, price?.currency);
       setOfferPriceValue(convertedSharetribePrice);
-      const inti = getInitialValues(description, convertedSharetribePrice);
-  
+      const inti = getInitialValues(description, convertedSharetribePrice, id.uuid);
+
       setInitialValues(inti);
     }
-  
   }, [listing]);
   return (
     <FinalForm
@@ -192,6 +191,7 @@ const UpdateOfferFormComponent = props => {
                   label={offerPriceLabel}
                   placeholder={offerPricePlaceholder}
                   currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
+                  disabled={!flex_price}
                 />
 
                 <div className={classNames(css.flexContent, css.commissionContent)}>
@@ -250,6 +250,15 @@ const UpdateOfferFormComponent = props => {
                     <FormattedMessage id="InquiryForm.submitButtonText" />
                   </PrimaryButton>
                 </div>
+                {id ? (
+                  <FieldTextInput
+                    className={css.offerId}
+                    type="text"
+                    name="offerId"
+                    id={formId ? `${formId}.offerId` : 'offerId'}
+                    label={messageLabel}
+                  />
+                ) : null}
               </div>
             )}
           </Form>
