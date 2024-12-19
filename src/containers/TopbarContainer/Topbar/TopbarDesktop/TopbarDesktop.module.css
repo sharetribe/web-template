@@ -126,7 +126,7 @@
   right: -9px;
 
   /* Style: red dot */
-  background-color: var(--colorFail);
+  background-color: var(--colorBlueNote);
 
   animation-name: notificationPop;
   animation-duration: 0.1s;
