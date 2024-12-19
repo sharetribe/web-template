@@ -6,7 +6,7 @@
   color: var(--colorWhite);
   text-align: center;
 
-  background-color: var(--colorFail);
+  background-color: var(--colorBlueNote);
 
   /* Layout of a red dot */
   display: inline-block;
