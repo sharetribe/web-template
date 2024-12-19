@@ -1,0 +1,63 @@
+@import '../../../styles/customMediaQueries.css';
+
+.root {
+}
+
+.icon {
+  display: none;
+
+  @media (--viewportMedium) {
+    display: block;
+    margin-bottom: 36px;
+  }
+}
+
+.heading {
+  composes: marketplaceModalTitleStyles from global;
+  text-align: center !important;
+}
+
+.field {
+  margin: 25px 0 24px 0;
+
+  @media (--viewportMedium) {
+    margin: 22px 0 24px 0;
+  }
+}
+
+.error {
+  color: var(--colorFail);
+  margin-top: 0;
+
+  @media (--viewportMedium) {
+    margin-top: 0;
+  }
+}
+
+.emailNoti {
+  font-size: 12px;
+  /* font-family: sans-serif; */
+  padding: 20px;
+  background-color: aliceblue;
+  border-radius: 12px;
+  margin: 32px 0px;
+}
+
+.flexContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding:8px 0px;
+}
+
+.earnContent {
+  font-size: 20px;
+  /* font-family: sans-serif; */
+  font-weight: bold;
+}
+
+.commissionContent {
+  font-size: 12px;
+  /* font-family: sans-serif; */
+  color: #4B4B4F;
+}

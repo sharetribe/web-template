@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { bool, string } from 'prop-types';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Form as FinalForm } from 'react-final-form';
 import { compose } from 'redux';
 
@@ -26,7 +26,7 @@ import {
 import appSettings from '../../../config/settings';
 import { formatMoney } from '../../../util/currency';
 import { NO_ACCESS_PAGE_INITIATE_TRANSACTIONS } from '../../../util/urlHelpers';
-import css from './CustomInquiryForm.module.css';
+import css from './UpdateOfferForm.module.css';
 const { types } = require('sharetribe-flex-sdk');
 const { Money } = types;
 
@@ -65,21 +65,32 @@ const ErrorMessage = props => {
   ) : null;
 };
 
-const getInitialValues = props => {
-  const { offerPrice } = props;
-
-  return { offerPrice };
+const getInitialValues = (description, convertedSharetribePrice) => {
+  const offerPrice = convertedSharetribePrice;
+  return { message: description, offerPrice };
 };
 
 // NOTE: this InquiryForm is only for booking & purchase processes
 // The default-inquiry process is handled differently
-const CustomInquiryFormComponent = props => {
-  const initialValues = getInitialValues(props);
-  const { flex_price, offerPrice, listing } = props;
+const UpdateOfferFormComponent = props => {
+  const { listing } = props || {};
 
+  const { attributes } = listing || {};
+  const { description, price } = attributes || {};
+  const defaultPrice = new Money(price?.amount ?? 0, price?.currency ?? 'EUR');
   const [inquiryFormPage, setInquiryFormPage] = useState(1);
-  const [offerPriceValue, setOfferPriceValue] = useState(offerPrice);
-
+  const [offerPriceValue, setOfferPriceValue] = useState(defaultPrice);
+  const [initialValues, setInitialValues] = useState({ offerPrice: defaultPrice });
+  useEffect(() => {
+    if(listing){
+      const convertedSharetribePrice = new Money(price?.amount, price?.currency);
+      setOfferPriceValue(convertedSharetribePrice);
+      const inti = getInitialValues(description, convertedSharetribePrice);
+  
+      setInitialValues(inti);
+    }
+  
+  }, [listing]);
   return (
     <FinalForm
       {...props}
@@ -103,7 +114,6 @@ const CustomInquiryFormComponent = props => {
           handleSubmit,
           inProgress,
           intl,
-          // listingTitle,
           authorDisplayName,
           sendInquiryError,
           marketplaceCurrency,
@@ -144,13 +154,13 @@ const CustomInquiryFormComponent = props => {
         });
         const messageRequired = validators.requiredAndNonEmptyString(messageRequiredMessage);
 
-        // const offerPriceRequired = validators.requiredAndNonEmptyString(offerPriceRequiredMessage);
+        const offerPriceRequired = validators.requiredAndNonEmptyString(offerPriceRequiredMessage);
 
         const classes = classNames(rootClassName || css.root, className);
         const submitInProgress = inProgress;
         const submitDisabled = submitInProgress;
         const { offerPrice } = values || {};
-        setOfferPriceValue(offerPrice);
+        if (offerPrice.amount !== 0) setOfferPriceValue(offerPrice);
         const commissionPrice =
           offerPrice && new Money(offerPrice.amount / 10, offerPrice.currency);
         const formattedCommissionPrice = commissionPrice && formatMoney(intl, commissionPrice);
@@ -249,7 +259,7 @@ const CustomInquiryFormComponent = props => {
   );
 };
 
-CustomInquiryFormComponent.defaultProps = {
+UpdateOfferFormComponent.defaultProps = {
   rootClassName: null,
   className: null,
   submitButtonWrapperClassName: null,
@@ -257,7 +267,7 @@ CustomInquiryFormComponent.defaultProps = {
   sendInquiryError: null,
 };
 
-CustomInquiryFormComponent.propTypes = {
+UpdateOfferFormComponent.propTypes = {
   rootClassName: string,
   className: string,
   submitButtonWrapperClassName: string,
@@ -272,8 +282,8 @@ CustomInquiryFormComponent.propTypes = {
   intl: intlShape.isRequired,
 };
 
-const CustomInquiryForm = compose(injectIntl)(CustomInquiryFormComponent);
+const UpdateOfferForm = compose(injectIntl)(UpdateOfferFormComponent);
 
-CustomInquiryForm.displayName = 'CustomInquiryForm';
+UpdateOfferForm.displayName = 'UpdateOfferForm';
 
-export default CustomInquiryForm;
+export default UpdateOfferForm;

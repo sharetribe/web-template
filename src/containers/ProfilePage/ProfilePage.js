@@ -15,12 +15,12 @@ import { pickCustomFieldProps } from '../../util/fieldHelpers';
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { richText } from '../../util/richText';
 import {
+  propTypes,
   REVIEW_TYPE_OF_CUSTOMER,
   REVIEW_TYPE_OF_PROVIDER,
   SCHEMA_TYPE_MULTI_ENUM,
   SCHEMA_TYPE_TEXT,
   SCHEMA_TYPE_YOUTUBE,
-  propTypes,
 } from '../../util/types';
 import {
   NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
@@ -35,6 +35,7 @@ import {
   H2,
   H4,
   Heading,
+  ImageFromS3,
   LayoutSideNavigation,
   ListingCard,
   NamedLink,
@@ -49,12 +50,17 @@ import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
+import _ from 'lodash';
+import {
+  checkFileType,
+  FILE_DOCUMENT_TYPES,
+  PreviewLink,
+} from '../../components/FieldDropzone/FieldDropzone';
 import css from './ProfilePage.module.css';
 import SectionDetailsMaybe from './SectionDetailsMaybe';
 import SectionMultiEnumMaybe from './SectionMultiEnumMaybe';
 import SectionTextMaybe from './SectionTextMaybe';
 import SectionYoutubeVideoMaybe from './SectionYoutubeVideoMaybe';
-import _ from 'lodash';
 
 const MAX_MOBILE_SCREEN_WIDTH = 768;
 export const MIN_LENGTH_FOR_LONG_WORDS = 20;
@@ -171,7 +177,7 @@ export const DesktopReviews = props => {
 
 export const CustomUserFields = props => {
   const { publicData, metadata, userFieldConfig } = props;
-
+  const { certifications } = publicData;
   const shouldPickUserField = fieldConfig => fieldConfig?.showConfig?.displayInProfile !== false;
   const propsForCustomFields =
     pickCustomFieldProps(publicData, metadata, userFieldConfig, 'userType', shouldPickUserField) ||
@@ -190,6 +196,47 @@ export const CustomUserFields = props => {
           <SectionYoutubeVideoMaybe {...fieldProps} />
         ) : null;
       })}
+      {certifications ? (
+        <div>
+          <Heading as="h2" rootClassName={css.sectionHeading}>
+            <FormattedMessage id="ProfilePage.certification" />
+          </Heading>
+          <div className={css.flexCertification}>
+            {certifications.map(certification => {
+              const fileType = checkFileType(certification).split(',')[1];
+              const getFileName = checkFileType(certification).split(',')[0];
+              const isFileDocument = FILE_DOCUMENT_TYPES.includes(fileType.toString());
+
+              const renderDocument = (
+                <div className={css.thumbFile}>
+                  <span className={css.thumbFileText}>{getFileName}</span>
+                </div>
+              );
+
+              const renderFile = isFileDocument ? (
+                renderDocument
+              ) : (
+                <ImageFromS3
+                  id={certification}
+                  rootClassName={css.thumbImage}
+                  aspectWidth={1}
+                  aspectHeight={1}
+                  file={certification}
+                />
+              );
+
+              return (
+                <li className={css.thumb} key={certification}>
+                  <div className={css.actionButtons}>
+                    <PreviewLink file={certification} />
+                  </div>
+                  <div className={css.thumbInner}>{renderFile}</div>
+                </li>
+              );
+            })}
+          </div>
+        </div>
+      ) : null}
     </>
   );
 };
@@ -239,7 +286,7 @@ export const MainContent = props => {
       <H2 as="h1" className={css.desktopHeading}>
         <FormattedMessage id="ProfilePage.desktopHeading" values={{ name: displayName }} />
       </H2>
-      {hasBio ? <p className={css.bio}>{bioWithLinks}</p> : null}
+      {/* {hasBio ? <p className={css.bio}>{bioWithLinks}</p> : null} */}
 
       {displayName ? (
         <CustomUserFields
@@ -446,7 +493,11 @@ const mapStateToProps = state => {
     isCurrentUser && !(isUserAuthorized(currentUser) && hasPermissionToViewData(currentUser));
 
   const listingsData = getMarketplaceEntities(state, userListingRefs);
-  const listings = _.filter(listingsData, listing => listing.attributes.publicData.transactionProcessAlias !== "default-purchase/release-1");
+  const listings = _.filter(
+    listingsData,
+    listing =>
+      listing.attributes.publicData.transactionProcessAlias !== 'default-purchase/release-1'
+  );
 
   return {
     scrollingDisabled: isScrollingDisabled(state),
