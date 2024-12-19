@@ -30,7 +30,7 @@ const ActionButtonsMaybe = props => {
 
   const buttonsDisabled = primaryButtonProps?.inProgress || secondaryButtonProps?.inProgress;
 
-  console.log("state date", stateData)
+  //console.log("state data", stateData)
 
   // Handler to open confirmation modal
   const handlePrimaryClick = () => {
@@ -70,7 +70,7 @@ const ActionButtonsMaybe = props => {
         contentClassName={modalCss.modalContent}
       >
         <div>
-          <h2 className="marketplaceModalTitleStyles">{primaryButtonProps.buttonText}</h2>
+          <h2 className="marketplaceModalTitleStyles">Confirmation</h2>
           <p>
             {isProvider ? 
               "I confirm that I have coordinated a meeting between the buyer and property manager." 
