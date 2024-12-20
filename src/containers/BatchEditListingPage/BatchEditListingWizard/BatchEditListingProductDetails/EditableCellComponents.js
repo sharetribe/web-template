@@ -61,7 +61,7 @@ const EditableCell = ({
             options={options}
             onChange={handleChange}
             placeholder={placeholder}
-            maxTagCount={maxSelection}
+            maxCount={maxSelection}
             className={css.formItem}
             style={{ width: '100%' }}
           />
@@ -84,7 +84,7 @@ const EditableCell = ({
             value={value}
             onChange={handleChange}
             placeholder={placeholder}
-            maxTagCount={MAX_KEYWORDS}
+            maxTagCount={maxSelection}
             className={css.formItem}
             style={{ width: '100%' }}
           />

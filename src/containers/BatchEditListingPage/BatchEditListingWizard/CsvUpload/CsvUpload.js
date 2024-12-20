@@ -34,6 +34,7 @@ export const CsvUpload = ({ categories, usageOptions, onSaveListing }) => {
     const { file } = request;
     dispatch({ type: CSV_UPLOAD_REQUEST });
 
+    // noinspection JSUnresolvedReference
     Papa.parse(file, {
       header: true,
       skipEmptyLines: true,

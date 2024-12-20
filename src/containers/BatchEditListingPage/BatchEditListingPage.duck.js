@@ -23,6 +23,7 @@ import {
   PAGE_MODE_NEW,
   RESULT_PAGE_SIZE,
   USAGE_EDITORIAL,
+  YES_RELEASES,
 } from './constants';
 import { getDimensions } from './imageHelpers';
 import { stringToArray } from '../../util/string';
@@ -87,7 +88,7 @@ function uppyFileToListing(file) {
     preview,
     category: [],
     usage: USAGE_EDITORIAL,
-    releases: NO_RELEASES,
+    releases: false,
     price: DEFAULT_PRODUCT_LISTING_PRICE,
     dimensions: dimensions,
     isAi: false,
@@ -451,7 +452,7 @@ export function initializeUppy(meta) {
                 categoryLevel1: getListingCategory(listing),
                 imageryCategory: listing.category,
                 usage: listing.usage,
-                releases: listing.releases,
+                releases: listing.releases ? YES_RELEASES : NO_RELEASES,
                 keywords: listing.keywords,
                 imageSize: listing.dimensions,
                 fileType: listing.type,
@@ -557,7 +558,7 @@ export function requestSaveBatchListings(pageMode = PAGE_MODE_NEW) {
                 publicData: {
                   imageryCategory: listing.category,
                   usage: listing.usage,
-                  releases: listing.releases,
+                  releases: listing.releases ? YES_RELEASES : NO_RELEASES,
                   keywords: listing.keywords,
                   imageSize: listing.dimensions,
                   aiTerms: listing.isAi ? 'yes' : 'no',
@@ -599,6 +600,7 @@ export const queryOwnListings = queryParams => (dispatch, getState, sdk) => {
   const { perPage, ...rest } = queryParams;
   const params = { ...rest, perPage };
 
+  // noinspection JSCheckFunctionSignatures
   return sdk.ownListings
     .query(params)
     .then(response => {
@@ -631,12 +633,12 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   if (mode !== PAGE_MODE_NEW) {
     const pageQueryParams = parse(search);
     const page = pageQueryParams.page || 1;
-    const queryParams = new URLSearchParams();
+    const queryParams = {};
     if (pageQueryParams.category) {
-      queryParams.set('pub_categoryLevel1', pageQueryParams.category);
+      queryParams.pub_categoryLevel1 = pageQueryParams.category;
     }
     if (pageQueryParams.type) {
-      queryParams.set('pub_listingType', pageQueryParams.type);
+      queryParams.pub_listingType = pageQueryParams.type;
     }
 
     dispatch(

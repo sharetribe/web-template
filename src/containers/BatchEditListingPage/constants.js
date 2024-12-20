@@ -4,6 +4,7 @@ export const LARGE_IMAGE = 'large-image';
 export const UNAVAILABLE_IMAGE_RESOLUTION = 'unavailable';
 export const USAGE_EDITORIAL = 'editorial';
 export const NO_RELEASES = 'no-release';
+export const YES_RELEASES = 'yes-release';
 
 export const AI_TERMS_STATUS_ACCEPTED = 'accepted';
 export const AI_TERMS_STATUS_REQUIRED = 'required';

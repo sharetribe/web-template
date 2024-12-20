@@ -1,6 +1,6 @@
 import imagePlaceholder from '../../../../assets/image-placeholder.jpg';
 import { Flex, Image, Table } from 'antd';
-import { DEFAULT_PRODUCT_LISTING_PRICE, MAX_CATEGORIES } from '../../constants';
+import { DEFAULT_PRODUCT_LISTING_PRICE, MAX_CATEGORIES, MAX_KEYWORDS } from '../../constants';
 import css from './EditListingBatchProductDetails.module.css';
 import React from 'react';
 import { EditableCellComponents } from './EditableCellComponents';
@@ -169,7 +169,7 @@ export const EditableListingsTable = props => {
     {
       title: (
         <TableHeaderTitle
-          helperText={`Enter up to ${MAX_CATEGORIES} keywords to enhance searchability of the listing`}
+          helperText={`Enter up to ${MAX_KEYWORDS} keywords to enhance searchability of the listing`}
         >
           <FormattedMessage id="EditableListingsTable.keywords" defaultMessage="Keywords" />
         </TableHeaderTitle>
@@ -178,6 +178,7 @@ export const EditableListingsTable = props => {
       dataIndex: 'keywords',
       editable: true,
       editControlType: 'tags',
+      maxSelection: MAX_KEYWORDS,
       placeholder: intl.formatMessage({
         id: 'EditableListingsTable.keywordsPlaceholder',
         defaultMessage: 'Up to 30 keywords',
