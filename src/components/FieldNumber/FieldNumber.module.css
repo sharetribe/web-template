@@ -39,10 +39,25 @@
   }
 }
 
+.numberButton:focus {
+  outline: none;
+
+  .iconContainer {
+    stroke: #b8bfd1;
+  }
+}
 .numberButton:active {
   .iconContainer {
     fill: var(--colorGrey50);
     stroke: #b8bfd1;
+  }
+}
+.numberButton:disabled {
+  cursor: not-allowed;
+
+  .disabled.iconContainer {
+    fill: var(--colorSecondaryButton);
+    stroke: #d8dce6;
   }
 }
 
@@ -69,8 +84,6 @@
 }
 
 .disabled {
-  cursor: not-allowed;
-
   .icon {
     stroke: var(--colorGrey200);
     fill: var(--colorGrey200);

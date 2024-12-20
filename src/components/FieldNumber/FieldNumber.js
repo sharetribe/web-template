@@ -10,10 +10,8 @@ const increment = 'increment';
 
 const getIconClasses = props => {
   const { className, disabled } = props;
-  const classes = disabled
-    ? classNames(className, css.iconContainer, css.disabled)
-    : classNames(css.iconContainer, className);
-  const iconClassName = disabled ? classNames(css.icon, css.disabled) : css.icon;
+  const classes = classNames(className, css.iconContainer, { [css.disabled]: disabled });
+  const iconClassName = classNames(css.icon, { [css.disabled]: disabled });
 
   return {
     classes,
