@@ -66,10 +66,18 @@ const MAX_MOBILE_SCREEN_WIDTH = 768;
 export const MIN_LENGTH_FOR_LONG_WORDS = 20;
 
 export const AsideContent = props => {
-  const { user, displayName, showLinkToProfileSettingsPage } = props;
+  const { user, displayName, showLinkToProfileSettingsPage, publicData } = props;
+  const { stripeAccount } = user;
+  const { certifications, top_user_badge } = publicData || {};
+
   return (
     <div className={css.asideContent}>
       <AvatarLarge className={css.avatar} user={user} disableProfileLink />
+      {stripeAccount ? <div>Stripe</div> : null}
+      {certifications && Array.isArray(certifications) && certifications.length > 0 ? (
+        <div>certification</div>
+      ) : null}
+      {top_user_badge ? <div>TopUser Badge</div> : null}
       <H2 as="h1" className={css.mobileHeading}>
         {displayName ? (
           <FormattedMessage id="ProfilePage.mobileHeading" values={{ name: displayName }} />
@@ -433,6 +441,7 @@ export const ProfilePageComponent = props => {
             user={profileUser}
             showLinkToProfileSettingsPage={mounted && isCurrentUser}
             displayName={displayName}
+            publicData={publicData}
           />
         }
         footer={<FooterContainer />}

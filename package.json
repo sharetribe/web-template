@@ -84,7 +84,8 @@
     "cross-env": "^7.0.3",
     "inquirer": "^8.2.4",
     "nodemon": "^3.1.4",
-    "prettier": "^1.18.2"
+    "prettier": "^1.18.2",
+    "@babel/plugin-transform-private-property-in-object": "^7.23.4"
   },
   "resolutions": {
     "moment": "^2.30.1"
@@ -142,5 +143,6 @@
     "singleQuote": true,
     "trailingComma": "es5",
     "proseWrap": "always"
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
 }

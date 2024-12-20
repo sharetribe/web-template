@@ -25,6 +25,7 @@ const ping = require('./api/ping');
 const { upload, uploadS3 } = require('./AWS/uploadFile');
 const uploadS3Endpoint = require('./api/upload-s3');
 const updateOfferListing = require('./api/update-offer-listing');
+const getProfileUser = require('./api/get-user-info');
 
 const router = express.Router();
 
@@ -89,5 +90,6 @@ router.post('/offer-listing-page', offerListingPage);
 router.get('/ping', ping);
 router.post('/upload-s3', upload.array('files'), uploadS3, uploadS3Endpoint);
 router.post('/update-offer-listing', updateOfferListing);
+router.post('/get-user-info', getProfileUser);
 
 module.exports = router;
