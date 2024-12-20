@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { array, bool, func, number, object, string } from 'prop-types';
 import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
@@ -9,7 +9,7 @@ import { timestampToDate } from '../../../util/dates';
 import { propTypes } from '../../../util/types';
 import { BOOKING_PROCESS_NAME } from '../../../transactions/transaction';
 
-import { Form, H6, PrimaryButton } from '../../../components';
+import { Form, H6, PrimaryButton, FieldSelect } from '../../../components';
 
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
 import FieldDateAndTimeInput from './FieldDateAndTimeInput';
@@ -21,18 +21,30 @@ import css from './BookingTimeForm.module.css';
 // In case you add more fields to the form, make sure you add
 // the values here to the orderData object.
 const handleFetchLineItems = props => formValues => {
-  const { listingId, isOwnListing, fetchLineItemsInProgress, onFetchTransactionLineItems } = props;
-  const { bookingStartTime, bookingEndTime } = formValues.values;
+  const {
+    listingId,
+    isOwnListing,
+    fetchLineItemsInProgress,
+    onFetchTransactionLineItems,
+    seatsEnabled,
+  } = props;
+  const { bookingStartTime, bookingEndTime, seats } = formValues.values;
   const startDate = bookingStartTime ? timestampToDate(bookingStartTime) : null;
   const endDate = bookingEndTime ? timestampToDate(bookingEndTime) : null;
 
   // Note: we expect values bookingStartTime and bookingEndTime to be strings
   // which is the default case when the value has been selected through the form
   const isStartBeforeEnd = bookingStartTime < bookingEndTime;
+  const seatsMaybe = seatsEnabled && seats > 0 ? { seats: parseInt(seats, 10) } : {};
 
   if (bookingStartTime && bookingEndTime && isStartBeforeEnd && !fetchLineItemsInProgress) {
+    const orderData = {
+      bookingStart: startDate,
+      bookingEnd: endDate,
+      ...seatsMaybe,
+    };
     onFetchTransactionLineItems({
-      orderData: { bookingStart: startDate, bookingEnd: endDate },
+      orderData,
       listingId,
       isOwnListing,
     });
@@ -46,8 +58,11 @@ export const BookingTimeFormComponent = props => {
     price: unitPrice,
     dayCountAvailableForBooking,
     marketplaceName,
+    seatsEnabled,
     ...rest
   } = props;
+
+  const [seatsOptions, setSeatsOptions] = useState([1]);
 
   const classes = classNames(rootClassName || css.root, className);
 
@@ -94,10 +109,14 @@ export const BookingTimeFormComponent = props => {
         const showEstimatedBreakdown =
           breakdownData && lineItems && !fetchLineItemsInProgress && !fetchLineItemsError;
 
+        const onHandleFetchLineItems = handleFetchLineItems(props);
+
         return (
           <Form onSubmit={handleSubmit} className={classes} enforcePagePreloadFor="CheckoutPage">
             {monthlyTimeSlots && timeZone ? (
               <FieldDateAndTimeInput
+                seatsEnabled={seatsEnabled}
+                setSeatsOptions={setSeatsOptions}
                 startDateInputProps={{
                   label: intl.formatMessage({ id: 'BookingTimeForm.bookingStartTitle' }),
                   placeholderText: startDatePlaceholder,
@@ -116,8 +135,37 @@ export const BookingTimeFormComponent = props => {
                 pristine={pristine}
                 timeZone={timeZone}
                 dayCountAvailableForBooking={dayCountAvailableForBooking}
-                handleFetchLineItems={handleFetchLineItems(props)}
+                handleFetchLineItems={onHandleFetchLineItems}
               />
+            ) : null}
+            {seatsEnabled ? (
+              <FieldSelect
+                name="seats"
+                id="seats"
+                disabled={!startTime}
+                label={intl.formatMessage({ id: 'BookingTimeForm.seatsTitle' })}
+                className={css.fieldSeats}
+                onChange={values => {
+                  onHandleFetchLineItems({
+                    values: {
+                      bookingStartDate: startDate,
+                      bookingStartTime: startTime,
+                      bookingEndDate: endDate,
+                      bookingEndTime: endTime,
+                      seats: values,
+                    },
+                  });
+                }}
+              >
+                <option disabled value="">
+                  {intl.formatMessage({ id: 'BookingTimeForm.seatsPlaceholder' })}
+                </option>
+                {seatsOptions.map(s => (
+                  <option value={s} key={s}>
+                    {s}
+                  </option>
+                ))}
+              </FieldSelect>
             ) : null}
 
             {showEstimatedBreakdown ? (
