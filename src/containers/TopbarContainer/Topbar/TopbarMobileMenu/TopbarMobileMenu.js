@@ -121,7 +121,7 @@ function TopbarMobileMenu(props) {
           </div>
           <br />
             <NamedLink name="GiftCardsPage">
-              Gigt cards
+              Gift cards
             </NamedLink>
         </div>
 
