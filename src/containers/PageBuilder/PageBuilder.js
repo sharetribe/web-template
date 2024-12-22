@@ -9,6 +9,7 @@ import Newsletter from '../../components/Newsletter/Newsletter.js';
 import HowItWorks from '../../components/HowItWorks/HowItWorks.js';
 import WhyUs from '../../components/WhyUs/WhyUs.js';
 import Sponsors from '../../components/Sponsors/Sponsors.js';
+import DynamicCarousel from '../../components/DynamicCarousel/DynamicCarousel.js';
 import Counter from '../../components/Counter/Counter.js';
 import ToDo from '../../components/ToDo/ToDo.js';
 import { validProps } from './Field';
@@ -189,9 +190,11 @@ function PageBuilder(props) {
                             />
                             <SectionBuilder sections={sections} options={options} />
                             <HowItWorks />
+                            <DynamicCarousel />
+                            <Sponsors />
                             <WhyUs />
                             <ActionTeamButtons />
-                            <Sponsors />
+                     
                             <Newsletter isTeamBuilding={isTeamBuilding} />
                           </>
                         ) : (
