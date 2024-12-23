@@ -33,25 +33,10 @@ const DynamicCarousel = () => {
   const right1Index = wrapIndex(centerIndex + 1);
   const right2Index = wrapIndex(centerIndex + 2);
 
-  const visibleItems = [
-    { item: items[left2Index], position: styles['left-2'] },
-    { item: items[left1Index], position: styles['left-1'] },
-    { item: items[centerIndex], position: styles.center },
-    { item: items[right1Index], position: styles['right-1'] },
-    { item: items[right2Index], position: styles['right-2'] },
-  ];
 
   return (
     <div className={css.carouselContainer}>
-      <button onClick={handlePrev} className={`${styles['arrow-btn']} ${styles['left-arrow']}`}>&#9664;</button>
-      <div className={css.carouselInner}>
-        {visibleItems.map((vItem, idx) => (
-          <div key={idx} className={`${styles['carousel-item']} ${vItem.position}`}>
-            <img src={vItem.item} alt={`Item ${idx}`} style={{ width: '200px', height: '300px', objectFit: 'cover' }}/>
-          </div>
-        ))}
-      </div>
-      <button onClick={handleNext} className={`${styles['arrow-btn']} ${styles['right-arrow']}`}>&#9654;</button>
+I più amati da tutti
     </div>
   );
 };
