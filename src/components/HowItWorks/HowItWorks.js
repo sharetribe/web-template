@@ -6,7 +6,7 @@ import img3 from '../../media/landing/3.png';
 
 const HowItWorks = () => {
   return (
-    <>
+
           <div className={css.container}>
       <h2 className={css.title}>Come funziona</h2>
         <div className={css.steps}>
@@ -33,7 +33,7 @@ const HowItWorks = () => {
           </div>
         </div>
       </div>
-    </>
+
   );
 };
 

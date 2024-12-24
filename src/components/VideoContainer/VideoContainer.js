@@ -39,15 +39,13 @@ function VideoContainer({ className, isTeamBuilding }) {
             allowFullScreen
             title="Team Building Video"
           ></iframe>
-          <p>
-            Boost Creativity in Your Workplace Team Building with Club Joy Take
-            team-building to the next level with creative, hands-on workshops
-            that come straight to your office. Whether it’s pottery or painting,
-            our experiences are designed to help your team collaborate, unwind,
-            and reignite their creativity. With hassle-free planning and
-            engaging activities, we make sure your event is fun, memorable, and
-            completely stress-free—all while delivering real results.
-          </p>
+              <p>
+              I nostri workshop creativi aiutano il tuo team a riscoprire collaborazione,<br/>
+              pensiero critico e empatia - competenze che l’AI non può replicare. <br/><br/>
+              Rafforziamo ciò che rende i tuoi dipendenti unici, stimolando un pensiero laterale che nessun algoritmo può imitare. 
+              Riportiamo i dipendenti al centro della creatività aziendale, trasformando idee in innovazioni concrete.<br/><br/>
+              Prepara il tuo team per un futuro dove l’unicità umana fa la differenza.
+              </p>
         </>
       ) : (
         <iframe

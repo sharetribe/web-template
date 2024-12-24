@@ -1,60 +1,104 @@
 .buttonContainer {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
+  gap: 16px; /* space between buttons */
+}
+
+/* 
+  ==============
+  MAIN BUTTONS
+  ==============
+*/
+.parlaConNoiButton, .primaryButton {
+  background-color: #0048ff;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  width: 300px;
+  height: 55px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.3s ease;
+  padding: 0 24px;
+}
+
+.parlaConNoiButton:hover,
+.primaryButton:hover {
+  background-color: #0056b3;
+}
+
+/* 
+  ==============
+  MODAL STYLES
+  ==============
+*/
+
+/* Dark overlay that covers entire screen */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5); 
+  display: flex;
   justify-content: center;
+  align-items: center;
+  z-index: 9999; /* ensure it floats above everything */
+}
+
+/* The white box that pops up */
+.modalContent {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 24px;
+  width: 320px; /* adjust as desired */
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  position: relative;
+}
+
+/* Title text in the modal */
+.modalContent h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+/* Buttons within the modal (WhatsApp, Calendly, Annulla) */
+.modalOption, .modalClose {
+  display: block; /* full width */
   width: 100%;
-  gap: 50px;
+  margin-bottom: 12px;
+  background-color: #0048ff;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  height: 45px;
+  border-radius: 20px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.modalOption:hover, .modalClose:hover {
+  background-color: #0056b3;
+}
+
+/* 
+  ==============
+  RESPONSIVE
+  ==============
+*/
+@media (max-width: 768px) {
+  .buttonContainer {
+    gap: 8px;
   }
 
-.calendlyButton {
-    display: inline-block;
-    background-color: #0048ff;
-    color: #fff;
-    padding: 12px 24px;
-    font-size: 16px;
-    font-weight: bold;
-    border: none;
-    width: 300px;
-    border-radius: 20px;
-    cursor: pointer;
-    height: 55px;
-    text-align: center;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
+  .modalContent {
+    width: 90%; /* take more space on small screens */
   }
-  
-  .calendlyButton:hover {
-    background-color: #0056b3;
-  }
-  
-  .calendlyButton:focus {
-    outline: none;
-    box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
-  }
-  
-  .calendlyButton:active {
-    background-color: #0048ff;
-  }
-  .button {
-    width: 300px;
-    color: white;
-    margin: 5px;
-    padding: 10px;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    background-color: #0048ff;
-  }
-  
-  .button:hover {
-    background-color: #5d85ff;
-  }
-  
-  @media (max-width: 768px) {
-    .buttonContainer {
-      flex-direction: column;
-      gap: 8px;
-    }
-  }
+}
