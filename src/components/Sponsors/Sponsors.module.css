@@ -20,14 +20,18 @@
   margin: 0 auto;
 }
 
+@media (max-width: 600px) {
+  .logoGrid {
+    grid-template-columns: 1fr 1fr; 
+  }
+}
+
 .logo {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 150px;
   height: 150px;
-
-
   border-radius: 5px;
   box-sizing: border-box;
 }
