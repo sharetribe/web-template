@@ -2,6 +2,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 10px
 }
 
 .image {
@@ -20,15 +21,15 @@
 
 .center img {
   width: 300px;
-  height: 400px;
+  height: 300px;
 }
 
 .left img, .right img {
   width: 200px;
-  height: 300px;
+  height: 350px;
 }
 
 .leftFar img, .rightFar img {
   width: 100px;
-  height: 200px;
+  height: 400px;
 }

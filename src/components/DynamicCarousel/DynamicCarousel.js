@@ -23,7 +23,7 @@ const DynamicCarousel = () => {
           newImages.push(shiftedImage);
           return newImages;
         });
-      }, 300); // Adjust the interval speed here (in milliseconds)
+      }, 800); // Adjust the interval speed here (in milliseconds)
     } else {
       clearInterval(interval);
     }
