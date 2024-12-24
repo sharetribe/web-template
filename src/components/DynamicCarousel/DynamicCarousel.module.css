@@ -2,16 +2,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
-  height: 400px;
-  overflow: hidden;
 }
 
 .image {
+  flex-shrink: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  transition: transform 0.3s ease-out;
 }
 
 .image img {
@@ -22,7 +20,7 @@
 
 .center img {
   width: 300px;
-  height: 200px;
+  height: 400px;
 }
 
 .left img, .right img {
@@ -32,5 +30,5 @@
 
 .leftFar img, .rightFar img {
   width: 100px;
-  height: 400px;
+  height: 200px;
 }
