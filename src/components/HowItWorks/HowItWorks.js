@@ -13,7 +13,7 @@ const HowItWorks = () => {
           {/* Step 1 */}
           <div className={css.step}>
             <img src={img1} alt="Step 1" className={css.image} />
-            <p className={css.text}>esplora</p>
+            <p>esplora</p>
           </div>
 
           <div className={css.arrow}></div>
@@ -21,7 +21,7 @@ const HowItWorks = () => {
           {/* Step 2 */}
           <div className={css.step}>
             <img src={img2} alt="Step 2" className={css.image} />
-            <p className={css.text}>scegli</p>
+            <p >scegli</p>
           </div>
 
           <div className={css.arrow}></div>
@@ -29,7 +29,7 @@ const HowItWorks = () => {
           {/* Step 3 */}
           <div className={css.step}>
             <img src={img3} alt="Step 3" className={css.image} />
-            <p className={`${css.text} ${css.enjoy}`}>en<span style={{color: '#0048ff'}}>joy</span></p>
+            <p>en<span style={{color: '#0048ff'}}>joy</span></p>
           </div>
         </div>
       </div>

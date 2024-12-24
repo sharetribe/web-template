@@ -1,6 +1,7 @@
 .buttonContainer {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: center;
   align-items: center;
   gap: 16px; /* space between buttons */
 }
@@ -96,6 +97,9 @@
 @media (max-width: 768px) {
   .buttonContainer {
     gap: 8px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 
   .modalContent {
