@@ -13,7 +13,7 @@ import DynamicCarousel from '../../components/DynamicCarousel/DynamicCarousel.js
 import Counter from '../../components/Counter/Counter.js';
 import ToDo from '../../components/ToDo/ToDo.js';
 import { validProps } from './Field';
-
+import TrustPilot from '../../components/TrustPilot/TrustPilot.js';
 import SectionBuilder from './SectionBuilder/SectionBuilder.js';
 import StaticPage from './StaticPage.js';
 
@@ -192,9 +192,9 @@ function PageBuilder(props) {
                             <HowItWorks />
                             <DynamicCarousel />
                             <Sponsors />
+                            <TrustPilot />
                             <WhyUs />
                             <ActionTeamButtons />
-                     
                             <Newsletter isTeamBuilding={isTeamBuilding} />
                           </>
                         ) : (

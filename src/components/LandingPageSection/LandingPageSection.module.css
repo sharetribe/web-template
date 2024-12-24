@@ -18,6 +18,7 @@
 .emptyDiv2 {
   flex: 1 1 33%;
   padding: 10px;
+  margin-top: 150px;
   box-sizing: border-box;
 }
 

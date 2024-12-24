@@ -9,11 +9,24 @@
   background-color: white;
 }
 
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
 .image {
   width: 250px; 
   height: 250px; 
   object-fit: contain; 
+  transition: transform 0.3s ease; /* Smooth transition for zoom effect */
 }
+
+.step:hover .image {
+  transform: scale(1.1); /* Zoom in the image */
+}
+
 
 .step {
   display: flex;
@@ -23,7 +36,7 @@
 }
 
 .text {
-  font-size: 0.9rem;
+  font-size: 1.2rem;
   font-weight: bold;
   margin-top: 10px;
 }

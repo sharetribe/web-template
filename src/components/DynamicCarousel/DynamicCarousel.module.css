@@ -33,3 +33,33 @@
   width: 100px;
   height: 400px;
 }
+
+.button {
+  width: 300px;
+  color: white;
+  margin: 5px;
+  padding: 10px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  background-color: #0048ff;
+  margin-top: 20px;
+  justify-content: center;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 50px;
+  }

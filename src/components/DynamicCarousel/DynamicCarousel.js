@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { PrimaryButton } from '../Button/Button';
 import css from './DynamicCarousel.module.css';
+import { useHistory } from 'react-router-dom'; 
 
 const DynamicCarousel = () => {
+  const history = useHistory(); // Use useHistory hook
   const [images, setImages] = useState([
     'https://picsum.photos/100/200?random=1',
     'https://picsum.photos/200/300?random=2',
@@ -11,6 +14,10 @@ const DynamicCarousel = () => {
   ]);
 
   const [hovering, setHovering] = useState(false);
+
+  const handleNavigate = () => {
+    history.push('/ts'); // Use history.push for navigation
+  };
 
   useEffect(() => {
     let interval;
@@ -35,6 +42,8 @@ const DynamicCarousel = () => {
   const handleMouseLeave = () => setHovering(false);
 
   return (
+    <>
+      <h2 className={css.title}>I più amati da tutti</h2>
     <div
       className={css.carousel}
       onMouseEnter={handleMouseEnter}
@@ -58,8 +67,16 @@ const DynamicCarousel = () => {
           <img src={src} alt={`Image ${index + 1}`} />
         </div>
       ))}
+
     </div>
+    <div className={css.buttonContainer}>
+    <PrimaryButton type="submit" className={css.button} onClick={handleNavigate}>
+    Esplora tutti i team building
+    </PrimaryButton>
+    </div>
+    </>
   );
+
 };
 
 export default DynamicCarousel;

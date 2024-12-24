@@ -1,0 +1,64 @@
+.container {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+  }
+  
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .carousel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .arrow {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px;
+  }
+  
+  .content {
+    display: flex;
+    align-items: flex-start;
+    text-align: left;
+    max-width: 800px;
+    margin: 0 20px;
+  }
+  
+  .text {
+    font-size: 16px;
+    margin-right: 20px;
+    line-height: 1.5;
+    flex: 1;
+  }
+  
+  .image {
+    max-width: 300px;
+    border-radius: 8px;
+  }
+  
+  .trustpilot {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .rating {
+    display: flex;
+    margin-right: 10px;
+  }
+  
+  .star {
+    color: #00b67a;
+    font-size: 20px;
+    margin: 0 2px;
+  }
+  

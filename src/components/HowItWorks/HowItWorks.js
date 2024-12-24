@@ -7,8 +7,9 @@ import img3 from '../../media/landing/3.png';
 const HowItWorks = () => {
   return (
     <>
-      <h2 className={css.title}>Come Funziona?</h2>
-      <div className={css.container}>
+          <h2 className={css.title}>Come funziona</h2>
+          <div className={css.container}>
+      <h2 className={css.title}>Come funziona</h2>
         <div className={css.steps}>
           {/* Step 1 */}
           <div className={css.step}>
@@ -29,7 +30,7 @@ const HowItWorks = () => {
           {/* Step 3 */}
           <div className={css.step}>
             <img src={img3} alt="Step 3" className={css.image} />
-            <p className={`${css.text} ${css.enjoy}`}>en<span style={{color: ' #004494'}}>joy</span></p>
+            <p className={`${css.text} ${css.enjoy}`}>en<span style={{color: '#0048ff'}}>joy</span></p>
           </div>
         </div>
       </div>
