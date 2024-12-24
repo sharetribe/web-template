@@ -1,42 +1,32 @@
-import React, { useState } from 'react';
+import React from 'react';
 import css from './DynamicCarousel.module.css';
 
-
-
 const DynamicCarousel = () => {
-
-  const items = [
-    'https://picsum.photos/200/300?random=1',
+  const images = [
+    'https://picsum.photos/300/400?random=1',
     'https://picsum.photos/200/300?random=2',
-    'https://picsum.photos/200/300?random=3',
+    'https://picsum.photos/300/400?random=3',
     'https://picsum.photos/200/300?random=4',
-    'https://picsum.photos/200/300?random=5',
-    'https://picsum.photos/200/300?random=6',
+    'https://picsum.photos/100/200?random=5',
   ];
-  const [centerIndex, setCenterIndex] = useState(0);
-  const length = items.length;
-
-  const wrapIndex = (index) => {
-    return (index % length + length) % length;
-  };
-
-  const handleNext = () => {
-    setCenterIndex((prev) => wrapIndex(prev + 1));
-  };
-
-  const handlePrev = () => {
-    setCenterIndex((prev) => wrapIndex(prev - 1));
-  };
-
-  const left1Index = wrapIndex(centerIndex - 1);
-  const left2Index = wrapIndex(centerIndex - 2);
-  const right1Index = wrapIndex(centerIndex + 1);
-  const right2Index = wrapIndex(centerIndex + 2);
-
 
   return (
-    <div className={css.carouselContainer}>
-I più amati da tutti
+    <div className={css.carousel}>
+      <div className={`${css.image} ${css.leftFar}`}>
+        <img src={images[4]} alt="Left Far" />
+      </div>
+      <div className={`${css.image} ${css.left}`}>
+        <img src={images[1]} alt="Left" />
+      </div>
+      <div className={`${css.image} ${css.center}`}>
+        <img src={images[2]} alt="Center" />
+      </div>
+      <div className={`${css.image} ${css.right}`}>
+        <img src={images[3]} alt="Right" />
+      </div>
+      <div className={`${css.image} ${css.rightFar}`}>
+        <img src={images[0]} alt="Right Far" />
+      </div>
     </div>
   );
 };

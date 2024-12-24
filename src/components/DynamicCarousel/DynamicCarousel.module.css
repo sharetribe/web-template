@@ -1,81 +1,36 @@
-/* DynamicCarousel.module.css */
-
-.carousel-container {
-  position: relative;
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-  overflow: hidden;
-}
-
-.carousel-inner {
+.carousel {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
-  width: 100%;
+  gap: 10px;
+  height: 400px;
   overflow: hidden;
 }
 
-.carousel-item {
-  position: absolute;
-  transition: transform 0.5s ease, opacity 0.5s ease;
-  opacity: 0;
+.image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
-.left-2 {
-  transform: translateX(-120%) scale(0.8);
-  opacity: 0.5;
-  z-index: 1;
+.image img {
+  display: block;
+  object-fit: cover;
+  border-radius: 8px;
 }
 
-.left-1 {
-  transform: translateX(-60%) scale(0.9);
-  opacity: 0.8;
-  z-index: 2;
+.center img {
+  width: 300px;
+  height: 200px;
 }
 
-.center {
-  transform: translateX(0) scale(1);
-  opacity: 1;
-  z-index: 3;
+.left img, .right img {
+  width: 200px;
+  height: 300px;
 }
 
-.right-1 {
-  transform: translateX(60%) scale(0.9);
-  opacity: 0.8;
-  z-index: 2;
-}
-
-.right-2 {
-  transform: translateX(120%) scale(0.8);
-  opacity: 0.5;
-  z-index: 1;
-}
-
-.arrow-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  font-size: 20px;
-  cursor: pointer;
-  z-index: 4;
-}
-
-.left-arrow {
-  left: 10px;
-}
-
-.right-arrow {
-  right: 10px;
-}
-
-.arrow-btn:hover {
-  background-color: rgba(0, 0, 0, 0.7);
+.leftFar img, .rightFar img {
+  width: 100px;
+  height: 400px;
 }

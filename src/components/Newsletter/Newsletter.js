@@ -109,4 +109,4 @@ function Newsletter({isTeamBuilding}) {
   );
 }
 
-export default Newsletter;
+export default Newsletter; 
