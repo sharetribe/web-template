@@ -59,7 +59,6 @@ function PriceMaybe(props) {
   return (
     <div className={css.price}>
       <div className={css.priceValue} title={priceTitle}>
-        {listingType === 'teambuilding' ? <><IconsEuro/></> : null}
         {formattedPrice}
       </div>
       {isBookable ? (
@@ -161,7 +160,6 @@ export function ListingCardComponent(props) {
           )}
                     {listing.attributes.publicData.listingType === 'teambuilding' ? (
             <div className={css.teamBuilding}>
-             <LocationMaybe publicData={publicData} />
               <IconsPerson size="14px" color="blu" />
               {max !== undefined && max !== null ? `${min} +` : `${min}+`}
             </div>
