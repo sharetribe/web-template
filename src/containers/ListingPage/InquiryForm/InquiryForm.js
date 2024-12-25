@@ -20,6 +20,7 @@ import {
   IconInquiry,
   Heading,
   NamedLink,
+  ReminderBox,
 } from '../../../components';
 
 import css from './InquiryForm.module.css';
@@ -116,7 +117,7 @@ const InquiryFormComponent = props => (
             validate={messageRequired}
           />
           <ReminderBox />
-          
+
           <div className={submitButtonWrapperClassName}>
             <ErrorMessage error={sendInquiryError} />
             <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
