@@ -68,10 +68,10 @@ const TopbarMobileMenu = props => {
 
   const user = ensureCurrentUser(currentUser);
 
-  const extraLinks = customLinks.map(linkConfig => {
+  const extraLinks = customLinks.map((linkConfig, index) => {
     return (
       <CustomLinkComponent
-        key={linkConfig.text}
+        key={`${linkConfig.text}_${index}`}
         linkConfig={linkConfig}
         currentPage={currentPage}
       />

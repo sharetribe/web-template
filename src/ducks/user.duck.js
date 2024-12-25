@@ -362,16 +362,31 @@ export const fetchCurrentUserNotifications = () => (dispatch, getState, sdk) => 
     .catch(e => dispatch(fetchCurrentUserNotificationsError(storableError(e))));
 };
 
+/**
+ * Fetch currentUser API entity.
+ *
+ * @param {Object} options
+ * @param {Object} [options.callParams]           Optional parameters for the currentUser.show().
+ * @param {boolean} [options.updateHasListings]   Make extra call for fetchCurrentUserHasListings()?
+ * @param {boolean} [options.updateNotifications] Make extra call for fetchCurrentUserNotifications()?
+ * @param {boolean} [options.afterLogin]          Fetch is no-op for unauthenticated users except after login() call
+ * @param {boolean} [options.enforce]             Enforce the call even if the currentUser entity is freshly fetched.
+ */
 export const fetchCurrentUser = options => (dispatch, getState, sdk) => {
   const state = getState();
   const { currentUserHasListings, currentUserShowTimestamp } = state.user || {};
   const { isAuthenticated } = state.auth;
-  const { callParams = null, updateHasListings = true, updateNotifications = true, afterLogin } =
-    options || {};
+  const {
+    callParams = null,
+    updateHasListings = true,
+    updateNotifications = true,
+    afterLogin,
+    enforce = false, // Automatic emailVerification might be called too fast
+  } = options || {};
 
   // Double fetch might happen when e.g. profile page is making a full page load
   const aSecondAgo = new Date().getTime() - 1000;
-  if (currentUserShowTimestamp > aSecondAgo) {
+  if (!enforce && currentUserShowTimestamp > aSecondAgo) {
     return Promise.resolve({});
   }
   // Set in-progress, no errors

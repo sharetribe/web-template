@@ -1,6 +1,5 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import 'react-dates/initialize';
 import Decimal from 'decimal.js';
 
 import { LINE_ITEM_HOUR } from '../../../util/types';

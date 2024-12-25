@@ -29,6 +29,8 @@ import {
   ERROR_CODE_PERMISSION_DENIED_POST_LISTINGS,
   ERROR_CODE_PERMISSION_DENIED_PENDING_APPROVAL,
   ERROR_CODE_USER_PENDING_APPROVAL,
+  ERROR_CODE_PERMISSION_DENIED_INITIATE_TRANSACTIONS,
+  ERROR_CODE_PERMISSION_DENIED_READ,
 } from './types';
 // NOTE: This file imports types.js, which may lead to circular dependency
 
@@ -275,6 +277,25 @@ export const isErrorNoPermissionForUserPendingApproval = error =>
  */
 export const isErrorUserPendingApproval = error =>
   error && error.status === 403 && hasErrorWithCode(error, ERROR_CODE_USER_PENDING_APPROVAL);
+
+/**
+ * Check if the given API error (from `sdk.transactions.initiate(params)`
+ * is due to denied permission to initiate transactions.
+ */
+export const isErrorNoPermissionForInitiateTransactions = error =>
+  error &&
+  error.status === 403 &&
+  hasErrorWithCode(error, ERROR_CODE_PERMISSION_DENIED_INITIATE_TRANSACTIONS);
+
+/**
+ * Check if the given API error (from `sdk.transactions.initiate(params)`
+ * is due to denied permission to view marketplace data.
+ */
+export const isErrorNoViewingPermission = error => {
+  return (
+    error && error.status === 403 && hasErrorWithCode(error, ERROR_CODE_PERMISSION_DENIED_READ)
+  );
+};
 
 /**
  * Check if the given API error (from

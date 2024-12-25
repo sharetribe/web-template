@@ -4,146 +4,11 @@
     <meta charset="utf-8">
     <title>500 Server error</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="/static/favicon.ico">
 
     <style>
 
-     /**
-      * Inter font is back up font for non-apple environments
-      *
-      * https://rsms.me/inter/
-      * https://github.com/philipbelesky/inter-ui
-      */
-
-      @font-face {
-        font-family: "Inter";
-        font-style: normal;
-        font-weight: 100;
-        font-display: optional;
-        src: url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-Thin.woff2") format("woff2"), url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-Thin.woff") format("woff");
-      }
-      @font-face {
-        font-family: "Inter";
-        font-style: italic;
-        font-weight: 100;
-        font-display: optional;
-        src: url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-ThinItalic.woff2") format("woff2"), url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-ThinItalic.woff") format("woff");
-      }
-      @font-face {
-        font-family: "Inter";
-        font-style: normal;
-        font-weight: 200;
-        font-display: optional;
-        src: url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-ExtraLight.woff2") format("woff2"), url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-ExtraLight.woff") format("woff");
-      }
-      @font-face {
-        font-family: "Inter";
-        font-style: italic;
-        font-weight: 200;
-        font-display: optional;
-        src: url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-ExtraLightItalic.woff2") format("woff2"), url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-ExtraLightItalic.woff") format("woff");
-      }
-      @font-face {
-        font-family: "Inter";
-        font-style: normal;
-        font-weight: 300;
-        font-display: optional;
-        src: url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-Light.woff2") format("woff2"), url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-Light.woff") format("woff");
-      }
-      @font-face {
-        font-family: "Inter";
-        font-style: italic;
-        font-weight: 300;
-        font-display: optional;
-        src: url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-LightItalic.woff2") format("woff2"), url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-LightItalic.woff") format("woff");
-      }
-      @font-face {
-        font-family: "Inter";
-        font-style: normal;
-        font-weight: 400;
-        font-display: optional;
-        src: url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-Regular.woff2") format("woff2"), url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-Regular.woff") format("woff");
-      }
-      @font-face {
-        font-family: "Inter";
-        font-style: italic;
-        font-weight: 400;
-        font-display: optional;
-        src: url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-Italic.woff2") format("woff2"), url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-Italic.woff") format("woff");
-      }
-      @font-face {
-        font-family: "Inter";
-        font-style: normal;
-        font-weight: 500;
-        font-display: optional;
-        src: url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-Medium.woff2") format("woff2"), url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-Medium.woff") format("woff");
-      }
-      @font-face {
-        font-family: "Inter";
-        font-style: italic;
-        font-weight: 500;
-        font-display: optional;
-        src: url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-MediumItalic.woff2") format("woff2"), url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-MediumItalic.woff") format("woff");
-      }
-      @font-face {
-        font-family: "Inter";
-        font-style: normal;
-        font-weight: 600;
-        font-display: optional;
-        src: url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-SemiBold.woff2") format("woff2"), url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-SemiBold.woff") format("woff");
-      }
-      @font-face {
-        font-family: "Inter";
-        font-style: italic;
-        font-weight: 600;
-        font-display: optional;
-        src: url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-SemiBoldItalic.woff2") format("woff2"), url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-SemiBoldItalic.woff") format("woff");
-      }
-      @font-face {
-        font-family: "Inter";
-        font-style: normal;
-        font-weight: 700;
-        font-display: optional;
-        src: url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-Bold.woff2") format("woff2"), url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-Bold.woff") format("woff");
-      }
-      @font-face {
-        font-family: "Inter";
-        font-style: italic;
-        font-weight: 700;
-        font-display: optional;
-        src: url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-BoldItalic.woff2") format("woff2"), url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-BoldItalic.woff") format("woff");
-      }
-      @font-face {
-        font-family: "Inter";
-        font-style: normal;
-        font-weight: 800;
-        font-display: optional;
-        src: url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-ExtraBold.woff2") format("woff2"), url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-ExtraBold.woff") format("woff");
-      }
-      @font-face {
-        font-family: "Inter";
-        font-style: italic;
-        font-weight: 800;
-        font-display: optional;
-        src: url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-ExtraBoldItalic.woff2") format("woff2"), url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-ExtraBoldItalic.woff") format("woff");
-      }
-      @font-face {
-        font-family: "Inter";
-        font-style: normal;
-        font-weight: 900;
-        font-display: optional;
-        src: url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-Black.woff2") format("woff2"), url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-Black.woff") format("woff");
-      }
-      @font-face {
-        font-family: "Inter";
-        font-style: italic;
-        font-weight: 900;
-        font-display: optional;
-        src: url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-BlackItalic.woff2") format("woff2"), url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-BlackItalic.woff") format("woff");
-      }
-
       body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Inter var', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+        font-family: -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
         -webkit-font-smoothing: antialiased; /* http://szafranek.net/blog/2009/02/22/font-smoothing-explained/ */
         -moz-osx-font-smoothing: grayscale; /* http://szafranek.net/blog/2009/02/22/font-smoothing-explained/ */
         text-rendering: optimizeSpeed;
@@ -190,9 +55,8 @@
         /* Dimensions */
         display: block;
         max-width: 360px;
-        min-height: 47px;
         margin: 46px auto 0 auto;
-        padding: 18px 0 0 0;
+        padding: 20px 0;
 
 
         /* Font */

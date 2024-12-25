@@ -150,15 +150,23 @@
   /* ================ Filters ================ */
   --marketplaceButtonSmallDesktopPadding: 9px 16px 9px 16px;
 
-  /* ================ DateInput, DateRangeInput, DateRangeController ================ */
-  --ReactDates_selectionHeight: 36px;
-  --ReactDates_hoveredOverlayColor: rgba(255, 255, 255, 0.2);
-
-  --DateInput_selectionHeight: var(--ReactDates_selectionHeight);
-  --DateInput_hoveredOverlayColor: var(--ReactDates_hoveredOverlayColor);
-  --DateRangeInput_selectionHeight: var(--ReactDates_selectionHeight);
-  --DateRangeInput_hoveredOverlayColor: var(--ReactDates_hoveredOverlayColor);
-  --DateRangeController_selectionHeight: var(--ReactDates_selectionHeight);
+  /* ================ DatePicker ================ */
+  --datepickerFgColor: var(--colorWhite);
+  --datepickerBgColor: var(--marketplaceColor);
+  --datepickerBorderColor: var(--colorGrey50);
+  --datepickerDisabledFgColor: var(--marketplaceColorDark);
+  --datepickerDisabledTextDeco: unset;
+  --datepickerHoveredFgColor: inherit;
+  --datepickerHoveredBgColor: rgba(255, 255, 255, 0.2);
+  --datepickerHeaderFgColor: var(--colorWhite);
+  --datepickerHeaderFgColorDisabled: var(--colorGrey100);
+  --datepickerHeaderArrowColor: var(--colorWhite);
+  --datepickerDateOutline: white solid 1px;
+  --datepickerButtonOutlineColor: var(--colorGrey50);
+  --datepickerSelectedFgColor: var(--colorWhite);
+  --datepickerSelectedBgColor: var(--colorSuccess);
+  --datepickerSelectedHoveredFgColor: inherit;
+  --datepickerSelectedHoveredBgColor: rgba(255, 255, 255, 0.2);
 
   /* ================ SectionHero ================ */
   --SectionHero_desktopTitleMaxWidth: 625px;
@@ -1232,6 +1240,42 @@ textarea {
   box-shadow: none;
   cursor: not-allowed;
   border-color: var(--colorGrey100);
+}
+
+.buttonSmall {
+  font-family: var(--fontFamily);
+  font-weight: var(--fontWeightMedium);
+
+  font-size: 14px;
+  line-height: 16px;
+  padding: 6px 16px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  /* Colors */
+  background-color: var(--colorWhite);
+  color: var(--colorGrey700);
+
+  /* Borders */
+  border-radius: var(--borderRadius);
+  border: 1px solid var(--colorGrey100);
+  background: var(--colorWhite);
+
+  cursor: pointer;
+  transition: var(--transitionStyleButton);
+
+  @media (--viewportMedium) {
+    padding: 7px 16px;
+  }
+}
+.buttonSmall:focus,
+.buttonSmall:hover {
+  background-color: var(--marketplaceColor);
+  border-color: var(--marketplaceColor);
+  color: var(--colorWhite);
 }
 
 /* ================ Modals ================ */

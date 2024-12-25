@@ -48,12 +48,14 @@ export const SCHEMA_TYPE_MULTI_ENUM = 'multi-enum';
 export const SCHEMA_TYPE_TEXT = 'text';
 export const SCHEMA_TYPE_LONG = 'long';
 export const SCHEMA_TYPE_BOOLEAN = 'boolean';
+export const SCHEMA_TYPE_YOUTUBE = 'youtubeVideoUrl';
 export const EXTENDED_DATA_SCHEMA_TYPES = [
   SCHEMA_TYPE_ENUM,
   SCHEMA_TYPE_MULTI_ENUM,
   SCHEMA_TYPE_TEXT,
   SCHEMA_TYPE_LONG,
   SCHEMA_TYPE_BOOLEAN,
+  SCHEMA_TYPE_YOUTUBE,
 ];
 
 const propTypes = {};
@@ -646,6 +648,9 @@ export const ERROR_CODE_STOCK_OLD_TOTAL_MISMATCH = 'old-total-mismatch';
 export const ERROR_CODE_PERMISSION_DENIED_POST_LISTINGS = 'permission-denied-post-listings';
 export const ERROR_CODE_PERMISSION_DENIED_PENDING_APPROVAL = 'permission-denied-pending-approval';
 export const ERROR_CODE_USER_PENDING_APPROVAL = 'user-pending-approval';
+export const ERROR_CODE_PERMISSION_DENIED_INITIATE_TRANSACTIONS =
+  'permission-denied-initiate-transactions';
+export const ERROR_CODE_PERMISSION_DENIED_READ = 'permission-denied-read';
 
 const ERROR_CODES = [
   ERROR_CODE_TRANSACTION_LISTING_NOT_FOUND,
@@ -668,6 +673,8 @@ const ERROR_CODES = [
   ERROR_CODE_PERMISSION_DENIED_POST_LISTINGS,
   ERROR_CODE_PERMISSION_DENIED_PENDING_APPROVAL,
   ERROR_CODE_USER_PENDING_APPROVAL,
+  ERROR_CODE_PERMISSION_DENIED_INITIATE_TRANSACTIONS,
+  ERROR_CODE_PERMISSION_DENIED_READ,
 ];
 
 // API error
