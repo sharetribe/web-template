@@ -1,6 +1,7 @@
 // Add here the translations of the country names using key "<language_code>: 'transalation'" e.g. fi: 'Afganistan'
 // prettier-ignore
 const countryCodes = [
+  { code: 'BG', en: 'България', fr: 'Bulgarie', es: 'Bulgaria', de: 'Bulgarien' },
   { code: 'AF', en: 'Afghanistan', fr: 'Afghanistan', es: 'Afganistán', de: 'Afghanistan' },
   { code: 'AX', en: 'Åland Islands', fr: 'Îles Åland', es: 'Islas Áland', de: 'Åland' },
   { code: 'AL', en: 'Albania', fr: 'Albanie', es: 'Albania', de: 'Albanien' },
@@ -35,7 +36,6 @@ const countryCodes = [
   { code: 'BR', en: 'Brazil', fr: 'Brésil', es: 'Brasil', de: 'Brasilien' },
   { code: 'IO', en: 'British Indian Ocean Territory', fr: 'Territoire britannique de l’Océan Indien', es: 'Territorio Británico del Océano Índico', de: 'Britisches Territorium im Indischen Ozean' },
   { code: 'BN', en: 'Brunei Darussalam', fr: 'Brunei Darussalam', es: 'Brunéi', de: 'Brunei Darussalam' },
-  { code: 'BG', en: 'Bulgaria', fr: 'Bulgarie', es: 'Bulgaria', de: 'Bulgarien' },
   { code: 'BF', en: 'Burkina Faso', fr: 'Burkina Faso', es: 'Burkina Faso', de: 'Burkina Faso' },
   { code: 'BI', en: 'Burundi', fr: 'Burundi', es: 'Burundi', de: 'Burundi' },
   { code: 'KH', en: 'Cambodia', fr: 'Cambodge', es: 'Camboya', de: 'Kambodscha' },

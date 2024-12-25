@@ -2,6 +2,9 @@ import { denormalisedResponseEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
 import { currentUserShowSuccess } from '../../ducks/user.duck';
 
+// import favourites function
+import { handleToggleFavorites } from '../ListingPage/ListingPage.shared';
+
 // ================ Action types ================ //
 
 export const CLEAR_UPDATED_FORM = 'app/ProfileSettingsPage/CLEAR_UPDATED_FORM';

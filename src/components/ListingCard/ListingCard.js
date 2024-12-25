@@ -144,7 +144,7 @@ export const ListingCardComponent = props => {
               longWordClass: css.longWord,
             })}
           </div>
-          <div>{conditionName}</div>
+          <div className={css.condition}>{conditionName}</div>
           <PriceMaybe price={price} publicData={publicData} config={config} intl={intl} />
           {showAuthorInfo ? (
             <div className={css.authorInfo}>

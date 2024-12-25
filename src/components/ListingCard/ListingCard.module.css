@@ -121,3 +121,10 @@
   word-break: break-word;
   hyphens: auto;
 }
+
+.condition {
+  composes: marketplaceTinyFontStyles from global;
+  margin: 4px 0;
+  color: var(--colorGrey700);
+  /* color: var(--colorText); */
+}

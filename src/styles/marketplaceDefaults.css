@@ -804,7 +804,7 @@ textarea {
 }
 
 .textSmall {
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.2;
   font-weight: var(--fontWeightMedium);
   /* letter-spacing: -0.1px; */
@@ -1574,3 +1574,8 @@ textarea {
 #how-to-sell {
   background: rgba (254,25,0,.75);
 }
+/* fieldset ul {
+  columns: 3;
+  -webkit-columns: 3;
+  -moz-columns: 3;
+} */

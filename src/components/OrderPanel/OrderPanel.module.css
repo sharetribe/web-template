@@ -288,3 +288,17 @@
     padding: 0;
   }
 }
+.favoriteButton {
+  min-height: unset;
+  margin: 1rem auto;
+  padding: .5rem 0;
+  font-weight: 400;
+  color: var(--colorGrey700);
+  background: transparent;
+  border: 1px solid var(--colorGrey700);
+  &:hover {
+    color: var(--colorBtnCtaText);
+    border-color: var(--colorPrimary);
+    background: var(--colorPrimary);
+  }
+}

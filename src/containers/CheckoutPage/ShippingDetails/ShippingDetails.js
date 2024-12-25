@@ -56,6 +56,9 @@ const ShippingDetails = props => {
         placeholder={intl.formatMessage({
           id: 'ShippingDetails.recipientPhoneNumberPlaceholder',
         })}
+        validate={validators.required(
+          intl.formatMessage({ id: 'ShippingDetails.recipientNameRequired' })
+        )}
         onUnmount={() => formApi.change('recipientPhoneNumber', undefined)}
       />
       <div className={css.formRow}>
@@ -63,7 +66,7 @@ const ShippingDetails = props => {
           id={`${fieldId}.recipientAddressLine1`}
           name="recipientAddressLine1"
           disabled={disabled}
-          className={css.field}
+          className={css.fieldFullWidth}
           type="text"
           autoComplete="shipping address-line1"
           label={intl.formatMessage({ id: 'ShippingDetails.addressLine1Label' })}
@@ -75,7 +78,9 @@ const ShippingDetails = props => {
           )}
           onUnmount={() => formApi.change('recipientAddressLine1', undefined)}
         />
-
+        
+        {/* address line 2 commented out */}
+        {false && (
         <FieldTextInput
           id={`${fieldId}.recipientAddressLine2`}
           name="recipientAddressLine2"
@@ -91,7 +96,9 @@ const ShippingDetails = props => {
             id: 'ShippingDetails.addressLine2Placeholder',
           })}
           onUnmount={() => formApi.change('recipientAddressLine2', undefined)}
-        />
+        />)}
+        {/* address line 2 commented out */}
+
       </div>
       <div className={css.formRow}>
         <FieldTextInput
@@ -125,6 +132,8 @@ const ShippingDetails = props => {
         />
       </div>
       <div className={css.formRow}>
+        {/* state commented out */}
+        {false && (
         <FieldTextInput
           id={`${fieldId}.recipientState`}
           name="recipientState"
@@ -139,7 +148,8 @@ const ShippingDetails = props => {
           placeholder={intl.formatMessage({ id: 'ShippingDetails.statePlaceholder' })}
           onUnmount={() => formApi.change('recipientState', undefined)}
         />
-
+        )}
+        {/* state commented out */}
         <FieldSelect
           id={`${fieldId}.recipientCountry`}
           name="recipientCountry"
