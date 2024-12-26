@@ -404,3 +404,38 @@
   padding: 0 calc(4px + 8px);
   z-index: 1;
 }
+
+.reviewBtton{
+  padding: 8px;
+  border: 1px solid black;
+  border-radius: 4px;
+  width: max-content;
+  margin: 12px 0px;
+  cursor: pointer;
+}
+
+.reviewBtton:hover{
+  background-color: var(--marketplaceColor);
+  color: white;
+}
+
+.reviewContent {
+  composes: textSmall from global;
+  font-style: italic;
+  margin: 0;
+  white-space: pre-line;
+}
+
+.publicReviewTitle{
+  font-size: large;
+  margin-bottom: 12px;
+  font-weight: bold;
+}
+
+.publicReviewContent{
+  padding: 12px 0px;
+}
+
+.publicReviewComponent{
+  padding: 20px 0px;
+}

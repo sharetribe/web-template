@@ -174,3 +174,7 @@ export const postUploadToS3 = files => {
 export const updateOfferListing = body => {
   return post('/api/update-offer-listing', body);
 };
+
+export const updatePublicReview = body => {
+  return post('/api/update-public-review', body);
+};
