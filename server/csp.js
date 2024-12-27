@@ -122,6 +122,7 @@ const defaultDirectives = {
     'js.stripe.com',
     // Plausible analytics
     'plausible.io',
+    'kit.fontawesome.com',
   ],
   styleSrc: [self, unsafeInline, 'fonts.googleapis.com', 'api.mapbox.com'],
 };
