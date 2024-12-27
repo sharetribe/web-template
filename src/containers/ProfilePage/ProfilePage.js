@@ -52,6 +52,7 @@ import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import _ from 'lodash';
+import moment from 'moment';
 import {
   checkFileType,
   FILE_DOCUMENT_TYPES,
@@ -269,6 +270,7 @@ export const MainContent = props => {
     isCurrentUser,
     onSendReview,
     profileId,
+    currentUserDisplayName,
   } = props;
 
   const hasListings = listings.length > 0;
@@ -304,13 +306,16 @@ export const MainContent = props => {
   const onSubmitReview = values => {
     const { reviewRating, reviewContent } = values;
     const rating = Number.parseInt(reviewRating, 10);
+    const review = {
+      reviewRating: rating,
+      reviewContent,
+      createdAt: new Date().toISOString(),
+      name: currentUserDisplayName,
+    };
     if (openReview && Array.isArray(openReview) && openReview.length > 0) {
-      openReview.push({
-        reviewRating: rating,
-        reviewContent,
-      });
+      openReview.push(review);
     } else {
-      openReview = [{ reviewRating: rating, reviewContent }];
+      openReview = [review];
     }
 
     const params = {
@@ -378,16 +383,25 @@ export const MainContent = props => {
             <FormattedMessage id="ProfilePage.publicReview" />
           </H4>
 
-          {publicReviews.map((review, index) => (
-            <div className={css.publicReviewContent} key={index}>
-              <ReviewRating
-                rating={review.reviewRating}
-                className={css.mobileReviewRating}
-                reviewStarClassName={css.reviewRatingStar}
-              />
-              <p className={css.reviewContent}>{review.reviewContent}</p>
-            </div>
-          ))}
+          {publicReviews.map((review, index) => {
+            const getDate = review.createdAt ? moment(review.createdAt).format('DD/MM/YYYY') : null;
+            const displayName = review.name;
+            return (
+              <div className={css.publicReview} key={index}>
+                <ReviewRating
+                  rating={review.reviewRating}
+                  className={css.mobileReviewRating}
+                  reviewStarClassName={css.reviewRatingStar}
+                />
+                <div className={css.publicReviewContent}>{review.reviewContent}</div>
+
+                <div className={css.publicReviewName}>
+                  {displayName ? <div>{displayName}</div> : null}
+                  {getDate ? <div>{getDate}</div> : null}
+                </div>
+              </div>
+            );
+          })}
         </div>
       ) : null}
       {hideReviews ? null : isMobileLayout ? (
@@ -466,6 +480,7 @@ export const ProfilePageComponent = props => {
 
   const schemaTitleVars = { name: displayName, marketplaceName: config.marketplaceName };
   const schemaTitle = intl.formatMessage({ id: 'ProfilePage.schemaTitle' }, schemaTitleVars);
+  const { displayName: currentUserDisplayName } = currentUser?.attributes?.profile || {};
 
   if (!isDataLoaded) {
     return null;
@@ -549,6 +564,7 @@ export const ProfilePageComponent = props => {
           isCurrentUser={isCurrentUser}
           onSendReview={onSendReview}
           profileId={profileUser?.id}
+          currentUserDisplayName={currentUserDisplayName}
           {...rest}
         />
       </LayoutSideNavigation>

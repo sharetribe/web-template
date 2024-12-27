@@ -432,10 +432,23 @@
   font-weight: bold;
 }
 
-.publicReviewContent{
+.publicReview{
   padding: 12px 0px;
+}
+
+.publicReviewContent{
+  padding: 16px 0px;
 }
 
 .publicReviewComponent{
   padding: 20px 0px;
+}
+
+.publicReviewName{
+  display: flex;
+  gap: 8px;
+  text-align: center;
+  color: lightgrey;
+  font-size: 12px;
+  font-weight: bold;
 }
