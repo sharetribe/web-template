@@ -71,19 +71,23 @@ const getResolvedCustomLinks = (customLinks, routeConfiguration) => {
     const isInternalLink = type === 'internal' || href.charAt(0) === '/';
     if (isInternalLink) {
       // Internal link
-      const testURL = new URL('http://my.marketplace.com' + href);
-      const matchedRoutes = matchPathname(testURL.pathname, routeConfiguration);
-      if (matchedRoutes.length > 0) {
-        const found = matchedRoutes[0];
-        const to = { search: testURL.search, hash: testURL.hash };
-        return {
-          ...linkConfig,
-          route: {
-            name: found.route?.name,
-            params: found.params,
-            to,
-          },
-        };
+      try {
+        const testURL = new URL('http://my.marketplace.com' + href);
+        const matchedRoutes = matchPathname(testURL.pathname, routeConfiguration);
+        if (matchedRoutes.length > 0) {
+          const found = matchedRoutes[0];
+          const to = { search: testURL.search, hash: testURL.hash };
+          return {
+            ...linkConfig,
+            route: {
+              name: found.route?.name,
+              params: found.params,
+              to,
+            },
+          };
+        }
+      } catch (e) {
+        return linkConfig;
       }
     }
     return linkConfig;

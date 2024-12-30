@@ -8,8 +8,14 @@ import {
   SCHEMA_TYPE_TEXT,
   SCHEMA_TYPE_LONG,
   SCHEMA_TYPE_BOOLEAN,
+  SCHEMA_TYPE_YOUTUBE,
 } from '../../util/types';
-import { required, nonEmptyArray, validateInteger } from '../../util/validators';
+import {
+  required,
+  nonEmptyArray,
+  validateInteger,
+  validateYoutubeURL,
+} from '../../util/validators';
 // Import shared components
 import { FieldCheckboxGroup, FieldSelect, FieldTextInput, FieldBoolean } from '../../components';
 // Import modules from this directory
@@ -164,6 +170,38 @@ const CustomFieldBoolean = props => {
   );
 };
 
+const CustomFieldYoutube = props => {
+  const { name, fieldConfig, defaultRequiredMessage, formId, intl } = props;
+  const { placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
+  const label = getLabel(fieldConfig);
+  const placeholder =
+    placeholderMessage ||
+    intl.formatMessage({ id: 'CustomExtendedDataField.placeholderYoutubeVideoURL' });
+
+  const notValidUrlMessage = intl.formatMessage({
+    id: 'CustomExtendedDataField.notValidYoutubeVideoURL',
+  });
+
+  const validate = value => {
+    const requiredMsg = requiredMessage || defaultRequiredMessage;
+    return isRequired && value == null
+      ? requiredMsg
+      : validateYoutubeURL(value, notValidUrlMessage);
+  };
+
+  return (
+    <FieldTextInput
+      className={css.customField}
+      id={formId ? `${formId}.${name}` : name}
+      name={name}
+      type="text"
+      label={label}
+      placeholder={placeholder}
+      validate={value => validate(value)}
+    />
+  );
+};
+
 /**
  * Return Final Form field for each configuration according to schema type.
  *
@@ -189,6 +227,8 @@ const CustomExtendedDataField = props => {
     ? renderFieldComponent(CustomFieldLong, props)
     : schemaType === SCHEMA_TYPE_BOOLEAN
     ? renderFieldComponent(CustomFieldBoolean, props)
+    : schemaType === SCHEMA_TYPE_YOUTUBE
+    ? renderFieldComponent(CustomFieldYoutube, props)
     : null;
 };
 

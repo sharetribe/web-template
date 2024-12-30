@@ -64,6 +64,7 @@ import {
 import { convertListingPrices } from '../../extensions/MultipleCurrency/utils/currency.js';
 
 import css from './TransactionPage.module.css';
+import { hasPermissionToViewData } from '../../util/userHelpers.js';
 
 // Submit dispute and close the review modal
 const onDisputeOrder = (
@@ -395,6 +396,8 @@ export const TransactionPageComponent = props => {
   const timeZone = listing?.attributes?.availabilityPlan?.timezone;
   const dateType = lineItemUnitType === LINE_ITEM_HOUR ? DATE_TYPE_DATETIME : DATE_TYPE_DATE;
 
+  const hasViewingRights = currentUser && hasPermissionToViewData(currentUser);
+
   const txBookingMaybe = booking?.id ? { booking, dateType, timeZone } : {};
   const orderBreakdownMaybe = hasLineItems
     ? {
@@ -439,6 +442,7 @@ export const TransactionPageComponent = props => {
       stateData={stateData}
       transactionRole={transactionRole}
       showBookingLocation={showBookingLocation}
+      hasViewingRights={hasViewingRights}
       activityFeed={
         <ActivityFeed
           messages={messages}
