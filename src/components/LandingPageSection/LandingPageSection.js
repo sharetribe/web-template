@@ -34,15 +34,7 @@ function LandingPageSection({ onSearchSubmit }) {
     };
   }, []);
 
-  const containerStyle = {
-    position: 'relative',
-    height: isMobile ? '725px' : '850px',
-    backgroundColor: isTeamBuilding ? 'white' : 'none',
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'right',
-    flex: '1 1 30%',
-  };
+
 
   const containerStyle2 = {
     position: 'relative',
@@ -100,7 +92,7 @@ function LandingPageSection({ onSearchSubmit }) {
   ) : null;
 
   return (
-    <div className={css.isTeamBuildingContainer} style={containerStyle}>
+    <>
       {tooltip}
       {!isTeamBuilding ? (
         <div className={css.surveyContainer}>
@@ -119,30 +111,38 @@ function LandingPageSection({ onSearchSubmit }) {
           </div>
         </div>
       ) : (
-        <div className={css.surveyContainer}>
-          {!isMobile && (
-            <div className={css.emptyDiv2}>
-              <p className={css.emptyText}>
+
+        <div>
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className={css.backgroundVideo}
+        >
+          <source
+            src="https://www.w3schools.com/howto/rain.mp4"
+            type="video/mp4"
+          />
+        </video>
+        <div className={css.emptyDiv2}>
               <h1>
               Creatività che fa la differenza
               </h1>
+              <p style={{color:"white"}}>
               I nostri workshop creativi aiutano il tuo team a riscoprire collaborazione,<br/>
               pensiero critico e empatia - competenze che l’AI non può replicare. <br/><br/>
               Rafforziamo ciò che rende i tuoi dipendenti unici, stimolando un pensiero laterale che nessun algoritmo può imitare. 
               Riportiamo i dipendenti al centro della creatività aziendale, trasformando idee in innovazioni concrete.<br/><br/>
               Prepara il tuo team per un futuro dove l’unicità umana fa la differenza.
               </p>
-              <ActionTeamButtons />
-            </div>
-          )}
-          <div className={css.videoSection}>
-            <VideoContainer />
-          </div>
+          <ActionTeamButtons />
         </div>
+      </div>
 
 
       )}
-    </div>
+    </>
   );
 }
 
