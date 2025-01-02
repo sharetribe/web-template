@@ -191,6 +191,18 @@ export const EditListingPricingAndStockFormComponent = props => (
               type="number"
               min={0}
               validate={stockValidator}
+              onWheel={e => {
+                // fix: number input should not change value on scroll
+                if (e.target === document.activeElement) {
+                  // Prevent the input value change, because we prefer page scrolling
+                  e.target.blur();
+
+                  // Refocus immediately, on the next tick (after the current function is done)
+                  setTimeout(() => {
+                    e.target.focus();
+                  }, 0);
+                }
+              }}
             />
           ) : (
             <Field id="stock" name="stock" type="hidden" className={css.unitTypeHidden}>

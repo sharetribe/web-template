@@ -56,6 +56,18 @@ const FieldSeatsInput = props => {
         label={intl.formatMessage({ id: 'FieldSeatsInput.seatsLabel' }, { unitType })}
         placeholder={intl.formatMessage({ id: 'FieldSeatsInput.seatsPlaceholder' }, { unitType })}
         validate={value => validate(value, 0, Number.MAX_SAFE_INTEGER, intl)}
+        onWheel={e => {
+          // fix: number input should not change value on scroll
+          if (e.target === document.activeElement) {
+            // Prevent the input value change, because we prefer page scrolling
+            e.target.blur();
+
+            // Refocus immediately, on the next tick (after the current function is done)
+            setTimeout(() => {
+              e.target.focus();
+            }, 0);
+          }
+        }}
       />
     </div>
   );
