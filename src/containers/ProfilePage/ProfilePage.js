@@ -41,21 +41,25 @@ import {
   NamedLink,
   NamedRedirect,
   Page,
+  ReviewRating,
   Reviews,
 } from '../../components';
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
-import { isScrollingDisabled } from '../../ducks/ui.duck';
+import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
 
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import _ from 'lodash';
+import moment from 'moment';
 import {
   checkFileType,
   FILE_DOCUMENT_TYPES,
   PreviewLink,
 } from '../../components/FieldDropzone/FieldDropzone';
+import CustomReviewModal from './CustomReviewModal/CustomReviewModal';
+import { addUserReview } from './ProfilePage.duck';
 import css from './ProfilePage.module.css';
 import SectionDetailsMaybe from './SectionDetailsMaybe';
 import SectionMultiEnumMaybe from './SectionMultiEnumMaybe';
@@ -255,6 +259,18 @@ export const MainContent = props => {
     userFieldConfig,
     intl,
     hideReviews,
+    onManageDisableScrolling,
+    setReviewModalOpen,
+    isReviewModalOpen,
+    config,
+    reviewSubmitted,
+    setReviewSubmitted,
+    sendReviewInProgress,
+    sendReviewError,
+    isCurrentUser,
+    onSendReview,
+    profileId,
+    currentUserDisplayName,
   } = props;
 
   const hasListings = listings.length > 0;
@@ -281,6 +297,44 @@ export const MainContent = props => {
       </p>
     );
   }
+
+  const { publicReviews } = publicData || {};
+
+  let openReview = publicReviews;
+
+  // Submit review and close the review modal
+  const onSubmitReview = values => {
+    const { reviewRating, reviewContent } = values;
+    const rating = Number.parseInt(reviewRating, 10);
+    const review = {
+      reviewRating: rating,
+      reviewContent,
+      createdAt: new Date().toISOString(),
+      name: currentUserDisplayName,
+    };
+    if (openReview && Array.isArray(openReview) && openReview.length > 0) {
+      openReview.push(review);
+    } else {
+      openReview = [review];
+    }
+
+    const params = {
+      id: profileId,
+      publicData: {
+        publicReviews: openReview,
+      },
+    };
+
+    onSendReview(params)
+      .then(r => {
+        setReviewModalOpen(false);
+        setReviewSubmitted(true);
+      })
+      .catch(e => {
+        // Do nothing.
+      });
+  };
+
   return (
     <div>
       <H2 as="h1" className={css.desktopHeading}>
@@ -311,11 +365,61 @@ export const MainContent = props => {
           </ul>
         </div>
       ) : null}
+
+      {!isCurrentUser ? (
+        <div
+          className={css.reviewBtton}
+          onClick={() => {
+            setReviewModalOpen(true);
+          }}
+        >
+          <FormattedMessage id="ProfilePage.reviewButton" />
+        </div>
+      ) : null}
+
+      {publicReviews ? (
+        <div className={css.publicReviewComponent}>
+          <H4 as="h2" className={css.publicReviewTitle}>
+            <FormattedMessage id="ProfilePage.publicReview" />
+          </H4>
+
+          {publicReviews.map((review, index) => {
+            const getDate = review.createdAt ? moment(review.createdAt).format('DD/MM/YYYY') : null;
+            const displayName = review.name;
+            return (
+              <div className={css.publicReview} key={index}>
+                <ReviewRating
+                  rating={review.reviewRating}
+                  className={css.mobileReviewRating}
+                  reviewStarClassName={css.reviewRatingStar}
+                />
+                <div className={css.publicReviewContent}>{review.reviewContent}</div>
+
+                <div className={css.publicReviewName}>
+                  {displayName ? <div>{displayName}</div> : null}
+                  {getDate ? <div>{getDate}</div> : null}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : null}
       {hideReviews ? null : isMobileLayout ? (
         <MobileReviews reviews={reviews} queryReviewsError={queryReviewsError} />
       ) : (
         <DesktopReviews reviews={reviews} queryReviewsError={queryReviewsError} />
       )}
+      <CustomReviewModal
+        id="ReviewOrderModal"
+        isOpen={isReviewModalOpen}
+        onCloseModal={() => setReviewModalOpen(false)}
+        onManageDisableScrolling={onManageDisableScrolling}
+        onSubmitReview={onSubmitReview}
+        reviewSent={reviewSubmitted}
+        sendReviewInProgress={sendReviewInProgress}
+        sendReviewError={sendReviewError}
+        marketplaceName={config.marketplaceName}
+      />
     </div>
   );
 };
@@ -324,6 +428,8 @@ export const ProfilePageComponent = props => {
   const config = useConfiguration();
   const intl = useIntl();
   const [mounted, setMounted] = useState(false);
+  const [isReviewModalOpen, setReviewModalOpen] = useState(false);
+  const [reviewSubmitted, setReviewSubmitted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -336,6 +442,8 @@ export const ProfilePageComponent = props => {
     useCurrentUser,
     userShowError,
     user,
+    onManageDisableScrolling,
+    onSendReview,
     ...rest
   } = props;
   const isVariant = pathParams.variant?.length > 0;
@@ -372,6 +480,7 @@ export const ProfilePageComponent = props => {
 
   const schemaTitleVars = { name: displayName, marketplaceName: config.marketplaceName };
   const schemaTitle = intl.formatMessage({ id: 'ProfilePage.schemaTitle' }, schemaTitleVars);
+  const { displayName: currentUserDisplayName } = currentUser?.attributes?.profile || {};
 
   if (!isDataLoaded) {
     return null;
@@ -446,6 +555,16 @@ export const ProfilePageComponent = props => {
           userFieldConfig={userFields}
           hideReviews={hasNoViewingRightsOnPrivateMarketplace}
           intl={intl}
+          onManageDisableScrolling={onManageDisableScrolling}
+          isReviewModalOpen={isReviewModalOpen}
+          setReviewModalOpen={setReviewModalOpen}
+          config={config}
+          reviewSubmitted={reviewSubmitted}
+          setReviewSubmitted={setReviewSubmitted}
+          isCurrentUser={isCurrentUser}
+          onSendReview={onSendReview}
+          profileId={profileUser?.id}
+          currentUserDisplayName={currentUserDisplayName}
           {...rest}
         />
       </LayoutSideNavigation>
@@ -483,6 +602,8 @@ const mapStateToProps = state => {
     userListingRefs,
     reviews,
     queryReviewsError,
+    sendReviewInProgress,
+    sendReviewError,
   } = state.ProfilePage;
   const userMatches = getMarketplaceEntities(state, [{ type: 'user', id: userId }]);
   const user = userMatches.length === 1 ? userMatches[0] : null;
@@ -509,9 +630,19 @@ const mapStateToProps = state => {
     listings,
     reviews,
     queryReviewsError,
+    sendReviewInProgress,
+    sendReviewError,
   };
 };
 
-const ProfilePage = compose(connect(mapStateToProps))(ProfilePageComponent);
+const mapDispatchToProps = dispatch => {
+  return {
+    onManageDisableScrolling: (componentId, disableScrolling) =>
+      dispatch(manageDisableScrolling(componentId, disableScrolling)),
+    onSendReview: params => dispatch(addUserReview(params)),
+  };
+};
+
+const ProfilePage = compose(connect(mapStateToProps, mapDispatchToProps))(ProfilePageComponent);
 
 export default ProfilePage;
