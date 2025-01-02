@@ -144,6 +144,18 @@ const CustomFieldLong = props => {
       label={label}
       placeholder={placeholder}
       validate={value => validate(value, minimum, maximum)}
+      onWheel={e => {
+        // fix: number input should not change value on scroll
+        if (e.target === document.activeElement) {
+          // Prevent the input value change, because we prefer page scrolling
+          e.target.blur();
+
+          // Refocus immediately, on the next tick (after the current function is done)
+          setTimeout(() => {
+            e.target.focus();
+          }, 0);
+        }
+      }}
     />
   );
 };
