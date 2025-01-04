@@ -1,5 +1,5 @@
-import React from 'react';
-import { array, arrayOf, func, node, number, object, oneOf, string } from 'prop-types';
+import React, { useState } from 'react';
+import { array, arrayOf, bool, func, node, number, object, oneOf, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { useIntl } from '../../../util/reactIntl';
@@ -63,9 +63,11 @@ const SelectMultipleFilter = props => {
     schemaType,
     searchMode,
     showAsPopup,
+    showSearch,
     ...rest
   } = props;
 
+  const [search, setSearch] = useState('');
   const classes = classNames(rootClassName || css.root, className);
 
   const queryParamName = getQueryParamName(queryParamNames);
@@ -92,6 +94,10 @@ const SelectMultipleFilter = props => {
   // pass the initial values with the name key so that
   // they can be passed to the correct field
   const namedInitialValues = { [name]: selectedOptions };
+
+  const handleSearch = value => {
+    setSearch(value);
+  };
 
   const handleSubmit = values => {
     const usedValue = values ? values[name] : values;
@@ -129,15 +135,17 @@ const SelectMultipleFilter = props => {
       isSelected={hasInitialValues}
       id={`${id}.plain`}
       liveEdit
+      onSearch={handleSearch}
       onSubmit={handleSubmit}
       initialValues={namedInitialValues}
+      showSearch={showSearch}
       {...rest}
     >
       <GroupOfFieldCheckboxes
         className={css.fieldGroupPlain}
         name={name}
         id={`${id}-checkbox-group`}
-        options={options}
+        options={options.filter((option) => !search || option.label.toLowerCase().includes(search.toLowerCase()))}
       />
     </FilterPlain>
   );
@@ -164,6 +172,7 @@ SelectMultipleFilter.propTypes = {
   schemaType: oneOf([SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM]).isRequired,
   initialValues: object,
   contentPlacementOffset: number,
+  showSearch: bool
 };
 
 export default SelectMultipleFilter;

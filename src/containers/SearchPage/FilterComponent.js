@@ -39,6 +39,7 @@ const FilterComponent = props => {
   const prefix = idPrefix || 'SearchPage';
   const componentId = `${prefix}.${key.toLowerCase()}`;
   const name = key.replace(/\s+/g, '-');
+  const showSearch = key === 'marki' || key === 'dizaierski_marki';
 
   // Default filters: price, keywords, dates
   switch (schemaType) {
@@ -111,6 +112,7 @@ const FilterComponent = props => {
       const { scope, enumOptions, filterConfig = {} } = config;
       const { label, filterType } = filterConfig;
       const queryParamNames = [constructQueryParamName(key, scope)];
+
       return filterType === 'SelectSingleFilter' ? (
         <SelectSingleFilter
           id={componentId}
@@ -133,6 +135,7 @@ const FilterComponent = props => {
           onSubmit={getHandleChangedValueFn(useHistoryPush)}
           options={enumOptions}
           schemaType={schemaType}
+          showSearch={showSearch}
           {...rest}
         />
       );

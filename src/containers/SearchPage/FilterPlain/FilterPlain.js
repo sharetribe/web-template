@@ -55,6 +55,7 @@ class FilterPlainComponent extends Component {
       className,
       plainClassName,
       id,
+      intl,
       label,
       labelSelection,
       labelSelectionSeparator,
@@ -62,6 +63,8 @@ class FilterPlainComponent extends Component {
       children,
       initialValues,
       keepDirtyOnReinitialize,
+      showSearch,
+      onSearch,
     } = this.props;
     const classes = classNames(rootClassName || css.root, className);
 
@@ -92,6 +95,18 @@ class FilterPlainComponent extends Component {
             this.filterContent = node;
           }}
         >
+          {showSearch && (
+            <div>
+              <input
+                onChange={e => onSearch(e.target.value)}
+                type="text"
+                placeholder={intl.formatMessage({
+                  id: 'TopbarSearchForm.placeholder',
+                })}
+                autoComplete="off"
+                />
+            </div>
+          )}
           <FilterForm
             id={`${id}.form`}
             liveEdit
@@ -125,6 +140,7 @@ FilterPlainComponent.propTypes = {
   className: string,
   plainClassName: string,
   id: string.isRequired,
+  onSearch: func,
   onSubmit: func.isRequired,
   label: node.isRequired,
   labelSelection: node,
@@ -133,6 +149,7 @@ FilterPlainComponent.propTypes = {
   children: node.isRequired,
   initialValues: object,
   keepDirtyOnReinitialize: bool,
+  showSearch: bool,
 
   // form injectIntl
   intl: intlShape.isRequired,
