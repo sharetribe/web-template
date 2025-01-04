@@ -169,7 +169,7 @@ function PageBuilder(props) {
                     {sections.length === 0 && inProgress ? (
                       <LoadingSpinner />
                     ) : (
-                      <div className={css.mainContentContainer}>
+                      <> 
                         {isAbout ? (
                           <div style={{ marginTop: '30px' }}>
                             <SectionBuilder sections={sections} options={options} />
@@ -200,7 +200,7 @@ function PageBuilder(props) {
                         ) : (
                           <SectionBuilder sections={sections} options={options} />
                         )}
-                      </div>
+                      </>
                     )}
                   </>
                 )}

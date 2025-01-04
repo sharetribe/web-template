@@ -92,7 +92,7 @@
   .text {
     margin-right: 0;
     margin-bottom: 20px;
-  }
+  }  
 
   .image {
     max-width: 100%;
@@ -103,5 +103,17 @@
     display: flex;
     gap: 10px;
     margin-bottom: 10px; 
+  }
+
+  .arrow {
+    display: none;
+  }
+
+  .arrowMobile {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px;
   }
 }

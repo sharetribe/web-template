@@ -57,10 +57,10 @@ const TrustPilot = () => {
         </span>
 
         <div className={styles.arrowsMobile}>
-          <button className={styles.arrow} onClick={handlePrev}>
+          <button className={styles.arrowMobile} onClick={handlePrev}>
             &#8249;
           </button>
-          <button className={styles.arrow} onClick={handleNext}>
+          <button className={styles.arrowMobile} onClick={handleNext}>
             &#8250;
           </button>
         </div>

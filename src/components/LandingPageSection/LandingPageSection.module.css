@@ -14,12 +14,10 @@
 
 .backgroundVideo{
   position: absolute;
-
   width: 100vw;
-  max-height: 700px;
+  height:70%;
   object-fit: cover;
   z-index: 1;
-  
 }
 
 .emptyDiv2 {
@@ -50,13 +48,20 @@
 .emptyDiv2 {
   flex: 1 1 33%;
   padding: 10px;
-  margin-top: 150px;
   box-sizing: border-box;
 }
 
-@media (max-width: 1024px) {
+.mobileContainer{
+  height: 100vh;
+}
+
+@media (max-width: 768px) {
   .surveyContainer {
     flex-direction: column;
+  }
+
+  .mobileContainer{
+    height: 80vh;
   }
 
   .videoContainer {

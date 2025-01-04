@@ -9,7 +9,7 @@
 .parlaConNoiButton, .primaryButton {
   background-color: #0048ff;
   color: #fff;
-  font-size: 16px;
+  font-size: 1.2rem;
   width: 300px;
   height: 55px;
   border: none;
@@ -36,7 +36,7 @@
   background-color: white;
   border: none;
   border-radius: 20px;
-  font-size: 16px;
+  font-size: 1.2rem;
   color: black;
   transition: background-color 0.3s ease;
 }
@@ -48,7 +48,7 @@
 .popupButton {
   border: none;
   background: none;
-  font-size: 16px;
+  font-size: 1.2rem;
   cursor: pointer;
   color: black;
   margin: 0; /* Remove default margin to align with icon */
@@ -84,7 +84,7 @@
   width: 100%;
   margin-bottom: 5px;
   color:black;
-  font-size: 16px;
+  font-size: 1.2rem;
   border: none;
   height: 45px;
   border-radius: 20px;

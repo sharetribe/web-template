@@ -65,7 +65,7 @@ function Newsletter({isTeamBuilding}) {
   return (
     <div className={css.formContainer}>
       <form onSubmit={handleSubmit} className={css.form}>
-        <p style={{ textAlign: 'center' }}>
+        <p style={{ textAlign: 'center', fontSize: "1.2rem"  }}>
           {intl.formatMessage({ id: 'Newsletter.header' })}
           <span role="img" aria-label="heart emoji" style={heartStyle}>
             ❤️

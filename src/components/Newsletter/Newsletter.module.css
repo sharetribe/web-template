@@ -35,9 +35,11 @@
 
 .nameInput {
   flex-grow: 1;
+  font-size: 1.2rem;  
 }
 
 .button {
+  font-size: 1.2rem;  
   width: 300px;
   color: white;
   margin: 5px;
@@ -51,4 +53,10 @@
 
 .button:hover {
   background-color: #5d85ff;
+}
+
+@media (max-width: 768px) {
+  .nameInput {
+    margin-bottom: 5px;
+  }
 }

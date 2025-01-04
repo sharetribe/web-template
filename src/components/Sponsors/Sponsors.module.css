@@ -20,7 +20,11 @@
   margin: 0 auto;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+  .container {
+    height: 80vh;
+  }
+
   .logoGrid {
     grid-template-columns: 1fr 1fr; 
   }

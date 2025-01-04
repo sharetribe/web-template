@@ -94,7 +94,7 @@ function LandingPageSection({ onSearchSubmit }) {
   */
 
   return (
-    <>
+    <div >
       {/*tooltip*/}
       {!isTeamBuilding ? (
         <div className={css.surveyContainer}>
@@ -114,7 +114,7 @@ function LandingPageSection({ onSearchSubmit }) {
         </div>
       ) : (
 
-        <div>
+      <div className={css.mobileContainer}>
         <video
           autoPlay
           loop
@@ -128,10 +128,10 @@ function LandingPageSection({ onSearchSubmit }) {
           />
         </video>
         <div className={css.emptyDiv2}>
-              <h1>
+              <h1 style={{fontSize:"1.5rem"}}>
               Creatività che fa la differenza
               </h1>
-              <p style={{color:"white"}}>
+              <p style={{color:"white", fontSize:"1.2rem"}}>
               I nostri workshop creativi aiutano il tuo team a riscoprire collaborazione,<br/>
               pensiero critico e empatia - competenze che l’AI non può replicare. <br/><br/>
               Rafforziamo ciò che rende i tuoi dipendenti unici, stimolando un pensiero laterale che nessun algoritmo può imitare. 
@@ -143,7 +143,7 @@ function LandingPageSection({ onSearchSubmit }) {
 
 
       )}
-    </>
+    </div>
   );
 }
 
