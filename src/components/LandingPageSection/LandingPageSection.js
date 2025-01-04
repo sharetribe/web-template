@@ -68,6 +68,7 @@ function LandingPageSection({ onSearchSubmit }) {
     return () => clearTimeout(timer);
   }, []);
 
+  /*
   const tooltipMessage = isTeamBuilding
     ? intl.formatMessage({ id: 'Tooltip.public' })
     : intl.formatMessage({
@@ -90,10 +91,11 @@ function LandingPageSection({ onSearchSubmit }) {
       {tooltipLink}
     </div>
   ) : null;
+  */
 
   return (
     <>
-      {tooltip}
+      {/*tooltip*/}
       {!isTeamBuilding ? (
         <div className={css.surveyContainer}>
           {!isMobile && (
@@ -134,7 +136,6 @@ function LandingPageSection({ onSearchSubmit }) {
               pensiero critico e empatia - competenze che l’AI non può replicare. <br/><br/>
               Rafforziamo ciò che rende i tuoi dipendenti unici, stimolando un pensiero laterale che nessun algoritmo può imitare. 
               Riportiamo i dipendenti al centro della creatività aziendale, trasformando idee in innovazioni concrete.<br/><br/>
-              Prepara il tuo team per un futuro dove l’unicità umana fa la differenza.
               </p>
           <ActionTeamButtons />
         </div>

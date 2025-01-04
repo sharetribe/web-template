@@ -6,16 +6,10 @@
   gap: 16px; /* space between buttons */
 }
 
-/* 
-  ==============
-  MAIN BUTTONS
-  ==============
-*/
 .parlaConNoiButton, .primaryButton {
   background-color: #0048ff;
   color: #fff;
   font-size: 16px;
-  font-weight: bold;
   width: 300px;
   height: 55px;
   border: none;
@@ -31,13 +25,35 @@
   background-color: #0056b3;
 }
 
-/* 
-  ==============
-  MODAL STYLES
-  ==============
-*/
+.popupButtonWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: 100%; /* Full width like other modal options */
+  margin-bottom: 5px;
+  height: 45px;
+  background-color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 16px;
+  color: black;
+  transition: background-color 0.3s ease;
+}
 
-/* Dark overlay that covers entire screen */
+.popupButtonWrapper:hover {
+  background-color: #f0f0f0; /* Subtle hover effect */
+}
+
+.popupButton {
+  border: none;
+  background: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: black;
+  margin: 0; /* Remove default margin to align with icon */
+}
+
 .modalOverlay {
   position: fixed;
   top: 0;
@@ -55,34 +71,31 @@
 .modalContent {
   background-color: #fff;
   border-radius: 10px;
-  padding: 24px;
+  padding: 12px;
   width: 320px; /* adjust as desired */
   text-align: center;
   box-shadow: 0 2px 8px rgba(0,0,0,0.3);
   position: relative;
 }
 
-/* Title text in the modal */
-.modalContent h3 {
-  margin-top: 0;
-  margin-bottom: 16px;
-}
-
 /* Buttons within the modal (WhatsApp, Calendly, Annulla) */
 .modalOption, .modalClose {
   display: block; /* full width */
   width: 100%;
-  margin-bottom: 12px;
-  background-color: #0048ff;
-  color: #fff;
+  margin-bottom: 5px;
+  color:black;
   font-size: 16px;
-  font-weight: bold;
   border: none;
   height: 45px;
   border-radius: 20px;
   cursor: pointer;
   text-align: center;
   transition: background-color 0.3s ease;
+}
+
+.modalClose {
+  background-color: #0048ff;
+  color: #fff;
 }
 
 .modalOption:hover, .modalClose:hover {

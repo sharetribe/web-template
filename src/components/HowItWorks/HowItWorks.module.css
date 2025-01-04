@@ -71,22 +71,12 @@
   .steps {
     flex-direction: column; 
     align-items: center;
-    gap: 40px; 
+    gap: 10px; 
   }
 
 
   .arrow {
-    width: 2px; 
-    height: 40px; 
-  }
-
-  .arrow::after {
-    top: auto; 
-    bottom: -6px; 
-    left: 50%; 
-    transform: translateX(-50%);
-    border: 6px solid transparent;
-    border-top-color: black; 
+    display: none; 
   }
 
   .circle {

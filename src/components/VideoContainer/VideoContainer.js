@@ -47,7 +47,6 @@ function VideoContainer({ className, isTeamBuilding }) {
               pensiero critico e empatia - competenze che l’AI non può replicare. <br/><br/>
               Rafforziamo ciò che rende i tuoi dipendenti unici, stimolando un pensiero laterale che nessun algoritmo può imitare. 
               Riportiamo i dipendenti al centro della creatività aziendale, trasformando idee in innovazioni concrete.<br/><br/>
-              Prepara il tuo team per un futuro dove l’unicità umana fa la differenza.
               </p>
               <ActionTeamButtons />
               </>

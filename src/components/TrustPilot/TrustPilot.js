@@ -20,15 +20,11 @@ const TrustPilot = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handlePrev = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? reviews.length - 1 : prevIndex - 1
-    );
+    setCurrentIndex((prevIndex) => (prevIndex === 0 ? reviews.length - 1 : prevIndex - 1));
   };
 
   const handleNext = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === reviews.length - 1 ? 0 : prevIndex + 1
-    );
+    setCurrentIndex((prevIndex) => (prevIndex === reviews.length - 1 ? 0 : prevIndex + 1));
   };
 
   const { text, image } = reviews[currentIndex];
@@ -36,15 +32,22 @@ const TrustPilot = () => {
   return (
     <div className={styles.container}>
       <h2 className={styles.title}>Potresti essere tu</h2>
+
       <div className={styles.carousel}>
+        <button className={styles.arrow} onClick={handlePrev}>
+          &#8249;
+        </button>
         <div className={styles.content}>
           <p className={styles.text}>{text}</p>
           <img className={styles.image} src={image} alt="Review" />
         </div>
+        <button className={styles.arrow} onClick={handleNext}>
+          &#8250;
+        </button>
       </div>
-      
+
       <div className={styles.trustpilot}>
-        <span className={styles.tpText}>Trustpilot</span>
+        {/*<span className={styles.tpText}>Trustpilot</span>*/}
         <span className={styles.rating}>
           <span className={styles.star}>&#9733;</span>
           <span className={styles.star}>&#9733;</span>
@@ -52,7 +55,8 @@ const TrustPilot = () => {
           <span className={styles.star}>&#9733;</span>
           <span className={styles.star}>&#9733;</span>
         </span>
-        <div className={styles.arrows}>
+
+        <div className={styles.arrowsMobile}>
           <button className={styles.arrow} onClick={handlePrev}>
             &#8249;
           </button>

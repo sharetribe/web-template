@@ -52,10 +52,8 @@
 }
 
 
-.arrows {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 10px; 
+.arrowsMobile {
+  display: none;
 }
 
 .arrow {
@@ -99,5 +97,11 @@
   .image {
     max-width: 100%;
     margin: 0 auto;
+  }
+
+  .arrowsMobile {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px; 
   }
 }

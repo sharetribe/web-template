@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { PopupButton } from 'react-calendly';
 import { useHistory } from 'react-router-dom';
 import { PrimaryButton } from '../Button/Button'; 
+import { FcCalendar } from 'react-icons/fc';
+import { FaWhatsapp } from 'react-icons/fa';
 import css from './ActionTeamButtons.module.css';
 
 const ActionTeamButtons = () => {
@@ -58,19 +60,21 @@ const ActionTeamButtons = () => {
             className={css.modalContent}
             onClick={(e) => e.stopPropagation()}
           >
-            <h3>Scegli un canale</h3>
             <button onClick={handleWhatsApp} className={css.modalOption}>
-              WhatsApp
+              <FaWhatsapp style={{ marginRight: '12px', color: '#25D366' , width:'30px', height:'30px' }} />
+              Chattiamo ora
             </button>
             {isClient && (
-              <PopupButton
-                url="https://calendly.com/hello-epym"
-                rootElement={document.getElementById('root')}
-                text="Calendly"
-                className={css.modalOption}
-                onClick={handleCalendlyClick}
-              />
-            )}
+  <div className={css.popupButtonWrapper} onClick={handleCalendlyClick}>
+    <FcCalendar style={{ marginRight: '2px', width:'30px', height:'30px' }} />
+    <PopupButton
+      url="https://calendly.com/hello-epym"
+      rootElement={document.getElementById('root')}
+      text="Ti richiamiamo"
+      className={css.popupButton}
+    />
+  </div>
+)}
             <button onClick={handleCloseModal} className={css.modalClose}>
               Annulla
             </button>
