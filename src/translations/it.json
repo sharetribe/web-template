@@ -720,7 +720,7 @@
     "ProfilePage.loadingReviewsFailed": "Caricamento delle recensioni fallito.",
     "ProfilePage.mobileHeading": "{name}",
     "ProfilePage.reviewsAsACustomerTitle": "Recensioni come cliente ({count})",
-    "ProfilePage.reviewsFromMyCustomersTitle": "Recensioni dai miei clienti ({count})",
+    "ProfilePage.reviewsFromMyCustomersTitle": "Recensioni",
     "ProfilePage.schemaTitle": "{name} | {marketplaceName}",
     "ProfileSettingsForm.addYourProfilePicture": "+ Aggiungi la tua foto profilo…",
     "ProfileSettingsForm.addYourProfilePictureMobile": "+ Aggiungi",

@@ -177,15 +177,69 @@
     }
   }
 }
+/* MOBILE REVIEW BOX */
+.mobileReviews {
+  text-align: center;
+  padding: 16px;
+  font-family: Arial, sans-serif;
+}
 
 .mobileReviewsTitle {
-  margin: 24px 0 26px 0;
+  font-size: 18px;
+  margin-bottom: 16px;
+  font-weight: bold;
 }
 
-.mobileReviews {
-  border-top: 1px solid var(--colorGrey100);
-  margin-bottom: 36px;
+.reviewContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
 }
+
+.arrowButton {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0 8px;
+}
+
+.arrowButton:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.reviews {
+  display: flex;
+  gap: 16px;
+}
+
+.review {
+  max-width: 250px;
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.review p {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.review span {
+  color: #ffc107;
+  font-size: 18px;
+}
+
+.review small {
+  display: block;
+  margin-top: 8px;
+  font-size: 14px;
+  color: #555;
+}
+
 
 .desktopReviews {
   border-top: 1px solid var(--colorGrey100);
@@ -308,27 +362,28 @@
   letter-spacing: -0.09px;
 }
 
-
-
-/*REVIEW WIDGET */
+/* REVIEW WIDGET */
 .reviewWidget {
-  border: 1px solid #ddd;
-  border-radius: 8px;
   padding: 16px;
-  max-width: 600px;
+  max-width: 300px;
   margin: 0 auto;
   font-family: Arial, sans-serif;
+  text-align: center;
 }
 
 .summary {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 16px;
+  align-items: center;
+  gap: 16px;
+  padding-top: 8px;
+  margin-top: 8px;
 }
 
 .totalReviews {
   font-size: 24px;
   font-weight: bold;
+  color: #000;
 }
 
 .averageRating {
@@ -340,34 +395,7 @@
 .star {
   font-size: 18px;
   color: #007bff;
-}
-
-.reviewList {
-  margin-top: 16px;
-}
-
-.review {
-  border-bottom: 1px solid #ddd;
-  padding: 8px 0;
-}
-
-.reviewHeader {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 4px;
-}
-
-.authorName {
-  font-weight: bold;
-}
-
-.rating {
-  color: #ffc107;
-}
-
-.reviewContent {
-  font-size: 14px;
-  color: #555;
+  margin-left: 4px;
 }
 
 .error {
