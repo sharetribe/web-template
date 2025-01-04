@@ -79,7 +79,6 @@ export const ListingCardComponent = props => {
     showAuthorInfo,
   } = props;
 
-  console.log(config);
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureListing(listing);
   const id = currentListing.id.uuid;
