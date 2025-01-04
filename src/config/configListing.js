@@ -128,36 +128,59 @@ export const listingFields = [
   //     requiredMessage: 'You need to select a tire size.',
   //   },
   // },
-  // {
-  //   key: 'brand',
-  //   scope: 'public',
-  //   schemaType: 'enum',
-  //   enumOptions: [
-  //     { option: 'cube', label: 'Cube' },
-  //     { option: 'diamant', label: 'Diamant' },
-  //     { option: 'ghost', label: 'GHOST' },
-  //     { option: 'giant', label: 'Giant' },
-  //     { option: 'kalkhoff', label: 'Kalkhoff' },
-  //     { option: 'kona', label: 'Kona' },
-  //     { option: 'otler', label: 'Otler' },
-  //     { option: 'vermont', label: 'Vermont' },
-  //   ],
-  //   filterConfig: {
-  //     indexForSearch: true,
-  //     label: 'Brand',
-  //     group: 'secondary',
-  //   },
-  //   showConfig: {
-  //     label: 'Brand',
-  //     isDetail: true,
-  //   },
-  //   saveConfig: {
-  //     label: 'Brand',
-  //     placeholderMessage: 'Select an option…',
-  //     isRequired: true,
-  //     requiredMessage: 'You need to select a brand.',
-  //   },
-  // },
+  {
+    key: 'marki',
+    scope: 'public',
+    schemaType: 'enum',
+    enumOptions: [
+      { option: 'diamant', label: 'Diamant' },
+      { option: 'ghost', label: 'GHOST' },
+      { option: 'giant', label: 'Giant' },
+      { option: 'kalkhoff', label: 'Kalkhoff' },
+      { option: 'kona', label: 'Kona' },
+      { option: 'otler', label: 'Otler' },
+      { option: 'vermont', label: 'Vermont' },
+    ],
+    filterConfig: {
+      indexForSearch: true,
+      label: 'Марки',
+      group: 'secondary',
+    },
+    showConfig: {
+      label: 'Марки',
+      isDetail: true,
+    },
+    saveConfig: {
+      label: 'Марки',
+      placeholderMessage: 'Селектирай марка…',
+      isRequired: true,
+      requiredMessage: 'Трябва да изберете марка.',
+    },
+  },
+  {
+    key: 'dizaierski_marki',
+    scope: 'public',
+    schemaType: 'enum',
+    enumOptions: [
+      { option: 'division', label: 'Division' },
+    ],
+    filterConfig: {
+      indexForSearch: true,
+      label: 'Дизайнерски марки',
+      group: 'secondary',
+    },
+    showConfig: {
+      label: 'Дизайнерски марки',
+      isDetail: true,
+    },
+    saveConfig: {
+      label: 'Дизайнерски марки',
+      placeholderMessage: 'Селектирай дизайнерска марка…',
+      isRequired: false,
+      requiredMessage: 'Трябва да изберете дизайнерска марка.',
+    },
+  },
+
   // {
   //   key: 'accessories',
   //   scope: 'public',

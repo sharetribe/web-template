@@ -1127,7 +1127,27 @@ const mergeListingConfig = (hostedConfig, defaultConfigs, categoriesInUse) => {
     : hostedListingTypes;
   const listingFields = shouldMerge
     ? union(hostedListingFields, defaultListingFields, 'key')
-    : hostedListingFields;
+    : hostedListingFields.map((field) => {
+      if (field.key === 'marki') {
+        return {
+          ...field,
+          enumOptions: [
+            ...field.enumOptions,
+            ...defaultListingFields.find((defaultField) => defaultField.key === 'marki').enumOptions
+          ].sort((a, b) => a.label.localeCompare(b.label))
+        };
+      }
+      if (field.key === 'dizaierski_marki') {
+        return {
+          ...field,
+          enumOptions: [
+            ...field.enumOptions,
+            ...defaultListingFields.find((defaultField) => defaultField.key === 'dizaierski_marki').enumOptions
+          ].sort((a, b) => a.label.localeCompare(b.label))
+        };
+      }
+      return field;
+    });
 
   const listingTypesInUse = listingTypes.map(lt => `${lt.listingType}`);
 
