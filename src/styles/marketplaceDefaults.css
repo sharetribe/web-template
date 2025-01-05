@@ -30,7 +30,7 @@
   --colorSuccessLight: #f0fff6;
   --colorFail: #ff0000;
   --colorFailLight: #fff0f0;
-  --colorAttention: #ffaa00;
+  --colorAttention: #fe5000;
   --colorAttentionLight: #fff7f0;
   --colorBannedLight: var(--marketplaceColorLight);
   --colorBannedDark: var(--marketplaceColor);
@@ -560,7 +560,7 @@ textarea {
   @media (--viewportMedium) {
     /* 7 + 32 + 7 + borders = 48, which is divisible by 8. */
     padding: 7px 16px 7px 16px;
-    line-height: 32px;
+    line-height: 1;
   }
 }
 /* Effects */
@@ -1555,6 +1555,23 @@ textarea {
 }
 
 /* add-ons */
+#home-hero div:last-of-type {
+  align-self: end;
+  header {
+    padding: 1rem;
+  }
+  p {
+    font-size: 16px;
+  }
+  @media (--viewportLargeWithPaddings) {
+    header {
+      padding: 2rem;
+    }
+    p {
+      font-size: 18px;
+    }
+  }
+}
 #privacy header,
 #terms header {
   justify-content: flex-start;
@@ -1572,7 +1589,27 @@ textarea {
   padding: 0 1rem;
 }
 #how-to-sell {
-  background: rgba (254,25,0,.75);
+  div:first-of-type {
+    header, div {
+      background: #fe1b00;
+    }
+    header {
+      padding: 2rem 1rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      h2, p {
+        color: #fff;
+        text-align: center;
+      }
+    }
+    div {
+      h3, p {
+        color: #fff;
+        text-align: center;
+      }
+    }
+  }
 }
 /* fieldset ul {
   columns: 3;

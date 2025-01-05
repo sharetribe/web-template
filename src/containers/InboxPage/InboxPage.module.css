@@ -63,7 +63,7 @@
     background-color: transparent;
   }
   @media (--viewportLargeWithPaddings) {
-    padding: 40px 0 82px calc((100% - 1056px) / 2);
+    padding: 40px 16px 82px calc((100% - 1056px) / 2);
   }
 }
 
@@ -198,11 +198,6 @@
   @media (--viewportMedium) {
     display: block;
     align-items: unset;
-  }
-
-  @media (--viewportLarge) {
-    margin-top: 3px;
-    margin-right: 7px;
   }
 }
 
