@@ -190,7 +190,7 @@ function PageBuilder(props) {
                             />
                             <SectionBuilder sections={sections} options={options} />
                             <HowItWorks />
-                            {/*<DynamicCarousel />*/}
+                            <DynamicCarousel />
                             <Sponsors />
                             <TrustPilot />
                             <WhyUs />

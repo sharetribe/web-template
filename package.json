@@ -24,6 +24,8 @@
     "decimal.js": "^10.4.3",
     "dotenv": "^10.0.0",
     "dotenv-expand": "^5.1.0",
+    "embla-carousel-autoplay": "^8.5.1",
+    "embla-carousel-react": "^8.5.1",
     "express": "^4.19.2",
     "express-enforces-ssl": "^1.1.0",
     "final-form": "4.20.7",
