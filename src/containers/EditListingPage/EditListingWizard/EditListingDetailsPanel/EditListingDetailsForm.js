@@ -14,6 +14,7 @@ import {
   isValidCurrencyForTransactionProcess,
 } from '../../../../util/fieldHelpers';
 import { maxLength, required, composeValidators } from '../../../../util/validators';
+import { getSelectableCategoriesFromProductType } from '../../../../extensions/categoryConfig/utils';
 
 // Import shared components
 import {
@@ -298,7 +299,7 @@ const EditListingDetailsFormComponent = props => (
         marketplaceCurrency,
         marketplaceName,
         selectableListingTypes,
-        selectableCategories,
+        selectableCategories: allSelectableCategories,
         hasExistingListingType,
         pickSelectedCategories,
         categoryPrefix,
@@ -337,9 +338,13 @@ const EditListingDetailsFormComponent = props => (
         currencyToCheck
       );
 
+      const selectableCategories = Array.isArray(allSelectableCategories)
+        ? getSelectableCategoriesFromProductType(listingType, allSelectableCategories)
+        : [];
+
       const maxLength60Message = maxLength(maxLengthMessage, TITLE_MAX_LENGTH);
 
-      const hasCategories = selectableCategories && selectableCategories.length > 0;
+      const hasCategories = selectableCategories.length > 0;
       const showCategories = listingType && hasCategories;
 
       const showTitle = hasCategories ? allCategoriesChosen : listingType;
