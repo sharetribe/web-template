@@ -1,0 +1,33 @@
+@import '../../../styles/customMediaQueries.css';
+
+.root {
+  composes: marketplaceModalBaseStyles from global;
+  padding-top: 70px;
+
+  @media (--viewportMedium) {
+    flex-basis: 567px;
+  }
+}
+
+.modalContent {
+  flex-grow: 1;
+}
+
+/* Icon of the modal */
+.modalIcon {
+  composes: marketplaceModalIconStyles from global;
+}
+
+/* Title of the modal */
+.modalTitle {
+  composes: marketplaceModalTitleStyles from global;
+}
+
+.reviewee {
+  white-space: nowrap;
+}
+
+/* Paragraph for the Modal */
+.modalMessage {
+  composes: marketplaceModalParagraphStyles from global;
+}

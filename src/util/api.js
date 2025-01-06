@@ -178,3 +178,7 @@ export const updateOfferListing = body => {
 export const getProfileUserInfo = body => {
   return post('/api//get-user-info', body);
 };
+
+export const updatePublicReview = body => {
+  return post('/api/update-public-review', body);
+};

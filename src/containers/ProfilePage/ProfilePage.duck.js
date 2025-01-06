@@ -1,6 +1,7 @@
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { fetchCurrentUser } from '../../ducks/user.duck';
 import { getProfileUserInfo } from '../../util/api';
+import { updatePublicReview } from '../../util/api';
 import { denormalisedResponseEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
 import { createImageVariantConfig, types as sdkTypes } from '../../util/sdkLoader';
@@ -25,6 +26,10 @@ export const QUERY_REVIEWS_REQUEST = 'app/ProfilePage/QUERY_REVIEWS_REQUEST';
 export const QUERY_REVIEWS_SUCCESS = 'app/ProfilePage/QUERY_REVIEWS_SUCCESS';
 export const QUERY_REVIEWS_ERROR = 'app/ProfilePage/QUERY_REVIEWS_ERROR';
 
+export const SEND_REVIEW_REQUEST = 'app/ProfilePage/SEND_REVIEW_REQUEST';
+export const SEND_REVIEW_SUCCESS = 'app/ProfilePage/SEND_REVIEW_SUCCESS';
+export const SEND_REVIEW_ERROR = 'app/ProfilePage/SEND_REVIEW_ERROR';
+
 // ================ Reducer ================ //
 
 const initialState = {
@@ -34,6 +39,8 @@ const initialState = {
   queryListingsError: null,
   reviews: [],
   queryReviewsError: null,
+  sendReviewInProgress: false,
+  sendReviewError: null,
 };
 
 export default function profilePageReducer(state = initialState, action = {}) {
@@ -124,6 +131,10 @@ export const queryReviewsError = e => ({
   error: true,
   payload: e,
 });
+
+const sendReviewRequest = () => ({ type: SEND_REVIEW_REQUEST });
+const sendReviewSuccess = () => ({ type: SEND_REVIEW_SUCCESS });
+const sendReviewError = e => ({ type: SEND_REVIEW_ERROR, error: true, payload: e });
 
 // ================ Thunks ================ //
 
@@ -223,6 +234,19 @@ export const customShowUser = (userId, config) => async (dispatch, getState, sdk
     return response;
   } catch (err) {
     dispatch(showUserError(storableError(err)));
+  }
+};
+
+export const addUserReview = params => async (dispatch, getState, sdk) => {
+  dispatch(sendReviewRequest());
+
+  try {
+    const userReview = await updatePublicReview(params);
+    
+    return null;
+  } catch (err) {
+    dispatch(sendReviewError(storableError(e)));
+    return console.error(err);
   }
 };
 

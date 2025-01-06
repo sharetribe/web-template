@@ -26,6 +26,7 @@ const { upload, uploadS3 } = require('./AWS/uploadFile');
 const uploadS3Endpoint = require('./api/upload-s3');
 const updateOfferListing = require('./api/update-offer-listing');
 const getProfileUser = require('./api/get-user-info');
+const updatePublicReview = require('./api/update-public-review');
 
 const router = express.Router();
 
@@ -91,5 +92,6 @@ router.get('/ping', ping);
 router.post('/upload-s3', upload.array('files'), uploadS3, uploadS3Endpoint);
 router.post('/update-offer-listing', updateOfferListing);
 router.post('/get-user-info', getProfileUser);
+router.post('/update-public-review',updatePublicReview);
 
 module.exports = router;
