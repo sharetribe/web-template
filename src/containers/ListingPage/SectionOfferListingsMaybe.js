@@ -3,7 +3,10 @@ import React, { useState } from 'react';
 import { Form as FinalForm } from 'react-final-form';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
-import editSVG from '../../assets/edit.svg';
+import certifiticationPNG from '../../assets/certificates.png';
+import paymentVerifiedPNG from '../../assets/payment-verified.png';
+import profileVerifiedPNG from '../../assets/profile-verified.png';
+import topUserPNG from '../../assets/top-user.png';
 import { AvatarSmall, Form, H4, ReviewRating } from '../../components';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { formatMoney } from '../../util/currency';
@@ -47,7 +50,16 @@ const SectionOfferListingsMaybe = props => {
       {listings
         ? listings.map(listing => {
             const [isExpanded, setIsExpanded] = useState(false);
-            const { attributes, author, id, reviews } = listing || {};
+            const {
+              attributes,
+              author,
+              id,
+              reviews,
+              stripeConnected,
+              stripeAccount,
+              top_user_badge,
+              certifications,
+            } = listing || {};
             const { description, price, title } = attributes || {};
             const rating =
               reviews.map(review => review.attributes.rating).reduce((a, b) => a + b, 0) /
@@ -62,7 +74,6 @@ const SectionOfferListingsMaybe = props => {
               : true;
 
             const displayText = isExpanded ? description : `${description.slice(0, maxLength)}...`;
-
             const descriptionWithLinks = richText(displayText, {
               linkify: true,
               longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
@@ -121,7 +132,7 @@ const SectionOfferListingsMaybe = props => {
                       enforcePagePreloadFor="OrderDetailsPage"
                     >
                       <div key={listing.id.uuid} className={css.offerListingContent}>
-                        <div className={css.offerListingAvatarContent}>
+                        {/* <div className={css.offerListingAvatarContent}>
                           <div className={css.showFlex}>
                             <AvatarSmall user={ensuredAuthor} />
                             <div>
@@ -159,6 +170,54 @@ const SectionOfferListingsMaybe = props => {
                             </div>
                             <div className={css.offerListingPrice}>{formattedPrice}</div>
                           </div>
+                        </div> */}
+                        <div className={css.offerListingAvatarContent}>
+                          <div className={css.offerListingPrice}>{formattedPrice}</div>
+                          {listingIsPublishedByUser ? (
+                            <div
+                              className={css.offerListingAcceptOfferButton}
+                              onClick={() => {
+                                setSelectedListing(listing);
+                                setUpdateOfferModalOpen(true);
+                              }}
+                            >
+                              <FormattedMessage id="ListingPage.editOfferButton" />
+                            </div>
+                          ) : (
+                            <div
+                              className={
+                                listingIsPublishedByUser
+                                  ? css.disableOfferListingAcceptOfferButton
+                                  : css.offerListingAcceptOfferButton
+                              }
+                              onClick={listingIsPublishedByUser ? () => {} : handleSubmit}
+                            >
+                              <FormattedMessage id="ListingPage.acceptOfferButton" />
+                            </div>
+                          )}
+                        </div>
+                        <div className={classNames(css.showFlex, css.padding)}>
+                          <AvatarSmall user={ensuredAuthor} />
+                          <div>
+                            {displayName}
+                            {rating ? (
+                              <ReviewRating
+                                reviewStarClassName={css.reviewStar}
+                                className={css.reviewStars}
+                                rating={rating}
+                              />
+                            ) : null}
+                          </div>
+                          {stripeConnected ? (
+                            <img src={paymentVerifiedPNG} height={16} width={16} />
+                          ) : null}
+                          {stripeAccount ? (
+                            <img src={profileVerifiedPNG} height={16} width={16} />
+                          ) : null}
+                          {top_user_badge ? <img src={topUserPNG} height={16} width={16} /> : null}
+                          {certifications ? (
+                            <img src={certifiticationPNG} height={16} width={16} />
+                          ) : null}
                         </div>
 
                         <div className={css.offerListingDescriptionContent}>

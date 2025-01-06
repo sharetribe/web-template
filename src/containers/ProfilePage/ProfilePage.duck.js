@@ -1,5 +1,6 @@
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { fetchCurrentUser } from '../../ducks/user.duck';
+import { getProfileUserInfo } from '../../util/api';
 import { updatePublicReview } from '../../util/api';
 import { denormalisedResponseEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
@@ -215,6 +216,27 @@ export const showUser = (userId, config) => (dispatch, getState, sdk) => {
     .catch(e => dispatch(showUserError(storableError(e))));
 };
 
+export const customShowUser = (userId, config) => async (dispatch, getState, sdk) => {
+  dispatch(showUserRequest(userId));
+
+  try {
+    const values = {
+      id: userId.uuid,
+      include: ['profileImage', 'stripeAccount'],
+    };
+
+    const response = await getProfileUserInfo(values);
+
+    const userFields = config?.user?.userFields;
+    const sanitizeConfig = { userFields };
+    dispatch(addMarketplaceEntities(response, sanitizeConfig));
+    dispatch(showUserSuccess());
+    return response;
+  } catch (err) {
+    dispatch(showUserError(storableError(err)));
+  }
+};
+
 export const addUserReview = params => async (dispatch, getState, sdk) => {
   dispatch(sendReviewRequest());
 
@@ -290,7 +312,7 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
 
   return Promise.all([
     dispatch(fetchCurrentUser(fetchCurrentUserOptions)),
-    dispatch(showUser(userId, config)),
+    dispatch(customShowUser(userId, config)),
     dispatch(queryUserListings(userId, config)),
     dispatch(queryUserReviews(userId)),
   ]);

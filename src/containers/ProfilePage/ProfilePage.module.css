@@ -405,7 +405,7 @@
   z-index: 1;
 }
 
-.reviewBtton{
+.reviewBtton {
   padding: 8px;
   border: 1px solid black;
   border-radius: 4px;
@@ -414,7 +414,7 @@
   cursor: pointer;
 }
 
-.reviewBtton:hover{
+.reviewBtton:hover {
   background-color: var(--marketplaceColor);
   color: white;
 }
@@ -426,29 +426,43 @@
   white-space: pre-line;
 }
 
-.publicReviewTitle{
+.publicReviewTitle {
   font-size: large;
   margin-bottom: 12px;
   font-weight: bold;
 }
 
-.publicReview{
+.publicReview {
   padding: 12px 0px;
 }
 
-.publicReviewContent{
+.publicReviewContent {
   padding: 16px 0px;
 }
 
-.publicReviewComponent{
+.publicReviewComponent {
   padding: 20px 0px;
 }
 
-.publicReviewName{
+.publicReviewName {
   display: flex;
   gap: 8px;
   text-align: center;
   color: lightgrey;
   font-size: 12px;
   font-weight: bold;
+}
+.displayFlex {
+  display: flex;
+  gap: 4px;
+  padding: 4px 0px;
+}
+
+.displayFlexDesktop {
+  display: none;
+
+  @media (--viewportLarge) {
+    display: flex;
+    gap: 4px;
+  }
 }

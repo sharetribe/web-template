@@ -53,6 +53,10 @@ import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import _ from 'lodash';
 import moment from 'moment';
+import certifiticationPNG from '../../assets/certificates.png';
+import paymentVerifiedPNG from '../../assets/payment-verified.png';
+import profileVerifiedPNG from '../../assets/profile-verified.png';
+import topUserPNG from '../../assets/top-user.png';
 import {
   checkFileType,
   FILE_DOCUMENT_TYPES,
@@ -70,14 +74,34 @@ const MAX_MOBILE_SCREEN_WIDTH = 768;
 export const MIN_LENGTH_FOR_LONG_WORDS = 20;
 
 export const AsideContent = props => {
-  const { user, displayName, showLinkToProfileSettingsPage } = props;
+  const { user, displayName, showLinkToProfileSettingsPage, publicData } = props;
+  const { stripeAccount } = user;
+  const { certifications, top_user_badge } = publicData || {};
+
   return (
     <div className={css.asideContent}>
       <AvatarLarge className={css.avatar} user={user} disableProfileLink />
+      <div className={css.displayFlexDesktop}>
+        {stripeAccount ? <img src={paymentVerifiedPNG} height={20} width={20} /> : null}
+        {stripeAccount ? <img src={profileVerifiedPNG} height={20} width={20} /> : null}
+        {certifications && Array.isArray(certifications) && certifications.length > 0 ? (
+          <img src={certifiticationPNG} height={20} width={20} />
+        ) : null}
+        {top_user_badge ? <img src={topUserPNG} height={20} width={20} /> : null}
+      </div>
+
       <H2 as="h1" className={css.mobileHeading}>
         {displayName ? (
           <FormattedMessage id="ProfilePage.mobileHeading" values={{ name: displayName }} />
         ) : null}
+        <div className={css.displayFlex}>
+          {stripeAccount ? <img src={paymentVerifiedPNG} height={20} width={20} /> : null}
+          {stripeAccount ? <img src={profileVerifiedPNG} height={20} width={20} /> : null}
+          {certifications && Array.isArray(certifications) && certifications.length > 0 ? (
+            <img src={certifiticationPNG} height={20} width={20} />
+          ) : null}
+          {top_user_badge ? <img src={topUserPNG} height={20} width={20} /> : null}
+        </div>
       </H2>
       {showLinkToProfileSettingsPage ? (
         <>
@@ -542,6 +566,7 @@ export const ProfilePageComponent = props => {
             user={profileUser}
             showLinkToProfileSettingsPage={mounted && isCurrentUser}
             displayName={displayName}
+            publicData={publicData}
           />
         }
         footer={<FooterContainer />}

@@ -1153,8 +1153,9 @@
   "UserNav.accountSettings": "Account settings",
   "UserNav.profileSettings": "Profile settings",
   "UserNav.yourListings": "Your listings",
-  "ProfileSettingsForm.uploadfiles":"Certification",
-  "ProfilePage.certification":"Certification",
-  "ProfilePage.reviewButton":"Add review",
-  "ProfilePage.publicReview":"Public Review"
+  "ProfileSettingsForm.uploadfiles": "Certification",
+  "ProfilePage.certification": "Certification",
+  "ProfilePage.reviewButton": "Add review",
+  "ProfilePage.publicReview": "Public Review",
+  "ListingPage.editOfferButton": "Edit"
 }
