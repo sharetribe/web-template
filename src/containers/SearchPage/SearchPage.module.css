@@ -302,6 +302,7 @@
     position: fixed;
     top: var(--topbarHeightDesktop);
     right: 0;
+    left: unset;
 
     /* Fixed content needs width relative to viewport */
     width: 50vw;
