@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOMClient from 'react-dom/client';
 import { node, string, object } from 'prop-types';
 
 import { IntlProvider } from '../../../util/reactIntl';
@@ -66,7 +66,10 @@ class ReusableMapContainer extends React.Component {
       );
 
       // Render children to created element
-      ReactDOM.render(children, this.el);
+      // TODO: Perhaps this should use createPortal instead of createRoot.
+      // (The question is if portal re-initializes the map - which is pricing factor.)
+      window.mapRoot = window.mapRoot || ReactDOMClient.createRoot(this.el);
+      window.mapRoot.render(children);
     };
 
     const targetDomNode = document.getElementById(this.el.id);
