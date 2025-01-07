@@ -53,15 +53,15 @@ function mergeTransactionsAndBookings(response) {
       };
     })
     .filter(Boolean);
-
+  
   // Group by listing ID and start date to merge bookings with the same start date for each listing
-  const groupedByListingAndDate = Object.values(
+  const groupedByListingDateAndTime = Object.values(
     mergedData.reduce((acc, curr) => {
       const listingKey = curr.listingId;
-      const startDateKey = moment(curr.start).format('YYYY-MM-DD');
-
-      const key = `${listingKey}-${startDateKey}`;
-
+      const startDateTimeKey = moment(curr.start).format('YYYY-MM-DDTHH:mm');
+  
+      const key = `${listingKey}-${startDateTimeKey}`;
+  
       if (!acc[key]) {
         acc[key] = {
           id: curr.id,
@@ -74,16 +74,16 @@ function mergeTransactionsAndBookings(response) {
           },
         };
       } else {
-        // Merge the seats and names if multiple bookings on the same date for the same listing
+        // Merge the seats and names if multiple bookings at the same start time for the same listing
         acc[key].seats += curr.seats;
         acc[key].protectedData.names.push(...(curr.protectedData.seatNames || []));
       }
-
+  
       return acc;
     }, {}),
   );
 
-  return groupedByListingAndDate;
+  return groupedByListingDateAndTime;
 }
 
 function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransactions }) {
@@ -92,6 +92,7 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
   const [selectedEventDate, setSelectedEventDate] = useState(null);
   const [selectedActivity, setSelectedActivity] = useState({ resource: null, bookingData: null });
   const [showForm, setShowForm] = useState(false);
+  const [calendarEvent, setCalendarEvent] = useState(null);
   const [currentMonth, setCurrentMonth] = useState(moment());
   const intl = useIntl();
 
@@ -117,31 +118,15 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
       end: moment(booking.end).toDate(),
       allDay: false,
       resource: listing,
+      seats: booking.seats,
+      names: booking.protectedData.names,
     };
   });
 
   const handleSelectEvent = (calendarEvent) => {
     setSelectedListing(calendarEvent.resource);
     setSelectedEventDate(calendarEvent.start);
-
-    const matchedBooking = mergedBookings.find(
-      (booking) =>
-        moment(booking.start).isSame(moment(calendarEvent.start), 'day') &&
-        booking.listingId === calendarEvent.resource.id.uuid,
-    );
-
-    if (matchedBooking) {
-      const eventIdentifier = `${calendarEvent.title}-${moment(calendarEvent.start).format('YYYY-MM-DD')}`;
-      setSelectedActivity({
-        resource: {
-          ...calendarEvent,
-          eventIdentifier,
-        },
-        bookingData: matchedBooking,
-      });
-    } else {
-      setSelectedActivity({ resource: calendarEvent.resource, bookingData: null });
-    }
+    setCalendarEvent(calendarEvent);
   };
 
   const handleSelectActivity = () => {
@@ -182,46 +167,23 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
                   id: 'Calendar.activity',
                 })}
               </h4>
-              {(selectedListing.attributes.availabilityPlan.entries || [])
-                .filter((activity) => {
-                  const eventDate = moment(selectedEventDate).format('YYYY-MM-DD');
-                  const activityDateTime = moment(`${eventDate}T${activity.startTime}`);
-                  return moment(selectedEventDate).isSame(activityDateTime, 'day');
-                })
-                .map((activity) => {
-                  const matchedBooking = selectedActivity.bookingData;
-
-                  const seatCount = matchedBooking ? matchedBooking.seats : activity.seats;
-                  const seatAttendees = matchedBooking
-                    ? matchedBooking.protectedData.names.length
-                    : 0;
-                  const names = matchedBooking ? matchedBooking.protectedData.names : [];
-
-                  return (
-                    <li
-                      key={randomId()}
-                      onClick={() => {
-                        setSelectedActivity({
-                          resource: {
-                            ...activity,
-                            eventIdentifier: `${selectedListing.attributes.title}-${moment(selectedEventDate).format('YYYY-MM-DD')}`,
-                          },
-                          bookingData: matchedBooking,
-                        });
-                        handleSelectActivity();
-                      }}
-                      className={css.listItem}
-                    >
-                      {activity.startTime} {selectedListing.attributes.title}
-                      {/* Seats: {seatAttendees}/{seatCount} */}
-                    </li>
-                  );
-                })}
+              <ul>
+                {selectedActivity && (
+                  <li
+                    key={randomId()}
+                    onClick={handleSelectActivity}
+                    className={css.listItem}
+                  >
+                    {moment(selectedEventDate).format('HH:mm')} {selectedListing.attributes.title}
+                    {/* Seats: {selectedActivity.bookingData.names.length}/{selectedActivity.bookingData.seats} */}
+                  </li>
+                )}
+              </ul>
             </div>
           )}
         </>
       ) : (
-        <AttendanceForm activity={selectedActivity} onBack={handleBack} />
+        <AttendanceForm activity={calendarEvent} onBack={handleBack} />
       )}
     </div>
   );

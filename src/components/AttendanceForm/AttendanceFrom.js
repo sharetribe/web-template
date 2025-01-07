@@ -16,15 +16,14 @@ const normalizeNames = (names) => {
 };
 
 function AttendanceForm({ activity, onBack }) {
+
   const [checkedNames, setCheckedNames] = useState([]);
   const intl = useIntl();
 
   const eventIdentifier = activity?.resource?.eventIdentifier || 'unknownEvent';
 
-  const normalizedNames = normalizeNames(activity?.bookingData?.protectedData?.names ?? []);
+  const normalizedNames = normalizeNames(activity?.names ?? []);
   const names = normalizedNames.filter((name) => !name.includes('day'));
-  const Total = activity?.resource?.seats;
-
   useEffect(() => {
     const fetchAttendanceRecords = async () => {
       if (!eventIdentifier) return;
@@ -86,9 +85,6 @@ function AttendanceForm({ activity, onBack }) {
         <h4 className={css.formTitle}>{eventIdentifier}</h4>
         <p className={css.formSubTitle}>
           Presenze: {checkedNames.length}/{names.length}
-        </p>
-        <p className={css.formSubTitle}>
-          Total: {names.length}/{Total}
         </p>
         {names.length === 0 ? (
           <div className={css.noContainer}>
