@@ -11,6 +11,7 @@ import {
 } from '../../containers/ManageListingsPage/ManageListingsPage.duck';
 import { fetchCurrentUserTransactions } from '../../ducks/user.duck';
 import AttendanceForm from '../AttendanceForm/AttendanceFrom';
+import EventForm from '../EventForm/EventForm';
 
 const randomId = () => uuidv4();
 const localizer = momentLocalizer(moment);
@@ -92,6 +93,7 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
   const [selectedEventDate, setSelectedEventDate] = useState(null);
   const [selectedActivity, setSelectedActivity] = useState({ resource: null, bookingData: null });
   const [showForm, setShowForm] = useState(false);
+  const [showEventForm, setShowEventForm] = useState(false);
   const [calendarEvent, setCalendarEvent] = useState(null);
   const [currentMonth, setCurrentMonth] = useState(moment());
   const intl = useIntl();
@@ -110,16 +112,21 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
 
   // Map mergedBookings to events to ensure only one event per date per listing
   const events = mergedBookings.map((booking) => {
+    console.log(booking);
     const listing = ownListings.find((listing) => listing.id.uuid === booking.listingId);
+    
+    // Check if protectedData exists and has names
+    const names = booking.protectedData ? booking.protectedData.names : 'No Names Available';
+  
     return {
       id: booking.id,
-      title: listing ? listing.attributes.title : 'Unknown Listing',
+      title: listing ? `${listing.attributes.title} - ${moment(booking.start).format('HH:mm')}` : `Manuale ${booking.title} - ${moment(booking.start).format('HH:mm')}`,
       start: moment(booking.start).toDate(),
       end: moment(booking.end).toDate(),
       allDay: false,
       resource: listing,
       seats: booking.seats,
-      names: booking.protectedData.names,
+      names: names,
     };
   });
 
@@ -141,9 +148,14 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
     setCurrentMonth(moment(newDate));
   };
 
+  const handleCreateEvent = (eventData) => {
+    setMergedBookings([...mergedBookings, eventData]);
+    setShowEventForm(false);
+  };
+
   return (
     <div style={{ marginTop: '180px' }}>
-      {!showForm ? (
+      {!showForm && !showEventForm ? (
         <>
           <Calendar
             localizer={localizer}
@@ -154,6 +166,7 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
             endAccessor="end"
             style={{ height: 500, margin: '100px' }}
           />
+          <button onClick={() => setShowEventForm(true)}>Create Event</button>
           {selectedListing && selectedEventDate && (
             <div
               style={{
@@ -182,6 +195,11 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
             </div>
           )}
         </>
+      ) : showEventForm ? (
+        <EventForm
+          onSubmit={handleCreateEvent}
+          onCancel={() => setShowEventForm(false)}
+        />
       ) : (
         <AttendanceForm activity={calendarEvent} onBack={handleBack} />
       )}

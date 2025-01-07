@@ -24,6 +24,8 @@ function AttendanceForm({ activity, onBack }) {
 
   const normalizedNames = normalizeNames(activity?.names ?? []);
   const names = normalizedNames.filter((name) => !name.includes('day'));
+
+
   useEffect(() => {
     const fetchAttendanceRecords = async () => {
       if (!eventIdentifier) return;
@@ -84,7 +86,7 @@ function AttendanceForm({ activity, onBack }) {
       <div className={css.formContent}>
         <h4 className={css.formTitle}>{eventIdentifier}</h4>
         <p className={css.formSubTitle}>
-          Presenze: {checkedNames.length}/{names.length}
+          Presenze: {names.length}
         </p>
         {names.length === 0 ? (
           <div className={css.noContainer}>
