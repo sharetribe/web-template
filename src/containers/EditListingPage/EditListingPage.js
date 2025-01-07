@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 // Import configs and util modules
-import { intlShape, injectIntl } from '../../util/reactIntl';
+import { intlShape, useIntl } from '../../util/reactIntl';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import {
   LISTING_PAGE_PARAM_TYPE_DRAFT,
@@ -86,8 +86,49 @@ const pickRenderableImages = (
   return allImages.reduce(pickImagesAndIds, { imageEntities: [], imageIds: [] }).imageEntities;
 };
 
-// N.B. All the presentational content needs to be extracted to their own components
+/**
+ * The EditListingPage component.
+ *
+ * @component
+ * @param {Object} props
+ * @param {propTypes.currentUser} props.currentUser - The current user
+ * @param {propTypes.error} [props.createStripeAccountError] - The create stripe account error
+ * @param {boolean} [props.fetchInProgress] - Whether the fetch is in progress
+ * @param {propTypes.error} [props.fetchStripeAccountError] - The fetch stripe account error
+ * @param {Function} [props.getOwnListing] - The get own listing function
+ * @param {propTypes.error} props.getAccountLinkError - The get account link error
+ * @param {boolean} props.getAccountLinkInProgress - Whether the get account link is in progress
+ * @param {Function} props.onFetchExceptions - The on fetch exceptions function
+ * @param {Function} props.onAddAvailabilityException - The on add availability exception function
+ * @param {Function} props.onDeleteAvailabilityException - The on delete availability exception function
+ * @param {Function} props.onCreateListingDraft - The on create listing draft function
+ * @param {Function} props.onPublishListingDraft - The on publish listing draft function
+ * @param {Function} props.onUpdateListing - The on update listing function
+ * @param {Function} props.onImageUpload - The on image upload function
+ * @param {Function} props.onRemoveListingImage - The on remove listing image function
+ * @param {Function} props.onManageDisableScrolling - The on manage disable scrolling function
+ * @param {Function} props.onPayoutDetailsChange - The on payout details change function
+ * @param {Function} props.onPayoutDetailsSubmit - The on payout details submit function
+ * @param {Function} props.onGetStripeConnectAccountLink - The get StripeConnectAccountLink function
+ * @param {Object} props.history - The history object
+ * @param {Function} props.history.push - The push function
+ * @param {Object} props.location - The location object
+ * @param {string} props.location.search - The search string
+ * @param {Object} props.page - The page object (state of the EditListingPage)
+ * @param {Object} props.params - The params object
+ * @param {string} props.params.id - The id of the listing
+ * @param {string} props.params.slug - The slug of the listing
+ * @param {string} props.params.tab - The tab of the wizard
+ * @param {string} props.params.type - The type of the listing (new, draft, pendingApproval)
+ * @param {string} props.params.returnURLType - The return URL type (success or failure for stripe onboarding)
+ * @param {boolean} props.scrollingDisabled - Whether the scrolling is disabled
+ * @param {boolean} [props.stripeAccountFetched] - Whether the stripe account is fetched
+ * @param {Object} [props.stripeAccount] - The stripe account object
+ * @param {Object} [props.updateStripeAccountError] - The update stripe account error
+ * @returns {JSX.Element}
+ */
 export const EditListingPageComponent = props => {
+  const intl = useIntl();
   const {
     currentUser,
     createStripeAccountError,
@@ -97,7 +138,6 @@ export const EditListingPageComponent = props => {
     getAccountLinkError,
     getAccountLinkInProgress,
     history,
-    intl,
     onFetchExceptions,
     onAddAvailabilityException,
     onDeleteAvailabilityException,
@@ -289,65 +329,6 @@ export const EditListingPageComponent = props => {
   }
 };
 
-EditListingPageComponent.defaultProps = {
-  createStripeAccountError: null,
-  fetchStripeAccountError: null,
-  getAccountLinkError: null,
-  getAccountLinkInProgress: null,
-  stripeAccountFetched: null,
-  currentUser: null,
-  stripeAccount: null,
-  listing: null,
-  listingDraft: null,
-  notificationCount: 0,
-  sendVerificationEmailError: null,
-};
-
-EditListingPageComponent.propTypes = {
-  createStripeAccountError: propTypes.error,
-  fetchStripeAccountError: propTypes.error,
-  getAccountLinkError: propTypes.error,
-  getAccountLinkInProgress: bool,
-  updateStripeAccountError: propTypes.error,
-  currentUser: propTypes.currentUser,
-  fetchInProgress: bool.isRequired,
-  getOwnListing: func.isRequired,
-  onFetchExceptions: func.isRequired,
-  onAddAvailabilityException: func.isRequired,
-  onDeleteAvailabilityException: func.isRequired,
-  onGetStripeConnectAccountLink: func.isRequired,
-  onCreateListingDraft: func.isRequired,
-  onPublishListingDraft: func.isRequired,
-  onImageUpload: func.isRequired,
-  onManageDisableScrolling: func.isRequired,
-  onPayoutDetailsChange: func.isRequired,
-  onPayoutDetailsSubmit: func.isRequired,
-  onRemoveListingImage: func.isRequired,
-  onUpdateListing: func.isRequired,
-  page: object.isRequired,
-  params: shape({
-    id: string.isRequired,
-    slug: string.isRequired,
-    type: oneOf(LISTING_PAGE_PARAM_TYPES).isRequired,
-    tab: string.isRequired,
-    returnURLType: oneOf(STRIPE_ONBOARDING_RETURN_URL_TYPES),
-  }).isRequired,
-  stripeAccountFetched: bool,
-  stripeAccount: object,
-  scrollingDisabled: bool.isRequired,
-
-  /* from withRouter */
-  history: shape({
-    push: func.isRequired,
-  }).isRequired,
-  location: shape({
-    search: string.isRequired,
-  }).isRequired,
-
-  /* from injectIntl */
-  intl: intlShape.isRequired,
-};
-
 const mapStateToProps = state => {
   const page = state.EditListingPage;
   const {
@@ -412,8 +393,7 @@ const EditListingPage = compose(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  ),
-  injectIntl
+  )
 )(EditListingPageComponent);
 
 export default EditListingPage;

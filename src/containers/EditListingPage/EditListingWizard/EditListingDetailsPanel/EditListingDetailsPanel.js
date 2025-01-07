@@ -1,5 +1,4 @@
 import React from 'react';
-import { bool, func, object, string } from 'prop-types';
 import classNames from 'classnames';
 
 // Import util modules
@@ -249,6 +248,25 @@ const getInitialValues = (
   };
 };
 
+/**
+ * The EditListingDetailsPanel component.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {propTypes.ownListing} props.listing - The listing object
+ * @param {boolean} props.disabled - Whether the form is disabled
+ * @param {boolean} props.ready - Whether the form is ready
+ * @param {Function} props.onSubmit - The submit function
+ * @param {Function} props.onListingTypeChange - The listing type change function
+ * @param {string} props.submitButtonText - The submit button text
+ * @param {boolean} props.panelUpdated - Whether the panel is updated
+ * @param {boolean} props.updateInProgress - Whether the update is in progress
+ * @param {Object} props.errors - The errors object
+ * @param {Object} props.config - The config object
+ * @returns {JSX.Element}
+ */
 const EditListingDetailsPanel = props => {
   const {
     className,
@@ -392,30 +410,6 @@ const EditListingDetailsPanel = props => {
       )}
     </div>
   );
-};
-
-EditListingDetailsPanel.defaultProps = {
-  className: null,
-  rootClassName: null,
-  errors: null,
-  listing: null,
-};
-
-EditListingDetailsPanel.propTypes = {
-  className: string,
-  rootClassName: string,
-
-  // We cannot use propTypes.listing since the listing might be a draft.
-  listing: object,
-
-  disabled: bool.isRequired,
-  ready: bool.isRequired,
-  onSubmit: func.isRequired,
-  onListingTypeChange: func.isRequired,
-  submitButtonText: string.isRequired,
-  panelUpdated: bool.isRequired,
-  updateInProgress: bool.isRequired,
-  errors: object.isRequired,
 };
 
 export default EditListingDetailsPanel;
