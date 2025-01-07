@@ -1,7 +1,13 @@
 import React from 'react';
-import { string } from 'prop-types';
 import css from './IconDoor.module.css';
 
+/**
+ * Icon door
+ *
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @returns {JSX.Element} Icon door component
+ */
 const IconDoor = props => {
   const { className } = props;
   return (
@@ -41,12 +47,6 @@ const IconDoor = props => {
       </g>
     </svg>
   );
-};
-
-IconDoor.defaultProps = { className: null };
-
-IconDoor.propTypes = {
-  className: string,
 };
 
 export default IconDoor;

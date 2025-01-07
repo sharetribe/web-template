@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { bool } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
@@ -80,6 +79,16 @@ const CTAButtonMaybe = props => {
   );
 };
 
+/**
+ * No access page
+ *
+ * @param {Object} props
+ * @param {boolean} props.scrollingDisabled - Whether the scrolling is disabled
+ * @param {Object} props.currentUser - The current user
+ * @param {Object} props.params - The path params
+ * @param {Object} props.params.missingAccessRight - The missing access right from the path params
+ * @returns {JSX.Element} No access page component
+ */
 export const NoAccessPageComponent = props => {
   const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();
@@ -180,12 +189,6 @@ export const NoAccessPageComponent = props => {
       </LayoutSingleColumn>
     </Page>
   );
-};
-
-NoAccessPageComponent.defaultProps = {};
-
-NoAccessPageComponent.propTypes = {
-  scrollingDisabled: bool.isRequired,
 };
 
 const mapStateToProps = state => {
