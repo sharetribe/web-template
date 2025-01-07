@@ -28,7 +28,7 @@ const DynamicCarousel = () => {
   };
 
   return (
-    <>
+    <div className={css.container}>
       <h2 className={css.title}>I più amati da tutti</h2>
       <EmblaCarousel slides={images}/>
 
@@ -41,7 +41,7 @@ const DynamicCarousel = () => {
           Esplora tutti i team building
         </PrimaryButton>
       </div>
-    </>
+    </div>
   );
 };
 

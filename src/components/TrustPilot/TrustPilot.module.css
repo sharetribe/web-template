@@ -76,7 +76,10 @@
   margin: 0 2px;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+  .container {
+   height: 100vh;
+  }
   .carousel {
     flex-direction: column;
   }

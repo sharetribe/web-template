@@ -1,9 +1,11 @@
-.embla {
+:root {
+  --slide-height: 19rem;
+  --slide-spacing: 1rem;
+  --slide-size: 40%;
+}
+  .embla {
     max-width: 48rem;
     margin: auto;
-    --slide-height: 19rem;
-    --slide-spacing: 1rem;
-    --slide-size: 40%;
   }
   .embla__viewport {
     overflow: hidden;

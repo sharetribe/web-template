@@ -12,7 +12,6 @@ import useEmblaCarousel from 'embla-carousel-react'
 import Autoplay from 'embla-carousel-autoplay'
 
 const EmblaCarousel = (props) => {
-  console.log(props)
   const { slides } = props
   const options = { loop: true }
   const autoplayOptions = { delay: 2000 };

@@ -69,6 +69,11 @@
 
 @media (max-width: 768px) {
 
+
+    .container {
+      height: 50vh;
+    }
+  
   .carousel {
     display: none; 
   }
