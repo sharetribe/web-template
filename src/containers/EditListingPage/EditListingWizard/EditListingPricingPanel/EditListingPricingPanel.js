@@ -1,10 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 // Import configs and util modules
 import { FormattedMessage } from '../../../../util/reactIntl';
-import { LISTING_STATE_DRAFT } from '../../../../util/types';
+import { LISTING_STATE_DRAFT, propTypes } from '../../../../util/types';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
 import { isValidCurrencyForTransactionProcess } from '../../../../util/fieldHelpers';
 
@@ -29,6 +28,26 @@ const getListingTypeConfig = (publicData, listingTypes) => {
   return listingTypes.find(conf => conf.listingType === selectedListingType);
 };
 
+/**
+ * The EditListingPricingPanel component.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {propTypes.ownListing} props.listing - The listing object
+ * @param {string} props.marketplaceCurrency - The marketplace currency
+ * @param {number} props.listingMinimumPriceSubUnits - The listing minimum price sub units
+ * @param {boolean} props.disabled - Whether the form is disabled
+ * @param {boolean} props.ready - Whether the form is ready
+ * @param {Function} props.onSubmit - The submit function
+ * @param {string} props.submitButtonText - The submit button text
+ * @param {Array<propTypes.listingType>} props.listingTypes - The listing types
+ * @param {boolean} props.panelUpdated - Whether the panel is updated
+ * @param {boolean} props.updateInProgress - Whether the panel is updating
+ * @param {Object} props.errors - The errors
+ * @returns {JSX.Element}
+ */
 const EditListingPricingPanel = props => {
   const {
     className,
@@ -114,30 +133,6 @@ const EditListingPricingPanel = props => {
       )}
     </div>
   );
-};
-
-const { func, object, string, bool } = PropTypes;
-
-EditListingPricingPanel.defaultProps = {
-  className: null,
-  rootClassName: null,
-  listing: null,
-};
-
-EditListingPricingPanel.propTypes = {
-  className: string,
-  rootClassName: string,
-
-  // We cannot use propTypes.listing since the listing might be a draft.
-  listing: object,
-
-  disabled: bool.isRequired,
-  ready: bool.isRequired,
-  onSubmit: func.isRequired,
-  submitButtonText: string.isRequired,
-  panelUpdated: bool.isRequired,
-  updateInProgress: bool.isRequired,
-  errors: object.isRequired,
 };
 
 export default EditListingPricingPanel;
