@@ -559,7 +559,7 @@ textarea {
 
   @media (--viewportMedium) {
     /* 7 + 32 + 7 + borders = 48, which is divisible by 8. */
-    padding: 7px 16px 7px 16px;
+    padding: 7px 14px 7px 14px;
     line-height: 1;
   }
 }

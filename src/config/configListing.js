@@ -827,7 +827,7 @@ export const listingFields = [
       { "option": "skinnydip", "label": "Skinnydip" },
       { "option": "skylar rose", "label": "Skylar Rose" },
       { "option": "sloggi", "label": "Sloggi" },
-      { "option": "smith and canova", "label": "Smith And Canova" },
+      { "option": "smith and canova", "label": "Smith And Canova" }, 
       { "option": "sndys", "label": "SNDYS" },
       { "option": "something new", "label": "Something New" },
       { "option": "something new curve", "label": "Something New Curve" },
