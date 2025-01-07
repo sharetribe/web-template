@@ -1094,6 +1094,7 @@
     "TopbarDesktop.provider": "Diventa Provider",
     "TopbarDesktop.createListing": "Pubblica inserzione",
     "TopbarDesktop.inbox": "Ordini",
+    "TopbarDesktop.LinksMenu.more": "Altro",
     "TopbarDesktop.login": "Accedi o registrati",
     "TopbarDesktop.logo": "{marketplaceName}",
     "TopbarDesktop.logout": "Esci",
