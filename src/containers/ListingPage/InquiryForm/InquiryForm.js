@@ -1,10 +1,8 @@
 import React from 'react';
-import { string, bool } from 'prop-types';
-import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
-import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import * as validators from '../../../util/validators';
 import { propTypes } from '../../../util/types';
 import {
@@ -60,9 +58,23 @@ const ErrorMessage = props => {
   ) : null;
 };
 
-// NOTE: this InquiryForm is only for booking & purchase processes
-// The default-inquiry process is handled differently
-const InquiryFormComponent = props => (
+/**
+ * The InquiryForm component.
+ * NOTE: this InquiryForm is only for booking & purchase processes
+ * The default-inquiry process is handled differently
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} [props.submitButtonWrapperClassName] - Custom class to be passed for the submit button wrapper
+ * @param {boolean} [props.inProgress] - Whether the inquiry is in progress
+ * @param {string} props.listingTitle - The listing title
+ * @param {string} props.authorDisplayName - The author display name
+ * @param {propTypes.error} props.sendInquiryError - The send inquiry error
+ * @returns {JSX.Element} inquiry form component
+ */
+const InquiryForm = props => (
   <FinalForm
     {...props}
     render={fieldRenderProps => {
@@ -72,13 +84,13 @@ const InquiryFormComponent = props => (
         submitButtonWrapperClassName,
         formId,
         handleSubmit,
-        inProgress,
-        intl,
+        inProgress = false,
         listingTitle,
         authorDisplayName,
         sendInquiryError,
       } = fieldRenderProps;
 
+      const intl = useIntl();
       const messageLabel = intl.formatMessage(
         {
           id: 'InquiryForm.messageLabel',
@@ -126,32 +138,5 @@ const InquiryFormComponent = props => (
     }}
   />
 );
-
-InquiryFormComponent.defaultProps = {
-  rootClassName: null,
-  className: null,
-  submitButtonWrapperClassName: null,
-  inProgress: false,
-  sendInquiryError: null,
-};
-
-InquiryFormComponent.propTypes = {
-  rootClassName: string,
-  className: string,
-  submitButtonWrapperClassName: string,
-
-  inProgress: bool,
-
-  listingTitle: string.isRequired,
-  authorDisplayName: string.isRequired,
-  sendInquiryError: propTypes.error,
-
-  // from injectIntl
-  intl: intlShape.isRequired,
-};
-
-const InquiryForm = compose(injectIntl)(InquiryFormComponent);
-
-InquiryForm.displayName = 'InquiryForm';
 
 export default InquiryForm;
