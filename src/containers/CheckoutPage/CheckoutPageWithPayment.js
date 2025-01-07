@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { arrayOf, bool, func, object, oneOfType, shape, string } from 'prop-types';
 
 // Import contexts and util modules
 import { FormattedMessage, intlShape } from '../../util/reactIntl';
@@ -303,6 +302,46 @@ const onStripeInitialized = (stripe, process, props) => {
   }
 };
 
+/**
+ * A component that renders the checkout page with payment.
+ *
+ * @component
+ * @param {Object} props
+ * @param {boolean} props.scrollingDisabled - Whether the page should scroll
+ * @param {string} props.speculateTransactionError - The error message for the speculate transaction
+ * @param {propTypes.transaction} props.speculatedTransaction - The speculated transaction
+ * @param {boolean} props.isClockInSync - Whether the clock is in sync
+ * @param {string} props.initiateOrderError - The error message for the initiate order
+ * @param {string} props.confirmPaymentError - The error message for the confirm payment
+ * @param {intlShape} props.intl - The intl object
+ * @param {propTypes.currentUser} props.currentUser - The current user
+ * @param {string} props.confirmCardPaymentError - The error message for the confirm card payment
+ * @param {propTypes.paymentIntent} props.paymentIntent - The Stripe's payment intent
+ * @param {boolean} props.stripeCustomerFetched - Whether the stripe customer has been fetched
+ * @param {Object} props.pageData - The page data
+ * @param {propTypes.listing} props.pageData.listing - The listing entity
+ * @param {propTypes.transaction} props.pageData.transaction - The transaction entity
+ * @param {Object} props.pageData.orderData - The order data
+ * @param {string} props.processName - The process name
+ * @param {string} props.listingTitle - The listing title
+ * @param {string} props.title - The title
+ * @param {Function} props.onInitiateOrder - The function to initiate the order
+ * @param {Function} props.onConfirmCardPayment - The function to confirm the card payment
+ * @param {Function} props.onConfirmPayment - The function to confirm the payment after Stripe call is made
+ * @param {Function} props.onSendMessage - The function to send a message
+ * @param {Function} props.onSavePaymentMethod - The function to save the payment method for later use
+ * @param {Function} props.onSubmitCallback - The function to submit the callback
+ * @param {propTypes.error} props.initiateOrderError - The error message for the initiate order
+ * @param {propTypes.error} props.confirmPaymentError - The error message for the confirm payment
+ * @param {propTypes.error} props.confirmCardPaymentError - The error message for the confirm card payment
+ * @param {propTypes.paymentIntent} props.paymentIntent - The Stripe's payment intent
+ * @param {boolean} props.stripeCustomerFetched - Whether the stripe customer has been fetched
+ * @param {Object} props.config - The config
+ * @param {Object} props.routeConfiguration - The route configuration
+ * @param {Object} props.history - The history object
+ * @param {Object} props.history.push - The push state function of the history object
+ * @returns {JSX.Element}
+ */
 export const CheckoutPageWithPayment = props => {
   const [submitting, setSubmitting] = useState(false);
   // Initialized stripe library is saved to state - if it's needed at some point here too.
@@ -541,64 +580,6 @@ export const CheckoutPageWithPayment = props => {
       </div>
     </Page>
   );
-};
-
-CheckoutPageWithPayment.defaultProps = {
-  initiateOrderError: null,
-  confirmPaymentError: null,
-  listing: null,
-  orderData: {},
-  speculateTransactionError: null,
-  speculatedTransaction: null,
-  transaction: null,
-  currentUser: null,
-  paymentIntent: null,
-};
-
-CheckoutPageWithPayment.propTypes = {
-  scrollingDisabled: bool.isRequired,
-  listing: propTypes.listing,
-  orderData: object,
-  fetchStripeCustomer: func.isRequired,
-  stripeCustomerFetched: bool.isRequired,
-  fetchSpeculatedTransaction: func.isRequired,
-  speculateTransactionInProgress: bool.isRequired,
-  speculateTransactionError: propTypes.error,
-  speculatedTransaction: propTypes.transaction,
-  transaction: propTypes.transaction,
-  currentUser: propTypes.currentUser,
-  params: shape({
-    id: string,
-    slug: string,
-  }).isRequired,
-  onConfirmPayment: func.isRequired,
-  onInitiateOrder: func.isRequired,
-  onConfirmCardPayment: func.isRequired,
-  onRetrievePaymentIntent: func.isRequired,
-  onSavePaymentMethod: func.isRequired,
-  onSendMessage: func.isRequired,
-  initiateOrderError: propTypes.error,
-  confirmPaymentError: propTypes.error,
-  // confirmCardPaymentError comes from Stripe so that's why we can't expect it to be in a specific form
-  confirmCardPaymentError: oneOfType([propTypes.error, object]),
-  paymentIntent: object,
-
-  // from connect
-  dispatch: func.isRequired,
-
-  // from useIntl
-  intl: intlShape.isRequired,
-
-  // from useConfiguration
-  config: object.isRequired,
-
-  // from useRouteConfiguration
-  routeConfiguration: arrayOf(propTypes.route).isRequired,
-
-  // from useHistory
-  history: shape({
-    push: func.isRequired,
-  }).isRequired,
 };
 
 export default CheckoutPageWithPayment;
