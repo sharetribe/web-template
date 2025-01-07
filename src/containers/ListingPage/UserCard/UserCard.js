@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { bool, func, oneOfType, string } from 'prop-types';
 import truncate from 'lodash/truncate';
 import classNames from 'classnames';
 
@@ -63,20 +62,26 @@ const ExpandableBio = props => {
   );
 };
 
-ExpandableBio.defaultProps = { className: null };
-
-ExpandableBio.propTypes = {
-  className: string,
-  bio: string.isRequired,
-};
-
+/**
+ * The UserCard component.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {propTypes.user | propTypes.currentUser} props.user - The user
+ * @param {propTypes.currentUser} props.currentUser - The current user
+ * @param {function} props.onContactUser - The on contact user function
+ * @param {boolean} [props.showContact] - Whether to show the contact user button
+ * @returns {JSX.Element} user card component
+ */
 const UserCard = props => {
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const { rootClassName, className, user, currentUser, onContactUser, showContact } = props;
+  const { rootClassName, className, user, currentUser, onContactUser, showContact = true } = props;
 
   const userIsCurrentUser = user && user.type === 'currentUser';
   const ensuredUser = userIsCurrentUser ? ensureCurrentUser(user) : ensureUser(user);
@@ -153,23 +158,6 @@ const UserCard = props => {
       {hasBio ? <ExpandableBio className={css.mobileBio} bio={bio} /> : null}
     </div>
   );
-};
-
-UserCard.defaultProps = {
-  rootClassName: null,
-  className: null,
-  user: null,
-  currentUser: null,
-  showContact: true,
-};
-
-UserCard.propTypes = {
-  rootClassName: string,
-  className: string,
-  user: oneOfType([propTypes.user, propTypes.currentUser]),
-  currentUser: propTypes.currentUser,
-  onContactUser: func.isRequired,
-  showContact: bool,
 };
 
 export default UserCard;
