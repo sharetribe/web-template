@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import { arrayOf, bool, func, object, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
-import { FormattedMessage, useIntl, intlShape } from '../../util/reactIntl';
-import { propTypes } from '../../util/types';
+import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { createResourceLocatorString } from '../../util/routes';
 import { isMainSearchTypeKeywords } from '../../util/search';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
@@ -28,7 +26,9 @@ export class NotFoundPageComponent extends Component {
     // provides the context object. We attach a `notfound` flag to
     // the context to tell the server to change the response status
     // code into a 404.
-    this.props.staticContext.notfound = true;
+    if (this.props.staticContext) {
+      this.props.staticContext.notfound = true;
+    }
   }
 
   render() {
@@ -78,31 +78,16 @@ export class NotFoundPageComponent extends Component {
   }
 }
 
-NotFoundPageComponent.defaultProps = {
-  staticContext: {},
-};
-
-NotFoundPageComponent.propTypes = {
-  scrollingDisabled: bool.isRequired,
-  marketplaceName: string.isRequired,
-  isKeywordSearch: bool.isRequired,
-
-  // The context object from StaticRouter,
-  // it should be manually passed if this page is rendered inside other route.
-  staticContext: object,
-
-  // from useIntl
-  intl: intlShape.isRequired,
-
-  // from useRouteConfiguration
-  routeConfiguration: arrayOf(propTypes.route).isRequired,
-
-  // from useHistory
-  history: shape({
-    push: func.isRequired,
-  }).isRequired,
-};
-
+/**
+ * The not-found page.
+ *
+ * @param {Object} props
+ * @param {Object} props.staticContext - The context object from StaticRouter. It should be manually passed if this page is rendered inside other route.
+ * @param {boolean} props.scrollingDisabled - Whether the scrolling is disabled
+ * @param {string} props.marketplaceName - The marketplace name
+ * @param {boolean} props.isKeywordSearch - Whether the search is a keyword search
+ * @returns {JSX.Element} Enhanced not found page component
+ */
 const EnhancedNotFoundPage = props => {
   const routeConfiguration = useRouteConfiguration();
   const config = useConfiguration();
