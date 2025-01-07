@@ -1,4 +1,5 @@
 import get from 'lodash/get';
+import { LISTING_TYPE_CATEGORIES } from './constants';
 
 export const attachCategoryConfigToAppConfig = (appConfig, categoryConfig) => {
   return (appConfig.categoryCustomConfiguration = categoryConfig);
@@ -42,4 +43,16 @@ export const retrieveCustomerCommission = (listing, config) => {
       config.categoryCustomConfiguration.config[category]?.customerCommissionPercentage ??
       getCustomerDefaultCommission(config),
   };
+};
+
+export const getSelectableCategoriesFromProductType = (
+  selectedListingType,
+  allSelectableCategories = []
+) => {
+  const listingType = LISTING_TYPE_CATEGORIES[selectedListingType];
+  if (!listingType) {
+    return allSelectableCategories;
+  }
+  const { categories } = listingType;
+  return allSelectableCategories.filter(({ id }) => categories.includes(id));
 };
