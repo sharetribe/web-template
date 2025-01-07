@@ -380,10 +380,10 @@ const EditListingDetailsFormComponent = props => (
         // This line to rerender the label after change category field value
         formApi.focus(`${categoryPrefix}1`);
 
-        const selectedCatLenght = Object.keys(values).filter(key => key.startsWith(categoryPrefix))
+        const selectedCatLength = Object.keys(values).filter(key => key.startsWith(categoryPrefix))
           .length;
-        if (selectedCatLenght > 1) {
-          for (let i = selectedCatLenght; i > 1; i--) {
+        if (selectedCatLength > 1) {
+          for (let i = selectedCatLength; i > 1; i--) {
             formApi.change(`${categoryPrefix}${i}`, null);
           }
         }
