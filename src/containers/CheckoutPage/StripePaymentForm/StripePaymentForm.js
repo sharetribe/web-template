@@ -4,11 +4,10 @@
  * It's also handled separately in handleSubmit function.
  */
 import React, { Component } from 'react';
-import { bool, func, object, shape, string } from 'prop-types';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
-import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import { FormattedMessage, injectIntl } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import { ensurePaymentMethodCard } from '../../../util/data';
 
@@ -262,6 +261,34 @@ const initialState = {
  *
  * See: https://stripe.com/docs/payments/payment-intents
  *      https://stripe.com/docs/elements
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} props.className - The class name for the payment form
+ * @param {string} props.rootClassName - The root class that overrides the default class for the payment form
+ * @param {boolean} props.inProgress - Whether the form is in progress
+ * @param {boolean} props.loadingData - Whether the data is loading
+ * @param {propTypes.error} props.initiateOrderError - The error that occurs when initiating the order
+ * @param {propTypes.error} props.confirmCardPaymentError - The error that occurs when confirming the card payment
+ * @param {propTypes.error} props.confirmPaymentError - The error that occurs when confirming the payment
+ * @param {string} props.formId - The form ID
+ * @param {Function} props.onSubmit - The function to call when the form is submitted
+ * @param {string} props.authorDisplayName - The author display name
+ * @param {boolean} props.showInitialMessageInput - Whether to show the initial message input
+ * @param {string} props.stripePublishableKey - The Stripe publishable key
+ * @param {Function} props.onStripeInitialized - The function to call when Stripe is initialized
+ * @param {boolean} props.hasHandledCardPayment - Whether the card payment has been handled
+ * @param {Object} props.defaultPaymentMethod - The default payment method
+ * @param {boolean} props.askShippingDetails - Whether to ask for shipping details
+ * @param {boolean} props.showPickUplocation - Whether to show the pickup location
+ * @param {string} props.totalPrice - The total price
+ * @param {string} props.locale - The locale
+ * @param {Object} props.listingLocation - The listing location
+ * @param {Object} props.listingLocation.building - The building
+ * @param {Object} props.listingLocation.address - The address
+ * @param {boolean} props.isBooking - Whether the booking is in progress
+ * @param {boolean} props.isFuzzyLocation - Whether the location is fuzzy
+ * @param {Object} props.intl - The intl object
  */
 class StripePaymentForm extends Component {
   constructor(props) {
@@ -427,7 +454,6 @@ class StripePaymentForm extends Component {
       inProgress: submitInProgress,
       loadingData,
       formId,
-      paymentInfo,
       authorDisplayName,
       showInitialMessageInput,
       intl,
@@ -681,54 +707,5 @@ class StripePaymentForm extends Component {
     return <FinalForm onSubmit={this.handleSubmit} {...rest} render={this.paymentForm} />;
   }
 }
-
-StripePaymentForm.defaultProps = {
-  className: null,
-  rootClassName: null,
-  inProgress: false,
-  loadingData: false,
-  showInitialMessageInput: true,
-  hasHandledCardPayment: false,
-  defaultPaymentMethod: null,
-  initiateOrderError: null,
-  confirmCardPaymentError: null,
-  confirmPaymentError: null,
-  askShippingDetails: false,
-  showPickUplocation: false,
-  listingLocation: null,
-  totalPrice: null,
-  isFuzzyLocation: false,
-};
-
-StripePaymentForm.propTypes = {
-  className: string,
-  rootClassName: string,
-  inProgress: bool,
-  loadingData: bool,
-  initiateOrderError: object,
-  confirmCardPaymentError: object,
-  confirmPaymentError: object,
-  formId: string.isRequired,
-  onSubmit: func.isRequired,
-  authorDisplayName: string.isRequired,
-  showInitialMessageInput: bool,
-  hasHandledCardPayment: bool,
-  defaultPaymentMethod: propTypes.defaultPaymentMethod,
-  askShippingDetails: bool,
-  showPickUplocation: bool,
-  listingLocation: shape({
-    address: string.isRequired,
-    building: string,
-  }),
-  totalPrice: string,
-  locale: string.isRequired,
-  stripePublishableKey: string.isRequired,
-  marketplaceName: string.isRequired,
-  isBooking: bool.isRequired,
-  isFuzzyLocation: bool,
-
-  // from injectIntl
-  intl: intlShape.isRequired,
-};
 
 export default injectIntl(StripePaymentForm);
