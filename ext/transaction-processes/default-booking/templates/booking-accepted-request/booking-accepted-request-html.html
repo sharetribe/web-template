@@ -140,8 +140,7 @@
                             <tr>
                               <td>
                                 <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "BookingAcceptedRequest.PriceBreakdownHourly" "{amount,number,::.00} {currency} x {multiplier, number} {multiplier, plural, one {hour} other {hours}}" amount=unit-price.amount currency=unit-price.currency multiplier=units}}</p>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "BookingAcceptedRequest.SeatsQuantity" "Seats x {multiplier, number}" multiplier=seats}}</p>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "BookingAcceptedRequest.PriceBreakdownHourlyWithSeats" "{amount, number, ::.00} {currency} × {multiplier, number} {multiplier, plural, one {hour} other {hours}} x {seats, number} {seats, plural, one {seat} other {seats}}" amount=unit-price.amount currency=unit-price.currency multiplier=units seats=seats}}</p>
 
                                 </td>
                                 <td style="text-align:right">
@@ -172,8 +171,7 @@
                             <tr>
                               <td>
                                 <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "BookingAcceptedRequest.PriceBreakdownDaily" "{amount,number,::.00} {currency} x {multiplier, number} {multiplier, plural, one {day} other {days}}" amount=unit-price.amount currency=unit-price.currency multiplier=units}}</p>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "BookingAcceptedRequest.SeatsQuantity" "Seats x {multiplier, number}" multiplier=seats}}</p>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "BookingAcceptedRequest.PriceBreakdownDailyWithSeats" "{amount, number, ::.00} {currency} × {multiplier, number} {multiplier, plural, one {day} other {days}} x {seats, number} {seats, plural, one {seat} other {seats}}" amount=unit-price.amount currency=unit-price.currency multiplier=units seats=seats}}</p>
                                 </td>
                                 <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{> format-money money=line-total}}</p>
@@ -203,8 +201,7 @@
                             <tr>
                               <td>
                                 <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "BookingAcceptedRequest.PriceBreakdownNightly" "{amount,number,::.00} {currency} x {multiplier, number} {multiplier, plural, one {night} other {nights}}" amount=unit-price.amount currency=unit-price.currency multiplier=units}}</p>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "BookingAcceptedRequest.SeatsQuantity" "Seats x {multiplier, number}" multiplier=seats}}</p>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "BookingAcceptedRequest.PriceBreakdownNightlyWithSeats" "{amount, number, ::.00} {currency} × {multiplier, number} {multiplier, plural, one {night} other {nights}} x {seats, number} {seats, plural, one {seat} other {seats}}" amount=unit-price.amount currency=unit-price.currency multiplier=units seats=seats}}</p>
                                 </td>
                                 <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{> format-money money=line-total}}</p>
