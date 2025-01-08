@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [change] Update the wording of the numberTooSmall error message for consistency.
+  [#522](https://github.com/sharetribe/web-template/pull/522)
+
 ## [v6.3.0] 2025-01-08
 
 - [fix] fix a bug with seats handling in email templates.
