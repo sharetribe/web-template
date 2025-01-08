@@ -112,7 +112,6 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
 
   // Map mergedBookings to events to ensure only one event per date per listing
   const events = mergedBookings.map((booking) => {
-    console.log(booking);
     const listing = ownListings.find((listing) => listing.id.uuid === booking.listingId);
     
     // Check if protectedData exists and has names
