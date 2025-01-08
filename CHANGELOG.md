@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] fix a bug with seats handling in email templates.
+  [#518](https://github.com/sharetribe/web-template/pull/518)
 - [add] Add support for using multiple seats on default-booking process.
   [#502](https://github.com/sharetribe/web-template/pull/502)
 - [fix] ListingPageVariant: the #author anchor was not pointing to ListingPageVariant.
