@@ -12,6 +12,21 @@ const ALL = '*';
 const DEFAULT_GROUP = 'misc';
 const PREFIX_SEPARATOR = ':';
 
+const { bool, shape, string, arrayOf } = PropTypes;
+
+/**
+ * Example component
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} props.componentName - The component name
+ * @param {string} props.exampleName - The example name
+ * @param {Function | ReactNode} props.component - The component
+ * @param {string} [props.description] - The description
+ * @param {Object} [props.props] - The props
+ * @param {boolean} [props.useDefaultWrapperStyles] - Whether to use default wrapper styles
+ * @returns {JSX.Element}
+ */
 const Example = props => {
   const {
     componentName,
@@ -19,8 +34,8 @@ const Example = props => {
     component: ExampleComponent,
     description,
     props: exampleProps,
-    useDefaultWrapperStyles,
-    rawOnly,
+    useDefaultWrapperStyles = true,
+    rawOnly = false,
   } = props;
 
   const exampleWrapperClassName = useDefaultWrapperStyles ? css.defaultWrapperStyles : '';
@@ -67,31 +82,22 @@ const Example = props => {
             only.
           </p>
         ) : (
-          <ExampleComponent {...exampleProps} />
+          <ExampleComponent {...(exampleProps || {})} />
         )}
       </div>
     </li>
   );
 };
 
-const { bool, func, node, object, oneOfType, shape, string, arrayOf } = PropTypes;
-
-Example.defaultProps = {
-  description: null,
-  props: {},
-  useDefaultWrapperStyles: true,
-};
-
-Example.propTypes = {
-  componentName: string.isRequired,
-  exampleName: string.isRequired,
-  component: oneOfType([func, node]).isRequired,
-  description: string,
-  props: object,
-  useDefaultWrapperStyles: bool,
-};
-
-// Renders the list of component example groups as clickable filters
+/**
+ * Renders the list of component example groups as clickable filters
+ *
+ * @component
+ * @param {Object} props
+ * @param {Array<string>} props.groups - The groups
+ * @param {string} [props.selectedGroup] - The selected group
+ * @returns {JSX.Element}
+ */
 const Nav = props => {
   const { groups, selectedGroup } = props;
   const toGroupLink = (group, linkableContent) => {
@@ -155,13 +161,6 @@ const Nav = props => {
       <ul className={css.groups}>{pageSubComponentGroups}</ul>
     </nav>
   );
-};
-
-Nav.defaultProps = { selectedGroup: null };
-
-Nav.propTypes = {
-  groups: arrayOf(string).isRequired,
-  selectedGroup: string,
 };
 
 // The imported examples are in a nested tree structure. Flatten the
@@ -238,8 +237,20 @@ const Examples = props => {
   );
 };
 
+/**
+ * StyleguidePage component
+ *
+ * @component
+ * @param {Object} props
+ * @param {Object} props.params - The params
+ * @param {string} [props.params.group] - The group
+ * @param {string} [props.params.component] - The component
+ * @param {string} [props.params.example] - The example
+ * @param {boolean} [props.raw] - Whether to render raw examples
+ * @returns {JSX.Element}
+ */
 const StyleguidePage = props => {
-  const { params, raw } = props;
+  const { params, raw = false } = props;
   const flattened = flatExamples(allExamples);
   const groups = flattened.reduce((result, ex) => {
     if (ex.group && !result.includes(ex.group)) {
@@ -276,17 +287,6 @@ const StyleguidePage = props => {
       </div>
     </section>
   );
-};
-
-StyleguidePage.defaultProps = { raw: false };
-
-StyleguidePage.propTypes = {
-  params: shape({
-    group: string,
-    component: string,
-    example: string,
-  }).isRequired,
-  raw: bool,
 };
 
 export default StyleguidePage;
