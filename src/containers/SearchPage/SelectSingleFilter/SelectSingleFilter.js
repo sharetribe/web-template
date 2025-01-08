@@ -1,5 +1,4 @@
 import React from 'react';
-import { array, arrayOf, bool, func, node, number, object, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { pickInitialValuesForFieldSelectTree } from '../../../util/search';
@@ -15,19 +14,38 @@ const getQueryParamName = queryParamNames => {
   return Array.isArray(queryParamNames) ? queryParamNames[0] : queryParamNames;
 };
 
+/**
+ * SelectSingleFilter component
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.rootClassName] - Custom class that extends the default class for the root element
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} props.id - The id
+ * @param {string} props.name - The name
+ * @param {React.ReactNode} props.label - The label
+ * @param {Array<string>} props.queryParamNames - The query param names
+ * @param {Object} props.initialValues - The initial values
+ * @param {Array<Object>} props.options - The options
+ * @param {Function} props.onSubmit - The function to handle the submit
+ * @param {boolean} [props.showAsPopup] - Whether to show as popup
+ * @param {number} [props.contentPlacementOffset] - The content placement offset
+ * @param {boolean} [props.isNestedEnum] - Whether the enum is nested
+ * @returns {JSX.Element}
+ */
 const SelectSingleFilter = props => {
   const {
     rootClassName,
     className,
-    showAsPopup,
+    showAsPopup = false,
     options,
-    isNestedEnum,
+    isNestedEnum = false,
     id,
     name,
     label,
     queryParamNames,
     initialValues,
-    contentPlacementOffset,
+    contentPlacementOffset = 0,
     onSubmit,
     ...rest
   } = props;
@@ -97,30 +115,6 @@ const SelectSingleFilter = props => {
       <FieldSelectTree name={name} options={options} />
     </FilterPlain>
   );
-};
-
-SelectSingleFilter.defaultProps = {
-  rootClassName: null,
-  className: null,
-  showAsPopup: false,
-  initialValues: null,
-  contentPlacementOffset: 0,
-  isNestedEnum: false,
-};
-
-SelectSingleFilter.propTypes = {
-  rootClassName: string,
-  className: string,
-  showAsPopup: bool,
-  id: string.isRequired,
-  name: string.isRequired,
-  label: node.isRequired,
-  queryParamNames: arrayOf(string).isRequired,
-  options: array.isRequired,
-  onSubmit: func.isRequired,
-  initialValues: object,
-  contentPlacementOffset: number,
-  isNestedEnum: bool,
 };
 
 export default SelectSingleFilter;

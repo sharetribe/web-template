@@ -1,10 +1,9 @@
 import React from 'react';
-import { bool, func, number, object, string } from 'prop-types';
 import classNames from 'classnames';
 import debounce from 'lodash/debounce';
 import { Field, Form as FinalForm, FormSpy } from 'react-final-form';
 
-import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 
 import { Form, RangeSlider } from '../../../components';
 
@@ -32,9 +31,29 @@ const parseMax = (max, currentMin) => value => {
   return parsedValue < currentMin ? currentMin : parsedValue > max ? max : parsedValue;
 };
 
-// PriceFilterForm component
-const PriceFilterFormComponent = props => {
-  const { liveEdit, onChange, onSubmit, onCancel, onClear, ...rest } = props;
+/**
+ * PriceFilterForm component
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} props.id - The ID
+ * @param {boolean} [props.liveEdit] - Whether the filter is live editable
+ * @param {boolean} [props.showAsPopup] - Whether the filter is shown as a popup
+ * @param {Function} props.onChange - The function to change the filter
+ * @param {Function} props.onSubmit - The function to submit the filter
+ * @param {Function} props.onCancel - The function to cancel the filter
+ * @param {Function} props.onClear - The function to clear the filter
+ * @param {boolean} [props.isOpen] - Whether the filter is open
+ * @param {Function} props.contentRef - The function to get the content ref
+ * @param {Object} props.style - The style
+ * @param {number} props.min - The minimum price for the price range filter
+ * @param {number} props.max - The maximum price for the price range filter
+ * @param {number} props.step - The step for the price range filter
+ * @returns {JSX.Element}
+ */
+const PriceFilterForm = props => {
+  const intl = useIntl();
+  const { liveEdit = false, onChange, onSubmit, onCancel, onClear, ...rest } = props;
 
   if (liveEdit && !onChange) {
     throw new Error('PriceFilterForm: if liveEdit is true you need to provide onChange function');
@@ -82,18 +101,18 @@ const PriceFilterFormComponent = props => {
           form,
           handleSubmit,
           id,
-          showAsPopup,
+          showAsPopup = false,
           onClear,
           onCancel,
-          isOpen,
-          isInSideBar,
+          isOpen = false,
+          isInSideBar = false,
           contentRef,
           style,
           intl,
           values,
-          min,
-          max,
-          step,
+          min = 0,
+          max = 1000,
+          step = 1,
           children,
         } = formRenderProps;
         const { minPrice: minPriceRaw, maxPrice: maxPriceRaw } = values;
@@ -195,40 +214,5 @@ const PriceFilterFormComponent = props => {
     />
   );
 };
-
-PriceFilterFormComponent.defaultProps = {
-  liveEdit: false,
-  showAsPopup: false,
-  isOpen: false,
-  contentRef: null,
-  style: null,
-  min: 0,
-  step: 1,
-  onCancel: null,
-  onChange: null,
-  onClear: null,
-  onSubmit: null,
-};
-
-PriceFilterFormComponent.propTypes = {
-  id: string.isRequired,
-  liveEdit: bool,
-  showAsPopup: bool,
-  onCancel: func,
-  onChange: func,
-  onClear: func,
-  onSubmit: func,
-  isOpen: bool,
-  contentRef: func,
-  style: object,
-  min: number.isRequired,
-  max: number.isRequired,
-  step: number,
-
-  // form injectIntl
-  intl: intlShape.isRequired,
-};
-
-const PriceFilterForm = injectIntl(PriceFilterFormComponent);
 
 export default PriceFilterForm;
