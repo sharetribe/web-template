@@ -148,7 +148,7 @@
   "CustomExtendedDataField.placeholderYoutubeVideoURL": "The URL of a YouTube video",
   "CustomExtendedDataField.required": "Required",
   "CustomExtendedDataField.notValidYoutubeVideoURL": "The URL you entered is not a valid YouTube URL.",
-  "CustomExtendedDataField.numberTooSmall": "The number must be larger than or equal to {min}",
+  "CustomExtendedDataField.numberTooSmall": "The number must be greater than or equal to {min}",
   "CustomExtendedDataField.numberTooBig": "The number must be less than or equal to {max}",
   "DatePicker.clearButton": "Clear value",
   "DatePicker.screenreader.blockedDate": "{date} is not available",
