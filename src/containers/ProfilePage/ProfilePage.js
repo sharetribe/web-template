@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { bool, arrayOf, oneOfType } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
@@ -205,7 +204,7 @@ export const MainContent = props => {
     displayName,
     listings,
     queryListingsError,
-    reviews,
+    reviews = [],
     queryReviewsError,
     publicData,
     metadata,
@@ -278,6 +277,22 @@ export const MainContent = props => {
   );
 };
 
+/**
+ * ProfilePageComponent
+ *
+ * @component
+ * @param {Object} props
+ * @param {boolean} props.scrollingDisabled - Whether the scrolling is disabled
+ * @param {propTypes.currentUser} props.currentUser - The current user
+ * @param {boolean} props.useCurrentUser - Whether to use the current user
+ * @param {propTypes.user|propTypes.currentUser} props.user - The user
+ * @param {propTypes.error} props.userShowError - The user show error
+ * @param {propTypes.error} props.queryListingsError - The query listings error
+ * @param {Array<propTypes.listing|propTypes.ownListing>} props.listings - The listings
+ * @param {Array<propTypes.review>} props.reviews - The reviews
+ * @param {propTypes.error} props.queryReviewsError - The query reviews error
+ * @returns {JSX.Element} ProfilePageComponent
+ */
 export const ProfilePageComponent = props => {
   const config = useConfiguration();
   const intl = useIntl();
@@ -411,27 +426,6 @@ export const ProfilePageComponent = props => {
   );
 };
 
-ProfilePageComponent.defaultProps = {
-  currentUser: null,
-  user: null,
-  userShowError: null,
-  queryListingsError: null,
-  reviews: [],
-  queryReviewsError: null,
-};
-
-ProfilePageComponent.propTypes = {
-  scrollingDisabled: bool.isRequired,
-  currentUser: propTypes.currentUser,
-  useCurrentUser: bool.isRequired,
-  user: oneOfType([propTypes.user, propTypes.currentUser]),
-  userShowError: propTypes.error,
-  queryListingsError: propTypes.error,
-  listings: arrayOf(oneOfType([propTypes.listing, propTypes.ownListing])).isRequired,
-  reviews: arrayOf(propTypes.review),
-  queryReviewsError: propTypes.error,
-};
-
 const mapStateToProps = state => {
   const { currentUser } = state.user;
   const {
@@ -439,7 +433,7 @@ const mapStateToProps = state => {
     userShowError,
     queryListingsError,
     userListingRefs,
-    reviews,
+    reviews = [],
     queryReviewsError,
   } = state.ProfilePage;
   const userMatches = getMarketplaceEntities(state, [{ type: 'user', id: userId }]);
