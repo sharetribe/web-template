@@ -25,19 +25,6 @@
     width: 70%;
     margin: 0 auto;
   }
-
-  a{
-    border: 1px solid var(--colorPrimaryButton);
-    padding:8px 10px;
-    border-radius: 4px;
-
-    &:hover{
-      background-color: var(--colorPrimaryButton);
-      color: var(--colorWhite);
-      text-decoration: none;
-    }
-  }
-
 }
 
 .oneColumn {
