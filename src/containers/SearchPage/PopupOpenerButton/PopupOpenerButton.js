@@ -1,11 +1,21 @@
 import React from 'react';
-import { bool, func, node, number } from 'prop-types';
 import classNames from 'classnames';
 
 import css from './PopupOpenerButton.module.css';
 
+/**
+ * PopupOpenerButton component
+ *
+ * @component
+ * @param {Object} props
+ * @param {boolean} [props.isSelected] - Whether the filter is selected
+ * @param {number} [props.labelMaxWidth] - The maximum width of the label
+ * @param {Function} props.toggleOpen - The function to toggle the filter
+ * @param {React.Node} props.children - The children
+ * @returns {JSX.Element}
+ */
 const PopupOpenerButton = props => {
-  const { isSelected, labelMaxWidth, toggleOpen, children } = props;
+  const { isSelected = false, labelMaxWidth = null, toggleOpen, children } = props;
 
   const labelStyles = isSelected ? css.labelSelected : css.label;
   const labelMaxWidthMaybe = labelMaxWidth ? { maxWidth: `${labelMaxWidth}px` } : {};
@@ -20,18 +30,6 @@ const PopupOpenerButton = props => {
       {children}
     </button>
   );
-};
-
-PopupOpenerButton.defaultProps = {
-  isSelected: false,
-  labelMaxWidth: null,
-};
-
-PopupOpenerButton.propTypes = {
-  isSelected: bool,
-  toggleOpen: func.isRequired,
-  children: node.isRequired,
-  labelMaxWidth: number,
 };
 
 export default PopupOpenerButton;

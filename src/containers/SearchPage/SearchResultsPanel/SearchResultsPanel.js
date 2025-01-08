@@ -1,5 +1,4 @@
 import React from 'react';
-import { array, bool, node, object, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { propTypes } from '../../../util/types';
@@ -7,15 +6,29 @@ import { ListingCard, PaginationLinks } from '../../../components';
 
 import css from './SearchResultsPanel.module.css';
 
+/**
+ * SearchResultsPanel component
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that extends the default class for the root element
+ * @param {Array<propTypes.listing>} props.listings - The listings
+ * @param {propTypes.pagination} props.pagination - The pagination
+ * @param {Object} props.search - The search
+ * @param {Function} props.setActiveListing - The function to handle the active listing
+ * @param {boolean} [props.isMapVariant] - Whether the map variant is enabled
+ * @returns {JSX.Element}
+ */
 const SearchResultsPanel = props => {
   const {
     className,
     rootClassName,
-    listings,
+    listings = [],
     pagination,
     search,
     setActiveListing,
-    isMapVariant,
+    isMapVariant = true,
   } = props;
   const classes = classNames(rootClassName || css.root, className);
 
@@ -71,26 +84,6 @@ const SearchResultsPanel = props => {
       {paginationLinks}
     </div>
   );
-};
-
-SearchResultsPanel.defaultProps = {
-  children: null,
-  className: null,
-  listings: [],
-  pagination: null,
-  rootClassName: null,
-  search: null,
-  isMapVariant: true,
-};
-
-SearchResultsPanel.propTypes = {
-  children: node,
-  className: string,
-  listings: array,
-  pagination: propTypes.pagination,
-  rootClassName: string,
-  search: object,
-  isMapVariant: bool,
 };
 
 export default SearchResultsPanel;

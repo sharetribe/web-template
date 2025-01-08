@@ -1,9 +1,22 @@
 import React, { useState } from 'react';
-import { arrayOf, func, shape, string } from 'prop-types';
 import classNames from 'classnames';
 
 import css from './SortByPlain.module.css';
 
+/**
+ * SortByPlain component
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.rootClassName] - Custom class that extends the default class for the root element
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} props.urlParam - The url param
+ * @param {string} props.label - The label
+ * @param {Function} props.onSelect - The function to handle the select
+ * @param {Array<Object>} props.options - The options [{ key: string, label: string }]
+ * @param {string} [props.initialValue] - The initial value
+ * @returns {JSX.Element}
+ */
 const SortByPlain = props => {
   const [isOpen, setIsOpen] = useState(true);
   const { rootClassName, className, label, options, initialValue } = props;
@@ -63,28 +76,6 @@ const SortByPlain = props => {
       </div>
     </div>
   );
-};
-
-SortByPlain.defaultProps = {
-  rootClassName: null,
-  className: null,
-  initialValue: null,
-};
-
-SortByPlain.propTypes = {
-  rootClassName: string,
-  className: string,
-  urlParam: string.isRequired,
-  label: string.isRequired,
-  onSelect: func.isRequired,
-
-  options: arrayOf(
-    shape({
-      key: string.isRequired,
-      label: string.isRequired,
-    })
-  ).isRequired,
-  initialValue: string,
 };
 
 export default SortByPlain;

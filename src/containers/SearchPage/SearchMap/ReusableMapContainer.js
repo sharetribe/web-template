@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOMClient from 'react-dom/client';
-import { node, string, object } from 'prop-types';
 
 import { IntlProvider } from '../../../util/reactIntl';
 
@@ -12,6 +11,15 @@ import css from './SearchMap.module.css';
  * - Efficient Google Maps usage: less unnecessary calls to instantiate a dynamic map.
  * - Reaction to a bug when removing Google Map instance
  *   https://issuetracker.google.com/issues/35821412
+ *
+ * @component
+ * @param {Object} props
+ * @param {React.Node} props.children - The children
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} props.reusableMapHiddenHandle - The handle for the reusable map hidden
+ * @param {Object} props.messages - The messages for IntlProvider
+ * @param {Object} props.config - The config
+ * @returns {JSX.Element}
  */
 class ReusableMapContainer extends React.Component {
   constructor(props) {
@@ -114,17 +122,5 @@ class ReusableMapContainer extends React.Component {
     );
   }
 }
-
-ReusableMapContainer.defaultProps = {
-  className: string,
-};
-
-ReusableMapContainer.propTypes = {
-  children: node.isRequired,
-  className: string,
-  reusableMapHiddenHandle: string.isRequired,
-  messages: object.isRequired,
-  config: object.isRequired,
-};
 
 export default ReusableMapContainer;
