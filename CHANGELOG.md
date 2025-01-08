@@ -12,7 +12,9 @@ way to update this template, but currently, we follow a pattern:
 
 ---
 
-## Upcoming version 2024-XX-XX
+## Upcoming version 2025-XX-XX
+
+## [v6.3.0] 2025-01-08
 
 - [fix] fix a bug with seats handling in email templates.
   [#518](https://github.com/sharetribe/web-template/pull/518)
@@ -26,6 +28,8 @@ way to update this template, but currently, we follow a pattern:
   [#512](https://github.com/sharetribe/web-template/pull/512)
 - [add] Add currently available translations for DE, ES, FR.
   [#511](https://github.com/sharetribe/web-template/pull/511)
+
+  [v6.3.0]: https://github.com/sharetribe/web-template/compare/v6.2.0...v6.3.0
 
 ## [v6.2.0] 2024-11-26
 
