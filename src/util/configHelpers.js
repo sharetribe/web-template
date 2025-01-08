@@ -873,7 +873,7 @@ const validListingTypes = listingTypes => {
             unitType,
             ...restOfTransactionType,
           },
-          // e.g. stockType
+          // e.g. stockType, availabilityType,...
           ...restOfListingType,
         },
       ];
@@ -1204,6 +1204,17 @@ const validDatesConfig = config => {
   return { key: 'dates', schemaType: 'dates', label, availability, dateRangeMode };
 };
 
+const validSeatsConfig = config => {
+  const { enabled = true, label = 'Seats' } = config;
+  const isValidLabel = typeof label === 'string';
+
+  if (!(enabled && isValidLabel)) {
+    return null;
+  }
+
+  return { key: 'seats', schemaType: 'seats', label };
+};
+
 const validPriceConfig = config => {
   const { enabled = true, label = 'Price', min = 0, max = 1000, step = 5 } = config;
   const isValidLabel = typeof label === 'string';
@@ -1240,6 +1251,8 @@ const validDefaultFilters = (defaultFilters, categoryConfiguration) => {
         ? validCategoryConfig(data, categoryConfiguration)
         : schemaType === 'dates'
         ? validDatesConfig(data)
+        : schemaType === 'seats'
+        ? validSeatsConfig(data)
         : schemaType === 'price'
         ? validPriceConfig(data)
         : schemaType === 'keywords'
@@ -1278,6 +1291,7 @@ const mergeSearchConfig = (hostedSearchConfig, defaultSearchConfig, categoryConf
     mainSearch,
     categoryFilter,
     dateRangeFilter,
+    seatsFilter,
     priceFilter,
     keywordsFilter,
     sortConfig,
@@ -1296,6 +1310,8 @@ const mergeSearchConfig = (hostedSearchConfig, defaultSearchConfig, categoryConf
       ? [defaultSearchConfig.keywordsFilter]
       : [];
 
+  const seatsFilterMaybe = typeof seatsFilter?.enabled === 'boolean' ? [seatsFilter] : [];
+
   // This will define the order of default filters
   // The reason: These default filters come from config assets and
   // there they'll be their own separate entities and not wrapped in an array.
@@ -1305,6 +1321,7 @@ const mergeSearchConfig = (hostedSearchConfig, defaultSearchConfig, categoryConf
   const defaultFilters = [
     ...categoryFilterMaybe,
     dateRangeFilter,
+    ...seatsFilterMaybe,
     priceFilter,
     ...keywordsFilterMaybe,
   ];

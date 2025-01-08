@@ -234,10 +234,19 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
     return hasDatesFilterInUse ? {} : { minStock: 1, stockMode: 'match-undefined' };
   };
 
-  const { perPage, price, dates, sort, mapSearch, ...restOfParams } = searchParams;
+  const seatsSearchParams = (seats, datesMaybe) => {
+    const seatsFilter = config.search.defaultFilters.find(f => f.key === 'seats');
+    const hasDatesFilterInUse = Object.keys(datesMaybe).length > 0;
+
+    // Seats filter cannot be applied without dates
+    return hasDatesFilterInUse && seatsFilter ? { seats } : {};
+  };
+
+  const { perPage, price, dates, seats, sort, mapSearch, ...restOfParams } = searchParams;
   const priceMaybe = priceSearchParams(price);
   const datesMaybe = datesSearchParams(dates);
   const stockMaybe = stockFilters(datesMaybe);
+  const seatsMaybe = seatsSearchParams(seats, datesMaybe);
   const sortMaybe = sort === config.search.sortConfig.relevanceKey ? {} : { sort };
 
   const params = {
@@ -247,6 +256,7 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
     ...priceMaybe,
     ...datesMaybe,
     ...stockMaybe,
+    ...seatsMaybe,
     ...sortMaybe,
     ...searchValidListingTypes(config.listing.listingTypes),
     perPage,
