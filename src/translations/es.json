@@ -179,7 +179,6 @@
   "EditListingAvailabilityExceptionForm.notAvailable": "No disponible",
   "EditListingAvailabilityExceptionForm.title": "Agregar una excepción de disponibilidad",
   "EditListingAvailabilityPanel.WeeklyCalendar.available": "Disponible",
-  "EditListingAvailabilityPanel.WeeklyCalendar.exceptions": "Excepciones",
   "EditListingAvailabilityPanel.WeeklyCalendar.fetchExceptionsError": "Error al obtener datos de excepción de disponibilidad",
   "EditListingAvailabilityPanel.WeeklyCalendar.notAvailable": "No disponible",
   "EditListingAvailabilityPanel.WeeklyCalendar.scheduleTitle": "Horario para",

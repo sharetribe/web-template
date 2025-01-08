@@ -88,6 +88,7 @@ export { default as ModalInMobile } from './ModalInMobile/ModalInMobile';
 // Fields (for Final Form)
 export { default as FieldCheckbox } from './FieldCheckbox/FieldCheckbox';
 export { default as FieldCurrencyInput } from './FieldCurrencyInput/FieldCurrencyInput';
+export { default as FieldNumber } from './FieldNumber/FieldNumber';
 export { default as FieldRadioButton } from './FieldRadioButton/FieldRadioButton';
 export { default as FieldReviewRating } from './FieldReviewRating/FieldReviewRating';
 export { default as FieldSelect } from './FieldSelect/FieldSelect';

@@ -5,6 +5,7 @@
 
 .heading,
 .radioButtons,
+.seatsInput,
 .submitButton {
   padding-left: 24px;
   padding-right: 24px;
@@ -23,10 +24,8 @@
 .section {
   display: flex;
   flex-direction: column;
-  margin-bottom: 48px;
 
   @media (--viewportMedium) {
-    margin-bottom: 200px;
     padding-left: 60px;
     padding-right: 60px;
   }
@@ -38,13 +37,19 @@
   fill: var(--colorWhite);
 }
 
+.seatsInput {
+  margin-top: 24px;
+}
+
 .submitButton {
   margin-top: auto;
   flex-shrink: 0;
   /* Mobile phones introduce bottom-bar, for which we need to give 96px vertical space */
   padding-bottom: 96px;
+  margin-top: 48px;
 
   @media (--viewportMedium) {
+    margin-top: 200px;
     padding-bottom: 0;
   }
 }

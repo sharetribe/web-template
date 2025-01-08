@@ -248,8 +248,13 @@ export const listingFields = [
  * - stockType            This is relevant only to listings using default-purchase process.
  *                        If set to 'oneItem', stock management is not showed and the listing is
  *                        considered unique (stock = 1).
- *                        Possible values: 'oneItem' and 'multipleItems'.
+ *                        Possible values: 'oneItem', 'multipleItems', 'infiniteOneItem', and 'infiniteMultipleItems'.
  *                        Default: 'multipleItems'.
+ * - availabilityType     This is relevant only to listings using default-booking process.
+ *                        If set to 'oneSeat', seat management is not showed and the listing is
+ *                        considered per person (seat = 1).
+ *                        Possible values: 'oneSeat' and 'multipleSeats'.
+ *                        Default: 'oneSeat'.
  * - defaultListingFields These are tied to transaction processes. Different processes have different flags.
  *                        E.g. default-inquiry can toggle price and location to true/false value to indicate,
  *                        whether price (or location) tab should be shown. If defaultListingFields.price is not
@@ -270,6 +275,7 @@ export const listingTypes = [
       alias: 'default-booking/release-1',
       unitType: 'day',
     },
+    availabilityType: 'oneSeat',
     defaultListingFields: {
       location: true,
       payoutDetails: true,

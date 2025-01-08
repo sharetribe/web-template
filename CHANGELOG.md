@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] Add support for using multiple seats on default-booking process.
+  [#502](https://github.com/sharetribe/web-template/pull/502)
 - [fix] ListingPageVariant: the #author anchor was not pointing to ListingPageVariant.
   [#515](https://github.com/sharetribe/web-template/pull/515)
 - [fix] target element didn't seem to work well with scroll-margin.

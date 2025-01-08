@@ -215,7 +215,8 @@
   grid-template-areas:
     'dot name    state'
     '... item    state'
-    '... details state';
+    '... details state'
+    '... seats   state';
   padding: 2px 0 6px;
   gap: 4px 0;
 
@@ -291,6 +292,15 @@
 .itemDetails {
   composes: marketplaceTinyFontStyles from global;
   grid-area: details;
+  color: var(--colorGrey700);
+
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.itemSeats {
+  composes: marketplaceTinyFontStyles from global;
+  grid-area: seats;
   color: var(--colorGrey700);
 
   margin-top: 0;
