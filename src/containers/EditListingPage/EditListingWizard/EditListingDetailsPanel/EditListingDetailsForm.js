@@ -15,6 +15,7 @@ import {
   maxLength,
   required,
 } from '../../../../util/validators';
+import { maxLength, required, composeValidators } from '../../../../util/validators';
 
 // Import shared components
 import {
@@ -264,17 +265,17 @@ export const AddListingFields = props => {
 
     return isKnownSchemaType && isProviderScope && isTargetListingType && isTargetCategory
       ? [
-          ...pickedFields,
-          <CustomExtendedDataField
-            key={namespacedKey}
-            name={namespacedKey}
-            fieldConfig={fieldConfig}
-            defaultRequiredMessage={intl.formatMessage({
-              id: 'EditListingDetailsForm.defaultRequiredMessage',
-            })}
-            formId={formId}
-          />,
-        ]
+        ...pickedFields,
+        <CustomExtendedDataField
+          key={namespacedKey}
+          name={namespacedKey}
+          fieldConfig={fieldConfig}
+          defaultRequiredMessage={intl.formatMessage({
+            id: 'EditListingDetailsForm.defaultRequiredMessage',
+          })}
+          formId={formId}
+        />,
+      ]
       : pickedFields;
   }, []);
 
@@ -332,6 +333,8 @@ const EditListingDetailsFormComponent = props => (
         intl,
         invalid,
         pristine,
+        marketplaceCurrency,
+        marketplaceName,
         selectableListingTypes,
         selectableCategories,
         hasExistingListingType,
@@ -343,6 +346,7 @@ const EditListingDetailsFormComponent = props => (
         fetchErrors,
         listingFieldsConfig,
         showListingType,
+        listingCurrency,
         values,
       } = formRenderProps;
 
@@ -358,6 +362,20 @@ const EditListingDetailsFormComponent = props => (
           maxLength: TITLE_MAX_LENGTH,
         }
       );
+
+      // Determine the currency to validate:
+      // - If editing an existing listing, use the listing's currency.
+      // - If creating a new listing, fall back to the default marketplace currency.
+      const currencyToCheck = listingCurrency || marketplaceCurrency;
+
+      // Verify if the selected listing type's transaction process supports the chosen currency.
+      // This checks compatibility between the transaction process
+      // and the marketplace or listing currency.
+      const isCompatibleCurrency = isValidCurrencyForTransactionProcess(
+        transactionProcessAlias,
+        currencyToCheck
+      );
+
       const maxLength60Message = maxLength(maxLengthMessage, TITLE_MAX_LENGTH);
 
       const hasCategories = selectableCategories && selectableCategories.length > 0;
@@ -374,7 +392,11 @@ const EditListingDetailsFormComponent = props => (
 
       const hasMandatoryListingTypeData = listingType && transactionProcessAlias && unitType;
       const submitDisabled =
-        invalid || disabled || submitInProgress || !hasMandatoryListingTypeData;
+        invalid ||
+        disabled ||
+        submitInProgress ||
+        !hasMandatoryListingTypeData ||
+        !isCompatibleCurrency;
 
       const chooseSelectOption = [
         { key: 'Alla data', label: 'Alla data' },
@@ -426,7 +448,7 @@ const EditListingDetailsFormComponent = props => (
             />
           ) : null}
 
-          {showCategories ? (
+          {showCategories && isCompatibleCurrency && (
             <FieldSelectCategory
               values={values}
               prefix={categoryPrefix}
@@ -436,23 +458,25 @@ const EditListingDetailsFormComponent = props => (
               allCategoriesChosen={allCategoriesChosen}
               setAllCategoriesChosen={setAllCategoriesChosen}
             />
-          ) : null}
+          )}
 
-          {showTitle ? (
+          {showTitle && isCompatibleCurrency && (
             <FieldTextInput
               id={`${formId}title`}
               name="title"
               className={css.title}
               type="text"
               label={intl.formatMessage({ id: 'EditListingDetailsForm.title' })}
-              placeholder={intl.formatMessage({ id: 'EditListingDetailsForm.titlePlaceholder' })}
+              placeholder={intl.formatMessage({
+                id: 'EditListingDetailsForm.titlePlaceholder',
+              })}
               maxLength={TITLE_MAX_LENGTH}
               validate={composeValidators(required(titleRequiredMessage), maxLength60Message)}
               autoFocus={autoFocus}
             />
-          ) : null}
+          )}
 
-          {showDescription ? (
+          {showDescription && isCompatibleCurrency && (
             <FieldTextInput
               id={`${formId}description`}
               name="description"
@@ -468,7 +492,7 @@ const EditListingDetailsFormComponent = props => (
                 })
               )}
             />
-          ) : null}
+          )}
 
           <FieldSelect
             className={css.customField}
@@ -512,15 +536,15 @@ const EditListingDetailsFormComponent = props => (
             />
           ) : null}
 
-          {/* {showListingFields ? (
-            <AddListingFields
-              listingType={listingType}
-              listingFieldsConfig={listingFieldsConfig}
-              selectedCategories={pickSelectedCategories(values)}
-              formId={formId}
-              intl={intl}
-            />
-          ) : null} */}
+
+          {!isCompatibleCurrency && listingType && (
+            <p className={css.error}>
+              <FormattedMessage
+                id="EditListingDetailsForm.incompatibleCurrency"
+                values={{ marketplaceName, marketplaceCurrency }}
+              />
+            </p>
+          )}
 
           <Button
             className={css.submitButton}

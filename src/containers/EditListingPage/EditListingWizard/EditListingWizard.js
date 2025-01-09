@@ -280,7 +280,7 @@ const tabsActive = (isNew, listing, tabs, config) => {
 
 const scrollToTab = (tabPrefix, tabId) => {
   const el = document.querySelector(`#${tabPrefix}_${tabId}`);
-  if (el) {
+  if (el && el.scrollIntoView) {
     el.scrollIntoView({
       block: 'start',
       behavior: 'smooth',
@@ -364,6 +364,7 @@ class EditListingWizard extends Component {
         unitType: 'inquiry',
         label: 'Progetto',
       },
+      mounted: false,
     };
     this.handleCreateFlowTabScrolling = this.handleCreateFlowTabScrolling.bind(this);
     this.handlePublishListing = this.handlePublishListing.bind(this);
@@ -375,6 +376,9 @@ class EditListingWizard extends Component {
 
     if (stripeOnboardingReturnURL != null && !this.showPayoutDetails) {
       this.setState({ showPayoutDetails: true });
+    }
+    if (!this.mounted) {
+      this.mounted = true;
     }
   }
 
@@ -425,7 +429,6 @@ class EditListingWizard extends Component {
       rootClassName,
       params,
       listing,
-      viewport,
       intl,
       errors,
       fetchInProgress,
@@ -519,10 +522,14 @@ class EditListingWizard extends Component {
       return <NamedRedirect name="EditListingPage" params={{ ...params, tab: nearestActiveTab }} />;
     }
 
-    const { width } = viewport;
-    const hasViewport = width > 0;
-    const hasHorizontalTabLayout = hasViewport && width <= MAX_HORIZONTAL_NAV_SCREEN_WIDTH;
-    const hasVerticalTabLayout = hasViewport && width > MAX_HORIZONTAL_NAV_SCREEN_WIDTH;
+    const isBrowser = typeof window !== 'undefined';
+    const hasMatchMedia = isBrowser && window?.matchMedia;
+    const isMobileLayout = hasMatchMedia
+      ? window.matchMedia(`(max-width: ${MAX_HORIZONTAL_NAV_SCREEN_WIDTH}px)`)?.matches
+      : true;
+
+    const hasHorizontalTabLayout = this.mounted && isMobileLayout;
+    const hasVerticalTabLayout = this.mounted && !isMobileLayout;
 
     // Check if scrollToTab call is needed (tab is not visible on mobile)
     if (hasVerticalTabLayout) {
@@ -566,6 +573,14 @@ class EditListingWizard extends Component {
         hasRequirements(stripeAccountData, 'currently_due'));
 
     const savedCountry = stripeAccountData ? stripeAccountData.country : null;
+    const savedAccountType = stripeAccountData ? stripeAccountData.business_type : null;
+
+    const { marketplaceName } = config;
+    const payoutModalInfo = stripeAccountData ? (
+      <FormattedMessage id="EditListingWizard.payoutModalInfo" values={{ marketplaceName }} />
+    ) : (
+      <FormattedMessage id="EditListingWizard.payoutModalInfoNew" values={{ marketplaceName }} />
+    );
 
     const handleGetStripeConnectAccountLink = handleGetStripeConnectAccountLinkFn(
       onGetStripeConnectAccountLink,
@@ -647,9 +662,7 @@ class EditListingWizard extends Component {
               </p>
             ) : (
               <>
-                <p className={css.modalMessage}>
-                  <FormattedMessage id="EditListingWizard.payoutModalInfo" />
-                </p>
+                <p className={css.modalMessage}>{payoutModalInfo}</p>
                 <StripeConnectAccountForm
                   disabled={formDisabled}
                   inProgress={payoutDetailsSaveInProgress}
@@ -657,6 +670,7 @@ class EditListingWizard extends Component {
                   currentUser={currentUser}
                   stripeBankAccountLastDigits={getBankAccountLast4Digits(stripeAccountData)}
                   savedCountry={savedCountry}
+                  savedAccountType={savedAccountType}
                   submitButtonText={intl.formatMessage({
                     id: 'StripePayoutPage.submitButtonText',
                   })}
@@ -758,12 +772,6 @@ EditListingWizard.propTypes = {
   onGetStripeConnectAccountLink: func.isRequired,
   onManageDisableScrolling: func.isRequired,
 
-  // from withViewport
-  viewport: shape({
-    width: number.isRequired,
-    height: number.isRequired,
-  }).isRequired,
-
   // from useIntl
   intl: intlShape.isRequired,
 
@@ -788,4 +796,4 @@ const EnhancedEditListingWizard = props => {
   );
 };
 
-export default withViewport(EnhancedEditListingWizard);
+export default EnhancedEditListingWizard;

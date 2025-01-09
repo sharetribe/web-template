@@ -23,7 +23,7 @@ import { LINE_ITEM_DAY, propTypes } from '../../../util/types';
 import { timeSlotsPerDate } from '../../../util/generators';
 import { BOOKING_PROCESS_NAME } from '../../../transactions/transaction';
 
-import { Form, PrimaryButton, FieldDateRangePicker, H6 } from '../../../components';
+import { Form, PrimaryButton, FieldDateRangePicker, FieldSelect, H6 } from '../../../components';
 
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
 
@@ -337,21 +337,27 @@ const handleMonthClick = (
 // lineItems from this Template's backend for the EstimatedTransactionMaybe
 // In case you add more fields to the form, make sure you add
 // the values here to the orderData object.
-const handleFormSpyChange = (
+
+const calculateLineItems = (
   listingId,
   isOwnListing,
   fetchLineItemsInProgress,
-  onFetchTransactionLineItems
+  onFetchTransactionLineItems,
+  seatsEnabled
 ) => formValues => {
-  const { startDate, endDate } =
-    formValues.values && formValues.values.bookingDates ? formValues.values.bookingDates : {};
+  const { startDate, endDate, seats } = formValues?.values || {};
+
+  const seatCount = seats ? parseInt(seats, 10) : 1;
+
+  const orderData = {
+    bookingStart: startDate,
+    bookingEnd: endDate,
+    ...(seatsEnabled && { seats: seatCount }),
+  };
 
   if (startDate && endDate && !fetchLineItemsInProgress) {
     onFetchTransactionLineItems({
-      orderData: {
-        bookingStart: startDate,
-        bookingEnd: endDate,
-      },
+      orderData,
       listingId,
       isOwnListing,
     });
@@ -373,6 +379,103 @@ const showPreviousMonthStepper = (currentMonth, timeZone) => {
   return isDateSameOrAfter(prevMonthDate, currentMonthDate);
 };
 
+const getStartAndEndOnTimeZone = (startDate, endDate, isDaily, timeZone) => {
+  // Parse the startDate and endDate into the target time zone
+  const parsedStart = startDate
+    ? getStartOf(timeOfDayFromLocalToTimeZone(startDate, timeZone), 'day', timeZone)
+    : startDate;
+
+  const parsedEnd = endDate
+    ? getStartOf(timeOfDayFromLocalToTimeZone(endDate, timeZone), 'day', timeZone)
+    : endDate;
+
+  // Adjust endDate for API if isDaily is true
+  const endDateForAPI = parsedEnd && isDaily ? getExclusiveEndDate(parsedEnd, timeZone) : parsedEnd;
+
+  // Return the processed dates
+  return { startDate: parsedStart, endDate: endDateForAPI };
+};
+
+// return a list of timeslots that exist between startDate and endDate
+const filterTimeSlotsByDate = (allTimeSlots, startDate, endDate) => {
+  return Object.values(allTimeSlots).filter(
+    ({ attributes: { start, end } }) =>
+      // Check if the timeslot is within or overlaps with the selected dates
+      (start < startDate && end > startDate) ||
+      (start >= startDate && end <= endDate) ||
+      (start < endDate && end > endDate)
+  );
+};
+
+// Finds the timeslot with the smallest number of seats
+const findMinSeatsTimeSlot = timeSlots => {
+  return timeSlots.reduce((minSeatsSlot, timeSlot) => {
+    const { seats } = timeSlot.attributes;
+    return !minSeatsSlot || seats < minSeatsSlot.seats ? timeSlot.attributes : minSeatsSlot;
+  }, null);
+};
+
+// Main function to get the seat options based on the minimum seats available in the date range
+const getMinSeatsOptions = (allTimeSlots, startDate, endDate) => {
+  if (!startDate || !endDate) {
+    return [];
+  }
+  const filteredTimeSlots = filterTimeSlotsByDate(allTimeSlots, startDate, endDate);
+  const minSeatsSlot = findMinSeatsTimeSlot(filteredTimeSlots);
+
+  // Return the array of seat options from 1 to the minimum seats available, capped at 100
+  const maxOptions = 100;
+  return minSeatsSlot
+    ? Array.from({ length: Math.min(minSeatsSlot.seats, maxOptions) }, (_, i) => i + 1)
+    : [];
+};
+
+// Checks if two timeslots are consequtive
+const areConsecutiveTimeSlots = (timeSlotA, timeSlotB) =>
+  new Date(timeSlotA.attributes.end).getTime() === new Date(timeSlotB.attributes.start).getTime();
+
+// Find the index of a the first consecutive timeslot in a list of timeslots
+const findIndexOfFirstConsecutiveTimeSlot = (timeSlots, index) =>
+  index > 0 && areConsecutiveTimeSlots(timeSlots[index - 1], timeSlots[index])
+    ? findIndexOfFirstConsecutiveTimeSlot(timeSlots, index - 1)
+    : index;
+
+// find the index of the last consecutive timeslot in a list of timeslots
+const findIndexOfLastConsecutiveTimeSlot = (timeSlots, index) =>
+  index < timeSlots.length - 1 && areConsecutiveTimeSlots(timeSlots[index], timeSlots[index + 1])
+    ? findIndexOfLastConsecutiveTimeSlot(timeSlots, index + 1)
+    : index;
+
+// Find and combine adjacent/consecutive timeslots into one timeslot
+const combineConsecutiveTimeSlots = (slots, startDate) => {
+  // Locate the index of the timeslot containing startDate
+  const startIndex = slots.findIndex(({ attributes }) => {
+    const { start, end } = attributes;
+    const startTime = new Date(start).getTime();
+    const endTime = new Date(end).getTime();
+    return startDate.getTime() >= startTime && startDate.getTime() < endTime;
+  });
+
+  // Return empty array if no timeslot matches startDate
+  if (startIndex === -1) return [];
+
+  // Determine the full range of consecutive timeslots
+  const indexOfFirstTimeSlot = findIndexOfFirstConsecutiveTimeSlot(slots, startIndex);
+  const indexOfLastTimeSlot = findIndexOfLastConsecutiveTimeSlot(slots, startIndex);
+
+  // Combine the consecutive timeslots into a single slot
+  const combinedSlot = {
+    ...slots[indexOfFirstTimeSlot],
+    attributes: {
+      ...slots[indexOfFirstTimeSlot].attributes,
+      start: slots[indexOfFirstTimeSlot].attributes.start,
+      end: slots[indexOfLastTimeSlot].attributes.end,
+    },
+  };
+
+  return [combinedSlot];
+};
+
 export const BookingDatesFormComponent = props => {
   const {
     rootClassName,
@@ -388,6 +491,7 @@ export const BookingDatesFormComponent = props => {
     payoutDetailsWarning,
     monthlyTimeSlots,
     onMonthChanged,
+    seatsEnabled,
     ...rest
   } = props;
 
@@ -438,12 +542,14 @@ export const BookingDatesFormComponent = props => {
 
   const classes = classNames(rootClassName || css.root, className);
 
-  const onFormSpyChange = handleFormSpyChange(
+  const onHandleFetchLineItems = calculateLineItems(
     listingId,
     isOwnListing,
     fetchLineItemsInProgress,
-    onFetchTransactionLineItems
+    onFetchTransactionLineItems,
+    seatsEnabled
   );
+
   return (
     <FinalForm
       {...rest}
@@ -460,6 +566,7 @@ export const BookingDatesFormComponent = props => {
           lineItems,
           fetchLineItemsError,
           onFetchTimeSlots,
+          form: formApi,
         } = formRenderProps;
         const { startDate, endDate } = values && values.bookingDates ? values.bookingDates : {};
 
@@ -482,7 +589,6 @@ export const BookingDatesFormComponent = props => {
                 endDate,
               }
             : null;
-
         const showEstimatedBreakdown =
           breakdownData && lineItems && !fetchLineItemsInProgress && !fetchLineItemsError;
 
@@ -499,6 +605,11 @@ export const BookingDatesFormComponent = props => {
         const endDatePlaceholderText =
           endDatePlaceholder || intl.formatDate(tomorrow, dateFormatOptions);
 
+        const relevantTimeSlots =
+          seatsEnabled && startDate && !endDate
+            ? combineConsecutiveTimeSlots(allTimeSlots, startDate)
+            : allTimeSlots;
+
         const onMonthClick = handleMonthClick(
           currentMonth,
           monthlyTimeSlots,
@@ -508,7 +619,7 @@ export const BookingDatesFormComponent = props => {
           onFetchTimeSlots
         );
         const isDayBlocked = isDayBlockedFn({
-          allTimeSlots,
+          allTimeSlots: relevantTimeSlots,
           monthlyTimeSlots,
           isDaily: lineItemUnitType === LINE_ITEM_DAY,
           startDate,
@@ -516,19 +627,26 @@ export const BookingDatesFormComponent = props => {
           timeZone,
         });
         const isOutsideRange = isOutsideRangeFn(
-          allTimeSlots,
+          relevantTimeSlots,
           monthlyTimeSlots,
           startDate,
           endDate,
           lineItemUnitType,
           dayCountAvailableForBooking,
-          timeZone
+          timeZone,
+          seatsEnabled
+        );
+
+        const seatsOptions = getMinSeatsOptions(
+          relevantTimeSlots,
+          values?.bookingDates?.startDate,
+          values?.bookingDates?.endDate
         );
 
         const isDaily = lineItemUnitType === LINE_ITEM_DAY;
+
         return (
           <Form onSubmit={handleSubmit} className={classes} enforcePagePreloadFor="CheckoutPage">
-            <FormSpy subscription={{ values: true }} onChange={onFormSpyChange} />
             <FieldDateRangePicker
               className={css.bookingDates}
               name="bookingDates"
@@ -559,17 +677,7 @@ export const BookingDatesFormComponent = props => {
               }}
               parse={v => {
                 const { startDate, endDate } = v || {};
-                // Parse the DateRangePicker's value (local 00:00) for the Final Form
-                // The form expects listing's time zone and start of day aka 00:00
-                const parsedStart = startDate
-                  ? getStartOf(timeOfDayFromLocalToTimeZone(startDate, timeZone), 'day', timeZone)
-                  : startDate;
-                const parsedEnd = endDate
-                  ? getStartOf(timeOfDayFromLocalToTimeZone(endDate, timeZone), 'day', timeZone)
-                  : endDate;
-                const endDateForAPI =
-                  parsedEnd && isDaily ? getExclusiveEndDate(parsedEnd, timeZone) : parsedEnd;
-                return v ? { startDate: parsedStart, endDate: endDateForAPI } : v;
+                return v ? getStartAndEndOnTimeZone(startDate, endDate, isDaily, timeZone) : v;
               }}
               useMobileMargins
               validate={composeValidators(
@@ -582,7 +690,7 @@ export const BookingDatesFormComponent = props => {
               )}
               isDayBlocked={isDayBlocked}
               isOutsideRange={isOutsideRange}
-              isBlockedBetween={isBlockedBetween(allTimeSlots, timeZone)}
+              isBlockedBetween={isBlockedBetween(relevantTimeSlots, timeZone)}
               disabled={fetchLineItemsInProgress}
               showPreviousMonthStepper={showPreviousMonthStepper(currentMonth, timeZone)}
               showNextMonthStepper={showNextMonthStepper(
@@ -598,7 +706,56 @@ export const BookingDatesFormComponent = props => {
               onClose={() => {
                 setCurrentMonth(startDate || endDate || startOfToday);
               }}
+              onChange={values => {
+                const { startDate: startDateFromValues, endDate: endDateFromValues } = values || {};
+                const { startDate, endDate } = values
+                  ? getStartAndEndOnTimeZone(
+                      startDateFromValues,
+                      endDateFromValues,
+                      isDaily,
+                      timeZone
+                    )
+                  : {};
+                if (seatsEnabled) {
+                  formApi.change('seats', 1);
+                }
+                onHandleFetchLineItems({
+                  values: {
+                    startDate,
+                    endDate,
+                    seats: seatsEnabled ? 1 : undefined,
+                  },
+                });
+              }}
             />
+
+            {seatsEnabled ? (
+              <FieldSelect
+                name="seats"
+                id="seats"
+                label={intl.formatMessage({ id: 'BookingDatesForm.seatsTitle' })}
+                disabled={!(startDate && endDate)}
+                className={css.fieldSeats}
+                onChange={values => {
+                  onHandleFetchLineItems({
+                    values: {
+                      startDate: startDate,
+                      endDate: endDate,
+                      seats: values,
+                    },
+                  });
+                }}
+              >
+                <option disabled value="">
+                  {intl.formatMessage({ id: 'BookingDatesForm.seatsPlaceholder' })}
+                </option>
+                {seatsOptions.map(s => (
+                  <option value={s} key={s}>
+                    {s}
+                  </option>
+                ))}
+              </FieldSelect>
+            ) : null}
 
             {showEstimatedBreakdown ? (
               <div className={css.priceBreakdownContainer}>

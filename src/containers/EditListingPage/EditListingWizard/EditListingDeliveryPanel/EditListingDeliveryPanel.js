@@ -191,7 +191,10 @@ const EditListingDeliveryPanel = props => {
         />
       ) : (
         <div className={css.priceCurrencyInvalid}>
-          <FormattedMessage id="EditListingPricingPanel.listingPriceCurrencyInvalid" />
+          <FormattedMessage
+            id="EditListingPricingPanel.listingPriceCurrencyInvalid"
+            values={{ marketplaceCurrency }}
+          />
         </div>
       )}
     </div>

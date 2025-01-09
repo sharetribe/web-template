@@ -8,7 +8,13 @@ import {
   constructQueryParamName,
 } from '../../util/search';
 import { createSlug, parse, stringify } from '../../util/urlHelpers';
-import { getStartOf, parseDateFromISO8601, subtractTime } from '../../util/dates';
+import {
+  getStartOf,
+  parseDateFromISO8601,
+  subtractTime,
+  addTime,
+  stringifyDateToISO8601,
+} from '../../util/dates';
 import { isFieldForCategory } from '../../util/fieldHelpers';
 
 /**
@@ -81,6 +87,8 @@ export const validURLParamForExtendedData = (
       startDate.getTime() <= endDate.getTime();
 
     return hasValidDates ? { [queryParamName]: paramValue } : {};
+  } else if (queryParamName === 'seats') {
+    return paramValue ? { [queryParamName]: paramValue } : {};
   }
 
   // Resolve configurations for extended data filters
@@ -457,4 +465,33 @@ export const createSearchResultSchema = (
       mainEntity: [schemaMainEntity],
     },
   };
+};
+
+export const getDatesAndSeatsMaybe = (currentParams, newParams) => {
+  const { seats, dates: newDates } = newParams;
+  const { dates: currentDates } = currentParams;
+
+  // Determine which dates and seats to use:
+  // - if newDates has a value, it was just selected
+  // - if newDates is null, it was just cleared
+  // - if newDates is undefined, it was not modified, and we use currentDates
+  const dates = !!newDates || newDates === null ? newDates : currentDates;
+
+  const today = stringifyDateToISO8601(new Date());
+  const aWeekFromNow = stringifyDateToISO8601(addTime(today, 7, 'day'));
+  // Get parameters for dates and seats:
+  // - If both dates and seats are included, pass both
+  // - Dates can be queried without seats
+  // - Seats cannot be queried without dates – pass a default date range
+  //   of one week with the provided seats value
+  // - If neither dates nor seats exist, set them to null to clear them from search
+  const datesAndSeatsMaybe =
+    dates && seats
+      ? { dates, seats }
+      : dates
+      ? { dates }
+      : seats
+      ? { seats, dates: `${today},${aWeekFromNow}` }
+      : { seats: null, dates: null };
+  return datesAndSeatsMaybe;
 };

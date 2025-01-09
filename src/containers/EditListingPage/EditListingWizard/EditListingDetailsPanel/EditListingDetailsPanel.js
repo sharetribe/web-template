@@ -387,7 +387,9 @@ const EditListingDetailsPanel = props => {
           categoryPrefix={categoryKey}
           onListingTypeChange={onListingTypeChange}
           listingFieldsConfig={listingFields}
+          listingCurrency={listing?.attributes?.price?.currency}
           marketplaceCurrency={config.currency}
+          marketplaceName={config.marketplaceName}
           disabled={disabled}
           ready={ready}
           updated={panelUpdated}

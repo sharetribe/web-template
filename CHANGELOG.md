@@ -12,9 +12,41 @@ way to update this template, but currently, we follow a pattern:
 
 ---
 
-## Upcoming version 2024-XX-XX
+## Upcoming version 2025-XX-XX
 
-- [change] Node v23.2 is failing. Add engine rule for node (">=18.20.1 <23.2.0") for now.
+- [add] Add currently available translations for DE, ES, FR.
+  [#524](https://github.com/sharetribe/web-template/pull/524)
+- [change] Update the wording of the numberTooSmall error message for consistency.
+  [#522](https://github.com/sharetribe/web-template/pull/522)
+
+## [v6.3.0] 2025-01-08
+
+- [fix] fix a bug with seats handling in email templates.
+  [#518](https://github.com/sharetribe/web-template/pull/518)
+- [add] Add support for using multiple seats on default-booking process.
+  [#502](https://github.com/sharetribe/web-template/pull/502)
+- [fix] ListingPageVariant: the #author anchor was not pointing to ListingPageVariant.
+  [#515](https://github.com/sharetribe/web-template/pull/515)
+- [fix] target element didn't seem to work well with scroll-margin.
+  [#513](https://github.com/sharetribe/web-template/pull/513)
+- [change] Require account type when creating a Stripe account
+  [#512](https://github.com/sharetribe/web-template/pull/512)
+- [add] Add currently available translations for DE, ES, FR.
+  [#511](https://github.com/sharetribe/web-template/pull/511)
+
+  [v6.3.0]: https://github.com/sharetribe/web-template/compare/v6.2.0...v6.3.0
+
+## [v6.2.0] 2024-11-26
+
+- [add] Remove bank account collection from the template, so that it is collected in the Stripe
+  Onboarding flow instead. [#470](https://github.com/sharetribe/web-template/pull/470)
+- [add] Add currently available translations for DE, ES, FR.
+  [#508](https://github.com/sharetribe/web-template/pull/508)
+- [add] Add support for currencies not supported by Stripe in inquiry processes.
+  [#493](https://github.com/sharetribe/web-template/pull/493)
+- SingeDatePicker: don't update value to dateData if it has the same timestamp has not changed.
+  [#507](https://github.com/sharetribe/web-template/pull/507)
+- [change] Node v23.2 is failing. This adds engine rule for node (">=18.20.1 <23.2.0") for now.
   [#505](https://github.com/sharetribe/web-template/pull/505)
 - [change] Update mapbox-gl-js (v1.0.0 => v3.7.0) and mapbox-sdk-js (0.6.0 => 0.16.1) Note: Mapbox
   license changed in v2 (and pricing for non-mapbox related map tiles)
@@ -35,6 +67,8 @@ way to update this template, but currently, we follow a pattern:
 - [fix] Open discard modal on ManageListingsPage only if scrolling is disabled. Fixes an issue where
   opening the discard draft modal on mobile scrolled the page to the very bottom.
   [#497](https://github.com/sharetribe/web-template/pull/497)
+
+  [v6.2.0]: https://github.com/sharetribe/web-template/compare/v6.1.0...v6.2.0
 
 ## [v6.1.0] 2024-11-06
 
