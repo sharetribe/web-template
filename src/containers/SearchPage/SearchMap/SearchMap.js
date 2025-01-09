@@ -138,7 +138,7 @@ export class SearchMapComponent extends Component {
       rootClassName,
       reusableContainerClassName,
       bounds,
-      center,
+      center = null,
       location,
       listings: originalListings,
       onMapMoveEnd,
