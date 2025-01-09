@@ -283,7 +283,7 @@ const TimeRangeSelects = props => {
       )}
       <div className={css.fieldArrayDelete} onClick={onRemove} style={{ cursor: 'pointer' }}>
         <IconDelete rootClassName={css.deleteIcon} />
-        Delete
+        <FormattedMessage id="EditListingAvailabilityPlanForm.delete" />
       </div>
     </div>
   );
