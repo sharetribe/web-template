@@ -772,7 +772,7 @@
   "SearchPage.schemaDescription": "Showing search results",
   "SearchPage.schemaForSearch": "a query",
   "SearchPage.schemaTitle": "Search results for {searchTitle} | {marketplaceName}",
-  "SeatsFilter.labelSelected":"Seats: {seatCount}",
+  "SeatsFilter.labelSelected": "Seats: {seatCount}",
   "SearchPage.searchError": "Search failed. Please try again.",
   "SelectMultipleFilter.labelSelected": "{labelText} • {count}",
   "SelectMultipleFilterPlainForm.labelSelected": "• {count}",
