@@ -14,8 +14,10 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Add currently available translations for DE, ES, FR.
+  [#511](https://github.com/sharetribe/web-template/pull/511)
 - [change] Update the wording of the numberTooSmall error message for consistency.
-  [#522](https://github.com/sharetribe/web-template/pull/522)
+  [#524](https://github.com/sharetribe/web-template/pull/524)
 
 ## [v6.3.0] 2025-01-08
 
