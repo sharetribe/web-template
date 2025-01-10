@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Add currently available translations for DE, ES, FR.
+  [#527](https://github.com/sharetribe/web-template/pull/527)
 - [fix] AvailabilityPlanForm had a hard-coded "Delete" text.
   [#525](https://github.com/sharetribe/web-template/pull/525)
 - [add] Add currently available translations for DE, ES, FR.

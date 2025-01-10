@@ -205,6 +205,7 @@
   "EditListingAvailabilityPlanForm.dayOfWeek.thu": "Donnerstag",
   "EditListingAvailabilityPlanForm.dayOfWeek.tue": "Dienstag",
   "EditListingAvailabilityPlanForm.dayOfWeek.wed": "Mittwoch",
+  "EditListingAvailabilityPlanForm.delete": "Delete",
   "EditListingAvailabilityPlanForm.endTimePlaceholder": "Ende",
   "EditListingAvailabilityPlanForm.hoursOfOperationTitle": "Wochenplan",
   "EditListingAvailabilityPlanForm.plus1Day": "+1 Tag",
