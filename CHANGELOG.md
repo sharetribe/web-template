@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] a link inside the inquiry message was invisible for the sender of the inquiry.
+  [#528](https://github.com/sharetribe/web-template/pull/528)
 - [add] Add currently available translations for DE, ES, FR.
   [#527](https://github.com/sharetribe/web-template/pull/527)
 - [fix] AvailabilityPlanForm had a hard-coded "Delete" text.
