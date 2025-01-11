@@ -18,7 +18,7 @@ import SectionBuilder from './SectionBuilder/SectionBuilder.js';
 import StaticPage from './StaticPage.js';
 
 import css from './PageBuilder.module.css';
-import ActionTeamButtons from '../../components/ActionTeamButtons/ActionTeamButtons.js';
+
 
 const getMetadata = (meta, schemaType, fieldOptions) => {
   const { pageTitle, pageDescription, socialSharing } = meta;
@@ -194,7 +194,6 @@ function PageBuilder(props) {
                             <Sponsors />
                             <TrustPilot />
                             <WhyUs />
-                            <ActionTeamButtons />
                             <Newsletter isTeamBuilding={isTeamBuilding} />
                           </>
                         ) : (

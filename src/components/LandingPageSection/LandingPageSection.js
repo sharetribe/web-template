@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import css from './LandingPageSection.module.css';
 import landingCoverR from '../../media/landingCoverR.JPG';
+import video from '../../media/video/video.mp4';
 import landingPE from '../../media/landingPE.JPG';
 import SurveyForm from '../SurveyForm/SurveyForm';
 import VideoContainer from '../VideoContainer/VideoContainer';
@@ -123,12 +124,12 @@ function LandingPageSection({ onSearchSubmit }) {
           className={css.backgroundVideo}
         >
           <source
-            src="https://www.w3schools.com/howto/rain.mp4"
+            src={video}
             type="video/mp4"
           />
         </video>
         <div className={css.emptyDiv2}>
-              <h1 style={{fontSize:"1.5rem"}}>
+              <h1 style={{fontSize:"2rem"}}>
               Creatività che fa la differenza
               </h1>
               <p style={{color:"white", fontSize:"1.2rem"}}>

@@ -15,7 +15,7 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 40px;
+  gap: 4px;
   text-align: left;
 }
 
@@ -36,8 +36,16 @@
   line-height: 1.5;
 }
 
+.buttonContainer {
+  margin-top: 50px;
+}
+
 @media (max-width: 768px) {
   .container {
     height: 100vh;
+  }
+
+  .buttonContainer {
+    margin-top: 20px;
   }
 }

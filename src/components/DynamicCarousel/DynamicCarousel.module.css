@@ -4,6 +4,7 @@
   justify-content: center;
   align-items: center;
   gap: 10px;
+  height: 50vh;
 }
 
 .image {
@@ -69,9 +70,9 @@
 
 @media (max-width: 768px) {
 
-
     .container {
-      height: 50vh;
+      height: 75vh;
+      margin-top: 25vh;
     }
   
   .carousel {
@@ -97,5 +98,12 @@
     font-size: 2rem;
     cursor: pointer;
     padding: 0 10px;
+  }
+
+  .buttonContainer {
+    margin-top: 5vh;
+  }
+  .title{
+    margin-bottom: 5vh;
   }
 }

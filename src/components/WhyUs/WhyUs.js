@@ -1,5 +1,6 @@
 import React from 'react';
 import css from './WhyUs.module.css';
+import ActionTeamButtons from '../ActionTeamButtons/ActionTeamButtons';
 const WhyUs = () => {
   return (
     <div className={css.container}>
@@ -41,6 +42,9 @@ const WhyUs = () => {
           La creatività in tutte le sue forme, scegliete il vostro artigiano preferito 
           </p>
         </div>
+      </div>
+      <div className={css.buttonContainer} >
+      <ActionTeamButtons  />
       </div>
     </div>
   );

@@ -5,6 +5,7 @@
   text-align: center;
   width: 100%;
   background-color: white;
+  height: 50vh;
 }
 
 .title {
@@ -15,8 +16,8 @@
 }
 
 .image {
-  width: 250px; 
-  height: 250px; 
+  width: 350px; 
+  height: 350px; 
   object-fit: contain; 
   transition: transform 0.3s ease; /* Smooth transition for zoom effect */
 }
@@ -44,7 +45,6 @@
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  width: 80%;
 }
 
 .arrow {
@@ -69,7 +69,8 @@
 
 @media (max-width: 768px) {
   .container {
-    height: 100vh;
+    height: 75vh;
+    margin-top: 25vh;
   }
 
   .steps {
