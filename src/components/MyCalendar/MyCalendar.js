@@ -195,17 +195,18 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
           )}
         </>
       ) : showEventForm ? (
-        <EventForm
-          onSubmit={handleCreateEvent}
-          onCancel={() => setShowEventForm(false)}
-        />
+      
+        null
       ) : (
         <AttendanceForm activity={calendarEvent} onBack={handleBack} />
       )}
     </div>
   );
 }
-
+{ /*<EventForm
+  onSubmit={handleCreateEvent}
+  onCancel={() => setShowEventForm(false)}
+/>*/}
 const mapStateToProps = (state) => ({
   transactionRefs: state.InboxPage.transactionRefs,
   transactions: state.InboxPage.transactions,

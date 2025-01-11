@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
 import styles from './TrustPilot.module.css';
+import r1 from '../../media/landing/r1.JPG';
+import r2 from '../../media/landing/r2.JPG';
+import r3 from '../../media/landing/r3.JPG';
 
 const reviews = [
   {
     text: 'Siamo un team di 30 persone, con età e background diversissimi. Siamo arrivati al workshop un po’ titubanti—chi pensava di essere negato, chi aveva mille scadenze in testa. Ma bastava vedere il sorriso di ognuno mentre ci si sporcava le mani per capire che stavamo vivendo qualcosa di unico. Per qualche ora, non c’erano ruoli, generazioni o gerarchie. Solo mani impiastricciate e idee che volavano.',
-    image: 'https://picsum.photos/400/300?random=1',
+    image: r1,
   },
   {
     text: 'Abbiamo trascorso una giornata incredibile, ricca di creatività e collaborazione. Non importa da dove venivamo o cosa facevamo prima—ci siamo uniti in un’esperienza che ci ha lasciati ispirati e motivati.',
-    image: 'https://picsum.photos/400/300?random=2',
+    image: r2,
   },
   {
     text: 'L’energia del team era contagiosa! Per un giorno ci siamo lasciati alle spalle le distrazioni e abbiamo trovato una nuova connessione con i colleghi, scoprendo idee e risate che non immaginavamo.',
-    image: 'https://picsum.photos/400/300?random=3',
+    image: r3
   },
 ];
 
