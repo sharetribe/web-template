@@ -75,11 +75,11 @@
   font-size: 20px;
   margin: 0 2px;
 }
-
 @media (max-width: 768px) {
   .container {
-   height: 100vh;
+    height: 90vh;
   }
+
   .carousel {
     flex-direction: column;
   }
@@ -90,22 +90,30 @@
     text-align: center;
     margin: 20px 0;
     max-width: 100%;
+    display: flex;
+    justify-content: center; /* Ensure the content is centered */
   }
 
   .text {
     margin-right: 0;
     margin-bottom: 20px;
-  }  
+    min-height: 100px; 
+    display: flex;
+    align-items: flex-start; /* Align text at the top */
+    justify-content: flex-start; /* Keep text aligned at the top */
+    line-height: 1.5;
+  }
 
   .image {
     max-width: 100%;
+    width: 250px;
     margin: 0 auto;
   }
 
   .arrowsMobile {
     display: flex;
     gap: 10px;
-    margin-bottom: 10px; 
+    margin-bottom: 10px;
   }
 
   .arrow {
