@@ -16,11 +16,10 @@ const normalizeNames = (names) => {
 };
 
 function AttendanceForm({ activity, onBack }) {
-
   const [checkedNames, setCheckedNames] = useState([]);
   const intl = useIntl();
 
-  const eventIdentifier = activity?.resource?.eventIdentifier || 'unknownEvent';
+  const eventIdentifier = activity?.title || 'unknownEvent';
 
   const normalizedNames = normalizeNames(activity?.names ?? []);
   const names = normalizedNames.filter((name) => !name.includes('day'));

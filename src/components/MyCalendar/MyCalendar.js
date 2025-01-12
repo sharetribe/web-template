@@ -11,7 +11,7 @@ import {
 } from '../../containers/ManageListingsPage/ManageListingsPage.duck';
 import { fetchCurrentUserTransactions } from '../../ducks/user.duck';
 import AttendanceForm from '../AttendanceForm/AttendanceFrom';
-import EventForm from '../EventForm/EventForm';
+
 
 const randomId = () => uuidv4();
 const localizer = momentLocalizer(moment);
@@ -165,7 +165,6 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
             endAccessor="end"
             style={{ height: 500, margin: '100px' }}
           />
-          <button onClick={() => setShowEventForm(true)}>Create Event</button>
           {selectedListing && selectedEventDate && (
             <div
               style={{
@@ -194,19 +193,13 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
             </div>
           )}
         </>
-      ) : showEventForm ? (
-      
-        null
       ) : (
         <AttendanceForm activity={calendarEvent} onBack={handleBack} />
       )}
     </div>
   );
 }
-{ /*<EventForm
-  onSubmit={handleCreateEvent}
-  onCancel={() => setShowEventForm(false)}
-/>*/}
+
 const mapStateToProps = (state) => ({
   transactionRefs: state.InboxPage.transactionRefs,
   transactions: state.InboxPage.transactions,
