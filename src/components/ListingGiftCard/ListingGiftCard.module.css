@@ -156,3 +156,23 @@
   color: black; 
   text-align: center; 
 }
+
+@media (max-width: 768px) {
+  .aspectRatioWrapper {
+    background: none;
+    border-radius: 10px;
+    width: 300px; 
+    height: 250px;
+    overflow: hidden; 
+    object-fit: contain;
+ 
+   
+  
+    @media (--viewportMedium) {
+      &:hover {
+        transform: scale(1.05); 
+        box-shadow: var(--boxShadowListingCard);
+      }
+    }
+  }
+}

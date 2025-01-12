@@ -119,12 +119,14 @@ function TopbarMobileMenu(props) {
               <FormattedMessage id="TopbarDesktop.team" />
             </NamedLink>
           </div>
+          <br />
+            <NamedLink name="GiftCardsPage">
+              Gift cards
+            </NamedLink>
         </div>
 
         <div className={css.footer}>
-          <NamedLink className={css.createNewListingLink} name="NewListingPage">
-            <FormattedMessage id="TopbarMobileMenu.newListingLink" />
-          </NamedLink>
+         
         </div>
 
         {/* Language Selector for Unauthenticated Users 

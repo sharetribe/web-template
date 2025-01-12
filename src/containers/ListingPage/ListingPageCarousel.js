@@ -3,7 +3,7 @@ import { array, arrayOf, bool, func, shape, string, oneOf, object } from 'prop-t
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
-
+import {ProtectedComponent} from '../../components/ProtectedComponent/ProtectedComponent';
 // Contexts
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
@@ -311,6 +311,7 @@ export function ListingPageComponent(props) {
         },
       }}
     >
+       <ProtectedComponent>
       <LayoutSingleColumn className={css.pageRoot} topbar={topbar} footer={<FooterContainer />}>
         <div className={css.contentWrapperForProductLayout}>
           <div className={css.mainColumnForProductLayout}>
@@ -417,6 +418,7 @@ export function ListingPageComponent(props) {
           </div>
         </div>
       </LayoutSingleColumn>
+      </ProtectedComponent>
     </Page>
   );
 }

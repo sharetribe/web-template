@@ -1,33 +1,45 @@
 <!doctype html>
 <html data-htmlattr="htmlAttributes">
-  <head>
-    <meta charset="utf-8">
-     <!--!title-->
-     <meta name="viewport" content="width=device-width, initial-scale=1">
-     <meta name="google-site-verification" content="qEM6y77Db2yP4swPsIpUayX4koQ6oOwUp6j3eGTAjF8" />
-     <!--!meta-->
- <!-- Favicons and app icons -->
-    <!-- If you want more control, you can create icons using https://realfavicongenerator.net/ and remove generated webmanifest from the server and Page -->
-    <!-- Note: we generate web app manifest from design/branding.json, and it is set in src/components/Page/Page component -->
-    <!-- Note: we don't use favicon.ico by default. However, favicon-48x48.png, favicon-32x32.png, favicon-16x16.png and apple-touch-icon come from hosted assets / Console -->
-        <!-- End Favicons -->
-    <!-- Meta Pixel Code -->
-    <script>
-      !function(f,b,e,v,n,t,s)
-      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-      n.queue=[];t=b.createElement(e);t.async=!0;
-      t.src=v;s=b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t,s)}(window, document,'script',
+
+<head>
+  <meta charset="utf-8">
+  <!--!title-->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="google-site-verification" content="qEM6y77Db2yP4swPsIpUayX4koQ6oOwUp6j3eGTAjF8" />
+  <!--!meta-->
+  <!-- Favicons and app icons -->
+  <!-- If you want more control, you can create icons using https://realfavicongenerator.net/ and remove generated webmanifest from the server and Page -->
+  <!-- Note: we generate web app manifest from design/branding.json, and it is set in src/components/Page/Page component -->
+  <!-- Note: we don't use favicon.ico by default. However, favicon-48x48.png, favicon-32x32.png, favicon-16x16.png and apple-touch-icon come from hosted assets / Console -->
+  <!-- End Favicons -->
+  <!-- Meta Pixel Code -->
+  <script>
+    !function (f, b, e, v, n, t, s) {
+      if (f.fbq) return; n = f.fbq = function () {
+        n.callMethod ?
+        n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+      };
+      if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+      n.queue = []; t = b.createElement(e); t.async = !0;
+      t.src = v; s = b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t, s)
+    }(window, document, 'script',
       'https://connect.facebook.net/en_US/fbevents.js');
-      fbq('init', '1056052969350467'); // Replace with your Meta Pixel ID
-      fbq('track', 'PageView');
-    </script>
-    <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=1056052969350467&ev=PageView&noscript=1"
-    /></noscript>
-    <!-- End Meta Pixel Code -->
+    fbq('init', '1056052969350467'); // Replace with your Meta Pixel ID
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=1056052969350467&ev=PageView&noscript=1" /></noscript>
+  <!-- End Meta Pixel Code -->
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y76KSD1WPQ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y76KSD1WPQ');
+  </script>
 
     <!-- Calendly Pixel Code 
     <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript"></script>

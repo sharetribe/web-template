@@ -834,3 +834,24 @@ export const getStartOfWeek = (date, timeZone, firstDayOfWeek) =>
  */
 export const getMomentFromDate = (date, timeZone) =>
   timeZone ? moment(date).tz(timeZone) : moment(date);
+
+
+/** TEMP 15 MIN FIX */
+export const getPartial = (startLimit) => {
+  // Parse the date and time from the startLimit string
+  const date = new Date(startLimit);
+
+  // Extract timestamp in milliseconds
+  const timestamp = date.getTime();
+
+  // Extract time in HH:mm format
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const timeOfDay = `${hours}:${minutes}`;
+
+  // Return the output array with the desired format
+  return [{
+      timestamp: timestamp,
+      timeOfDay: timeOfDay
+  }];
+}
