@@ -28,6 +28,12 @@
   .logoGrid {
     grid-template-columns: 1fr 1fr; 
   }
+
+  .logoGrid .logo:last-child {
+    grid-column: 1 / -1; 
+    justify-self: center;
+  }
+
 }
 
 .logo {
@@ -35,7 +41,7 @@
   justify-content: center;
   align-items: center;
   width: 150px;
-  height: 150px;
+  height: 120px;
   border-radius: 5px;
   box-sizing: border-box;
 }

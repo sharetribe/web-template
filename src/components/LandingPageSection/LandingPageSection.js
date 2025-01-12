@@ -132,7 +132,7 @@ function LandingPageSection({ onSearchSubmit }) {
               <h1 style={{fontSize:"2rem"}}>
               Creatività che fa la differenza
               </h1>
-              <p style={{color:"white", fontSize:"1.2rem"}}>
+              <p className={css.teamText}>
               I nostri workshop creativi aiutano il tuo team a riscoprire collaborazione,<br/>
               pensiero critico e empatia - competenze che l’AI non può replicare. <br/><br/>
               Rafforziamo ciò che rende i tuoi dipendenti unici, stimolando un pensiero laterale che nessun algoritmo può imitare. 

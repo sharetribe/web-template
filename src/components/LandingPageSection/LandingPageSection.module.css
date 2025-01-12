@@ -117,6 +117,12 @@
   justify-content: center;
 }
 
+.teamText{
+  font-size: 1.2rem;
+  color:white;
+}
+
+
 
 @media (max-width: 768px) {
   .surveyContainer {
@@ -134,5 +140,9 @@
 
   .backgroundVideo{
     height:100vh;
+  }
+
+  .teamText{
+    text-align: justify
   }
 }

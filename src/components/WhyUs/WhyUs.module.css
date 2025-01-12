@@ -43,6 +43,8 @@
 @media (max-width: 768px) {
   .container {
     height: 100vh;
+    margin-top: 5vh;
+    margin-bottom: 5vh;
   }
 
   .buttonContainer {
