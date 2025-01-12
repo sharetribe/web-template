@@ -35,7 +35,6 @@ const TrustPilot = () => {
   return (
     <div className={styles.container}>
       <h2 className={styles.title}>Potresti essere tu</h2>
-
       <div className={styles.carousel}>
         <button className={styles.arrow} onClick={handlePrev}>
           &#8249;
