@@ -14,6 +14,7 @@ import {
   isValidCurrencyForTransactionProcess,
 } from '../../../../util/fieldHelpers';
 import { maxLength, required, composeValidators } from '../../../../util/validators';
+import { getSelectableCategoriesFromProductType } from '../../../../extensions/categoryConfig/utils';
 
 // Import shared components
 import {
@@ -24,6 +25,7 @@ import {
   Heading,
   CustomExtendedDataField,
 } from '../../../../components';
+import OnChange from '../../../../extensions/common/components/finalFormFieldListener/Onchange/OnChange';
 // Import modules from this directory
 import css from './EditListingDetailsForm.module.css';
 
@@ -298,7 +300,7 @@ const EditListingDetailsFormComponent = props => (
         marketplaceCurrency,
         marketplaceName,
         selectableListingTypes,
-        selectableCategories,
+        selectableCategories: allSelectableCategories,
         hasExistingListingType,
         pickSelectedCategories,
         categoryPrefix,
@@ -337,9 +339,13 @@ const EditListingDetailsFormComponent = props => (
         currencyToCheck
       );
 
+      const selectableCategories = Array.isArray(allSelectableCategories)
+        ? getSelectableCategoriesFromProductType(listingType, allSelectableCategories)
+        : [];
+
       const maxLength60Message = maxLength(maxLengthMessage, TITLE_MAX_LENGTH);
 
-      const hasCategories = selectableCategories && selectableCategories.length > 0;
+      const hasCategories = selectableCategories.length > 0;
       const showCategories = listingType && hasCategories;
 
       const showTitle = hasCategories ? allCategoriesChosen : listingType;
@@ -357,6 +363,36 @@ const EditListingDetailsFormComponent = props => (
         !hasMandatoryListingTypeData ||
         !isCompatibleCurrency;
 
+      const handleListingTypeChange = async () => {
+        const firstCategory = selectableCategories[0]?.id;
+        if (!firstCategory) {
+          return;
+        }
+
+        const isOnlyCategory = selectableCategories.length === 1;
+        const initialValue = isOnlyCategory ? firstCategory : null;
+
+        // Even though formApi.change is not async
+        // Using it trigger useEffect in FieldSelectCategory
+        // That useEffect try to set allCategoriesChosen as false because value is not updated yet
+        // We will set allCategoriesChosen again after
+        await formApi.change(`${categoryPrefix}1`, initialValue);
+        // This line to rerender the label after change category field value
+        formApi.focus(`${categoryPrefix}1`);
+
+        const selectedCatLength = Object.keys(values).filter(key => key.startsWith(categoryPrefix))
+          .length;
+        if (selectedCatLength > 1) {
+          for (let i = selectedCatLength; i > 1; i--) {
+            formApi.change(`${categoryPrefix}${i}`, null);
+          }
+        }
+
+        const categoryConfig = findCategoryConfig(selectableCategories, firstCategory)
+          .subcategories;
+        setAllCategoriesChosen(isOnlyCategory && (!categoryConfig || categoryConfig.length === 0));
+      };
+
       return (
         <Form className={classes} onSubmit={handleSubmit}>
           <ErrorMessage fetchErrors={fetchErrors} />
@@ -370,6 +406,11 @@ const EditListingDetailsFormComponent = props => (
             formId={formId}
             intl={intl}
           />
+          <OnChange name="listingType">
+            {() => {
+              handleListingTypeChange();
+            }}
+          </OnChange>
 
           {showCategories && isCompatibleCurrency && (
             <FieldSelectCategory
