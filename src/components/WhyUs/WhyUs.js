@@ -1,6 +1,7 @@
 import React from 'react';
 import css from './WhyUs.module.css';
 import ActionTeamButtons from '../ActionTeamButtons/ActionTeamButtons';
+import Newsletter from '../Newsletter/Newsletter';
 const WhyUs = () => {
   return (
     <div className={css.container}>
@@ -45,7 +46,9 @@ const WhyUs = () => {
       </div>
       <div className={css.buttonContainer} >
       <ActionTeamButtons  />
+      <Newsletter />
       </div>
+      
     </div>
   );
 };

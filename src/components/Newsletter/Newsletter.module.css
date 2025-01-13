@@ -57,7 +57,7 @@
 
 @media (max-width: 768px) {
   .formContainer {
-    margin-top: 15vh;
+    margin-top: 0vh;
   }
   .nameInput {
     margin-bottom: 5px;

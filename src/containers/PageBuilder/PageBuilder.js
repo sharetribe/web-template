@@ -194,7 +194,6 @@ function PageBuilder(props) {
                             <Sponsors />
                             <TrustPilot />
                             <WhyUs />
-                            <Newsletter isTeamBuilding={isTeamBuilding} />
                           </>
                         ) : (
                           <SectionBuilder sections={sections} options={options} />

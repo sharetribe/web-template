@@ -66,8 +66,8 @@
 
 @media (max-width: 768px) {
   .container {
-    height: 100vh;
-    margin-top: 25vh;
+    height: 60vh;
+    margin-top: 35vh;
   }
 
   .steps {

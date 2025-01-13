@@ -76,7 +76,7 @@
 
 @media (max-width: 768px) {
   .container {
-    height: 100vh;
+    height: 60vh;
     margin-bottom: 10vh;
     padding: 10px;
   }
