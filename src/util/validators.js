@@ -1,6 +1,7 @@
 import toPairs from 'lodash/toPairs';
 import { types as sdkTypes } from './sdkLoader';
 import { diffInTime } from './dates';
+import { extractYouTubeID } from './string';
 
 const { LatLng, Money } = sdkTypes;
 
@@ -139,6 +140,11 @@ export const validateInteger = (value, max, min, numberTooSmallMessage, numberTo
     return numberTooSmallMessage;
   }
   return VALID;
+};
+
+// If URL is passed to this function as null, will return VALID
+export const validateYoutubeURL = (url, message) => {
+  return url ? (extractYouTubeID(url) ? VALID : message) : VALID;
 };
 
 export const ageAtLeast = (message, minYears) => value => {

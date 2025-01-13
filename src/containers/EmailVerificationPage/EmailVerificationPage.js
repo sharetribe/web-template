@@ -68,7 +68,7 @@ export const EmailVerificationPageComponent = props => {
   // The first attempt to verify email is done when the page is loaded
   // If the verify API call is successfull and the user has verified email
   // We can redirect user forward from email verification page.
-  if (isVerified && user && user.attributes.emailVerified) {
+  if (isVerified && user.attributes.emailVerified && user.attributes.pendingEmail == null) {
     return <NamedRedirect name="LandingPage" />;
   }
 

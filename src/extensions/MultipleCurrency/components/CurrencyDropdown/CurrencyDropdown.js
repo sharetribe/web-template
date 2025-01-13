@@ -53,7 +53,6 @@ const CurrencyDropdown = props => {
       isOpen={isOpen}
       className={classes}
       contentPosition="right"
-      isFullWidthMobile={false}
     >
       <MenuLabel className={css.profileMenuLabel} isOpenClassName={css.profileMenuIsOpen}>
         <div className={css.currencyIcon}>

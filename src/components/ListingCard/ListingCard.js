@@ -1,5 +1,5 @@
 import React from 'react';
-import { string, func, bool } from 'prop-types';
+import { string, func, bool, oneOfType } from 'prop-types';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 
@@ -179,7 +179,7 @@ ListingCardComponent.propTypes = {
   className: string,
   rootClassName: string,
   intl: intlShape.isRequired,
-  listing: propTypes.listing.isRequired,
+  listing: oneOfType([propTypes.listing, propTypes.ownListing]).isRequired,
   showAuthorInfo: bool,
 
   // Responsive image sizes hint
