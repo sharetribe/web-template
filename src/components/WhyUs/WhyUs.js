@@ -46,7 +46,6 @@ const WhyUs = () => {
       </div>
       <div className={css.buttonContainer} >
       <ActionTeamButtons  />
-      <Newsletter />
       </div>
       
     </div>

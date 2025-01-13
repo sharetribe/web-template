@@ -194,6 +194,8 @@ function PageBuilder(props) {
                             <Sponsors />
                             <TrustPilot />
                             <WhyUs />
+                            <Newsletter />
+                            <br/>
                           </>
                         ) : (
                           <SectionBuilder sections={sections} options={options} />
