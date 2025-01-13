@@ -78,6 +78,7 @@
   .container {
     height: 75vh;
     padding: 10px;
+    margin-bottom: 10vh;
   }
 
   .carousel {
