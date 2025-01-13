@@ -23,6 +23,7 @@
 @media (max-width: 768px) {
   .container {
     height: 80vh;
+    margin-bottom: 10vh;
   }
 
   .logoGrid {
