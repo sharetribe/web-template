@@ -13,7 +13,7 @@ import loadable from '@loadable/component';
 import difference from 'lodash/difference';
 import mapValues from 'lodash/mapValues';
 import moment from 'moment';
-import "react-datepicker/dist/react-datepicker.css";
+
 // Configs and store setup
 import defaultConfig from './config/configDefault';
 import appSettings from './config/settings';
