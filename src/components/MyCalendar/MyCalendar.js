@@ -11,7 +11,7 @@ import {
 } from '../../containers/ManageListingsPage/ManageListingsPage.duck';
 import { fetchCurrentUserTransactions } from '../../ducks/user.duck';
 import AttendanceForm from '../AttendanceForm/AttendanceFrom';
-
+import EventForm from '../EventForm/EventForm';
 
 const randomId = () => uuidv4();
 const localizer = momentLocalizer(moment);
@@ -112,6 +112,7 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
 
   // Map mergedBookings to events to ensure only one event per date per listing
   const events = mergedBookings.map((booking) => {
+    console.log(booking);
     const listing = ownListings.find((listing) => listing.id.uuid === booking.listingId);
     
     // Check if protectedData exists and has names
@@ -165,6 +166,7 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
             endAccessor="end"
             style={{ height: 500, margin: '100px' }}
           />
+          <button onClick={() => setShowEventForm(true)}>Create Event</button>
           {selectedListing && selectedEventDate && (
             <div
               style={{
@@ -193,6 +195,11 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
             </div>
           )}
         </>
+      ) : showEventForm ? (
+        <EventForm
+          onSubmit={handleCreateEvent}
+          onCancel={() => setShowEventForm(false)}
+        />
       ) : (
         <AttendanceForm activity={calendarEvent} onBack={handleBack} />
       )}
