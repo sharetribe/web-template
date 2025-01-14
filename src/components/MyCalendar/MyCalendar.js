@@ -103,7 +103,9 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
     fetchCurrentUserTransactions()
       .then((response) => {
         const mergedData = mergeTransactionsAndBookings(response);
+        //fetched bookings from supabase
         setMergedBookings(mergedData);
+        //console.log('Merged bookings:', mergedData);
       })
       .catch((error) => {
         console.error('Error fetching user transactions:', error);
@@ -112,7 +114,6 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
 
   // Map mergedBookings to events to ensure only one event per date per listing
   const events = mergedBookings.map((booking) => {
-    console.log(booking);
     const listing = ownListings.find((listing) => listing.id.uuid === booking.listingId);
     
     // Check if protectedData exists and has names
@@ -149,12 +150,29 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
   };
 
   const handleCreateEvent = (eventData) => {
+    //console.log('Creating event:', eventData);
     setMergedBookings([...mergedBookings, eventData]);
     setShowEventForm(false);
   };
 
+  const eventPropGetter = (event) => {
+    const isManuale = event.title.includes('Manuale');
+    const backgroundColor = isManuale ?'lightcoral' : 'lightgreen';
+    return {
+      style: {
+        backgroundColor,
+        borderRadius: '5px',
+        opacity: 0.8,
+        color: 'black',
+        border: '0px',
+        display: 'block',
+      },
+    };
+  };
+
+
   return (
-    <div style={{ marginTop: '180px' }}>
+    <div style={{ marginTop: '150px' }}>
       {!showForm && !showEventForm ? (
         <>
           <Calendar
@@ -164,9 +182,10 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
             onNavigate={handleNavigate}
             startAccessor="start"
             endAccessor="end"
-            style={{ height: 500, margin: '100px' }}
+            style={{ height: 500, margin: '10px' }}
+            eventPropGetter={eventPropGetter}
           />
-          <button onClick={() => setShowEventForm(true)}>Create Event</button>
+          {/*<button onClick={() => setShowEventForm(true)}>Create Event</button>*/}
           {selectedListing && selectedEventDate && (
             <div
               style={{

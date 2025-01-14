@@ -1,8 +1,14 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "./react-datepicker.css";
+import css from "./EventForm.module.css";
+import { createClient } from '@supabase/supabase-js';
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
+const supabaseKey = process.env.REACT_APP_SUPABASE_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 import { v4 as uuidv4 } from 'uuid';
+
 
 const randomId = () => uuidv4();
 
@@ -12,13 +18,13 @@ const EventForm = ({ onSubmit, onCancel }) => {
   const [start, setStart] = useState(null);
   const [end, setEnd] = useState(null);
   const [names, setNames] = useState([]);
+  const [listingId, setListingId] = useState('n/a');
 
   const handleProviderChange = (e) => {
     const selectedProvider = e.target.value;
     setProvider(selectedProvider);
     if (selectedProvider === 'Clubjoy') {
       console.log('Fetching possible titles for Clubjoy...');
-      // Simulate fetch logic
       setTitle('Suggested Clubjoy Title');
     } else {
       setTitle(''); // Clear title for other providers
@@ -47,29 +53,48 @@ const EventForm = ({ onSubmit, onCancel }) => {
     setNames(nameList);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    /*
     if (provider === 'Clubjoy') {
       console.log('Calling API for Clubjoy event creation...');
     }
+    */
     onSubmit({
       id: randomId(),
-      listingId: '',
+      listingId,
       title,
       start,
       end,
-      seats: names.length, // Number of seats equals the number of names
-      protectedData: names
+      seats: names.length,
+      protectedData: { names }
     });
+
+    /*
+    const { data, error } = await supabase
+      .from('reservations')
+      .insert([newEvent]);
+
+    if (error) {
+      console.error('Error inserting data:', error);
+    } else {
+      console.log('Data inserted successfully:', data);
+      onSubmit(newEvent);
+    }
+    */
+
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className={css.container} onSubmit={handleSubmit}>
       <div>
         <label>Provider:</label>
-        <select value={provider} onChange={handleProviderChange}>
+        {/* onChange={handleProviderChange}*/}
+        <select value={provider}>
           <option value="Clubjoy">Clubjoy</option>
           <option value="AirBnb">AirBnb</option>
+          <option value="GetYourGuide">GetYourGuide</option>
+          <option value="Viator">Viator</option>
           <option value="Other">Other</option>
         </select>
       </div>
@@ -80,7 +105,16 @@ const EventForm = ({ onSubmit, onCancel }) => {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
-          disabled={provider === 'Clubjoy'}
+        //disabled={provider === 'Clubjoy'}
+        />
+      </div>
+      <div>
+        <label>Booking number (if any):</label>
+        <input
+          type="text"
+          value={listingId}
+          onChange={(e) => setListingId(e.target.value)}
+        //disabled={provider === 'Clubjoy'}
         />
       </div>
       <div>
@@ -107,7 +141,7 @@ const EventForm = ({ onSubmit, onCancel }) => {
           placeholderText="Select end date and time"
           minDate={start} // Ensure end date is not before start date
           filterDate={(date) => start && date.toDateString() === start.toDateString()}
-          filterTime={(time) => !start || time >= start} // Ensure time is not before start time
+          filterTime={(time) => !start || time >= new Date(start.getTime() + 15 * 60000)} // Ensure time is not before start time
           disabled={!start} // Disable until start is selected
         />
 
