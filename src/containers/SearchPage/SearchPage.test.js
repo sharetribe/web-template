@@ -209,6 +209,11 @@ const getConfig = (variantType, customListingFields) => {
       ...hostedConfig.layout,
       searchPage: { variantType },
     },
+    topbar: {
+      searchBar: {
+        display: 'always',
+      },
+    },
   };
 };
 
