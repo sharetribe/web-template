@@ -2,387 +2,75 @@
 
 .surveyContainer {
   display: flex;
-  align-items: stretch;
-  justify-content: center;
   width: 100%;
-  height: 100%;
-  flex-direction: column; /* Default to column for smaller screens */
+  height: auto; /* Let height expand based on content */
+  box-sizing: border-box; 
+}
+
+.backgroundVideo{
+  position: absolute;
+  width: 100%;
+  height:100vh;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.emptyDiv2 {
+  position: relative;
+  flex: 1;
+  text-align: center;
+  color: white;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.emptyDiv2 {
+  flex: 1 1 33%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.mobileContainer{
+  height: 100vh;
 }
 
 .emptyDiv {
   flex: 1;
 }
 
+.emptyDiv2 {
+  flex: 10;
+}
+
 .emptyText {
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: #ed514a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  white-space: wrap;
   padding: 50px;
-  margin-top: 80px;
-  margin-bottom: 100px;
-  margin-left: 20px;
-  line-height: 1.2;
+  font-size: 5rem;
+  line-height: 1.5;
+  margin-top: 50px;
+  color: #ed514a;
 }
 
-.surveyForm,
-.isTeamBuildingContainer {
+.surveyForm{
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-
-.option {
-  font-size: 12px;
-}
-
-.dropdown {
-  position: relative;
-}
-
-.dropdownContent,
-.dropdownContent2 {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  z-index: 1000;
-  background: white;
-  border: 1px solid #ccc;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  padding: 10px 0;
-}
-
-.dropdownLabel,
-.dropdownLabel2 {
-  display: grid;
-  grid-template-columns: min-content auto;
-  gap: 10px;
-  align-items: center;
-  padding: 5px 20px;
-}
-
-.dropdownLabel input[type='checkbox'] {
-  width: 25px;
-  height: 25px;
-  background: white;
-  border-radius: 5px;
-  border: 2px solid gray;
-  justify-self: start;
-  margin-right: 0;
-}
-
-.landingBarContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  height: 500px;
-  background-color: #fff;
-  background-size: cover;
-  padding-left: 40px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-
-.introText,
-.introText2 {
-  margin-left: 150px;
-  font-weight: bold;
-  height: auto;
-  color: #333;
-}
-
-.introText2 {
-  font-weight: lighter;
-}
-
-.form {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-  background: #f9f9f9;
-  padding: 20px;
-  border-radius: 8px;
-  width: auto;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.time .DateRangePicker {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
-.time .DateInput {
-  margin-right: 8px;
-}
-
-input,
-select,
-.DateRangePicker {
-  height: 46px;
-  margin-bottom: 2px;
-}
-
-.button {
-  width: 100%;
-  padding: 12px 0;
-  background-color: #012fa7;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 20px;
-}
-
-.button:hover {
-  background-color: #012fa7;
-}
-
-.searchIcon {
-  stroke: var(--colorWhite);
-  fill: #fff;
-  background-color: #012fa7;
-}
-
-.closeButton {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  margin-top: 15px;
-  padding: 10px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  color: gray;
-  transition: color 0.3s;
-  font-size: small;
-}
-
-.closeButton:hover {
-  color: #012fa7;
-}
-
-.fieldSearch,
-.joy,
-.time,
-.location,
-.button,
-.dateWrapper {
-  width: 100%;
-  height: 60px;
-  border-radius: 20px;
-  margin-top: 10px;
-}
-
-.fieldSearch {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding-left: 10px;
-  font-size: 12px;
-  background-color: #fff;
-  color: #b0b0b5 !important;
-  border: 1px solid #ccc;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-
-@media (min-width: 1025px) {
-  .surveyContainer {
-    flex-direction: row;
-  }
-
-  .dropdownContent {
-    left: 17px;
-    top: 80px;
-    width: 35%;
-  }
-
-  .dropdownContent2 {
-    left: 550px;
-    top: 80px;
-    width: 45%;
-  }
-
-  .introText {
-    font-size: 32px;
-  }
-
-  .introText2 {
-    font-size: 16px;
-    font-weight: lighter;
-  }
-
-  .button {
-    display: flex;
-    align-content: center;
-    justify-content: center;
-    position: absolute;
-    right: -10px;
-    top: 50%;
-    font-size: 16px;
-    transform: translateY(-50%);
-    padding: 10px 20px;
-    background-color: #012fa7;
-    color: white;
-    border: none;
-    border-radius: 40px !important;
-    height: 60px;
-    max-width: 70px;
-    cursor: pointer;
-  }
-
-  .fieldSearch {
-    flex: 1 0 33.33%;
-    height: 60px;
-    font-size: 16px;
-    width: 180px;
-    padding-left: 10px;
-  }
-
-  .landingBarContainer .fieldSearch {
-    width: 400px;
-  }
-
-  .barContainer {
-    margin-left: 130px;
-    z-index: 2;
-  }
-
-  .container {
-    width: 40vw;
-    z-index: 2;
-  }
-}
-
-@media (min-width: 1800px) {
-  .dropdownContent {
-    width: 25%;
-  }
-
-  .introText,
-  .introText2 {
-    margin-left: 180px;
-  }
-
-  .introText {
-    font-size: 32px;
-  }
-
-  .introText2 {
-    font-size: 16px;
-  }
-
-  .barContainer {
-    margin-left: 160px;
-  }
-
-  .button {
-    right: -35px;
-    height: 65px;
-    width: 100px;
-  }
-
-  .fieldSearch {
-    width: 500px;
-  }
-}
-
-@media (min-width: 768px) and (max-width: 1024px) {
-  .landingBarContainer {
-    margin-top: 60px;
-    margin-bottom: 60px;
-    text-align: center;
-  }
-
-  .introText {
-    font-size: 32px;
-    margin-top: 250px;
-  }
-
-  .introText2 {
-    font-size: 18px;
-  }
-
-  .joy,
-  .time,
-  .location,
-  .dateWrapper,
-  .fieldSearch {
-    width: 768px;
-    height: 60px;
-  }
-
-  .button {
-    font-size: 19px;
-  }
-
-  .dropdownContent {
-    top: 275px;
-    width: 635px;
-    left: 120px;
-  }
-
-  .dropdownContent2 {
-    top: 600px;
-    left: 120px;
-  }
-}
-
-@media (max-width: 767px) {
-  .landingBarContainer {
-    margin-top: 0;
-    margin-bottom: 5px;
-    text-align: center;
-    padding: 0;
-  }
-
-  .introText {
-    font-size: 18px;
-    margin-top: 180px;
-  }
-
-  .introText2 {
-    font-size: 12px;
-  }
-
-  .form {
-    padding: 10px;
-    width: 90vw;
-    box-sizing: border-box;
-  }
-
-  .fieldSearch,
-  .joy,
-  .time,
-  .location,
-  .button,
-  .dateWrapper {
-    width: 100%;
-    height: 60px;
-  }
-
-  .button {
-    font-size: 16px;
-    box-shadow: 0 5px 5px rgba(255, 255, 255, 0.5);
-  }
-
-  .dropdownContent {
-    top: 165px;
-    width: 300px;
-    left: 45px;
-  }
-
-  .dropdownContent2 {
-    top: 450px;
-    left: 45px;
-  }
 }
 
 @keyframes bounce {
@@ -411,4 +99,50 @@ select,
   white-space: nowrap;
   opacity: 1;
   animation: bounce 1.5s infinite ease-in-out;
+}
+
+.surveyContainer {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: auto;
+}
+
+.emptyDiv2 {
+  flex: 1 1 33%; 
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.teamText{
+  font-size: 1.2rem;
+  color:white;
+}
+
+
+
+@media (max-width: 768px) {
+  .surveyContainer {
+    flex-direction: column;
+  }
+
+  .mobileContainer{
+    height: 80vh;
+  }
+
+  .emptyDiv2 {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+
+  .backgroundVideo{
+    height:100vh;
+  }
+
+  .teamText{
+    text-align: justify
+  }
 }

@@ -1,46 +1,48 @@
 @import '../../../../styles/customMediaQueries.css';
 
+/* Desktop */
 .root {
+  /* Size */
   width: 100%;
   height: var(--topbarHeightDesktop);
+
+  /* Layout for child components */
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-start;
   padding: 0 12px 0 0;
-  background-color: var(--colorWhite);
-  box-shadow: var(--boxShadowLight);
 
+  /* fill */
+  background-color: var(--colorWhite);
+
+  border-bottom: 0.5px solid;
+  /* shadows
+  box-shadow: var(--boxShadowLight);
+  */
+  
   @media (--viewportLarge) {
     padding: 0 24px 0 0;
   }
 }
 
+/* logo */
 .logoLink {
   border-bottom: 0px solid;
   transition: var(--transitionStyleButton);
-  width: fit-content;
 }
 .logoLink:hover {
   border-bottom: 4px solid var(--marketplaceColor);
   border-radius: 0;
 }
 
-.whiteBackground {
-  background-color: rgb(255, 255, 255);
-}
-
+/* Search */
 .searchLink {
-  flex-grow: 1;
+  min-width: 320px;
   height: 100%;
-  margin-right: 24px;
   border-left-style: solid;
   border-left-width: 1px;
   border-left-color: var(--colorGrey100);
-
-  @media (--viewportLarge) {
-    padding-left: 0;
-  }
 }
 
 .search {
@@ -49,6 +51,7 @@
   line-height: 24px;
   letter-spacing: 0;
   color: var(--colorGrey700);
+
   display: inline-block;
   margin: 28px 0;
   text-decoration: inherit;
@@ -58,8 +61,16 @@
   }
 }
 
+.takeAvailableSpace {
+  flex-grow: 1;
+
+  /* At 1024px, the translations might need more space than what searchLink otherwise gets. */
+  min-width: 220px;
+}
+
 .topbarSearchWithLeftPadding {
   padding-left: 24px;
+  padding-right: 24px;
   height: var(--topbarHeightDesktop);
 
   @media (--viewportLarge) {
@@ -67,50 +78,19 @@
   }
 }
 
-.createListingLink {
+/* These is used with Inbox, Sign up, and Log in */
+.topbarLink {
+  flex-shrink: 0;
+
   border-bottom: 0px solid;
   transition: var(--transitionStyleButton);
-  font-weight: var(--fontWeightMedium);
-  font-size: 14px;
-  line-height: 18px;
-  letter-spacing: 0;
-  color: var(--marketplaceColor);
-  height: 100%;
-  padding: 0 12px 0 12px;
-  margin: 0;
 
-  &:hover {
-    color: var(--marketplaceColorDark);
-    border-bottom: 4px solid var(--marketplaceColor);
-    border-radius: 0;
-    text-decoration: none;
-  }
-
-  @media (--viewportMedium) {
-    line-height: 16px;
-    margin: 0;
-  }
-}
-
-.topbarDesktopLabel {
-  composes: textSmall from global;
-  display: inline-block;
-  margin: 28px 0;
-  text-decoration: inherit;
-}
-
-.createListing {
-  composes: topbarDesktopLabel;
-}
-
-.inboxLink {
-  border-bottom: 0px solid;
-  transition: var(--transitionStyleButton);
   font-weight: var(--fontWeightMedium);
   font-size: 14px;
   line-height: 18px;
   letter-spacing: 0;
   color: var(--colorGrey700);
+
   height: 100%;
   padding: 0 12px 0 12px;
   margin: 0;
@@ -128,23 +108,33 @@
   }
 }
 
-.inbox {
-  composes: topbarDesktopLabel;
+.topbarLinkLabel {
+  composes: textSmall from global;
+  display: inline-block;
+  margin: 28px 0;
+  text-decoration: inherit;
   position: relative;
 }
 
 .notificationDot {
+  /* Dimensions */
   width: 7px;
   height: 7px;
   border-radius: 50%;
+
+  /* Position */
   position: absolute;
   top: 2px;
   right: -9px;
+
+  /* Style: red dot */
   background-color: var(--colorFail);
+
   animation-name: notificationPop;
   animation-duration: 0.1s;
   animation-delay: 0.1s;
   animation-fill-mode: forwards;
+
   animation-timing-function: ease-in;
   opacity: 0;
   transform: scale(0);
@@ -161,9 +151,17 @@
   }
 }
 
+/* Profile menu */
 .profileMenuLabel {
   border-bottom: 0px solid;
   transition: var(--transitionStyleButton);
+
+  font-weight: var(--fontWeightMedium);
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: 0;
+  color: var(--colorGrey700);
+
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -198,50 +196,14 @@
   padding-top: 20px;
 }
 
-.whiteText {
-  color: white;
-}
-
-.signupLink {
-  border-bottom: 0px solid;
-  transition: var(--transitionStyleButton);
-  flex-shrink: 0;
-  height: 100%;
-  padding: 0 12px 0 12px;
-  color: var(--colorGrey700);
-
-  &:hover {
-    color: var(--colorBlack);
-    border-bottom: 4px solid var(--marketplaceColor);
-    border-radius: 0;
-    text-decoration: none;
-  }
-}
-
-.loginLink {
-  border-bottom: 0px solid;
-  transition: var(--transitionStyleButton);
-  flex-shrink: 0;
-  height: 100%;
-  padding: 0 12px 0 12px;
-  color: var(--colorGrey700);
-
-  &:hover {
-    color: var(--colorBlack);
-    border-bottom: 4px solid var(--marketplaceColor);
-    border-radius: 0;
-    text-decoration: none;
-  }
-}
-
-.signup,
-.login {
-  composes: textSmall from global;
-  display: inline-block;
-  margin: 28px 0;
+.topbarLinkSocialLabel {
+  display: flex;
+  margin: 20px 0;
   text-decoration: inherit;
+  margin-bottom: 40px;
 }
 
+/* left animated "border" like hover element */
 .menuItemBorder {
   position: absolute;
   top: 2px;
@@ -251,15 +213,18 @@
   transition: width var(--transitionStyleButton);
 }
 
-.profileSettingsLink,
-.OverviewLink,
-.yourListingsLink {
+.menuLink {
   composes: textSmall from global;
   position: relative;
   display: block;
+
+  /* Dimensions */
   width: 100%;
+  min-width: 276px;
   margin: 0;
   padding: 4px 24px;
+
+  /* Layout details */
   color: var(--colorGrey700);
   text-align: left;
   transition: var(--transitionStyleButton);
@@ -281,20 +246,30 @@
 
 .logoutButton {
   display: inline;
+
+  /* Text size should be inherited */
   text-decoration: none;
+
+  /* Font is specific to this component */
   font-weight: var(--fontWeightMedium);
   font-size: 14px;
   line-height: 18px;
   letter-spacing: 0;
+
+  /* Dimensions */
   position: relative;
   width: 100%;
   min-width: 276px;
   margin: 0;
   padding: 20px 24px;
+
+  /* Layout details */
   color: var(--colorGrey300);
   text-align: left;
   white-space: nowrap;
   transition: var(--transitionStyleButton);
+
+  /* Borders */
   border: none;
   border-top-width: 1px;
   border-top-style: solid;
@@ -306,7 +281,7 @@
     text-decoration: none;
 
     & .menuItemBorder {
-      height: 100%;
+      height: 100%; 
       width: 6px;
       top: 0;
       background-color: var(--marketplaceColor);
@@ -334,50 +309,5 @@
       background-color: var(--colorBlack);
     }
   }
-}
 
-.authLinks {
-  display: flex;
-  gap: 8px;
-  padding-right: 12px;
-}
-
-.root {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  height: var(--topbarHeightDesktop);
-  padding: 0 24px;
-  box-shadow: none;
-  transition: ease-in-out all 0.5s;
-}
-
-.leftContent,
-.rightContent {
-  display: flex;
-  align-items: center;
-}
-
-.leftContent {
-  justify-content: flex-start;
-}
-
-.rightContent {
-  justify-content: flex-end;
-}
-
-.languageSelector {
-  font-size: 14px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  background-color: #f8f8f8;
-  width: 60px;
-}
-
-.smallLanguageSelector {
-  font-size: 12px;
-  padding: 2px 6px;
-  width: 60px;
 }

@@ -810,7 +810,7 @@ class FieldDateAndTimeInput extends Component {
             <option value="" key="default">
               Seleziona Lingua
             </option>
-            {publicData.language.map((s) => (
+            {publicData?.language?.map((s) => (
               <option value={s} key={s}>
                 {languageMapping[s] || s}
               </option>

@@ -3,10 +3,13 @@ import { useLocation } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import css from './LandingPageSection.module.css';
 import landingCoverR from '../../media/landingCoverR.JPG';
+import video from '../../media/video/video.mp4';
 import landingPE from '../../media/landingPE.JPG';
 import SurveyForm from '../SurveyForm/SurveyForm';
+import VideoContainer from '../VideoContainer/VideoContainer';
 import { FormattedMessage } from '../../util/reactIntl';
 import { NamedLink } from '..';
+import ActionTeamButtons from '../ActionTeamButtons/ActionTeamButtons';
 
 function LandingPageSection({ onSearchSubmit }) {
   const intl = useIntl();
@@ -32,15 +35,7 @@ function LandingPageSection({ onSearchSubmit }) {
     };
   }, []);
 
-  const containerStyle = {
-    position: 'relative',
-    height: isMobile ? '725px' : '850px',
-    backgroundColor: isTeamBuilding ? 'white' : 'none',
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'right',
-    flex: '1 1 30%',
-  };
+
 
   const containerStyle2 = {
     position: 'relative',
@@ -74,11 +69,12 @@ function LandingPageSection({ onSearchSubmit }) {
     return () => clearTimeout(timer);
   }, []);
 
+  /*
   const tooltipMessage = isTeamBuilding
     ? intl.formatMessage({ id: 'Tooltip.public' })
     : intl.formatMessage({
-        id: 'Tooltip.private',
-      });
+      id: 'Tooltip.private',
+    });
 
   const tooltipLink = isTeamBuilding ? (
     <NamedLink name="LandingPage" to="/" className={css.tooltipLink}>
@@ -96,10 +92,11 @@ function LandingPageSection({ onSearchSubmit }) {
       {tooltipLink}
     </div>
   ) : null;
+  */
 
   return (
-    <div className={css.isTeamBuildingContainer} style={containerStyle}>
-      {tooltip}
+    <div >
+      {/*tooltip*/}
       {!isTeamBuilding ? (
         <div className={css.surveyContainer}>
           {!isMobile && (
@@ -117,22 +114,35 @@ function LandingPageSection({ onSearchSubmit }) {
           </div>
         </div>
       ) : (
-        <div className={css.surveyContainer}>
-          {!isMobile && (
-            <div className={css.emptyDiv}>
-              <h1 className={css.emptyText}>
-                Scopri le migliori esperienze creative
-                <br /> per il tuo gruppo,
-                <br /> in pochi click
+
+      <div className={css.mobileContainer}>
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className={css.backgroundVideo}
+        >
+          <source
+            src={video}
+            type="video/mp4"
+          />
+        </video>
+        <div className={css.emptyDiv2}>
+              <h1 style={{fontSize:"2rem"}}>
+              Creatività che fa la differenza
               </h1>
-            </div>
-          )}
-          <div className={css.surveyForm} style={containerStyle2}>
-            <div style={{ paddingTop: '50px' }}>
-              <SurveyForm isTeamBuilding={isTeamBuilding} />
-            </div>
-          </div>
+              <p className={css.teamText}>
+              I nostri workshop creativi aiutano il tuo team a riscoprire collaborazione,
+              pensiero critico e empatia - competenze che l’AI non può replicare. <br/><br/>
+              Rafforziamo ciò che rende i tuoi dipendenti unici, stimolando un pensiero laterale che nessun algoritmo può imitare. 
+              Riportiamo i dipendenti al centro della creatività aziendale, trasformando idee in innovazioni concrete.<br/><br/>
+              </p>
+          <ActionTeamButtons />
         </div>
+      </div>
+
+
       )}
     </div>
   );

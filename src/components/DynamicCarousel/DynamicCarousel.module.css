@@ -1,0 +1,109 @@
+
+.carousel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  height: 50vh;
+}
+
+.image {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s ease-out;
+}
+
+.image img {
+  display: block;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.center img {
+  width: 300px;
+  height: 300px;
+}
+
+.left img,
+.right img {
+  width: 200px;
+  height: 350px;
+}
+
+.leftFar img,
+.rightFar img {
+  width: 100px;
+  height: 400px;
+}
+
+.button {
+  width: 300px;
+  color: white;
+  margin: 5px;
+  padding: 10px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  background-color: #0048ff;
+  margin-top: 20px;
+  justify-content: center;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 50px;
+}
+
+@media (max-width: 768px) {
+
+    .container {
+      height: 70vh;
+      margin-top: 15vh;
+    }
+  
+  .carousel {
+    display: none; 
+  }
+
+  .mobileCarousel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .mobileImage {
+    width: 300px;
+    height: 300px;
+    border-radius: 8px;
+  }
+
+  .arrow {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0 10px;
+  }
+
+  .buttonContainer {
+    margin-top: 5vh;
+  }
+  .title{
+    margin-bottom: 5vh;
+  }
+}

@@ -82,7 +82,7 @@ export class SearchPageComponent extends Component {
     this.onMapMoveEnd = debounce(this.onMapMoveEnd.bind(this), SEARCH_WITH_MAP_DEBOUNCE);
     this.onOpenMobileModal = this.onOpenMobileModal.bind(this);
     this.onCloseMobileModal = this.onCloseMobileModal.bind(this);
-
+    this.isTeambuilding = props.location.pathname === '/ts' ? 'teamSearchPage' : 'SearchPage';
     // Filter functions
     this.applyFilters = this.applyFilters.bind(this);
     this.cancelFilters = this.cancelFilters.bind(this);
@@ -138,7 +138,7 @@ export class SearchPageComponent extends Component {
         ...validFilterParams(rest, filterConfigs, dropNonFilterParams),
       };
 
-      history.push(createResourceLocatorString('SearchPage', routes, {}, searchParams));
+      history.push(createResourceLocatorString(this.isTeambuilding, routes, {}, searchParams));
     }
   }
 
@@ -170,7 +170,7 @@ export class SearchPageComponent extends Component {
     const searchParams = { ...urlQueryParams, ...this.state.currentQueryParams };
     const search = cleanSearchFromConflictingParams(searchParams, filterConfigs, sortConfig);
 
-    history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, search));
+    history.push(createResourceLocatorString(this.isTeambuilding, routeConfiguration, {}, search));
   }
 
   // Close the filters by clicking cancel, revert to the initial params
@@ -192,7 +192,7 @@ export class SearchPageComponent extends Component {
 
     // Reset routing params
     const queryParams = omit(urlQueryParams, filterQueryParamNames);
-    history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, queryParams));
+    history.push(createResourceLocatorString(this.isTeambuilding, routeConfiguration, {}, queryParams));
   }
 
   getHandleChangedValueFn(useHistoryPush) {
@@ -236,7 +236,7 @@ export class SearchPageComponent extends Component {
         if (useHistoryPush) {
           const searchParams = this.state.currentQueryParams;
           const search = cleanSearchFromConflictingParams(searchParams, filterConfigs, sortConfig);
-          history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, search));
+          history.push(createResourceLocatorString(this.isTeambuilding, routeConfiguration, {}, search));
         }
       };
 
@@ -252,7 +252,7 @@ export class SearchPageComponent extends Component {
       ? { ...urlQueryParams, [urlParam]: values }
       : omit(urlQueryParams, urlParam);
 
-    history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, queryParams));
+    history.push(createResourceLocatorString(this.isTeambuilding, routeConfiguration, {}, queryParams));
   }
 
   render() {
@@ -440,6 +440,7 @@ export class SearchPageComponent extends Component {
               sortByComponent={sortBy('mobile')}
               listingsAreLoaded={listingsAreLoaded}
               resultsCount={totalItems}
+              isTeambuilding={this.isTeambuilding}
               searchInProgress={searchInProgress}
               searchListingsError={searchListingsError}
               showAsModalMaxWidth={MODAL_BREAKPOINT}

@@ -42,6 +42,7 @@ import {
   ButtonTabNavHorizontal,
   LayoutSideNavigation,
   NamedRedirect,
+  InlineTextButton,
 } from '../../components';
 
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
@@ -91,29 +92,88 @@ export function ReviewsErrorMaybe(props) {
 
 export function MobileReviews(props) {
   const { reviews, queryReviewsError } = props;
+  const [currentIndex, setCurrentIndex] = useState(0); // Track current starting review index
+
   const reviewsOfProvider = reviews.filter((r) => r.attributes.type === REVIEW_TYPE_OF_PROVIDER);
-  const reviewsOfCustomer = reviews.filter((r) => r.attributes.type === REVIEW_TYPE_OF_CUSTOMER);
+  const reviewsToShow = reviewsOfProvider; // Adjust based on your needs
+
+  const handlePrevious = () => {
+    setCurrentIndex((prevIndex) => 
+      prevIndex === 0 ? reviewsToShow.length - 2 : Math.max(prevIndex - 2, 0)
+    );
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prevIndex) => 
+      prevIndex + 2 >= reviewsToShow.length ? 0 : prevIndex + 2
+    );
+  };
+
+  if (!reviewsToShow || reviewsToShow.length === 0) {
+    return <div>No reviews available.</div>;
+  }
+
+  // Get two reviews to display
+  const displayedReviews = reviewsToShow.slice(currentIndex, currentIndex + 2);
+
   return (
     <div className={css.mobileReviews}>
-      <H4 as="h2" className={css.mobileReviewsTitle}>
-        <FormattedMessage
-          id="ProfilePage.reviewsFromMyCustomersTitle"
-          values={{ count: reviewsOfProvider.length }}
-        />
-      </H4>
-      <ReviewsErrorMaybe queryReviewsError={queryReviewsError} />
-      <Reviews reviews={reviewsOfProvider} />
-      <H4 as="h2" className={css.mobileReviewsTitle}>
-        <FormattedMessage
-          id="ProfilePage.reviewsAsACustomerTitle"
-          values={{ count: reviewsOfCustomer.length }}
-        />
-      </H4>
-      <ReviewsErrorMaybe queryReviewsError={queryReviewsError} />
-      <Reviews reviews={reviewsOfCustomer} />
+      <h4 className={css.mobileReviewsTitle}>
+        Reviews 
+      </h4>
+      <div className={css.reviewContainer}>
+        <button className={css.arrowButton} onClick={handlePrevious}>
+          ◀
+        </button>
+        <div className={css.reviews}>
+          {displayedReviews.map((review, index) => (
+            <div key={index} className={css.review}>
+              <p>{review.attributes.content}</p>
+              <span>{'★'.repeat(review.attributes.rating)}</span>
+              <small>{review.author.attributes.profile.displayName || 'Anonymous'}</small>
+            </div>
+          ))}
+        </div>
+        <button className={css.arrowButton} onClick={handleNext}>
+          ▶
+        </button>
+      </div>
     </div>
   );
 }
+export function ReviewWidget(props) {
+  const { reviews, queryReviewsError } = props;
+
+  if (queryReviewsError) {
+    return <div className={css.error}>Error loading reviews.</div>;
+  }
+
+  if (!reviews || reviews.length === 0) {
+    return <div className={css.noReviews}>No reviews yet.</div>;
+  }
+
+  const totalReviews = reviews.length;
+  const averageRating =
+    reviews.reduce((sum, review) => sum + review.attributes.rating, 0) /
+    totalReviews;
+
+  return (
+    <div className={css.reviewWidget}>
+      <div className={css.summary}>
+        <div>
+          <span className={css.totalReviews}>{totalReviews}</span>
+          <span> Reviews</span>
+        </div>
+        <div>
+          <span className={css.averageRating}>{averageRating.toFixed(1)}</span>
+          <span className={css.star}>★ Rating</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
 
 export function DesktopReviews(props) {
   const [showReviewsType, setShowReviewsType] = useState(REVIEW_TYPE_OF_PROVIDER);
@@ -165,6 +225,7 @@ export function DesktopReviews(props) {
     </div>
   );
 }
+
 
 export function CustomUserFields(props) {
   const { publicData, metadata, userFieldConfig } = props;
@@ -235,7 +296,7 @@ export function MainContent(props) {
         <FormattedMessage id="ProfilePage.desktopHeading" values={{ name: displayName }} />
       </H2>
       {hasBio ? <p className={css.bio}>{bioWithLinks}</p> : null}
-
+      {hideReviews ? null : <MobileReviews reviews={reviews} queryReviewsError={queryReviewsError} />}
       {displayName ? (
         <CustomUserFields
           publicData={publicData}
@@ -246,7 +307,7 @@ export function MainContent(props) {
       ) : null}
 
       {hasListings ? (
-        <div className={listingsContainerClasses}>
+        <div className={listingsContainerClasses}>         
           <H4 as="h2" className={css.listingsTitle}>
             <FormattedMessage id="ProfilePage.listingsTitle" values={{ count: listings.length }} />
           </H4>
@@ -259,11 +320,6 @@ export function MainContent(props) {
           </ul>
         </div>
       ) : null}
-      {hideReviews ? null : isMobileLayout ? (
-        <MobileReviews reviews={reviews} queryReviewsError={queryReviewsError} />
-      ) : (
-        <DesktopReviews reviews={reviews} queryReviewsError={queryReviewsError} />
-      )}
     </div>
   );
 }
@@ -283,6 +339,7 @@ export function ProfilePageComponent(props) {
     currentUser,
     useCurrentUser,
     userShowError,
+    hideReviews,
     user,
     ...rest
   } = props;
@@ -369,6 +426,7 @@ export function ProfilePageComponent(props) {
     return null;
   }
   // This is rendering normal profile page (not preview for pending-approval)
+ 
   return (
     <Page
       scrollingDisabled={scrollingDisabled}
@@ -382,15 +440,15 @@ export function ProfilePageComponent(props) {
       <LayoutSideNavigation
         sideNavClassName={css.aside}
         topbar={<TopbarContainer />}
-        sideNav={
-          <AsideContent
+        sideNav={null}
+        footer={<FooterContainer />}
+      >
+        <AsideContent
             user={profileUser}
             showLinkToProfileSettingsPage={mounted && isCurrentUser}
             displayName={displayName}
-          />
-        }
-        footer={<FooterContainer />}
-      >
+        />
+         {hideReviews ? null : <ReviewWidget {...rest} />}
         <MainContent
           bio={bio}
           displayName={displayName}

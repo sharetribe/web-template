@@ -6,14 +6,19 @@ import TopbarContainer from '../TopbarContainer/TopbarContainer.js';
 import FooterContainer from '../FooterContainer/FooterContainer.js';
 import LandingPageSection from '../../components/LandingPageSection/LandingPageSection.js';
 import Newsletter from '../../components/Newsletter/Newsletter.js';
+import HowItWorks from '../../components/HowItWorks/HowItWorks.js';
+import WhyUs from '../../components/WhyUs/WhyUs.js';
+import Sponsors from '../../components/Sponsors/Sponsors.js';
+import DynamicCarousel from '../../components/DynamicCarousel/DynamicCarousel.js';
 import Counter from '../../components/Counter/Counter.js';
 import ToDo from '../../components/ToDo/ToDo.js';
 import { validProps } from './Field';
-
+import TrustPilot from '../../components/TrustPilot/TrustPilot.js';
 import SectionBuilder from './SectionBuilder/SectionBuilder.js';
 import StaticPage from './StaticPage.js';
 
 import css from './PageBuilder.module.css';
+
 
 const getMetadata = (meta, schemaType, fieldOptions) => {
   const { pageTitle, pageDescription, socialSharing } = meta;
@@ -164,7 +169,7 @@ function PageBuilder(props) {
                     {sections.length === 0 && inProgress ? (
                       <LoadingSpinner />
                     ) : (
-                      <div className={css.mainContentContainer}>
+                      <> 
                         {isAbout ? (
                           <div style={{ marginTop: '30px' }}>
                             <SectionBuilder sections={sections} options={options} />
@@ -184,28 +189,18 @@ function PageBuilder(props) {
                               isTeamBuilding={isTeamBuilding}
                             />
                             <SectionBuilder sections={sections} options={options} />
-                            <div className={css.subContainerWrapper}>
-                              <div className={css.subContainer}>
-                                <div>
-                                  <div className={css.header}>Prenota online</div>
-                                  <div>senza dover aspettare preventivi</div>
-                                </div>
-                                <div>
-                                  <div className={css.header}>Cancella gratuitemente</div>
-                                  <div>fino a 5 giorni dall'evento</div>
-                                </div>
-                                <div>
-                                  <div className={css.header}>Supporto 24/24h</div>
-                                  <div>comodamente su whatsapp</div>
-                                </div>
-                              </div>
-                            </div>
+                            <HowItWorks />
+                            <DynamicCarousel />
+                            <Sponsors />
+                            <TrustPilot />
+                            <WhyUs />
                             <Newsletter />
+                            <br/>
                           </>
                         ) : (
                           <SectionBuilder sections={sections} options={options} />
                         )}
-                      </div>
+                      </>
                     )}
                   </>
                 )}

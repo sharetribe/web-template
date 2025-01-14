@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom'; // Import withRouter
 import { bool, func, object, number, string } from 'prop-types';
 import classNames from 'classnames';
 
@@ -17,33 +16,41 @@ import {
   NamedLink,
 } from '../../../../components';
 
-import TopbarSearchForm from '../TopbarSearchForm/TopbarSearchForm';
 import CustomLinksMenu from './CustomLinksMenu/CustomLinksMenu';
-
-import css from './TopbarDesktop.module.css';
 import SocialBar from '../../../../components/SocialBar/SocialBar';
+import css from './TopbarDesktop.module.css';
 
-function SignupLink() {
+const SignupLink = () => {
   return (
-    <NamedLink name="SignupPage" className={css.loginLink}>
-      <span className={css.login}>
+    <NamedLink name="SignupPage" className={css.topbarLink}>
+      <span className={css.topbarLinkLabel}>
         <FormattedMessage id="TopbarDesktop.signup" />
       </span>
     </NamedLink>
   );
-}
+};
 
-function LoginLink() {
+const LoginLink = () => {
   return (
-    <NamedLink name="LoginPage" className={css.loginLink}>
-      <span className={css.login}>
+    <NamedLink name="LoginPage" className={css.topbarLink}>
+      <span className={css.topbarLinkLabel}>
         <FormattedMessage id="TopbarDesktop.login" />
       </span>
     </NamedLink>
   );
-}
+};
 
-function InboxLink({ notificationCount, currentUserHasListings }) {
+const newListingLink = ( userRole) => {
+  return userRole === 'provider' ? (
+    <NamedLink name="NewListingPage" className={css.topbarLink}>
+      <span className={css.topbarLinkLabel}>
+        <FormattedMessage id="TopbarDesktop.createListing" />
+      </span>
+    </NamedLink>
+  ) : null;
+};
+
+const InboxLink = ({ notificationCount, currentUserHasListings }) => {
   const notificationDot = notificationCount > 0 ? <div className={css.notificationDot} /> : null;
   return (
     <NamedLink
@@ -51,49 +58,49 @@ function InboxLink({ notificationCount, currentUserHasListings }) {
       name="InboxPage"
       params={{ tab: currentUserHasListings ? 'sales' : 'orders' }}
     >
-      <span className={css.login}>
+      <span className={css.topbarLinkLabel}>
         <FormattedMessage id="TopbarDesktop.inbox" />
         {notificationDot}
       </span>
     </NamedLink>
   );
-}
+};
 
-function ProfileMenu({ currentPage, currentUser, onLogout, userRole }) {
-  const currentPageClass = (page) => {
+function ProfileMenu({ currentPage, currentUser, onLogout }) {
+  const currentPageClass = page => {
     const isAccountSettingsPage =
       page === 'AccountSettingsPage' && ACCOUNT_SETTINGS_PAGES.includes(currentPage);
     return currentPage === page || isAccountSettingsPage ? css.currentPage : null;
   };
 
+
+  const userRole = currentUser?.attributes?.profile?.publicData?.role;
   return (
     <Menu>
       <MenuLabel className={css.profileMenuLabel} isOpenClassName={css.profileMenuIsOpen}>
         <Avatar className={css.avatar} user={currentUser} disableProfileLink />
       </MenuLabel>
       <MenuContent className={css.profileMenuContent}>
-        <MenuItem key="CMSPage">
-          {userRole === 'provider' && (
-            <NamedLink
-              className={classNames(css.menuLink, currentPageClass('CMSPage'))}
-              name="CMSPage"
-              params={{ pageId: 'overview' }}
-            >
-              <span className={css.menuItemBorder} />
-              <FormattedMessage id="TopbarDesktop.overview" />
-            </NamedLink>
-          )}
+      <MenuItem  key="OverviewListingsPage">
+      {userRole === 'provider' && (
+          <NamedLink
+            className={classNames(css.menuLink, currentPageClass('CMSPage'))}
+            name="CMSPage"
+            params={{ pageId: 'overview' }}
+          >
+             <span className={css.menuItemBorder} />
+            <FormattedMessage id="TopbarMobileMenu.overview" />
+          </NamedLink>
+        )}
         </MenuItem>
         <MenuItem key="ManageListingsPage">
-          {userRole === 'provider' && (
-            <NamedLink
-              className={classNames(css.menuLink, currentPageClass('ManageListingsPage'))}
-              name="ManageListingsPage"
-            >
-              <span className={css.menuItemBorder} />
-              <FormattedMessage id="TopbarDesktop.yourListingsLink" />
-            </NamedLink>
-          )}
+          <NamedLink
+            className={classNames(css.menuLink, currentPageClass('ManageListingsPage'))}
+            name="ManageListingsPage"
+          >
+            <span className={css.menuItemBorder} />
+            <FormattedMessage id="TopbarDesktop.yourListingsLink" />
+          </NamedLink>
         </MenuItem>
         <MenuItem key="ProfileSettingsPage">
           <NamedLink
@@ -122,9 +129,9 @@ function ProfileMenu({ currentPage, currentUser, onLogout, userRole }) {
       </MenuContent>
     </Menu>
   );
-}
+};
 
-function TopbarDesktop(props) {
+const TopbarDesktop = props => {
   const {
     className,
     config,
@@ -139,79 +146,20 @@ function TopbarDesktop(props) {
     onLogout,
     onSearchSubmit,
     initialSearchFormValues,
-    searchParams,
-    location, // Destructure location prop provided by withRouter
   } = props;
-
   const [mounted, setMounted] = useState(false);
-  const [scrolling, setScrolling] = useState(false);
-  const [language, setLanguage] = useState('it'); // State for managing language
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 0) {
-        setScrolling(true);
-      } else {
-        setScrolling(false);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  const handleLanguageChange = (event) => {
-    const selectedLanguage = event.target.value;
-    setLanguage(selectedLanguage);
-
-    // Redirect to the appropriate domain based on language
-    if (selectedLanguage === 'en') {
-      window.location.href = 'https://clubjoy.co'; // Redirect to English version
-    } else {
-      window.location.href = 'https://clubjoy.it'; // Redirect to Italian version
-    }
-  };
-
-  const classes = classNames(rootClassName || css.root, className, {
-    [css.scrolling]: scrolling,
-    [css.whiteBackground]: scrolling,
-  });
-
-  const { marketplaceName } = config;
+  const marketplaceName = config.marketplaceName;
   const authenticatedOnClientSide = mounted && isAuthenticated;
   const isAuthenticatedOrJustHydrated = isAuthenticated || !mounted;
   const userRole = currentUser?.attributes?.profile?.publicData?.role;
-  // Determine if the current page is the landing page based on the pathname
-  const isLandingPage = location.pathname === '/';
 
-  // const search = !isLandingPage ? <LandingSearchBarForm onSearchSubmit={onSearchSubmit} /> : null; // Only render TopbarSearchForm if not on landing page
-
-  const notificationDot = notificationCount > 0 ? <div className={css.notificationDot} /> : null;
-  const inboxLink = authenticatedOnClientSide ? (
-    <NamedLink
-      className={css.inboxLink}
-      name="InboxPage"
-      params={{ tab: currentUserHasListings ? 'sales' : 'orders' }}
-    >
-      <span className={css.inbox}>
-        <FormattedMessage id="TopbarDesktop.inbox" />
-        {notificationDot}
-      </span>
-    </NamedLink>
-  ) : null;
-
-  const currentPageClass = (page) => {
-    const isAccountSettingsPage =
-      page === 'AccountSettingsPage' && ACCOUNT_SETTINGS_PAGES.includes(currentPage);
-    return currentPage === page || isAccountSettingsPage ? css.currentPage : null;
-  };
+  const giveSpaceForSearch = customLinks == null || customLinks?.length === 0;
+  const classes = classNames(rootClassName || css.root, className);
 
   const inboxLinkMaybe = authenticatedOnClientSide ? (
     <InboxLink
@@ -221,117 +169,38 @@ function TopbarDesktop(props) {
   ) : null;
 
   const profileMenuMaybe = authenticatedOnClientSide ? (
-    <ProfileMenu
-      currentPage={currentPage}
-      currentUser={currentUser}
-      onLogout={onLogout}
-      userRole={userRole}
-    />
+    <ProfileMenu currentPage={currentPage} currentUser={currentUser} onLogout={onLogout} />
   ) : null;
+
   const signupLinkMaybe = isAuthenticatedOrJustHydrated ? null : <SignupLink />;
   const loginLinkMaybe = isAuthenticatedOrJustHydrated ? null : <LoginLink />;
 
-  const signupBusinessLink = isAuthenticatedOrJustHydrated ? null : (
-    <NamedLink name="bSignupPage" className={css.loginLink}>
-      <span className={css.login}>Business</span>
-    </NamedLink>
-  );
-
   return (
     <nav className={classes}>
-      {isLandingPage ? (
-        <>
-          <div className={css.leftContent}>
-            <LinkedLogo
-              className={css.logoLink}
-              layout="desktop"
-              logoSettings={{ format: 'image', height: 60 }}
-              alt={intl.formatMessage({ id: 'TopbarDesktop.logo' }, { marketplaceName })}
-            />
-          </div>
-          <div className={css.rightContent}>
-            {userRole === 'provider' && (
-              <NamedLink className={css.createListingLink} name="NewListingPage">
-                <span className={css.createListing}>
-                  <FormattedMessage id="TopbarDesktop.createListing" />
-                </span>
-              </NamedLink>
-            )}
-            <SocialBar />
-            <NamedLink className={css.createListingLink} name="GiftCardsPage">
-              <span className={css.createListing}>Gift card</span>
-            </NamedLink>
-
-            <CustomLinksMenu
-              currentPage={currentPage}
-              customLinks={customLinks}
-              intl={intl}
-              hasClientSideContentReady={
-                authenticatedOnClientSide || !isAuthenticatedOrJustHydrated
-              }
-            />
-            {inboxLinkMaybe}
-            {profileMenuMaybe}
-            <div className={css.authLinks}>
-              {signupBusinessLink}
-              {signupLinkMaybe}
-              {loginLinkMaybe}
-            </div>
-
-            <select
-              className={css.languageSelector}
-              value={language}
-              onChange={handleLanguageChange}
-            >
-              <option value="it">IT</option>
-              <option value="en">EN</option>
-            </select>
-          </div>
-        </>
-      ) : (
-        <>
-          <div className={css.leftContent}>
-            <LinkedLogo
-              className={css.logoLink}
-              logoSettings={{ format: 'image', height: 60 }}
-              layout="desktop"
-              alt={intl.formatMessage({ id: 'TopbarDesktop.logo' }, { marketplaceName })}
-            />
-            {/* search */}
-          </div>
-          <div className={css.rightContent}>
-            <NamedLink className={css.createListingLink} name="GiftCardsPage">
-              <span className={css.createListing}>Gift card</span>
-            </NamedLink>
-            {userRole === 'provider' && (
-              <NamedLink className={css.createListingLink} name="NewListingPage">
-                <span className={css.createListing}>
-                  <FormattedMessage id="TopbarDesktop.createListing" />
-                </span>
-              </NamedLink>
-            )}
-            {inboxLinkMaybe}
-            {profileMenuMaybe}
-            <div className={css.authLinks}>
-              {signupBusinessLink}
-              {signupLinkMaybe}
-              {loginLinkMaybe}
-            </div>
-
-            <select
-              className={classNames(css.languageSelector, css.smallLanguageSelector)} // Add a new class here
-              value={language}
-              onChange={handleLanguageChange}
-            >
-              <option value="it">IT</option>
-              <option value="en">EN</option>
-            </select>
-          </div>
-        </>
-      )}
+      <LinkedLogo
+        className={css.logoLink}
+        layout="desktop"
+        alt={intl.formatMessage({ id: 'TopbarDesktop.logo' }, { marketplaceName })}
+        linkToExternalSite={config?.topbar?.logoLink}
+      />
+      <span className={css.topbarLinkSocialLabel}>
+      <SocialBar/>
+      </span>
+        <CustomLinksMenu
+        currentPage={currentPage}
+        customLinks={customLinks}
+        intl={intl}
+        hasClientSideContentReady={authenticatedOnClientSide || !isAuthenticatedOrJustHydrated}
+      />
+      {newListingLink(userRole)}
+      {inboxLinkMaybe}
+      {signupLinkMaybe}
+      {loginLinkMaybe}
+    
+      {profileMenuMaybe}
     </nav>
   );
-}
+};
 
 TopbarDesktop.defaultProps = {
   rootClassName: null,
@@ -356,8 +225,6 @@ TopbarDesktop.propTypes = {
   initialSearchFormValues: object,
   intl: intlShape.isRequired,
   config: object,
-  location: object.isRequired,
 };
 
-// Wrap TopbarDesktop with withRouter to get access to the location prop
-export default withRouter(TopbarDesktop);
+export default TopbarDesktop;

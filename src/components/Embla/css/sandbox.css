@@ -1,0 +1,30 @@
+.header {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    padding: 4rem 2rem 2rem 2rem;
+    margin: 0;
+  }
+  .footer {
+    display: flex;
+    justify-content: center;
+    padding: 2rem 2rem 4rem 2rem;
+  }
+  .footer__link {
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    text-decoration: none;
+    text-align: center;
+    font-weight: 600;
+    color: var(--text-low-contrast);
+    font-size: 1.4rem;
+  }
+  .footer__link__svg {
+    display: block;
+    width: 2rem;
+    height: 2rem;
+    margin-right: 1rem;
+    fill: currentColor;
+  }
+  

@@ -1,0 +1,61 @@
+.container {
+  margin: 40px auto;
+  padding: 20px;
+  max-width: 1200px;
+  text-align: center;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px;
+  text-align: left;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+}
+
+.heading {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #f44133;
+}
+
+.description {
+  font-size: 1.2rem;
+  line-height: 1.5;
+}
+
+.buttonContainer {
+  margin-top: 50px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    height: 105vh;
+    margin-top: 5vh;
+  }
+
+  .buttonContainer {
+    margin-top: 20px;
+  }
+
+  .heading {
+    font-size: 1.5rem;
+  }
+
+  .description {
+    font-size: 0.9rem;
+  }
+  
+}

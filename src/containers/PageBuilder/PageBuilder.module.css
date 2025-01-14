@@ -41,7 +41,7 @@
 }
 
 .desktopTopbarLandingPage {
-  background-color: transparent;
+  background-color: white;
 }
 
 .desktopTopbar,
@@ -51,6 +51,8 @@
 
 .main {
   display: grid;
+  background-color: white;
+  
 }
 
 .loading {
@@ -128,3 +130,4 @@
     }
   }
 }
+

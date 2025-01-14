@@ -1,4 +1,4 @@
-.formContainer {
+.formContainer { 
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -35,67 +35,36 @@
 
 .nameInput {
   flex-grow: 1;
+  font-size: 1.2rem;  
+  border-radius: 20px;
+  margin-bottom: 2px;
 }
 
 .button {
+  font-size: 1.2rem;  
   width: 300px;
   color: white;
   margin: 5px;
   padding: 10px;
   border: none;
-  border-radius: 5px;
+  border-radius: 20px;
   cursor: pointer;
   transition: background-color 0.3s;
-  background-color: #007bff;
+  background-color: #0048ff;
 }
 
 .button:hover {
   background-color: #5d85ff;
 }
 
-.calendlyButton {
-  display: inline-block;
-  background-color: #007bff;
-  color: #fff;
-  padding: 12px 24px;
-  font-size: 16px;
-  font-weight: bold;
-  border: none;
-  width: 300px;
-  border-radius: 4px;
-  cursor: pointer;
-  height: 55px;
-  text-align: center;
-  text-decoration: none;
-  transition: background-color 0.3s ease;
-}
-
-.calendlyButton:hover {
-  background-color: #0056b3;
-}
-
-.calendlyButton:focus {
-  outline: none;
-  box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
-}
-
-.calendlyButton:active {
-  background-color: #004494;
-}
-
-.buttonContainer {
-  margin-top: 10px;
-  display: flex;
-  flex-direction: row;
-  gap: 16px;
-  justify-content: center;
-  align-items: center;
-  width: 80%;
-}
-
 @media (max-width: 768px) {
-  .buttonContainer {
-    flex-direction: column;
-    gap: 8px;
+  .formContainer {
+    margin-top: 5vh;
+    margin-bottom: 5vh;
+    height: 20vh;
+  }
+  .nameInput {
+    margin-bottom: 5px;
+    border-radius: 20px;
   }
 }

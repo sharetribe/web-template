@@ -1,0 +1,128 @@
+.container {
+  text-align: center;
+  font-family: Arial, sans-serif;
+  padding: 5px;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.carousel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content {
+  display: flex;
+  align-items: flex-start;
+  text-align: left;
+  max-width: 800px;
+}
+
+.text {
+  font-size: 16px;
+  margin-right: 20px;
+  line-height: 1.5;
+  flex: 1;
+}
+
+.image {
+  max-width: 300px;
+  border-radius: 8px;
+}
+
+.trustpilot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+
+.tpText {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px; 
+}
+
+
+.arrowsMobile {
+  display: none;
+}
+
+.arrow {
+  background: none;
+  border: none;
+  font-size: 64px;
+  cursor: pointer;
+  padding: 20px;
+}
+
+.rating {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.star {
+  color: #00b67a;
+  font-size: 20px;
+  margin: 0 2px;
+}
+
+
+@media (max-width: 768px) {
+  .container {
+    height: 75vh;
+    padding: 10px;
+    margin-bottom: 10vh;
+  }
+
+  .carousel {
+    flex-direction: column;
+  }
+
+  .content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    display: flex;
+    justify-content: center; 
+  }
+
+  .text {
+    margin-right: 0;
+    display: flex;
+    align-items: justify;
+    justify-content: flex-start; 
+    text-align: justify;
+  }
+
+  .image {
+    max-width: 100%;
+    width: 200px;
+    height: 250px;
+    margin: 0 auto;
+  }
+
+  .arrowsMobile {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .arrow {
+    display: none;
+  }
+
+  .arrowMobile {
+    background: none;
+    border: none;
+    font-size: 36px;
+    cursor: pointer;
+    padding: 10px;
+  }
+}

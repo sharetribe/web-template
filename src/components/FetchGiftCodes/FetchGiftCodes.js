@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import css from './FGC.module.css';
+import css from './temp.module.css';
+
 import { fetchGiftCard } from '../../util/supabase';
 
 function FetchGiftCodes({ user, transactionId, onGiftCardCodesFetched }) {

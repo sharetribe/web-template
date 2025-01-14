@@ -17,7 +17,6 @@ class SearchFiltersMobileComponent extends Component {
   constructor(props) {
     super(props);
     this.state = { isFiltersOpenOnMobile: false, initialQueryParams: null };
-
     this.openFilters = this.openFilters.bind(this);
     this.cancelFilters = this.cancelFilters.bind(this);
     this.closeFilters = this.closeFilters.bind(this);
@@ -37,7 +36,7 @@ class SearchFiltersMobileComponent extends Component {
 
     history.push(
       createResourceLocatorString(
-        'SearchPage',
+        isTeambuilding,
         routeConfiguration,
         {},
         this.state.initialQueryParams,
