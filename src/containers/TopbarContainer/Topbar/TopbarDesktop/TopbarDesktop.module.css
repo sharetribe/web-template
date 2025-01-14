@@ -44,6 +44,12 @@
   margin-right: auto;
 }
 
+.spacer {
+  min-width: 320px;
+  height: 100%;
+  margin-right: auto;
+}
+
 .search {
   font-weight: var(--fontWeightMedium);
   font-size: 15px;
