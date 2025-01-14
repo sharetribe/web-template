@@ -133,7 +133,7 @@ function LandingPageSection({ onSearchSubmit }) {
               Creatività che fa la differenza
               </h1>
               <p className={css.teamText}>
-              I nostri workshop creativi aiutano il tuo team a riscoprire collaborazione,<br/>
+              I nostri workshop creativi aiutano il tuo team a riscoprire collaborazione,
               pensiero critico e empatia - competenze che l’AI non può replicare. <br/><br/>
               Rafforziamo ciò che rende i tuoi dipendenti unici, stimolando un pensiero laterale che nessun algoritmo può imitare. 
               Riportiamo i dipendenti al centro della creatività aziendale, trasformando idee in innovazioni concrete.<br/><br/>
