@@ -339,7 +339,6 @@ export class TransactionPanelComponent extends Component {
                 ) : (
                   <p />
                 )}
-
                 {this.props.protectedData.seatNames?.length > 0 ? (
                   <div>
                     <strong>Nomi prenotazione</strong>
@@ -363,6 +362,18 @@ export class TransactionPanelComponent extends Component {
               </div>
             ) : (
               <div className={css.feedContainer}>
+                {/*stateData.processState === "preauthorized" && (
+                  <iframe
+                    src="https://gy00ry15w6gzq36.embednotionpage.com/17bca81da14e80afa33fcb11b393bca8?pvs=105"
+                    style={{
+                      width: "100%",
+                      height: "500px",
+                      border: "none",
+                      padding: "0"
+                    }}
+                    title="Embedded Notion Page"
+                  ></iframe>
+                )*/}
                 {this.props.protectedData.seatNames?.length > 0 ? (
                   <div>
                     <strong>Nomi prenotazione:</strong>
@@ -431,16 +442,16 @@ export class TransactionPanelComponent extends Component {
               </>
             ) : null}
             {(stateData?.processState == 'accepted') &
-            !isProvider &
-            (listingType == 'teambuilding') ? (
+              !isProvider &
+              (listingType == 'teambuilding') ? (
               <>
                 <div className={css.mobileActionButtonSpacer} />
                 <div className={css.mobileActionButtons}>{teamButtons}</div>
               </>
             ) : null}
             {(stateData?.processState == 'accepted') &
-            isProvider &
-            (listingType == 'teambuilding') ? (
+              isProvider &
+              (listingType == 'teambuilding') ? (
               <>
                 <div className={css.mobileActionButtonSpacer} />
                 <div className={css.mobileActionButtons}>{providerButtons}</div>
@@ -488,13 +499,13 @@ export class TransactionPanelComponent extends Component {
                   transactionRole={transactionRole}
                 />
                 {(stateData?.processState == 'accepted') &
-                !isProvider &
-                (listingType == 'teambuilding') ? (
+                  !isProvider &
+                  (listingType == 'teambuilding') ? (
                   <div className={css.desktopActionButtons}>{teamButtons}</div>
                 ) : null}
                 {(stateData?.processState == 'accepted') &
-                isProvider &
-                (listingType == 'teambuilding') ? (
+                  isProvider &
+                  (listingType == 'teambuilding') ? (
                   <div className={css.desktopActionButtons}>{providerButtons}</div>
                 ) : null}
                 {stateData.showActionButtons ? (
