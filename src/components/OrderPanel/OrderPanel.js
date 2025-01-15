@@ -385,9 +385,12 @@ const OrderPanel = props => {
           />
         ) : showProductOrderForm ? (
           <>
-            <div className={css.buttonGroup}>
-              <ContactButton />
+             <div className={css.hideOnMobile}>
+              <div className={css.buttonGroup}>
+                <ContactButton />
+              </div>
             </div>
+            
             <ProductOrderForm
               formId="OrderPanelProductOrderForm"
               onSubmit={onSubmit}

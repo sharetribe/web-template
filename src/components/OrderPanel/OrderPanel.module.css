@@ -38,6 +38,13 @@
   }
 }
 
+.hideOnMobile{
+  display:none;
+  @media (--viewportMedium) {
+    display: block;
+  }
+}
+
 .heading {
   /* Font */
   color: var(--colorGrey700);
@@ -184,7 +191,7 @@
   padding: 18px 24px 18px 16px;
   background-color: var(--colorWhite);
   box-shadow: var(--boxShadowTop);
-  display: flex;
+  /*display: flex;*/
 
   /* Contain repainting to this component only */
   /* 3D painting container helps scrolling */
@@ -225,6 +232,7 @@
   align-items: center;
   justify-content: center;
   gap: unset;
+  margin: 0 0 12px;
 }
 
 .priceValue {
@@ -291,7 +299,7 @@
 
 .buttonGroup {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 12px;
   width: 100%;
 }

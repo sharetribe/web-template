@@ -3,12 +3,14 @@
 .root {
   display: flex;
   align-items: center;
-  justify-content: center;
+  
+  justify-content: left;
   height: 60px;
-  margin: 0;
+  margin: 1px 0 0 62px;
 
   @media (--viewportMedium) {
     margin: 6px 0;
+    justify-content: center;
   }
 }
 
@@ -31,7 +33,10 @@
   max-height: 24px;
 }
 .logo36 {
-  max-height: 36px;
+  max-height: 24px;
+  @media (--viewportMedium) {
+    max-height: 36px;
+  }
 }
 .logo48 {
   max-height: 48px;
