@@ -14,6 +14,10 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+## [v7.0.0] 2025-01-15
+
+This major release takes the React v17.0.2 into use.
+
 - [fix] EditListingWizard: fix a bug with YouTube field.
   [#533](https://github.com/sharetribe/web-template/pull/533)
 - [fix] CustomExtendedDataField.module.css: add missing customMediaQuery import.
@@ -38,6 +42,8 @@ way to update this template, but currently, we follow a pattern:
   [#524](https://github.com/sharetribe/web-template/pull/524)
 - [change] Update the wording of the numberTooSmall error message for consistency.
   [#522](https://github.com/sharetribe/web-template/pull/522)
+
+  [v7.0.0]: https://github.com/sharetribe/web-template/compare/v6.3.0...v7.0.0
 
 ## [v6.3.0] 2025-01-08
 
