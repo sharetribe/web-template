@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { func, object, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { injectIntl, intlShape } from '../../../util/reactIntl';
@@ -9,6 +8,20 @@ import { ensureListing } from '../../../util/data';
 
 import css from './SearchMapPriceLabel.module.css';
 
+/**
+ * SearchMapPriceLabel component
+ * TODO: change to functional component
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that extends the default class for the root element
+ * @param {propTypes.listing} props.listing - The listing
+ * @param {Function} props.onListingClicked - The function to handle the listing click
+ * @param {Object} props.config - The configuration
+ * @param {intlShape} props.intl - The intl object
+ * @returns {JSX.Element}
+ */
 class SearchMapPriceLabel extends Component {
   shouldComponentUpdate(nextProps) {
     const currentListing = ensureListing(this.props.listing);
@@ -59,21 +72,5 @@ class SearchMapPriceLabel extends Component {
     );
   }
 }
-
-SearchMapPriceLabel.defaultProps = {
-  className: null,
-  rootClassName: null,
-};
-
-SearchMapPriceLabel.propTypes = {
-  className: string,
-  rootClassName: string,
-  listing: propTypes.listing.isRequired,
-  onListingClicked: func.isRequired,
-  config: object.isRequired,
-
-  // from injectIntl
-  intl: intlShape.isRequired,
-};
 
 export default injectIntl(SearchMapPriceLabel);

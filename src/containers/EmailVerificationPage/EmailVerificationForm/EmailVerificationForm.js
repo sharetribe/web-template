@@ -1,9 +1,7 @@
 import React from 'react';
-import { bool } from 'prop-types';
-import { compose } from 'redux';
 import { Form as FinalForm, Field } from 'react-final-form';
 
-import { FormattedMessage, injectIntl } from '../../../util/reactIntl';
+import { FormattedMessage } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import {
   Heading,
@@ -16,11 +14,22 @@ import {
 
 import css from './EmailVerificationForm.module.css';
 
-const EmailVerificationFormComponent = props => (
+/**
+ * The EmailVerificationForm component.
+ *
+ * @component
+ * @param {Object} props
+ * @param {Object} props.currentUser - The current user
+ * @param {boolean} props.inProgress - Whether the form is in progress
+ * @param {Function} props.handleSubmit - The handle submit function
+ * @param {propTypes.error} props.verificationError - The verification error
+ * @returns {JSX.Element} email verification form component
+ */
+const EmailVerificationForm = props => (
   <FinalForm
     {...props}
     render={formRenderProps => {
-      const { currentUser, inProgress, handleSubmit, verificationError } = formRenderProps;
+      const { currentUser, inProgress = false, handleSubmit, verificationError } = formRenderProps;
 
       const { email, emailVerified, pendingEmail, profile } = currentUser.attributes;
       const emailToVerify = <strong>{pendingEmail || email}</strong>;
@@ -124,19 +133,5 @@ const EmailVerificationFormComponent = props => (
     }}
   />
 );
-
-EmailVerificationFormComponent.defaultProps = {
-  currentUser: null,
-  inProgress: false,
-  verificationError: null,
-};
-
-EmailVerificationFormComponent.propTypes = {
-  inProgress: bool,
-  currentUser: propTypes.currentUser.isRequired,
-  verificationError: propTypes.error,
-};
-
-const EmailVerificationForm = compose(injectIntl)(EmailVerificationFormComponent);
 
 export default EmailVerificationForm;

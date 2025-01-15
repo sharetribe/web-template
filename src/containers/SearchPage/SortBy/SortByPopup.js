@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { arrayOf, func, number, shape, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { Menu, MenuContent, MenuItem, MenuLabel } from '../../../components';
@@ -25,6 +24,22 @@ const SortByIcon = props => {
   );
 };
 
+/**
+ * SortByPopup component
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.rootClassName] - Custom class that extends the default class for the root element
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.menuLabelRootClassName] - Custom class that extends the default class for the menu label
+ * @param {string} props.urlParam - The url param
+ * @param {string} props.label - The label
+ * @param {Function} props.onSelect - The function to handle the select
+ * @param {Array<Object>} props.options - The options [{ key: string, label: string }]
+ * @param {string} [props.initialValue] - The initial value
+ * @param {number} [props.contentPlacementOffset] - The content placement offset
+ * @returns {JSX.Element}
+ */
 const SortByPopup = props => {
   const [isOpen, setIsOpen] = useState(false);
   const {
@@ -35,7 +50,7 @@ const SortByPopup = props => {
     label,
     options,
     initialValue,
-    contentPlacementOffset,
+    contentPlacementOffset = 0,
     onSelect,
   } = props;
 
@@ -92,31 +107,6 @@ const SortByPopup = props => {
       </MenuContent>
     </Menu>
   );
-};
-
-SortByPopup.defaultProps = {
-  rootClassName: null,
-  className: null,
-  menuLabelRootClassName: null,
-  initialValue: null,
-  contentPlacementOffset: 0,
-};
-
-SortByPopup.propTypes = {
-  rootClassName: string,
-  className: string,
-  menuLabelRootClassName: string,
-  urlParam: string.isRequired,
-  label: string.isRequired,
-  onSelect: func.isRequired,
-  options: arrayOf(
-    shape({
-      key: string.isRequired,
-      label: string.isRequired,
-    })
-  ).isRequired,
-  initialValue: string,
-  contentPlacementOffset: number,
 };
 
 export default SortByPopup;

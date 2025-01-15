@@ -1,5 +1,4 @@
 import React from 'react';
-import { arrayOf, bool, func, node, number, object, shape, string } from 'prop-types';
 import classNames from 'classnames';
 import { LinkedLogo } from '../../../../components';
 
@@ -31,18 +30,56 @@ const getGridCss = numberOfColumns => {
   return contentConfig ? contentConfig.gridCss : GRID_CONFIG[0].gridCss;
 };
 
-// Section component that's able to show blocks in multiple different columns (defined by "numberOfColumns" prop)
+/**
+ * @typedef {Object} SocialMediaLinkConfig
+ * @property {'socialMediaLink'} fieldType
+ * @property {string} platform
+ * @property {string} url
+ */
+
+/**
+ * @typedef {Object} BlockConfig
+ * @property {string} blockId
+ * @property {string} blockName
+ * @property {'defaultBlock' | 'footerBlock' | 'socialMediaLink'} blockType
+ */
+
+/**
+ * @typedef {Object} FieldComponentConfig
+ * @property {ReactNode} component
+ * @property {Function} pickValidProps
+ */
+
+/**
+ * Section component that's able to show blocks in multiple different columns (defined by "numberOfColumns" prop)
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string} props.sectionId id of the section
+ * @param {'footer'} props.sectionType
+ * @param {number} props.numberOfColumns columns for blocks in footer (1-4)
+ * @param {Array<SocialMediaLinkConfig>?} props.socialMediaLinks array of social media link configs
+ * @param {Object?} props.slogan
+ * @param {Object?} props.copyright
+ * @param {Object?} props.appearance
+ * @param {Array<BlockConfig>?} props.blocks array of block configs
+ * @param {Object} props.options extra options for the section component (e.g. custom fieldComponents)
+ * @param {Object<string,FieldComponentConfig>?} props.options.fieldComponents custom fields
+ * @returns {JSX.Element} Section for article content
+ */
 const SectionFooter = props => {
   const {
     sectionId,
     className,
     rootClassName,
-    numberOfColumns,
-    socialMediaLinks,
+    numberOfColumns = 1,
+    socialMediaLinks = [],
     slogan,
     appearance,
     copyright,
-    blocks,
+    blocks = [],
     options,
     linkLogoToExternalSite,
   } = props;
@@ -108,36 +145,6 @@ const SectionFooter = props => {
       </div>
     </SectionContainer>
   );
-};
-
-const propTypeOption = shape({
-  fieldComponents: shape({ component: node, pickValidProps: func }),
-});
-
-SectionFooter.defaultProps = {
-  className: null,
-  rootClassName: null,
-  textClassName: null,
-  numberOfColumns: 1,
-  socialMediaLinks: [],
-  slogan: null,
-  copyright: null,
-  appearance: null,
-  blocks: [],
-  options: null,
-};
-
-SectionFooter.propTypes = {
-  sectionId: string.isRequired,
-  className: string,
-  rootClassName: string,
-  numberOfColumns: number,
-  socialMediaLinks: arrayOf(object),
-  slogan: object,
-  copyright: object,
-  appearance: object,
-  blocks: arrayOf(object),
-  options: propTypeOption,
 };
 
 export default SectionFooter;

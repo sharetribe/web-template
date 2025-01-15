@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { NamedLink } from '../../components';
 
@@ -21,19 +20,28 @@ const Tab = props => {
   );
 };
 
-Tab.defaultProps = { className: null, disabled: false, selected: false };
+/**
+ * @typedef {Object} TabConfig
+ * @property {string} text - The text to be rendered in the tab
+ * @property {boolean} disabled - Whether the tab is disabled
+ * @property {boolean} selected - Whether the tab is selected
+ * @property {Object} linkProps - The props to be passed to the link component
+ * @property {string} linkProps.name - The name of the link
+ * @property {string} linkProps.params - The path params to be passed to the link component
+ * @property {string} linkProps.to - The rest of the URL params neede
+ */
 
-const { arrayOf, bool, node, object, string } = PropTypes;
-
-Tab.propTypes = {
-  id: string.isRequired,
-  className: string,
-  text: node.isRequired,
-  disabled: bool,
-  selected: bool,
-  linkProps: object.isRequired,
-};
-
+/**
+ * A component that renders a tab navigation.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} [props.tabRootClassName] - Custom class that overrides the default class for the tab element
+ * @param {Array<TabConfig>} props.tabs - The tabs to render
+ * @returns {JSX.Element}
+ */
 const TabNav = props => {
   const { className, rootClassName, tabRootClassName, tabs } = props;
   const classes = classNames(rootClassName || css.root, className);
@@ -46,20 +54,6 @@ const TabNav = props => {
       })}
     </nav>
   );
-};
-
-TabNav.defaultProps = {
-  className: null,
-  rootClassName: null,
-  tabRootClassName: null,
-  tabClassName: null,
-};
-
-TabNav.propTypes = {
-  className: string,
-  rootClassName: string,
-  tabRootClassName: string,
-  tabs: arrayOf(object).isRequired,
 };
 
 export default TabNav;

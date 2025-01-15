@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { bool, func, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import { useConfiguration } from '../../context/configurationContext';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { parse } from '../../util/urlHelpers';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
@@ -91,11 +90,23 @@ const ResetDoneContent = () => {
   );
 };
 
+/**
+ * The reset-password page.
+ *
+ * @param {Object} props
+ * @param {boolean} props.scrollingDisabled - Whether the page is scrolling disabled
+ * @param {boolean} props.resetPasswordInProgress - Whether the reset password is in progress
+ * @param {propTypes.error} props.resetPasswordError - The reset password error
+ * @param {function} props.onSubmitPassword - The function to submit the password
+ * @param {Object} props.location - The location object
+ * @param {string} props.location.search - The search string
+ * @returns {JSX.Element} Password reset page component
+ */
 export const PasswordResetPageComponent = props => {
   const [state, setState] = useState({ newPasswordSubmitted: false });
   const config = useConfiguration();
+  const intl = useIntl();
   const {
-    intl,
     scrollingDisabled,
     location,
     resetPasswordInProgress,
@@ -153,25 +164,6 @@ export const PasswordResetPageComponent = props => {
   );
 };
 
-PasswordResetPageComponent.defaultProps = {
-  resetPasswordError: null,
-};
-
-PasswordResetPageComponent.propTypes = {
-  scrollingDisabled: bool.isRequired,
-  resetPasswordInProgress: bool.isRequired,
-  resetPasswordError: propTypes.error,
-  onSubmitPassword: func.isRequired,
-
-  // from withRouter
-  location: shape({
-    search: string,
-  }).isRequired,
-
-  // from injectIntl
-  intl: intlShape.isRequired,
-};
-
 const mapStateToProps = state => {
   const { resetPasswordInProgress, resetPasswordError } = state.PasswordResetPage;
   return {
@@ -196,8 +188,7 @@ const PasswordResetPage = compose(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  ),
-  injectIntl
+  )
 )(PasswordResetPageComponent);
 
 export default PasswordResetPage;

@@ -1,5 +1,4 @@
 import React from 'react';
-import { string, shape, number, object } from 'prop-types';
 import polyline from '@mapbox/polyline';
 
 import { lazyLoadWithDimensions } from '../../util/uiHelpers';
@@ -34,6 +33,25 @@ const mapOverlay = (center, mapsConfig) => {
   return markerOverlay(center);
 };
 
+/**
+ * Static version of Mapbox
+ * Note: Google supports max 640px wide static map tile. It's enforced with Mapbox too.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to component's own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string?} props.address
+ * @param {Object} props.center LatLng
+ * @param {number} props.center.lat latitude
+ * @param {number} props.center.lng longitude
+ * @param {number} props.zoom zoom level
+ * @param {Object} props.mapsConfig
+ * @param {Object} props.dimensions
+ * @param {number} props.dimensions.width
+ * @param {number} props.dimensions.height
+ * @returns {JSX.Element} static version of Mapbox
+ */
 const StaticMapboxMap = props => {
   const { address, center, zoom, mapsConfig, dimensions } = props;
   const { width, height } = dimensions;
@@ -52,27 +70,6 @@ const StaticMapboxMap = props => {
     `?access_token=${mapsConfig.mapboxAccessToken}`;
 
   return <img src={src} alt={address} crossOrigin="anonymous" />;
-};
-
-StaticMapboxMap.defaultProps = {
-  address: '',
-  center: null,
-};
-
-StaticMapboxMap.propTypes = {
-  address: string,
-  center: shape({
-    lat: number.isRequired,
-    lng: number.isRequired,
-  }).isRequired,
-  zoom: number.isRequired,
-  mapsConfig: object.isRequired,
-
-  // from withDimensions
-  dimensions: shape({
-    width: number.isRequired,
-    height: number.isRequired,
-  }).isRequired,
 };
 
 export default lazyLoadWithDimensions(StaticMapboxMap, { maxWidth: '640px' });

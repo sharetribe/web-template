@@ -1,10 +1,20 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { REVIEW_RATINGS } from '../../util/types';
 
 import { IconReviewStar } from '../../components';
 
+/**
+ * A component that renders a review rating.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.reviewStarClassName] - Custom class that extends the default class for the review star element
+ * @param {1|2|3|4|5} props.rating - The rating to render
+ * @returns {JSX.Element}
+ */
 const ReviewRating = props => {
   const { className, rootClassName, reviewStarClassName, rating } = props;
   const classes = classNames(rootClassName, className);
@@ -21,21 +31,6 @@ const ReviewRating = props => {
       ))}
     </span>
   );
-};
-
-ReviewRating.defaultProps = {
-  rootClassName: null,
-  className: null,
-  reviewStarClassName: null,
-};
-
-const { string, oneOf } = PropTypes;
-
-ReviewRating.propTypes = {
-  rating: oneOf(REVIEW_RATINGS).isRequired,
-  reviewStartClassName: string,
-  rootClassName: string,
-  className: string,
 };
 
 export default ReviewRating;

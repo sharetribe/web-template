@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { act } from 'react';
 import '@testing-library/jest-dom';
 
 import { renderWithProviders as render, testingLibrary } from '../../util/testHelpers';
@@ -41,13 +41,15 @@ describe('AuthenticationPage', () => {
     jest.clearAllMocks();
   });
 
-  it('has just email and password inputs in login tab if social logins are not enabled', () => {
+  it('has just email and password inputs in login tab if social logins are not enabled', async () => {
     // We want to make sure that during the test the env variables
     // for social logins are as we expect them to be
     process.env = Object.assign(process.env, { REACT_APP_FACEBOOK_APP_ID: '' });
     process.env = Object.assign(process.env, { REACT_APP_GOOGLE_CLIENT_ID: '' });
 
-    render(<AuthenticationPage {...props} />);
+    await act(async () => {
+      render(<AuthenticationPage {...props} />);
+    });
 
     expect(screen.getByRole('textbox', { name: 'LoginForm.emailLabel' })).toBeInTheDocument();
     expect(screen.getByLabelText('LoginForm.passwordLabel')).toBeInTheDocument();
@@ -74,8 +76,10 @@ describe('AuthenticationPage', () => {
     // First we can check that login button is in the document
     expect(screen.getByRole('button', { name: 'LoginForm.logIn' })).toBeInTheDocument();
 
-    // User event for changing the tab
-    userEvent.click(screen.getByRole('link', { name: 'AuthenticationPage.signupLinkText' }));
+    await act(async () => {
+      // User event for changing the tab
+      userEvent.click(screen.getByRole('link', { name: 'AuthenticationPage.signupLinkText' }));
+    });
 
     // Then we can check that login sign up button is in the document
     waitFor(() =>

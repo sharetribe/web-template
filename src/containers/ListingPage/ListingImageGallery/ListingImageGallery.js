@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import ReactImageGallery from 'react-image-gallery';
 
 import { propTypes } from '../../../util/types';
-import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import {
   AspectRatioWrapper,
   Button,
@@ -50,9 +49,22 @@ const getFirstImageAspectRatio = (firstImage, scaledVariant) => {
     : { aspectWidth: 1, aspectHeight: 1 };
 };
 
+/**
+ * The ListingImageGallery component.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {Array<propTypes.image>} props.images - The images
+ * @param {Array<string>} props.imageVariants - The image variants
+ * @param {Array<string>} props.thumbnailVariants - The thumbnail variants
+ * @returns {JSX.Element} listing image gallery component
+ */
 const ListingImageGallery = props => {
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const { intl, rootClassName, className, images, imageVariants, thumbnailVariants } = props;
+  const intl = useIntl();
+  const { rootClassName, className, images, imageVariants, thumbnailVariants } = props;
   const thumbVariants = thumbnailVariants || imageVariants;
   // imageVariants are scaled variants.
   const { aspectWidth, aspectHeight } = getFirstImageAspectRatio(images?.[0], imageVariants[0]);
@@ -174,23 +186,4 @@ const ListingImageGallery = props => {
   );
 };
 
-ListingImageGallery.defaultProps = {
-  rootClassName: null,
-  className: null,
-  thumbnailVariants: null,
-};
-
-const { string, arrayOf } = PropTypes;
-
-ListingImageGallery.propTypes = {
-  rootClassName: string,
-  className: string,
-  images: arrayOf(propTypes.image).isRequired,
-  imageVariants: arrayOf(string).isRequired,
-  thumbnailVariants: arrayOf(string),
-
-  // from injectIntl
-  intl: intlShape.isRequired,
-};
-
-export default injectIntl(ListingImageGallery);
+export default ListingImageGallery;

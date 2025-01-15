@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { bool, func, node, object, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
@@ -9,6 +8,27 @@ import FilterForm from '../FilterForm/FilterForm';
 
 import css from './FilterPlain.module.css';
 
+/**
+ * FilterPlain component
+ * TODO: change to functional component
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} [props.plainClassName] - Custom class that extends the default class css.plain
+ * @param {string} props.id - The ID
+ * @param {Function} props.onSubmit - The function to submit
+ * @param {React.Node} props.label - The label
+ * @param {React.Node} [props.labelSelection] - The label with active selection
+ * @param {React.Node} [props.labelSelectionSeparator] - The label selection separator
+ * @param {boolean} props.isSelected - Whether the filter is selected
+ * @param {React.Node} props.children - The children
+ * @param {Object} [props.initialValues] - The initial values
+ * @param {boolean} [props.keepDirtyOnReinitialize] - Whether to keep dirty on reinitialize
+ * @param {intlShape} props.intl - The intl object
+ * @returns {JSX.Element}
+ */
 class FilterPlainComponent extends Component {
   constructor(props) {
     super(props);
@@ -50,7 +70,7 @@ class FilterPlainComponent extends Component {
       isSelected,
       children,
       initialValues,
-      keepDirtyOnReinitialize,
+      keepDirtyOnReinitialize = false,
     } = this.props;
     const classes = classNames(rootClassName || css.root, className);
 
@@ -98,34 +118,6 @@ class FilterPlainComponent extends Component {
     );
   }
 }
-
-FilterPlainComponent.defaultProps = {
-  rootClassName: null,
-  className: null,
-  plainClassName: null,
-  initialValues: null,
-  keepDirtyOnReinitialize: false,
-  labelSelection: null,
-  labelSelectionSeparator: null,
-};
-
-FilterPlainComponent.propTypes = {
-  rootClassName: string,
-  className: string,
-  plainClassName: string,
-  id: string.isRequired,
-  onSubmit: func.isRequired,
-  label: node.isRequired,
-  labelSelection: node,
-  labelSelectionSeparator: node,
-  isSelected: bool.isRequired,
-  children: node.isRequired,
-  initialValues: object,
-  keepDirtyOnReinitialize: bool,
-
-  // form injectIntl
-  intl: intlShape.isRequired,
-};
 
 const FilterPlain = injectIntl(FilterPlainComponent);
 

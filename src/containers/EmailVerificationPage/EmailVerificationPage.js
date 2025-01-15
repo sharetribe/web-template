@@ -1,11 +1,10 @@
 import React from 'react';
-import { bool, func, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import { useConfiguration } from '../../context/configurationContext';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { parse } from '../../util/urlHelpers';
 import { ensureCurrentUser } from '../../util/data';
@@ -47,11 +46,26 @@ const parseVerificationToken = search => {
   return null;
 };
 
+/**
+ * The EmailVerificationPage component.
+ *
+ * @component
+ * @param {Object} props
+ * @param {propTypes.currentUser} props.currentUser - The current user
+ * @param {boolean} props.scrollingDisabled - Whether scrolling is disabled
+ * @param {Function} props.submitVerification - The submit verification function
+ * @param {boolean} props.isVerified - Whether the email is verified
+ * @param {boolean} props.emailVerificationInProgress - Whether the email verification is in progress
+ * @param {propTypes.error} props.verificationError - The verification error
+ * @param {Object} props.location - The location object
+ * @param {string} props.location.search - The search object
+ * @returns {JSX.Element} email verification page component
+ */
 export const EmailVerificationPageComponent = props => {
   const config = useConfiguration();
+  const intl = useIntl();
   const {
     currentUser,
-    intl,
     scrollingDisabled,
     submitVerification,
     isVerified,
@@ -112,28 +126,6 @@ export const EmailVerificationPageComponent = props => {
   );
 };
 
-EmailVerificationPageComponent.defaultProps = {
-  currentUser: null,
-  verificationError: null,
-};
-
-EmailVerificationPageComponent.propTypes = {
-  currentUser: propTypes.currentUser,
-  scrollingDisabled: bool.isRequired,
-  submitVerification: func.isRequired,
-  isVerified: bool,
-  emailVerificationInProgress: bool.isRequired,
-  verificationError: propTypes.error,
-
-  // from withRouter
-  location: shape({
-    search: string,
-  }).isRequired,
-
-  // from injectIntl
-  intl: intlShape.isRequired,
-};
-
 const mapStateToProps = state => {
   const { currentUser } = state.user;
   const { isVerified, verificationError, verificationInProgress } = state.emailVerification;
@@ -163,8 +155,7 @@ const EmailVerificationPage = compose(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  ),
-  injectIntl
+  )
 )(EmailVerificationPageComponent);
 
 export default EmailVerificationPage;

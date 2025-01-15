@@ -1,15 +1,12 @@
 import React from 'react';
-import PropTypes, { arrayOf } from 'prop-types';
 
 // Import configs and util modules
 import {
   LISTING_PAGE_PARAM_TYPE_DRAFT,
   LISTING_PAGE_PARAM_TYPE_NEW,
-  LISTING_PAGE_PARAM_TYPES,
 } from '../../../util/urlHelpers';
 import { ensureListing } from '../../../util/data';
 import { createResourceLocatorString } from '../../../util/routes';
-import { propTypes } from '../../../util/types';
 
 // Import modules from this directory
 import EditListingAvailabilityPanel from './EditListingAvailabilityPanel/EditListingAvailabilityPanel';
@@ -72,6 +69,13 @@ const redirectAfterDraftUpdate = (listingId, params, tab, marketplaceTabs, histo
   history.push(to);
 };
 
+/**
+ * A single tab on the EditListingWizard.
+ *
+ * @component
+ * @param {Object} props
+ * @returns {JSX.Element} EditListingWizardTab component
+ */
 const EditListingWizardTab = props => {
   const {
     tab,
@@ -254,61 +258,6 @@ const EditListingWizardTab = props => {
     default:
       return null;
   }
-};
-
-EditListingWizardTab.defaultProps = {
-  listing: null,
-  updatedTab: null,
-};
-
-const { array, bool, func, object, oneOf, shape, string } = PropTypes;
-
-EditListingWizardTab.propTypes = {
-  params: shape({
-    id: string.isRequired,
-    slug: string.isRequired,
-    type: oneOf(LISTING_PAGE_PARAM_TYPES).isRequired,
-    tab: oneOf(SUPPORTED_TABS).isRequired,
-  }).isRequired,
-  locationSearch: object,
-  errors: shape({
-    createListingDraftError: object,
-    publishListingError: object,
-    updateListingError: object,
-    showListingsError: object,
-    uploadImageError: object,
-  }).isRequired,
-  fetchInProgress: bool.isRequired,
-  newListingPublished: bool.isRequired,
-  history: shape({
-    push: func.isRequired,
-    replace: func.isRequired,
-  }).isRequired,
-  images: array.isRequired,
-
-  // We cannot use propTypes.listing since the listing might be a draft.
-  listing: shape({
-    attributes: shape({
-      publicData: object,
-      description: string,
-      geolocation: object,
-      pricing: object,
-      title: string,
-    }),
-    images: array,
-  }),
-
-  handleCreateFlowTabScrolling: func.isRequired,
-  handlePublishListing: func.isRequired,
-  onUpdateListing: func.isRequired,
-  onCreateListingDraft: func.isRequired,
-  onImageUpload: func.isRequired,
-  onRemoveImage: func.isRequired,
-  onListingTypeChange: func.isRequired,
-  updatedTab: string,
-  updateInProgress: bool.isRequired,
-  config: object.isRequired,
-  routeConfiguration: arrayOf(propTypes.route).isRequired,
 };
 
 export default EditListingWizardTab;

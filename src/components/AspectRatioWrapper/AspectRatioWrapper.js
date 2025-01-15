@@ -1,9 +1,20 @@
 import React from 'react';
-import { node, number, string } from 'prop-types';
 import classNames from 'classnames';
 
 import css from './AspectRatioWrapper.module.css';
 
+/**
+ * Container that maintains a given aspect ratio, which should be given through width and heigh props
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {number} props.width
+ * @param {number} props.height
+ * @param {ReactNode} props.children
+ * @returns {JSX.Element} container element that maintains given aspect ratio
+ */
 const AspectRatioWrapper = props => {
   const { children, className, rootClassName, width, height, ...rest } = props;
   const classes = classNames(rootClassName || css.root, className);
@@ -18,20 +29,6 @@ const AspectRatioWrapper = props => {
       </div>
     </div>
   );
-};
-
-AspectRatioWrapper.defaultProps = {
-  className: null,
-  rootClassName: null,
-  children: null,
-};
-
-AspectRatioWrapper.propTypes = {
-  className: string,
-  rootClassName: string,
-  width: number.isRequired,
-  height: number.isRequired,
-  children: node,
 };
 
 export default AspectRatioWrapper;

@@ -1,12 +1,11 @@
 import React from 'react';
-import { bool, func, oneOf, shape } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { createResourceLocatorString } from '../../util/routes';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { ensureCurrentUser } from '../../util/data';
 import { propTypes } from '../../util/types';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
@@ -76,9 +75,33 @@ const handleGetStripeConnectAccountLinkFn = (getLinkFn, commonParams) => type =>
     .catch(err => console.error(err));
 };
 
+/**
+ * StripePayoutPage component
+ *
+ * @component
+ * @param {Object} props
+ * @param {propTypes.currentUser} props.currentUser - The current user
+ * @param {boolean} props.scrollingDisabled - Whether scrolling is disabled
+ * @param {boolean} props.getAccountLinkInProgress - Whether the account link is in progress
+ * @param {boolean} props.payoutDetailsSaveInProgress - Whether the payout details are in progress
+ * @param {propTypes.error} props.createStripeAccountError - The create stripe account error
+ * @param {propTypes.error} props.getAccountLinkError - The get account link error
+ * @param {propTypes.error} props.updateStripeAccountError - The update stripe account error
+ * @param {propTypes.error} props.fetchStripeAccountError - The fetch stripe account error
+ * @param {Object} props.stripeAccount - The stripe account
+ * @param {boolean} props.stripeAccountFetched - Whether the stripe account is fetched
+ * @param {boolean} props.payoutDetailsSaved - Whether the payout details are saved
+ * @param {Function} props.onPayoutDetailsChange - The function to handle the payout details change
+ * @param {Function} props.onPayoutDetailsSubmit - The function to handle the payout details submit
+ * @param {Function} props.onGetStripeConnectAccountLink - The function to handle the get stripe connect account link
+ * @param {Object} props.params - The path params
+ * @param {STRIPE_ONBOARDING_RETURN_URL_SUCCESS | STRIPE_ONBOARDING_RETURN_URL_FAILURE} props.params.returnURLType - The return URL type (success or failure)
+ * @returns {JSX.Element}
+ */
 export const StripePayoutPageComponent = props => {
   const config = useConfiguration();
   const routes = useRouteConfiguration();
+  const intl = useIntl();
   const {
     currentUser,
     scrollingDisabled,
@@ -95,10 +118,9 @@ export const StripePayoutPageComponent = props => {
     payoutDetailsSaveInProgress,
     payoutDetailsSaved,
     params,
-    intl,
   } = props;
 
-  const { returnURLType } = params;
+  const { returnURLType } = params || {};
   const ensuredCurrentUser = ensureCurrentUser(currentUser);
   const currentUserLoaded = !!ensuredCurrentUser.id;
   const stripeConnected = currentUserLoaded && !!stripeAccount && !!stripeAccount.id;
@@ -219,42 +241,6 @@ export const StripePayoutPageComponent = props => {
   );
 };
 
-StripePayoutPageComponent.defaultProps = {
-  currentUser: null,
-  createStripeAccountError: null,
-  updateStripeAccountError: null,
-  fetchStripeAccountError: null,
-  getAccountLinkError: null,
-  stripeAccount: null,
-  params: {
-    returnURLType: null,
-  },
-};
-
-StripePayoutPageComponent.propTypes = {
-  currentUser: propTypes.currentUser,
-  scrollingDisabled: bool.isRequired,
-  getAccountLinkInProgress: bool.isRequired,
-  payoutDetailsSaveInProgress: bool.isRequired,
-  createStripeAccountError: propTypes.error,
-  getAccountLinkError: propTypes.error,
-  updateStripeAccountError: propTypes.error,
-  fetchStripeAccountError: propTypes.error,
-  stripeAccount: propTypes.stripeAccount,
-  stripeAccountFetched: bool.isRequired,
-  payoutDetailsSaved: bool.isRequired,
-
-  onPayoutDetailsChange: func.isRequired,
-  onPayoutDetailsSubmit: func.isRequired,
-  onGetStripeConnectAccountLink: func.isRequired,
-  params: shape({
-    returnURLType: oneOf(STRIPE_ONBOARDING_RETURN_URL_TYPES),
-  }),
-
-  // from injectIntl
-  intl: intlShape.isRequired,
-};
-
 const mapStateToProps = state => {
   const {
     getAccountLinkInProgress,
@@ -293,8 +279,7 @@ const StripePayoutPage = compose(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  ),
-  injectIntl
+  )
 )(StripePayoutPageComponent);
 
 export default StripePayoutPage;

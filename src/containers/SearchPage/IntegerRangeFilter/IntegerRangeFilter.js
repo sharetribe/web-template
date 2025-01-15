@@ -1,5 +1,4 @@
 import React, { useRef } from 'react';
-import { arrayOf, bool, func, node, object, string } from 'prop-types';
 
 import debounce from 'lodash/debounce';
 import classNames from 'classnames';
@@ -33,6 +32,26 @@ const formatToQueryParam = (range, queryParamName) => {
   return { [queryParamName]: value };
 };
 
+/**
+ * IntegerRangeFilter component
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} props.id - The ID
+ * @param {string} props.name - The name
+ * @param {React.Node} props.label - The label
+ * @param {Array<string>} props.queryParamNames - The query param names
+ * @param {Object} props.initialValues - The initial values
+ * @param {boolean} [props.showAsPopup] - Whether to show the filter as a popup
+ * @param {number} [props.min] - The minimum value
+ * @param {number} [props.max] - The maximum value
+ * @param {number} [props.step] - The step
+ * @param {Function} props.onSubmit - The function to submit
+ * @param {intlShape} props.intl - The intl object
+ * @returns {JSX.Element}
+ */
 const IntegerRangeFilter = props => {
   const {
     min,
@@ -47,7 +66,7 @@ const IntegerRangeFilter = props => {
     intl,
     id,
     name,
-    showAsPopup,
+    showAsPopup = true,
     ...rest
   } = props;
 
@@ -160,26 +179,6 @@ const IntegerRangeFilter = props => {
       />
     </FilterPlain>
   );
-};
-
-IntegerRangeFilter.defaultProps = {
-  rootClassName: null,
-  className: null,
-  showAsPopup: true,
-  liveEdit: false,
-  initialValues: null,
-};
-
-IntegerRangeFilter.propTypes = {
-  rootClassName: string,
-  className: string,
-  id: string.isRequired,
-  label: node,
-  liveEdit: bool,
-  queryParamNames: arrayOf(string).isRequired,
-  onSubmit: func.isRequired,
-  initialValues: object,
-  showAsPopup: bool,
 };
 
 export default IntegerRangeFilter;

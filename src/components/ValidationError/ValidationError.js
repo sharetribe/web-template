@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import css from './ValidationError.module.css';
@@ -9,25 +8,21 @@ import css from './ValidationError.module.css';
  * input fields. The component takes the final-form Field component
  * `meta` object as a prop and infers if an error message should be
  * shown.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {Object} props.fieldMeta - The field meta object (Final Form Field meta)
+ * @param {boolean} props.fieldMeta.touched - Whether the field has been touched
+ * @param {string} [props.fieldMeta.error] - The error message
+ * @returns {JSX.Element} Validation error component
  */
 const ValidationError = props => {
   const { rootClassName, className, fieldMeta } = props;
   const { touched, error } = fieldMeta;
   const classes = classNames(rootClassName || css.root, className);
   return touched && error ? <div className={classes}>{error}</div> : null;
-};
-
-ValidationError.defaultProps = { rootClassName: null, className: null };
-
-const { shape, bool, string } = PropTypes;
-
-ValidationError.propTypes = {
-  rootClassName: string,
-  className: string,
-  fieldMeta: shape({
-    touched: bool.isRequired,
-    error: string,
-  }).isRequired,
 };
 
 export default ValidationError;

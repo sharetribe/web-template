@@ -5,6 +5,15 @@ import { LINE_ITEM_PICKUP_FEE, propTypes } from '../../util/types';
 
 import css from './OrderBreakdown.module.css';
 
+/**
+ * A component that renders the pickup fee as a line item.
+ *
+ * @component
+ * @param {Object} props
+ * @param {Array<propTypes.lineItem>} props.lineItems - The line items to render
+ * @param {intlShape} props.intl - The intl object
+ * @returns {JSX.Element}
+ */
 const LineItemPickupFeeMaybe = props => {
   const { lineItems, intl } = props;
 
@@ -20,11 +29,6 @@ const LineItemPickupFeeMaybe = props => {
       <span className={css.itemValue}>{formatMoney(intl, pickupFeeLineItem.lineTotal)}</span>
     </div>
   ) : null;
-};
-
-LineItemPickupFeeMaybe.propTypes = {
-  lineItems: propTypes.lineItems.isRequired,
-  intl: intlShape.isRequired,
 };
 
 export default LineItemPickupFeeMaybe;

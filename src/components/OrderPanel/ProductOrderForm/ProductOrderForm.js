@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { bool, func, number, string } from 'prop-types';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
 
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
@@ -298,6 +297,30 @@ const renderForm = formRenderProps => {
   );
 };
 
+/**
+ * A form for ordering a product.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} props.marketplaceName - The name of the marketplace
+ * @param {string} props.formId - The ID of the form
+ * @param {Function} props.onSubmit - The function to handle the form submission
+ * @param {propTypes.uuid} props.listingId - The ID of the listing
+ * @param {propTypes.money} props.price - The price of the listing
+ * @param {number} props.currentStock - The current stock of the listing
+ * @param {boolean} props.isOwnListing - Whether the listing is owned by the current user
+ * @param {boolean} props.pickupEnabled - Whether pickup is enabled
+ * @param {boolean} props.shippingEnabled - Whether shipping is enabled
+ * @param {boolean} props.displayDeliveryMethod - Whether the delivery method is displayed
+ * @param {Object} props.lineItems - The line items
+ * @param {Function} props.onFetchTransactionLineItems - The function to fetch the transaction line items
+ * @param {boolean} props.fetchLineItemsInProgress - Whether the line items are being fetched
+ * @param {propTypes.error} props.fetchLineItemsError - The error for fetching the line items
+ * @param {Function} props.onContactUser - The function to contact the user
+ * @returns {JSX.Element}
+ */
 const ProductOrderForm = props => {
   const intl = useIntl();
   const {
@@ -343,49 +366,6 @@ const ProductOrderForm = props => {
       render={renderForm}
     />
   );
-};
-
-ProductOrderForm.defaultProps = {
-  rootClassName: null,
-  className: null,
-  price: null,
-  currentStock: null,
-  listingId: null,
-  isOwnListing: false,
-  pickupEnabled: false,
-  shippingEnabled: false,
-  displayDeliveryMethod: false,
-  lineItems: null,
-  fetchLineItemsError: null,
-};
-
-ProductOrderForm.propTypes = {
-  rootClassName: string,
-  className: string,
-
-  marketplaceName: string.isRequired,
-
-  // form
-  formId: string.isRequired,
-  onSubmit: func.isRequired,
-
-  // listing
-  listingId: propTypes.uuid,
-  price: propTypes.money,
-  currentStock: number,
-  isOwnListing: bool,
-  pickupEnabled: bool,
-  shippingEnabled: bool,
-  displayDeliveryMethod: bool,
-
-  // line items
-  lineItems: propTypes.lineItems,
-  onFetchTransactionLineItems: func.isRequired,
-  fetchLineItemsInProgress: bool.isRequired,
-  fetchLineItemsError: propTypes.error,
-
-  // other
-  onContactUser: func,
 };
 
 export default ProductOrderForm;

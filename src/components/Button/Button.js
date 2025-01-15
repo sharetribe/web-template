@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { bool, node, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
@@ -100,6 +99,22 @@ const ButtonWithPagePreload = props => {
   return <PlainButton {...restProps} {...onOverButtonMaybe} />;
 };
 
+/**
+ * Topbar containing logo, main search and navigation links.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string?} props.spinnerClassName overwrite components own css.spinner
+ * @param {string?} props.checkmarkClassName overwrite components own css.checkmark
+ * @param {boolean} props.inProgress
+ * @param {boolean} props.ready
+ * @param {boolean} props.disabled
+ * @param {string?} props.enforcePagePreloadFor
+ * @param {ReactNode?} props.children
+ * @returns {JSX.Element} topbar component
+ */
 const Button = props => {
   const { enforcePagePreloadFor, ...restProps } = props;
   return enforcePagePreloadFor ? (
@@ -107,32 +122,6 @@ const Button = props => {
   ) : (
     <PlainButton {...restProps} />
   );
-};
-
-Button.defaultProps = {
-  rootClassName: null,
-  className: null,
-  spinnerClassName: null,
-  checkmarkClassName: null,
-  inProgress: false,
-  ready: false,
-  disabled: false,
-  enforcePagePreloadFor: null,
-  children: null,
-};
-
-Button.propTypes = {
-  rootClassName: string,
-  className: string,
-  spinnerClassName: string,
-  checkmarkClassName: string,
-
-  inProgress: bool,
-  ready: bool,
-  disabled: bool,
-  enforcePagePreloadFor: string,
-
-  children: node,
 };
 
 export default Button;

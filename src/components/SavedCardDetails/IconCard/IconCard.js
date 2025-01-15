@@ -1,5 +1,4 @@
 import React from 'react';
-import { string } from 'prop-types';
 import classNames from 'classnames';
 
 import css from './IconCard.module.css';
@@ -12,8 +11,18 @@ const BRAND_MASTERCARD = 'mastercard';
 const BRAND_UNIONPAY = 'unionpay';
 const BRAND_VISA = 'visa';
 
+/**
+ * Payment card icon.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {'amex' | 'diners' | 'discovery' | 'jcb' | 'mastercard' | 'unionpay' | 'visa'} props.brand payment card provider
+ * @returns {JSX.Element} SVG icon
+ */
 const IconCard = props => {
-  const { className, rootClassName, brand } = props;
+  const { className, rootClassName, brand = 'default' } = props;
   const classes = classNames(rootClassName || css.root, className);
 
   switch (brand) {
@@ -247,18 +256,6 @@ const IconCard = props => {
         </svg>
       );
   }
-};
-
-IconCard.defaultProps = {
-  className: null,
-  rootClassName: null,
-  brand: 'default',
-};
-
-IconCard.propTypes = {
-  className: string,
-  rootClassName: string,
-  brand: string,
 };
 
 export default IconCard;

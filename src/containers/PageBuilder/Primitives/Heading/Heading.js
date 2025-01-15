@@ -1,5 +1,4 @@
 import React from 'react';
-import { node, string } from 'prop-types';
 import classNames from 'classnames';
 
 import css from './Heading.module.css';
@@ -13,19 +12,17 @@ const Heading = props => {
   return <Tag className={classes} ref={tagRef} {...otherProps} />;
 };
 
-const defaultPropsHeading = {
-  rootClassName: null,
-  className: null,
-  as: null,
-};
-
-const propTypesHeading = {
-  rootClassName: string,
-  className: string,
-  children: node.isRequired,
-  as: string,
-};
-
+/**
+ * Render a h1 heading element
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string?} props.as tag/element to be used. Default 'h1'
+ * @param {ReactNode} props.children
+ * @returns {JSX.Element} heading element
+ */
 export const H1 = React.forwardRef((props, ref) => {
   const { rootClassName: rootClass, as, ...otherProps } = props;
   return (
@@ -33,9 +30,18 @@ export const H1 = React.forwardRef((props, ref) => {
   );
 });
 H1.displayName = 'H1';
-H1.defaultProps = defaultPropsHeading;
-H1.propTypes = propTypesHeading;
 
+/**
+ * Render a h2 heading element
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string?} props.as tag/element to be used. Default 'h2'
+ * @param {ReactNode} props.children
+ * @returns {JSX.Element} heading element
+ */
 export const H2 = React.forwardRef((props, ref) => {
   const { rootClassName: rootClass, as, ...otherProps } = props;
   return (
@@ -43,9 +49,18 @@ export const H2 = React.forwardRef((props, ref) => {
   );
 });
 H2.displayName = 'H2';
-H2.defaultProps = defaultPropsHeading;
-H2.propTypes = propTypesHeading;
 
+/**
+ * Render a h3 heading element
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string?} props.as tag/element to be used. Default 'h3'
+ * @param {ReactNode} props.children
+ * @returns {JSX.Element} heading element
+ */
 export const H3 = React.forwardRef((props, ref) => {
   const { rootClassName: rootClass, as, ...otherProps } = props;
   return (
@@ -53,9 +68,18 @@ export const H3 = React.forwardRef((props, ref) => {
   );
 });
 H3.displayName = 'H3';
-H3.defaultProps = defaultPropsHeading;
-H3.propTypes = propTypesHeading;
 
+/**
+ * Render a h4 heading element
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string?} props.as tag/element to be used. Default 'h4'
+ * @param {ReactNode} props.children
+ * @returns {JSX.Element} heading element
+ */
 export const H4 = React.forwardRef((props, ref) => {
   const { rootClassName: rootClass, as, ...otherProps } = props;
   return (
@@ -63,9 +87,18 @@ export const H4 = React.forwardRef((props, ref) => {
   );
 });
 H4.displayName = 'H4';
-H4.defaultProps = defaultPropsHeading;
-H4.propTypes = propTypesHeading;
 
+/**
+ * Render a h5 heading element
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string?} props.as tag/element to be used. Default 'h5'
+ * @param {ReactNode} props.children
+ * @returns {JSX.Element} heading element
+ */
 export const H5 = React.forwardRef((props, ref) => {
   const { rootClassName: rootClass, as, ...otherProps } = props;
   return (
@@ -73,9 +106,18 @@ export const H5 = React.forwardRef((props, ref) => {
   );
 });
 H5.displayName = 'H5';
-H5.defaultProps = defaultPropsHeading;
-H5.propTypes = propTypesHeading;
 
+/**
+ * Render a h6 heading element
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string?} props.as tag/element to be used. Default 'h6'
+ * @param {ReactNode} props.children
+ * @returns {JSX.Element} heading element
+ */
 export const H6 = React.forwardRef((props, ref) => {
   const { rootClassName: rootClass, as, ...otherProps } = props;
   return (
@@ -83,5 +125,3 @@ export const H6 = React.forwardRef((props, ref) => {
   );
 });
 H6.displayName = 'H6';
-H6.defaultProps = defaultPropsHeading;
-H6.propTypes = propTypesHeading;

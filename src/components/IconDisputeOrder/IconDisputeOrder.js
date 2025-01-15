@@ -1,9 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import css from './IconDisputeOrder.module.css';
 
+/**
+ * Delete icon.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @returns {JSX.Element} SVG icon
+ */
 const IconDisputeOrder = props => {
   const { className, rootClassName } = props;
   const classes = classNames(rootClassName || css.root, className);
@@ -23,15 +31,6 @@ const IconDisputeOrder = props => {
       </g>
     </svg>
   );
-};
-
-IconDisputeOrder.defaultProps = { className: null, rootClassName: null };
-
-const { string } = PropTypes;
-
-IconDisputeOrder.propTypes = {
-  className: string,
-  rootClassName: string,
 };
 
 export default IconDisputeOrder;

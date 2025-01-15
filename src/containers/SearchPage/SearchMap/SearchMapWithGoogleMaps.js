@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import invariant from 'invariant';
-import { arrayOf, func, number, object, oneOfType, shape, string } from 'prop-types';
 import isEqual from 'lodash/isEqual';
 import classNames from 'classnames';
 
@@ -394,6 +393,23 @@ const InfoCardComponent = props => {
 
 /**
  * Render GoogleMaps and add price labels, group "markers" and infocard using OverlayView.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.id] - The ID
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {propTypes.latlngBounds} props.bounds - The bounds
+ * @param {propTypes.latlng} props.center - The center
+ * @param {Object} props.location - The location
+ * @param {string} props.location.search - The search query params
+ * @param {propTypes.uuid} [props.activeListingId] - The active listing ID
+ * @param {Array<propTypes.listing>} [props.listings] - The listings
+ * @param {Function} props.onMapMoveEnd - The function to move end
+ * @param {Function} props.onMapLoad - The function to load
+ * @param {number} [props.zoom] - The zoom
+ * @param {string} [props.reusableMapHiddenHandle] - The handle for the reusable map hidden
+ * @param {Object} props.config - The configuration
+ * @returns {JSX.Element}
  */
 class SearchMapWithGoogleMaps extends Component {
   constructor(props) {
@@ -455,7 +471,7 @@ class SearchMapWithGoogleMaps extends Component {
     const hasDimensions = offsetHeight > 0 && offsetWidth > 0;
 
     if (hasDimensions) {
-      const { bounds, center, zoom } = this.props;
+      const { bounds, center = new sdkTypes.LatLng(0, 0), zoom = 11 } = this.props;
       const maps = window.google.maps;
       const controlPosition = maps.ControlPosition.LEFT_TOP;
       const zoomOutToShowEarth = { zoom: 1, center: { lat: 0, lng: 0 } };
@@ -522,9 +538,9 @@ class SearchMapWithGoogleMaps extends Component {
 
   render() {
     const {
-      id,
+      id = 'searchMap',
       className,
-      listings,
+      listings = [],
       activeListingId,
       infoCardOpen,
       onListingClicked,
@@ -565,32 +581,5 @@ class SearchMapWithGoogleMaps extends Component {
     );
   }
 }
-
-SearchMapWithGoogleMaps.defaultProps = {
-  id: 'map',
-  center: new sdkTypes.LatLng(0, 0),
-  infoCardOpen: null,
-  listings: [],
-  activeListingId: null,
-  zoom: 11,
-  reusableMapHiddenHandle: null,
-};
-
-SearchMapWithGoogleMaps.propTypes = {
-  id: string,
-  center: propTypes.latlng,
-  location: shape({
-    search: string.isRequired,
-  }).isRequired,
-  infoCardOpen: oneOfType([propTypes.listing, arrayOf(propTypes.listing)]),
-  listings: arrayOf(propTypes.listing),
-  activeListingId: propTypes.uuid,
-
-  onMapMoveEnd: func.isRequired,
-  onMapLoad: func.isRequired,
-  zoom: number,
-  reusableMapHiddenHandle: string,
-  config: object.isRequired,
-};
 
 export default SearchMapWithGoogleMaps;

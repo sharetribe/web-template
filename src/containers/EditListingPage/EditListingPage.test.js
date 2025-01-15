@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { act } from 'react';
 import '@testing-library/jest-dom';
 
 import { types as sdkTypes } from '../../util/sdkLoader';
@@ -1565,17 +1565,20 @@ describe('EditListingPage', () => {
     // mode: available, not-available
     expect(getByText('EditListingAvailabilityExceptionForm.available')).toBeInTheDocument();
     expect(getByText('EditListingAvailabilityExceptionForm.notAvailable')).toBeInTheDocument();
-    // date range picker
-    expect(
-      getByText('EditListingAvailabilityExceptionForm.exceptionStartDateLabel')
-    ).toBeInTheDocument();
-    expect(
-      getByText('EditListingAvailabilityExceptionForm.exceptionEndDateLabel')
-    ).toBeInTheDocument();
-    // submit button
-    expect(
-      getByRole('button', { name: 'EditListingAvailabilityExceptionForm.addException' })
-    ).toBeInTheDocument();
+
+    // date range picker (code-splitted)
+    await waitFor(async () => {
+      expect(
+        getByText('EditListingAvailabilityExceptionForm.exceptionStartDateLabel')
+      ).toBeInTheDocument();
+      expect(
+        getByText('EditListingAvailabilityExceptionForm.exceptionEndDateLabel')
+      ).toBeInTheDocument();
+      // submit button
+      expect(
+        getByRole('button', { name: 'EditListingAvailabilityExceptionForm.addException' })
+      ).toBeInTheDocument();
+    });
   }, 10000);
 
   it('Booking (day): edit flow on availability tab with seats', async () => {
@@ -1968,17 +1971,20 @@ describe('EditListingPage', () => {
     // mode: available, not-available
     expect(getByText('EditListingAvailabilityExceptionForm.available')).toBeInTheDocument();
     expect(getByText('EditListingAvailabilityExceptionForm.notAvailable')).toBeInTheDocument();
-    // date range picker
-    expect(
-      getByText('EditListingAvailabilityExceptionForm.exceptionStartDateLabel')
-    ).toBeInTheDocument();
-    expect(
-      getByText('EditListingAvailabilityExceptionForm.exceptionEndDateLabel')
-    ).toBeInTheDocument();
-    // submit button
-    expect(
-      getByRole('button', { name: 'EditListingAvailabilityExceptionForm.addException' })
-    ).toBeInTheDocument();
+
+    // date range picker (code-splitted)
+    await waitFor(async () => {
+      expect(
+        getByText('EditListingAvailabilityExceptionForm.exceptionStartDateLabel')
+      ).toBeInTheDocument();
+      expect(
+        getByText('EditListingAvailabilityExceptionForm.exceptionEndDateLabel')
+      ).toBeInTheDocument();
+      // submit button
+      expect(
+        getByRole('button', { name: 'EditListingAvailabilityExceptionForm.addException' })
+      ).toBeInTheDocument();
+    });
   }, 10000);
 
   it('Booking (hour): edit flow on availability tab', async () => {
@@ -2137,15 +2143,18 @@ describe('EditListingPage', () => {
     // mode: available, not-available
     expect(getByText('EditListingAvailabilityExceptionForm.available')).toBeInTheDocument();
     expect(getByText('EditListingAvailabilityExceptionForm.notAvailable')).toBeInTheDocument();
-    // time range pickers
-    expect(
-      getByText('EditListingAvailabilityExceptionForm.exceptionStartDateLabel')
-    ).toBeInTheDocument();
-    expect(
-      getByText('EditListingAvailabilityExceptionForm.exceptionEndDateLabel')
-    ).toBeInTheDocument();
 
-    // TODO Testing date pickers needs more work
+    // time range pickers (code-splitted)
+    await waitFor(async () => {
+      expect(
+        getByText('EditListingAvailabilityExceptionForm.exceptionStartDateLabel')
+      ).toBeInTheDocument();
+      expect(
+        getByText('EditListingAvailabilityExceptionForm.exceptionEndDateLabel')
+      ).toBeInTheDocument();
+
+      // TODO Testing date pickers needs more work
+    });
 
     // submit button
     expect(
@@ -2612,7 +2621,7 @@ describe('EditListingPage', () => {
 });
 
 describe('EditListingPageComponent', () => {
-  it('Check that there is correct wizard tabs', () => {
+  it('Check that there is correct wizard tabs', async () => {
     render(
       <EditListingPageComponent
         params={{ id: 'id', slug: 'slug', type: 'new', tab: 'details' }}
@@ -2661,10 +2670,12 @@ describe('EditListingPageComponent', () => {
     const tabLabelPhotos = 'EditListingWizard.tabLabelPhotos';
     expect(screen.queryByText(tabLabelPhotos)).not.toBeInTheDocument();
 
-    userEvent.selectOptions(
-      screen.getByLabelText('EditListingDetailsForm.listingTypeLabel'),
-      'product-selling'
-    );
+    await act(async () => {
+      userEvent.selectOptions(
+        screen.getByLabelText('EditListingDetailsForm.listingTypeLabel'),
+        'product-selling'
+      );
+    });
 
     // Tabs not in use
     const tabLabelLocation = 'EditListingWizard.tabLabelLocation';

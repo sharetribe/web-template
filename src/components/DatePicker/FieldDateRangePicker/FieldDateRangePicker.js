@@ -7,7 +7,6 @@
  */
 
 import React from 'react';
-import { bool, func, object, string, number } from 'prop-types';
 import { Field } from 'react-final-form';
 import classNames from 'classnames';
 
@@ -101,40 +100,23 @@ const FieldDateRangePickerComponent = props => {
   );
 };
 
-FieldDateRangePickerComponent.defaultProps = {
-  className: null,
-  rootClassName: null,
-  inputClassName: null,
-  popupClassName: null,
-  useMobileMargins: false,
-  endDateId: null,
-  endDateLabel: null,
-  endDatePlaceholderText: null,
-  startDateId: null,
-  startDateLabel: null,
-  startDatePlaceholderText: null,
-};
-
-FieldDateRangePickerComponent.propTypes = {
-  className: string,
-  rootClassName: string,
-  inputClassName: string,
-  popupClassName: string,
-  isDaily: bool.isRequired,
-  useMobileMargins: bool,
-  endDateId: string,
-  endDateLabel: string,
-  endDatePlaceholderText: string,
-  startDateId: string,
-  startDateLabel: string,
-  startDatePlaceholderText: string,
-  input: object.isRequired,
-  meta: object.isRequired,
-
-  isOutsideRange: func.isRequired,
-  firstDayOfWeek: number.isRequired,
-};
-
+/**
+ * A component that provides a date range picker for Final Forms.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {boolean} [props.isDaily] - Whether the date range is daily
+ * @param {boolean} [props.useMobileMargins] - Whether to use mobile margins (allowing the input to expand to the full width of the screen)
+ * @param {string} [props.endDateId] - The ID of the end date input
+ * @param {string} [props.endDateLabel] - The label of the end date input
+ * @param {string} [props.startDateId] - The ID of the start date input
+ * @param {string} [props.startDateLabel] - The label of the start date input
+ * @param {Function} [props.isOutsideRange] - The function to check if a day is outside the range
+ * @param {number} [props.firstDayOfWeek] - The first day of the week (0-6, default to value set in configuration)
+ * @returns {JSX.Element} FieldDateRangePicker component
+ */
 const FieldDateRangePicker = props => {
   const config = useConfiguration();
   const { isOutsideRange, firstDayOfWeek, ...rest } = props;

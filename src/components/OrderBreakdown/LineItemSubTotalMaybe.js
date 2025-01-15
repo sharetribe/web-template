@@ -1,5 +1,4 @@
 import React from 'react';
-import { string } from 'prop-types';
 import Decimal from 'decimal.js';
 
 import { FormattedMessage, intlShape } from '../../util/reactIntl';
@@ -57,6 +56,18 @@ const hasCommission = (lineItems, userRole) => {
   return !!commissionLineItem;
 };
 
+/**
+ * A component that renders the subtotal as a line item.
+ *
+ * @component
+ * @param {Object} props
+ * @param {Array<propTypes.lineItem>} props.lineItems - The line items to render
+ * @param {string} props.code - The code of the line item
+ * @param {string} props.userRole - The role of the user
+ * @param {intlShape} props.intl - The intl object
+ * @param {string} props.marketplaceCurrency - The currency of the marketplace
+ * @returns {JSX.Element}
+ */
 const LineItemSubTotalMaybe = props => {
   const { lineItems, code, userRole, intl, marketplaceCurrency } = props;
 
@@ -83,12 +94,6 @@ const LineItemSubTotalMaybe = props => {
       </div>
     </>
   ) : null;
-};
-
-LineItemSubTotalMaybe.propTypes = {
-  lineItems: propTypes.lineItems.isRequired,
-  userRole: string.isRequired,
-  intl: intlShape.isRequired,
 };
 
 export default LineItemSubTotalMaybe;

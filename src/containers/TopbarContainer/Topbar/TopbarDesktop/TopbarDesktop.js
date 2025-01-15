@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { bool, func, object, number, string } from 'prop-types';
 import classNames from 'classnames';
 
-import { FormattedMessage, intlShape } from '../../../../util/reactIntl';
+import { FormattedMessage } from '../../../../util/reactIntl';
 import { ACCOUNT_SETTINGS_PAGES } from '../../../../routing/routeConfiguration';
-import { propTypes } from '../../../../util/types';
 import {
   Avatar,
   InlineTextButton,
@@ -108,6 +106,25 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout }) => {
   );
 };
 
+/**
+ * Topbar for desktop layout
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {boolean} props.currentUserHasListings
+ * @param {CurrentUser} props.currentUser API entity
+ * @param {string?} props.currentPage
+ * @param {boolean} props.isAuthenticated
+ * @param {number} props.notificationCount
+ * @param {Function} props.onLogout
+ * @param {Function} props.onSearchSubmit
+ * @param {Object?} props.initialSearchFormValues
+ * @param {Object} props.intl
+ * @param {Object} props.config
+ * @returns {JSX.Element} search icon
+ */
 const TopbarDesktop = props => {
   const {
     className,
@@ -117,12 +134,12 @@ const TopbarDesktop = props => {
     currentPage,
     rootClassName,
     currentUserHasListings,
-    notificationCount,
+    notificationCount = 0,
     intl,
     isAuthenticated,
     onLogout,
     onSearchSubmit,
-    initialSearchFormValues,
+    initialSearchFormValues = {},
   } = props;
   const [mounted, setMounted] = useState(false);
 
@@ -180,31 +197,6 @@ const TopbarDesktop = props => {
       {loginLinkMaybe}
     </nav>
   );
-};
-
-TopbarDesktop.defaultProps = {
-  rootClassName: null,
-  className: null,
-  currentUser: null,
-  currentPage: null,
-  notificationCount: 0,
-  initialSearchFormValues: {},
-  config: null,
-};
-
-TopbarDesktop.propTypes = {
-  rootClassName: string,
-  className: string,
-  currentUserHasListings: bool.isRequired,
-  currentUser: propTypes.currentUser,
-  currentPage: string,
-  isAuthenticated: bool.isRequired,
-  onLogout: func.isRequired,
-  notificationCount: number,
-  onSearchSubmit: func.isRequired,
-  initialSearchFormValues: object,
-  intl: intlShape.isRequired,
-  config: object,
 };
 
 export default TopbarDesktop;

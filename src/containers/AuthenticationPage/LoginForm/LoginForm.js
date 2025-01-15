@@ -1,10 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
-import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import * as validators from '../../../util/validators';
 import { Form, PrimaryButton, FieldTextInput, NamedLink } from '../../../components';
 
@@ -104,24 +102,20 @@ const LoginFormComponent = props => (
   />
 );
 
-LoginFormComponent.defaultProps = {
-  rootClassName: null,
-  className: null,
-  form: null,
-  inProgress: false,
+/**
+ * A component that renders the login form.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} props.rootClassName - The root class name that overrides the default class css.root
+ * @param {string} props.className - The class that extends the root class
+ * @param {string} props.formId - The form id
+ * @param {boolean} props.inProgress - Whether the form is in progress
+ * @returns {JSX.Element}
+ */
+const LoginForm = props => {
+  const intl = useIntl();
+  return <LoginFormComponent {...props} intl={intl} />;
 };
-
-const { string, bool } = PropTypes;
-
-LoginFormComponent.propTypes = {
-  rootClassName: string,
-  className: string,
-  form: string,
-  inProgress: bool,
-  intl: intlShape.isRequired,
-};
-
-const LoginForm = compose(injectIntl)(LoginFormComponent);
-LoginForm.displayName = 'LoginForm';
 
 export default LoginForm;

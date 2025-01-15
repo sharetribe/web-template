@@ -1,7 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import css from './DoorIcon.module.css';
 
+/**
+ * The door icon.
+ *
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that overrides the default class for the root element
+ * @returns {JSX.Element} Door icon component
+ */
 const DoorIcon = props => {
   const { className } = props;
   return (
@@ -41,14 +47,6 @@ const DoorIcon = props => {
       </g>
     </svg>
   );
-};
-
-DoorIcon.defaultProps = { className: null };
-
-const { string } = PropTypes;
-
-DoorIcon.propTypes = {
-  className: string,
 };
 
 export default DoorIcon;
