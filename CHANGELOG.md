@@ -14,6 +14,14 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [change] This updates Sharetribe Web Template to use React v18 (v18.3.1). Some highlights:
+
+  - Several dependency libraries have been updated.
+  - Hydration is much more strict now. First render on client-side must match the server-side
+    render.
+
+  [#523](https://github.com/sharetribe/web-template/pull/523)
+
 - [add] Add currently available translations for DE.
   [#529](https://github.com/sharetribe/web-template/pull/529)
 - [fix] a link inside the inquiry message was invisible for the sender of the inquiry.
