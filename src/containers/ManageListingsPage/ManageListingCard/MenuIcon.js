@@ -1,11 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import css from './ManageListingCard.module.css';
 
+/**
+ * Menu icon
+ *
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {boolean} [props.isActive] - Whether the menu is active
+ * @returns {JSX.Element} Menu icon components
+ */
 const MenuIcon = props => {
-  const { className, isActive } = props;
+  const { className, isActive = false } = props;
   const classes = classNames(css.menuIcon, className);
   const filter = isActive ? '' : 'url(#a)';
   return (
@@ -31,18 +38,6 @@ const MenuIcon = props => {
       </g>
     </svg>
   );
-};
-
-MenuIcon.defaultProps = {
-  className: null,
-  isActive: false,
-};
-
-const { bool, string } = PropTypes;
-
-MenuIcon.propTypes = {
-  className: string,
-  isActive: bool,
 };
 
 export default MenuIcon;

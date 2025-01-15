@@ -1,8 +1,7 @@
 import React from 'react';
-import { string, bool } from 'prop-types';
 
 import { useConfiguration } from '../../../context/configurationContext';
-import { intlShape, injectIntl } from '../../../util/reactIntl';
+import { useIntl } from '../../../util/reactIntl';
 import { isMainSearchTypeKeywords } from '../../../util/search';
 
 import SortByPlain from './SortByPlain';
@@ -10,16 +9,28 @@ import SortByPopup from './SortByPopup';
 
 import css from './SortBy.module.css';
 
+/**
+ * SortBy component
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.sort] - The sort
+ * @param {boolean} [props.showAsPopup] - Whether to show as popup
+ * @param {boolean} props.isConflictingFilterActive - Whether the conflicting filter is active
+ * @param {boolean} [props.hasConflictingFilters] - Whether there are filters that could conflict
+ * @param {'mobile' | 'desktop'} [props.mode] - The mode
+ * @returns {JSX.Element}
+ */
 const SortBy = props => {
   const config = useConfiguration();
+  const intl = useIntl();
   const {
     sort,
-    showAsPopup,
+    showAsPopup = false,
     selectedFilters,
     isConflictingFilterActive,
     hasConflictingFilters,
-    intl,
-    mode,
+    mode = 'desktop',
     ...rest
   } = props;
 
@@ -95,16 +106,4 @@ const SortBy = props => {
   return showAsPopup ? <SortByPopup {...componentProps} /> : <SortByPlain {...componentProps} />;
 };
 
-SortBy.defaultProps = {
-  sort: null,
-  showAsPopup: false,
-};
-
-SortBy.propTypes = {
-  sort: string,
-  showAsPopup: bool,
-  isConflictingFilterActive: bool.isRequired,
-  intl: intlShape.isRequired,
-};
-
-export default injectIntl(SortBy);
+export default SortBy;

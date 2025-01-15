@@ -1,5 +1,4 @@
 import React from 'react';
-import { arrayOf, shape, string } from 'prop-types';
 import { Field } from 'react-final-form';
 import classNames from 'classnames';
 
@@ -177,11 +176,24 @@ const handleChangeFn = (primaryOptions, currentSelections, namePrefix, onChange)
 };
 
 /**
+ * @typedef {Object} SelectTreeOptionConfig
+ * @property {string} option
+ * @property {string} label
+ * @property {Array<SelectTreeOptionConfig>} suboptions
+ */
+
+/**
  * Create Final Form field that represents "tree select" component,
  * where user can select nested options like categories.
  *
- * @param {*} props contain properties like className, rootClassName, label, name, options
- * @returns Final Form Field with custom UI.
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string} props.name Name of the input in Final Form
+ * @param {ReactNode} props.label
+ * @param {Array<SelectTreeOptionConfig>} props.options
+ * @returns {JSX.Element} Final Form Field containing nested "select" input
  */
 const FieldSelectTree = props => {
   const { className, rootClassName, label, name, options, ...rest } = props;
@@ -215,26 +227,6 @@ const FieldSelectTree = props => {
       }}
     </Field>
   );
-};
-
-FieldSelectTree.defaultProps = {
-  rootClassName: null,
-  className: null,
-};
-
-const optionConfigShape = {
-  option: string.isRequired,
-  label: string,
-};
-optionConfigShape.suboptions = arrayOf(shape(optionConfigShape));
-const optionConfig = shape(optionConfigShape);
-
-FieldSelectTree.propTypes = {
-  rootClassName: string,
-  className: string,
-  label: string,
-  name: string.isRequired,
-  options: arrayOf(optionConfig).isRequired,
 };
 
 export default FieldSelectTree;

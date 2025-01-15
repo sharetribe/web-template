@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import css from './IconCheckMark.module.css';
@@ -7,8 +6,18 @@ import css from './IconCheckMark.module.css';
 const SIZE_SMALL = 'small';
 const SIZE_BIG = 'big';
 
+/**
+ * Checkmark icon.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own root class
+ * @param {string?} props.rootClassName overwrite components own root class
+ * @param {'big' | 'small'} props.size
+ * @returns {JSX.Element} SVG icon
+ */
 const IconCheckmark = props => {
-  const { rootClassName, className, size } = props;
+  const { rootClassName, className, size = SIZE_BIG } = props;
   const classes = classNames(rootClassName || css.root, className);
   if (size === SIZE_SMALL) {
     return (
@@ -30,20 +39,6 @@ const IconCheckmark = props => {
       </svg>
     );
   }
-};
-
-IconCheckmark.defaultProps = {
-  rootClassName: null,
-  className: null,
-  size: 'big',
-};
-
-const { string } = PropTypes;
-
-IconCheckmark.propTypes = {
-  rootClassName: string,
-  className: string,
-  size: string,
 };
 
 export default IconCheckmark;

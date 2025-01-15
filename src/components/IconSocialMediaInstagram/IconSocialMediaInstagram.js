@@ -1,9 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import css from './IconSocialMediaInstagram.module.css';
 
+/**
+ * Instagram icon.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @returns {JSX.Element} SVG icon
+ */
 const IconSocialMediaInstagram = props => {
   const { rootClassName, className } = props;
   const classes = classNames(rootClassName || css.root, className);
@@ -16,11 +24,5 @@ const IconSocialMediaInstagram = props => {
     </svg>
   );
 };
-
-IconSocialMediaInstagram.defaultProps = { rootClassName: null, className: null };
-
-const { string } = PropTypes;
-
-IconSocialMediaInstagram.propTypes = { rootClassName: string, className: string };
 
 export default IconSocialMediaInstagram;

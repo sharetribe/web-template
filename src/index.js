@@ -11,15 +11,9 @@
  * Note that this file is required for the build process.
  */
 
-// React 16 depends on the collection types Map and Set, as well as requestAnimationFrame.
-// https://reactjs.org/docs/javascript-environment-requirements.html
-import 'core-js/features/map';
-import 'core-js/features/set';
-import 'raf/polyfill';
-
 // Dependency libs
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOMClient from 'react-dom/client';
 import { loadableReady } from '@loadable/component';
 
 // Import default styles before other CSS-related modules are imported
@@ -58,6 +52,7 @@ const render = (store, shouldHydrate) => {
   const cdnAssetsVersion = state.hostedAssets.version;
   const authInfoLoaded = state.auth.authInfoLoaded;
   const info = authInfoLoaded ? Promise.resolve({}) : store.dispatch(authInfo());
+
   info
     .then(() => {
       // Ensure that Loadable Components is ready
@@ -81,14 +76,18 @@ const render = (store, shouldHydrate) => {
       }, {});
 
       if (shouldHydrate) {
-        ReactDOM.hydrate(
+        const container = document.getElementById('root');
+
+        ReactDOMClient.hydrateRoot(
+          container,
           <ClientApp store={store} hostedTranslations={translations} hostedConfig={hostedConfig} />,
-          document.getElementById('root')
+          { onRecoverableError: log.onRecoverableError }
         );
       } else {
-        ReactDOM.render(
-          <ClientApp store={store} hostedTranslations={translations} hostedConfig={hostedConfig} />,
-          document.getElementById('root')
+        const container = document.getElementById('root');
+        const root = ReactDOMClient.createRoot(container);
+        root.render(
+          <ClientApp store={store} hostedTranslations={translations} hostedConfig={hostedConfig} />
         );
       }
     })

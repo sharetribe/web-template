@@ -1,10 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
-import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { isTransactionsTransitionAlreadyReviewed } from '../../../util/errors';
 import { propTypes } from '../../../util/types';
 import { required } from '../../../util/validators';
@@ -13,7 +11,21 @@ import { FieldReviewRating, Form, PrimaryButton, FieldTextInput } from '../../..
 
 import css from './ReviewForm.module.css';
 
-const ReviewFormComponent = props => (
+/**
+ * Review form
+ *
+ * @component
+ * @param {Object} props - The props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that extends the default class for the root element
+ * @param {string} props.formId - The form id
+ * @param {Function} props.onSubmit - The on submit function
+ * @param {boolean} props.reviewSent - Whether the review is sent
+ * @param {propTypes.error} props.sendReviewError - The send review error
+ * @param {boolean} props.sendReviewInProgress - Whether the send review is in progress
+ * @returns {JSX.Element} The ReviewForm component
+ */
+const ReviewForm = props => (
   <FinalForm
     {...props}
     render={fieldRenderProps => {
@@ -22,14 +34,13 @@ const ReviewFormComponent = props => (
         rootClassName,
         disabled,
         handleSubmit,
-        intl,
         formId,
         invalid,
         reviewSent,
         sendReviewError,
         sendReviewInProgress,
       } = fieldRenderProps;
-
+      const intl = useIntl();
       const reviewRating = intl.formatMessage({ id: 'ReviewForm.reviewRatingLabel' });
       const reviewRatingRequiredMessage = intl.formatMessage({
         id: 'ReviewForm.reviewRatingRequired',
@@ -97,22 +108,5 @@ const ReviewFormComponent = props => (
     }}
   />
 );
-
-ReviewFormComponent.defaultProps = { className: null, rootClassName: null, sendReviewError: null };
-
-const { bool, func, string } = PropTypes;
-
-ReviewFormComponent.propTypes = {
-  className: string,
-  rootClassName: string,
-  intl: intlShape.isRequired,
-  onSubmit: func.isRequired,
-  reviewSent: bool.isRequired,
-  sendReviewError: propTypes.error,
-  sendReviewInProgress: bool.isRequired,
-};
-
-const ReviewForm = compose(injectIntl)(ReviewFormComponent);
-ReviewForm.displayName = 'ReviewForm';
 
 export default ReviewForm;

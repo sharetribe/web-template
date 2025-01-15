@@ -6,7 +6,35 @@ import { ResponsiveImage } from '../../../../components/index.js';
 
 import css from './CustomAppearance.module.css';
 
-// BackgroundImage doesn't have enforcable aspectratio
+/**
+ * @typedef {Object} ImageVariant
+ * @property {number} width
+ * @property {number} height
+ * @property {string} url image source
+ */
+
+/**
+ * Render a custom appearance for a section component.
+ * E.g. change the background color or image of the SectionContainer
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string?} props.backgroundColor hexadecimal color string ('#ffaa00')
+ * @param {Object} props.backgroundImage
+ * @param {string} props.backgroundImage.id
+ * @param {'imageAsset'} props.backgroundImage.type
+ * @param {Object} props.backgroundImage.attributes
+ * @param {Object<key,ImageVariant>} props.backgroundImage.attributes.variants
+ * @param {Object} props.backgroundImageOverlay
+ * @param {string} props.backgroundImageOverlay.preset
+ * @param {string} props.backgroundImageOverlay.color
+ * @param {number} props.backgroundImageOverlay.opacity
+ * @param {string?} props.alt
+ * @param {string?} props.sizes
+ * @returns {JSX.Element} custom appearance for the container of a section component
+ */
 export const CustomAppearance = React.forwardRef((props, ref) => {
   const {
     className,
@@ -14,7 +42,7 @@ export const CustomAppearance = React.forwardRef((props, ref) => {
     backgroundColor,
     backgroundImage,
     backgroundImageOverlay,
-    alt,
+    alt = 'background image',
     sizes,
   } = props;
 
@@ -52,39 +80,3 @@ export const CustomAppearance = React.forwardRef((props, ref) => {
 });
 
 CustomAppearance.displayName = 'CustomAppearance';
-
-CustomAppearance.defaultProps = {
-  rootClassName: null,
-  className: null,
-  alt: 'background image',
-  sizes: null,
-  backgroundColor: null,
-  backgroundImage: null,
-  backgroundImageOverlay: null,
-};
-
-CustomAppearance.propTypes = {
-  rootClassName: string,
-  className: string,
-  backgroundColor: string,
-  backgroundImage: shape({
-    id: string.isRequired,
-    type: oneOf(['imageAsset']).isRequired,
-    attributes: shape({
-      variants: objectOf(
-        shape({
-          width: number.isRequired,
-          height: number.isRequired,
-          url: string.isRequired,
-        })
-      ).isRequired,
-    }).isRequired,
-  }),
-  backgroundImageOverlay: shape({
-    preset: string.isRequired,
-    color: string.isRequired,
-    opacity: number.isRequired,
-  }),
-  alt: string,
-  sizes: string,
-};

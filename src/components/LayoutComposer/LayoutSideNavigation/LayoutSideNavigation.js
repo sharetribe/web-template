@@ -1,5 +1,4 @@
 import React from 'react';
-import { bool, node, string } from 'prop-types';
 import classNames from 'classnames';
 
 import LayoutComposer from '../LayoutComposer';
@@ -7,7 +6,24 @@ import LayoutWrapperAccountSettingsSideNav from './LayoutWrapperAccountSettingsS
 
 import css from './LayoutSideNavigation.module.css';
 
-// Commonly used layout
+/**
+ * Commonly used layout
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to component's own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string?} props.containerClassName overwrite components own css.container
+ * @param {string?} props.mainColumnClassName add more style rules in addition to css.main
+ * @param {string?} props.sideNavClassName add more style rules in addition to css.sideNav
+ * @param {ReactNode} props.children
+ * @param {ReactNode} props.topbar
+ * @param {ReactNode?} props.sideNav
+ * @param {ReactNode?} props.footer
+ * @param {boolean?} props.useAccountSettingsNav
+ * @param {string?} props.currentPage
+ * @returns {JSX.Element} LayoutComposer that expects children to be a function.
+ */
 const LayoutSideNavigation = props => {
   const {
     className,
@@ -59,28 +75,6 @@ const LayoutSideNavigation = props => {
       }}
     </LayoutComposer>
   );
-};
-
-LayoutSideNavigation.displayName = 'LayoutSideNavigation';
-
-LayoutSideNavigation.defaultProps = {
-  className: null,
-  rootClassName: null,
-  sideNav: null,
-  footer: null,
-  useAccountSettingsNav: false,
-  currentPage: null,
-};
-
-LayoutSideNavigation.propTypes = {
-  className: string,
-  rootClassName: string,
-  children: node.isRequired,
-  topbar: node.isRequired,
-  sideNav: node,
-  footer: node,
-  useAccountSettingsNav: bool,
-  currentPage: string,
 };
 
 export default LayoutSideNavigation;

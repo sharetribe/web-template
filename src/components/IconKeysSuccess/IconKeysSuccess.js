@@ -1,9 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import css from './IconKeysSuccess.module.css';
 
+/**
+ * Inquiry icon with success mark.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @returns {JSX.Element} SVG icon
+ */
 const IconKeysSuccess = props => {
   const { className } = props;
   return (
@@ -54,14 +61,6 @@ const IconKeysSuccess = props => {
       </g>
     </svg>
   );
-};
-
-IconKeysSuccess.defaultProps = { className: null };
-
-const { string } = PropTypes;
-
-IconKeysSuccess.propTypes = {
-  className: string,
 };
 
 export default IconKeysSuccess;

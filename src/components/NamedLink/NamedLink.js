@@ -18,16 +18,46 @@
  * the one in the generated pathname of the link.
  */
 import React from 'react';
-import { object, string, shape, any } from 'prop-types';
 import { Link, withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 
 import { pathByRouteName, findRouteByRouteName } from '../../util/routes';
 
-export const NamedLinkComponent = props => {
+/**
+ * This component wraps React-Router's Link by providing name-based routing.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className
+ * @param {string?} props.activeClassName class applied, when the link is the current link
+ * @param {string?} props.name - name of the route in routeConfiguration
+ * @param {Object?} props.params - path params for the named route and its pathname prop
+ * @param {Object?} props.to - props for the React Router Link
+ * @param {string?} props.to.search - search params for the React Router Link
+ * @param {string?} props.to.hash - hash for the React Router Link
+ * @param {Object?} props.to.state - state for the React Router Link (history.pushstate)
+ * @param {any} props.children - the content of the link
+ * @param {Object?} props.style - inline css for the link
+ * @param {string?} props.title - title attribute for the 'a' element.
+ * @param {Object?} props.match - match from React Router
+ * @returns {JSX.Element} containing form that allows adding availability exceptions
+ */
+export const NamedLink = withRouter(props => {
   const routeConfiguration = useRouteConfiguration();
-  const { name, params, title } = props;
+  const {
+    name,
+    params = {}, // pathParams
+    title,
+    // Link props
+    to = {},
+    children,
+    match = {},
+    // <a> element props
+    className,
+    style = {},
+    activeClassName = 'NamedLink_active',
+  } = props;
 
   const onOver = () => {
     const { component: Page } = findRouteByRouteName(name, routeConfiguration);
@@ -38,13 +68,10 @@ export const NamedLinkComponent = props => {
   };
 
   // Link props
-  const { to, children } = props;
   const pathname = pathByRouteName(name, routeConfiguration, params);
-  const { match } = props;
   const active = match.url && match.url === pathname;
 
   // <a> element props
-  const { className, style, activeClassName } = props;
   const aElemProps = {
     className: classNames(className, { [activeClassName]: active }),
     style,
@@ -56,42 +83,6 @@ export const NamedLinkComponent = props => {
       {children}
     </Link>
   );
-};
-
-NamedLinkComponent.defaultProps = {
-  params: {},
-  to: {},
-  children: null,
-  className: '',
-  style: {},
-  activeClassName: 'NamedLink_active',
-  title: null,
-  match: {},
-};
-
-// This ensures a nice display name in snapshots etc.
-NamedLinkComponent.displayName = 'NamedLink';
-
-NamedLinkComponent.propTypes = {
-  // name of the route in routeConfiguration
-  name: string.isRequired,
-  // params object for the named route
-  params: object,
-  // Link component props
-  to: shape({ search: string, hash: string, state: object }),
-  children: any,
-
-  // generic props for the underlying <a> element
-  className: string,
-  style: object,
-  activeClassName: string,
-  title: string,
-
-  // from withRouter
-  match: object,
-};
-
-const NamedLink = withRouter(NamedLinkComponent);
-NamedLink.displayName = 'NamedLink';
+});
 
 export default NamedLink;

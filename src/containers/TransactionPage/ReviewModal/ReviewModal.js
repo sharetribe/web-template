@@ -1,8 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import { FormattedMessage, intlShape, injectIntl } from '../../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import { IconReviewUser, Modal } from '../../../components';
 
@@ -10,20 +9,39 @@ import ReviewForm from '../ReviewForm/ReviewForm';
 
 import css from './ReviewModal.module.css';
 
+/**
+ * Review modal
+ *
+ * @component
+ * @param {Object} props - The props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that extends the default class for the root element
+ * @param {string} props.id - The id
+ * @param {boolean} props.isOpen - Whether the modal is open
+ * @param {Function} props.onCloseModal - The on close modal function
+ * @param {Function} props.onManageDisableScrolling - The on manage disable scrolling function
+ * @param {Function} props.onSubmitReview - The on submit review function
+ * @param {string} props.revieweeName - The reviewee name
+ * @param {boolean} props.reviewSent - Whether the review is sent
+ * @param {boolean} props.sendReviewInProgress - Whether the send review is in progress
+ * @param {propTypes.error} props.sendReviewError - The send review error
+ * @param {string} props.marketplaceName - The marketplace name
+ * @returns {JSX.Element} The ReviewModal component
+ */
 const ReviewModal = props => {
+  const intl = useIntl();
   const {
     className,
     rootClassName,
     id,
     marketplaceName,
-    intl,
     isOpen,
     onCloseModal,
     onManageDisableScrolling,
     onSubmitReview,
     revieweeName,
-    reviewSent,
-    sendReviewInProgress,
+    reviewSent = false,
+    sendReviewInProgress = false,
     sendReviewError,
   } = props;
 
@@ -59,24 +77,4 @@ const ReviewModal = props => {
   );
 };
 
-const { bool, string } = PropTypes;
-
-ReviewModal.defaultProps = {
-  className: null,
-  rootClassName: null,
-  reviewSent: false,
-  sendReviewInProgress: false,
-  sendReviewError: null,
-};
-
-ReviewModal.propTypes = {
-  className: string,
-  rootClassName: string,
-  intl: intlShape.isRequired,
-  reviewSent: bool,
-  sendReviewInProgress: bool,
-  sendReviewError: propTypes.error,
-  marketplaceName: string.isRequired,
-};
-
-export default injectIntl(ReviewModal);
+export default ReviewModal;

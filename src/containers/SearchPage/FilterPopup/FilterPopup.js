@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { bool, func, node, number, object, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { injectIntl, intlShape } from '../../../util/reactIntl';
@@ -13,6 +12,26 @@ import css from './FilterPopup.module.css';
 
 const KEY_CODE_ESCAPE = 27;
 
+/**
+ * FilterPopup component
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} [props.popupClassName] - Custom class that overrides the default class css.popupSize
+ * @param {string} props.id - The ID
+ * @param {React.Node} props.label - The label
+ * @param {number} [props.labelMaxWidth] - The maximum width of the label
+ * @param {boolean} props.isSelected - Whether the filter is selected
+ * @param {React.Node} props.children - The children
+ * @param {Object} [props.initialValues] - The initial values
+ * @param {boolean} [props.keepDirtyOnReinitialize] - Whether to keep dirty on reinitialize
+ * @param {number} [props.contentPlacementOffset] - The content placement offset
+ * @param {Function} props.onSubmit - The function to submit
+ * @param {intlShape} props.intl - The intl object
+ * @returns {JSX.Element}
+ */
 class FilterPopup extends Component {
   constructor(props) {
     super(props);
@@ -87,7 +106,7 @@ class FilterPopup extends Component {
       const contentWidth = this.filterContent.offsetWidth;
       const contentWidthBiggerThanLabel = contentWidth - labelWidth;
       const renderToRight = distanceToRight > contentWidthBiggerThanLabel;
-      const contentPlacementOffset = this.props.contentPlacementOffset;
+      const contentPlacementOffset = this.props.contentPlacementOffset || 0;
 
       const offset = renderToRight
         ? { left: contentPlacementOffset }
@@ -111,8 +130,8 @@ class FilterPopup extends Component {
       isSelected,
       children,
       initialValues,
-      keepDirtyOnReinitialize,
-      contentPlacementOffset,
+      keepDirtyOnReinitialize = false,
+      contentPlacementOffset = 0,
     } = this.props;
 
     const classes = classNames(rootClassName || css.root, className);
@@ -165,35 +184,5 @@ class FilterPopup extends Component {
     );
   }
 }
-
-FilterPopup.defaultProps = {
-  rootClassName: null,
-  className: null,
-  popupClassName: null,
-  initialValues: null,
-  keepDirtyOnReinitialize: false,
-  contentPlacementOffset: 0,
-  liveEdit: false,
-  label: null,
-  labelMaxWidth: null,
-};
-
-FilterPopup.propTypes = {
-  rootClassName: string,
-  className: string,
-  popupClassName: string,
-  id: string.isRequired,
-  onSubmit: func.isRequired,
-  initialValues: object,
-  keepDirtyOnReinitialize: bool,
-  contentPlacementOffset: number,
-  label: string.isRequired,
-  labelMaxWidth: number,
-  isSelected: bool.isRequired,
-  children: node.isRequired,
-
-  // form injectIntl
-  intl: intlShape.isRequired,
-};
 
 export default injectIntl(FilterPopup);

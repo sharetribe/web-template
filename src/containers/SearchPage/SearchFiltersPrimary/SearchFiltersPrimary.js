@@ -1,5 +1,4 @@
 import React from 'react';
-import { bool, func, node, number, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { FormattedMessage } from '../../../util/reactIntl';
@@ -8,14 +7,27 @@ import PopupOpenerButton from '../PopupOpenerButton/PopupOpenerButton';
 
 import css from './SearchFiltersPrimary.module.css';
 
+/**
+ * SearchFiltersPrimary component
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {React.Node} props.children - The children
+ * @param {boolean} [props.isSecondaryFiltersOpen] - Whether the secondary filters are open
+ * @param {Function} [props.toggleSecondaryFiltersOpen] - The function to toggle the secondary filters
+ * @param {number} [props.selectedSecondaryFiltersCount] - The number of selected secondary filters
+ * @returns {JSX.Element}
+ */
 const SearchFiltersPrimaryComponent = props => {
   const {
     rootClassName,
     className,
     children,
-    isSecondaryFiltersOpen,
-    toggleSecondaryFiltersOpen,
-    selectedSecondaryFiltersCount,
+    isSecondaryFiltersOpen = false,
+    toggleSecondaryFiltersOpen = null,
+    selectedSecondaryFiltersCount = 0,
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
@@ -42,22 +54,6 @@ const SearchFiltersPrimaryComponent = props => {
       </div>
     </div>
   );
-};
-
-SearchFiltersPrimaryComponent.defaultProps = {
-  rootClassName: null,
-  className: null,
-  isSecondaryFiltersOpen: false,
-  toggleSecondaryFiltersOpen: null,
-  selectedSecondaryFiltersCount: 0,
-};
-
-SearchFiltersPrimaryComponent.propTypes = {
-  rootClassName: string,
-  className: string,
-  isSecondaryFiltersOpen: bool,
-  toggleSecondaryFiltersOpen: func,
-  selectedSecondaryFiltersCount: number,
 };
 
 const SearchFiltersPrimary = SearchFiltersPrimaryComponent;

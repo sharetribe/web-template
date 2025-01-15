@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { array, bool, func, number, object, string } from 'prop-types';
-import { compose } from 'redux';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
 import classNames from 'classnames';
 
 import appSettings from '../../../config/settings';
-import { FormattedMessage, intlShape, injectIntl } from '../../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { required, bookingDatesRequired, composeValidators } from '../../../util/validators';
 import {
   getStartOf,
@@ -476,7 +474,31 @@ const combineConsecutiveTimeSlots = (slots, startDate) => {
   return [combinedSlot];
 };
 
-export const BookingDatesFormComponent = props => {
+/**
+ * A form for selecting booking dates.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.rootClassName] - Custom class name for the root element
+ * @param {string} [props.className] - Custom class name
+ * @param {Object} props.price - The unit price of the
+ * @param {string} props.listingId - The listing ID
+ * @param {boolean} props.isOwnListing - Whether the listing belongs to the current user
+ * @param {propTypes.lineItemUnitType} props.lineItemUnitType - The unit type of the line item
+ * @param {Object} props.monthlyTimeSlots - The monthly time slots
+ * @param {Function} props.onFetchTimeSlots - Handler for fetching time slots
+ * @param {Array<Object>} props.lineItems - The line items
+ * @param {boolean} props.fetchLineItemsInProgress - Whether line items are being fetched
+ * @param {propTypes.error} props.fetchLineItemsError - The error for fetching line items
+ * @param {Function} props.onFetchTransactionLineItems - Handler for fetching transaction line items
+ * @param {string} props.timeZone - The time zone
+ * @param {string} props.marketplaceName - Name of the marketplace
+ * @param {string} [props.startDatePlaceholder] - Placeholder for the start date
+ * @param {string} [props.endDatePlaceholder] - Placeholder for the end date
+ * @param {number} props.dayCountAvailableForBooking - Number of days available for booking
+ * @returns {JSX.Element}
+ */
+export const BookingDatesForm = props => {
   const {
     rootClassName,
     className,
@@ -494,7 +516,7 @@ export const BookingDatesFormComponent = props => {
     seatsEnabled,
     ...rest
   } = props;
-
+  const intl = useIntl();
   const [currentMonth, setCurrentMonth] = useState(getStartOf(TODAY, 'month', timeZone));
 
   const allTimeSlots = getAllTimeSlots(monthlyTimeSlots);
@@ -560,7 +582,6 @@ export const BookingDatesFormComponent = props => {
           startDatePlaceholder,
           formId,
           handleSubmit,
-          intl,
           lineItemUnitType,
           values,
           lineItems,
@@ -803,45 +824,5 @@ export const BookingDatesFormComponent = props => {
     />
   );
 };
-
-BookingDatesFormComponent.defaultProps = {
-  rootClassName: null,
-  className: null,
-  price: null,
-  isOwnListing: false,
-  startDatePlaceholder: null,
-  endDatePlaceholder: null,
-  lineItems: null,
-  fetchLineItemsError: null,
-  monthlyTimeSlots: null,
-};
-
-BookingDatesFormComponent.propTypes = {
-  rootClassName: string,
-  className: string,
-
-  marketplaceName: string.isRequired,
-  lineItemUnitType: propTypes.lineItemUnitType.isRequired,
-  price: propTypes.money,
-  isOwnListing: bool,
-  monthlyTimeSlots: object,
-  onFetchTimeSlots: func.isRequired,
-
-  onFetchTransactionLineItems: func.isRequired,
-  lineItems: array,
-  fetchLineItemsInProgress: bool.isRequired,
-  fetchLineItemsError: propTypes.error,
-
-  // from injectIntl
-  intl: intlShape.isRequired,
-
-  // for tests
-  startDatePlaceholder: string,
-  endDatePlaceholder: string,
-  dayCountAvailableForBooking: number.isRequired,
-};
-
-const BookingDatesForm = compose(injectIntl)(BookingDatesFormComponent);
-BookingDatesForm.displayName = 'BookingDatesForm';
 
 export default BookingDatesForm;

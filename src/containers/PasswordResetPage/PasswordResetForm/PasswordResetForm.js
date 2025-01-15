@@ -1,17 +1,25 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
-import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import * as validators from '../../../util/validators';
 
 import { Form, PrimaryButton, FieldTextInput } from '../../../components';
 
 import css from './PasswordResetForm.module.css';
 
-const PasswordResetFormComponent = props => (
+/**
+ * The reset-password form.
+ *
+ * @param {Object} props
+ * @param {string} [props.formId] - The form ID
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {boolean} [props.inProgress] - Whether the form is in progress
+ * @returns {JSX.Element} Reset-password form component
+ */
+const PasswordResetForm = props => (
   <FinalForm
     {...props}
     render={fieldRenderProps => {
@@ -20,11 +28,11 @@ const PasswordResetFormComponent = props => (
         className,
         formId,
         handleSubmit,
-        inProgress,
-        intl,
+        inProgress = false,
         invalid,
       } = fieldRenderProps;
 
+      const intl = useIntl();
       // password
       const passwordLabel = intl.formatMessage({
         id: 'PasswordResetForm.passwordLabel',
@@ -90,25 +98,5 @@ const PasswordResetFormComponent = props => (
     }}
   />
 );
-
-PasswordResetFormComponent.defaultProps = {
-  rootClassName: null,
-  className: null,
-  inProgress: false,
-  formId: null,
-};
-
-const { string, bool } = PropTypes;
-
-PasswordResetFormComponent.propTypes = {
-  rootClassName: string,
-  className: string,
-  inProgress: bool,
-  intl: intlShape.isRequired,
-  formId: string,
-};
-
-const PasswordResetForm = compose(injectIntl)(PasswordResetFormComponent);
-PasswordResetForm.displayName = 'PasswordResetForm';
 
 export default PasswordResetForm;

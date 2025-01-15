@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import { bool, func, object, shape, string } from 'prop-types';
-import { compose } from 'redux';
 import { ARRAY_ERROR } from 'final-form';
 import { Form as FinalForm, Field } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
@@ -9,7 +7,7 @@ import isEqual from 'lodash/isEqual';
 import classNames from 'classnames';
 
 // Import configs and util modules
-import { FormattedMessage, intlShape, injectIntl } from '../../../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../../../util/reactIntl';
 import { propTypes } from '../../../../util/types';
 import { nonEmptyArray, composeValidators } from '../../../../util/validators';
 import { isUploadImageOverLimitError } from '../../../../util/errors';
@@ -111,7 +109,33 @@ const FieldListingImage = props => {
   );
 };
 
-export const EditListingPhotosFormComponent = props => {
+/**
+ * The EditListingPhotosForm component.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {boolean} props.disabled - Whether the form is disabled
+ * @param {boolean} props.ready - Whether the form is ready
+ * @param {boolean} props.updated - Whether the form is updated
+ * @param {boolean} props.updateInProgress - Whether the update is in progress
+ * @param {Object} props.fetchErrors - The fetch errors object
+ * @param {propTypes.error} props.fetchErrors.publishListingError - The publish listing error
+ * @param {propTypes.error} props.fetchErrors.showListingsError - The show listings error
+ * @param {propTypes.error} props.fetchErrors.uploadImageError - The upload image error
+ * @param {propTypes.error} props.fetchErrors.updateListingError - The update listing error
+ * @param {string} props.saveActionMsg - The save action message
+ * @param {Function} props.onSubmit - The submit function
+ * @param {Function} props.onImageUpload - The image upload function
+ * @param {Function} props.onRemoveImage - The remove image function
+ * @param {Object} props.listingImageConfig - The listing image config
+ * @param {number} props.listingImageConfig.aspectWidth - The aspect width
+ * @param {number} props.listingImageConfig.aspectHeight - The aspect height
+ * @param {string} props.listingImageConfig.variantPrefix - The variant prefix
+ * @returns {JSX.Element}
+ */
+export const EditListingPhotosForm = props => {
   const [state, setState] = useState({ imageUploadRequested: false });
   const [submittedImages, setSubmittedImages] = useState([]);
 
@@ -129,6 +153,7 @@ export const EditListingPhotosFormComponent = props => {
         });
     }
   };
+  const intl = useIntl();
 
   return (
     <FinalForm
@@ -140,7 +165,6 @@ export const EditListingPhotosFormComponent = props => {
           className,
           fetchErrors,
           handleSubmit,
-          intl,
           invalid,
           onRemoveImage,
           disabled,
@@ -273,25 +297,4 @@ export const EditListingPhotosFormComponent = props => {
   );
 };
 
-EditListingPhotosFormComponent.defaultProps = { fetchErrors: null };
-
-EditListingPhotosFormComponent.propTypes = {
-  fetchErrors: shape({
-    publishListingError: propTypes.error,
-    showListingsError: propTypes.error,
-    uploadImageError: propTypes.error,
-    updateListingError: propTypes.error,
-  }),
-  intl: intlShape.isRequired,
-  onImageUpload: func.isRequired,
-  onSubmit: func.isRequired,
-  saveActionMsg: string.isRequired,
-  disabled: bool.isRequired,
-  ready: bool.isRequired,
-  updated: bool.isRequired,
-  updateInProgress: bool.isRequired,
-  onRemoveImage: func.isRequired,
-  listingImageConfig: object.isRequired,
-};
-
-export default compose(injectIntl)(EditListingPhotosFormComponent);
+export default EditListingPhotosForm;

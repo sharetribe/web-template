@@ -192,7 +192,7 @@ const noCacheHeaders = {
   'Cache-control': 'no-cache, no-store, must-revalidate',
 };
 
-app.get('*', (req, res) => {
+app.get('*', async (req, res) => {
   if (req.url.startsWith('/static/')) {
     // The express.static middleware only handles static resources
     // that it finds, otherwise passes them through. However, we don't
@@ -226,8 +226,9 @@ app.get('*', (req, res) => {
     .loadData(req.url, sdk, appInfo)
     .then(data => {
       const cspNonce = cspEnabled ? res.locals.cspNonce : null;
-      const html = renderer.render(req.url, context, data, renderApp, webExtractor, cspNonce);
-
+      return renderer.render(req.url, context, data, renderApp, webExtractor, cspNonce);
+    })
+    .then(html => {
       if (dev) {
         const debugData = {
           url: req.url,

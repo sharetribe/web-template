@@ -1,10 +1,18 @@
 import React from 'react';
-import { node, string } from 'prop-types';
 
-// External link that opens in a new tab/window, ensuring that the
-// opened page doesn't have access to the current page.
-//
-// See: https://mathiasbynens.github.io/rel-noopener/
+/**
+ * External link that opens in a new tab/window, ensuring that the
+ * opened page doesn't have access to the current page.
+ * See: https://mathiasbynens.github.io/rel-noopener/
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string} props.target attribute for <a> element
+ * @param {ReactNode} props.children
+ * @returns {JSX.Element} External link
+ */
 const ExternalLink = props => {
   const { children, target, ...rest } = props;
   const targetProp = target || '_blank';
@@ -18,9 +26,5 @@ const ExternalLink = props => {
     </a>
   );
 };
-
-ExternalLink.defaultProps = { children: null, target: '_blank' };
-
-ExternalLink.propTypes = { children: node, target: string };
 
 export default ExternalLink;

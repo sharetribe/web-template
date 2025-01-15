@@ -1,8 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import css from './IconBannedUser.module.css';
 
+/**
+ * Banned icon.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own root class
+ * @returns {JSX.Element} SVG icon
+ */
 const IconBannedUser = props => {
   const { className } = props;
   return (
@@ -27,11 +34,5 @@ const IconBannedUser = props => {
     </svg>
   );
 };
-
-IconBannedUser.defaultProps = { className: null };
-
-const { string } = PropTypes;
-
-IconBannedUser.propTypes = { className: string };
 
 export default IconBannedUser;

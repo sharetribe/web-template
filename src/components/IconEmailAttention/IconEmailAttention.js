@@ -1,9 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import css from './IconEmailAttention.module.css';
 
+/**
+ * Email icon with attention focus.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @returns {JSX.Element} SVG icon
+ */
 const IconEmailAttention = props => {
   const { rootClassName, className } = props;
   const classes = classNames(rootClassName || css.root, className);
@@ -32,11 +40,5 @@ const IconEmailAttention = props => {
     </svg>
   );
 };
-
-IconEmailAttention.defaultProps = { rootClassName: null, className: null };
-
-const { string } = PropTypes;
-
-IconEmailAttention.propTypes = { rootClassName: string, className: string };
 
 export default IconEmailAttention;

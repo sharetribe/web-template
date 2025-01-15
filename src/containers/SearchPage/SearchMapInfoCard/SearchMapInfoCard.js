@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { arrayOf, bool, func, object, string } from 'prop-types';
-import { compose } from 'redux';
 import classNames from 'classnames';
 
-import { injectIntl, intlShape } from '../../../util/reactIntl';
+import { useIntl } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import { formatMoney } from '../../../util/currency';
 import { ensureListing } from '../../../util/data';
@@ -83,24 +81,23 @@ const ListingCard = props => {
   );
 };
 
-ListingCard.defaultProps = {
-  className: null,
-};
-
-ListingCard.propTypes = {
-  className: string,
-  listing: propTypes.listing.isRequired,
-  clickHandler: func.isRequired,
-  intl: intlShape.isRequired,
-  isInCarousel: bool.isRequired,
-};
-
+/**
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that extends the default class for the root element
+ * @param {Array<propTypes.listing>} props.listings - The listings
+ * @param {Function} props.onListingInfoCardClicked - The function to handle the listing info card click
+ * @param {Function} props.createURLToListing - The function to create the URL to the listing
+ * @param {Object} props.config - The configuration
+ * @returns {JSX.Element}
+ */
 const SearchMapInfoCard = props => {
   const [currentListingIndex, setCurrentListingIndex] = useState(0);
+  const intl = useIntl();
   const {
     className,
     rootClassName,
-    intl,
     listings,
     createURLToListing,
     onListingInfoCardClicked,
@@ -155,21 +152,4 @@ const SearchMapInfoCard = props => {
   );
 };
 
-SearchMapInfoCard.defaultProps = {
-  className: null,
-  rootClassName: null,
-};
-
-SearchMapInfoCard.propTypes = {
-  className: string,
-  rootClassName: string,
-  listings: arrayOf(propTypes.listing).isRequired,
-  onListingInfoCardClicked: func.isRequired,
-  createURLToListing: func.isRequired,
-  config: object.isRequired,
-
-  // from injectIntl
-  intl: intlShape.isRequired,
-};
-
-export default compose(injectIntl)(SearchMapInfoCard);
+export default SearchMapInfoCard;

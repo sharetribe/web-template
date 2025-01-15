@@ -1,5 +1,4 @@
 import React from 'react';
-import { array, arrayOf, func, node, number, object, oneOf, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { useIntl } from '../../../util/reactIntl';
@@ -47,6 +46,26 @@ const format = (selectedOptions, queryParamName, schemaType, searchMode) => {
   return { [queryParamName]: value };
 };
 
+/**
+ * SelectMultipleFilter component
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.rootClassName] - Custom class that extends the default class for the root element
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} props.id - The id
+ * @param {string} props.name - The name
+ * @param {node} props.label - The label
+ * @param {Array<string>} props.queryParamNames - The query param names
+ * @param {Object} props.initialValues - The initial values
+ * @param {Function} props.onSubmit - The function to handle the submit
+ * @param {Array<Object>} props.options - The options
+ * @param {SCHEMA_TYPE_ENUM | SCHEMA_TYPE_MULTI_ENUM} props.schemaType - The schema type
+ * @param {'has_all' | 'has_any'} props.searchMode - The search mode
+ * @param {boolean} [props.showAsPopup] - Whether to show as popup
+ * @param {number} [props.contentPlacementOffset] - The content placement offset
+ * @returns {JSX.Element}
+ */
 const SelectMultipleFilter = props => {
   const intl = useIntl();
   const {
@@ -57,7 +76,7 @@ const SelectMultipleFilter = props => {
     label,
     options,
     initialValues,
-    contentPlacementOffset,
+    contentPlacementOffset = 0,
     onSubmit,
     queryParamNames,
     schemaType,
@@ -141,29 +160,6 @@ const SelectMultipleFilter = props => {
       />
     </FilterPlain>
   );
-};
-
-SelectMultipleFilter.defaultProps = {
-  rootClassName: null,
-  className: null,
-  initialValues: null,
-  contentPlacementOffset: 0,
-  searchMode: null,
-};
-
-SelectMultipleFilter.propTypes = {
-  rootClassName: string,
-  className: string,
-  id: string.isRequired,
-  name: string.isRequired,
-  queryParamNames: arrayOf(string).isRequired,
-  label: node.isRequired,
-  onSubmit: func.isRequired,
-  options: array.isRequired,
-  searchMode: oneOf(['has_all', 'has_any']),
-  schemaType: oneOf([SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM]).isRequired,
-  initialValues: object,
-  contentPlacementOffset: number,
 };
 
 export default SelectMultipleFilter;

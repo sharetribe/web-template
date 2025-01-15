@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import isEqual from 'lodash/isEqual';
 import classNames from 'classnames';
@@ -62,6 +61,26 @@ const PhoneNumberMaybe = props => {
   );
 };
 
+/**
+ * The ContactDetailsForm component.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.rootClassName] - The root class name to be used instead of the default css.root.
+ * @param {string} [props.className] - The class name
+ * @param {string} [props.formId] - The form id
+ * @param {propTypes.error} [props.saveEmailError] - The save email error
+ * @param {propTypes.error} [props.savePhoneNumberError] - The save phone number error
+ * @param {boolean} props.inProgress - Whether the form is in progress
+ * @param {intlShape} props.intl - The intl object
+ * @param {Function} props.onResendVerificationEmail - The resend verification email function
+ * @param {boolean} props.ready - Whether the form is ready
+ * @param {propTypes.error} props.sendVerificationEmailError - The send verification email error
+ * @param {boolean} props.sendVerificationEmailInProgress - Whether the send verification email is in progress
+ * @param {boolean} props.resetPasswordInProgress - Whether the reset password is in progress
+ * @param {propTypes.error} props.resetPasswordError - The reset password error
+ * @returns {JSX.Element}
+ */
 class ContactDetailsFormComponent extends Component {
   constructor(props) {
     super(props);
@@ -106,12 +125,12 @@ class ContactDetailsFormComponent extends Component {
             currentUser,
             formId,
             handleSubmit,
-            inProgress,
+            inProgress = false,
             intl,
             invalid,
             sendVerificationEmailError,
-            sendVerificationEmailInProgress,
-            resetPasswordInProgress,
+            sendVerificationEmailInProgress = false,
+            resetPasswordInProgress = false,
             values,
             userTypeConfig,
           } = fieldRenderProps;
@@ -405,39 +424,6 @@ class ContactDetailsFormComponent extends Component {
     );
   }
 }
-
-ContactDetailsFormComponent.defaultProps = {
-  rootClassName: null,
-  className: null,
-  formId: null,
-  saveEmailError: null,
-  savePhoneNumberError: null,
-  inProgress: false,
-  sendVerificationEmailError: null,
-  sendVerificationEmailInProgress: false,
-  email: null,
-  phoneNumber: null,
-  resetPasswordInProgress: false,
-  resetPasswordError: null,
-};
-
-const { bool, func, string } = PropTypes;
-
-ContactDetailsFormComponent.propTypes = {
-  rootClassName: string,
-  className: string,
-  formId: string,
-  saveEmailError: propTypes.error,
-  savePhoneNumberError: propTypes.error,
-  inProgress: bool,
-  intl: intlShape.isRequired,
-  onResendVerificationEmail: func.isRequired,
-  ready: bool.isRequired,
-  sendVerificationEmailError: propTypes.error,
-  sendVerificationEmailInProgress: bool,
-  resetPasswordInProgress: bool,
-  resetPasswordError: propTypes.error,
-};
 
 const ContactDetailsForm = compose(injectIntl)(ContactDetailsFormComponent);
 

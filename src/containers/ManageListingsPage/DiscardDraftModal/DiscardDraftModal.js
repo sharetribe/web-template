@@ -1,21 +1,31 @@
 import React from 'react';
-import { bool, func, string } from 'prop-types';
 import classNames from 'classnames';
 
-import { FormattedMessage, intlShape, injectIntl } from '../../../util/reactIntl';
-import { propTypes } from '../../../util/types';
+import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 
 import { IconAlert, Modal, Button } from '../../../components';
 
 import css from './DiscardDraftModal.module.css';
 
-// Dispute modal
+/**
+ * Dispute modal
+ *
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} props.id - The id of the modal
+ * @param {boolean} props.isOpen - Whether the modal is open
+ * @param {function} props.onCloseModal - The function to close the modal
+ * @param {function} props.onManageDisableScrolling - The function to manage disable scrolling
+ * @param {function} props.onDiscardDraft - The function to discard the draft
+ * @returns {JSX.Element} Discard draft modal component
+ */
 const DiscardDraftModal = props => {
+  const intl = useIntl();
   const {
     className,
     rootClassName,
     id,
-    intl,
     isOpen,
     onCloseModal,
     onManageDisableScrolling,
@@ -48,27 +58,4 @@ const DiscardDraftModal = props => {
   );
 };
 
-DiscardDraftModal.defaultProps = {
-  className: null,
-  rootClassName: null,
-  isOpen: false,
-  disputeSubmitted: false,
-  disputeInProgress: false,
-  disputeError: null,
-};
-
-DiscardDraftModal.propTypes = {
-  className: string,
-  rootClassName: string,
-  id: string.isRequired,
-  isOpen: bool,
-  intl: intlShape.isRequired,
-  onCloseModal: func.isRequired,
-  onManageDisableScrolling: func.isRequired,
-  onDiscardDraft: func.isRequired,
-  disputeSubmitted: bool,
-  disputeInProgress: bool,
-  disputeError: propTypes.error,
-};
-
-export default injectIntl(DiscardDraftModal);
+export default DiscardDraftModal;

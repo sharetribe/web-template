@@ -1,9 +1,8 @@
 import React from 'react';
-import { bool, func, string } from 'prop-types';
 import { Form as FinalForm, Field } from 'react-final-form';
 import classNames from 'classnames';
 
-import { intlShape, injectIntl } from '../../../util/reactIntl';
+import { useIntl } from '../../../util/reactIntl';
 import { Form, LocationAutocompleteInput } from '../../../components';
 
 import IconSearchDesktop from './IconSearchDesktop';
@@ -76,7 +75,18 @@ const LocationSearchField = props => {
   );
 };
 
-const SearchFormComponent = props => {
+/**
+ * Search form
+ *
+ * @param {Object} props
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {function} props.onSubmit - The function to submit the form
+ * @param {boolean} props.isKeywordSearch - Whether the search is a keyword search
+ * @returns {JSX.Element} Search form component
+ */
+const SearchForm = props => {
+  const intl = useIntl();
   const handleChange = location => {
     if (location.selectedPlace) {
       // Note that we use `onSubmit` instead of the conventional
@@ -91,7 +101,7 @@ const SearchFormComponent = props => {
     <FinalForm
       {...props}
       render={formRenderProps => {
-        const { rootClassName, className, isKeywordSearch, intl, handleSubmit } = formRenderProps;
+        const { rootClassName, className, isKeywordSearch, handleSubmit } = formRenderProps;
         const classes = classNames(rootClassName || css.root, className);
 
         // Allow form submit only when the place has changed
@@ -111,19 +121,5 @@ const SearchFormComponent = props => {
     />
   );
 };
-
-SearchFormComponent.defaultProps = { rootClassName: null, className: null };
-
-SearchFormComponent.propTypes = {
-  rootClassName: string,
-  className: string,
-  onSubmit: func.isRequired,
-  isKeywordSearch: bool.isRequired,
-
-  // from injectIntl
-  intl: intlShape.isRequired,
-};
-
-const SearchForm = injectIntl(SearchFormComponent);
 
 export default SearchForm;

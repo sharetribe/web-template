@@ -26,14 +26,14 @@ describe('util/routes.js', () => {
         createResourceLocatorString('ListingPage', routes, { id: '1234', slug: 'nice-listing' }, {})
       ).toEqual('/l/nice-listing/1234');
       expect(() => createResourceLocatorString('ListingPage', routes, {}, {})).toThrowError(
-        TypeError('Expected "slug" to be a string')
+        TypeError('Missing parameters: slug, id')
       );
       expect(() =>
         createResourceLocatorString('ListingPage', routes, { id: '1234' }, {})
-      ).toThrowError(TypeError('Expected "slug" to be a string'));
+      ).toThrowError(TypeError('Missing parameters: slug'));
       expect(() =>
         createResourceLocatorString('ListingPage', routes, { slug: 'nice-listing' }, {})
-      ).toThrowError(TypeError('Expected "id" to be a string'));
+      ).toThrowError(TypeError('Missing parameters: id'));
     });
 
     it('should return meaningful strings with search parameters', () => {

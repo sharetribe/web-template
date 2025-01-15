@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-import { bool, string, number } from 'prop-types';
 import classNames from 'classnames';
 import { Field } from 'react-final-form';
 
@@ -124,8 +123,20 @@ const RangeInput = props => {
   );
 };
 
+/**
+ * FieldSelectIntegerRange component
+ *
+ * @component
+ * @param {Object} props
+ * @param {number} [props.min] - The minimum value
+ * @param {number} [props.max] - The maximum value
+ * @param {string} [props.name] - The name
+ * @param {number} [props.step] - The step
+ * @param {boolean} [props.isInSideBar] - Whether the filter is in the sidebar
+ * @returns {JSX.Element}
+ */
 const FieldSelectIntegerRange = props => {
-  const { max, min, name, step, isInSideBar, ...rest } = props;
+  const { max, min, name, step = 5, isInSideBar = false, ...rest } = props;
   return (
     <Field
       max={max}
@@ -137,22 +148,6 @@ const FieldSelectIntegerRange = props => {
       {...rest}
     />
   );
-};
-
-FieldSelectIntegerRange.defaultProps = {
-  min: null,
-  max: null,
-  step: 5,
-  name: null,
-  isInSideBar: false,
-};
-
-FieldSelectIntegerRange.propTypes = {
-  min: number,
-  max: number,
-  step: number,
-  isInSideBar: bool.isRequired,
-  name: string,
 };
 
 export default FieldSelectIntegerRange;
