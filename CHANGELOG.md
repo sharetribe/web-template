@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] CustomExtendedDataField.module.css: add missing customMediaQuery import.
+  [#532](https://github.com/sharetribe/web-template/pull/532)
 - [change] This updates Sharetribe Web Template to use React v18 (v18.3.1). Some highlights:
 
   - Several dependency libraries have been updated.
