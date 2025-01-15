@@ -23,6 +23,7 @@ import {
   SCHEMA_TYPE_TEXT,
   SCHEMA_TYPE_LONG,
   SCHEMA_TYPE_BOOLEAN,
+  SCHEMA_TYPE_YOUTUBE,
   propTypes,
 } from '../../../util/types';
 import {
@@ -188,6 +189,8 @@ const hasValidListingFieldsInExtendedData = (publicData, privateData, config) =>
         ? typeof savedListingField === 'number' && Number.isInteger(savedListingField)
         : schemaType === SCHEMA_TYPE_BOOLEAN
         ? savedListingField === true || savedListingField === false
+        : schemaType === SCHEMA_TYPE_YOUTUBE
+        ? typeof savedListingField === 'string'
         : false;
     }
     return true;
