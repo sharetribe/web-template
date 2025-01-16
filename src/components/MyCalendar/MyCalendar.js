@@ -12,6 +12,10 @@ import {
 import { fetchCurrentUserTransactions } from '../../ducks/user.duck';
 import AttendanceForm from '../AttendanceForm/AttendanceFrom';
 import EventForm from '../EventForm/EventForm';
+import { createClient } from '@supabase/supabase-js';
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
+const supabaseKey = process.env.REACT_APP_SUPABASE_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 const randomId = () => uuidv4();
 const localizer = momentLocalizer(moment);
@@ -19,7 +23,6 @@ const localizer = momentLocalizer(moment);
 function mergeTransactionsAndBookings(response) {
   const { data: transactions, included } = response;
 
-  // Create a map of included bookings by their ID
   const bookingMap = included.reduce((map, item) => {
     if (item.type === 'booking') {
       map[item.id.uuid] = item.attributes;
@@ -27,14 +30,12 @@ function mergeTransactionsAndBookings(response) {
     return map;
   }, {});
 
-  // Map transactions to a simplified structure for each booking
   const mergedData = transactions
     .map((transaction) => {
       const { unitType, seatNames } = transaction.attributes.protectedData;
       const listingId = transaction.relationships.listing.data.id.uuid;
       const bookingId = transaction.relationships.booking.data.id.uuid;
 
-      // Get the corresponding booking from the map
       const booking = bookingMap[bookingId];
       if (!booking) {
         console.warn(`Booking not found for booking ID: ${bookingId}`);
@@ -54,15 +55,14 @@ function mergeTransactionsAndBookings(response) {
       };
     })
     .filter(Boolean);
-  
-  // Group by listing ID and start date to merge bookings with the same start date for each listing
+
   const groupedByListingDateAndTime = Object.values(
     mergedData.reduce((acc, curr) => {
       const listingKey = curr.listingId;
       const startDateTimeKey = moment(curr.start).format('YYYY-MM-DDTHH:mm');
-  
+
       const key = `${listingKey}-${startDateTimeKey}`;
-  
+
       if (!acc[key]) {
         acc[key] = {
           id: curr.id,
@@ -75,11 +75,10 @@ function mergeTransactionsAndBookings(response) {
           },
         };
       } else {
-        // Merge the seats and names if multiple bookings at the same start time for the same listing
         acc[key].seats += curr.seats;
         acc[key].protectedData.names.push(...(curr.protectedData.seatNames || []));
       }
-  
+
       return acc;
     }, {}),
   );
@@ -87,7 +86,7 @@ function mergeTransactionsAndBookings(response) {
   return groupedByListingDateAndTime;
 }
 
-function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransactions }) {
+function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransactions,  currentUser }) {
   const [mergedBookings, setMergedBookings] = useState([]);
   const [selectedListing, setSelectedListing] = useState(null);
   const [selectedEventDate, setSelectedEventDate] = useState(null);
@@ -103,22 +102,30 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
     fetchCurrentUserTransactions()
       .then((response) => {
         const mergedData = mergeTransactionsAndBookings(response);
-        //fetched bookings from supabase
         setMergedBookings(mergedData);
-        //console.log('Merged bookings:', mergedData);
       })
       .catch((error) => {
         console.error('Error fetching user transactions:', error);
-      });
-  }, [fetchOwnListings, fetchCurrentUserTransactions, currentMonth]);
+      }).then(() => {
+      if (currentUser) {
+        supabase
+          .from('reservations')
+          .select('*')
+          .eq('userId', currentUser)
+          .then(({ data, error }) => {
+            if (error) {
+              console.error('Error fetching reservations:', error);
+            } else {
+              setMergedBookings((prevBookings) => [...prevBookings, ...data]);
+            }
+          });
+      }
+    });
+  }, [fetchOwnListings, fetchCurrentUserTransactions, ]);
 
-  // Map mergedBookings to events to ensure only one event per date per listing
   const events = mergedBookings.map((booking) => {
     const listing = ownListings.find((listing) => listing.id.uuid === booking.listingId);
-    
-    // Check if protectedData exists and has names
     const names = booking.protectedData ? booking.protectedData.names : 'No Names Available';
-  
     return {
       id: booking.id,
       title: listing ? `${listing.attributes.title} - ${moment(booking.start).format('HH:mm')}` : `Manuale ${booking.title} - ${moment(booking.start).format('HH:mm')}`,
@@ -132,7 +139,7 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
   });
 
   const handleSelectEvent = (calendarEvent) => {
-    setSelectedListing(calendarEvent.resource);
+    setSelectedListing(calendarEvent);
     setSelectedEventDate(calendarEvent.start);
     setCalendarEvent(calendarEvent);
   };
@@ -150,14 +157,13 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
   };
 
   const handleCreateEvent = (eventData) => {
-    //console.log('Creating event:', eventData);
     setMergedBookings([...mergedBookings, eventData]);
     setShowEventForm(false);
   };
 
   const eventPropGetter = (event) => {
     const isManuale = event.title.includes('Manuale');
-    const backgroundColor = isManuale ?'lightcoral' : 'lightgreen';
+    const backgroundColor = isManuale ? 'lightcoral' : 'lightgreen';
     return {
       style: {
         backgroundColor,
@@ -185,7 +191,7 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
             style={{ height: 500, margin: '10px' }}
             eventPropGetter={eventPropGetter}
           />
-          {/*<button onClick={() => setShowEventForm(true)}>Create Event</button>*/}
+          <button onClick={() => setShowEventForm(true)}>Create Event</button>
           {selectedListing && selectedEventDate && (
             <div
               style={{
@@ -206,8 +212,7 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
                     onClick={handleSelectActivity}
                     className={css.listItem}
                   >
-                    {moment(selectedEventDate).format('HH:mm')} {selectedListing.attributes.title}
-                    {/* Seats: {selectedActivity.bookingData.names.length}/{selectedActivity.bookingData.seats} */}
+                    {moment(selectedEventDate).format('HH:mm')} {selectedListing.title}
                   </li>
                 )}
               </ul>
@@ -218,6 +223,7 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
         <EventForm
           onSubmit={handleCreateEvent}
           onCancel={() => setShowEventForm(false)}
+          currentUser={currentUser} 
         />
       ) : (
         <AttendanceForm activity={calendarEvent} onBack={handleBack} />
@@ -231,6 +237,7 @@ const mapStateToProps = (state) => ({
   transactions: state.InboxPage.transactions,
   booking: state.InboxPage.booking,
   ownListings: getOwnListingsById(state, state.ManageListingsPage.currentPageResultIds),
+  currentUser: state.user.currentUser.id.uuid, 
 });
 
 const mapDispatchToProps = (dispatch) => ({

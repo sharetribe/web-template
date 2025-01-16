@@ -12,7 +12,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 const randomId = () => uuidv4();
 
-const EventForm = ({ onSubmit, onCancel }) => {
+const EventForm = ({ onSubmit, onCancel, currentUser }) => {
+  
   const [provider, setProvider] = useState('Clubjoy');
   const [title, setTitle] = useState('');
   const [start, setStart] = useState(null);
@@ -42,7 +43,7 @@ const EventForm = ({ onSubmit, onCancel }) => {
       return;
     }
     if (start && date <= start) {
-      console.log('End time cannot be before start time.');
+      ('End time cannot be before start time.');
       return;
     }
     setEnd(date);
@@ -55,34 +56,28 @@ const EventForm = ({ onSubmit, onCancel }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    /*
-    if (provider === 'Clubjoy') {
-      console.log('Calling API for Clubjoy event creation...');
-    }
-    */
-    onSubmit({
+  
+    const newEvent = {
       id: randomId(),
-      listingId,
+      listing_id: listingId,
       title,
-      start,
-      end,
+      start: start.toISOString(),
+      end: end.toISOString(),
       seats: names.length,
-      protectedData: { names }
-    });
-
-    /*
+      protectedData: { names },
+      userId: currentUser,
+      provider,
+    };
+  
     const { data, error } = await supabase
       .from('reservations')
       .insert([newEvent]);
-
+  
     if (error) {
-      console.error('Error inserting data:', error);
+      console.error('Error inserting data:', error.message);
     } else {
-      console.log('Data inserted successfully:', data);
-      onSubmit(newEvent);
+      onCancel();
     }
-    */
-
   };
 
   return (
