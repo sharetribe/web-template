@@ -1,23 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { compose } from 'redux';
-import { withRouter } from 'react-router-dom';
-import {
-  array,
-  arrayOf,
-  bool,
-  func,
-  node,
-  number,
-  object,
-  oneOfType,
-  shape,
-  string,
-} from 'prop-types';
+import { useLocation, useHistory } from 'react-router-dom';
 import loadable from '@loadable/component';
 import classNames from 'classnames';
-import omit from 'lodash/omit';
 
-import { intlShape, injectIntl, FormattedMessage, useIntl } from '../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import {
   displayDeliveryPickup,
   displayDeliveryShipping,
@@ -101,7 +87,7 @@ const openOrderModal = (isOwnListing, isClosed, history, location) => {
 
 const closeOrderModal = (history, location) => {
   const { pathname, search, state } = location;
-  const searchParams = omit(parse(search), 'orderOpen');
+  const { orderOpen, ...searchParams } = parse(search);
   const searchString = `?${stringify(searchParams)}`;
   history.push(`${pathname}${searchString}`, state);
 };
@@ -201,14 +187,14 @@ const PriceMaybe = props => {
  * @param {string} props.marketplaceCurrency - The currency used in the marketplace
  * @param {number} props.dayCountAvailableForBooking - Number of days available for booking
  * @param {string} props.marketplaceName - Name of the marketplace
- * @param {Object} props.history - React Router history object
- * @param {Object} props.location - React Router location object
  *
  * @returns {JSX.Element} Component that displays the order panel with appropriate form
  */
 const OrderPanel = props => {
   const [mounted, setMounted] = useState(false);
   const intl = useIntl();
+  const location = useLocation();
+  const history = useHistory();
 
   useEffect(() => {
     setMounted(true);
@@ -229,8 +215,6 @@ const OrderPanel = props => {
     onManageDisableScrolling,
     onFetchTimeSlots,
     monthlyTimeSlots,
-    history,
-    location,
     onFetchTransactionLineItems,
     onContactUser,
     lineItems,
@@ -475,4 +459,4 @@ const OrderPanel = props => {
   );
 };
 
-export default compose(withRouter)(OrderPanel);
+export default OrderPanel;
