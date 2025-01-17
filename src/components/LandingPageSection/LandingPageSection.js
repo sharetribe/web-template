@@ -4,6 +4,7 @@ import { useIntl } from 'react-intl';
 import css from './LandingPageSection.module.css';
 import landingCoverR from '../../media/landingCoverR.JPG';
 import video from '../../media/video/video.mp4';
+import video2 from '../../media/video/video2.mp4';
 import landingPE from '../../media/landingPE.JPG';
 import SurveyForm from '../SurveyForm/SurveyForm';
 import VideoContainer from '../VideoContainer/VideoContainer';
@@ -96,7 +97,7 @@ function LandingPageSection({ onSearchSubmit }) {
 
   return (
     <div >
-      {/*tooltip*/}
+      {/*tooltip
       {!isTeamBuilding ? (
         <div className={css.surveyContainer}>
           {!isMobile && (
@@ -114,6 +115,7 @@ function LandingPageSection({ onSearchSubmit }) {
           </div>
         </div>
       ) : (
+       */}
 
       <div className={css.mobileContainer}>
         <video
@@ -124,12 +126,14 @@ function LandingPageSection({ onSearchSubmit }) {
           className={css.backgroundVideo}
         >
           <source
-            src={video}
+            src={isTeamBuilding ? video : video2}
             type="video/mp4"
           />
         </video>
         <div className={css.emptyDiv2}>
         <div className={css.contentContainer}>
+        {isTeamBuilding ? (
+          <>
               <h1 className={css.contentTitle}>
               Creatività che fa la differenza
               </h1>
@@ -139,7 +143,19 @@ function LandingPageSection({ onSearchSubmit }) {
               Rafforziamo ciò che vi rende unici, 
               riportando le persone al centro della creatività aziendale e trasformando idee in innovazioni concrete.<br/><br/>
               </p>
-  
+              </>
+              ) : (
+                <>
+              <h1 className={css.contentTitle}>
+              Mani sporche, cuore felice
+              </h1>
+              <p className={css.teamText}>
+              Scopri il piacere di creare qualcosa con le tue mani, senza pressioni o aspettative. 
+Che tu venga da solo o con un paio di amici, i nostri workshop sono il posto perfetto per sporcarsi le mani, ridere degli errori, e creare qualcosa di unico. 
+Ritrova quella parte di te che non vede l’ora di esplorare, sbagliare e brillare.
+              </p>
+              </>
+            )}
           <ActionTeamButtons />
           </div>
         </div>
