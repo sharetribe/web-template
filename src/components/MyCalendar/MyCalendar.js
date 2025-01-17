@@ -191,7 +191,7 @@ function MyCalendar({ ownListings, fetchOwnListings, fetchCurrentUserTransaction
             style={{ height: 500, margin: '10px' }}
             eventPropGetter={eventPropGetter}
           />
-          <button onClick={() => setShowEventForm(true)}>Create Event</button>
+          <button  className={css.button} onClick={() => setShowEventForm(true)}>Create Event</button>
           {selectedListing && selectedEventDate && (
             <div
               style={{

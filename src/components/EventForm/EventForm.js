@@ -111,34 +111,33 @@ const EventForm = ({ onSubmit, onCancel, currentUser }) => {
           onChange={(e) => setListingId(e.target.value)}
         //disabled={provider === 'Clubjoy'}
         />
-      </div>
-      <div>
-        <label>Start:</label>
-        <DatePicker
-          selected={start}
-          onChange={handleStartChange}
-          showTimeSelect
-          timeFormat="HH:mm"
-          timeIntervals={15} // 15-minute intervals
-          dateFormat="MMMM d, yyyy h:mm aa"
-          placeholderText="Select start date and time"
-        />
-      </div>
-      <div>
-        <label>End:</label>
-        <DatePicker
-          selected={end}
-          onChange={handleEndChange}
-          showTimeSelect
-          timeFormat="HH:mm"
-          timeIntervals={15} // 15-minute intervals
-          dateFormat="MMMM d, yyyy h:mm aa"
-          placeholderText="Select end date and time"
-          minDate={start} // Ensure end date is not before start date
-          filterDate={(date) => start && date.toDateString() === start.toDateString()}
-          filterTime={(time) => !start || time >= new Date(start.getTime() + 15 * 60000)} // Ensure time is not before start time
-          disabled={!start} // Disable until start is selected
-        />
+  
+      <div className={css.datePickerContainer}>
+  <label>Start:</label>
+  <DatePicker
+    selected={start}
+    onChange={handleStartChange}
+    showTimeSelect
+    timeFormat="HH:mm"
+    timeIntervals={15} // 15-minute intervals
+    dateFormat="MMMM d, yyyy h:mm aa"
+    placeholderText="Select start date and time"
+  />
+</div>
+<div className={css.datePickerContainer}>
+  <label>End:</label>
+  <DatePicker
+    selected={end}
+    onChange={handleEndChange}
+    showTimeSelect
+    timeFormat="HH:mm"
+    timeIntervals={15} // 15-minute intervals
+    dateFormat="MMMM d, yyyy h:mm aa"
+    placeholderText="Select end date and time"
+    minDate={start} // Ensure end date is not before start date
+    disabled={!start} // Disable until start is selected
+  />
+</div>
 
 
       </div>
@@ -151,8 +150,8 @@ const EventForm = ({ onSubmit, onCancel, currentUser }) => {
         />
         <p>Seats: {names.length}</p>
       </div>
-      <button type="submit">Create Event</button>
-      <button type="button" onClick={onCancel}>
+      <button className={css.button} type="submit">Create Event</button>
+      <button className={css.button} type="button" onClick={onCancel}>
         Cancel
       </button>
     </form>

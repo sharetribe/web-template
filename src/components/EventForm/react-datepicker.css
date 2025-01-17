@@ -27,6 +27,7 @@
   display: inline-block;
   position: relative;
   line-height: initial;
+  margin-left:10vh
 }
 
 .react-datepicker--time-only .react-datepicker__time-container {
@@ -752,4 +753,12 @@ h2.react-datepicker__current-month {
   width: 1em;
   height: 1em;
   vertical-align: -0.125em;
+}
+
+
+
+@media (max-width: 768px) {
+  .react-datepicker  {
+    margin-left:10vh
+  }
 }
