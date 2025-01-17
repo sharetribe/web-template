@@ -301,7 +301,10 @@
   display: flex;
   flex-direction: row;
   gap: 12px;
-  width: 100%;
+  width: calc(100% - 52px);
+  @media (--viewportMedium) {
+    width: 100%;
+  }
 }
 
 .contactSellerButton {
