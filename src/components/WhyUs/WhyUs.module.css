@@ -2,6 +2,7 @@
   padding: 10px;
   max-width: 1200px;
   text-align: center;
+  margin: 0 auto;
 }
 
 .title {
@@ -41,7 +42,7 @@
 
 @media (max-width: 768px) {
   .container {
-    height: 100vh;
+    height: 90vh;
     margin-top: 5vh;
   }
 
