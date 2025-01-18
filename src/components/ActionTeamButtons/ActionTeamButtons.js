@@ -19,7 +19,7 @@ const ActionTeamButtons = ({isTeamBuilding}) => {
 
   // Navigation example
   const handleNavigate = () => {
-    isTeamBuilding? history.push('/ts') : history.push('/s');
+    isTeamBuilding? history.push('/ts') : history.push('/s?bounds=46.51185105%2C9.45037995%2C44.51045137%2C7.47284088');
   };
 
   // Open the modal
