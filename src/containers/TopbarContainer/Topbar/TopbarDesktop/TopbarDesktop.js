@@ -194,7 +194,6 @@ const TopbarDesktop = props => {
       />
       {newListingLink(userRole)}
       {inboxLinkMaybe}
-      {signupLinkMaybe}
       {loginLinkMaybe}
     
       {profileMenuMaybe}
