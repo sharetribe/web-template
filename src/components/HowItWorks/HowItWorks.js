@@ -5,12 +5,12 @@ import img1 from '../../media/landing/1.png';
 import img2 from '../../media/landing/2.png';
 import img3 from '../../media/landing/3.png';
 
-const HowItWorks = () => {
+const HowItWorks = ({isTeamBuilding}) => {
   const history = useHistory(); 
 
   // Navigate to /ts
   const handleNavigate = () => {
-    history.push('/ts');
+    isTeamBuilding? history.push('/ts') : history.push('/s?bounds=46.51185105%2C9.45037995%2C44.51045137%2C7.47284088');
   };
 
   return (

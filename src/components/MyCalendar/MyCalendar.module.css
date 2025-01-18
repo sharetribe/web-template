@@ -844,3 +844,14 @@ button:global(.rbc-input)::-moz-focus-inner {
   background-color: #012fa7;
   color: white;
 }
+
+.button{
+  background-color: #012fa7;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  margin-left: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}

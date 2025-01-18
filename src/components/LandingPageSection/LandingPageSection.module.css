@@ -84,6 +84,10 @@
   }
 }
 
+.contentContainer{
+  justify-content: center;
+}
+
 .tooltip {
   position: absolute;
   top: 100px;
@@ -120,13 +124,24 @@
 .teamText{
   font-size: 1.2rem;
   color:white;
+  width: 40%;
+  margin: 0 auto;
+  text-align: justify;
+  margin-bottom: 20px;
 }
 
+.contentTitle{
+  font-size: 2rem;
+}
 
 
 @media (max-width: 768px) {
   .surveyContainer {
     flex-direction: column;
+  }
+
+  .contentTitle{
+    font-size: 1.5rem;
   }
 
   .mobileContainer{
@@ -143,6 +158,11 @@
   }
 
   .teamText{
-    text-align: justify
+    width: 80%;
+    text-align: justify;
+  }
+
+  .emptyDiv2 {
+    padding: 0px;
   }
 }

@@ -12,7 +12,7 @@ import '../Embla/css/embla.css'
 const SLIDE_COUNT = 5
 const SLIDES = Array.from(Array(SLIDE_COUNT).keys())
 
-const DynamicCarousel = () => {
+const DynamicCarousel = ({isTeamBuilding}) => {
   const history = useHistory();
   const [images, setImages] = useState([
     'https://picsum.photos/100/200?random=1',
@@ -24,13 +24,13 @@ const DynamicCarousel = () => {
   const [isMobile, setIsMobile] = useState(false);
 
   const handleNavigate = () => {
-    history.push('/ts');
+    isTeamBuilding? history.push('/ts') : history.push('/s?bounds=46.51185105%2C9.45037995%2C44.51045137%2C7.47284088');
   };
 
   return (
     <div className={css.container}>
       <h2 className={css.title}>I più amati da tutti</h2>
-      <EmblaCarousel slides={images}/>
+      <EmblaCarousel isTeamBuilding={isTeamBuilding}/>
 
       <div className={css.buttonContainer}>
         <PrimaryButton

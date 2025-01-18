@@ -176,24 +176,31 @@ function PageBuilder(props) {
                           </div>
                         ) : isLandingPage ? (
                           <>
-                            <LandingPageSection onSearchSubmit={handleSearchSubmit} />
-                            <ToDo />
-                            <Counter />
-                            <SectionBuilder sections={sections} options={options} />
-                            <Newsletter />
-                          </>
-                        ) : isTeamBuilding ? (
-                          <>
                             <LandingPageSection
                               onSearchSubmit={handleSearchSubmit}
                               isTeamBuilding={isTeamBuilding}
                             />
                             <SectionBuilder sections={sections} options={options} />
-                            <HowItWorks />
-                            <DynamicCarousel />
+                            <HowItWorks  isTeamBuilding={isTeamBuilding} />
+                            <DynamicCarousel  isTeamBuilding={isTeamBuilding}/>
+                            <Sponsors  isTeamBuilding={isTeamBuilding}/>
+                            <TrustPilot isTeamBuilding={isTeamBuilding} />
+                            <WhyUs  isTeamBuilding={isTeamBuilding}/>
+                            <Newsletter  isTeamBuilding={isTeamBuilding} />
+                            <br/>
+                          </>
+                        ) : isTeamBuilding ? (
+                          <>
+                            <LandingPageSection
+                              onSearchSubmit={handleSearchSubmit}
+                              isT={isTeamBuilding}
+                            />
+                            <SectionBuilder sections={sections} options={options} />
+                            <HowItWorks isTeamBuilding={isTeamBuilding}/>
+                            <DynamicCarousel isTeamBuilding={isTeamBuilding}/>
                             <Sponsors />
-                            <TrustPilot />
-                            <WhyUs />
+                            <TrustPilot isTeamBuilding={isTeamBuilding} />
+                            <WhyUs isTeamBuilding={isTeamBuilding} />
                             <Newsletter />
                             <br/>
                           </>

@@ -156,3 +156,4 @@ export const slackNotifications = (body) => post('/api/slack/notifications', bod
 
 export const updateTransaction = (body) => post(`/api/update-transaction`, body);
 
+export const manualEvent = (body) => post(`/api/brevo/manualEvent`, body);

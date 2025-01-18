@@ -7,6 +7,10 @@
   height: 50vh;
 }
 
+.container {
+  margin-top: 20vh;
+}
+
 .image {
   flex-shrink: 0;
   display: flex;

@@ -54,6 +54,30 @@ const withCoordinatesObfuscated = (listings, offset) =>
     };
   });
 
+  const computedBounds = (location) => {
+    const params = new URLSearchParams(location.search);
+    const pubGeotag = params.get('pub_geotag');
+  
+    if (pubGeotag === 'Milan') {
+      return {
+        ne: { lat: 45.69534043, lng: 9.55578592 },
+        sw: { lat: 45.15318306, lng: 8.93780496 },
+      };
+    } else if (pubGeotag === 'Turin') {
+      return {
+        ne: { lat: 45.25976614, lng: 8.04060169 },
+        sw: { lat: 44.7134214, lng: 7.42262073 },
+      };
+    } else if (pubGeotag === 'Milan,Turin' || pubGeotag === 'Turin,Milan') {
+      return {
+        ne: { lat: 46.36378091, lng: 9.86595435 },
+        sw: { lat: 44.18986644, lng: 7.39403052 },
+      };
+    }
+  
+    return null; // Return null for everything else
+  };
+  
 export class SearchMapComponent extends Component {
   constructor(props) {
     super(props);
@@ -137,7 +161,7 @@ export class SearchMapComponent extends Component {
       className,
       rootClassName,
       reusableContainerClassName,
-      bounds,
+      bounds: originalBounds,
       center,
       location,
       listings: originalListings,
@@ -147,7 +171,10 @@ export class SearchMapComponent extends Component {
       activeListingId,
       messages,
     } = this.props;
+
     const classes = classNames(rootClassName || css.root, className);
+    const computedBoundsResult = computedBounds(location);
+    const effectiveBounds = computedBoundsResult || originalBounds;
 
     const listingsWithLocation = originalListings.filter((l) => !!l.attributes.geolocation);
     const listings = config.maps.fuzzy.enabled
@@ -178,7 +205,7 @@ export class SearchMapComponent extends Component {
         <SearchMapVariantComponent
           id={id}
           className={classes}
-          bounds={bounds}
+          bounds={effectiveBounds} // Use the new variable name
           center={center}
           location={location}
           infoCardOpen={infoCardOpen}

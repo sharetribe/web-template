@@ -4,6 +4,7 @@ import { useIntl } from 'react-intl';
 import css from './LandingPageSection.module.css';
 import landingCoverR from '../../media/landingCoverR.JPG';
 import video from '../../media/video/video.mp4';
+import video2 from '../../media/video/video2.mp4';
 import landingPE from '../../media/landingPE.JPG';
 import SurveyForm from '../SurveyForm/SurveyForm';
 import VideoContainer from '../VideoContainer/VideoContainer';
@@ -96,7 +97,7 @@ function LandingPageSection({ onSearchSubmit }) {
 
   return (
     <div >
-      {/*tooltip*/}
+      {/*tooltip
       {!isTeamBuilding ? (
         <div className={css.surveyContainer}>
           {!isMobile && (
@@ -114,6 +115,7 @@ function LandingPageSection({ onSearchSubmit }) {
           </div>
         </div>
       ) : (
+       */}
 
       <div className={css.mobileContainer}>
         <video
@@ -124,26 +126,41 @@ function LandingPageSection({ onSearchSubmit }) {
           className={css.backgroundVideo}
         >
           <source
-            src={video}
+            src={isTeamBuilding ? video : video2}
             type="video/mp4"
           />
         </video>
         <div className={css.emptyDiv2}>
-              <h1 style={{fontSize:"2rem"}}>
+        <div className={css.contentContainer}>
+        {isTeamBuilding ? (
+          <>
+              <h1 className={css.contentTitle}>
               Creatività che fa la differenza
               </h1>
               <p className={css.teamText}>
               I nostri workshop creativi aiutano il tuo team a riscoprire collaborazione,
-              pensiero critico e empatia - competenze che l’AI non può replicare. <br/><br/>
-              Rafforziamo ciò che rende i tuoi dipendenti unici, stimolando un pensiero laterale che nessun algoritmo può imitare. 
-              Riportiamo i dipendenti al centro della creatività aziendale, trasformando idee in innovazioni concrete.<br/><br/>
+              pensiero critico e empatia - competenze che l’AI non può replicare.
+              Rafforziamo ciò che vi rende unici, 
+              riportando le persone al centro della creatività aziendale e trasformando idee in innovazioni concrete.<br/><br/>
               </p>
-          <ActionTeamButtons />
+              </>
+              ) : (
+                <>
+              <h1 className={css.contentTitle}>
+              Mani sporche, cuore felice
+              </h1>
+              <p className={css.teamText}>
+              Scopri il piacere di creare qualcosa con le tue mani, senza pressioni o aspettative. 
+Che tu venga da solo o con un paio di amici, i nostri workshop sono il posto perfetto per sporcarsi le mani, ridere degli errori, e creare qualcosa di unico. 
+Ritrova quella parte di te che non vede l’ora di esplorare, sbagliare e brillare.
+              </p>
+              </>
+            )}
+          <ActionTeamButtons isTeamBuilding={isTeamBuilding}/>
+          </div>
         </div>
       </div>
 
-
-      )}
     </div>
   );
 }

@@ -6,7 +6,8 @@ import { FcCalendar } from 'react-icons/fc';
 import { FaWhatsapp } from 'react-icons/fa';
 import css from './ActionTeamButtons.module.css';
 
-const ActionTeamButtons = () => {
+
+const ActionTeamButtons = ({isTeamBuilding}) => {
   const [isClient, setIsClient] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const history = useHistory();
@@ -18,7 +19,7 @@ const ActionTeamButtons = () => {
 
   // Navigation example
   const handleNavigate = () => {
-    history.push('/ts');
+    isTeamBuilding? history.push('/ts') : history.push('/s?bounds=46.51185105%2C9.45037995%2C44.51045137%2C7.47284088');
   };
 
   // Open the modal

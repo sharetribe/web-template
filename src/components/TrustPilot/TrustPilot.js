@@ -3,8 +3,11 @@ import styles from './TrustPilot.module.css';
 import r1 from '../../media/landing/r1.JPG';
 import r2 from '../../media/landing/r2.JPG';
 import r3 from '../../media/landing/r3.JPG';
+import r4 from '../../media/landing/r4.JPG';
+import r5 from '../../media/landing/r5.JPG';
+import r6 from '../../media/landing/r6.JPG';
 
-const reviews = [
+const reviews1 = [
   {
     text: '"Siamo un team di 30 persone, con età e background diversissimi. Siamo arrivati al workshop un po’ titubanti—chi pensava di essere negato, chi aveva mille scadenze in testa. Ma bastava vedere il sorriso di ognuno mentre ci si sporcava le mani per capire che stavamo vivendo qualcosa di unico. Per qualche ora, non c’erano ruoli, generazioni o gerarchie. Solo mani impiastricciate e idee che volavano."',
     image: r2,
@@ -19,9 +22,24 @@ const reviews = [
   },
 ];
 
-const TrustPilot = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+const reviews2 = [
+  {
+    text: '"Atmosfera fantastica! Ho creato la mia prima tazza e mi sono sentita super orgogliosa. Lo rifarei subito!"',
+    image: r4,
+  },
+  {
+    text: '"Ho (ri)scoperto finalmente il mio lato artistico: liberatorio e divertente, un’esperienza davvero unica!"',
+    image: r5,
+  },
+  {
+    text: '"Difficile ormai trovare un momento di relax così. Ho conosciuto nuove persone internazionali e sono andato a casa con qualcosa di bellissimo."',
+    image: r6
+  },
+];
 
+const TrustPilot = ({isTeamBuilding}) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const reviews = isTeamBuilding? reviews1 : reviews2;
   const handlePrev = () => {
     setCurrentIndex((prevIndex) => (prevIndex === 0 ? reviews.length - 1 : prevIndex - 1));
   };
