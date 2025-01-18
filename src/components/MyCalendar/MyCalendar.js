@@ -237,7 +237,7 @@ const mapStateToProps = (state) => ({
   transactions: state.InboxPage.transactions,
   booking: state.InboxPage.booking,
   ownListings: getOwnListingsById(state, state.ManageListingsPage.currentPageResultIds),
-  currentUser: state.user.currentUser.id.uuid, 
+  currentUser: state.user.currentUser, 
 });
 
 const mapDispatchToProps = (dispatch) => ({

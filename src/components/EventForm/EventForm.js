@@ -3,6 +3,7 @@ import DatePicker from "react-datepicker";
 import "./react-datepicker.css";
 import css from "./EventForm.module.css";
 import { createClient } from '@supabase/supabase-js';
+import { manualEvent } from "../../util/api";
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
 const supabaseKey = process.env.REACT_APP_SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
@@ -13,7 +14,7 @@ import { v4 as uuidv4 } from 'uuid';
 const randomId = () => uuidv4();
 
 const EventForm = ({ onSubmit, onCancel, currentUser }) => {
-  
+
   const [provider, setProvider] = useState('Clubjoy');
   const [title, setTitle] = useState('');
   const [start, setStart] = useState(null);
@@ -65,7 +66,7 @@ const EventForm = ({ onSubmit, onCancel, currentUser }) => {
       end: end.toISOString(),
       seats: names.length,
       protectedData: { names },
-      userId: currentUser,
+      userId: currentUser?.id?.uuid,
       provider,
     };
   
@@ -73,12 +74,25 @@ const EventForm = ({ onSubmit, onCancel, currentUser }) => {
       .from('reservations')
       .insert([newEvent]);
   
-    if (error) {
+    if (error) { // Changed 'err' to 'error' to match the destructured variable
       console.error('Error inserting data:', error.message);
-    } else {
-      onCancel();
-    }
+    } 
+  
+    const payload = {
+      newEvent,
+      email: currentUser.attributes.email,
+    };
+  
+    await manualEvent(payload)
+      .then((response) => {
+        console.log('Event created:', response);
+        onCancel();
+      })
+      .catch((error) => {
+        console.error('Error creating event:', error);
+      }); // Closed the 'catch' block properly
   };
+  
 
   return (
     <form className={css.container} onSubmit={handleSubmit}>
