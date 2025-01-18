@@ -79,7 +79,7 @@ const WhyUs = ({ isTeamBuilding }) => {
         )}
       </div>
       <div className={css.buttonContainer}>
-        <ActionTeamButtons />
+        <ActionTeamButtons isTeamBuilding={isTeamBuilding}/>
       </div>
     </div>
   );

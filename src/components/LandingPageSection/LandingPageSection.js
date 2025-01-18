@@ -156,13 +156,11 @@ Ritrova quella parte di te che non vede l’ora di esplorare, sbagliare e brilla
               </p>
               </>
             )}
-          <ActionTeamButtons />
+          <ActionTeamButtons isTeamBuilding={isTeamBuilding}/>
           </div>
         </div>
       </div>
 
-
-      )}
     </div>
   );
 }

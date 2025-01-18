@@ -3,6 +3,9 @@ import styles from './TrustPilot.module.css';
 import r1 from '../../media/landing/r1.JPG';
 import r2 from '../../media/landing/r2.JPG';
 import r3 from '../../media/landing/r3.JPG';
+import r4 from '../../media/landing/r4.JPG';
+import r5 from '../../media/landing/r5.JPG';
+import r6 from '../../media/landing/r6.JPG';
 
 const reviews1 = [
   {
@@ -22,15 +25,15 @@ const reviews1 = [
 const reviews2 = [
   {
     text: '"Atmosfera fantastica! Ho creato la mia prima tazza e mi sono sentita super orgogliosa. Lo rifarei subito!"',
-    image: r2,
+    image: r4,
   },
   {
     text: '"Ho (ri)scoperto finalmente il mio lato artistico: liberatorio e divertente, un’esperienza davvero unica!"',
-    image: r1,
+    image: r5,
   },
   {
     text: '"Difficile ormai trovare un momento di relax così. Ho conosciuto nuove persone internazionali e sono andato a casa con qualcosa di bellissimo."',
-    image: r3
+    image: r6
   },
 ];
 
