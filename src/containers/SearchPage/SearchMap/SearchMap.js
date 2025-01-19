@@ -56,19 +56,19 @@ const withCoordinatesObfuscated = (listings, offset) =>
 
   const computedBounds = (location) => {
     const params = new URLSearchParams(location.search);
-    const pubGeotag = params.get('pub_geotag');
+    const pubGeotag = params.get('pub_geoTag');
   
-    if (pubGeotag === 'Milan') {
+    if (pubGeotag && pubGeotag.includes('Milan') && !pubGeotag.includes('Turin')) {
       return {
         ne: { lat: 45.69534043, lng: 9.55578592 },
         sw: { lat: 45.15318306, lng: 8.93780496 },
       };
-    } else if (pubGeotag === 'Turin') {
+    } else if (pubGeotag && pubGeotag.includes('Turin') && !pubGeotag.includes('Milan')) {
       return {
         ne: { lat: 45.25976614, lng: 8.04060169 },
         sw: { lat: 44.7134214, lng: 7.42262073 },
       };
-    } else if (pubGeotag === 'Milan,Turin' || pubGeotag === 'Turin,Milan') {
+    } else if (pubGeotag && pubGeotag.includes('Milan') && pubGeotag.includes('Turin')) {
       return {
         ne: { lat: 46.36378091, lng: 9.86595435 },
         sw: { lat: 44.18986644, lng: 7.39403052 },
@@ -76,7 +76,7 @@ const withCoordinatesObfuscated = (listings, offset) =>
     }
   
     return null; // Return null for everything else
-  };
+};
   
 export class SearchMapComponent extends Component {
   constructor(props) {
