@@ -76,7 +76,7 @@
 
 @media (max-width: 768px) {
   .container {
-    height: 75vh;
+    height: 50vh;
     padding: 10px;
     margin-bottom: 10vh;
   }
@@ -103,9 +103,10 @@
 
   .image {
     max-width: 100%;
-    width: 200px;
+    width: 250px;
     height: 250px;
     margin: 0 auto;
+    object-fit: cover;
   }
 
   .arrowsMobile {

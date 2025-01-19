@@ -57,6 +57,11 @@
   background-color: #5d85ff;
 }
 
+.header {
+  text-align: center;
+  font-size: 1.2rem;
+}
+
 @media (max-width: 768px) {
   .formContainer {
     margin-top: 5vh;

@@ -65,12 +65,12 @@ function Newsletter({isTeamBuilding}) {
   return (
     <div className={css.formContainer}>
       <form onSubmit={handleSubmit} className={css.form}>
-        <p style={{ textAlign: 'center', fontSize: "1.2rem"  }}>
-          {intl.formatMessage({ id: 'Newsletter.header' })}
+        <h3 className={css.header}>
+          {intl.formatMessage({ id: 'Newsletter.header' })} 
           <span role="img" aria-label="heart emoji" style={heartStyle}>
             ❤️
           </span>
-        </p>
+        </h3>
         {errorMessage && <div className={css.alert}>{errorMessage}</div>}
         <div className={css.nameRow}>
           <input
