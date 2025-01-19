@@ -38,7 +38,7 @@ const DynamicCarousel = ({isTeamBuilding}) => {
           className={css.button}
           onClick={handleNavigate}
         >
-          Esplora tutti i team building
+          Esplora
         </PrimaryButton>
       </div>
     </div>
