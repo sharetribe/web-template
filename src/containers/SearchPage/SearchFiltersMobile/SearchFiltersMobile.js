@@ -32,8 +32,8 @@ class SearchFiltersMobileComponent extends Component {
 
   // Close the filters by clicking cancel, revert to the initial params
   cancelFilters() {
-    const { history, onCloseModal, routeConfiguration } = this.props;
-
+    const { history, onCloseModal, routeConfiguration, isTeambuilding } = this.props;
+    
     history.push(
       createResourceLocatorString(
         isTeambuilding,
