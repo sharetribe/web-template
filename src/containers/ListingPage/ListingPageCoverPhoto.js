@@ -311,7 +311,7 @@ export const ListingPageComponent = props => {
         offers: {
           '@type': 'Offer',
           url: productURL,
-          ...priceForSchemaMaybe(price, intl),
+          ...priceForSchemaMaybe(price),
           ...availabilityMaybe,
         },
       }}

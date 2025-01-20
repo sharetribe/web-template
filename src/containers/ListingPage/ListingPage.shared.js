@@ -48,15 +48,12 @@ export const priceData = (price, marketplaceCurrency, intl) => {
  * @param {Money} price
  * @returns {Money|null}
  */
-export const priceForSchemaMaybe = (price, intl) => {
+export const priceForSchemaMaybe = price => {
   try {
     const schemaPrice = convertMoneyToNumber(price);
     return schemaPrice
       ? {
-          price: intl.formatNumber(schemaPrice, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          }),
+          price: schemaPrice.toFixed(2),
           priceCurrency: price.currency,
         }
       : {};
