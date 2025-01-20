@@ -25,6 +25,7 @@ const getSoleUserTypeMaybe = userTypes =>
 
 const SignupFormComponent = props => {
   const [currency, setCurrency] = useState(null);
+  const [promoCode, setPromoCode] = useState(null);
 
   useEffect(() => {
     const fetchCurrency = async position => {
@@ -43,6 +44,13 @@ const SignupFormComponent = props => {
     } else {
       console.log('Geolocation is not supported by this browser.');
     }
+
+    // Get promo code from URL if it exists
+    const params = new URLSearchParams(window.location.search);
+    const fprParam = params.get('fpr');
+    if (fprParam) {
+      setPromoCode(fprParam);
+    }
   }, []);
 
   return (
@@ -52,6 +60,7 @@ const SignupFormComponent = props => {
       initialValues={{
         userType: props.preselectedUserType || getSoleUserTypeMaybe(props.userTypes),
         pub_userCurrency: currency,
+        pub_userPromoCode: promoCode,
       }}
       render={formRenderProps => {
         const {
@@ -122,6 +131,7 @@ const SignupFormComponent = props => {
         // only fields with no user type id limitation are selected.
         const userFieldProps = getPropsForCustomUserFieldInputs(userFields, intl, userType);
 
+        
         const noUserTypes = !userType && !(userTypes?.length > 0);
         const userTypeConfig = userTypes.find(config => config.userType === userType);
         const showDefaultUserFields = userType || noUserTypes;
