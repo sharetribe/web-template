@@ -47,15 +47,18 @@ const SignupFormComponent = props => {
     }
 
     // Get promo code from URL if it exists, otherwise check cookie
+    //if the value is set, make the field readonly
     const params = new URLSearchParams(window.location.search);
     const fprParam = params.get('fpr');
+    const cookiePromoCode = Cookies.get('_fprom_ref');
     if (fprParam) {
       setPromoCode(fprParam);
-    } else {
-      const cookiePromoCode = Cookies.get('_fprom_ref');
-      if (cookiePromoCode) {
+    } else if (cookiePromoCode) {
         setPromoCode(cookiePromoCode);
       }
+    
+    if(fprParam || cookiePromoCode){ 
+      document.getElementById('pub_userPromoCode').setAttribute('readonly', true)
     }
   }, []);
 
