@@ -1,81 +1,59 @@
-import React, { useState, useEffect } from 'react';
-import { PopupButton } from 'react-calendly';
-import { useHistory } from 'react-router-dom';
-import { PrimaryButton } from '../Button/Button'; 
-import { FcCalendar } from 'react-icons/fc';
+import React, { useState } from 'react';
 import { FaWhatsapp } from 'react-icons/fa';
+import { FcCalendar } from 'react-icons/fc';
+import { PrimaryButton } from '../Button/Button'; 
+import { useHistory } from 'react-router-dom';
 import css from './ActionTeamButtons.module.css';
 
-
-const ActionTeamButtons = ({isTeamBuilding}) => {
-  const [isClient, setIsClient] = useState(false);
+const ActionTeamButtons = ({ isTeamBuilding }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
   const history = useHistory();
-
-  // For Calendly
-  useEffect(() => {
-    setIsClient(true); // Make sure Calendly can mount on client side
-  }, []);
 
   // Navigation example
   const handleNavigate = () => {
-    isTeamBuilding? history.push('/ts') : history.push('/s?bounds=46.51185105%2C9.45037995%2C44.51045137%2C7.47284088');
+    isTeamBuilding 
+      ? history.push('/ts') 
+      : history.push('/s?bounds=46.51185105%2C9.45037995%2C44.51045137%2C7.47284088');
   };
 
-  // Open the modal
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
+  // Open/Close modal handlers
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
 
-  // Close the modal
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
-
-  // WhatsApp
+  // Handle WhatsApp click
   const handleWhatsApp = () => {
-    window.open(
-      'https://wa.me/3757765898',
-      '_blank'
-    );
-    // Close the modal after selection
+    window.open('https://wa.me/3757765898', '_blank');
     handleCloseModal();
   };
 
-  // Calendly (We’ll also close the modal immediately if user clicks Calendly)
+  // Open Calendly link directly
   const handleCalendlyClick = () => {
-    handleCloseModal();
+    setIsModalOpen(false);
+    setIsCalendlyOpen(true);
   };
 
   return (
     <div className={css.buttonContainer}>
-      {/* Button to open the modal */}
+      {/* Open the modal */}
       <button onClick={handleOpenModal} className={css.parlaConNoiButton}>
         Parla con noi
       </button>
 
-      {/* The Modal (conditionally rendered) */}
+      {/* Modal content */}
       {isModalOpen && (
         <div className={css.modalOverlay} onClick={handleCloseModal}>
-          <div
-            className={css.modalContent}
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className={css.modalContent} onClick={(e) => e.stopPropagation()}>
             <button onClick={handleWhatsApp} className={css.modalOption}>
-              <FaWhatsapp style={{ marginRight: '12px', color: '#25D366' , width:'30px', height:'30px' }} />
+              <FaWhatsapp style={{ marginRight: '12px', color: '#25D366', width: '30px', height: '30px' }} />
               Chattiamo ora
             </button>
-            {isClient && (
-  <div className={css.popupButtonWrapper} onClick={handleCalendlyClick}>
-    <FcCalendar style={{ marginRight: '2px', width:'30px', height:'30px' }} />
-    <PopupButton
-      url="https://calendly.com/hello-epym"
-      rootElement={document.getElementById('root')}
-      text="Ti richiamiamo"
-      className={css.popupButton}
-    />
-  </div>
-)}
+
+            <button onClick={handleCalendlyClick} className={css.modalOption}>
+              <FcCalendar style={{ marginRight: '2px', width: '30px', height: '30px' }} />
+              Ti richiamiamo
+            </button>
+
             <button onClick={handleCloseModal} className={css.modalClose}>
               Annulla
             </button>
@@ -83,7 +61,22 @@ const ActionTeamButtons = ({isTeamBuilding}) => {
         </div>
       )}
 
-      {/* Another primary button (example) */}
+      {/* Calendly Popup Modal */}
+      {isCalendlyOpen && (
+        <div className={css.calendlyOverlay} onClick={() => setIsCalendlyOpen(false)}>
+          <div className={css.calendlyContent} onClick={(e) => e.stopPropagation()}>
+            <iframe 
+              src="https://calendly.com/hello-epym" 
+              className={css.calendlyIframe}
+              allowFullScreen
+            />
+            <button onClick={() => setIsCalendlyOpen(false)} className={css.modalClose}>
+              Chiudi
+            </button>
+          </div>
+        </div>
+      )}
+
       <PrimaryButton onClick={handleNavigate} className={css.primaryButton}>
         Prenota la tua esperienza
       </PrimaryButton>
