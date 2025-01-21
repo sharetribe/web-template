@@ -4,6 +4,7 @@ import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
+import Cookies from 'js-cookie';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
@@ -45,11 +46,16 @@ const SignupFormComponent = props => {
       console.log('Geolocation is not supported by this browser.');
     }
 
-    // Get promo code from URL if it exists
+    // Get promo code from URL if it exists, otherwise check cookie
     const params = new URLSearchParams(window.location.search);
     const fprParam = params.get('fpr');
     if (fprParam) {
       setPromoCode(fprParam);
+    } else {
+      const cookiePromoCode = Cookies.get('_fprom_ref');
+      if (cookiePromoCode) {
+        setPromoCode(cookiePromoCode);
+      }
     }
   }, []);
 
