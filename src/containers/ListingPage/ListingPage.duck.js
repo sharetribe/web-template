@@ -342,17 +342,15 @@ export const sendInquiry = (listing, message) => (dispatch, getState, sdk) => {
 };
 
 // Helper function for loadData call.
+// Note: listing could be ownListing entity too
 const fetchMonthlyTimeSlots = (dispatch, listing) => {
   const hasWindow = typeof window !== 'undefined';
-  const attributes = listing.attributes;
-  // Listing could be ownListing entity too, so we just check if attributes key exists
-  const hasTimeZone =
-    attributes && attributes.availabilityPlan && attributes.availabilityPlan.timezone;
+  const { availabilityPlan, publicData } = listing?.attributes || {};
+  const tz = availabilityPlan?.timezone;
 
   // Fetch time-zones on client side only.
-  if (hasWindow && listing.id && hasTimeZone) {
-    const tz = listing.attributes.availabilityPlan.timezone;
-    const unitType = attributes?.publicData?.unitType;
+  if (hasWindow && listing.id && !!tz) {
+    const unitType = publicData?.unitType;
     const timeUnit = unitType === 'hour' ? 'hour' : 'day';
     const nextBoundary = findNextBoundary(new Date(), timeUnit, tz);
 
