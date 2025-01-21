@@ -16,6 +16,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## [v7.0.0] 2025-01-15
 
+- [fix] ListingPage: fetchMonthlyTimeSlots didn't work correctly with day unitType.
+  [#536](https://github.com/sharetribe/web-template/pull/536)
 - [change] Google's search schema requires a price that uses dot as decimal separator.
   [#535](https://github.com/sharetribe/web-template/pull/535)
 
