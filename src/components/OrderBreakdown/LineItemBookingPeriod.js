@@ -89,9 +89,8 @@ const LineItemBookingPeriod = props => {
   const localStartDate = displayStart || start;
   const localEndDateRaw = displayEnd || end;
 
-  const isNightly = code === LINE_ITEM_NIGHT;
-  const isHour = code === LINE_ITEM_HOUR;
-  const endDay = isNightly || isHour ? localEndDateRaw : subtractTime(localEndDateRaw, 1, 'days');
+  const showInclusiveEndDate = [LINE_ITEM_DAY].includes(code);
+  const endDay = showInclusiveEndDate ? subtractTime(localEndDateRaw, 1, 'days') : localEndDateRaw;
 
   return (
     <>
