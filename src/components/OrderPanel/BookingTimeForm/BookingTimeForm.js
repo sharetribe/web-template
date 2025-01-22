@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { array, bool, func, number, object, string } from 'prop-types';
-import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
-import { FormattedMessage, intlShape, injectIntl, useIntl } from '../../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { timestampToDate } from '../../../util/dates';
 import { propTypes } from '../../../util/types';
 import { BOOKING_PROCESS_NAME } from '../../../transactions/transaction';
