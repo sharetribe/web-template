@@ -8,14 +8,7 @@ import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { createResourceLocatorString, findRouteByRouteName } from '../../util/routes';
-import {
-  DATE_TYPE_DATE,
-  DATE_TYPE_DATETIME,
-  LISTING_UNIT_TYPES,
-  LINE_ITEM_HOUR,
-  LINE_ITEM_ITEM,
-  propTypes,
-} from '../../util/types';
+import { LISTING_UNIT_TYPES, propTypes } from '../../util/types';
 import { timestampToDate } from '../../util/dates';
 import { createSlug } from '../../util/urlHelpers';
 import {
@@ -438,11 +431,10 @@ export const TransactionPageComponent = props => {
     : null;
 
   const timeZone = listing?.attributes?.availabilityPlan?.timezone;
-  const dateType = lineItemUnitType === LINE_ITEM_HOUR ? DATE_TYPE_DATETIME : DATE_TYPE_DATE;
 
   const hasViewingRights = currentUser && hasPermissionToViewData(currentUser);
 
-  const txBookingMaybe = booking?.id ? { booking, dateType, timeZone } : {};
+  const txBookingMaybe = booking?.id ? { booking, timeZone } : {};
   const orderBreakdownMaybe = hasLineItems
     ? {
         orderBreakdown: (

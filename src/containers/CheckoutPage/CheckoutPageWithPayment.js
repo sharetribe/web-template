@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { FormattedMessage, intlShape } from '../../util/reactIntl';
 import { pathByRouteName } from '../../util/routes';
 import { isValidCurrencyForTransactionProcess } from '../../util/fieldHelpers.js';
-import { propTypes, LINE_ITEM_HOUR, DATE_TYPE_DATE, DATE_TYPE_DATETIME } from '../../util/types';
+import { propTypes } from '../../util/types';
 import { ensureTransaction } from '../../util/data';
 import { createSlug } from '../../util/urlHelpers';
 import { isTransactionInitiateListingNotFoundError } from '../../util/errors';
@@ -389,10 +389,8 @@ export const CheckoutPageWithPayment = props => {
       : speculatedTransaction;
   const timeZone = listing?.attributes?.availabilityPlan?.timezone;
   const transactionProcessAlias = listing?.attributes?.publicData?.transactionProcessAlias;
-  const unitType = listing?.attributes?.publicData?.unitType;
-  const lineItemUnitType = `line-item/${unitType}`;
-  const dateType = lineItemUnitType === LINE_ITEM_HOUR ? DATE_TYPE_DATETIME : DATE_TYPE_DATE;
-  const txBookingMaybe = tx?.booking?.id ? { booking: tx.booking, dateType, timeZone } : {};
+
+  const txBookingMaybe = tx?.booking?.id ? { booking: tx.booking, timeZone } : {};
 
   // Show breakdown only when (speculated?) transaction is loaded
   // (i.e. it has an id and lineItems)
