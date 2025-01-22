@@ -288,6 +288,21 @@ const OrderPanel = props => {
   );
   const seatsEnabled = [AVAILABILITY_MULTIPLE_SEATS].includes(listingTypeConfig?.availabilityType);
 
+  const sharedProps = {
+    lineItemUnitType,
+    onSubmit,
+    price,
+    marketplaceCurrency,
+    listingId: listing.id,
+    isOwnListing,
+    marketplaceName,
+    onFetchTransactionLineItems,
+    lineItems,
+    fetchLineItemsInProgress,
+    fetchLineItemsError,
+    payoutDetailsWarning,
+  };
+
   const showClosedListingHelpText = listing.id && isClosed;
   const isOrderOpen = !!parse(location.search).orderOpen;
 
@@ -347,67 +362,35 @@ const OrderPanel = props => {
             seatsEnabled={seatsEnabled}
             className={css.bookingForm}
             formId="OrderPanelBookingTimeForm"
-            lineItemUnitType={lineItemUnitType}
-            onSubmit={onSubmit}
-            price={price}
-            marketplaceCurrency={marketplaceCurrency}
             dayCountAvailableForBooking={dayCountAvailableForBooking}
-            listingId={listing.id}
-            isOwnListing={isOwnListing}
             monthlyTimeSlots={monthlyTimeSlots}
             onFetchTimeSlots={onFetchTimeSlots}
             startDatePlaceholder={intl.formatDate(TODAY, dateFormattingOptions)}
             endDatePlaceholder={intl.formatDate(TODAY, dateFormattingOptions)}
             timeZone={timeZone}
-            marketplaceName={marketplaceName}
-            onFetchTransactionLineItems={onFetchTransactionLineItems}
-            lineItems={lineItems}
-            fetchLineItemsInProgress={fetchLineItemsInProgress}
-            fetchLineItemsError={fetchLineItemsError}
-            payoutDetailsWarning={payoutDetailsWarning}
+            {...sharedProps}
           />
         ) : showBookingDatesForm ? (
           <BookingDatesForm
             seatsEnabled={seatsEnabled}
             className={css.bookingForm}
             formId="OrderPanelBookingDatesForm"
-            lineItemUnitType={lineItemUnitType}
-            onSubmit={onSubmit}
-            price={price}
-            marketplaceCurrency={marketplaceCurrency}
             dayCountAvailableForBooking={dayCountAvailableForBooking}
-            listingId={listing.id}
-            isOwnListing={isOwnListing}
             monthlyTimeSlots={monthlyTimeSlots}
             onFetchTimeSlots={onFetchTimeSlots}
             timeZone={timeZone}
-            marketplaceName={marketplaceName}
-            onFetchTransactionLineItems={onFetchTransactionLineItems}
-            lineItems={lineItems}
-            fetchLineItemsInProgress={fetchLineItemsInProgress}
-            fetchLineItemsError={fetchLineItemsError}
-            payoutDetailsWarning={payoutDetailsWarning}
+            {...sharedProps}
           />
         ) : showProductOrderForm ? (
           <ProductOrderForm
             formId="OrderPanelProductOrderForm"
-            onSubmit={onSubmit}
-            price={price}
-            marketplaceCurrency={marketplaceCurrency}
             currentStock={currentStock}
             allowOrdersOfMultipleItems={allowOrdersOfMultipleItems}
             pickupEnabled={pickupEnabled && displayPickup}
             shippingEnabled={shippingEnabled && displayShipping}
             displayDeliveryMethod={displayPickup || displayShipping}
-            listingId={listing.id}
-            isOwnListing={isOwnListing}
-            marketplaceName={marketplaceName}
-            onFetchTransactionLineItems={onFetchTransactionLineItems}
             onContactUser={onContactUser}
-            lineItems={lineItems}
-            fetchLineItemsInProgress={fetchLineItemsInProgress}
-            fetchLineItemsError={fetchLineItemsError}
-            payoutDetailsWarning={payoutDetailsWarning}
+            {...sharedProps}
           />
         ) : showInquiryForm ? (
           <InquiryWithoutPaymentForm formId="OrderPanelInquiryForm" onSubmit={onSubmit} />
