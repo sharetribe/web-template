@@ -62,22 +62,20 @@ const getItemQuantityAndLineItems = (orderData, publicData, currency) => {
 /**
  * Get quantity for arbitrary units for time-based bookings.
  *
- * @param {*} orderData should contain quantity
+ * @param {Object} orderData
+ * @param {string} orderData.bookingStart
+ * @param {string} orderData.bookingEnd
+ * @param {number} [orderData.seats]
  */
 const getHourQuantityAndLineItems = orderData => {
-  const { bookingStart, bookingEnd } = orderData || {};
-  const quantity =
-    bookingStart && bookingEnd ? calculateQuantityFromHours(bookingStart, bookingEnd) : null;
-
-  return { quantity, extraLineItems: [] };
-};
-
-const getHoursWithSeatsAndLineItems = orderData => {
   const { bookingStart, bookingEnd, seats } = orderData || {};
+  const hasSeats = !!seats;
   const units =
     bookingStart && bookingEnd ? calculateQuantityFromHours(bookingStart, bookingEnd) : null;
 
-  return { units, seats, extraLineItems: [] };
+  // If there are seats, the quantity is split to factors: units and seats.
+  // E.g. 3 hours x 2 seats (aka unit price is multiplied by 6)
+  return hasSeats ? { units, seats, extraLineItems: [] } : { quantity: units, extraLineItems: [] };
 };
 
 /**
@@ -155,8 +153,6 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
   const quantityAndExtraLineItems =
     unitType === 'item'
       ? getItemQuantityAndLineItems(orderData, publicData, currency)
-      : unitType === 'hour' && orderData.seats
-      ? getHoursWithSeatsAndLineItems(orderData)
       : unitType === 'hour'
       ? getHourQuantityAndLineItems(orderData)
       : ['day', 'night'].includes(unitType) && orderData.seats
