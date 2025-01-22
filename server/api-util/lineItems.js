@@ -60,6 +60,19 @@ const getItemQuantityAndLineItems = (orderData, publicData, currency) => {
 };
 
 /**
+ * Get quantity for fixed bookings with seats.
+ * @param {Object} orderData
+ * @param {number} [orderData.seats]
+ */
+const getFixedQuantityAndLineItems = orderData => {
+  const { seats } = orderData || {};
+  const hasSeats = !!seats;
+  // If there are seats, the quantity is split to factors: units and seats.
+  // E.g. 1 session x 2 seats (aka unit price is multiplied by 2)
+  return hasSeats ? { units: 1, seats, extraLineItems: [] } : { quantity: 1, extraLineItems: [] };
+};
+
+/**
  * Get quantity for arbitrary units for time-based bookings.
  *
  * @param {Object} orderData
@@ -151,6 +164,8 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
   const quantityAndExtraLineItems =
     unitType === 'item'
       ? getItemQuantityAndLineItems(orderData, publicData, currency)
+      : unitType === 'fixed'
+      ? getFixedQuantityAndLineItems(orderData)
       : unitType === 'hour'
       ? getHourQuantityAndLineItems(orderData)
       : ['day', 'night'].includes(unitType)
