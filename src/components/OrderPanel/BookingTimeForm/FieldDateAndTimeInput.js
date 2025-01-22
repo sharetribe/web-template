@@ -236,13 +236,12 @@ const getAllTimeValues = (
 
   const selectedEndTimeAsDateObject = selectedEndTime ? timestampToDate(selectedEndTime) : null;
 
-  const selectedTimeSlot = timeSlots.find(t =>
-    isInRange(startTimeAsDate, t.attributes.start, t.attributes.end)
-  );
-
   const selectedTimeSlotIndex = timeSlots.findIndex(t =>
     isInRange(startTimeAsDate, t.attributes.start, t.attributes.end)
   );
+
+  const selectedTimeSlot =
+    selectedTimeSlotIndex >= 0 ? timeSlots[selectedTimeSlotIndex] : undefined;
 
   const findLastAdjacent = index => {
     const current = timeSlots[index];
