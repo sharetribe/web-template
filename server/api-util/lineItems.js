@@ -81,23 +81,21 @@ const getHourQuantityAndLineItems = orderData => {
 /**
  * Calculate quantity based on days or nights between given bookingDates.
  *
- * @param {*} orderData should contain bookingDates
- * @param {*} code should be either 'line-item/day' or 'line-item/night'
+ * @param {Object} orderData
+ * @param {string} orderData.bookingStart
+ * @param {string} orderData.bookingEnd
+ * @param {number} [orderData.seats]
+ * @param {'line-item/day' | 'line-item/night'} code
  */
 const getDateRangeQuantityAndLineItems = (orderData, code) => {
-  // bookingStart & bookingend are used with day-based bookings (how many days / nights)
-  const { bookingStart, bookingEnd } = orderData || {};
-  const quantity =
-    bookingStart && bookingEnd ? calculateQuantityFromDates(bookingStart, bookingEnd, code) : null;
-
-  return { quantity, extraLineItems: [] };
-};
-
-const getDateRangeWithSeatsAndLineItems = (orderData, code) => {
   const { bookingStart, bookingEnd, seats } = orderData;
+  const hasSeats = !!seats;
   const units =
     bookingStart && bookingEnd ? calculateQuantityFromDates(bookingStart, bookingEnd, code) : null;
-  return { units, seats, extraLineItems: [] };
+
+  // If there are seats, the quantity is split to factors: units and seats.
+  // E.g. 3 nights x 4 seats (aka unit price is multiplied by 12)
+  return hasSeats ? { units, seats, extraLineItems: [] } : { quantity: units, extraLineItems: [] };
 };
 
 /**
@@ -155,8 +153,6 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
       ? getItemQuantityAndLineItems(orderData, publicData, currency)
       : unitType === 'hour'
       ? getHourQuantityAndLineItems(orderData)
-      : ['day', 'night'].includes(unitType) && orderData.seats
-      ? getDateRangeWithSeatsAndLineItems(orderData, code)
       : ['day', 'night'].includes(unitType)
       ? getDateRangeQuantityAndLineItems(orderData, code)
       : {};
