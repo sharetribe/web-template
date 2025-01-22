@@ -565,6 +565,8 @@
   "OrderBreakdown.baseUnitNightSeats": "{unitPrice} x {quantity, number} {quantity, plural, one {night} other {nights}} x { seats, number } { seats, plural, one {seat} other {seats} }",
   "OrderBreakdown.baseUnitHour": "{unitPrice} x {quantity, number} {quantity, plural, one {hour} other {hours}}",
   "OrderBreakdown.baseUnitHourSeats": "{unitPrice} x {quantity, number} {quantity, plural, one {hour} other {hours}} x { seats, number } { seats, plural, one {seat} other {seats} }",
+  "OrderBreakdown.baseUnitFixedBooking": "{unitPrice}",
+  "OrderBreakdown.baseUnitFixedBookingSeats": "{unitPrice} x {seats, number} {seats, plural, one {seat} other {seats}}",
   "OrderBreakdown.baseUnitQuantity": "{quantity, plural, one {Unit price} other {{unitPrice} x #}}",
   "OrderBreakdown.bookingEnd": "Booking end",
   "OrderBreakdown.bookingStart": "Booking start",
