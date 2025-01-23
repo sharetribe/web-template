@@ -145,6 +145,8 @@
   margin: 0;
   display: flex;
   flex-wrap: wrap;
+  max-height:400px;
+  overflow:scroll;
 }
 
 .listing {
@@ -152,29 +154,15 @@
 
   /* Single column in mobile */
   margin-top: 34px;
-  &:first-of-type {
-    margin-top: 18px;
-  }
+
 
   @media (--viewportMedium) {
     /* Two columns in desktop */
-    width: calc(50% - 12px);
-    margin-bottom: 36px;
+    width: calc(33% - 12px);
+    margin: 0 0 36px 0;
+    padding:6px 12px 6px 0;
+    box-sizing: content-box;
 
-    /* Horizontal space */
-    &:nth-of-type(odd) {
-      margin-right: 12px;
-    }
-    &:nth-of-type(even) {
-      margin-left: 12px;
-    }
-
-    /* Vertical space */
-    margin-top: 0;
-    &:nth-of-type(1),
-    &:nth-of-type(2) {
-      margin-top: 20px;
-    }
   }
 }
 
