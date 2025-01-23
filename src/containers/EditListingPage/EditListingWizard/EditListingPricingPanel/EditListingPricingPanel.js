@@ -6,26 +6,39 @@ import { FormattedMessage } from '../../../../util/reactIntl';
 import { LISTING_STATE_DRAFT, propTypes } from '../../../../util/types';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
 import { isValidCurrencyForTransactionProcess } from '../../../../util/fieldHelpers';
+import { FIXED } from '../../../../transactions/transaction';
 
 // Import shared components
 import { H3, ListingLink } from '../../../../components';
 
 // Import modules from this directory
 import EditListingPricingForm from './EditListingPricingForm';
+import {
+  getInitialValuesForPriceVariants,
+  handleSubmitValuesForPriceVariants,
+} from './BookingPriceVariants';
+import {
+  getInitialValuesForStartTimeInterval,
+  handleSubmitValuesForStartTimeInterval,
+} from './StartTimeInverval';
 import css from './EditListingPricingPanel.module.css';
 
 const { Money } = sdkTypes;
 
-const getInitialValues = params => {
-  const { listing } = params;
-  const { price } = listing?.attributes || {};
-
-  return { price };
-};
-
 const getListingTypeConfig = (publicData, listingTypes) => {
   const selectedListingType = publicData.listingType;
   return listingTypes.find(conf => conf.listingType === selectedListingType);
+};
+
+// NOTE: components that handle price variants and start time interval are currently
+// exporting helper functions that handle the initial values and the submission values.
+// This is a tentative approach to contain logic in one place.
+const getInitialValues = props => {
+  const { listing } = props;
+  const { unitType } = listing?.attributes?.publicData || {};
+  return unitType === FIXED
+    ? { ...getInitialValuesForPriceVariants(props), ...getInitialValuesForStartTimeInterval(props) }
+    : { price: listing?.attributes?.price };
 };
 
 /**
@@ -108,9 +121,38 @@ const EditListingPricingPanel = props => {
             const { price } = values;
 
             // New values for listing attributes
-            const updateValues = {
-              price,
-            };
+            let updateValues = {};
+
+            if (unitType === FIXED) {
+              let publicDataUpdates = {};
+              // NOTE: components that handle price variants and start time interval are currently
+              // exporting helper functions that handle the initial values and the submission values.
+              // This is a tentative approach to contain logic in one place.
+              // We might remove or improve this setup in the future.
+
+              // This adds startTimeInterval to publicData
+              const startTimeIntervalChanges = handleSubmitValuesForStartTimeInterval(
+                values,
+                publicDataUpdates
+              );
+              // This adds lowest price variant to the listing.attributes.price and priceVariants to listing.attributes.publicData
+              const priceVariantChanges = handleSubmitValuesForPriceVariants(
+                values,
+                publicDataUpdates,
+                unitType
+              );
+              updateValues = {
+                ...priceVariantChanges,
+                ...startTimeIntervalChanges,
+                publicData: {
+                  ...startTimeIntervalChanges.publicData,
+                  ...priceVariantChanges.publicData,
+                },
+              };
+            } else {
+              updateValues = { price };
+            }
+
             onSubmit(updateValues);
           }}
           marketplaceCurrency={marketplaceCurrency}
