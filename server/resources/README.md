@@ -23,8 +23,8 @@ access to the website.
 Robots.txt also contains a link to the sitemap, which is the reason why we generate this on the fly.
 Essentially, the _server/resources/robots.txt_ contains a URL
 _"https://my.marketplace.com/sitemap-index.xml"_, which is transformed to use the correct hostname
-from `REACT_APP_MARKETPLACE_ROOT_URL`. This transformation is done by the actual resource-script:
-**robotsTxt.js**.
+from `REACT_APP_MARKETPLACE_ROOT_URL` and subpath `/robots/sitemap-index.xml`. This transformation
+is done by the actual resource-script: **robotsTxt.js**.
 
 **Note**: on localhost, this file is served from the Dev port on apiServer.js (3500 aka
 http://localhost:3500/robots.txt) for debugging purposes.
@@ -57,7 +57,8 @@ is not.
 
 ### Sitemap Index
 
-We serve /sitemap-index.xml from the root. The _robotsTxt.js_ adds a link to the sitemap-index.xml
+We serve sitemap-index.xml from the robots folder. The _robotsTxt.js_ adds a link to the
+/robots/sitemap-index.xml
 
 The sitemap-index.xml contains links to 3 different sub sitemaps:
 

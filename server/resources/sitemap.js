@@ -114,8 +114,12 @@ const sitemapIndex = (req, res, rootUrl, isPrivateMarketplace) => {
 
     // Sitemap-index will contain the following sitemaps:
     const sitemaps = isPrivateMarketplace
-      ? ['/sitemap-default.xml', '/sitemap-recent-pages.xml']
-      : ['/sitemap-default.xml', '/sitemap-recent-listings.xml', '/sitemap-recent-pages.xml'];
+      ? ['/robots/sitemap-default.xml', '/robots/sitemap-recent-pages.xml']
+      : [
+          '/robots/sitemap-default.xml',
+          '/robots/sitemap-recent-listings.xml',
+          '/robots/sitemap-recent-pages.xml',
+        ];
 
     // Add sitemaps to the index
     sitemaps.forEach(sitemapPath => {

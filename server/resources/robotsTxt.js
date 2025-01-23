@@ -88,7 +88,7 @@ Crawl-Delay: 5
  * @param {String} robotsTxtPath
  */
 const sendRobotsTxt = (req, res, robotsTxtPath) => {
-  const sitemapIndexUrl = `${getRootURL({ useDevApiServerPort: true })}/sitemap-index.xml`;
+  const sitemapIndexUrl = `${getRootURL({ useDevApiServerPort: true })}/robots/sitemap-index.xml`;
 
   try {
     const modifiedStream = new Transform({

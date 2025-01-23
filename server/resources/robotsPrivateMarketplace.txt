@@ -4,8 +4,8 @@
 
 User-agent: *
 Disallow: /s
-Disallow: /u
-Disallow: /l
+Disallow: /u/
+Disallow: /l/
 Disallow: /profile-settings
 Disallow: /inbox
 Disallow: /order

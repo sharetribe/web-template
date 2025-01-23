@@ -150,7 +150,12 @@ app.get('/favicon.ico', (req, res) => {
 app.get('/robots.txt', robotsTxtRoute);
 
 // Handle different sitemap-* resources. E.g. /sitemap-index.xml
-app.get('/sitemap-:resource', sitemapResourceRoute);
+// Note: we don't use /sitemap-* because private marketplace concept would have a robots.txt issue:
+// disallowing route /s would also disallow /sitemap-*
+app.get('/sitemap-*', (req, res) => {
+  res.redirect('/robots' + req.originalUrl, '301');
+});
+app.get('/robots/sitemap-:resource', sitemapResourceRoute);
 
 // Generate web app manifest
 // When developing with "yarn run dev",
