@@ -9,10 +9,29 @@ const placeOrigin = place => {
   return null;
 };
 
+const placeOriginNew = place => {
+  if (place && place.location) {
+    return new SDKLatLng(place.location.lat(), place.location.lng());
+  }
+  return null;
+};
+
 const placeBounds = place => {
   if (place && place.geometry && place.geometry.viewport) {
     const ne = place.geometry.viewport.getNorthEast();
     const sw = place.geometry.viewport.getSouthWest();
+    return new SDKLatLngBounds(
+      new SDKLatLng(ne.lat(), ne.lng()),
+      new SDKLatLng(sw.lat(), sw.lng())
+    );
+  }
+  return null;
+};
+
+const placeBoundsNew = place => {
+  if (place && place.viewport) {
+    const ne = place.viewport.getNorthEast();
+    const sw = place.viewport.getSouthWest();
     return new SDKLatLngBounds(
       new SDKLatLng(ne.lat(), ne.lng()),
       new SDKLatLng(sw.lat(), sw.lng())
@@ -55,6 +74,20 @@ export const getPlaceDetails = (placeId, sessionToken) =>
     });
   });
 
+// ToDo apply error handling
+export const getPlaceDetailsNew = async placeId => {
+  const place = await new window.google.maps.places.Place({ id: placeId });
+  const fields = ['addressComponents', 'formattedAddress', 'viewport', 'id', 'location'];
+
+  await place.fetchFields({ fields: fields });
+
+  return {
+    adress: place.formattedAddress,
+    origin: placeOriginNew(place),
+    bounds: placeBoundsNew(place),
+  };
+};
+
 const predictionSuccessful = status => {
   const { OK, ZERO_RESULTS } = window.google.maps.places.PlacesServiceStatus;
   return status === OK || status === ZERO_RESULTS;
@@ -93,6 +126,23 @@ export const getPlacePredictions = (search, sessionToken, searchConfigurations) 
       }
     );
   });
+
+export const getPlacePredictionsNew = async (search, sessionToken, searchConfigurations) => {
+  const sessionTokenMaybe = sessionToken ? { sessionToken } : {};
+  const request = {
+    input: search,
+    ...sessionTokenMaybe,
+  };
+
+  const {
+    suggestions,
+  } = await google.maps.places.AutocompleteSuggestion.fetchAutocompleteSuggestions(request);
+
+  return {
+    search,
+    predictions: suggestions,
+  };
+};
 
 /**
  * Deprecation: use function from src/util/maps.js

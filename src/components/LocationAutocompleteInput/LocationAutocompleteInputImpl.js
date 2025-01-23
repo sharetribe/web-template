@@ -11,6 +11,8 @@ import IconHourGlass from './IconHourGlass';
 import IconCurrentLocation from './IconCurrentLocation';
 import * as geocoderMapbox from './GeocoderMapbox';
 import * as geocoderGoogleMaps from './GeocoderGoogleMaps';
+// import * as geocoderGoogleMaps from './GeocoderGoogleMapsNew';
+import * as geocoderGoogleMapsNew from './GeocoderGoogleMapsNew';
 
 import css from './LocationAutocompleteInput.module.css';
 
