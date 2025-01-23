@@ -28,6 +28,10 @@ import css from './Topbar.module.css';
 
 const MAX_MOBILE_SCREEN_WIDTH = 1024;
 
+const SEARCH_DISPLAY_ALWAYS = 'always';
+const SEARCH_DISPLAY_NOT_LANDING_PAGE = 'notLandingPage';
+const SEARCH_DISPLAY_ONLY_SEARCH_PAGE = 'onlySearchPage';
+
 const redirectToURLWithModalState = (history, location, modalStateParam) => {
   const { pathname, search, state } = location;
   const searchString = `?${stringify({ [modalStateParam]: 'open', ...parse(search) })}`;
@@ -244,6 +248,31 @@ const TopbarComponent = props => {
 
   const classes = classNames(rootClassName || css.root, className);
 
+  const { display: searchFormDisplay = SEARCH_DISPLAY_ALWAYS } = config?.topbar?.searchBar || {};
+
+  // Search form is shown conditionally depending on configuration and
+  // the current page.
+  const showSearchOnAllPages = searchFormDisplay === SEARCH_DISPLAY_ALWAYS;
+  const showSearchOnSearchPage =
+    searchFormDisplay === SEARCH_DISPLAY_ONLY_SEARCH_PAGE && resolvedCurrentPage === 'SearchPage';
+  const showSearchNotOnLandingPage =
+    searchFormDisplay === SEARCH_DISPLAY_NOT_LANDING_PAGE && resolvedCurrentPage !== 'LandingPage';
+
+  const showSearchForm =
+    showSearchOnAllPages || showSearchOnSearchPage || showSearchNotOnLandingPage;
+
+  const mobileSearchButtonMaybe = showSearchForm ? (
+    <Button
+      rootClassName={css.searchMenu}
+      onClick={() => redirectToURLWithModalState(history, location, 'mobilesearch')}
+      title={intl.formatMessage({ id: 'Topbar.searchIcon' })}
+    >
+      <SearchIcon className={css.searchMenuIcon} />
+    </Button>
+  ) : (
+    <div className={css.searchMenu} />
+  );
+
   return (
     <div className={classes}>
       <LimitedAccessBanner
@@ -268,13 +297,7 @@ const TopbarComponent = props => {
           alt={intl.formatMessage({ id: 'Topbar.logoIcon' })}
           linkToExternalSite={config?.topbar?.logoLink}
         />
-        <Button
-          rootClassName={css.searchMenu}
-          onClick={() => redirectToURLWithModalState(history, location, 'mobilesearch')}
-          title={intl.formatMessage({ id: 'Topbar.searchIcon' })}
-        >
-          <SearchIcon className={css.searchMenuIcon} />
-        </Button>
+        {mobileSearchButtonMaybe}
       </div>
       <div className={css.desktop}>
         <TopbarDesktop
@@ -290,6 +313,7 @@ const TopbarComponent = props => {
           onSearchSubmit={handleSubmit}
           config={config}
           customLinks={customLinks}
+          showSearchForm={showSearchForm}
         />
       </div>
       <Modal
