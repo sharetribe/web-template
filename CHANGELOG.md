@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Add support for hiding the Topbar search based on configuration. 
+  [#531](https://github.com/sharetribe/web-template/pull/531)
+
 ## [v7.0.0] 2025-01-15
 
 - [fix] ListingPage: fetchMonthlyTimeSlots didn't work correctly with day unitType.
