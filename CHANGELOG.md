@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Add support for the new Google Places API
+  [#539](https://github.com/sharetribe/web-template/pull/539)
 - [fix] SearchPageWithMap: duplicate class caused positioning issue on localhost:3000.
   [#546](https://github.com/sharetribe/web-template/pull/546)
 - [fix] TopbarDesktop: fix a typo (non-existent element attribute), when the search form was not
