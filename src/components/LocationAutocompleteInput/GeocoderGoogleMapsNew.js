@@ -46,9 +46,7 @@ class GeocoderGoogleMaps {
   getPlacePredictions(search, countryLimit) {
     const limitCountriesMaybe = countryLimit
       ? {
-          componentRestrictions: {
-            country: countryLimit,
-          },
+          includedRegionCodes: countryLimit,
         }
       : {};
 
@@ -62,6 +60,9 @@ class GeocoderGoogleMaps {
       });
   }
 
+  /**
+   * Get the ID of the given prediction.
+   */
   getPredictionId(prediction) {
     if (prediction.predictionPlace) {
       // default prediction defined above
@@ -90,7 +91,6 @@ class GeocoderGoogleMaps {
    *
    * @return {Promise<util.propTypes.place>} a place object
    */
-
   getPlaceDetails(prediction, currentLocationBoundsDistance) {
     if (this.getPredictionId(prediction) === CURRENT_LOCATION_ID) {
       return userLocation().then(latlng => {
