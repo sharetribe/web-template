@@ -2,6 +2,8 @@ import { types as sdkTypes } from '../util/sdkLoader';
 
 const { LatLng: SDKLatLng, LatLngBounds: SDKLatLngBounds } = sdkTypes;
 
+const isDev = process.env.NODE_ENV === 'development';
+
 const placeOrigin = place => {
   if (place && place.geometry && place.geometry.location) {
     return new SDKLatLng(place.geometry.location.lat(), place.geometry.location.lng());
@@ -115,7 +117,10 @@ export const getPlaceDetailsNew = async placeId => {
       bounds: placeBoundsNew(place),
     };
   } catch (error) {
-    console.error(`Could not get details for place id "${placeId}": `, error);
+    if (isDev) {
+      console.error(`Could not get details for place id "${placeId}": `, error);
+    }
+    return error;
   }
 };
 
@@ -189,7 +194,13 @@ export const getPlacePredictionsNew = async (search, sessionToken, searchConfigu
       predictions: suggestions,
     };
   } catch (error) {
-    console.error(`Could not get autocomplete suggestions using search query "${search}": `, error);
+    if (isDev) {
+      console.error(
+        `Could not get autocomplete suggestions using search query "${search}": `,
+        error
+      );
+    }
+    return error;
   }
 };
 
