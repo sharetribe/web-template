@@ -98,7 +98,7 @@ const CustomFieldText = props => {
       className={css.customField}
       id={formId ? `${formId}.${name}` : name}
       name={name}
-      type="textarea"
+      type="text"
       label={label}
       placeholder={placeholder}
       {...validateMaybe}

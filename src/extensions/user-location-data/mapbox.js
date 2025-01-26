@@ -26,7 +26,7 @@ const get = async (path, query) => {
 
 export const reverseGeocoding = (latitude, longitude) => {
   return get(`/geocoding/v5/mapbox.places/${longitude},${latitude}.json`, {
-    types: 'country',
+    types: 'region,country',
     access_token: config.maps.mapboxAccessToken,
   });
 };

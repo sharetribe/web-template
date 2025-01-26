@@ -396,7 +396,7 @@ export const ProfilePageComponent = props => {
           userShowError={userShowError}
           publicData={publicData}
           metadata={metadata}
-          userFieldConfig={userFields}
+          //userFieldConfig={userFields}
           hideReviews={hasNoViewingRightsOnPrivateMarketplace}
           intl={intl}
           {...rest}

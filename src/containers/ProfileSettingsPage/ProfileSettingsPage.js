@@ -24,7 +24,7 @@ import ProfileSettingsForm from './ProfileSettingsForm/ProfileSettingsForm';
 
 import { updateProfile, uploadImage } from './ProfileSettingsPage.duck';
 
-import { getUserCurrency } from '../../extensions/user-currency/helpers';
+import { getUserLocationData } from '../../extensions/user-location-data/helpers';
 
 import css from './ProfileSettingsPage.module.css';
 
@@ -58,9 +58,9 @@ export const ProfileSettingsPageComponent = props => {
   useEffect(() => {
     const fetchCurrency = async position => {
       try {
-        const userCurrency = await getUserCurrency(position);
-        if (userCurrency) {
-          setCurrency(userCurrency);
+        const userLocationData = await getUserLocationData(position);
+        if (userLocationData.currency) {
+          setCurrency(userLocationData.currency);
         }
       } catch (error) {
         console.error('Error fetching user currency:', error);
