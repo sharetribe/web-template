@@ -40,6 +40,7 @@ import {
   NamedLink,
   ListingCard,
   Reviews,
+  ReviewRating,
   ButtonTabNavHorizontal,
   LayoutSideNavigation,
   NamedRedirect,
@@ -60,15 +61,37 @@ const MAX_MOBILE_SCREEN_WIDTH = 768;
 const MIN_LENGTH_FOR_LONG_WORDS = 20;
 
 export const AsideContent = props => {
-  const { user, displayName, showLinkToProfileSettingsPage } = props;
+  const { user, displayName, showLinkToProfileSettingsPage, reviews } = props;
+  
+  const avgRating = reviews.reduce((acc, review) => {
+    return acc + review.attributes.rating;
+  }, 0) / (reviews.length || 1); // Avoid division by zero by using || 1
+  
   return (
     <div className={css.asideContent}>
       <AvatarLarge className={css.avatar} user={user} disableProfileLink />
-      <H2 as="h1" className={css.mobileHeading}>
-        {displayName ? (
-          <FormattedMessage id="ProfilePage.mobileHeading" values={{ name: displayName }} />
+      <div>
+        <H2 as="h1" className={css.mobileHeading}>
+          {displayName ? (
+            <FormattedMessage id="ProfilePage.mobileHeading" values={{ name: displayName }} />
+          ) : null}
+        </H2>
+        
+        {avgRating ? (
+          <div className={css.avgRating}>
+            <div>
+              <ReviewRating
+                rating={avgRating}
+                className={css.mobileReviewRating}
+                reviewStarClassName={css.reviewRatingStar}
+              />
+            </div>
+            <p>{reviews.length} total review(s)</p>
+          </div>
         ) : null}
-      </H2>
+
+      </div>
+
       {showLinkToProfileSettingsPage ? (
         <>
           <NamedLink className={css.editLinkMobile} name="ProfileSettingsPage">
@@ -79,6 +102,10 @@ export const AsideContent = props => {
           </NamedLink>
         </>
       ) : null}
+
+      
+      
+
     </div>
   );
 };
@@ -386,6 +413,7 @@ export const ProfilePageComponent = props => {
             user={profileUser}
             showLinkToProfileSettingsPage={mounted && isCurrentUser}
             displayName={displayName}
+            {...rest}
           />
         }
         footer={<FooterContainer />}
@@ -452,6 +480,7 @@ const mapStateToProps = state => {
     uiCurrency,
     exchangeRate
   );
+
 
   return {
     scrollingDisabled: isScrollingDisabled(state),

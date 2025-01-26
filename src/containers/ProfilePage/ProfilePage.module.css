@@ -25,6 +25,17 @@
   flex-direction: row;
   flex-wrap: wrap;
   border-bottom: 1px solid var(--colorGrey100);
+  
+  h1{
+    margin-bottom:12px;
+  }
+
+  .avgRating{
+    p{font-size:13px;
+      margin-top:6px;
+      color:var(--colorGrey500)
+    }
+  }
 
   @media (--viewportLarge) {
     flex-direction: column;
