@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] TabNavHorizontal: Dark skin tab focus styles overriding hover font color.
+  [#543](https://github.com/sharetribe/web-template/pull/543)
 - [fix] Private marketplace: allow search crawlers to access the `/sitemap` route.
   [#541](https://github.com/sharetribe/web-template/pull/541)
 
