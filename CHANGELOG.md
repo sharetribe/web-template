@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [change] priceForSchemaMaybe: render offer price when price is 0. This helps customizations, but
+  it's not enough for no-code features to support 0 price for inquiries.
+  [#544](https://github.com/sharetribe/web-template/pull/544)
 - [fix] TabNavHorizontal: Dark skin tab focus styles overriding hover font color.
   [#543](https://github.com/sharetribe/web-template/pull/543)
 - [fix] Private marketplace: allow search crawlers to access the `/sitemap` route.
