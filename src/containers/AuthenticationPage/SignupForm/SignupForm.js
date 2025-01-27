@@ -76,6 +76,7 @@ const SignupFormComponent = props => {
         pub_userCurrency: currency,
         pub_userLocation: region,
         pub_userPromoCode: promoCode,
+        pub_userAffiliateProgram: 'true'
       }}
       render={formRenderProps => {
         const {
@@ -152,7 +153,7 @@ const SignupFormComponent = props => {
           .fieldConfig.schemaType='enum';
         userFieldProps.find(field => field.key == 'pub_userLocation')
           .fieldConfig.enumOptions= regions;
-        console.log('user fields', userFieldProps)
+        //console.log('user fields', userFieldProps)
 
         const noUserTypes = !userType && !(userTypes?.length > 0);
         const userTypeConfig = userTypes.find(config => config.userType === userType);

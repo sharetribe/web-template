@@ -269,6 +269,7 @@ class ProfileSettingsFormComponent extends Component {
             false
           );
 
+
           return (
             <Form
               className={classes}
@@ -319,6 +320,9 @@ class ProfileSettingsFormComponent extends Component {
                         </div>
                       );
                     }
+
+                    //disable promo code field - it's only for reading at this point
+                    document.getElementById('pub_userPromoCode')?.setAttribute('readonly', true);
 
                     return (
                       <div className={css.uploadAvatarWrapper}>

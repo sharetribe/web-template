@@ -572,6 +572,12 @@ textarea:disabled {
     cursor: not-allowed;
   }
 }
+input:read-only{
+  background-color: #f9f9f9;
+  &:hover {
+    cursor: not-allowed;
+  }
+}
 
 textarea {
   min-height: 84px; /* 3 rows  */

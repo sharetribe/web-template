@@ -58,7 +58,7 @@
 
 .mobileHeading {
   flex-shrink: 0;
-  margin: 60px 0 0 0;
+  margin: 35px 0 0 0;
 
   @media (--viewportMedium) {
     margin: 49px 0 0 0;
