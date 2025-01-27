@@ -144,6 +144,12 @@ class ProfileSettingsFormComponent extends Component {
             if (userCurrency !== initialValues.pub_userCurrency) {
               setInitialValues(values);
             }
+
+            //disable promo code / affiliate program fields - it's only for reading at this point
+            document.getElementById('pub_userPromoCode')?.setAttribute('disabled', true);
+            document.getElementById('pub_userAffiliateProgram')?.setAttribute('disabled', true);
+            //console.log(document.getElementById('pub_userAffiliateProgram'))
+
           }, [values, userCurrency, currencyBasedOnLocation, initialValues]);
 
           // First name
@@ -321,8 +327,7 @@ class ProfileSettingsFormComponent extends Component {
                       );
                     }
 
-                    //disable promo code field - it's only for reading at this point
-                    document.getElementById('pub_userPromoCode')?.setAttribute('readonly', true);
+                    
 
                     return (
                       <div className={css.uploadAvatarWrapper}>
