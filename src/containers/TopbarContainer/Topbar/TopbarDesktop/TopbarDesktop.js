@@ -180,8 +180,9 @@ const TopbarDesktop = props => {
     />
   ) : (
     <div
-      className={classNames(css.spacer, { [css.takeAvailableSpace]: giveSpaceForSearch })}
-      desktopInputRoot={css.topbarSearchWithLeftPadding}
+      className={classNames(css.spacer, css.topbarSearchWithLeftPadding, {
+        [css.takeAvailableSpace]: giveSpaceForSearch,
+      })}
     />
   );
 
