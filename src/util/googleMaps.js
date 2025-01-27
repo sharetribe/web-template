@@ -112,7 +112,7 @@ export const getPlaceDetailsNew = async placeId => {
     await place.fetchFields({ fields: fields });
 
     return {
-      adress: place.formattedAddress,
+      address: place.formattedAddress,
       origin: placeOriginNew(place),
       bounds: placeBoundsNew(place),
     };
@@ -191,7 +191,7 @@ export const getPlacePredictionsNew = async (search, sessionToken, searchConfigu
 
     return {
       search,
-      predictions: suggestions,
+      predictions: suggestions || [],
     };
   } catch (error) {
     if (isDev) {
