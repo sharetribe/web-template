@@ -14,11 +14,14 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] Private marketplace: allow search crawlers to access the `/sitemap` route.
+  [#541](https://github.com/sharetribe/web-template/pull/541)
+
 ## [v7.1.0] 2025-01-23
 
-- [add] Add support for hiding the Topbar search based on configuration. 
+- [add] Add support for hiding the Topbar search based on configuration.
   [#531](https://github.com/sharetribe/web-template/pull/531)
-- [fix] ListingPage: fetchMonthlyTimeSlots didn't work correctly with day unitType.
+- [fix] TransactionPage: fetchMonthlyTimeSlots didn't work correctly with day unitType.
   [#536](https://github.com/sharetribe/web-template/pull/536)
 - [change] Google's search schema requires a price that uses dot as decimal separator.
   [#535](https://github.com/sharetribe/web-template/pull/535)
