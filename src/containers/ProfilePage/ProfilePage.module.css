@@ -107,8 +107,10 @@
 
 .bio {
   /* Preserve newlines, but collapse other whitespace */
-  white-space: pre-line;
+  white-space: normal;
   margin: 5px 0 24px 0;
+
+  img{max-width:100%}
 
   @media (--viewportMedium) {
     margin: 4px 0 51px 0;
