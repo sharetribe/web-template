@@ -51,12 +51,10 @@ export const priceData = (price, marketplaceCurrency, intl) => {
 export const priceForSchemaMaybe = price => {
   try {
     const schemaPrice = convertMoneyToNumber(price);
-    return schemaPrice
-      ? {
-          price: schemaPrice.toFixed(2),
-          priceCurrency: price.currency,
-        }
-      : {};
+    return {
+      price: schemaPrice.toFixed(2),
+      priceCurrency: price.currency,
+    };
   } catch (e) {
     return {};
   }
