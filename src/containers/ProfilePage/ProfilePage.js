@@ -285,7 +285,19 @@ export const MainContent = props => {
           <ul className={css.listings}>
             {listings.map(l => (
               <li className={css.listing} key={l.id.uuid}>
-                <ListingCard listing={l} showAuthorInfo={false} />
+                <div className={classNames(css.listingWrapper, { 
+                  [css.soldListing]: l.currentStock?.attributes?.quantity === 0 
+                })}>
+                  <ListingCard 
+                    listing={l} 
+                    showAuthorInfo={false}
+                  />
+                  {l.currentStock?.attributes?.quantity === 0 && (
+                    <div className={css.soldBadge}>
+                      <FormattedMessage id="ProfilePage.sold" />
+                    </div>
+                  )}
+                </div>
               </li>
             ))}
           </ul>

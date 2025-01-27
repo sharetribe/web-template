@@ -1098,5 +1098,6 @@
   "UserNav.accountSettings": "Account settings",
   "UserNav.profileSettings": "Profile settings",
   "UserNav.yourListings": "Your listings",
-  "ProductOrderForm.categoryLabel": "Listing Category"
+  "ProductOrderForm.categoryLabel": "Listing Category",
+  "ProfilePage.sold": "SOLD"
 }
