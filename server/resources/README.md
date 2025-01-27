@@ -34,6 +34,12 @@ http://localhost:3500/robots.txt) for debugging purposes.
 There's a more restrictive version of the robots.txt (robotsPrivateMarketplace.txt), which is used
 if access-control.json asset has private mode set active.
 
+**Note**: For private marketplace, the `/s` route is disallowed, and the `/sitemap` route is
+explicitly allowed. If you add new routes that start with `/s` at the root (e.g.
+`your.marketplace.com/support`), you need to add them to the robotsPrivateMarketplace.txt file. By
+default, [Pages content](https://www.sharetribe.com/docs/template/page-builder/) is served from
+`/p/*`, which is unaffected.
+
 ## Sitemap
 
 A [sitemap](https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview) is a file
