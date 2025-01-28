@@ -87,8 +87,3 @@
     margin: auto 36px 0 36px;
   }
 }
-
-/** until we figure out currency, hide it **/
-.listingCard_price{
-  display: none;
-}

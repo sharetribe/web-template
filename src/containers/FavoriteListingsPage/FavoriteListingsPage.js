@@ -16,6 +16,9 @@ import {
   ListingCard,
 } from '../../components';
 
+import { convertListingPrices } from '../../extensions/MultipleCurrency/utils/currency';
+import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
+
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
@@ -144,10 +147,21 @@ const mapStateToProps = state => {
     queryFavoritesError,
     queryParams,
   } = state.FavoriteListingsPage;
+  
   const listings = getListingsById(state, currentPageResultIds);
+  
+  const { uiCurrency } = state.ui;
+  const { exchangeRate } = state.ExchangeRate;
+
+  const convertedListings = convertListingPrices(
+    getMarketplaceEntities(state, listings),
+    uiCurrency,
+    exchangeRate
+  );
+
   return {
     currentPageResultIds,
-    listings,
+    listings: convertedListings,
     pagination,
     queryInProgress,
     queryFavoritesError,

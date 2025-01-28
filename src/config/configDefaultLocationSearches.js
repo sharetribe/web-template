@@ -12,13 +12,19 @@ const { LatLng, LatLngBounds } = sdkTypes;
 //       1) help customers to find relevant locations, and
 //       2) reduce the cost of using map providers geocoding API
 const defaultLocations = [
-  // {
-  //   id: 'default-helsinki',
-  //   predictionPlace: {
-  //     address: 'Helsinki, Finland',
-  //     bounds: new LatLngBounds(new LatLng(60.29783, 25.25448), new LatLng(59.92248, 24.78287)),
-  //   },
-  // },
+  {
+    id: 'default-usa',
+    predictionPlace: {
+      address: 'United States',
+      bounds: new LatLngBounds(new LatLng(57.13529038, -70.1662803), new LatLng(-7.27089218, -126.6649138)),
+    }, 
+  },{
+     id: 'default-canada',
+     predictionPlace: {
+       address: 'Canada',
+       bounds: new LatLngBounds(new LatLng(83.147207, -52.521929), new LatLng(41.669086, -141.001855)),
+     }, 
+   },
   // {
   //   id: 'default-turku',
   //   predictionPlace: {
