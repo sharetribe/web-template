@@ -313,3 +313,7 @@
     width: 37.5vw;
   }
 }
+
+.mapRoot {
+  background-color: var(--colorGrey100);
+}
