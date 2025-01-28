@@ -44,7 +44,7 @@ import {
   resolveLatestProcessName,
 } from '../../transactions/transaction';
 
-import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2, InlineTextButton } from '../../components';
+import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2, InlineTextButton, Button, SecondaryButton } from '../../components';
 
 import css from './OrderPanel.module.css';
 
@@ -209,6 +209,8 @@ const OrderPanel = props => {
     payoutDetailsWarning,
     showCurrencyNotify,
     existingMessageHistory,
+    onToggleFavorites,
+    currentUser,
   } = props;
 
   const publicData = listing?.attributes?.publicData || {};
@@ -295,6 +297,25 @@ const OrderPanel = props => {
       </InlineTextButton>
     ) : null;
 
+    const isFavorite = currentUser?.attributes.profile.privateData.favorites?.includes(
+      listing.id.uuid
+    );
+    
+    const toggleFavorites = () => onToggleFavorites(isFavorite);
+    
+    const favoriteButton = isFavorite ? (
+      <InlineTextButton
+        className={`${css.favoriteButton} ${css.active}`}
+        onClick={toggleFavorites}
+      >
+        <i class="fa-solid fa-heart"></i>
+      </InlineTextButton>
+    ) : (
+      <InlineTextButton className={css.favoriteButton} onClick={toggleFavorites}>
+        <i class="fa-regular fa-heart"></i>
+      </InlineTextButton>
+    );
+
   return (
     <div className={classes}>
       <ModalInMobile
@@ -324,6 +345,8 @@ const OrderPanel = props => {
         />
 
        {isListingPage && (
+        
+        <>
         <div className={css.author}>
           <AvatarSmall user={author} className={css.providerAvatar} />
           <span className={css.providerNameLinked}>
@@ -333,6 +356,9 @@ const OrderPanel = props => {
             <FormattedMessage id="OrderPanel.author" values={{ name: authorDisplayName }} />
           </span>
         </div>
+         
+         </>
+
        )}
 
         {showPriceMissing ? (
@@ -388,6 +414,7 @@ const OrderPanel = props => {
              <div className={css.hideOnMobile}>
               <div className={css.buttonGroup}>
                 <ContactButton />
+                {favoriteButton}
               </div>
             </div>
             
@@ -421,6 +448,7 @@ const OrderPanel = props => {
             <FormattedMessage id="OrderPanel.unknownTransactionProcess" />
           </p>
         ) : null}
+        
       </ModalInMobile>
       <div className={css.openOrderForm}>
         <PriceMaybe
@@ -434,6 +462,7 @@ const OrderPanel = props => {
 
         <div className={css.buttonGroup}>
           <ContactButton />
+          {favoriteButton}
 
           {isClosed ? (
             <div className={css.closedListingButton}>

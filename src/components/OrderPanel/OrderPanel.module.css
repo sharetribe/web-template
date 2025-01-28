@@ -300,14 +300,15 @@
 .buttonGroup {
   display: flex;
   flex-direction: row;
-  gap: 12px;
+  gap: 6px;
   width: calc(100% - 52px);
   @media (--viewportMedium) {
     width: 100%;
+    gap: 12px;
   }
 }
 
-.contactSellerButton {
+.contactSellerButton, .favoriteButton {
   font-weight: var(--fontWeightMedium);
   color: var(--colorGrey700);
   padding: 12px 12px;
@@ -322,11 +323,23 @@
   min-height: 56px;
 }
 
-.contactSellerButton:hover {
+.contactSellerButton:hover, .favoriteButton:hover {
   background-color: var(--marketplaceColorDark);
   color:white;
   text-decoration: none;
   border-color:var(--marketplaceColor)
+}
+
+.favoriteButton {
+  width:112px;
+  @media (--viewportMedium) {
+    width: 74px;
+  }
+  
+}
+.favoriteButton.active{
+  color:white;
+  background:var(--marketplaceColorDark);
 }
 
 .sendIcon {
@@ -340,3 +353,4 @@
 .sendMessageText {
   margin-left: 4px;
 }
+

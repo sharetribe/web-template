@@ -22,6 +22,9 @@ import {
   setInitialValues as TransactionPageInitialValues,
 } from './TransactionPage/TransactionPage.duck';
 
+import { loadData as FavoriteListingsPageLoader } from './FavoriteListingsPage/FavoriteListingsPage.duck';
+
+
 const getPageDataLoadingAPI = () => {
   return {
     AuthenticationPage: {
@@ -75,6 +78,9 @@ const getPageDataLoadingAPI = () => {
     TransactionPage: {
       loadData: TransactionPageLoader,
       setInitialValues: TransactionPageInitialValues,
+    },
+    FavoriteListingsPage: {
+      loadData: FavoriteListingsPageLoader,
     },
   };
 };

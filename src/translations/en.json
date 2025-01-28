@@ -1099,5 +1099,13 @@
   "UserNav.profileSettings": "Profile settings",
   "UserNav.yourListings": "Your listings",
   "ProductOrderForm.categoryLabel": "Listing Category",
-  "ProfilePage.sold": "SOLD"
+  "ProfilePage.sold": "SOLD",
+  "FavoriteListingsPage.loadingFavoriteListings": "Loading listings...",
+  "FavoriteListingsPage.noResults": "You haven't favorited any listings.",
+  "FavoriteListingsPage.queryError": "Query failed. Please try again.",
+  "FavoriteListingsPage.title": "View your favorites",
+  "FavoriteListingsPage.youHaveListings": "You have {count} favorite {count, plural, one {listing} other {listings}}",
+  "OrderPanel.addFavoriteButton":"Add to favorites",
+  "OrderPanel.unfavoriteButton":"Unfavorite",
+  "UserNav.favoriteListings": "Your favorites"
 }
