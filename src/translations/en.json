@@ -1101,7 +1101,7 @@
   "ProductOrderForm.categoryLabel": "Listing Category",
   "ProfilePage.sold": "SOLD",
   "FavoriteListingsPage.loadingFavoriteListings": "Loading listings...",
-  "FavoriteListingsPage.noResults": "You haven't favorited any listings.",
+  "FavoriteListingsPage.noResults": "You haven't favorited any listings yet.",
   "FavoriteListingsPage.queryError": "Query failed. Please try again.",
   "FavoriteListingsPage.title": "View your favorites",
   "FavoriteListingsPage.youHaveListings": "You have {count} favorite {count, plural, one {listing} other {listings}}",

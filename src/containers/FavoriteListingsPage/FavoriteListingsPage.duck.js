@@ -84,9 +84,9 @@ export const queryFavoritesError = e => ({
 export const queryFavoriteListings = queryParams => (dispatch, getState, sdk) => {
   dispatch(queryFavoritesRequest(queryParams));
   const { currentUser } = getState().user;
-  const { favorites } = currentUser?.attributes.profile.privateData || {};
+  const { favorites } = currentUser?.attributes.profile.privateData || {};  
 
-  const favoritesMaybe = favorites ? { ids: favorites } : {};
+  const favoritesMaybe = favorites ? { ids: favorites } : { ids: []};
   const { perPage, ...rest } = queryParams;
   const params = { ...favoritesMaybe, ...rest, perPage };
 
@@ -101,9 +101,12 @@ export const queryFavoriteListings = queryParams => (dispatch, getState, sdk) =>
       dispatch(queryFavoritesError(storableError(e)));
       throw e;
     });
+
+    
 };
 
 export const loadData = (params, search, config) => {
+  
   const queryParams = parse(search);
   const page = queryParams.page || 1;
 
