@@ -577,7 +577,7 @@ export class SearchPageComponent extends Component {
               {shouldShowSearchMap ? (
                 <SearchMap
                   reusableContainerClassName={css.map}
-                  rootClassName={css.map}
+                  rootClassName={css.mapRoot}
                   activeListingId={activeListingId}
                   bounds={bounds}
                   center={origin}
