@@ -298,6 +298,7 @@ class SearchMapWithMapbox extends Component {
       this.props.onMapLoad(this.map);
     } else if (prevProps.mapComponentRefreshToken !== this.props.mapComponentRefreshToken) {
       /* Notify parent component that Mapbox map is loaded */
+      this.map.resize();
       this.props.onMapLoad(this.map);
     }
   }
