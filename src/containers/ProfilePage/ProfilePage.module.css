@@ -107,7 +107,7 @@
 
 .bio {
   /* Preserve newlines, but collapse other whitespace */
-  white-space: normal;
+  white-space: pre-line;
   margin: 5px 0 24px 0;
 
   img{max-width:100%}
