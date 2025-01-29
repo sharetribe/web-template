@@ -141,7 +141,6 @@ export const ListingCardComponent = props => {
             intl={intl}
             uiCurrency={uiCurrency}
           />
-          {categoryLabel && (<h6 className={css.category}>{categoryLabel}</h6>)}
         </div>
 
         <div className={css.mainInfo}>
@@ -152,6 +151,7 @@ export const ListingCardComponent = props => {
               longWordClass: css.longWord,
             })}
           </div>
+          {categoryLabel && (<label className={css.category}>{categoryLabel}</label>)}
           
           {showAuthorInfo ? (
             <div className={css.authorInfo}>
