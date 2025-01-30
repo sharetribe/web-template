@@ -11,6 +11,7 @@ import IconHourGlass from './IconHourGlass';
 import IconCurrentLocation from './IconCurrentLocation';
 import * as geocoderMapbox from './GeocoderMapbox';
 import * as geocoderGoogleMaps from './GeocoderGoogleMaps';
+import * as geocoderGoogleMapsNew from './GeocoderGoogleMapsNew';
 
 import css from './LocationAutocompleteInput.module.css';
 
@@ -34,7 +35,17 @@ const getTouchCoordinates = nativeEvent => {
 // Get correct geocoding variant: geocoderGoogleMaps or geocoderMapbox
 const getGeocoderVariant = mapProvider => {
   const isGoogleMapsInUse = mapProvider === 'googleMaps';
-  return isGoogleMapsInUse ? geocoderGoogleMaps : geocoderMapbox;
+
+  // Determine if the new version of the Google Places API is enabled
+  const useNewGooglePlacesAPI =
+    typeof window !== 'undefined' &&
+    typeof window?.useNewGooglePlacesAPI !== 'undefined' &&
+    window?.useNewGooglePlacesAPI;
+  return isGoogleMapsInUse && useNewGooglePlacesAPI
+    ? geocoderGoogleMapsNew
+    : isGoogleMapsInUse
+    ? geocoderGoogleMaps
+    : geocoderMapbox;
 };
 
 // Renders the autocompletion prediction results in a list
@@ -161,6 +172,30 @@ class LocationAutocompleteInputImplementation extends Component {
 
   componentDidMount() {
     this._isMounted = true;
+
+    // Check whether the new version of the Google Places API is in use.
+    // The useNewGooglePlacesAPI property indicates whether the updated
+    // Google Places API is available and being utilized. If the useNewGooglePlacesAPI
+    // property is undefined, it means we haven't determined the API version yet.
+    const googleMapsStatus = typeof window?.useNewGooglePlacesAPI !== 'undefined';
+
+    // If the map provider configured in the application is Google Maps and we
+    // haven't yet determined the API version, we make a test API call
+    // to Google Maps Places Autocomplete to check its behavior.
+    // The fetchAutocompleteSuggestions function is only supported by
+    // the newer version of Google Places API.
+    if (this.props.config.maps.mapProvider === 'googleMaps' && !googleMapsStatus) {
+      window?.google.maps.places.AutocompleteSuggestion.fetchAutocompleteSuggestions({
+        input: 'test',
+      })
+        .then(response => {
+          // A response means that the new Places API is enabled
+          window.useNewGooglePlacesAPI = true;
+        })
+        .catch(e => {
+          window.useNewGooglePlacesAPI = false;
+        });
+    }
   }
 
   componentWillUnmount() {
@@ -216,11 +251,11 @@ class LocationAutocompleteInputImplementation extends Component {
         e.preventDefault();
         e.stopPropagation();
         this.selectItemIfNoneSelected();
-        this.input.blur();
+        this.input?.blur();
       }
     } else if (e.keyCode === KEY_CODE_TAB) {
       this.selectItemIfNoneSelected();
-      this.input.blur();
+      this.input?.blur();
     } else if (e.keyCode === KEY_CODE_ESC && this.input) {
       this.input.blur();
     }
