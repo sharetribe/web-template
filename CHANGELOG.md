@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+## [v7.2.0] 2025-01-30
+
 - [add] Add support for the new Google Places API
   [#539](https://github.com/sharetribe/web-template/pull/539)
 - [fix] SearchPageWithMap: duplicate class caused positioning issue on localhost:3000.
@@ -27,6 +29,8 @@ way to update this template, but currently, we follow a pattern:
   [#543](https://github.com/sharetribe/web-template/pull/543)
 - [fix] Private marketplace: allow search crawlers to access the `/sitemap` route.
   [#541](https://github.com/sharetribe/web-template/pull/541)
+
+  [v7.2.0]: https://github.com/sharetribe/web-template/compare/v7.1.0...v7.2.0
 
 ## [v7.1.0] 2025-01-23
 
