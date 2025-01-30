@@ -42,6 +42,7 @@ const defaultDirectives = {
     assetCdnBaseUrl,
     '*.st-api.com',
     'maps.googleapis.com',
+    'places.googleapis.com',
     '*.tiles.mapbox.com',
     'api.mapbox.com',
     'events.mapbox.com',
