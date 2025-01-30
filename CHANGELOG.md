@@ -41,7 +41,7 @@ way to update this template, but currently, we follow a pattern:
 
 ## [v7.0.0] 2025-01-15
 
-This major release takes the React v17.0.2 into use.
+This major release takes the React v18.3.1 into use.
 
 - [fix] EditListingWizard: fix a bug with YouTube field.
   [#533](https://github.com/sharetribe/web-template/pull/533)

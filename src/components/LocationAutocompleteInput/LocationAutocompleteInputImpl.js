@@ -251,11 +251,11 @@ class LocationAutocompleteInputImplementation extends Component {
         e.preventDefault();
         e.stopPropagation();
         this.selectItemIfNoneSelected();
-        this.input.blur();
+        this.input?.blur();
       }
     } else if (e.keyCode === KEY_CODE_TAB) {
       this.selectItemIfNoneSelected();
-      this.input.blur();
+      this.input?.blur();
     } else if (e.keyCode === KEY_CODE_ESC && this.input) {
       this.input.blur();
     }
