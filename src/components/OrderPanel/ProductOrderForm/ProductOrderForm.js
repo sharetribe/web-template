@@ -66,11 +66,13 @@ const DeliveryMethodMaybe = props => {
     listing,
   } = props;
 
-  const categoryLevel1 = listing?.attributes?.publicData?.categoryLevel1;
+  const listingType = listing?.attributes?.publicData?.listingType;
+  //const categoryLevel1 = listing?.attributes?.publicData?.categoryLevel1;
   const showDeliveryMethodSelector = displayDeliveryMethod && hasMultipleDeliveryMethods;
   const showSingleDeliveryMethod = displayDeliveryMethod && deliveryMethod;
-  const showDeliveryContent = categoryLevel1 !== 'location';
+  const showDeliveryContent = listingType !== 'sell'; //sell = all location categories ( location, location-machine, atm-location )
 
+  //console.log('listing', listing)
   // If category is 'location' or there's no stock, don't show anything
   if (!showDeliveryContent || !hasStock) {
     return null;
@@ -99,17 +101,18 @@ const DeliveryMethodMaybe = props => {
       <H3 rootClassName={css.singleDeliveryMethodLabel}> 
         {intl.formatMessage({ id: 'ProductOrderForm.deliveryMethodLabel' })}
       </H3>
-      <p className={css.singleDeliveryMethodSelected}>
+      <FieldTextInput
+        id={`${formId}.deliveryMethod`}
+        className={`${css.deliveryField} marketplaceSmallFontStyles`}
+        name="deliveryMethod"
+        type="hidden"
+      />
+      <p className={`${css.singleDeliveryMethodSelected} marketplaceSmallFontStyles`}>
         {deliveryMethod === 'shipping'
           ? intl.formatMessage({ id: 'ProductOrderForm.shippingOption' })
           : intl.formatMessage({ id: 'ProductOrderForm.pickupOption' })}
       </p>
-      <FieldTextInput
-        id={`${formId}.deliveryMethod`}
-        className={css.deliveryField}
-        name="deliveryMethod"
-        type="hidden"
-      />
+      
     </div>
   ) : (
     <FieldTextInput
@@ -171,6 +174,8 @@ const renderForm = formRenderProps => {
     }
   }, [uiCurrency]);
 
+  const showOnlyTotal = listing?.attributes?.publicData?.listingType == 'sell'; //location listing
+
   // If form values change, update line-items for the order breakdown
   const handleOnChange = formValues => {
     const { quantity, deliveryMethod } = formValues.values;
@@ -208,6 +213,7 @@ const renderForm = formRenderProps => {
   const breakdownData = {};
   const showBreakdown =
     breakdownData && lineItems && !fetchLineItemsInProgress && !fetchLineItemsError;
+
 
   const showContactUser = typeof onContactUser === 'function';
 
@@ -269,6 +275,7 @@ const renderForm = formRenderProps => {
       )}
 
       <CategoryLabel listing={listing} intl={intl} />
+
       <DeliveryMethodMaybe
         displayDeliveryMethod={displayDeliveryMethod}
         hasMultipleDeliveryMethods={hasMultipleDeliveryMethods}
@@ -280,12 +287,17 @@ const renderForm = formRenderProps => {
       />
 
 
-      {showBreakdown ? (
-        <div className={css.breakdownWrapper}>
-          <H6 as="h3" className={css.bookingBreakdownTitle}>
-            <FormattedMessage id="ProductOrderForm.breakdownTitle" />
-          </H6>
-          <hr className={css.totalDivider} />
+      {showBreakdown  ? (
+        <div className={`${css.breakdownWrapper} ${showOnlyTotal ? css.showOnlyTotal : ''}`}>
+          {!showOnlyTotal ? (
+            <>
+            <H6 as="h3" className={css.bookingBreakdownTitle}>
+              <FormattedMessage id="ProductOrderForm.breakdownTitle" />
+            </H6>
+           <hr className={css.totalDivider} />
+           </>
+          ) : null}
+         
           <EstimatedCustomerBreakdownMaybe
             breakdownData={breakdownData}
             lineItems={lineItems}
@@ -296,6 +308,8 @@ const renderForm = formRenderProps => {
           />
         </div>
       ) : null}
+
+  
 
       <div className={css.submitButton}>
         <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
@@ -432,10 +446,10 @@ const CategoryLabel = props => {
   
   return categoryLevel1 ? (
     <div className={css.category}>
-      <h3 className={`${css.categoryLabel} label`}>
+      <h3 className={`${css.categoryLabel} marketplaceSmallFontStyles`}>
         {intl.formatMessage({ id: 'ProductOrderForm.categoryLabel' })}
       </h3>
-      <p className={css.categoryValue}>{getCategoryLabel(categoryLevel1)}</p>
+      <p className={`${css.categoryValue} marketplaceSmallFontStyles`}>{getCategoryLabel(categoryLevel1)}</p>
     </div>
   ) : null;
 };

@@ -376,7 +376,11 @@ export const ListingPageComponent = props => {
               listingId={currentListing.id}
               mapsConfig={config.maps}
             />
+
+            {reviews.length > 0 && (
             <SectionReviews reviews={reviews} fetchReviewsError={fetchReviewsError} />
+            )}
+
             <SectionAuthorMaybe
               title={title}
               listing={currentListing}
