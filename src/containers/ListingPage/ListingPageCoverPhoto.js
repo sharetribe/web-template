@@ -9,7 +9,12 @@ import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 // Utils
 import { FormattedMessage, intlShape, useIntl } from '../../util/reactIntl';
-import { LISTING_STATE_PENDING_APPROVAL, LISTING_STATE_CLOSED, propTypes } from '../../util/types';
+import {
+  LISTING_STATE_PENDING_APPROVAL,
+  LISTING_STATE_CLOSED,
+  LISTING_TYPES,
+  propTypes,
+} from '../../util/types';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import {
   LISTING_PAGE_DRAFT_VARIANT,
@@ -18,10 +23,15 @@ import {
   LISTING_PAGE_PARAM_TYPE_EDIT,
   createSlug,
   NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
+  NO_ACCESS_PAGE_VIEW_LISTINGS,
+  NO_ACCESS_PAGE_FORBIDDEN_LISTING_TYPE,
 } from '../../util/urlHelpers';
-import { isErrorUserPendingApproval, isForbiddenError } from '../../util/errors.js';
-import { isUserAuthorized } from '../../util/userHelpers.js';
-import { convertMoneyToNumber } from '../../util/currency';
+import {
+  isErrorNoViewingPermission,
+  isErrorUserPendingApproval,
+  isForbiddenError,
+} from '../../util/errors.js';
+import { hasPermissionToViewData, isUserAuthorized } from '../../util/userHelpers.js';
 import {
   ensureListing,
   ensureOwnListing,
@@ -73,6 +83,7 @@ import {
   handleSubmitInquiry,
   handleSubmit,
   handleToggleFavorites,
+  priceForSchemaMaybe,
 } from './ListingPage.shared';
 import SectionHero from './SectionHero';
 import SectionTextMaybe from './SectionTextMaybe';
@@ -120,16 +131,18 @@ export const ListingPageComponent = props => {
     onInitializeCardPaymentData,
     config,
     routeConfiguration,
+    showOwnListingsOnly,
     onUpdateFavorites,
     onFetchCurrentUser,
   } = props;
 
   const listingConfig = config.listing;
   const listingId = new UUID(rawParams.id);
+  const isVariant = rawParams.variant != null;
   const isPendingApprovalVariant = rawParams.variant === LISTING_PAGE_PENDING_APPROVAL_VARIANT;
   const isDraftVariant = rawParams.variant === LISTING_PAGE_DRAFT_VARIANT;
   const currentListing =
-    isPendingApprovalVariant || isDraftVariant
+    isPendingApprovalVariant || isDraftVariant || showOwnListingsOnly
       ? ensureOwnListing(getOwnListing(listingId))
       : ensureListing(getListing(listingId));
 
@@ -162,6 +175,30 @@ export const ListingPageComponent = props => {
   }
 
   const topbar = <TopbarContainer />;
+  const {
+    description = '',
+    geolocation = null,
+    price = null,
+    title = '',
+    publicData = {},
+    metadata = {},
+  } = currentListing.attributes;
+  const { listingType } = publicData;
+  const isPortfolioListing = listingType === LISTING_TYPES.PORTFOLIO;
+  const isProfileListing = listingType === LISTING_TYPES.PROFILE;
+
+  const authorId = currentListing?.author?.id?.uuid;
+  if (isPortfolioListing) {
+    return (
+      <NamedRedirect
+        name="NoAccessPage"
+        params={{ missingAccessRight: NO_ACCESS_PAGE_FORBIDDEN_LISTING_TYPE }}
+      />
+    );
+  }
+  if (isProfileListing) {
+    return <NamedRedirect name="ProfilePage" params={{ id: authorId }} />;
+  }
 
   if (showListingError && showListingError.status === 404) {
     // 404 listing not found
@@ -173,15 +210,6 @@ export const ListingPageComponent = props => {
     // Still loading the listing
     return <LoadingPage topbar={topbar} scrollingDisabled={scrollingDisabled} intl={intl} />;
   }
-
-  const {
-    description = '',
-    geolocation = null,
-    price = null,
-    title = '',
-    publicData = {},
-    metadata = {},
-  } = currentListing.attributes;
 
   const richTitle = (
     <span>
@@ -197,7 +225,7 @@ export const ListingPageComponent = props => {
   const isOwnListing =
     userAndListingAuthorAvailable && currentListing.author.id.uuid === currentUser.id.uuid;
 
-  const { listingType, transactionProcessAlias, unitType } = publicData;
+  const { transactionProcessAlias, unitType } = publicData;
   if (!(listingType && transactionProcessAlias && unitType)) {
     // Listing should always contain listingType, transactionProcessAlias and unitType)
     return (
@@ -207,12 +235,12 @@ export const ListingPageComponent = props => {
   const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
   const isBooking = isBookingProcess(processName);
   const isPurchase = isPurchaseProcess(processName);
-  const processType = isBooking ? ('booking' ? isPurchase : 'purchase') : 'inquiry';
+  const processType = isBooking ? 'booking' : isPurchase ? 'purchase' : 'inquiry';
 
   const currentAuthor = authorAvailable ? currentListing.author : null;
   const ensuredAuthor = ensureUser(currentAuthor);
   const noPayoutDetailsSetWithOwnListing =
-    isOwnListing && (processType !== 'inquiry' && !currentUser?.attributes?.stripeConnected);
+    isOwnListing && processType !== 'inquiry' && !currentUser?.attributes?.stripeConnected;
   const payoutDetailsWarning = noPayoutDetailsSetWithOwnListing ? (
     <div>
       <FormattedMessage id="ListingPage.payoutDetailsWarning" values={{ processType }} />
@@ -277,15 +305,6 @@ export const ListingPageComponent = props => {
   // Read more about product schema
   // https://developers.google.com/search/docs/advanced/structured-data/product
   const productURL = `${config.marketplaceRootURL}${location.pathname}${location.search}${location.hash}`;
-  const schemaPriceMaybe = price
-    ? {
-        price: intl.formatNumber(convertMoneyToNumber(price), {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        }),
-        priceCurrency: price.currency,
-      }
-    : {};
   const currentStock = currentListing.currentStock?.attributes?.quantity || 0;
   const schemaAvailability = !currentListing.currentStock
     ? null
@@ -327,7 +346,7 @@ export const ListingPageComponent = props => {
         offers: {
           '@type': 'Offer',
           url: productURL,
-          ...schemaPriceMaybe,
+          ...priceForSchemaMaybe(price, intl),
           ...availabilityMaybe,
         },
       }}
@@ -337,6 +356,7 @@ export const ListingPageComponent = props => {
           title={title}
           listing={currentListing}
           isOwnListing={isOwnListing}
+          currentUser={currentUser}
           editParams={{
             id: listingId.uuid,
             slug: listingSlug,
@@ -396,7 +416,7 @@ export const ListingPageComponent = props => {
               authorLink={
                 <NamedLink
                   className={css.authorNameLink}
-                  name="ListingPage"
+                  name={isVariant ? 'ListingPageVariant' : 'ListingPage'}
                   params={params}
                   to={{ hash: '#author' }}
                 >
@@ -507,8 +527,9 @@ const EnhancedListingPage = props => {
   const location = useLocation();
 
   const showListingError = props.showListingError;
-  const isVariant = props.params?.variant?.length > 0;
-  if (isForbiddenError(showListingError) && !isVariant) {
+  const isVariant = props.params?.variant != null;
+  const currentUser = props.currentUser;
+  if (isForbiddenError(showListingError) && !isVariant && !currentUser) {
     // This can happen if private marketplace mode is active
     return (
       <NamedRedirect
@@ -518,15 +539,28 @@ const EnhancedListingPage = props => {
     );
   }
 
-  const currentUser = props.currentUser;
   const isPrivateMarketplace = config.accessControl.marketplace.private === true;
   const isUnauthorizedUser = currentUser && !isUserAuthorized(currentUser);
+  const hasNoViewingRights = currentUser && !hasPermissionToViewData(currentUser);
   const hasUserPendingApprovalError = isErrorUserPendingApproval(showListingError);
+
   if ((isPrivateMarketplace && isUnauthorizedUser) || hasUserPendingApprovalError) {
     return (
       <NamedRedirect
         name="NoAccessPage"
         params={{ missingAccessRight: NO_ACCESS_PAGE_USER_PENDING_APPROVAL }}
+      />
+    );
+  } else if (
+    (hasNoViewingRights && isForbiddenError(showListingError)) ||
+    isErrorNoViewingPermission(showListingError)
+  ) {
+    // If the user has no viewing rights, fetching anything but their own listings
+    // will return a 403 error. If that happens, redirect to NoAccessPage.
+    return (
+      <NamedRedirect
+        name="NoAccessPage"
+        params={{ missingAccessRight: NO_ACCESS_PAGE_VIEW_LISTINGS }}
       />
     );
   }
@@ -538,6 +572,7 @@ const EnhancedListingPage = props => {
       intl={intl}
       history={history}
       location={location}
+      showOwnListingsOnly={hasNoViewingRights}
       {...props}
     />
   );
@@ -610,11 +645,6 @@ const mapDispatchToProps = dispatch => ({
 // lifecycle hook.
 //
 // See: https://github.com/ReactTraining/react-router/issues/4671
-const ListingPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(EnhancedListingPage);
+const ListingPage = compose(connect(mapStateToProps, mapDispatchToProps))(EnhancedListingPage);
 
 export default ListingPage;

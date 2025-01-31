@@ -17,11 +17,18 @@ const { verifySlackRequestMiddleware, slackInteractivity } = require('./api/slac
 const transitionPrivileged = require('./api/transition-privileged');
 const createUserWithIdp = require('./api/auth/createUserWithIdp');
 const { authenticateAuth0, authenticateAuth0Callback } = require('./api/auth/auth0');
+const transloaditParams = require('./api/transloadit-params');
 
 const router = express.Router();
 
 // ================ API router Slack integration manager: ================ //
-router.post('/slack/interactivity', bodyParser.json(), bodyParser.urlencoded({ extended: true }), verifySlackRequestMiddleware, slackInteractivity);
+router.post(
+  '/slack/interactivity',
+  bodyParser.json(),
+  bodyParser.urlencoded({ extended: true }),
+  verifySlackRequestMiddleware,
+  slackInteractivity
+);
 
 // ================ API router middleware: ================ //
 // Parse Transit body first to a string
@@ -52,6 +59,7 @@ router.get('/login-as', loginAs);
 router.post('/transaction-line-items', transactionLineItems);
 router.post('/initiate-privileged', initiatePrivileged);
 router.post('/transition-privileged', transitionPrivileged);
+router.post('/transloadit-params', transloaditParams);
 
 // Create user with identity provider (e.g. Facebook or Google)
 // This endpoint is called to create a new user after user has confirmed

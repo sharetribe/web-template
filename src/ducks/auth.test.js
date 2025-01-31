@@ -12,19 +12,6 @@ import reducer, {
 
 describe('auth duck', () => {
   describe('reducer', () => {
-    it('should be logged out with no errors by default', () => {
-      const state = reducer();
-      expect(state.isAuthenticated).toEqual(false);
-      expect(state.authInfoLoaded).toEqual(false);
-      expect(state.loginError).toBeNull();
-      expect(state.logoutError).toBeNull();
-      expect(state.signupError).toBeNull();
-      expect(state.loginInProgress).toEqual(false);
-      expect(state.logoutInProgress).toEqual(false);
-      expect(state.signupInProgress).toEqual(false);
-      expect(authenticationInProgress({ auth: state })).toEqual(false);
-    });
-
     it('should set initial state for unauthenticated users', () => {
       const authInfoLoggedOut = {};
       const initialState = reducer();

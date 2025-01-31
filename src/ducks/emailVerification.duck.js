@@ -64,6 +64,6 @@ export const verify = verificationToken => (dispatch, getState, sdk) => {
   return sdk.currentUser
     .verifyEmail({ verificationToken })
     .then(() => dispatch(verificationSuccess()))
-    .then(() => dispatch(fetchCurrentUser()))
+    .then(() => dispatch(fetchCurrentUser({ enforce: true })))
     .catch(e => dispatch(verificationError(storableError(e))));
 };

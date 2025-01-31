@@ -38,7 +38,7 @@ module.exports = (err, user, req, res, idpClientId, idpId) => {
           maxAge: 15 * 60 * 1000, // 15 minutes
         }
       )
-      .redirect(`${rootUrl}/login#`);
+      .redirect(`${rootUrl}/signup#`);
   }
 
   if (!user) {
@@ -61,7 +61,7 @@ module.exports = (err, user, req, res, idpClientId, idpId) => {
           maxAge: 15 * 60 * 1000, // 15 minutes
         }
       )
-      .redirect(`${rootUrl}/login#`);
+      .redirect(`${rootUrl}/signup#`);
   }
 
   const { from, defaultReturn, defaultConfirm, userType } = user;
@@ -124,7 +124,7 @@ module.exports = (err, user, req, res, idpClientId, idpId) => {
           idpId,
           from,
           userType,
-          brandStudioId: user.brandStudioId
+          brandStudioId: user.brandStudioId,
         },
         {
           maxAge: 15 * 60 * 1000, // 15 minutes

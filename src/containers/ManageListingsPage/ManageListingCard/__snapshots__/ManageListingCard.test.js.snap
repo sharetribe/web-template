@@ -206,7 +206,7 @@ exports[`ManageListingCard matches snapshot (purchase) 1`] = `
     >
       <a
         class="manageLink"
-        href="/l/listing1-title/listing1/edit/details"
+        href="/listing/listing1-title/listing1/edit/upload"
       >
         <span>
           ManageListingCard.editListing

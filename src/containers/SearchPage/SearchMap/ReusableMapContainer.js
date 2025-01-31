@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { node, string, object } from 'prop-types';
+import { node, object, string } from 'prop-types';
 
 import { IntlProvider } from '../../../util/reactIntl';
 
@@ -65,8 +65,8 @@ class ReusableMapContainer extends React.Component {
         </IntlProvider>
       );
 
-      // Render children to created element
       ReactDOM.render(children, this.el);
+      // Render children to created element
     };
 
     const targetDomNode = document.getElementById(this.el.id);

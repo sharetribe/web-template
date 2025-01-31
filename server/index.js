@@ -16,6 +16,11 @@
 // This enables nice stacktraces from the minified production bundle
 require('source-map-support').install();
 
+// Setup Sentry
+// Note 1: This needs to happen before other express requires
+// Note 2: this doesn't use instrument.js file but log.js
+const log = require('./log');
+
 const fs = require('fs');
 const express = require('express');
 const helmet = require('helmet');
@@ -45,8 +50,7 @@ async function startServer() {
     const { getExtractors } = require('./importer');
     const renderer = require('./renderer');
     const dataLoader = require('./dataLoader');
-    const log = require('./log');
-    const csp = require('./csp');
+    const { generateCSPNonce, csp } = require('./csp');
     const sdkUtils = require('./api-util/sdk');
 
     const buildPath = path.resolve(__dirname, '..', 'build');
@@ -63,27 +67,36 @@ async function startServer() {
     const cspEnabled = CSP === 'block' || CSP === 'report';
     const app = express();
 
-    const errorPage = fs.readFileSync(path.join(buildPath, '500.html'), 'utf-8');
+    const errorPage500 = fs.readFileSync(path.join(buildPath, '500.html'), 'utf-8');
+    const errorPage404 = fs.readFileSync(path.join(buildPath, '404.html'), 'utf-8');
 
-    // Setup error logger
-    log.setup();
-    // Add logger request handler. In case Sentry is set up
-    // request information is added to error context when sent
-    // to Sentry.
-    app.use(log.requestHandler());
+    // Filter out bot requests that scan websites for php vulnerabilities
+    // from paths like /asdf/index.php, //cms/wp-includes/wlwmanifest.xml, etc.
+    // There's no need to pass those to React app rendering as it causes unnecessary asset fetches.
+    // Note: you might want to do this on the edge server instead.
+    app.use(
+      /.*(\.php|\.php7|\/wp-.*\/.*|cgi-bin.*|htdocs\.rar|htdocs\.zip|root\.7z|root\.rar|root\.zip|www\.7z|www\.rar|wwwroot\.7z)$/,
+      (req, res) => {
+        return res.status(404).send(errorPage404);
+      }
+    );
 
     // The helmet middleware sets various HTTP headers to improve security.
     // See: https://www.npmjs.com/package/helmet
     // Helmet 4 doesn't disable CSP by default so we need to do that explicitly.
     // If csp is enabled we will add that separately.
-
     app.use(
       helmet({
         contentSecurityPolicy: false,
+        referrerPolicy: {
+          policy: 'origin',
+        },
       })
     );
 
     if (cspEnabled) {
+      app.use(generateCSPNonce);
+
       // When a CSP directive is violated, the browser posts a JSON body
       // to the defined report URL and we need to parse this body.
       app.use(
@@ -157,6 +170,14 @@ async function startServer() {
     // even if you have enabled basic authentication e.g. in staging environment.
     app.use('/.well-known', wellKnownRouter);
 
+    // Initialize the authentication middleware for Node.js
+    // We use this to enable authenticating with
+    // a 3rd party identity provider (Auth0)
+    app.use(auth0RequestHandler);
+
+    // Server-side routes that do not render the application
+    app.use('/api', apiRouter);
+
     // Use basic authentication when not in dev mode. This is
     // intentionally after the static middleware and /.well-known
     // endpoints as those will bypass basic auth.
@@ -171,14 +192,6 @@ async function startServer() {
         app.use(auth.basicAuth(USERNAME, PASSWORD));
       }
     }
-
-    // Initialize the authentication middleware for Node.js
-    // We use this to enable authenticating with
-    // a 3rd party identity provider (Auth0)
-    app.use(auth0RequestHandler);
-
-    // Server-side routes that do not render the application
-    app.use('/api', apiRouter);
 
     const noCacheHeaders = {
       'Cache-control': 'no-cache, no-store, must-revalidate',
@@ -217,7 +230,8 @@ async function startServer() {
       dataLoader
         .loadData(req.url, sdk, appInfo)
         .then(data => {
-          const html = renderer.render(req.url, context, data, renderApp, webExtractor);
+          const cspNonce = cspEnabled ? res.locals.cspNonce : null;
+          const html = renderer.render(req.url, context, data, renderApp, webExtractor, cspNonce);
 
           if (dev) {
             const debugData = {
@@ -257,13 +271,13 @@ async function startServer() {
         })
         .catch(e => {
           log.error(e, 'server-side-render-failed');
-          res.status(500).send(errorPage);
+          res.status(500).send(errorPage500);
         });
     });
 
     // Set error handler. If Sentry is set up, all error responses
     // will be logged there.
-    app.use(log.errorHandler());
+    log.setupExpressErrorHandler(app);
 
     if (cspEnabled) {
       // Dig out the value of the given CSP report key from the request body.

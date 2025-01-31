@@ -1,0 +1,133 @@
+@import '../../../styles/customMediaQueries.css';
+
+.confirmFormRoot {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @media (--viewportLarge) {
+    justify-content: space-evenly;
+    align-items: stretch;
+    flex-direction: row;
+    gap: 48px;
+  }
+
+  &.forBrand {
+    background-color: #f0f0fa;
+    position: relative;
+  }
+
+  &.forSeller {
+    background-color: #f7f0f0;
+    position: relative;
+  }
+
+  .infoSection {
+    flex: 0 1 0;
+    padding: var(--modalPadding);
+    padding-top: 29px;
+    padding-bottom: 0px;
+    margin-bottom: 0;
+    text-align: center;
+
+    @media (--viewportLarge) {
+      flex-basis: 600px;
+      text-align: left;
+    }
+
+    @media (--viewportMedium) {
+      margin-top: 5vh;
+      max-width: 600px;
+    }
+  }
+}
+
+.infoTitle {
+  color: var(--colorBlack);
+  font-size: 40px;
+  font-style: normal;
+  font-weight: var(--fontWeightSemiBold);
+  line-height: 120%;
+  margin-bottom: 48px;
+  margin-top: 0;
+}
+
+.infoSubtitle {
+  color: var(--colorBlack);
+  font-size: 22px;
+  font-style: normal;
+  font-weight: var(--fontWeightRegular);
+  line-height: 120%;
+  margin-bottom: 48px;
+  margin-top: 0;
+}
+
+.confirmForm {
+  composes: marketplaceModalBaseStyles from global;
+  padding-top: 29px;
+  flex: 1 0 0;
+  border: 0;
+  width: 100%;
+
+  @media (--viewportLarge) {
+    flex-basis: 600px;
+  }
+
+  @media (--viewportMedium) {
+    margin-top: 5vh;
+    margin-bottom: 7.5vh;
+    min-height: 700px;
+    max-width: 600px;
+  }
+}
+
+.signupForm {
+  composes: marketplaceModalBaseStyles from global;
+  flex-basis: 100%;
+  margin: 0;
+  border: 0;
+
+  @media (--viewportMedium) {
+    min-height: 700px;
+  }
+}
+
+/* ================ Form ================ */
+.form {
+  margin-top: 24px;
+
+  @media (--viewportMedium) {
+    margin-top: 30px;
+    padding-top: 2px;
+  }
+}
+
+/* ================ Social logins & SSO ================ */
+.signupWithIdpTitle {
+  composes: marketplaceModalTitleStyles from global;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 16px;
+  color: var(--colorBlack);
+
+  @media (--viewportMedium) {
+    padding: 0;
+    margin-top: 6px;
+  }
+}
+
+.confirmInfoText {
+}
+
+/* ================ Errors ================ */
+.error {
+  background-color: var(--colorFailLight);
+  text-align: center;
+  padding: 24px;
+  max-width: 750px;
+
+  @media (--viewportMedium) {
+    margin: auto;
+  }
+}

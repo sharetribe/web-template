@@ -9,7 +9,7 @@ const TRANSIT_VERBOSE = process.env.REACT_APP_SHARETRIBE_SDK_TRANSIT_VERBOSE ===
 const USING_SSL = process.env.REACT_APP_SHARETRIBE_USING_SSL === 'true';
 const BASE_URL = process.env.REACT_APP_SHARETRIBE_SDK_BASE_URL;
 const AUTH0_CLIENT_ID = process.env.AUTH0_MARKETPLACE_CLIENT_ID;
-const AUTH0_IDP_ID = 'auth0dev';
+const AUTH0_IDP_ID = process.env.AUTH0_IDP_ID;
 
 // Instantiate HTTP(S) Agents with keepAlive set to true.
 // This will reduce the request time for consecutive requests by

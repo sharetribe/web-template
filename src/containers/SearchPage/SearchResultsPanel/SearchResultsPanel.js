@@ -64,6 +64,7 @@ const SearchResultsPanel = props => {
             listing={l}
             renderSizes={cardRenderSizes(isMapVariant)}
             setActiveListing={setActiveListing}
+            hidePrice
           />
         ))}
         {props.children}

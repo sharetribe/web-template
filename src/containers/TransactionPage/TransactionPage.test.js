@@ -1,7 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 import Decimal from 'decimal.js';
-import 'react-dates/initialize';
 
 import { types as sdkTypes } from '../../util/sdkLoader';
 import {
@@ -1061,15 +1060,6 @@ describe('TransactionPage', () => {
   // With OrderPanel
   // NOTE: OrderPanel is code-splitted away. Due to async nature, it can't be tested with "test.each()"
   describe('Transaction process with OrderPanel', () => {
-    const originalWarn = console.warn.bind(console.warn);
-    beforeAll(() => {
-      console.warn = msg =>
-        !msg.toString().includes('componentWillReceiveProps') && originalWarn(msg);
-    });
-    afterAll(() => {
-      console.warn = originalWarn;
-    });
-
     const createInquiry = (processName, unitType, lastTransition) =>
       createTransaction({
         id: `id-${processName}-inquiry-order`,
@@ -1171,6 +1161,90 @@ describe('TransactionPage', () => {
       });
     });
 
+    it('Inquiry with restricted view rights should not show OrderPanel - hour unit', async () => {
+      const config = {
+        ...getHostedConfiguration(),
+        accessControl: { marketplace: { private: true } },
+      };
+
+      const routeConfiguration = getRouteConfiguration(config.layout);
+      const processName = 'default-booking';
+      const bookingInquiry = createInquiry(processName, 'hour', bookingTransitions.INQUIRE);
+      const transactionRole = TX_TRANSITION_ACTOR_CUSTOMER;
+      const nextTransitions = [
+        {
+          id: new UUID('next-transition'),
+          type: 'processTransition',
+          attributes: {
+            name: 'transition/request-payment-after-inquiry',
+            actor: [transactionRole],
+            actions: [],
+            params: {},
+          },
+        },
+      ];
+
+      const stateData = getStateData(
+        {
+          transaction: bookingInquiry,
+          transactionRole,
+          nextTransitions,
+          intl: fakeIntl,
+          transitionInProgress: false,
+          transitionError: null,
+          onTransition: noop,
+          sendReviewInProgress: false,
+          sendReviewError: null,
+          onOpenReviewModal: noop,
+        },
+        getProcess(processName)
+      );
+
+      const currentUser = createCurrentUser(customerId);
+      currentUser.effectivePermissionSet.attributes.read = 'permissions/deny';
+
+      const props = {
+        ...panelBaseProps,
+        currentUser,
+        transaction: bookingInquiry,
+        transactionRole,
+        nextTransitions,
+        params: {
+          id: bookingInquiry.id?.uuid,
+        },
+        lineItems: [],
+      };
+
+      const { getAllByText } = render(<TransactionPageComponent {...props} />, {
+        config,
+        routeConfiguration,
+      });
+
+      await waitFor(() => {
+        const state = stateData.processState;
+        const txTitle = `TransactionPage.${processName}.${transactionRole}.${state}.title`;
+        expect(screen.getByText(txTitle)).toBeInTheDocument();
+
+        expect(screen.getByText('TransactionPage.listingTitleMobile')).toBeInTheDocument();
+
+        // Activity feed (here we just check the heading)
+        expect(screen.getByText('TransactionPanel.activityHeading')).toBeInTheDocument();
+
+        // Show listing's title only (side card)
+        expect(getAllByText('listing-item title')).toHaveLength(1);
+
+        // Don't show listing pricing
+        expect(screen.queryByText('$55.00')).toBeNull();
+        expect(screen.queryByText('OrderPanel.perUnit')).toBeNull();
+
+        // Don't show BookingTimeForm inputs
+        expect(screen.queryByText('BookingTimeForm.bookingStartTitle')).toBeNull();
+        expect(screen.queryByText('FieldDateAndTimeInput.startTime')).toBeNull();
+        expect(screen.queryByText('FieldDateAndTimeInput.endTime')).toBeNull();
+        expect(screen.queryByText('BookingTimeForm.requestToBook')).toBeNull();
+      });
+    });
+
     it('Inquiry with OrderPanel - day unit', async () => {
       const config = getHostedConfiguration();
       const routeConfiguration = getRouteConfiguration(config.layout);
@@ -1253,6 +1327,89 @@ describe('TransactionPage', () => {
       });
     });
 
+    it('Inquiry with restricted view rights should not show OrderPanel - day unit', async () => {
+      const config = {
+        ...getHostedConfiguration(),
+        accessControl: { marketplace: { private: true } },
+      };
+
+      const routeConfiguration = getRouteConfiguration(config.layout);
+      const processName = 'default-booking';
+      const bookingInquiry = createInquiry(processName, 'day', bookingTransitions.INQUIRE);
+      const transactionRole = TX_TRANSITION_ACTOR_CUSTOMER;
+      const nextTransitions = [
+        {
+          id: new UUID('next-transition'),
+          type: 'processTransition',
+          attributes: {
+            name: 'transition/request-payment-after-inquiry',
+            actor: [transactionRole],
+            actions: [],
+            params: {},
+          },
+        },
+      ];
+
+      const stateData = getStateData(
+        {
+          transaction: bookingInquiry,
+          transactionRole,
+          nextTransitions,
+          intl: fakeIntl,
+          transitionInProgress: false,
+          transitionError: null,
+          onTransition: noop,
+          sendReviewInProgress: false,
+          sendReviewError: null,
+          onOpenReviewModal: noop,
+        },
+        getProcess(processName)
+      );
+
+      const currentUser = createCurrentUser(customerId);
+      currentUser.effectivePermissionSet.attributes.read = 'permissions/deny';
+
+      const props = {
+        ...panelBaseProps,
+        currentUser,
+        transaction: bookingInquiry,
+        transactionRole,
+        nextTransitions,
+        params: {
+          id: bookingInquiry.id?.uuid,
+        },
+        lineItems: [],
+      };
+
+      const { getAllByText } = render(<TransactionPageComponent {...props} />, {
+        config,
+        routeConfiguration,
+      });
+
+      await waitFor(() => {
+        const state = stateData.processState;
+        const txTitle = `TransactionPage.${processName}.${transactionRole}.${state}.title`;
+        expect(screen.getByText(txTitle)).toBeInTheDocument();
+
+        expect(screen.getByText('TransactionPage.listingTitleMobile')).toBeInTheDocument();
+
+        // Activity feed (here we just check the heading)
+        expect(screen.getByText('TransactionPanel.activityHeading')).toBeInTheDocument();
+
+        // Show listing's title only (side card)
+        expect(getAllByText('listing-item title')).toHaveLength(1);
+
+        // Don't show listing pricing
+        expect(screen.queryByText('$55.00')).toBeNull();
+        expect(screen.queryByText('OrderPanel.perUnit')).toBeNull();
+
+        // Don't show BookingDatesForm inputs
+        expect(screen.queryByText('BookingDatesForm.bookingStartTitle')).toBeNull();
+        expect(screen.queryByText('BookingDatesForm.bookingEndTitle')).toBeNull();
+        expect(screen.queryByText('BookingDatesForm.requestToBook')).toBeNull();
+      });
+    });
+
     it('Inquiry with OrderPanel - item unit', async () => {
       const config = getHostedConfiguration();
       const routeConfiguration = getRouteConfiguration(config.layout);
@@ -1330,6 +1487,87 @@ describe('TransactionPage', () => {
 
         // Order purchase CTA
         expect(getByText('OrderPanel.ctaButtonMessagePurchase')).toBeInTheDocument();
+      });
+    });
+
+    it('Inquiry with restricted view rights should not show OrderPanel - item unit', async () => {
+      const config = {
+        ...getHostedConfiguration(),
+        accessControl: { marketplace: { private: true } },
+      };
+
+      const routeConfiguration = getRouteConfiguration(config.layout);
+      const processName = 'default-purchase';
+      const inquiry = createInquiry(processName, 'item', purchaseTransitions.INQUIRE);
+      const transactionRole = TX_TRANSITION_ACTOR_CUSTOMER;
+      const nextTransitions = [
+        {
+          id: new UUID('next-transition'),
+          type: 'processTransition',
+          attributes: {
+            name: 'transition/request-payment-after-inquiry',
+            actor: [transactionRole],
+            actions: [],
+            params: {},
+          },
+        },
+      ];
+
+      const stateData = getStateData(
+        {
+          transaction: inquiry,
+          transactionRole,
+          nextTransitions,
+          intl: fakeIntl,
+          transitionInProgress: false,
+          transitionError: null,
+          onTransition: noop,
+          sendReviewInProgress: false,
+          sendReviewError: null,
+          onOpenReviewModal: noop,
+        },
+        getProcess(processName)
+      );
+
+      const currentUser = createCurrentUser(customerId);
+      currentUser.effectivePermissionSet.attributes.read = 'permissions/deny';
+
+      const props = {
+        ...panelBaseProps,
+        currentUser,
+        transaction: inquiry,
+        transactionRole,
+        nextTransitions,
+        params: {
+          id: inquiry.id?.uuid,
+        },
+        lineItems: [],
+      };
+
+      const { getAllByText } = render(<TransactionPageComponent {...props} />, {
+        config,
+        routeConfiguration,
+      });
+
+      await waitFor(() => {
+        const state = stateData.processState;
+        const txTitle = `TransactionPage.${processName}.${transactionRole}.${state}.title`;
+        expect(screen.getByText(txTitle)).toBeInTheDocument();
+
+        expect(screen.getByText('TransactionPage.listingTitleMobile')).toBeInTheDocument();
+
+        // Activity feed (here we just check the heading)
+        expect(screen.getByText('TransactionPanel.activityHeading')).toBeInTheDocument();
+
+        // Show listing's title only (side card)
+        expect(getAllByText('listing-item title')).toHaveLength(1);
+
+        // Don't show listing pricing
+        expect(screen.queryByText('$55.00')).toBeNull();
+        expect(screen.queryByText('OrderPanel.perUnit')).toBeNull();
+
+        // Don't show order purchase CTA
+        expect(screen.queryByText('OrderPanel.ctaButtonMessagePurchase')).toBeNull();
       });
     });
   });

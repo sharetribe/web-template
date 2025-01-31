@@ -1,0 +1,52 @@
+.root {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  background: var(--boxShadowLight);
+}
+
+.linksContainer {
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 8px 0;
+  gap: 16px;
+  flex-grow: 1;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.linksContainer::-webkit-scrollbar {
+  display: none;
+}
+
+.defaultLink {
+  color: var(--colorGrey500);
+  text-decoration: none;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.defaultLink:hover {
+  color: var(--colorGrey900);
+  text-decoration: none;
+}
+
+.activeLink {
+  color: var(--marketplaceColor);
+  font-weight: bold;
+}
+
+.scrollButtonLeft,
+.scrollButtonRight {
+  z-index: 2;
+}
+
+.scrollButtonLeft {
+  margin-right: 8px;
+}
+
+.scrollButtonRight {
+  margin-left: 8px;
+}

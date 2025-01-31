@@ -50,8 +50,8 @@ import {
   AvatarSmall,
   H1,
   H2,
-  Button, // add these rows to the
-  SecondaryButton, // existing import from '../../components'
+  Button,
+  SecondaryButton,
 } from '../../components';
 
 import css from './OrderPanel.module.css';
@@ -86,6 +86,14 @@ const priceData = (price, currency, intl) => {
     };
   }
   return {};
+};
+
+const formatMoneyIfSupportedCurrency = (price, intl) => {
+  try {
+    return formatMoney(intl, price);
+  } catch (e) {
+    return `(${price.currency})`;
+  }
 };
 
 const openOrderModal = (isOwnListing, isClosed, history, location) => {
@@ -152,7 +160,7 @@ const PriceMaybe = props => {
     </div>
   ) : (
     <div className={css.priceContainer}>
-      <p className={css.price}>{formatMoney(intl, price)}</p>
+      <p className={css.price}>{formatMoneyIfSupportedCurrency(price, intl)}</p>
       <div className={css.perUnit}>
         <FormattedMessage id="OrderPanel.perUnit" values={{ unitType }} />
       </div>
@@ -465,7 +473,7 @@ OrderPanel.propTypes = {
   dayCountAvailableForBooking: number.isRequired,
   marketplaceName: string.isRequired,
   onToggleFavorites: func.isRequired,
-  currentUser: propTypes.currentUser.isRequired,
+  currentUser: propTypes.currentUser,
   // from withRouter
   history: shape({
     push: func.isRequired,
@@ -477,7 +485,4 @@ OrderPanel.propTypes = {
   intl: intlShape.isRequired,
 };
 
-export default compose(
-  withRouter,
-  injectIntl
-)(OrderPanel);
+export default compose(withRouter, injectIntl)(OrderPanel);

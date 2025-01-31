@@ -1,150 +1,215 @@
-import React, { useEffect, useState } from 'react';
-import { arrayOf, bool, func, object, shape, string } from 'prop-types';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
-import { FormattedMessage, useIntl } from '../../util/reactIntl';
-import { pathByRouteName } from '../../util/routes';
+import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
+import { useIntl, FormattedMessage } from '../../util/reactIntl';
+
+import { createResourceLocatorString, pathByRouteName } from '../../util/routes';
+import { LISTING_GRID_DEFAULTS, LISTING_GRID_ROLE, LISTING_TAB_TYPES } from '../../util/types';
 import { hasPermissionToPostListings } from '../../util/userHelpers';
 import { NO_ACCESS_PAGE_POST_LISTINGS } from '../../util/urlHelpers';
-import { propTypes } from '../../util/types';
-import { isErrorNoPermissionToPostListings } from '../../util/errors';
-import { isScrollingDisabled } from '../../ducks/ui.duck';
 
 import {
   H3,
-  Page,
-  PaginationLinks,
-  UserNav,
   LayoutSingleColumn,
-  NamedLink,
+  Page,
+  UserNav,
+  NamedRedirect,
+  ListingTabs,
+  PortfolioListingCard,
 } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
+import DiscardDraftModal from './DiscardDraftModal/DiscardDraftModal';
 import ManageListingCard from './ManageListingCard/ManageListingCard';
+import {
+  closeListing,
+  openListing,
+  getOwnListingsById,
+  discardDraft,
+} from './ManageListingsPage.duck';
+import { getLinks, getItems, getCurrentCategory, routeHandler } from './utils';
 
-import { closeListing, openListing, getOwnListingsById } from './ManageListingsPage.duck';
 import css from './ManageListingsPage.module.css';
-
-const Heading = props => {
-  const { listingsAreLoaded, pagination } = props;
-  const hasResults = listingsAreLoaded && pagination.totalItems > 0;
-  const hasNoResults = listingsAreLoaded && pagination.totalItems === 0;
-
-  return hasResults ? (
-    <H3 as="h1" className={css.heading}>
-      <FormattedMessage
-        id="ManageListingsPage.youHaveListings"
-        values={{ count: pagination.totalItems }}
-      />
-    </H3>
-  ) : hasNoResults ? (
-    <div className={css.noResultsContainer}>
-      <H3 as="h1" className={css.headingNoListings}>
-        <FormattedMessage id="ManageListingsPage.noResults" />
-      </H3>
-      <p className={css.createListingParagraph}>
-        <NamedLink className={css.createListingLink} name="NewListingPage">
-          <FormattedMessage id="ManageListingsPage.createListing" />
-        </NamedLink>
-      </p>
-    </div>
-  ) : null;
-};
-
-const PaginationLinksMaybe = props => {
-  const { listingsAreLoaded, pagination, page } = props;
-  return listingsAreLoaded && pagination && pagination.totalPages > 1 ? (
-    <PaginationLinks
-      className={css.pagination}
-      pageName="ManageListingsPage"
-      pageSearchParams={{ page }}
-      pagination={pagination}
-    />
-  ) : null;
-};
 
 export const ManageListingsPageComponent = props => {
   const [listingMenuOpen, setListingMenuOpen] = useState(null);
-  const history = useHistory();
+  const [discardDraftModalOpen, setDiscardDraftModalOpen] = useState(null);
+  const [discardDraftModalId, setDiscardDraftModalId] = useState(null);
   const routeConfiguration = useRouteConfiguration();
+  const history = useHistory();
   const intl = useIntl();
 
   const {
-    currentUser,
-    closingListing,
-    closingListingError,
-    listings,
+    currentUser = null,
+    closingListing = null,
+    closingListingError = null,
+    discardingDraft,
+    discardingDraftError,
+    listings = [],
     onCloseListing,
+    onDiscardDraft,
     onOpenListing,
-    openingListing,
-    openingListingError,
-    pagination,
+    openingListing = null,
+    openingListingError = null,
+    pagination = null,
     queryInProgress,
     queryListingsError,
     queryParams,
     scrollingDisabled,
+    onManageDisableScrolling,
   } = props;
+  const defaultListingType = LISTING_GRID_DEFAULTS.TYPE;
+  const currentListingType = queryParams.pub_listingType || defaultListingType;
+
+  const currentCategory = useMemo(
+    () => getCurrentCategory(listings, currentListingType, queryParams),
+    [listings, currentListingType, queryParams]
+  );
+  const links = useMemo(() => getLinks(listings, currentListingType), [
+    listings,
+    currentListingType,
+  ]);
+  const items = useMemo(() => getItems(listings, currentListingType, currentCategory), [
+    listings,
+    currentListingType,
+    currentCategory,
+  ]);
+
+  function createManageLocatorString(queryParams) {
+    const pathParams = {};
+    const destination = createResourceLocatorString(
+      'ManageListingsPage',
+      routeConfiguration,
+      pathParams,
+      queryParams
+    );
+    history.replace(destination);
+  }
+  const { updateProductRoute, updatePortfolioRoute } = routeHandler(createManageLocatorString);
 
   useEffect(() => {
-    if (isErrorNoPermissionToPostListings(openingListingError?.error)) {
-      const noAccessPagePath = pathByRouteName('NoAccessPage', routeConfiguration, {
-        missingAccessRight: NO_ACCESS_PAGE_POST_LISTINGS,
-      });
-      history.push(noAccessPagePath);
+    const listingTypeParamValue = queryParams.pub_listingType;
+    switch (listingTypeParamValue) {
+      case LISTING_TAB_TYPES.PORTFOLIO: {
+        const invalidCategoryType = !queryParams.pub_listingId;
+        const listingsAvailable = !queryInProgress && !!currentCategory;
+        const shouldUpdate = invalidCategoryType && listingsAvailable;
+        if (shouldUpdate) {
+          updatePortfolioRoute(currentCategory);
+        }
+        break;
+      }
+      default: {
+        const invalidListingType = !(
+          listingTypeParamValue && Object.values(LISTING_TAB_TYPES).includes(listingTypeParamValue)
+        );
+        const invalidCategoryType =
+          listingTypeParamValue === LISTING_TAB_TYPES.PRODUCT && !queryParams.pub_categoryLevel1;
+        const shouldUpdateRoute = invalidListingType || invalidCategoryType;
+        if (shouldUpdateRoute) {
+          updateProductRoute();
+        }
+        break;
+      }
     }
-  }, [openingListingError]);
+  }, [queryInProgress]);
 
-  const onToggleMenu = listing => {
-    setListingMenuOpen(listing);
+  const openDiscardDraftModal = listingId => {
+    setDiscardDraftModalId(listingId);
+    setDiscardDraftModalOpen(true);
   };
 
-  const handleOpenListing = listingId => {
-    const hasPostingRights = hasPermissionToPostListings(currentUser);
+  const handleDiscardDraft = () => {
+    onDiscardDraft(discardDraftModalId);
+    setDiscardDraftModalOpen(false);
+    setDiscardDraftModalId(null);
+  };
 
-    if (!hasPostingRights) {
-      const noAccessPagePath = pathByRouteName('NoAccessPage', routeConfiguration, {
-        missingAccessRight: NO_ACCESS_PAGE_POST_LISTINGS,
-      });
-      history.push(noAccessPagePath);
-    } else {
-      onOpenListing(listingId);
+  const hasPostingRights = hasPermissionToPostListings(currentUser);
+  if (!hasPostingRights) {
+    return (
+      <NamedRedirect
+        name="NoAccessPage"
+        params={{ missingAccessRight: NO_ACCESS_PAGE_POST_LISTINGS }}
+      />
+    );
+  }
+
+  const listingRenderer = (item, className, renderSizes, index) => {
+    switch (currentListingType) {
+      case LISTING_TAB_TYPES.PORTFOLIO: {
+        return (
+          <PortfolioListingCard
+            key={`${currentCategory}-${index}`}
+            className={className}
+            image={item}
+            renderSizes={renderSizes}
+          />
+        );
+      }
+      case LISTING_TAB_TYPES.PRODUCT:
+      default: {
+        const onToggleMenu = listing => {
+          setListingMenuOpen(listing);
+        };
+        const handleOpenListing = listingId => {
+          if (!hasPostingRights) {
+            const noAccessPagePath = pathByRouteName('NoAccessPage', routeConfiguration, {
+              missingAccessRight: NO_ACCESS_PAGE_POST_LISTINGS,
+            });
+            history.push(noAccessPagePath);
+          } else {
+            onOpenListing(listingId);
+          }
+        };
+        const closingErrorListingId = !!closingListingError && closingListingError.listingId;
+        const openingErrorListingId = !!openingListingError && openingListingError.listingId;
+        const discardingErrorListingId = !!discardingDraftError && discardingDraft.listingId;
+        const listingId = item.id.uuid;
+        return (
+          <ManageListingCard
+            key={listingId}
+            className={className}
+            listing={item}
+            renderSizes={renderSizes}
+            isMenuOpen={!!listingMenuOpen && listingMenuOpen.id.uuid === listingId}
+            actionsInProgressListingId={openingListing || closingListing || discardingDraft}
+            onToggleMenu={onToggleMenu}
+            onCloseListing={onCloseListing}
+            onOpenListing={handleOpenListing}
+            onDiscardDraft={openDiscardDraftModal}
+            hasOpeningError={openingErrorListingId.uuid === listingId}
+            hasClosingError={closingErrorListingId.uuid === listingId}
+            hasDiscardingError={discardingErrorListingId.uuid === listingId}
+          />
+        );
+      }
     }
   };
 
-  const hasPaginationInfo = !!pagination && pagination.totalItems != null;
-  const listingsAreLoaded = !queryInProgress && hasPaginationInfo;
-
-  const loadingResults = (
-    <div className={css.messagePanel}>
-      <H3 as="h2" className={css.heading}>
-        <FormattedMessage id="ManageListingsPage.loadingOwnListings" />
-      </H3>
-    </div>
+  const titleRenderer = (
+    <H3 as="h1" className={css.heading}>
+      <FormattedMessage id="ManageListingsPage.title" />
+    </H3>
   );
 
-  const queryError = (
-    <div className={css.messagePanel}>
-      <H3 as="h2" className={css.heading}>
-        <FormattedMessage id="ManageListingsPage.queryError" />
-      </H3>
-    </div>
-  );
-
-  const closingErrorListingId = !!closingListingError && closingListingError.listingId;
-  const openingErrorListingId = !!openingListingError && openingListingError.listingId;
-
-  const panelWidth = 62.5;
-  // Render hints for responsive image
-  const renderSizes = [
-    `(max-width: 767px) 100vw`,
-    `(max-width: 1920px) ${panelWidth / 2}vw`,
-    `${panelWidth / 3}vw`,
-  ].join(', ');
+  const onTabChange = key => {
+    switch (key) {
+      case LISTING_TAB_TYPES.PORTFOLIO:
+        updatePortfolioRoute();
+        break;
+      case LISTING_TAB_TYPES.PRODUCT:
+      default:
+        updateProductRoute();
+        break;
+    }
+  };
 
   return (
     <Page
@@ -160,87 +225,51 @@ export const ManageListingsPageComponent = props => {
         }
         footer={<FooterContainer />}
       >
-        {queryInProgress ? loadingResults : null}
-        {queryListingsError ? queryError : null}
+        <ListingTabs
+          items={items}
+          pagination={pagination}
+          queryInProgress={queryInProgress}
+          queryListingsError={queryListingsError}
+          queryParams={queryParams}
+          onTabChange={onTabChange}
+          categories={links}
+          currentCategory={currentCategory}
+          listingRenderer={listingRenderer}
+          role={LISTING_GRID_ROLE.MANAGE}
+          title={titleRenderer}
+          noResultsMessageId="ManageListingsPage.noResults"
+          loadingMessageId="ManageListingsPage.loadingOwnListings"
+          errorMessageId="ManageListingsPage.queryError"
+        />
 
-        <div className={css.listingPanel}>
-          <Heading listingsAreLoaded={listingsAreLoaded} pagination={pagination} />
-
-          <div className={css.listingCards}>
-            {listings.map(l => (
-              <ManageListingCard
-                className={css.listingCard}
-                key={l.id.uuid}
-                listing={l}
-                isMenuOpen={!!listingMenuOpen && listingMenuOpen.id.uuid === l.id.uuid}
-                actionsInProgressListingId={openingListing || closingListing}
-                onToggleMenu={onToggleMenu}
-                onCloseListing={onCloseListing}
-                onOpenListing={handleOpenListing}
-                hasOpeningError={openingErrorListingId.uuid === l.id.uuid}
-                hasClosingError={closingErrorListingId.uuid === l.id.uuid}
-                renderSizes={renderSizes}
-              />
-            ))}
-          </div>
-
-          <PaginationLinksMaybe
-            listingsAreLoaded={listingsAreLoaded}
-            pagination={pagination}
-            page={queryParams ? queryParams.page : 1}
+        {onManageDisableScrolling && discardDraftModalOpen ? (
+          <DiscardDraftModal
+            id="ManageListingsPage"
+            isOpen={discardDraftModalOpen}
+            onManageDisableScrolling={onManageDisableScrolling}
+            onCloseModal={() => setDiscardDraftModalOpen(false)}
+            onDiscardDraft={handleDiscardDraft}
           />
-        </div>
+        ) : null}
       </LayoutSingleColumn>
     </Page>
   );
 };
 
-ManageListingsPageComponent.defaultProps = {
-  currentUser: null,
-  listings: [],
-  pagination: null,
-  queryListingsError: null,
-  queryParams: null,
-  closingListing: null,
-  closingListingError: null,
-  openingListing: null,
-  openingListingError: null,
-};
-
-ManageListingsPageComponent.propTypes = {
-  currentUser: propTypes.currentUser,
-  closingListing: shape({ uuid: string.isRequired }),
-  closingListingError: shape({
-    listingId: propTypes.uuid.isRequired,
-    error: propTypes.error.isRequired,
-  }),
-  listings: arrayOf(propTypes.ownListing),
-  onCloseListing: func.isRequired,
-  onOpenListing: func.isRequired,
-  openingListing: shape({ uuid: string.isRequired }),
-  openingListingError: shape({
-    listingId: propTypes.uuid.isRequired,
-    error: propTypes.error.isRequired,
-  }),
-  pagination: propTypes.pagination,
-  queryInProgress: bool.isRequired,
-  queryListingsError: propTypes.error,
-  queryParams: object,
-  scrollingDisabled: bool.isRequired,
-};
-
 const mapStateToProps = state => {
   const { currentUser } = state.user;
   const {
-    currentPageResultIds,
     pagination,
+    queryParams,
+    currentPageResultIds,
     queryInProgress,
     queryListingsError,
-    queryParams,
     openingListing,
     openingListingError,
     closingListing,
     closingListingError,
+    discardingDraft,
+    discardingDraftError,
   } = state.ManageListingsPage;
   const listings = getOwnListingsById(state, currentPageResultIds);
   return {
@@ -256,19 +285,21 @@ const mapStateToProps = state => {
     openingListingError,
     closingListing,
     closingListingError,
+    discardingDraft,
+    discardingDraftError,
   };
 };
 
 const mapDispatchToProps = dispatch => ({
   onCloseListing: listingId => dispatch(closeListing(listingId)),
   onOpenListing: listingId => dispatch(openListing(listingId)),
+  onDiscardDraft: listingId => dispatch(discardDraft(listingId)),
+  onManageDisableScrolling: (componentId, disableScrolling) =>
+    dispatch(manageDisableScrolling(componentId, disableScrolling)),
 });
 
-const ManageListingsPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(ManageListingsPageComponent);
+const ManageListingsPage = compose(connect(mapStateToProps, mapDispatchToProps))(
+  ManageListingsPageComponent
+);
 
 export default ManageListingsPage;

@@ -4,9 +4,9 @@ import { compose } from 'redux';
 import classNames from 'classnames';
 
 import { injectIntl, intlShape } from '../../../util/reactIntl';
-import { propTypes } from '../../../util/types';
+import { propTypes, LISTING_TYPES } from '../../../util/types';
 import { formatMoney } from '../../../util/currency';
-import { ensureListing } from '../../../util/data';
+import { ensureListing, ensureUser } from '../../../util/data';
 
 import { AspectRatioWrapper, ResponsiveImage } from '../../../components';
 
@@ -16,15 +16,23 @@ import css from './SearchMapInfoCard.module.css';
 const ListingCard = props => {
   const { className, clickHandler, intl, isInCarousel, listing, urlToListing, config } = props;
 
-  const { title, price } = listing.attributes;
+  const { title: listingTitle = '', price, publicData } = listing.attributes;
   const formattedPrice =
     price && price.currency === config.currency
       ? formatMoney(intl, price)
       : price?.currency
       ? price.currency
       : null;
-  const firstImage = listing.images && listing.images.length > 0 ? listing.images[0] : null;
-
+  const isCreativeProfile = publicData.listingType === LISTING_TYPES.PROFILE;
+  const author = ensureUser(listing.author);
+  const authorDisplayName = author.attributes.profile.displayName;
+  const title = isCreativeProfile ? authorDisplayName : listingTitle;
+  const authorProfileImage = author.profileImage;
+  const firstImage = isCreativeProfile
+    ? authorProfileImage
+    : listing.images && listing.images.length > 0
+    ? listing.images[0]
+    : null;
   const {
     aspectWidth = 1,
     aspectHeight = 1,
@@ -122,6 +130,7 @@ const SearchMapInfoCard = props => {
         intl={intl}
         isInCarousel={hasCarousel}
         config={config}
+        hidePrice
       />
       {hasCarousel ? (
         <div className={classNames(css.paginationInfo, css.borderRadiusInheritBottom)}>

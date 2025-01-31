@@ -1,0 +1,93 @@
+@import '../../../../styles/customMediaQueries.css';
+
+.root {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 24px 36px;
+  background-color: var(--colorWhite);
+
+  @media (--viewportLarge) {
+    width: 80%;
+  }
+}
+
+.submitButton {
+  margin-top: auto;
+  flex-shrink: 0;
+  text-wrap: nowrap;
+  padding: 12px;
+  min-width: 200px;
+
+  @media (--viewportLarge) {
+    display: inline-block;
+  }
+}
+
+.editableRow:hover .editableCellValueWrap {
+  padding: 4px 11px;
+  border: 1px solid #d9d9d9;
+  border-radius: 2px;
+}
+
+.editableCellValueWrap {
+  padding: 5px 12px;
+  cursor: pointer;
+}
+
+.stickyHeader {
+  position: sticky;
+  top: 0;
+  background-color: var(--colorWhite);
+  z-index: calc(var(--zIndexTopbar) - 1);
+  justify-content: space-between;
+}
+
+.stickyTitle {
+  margin: 0;
+}
+
+.stickyHeader .subTitle {
+  transition: opacity 0.3s ease, max-height 0.3s ease;
+  opacity: 1;
+  overflow: hidden;
+  padding-right: 24px;
+}
+
+.subTitle.hidden {
+  opacity: 0;
+  max-height: 0; /* Collapse subtitle */
+}
+
+.buttonWrapper {
+  justify-content: center;
+  align-self: center;
+}
+
+.stickyHeader.scrolled .submitButton {
+  transform: scale(0.8); /* Shrink button */
+  transform-origin: right; /* Ensures scaling happens from the right edge */
+  margin-left: auto; /* Keeps alignment to the right */
+}
+
+.formItem:focus {
+  border: none;
+  box-shadow: none;
+}
+
+.modalContent {
+  padding: var(--modalPadding);
+  margin: 1rem;
+  padding-bottom: 24px;
+}
+
+.modalContent .modalBottom {
+  margin-top: 48px;
+}
+
+.csvUploadWrapper {
+  padding: 12px 0;
+  justify-content: flex-end;
+}

@@ -12,6 +12,11 @@ build
 # misc
 .DS_Store
 .env
-.env.copy
+.env.local
+.env.*.local
 npm-debug.log
 yarn-error.log
+.idea
+
+# direnv config file
+.envrc

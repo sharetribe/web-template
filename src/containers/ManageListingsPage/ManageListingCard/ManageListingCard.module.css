@@ -250,7 +250,8 @@
 }
 
 .titleWrapper {
-  line-height: 24px;
+  line-height: 16px;
+  font-size: 14px;
 }
 
 .title {
@@ -381,6 +382,11 @@
   margin: 0 3px 0 3px;
 }
 
-.closeListingText {
+.alternativeActionText {
   composes: h5 from global;
+  margin: 0px 24px;
+}
+
+.alternativeActionLink {
+  composes: a textSmall from global;
 }

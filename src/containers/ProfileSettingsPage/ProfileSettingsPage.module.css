@@ -1,15 +1,13 @@
 @import '../../styles/customMediaQueries.css';
 
-.root {
-  background-color: var(--colorWhite);
-}
 .content {
-  width: calc(100% - 48px);
-  margin: 12px 24px 24px 24px;
-
   @media (--viewportMedium) {
-    max-width: 565px;
-    margin: 55px auto 56px auto;
+    margin: 32px auto 0 auto;
+    max-width: 564px;
+  }
+
+  @media (--viewportLarge) {
+    margin: 0;
   }
 }
 

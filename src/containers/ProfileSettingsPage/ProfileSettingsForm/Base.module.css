@@ -1,0 +1,49 @@
+@import '../../../styles/customMediaQueries.css';
+
+.sectionContainer {
+  padding: 0;
+  margin-bottom: 36px;
+
+  @media (--viewportMedium) {
+    padding: 0;
+    margin-bottom: 56px;
+  }
+}
+
+.sectionTitle {
+}
+
+.lastSection {
+  margin-bottom: 69px;
+
+  @media (--viewportMedium) {
+    margin-bottom: 111px;
+
+    & .sectionTitle {
+      margin-bottom: 16px;
+    }
+  }
+}
+
+.error {
+  /* Font */
+  composes: h4 from global;
+  color: var(--colorFail);
+  margin-top: 18px;
+  margin-bottom: 0;
+
+  @media (--viewportMedium) {
+    margin-top: 22px;
+    margin-bottom: 2px;
+  }
+}
+
+.extraInfo {
+  composes: textSmall from global;
+  color: var(--colorGrey300);
+  margin-top: 11px;
+
+  @media (--viewportMedium) {
+    margin-top: 16px;
+  }
+}

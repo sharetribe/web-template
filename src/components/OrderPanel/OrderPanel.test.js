@@ -1,6 +1,5 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import 'react-dates/initialize';
 
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { createListing, createStock, createUser, fakeIntl } from '../../util/testData';
@@ -69,7 +68,10 @@ const listingFields = [
       listingTypeIds: ['sell-bicycles'],
     },
     schemaType: 'enum',
-    enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
+    enumOptions: [
+      { option: 'cat_1', label: 'Cat 1' },
+      { option: 'cat_2', label: 'Cat 2' },
+    ],
     filterConfig: {
       indexForSearch: true,
       label: 'Cat',
@@ -90,7 +92,10 @@ const listingFields = [
       listingTypeIds: ['rent-bicycles-daily', 'rent-bicycles-nightly', 'rent-bicycles-hourly'],
     },
     schemaType: 'multi-enum',
-    enumOptions: [{ option: 'dog_1', label: 'Dog 1' }, { option: 'dog_2', label: 'Dog 2' }],
+    enumOptions: [
+      { option: 'dog_1', label: 'Dog 1' },
+      { option: 'dog_2', label: 'Dog 2' },
+    ],
     filterConfig: {
       indexForSearch: true,
       label: 'Amenities',
@@ -206,19 +211,6 @@ const commonProps = {
 };
 
 describe('OrderPanel', () => {
-  const originalWarn = console.warn.bind(console.warn);
-  beforeEach(() => {
-    console.warn = msg =>
-      !(
-        msg.toString().includes('componentWillReceiveProps') ||
-        msg.toString().includes('componentWillUpdate')
-      ) && originalWarn(msg);
-  });
-
-  afterAll(() => {
-    console.warn = originalWarn;
-  });
-
   const config = getConfig();
   const routeConfiguration = getRouteConfiguration(config.layout);
   const stockTypeMaybe = stockType => (stockType ? { stockType } : {});

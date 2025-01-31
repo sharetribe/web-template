@@ -1,6 +1,5 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import 'react-dates/initialize';
 
 import { types as sdkTypes } from '../../util/sdkLoader';
 import {
@@ -95,7 +94,10 @@ const listingFieldsInquiry = [
       listingTypeIds: ['inquiry'],
     },
     schemaType: 'enum',
-    enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
+    enumOptions: [
+      { option: 'cat_1', label: 'Cat 1' },
+      { option: 'cat_2', label: 'Cat 2' },
+    ],
     filterConfig: {
       indexForSearch: true,
       label: 'Cat',
@@ -123,7 +125,10 @@ const listingFieldsPurchase = [
       categoryIds: ['sneakers'],
     },
     schemaType: 'enum',
-    enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
+    enumOptions: [
+      { option: 'cat_1', label: 'Cat 1' },
+      { option: 'cat_2', label: 'Cat 2' },
+    ],
     filterConfig: {
       indexForSearch: true,
       label: 'Cat',
@@ -147,7 +152,10 @@ const listingFieldsBooking = [
       listingTypeIds: ['rent-bicycles-daily', 'rent-bicycles-nightly', 'rent-bicycles-hourly'],
     },
     schemaType: 'multi-enum',
-    enumOptions: [{ option: 'dog_1', label: 'Dog 1' }, { option: 'dog_2', label: 'Dog 2' }],
+    enumOptions: [
+      { option: 'dog_1', label: 'Dog 1' },
+      { option: 'dog_2', label: 'Dog 2' },
+    ],
     filterConfig: {
       indexForSearch: true,
       label: 'Amenities',
@@ -223,19 +231,12 @@ const getConfig = (listingTypes, listingFields, categoryConfig) => {
 };
 
 describe('EditListingPage', () => {
-  const originalWarn = console.warn.bind(console.warn);
   beforeEach(() => {
     // This is not defined by default on test env. Availability panel needs it.
     window.scrollTo = jest.fn();
-    console.warn = msg =>
-      !(
-        msg.toString().includes('componentWillReceiveProps') ||
-        msg.toString().includes('componentWillUpdate')
-      ) && originalWarn(msg);
   });
 
   afterAll(() => {
-    console.warn = originalWarn;
     // Remove window.scrollTo
     jest.clearAllMocks();
   });
@@ -1881,7 +1882,7 @@ describe('EditListingPage', () => {
       getByText('EditListingAvailabilityExceptionForm.exceptionEndDateLabel')
     ).toBeInTheDocument();
 
-    // TODO Testing react-dates / date pickers needs more work
+    // TODO Testing date pickers needs more work
 
     // submit button
     expect(

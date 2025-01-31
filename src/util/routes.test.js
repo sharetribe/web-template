@@ -1,5 +1,10 @@
 import routeConfiguration from '../routing/routeConfiguration';
-import { createResourceLocatorString, findRouteByRouteName, canonicalRoutePath } from './routes';
+import {
+  createResourceLocatorString,
+  findRouteByRouteName,
+  canonicalRoutePath,
+  replaceParamsInHref,
+} from './routes';
 
 const layoutConfig = {
   searchPage: { variantType: 'map' },
@@ -129,6 +134,45 @@ describe('util/routes.js', () => {
       };
       expect(canonicalRoutePath(routes, location)).toEqual(
         '/l/00000000-0000-0000-0000-000000000000'
+      );
+    });
+  });
+  describe('replaceUserParamsInHref', () => {
+    it('should correctly replace {userId} and {userEmail} in the href', () => {
+      const userId = '00000000-aaaa-bbbb-cccc-ffffffffffff';
+      const userEmail = 'user@example.com';
+
+      // Path with {userId} and {userEmail}
+      const href1 = 'https://buy.example.com/{userId}?prefilled_email={userEmail}';
+      const result1 = replaceParamsInHref(href1, { userId, userEmail });
+      expect(result1).toEqual(
+        'https://buy.example.com/00000000-aaaa-bbbb-cccc-ffffffffffff?prefilled_email=user%40example.com'
+      );
+    });
+
+    it('should correctly replace {listingId} and {userEmail} in the href', () => {
+      const userEmail = 'user@example.com';
+      const listingId = '11111111-bbbb-cccc-dddd-eeeeeeeeeeee';
+
+      // Path with {listingId} and {userEmail}
+      const href2 =
+        'https://buy.example.com/path?client_reference_id={listingId}&prefilled_email={userEmail}';
+      const result2 = replaceParamsInHref(href2, { listingId, userEmail });
+      expect(result2).toEqual(
+        'https://buy.example.com/path?client_reference_id=11111111-bbbb-cccc-dddd-eeeeeeeeeeee&prefilled_email=user%40example.com'
+      );
+    });
+
+    it('should correctly replace multiple {userId} variables in the href', () => {
+      const userId = '00000000-aaaa-bbbb-cccc-ffffffffffff';
+      const userEmail = 'user@example.com';
+
+      // Path with multiple {userId} variables
+      const href3 =
+        'https://buy.example.com/path?client_reference_id={userId}&prefilled_email={userEmail}&prefilled_userId={userId}';
+      const result3 = replaceParamsInHref(href3, { userId, userEmail });
+      expect(result3).toEqual(
+        'https://buy.example.com/path?client_reference_id=00000000-aaaa-bbbb-cccc-ffffffffffff&prefilled_email=user%40example.com&prefilled_userId=00000000-aaaa-bbbb-cccc-ffffffffffff'
       );
     });
   });

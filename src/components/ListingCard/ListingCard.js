@@ -1,5 +1,5 @@
 import React from 'react';
-import { string, func, bool } from 'prop-types';
+import { string, func, bool, oneOfType } from 'prop-types';
 import classNames from 'classnames';
 
 import { useConfiguration } from '../../context/configurationContext';
@@ -7,7 +7,7 @@ import { useConfiguration } from '../../context/configurationContext';
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import { displayPrice } from '../../util/configHelpers';
 import { lazyLoadWithDimensions } from '../../util/uiHelpers';
-import { propTypes } from '../../util/types';
+import { propTypes, LISTING_TYPES } from '../../util/types';
 import { formatMoney } from '../../util/currency';
 import { ensureListing, ensureUser } from '../../util/data';
 import { richText } from '../../util/richText';
@@ -42,11 +42,11 @@ const priceData = (price, currency, intl) => {
 const LazyImage = lazyLoadWithDimensions(ResponsiveImage, { loadAfterInitialRendering: 3000 });
 
 const PriceMaybe = props => {
-  const { price, publicData, config, intl } = props;
+  const { hidePrice, price, publicData, config, intl } = props;
   const { listingType } = publicData || {};
   const validListingTypes = config.listing.listingTypes;
   const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
-  const showPrice = displayPrice(foundListingTypeConfig);
+  const showPrice = !hidePrice && displayPrice(foundListingTypeConfig);
   if (!showPrice && price) {
     return null;
   }
@@ -77,17 +77,24 @@ export const ListingCardComponent = props => {
     renderSizes,
     setActiveListing,
     showAuthorInfo,
+    hidePrice,
   } = props;
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureListing(listing);
   const id = currentListing.id.uuid;
-  const { title = '', price, publicData } = currentListing.attributes;
-  const slug = createSlug(title);
+  const { title: listingTitle = '', price, publicData } = currentListing.attributes;
+  const isCreativeProfile = publicData.listingType === LISTING_TYPES.PROFILE;
   const author = ensureUser(listing.author);
-  const authorName = author.attributes.profile.displayName;
-  const firstImage =
-    currentListing.images && currentListing.images.length > 0 ? currentListing.images[0] : null;
-
+  const authorDisplayName = author.attributes.profile.displayName;
+  const title = isCreativeProfile ? authorDisplayName : listingTitle;
+  const slug = createSlug(title);
+  const authorName = isCreativeProfile ? 'Creative Profile' : authorDisplayName;
+  const authorProfileImage = author.profileImage;
+  const firstImage = isCreativeProfile
+    ? authorProfileImage
+    : currentListing.images && currentListing.images.length > 0
+    ? currentListing.images[0]
+    : null;
   const {
     aspectWidth = 1,
     aspectHeight = 1,
@@ -121,7 +128,13 @@ export const ListingCardComponent = props => {
         />
       </AspectRatioWrapper>
       <div className={css.info}>
-        <PriceMaybe price={price} publicData={publicData} config={config} intl={intl} />
+        <PriceMaybe
+          price={price}
+          publicData={publicData}
+          config={config}
+          intl={intl}
+          hidePrice={hidePrice}
+        />
         <div className={css.mainInfo}>
           <div className={css.title}>
             {richText(title, {
@@ -146,14 +159,16 @@ ListingCardComponent.defaultProps = {
   renderSizes: null,
   setActiveListing: null,
   showAuthorInfo: true,
+  hidePrice: false,
 };
 
 ListingCardComponent.propTypes = {
   className: string,
   rootClassName: string,
   intl: intlShape.isRequired,
-  listing: propTypes.listing.isRequired,
+  listing: oneOfType([propTypes.listing, propTypes.ownListing]).isRequired,
   showAuthorInfo: bool,
+  hidePrice: bool,
 
   // Responsive image sizes hint
   renderSizes: string,

@@ -4,6 +4,7 @@ import classNames from 'classnames';
 
 import { FormattedMessage, intlShape } from '../../../../util/reactIntl';
 import { ACCOUNT_SETTINGS_PAGES } from '../../../../routing/routeConfiguration';
+import { isCreativeSeller } from '../../../../util/userHelpers';
 import { propTypes } from '../../../../util/types';
 import {
   Avatar,
@@ -70,13 +71,13 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout }) => {
         <Avatar className={css.avatar} user={currentUser} disableProfileLink />
       </MenuLabel>
       <MenuContent className={css.profileMenuContent}>
-        <MenuItem key="ManageListingsPage">
+        <MenuItem key="FavoriteListingsPage">
           <NamedLink
-            className={classNames(css.menuLink, currentPageClass('ManageListingsPage'))}
-            name="ManageListingsPage"
+            className={classNames(css.menuLink, currentPageClass('FavoriteListingsPage'))}
+            name="FavoriteListingsPage"
           >
             <span className={css.menuItemBorder} />
-            <FormattedMessage id="TopbarDesktop.yourListingsLink" />
+            <FormattedMessage id="TopbarDesktop.favoriteListings" />
           </NamedLink>
         </MenuItem>
         <MenuItem key="ProfileSettingsPage">
@@ -150,6 +151,7 @@ const TopbarDesktop = props => {
 
   const signupLinkMaybe = isAuthenticatedOrJustHydrated ? null : <SignupLink />;
   const loginLinkMaybe = isAuthenticatedOrJustHydrated ? null : <LoginLink />;
+  const isSeller = isCreativeSeller(currentUser?.attributes?.profile?.publicData?.userType);
 
   return (
     <nav className={classes}>
@@ -172,6 +174,7 @@ const TopbarDesktop = props => {
         customLinks={customLinks}
         intl={intl}
         hasClientSideContentReady={authenticatedOnClientSide || !isAuthenticatedOrJustHydrated}
+        isSeller={isSeller}
       />
 
       {inboxLinkMaybe}

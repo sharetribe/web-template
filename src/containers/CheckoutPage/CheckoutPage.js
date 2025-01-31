@@ -8,8 +8,14 @@ import { useIntl } from 'react-intl';
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { userDisplayNameAsString } from '../../util/data';
-import { NO_ACCESS_PAGE_USER_PENDING_APPROVAL } from '../../util/urlHelpers';
-import { isUserAuthorized } from '../../util/userHelpers';
+import {
+  NO_ACCESS_PAGE_INITIATE_TRANSACTIONS,
+  NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
+  NO_ACCESS_PAGE_FORBIDDEN_LISTING_TYPE,
+} from '../../util/urlHelpers';
+import { hasPermissionToInitiateTransactions, isUserAuthorized } from '../../util/userHelpers';
+import { isErrorNoPermissionForInitiateTransactions } from '../../util/errors';
+import { LISTING_TYPES } from '../../util/types';
 import { INQUIRY_PROCESS_NAME, resolveLatestProcessName } from '../../transactions/transaction';
 
 // Import global thunk functions
@@ -99,16 +105,38 @@ const EnhancedCheckoutPage = props => {
     scrollingDisabled,
     speculateTransactionInProgress,
     onInquiryWithoutPayment,
+    initiateOrderError,
   } = props;
   const processName = getProcessName(pageData);
   const isInquiryProcess = processName === INQUIRY_PROCESS_NAME;
 
   // Handle redirection to ListingPage, if this is own listing or if required data is not available
   const listing = pageData?.listing;
+  const { publicData = {} } = listing?.attributes || {};
+  const { listingType } = publicData;
+  const isPortfolioListing = listingType === LISTING_TYPES.PORTFOLIO;
+  const isProfileListing = listingType === LISTING_TYPES.PROFILE;
   const isOwnListing = currentUser?.id && listing?.author?.id?.uuid === currentUser?.id?.uuid;
   const hasRequiredData = !!(listing?.id && listing?.author?.id && processName);
   const shouldRedirect = isDataLoaded && !(hasRequiredData && !isOwnListing);
   const shouldRedirectUnathorizedUser = isDataLoaded && !isUserAuthorized(currentUser);
+  // Redirect if the user has no transaction rights
+  const shouldRedirectNoTransactionRightsUser =
+    isDataLoaded &&
+    // - either when they first arrive on the checkout page
+    (!hasPermissionToInitiateTransactions(currentUser) ||
+      // - or when they are sending the order (if the operator removed transaction rights
+      // when they were already on the checkout page and the user has not refreshed the page)
+      isErrorNoPermissionForInitiateTransactions(initiateOrderError));
+
+  if (isPortfolioListing || isProfileListing) {
+    return (
+      <NamedRedirect
+        name="NoAccessPage"
+        params={{ missingAccessRight: NO_ACCESS_PAGE_FORBIDDEN_LISTING_TYPE }}
+      />
+    );
+  }
 
   // Redirect back to ListingPage if data is missing.
   // Redirection must happen before any data format error is thrown (e.g. wrong currency)
@@ -118,11 +146,19 @@ const EnhancedCheckoutPage = props => {
       listing,
     });
     return <NamedRedirect name="ListingPage" params={params} />;
+    // Redirect to NoAccessPage if access rights are missing
   } else if (shouldRedirectUnathorizedUser) {
     return (
       <NamedRedirect
         name="NoAccessPage"
         params={{ missingAccessRight: NO_ACCESS_PAGE_USER_PENDING_APPROVAL }}
+      />
+    );
+  } else if (shouldRedirectNoTransactionRightsUser) {
+    return (
+      <NamedRedirect
+        name="NoAccessPage"
+        params={{ missingAccessRight: NO_ACCESS_PAGE_INITIATE_TRANSACTIONS }}
       />
     );
   }
@@ -226,12 +262,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(savePaymentMethod(stripeCustomer, stripePaymentMethodId)),
 });
 
-const CheckoutPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(EnhancedCheckoutPage);
+const CheckoutPage = compose(connect(mapStateToProps, mapDispatchToProps))(EnhancedCheckoutPage);
 
 CheckoutPage.setInitialValues = (initialValues, saveToSessionStorage = false) => {
   if (saveToSessionStorage) {

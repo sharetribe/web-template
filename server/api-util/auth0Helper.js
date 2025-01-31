@@ -25,7 +25,6 @@ async function updateAuth0User({
   firstName,
   lastName,
   displayName,
-  membership,
   sellerStatus,
   communityStatus,
   userType,
@@ -36,7 +35,6 @@ async function updateAuth0User({
     marketId,
     ...(studioId ? { studioId } : {}),
     ...(communityId ? { communityId } : {}),
-    ...(membership ? { membership } : {}),
     ...(sellerStatus ? { sellerStatus } : {}),
     ...(communityStatus ? { communityStatus } : {}),
     userType,
@@ -54,5 +52,5 @@ async function updateAuth0User({
 }
 
 module.exports = {
-  updateAuth0User
+  updateAuth0User,
 };

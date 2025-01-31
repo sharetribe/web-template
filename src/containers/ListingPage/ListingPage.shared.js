@@ -2,12 +2,16 @@ import React from 'react';
 import { FormattedMessage } from '../../util/reactIntl';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { createResourceLocatorString, findRouteByRouteName } from '../../util/routes';
-import { formatMoney } from '../../util/currency';
+import { convertMoneyToNumber, formatMoney } from '../../util/currency';
 import { timestampToDate } from '../../util/dates';
-import { isUserAuthorized } from '../../util/userHelpers';
-import { NO_ACCESS_PAGE_USER_PENDING_APPROVAL, createSlug } from '../../util/urlHelpers';
+import { hasPermissionToInitiateTransactions, isUserAuthorized } from '../../util/userHelpers';
+import {
+  NO_ACCESS_PAGE_INITIATE_TRANSACTIONS,
+  NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
+  createSlug,
+} from '../../util/urlHelpers';
 
-import { Page, LayoutSingleColumn } from '../../components';
+import { H2, LayoutSingleColumn, Page } from '../../components';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import css from './ListingPage.module.css';
@@ -36,6 +40,29 @@ export const priceData = (price, marketplaceCurrency, intl) => {
     };
   }
   return {};
+};
+
+/**
+ * Converts Money object to number, which is needed for the search schema (for Google etc.)
+ *
+ * @param {Money} price
+ * @returns {Money|null}
+ */
+export const priceForSchemaMaybe = (price, intl) => {
+  try {
+    const schemaPrice = convertMoneyToNumber(price);
+    return schemaPrice
+      ? {
+          price: intl.formatNumber(schemaPrice, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }),
+          priceCurrency: price.currency,
+        }
+      : {};
+  } catch (e) {
+    return {};
+  }
 };
 
 /**
@@ -103,6 +130,10 @@ export const handleContactUser = parameters => () => {
     // A user in pending-approval state can't contact the author (the same applies for a banned user)
     const pathParams = { missingAccessRight: NO_ACCESS_PAGE_USER_PENDING_APPROVAL };
     history.push(createResourceLocatorString('NoAccessPage', routes, pathParams, {}));
+  } else if (!hasPermissionToInitiateTransactions(currentUser)) {
+    // A user in pending-approval state can't contact the author (the same applies for a banned user)
+    const pathParams = { missingAccessRight: NO_ACCESS_PAGE_INITIATE_TRANSACTIONS };
+    history.push(createResourceLocatorString('NoAccessPage', routes, pathParams, {}));
   } else {
     setInquiryModalOpen(true);
   }
@@ -116,6 +147,7 @@ export const handleContactUser = parameters => () => {
  */
 export const handleSubmitInquiry = parameters => values => {
   const { history, params, getListing, onSendInquiry, routes, setInquiryModalOpen } = parameters;
+
   const listingId = new UUID(params.id);
   const listing = getListing(listingId);
   const { message } = values;
@@ -237,12 +269,19 @@ export const ErrorPage = props => {
       topbar={topbar}
       scrollingDisabled={scrollingDisabled}
     >
-      <p className={css.errorText}>
-        {invalidListing ? (
-          <FormattedMessage id="ListingPage.errorInvalidListingMessage" />
-        ) : (
-          <FormattedMessage id="ListingPage.errorLoadingListingMessage" />
-        )}
+      <p>
+        <div className={css.errorWrapper}>
+          <H2>
+            <FormattedMessage id="ListingPage.errorListingTitle" />
+          </H2>
+          <p className={css.errorText}>
+            {invalidListing ? (
+              <FormattedMessage id="ListingPage.errorInvalidListingMessage" />
+            ) : (
+              <FormattedMessage id="ListingPage.errorLoadingListingMessage" />
+            )}
+          </p>
+        </div>
       </p>
     </PlainPage>
   );
@@ -269,7 +308,7 @@ export const handleToggleFavorites = parameters => async isFavorite => {
   const { onFetchCurrentUser, routes, location, history } = parameters;
   const currentUser = await onFetchCurrentUser();
   // Only allow signed-in users to save favorites
-  if (!currentUser) {
+  if (!currentUser || Object.keys(currentUser).length === 0) {
     const state = {
       from: `${location.pathname}${location.search}${location.hash}`,
     };

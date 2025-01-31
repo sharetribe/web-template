@@ -5,14 +5,12 @@ import LinksMenu from './LinksMenu';
 
 import css from './CustomLinksMenu.module.css';
 
-const draftId = '00000000-0000-0000-0000-000000000000';
-const createListingLinkConfig = intl => ({
+const manageListingsLinkConfig = intl => ({
   group: 'primary',
-  text: intl.formatMessage({ id: 'TopbarDesktop.createListing' }),
+  text: intl.formatMessage({ id: 'TopbarDesktop.yourListingsLink' }),
   type: 'internal',
   route: {
-    name: 'EditListingPage',
-    params: { slug: 'draft', id: draftId, type: 'new', tab: 'details' },
+    name: 'ManageListingsPage',
   },
   highlight: true,
 });
@@ -64,15 +62,19 @@ const groupMeasuredLinks = (links, containerWidth, menuMoreWidth) => {
 };
 
 const calculateContainerWidth = (containerRefTarget, parentWidth) => {
+  if (!containerRefTarget) {
+    return;
+  }
+
   // Siblings include logo, search form, (inbox, profile menu || login signup)
-  const siblingArray = Array.from(containerRefTarget.parentNode.childNodes).filter(
-    n => n !== containerRefTarget
-  );
+  const siblingArray = containerRefTarget?.parentNode?.childNodes
+    ? Array.from(containerRefTarget.parentNode.childNodes).filter(n => n !== containerRefTarget)
+    : [];
   const siblingWidthsCombined = siblingArray.reduce((acc, node) => acc + node.offsetWidth, 0);
 
   // .root class of the TopbarDesktop has 24px padding on the right
   // Firefox doesn't support computedStyleMap()
-  const parentStyleMap = containerRefTarget.parentElement.computedStyleMap
+  const parentStyleMap = containerRefTarget?.parentElement?.computedStyleMap
     ? containerRefTarget.parentElement.computedStyleMap()
     : null;
   const topbarPaddingRight = parentStyleMap?.get('padding-right')?.value;
@@ -100,12 +102,21 @@ const calculateContainerWidth = (containerRefTarget, parentWidth) => {
  * @param {*} props contains currentPage, customLinks, intl, and hasClientSideContentReady
  * @returns component to be placed inside TopbarDesktop
  */
-const CustomLinksMenu = ({ currentPage, customLinks = [], hasClientSideContentReady, intl }) => {
+const CustomLinksMenu = ({
+  currentPage,
+  customLinks = [],
+  hasClientSideContentReady,
+  intl,
+  isSeller,
+}) => {
   const containerRef = useRef(null);
   const observer = useRef(null);
   const [mounted, setMounted] = useState(false);
   const [moreLabelWidth, setMoreLabelWidth] = useState(0);
-  const [links, setLinks] = useState([createListingLinkConfig(intl), ...customLinks]);
+  const [links, setLinks] = useState([
+    ...(isSeller ? [manageListingsLinkConfig(intl)] : []),
+    ...customLinks,
+  ]);
   const [layoutData, setLayoutData] = useState({
     priorityLinks: links,
     menuLinks: links,
@@ -118,28 +129,33 @@ const CustomLinksMenu = ({ currentPage, customLinks = [], hasClientSideContentRe
 
   useEffect(() => {
     let animationFrameId = null;
+    const body = document.body;
+    const container = containerRef.current;
+
     if (hasClientSideContentReady && moreLabelWidth > 0) {
       // ResizeObserver sets layout data: grouped priority links and links that go to menuLinks dropdown
       observer.current = new ResizeObserver(entries => {
-        const containerRefParentWidth = containerRef.current?.parentNode?.offsetWidth;
-        const bodyOffsetWidth = document.body.offsetWidth;
+        const containerRefParentWidth = container?.parentNode?.offsetWidth;
+        const bodyOffsetWidth = body.offsetWidth;
 
         for (const entry of entries) {
           // Body's width has changed (aka viewport has changed)
-          const isBodyTheTarget = entry.target === document.body;
+          const isBodyTheTarget = entry.target === body;
           // If the width of the TopbarDesktop (aka <nav>) changes, this assumes that the document.body has the correct width.
           const hasWidthOfTopbarDesktopChanged =
             !isBodyTheTarget && containerRefParentWidth !== bodyOffsetWidth;
 
           if (isBodyTheTarget || hasWidthOfTopbarDesktopChanged) {
-            const target = containerRef?.current;
+            const target = container;
             const availableContainerWidth = calculateContainerWidth(target, bodyOffsetWidth);
 
             // The groupedLinks variable contains { priorityLinks, menuLinks }
             const groupedLinks = groupMeasuredLinks(links, availableContainerWidth, moreLabelWidth);
             // The setLayoutData call affects the UI. This pushes the painting to the next frame.
             animationFrameId = window.requestAnimationFrame(() => {
-              setLayoutData({ ...groupedLinks, containerWidth: availableContainerWidth });
+              if (container) {
+                setLayoutData({ ...groupedLinks, containerWidth: availableContainerWidth });
+              }
             });
             // After setLayoutData is called, don't process other entries
             break;
@@ -147,19 +163,23 @@ const CustomLinksMenu = ({ currentPage, customLinks = [], hasClientSideContentRe
         }
       });
 
-      if (containerRef?.current) {
+      if (container) {
         // We need to observe both document body and the component's own container
         // When the window is squeezed, priority links prevent the container to shrink smaller.
         // At that point, we need to calculate the width from the width of the body.
         // It's also possible that some of the other elements get a repaint after window-level repaint (e.g. image loads)
         // In those cases, we just need to
-        observer.current.observe(document.body);
-        observer.current.observe(containerRef.current);
+        observer.current.observe(body);
+        observer.current.observe(container);
       }
     }
     return () => {
-      observer.current?.unobserve(document.body);
-      observer.current?.unobserve(containerRef.current);
+      if (body) {
+        observer.current?.unobserve(body);
+      }
+      if (container) {
+        observer.current?.unobserve(container);
+      }
       if (animationFrameId) {
         window.cancelAnimationFrame(animationFrameId);
       }
@@ -170,7 +190,9 @@ const CustomLinksMenu = ({ currentPage, customLinks = [], hasClientSideContentRe
 
   // If there are no custom links, just render createListing link.
   if (customLinks?.length === 0) {
-    return <CreateListingMenuLink customLinksMenuClass={css.createListingLinkOnly} />;
+    return isSeller ? (
+      <CreateListingMenuLink customLinksMenuClass={css.createListingLinkOnly} />
+    ) : null;
   }
 
   const styleMaybe = mounted ? { style: { width: `${containerWidth}px` } } : {};

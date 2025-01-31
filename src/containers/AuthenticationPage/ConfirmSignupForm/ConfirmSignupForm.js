@@ -8,15 +8,25 @@ import classNames from 'classnames';
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import * as validators from '../../../util/validators';
-import { getPropsForCustomUserFieldInputs, getBrandUserFieldInputs } from '../../../util/userHelpers';
-
-import { Form, PrimaryButton, FieldTextInput, CustomExtendedDataField } from '../../../components';
-
-import FieldSelectUserType from '../FieldSelectUserType';
+import {
+  getPropsForCustomUserFieldInputs,
+  getBrandUserFieldInputs,
+  isCreativeSeller,
+  isStudioBrand,
+} from '../../../util/userHelpers';
+import {
+  Form,
+  PrimaryButton,
+  FieldTextInput,
+  CustomExtendedDataField,
+  FieldLocationAutocompleteInput,
+} from '../../../components';
 import UserFieldDisplayName from '../UserFieldDisplayName';
 import UserFieldPhoneNumber from '../UserFieldPhoneNumber';
 
 import css from './ConfirmSignupForm.module.css';
+
+const identity = v => v;
 
 const getSoleUserTypeMaybe = userTypes =>
   Array.isArray(userTypes) && userTypes.length === 1 ? userTypes[0].userType : null;
@@ -38,12 +48,10 @@ const ConfirmSignupFormComponent = props => (
         termsAndConditions,
         authInfo,
         idp,
-        preselectedUserType,
         userTypes,
         userFields,
         values,
       } = formRenderProps;
-
       const { userType } = values || {};
 
       // email
@@ -58,15 +66,26 @@ const ConfirmSignupFormComponent = props => (
         })
       );
 
+      // Location
+      const addressRequired = validators.autocompleteSearchRequired(
+        intl.formatMessage({
+          id: 'ConfirmSignupForm.addressRequired',
+        })
+      );
+      const addressValid = validators.autocompletePlaceSelected(
+        intl.formatMessage({
+          id: 'ConfirmSignupForm.addressNotRecognized',
+        })
+      );
+
       // Custom user fields. Since user types are not supported here,
       // only fields with no user type id limitation are selected.
       const userFieldProps = getPropsForCustomUserFieldInputs(userFields, intl, userType);
-
       const noUserTypes = !userType && !(userTypes?.length > 0);
       const userTypeConfig = userTypes.find(config => config.userType === userType);
       const showDefaultUserFields = userType || noUserTypes;
       const showCustomUserFields = (userType || noUserTypes) && userFieldProps?.length > 0;
-
+      const showSellerLocationFields = isCreativeSeller(userType);
       const classes = classNames(rootClassName || css.root, className);
       const submitInProgress = inProgress;
       const submitDisabled = invalid || submitInProgress;
@@ -81,13 +100,6 @@ const ConfirmSignupFormComponent = props => (
 
       return (
         <Form className={classes} onSubmit={handleSubmit}>
-          <FieldSelectUserType
-            name="userType"
-            userTypes={userTypes}
-            hasExistingUserType={!!preselectedUserType}
-            intl={intl}
-          />
-
           {showDefaultUserFields ? (
             <div className={css.defaultUserFields}>
               <FieldTextInput
@@ -167,7 +179,9 @@ const ConfirmSignupFormComponent = props => (
                 const { brandStudioId } = authInfo;
                 const isBrandAdmin = !brandStudioId;
                 const fieldKey = fieldProps.fieldConfig.key;
-                const showField = getBrandUserFieldInputs(preselectedUserType, isBrandAdmin, fieldKey)
+                const showField = isStudioBrand(preselectedUserType)
+                  ? getBrandUserFieldInputs(fieldKey, isBrandAdmin)
+                  : true;
                 return showField ? (
                   <CustomExtendedDataField {...fieldProps} formId={formId} />
                 ) : null;
@@ -175,10 +189,31 @@ const ConfirmSignupFormComponent = props => (
             </div>
           ) : null}
 
+          {showSellerLocationFields ? (
+            <div className={css.customFields}>
+              <FieldLocationAutocompleteInput
+                rootClassName={css.locationAddress}
+                inputClassName={css.locationAutocompleteInput}
+                iconClassName={css.locationAutocompleteInputIcon}
+                predictionsClassName={css.predictionsRoot}
+                validClassName={css.validLocation}
+                name="location"
+                label={intl.formatMessage({ id: 'ConfirmSignupForm.address' })}
+                placeholder={intl.formatMessage({
+                  id: 'ConfirmSignupForm.addressPlaceholder',
+                })}
+                useDefaultPredictions={false}
+                format={identity}
+                valueFromForm={values.location?.address}
+                validate={validators.composeValidators(addressRequired, addressValid)}
+              />
+            </div>
+          ) : null}
+
           <div className={css.bottomWrapper}>
             {termsAndConditions}
             <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
-              <FormattedMessage id="ConfirmSignupForm.signUp" values={{ idp: idp }} />
+              <FormattedMessage id="ConfirmSignupForm.signUp" />
             </PrimaryButton>
           </div>
         </Form>

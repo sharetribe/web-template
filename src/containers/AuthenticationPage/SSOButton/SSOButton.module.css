@@ -1,0 +1,10 @@
+@import '../../../styles/customMediaQueries.css';
+
+.socialButtonWrapper {
+  margin-bottom: 6px;
+
+  @media (--viewportMedium) {
+    max-width: 200px;
+    margin-top: 8px;
+  }
+}

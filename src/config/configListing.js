@@ -335,4 +335,4 @@ export const listingTypes = [
 //
 // Read More:
 // https://www.sharetribe.com/docs/how-to/manage-search-schemas-with-flex-cli/#adding-listing-search-schemas
-export const enforceValidListingType = false;
+export const enforceValidListingType = true;

@@ -1,5 +1,5 @@
 // We create Redux store directly, instead of using any extra dependencies.
-import { legacy_createStore as createStore, applyMiddleware, compose } from 'redux';
+import { applyMiddleware, compose, legacy_createStore as createStore } from 'redux';
 import thunk from 'redux-thunk';
 import createReducer from './reducers';
 import * as analytics from './analytics/analytics';
@@ -20,7 +20,5 @@ export default function configureStore(initialState = {}, sdk = null, analyticsH
 
   const enhancer = composeEnhancers(applyMiddleware(...middlewares));
 
-  const store = createStore(createReducer(), initialState, enhancer);
-
-  return store;
+  return createStore(createReducer(), initialState, enhancer);
 }

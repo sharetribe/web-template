@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html lang="en">
   {{set-translations (asset "content/email-texts.json")}}
   {{set-locale (asset "general/localization.json" "locale" "en_US")}}
+<html lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
   </head>{{#with transaction}}
@@ -19,9 +19,9 @@
                   <table style="padding:16px 0 0" align="center" role="presentation" cellSpacing="0" cellPadding="0" border="0" width="100%">
                     <tbody>
                       <tr>
-                        <td><a href="{{marketplace.url}}/sale/{{url-encode id}}/details" target="_blank" style="color:#FFF;background-color:#007DF2;border-radius:4px;font-size:15px;text-decoration:none;text-align:center;display:inline-block;min-width:210px;padding:0px 0px;line-height:100%;max-width:100%"><span><!--[if mso]><i style="letter-spacing: undefinedpx;mso-font-width:-100%;mso-text-raise:0" hidden>&nbsp;</i><![endif]--></span><span style="color:#FFF;background-color:#007DF2;border-radius:4px;font-size:15px;text-decoration:none;text-align:center;display:inline-block;min-width:210px;padding:16px 32px;max-width:100%;line-height:120%;text-transform:none;mso-padding-alt:0px;mso-text-raise:0">{{t "InquiryNewInquiry.Cta" "Reply to {customerDisplayName}" customerDisplayName=customer.display-name }}</span><span><!--[if mso]><i style="letter-spacing: undefinedpx;mso-font-width:-100%" hidden>&nbsp;</i><![endif]--></span></a>
+                        <td><a href="{{marketplace.url}}/sale/{{url-encode id}}" target="_blank" style="color:#FFF;background-color:{{asset "design/branding.json" "marketplaceColors.notificationPrimaryButton" "#007DF2"}};border-radius:4px;font-size:15px;text-decoration:none;text-align:center;display:inline-block;min-width:210px;padding:0px 0px;line-height:100%;max-width:100%"><span><!--[if mso]><i style="letter-spacing: undefinedpx;mso-font-width:-100%;mso-text-raise:0" hidden>&nbsp;</i><![endif]--></span><span style="color:#FFF;background-color:{{asset "design/branding.json" "marketplaceColors.notificationPrimaryButton" "#007DF2"}};border-radius:4px;font-size:15px;text-decoration:none;text-align:center;display:inline-block;min-width:210px;padding:16px 32px;max-width:100%;line-height:120%;text-transform:none;mso-padding-alt:0px;mso-text-raise:0">{{t "InquiryNewInquiry.Cta" "Reply to {customerDisplayName}" customerDisplayName=customer.display-name }}</span><span><!--[if mso]><i style="letter-spacing: undefinedpx;mso-font-width:-100%" hidden>&nbsp;</i><![endif]--></span></a>
                           <div>
-                            <p style="font-size:14px;line-height:1.5;margin:16px 0;color:#484848">{{t "TransactionEmails.AccessibleLinkText" "Can't click the button? Here's the link for your convenience:"}} <a target="_blank" style="color:#067df7;text-decoration:none" href="{{marketplace.url}}/sale/{{url-encode id}}/details">{{marketplace.url}}/sale/{{url-encode id}}/details</a></p>
+                            <p style="font-size:14px;line-height:1.5;margin:16px 0;color:#484848">{{t "TransactionEmails.AccessibleLinkText" "Can't click the button? Here's a link for your convenience:"}} <a target="_blank" style="color:{{asset "design/branding.json" "marketplaceColors.notificationPrimaryButton" "#007DF2"}};text-decoration:none" href="{{marketplace.url}}/sale/{{url-encode id}}">{{marketplace.url}}/sale/{{url-encode id}}</a></p>
                           </div>
                         </td>
                       </tr>
@@ -29,7 +29,7 @@
                   </table>
                 <div>
                   <hr style="width:100%;border:none;border-top:1px solid #eaeaea;border-color:#E1E1E1;margin:20px 0" />
-                  <p style="font-size:12px;line-height:15px;margin:0 auto;color:#b7b7b7;text-align:left;margin-bottom:50px">{{t "TransactionEmails.MembershipParagraph" "You have received this email notification because you are a member of {marketplaceName}. If you no longer wish to receive these emails, please contact {marketplaceName} team." marketplaceName=marketplace.name }}</p>
+                  <p style="font-size:12px;line-height:15px;margin:0 auto;color:#b7b7b7;text-align:left;margin-bottom:50px">{{t "TransactionEmails.MembershipParagraph" "You're a member of {marketplaceName}. If you no longer want to receive these emails, please contact {marketplaceName} team." marketplaceName=marketplace.name }}</p>
                 </div>
               </td>
             </tr>

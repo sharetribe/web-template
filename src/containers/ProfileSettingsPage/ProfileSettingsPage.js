@@ -12,10 +12,11 @@ import {
   initialValuesForUserFields,
   isUserAuthorized,
   pickUserFieldsData,
+  isCreativeSeller,
 } from '../../util/userHelpers';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 
-import { H3, Page, UserNav, NamedLink, LayoutSingleColumn } from '../../components';
+import { H3, Page, UserNav, NamedLink, LayoutSideNavigation } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
@@ -66,12 +67,27 @@ export const ProfileSettingsPageComponent = props => {
 
   const { userFields, userTypes = [] } = config.user;
 
-  const handleSubmit = (values) => {
-    const { firstName, lastName, displayName, bio: rawBio, userType: initialUserType, applyAsSeller, ...rest } = values;
-    const displayNameMaybe = displayName
-      ? { displayName: displayName.trim() }
-      : { displayName: null };
+  const handleSubmit = values => {
+    const {
+      firstName,
+      lastName,
+      displayName,
+      bio: rawBio,
+      userType: initialUserType,
+      applyAsSeller,
+      location: newLocation,
+      ...rest
+    } = values;
+    const displayNameMaybe = displayName ? { displayName: displayName.trim() } : {};
     const userType = applyAsSeller ? USER_TYPES.SELLER : initialUserType.trim();
+    const location = newLocation && {
+      address: newLocation?.selectedPlace?.address,
+      geolocation: {
+        lat: newLocation?.selectedPlace?.origin?.lat,
+        lng: newLocation?.selectedPlace?.origin?.lng,
+      },
+      building: '',
+    };
     // Ensure that the optional bio is a string
     const bio = rawBio || '';
     const profile = {
@@ -80,14 +96,15 @@ export const ProfileSettingsPageComponent = props => {
       ...displayNameMaybe,
       bio,
       publicData: {
-        ...pickUserFieldsData(rest, 'public', userType, userFields),
         userType,
-      },
-      protectedData: {
-        ...pickUserFieldsData(rest, 'protected', userType, userFields),
+        ...pickUserFieldsData(rest, 'public', userType, userFields),
       },
       privateData: {
         ...pickUserFieldsData(rest, 'private', userType, userFields),
+        ...(!!location && { location }),
+      },
+      protectedData: {
+        ...pickUserFieldsData(rest, 'protected', userType, userFields),
       },
     };
     const uploadedImage = props.image;
@@ -121,7 +138,10 @@ export const ProfileSettingsPageComponent = props => {
   const isDisplayNameIncluded = userTypeConfig?.defaultUserFields?.displayName !== false;
   // ProfileSettingsForm decides if it's allowed to show the input field.
   const displayNameMaybe = isDisplayNameIncluded && displayName ? { displayName } : {};
+  const withProfileListing = !!metadata?.profileListingId;
+  const withCreativeProfile = isCreativeSeller(userType) && withProfileListing;
 
+  const title = intl.formatMessage({ id: 'ProfileSettingsPage.title' });
   const profileSettingsForm = user.id ? (
     <ProfileSettingsForm
       className={css.form}
@@ -152,17 +172,19 @@ export const ProfileSettingsPageComponent = props => {
     />
   ) : null;
 
-  const title = intl.formatMessage({ id: 'ProfileSettingsPage.title' });
-
   return (
-    <Page className={css.root} title={title} scrollingDisabled={scrollingDisabled}>
-      <LayoutSingleColumn
+    <Page title={title} scrollingDisabled={scrollingDisabled}>
+      <LayoutSideNavigation
         topbar={
           <>
             <TopbarContainer />
             <UserNav currentPage="ProfileSettingsPage" />
           </>
         }
+        sideNav={null}
+        useProfileSettingsNav
+        withCreativeProfile={withCreativeProfile}
+        currentPage="ProfileSettingsPage"
         footer={<FooterContainer />}
       >
         <div className={css.content}>
@@ -175,7 +197,7 @@ export const ProfileSettingsPageComponent = props => {
           </div>
           {profileSettingsForm}
         </div>
-      </LayoutSingleColumn>
+      </LayoutSideNavigation>
     </Page>
   );
 };
@@ -237,10 +259,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const ProfileSettingsPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  ),
+  connect(mapStateToProps, mapDispatchToProps),
   injectIntl
 )(ProfileSettingsPageComponent);
 

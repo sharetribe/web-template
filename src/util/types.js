@@ -48,12 +48,14 @@ export const SCHEMA_TYPE_MULTI_ENUM = 'multi-enum';
 export const SCHEMA_TYPE_TEXT = 'text';
 export const SCHEMA_TYPE_LONG = 'long';
 export const SCHEMA_TYPE_BOOLEAN = 'boolean';
+export const SCHEMA_TYPE_YOUTUBE = 'youtubeVideoUrl';
 export const EXTENDED_DATA_SCHEMA_TYPES = [
   SCHEMA_TYPE_ENUM,
   SCHEMA_TYPE_MULTI_ENUM,
   SCHEMA_TYPE_TEXT,
   SCHEMA_TYPE_LONG,
   SCHEMA_TYPE_BOOLEAN,
+  SCHEMA_TYPE_YOUTUBE,
 ];
 
 const propTypes = {};
@@ -646,6 +648,9 @@ export const ERROR_CODE_STOCK_OLD_TOTAL_MISMATCH = 'old-total-mismatch';
 export const ERROR_CODE_PERMISSION_DENIED_POST_LISTINGS = 'permission-denied-post-listings';
 export const ERROR_CODE_PERMISSION_DENIED_PENDING_APPROVAL = 'permission-denied-pending-approval';
 export const ERROR_CODE_USER_PENDING_APPROVAL = 'user-pending-approval';
+export const ERROR_CODE_PERMISSION_DENIED_INITIATE_TRANSACTIONS =
+  'permission-denied-initiate-transactions';
+export const ERROR_CODE_PERMISSION_DENIED_READ = 'permission-denied-read';
 
 const ERROR_CODES = [
   ERROR_CODE_TRANSACTION_LISTING_NOT_FOUND,
@@ -668,6 +673,8 @@ const ERROR_CODES = [
   ERROR_CODE_PERMISSION_DENIED_POST_LISTINGS,
   ERROR_CODE_PERMISSION_DENIED_PENDING_APPROVAL,
   ERROR_CODE_USER_PENDING_APPROVAL,
+  ERROR_CODE_PERMISSION_DENIED_INITIATE_TRANSACTIONS,
+  ERROR_CODE_PERMISSION_DENIED_READ,
 ];
 
 // API error
@@ -706,26 +713,72 @@ propTypes.dateType = oneOf([DATE_TYPE_DATE, DATE_TYPE_TIME, DATE_TYPE_DATETIME])
 export const USER_TYPES = {
   BRAND: 'studio-brand',
   BUYER: 'buyer',
-  SELLER: 'creative-seller'
-}
+  SELLER: 'creative-seller',
+};
 
 export const COMMUNITY_STATUS = {
   APPLIED: 'APPLIED',
   APPROVED: 'APPROVED',
   WAITLISTED: 'WAITLISTED',
-}
+};
 
 export const SELLER_STATUS = {
   APPLIED: 'APPLIED',
   APPROVED: 'APPROVED',
   WAITLISTED: 'WAITLISTED',
-}
+};
 
-export const MEMBERSHIP_TYPES = {
+export const SELLER_MEMBERSHIP_TYPES = {
   BASIC: 'BASIC',
   CONNECT: 'CONNECT',
   PRO: 'PRO',
-}
+};
+
+export const LISTING_TYPES = {
+  PRODUCT: 'product-listing',
+  SERVICE: 'service-listing',
+  PORTFOLIO: 'portfolio-showcase',
+  PROFILE: 'profile-listing',
+};
+
+export const LISTING_TAB_TYPES = {
+  ...LISTING_TYPES,
+  REVIEWS: 'reviews',
+};
+
+export const LISTING_GRID_DEFAULTS = {
+  TYPE: LISTING_TAB_TYPES.PRODUCT,
+  CATEGORY: categories => (categories && categories.length ? categories[0].id : null),
+};
+
+export const LISTING_GRID_ROLE = {
+  FAVORITE: 'FAVORITE',
+  MANAGE: 'MANAGE',
+  PROFILE: 'PROFILE',
+};
+
+export const LISTING_TABS_PRODUCT_CATEGORIES = [
+  {
+    name: 'Photos',
+    id: 'photos',
+  },
+  {
+    name: 'Videos',
+    id: 'videos',
+  },
+  {
+    name: 'Illustrations',
+    id: 'illustrations',
+  },
+  {
+    name: 'AI Images',
+    id: 'ai-image',
+  },
+  {
+    name: 'AI Videos',
+    id: 'ai-video',
+  },
+];
 
 propTypes.sellerStatus = oneOfType(SELLER_STATUS);
 

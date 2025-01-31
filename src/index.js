@@ -30,7 +30,7 @@ import './styles/marketplaceDefaults.css';
 // Configs and store setup
 import appSettings from './config/settings';
 import defaultConfig from './config/configDefault';
-import { LoggingAnalyticsHandler, GoogleAnalyticsHandler } from './analytics/handlers';
+import { GoogleAnalyticsHandler, LoggingAnalyticsHandler } from './analytics/handlers';
 import configureStore from './store';
 
 // Utils

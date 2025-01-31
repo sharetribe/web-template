@@ -141,6 +141,7 @@ export class TransactionPanelComponent extends Component {
       orderBreakdown,
       orderPanel,
       config,
+      hasViewingRights,
     } = this.props;
 
     const isCustomer = transactionRole === 'customer';
@@ -183,6 +184,11 @@ export class TransactionPanelComponent extends Component {
 
     const showSendMessageForm =
       !isCustomerBanned && !isCustomerDeleted && !isProviderBanned && !isProviderDeleted;
+
+    // Only show order panel for users who have listing viewing rights, otherwise
+    // show the detail card heading.
+    const showOrderPanel = stateData.showOrderPanel && hasViewingRights;
+    const showDetailCardHeadings = stateData.showDetailCardHeadings || !hasViewingRights;
 
     const deliveryMethod = protectedData?.deliveryMethod || 'none';
 
@@ -322,7 +328,7 @@ export class TransactionPanelComponent extends Component {
                 />
 
                 <DetailCardHeadingsMaybe
-                  showDetailCardHeadings={stateData.showDetailCardHeadings}
+                  showDetailCardHeadings={showDetailCardHeadings}
                   listingTitle={
                     listingDeleted ? (
                       listingTitle
@@ -339,7 +345,7 @@ export class TransactionPanelComponent extends Component {
                   price={listing?.attributes?.price}
                   intl={intl}
                 />
-                {stateData.showOrderPanel ? orderPanel : null}
+                {showOrderPanel ? orderPanel : null}
                 <BreakdownMaybe
                   className={css.breakdownContainer}
                   orderBreakdown={orderBreakdown}

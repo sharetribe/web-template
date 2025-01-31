@@ -1,0 +1,6 @@
+@import '../../../styles/customMediaQueries.css';
+@import '../ProfileSettingsForm/Base.module.css';
+
+.row {
+  width: 100%;
+}

@@ -1,8 +1,8 @@
 const { loadEventScripts } = require('./events');
 
 async function loadScripts() {
-  console.warn("\nLoading scripts..");
-	const shouldIgnoreScripts = process.env.MARKETPLACE_IGNORE_SCRIPTS;
+  console.warn('\nLoading scripts..');
+  const shouldIgnoreScripts = process.env.MARKETPLACE_IGNORE_SCRIPTS;
   if (shouldIgnoreScripts) {
     console.log('--- Scripts are disabled. Check ENV variable "MARKETPLACE_IGNORE_SCRIPTS"');
   } else {
@@ -13,7 +13,7 @@ async function loadScripts() {
     // await analytics();
     // showMarketplace();
   }
-  console.warn("Loading scripts DONE\n");
+  console.warn('Loading scripts DONE\n');
 }
 
 module.exports = {

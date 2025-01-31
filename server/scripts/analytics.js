@@ -2,7 +2,7 @@ const { integrationSdkInit } = require('../api-util/scriptManager');
 
 const SCRIPT_NAME = 'analytics';
 
-async function script () {
+async function script() {
   console.log(`Loading event script: ${SCRIPT_NAME}`);
   try {
     const integrationSdk = integrationSdkInit();

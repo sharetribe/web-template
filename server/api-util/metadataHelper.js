@@ -1,26 +1,37 @@
 const USER_TYPES = {
   BRAND: 'studio-brand',
   BUYER: 'buyer',
-  SELLER: 'creative-seller'
-}
+  SELLER: 'creative-seller',
+};
 
 const COMMUNITY_STATUS = {
   APPLIED: 'APPLIED',
   APPROVED: 'APPROVED',
   WAITLISTED: 'WAITLISTED',
-}
+};
 
 const SELLER_STATUS = {
   APPLIED: 'APPLIED',
   APPROVED: 'APPROVED',
   WAITLISTED: 'WAITLISTED',
-}
+};
 
-const MEMBERSHIP_TYPES = {
+const BRAND_MEMBERSHIP_TYPES = {
+  BASIC: 'BASIC',
+  TALENT_SUITE: 'TALENT_SUITE',
+};
+const SELLER_MEMBERSHIP_TYPES = {
   BASIC: 'BASIC',
   CONNECT: 'CONNECT',
   PRO: 'PRO',
-}
+};
+
+const LISTING_TYPES = {
+  PRODUCT: 'product-listing',
+  SERVICE: 'service-listing',
+  PORTFOLIO: 'portfolio-showcase',
+  PROFILE: 'profile-listing',
+};
 
 const USER_UPDATE_TYPE = {
   NO_CHANGES: 'NO_CHANGES',
@@ -65,18 +76,20 @@ const USER_UPDATE_TYPE = {
   SELLER_STATUS_INIT_AS_APPROVED: 'SELLER_STATUS_INIT_AS_APPROVED',
   SELLER_STATUS_INIT_AS_WAITLISTED: 'SELLER_STATUS_INIT_AS_WAITLISTED',
   SELLER_STATUS_INVALID_CHANGE: 'SELLER_STATUS_INVALID_CHANGE',
-}
+};
 
 // Check for null or undefined
 function isValidField(value) {
-  return value != null
+  return value != null;
 }
 
 module.exports = {
   USER_TYPES,
   COMMUNITY_STATUS,
   SELLER_STATUS,
-  MEMBERSHIP_TYPES,
+  BRAND_MEMBERSHIP_TYPES,
+  SELLER_MEMBERSHIP_TYPES,
   USER_UPDATE_TYPE,
-  isValidField
+  LISTING_TYPES,
+  isValidField,
 };

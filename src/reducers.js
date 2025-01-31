@@ -10,7 +10,10 @@ import * as pageReducers from './containers/reducers';
  * which is page specific.
  * Future: this structure could take in asyncReducers, which are changed when you navigate pages.
  */
-const appReducer = combineReducers({ ...globalReducers, ...pageReducers });
+const appReducer = combineReducers({
+  ...globalReducers,
+  ...pageReducers,
+});
 
 const createReducer = () => {
   return (state, action) => {

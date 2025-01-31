@@ -6,36 +6,36 @@ import classNames from 'classnames';
 
 import { useConfiguration } from '../../../context/configurationContext';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
-import { FormattedMessage, intlShape, injectIntl } from '../../../util/reactIntl';
+import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { displayPrice } from '../../../util/configHelpers';
 import {
-  LISTING_STATE_PENDING_APPROVAL,
   LISTING_STATE_CLOSED,
   LISTING_STATE_DRAFT,
+  LISTING_STATE_PENDING_APPROVAL,
   propTypes,
   STOCK_MULTIPLE_ITEMS,
 } from '../../../util/types';
 import { formatMoney } from '../../../util/currency';
 import { ensureOwnListing } from '../../../util/data';
 import {
-  LISTING_PAGE_PENDING_APPROVAL_VARIANT,
+  createSlug,
   LISTING_PAGE_DRAFT_VARIANT,
   LISTING_PAGE_PARAM_TYPE_DRAFT,
   LISTING_PAGE_PARAM_TYPE_EDIT,
-  createSlug,
+  LISTING_PAGE_PENDING_APPROVAL_VARIANT,
 } from '../../../util/urlHelpers';
 import { createResourceLocatorString, findRouteByRouteName } from '../../../util/routes';
 import { isBookingProcessAlias, isPurchaseProcessAlias } from '../../../transactions/transaction';
 
 import {
   AspectRatioWrapper,
+  IconSpinner,
   InlineTextButton,
   Menu,
-  MenuLabel,
   MenuContent,
   MenuItem,
+  MenuLabel,
   NamedLink,
-  IconSpinner,
   PrimaryButtonInline,
   ResponsiveImage,
 } from '../../../components';
@@ -47,6 +47,7 @@ import css from './ManageListingCard.module.css';
 // Menu content needs the same padding
 const MENU_CONTENT_OFFSET = -12;
 const MAX_LENGTH_FOR_WORDS_IN_TITLE = 7;
+const MOBILE_MAX_WIDTH = 550;
 
 const priceData = (price, currency, intl) => {
   if (price?.currency === currency) {
@@ -114,7 +115,17 @@ const formatTitle = (title, maxLength) => {
 };
 
 const ShowFinishDraftOverlayMaybe = props => {
-  const { isDraft, title, id, slug, hasImage, intl } = props;
+  const {
+    isDraft,
+    title,
+    id,
+    slug,
+    hasImage,
+    intl,
+    actionsInProgressListingId,
+    currentListingId,
+    onDiscardDraft,
+  } = props;
 
   return isDraft ? (
     <React.Fragment>
@@ -132,6 +143,27 @@ const ShowFinishDraftOverlayMaybe = props => {
         >
           <FormattedMessage id="ManageListingCard.finishListingDraft" />
         </NamedLink>
+        <div className={css.alternativeActionText}>
+          {intl.formatMessage(
+            { id: 'ManageListingCard.discardDraftText' },
+            {
+              discardDraftLink: (
+                <InlineTextButton
+                  key="discardDraftLink"
+                  rootClassName={css.alternativeActionLink}
+                  disabled={!!actionsInProgressListingId}
+                  onClick={() => {
+                    if (!actionsInProgressListingId) {
+                      onDiscardDraft(currentListingId);
+                    }
+                  }}
+                >
+                  <FormattedMessage id="ManageListingCard.discardDraftLinkText" />
+                </InlineTextButton>
+              ),
+            }
+          )}
+        </div>
       </Overlay>
     </React.Fragment>
   ) : null;
@@ -214,14 +246,14 @@ const ShowOutOfStockOverlayMaybe = props => {
             <FormattedMessage id="ManageListingCard.setPriceAndStock" />
           </NamedLink>
 
-          <div className={css.closeListingText}>
+          <div className={css.alternativeActionText}>
             {intl.formatMessage(
               { id: 'ManageListingCard.closeListingTextOr' },
               {
                 closeListingLink: (
                   <InlineTextButton
                     key="closeListingLink"
-                    className={css.closeListingText}
+                    className={css.alternativeActionLink}
                     disabled={!!actionsInProgressListingId}
                     onClick={() => {
                       if (!actionsInProgressListingId) {
@@ -237,10 +269,10 @@ const ShowOutOfStockOverlayMaybe = props => {
           </div>
         </>
       ) : (
-        <div className={css.closeListingText}>
+        <div className={css.alternativeActionText}>
           <InlineTextButton
             key="closeListingLink"
-            className={css.closeListingText}
+            className={css.alternativeActionText}
             disabled={!!actionsInProgressListingId}
             onClick={() => {
               if (!actionsInProgressListingId) {
@@ -339,24 +371,26 @@ export const ManageListingCardComponent = props => {
   const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();
   const {
-    className,
-    rootClassName,
+    className = null,
+    rootClassName = null,
     hasClosingError,
+    hasDiscardingError,
     hasOpeningError,
     history,
     intl,
     isMenuOpen,
-    actionsInProgressListingId,
+    actionsInProgressListingId = null,
     listing,
     onCloseListing,
     onOpenListing,
+    onDiscardDraft,
     onToggleMenu,
-    renderSizes,
+    renderSizes = null,
   } = props;
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureOwnListing(listing);
   const id = currentListing.id.uuid;
-  const { title = '', price, state, publicData } = currentListing.attributes;
+  const { title = '', price, state, publicData, description } = currentListing.attributes;
   const slug = createSlug(title);
   const isPendingApproval = state === LISTING_STATE_PENDING_APPROVAL;
   const isClosed = state === LISTING_STATE_CLOSED;
@@ -383,7 +417,7 @@ export const ManageListingCardComponent = props => {
     [css.menuItemDisabled]: !!actionsInProgressListingId,
   });
 
-  const hasError = hasOpeningError || hasClosingError;
+  const hasError = hasOpeningError || hasClosingError || hasDiscardingError;
   const thisListingInProgress =
     actionsInProgressListingId && actionsInProgressListingId.uuid === id;
 
@@ -452,6 +486,7 @@ export const ManageListingCardComponent = props => {
             <Menu
               className={classNames(css.menu, { [css.cardIsOpen]: !isClosed })}
               contentPlacementOffset={MENU_CONTENT_OFFSET}
+              mobileMaxWidth={MOBILE_MAX_WIDTH}
               contentPosition="left"
               useArrow={false}
               onToggleActive={isOpen => {
@@ -493,6 +528,9 @@ export const ManageListingCardComponent = props => {
           slug={slug}
           hasImage={!!firstImage}
           intl={intl}
+          actionsInProgressListingId={actionsInProgressListingId}
+          currentListingId={currentListing.id}
+          onDiscardDraft={onDiscardDraft}
         />
 
         <ShowClosedOverlayMaybe
@@ -532,32 +570,12 @@ export const ManageListingCardComponent = props => {
       </div>
 
       <div className={css.info}>
-        <PriceMaybe price={price} publicData={publicData} config={config} intl={intl} />
-
         <div className={css.mainInfo}>
-          <div className={css.titleWrapper}>
-            <InlineTextButton
-              rootClassName={titleClasses}
-              onClick={event => {
-                event.preventDefault();
-                event.stopPropagation();
-                history.push(createListingURL(routeConfiguration, listing));
-              }}
-            >
-              {formatTitle(title, MAX_LENGTH_FOR_WORDS_IN_TITLE)}
-            </InlineTextButton>
-          </div>
+          <div className={css.titleWrapper}>{description}</div>
+          <div className={css.titleWrapper}>{listingType}</div>
         </div>
 
         <div className={css.manageLinks}>
-          <NamedLink
-            className={css.manageLink}
-            name="EditListingPage"
-            params={{ id, slug, type: editListingLinkType, tab: 'details' }}
-          >
-            <FormattedMessage id="ManageListingCard.editListing" />
-          </NamedLink>
-
           <LinkToStockOrAvailabilityTab
             id={id}
             slug={slug}
@@ -572,13 +590,6 @@ export const ManageListingCardComponent = props => {
       </div>
     </div>
   );
-};
-
-ManageListingCardComponent.defaultProps = {
-  className: null,
-  rootClassName: null,
-  actionsInProgressListingId: null,
-  renderSizes: null,
 };
 
 const { bool, func, shape, string } = PropTypes;
@@ -605,7 +616,4 @@ ManageListingCardComponent.propTypes = {
   }).isRequired,
 };
 
-export default compose(
-  withRouter,
-  injectIntl
-)(ManageListingCardComponent);
+export default compose(withRouter, injectIntl)(ManageListingCardComponent);

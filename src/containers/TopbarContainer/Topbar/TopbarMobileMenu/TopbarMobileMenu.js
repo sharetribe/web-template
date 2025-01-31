@@ -68,10 +68,10 @@ const TopbarMobileMenu = props => {
 
   const user = ensureCurrentUser(currentUser);
 
-  const extraLinks = customLinks.map(linkConfig => {
+  const extraLinks = customLinks.map((linkConfig, index) => {
     return (
       <CustomLinkComponent
-        key={linkConfig.text}
+        key={`${linkConfig.text}_${index}`}
         linkConfig={linkConfig}
         currentPage={currentPage}
       />
@@ -154,10 +154,10 @@ const TopbarMobileMenu = props => {
             {notificationCountBadge}
           </NamedLink>
           <NamedLink
-            className={classNames(css.navigationLink, currentPageClass('ManageListingsPage'))}
-            name="ManageListingsPage"
+            className={classNames(css.navigationLink, currentPageClass('FavoriteListingsPage'))}
+            name="FavoriteListingsPage"
           >
-            <FormattedMessage id="TopbarMobileMenu.yourListingsLink" />
+            <FormattedMessage id="TopbarMobileMenu.favoriteListings" />
           </NamedLink>
           <NamedLink
             className={classNames(css.navigationLink, currentPageClass('ProfileSettingsPage'))}

@@ -1,7 +1,8 @@
-import { updatedEntities, denormalisedEntities } from '../../util/data';
+import { denormalisedEntities, updatedEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
 import { createImageVariantConfig } from '../../util/sdkLoader';
 import { parse } from '../../util/urlHelpers';
+import { LISTING_TAB_TYPES } from '../../util/types';
 
 import { fetchCurrentUser } from '../../ducks/user.duck';
 
@@ -11,7 +12,6 @@ import { fetchCurrentUser } from '../../ducks/user.duck';
 const RESULT_PAGE_SIZE = 42;
 
 // ================ Action types ================ //
-
 export const FETCH_LISTINGS_REQUEST = 'app/ManageListingsPage/FETCH_LISTINGS_REQUEST';
 export const FETCH_LISTINGS_SUCCESS = 'app/ManageListingsPage/FETCH_LISTINGS_SUCCESS';
 export const FETCH_LISTINGS_ERROR = 'app/ManageListingsPage/FETCH_LISTINGS_ERROR';
@@ -23,6 +23,10 @@ export const OPEN_LISTING_ERROR = 'app/ManageListingsPage/OPEN_LISTING_ERROR';
 export const CLOSE_LISTING_REQUEST = 'app/ManageListingsPage/CLOSE_LISTING_REQUEST';
 export const CLOSE_LISTING_SUCCESS = 'app/ManageListingsPage/CLOSE_LISTING_SUCCESS';
 export const CLOSE_LISTING_ERROR = 'app/ManageListingsPage/CLOSE_LISTING_ERROR';
+
+export const DISCARD_DRAFT_REQUEST = 'app/ManageListingsPage/DISCARD_DRAFT_REQUEST';
+export const DISCARD_DRAFT_SUCCESS = 'app/ManageListingsPage/DISCARD_DRAFT_SUCCESS';
+export const DISCARD_DRAFT_ERROR = 'app/ManageListingsPage/DISCARD_DRAFT_ERROR';
 
 export const ADD_OWN_ENTITIES = 'app/ManageListingsPage/ADD_OWN_ENTITIES';
 export const CLEAR_OPEN_LISTING_ERROR = 'app/ManageListingsPage/CLEAR_OPEN_LISTING_ERROR';
@@ -40,6 +44,8 @@ const initialState = {
   openingListingError: null,
   closingListing: null,
   closingListingError: null,
+  discardingDraft: null,
+  discardingDraftError: null,
 };
 
 const resultIds = data => data.data.map(l => l.id);
@@ -143,6 +149,30 @@ const manageListingsPageReducer = (state = initialState, action = {}) => {
       };
     }
 
+    case DISCARD_DRAFT_REQUEST:
+      return {
+        ...state,
+        discardingDraft: payload.listingId,
+        discardingDraftError: null,
+      };
+    case DISCARD_DRAFT_SUCCESS:
+      return {
+        ...state,
+        discardingDraft: null,
+      };
+    case DISCARD_DRAFT_ERROR: {
+      // eslint-disable-next-line no-console
+      console.error(payload);
+      return {
+        ...state,
+        discardingDraft: null,
+        discardingDraftError: {
+          listingId: state.discardingDraft,
+          error: payload,
+        },
+      };
+    }
+
     case ADD_OWN_ENTITIES:
       return merge(state, payload);
 
@@ -217,6 +247,21 @@ export const closeListingError = e => ({
   payload: e,
 });
 
+export const discardDraftRequest = listingId => ({
+  type: DISCARD_DRAFT_REQUEST,
+  payload: { listingId },
+});
+
+export const discardDraftSuccess = () => ({
+  type: DISCARD_DRAFT_SUCCESS,
+});
+
+export const discardDraftError = e => ({
+  type: DISCARD_DRAFT_ERROR,
+  error: true,
+  payload: e,
+});
+
 export const queryListingsRequest = queryParams => ({
   type: FETCH_LISTINGS_REQUEST,
   payload: { queryParams },
@@ -237,8 +282,14 @@ export const queryListingsError = e => ({
 export const queryOwnListings = queryParams => (dispatch, getState, sdk) => {
   dispatch(queryListingsRequest(queryParams));
 
-  const { perPage, ...rest } = queryParams;
-  const params = { ...rest, perPage };
+  const { perPage, pub_listingId, ...rest } = queryParams;
+  const validListingType = !!queryParams.pub_listingType;
+  const validCategoryType = !!queryParams.pub_categoryLevel1;
+  const validRequestParams = validListingType || validCategoryType;
+  const withImageLimit = queryParams.pub_listingType !== LISTING_TAB_TYPES.PORTFOLIO;
+  const params = { ...rest, perPage, ...(withImageLimit ? { 'limit.images': 1 } : {}) };
+
+  if (!validRequestParams) return;
 
   return sdk.ownListings
     .query(params)
@@ -281,6 +332,28 @@ export const openListing = listingId => (dispatch, getState, sdk) => {
     });
 };
 
+const delay = ms => new Promise(resolve => window.setTimeout(resolve, ms));
+export const discardDraft = listingId => (dispatch, getState, sdk) => {
+  dispatch(discardDraftRequest(listingId));
+  const { queryParams } = getState().ManageListingsPage;
+
+  return sdk.ownListings
+    .discardDraft({ id: listingId }, { expand: true })
+    .then(() => {
+      // Return the listing update with a delay, so that the user
+      // notices which listing gets removed
+      return Promise.all([delay(300), sdk.ownListings.query(queryParams)]);
+    })
+    .then(([_, listingResponse]) => {
+      dispatch(addOwnEntities(listingResponse));
+      dispatch(queryListingsSuccess(listingResponse));
+      dispatch(discardDraftSuccess());
+    })
+    .catch(e => {
+      dispatch(discardDraftError(storableError(e)));
+    });
+};
+
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   const queryParams = parse(search);
   const page = queryParams.page || 1;
@@ -304,14 +377,12 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
         'fields.image': [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`],
         ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
         ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
-        'limit.images': 1,
       })
     ),
   ])
     .then(response => {
       // const currentUser = response[0]?.data?.data;
-      const ownListings = response[1]?.data?.data;
-      return ownListings;
+      return response[1]?.data?.data;
     })
     .catch(e => {
       throw e;

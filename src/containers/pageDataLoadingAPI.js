@@ -2,10 +2,12 @@
  * Export loadData calls from ducks modules of different containers
  */
 import { loadData as AuthenticationPageLoader } from './AuthenticationPage/AuthenticationPage.duck';
+import { loadData as BatchEditListingPageLoader } from './BatchEditListingPage/BatchEditListingPage.duck';
 import { loadData as LandingPageLoader } from './LandingPage/LandingPage.duck';
 import { setInitialValues as CheckoutPageInitialValues } from './CheckoutPage/CheckoutPage.duck';
 import { loadData as CMSPageLoader } from './CMSPage/CMSPage.duck';
 import { loadData as ContactDetailsPageLoader } from './ContactDetailsPage/ContactDetailsPage.duck';
+import { loadData as CreativeDetailsPageLoader } from './CreativeDetailsPage/CreativeDetailsPage.duck';
 import { loadData as EditListingPageLoader } from './EditListingPage/EditListingPage.duck';
 import { loadData as EmailVerificationPageLoader } from './EmailVerificationPage/EmailVerificationPage.duck';
 import { loadData as FavoriteListingsPageLoader } from './FavoriteListingsPage/FavoriteListingsPage.duck';
@@ -15,6 +17,7 @@ import { loadData as ManageListingsPageLoader } from './ManageListingsPage/Manag
 import { loadData as PaymentMethodsPageLoader } from './PaymentMethodsPage/PaymentMethodsPage.duck';
 import { loadData as PrivacyPolicyPageLoader } from './PrivacyPolicyPage/PrivacyPolicyPage.duck';
 import { loadData as ProfilePageLoader } from './ProfilePage/ProfilePage.duck';
+import { loadData as ProfileSettingsPageLoader } from './ProfileSettingsPage/ProfileSettingsPage.duck';
 import { loadData as SearchPageLoader } from './SearchPage/SearchPage.duck';
 import { loadData as StripePayoutPageLoader } from './StripePayoutPage/StripePayoutPage.duck';
 import { loadData as TermsOfServicePageLoader } from './TermsOfServicePage/TermsOfServicePage.duck';
@@ -28,6 +31,9 @@ const getPageDataLoadingAPI = () => {
     AuthenticationPage: {
       loadData: AuthenticationPageLoader,
     },
+    BatchEditListingPage: {
+      loadData: BatchEditListingPageLoader,
+    },
     LandingPage: {
       loadData: LandingPageLoader,
     },
@@ -39,6 +45,9 @@ const getPageDataLoadingAPI = () => {
     },
     ContactDetailsPage: {
       loadData: ContactDetailsPageLoader,
+    },
+    CreativeDetailsPage: {
+      loadData: CreativeDetailsPageLoader,
     },
     EditListingPage: {
       loadData: EditListingPageLoader,
@@ -66,6 +75,9 @@ const getPageDataLoadingAPI = () => {
     },
     ProfilePage: {
       loadData: ProfilePageLoader,
+    },
+    ProfileSettingsPage: {
+      loadData: ProfileSettingsPageLoader,
     },
     SearchPage: {
       loadData: SearchPageLoader,

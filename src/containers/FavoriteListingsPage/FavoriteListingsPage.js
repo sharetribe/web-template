@@ -1,26 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
-import { propTypes } from '../../util/types';
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
+import { injectIntl, intlShape, FormattedMessage } from '../../util/reactIntl';
+import { createResourceLocatorString } from '../../util/routes';
+import { LISTING_GRID_DEFAULTS, LISTING_GRID_ROLE, propTypes } from '../../util/types';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 
-import {
-  H3,
-  Page,
-  PaginationLinks,
-  UserNav,
-  LayoutSingleColumn,
-  ListingCard,
-} from '../../components';
+import { H3, Page, UserNav, LayoutSingleColumn, ListingTabs, ListingCard } from '../../components';
 
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
-import css from './FavoriteListingsPage.module.css';
 import { getListingsById } from '../../ducks/marketplaceData.duck';
+
+import css from './FavoriteListingsPage.module.css';
 
 export const FavoriteListingsPageComponent = props => {
   const {
@@ -32,65 +29,56 @@ export const FavoriteListingsPageComponent = props => {
     scrollingDisabled,
     intl,
   } = props;
-
-  const hasPaginationInfo = !!pagination && pagination.totalItems != null;
-  const listingsAreLoaded = !queryInProgress && hasPaginationInfo;
-
-  const loadingResults = (
-    <div className={css.messagePanel}>
-      <H3 as="h2" className={css.heading}>
-        <FormattedMessage id="FavoriteListingsPage.loadingFavoriteListings" />
-      </H3>
-    </div>
-  );
-
-  const queryError = (
-    <div className={css.messagePanel}>
-      <H3 as="h2" className={css.heading}>
-        <FormattedMessage id="FavoriteListingsPage.queryError" />
-      </H3>
-    </div>
-  );
-
-  const noResults =
-    listingsAreLoaded && pagination.totalItems === 0 ? (
-      <H3 as="h1" className={css.heading}>
-        <FormattedMessage id="FavoriteListingsPage.noResults" />
-      </H3>
-    ) : null;
-
-  const heading =
-    listingsAreLoaded && pagination.totalItems > 0 ? (
-      <H3 as="h1" className={css.heading}>
-        <FormattedMessage
-          id="FavoriteListingsPage.youHaveListings"
-          values={{ count: pagination.totalItems }}
-        />
-      </H3>
-    ) : (
-      noResults
-    );
-
-  const page = queryParams ? queryParams.page : 1;
-  const paginationLinks =
-    listingsAreLoaded && pagination && pagination.totalPages > 1 ? (
-      <PaginationLinks
-        className={css.pagination}
-        pageName="FavoriteListingsPage"
-        pageSearchParams={{ page }}
-        pagination={pagination}
-      />
-    ) : null;
-
+  const history = useHistory();
+  const routeConfiguration = useRouteConfiguration();
   const title = intl.formatMessage({ id: 'FavoriteListingsPage.title' });
+  const defaultListingType = LISTING_GRID_DEFAULTS.TYPE;
 
-  const panelWidth = 62.5;
-  // Render hints for responsive image
-  const renderSizes = [
-    `(max-width: 767px) 100vw`,
-    `(max-width: 1920px) ${panelWidth / 2}vw`,
-    `${panelWidth / 3}vw`,
-  ].join(', ');
+  useEffect(() => {
+    const validListingType = !queryParams.pub_listingType;
+    const shouldUpdateRoute = validListingType;
+    if (shouldUpdateRoute) {
+      const pathParams = {};
+      const queryParams = { pub_listingType: defaultListingType };
+      const destination = createResourceLocatorString(
+        'FavoriteListingsPage',
+        routeConfiguration,
+        pathParams,
+        queryParams
+      );
+      history.replace(destination);
+    }
+  }, []);
+
+  const onTabChange = key => {
+    const pathParams = {};
+    const queryParams = { pub_listingType: key };
+    const destination = createResourceLocatorString(
+      'FavoriteListingsPage',
+      routeConfiguration,
+      pathParams,
+      queryParams
+    );
+    history.push(destination);
+  };
+
+  const listingRenderer = (listing, className, renderSizes) => {
+    const listingId = listing.id.uuid;
+    return (
+      <ListingCard
+        key={listingId}
+        className={className}
+        listing={listing}
+        renderSizes={renderSizes}
+      />
+    );
+  };
+
+  const titleRenderer = (
+    <H3 as="h1" className={css.heading}>
+      <FormattedMessage id="FavoriteListingsPage.title" />
+    </H3>
+  );
 
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
@@ -103,22 +91,20 @@ export const FavoriteListingsPageComponent = props => {
         }
         footer={<FooterContainer />}
       >
-        {queryInProgress ? loadingResults : null}
-        {queryFavoritesError ? queryError : null}
-        <div className={css.listingPanel}>
-          {heading}
-          <div className={css.listingCards}>
-            {listings.map(l => (
-              <ListingCard
-                className={css.listingCard}
-                key={l.id.uuid}
-                listing={l}
-                renderSizes={renderSizes}
-              />
-            ))}
-          </div>
-          {paginationLinks}
-        </div>
+        <ListingTabs
+          items={listings}
+          pagination={pagination}
+          queryInProgress={queryInProgress}
+          queryListingsError={queryFavoritesError}
+          queryParams={queryParams}
+          onTabChange={onTabChange}
+          listingRenderer={listingRenderer}
+          role={LISTING_GRID_ROLE.FAVORITE}
+          title={titleRenderer}
+          noResultsMessageId="FavoriteListingsPage.noResults"
+          loadingMessageId="FavoriteListingsPage.loadingFavoriteListings"
+          errorMessageId="FavoriteListingsPage.queryError"
+        />
       </LayoutSingleColumn>
     </Page>
   );

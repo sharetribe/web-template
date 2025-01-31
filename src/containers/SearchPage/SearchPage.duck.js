@@ -10,8 +10,9 @@ import {
   getStartOf,
 } from '../../util/dates';
 import { constructQueryParamName, isOriginInUse, isStockInUse } from '../../util/search';
-import { isUserAuthorized } from '../../util/userHelpers';
+import { hasPermissionToViewData, isUserAuthorized } from '../../util/userHelpers';
 import { parse } from '../../util/urlHelpers';
+import { LISTING_TAB_TYPES } from '../../util/types';
 
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 
@@ -115,9 +116,12 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
   // Read More:
   // https://www.sharetribe.com/docs/how-to/manage-search-schemas-with-flex-cli/#adding-listing-search-schemas
   const searchValidListingTypes = listingTypes => {
+    const validListingTypes = listingTypes.filter(
+      l => l.listingType !== LISTING_TAB_TYPES.PORTFOLIO
+    );
     return config.listing.enforceValidListingType
       ? {
-          pub_listingType: listingTypes.map(l => l.listingType),
+          pub_listingType: validListingTypes.map(l => l.listingType),
           // pub_transactionProcessAlias: listingTypes.map(l => l.transactionType.alias),
           // pub_unitType: listingTypes.map(l => l.transactionType.unitType),
         }
@@ -281,8 +285,10 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   const state = getState();
   const currentUser = state.user?.currentUser;
   const isAuthorized = currentUser && isUserAuthorized(currentUser);
+  const hasViewingRights = currentUser && hasPermissionToViewData(currentUser);
   const isPrivateMarketplace = config.accessControl.marketplace.private === true;
-  const canFetchData = !isPrivateMarketplace || (isPrivateMarketplace && isAuthorized);
+  const canFetchData =
+    !isPrivateMarketplace || (isPrivateMarketplace && isAuthorized && hasViewingRights);
   if (!canFetchData) {
     return Promise.resolve();
   }
@@ -308,7 +314,7 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
       ...originMaybe,
       page,
       perPage: RESULT_PAGE_SIZE,
-      include: ['author', 'images'],
+      include: ['author', 'author.profileImage', 'images'],
       'fields.listing': [
         'title',
         'geolocation',

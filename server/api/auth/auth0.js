@@ -14,14 +14,14 @@ const clientID = process.env.AUTH0_MARKETPLACE_CLIENT_ID;
 const authorizationParams = {
   response_type: 'code',
   scope: 'openid email profile',
-  audience: process.env.AUTH0_MARKETPLACE_AUDIENCE,
+  audience: process.env.AUTH0_AUDIENCE,
 };
 
 const configParams = {
   idpLogout: true,
   authRequired: false,
   baseURL: baseURL,
-  issuerBaseURL: `https://${process.env.AUTH0_API_DOMAIN}`,
+  issuerBaseURL: `https://${process.env.AUTH0_DOMAIN}`,
   clientID,
   clientSecret: process.env.AUTH0_MARKETPLACE_CLIENT_SECRET,
   secret: process.env.AUTH0_COOKIE_SECRET,
@@ -39,13 +39,15 @@ const configParams = {
 };
 
 exports.authenticateAuth0 = (req, res) => {
-  const { from, defaultReturn, defaultConfirm, userType, brandStudioId } = req.query || {};
+  const { from, defaultReturn, defaultConfirm, userType, brandStudioId, screenHint } =
+    req.query || {};
   const params = {
     ...(from ? { 'ext-mp-from': from } : {}),
     ...(defaultReturn ? { 'ext-mp-default-return': defaultReturn } : {}),
     ...(defaultConfirm ? { 'ext-mp-default-confirm': defaultConfirm } : {}),
     ...(userType ? { 'ext-mp-user-type': userType } : {}),
     ...(brandStudioId ? { 'ext-mp-brand-studio-id': brandStudioId } : {}),
+    screen_hint: screenHint || 'login',
   };
   res.oidc.login({
     returnTo: '/api/auth/auth0/custom-callback',
@@ -71,7 +73,12 @@ exports.authenticateAuth0Callback = (req, res) => {
     defaultReturn = '/',
     defaultConfirm = '/',
   } = initialRoutes;
-  const { userType = defaultUserType, given_name: firstName, family_name: lastName, brandStudioId } = initialProfile;
+  const {
+    userType = defaultUserType,
+    given_name: firstName,
+    family_name: lastName,
+    brandStudioId,
+  } = initialProfile;
   const userInfo = req.oidc.user;
   const { email } = userInfo;
   const userProfile = {
@@ -85,5 +92,5 @@ exports.authenticateAuth0Callback = (req, res) => {
     ...(userType ? { userType } : {}),
     ...(brandStudioId ? { brandStudioId } : {}),
   };
-  loginWithIdp(null, userProfile, req, res, clientID, 'auth0dev');
+  loginWithIdp(null, userProfile, req, res, clientID, process.env.AUTH0_IDP_ID);
 };
