@@ -141,7 +141,7 @@ export const queryUserListings = (userId, config, ownProfileOnly = false) => (
   const aspectRatio = aspectHeight / aspectWidth;
 
   const queryParams = {
-    include: ['author', 'images'],
+    include: ['author', 'images', 'currentStock'],
     'fields.image': [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`],
     ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
     ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),

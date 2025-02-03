@@ -4,11 +4,13 @@ import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
+import Cookies from 'js-cookie';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import * as validators from '../../../util/validators';
 import { getPropsForCustomUserFieldInputs } from '../../../util/userHelpers';
+import { regions } from '../../../config/regions';
 
 import { Form, PrimaryButton, FieldTextInput, CustomExtendedDataField } from '../../../components';
 
@@ -16,7 +18,7 @@ import FieldSelectUserType from '../FieldSelectUserType';
 import UserFieldDisplayName from '../UserFieldDisplayName';
 import UserFieldPhoneNumber from '../UserFieldPhoneNumber';
 
-import { getUserCurrency } from '../../../extensions/user-currency/helpers';
+import { getUserLocationData } from '../../../extensions/user-location-data/helpers';
 
 import css from './SignupForm.module.css';
 
@@ -25,23 +27,43 @@ const getSoleUserTypeMaybe = userTypes =>
 
 const SignupFormComponent = props => {
   const [currency, setCurrency] = useState(null);
+  const [region, setRegion] = useState(null);
+  const [promoCode, setPromoCode] = useState(null);
 
   useEffect(() => {
-    const fetchCurrency = async position => {
+    const fetchLocationData = async position => {
       try {
-        const userCurrency = await getUserCurrency(position);
-        if (userCurrency) {
-          setCurrency(userCurrency);
+        const userLocationData = await getUserLocationData(position);
+        if (userLocationData.currency) {
+          setCurrency(userLocationData.currency);
+        }
+        if (userLocationData.region) {
+          setRegion(userLocationData.region);
         }
       } catch (error) {
-        console.error('Error fetching user currency:', error);
+        console.error('Error fetching user location data:', error);
       }
     };
 
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(fetchCurrency);
+      navigator.geolocation.getCurrentPosition(fetchLocationData);
     } else {
       console.log('Geolocation is not supported by this browser.');
+    }
+
+    // Get promo code from URL if it exists, otherwise check cookie
+    //if the value is set, make the field readonly
+    const params = new URLSearchParams(window.location.search);
+    const fprParam = params.get('fpr');
+    const cookiePromoCode = Cookies.get('_fprom_ref');
+    if (fprParam) {
+      setPromoCode(fprParam);
+    } else if (cookiePromoCode) {
+        setPromoCode(cookiePromoCode);
+      }
+    
+    if(fprParam || cookiePromoCode){ 
+      document.getElementById('pub_userPromoCode').setAttribute('readonly', true)
     }
   }, []);
 
@@ -52,6 +74,9 @@ const SignupFormComponent = props => {
       initialValues={{
         userType: props.preselectedUserType || getSoleUserTypeMaybe(props.userTypes),
         pub_userCurrency: currency,
+        pub_userLocation: region,
+        pub_userPromoCode: promoCode,
+        pub_userAffiliateProgram: 'true'
       }}
       render={formRenderProps => {
         const {
@@ -121,6 +146,14 @@ const SignupFormComponent = props => {
         // Custom user fields. Since user types are not supported here,
         // only fields with no user type id limitation are selected.
         const userFieldProps = getPropsForCustomUserFieldInputs(userFields, intl, userType);
+
+       
+        //modify location to be a list of regions
+        userFieldProps.find(field => field.key == 'pub_userLocation')
+          .fieldConfig.schemaType='enum';
+        userFieldProps.find(field => field.key == 'pub_userLocation')
+          .fieldConfig.enumOptions= regions;
+        //console.log('user fields', userFieldProps)
 
         const noUserTypes = !userType && !(userTypes?.length > 0);
         const userTypeConfig = userTypes.find(config => config.userType === userType);

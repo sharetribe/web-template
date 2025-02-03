@@ -1,19 +1,19 @@
 export const CATEGORIES = {
     'location': {
       id: 'location',
-      label: 'Vending Location'
+      label: 'Vending location'
     },
     'machine': {
       id: 'machine',
-      label: 'Vending Machine'
+      label: 'Vending machine'
     },
     'location-machine': {
       id: 'location-machine',
-      label: 'Location with Machine(s)'
+      label: 'Location with machine(s)'
     },
     'atm-location': {
       id: 'atm-location',
-      label: 'ATM at Location'
+      label: 'ATM at location'
     }
   };
   

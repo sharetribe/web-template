@@ -40,6 +40,7 @@ import {
   NamedLink,
   ListingCard,
   Reviews,
+  ReviewRating,
   ButtonTabNavHorizontal,
   LayoutSideNavigation,
   NamedRedirect,
@@ -55,20 +56,43 @@ import SectionDetailsMaybe from './SectionDetailsMaybe';
 import SectionTextMaybe from './SectionTextMaybe';
 import SectionMultiEnumMaybe from './SectionMultiEnumMaybe';
 import SectionYoutubeVideoMaybe from './SectionYoutubeVideoMaybe';
+//import renderMarkdown from '../../containers/PageBuilder/markdownProcessor';
 
 const MAX_MOBILE_SCREEN_WIDTH = 768;
 const MIN_LENGTH_FOR_LONG_WORDS = 20;
 
 export const AsideContent = props => {
-  const { user, displayName, showLinkToProfileSettingsPage } = props;
+  const { user, displayName, showLinkToProfileSettingsPage, reviews } = props;
+  
+  console.log('about this user', user)
+  const avgRating = Math.round(reviews.reduce((acc, review) => {
+    return acc + review.attributes.rating;
+  }, 0) / (reviews.length || 1)); // Avoid division by zero by using || 1
   return (
     <div className={css.asideContent}>
       <AvatarLarge className={css.avatar} user={user} disableProfileLink />
-      <H2 as="h1" className={css.mobileHeading}>
-        {displayName ? (
-          <FormattedMessage id="ProfilePage.mobileHeading" values={{ name: displayName }} />
+      <div>
+        <H2 as="h1" className={css.mobileHeading}>
+          {displayName ? (
+            <FormattedMessage id="ProfilePage.mobileHeading" values={{ name: displayName }} />
+          ) : null}
+        </H2>
+        
+        {avgRating ? (
+          <div className={css.avgRating}>
+            <div>
+              <ReviewRating
+                rating={avgRating}
+                className={css.mobileReviewRating}
+                reviewStarClassName={css.reviewRatingStar}
+              />
+            </div>
+            <p>{reviews.length} total review(s)</p>
+          </div>
         ) : null}
-      </H2>
+
+      </div>
+
       {showLinkToProfileSettingsPage ? (
         <>
           <NamedLink className={css.editLinkMobile} name="ProfileSettingsPage">
@@ -79,6 +103,10 @@ export const AsideContent = props => {
           </NamedLink>
         </>
       ) : null}
+
+      
+      
+
     </div>
   );
 };
@@ -258,7 +286,19 @@ export const MainContent = props => {
           <ul className={css.listings}>
             {listings.map(l => (
               <li className={css.listing} key={l.id.uuid}>
-                <ListingCard listing={l} showAuthorInfo={false} />
+                <div className={classNames(css.listingWrapper, { 
+                  [css.soldListing]: l.currentStock?.attributes?.quantity === 0 
+                })}>
+                  <ListingCard 
+                    listing={l} 
+                    showAuthorInfo={false}
+                  />
+                  {l.currentStock?.attributes?.quantity === 0 && (
+                    <div className={css.soldBadge}>
+                      <FormattedMessage id="ProfilePage.sold" />
+                    </div>
+                  )}
+                </div>
               </li>
             ))}
           </ul>
@@ -386,6 +426,7 @@ export const ProfilePageComponent = props => {
             user={profileUser}
             showLinkToProfileSettingsPage={mounted && isCurrentUser}
             displayName={displayName}
+            {...rest}
           />
         }
         footer={<FooterContainer />}
@@ -396,7 +437,7 @@ export const ProfilePageComponent = props => {
           userShowError={userShowError}
           publicData={publicData}
           metadata={metadata}
-          userFieldConfig={userFields}
+          //userFieldConfig={userFields}
           hideReviews={hasNoViewingRightsOnPrivateMarketplace}
           intl={intl}
           {...rest}
@@ -452,6 +493,7 @@ const mapStateToProps = state => {
     uiCurrency,
     exchangeRate
   );
+
 
   return {
     scrollingDisabled: isScrollingDisabled(state),

@@ -73,10 +73,10 @@
 }
 .category{
   color:var(--colorGrey700);
+  text-transform: capitalize;
   font-size:70%;
   font-weight: 300;
   margin:0;
-  display:flex;
 }
 
 

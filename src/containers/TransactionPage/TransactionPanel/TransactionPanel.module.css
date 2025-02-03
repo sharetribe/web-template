@@ -339,6 +339,7 @@
 
   @media (--viewportLarge) {
     display: block;
+    padding-bottom:24px;
   }
 }
 

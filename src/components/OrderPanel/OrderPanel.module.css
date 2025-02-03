@@ -38,6 +38,13 @@
   }
 }
 
+.hideOnMobile{
+  display:none;
+  @media (--viewportMedium) {
+    display: block;
+  }
+}
+
 .heading {
   /* Font */
   color: var(--colorGrey700);
@@ -184,7 +191,7 @@
   padding: 18px 24px 18px 16px;
   background-color: var(--colorWhite);
   box-shadow: var(--boxShadowTop);
-  display: flex;
+  /*display: flex;*/
 
   /* Contain repainting to this component only */
   /* 3D painting container helps scrolling */
@@ -225,6 +232,7 @@
   align-items: center;
   justify-content: center;
   gap: unset;
+  margin: 0 0 12px;
 }
 
 .priceValue {
@@ -291,12 +299,16 @@
 
 .buttonGroup {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 100%;
+  flex-direction: row;
+  gap: 6px;
+  width: calc(100% - 52px);
+  @media (--viewportMedium) {
+    width: 100%;
+    gap: 12px;
+  }
 }
 
-.contactSellerButton {
+.contactSellerButton, .favoriteButton {
   font-weight: var(--fontWeightMedium);
   color: var(--colorGrey700);
   padding: 12px 12px;
@@ -311,11 +323,23 @@
   min-height: 56px;
 }
 
-.contactSellerButton:hover {
+.contactSellerButton:hover, .favoriteButton:hover {
   background-color: var(--marketplaceColorDark);
   color:white;
   text-decoration: none;
   border-color:var(--marketplaceColor)
+}
+
+.favoriteButton {
+  width:112px;
+  @media (--viewportMedium) {
+    width: 74px;
+  }
+  
+}
+.favoriteButton.active{
+  color:white;
+  background:var(--marketplaceColorDark);
 }
 
 .sendIcon {
@@ -329,3 +353,4 @@
 .sendMessageText {
   margin-left: 4px;
 }
+

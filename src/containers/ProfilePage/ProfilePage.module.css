@@ -25,6 +25,17 @@
   flex-direction: row;
   flex-wrap: wrap;
   border-bottom: 1px solid var(--colorGrey100);
+  
+  h1{
+    margin-bottom:12px;
+  }
+
+  .avgRating{
+    p{font-size:13px;
+      margin-top:6px;
+      color:var(--colorGrey500)
+    }
+  }
 
   @media (--viewportLarge) {
     flex-direction: column;
@@ -47,7 +58,7 @@
 
 .mobileHeading {
   flex-shrink: 0;
-  margin: 60px 0 0 0;
+  margin: 35px 0 0 0;
 
   @media (--viewportMedium) {
     margin: 49px 0 0 0;
@@ -99,6 +110,8 @@
   white-space: pre-line;
   margin: 5px 0 24px 0;
 
+  img{max-width:100%}
+
   @media (--viewportMedium) {
     margin: 4px 0 51px 0;
   }
@@ -145,6 +158,8 @@
   margin: 0;
   display: flex;
   flex-wrap: wrap;
+  max-height:400px;
+  overflow:scroll;
 }
 
 .listing {
@@ -152,29 +167,15 @@
 
   /* Single column in mobile */
   margin-top: 34px;
-  &:first-of-type {
-    margin-top: 18px;
-  }
+
 
   @media (--viewportMedium) {
     /* Two columns in desktop */
-    width: calc(50% - 12px);
-    margin-bottom: 36px;
+    width: calc(33% - 12px);
+    margin: 0 0 36px 0;
+    padding:6px 12px 6px 0;
+    box-sizing: content-box;
 
-    /* Horizontal space */
-    &:nth-of-type(odd) {
-      margin-right: 12px;
-    }
-    &:nth-of-type(even) {
-      margin-left: 12px;
-    }
-
-    /* Vertical space */
-    margin-top: 0;
-    &:nth-of-type(1),
-    &:nth-of-type(2) {
-      margin-top: 20px;
-    }
   }
 }
 
@@ -322,4 +323,33 @@
   right: 0;
   width: 100%;
   height: 100%;
+}
+
+.listingWrapper {
+  position: relative;
+}
+
+.soldListing {
+  > a{
+  filter:grayscale(1);
+  opacity: 0.7;
+  }
+}
+
+.soldBadge {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--marketplaceColor);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.10);
+  background: white;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  z-index: 1;
+}
+
+.unclickable {
+  pointer-events: none;
 }

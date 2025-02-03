@@ -8,6 +8,7 @@ const Sentry = require('@sentry/node');
 
 const ENV = process.env.REACT_APP_ENV;
 const SENTRY_DSN = process.env.REACT_APP_SENTRY_DSN;
+const REACT_APP_MARKETPLACE_ROOT_URL = process.env.REACT_APP_MARKETPLACE_ROOT_URL;
 
 const ingoreErrorsMap = {
   ['AxiosError: Network Error']: true,
@@ -26,7 +27,16 @@ if (SENTRY_DSN) {
   // exceptions from starting the server etc. but does not catch the
   // ones thrown from Express.js middleware functions. For those
   // an error handler has to be added to the Express app.
-  Sentry.init({ dsn: SENTRY_DSN, environment: ENV, ignoreErrors });
+  Sentry.init({
+    dsn: SENTRY_DSN,
+    environment: ENV,
+    ignoreErrors,
+    tracePropagationTargets: [
+      'flex-api.sharetribe.com',
+      REACT_APP_MARKETPLACE_ROOT_URL,
+      /^\/api\//,
+    ],
+  });
 }
 
 /**

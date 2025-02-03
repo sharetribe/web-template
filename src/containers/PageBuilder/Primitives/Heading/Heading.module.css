@@ -18,6 +18,7 @@
   /* use break-word if available */
   word-break: break-word;
   hyphens: auto;
+  word-break: auto-phrase;
 }
 
 /* Specific styles */

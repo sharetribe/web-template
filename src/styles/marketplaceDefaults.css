@@ -572,13 +572,19 @@ textarea:disabled {
     cursor: not-allowed;
   }
 }
+input:read-only{
+  background-color: #f9f9f9;
+  &:hover {
+    cursor: not-allowed;
+  }
+}
 
 textarea {
-  min-height: 48px; /* 1rows  */
+  min-height: 84px; /* 3 rows  */
   max-height: 300px; /* 12 rows fullu visible, scroll after */
 
   @media (--viewportMedium) {
-    min-height: 48px; /* 1 row fully visible */
+    min-height: 112px; /* 3 rows fully visible */
     max-height: 496px; /* 15 rows fullu visible, scroll after */
     line-height: 24px;
   }
