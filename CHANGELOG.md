@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] LocationAutocompleteInput: fix a bug with Google Maps API loading order with Webpack Dev
+  Server. [#548](https://github.com/sharetribe/web-template/pull/548)
+
 ## [v7.2.0] 2025-01-30
 
 - [add] Add support for the new Google Places API
