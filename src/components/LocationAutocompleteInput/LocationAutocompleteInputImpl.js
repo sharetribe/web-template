@@ -178,13 +178,15 @@ class LocationAutocompleteInputImplementation extends Component {
     // Google Places API is available and being utilized. If the useNewGooglePlacesAPI
     // property is undefined, it means we haven't determined the API version yet.
     const googleMapsStatus = typeof window?.useNewGooglePlacesAPI !== 'undefined';
+    // Development against localhost:3000 aka Webpack Dev Server has a bit random loading order.
+    const hasGoogle = window?.google;
 
     // If the map provider configured in the application is Google Maps and we
     // haven't yet determined the API version, we make a test API call
     // to Google Maps Places Autocomplete to check its behavior.
     // The fetchAutocompleteSuggestions function is only supported by
     // the newer version of Google Places API.
-    if (this.props.config.maps.mapProvider === 'googleMaps' && !googleMapsStatus) {
+    if (this.props.config.maps.mapProvider === 'googleMaps' && hasGoogle && !googleMapsStatus) {
       window?.google.maps.places.AutocompleteSuggestion.fetchAutocompleteSuggestions({
         input: 'test',
       })
