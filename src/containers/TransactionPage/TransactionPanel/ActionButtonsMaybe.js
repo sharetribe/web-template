@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import classNames from 'classnames';
 import { Modal } from '../../../components';
 import { PrimaryButton, SecondaryButton } from '../../../components';
+import { SquareCheck } from 'lucide-react';
 
 import css from './TransactionPanel.module.css';
 import modalCss from '../../../components/Modal/Modal.module.css';
@@ -80,11 +81,11 @@ const ActionButtonsMaybe = props => {
           </p>
           
           <div className="reminderBox">
-            <i class="fa-solid fa-check" aria-hidden="true"></i>
+            <SquareCheck />
             {isProvider ? 
-              "I understand that as a representative of the property manager, I will cancel the order if the property manager requests it."
+              " I understand that as a representative of the property manager, I will cancel the order if the property manager requests it."
             :
-              "I understand that once I confirm, the sale will be final."
+              " I understand that once I confirm, the sale will be final."
             }
           </div>
 

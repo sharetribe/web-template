@@ -1565,3 +1565,10 @@ hr {
 .reminderBox > i{
   margin-right:6px;
 }
+
+svg.lucide{
+  margin-bottom:2px;
+  height:16px;
+  width:16px;
+  fill:none;
+}
