@@ -88,7 +88,7 @@ export const ListingCardComponent = props => {
   const authorDisplayName = author.attributes.profile.displayName;
   const title = isCreativeProfile ? authorDisplayName : listingTitle;
   const slug = createSlug(title);
-  const authorName = isCreativeProfile ? 'Creative Profile' : authorDisplayName;
+  const authorName = isCreativeProfile ? 'Artist Profile' : authorDisplayName;
   const authorProfileImage = author.profileImage;
   const firstImage = isCreativeProfile
     ? authorProfileImage

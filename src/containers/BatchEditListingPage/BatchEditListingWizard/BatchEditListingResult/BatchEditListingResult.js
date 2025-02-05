@@ -1,4 +1,6 @@
+import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { getSaveListingData, RESET_STATE } from '../../BatchEditListingPage.duck';
 import React, { useEffect, useMemo } from 'react';
 import { createResourceLocatorString } from '../../../../util/routes';
@@ -8,7 +10,18 @@ import css from '../BatchEditListingWizard.module.css';
 export const BatchEditListingResult = props => {
   const { routeConfiguration, history } = props;
   const dispatch = useDispatch();
+  const intl = useIntl();
   const { failedListings, successfulListings } = useSelector(getSaveListingData);
+  const resultErrorTitle = intl.formatMessage({ id: 'BatchEditListingResult.result.error.title' });
+  const resultSuccessTitle = intl.formatMessage({
+    id: 'BatchEditListingResult.result.success.title',
+  });
+  const resultErrorDescription = intl.formatMessage({
+    id: 'BatchEditListingResult.result.error.description',
+  });
+  const resultSuccessDescription = intl.formatMessage({
+    id: 'BatchEditListingResult.result.success.description',
+  });
 
   useEffect(() => {
     // Reset state when component unmounts
@@ -22,14 +35,13 @@ export const BatchEditListingResult = props => {
       return failedListings.length > 0
         ? {
             status: 'warning',
-            title: 'Some listings failed to publish',
-            subtitle: 'Please check the listings and try again.',
+            title: resultErrorTitle,
+            subtitle: resultErrorDescription,
           }
         : {
             status: 'success',
-            title: 'All Set! Listings Submitted for Review',
-            subtitle:
-              'Thank you for submitting your listings. Our team will review them shortly. You can check the status in your dashboard.',
+            title: resultSuccessTitle,
+            subtitle: resultSuccessDescription,
           };
     }
 

@@ -1,9 +1,17 @@
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Input, InputNumber, Select, Switch } from 'antd';
+import { NamedLink } from '../../../../components';
 import { MAX_KEYWORDS } from '../../constants';
 import css from './EditListingBatchProductDetails.module.css';
 
 const { TextArea } = Input;
+
+export const getPricingGuideLink = () => (
+  <NamedLink name="CMSPage" params={{ pageId: 'pricing-guide' }}>
+    pricing guide.
+  </NamedLink>
+)
 
 const EditableCell = ({
   title,
@@ -21,6 +29,7 @@ const EditableCell = ({
   ...restProps
 }) => {
   const value = record[dataIndex] !== undefined ? record[dataIndex] : '';
+  const pricingGuideLink = getPricingGuideLink();
 
   const handleChange = newValue => {
     const values = { ...record, [dataIndex]: newValue };
@@ -102,13 +111,18 @@ const EditableCell = ({
         );
       case 'money':
         return (
-          <InputNumber
-            value={value}
-            onChange={handleChange}
-            placeholder={placeholder}
-            formatter={val => `$ ${val}`}
-            className={css.formItem}
-          />
+          <>
+            <InputNumber
+              value={value}
+              onChange={handleChange}
+              placeholder={placeholder}
+              formatter={val => `$ ${val}`}
+              className={css.formItem}
+            />
+            <div className={css.moneyFieldPricingGuide}>
+              <FormattedMessage id="EditableCellComponents.money.helpText" values={{ pricingGuide: pricingGuideLink }} />
+            </div>
+          </>
         );
       default:
         return null;
