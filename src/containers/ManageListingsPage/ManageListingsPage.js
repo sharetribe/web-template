@@ -148,7 +148,7 @@ export const ManageListingsPageComponent = props => {
           <PortfolioListingCard
             key={`${currentCategory}-${index}`}
             className={className}
-            image={item}
+            item={item}
             renderSizes={renderSizes}
           />
         );

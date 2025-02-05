@@ -131,6 +131,7 @@ const defaultDirectives = {
     'releases.transloadit.com',
   ],
   workerSrc: [self],
+  mediaSrc: [self, 'blob:', 'data:', '*'],
 };
 
 /**
