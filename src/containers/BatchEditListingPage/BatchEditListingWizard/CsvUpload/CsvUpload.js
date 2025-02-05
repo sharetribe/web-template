@@ -1,4 +1,5 @@
 import React from 'react';
+import { useIntl } from 'react-intl';
 import { Button, message, Space, Tooltip, Upload } from 'antd';
 import Papa from 'papaparse';
 import { DownloadOutlined, InfoCircleOutlined, UploadOutlined } from '@ant-design/icons';
@@ -21,7 +22,10 @@ import css from './CsvUpload.module.css';
 export const CsvUpload = ({ categories, usageOptions, onSaveListing }) => {
   const listings = useSelector(getListings);
   const dispatch = useDispatch();
-
+  const intl = useIntl();
+  const csvUploadTooltip = intl.formatMessage({
+    id: 'CsvUpload.tooltip',
+  });
   const beforeUpload = file => {
     const isCsv = file.type === 'text/csv';
     if (!isCsv) {
@@ -70,14 +74,12 @@ export const CsvUpload = ({ categories, usageOptions, onSaveListing }) => {
         if (listing) {
           updatedListings.push({
             ...listing,
-            imageType:
-              getCsvFieldValue(row, headers, 'imageType', fallbackRow) || listing.imageType,
             title: getCsvFieldValue(row, headers, 'title', fallbackRow) || listing.title,
             description:
               getCsvFieldValue(row, headers, 'description', fallbackRow) || listing.description,
-            isAi: normalizeBoolean(
-              getCsvFieldValue(row, headers, 'ethicalAi', fallbackRow),
-              listing.isAi
+            isIllustration: normalizeBoolean(
+              getCsvFieldValue(row, headers, 'isIllustration', fallbackRow),
+              listing.isIllustration
             ),
             category: normalizeCategory(
               getCsvFieldValue(row, headers, 'category', fallbackRow),
@@ -131,7 +133,7 @@ export const CsvUpload = ({ categories, usageOptions, onSaveListing }) => {
       >
         <Button icon={<UploadOutlined />}>Upload CSV</Button>
       </Upload>
-      <Tooltip title="You can fill the product listing table by uploading a CSV file. Download the spreadsheet template from the provided link to get started.">
+      <Tooltip title={csvUploadTooltip}>
         <InfoCircleOutlined />
       </Tooltip>
     </Space>

@@ -91,3 +91,7 @@
   padding: 12px 0;
   justify-content: flex-end;
 }
+
+.moneyFieldPricingGuide {
+  margin-top: 16px;
+}

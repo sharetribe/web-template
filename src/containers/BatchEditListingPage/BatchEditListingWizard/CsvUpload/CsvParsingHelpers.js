@@ -3,20 +3,22 @@ import { MAX_CATEGORIES } from '../../constants';
 // Define column mappings, including the fallback positions
 const fieldMapping = {
   fileName: { aliases: ['File Name'], position: 0 },
-  imageType: { aliases: ['Image Type'], position: 1 },
-  title: { aliases: ['Title'], position: 2 },
-  description: { aliases: ['Description'], position: 3 },
-  category: { aliases: ['Category (1-2 max)'], position: 4 },
+  title: { aliases: ['Title'], position: 1 },
+  description: { aliases: ['Description'], position: 2 },
+  isIllustration: { aliases: ['Illustration?'], position: 3 },
+  category: { aliases: ['Categories (1-3 max)'], position: 4 },
   usage: { aliases: ['Usage'], position: 5 },
-  released: { aliases: ['Released?'], position: 6 },
+  released: {
+    aliases: [
+      "If Commercial, do you have releases on file? (Select 'No' if releases are not needed)",
+    ],
+    position: 6,
+  },
   keywords: {
     aliases: ['Keywords (30 max, separate by commas)'],
     position: 7,
   },
-  ethicalAi: {
-    aliases: ['Please confirm any AI images were generated ethically'],
-    position: 8,
-  },
+  price: { aliases: ['Price'], position: 8 },
 };
 
 export const getCsvFieldValue = (row, headers, fieldKey, fallbackRow) => {

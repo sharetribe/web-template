@@ -19,7 +19,7 @@ import {
   SET_SELECTED_ROWS,
 } from '../../BatchEditListingPage.duck';
 import { useDispatch, useSelector } from 'react-redux';
-import { EditableListingsTable } from './EditableListingsTable';
+import { EditableListingsTable, getLicensingGuideLink } from './EditableListingsTable';
 import useStickyHeader from '../useStickyHeader';
 import {
   ExclamationCircleOutlined,
@@ -76,6 +76,7 @@ export const EditListingBatchProductDetails = props => {
   const dispatch = useDispatch();
   const listings = useSelector(getListings);
 
+  const licensingGuideLink = getLicensingGuideLink();
   const listingFieldsOptions = useSelector(getListingFieldsOptions);
   const listingsCreationInProgress = useSelector(getListingCreationInProgress);
   const invalidListings = useSelector(getInvalidListings);
@@ -168,7 +169,10 @@ export const EditListingBatchProductDetails = props => {
 
           <Flex className={css.subTitle} vertical>
             <Paragraph>
-              <FormattedMessage id="BatchEditListingProductDetails.subtitle" />
+              <FormattedMessage
+                id="BatchEditListingProductDetails.subtitle"
+                values={{ learnMore: licensingGuideLink }}
+              />
             </Paragraph>
             <Paragraph>
               <FormattedMessage id="BatchEditListingProductDetails.warningRefresh" />
