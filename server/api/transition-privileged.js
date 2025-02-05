@@ -6,6 +6,7 @@ const {
   serialize,
   fetchCommission,
 } = require('../api-util/sdk');
+const { retrieveCommissionAndFlatFee } = require('../extensions/line-items/utils');
 
 module.exports = async (req, res) => {
   const { isSpeculative, orderData, bodyParams, queryParams } = req.body;
@@ -23,14 +24,14 @@ module.exports = async (req, res) => {
     const listing = showListingResponse.data.data;
     const commissionAsset = fetchAssetsResponse.data.data[0];
 
-    const { providerCommission, customerCommission } =
-      commissionAsset?.type === 'jsonAsset' ? commissionAsset.attributes.data : {};
+    const { providerCommission, customerCommission, providerFlatFee } = await retrieveCommissionAndFlatFee(listing, commissionAsset);
 
     const lineItems = await transactionLineItems(
       listing,
       { ...orderData, ...bodyParams.params },
       providerCommission,
-      customerCommission
+      customerCommission,
+      providerFlatFee
     );
 
     // Omit listingId from params (transition/request-payment-after-inquiry does not need it)
