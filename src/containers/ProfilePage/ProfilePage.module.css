@@ -27,12 +27,13 @@
   border-bottom: 1px solid var(--colorGrey100);
   
   h1{
-    margin-bottom:12px;
+    margin-bottom:3px;
+    
   }
 
   .avgRating{
     p{font-size:13px;
-      margin-top:6px;
+      margin-top:0px;
       color:var(--colorGrey500)
     }
   }
@@ -48,7 +49,7 @@
   flex-shrink: 0;
 
   @media (--viewportLarge) {
-    margin: 0 96px 48px 0;
+    margin: 0 96px 24px 0;
   }
 }
 .avatarPlaceholder {
@@ -56,12 +57,34 @@
   width: 96px;
 }
 
+.verifiedBadge{
+  position:absolute;
+  background:var(--colorBlueNote);
+  width:28px;
+  height:28px;
+  border-radius:14px;
+  border:1px solid white;
+
+  margin-top:95px;
+  margin-left:70px;
+
+  @media (--viewportLarge){
+    margin-top:65px;
+  }
+  
+  svg{
+    color:white;
+    margin-top:1px;
+    margin-left:5px;
+  }
+}
+
 .mobileHeading {
   flex-shrink: 0;
   margin: 35px 0 0 0;
 
   @media (--viewportMedium) {
-    margin: 49px 0 0 0;
+    margin: 25px 0 0 0;
   }
   @media (--viewportLarge) {
     display: none;
@@ -352,4 +375,28 @@
 
 .unclickable {
   pointer-events: none;
+}
+
+.starRating {
+  position: relative;
+  width:100px;
+  white-space:nowrap;
+}
+
+.stars {
+  svg {
+    width:20px;
+    height:20px;;
+    fill:var(--colorGrey100);
+    stroke:0;
+  }
+}
+
+.rating {
+  position: absolute;
+  top: 0;
+  overflow:hidden;
+  svg {
+    fill:var(--marketplaceColor)
+  }
 }

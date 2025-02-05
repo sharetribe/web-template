@@ -46,6 +46,8 @@ import {
 
 import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2, InlineTextButton, Button, SecondaryButton } from '../../components';
 
+import { Heart } from 'lucide-react';
+
 import css from './OrderPanel.module.css';
 
 const BookingTimeForm = loadable(() =>
@@ -308,11 +310,11 @@ const OrderPanel = props => {
         className={`${css.favoriteButton} ${css.active}`}
         onClick={toggleFavorites}
       >
-        <i class="fa-solid fa-heart"></i>
+        <Heart />
       </InlineTextButton>
     ) : (
       <InlineTextButton className={css.favoriteButton} onClick={toggleFavorites}>
-        <i class="fa-regular fa-heart"></i>
+        <Heart />
       </InlineTextButton>
     );
 

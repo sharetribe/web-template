@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { FormattedMessage } from '../../../util/reactIntl';
 import { NamedLink, ModalInMobile } from '../../../components';
 
+import { X, Plus, FilePenLine } from 'lucide-react';
+
 import css from './NoSearchResultsMaybe.module.css';
 
 const NoSearchResultsMaybe = props => {
@@ -79,21 +81,21 @@ const NoSearchResultsMaybe = props => {
         <span>
         {hasSearchParams ? (
           <button className={css.resetAllFiltersButton} onClick={e => resetAll(e)}>
-            <i class="fa-solid fa-xmark"></i> <FormattedMessage id={'SearchPage.resetAllFilters'} />
+            <X /> <FormattedMessage id={'SearchPage.resetAllFilters'} />
           </button>
         ) : null}
         </span>
 
         <span>
           <NamedLink className={css.createListingLink} name="NewListingPage">
-          <i class="fa-solid fa-plus"></i> <FormattedMessage id="SearchPage.createListing" />
+          <Plus  /> <FormattedMessage id="SearchPage.createListing" />
           </NamedLink>
         </span>
         
         {formId && ( // Check if formId has a value
           <span>
            <button className={css.openLeadForm} onClick={handleButtonClick}>
-              <i class="fa-brands fa-wpforms"></i> Request a {getCategoryLabel(category)}
+              <FilePenLine/> Request a {getCategoryLabel(category)}
               </button>
           </span>
         )}

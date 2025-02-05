@@ -339,6 +339,7 @@
 }
 .favoriteButton.active{
   color:white;
+  > svg{ fill: white}
   background:var(--marketplaceColorDark);
 }
 

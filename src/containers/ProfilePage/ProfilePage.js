@@ -56,7 +56,7 @@ import SectionDetailsMaybe from './SectionDetailsMaybe';
 import SectionTextMaybe from './SectionTextMaybe';
 import SectionMultiEnumMaybe from './SectionMultiEnumMaybe';
 import SectionYoutubeVideoMaybe from './SectionYoutubeVideoMaybe';
-//import renderMarkdown from '../../containers/PageBuilder/markdownProcessor';
+import { Star, ShieldCheck } from "lucide-react";
 
 const MAX_MOBILE_SCREEN_WIDTH = 768;
 const MIN_LENGTH_FOR_LONG_WORDS = 20;
@@ -64,13 +64,21 @@ const MIN_LENGTH_FOR_LONG_WORDS = 20;
 export const AsideContent = props => {
   const { user, displayName, showLinkToProfileSettingsPage, reviews } = props;
   
-  console.log('about this user', user)
-  const avgRating = Math.round(reviews.reduce((acc, review) => {
+  const isVerified = user.attributes?.profile?.metadata?.verified === true;
+
+  //console.log('about user verified', isVerified)
+
+  const avgRating = reviews.reduce((acc, review) => {
     return acc + review.attributes.rating;
-  }, 0) / (reviews.length || 1)); // Avoid division by zero by using || 1
+  }, 0) / (reviews.length || 1); // Avoid division by zero by using || 1
   return (
     <div className={css.asideContent}>
       <AvatarLarge className={css.avatar} user={user} disableProfileLink />
+      {isVerified ? (
+        <div className={css.verifiedBadge} title="verified user">
+          <ShieldCheck />
+        </div>
+      ) : null}
       <div>
         <H2 as="h1" className={css.mobileHeading}>
           {displayName ? (
@@ -80,13 +88,20 @@ export const AsideContent = props => {
         
         {avgRating ? (
           <div className={css.avgRating}>
-            <div>
-              <ReviewRating
-                rating={avgRating}
-                className={css.mobileReviewRating}
-                reviewStarClassName={css.reviewRatingStar}
-              />
+            
+            <div className={css.starRating}>
+              <div className={css.stars}>
+                { Array.from({ length: 5 }, () => (
+                    <Star strokeWidth={0} />
+                ))}
+              </div>
+              <div className={`${css.stars} ${css.rating}`} style={{width: Math.round(avgRating * 20) + '%'}}>
+                { Array.from({ length: 5 }, () => (
+                    <Star strokeWidth={0} />
+                ))}
+              </div>
             </div>
+      
             <p>{reviews.length} total review(s)</p>
           </div>
         ) : null}
