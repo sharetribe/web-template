@@ -11,7 +11,7 @@ export const getPricingGuideLink = () => (
   <NamedLink name="CMSPage" params={{ pageId: 'pricing-guide' }}>
     pricing guide.
   </NamedLink>
-)
+);
 
 const EditableCell = ({
   title,
@@ -120,7 +120,10 @@ const EditableCell = ({
               className={css.formItem}
             />
             <div className={css.moneyFieldPricingGuide}>
-              <FormattedMessage id="EditableCellComponents.money.helpText" values={{ pricingGuide: pricingGuideLink }} />
+              <FormattedMessage
+                id="EditableCellComponents.money.helpText"
+                values={{ pricingGuide: pricingGuideLink }}
+              />
             </div>
           </>
         );

@@ -9,8 +9,10 @@ const fieldMapping = {
   category: { aliases: ['Categories (1-3 max)'], position: 4 },
   usage: { aliases: ['Usage'], position: 5 },
   released: {
-    aliases: ["If Commercial, do you have releases on file? (Select 'No' if releases are not needed)"],
-    position: 6
+    aliases: [
+      "If Commercial, do you have releases on file? (Select 'No' if releases are not needed)",
+    ],
+    position: 6,
   },
   keywords: {
     aliases: ['Keywords (30 max, separate by commas)'],

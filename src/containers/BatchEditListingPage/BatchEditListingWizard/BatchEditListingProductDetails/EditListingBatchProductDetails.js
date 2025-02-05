@@ -169,7 +169,10 @@ export const EditListingBatchProductDetails = props => {
 
           <Flex className={css.subTitle} vertical>
             <Paragraph>
-              <FormattedMessage id="BatchEditListingProductDetails.subtitle" values={{ learnMore: licensingGuideLink }} />
+              <FormattedMessage
+                id="BatchEditListingProductDetails.subtitle"
+                values={{ learnMore: licensingGuideLink }}
+              />
             </Paragraph>
             <Paragraph>
               <FormattedMessage id="BatchEditListingProductDetails.warningRefresh" />

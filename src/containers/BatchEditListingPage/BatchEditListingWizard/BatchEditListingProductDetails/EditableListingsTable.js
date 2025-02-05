@@ -22,7 +22,7 @@ export const getLicensingGuideLink = () => (
   <NamedLink name="CMSPage" params={{ pageId: 'licensing-guide' }}>
     Learn More.
   </NamedLink>
-)
+);
 
 export const EditableListingsTable = props => {
   const {
@@ -67,7 +67,7 @@ export const EditableListingsTable = props => {
     { maxKeywords: MAX_KEYWORDS }
   );
   const priceHelperText = intl.formatMessage(
-    { id: 'EditableListingsTable.price.helperText'},
+    { id: 'EditableListingsTable.price.helperText' },
     { pricingGuide: pricingGuideLink }
   );
 
