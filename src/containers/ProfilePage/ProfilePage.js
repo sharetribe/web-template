@@ -34,6 +34,7 @@ import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import {
   Heading,
   H2,
+  H3,
   H4,
   Page,
   AvatarLarge,
@@ -56,13 +57,13 @@ import SectionDetailsMaybe from './SectionDetailsMaybe';
 import SectionTextMaybe from './SectionTextMaybe';
 import SectionMultiEnumMaybe from './SectionMultiEnumMaybe';
 import SectionYoutubeVideoMaybe from './SectionYoutubeVideoMaybe';
-import { Star, ShieldCheck } from "lucide-react";
+import { Star, ShieldCheck, CalendarClock, Globe } from "lucide-react";
 
 const MAX_MOBILE_SCREEN_WIDTH = 768;
 const MIN_LENGTH_FOR_LONG_WORDS = 20;
 
 export const AsideContent = props => {
-  const { user, displayName, showLinkToProfileSettingsPage, reviews } = props;
+  const { user, displayName, showLinkToProfileSettingsPage, reviews, listings } = props;
   
   const isVerified = user.attributes?.profile?.metadata?.verified === true;
 
@@ -91,20 +92,29 @@ export const AsideContent = props => {
             
             <div className={css.starRating}>
               <div className={css.stars}>
-                { Array.from({ length: 5 }, () => (
-                    <Star strokeWidth={0} />
+                { Array.from({ length: 5 }, (_, index) => (
+                    <Star key={`empty-star-${index}`} strokeWidth={0} />
                 ))}
               </div>
               <div className={`${css.stars} ${css.rating}`} style={{width: Math.round(avgRating * 20) + '%'}}>
-                { Array.from({ length: 5 }, () => (
-                    <Star strokeWidth={0} />
+                { Array.from({ length: 5 }, (_, index) => (
+                    <Star key={`filled-star-${index}`} strokeWidth={0} />
                 ))}
               </div>
             </div>
-      
-            <p>{reviews.length} total review(s)</p>
           </div>
         ) : null}
+
+        <div className={css.asideStats}>
+          <div className={css.asideStatsItem}>
+            <h4>{reviews.length}</h4>
+            <p>Reviews</p>
+          </div>
+          <div className={css.asideStatsItem}>
+            <h4>{listings.length}</h4>
+            <p>Listings</p>
+          </div>
+        </div>
 
       </div>
 
@@ -242,6 +252,7 @@ export const MainContent = props => {
     userShowError,
     bio,
     displayName,
+    createdAt,
     listings,
     queryListingsError,
     reviews,
@@ -270,6 +281,11 @@ export const MainContent = props => {
     [css.withBioMissingAbove]: !hasBio,
   });
 
+  const isVerified = metadata?.verified === true;
+  console.log('reviews', reviews)
+  const hasBuyerReview = reviews.some(review => review.attributes.type === REVIEW_TYPE_OF_PROVIDER);
+  const isVerifiedSeller = isVerified && hasBuyerReview;
+
   if (userShowError || queryListingsError) {
     return (
       <p className={css.error}>
@@ -279,10 +295,35 @@ export const MainContent = props => {
   }
   return (
     <div>
-      <H2 as="h1" className={css.desktopHeading}>
+      <H3 as="h1" className={css.desktopHeading}>
         <FormattedMessage id="ProfilePage.desktopHeading" values={{ name: displayName }} />
-      </H2>
-      {hasBio ? <p className={css.bio}>{bioWithLinks}</p> : null}
+      </H3>
+
+      <div className={css.twoColumnSection}>
+        <div className={css.leftColumn}>
+          {isVerifiedSeller && (
+            <div className={css.iconLine}>
+              <ShieldCheck />
+              <span>Verified Seller</span>
+            </div>
+          )}
+
+          <div className={css.iconLine}>
+            <CalendarClock />
+            <span>
+              Joined {createdAt ? new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(createdAt)) : 'n/a'}
+            </span>
+          </div>
+
+          <div className={css.iconLine}>
+            <Globe />
+            <span>From {publicData?.userLocation}</span>
+          </div>
+        </div>
+        <div className={css.rightColumn}>
+          {hasBio ? <p className={css.bio}>{bioWithLinks}</p> : null}
+        </div>
+      </div>
 
       {displayName ? (
         <CustomUserFields
@@ -363,7 +404,9 @@ export const ProfilePageComponent = props => {
 
   const isCurrentUser = currentUser?.id && currentUser?.id?.uuid === pathParams.id;
   const profileUser = useCurrentUser ? currentUser : user;
+
   const { bio, displayName, publicData, metadata } = profileUser?.attributes?.profile || {};
+  const createdAt = profileUser?.attributes?.createdAt;
   const { userFields } = config.user;
   const isPrivateMarketplace = config.accessControl.marketplace.private === true;
   const isUnauthorizedUser = currentUser && !isUserAuthorized(currentUser);
@@ -449,6 +492,7 @@ export const ProfilePageComponent = props => {
         <MainContent
           bio={bio}
           displayName={displayName}
+          createdAt={createdAt}
           userShowError={userShowError}
           publicData={publicData}
           metadata={metadata}

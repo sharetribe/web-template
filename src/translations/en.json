@@ -416,6 +416,8 @@
   "InquiryForm.messageLabel": "Message to {authorDisplayName}",
   "InquiryForm.messagePlaceholder": "Hello {authorDisplayName}! I'm looking forward to…",
   "InquiryForm.messageRequired": "A message is required",
+  "InquiryForm.noEmailAllowed": "Please do not include email addresses. This violates our Terms of Service.",
+  "InquiryForm.noPhoneNumberAllowed": "Please do not include phone numbers. This violates our Terms of Service.",
   "InquiryForm.noTransactionRightsError": "Oops, something went wrong. You don't have transaction rights. <NoAccessLink>Read more about transaction rights.</NoAccessLink>",
   "InquiryForm.sendInquiryError": "Oops, something went wrong. Please try again.",
   "InquiryForm.sendInquiryErrorNoProcess": "Oops, no transaction process attached to the listing. Please contact support",

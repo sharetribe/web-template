@@ -45,7 +45,7 @@
 }
 
 .avatar {
-  margin: 30px 26px 29px 0;
+  margin: 40px 26px 29px 0;
   flex-shrink: 0;
 
   @media (--viewportLarge) {
@@ -65,7 +65,7 @@
   border-radius:14px;
   border:1px solid white;
 
-  margin-top:95px;
+  margin-top:105px;
   margin-left:70px;
 
   @media (--viewportLarge){
@@ -76,6 +76,31 @@
     color:white;
     margin-top:1px;
     margin-left:5px;
+  }
+}
+
+.asideStats{
+  display:flex;
+  flex-direction:row;
+  justify-content:space-between;
+  max-width:120px;
+  margin-bottom:30px;
+
+  .asideStatsItem{
+    h4 {
+      margin:10px 0 0 0;
+      font-size:24px;
+      line-height:24px;
+      font-weight:bold;
+      @media (--viewportLarge){
+        margin-top:20px;
+      }
+    }
+    p {
+      margin:0;
+      font-size:12px;
+      line-height:12px;
+    }
   }
 }
 
@@ -132,7 +157,7 @@
   /* Preserve newlines, but collapse other whitespace */
   white-space: pre-line;
   margin: 5px 0 24px 0;
-
+  padding:0;
   img{max-width:100%}
 
   @media (--viewportMedium) {
@@ -181,8 +206,6 @@
   margin: 0;
   display: flex;
   flex-wrap: wrap;
-  max-height:400px;
-  overflow:scroll;
 }
 
 .listing {
@@ -398,5 +421,36 @@
   overflow:hidden;
   svg {
     fill:var(--marketplaceColor)
+  }
+}
+
+.twoColumnSection {
+  gap: 30px;
+  margin-bottom: 20px;
+  @media (--viewportMedium) {
+    display: flex;
+    margin-bottom: 30px;
+  }
+}
+
+.leftColumn {
+  flex: 1;
+  flex-direction: column;
+  justify-content: flex-start;
+  display: flex;
+  
+}
+
+.rightColumn {
+  flex: 2;
+}
+
+.iconLine {
+  display: flex;
+  white-space: nowrap;
+  align-items: center;
+  margin-bottom: 10px;
+  span {
+    margin-left:10px;
   }
 }
