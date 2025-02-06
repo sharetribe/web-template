@@ -15,25 +15,24 @@ const processEvent = async (integrationSdk, event, storageManagerClient) => {
   const { attributes: listing, relationships } = resource;
   const userId = relationships?.author?.data?.id?.uuid;
   const listingId = resourceId?.uuid;
-  const assetOriginalUrl = listing?.privateData?.originalAssetUrl;
-  const assetPreviewUrl = listing?.privateData?.previewAssetUrl;
+  const originalAssetUrl = listing?.privateData?.originalAssetUrl;
+  const previewAssetUrl = listing?.privateData?.previewAssetUrl;
   const isProductListing = listing?.publicData?.listingType === LISTING_TYPES.PRODUCT;
 
-  if (!assetOriginalUrl || !assetPreviewUrl || !userId || !listingId || !isProductListing) return;
+  if (!originalAssetUrl || !previewAssetUrl || !userId || !listingId || !isProductListing) return;
 
   try {
     const originalAssetData = await storageManagerClient.uploadOriginalAsset(
       userId,
       listingId,
-      assetOriginalUrl
+      originalAssetUrl
     );
-    const imageStream = await httpFileUrlToStream(assetPreviewUrl);
+    const imageStream = await httpFileUrlToStream(previewAssetUrl);
     const { data: sdkImage } = await integrationSdk.images.upload({ image: imageStream });
-
     await integrationSdk.listings.update(
       {
         id: listingId,
-        privateData: { originalAssetUrl: originalAssetData.source, assetPreviewUrl: null },
+        privateData: { originalAssetUrl: originalAssetData.source, previewAssetUrl: null },
         images: [sdkImage.data.id],
       },
       { expand: true, include: ['images'] }

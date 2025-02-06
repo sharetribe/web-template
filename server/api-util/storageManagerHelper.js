@@ -24,7 +24,8 @@ class StorageManagerClient {
       });
       return response.data;
     } catch (error) {
-      console.error('Failed to upload original asset:', error);
+      const parsedError = error?.response?.data || ''
+      console.error('Failed to upload original asset:', parsedError);
       throw error;
     }
   }
