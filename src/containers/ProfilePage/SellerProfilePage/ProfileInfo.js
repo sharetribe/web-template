@@ -11,6 +11,7 @@ import {
   USER_TYPES,
 } from '../../../util/types';
 import { pickCustomFieldProps } from '../../../util/fieldHelpers';
+import { isValidURL } from '../../../util/urlHelpers';
 import { getUserTypeFieldInputs } from '../../../util/userHelpers';
 import { richText } from '../../../util/richText';
 
@@ -34,16 +35,17 @@ const CustomUserFields = props => {
     const userType = USER_TYPES.SELLER;
     const fieldKey = fieldConfig.key;
     const isBrandAdmin = false;
-    const enableField = getUserTypeFieldInputs(userType, fieldKey, isBrandAdmin, false);
+    const enableField = getUserTypeFieldInputs(userType, fieldKey, isBrandAdmin, false, true);
     const displayInProfile = fieldConfig?.showConfig?.displayInProfile !== false;
     return displayInProfile && enableField;
   };
   const propsForCustomFields =
     pickCustomFieldProps(publicData, metadata, userFieldConfig, 'userType', shouldPickUserField) ||
     [];
+  const parsedUserFieldConfig = userFieldConfig.filter(field => field.key !== 'liabilityInsurance');
   return (
     <>
-      <SectionDetailsMaybe {...props} />
+      <SectionDetailsMaybe {...{ ...props, userFieldConfig: parsedUserFieldConfig }} />
       {propsForCustomFields.map(customFieldProps => {
         const { schemaType, ...fieldProps } = customFieldProps;
         return schemaType === SCHEMA_TYPE_MULTI_ENUM ? (
@@ -138,6 +140,7 @@ function ProfileInfo({
   const address = creativeProfile?.attributes?.publicData?.location?.address || '';
   const hasBio = !!bio;
   const hasPortfolioURL = !!portfolioURL;
+  const parsedPortfolioURL = `${isValidURL(portfolioURL) ? '' : 'http://'}${portfolioURL}`;
   const bioWithLinks = richText(bio, {
     linkify: true,
     longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
@@ -198,7 +201,7 @@ function ProfileInfo({
             <p className={css.addressLabel}>{address}</p>
             {hasBio && <span className={css.bioLabel}>{bioWithLinks}</span>}
             {hasPortfolioURL && (
-              <Button type="link" href={portfolioURL} className={css.portfolioLink}>
+              <Button type="link" href={parsedPortfolioURL} className={css.portfolioLink}>
                 {portfolioURL}
               </Button>
             )}

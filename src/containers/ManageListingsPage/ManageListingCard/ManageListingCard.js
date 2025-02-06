@@ -7,7 +7,6 @@ import classNames from 'classnames';
 import { useConfiguration } from '../../../context/configurationContext';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
-import { displayPrice } from '../../../util/configHelpers';
 import {
   LISTING_STATE_CLOSED,
   LISTING_STATE_DRAFT,
@@ -15,7 +14,6 @@ import {
   propTypes,
   STOCK_MULTIPLE_ITEMS,
 } from '../../../util/types';
-import { formatMoney } from '../../../util/currency';
 import { ensureOwnListing } from '../../../util/data';
 import {
   createSlug,
@@ -48,25 +46,6 @@ import css from './ManageListingCard.module.css';
 const MENU_CONTENT_OFFSET = -12;
 const MAX_LENGTH_FOR_WORDS_IN_TITLE = 7;
 const MOBILE_MAX_WIDTH = 550;
-
-const priceData = (price, currency, intl) => {
-  if (price?.currency === currency) {
-    const formattedPrice = formatMoney(intl, price);
-    return { formattedPrice, priceTitle: formattedPrice };
-  } else if (price) {
-    return {
-      formattedPrice: intl.formatMessage(
-        { id: 'ManageListingCard.unsupportedPrice' },
-        { currency: price.currency }
-      ),
-      priceTitle: intl.formatMessage(
-        { id: 'ManageListingCard.unsupportedPriceTitle' },
-        { currency: price.currency }
-      ),
-    };
-  }
-  return {};
-};
 
 const createListingURL = (routes, listing) => {
   const id = listing.id.uuid;
@@ -331,42 +310,6 @@ const LinkToStockOrAvailabilityTab = props => {
   );
 };
 
-const PriceMaybe = props => {
-  const { price, publicData, config, intl } = props;
-  const { listingType } = publicData || {};
-  const validListingTypes = config.listing.listingTypes;
-  const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
-
-  const showPrice = displayPrice(foundListingTypeConfig);
-  if (showPrice && !price) {
-    return (
-      <div className={css.noPrice}>
-        <FormattedMessage id="ManageListingCard.priceNotSet" />
-      </div>
-    );
-  } else if (!showPrice) {
-    return null;
-  }
-
-  const isBookable = isBookingProcessAlias(publicData?.transactionProcessAlias);
-  const { formattedPrice, priceTitle } = priceData(price, config.currency, intl);
-  return (
-    <div className={css.price}>
-      <div className={css.priceValue} title={priceTitle}>
-        {formattedPrice}
-      </div>
-      {isBookable ? (
-        <div className={css.perUnit}>
-          <FormattedMessage
-            id="ManageListingCard.perUnit"
-            values={{ unitType: publicData?.unitType }}
-          />
-        </div>
-      ) : null}
-    </div>
-  );
-};
-
 export const ManageListingCardComponent = props => {
   const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();
@@ -390,7 +333,7 @@ export const ManageListingCardComponent = props => {
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureOwnListing(listing);
   const id = currentListing.id.uuid;
-  const { title = '', price, state, publicData, description } = currentListing.attributes;
+  const { title = '', price, state, publicData } = currentListing.attributes;
   const slug = createSlug(title);
   const isPendingApproval = state === LISTING_STATE_PENDING_APPROVAL;
   const isClosed = state === LISTING_STATE_CLOSED;
@@ -402,6 +345,7 @@ export const ManageListingCardComponent = props => {
   const hasListingType = !!listingType;
   const validListingTypes = config.listing.listingTypes;
   const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
+  const listingTypeLabel = foundListingTypeConfig.label;
 
   const currentStock = currentListing.currentStock?.attributes?.quantity;
   const isOutOfStock = currentStock === 0;
@@ -571,8 +515,10 @@ export const ManageListingCardComponent = props => {
 
       <div className={css.info}>
         <div className={css.mainInfo}>
-          <div className={css.titleWrapper}>{description}</div>
-          <div className={css.titleWrapper}>{listingType}</div>
+          <div className={css.titleWrapper}>
+            {formatTitle(title, MAX_LENGTH_FOR_WORDS_IN_TITLE)}
+          </div>
+          <div className={css.titleWrapper}>{listingTypeLabel}</div>
         </div>
 
         <div className={css.manageLinks}>

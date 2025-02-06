@@ -225,24 +225,34 @@ export const getBrandUserFieldInputs = (fieldKey, isBrandAdmin) => {
   }
 };
 
-export const getSellerUserFieldInputs = (fieldKey, isSellerApplication) => {
+export const getSellerUserFieldInputs = (fieldKey, isSellerApplication, isPublicProfile) => {
   if (isSellerApplication) {
     return true;
   }
   switch (fieldKey) {
     case 'creativeSpecialty':
       return false;
+    case 'whyJoin':
+    case 'mentorship':
+    case 'birthday':
+      return !isPublicProfile;
     default:
       return true;
   }
 };
 
-export const getUserTypeFieldInputs = (userType, fieldKey, isBrandAdmin, isSellerApplication) => {
+export const getUserTypeFieldInputs = (
+  userType,
+  fieldKey,
+  isBrandAdmin,
+  isSellerApplication,
+  isPublicProfile
+) => {
   if (isStudioBrand(userType)) {
     return getBrandUserFieldInputs(fieldKey, isBrandAdmin);
   }
   if (isCreativeSeller(userType)) {
-    return getSellerUserFieldInputs(fieldKey, isSellerApplication);
+    return getSellerUserFieldInputs(fieldKey, isSellerApplication, isPublicProfile);
   }
   return true;
 };

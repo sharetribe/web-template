@@ -4,7 +4,7 @@ import { MAX_CATEGORIES, MAX_KEYWORDS } from '../../constants';
 import css from './EditListingBatchProductDetails.module.css';
 import React from 'react';
 import { NamedLink } from '../../../../components';
-import { EditableCellComponents, getPricingGuideLink } from './EditableCellComponents';
+import { EditableCellComponents } from './EditableCellComponents';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { getImageDimensionLabel } from '../../imageHelpers';
 import { CsvUpload } from '../CsvUpload/CsvUpload';
@@ -17,6 +17,12 @@ const stringSorter = (strA, strB) => {
 const numberSorter = (a, b) => {
   return a - b;
 };
+
+const getPricingGuideLink = () => (
+  <NamedLink name="CMSPage" params={{ pageId: 'pricing-guide' }}>
+    pricing guide.
+  </NamedLink>
+);
 
 export const getLicensingGuideLink = () => (
   <NamedLink name="CMSPage" params={{ pageId: 'licensing-guide' }}>
@@ -46,7 +52,8 @@ export const EditableListingsTable = props => {
   const descriptionHelperText = intl.formatMessage({
     id: 'EditableListingsTable.description.helperText',
   });
-  const isAiHelperText = intl.formatMessage({ id: 'EditableListingsTable.isAi.helperText' });
+  // [TODO:] Disabled for the time being
+  // const isAiHelperText = intl.formatMessage({ id: 'EditableListingsTable.isAi.helperText' });
   const isIllustrationHelperText = intl.formatMessage({
     id: 'EditableListingsTable.isIllustration.helperText',
   });

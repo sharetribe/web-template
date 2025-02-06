@@ -421,9 +421,13 @@ export function initializeUppy(meta) {
         }
       });
 
-      uppyInstance.on('transloadit:result', (_, result) => {
+      uppyInstance.on('transloadit:result', (assembly, result) => {
         const { localId, ssl_url } = result;
-        dispatch({ type: UPDATE_LISTING, payload: { id: localId, previewUrl: ssl_url } });
+        const isOriginal = assembly === ':original';
+        const fileData = {
+          ...(isOriginal ? { originalUrl: ssl_url } : { previewUrl: ssl_url }),
+        };
+        dispatch({ type: UPDATE_LISTING, payload: { id: localId, ...fileData } });
       });
 
       uppyInstance.on('complete', async result => {
@@ -437,13 +441,11 @@ export function initializeUppy(meta) {
         }
 
         for (let successfulUpload of result.successful) {
-          const { uploadURL } = successfulUpload;
           const listing = getSingleListing(getState(), successfulUpload.id);
           try {
             const { currency, transactionType } = listingsDefaults;
             const truncatedPrice = truncateToSubUnitPrecision(listing.price, unitDivisor(currency));
             const price = convertUnitToSubUnit(truncatedPrice, unitDivisor(currency));
-
             const listingData = {
               title: listing.title,
               description: listing.description,
@@ -463,14 +465,13 @@ export function initializeUppy(meta) {
               },
               privateData: {
                 previewAssetUrl: listing.previewUrl,
-                originalAssetUrl: uploadURL,
+                originalAssetUrl: listing.originalUrl,
               },
               price: {
                 amount: price,
                 currency: currency,
               },
             };
-
             await sdk.ownListings.create(listingData, {
               expand: true,
             });

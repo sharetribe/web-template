@@ -239,15 +239,20 @@ export const EditListingBatchProductDetails = props => {
       </Modal>
 
       <Modal
-        title="Creating listings"
+        title={
+          <FormattedMessage id="BatchEditListingProductDetails.progressModal.title"></FormattedMessage>
+        }
         open={showProgressModal}
         footer={null}
         keyboard={false}
         closeIcon={null}
       >
         <H3>
-          <FormattedMessage id="BatchEditListingProductDetails.progressModal.title"></FormattedMessage>
+          <FormattedMessage id="BatchEditListingProductDetails.progressModal.content.title"></FormattedMessage>
         </H3>
+        <Paragraph>
+          <FormattedMessage id="BatchEditListingProductDetails.progressModal.content.description"></FormattedMessage>
+        </Paragraph>
         <Paragraph>
           <Progress
             percent={(successfulListings.length / selectedRowsKeys.length) * 100}
