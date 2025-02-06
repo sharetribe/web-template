@@ -770,14 +770,15 @@ export const LISTING_TABS_PRODUCT_CATEGORIES = [
     name: 'Illustrations',
     id: 'illustrations',
   },
-  {
-    name: 'AI Images',
-    id: 'ai-image',
-  },
-  {
-    name: 'AI Videos',
-    id: 'ai-video',
-  },
+  // [TODO:] Disabled for the time being
+  // {
+  //   name: 'AI Images',
+  //   id: 'ai-image',
+  // },
+  // {
+  //   name: 'AI Videos',
+  //   id: 'ai-video',
+  // },
 ];
 
 propTypes.sellerStatus = oneOfType(SELLER_STATUS);
