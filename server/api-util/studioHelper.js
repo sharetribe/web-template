@@ -9,6 +9,7 @@ const STUDIO_USER_TYPE = {
 class StudioManagerClient {
   axiosClient = axios.create({
     baseURL: `${process.env.WEBAPI_URL}/${BASE_PATH}`,
+    timeout: 180000, // 3 minutes timeout
   });
 
   constructor() {

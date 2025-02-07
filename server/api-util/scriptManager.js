@@ -42,8 +42,11 @@ function generateScript(SCRIPT_NAME, queryEvents, analyzeEvent, analyzeEventGrou
     // PROD: Keeping this at 1 minute or more is a good idea.
     // DEV: We use 10 seconds so that the data is printed without much delay.
     // (1 minutes = 60 seconds) && (1 second = 1000 ms) && (1 minute = 60*1000 ms)
-    const msInMinute = 60 * 1000;
-    const pollIdleWait = dev ? 10000 : 5 * msInMinute;
+
+    // const msInMinute = 60 * 1000;
+    // const pollIdleWait = dev ? 10000 : 5 * msInMinute;
+    const pollIdleWait = dev ? 10000 : 30000;
+
     // Polling interval (in ms) when a full page of events is received and there may be more
     const pollWait = 250;
     // File to keep state across restarts. Stores the last seen event sequence ID,
