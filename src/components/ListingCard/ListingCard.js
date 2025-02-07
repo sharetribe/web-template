@@ -136,12 +136,14 @@ export const ListingCardComponent = props => {
           hidePrice={hidePrice}
         />
         <div className={css.mainInfo}>
-          <div className={css.title}>
-            {richText(title, {
-              longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
-              longWordClass: css.longWord,
-            })}
-          </div>
+          {isCreativeProfile && (
+            <div className={css.title}>
+              {richText(title, {
+                longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
+                longWordClass: css.longWord,
+              })}
+            </div>
+          )}
           {showAuthorInfo ? (
             <div className={css.authorInfo}>
               <FormattedMessage id="ListingCard.author" values={{ authorName }} />
