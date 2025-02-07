@@ -71,34 +71,37 @@ const ReviewsComponent = props => {
 
   const carouselRef = useRef(null);
 
-  const ButtonGroup = ({ next, previous, goToSlide, ...rest }) => {
-    const { carouselState: { currentSlide } } = rest;
-    return (
-      <div className="carousel-button-group">
-        <SecondaryButton className={currentSlide === 0 ? 'disable' : ''} onClick={() => previous()}>
-          <ChevronLeft/>
-          </SecondaryButton>
-        <SecondaryButton onClick={() => next()}>
-          <ChevronRight/>
-          </SecondaryButton>
-      </div>
-    );
+  const [currentSlide, setCurrentSlide] = React.useState(0);
+  const [totalItems, setTotalItems] = React.useState(0);
+
+  const handleAfterChange = (previousSlide, { currentSlide, totalItems }) => {
+    setCurrentSlide(currentSlide);
+    setTotalItems(totalItems);
   };
 
   return (
     <div className={classes}>
-      
       <div className="carousel-button-group">
-        <SecondaryButton onClick={() => carouselRef.current.previous()}>
+        <SecondaryButton 
+          className={currentSlide === 0 ? 'disable' : ''} 
+          onClick={() => carouselRef.current.previous()}
+        >
           <ChevronLeft/>
         </SecondaryButton>
         <SecondaryButton 
-        onClick={() => { carouselRef.current.next(); console.log(carouselRef.current?.state) }}>
+          className={currentSlide === totalItems - 1 ? 'disable' : ''} 
+          onClick={() => carouselRef.current.next()}
+        >
           <ChevronRight/>
         </SecondaryButton>
       </div>
 
-      <Carousel ref={carouselRef} arrows={false} responsive={responsive}>
+      <Carousel 
+        ref={carouselRef} 
+        arrows={false} 
+        responsive={responsive} 
+        afterChange={handleAfterChange}
+      >
         {reviews.map(r => {
           return (
             <li key={`Review_${r.id.uuid}`} className={css.reviewItem}>

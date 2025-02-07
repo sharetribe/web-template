@@ -1593,6 +1593,7 @@ svg.lucide{
       border:none;
       color: var(--colorGrey300);
       pointer-events: none;
+      cursor: not-allowed;
     }
   }
 }
