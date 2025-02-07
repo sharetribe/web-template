@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { arrayOf, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { injectIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 
-import { Avatar, ReviewRating, UserDisplayName } from '../../components';
+import { Avatar, SecondaryButton, ReviewRating, UserDisplayName } from '../../components';
+
+import {ChevronLeft, ChevronRight} from 'lucide-react';
+
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
 
 import css from './Reviews.module.css';
 
@@ -49,19 +54,60 @@ Review.propTypes = {
 };
 
 const ReviewsComponent = props => {
+  
   const { className, rootClassName, reviews, intl } = props;
   const classes = classNames(rootClassName || css.root, className);
+  
+  const responsive = {
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 2
+    },
+    mobile: {
+      breakpoint: { max: 600, min: 0 },
+      items: 1
+    }
+  };
+
+  const carouselRef = useRef(null);
+
+  const ButtonGroup = ({ next, previous, goToSlide, ...rest }) => {
+    const { carouselState: { currentSlide } } = rest;
+    return (
+      <div className="carousel-button-group">
+        <SecondaryButton className={currentSlide === 0 ? 'disable' : ''} onClick={() => previous()}>
+          <ChevronLeft/>
+          </SecondaryButton>
+        <SecondaryButton onClick={() => next()}>
+          <ChevronRight/>
+          </SecondaryButton>
+      </div>
+    );
+  };
 
   return (
-    <ul className={classes}>
-      {reviews.map(r => {
-        return (
-          <li key={`Review_${r.id.uuid}`} className={css.reviewItem}>
-            <Review review={r} intl={intl} />
-          </li>
-        );
-      })}
-    </ul>
+    <div className={classes}>
+      
+      <div className="carousel-button-group">
+        <SecondaryButton onClick={() => carouselRef.current.previous()}>
+          <ChevronLeft/>
+        </SecondaryButton>
+        <SecondaryButton 
+        onClick={() => { carouselRef.current.next(); console.log(carouselRef.current?.state) }}>
+          <ChevronRight/>
+        </SecondaryButton>
+      </div>
+
+      <Carousel ref={carouselRef} arrows={false} responsive={responsive}>
+        {reviews.map(r => {
+          return (
+            <li key={`Review_${r.id.uuid}`} className={css.reviewItem}>
+              <Review review={r} intl={intl} />
+            </li>
+          );
+        })}
+      </Carousel>
+    </div>
   );
 };
 

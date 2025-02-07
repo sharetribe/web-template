@@ -2,6 +2,12 @@
 
 .root {
   margin: 0;
+  max-width: 335px;
+  position: relative;
+
+  @media (--viewportMedium) {
+    max-width: 805px;
+  }
 }
 
 .reviewItem {

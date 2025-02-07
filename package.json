@@ -5,6 +5,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@babel/runtime": "^7.17.9",
+    "@daily-co/daily-js": "^0.74.0",
     "@loadable/component": "^5.16.4",
     "@loadable/server": "^5.16.5",
     "@mapbox/polyline": "^1.1.1",
@@ -52,6 +53,7 @@
     "react-image-gallery": "1.2.8",
     "react-intl": "^5.25.1",
     "react-moment-proptypes": "^1.8.1",
+    "react-multi-carousel": "^2.8.5",
     "react-redux": "^7.2.8",
     "react-router-dom": "^5.3.2",
     "react-with-direction": "^1.4.0",

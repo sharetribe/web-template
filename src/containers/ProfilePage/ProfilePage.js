@@ -145,6 +145,27 @@ export const ReviewsErrorMaybe = props => {
   ) : null;
 };
 
+export const CardReviews = props => {
+  const { reviews, queryReviewsError } = props;
+  
+  return (
+    <div className={css.mobileReviews}>
+      <H4 as="h2" className={css.mobileReviewsTitle}>
+        <FormattedMessage
+          id="ProfilePage.reviewsTitle"
+          values={{ count: reviews.length }}
+        />
+      </H4>
+      <ReviewsErrorMaybe queryReviewsError={queryReviewsError} />
+
+  <Reviews reviews={reviews} />
+      
+      
+    </div>
+  );
+};
+
+/*
 export const MobileReviews = props => {
   const { reviews, queryReviewsError } = props;
   const reviewsOfProvider = reviews.filter(r => r.attributes.type === REVIEW_TYPE_OF_PROVIDER);
@@ -246,7 +267,7 @@ export const CustomUserFields = props => {
     </>
   );
 };
-
+*/
 export const MainContent = props => {
   const {
     userShowError,
@@ -325,7 +346,7 @@ export const MainContent = props => {
         </div>
       </div>
 
-      {displayName ? (
+      {displayName && false ? (
         <CustomUserFields
           publicData={publicData}
           metadata={metadata}
@@ -334,6 +355,10 @@ export const MainContent = props => {
         />
       ) : null}
 
+      {hideReviews ? null 
+        : <CardReviews reviews={reviews} queryReviewsError={queryReviewsError} />
+      }
+      
       {hasListings ? (
         <div className={listingsContainerClasses}>
           <H4 as="h2" className={css.listingsTitle}>
@@ -360,11 +385,7 @@ export const MainContent = props => {
           </ul>
         </div>
       ) : null}
-      {hideReviews ? null : isMobileLayout ? (
-        <MobileReviews reviews={reviews} queryReviewsError={queryReviewsError} />
-      ) : (
-        <DesktopReviews reviews={reviews} queryReviewsError={queryReviewsError} />
-      )}
+      
     </div>
   );
 };

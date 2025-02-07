@@ -681,6 +681,7 @@
   "ProfilePage.reviewsFromMyCustomersTitle": "Reviews from customers ({count})",
   "ProfilePage.statsLabel.listings": "{count, plural, one {Listing} other {Listings}}",
   "ProfilePage.statsLabel.reviews": "{count, plural, one {Review} other {Reviews}}",
+  "ProfilePage.reviewsTitle": "{count, plural, one {Review} other {Reviews}} ({count})",
   "ProfilePage.label.joined": "Joined",
   "ProfilePage.label.from": "From",
   "ProfilePage.label.verfiedSeller": "Verified Seller",
