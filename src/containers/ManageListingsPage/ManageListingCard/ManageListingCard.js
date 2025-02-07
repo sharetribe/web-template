@@ -44,7 +44,6 @@ import css from './ManageListingCard.module.css';
 
 // Menu content needs the same padding
 const MENU_CONTENT_OFFSET = -12;
-const MAX_LENGTH_FOR_WORDS_IN_TITLE = 7;
 const MOBILE_MAX_WIDTH = 550;
 
 const createListingURL = (routes, listing) => {
@@ -74,23 +73,6 @@ const createListingURL = (routes, listing) => {
         };
 
   return createResourceLocatorString(linkProps.name, routes, linkProps.params, {});
-};
-
-// Cards are not fixed sizes - So, long words in title make flexboxed items to grow too big.
-// 1. We split title to an array of words and spaces.
-//    "foo bar".split(/([^\s]+)/gi) => ["", "foo", " ", "bar", ""]
-// 2. Then we break long words by adding a '<span>' with word-break: 'break-all';
-const formatTitle = (title, maxLength) => {
-  const nonWhiteSpaceSequence = /([^\s]+)/gi;
-  return title.split(nonWhiteSpaceSequence).map((word, index) => {
-    return word.length > maxLength ? (
-      <span key={index} style={{ wordBreak: 'break-all' }}>
-        {word}
-      </span>
-    ) : (
-      word
-    );
-  });
 };
 
 const ShowFinishDraftOverlayMaybe = props => {
@@ -515,9 +497,6 @@ export const ManageListingCardComponent = props => {
 
       <div className={css.info}>
         <div className={css.mainInfo}>
-          <div className={css.titleWrapper}>
-            {formatTitle(title, MAX_LENGTH_FOR_WORDS_IN_TITLE)}
-          </div>
           <div className={css.titleWrapper}>{listingTypeLabel}</div>
         </div>
 
