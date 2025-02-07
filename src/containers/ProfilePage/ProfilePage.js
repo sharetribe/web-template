@@ -76,7 +76,7 @@ export const AsideContent = props => {
     <div className={css.asideContent}>
       <AvatarLarge className={css.avatar} user={user} disableProfileLink />
       {isVerified ? (
-        <div className={css.verifiedBadge} title="verified user">
+        <div className={css.verifiedBadge}>
           <ShieldCheck />
         </div>
       ) : null}
@@ -108,11 +108,11 @@ export const AsideContent = props => {
         <div className={css.asideStats}>
           <div className={css.asideStatsItem}>
             <h4>{reviews.length}</h4>
-            <p>Reviews</p>
+            <p><FormattedMessage id="ProfilePage.statsLabel.reviews" values={{ count: reviews.length }} /></p>
           </div>
           <div className={css.asideStatsItem}>
             <h4>{listings.length}</h4>
-            <p>Listings</p>
+            <p><FormattedMessage id="ProfilePage.statsLabel.listings" values={{ count: listings.length }} /></p>
           </div>
         </div>
 
@@ -304,20 +304,20 @@ export const MainContent = props => {
           {isVerifiedSeller && (
             <div className={css.iconLine}>
               <ShieldCheck />
-              <span>Verified Seller</span>
+              <span><FormattedMessage id="ProfilePage.label.verfiedSeller" /></span>
             </div>
           )}
 
           <div className={css.iconLine}>
             <CalendarClock />
             <span>
-              Joined {createdAt ? new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(createdAt)) : 'n/a'}
+            <FormattedMessage id="ProfilePage.label.joined" /> {createdAt ? new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(createdAt)) : 'n/a'}
             </span>
           </div>
 
           <div className={css.iconLine}>
             <Globe />
-            <span>From {publicData?.userLocation}</span>
+            <span><FormattedMessage id="ProfilePage.label.from" /> {publicData?.userLocation}</span>
           </div>
         </div>
         <div className={css.rightColumn}>
