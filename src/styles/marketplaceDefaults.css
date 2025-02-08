@@ -1581,12 +1581,15 @@ svg.lucide{
 
    > button {
     width: 34px;
-    height: 34px;
+    height: 32px;
     border-radius: 100%;
     display: inline-block;
     overflow: hidden;
     min-height: auto;
     margin-right: 6px;
+    > *{
+      margin: 0;
+    }
 
     &.disable{
       box-shadow: none;
