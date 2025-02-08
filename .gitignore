@@ -15,4 +15,3 @@ build
 npm-debug.log
 yarn-error.log
 llms.txt
-yarn.lock
