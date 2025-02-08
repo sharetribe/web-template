@@ -1214,6 +1214,17 @@
   resolved "https://registry.yarnpkg.com/@csstools/selector-specificity/-/selector-specificity-2.2.0.tgz#2cbcf822bf3764c9658c4d2e568bd0c0cb748016"
   integrity sha512-+OJ9konv95ClSTOJCmMZqpd5+YGsB2S+x6w3E1oaM8UuR5j8nTNHYSz8c9BEPGDOCMQYIEEGlVPj/VY64iTbGw==
 
+"@daily-co/daily-js@^0.74.0":
+  version "0.74.0"
+  resolved "https://registry.yarnpkg.com/@daily-co/daily-js/-/daily-js-0.74.0.tgz#e0991bf4b8f97a0c54467f2385afdb8f9d6cc201"
+  integrity sha512-wyZzt+sH7yh5Cg3DQeoZ1Yen8+bbai0/Zq8JZzklqELrpjiFuu34e3qwjwt79cx7T9eukbZbK6gtk3cmCBW3iw==
+  dependencies:
+    "@babel/runtime" "^7.12.5"
+    "@sentry/browser" "^8.33.1"
+    bowser "^2.8.1"
+    dequal "^2.0.3"
+    events "^3.1.0"
+
 "@eslint-community/eslint-utils@^4.2.0":
   version "4.4.1"
   resolved "https://registry.yarnpkg.com/@eslint-community/eslint-utils/-/eslint-utils-4.4.1.tgz#d1145bf2c20132d6400495d6df4bf59362fd9d56"
@@ -2127,7 +2138,7 @@
     "@sentry-internal/browser-utils" "8.54.0"
     "@sentry/core" "8.54.0"
 
-"@sentry/browser@^8.26.0":
+"@sentry/browser@^8.26.0", "@sentry/browser@^8.33.1":
   version "8.54.0"
   resolved "https://registry.yarnpkg.com/@sentry/browser/-/browser-8.54.0.tgz#5487075908aac564892e689e1b6d233fdb314f5b"
   integrity sha512-BgUtvxFHin0fS0CmJVKTLXXZcke0Av729IVfi+2fJ4COX8HO7/HAP02RKaSQGmL2HmvWYTfNZ7529AnUtrM4Rg==
@@ -3741,6 +3752,11 @@ bottleneck@^2.19.5:
   resolved "https://registry.yarnpkg.com/bottleneck/-/bottleneck-2.19.5.tgz#5df0b90f59fd47656ebe63c78a98419205cadd91"
   integrity sha512-VHiNCbI1lKdl44tGrhNfU3lup0Tj/ZBMJB5/2ZbNXRCPuRCO7ed2mgcK4r17y+KB2EfuYuRaVlwNbAeaWGSpbw==
 
+bowser@^2.8.1:
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/bowser/-/bowser-2.11.0.tgz#5ca3c35757a7aa5771500c70a73a9f91ef420a8f"
+  integrity sha512-AlcaJBi/pqqJBIQ8U9Mcpc9i8Aqxn88Skv5d+xBX006BY5u8N3mGLHa5Lgppa7L/HfwgwLgZ6NYs+Ag6uUmJRA==
+
 brace-expansion@^1.1.7:
   version "1.1.11"
   resolved "https://registry.yarnpkg.com/brace-expansion/-/brace-expansion-1.1.11.tgz#3c7fcbf529d87226f3d2f52b966ff5271eb441dd"
@@ -4699,6 +4715,11 @@ depd@~1.1.2:
   resolved "https://registry.yarnpkg.com/depd/-/depd-1.1.2.tgz#9bcd52e14c097763e749b274c4346ed2e560b5a9"
   integrity sha512-7emPTl6Dpo6JRXOXjLRxck+FlLRX5847cLKEn00PLAgc3g2hTZZgr+e4c2v6QpSmLeFP3n5yUo7ft6avBK/5jQ==
 
+dequal@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/dequal/-/dequal-2.0.3.tgz#2644214f1997d39ed0ee0ece72335490a7ac67be"
+  integrity sha512-0je+qPKHEMohvfRTCEo3CrPG6cAzAYgmzKyxRiYSSDkS6eGJdyVJm7WaYA5ECaAD9wLB2T4EEeymA5aFVcYXCA==
+
 destroy@1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/destroy/-/destroy-1.2.0.tgz#4803735509ad8be552934c67df614f94e66fa015"
@@ -5445,7 +5466,7 @@ eventemitter3@^4.0.0:
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
   integrity sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==
 
-events@^3.2.0:
+events@^3.1.0, events@^3.2.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/events/-/events-3.3.0.tgz#31a95ad0a924e2d2c419a813aeb2c4e878ea7400"
   integrity sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==

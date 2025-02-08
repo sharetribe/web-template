@@ -49,6 +49,9 @@
   background-color: var(--colorWhite);
   box-shadow: var(--boxShadow);
 
+  width: auto;
+  margin:0;
+
   @media (--viewportMedium) {
     padding: 24px 24px 0 24px;
   }

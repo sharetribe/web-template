@@ -149,8 +149,8 @@ export const CardReviews = props => {
   const { reviews, queryReviewsError } = props;
   
   return (
-    <div className={css.mobileReviews}>
-      <H4 as="h2" className={css.mobileReviewsTitle}>
+    <div className={css.reviews}>
+      <H4 as="h2" className={css.reviewsTitle}>
         <FormattedMessage
           id="ProfilePage.reviewsTitle"
           values={{ count: reviews.length }}

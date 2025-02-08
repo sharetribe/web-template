@@ -21,6 +21,7 @@
 
 .asideContent {
   width: 100%;
+  margin:0 24px;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -41,6 +42,11 @@
   @media (--viewportLarge) {
     flex-direction: column;
     border-bottom: none;
+    width:120px;
+    position: sticky;
+    top: 150px;
+
+    align-self: flex-start
   }
 }
 
@@ -49,7 +55,7 @@
   flex-shrink: 0;
 
   @media (--viewportLarge) {
-    margin: 0 96px 24px 0;
+    margin: 0 0 24px 0;
   }
 }
 .avatarPlaceholder {
@@ -225,11 +231,11 @@
   }
 }
 
-.mobileReviewsTitle {
+.mobileReviewsTitle, .reviewsTitle {
   margin: 24px 0 26px 0;
 }
 
-.mobileReviews {
+.mobileReviews, .reviews {
   border-top: 1px solid var(--colorGrey100);
   margin-bottom: 36px;
 }

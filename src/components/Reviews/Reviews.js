@@ -60,11 +60,11 @@ const ReviewsComponent = props => {
   
   const responsive = {
     desktop: {
-      breakpoint: { max: 3000, min: 1024 },
+      breakpoint: { max: 3000, min: 800 },
       items: 2
     },
     mobile: {
-      breakpoint: { max: 600, min: 0 },
+      breakpoint: { max: 800, min: 0 },
       items: 1
     }
   };

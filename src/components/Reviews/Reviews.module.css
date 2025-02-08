@@ -2,11 +2,11 @@
 
 .root {
   margin: 0;
-  max-width: 335px;
+  max-width: calc(100vw - 48px);
   position: relative;
 
-  @media (--viewportMedium) {
-    max-width: 805px;
+  @media (--viewportLarge) {
+    max-width: calc(70vw - 48px);
   }
 }
 
