@@ -84,6 +84,7 @@ const ReviewsComponent = props => {
     const width = window.innerWidth;
     const responsiveSetting = settings.responsive.find(r => width <= r.breakpoint);
     setSlidesToShow(responsiveSetting ? responsiveSetting.settings.slidesToShow : settings.slidesToShow);
+    carouselRef.current.slickGoTo(0);
   };
 
   React.useEffect(() => {
@@ -92,6 +93,7 @@ const ReviewsComponent = props => {
 
     // Mimic a window resize event
     const resizeEvent = new Event('resize');
+
     setTimeout(() => {
       window.dispatchEvent(resizeEvent);
     }, 300);
