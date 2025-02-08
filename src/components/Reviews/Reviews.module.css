@@ -28,6 +28,7 @@
   flex-basis: 564px;
   flex-shrink: 1;
   flex-grow: 0;
+  padding-right:20px;
 }
 
 .avatar {
