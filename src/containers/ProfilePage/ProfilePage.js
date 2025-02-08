@@ -303,7 +303,6 @@ export const MainContent = props => {
   });
 
   const isVerified = metadata?.verified === true;
-  //console.log('reviews', reviews)
   const hasBuyerReview = reviews.some(review => review.attributes.type === REVIEW_TYPE_OF_PROVIDER);
   const isVerifiedSeller = isVerified && hasBuyerReview;
 
@@ -355,7 +354,7 @@ export const MainContent = props => {
         />
       ) : null}
 
-      {hideReviews ? null 
+      {hideReviews || reviews.length === 0 ? null 
         : <CardReviews reviews={reviews} queryReviewsError={queryReviewsError} />
       }
       
