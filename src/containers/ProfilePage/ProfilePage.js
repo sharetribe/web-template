@@ -303,7 +303,7 @@ export const MainContent = props => {
   });
 
   const isVerified = metadata?.verified === true;
-  console.log('reviews', reviews)
+  //console.log('reviews', reviews)
   const hasBuyerReview = reviews.some(review => review.attributes.type === REVIEW_TYPE_OF_PROVIDER);
   const isVerifiedSeller = isVerified && hasBuyerReview;
 

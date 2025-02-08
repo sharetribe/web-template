@@ -9,8 +9,7 @@ import { Avatar, SecondaryButton, ReviewRating, UserDisplayName } from '../../co
 
 import {ChevronLeft, ChevronRight} from 'lucide-react';
 
-import Carousel from "react-multi-carousel";
-import "react-multi-carousel/lib/styles.css";
+import Slider from "react-slick";
 
 import css from './Reviews.module.css';
 
@@ -58,25 +57,57 @@ const ReviewsComponent = props => {
   const { className, rootClassName, reviews, intl } = props;
   const classes = classNames(rootClassName || css.root, className);
   
-  const responsive = {
-    desktop: {
-      breakpoint: { max: 3000, min: 800 },
-      items: 2
-    },
-    mobile: {
-      breakpoint: { max: 800, min: 0 },
-      items: 1
-    }
+  const settings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 2,
+    slidesToScroll: 1,
+    initialSlide: 0,
+    responsive: [
+
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1
+        }
+      }
+    ]
   };
 
   const carouselRef = useRef(null);
-
   const [currentSlide, setCurrentSlide] = React.useState(0);
-  const [totalItems, setTotalItems] = React.useState(0);
+  const [slidesToShow, setSlidesToShow] = React.useState(settings.slidesToShow);
 
-  const handleAfterChange = (previousSlide, { currentSlide, totalItems }) => {
-    setCurrentSlide(currentSlide);
-    setTotalItems(totalItems);
+  const updateSlidesToShow = () => {
+    const width = window.innerWidth;
+    const responsiveSetting = settings.responsive.find(r => width <= r.breakpoint);
+    setSlidesToShow(responsiveSetting ? responsiveSetting.settings.slidesToShow : settings.slidesToShow);
+  };
+
+  React.useEffect(() => {
+    updateSlidesToShow();
+    window.addEventListener('resize', updateSlidesToShow);
+
+    // Mimic a window resize event
+    const resizeEvent = new Event('resize');
+    setTimeout(() => {
+      window.dispatchEvent(resizeEvent);
+    }, 300);
+
+    return () => {
+      window.removeEventListener('resize', updateSlidesToShow);
+    };
+  }, []);
+
+  const totalSlides = Math.ceil(reviews.length / slidesToShow);
+
+  //for use with carousel buttons
+  const handleAfterChange = (current) => {
+    setCurrentSlide(current);
+    console.log('current', current);
+    console.log('totalSlides', totalSlides);
   };
 
   return (
@@ -84,32 +115,27 @@ const ReviewsComponent = props => {
       <div className="carousel-button-group">
         <SecondaryButton 
           className={currentSlide === 0 ? 'disable' : ''} 
-          onClick={() => carouselRef.current.previous()}
+          onClick={() => carouselRef.current.slickPrev()}
         >
           <ChevronLeft/>
         </SecondaryButton>
         <SecondaryButton 
-          className={currentSlide === totalItems - 1 ? 'disable' : ''} 
-          onClick={() => carouselRef.current.next()}
+          className={currentSlide == totalSlides -1 ? 'disable' : ''}
+          onClick={() => carouselRef.current.slickNext()}
         >
           <ChevronRight/>
         </SecondaryButton>
       </div>
 
-      <Carousel 
-        ref={carouselRef} 
-        arrows={false} 
-        responsive={responsive} 
-        afterChange={handleAfterChange}
-      >
+      <Slider ref={carouselRef} {...settings} afterChange={handleAfterChange}>
         {reviews.map(r => {
           return (
-            <li key={`Review_${r.id.uuid}`} className={css.reviewItem}>
+            <div key={`Review_${r.id.uuid}`} className={css.reviewItem}>
               <Review review={r} intl={intl} />
-            </li>
+            </div>
           );
         })}
-      </Carousel>
+      </Slider>
     </div>
   );
 };
