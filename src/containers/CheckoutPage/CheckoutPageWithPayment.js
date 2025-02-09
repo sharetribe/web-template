@@ -463,7 +463,7 @@ export const CheckoutPageWithPayment = props => {
   // If your marketplace works mostly in one country you can use initial values to select country automatically
   // e.g. {country: 'FI'}
 
-  const initalValuesForStripePayment = { name: userName, recipientName: userName };
+  const initialValuesForStripePayment = { name: userName, recipientName: userName };
   const askShippingDetails =
     orderData?.deliveryMethod === 'shipping' &&
     !hasTransactionPassedPendingPayment(existingTransaction, process);
@@ -535,7 +535,7 @@ export const CheckoutPageWithPayment = props => {
                 formId="CheckoutPagePaymentForm"
                 authorDisplayName={listing?.author?.attributes?.profile?.displayName}
                 showInitialMessageInput={showInitialMessageInput}
-                initialValues={initalValuesForStripePayment}
+                initialValues={initialValuesForStripePayment}
                 initiateOrderError={initiateOrderError}
                 confirmCardPaymentError={confirmCardPaymentError}
                 confirmPaymentError={confirmPaymentError}
