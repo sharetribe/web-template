@@ -52,9 +52,10 @@
     border-left-style: solid;
     border-left-color: var(--colorGrey100);
 
+    box-sizing: border-box;
     width: 70%;
-    box-sizing: content-box;
     max-width: 800px;
+    margin-right: calc(70% - 730px);
   }
 
  
