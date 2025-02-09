@@ -55,7 +55,6 @@
     width: 70%;
     box-sizing: content-box;
     max-width: 800px;
-    margin-right: calc(70% - 800px);
   }
 
  

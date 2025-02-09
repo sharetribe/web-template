@@ -14,6 +14,10 @@ export const CATEGORIES = {
     'atm-location': {
       id: 'atm-location',
       label: 'ATM at location'
+    },
+    'location-find': {
+      id: 'location-find',
+      label: 'Location finding service'
     }
   };
   

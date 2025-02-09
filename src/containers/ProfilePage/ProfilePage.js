@@ -57,7 +57,7 @@ import SectionDetailsMaybe from './SectionDetailsMaybe';
 import SectionTextMaybe from './SectionTextMaybe';
 import SectionMultiEnumMaybe from './SectionMultiEnumMaybe';
 import SectionYoutubeVideoMaybe from './SectionYoutubeVideoMaybe';
-import { Star, ShieldCheck, CalendarClock, Globe } from "lucide-react";
+import { Star, ShieldCheck, CalendarClock, Globe, Search } from "lucide-react";
 
 const MAX_MOBILE_SCREEN_WIDTH = 768;
 const MIN_LENGTH_FOR_LONG_WORDS = 20;
@@ -284,8 +284,13 @@ export const MainContent = props => {
     intl,
     hideReviews,
   } = props;
+  
+  const listingServices = listings.filter(listing => listing.attributes.publicData.listingType === 'sell-service');
+  const listingProducts = listings.filter(listing => listing.attributes.publicData.listingType !== 'sell-service');
 
-  const hasListings = listings.length > 0;
+  const hasServiceListings = listingServices.length > 0;
+  const hasProductListings = listingProducts.length > 0;
+
   const hasMatchMedia = typeof window !== 'undefined' && window?.matchMedia;
   const isMobileLayout = hasMatchMedia
     ? window.matchMedia(`(max-width: ${MAX_MOBILE_SCREEN_WIDTH}px)`)?.matches
@@ -305,6 +310,12 @@ export const MainContent = props => {
   const isVerified = metadata?.verified === true;
   const hasBuyerReview = reviews.some(review => review.attributes.type === REVIEW_TYPE_OF_PROVIDER);
   const isVerifiedSeller = isVerified && hasBuyerReview;
+
+  const [searchKeyword, setSearchKeyword] = useState('');
+
+  const filteredListingProducts = listingProducts.filter(listing =>
+    listing.attributes.title.toLowerCase().includes(searchKeyword.toLowerCase())
+  );
 
   if (userShowError || queryListingsError) {
     return (
@@ -357,14 +368,45 @@ export const MainContent = props => {
       {hideReviews || reviews.length === 0 ? null 
         : <CardReviews reviews={reviews} queryReviewsError={queryReviewsError} />
       }
-      
-      {hasListings ? (
+      {hasServiceListings ? (
         <div className={listingsContainerClasses}>
           <H4 as="h2" className={css.listingsTitle}>
-            <FormattedMessage id="ProfilePage.listingsTitle" values={{ count: listings.length }} />
+            <FormattedMessage id="ProfilePage.servicesTitle" />
           </H4>
           <ul className={css.listings}>
-            {listings.map(l => (
+            {listingServices.map(l => (
+              <li className={css.listing} key={l.id.uuid}>
+                  <ListingCard 
+                    listing={l} 
+                    showAuthorInfo={false}
+                  />
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+
+      {hasProductListings ? (
+        <div className={listingsContainerClasses}>
+          
+          <div className={css.searchContainer}>
+          <H4 as="h2" className={css.listingsTitle}>
+            <FormattedMessage id="ProfilePage.listingsTitle" />
+          </H4>
+          <div className={css.searchInputWrapper}>
+              <Search className={css.searchIcon} />
+              <input
+                type="text"
+                className={css.listingSearchBox}
+                placeholder="Search listings..."
+                value={searchKeyword}
+                onChange={e => setSearchKeyword(e.target.value)}
+              />
+          </div>
+        </div>
+          
+        <ul className={css.listings}>
+            {filteredListingProducts.map(l => (
               <li className={css.listing} key={l.id.uuid}>
                 <div className={classNames(css.listingWrapper, { 
                   [css.soldListing]: l.currentStock?.attributes?.quantity === 0 
