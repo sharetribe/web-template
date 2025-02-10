@@ -22,8 +22,8 @@ class StorageManagerClient {
     }, Promise.reject);
     axiosRetry(this.client, {
       retries: 3, // Retry each request up to 3 times
-      retryDelay: (retryCount) => retryCount * 2000, // Exponential backoff (2s, 4s, 6s)
-      retryCondition: () => true
+      retryDelay: retryCount => retryCount * 2000, // Exponential backoff (2s, 4s, 6s)
+      retryCondition: () => true,
     });
   }
 

@@ -73,7 +73,7 @@ function script() {
 
   const analyzeEventsBatch = async events => {
     await Promise.all(
-      events.map(async (e) => {
+      events.map(async e => {
         await analyzeEvent(e);
       })
     );
