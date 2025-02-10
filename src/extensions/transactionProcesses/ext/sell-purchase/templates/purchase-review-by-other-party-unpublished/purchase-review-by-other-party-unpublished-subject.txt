@@ -1,0 +1,1 @@
+{{set-translations (asset "content/email-texts.json")}}{{t "PurchaseReviewByOtherPartyUnpublished.Subject" "{otherPartyDisplayName} left you a review" otherPartyDisplayName=other-party.display-name }}

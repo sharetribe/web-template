@@ -1,0 +1,307 @@
+{:format :v3,
+ :transitions
+ [{:name :transition/inquire,
+   :actor :actor.role/customer,
+   :actions [],
+   :to :state/inquiry}
+
+  {:name :transition/request-payment,
+   :actor :actor.role/customer,
+   :privileged? true,
+   :actions
+   [{:name :action/create-pending-stock-reservation}
+    {:name :action/privileged-set-line-items}
+    {:name :action/stripe-create-payment-intent}],
+   :to :state/pending-payment}
+
+  {:name :transition/request-payment-after-inquiry,
+   :actor :actor.role/customer,
+   :privileged? true,
+   :actions
+   [{:name :action/create-pending-stock-reservation}
+    {:name :action/privileged-set-line-items}
+    {:name :action/stripe-create-payment-intent}],
+   :from :state/inquiry,
+   :to :state/pending-payment}
+
+  {:name :transition/confirm-payment,
+   :actor :actor.role/customer,
+   :actions
+   [{:name :action/stripe-confirm-payment-intent}],
+   :from :state/pending-payment,
+   :to :state/purchase-confirmed-by-buyer}
+
+  {:name :transition/expire-payment,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/pending-payment]}
+     {:fn/period ["PT15M"]}]},
+   :actions
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}
+    ;; Keep this action last in the list of actions for
+    ;; the transition
+    {:name :action/decline-stock-reservation}],
+   :from :state/pending-payment,
+   :to :state/payment-expired}
+
+  {:name :transitions/buyer-refund-before-seller-confirmed,
+   :actor :actor.role/customer,
+   :actions
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}
+    ;; Keep this action last in the list of actions for
+    ;; the transition
+    {:name :action/decline-stock-reservation}],
+   :from :state/purchase-confirmed-by-buyer,
+   :to :state/refund-before-capture}
+  {:name :transitions/seller-refund-before-seller-confirmed,
+   :actor :actor.role/provider,
+   :actions
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}
+    ;; Keep this action last in the list of actions for
+    ;; the transition
+    {:name :action/decline-stock-reservation}],
+   :from :state/purchase-confirmed-by-buyer,
+   :to :state/refund-before-capture}
+
+  {:name :transitions/seller-confirm-purchase,
+   :actor :actor.role/provider,
+   :actions
+   [{:name :action/update-protected-data}
+    {:name :action/accept-stock-reservation}],
+   :from :state/purchase-confirmed-by-buyer,
+   :to :state/purchased}
+
+  {:name :transitions/expire-seller-confirm-period,
+   :at {:fn/plus
+        [{:fn/timepoint [:time/first-entered-state :state/purchase-confirmed-by-buyer]}
+         {:fn/period ["P6DT23H"]}]},
+   :actions
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}
+    ;; Keep this action last in the list of actions for
+    ;; the transition
+    {:name :action/decline-stock-reservation}],
+   :from :state/purchase-confirmed-by-buyer
+   :to :state/purchase-expired}
+
+  {:name :transitions/buyer-refund-before-capture-intent,
+   :actor :actor.role/customer,
+   :actions
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}
+    ;; Keep this action last in the list of actions for
+    ;; the transition
+    {:name :action/cancel-stock-reservation}],
+   :from :state/purchased,
+   :to :state/refund-before-capture}
+  {:name :transitions/seller-refund-before-capture-intent,
+   :actor :actor.role/provider,
+   :actions
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}
+    ;; Keep this action last in the list of actions for
+    ;; the transition
+    {:name :action/cancel-stock-reservation}],
+   :from :state/purchased,
+   :to :state/refund-before-capture}
+
+  {;; This should only be executed when capturing intent failed
+   :name :transitions/operator-cancel-transition-after-expire-intent,
+   :actor :actor.role/operator,
+   :actions
+   [{:name :action/calculate-full-refund}
+    {:name :action/cancel-stock-reservation}],
+   :from :state/purchased,
+   :to :state/refund-before-capture}
+
+  {:name :transitions/buyer-mark-complete-before-capture-intent,
+   :actor :actor.role/customer,
+   :privileged? true,
+   :actions
+   [{:name :action/stripe-capture-payment-intent}
+    {:name :action/stripe-create-payout}],
+   :from :state/purchased,
+   :to :state/completed}
+
+  {:name :transitions/expire-payment-hold-period,
+   :at {:fn/plus
+        [{:fn/timepoint [:time/first-entered-state :state/pending-payment]}
+         {:fn/period ["P6DT23H55M"]}]},
+   :actions
+   [{:name :action/stripe-capture-payment-intent}],
+   :from :state/purchased,
+   :to :state/stripe-intent-captured}
+
+  {:name :transitions/buyer-mark-complete,
+   :actor :actor.role/customer,
+   :actions
+   [{:name :action/stripe-create-payout}],
+   :from :state/stripe-intent-captured,
+   :to :state/completed}
+
+  {:name :transitions/auto-disable-refund,
+   :at {:fn/plus
+        [{:fn/timepoint [:time/first-entered-state :state/stripe-intent-captured]}
+         {:fn/period ["P20D"]}]},
+   :actions [],
+   :from :state/stripe-intent-captured,
+   :to :state/refund-disabled}
+
+  {:name :transitions/buyer-issue-refund,
+   :actor :actor.role/customer,
+   :actions
+   [{:name :action/update-protected-data}],
+   :from :state/stripe-intent-captured,
+   :to :state/seller-handle-disputed}
+
+  {:name :transitions/seller-issue-refund,
+   :actor :actor.role/provider,
+   :actions
+   [{:name :action/update-protected-data}],
+   :from :state/stripe-intent-captured,
+   :to :state/operator-handle-disputed}
+
+  {:name :transitions/seller-dispute,
+   :actor :actor.role/provider,
+   :actions
+   [{:name :action/update-protected-data}],
+   :from :state/seller-handle-disputed,
+   :to :state/operator-handle-disputed}
+
+  {:name :transitions/seller-approve-refund,
+   :actor :actor.role/provider,
+   :actions
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}
+    ;; Keep this action last in the list of actions for
+    ;; the transition
+    {:name :action/cancel-stock-reservation}],
+   :from :state/seller-handle-disputed,
+   :to :state/canceled}
+
+  {:name :transitions/operator-mark-complete,
+   :actor :actor.role/operator,
+   :actions
+   [{:name :action/stripe-create-payout}],
+   :from :state/operator-handle-disputed,
+   :to :state/completed}
+
+  {:name :transitions/expire-dispute-period,
+   :at {:fn/plus
+        [{:fn/timepoint [:time/first-entered-state :state/stripe-intent-captured]}
+         {:fn/period ["P30D"]}]},
+   :actions
+   [{:name :action/stripe-create-payout}],
+   :from :state/operator-handle-disputed,
+   :to :state/completed}
+
+  {:name :transitions/operator-approve-refund,
+   :actor :actor.role/operator,
+   :actions
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}
+    ;; Keep this action last in the list of actions for
+    ;; the transition
+    {:name :action/cancel-stock-reservation}],
+   :from :state/operator-handle-disputed,
+   :to :state/canceled}
+
+  {:name :transitions/buyer-mark-complete-refund-disabled,
+   :actor :actor.role/customer,
+   :actions
+   [{:name :action/stripe-create-payout}],
+   :from :state/refund-disabled,
+   :to :state/completed}
+
+  {:name :transitions/auto-mark-complete,
+   :at {:fn/plus
+        [{:fn/timepoint [:time/first-entered-state :state/stripe-intent-captured]}
+         {:fn/period ["P30D"]}]},
+   :actions
+   [{:name :action/stripe-create-payout}],
+   :from :state/refund-disabled,
+   :to :state/completed}
+
+  {:name :transition/review-1-by-provider,
+   :actor :actor.role/provider,
+   :actions [{:name :action/post-review-by-provider}],
+   :from :state/completed,
+   :to :state/reviewed-by-provider}
+  {:name :transition/review-2-by-provider,
+   :actor :actor.role/provider,
+   :actions
+   [{:name :action/post-review-by-provider}
+    {:name :action/publish-reviews}],
+   :from :state/reviewed-by-customer,
+   :to :state/reviewed}
+  {:name :transition/review-1-by-customer,
+   :actor :actor.role/customer,
+   :actions [{:name :action/post-review-by-customer}],
+   :from :state/completed,
+   :to :state/reviewed-by-customer}
+  {:name :transition/review-2-by-customer,
+   :actor :actor.role/customer,
+   :actions
+   [{:name :action/post-review-by-customer}
+    {:name :action/publish-reviews}],
+   :from :state/reviewed-by-provider,
+   :to :state/reviewed}
+  {:name :transition/expire-review-period,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/completed]}
+     {:fn/period ["P7D"]}]},
+   :actions [],
+   :from :state/completed,
+   :to :state/reviewed}
+  {:name :transition/expire-provider-review-period,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/completed]}
+     {:fn/period ["P7D"]}]},
+   :actions [{:name :action/publish-reviews}],
+   :from :state/reviewed-by-customer,
+   :to :state/reviewed}
+  {:name :transition/expire-customer-review-period,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/completed]}
+     {:fn/period ["P7D"]}]},
+   :actions [{:name :action/publish-reviews}],
+   :from :state/reviewed-by-provider,
+   :to :state/reviewed}],
+ :notifications
+ [{:name :notification/order-receipt,
+   :on :transition/confirm-payment,
+   ;; This notification is delayed to give the customer a chance to verify their
+   ;; email address, in case they are a new customer.
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/purchase-confirmed-by-buyer]}
+     {:fn/period ["PT15M"]}]},
+   :to :actor.role/customer,
+   :template :purchase-order-receipt}
+  {:name :notification/purchase-new-order,
+   :on :transition/confirm-payment,
+   :to :actor.role/provider,
+   :template :purchase-new-order}
+
+  {:name :notification/review-by-provider-first,
+   :on :transition/review-1-by-provider,
+   :to :actor.role/customer,
+   :template :purchase-review-by-other-party-unpublished}
+  {:name :notification/review-by-customer-first,
+   :on :transition/review-1-by-customer,
+   :to :actor.role/provider,
+   :template :purchase-review-by-other-party-unpublished}
+  {:name :notification/review-by-provider-second,
+   :on :transition/review-2-by-provider,
+   :to :actor.role/customer,
+   :template :purchase-review-by-other-party-published}
+  {:name :notification/review-by-customer-second,
+   :on :transition/review-2-by-customer,
+   :to :actor.role/provider,
+   :template :purchase-review-by-other-party-published}]}
