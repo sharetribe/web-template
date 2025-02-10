@@ -37,13 +37,40 @@
                   <tbody>
                     <tr>
                       <td>
+                      {{#if protected-data.priceVariantName}}
                         <table align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                           <tbody>
                             <tr>
                               <td>
                                 <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "BookingMoneyPaid.StartLabel" "Start"}}
-                                  </p>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{protected-data.priceVariantName}}</p>
+                                </td>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <hr style="width:100%;border:none;border-top:1px solid #eaeaea;border-color:#E1E1E1;margin:20px 0" />
+                        <table align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <td>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px;margin-bottom:1px">{{t "BookingMoneyPaid.StartLabel" "Start"}}</p>
+                                </td>
+                                <td style="text-align:right">
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px;margin-bottom:1px">{{t "BookingMoneyPaid.EndLabel" "End"}}</p>
+                                </td>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      {{else}}
+                        <table align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <td>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "BookingMoneyPaid.StartLabel" "Start"}}</p>
                                 </td>
                                 <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "BookingMoneyPaid.EndLabel" "End"}}</p>
@@ -51,7 +78,9 @@
                               </td>
                             </tr>
                           </tbody>
-                        </table>{{#each tx-line-items}}{{#eq "line-item/hour" code}}
+                        </table>
+                        {{/if}}
+                        {{#each tx-line-items}}{{#eq "line-item/hour" code}}
                         <table align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                           <tbody>
                             <tr>
@@ -119,6 +148,36 @@
                                 </td>
                                 <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;font-weight:700;margin-top:1px;margin-bottom:1px">{{> format-day date=booking.end}}</p>
+                                </td>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <table align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <td>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;font-weight:700;margin-top:1px;margin-bottom:1px">{{> format-month-date date=booking.start}}</p>
+                                </td>
+                                <td style="text-align:right">
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;font-weight:700;margin-top:1px;margin-bottom:1px">{{> format-month-date date=booking.end}}</p>
+                                </td>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        {{/eq}}
+                        {{#eq "line-item/fixed" code}}
+                        <table align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <td>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;font-weight:700;margin-top:1px;margin-bottom:1px">{{> format-day-time date=booking.start}}</p>
+                                </td>
+                                <td style="text-align:right">
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;font-weight:700;margin-top:1px;margin-bottom:1px">{{> format-day-time date=booking.end}}</p>
                                 </td>
                               </td>
                             </tr>
@@ -231,7 +290,24 @@
                             </tr>
                           </tbody>
                         </table>
-                        {{/if}}{{/eq}}{{#eq "line-item/provider-commission" code}}
+                        {{/if}}{{/eq}}
+                        {{#eq "line-item/fixed" code}}
+                        <table align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <td>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{> format-money money=line-total}}</p>
+                                </td>
+                                <td style="text-align:right">
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{> format-money money=line-total}}</p>
+                                </td>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        {{/eq}}
+                        {{#eq "line-item/provider-commission" code}}
                         <table align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                           <tbody>
                             <tr>
