@@ -60,7 +60,7 @@ function listingsFromSdkResponse(sdkResponse, listingDefaults) {
       releases: ownListing.attributes.publicData.releases,
       dimensions: ownListing.attributes.publicData.imageSize,
       price,
-      isAi: ownListing.attributes.publicData.aiTerms === 'yes',
+      // isAi: ownListing.attributes.publicData.aiTerms === 'yes',
       preview,
     };
   });

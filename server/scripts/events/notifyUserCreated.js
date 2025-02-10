@@ -171,7 +171,15 @@ function script() {
     }
   };
 
-  generateScript(SCRIPT_NAME, queryEvents, analyzeEvent);
+  const analyzeEventsBatch = async events => {
+    await Promise.all(
+      events.map(async (e) => {
+        await analyzeEvent(e);
+      })
+    );
+  };
+
+  generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch);
 }
 
 module.exports = script;

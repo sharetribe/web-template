@@ -71,7 +71,15 @@ function script() {
   const queryEvents = args => integrationSdk.events.query({ ...args, eventTypes: EVENT_TYPES });
   const analyzeEvent = event => processEvent(integrationSdk, event, storageManagerClient);
 
-  generateScript(SCRIPT_NAME, queryEvents, analyzeEvent, analyzeEventGroup);
+  const analyzeEventsBatch = async events => {
+    await Promise.all(
+      events.map(async (e) => {
+        await analyzeEvent(e);
+      })
+    );
+  };
+
+  generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, analyzeEventGroup);
 }
 
 module.exports = script;
