@@ -2,6 +2,23 @@ const fs = require('fs');
 const sharetribeIntegrationSdk = require('sharetribe-flex-integration-sdk');
 
 let INTEGRATION_SDK = null;
+let EVENTS_BATCH_SIZE = 15;
+
+async function processInBatches(array, process) {
+  const result = [];
+  for (let i = 0; i < array.length; i += EVENTS_BATCH_SIZE) {
+    const batch = array.slice(i, i + EVENTS_BATCH_SIZE);
+    const index = i / EVENTS_BATCH_SIZE;
+    console.warn('\n-------\n');
+    console.warn('\n[processInBatches] - INDEX:', index);
+    const data = await process(batch);
+    result.push(data);
+    if (i + EVENTS_BATCH_SIZE < array.length) {
+      await new Promise(resolve => setTimeout(resolve, EVENTS_BATCH_SIZE));
+    }
+  }
+  return result;
+}
 
 function integrationSdkInit() {
   const withExistingIntance = !!INTEGRATION_SDK;
@@ -32,7 +49,7 @@ function integrationSdkInit() {
   return INTEGRATION_SDK;
 }
 
-function generateScript(SCRIPT_NAME, queryEvents, analyzeEvent, analyzeEventGroup) {
+function generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, analyzeEventGroup) {
   console.log(`Loading event script: ${SCRIPT_NAME}`);
   try {
     const dev = process.env.REACT_APP_ENV === 'development';
@@ -91,9 +108,7 @@ function generateScript(SCRIPT_NAME, queryEvents, analyzeEvent, analyzeEventGrou
         if (withEventGroupHandler) {
           analyzeEventGroup(events);
         }
-        events.forEach(e => {
-          analyzeEvent(e);
-        });
+        processInBatches(events, analyzeEventsBatch);
         if (lastEvent) saveLastEventSequenceId(lastEvent.attributes.sequenceId);
         setTimeout(() => {
           pollLoop(lastSequenceId);
