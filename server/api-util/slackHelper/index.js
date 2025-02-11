@@ -3,6 +3,7 @@ const { WebClient } = require('@slack/web-api');
 const { isValidURL } = require('../urlHelpers');
 
 const getProductListingsCreatedBlocks = require('./productListingsCreatedBlocks');
+const getProductListingsErrorBlocks = require('./productListingsErrorBlocks');
 const getSellerValidationBlocks = require('./sellerValidationBlocks');
 const getUserUpdateWarningBlocks = require('./userUpdateWarningBlocks');
 
@@ -74,8 +75,28 @@ const slackProductListingsCreatedWorkflow = async totalListings => {
   }
 };
 
+const slackProductListingsErrorWorkflow = async listings => {
+  const slackListingManagerChannelId = process.env.SLACK_LISTING_MANAGER_CHANNEL_ID;
+  const slackBotToken = process.env.SLACK_BOT_TOKEN;
+  try {
+    const webClient = new WebClient(slackBotToken);
+    const productListingsErrorBlocks = getProductListingsErrorBlocks(listings);
+    await webClient.chat.postMessage({
+      channel: slackListingManagerChannelId,
+      text: 'Starting Product Listing Error workflow',
+      blocks: productListingsErrorBlocks,
+      unfurl_links: false,
+    });
+  } catch (error) {
+    const metadata = error.data.response_metadata;
+    console.warn(`--- error`, error);
+    console.warn(`--- metadata`, metadata);
+  }
+};
+
 module.exports = {
   slackSellerValidationWorkflow,
   slackUserUpdateWarningWorkflow,
   slackProductListingsCreatedWorkflow,
+  slackProductListingsErrorWorkflow,
 };

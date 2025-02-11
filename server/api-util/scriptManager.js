@@ -2,22 +2,20 @@ const fs = require('fs');
 const sharetribeIntegrationSdk = require('sharetribe-flex-integration-sdk');
 
 let INTEGRATION_SDK = null;
-let EVENTS_BATCH_SIZE = 15;
+let EVENTS_BATCH_SIZE = 10;
 
 async function processInBatches(array, process) {
-  const result = [];
+  const totalEvents = array.length;
+  const totalBatches = Math.ceil(totalEvents / EVENTS_BATCH_SIZE);
   for (let i = 0; i < array.length; i += EVENTS_BATCH_SIZE) {
     const batch = array.slice(i, i + EVENTS_BATCH_SIZE);
-    const index = i / EVENTS_BATCH_SIZE;
-    console.warn('\n-------\n');
-    console.warn('\n[processInBatches] - INDEX:', index);
-    const data = await process(batch);
-    result.push(data);
+    const index = `totalEvents: ${totalEvents} | BATCH: ${i / EVENTS_BATCH_SIZE +
+      1}/${totalBatches}`;
+    await process(batch, index);
     if (i + EVENTS_BATCH_SIZE < array.length) {
       await new Promise(resolve => setTimeout(resolve, EVENTS_BATCH_SIZE));
     }
   }
-  return result;
 }
 
 function integrationSdkInit() {
@@ -60,12 +58,12 @@ function generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, analyzeEve
     // DEV: We use 10 seconds so that the data is printed without much delay.
     // (1 minutes = 60 seconds) && (1 second = 1000 ms) && (1 minute = 60*1000 ms)
 
-    // const msInMinute = 60 * 1000;
+    const msInMinute = 60 * 1000;
     // const pollIdleWait = dev ? 10000 : 5 * msInMinute;
-    const pollIdleWait = dev ? 10000 : 30000;
+    const pollIdleWait = dev ? 10000 : 2 * msInMinute;
 
     // Polling interval (in ms) when a full page of events is received and there may be more
-    const pollWait = 250;
+    const pollWait = 30000;
     // File to keep state across restarts. Stores the last seen event sequence ID,
     // which allows continuing polling from the correct place
     const stateFile = `server/scripts/events/cache/${SCRIPT_NAME}.state`;

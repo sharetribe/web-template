@@ -22,7 +22,12 @@ class StorageManagerClient {
     }, Promise.reject);
     axiosRetry(this.client, {
       retries: 3, // Retry each request up to 3 times
-      retryDelay: retryCount => retryCount * 2000, // Exponential backoff (2s, 4s, 6s)
+      retryDelay: retryCount => {
+        console.warn('\n\n++++++++++++++++++++');
+        console.warn('\n[StorageManagerClient] - retryCount:', retryCount);
+        console.warn('\n++++++++++++++++++++\n\n');
+        return retryCount * 1500;
+      },
       retryCondition: () => true,
     });
   }
@@ -38,7 +43,12 @@ class StorageManagerClient {
       return response.data;
     } catch (error) {
       const parsedError = error?.response?.data || '';
-      console.error('Failed to upload original asset:', parsedError);
+      console.error(
+        `[StorageManagerClient] | Failed to upload original asset | listingId: ${listingId}`
+      );
+      console.error(
+        `[StorageManagerClient] | Failed to upload original asset | Error : ${parsedError}`
+      );
       throw error;
     }
   }

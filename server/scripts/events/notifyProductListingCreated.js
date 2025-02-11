@@ -2,7 +2,10 @@ const { generateScript, integrationSdkInit } = require('../../api-util/scriptMan
 const { StorageManagerClient } = require('../../api-util/storageManagerHelper');
 const { httpFileUrlToStream } = require('../../api-util/httpHelpers');
 const { LISTING_TYPES } = require('../../api-util/metadataHelper');
-const { slackProductListingsCreatedWorkflow } = require('../../api-util/slackHelper');
+const {
+  slackProductListingsCreatedWorkflow,
+  slackProductListingsErrorWorkflow,
+} = require('../../api-util/slackHelper');
 
 const SCRIPT_NAME = 'notifyProductListingCreated';
 const EVENT_TYPES = 'listing/created';
@@ -19,7 +22,9 @@ const processEvent = async (integrationSdk, event, storageManagerClient) => {
   const previewAssetUrl = listing?.privateData?.previewAssetUrl;
   const isProductListing = listing?.publicData?.listingType === LISTING_TYPES.PRODUCT;
 
-  if (!originalAssetUrl || !previewAssetUrl || !userId || !listingId || !isProductListing) return;
+  if (!originalAssetUrl || !previewAssetUrl || !userId || !listingId || !isProductListing) {
+    return { success: false, listingId };
+  }
 
   try {
     const originalAssetData = await storageManagerClient.uploadOriginalAsset(
@@ -37,8 +42,13 @@ const processEvent = async (integrationSdk, event, storageManagerClient) => {
       },
       { expand: true, include: ['images'] }
     );
+    return { success: true, listingId };
   } catch (error) {
-    console.error('Error processing event:', error);
+    console.error(
+      `[notifyProductListingCreated] Error processing event | listingId: ${listingId} | Error:`,
+      error
+    );
+    return { success: false, listingId };
   }
 };
 
@@ -71,12 +81,30 @@ function script() {
   const queryEvents = args => integrationSdk.events.query({ ...args, eventTypes: EVENT_TYPES });
   const analyzeEvent = event => processEvent(integrationSdk, event, storageManagerClient);
 
-  const analyzeEventsBatch = async events => {
+  const analyzeEventsBatch = async (events, index) => {
+    let successList = [];
+    let failList = [];
+    console.warn('\n\n*******************************');
+    console.warn(`[processEventsBatch] ${index} - START:`);
     await Promise.all(
       events.map(async e => {
-        await analyzeEvent(e);
+        const { success, listingId } = await analyzeEvent(e);
+        if (success) {
+          successList.push(listingId);
+        } else {
+          failList.push(listingId);
+        }
       })
     );
+    if (failList.length) {
+      slackProductListingsErrorWorkflow(failList);
+    }
+    const result = { success: successList.length, fail: failList.length };
+    console.warn('[processEventsBatch] - successList:', successList);
+    console.warn('[processEventsBatch] - failList:', failList);
+    console.warn('[processEventsBatch] - END:', result);
+    console.warn('*******************************\n\n');
+    return result;
   };
 
   generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, analyzeEventGroup);
