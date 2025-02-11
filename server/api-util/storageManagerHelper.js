@@ -1,18 +1,12 @@
 const axios = require('axios');
 const axiosRetry = require('axios-retry').default;
-const http = require('http');
-const https = require('https');
 
-const httpAgent = new http.Agent({ keepAlive: true });
-const httpsAgent = new https.Agent({ keepAlive: true });
 const ASSET_UPLOAD_URL = '/assets/marketplace/original';
 
 class StorageManagerClient {
   client = axios.create({
     baseURL: `${process.env.STORAGE_MANAGER_URL}/api`,
     timeout: 180000, // 3 minutes timeout
-    httpAgent: httpAgent,
-    httpsAgent: httpsAgent,
   });
 
   constructor() {
