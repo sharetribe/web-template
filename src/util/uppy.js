@@ -1,5 +1,9 @@
 import { createUploadSignature } from './api';
 
+const MAX_FILE_SIZE_GB = 2; // Value in GB
+const MAX_TOTAL_FILE_SIZE_GB = 2; // Value in GB
+const MAX_NUMBER_OF_FILES = 75;
+
 export async function createUppyInstance(meta, onBeforeUpload) {
   try {
     // Dynamically import Uppy modules, so they don't break server bundle
@@ -17,6 +21,9 @@ export async function createUppyInstance(meta, onBeforeUpload) {
       onBeforeUpload,
       restrictions: {
         allowedFileTypes: ['image/*', 'video/*'],
+        maxNumberOfFiles: MAX_NUMBER_OF_FILES,
+        maxFileSize: MAX_FILE_SIZE_GB * 1024 * 1024 * 1024, // byte to GB
+        maxTotalFileSize: MAX_TOTAL_FILE_SIZE_GB * 1024 * 1024 * 1024, // byte to GB
       },
     });
 
