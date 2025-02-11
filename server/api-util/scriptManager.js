@@ -60,10 +60,10 @@ function generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, analyzeEve
 
     const msInMinute = 60 * 1000;
     // const pollIdleWait = dev ? 10000 : 5 * msInMinute;
-    const pollIdleWait = dev ? 10000 : 2 * msInMinute;
+    const pollIdleWait = dev ? 10000 : 3 * msInMinute;
 
     // Polling interval (in ms) when a full page of events is received and there may be more
-    const pollWait = 30000;
+    const pollWait = 1 * msInMinute;
     // File to keep state across restarts. Stores the last seen event sequence ID,
     // which allows continuing polling from the correct place
     const stateFile = `server/scripts/events/cache/${SCRIPT_NAME}.state`;

@@ -458,7 +458,7 @@ export function initializeUppy(meta) {
                 keywords: listing.keywords,
                 imageSize: listing.dimensions,
                 fileType: listing.type,
-                aiTerms: listing.isAi ? 'yes' : 'no',
+                // aiTerms: listing.isAi ? 'yes' : 'no',
                 originalFileName: listing.name,
                 transactionProcessAlias: transactionType.alias,
                 unitType: transactionType.unitType,
@@ -562,7 +562,7 @@ export function requestSaveBatchListings(pageMode = PAGE_MODE_NEW) {
                   releases: listing.releases ? YES_RELEASES : NO_RELEASES,
                   keywords: listing.keywords,
                   imageSize: listing.dimensions,
-                  aiTerms: listing.isAi ? 'yes' : 'no',
+                  // aiTerms: listing.isAi ? 'yes' : 'no',
                 },
                 price: {
                   amount: price,
