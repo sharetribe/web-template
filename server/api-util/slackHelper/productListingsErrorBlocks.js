@@ -5,7 +5,7 @@ function getBlocks(listings) {
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: `:warning: *WARNING* :warning:\nA total of *${totalListings} Product Listings* have failed to be stored.`,
+        text: `:warning: *WARNING* :warning:\nA total of *${totalListings} Product Listings* have failed to be uploaded.`,
       },
     },
     {
