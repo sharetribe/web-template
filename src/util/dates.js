@@ -7,6 +7,31 @@ export const START_DATE = 'startDate';
 export const END_DATE = 'endDate';
 
 /**
+ * Time unit configurations.
+ * These contain custom time units as well as the time units that moment.js supports.
+ */
+export const bookingTimeUnits = {
+  day: { timeUnit: 'day', isCustom: false },
+  // The unity type 'night' is handled by 'day' unit, when working with moment.js
+  night: { timeUnit: 'day', isCustom: false },
+  hour: {
+    timeUnit: 'hour',
+    timeUnitInMinutes: 60,
+    isCustom: false,
+  },
+  halfHour: {
+    timeUnit: 'halfHour',
+    timeUnitInMinutes: 30,
+    isCustom: true,
+  },
+  quarterHour: {
+    timeUnit: 'quarterHour',
+    timeUnitInMinutes: 15,
+    isCustom: true,
+  },
+};
+
+/**
  * Check if the browser's DateTimeFormat API supports time zones.
  *
  * @returns {Boolean} true if the browser returns current time zone.
