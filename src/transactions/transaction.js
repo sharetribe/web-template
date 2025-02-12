@@ -2,7 +2,7 @@ import * as log from '../util/log';
 import * as purchaseProcess from './transactionProcessPurchase';
 import * as bookingProcess from './transactionProcessBooking';
 import * as inquiryProcess from './transactionProcessInquiry';
-import * as sellPurchaseProcess from '../extensions/transactionProcesses/sellPurchase/transactionProcessSellPurchase';
+import * as sellPurchaseProcess from '../extensions/transactionProcesses/sellPurchase/transactions/transactionProcessSellPurchase';
 
 // Supported unit types
 // Note: These are passed to translations/microcopy in certain cases.
