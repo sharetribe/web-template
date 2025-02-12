@@ -7,7 +7,10 @@ const {
   SELLER_MEMBERSHIP_TYPES,
 } = require('../../api-util/metadataHelper');
 const { integrationSdkInit, generateScript } = require('../../api-util/scriptManager');
-const { slackSellerValidationWorkflow } = require('../../api-util/slackHelper');
+const {
+  slackSellerValidationWorkflow,
+  slackUserCreatedErrorWorkflow,
+} = require('../../api-util/slackHelper');
 const { StudioManagerClient: SMClient, STUDIO_USER_TYPE } = require('../../api-util/studioHelper');
 
 const SCRIPT_NAME = 'notifyUserCreated';
@@ -140,33 +143,44 @@ function script() {
       if (userType === USER_TYPES.BUYER) {
         return;
       }
-      const { metadata, privateData, publicData } = await getExtendedData(userId, user.attributes);
-      const { studioId, communityId, sellerStatus, communityStatus } = metadata || {};
-      await integrationSdk.users.updateProfile(
-        {
-          id: userId,
-          ...(!!privateData && { privateData }),
-          ...(!!publicData && { publicData }),
-          metadata,
-        },
-        QUERY_PARAMS
-      );
-      await updateAuth0User({
-        auth0UserId: identityProviders[0].userId,
-        marketId: userId,
-        studioId,
-        communityId,
-        firstName,
-        lastName,
-        displayName,
-        sellerStatus,
-        communityStatus,
-        userType,
-      });
-      if (userType === USER_TYPES.SELLER) {
-        const { displayName } = profile;
-        const { portfolioURL } = profile.publicData;
-        await slackSellerValidationWorkflow(userId, displayName, email, portfolioURL);
+      try {
+        const { metadata, privateData, publicData } = await getExtendedData(
+          userId,
+          user.attributes
+        );
+        const { studioId, communityId, sellerStatus, communityStatus } = metadata || {};
+        await integrationSdk.users.updateProfile(
+          {
+            id: userId,
+            ...(!!privateData && { privateData }),
+            ...(!!publicData && { publicData }),
+            metadata,
+          },
+          QUERY_PARAMS
+        );
+        await updateAuth0User({
+          auth0UserId: identityProviders[0].userId,
+          marketId: userId,
+          studioId,
+          communityId,
+          firstName,
+          lastName,
+          displayName,
+          sellerStatus,
+          communityStatus,
+          userType,
+        });
+        if (userType === USER_TYPES.SELLER) {
+          const { displayName } = profile;
+          const { portfolioURL } = profile.publicData;
+          await slackSellerValidationWorkflow(userId, displayName, email, portfolioURL);
+        }
+      } catch (error) {
+        slackUserCreatedErrorWorkflow(userId);
+        console.error(
+          `[notifyUserCreated] Error processing event | userId: ${userId} | Error:`,
+          error
+        );
       }
     }
   };

@@ -2,7 +2,10 @@ const fs = require('fs');
 const sharetribeIntegrationSdk = require('sharetribe-flex-integration-sdk');
 
 let INTEGRATION_SDK = null;
-let EVENTS_BATCH_SIZE = 10;
+// (1 minutes = 60 seconds) && (1 second = 1000 ms) && (1 minute = 60*1000 ms)
+const MS_IN_MINUTE = 60 * 1000;
+const EVENTS_BATCH_SIZE = 15;
+const EVENTS_BATCH_DELAY = 1 * MS_IN_MINUTE;
 
 async function processInBatches(array, process) {
   const totalEvents = array.length;
@@ -13,7 +16,7 @@ async function processInBatches(array, process) {
       1}/${totalBatches}`;
     await process(batch, index);
     if (i + EVENTS_BATCH_SIZE < array.length) {
-      await new Promise(resolve => setTimeout(resolve, EVENTS_BATCH_SIZE));
+      await new Promise(resolve => setTimeout(resolve, EVENTS_BATCH_DELAY));
     }
   }
 }
@@ -56,12 +59,12 @@ function generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, analyzeEve
     // Polling interval (in ms) when all events have been fetched.
     // PROD: Keeping this at 1 minute or more is a good idea.
     // DEV: We use 10 seconds so that the data is printed without much delay.
-    // (1 minutes = 60 seconds) && (1 second = 1000 ms) && (1 minute = 60*1000 ms)
-    const msInMinute = 60 * 1000;
-    // const pollIdleWait = dev ? 10000 : 5 * msInMinute;
-    const pollIdleWait = dev ? 10000 : 2 * msInMinute;
+
+    // const pollIdleWait = dev ? 10000 : 5 * MS_IN_MINUTE;
+    const pollIdleWait = dev ? 10000 : 2 * MS_IN_MINUTE;
+
     // Polling interval (in ms) when a full page of events is received and there may be more
-    const pollWait = 1 * msInMinute;
+    const pollWait = 1 * MS_IN_MINUTE;
     // File to keep state across restarts. Stores the last seen event sequence ID,
     // which allows continuing polling from the correct place
     const stateFile = `server/scripts/events/cache/${SCRIPT_NAME}.state`;
@@ -94,7 +97,7 @@ function generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, analyzeEve
       const params = sequenceId
         ? { startAfterSequenceId: sequenceId }
         : { createdAtStart: startTime };
-      queryEvents(params).then(res => {
+      queryEvents(params).then(async res => {
         const events = res.data.data;
         const lastEvent = events[events.length - 1];
         const fullPage = events.length === res.data.meta.perPage;
@@ -104,7 +107,7 @@ function generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, analyzeEve
         if (withEventGroupHandler) {
           analyzeEventGroup(events);
         }
-        processInBatches(events, analyzeEventsBatch);
+        await processInBatches(events, analyzeEventsBatch);
         if (lastEvent) saveLastEventSequenceId(lastEvent.attributes.sequenceId);
         setTimeout(() => {
           pollLoop(lastSequenceId);

@@ -6,6 +6,9 @@ const getProductListingsCreatedBlocks = require('./productListingsCreatedBlocks'
 const getProductListingsErrorBlocks = require('./productListingsErrorBlocks');
 const getSellerValidationBlocks = require('./sellerValidationBlocks');
 const getUserUpdateWarningBlocks = require('./userUpdateWarningBlocks');
+const getProfileListingUpdateErrorBlocks = require('./profileListingUpdateErrorBlocks');
+const getUserCreatedErrorBlocks = require('./userCreatedErrorBlocks');
+const getUserUpdatedErrorBlocks = require('./userUpdatedErrorBlocks');
 
 const slackSellerValidationWorkflow = async (userId, displayName, email, portfolioURL) => {
   const slackUserManagerChannelId = process.env.SLACK_USER_MANAGER_CHANNEL_ID;
@@ -94,9 +97,69 @@ const slackProductListingsErrorWorkflow = async listings => {
   }
 };
 
+const slackProfileListingUpdateErrorWorkflow = async userId => {
+  const slackUserManagerChannelId = process.env.SLACK_USER_MANAGER_CHANNEL_ID;
+  const slackBotToken = process.env.SLACK_BOT_TOKEN;
+  try {
+    const webClient = new WebClient(slackBotToken);
+    const profileListingUpdateErrorBlocks = getProfileListingUpdateErrorBlocks(userId);
+    await webClient.chat.postMessage({
+      channel: slackUserManagerChannelId,
+      text: 'Starting Profile Listing Update Error workflow',
+      blocks: profileListingUpdateErrorBlocks,
+      unfurl_links: false,
+    });
+  } catch (error) {
+    const metadata = error.data.response_metadata;
+    console.warn(`--- error`, error);
+    console.warn(`--- metadata`, metadata);
+  }
+};
+
+const slackUserCreatedErrorWorkflow = async userId => {
+  const slackUserManagerChannelId = process.env.SLACK_USER_MANAGER_CHANNEL_ID;
+  const slackBotToken = process.env.SLACK_BOT_TOKEN;
+  try {
+    const webClient = new WebClient(slackBotToken);
+    const userCreatedErrorBlocks = getUserCreatedErrorBlocks(userId);
+    await webClient.chat.postMessage({
+      channel: slackUserManagerChannelId,
+      text: 'Starting User Created Error workflow',
+      blocks: userCreatedErrorBlocks,
+      unfurl_links: false,
+    });
+  } catch (error) {
+    const metadata = error.data.response_metadata;
+    console.warn(`--- error`, error);
+    console.warn(`--- metadata`, metadata);
+  }
+};
+
+const slacktUserUpdatedErrorWorkflow = async userId => {
+  const slackUserManagerChannelId = process.env.SLACK_USER_MANAGER_CHANNEL_ID;
+  const slackBotToken = process.env.SLACK_BOT_TOKEN;
+  try {
+    const webClient = new WebClient(slackBotToken);
+    const userUpdatedErrorBlocks = getUserUpdatedErrorBlocks(userId);
+    await webClient.chat.postMessage({
+      channel: slackUserManagerChannelId,
+      text: 'Starting User Updated Error workflow',
+      blocks: userUpdatedErrorBlocks,
+      unfurl_links: false,
+    });
+  } catch (error) {
+    const metadata = error.data.response_metadata;
+    console.warn(`--- error`, error);
+    console.warn(`--- metadata`, metadata);
+  }
+};
+
 module.exports = {
   slackSellerValidationWorkflow,
   slackUserUpdateWarningWorkflow,
   slackProductListingsCreatedWorkflow,
   slackProductListingsErrorWorkflow,
+  slackProfileListingUpdateErrorWorkflow,
+  slackUserCreatedErrorWorkflow,
+  slacktUserUpdatedErrorWorkflow,
 };

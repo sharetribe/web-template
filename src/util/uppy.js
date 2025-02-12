@@ -2,7 +2,7 @@ import { createUploadSignature } from './api';
 
 const MAX_FILE_SIZE_GB = 2; // Value in GB
 const MAX_TOTAL_FILE_SIZE_GB = 2; // Value in GB
-const MAX_NUMBER_OF_FILES = 75;
+const MAX_NUMBER_OF_FILES = 50;
 
 export async function createUppyInstance(meta, onBeforeUpload) {
   try {

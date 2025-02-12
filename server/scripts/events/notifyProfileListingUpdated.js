@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const { LISTING_TYPES } = require('../../api-util/metadataHelper');
 const { integrationSdkInit, generateScript } = require('../../api-util/scriptManager');
+const { slackProfileListingUpdateErrorWorkflow } = require('../../api-util/slackHelper');
 const { StudioManagerClient: SMClient } = require('../../api-util/studioHelper');
 
 const SCRIPT_NAME = 'notifyProfileListingUpdated';
@@ -62,8 +63,16 @@ function script() {
       const authorId = author?.id?.uuid;
       const { listingType } = listing?.attributes?.publicData || {};
       const isValidListingType = listingType === LISTING_TYPES.PROFILE;
-      if (isValidListingType) {
-        await profileListingSync(listingId, authorId, listing, previousValues);
+      try {
+        if (isValidListingType) {
+          await profileListingSync(listingId, authorId, listing, previousValues);
+        }
+      } catch (error) {
+        slackProfileListingUpdateErrorWorkflow(authorId);
+        console.error(
+          `[notifyProfileListingUpdated] Error processing event | authorId: ${authorId} | listingId: ${listingId} | Error:`,
+          error
+        );
       }
     }
   };

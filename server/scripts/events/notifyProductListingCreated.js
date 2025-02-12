@@ -11,27 +11,45 @@ const SCRIPT_NAME = 'notifyProductListingCreated';
 const EVENT_TYPES = 'listing/created';
 const RESOURCE_TYPE = 'listing';
 
-const processEvent = async (integrationSdk, event, storageManagerClient) => {
+const filterEvents = event => {
   const { resourceType, eventType, resourceId, resource } = event.attributes;
-  if (resourceType !== RESOURCE_TYPE || eventType !== EVENT_TYPES) return;
-
+  if (resourceType !== RESOURCE_TYPE || eventType !== EVENT_TYPES) return false;
   const { attributes: listing, relationships } = resource;
   const userId = relationships?.author?.data?.id?.uuid;
   const listingId = resourceId?.uuid;
   const originalAssetUrl = listing?.privateData?.originalAssetUrl;
   const previewAssetUrl = listing?.privateData?.previewAssetUrl;
   const isProductListing = listing?.publicData?.listingType === LISTING_TYPES.PRODUCT;
-
   if (!originalAssetUrl || !previewAssetUrl || !userId || !listingId || !isProductListing) {
-    return { success: false, listingId };
+    return false;
   }
+  return true;
+};
 
-  try {
-    const originalAssetData = await storageManagerClient.uploadOriginalAsset(
+const storageHandler = async events => {
+  const storageManagerClient = new StorageManagerClient();
+  const data = events.map(event => {
+    const { resourceId, resource } = event.attributes;
+    const { attributes: listing, relationships } = resource;
+    const userId = relationships?.author?.data?.id?.uuid;
+    const listingId = resourceId?.uuid;
+    const originalAssetUrl = listing?.privateData?.originalAssetUrl;
+    return {
       userId,
-      listingId,
-      originalAssetUrl
-    );
+      relationId: listingId,
+      tempSslUrl: originalAssetUrl,
+      metadata: {},
+    };
+  });
+  return await storageManagerClient.uploadOriginalAssets(data);
+};
+
+const processEvent = async (integrationSdk, event, originalAssetData) => {
+  const { resourceId, resource } = event.attributes;
+  const { attributes: listing } = resource;
+  const listingId = resourceId?.uuid;
+  const previewAssetUrl = listing?.privateData?.previewAssetUrl;
+  try {
     const imageStream = await httpFileUrlToStream(previewAssetUrl);
     const { data: sdkImage } = await integrationSdk.images.upload({ image: imageStream });
     await integrationSdk.listings.update(
@@ -42,69 +60,74 @@ const processEvent = async (integrationSdk, event, storageManagerClient) => {
       },
       { expand: true, include: ['images'] }
     );
-    return { success: true, listingId };
+    return true;
   } catch (error) {
     console.error(
       `[notifyProductListingCreated] Error processing event | listingId: ${listingId} | Error:`,
       error
     );
-    return { success: false, listingId };
+    return false;
   }
 };
 
 const analyzeEventGroup = events => {
   try {
-    const parsedEvents = [];
-    events.forEach(event => {
-      const { resourceType, eventType, resource } = event.attributes;
-      if (resourceType !== RESOURCE_TYPE || eventType !== EVENT_TYPES) return;
-      const { attributes: listing } = resource;
-      const isProductListing = listing?.publicData?.listingType === LISTING_TYPES.PRODUCT;
-      if (isProductListing) {
-        parsedEvents.push(event);
-      }
-    });
+    const parsedEvents = events.filter(filterEvents);
     const totalListings = parsedEvents.length;
     const withValidEvents = !!totalListings;
     if (withValidEvents) {
       slackProductListingsCreatedWorkflow(totalListings);
     }
   } catch (error) {
-    console.error('Error processing events group:', error);
+    console.error('[analyzeEventGroup] Error processing events group:', error);
   }
 };
 
 function script() {
   const integrationSdk = integrationSdkInit();
-  const storageManagerClient = new StorageManagerClient();
-
   const queryEvents = args => integrationSdk.events.query({ ...args, eventTypes: EVENT_TYPES });
-  const analyzeEvent = event => processEvent(integrationSdk, event, storageManagerClient);
+  const analyzeEvent = (event, originalAssetData) =>
+    processEvent(integrationSdk, event, originalAssetData);
 
   const analyzeEventsBatch = async (events, index) => {
     let successList = [];
     let failList = [];
-    console.warn('\n\n*******************************');
-    console.warn(`[processEventsBatch] ${index} - START:`);
-    await Promise.all(
-      events.map(async e => {
-        const { success, listingId } = await analyzeEvent(e);
-        if (success) {
-          successList.push(listingId);
-        } else {
-          failList.push(listingId);
-        }
-      })
-    );
-    if (failList.length) {
+    const parsedEvents = events.filter(filterEvents);
+    try {
+      const originalAssets = await storageHandler(parsedEvents);
+      await Promise.all(
+        parsedEvents.map(async event => {
+          const { resourceId } = event.attributes;
+          const listingId = resourceId?.uuid;
+          const originalAssetData = originalAssets.find(asset => asset.id === listingId);
+          const success = await analyzeEvent(event, originalAssetData);
+          if (success) {
+            successList.push(listingId);
+          } else {
+            failList.push(listingId);
+          }
+        })
+      );
+      const withErrors = !!failList.length;
+      if (withErrors) {
+        slackProductListingsErrorWorkflow(failList);
+      }
+      const totalEvents = events.length;
+      const invalidEvents = totalEvents - parsedEvents.length;
+      const result = { success: successList.length, fail: failList.length, invalid: invalidEvents };
+      return result;
+    } catch (error) {
+      const failList = parsedEvents.map(event => {
+        const { resourceId } = event.attributes;
+        const listingId = resourceId?.uuid;
+        return listingId;
+      });
       slackProductListingsErrorWorkflow(failList);
+      console.warn(
+        `[notifyProductListingCreated] - Error storing the originals: ${failList.join(', ')}`
+      );
+      return;
     }
-    const result = { success: successList.length, fail: failList.length };
-    console.warn('[processEventsBatch] - successList:', successList);
-    console.warn('[processEventsBatch] - failList:', failList);
-    console.warn('[processEventsBatch] - END:', result);
-    console.warn('*******************************\n\n');
-    return result;
   };
 
   generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, analyzeEventGroup);

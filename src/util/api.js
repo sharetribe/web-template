@@ -148,7 +148,3 @@ export const createUserWithIdp = body => {
 export const createUploadSignature = body => {
   return post('/api/transloadit-params', body);
 };
-
-export const uploadOriginalAsset = async body => {
-  return post('/api/storage-manager/upload-original', body);
-};
