@@ -3,5 +3,7 @@
   "EditListingWizard.sell-purchase.new.saveDetails": "Next",
   "EditListingWizard.sell-purchase.new.savePhotos": "Publish listing",
   "EditListingWizard.sell-purchase.new.savePricingAndStock": "Next",
-  "EditListingWizard.sell-purchase.new.saveLocation": "Next"
+  "EditListingWizard.sell-purchase.new.saveLocation": "Next",
+  "CheckoutPage.sell-purchase.orderBreakdown": "Order breakdown",
+  "CheckoutPage.sell-purchase.title": "Complete order"
 }

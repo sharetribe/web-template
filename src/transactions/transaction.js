@@ -56,7 +56,6 @@ const PROCESSES = [
     process: sellPurchaseProcess,
     unitTypes: [ITEM],
   },
-  ,
 ];
 
 /**

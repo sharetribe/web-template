@@ -6,10 +6,12 @@ import {
   resolveLatestProcessName,
   getProcess,
 } from '../../transactions/transaction';
+import { SELL_PURCHASE_PROCESS_NAME } from '../../extensions/transactionProcesses/sellPurchase/transactions/transactionProcessSellPurchase.js';
 
 import { getStateDataForBookingProcess } from './InboxPage.stateDataBooking.js';
 import { getStateDataForInquiryProcess } from './InboxPage.stateDataInquiry.js';
 import { getStateDataForPurchaseProcess } from './InboxPage.stateDataPurchase.js';
+import { getStateDataForSellPurchaseProcess } from '../../extensions/transactionProcesses/sellPurchase/stateData/InboxPage.stateDataSellPurchase.js';
 
 export const stateDataShape = shape({
   processName: string.isRequired,
@@ -41,6 +43,8 @@ export const getStateData = params => {
     return getStateDataForBookingProcess(params, processInfo());
   } else if (processName === INQUIRY_PROCESS_NAME) {
     return getStateDataForInquiryProcess(params, processInfo());
+  } else if (processName === SELL_PURCHASE_PROCESS_NAME) {
+    return getStateDataForSellPurchaseProcess(params, processInfo());
   } else {
     return {};
   }

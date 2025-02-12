@@ -5,9 +5,11 @@ import {
   PURCHASE_PROCESS_NAME,
   resolveLatestProcessName,
 } from '../../transactions/transaction';
+import { SELL_PURCHASE_PROCESS_NAME } from '../../extensions/transactionProcesses/sellPurchase/transactions/transactionProcessSellPurchase.js';
 import { getStateDataForBookingProcess } from './TransactionPage.stateDataBooking.js';
 import { getStateDataForInquiryProcess } from './TransactionPage.stateDataInquiry.js';
 import { getStateDataForPurchaseProcess } from './TransactionPage.stateDataPurchase.js';
+import { getStateDataForSellPurchaseProcess } from '../../extensions/transactionProcesses/sellPurchase/stateData/TransactionPage.stateDataSellPurchase.js';
 
 const errorShape = shape({
   type: oneOf(['error']).isRequired,
@@ -139,6 +141,8 @@ export const getStateData = (params, process) => {
     return getStateDataForBookingProcess(params, processInfo());
   } else if (processName === INQUIRY_PROCESS_NAME) {
     return getStateDataForInquiryProcess(params, processInfo());
+  } else if (processName === SELL_PURCHASE_PROCESS_NAME) {
+    return getStateDataForSellPurchaseProcess(params, processInfo());
   } else {
     return {};
   }
