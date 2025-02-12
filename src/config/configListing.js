@@ -262,19 +262,19 @@ export const listingFields = [
  */
 
 export const listingTypes = [
-  {
-    listingType: 'daily-booking',
-    label: 'Daily booking',
-    transactionType: {
-      process: 'default-booking',
-      alias: 'default-booking/release-1',
-      unitType: 'day',
-    },
-    defaultListingFields: {
-      location: true,
-      payoutDetails: true,
-    },
-  },
+  // {
+  //   listingType: 'daily-booking',
+  //   label: 'Daily booking',
+  //   transactionType: {
+  //     process: 'default-booking',
+  //     alias: 'default-booking/release-1',
+  //     unitType: 'day',
+  //   },
+  //   defaultListingFields: {
+  //     location: true,
+  //     payoutDetails: true,
+  //   },
+  // },
   // // Here are some examples for other listingTypes
   // // TODO: SearchPage does not work well if both booking and product selling are used at the same time
   // {
@@ -323,6 +323,29 @@ export const listingTypes = [
   //     location: true,
   //   },
   // },
+
+  {
+    listingType: 'sell',
+    label: 'Sell a Location (with or without machine)',
+    transactionType: {
+      process: 'sell-purchase',
+      alias: 'sell-purchase/release-1',
+      unitType: 'item',
+    },
+    stockType: 'oneItem',
+    defaultListingFields: {
+      description: true,
+      availability: false,
+      payoutDetails: true,
+      images: true,
+      pickup: true,
+      title: true,
+      shipping: false,
+      location: false,
+      price: true,
+      stock: false,
+    },
+  },
 ];
 
 // SearchPage can enforce listing query to only those listings with valid listingType

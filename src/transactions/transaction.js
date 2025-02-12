@@ -2,6 +2,7 @@ import * as log from '../util/log';
 import * as purchaseProcess from './transactionProcessPurchase';
 import * as bookingProcess from './transactionProcessBooking';
 import * as inquiryProcess from './transactionProcessInquiry';
+import * as sellPurchaseProcess from '../extensions/transactionProcesses/sellPurchase/transactionProcessSellPurchase';
 
 // Supported unit types
 // Note: These are passed to translations/microcopy in certain cases.
@@ -49,6 +50,13 @@ const PROCESSES = [
     process: inquiryProcess,
     unitTypes: [INQUIRY],
   },
+  {
+    name: sellPurchaseProcess.SELL_PURCHASE_PROCESS_NAME,
+    alias: `${sellPurchaseProcess.SELL_PURCHASE_PROCESS_NAME}/release-1`,
+    process: sellPurchaseProcess,
+    unitTypes: [ITEM],
+  },
+  ,
 ];
 
 /**
@@ -269,7 +277,7 @@ export const getAllTransitionsForEveryProcess = () => {
 export const isPurchaseProcess = processName => {
   const latestProcessName = resolveLatestProcessName(processName);
   const processInfo = PROCESSES.find(process => process.name === latestProcessName);
-  return [PURCHASE_PROCESS_NAME].includes(processInfo?.name);
+  return [PURCHASE_PROCESS_NAME, sellPurchaseProcess.SELL_PURCHASE_PROCESS_NAME].includes(processInfo?.name);
 };
 
 /**
