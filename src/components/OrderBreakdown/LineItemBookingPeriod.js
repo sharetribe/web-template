@@ -9,9 +9,24 @@ import {
   LINE_ITEM_NIGHT,
   propTypes,
 } from '../../util/types';
-import { subtractTime } from '../../util/dates';
+import { subtractTime, isDST } from '../../util/dates';
 
 import css from './OrderBreakdown.module.css';
+
+const DSTMaybe = props => {
+  const { startDate, endDate, isStart, timeZone } = props;
+  const isStartInDST = isDST(startDate, timeZone);
+  const isEndInDST = isDST(endDate, timeZone);
+  const isDSTChanged = isStartInDST !== isEndInDST;
+  const showDSTMsgForStart = isDSTChanged && isStart && isStartInDST;
+  const showDSTMsgForEnd = isDSTChanged && !isStart && isEndInDST;
+
+  return showDSTMsgForStart || showDSTMsgForEnd ? (
+    <div className={css.itemLabel}>
+      <FormattedMessage id="OrderBreakdown.bookingWithDSTInEffect" />
+    </div>
+  ) : null;
+};
 
 const BookingPeriod = props => {
   const { startDate, endDate, dateType, timeZone } = props;
@@ -46,6 +61,7 @@ const BookingPeriod = props => {
           <div className={css.itemLabel}>
             <FormattedDate value={startDate} {...dateFormatOptions} {...timeZoneMaybe} />
           </div>
+          <DSTMaybe startDate={startDate} endDate={endDate} isStart={true} timeZone={timeZone} />
         </div>
 
         <div className={css.bookingPeriodSectionRight}>
@@ -58,6 +74,7 @@ const BookingPeriod = props => {
           <div className={css.itemLabel}>
             <FormattedDate value={endDate} {...dateFormatOptions} {...timeZoneMaybe} />
           </div>
+          <DSTMaybe startDate={startDate} endDate={endDate} isStart={false} timeZone={timeZone} />
         </div>
       </div>
     </>
