@@ -644,6 +644,7 @@ const findBookingUnitBoundaries = params => {
     intl,
     timeZone,
     timeUnit = 'hour',
+    unitCount = 1,
   } = params;
 
   if (moment(currentBoundary).isBetween(startMoment, endMoment, null, '[]')) {
@@ -660,28 +661,66 @@ const findBookingUnitBoundaries = params => {
     return findBookingUnitBoundaries({
       ...params,
       cumulatedResults: [...cumulatedResults, ...newBoundary],
-      currentBoundary: moment(nextBoundaryFn(currentBoundary, timeUnit, timeZone)),
+      currentBoundary: nextBoundaryFn(currentBoundary, unitCount, timeUnit, timeZone),
     });
   }
   return cumulatedResults;
 };
 
 /**
- * Find the next sharp hour after the current moment.
+ * Find the next boundary for the given time unit.
+ *
+ * @example
+ * findNextBoundary(new Date('2025-02-06T00:22:00.000Z'), 1, 'hour', 'Europe/Helsinki').toISOString()
+ * => 2025-02-06T01:00:00.000Z
  *
  * @param {Moment|Date} Start point for looking next sharp hour.
+ * @param {Number} unitCount number of time units to add.
  * @param {String} timeUnit scope. e.g. 'hour', 'day'
  * @param {String} timezone name. It should represent IANA timezone key.
  *
- * @returns {Array} an array of localized hours.
+ * @returns {Array} an array of boundary data. e.g. [{timestamp: 1707484800000, timeOfDay: '12:00'}]
  */
-export const findNextBoundary = (currentMomentOrDate, timeUnit, timeZone) =>
-  moment(currentMomentOrDate)
+export const findNextBoundary = (currentDate, unitCount, timeUnit, timeZone) => {
+  return moment(currentDate)
     .clone()
     .tz(timeZone)
-    .add(1, timeUnit)
+    .add(unitCount, timeUnit)
     .startOf(timeUnit)
     .toDate();
+/**
+ * Find the boundaries using the given time unit.
+ *
+ * @param {Date} startTime - find boundaries from this time
+ * @param {Date} endTime - find boundaries until this time
+ * @param {Number} unitCount - The number of time units to add between boundaries.
+ * @param {String} timeUnit - The time unit. (E.g. 'hour')
+ * @param {String} timeZone - The time zone key. (E.g. 'Europe/Helsinki')
+ * @param {Object} intl - The intl object.
+ * @returns {Array} The boundaries of the time unit.
+ */
+export const getBoundaries = (startTime, endTime, unitCount, timeUnit, timeZone, intl) => {
+  if (!moment.tz.zone(timeZone)) {
+    throw new Error(
+      'Time zones are not loaded into moment-timezone. "getBoundaries" function uses time zones.'
+    );
+  }
+
+  // Select a moment before startTime to find next possible sharp hour.
+  // I.e. startTime might be a sharp hour.
+  const millisecondBeforeStartTime = new Date(startTime.getTime() - 1);
+  return findBookingUnitBoundaries({
+    currentBoundary: findNextBoundary(millisecondBeforeStartTime, 1, timeUnit, timeZone),
+    startMoment: moment(startTime),
+    endMoment: moment(endTime),
+    nextBoundaryFn: findNextBoundary,
+    cumulatedResults: [],
+    intl,
+    timeZone,
+    timeUnit,
+    unitCount,
+  });
+};
 
 /**
  * Find sharp hours inside given time window. Returned strings are localized to given time zone.
@@ -714,25 +753,7 @@ export const findNextBoundary = (currentMomentOrDate, timeUnit, timeZone) =>
  * @returns {Array} an array of objects with keys timestamp and timeOfDay.
  */
 export const getSharpHours = (startTime, endTime, timeZone, intl) => {
-  if (!moment.tz.zone(timeZone)) {
-    throw new Error(
-      'Time zones are not loaded into moment-timezone. "getSharpHours" function uses time zones.'
-    );
-  }
-
-  // Select a moment before startTime to find next possible sharp hour.
-  // I.e. startTime might be a sharp hour.
-  const millisecondBeforeStartTime = new Date(startTime.getTime() - 1);
-  return findBookingUnitBoundaries({
-    currentBoundary: findNextBoundary(millisecondBeforeStartTime, 'hour', timeZone),
-    startMoment: moment(startTime),
-    endMoment: moment(endTime),
-    nextBoundaryFn: findNextBoundary,
-    cumulatedResults: [],
-    intl,
-    timeZone,
-    timeUnit: 'hour',
-  });
+  return getBoundaries(startTime, endTime, 1, 'hour', timeZone, intl);
 };
 
 /**
