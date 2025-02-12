@@ -92,6 +92,18 @@ export const getTimeZoneNames = relevantZonesRegExp => {
 };
 
 /**
+ * Check if the given date is in Daylight Saving Time (DST) for the given time zone.
+ *
+ * @param {Date} date
+ * @param {string} timeZone IANA time zone key
+ * @returns {boolean} true if the given date is in DST for the given time zone
+ */
+export const isDST = (date, timeZone) => {
+  const dateMoment = moment.tz(date, timeZone);
+  return dateMoment.isDST();
+};
+
+/**
  * Check that the given parameter is a Date object.
  *
  * @param {Date} object that should be a Date.
