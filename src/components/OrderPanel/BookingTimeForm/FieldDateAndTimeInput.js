@@ -827,7 +827,7 @@ const FieldDateAndTimeInput = props => {
           >
             {bookingStartDate ? (
               availableStartTimes.map(p => (
-                <option key={p.timeOfDay} value={p.timestamp}>
+                <option key={p.timestamp} value={p.timestamp}>
                   {p.timeOfDay}
                 </option>
               ))
@@ -851,7 +851,7 @@ const FieldDateAndTimeInput = props => {
           >
             {bookingEndTimeAvailable ? (
               availableEndTimes.map(p => (
-                <option key={p.timeOfDay === '00:00' ? '24:00' : p.timeOfDay} value={p.timestamp}>
+                <option key={p.timestamp} value={p.timestamp}>
                   {p.timeOfDay === '00:00' ? '24:00' : p.timeOfDay}
                 </option>
               ))

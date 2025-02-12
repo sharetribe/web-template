@@ -624,19 +624,13 @@ const findBookingUnitBoundaries = params => {
   if (moment(currentBoundary).isBetween(startMoment, endMoment, null, '[]')) {
     const timeOfDay = formatDateIntoPartials(currentBoundary, intl, { timeZone })?.time;
 
-    // Choose the previous (aka first) sharp hour boundary,
-    // if daylight saving time (DST) creates the same time of day two times.
-    const newBoundary =
-      cumulatedResults &&
-      cumulatedResults.length > 0 &&
-      cumulatedResults.slice(-1)[0].timeOfDay === timeOfDay
-        ? []
-        : [
-            {
-              timestamp: currentBoundary.valueOf(),
-              timeOfDay,
-            },
-          ];
+    // NOTE: the daylight saving time (DST) can create the same time of day two times.
+    const newBoundary = [
+      {
+        timestamp: currentBoundary.valueOf(),
+        timeOfDay,
+      },
+    ];
 
     return findBookingUnitBoundaries({
       ...params,
