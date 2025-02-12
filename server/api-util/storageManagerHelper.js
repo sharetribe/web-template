@@ -17,29 +17,18 @@ class StorageManagerClient {
     axiosRetry(this.client, {
       retries: 3, // Retry each request up to 3 times
       retryDelay: retryCount => {
-        console.warn('\n\n++++++++++++++++++++');
-        console.warn('\n[StorageManagerClient] - retryCount:', retryCount);
-        console.warn('\n++++++++++++++++++++\n\n');
         return retryCount * 1500;
       },
       retryCondition: () => true,
     });
   }
 
-  async uploadOriginalAsset(userId, listingId, imageUrl, metadata = {}) {
+  async uploadOriginalAssets(data) {
     try {
-      const response = await this.client.post(ASSET_UPLOAD_URL, {
-        userId,
-        listingId,
-        tempSslUrl: imageUrl,
-        metadata,
-      });
+      const response = await this.client.post(ASSET_UPLOAD_URL, { data });
       return response.data;
     } catch (error) {
       const parsedError = error?.response?.data || '';
-      console.error(
-        `[StorageManagerClient] | Failed to upload original asset | listingId: ${listingId}`
-      );
       console.error(
         `[StorageManagerClient] | Failed to upload original asset | Error : ${parsedError}`
       );

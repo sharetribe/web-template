@@ -11,6 +11,7 @@ const { integrationSdkInit, generateScript } = require('../../api-util/scriptMan
 const {
   slackSellerValidationWorkflow,
   slackUserUpdateWarningWorkflow,
+  slacktUserUpdatedErrorWorkflow,
 } = require('../../api-util/slackHelper');
 const { StudioManagerClient: SMClient } = require('../../api-util/studioHelper');
 const {
@@ -296,23 +297,31 @@ function script() {
       const { profile, email } = user.attributes;
       const { displayName } = profile;
       const { userType } = profile.publicData || {};
-      const [userTypeEvent, sellerStatusEvent] = await profileUpgrade(
-        userId,
-        user.attributes,
-        previousValues
-      );
-      if (userType === USER_TYPES.SELLER) {
-        const { portfolioURL } = profile.publicData;
-        await shouldStartSellerValidationWorkflow(
-          userTypeEvent,
-          sellerStatusEvent,
+      try {
+        const [userTypeEvent, sellerStatusEvent] = await profileUpgrade(
           userId,
-          displayName,
-          email,
-          portfolioURL
+          user.attributes,
+          previousValues
+        );
+        if (userType === USER_TYPES.SELLER) {
+          const { portfolioURL } = profile.publicData;
+          await shouldStartSellerValidationWorkflow(
+            userTypeEvent,
+            sellerStatusEvent,
+            userId,
+            displayName,
+            email,
+            portfolioURL
+          );
+        }
+        await profileSync(userId, user, previousValues);
+      } catch (error) {
+        slacktUserUpdatedErrorWorkflow(userId);
+        console.error(
+          `[notifyUserUpdated] Error processing event | userId: ${userId} | Error:`,
+          error
         );
       }
-      await profileSync(userId, user, previousValues);
     }
   };
 
