@@ -319,15 +319,22 @@ describe('date utils', () => {
 
   describe('findNextBoundary()', () => {
     it('should return 01:00 as next boundary when starting from 00:45', () => {
-      expect(findNextBoundary(new Date('2019-09-18T00:45:00.000Z'), 'hour', 'Etc/UTC')).toEqual(
+      expect(findNextBoundary(new Date('2019-09-18T00:45:00.000Z'), 1, 'hour', 'Etc/UTC')).toEqual(
         new Date('2019-09-18T01:00:00.000Z')
       );
     });
     it('should return 02:00 as next boundary when starting from 01:00', () => {
-      expect(findNextBoundary(new Date('2019-09-18T01:00:00.000Z'), 'hour', 'Etc/UTC')).toEqual(
+      expect(findNextBoundary(new Date('2019-09-18T01:00:00.000Z'), 1, 'hour', 'Etc/UTC')).toEqual(
         new Date('2019-09-18T02:00:00.000Z')
       );
     });
+
+    it('should return 01:00 as next boundary when starting from 00:45 in Helsinki', () => {
+      expect(findNextBoundary(new Date('2019-09-18T00:45:00.000Z'), 1, 'hour', 'Europe/Helsinki')).toEqual(
+        new Date('2019-09-18T01:00:00.000Z')
+      );
+    });
+
   });
 
   describe('getSharpHours()', () => {

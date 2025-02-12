@@ -352,7 +352,7 @@ const fetchMonthlyTimeSlots = (dispatch, listing) => {
   if (hasWindow && listing.id && !!tz) {
     const unitType = publicData?.unitType;
     const timeUnit = unitType === 'hour' ? 'hour' : 'day';
-    const nextBoundary = findNextBoundary(new Date(), timeUnit, tz);
+    const nextBoundary = findNextBoundary(new Date(), 1, timeUnit, tz);
 
     const nextMonth = getStartOf(nextBoundary, 'month', tz, 1, 'months');
     const nextAfterNextMonth = getStartOf(nextMonth, 'month', tz, 1, 'months');
