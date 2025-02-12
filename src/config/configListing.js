@@ -371,6 +371,7 @@ export const listingFields = [
       { option: 'frock and frill tall', label: 'Frock and Frill Tall' },
       { option: 'frock and frill petite', label: 'Frock and Frill Petite' },
       { option: 'frock and frill plus', label: 'Frock and Frill Plus' },
+      { option: 'furla', label: 'Furla' },
       { option: 'gant', label: 'Gant' },
       { option: 'gbemi', label: 'Gbemi' },
       { option: 'ghd', label: 'ghd' },

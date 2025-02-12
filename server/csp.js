@@ -146,10 +146,34 @@ exports.csp = (reportUri, reportOnly) => {
   // const { imgSrc = [self] } = defaultDirectives;
   // const exampleImgSrc = imgSrc.concat('my-custom-domain.example.com');
 
+  // new FB code
+  const { imgSrc = [self] } = defaultDirectives;
+  const imgSrcOverride = imgSrc.concat('www.facebook.com');
+
+  const { scriptSrc = [self] } = defaultDirectives;
+  const scriptSrcOverride = scriptSrc.concat('connect.facebook.net', 'www.facebook.com');
+
+  const { frameSrc = [self ] } = defaultDirectives;
+  const frameSrcOverride = frameSrc.concat('connect.facebook.net', 'www.facebook.com');
+
+  const { connectSrc = [self] } = defaultDirectives;
+  const connectSrcOverride = connectSrc.concat('www.facebook.com');
+
   const customDirectives = {
     // Example: Add custom directive override
-    // imgSrc: exampleImgSrc,
+    imgSrc: imgSrcOverride,
+    scriptSrc: scriptSrcOverride,
+    frameSrc: frameSrcOverride,
+    connectSrc: connectSrcOverride
   };
+  // end new FB code
+  
+  // replaced by FB code
+  // const customDirectives = {
+    // Example: Add custom directive override
+    // imgSrc: exampleImgSrc,
+  // };
+  // end replaced by FB code
 
   // ================ END CUSTOM CSP URLs ================ //
 
