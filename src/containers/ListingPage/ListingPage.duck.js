@@ -20,6 +20,18 @@ import { getProcess, isBookingProcessAlias } from '../../transactions/transactio
 import { fetchCurrentUser, fetchCurrentUserHasOrdersSuccess } from '../../ducks/user.duck';
 
 const { UUID } = sdkTypes;
+const MINUTE_IN_MS = 1000 * 60;
+
+// Day-based time slots queries are cached for 1 minute.
+const removeOutdatedDateData = timeSlotsForDate => {
+  const now = new Date().getTime();
+  const minuteAgo = now - MINUTE_IN_MS;
+  return Object.fromEntries(
+    Object.entries(timeSlotsForDate).filter(([dateId, data]) => {
+      return data.fetchedAt && data.fetchedAt > minuteAgo;
+    })
+  );
+};
 
 // ================ Action types ================ //
 
@@ -35,6 +47,12 @@ export const FETCH_REVIEWS_ERROR = 'app/ListingPage/FETCH_REVIEWS_ERROR';
 export const FETCH_MONTHLY_TIME_SLOTS_REQUEST = 'app/ListingPage/FETCH_MONTHLY_TIME_SLOTS_REQUEST';
 export const FETCH_MONTHLY_TIME_SLOTS_SUCCESS = 'app/ListingPage/FETCH_MONTHLY_TIME_SLOTS_SUCCESS';
 export const FETCH_MONTHLY_TIME_SLOTS_ERROR = 'app/ListingPage/FETCH_MONTHLY_TIME_SLOTS_ERROR';
+
+export const FETCH_TIME_SLOTS_FOR_DATE_REQUEST =
+  'app/ListingPage/FETCH_TIME_SLOTS_FOR_DATE_REQUEST';
+export const FETCH_TIME_SLOTS_FOR_DATE_SUCCESS =
+  'app/ListingPage/FETCH_TIME_SLOTS_FOR_DATE_SUCCESS';
+export const FETCH_TIME_SLOTS_FOR_DATE_ERROR = 'app/ListingPage/FETCH_TIME_SLOTS_FOR_DATE_ERROR';
 
 export const FETCH_LINE_ITEMS_REQUEST = 'app/ListingPage/FETCH_LINE_ITEMS_REQUEST';
 export const FETCH_LINE_ITEMS_SUCCESS = 'app/ListingPage/FETCH_LINE_ITEMS_SUCCESS';
@@ -54,6 +72,16 @@ const initialState = {
   monthlyTimeSlots: {
     // '2022-03': {
     //   timeSlots: [],
+    //   fetchTimeSlotsError: null,
+    //   fetchTimeSlotsInProgress: null,
+    // },
+  },
+  timeSlotsForDate: {
+    // For small time units, we fetch monthly time slots with sparse mode for calendar view
+    // and when the user clicks on a day, we make a full time slot query. This is for that purpose.
+    // '2025-02-03': {
+    //   timeSlots: [],
+    //   fetchedAt: 1738569600000,
     //   fetchTimeSlotsError: null,
     //   fetchTimeSlotsInProgress: null,
     // },
@@ -119,6 +147,44 @@ const listingPageReducer = (state = initialState, action = {}) => {
       };
       return { ...state, monthlyTimeSlots };
     }
+    case FETCH_TIME_SLOTS_FOR_DATE_REQUEST: {
+      const timeSlotsForDate = {
+        ...removeOutdatedDateData(state.timeSlotsForDate),
+        [payload]: {
+          ...state.timeSlotsForDate[payload],
+          fetchTimeSlotsError: null,
+          fetchedAt: null,
+          fetchTimeSlotsInProgress: true,
+          timeSlots: [],
+        },
+      };
+      return { ...state, timeSlotsForDate };
+    }
+    case FETCH_TIME_SLOTS_FOR_DATE_SUCCESS: {
+      const dateId = payload.dateId;
+      const timeSlotsForDate = {
+        ...state.timeSlotsForDate,
+        [dateId]: {
+          ...state.timeSlotsForDate[dateId],
+          fetchTimeSlotsInProgress: false,
+          fetchedAt: new Date().getTime(),
+          timeSlots: payload.timeSlots,
+        },
+      };
+      return { ...state, timeSlotsForDate };
+    }
+    case FETCH_TIME_SLOTS_FOR_DATE_ERROR: {
+      const dateId = payload.dateId;
+      const timeSlotsForDate = {
+        ...state.timeSlotsForDate,
+        [dateId]: {
+          ...state.timeSlotsForDate[dateId],
+          fetchTimeSlotsInProgress: false,
+          fetchTimeSlotsError: payload.error,
+        },
+      };
+      return { ...state, timeSlotsForDate };
+    }
 
     case FETCH_LINE_ITEMS_REQUEST:
       return { ...state, fetchLineItemsInProgress: true, fetchLineItemsError: null };
@@ -179,6 +245,20 @@ export const fetchMonthlyTimeSlotsError = (monthId, error) => ({
   type: FETCH_MONTHLY_TIME_SLOTS_ERROR,
   error: true,
   payload: { monthId, error },
+});
+
+export const fetchTimeSlotsForDateRequest = dateId => ({
+  type: FETCH_TIME_SLOTS_FOR_DATE_REQUEST,
+  payload: dateId,
+});
+export const fetchTimeSlotsForDateSuccess = (dateId, timeSlots) => ({
+  type: FETCH_TIME_SLOTS_FOR_DATE_SUCCESS,
+  payload: { timeSlots, dateId },
+});
+export const fetchTimeSlotsForDateError = (dateId, error) => ({
+  type: FETCH_TIME_SLOTS_FOR_DATE_ERROR,
+  error: true,
+  payload: { dateId, error },
 });
 
 export const fetchLineItemsRequest = () => ({ type: FETCH_LINE_ITEMS_REQUEST });
