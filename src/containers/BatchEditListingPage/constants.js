@@ -9,7 +9,6 @@ export const YES_RELEASES = 'yes-release';
 export const AI_TERMS_STATUS_ACCEPTED = 'accepted';
 export const AI_TERMS_STATUS_REQUIRED = 'required';
 export const AI_TERMS_STATUS_NOT_REQUIRED = 'not-required';
-export const RESULT_PAGE_SIZE = 30;
 
 export const PAGE_MODE_NEW = 'new';
 export const PAGE_MODE_EDIT = 'edit';

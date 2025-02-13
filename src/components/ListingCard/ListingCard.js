@@ -76,7 +76,6 @@ export const ListingCardComponent = props => {
     listing,
     renderSizes,
     setActiveListing,
-    showAuthorInfo,
     hidePrice,
   } = props;
   const classes = classNames(rootClassName || css.root, className);
@@ -88,7 +87,7 @@ export const ListingCardComponent = props => {
   const authorDisplayName = author.attributes.profile.displayName;
   const title = isCreativeProfile ? authorDisplayName : listingTitle;
   const slug = createSlug(title);
-  const authorName = isCreativeProfile ? 'Artist Profile' : authorDisplayName;
+  const authorName = 'Artist Profile';
   const authorProfileImage = author.profileImage;
   const firstImage = isCreativeProfile
     ? authorProfileImage
@@ -135,21 +134,20 @@ export const ListingCardComponent = props => {
           intl={intl}
           hidePrice={hidePrice}
         />
-        <div className={css.mainInfo}>
-          {isCreativeProfile && (
+
+        {isCreativeProfile && (
+          <div className={css.mainInfo}>
             <div className={css.title}>
               {richText(title, {
                 longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
                 longWordClass: css.longWord,
               })}
             </div>
-          )}
-          {showAuthorInfo ? (
             <div className={css.authorInfo}>
               <FormattedMessage id="ListingCard.author" values={{ authorName }} />
             </div>
-          ) : null}
-        </div>
+          </div>
+        )}
       </div>
     </NamedLink>
   );
@@ -160,7 +158,6 @@ ListingCardComponent.defaultProps = {
   rootClassName: null,
   renderSizes: null,
   setActiveListing: null,
-  showAuthorInfo: true,
   hidePrice: false,
 };
 
@@ -169,7 +166,6 @@ ListingCardComponent.propTypes = {
   rootClassName: string,
   intl: intlShape.isRequired,
   listing: oneOfType([propTypes.listing, propTypes.ownListing]).isRequired,
-  showAuthorInfo: bool,
   hidePrice: bool,
 
   // Responsive image sizes hint

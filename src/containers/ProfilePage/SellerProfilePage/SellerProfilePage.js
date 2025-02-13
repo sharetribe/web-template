@@ -204,14 +204,7 @@ function SellerProfilePage({
       case LISTING_TAB_TYPES.PRODUCT:
       default: {
         const listingId = item.id.uuid;
-        return (
-          <ListingCard
-            key={listingId}
-            listing={item}
-            showAuthorInfo={false}
-            className={className}
-          />
-        );
+        return <ListingCard key={listingId} listing={item} className={className} />;
       }
     }
   };
