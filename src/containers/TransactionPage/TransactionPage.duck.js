@@ -54,9 +54,11 @@ export const SEND_REVIEW_REQUEST = 'app/TransactionPage/SEND_REVIEW_REQUEST';
 export const SEND_REVIEW_SUCCESS = 'app/TransactionPage/SEND_REVIEW_SUCCESS';
 export const SEND_REVIEW_ERROR = 'app/TransactionPage/SEND_REVIEW_ERROR';
 
-export const FETCH_TIME_SLOTS_REQUEST = 'app/TransactionPage/FETCH_TIME_SLOTS_REQUEST';
-export const FETCH_TIME_SLOTS_SUCCESS = 'app/TransactionPage/FETCH_TIME_SLOTS_SUCCESS';
-export const FETCH_TIME_SLOTS_ERROR = 'app/TransactionPage/FETCH_TIME_SLOTS_ERROR';
+export const FETCH_MONTHLY_TIME_SLOTS_REQUEST =
+  'app/TransactionPage/FETCH_MONTHLY_TIME_SLOTS_REQUEST';
+export const FETCH_MONTHLY_TIME_SLOTS_SUCCESS =
+  'app/TransactionPage/FETCH_MONTHLY_TIME_SLOTS_SUCCESS';
+export const FETCH_MONTHLY_TIME_SLOTS_ERROR = 'app/TransactionPage/FETCH_MONTHLY_TIME_SLOTS_ERROR';
 
 export const FETCH_LINE_ITEMS_REQUEST = 'app/TransactionPage/FETCH_LINE_ITEMS_REQUEST';
 export const FETCH_LINE_ITEMS_SUCCESS = 'app/TransactionPage/FETCH_LINE_ITEMS_SUCCESS';
@@ -183,7 +185,7 @@ export default function transactionPageReducer(state = initialState, action = {}
     case SEND_REVIEW_ERROR:
       return { ...state, sendReviewInProgress: false, sendReviewError: payload };
 
-    case FETCH_TIME_SLOTS_REQUEST: {
+    case FETCH_MONTHLY_TIME_SLOTS_REQUEST: {
       const monthlyTimeSlots = {
         ...state.monthlyTimeSlots,
         [payload]: {
@@ -194,7 +196,7 @@ export default function transactionPageReducer(state = initialState, action = {}
       };
       return { ...state, monthlyTimeSlots };
     }
-    case FETCH_TIME_SLOTS_SUCCESS: {
+    case FETCH_MONTHLY_TIME_SLOTS_SUCCESS: {
       const monthId = payload.monthId;
       const monthlyTimeSlots = {
         ...state.monthlyTimeSlots,
@@ -206,7 +208,7 @@ export default function transactionPageReducer(state = initialState, action = {}
       };
       return { ...state, monthlyTimeSlots };
     }
-    case FETCH_TIME_SLOTS_ERROR: {
+    case FETCH_MONTHLY_TIME_SLOTS_ERROR: {
       const monthId = payload.monthId;
       const monthlyTimeSlots = {
         ...state.monthlyTimeSlots,
@@ -276,16 +278,16 @@ const sendReviewRequest = () => ({ type: SEND_REVIEW_REQUEST });
 const sendReviewSuccess = () => ({ type: SEND_REVIEW_SUCCESS });
 const sendReviewError = e => ({ type: SEND_REVIEW_ERROR, error: true, payload: e });
 
-export const fetchTimeSlotsRequest = monthId => ({
-  type: FETCH_TIME_SLOTS_REQUEST,
+export const fetchMonthlyTimeSlotsRequest = monthId => ({
+  type: FETCH_MONTHLY_TIME_SLOTS_REQUEST,
   payload: monthId,
 });
-export const fetchTimeSlotsSuccess = (monthId, timeSlots) => ({
-  type: FETCH_TIME_SLOTS_SUCCESS,
+export const fetchMonthlyTimeSlotsSuccess = (monthId, timeSlots) => ({
+  type: FETCH_MONTHLY_TIME_SLOTS_SUCCESS,
   payload: { timeSlots, monthId },
 });
-export const fetchTimeSlotsError = (monthId, error) => ({
-  type: FETCH_TIME_SLOTS_ERROR,
+export const fetchMonthlyTimeSlotsError = (monthId, error) => ({
+  type: FETCH_MONTHLY_TIME_SLOTS_ERROR,
   error: true,
   payload: { monthId, error },
 });
@@ -312,7 +314,7 @@ const timeSlotsRequest = params => (dispatch, getState, sdk) => {
 export const fetchTimeSlots = (listingId, start, end, timeZone) => (dispatch, getState, sdk) => {
   const monthId = monthIdString(start, timeZone);
 
-  dispatch(fetchTimeSlotsRequest(monthId));
+  dispatch(fetchMonthlyTimeSlotsRequest(monthId));
 
   // The maximum pagination page size for timeSlots is 500
   const extraParams = {
@@ -322,10 +324,12 @@ export const fetchTimeSlots = (listingId, start, end, timeZone) => (dispatch, ge
 
   return dispatch(timeSlotsRequest({ listingId, start, end, ...extraParams }))
     .then(timeSlots => {
-      dispatch(fetchTimeSlotsSuccess(monthId, timeSlots));
+      dispatch(fetchMonthlyTimeSlotsSuccess(monthId, timeSlots));
+      return timeSlots;
     })
     .catch(e => {
-      dispatch(fetchTimeSlotsError(monthId, storableError(e)));
+      dispatch(fetchMonthlyTimeSlotsError(monthId, storableError(e)));
+      return [];
     });
 };
 
