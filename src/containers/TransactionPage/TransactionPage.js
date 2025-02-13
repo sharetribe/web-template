@@ -155,15 +155,10 @@ export const TransactionPageComponent = props => {
     transitionInProgress,
     transitionError,
     onTransition,
-    monthlyTimeSlots,
-    onFetchTimeSlots,
     nextTransitions,
     callSetInitialValues,
     onInitializeCardPaymentData,
-    onFetchTransactionLineItems,
-    lineItems,
-    fetchLineItemsInProgress,
-    fetchLineItemsError,
+    ...restOfProps
   } = props;
 
   const { listing, provider, customer, booking } = transaction || {};
@@ -522,12 +517,7 @@ export const TransactionPageComponent = props => {
           author={provider}
           onSubmit={handleSubmitOrderRequest}
           onManageDisableScrolling={onManageDisableScrolling}
-          onFetchTimeSlots={onFetchTimeSlots}
-          monthlyTimeSlots={monthlyTimeSlots}
-          onFetchTransactionLineItems={onFetchTransactionLineItems}
-          lineItems={lineItems}
-          fetchLineItemsInProgress={fetchLineItemsInProgress}
-          fetchLineItemsError={fetchLineItemsError}
+          {...restOfProps}
           validListingTypes={config.listing.listingTypes}
           marketplaceCurrency={config.currency}
           dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
@@ -626,11 +616,11 @@ const mapStateToProps = state => {
     sendMessageError,
     sendReviewInProgress,
     sendReviewError,
-    monthlyTimeSlots,
     nextTransitions: processTransitions,
-    lineItems,
-    fetchLineItemsInProgress,
-    fetchLineItemsError,
+    monthlyTimeSlots, // for OrderPanel
+    lineItems, // for OrderPanel
+    fetchLineItemsInProgress, // for OrderPanel
+    fetchLineItemsError, // for OrderPanel
   };
 };
 
@@ -647,9 +637,9 @@ const mapDispatchToProps = dispatch => {
     callSetInitialValues: (setInitialValues, values) => dispatch(setInitialValues(values)),
     onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
     onFetchTransactionLineItems: (orderData, listingId, isOwnListing) =>
-      dispatch(fetchTransactionLineItems(orderData, listingId, isOwnListing)),
+      dispatch(fetchTransactionLineItems(orderData, listingId, isOwnListing)), // for OrderPanel
     onFetchTimeSlots: (listingId, start, end, timeZone, options) =>
-      dispatch(fetchTimeSlots(listingId, start, end, timeZone, options)),
+      dispatch(fetchTimeSlots(listingId, start, end, timeZone, options)), // for OrderPanel
   };
 };
 

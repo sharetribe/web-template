@@ -114,12 +114,6 @@ export const ListingPageComponent = props => {
     fetchReviewsError,
     sendInquiryInProgress,
     sendInquiryError,
-    monthlyTimeSlots,
-    onFetchTimeSlots,
-    onFetchTransactionLineItems,
-    lineItems,
-    fetchLineItemsInProgress,
-    fetchLineItemsError,
     history,
     callSetInitialValues,
     onSendInquiry,
@@ -127,6 +121,7 @@ export const ListingPageComponent = props => {
     config,
     routeConfiguration,
     showOwnListingsOnly,
+    ...restOfProps
   } = props;
 
   const listingConfig = config.listing;
@@ -406,12 +401,7 @@ export const ListingPageComponent = props => {
               author={ensuredAuthor}
               onManageDisableScrolling={onManageDisableScrolling}
               onContactUser={onContactUser}
-              monthlyTimeSlots={monthlyTimeSlots}
-              onFetchTimeSlots={onFetchTimeSlots}
-              onFetchTransactionLineItems={onFetchTransactionLineItems}
-              lineItems={lineItems}
-              fetchLineItemsInProgress={fetchLineItemsInProgress}
-              fetchLineItemsError={fetchLineItemsError}
+              {...restOfProps}
               validListingTypes={config.listing.listingTypes}
               marketplaceCurrency={config.currency}
               dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
@@ -553,10 +543,10 @@ const mapStateToProps = state => {
     showListingError,
     reviews,
     fetchReviewsError,
-    monthlyTimeSlots,
-    lineItems,
-    fetchLineItemsInProgress,
-    fetchLineItemsError,
+    monthlyTimeSlots, // for OrderPanel
+    lineItems, // for OrderPanel
+    fetchLineItemsInProgress, // for OrderPanel
+    fetchLineItemsError, // for OrderPanel
     sendInquiryInProgress,
     sendInquiryError,
   };
@@ -567,7 +557,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(manageDisableScrolling(componentId, disableScrolling)),
   callSetInitialValues: (setInitialValues, values, saveToSessionStorage) =>
     dispatch(setInitialValues(values, saveToSessionStorage)),
-  onFetchTransactionLineItems: params => dispatch(fetchTransactionLineItems(params)),
+  onFetchTransactionLineItems: params => dispatch(fetchTransactionLineItems(params)), // for OrderPanel
   onSendInquiry: (listing, message) => dispatch(sendInquiry(listing, message)),
   onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
   onFetchTimeSlots: (listingId, start, end, timeZone, options) =>
