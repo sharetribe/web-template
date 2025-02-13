@@ -96,6 +96,9 @@ export const IncludeScripts = props => {
   }
 
   // FB script start
+  // test deployment
+  console.log('Deployed test.js to production on 2025-02-13');
+  
   analyticsLibraries.push(
     <script key='fb'>
       {`

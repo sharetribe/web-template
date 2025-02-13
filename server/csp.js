@@ -147,6 +147,9 @@ exports.csp = (reportUri, reportOnly) => {
   // const exampleImgSrc = imgSrc.concat('my-custom-domain.example.com');
 
   // new FB code
+  // test deployment
+  console.log('Deployed test.js to production on 2025-02-13');
+  
   const { imgSrc = [self] } = defaultDirectives;
   const imgSrcOverride = imgSrc.concat('www.facebook.com');
 
