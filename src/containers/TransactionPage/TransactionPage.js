@@ -648,8 +648,8 @@ const mapDispatchToProps = dispatch => {
     onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
     onFetchTransactionLineItems: (orderData, listingId, isOwnListing) =>
       dispatch(fetchTransactionLineItems(orderData, listingId, isOwnListing)),
-    onFetchTimeSlots: (listingId, start, end, timeZone) =>
-      dispatch(fetchTimeSlots(listingId, start, end, timeZone)),
+    onFetchTimeSlots: (listingId, start, end, timeZone, options) =>
+      dispatch(fetchTimeSlots(listingId, start, end, timeZone, options)),
   };
 };
 
