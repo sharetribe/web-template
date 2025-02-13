@@ -311,13 +311,18 @@ const timeSlotsRequest = params => (dispatch, getState, sdk) => {
   });
 };
 
-export const fetchTimeSlots = (listingId, start, end, timeZone) => (dispatch, getState, sdk) => {
+export const fetchTimeSlots = (listingId, start, end, timeZone, options) => (
+  dispatch,
+  getState,
+  sdk
+) => {
+  const { extraQueryParams = null } = options || {};
   const monthId = monthIdString(start, timeZone);
 
   dispatch(fetchMonthlyTimeSlotsRequest(monthId));
 
   // The maximum pagination page size for timeSlots is 500
-  const extraParams = {
+  const extraParams = extraQueryParams || {
     perPage: 500,
     page: 1,
   };
