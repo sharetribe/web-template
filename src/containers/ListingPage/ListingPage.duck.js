@@ -6,7 +6,12 @@ import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { transactionLineItems } from '../../util/api';
 import * as log from '../../util/log';
 import { denormalisedResponseEntities } from '../../util/data';
-import { findNextBoundary, getStartOf, monthIdString } from '../../util/dates';
+import {
+  findNextBoundary,
+  getStartOf,
+  monthIdString,
+  stringifyDateToISO8601,
+} from '../../util/dates';
 import {
   hasPermissionToInitiateTransactions,
   hasPermissionToViewData,
@@ -367,10 +372,7 @@ export const fetchTimeSlots = (listingId, start, end, timeZone, options) => (
   getState,
   sdk
 ) => {
-  const { extraQueryParams = null } = options || {};
-  const monthId = monthIdString(start, timeZone);
-
-  dispatch(fetchMonthlyTimeSlotsRequest(monthId));
+  const { extraQueryParams = null, useFetchTimeSlotsForDate = false } = options || {};
 
   // The maximum pagination page size for timeSlots is 500
   const extraParams = extraQueryParams || {
@@ -378,15 +380,40 @@ export const fetchTimeSlots = (listingId, start, end, timeZone, options) => (
     page: 1,
   };
 
-  return dispatch(timeSlotsRequest({ listingId, start, end, ...extraParams }))
-    .then(timeSlots => {
-      dispatch(fetchMonthlyTimeSlotsSuccess(monthId, timeSlots));
-      return timeSlots;
-    })
-    .catch(e => {
-      dispatch(fetchMonthlyTimeSlotsError(monthId, storableError(e)));
-      return [];
-    });
+  // For small time units, we fetch the data per date.
+  // This is to avoid fetching too much data (with 15 minute intervals, there can be 24*4*31 = 2928 time slots)
+  if (useFetchTimeSlotsForDate) {
+    const dateId = stringifyDateToISO8601(start, timeZone);
+    const dateData = getState().ListingPage.timeSlotsForDate[dateId];
+    const minuteAgo = new Date().getTime() - MINUTE_IN_MS;
+    const hasRecentlyFetchedData = dateData?.fetchedAt > minuteAgo;
+    if (hasRecentlyFetchedData) {
+      return Promise.resolve(dateData?.timeSlots || []);
+    }
+
+    dispatch(fetchTimeSlotsForDateRequest(dateId));
+    return dispatch(timeSlotsRequest({ listingId, start, end, ...extraParams }))
+      .then(timeSlots => {
+        dispatch(fetchTimeSlotsForDateSuccess(dateId, timeSlots));
+        return timeSlots;
+      })
+      .catch(e => {
+        dispatch(fetchTimeSlotsForDateError(dateId, storableError(e)));
+        return [];
+      });
+  } else {
+    const monthId = monthIdString(start, timeZone);
+    dispatch(fetchMonthlyTimeSlotsRequest(monthId));
+    return dispatch(timeSlotsRequest({ listingId, start, end, ...extraParams }))
+      .then(timeSlots => {
+        dispatch(fetchMonthlyTimeSlotsSuccess(monthId, timeSlots));
+        return timeSlots;
+      })
+      .catch(e => {
+        dispatch(fetchMonthlyTimeSlotsError(monthId, storableError(e)));
+        return [];
+      });
+  }
 };
 
 export const sendInquiry = (listing, message) => (dispatch, getState, sdk) => {
