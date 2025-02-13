@@ -427,6 +427,7 @@ export const ListingPageComponent = props => {
  * @param {Array<propTypes.review>} props.reviews - The reviews
  * @param {propTypes.error} props.fetchReviewsError - The fetch reviews error
  * @param {Object<string, Object>} props.monthlyTimeSlots - The monthly time slots. E.g. { '2019-11': { timeSlots: [], fetchTimeSlotsInProgress: false, fetchTimeSlotsError: null } }
+ * @param {Object<string, Object>} props.timeSlotsForDate - The time slots for date. E.g. { '2019-11-01': { timeSlots: [], fetchedAt: 1572566400000, fetchTimeSlotsError: null, fetchTimeSlotsInProgress: false } }
  * @param {boolean} props.sendInquiryInProgress - Whether the send inquiry is in progress
  * @param {propTypes.error} props.sendInquiryError - The send inquiry error
  * @param {Function} props.onSendInquiry - The on send inquiry function
@@ -505,6 +506,7 @@ const mapStateToProps = state => {
     reviews,
     fetchReviewsError,
     monthlyTimeSlots,
+    timeSlotsForDate,
     sendInquiryInProgress,
     sendInquiryError,
     lineItems,
@@ -537,6 +539,7 @@ const mapStateToProps = state => {
     reviews,
     fetchReviewsError,
     monthlyTimeSlots, // for OrderPanel
+    timeSlotsForDate, // for OrderPanel
     lineItems, // for OrderPanel
     fetchLineItemsInProgress, // for OrderPanel
     fetchLineItemsError, // for OrderPanel

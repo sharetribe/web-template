@@ -101,6 +101,7 @@ const onDisputeOrder = (
  * @param {string} props.transitionInProgress - The transition in progress
  * @param {propTypes.error} props.transitionError - The transition error
  * @param {Object<string, Object>} props.monthlyTimeSlots - The monthly time slots: { '2019-11': { timeSlots: [], fetchTimeSlotsInProgress: false, fetchTimeSlotsError: null } }
+ * @param {Object<string, Object>} props.timeSlotsForDate - The time slots for date. E.g. { '2019-11-01': { timeSlots: [], fetchedAt: 1572566400000, fetchTimeSlotsError: null, fetchTimeSlotsInProgress: false } }
  * @param {propTypes.error} props.fetchTimeSlotsError - The fetch time slots error
  * @param {Array<propTypes.lineItem>} props.lineItems - The line items
  * @param {propTypes.error} props.fetchLineItemsError - The fetch line items error
@@ -588,6 +589,7 @@ const mapStateToProps = state => {
     sendReviewInProgress,
     sendReviewError,
     monthlyTimeSlots,
+    timeSlotsForDate,
     processTransitions,
     lineItems,
     fetchLineItemsInProgress,
@@ -618,6 +620,7 @@ const mapStateToProps = state => {
     sendReviewError,
     nextTransitions: processTransitions,
     monthlyTimeSlots, // for OrderPanel
+    timeSlotsForDate, // for OrderPanel
     lineItems, // for OrderPanel
     fetchLineItemsInProgress, // for OrderPanel
     fetchLineItemsError, // for OrderPanel
