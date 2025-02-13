@@ -261,3 +261,13 @@ export function isValidURL(value) {
   }
   return url.protocol === 'http:' || url.protocol === 'https:';
 }
+
+export function listingsQueryParamsHandler(queryParams) {
+  const { page = 1, pub_listingType, pub_categoryLevel1, pub_listingId } = queryParams;
+  return {
+    pub_listingType,
+    ...(pub_categoryLevel1 ? { pub_categoryLevel1 } : {}),
+    ...(pub_listingId ? { pub_listingId } : {}),
+    page,
+  };
+}

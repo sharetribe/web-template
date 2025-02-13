@@ -7,6 +7,7 @@ import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { FormattedMessage } from '../../util/reactIntl';
 import { createResourceLocatorString } from '../../util/routes';
 import { LISTING_GRID_ROLE, LISTING_GRID_DEFAULTS, LISTING_TAB_TYPES } from '../../util/types';
+import { listingsQueryParamsHandler } from '../../util/urlHelpers';
 import { PAGE_MODE_EDIT, PAGE_MODE_NEW } from '../../containers/BatchEditListingPage/constants';
 
 import { H3, ScrollableLinks } from '../';
@@ -36,12 +37,12 @@ export const ListingTabs = ({
 
   const listingsAreLoaded = !queryInProgress;
   const defaultListingType = LISTING_GRID_DEFAULTS.TYPE;
+  const listingsQueryParams = listingsQueryParamsHandler(queryParams);
   const currentListingType = queryParams.pub_listingType || defaultListingType;
   const hasNoResults = listingsAreLoaded && !items.length;
   const withCategories = !!(categories && categories.length);
   const enableGrid = listingsAreLoaded && !queryListingsError;
   const enablePagination = listingsAreLoaded && pagination && pagination.totalPages > 1;
-  const page = queryParams ? queryParams.page : 1;
   const { pageName, tabs, enableCategoryTabs, enableListingManagement } = getTabsFeaturesForRole(
     role,
     hideReviews
@@ -100,12 +101,7 @@ export const ListingTabs = ({
                 <AntButton
                   type="text"
                   className={css.actionButton}
-                  onClick={() =>
-                    goToManageListing(PAGE_MODE_EDIT, {
-                      category: currentCategory,
-                      type: currentListingType,
-                    })
-                  }
+                  onClick={() => goToManageListing(PAGE_MODE_EDIT, listingsQueryParams)}
                 >
                   <FormattedMessage id="ListingTabs.manageButton" />
                 </AntButton>
@@ -139,7 +135,11 @@ export const ListingTabs = ({
           items={tabs.map(tab => ({ ...tab, children: contentRenderer }))}
         />
         {enablePagination && (
-          <Pagination pageName={pageName} pageSearchParams={{ page }} pagination={pagination} />
+          <Pagination
+            pageName={pageName}
+            pageSearchParams={listingsQueryParams}
+            pagination={pagination}
+          />
         )}
       </div>
     </div>

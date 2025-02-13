@@ -20,7 +20,11 @@ export async function createUppyInstance(meta, onBeforeUpload) {
     const uppy = new Uppy({
       onBeforeUpload,
       restrictions: {
-        allowedFileTypes: ['image/*', 'video/*'],
+        /**
+         * [TODO:] Enable videos before release
+         */
+        // allowedFileTypes: ['image/*', 'video/*'],
+        allowedFileTypes: ['image/*'],
         maxNumberOfFiles: MAX_NUMBER_OF_FILES,
         maxFileSize: MAX_FILE_SIZE_GB * 1024 * 1024 * 1024, // byte to GB
         maxTotalFileSize: MAX_TOTAL_FILE_SIZE_GB * 1024 * 1024 * 1024, // byte to GB

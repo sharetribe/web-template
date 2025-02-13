@@ -99,8 +99,8 @@ export const ManageListingsPageComponent = props => {
       case LISTING_TAB_TYPES.PORTFOLIO: {
         const invalidCategoryType = !queryParams.pub_listingId;
         const listingsAvailable = !queryInProgress && !!currentCategory;
-        const shouldUpdate = invalidCategoryType && listingsAvailable;
-        if (shouldUpdate) {
+        const shouldUpdateRoute = invalidCategoryType && listingsAvailable;
+        if (shouldUpdateRoute) {
           updatePortfolioRoute(currentCategory);
         }
         break;

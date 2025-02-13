@@ -10,7 +10,10 @@ import {
 } from '../../util/currency';
 import { LISTING_TYPES } from '../../util/types';
 import { parse } from '../../util/urlHelpers';
-import { queryListingsError } from '../ManageListingsPage/ManageListingsPage.duck';
+import {
+  RESULT_PAGE_SIZE,
+  queryListingsError,
+} from '../ManageListingsPage/ManageListingsPage.duck';
 import { storableError } from '../../util/errors';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import {
@@ -21,7 +24,6 @@ import {
   MAX_KEYWORDS,
   NO_RELEASES,
   PAGE_MODE_NEW,
-  RESULT_PAGE_SIZE,
   USAGE_EDITORIAL,
   YES_RELEASES,
 } from './constants';
@@ -598,8 +600,13 @@ export const queryOwnListings = queryParams => (dispatch, getState, sdk) => {
     payload: { queryParams },
   });
 
-  const { perPage, ...rest } = queryParams;
+  const { perPage, pub_listingId, ...rest } = queryParams;
+  const validListingType = !!queryParams.pub_listingType;
+  const validCategoryType = !!queryParams.pub_categoryLevel1;
+  const validRequestParams = validListingType || validCategoryType;
   const params = { ...rest, perPage };
+
+  if (!validRequestParams) return;
 
   // noinspection JSCheckFunctionSignatures
   return sdk.ownListings
@@ -632,16 +639,8 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
 
   const { mode } = params;
   if (mode !== PAGE_MODE_NEW) {
-    const pageQueryParams = parse(search);
-    const page = pageQueryParams.page || 1;
-    const queryParams = {};
-    if (pageQueryParams.category) {
-      queryParams.pub_categoryLevel1 = pageQueryParams.category;
-    }
-    if (pageQueryParams.type) {
-      queryParams.pub_listingType = pageQueryParams.type;
-    }
-
+    const queryParams = parse(search);
+    const page = queryParams.page || 1;
     dispatch(
       queryOwnListings({
         ...queryParams,

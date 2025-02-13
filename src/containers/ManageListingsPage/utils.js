@@ -85,6 +85,7 @@ export function routeHandler(createManageLocatorString) {
     const queryParams = {
       pub_listingType: LISTING_TAB_TYPES.PRODUCT,
       pub_categoryLevel1: LISTING_GRID_DEFAULTS.CATEGORY(LISTING_TABS_PRODUCT_CATEGORIES),
+      page: 1,
     };
     createManageLocatorString(queryParams);
   }
@@ -93,6 +94,7 @@ export function routeHandler(createManageLocatorString) {
     const queryParams = {
       pub_listingType: LISTING_TAB_TYPES.PORTFOLIO,
       ...(listingId ? { pub_listingId: listingId } : {}),
+      page: 1,
     };
     createManageLocatorString(queryParams);
   }

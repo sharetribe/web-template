@@ -5,7 +5,7 @@ let INTEGRATION_SDK = null;
 // (1 minutes = 60 seconds) && (1 second = 1000 ms) && (1 minute = 60*1000 ms)
 const MS_IN_MINUTE = 60 * 1000;
 const EVENTS_BATCH_SIZE = 15;
-const EVENTS_BATCH_DELAY = 1 * MS_IN_MINUTE;
+const EVENTS_BATCH_DELAY = 1.5 * MS_IN_MINUTE;
 
 async function processInBatches(array, process) {
   const totalEvents = array.length;
@@ -59,12 +59,9 @@ function generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, analyzeEve
     // Polling interval (in ms) when all events have been fetched.
     // PROD: Keeping this at 1 minute or more is a good idea.
     // DEV: We use 10 seconds so that the data is printed without much delay.
-
-    // const pollIdleWait = dev ? 10000 : 5 * MS_IN_MINUTE;
-    const pollIdleWait = dev ? 10000 : 2 * MS_IN_MINUTE;
-
+    const pollIdleWait = dev ? 10000 : 5 * MS_IN_MINUTE;
     // Polling interval (in ms) when a full page of events is received and there may be more
-    const pollWait = 1 * MS_IN_MINUTE;
+    const pollWait = 3 * MS_IN_MINUTE;
     // File to keep state across restarts. Stores the last seen event sequence ID,
     // which allows continuing polling from the correct place
     const stateFile = `server/scripts/events/cache/${SCRIPT_NAME}.state`;
