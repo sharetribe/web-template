@@ -48,7 +48,11 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
         showDetailCardHeadings: true,
         showActionButtons: true,
         showExtraInfo: true,
-        primaryButtonProps: actionButtonProps(transitions.MARK_RECEIVED_FROM_PURCHASED, CUSTOMER),
+        primaryButtonProps: actionButtonProps(transitions.MARK_RECEIVED_FROM_PURCHASED, CUSTOMER, {
+          isConfirmNeeded: true,
+          showConfirmStatement: true,
+          showRemindStatement: true,
+        }),
       };
     })
     .cond([states.PURCHASED, PROVIDER], () => {
@@ -62,6 +66,9 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
         showDetailCardHeadings: true,
         showActionButtons: true,
         primaryButtonProps: actionButtonProps(transitions.MARK_DELIVERED, PROVIDER, {
+          isConfirmNeeded: true,
+          showConfirmStatement: true,
+          showRemindStatement: true,
           actionButtonTranslationId,
         }),
       };
@@ -73,7 +80,11 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
         showDetailCardHeadings: true,
         showDispute: true,
         showActionButtons: true,
-        primaryButtonProps: actionButtonProps(transitions.MARK_RECEIVED, CUSTOMER),
+        primaryButtonProps: actionButtonProps(transitions.MARK_RECEIVED, CUSTOMER, {
+          isConfirmNeeded: true,
+          showConfirmStatement: true,
+          showRemindStatement: true,
+        }),
       };
     })
     .cond([states.COMPLETED, _], () => {

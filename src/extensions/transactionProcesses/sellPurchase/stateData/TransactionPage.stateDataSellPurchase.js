@@ -39,8 +39,27 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
     .cond([states.INQUIRY, PROVIDER], () => {
       return { processName, processState, showDetailCardHeadings: true };
     })
-    .cond([states.PURCHASE_CONFIRMED_BY_BUYER, _], () => {
+    .cond([states.PURCHASE_CONFIRMED_BY_BUYER, CUSTOMER], () => {
       return { processName, processState, showDetailCardHeadings: true };
+    })
+    .cond([states.PURCHASE_CONFIRMED_BY_BUYER, PROVIDER], () => {
+      return {
+        processName,
+        processState,
+        showDetailCardHeadings: true,
+        showActionButtons: true,
+        primaryButtonProps: actionButtonProps(transitions.SELLER_CONFIRM_PURCHASE, PROVIDER, {
+          isConfirmNeeded: true,
+          showConfirmStatement: true,
+          showRemindStatement: true,
+        }),
+        secondaryButtonProps: actionButtonProps(
+          transitions.SELLER_REFUND_BEFORE_SELLER_CONFIRMED,
+          PROVIDER,
+          {
+            isConfirmNeeded: true,
+          }),
+      };
     })
     .cond([states.PAYMENT_EXPIRED, _], () => {
       return { processName, processState, showDetailCardHeadings: true };

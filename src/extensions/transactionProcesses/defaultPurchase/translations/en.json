@@ -1,0 +1,8 @@
+{
+  "PrimaryConfirmActionModal.default-purchase.purchased.customer.confirmStatement": "I confirm that I have met with the property manager and I have or will coordinate moving my machine into place.",
+  "PrimaryConfirmActionModal.default-purchase.purchased.provider.confirmStatement": "I confirm that I have coordinated a meeting between the buyer and property manager.",
+  "PrimaryConfirmActionModal.default-purchase.delivered.customer.confirmStatement": "I confirm that I have met with the property manager and I have or will coordinate moving my machine into place.",
+  "PrimaryConfirmActionModal.default-purchase.purchased.customer.reminderStatement": "I understand that once I confirm, the sale will be final.",
+  "PrimaryConfirmActionModal.default-purchase.purchased.provider.reminderStatement": "I understand that as a representative of the property manager, I will cancel the order if the property manager requests it.",
+  "PrimaryConfirmActionModal.default-purchase.delivered.customer.reminderStatement": "I understand that once I confirm, the sale will be final."
+}
