@@ -32,6 +32,38 @@ export const bookingTimeUnits = {
 };
 
 /**
+ * Rounding function for moment.js. Rounds a moment instance
+ * to the start of the specified duration in minutes.
+ *
+ * Note 1: working with other time units (like 'day') would require handling time zones
+ *        and DST changes.
+ *
+ * Note 2: moment uses the previously set time zone for UTC offset.
+ *         The same thing could be done without the moment library,
+ *         but you'd need to check the UTC offset on every adjustment to the time.
+ *         https://stackoverflow.com/a/74377652
+ *
+ * @example
+ * moment('2025-02-06T10:33:00.000Z').tz('Etc/UTC').startOfDuration(30).toISOString()
+ * // => 2025-02-06T10:30:00.000Z
+ *
+ * @example
+ * moment('2025-02-06T10:48:00.000Z').tz('Etc/UTC').startOfDuration(15).toISOString()
+ * // => 2025-02-06T10:45:00.000Z
+ *
+ * @param {number} unitCount the number of units in the duration
+ * @returns Moment rounded to the start of the specified duration interval
+ */
+moment.fn.startOfMinuteBasedInterval = function(unitCount) {
+  const durationInMs = moment.duration(unitCount, 'minutes').asMilliseconds();
+
+  // Calculate the number of durations since 1970-01-01 00:00:00
+  const durationCount = Math.floor(this.valueOf() / durationInMs);
+  // Return a moment that is rounded to the start of the previous whole number of durations
+  return moment(durationCount * durationInMs);
+};
+
+/**
  * Check if the browser's DateTimeFormat API supports time zones.
  *
  * @returns {Boolean} true if the browser returns current time zone.
@@ -673,6 +705,8 @@ const findBookingUnitBoundaries = params => {
  * @example
  * findNextBoundary(new Date('2025-02-06T00:22:00.000Z'), 1, 'hour', 'Europe/Helsinki').toISOString()
  * => 2025-02-06T01:00:00.000Z
+ * findNextBoundary(new Date('2025-02-06T00:22:00.000Z'), 1, 'quarterHour', 'Europe/Helsinki').toISOString()
+ * => 2025-02-06T00:30:00.000Z
  *
  * @param {Moment|Date} Start point for looking next sharp hour.
  * @param {Number} unitCount number of time units to add.
@@ -682,12 +716,34 @@ const findBookingUnitBoundaries = params => {
  * @returns {Array} an array of boundary data. e.g. [{timestamp: 1707484800000, timeOfDay: '12:00'}]
  */
 export const findNextBoundary = (currentDate, unitCount, timeUnit, timeZone) => {
-  return moment(currentDate)
-    .clone()
-    .tz(timeZone)
-    .add(unitCount, timeUnit)
-    .startOf(timeUnit)
-    .toDate();
+  const customTimeUnitConfig = bookingTimeUnits[timeUnit]?.isCustom
+    ? bookingTimeUnits[timeUnit]
+    : null;
+
+  if (!!customTimeUnitConfig) {
+    // If the time unit is custom, we need to use startOfMinuteBasedInterval function to adjust 00, 15, 30, 45 rounding.
+    const customTimeUnitInMinutes = customTimeUnitConfig?.timeUnitInMinutes;
+    const minuteOffset = !!customTimeUnitInMinutes
+      ? unitCount * customTimeUnitInMinutes
+      : unitCount;
+
+    return moment(currentDate)
+      .clone()
+      .tz(timeZone)
+      .add(minuteOffset, 'minute')
+      .startOfMinuteBasedInterval(customTimeUnitInMinutes)
+      .toDate();
+  } else {
+    // Other time units are handled with the default moment.js functions
+    return moment(currentDate)
+      .clone()
+      .tz(timeZone)
+      .add(unitCount, timeUnit)
+      .startOf(timeUnit)
+      .toDate();
+  }
+};
+
 /**
  * Find the boundaries using the given time unit.
  *
