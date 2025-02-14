@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Add fixed bookings and price variant name support to booking process email templates.
+  [#552](https://github.com/sharetribe/web-template/pull/552)
 - [fix] LocationAutocompleteInput: fix a bug with Google Maps API loading order with Webpack Dev
   Server. [#548](https://github.com/sharetribe/web-template/pull/548)
 
