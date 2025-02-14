@@ -31,7 +31,10 @@
                   {{/ eq}}{{#eq "line-item/night" code}}
                 <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">
                   {{t "BookingMoneyPaid.ContentForNightly" "We have sent you {amount,number,::.00} {currency} for the booking of {listingTitle} from {dateStart,date,::YYYYMMMd} to {dateEnd,date,::YYYYMMMd} by {customerDisplayName}. It might take up to 7 days for the money to reach your bank account." amount=payout-total.amount currency=payout-total.currency listingTitle=listing.title dateStart=booking.start dateEnd=booking.end customerDisplayName=customer.display-name}}
-                </p>{{/ eq}}{{/each}}
+                </p>{{/eq}}{{#eq "line-item/fixed" code}}
+                <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">
+                  {{t "BookingMoneyPaid.ContentForFixed" "We have sent you {amount,number,::.00} {currency} for the booking of {listingTitle} from {dateStart,date,::jmmYYYYMMMd} to {dateEnd,date,::jmmYYYYMMMd} by {customerDisplayName}. It might take up to 7 days for the money to reach your bank account." amount=payout-total.amount currency=payout-total.currency listingTitle=listing.title dateStart=booking.start dateEnd=booking.end customerDisplayName=customer.display-name}}
+                </p>{{/eq}}{{/each}}
                 <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "BookingMoneyPaid.BookingBreakdownTitle" "Here's the booking breakdown."}}</p>
                 <table style="color:#484848;font-size:16px;line-height:1.4;background-color:#FFF;padding:8px 24px;border-radius:8px;border:1px solid;border-color:#E1E1E1;margin:24px 0" align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                   <tbody>
