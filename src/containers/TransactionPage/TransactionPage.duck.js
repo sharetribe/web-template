@@ -655,7 +655,8 @@ const sendReviewAsSecond = (txId, transition, params, dispatch, sdk, config) => 
 // However, the other party might have made the review after previous data synch point.
 // So, error is likely to happen and then we must try another state transition
 // by calling sendReviewAsSecond().
-const sendReviewAsFirst = (txId, transition, params, dispatch, sdk, config) => {
+const sendReviewAsFirst = (txId, transition, params, dispatch, sdk, config, options = {}) => {
+  const { reviewAsSecond: reviewAsSecondTransition } = options;
   const include = REVIEW_TX_INCLUDES;
 
   return sdk.transactions
@@ -670,8 +671,15 @@ const sendReviewAsFirst = (txId, transition, params, dispatch, sdk, config) => {
     })
     .catch(e => {
       // If transaction transition is invalid, lets try another endpoint.
-      if (isTransactionsTransitionInvalidTransition(e)) {
-        return sendReviewAsSecond(id, params, role, dispatch, sdk);
+      if (isTransactionsTransitionInvalidTransition(e) && reviewAsSecondTransition) {
+        return sendReviewAsSecond(
+          txId,
+          reviewAsSecondTransition,
+          params,
+          dispatch,
+          sdk,
+          config
+        );
       } else {
         dispatch(sendReviewError(storableError(e)));
 
@@ -692,7 +700,7 @@ export const sendReview = (tx, transitionOptionsInfo, params, config) => (
 
   return hasOtherPartyReviewedFirst
     ? sendReviewAsSecond(tx?.id, reviewAsSecond, params, dispatch, sdk, config)
-    : sendReviewAsFirst(tx?.id, reviewAsFirst, params, dispatch, sdk, config);
+    : sendReviewAsFirst(tx?.id, reviewAsFirst, params, dispatch, sdk, config, { reviewAsSecond });
 };
 
 const isNonEmpty = value => {
