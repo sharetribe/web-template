@@ -96,11 +96,12 @@ export const IncludeScripts = props => {
   }
 
   // FB script start
-  // test deployment
-  console.log('Deployed test.js to production on 2025-02-13');
   
   analyticsLibraries.push(
-    <script key='fb'>
+    <script 
+      key='fb'
+      nonce="6770d74824cc53512837f5654ab230448eb462060b125345d743c1a60c4229d5"
+    >
       {`
         !function(f,b,e,v,n,t,s)
         {if(f.fbq)return;n=f.fbq=function(){n.callMethod?

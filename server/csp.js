@@ -147,14 +147,16 @@ exports.csp = (reportUri, reportOnly) => {
   // const exampleImgSrc = imgSrc.concat('my-custom-domain.example.com');
 
   // new FB code
-  // test deployment
-  console.log('Deployed test.js to production on 2025-02-13');
   
   const { imgSrc = [self] } = defaultDirectives;
   const imgSrcOverride = imgSrc.concat('www.facebook.com');
 
   const { scriptSrc = [self] } = defaultDirectives;
-  const scriptSrcOverride = scriptSrc.concat('connect.facebook.net', 'www.facebook.com');
+  const scriptSrcOverride = scriptSrc.concat(
+    'connect.facebook.net',
+    'www.facebook.com',
+    `'nonce-6770d74824cc53512837f5654ab230448eb462060b125345d743c1a60c4229d5'`
+  );
 
   const { frameSrc = [self ] } = defaultDirectives;
   const frameSrcOverride = frameSrc.concat('connect.facebook.net', 'www.facebook.com');
@@ -169,15 +171,7 @@ exports.csp = (reportUri, reportOnly) => {
     frameSrc: frameSrcOverride,
     connectSrc: connectSrcOverride
   };
-  // end new FB code
   
-  // replaced by FB code
-  // const customDirectives = {
-    // Example: Add custom directive override
-    // imgSrc: exampleImgSrc,
-  // };
-  // end replaced by FB code
-
   // ================ END CUSTOM CSP URLs ================ //
 
   // Helmet v4 expects every value to be iterable so strings or booleans are not supported directly
