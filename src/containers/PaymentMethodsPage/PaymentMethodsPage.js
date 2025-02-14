@@ -150,7 +150,7 @@ const PaymentMethodsPageComponent = props => {
     ? `${ensuredCurrentUser.attributes.profile.firstName} ${ensuredCurrentUser.attributes.profile.lastName}`
     : null;
 
-  const initalValuesForStripePayment = { name: userName };
+  const initialValuesForStripePayment = { name: userName };
 
   const card = hasDefaultPaymentMethod
     ? ensurePaymentMethodCard(currentUser.stripeCustomer.defaultPaymentMethod).attributes.card
@@ -194,7 +194,7 @@ const PaymentMethodsPageComponent = props => {
                 <PaymentMethodsForm
                   className={css.paymentForm}
                   formId="PaymentMethodsForm"
-                  initialValues={initalValuesForStripePayment}
+                  initialValues={initialValuesForStripePayment}
                   onSubmit={handleSubmit}
                   handleRemovePaymentMethod={handleRemovePaymentMethod}
                   hasDefaultPaymentMethod={hasDefaultPaymentMethod}
