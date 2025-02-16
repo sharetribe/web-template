@@ -188,7 +188,10 @@ export const InboxItem = props => {
           <div className={css.itemMessage}>
             {(() => {
               const lastMessage = tx.messages[tx.messages.length - 1];
-              const messageContent = lastMessage?.attributes?.content?.slice(0, 67) + '...';
+              let messageContent = lastMessage?.attributes?.content?.slice(0, 67);
+              if (messageContent.length < lastMessage?.attributes?.content?.length) {
+                messageContent += '...';
+              }
               const messageDate = new Date(lastMessage?.attributes?.createdAt).toLocaleDateString();
 
               return (
