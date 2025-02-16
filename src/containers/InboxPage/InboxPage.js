@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { arrayOf, bool, number, oneOf, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -44,7 +44,7 @@ import {
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
-
+import { Search } from 'lucide-react';
 import { stateDataShape, getStateData } from './InboxPage.stateData';
 import css from './InboxPage.module.css';
 
@@ -207,8 +207,37 @@ export const InboxPageComponent = props => {
     return <NotFoundPage staticContext={props.staticContext} />;
   }
 
+  // Retrieve the search query from sessionStorage or default to an empty string
+  const initialSearchQuery = sessionStorage.getItem('searchQuery') || '';
+
+  const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
+
+  const handleSearchChange = event => {
+    const newQuery = event.target.value;
+    setSearchQuery(newQuery);
+    sessionStorage.setItem('searchQuery', newQuery); // Store the search query in sessionStorage
+  };
+
+  // Filter transactions based on the local search query
+  const filteredTransactions = transactions.filter(tx => {
+    const { customer, provider, listing, messages } = tx;
+    const searchLower = searchQuery.toLowerCase();
+
+    const customerName = customer.attributes.profile.displayName.toLowerCase();
+    const providerName = provider.attributes.profile.displayName.toLowerCase();
+    const listingTitle = listing.attributes.title.toLowerCase();
+    const messageContents = messages.map(msg => msg.attributes.content.toLowerCase());
+
+    return (
+      customerName.includes(searchLower) ||
+      providerName.includes(searchLower) ||
+      listingTitle.includes(searchLower) ||
+      messageContents.some(content => content.includes(searchLower))
+    );
+  });
+
   const isOrders = tab === 'orders';
-  const hasNoResults = !fetchInProgress && transactions.length === 0 && !fetchOrdersOrSalesError;
+  const hasNoResults = !fetchInProgress && filteredTransactions.length === 0 && !fetchOrdersOrSalesError;
   const ordersTitle = intl.formatMessage({ id: 'InboxPage.ordersTitle' });
   const salesTitle = intl.formatMessage({ id: 'InboxPage.salesTitle' });
   const title = isOrders ? ordersTitle : salesTitle;
@@ -301,10 +330,22 @@ export const InboxPageComponent = props => {
         }
         sideNav={
           <>
-            <H2 as="h1" className={css.title}>
-              <FormattedMessage id="InboxPage.title" />
-            </H2>
-            <TabNav rootClassName={css.tabs} tabRootClassName={css.tab} tabs={tabs} />{' '}
+            <div className={css.titleContainer}>
+              <H2 as="h1" className={css.title}>
+                <FormattedMessage id="InboxPage.title" />
+              </H2>
+              <div className={css.searchContainer}>
+                <Search className={css.searchIcon} />
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  className={css.searchBox}
+                />
+              </div>
+            </div>
+            <TabNav rootClassName={css.tabs} tabRootClassName={css.tab} tabs={tabs} />
           </>
         }
         footer={<FooterContainer />}
@@ -316,7 +357,7 @@ export const InboxPageComponent = props => {
         ) : null}
         <ul className={css.itemList}>
           {!fetchInProgress ? (
-            transactions.map(toTxItem)
+            filteredTransactions.map(toTxItem)
           ) : (
             <li className={css.listItemsLoading}>
               <IconSpinner />
@@ -325,7 +366,7 @@ export const InboxPageComponent = props => {
           {hasNoResults ? (
             <li key="noResults" className={css.noResults}>
               <FormattedMessage
-                id={isOrders ? 'InboxPage.noOrdersFound' : 'InboxPage.noSalesFound'}
+                id={searchQuery ? 'InboxPage.noResults' : isOrders ? 'InboxPage.noOrdersFound' : 'InboxPage.noSalesFound'}
               />
             </li>
           ) : null}

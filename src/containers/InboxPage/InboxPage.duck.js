@@ -71,7 +71,7 @@ const fetchOrdersOrSalesError = e => ({
 
 // ================ Thunks ================ //
 
-const INBOX_PAGE_SIZE = 10;
+const INBOX_PAGE_SIZE = 100;
 
 export const loadData = (params, search) => (dispatch, getState, sdk) => {
   const { tab } = params;
@@ -100,6 +100,7 @@ export const loadData = (params, search) => (dispatch, getState, sdk) => {
       'customer',
       'customer.profileImage',
       'booking',
+      'messages',
     ],
     'fields.transaction': [
       'processName',
@@ -109,6 +110,7 @@ export const loadData = (params, search) => (dispatch, getState, sdk) => {
       'payinTotal',
       'payoutTotal',
       'lineItems',
+      'messages',
     ],
     'fields.listing': ['title', 'availabilityPlan', 'publicData.listingType'],
     'fields.user': ['profile.displayName', 'profile.abbreviatedName', 'deleted', 'banned'],
