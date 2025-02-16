@@ -41,7 +41,9 @@ const ActionButtonsMaybe = props => {
     buttonText: primaryButtonText,
     isConfirmNeeded: primaryIsConfirmNeeded,
     showConfirmStatement: primaryShowConfirmStatement,
-    showRemindStatement: primaryShowRemindStatement,
+    showReminderStatement: primaryShowReminderStatement,
+    confirmStatementTranslationId: primaryConfirmStatementTranslationId,
+    reminderStatementTranslationId: primaryReminderStatementTranslationId,
     confirmButtonTranslationId: primaryConfirmButtonTranslationId,
     confirmModalTitleTranslationId: primaryConfirmModalTitleTranslationId,
   } = primaryButtonProps || {};
@@ -51,7 +53,9 @@ const ActionButtonsMaybe = props => {
     buttonText: secondaryButtonText,
     isConfirmNeeded: secondaryIsConfirmNeeded,
     showConfirmStatement: secondaryShowConfirmStatement,
-    showRemindStatement: secondaryShowRemindStatement,
+    showReminderStatement: secondaryShowReminderStatement,
+    confirmStatementTranslationId: secondaryConfirmStatementTranslationId,
+    reminderStatementTranslationId: secondaryReminderStatementTranslationId,
     confirmButtonTranslationId: secondaryConfirmButtonTranslationId,
     confirmModalTitleTranslationId: secondaryConfirmModalTitleTranslationId,
   } = secondaryButtonProps || {};
@@ -105,24 +109,30 @@ const ActionButtonsMaybe = props => {
       <div>
         <h2 className="marketplaceModalTitleStyles">
           {intl.formatMessage({
-            id: primaryConfirmModalTitleTranslationId || 'PrimaryConfirmActionModal.modalTitle',
+            id:
+              primaryConfirmModalTitleTranslationId ||
+              'TransactionPage.PrimaryConfirmActionModal.modalTitle',
           })}
         </h2>
 
         {primaryShowConfirmStatement && (
           <p>
             {intl.formatMessage({
-              id: `PrimaryConfirmActionModal.${processName}.${processState}.${transactionRole}.confirmStatement`,
+              id:
+                primaryConfirmStatementTranslationId ||
+                `TransactionPage.PrimaryConfirmActionModal.${processName}.${processState}.${transactionRole}.confirmStatement`,
             })}
           </p>
         )}
 
-        {primaryShowRemindStatement && (
+        {primaryShowReminderStatement && (
           <div className="reminderBox">
             <SquareCheck className={css.confirmModalCheckBoxIcon} />
 
             {intl.formatMessage({
-              id: `PrimaryConfirmActionModal.${processName}.${processState}.${transactionRole}.reminderStatement`,
+              id:
+                primaryReminderStatementTranslationId ||
+                `TransactionPage.PrimaryConfirmActionModal.${processName}.${processState}.${transactionRole}.reminderStatement`,
             })}
           </div>
         )}
@@ -137,7 +147,9 @@ const ActionButtonsMaybe = props => {
             }
           >
             {intl.formatMessage({
-              id: primaryConfirmButtonTranslationId || 'PrimaryConfirmActionModal.confirmButton',
+              id:
+                primaryConfirmButtonTranslationId ||
+                'TransactionPage.PrimaryConfirmActionModal.confirmButton',
             })}
           </PrimaryButton>
         </div>
@@ -174,37 +186,47 @@ const ActionButtonsMaybe = props => {
       <div>
         <h2 className="marketplaceModalTitleStyles">
           {intl.formatMessage({
-            id: secondaryConfirmModalTitleTranslationId || 'SecondaryConfirmActionModal.modalTitle',
+            id:
+              secondaryConfirmModalTitleTranslationId ||
+              'TransactionPage.SecondaryConfirmActionModal.modalTitle',
           })}
         </h2>
 
         {secondaryShowConfirmStatement && (
           <p>
             {intl.formatMessage({
-              id: `SecondaryConfirmActionModal.${processName}.${processState}.${transactionRole}.confirmStatement`,
+              id:
+                secondaryConfirmStatementTranslationId ||
+                `TransactionPage.SecondaryConfirmActionModal.${processName}.${processState}.${transactionRole}.confirmStatement`,
             })}
           </p>
         )}
 
-        {secondaryShowRemindStatement && (
+        {secondaryShowReminderStatement && (
           <div className="reminderBox">
             <SquareCheck className={css.confirmModalCheckBoxIcon} />
 
             {intl.formatMessage({
-              id: `SecondaryConfirmActionModal.${processName}.${processState}.${transactionRole}.reminderStatement`,
+              id:
+                secondaryReminderStatementTranslationId ||
+                `TransactionPage.SecondaryConfirmActionModal.${processName}.${processState}.${transactionRole}.reminderStatement`,
             })}
           </div>
         )}
 
         <div style={{ display: 'flex', gap: '16px', justifyContent: 'flex-end' }}>
-          <PrimaryButton onClick={() =>
+          <PrimaryButton
+            onClick={() =>
               handleConfirmModal({
                 onAction: primaryOnAction,
                 setIsModalOpen: setIsPrimaryConfirmModalOpen,
-              })}>
+              })
+            }
+          >
             {intl.formatMessage({
               id:
-                secondaryConfirmButtonTranslationId || 'SecondaryConfirmActionModal.confirmButton',
+                secondaryConfirmButtonTranslationId ||
+                'TransactionPage.SecondaryConfirmActionModal.confirmButton',
             })}
           </PrimaryButton>
         </div>

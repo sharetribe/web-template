@@ -137,6 +137,7 @@
 
   {:name :transitions/buyer-mark-complete,
    :actor :actor.role/customer,
+   :privileged? true,
    :actions
    [{:name :action/stripe-create-payout}],
    :from :state/stripe-intent-captured,
@@ -211,6 +212,7 @@
 
   {:name :transitions/buyer-mark-complete-refund-disabled,
    :actor :actor.role/customer,
+   :privileged? true,
    :actions
    [{:name :action/stripe-create-payout}],
    :from :state/refund-disabled,

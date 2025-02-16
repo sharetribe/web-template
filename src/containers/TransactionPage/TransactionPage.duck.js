@@ -20,6 +20,7 @@ import {
 
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { fetchCurrentUserNotifications } from '../../ducks/user.duck';
+import { markProgress } from '../../extensions/transactionProcesses/sellPurchase/api';
 
 const { UUID } = sdkTypes;
 
@@ -672,14 +673,7 @@ const sendReviewAsFirst = (txId, transition, params, dispatch, sdk, config, opti
     .catch(e => {
       // If transaction transition is invalid, lets try another endpoint.
       if (isTransactionsTransitionInvalidTransition(e) && reviewAsSecondTransition) {
-        return sendReviewAsSecond(
-          txId,
-          reviewAsSecondTransition,
-          params,
-          dispatch,
-          sdk,
-          config
-        );
+        return sendReviewAsSecond(txId, reviewAsSecondTransition, params, dispatch, sdk, config);
       } else {
         dispatch(sendReviewError(storableError(e)));
 
@@ -756,4 +750,42 @@ export const loadData = (params, search, config) => (dispatch, getState) => {
     dispatch(fetchMessages(txId, 1, config)),
     dispatch(fetchNextTransitions(txId)),
   ]);
+};
+
+// Function to mark sell-purchase transactions progress
+// in state PURCHASED, STRIPE_INTENT_CAPTURE, REFUND_DISABLED
+// and transition to COMPLETED
+// Treat it as a pseudo-transition
+export const markProgressSellPurchase = (txId, transitionName) => async (
+  dispatch,
+  getState,
+  sdk
+) => {
+  if (transitionInProgress(getState())) {
+    return Promise.reject(new Error('Transition already in progress'));
+  }
+  dispatch(transitionRequest(transitionName));
+
+  try {
+    const response = await markProgress(txId);
+
+    dispatch(addMarketplaceEntities(response));
+    dispatch(transitionSuccess());
+    dispatch(fetchCurrentUserNotifications());
+
+    // There could be automatic transitions after this transition
+    // For example mark-received-from-purchased > auto-complete.
+    // Here, we make 1-2 delayed updates for the tx entity.
+    // This way "leave a review" link should show up for the customer.
+    refreshTransactionEntity(sdk, txId, dispatch);
+
+    return response;
+  } catch (e) {
+    dispatch(transitionError(storableError(e)));
+    log.error(e, `${transitionName}-failed`, {
+      txId,
+      transition: transitionName,
+    });
+    throw e;
+  }
 };

@@ -6,6 +6,7 @@ import {
   resolveLatestProcessName,
 } from '../../transactions/transaction';
 import { SELL_PURCHASE_PROCESS_NAME } from '../../extensions/transactionProcesses/sellPurchase/transactions/transactionProcessSellPurchase.js';
+import { MARK_PROGRESS_TRANSITION_NAME } from '../../extensions/transactionProcesses/sellPurchase/constants.js';
 import { getStateDataForBookingProcess } from './TransactionPage.stateDataBooking.js';
 import { getStateDataForInquiryProcess } from './TransactionPage.stateDataInquiry.js';
 import { getStateDataForPurchaseProcess } from './TransactionPage.stateDataPurchase.js';
@@ -89,6 +90,7 @@ export const getStateData = (params, process) => {
     transitionInProgress,
     transitionError,
     onTransition,
+    onMarkProgressSellPurchase,
     sendReviewInProgress,
     sendReviewError,
     onOpenReviewModal,
@@ -123,6 +125,21 @@ export const getStateData = (params, process) => {
     actionButtonTranslationErrorId: 'TransactionPage.leaveReview.actionError',
   });
 
+  const getMarkSellPurchaseProgressProps = (forRole, extra = {}) =>
+    getActionButtonPropsMaybe(
+      {
+        processName,
+        transitionName: MARK_PROGRESS_TRANSITION_NAME,
+        transactionRole,
+        intl,
+        inProgress: transitionInProgress === MARK_PROGRESS_TRANSITION_NAME,
+        transitionError,
+        onAction: () => onMarkProgressSellPurchase(transaction?.id, MARK_PROGRESS_TRANSITION_NAME),
+        ...extra,
+      },
+      forRole
+    );
+
   const processInfo = () => {
     const { getState, states, transitions } = process;
     const processState = getState(transaction);
@@ -134,6 +151,7 @@ export const getStateData = (params, process) => {
       isCustomer,
       actionButtonProps: getActionButtonProps,
       leaveReviewProps: getLeaveReviewProps,
+      markSellPurchaseProgressProps: getMarkSellPurchaseProgressProps,
     };
   };
 
