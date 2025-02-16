@@ -44,7 +44,7 @@ import {
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
-import { Search } from 'lucide-react';
+import { Search, MessagesSquare } from 'lucide-react';
 import { stateDataShape, getStateData } from './InboxPage.stateData';
 import css from './InboxPage.module.css';
 
@@ -122,6 +122,7 @@ export const InboxItem = props => {
     stateData,
     isBooking,
     stockType = STOCK_MULTIPLE_ITEMS,
+    currentUser,
   } = props;
   const { customer, provider, listing } = tx;
   const { processName, processState, actionNeeded, isSaleNotification, isFinal } = stateData;
@@ -148,6 +149,11 @@ export const InboxItem = props => {
     [css.stateNoActionNeeded]: !actionNeeded,
   });
 
+  console.log('currentUser',currentUser.id.uuid);
+  console.log('tx',tx.messages[tx.messages.length - 1]);
+  console.log("transasctionRole",transactionRole);
+  console.log("stateData",stateData);
+  console.log("--------------------------------");
   return (
     <div className={css.item}>
       <div className={css.itemAvatar}>
@@ -161,6 +167,7 @@ export const InboxItem = props => {
         <div className={css.rowNotificationDot}>{rowNotificationDot}</div>
         <div className={css.itemUsername}>{otherUserDisplayName}</div>
         <div className={css.itemTitle}>{listing?.attributes?.title}</div>
+        
         <div className={css.itemDetails}>
           {isBooking ? (
             <BookingTimeInfoMaybe transaction={tx} />
@@ -176,6 +183,25 @@ export const InboxItem = props => {
             />
           </div>
         </div>
+
+        {tx.messages.length > 0 && (
+          <div className={css.itemMessage}>
+            {(() => {
+              const lastMessage = tx.messages[tx.messages.length - 1];
+              const messageContent = lastMessage?.attributes?.content?.slice(0, 67) + '...';
+              const messageDate = new Date(lastMessage?.attributes?.createdAt).toLocaleDateString();
+
+              return (
+                <>
+                
+                  <span className={css.messageContent}><MessagesSquare className={css.messageIcon}/> {messageContent}</span>
+                  <span className={css.messageDate}> {messageDate}</span>
+                  
+                </>
+              );
+            })()}
+          </div>
+        )}
       </NamedLink>
     </div>
   );
@@ -186,6 +212,7 @@ InboxItem.propTypes = {
   tx: propTypes.transaction.isRequired,
   intl: intlShape.isRequired,
   stateData: stateDataShape.isRequired,
+  currentUser: propTypes.currentUser,
 };
 
 export const InboxPageComponent = props => {
@@ -275,6 +302,7 @@ export const InboxPageComponent = props => {
           stateData={stateData}
           stockType={stockType}
           isBooking={isBooking}
+          currentUser={currentUser}
         />
       </li>
     ) : null;

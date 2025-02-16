@@ -233,7 +233,8 @@
   grid-template-areas:
     'dot name    state'
     '... item    state'
-    '... details state';
+    '... details state'
+    '... message state';
   padding: 2px 0 6px;
   gap: 4px 0;
 
@@ -247,6 +248,33 @@
     /* Hightlight the username when the whole item is hovered */
     color: var(--marketplaceColor);
   }
+}
+
+.itemMessage {
+  grid-area: message;
+  grid-column: 2 / span 2;
+  color: var(--colorGrey700);
+  margin-left: 24px;
+  
+  font-size: 12px; 
+  line-height: 16px;
+  display: flex;
+  flex-direction: row;
+  gap:8px;
+  justify-content:space-between;
+
+  > .messageDate {
+    color: var(--colorGrey300);
+  }
+  
+  background-color: var(--colorGrey75); 
+  padding:3px 8px;
+  border-radius: 6px;
+}
+.messageIcon {
+  margin-left:-30px;
+  margin-right:10px;
+  color: var(--colorGrey300);
 }
 
 .rowNotificationDot {
