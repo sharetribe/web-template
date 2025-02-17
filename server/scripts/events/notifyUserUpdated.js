@@ -306,7 +306,10 @@ function script() {
       const { displayName } = profile;
       const { userType } = profile.publicData || {};
       try {
-        const [membershipUpdated, membership] = membershipChangesValidation(user.attributes, previousValues)
+        const [membershipUpdated, membership] = membershipChangesValidation(
+          user.attributes,
+          previousValues
+        );
         // Membership upgrades are standalone changes. No need to keep checking
         if (membershipUpdated) {
           await membershipUpgrade(userId, membership);

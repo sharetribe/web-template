@@ -174,7 +174,6 @@ const slackPortfolioListingCreatedErrorWorkflow = async listingId => {
   }
 };
 
-
 module.exports = {
   slackSellerValidationWorkflow,
   slackUserUpdateWarningWorkflow,
