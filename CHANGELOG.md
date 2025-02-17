@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] AuthenticationPage: fix a bug with autenticated users accessing the auth pages.
+  [#555](https://github.com/sharetribe/web-template/pull/555)
 - [fix] CheckoutPageWithPayment & PaymentMethodsPage had a typo in a variable name.
   [#554](https://github.com/sharetribe/web-template/pull/554)
 - [fix] DatePicker: fix a bug with the calendar transition.
