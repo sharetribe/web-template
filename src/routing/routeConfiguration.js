@@ -19,6 +19,7 @@ const CMSPage = loadable(() => import(/* webpackChunkName: "CMSPage" */ '../cont
 const ContactDetailsPage = loadable(() => import(/* webpackChunkName: "ContactDetailsPage" */ '../containers/ContactDetailsPage/ContactDetailsPage'));
 const CreativeDetailsPage = loadable(() => import(/* webpackChunkName: "CreativeDetailsPage" */ '../containers/CreativeDetailsPage/CreativeDetailsPage'));
 const EditListingPage = loadable(() => import(/* webpackChunkName: "EditListingPage" */ '../containers/EditListingPage/EditListingPage'));
+const EditPortfolioListingPage = loadable(() => import(/* webpackChunkName: "EditPortfolioListingPage" */ '../containers/EditPortfolioListingPage/EditPortfolioListingPage'));
 const BatchEditListingPage = loadable(() => import(/* webpackChunkName: "BatchEditListingPage" */ '../containers/BatchEditListingPage/BatchEditListingPage'));
 const EmailVerificationPage = loadable(() => import(/* webpackChunkName: "EmailVerificationPage" */ '../containers/EmailVerificationPage/EmailVerificationPage'));
 const FavoriteListingsPage = loadable(() => import(/* webpackChunkName: "FavoriteListingsPage" */ '../containers/FavoriteListingsPage/FavoriteListingsPage'));
@@ -100,6 +101,23 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       path: '/l',
       name: 'ListingBasePage',
       component: RedirectToLandingPage,
+    },
+    {
+      path: '/l/portfolio/new',
+      name: 'NewPortfolioListingPage',
+      auth: true,
+      component: () => (
+        <NamedRedirect
+          name="EditPortfolioListingPage"
+          params={{ id: draftId, mode: 'new', tab: 'details' }}
+        />
+      ),
+    },
+    {
+      path: '/l/portfolio/:id/:mode/:tab',
+      name: 'EditPortfolioListingPage',
+      component: EditPortfolioListingPage,
+      loadData: pageDataLoadingAPI.EditPortfolioListingPage.loadData,
     },
     {
       path: '/l/products/:mode/:tab',

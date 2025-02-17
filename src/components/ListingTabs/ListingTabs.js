@@ -6,12 +6,17 @@ import classNames from 'classnames';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { FormattedMessage } from '../../util/reactIntl';
 import { createResourceLocatorString } from '../../util/routes';
-import { LISTING_GRID_ROLE, LISTING_GRID_DEFAULTS, LISTING_TAB_TYPES } from '../../util/types';
+import {
+  LISTING_GRID_DEFAULTS,
+  LISTING_GRID_ROLE,
+  LISTING_TAB_TYPES,
+  LISTING_TYPES,
+} from '../../util/types';
 import { listingsQueryParamsHandler } from '../../util/urlHelpers';
 import { PAGE_MODE_EDIT, PAGE_MODE_NEW } from '../../containers/BatchEditListingPage/constants';
 
 import { H3, ScrollableLinks } from '../';
-import { Loader, Error, Pagination, getTabsFeaturesForRole } from './GridHelpers';
+import { Error, getTabsFeaturesForRole, Loader, Pagination } from './GridHelpers';
 
 import css from './ListingTabs.module.css';
 
@@ -49,16 +54,32 @@ export const ListingTabs = ({
   );
 
   const goToManageListing = (mode = PAGE_MODE_NEW, searchParams = {}) => {
-    const destination = createResourceLocatorString(
-      'BatchEditListingPage',
-      routeConfiguration,
-      {
-        mode,
-        tab: 'upload',
-      },
-      searchParams
-    );
-    history.push(destination);
+    if (currentListingType === LISTING_TYPES.PRODUCT) {
+      const destination = createResourceLocatorString(
+        'BatchEditListingPage',
+        routeConfiguration,
+        {
+          mode,
+          tab: 'upload',
+        },
+        searchParams
+      );
+
+      history.push(destination);
+      return;
+    }
+
+    if (mode === PAGE_MODE_NEW) {
+      history.push(createResourceLocatorString('NewPortfolioListingPage', routeConfiguration));
+    } else {
+      history.push(
+        createResourceLocatorString('EditPortfolioListingPage', routeConfiguration, {
+          mode: PAGE_MODE_EDIT,
+          id: searchParams.category,
+          tab: 'details',
+        })
+      );
+    }
   };
 
   const panelWidth = 62.5;
