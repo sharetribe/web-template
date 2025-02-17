@@ -6,7 +6,7 @@ const ASSET_UPLOAD_URL = '/assets/marketplace/original';
 class StorageManagerClient {
   client = axios.create({
     baseURL: `${process.env.STORAGE_MANAGER_URL}/api`,
-    timeout: 180000, // 3 minutes timeout
+    timeout: 45000, // 45 seconds timeout
   });
 
   constructor() {
