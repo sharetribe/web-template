@@ -1,0 +1,37 @@
+
+.videoContainer {
+  width: 100%;
+  height: 100%;
+}
+
+.videoPlayer {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  align-self: center;
+  background-color: #000;
+}
+
+.playOverlay {
+  position: absolute;
+}
+
+.playOverlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.playIcon {
+  font-size: 36px;
+  color: white;
+}
