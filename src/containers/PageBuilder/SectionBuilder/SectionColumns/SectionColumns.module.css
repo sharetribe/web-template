@@ -27,6 +27,26 @@
   }
 }
 
+ p > a:first-child{
+  display: inline-block;
+  padding: 8px 20px;
+  font-size: 15px;
+  background-color: var(--marketplaceColor);
+  border-radius: 4px;
+  color: white;
+  text-decoration: none !important;
+  box-shadow: 0 8px 16px 0 rgb(0 0 0 / 20%);
+  font-weight: 500;
+  margin-top: 24px;
+  white-space: nowrap;
+
+  &:hover {
+    text-decoration: none;
+    color:white;
+    background-color: var(--marketplaceColorDark);
+  }
+}
+
 .oneColumn {
   composes: baseColumn;
 }
