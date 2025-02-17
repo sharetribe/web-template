@@ -1557,6 +1557,9 @@ textarea {
 /* add-ons */
 #home-hero div:last-of-type {
   align-self: end;
+  @media (--viewportMedium) {
+    align-self: center;
+  }
   header {
     padding: 1rem;
   }
