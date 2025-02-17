@@ -1,0 +1,11 @@
+const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
+const STRIPE_WEBHOOK_ENDPOINT_SECRET = process.env.STRIPE_WEBHOOK_ENDPOINT_SECRET;
+const REACT_APP_ENV = process.env.REACT_APP_ENV;
+
+const isLiveMode = REACT_APP_ENV === 'production';
+
+module.exports = {
+  STRIPE_WEBHOOK_SECRET,
+  STRIPE_WEBHOOK_ENDPOINT_SECRET,
+  isLiveMode,
+};
