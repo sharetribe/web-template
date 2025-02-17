@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] CheckoutPageWithPayment & PaymentMethodsPage had a typo in a variable name.
+  [#554](https://github.com/sharetribe/web-template/pull/554)
 - [fix] DatePicker: fix a bug with the calendar transition.
   [#553](https://github.com/sharetribe/web-template/pull/553)
 - [add] Add fixed bookings and price variant name support to booking process email templates.
