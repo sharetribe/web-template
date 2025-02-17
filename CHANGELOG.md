@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] BookingTimeForm (hourly booking): calendar day was not localized causing isDayBlocked fn to
+  choose past day, if listing's time zone was to the west of the browser's location / time zone.
+  [#556](https://github.com/sharetribe/web-template/pull/556)
 - [fix] AuthenticationPage: fix a bug with autenticated users accessing the auth pages.
   [#555](https://github.com/sharetribe/web-template/pull/555)
 - [fix] CheckoutPageWithPayment & PaymentMethodsPage had a typo in a variable name.

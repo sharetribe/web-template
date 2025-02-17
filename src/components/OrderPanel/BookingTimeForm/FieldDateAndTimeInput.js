@@ -755,7 +755,10 @@ const FieldDateAndTimeInput = props => {
   };
 
   const isDayBlocked = day => {
-    const dateIdString = stringifyDateToISO8601(day, timeZone);
+    const timeOfDay = timeOfDayFromLocalToTimeZone(day, timeZone);
+    const dayInListingTZ = getStartOf(timeOfDay, 'day', timeZone);
+
+    const dateIdString = stringifyDateToISO8601(dayInListingTZ, timeZone);
     const timeSlotData = timeSlotsData[dateIdString];
     return !timeSlotData?.hasAvailability;
   };
