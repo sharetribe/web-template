@@ -4,21 +4,8 @@ const sharetribeIntegrationSdk = require('sharetribe-flex-integration-sdk');
 let INTEGRATION_SDK = null;
 // (1 minutes = 60 seconds) && (1 second = 1000 ms) && (1 minute = 60*1000 ms)
 const MS_IN_MINUTE = 60 * 1000;
-// const EVENTS_BATCH_SIZE = 15;
-const EVENTS_BATCH_SIZE = 5;
+const EVENTS_BATCH_SIZE = 15;
 const EVENTS_BATCH_DELAY = 1.5 * MS_IN_MINUTE;
-
-
-
-
-
-let REQUEST = 0;
-
-
-
-
-
-
 
 async function processInBatches(array, process) {
   const totalEvents = array.length;
@@ -37,26 +24,7 @@ async function processInBatches(array, process) {
 function integrationSdkInit() {
   const withExistingIntance = !!INTEGRATION_SDK;
   if (!withExistingIntance) {
-
-
-
-
-
-
-
-
     const dev = process.env.REACT_APP_ENV === 'development';
-    // const dev = false;
-
-
-
-
-
-
-
-
-
-
     const clientId = process.env.SHARETRIBE_INTEGRATION_CLIENT_ID;
     const clientSecret = process.env.SHARETRIBE_INTEGRATION_CLIENT_SECRET;
     // Create rate limit handler for queries.
@@ -85,29 +53,7 @@ function integrationSdkInit() {
 function generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, analyzeEventGroup) {
   console.log(`Loading event script: ${SCRIPT_NAME}`);
   try {
-
-
-
-
-
-
-
-
-
-
     const dev = process.env.REACT_APP_ENV === 'development';
-    // const dev = false;
-
-
-
-
-
-
-
-
-
-
-
     // Start polling from current time on, when there's no stored state
     const startTime = new Date();
     // Polling interval (in ms) when all events have been fetched.
@@ -158,53 +104,7 @@ function generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, analyzeEve
         if (withEventGroupHandler) {
           analyzeEventGroup(events);
         }
-
-
-
-
-
-
-
-
-
-        const enableLogs = SCRIPT_NAME === 'notifyProductListingCreated';
-        if (enableLogs) {
-          const totalEvents = events.length;
-          const totalBatches = Math.ceil(totalEvents / EVENTS_BATCH_SIZE);
-          console.warn('\n\n\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
-          console.warn(`\n[pollLoop] REQUEST: ${REQUEST} - totalEvents:`, totalEvents);
-          console.warn('\n[pollLoop] - totalBatches:', totalBatches);
-        }
-
-
-
-
-
-
-
-
-
         await processInBatches(events, analyzeEventsBatch);
-
-
-
-
-
-
-
-
-        if (enableLogs) {
-          REQUEST++;
-          console.warn('\n\n=================\n\n');
-          console.warn('\n[pollLoop] - ALL RESULTS!:');
-          console.warn('\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n\n\n');
-        }
-
-
-
-
-
-
         if (lastEvent) saveLastEventSequenceId(lastEvent.attributes.sequenceId);
         setTimeout(() => {
           pollLoop(lastSequenceId);
