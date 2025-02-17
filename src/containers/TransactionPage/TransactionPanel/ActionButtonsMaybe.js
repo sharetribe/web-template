@@ -218,8 +218,8 @@ const ActionButtonsMaybe = props => {
           <PrimaryButton
             onClick={() =>
               handleConfirmModal({
-                onAction: primaryOnAction,
-                setIsModalOpen: setIsPrimaryConfirmModalOpen,
+                onAction: secondaryOnAction,
+                setIsModalOpen: setIsSecondaryConfirmModalOpen,
               })
             }
           >

@@ -172,6 +172,14 @@
    :from :state/seller-handle-disputed,
    :to :state/operator-handle-disputed}
 
+  {:name :transitions/auto-dispute-refund,
+   :at {:fn/plus
+        [{:fn/timepoint [:time/first-entered-state :state/seller-handle-disputed]}
+         {:fn/period ["P5D"]}]},
+   :actions [],
+   :from :state/seller-handle-disputed,
+   :to :state/operator-handle-disputed}
+
   {:name :transitions/seller-approve-refund,
    :actor :actor.role/provider,
    :actions

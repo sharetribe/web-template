@@ -101,9 +101,9 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
             actionButtonTranslationErrorId:
               'TransactionPage.sell-purchase.customer.markMetManager.actionError',
             confirmStatementTranslationId:
-              'TransactionPage.PrimaryConfirmActionModal.sell-purchase.purchased.customer.markMetManager.reminderStatement',
-            reminderStatementTranslationId:
               'TransactionPage.PrimaryConfirmActionModal.sell-purchase.purchased.customer.markMetManager.confirmStatement',
+            reminderStatementTranslationId:
+              'TransactionPage.PrimaryConfirmActionModal.sell-purchase.purchased.customer.markMetManager.reminderStatement',
           };
 
       return {
@@ -122,6 +122,11 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
           CUSTOMER,
           {
             isConfirmNeeded: true,
+            showReminderStatement: true,
+            confirmModalTitleTranslationId:
+              'TransactionPage.SecondaryConfirmActionModal.sell-purchase.purchased.customer.modalTitle',
+            confirmButtonTranslationId:
+              'TransactionPage.SecondaryConfirmActionModal.sell-purchase.purchased.customer.confirmButton',
           }
         ),
       };
@@ -160,14 +165,137 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
     .cond([states.PURCHASE_EXPIRED, _], () => {
       return { processName, processState, showDetailCardHeadings: true };
     })
-    .cond([states.STRIPE_INTENT_CAPTURED, _], () => {
+    .cond([states.STRIPE_INTENT_CAPTURED, CUSTOMER], () => {
+      const primaryButtonProps = buyerMarkMetManager
+        ? {
+            actionButtonTranslationId:
+              'TransactionPage.sell-purchase.customer.transition-buyer-mark-complete.actionButton',
+            actionButtonTranslationErrorId:
+              'TransactionPage.sell-purchase.customer.transition-buyer-mark-complete.actionError',
+            confirmStatementTranslationId:
+              'TransactionPage.PrimaryConfirmActionModal.sell-purchase.stripe-intent-captured.customer.confirmStatement',
+            reminderStatementTranslationId:
+              'TransactionPage.PrimaryConfirmActionModal.sell-purchase.stripe-intent-captured.customer.reminderStatement',
+          }
+        : {
+            actionButtonTranslationId:
+              'TransactionPage.sell-purchase.customer.markMetManager.actionButton',
+            actionButtonTranslationErrorId:
+              'TransactionPage.sell-purchase.customer.markMetManager.actionError',
+            confirmStatementTranslationId:
+              'TransactionPage.PrimaryConfirmActionModal.sell-purchase.stripe-intent-captured.customer.markMetManager.confirmStatement',
+            reminderStatementTranslationId:
+              'TransactionPage.PrimaryConfirmActionModal.sell-purchase.stripe-intent-captured.customer.markMetManager.reminderStatement',
+          };
+
+      return {
+        processName,
+        processState,
+        showDetailCardHeadings: true,
+        showActionButtons: true,
+        primaryButtonProps: markSellPurchaseProgressProps(CUSTOMER, {
+          isConfirmNeeded: true,
+          showConfirmStatement: true,
+          showReminderStatement: true,
+          ...primaryButtonProps,
+        }),
+        secondaryButtonProps: actionButtonProps(transitions.BUYER_ISSUE_REFUND, CUSTOMER, {
+          isConfirmNeeded: true,
+          showReminderStatement: true,
+          confirmModalTitleTranslationId:
+            'TransactionPage.SecondaryConfirmActionModal.sell-purchase.stripe-intent-captured.customer.modalTitle',
+          confirmButtonTranslationId:
+            'TransactionPage.SecondaryConfirmActionModal.sell-purchase.stripe-intent-captured.customer.confirmButton',
+        }),
+      };
+    })
+    .cond([states.STRIPE_INTENT_CAPTURED, PROVIDER], () => {
+      const primaryButtonMaybe = sellerMarkMachinePlaced
+        ? {}
+        : {
+            primaryButtonProps: markSellPurchaseProgressProps(PROVIDER, {
+              isConfirmNeeded: true,
+              showConfirmStatement: true,
+              showReminderStatement: true,
+              actionButtonTranslationId:
+                'TransactionPage.sell-purchase.provider.markMachinePlaced.actionButton',
+              actionButtonTranslationErrorId:
+                'TransactionPage.sell-purchase.provider.markMachinePlaced.actionError',
+            }),
+          };
+
+      return {
+        processName,
+        processState,
+        showDetailCardHeadings: true,
+        showActionButtons: true,
+        secondaryButtonProps: actionButtonProps(transitions.SELLER_ISSUE_REFUND, PROVIDER, {
+          isConfirmNeeded: true,
+          showReminderStatement: true,
+        }),
+        ...primaryButtonMaybe,
+      };
+    })
+    .cond([states.REFUND_DISABLED, CUSTOMER], () => {
+      const primaryButtonProps = buyerMarkMetManager
+        ? {
+            actionButtonTranslationId:
+              'TransactionPage.sell-purchase.customer.transition-buyer-mark-complete-refund-disabled.actionButton',
+            actionButtonTranslationErrorId:
+              'TransactionPage.sell-purchase.customer.transition-buyer-mark-complete-refund-disabled.actionError',
+            confirmStatementTranslationId:
+              'TransactionPage.PrimaryConfirmActionModal.sell-purchase.refund-disabled.customer.confirmStatement',
+            reminderStatementTranslationId:
+              'TransactionPage.PrimaryConfirmActionModal.sell-purchase.refund-disabled.customer.reminderStatement',
+          }
+        : {
+            actionButtonTranslationId:
+              'TransactionPage.sell-purchase.customer.markMetManager.actionButton',
+            actionButtonTranslationErrorId:
+              'TransactionPage.sell-purchase.customer.markMetManager.actionError',
+            confirmStatementTranslationId:
+              'TransactionPage.PrimaryConfirmActionModal.sell-purchase.refund-disabled.customer.markMetManager.confirmStatement',
+            reminderStatementTranslationId:
+              'TransactionPage.PrimaryConfirmActionModal.sell-purchase.refund-disabled.customer.markMetManager.reminderStatement',
+          };
+
+      return {
+        processName,
+        processState,
+        showDetailCardHeadings: true,
+        showActionButtons: true,
+        primaryButtonProps: markSellPurchaseProgressProps(CUSTOMER, {
+          isConfirmNeeded: true,
+          showConfirmStatement: true,
+          showReminderStatement: true,
+          ...primaryButtonProps,
+        }),
+      };
+    })
+    .cond([states.REFUND_DISABLED, PROVIDER], () => {
       return { processName, processState, showDetailCardHeadings: true };
     })
-    .cond([states.REFUND_DISABLED, _], () => {
+    .cond([states.SELLER_HANDLE_DISPUTED, CUSTOMER], () => {
       return { processName, processState, showDetailCardHeadings: true };
     })
-    .cond([states.SELLER_HANDLE_DISPUTED, _], () => {
-      return { processName, processState, showDetailCardHeadings: true };
+    .cond([states.SELLER_HANDLE_DISPUTED, PROVIDER], () => {
+      return {
+        processName,
+        processState,
+        showDetailCardHeadings: true,
+        showActionButtons: true,
+        primaryButtonProps: actionButtonProps(transitions.SELLER_APPROVE_REFUND, PROVIDER, {
+          isConfirmNeeded: true,
+          showConfirmStatement: true,
+        }),
+        secondaryButtonProps: actionButtonProps(transitions.SELLER_DISPUTE, PROVIDER, {
+          isConfirmNeeded: true,
+          confirmModalTitleTranslationId:
+            'TransactionPage.SecondaryConfirmActionModal.sell-purchase.seller-handle-disputed.provider.modalTitle',
+          confirmButtonTranslationId:
+            'TransactionPage.SecondaryConfirmActionModal.sell-purchase.seller-handle-disputed.provider.confirmButton',
+        }),
+      };
     })
     .cond([states.OPERATOR_HANDLE_DISPUTED, _], () => {
       return { processName, processState, showDetailCardHeadings: true };
