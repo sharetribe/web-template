@@ -71,6 +71,7 @@ const initialState = {
   transactionRef: null,
   transitionInProgress: null,
   transitionError: null,
+  transitionErrorName: null,
   fetchMessagesInProgress: false,
   fetchMessagesError: null,
   totalMessages: 0,
@@ -136,15 +137,19 @@ export default function transactionPageReducer(state = initialState, action = {}
         ...state,
         transitionInProgress: payload,
         transitionError: null,
+        transitionErrorName: null,
       };
     case TRANSITION_SUCCESS:
       return { ...state, transitionInProgress: null };
-    case TRANSITION_ERROR:
+    case TRANSITION_ERROR: {
+      const { error, transitionName } = payload;
       return {
         ...state,
         transitionInProgress: null,
-        transitionError: payload,
+        transitionError: error,
+        transitionErrorName: transitionName,
       };
+    }
 
     case FETCH_MESSAGES_REQUEST:
       return { ...state, fetchMessagesInProgress: true, fetchMessagesError: null };
@@ -260,7 +265,11 @@ const fetchTransitionsError = e => ({ type: FETCH_TRANSITIONS_ERROR, error: true
 
 const transitionRequest = transitionName => ({ type: TRANSITION_REQUEST, payload: transitionName });
 const transitionSuccess = () => ({ type: TRANSITION_SUCCESS });
-const transitionError = e => ({ type: TRANSITION_ERROR, error: true, payload: e });
+const transitionError = ({ error, transitionName }) => ({
+  type: TRANSITION_ERROR,
+  error: true,
+  payload: { error, transitionName },
+});
 
 const fetchMessagesRequest = () => ({ type: FETCH_MESSAGES_REQUEST });
 const fetchMessagesSuccess = (messages, pagination) => ({
@@ -539,7 +548,7 @@ export const makeTransition = (txId, transitionName, params) => (dispatch, getSt
       return response;
     })
     .catch(e => {
-      dispatch(transitionError(storableError(e)));
+      dispatch(transitionError({ error: storableError(e), transitionName }));
       log.error(e, `${transitionName}-failed`, {
         txId,
         transition: transitionName,
@@ -781,11 +790,10 @@ export const markProgressSellPurchase = (txId, transitionName) => async (
 
     return response;
   } catch (e) {
-    dispatch(transitionError(storableError(e)));
+    dispatch(transitionError({ error: storableError(e), transitionName }));
     log.error(e, `${transitionName}-failed`, {
       txId,
       transition: transitionName,
     });
-    throw e;
   }
 };

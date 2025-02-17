@@ -46,6 +46,8 @@ const ActionButtonsMaybe = props => {
     reminderStatementTranslationId: primaryReminderStatementTranslationId,
     confirmButtonTranslationId: primaryConfirmButtonTranslationId,
     confirmModalTitleTranslationId: primaryConfirmModalTitleTranslationId,
+    error: primaryError,
+    errorText: primaryErrorText,
   } = primaryButtonProps || {};
   const {
     inProgress: secondaryInProgress,
@@ -58,6 +60,8 @@ const ActionButtonsMaybe = props => {
     reminderStatementTranslationId: secondaryReminderStatementTranslationId,
     confirmButtonTranslationId: secondaryConfirmButtonTranslationId,
     confirmModalTitleTranslationId: secondaryConfirmModalTitleTranslationId,
+    error: secondaryError,
+    errorText: secondaryErrorText,
   } = secondaryButtonProps || {};
 
   const buttonsDisabled = primaryInProgress || secondaryInProgress;
@@ -92,7 +96,7 @@ const ActionButtonsMaybe = props => {
         })
       }
     >
-      {primaryButtonText}
+      {primaryError ? primaryErrorText : primaryButtonText}
     </PrimaryButton>
   ) : null;
 
@@ -169,9 +173,10 @@ const ActionButtonsMaybe = props => {
         })
       }
     >
-      {secondaryButtonText}
+      {secondaryError ? secondaryErrorText : secondaryButtonText}
     </SecondaryButton>
   ) : null;
+  console.log({ primaryButtonProps, secondaryButtonProps });
 
   const secondaryConfirmModal = secondaryIsConfirmNeeded ? (
     <Modal

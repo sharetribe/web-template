@@ -1,24 +1,29 @@
 const { getTrustedSdk, integrationSdk, serialize } = require('../../../common/sdk');
 const {
   SELL_PURCHASE_PROCESS_NAME,
-  transitions,
   markProgressLastTransitions,
   markProgressPossibleNextTransitions,
 } = require('./transactions/transactionProcessSellPurchase');
 
 const markProgress = async (req, res) => {
-  const { params, query, body, currentUser = {} } = req;
+  const { body, currentUser = {} } = req;
   const { txId } = body;
   const {
     id: { uuid: userId },
   } = currentUser;
 
   if (!txId) {
-    return res.status(400).json({ error: 'Missing transaction ID' });
+    return res.status(400).json({
+      name: 'invalid-tx-id',
+      message: 'Missing transaction ID',
+    });
   }
 
   if (!userId) {
-    return res.status(400).json({ error: 'Unrecognized user' });
+    return res.status(400).json({
+      name: 'invalid-user',
+      message: 'Unrecognized user',
+    });
   }
 
   try {
@@ -55,9 +60,10 @@ const markProgress = async (req, res) => {
       const { sellerMarkMachinePlaced } = txMetadata;
 
       if (sellerMarkMachinePlaced) {
-        return res
-          .status(400)
-          .json({ error: 'Seller have already marked introduced buyer to manager' });
+        return res.status(400).json({
+          name: 'seller-already-marked',
+          message: 'Seller have already marked machine placed',
+        });
       }
 
       const response = await integrationSdk.transactions.updateMetadata(
@@ -122,9 +128,15 @@ const markProgress = async (req, res) => {
         .end();
     }
 
-    return res.status(400).json({ error: 'User is not in transaction' });
+    return res.status(400).json({
+      name: 'unrelevant-user',
+      message: 'User is not in transaction',
+    });
   } catch (error) {
-    return res.status(500).json({ error: error.message || error });
+    return res.status(500).json({
+      name: 'internal-error',
+      message: error.message || error,
+    });
   }
 };
 
