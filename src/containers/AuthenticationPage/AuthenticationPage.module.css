@@ -1,5 +1,8 @@
 @import '../../styles/customMediaQueries.css';
 
+.layoutWrapperMain {
+}
+
 .root {
   flex-grow: 1;
 }
@@ -24,6 +27,13 @@
     margin-bottom: 7.5vh;
     min-height: 700px;
   }
+}
+
+.spinnerContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
 /* ================ Tabs & Form ================ */

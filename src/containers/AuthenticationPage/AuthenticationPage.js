@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { bool, func, object, oneOf, shape } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter, Redirect } from 'react-router-dom';
@@ -12,7 +11,7 @@ import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { camelize } from '../../util/string';
 import { pathByRouteName } from '../../util/routes';
 import { apiBaseUrl } from '../../util/api';
-import { FormattedMessage, injectIntl, intlShape, useIntl } from '../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { ensureCurrentUser } from '../../util/data';
 import {
@@ -28,6 +27,7 @@ import { sendVerificationEmail } from '../../ducks/user.duck';
 import {
   Page,
   Heading,
+  IconSpinner,
   NamedRedirect,
   LinkTabNavHorizontal,
   SocialLoginButton,
@@ -448,6 +448,31 @@ const getAuthErrorFromCookies = () => {
     : null;
 };
 
+const BlankPage = props => {
+  const { schemaTitle, schemaDescription, scrollingDisabled, topbarClasses } = props;
+  return (
+    <Page
+      title={schemaTitle}
+      scrollingDisabled={scrollingDisabled}
+      schema={{
+        '@context': 'http://schema.org',
+        '@type': 'WebPage',
+        name: schemaTitle,
+        description: schemaDescription,
+      }}
+    >
+      <LayoutSingleColumn
+        topbar={<TopbarContainer className={topbarClasses} />}
+        footer={<FooterContainer />}
+      >
+        <div className={css.spinnerContainer}>
+          <IconSpinner />
+        </div>
+      </LayoutSingleColumn>
+    </Page>
+  );
+};
+
 /**
  * The AuthenticationPage component.
  *
@@ -483,6 +508,8 @@ export const AuthenticationPageComponent = props => {
   const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
   const [authInfo, setAuthInfo] = useState(getAuthInfoFromCookies());
   const [authError, setAuthError] = useState(getAuthErrorFromCookies());
+  const [mounted, setMounted] = useState(false);
+
   const config = useConfiguration();
   const intl = useIntl();
 
@@ -492,6 +519,7 @@ export const AuthenticationPageComponent = props => {
     if (authError) {
       Cookies.remove('st-autherror');
     }
+    setMounted(true);
   }, []);
 
   // On mobile, it's better to scroll to top.
@@ -548,12 +576,41 @@ export const AuthenticationPageComponent = props => {
   // flag only when the current user is fully loaded.
   const showEmailVerification = !isLogin && currentUserLoaded && !user.attributes.emailVerified;
 
-  // Already authenticated, redirect away from auth page
-  if (isAuthenticated && from) {
+  const marketplaceName = config.marketplaceName;
+  const schemaTitle = isLogin
+    ? intl.formatMessage({ id: 'AuthenticationPage.schemaTitleLogin' }, { marketplaceName })
+    : intl.formatMessage({ id: 'AuthenticationPage.schemaTitleSignup' }, { marketplaceName });
+  const schemaDescription = isLogin
+    ? intl.formatMessage({ id: 'AuthenticationPage.schemaDescriptionLogin' }, { marketplaceName })
+    : intl.formatMessage({ id: 'AuthenticationPage.schemaDescriptionSignup' }, { marketplaceName });
+  const topbarClasses = classNames({
+    [css.hideOnMobile]: showEmailVerification,
+  });
+
+  const shouldRedirectToFrom = isAuthenticated && from;
+  const shouldRedirectToLandingPage =
+    isAuthenticated && currentUserLoaded && !showEmailVerification;
+  if (!mounted && shouldRedirectToLandingPage) {
+    // Show a blank page for already authenticated users,
+    // when the first rendering on client side is not yet done
+    // This is done to avoid hydration issues when full page load is happening.
+    return (
+      <BlankPage
+        schemaTitle={schemaTitle}
+        schemaDescription={schemaDescription}
+        topbarClasses={topbarClasses}
+      />
+    );
+  }
+
+  if (shouldRedirectToFrom) {
+    // Already authenticated, redirect back to the page the user tried to access
     return <Redirect to={from} />;
-  } else if (isAuthenticated && currentUserLoaded && !showEmailVerification) {
+  } else if (shouldRedirectToLandingPage) {
+    // Already authenticated, redirect to the landing page (this was direct access to /login or /signup)
     return <NamedRedirect name="LandingPage" />;
   } else if (show404) {
+    // User type not found, show 404
     return <NotFoundPage staticContext={props.staticContext} />;
   }
 
@@ -567,18 +624,6 @@ export const AuthenticationPageComponent = props => {
       <FormattedMessage id={resendErrorTranslationId} />
     </p>
   ) : null;
-
-  const marketplaceName = config.marketplaceName;
-  const schemaTitle = isLogin
-    ? intl.formatMessage({ id: 'AuthenticationPage.schemaTitleLogin' }, { marketplaceName })
-    : intl.formatMessage({ id: 'AuthenticationPage.schemaTitleSignup' }, { marketplaceName });
-  const schemaDescription = isLogin
-    ? intl.formatMessage({ id: 'AuthenticationPage.schemaDescriptionLogin' }, { marketplaceName })
-    : intl.formatMessage({ id: 'AuthenticationPage.schemaDescriptionSignup' }, { marketplaceName });
-
-  const topbarClasses = classNames({
-    [css.hideOnMobile]: showEmailVerification,
-  });
 
   return (
     <Page
