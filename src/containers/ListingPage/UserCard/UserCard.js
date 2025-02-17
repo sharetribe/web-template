@@ -120,13 +120,13 @@ const UserCard = props => {
   ) : null;
 
   const links = ensuredUser.id ? (
-    <p className={linkClasses}>
+    <div className={linkClasses}>
       <NamedLink className={css.link} name="ProfilePage" params={{ id: ensuredUser.id.uuid }}>
         <FormattedMessage id="UserCard.viewProfileLink" />
       </NamedLink>
       {separator}
       {isCurrentUser ? editProfileMobile : contact}
-    </p>
+    </div>
   ) : null;
 
   return (
