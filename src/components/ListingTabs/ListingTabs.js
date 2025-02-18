@@ -75,7 +75,7 @@ export const ListingTabs = ({
       history.push(
         createResourceLocatorString('EditPortfolioListingPage', routeConfiguration, {
           mode: PAGE_MODE_EDIT,
-          id: searchParams.category,
+          id: searchParams.pub_listingId,
           tab: 'details',
         })
       );

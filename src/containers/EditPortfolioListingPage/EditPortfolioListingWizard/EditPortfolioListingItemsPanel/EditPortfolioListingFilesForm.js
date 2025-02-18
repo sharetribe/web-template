@@ -100,13 +100,10 @@ const EditPortfolioListingFilesFormComponent = props => {
   const uploadImageError = useSelector(state => state.EditPortfolioListingPage.uploadError);
   const publishListingError = useSelector(state => state.EditPortfolioListingPage.saveError);
   const showListingsError = useSelector(state => state.EditPortfolioListingPage.error);
-  const listingId = useSelector(state => state.EditPortfolioListingPage.portfolioListing?.id);
   const existingImages = useSelector(state => state.EditPortfolioListingPage.images);
   const listing = useSelector(state => state.EditPortfolioListingPage.portfolioListing);
-  const existingVideos = useSelector(
-    state => state.EditPortfolioListingPage.portfolioListing?.attributes.publicData?.videos || []
-  );
-
+  const listingId = listing?.id;
+  const existingVideos = listing?.attributes?.publicData?.videos || [];
   const listingState = listing?.attributes?.state;
   const isDraft = listingState === LISTING_STATE_DRAFT;
 
@@ -131,12 +128,15 @@ const EditPortfolioListingFilesFormComponent = props => {
 
   const onPublishHandler = () => {
     if (!listingId) return;
-
-    dispatch(publishPortfolioListing(listingId)).then(updatedListing => {
-      if (updatedListing) {
-        onPublishListing(updatedListing);
-      }
-    });
+    if (isDraft) {
+      dispatch(publishPortfolioListing(listingId)).then(updatedListing => {
+        if (updatedListing) {
+          onPublishListing(updatedListing);
+        }
+      });
+    } else {
+      onPublishListing(listing);
+    }
   };
 
   const onSaveVideo = video => {
@@ -177,9 +177,8 @@ const EditPortfolioListingFilesFormComponent = props => {
         errors,
         listingImageConfig = {},
       }) => {
-        const { aspectWidth = 1, aspectHeight = 1, variantPrefix } = listingImageConfig;
-        const submitDisabled =
-          invalid || disabled || updateInProgress || uploadedMedia.length === 0;
+        const { aspectWidth = 1, aspectHeight = 1 } = listingImageConfig;
+        const submitDisabled = invalid || disabled || updateInProgress;
         const imagesError = touched.images && errors?.images && errors.images[ARRAY_ERROR];
         const uploadOverLimit = isUploadImageOverLimitError(uploadImageError);
         const classes = classNames(css.root, className);
@@ -237,16 +236,14 @@ const EditPortfolioListingFilesFormComponent = props => {
             <PublishListingError error={publishListingError} />
             <ShowListingsError error={showListingsError} />
 
-            {isDraft && (
-              <Button
-                className={css.submitButton}
-                type="submit"
-                inProgress={updateInProgress}
-                disabled={submitDisabled}
-              >
-                Publish
-              </Button>
-            )}
+            <Button
+              className={css.submitButton}
+              type="submit"
+              inProgress={updateInProgress}
+              disabled={submitDisabled}
+            >
+              {isDraft ? 'Publish' : 'Save'}
+            </Button>
           </Form>
         );
       }}
