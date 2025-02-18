@@ -44,7 +44,7 @@
   "SellPurchaseRefundDeclinedCustomer.Title": "Refund Denied for Your Order",
   "SellPurchaseRefundDeclinedCustomer.ContentRefundDeclined": "After carefully reviewing your request, we regret to inform you that the refund for your order of <salelink>{listingTitle}</salelink> has been denied.",
   "SellPurchaseRefundDeclinedCustomer.ContentAssistance": "If you have any concerns about this decision or need further assistance, please don’t hesitate to contact us. We’re here to help.",
-  "SellPurchaseRefundDeclinedProvider.Title": "Refund Approved for Order {txId}",
+  "SellPurchaseRefundDeclinedProvider.Title": "Refund Declined for Order {txId}",
   "SellPurchaseRefundDeclinedProvider.ContentRefundApproved": "The refund request for the order of <salelink>{listingTitle}</salelink> has been denied. The payout for this order will proceed as usual.",
   "SellPurchaseRefundDeclinedProvider.ContentAssistance": "If you have any questions or concerns, please don’t hesitate to contact us.",
   "TransactionEmails.Greetings": "Dear {name},",
