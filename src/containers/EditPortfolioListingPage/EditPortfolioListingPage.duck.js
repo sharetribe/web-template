@@ -401,9 +401,8 @@ export const removeVideoFromListing = (listingId, videoId, config) => (dispatch,
 export const removeImageFromListing = (listingId, imageId, config) => (dispatch, getState, sdk) => {
   const state = getState();
   const existingImages = state.EditPortfolioListingPage.images || [];
-  const updatedImages = existingImages.filter(image => image.id !== imageId);
+  const updatedImages = existingImages.filter(image => image.id !== imageId).map(image => image.id);
   const queryParams = getSdkRequestParams(config);
-
   return sdk.ownListings
     .update(
       {

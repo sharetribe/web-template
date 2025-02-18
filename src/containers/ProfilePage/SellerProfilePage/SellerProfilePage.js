@@ -173,7 +173,7 @@ function SellerProfilePage({
     }
   }, [queryInProgress]);
 
-  const listingRenderer = (item, className, renderSizes, index) => {
+  const listingRenderer = (item, className, _, index) => {
     switch (currentListingType) {
       case LISTING_TAB_TYPES.REVIEWS: {
         const parsedReviews = reviews.filter(r => r.attributes.type === currentCategory);
@@ -196,8 +196,7 @@ function SellerProfilePage({
           <PortfolioListingCard
             key={`${currentCategory}-${index}`}
             className={className}
-            image={item}
-            renderSizes={renderSizes}
+            item={item}
           />
         );
       }

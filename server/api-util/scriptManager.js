@@ -59,7 +59,7 @@ function generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, analyzeEve
     // Polling interval (in ms) when all events have been fetched.
     // PROD: Keeping this at 1 minute or more is a good idea.
     // DEV: We use 10 seconds so that the data is printed without much delay.
-    const pollIdleWait = dev ? 10000 : 5 * MS_IN_MINUTE;
+    const pollIdleWait = dev ? 30000 : 5 * MS_IN_MINUTE;
     // Polling interval (in ms) when a full page of events is received and there may be more
     const pollWait = 3 * MS_IN_MINUTE;
     // File to keep state across restarts. Stores the last seen event sequence ID,

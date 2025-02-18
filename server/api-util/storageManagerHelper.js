@@ -1,12 +1,11 @@
 const axios = require('axios');
-const axiosRetry = require('axios-retry').default;
 
 const ASSET_UPLOAD_URL = '/assets/marketplace/original';
 
 class StorageManagerClient {
   client = axios.create({
     baseURL: `${process.env.STORAGE_MANAGER_URL}/api`,
-    timeout: 180000, // 3 minutes timeout
+    timeout: 45000, // 45 seconds timeout
   });
 
   constructor() {
@@ -14,13 +13,6 @@ class StorageManagerClient {
       config.headers['x-api-key'] = process.env.STORAGE_MANAGER_API_KEY;
       return config;
     }, Promise.reject);
-    axiosRetry(this.client, {
-      retries: 3, // Retry each request up to 3 times
-      retryDelay: retryCount => {
-        return retryCount * 1500;
-      },
-      retryCondition: () => true,
-    });
   }
 
   async uploadOriginalAssets(data) {

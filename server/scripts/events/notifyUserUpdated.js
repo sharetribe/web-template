@@ -19,6 +19,7 @@ const {
   userTypeChangesValidation,
   communityStatusChangesValidation,
   sellerStatusChangesValidation,
+  membershipChangesValidation,
   shouldDisplayWarning,
 } = require('./util/userUpdateValidations');
 
@@ -61,6 +62,13 @@ function script() {
     if (buyerAppliedToBeSeller || waitListedSellerAskedForReview) {
       return await slackSellerValidationWorkflow(userId, displayName, email, portfolioURL);
     }
+  }
+
+  async function membershipUpgrade(userId, membership) {
+    return integrationSdk.users.updateProfile({
+      id: userId,
+      metadata: { membership },
+    });
   }
 
   async function profileUpgrade(userId, userAttributes, previousValues) {
@@ -298,23 +306,32 @@ function script() {
       const { displayName } = profile;
       const { userType } = profile.publicData || {};
       try {
-        const [userTypeEvent, sellerStatusEvent] = await profileUpgrade(
-          userId,
+        const [membershipUpdated, membership] = membershipChangesValidation(
           user.attributes,
           previousValues
         );
-        if (userType === USER_TYPES.SELLER) {
-          const { portfolioURL } = profile.publicData;
-          await shouldStartSellerValidationWorkflow(
-            userTypeEvent,
-            sellerStatusEvent,
+        // Membership upgrades are standalone changes. No need to keep checking
+        if (membershipUpdated) {
+          await membershipUpgrade(userId, membership);
+        } else {
+          const [userTypeEvent, sellerStatusEvent] = await profileUpgrade(
             userId,
-            displayName,
-            email,
-            portfolioURL
+            user.attributes,
+            previousValues
           );
+          if (userType === USER_TYPES.SELLER) {
+            const { portfolioURL } = profile.publicData;
+            await shouldStartSellerValidationWorkflow(
+              userTypeEvent,
+              sellerStatusEvent,
+              userId,
+              displayName,
+              email,
+              portfolioURL
+            );
+          }
+          await profileSync(userId, user, previousValues);
         }
-        await profileSync(userId, user, previousValues);
       } catch (error) {
         slacktUserUpdatedErrorWorkflow(userId);
         console.error(

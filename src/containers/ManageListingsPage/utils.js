@@ -49,21 +49,18 @@ export const getItems = (listings, currentListingType, currentListingId) => {
   switch (currentListingType) {
     case LISTING_TAB_TYPES.PORTFOLIO: {
       const selectedListing = listings.find(listing => listing.id.uuid === currentListingId);
-      const withImaged = selectedListing?.images && selectedListing?.images.length > 0;
-      if (!withImaged) {
-        return [];
-      }
-      const images = selectedListing.images.map(image => {
-        const imgWithTitle = { ...image };
-        imgWithTitle.attributes.title = selectedListing?.attributes?.title;
-        return imgWithTitle;
-      });
-
-      const videos = selectedListing.attributes.publicData.videos?.map(video => {
-        const videoWithTitle = { ...video, id: { uuid: video.id }, type: 'video' };
-        videoWithTitle.attributes = { title: selectedListing?.attributes?.title, variants: {} };
-        return videoWithTitle;
-      }) || [];
+      const images =
+        selectedListing?.images?.map(image => {
+          const imgWithTitle = { ...image };
+          imgWithTitle.attributes.title = selectedListing?.attributes?.title;
+          return imgWithTitle;
+        }) || [];
+      const videos =
+        selectedListing?.attributes?.publicData?.videos?.map(video => {
+          const videoWithTitle = { ...video, id: { uuid: video.id }, type: 'video' };
+          videoWithTitle.attributes = { title: selectedListing?.attributes?.title, variants: {} };
+          return videoWithTitle;
+        }) || [];
       return [...videos, ...images];
     }
     case LISTING_TAB_TYPES.PRODUCT:
