@@ -31,7 +31,7 @@
  *    - indexForSearch (optional):    If set as true, it is assumed that the extended data key has
  *                                    search index in place. I.e. the key can be used to filter
  *                                    listing queries (then scope needs to be 'public').
- *                                    Note: Flex CLI can be used to set search index for the key:
+ *                                    Note: Sharetribe CLI can be used to set search index for the key:
  *                                    https://www.sharetribe.com/docs/references/extended-data/#search-schema
  *                                    Read more about filtering listings with public data keys from API Reference:
  *                                    https://www.sharetribe.com/api-reference/marketplace.html#extended-data-filtering
