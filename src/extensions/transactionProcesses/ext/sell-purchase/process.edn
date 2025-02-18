@@ -300,6 +300,48 @@
    :to :actor.role/provider,
    :template :purchase-new-order}
 
+  {:name :notification/buyer-refund-before-seller-confirmed-customer,
+   :on :transition/buyer-refund-before-seller-confirmed,
+   :to :actor.role/customer,
+   :template :purchase-order-canceled-customer}
+  {:name :notification/buyer-refund-before-seller-confirmed-provider,
+   :on :transition/buyer-refund-before-seller-confirmed,
+   :to :actor.role/provider,
+   :template :purchase-order-canceled-provider}
+  {:name :notification/seller-refund-before-seller-confirmed-customer,
+   :on :transition/seller-refund-before-seller-confirmed,
+   :to :actor.role/customer,
+   :template :purchase-order-canceled-customer}
+  {:name :notification/seller-refund-before-seller-confirmed-provider,
+   :on :transition/seller-refund-before-seller-confirmed,
+   :to :actor.role/provider,
+   :template :purchase-order-canceled-provider}
+
+  {:name :notification/buyer-refund-before-capture-intent-customer,
+   :on :transition/buyer-refund-before-capture-intent,
+   :to :actor.role/customer,
+   :template :purchase-order-canceled-customer}
+  {:name :notification/buyer-refund-before-capture-intent-provider,
+   :on :transition/buyer-refund-before-capture-intent,
+   :to :actor.role/provider,
+   :template :purchase-order-canceled-provider}
+  {:name :notification/seller-refund-before-capture-intent-customer,
+   :on :transition/seller-refund-before-capture-intent,
+   :to :actor.role/customer,
+   :template :purchase-order-canceled-customer}
+  {:name :notification/seller-refund-before-capture-intent-provider,
+   :on :transition/seller-refund-before-capture-intent,
+   :to :actor.role/provider,
+   :template :purchase-order-canceled-provider}
+  {:name :notification/payment-intent-expired-customer,
+   :on :transition/operator-cancel-transition-after-expire-intent,
+   :to :actor.role/customer,
+   :template :purchase-order-canceled-customer}
+  {:name :notification/payment-intent-expired-provider,
+   :on :transition/operator-cancel-transition-after-expire-intent,
+   :to :actor.role/provider,
+   :template :purchase-order-canceled-provider}
+
   {:name :notification/purchase-mark-introduced-5-days-reminder,
    :on :transition/confirm-payment,
    :at
@@ -330,6 +372,39 @@
    :on :transition/expire-seller-confirm-period,
    :to :actor.role/customer,
    :template :purchase-auto-canceled-customer}
+
+  {:name :notification/seller-approve-refund-customer,
+   :on :transition/seller-approve-refund,
+   :to :actor.role/customer,
+   :template :purchase-refund-approved-customer}
+  {:name :notification/seller-approve-refund-provider,
+   :on :transition/seller-approve-refund,
+   :to :actor.role/provider,
+   :template :purchase-refund-approved-provider}
+  {:name :notification/operator-approve-refund-customer,
+   :on :transition/operator-approve-refund,
+   :to :actor.role/customer,
+   :template :purchase-refund-approved-customer}
+  {:name :notification/operator-approve-refund-provider,
+   :on :transition/operator-approve-refund,
+   :to :actor.role/provider,
+   :template :purchase-refund-approved-provider}
+  {:name :notification/operator-decline-refund-customer,
+   :on :transition/operator-mark-complete,
+   :to :actor.role/customer,
+   :template :purchase-refund-declined-customer}
+  {:name :notification/operator-decline-refund-provider,
+   :on :transition/operator-mark-complete,
+   :to :actor.role/provider,
+   :template :purchase-refund-declined-provider}
+  {:name :notification/auto-expire-dispute-customer,
+   :on :transition/expire-dispute-period,
+   :to :actor.role/customer,
+   :template :purchase-refund-declined-customer}
+  {:name :notification/auto-expire-dispute-provider,
+   :on :transition/expire-dispute-period,
+   :to :actor.role/provider,
+   :template :purchase-refund-declined-provider}
 
   {:name :notification/review-by-provider-first,
    :on :transition/review-1-by-provider,
