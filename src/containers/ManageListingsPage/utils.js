@@ -59,11 +59,11 @@ export const getItems = (listings, currentListingType, currentListingId) => {
         return imgWithTitle;
       });
 
-      const videos = selectedListing.attributes.publicData.videos.map(video => {
+      const videos = selectedListing.attributes.publicData.videos?.map(video => {
         const videoWithTitle = { ...video, id: { uuid: video.id }, type: 'video' };
         videoWithTitle.attributes = { title: selectedListing?.attributes?.title, variants: {} };
         return videoWithTitle;
-      });
+      }) || [];
       return [...videos, ...images];
     }
     case LISTING_TAB_TYPES.PRODUCT:
