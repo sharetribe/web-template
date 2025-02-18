@@ -65,3 +65,12 @@
   padding-left: 0;
   padding-right: 0;
 }
+
+p > em{
+  display:block;
+  margin-top: 6px;
+  @media (--viewportMedium) {
+    display:inline;
+    margin:0 6px;
+  }
+}

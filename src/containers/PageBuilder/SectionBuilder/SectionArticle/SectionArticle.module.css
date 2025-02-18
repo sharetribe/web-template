@@ -45,7 +45,3 @@ p > a:last-child{
     background-color:white;
   }
 }
-
-p > em{
-  margin:0 6px;
-}
