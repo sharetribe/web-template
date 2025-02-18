@@ -77,7 +77,7 @@
   {:name :transition/expire-seller-confirm-period,
    :at {:fn/plus
         [{:fn/timepoint [:time/first-entered-state :state/pending-payment]}
-         {:fn/period ["PT5M"]}]},
+         {:fn/period ["P6DT23H55M"]}]},
    :actions
    [{:name :action/calculate-full-refund}
     {:name :action/stripe-refund-payment}
@@ -129,7 +129,7 @@
   {:name :transition/expire-payment-hold-period,
    :at {:fn/plus
         [{:fn/timepoint [:time/first-entered-state :state/pending-payment]}
-         {:fn/period ["PT15M"]}]},
+         {:fn/period ["P6DT23H55M"]}]},
    :actions
    [{:name :action/stripe-capture-payment-intent}],
    :from :state/purchased,
@@ -146,7 +146,7 @@
   {:name :transition/auto-disable-refund,
    :at {:fn/plus
         [{:fn/timepoint [:time/first-entered-state :state/stripe-intent-captured]}
-         {:fn/period ["PT20M"]}]},
+         {:fn/period ["P20D"]}]},
    :actions [],
    :from :state/stripe-intent-captured,
    :to :state/refund-disabled}
@@ -175,7 +175,7 @@
   {:name :transition/auto-dispute-refund,
    :at {:fn/plus
         [{:fn/timepoint [:time/first-entered-state :state/seller-handle-disputed]}
-         {:fn/period ["PT5M"]}]},
+         {:fn/period ["P5D"]}]},
    :actions [],
    :from :state/seller-handle-disputed,
    :to :state/operator-handle-disputed}
@@ -201,7 +201,7 @@
   {:name :transition/expire-dispute-period,
    :at {:fn/plus
         [{:fn/timepoint [:time/first-entered-state :state/stripe-intent-captured]}
-         {:fn/period ["PT30M"]}]},
+         {:fn/period ["P30D"]}]},
    :actions
    [{:name :action/stripe-create-payout}],
    :from :state/operator-handle-disputed,
@@ -228,8 +228,8 @@
 
   {:name :transition/auto-mark-complete,
    :at {:fn/plus
-        [{:fn/timepoint [:time/first-entered-state :state/stripe-intent-captured]}
-         {:fn/period ["PT30M"]}]},
+        [{:fn/timepoint [:time/first-entered-state :state/refund-disabled]}
+         {:fn/period ["P10D"]}]},
    :actions
    [{:name :action/stripe-create-payout}],
    :from :state/refund-disabled,
@@ -263,7 +263,7 @@
    :at
    {:fn/plus
     [{:fn/timepoint [:time/first-entered-state :state/completed]}
-     {:fn/period ["P7M"]}]},
+     {:fn/period ["P7D"]}]},
    :actions [],
    :from :state/completed,
    :to :state/reviewed}
@@ -271,7 +271,7 @@
    :at
    {:fn/plus
     [{:fn/timepoint [:time/first-entered-state :state/completed]}
-     {:fn/period ["P7M"]}]},
+     {:fn/period ["P7D"]}]},
    :actions [{:name :action/publish-reviews}],
    :from :state/reviewed-by-customer,
    :to :state/reviewed}
@@ -279,7 +279,7 @@
    :at
    {:fn/plus
     [{:fn/timepoint [:time/first-entered-state :state/completed]}
-     {:fn/period ["P7M"]}]},
+     {:fn/period ["P7D"]}]},
    :actions [{:name :action/publish-reviews}],
    :from :state/reviewed-by-provider,
    :to :state/reviewed}],
