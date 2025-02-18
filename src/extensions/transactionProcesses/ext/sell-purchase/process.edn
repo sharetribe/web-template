@@ -45,7 +45,7 @@
    :from :state/pending-payment,
    :to :state/payment-expired}
 
-  {:name :transitions/buyer-refund-before-seller-confirmed,
+  {:name :transition/buyer-refund-before-seller-confirmed,
    :actor :actor.role/customer,
    :actions
    [{:name :action/calculate-full-refund}
@@ -55,7 +55,7 @@
     {:name :action/decline-stock-reservation}],
    :from :state/purchase-confirmed-by-buyer,
    :to :state/refund-before-capture}
-  {:name :transitions/seller-refund-before-seller-confirmed,
+  {:name :transition/seller-refund-before-seller-confirmed,
    :actor :actor.role/provider,
    :actions
    [{:name :action/calculate-full-refund}
@@ -66,7 +66,7 @@
    :from :state/purchase-confirmed-by-buyer,
    :to :state/refund-before-capture}
 
-  {:name :transitions/seller-confirm-purchase,
+  {:name :transition/seller-confirm-purchase,
    :actor :actor.role/provider,
    :actions
    [{:name :action/update-protected-data}
@@ -74,10 +74,10 @@
    :from :state/purchase-confirmed-by-buyer,
    :to :state/purchased}
 
-  {:name :transitions/expire-seller-confirm-period,
+  {:name :transition/expire-seller-confirm-period,
    :at {:fn/plus
-        [{:fn/timepoint [:time/first-entered-state :state/purchase-confirmed-by-buyer]}
-         {:fn/period ["P6DT23H"]}]},
+        [{:fn/timepoint [:time/first-entered-state :state/pending-payment]}
+         {:fn/period ["PT5M"]}]},
    :actions
    [{:name :action/calculate-full-refund}
     {:name :action/stripe-refund-payment}
@@ -87,7 +87,7 @@
    :from :state/purchase-confirmed-by-buyer
    :to :state/purchase-expired}
 
-  {:name :transitions/buyer-refund-before-capture-intent,
+  {:name :transition/buyer-refund-before-capture-intent,
    :actor :actor.role/customer,
    :actions
    [{:name :action/calculate-full-refund}
@@ -97,7 +97,7 @@
     {:name :action/cancel-stock-reservation}],
    :from :state/purchased,
    :to :state/refund-before-capture}
-  {:name :transitions/seller-refund-before-capture-intent,
+  {:name :transition/seller-refund-before-capture-intent,
    :actor :actor.role/provider,
    :actions
    [{:name :action/calculate-full-refund}
@@ -109,7 +109,7 @@
    :to :state/refund-before-capture}
 
   {;; This should only be executed when capturing intent failed
-   :name :transitions/operator-cancel-transition-after-expire-intent,
+   :name :transition/operator-cancel-transition-after-expire-intent,
    :actor :actor.role/operator,
    :actions
    [{:name :action/calculate-full-refund}
@@ -117,7 +117,7 @@
    :from :state/purchased,
    :to :state/refund-before-capture}
 
-  {:name :transitions/buyer-mark-complete-before-capture-intent,
+  {:name :transition/buyer-mark-complete-before-capture-intent,
    :actor :actor.role/customer,
    :privileged? true,
    :actions
@@ -126,16 +126,16 @@
    :from :state/purchased,
    :to :state/completed}
 
-  {:name :transitions/expire-payment-hold-period,
+  {:name :transition/expire-payment-hold-period,
    :at {:fn/plus
         [{:fn/timepoint [:time/first-entered-state :state/pending-payment]}
-         {:fn/period ["P6DT23H55M"]}]},
+         {:fn/period ["PT15M"]}]},
    :actions
    [{:name :action/stripe-capture-payment-intent}],
    :from :state/purchased,
    :to :state/stripe-intent-captured}
 
-  {:name :transitions/buyer-mark-complete,
+  {:name :transition/buyer-mark-complete,
    :actor :actor.role/customer,
    :privileged? true,
    :actions
@@ -143,44 +143,44 @@
    :from :state/stripe-intent-captured,
    :to :state/completed}
 
-  {:name :transitions/auto-disable-refund,
+  {:name :transition/auto-disable-refund,
    :at {:fn/plus
         [{:fn/timepoint [:time/first-entered-state :state/stripe-intent-captured]}
-         {:fn/period ["P20D"]}]},
+         {:fn/period ["PT20M"]}]},
    :actions [],
    :from :state/stripe-intent-captured,
    :to :state/refund-disabled}
 
-  {:name :transitions/buyer-issue-refund,
+  {:name :transition/buyer-issue-refund,
    :actor :actor.role/customer,
    :actions
    [{:name :action/update-protected-data}],
    :from :state/stripe-intent-captured,
    :to :state/seller-handle-disputed}
 
-  {:name :transitions/seller-issue-refund,
+  {:name :transition/seller-issue-refund,
    :actor :actor.role/provider,
    :actions
    [{:name :action/update-protected-data}],
    :from :state/stripe-intent-captured,
    :to :state/operator-handle-disputed}
 
-  {:name :transitions/seller-dispute,
+  {:name :transition/seller-dispute,
    :actor :actor.role/provider,
    :actions
    [{:name :action/update-protected-data}],
    :from :state/seller-handle-disputed,
    :to :state/operator-handle-disputed}
 
-  {:name :transitions/auto-dispute-refund,
+  {:name :transition/auto-dispute-refund,
    :at {:fn/plus
         [{:fn/timepoint [:time/first-entered-state :state/seller-handle-disputed]}
-         {:fn/period ["P5D"]}]},
+         {:fn/period ["PT5M"]}]},
    :actions [],
    :from :state/seller-handle-disputed,
    :to :state/operator-handle-disputed}
 
-  {:name :transitions/seller-approve-refund,
+  {:name :transition/seller-approve-refund,
    :actor :actor.role/provider,
    :actions
    [{:name :action/calculate-full-refund}
@@ -191,23 +191,23 @@
    :from :state/seller-handle-disputed,
    :to :state/canceled}
 
-  {:name :transitions/operator-mark-complete,
+  {:name :transition/operator-mark-complete,
    :actor :actor.role/operator,
    :actions
    [{:name :action/stripe-create-payout}],
    :from :state/operator-handle-disputed,
    :to :state/completed}
 
-  {:name :transitions/expire-dispute-period,
+  {:name :transition/expire-dispute-period,
    :at {:fn/plus
         [{:fn/timepoint [:time/first-entered-state :state/stripe-intent-captured]}
-         {:fn/period ["P30D"]}]},
+         {:fn/period ["PT30M"]}]},
    :actions
    [{:name :action/stripe-create-payout}],
    :from :state/operator-handle-disputed,
    :to :state/completed}
 
-  {:name :transitions/operator-approve-refund,
+  {:name :transition/operator-approve-refund,
    :actor :actor.role/operator,
    :actions
    [{:name :action/calculate-full-refund}
@@ -218,7 +218,7 @@
    :from :state/operator-handle-disputed,
    :to :state/canceled}
 
-  {:name :transitions/buyer-mark-complete-refund-disabled,
+  {:name :transition/buyer-mark-complete-refund-disabled,
    :actor :actor.role/customer,
    :privileged? true,
    :actions
@@ -226,10 +226,10 @@
    :from :state/refund-disabled,
    :to :state/completed}
 
-  {:name :transitions/auto-mark-complete,
+  {:name :transition/auto-mark-complete,
    :at {:fn/plus
         [{:fn/timepoint [:time/first-entered-state :state/stripe-intent-captured]}
-         {:fn/period ["P30D"]}]},
+         {:fn/period ["PT30M"]}]},
    :actions
    [{:name :action/stripe-create-payout}],
    :from :state/refund-disabled,
@@ -263,7 +263,7 @@
    :at
    {:fn/plus
     [{:fn/timepoint [:time/first-entered-state :state/completed]}
-     {:fn/period ["P7D"]}]},
+     {:fn/period ["P7M"]}]},
    :actions [],
    :from :state/completed,
    :to :state/reviewed}
@@ -271,7 +271,7 @@
    :at
    {:fn/plus
     [{:fn/timepoint [:time/first-entered-state :state/completed]}
-     {:fn/period ["P7D"]}]},
+     {:fn/period ["P7M"]}]},
    :actions [{:name :action/publish-reviews}],
    :from :state/reviewed-by-customer,
    :to :state/reviewed}
@@ -279,10 +279,11 @@
    :at
    {:fn/plus
     [{:fn/timepoint [:time/first-entered-state :state/completed]}
-     {:fn/period ["P7D"]}]},
+     {:fn/period ["P7M"]}]},
    :actions [{:name :action/publish-reviews}],
    :from :state/reviewed-by-provider,
    :to :state/reviewed}],
+
  :notifications
  [{:name :notification/order-receipt,
    :on :transition/confirm-payment,
@@ -298,6 +299,37 @@
    :on :transition/confirm-payment,
    :to :actor.role/provider,
    :template :purchase-new-order}
+
+  {:name :notification/purchase-mark-introduced-5-days-reminder,
+   :on :transition/confirm-payment,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/pending-payment]}
+     {:fn/period ["P2D"]}]},
+   :to :actor.role/provider,
+   :template :purchase-mark-introduced-5-days-reminder}
+  {:name :notification/purchase-mark-introduced-2-days-reminder,
+   :on :transition/confirm-payment,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/pending-payment]}
+     {:fn/period ["P5D"]}]},
+   :to :actor.role/provider,
+   :template :purchase-mark-introduced-2-days-reminder}
+
+  {:name :notification/purchase-introduce-manager,
+   :on :transition/seller-confirm-purchase,
+   :to :actor.role/customer,
+   :template :purchase-introduce-manager}
+
+  {:name :notification/purchase-auto-canceled-provider,
+   :on :transition/expire-seller-confirm-period,
+   :to :actor.role/provider,
+   :template :purchase-auto-canceled-provider}
+  {:name :notification/purchase-auto-canceled-customer,
+   :on :transition/expire-seller-confirm-period,
+   :to :actor.role/customer,
+   :template :purchase-auto-canceled-customer}
 
   {:name :notification/review-by-provider-first,
    :on :transition/review-1-by-provider,
