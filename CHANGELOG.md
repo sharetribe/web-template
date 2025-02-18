@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] Remove obsolete Flex CLI references
+  [#550](https://github.com/sharetribe/web-template/pull/550)
 - [fix] BookingTimeForm (hourly booking): calendar day was not localized causing isDayBlocked fn to
   choose past day, if listing's time zone was to the west of the browser's location / time zone.
   [#556](https://github.com/sharetribe/web-template/pull/556)
