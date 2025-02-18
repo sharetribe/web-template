@@ -374,7 +374,14 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
         page,
         perPage: RESULT_PAGE_SIZE,
         include: ['images', 'currentStock'],
-        'fields.image': [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`],
+        'fields.image': [
+          // Scaled variants for large images
+          'variants.scaled-xlarge',
+
+          // Cropped variants for listing thumbnail images
+          `variants.${variantPrefix}`,
+          `variants.${variantPrefix}-2x`,
+        ],
         ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
         ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
       })

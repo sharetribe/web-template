@@ -149,7 +149,6 @@ export const ManageListingsPageComponent = props => {
             key={`${currentCategory}-${index}`}
             className={className}
             item={item}
-            renderSizes={renderSizes}
           />
         );
       }

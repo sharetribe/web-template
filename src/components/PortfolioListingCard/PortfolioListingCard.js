@@ -12,7 +12,7 @@ import css from './PortfolioListingCard.module.css';
 
 export const PortfolioListingCard = props => {
   const config = useConfiguration();
-  const { className = null, rootClassName = null, item, renderSizes = null } = props;
+  const { className = null, rootClassName = null, item } = props;
   const classes = classNames(rootClassName || css.root, className);
   const [modalVisible, setModalVisible] = useState(false);
   const videoRef = useRef(null);
@@ -85,19 +85,18 @@ export const PortfolioListingCard = props => {
     variantPrefix = 'listing-card',
   } = config.layout.listingImage;
   const imageVariants = item?.attributes?.variants || {};
-  const variants = Object.keys(imageVariants).filter(k => k.startsWith(variantPrefix));
-  const srcSet = variants
-    .map(variantName => {
-      const variant = imageVariants[variantName];
-      return variant ? `${variant.url} ${variant.width}w` : null;
-    })
-    .filter(Boolean)
-    .join(', ');
+  const previewSrc = imageVariants['scaled-xlarge']?.url;
+  const thumbnailSrc = imageVariants[variantPrefix]?.url;
 
   return (
     <div className={classes}>
       <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
-        <Image srcSet={srcSet} alt={title} fallback={imagePlaceholder} />
+        <Image
+          src={thumbnailSrc}
+          alt={title}
+          fallback={imagePlaceholder}
+          preview={{ src: previewSrc }}
+        />
       </AspectRatioWrapper>
     </div>
   );
@@ -105,7 +104,6 @@ export const PortfolioListingCard = props => {
 
 PortfolioListingCard.propTypes = {
   className: PropTypes.string,
-  renderSizes: PropTypes.string,
   item: PropTypes.shape({
     type: PropTypes.string.isRequired,
     url: PropTypes.string,

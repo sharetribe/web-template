@@ -1,9 +1,9 @@
 const { LISTING_TYPES } = require('../../api-util/metadataHelper');
 const { integrationSdkInit, generateScript } = require('../../api-util/scriptManager');
-const { slackPortfolioListingCreatedErrorWorkflow } = require('../../api-util/slackHelper');
+const { slackPortfolioListingUpdatedErrorWorkflow } = require('../../api-util/slackHelper');
 
-const SCRIPT_NAME = 'notifyPortfolioListingCreated';
-const EVENT_TYPES = 'listing/created';
+const SCRIPT_NAME = 'notifyPortfolioListingUpdated';
+const EVENT_TYPES = 'listing/updated';
 const RESOURCE_TYPE = 'listing';
 
 function script() {
@@ -22,18 +22,23 @@ function script() {
     const { resourceType, eventType } = event.attributes;
     const isValidEvent = resourceType === RESOURCE_TYPE && eventType === EVENT_TYPES;
     if (isValidEvent) {
-      const { resourceId, resource: listing } = event.attributes;
+      const { resourceId, resource: listing, previousValues } = event.attributes;
       const listingId = resourceId.uuid;
+      const { state } = listing?.attributes || {};
       const { listingType } = listing?.attributes?.publicData || {};
       const isValidListingType = listingType === LISTING_TYPES.PORTFOLIO;
       try {
-        if (isValidListingType) {
-          const response = await approvePortfolioListing(listingId);
+        const { state: previousState } = previousValues?.attributes || {};
+        const stateUpdated = !!previousState;
+        const isListingPendingApproval = state === 'pendingApproval';
+        const shouldUpdate = isValidListingType && stateUpdated && isListingPendingApproval;
+        if (shouldUpdate) {
+          await approvePortfolioListing(listingId);
         }
       } catch (error) {
-        slackPortfolioListingCreatedErrorWorkflow(listingId);
+        slackPortfolioListingUpdatedErrorWorkflow(listingId);
         console.error(
-          `[notifyPortfolioListingCreated] Error processing event | listingId: ${listingId} | Error:`,
+          `[notifyPortfolioListingUpdated] Error processing event | listingId: ${listingId} | Error:`,
           error
         );
       }

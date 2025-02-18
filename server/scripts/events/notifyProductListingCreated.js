@@ -6,10 +6,13 @@ const {
   slackProductListingsCreatedWorkflow,
   slackProductListingsErrorWorkflow,
 } = require('../../api-util/slackHelper');
+const { retryAsync } = require('../../api-util/retryAsync');
 
 const SCRIPT_NAME = 'notifyProductListingCreated';
 const EVENT_TYPES = 'listing/created';
 const RESOURCE_TYPE = 'listing';
+const RETRY_DELAY = 20000; // 20 seconds
+const RETRIES = 3;
 
 const filterEvents = event => {
   const { resourceType, eventType, resourceId, resource } = event.attributes;
@@ -94,7 +97,8 @@ function script() {
     let failList = [];
     const parsedEvents = events.filter(filterEvents);
     try {
-      const originalAssets = await storageHandler(parsedEvents);
+      const promiseFn = async () => await storageHandler(parsedEvents);
+      const originalAssets = await retryAsync(promiseFn, RETRIES, RETRY_DELAY);
       await Promise.all(
         parsedEvents.map(async event => {
           const { resourceId } = event.attributes;

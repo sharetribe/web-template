@@ -242,7 +242,7 @@ const EditPortfolioListingFilesFormComponent = props => {
               inProgress={updateInProgress}
               disabled={submitDisabled}
             >
-              {isDraft ? 'Publish' : 'Save'}
+              {isDraft ? 'Publish' : 'Return'}
             </Button>
           </Form>
         );

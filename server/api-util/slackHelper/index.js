@@ -7,7 +7,7 @@ const getProductListingsErrorBlocks = require('./productListingsErrorBlocks');
 const getSellerValidationBlocks = require('./sellerValidationBlocks');
 const getUserUpdateWarningBlocks = require('./userUpdateWarningBlocks');
 const getProfileListingUpdateErrorBlocks = require('./profileListingUpdateErrorBlocks');
-const getPortfolioListingCreatedErrorBlocks = require('./portfolioListingCreatedErrorBlocks');
+const getPortfolioListingUpdatedErrorBlocks = require('./portfolioListingUpdatedErrorBlocks');
 const getUserCreatedErrorBlocks = require('./userCreatedErrorBlocks');
 const getUserUpdatedErrorBlocks = require('./userUpdatedErrorBlocks');
 
@@ -155,16 +155,16 @@ const slacktUserUpdatedErrorWorkflow = async userId => {
   }
 };
 
-const slackPortfolioListingCreatedErrorWorkflow = async listingId => {
+const slackPortfolioListingUpdatedErrorWorkflow = async listingId => {
   const slackListingManagerChannelId = process.env.SLACK_LISTING_MANAGER_CHANNEL_ID;
   const slackBotToken = process.env.SLACK_BOT_TOKEN;
   try {
     const webClient = new WebClient(slackBotToken);
-    const portfolioListingCreatedErrorBlocks = getPortfolioListingCreatedErrorBlocks(listingId);
+    const portfolioListingUpdatedErrorBlocks = getPortfolioListingUpdatedErrorBlocks(listingId);
     await webClient.chat.postMessage({
       channel: slackListingManagerChannelId,
       text: 'Starting Portfolio Listing Created Error workflow',
-      blocks: portfolioListingCreatedErrorBlocks,
+      blocks: portfolioListingUpdatedErrorBlocks,
       unfurl_links: false,
     });
   } catch (error) {
@@ -182,5 +182,5 @@ module.exports = {
   slackProfileListingUpdateErrorWorkflow,
   slackUserCreatedErrorWorkflow,
   slacktUserUpdatedErrorWorkflow,
-  slackPortfolioListingCreatedErrorWorkflow,
+  slackPortfolioListingUpdatedErrorWorkflow,
 };

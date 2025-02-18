@@ -90,15 +90,19 @@ export const getItems = (
     }
     case LISTING_TAB_TYPES.PORTFOLIO: {
       const selectedListing = listings.find(listing => listing.id.uuid === currentCategory);
-      const withImaged = selectedListing?.images && selectedListing?.images.length > 0;
-      if (!withImaged) {
-        return [];
-      }
-      return selectedListing.images.map(image => {
-        let imgWithTitle = { ...image };
-        imgWithTitle.attributes.title = selectedListing?.attributes?.title;
-        return imgWithTitle;
-      });
+      const images =
+        selectedListing?.images?.map(image => {
+          const imgWithTitle = { ...image };
+          imgWithTitle.attributes.title = selectedListing?.attributes?.title;
+          return imgWithTitle;
+        }) || [];
+      const videos =
+        selectedListing?.attributes?.publicData?.videos?.map(video => {
+          const videoWithTitle = { ...video, id: { uuid: video.id }, type: 'video' };
+          videoWithTitle.attributes = { title: selectedListing?.attributes?.title, variants: {} };
+          return videoWithTitle;
+        }) || [];
+      return [...videos, ...images];
     }
     case LISTING_TAB_TYPES.PRODUCT:
     default: {

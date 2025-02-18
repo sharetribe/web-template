@@ -1,4 +1,4 @@
-const notifyPortfolioListingCreated = require('./notifyPortfolioListingCreated');
+const notifyPortfolioListingUpdated = require('./notifyPortfolioListingUpdated');
 const notifyProductListingCreated = require('./notifyProductListingCreated');
 const notifyProfileListingUpdated = require('./notifyProfileListingUpdated');
 const notifyUserCreated = require('./notifyUserCreated');
@@ -6,7 +6,7 @@ const notifyUserUpdated = require('./notifyUserUpdated');
 
 async function loadEventScripts() {
   console.warn("\nLoading event's scripts..");
-  notifyPortfolioListingCreated();
+  notifyPortfolioListingUpdated();
   notifyProductListingCreated();
   notifyProfileListingUpdated();
   notifyUserCreated();
