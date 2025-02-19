@@ -6,12 +6,11 @@ const {
   slackProductListingsCreatedWorkflow,
   slackProductListingsErrorWorkflow,
 } = require('../../api-util/slackHelper');
-const { retryAsync } = require('../../api-util/retryAsync');
+const { retryAsync, RETRY_STORAGE_DELAY, RETRY_SDK_DELAY } = require('../../api-util/retryAsync');
 
 const SCRIPT_NAME = 'notifyProductListingCreated';
 const EVENT_TYPES = 'listing/created';
 const RESOURCE_TYPE = 'listing';
-const RETRY_DELAY = 20000; // 20 seconds
 const RETRIES = 3;
 
 const filterEvents = event => {
@@ -54,15 +53,18 @@ const processEvent = async (integrationSdk, event, originalAssetData) => {
   const previewAssetUrl = listing?.privateData?.previewAssetUrl;
   try {
     const imageStream = await httpFileUrlToStream(previewAssetUrl);
-    const { data: sdkImage } = await integrationSdk.images.upload({ image: imageStream });
-    await integrationSdk.listings.update(
-      {
-        id: listingId,
-        privateData: { originalAssetUrl: originalAssetData.source, previewAssetUrl: null },
-        images: [sdkImage.data.id],
-      },
-      { expand: true, include: ['images'] }
-    );
+    const promiseFn = async () => {
+      const { data: sdkImage } = await integrationSdk.images.upload({ image: imageStream });
+      await integrationSdk.listings.update(
+        {
+          id: listingId,
+          privateData: { originalAssetUrl: originalAssetData.source, previewAssetUrl: null },
+          images: [sdkImage.data.id],
+        },
+        { expand: true, include: ['images'] }
+      );
+    };
+    await retryAsync(promiseFn, RETRIES, RETRY_SDK_DELAY);
     return true;
   } catch (error) {
     console.error(
@@ -98,7 +100,7 @@ function script() {
     const parsedEvents = events.filter(filterEvents);
     try {
       const promiseFn = async () => await storageHandler(parsedEvents);
-      const originalAssets = await retryAsync(promiseFn, RETRIES, RETRY_DELAY);
+      const originalAssets = await retryAsync(promiseFn, RETRIES, RETRY_STORAGE_DELAY);
       await Promise.all(
         parsedEvents.map(async event => {
           const { resourceId } = event.attributes;
