@@ -19,7 +19,7 @@
   "SellPurchaseAutoCanceledProvider.ContentAssistance": "If you have any concerns or need further clarification, please don’t hesitate to reach out to us",
   "SellPurchaseAutoCanceledCustomer.Title": "{providerDisplayName} has Canceled Your Order",
   "SellPurchaseAutoCanceledCustomer.ContentOrderCanceled": "{providerDisplayName} has canceled your order for <salelink>{listingTitle}</salelink>. Your credit card was not charged.",
-  "SellPurchaseAutoCanceledCustomer.ContentContactStore": "If this was unexpected and you need further clarification, please contact {providerDisplayName} for more information",
+  "SellPurchaseAutoCanceledCustomer.ContentContactStore": "If this was unexpected and you need further clarification, please contact {providerDisplayName} for more information.",
   "SellPurchaseAutoCanceledCustomer.ContentAssistance": "If you still have any questions or need help, please contact us.",
   "SellPurchaseIntroduceManager.Subject": "Property Manager Details",
   "SellPurchaseIntroduceManager.ContentProviderShareDetails": "{providerDisplayName} shared the property manager's contact info with you:",

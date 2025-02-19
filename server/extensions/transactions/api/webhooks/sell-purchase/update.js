@@ -3,7 +3,7 @@ const { stripeInstance } = require('../../../utils/getStripeInstance');
 const {
   SELL_PURCHASE_PROCESS_NAME,
   transitions,
-} = require('../../sellPurchase/transactions/transactionProcessSellPurchase');
+} = require('../../sell-purchase/transactions/transactionProcessSellPurchase');
 
 const handleExpireIntent = async chargeObject => {
   const { ['payment_intent']: paymentIntentId } = chargeObject;

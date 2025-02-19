@@ -11,6 +11,8 @@
    :actions
    [{:name :action/create-pending-stock-reservation}
     {:name :action/privileged-set-line-items}
+    {:name :action/stripe-create-payment-intent}
+    {:name :action/update-protected-data}],
    :to :state/pending-payment}
 
   {:name :transition/request-payment-after-inquiry,

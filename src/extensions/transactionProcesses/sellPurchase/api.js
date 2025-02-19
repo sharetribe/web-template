@@ -1,4 +1,4 @@
-const { patchMethod } = require('../../common/api');
+const { postMethod } = require('../../common/api');
 
 export const markProgress = async txId =>
-  await patchMethod('/api/transactionProcesses/sellPurchase/markProgress', { txId });
+  await postMethod('/api/transactions/sell-purchase/progress', { txId });

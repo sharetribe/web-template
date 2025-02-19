@@ -1,11 +1,11 @@
 const express = require('express');
 const authenticatedUser = require('../../../common/middlewares/authenticatedUser');
-const markProgress = require('./markProgress');
+const updateProgress = require('./purchase-progress/update');
 
 const router = express.Router();
 
 router.use(authenticatedUser());
 
-router.patch('/markProgress', markProgress);
+router.post('/progress', updateProgress);
 
 module.exports = router;

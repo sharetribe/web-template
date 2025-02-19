@@ -1,6 +1,6 @@
 const { STRIPE_WEBHOOK_ENDPOINT_SECRET, isLiveMode } = require('../../../configs');
 const { stripeInstance } = require('../../../utils/getStripeInstance');
-const handleExpireIntent = require('./handleExpireIntent');
+const handleExpireIntent = require('./update');
 
 const endpointSecret = STRIPE_WEBHOOK_ENDPOINT_SECRET;
 
