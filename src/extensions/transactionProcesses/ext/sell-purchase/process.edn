@@ -155,6 +155,7 @@
 
   {:name :transition/buyer-issue-refund,
    :actor :actor.role/customer,
+   :privileged? true,
    :actions
    [{:name :action/update-protected-data}],
    :from :state/stripe-intent-captured,

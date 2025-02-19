@@ -203,6 +203,7 @@ const privilegeTransitions = [
   transitions.BUYER_MARK_COMPLETE,
   transitions.BUYER_MARK_COMPLETE_REFUND_DISABLED,
   transitions.BUYER_ISSUE_REFUND,
+  transitions.SELLER_ISSUE_REFUND,
 ];
 
 const isPrivileged = transition => {
