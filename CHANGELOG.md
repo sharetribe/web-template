@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+## [v7.3.0] 2025-02-19
+
 - [fix] Remove obsolete Flex CLI references
   [#550](https://github.com/sharetribe/web-template/pull/550)
 - [fix] BookingTimeForm (hourly booking): calendar day was not localized causing isDayBlocked fn to
@@ -29,6 +31,8 @@ way to update this template, but currently, we follow a pattern:
   [#552](https://github.com/sharetribe/web-template/pull/552)
 - [fix] LocationAutocompleteInput: fix a bug with Google Maps API loading order with Webpack Dev
   Server. [#548](https://github.com/sharetribe/web-template/pull/548)
+
+  [v7.3.0]: https://github.com/sharetribe/web-template/compare/v7.2.0...v7.3.0
 
 ## [v7.2.0] 2025-01-30
 
