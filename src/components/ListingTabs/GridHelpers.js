@@ -1,4 +1,5 @@
 import React from 'react';
+import { DateTime } from 'luxon';
 
 import { FormattedMessage } from '../../util/reactIntl';
 import { LISTING_TAB_TYPES, LISTING_GRID_ROLE } from '../../util/types';
@@ -8,6 +9,18 @@ import { H3, PaginationLinks } from '../';
 import css from './ListingTabs.module.css';
 
 export function getTabsFeaturesForRole(role, hideReviews) {
+  /**
+   * [TODO:]
+   *    - Temporary solution!!!
+   */
+  const checkTime = () => {
+    // Get current time in New York (Eastern Time Zone)
+    const now = DateTime.now().setZone('America/New_York');
+    const currentHour = now.hour;
+    const isWithinRange = currentHour >= 6;
+    return isWithinRange;
+  };
+
   switch (role) {
     case LISTING_GRID_ROLE.FAVORITE:
       return {
@@ -35,7 +48,7 @@ export function getTabsFeaturesForRole(role, hideReviews) {
     default:
       return {
         enableCategoryTabs: true,
-        enableListingManagement: true,
+        enableListingManagement: checkTime(),
         pageName: 'ManageListingsPage',
         tabs: [
           { key: LISTING_TAB_TYPES.PRODUCT, label: 'Shop' },
