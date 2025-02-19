@@ -32,7 +32,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
       return { processName, processState, actionNeeded: true };
     })
     .cond([states.PURCHASE_EXPIRED, _], () => {
-      return { processName, processState, actionNeeded: true };
+      return { processName, processState, isFinal: true };
     })
     .cond([states.COMPLETED, _], () => {
       return { processName, processState, actionNeeded: true };
