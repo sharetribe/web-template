@@ -1,16 +1,10 @@
-const { STRIPE_WEBHOOK_ENDPOINT_SECRET, isLiveMode } = require('../../../configs');
-const { stripeInstance } = require('../../../utils/getStripeInstance');
-const handleExpireIntent = require('./update');
-
-const endpointSecret = STRIPE_WEBHOOK_ENDPOINT_SECRET;
+const { isLiveMode } = require('../../../configs');
+const handleExpireIntent = require('./expire');
 
 const handleWebhook = async (req, res) => {
-  const sig = req.headers['stripe-signature'];
+  const event = req.event;
 
-  // Ensure request is from Stripe
   try {
-    const event = stripeInstance.webhooks.constructEvent(req.body, sig, endpointSecret);
-
     if (event.livemode !== isLiveMode) {
       // Skip if not matching mode
       return res.json({ received: true });
@@ -19,6 +13,7 @@ const handleWebhook = async (req, res) => {
     // Handle the event
     switch (event.type) {
       case 'charge.expired':
+      //TODO: Remove testing case below
       case 'charge.failed':
       case 'payment_intent.canceled':
         const chargeObject = event.data.object;
