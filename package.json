@@ -54,6 +54,7 @@
     "helmet": "^7.1.0",
     "jose": "^5.4.0",
     "lodash": "^4.17.21",
+    "luxon": "^3.5.0",
     "mapbox-gl-multitouch": "^1.0.3",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.46",
