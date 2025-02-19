@@ -176,7 +176,6 @@ const ActionButtonsMaybe = props => {
       {secondaryError ? secondaryErrorText : secondaryButtonText}
     </SecondaryButton>
   ) : null;
-  console.log({ primaryButtonProps, secondaryButtonProps });
 
   const secondaryConfirmModal = secondaryIsConfirmNeeded ? (
     <Modal

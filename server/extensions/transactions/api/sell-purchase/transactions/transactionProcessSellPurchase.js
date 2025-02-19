@@ -200,6 +200,9 @@ const privilegeTransitions = [
   transitions.REQUEST_PAYMENT,
   transitions.REQUEST_PAYMENT_AFTER_INQUIRY,
   transitions.BUYER_MARK_COMPLETE_BEFORE_CAPTURE_INTENT,
+  transitions.BUYER_MARK_COMPLETE,
+  transitions.BUYER_MARK_COMPLETE_REFUND_DISABLED,
+  transitions.BUYER_ISSUE_REFUND,
 ];
 
 const isPrivileged = transition => {

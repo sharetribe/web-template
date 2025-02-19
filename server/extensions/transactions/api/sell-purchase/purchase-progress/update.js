@@ -35,8 +35,8 @@ const updateProgress = async (req, res) => {
       customer,
     } = denormalisedResponseEntities(transactionResponse)[0];
 
-    const providerId = provider?.data?.id.uuid;
-    const customerId = customer?.data?.id.uuid;
+    const providerId = provider?.id.uuid;
+    const customerId = customer?.id.uuid;
 
     // Possible invalid values
     if (
