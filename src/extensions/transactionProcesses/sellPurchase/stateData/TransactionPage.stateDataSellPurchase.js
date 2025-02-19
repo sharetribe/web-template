@@ -6,6 +6,35 @@ import {
 } from '../../../../transactions/transaction';
 import { states, transitions } from '../transactions/transactionProcessSellPurchase';
 
+const getCustomerUpdateProgressPrimaryButtonProps = ({
+  buyerMarkMetManager,
+  availableTransition,
+  currentState,
+}) => {
+  const transitionName = buyerMarkMetManager ? availableTransition : 'markMetManager';
+  const modalStatementPrefix = buyerMarkMetManager ? '' : '.markMetManager';
+
+  return {
+    isConfirmNeeded: true,
+    showConfirmStatement: true,
+    showReminderStatement: true,
+    actionButtonTranslationId: `TransactionPage.sell-purchase.customer.${transitionName}.actionButton`,
+    actionButtonTranslationErrorId: `TransactionPage.sell-purchase.customer.${transitionName}.actionError`,
+    confirmStatementTranslationId: `TransactionPage.PrimaryConfirmActionModal.sell-purchase.${currentState}.customer${modalStatementPrefix}.confirmStatement`,
+    reminderStatementTranslationId: `TransactionPage.PrimaryConfirmActionModal.sell-purchase.${currentState}.customer${modalStatementPrefix}.reminderStatement`,
+  };
+};
+
+const getProviderUpdateProgressPrimaryButtonProps = () => ({
+  isConfirmNeeded: true,
+  showConfirmStatement: true,
+  showReminderStatement: true,
+  actionButtonTranslationId:
+    'TransactionPage.sell-purchase.provider.markMachinePlaced.actionButton',
+  actionButtonTranslationErrorId:
+    'TransactionPage.sell-purchase.provider.markMachinePlaced.actionError',
+});
+
 /**
  * Get state data against product process for TransactionPage's UI.
  * I.e. info about showing action buttons, current state etc.
@@ -84,39 +113,18 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
       return { processName, processState, showDetailCardHeadings: true };
     })
     .cond([states.PURCHASED, CUSTOMER], () => {
-      const primaryButtonProps = buyerMarkMetManager
-        ? {
-            actionButtonTranslationId:
-              'TransactionPage.sell-purchase.customer.transition-buyer-mark-complete-before-capture-intent.actionButton',
-            actionButtonTranslationErrorId:
-              'TransactionPage.sell-purchase.customer.transition-buyer-mark-complete-before-capture-intent.actionError',
-            confirmStatementTranslationId:
-              'TransactionPage.PrimaryConfirmActionModal.sell-purchase.purchased.customer.confirmStatement',
-            reminderStatementTranslationId:
-              'TransactionPage.PrimaryConfirmActionModal.sell-purchase.purchased.customer.reminderStatement',
-          }
-        : {
-            actionButtonTranslationId:
-              'TransactionPage.sell-purchase.customer.markMetManager.actionButton',
-            actionButtonTranslationErrorId:
-              'TransactionPage.sell-purchase.customer.markMetManager.actionError',
-            confirmStatementTranslationId:
-              'TransactionPage.PrimaryConfirmActionModal.sell-purchase.purchased.customer.markMetManager.confirmStatement',
-            reminderStatementTranslationId:
-              'TransactionPage.PrimaryConfirmActionModal.sell-purchase.purchased.customer.markMetManager.reminderStatement',
-          };
+      const primaryButtonProps = getCustomerUpdateProgressPrimaryButtonProps({
+        buyerMarkMetManager,
+        availableTransition: 'transition-buyer-mark-complete-before-capture-intent',
+        currentState: states.PURCHASED,
+      });
 
       return {
         processName,
         processState,
         showDetailCardHeadings: true,
         showActionButtons: true,
-        primaryButtonProps: markSellPurchaseProgressProps(CUSTOMER, {
-          isConfirmNeeded: true,
-          showConfirmStatement: true,
-          showReminderStatement: true,
-          ...primaryButtonProps,
-        }),
+        primaryButtonProps: markSellPurchaseProgressProps(CUSTOMER, primaryButtonProps),
         secondaryButtonProps: actionButtonProps(
           transitions.BUYER_REFUND_BEFORE_CAPTURE_INTENT,
           CUSTOMER,
@@ -135,15 +143,10 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
       const primaryButtonMaybe = sellerMarkMachinePlaced
         ? {}
         : {
-            primaryButtonProps: markSellPurchaseProgressProps(PROVIDER, {
-              isConfirmNeeded: true,
-              showConfirmStatement: true,
-              showReminderStatement: true,
-              actionButtonTranslationId:
-                'TransactionPage.sell-purchase.provider.markMachinePlaced.actionButton',
-              actionButtonTranslationErrorId:
-                'TransactionPage.sell-purchase.provider.markMachinePlaced.actionError',
-            }),
+            primaryButtonProps: markSellPurchaseProgressProps(
+              PROVIDER,
+              getProviderUpdateProgressPrimaryButtonProps()
+            ),
           };
 
       return {
@@ -166,29 +169,18 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
       return { processName, processState, showDetailCardHeadings: true };
     })
     .cond([states.STRIPE_INTENT_CAPTURED, CUSTOMER], () => {
-      const transitionName = buyerMarkMetManager
-        ? 'transition-buyer-mark-complete-before-capture-intent'
-        : 'markMetManager';
-      const modalStatementPrefix = buyerMarkMetManager ? '' : '.markMetManager';
-
-      const primaryButtonProps = {
-        actionButtonTranslationId: `TransactionPage.sell-purchase.customer.${transitionName}.actionButton`,
-        actionButtonTranslationErrorId: `TransactionPage.sell-purchase.customer.${transitionName}.actionError`,
-        confirmStatementTranslationId: `TransactionPage.PrimaryConfirmActionModal.sell-purchase.stripe-intent-captured.customer${modalStatementPrefix}.confirmStatement`,
-        reminderStatementTranslationId: `TransactionPage.PrimaryConfirmActionModal.sell-purchase.stripe-intent-captured.customer${modalStatementPrefix}.reminderStatement`,
-      };
+      const primaryButtonProps = getCustomerUpdateProgressPrimaryButtonProps({
+        buyerMarkMetManager,
+        availableTransition: 'transition-buyer-mark-complete',
+        currentState: states.STRIPE_INTENT_CAPTURED,
+      });
 
       return {
         processName,
         processState,
         showDetailCardHeadings: true,
         showActionButtons: true,
-        primaryButtonProps: markSellPurchaseProgressProps(CUSTOMER, {
-          isConfirmNeeded: true,
-          showConfirmStatement: true,
-          showReminderStatement: true,
-          ...primaryButtonProps,
-        }),
+        primaryButtonProps: markSellPurchaseProgressProps(CUSTOMER, primaryButtonProps),
         secondaryButtonProps: actionButtonProps(transitions.BUYER_ISSUE_REFUND, CUSTOMER, {
           isConfirmNeeded: true,
           showReminderStatement: true,
@@ -203,15 +195,10 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
       const primaryButtonMaybe = sellerMarkMachinePlaced
         ? {}
         : {
-            primaryButtonProps: markSellPurchaseProgressProps(PROVIDER, {
-              isConfirmNeeded: true,
-              showConfirmStatement: true,
-              showReminderStatement: true,
-              actionButtonTranslationId:
-                'TransactionPage.sell-purchase.provider.markMachinePlaced.actionButton',
-              actionButtonTranslationErrorId:
-                'TransactionPage.sell-purchase.provider.markMachinePlaced.actionError',
-            }),
+            primaryButtonProps: markSellPurchaseProgressProps(
+              PROVIDER,
+              getProviderUpdateProgressPrimaryButtonProps()
+            ),
           };
 
       return {
@@ -227,26 +214,28 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
       };
     })
     .cond([states.REFUND_DISABLED, CUSTOMER], () => {
-      const primaryButtonProps = buyerMarkMetManager
-        ? {
-            actionButtonTranslationId:
-              'TransactionPage.sell-purchase.customer.transition-buyer-mark-complete-refund-disabled.actionButton',
-            actionButtonTranslationErrorId:
-              'TransactionPage.sell-purchase.customer.transition-buyer-mark-complete-refund-disabled.actionError',
-            confirmStatementTranslationId:
-              'TransactionPage.PrimaryConfirmActionModal.sell-purchase.refund-disabled.customer.confirmStatement',
-            reminderStatementTranslationId:
-              'TransactionPage.PrimaryConfirmActionModal.sell-purchase.refund-disabled.customer.reminderStatement',
-          }
+      const primaryButtonProps = getCustomerUpdateProgressPrimaryButtonProps({
+        buyerMarkMetManager,
+        availableTransition: 'transition-buyer-mark-complete-refund-disabled',
+        currentState: states.REFUND_DISABLED,
+      });
+
+      return {
+        processName,
+        processState,
+        showDetailCardHeadings: true,
+        showActionButtons: true,
+        primaryButtonProps: markSellPurchaseProgressProps(CUSTOMER, primaryButtonProps),
+      };
+    })
+    .cond([states.REFUND_DISABLED, PROVIDER], () => {
+      const primaryButtonMaybe = sellerMarkMachinePlaced
+        ? {}
         : {
-            actionButtonTranslationId:
-              'TransactionPage.sell-purchase.customer.markMetManager.actionButton',
-            actionButtonTranslationErrorId:
-              'TransactionPage.sell-purchase.customer.markMetManager.actionError',
-            confirmStatementTranslationId:
-              'TransactionPage.PrimaryConfirmActionModal.sell-purchase.refund-disabled.customer.markMetManager.confirmStatement',
-            reminderStatementTranslationId:
-              'TransactionPage.PrimaryConfirmActionModal.sell-purchase.refund-disabled.customer.markMetManager.reminderStatement',
+            primaryButtonProps: markSellPurchaseProgressProps(
+              PROVIDER,
+              getProviderUpdateProgressPrimaryButtonProps()
+            ),
           };
 
       return {
@@ -254,16 +243,8 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
         processState,
         showDetailCardHeadings: true,
         showActionButtons: true,
-        primaryButtonProps: markSellPurchaseProgressProps(CUSTOMER, {
-          isConfirmNeeded: true,
-          showConfirmStatement: true,
-          showReminderStatement: true,
-          ...primaryButtonProps,
-        }),
+        ...primaryButtonMaybe,
       };
-    })
-    .cond([states.REFUND_DISABLED, PROVIDER], () => {
-      return { processName, processState, showDetailCardHeadings: true };
     })
     .cond([states.SELLER_HANDLE_DISPUTED, CUSTOMER], () => {
       return { processName, processState, showDetailCardHeadings: true };
