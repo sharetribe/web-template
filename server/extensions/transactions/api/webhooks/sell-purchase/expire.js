@@ -3,7 +3,7 @@ const { stripeInstance } = require('../../../mod/stripe/instance');
 const {
   SELL_PURCHASE_PROCESS_NAME,
   transitions,
-} = require('../../sell-purchase/transactions/transactionProcessSellPurchase');
+} = require('../../../transactions/transactionProcessSellPurchase');
 
 const handleExpireIntent = async chargeObject => {
   //TODO: paymentIntentObjectId is of payment_intent.canceled event type

@@ -2,7 +2,7 @@ const { getTrustedSdk } = require('../../../../common/sdk');
 const {
   SELL_PURCHASE_PROCESS_NAME,
   updateProgressLastTransitions,
-} = require('../transactions/transactionProcessSellPurchase');
+} = require('../../../transactions/transactionProcessSellPurchase');
 const updateProgressProvider = require('./provider');
 const updateProgressCustomer = require('./customer');
 const { denormalisedResponseEntities } = require('../../../../common/data/data');

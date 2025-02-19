@@ -1,7 +1,7 @@
 const { serialize, integrationSdk } = require('../../../../common/sdk');
 const {
   updateProgressPossibleNextTransitions,
-} = require('../transactions/transactionProcessSellPurchase');
+} = require('../../../transactions/transactionProcessSellPurchase');
 
 const updateProgress = async ({ res, trustedSdk, txId, txMetadata, lastTransition }) => {
   const { buyerMarkMetManager } = txMetadata;
