@@ -20,7 +20,7 @@ import {
 
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { fetchCurrentUserNotifications } from '../../ducks/user.duck';
-import { markProgress } from '../../extensions/transactionProcesses/sellPurchase/api';
+import { updateProgress } from '../../extensions/transactionProcesses/sellPurchase/api';
 
 const { UUID } = sdkTypes;
 
@@ -765,7 +765,7 @@ export const loadData = (params, search, config) => (dispatch, getState) => {
 // in state PURCHASED, STRIPE_INTENT_CAPTURE, REFUND_DISABLED
 // and transition to COMPLETED
 // Treat it as a pseudo-transition
-export const markProgressSellPurchase = (txId, transitionName) => async (
+export const updateProgressSellPurchase = (txId, transitionName) => async (
   dispatch,
   getState,
   sdk
@@ -776,7 +776,7 @@ export const markProgressSellPurchase = (txId, transitionName) => async (
   dispatch(transitionRequest(transitionName));
 
   try {
-    const response = await markProgress(txId);
+    const response = await updateProgress(txId);
 
     dispatch(addMarketplaceEntities(response));
     dispatch(transitionSuccess());

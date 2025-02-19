@@ -1,12 +1,12 @@
 const { getTrustedSdk } = require('../../../../common/sdk');
 const {
   SELL_PURCHASE_PROCESS_NAME,
-  markProgressLastTransitions,
+  updateProgressLastTransitions,
 } = require('../transactions/transactionProcessSellPurchase');
 const updateProgressProvider = require('./provider');
 const updateProgressCustomer = require('./customer');
 
-const markProgress = async (req, res) => {
+const updateProgress = async (req, res) => {
   const { body, currentUser = {} } = req;
   const { txId } = body;
   const {
@@ -42,7 +42,7 @@ const markProgress = async (req, res) => {
       !providerId ||
       !customerId ||
       (userId !== providerId && userId !== customerId) ||
-      !markProgressLastTransitions.includes(lastTransition)
+      !updateProgressLastTransitions.includes(lastTransition)
     ) {
       throw new Error('Invalid transaction details');
     }
@@ -67,4 +67,4 @@ const markProgress = async (req, res) => {
   }
 };
 
-module.exports = markProgress;
+module.exports = updateProgress;

@@ -14,8 +14,7 @@ const transitions = {
   SELLER_REFUND_BEFORE_CAPTURE_INTENT: 'transition/seller-refund-before-capture-intent',
   OPERATOR_CANCEL_TRANSITION_AFTER_EXPIRE_INTENT:
     'transition/operator-cancel-transition-after-expire-intent',
-  BUYER_MARK_COMPLETE_BEFORE_CAPTURE_INTENT:
-    'transition/buyer-mark-complete-before-capture-intent',
+  BUYER_MARK_COMPLETE_BEFORE_CAPTURE_INTENT: 'transition/buyer-mark-complete-before-capture-intent',
   EXPIRE_PAYMENT_HOLD_PERIOD: 'transition/expire-payment-hold-period',
   BUYER_MARK_COMPLETE: 'transition/buyer-mark-complete',
   AUTO_DISABLE_REFUND: 'transition/auto-disable-refund',
@@ -244,13 +243,13 @@ const isRefunded = transition => {
 
 const statesNeedingProviderAttention = [states.PURCHASED];
 
-const markProgressLastTransitions = [
+const updateProgressLastTransitions = [
   transitions.SELLER_CONFIRM_PURCHASE,
   transitions.EXPIRE_PAYMENT_HOLD_PERIOD,
   transitions.AUTO_DISABLE_REFUND,
 ];
 
-const markProgressPossibleNextTransitions = {
+const updateProgressPossibleNextTransitions = {
   [transitions.SELLER_CONFIRM_PURCHASE]: transitions.BUYER_MARK_COMPLETE_BEFORE_CAPTURE_INTENT,
   [transitions.EXPIRE_PAYMENT_HOLD_PERIOD]: transitions.BUYER_MARK_COMPLETE,
   [transitions.AUTO_DISABLE_REFUND]: transitions.BUYER_MARK_COMPLETE_REFUND_DISABLED,
@@ -269,6 +268,6 @@ module.exports = {
   isCompleted,
   isRefunded,
   statesNeedingProviderAttention,
-  markProgressLastTransitions,
-  markProgressPossibleNextTransitions,
+  updateProgressLastTransitions,
+  updateProgressPossibleNextTransitions,
 };

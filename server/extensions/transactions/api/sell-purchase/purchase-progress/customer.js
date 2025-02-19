@@ -1,6 +1,6 @@
 const { serialize, integrationSdk } = require('../../../../common/sdk');
 const {
-  markProgressPossibleNextTransitions,
+  updateProgressPossibleNextTransitions,
 } = require('../transactions/transactionProcessSellPurchase');
 
 const updateProgress = async ({ res, trustedSdk, txId, txMetadata, lastTransition }) => {
@@ -10,7 +10,7 @@ const updateProgress = async ({ res, trustedSdk, txId, txMetadata, lastTransitio
     ? trustedSdk.transactions.transition(
         {
           id: txId,
-          transition: markProgressPossibleNextTransitions[lastTransition],
+          transition: updateProgressPossibleNextTransitions[lastTransition],
           params: {},
         },
         { expand: true }

@@ -1,4 +1,4 @@
 const { postMethod } = require('../../common/api');
 
-export const markProgress = async txId =>
+export const updateProgress = async txId =>
   await postMethod('/api/transactions/sell-purchase/progress', { txId });

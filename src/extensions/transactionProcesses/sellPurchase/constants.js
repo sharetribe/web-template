@@ -1,1 +1,1 @@
-export const MARK_PROGRESS_TRANSITION_NAME = 'markProgressSellPurchase';
+export const UPDATE_PROGRESS_TRANSITION_NAME = 'updateProgressSellPurchase';

@@ -60,7 +60,7 @@ import {
   fetchMoreMessages,
   fetchTimeSlots,
   fetchTransactionLineItems,
-  markProgressSellPurchase,
+  updateProgressSellPurchase,
 } from './TransactionPage.duck';
 import { convertListingPrices } from '../../extensions/MultipleCurrency/utils/currency.js';
 
@@ -122,7 +122,7 @@ export const TransactionPageComponent = props => {
     transitionError,
     transitionErrorName,
     onTransition,
-    onMarkProgressSellPurchase,
+    onUpdateProgressSellPurchase,
     monthlyTimeSlots,
     onFetchTimeSlots,
     nextTransitions,
@@ -368,7 +368,7 @@ export const TransactionPageComponent = props => {
           sendReviewInProgress,
           sendReviewError,
           onTransition,
-          onMarkProgressSellPurchase,
+          onUpdateProgressSellPurchase,
           onOpenReviewModal,
           intl,
         },
@@ -700,8 +700,8 @@ const mapDispatchToProps = dispatch => {
       dispatch(fetchTransactionLineItems(orderData, listingId, isOwnListing)),
     onFetchTimeSlots: (listingId, start, end, timeZone) =>
       dispatch(fetchTimeSlots(listingId, start, end, timeZone)),
-    onMarkProgressSellPurchase: (txId, transitionName) =>
-      dispatch(markProgressSellPurchase(txId, transitionName)),
+    onUpdateProgressSellPurchase: (txId, transitionName) =>
+      dispatch(updateProgressSellPurchase(txId, transitionName)),
   };
 };
 
