@@ -4,8 +4,8 @@ const sharetribeIntegrationSdk = require('sharetribe-flex-integration-sdk');
 let INTEGRATION_SDK = null;
 // (1 minutes = 60 seconds) && (1 second = 1000 ms) && (1 minute = 60*1000 ms)
 const MS_IN_MINUTE = 60 * 1000;
-const EVENTS_BATCH_SIZE = 15;
-const EVENTS_BATCH_DELAY = 1.5 * MS_IN_MINUTE;
+const EVENTS_BATCH_SIZE = 10;
+const EVENTS_BATCH_DELAY = 1 * MS_IN_MINUTE;
 
 async function processInBatches(array, process) {
   const totalEvents = array.length;
@@ -39,13 +39,14 @@ function integrationSdkInit() {
     const commandLimiterConfig =
       sharetribeIntegrationSdk.util[dev ? 'devCommandLimiterConfig' : 'prodCommandLimiterConfig'];
     const commandLimiter = sharetribeIntegrationSdk.util.createRateLimiter(commandLimiterConfig);
-    INTEGRATION_SDK = sharetribeIntegrationSdk.createInstance({
+    const sdk = sharetribeIntegrationSdk.createInstance({
       clientId,
       clientSecret,
       // Pass rate limit handlers
       queryLimiter: queryLimiter,
       commandLimiter: commandLimiter,
     });
+    INTEGRATION_SDK = sdk;
   }
   return INTEGRATION_SDK;
 }

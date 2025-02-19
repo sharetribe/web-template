@@ -1,10 +1,12 @@
 const { LISTING_TYPES } = require('../../api-util/metadataHelper');
 const { integrationSdkInit, generateScript } = require('../../api-util/scriptManager');
 const { slackPortfolioListingUpdatedErrorWorkflow } = require('../../api-util/slackHelper');
+const { retryAsync, RETRY_SDK_DELAY } = require('../../api-util/retryAsync');
 
 const SCRIPT_NAME = 'notifyPortfolioListingUpdated';
 const EVENT_TYPES = 'listing/updated';
 const RESOURCE_TYPE = 'listing';
+const RETRIES = 3;
 
 function script() {
   const integrationSdk = integrationSdkInit();
@@ -14,8 +16,9 @@ function script() {
     return integrationSdk.events.query({ ...args, ...filter });
   };
 
-  function approvePortfolioListing(listingId) {
-    return integrationSdk.listings.approve({ id: listingId });
+  async function approvePortfolioListing(listingId) {
+    const promiseFn = () => integrationSdk.listings.approve({ id: listingId });
+    await retryAsync(promiseFn, RETRIES, RETRY_SDK_DELAY);
   }
 
   const analyzeEvent = async event => {
