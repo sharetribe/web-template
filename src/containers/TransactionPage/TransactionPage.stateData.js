@@ -134,8 +134,10 @@ export const getStateData = (params, process) => {
         transactionRole,
         intl,
         inProgress: transitionInProgress === UPDATE_PROGRESS_TRANSITION_NAME,
-        transitionError: transitionErrorName === UPDATE_PROGRESS_TRANSITION_NAME ? transitionError : null,
-        onAction: () => onUpdateProgressSellPurchase(transaction?.id, UPDATE_PROGRESS_TRANSITION_NAME),
+        transitionError:
+          transitionErrorName === UPDATE_PROGRESS_TRANSITION_NAME ? transitionError : null,
+        onAction: () =>
+          onUpdateProgressSellPurchase(transaction?.id, UPDATE_PROGRESS_TRANSITION_NAME),
         ...extra,
       },
       forRole
@@ -156,15 +158,16 @@ export const getStateData = (params, process) => {
     };
   };
 
-  if (processName === PURCHASE_PROCESS_NAME) {
-    return getStateDataForPurchaseProcess(params, processInfo());
-  } else if (processName === BOOKING_PROCESS_NAME) {
-    return getStateDataForBookingProcess(params, processInfo());
-  } else if (processName === INQUIRY_PROCESS_NAME) {
-    return getStateDataForInquiryProcess(params, processInfo());
-  } else if (processName === SELL_PURCHASE_PROCESS_NAME) {
-    return getStateDataForSellPurchaseProcess(params, processInfo());
-  } else {
-    return {};
+  switch (processName) {
+    case PURCHASE_PROCESS_NAME:
+      return getStateDataForPurchaseProcess(params, processInfo());
+    case BOOKING_PROCESS_NAME:
+      return getStateDataForBookingProcess(params, processInfo());
+    case INQUIRY_PROCESS_NAME:
+      return getStateDataForInquiryProcess(params, processInfo());
+    case SELL_PURCHASE_PROCESS_NAME:
+      return getStateDataForSellPurchaseProcess(params, processInfo());
+    default:
+      return {};
   }
 };
