@@ -1,6 +1,6 @@
-const getDisputeEmailTemplate = require('../common/template/dispute');
-const { MJ_RECIPIENT_EMAILS, MJ_SENDER_EMAIL } = require('../common/configs/mailjet');
-const sendEmail = require('../mod/mailjet/send');
+const getDisputeEmailTemplate = require('../template/dispute');
+const { MJ_RECIPIENT_EMAILS, MJ_SENDER_EMAIL } = require('../configs/mailjet');
+const sendEmail = require('../../mod/mailjet/send');
 
 const DISPUTE_EMAIL_SUBJECT = 'Review refund request ';
 
