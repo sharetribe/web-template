@@ -5,6 +5,7 @@ const {
 } = require('../transactions/transactionProcessSellPurchase');
 const updateProgressProvider = require('./provider');
 const updateProgressCustomer = require('./customer');
+const { denormalisedResponseEntities } = require('../../../../common/data/data');
 
 const updateProgress = async (req, res) => {
   const { body, currentUser = {} } = req;
@@ -30,8 +31,9 @@ const updateProgress = async (req, res) => {
 
     const {
       attributes: { metadata: txMetadata = {}, processName, lastTransition },
-      relationships: { provider, customer } = {},
-    } = transactionResponse?.data?.data;
+      provider,
+      customer,
+    } = denormalisedResponseEntities(transactionResponse)[0];
 
     const providerId = provider?.data?.id.uuid;
     const customerId = customer?.data?.id.uuid;
