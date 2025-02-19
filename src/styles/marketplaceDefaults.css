@@ -1602,3 +1602,7 @@ svg.lucide{
     }
   }
 }
+
+.slick-dots li button:before{
+  color: var(--marketplaceColorDark) !important;
+}
