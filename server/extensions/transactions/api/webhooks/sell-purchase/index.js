@@ -1,4 +1,4 @@
-const { isLiveMode } = require('../../../configs');
+const { isLiveMode } = require('../../../common/configs/stripe');
 const handleExpireIntent = require('./expire');
 
 const handleWebhook = async (req, res) => {

@@ -1,4 +1,4 @@
-const { stripeInstance } = require('../../../utils/getStripeInstance');
+const { stripeInstance } = require('../../../mod/stripe/instance');
 
 const verifySignature = secret => async (req, res, next) => {
   try {

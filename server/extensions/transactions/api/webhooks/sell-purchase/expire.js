@@ -1,5 +1,5 @@
 const { integrationSdk } = require('../../../../common/sdk');
-const { stripeInstance } = require('../../../utils/getStripeInstance');
+const { stripeInstance } = require('../../../mod/stripe/instance');
 const {
   SELL_PURCHASE_PROCESS_NAME,
   transitions,

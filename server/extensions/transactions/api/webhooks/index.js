@@ -5,7 +5,7 @@ const { handleStripeWebhook } = require('./utils/config');
 const handleSellPurchaseWebhook = require('./sell-purchase');
 const {
   STRIPE_WEBHOOK_CHARGE_EXPIRED_ENDPOINT_SECRET: chargeExpiredSecret,
-} = require('../../configs');
+} = require('../../common/configs/stripe');
 const verifySignature = require('./middlewares/verifySignature');
 
 const router = express.Router();
