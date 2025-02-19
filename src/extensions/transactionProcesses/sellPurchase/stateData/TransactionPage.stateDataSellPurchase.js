@@ -166,27 +166,17 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
       return { processName, processState, showDetailCardHeadings: true };
     })
     .cond([states.STRIPE_INTENT_CAPTURED, CUSTOMER], () => {
-      const primaryButtonProps = buyerMarkMetManager
-        ? {
-            actionButtonTranslationId:
-              'TransactionPage.sell-purchase.customer.transition-buyer-mark-complete.actionButton',
-            actionButtonTranslationErrorId:
-              'TransactionPage.sell-purchase.customer.transition-buyer-mark-complete.actionError',
-            confirmStatementTranslationId:
-              'TransactionPage.PrimaryConfirmActionModal.sell-purchase.stripe-intent-captured.customer.confirmStatement',
-            reminderStatementTranslationId:
-              'TransactionPage.PrimaryConfirmActionModal.sell-purchase.stripe-intent-captured.customer.reminderStatement',
-          }
-        : {
-            actionButtonTranslationId:
-              'TransactionPage.sell-purchase.customer.markMetManager.actionButton',
-            actionButtonTranslationErrorId:
-              'TransactionPage.sell-purchase.customer.markMetManager.actionError',
-            confirmStatementTranslationId:
-              'TransactionPage.PrimaryConfirmActionModal.sell-purchase.stripe-intent-captured.customer.markMetManager.confirmStatement',
-            reminderStatementTranslationId:
-              'TransactionPage.PrimaryConfirmActionModal.sell-purchase.stripe-intent-captured.customer.markMetManager.reminderStatement',
-          };
+      const transitionName = buyerMarkMetManager
+        ? 'transition-buyer-mark-complete-before-capture-intent'
+        : 'markMetManager';
+      const modalStatementPrefix = buyerMarkMetManager ? '' : '.markMetManager';
+
+      const primaryButtonProps = {
+        actionButtonTranslationId: `TransactionPage.sell-purchase.customer.${transitionName}.actionButton`,
+        actionButtonTranslationErrorId: `TransactionPage.sell-purchase.customer.${transitionName}.actionError`,
+        confirmStatementTranslationId: `TransactionPage.PrimaryConfirmActionModal.sell-purchase.stripe-intent-captured.customer${modalStatementPrefix}.confirmStatement`,
+        reminderStatementTranslationId: `TransactionPage.PrimaryConfirmActionModal.sell-purchase.stripe-intent-captured.customer${modalStatementPrefix}.reminderStatement`,
+      };
 
       return {
         processName,
