@@ -92,6 +92,7 @@ export const getStateData = (params, process) => {
     transitionErrorName,
     onTransition,
     onUpdateProgressSellPurchase,
+    onInitiateDisputeSellPurchase,
     sendReviewInProgress,
     sendReviewError,
     onOpenReviewModal,
@@ -126,7 +127,7 @@ export const getStateData = (params, process) => {
     actionButtonTranslationErrorId: 'TransactionPage.leaveReview.actionError',
   });
 
-  const getMarkSellPurchaseProgressProps = (forRole, extra = {}) =>
+  const getUpdateSellPurchaseProgressProps = (forRole, extra = {}) =>
     getActionButtonPropsMaybe(
       {
         processName,
@@ -142,6 +143,29 @@ export const getStateData = (params, process) => {
       },
       forRole
     );
+  const getIntiateDisputeSellPurchaseProps = (transitionName, forRole, extra = {}) =>
+    getActionButtonPropsMaybe(
+      {
+        processName,
+        transitionName,
+        transactionRole,
+        intl,
+        inProgress: transitionInProgress === transitionName,
+        transitionError: transitionErrorName === transitionName ? transitionError : null,
+        onAction: ({ disputeReason = 'Dispute reason' } = {}) =>
+          onInitiateDisputeSellPurchase(transaction?.id, transitionName, disputeReason),
+        ...extra,
+      },
+      forRole
+    );
+
+  const sellPurchaseActionButtonsPropsMaybe =
+    processName === SELL_PURCHASE_PROCESS_NAME
+      ? {
+          updateSellPurchaseProgressProps: getUpdateSellPurchaseProgressProps,
+          initiateDisputeSellPurchase: getIntiateDisputeSellPurchaseProps,
+        }
+      : {};
 
   const processInfo = () => {
     const { getState, states, transitions } = process;
@@ -154,7 +178,7 @@ export const getStateData = (params, process) => {
       isCustomer,
       actionButtonProps: getActionButtonProps,
       leaveReviewProps: getLeaveReviewProps,
-      markSellPurchaseProgressProps: getMarkSellPurchaseProgressProps,
+      ...sellPurchaseActionButtonsPropsMaybe,
     };
   };
 

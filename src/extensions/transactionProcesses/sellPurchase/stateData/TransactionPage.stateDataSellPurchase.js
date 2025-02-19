@@ -52,10 +52,10 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
   const {
     processName,
     processState,
-    isCustomer,
     actionButtonProps,
     leaveReviewProps,
-    markSellPurchaseProgressProps,
+    updateSellPurchaseProgressProps,
+    initiateDisputeSellPurchase,
   } = processInfo;
 
   return new ConditionalResolver([processState, transactionRole])
@@ -124,7 +124,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
         processState,
         showDetailCardHeadings: true,
         showActionButtons: true,
-        primaryButtonProps: markSellPurchaseProgressProps(CUSTOMER, primaryButtonProps),
+        primaryButtonProps: updateSellPurchaseProgressProps(CUSTOMER, primaryButtonProps),
         secondaryButtonProps: actionButtonProps(
           transitions.BUYER_REFUND_BEFORE_CAPTURE_INTENT,
           CUSTOMER,
@@ -143,7 +143,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
       const primaryButtonMaybe = sellerMarkMachinePlaced
         ? {}
         : {
-            primaryButtonProps: markSellPurchaseProgressProps(
+            primaryButtonProps: updateSellPurchaseProgressProps(
               PROVIDER,
               getProviderUpdateProgressPrimaryButtonProps()
             ),
@@ -180,22 +180,26 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
         processState,
         showDetailCardHeadings: true,
         showActionButtons: true,
-        primaryButtonProps: markSellPurchaseProgressProps(CUSTOMER, primaryButtonProps),
-        secondaryButtonProps: actionButtonProps(transitions.BUYER_ISSUE_REFUND, CUSTOMER, {
-          isConfirmNeeded: true,
-          showReminderStatement: true,
-          confirmModalTitleTranslationId:
-            'TransactionPage.SecondaryConfirmActionModal.sell-purchase.stripe-intent-captured.customer.modalTitle',
-          confirmButtonTranslationId:
-            'TransactionPage.SecondaryConfirmActionModal.sell-purchase.stripe-intent-captured.customer.confirmButton',
-        }),
+        primaryButtonProps: updateSellPurchaseProgressProps(CUSTOMER, primaryButtonProps),
+        secondaryButtonProps: initiateDisputeSellPurchase(
+          transitions.BUYER_ISSUE_REFUND,
+          CUSTOMER,
+          {
+            isConfirmNeeded: true,
+            showReminderStatement: true,
+            confirmModalTitleTranslationId:
+              'TransactionPage.SecondaryConfirmActionModal.sell-purchase.stripe-intent-captured.customer.modalTitle',
+            confirmButtonTranslationId:
+              'TransactionPage.SecondaryConfirmActionModal.sell-purchase.stripe-intent-captured.customer.confirmButton',
+          }
+        ),
       };
     })
     .cond([states.STRIPE_INTENT_CAPTURED, PROVIDER], () => {
       const primaryButtonMaybe = sellerMarkMachinePlaced
         ? {}
         : {
-            primaryButtonProps: markSellPurchaseProgressProps(
+            primaryButtonProps: updateSellPurchaseProgressProps(
               PROVIDER,
               getProviderUpdateProgressPrimaryButtonProps()
             ),
@@ -206,10 +210,14 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
         processState,
         showDetailCardHeadings: true,
         showActionButtons: true,
-        secondaryButtonProps: actionButtonProps(transitions.SELLER_ISSUE_REFUND, PROVIDER, {
-          isConfirmNeeded: true,
-          showReminderStatement: true,
-        }),
+        secondaryButtonProps: initiateDisputeSellPurchase(
+          transitions.SELLER_ISSUE_REFUND,
+          PROVIDER,
+          {
+            isConfirmNeeded: true,
+            showReminderStatement: true,
+          }
+        ),
         ...primaryButtonMaybe,
       };
     })
@@ -225,14 +233,14 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
         processState,
         showDetailCardHeadings: true,
         showActionButtons: true,
-        primaryButtonProps: markSellPurchaseProgressProps(CUSTOMER, primaryButtonProps),
+        primaryButtonProps: updateSellPurchaseProgressProps(CUSTOMER, primaryButtonProps),
       };
     })
     .cond([states.REFUND_DISABLED, PROVIDER], () => {
       const primaryButtonMaybe = sellerMarkMachinePlaced
         ? {}
         : {
-            primaryButtonProps: markSellPurchaseProgressProps(
+            primaryButtonProps: updateSellPurchaseProgressProps(
               PROVIDER,
               getProviderUpdateProgressPrimaryButtonProps()
             ),

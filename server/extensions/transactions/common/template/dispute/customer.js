@@ -1,4 +1,4 @@
-const getDisputeEmailTemplate = data => {
+const getCustomerDisputeEmailTemplate = data => {
   const { txId, providerName, customerName } = data;
 
   return `
@@ -10,10 +10,10 @@ const getDisputeEmailTemplate = data => {
       <li><b>Seller:</b> ${providerName}</li>
       <li><b>Transaction ID:</b> ${txId}</li>
     </ul>
-    <p>Please monitor this case and resolve this. If a refund is necessary, process it manually via the Sharetribe Console</p>
+    <p>Please monitor this case and resolve this. If a refund is necessary, process it manually via the Sharetribe Console.</p>
     <p>Thank you,</p>
     <p>Vending Village</p>
   `;
 };
 
-module.exports = getDisputeEmailTemplate;
+module.exports = getCustomerDisputeEmailTemplate;
