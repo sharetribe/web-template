@@ -592,6 +592,7 @@ export const listingFields = [
       { option: 'marshall artist', label: 'Marshall Artist' },
       { option: 'massimo dutti', label: 'Massimo Dutti' },
       { option: 'matt & nat', label: 'matt & nat' },
+      { option: 'max & co', label: 'Max & Co' },
       { option: 'maya', label: 'Maya' },
       { option: 'maya maternity', label: 'Maya Maternity' },
       { option: 'maya plus', label: 'Maya Plus' },
