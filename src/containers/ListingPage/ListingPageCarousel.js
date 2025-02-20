@@ -38,6 +38,8 @@ import {
   isPurchaseProcess,
   resolveLatestProcessName,
 } from '../../transactions/transaction';
+import { SELL_PURCHASE_PROCESS_NAME } from '../../extensions/transactionProcesses/sellPurchase/transactions/transactionProcessSellPurchase.js';
+import { SELL_PURCHASE_PROGRESS_BAR_STEPS_CUSTOMER } from '../../extensions/transactionProcesses/common/constants.js';
 
 // Global ducks (for Redux actions and thunks)
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
@@ -88,6 +90,7 @@ import SectionMapMaybe from './SectionMapMaybe';
 import SectionGallery from './SectionGallery';
 import CustomListingFields from './CustomListingFields';
 import { convertListingPrices } from '../../extensions/MultipleCurrency/utils/currency.js';
+import ProgressBar from '../../extensions/transactionProcesses/components/ProgressBar/ProgressBar.js';
 
 import css from './ListingPage.module.css';
 
@@ -222,7 +225,7 @@ export const ListingPageComponent = props => {
   const currentAuthor = authorAvailable ? currentListing.author : null;
   const ensuredAuthor = ensureUser(currentAuthor);
   const noPayoutDetailsSetWithOwnListing =
-    isOwnListing && (processType !== 'inquiry' && !currentUser?.attributes?.stripeConnected);
+    isOwnListing && processType !== 'inquiry' && !currentUser?.attributes?.stripeConnected;
   const payoutDetailsWarning = noPayoutDetailsSetWithOwnListing ? (
     <span className={css.payoutDetailsWarning}>
       <FormattedMessage id="ListingPage.payoutDetailsWarning" values={{ processType }} />
@@ -326,6 +329,12 @@ export const ListingPageComponent = props => {
       }}
     >
       <LayoutSingleColumn className={css.pageRoot} topbar={topbar} footer={<FooterContainer />}>
+        {processName === SELL_PURCHASE_PROCESS_NAME && (
+          <ProgressBar
+            steps={SELL_PURCHASE_PROGRESS_BAR_STEPS_CUSTOMER}
+            stateData={{ processName }}
+          />
+        )}
         <div className={css.contentWrapperForProductLayout}>
           <div className={css.mainColumnForProductLayout}>
             {currentListing.id && noPayoutDetailsSetWithOwnListing ? (
@@ -378,7 +387,7 @@ export const ListingPageComponent = props => {
             />
 
             {reviews.length > 0 && (
-            <SectionReviews reviews={reviews} fetchReviewsError={fetchReviewsError} />
+              <SectionReviews reviews={reviews} fetchReviewsError={fetchReviewsError} />
             )}
 
             <SectionAuthorMaybe
@@ -636,8 +645,7 @@ const mapDispatchToProps = dispatch => ({
   onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
   onFetchTimeSlots: (listingId, start, end, timeZone) =>
     dispatch(fetchTimeSlots(listingId, start, end, timeZone)),
-  onUpdateFavorites: (payload) => 
-    dispatch(updateProfile(payload)),
+  onUpdateFavorites: payload => dispatch(updateProfile(payload)),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the
@@ -646,11 +654,6 @@ const mapDispatchToProps = dispatch => ({
 // lifecycle hook.
 //
 // See: https://github.com/ReactTraining/react-router/issues/4671
-const ListingPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(EnhancedListingPage);
+const ListingPage = compose(connect(mapStateToProps, mapDispatchToProps))(EnhancedListingPage);
 
 export default ListingPage;

@@ -10,6 +10,8 @@ import { ensureTransaction } from '../../util/data';
 import { createSlug } from '../../util/urlHelpers';
 import { isTransactionInitiateListingNotFoundError } from '../../util/errors';
 import { getProcess, isBookingProcessAlias } from '../../transactions/transaction';
+import { SELL_PURCHASE_PROCESS_NAME } from '../../extensions/transactionProcesses/sellPurchase/transactions/transactionProcessSellPurchase.js';
+import { SELL_PURCHASE_PROGRESS_BAR_STEPS_CUSTOMER } from '../../extensions/transactionProcesses/common/constants.js';
 
 // Import shared components
 import { H3, H4, NamedLink, OrderBreakdown, Page } from '../../components';
@@ -33,6 +35,7 @@ import StripePaymentForm from './StripePaymentForm/StripePaymentForm';
 import DetailsSideCard from './DetailsSideCard';
 import MobileListingImage from './MobileListingImage';
 import MobileOrderBreakdown from './MobileOrderBreakdown';
+import ProgressBar from '../../extensions/transactionProcesses/components/ProgressBar/ProgressBar.js';
 
 import css from './CheckoutPage.module.css';
 
@@ -449,6 +452,12 @@ export const CheckoutPageWithPayment = props => {
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
       <CustomTopbar intl={intl} linkToExternalSite={config?.topbar?.logoLink} />
+      {processName === SELL_PURCHASE_PROCESS_NAME && (
+        <ProgressBar
+          steps={SELL_PURCHASE_PROGRESS_BAR_STEPS_CUSTOMER}
+          stateData={{ processName }}
+        />
+      )}
       <div className={css.contentContainer}>
         <MobileListingImage
           listingTitle={listingTitle}
