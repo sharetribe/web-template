@@ -54,7 +54,7 @@ const testimonialsData = [
     title: "Healthy Snaxs Vending",
     avatar: "/static/testimonials/javier.jpg",
     testimonial: "I bought a location, but it wasn't a fit. I got a full refund - no questions asked. Just bought another one and it's a great fit!",
-    profileID: "66db113b-3943-4749-bc12-6d5458bbb3e5",
+    profileID: "67ad0a4c-2b13-4c3a-86be-11b397543be8",
   },
 ];
 
