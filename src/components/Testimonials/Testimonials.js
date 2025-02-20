@@ -34,25 +34,26 @@ const settings = {
   };
 
 const testimonialsData = [
-  {
+    {
+        name: "Steve Anderson",
+        title: "Vending Grand Master",
+        avatar: "/static/testimonials/steve.jpg",
+        testimonial: "In my 45+ years of vending, I've never seen anything like this. Vending Village is a total game changer!",
+        profileID: "67896702-b6eb-4b1d-bbfc-cece57dcf66e",
+      },
+    {
     name: "Maureen Washington",
     title: "Location Finder",
     avatar: "/static/testimonials/maureen.jpg",
-    testimonial: "This service has transformed our business. The team is fantastic and the results speak for themselves.",
-    profileID: "1234567890", 
+    testimonial: "Vending Village has seriously transformed our business. We're way more productive and seeing great results.",
+    profileID: "67587c49-837e-431f-a496-0fdddb64a05e", 
   },
+  
   {
-    name: "Borat",
-    title: "Vending Operator",
-    avatar: "https://sharetribe.imgix.net/665d2413-bb2c-4976-a79b-92874b1868bb/670928a7-01df-4103-b240-4283024f7c50?auto=format&crop=edges&fit=crop&h=480&w=480&s=e172d685e66109da3bdfa49ec0f9be13",
-    testimonial: "An amazing experience! The platform is user-friendly and the support team is always there to help.",
-    profileID: "1234567890",
-  },
-  {
-    name: "Alice Johnson",
-    title: "Product Designer",
-    avatar: "https://sharetribe.imgix.net/66d9f518-0df9-4dba-b7b8-76ee987917da/6761d443-eeb7-4cc7-bca8-71fa1356c3d9?auto=format&crop=edges&fit=crop&h=480&w=480&s=0264f1f71e40746f7843f92b95c99b1c",
-    testimonial: "I love the intuitive design and the seamless integration with our existing tools. Highly recommend!",
+    name: "Javier Carrera",
+    title: "Healthy Snaxs Vending",
+    avatar: "/static/testimonials/javier.jpg",
+    testimonial: "I bought a location, but it wasn't a fit. I got a full refund - no questions asked. Just bought another one and it's a great fit!",
     profileID: "66db113b-3943-4749-bc12-6d5458bbb3e5",
   },
 ];
