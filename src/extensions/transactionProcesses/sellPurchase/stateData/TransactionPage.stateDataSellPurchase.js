@@ -127,6 +127,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
 
       return {
         ...defaultStateData,
+        showRefundAvailabileNotice: true,
         showActionButtons: true,
         primaryButtonProps: updateSellPurchaseProgressProps(CUSTOMER, primaryButtonProps),
         secondaryButtonProps: actionButtonProps(
@@ -155,6 +156,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
 
       return {
         ...defaultStateData,
+        showRefundAvailabileNotice: true,
         showActionButtons: true,
         secondaryButtonProps: actionButtonProps(
           transitions.SELLER_REFUND_BEFORE_CAPTURE_INTENT,
@@ -179,6 +181,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
 
       return {
         ...defaultStateData,
+        showRefundAvailabileNotice: true,
         showActionButtons: true,
         primaryButtonProps: updateSellPurchaseProgressProps(CUSTOMER, primaryButtonProps),
         secondaryButtonProps: initiateDisputeSellPurchase(
@@ -207,6 +210,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
 
       return {
         ...defaultStateData,
+        showRefundAvailabileNotice: true,
         showActionButtons: true,
         secondaryButtonProps: initiateDisputeSellPurchase(
           transitions.SELLER_ISSUE_REFUND,
@@ -228,6 +232,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
 
       return {
         ...defaultStateData,
+        showRefundAvailabileNotice: true,
         showActionButtons: true,
         primaryButtonProps: updateSellPurchaseProgressProps(CUSTOMER, primaryButtonProps),
       };
@@ -244,16 +249,18 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
 
       return {
         ...defaultStateData,
+        showRefundAvailabileNotice: true,
         showActionButtons: true,
         ...primaryButtonMaybe,
       };
     })
     .cond([states.SELLER_HANDLE_DISPUTED, CUSTOMER], () => {
-      return defaultStateData;
+      return { ...defaultStateData, showRefundAvailabileNotice: true };
     })
     .cond([states.SELLER_HANDLE_DISPUTED, PROVIDER], () => {
       return {
         ...defaultStateData,
+        showRefundAvailabileNotice: true,
         showActionButtons: true,
         primaryButtonProps: actionButtonProps(transitions.SELLER_APPROVE_REFUND, PROVIDER, {
           isConfirmNeeded: true,
@@ -269,7 +276,10 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
       };
     })
     .cond([states.OPERATOR_HANDLE_DISPUTED, _], () => {
-      return defaultStateData;
+      return {
+        ...defaultStateData,
+        showRefundAvailabileNotice: true,
+      };
     })
     .cond([states.CANCELED, _], () => {
       return { ...defaultStateData, isCanceled: true };

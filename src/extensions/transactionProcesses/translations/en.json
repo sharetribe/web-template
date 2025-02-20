@@ -7,5 +7,7 @@
   "ProgressStep.stepState.pending": "Pending",
   "ProgressStep.stepState.inProgress": "In Progress",
   "ProgressStep.stepState.completed": "Completed",
-  "ProgressStep.stepState.canceled": "Canceled"
+  "ProgressStep.stepState.canceled": "Canceled",
+  "NoticeRefundAvailable.title": "Notice: ",
+  "NoticeRefundAvailable.content": "Please note that refunds are available for 20 days after the manager is introduced – let us know if you need help."
 }

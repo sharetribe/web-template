@@ -326,6 +326,16 @@ export class TransactionPanelComponent extends Component {
               </div>
             )}
 
+            {stateData?.processName === SELL_PURCHASE_PROCESS_NAME &&
+              stateData?.showRefundAvailabileNotice && (
+                <p className={css.refundAvailableNotice}>
+                  <span className={css.refundAvailableNoticeTitle}>
+                    <FormattedMessage id="NoticeRefundAvailable.title" />
+                  </span>
+                  <FormattedMessage id="NoticeRefundAvailable.content" />
+                </p>
+              )}
+
             {stateData.showActionButtons ? (
               <>
                 <div className={css.mobileActionButtonSpacer}></div>
