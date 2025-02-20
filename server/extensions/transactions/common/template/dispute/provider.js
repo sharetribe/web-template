@@ -3,6 +3,7 @@ const getProviderDisputeEmailTemplate = data => {
 
   return `
     <p><b>Refund Request Review</b></p></br>
+    <p>Dear admin,</p>
     <p>A seller has requested a refund for an order. Please kindly step in to assist and take the necessary action.</p>
     <p>Order Details:</p>
     <ul>

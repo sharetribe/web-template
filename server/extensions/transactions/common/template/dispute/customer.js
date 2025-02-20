@@ -3,6 +3,7 @@ const getCustomerDisputeEmailTemplate = data => {
 
   return `
     <p><b>Refund Request Review</b></p></br>
+    <p>Dear admin,</p>
     <p>A buyer has requested a refund for an order. Please keep track of this request, and if the seller does not resolve it within 5 days, kindly step in to assist and take the necessary action.</p>
     <p>Order Details:</p>
     <ul>
