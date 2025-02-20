@@ -1,6 +1,7 @@
 import React from 'react';
 import { string } from 'prop-types';
 import classNames from 'classnames';
+import { TriangleAlert } from 'lucide-react';
 
 import css from './ReminderBox.module.css';
 
@@ -10,7 +11,7 @@ const ReminderBox = props => {
 
   return (
     <div className={classes}>
-      <i className="fa-solid fa-triangle-exclamation"></i>&nbsp;
+      <TriangleAlert />
       <b>Do not share personal contact details.</b>
       To comply with our <a href="/terms-of-service\">Terms of Service</a> all communication and
       transactions must be completed on the site.
