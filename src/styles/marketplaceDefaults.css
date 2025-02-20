@@ -1572,3 +1572,32 @@ svg.lucide{
   width:16px;
   fill:none;
 }
+
+.carousel-button-group{
+  
+  position: absolute;
+  right: 0;
+  top: -60px;
+
+   > button {
+    width: 34px;
+    height: 34px;
+    padding:0;
+    border-radius: 100%;
+    display: inline-block;
+    overflow: hidden;
+    min-height: auto;
+    margin-right: 6px;
+    > *{
+      margin: 0;
+    }
+
+    &.disable{
+      box-shadow: none;
+      border:none;
+      color: var(--colorGrey300);
+      pointer-events: none;
+      cursor: not-allowed;
+    }
+  }
+}

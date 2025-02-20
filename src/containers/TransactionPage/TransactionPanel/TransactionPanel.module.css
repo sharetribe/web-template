@@ -605,3 +605,7 @@
     display: block;
   }
 }
+
+.confirmModalCheckBoxIcon {
+  margin-right: 4px;
+}

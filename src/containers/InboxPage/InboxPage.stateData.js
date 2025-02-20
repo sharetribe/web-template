@@ -6,10 +6,12 @@ import {
   resolveLatestProcessName,
   getProcess,
 } from '../../transactions/transaction';
+import { SELL_PURCHASE_PROCESS_NAME } from '../../extensions/transactionProcesses/sellPurchase/transactions/transactionProcessSellPurchase.js';
 
 import { getStateDataForBookingProcess } from './InboxPage.stateDataBooking.js';
 import { getStateDataForInquiryProcess } from './InboxPage.stateDataInquiry.js';
 import { getStateDataForPurchaseProcess } from './InboxPage.stateDataPurchase.js';
+import { getStateDataForSellPurchaseProcess } from '../../extensions/transactionProcesses/sellPurchase/stateData/InboxPage.stateDataSellPurchase.js';
 
 export const stateDataShape = shape({
   processName: string.isRequired,
@@ -35,13 +37,16 @@ export const getStateData = params => {
     };
   };
 
-  if (processName === PURCHASE_PROCESS_NAME) {
-    return getStateDataForPurchaseProcess(params, processInfo());
-  } else if (processName === BOOKING_PROCESS_NAME) {
-    return getStateDataForBookingProcess(params, processInfo());
-  } else if (processName === INQUIRY_PROCESS_NAME) {
-    return getStateDataForInquiryProcess(params, processInfo());
-  } else {
-    return {};
+  switch (processName) {
+    case PURCHASE_PROCESS_NAME:
+      return getStateDataForPurchaseProcess(params, processInfo());
+    case BOOKING_PROCESS_NAME:
+      return getStateDataForBookingProcess(params, processInfo());
+    case INQUIRY_PROCESS_NAME:
+      return getStateDataForInquiryProcess(params, processInfo());
+    case SELL_PURCHASE_PROCESS_NAME:
+      return getStateDataForSellPurchaseProcess(params, processInfo());
+    default:
+      return {};
   }
 };

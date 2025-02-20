@@ -5,9 +5,12 @@ import {
   PURCHASE_PROCESS_NAME,
   resolveLatestProcessName,
 } from '../../transactions/transaction';
+import { SELL_PURCHASE_PROCESS_NAME } from '../../extensions/transactionProcesses/sellPurchase/transactions/transactionProcessSellPurchase.js';
+import { UPDATE_PROGRESS_TRANSITION_NAME } from '../../extensions/transactionProcesses/sellPurchase/constants.js';
 import { getStateDataForBookingProcess } from './TransactionPage.stateDataBooking.js';
 import { getStateDataForInquiryProcess } from './TransactionPage.stateDataInquiry.js';
 import { getStateDataForPurchaseProcess } from './TransactionPage.stateDataPurchase.js';
+import { getStateDataForSellPurchaseProcess } from '../../extensions/transactionProcesses/sellPurchase/stateData/TransactionPage.stateDataSellPurchase.js';
 
 const errorShape = shape({
   type: oneOf(['error']).isRequired,
@@ -56,6 +59,7 @@ const getActionButtonPropsMaybe = (params, onlyForRole = 'both') => {
     actionButtonTranslationId,
     actionButtonTranslationErrorId,
     intl,
+    ...rest
   } = params;
   const transitionKey = getTransitionKey(transitionName);
 
@@ -68,6 +72,7 @@ const getActionButtonPropsMaybe = (params, onlyForRole = 'both') => {
 
   return onlyForRole === 'both' || onlyForRole === transactionRole
     ? {
+        ...rest,
         inProgress,
         error: transitionError,
         onAction,
@@ -84,7 +89,10 @@ export const getStateData = (params, process) => {
     intl,
     transitionInProgress,
     transitionError,
+    transitionErrorName,
     onTransition,
+    onUpdateProgressSellPurchase,
+    onInitiateDisputeSellPurchase,
     sendReviewInProgress,
     sendReviewError,
     onOpenReviewModal,
@@ -100,7 +108,7 @@ export const getStateData = (params, process) => {
         transactionRole,
         intl,
         inProgress: transitionInProgress === transitionName,
-        transitionError,
+        transitionError: transitionErrorName === transitionName ? transitionError : null,
         onAction: () => onTransition(transaction?.id, transitionName, {}),
         ...extra,
       },
@@ -119,6 +127,46 @@ export const getStateData = (params, process) => {
     actionButtonTranslationErrorId: 'TransactionPage.leaveReview.actionError',
   });
 
+  const getUpdateSellPurchaseProgressProps = (forRole, extra = {}) =>
+    getActionButtonPropsMaybe(
+      {
+        processName,
+        transitionName: UPDATE_PROGRESS_TRANSITION_NAME,
+        transactionRole,
+        intl,
+        inProgress: transitionInProgress === UPDATE_PROGRESS_TRANSITION_NAME,
+        transitionError:
+          transitionErrorName === UPDATE_PROGRESS_TRANSITION_NAME ? transitionError : null,
+        onAction: () =>
+          onUpdateProgressSellPurchase(transaction?.id, UPDATE_PROGRESS_TRANSITION_NAME),
+        ...extra,
+      },
+      forRole
+    );
+  const getIntiateDisputeSellPurchaseProps = (transitionName, forRole, extra = {}) =>
+    getActionButtonPropsMaybe(
+      {
+        processName,
+        transitionName,
+        transactionRole,
+        intl,
+        inProgress: transitionInProgress === transitionName,
+        transitionError: transitionErrorName === transitionName ? transitionError : null,
+        onAction: ({ disputeReason = 'Dispute reason' } = {}) =>
+          onInitiateDisputeSellPurchase(transaction?.id, transitionName, disputeReason),
+        ...extra,
+      },
+      forRole
+    );
+
+  const sellPurchaseActionButtonsPropsMaybe =
+    processName === SELL_PURCHASE_PROCESS_NAME
+      ? {
+          updateSellPurchaseProgressProps: getUpdateSellPurchaseProgressProps,
+          initiateDisputeSellPurchase: getIntiateDisputeSellPurchaseProps,
+        }
+      : {};
+
   const processInfo = () => {
     const { getState, states, transitions } = process;
     const processState = getState(transaction);
@@ -130,16 +178,20 @@ export const getStateData = (params, process) => {
       isCustomer,
       actionButtonProps: getActionButtonProps,
       leaveReviewProps: getLeaveReviewProps,
+      ...sellPurchaseActionButtonsPropsMaybe,
     };
   };
 
-  if (processName === PURCHASE_PROCESS_NAME) {
-    return getStateDataForPurchaseProcess(params, processInfo());
-  } else if (processName === BOOKING_PROCESS_NAME) {
-    return getStateDataForBookingProcess(params, processInfo());
-  } else if (processName === INQUIRY_PROCESS_NAME) {
-    return getStateDataForInquiryProcess(params, processInfo());
-  } else {
-    return {};
+  switch (processName) {
+    case PURCHASE_PROCESS_NAME:
+      return getStateDataForPurchaseProcess(params, processInfo());
+    case BOOKING_PROCESS_NAME:
+      return getStateDataForBookingProcess(params, processInfo());
+    case INQUIRY_PROCESS_NAME:
+      return getStateDataForInquiryProcess(params, processInfo());
+    case SELL_PURCHASE_PROCESS_NAME:
+      return getStateDataForSellPurchaseProcess(params, processInfo());
+    default:
+      return {};
   }
 };

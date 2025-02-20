@@ -1,0 +1,11 @@
+const MJ_API_PUBLIC_KEY = process.env.MJ_API_PUBLIC_KEY;
+const MJ_API_PRIVATE_KEY = process.env.MJ_API_PRIVATE_KEY;
+const MJ_SENDER_EMAIL = process.env.MJ_SENDER_EMAIL;
+const MJ_RECIPIENT_EMAILS = process.env.MJ_RECIPIENT_EMAILS;
+
+module.exports = {
+  MJ_API_PUBLIC_KEY,
+  MJ_API_PRIVATE_KEY,
+  MJ_SENDER_EMAIL,
+  MJ_RECIPIENT_EMAILS,
+};

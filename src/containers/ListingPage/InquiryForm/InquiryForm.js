@@ -61,6 +61,21 @@ const ErrorMessage = props => {
   ) : null;
 };
 
+// Custom validator to check for phone numbers and email addresses
+const noContactInfo = value => {
+  const phonePattern = /\b\d{3}[-.\s]?\d{3}[-.\s]?\d{4}\b/; // Simple pattern for phone numbers
+  const emailPattern = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/; // Pattern for email addresses
+
+  if (phonePattern.test(value)) {
+    return <FormattedMessage id="InquiryForm.noPhoneNumberAllowed" />;
+  }
+  if (emailPattern.test(value)) {
+    return <FormattedMessage id="InquiryForm.noEmailAllowed" />;
+  }
+  return undefined;
+};
+
+
 // NOTE: this InquiryForm is only for booking & purchase processes
 // The default-inquiry process is handled differently
 const InquiryFormComponent = props => (
@@ -95,11 +110,14 @@ const InquiryFormComponent = props => (
       const messageRequiredMessage = intl.formatMessage({
         id: 'InquiryForm.messageRequired',
       });
-      const messageRequired = validators.requiredAndNonEmptyString(messageRequiredMessage);
 
       const classes = classNames(rootClassName || css.root, className);
       const submitInProgress = inProgress;
       const submitDisabled = submitInProgress;
+
+      const messageRequired = validators.requiredAndNonEmptyString(messageRequiredMessage);
+      const messageValidators = validators.composeValidators(messageRequired, noContactInfo);
+
 
       return (
         <Form className={classes} onSubmit={handleSubmit} enforcePagePreloadFor="OrderDetailsPage">
@@ -114,7 +132,7 @@ const InquiryFormComponent = props => (
             id={formId ? `${formId}.message` : 'message'}
             label={messageLabel}
             placeholder={messagePlaceholder}
-            validate={messageRequired}
+            validate={messageValidators}
           />
           <ReminderBox />
 

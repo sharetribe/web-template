@@ -34,6 +34,7 @@ import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import {
   Heading,
   H2,
+  H3,
   H4,
   Page,
   AvatarLarge,
@@ -56,13 +57,13 @@ import SectionDetailsMaybe from './SectionDetailsMaybe';
 import SectionTextMaybe from './SectionTextMaybe';
 import SectionMultiEnumMaybe from './SectionMultiEnumMaybe';
 import SectionYoutubeVideoMaybe from './SectionYoutubeVideoMaybe';
-import { Star, ShieldCheck } from "lucide-react";
+import { Star, ShieldCheck, CalendarClock, Globe, Search } from "lucide-react";
 
 const MAX_MOBILE_SCREEN_WIDTH = 768;
 const MIN_LENGTH_FOR_LONG_WORDS = 20;
 
 export const AsideContent = props => {
-  const { user, displayName, showLinkToProfileSettingsPage, reviews } = props;
+  const { user, displayName, showLinkToProfileSettingsPage, reviews, listings } = props;
   
   const isVerified = user.attributes?.profile?.metadata?.verified === true;
 
@@ -75,7 +76,7 @@ export const AsideContent = props => {
     <div className={css.asideContent}>
       <AvatarLarge className={css.avatar} user={user} disableProfileLink />
       {isVerified ? (
-        <div className={css.verifiedBadge} title="verified user">
+        <div className={css.verifiedBadge}>
           <ShieldCheck />
         </div>
       ) : null}
@@ -91,20 +92,29 @@ export const AsideContent = props => {
             
             <div className={css.starRating}>
               <div className={css.stars}>
-                { Array.from({ length: 5 }, () => (
-                    <Star strokeWidth={0} />
+                { Array.from({ length: 5 }, (_, index) => (
+                    <Star key={`empty-star-${index}`} strokeWidth={0} />
                 ))}
               </div>
               <div className={`${css.stars} ${css.rating}`} style={{width: Math.round(avgRating * 20) + '%'}}>
-                { Array.from({ length: 5 }, () => (
-                    <Star strokeWidth={0} />
+                { Array.from({ length: 5 }, (_, index) => (
+                    <Star key={`filled-star-${index}`} strokeWidth={0} />
                 ))}
               </div>
             </div>
-      
-            <p>{reviews.length} total review(s)</p>
           </div>
         ) : null}
+
+        <div className={css.asideStats}>
+          <div className={css.asideStatsItem}>
+            <h4>{reviews.length}</h4>
+            <p><FormattedMessage id="ProfilePage.statsLabel.reviews" values={{ count: reviews.length }} /></p>
+          </div>
+          <div className={css.asideStatsItem}>
+            <h4>{listings.length}</h4>
+            <p><FormattedMessage id="ProfilePage.statsLabel.listings" values={{ count: listings.length }} /></p>
+          </div>
+        </div>
 
       </div>
 
@@ -135,6 +145,27 @@ export const ReviewsErrorMaybe = props => {
   ) : null;
 };
 
+export const CardReviews = props => {
+  const { reviews, queryReviewsError } = props;
+  
+  return (
+    <div className={css.reviews}>
+      <H4 as="h2" className={css.reviewsTitle}>
+        <FormattedMessage
+          id="ProfilePage.reviewsTitle"
+          values={{ count: reviews.length }}
+        />
+      </H4>
+      <ReviewsErrorMaybe queryReviewsError={queryReviewsError} />
+
+  <Reviews reviews={reviews} />
+      
+      
+    </div>
+  );
+};
+
+/*
 export const MobileReviews = props => {
   const { reviews, queryReviewsError } = props;
   const reviewsOfProvider = reviews.filter(r => r.attributes.type === REVIEW_TYPE_OF_PROVIDER);
@@ -236,12 +267,13 @@ export const CustomUserFields = props => {
     </>
   );
 };
-
+*/
 export const MainContent = props => {
   const {
     userShowError,
     bio,
     displayName,
+    createdAt,
     listings,
     queryListingsError,
     reviews,
@@ -252,8 +284,13 @@ export const MainContent = props => {
     intl,
     hideReviews,
   } = props;
+  
+  const listingServices = listings.filter(listing => listing.attributes.publicData.listingType === 'sell-service');
+  const listingProducts = listings.filter(listing => listing.attributes.publicData.listingType !== 'sell-service');
 
-  const hasListings = listings.length > 0;
+  const hasServiceListings = listingServices.length > 0;
+  const hasProductListings = listingProducts.length > 0;
+
   const hasMatchMedia = typeof window !== 'undefined' && window?.matchMedia;
   const isMobileLayout = hasMatchMedia
     ? window.matchMedia(`(max-width: ${MAX_MOBILE_SCREEN_WIDTH}px)`)?.matches
@@ -270,6 +307,16 @@ export const MainContent = props => {
     [css.withBioMissingAbove]: !hasBio,
   });
 
+  const isVerified = metadata?.verified === true;
+  const hasBuyerReview = reviews.some(review => review.attributes.type === REVIEW_TYPE_OF_PROVIDER);
+  const isVerifiedSeller = isVerified && hasBuyerReview;
+
+  const [searchKeyword, setSearchKeyword] = useState('');
+
+  const filteredListingProducts = listingProducts.filter(listing =>
+    listing.attributes.title.toLowerCase().includes(searchKeyword.toLowerCase())
+  );
+
   if (userShowError || queryListingsError) {
     return (
       <p className={css.error}>
@@ -279,12 +326,37 @@ export const MainContent = props => {
   }
   return (
     <div>
-      <H2 as="h1" className={css.desktopHeading}>
+      <H3 as="h1" className={css.desktopHeading}>
         <FormattedMessage id="ProfilePage.desktopHeading" values={{ name: displayName }} />
-      </H2>
-      {hasBio ? <p className={css.bio}>{bioWithLinks}</p> : null}
+      </H3>
 
-      {displayName ? (
+      <div className={css.twoColumnSection}>
+        <div className={css.leftColumn}>
+          {isVerifiedSeller && (
+            <div className={css.iconLine}>
+              <ShieldCheck />
+              <span><FormattedMessage id="ProfilePage.label.verfiedSeller" /></span>
+            </div>
+          )}
+
+          <div className={css.iconLine}>
+            <CalendarClock />
+            <span>
+            <FormattedMessage id="ProfilePage.label.joined" /> {createdAt ? new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(createdAt)) : 'n/a'}
+            </span>
+          </div>
+
+          <div className={css.iconLine}>
+            <Globe />
+            <span><FormattedMessage id="ProfilePage.label.from" /> {publicData?.userLocation}</span>
+          </div>
+        </div>
+        <div className={css.rightColumn}>
+          {hasBio ? <p className={css.bio}>{bioWithLinks}</p> : null}
+        </div>
+      </div>
+
+      {displayName && false ? (
         <CustomUserFields
           publicData={publicData}
           metadata={metadata}
@@ -293,13 +365,48 @@ export const MainContent = props => {
         />
       ) : null}
 
-      {hasListings ? (
+      {hideReviews || reviews.length === 0 ? null 
+        : <CardReviews reviews={reviews} queryReviewsError={queryReviewsError} />
+      }
+      {hasServiceListings ? (
         <div className={listingsContainerClasses}>
           <H4 as="h2" className={css.listingsTitle}>
-            <FormattedMessage id="ProfilePage.listingsTitle" values={{ count: listings.length }} />
+            <FormattedMessage id="ProfilePage.servicesTitle" />
           </H4>
           <ul className={css.listings}>
-            {listings.map(l => (
+            {listingServices.map(l => (
+              <li className={css.listing} key={l.id.uuid}>
+                  <ListingCard 
+                    listing={l} 
+                    showAuthorInfo={false}
+                  />
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+
+      {hasProductListings ? (
+        <div className={listingsContainerClasses}>
+          
+          <div className={css.searchContainer}>
+          <H4 as="h2" className={css.listingsTitle}>
+            <FormattedMessage id="ProfilePage.listingsTitle" />
+          </H4>
+          <div className={css.searchInputWrapper}>
+              <Search className={css.searchIcon} />
+              <input
+                type="text"
+                className={css.listingSearchBox}
+                placeholder="Search listings..."
+                value={searchKeyword}
+                onChange={e => setSearchKeyword(e.target.value)}
+              />
+          </div>
+        </div>
+          
+        <ul className={css.listings}>
+            {filteredListingProducts.map(l => (
               <li className={css.listing} key={l.id.uuid}>
                 <div className={classNames(css.listingWrapper, { 
                   [css.soldListing]: l.currentStock?.attributes?.quantity === 0 
@@ -319,11 +426,7 @@ export const MainContent = props => {
           </ul>
         </div>
       ) : null}
-      {hideReviews ? null : isMobileLayout ? (
-        <MobileReviews reviews={reviews} queryReviewsError={queryReviewsError} />
-      ) : (
-        <DesktopReviews reviews={reviews} queryReviewsError={queryReviewsError} />
-      )}
+      
     </div>
   );
 };
@@ -363,7 +466,9 @@ export const ProfilePageComponent = props => {
 
   const isCurrentUser = currentUser?.id && currentUser?.id?.uuid === pathParams.id;
   const profileUser = useCurrentUser ? currentUser : user;
+
   const { bio, displayName, publicData, metadata } = profileUser?.attributes?.profile || {};
+  const createdAt = profileUser?.attributes?.createdAt;
   const { userFields } = config.user;
   const isPrivateMarketplace = config.accessControl.marketplace.private === true;
   const isUnauthorizedUser = currentUser && !isUserAuthorized(currentUser);
@@ -449,6 +554,7 @@ export const ProfilePageComponent = props => {
         <MainContent
           bio={bio}
           displayName={displayName}
+          createdAt={createdAt}
           userShowError={userShowError}
           publicData={publicData}
           metadata={metadata}

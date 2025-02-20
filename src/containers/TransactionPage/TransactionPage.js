@@ -60,6 +60,8 @@ import {
   fetchMoreMessages,
   fetchTimeSlots,
   fetchTransactionLineItems,
+  updateProgressSellPurchase,
+  intiateDisputeSellPurchase,
 } from './TransactionPage.duck';
 import { convertListingPrices } from '../../extensions/MultipleCurrency/utils/currency.js';
 
@@ -119,7 +121,10 @@ export const TransactionPageComponent = props => {
     transactionRole,
     transitionInProgress,
     transitionError,
+    transitionErrorName,
     onTransition,
+    onUpdateProgressSellPurchase,
+    onInitiateDisputeSellPurchase,
     monthlyTimeSlots,
     onFetchTimeSlots,
     nextTransitions,
@@ -361,9 +366,12 @@ export const TransactionPageComponent = props => {
           nextTransitions,
           transitionInProgress,
           transitionError,
+          transitionErrorName,
           sendReviewInProgress,
           sendReviewError,
           onTransition,
+          onUpdateProgressSellPurchase,
+          onInitiateDisputeSellPurchase,
           onOpenReviewModal,
           intl,
         },
@@ -617,6 +625,7 @@ const mapStateToProps = state => {
     fetchTransactionError,
     transitionInProgress,
     transitionError,
+    transitionErrorName,
     transactionRef,
     fetchMessagesInProgress,
     fetchMessagesError,
@@ -654,6 +663,7 @@ const mapStateToProps = state => {
     fetchTransactionError,
     transitionInProgress,
     transitionError,
+    transitionErrorName,
     scrollingDisabled: isScrollingDisabled(state),
     transaction,
     fetchMessagesInProgress,
@@ -693,6 +703,10 @@ const mapDispatchToProps = dispatch => {
       dispatch(fetchTransactionLineItems(orderData, listingId, isOwnListing)),
     onFetchTimeSlots: (listingId, start, end, timeZone) =>
       dispatch(fetchTimeSlots(listingId, start, end, timeZone)),
+    onUpdateProgressSellPurchase: (txId, transitionName) =>
+      dispatch(updateProgressSellPurchase(txId, transitionName)),
+    onInitiateDisputeSellPurchase: (txId, transitionName, disputeReason) =>
+      dispatch(intiateDisputeSellPurchase(txId, transitionName, disputeReason)),
   };
 };
 

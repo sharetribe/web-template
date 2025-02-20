@@ -3,6 +3,7 @@ export const CATEGORIES = {
   MACHINE: 'machine',
   LOCATION_MACHINE: 'location-machine',
   ATM_LOCATION: 'atm-location',
+  LOCATION_FIND: 'location-find',
   PARTS: 'parts',
   SERVICES: 'services',
 };
@@ -18,7 +19,7 @@ export const LISTING_TYPE_CATEGORIES = {
   },
   'sell-service': {
     label: 'Sell a Service',
-    categories: [CATEGORIES.SERVICES],
+    categories: [CATEGORIES.SERVICES, CATEGORIES.LOCATION_FIND],
   },
   'sell-parts': {
     label: 'Sell Parts',

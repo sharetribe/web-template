@@ -21,6 +21,7 @@
 
 .asideContent {
   width: 100%;
+  margin:0 24px;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -41,15 +42,20 @@
   @media (--viewportLarge) {
     flex-direction: column;
     border-bottom: none;
+    width:120px;
+    position: sticky;
+    top: 150px;
+
+    align-self: flex-start
   }
 }
 
 .avatar {
-  margin: 30px 26px 29px 0;
+  margin: 40px 26px 29px 0;
   flex-shrink: 0;
 
   @media (--viewportLarge) {
-    margin: 0 96px 24px 0;
+    margin: 0 0 24px 0;
   }
 }
 .avatarPlaceholder {
@@ -65,7 +71,7 @@
   border-radius:14px;
   border:1px solid white;
 
-  margin-top:95px;
+  margin-top:105px;
   margin-left:70px;
 
   @media (--viewportLarge){
@@ -74,8 +80,33 @@
   
   svg{
     color:white;
-    margin-top:1px;
-    margin-left:5px;
+    margin-top:2px;
+    margin-left:6px;
+  }
+}
+
+.asideStats{
+  display:flex;
+  flex-direction:row;
+  justify-content:space-between;
+  max-width:120px;
+  margin-bottom:30px;
+
+  .asideStatsItem{
+    h4 {
+      margin:10px 0 0 0;
+      font-size:24px;
+      line-height:24px;
+      font-weight:bold;
+      @media (--viewportLarge){
+        margin-top:20px;
+      }
+    }
+    p {
+      margin:0;
+      font-size:12px;
+      line-height:12px;
+    }
   }
 }
 
@@ -132,7 +163,7 @@
   /* Preserve newlines, but collapse other whitespace */
   white-space: pre-line;
   margin: 5px 0 24px 0;
-
+  padding:0;
   img{max-width:100%}
 
   @media (--viewportMedium) {
@@ -181,8 +212,6 @@
   margin: 0;
   display: flex;
   flex-wrap: wrap;
-  max-height:400px;
-  overflow:scroll;
 }
 
 .listing {
@@ -202,11 +231,11 @@
   }
 }
 
-.mobileReviewsTitle {
+.mobileReviewsTitle, .reviewsTitle {
   margin: 24px 0 26px 0;
 }
 
-.mobileReviews {
+.mobileReviews, .reviews {
   border-top: 1px solid var(--colorGrey100);
   margin-bottom: 36px;
 }
@@ -399,4 +428,81 @@
   svg {
     fill:var(--marketplaceColor)
   }
+}
+
+.twoColumnSection {
+  gap: 30px;
+  margin-bottom: 20px;
+  @media (--viewportMedium) {
+    display: flex;
+    margin-bottom: 30px;
+  }
+}
+
+.leftColumn {
+  flex: 1;
+  flex-direction: column;
+  justify-content: flex-start;
+  display: flex;
+  
+}
+
+.rightColumn {
+  flex: 2;
+}
+
+.iconLine {
+  display: flex;
+  white-space: nowrap;
+  align-items: center;
+  margin-bottom: 10px;
+  span {
+    margin-left:10px;
+  }
+}
+
+.searchContainer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin: 1rem 0;
+  position: sticky;
+  top: 60px;
+  z-index: 10;
+  margin-left: -24px;
+  margin-right: -24px;
+  margin-bottom: 0;
+  padding: 12px 24px;
+  background: var(--colorGrey50);
+
+  @media (--viewportLarge) {
+    background: white;
+  }
+}
+
+.searchInputWrapper {
+  display: flex;
+  align-items: center;
+  width: 220px;
+  background-color: transparent; /* Blend into the page */
+  border: none; /* Remove borders */
+  position: relative;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 14px; /* Adjust spacing as needed */
+  color: #999; /* Adjust color as needed */
+  pointer-events: none; /* Ensure the icon doesn't block input interaction */
+  transform: scaleX(-1);
+}
+
+.listingSearchBox {
+  width: 100%;
+  padding: 0.3rem 0.5rem 0.3rem 2.5rem; /* Adjust padding to accommodate the icon */
+  border: 1px solid white;
+  outline: none;
+  background-color: white; /* Blend into the page */
+  font-size: 1rem; /* Adjust font size as needed */
+  border-radius: 30px;
 }
