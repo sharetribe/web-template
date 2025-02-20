@@ -233,20 +233,10 @@ function shouldDisplayWarning(value) {
   }
 }
 
-function membershipChangesValidation(userAttributes, previousValues) {
-  const { profile } = userAttributes;
-  const { membership } = profile.metadata || {};
-  const { profile: previousProfile } = previousValues?.attributes || {};
-  const { membership: previousMembership } = previousProfile?.metadata || {};
-  const membershipUpdated = !!previousMembership;
-  return [membershipUpdated, membership];
-}
-
 module.exports = {
   profileChangesValidation,
   userTypeChangesValidation,
   communityStatusChangesValidation,
   sellerStatusChangesValidation,
   shouldDisplayWarning,
-  membershipChangesValidation,
 };

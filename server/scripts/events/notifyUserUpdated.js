@@ -19,7 +19,6 @@ const {
   userTypeChangesValidation,
   communityStatusChangesValidation,
   sellerStatusChangesValidation,
-  membershipChangesValidation,
   shouldDisplayWarning,
 } = require('./util/userUpdateValidations');
 
@@ -62,13 +61,6 @@ function script() {
     if (buyerAppliedToBeSeller || waitListedSellerAskedForReview) {
       return await slackSellerValidationWorkflow(userId, displayName, email, portfolioURL);
     }
-  }
-
-  async function membershipUpgrade(userId, membership) {
-    return integrationSdk.users.updateProfile({
-      id: userId,
-      metadata: { membership },
-    });
   }
 
   async function profileUpgrade(userId, userAttributes, previousValues) {
@@ -282,18 +274,21 @@ function script() {
     await shouldUpdateBrandUsers(userAttributes, previousValues);
     await shouldSyncUserProfile(userId, resource, previousValues);
     await shouldSyncProfileListing(resource, previousValues);
-    await updateAuth0User({
-      auth0UserId: identityProviders[0].userId,
-      marketId: userId,
-      studioId,
-      communityId,
-      firstName,
-      lastName,
-      displayName,
-      sellerStatus,
-      communityStatus,
-      userType,
-    });
+    const auth0UserId = identityProviders?.[0]?.userId;
+    if (auth0UserId) {
+      await updateAuth0User({
+        auth0UserId,
+        marketId: userId,
+        studioId,
+        communityId,
+        firstName,
+        lastName,
+        displayName,
+        sellerStatus,
+        communityStatus,
+        userType,
+      });
+    }
   }
 
   const analyzeEvent = async event => {
@@ -306,32 +301,23 @@ function script() {
       const { displayName } = profile;
       const { userType } = profile.publicData || {};
       try {
-        const [membershipUpdated, membership] = membershipChangesValidation(
+        const [userTypeEvent, sellerStatusEvent] = await profileUpgrade(
+          userId,
           user.attributes,
           previousValues
         );
-        // Membership upgrades are standalone changes. No need to keep checking
-        if (membershipUpdated) {
-          await membershipUpgrade(userId, membership);
-        } else {
-          const [userTypeEvent, sellerStatusEvent] = await profileUpgrade(
+        if (userType === USER_TYPES.SELLER) {
+          const { portfolioURL } = profile.publicData;
+          await shouldStartSellerValidationWorkflow(
+            userTypeEvent,
+            sellerStatusEvent,
             userId,
-            user.attributes,
-            previousValues
+            displayName,
+            email,
+            portfolioURL
           );
-          if (userType === USER_TYPES.SELLER) {
-            const { portfolioURL } = profile.publicData;
-            await shouldStartSellerValidationWorkflow(
-              userTypeEvent,
-              sellerStatusEvent,
-              userId,
-              displayName,
-              email,
-              portfolioURL
-            );
-          }
-          await profileSync(userId, user, previousValues);
         }
+        await profileSync(userId, user, previousValues);
       } catch (error) {
         slacktUserUpdatedErrorWorkflow(userId);
         console.error(
