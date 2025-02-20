@@ -95,6 +95,17 @@ class StudioManagerClient {
     await this.axiosClient.put(`/user/${userId}/creator`, data);
     return true;
   }
+
+  async getScriptSequence(scriptName) {
+    const result = await this.axiosClient.get(`/sequence/${scriptName}`);
+    const { success, sequenceId } = result?.data || {};
+    return { success, sequenceId };
+  }
+  async updateScriptSequence(scriptName, data) {
+    const result = await this.axiosClient.put(`/sequence/${scriptName}`, data);
+    const { success, sequenceId } = result?.data || {};
+    return { success, sequenceId };
+  }
 }
 
 module.exports = {
