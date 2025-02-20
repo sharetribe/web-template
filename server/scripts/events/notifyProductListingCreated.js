@@ -94,7 +94,7 @@ function script() {
   const analyzeEvent = (event, originalAssetData) =>
     processEvent(integrationSdk, event, originalAssetData);
 
-  const analyzeEventsBatch = async (events, index) => {
+  const analyzeEventsBatch = async events => {
     let successList = [];
     let failList = [];
     const parsedEvents = events.filter(filterEvents);

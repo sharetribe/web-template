@@ -72,7 +72,7 @@ async function generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, anal
       if (withEventGroupHandler) {
         analyzeEventGroup(events);
       }
-      await processInBatches(events, analyzeEventsBatch);
+      await analyzeEventsBatch(events);
       if (lastEvent) saveLastEventSequenceId(lastEvent.attributes.sequenceId);
       setTimeout(() => {
         pollLoop(lastSequenceId);
