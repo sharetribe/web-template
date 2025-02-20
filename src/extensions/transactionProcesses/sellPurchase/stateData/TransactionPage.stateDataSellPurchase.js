@@ -4,6 +4,7 @@ import {
   CONDITIONAL_RESOLVER_WILDCARD,
   ConditionalResolver,
 } from '../../../../transactions/transaction';
+import { getSellPurchaseProgressStep } from '../../common/helpers/getSellPurchaseProgressStep';
 import { states, transitions } from '../transactions/transactionProcessSellPurchase';
 
 const getCustomerUpdateProgressPrimaryButtonProps = ({
@@ -50,6 +51,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
   const _ = CONDITIONAL_RESOLVER_WILDCARD;
 
   const {
+    isCustomer,
     processName,
     processState,
     actionButtonProps,
@@ -57,6 +59,14 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
     updateSellPurchaseProgressProps,
     initiateDisputeSellPurchase,
   } = processInfo;
+
+  const progressStep = getSellPurchaseProgressStep({ isCustomer, processState, transaction });
+  const defaultStateData = {
+    processName,
+    processState,
+    showDetailCardHeadings: true,
+    progressStep,
+  };
 
   return new ConditionalResolver([processState, transactionRole])
     .cond([states.INQUIRY, CUSTOMER], () => {
@@ -69,13 +79,11 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
       return { processName, processState, showOrderPanel };
     })
     .cond([states.INQUIRY, PROVIDER], () => {
-      return { processName, processState, showDetailCardHeadings: true };
+      return defaultStateData;
     })
     .cond([states.PURCHASE_CONFIRMED_BY_BUYER, CUSTOMER], () => {
       return {
-        processName,
-        processState,
-        showDetailCardHeadings: true,
+        ...defaultStateData,
         showActionButtons: true,
         secondaryButtonProps: actionButtonProps(
           transitions.BUYER_REFUND_BEFORE_SELLER_CONFIRMED,
@@ -88,9 +96,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
     })
     .cond([states.PURCHASE_CONFIRMED_BY_BUYER, PROVIDER], () => {
       return {
-        processName,
-        processState,
-        showDetailCardHeadings: true,
+        ...defaultStateData,
         showActionButtons: true,
         primaryButtonProps: actionButtonProps(transitions.SELLER_CONFIRM_PURCHASE, PROVIDER, {
           isConfirmNeeded: true,
@@ -107,10 +113,10 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
       };
     })
     .cond([states.PAYMENT_EXPIRED, _], () => {
-      return { processName, processState, showDetailCardHeadings: true };
+      return { ...defaultStateData, isCanceled: true };
     })
     .cond([states.REFUND_BEFORE_CAPTURE, _], () => {
-      return { processName, processState, showDetailCardHeadings: true };
+      return { ...defaultStateData, isCanceled: true };
     })
     .cond([states.PURCHASED, CUSTOMER], () => {
       const primaryButtonProps = getCustomerUpdateProgressPrimaryButtonProps({
@@ -120,9 +126,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
       });
 
       return {
-        processName,
-        processState,
-        showDetailCardHeadings: true,
+        ...defaultStateData,
         showActionButtons: true,
         primaryButtonProps: updateSellPurchaseProgressProps(CUSTOMER, primaryButtonProps),
         secondaryButtonProps: actionButtonProps(
@@ -150,9 +154,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
           };
 
       return {
-        processName,
-        processState,
-        showDetailCardHeadings: true,
+        ...defaultStateData,
         showActionButtons: true,
         secondaryButtonProps: actionButtonProps(
           transitions.SELLER_REFUND_BEFORE_CAPTURE_INTENT,
@@ -166,7 +168,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
       };
     })
     .cond([states.PURCHASE_EXPIRED, _], () => {
-      return { processName, processState, showDetailCardHeadings: true };
+      return { ...defaultStateData, isCanceled: true };
     })
     .cond([states.STRIPE_INTENT_CAPTURED, CUSTOMER], () => {
       const primaryButtonProps = getCustomerUpdateProgressPrimaryButtonProps({
@@ -176,9 +178,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
       });
 
       return {
-        processName,
-        processState,
-        showDetailCardHeadings: true,
+        ...defaultStateData,
         showActionButtons: true,
         primaryButtonProps: updateSellPurchaseProgressProps(CUSTOMER, primaryButtonProps),
         secondaryButtonProps: initiateDisputeSellPurchase(
@@ -206,9 +206,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
           };
 
       return {
-        processName,
-        processState,
-        showDetailCardHeadings: true,
+        ...defaultStateData,
         showActionButtons: true,
         secondaryButtonProps: initiateDisputeSellPurchase(
           transitions.SELLER_ISSUE_REFUND,
@@ -229,9 +227,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
       });
 
       return {
-        processName,
-        processState,
-        showDetailCardHeadings: true,
+        ...defaultStateData,
         showActionButtons: true,
         primaryButtonProps: updateSellPurchaseProgressProps(CUSTOMER, primaryButtonProps),
       };
@@ -247,21 +243,17 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
           };
 
       return {
-        processName,
-        processState,
-        showDetailCardHeadings: true,
+        ...defaultStateData,
         showActionButtons: true,
         ...primaryButtonMaybe,
       };
     })
     .cond([states.SELLER_HANDLE_DISPUTED, CUSTOMER], () => {
-      return { processName, processState, showDetailCardHeadings: true };
+      return defaultStateData;
     })
     .cond([states.SELLER_HANDLE_DISPUTED, PROVIDER], () => {
       return {
-        processName,
-        processState,
-        showDetailCardHeadings: true,
+        ...defaultStateData,
         showActionButtons: true,
         primaryButtonProps: actionButtonProps(transitions.SELLER_APPROVE_REFUND, PROVIDER, {
           isConfirmNeeded: true,
@@ -277,16 +269,14 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
       };
     })
     .cond([states.OPERATOR_HANDLE_DISPUTED, _], () => {
-      return { processName, processState, showDetailCardHeadings: true };
+      return defaultStateData;
     })
     .cond([states.CANCELED, _], () => {
-      return { processName, processState, showDetailCardHeadings: true };
+      return { ...defaultStateData, isCanceled: true };
     })
     .cond([states.COMPLETED, _], () => {
       return {
-        processName,
-        processState,
-        showDetailCardHeadings: true,
+        ...defaultStateData,
         showReviewAsFirstLink: true,
         showActionButtons: true,
         primaryButtonProps: leaveReviewProps,
@@ -294,30 +284,42 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
     })
     .cond([states.REVIEWED_BY_PROVIDER, CUSTOMER], () => {
       return {
-        processName,
-        processState,
-        showDetailCardHeadings: true,
+        ...defaultStateData,
         showReviewAsSecondLink: true,
         showActionButtons: true,
         primaryButtonProps: leaveReviewProps,
+      };
+    })
+    .cond([states.REVIEWED_BY_PROVIDER, PROVIDER], () => {
+      return {
+        ...defaultStateData,
+        isCompleted: true,
       };
     })
     .cond([states.REVIEWED_BY_CUSTOMER, PROVIDER], () => {
       return {
-        processName,
-        processState,
-        showDetailCardHeadings: true,
+        ...defaultStateData,
         showReviewAsSecondLink: true,
         showActionButtons: true,
         primaryButtonProps: leaveReviewProps,
       };
     })
+    .cond([states.REVIEWED_BY_CUSTOMER, CUSTOMER], () => {
+      return {
+        ...defaultStateData,
+        isCompleted: true,
+      };
+    })
     .cond([states.REVIEWED, _], () => {
-      return { processName, processState, showDetailCardHeadings: true, showReviews: true };
+      return {
+        ...defaultStateData,
+        showReviews: true,
+        isCompleted: true,
+      };
     })
     .default(() => {
       // Default values for other states
-      return { processName, processState, showDetailCardHeadings: true };
+      return defaultStateData;
     })
     .resolve();
 };

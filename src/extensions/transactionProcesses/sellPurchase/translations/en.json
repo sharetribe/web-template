@@ -128,5 +128,10 @@
   "TransactionPage.ActivityFeed.sell-purchase.completed": "{stateStatus, select, current {The listing was received. {reviewLink}} other {The listing was received.}}",
   "TransactionPage.ActivityFeed.sell-purchase.reviewed": "{actor, select, you {You left a review for {otherUsersName}.} other {{otherUsersName} left a review for you. {reviewLink}}}",
   "TransactionPage.ActivityFeed.sell-purchase.reviewed-by-provider": "{actor, select, you {You left a review for {otherUsersName}.} other {{otherUsersName} left a review for you. {reviewLink}}}",
-  "TransactionPage.ActivityFeed.sell-purchase.reviewed-by-customer": "{actor, select, you {You left a review for {otherUsersName}.} other {{otherUsersName} left a review for you. {reviewLink}}}"
+  "TransactionPage.ActivityFeed.sell-purchase.reviewed-by-customer": "{actor, select, you {You left a review for {otherUsersName}.} other {{otherUsersName} left a review for you. {reviewLink}}}",
+
+  "ProgressStep.stepTitle.sell-purchase.Customer.PendingPayment" : "Complete Payment",
+  "ProgressStep.stepTitle.sell-purchase.Customer.MeetManager" : "Meet with Manager",
+  "ProgressStep.stepTitle.sell-purchase.Customer.PlaceMachine" : "Place your Machine",
+  "ProgressStep.stepTitle.sell-purchase.Customer.Review" : "Leave a Review"
 }

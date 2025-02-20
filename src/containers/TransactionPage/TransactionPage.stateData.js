@@ -6,11 +6,11 @@ import {
   resolveLatestProcessName,
 } from '../../transactions/transaction';
 import { SELL_PURCHASE_PROCESS_NAME } from '../../extensions/transactionProcesses/sellPurchase/transactions/transactionProcessSellPurchase.js';
-import { UPDATE_PROGRESS_TRANSITION_NAME } from '../../extensions/transactionProcesses/sellPurchase/constants.js';
 import { getStateDataForBookingProcess } from './TransactionPage.stateDataBooking.js';
 import { getStateDataForInquiryProcess } from './TransactionPage.stateDataInquiry.js';
 import { getStateDataForPurchaseProcess } from './TransactionPage.stateDataPurchase.js';
 import { getStateDataForSellPurchaseProcess } from '../../extensions/transactionProcesses/sellPurchase/stateData/TransactionPage.stateDataSellPurchase.js';
+import { SELL_PURCHASE_UPDATE_PROGRESS_TRANSITION_NAME } from '../../extensions/transactionProcesses/common/constants.js';
 
 const errorShape = shape({
   type: oneOf(['error']).isRequired,
@@ -131,14 +131,19 @@ export const getStateData = (params, process) => {
     getActionButtonPropsMaybe(
       {
         processName,
-        transitionName: UPDATE_PROGRESS_TRANSITION_NAME,
+        transitionName: SELL_PURCHASE_UPDATE_PROGRESS_TRANSITION_NAME,
         transactionRole,
         intl,
-        inProgress: transitionInProgress === UPDATE_PROGRESS_TRANSITION_NAME,
+        inProgress: transitionInProgress === SELL_PURCHASE_UPDATE_PROGRESS_TRANSITION_NAME,
         transitionError:
-          transitionErrorName === UPDATE_PROGRESS_TRANSITION_NAME ? transitionError : null,
+          transitionErrorName === SELL_PURCHASE_UPDATE_PROGRESS_TRANSITION_NAME
+            ? transitionError
+            : null,
         onAction: () =>
-          onUpdateProgressSellPurchase(transaction?.id, UPDATE_PROGRESS_TRANSITION_NAME),
+          onUpdateProgressSellPurchase(
+            transaction?.id,
+            SELL_PURCHASE_UPDATE_PROGRESS_TRANSITION_NAME
+          ),
         ...extra,
       },
       forRole

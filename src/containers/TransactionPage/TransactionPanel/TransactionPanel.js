@@ -8,6 +8,8 @@ import { propTypes } from '../../../util/types';
 import { userDisplayNameAsString } from '../../../util/data';
 import { isMobileSafari } from '../../../util/userAgent';
 import { createSlug } from '../../../util/urlHelpers';
+import { SELL_PURCHASE_PROCESS_NAME } from '../../../extensions/transactionProcesses/sellPurchase/transactions/transactionProcessSellPurchase';
+import { SELL_PURCHASE_PROGRESS_BAR_STEPS_CUSTOMER } from '../../../extensions/transactionProcesses/common/constants';
 
 import { AvatarLarge, NamedLink, UserDisplayName } from '../../../components';
 
@@ -26,6 +28,8 @@ import ActionButtonsMaybe from './ActionButtonsMaybe';
 import DiminishedActionButtonMaybe from './DiminishedActionButtonMaybe';
 import PanelHeading from './PanelHeading';
 import CurrencyNote from '../../../extensions/MultipleCurrency/components/CurrencyNote/CurrencyNote';
+
+import ProgressBar from '../../../extensions/transactionProcesses/components/ProgressBar/ProgressBar';
 
 import css from './TransactionPanel.module.css';
 
@@ -200,6 +204,12 @@ export class TransactionPanelComponent extends Component {
 
     return (
       <div className={classes}>
+        {stateData?.processName === SELL_PURCHASE_PROCESS_NAME && (
+          <ProgressBar
+            steps={isCustomer ? SELL_PURCHASE_PROGRESS_BAR_STEPS_CUSTOMER : []}
+            stateData={stateData}
+          />
+        )}
         <div className={css.container}>
           <div className={css.txInfo}>
             <DetailCardImage

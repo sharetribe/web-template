@@ -2,5 +2,10 @@
   "TransactionPage.PrimaryConfirmActionModal.modalTitle": "Confirmation",
   "TransactionPage.PrimaryConfirmActionModal.confirmButton": "Confirm",
   "TransactionPage.SecondaryConfirmActionModal.modalTitle": "Issue a refund",
-  "TransactionPage.SecondaryConfirmActionModal.confirmButton": "Issue a refund"
+  "TransactionPage.SecondaryConfirmActionModal.confirmButton": "Issue a refund",
+  "ProgressStep.stepCount": "STEP {stepCount}",
+  "ProgressStep.stepState.pending": "Pending",
+  "ProgressStep.stepState.inProgress": "In Progress",
+  "ProgressStep.stepState.completed": "Completed",
+  "ProgressStep.stepState.canceled": "Canceled"
 }
