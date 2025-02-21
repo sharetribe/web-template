@@ -9,7 +9,10 @@ import { userDisplayNameAsString } from '../../../util/data';
 import { isMobileSafari } from '../../../util/userAgent';
 import { createSlug } from '../../../util/urlHelpers';
 import { SELL_PURCHASE_PROCESS_NAME } from '../../../extensions/transactionProcesses/sellPurchase/transactions/transactionProcessSellPurchase';
-import { SELL_PURCHASE_PROGRESS_BAR_STEPS_CUSTOMER } from '../../../extensions/transactionProcesses/common/constants';
+import {
+  SELL_PURCHASE_PROGRESS_BAR_STEPS_CUSTOMER,
+  SELL_PURCHASE_PROGRESS_BAR_STEPS_SELLER,
+} from '../../../extensions/transactionProcesses/common/constants';
 
 import { AvatarLarge, NamedLink, UserDisplayName } from '../../../components';
 
@@ -206,7 +209,11 @@ export class TransactionPanelComponent extends Component {
       <div className={classes}>
         {stateData?.processName === SELL_PURCHASE_PROCESS_NAME && (
           <ProgressBar
-            steps={isCustomer ? SELL_PURCHASE_PROGRESS_BAR_STEPS_CUSTOMER : []}
+            steps={
+              isCustomer
+                ? SELL_PURCHASE_PROGRESS_BAR_STEPS_CUSTOMER
+                : SELL_PURCHASE_PROGRESS_BAR_STEPS_SELLER
+            }
             stateData={stateData}
           />
         )}
