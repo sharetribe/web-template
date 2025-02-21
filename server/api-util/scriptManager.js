@@ -53,7 +53,7 @@ async function generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, anal
     const saveLastEventSequenceId = sequenceId =>
       studioManagerClient.updateScriptSequence(SCRIPT_NAME, { sequenceId });
     const loadLastEventSequenceId = async () => {
-      const { success, sequenceId } = await studioManagerClient.getScriptSequence(SCRIPT_NAME);
+      const { sequenceId } = await studioManagerClient.getScriptSequence(SCRIPT_NAME);
       if (sequenceId === 0) return null;
       return sequenceId;
     };
@@ -64,16 +64,19 @@ async function generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, anal
         : { createdAtStart: startTime };
       const res = await queryEvents({ ...params, perPage: EVENTS_BATCH_SIZE });
       const events = res.data.data;
+      const withEvents = !!events.length;
       const lastEvent = events[events.length - 1];
       const fullPage = events.length === res.data.meta.perPage;
       const delay = fullPage ? pollWait : pollIdleWait;
       const lastSequenceId = lastEvent ? lastEvent.attributes.sequenceId : sequenceId;
-      const withEventGroupHandler = !!analyzeEventGroup;
-      if (withEventGroupHandler) {
-        analyzeEventGroup(events);
+      if (withEvents) {
+        const withEventGroupHandler = !!analyzeEventGroup;
+        if (withEventGroupHandler) {
+          analyzeEventGroup(events);
+        }
+        await analyzeEventsBatch(events);
+        if (lastEvent) saveLastEventSequenceId(lastEvent.attributes.sequenceId);
       }
-      await analyzeEventsBatch(events);
-      if (lastEvent) saveLastEventSequenceId(lastEvent.attributes.sequenceId);
       setTimeout(() => {
         pollLoop(lastSequenceId);
       }, delay);
