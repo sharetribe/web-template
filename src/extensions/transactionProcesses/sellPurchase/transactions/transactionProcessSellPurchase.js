@@ -21,6 +21,7 @@ export const transitions = {
   BUYER_ISSUE_REFUND: 'transition/buyer-issue-refund',
   SELLER_ISSUE_REFUND: 'transition/seller-issue-refund',
   SELLER_DISPUTE: 'transition/seller-dispute',
+  AUTO_DISPUTE_REFUND: 'transition/auto-dispute-refund',
   SELLER_APPROVE_REFUND: 'transition/seller-approve-refund',
   OPERATOR_MARK_COMPLETE: 'transition/operator-mark-complete',
   EXPIRE_DISPUTE_PERIOD: 'transition/expire-dispute-period',
@@ -125,6 +126,7 @@ export const graph = {
       on: {
         [transitions.SELLER_DISPUTE]: states.OPERATOR_HANDLE_DISPUTED,
         [transitions.SELLER_APPROVE_REFUND]: states.CANCELED,
+        [transitions.AUTO_DISPUTE_REFUND]: states.OPERATOR_HANDLE_DISPUTED,
       },
     },
     [states.OPERATOR_HANDLE_DISPUTED]: {
@@ -169,6 +171,7 @@ export const isRelevantPastTransition = transition => {
     transitions.BUYER_ISSUE_REFUND,
     transitions.SELLER_ISSUE_REFUND,
     transitions.SELLER_DISPUTE,
+    transitions.AUTO_DISPUTE_REFUND,
     transitions.SELLER_APPROVE_REFUND,
     transitions.OPERATOR_MARK_COMPLETE,
     transitions.EXPIRE_DISPUTE_PERIOD,

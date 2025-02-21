@@ -4,7 +4,7 @@ import {
   CONDITIONAL_RESOLVER_WILDCARD,
   ConditionalResolver,
 } from '../../../../transactions/transaction';
-import { required } from '../../../../util/validators';
+import { emailFormatValid, required } from '../../../../util/validators';
 import {
   FIELD_TEXT,
   MARK_MACHINE_PLACE_TRANSITION_NAME,
@@ -106,6 +106,19 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
       };
     })
     .cond([states.PURCHASE_CONFIRMED_BY_BUYER, PROVIDER], () => {
+      const getFieldTextConfig = (name, validators = []) => ({
+        type: FIELD_TEXT,
+        labelTranslationId: `TransactionPage.sell-purchase.${name}.label`,
+        name: `protectedData.${name}`,
+        validators: [
+          {
+            validatorFn: required,
+            messageTranslationId: `TransactionPage.sell-purchase.${name}.requiredMessage`,
+          },
+          ...validators,
+        ],
+      });
+
       return {
         ...defaultStateData,
         showActionButtons: true,
@@ -113,7 +126,19 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
           isConfirmNeeded: true,
           showConfirmStatement: true,
           showReminderStatement: true,
-          formConfigs: [],
+          formConfigs: [
+            getFieldTextConfig('managerName'),
+            getFieldTextConfig('managerPhoneNumber'),
+            getFieldTextConfig('managerEmail', [
+              {
+                validatorFn: emailFormatValid,
+                messageTranslationId:
+                  'TransactionPage.sell-purchase.managerEmail.emailInvalidMesage',
+              },
+            ]),
+          ],
+          confirmModalTitleTranslationId:
+            'TransactionPage.PrimaryConfirmActionModal.sell-purchase.purchase-confirmed-by-buyer.provider.modalTitle',
         }),
         secondaryButtonProps: actionButtonProps(
           transitions.SELLER_REFUND_BEFORE_SELLER_CONFIRMED,
