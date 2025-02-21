@@ -100,7 +100,7 @@ export const getStateData = (params, process) => {
   const isCustomer = transactionRole === 'customer';
   const processName = resolveLatestProcessName(transaction?.attributes?.processName);
 
-  const getActionButtonProps = (transitionName, forRole, extra = {}) =>
+  const getActionButtonProps = (transitionName, forRole, { onAction, ...extra } = {}) =>
     getActionButtonPropsMaybe(
       {
         processName,
@@ -109,7 +109,7 @@ export const getStateData = (params, process) => {
         intl,
         inProgress: transitionInProgress === transitionName,
         transitionError: transitionErrorName === transitionName ? transitionError : null,
-        onAction: () => onTransition(transaction?.id, transitionName, {}),
+        onAction: onAction || (() => onTransition(transaction?.id, transitionName, {})),
         ...extra,
       },
       forRole
@@ -127,42 +127,17 @@ export const getStateData = (params, process) => {
     actionButtonTranslationErrorId: 'TransactionPage.leaveReview.actionError',
   });
 
-  const getUpdateSellPurchaseProgressProps = (forRole, extra = {}) =>
-    getActionButtonPropsMaybe(
-      {
-        processName,
-        transitionName: SELL_PURCHASE_UPDATE_PROGRESS_TRANSITION_NAME,
-        transactionRole,
-        intl,
-        inProgress: transitionInProgress === SELL_PURCHASE_UPDATE_PROGRESS_TRANSITION_NAME,
-        transitionError:
-          transitionErrorName === SELL_PURCHASE_UPDATE_PROGRESS_TRANSITION_NAME
-            ? transitionError
-            : null,
-        onAction: () =>
-          onUpdateProgressSellPurchase(
-            transaction?.id,
-            SELL_PURCHASE_UPDATE_PROGRESS_TRANSITION_NAME
-          ),
-        ...extra,
-      },
-      forRole
-    );
+  const getUpdateSellPurchaseProgressProps = (transitionName, forRole, extra = {}) =>
+    getActionButtonProps(transitionName, forRole, {
+      ...extra,
+      onAction: () => onUpdateProgressSellPurchase(transaction?.id, transitionName),
+    });
   const getIntiateDisputeSellPurchaseProps = (transitionName, forRole, extra = {}) =>
-    getActionButtonPropsMaybe(
-      {
-        processName,
-        transitionName,
-        transactionRole,
-        intl,
-        inProgress: transitionInProgress === transitionName,
-        transitionError: transitionErrorName === transitionName ? transitionError : null,
-        onAction: ({ disputeReason = 'Dispute reason' } = {}) =>
-          onInitiateDisputeSellPurchase(transaction?.id, transitionName, disputeReason),
-        ...extra,
-      },
-      forRole
-    );
+    getActionButtonProps(transitionName, forRole, {
+      ...extra,
+      onAction: ({ disputeReason = 'Dispute reason' } = {}) =>
+        onInitiateDisputeSellPurchase(transaction?.id, transitionName, disputeReason),
+    });
 
   const sellPurchaseActionButtonsPropsMaybe =
     processName === SELL_PURCHASE_PROCESS_NAME

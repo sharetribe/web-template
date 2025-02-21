@@ -4,6 +4,7 @@ import {
   CONDITIONAL_RESOLVER_WILDCARD,
   ConditionalResolver,
 } from '../../../../transactions/transaction';
+import { MARK_MACHINE_PLACE, MARK_MET_MANAGER } from '../../common/constants';
 import { getSellPurchaseProgressStep } from '../../common/helpers/getSellPurchaseProgressStep';
 import { states, transitions } from '../transactions/transactionProcessSellPurchase';
 
@@ -12,8 +13,8 @@ const getCustomerUpdateProgressPrimaryButtonProps = ({
   availableTransition,
   currentState,
 }) => {
-  const transitionName = buyerMarkMetManager ? availableTransition : 'markMetManager';
-  const modalStatementPrefix = buyerMarkMetManager ? '' : '.markMetManager';
+  const transitionName = buyerMarkMetManager ? availableTransition : MARK_MET_MANAGER;
+  const modalStatementPrefix = buyerMarkMetManager ? '' : `.${MARK_MET_MANAGER}`;
 
   return {
     isConfirmNeeded: true,
@@ -30,10 +31,8 @@ const getProviderUpdateProgressPrimaryButtonProps = () => ({
   isConfirmNeeded: true,
   showConfirmStatement: true,
   showReminderStatement: true,
-  actionButtonTranslationId:
-    'TransactionPage.sell-purchase.provider.markMachinePlaced.actionButton',
-  actionButtonTranslationErrorId:
-    'TransactionPage.sell-purchase.provider.markMachinePlaced.actionError',
+  actionButtonTranslationId: `TransactionPage.sell-purchase.provider.${MARK_MACHINE_PLACE}.actionButton`,
+  actionButtonTranslationErrorId: `TransactionPage.sell-purchase.provider.${MARK_MACHINE_PLACE}.actionError`,
 });
 
 /**
@@ -129,7 +128,11 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
         ...defaultStateData,
         showRefundAvailabileNotice: true,
         showActionButtons: true,
-        primaryButtonProps: updateSellPurchaseProgressProps(CUSTOMER, primaryButtonProps),
+        primaryButtonProps: updateSellPurchaseProgressProps(
+          MARK_MET_MANAGER,
+          CUSTOMER,
+          primaryButtonProps
+        ),
         secondaryButtonProps: actionButtonProps(
           transitions.BUYER_REFUND_BEFORE_CAPTURE_INTENT,
           CUSTOMER,
@@ -149,6 +152,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
         ? {}
         : {
             primaryButtonProps: updateSellPurchaseProgressProps(
+              MARK_MACHINE_PLACE,
               PROVIDER,
               getProviderUpdateProgressPrimaryButtonProps()
             ),
@@ -183,7 +187,11 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
         ...defaultStateData,
         showRefundAvailabileNotice: true,
         showActionButtons: true,
-        primaryButtonProps: updateSellPurchaseProgressProps(CUSTOMER, primaryButtonProps),
+        primaryButtonProps: updateSellPurchaseProgressProps(
+          MARK_MET_MANAGER,
+          CUSTOMER,
+          primaryButtonProps
+        ),
         secondaryButtonProps: initiateDisputeSellPurchase(
           transitions.BUYER_ISSUE_REFUND,
           CUSTOMER,
@@ -203,6 +211,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
         ? {}
         : {
             primaryButtonProps: updateSellPurchaseProgressProps(
+              MARK_MACHINE_PLACE,
               PROVIDER,
               getProviderUpdateProgressPrimaryButtonProps()
             ),
@@ -234,7 +243,11 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
         ...defaultStateData,
         showRefundAvailabileNotice: true,
         showActionButtons: true,
-        primaryButtonProps: updateSellPurchaseProgressProps(CUSTOMER, primaryButtonProps),
+        primaryButtonProps: updateSellPurchaseProgressProps(
+          MARK_MET_MANAGER,
+          CUSTOMER,
+          primaryButtonProps
+        ),
       };
     })
     .cond([states.REFUND_DISABLED, PROVIDER], () => {
@@ -242,6 +255,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
         ? {}
         : {
             primaryButtonProps: updateSellPurchaseProgressProps(
+              MARK_MACHINE_PLACE,
               PROVIDER,
               getProviderUpdateProgressPrimaryButtonProps()
             ),
