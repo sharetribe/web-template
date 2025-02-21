@@ -1,11 +1,12 @@
+
 export const PROGRESS_STEP_PENDING = 'pending';
 export const PROGRESS_STEP_IN_PROGRESS = 'inProgress';
 export const PROGRESS_STEP_COMPLETED = 'completed';
 export const PROGRESS_STEP_CANCELED = 'canceled';
 
 export const SELL_PURCHASE_UPDATE_PROGRESS_TRANSITION_NAME = 'updateProgressSellPurchase';
-export const MARK_MET_MANAGER = 'markMetManager';
-export const MARK_MACHINE_PLACE = 'markMachinePlaced';
+export const MARK_MET_MANAGER_TRANSITION_NAME = 'markMetManager';
+export const MARK_MACHINE_PLACE_TRANSITION_NAME = 'markMachinePlaced';
 
 export const SELL_PURCHASE_PROGRESS_BAR_STEP_CUSTOMER_PENDING_PAYMENT = 'Customer.PendingPayment';
 export const SELL_PURCHASE_PROGRESS_BAR_STEP_CUSTOMER_MEET_MANAGER = 'Customer.MeetManager';
@@ -18,3 +19,6 @@ export const SELL_PURCHASE_PROGRESS_BAR_STEPS_CUSTOMER = [
   SELL_PURCHASE_PROGRESS_BAR_STEP_CUSTOMER_PLACE_MACHINE,
   SELL_PURCHASE_PROGRESS_BAR_STEP_CUSTOMER_REVIEW,
 ];
+
+export const FIELD_TEXT = 'TextField';
+export const FIELD_LOCATION = 'LocationField';

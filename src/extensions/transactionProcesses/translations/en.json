@@ -9,5 +9,9 @@
   "ProgressStep.stepState.completed": "Completed",
   "ProgressStep.stepState.canceled": "Canceled",
   "NoticeRefundAvailable.title": "Notice: ",
-  "NoticeRefundAvailable.content": "Please note that refunds are available for 20 days after the manager is introduced – let us know if you need help."
+  "NoticeRefundAvailable.content": "Please note that refunds are available for 20 days after the manager is introduced – let us know if you need help.",
+  "TransactionPage.RefundField.label": "Please tell us what went wrong",
+  "TransactionPage.RefundField.requiredMessage": "A reason is required.",
+  "TransactionPage.DisputeField.label": "Please tell us the details If you dispute this refund request, we will take up to 5 days to manually investigate and resolve the issue. ",
+  "TransactionPage.DisputeField.requiredMessage": "A reason is required."
 }

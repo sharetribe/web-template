@@ -109,7 +109,8 @@ export const getStateData = (params, process) => {
         intl,
         inProgress: transitionInProgress === transitionName,
         transitionError: transitionErrorName === transitionName ? transitionError : null,
-        onAction: onAction || (() => onTransition(transaction?.id, transitionName, {})),
+        onAction:
+          onAction || ((params = {}) => onTransition(transaction?.id, transitionName, params)),
         ...extra,
       },
       forRole
@@ -135,7 +136,7 @@ export const getStateData = (params, process) => {
   const getIntiateDisputeSellPurchaseProps = (transitionName, forRole, extra = {}) =>
     getActionButtonProps(transitionName, forRole, {
       ...extra,
-      onAction: ({ disputeReason = 'Dispute reason' } = {}) =>
+      onAction: ({ disputeReason } = {}) =>
         onInitiateDisputeSellPurchase(transaction?.id, transitionName, disputeReason),
     });
 

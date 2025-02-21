@@ -4,7 +4,16 @@ import {
   CONDITIONAL_RESOLVER_WILDCARD,
   ConditionalResolver,
 } from '../../../../transactions/transaction';
-import { MARK_MACHINE_PLACE, MARK_MET_MANAGER } from '../../common/constants';
+import { required } from '../../../../util/validators';
+import {
+  FIELD_TEXT,
+  MARK_MACHINE_PLACE_TRANSITION_NAME,
+  MARK_MET_MANAGER_TRANSITION_NAME,
+} from '../../common/constants';
+import {
+  getDisputeReasonField,
+  getRefundReasonField,
+} from '../../common/helpers/getActionModalFormField';
 import { getSellPurchaseProgressStep } from '../../common/helpers/getSellPurchaseProgressStep';
 import { states, transitions } from '../transactions/transactionProcessSellPurchase';
 
@@ -13,8 +22,10 @@ const getCustomerUpdateProgressPrimaryButtonProps = ({
   availableTransition,
   currentState,
 }) => {
-  const transitionName = buyerMarkMetManager ? availableTransition : MARK_MET_MANAGER;
-  const modalStatementPrefix = buyerMarkMetManager ? '' : `.${MARK_MET_MANAGER}`;
+  const transitionName = buyerMarkMetManager
+    ? availableTransition
+    : MARK_MET_MANAGER_TRANSITION_NAME;
+  const modalStatementPrefix = buyerMarkMetManager ? '' : `.${MARK_MET_MANAGER_TRANSITION_NAME}`;
 
   return {
     isConfirmNeeded: true,
@@ -31,8 +42,8 @@ const getProviderUpdateProgressPrimaryButtonProps = () => ({
   isConfirmNeeded: true,
   showConfirmStatement: true,
   showReminderStatement: true,
-  actionButtonTranslationId: `TransactionPage.sell-purchase.provider.${MARK_MACHINE_PLACE}.actionButton`,
-  actionButtonTranslationErrorId: `TransactionPage.sell-purchase.provider.${MARK_MACHINE_PLACE}.actionError`,
+  actionButtonTranslationId: `TransactionPage.sell-purchase.provider.${MARK_MACHINE_PLACE_TRANSITION_NAME}.actionButton`,
+  actionButtonTranslationErrorId: `TransactionPage.sell-purchase.provider.${MARK_MACHINE_PLACE_TRANSITION_NAME}.actionError`,
 });
 
 /**
@@ -89,6 +100,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
           CUSTOMER,
           {
             isConfirmNeeded: true,
+            formConfigs: [getRefundReasonField({ role: CUSTOMER })],
           }
         ),
       };
@@ -101,12 +113,14 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
           isConfirmNeeded: true,
           showConfirmStatement: true,
           showReminderStatement: true,
+          formConfigs: [],
         }),
         secondaryButtonProps: actionButtonProps(
           transitions.SELLER_REFUND_BEFORE_SELLER_CONFIRMED,
           PROVIDER,
           {
             isConfirmNeeded: true,
+            formConfigs: [getRefundReasonField({ role: PROVIDER })],
           }
         ),
       };
@@ -129,7 +143,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
         showRefundAvailabileNotice: true,
         showActionButtons: true,
         primaryButtonProps: updateSellPurchaseProgressProps(
-          MARK_MET_MANAGER,
+          MARK_MET_MANAGER_TRANSITION_NAME,
           CUSTOMER,
           primaryButtonProps
         ),
@@ -143,6 +157,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
               'TransactionPage.SecondaryConfirmActionModal.sell-purchase.purchased.customer.modalTitle',
             confirmButtonTranslationId:
               'TransactionPage.SecondaryConfirmActionModal.sell-purchase.purchased.customer.confirmButton',
+            formConfigs: [getRefundReasonField({ role: CUSTOMER })],
           }
         ),
       };
@@ -152,7 +167,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
         ? {}
         : {
             primaryButtonProps: updateSellPurchaseProgressProps(
-              MARK_MACHINE_PLACE,
+              MARK_MACHINE_PLACE_TRANSITION_NAME,
               PROVIDER,
               getProviderUpdateProgressPrimaryButtonProps()
             ),
@@ -168,6 +183,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
           {
             isConfirmNeeded: true,
             showReminderStatement: true,
+            formConfigs: [getRefundReasonField({ role: PROVIDER })],
           }
         ),
         ...primaryButtonMaybe,
@@ -188,7 +204,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
         showRefundAvailabileNotice: true,
         showActionButtons: true,
         primaryButtonProps: updateSellPurchaseProgressProps(
-          MARK_MET_MANAGER,
+          MARK_MET_MANAGER_TRANSITION_NAME,
           CUSTOMER,
           primaryButtonProps
         ),
@@ -202,6 +218,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
               'TransactionPage.SecondaryConfirmActionModal.sell-purchase.stripe-intent-captured.customer.modalTitle',
             confirmButtonTranslationId:
               'TransactionPage.SecondaryConfirmActionModal.sell-purchase.stripe-intent-captured.customer.confirmButton',
+            formConfigs: [getRefundReasonField({ name: 'disputeReason' })],
           }
         ),
       };
@@ -211,7 +228,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
         ? {}
         : {
             primaryButtonProps: updateSellPurchaseProgressProps(
-              MARK_MACHINE_PLACE,
+              MARK_MACHINE_PLACE_TRANSITION_NAME,
               PROVIDER,
               getProviderUpdateProgressPrimaryButtonProps()
             ),
@@ -227,6 +244,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
           {
             isConfirmNeeded: true,
             showReminderStatement: true,
+            formConfigs: [getRefundReasonField({ name: 'disputeReason' })],
           }
         ),
         ...primaryButtonMaybe,
@@ -244,7 +262,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
         showRefundAvailabileNotice: true,
         showActionButtons: true,
         primaryButtonProps: updateSellPurchaseProgressProps(
-          MARK_MET_MANAGER,
+          MARK_MET_MANAGER_TRANSITION_NAME,
           CUSTOMER,
           primaryButtonProps
         ),
@@ -255,7 +273,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
         ? {}
         : {
             primaryButtonProps: updateSellPurchaseProgressProps(
-              MARK_MACHINE_PLACE,
+              MARK_MACHINE_PLACE_TRANSITION_NAME,
               PROVIDER,
               getProviderUpdateProgressPrimaryButtonProps()
             ),
@@ -286,6 +304,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
             'TransactionPage.SecondaryConfirmActionModal.sell-purchase.seller-handle-disputed.provider.modalTitle',
           confirmButtonTranslationId:
             'TransactionPage.SecondaryConfirmActionModal.sell-purchase.seller-handle-disputed.provider.confirmButton',
+          formConfigs: [getDisputeReasonField()],
         }),
       };
     })
