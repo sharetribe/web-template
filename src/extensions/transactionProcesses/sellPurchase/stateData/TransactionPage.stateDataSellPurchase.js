@@ -4,8 +4,14 @@ import {
   CONDITIONAL_RESOLVER_WILDCARD,
   ConditionalResolver,
 } from '../../../../transactions/transaction';
-import { emailFormatValid, required } from '../../../../util/validators';
 import {
+  autocompletePlaceSelected,
+  autocompleteSearchRequired,
+  emailFormatValid,
+  required,
+} from '../../../../util/validators';
+import {
+    FIELD_LOCATION,
   FIELD_TEXT,
   MARK_MACHINE_PLACE_TRANSITION_NAME,
   MARK_MET_MANAGER_TRANSITION_NAME,
@@ -136,6 +142,21 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
                   'TransactionPage.sell-purchase.managerEmail.emailInvalidMesage',
               },
             ]),
+            {
+              type: FIELD_LOCATION,
+              labelTranslationId: 'TransactionPage.sell-purchase.managerAddress.label',
+              name: 'protectedData.managerAddress',
+              validators: [
+                {
+                  validatorFn: autocompleteSearchRequired,
+                  messageTranslationId: 'TransactionPage.sell-purchase.managerAddress.requiredMessage',
+                },
+                {
+                  validatorFn: autocompletePlaceSelected,
+                  messageTranslationId: 'TransactionPage.sell-purchase.managerAddress.placeInvalidMessage',
+                },
+              ],
+            },
           ],
           confirmModalTitleTranslationId:
             'TransactionPage.PrimaryConfirmActionModal.sell-purchase.purchase-confirmed-by-buyer.provider.modalTitle',

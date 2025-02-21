@@ -127,6 +127,7 @@
   "TransactionPage.sell-purchase.managerEmail.emailInvalidMesage":"Please input a valid email",
   "TransactionPage.sell-purchase.managerAddress.label":"Address of location",
   "TransactionPage.sell-purchase.managerAddress.requiredMessage":"A location is required",
+  "TransactionPage.sell-purchase.managerAddress.placeInvalidMessage": "We can't find that location. Please retry.",
 
 
   "TransactionPage.ActivityFeed.sell-purchase.purchase-confirmed-by-buyer": "{actor, select, you {You placed an order for {listingTitle}.} other {{otherUsersName} placed an order for {listingTitle}.}}",

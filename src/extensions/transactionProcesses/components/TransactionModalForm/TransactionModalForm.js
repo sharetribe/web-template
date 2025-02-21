@@ -2,13 +2,14 @@ import React from 'react';
 import { Form as FinalForm } from 'react-final-form';
 import { useIntl } from 'react-intl';
 
-import { FieldTextInput, Form } from '../../../../components';
+import { FieldLocationAutocompleteInput, FieldTextInput, Form } from '../../../../components';
 import { FIELD_LOCATION, FIELD_TEXT } from '../../common/constants';
 import { composeValidators } from '../../../../util/validators';
 
 import css from './TransactionModalForm.module.css';
+import { get, merge, set } from 'lodash';
 
-const getField = ({ config, configIndex, intl }) => {
+const getField = ({ config, configIndex, intl, values }) => {
   const {
     type,
     labelTranslationId,
@@ -28,7 +29,6 @@ const getField = ({ config, configIndex, intl }) => {
       return (
         <FieldTextInput
           key={configIndex}
-          className={css.fieldInput}
           id={name}
           name={name}
           type="text"
@@ -41,22 +41,55 @@ const getField = ({ config, configIndex, intl }) => {
       );
 
     case FIELD_LOCATION:
+      return (
+        <FieldLocationAutocompleteInput
+          key={configIndex}
+          iconClassName={css.locationAutocompleteInputIcon}
+          name={name}
+          label={labelTranslationId && intl.formatMessage({ id: labelTranslationId })}
+          placeholder={
+            placeholderTranslationId && intl.formatMessage({ id: placeholderTranslationId })
+          }
+          useDefaultPredictions={false}
+          format={v => v}
+          valueFromForm={values[name]}
+          validate={composeValidators(...validators)}
+        />
+      );
     default:
       return null;
   }
 };
 
-function TransactionModalForm({ formConfigs = [], ...restProps }) {
+function TransactionModalForm({ onSubmit, formConfigs = [], ...restProps }) {
   const intl = useIntl();
-  const fields = Array.isArray(formConfigs)
-    ? formConfigs.map((config, configIndex) => getField({ config, configIndex, intl }))
-    : [];
+
+  const handleSubmit = values => {
+    const locationFields = formConfigs.filter(field => field.type === FIELD_LOCATION);
+    const locationValues = locationFields.reduce((acc, current) => {
+      const { name } = current;
+
+      const value = get(values, name);
+      set(acc, name, value?.selectedPlace?.address);
+      return acc;
+    }, {});
+
+    onSubmit(merge({}, values, locationValues));
+  };
 
   return (
     <FinalForm
+      onSubmit={handleSubmit}
       {...restProps}
       render={formRenderProps => {
-        const { children, handleSubmit } = formRenderProps;
+        const { children, handleSubmit, values } = formRenderProps;
+
+        const fields = Array.isArray(formConfigs)
+          ? formConfigs.map((config, configIndex) =>
+              getField({ config, configIndex, intl, values })
+            )
+          : [];
+
         return (
           <Form onSubmit={handleSubmit}>
             {fields}

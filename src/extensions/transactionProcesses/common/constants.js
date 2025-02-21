@@ -1,4 +1,3 @@
-
 export const PROGRESS_STEP_PENDING = 'pending';
 export const PROGRESS_STEP_IN_PROGRESS = 'inProgress';
 export const PROGRESS_STEP_COMPLETED = 'completed';

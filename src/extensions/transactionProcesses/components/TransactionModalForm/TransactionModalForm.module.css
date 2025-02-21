@@ -8,3 +8,7 @@
     color: --var(--colorGrey700);
   }
 }
+
+.locationAutocompleteInputIcon {
+  display: none;
+}
