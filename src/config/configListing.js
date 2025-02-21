@@ -597,6 +597,7 @@ export const listingFields = [
       { option: 'massimo dutti', label: 'Massimo Dutti' },
       { option: 'matt & nat', label: 'matt & nat' },
       { option: 'max & co', label: 'Max & Co' },
+      { option: 'max mara weekend', label: 'Max Mara Weekend' },
       { option: 'maya', label: 'Maya' },
       { option: 'maya maternity', label: 'Maya Maternity' },
       { option: 'maya plus', label: 'Maya Plus' },
@@ -1005,6 +1006,7 @@ export const listingFields = [
       { option: "z_code_z", "label": "Z_Code_Z" },
       { option: "zemeta", "label": "Zemeta" },
       { option: "zulu & zephyr", "label": "Zulu & Zephyr" },
+      { option: "друга марка", "label": "Друга Марка" },
     ],
     filterConfig: {
       indexForSearch: true,

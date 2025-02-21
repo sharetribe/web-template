@@ -21,10 +21,13 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-top: 3rem;
+  margin-top: 2rem;
+}
+.customLinksWrapper a {
+  color: var(--colorPrimary);
 }
 .accountLinksWrapper {
-  margin-bottom: 36px;
+  margin-bottom: 1.5rem;
 }
 
 .footer {
@@ -115,7 +118,7 @@
 .inbox {
   /* Font */
   composes: customLinkFont;
-  color: var(--marketplaceColor);
+  color: var(--colorText);
   position: relative;
 
   margin-top: auto;
@@ -125,7 +128,7 @@
 .navigationLink {
   /* Font */
   composes: customLinkFont;
-  color: var(--marketplaceColor);
+  color: var(--colorText);
 
   /* Layout */
   margin-top: 0;

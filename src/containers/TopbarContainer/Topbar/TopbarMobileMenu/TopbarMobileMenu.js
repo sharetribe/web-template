@@ -174,6 +174,7 @@ const TopbarMobileMenu = props => {
             <FormattedMessage id="TopbarMobileMenu.accountSettingsLink" />
           </NamedLink>
         </div>
+        <div className={css.halfLine}></div>
         <div className={css.customLinksWrapper}>{extraLinks}</div>
         <div className={css.spacer} />
       </div>

@@ -145,7 +145,7 @@
   --topbarHeight: 60px;
   --topbarHeightDesktop: 72px;
 
-  --TopbarMobileMenu_topMargin: 96px;
+  --TopbarMobileMenu_topMargin: 32px;
 
   --Topbar_logoHeight: 25px;
   --CheckoutPage_logoHeight: 25px;
@@ -808,7 +808,9 @@ textarea {
   line-height: 1.2;
   font-weight: var(--fontWeightMedium);
   /* letter-spacing: -0.1px; */
-
+  @media (max-width: 768px) {
+    font-size: 22px;
+  }
   @media (--viewportMedium) {
     line-height: 1.2;
   }
@@ -836,11 +838,12 @@ textarea {
   font-weight: var(--fontWeightRegular);
   font-size: 13px;
   line-height: 18px;
-  /* margin-top + n * line-height + margin-bottom => x * 6px */
   margin-top: 9.5px;
   margin-bottom: 8.5px;
   -webkit-font-smoothing: subpixel-antialiased;
-
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
   @media (--viewportMedium) {
     line-height: 16px;
     /* margin-top + n * line-height + margin-bottom => x * 8px */
