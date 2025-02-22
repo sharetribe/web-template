@@ -1558,42 +1558,93 @@ textarea {
 }
 
 /* add-ons */
-#home-hero div:last-of-type {
-  align-self: end;
-  @media (--viewportMedium) {
-    align-self: center;
-  }
+#home-hero {
+  min-height: 50vh;
   header {
-    padding: 1rem;
+    @media (max-width: 600px) {
+      margin: 0 auto;
+    }
+    @media (min-width: 1128px) and (max-width: 1400px) {
+      margin: 0 0 0 10vw;
+    }
+    @media (min-width: 1401px) {
+      margin: 0 0 0 20vw;
+    }
+    h1 {
+      font-weight: 900;
+    }
   }
-  p {
-    font-size: 16px;
-  }
-  @media (--viewportLargeWithPaddings) {
+  div:last-of-type {
+    align-self: end;
+    @media (--viewportMedium) {
+      align-self: center;
+    }
     header {
-      padding: 2rem;
+      padding: 1rem;
     }
     p {
-      font-size: 18px;
+      font-size: 16px;
+    }
+    @media (--viewportLargeWithPaddings) {
+      header {
+        padding: 2rem;
+      }
+      p {
+        font-size: 18px;
+      }
     }
   }
 }
-#privacy header,
-#terms header {
+
+#how-to-home header {
   justify-content: flex-start;
-  h1, p {
-    text-align: left;
+  h2 {
     justify-self: flex-start;
+    color: var(--colorPrimary);
+    text-align: left;
   }
-  .description {
+  p {
+    justify-self: flex-start;
+    margin-top: 0;
+    padding: 0;
+    text-align: left;
+    text-wrap: auto;
     max-width: 100%;
   }
 }
-#privacy ul,
-#terms ul {
-  margin-top: 0;
-  padding: 0 1rem;
+
+#howto-step-1 div:first-of-type,
+#howto-step-2 div:first-of-type,
+#howto-step-3 div:first-of-type,
+#howto-step-4 div:first-of-type {
+  width: 60px;
+  height: 60px;
 }
+
+#howto-step-1 h3,
+#howto-step-2 h3,
+#howto-step-3 h3,
+#howto-step-4 h3 {
+  margin-bottom: 0;
+  padding: 0;
+  font-weight: 800 !important;
+  line-height: 1;
+  color: black;
+}
+#howto-step-1:hover h3,
+#howto-step-2:hover h3,
+#howto-step-3:hover h3,
+#howto-step-4:hover h3 {
+  color: var(--colorPrimary);
+}
+
+#howto-step-1 p,
+#howto-step-2 p,
+#howto-step-3 p,
+#howto-step-4 p {
+  margin-top: 1rem;
+}
+
 #how-to-sell {
   div:first-of-type {
     header, div {
@@ -1617,8 +1668,20 @@ textarea {
     }
   }
 }
-/* fieldset ul {
-  columns: 3;
-  -webkit-columns: 3;
-  -moz-columns: 3;
-} */
+
+#privacy header,
+#terms header {
+  justify-content: flex-start;
+  h1, p {
+    text-align: left;
+    justify-self: flex-start;
+  }
+  .description {
+    max-width: 100%;
+  }
+}
+#privacy ul,
+#terms ul {
+  margin-top: 0;
+  padding: 0 1rem;
+}

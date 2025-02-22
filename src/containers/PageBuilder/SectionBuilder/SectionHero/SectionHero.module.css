@@ -24,30 +24,22 @@
   margin-left: 20%;
   padding: 2rem;
   background: rgba(255,255,255,.9);
+  h1 {
+    font-size: 42px;
+    font-weight: var(--fontWeightBold);
+    line-height: 1.1;
+    color: var(--colorSecondary);
+  }
+  p {
+    font-weight: 300;
+    line-height: 1.4;
+    color: var(--colorSecondary);
+  }
+  a {
+    text-transform: uppercase;
+  }
 }
 
-/* container parent at bottom on mobile 
-@media (min-width:200px) and (max-width:800px) {
-  #heroHome  {
-    align-self: flex-end;
-  } 
-}
-*/
-
-#heroHome h1 {
-  font-size: 42px;
-  font-weight: var(--fontWeightBold);
-  line-height: 1.1;
-  color: var(--colorSecondary);
-}
-#heroHome p {
-  font-weight: 300;
-  line-height: 1.4;
-  color: var(--colorSecondary);
-}
-#heroHome a {
-  text-transform: uppercase;
-}
 @media (min-width:200px) and (max-width:800px) {
   #heroHome {
     max-width: 90%;

@@ -15,7 +15,6 @@
   transition: var(--transitionStyleButton);
   background: var(--colorGrey100); /* Loading BG color */
   border-radius: var(--borderRadiusMedium);
-
   @media (--viewportMedium) {
     &:hover {
       transform: scale(1.02);
@@ -23,6 +22,9 @@
     }
   }
 }
+/* @media (max-width: 600px) {
+  max-height: 50vh;
+} */
 
 .rootForImage {
   border: solid 1px var(--colorGrey100);
