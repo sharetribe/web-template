@@ -1558,40 +1558,23 @@ textarea {
 }
 
 /* add-ons */
-#home-hero {
-  min-height: 50vh;
-  header {
-    @media (max-width: 600px) {
-      margin: 0 auto;
-    }
-    @media (min-width: 1128px) and (max-width: 1400px) {
-      margin: 0 0 0 10vw;
-    }
-    @media (min-width: 1401px) {
-      margin: 0 0 0 20vw;
-    }
-    h1 {
-      font-weight: 900;
-    }
+#home-hero div:last-of-type {
+  align-self: end;
+  @media (--viewportMedium) {
+    align-self: center;
   }
-  div:last-of-type {
-    align-self: end;
-    @media (--viewportMedium) {
-      align-self: center;
-    }
+  header {
+    padding: 1rem;
+  }
+  p {
+    font-size: 16px;
+  }
+  @media (--viewportLargeWithPaddings) {
     header {
-      padding: 1rem;
+      padding: 2rem;
     }
     p {
-      font-size: 16px;
-    }
-    @media (--viewportLargeWithPaddings) {
-      header {
-        padding: 2rem;
-      }
-      p {
-        font-size: 18px;
-      }
+      font-size: 18px;
     }
   }
 }
@@ -1605,7 +1588,7 @@ textarea {
   }
   p {
     justify-self: flex-start;
-    margin-top: 0;
+    margin-top: 1rem;
     padding: 0;
     text-align: left;
     text-wrap: auto;
@@ -1627,7 +1610,8 @@ textarea {
 #howto-step-4 h3 {
   margin-bottom: 0;
   padding: 0;
-  font-weight: 800 !important;
+  font-size: 1.375rem;
+  font-weight: 600 !important;
   line-height: 1;
   color: black;
 }
