@@ -1595,6 +1595,7 @@ textarea {
       } 
     }
     p {
+      color: var(--colorText);
       font-size: 1rem;
       font-weight: 300;
       text-align: left;
