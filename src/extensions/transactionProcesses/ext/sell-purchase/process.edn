@@ -52,6 +52,7 @@
    :actions
    [{:name :action/calculate-full-refund}
     {:name :action/stripe-refund-payment}
+    {:name :action/update-protected-data}
     ;; Keep this action last in the list of actions for
     ;; the transition
     {:name :action/decline-stock-reservation}],
@@ -62,6 +63,7 @@
    :actions
    [{:name :action/calculate-full-refund}
     {:name :action/stripe-refund-payment}
+    {:name :action/update-protected-data}
     ;; Keep this action last in the list of actions for
     ;; the transition
     {:name :action/decline-stock-reservation}],
@@ -94,6 +96,7 @@
    :actions
    [{:name :action/calculate-full-refund}
     {:name :action/stripe-refund-payment}
+    {:name :action/update-protected-data}
     ;; Keep this action last in the list of actions for
     ;; the transition
     {:name :action/cancel-stock-reservation}],
@@ -104,6 +107,7 @@
    :actions
    [{:name :action/calculate-full-refund}
     {:name :action/stripe-refund-payment}
+    {:name :action/update-protected-data}
     ;; Keep this action last in the list of actions for
     ;; the transition
     {:name :action/cancel-stock-reservation}],
@@ -163,6 +167,7 @@
 
   {:name :transition/seller-issue-refund,
    :actor :actor.role/provider,
+   :privileged? true,
    :actions
    [{:name :action/update-protected-data}],
    :from :state/stripe-intent-captured,
@@ -204,7 +209,7 @@
   {:name :transition/expire-dispute-period,
    :at {:fn/plus
         [{:fn/timepoint [:time/first-entered-state :state/stripe-intent-captured]}
-         {:fn/period ["P30D"]}]},
+         {:fn/period ["PT30M"]}]},
    :actions
    [{:name :action/stripe-create-payout}],
    :from :state/operator-handle-disputed,

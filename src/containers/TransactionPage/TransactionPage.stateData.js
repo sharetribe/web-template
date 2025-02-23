@@ -6,11 +6,11 @@ import {
   resolveLatestProcessName,
 } from '../../transactions/transaction';
 import { SELL_PURCHASE_PROCESS_NAME } from '../../extensions/transactionProcesses/sellPurchase/transactions/transactionProcessSellPurchase.js';
-import { UPDATE_PROGRESS_TRANSITION_NAME } from '../../extensions/transactionProcesses/sellPurchase/constants.js';
 import { getStateDataForBookingProcess } from './TransactionPage.stateDataBooking.js';
 import { getStateDataForInquiryProcess } from './TransactionPage.stateDataInquiry.js';
 import { getStateDataForPurchaseProcess } from './TransactionPage.stateDataPurchase.js';
 import { getStateDataForSellPurchaseProcess } from '../../extensions/transactionProcesses/sellPurchase/stateData/TransactionPage.stateDataSellPurchase.js';
+import { SELL_PURCHASE_UPDATE_PROGRESS_TRANSITION_NAME } from '../../extensions/transactionProcesses/common/constants.js';
 
 const errorShape = shape({
   type: oneOf(['error']).isRequired,
@@ -100,7 +100,7 @@ export const getStateData = (params, process) => {
   const isCustomer = transactionRole === 'customer';
   const processName = resolveLatestProcessName(transaction?.attributes?.processName);
 
-  const getActionButtonProps = (transitionName, forRole, extra = {}) =>
+  const getActionButtonProps = (transitionName, forRole, { onAction, ...extra } = {}) =>
     getActionButtonPropsMaybe(
       {
         processName,
@@ -109,7 +109,8 @@ export const getStateData = (params, process) => {
         intl,
         inProgress: transitionInProgress === transitionName,
         transitionError: transitionErrorName === transitionName ? transitionError : null,
-        onAction: () => onTransition(transaction?.id, transitionName, {}),
+        onAction:
+          onAction || ((params = {}) => onTransition(transaction?.id, transitionName, params)),
         ...extra,
       },
       forRole
@@ -127,37 +128,17 @@ export const getStateData = (params, process) => {
     actionButtonTranslationErrorId: 'TransactionPage.leaveReview.actionError',
   });
 
-  const getUpdateSellPurchaseProgressProps = (forRole, extra = {}) =>
-    getActionButtonPropsMaybe(
-      {
-        processName,
-        transitionName: UPDATE_PROGRESS_TRANSITION_NAME,
-        transactionRole,
-        intl,
-        inProgress: transitionInProgress === UPDATE_PROGRESS_TRANSITION_NAME,
-        transitionError:
-          transitionErrorName === UPDATE_PROGRESS_TRANSITION_NAME ? transitionError : null,
-        onAction: () =>
-          onUpdateProgressSellPurchase(transaction?.id, UPDATE_PROGRESS_TRANSITION_NAME),
-        ...extra,
-      },
-      forRole
-    );
+  const getUpdateSellPurchaseProgressProps = (transitionName, forRole, extra = {}) =>
+    getActionButtonProps(transitionName, forRole, {
+      ...extra,
+      onAction: () => onUpdateProgressSellPurchase(transaction?.id, transitionName),
+    });
   const getIntiateDisputeSellPurchaseProps = (transitionName, forRole, extra = {}) =>
-    getActionButtonPropsMaybe(
-      {
-        processName,
-        transitionName,
-        transactionRole,
-        intl,
-        inProgress: transitionInProgress === transitionName,
-        transitionError: transitionErrorName === transitionName ? transitionError : null,
-        onAction: ({ disputeReason = 'Dispute reason' } = {}) =>
-          onInitiateDisputeSellPurchase(transaction?.id, transitionName, disputeReason),
-        ...extra,
-      },
-      forRole
-    );
+    getActionButtonProps(transitionName, forRole, {
+      ...extra,
+      onAction: ({ disputeReason } = {}) =>
+        onInitiateDisputeSellPurchase(transaction?.id, transitionName, disputeReason),
+    });
 
   const sellPurchaseActionButtonsPropsMaybe =
     processName === SELL_PURCHASE_PROCESS_NAME

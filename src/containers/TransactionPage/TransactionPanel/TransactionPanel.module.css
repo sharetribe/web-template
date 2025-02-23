@@ -609,3 +609,12 @@
 .confirmModalCheckBoxIcon {
   margin-right: 4px;
 }
+
+.refundAvailableNotice {
+  font-size: 11px;
+  line-height: 15px;
+  font-style: italic;
+}
+.refundAvailableNoticeTitle {
+  font-weight: var(--fontWeightBold)
+}
