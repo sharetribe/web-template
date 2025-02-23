@@ -1559,38 +1559,57 @@ textarea {
 
 /* add-ons */
 #home-hero {
-  min-height: 50vh;
+  div:last-of-type {
+    height: 85vh;
+    @media (--viewportLarge) {
+      height: 50vh;
+    }
+  }
   header {
+    width: 90%;
+    padding: 2rem;
+    background: rgba(255,255,255,.85);
     @media (max-width: 600px) {
       margin: 0 auto;
     }
     @media (min-width: 1128px) and (max-width: 1400px) {
+      width: 70%;
       margin: 0 0 0 10vw;
     }
     @media (min-width: 1401px) {
+      width: 65%;
       margin: 0 0 0 20vw;
     }
     h1 {
+      justify-self: flex-start;
+      font-size: 1.75rem;
       font-weight: 700;
-    }
-  }
-  div:last-of-type {
-    align-self: end;
-    @media (--viewportMedium) {
-      align-self: center;
-    }
-    header {
-      padding: 1rem;
+      text-align: left;
+      /* text-wrap: auto; */
+      color: var(--colorText);
+      @media (--viewportLarge) {
+        font-size: 2.5rem;
+      } 
     }
     p {
-      font-size: 16px;
-    }
-    @media (--viewportLargeWithPaddings) {
-      header {
-        padding: 2rem;
+      font-size: 1rem;
+      font-weight: 300;
+      text-align: left;
+      text-wrap: auto;
+      color: var(--colorText);
+      @media (--viewportLarge) {
+        font-size: 1.125rem;
+        margin-top: .75rem;
       }
-      p {
-        font-size: 18px;
+    }
+    a {
+      justify-self: flex-start;
+      font-size: .75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      @media (--viewportLarge) {
+        font-size: 1rem;
+        font-weight: 600;
       }
     }
   }
