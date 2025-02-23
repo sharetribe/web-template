@@ -1561,8 +1561,11 @@ textarea {
 #home-hero {
   div:last-of-type {
     height: 85vh;
+    display: flex;
+    align-items: flex-end;
     @media (--viewportLarge) {
       height: 50vh;
+      align-items: center;
     }
   }
   header {
@@ -1607,9 +1610,13 @@ textarea {
       font-size: .75rem;
       font-weight: 800;
       text-transform: uppercase;
+      width: 100%;
+      text-align: center;
       @media (--viewportLarge) {
+        width: fit-content;
         font-size: 1rem;
         font-weight: 600;
+        text-align: center;
       }
     }
   }
