@@ -34,6 +34,8 @@ import {
   ResponsiveBackgroundImageContainer,
   Modal,
   LayoutSingleColumn,
+  Button,
+  LinkedLogo,
 } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
@@ -96,7 +98,7 @@ export const SocialLoginButtonsMaybe = props => {
     window.location.href = `${baseUrl}/api/auth/google?${queryParams}`;
   };
 
-  return showSocialLogins ? (
+  return !showSocialLogins ? (
     <div className={css.idpButtons}>
       <div className={css.socialButtonsOr}>
         <span className={css.socialButtonsOrText}>
@@ -117,9 +119,10 @@ export const SocialLoginButtonsMaybe = props => {
         </div>
       ) : null}
 
-      {showGoogleLogin ? (
+      {!showGoogleLogin ? (
         <div className={css.socialButtonWrapper}>
-          <SocialLoginButton onClick={() => authWithGoogle()}>
+          {/* <SocialLoginButton onClick={() => authWithGoogle()}> */}
+          <SocialLoginButton onClick={() => {alert('Need to add client ID from identity provider')}}>
             <span className={css.buttonIcon}>{GoogleLogo}</span>
             {isLogin ? (
               <FormattedMessage id="AuthenticationPage.loginWithGoogle" />
@@ -142,9 +145,9 @@ const getNonUserFieldParams = (values, userFieldConfigs) => {
     return isUserFieldKey
       ? picked
       : {
-          ...picked,
-          [key]: value,
-        };
+        ...picked,
+        [key]: value,
+      };
   }, {});
 };
 
@@ -163,8 +166,10 @@ export const AuthenticationForms = props => {
     authInProgress,
     submitSignup,
     termsAndConditions,
+    history,
   } = props;
   const config = useConfiguration();
+  const routeConfiguration = useRouteConfiguration();
   const { userFields, userTypes = [] } = config.user;
   const preselectedUserType = userTypes.find(conf => conf.userType === userType)?.userType || null;
 
@@ -226,6 +231,11 @@ export const AuthenticationForms = props => {
     submitSignup(params);
   };
 
+  const handleNavigateSignUp = () => {
+    const signupPath = pathByRouteName('SignupPage', routeConfiguration);
+    history.push(signupPath);
+  }
+
   const loginErrorMessage = (
     <div className={css.error}>
       <FormattedMessage id="AuthenticationPage.loginFailed" />
@@ -252,18 +262,26 @@ export const AuthenticationForms = props => {
     isLogin && !!idpAuthError
       ? idpAuthErrorMessage
       : isLogin && !!loginError
-      ? loginErrorMessage
-      : !!signupError
-      ? signupErrorMessage
-      : null;
+        ? loginErrorMessage
+        : !!signupError
+          ? signupErrorMessage
+          : null;
 
   return (
     <div className={css.content}>
-      <LinkTabNavHorizontal className={css.tabs} tabs={tabs} />
+      {/* <LinkTabNavHorizontal className={css.tabs} tabs={tabs} /> */}
       {loginOrSignupError}
 
       {isLogin ? (
-        <LoginForm className={css.loginForm} onSubmit={submitLogin} inProgress={authInProgress} />
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <label style={{ fontSize: "16px" }}>
+            アカウントをお持ちでない方はこちら
+          </label>
+          <Button onClick={handleNavigateSignUp}>新規会員登録</Button>
+          <hr style={{ color: 'black', width: "100%", marginTop: "30px" }} />
+          <label style={{ fontSize: "16px" }}>メールアドレスでログイン</label>
+          <LoginForm className={css.loginForm} onSubmit={submitLogin} inProgress={authInProgress} />
+        </div>
       ) : (
         <SignupForm
           className={css.signupForm}
@@ -330,19 +348,19 @@ const ConfirmIdProviderInfoForm = props => {
     // Pass other values as extended data according to user field configuration
     const extendedDataMaybe = !isEmpty(rest)
       ? {
-          publicData: {
-            userType,
-            ...pickUserFieldsData(rest, 'public', userType, userFields),
-          },
-          privateData: {
-            ...pickUserFieldsData(rest, 'private', userType, userFields),
-          },
-          protectedData: {
-            ...pickUserFieldsData(rest, 'protected', userType, userFields),
-            // If the confirm form has any additional values, pass them forward as user's protected data
-            ...getNonUserFieldParams(rest, userFields),
-          },
-        }
+        publicData: {
+          userType,
+          ...pickUserFieldsData(rest, 'public', userType, userFields),
+        },
+        privateData: {
+          ...pickUserFieldsData(rest, 'private', userType, userFields),
+        },
+        protectedData: {
+          ...pickUserFieldsData(rest, 'protected', userType, userFields),
+          // If the confirm form has any additional values, pass them forward as user's protected data
+          ...getNonUserFieldParams(rest, userFields),
+        },
+      }
       : {};
 
     submitSingupWithIdp({
@@ -406,6 +424,7 @@ export const AuthenticationOrConfirmInfoForm = props => {
     signupError,
     confirmError,
     termsAndConditions,
+    history,
   } = props;
   const isConfirm = tab === 'confirm';
   const isLogin = tab === 'login';
@@ -433,6 +452,7 @@ export const AuthenticationOrConfirmInfoForm = props => {
       authInProgress={authInProgress}
       submitSignup={submitSignup}
       termsAndConditions={termsAndConditions}
+      history={history}
     ></AuthenticationForms>
   );
 };
@@ -548,6 +568,7 @@ export const AuthenticationPageComponent = props => {
     tosAssetsData,
     tosFetchInProgress,
     tosFetchError,
+    history,
   } = props;
 
   // History API has potentially state tied to this route
@@ -638,9 +659,12 @@ export const AuthenticationPageComponent = props => {
     >
       <LayoutSingleColumn
         mainColumnClassName={css.layoutWrapperMain}
-        topbar={<TopbarContainer className={topbarClasses} />}
-        footer={<FooterContainer />}
+      // topbar={<TopbarContainer className={topbarClasses} />}
+      // footer={<FooterContainer />}
       >
+        <div style={{width: "100%", display: "flex", justifyContent: "center", background: "#f5f5f5"}}>
+          <LinkedLogo />
+        </div>
         <ResponsiveBackgroundImageContainer
           className={css.root}
           childrenWrapperClassName={css.contentContainer}
@@ -649,6 +673,7 @@ export const AuthenticationPageComponent = props => {
           sizes="100%"
           useOverlay
         >
+          
           {showEmailVerification ? (
             <EmailVerificationInfo
               name={user.attributes.profile.firstName}
@@ -673,13 +698,14 @@ export const AuthenticationPageComponent = props => {
               idpAuthError={authError}
               signupError={signupError}
               confirmError={confirmError}
-              termsAndConditions={
-                <TermsAndConditions
-                  onOpenTermsOfService={() => setTosModalOpen(true)}
-                  onOpenPrivacyPolicy={() => setPrivacyModalOpen(true)}
-                  intl={intl}
-                />
-              }
+              history={history}
+            // termsAndConditions={
+            //   <TermsAndConditions
+            //     onOpenTermsOfService={() => setTosModalOpen(true)}
+            //     onOpenPrivacyPolicy={() => setPrivacyModalOpen(true)}
+            //     intl={intl}
+            //   />
+            // }
             />
           )}
         </ResponsiveBackgroundImageContainer>

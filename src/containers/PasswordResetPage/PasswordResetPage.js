@@ -136,8 +136,8 @@ export const PasswordResetPageComponent = props => {
     >
       <LayoutSingleColumn
         mainColumnClassName={css.layoutWrapperMain}
-        topbar={<TopbarContainer />}
-        footer={<FooterContainer />}
+      //   topbar={<TopbarContainer />}
+      //   footer={<FooterContainer />}
       >
         <ResponsiveBackgroundImageContainer
           className={css.root}

@@ -171,8 +171,8 @@ export const PasswordRecoveryPageComponent = props => {
     >
       <LayoutSingleColumn
         mainColumnClassName={css.layoutWrapperMain}
-        topbar={<TopbarContainer />}
-        footer={<FooterContainer />}
+        // topbar={<TopbarContainer />}
+        // footer={<FooterContainer />}
       >
         <ResponsiveBackgroundImageContainer
           className={css.root}

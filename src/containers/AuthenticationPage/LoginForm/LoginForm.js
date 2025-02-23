@@ -68,7 +68,7 @@ const LoginFormComponent = props => (
               id={formId ? `${formId}.email` : 'email'}
               name="email"
               autoComplete="email"
-              label={emailLabel}
+              // label={emailLabel}
               placeholder={emailPlaceholder}
               validate={validators.composeValidators(emailRequired, emailValid)}
             />
@@ -78,7 +78,7 @@ const LoginFormComponent = props => (
               id={formId ? `${formId}.password` : 'password'}
               name="password"
               autoComplete="current-password"
-              label={passwordLabel}
+              // label={passwordLabel}
               placeholder={passwordPlaceholder}
               validate={passwordRequired}
             />
@@ -92,7 +92,7 @@ const LoginFormComponent = props => (
                 />
               </span>
             </p>
-            <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
+            <PrimaryButton type="submit" inProgress={submitInProgress}>
               <FormattedMessage id="LoginForm.logIn" />
             </PrimaryButton>
           </div>

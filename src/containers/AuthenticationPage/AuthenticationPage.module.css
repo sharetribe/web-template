@@ -20,10 +20,10 @@
 
 .content {
   composes: marketplaceModalBaseStyles from global;
+  margin-top: 0;
   padding-top: 29px;
 
   @media (--viewportMedium) {
-    margin-top: 5vh;
     margin-bottom: 7.5vh;
     min-height: 700px;
   }
@@ -75,10 +75,11 @@
   whole form correctly.  */
   flex-grow: 0;
   flex-basis: 260px;
+  width: 100%;
 
   @media (--viewportMedium) {
     flex-basis: 330px;
-    margin-top: 30px;
+    margin-top: 10px;
     padding-top: 2px;
   }
 }
@@ -95,8 +96,8 @@
   flex-basis: 340px;
 
   @media (--viewportMedium) {
-    flex-basis: 410px;
-    margin-top: 30px;
+    flex-basis: 330px;
+    margin-top: 10px;
     padding-top: 2px;
   }
 }
