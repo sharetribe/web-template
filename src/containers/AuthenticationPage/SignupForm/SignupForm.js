@@ -126,44 +126,42 @@ const SignupFormComponent = props => (
                 })}
                 validate={validators.composeValidators(emailRequired, emailValid)}
               />
-              <div className={css.name}>
-                <FieldTextInput
-                  className={css.firstNameRoot}
-                  type="text"
-                  id={formId ? `${formId}.fname` : 'fname'}
-                  name="fname"
-                  autoComplete="given-name"
-                  label={intl.formatMessage({
-                    id: 'SignupForm.firstNameLabel',
-                  })}
-                  placeholder={intl.formatMessage({
-                    id: 'SignupForm.firstNamePlaceholder',
-                  })}
-                  validate={validators.required(
-                    intl.formatMessage({
-                      id: 'SignupForm.firstNameRequired',
-                    })
-                  )}
-                />
-                <FieldTextInput
-                  className={css.lastNameRoot}
-                  type="text"
-                  id={formId ? `${formId}.lname` : 'lname'}
-                  name="lname"
-                  autoComplete="family-name"
-                  label={intl.formatMessage({
-                    id: 'SignupForm.lastNameLabel',
-                  })}
-                  placeholder={intl.formatMessage({
-                    id: 'SignupForm.lastNamePlaceholder',
-                  })}
-                  validate={validators.required(
-                    intl.formatMessage({
-                      id: 'SignupForm.lastNameRequired',
-                    })
-                  )}
-                />
-              </div>
+              <FieldTextInput
+                // className={css.firstNameRoot}
+                type="text"
+                id={formId ? `${formId}.fname` : 'fname'}
+                name="fname"
+                autoComplete="given-name"
+                label={intl.formatMessage({
+                  id: 'SignupForm.firstNameLabel',
+                })}
+                placeholder={intl.formatMessage({
+                  id: 'SignupForm.firstNamePlaceholder',
+                })}
+                validate={validators.required(
+                  intl.formatMessage({
+                    id: 'SignupForm.firstNameRequired',
+                  })
+                )}
+              />
+              <FieldTextInput
+                // className={css.lastNameRoot}
+                type="text"
+                id={formId ? `${formId}.lname` : 'lname'}
+                name="lname"
+                autoComplete="family-name"
+                label={intl.formatMessage({
+                  id: 'SignupForm.lastNameLabel',
+                })}
+                placeholder={intl.formatMessage({
+                  id: 'SignupForm.lastNamePlaceholder',
+                })}
+                validate={validators.required(
+                  intl.formatMessage({
+                    id: 'SignupForm.lastNameRequired',
+                  })
+                )}
+              />
 
               <UserFieldDisplayName
                 formName="SignupForm"
