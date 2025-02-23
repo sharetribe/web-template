@@ -19,9 +19,9 @@
 
   /* Colors used for different functions (like error texts) */
   --colorPrimary: #fe1b00;
-  --colorPrimaryHover: #fe5000;
+  --colorPrimaryHover: #dc1600;
   --colorSecondary: #2e293a;
-  --colorText: #2e293a;
+  --colorText: #1b1919;
   --colorTextFade: #f0eef3;
   --colorBtnCtaText: #ffffff;
   /* end custom colors */
@@ -1558,23 +1558,40 @@ textarea {
 }
 
 /* add-ons */
-#home-hero div:last-of-type {
-  align-self: end;
-  @media (--viewportMedium) {
-    align-self: center;
-  }
+#home-hero {
+  min-height: 50vh;
   header {
-    padding: 1rem;
+    @media (max-width: 600px) {
+      margin: 0 auto;
+    }
+    @media (min-width: 1128px) and (max-width: 1400px) {
+      margin: 0 0 0 10vw;
+    }
+    @media (min-width: 1401px) {
+      margin: 0 0 0 20vw;
+    }
+    h1 {
+      font-weight: 700;
+    }
   }
-  p {
-    font-size: 16px;
-  }
-  @media (--viewportLargeWithPaddings) {
+  div:last-of-type {
+    align-self: end;
+    @media (--viewportMedium) {
+      align-self: center;
+    }
     header {
-      padding: 2rem;
+      padding: 1rem;
     }
     p {
-      font-size: 18px;
+      font-size: 16px;
+    }
+    @media (--viewportLargeWithPaddings) {
+      header {
+        padding: 2rem;
+      }
+      p {
+        font-size: 18px;
+      }
     }
   }
 }
