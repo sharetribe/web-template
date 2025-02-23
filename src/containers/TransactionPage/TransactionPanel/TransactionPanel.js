@@ -33,6 +33,7 @@ import PanelHeading from './PanelHeading';
 import CurrencyNote from '../../../extensions/MultipleCurrency/components/CurrencyNote/CurrencyNote';
 
 import ProgressBar from '../../../extensions/transactionProcesses/components/ProgressBar/ProgressBar';
+import ManagerInformationMaybe from '../../../extensions/transactionProcesses/components/ManagerInformationMaybe/ManagerInformationMaybe';
 
 import css from './TransactionPanel.module.css';
 
@@ -300,6 +301,13 @@ export class TransactionPanelComponent extends Component {
                   className={css.deliveryInfoSection}
                   listing={listing}
                   showBookingLocation={showBookingLocation}
+                />
+
+                <ManagerInformationMaybe
+                  protectedData={protectedData}
+                  stateData={stateData}
+                  className={css.managerInfoSection}
+                  headingClassName={css.sectionHeading}
                 />
               </div>
             ) : null}

@@ -2,8 +2,8 @@
   margin-bottom: 16px;
 
   & > label {
-    font-size: 15px;
-    line-height: 21px;
+    font-size: 14px;
+    line-height: 20px;
     font-weight: var(--fontWeightBold);
     color: --var(--colorGrey700);
   }

@@ -11,7 +11,7 @@ import {
   required,
 } from '../../../../util/validators';
 import {
-    FIELD_LOCATION,
+  FIELD_LOCATION,
   FIELD_TEXT,
   MARK_MACHINE_PLACE_TRANSITION_NAME,
   MARK_MET_MANAGER_TRANSITION_NAME,
@@ -149,11 +149,13 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
               validators: [
                 {
                   validatorFn: autocompleteSearchRequired,
-                  messageTranslationId: 'TransactionPage.sell-purchase.managerAddress.requiredMessage',
+                  messageTranslationId:
+                    'TransactionPage.sell-purchase.managerAddress.requiredMessage',
                 },
                 {
                   validatorFn: autocompletePlaceSelected,
-                  messageTranslationId: 'TransactionPage.sell-purchase.managerAddress.placeInvalidMessage',
+                  messageTranslationId:
+                    'TransactionPage.sell-purchase.managerAddress.placeInvalidMessage',
                 },
               ],
             },

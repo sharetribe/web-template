@@ -221,6 +221,10 @@
   order: 1;
 }
 
+.managerInfoSection {
+  order: 3;
+}
+
 /* "aside" section in desktop layout */
 .asideDesktop {
   margin: 1px 0 0 0;
@@ -339,7 +343,7 @@
 
   @media (--viewportLarge) {
     display: block;
-    padding-bottom:24px;
+    padding-bottom: 24px;
   }
 }
 
@@ -616,5 +620,5 @@
   font-style: italic;
 }
 .refundAvailableNoticeTitle {
-  font-weight: var(--fontWeightBold)
+  font-weight: var(--fontWeightBold);
 }

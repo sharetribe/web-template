@@ -37,6 +37,7 @@ const getField = ({ config, configIndex, intl, values }) => {
             placeholderTranslationId && intl.formatMessage({ id: placeholderTranslationId })
           }
           validate={composeValidators(...validators)}
+          className={css.fieldInput}
         />
       );
 
@@ -44,7 +45,6 @@ const getField = ({ config, configIndex, intl, values }) => {
       return (
         <FieldLocationAutocompleteInput
           key={configIndex}
-          iconClassName={css.locationAutocompleteInputIcon}
           name={name}
           label={labelTranslationId && intl.formatMessage({ id: labelTranslationId })}
           placeholder={
@@ -54,6 +54,8 @@ const getField = ({ config, configIndex, intl, values }) => {
           format={v => v}
           valueFromForm={values[name]}
           validate={composeValidators(...validators)}
+          rootClassName={css.fieldInput}
+          iconClassName={css.locationAutocompleteInputIcon}
         />
       );
     default:
@@ -71,6 +73,7 @@ function TransactionModalForm({ onSubmit, formConfigs = [], ...restProps }) {
 
       const value = get(values, name);
       set(acc, name, value?.selectedPlace?.address);
+      set(acc, `${name}Geo`, value?.selectedPlace.origin);
       return acc;
     }, {});
 

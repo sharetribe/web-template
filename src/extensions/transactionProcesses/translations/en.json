@@ -13,5 +13,10 @@
   "TransactionPage.RefundField.label": "Please tell us what went wrong",
   "TransactionPage.RefundField.requiredMessage": "A reason is required.",
   "TransactionPage.DisputeField.label": "Please tell us the details If you dispute this refund request, we will take up to 5 days to manually investigate and resolve the issue. ",
-  "TransactionPage.DisputeField.requiredMessage": "A reason is required."
+  "TransactionPage.DisputeField.requiredMessage": "A reason is required.",
+  "TransactionPanel.managerInformationHeading": "Manager Information",
+  "TransactionPanel.managerNameContent": "Name: {managerName}",
+  "TransactionPanel.managerPhoneNumberContent": "Phone Number: {managerPhoneNumber}",
+  "TransactionPanel.managerEmailTitle": "Email: ",
+  "TransactionPanel.managerAddressTitle": "Address of location: "
 }
