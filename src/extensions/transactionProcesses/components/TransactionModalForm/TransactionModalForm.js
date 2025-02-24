@@ -3,7 +3,7 @@ import { Form as FinalForm } from 'react-final-form';
 import { useIntl } from 'react-intl';
 
 import { FieldLocationAutocompleteInput, FieldTextInput, Form } from '../../../../components';
-import { FIELD_LOCATION, FIELD_TEXT } from '../../common/constants';
+import { FIELD_LOCATION, FIELD_TEXT, FIELD_TEXTAREA } from '../../common/constants';
 import { composeValidators } from '../../../../util/validators';
 
 import css from './TransactionModalForm.module.css';
@@ -32,6 +32,22 @@ const getField = ({ config, configIndex, intl, values }) => {
           id={name}
           name={name}
           type="text"
+          label={labelTranslationId && intl.formatMessage({ id: labelTranslationId })}
+          placeholder={
+            placeholderTranslationId && intl.formatMessage({ id: placeholderTranslationId })
+          }
+          validate={composeValidators(...validators)}
+          className={css.fieldInput}
+        />
+      );
+
+    case FIELD_TEXTAREA:
+      return (
+        <FieldTextInput
+          key={configIndex}
+          id={name}
+          name={name}
+          type="textarea"
           label={labelTranslationId && intl.formatMessage({ id: labelTranslationId })}
           placeholder={
             placeholderTranslationId && intl.formatMessage({ id: placeholderTranslationId })

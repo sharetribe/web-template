@@ -29,4 +29,5 @@ export const SELL_PURCHASE_PROGRESS_BAR_STEPS_SELLER = [
 ];
 
 export const FIELD_TEXT = 'TextField';
+export const FIELD_TEXTAREA = 'TextareaField';
 export const FIELD_LOCATION = 'LocationField';
