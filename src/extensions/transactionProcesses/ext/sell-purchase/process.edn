@@ -381,6 +381,19 @@
    :to :actor.role/customer,
    :template :purchase-auto-canceled-customer}
 
+  {:name :notification/buyer-issue-refund,
+   :on :transition/buyer-issue-refund,
+   :to :actor.role/provider,
+   :template :purchase-customer-disputed-order}
+  {:name :notification/seller-issue-refund,
+   :on :transition/seller-issue-refund,
+   :to :actor.role/customer,
+   :template :purchase-provider-disputed-order}
+  {:name :notification/seller-dispute-refund,
+   :on :transition/seller-dispute,
+   :to :actor.role/customer,
+   :template :purchase-provider-disputed-order}
+
   {:name :notification/seller-approve-refund-customer,
    :on :transition/seller-approve-refund,
    :to :actor.role/customer,
