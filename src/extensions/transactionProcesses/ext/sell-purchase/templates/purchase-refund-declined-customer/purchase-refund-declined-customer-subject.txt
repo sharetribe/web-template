@@ -1,1 +1,1 @@
-{{set-translations (asset "content/email-texts.json")}}{{t "SellPurchaseRefundProcessed.Subject" "Your refund request has been processed"}}
+{{set-translations (asset "content/email-texts.json")}}{{t "SellPurchaseRefundDeclinedCustomer.Subject" "A disputed order for {listingTitle} is now considered completed" listingTitle=transaction.listing.title}}
