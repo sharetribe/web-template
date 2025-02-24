@@ -374,6 +374,7 @@ export const TransactionPageComponent = props => {
           onInitiateDisputeSellPurchase,
           onOpenReviewModal,
           intl,
+          config,
         },
         process
       )
@@ -689,8 +690,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onTransition: (txId, transitionName, params) =>
-      dispatch(makeTransition(txId, transitionName, params)),
+    onTransition: (txId, transitionName, params, options) =>
+      dispatch(makeTransition(txId, transitionName, params, options)),
     onShowMoreMessages: (txId, config) => dispatch(fetchMoreMessages(txId, config)),
     onSendMessage: (txId, message, config) => dispatch(sendMessage(txId, message, config)),
     onManageDisableScrolling: (componentId, disableScrolling) =>
@@ -712,10 +713,7 @@ const mapDispatchToProps = dispatch => {
 
 const TransactionPage = compose(
   withRouter,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  ),
+  connect(mapStateToProps, mapDispatchToProps),
   injectIntl
 )(TransactionPageComponent);
 

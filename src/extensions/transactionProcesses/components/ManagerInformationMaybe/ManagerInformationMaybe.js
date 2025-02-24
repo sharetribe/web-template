@@ -15,7 +15,6 @@ function ManagerInformationMaybe({
   headingClassName,
 }) {
   const { processName } = stateData;
-  console.log(protectedData);
   const {
     managerAddress,
     managerAddressGeo,

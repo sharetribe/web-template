@@ -526,16 +526,28 @@ const refreshTransactionEntity = (sdk, txId, dispatch) => {
     });
 };
 
-export const makeTransition = (txId, transitionName, params) => (dispatch, getState, sdk) => {
+export const makeTransition = (txId, transitionName, params, { callbackDispatch, config } = {}) => (
+  dispatch,
+  getState,
+  sdk
+) => {
   if (transitionInProgress(getState())) {
     return Promise.reject(new Error('Transition already in progress'));
   }
   dispatch(transitionRequest(transitionName));
 
+  let txTransitionResponse;
+
   return sdk.transactions
     .transition({ id: txId, transition: transitionName, params }, { expand: true })
     .then(response => {
-      dispatch(addMarketplaceEntities(response));
+      txTransitionResponse = response;
+      return callbackDispatch
+        ? dispatch(callbackDispatch({ txId, transitionName, params, config }))
+        : Promise.resolve();
+    })
+    .then(response => {
+      dispatch(addMarketplaceEntities(txTransitionResponse));
       dispatch(transitionSuccess());
       dispatch(fetchCurrentUserNotifications());
 
@@ -545,7 +557,7 @@ export const makeTransition = (txId, transitionName, params) => (dispatch, getSt
       // This way "leave a review" link should show up for the customer.
       refreshTransactionEntity(sdk, txId, dispatch);
 
-      return response;
+      return txTransitionResponse;
     })
     .catch(e => {
       dispatch(transitionError({ error: storableError(e), transitionName }));

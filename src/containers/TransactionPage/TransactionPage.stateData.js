@@ -10,7 +10,6 @@ import { getStateDataForBookingProcess } from './TransactionPage.stateDataBookin
 import { getStateDataForInquiryProcess } from './TransactionPage.stateDataInquiry.js';
 import { getStateDataForPurchaseProcess } from './TransactionPage.stateDataPurchase.js';
 import { getStateDataForSellPurchaseProcess } from '../../extensions/transactionProcesses/sellPurchase/stateData/TransactionPage.stateDataSellPurchase.js';
-import { SELL_PURCHASE_UPDATE_PROGRESS_TRANSITION_NAME } from '../../extensions/transactionProcesses/common/constants.js';
 
 const errorShape = shape({
   type: oneOf(['error']).isRequired,
@@ -96,11 +95,16 @@ export const getStateData = (params, process) => {
     sendReviewInProgress,
     sendReviewError,
     onOpenReviewModal,
+    config,
   } = params;
   const isCustomer = transactionRole === 'customer';
   const processName = resolveLatestProcessName(transaction?.attributes?.processName);
 
-  const getActionButtonProps = (transitionName, forRole, { onAction, ...extra } = {}) =>
+  const getActionButtonProps = (
+    transitionName,
+    forRole,
+    { onAction, requestOptions, ...extra } = {}
+  ) =>
     getActionButtonPropsMaybe(
       {
         processName,
@@ -110,7 +114,9 @@ export const getStateData = (params, process) => {
         inProgress: transitionInProgress === transitionName,
         transitionError: transitionErrorName === transitionName ? transitionError : null,
         onAction:
-          onAction || ((params = {}) => onTransition(transaction?.id, transitionName, params)),
+          onAction ||
+          ((params = {}) =>
+            onTransition(transaction?.id, transitionName, params, { ...requestOptions, config })),
         ...extra,
       },
       forRole
