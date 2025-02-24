@@ -1,8 +1,8 @@
 import { required } from '../../../../util/validators';
-import { FIELD_TEXT } from '../constants';
+import { FIELD_TEXTAREA } from '../constants';
 
 export const getRefundReasonField = ({ role, name }) => ({
-  type: FIELD_TEXT,
+  type: FIELD_TEXTAREA,
   labelTranslationId: 'TransactionPage.RefundField.label',
   name: name || `protectedData.${role}DisputeReason`,
   validators: [
@@ -12,7 +12,7 @@ export const getRefundReasonField = ({ role, name }) => ({
 
 // Only for provider
 export const getDisputeReasonField = () => ({
-  type: FIELD_TEXT,
+  type: FIELD_TEXTAREA,
   labelTranslationId: 'TransactionPage.DisputeField.label',
   name: 'protectedData.providerDisputeReason',
   validators: [
