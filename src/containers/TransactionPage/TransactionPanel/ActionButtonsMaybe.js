@@ -156,12 +156,6 @@ const ActionButtonsMaybe = props => {
 
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'flex-end' }}>
             <PrimaryButton
-            // onClick={() =>
-            //   handleConfirmModal({
-            //     onAction: primaryOnAction,
-            //     setIsModalOpen: setIsPrimaryConfirmModalOpen,
-            //   })
-            // }
             >
               {intl.formatMessage({
                 id:

@@ -1,3 +1,4 @@
+import { sendMessage } from '../../../../containers/TransactionPage/TransactionPage.duck';
 import {
   TX_TRANSITION_ACTOR_CUSTOMER as CUSTOMER,
   TX_TRANSITION_ACTOR_PROVIDER as PROVIDER,
@@ -11,7 +12,7 @@ import {
   required,
 } from '../../../../util/validators';
 import {
-    FIELD_LOCATION,
+  FIELD_LOCATION,
   FIELD_TEXT,
   MARK_MACHINE_PLACE_TRANSITION_NAME,
   MARK_MET_MANAGER_TRANSITION_NAME,
@@ -20,6 +21,7 @@ import {
   getDisputeReasonField,
   getRefundReasonField,
 } from '../../common/helpers/getActionModalFormField';
+import { getSellPurchaseManagerInfoMessage } from '../../common/helpers/getSellPurchaseManagerInfoMessage';
 import { getSellPurchaseProgressStep } from '../../common/helpers/getSellPurchaseProgressStep';
 import { states, transitions } from '../transactions/transactionProcessSellPurchase';
 
@@ -149,17 +151,23 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
               validators: [
                 {
                   validatorFn: autocompleteSearchRequired,
-                  messageTranslationId: 'TransactionPage.sell-purchase.managerAddress.requiredMessage',
+                  messageTranslationId:
+                    'TransactionPage.sell-purchase.managerAddress.requiredMessage',
                 },
                 {
                   validatorFn: autocompletePlaceSelected,
-                  messageTranslationId: 'TransactionPage.sell-purchase.managerAddress.placeInvalidMessage',
+                  messageTranslationId:
+                    'TransactionPage.sell-purchase.managerAddress.placeInvalidMessage',
                 },
               ],
             },
           ],
           confirmModalTitleTranslationId:
             'TransactionPage.PrimaryConfirmActionModal.sell-purchase.purchase-confirmed-by-buyer.provider.modalTitle',
+          requestOptions: {
+            callbackDispatch: ({ txId, params, config }) =>
+              sendMessage(txId, getSellPurchaseManagerInfoMessage(params.protectedData), config),
+          },
         }),
         secondaryButtonProps: actionButtonProps(
           transitions.SELLER_REFUND_BEFORE_SELLER_CONFIRMED,

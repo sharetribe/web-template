@@ -93,6 +93,10 @@
   "TransactionPage.sell-purchase.provider.markMachinePlaced.actionError": "Oops, marking failed. Please try again.",
   "TransactionPage.PrimaryConfirmActionModal.sell-purchase.purchased.provider.confirmStatement": "The property manager has informed me that the buyer has placed their machine at the location.",
   "TransactionPage.PrimaryConfirmActionModal.sell-purchase.purchased.provider.reminderStatement": "I understand that once the buyer has placed their machine, I can no longer act on behalf of the property manager.",
+  "TransactionPage.PrimaryConfirmActionModal.sell-purchase.stripe-intent-captured.provider.confirmStatement": "The property manager has informed me that the buyer has placed their machine at the location.",
+  "TransactionPage.PrimaryConfirmActionModal.sell-purchase.stripe-intent-captured.provider.reminderStatement": "I understand that once the buyer has placed their machine, I can no longer act on behalf of the property manager.",
+  "TransactionPage.PrimaryConfirmActionModal.sell-purchase.refund-disabled.provider.confirmStatement": "The property manager has informed me that the buyer has placed their machine at the location.",
+  "TransactionPage.PrimaryConfirmActionModal.sell-purchase.refund-disabled.provider.reminderStatement": "I understand that once the buyer has placed their machine, I can no longer act on behalf of the property manager.",
   "TransactionPage.sell-purchase.customer.transition-buyer-refund-before-capture-intent.actionButton": "Request a refund",
   "TransactionPage.sell-purchase.customer.transition-buyer-refund-before-capture-intent.actionError": "Oops, dispute failed. Please try again.",
   "TransactionPage.SecondaryConfirmActionModal.sell-purchase.purchased.customer.modalTitle": "Request a refund",
@@ -128,7 +132,6 @@
   "TransactionPage.sell-purchase.managerAddress.label":"Address of location",
   "TransactionPage.sell-purchase.managerAddress.requiredMessage":"A location is required",
   "TransactionPage.sell-purchase.managerAddress.placeInvalidMessage": "We can't find that location. Please retry.",
-
 
   "TransactionPage.ActivityFeed.sell-purchase.purchase-confirmed-by-buyer": "{actor, select, you {You placed an order for {listingTitle}.} other {{otherUsersName} placed an order for {listingTitle}.}}",
   "TransactionPage.ActivityFeed.sell-purchase.payment-expired": "The order was canceled.",
