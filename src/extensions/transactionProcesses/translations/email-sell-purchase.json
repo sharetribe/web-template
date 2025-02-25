@@ -52,7 +52,7 @@
   "SellPurchaseOrderDisputed.Title": "Your order for {listingTitle} has been disputed",
   "SellPurchaseProviderDisputed.ContentOrderDisputed": "We want to inform you that {providerDisplayName} has initiated a dispute for the order of <salelink>{listingTitle}</salelink>.",
   "SellPurchaseProviderDisputed.ContentProcess": "Vending Village will now evaluate the solution and resolve it.",
-  "SellPurchaseProviderDisputed.ContentAssistance": "Vending Village will now evaluate the solution and resolve it.",
+  "SellPurchaseProviderDisputed.ContentAssistance": "If you have any questions or need assistance, feel free to contact us.",
   "SellPurchaseCustomerDisputed.ContentOrderDisputed": "We want to inform you that {customerDisplayName} has initiated a dispute for the order of <salelink>{listingTitle}</salelink>.",
   "SellPurchaseCustomerDisputed.ContentProcess": "Please review the dispute details and take any necessary actions.",
   "SellPurchaseCustomerDisputed.ContentAssistance": "If you have any questions or need assistance, feel free to contact us.",

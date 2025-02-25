@@ -151,7 +151,7 @@
 
   {:name :transition/auto-disable-refund,
    :at {:fn/plus
-        [{:fn/timepoint [:time/first-entered-state :state/stripe-intent-captured]}
+        [{:fn/timepoint [:time/first-entered-state :state/purchased]}
          {:fn/period ["P20D"]}]},
    :actions [],
    :from :state/stripe-intent-captured,
@@ -208,8 +208,8 @@
 
   {:name :transition/expire-dispute-period,
    :at {:fn/plus
-        [{:fn/timepoint [:time/first-entered-state :state/stripe-intent-captured]}
-         {:fn/period ["PT30M"]}]},
+        [{:fn/timepoint [:time/first-entered-state :state/purchased]}
+         {:fn/period ["P30D"]}]},
    :actions
    [{:name :action/stripe-create-payout}],
    :from :state/operator-handle-disputed,
@@ -236,8 +236,8 @@
 
   {:name :transition/auto-mark-complete,
    :at {:fn/plus
-        [{:fn/timepoint [:time/first-entered-state :state/refund-disabled]}
-         {:fn/period ["P10D"]}]},
+        [{:fn/timepoint [:time/first-entered-state :state/purchased]}
+         {:fn/period ["P30D"]}]},
    :actions
    [{:name :action/stripe-create-payout}],
    :from :state/refund-disabled,
