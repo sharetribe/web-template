@@ -46,9 +46,9 @@ async function generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, anal
     // Polling interval (in ms) when all events have been fetched.
     // PROD: Keeping this at 1 minute or more is a good idea.
     // DEV: We use 10 seconds so that the data is printed without much delay.
-    const pollIdleWait = dev ? 30000 : 5 * MS_IN_MINUTE;
+    const pollIdleWait = dev ? 30000 : 2 * MS_IN_MINUTE;
     // Polling interval (in ms) when a full page of events is received and there may be more
-    const pollWait = 1 * MS_IN_MINUTE;
+    const pollWait = 0.5 * MS_IN_MINUTE;
     // Sequence Queue management
     const saveLastEventSequenceId = sequenceId =>
       studioManagerClient.updateScriptSequence(SCRIPT_NAME, { sequenceId });
@@ -62,6 +62,7 @@ async function generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, anal
       const params = sequenceId
         ? { startAfterSequenceId: sequenceId }
         : { createdAtStart: startTime };
+      console.log(`--- ${SCRIPT_NAME}: startAfterSequenceId: ${sequenceId} | START`);
       const res = await queryEvents({ ...params, perPage: EVENTS_BATCH_SIZE });
       const events = res.data.data;
       const withEvents = !!events.length;
@@ -77,6 +78,7 @@ async function generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, anal
         await analyzeEventsBatch(events);
         if (lastEvent) saveLastEventSequenceId(lastEvent.attributes.sequenceId);
       }
+      console.log(`--- ${SCRIPT_NAME}: lastSequenceId: ${lastSequenceId} | END`);
       setTimeout(() => {
         pollLoop(lastSequenceId);
       }, delay);
