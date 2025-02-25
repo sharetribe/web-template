@@ -63,6 +63,8 @@
 
   "TransactionPage.sell-purchase.customer.transition-buyer-refund-before-seller-confirmed.actionButton": "Issue a refund",
   "TransactionPage.sell-purchase.customer.transition-buyer-refund-before-seller-confirmed.actionError": "Oops, dispute failed. Please try again.",
+  "TransactionPage.PrimaryConfirmActionModal.sell-purchase.purchase-confirmed-by-buyer.customer.confirmStatement": "Are you sure you want to process a refund for this transaction?",
+  "TransactionPage.PrimaryConfirmActionModal.sell-purchase.purchase-confirmed-by-buyer.customer.reminderStatement": "This action cannot be undone. Please review the details carefully before confirming.",
   "TransactionPage.sell-purchase.provider.transition-seller-confirm-purchase.actionButton": "Intro buyer to manager",
   "TransactionPage.sell-purchase.provider.transition-seller-confirm-purchase.actionError": "Oops, marking failed. Please try again.",
   "TransactionPage.PrimaryConfirmActionModal.sell-purchase.purchase-confirmed-by-buyer.provider.confirmStatement": "I confirm that I have coordinated a meeting between the buyer and property manager.",

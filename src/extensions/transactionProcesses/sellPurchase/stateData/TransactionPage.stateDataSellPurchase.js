@@ -108,7 +108,10 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
           CUSTOMER,
           {
             isConfirmNeeded: true,
-            formConfigs: [getRefundReasonField({ role: CUSTOMER })],
+            showConfirmStatement: true,
+            showReminderStatement: true,
+            confirmStatementTranslationId: `TransactionPage.PrimaryConfirmActionModal.sell-purchase.${states.PURCHASE_CONFIRMED_BY_BUYER}.customer.confirmStatement`,
+            reminderStatementTranslationId: `TransactionPage.PrimaryConfirmActionModal.sell-purchase.${states.PURCHASE_CONFIRMED_BY_BUYER}.customer.reminderStatement`,
           }
         ),
       };
