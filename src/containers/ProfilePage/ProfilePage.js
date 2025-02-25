@@ -485,6 +485,12 @@ export const ProfilePageComponent = props => {
 
   const schemaTitleVars = { name: displayName, marketplaceName: config.marketplaceName };
   const schemaTitle = intl.formatMessage({ id: 'ProfilePage.schemaTitle' }, schemaTitleVars);
+  const profileImageUrl = profileUser?.profileImage?.attributes?.variants?.['square-small2x']?.url || 'default-image-url';
+  const schemaImages = profileImageUrl ? [{
+    width: 480,
+    height: 480,
+    url: profileImageUrl
+  }] : [];
 
   if (!isDataLoaded) {
     return null;
@@ -532,6 +538,9 @@ export const ProfilePageComponent = props => {
     <Page
       scrollingDisabled={scrollingDisabled}
       title={schemaTitle}
+      twitterImages={schemaImages}
+      facebookImages={schemaImages}
+      description={bio}
       schema={{
         '@context': 'http://schema.org',
         '@type': 'ProfilePage',

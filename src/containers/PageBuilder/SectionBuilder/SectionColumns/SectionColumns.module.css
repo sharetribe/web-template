@@ -45,6 +45,17 @@
 }
 .fourColumns {
   composes: baseColumn;
+
+  p > a:first-child{
+    background-color:transparent;
+    color:var(--marketplaceColor);
+    box-shadow:none;
+    &:hover{
+      background-color:transparent;
+      color:var(--marketplaceColorDark);
+      box-shadow: var(--marketplaceColor) 0 0 0 1px;
+    }
+  }
   @media (--viewportMedium) {
     grid-template-columns: repeat(4, calc((100% - 3 * 32px) / 4));
   }
@@ -53,4 +64,13 @@
 .noSidePaddings {
   padding-left: 0;
   padding-right: 0;
+}
+
+p > em{
+  display:block;
+  margin-top: 6px;
+  @media (--viewportMedium) {
+    display:inline;
+    margin:0 6px;
+  }
 }

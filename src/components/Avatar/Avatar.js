@@ -10,6 +10,7 @@ import {
   userAbbreviatedName,
 } from '../../util/data';
 import { isUserAuthorized } from '../../util/userHelpers';
+import { stringToColor, darkenColor } from '../../util/colorUtils';
 
 import { ResponsiveImage, IconBannedUser, NamedLink } from '../../components/';
 
@@ -78,6 +79,10 @@ export const AvatarComponent = props => {
       : { name: 'ProfileBasePage' };
   const hasProfileImage = avatarUser.profileImage && avatarUser.profileImage.id;
   const profileLinkEnabled = !disableProfileLink;
+  // Placeholder avatar (initials)
+  const backgroundColor = stringToColor(displayName);
+  const darkerBackgroundColor = darkenColor(backgroundColor);
+  const backgroundGradient = `linear-gradient(-180deg, ${backgroundColor} 0%, ${darkerBackgroundColor} 100%)`;
 
   if (isBannedUser || isDeletedUser) {
     return (
@@ -110,17 +115,28 @@ export const AvatarComponent = props => {
       </div>
     );
   } else if (profileLinkEnabled) {
-    // Placeholder avatar (initials)
+    
     return (
-      <NamedLink {...rootProps} {...linkProps}>
-        <span className={initialsClassName || css.initials}>{abbreviatedName}</span>
+      <NamedLink
+        {...rootProps}
+        {...linkProps}
+        style={{ backgroundImage: backgroundGradient }}
+      >
+        <span className={initialsClassName || css.initials}>
+          {abbreviatedName}
+        </span>
       </NamedLink>
     );
   } else {
-    // Placeholder avatar (initials)
+    
     return (
-      <div {...rootProps}>
-        <span className={initialsClassName || css.initials}>{abbreviatedName}</span>
+      <div
+        {...rootProps}
+        style={{ backgroundImage: backgroundGradient }}
+      >
+        <span className={initialsClassName || css.initials}>
+          {abbreviatedName}
+        </span>
       </div>
     );
   }

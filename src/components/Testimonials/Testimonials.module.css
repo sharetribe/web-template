@@ -1,0 +1,112 @@
+@import '../../styles/customMediaQueries.css';
+
+.root{
+    padding:20px 40px 60px;
+    text-align: center;
+    width: 100vw;
+    height: auto;
+    margin: 0 auto;
+    background-color: #f6d6c3;
+}
+
+h2{
+    font-size: 32px;
+    margin-bottom: 40px;
+}
+
+.sliderContainer{
+    max-width:1120px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.testimonial {
+    padding: 20px;
+    background-color: var(--colorWhite);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 40px 10px 10px;
+    text-align: center;
+    position: relative;
+    max-width: 280px;
+    height:350px;
+
+    @media (--viewportLarge) {
+        max-width: 300px;
+    }
+    @media (--viewportLargeWithPaddings) {
+        max-width: 340px;
+    }
+}
+
+.testimonial img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    background-color: var(--marketplaceColor);
+    border: 2px solid white;
+    position: absolute;
+    top: -40px; 
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.testimonial h3 {
+    font-size: 1.2em;
+    margin: 40px 0 0 0;
+    padding:0;
+    color: var(--colorPrimary);
+}
+
+.testimonial p {
+    font-size: 0.9em;
+    color: var(--colorGrey700);
+    margin: 0 0 20px;
+    padding:0;
+}
+
+.testimonial blockquote {
+    font-style: italic;
+    color: var(--colorGrey800);
+    margin: 10px 20px 10px 30px;
+    text-align: left;
+    text-overflow: ellipsis;
+}
+.testimonial a {
+    color: var(--marketplaceColor);
+    text-decoration: none;
+    display: block;
+    margin: 20px 10px 10px;
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 10px;
+    position: absolute;
+    bottom: 10px;
+    width: calc(100% - 60px);
+
+    &:hover{
+        color: var(--marketplaceColorDark);
+        border-color: var(--marketplaceColor);
+    }
+}
+
+.openQuote,
+.closeQuote{
+    color: transparent;
+    fill: var(--colorGrey300) !important;
+    margin: 0 5px;
+    position: absolute;
+}
+.openQuote{ 
+    transform: rotate(180deg); 
+    width: 20px !important;
+    height: 20px !important;
+    margin-top: -5px;
+    left: 20px;
+}
+.closeQuote{
+    margin-top: 5px;
+    margin-right: -5px;
+}

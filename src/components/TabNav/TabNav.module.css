@@ -70,6 +70,7 @@
 .selectedLink {
   border-bottom-color: var(--colorBlack);
   color: var(--colorBlack);
+  font-weight: var(--fontWeightSemiBold);
 
   @media (--viewportLarge) {
     width: var(--TabNav_linkWidth);
