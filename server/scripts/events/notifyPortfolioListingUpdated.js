@@ -49,11 +49,9 @@ function script() {
   };
 
   const analyzeEventsBatch = async events => {
-    await Promise.all(
-      events.map(async e => {
-        await analyzeEvent(e);
-      })
-    );
+    for (const event of events) {
+      await analyzeEvent(event);
+    }
   };
 
   generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch);

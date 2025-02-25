@@ -48,7 +48,7 @@ async function generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, anal
     // DEV: We use 10 seconds so that the data is printed without much delay.
     const pollIdleWait = dev ? 30000 : 5 * MS_IN_MINUTE;
     // Polling interval (in ms) when a full page of events is received and there may be more
-    const pollWait = 3 * MS_IN_MINUTE;
+    const pollWait = 1 * MS_IN_MINUTE;
     // Sequence Queue management
     const saveLastEventSequenceId = sequenceId =>
       studioManagerClient.updateScriptSequence(SCRIPT_NAME, { sequenceId });
