@@ -23,7 +23,7 @@
   --colorSuccessLight: #f0fff6;
   --colorFail: #ff0000;
   --colorFailLight: #fff0f0;
-  --colorAttention: #ffaa00;
+  --colorAttention: #1184ae;
   --colorAttentionLight: #fff7f0;
   --colorBannedLight: var(--marketplaceColorLight);
   --colorBannedDark: var(--marketplaceColor);
@@ -32,6 +32,7 @@
 
   --colorWhite: hsl(0 0% 100%);
   --colorGrey50: hsl(240 3% 98%);
+  --colorGrey75: hsl(240 3% 95%);
   --colorGrey100: hsl(240 3% 90%);
   --colorGrey200: hsl(240 3% 80%);
   --colorGrey300: hsl(240 3% 70%);
@@ -1600,4 +1601,8 @@ svg.lucide{
       cursor: not-allowed;
     }
   }
+}
+
+.slick-dots li button:before{
+  color: var(--marketplaceColorDark) !important;
 }

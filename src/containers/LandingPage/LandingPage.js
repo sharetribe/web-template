@@ -19,23 +19,16 @@ export const LandingPageComponent = props => {
   const { pageAssetsData, inProgress, error } = props;
 
   const pageBuilderContent = pageAssetsData?.[camelize(ASSET_NAME)]?.data;
+
   //console.log('pageBuilderContent', pageBuilderContent);
-  //console.log('pageBuilderContent type', typeof pageBuilderContent);
 
   return (
-    
-      <PageBuilder
+    <PageBuilder
       pageAssetsData={pageBuilderContent}
       inProgress={inProgress}
-      options={{
-        AdBanner: {
-          show: true,
-        },
-      }}
       error={error}
       fallbackPage={<FallbackPage error={error} />}
     />
-    
   );
 };
 

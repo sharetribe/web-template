@@ -60,6 +60,8 @@ export { default as UserDisplayName } from './UserDisplayName/UserDisplayName';
 export { default as ValidationError } from './ValidationError/ValidationError';
 export { default as AdBanner } from './AdBanner/AdBanner';
 export { default as ReminderBox } from './ReminderBox/ReminderBox';
+export { default as Testimonials } from './Testimonials/Testimonials';
+
 /**
  * Composite components
  * These components include other components
