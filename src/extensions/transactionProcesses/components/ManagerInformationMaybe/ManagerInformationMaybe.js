@@ -26,7 +26,9 @@ function ManagerInformationMaybe({
   const classes = classNames(css.root, className);
   const headingClasses = classNames(css.heading, headingClassName);
 
-  if (processName !== SELL_PURCHASE_PROCESS_NAME) {
+  const isAnyDataExisted = managerAddress || managerEmail || managerName || managerPhoneNumber;
+
+  if (processName !== SELL_PURCHASE_PROCESS_NAME || !isAnyDataExisted) {
     return null;
   }
 
