@@ -41,7 +41,7 @@ const analyzeEventGroup = events => {
   }
 };
 
-function script() {
+function scriptHelper() {
   const integrationSdk = integrationSdkInit();
 
   async function getAuthor(authorId) {
@@ -72,7 +72,6 @@ function script() {
     return await storageManagerClient.uploadOriginalAssets(data);
   };
 
-  const queryEvents = args => integrationSdk.events.query({ ...args, eventTypes: EVENT_TYPES });
   const analyzeEvent = async (event, originalAssetData) => {
     const { resourceId, resource } = event.attributes;
     const { attributes: listing } = resource;
@@ -105,21 +104,34 @@ function script() {
   const analyzeEventsBatch = async events => {
     let successList = [];
     let failList = [];
+    const promiseFn = async () => await storageHandler(events);
+    const originalAssets = await retryAsync(promiseFn, RETRIES, RETRY_STORAGE_DELAY);
+    for (const event of events) {
+      const { resourceId } = event.attributes;
+      const listingId = resourceId?.uuid;
+      const originalAssetData = originalAssets.find(asset => asset.id === listingId);
+      const success = await analyzeEvent(event, originalAssetData);
+      if (success) {
+        successList.push(listingId);
+      } else {
+        failList.push(listingId);
+      }
+    }
+    return [successList, failList];
+  };
+  return analyzeEventsBatch;
+}
+
+function script() {
+  const integrationSdk = integrationSdkInit();
+  const eventsBatchManager = scriptHelper();
+
+  const queryEvents = args => integrationSdk.events.query({ ...args, eventTypes: EVENT_TYPES });
+
+  const analyzeEventsBatch = async events => {
     const parsedEvents = events.filter(filterEvents);
     try {
-      const promiseFn = async () => await storageHandler(parsedEvents);
-      const originalAssets = await retryAsync(promiseFn, RETRIES, RETRY_STORAGE_DELAY);
-      for (const event of parsedEvents) {
-        const { resourceId } = event.attributes;
-        const listingId = resourceId?.uuid;
-        const originalAssetData = originalAssets.find(asset => asset.id === listingId);
-        const success = await analyzeEvent(event, originalAssetData);
-        if (success) {
-          successList.push(listingId);
-        } else {
-          failList.push(listingId);
-        }
-      }
+      const [successList, failList] = await eventsBatchManager(parsedEvents);
       const withErrors = !!failList.length;
       if (withErrors) {
         slackProductListingsErrorWorkflow(failList);
@@ -146,3 +158,4 @@ function script() {
 }
 
 module.exports = script;
+module.exports.scriptHelper = scriptHelper;
