@@ -5,6 +5,7 @@ let INTEGRATION_SDK = null;
 // (1 minutes = 60 seconds) && (1 second = 1000 ms) && (1 minute = 60*1000 ms)
 const MS_IN_MINUTE = 60 * 1000;
 const EVENTS_BATCH_SIZE = 10;
+const POLL_TIMEOUT_LIMIT = 2 * MS_IN_MINUTE; // 2 minutes
 
 function integrationSdkInit() {
   const withExistingIntance = !!INTEGRATION_SDK;
@@ -46,7 +47,7 @@ async function generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, anal
     // Polling interval (in ms) when all events have been fetched.
     // PROD: Keeping this at 1 minute or more is a good idea.
     // DEV: We use 10 seconds so that the data is printed without much delay.
-    const pollIdleWait = dev ? 30000 : 2 * MS_IN_MINUTE;
+    const pollIdleWait = 2 * MS_IN_MINUTE;
     // Polling interval (in ms) when a full page of events is received and there may be more
     const pollWait = 0.5 * MS_IN_MINUTE;
     // Sequence Queue management
@@ -59,42 +60,83 @@ async function generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, anal
     };
 
     const pollLoop = async sequenceId => {
-      const params = sequenceId
-        ? { startAfterSequenceId: sequenceId }
-        : { createdAtStart: startTime };
-      console.log(`--- ${SCRIPT_NAME}: startAfterSequenceId: ${sequenceId} | START`);
-      const res = await queryEvents({ ...params, perPage: EVENTS_BATCH_SIZE });
-      const events = res.data.data;
-      const withEvents = !!events.length;
-      const lastEvent = events[events.length - 1];
-      const fullPage = events.length === res.data.meta.perPage;
-      const delay = fullPage ? pollWait : pollIdleWait;
-      const lastSequenceId = lastEvent ? lastEvent.attributes.sequenceId : sequenceId;
-      if (withEvents) {
-        const withEventGroupHandler = !!analyzeEventGroup;
-        if (withEventGroupHandler) {
-          analyzeEventGroup(events);
+      let lastSequenceId = sequenceId;
+      const executeWithTimeout = new Promise(async (resolve, reject) => {
+        try {
+          const params = sequenceId
+            ? { startAfterSequenceId: sequenceId }
+            : { createdAtStart: startTime };
+          const withLogs = dev ? SCRIPT_NAME === 'notifyProductListingCreated' : false;
+          if (withLogs) {
+            console.warn('\n\n\n*******************************');
+          }
+          const res = await queryEvents({ ...params, perPage: EVENTS_BATCH_SIZE });
+          const events = res.data.data;
+          const withEvents = !!events.length;
+          const lastEvent = events[events.length - 1];
+          const fullPage = events.length === res.data.meta.perPage;
+          const delay = fullPage ? pollWait : pollIdleWait;
+          lastSequenceId = lastEvent ? lastEvent.attributes.sequenceId : sequenceId;
+          if (withEvents) {
+            const lastResourceId = lastEvent && lastEvent.attributes.resourceId.uuid;
+            console.log(
+              `--- [pollLoop] | [${SCRIPT_NAME}] - startAfterSequenceId: ${sequenceId} | lastSequenceId: ${lastSequenceId} | lastResourceId: ${lastResourceId}`
+            );
+            if (withLogs) {
+              const eventList = events.map(event => {
+                const { resourceId } = event.attributes;
+                const listingId = resourceId?.uuid;
+                return listingId;
+              });
+              console.warn(`--- [pollLoop] | [${SCRIPT_NAME}] - Event IDs: ${eventList.join(', ')}`);
+            }
+            const withEventGroupHandler = !!analyzeEventGroup;
+            if (withEventGroupHandler) {
+              analyzeEventGroup(events);
+            }
+            await analyzeEventsBatch(events);
+            if (lastEvent) saveLastEventSequenceId(lastEvent.attributes.sequenceId);
+          } else {
+            console.log(
+              `--- [pollLoop] | [${SCRIPT_NAME}] - startAfterSequenceId: ${sequenceId} | NO NEW EVENTS`
+            );
+          }
+          if (withLogs) {
+            console.warn('\n*******************************\n\n\n');
+          }
+          resolve();
+        } catch (error) {
+          reject(error);
         }
-        await analyzeEventsBatch(events);
-        if (lastEvent) saveLastEventSequenceId(lastEvent.attributes.sequenceId);
+      });
+      const poolTimeout = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('TIMEOUT: pollLoop took too long')), POLL_TIMEOUT_LIMIT)
+      );
+      try {
+        await Promise.race([executeWithTimeout, poolTimeout]); // Whichever finishes first
+      } catch (error) {
+        console.log(`--- [pollLoop] | [${SCRIPT_NAME}] - Restarted due to timeout`);
       }
-      console.log(`--- ${SCRIPT_NAME}: lastSequenceId: ${lastSequenceId} | END`);
-      setTimeout(() => {
-        pollLoop(lastSequenceId);
-      }, delay);
+      setTimeout(
+        () => {
+          pollLoop(lastSequenceId);
+        },
+        dev ? 20000 : delay
+      );
     };
+
     const lastSequenceId = await loadLastEventSequenceId();
     if (lastSequenceId) {
       console.log(
-        `--- ${SCRIPT_NAME}: Resuming event polling from last seen event with sequence ID ${lastSequenceId}`
+        `--- [pollLoop] | [${SCRIPT_NAME}] - Resuming event polling from last seen event with sequence ID ${lastSequenceId}`
       );
     } else {
-      console.log(`--- ${SCRIPT_NAME}: No state found or failed to load state.`);
-      console.log(`--- ${SCRIPT_NAME}: Starting event polling from current time.`);
+      console.log(`--- [pollLoop] | [${SCRIPT_NAME}] - No state found or failed to load state.`);
+      console.log(`--- [pollLoop] | [${SCRIPT_NAME}] - Starting event polling from current time.`);
     }
     pollLoop(lastSequenceId);
   } catch (err) {
-    console.error(`SCRIPT ERROR | ${SCRIPT_NAME}: `, err);
+    console.error(`SCRIPT ERROR | [${SCRIPT_NAME}]`, err);
   }
 }
 

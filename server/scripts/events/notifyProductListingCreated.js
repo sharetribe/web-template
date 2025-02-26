@@ -19,10 +19,18 @@ const filterEvents = event => {
   const { attributes: listing, relationships } = resource;
   const authorId = relationships?.author?.data?.id?.uuid;
   const listingId = resourceId?.uuid;
-  const originalAssetUrl = listing?.privateData?.originalAssetUrl;
-  const previewAssetUrl = listing?.privateData?.previewAssetUrl;
+  const tempOriginalAssetUrl =
+    listing?.privateData?.tempOriginalAssetUrl || listing?.privateData?.originalAssetUrl;
+  const tempPreviewAssetUrl =
+    listing?.privateData?.tempPreviewAssetUrl || listing?.privateData?.previewAssetUrl;
   const isProductListing = listing?.publicData?.listingType === LISTING_TYPES.PRODUCT;
-  if (!originalAssetUrl || !previewAssetUrl || !authorId || !listingId || !isProductListing) {
+  if (
+    !tempOriginalAssetUrl ||
+    !tempPreviewAssetUrl ||
+    !authorId ||
+    !listingId ||
+    !isProductListing
+  ) {
     return false;
   }
   return true;
@@ -52,6 +60,10 @@ function scriptHelper() {
 
   const storageHandler = async events => {
     const storageManagerClient = new StorageManagerClient();
+
+    console.warn('\n\n----------------');
+    console.warn(`\n[storageHandler] - START! | Total: ${events.length}`);
+
     const data = await Promise.all(
       events.map(async event => {
         const { resourceId, resource } = event.attributes;
@@ -60,15 +72,20 @@ function scriptHelper() {
         const author = await getAuthor(authorId);
         const creator = `${author.firstName} ${author.lastName}`;
         const listingId = resourceId?.uuid;
-        const originalAssetUrl = listing?.privateData?.originalAssetUrl;
+        const tempOriginalAssetUrl =
+          listing?.privateData?.tempOriginalAssetUrl || listing?.privateData?.originalAssetUrl;
         return {
           userId: authorId,
           relationId: listingId,
-          tempSslUrl: originalAssetUrl,
+          tempSslUrl: tempOriginalAssetUrl,
           metadata: { creator },
         };
       })
     );
+
+    console.warn(`\n[storageHandler] - results: ${events.length}`);
+    // console.warn('\n[storageHandler] - data:', data);
+
     return await storageManagerClient.uploadOriginalAssets(data);
   };
 
@@ -76,15 +93,16 @@ function scriptHelper() {
     const { resourceId, resource } = event.attributes;
     const { attributes: listing } = resource;
     const listingId = resourceId?.uuid;
-    const previewAssetUrl = listing?.privateData?.previewAssetUrl;
+    const tempPreviewAssetUrl =
+      listing?.privateData?.tempPreviewAssetUrl || listing?.privateData?.previewAssetUrl;
     try {
-      const imageStream = await httpFileUrlToStream(previewAssetUrl);
+      const imageStream = await httpFileUrlToStream(tempPreviewAssetUrl);
       const promiseFn = async () => {
         const { data: sdkImage } = await integrationSdk.images.upload({ image: imageStream });
         await integrationSdk.listings.update(
           {
             id: listingId,
-            privateData: { originalAssetUrl: originalAssetData.source, previewAssetUrl: null },
+            privateData: { originalAssetUrl: originalAssetData.source },
             images: [sdkImage.data.id],
           },
           { expand: true, include: ['images'] }
@@ -111,6 +129,9 @@ function scriptHelper() {
       const listingId = resourceId?.uuid;
       const originalAssetData = originalAssets.find(asset => asset.id === listingId);
       const success = await analyzeEvent(event, originalAssetData);
+
+      console.warn(`\n[analyzeEventsBatch] - listingId: ${listingId} | success: ${success}`);
+
       if (success) {
         successList.push(listingId);
       } else {
