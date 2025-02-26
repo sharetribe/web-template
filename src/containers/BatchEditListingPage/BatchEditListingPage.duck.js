@@ -466,8 +466,8 @@ export function initializeUppy(meta) {
                 unitType: transactionType.unitType,
               },
               privateData: {
-                previewAssetUrl: listing.previewUrl,
-                originalAssetUrl: listing.originalUrl,
+                tempPreviewAssetUrl: listing.previewUrl,
+                tempOriginalAssetUrl: listing.originalUrl,
               },
               price: {
                 amount: price,
