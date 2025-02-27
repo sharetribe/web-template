@@ -260,7 +260,7 @@ export const EditableListingsTable = props => {
 
     return {
       ...col,
-      onCell: (record, rowIndex) => ({
+      onCell: record => ({
         record,
         editable: col.editable,
         dataIndex: col.dataIndex,
@@ -268,10 +268,8 @@ export const EditableListingsTable = props => {
         handleSave,
         editControlType: col.editControlType,
         options: col.options,
-        cellClassName: css.editableCellValueWrap,
         onBeforeSave: col.onBeforeSave,
         placeholder: col.placeholder,
-        rowIndex: rowIndex,
         maxSelection: col.maxSelection,
         disabled: col.disabled,
       }),

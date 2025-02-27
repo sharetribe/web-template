@@ -4,6 +4,7 @@ const { isValidURL } = require('../urlHelpers');
 
 const getProductListingsCreatedBlocks = require('./productListingsCreatedBlocks');
 const getProductListingsErrorBlocks = require('./productListingsErrorBlocks');
+const getProductListingsFieldsErrorBlocks = require('./productListingsFieldsErrorBlocks');
 const getSellerValidationBlocks = require('./sellerValidationBlocks');
 const getUserUpdateWarningBlocks = require('./userUpdateWarningBlocks');
 const getProfileListingUpdateErrorBlocks = require('./profileListingUpdateErrorBlocks');
@@ -98,6 +99,25 @@ const slackProductListingsErrorWorkflow = async listings => {
   }
 };
 
+const slackProductListingsFieldsErrorWorkflow = async listing => {
+  const slackListingManagerChannelId = process.env.SLACK_LISTING_MANAGER_CHANNEL_ID;
+  const slackBotToken = process.env.SLACK_BOT_TOKEN;
+  try {
+    const webClient = new WebClient(slackBotToken);
+    const productListingsFieldsErrorBlocks = getProductListingsFieldsErrorBlocks(listing);
+    await webClient.chat.postMessage({
+      channel: slackListingManagerChannelId,
+      text: 'Starting Product Listing "incomplete-fields" Error workflow',
+      blocks: productListingsFieldsErrorBlocks,
+      unfurl_links: false,
+    });
+  } catch (error) {
+    const metadata = error.data.response_metadata;
+    console.warn(`--- error`, error);
+    console.warn(`--- metadata`, metadata);
+  }
+};
+
 const slackProfileListingUpdateErrorWorkflow = async userId => {
   const slackUserManagerChannelId = process.env.SLACK_USER_MANAGER_CHANNEL_ID;
   const slackBotToken = process.env.SLACK_BOT_TOKEN;
@@ -179,6 +199,7 @@ module.exports = {
   slackUserUpdateWarningWorkflow,
   slackProductListingsCreatedWorkflow,
   slackProductListingsErrorWorkflow,
+  slackProductListingsFieldsErrorWorkflow,
   slackProfileListingUpdateErrorWorkflow,
   slackUserCreatedErrorWorkflow,
   slacktUserUpdatedErrorWorkflow,

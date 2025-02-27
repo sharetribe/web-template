@@ -434,60 +434,62 @@ export function initializeUppy(meta) {
 
       uppyInstance.on('complete', async result => {
         const listingsDefaults = getListingsDefaults(getState());
-
         if (result.failed?.length) {
           result.failed.forEach(failed => {
             const failedListing = getSingleListing(getState(), failed.id);
             dispatch({ type: ADD_FAILED_LISTING, payload: failedListing });
           });
         }
-
         for (let successfulUpload of result.successful) {
           const listing = getSingleListing(getState(), successfulUpload.id);
           try {
             const { currency, transactionType } = listingsDefaults;
             const truncatedPrice = truncateToSubUnitPrecision(listing.price, unitDivisor(currency));
             const price = convertUnitToSubUnit(truncatedPrice, unitDivisor(currency));
-            const listingData = {
-              title: listing.title,
-              description: listing.description,
-              publicData: {
-                listingType: LISTING_TYPES.PRODUCT,
-                categoryLevel1: getListingCategory(listing),
-                imageryCategory: listing.category,
-                usage: listing.usage,
-                releases: listing.releases ? YES_RELEASES : NO_RELEASES,
-                keywords: listing.keywords,
-                imageSize: listing.dimensions,
-                fileType: listing.type,
-                // aiTerms: listing.isAi ? 'yes' : 'no',
-                originalFileName: listing.name,
-                transactionProcessAlias: transactionType.alias,
-                unitType: transactionType.unitType,
-              },
-              privateData: {
-                tempPreviewAssetUrl: listing.previewUrl,
-                tempOriginalAssetUrl: listing.originalUrl,
-              },
-              price: {
-                amount: price,
-                currency: currency,
-              },
-            };
-            await sdk.ownListings.create(listingData, {
-              expand: true,
-            });
-            dispatch({ type: ADD_SUCCESSFUL_LISTING, payload: listing });
+            const { previewUrl, originalUrl } = listing;
+            const withTempAssets = !!previewUrl && !!originalUrl;
+            if (withTempAssets) {
+              const listingData = {
+                title: listing.title,
+                description: listing.description,
+                publicData: {
+                  listingType: LISTING_TYPES.PRODUCT,
+                  categoryLevel1: getListingCategory(listing),
+                  imageryCategory: listing.category,
+                  usage: listing.usage,
+                  releases: listing.releases ? YES_RELEASES : NO_RELEASES,
+                  keywords: listing.keywords,
+                  imageSize: listing.dimensions,
+                  fileType: listing.type,
+                  // aiTerms: listing.isAi ? 'yes' : 'no',
+                  originalFileName: listing.name,
+                  transactionProcessAlias: transactionType.alias,
+                  unitType: transactionType.unitType,
+                },
+                privateData: {
+                  tempPreviewAssetUrl: listing.previewUrl,
+                  tempOriginalAssetUrl: listing.originalUrl,
+                },
+                price: {
+                  amount: price,
+                  currency: currency,
+                },
+              };
+              await sdk.ownListings.create(listingData, {
+                expand: true,
+              });
+              dispatch({ type: ADD_SUCCESSFUL_LISTING, payload: listing });
+            } else {
+              dispatch({ type: ADD_FAILED_LISTING, payload: listing });
+            }
           } catch (error) {
             dispatch({ type: ADD_FAILED_LISTING, payload: listing });
             console.error('Error during image upload:', error);
           }
         }
-
         const { successfulListings, failedListings, selectedRowsKeys } = getSaveListingData(
           getState()
         );
-
         const totalListingsProcessed = successfulListings.length + failedListings.length;
         if (totalListingsProcessed === selectedRowsKeys.length) {
           dispatch({
