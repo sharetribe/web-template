@@ -1,5 +1,6 @@
 import { EXTENDED_DATA_SCHEMA_TYPES } from './types';
 import { getFieldValue } from './fieldHelpers';
+import { DISABLED_FIELDS } from '../extensions/common/config/constants/user.config';
 
 /**
  * Get the namespaced attribute key based on the specified extended data scope and attribute key
@@ -116,6 +117,7 @@ export const getPropsForCustomUserFieldInputs = (
       const isTargetUserType =
         !userTypeConfig?.limitToUserTypeIds || userTypeConfig?.userTypeIds?.includes(userType);
       const isUserScope = ['public', 'private', 'protected'].includes(scope);
+      const isDisabled = DISABLED_FIELDS.includes(key);
 
       return isKnownSchemaType && isTargetUserType && isUserScope && showField
         ? [
@@ -127,6 +129,7 @@ export const getPropsForCustomUserFieldInputs = (
               defaultRequiredMessage: intl.formatMessage({
                 id: 'CustomExtendedDataField.required',
               }),
+              disabled: isDisabled,
             },
           ]
         : pickedFields;

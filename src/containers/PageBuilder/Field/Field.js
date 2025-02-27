@@ -39,6 +39,7 @@ import {
   exposeOpenGraphData,
   exposeSocialMediaProps,
 } from './Field.helpers';
+import { MarkdownP } from '../Primitives/P/P';
 
 const TEXT_CONTENT = [
   'heading1',
@@ -108,7 +109,7 @@ const defaultFieldComponents = {
         h4: H4,
         h5: H5,
         h6: H6,
-        p: P,
+        p: MarkdownP,
         span: Text,
         img: MarkdownImage,
         code: Code,
