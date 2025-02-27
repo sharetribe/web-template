@@ -61,6 +61,7 @@ async function generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, anal
 
     const pollLoop = async sequenceId => {
       let lastSequenceId = sequenceId;
+      let delay = pollIdleWait;
       const executeWithTimeout = new Promise(async (resolve, reject) => {
         try {
           const params = sequenceId
@@ -75,7 +76,7 @@ async function generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, anal
           const withEvents = !!events.length;
           const lastEvent = events[events.length - 1];
           const fullPage = events.length === res.data.meta.perPage;
-          const delay = fullPage ? pollWait : pollIdleWait;
+          delay = fullPage ? pollWait : pollIdleWait;
           lastSequenceId = lastEvent ? lastEvent.attributes.sequenceId : sequenceId;
           if (withEvents) {
             const lastResourceId = lastEvent && lastEvent.attributes.resourceId.uuid;
