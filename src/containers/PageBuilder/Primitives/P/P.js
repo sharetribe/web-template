@@ -24,3 +24,11 @@ P.propTypes = {
   className: string,
   children: node,
 };
+
+export const MarkdownP = React.forwardRef((props, ref) => {
+  const { className, rootClassName, ...otherProps } = props;
+  const classes = classNames(rootClassName || css.pMarkdown, className);
+
+  return <p className={classes} {...otherProps} ref={ref} />;
+});
+

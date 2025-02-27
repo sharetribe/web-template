@@ -10,7 +10,7 @@
   text-align: center;
 
   h1 {
-    background-color:rgba(0,0,0,0.08);
+    background-color: rgba(0, 0, 0, 0.08);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -20,7 +20,7 @@
     margin: 0 auto;
     font-size: 2em;
   }
-  ul{
+  ul {
     text-align: left;
     width: 70%;
     margin: 0 auto;
@@ -46,16 +46,6 @@
 .fourColumns {
   composes: baseColumn;
 
-  p > a:first-child{
-    background-color:transparent;
-    color:var(--marketplaceColor);
-    box-shadow:none;
-    &:hover{
-      background-color:transparent;
-      color:var(--marketplaceColorDark);
-      box-shadow: var(--marketplaceColor) 0 0 0 1px;
-    }
-  }
   @media (--viewportMedium) {
     grid-template-columns: repeat(4, calc((100% - 3 * 32px) / 4));
   }
@@ -64,13 +54,4 @@
 .noSidePaddings {
   padding-left: 0;
   padding-right: 0;
-}
-
-p > em{
-  display:block;
-  margin-top: 6px;
-  @media (--viewportMedium) {
-    display:inline;
-    margin:0 6px;
-  }
 }
