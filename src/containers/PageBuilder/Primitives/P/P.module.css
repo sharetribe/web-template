@@ -22,6 +22,28 @@
     margin-top: 24px;
   }
 }
+
+.buttonLink {
+  display: inline-block;
+  padding: 8px 20px;
+  font-size: 15px;
+  background-color: var(--marketplaceColor);
+  border: 1px solid var(--marketplaceColor);
+  border-radius: 4px;
+  text-decoration: none;
+  box-shadow: 0 8px 16px 0 rgb(0 0 0 / 20%);
+  font-weight: 500;
+  margin-top: 12px;
+  white-space: nowrap;
+
+  &:hover {
+    text-decoration: none;
+    color: white;
+    border-color: var(--marketplaceColorDark);
+    background-color: var(--marketplaceColorDark);
+  }
+}
+
 .pMarkdown {
   composes: p;
 
@@ -34,49 +56,50 @@
     }
   }
 
-  & > a {
+  & > a:hover {
+    text-decoration: none;
+    border: none;
+    box-shadow: none;
+    color: var(--marketplaceColorDark);
+  }
+
+  & > a:first-child:not(:only-of-type) {
     display: inline-block;
     padding: 8px 20px;
-    font-size: 15px;
-    background-color: var(--marketplaceColor);
     border: 1px solid var(--marketplaceColor);
-    border-radius: 4px;
-    text-decoration: none;
+    border-radius: var(--borderRadiusMedium);
     box-shadow: 0 8px 16px 0 rgb(0 0 0 / 20%);
-    font-weight: 500;
     margin-top: 12px;
+
+    background-color: var(--marketplaceColor);
+
+    font-weight: 500;
+    font-size: 15px;
+    text-decoration: none;
+    white-space: nowrap;
+    color: var(--colorWhite);
+
+    &:hover {
+      color: var(--colorWhite);
+      background-color: var(--marketplaceColorDark);
+    }
+  }
+
+  & > a:last-child:not(:only-of-type) {
+    display: inline-block;
+    padding: 8px 20px;
+    border: 1px solid var(--marketplaceColor);
+    border-radius: var(--borderRadiusMedium);
+    box-shadow: 0 8px 16px 0 rgb(0 0 0 / 20%);
+    margin-top: 12px;
+
+    background-color: var(--marketplaceColor);
+
+    font-weight: 500;
+    font-size: 15px;
+    text-decoration: none;
     white-space: nowrap;
 
-    &:hover {
-      text-decoration: none;
-      color: var(--colorWhite);
-      border-color: var(--marketplaceColorDark);
-      background-color: var(--marketplaceColorDark);
-    }
-  }
-
-  & > a:first-child:last-child {
-    background-color: transparent;
-    color: var(--marketplaceColor);
-    box-shadow: none;
-    &:hover {
-      background-color: transparent;
-      color: var(--marketplaceColorDark);
-      box-shadow: var(--marketplaceColor) 0 0 0 1px;
-    }
-  }
-
-  & > a:first-child {
-    color: var(--colorWhite);
-    text-decoration: none;
-
-    &:hover {
-      color: var(--colorWhite);
-      background-color: var(--marketplaceColorDark);
-    }
-  }
-
-  & > a:last-child {
     background-color: rgba(255, 255, 255, 0.9);
     border: 1px solid var(--colorWhite);
     color: var(--marketplaceColor);

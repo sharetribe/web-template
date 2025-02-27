@@ -46,6 +46,23 @@
 .fourColumns {
   composes: baseColumn;
 
+  & p > a:only-of-type {
+    display: inline-block;
+    padding: 8px 20px;
+    white-space: nowrap;
+    border-radius: var(--borderRadiusMedium);
+
+    background-color: transparent;
+    color: var(--marketplaceColor);
+    box-shadow: none;
+
+    &:hover {
+      background-color: transparent;
+      color: var(--marketplaceColorDark);
+      box-shadow: var(--marketplaceColor) 0 0 0 1px;
+    }
+  }
+
   @media (--viewportMedium) {
     grid-template-columns: repeat(4, calc((100% - 3 * 32px) / 4));
   }
