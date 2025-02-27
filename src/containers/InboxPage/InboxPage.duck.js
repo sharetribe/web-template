@@ -31,6 +31,7 @@ const initialState = {
   fetchOrdersOrSalesError: null,
   pagination: null,
   transactionRefs: [],
+  initialSearchQuery: '',
 };
 
 export default function inboxPageReducer(state = initialState, action = {}) {
@@ -39,12 +40,14 @@ export default function inboxPageReducer(state = initialState, action = {}) {
     case FETCH_ORDERS_OR_SALES_REQUEST:
       return { ...state, fetchInProgress: true, fetchOrdersOrSalesError: null };
     case FETCH_ORDERS_OR_SALES_SUCCESS: {
-      const transactions = sortedTransactions(payload.data.data);
+      const { response, initialSearchQuery } = payload;
+      const transactions = sortedTransactions(response.data.data);
       return {
         ...state,
         fetchInProgress: false,
         transactionRefs: entityRefs(transactions),
-        pagination: payload.data.meta,
+        pagination: response.data.meta,
+        initialSearchQuery: initialSearchQuery,
       };
     }
     case FETCH_ORDERS_OR_SALES_ERROR:
@@ -75,6 +78,9 @@ const INBOX_PAGE_SIZE = 100;
 
 export const loadData = (params, search) => (dispatch, getState, sdk) => {
   const { tab } = params;
+
+  // Retrieve the search query from sessionStorage or default to an empty string
+  const initialSearchQuery = sessionStorage.getItem('searchQuery') || '';
 
   const onlyFilterValues = {
     orders: 'order',
@@ -123,7 +129,7 @@ export const loadData = (params, search) => (dispatch, getState, sdk) => {
     .query(apiQueryParams)
     .then(response => {
       dispatch(addMarketplaceEntities(response));
-      dispatch(fetchOrdersOrSalesSuccess(response));
+      dispatch(fetchOrdersOrSalesSuccess({ response, initialSearchQuery }));
       return response;
     })
     .catch(e => {

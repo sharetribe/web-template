@@ -149,11 +149,6 @@ export const InboxItem = props => {
     [css.stateNoActionNeeded]: !actionNeeded,
   });
 
-  console.log('currentUser',currentUser.id.uuid);
-  console.log('tx',tx.messages[tx.messages.length - 1]);
-  console.log("transasctionRole",transactionRole);
-  console.log("stateData",stateData);
-  console.log("--------------------------------");
   return (
     <div className={css.item}>
       <div className={css.itemAvatar}>
@@ -167,7 +162,7 @@ export const InboxItem = props => {
         <div className={css.rowNotificationDot}>{rowNotificationDot}</div>
         <div className={css.itemUsername}>{otherUserDisplayName}</div>
         <div className={css.itemTitle}>{listing?.attributes?.title}</div>
-        
+
         <div className={css.itemDetails}>
           {isBooking ? (
             <BookingTimeInfoMaybe transaction={tx} />
@@ -196,10 +191,10 @@ export const InboxItem = props => {
 
               return (
                 <>
-                
-                  <span className={css.messageContent}><MessagesSquare className={css.messageIcon}/> {messageContent}</span>
+                  <span className={css.messageContent}>
+                    <MessagesSquare className={css.messageIcon} /> {messageContent}
+                  </span>
                   <span className={css.messageDate}> {messageDate}</span>
-                  
                 </>
               );
             })()}
@@ -230,15 +225,13 @@ export const InboxPageComponent = props => {
     providerNotificationCount,
     scrollingDisabled,
     transactions,
+    initialSearchQuery,
   } = props;
   const { tab } = params;
   const validTab = tab === 'orders' || tab === 'sales';
   if (!validTab) {
     return <NotFoundPage staticContext={props.staticContext} />;
   }
-
-  // Retrieve the search query from sessionStorage or default to an empty string
-  const initialSearchQuery = sessionStorage.getItem('searchQuery') || '';
 
   const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
 
@@ -267,7 +260,8 @@ export const InboxPageComponent = props => {
   });
 
   const isOrders = tab === 'orders';
-  const hasNoResults = !fetchInProgress && filteredTransactions.length === 0 && !fetchOrdersOrSalesError;
+  const hasNoResults =
+    !fetchInProgress && filteredTransactions.length === 0 && !fetchOrdersOrSalesError;
   const ordersTitle = intl.formatMessage({ id: 'InboxPage.ordersTitle' });
   const salesTitle = intl.formatMessage({ id: 'InboxPage.salesTitle' });
   const title = isOrders ? ordersTitle : salesTitle;
@@ -397,7 +391,13 @@ export const InboxPageComponent = props => {
           {hasNoResults ? (
             <li key="noResults" className={css.noResults}>
               <FormattedMessage
-                id={searchQuery ? 'InboxPage.noResults' : isOrders ? 'InboxPage.noOrdersFound' : 'InboxPage.noSalesFound'}
+                id={
+                  searchQuery
+                    ? 'InboxPage.noResults'
+                    : isOrders
+                    ? 'InboxPage.noOrdersFound'
+                    : 'InboxPage.noSalesFound'
+                }
               />
             </li>
           ) : null}
@@ -441,7 +441,13 @@ InboxPageComponent.propTypes = {
 };
 
 const mapStateToProps = state => {
-  const { fetchInProgress, fetchOrdersOrSalesError, pagination, transactionRefs } = state.InboxPage;
+  const {
+    fetchInProgress,
+    fetchOrdersOrSalesError,
+    pagination,
+    transactionRefs,
+    initialSearchQuery,
+  } = state.InboxPage;
   const { currentUser, currentUserNotificationCount: providerNotificationCount } = state.user;
   return {
     currentUser,
@@ -449,14 +455,12 @@ const mapStateToProps = state => {
     fetchOrdersOrSalesError,
     pagination,
     providerNotificationCount,
+    initialSearchQuery,
     scrollingDisabled: isScrollingDisabled(state),
     transactions: getMarketplaceEntities(state, transactionRefs),
   };
 };
 
-const InboxPage = compose(
-  connect(mapStateToProps),
-  injectIntl
-)(InboxPageComponent);
+const InboxPage = compose(connect(mapStateToProps), injectIntl)(InboxPageComponent);
 
 export default InboxPage;
