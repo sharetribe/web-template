@@ -7,7 +7,11 @@ const notifyUserUpdated = require('./notifyUserUpdated');
 async function loadEventScripts() {
   console.warn("\nLoading event's scripts..");
   notifyPortfolioListingUpdated();
-  notifyProductListingCreated();
+  /**
+   * [TODO:]
+   *  - Re-enable once the storage-manager is up and working
+   */
+  // notifyProductListingCreated();
   notifyProfileListingUpdated();
   notifyUserCreated();
   notifyUserUpdated();

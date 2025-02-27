@@ -5,6 +5,7 @@ const { LISTING_TYPES } = require('../../api-util/metadataHelper');
 const {
   slackProductListingsCreatedWorkflow,
   slackProductListingsErrorWorkflow,
+  slackProductListingsFieldsErrorWorkflow,
 } = require('../../api-util/slackHelper');
 const { retryAsync, RETRY_STORAGE_DELAY, RETRY_SDK_DELAY } = require('../../api-util/retryAsync');
 
@@ -17,20 +18,19 @@ const filterEvents = event => {
   const { resourceType, eventType, resourceId, resource } = event.attributes;
   if (resourceType !== RESOURCE_TYPE || eventType !== EVENT_TYPES) return false;
   const { attributes: listing, relationships } = resource;
+  const isProductListing = listing?.publicData?.listingType === LISTING_TYPES.PRODUCT;
+  if (!isProductListing) {
+    return false;
+  }
   const authorId = relationships?.author?.data?.id?.uuid;
   const listingId = resourceId?.uuid;
   const tempOriginalAssetUrl =
     listing?.privateData?.tempOriginalAssetUrl || listing?.privateData?.originalAssetUrl;
   const tempPreviewAssetUrl =
     listing?.privateData?.tempPreviewAssetUrl || listing?.privateData?.previewAssetUrl;
-  const isProductListing = listing?.publicData?.listingType === LISTING_TYPES.PRODUCT;
-  if (
-    !tempOriginalAssetUrl ||
-    !tempPreviewAssetUrl ||
-    !authorId ||
-    !listingId ||
-    !isProductListing
-  ) {
+  const isMissingFields = !tempOriginalAssetUrl || !tempPreviewAssetUrl || !authorId || !listingId;
+  if (isMissingFields) {
+    slackProductListingsFieldsErrorWorkflow(resource);
     return false;
   }
   return true;
