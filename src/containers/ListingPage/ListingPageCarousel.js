@@ -134,6 +134,8 @@ export const ListingPageComponent = props => {
     uiCurrency,
     showOwnListingsOnly,
     onUpdateFavorites,
+    lastTransaction,
+    fetchTransactionsError,
   } = props;
 
   const listingConfig = config.listing;
@@ -179,7 +181,7 @@ export const ListingPageComponent = props => {
   if (showListingError && showListingError.status === 404) {
     // 404 listing not found
     return <NotFoundPage staticContext={props.staticContext} />;
-  } else if (showListingError) {
+  } else if (showListingError && fetchTransactionsError) {
     // Other error in fetching listing
     return <ErrorPage topbar={topbar} scrollingDisabled={scrollingDisabled} intl={intl} />;
   } else if (!currentListing.id) {
@@ -257,6 +259,7 @@ export const ListingPageComponent = props => {
     getListing,
     onSendInquiry,
     setInquiryModalOpen,
+    listingConfig,
   });
   const onSubmit = handleSubmit({
     ...commonParams,
@@ -264,6 +267,8 @@ export const ListingPageComponent = props => {
     callSetInitialValues,
     getListing,
     onInitializeCardPaymentData,
+    lastTransaction,
+    listingConfig,
   });
 
   const handleOrderSubmit = values => {
@@ -589,6 +594,8 @@ const mapStateToProps = state => {
     fetchLineItemsInProgress,
     fetchLineItemsError,
     inquiryModalOpenForListingId,
+    lastTransaction,
+    fetchTransactionsError,
   } = state.ListingPage;
   const { currentUser } = state.user;
   const { exchangeRate } = state.ExchangeRate;
@@ -632,6 +639,8 @@ const mapStateToProps = state => {
     sendInquiryError,
     convertListingPrice,
     uiCurrency,
+    lastTransaction,
+    fetchTransactionsError,
   };
 };
 
@@ -641,7 +650,7 @@ const mapDispatchToProps = dispatch => ({
   callSetInitialValues: (setInitialValues, values, saveToSessionStorage) =>
     dispatch(setInitialValues(values, saveToSessionStorage)),
   onFetchTransactionLineItems: params => dispatch(fetchTransactionLineItems(params)),
-  onSendInquiry: (listing, message) => dispatch(sendInquiry(listing, message)),
+  onSendInquiry: (listing, message, options) => dispatch(sendInquiry(listing, message, options)),
   onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
   onFetchTimeSlots: (listingId, start, end, timeZone) =>
     dispatch(fetchTimeSlots(listingId, start, end, timeZone)),
