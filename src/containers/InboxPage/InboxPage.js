@@ -138,7 +138,11 @@ export const InboxItem = props => {
   const otherUserDisplayName = <UserDisplayName user={otherUser} intl={intl} />;
   const isOtherUserBanned = otherUser.attributes.banned;
 
-  const rowNotificationDot = isSaleNotification ? <div className={css.notificationDot} /> : null;
+  const isLastMessageUnreplied =
+    Array.isArray(messages) &&
+    messages.length > 0 &&
+    messages[messages.length - 1].sender.id.uuid !== currentUser.id.uuid;
+  const rowNotificationDot = isSaleNotification || isLastMessageUnreplied ? <div className={css.notificationDot} /> : null;
 
   const getMessageComponent = () => {
     if (messages.length === 0) {
