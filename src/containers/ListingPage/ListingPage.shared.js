@@ -10,6 +10,10 @@ import {
   NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
   createSlug,
 } from '../../util/urlHelpers';
+import {
+  getInProgressTxId,
+  isSingleItemStockType,
+} from '../../extensions/singleTransactionThread/common/helpers/verify';
 
 import { Page, LayoutSingleColumn } from '../../components';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
@@ -146,13 +150,22 @@ export const handleContactUser = parameters => () => {
  * @param {Object} parameters all the info needed to create inquiry.
  */
 export const handleSubmitInquiry = parameters => values => {
-  const { history, params, getListing, onSendInquiry, routes, setInquiryModalOpen } = parameters;
+  const {
+    history,
+    params,
+    getListing,
+    onSendInquiry,
+    routes,
+    setInquiryModalOpen,
+    isOwnListing,
+    listingConfig,
+  } = parameters;
 
   const listingId = new UUID(params.id);
   const listing = getListing(listingId);
   const { message } = values;
 
-  onSendInquiry(listing, message.trim())
+  onSendInquiry(listing, message.trim(), { isOwn: isOwnListing, listingConfig })
     .then(txId => {
       setInquiryModalOpen(false);
 
@@ -178,6 +191,8 @@ export const handleSubmit = parameters => values => {
     callSetInitialValues,
     onInitializeCardPaymentData,
     routes,
+    lastTransaction,
+    listingConfig,
   } = parameters;
   const listingId = new UUID(params.id);
   const listing = getListing(listingId);
@@ -211,6 +226,10 @@ export const handleSubmit = parameters => values => {
   const quantity = Number.parseInt(quantityRaw, 10);
   const quantityMaybe = Number.isInteger(quantity) ? { quantity } : {};
   const deliveryMethodMaybe = deliveryMethod ? { deliveryMethod } : {};
+  const transactionMaybe =
+    getInProgressTxId(lastTransaction) && isSingleItemStockType({ listing, listingConfig })
+      ? { transaction: lastTransaction }
+      : {};
 
   const initialValues = {
     listing,
@@ -221,6 +240,7 @@ export const handleSubmit = parameters => values => {
       ...otherOrderData,
     },
     confirmPaymentError: null,
+    ...transactionMaybe,
   };
 
   const saveToSessionStorage = !currentUser;
@@ -307,10 +327,7 @@ export const handleToggleFavorites = parameters => isFavorite => {
     };
 
     // Sign up and return back to the listing page.
-    history.push(
-      createResourceLocatorString('SignupPage', routes, {}, {}),
-      state
-    );
+    history.push(createResourceLocatorString('SignupPage', routes, {}, {}), state);
   } else {
     const { params, onUpdateFavorites } = parameters;
     const {

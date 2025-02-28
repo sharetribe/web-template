@@ -311,6 +311,17 @@ export const isBookingProcessAlias = processAlias => {
 };
 
 /**
+ * Check if the process is inquiry process
+ *
+ * @param {String} processName
+ */
+export const isInquiryProcess = processName => {
+  const latestProcessName = resolveLatestProcessName(processName);
+  const processInfo = PROCESSES.find(process => process.name === latestProcessName);
+  return [INQUIRY_PROCESS_NAME].includes(processInfo?.name);
+};
+
+/**
  * Check from unit type if full days should be used.
  * E.g. unit type is day or night
  * This is mainly used for availability management.

@@ -124,7 +124,7 @@ export const InboxItem = props => {
     stockType = STOCK_MULTIPLE_ITEMS,
     currentUser,
   } = props;
-  const { customer, provider, listing } = tx;
+  const { customer, provider, listing, messages = [] } = tx;
   const { processName, processState, actionNeeded, isSaleNotification, isFinal } = stateData;
   const isCustomer = transactionRole === TX_TRANSITION_ACTOR_CUSTOMER;
 
@@ -138,7 +138,37 @@ export const InboxItem = props => {
   const otherUserDisplayName = <UserDisplayName user={otherUser} intl={intl} />;
   const isOtherUserBanned = otherUser.attributes.banned;
 
-  const rowNotificationDot = isSaleNotification ? <div className={css.notificationDot} /> : null;
+  const isLastMessageUnreplied =
+    messages &&
+    messages.length > 0 &&
+    messages[messages.length - 1].sender.id.uuid !== currentUser.id.uuid;
+  const rowNotificationDot =
+    isSaleNotification || isLastMessageUnreplied ? <div className={css.notificationDot} /> : null;
+
+  const getMessageComponent = () => {
+    if (messages.length === 0) {
+      return null;
+    }
+    const lastMessage = messages[messages.length - 1];
+    if (!lastMessage?.attributes) {
+      return null;
+    }
+
+    const { content: rawMessageContent, createdAt: messageCreatedAt } = lastMessage.attributes;
+    const { displayName } = lastMessage.sender.attributes.profile;
+    const messageContent = `${displayName}: ${rawMessageContent}`;
+    const messageDate = new Date(messageCreatedAt).toLocaleDateString();
+
+    return (
+      <div className={css.itemMessage}>
+        <div className={css.messageContainer}>
+          <MessagesSquare className={css.messageIcon} />
+          <span className={css.messageContent}>{messageContent}</span>
+        </div>
+        <span className={css.messageDate}> {messageDate}</span>
+      </div>
+    );
+  };
 
   const linkClasses = classNames(css.itemLink, {
     [css.bannedUserLink]: isOtherUserBanned,
@@ -178,28 +208,7 @@ export const InboxItem = props => {
             />
           </div>
         </div>
-
-        {tx.messages.length > 0 && (
-          <div className={css.itemMessage}>
-            {(() => {
-              const lastMessage = tx.messages[tx.messages.length - 1];
-              let messageContent = lastMessage?.attributes?.content?.slice(0, 67);
-              if (messageContent.length < lastMessage?.attributes?.content?.length) {
-                messageContent += '...';
-              }
-              const messageDate = new Date(lastMessage?.attributes?.createdAt).toLocaleDateString();
-
-              return (
-                <>
-                  <span className={css.messageContent}>
-                    <MessagesSquare className={css.messageIcon} /> {messageContent}
-                  </span>
-                  <span className={css.messageDate}> {messageDate}</span>
-                </>
-              );
-            })()}
-          </div>
-        )}
+        {getMessageComponent()}
       </NamedLink>
     </div>
   );
