@@ -8,20 +8,27 @@ export const CATEGORIES = {
   SERVICES: 'services',
 };
 
+export const LISTING_TYPES = {
+  SELL: 'sell',
+  SELL_MACHINE: 'sell-machine',
+  SELL_SERVICE: 'sell-service',
+  SELL_PARTS: 'sell-parts',
+};
+
 export const LISTING_TYPE_CATEGORIES = {
-  sell: {
+  [LISTING_TYPES.SELL]: {
     label: 'Sell a Location (with or without machine)',
     categories: [CATEGORIES.LOCATION, CATEGORIES.LOCATION_MACHINE, CATEGORIES.ATM_LOCATION],
   },
-  'sell-machine': {
+  [LISTING_TYPES.SELL_MACHINE]: {
     label: 'Sell a Machine',
     categories: [CATEGORIES.MACHINE],
   },
-  'sell-service': {
+  [LISTING_TYPES.SELL_SERVICE]: {
     label: 'Sell a Service',
     categories: [CATEGORIES.SERVICES, CATEGORIES.LOCATION_FIND],
   },
-  'sell-parts': {
+  [LISTING_TYPES.SELL_PARTS]: {
     label: 'Sell Parts',
     categories: [CATEGORIES.PARTS],
   },

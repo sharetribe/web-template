@@ -27,6 +27,10 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
     actionButtonProps,
     leaveReviewProps,
   } = processInfo;
+  const { categoryLevel1: rawCategoryLevel1, listingType: rawListingType } = transaction.listing.attributes.publicData;
+  const categoryLevel1 = rawCategoryLevel1?.replaceAll('-', '_');
+  const listingType = rawListingType?.replaceAll('-', '_');
+
 
   return new ConditionalResolver([processState, transactionRole])
     .cond([states.INQUIRY, CUSTOMER], () => {
@@ -52,6 +56,10 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
           isConfirmNeeded: true,
           showConfirmStatement: true,
           showReminderStatement: true,
+          buttonTextValues: {
+            categoryLevel1,
+            listingType,
+          },
         }),
       };
     })
@@ -70,6 +78,10 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
           showConfirmStatement: true,
           showReminderStatement: true,
           actionButtonTranslationId,
+          buttonTextValues: {
+            categoryLevel1,
+            listingType,
+          },
         }),
       };
     })
@@ -84,6 +96,10 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
           isConfirmNeeded: true,
           showConfirmStatement: true,
           showReminderStatement: true,
+          buttonTextValues: {
+            categoryLevel1,
+            listingType,
+          },
         }),
       };
     })

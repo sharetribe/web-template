@@ -29,6 +29,7 @@ const getCustomerUpdateProgressPrimaryButtonProps = ({
   buyerMarkMetManager,
   availableTransition,
   currentState,
+  buttonTextValues = {},
 }) => {
   const transitionName = buyerMarkMetManager
     ? availableTransition
@@ -43,15 +44,17 @@ const getCustomerUpdateProgressPrimaryButtonProps = ({
     actionButtonTranslationErrorId: `TransactionPage.sell-purchase.customer.${transitionName}.actionError`,
     confirmStatementTranslationId: `TransactionPage.PrimaryConfirmActionModal.sell-purchase.${currentState}.customer${modalStatementPrefix}.confirmStatement`,
     reminderStatementTranslationId: `TransactionPage.PrimaryConfirmActionModal.sell-purchase.${currentState}.customer${modalStatementPrefix}.reminderStatement`,
+    buttonTextValues,
   };
 };
 
-const getProviderUpdateProgressPrimaryButtonProps = () => ({
+const getProviderUpdateProgressPrimaryButtonProps = (buttonTextValues = {}) => ({
   isConfirmNeeded: true,
   showConfirmStatement: true,
   showReminderStatement: true,
   actionButtonTranslationId: `TransactionPage.sell-purchase.provider.${MARK_MACHINE_PLACE_TRANSITION_NAME}.actionButton`,
   actionButtonTranslationErrorId: `TransactionPage.sell-purchase.provider.${MARK_MACHINE_PLACE_TRANSITION_NAME}.actionError`,
+  buttonTextValues,
 });
 
 /**
@@ -67,6 +70,9 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
   const { sellerMarkMachinePlaced, buyerMarkMetManager } = transaction?.attributes?.metadata || {};
   const isProviderBanned = transaction?.provider?.attributes?.banned;
   const _ = CONDITIONAL_RESOLVER_WILDCARD;
+
+  const { categoryLevel1: rawCategoryLevel1 } = transaction.listing.attributes.publicData;
+  const categoryLevel1 = rawCategoryLevel1?.replaceAll('-', '_');
 
   const {
     isCustomer,
@@ -193,6 +199,9 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
         buyerMarkMetManager,
         availableTransition: 'transition-buyer-mark-complete-before-capture-intent',
         currentState: states.PURCHASED,
+        buttonTextValues: {
+          categoryLevel1,
+        },
       });
 
       return {
@@ -226,7 +235,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
             primaryButtonProps: updateSellPurchaseProgressProps(
               MARK_MACHINE_PLACE_TRANSITION_NAME,
               PROVIDER,
-              getProviderUpdateProgressPrimaryButtonProps()
+              getProviderUpdateProgressPrimaryButtonProps({ categoryLevel1 })
             ),
           };
 
@@ -254,6 +263,9 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
         buyerMarkMetManager,
         availableTransition: 'transition-buyer-mark-complete',
         currentState: states.STRIPE_INTENT_CAPTURED,
+        buttonTextValues: {
+          categoryLevel1,
+        },
       });
 
       return {
@@ -287,7 +299,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
             primaryButtonProps: updateSellPurchaseProgressProps(
               MARK_MACHINE_PLACE_TRANSITION_NAME,
               PROVIDER,
-              getProviderUpdateProgressPrimaryButtonProps()
+              getProviderUpdateProgressPrimaryButtonProps({ categoryLevel1 })
             ),
           };
 
@@ -312,6 +324,9 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
         buyerMarkMetManager,
         availableTransition: 'transition-buyer-mark-complete-refund-disabled',
         currentState: states.REFUND_DISABLED,
+        buttonTextValues: {
+          categoryLevel1,
+        },
       });
 
       return {
@@ -332,7 +347,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
             primaryButtonProps: updateSellPurchaseProgressProps(
               MARK_MACHINE_PLACE_TRANSITION_NAME,
               PROVIDER,
-              getProviderUpdateProgressPrimaryButtonProps()
+              getProviderUpdateProgressPrimaryButtonProps({ categoryLevel1 })
             ),
           };
 
