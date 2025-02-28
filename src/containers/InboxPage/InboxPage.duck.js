@@ -107,7 +107,7 @@ export const loadData = (params, search) => (dispatch, getState, sdk) => {
       'customer.profileImage',
       'booking',
       'messages',
-      'messages.sender'
+      'messages.sender',
     ],
     'fields.transaction': [
       'processName',

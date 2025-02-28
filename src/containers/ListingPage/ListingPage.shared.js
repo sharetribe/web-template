@@ -10,15 +10,15 @@ import {
   NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
   createSlug,
 } from '../../util/urlHelpers';
+import {
+  getInProgressTxId,
+  isSingleItemStockType,
+} from '../../extensions/singleTransactionThread/common/helpers/verify';
 
 import { Page, LayoutSingleColumn } from '../../components';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import css from './ListingPage.module.css';
-import {
-  getExistedTxId,
-  isSingleItemStockType,
-} from '../../extensions/singleTransactionThread/common/helpers/verify';
 
 /**
  * This file contains shared functions from each ListingPage variants.
@@ -227,7 +227,7 @@ export const handleSubmit = parameters => values => {
   const quantityMaybe = Number.isInteger(quantity) ? { quantity } : {};
   const deliveryMethodMaybe = deliveryMethod ? { deliveryMethod } : {};
   const transactionMaybe =
-    getExistedTxId(lastTransaction) && isSingleItemStockType({ listing, listingConfig })
+    getInProgressTxId(lastTransaction) && isSingleItemStockType({ listing, listingConfig })
       ? { transaction: lastTransaction }
       : {};
 

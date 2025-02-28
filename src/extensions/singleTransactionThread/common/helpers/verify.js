@@ -12,7 +12,7 @@ import { STOCK_ONE_ITEM } from '../../../../util/types';
  *
  * @param {Object?} tx Transation info from sdk response
  */
-export const getExistedTxId = tx => {
+export const getInProgressTxId = tx => {
   if (!tx) {
     return null;
   }

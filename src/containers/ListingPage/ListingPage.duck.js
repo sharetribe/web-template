@@ -19,7 +19,7 @@ import {
 import { getProcess, isBookingProcessAlias } from '../../transactions/transaction';
 import { fetchCurrentUser, fetchCurrentUserHasOrdersSuccess } from '../../ducks/user.duck';
 import {
-  getExistedTxId,
+  getInProgressTxId,
   isSingleItemStockType,
 } from '../../extensions/singleTransactionThread/common/helpers/verify';
 
@@ -338,7 +338,7 @@ export const sendInquiry = (listing, message, { isOwn = false, listingConfig } =
   dispatch(sendInquiryRequest());
 
   const { lastTransaction } = getState().ListingPage;
-  const existedTxId = getExistedTxId(lastTransaction);
+  const existedTxId = getInProgressTxId(lastTransaction);
 
   if (existedTxId && isSingleItemStockType({ listing, listingConfig }) && !isOwn) {
     return sdk.messages
