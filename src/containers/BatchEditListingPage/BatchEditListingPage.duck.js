@@ -83,7 +83,11 @@ function uppyFileToListing(file) {
     key: id,
     id,
     name,
-    title: name,
+    /**
+     * [TODO:]
+     *    - Change default value used for the "title". Probably "Caption"
+     */
+    // title: name,
     description: null,
     keywords: keywordsOptions.slice(0, MAX_KEYWORDS),
     size,
@@ -618,7 +622,11 @@ export const queryOwnListings = queryParams => (dispatch, getState, sdk) => {
         type: FETCH_LISTINGS_FOR_EDIT_REQUEST_SUCCESS,
         payload: response,
       });
-
+      const listings = getListings(getState());
+      dispatch({
+        type: SET_SELECTED_ROWS,
+        payload: _.uniq(listings.map(ownListing => ownListing.id)),
+      });
       return response;
     })
     .catch(e => {
