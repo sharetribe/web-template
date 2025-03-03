@@ -44,6 +44,7 @@ const ActionButtonsMaybe = props => {
     showConfirmStatement: primaryShowConfirmStatement,
     showReminderStatement: primaryShowReminderStatement,
     confirmStatementTranslationId: primaryConfirmStatementTranslationId,
+    confirmStatementTranslationValues: primaryConfirmStatementTranslationValues = {},
     reminderStatementTranslationId: primaryReminderStatementTranslationId,
     confirmButtonTranslationId: primaryConfirmButtonTranslationId,
     confirmModalTitleTranslationId: primaryConfirmModalTitleTranslationId,
@@ -59,6 +60,7 @@ const ActionButtonsMaybe = props => {
     showConfirmStatement: secondaryShowConfirmStatement,
     showReminderStatement: secondaryShowReminderStatement,
     confirmStatementTranslationId: secondaryConfirmStatementTranslationId,
+    confirmStatementTranslationValues: secondaryConfirmStatementTranslationValues = {},
     reminderStatementTranslationId: secondaryReminderStatementTranslationId,
     confirmButtonTranslationId: secondaryConfirmButtonTranslationId,
     confirmModalTitleTranslationId: secondaryConfirmModalTitleTranslationId,
@@ -134,11 +136,16 @@ const ActionButtonsMaybe = props => {
         >
           {primaryShowConfirmStatement && (
             <p>
-              {intl.formatMessage({
-                id:
-                  primaryConfirmStatementTranslationId ||
-                  `TransactionPage.PrimaryConfirmActionModal.${processName}.${processState}.${transactionRole}.confirmStatement`,
-              })}
+              {intl.formatMessage(
+                {
+                  id:
+                    primaryConfirmStatementTranslationId ||
+                    `TransactionPage.PrimaryConfirmActionModal.${processName}.${processState}.${transactionRole}.confirmStatement`,
+                },
+                {
+                  ...primaryConfirmStatementTranslationValues,
+                }
+              )}
             </p>
           )}
 
@@ -155,8 +162,7 @@ const ActionButtonsMaybe = props => {
           )}
 
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'flex-end' }}>
-            <PrimaryButton
-            >
+            <PrimaryButton>
               {intl.formatMessage({
                 id:
                   primaryConfirmButtonTranslationId ||
@@ -216,11 +222,16 @@ const ActionButtonsMaybe = props => {
         >
           {secondaryShowConfirmStatement && (
             <p>
-              {intl.formatMessage({
-                id:
-                  secondaryConfirmStatementTranslationId ||
-                  `TransactionPage.SecondaryConfirmActionModal.${processName}.${processState}.${transactionRole}.confirmStatement`,
-              })}
+              {intl.formatMessage(
+                {
+                  id:
+                    secondaryConfirmStatementTranslationId ||
+                    `TransactionPage.SecondaryConfirmActionModal.${processName}.${processState}.${transactionRole}.confirmStatement`,
+                },
+                {
+                  ...secondaryConfirmStatementTranslationValues,
+                }
+              )}
             </p>
           )}
 
