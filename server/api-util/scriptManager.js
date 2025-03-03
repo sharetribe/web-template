@@ -49,7 +49,7 @@ async function generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, anal
     // DEV: We use 10 seconds so that the data is printed without much delay.
     const pollIdleWait = 10 * MS_IN_MINUTE;
     // Polling interval (in ms) when a full page of events is received and there may be more
-    const pollWait = 5 * MS_IN_MINUTE;
+    const pollWait = 3 * MS_IN_MINUTE;
     // Sequence Queue management
     const saveLastEventSequenceId = sequenceId =>
       studioManagerClient.updateScriptSequence(SCRIPT_NAME, { sequenceId });
@@ -76,12 +76,11 @@ async function generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, anal
           const withEvents = !!events.length;
           const lastEvent = events[events.length - 1];
           const fullPage = events.length === res.data.meta.perPage;
-          delay = fullPage ? pollWait : pollIdleWait;
-          lastSequenceId = lastEvent ? lastEvent.attributes.sequenceId : sequenceId;
           if (withEvents) {
-            const lastResourceId = lastEvent && lastEvent.attributes.resourceId.uuid;
+            const batchLastSequenceId = lastEvent.attributes.sequenceId;
+            const lastResourceId = lastEvent.attributes.resourceId.uuid;
             console.log(
-              `--- [pollLoop] | [${SCRIPT_NAME}] - startAfterSequenceId: ${sequenceId} | lastSequenceId: ${lastSequenceId} | lastResourceId: ${lastResourceId}`
+              `--- [pollLoop] | [${SCRIPT_NAME}] - startAfterSequenceId: ${sequenceId} | batchLastSequenceId: ${batchLastSequenceId} | lastResourceId: ${lastResourceId}`
             );
             if (withLogs) {
               const eventList = events.map(event => {
@@ -98,7 +97,9 @@ async function generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, anal
               analyzeEventGroup(events);
             }
             await analyzeEventsBatch(events);
-            if (lastEvent) saveLastEventSequenceId(lastEvent.attributes.sequenceId);
+            await saveLastEventSequenceId(batchLastSequenceId);
+            lastSequenceId = batchLastSequenceId;
+            delay = fullPage ? pollWait : pollIdleWait;
           } else {
             console.log(
               `--- [pollLoop] | [${SCRIPT_NAME}] - startAfterSequenceId: ${sequenceId} | NO NEW EVENTS`
