@@ -119,7 +119,14 @@ export const handleContactUser = parameters => () => {
     routes,
     setInitialValues,
     setInquiryModalOpen,
+    isOwnListing,
+    getListing,
+    lastTransaction,
+    listingConfig,
   } = parameters;
+
+  const listingId = new UUID(params.id);
+  const listing = getListing(listingId);
 
   if (!currentUser) {
     const state = { from: `${location.pathname}${location.search}${location.hash}` };
@@ -138,6 +145,15 @@ export const handleContactUser = parameters => () => {
     // A user in pending-approval state can't contact the author (the same applies for a banned user)
     const pathParams = { missingAccessRight: NO_ACCESS_PAGE_INITIATE_TRANSACTIONS };
     history.push(createResourceLocatorString('NoAccessPage', routes, pathParams, {}));
+  } else if (
+    lastTransaction &&
+    getInProgressTxId(lastTransaction) &&
+    isSingleItemStockType({ listing, listingConfig }) &&
+    !isOwnListing
+  ) {
+    history.push(
+      createResourceLocatorString('OrderDetailsPage', routes, { id: lastTransaction.id.uuid }, {})
+    );
   } else {
     setInquiryModalOpen(true);
   }

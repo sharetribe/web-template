@@ -251,7 +251,12 @@ export const ListingPageComponent = props => {
     callSetInitialValues,
     location,
     setInitialValues,
+    lastTransaction,
     setInquiryModalOpen,
+    isOwnListing,
+    lastTransaction,
+    getListing,
+    listingConfig,
   });
   // Note: this is for inquiry state in booking and purchase processes. Inquiry process is handled through handleSubmit.
   const onSubmitInquiry = handleSubmitInquiry({
@@ -447,6 +452,7 @@ export const ListingPageComponent = props => {
               marketplaceName={config.marketplaceName}
               onToggleFavorites={onToggleFavorites}
               currentUser={currentUser}
+              lastTransaction={lastTransaction}
             />
           </div>
         </div>
