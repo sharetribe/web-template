@@ -27,10 +27,16 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
     actionButtonProps,
     leaveReviewProps,
   } = processInfo;
-  const { categoryLevel1: rawCategoryLevel1, listingType: rawListingType } = transaction.listing.attributes.publicData;
+  const {
+    categoryLevel1: rawCategoryLevel1,
+    listingType: rawListingType,
+  } = transaction.listing.attributes.publicData;
   const categoryLevel1 = rawCategoryLevel1?.replaceAll('-', '_');
   const listingType = rawListingType?.replaceAll('-', '_');
-
+  const translationValues = {
+    categoryLevel1,
+    listingType,
+  };
 
   return new ConditionalResolver([processState, transactionRole])
     .cond([states.INQUIRY, CUSTOMER], () => {
@@ -55,11 +61,9 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
         primaryButtonProps: actionButtonProps(transitions.MARK_RECEIVED_FROM_PURCHASED, CUSTOMER, {
           isConfirmNeeded: true,
           showConfirmStatement: true,
+          confirmStatementTranslationValues: translationValues,
           showReminderStatement: true,
-          buttonTextValues: {
-            categoryLevel1,
-            listingType,
-          },
+          buttonTextValues: translationValues,
         }),
       };
     })
@@ -76,12 +80,10 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
         primaryButtonProps: actionButtonProps(transitions.MARK_DELIVERED, PROVIDER, {
           isConfirmNeeded: true,
           showConfirmStatement: true,
+          confirmStatementTranslationValues: translationValues,
           showReminderStatement: true,
           actionButtonTranslationId,
-          buttonTextValues: {
-            categoryLevel1,
-            listingType,
-          },
+          buttonTextValues: translationValues,
         }),
       };
     })
@@ -95,11 +97,9 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
         primaryButtonProps: actionButtonProps(transitions.MARK_RECEIVED, CUSTOMER, {
           isConfirmNeeded: true,
           showConfirmStatement: true,
+          confirmStatementTranslationValues: translationValues,
           showReminderStatement: true,
-          buttonTextValues: {
-            categoryLevel1,
-            listingType,
-          },
+          buttonTextValues: translationValues,
         }),
       };
     })
