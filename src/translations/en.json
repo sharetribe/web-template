@@ -398,7 +398,7 @@
   "InboxPage.default-purchase.inquiry.status": "Inquiry",
   "InboxPage.default-purchase.payment-expired.status": "Payment expired",
   "InboxPage.default-purchase.pending-payment.status": "Pending payment",
-  "InboxPage.default-purchase.purchased.status": "Waiting for delivery",
+  "InboxPage.default-purchase.purchased.status": "{listingType, select, sell_machine {Waiting for confirmation} sell_service {{categoryLevel1, select, location_find {Waiting for intro} other {Waiting for confirmation}}} sell_parts {Waiting for confirmation} other {Waiting for intro}}",
   "InboxPage.default-purchase.received.status": "Waiting for review",
   "InboxPage.default-purchase.reviewed-by-customer.status": "{transactionRole, select, customer {Waiting for listing author's review} other {Waiting for your review}}",
   "InboxPage.default-purchase.reviewed-by-provider.status": "{transactionRole, select, customer {Waiting for your review} other {Waiting for customer review}}",

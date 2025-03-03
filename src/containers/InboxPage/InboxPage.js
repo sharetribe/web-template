@@ -127,6 +127,7 @@ export const InboxItem = props => {
   const { customer, provider, listing } = tx;
   const { processName, processState, actionNeeded, isSaleNotification, isFinal } = stateData;
   const isCustomer = transactionRole === TX_TRANSITION_ACTOR_CUSTOMER;
+  const { listingType, categoryLevel1 } = listing?.attributes?.publicData || {};
 
   const lineItems = tx.attributes?.lineItems;
   const hasPricingData = lineItems.length > 0;
@@ -174,7 +175,11 @@ export const InboxItem = props => {
           <div className={stateClasses}>
             <FormattedMessage
               id={`InboxPage.${processName}.${processState}.status`}
-              values={{ transactionRole }}
+              values={{
+                transactionRole,
+                listingType: listingType?.replaceAll('-', '_'),
+                categoryLevel1: categoryLevel1?.replaceAll('-', '_'),
+              }}
             />
           </div>
         </div>
