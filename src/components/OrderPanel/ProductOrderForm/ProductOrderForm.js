@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { bool, func, number, string } from 'prop-types';
+import { bool, func, number, string, object } from 'prop-types';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
 import { useSelector } from 'react-redux';
 
@@ -21,6 +21,7 @@ import {
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
 
 import css from './ProductOrderForm.module.css';
+import { getCategoryLabel } from '../../../config/categories';
 
 // Browsers can't render huge number of select options.
 // (stock is shown inside select element)
@@ -62,10 +63,22 @@ const DeliveryMethodMaybe = props => {
     hasStock,
     formId,
     intl,
+    listing,
   } = props;
+
+  const listingType = listing?.attributes?.publicData?.listingType;
+  //const categoryLevel1 = listing?.attributes?.publicData?.categoryLevel1;
   const showDeliveryMethodSelector = displayDeliveryMethod && hasMultipleDeliveryMethods;
   const showSingleDeliveryMethod = displayDeliveryMethod && deliveryMethod;
-  return !hasStock ? null : showDeliveryMethodSelector ? (
+  const showDeliveryContent = listingType !== 'sell'; //sell = all location categories ( location, location-machine, atm-location )
+
+  //console.log('listing', listing)
+  // If category is 'location' or there's no stock, don't show anything
+  if (!showDeliveryContent || !hasStock) {
+    return null;
+  }
+
+  return showDeliveryMethodSelector ? (
     <FieldSelect
       id={`${formId}.deliveryMethod`}
       className={css.deliveryField}
@@ -85,20 +98,21 @@ const DeliveryMethodMaybe = props => {
     </FieldSelect>
   ) : showSingleDeliveryMethod ? (
     <div className={css.deliveryField}>
-      <H3 rootClassName={css.singleDeliveryMethodLabel}>
+      <H3 rootClassName={css.singleDeliveryMethodLabel}> 
         {intl.formatMessage({ id: 'ProductOrderForm.deliveryMethodLabel' })}
       </H3>
-      <p className={css.singleDeliveryMethodSelected}>
+      <FieldTextInput
+        id={`${formId}.deliveryMethod`}
+        className={`${css.deliveryField} marketplaceSmallFontStyles`}
+        name="deliveryMethod"
+        type="hidden"
+      />
+      <p className={`${css.singleDeliveryMethodSelected} marketplaceSmallFontStyles`}>
         {deliveryMethod === 'shipping'
           ? intl.formatMessage({ id: 'ProductOrderForm.shippingOption' })
           : intl.formatMessage({ id: 'ProductOrderForm.pickupOption' })}
       </p>
-      <FieldTextInput
-        id={`${formId}.deliveryMethod`}
-        className={css.deliveryField}
-        name="deliveryMethod"
-        type="hidden"
-      />
+      
     </div>
   ) : (
     <FieldTextInput
@@ -137,6 +151,7 @@ const renderForm = formRenderProps => {
     marketplaceName,
     values,
     showCurrencyNotify,
+    listing,
   } = formRenderProps;
 
   // Note: don't add custom logic before useEffect
@@ -158,6 +173,8 @@ const renderForm = formRenderProps => {
       });
     }
   }, [uiCurrency]);
+
+  const showOnlyTotal = listing?.attributes?.publicData?.listingType == 'sell'; //location listing
 
   // If form values change, update line-items for the order breakdown
   const handleOnChange = formValues => {
@@ -197,6 +214,7 @@ const renderForm = formRenderProps => {
   const showBreakdown =
     breakdownData && lineItems && !fetchLineItemsInProgress && !fetchLineItemsError;
 
+
   const showContactUser = typeof onContactUser === 'function';
 
   const onClickContactUser = e => {
@@ -225,6 +243,7 @@ const renderForm = formRenderProps => {
 
   return (
     <Form onSubmit={handleFormSubmit}>
+      
       <FormSpy subscription={{ values: true }} onChange={handleOnChange} />
       {hasNoStockLeft ? null : hasOneItemLeft || !allowOrdersOfMultipleItems ? (
         <FieldTextInput
@@ -235,6 +254,7 @@ const renderForm = formRenderProps => {
           validate={numberAtLeast(quantityRequiredMsg, 1)}
         />
       ) : (
+        
         <FieldSelect
           id={`${formId}.quantity`}
           className={css.quantityField}
@@ -254,6 +274,8 @@ const renderForm = formRenderProps => {
         </FieldSelect>
       )}
 
+      <CategoryLabel listing={listing} intl={intl} />
+
       <DeliveryMethodMaybe
         displayDeliveryMethod={displayDeliveryMethod}
         hasMultipleDeliveryMethods={hasMultipleDeliveryMethods}
@@ -261,14 +283,21 @@ const renderForm = formRenderProps => {
         hasStock={hasStock}
         formId={formId}
         intl={intl}
+        listing={listing}
       />
 
-      {showBreakdown ? (
-        <div className={css.breakdownWrapper}>
-          <H6 as="h3" className={css.bookingBreakdownTitle}>
-            <FormattedMessage id="ProductOrderForm.breakdownTitle" />
-          </H6>
-          <hr className={css.totalDivider} />
+
+      {showBreakdown  ? (
+        <div className={`${css.breakdownWrapper} ${showOnlyTotal ? css.showOnlyTotal : ''}`}>
+          {!showOnlyTotal ? (
+            <>
+            <H6 as="h3" className={css.bookingBreakdownTitle}>
+              <FormattedMessage id="ProductOrderForm.breakdownTitle" />
+            </H6>
+           <hr className={css.totalDivider} />
+           </>
+          ) : null}
+         
           <EstimatedCustomerBreakdownMaybe
             breakdownData={breakdownData}
             lineItems={lineItems}
@@ -279,6 +308,8 @@ const renderForm = formRenderProps => {
           />
         </div>
       ) : null}
+
+  
 
       <div className={css.submitButton}>
         <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
@@ -313,8 +344,21 @@ const ProductOrderForm = props => {
     shippingEnabled,
     displayDeliveryMethod,
     allowOrdersOfMultipleItems,
+    listing,
   } = props;
 
+  /* Debug log at the top level component
+  console.log('ProductOrderForm props:', {
+    props,
+    listing,
+    price,
+    currentStock,
+    pickupEnabled,
+    shippingEnabled,
+    displayDeliveryMethod,
+  });
+  */
+ 
   // Should not happen for listings that go through EditListingWizard.
   // However, this might happen for imported listings.
   if (displayDeliveryMethod && !pickupEnabled && !shippingEnabled) {
@@ -344,6 +388,7 @@ const ProductOrderForm = props => {
       initialValues={initialValues}
       hasMultipleDeliveryMethods={hasMultipleDeliveryMethods}
       displayDeliveryMethod={displayDeliveryMethod}
+      listing={listing}
       {...props}
       intl={intl}
       render={renderForm}
@@ -392,6 +437,21 @@ ProductOrderForm.propTypes = {
 
   // other
   onContactUser: func,
+  listing: object.isRequired,
+};
+
+const CategoryLabel = props => {
+  const { listing, intl } = props;
+  const categoryLevel1 = listing?.attributes?.publicData?.categoryLevel1;
+  
+  return categoryLevel1 ? (
+    <div className={css.category}>
+      <h3 className={`${css.categoryLabel} marketplaceSmallFontStyles`}>
+        {intl.formatMessage({ id: 'ProductOrderForm.categoryLabel' })}
+      </h3>
+      <p className={`${css.categoryValue} marketplaceSmallFontStyles`}>{getCategoryLabel(categoryLevel1)}</p>
+    </div>
+  ) : null;
 };
 
 export default ProductOrderForm;

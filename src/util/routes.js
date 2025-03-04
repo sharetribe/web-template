@@ -1,8 +1,8 @@
 import find from 'lodash/find';
 import { matchPath } from 'react-router-dom';
 import { compile } from 'path-to-regexp';
-import { stringify } from './urlHelpers';
 // NOTE: This file imports urlHelpers.js, which may lead to circular dependency
+import { stringify } from './urlHelpers';
 
 const findRouteByName = (nameToFind, routes) => find(routes, route => route.name === nameToFind);
 
@@ -124,4 +124,52 @@ export const canonicalRoutePath = (routes, location, pathOnly = false) => {
   }
 
   return pathOnly ? pathname : `${pathname}${search}${hash}`;
+};
+
+// Regex that replaces {userId}, {listingId} or {userEmail} in the href string
+// with URI encoded user email and ID
+export const replaceParamsInHref = (href, params) => {
+  return href.replace(/{(userId|userEmail|listingId)}/g, (match, key) => {
+    if (params[key] != null) {
+      return encodeURIComponent(params[key]);
+    }
+    return match;
+  });
+};
+
+// This function generates data required to render ExternalLink and InternalLink components.
+// It is given a URL and it replaces the {userId} and {userEmail} placeholders
+// with the corresponding user data, encodes the values, and determines whether the URL
+// is internal or external. If it's an internal link, the function resolves the appropriate
+// route and returns an object containing route information. For external links, it returns
+// the processed link without route details.
+export const generateLinkProps = (type, href, routeConfiguration, userId, userEmail, listingId) => {
+  const params = { userId, userEmail, listingId };
+  const processedLink = replaceParamsInHref(href, params);
+
+  const isInternalLink = type === 'internal' || href.charAt(0) === '/';
+
+  if (isInternalLink) {
+    const testURL = new URL('http://my.marketplace.com' + processedLink);
+
+    const matchedRoutes = matchPathname(testURL.pathname, routeConfiguration);
+    if (matchedRoutes.length > 0) {
+      const found = matchedRoutes[0];
+      const to = { search: testURL.search, hash: testURL.hash };
+
+      // Return an object with route info
+      return {
+        link: processedLink,
+        route: {
+          name: found.route?.name,
+          params: found.params,
+          to,
+        },
+      };
+    }
+  }
+  // If not internal, return the processed external link without route info
+  return {
+    link: processedLink,
+  };
 };

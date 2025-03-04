@@ -11,13 +11,14 @@
   margin-bottom: 0;
   line-height: 1.33;
   font-weight: bold;
-  color: var(--colorGrey900);
+  color: var(--colorGrey700);
 
   /* fallback option */
   word-break: break-all;
   /* use break-word if available */
   word-break: break-word;
   hyphens: auto;
+  word-break: auto-phrase;
 }
 
 /* Specific styles */
@@ -53,7 +54,6 @@
 
 .h2 {
   font-size: 32px;
-
   /* If ´& + *´ if used, margin-top needs !important to overwrite */
   /* Handle margin-top of next adjacent element against this heading element */
   & + p,

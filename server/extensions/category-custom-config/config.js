@@ -4,6 +4,7 @@ const CATEGORY_ID_LOCATION_MACHINE = 'location-machine';
 const CATEGORY_ID_ATM_LOCATION = 'atm-location';
 const CATEGORY_ID_PARTS = 'parts';
 const CATEGORY_ID_SERVICES = 'services';
+const CATEGORY_ID_LOCATION_FIND = 'location-find';
 
 /**
  * @param {number} minimumPrice must have subunit numbers included
@@ -13,6 +14,12 @@ const CATEGORY_ID_SERVICES = 'services';
  **/
 const categoriesExtraConfig = {
   [CATEGORY_ID_LOCATION]: {
+    minimumPrice: 20000,
+    providerFlatFee: 10000,
+    providerCommissionPercentage: 3,
+    customerCommissionPercentage: 0,
+  },
+  [CATEGORY_ID_LOCATION_FIND]: {
     minimumPrice: 20000,
     providerFlatFee: 10000,
     providerCommissionPercentage: 3,

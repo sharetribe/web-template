@@ -8,6 +8,11 @@ import { propTypes } from '../../../util/types';
 import { userDisplayNameAsString } from '../../../util/data';
 import { isMobileSafari } from '../../../util/userAgent';
 import { createSlug } from '../../../util/urlHelpers';
+import { SELL_PURCHASE_PROCESS_NAME } from '../../../extensions/transactionProcesses/sellPurchase/transactions/transactionProcessSellPurchase';
+import {
+  SELL_PURCHASE_PROGRESS_BAR_STEPS_CUSTOMER,
+  SELL_PURCHASE_PROGRESS_BAR_STEPS_SELLER,
+} from '../../../extensions/transactionProcesses/common/constants';
 
 import { AvatarLarge, NamedLink, UserDisplayName } from '../../../components';
 
@@ -26,6 +31,9 @@ import ActionButtonsMaybe from './ActionButtonsMaybe';
 import DiminishedActionButtonMaybe from './DiminishedActionButtonMaybe';
 import PanelHeading from './PanelHeading';
 import CurrencyNote from '../../../extensions/MultipleCurrency/components/CurrencyNote/CurrencyNote';
+
+import ProgressBar from '../../../extensions/transactionProcesses/components/ProgressBar/ProgressBar';
+import ManagerInformationMaybe from '../../../extensions/transactionProcesses/components/ManagerInformationMaybe/ManagerInformationMaybe';
 
 import css from './TransactionPanel.module.css';
 
@@ -142,6 +150,7 @@ export class TransactionPanelComponent extends Component {
       orderBreakdown,
       orderPanel,
       config,
+      hasViewingRights,
     } = this.props;
 
     const isCustomer = transactionRole === 'customer';
@@ -174,6 +183,9 @@ export class TransactionPanelComponent extends Component {
         secondaryButtonProps={stateData?.secondaryButtonProps}
         isListingDeleted={listingDeleted}
         isProvider={isProvider}
+        transactionRole={transactionRole}
+        processName={stateData?.processName}
+        processState={stateData?.processState}
       />
     );
 
@@ -185,12 +197,27 @@ export class TransactionPanelComponent extends Component {
     const showSendMessageForm =
       !isCustomerBanned && !isCustomerDeleted && !isProviderBanned && !isProviderDeleted;
 
+    // Only show order panel for users who have listing viewing rights, otherwise
+    // show the detail card heading.
+    const showOrderPanel = stateData.showOrderPanel && hasViewingRights;
+    const showDetailCardHeadings = stateData.showDetailCardHeadings || !hasViewingRights;
+
     const deliveryMethod = protectedData?.deliveryMethod || 'none';
 
     const classes = classNames(rootClassName || css.root, className);
 
     return (
       <div className={classes}>
+        {stateData?.processName === SELL_PURCHASE_PROCESS_NAME && (
+          <ProgressBar
+            steps={
+              isCustomer
+                ? SELL_PURCHASE_PROGRESS_BAR_STEPS_CUSTOMER
+                : SELL_PURCHASE_PROGRESS_BAR_STEPS_SELLER
+            }
+            stateData={stateData}
+          />
+        )}
         <div className={css.container}>
           <div className={css.txInfo}>
             <DetailCardImage
@@ -275,6 +302,13 @@ export class TransactionPanelComponent extends Component {
                   listing={listing}
                   showBookingLocation={showBookingLocation}
                 />
+
+                <ManagerInformationMaybe
+                  protectedData={protectedData}
+                  stateData={stateData}
+                  className={css.managerInfoSection}
+                  headingClassName={css.sectionHeading}
+                />
               </div>
             ) : null}
 
@@ -307,6 +341,16 @@ export class TransactionPanelComponent extends Component {
               </div>
             )}
 
+            {stateData?.processName === SELL_PURCHASE_PROCESS_NAME &&
+              stateData?.showRefundAvailabileNotice && (
+                <p className={css.refundAvailableNotice}>
+                  <span className={css.refundAvailableNoticeTitle}>
+                    <FormattedMessage id="NoticeRefundAvailable.title" />
+                  </span>
+                  <FormattedMessage id="NoticeRefundAvailable.content" />
+                </p>
+              )}
+
             {stateData.showActionButtons ? (
               <>
                 <div className={css.mobileActionButtonSpacer}></div>
@@ -328,7 +372,7 @@ export class TransactionPanelComponent extends Component {
                 />
 
                 <DetailCardHeadingsMaybe
-                  showDetailCardHeadings={stateData.showDetailCardHeadings}
+                  showDetailCardHeadings={showDetailCardHeadings}
                   listingTitle={
                     listingDeleted ? (
                       listingTitle
@@ -345,7 +389,7 @@ export class TransactionPanelComponent extends Component {
                   price={listing?.attributes?.price}
                   intl={intl}
                 />
-                {stateData.showOrderPanel ? orderPanel : null}
+                {showOrderPanel ? orderPanel : null}
                 <BreakdownMaybe
                   className={css.breakdownContainer}
                   orderBreakdown={orderBreakdown}

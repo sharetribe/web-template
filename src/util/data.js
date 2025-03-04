@@ -1,6 +1,7 @@
 import isArray from 'lodash/isArray';
 import reduce from 'lodash/reduce';
 import { sanitizeEntity } from './sanitize';
+import { TRANSLATE_CUSTOM_LINE_ITEM } from '../extensions/PriceBreakdown/common/constants';
 // NOTE: This file imports sanitize.js, which may lead to circular dependency
 
 /**
@@ -442,7 +443,14 @@ export const humanizeLineItemCode = code => {
   if (!/^line-item\/.+/.test(code)) {
     throw new Error(`Invalid line item code: ${code}`);
   }
-  const lowercase = code.replace(/^line-item\//, '').replace(/-/g, ' ');
+
+  const rawCode = code.replace(/^line-item\//, '');
+
+  const customLineItem = TRANSLATE_CUSTOM_LINE_ITEM[rawCode];
+  if (customLineItem?.label) {
+    return customLineItem.label;
+  }
+  const lowercase = rawCode.replace(/-/g, ' ');
 
   return lowercase.charAt(0).toUpperCase() + lowercase.slice(1);
 };

@@ -18,9 +18,14 @@ import {
   LISTING_PAGE_PARAM_TYPE_EDIT,
   createSlug,
   NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
+  NO_ACCESS_PAGE_VIEW_LISTINGS,
 } from '../../util/urlHelpers';
-import { isErrorUserPendingApproval, isForbiddenError } from '../../util/errors.js';
-import { isUserAuthorized } from '../../util/userHelpers.js';
+import {
+  isErrorNoViewingPermission,
+  isErrorUserPendingApproval,
+  isForbiddenError,
+} from '../../util/errors.js';
+import { hasPermissionToViewData, isUserAuthorized } from '../../util/userHelpers.js';
 import {
   ensureListing,
   ensureOwnListing,
@@ -33,6 +38,8 @@ import {
   isPurchaseProcess,
   resolveLatestProcessName,
 } from '../../transactions/transaction';
+import { SELL_PURCHASE_PROCESS_NAME } from '../../extensions/transactionProcesses/sellPurchase/transactions/transactionProcessSellPurchase.js';
+import { SELL_PURCHASE_PROGRESS_BAR_STEPS_CUSTOMER } from '../../extensions/transactionProcesses/common/constants.js';
 
 // Global ducks (for Redux actions and thunks)
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
@@ -70,7 +77,11 @@ import {
   handleSubmitInquiry,
   handleSubmit,
   priceForSchemaMaybe,
+  handleToggleFavorites,
 } from './ListingPage.shared';
+
+import { updateProfile } from '../ProfileSettingsPage/ProfileSettingsPage.duck';
+
 import ActionBarMaybe from './ActionBarMaybe';
 import SectionTextMaybe from './SectionTextMaybe';
 import SectionReviews from './SectionReviews';
@@ -79,6 +90,7 @@ import SectionMapMaybe from './SectionMapMaybe';
 import SectionGallery from './SectionGallery';
 import CustomListingFields from './CustomListingFields';
 import { convertListingPrices } from '../../extensions/MultipleCurrency/utils/currency.js';
+import ProgressBar from '../../extensions/transactionProcesses/components/ProgressBar/ProgressBar.js';
 
 import css from './ListingPage.module.css';
 
@@ -120,14 +132,19 @@ export const ListingPageComponent = props => {
     routeConfiguration,
     convertListingPrice,
     uiCurrency,
+    showOwnListingsOnly,
+    onUpdateFavorites,
+    lastTransaction,
+    fetchTransactionsError,
   } = props;
 
   const listingConfig = config.listing;
   const listingId = new UUID(rawParams.id);
+  const isVariant = rawParams.variant != null;
   const isPendingApprovalVariant = rawParams.variant === LISTING_PAGE_PENDING_APPROVAL_VARIANT;
   const isDraftVariant = rawParams.variant === LISTING_PAGE_DRAFT_VARIANT;
   const currentListing =
-    isPendingApprovalVariant || isDraftVariant
+    isPendingApprovalVariant || isDraftVariant || showOwnListingsOnly
       ? ensureOwnListing(convertListingPrice(getOwnListing(listingId)))
       : ensureListing(convertListingPrice(getListing(listingId)));
 
@@ -164,7 +181,7 @@ export const ListingPageComponent = props => {
   if (showListingError && showListingError.status === 404) {
     // 404 listing not found
     return <NotFoundPage staticContext={props.staticContext} />;
-  } else if (showListingError) {
+  } else if (showListingError && fetchTransactionsError) {
     // Other error in fetching listing
     return <ErrorPage topbar={topbar} scrollingDisabled={scrollingDisabled} intl={intl} />;
   } else if (!currentListing.id) {
@@ -210,7 +227,7 @@ export const ListingPageComponent = props => {
   const currentAuthor = authorAvailable ? currentListing.author : null;
   const ensuredAuthor = ensureUser(currentAuthor);
   const noPayoutDetailsSetWithOwnListing =
-    isOwnListing && (processType !== 'inquiry' && !currentUser?.attributes?.stripeConnected);
+    isOwnListing && processType !== 'inquiry' && !currentUser?.attributes?.stripeConnected;
   const payoutDetailsWarning = noPayoutDetailsSetWithOwnListing ? (
     <span className={css.payoutDetailsWarning}>
       <FormattedMessage id="ListingPage.payoutDetailsWarning" values={{ processType }} />
@@ -234,7 +251,12 @@ export const ListingPageComponent = props => {
     callSetInitialValues,
     location,
     setInitialValues,
+    lastTransaction,
     setInquiryModalOpen,
+    isOwnListing,
+    lastTransaction,
+    getListing,
+    listingConfig,
   });
   // Note: this is for inquiry state in booking and purchase processes. Inquiry process is handled through handleSubmit.
   const onSubmitInquiry = handleSubmitInquiry({
@@ -242,6 +264,7 @@ export const ListingPageComponent = props => {
     getListing,
     onSendInquiry,
     setInquiryModalOpen,
+    listingConfig,
   });
   const onSubmit = handleSubmit({
     ...commonParams,
@@ -249,6 +272,8 @@ export const ListingPageComponent = props => {
     callSetInitialValues,
     getListing,
     onInitializeCardPaymentData,
+    lastTransaction,
+    listingConfig,
   });
 
   const handleOrderSubmit = values => {
@@ -284,6 +309,13 @@ export const ListingPageComponent = props => {
 
   const availabilityMaybe = schemaAvailability ? { availability: schemaAvailability } : {};
 
+  const onToggleFavorites = handleToggleFavorites({
+    ...commonParams,
+    currentUser,
+    onUpdateFavorites,
+    location,
+  });
+
   return (
     <Page
       title={schemaTitle}
@@ -307,6 +339,12 @@ export const ListingPageComponent = props => {
       }}
     >
       <LayoutSingleColumn className={css.pageRoot} topbar={topbar} footer={<FooterContainer />}>
+        {processName === SELL_PURCHASE_PROCESS_NAME && (
+          <ProgressBar
+            steps={SELL_PURCHASE_PROGRESS_BAR_STEPS_CUSTOMER}
+            stateData={{ processName }}
+          />
+        )}
         <div className={css.contentWrapperForProductLayout}>
           <div className={css.mainColumnForProductLayout}>
             {currentListing.id && noPayoutDetailsSetWithOwnListing ? (
@@ -315,6 +353,7 @@ export const ListingPageComponent = props => {
                 isOwnListing={isOwnListing}
                 listing={currentListing}
                 showNoPayoutDetailsSet={noPayoutDetailsSetWithOwnListing}
+                currentUser={currentUser}
               />
             ) : null}
             {currentListing.id ? (
@@ -322,6 +361,7 @@ export const ListingPageComponent = props => {
                 className={css.actionBarForProductLayout}
                 isOwnListing={isOwnListing}
                 listing={currentListing}
+                currentUser={currentUser}
                 editParams={{
                   id: listingId.uuid,
                   slug: listingSlug,
@@ -355,7 +395,11 @@ export const ListingPageComponent = props => {
               listingId={currentListing.id}
               mapsConfig={config.maps}
             />
-            <SectionReviews reviews={reviews} fetchReviewsError={fetchReviewsError} />
+
+            {reviews.length > 0 && (
+              <SectionReviews reviews={reviews} fetchReviewsError={fetchReviewsError} />
+            )}
+
             <SectionAuthorMaybe
               title={title}
               listing={currentListing}
@@ -379,7 +423,7 @@ export const ListingPageComponent = props => {
               authorLink={
                 <NamedLink
                   className={css.authorNameLink}
-                  name="ListingPage"
+                  name={isVariant ? 'ListingPageVariant' : 'ListingPage'}
                   params={params}
                   to={{ hash: '#author' }}
                 >
@@ -406,6 +450,9 @@ export const ListingPageComponent = props => {
               marketplaceCurrency={uiCurrency}
               dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
               marketplaceName={config.marketplaceName}
+              onToggleFavorites={onToggleFavorites}
+              currentUser={currentUser}
+              lastTransaction={lastTransaction}
             />
           </div>
         </div>
@@ -488,8 +535,9 @@ const EnhancedListingPage = props => {
   const location = useLocation();
 
   const showListingError = props.showListingError;
-  const isVariant = props.params?.variant?.length > 0;
-  if (isForbiddenError(showListingError) && !isVariant) {
+  const isVariant = props.params?.variant != null;
+  const currentUser = props.currentUser;
+  if (isForbiddenError(showListingError) && !isVariant && !currentUser) {
     // This can happen if private marketplace mode is active
     return (
       <NamedRedirect
@@ -499,15 +547,28 @@ const EnhancedListingPage = props => {
     );
   }
 
-  const currentUser = props.currentUser;
   const isPrivateMarketplace = config.accessControl.marketplace.private === true;
   const isUnauthorizedUser = currentUser && !isUserAuthorized(currentUser);
+  const hasNoViewingRights = currentUser && !hasPermissionToViewData(currentUser);
   const hasUserPendingApprovalError = isErrorUserPendingApproval(showListingError);
+
   if ((isPrivateMarketplace && isUnauthorizedUser) || hasUserPendingApprovalError) {
     return (
       <NamedRedirect
         name="NoAccessPage"
         params={{ missingAccessRight: NO_ACCESS_PAGE_USER_PENDING_APPROVAL }}
+      />
+    );
+  } else if (
+    (hasNoViewingRights && isForbiddenError(showListingError)) ||
+    isErrorNoViewingPermission(showListingError)
+  ) {
+    // If the user has no viewing rights, fetching anything but their own listings
+    // will return a 403 error. If that happens, redirect to NoAccessPage.
+    return (
+      <NamedRedirect
+        name="NoAccessPage"
+        params={{ missingAccessRight: NO_ACCESS_PAGE_VIEW_LISTINGS }}
       />
     );
   }
@@ -519,6 +580,7 @@ const EnhancedListingPage = props => {
       intl={intl}
       history={history}
       location={location}
+      showOwnListingsOnly={hasNoViewingRights}
       {...props}
     />
   );
@@ -538,6 +600,8 @@ const mapStateToProps = state => {
     fetchLineItemsInProgress,
     fetchLineItemsError,
     inquiryModalOpenForListingId,
+    lastTransaction,
+    fetchTransactionsError,
   } = state.ListingPage;
   const { currentUser } = state.user;
   const { exchangeRate } = state.ExchangeRate;
@@ -581,6 +645,8 @@ const mapStateToProps = state => {
     sendInquiryError,
     convertListingPrice,
     uiCurrency,
+    lastTransaction,
+    fetchTransactionsError,
   };
 };
 
@@ -590,10 +656,11 @@ const mapDispatchToProps = dispatch => ({
   callSetInitialValues: (setInitialValues, values, saveToSessionStorage) =>
     dispatch(setInitialValues(values, saveToSessionStorage)),
   onFetchTransactionLineItems: params => dispatch(fetchTransactionLineItems(params)),
-  onSendInquiry: (listing, message) => dispatch(sendInquiry(listing, message)),
+  onSendInquiry: (listing, message, options) => dispatch(sendInquiry(listing, message, options)),
   onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
   onFetchTimeSlots: (listingId, start, end, timeZone) =>
     dispatch(fetchTimeSlots(listingId, start, end, timeZone)),
+  onUpdateFavorites: payload => dispatch(updateProfile(payload)),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the
@@ -602,11 +669,6 @@ const mapDispatchToProps = dispatch => ({
 // lifecycle hook.
 //
 // See: https://github.com/ReactTraining/react-router/issues/4671
-const ListingPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(EnhancedListingPage);
+const ListingPage = compose(connect(mapStateToProps, mapDispatchToProps))(EnhancedListingPage);
 
 export default ListingPage;

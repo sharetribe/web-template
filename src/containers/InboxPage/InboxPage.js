@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { arrayOf, bool, number, oneOf, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -44,7 +44,7 @@ import {
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
-
+import { Search, MessagesSquare } from 'lucide-react';
 import { stateDataShape, getStateData } from './InboxPage.stateData';
 import css from './InboxPage.module.css';
 
@@ -122,10 +122,12 @@ export const InboxItem = props => {
     stateData,
     isBooking,
     stockType = STOCK_MULTIPLE_ITEMS,
+    currentUser,
   } = props;
-  const { customer, provider, listing } = tx;
+  const { customer, provider, listing, messages = [] } = tx;
   const { processName, processState, actionNeeded, isSaleNotification, isFinal } = stateData;
   const isCustomer = transactionRole === TX_TRANSITION_ACTOR_CUSTOMER;
+  const { listingType, categoryLevel1 } = listing?.attributes?.publicData || {};
 
   const lineItems = tx.attributes?.lineItems;
   const hasPricingData = lineItems.length > 0;
@@ -137,7 +139,37 @@ export const InboxItem = props => {
   const otherUserDisplayName = <UserDisplayName user={otherUser} intl={intl} />;
   const isOtherUserBanned = otherUser.attributes.banned;
 
-  const rowNotificationDot = isSaleNotification ? <div className={css.notificationDot} /> : null;
+  const isLastMessageUnreplied =
+    messages &&
+    messages.length > 0 &&
+    messages[messages.length - 1].sender.id.uuid !== currentUser.id.uuid;
+  const rowNotificationDot =
+    isSaleNotification || isLastMessageUnreplied ? <div className={css.notificationDot} /> : null;
+
+  const getMessageComponent = () => {
+    if (messages.length === 0) {
+      return null;
+    }
+    const lastMessage = messages[messages.length - 1];
+    if (!lastMessage?.attributes) {
+      return null;
+    }
+
+    const { content: rawMessageContent, createdAt: messageCreatedAt } = lastMessage.attributes;
+    const { displayName } = lastMessage.sender.attributes.profile;
+    const messageContent = `${displayName}: ${rawMessageContent}`;
+    const messageDate = new Date(messageCreatedAt).toLocaleDateString();
+
+    return (
+      <div className={css.itemMessage}>
+        <div className={css.messageContainer}>
+          <MessagesSquare className={css.messageIcon} />
+          <span className={css.messageContent}>{messageContent}</span>
+        </div>
+        <span className={css.messageDate}> {messageDate}</span>
+      </div>
+    );
+  };
 
   const linkClasses = classNames(css.itemLink, {
     [css.bannedUserLink]: isOtherUserBanned,
@@ -161,6 +193,7 @@ export const InboxItem = props => {
         <div className={css.rowNotificationDot}>{rowNotificationDot}</div>
         <div className={css.itemUsername}>{otherUserDisplayName}</div>
         <div className={css.itemTitle}>{listing?.attributes?.title}</div>
+
         <div className={css.itemDetails}>
           {isBooking ? (
             <BookingTimeInfoMaybe transaction={tx} />
@@ -172,10 +205,15 @@ export const InboxItem = props => {
           <div className={stateClasses}>
             <FormattedMessage
               id={`InboxPage.${processName}.${processState}.status`}
-              values={{ transactionRole }}
+              values={{
+                transactionRole,
+                listingType: listingType?.replaceAll('-', '_'),
+                categoryLevel1: categoryLevel1?.replaceAll('-', '_'),
+              }}
             />
           </div>
         </div>
+        {getMessageComponent()}
       </NamedLink>
     </div>
   );
@@ -186,6 +224,7 @@ InboxItem.propTypes = {
   tx: propTypes.transaction.isRequired,
   intl: intlShape.isRequired,
   stateData: stateDataShape.isRequired,
+  currentUser: propTypes.currentUser,
 };
 
 export const InboxPageComponent = props => {
@@ -200,6 +239,7 @@ export const InboxPageComponent = props => {
     providerNotificationCount,
     scrollingDisabled,
     transactions,
+    initialSearchQuery,
   } = props;
   const { tab } = params;
   const validTab = tab === 'orders' || tab === 'sales';
@@ -207,8 +247,35 @@ export const InboxPageComponent = props => {
     return <NotFoundPage staticContext={props.staticContext} />;
   }
 
+  const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
+
+  const handleSearchChange = event => {
+    const newQuery = event.target.value;
+    setSearchQuery(newQuery);
+    sessionStorage.setItem('searchQuery', newQuery); // Store the search query in sessionStorage
+  };
+
+  // Filter transactions based on the local search query
+  const filteredTransactions = transactions.filter(tx => {
+    const { customer, provider, listing, messages } = tx;
+    const searchLower = searchQuery.toLowerCase();
+
+    const customerName = customer.attributes.profile.displayName.toLowerCase();
+    const providerName = provider.attributes.profile.displayName.toLowerCase();
+    const listingTitle = listing.attributes.title.toLowerCase();
+    const messageContents = messages.map(msg => msg.attributes.content.toLowerCase());
+
+    return (
+      customerName.includes(searchLower) ||
+      providerName.includes(searchLower) ||
+      listingTitle.includes(searchLower) ||
+      messageContents.some(content => content.includes(searchLower))
+    );
+  });
+
   const isOrders = tab === 'orders';
-  const hasNoResults = !fetchInProgress && transactions.length === 0 && !fetchOrdersOrSalesError;
+  const hasNoResults =
+    !fetchInProgress && filteredTransactions.length === 0 && !fetchOrdersOrSalesError;
   const ordersTitle = intl.formatMessage({ id: 'InboxPage.ordersTitle' });
   const salesTitle = intl.formatMessage({ id: 'InboxPage.salesTitle' });
   const title = isOrders ? ordersTitle : salesTitle;
@@ -246,6 +313,7 @@ export const InboxPageComponent = props => {
           stateData={stateData}
           stockType={stockType}
           isBooking={isBooking}
+          currentUser={currentUser}
         />
       </li>
     ) : null;
@@ -301,10 +369,22 @@ export const InboxPageComponent = props => {
         }
         sideNav={
           <>
-            <H2 as="h1" className={css.title}>
-              <FormattedMessage id="InboxPage.title" />
-            </H2>
-            <TabNav rootClassName={css.tabs} tabRootClassName={css.tab} tabs={tabs} />{' '}
+            <div className={css.titleContainer}>
+              <H2 as="h1" className={css.title}>
+                <FormattedMessage id="InboxPage.title" />
+              </H2>
+              <div className={css.searchContainer}>
+                <Search className={css.searchIcon} />
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  className={css.searchBox}
+                />
+              </div>
+            </div>
+            <TabNav rootClassName={css.tabs} tabRootClassName={css.tab} tabs={tabs} />
           </>
         }
         footer={<FooterContainer />}
@@ -316,7 +396,7 @@ export const InboxPageComponent = props => {
         ) : null}
         <ul className={css.itemList}>
           {!fetchInProgress ? (
-            transactions.map(toTxItem)
+            filteredTransactions.map(toTxItem)
           ) : (
             <li className={css.listItemsLoading}>
               <IconSpinner />
@@ -325,7 +405,13 @@ export const InboxPageComponent = props => {
           {hasNoResults ? (
             <li key="noResults" className={css.noResults}>
               <FormattedMessage
-                id={isOrders ? 'InboxPage.noOrdersFound' : 'InboxPage.noSalesFound'}
+                id={
+                  searchQuery
+                    ? 'InboxPage.noResults'
+                    : isOrders
+                    ? 'InboxPage.noOrdersFound'
+                    : 'InboxPage.noSalesFound'
+                }
               />
             </li>
           ) : null}
@@ -369,7 +455,13 @@ InboxPageComponent.propTypes = {
 };
 
 const mapStateToProps = state => {
-  const { fetchInProgress, fetchOrdersOrSalesError, pagination, transactionRefs } = state.InboxPage;
+  const {
+    fetchInProgress,
+    fetchOrdersOrSalesError,
+    pagination,
+    transactionRefs,
+    initialSearchQuery,
+  } = state.InboxPage;
   const { currentUser, currentUserNotificationCount: providerNotificationCount } = state.user;
   return {
     currentUser,
@@ -377,14 +469,12 @@ const mapStateToProps = state => {
     fetchOrdersOrSalesError,
     pagination,
     providerNotificationCount,
+    initialSearchQuery,
     scrollingDisabled: isScrollingDisabled(state),
     transactions: getMarketplaceEntities(state, transactionRefs),
   };
 };
 
-const InboxPage = compose(
-  connect(mapStateToProps),
-  injectIntl
-)(InboxPageComponent);
+const InboxPage = compose(connect(mapStateToProps), injectIntl)(InboxPageComponent);
 
 export default InboxPage;

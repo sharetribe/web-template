@@ -11,15 +11,22 @@ import {
   REVIEW_TYPE_OF_CUSTOMER,
   SCHEMA_TYPE_MULTI_ENUM,
   SCHEMA_TYPE_TEXT,
+  SCHEMA_TYPE_YOUTUBE,
   propTypes,
 } from '../../util/types';
 import {
   NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
+  NO_ACCESS_PAGE_VIEW_LISTINGS,
   PROFILE_PAGE_PENDING_APPROVAL_VARIANT,
 } from '../../util/urlHelpers';
-import { isErrorUserPendingApproval, isForbiddenError, isNotFoundError } from '../../util/errors';
+import {
+  isErrorNoViewingPermission,
+  isErrorUserPendingApproval,
+  isForbiddenError,
+  isNotFoundError,
+} from '../../util/errors';
 import { pickCustomFieldProps } from '../../util/fieldHelpers';
-import { isUserAuthorized } from '../../util/userHelpers';
+import { hasPermissionToViewData, isUserAuthorized } from '../../util/userHelpers';
 import { richText } from '../../util/richText';
 
 import { isScrollingDisabled } from '../../ducks/ui.duck';
@@ -27,12 +34,14 @@ import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import {
   Heading,
   H2,
+  H3,
   H4,
   Page,
   AvatarLarge,
   NamedLink,
   ListingCard,
   Reviews,
+  ReviewRating,
   ButtonTabNavHorizontal,
   LayoutSideNavigation,
   NamedRedirect,
@@ -47,20 +56,68 @@ import css from './ProfilePage.module.css';
 import SectionDetailsMaybe from './SectionDetailsMaybe';
 import SectionTextMaybe from './SectionTextMaybe';
 import SectionMultiEnumMaybe from './SectionMultiEnumMaybe';
+import SectionYoutubeVideoMaybe from './SectionYoutubeVideoMaybe';
+import { Star, ShieldCheck, CalendarClock, Globe, Search } from "lucide-react";
 
 const MAX_MOBILE_SCREEN_WIDTH = 768;
 const MIN_LENGTH_FOR_LONG_WORDS = 20;
 
 export const AsideContent = props => {
-  const { user, displayName, showLinkToProfileSettingsPage } = props;
+  const { user, displayName, showLinkToProfileSettingsPage, reviews, listings } = props;
+  
+  const isVerified = user.attributes?.profile?.metadata?.verified === true;
+
+  //console.log('about user verified', isVerified)
+
+  const avgRating = reviews.reduce((acc, review) => {
+    return acc + review.attributes.rating;
+  }, 0) / (reviews.length || 1); // Avoid division by zero by using || 1
   return (
     <div className={css.asideContent}>
       <AvatarLarge className={css.avatar} user={user} disableProfileLink />
-      <H2 as="h1" className={css.mobileHeading}>
-        {displayName ? (
-          <FormattedMessage id="ProfilePage.mobileHeading" values={{ name: displayName }} />
+      {isVerified ? (
+        <div className={css.verifiedBadge}>
+          <ShieldCheck />
+        </div>
+      ) : null}
+      <div>
+        <H2 as="h1" className={css.mobileHeading}>
+          {displayName ? (
+            <FormattedMessage id="ProfilePage.mobileHeading" values={{ name: displayName }} />
+          ) : null}
+        </H2>
+        
+        {avgRating ? (
+          <div className={css.avgRating}>
+            
+            <div className={css.starRating}>
+              <div className={css.stars}>
+                { Array.from({ length: 5 }, (_, index) => (
+                    <Star key={`empty-star-${index}`} strokeWidth={0} />
+                ))}
+              </div>
+              <div className={`${css.stars} ${css.rating}`} style={{width: Math.round(avgRating * 20) + '%'}}>
+                { Array.from({ length: 5 }, (_, index) => (
+                    <Star key={`filled-star-${index}`} strokeWidth={0} />
+                ))}
+              </div>
+            </div>
+          </div>
         ) : null}
-      </H2>
+
+        <div className={css.asideStats}>
+          <div className={css.asideStatsItem}>
+            <h4>{reviews.length}</h4>
+            <p><FormattedMessage id="ProfilePage.statsLabel.reviews" values={{ count: reviews.length }} /></p>
+          </div>
+          <div className={css.asideStatsItem}>
+            <h4>{listings.length}</h4>
+            <p><FormattedMessage id="ProfilePage.statsLabel.listings" values={{ count: listings.length }} /></p>
+          </div>
+        </div>
+
+      </div>
+
       {showLinkToProfileSettingsPage ? (
         <>
           <NamedLink className={css.editLinkMobile} name="ProfileSettingsPage">
@@ -71,6 +128,10 @@ export const AsideContent = props => {
           </NamedLink>
         </>
       ) : null}
+
+      
+      
+
     </div>
   );
 };
@@ -84,6 +145,27 @@ export const ReviewsErrorMaybe = props => {
   ) : null;
 };
 
+export const CardReviews = props => {
+  const { reviews, queryReviewsError } = props;
+  
+  return (
+    <div className={css.reviews}>
+      <H4 as="h2" className={css.reviewsTitle}>
+        <FormattedMessage
+          id="ProfilePage.reviewsTitle"
+          values={{ count: reviews.length }}
+        />
+      </H4>
+      <ReviewsErrorMaybe queryReviewsError={queryReviewsError} />
+
+  <Reviews reviews={reviews} />
+      
+      
+    </div>
+  );
+};
+
+/*
 export const MobileReviews = props => {
   const { reviews, queryReviewsError } = props;
   const reviewsOfProvider = reviews.filter(r => r.attributes.type === REVIEW_TYPE_OF_PROVIDER);
@@ -178,17 +260,20 @@ export const CustomUserFields = props => {
           <SectionMultiEnumMaybe {...fieldProps} />
         ) : schemaType === SCHEMA_TYPE_TEXT ? (
           <SectionTextMaybe {...fieldProps} />
+        ) : schemaType === SCHEMA_TYPE_YOUTUBE ? (
+          <SectionYoutubeVideoMaybe {...fieldProps} />
         ) : null;
       })}
     </>
   );
 };
-
+*/
 export const MainContent = props => {
   const {
     userShowError,
     bio,
     displayName,
+    createdAt,
     listings,
     queryListingsError,
     reviews,
@@ -197,9 +282,15 @@ export const MainContent = props => {
     metadata,
     userFieldConfig,
     intl,
+    hideReviews,
   } = props;
+  
+  const listingServices = listings.filter(listing => listing.attributes.publicData.listingType === 'sell-service');
+  const listingProducts = listings.filter(listing => listing.attributes.publicData.listingType !== 'sell-service');
 
-  const hasListings = listings.length > 0;
+  const hasServiceListings = listingServices.length > 0;
+  const hasProductListings = listingProducts.length > 0;
+
   const hasMatchMedia = typeof window !== 'undefined' && window?.matchMedia;
   const isMobileLayout = hasMatchMedia
     ? window.matchMedia(`(max-width: ${MAX_MOBILE_SCREEN_WIDTH}px)`)?.matches
@@ -216,6 +307,16 @@ export const MainContent = props => {
     [css.withBioMissingAbove]: !hasBio,
   });
 
+  const isVerified = metadata?.verified === true;
+  const hasBuyerReview = reviews.some(review => review.attributes.type === REVIEW_TYPE_OF_PROVIDER);
+  const isVerifiedSeller = isVerified && hasBuyerReview;
+
+  const [searchKeyword, setSearchKeyword] = useState('');
+
+  const filteredListingProducts = listingProducts.filter(listing =>
+    listing.attributes.title.toLowerCase().includes(searchKeyword.toLowerCase())
+  );
+
   if (userShowError || queryListingsError) {
     return (
       <p className={css.error}>
@@ -225,12 +326,37 @@ export const MainContent = props => {
   }
   return (
     <div>
-      <H2 as="h1" className={css.desktopHeading}>
+      <H3 as="h1" className={css.desktopHeading}>
         <FormattedMessage id="ProfilePage.desktopHeading" values={{ name: displayName }} />
-      </H2>
-      {hasBio ? <p className={css.bio}>{bioWithLinks}</p> : null}
+      </H3>
 
-      {displayName ? (
+      <div className={css.twoColumnSection}>
+        <div className={css.leftColumn}>
+          {isVerifiedSeller && (
+            <div className={css.iconLine}>
+              <ShieldCheck />
+              <span><FormattedMessage id="ProfilePage.label.verfiedSeller" /></span>
+            </div>
+          )}
+
+          <div className={css.iconLine}>
+            <CalendarClock />
+            <span>
+            <FormattedMessage id="ProfilePage.label.joined" /> {createdAt ? new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(createdAt)) : 'n/a'}
+            </span>
+          </div>
+
+          <div className={css.iconLine}>
+            <Globe />
+            <span><FormattedMessage id="ProfilePage.label.from" /> {publicData?.userLocation}</span>
+          </div>
+        </div>
+        <div className={css.rightColumn}>
+          {hasBio ? <p className={css.bio}>{bioWithLinks}</p> : null}
+        </div>
+      </div>
+
+      {displayName && false ? (
         <CustomUserFields
           publicData={publicData}
           metadata={metadata}
@@ -239,25 +365,68 @@ export const MainContent = props => {
         />
       ) : null}
 
-      {hasListings ? (
+      {hideReviews || reviews.length === 0 ? null 
+        : <CardReviews reviews={reviews} queryReviewsError={queryReviewsError} />
+      }
+      {hasServiceListings ? (
         <div className={listingsContainerClasses}>
           <H4 as="h2" className={css.listingsTitle}>
-            <FormattedMessage id="ProfilePage.listingsTitle" values={{ count: listings.length }} />
+            <FormattedMessage id="ProfilePage.servicesTitle" />
           </H4>
           <ul className={css.listings}>
-            {listings.map(l => (
+            {listingServices.map(l => (
               <li className={css.listing} key={l.id.uuid}>
-                <ListingCard listing={l} showAuthorInfo={false} />
+                  <ListingCard 
+                    listing={l} 
+                    showAuthorInfo={false}
+                  />
               </li>
             ))}
           </ul>
         </div>
       ) : null}
-      {isMobileLayout ? (
-        <MobileReviews reviews={reviews} queryReviewsError={queryReviewsError} />
-      ) : (
-        <DesktopReviews reviews={reviews} queryReviewsError={queryReviewsError} />
-      )}
+
+      {hasProductListings ? (
+        <div className={listingsContainerClasses}>
+          
+          <div className={css.searchContainer}>
+          <H4 as="h2" className={css.listingsTitle}>
+            <FormattedMessage id="ProfilePage.listingsTitle" />
+          </H4>
+          <div className={css.searchInputWrapper}>
+              <Search className={css.searchIcon} />
+              <input
+                type="text"
+                className={css.listingSearchBox}
+                placeholder="Search listings..."
+                value={searchKeyword}
+                onChange={e => setSearchKeyword(e.target.value)}
+              />
+          </div>
+        </div>
+          
+        <ul className={css.listings}>
+            {filteredListingProducts.map(l => (
+              <li className={css.listing} key={l.id.uuid}>
+                <div className={classNames(css.listingWrapper, { 
+                  [css.soldListing]: l.currentStock?.attributes?.quantity === 0 
+                })}>
+                  <ListingCard 
+                    listing={l} 
+                    showAuthorInfo={false}
+                  />
+                  {l.currentStock?.attributes?.quantity === 0 && (
+                    <div className={css.soldBadge}>
+                      <FormattedMessage id="ProfilePage.sold" />
+                    </div>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+      
     </div>
   );
 };
@@ -295,38 +464,63 @@ export const ProfilePageComponent = props => {
     return <NamedRedirect name="LandingPage" />;
   }
 
-  const isDataLoaded = isPreview
-    ? currentUser != null || userShowError != null
-    : user != null || userShowError != null;
   const isCurrentUser = currentUser?.id && currentUser?.id?.uuid === pathParams.id;
   const profileUser = useCurrentUser ? currentUser : user;
+
   const { bio, displayName, publicData, metadata } = profileUser?.attributes?.profile || {};
+  const createdAt = profileUser?.attributes?.createdAt;
   const { userFields } = config.user;
   const isPrivateMarketplace = config.accessControl.marketplace.private === true;
   const isUnauthorizedUser = currentUser && !isUserAuthorized(currentUser);
   const isUnauthorizedOnPrivateMarketplace = isPrivateMarketplace && isUnauthorizedUser;
   const hasUserPendingApprovalError = isErrorUserPendingApproval(userShowError);
+  const hasNoViewingRightsUser = currentUser && !hasPermissionToViewData(currentUser);
+  const hasNoViewingRightsOnPrivateMarketplace = isPrivateMarketplace && hasNoViewingRightsUser;
+
+  const isDataLoaded = isPreview
+    ? currentUser != null || userShowError != null
+    : hasNoViewingRightsOnPrivateMarketplace
+    ? currentUser != null || userShowError != null
+    : user != null || userShowError != null;
 
   const schemaTitleVars = { name: displayName, marketplaceName: config.marketplaceName };
   const schemaTitle = intl.formatMessage({ id: 'ProfilePage.schemaTitle' }, schemaTitleVars);
+  const profileImageUrl = profileUser?.profileImage?.attributes?.variants?.['square-small2x']?.url || 'default-image-url';
+  const schemaImages = profileImageUrl ? [{
+    width: 480,
+    height: 480,
+    url: profileImageUrl
+  }] : [];
 
   if (!isDataLoaded) {
     return null;
   } else if (!isPreview && isNotFoundError(userShowError)) {
     return <NotFoundPage staticContext={props.staticContext} />;
+  } else if (!isPreview && (isUnauthorizedOnPrivateMarketplace || hasUserPendingApprovalError)) {
+    return (
+      <NamedRedirect
+        name="NoAccessPage"
+        params={{ missingAccessRight: NO_ACCESS_PAGE_USER_PENDING_APPROVAL }}
+      />
+    );
+  } else if (
+    (!isPreview && hasNoViewingRightsOnPrivateMarketplace && !isCurrentUser) ||
+    isErrorNoViewingPermission(userShowError)
+  ) {
+    // Someone without viewing rights on a private marketplace is trying to
+    // view a profile page that is not their own – redirect to NoAccessPage
+    return (
+      <NamedRedirect
+        name="NoAccessPage"
+        params={{ missingAccessRight: NO_ACCESS_PAGE_VIEW_LISTINGS }}
+      />
+    );
   } else if (!isPreview && isForbiddenError(userShowError)) {
     // This can happen if private marketplace mode is active, but it's not reflected through asset yet.
     return (
       <NamedRedirect
         name="SignupPage"
         state={{ from: `${location.pathname}${location.search}${location.hash}` }}
-      />
-    );
-  } else if (!isPreview && (isUnauthorizedOnPrivateMarketplace || hasUserPendingApprovalError)) {
-    return (
-      <NamedRedirect
-        name="NoAccessPage"
-        params={{ missingAccessRight: NO_ACCESS_PAGE_USER_PENDING_APPROVAL }}
       />
     );
   } else if (isPreview && mounted && !isCurrentUser) {
@@ -344,6 +538,9 @@ export const ProfilePageComponent = props => {
     <Page
       scrollingDisabled={scrollingDisabled}
       title={schemaTitle}
+      twitterImages={schemaImages}
+      facebookImages={schemaImages}
+      description={bio}
       schema={{
         '@context': 'http://schema.org',
         '@type': 'ProfilePage',
@@ -358,6 +555,7 @@ export const ProfilePageComponent = props => {
             user={profileUser}
             showLinkToProfileSettingsPage={mounted && isCurrentUser}
             displayName={displayName}
+            {...rest}
           />
         }
         footer={<FooterContainer />}
@@ -365,10 +563,12 @@ export const ProfilePageComponent = props => {
         <MainContent
           bio={bio}
           displayName={displayName}
+          createdAt={createdAt}
           userShowError={userShowError}
           publicData={publicData}
           metadata={metadata}
-          userFieldConfig={userFields}
+          //userFieldConfig={userFields}
+          hideReviews={hasNoViewingRightsOnPrivateMarketplace}
           intl={intl}
           {...rest}
         />
@@ -393,7 +593,7 @@ ProfilePageComponent.propTypes = {
   user: oneOfType([propTypes.user, propTypes.currentUser]),
   userShowError: propTypes.error,
   queryListingsError: propTypes.error,
-  listings: arrayOf(propTypes.listing).isRequired,
+  listings: arrayOf(oneOfType([propTypes.listing, propTypes.ownListing])).isRequired,
   reviews: arrayOf(propTypes.review),
   queryReviewsError: propTypes.error,
 };
@@ -415,13 +615,15 @@ const mapStateToProps = state => {
 
   // Show currentUser's data if it's not approved yet
   const isCurrentUser = userId?.uuid === currentUser?.id?.uuid;
-  const useCurrentUser = isCurrentUser && !isUserAuthorized(currentUser);
+  const useCurrentUser =
+    isCurrentUser && !(isUserAuthorized(currentUser) && hasPermissionToViewData(currentUser));
 
   const convertedListings = convertListingPrices(
     getMarketplaceEntities(state, userListingRefs),
     uiCurrency,
     exchangeRate
   );
+
 
   return {
     scrollingDisabled: isScrollingDisabled(state),

@@ -108,7 +108,7 @@
   right: 17px;
 
   /* Style: red dot with white border */
-  background-color: var(--colorFail);
+  background-color: var(--colorBlueNote);
   border: 2px solid var(--colorWhite);
 
   animation-name: notificationPop;

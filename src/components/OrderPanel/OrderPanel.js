@@ -44,7 +44,9 @@ import {
   resolveLatestProcessName,
 } from '../../transactions/transaction';
 
-import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2 } from '../../components';
+import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2, InlineTextButton, Button, SecondaryButton } from '../../components';
+
+import { Heart } from 'lucide-react';
 
 import css from './OrderPanel.module.css';
 
@@ -162,6 +164,22 @@ const PriceMaybe = props => {
   );
 };
 
+const SendMessageIcon = () => (
+  <svg 
+    width="14" 
+    height="14" 
+    viewBox="0 0 14 14" 
+    xmlns="http://www.w3.org/2000/svg"
+    className={css.sendIcon}
+  >
+    <g fill="none" fillRule="evenodd" strokeLinejoin="round" className={css.strokeMatter}>
+      <path d="M12.91 1L0 7.003l5.052 2.212z" />
+      <path d="M10.75 11.686L5.042 9.222l7.928-8.198z" />
+      <path d="M5.417 8.583v4.695l2.273-2.852" />
+    </g>
+  </svg>
+);
+
 const OrderPanel = props => {
   const {
     rootClassName,
@@ -192,6 +210,9 @@ const OrderPanel = props => {
     fetchLineItemsError,
     payoutDetailsWarning,
     showCurrencyNotify,
+    existingMessageHistory,
+    onToggleFavorites,
+    currentUser,
   } = props;
 
   const publicData = listing?.attributes?.publicData || {};
@@ -266,6 +287,37 @@ const OrderPanel = props => {
   const classes = classNames(rootClassName || css.root, className);
   const titleClasses = classNames(titleClassName || css.orderTitle);
 
+  const isListingPage = location.pathname.startsWith('/l/');
+  
+  const ContactButton = () => 
+    isListingPage ? (
+      <InlineTextButton className={css.contactSellerButton} onClick={() => onContactUser(author)}>
+        <SendMessageIcon />
+        <span className={css.sendMessageText}>
+          <FormattedMessage id="InquiryForm.submitButtonText" />
+        </span>
+      </InlineTextButton>
+    ) : null;
+
+    const isFavorite = currentUser?.attributes.profile.privateData.favorites?.includes(
+      listing.id.uuid
+    );
+    
+    const toggleFavorites = () => onToggleFavorites(isFavorite);
+    
+    const favoriteButton = isFavorite ? (
+      <InlineTextButton
+        className={`${css.favoriteButton} ${css.active}`}
+        onClick={toggleFavorites}
+      >
+        <Heart />
+      </InlineTextButton>
+    ) : (
+      <InlineTextButton className={css.favoriteButton} onClick={toggleFavorites}>
+        <Heart />
+      </InlineTextButton>
+    );
+
   return (
     <div className={classes}>
       <ModalInMobile
@@ -294,6 +346,9 @@ const OrderPanel = props => {
           marketplaceCurrency={marketplaceCurrency}
         />
 
+       {isListingPage && (
+        
+        <>
         <div className={css.author}>
           <AvatarSmall user={author} className={css.providerAvatar} />
           <span className={css.providerNameLinked}>
@@ -303,6 +358,10 @@ const OrderPanel = props => {
             <FormattedMessage id="OrderPanel.author" values={{ name: authorDisplayName }} />
           </span>
         </div>
+         
+         </>
+
+       )}
 
         {showPriceMissing ? (
           <PriceMissing />
@@ -353,27 +412,37 @@ const OrderPanel = props => {
             payoutDetailsWarning={payoutDetailsWarning}
           />
         ) : showProductOrderForm ? (
-          <ProductOrderForm
-            formId="OrderPanelProductOrderForm"
-            onSubmit={onSubmit}
-            price={price}
-            marketplaceCurrency={marketplaceCurrency}
-            currentStock={currentStock}
-            allowOrdersOfMultipleItems={allowOrdersOfMultipleItems}
-            pickupEnabled={pickupEnabled && displayPickup}
-            shippingEnabled={shippingEnabled && displayShipping}
-            displayDeliveryMethod={displayPickup || displayShipping}
-            listingId={listing.id}
-            isOwnListing={isOwnListing}
-            marketplaceName={marketplaceName}
-            onFetchTransactionLineItems={onFetchTransactionLineItems}
-            onContactUser={onContactUser}
-            lineItems={lineItems}
-            fetchLineItemsInProgress={fetchLineItemsInProgress}
-            fetchLineItemsError={fetchLineItemsError}
-            payoutDetailsWarning={payoutDetailsWarning}
-            showCurrencyNotify={showCurrencyNotify}
-          />
+          <>
+             <div className={css.hideOnMobile}>
+              <div className={css.buttonGroup}>
+                <ContactButton />
+                {favoriteButton}
+              </div>
+            </div>
+            
+            <ProductOrderForm
+              formId="OrderPanelProductOrderForm"
+              onSubmit={onSubmit}
+              price={price}
+              marketplaceCurrency={marketplaceCurrency}
+              currentStock={currentStock}
+              allowOrdersOfMultipleItems={allowOrdersOfMultipleItems}
+              pickupEnabled={pickupEnabled && displayPickup}
+              shippingEnabled={shippingEnabled && displayShipping}
+              displayDeliveryMethod={displayPickup || displayShipping}
+              listingId={listing.id}
+              isOwnListing={isOwnListing}
+              marketplaceName={marketplaceName}
+              onFetchTransactionLineItems={onFetchTransactionLineItems}
+              onContactUser={onContactUser}
+              lineItems={lineItems}
+              fetchLineItemsInProgress={fetchLineItemsInProgress}
+              fetchLineItemsError={fetchLineItemsError}
+              payoutDetailsWarning={payoutDetailsWarning}
+              showCurrencyNotify={showCurrencyNotify}
+              listing={listing}
+            />
+          </>
         ) : showInquiryForm ? (
           <InquiryWithoutPaymentForm formId="OrderPanelInquiryForm" onSubmit={onSubmit} />
         ) : !isKnownProcess ? (
@@ -381,6 +450,7 @@ const OrderPanel = props => {
             <FormattedMessage id="OrderPanel.unknownTransactionProcess" />
           </p>
         ) : null}
+        
       </ModalInMobile>
       <div className={css.openOrderForm}>
         <PriceMaybe
@@ -392,33 +462,38 @@ const OrderPanel = props => {
           showCurrencyMismatch
         />
 
-        {isClosed ? (
-          <div className={css.closedListingButton}>
-            <FormattedMessage id="OrderPanel.closedListingButtonText" />
-          </div>
-        ) : (
-          <PrimaryButton
-            onClick={handleSubmit(
-              isOwnListing,
-              isClosed,
-              showInquiryForm,
-              onSubmit,
-              history,
-              location
-            )}
-            disabled={isOutOfStock}
-          >
-            {isBooking ? (
-              <FormattedMessage id="OrderPanel.ctaButtonMessageBooking" />
-            ) : isOutOfStock ? (
-              <FormattedMessage id="OrderPanel.ctaButtonMessageNoStock" />
-            ) : isPurchase ? (
-              <FormattedMessage id="OrderPanel.ctaButtonMessagePurchase" />
-            ) : (
-              <FormattedMessage id="OrderPanel.ctaButtonMessageInquiry" />
-            )}
-          </PrimaryButton>
-        )}
+        <div className={css.buttonGroup}>
+          <ContactButton />
+          {favoriteButton}
+
+          {isClosed ? (
+            <div className={css.closedListingButton}>
+              <FormattedMessage id="OrderPanel.closedListingButtonText" />
+            </div>
+          ) : (
+            <PrimaryButton
+              onClick={handleSubmit(
+                isOwnListing,
+                isClosed,
+                showInquiryForm,
+                onSubmit,
+                history,
+                location
+              )}
+              disabled={isOutOfStock}
+            >
+              {isBooking ? (
+                <FormattedMessage id="OrderPanel.ctaButtonMessageBooking" />
+              ) : isOutOfStock ? (
+                <FormattedMessage id="OrderPanel.ctaButtonMessageNoStock" />
+              ) : isPurchase ? (
+                <FormattedMessage id="OrderPanel.ctaButtonMessagePurchase" />
+              ) : (
+                <FormattedMessage id="OrderPanel.ctaButtonMessageInquiry" />
+              )}
+            </PrimaryButton>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -437,6 +512,7 @@ OrderPanel.defaultProps = {
   lineItems: null,
   fetchLineItemsError: null,
   showCurrencyNotify: true,
+  existingMessageHistory: false,
 };
 
 OrderPanel.propTypes = {
@@ -475,6 +551,7 @@ OrderPanel.propTypes = {
   dayCountAvailableForBooking: number.isRequired,
   marketplaceName: string.isRequired,
   showCurrencyNotify: bool,
+  existingMessageHistory: bool,
 
   // from withRouter
   history: shape({

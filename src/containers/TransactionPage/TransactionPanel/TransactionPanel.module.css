@@ -221,6 +221,10 @@
   order: 1;
 }
 
+.managerInfoSection {
+  order: 3;
+}
+
 /* "aside" section in desktop layout */
 .asideDesktop {
   margin: 1px 0 0 0;
@@ -339,6 +343,7 @@
 
   @media (--viewportLarge) {
     display: block;
+    padding-bottom: 24px;
   }
 }
 
@@ -603,4 +608,17 @@
   @media (--viewportLarge) {
     display: block;
   }
+}
+
+.confirmModalCheckBoxIcon {
+  margin-right: 4px;
+}
+
+.refundAvailableNotice {
+  font-size: 11px;
+  line-height: 15px;
+  font-style: italic;
+}
+.refundAvailableNoticeTitle {
+  font-weight: var(--fontWeightBold);
 }

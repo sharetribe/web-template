@@ -1,9 +1,14 @@
 .root {
-    padding: 12px;
-    line-height: 1.2;
-    font-size: 12px;
-    margin: 13px auto;
-    border-radius: 4px;
-    border: 1px solid var(--colorAttention);
-    background: var(--colorAttentionLight);
+  padding: 12px 16px;
+  line-height: 1;
+  font-size: 11px;
+  margin: 6px auto 8px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.05);
+
+  & :global(svg.lucide) {
+    margin-right: 4px;
+    width: 11px;
+    height: 11px;
   }
+}

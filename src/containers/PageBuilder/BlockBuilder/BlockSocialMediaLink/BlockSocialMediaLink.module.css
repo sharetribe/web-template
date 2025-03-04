@@ -6,6 +6,10 @@
   &:first-child .link {
     padding-left: 0px;
   }
+
+  &:last-child .link {
+    padding-right: 0px;
+  }
 }
 
 .link {

@@ -2,10 +2,18 @@ import React from 'react';
 import { FormattedMessage } from '../../util/reactIntl';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { createResourceLocatorString, findRouteByRouteName } from '../../util/routes';
-import { formatMoney } from '../../util/currency';
+import { convertMoneyToNumber, formatMoney } from '../../util/currency';
 import { timestampToDate } from '../../util/dates';
-import { isUserAuthorized } from '../../util/userHelpers';
-import { NO_ACCESS_PAGE_USER_PENDING_APPROVAL, createSlug } from '../../util/urlHelpers';
+import { hasPermissionToInitiateTransactions, isUserAuthorized } from '../../util/userHelpers';
+import {
+  NO_ACCESS_PAGE_INITIATE_TRANSACTIONS,
+  NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
+  createSlug,
+} from '../../util/urlHelpers';
+import {
+  getInProgressTxId,
+  isSingleItemStockType,
+} from '../../extensions/singleTransactionThread/common/helpers/verify';
 
 import { Page, LayoutSingleColumn } from '../../components';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
@@ -111,7 +119,14 @@ export const handleContactUser = parameters => () => {
     routes,
     setInitialValues,
     setInquiryModalOpen,
+    isOwnListing,
+    getListing,
+    lastTransaction,
+    listingConfig,
   } = parameters;
+
+  const listingId = new UUID(params.id);
+  const listing = getListing(listingId);
 
   if (!currentUser) {
     const state = { from: `${location.pathname}${location.search}${location.hash}` };
@@ -126,6 +141,19 @@ export const handleContactUser = parameters => () => {
     // A user in pending-approval state can't contact the author (the same applies for a banned user)
     const pathParams = { missingAccessRight: NO_ACCESS_PAGE_USER_PENDING_APPROVAL };
     history.push(createResourceLocatorString('NoAccessPage', routes, pathParams, {}));
+  } else if (!hasPermissionToInitiateTransactions(currentUser)) {
+    // A user in pending-approval state can't contact the author (the same applies for a banned user)
+    const pathParams = { missingAccessRight: NO_ACCESS_PAGE_INITIATE_TRANSACTIONS };
+    history.push(createResourceLocatorString('NoAccessPage', routes, pathParams, {}));
+  } else if (
+    lastTransaction &&
+    getInProgressTxId(lastTransaction) &&
+    isSingleItemStockType({ listing, listingConfig }) &&
+    !isOwnListing
+  ) {
+    history.push(
+      createResourceLocatorString('OrderDetailsPage', routes, { id: lastTransaction.id.uuid }, {})
+    );
   } else {
     setInquiryModalOpen(true);
   }
@@ -138,12 +166,22 @@ export const handleContactUser = parameters => () => {
  * @param {Object} parameters all the info needed to create inquiry.
  */
 export const handleSubmitInquiry = parameters => values => {
-  const { history, params, getListing, onSendInquiry, routes, setInquiryModalOpen } = parameters;
+  const {
+    history,
+    params,
+    getListing,
+    onSendInquiry,
+    routes,
+    setInquiryModalOpen,
+    isOwnListing,
+    listingConfig,
+  } = parameters;
+
   const listingId = new UUID(params.id);
   const listing = getListing(listingId);
   const { message } = values;
 
-  onSendInquiry(listing, message.trim())
+  onSendInquiry(listing, message.trim(), { isOwn: isOwnListing, listingConfig })
     .then(txId => {
       setInquiryModalOpen(false);
 
@@ -169,6 +207,8 @@ export const handleSubmit = parameters => values => {
     callSetInitialValues,
     onInitializeCardPaymentData,
     routes,
+    lastTransaction,
+    listingConfig,
   } = parameters;
   const listingId = new UUID(params.id);
   const listing = getListing(listingId);
@@ -202,6 +242,10 @@ export const handleSubmit = parameters => values => {
   const quantity = Number.parseInt(quantityRaw, 10);
   const quantityMaybe = Number.isInteger(quantity) ? { quantity } : {};
   const deliveryMethodMaybe = deliveryMethod ? { deliveryMethod } : {};
+  const transactionMaybe =
+    getInProgressTxId(lastTransaction) && isSingleItemStockType({ listing, listingConfig })
+      ? { transaction: lastTransaction }
+      : {};
 
   const initialValues = {
     listing,
@@ -212,6 +256,7 @@ export const handleSubmit = parameters => values => {
       ...otherOrderData,
     },
     confirmPaymentError: null,
+    ...transactionMaybe,
   };
 
   const saveToSessionStorage = !currentUser;
@@ -286,4 +331,47 @@ export const LoadingPage = props => {
       </p>
     </PlainPage>
   );
+};
+
+export const handleToggleFavorites = parameters => isFavorite => {
+  const { currentUser, routes, location, history } = parameters;
+
+  // Only allow signed-in users to save favorites
+  if (!currentUser) {
+    const state = {
+      from: `${location.pathname}${location.search}${location.hash}`,
+    };
+
+    // Sign up and return back to the listing page.
+    history.push(createResourceLocatorString('SignupPage', routes, {}, {}), state);
+  } else {
+    const { params, onUpdateFavorites } = parameters;
+    const {
+      attributes: { profile },
+    } = currentUser;
+    const { favorites = [] } = profile.privateData || {};
+
+    let payload;
+
+    if (!profile.privateData || !profile.privateData?.favorites) {
+      payload = {
+        privateData: {
+          favorites: [params.id],
+        },
+      };
+    } else if (isFavorite) {
+      payload = {
+        privateData: {
+          favorites: favorites.filter(f => f !== params.id),
+        },
+      };
+    } else {
+      payload = {
+        privateData: {
+          favorites: [...favorites, params.id],
+        },
+      };
+    }
+    onUpdateFavorites(payload);
+  }
 };

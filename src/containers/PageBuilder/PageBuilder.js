@@ -3,7 +3,6 @@ import React from 'react';
 import { IconSpinner, LayoutComposer } from '../../components/index.js';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer.js';
 import FooterContainer from '../FooterContainer/FooterContainer.js';
-import { AdBanner } from '../../components';
 
 import { validProps } from './Field';
 
@@ -103,6 +102,8 @@ const PageBuilder = props => {
   const { sections = [], meta = {} } = pageAssetsData || {};
   const pageMetaProps = getMetadata(meta, schemaType, options?.fieldComponents);
 
+  //console.log('sections', sections);
+
   const layoutAreas = `
     topbar
     main
@@ -125,7 +126,6 @@ const PageBuilder = props => {
                 ) : (
                   <div>
                     <SectionBuilder sections={sections} options={options} />
-                    {options?.AdBanner?.show && <AdBanner link="mailto:jamie@nayax.com" />}
                   </div>
                 )}
               </Main>

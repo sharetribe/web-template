@@ -60,10 +60,13 @@ import {
   fetchMoreMessages,
   fetchTimeSlots,
   fetchTransactionLineItems,
+  updateProgressSellPurchase,
+  intiateDisputeSellPurchase,
 } from './TransactionPage.duck';
 import { convertListingPrices } from '../../extensions/MultipleCurrency/utils/currency.js';
 
 import css from './TransactionPage.module.css';
+import { hasPermissionToViewData } from '../../util/userHelpers.js';
 
 // Submit dispute and close the review modal
 const onDisputeOrder = (
@@ -118,7 +121,10 @@ export const TransactionPageComponent = props => {
     transactionRole,
     transitionInProgress,
     transitionError,
+    transitionErrorName,
     onTransition,
+    onUpdateProgressSellPurchase,
+    onInitiateDisputeSellPurchase,
     monthlyTimeSlots,
     onFetchTimeSlots,
     nextTransitions,
@@ -360,11 +366,15 @@ export const TransactionPageComponent = props => {
           nextTransitions,
           transitionInProgress,
           transitionError,
+          transitionErrorName,
           sendReviewInProgress,
           sendReviewError,
           onTransition,
+          onUpdateProgressSellPurchase,
+          onInitiateDisputeSellPurchase,
           onOpenReviewModal,
           intl,
+          config,
         },
         process
       )
@@ -394,6 +404,8 @@ export const TransactionPageComponent = props => {
 
   const timeZone = listing?.attributes?.availabilityPlan?.timezone;
   const dateType = lineItemUnitType === LINE_ITEM_HOUR ? DATE_TYPE_DATETIME : DATE_TYPE_DATE;
+
+  const hasViewingRights = currentUser && hasPermissionToViewData(currentUser);
 
   const txBookingMaybe = booking?.id ? { booking, dateType, timeZone } : {};
   const orderBreakdownMaybe = hasLineItems
@@ -439,6 +451,7 @@ export const TransactionPageComponent = props => {
       stateData={stateData}
       transactionRole={transactionRole}
       showBookingLocation={showBookingLocation}
+      hasViewingRights={hasViewingRights}
       activityFeed={
         <ActivityFeed
           messages={messages}
@@ -613,6 +626,7 @@ const mapStateToProps = state => {
     fetchTransactionError,
     transitionInProgress,
     transitionError,
+    transitionErrorName,
     transactionRef,
     fetchMessagesInProgress,
     fetchMessagesError,
@@ -650,6 +664,7 @@ const mapStateToProps = state => {
     fetchTransactionError,
     transitionInProgress,
     transitionError,
+    transitionErrorName,
     scrollingDisabled: isScrollingDisabled(state),
     transaction,
     fetchMessagesInProgress,
@@ -675,8 +690,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onTransition: (txId, transitionName, params) =>
-      dispatch(makeTransition(txId, transitionName, params)),
+    onTransition: (txId, transitionName, params, options) =>
+      dispatch(makeTransition(txId, transitionName, params, options)),
     onShowMoreMessages: (txId, config) => dispatch(fetchMoreMessages(txId, config)),
     onSendMessage: (txId, message, config) => dispatch(sendMessage(txId, message, config)),
     onManageDisableScrolling: (componentId, disableScrolling) =>
@@ -689,15 +704,16 @@ const mapDispatchToProps = dispatch => {
       dispatch(fetchTransactionLineItems(orderData, listingId, isOwnListing)),
     onFetchTimeSlots: (listingId, start, end, timeZone) =>
       dispatch(fetchTimeSlots(listingId, start, end, timeZone)),
+    onUpdateProgressSellPurchase: (txId, transitionName) =>
+      dispatch(updateProgressSellPurchase(txId, transitionName)),
+    onInitiateDisputeSellPurchase: (txId, transitionName, disputeReason) =>
+      dispatch(intiateDisputeSellPurchase(txId, transitionName, disputeReason)),
   };
 };
 
 const TransactionPage = compose(
   withRouter,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  ),
+  connect(mapStateToProps, mapDispatchToProps),
   injectIntl
 )(TransactionPageComponent);
 

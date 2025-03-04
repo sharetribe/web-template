@@ -1,0 +1,22 @@
+{
+  "TransactionPage.PrimaryConfirmActionModal.modalTitle": "Confirmation",
+  "TransactionPage.PrimaryConfirmActionModal.confirmButton": "Confirm",
+  "TransactionPage.SecondaryConfirmActionModal.modalTitle": "Issue a refund",
+  "TransactionPage.SecondaryConfirmActionModal.confirmButton": "Issue a refund",
+  "ProgressStep.stepCount": "STEP {stepCount}",
+  "ProgressStep.stepState.pending": "Pending",
+  "ProgressStep.stepState.inProgress": "In Progress",
+  "ProgressStep.stepState.completed": "Completed",
+  "ProgressStep.stepState.canceled": "Canceled",
+  "NoticeRefundAvailable.title": "Notice: ",
+  "NoticeRefundAvailable.content": "Please note that refunds are available for 20 days after the manager is introduced – let us know if you need help.",
+  "TransactionPage.RefundField.label": "Please tell us what went wrong",
+  "TransactionPage.RefundField.requiredMessage": "A reason is required.",
+  "TransactionPage.DisputeField.label": "Please tell us the details If you dispute this refund request, we will take up to 5 days to manually investigate and resolve the issue. ",
+  "TransactionPage.DisputeField.requiredMessage": "A reason is required.",
+  "TransactionPanel.managerInformationHeading": "Manager Information",
+  "TransactionPanel.managerNameContent": "Name: {managerName}",
+  "TransactionPanel.managerPhoneNumberContent": "Phone Number: {managerPhoneNumber}",
+  "TransactionPanel.managerEmailTitle": "Email: ",
+  "TransactionPanel.managerAddressTitle": "Address of location: "
+}

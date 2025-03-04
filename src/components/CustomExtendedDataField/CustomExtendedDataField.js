@@ -8,8 +8,14 @@ import {
   SCHEMA_TYPE_TEXT,
   SCHEMA_TYPE_LONG,
   SCHEMA_TYPE_BOOLEAN,
+  SCHEMA_TYPE_YOUTUBE,
 } from '../../util/types';
-import { required, nonEmptyArray, validateInteger } from '../../util/validators';
+import {
+  required,
+  nonEmptyArray,
+  validateInteger,
+  validateYoutubeURL,
+} from '../../util/validators';
 // Import shared components
 import { FieldCheckboxGroup, FieldSelect, FieldTextInput, FieldBoolean } from '../../components';
 // Import modules from this directory
@@ -20,7 +26,7 @@ const createFilterOptions = options => options.map(o => ({ key: `${o.option}`, l
 const getLabel = fieldConfig => fieldConfig?.saveConfig?.label || fieldConfig?.label;
 
 const CustomFieldEnum = props => {
-  const { name, fieldConfig, defaultRequiredMessage, formId, intl } = props;
+  const { name, fieldConfig, defaultRequiredMessage, formId, intl, disabled } = props;
   const { enumOptions = [], saveConfig } = fieldConfig || {};
   const { placeholderMessage, isRequired, requiredMessage } = saveConfig || {};
   const validateMaybe = isRequired
@@ -39,6 +45,7 @@ const CustomFieldEnum = props => {
       name={name}
       id={formId ? `${formId}.${name}` : name}
       label={label}
+      disabled={disabled}
       {...validateMaybe}
     >
       <option disabled value="">
@@ -57,7 +64,7 @@ const CustomFieldEnum = props => {
 };
 
 const CustomFieldMultiEnum = props => {
-  const { name, fieldConfig, defaultRequiredMessage, formId } = props;
+  const { name, fieldConfig, defaultRequiredMessage, formId, disabled } = props;
   const { enumOptions = [], saveConfig } = fieldConfig || {};
   const { isRequired, requiredMessage } = saveConfig || {};
   const label = getLabel(fieldConfig);
@@ -72,13 +79,14 @@ const CustomFieldMultiEnum = props => {
       name={name}
       label={label}
       options={createFilterOptions(enumOptions)}
+      disabled={disabled}
       {...validateMaybe}
     />
   ) : null;
 };
 
 const CustomFieldText = props => {
-  const { name, fieldConfig, defaultRequiredMessage, formId, intl } = props;
+  const { name, fieldConfig, defaultRequiredMessage, formId, intl, disabled } = props;
   const { placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
   const label = getLabel(fieldConfig);
   const validateMaybe = isRequired
@@ -92,16 +100,17 @@ const CustomFieldText = props => {
       className={css.customField}
       id={formId ? `${formId}.${name}` : name}
       name={name}
-      type="textarea"
+      type="text"
       label={label}
       placeholder={placeholder}
+      disabled={disabled}
       {...validateMaybe}
     />
   );
 };
 
 const CustomFieldLong = props => {
-  const { name, fieldConfig, defaultRequiredMessage, formId, intl } = props;
+  const { name, fieldConfig, defaultRequiredMessage, formId, intl, disabled } = props;
   const { minimum, maximum, saveConfig } = fieldConfig;
   const { placeholderMessage, isRequired, requiredMessage } = saveConfig || {};
   const label = getLabel(fieldConfig);
@@ -138,12 +147,13 @@ const CustomFieldLong = props => {
       label={label}
       placeholder={placeholder}
       validate={value => validate(value, minimum, maximum)}
+      disabled={disabled}
     />
   );
 };
 
 const CustomFieldBoolean = props => {
-  const { name, fieldConfig, defaultRequiredMessage, formId, intl } = props;
+  const { name, fieldConfig, defaultRequiredMessage, formId, intl, disabled } = props;
   const { placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
   const label = getLabel(fieldConfig);
   const validateMaybe = isRequired
@@ -159,7 +169,40 @@ const CustomFieldBoolean = props => {
       name={name}
       label={label}
       placeholder={placeholder}
+      disabled={disabled}
       {...validateMaybe}
+    />
+  );
+};
+
+const CustomFieldYoutube = props => {
+  const { name, fieldConfig, defaultRequiredMessage, formId, intl } = props;
+  const { placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
+  const label = getLabel(fieldConfig);
+  const placeholder =
+    placeholderMessage ||
+    intl.formatMessage({ id: 'CustomExtendedDataField.placeholderYoutubeVideoURL' });
+
+  const notValidUrlMessage = intl.formatMessage({
+    id: 'CustomExtendedDataField.notValidYoutubeVideoURL',
+  });
+
+  const validate = value => {
+    const requiredMsg = requiredMessage || defaultRequiredMessage;
+    return isRequired && value == null
+      ? requiredMsg
+      : validateYoutubeURL(value, notValidUrlMessage);
+  };
+
+  return (
+    <FieldTextInput
+      className={css.customField}
+      id={formId ? `${formId}.${name}` : name}
+      name={name}
+      type="text"
+      label={label}
+      placeholder={placeholder}
+      validate={value => validate(value)}
     />
   );
 };
@@ -189,6 +232,8 @@ const CustomExtendedDataField = props => {
     ? renderFieldComponent(CustomFieldLong, props)
     : schemaType === SCHEMA_TYPE_BOOLEAN
     ? renderFieldComponent(CustomFieldBoolean, props)
+    : schemaType === SCHEMA_TYPE_YOUTUBE
+    ? renderFieldComponent(CustomFieldYoutube, props)
     : null;
 };
 

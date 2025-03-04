@@ -8,17 +8,28 @@ import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl
 import * as validators from '../../../util/validators';
 import { propTypes } from '../../../util/types';
 import {
+  isErrorNoPermissionForInitiateTransactions,
   isErrorNoPermissionForUserPendingApproval,
   isTooManyRequestsError,
 } from '../../../util/errors';
 
-import { Form, PrimaryButton, FieldTextInput, IconInquiry, Heading, ReminderBox } from '../../../components';
+import {
+  Form,
+  PrimaryButton,
+  FieldTextInput,
+  IconInquiry,
+  Heading,
+  NamedLink,
+  ReminderBox,
+} from '../../../components';
 
 import css from './InquiryForm.module.css';
+import { NO_ACCESS_PAGE_INITIATE_TRANSACTIONS } from '../../../util/urlHelpers';
 
 const ErrorMessage = props => {
   const { error } = props;
-  const userPendingApproval = true || isErrorNoPermissionForUserPendingApproval(error);
+  const userPendingApproval = isErrorNoPermissionForUserPendingApproval(error);
+  const userHasNoTransactionRights = isErrorNoPermissionForInitiateTransactions(error);
 
   // No transaction process attached to listing
   return error ? (
@@ -29,12 +40,41 @@ const ErrorMessage = props => {
         <FormattedMessage id="InquiryForm.tooManyRequestsError" />
       ) : userPendingApproval ? (
         <FormattedMessage id="InquiryForm.userPendingApprovalError" />
+      ) : userHasNoTransactionRights ? (
+        <FormattedMessage
+          id="InquiryForm.noTransactionRightsError"
+          values={{
+            NoAccessLink: msg => (
+              <NamedLink
+                name="NoAccessPage"
+                params={{ missingAccessRight: NO_ACCESS_PAGE_INITIATE_TRANSACTIONS }}
+              >
+                {msg}
+              </NamedLink>
+            ),
+          }}
+        />
       ) : (
         <FormattedMessage id="InquiryForm.sendInquiryError" />
       )}
     </p>
   ) : null;
 };
+
+// Custom validator to check for phone numbers and email addresses
+const noContactInfo = value => {
+  const phonePattern = /\b\d{3}[-.\s]?\d{3}[-.\s]?\d{4}\b/; // Simple pattern for phone numbers
+  const emailPattern = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/; // Pattern for email addresses
+
+  if (phonePattern.test(value)) {
+    return <FormattedMessage id="InquiryForm.noPhoneNumberAllowed" />;
+  }
+  if (emailPattern.test(value)) {
+    return <FormattedMessage id="InquiryForm.noEmailAllowed" />;
+  }
+  return undefined;
+};
+
 
 // NOTE: this InquiryForm is only for booking & purchase processes
 // The default-inquiry process is handled differently
@@ -70,11 +110,14 @@ const InquiryFormComponent = props => (
       const messageRequiredMessage = intl.formatMessage({
         id: 'InquiryForm.messageRequired',
       });
-      const messageRequired = validators.requiredAndNonEmptyString(messageRequiredMessage);
 
       const classes = classNames(rootClassName || css.root, className);
       const submitInProgress = inProgress;
       const submitDisabled = submitInProgress;
+
+      const messageRequired = validators.requiredAndNonEmptyString(messageRequiredMessage);
+      const messageValidators = validators.composeValidators(messageRequired, noContactInfo);
+
 
       return (
         <Form className={classes} onSubmit={handleSubmit} enforcePagePreloadFor="OrderDetailsPage">
@@ -89,10 +132,10 @@ const InquiryFormComponent = props => (
             id={formId ? `${formId}.message` : 'message'}
             label={messageLabel}
             placeholder={messagePlaceholder}
-            validate={messageRequired}
+            validate={messageValidators}
           />
           <ReminderBox />
-          
+
           <div className={submitButtonWrapperClassName}>
             <ErrorMessage error={sendInquiryError} />
             <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>

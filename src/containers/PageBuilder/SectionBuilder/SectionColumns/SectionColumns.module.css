@@ -10,7 +10,7 @@
   text-align: center;
 
   h1 {
-    background-color:rgba(0,0,0,0.08);
+    background-color: rgba(0, 0, 0, 0.08);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -20,24 +20,11 @@
     margin: 0 auto;
     font-size: 2em;
   }
-  ul{
+  ul {
     text-align: left;
     width: 70%;
     margin: 0 auto;
   }
-
-  a{
-    border: 1px solid var(--colorPrimaryButton);
-    padding:8px 10px;
-    border-radius: 4px;
-
-    &:hover{
-      background-color: var(--colorPrimaryButton);
-      color: var(--colorWhite);
-      text-decoration: none;
-    }
-  }
-
 }
 
 .oneColumn {
@@ -58,6 +45,24 @@
 }
 .fourColumns {
   composes: baseColumn;
+
+  & p > a:only-of-type {
+    display: inline-block;
+    padding: 8px 20px;
+    white-space: nowrap;
+    border-radius: var(--borderRadiusMedium);
+
+    background-color: transparent;
+    color: var(--marketplaceColor);
+    box-shadow: none;
+
+    &:hover {
+      background-color: transparent;
+      color: var(--marketplaceColorDark);
+      box-shadow: var(--marketplaceColor) 0 0 0 1px;
+    }
+  }
+
   @media (--viewportMedium) {
     grid-template-columns: repeat(4, calc((100% - 3 * 32px) / 4));
   }

@@ -38,10 +38,11 @@
   padding: 14px 0 2px 0;
 }
 
+
 .price {
   /* Layout */
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: flex-start;
   flex-shrink: 0;
   margin-bottom: 4px;
@@ -61,6 +62,23 @@
     margin-bottom: 0;
   }
 }
+
+.priceInfo{
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  align-items: flex-start;
+
+}
+.category{
+  color:var(--colorGrey700);
+  text-transform: capitalize;
+  font-size:70%;
+  font-weight: 300;
+  margin:0;
+}
+
 
 .perUnit {
   /* Font */

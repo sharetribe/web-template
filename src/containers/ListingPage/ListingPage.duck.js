@@ -7,13 +7,21 @@ import { transactionLineItems } from '../../util/api';
 import * as log from '../../util/log';
 import { denormalisedResponseEntities } from '../../util/data';
 import { findNextBoundary, getStartOf, monthIdString } from '../../util/dates';
-import { isUserAuthorized } from '../../util/userHelpers';
+import {
+  hasPermissionToInitiateTransactions,
+  hasPermissionToViewData,
+  isUserAuthorized,
+} from '../../util/userHelpers';
 import {
   LISTING_PAGE_DRAFT_VARIANT,
   LISTING_PAGE_PENDING_APPROVAL_VARIANT,
 } from '../../util/urlHelpers';
 import { getProcess, isBookingProcessAlias } from '../../transactions/transaction';
 import { fetchCurrentUser, fetchCurrentUserHasOrdersSuccess } from '../../ducks/user.duck';
+import {
+  getInProgressTxId,
+  isSingleItemStockType,
+} from '../../extensions/singleTransactionThread/common/helpers/verify';
 
 const { UUID } = sdkTypes;
 
@@ -40,6 +48,10 @@ export const SEND_INQUIRY_REQUEST = 'app/ListingPage/SEND_INQUIRY_REQUEST';
 export const SEND_INQUIRY_SUCCESS = 'app/ListingPage/SEND_INQUIRY_SUCCESS';
 export const SEND_INQUIRY_ERROR = 'app/ListingPage/SEND_INQUIRY_ERROR';
 
+export const FETCH_TRANSACTIONS_REQUEST = 'app/ListingPage/FETCH_TRANSACTIONS_REQUEST';
+export const FETCH_TRANSACTIONS_SUCCESS = 'app/ListingPage/FETCH_TRANSACTIONS_SUCCESS';
+export const FETCH_TRANSACTIONS_ERROR = 'app/ListingPage/FETCH_TRANSACTIONS_ERROR';
+
 // ================ Reducer ================ //
 
 const initialState = {
@@ -60,6 +72,8 @@ const initialState = {
   sendInquiryInProgress: false,
   sendInquiryError: null,
   inquiryModalOpenForListingId: null,
+  lastTransaction: null,
+  fetchTransactionsError: null,
 };
 
 const listingPageReducer = (state = initialState, action = {}) => {
@@ -130,6 +144,13 @@ const listingPageReducer = (state = initialState, action = {}) => {
     case SEND_INQUIRY_ERROR:
       return { ...state, sendInquiryInProgress: false, sendInquiryError: payload };
 
+    case FETCH_TRANSACTIONS_REQUEST:
+      return { ...state, fetchTransactionsError: null };
+    case FETCH_TRANSACTIONS_SUCCESS:
+      return { ...state, lastTransaction: payload };
+    case FETCH_TRANSACTIONS_ERROR:
+      return { ...state, fetchTransactionsError: payload };
+
     default:
       return state;
   }
@@ -191,6 +212,17 @@ export const fetchLineItemsError = error => ({
 export const sendInquiryRequest = () => ({ type: SEND_INQUIRY_REQUEST });
 export const sendInquirySuccess = () => ({ type: SEND_INQUIRY_SUCCESS });
 export const sendInquiryError = e => ({ type: SEND_INQUIRY_ERROR, error: true, payload: e });
+
+export const fetchTransactionsRequest = () => ({ type: FETCH_TRANSACTIONS_REQUEST });
+export const fetchTransactionsSuccess = lastTransaction => ({
+  type: FETCH_TRANSACTIONS_SUCCESS,
+  payload: lastTransaction,
+});
+export const fetchTransactionsError = error => ({
+  type: FETCH_TRANSACTIONS_ERROR,
+  error: true,
+  payload: error,
+});
 
 // ================ Thunks ================ //
 
@@ -298,8 +330,30 @@ export const fetchTimeSlots = (listingId, start, end, timeZone) => (dispatch, ge
     });
 };
 
-export const sendInquiry = (listing, message) => (dispatch, getState, sdk) => {
+export const sendInquiry = (listing, message, { isOwn = false, listingConfig } = {}) => (
+  dispatch,
+  getState,
+  sdk
+) => {
   dispatch(sendInquiryRequest());
+
+  const { lastTransaction } = getState().ListingPage;
+  const existedTxId = getInProgressTxId(lastTransaction);
+
+  if (existedTxId && isSingleItemStockType({ listing, listingConfig }) && !isOwn) {
+    return sdk.messages
+      .send({ transactionId: existedTxId, content: message })
+      .then(() => {
+        dispatch(sendInquirySuccess());
+        dispatch(fetchCurrentUserHasOrdersSuccess(true));
+        return existedTxId;
+      })
+      .catch(e => {
+        dispatch(sendInquiryError(storableError(e)));
+        throw e;
+      });
+  }
+
   const processAlias = listing?.attributes?.publicData?.transactionProcessAlias;
   if (!processAlias) {
     const error = new Error('No transaction process attached to listing');
@@ -381,13 +435,29 @@ export const fetchTransactionLineItems = ({ orderData, listingId, isOwnListing }
     });
 };
 
+export const fetchListingTransactions = listingId => (dispatch, getState, sdk) => {
+  dispatch(fetchTransactionsRequest());
+  return sdk.transactions
+    .query({
+      listingId: listingId,
+    })
+    .then(response => {
+      const lastTransaction = denormalisedResponseEntities(response)[0];
+      dispatch(fetchTransactionsSuccess(lastTransaction || null));
+    })
+    .catch(e => {
+      dispatch(fetchTransactionsError(storableError(e)));
+    });
+};
+
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   const listingId = new UUID(params.id);
   const state = getState();
   const currentUser = state.user?.currentUser;
-  const inquiryModalOpenForListingId = isUserAuthorized(currentUser)
-    ? state.ListingPage.inquiryModalOpenForListingId
-    : null;
+  const inquiryModalOpenForListingId =
+    isUserAuthorized(currentUser) && hasPermissionToInitiateTransactions(currentUser)
+      ? state.ListingPage.inquiryModalOpenForListingId
+      : null;
 
   // Clear old line-items
   dispatch(setInitialValues({ lineItems: null, inquiryModalOpenForListingId }));
@@ -405,15 +475,23 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
     return Promise.resolve();
   }
 
-  return Promise.all([
-    dispatch(showListing(listingId, config)),
-    dispatch(fetchReviews(listingId)),
-  ]).then(response => {
+  const hasNoViewingRights = currentUser && !hasPermissionToViewData(currentUser);
+  const promises = hasNoViewingRights
+    ? // If user has no viewing rights, only allow fetching their own listing without reviews
+      [dispatch(showListing(listingId, config, true))]
+    : // For users with viewing rights, fetch the listing and the associated reviews
+      [
+        dispatch(showListing(listingId, config)),
+        dispatch(fetchReviews(listingId)),
+        dispatch(fetchListingTransactions(listingId)),
+      ];
+
+  return Promise.all(promises).then(response => {
     const listingResponse = response[0];
     const listing = listingResponse?.data?.data;
     const transactionProcessAlias = listing?.attributes?.publicData?.transactionProcessAlias || '';
-    if (isBookingProcessAlias(transactionProcessAlias)) {
-      // Fetch timeSlots.
+    if (isBookingProcessAlias(transactionProcessAlias) && !hasNoViewingRights) {
+      // Fetch timeSlots if the user has viewing rights.
       // This can happen parallel to loadData.
       // We are not interested to return them from loadData call.
       fetchMonthlyTimeSlots(dispatch, listing);

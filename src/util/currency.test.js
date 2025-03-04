@@ -219,6 +219,14 @@ describe('currency utils', () => {
       expect(convertMoneyToNumber(new Money(1000, 'USD'))).toEqual(10);
       expect(convertMoneyToNumber(new Money(9900, 'USD'))).toEqual(99);
       expect(convertMoneyToNumber(new Money(10099, 'USD'))).toEqual(100.99);
+
+      expect(convertMoneyToNumber(new Money(1, 'JPY'))).toEqual(1);
+      expect(convertMoneyToNumber(new Money(100, 'JPY'))).toEqual(100);
+      expect(convertMoneyToNumber(new Money(1234, 'JPY'))).toEqual(1234);
+
+      expect(convertMoneyToNumber(new Money(1, 'VND'))).toEqual(1);
+      expect(convertMoneyToNumber(new Money(100000, 'VND'))).toEqual(100000);
+      expect(convertMoneyToNumber(new Money(500, 'VND'))).toEqual(500);
     });
 
     it('Wrong type of a parameter', () => {

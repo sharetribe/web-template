@@ -41,7 +41,7 @@
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-between;
-  padding: 29px 24px 0 24px;
+  padding: 50px 24px 12px 24px;
 
   border-top-width: 1px;
   border-top-color: var(--colorGrey100);
@@ -49,8 +49,15 @@
   background-color: var(--colorWhite);
   box-shadow: var(--boxShadow);
 
+  width: auto;
+  margin: 0;
+
+  position: sticky;
+  top: 10px;
+
   @media (--viewportMedium) {
-    padding: 24px 24px 0 24px;
+    padding: 24px 24px 12px 24px;
+    top: 72px;
   }
 
   @media (--viewportLarge) {
@@ -61,12 +68,19 @@
     border: none;
     box-shadow: none;
     background-color: transparent;
+    align-self: flex-start;
   }
   @media (--viewportLargeWithPaddings) {
     padding: 40px 0 82px calc((100% - 1056px) / 2);
   }
 }
-
+.titleContainer {
+  display: flex;
+  gap: 40px;
+  @media (--viewportLarge) {
+    display: block;
+  }
+}
 .title {
   align-self: center;
   padding: 0px 0 8px 0;
@@ -75,10 +89,14 @@
   margin-top: 0;
   margin-bottom: 0;
 
+  position: absolute;
+  top: 20px;
+
   @media (--viewportMedium) {
     padding: 0;
     margin-top: 0;
     margin-bottom: 0;
+    position: unset;
   }
 
   @media (--viewportLarge) {
@@ -96,11 +114,11 @@
 
   @media (--viewportMedium) {
     padding-top: 12px;
-    padding-top: 20px;
   }
 
   @media (--viewportLarge) {
     padding-top: 24px;
+    padding-left: 12px;
     flex-direction: column;
   }
 }
@@ -215,7 +233,8 @@
   grid-template-areas:
     'dot name    state'
     '... item    state'
-    '... details state';
+    '... details state'
+    '... message message';
   padding: 2px 0 6px;
   gap: 4px 0;
 
@@ -229,6 +248,55 @@
     /* Hightlight the username when the whole item is hovered */
     color: var(--marketplaceColor);
   }
+}
+
+.itemMessage {
+  grid-area: message;
+
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--colorGrey700);
+
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  justify-content: space-between;
+
+  > .messageDate {
+    color: var(--colorGrey300);
+  }
+
+  background-color: var(--colorGrey75);
+  padding: 3px 8px;
+  border-radius: 6px;
+
+  @media (--viewportMedium) {
+    margin-left: 24px;
+  }
+}
+.messageContainer {
+  display: flex;
+  gap: 12px;
+  @media (--viewportMedium) {
+    margin-left: -32px;
+  }
+}
+.messageIcon {
+  display: none;
+  color: var(--colorGrey300);
+
+  @media (--viewportMedium) {
+    display: inline;
+    flex: 1 0 16px;
+  }
+}
+.messageContent {
+  word-break: break-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
 }
 
 .rowNotificationDot {
@@ -258,7 +326,7 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background-color: var(--colorFail);
+  background-color: var(--colorBlueNote);
 }
 
 .itemUsername {
@@ -369,4 +437,40 @@
   & .stateName {
     color: var(--colorGrey300);
   }
+}
+
+.searchContainer {
+  margin-top: 0;
+  display: flex;
+  align-items: center;
+  width: 160px;
+  background-color: transparent;
+  border: none;
+  position: relative;
+  margin-left: -8px;
+
+  @media (--viewportMedium) {
+    margin-left: 0;
+    width: 230px;
+  }
+  @media (--viewportLarge) {
+    margin-top: 10px;
+  }
+}
+.searchIcon {
+  position: absolute;
+  left: 14px;
+  color: #999;
+  pointer-events: none;
+  transform: scaleX(-1);
+}
+
+.searchBox {
+  width: 100%;
+  padding: 0.3rem 0.5rem 0.3rem 2.5rem;
+  border: 1px solid var(--colorGrey100);
+  outline: none;
+  background-color: white;
+  font-size: 1rem;
+  border-radius: 30px;
 }

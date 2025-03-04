@@ -1,12 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import classNames from 'classnames';
+import { SquareCheck } from 'lucide-react';
+import { useIntl } from 'react-intl';
 
+import { Modal } from '../../../components';
 import { PrimaryButton, SecondaryButton } from '../../../components';
 
 import css from './TransactionPanel.module.css';
+import modalCss from '../../../components/Modal/Modal.module.css';
+import TransactionModalForm from '../../../extensions/transactionProcesses/components/TransactionModalForm/TransactionModalForm';
 
 // Functional component as a helper to build ActionButtons
 const ActionButtonsMaybe = props => {
+  const intl = useIntl();
+  const [isPrimaryConfirmModalOpen, setIsPrimaryConfirmModalOpen] = useState(false);
+  const [isSecondaryConfirmModalOpen, setIsSecondaryConfirmModalOpen] = useState(false);
+
   const {
     className,
     rootClassName,
@@ -15,6 +24,9 @@ const ActionButtonsMaybe = props => {
     secondaryButtonProps,
     isListingDeleted,
     isProvider,
+    transactionRole,
+    processName,
+    processState,
   } = props;
 
   // In default processes default processes need special handling
@@ -24,47 +36,242 @@ const ActionButtonsMaybe = props => {
     return null;
   }
 
-  const buttonsDisabled = primaryButtonProps?.inProgress || secondaryButtonProps?.inProgress;
+  const {
+    inProgress: primaryInProgress,
+    onAction: primaryOnAction,
+    buttonText: primaryButtonText,
+    isConfirmNeeded: primaryIsConfirmNeeded,
+    showConfirmStatement: primaryShowConfirmStatement,
+    showReminderStatement: primaryShowReminderStatement,
+    confirmStatementTranslationId: primaryConfirmStatementTranslationId,
+    confirmStatementTranslationValues: primaryConfirmStatementTranslationValues = {},
+    reminderStatementTranslationId: primaryReminderStatementTranslationId,
+    confirmButtonTranslationId: primaryConfirmButtonTranslationId,
+    confirmModalTitleTranslationId: primaryConfirmModalTitleTranslationId,
+    error: primaryError,
+    errorText: primaryErrorText,
+    formConfigs: primaryFormConfigs,
+  } = primaryButtonProps || {};
+  const {
+    inProgress: secondaryInProgress,
+    onAction: secondaryOnAction,
+    buttonText: secondaryButtonText,
+    isConfirmNeeded: secondaryIsConfirmNeeded,
+    showConfirmStatement: secondaryShowConfirmStatement,
+    showReminderStatement: secondaryShowReminderStatement,
+    confirmStatementTranslationId: secondaryConfirmStatementTranslationId,
+    confirmStatementTranslationValues: secondaryConfirmStatementTranslationValues = {},
+    reminderStatementTranslationId: secondaryReminderStatementTranslationId,
+    confirmButtonTranslationId: secondaryConfirmButtonTranslationId,
+    confirmModalTitleTranslationId: secondaryConfirmModalTitleTranslationId,
+    error: secondaryError,
+    errorText: secondaryErrorText,
+    formConfigs: secondaryFormConfigs,
+  } = secondaryButtonProps || {};
+
+  const buttonsDisabled = primaryInProgress || secondaryInProgress;
+
+  const classes = classNames(rootClassName || css.actionButtons, className);
+
+  // Handler to open confirmation modal
+  const handleClick = ({ isConfirmNeeded, onAction, setConfirmModalOpen }) => {
+    if (isConfirmNeeded) {
+      setConfirmModalOpen(true);
+      return;
+    }
+
+    onAction?.();
+  };
+
+  // Handler for confirming the action
+  const handleConfirmModal = ({ setIsModalOpen, onAction, values }) => {
+    setIsModalOpen(false);
+    onAction?.(values);
+  };
 
   const primaryButton = primaryButtonProps ? (
     <PrimaryButton
-      inProgress={primaryButtonProps.inProgress}
+      inProgress={primaryInProgress}
       disabled={buttonsDisabled}
-      onClick={primaryButtonProps.onAction}
+      onClick={() =>
+        handleClick({
+          isConfirmNeeded: primaryIsConfirmNeeded,
+          onAction: primaryOnAction,
+          setConfirmModalOpen: setIsPrimaryConfirmModalOpen,
+        })
+      }
     >
-      {primaryButtonProps.buttonText}
+      {primaryError ? primaryErrorText : primaryButtonText}
     </PrimaryButton>
   ) : null;
-  const primaryErrorMessage = primaryButtonProps?.error ? (
-    <p className={css.actionError}>{primaryButtonProps?.errorText}</p>
+
+  const primaryConfirmModal = primaryIsConfirmNeeded ? (
+    <Modal
+      id="PrimaryConfirmActionModal"
+      isOpen={isPrimaryConfirmModalOpen}
+      onClose={() => setIsPrimaryConfirmModalOpen(false)}
+      onManageDisableScrolling={() => {}}
+      closeButtonMessage="Close"
+      containerClassName={modalCss.modalContainer}
+      contentClassName={modalCss.modalContent}
+    >
+      <div>
+        <h2 className="marketplaceModalTitleStyles">
+          {intl.formatMessage({
+            id:
+              primaryConfirmModalTitleTranslationId ||
+              'TransactionPage.PrimaryConfirmActionModal.modalTitle',
+          })}
+        </h2>
+
+        <TransactionModalForm
+          formConfigs={primaryFormConfigs}
+          onSubmit={values =>
+            handleConfirmModal({
+              setIsModalOpen: setIsPrimaryConfirmModalOpen,
+              onAction: primaryOnAction,
+              values,
+            })
+          }
+        >
+          {primaryShowConfirmStatement && (
+            <p>
+              {intl.formatMessage(
+                {
+                  id:
+                    primaryConfirmStatementTranslationId ||
+                    `TransactionPage.PrimaryConfirmActionModal.${processName}.${processState}.${transactionRole}.confirmStatement`,
+                },
+                {
+                  ...primaryConfirmStatementTranslationValues,
+                }
+              )}
+            </p>
+          )}
+
+          {primaryShowReminderStatement && (
+            <div className="reminderBox">
+              <SquareCheck className={css.confirmModalCheckBoxIcon} />
+
+              {intl.formatMessage({
+                id:
+                  primaryReminderStatementTranslationId ||
+                  `TransactionPage.PrimaryConfirmActionModal.${processName}.${processState}.${transactionRole}.reminderStatement`,
+              })}
+            </div>
+          )}
+
+          <div style={{ display: 'flex', gap: '16px', justifyContent: 'flex-end' }}>
+            <PrimaryButton>
+              {intl.formatMessage({
+                id:
+                  primaryConfirmButtonTranslationId ||
+                  'TransactionPage.PrimaryConfirmActionModal.confirmButton',
+              })}
+            </PrimaryButton>
+          </div>
+        </TransactionModalForm>
+      </div>
+    </Modal>
   ) : null;
 
   const secondaryButton = secondaryButtonProps ? (
     <SecondaryButton
-      inProgress={secondaryButtonProps?.inProgress}
+      inProgress={secondaryInProgress}
       disabled={buttonsDisabled}
-      onClick={secondaryButtonProps.onAction}
+      onClick={() =>
+        handleClick({
+          isConfirmNeeded: secondaryIsConfirmNeeded,
+          onAction: secondaryOnAction,
+          setConfirmModalOpen: setIsSecondaryConfirmModalOpen,
+        })
+      }
     >
-      {secondaryButtonProps.buttonText}
+      {secondaryError ? secondaryErrorText : secondaryButtonText}
     </SecondaryButton>
   ) : null;
-  const secondaryErrorMessage = secondaryButtonProps?.error ? (
-    <p className={css.actionError}>{secondaryButtonProps?.errorText}</p>
+
+  const secondaryConfirmModal = secondaryIsConfirmNeeded ? (
+    <Modal
+      id="SecondaryConfirmActionModal"
+      isOpen={isSecondaryConfirmModalOpen}
+      onClose={() => setIsSecondaryConfirmModalOpen(false)}
+      onManageDisableScrolling={() => {}}
+      closeButtonMessage="Close"
+      containerClassName={modalCss.modalContainer}
+      contentClassName={modalCss.modalContent}
+    >
+      <div>
+        <h2 className="marketplaceModalTitleStyles">
+          {intl.formatMessage({
+            id:
+              secondaryConfirmModalTitleTranslationId ||
+              'TransactionPage.SecondaryConfirmActionModal.modalTitle',
+          })}
+        </h2>
+
+        <TransactionModalForm
+          formConfigs={secondaryFormConfigs}
+          onSubmit={values =>
+            handleConfirmModal({
+              setIsModalOpen: setIsSecondaryConfirmModalOpen,
+              onAction: secondaryOnAction,
+              values,
+            })
+          }
+        >
+          {secondaryShowConfirmStatement && (
+            <p>
+              {intl.formatMessage(
+                {
+                  id:
+                    secondaryConfirmStatementTranslationId ||
+                    `TransactionPage.SecondaryConfirmActionModal.${processName}.${processState}.${transactionRole}.confirmStatement`,
+                },
+                {
+                  ...secondaryConfirmStatementTranslationValues,
+                }
+              )}
+            </p>
+          )}
+
+          {secondaryShowReminderStatement && (
+            <div className="reminderBox">
+              <SquareCheck className={css.confirmModalCheckBoxIcon} />
+
+              {intl.formatMessage({
+                id:
+                  secondaryReminderStatementTranslationId ||
+                  `TransactionPage.SecondaryConfirmActionModal.${processName}.${processState}.${transactionRole}.reminderStatement`,
+              })}
+            </div>
+          )}
+
+          <div style={{ display: 'flex', gap: '16px', justifyContent: 'flex-end' }}>
+            <PrimaryButton>
+              {intl.formatMessage({
+                id:
+                  secondaryConfirmButtonTranslationId ||
+                  'TransactionPage.SecondaryConfirmActionModal.confirmButton',
+              })}
+            </PrimaryButton>
+          </div>
+        </TransactionModalForm>
+      </div>
+    </Modal>
   ) : null;
 
-  const classes = classNames(rootClassName || css.actionButtons, className);
-
   return showButtons ? (
-    <div className={classes}>
-      <div className={css.actionErrors}>
-        {primaryErrorMessage}
-        {secondaryErrorMessage}
+    <>
+      <div className={classes}>
+        <div className={css.actionButtonWrapper}>
+          {secondaryButton}
+          {primaryButton}
+        </div>
       </div>
-      <div className={css.actionButtonWrapper}>
-        {secondaryButton}
-        {primaryButton}
-      </div>
-    </div>
+      {primaryConfirmModal}
+      {secondaryConfirmModal}
+    </>
   ) : null;
 };
 

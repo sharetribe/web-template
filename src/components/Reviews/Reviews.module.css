@@ -2,6 +2,12 @@
 
 .root {
   margin: 0;
+  max-width: calc(100vw - 48px);
+  position: relative;
+
+  @media (--viewportLarge) {
+    max-width: calc(70vw - 48px);
+  }
 }
 
 .reviewItem {
@@ -22,6 +28,7 @@
   flex-basis: 564px;
   flex-shrink: 1;
   flex-grow: 0;
+  margin-right:35px;
 }
 
 .avatar {

@@ -9,6 +9,8 @@ import SectionColumns from './SectionColumns';
 import SectionFeatures from './SectionFeatures';
 import SectionHero from './SectionHero';
 
+import { AdBanner, Testimonials } from '../../../components';
+
 // Styles
 // Note: these contain
 // - shared classes that are passed as defaultClasses
@@ -39,6 +41,11 @@ const defaultSectionComponents = {
   features: { component: SectionFeatures },
   footer: { component: SectionFooter },
   hero: { component: SectionHero },
+};
+
+const customSectionComponents = {
+  testimonials: <Testimonials />, 
+  adBanner: <AdBanner link="mailto:jamie@nayax.com" />
 };
 
 //////////////////////
@@ -91,17 +98,29 @@ const SectionBuilder = props => {
         const sectionId = getUniqueSectionId(section.sectionId, index);
 
         if (Section) {
-          return (
-            <Section
-              key={`${sectionId}_i${index}`}
-              className={classes}
-              defaultClasses={DEFAULT_CLASSES}
-              isInsideContainer={isInsideContainer}
-              options={otherOption}
-              {...section}
-              sectionId={sectionId}
-            />
-          );
+          if(section.sectionName?.indexOf('customTemplate:') > -1){
+            //console.log('section blocks inside custom SectionBuilder', section.blocks);
+            const customSectionName = section.sectionName.split(':')[1];
+            const CustomComponent = customSectionComponents[customSectionName];
+
+            return (
+              <React.Fragment key={customSectionName}>
+                {React.cloneElement(CustomComponent, { section: section })}
+              </React.Fragment>
+            );
+          } else {
+            return (
+              <Section
+                key={`${sectionId}_i${index}`}
+                className={classes}
+                defaultClasses={DEFAULT_CLASSES}
+                isInsideContainer={isInsideContainer}
+                options={otherOption}
+                {...section}
+                sectionId={sectionId}
+              />
+            );
+          }
         } else {
           // If the section type is unknown, the app can't know what to render
           console.warn(

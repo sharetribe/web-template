@@ -24,6 +24,10 @@ export const CLOSE_LISTING_REQUEST = 'app/ManageListingsPage/CLOSE_LISTING_REQUE
 export const CLOSE_LISTING_SUCCESS = 'app/ManageListingsPage/CLOSE_LISTING_SUCCESS';
 export const CLOSE_LISTING_ERROR = 'app/ManageListingsPage/CLOSE_LISTING_ERROR';
 
+export const DISCARD_DRAFT_REQUEST = 'app/ManageListingsPage/DISCARD_DRAFT_REQUEST';
+export const DISCARD_DRAFT_SUCCESS = 'app/ManageListingsPage/DISCARD_DRAFT_SUCCESS';
+export const DISCARD_DRAFT_ERROR = 'app/ManageListingsPage/DISCARD_DRAFT_ERROR';
+
 export const ADD_OWN_ENTITIES = 'app/ManageListingsPage/ADD_OWN_ENTITIES';
 export const CLEAR_OPEN_LISTING_ERROR = 'app/ManageListingsPage/CLEAR_OPEN_LISTING_ERROR';
 
@@ -40,6 +44,8 @@ const initialState = {
   openingListingError: null,
   closingListing: null,
   closingListingError: null,
+  discardingDraft: null,
+  discardingDraftError: null,
 };
 
 const resultIds = data => data.data.map(l => l.id);
@@ -143,6 +149,30 @@ const manageListingsPageReducer = (state = initialState, action = {}) => {
       };
     }
 
+    case DISCARD_DRAFT_REQUEST:
+      return {
+        ...state,
+        discardingDraft: payload.listingId,
+        discardingDraftError: null,
+      };
+    case DISCARD_DRAFT_SUCCESS:
+      return {
+        ...state,
+        discardingDraft: null,
+      };
+    case DISCARD_DRAFT_ERROR: {
+      // eslint-disable-next-line no-console
+      console.error(payload);
+      return {
+        ...state,
+        discardingDraft: null,
+        discardingDraftError: {
+          listingId: state.discardingDraft,
+          error: payload,
+        },
+      };
+    }
+
     case ADD_OWN_ENTITIES:
       return merge(state, payload);
 
@@ -217,6 +247,21 @@ export const closeListingError = e => ({
   payload: e,
 });
 
+export const discardDraftRequest = listingId => ({
+  type: DISCARD_DRAFT_REQUEST,
+  payload: { listingId },
+});
+
+export const discardDraftSuccess = () => ({
+  type: DISCARD_DRAFT_SUCCESS,
+});
+
+export const discardDraftError = e => ({
+  type: DISCARD_DRAFT_ERROR,
+  error: true,
+  payload: e,
+});
+
 export const queryListingsRequest = queryParams => ({
   type: FETCH_LISTINGS_REQUEST,
   payload: { queryParams },
@@ -278,6 +323,28 @@ export const openListing = listingId => (dispatch, getState, sdk) => {
     })
     .catch(e => {
       dispatch(openListingError(storableError(e)));
+    });
+};
+
+const delay = ms => new Promise(resolve => window.setTimeout(resolve, ms));
+export const discardDraft = listingId => (dispatch, getState, sdk) => {
+  dispatch(discardDraftRequest(listingId));
+  const { queryParams } = getState().ManageListingsPage;
+
+  return sdk.ownListings
+    .discardDraft({ id: listingId }, { expand: true })
+    .then(() => {
+      // Return the listing update with a delay, so that the user
+      // notices which listing gets removed
+      return Promise.all([delay(300), sdk.ownListings.query(queryParams)]);
+    })
+    .then(([_, listingResponse]) => {
+      dispatch(addOwnEntities(listingResponse));
+      dispatch(queryListingsSuccess(listingResponse));
+      dispatch(discardDraftSuccess());
+    })
+    .catch(e => {
+      dispatch(discardDraftError(storableError(e)));
     });
 };
 

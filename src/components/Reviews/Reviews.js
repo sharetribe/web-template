@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { arrayOf, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { injectIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 
-import { Avatar, ReviewRating, UserDisplayName } from '../../components';
+import { Avatar, SecondaryButton, ReviewRating, UserDisplayName } from '../../components';
+
+import {ChevronLeft, ChevronRight} from 'lucide-react';
+
+import Slider from "react-slick";
 
 import css from './Reviews.module.css';
 
@@ -49,19 +53,92 @@ Review.propTypes = {
 };
 
 const ReviewsComponent = props => {
+  
   const { className, rootClassName, reviews, intl } = props;
   const classes = classNames(rootClassName || css.root, className);
+  
+  const settings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 2,
+    slidesToScroll: 1,
+    initialSlide: 0,
+    responsive: [
+
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1
+        }
+      }
+    ]
+  };
+
+  const carouselRef = useRef(null);
+  const [currentSlide, setCurrentSlide] = React.useState(0);
+  const [slidesToShow, setSlidesToShow] = React.useState(settings.slidesToShow);
+
+  const updateSlidesToShow = () => {
+    const width = window.innerWidth;
+    const responsiveSetting = settings.responsive.find(r => width <= r.breakpoint);
+    setSlidesToShow(responsiveSetting ? responsiveSetting.settings.slidesToShow : settings.slidesToShow);
+  };
+
+  React.useEffect(() => {
+    updateSlidesToShow();
+    window.addEventListener('resize', updateSlidesToShow);
+
+    // Mimic a window resize event
+    const resizeEvent = new Event('resize');
+
+    setTimeout(() => {
+      window.dispatchEvent(resizeEvent);
+      carouselRef.current.slickGoTo(0);
+    }, 300);
+
+    return () => {
+      window.removeEventListener('resize', updateSlidesToShow);
+    };
+  }, []);
+
+  const totalSlides = Math.ceil(reviews.length / slidesToShow);
+
+  //for use with carousel buttons
+  const handleAfterChange = (current) => {
+    setCurrentSlide(current);
+    console.log('current', current);
+    console.log('totalSlides', totalSlides);
+  };
 
   return (
-    <ul className={classes}>
-      {reviews.map(r => {
-        return (
-          <li key={`Review_${r.id.uuid}`} className={css.reviewItem}>
-            <Review review={r} intl={intl} />
-          </li>
-        );
-      })}
-    </ul>
+    <div className={classes}>
+      <div className="carousel-button-group">
+        <SecondaryButton 
+          className={currentSlide === 0 ? 'disable' : ''} 
+          onClick={() => carouselRef.current.slickPrev()}
+        >
+          <ChevronLeft/>
+        </SecondaryButton>
+        <SecondaryButton 
+          className={currentSlide == totalSlides -1 ? 'disable' : ''}
+          onClick={() => carouselRef.current.slickNext()}
+        >
+          <ChevronRight/>
+        </SecondaryButton>
+      </div>
+
+      <Slider ref={carouselRef} {...settings} afterChange={handleAfterChange}>
+        {reviews.map(r => {
+          return (
+            <div key={`Review_${r.id.uuid}`} className={css.reviewItem}>
+              <Review review={r} intl={intl} />
+            </div>
+          );
+        })}
+      </Slider>
+    </div>
   );
 };
 

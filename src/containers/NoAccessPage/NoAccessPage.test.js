@@ -11,10 +11,10 @@ const { screen, userEvent } = testingLibrary;
 const noop = () => null;
 
 describe('NoAccessPageComponent', () => {
-  it('Check that /no-posting-right has heading and content', () => {
+  it('Check that /no-posting-rights has heading and content', () => {
     render(
       <NoAccessPageComponent
-        params={{ missingAccessRight: 'posting-right' }}
+        params={{ missingAccessRight: 'posting-rights' }}
         scrollingDisabled={false}
         intl={fakeIntl}
       />
@@ -25,6 +25,23 @@ describe('NoAccessPageComponent', () => {
     expect(found).toBeInTheDocument();
     const postListingsContent = 'NoAccessPage.postListings.content';
     const found2 = screen.getByText(postListingsContent);
+    expect(found2).toBeInTheDocument();
+  });
+
+  it('Check that /no-transaction-rights has heading and content', () => {
+    render(
+      <NoAccessPageComponent
+        params={{ missingAccessRight: 'transaction-rights' }}
+        scrollingDisabled={false}
+        intl={fakeIntl}
+      />
+    );
+
+    const initiateTransactionsHeading = 'NoAccessPage.initiateTransactions.heading';
+    const found = screen.getByText(initiateTransactionsHeading);
+    expect(found).toBeInTheDocument();
+    const initiateTransactionsContent = 'NoAccessPage.initiateTransactions.content';
+    const found2 = screen.getByText(initiateTransactionsContent);
     expect(found2).toBeInTheDocument();
   });
 

@@ -13,12 +13,16 @@
   gap: 24px;
   width: 100%;
 
-  @media (--viewportLarge) {
+  @media (--viewportMedium) {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  @media (--viewportXLarge) {
+  @media (--viewportLarge) {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (--viewportXLarge) {
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 

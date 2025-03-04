@@ -1,0 +1,23 @@
+@import '../../../../styles/customMediaQueries.css';
+
+.root {
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  width: 100%;
+  max-width: var(--contentMaxWidth);
+  margin: auto;
+  padding: 8px;
+
+  @media (--viewportMedium) {
+    padding: 28px 72px;
+  }
+}
+
+.hiddenStep {
+  visibility: hidden;
+}

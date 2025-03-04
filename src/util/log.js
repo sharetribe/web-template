@@ -8,6 +8,9 @@
 
 import * as Sentry from '@sentry/browser';
 import appSettings from '../config/settings';
+import defaultConfig from '../config/configDefault';
+
+const { marketplaceRootURL } = defaultConfig;
 
 const ingoreErrorsMap = {
   ['ResizeObserver loop limit exceeded']: true, // Some exotic browsers seems to emit these.
@@ -34,6 +37,20 @@ export const setup = () => {
       dsn: appSettings.sentryDsn,
       environment: appSettings.env,
       ignoreErrors,
+      // eslint-disable-next-line new-cap
+      integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
+      // We recommend adjusting this value in production, or using tracesSampler
+      // for finer control
+      tracesSampleRate: appSettings.dev ? 1.0 : 0.1,
+      replaysSessionSampleRate: appSettings.dev ? 1.0 : 0.1, // Production should sets the sample rate at 10%. You may want to change it to 100% while in development
+      replaysOnErrorSampleRate: 1.0,
+
+      tracePropagationTargets: [
+        'localhost',
+        'flex-api.sharetribe.com',
+        marketplaceRootURL,
+        /^\/api\//,
+      ],
     });
   }
 };

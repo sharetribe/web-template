@@ -5,6 +5,9 @@
   width: 100%;
   border-radius: 8px;
   margin-bottom: 0;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .text {
@@ -13,5 +16,44 @@
 
   &:first-child {
     margin-top: 0;
+  }
+}
+
+.alignLeft {
+  text-align: left;
+}
+
+.alignCenter {
+  text-align: center;
+
+  & > ul,
+  & > ol {
+    text-align: left;
+    width: fit-content;
+    /* center */
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  & > p {
+    /* center */
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.alignRight {
+  text-align: right;
+  & > ul,
+  & > ol {
+    text-align: left;
+    width: fit-content;
+    /* push to right */
+    margin-left: auto;
+  }
+
+  & > p {
+    /* push to right */
+    margin-left: auto;
   }
 }
