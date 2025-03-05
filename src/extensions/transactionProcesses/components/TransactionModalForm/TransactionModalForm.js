@@ -70,6 +70,7 @@ const getField = ({ config, configIndex, intl, values }) => {
           format={v => v}
           valueFromForm={values[name]}
           validate={composeValidators(...validators)}
+          inputClassName={css.fieldLocationInput}
           rootClassName={css.fieldInput}
           iconClassName={css.locationAutocompleteInputIcon}
         />

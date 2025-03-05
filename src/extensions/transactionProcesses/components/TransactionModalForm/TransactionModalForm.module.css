@@ -9,6 +9,25 @@
   }
 }
 
+.fieldLocationInput {
+  flex-grow: 1;
+  height: 50px;
+  padding-left: 10px;
+  margin: 0;
+  line-height: unset;
+  border-bottom-width: 1px;
+
+  /* Safari bugfix: without this Safari will print placeholder to a wrong place */
+  &::-webkit-input-placeholder {
+    line-height: normal;
+  }
+
+  &:hover,
+  &:focus {
+    outline: none;
+  }
+}
+
 .locationAutocompleteInputIcon {
   display: none;
 }

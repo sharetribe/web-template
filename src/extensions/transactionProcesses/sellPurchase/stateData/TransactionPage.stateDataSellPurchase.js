@@ -100,7 +100,11 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
       const requestAfterInquiry = transitions.REQUEST_PAYMENT_AFTER_INQUIRY;
       const hasCorrectNextTransition = transitionNames.includes(requestAfterInquiry);
       const showOrderPanel = !isProviderBanned && hasCorrectNextTransition;
-      return { processName, processState, showOrderPanel };
+      return {
+        ...defaultStateData,
+        showDetailCardHeadings: true,
+        showOrderPanel,
+      };
     })
     .cond([states.INQUIRY, PROVIDER], () => {
       return defaultStateData;
@@ -141,7 +145,6 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
         showActionButtons: true,
         primaryButtonProps: actionButtonProps(transitions.SELLER_CONFIRM_PURCHASE, PROVIDER, {
           isConfirmNeeded: true,
-          showConfirmStatement: true,
           showReminderStatement: true,
           formConfigs: [
             getFieldTextConfig('managerName'),

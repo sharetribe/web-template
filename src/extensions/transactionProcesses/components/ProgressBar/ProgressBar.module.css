@@ -1,6 +1,7 @@
 @import '../../../../styles/customMediaQueries.css';
 
 .root {
+  background-color: var(--colorWhite);
 }
 
 .container {
@@ -9,12 +10,12 @@
   align-items: flex-start;
 
   width: 100%;
-  max-width: var(--contentMaxWidth);
   margin: auto;
   padding: 8px;
 
   @media (--viewportMedium) {
-    padding: 28px 72px;
+    max-width: calc(var(--contentMaxWidth) + 72px);
+    padding: 28px 36px;
   }
 }
 
