@@ -66,7 +66,7 @@ async function generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, anal
           const params = sequenceId
             ? { startAfterSequenceId: sequenceId }
             : { createdAtStart: startTime };
-          const withLogs = dev ? SCRIPT_NAME === 'notifyProductListingCreated' : false;
+          const withLogs = SCRIPT_NAME === 'notifyProductListingCreated';
           if (withLogs) {
             console.warn('\n\n\n*******************************');
           }
