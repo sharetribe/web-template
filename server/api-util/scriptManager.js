@@ -119,6 +119,7 @@ async function generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, anal
         await Promise.race([executeWithTimeout, poolTimeout]); // Whichever finishes first
       } catch (error) {
         console.log(`--- [pollLoop] | [${SCRIPT_NAME}] - Restarted due to timeout`);
+        delay = pollWait;
       }
       setTimeout(
         () => {
