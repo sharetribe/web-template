@@ -5,7 +5,7 @@ const httpFileUrlToStream = async imageUrl => {
     method: 'GET',
     url: imageUrl,
     responseType: 'stream',
-    timeout: 60000,
+    timeout: 30000, // 30 seconds
   });
   return response.data;
 };

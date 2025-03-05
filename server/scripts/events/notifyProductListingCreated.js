@@ -60,10 +60,8 @@ function scriptHelper() {
 
   const storageHandler = async events => {
     const storageManagerClient = new StorageManagerClient();
-
     console.warn('\n\n----------------');
     console.warn(`\n[storageHandler] - START! | Total: ${events.length}`);
-
     const data = await Promise.all(
       events.map(async event => {
         const { resourceId, resource } = event.attributes;
@@ -82,11 +80,24 @@ function scriptHelper() {
         };
       })
     );
-
-    console.warn(`\n[storageHandler] - results: ${events.length}`);
-    // console.warn('\n[storageHandler] - data:', data);
-
-    return await storageManagerClient.uploadOriginalAssets(data);
+    let results = [];
+    for (const product of data) {
+      try {
+        const originalData = await storageManagerClient.uploadOriginalAsset(product);
+        console.warn(
+          `\n[storageHandler] - id: ${originalData.id} | source: ${originalData.source}`
+        );
+        results.push(originalData);
+      } catch (error) {
+        console.error(
+          `[storageHandler] Error storing the original asset: ${product.relationId} | Error:`,
+          error
+        );
+      }
+    }
+    console.warn(`\n[storageHandler] - resultsLength: ${results.length}`);
+    // console.warn('\n[storageHandler] - results:', results);
+    return results;
   };
 
   const analyzeEvent = async (event, originalAssetData) => {
@@ -124,16 +135,19 @@ function scriptHelper() {
     let failList = [];
     const promiseFn = async () => await storageHandler(events);
     const originalAssets = await retryAsync(promiseFn, RETRIES, RETRY_STORAGE_DELAY);
+    console.warn('[analyzeEventsBatch] - Marketplace update START!');
     for (const event of events) {
       const { resourceId } = event.attributes;
       const listingId = resourceId?.uuid;
       const originalAssetData = originalAssets.find(asset => asset.id === listingId);
-      const success = await analyzeEvent(event, originalAssetData);
-
-      console.warn(`\n[analyzeEventsBatch] - listingId: ${listingId} | success: ${success}`);
-
-      if (success) {
-        successList.push(listingId);
+      if (originalAssetData) {
+        const success = await analyzeEvent(event, originalAssetData);
+        console.warn(`\n[analyzeEventsBatch] - listingId: ${listingId} | success: ${success}`);
+        if (success) {
+          successList.push(listingId);
+        } else {
+          failList.push(listingId);
+        }
       } else {
         failList.push(listingId);
       }

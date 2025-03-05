@@ -2,10 +2,9 @@ const sharetribeIntegrationSdk = require('sharetribe-flex-integration-sdk');
 const { StudioManagerClient: SMClient } = require('./studioHelper');
 
 let INTEGRATION_SDK = null;
-// (1 minutes = 60 seconds) && (1 second = 1000 ms) && (1 minute = 60*1000 ms)
-const MS_IN_MINUTE = 60 * 1000;
+const MS_IN_MINUTE = 60 * 1000; // (1 minutes = 60 seconds) && (1 second = 1000 ms) && (1 minute = 60*1000 ms)
+const POLL_TIMEOUT_LIMIT = 10 * MS_IN_MINUTE; // 10 minutes
 const EVENTS_BATCH_SIZE = 10;
-const POLL_TIMEOUT_LIMIT = 2 * MS_IN_MINUTE; // 2 minutes
 
 function integrationSdkInit() {
   const withExistingIntance = !!INTEGRATION_SDK;
@@ -49,7 +48,7 @@ async function generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, anal
     // DEV: We use 10 seconds so that the data is printed without much delay.
     const pollIdleWait = 10 * MS_IN_MINUTE;
     // Polling interval (in ms) when a full page of events is received and there may be more
-    const pollWait = 3 * MS_IN_MINUTE;
+    const pollWait = 2 * MS_IN_MINUTE;
     // Sequence Queue management
     const saveLastEventSequenceId = sequenceId =>
       studioManagerClient.updateScriptSequence(SCRIPT_NAME, { sequenceId });
