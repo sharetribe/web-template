@@ -3,7 +3,7 @@ const { StudioManagerClient: SMClient } = require('./studioHelper');
 
 let INTEGRATION_SDK = null;
 const MS_IN_MINUTE = 60 * 1000; // (1 minutes = 60 seconds) && (1 second = 1000 ms) && (1 minute = 60*1000 ms)
-const POLL_TIMEOUT_LIMIT = 10 * MS_IN_MINUTE; // 10 minutes
+const POLL_TIMEOUT_LIMIT = 5 * MS_IN_MINUTE; // 5 minutes
 const EVENTS_BATCH_SIZE = 10;
 
 function integrationSdkInit() {
