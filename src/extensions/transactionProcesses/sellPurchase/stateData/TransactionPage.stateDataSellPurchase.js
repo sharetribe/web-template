@@ -94,7 +94,11 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
       const requestAfterInquiry = transitions.REQUEST_PAYMENT_AFTER_INQUIRY;
       const hasCorrectNextTransition = transitionNames.includes(requestAfterInquiry);
       const showOrderPanel = !isProviderBanned && hasCorrectNextTransition;
-      return { processName, processState, showOrderPanel };
+      return {
+        ...defaultStateData,
+        showDetailCardHeadings: true,
+        showOrderPanel,
+      };
     })
     .cond([states.INQUIRY, PROVIDER], () => {
       return defaultStateData;
