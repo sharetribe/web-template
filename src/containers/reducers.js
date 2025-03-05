@@ -6,6 +6,7 @@
 import CheckoutPage from './CheckoutPage/CheckoutPage.duck';
 import ContactDetailsPage from './ContactDetailsPage/ContactDetailsPage.duck';
 import EditListingPage from './EditListingPage/EditListingPage.duck';
+import GoogleAuthRedirectPage from './GoogleAuthRedirectPage/GoogleAuthRedirectPage.duck'; // [SKYFARER]
 import InboxPage from './InboxPage/InboxPage.duck';
 import ListingPage from './ListingPage/ListingPage.duck';
 import ManageListingsPage from './ManageListingsPage/ManageListingsPage.duck';
@@ -23,6 +24,7 @@ export {
   CheckoutPage,
   ContactDetailsPage,
   EditListingPage,
+  GoogleAuthRedirectPage, // [SKYFARER]
   InboxPage,
   ListingPage,
   ManageListingsPage,

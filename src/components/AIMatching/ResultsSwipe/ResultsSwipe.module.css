@@ -1,0 +1,16 @@
+.swiper {
+  max-width: 240px;
+  height: 320px;
+}
+
+.gradientNameBar {
+  width: 100%;
+  background: linear-gradient(
+    135deg,
+    rgb(5, 25, 42), /* Darker shade for depth */
+    rgb(11, 38, 64), /* Base color */
+    rgb(35, 76, 120), /* Lighter shade for shine */
+    rgb(11, 38, 64), /* Base color for loop */
+    rgb(5, 25, 42) /* Return to darker for depth */
+  );
+}

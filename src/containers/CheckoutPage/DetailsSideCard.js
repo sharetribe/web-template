@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { FormattedMessage } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { createSlug } from '../../util/urlHelpers';
@@ -15,6 +14,8 @@ import {
 } from '../../components';
 
 import css from './CheckoutPage.module.css';
+
+import { getDefaultTimeZoneOnBrowser, getTimeZoneBadgeContent } from '../../util/dates';
 
 /**
  * A card that displays the listing and booking details on the checkout page.
@@ -44,6 +45,7 @@ const DetailsSideCard = props => {
     processName,
     breakdown,
     intl,
+    currentUser, // [SKYFARER]
   } = props;
 
   const { price, publicData } = listing?.attributes || {};
@@ -54,6 +56,12 @@ const DetailsSideCard = props => {
   const variants = firstImage
     ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
     : [];
+
+  // [SKYFARER]
+  const userPublicTimezone = currentUser?.attributes?.profile?.publicData?.timeZone;
+  const userTimeZone = userPublicTimezone ? userPublicTimezone.replace(/-/g, '/') : getDefaultTimeZoneOnBrowser();
+  const currentUserTimezoneName = getTimeZoneBadgeContent(userTimeZone);
+  // [/SKYFARER]
 
   return (
     <div className={css.detailsContainerDesktop}>
@@ -82,6 +90,9 @@ const DetailsSideCard = props => {
               {listingTitle}
             </NamedLink>
           </H4>
+
+          <span className={css.timezoneBadge}>{currentUserTimezoneName}</span>{/* [SKYFARER] */}
+
           {showPrice ? (
             <div className={css.priceContainer}>
               <p className={css.price}>{formatMoney(intl, price)}</p>

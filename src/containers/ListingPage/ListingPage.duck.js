@@ -3,7 +3,7 @@ import pick from 'lodash/pick';
 import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
 import { storableError } from '../../util/errors';
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
-import { transactionLineItems } from '../../util/api';
+import { fetchEventsFromGoogleCalendar, transactionLineItems } from '../../util/api'; // [SKYFARER MERGE: +fetchEventsFromGoogleCalendar]
 import * as log from '../../util/log';
 import { denormalisedResponseEntities } from '../../util/data';
 import { findNextBoundary, getStartOf, monthIdString } from '../../util/dates';
@@ -384,6 +384,7 @@ export const fetchTransactionLineItems = ({ orderData, listingId, isOwnListing }
 };
 
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
+  const hasWindow = typeof window !== 'undefined'; // [SKYFARER]
   const listingId = new UUID(params.id);
   const state = getState();
   const currentUser = state.user?.currentUser;
@@ -397,7 +398,18 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
 
   const ownListingVariants = [LISTING_PAGE_DRAFT_VARIANT, LISTING_PAGE_PENDING_APPROVAL_VARIANT];
   if (ownListingVariants.includes(params.variant)) {
-    return dispatch(showListing(listingId, config, true));
+    return dispatch(showListing(listingId, config, true))
+      .catch(error => { // [SKYFARER]
+        // Log the error with SSR context
+        log.error(error, 'LISTING_PAGE_LOAD_ERROR', {
+          listingId: listingId.uuid,
+          variant: params.variant,
+          isServer: !hasWindow,
+          url: hasWindow ? window.location.href : null
+        })
+        // Re-throw to trigger error boundary
+        throw error
+      })
   }
 
   // In private marketplace mode, this page won't fetch data if the user is unauthorized
@@ -418,6 +430,12 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   return Promise.all(promises).then(response => {
     const listingResponse = response[0];
     const listing = listingResponse?.data?.data;
+
+    // [SKYFARER]
+    const authorId = listing?.relationships?.author?.data?.id?.uuid;
+    if (hasWindow) fetchEventsFromGoogleCalendar({ listingId: params.id, currentUserId: authorId });
+    // [/SKYFARER]
+
     const transactionProcessAlias = listing?.attributes?.publicData?.transactionProcessAlias || '';
     if (isBookingProcessAlias(transactionProcessAlias) && !hasNoViewingRights) {
       // Fetch timeSlots if the user has viewing rights.

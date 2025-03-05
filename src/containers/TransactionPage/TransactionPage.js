@@ -467,6 +467,7 @@ export const TransactionPageComponent = props => {
   // that currently handles showing everything inside layout's main view area.
   const panel = isDataAvailable ? (
     <TransactionPanel
+      transaction={transaction} // [SKYFARER]
       className={detailsClassName}
       currentUser={currentUser}
       transactionId={transaction?.id}
@@ -504,6 +505,7 @@ export const TransactionPageComponent = props => {
       }
       isInquiryProcess={processName === INQUIRY_PROCESS_NAME}
       config={config}
+      onManageDisableScrolling={onManageDisableScrolling} // [SKYFARER]
       {...orderBreakdownMaybe}
       orderPanel={
         <OrderPanel

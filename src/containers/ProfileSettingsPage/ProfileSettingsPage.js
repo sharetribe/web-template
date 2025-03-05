@@ -24,6 +24,18 @@ import ProfileSettingsForm from './ProfileSettingsForm/ProfileSettingsForm';
 import { updateProfile, uploadImage } from './ProfileSettingsPage.duck';
 import css from './ProfileSettingsPage.module.css';
 
+// [SKYFARER]
+import { getGoogleAccessToken } from '../../util/userDataExtractor';
+import {
+  disconnectGoogleAccount,
+  disconnectGoogleSelector,
+} from '../EditListingPage/EditListingPage.duck';
+import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
+import { setCurrentPathnameAndInitiateAuth } from '../../util/editListingHelpers';
+import { googleAuthSelector, InitiateGoogleAuth } from '../../ducks/googleCalendar.duck';
+import { useDispatch } from 'react-redux';
+// [/SKYFARER]
+
 const onImageUploadHandler = (values, fn) => {
   const { id, imageId, file } = values;
   if (file) {
@@ -81,9 +93,20 @@ export const ProfileSettingsPageComponent = props => {
     updateProfileError,
     uploadImageError,
     uploadInProgress,
+    onDisconnectGoogleAccount, // [SKYFARER]
   } = props;
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const { authInProgress } = useSelector(googleAuthSelector); // [SKYFARER]
+  const { disconnectGoogleInProgress } = useSelector(disconnectGoogleSelector); // [SKYFARER]
 
+  const hasGoogleAccessToken = getGoogleAccessToken(currentUser); // [SKYFARER]
+  const currentPathname = location?.pathname;
   const { userFields, userTypes = [] } = config.user;
+
+  const inititateGoogleAuth = () => { // [SKYFARER]
+    setCurrentPathnameAndInitiateAuth(currentPathname, dispatch, InitiateGoogleAuth);
+  };
 
   const handleSubmit = (values, userType) => {
     const { firstName, lastName, displayName, bio: rawBio, ...rest } = values;
@@ -166,6 +189,11 @@ export const ProfileSettingsPageComponent = props => {
       marketplaceName={config.marketplaceName}
       userFields={userFields}
       userTypeConfig={userTypeConfig}
+      hasGoogleAccessToken={hasGoogleAccessToken} // [SKYFARER]
+      onDisconnectGoogleAccount={onDisconnectGoogleAccount} // [SKYFARER]
+      onInitiateGoogleAuth={inititateGoogleAuth} // [SKYFARER]
+      authInProgress={authInProgress} // [SKYFARER]
+      disconnectGoogleInProgress={disconnectGoogleInProgress} // [SKYFARER]
     />
   ) : null;
 
@@ -220,6 +248,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
   onImageUpload: data => dispatch(uploadImage(data)),
   onUpdateProfile: data => dispatch(updateProfile(data)),
+  onDisconnectGoogleAccount: data => dispatch(disconnectGoogleAccount(data)), // [SKYFARER]
 });
 
 const ProfileSettingsPage = compose(

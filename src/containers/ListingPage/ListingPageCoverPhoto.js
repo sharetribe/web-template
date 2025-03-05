@@ -80,6 +80,7 @@ import SectionTextMaybe from './SectionTextMaybe';
 import SectionReviews from './SectionReviews';
 import SectionAuthorMaybe from './SectionAuthorMaybe';
 import SectionMapMaybe from './SectionMapMaybe';
+import SectionLinks from './SectionLinks'; // [SKYFARER]
 import CustomListingFields from './CustomListingFields';
 
 import css from './ListingPage.module.css';
@@ -97,6 +98,7 @@ export const ListingPageComponent = props => {
   const {
     isAuthenticated,
     currentUser,
+    currentUserHasOrders, // [SKYFARER]
     getListing,
     getOwnListing,
     intl,
@@ -371,9 +373,28 @@ export const ListingPageComponent = props => {
               currentUser={currentUser}
               onManageDisableScrolling={onManageDisableScrolling}
             />
+
+            {/* [SKYFARER] */}
+            {process.env.REACT_APP_LISTING_PAGE_SHOW_USER_FIELDS === 'true' && (
+              <>
+                <hr style={{ marginBlock: '1rem' }} />
+                <CustomUserFields
+                  {...props}
+                  displayName={authorDisplayName}
+                  userFieldConfig={config.user.userFields}
+                  publicData={ensuredAuthor?.attributes?.profile?.publicData}
+                />
+              </>
+            )}
+
+            <hr style={{ marginBlock: '1rem' }} />
+            <SectionLinks />
+            {/* [/SKYFARER] */}
           </div>
           <div className={css.orderColumnForHeroLayout}>
             <OrderPanel
+              currentUser={currentUser}
+              currentUserHasOrders={currentUserHasOrders}
               className={css.orderPanel}
               listing={currentListing}
               isOwnListing={isOwnListing}
@@ -522,7 +543,7 @@ const mapStateToProps = state => {
     fetchLineItemsError,
     inquiryModalOpenForListingId,
   } = state.ListingPage;
-  const { currentUser } = state.user;
+  const { currentUser, currentUserHasOrders } = state.user; // [SKYFARER MERGE: +currentUserHasOrders]
 
   const getListing = id => {
     const ref = { id, type: 'listing' };
@@ -539,6 +560,7 @@ const mapStateToProps = state => {
   return {
     isAuthenticated,
     currentUser,
+    currentUserHasOrders, // [SKYFARER]
     getListing,
     getOwnListing,
     scrollingDisabled: isScrollingDisabled(state),

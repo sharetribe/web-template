@@ -37,7 +37,7 @@
 
   @media (--viewportMedium) {
     padding: 0;
-    margin-top: 40px;
+    /* margin-top: 40px; */ /* [SKYFARER] */
   }
 }
 
@@ -74,16 +74,34 @@
 
   @media (--viewportMedium) {
     padding: 0;
-    margin-top: 72px;
+    /* margin-top: 72px; */ /* [SKYFARER] */
   }
 }
 
-.fieldSeats {
-  width: calc(100% - 48px);
-  margin: 30px 24px 6px 24px;
+.promoCodeArea {
+  margin-top: 2rem;
+}
 
-  @media (--viewportMedium) {
-    width: 100%;
-    margin: 24px 0;
+.timezoneBadge {
+  display: block;
+  text-align: center;
+  font-size: 0.8em;
+  font-weight: 600;
+  color: #2d2d2d;
+  background-color: #e9e9e9;
+  border: 1px solid #d9d9d9;
+  border-radius: 10px;
+  padding: 4px 8px;
+  width: fit-content;
+  margin-block: 0;
+  margin-left: auto;
+  margin-right: auto;
+
+  &:before {
+    content: '🌐';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
   }
 }

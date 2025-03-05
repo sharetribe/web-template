@@ -11,6 +11,7 @@ const ActionButtonsMaybe = props => {
     className,
     rootClassName,
     showButtons,
+    setModal, // [SKYFARER]
     primaryButtonProps,
     secondaryButtonProps,
     isListingDeleted,
@@ -30,7 +31,7 @@ const ActionButtonsMaybe = props => {
     <PrimaryButton
       inProgress={primaryButtonProps.inProgress}
       disabled={buttonsDisabled}
-      onClick={primaryButtonProps.onAction}
+      onClick={primaryButtonProps.modal ? () => setModal(primaryButtonProps.modal) : primaryButtonProps.onAction} // [SKYFARER MERGE: modal]
     >
       {primaryButtonProps.buttonText}
     </PrimaryButton>
@@ -43,7 +44,7 @@ const ActionButtonsMaybe = props => {
     <SecondaryButton
       inProgress={secondaryButtonProps?.inProgress}
       disabled={buttonsDisabled}
-      onClick={secondaryButtonProps.onAction}
+      onClick={secondaryButtonProps.modal ? () => setModal(secondaryButtonProps.modal) : secondaryButtonProps.onAction} // [SKYFARER MERGE: modal]
     >
       {secondaryButtonProps.buttonText}
     </SecondaryButton>

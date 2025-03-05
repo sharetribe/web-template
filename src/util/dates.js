@@ -878,3 +878,24 @@ export const getEndOfWeek = (date, timeZone, firstDayOfWeek) => {
   const m = timeZone ? moment(date).tz(timeZone) : moment(date);
   return getEndOfWeekAsMoment(m, timeZone, firstDayOfWeek).toDate();
 };
+
+// [SKYFARER]
+export const getTimeZoneOffset = (timeZone) => {
+  const date = new Date();
+  const utc = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }));
+  const local = new Date(date.toLocaleString('en-US', { timeZone }));
+  const offsetMinutes = (local.getTime() - utc.getTime()) / 60000;
+  const offsetHours = Math.abs(Math.floor(offsetMinutes / 60));
+  const offsetMinutesRemainder = Math.abs(offsetMinutes % 60);
+  const offsetString = `${offsetMinutes >= 0 ? '+' : '-'}${offsetHours.toString().padStart(2, '0')}:${offsetMinutesRemainder.toString().padStart(2, '0')}`;
+  return offsetString;
+};
+
+// [SKYFARER]
+export const getTimeZoneBadgeContent = (timeZone) => {
+  const date = new Date();
+  const utc = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }));
+  const local = new Date(date.toLocaleString('en-US', { timeZone }));
+  const longName = new Intl.DateTimeFormat('en-US', { timeZone, timeZoneName: 'long' }).format(date).split(' ')[1];
+  return `${longName} UTC ${getTimeZoneOffset(timeZone)}`;
+}

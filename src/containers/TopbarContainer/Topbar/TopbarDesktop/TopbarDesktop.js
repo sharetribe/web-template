@@ -12,18 +12,36 @@ import {
   MenuContent,
   MenuItem,
   NamedLink,
+  PrimaryButtonInline, // [SKYFARER]
 } from '../../../../components';
 
 import TopbarSearchForm from '../TopbarSearchForm/TopbarSearchForm';
 import CustomLinksMenu from './CustomLinksMenu/CustomLinksMenu';
 
 import css from './TopbarDesktop.module.css';
+import SparklyBackground from '../../../../assets/sparkly-background.jpg'; // [SKYFARER]
+
+const isLowerEnv = process.env.REACT_APP_IS_LOWER_ENV === 'true'; // [SKYFARER]
+
+// [SKYFARER]
+const InstructorMatchingButtonLink = () => {
+  return (
+    <div className={css.topbarButtonWrapper}>
+      <NamedLink name='AIMatchingPage'>
+        <PrimaryButtonInline style={{backgroundImage: `url(${SparklyBackground})`, backgroundPosition: '50% 35%'}}>
+          <FormattedMessage style={{all: "unset"}} id='TopbarDesktop.ai'/>
+        </PrimaryButtonInline>
+      </NamedLink>
+    </div>
+  );
+};
+// [/SKYFARER]
 
 const SignupLink = () => {
   return (
-    <NamedLink name="SignupPage" className={css.topbarLink}>
+    <NamedLink name='SignupPage' className={css.topbarLink}>
       <span className={css.topbarLinkLabel}>
-        <FormattedMessage id="TopbarDesktop.signup" />
+        <FormattedMessage id='TopbarDesktop.signup' />
       </span>
     </NamedLink>
   );
@@ -56,6 +74,8 @@ const InboxLink = ({ notificationCount, currentUserHasListings }) => {
 };
 
 const ProfileMenu = ({ currentPage, currentUser, onLogout }) => {
+  const isInstructor = currentUser?.attributes?.profile?.publicData?.userType.toLowerCase() === 'instructor'; // [SKYFARER]
+
   const currentPageClass = page => {
     const isAccountSettingsPage =
       page === 'AccountSettingsPage' && ACCOUNT_SETTINGS_PAGES.includes(currentPage);
@@ -68,15 +88,30 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout }) => {
         <Avatar className={css.avatar} user={currentUser} disableProfileLink />
       </MenuLabel>
       <MenuContent className={css.profileMenuContent}>
-        <MenuItem key="ManageListingsPage">
-          <NamedLink
-            className={classNames(css.menuLink, currentPageClass('ManageListingsPage'))}
-            name="ManageListingsPage"
-          >
-            <span className={css.menuItemBorder} />
-            <FormattedMessage id="TopbarDesktop.yourListingsLink" />
-          </NamedLink>
-        </MenuItem>
+        {
+          isInstructor ? ( // [SKYFARER]
+            <MenuItem key="ManageListingsPage">
+              <NamedLink
+                className={classNames(css.menuLink, currentPageClass('ManageListingsPage'))}
+                name="ManageListingsPage"
+              >
+                <span className={css.menuItemBorder} />
+                <FormattedMessage id="TopbarDesktop.yourListingsLink" defaultMessage="Your Listings" />
+              </NamedLink>
+            </MenuItem>
+          ) : (
+            <MenuItem key="SearchPage">
+              <NamedLink
+                className={classNames(css.menuLink, currentPageClass('SearchPage'))}
+                name="SearchPage"
+                style={{ display: 'none' }}
+              >
+                <span className={css.menuItemBorder} />
+                <FormattedMessage id="TopbarDesktop.searchListingsLink" defaultMessage="Search Listings" />
+              </NamedLink>
+            </MenuItem>
+          )
+        }
         <MenuItem key="ProfileSettingsPage">
           <NamedLink
             className={classNames(css.menuLink, currentPageClass('ProfileSettingsPage'))}
@@ -156,6 +191,11 @@ const TopbarDesktop = props => {
   const giveSpaceForSearch = customLinks == null || customLinks?.length === 0;
   const classes = classNames(rootClassName || css.root, className);
 
+  // [SKYFARER]
+  const instructorMatchingButtonLinkMaybe = isAuthenticated && isLowerEnv ? ( // TODO: remove env flag once validated (I'm not sure what Mike's plan was but we'll mess with it later)
+    <InstructorMatchingButtonLink/>
+  ) : null;
+
   const inboxLinkMaybe = authenticatedOnClientSide ? (
     <InboxLink
       notificationCount={notificationCount}
@@ -203,6 +243,8 @@ const TopbarDesktop = props => {
         hasClientSideContentReady={authenticatedOnClientSide || !isAuthenticatedOrJustHydrated}
       />
 
+
+      {instructorMatchingButtonLinkMaybe}{/* [SKYFARER] */}
       {inboxLinkMaybe}
       {profileMenuMaybe}
       {signupLinkMaybe}

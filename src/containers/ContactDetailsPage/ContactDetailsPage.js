@@ -113,7 +113,7 @@ export const ContactDetailsPageComponent = props => {
               desktopClassName={css.desktopTopbar}
               mobileClassName={css.mobileTopbar}
             />
-            <UserNav currentPage="ContactDetailsPage" />
+            <UserNav currentPage="ContactDetailsPage" currentUser={currentUser} />{/* [SKYFARER] */}
           </>
         }
         sideNav={null}

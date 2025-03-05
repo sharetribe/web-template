@@ -21,6 +21,7 @@ import {
   FieldTextInput,
   H4,
   CustomExtendedDataField,
+  Icons, // [SKYFARER]
 } from '../../../components';
 
 import css from './ProfileSettingsForm.module.css';
@@ -148,6 +149,11 @@ class ProfileSettingsFormComponent extends Component {
             values,
             userFields,
             userTypeConfig,
+            hasGoogleAccessToken, // [SKYFARER]
+            onDisconnectGoogleAccount, // [SKYFARER]
+            onInitiateGoogleAuth, // [SKYFARER]
+            authInProgress, // [SKYFARER]
+            disconnectGoogleInProgress, // [SKYFARER]
           } = fieldRenderProps;
 
           const user = ensureCurrentUser(currentUser);
@@ -372,6 +378,42 @@ class ProfileSettingsFormComponent extends Component {
                   />
                 </div>
               </div>
+              <div>{/* [SKYFARER] */}
+                <H4 as="h2" className={css.sectionTitle}>
+                  <FormattedMessage id="ProfileSettingsForm.googleCalendar" />
+                </H4>
+                {hasGoogleAccessToken ? (
+                  <div className={css.planInfo}>
+                    <p>
+                      <FormattedMessage id="EditListingAvailabilityPanel.disconnectGoogleCalendar" />
+                    </p>
+                    <Button
+                      type="button"
+                      inProgress={disconnectGoogleInProgress}
+                      className={css.googleConnectButton}
+                      onClick={onDisconnectGoogleAccount}
+                    >
+                      <Icons name="googleLogo" />
+                      <FormattedMessage id="EditListingAvailabilityPanel.disconnectGoogleCalendar" />
+                    </Button>
+                  </div>
+                ) : (
+                  <div className={css.planInfo}>
+                    <p>
+                      <FormattedMessage id="EditListingAvailabilityPanel.connectWithGoogle" />
+                    </p>
+                    <Button
+                      type="button"
+                      inProgress={authInProgress}
+                      className={css.googleConnectButton}
+                      onClick={onInitiateGoogleAuth}
+                    >
+                      <Icons name="googleLogo" />
+                      <FormattedMessage id="EditListingAvailabilityPanel.connectWithGoogleCalendar" />
+                    </Button>
+                  </div>
+                )}
+              </div>{/* [SKYFARER] */}
 
               <DisplayNameMaybe userTypeConfig={userTypeConfig} intl={intl} />
 

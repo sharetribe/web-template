@@ -116,7 +116,12 @@ export const ListingCard = props => {
     : null;
 
   return (
-    <NamedLink className={classes} name="ListingPage" params={{ id, slug }}>
+    <NamedLink
+      className={classes}
+      name="ListingPage"
+      params={{ id, slug }}
+      target={typeof window !== 'undefined' ? window.location.hostname === 'localhost' ? undefined : '_blank' : '_blank'} // [SKYFARER]
+    >
       <AspectRatioWrapper
         className={css.aspectRatioWrapper}
         width={aspectWidth}

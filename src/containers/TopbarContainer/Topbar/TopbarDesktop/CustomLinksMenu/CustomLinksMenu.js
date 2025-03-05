@@ -100,7 +100,9 @@ const calculateContainerWidth = (containerRefTarget, parentWidth) => {
  * @param {*} props contains currentPage, customLinks, intl, and hasClientSideContentReady
  * @returns component to be placed inside TopbarDesktop
  */
-const CustomLinksMenu = ({ currentPage, customLinks = [], hasClientSideContentReady, intl }) => {
+const CustomLinksMenu = ({ currentPage, currentUser, customLinks = [], hasClientSideContentReady, intl }) => { // [SKYFARER MERGE: +currentUser]
+  const isInstructor = currentUser?.attributes?.profile?.publicData?.userType.toLowerCase() === 'instructor'; // [SKYFARER]
+
   const containerRef = useRef(null);
   const observer = useRef(null);
   const [mounted, setMounted] = useState(false);
@@ -189,7 +191,7 @@ const CustomLinksMenu = ({ currentPage, customLinks = [], hasClientSideContentRe
 
   return (
     <div className={css.customLinksMenu} ref={containerRef} {...styleMaybe}>
-      <PriorityLinks links={links} priorityLinks={priorityLinks} setLinks={setLinks} />
+      <PriorityLinks links={links} priorityLinks={priorityLinks} setLinks={setLinks} isInstructor={isInstructor} />{/* [SKYFARER] */}
       {mounted && hasMenuLinks ? (
         <LinksMenu
           id="linksMenu"

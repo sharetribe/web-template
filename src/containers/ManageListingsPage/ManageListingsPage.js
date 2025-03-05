@@ -206,7 +206,7 @@ export const ManageListingsPageComponent = props => {
         topbar={
           <>
             <TopbarContainer />
-            <UserNav currentPage="ManageListingsPage" />
+            <UserNav currentPage="ManageListingsPage" currentUser={currentUser} />{/* [SKYFARER MERGE: +currentUser (TODO: don't drill)] */}
           </>
         }
         footer={<FooterContainer />}

@@ -15,6 +15,7 @@ export const apiBaseUrl = marketplaceRootURL => {
     return `http://localhost:${port}`;
   }
 
+  if (typeof window === 'undefined') return marketplaceRootURL ? marketplaceRootURL.replace(/\/$/, '') : process.env.RENDER_EXTERNAL_URL; // [SKYFARER]
   // Otherwise, use the given marketplaceRootURL parameter or the same domain and port as the frontend
   return marketplaceRootURL ? marketplaceRootURL.replace(/\/$/, '') : `${window.location.origin}`;
 };
@@ -100,6 +101,16 @@ const post = (path, body, options = {}) => {
   return request(path, requestOptions);
 };
 
+// [SKYFARER]
+// Keep the previous parameter order for the get method.
+const get = path => {
+  const requestOptions = {
+    method: methods.GET,
+  };
+
+  return request(path, requestOptions);
+};
+
 // Fetch transaction line items from the local API endpoint.
 //
 // See `server/api/transaction-line-items.js` to see what data should
@@ -144,3 +155,75 @@ export const transitionPrivileged = body => {
 export const createUserWithIdp = body => {
   return post('/api/auth/create-user-with-idp', body);
 };
+
+// [SKYFARER]
+// Google
+export const getAuthURL = body => {
+  return get('/api/google/generate-auth-url', body);
+};
+
+export const saveGoogleAuthToken = ({ code, listingId }) => {
+  // Conditionally add listingId to the query string only if it's not null
+  const query = `?code=${code}` + (listingId ? `&listingId=${listingId}` : '');
+  console.log(query, 'queryquery');
+  return get(`/api/google/save-auth-token${query}`);
+};
+
+
+export const revokeGoogleAuthToken = () => {
+  return get(`/api/google/revoke-token`);
+};
+
+export const deleteGoogleEventByID = body => {
+  return post(`/api/google/delete-google-event-by-id`, body);
+};
+
+export const fetchEventsFromGoogleCalendar = body => {
+  return post(`/api/google/fetch-events-from-google-calendar`, body);
+};
+
+export const createGoogleMeeting = body => {
+  return post(`/api/google/create-google-meeting`, body);
+};
+
+export const rescheduleGoogleEvent = body => {
+  return post(`/api/google/reschedule-event`, body);
+};
+
+export const cancelGoogleEvent = body => {
+  return post(`/api/google/cancel-event`, body);
+};
+
+export const rescheduleRequest = body => {
+  return post(`/api/reschedule/request`, body);
+};
+
+export const acceptRescheduleRequest = body => {
+  return post(`/api/reschedule/accept`, body);
+};
+
+// Create or get a customer in Voucherify
+// TODO: I would like to move this to util/vouchers.js and import post from there
+// or just follow the same pattern as the other api calls, but I like the encapsulation
+export const voucherifyBackend = {
+  customers: {
+    createOrGet: body => {
+      if (!process.env.REACT_APP_VOUCHERIFY_ENABLED) return;
+      return post('/api/vouchers/customers', body);
+    },
+  },
+
+  vouchers: {
+    redeem: body => {
+      if (!process.env.REACT_APP_VOUCHERIFY_ENABLED) return;
+      return post('/api/vouchers/redeem', body);
+    }
+  }
+}
+
+export const aiBackend = {
+  instructors: body => {
+    return post('/api/ai/instructor-matches', body);
+  }
+}
+// [/SKYFARER]

@@ -424,6 +424,32 @@
   font-weight: var(--fontWeightBold);
 }
 
+/* [SKYFARER] */
+.timezoneBadge {
+  display: block;
+  text-align: center;
+  font-size: 0.8em;
+  font-weight: 600;
+  color: #2d2d2d;
+  background-color: #e9e9e9;
+  border: 1px solid #d9d9d9;
+  border-radius: 10px;
+  padding: 4px 8px;
+  /* width: fit-content; */
+  width: 100%;
+  margin-block: 0;
+  /* margin-left: auto; */
+  /* margin-top: -50px; */
+
+  &:before {
+    content: '🌐';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+  }
+}
+
 .incompatibleCurrency {
   margin-top: 20px;
 }

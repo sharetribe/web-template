@@ -281,3 +281,69 @@
   margin-top: 24px;
   margin-bottom: 56px;
 }
+
+/* [SKYFARER] */
+.googleConnectButton {
+  display: block;
+  width: 300px;
+  min-height: 48px;
+  margin: 0;
+  width: 100%;
+  padding: 0;
+
+  transition: all var(--transitionStyleButton);
+  cursor: pointer;
+
+  font-family: var(--fontFamily);
+  font-weight: var(--fontWeightMedium);
+  font-size: 14px;
+  line-height: 24px;
+
+  text-align: center;
+  text-decoration: none;
+
+  border: 1px solid #d2d2d2;
+  border-radius: var(--borderRadiusMedium);
+
+  background-color: var(--colorWhite);
+  color: var(--colorBlack);
+
+  /* We need to add this to position the icon inside button */
+  position: relative;
+
+  &:hover,
+  &:focus {
+    outline: none;
+    box-shadow: var(--boxShadowButton);
+    background-color: var(--colorWhite);
+    text-decoration: none;
+  }
+
+  &:disabled {
+    box-shadow: none;
+    cursor: not-allowed;
+    background-color: var(--colorGrey100);
+    color: var(--colorWhite);
+  }
+
+  @media (--viewportMedium) {
+    font-size: 16px;
+    line-height: 24px;
+    padding: 0;
+    color: #595959;
+  }
+
+  & > svg {
+    margin-right: 10px;
+  }
+}
+
+.planInfo{
+  & > p{
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: var(--fontWeightMedium);
+    letter-spacing: -0.1px;
+    color: #b2b2b7;
+  }
+}

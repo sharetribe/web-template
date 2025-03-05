@@ -90,7 +90,7 @@ const replacer = (key = null, value) => {
   return types.replacer(key, cleanedValue);
 };
 
-exports.render = function(requestUrl, context, data, renderApp, webExtractor, nonce) {
+exports.render = function(requestUrl, context, data, renderApp, webExtractor, nonce, hostname) { // [SKYFARER MERGE: +hostname]
   const { preloadedState, translations, hostedConfig } = data;
 
   // Bind webExtractor as "this" for collectChunks call.
@@ -103,7 +103,8 @@ exports.render = function(requestUrl, context, data, renderApp, webExtractor, no
     preloadedState,
     translations,
     hostedConfig,
-    collectWebChunks
+    collectWebChunks,
+    hostname // [SKYFARER]
   ).then(({ head, body }) => {
     // Preloaded state needs to be passed for client side too.
     // For security reasons we ensure that preloaded state is considered as a string

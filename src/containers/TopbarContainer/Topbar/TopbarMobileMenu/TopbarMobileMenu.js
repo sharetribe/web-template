@@ -15,12 +15,19 @@ import {
   InlineTextButton,
   NamedLink,
   NotificationBadge,
+  PrimaryButtonInline, // [SKYFARER]
 } from '../../../../components';
 
 import css from './TopbarMobileMenu.module.css';
 
-const CustomLinkComponent = ({ linkConfig, currentPage }) => {
+import SparklyBackground from '../../../../assets/sparkly-background.jpg'; // [SKYFARER]
+
+const isLowerEnv = process.env.REACT_APP_IS_LOWER_ENV === 'true'; // [SKYFARER]
+
+const CustomLinkComponent = ({ linkConfig, currentPage, currentUser }) => { // [SKYFARER MERGE: +currentUser]
   const { group, text, type, href, route } = linkConfig;
+  const isInstructor = currentUser?.attributes?.profile?.publicData?.userType.toLowerCase() === 'instructor'; // [SKYFARER]
+
   const getCurrentPageClass = page => {
     const hasPageName = name => currentPage?.indexOf(name) === 0;
     const isCMSPage = pageId => hasPageName('CMSPage') && currentPage === `${page}:${pageId}`;
@@ -79,6 +86,7 @@ const TopbarMobileMenu = props => {
   } = props;
 
   const user = ensureCurrentUser(currentUser);
+  const isInstructor = currentUser?.attributes?.profile?.publicData?.userType.toLowerCase() === 'instructor'; // [SKYFARER]
 
   const extraLinks = customLinks.map((linkConfig, index) => {
     return (
@@ -122,11 +130,12 @@ const TopbarMobileMenu = props => {
 
           <div className={css.spacer} />
         </div>
-        <div className={css.footer}>
+        {/* [SKYFARER] Client does not want this shown for unauthenticated users */}
+        {/* <div className={css.footer}>
           <NamedLink className={css.createNewListingLink} name="NewListingPage">
             <FormattedMessage id="TopbarMobileMenu.newListingLink" />
           </NamedLink>
-        </div>
+        </div> */}
       </div>
     );
   }
@@ -144,6 +153,18 @@ const TopbarMobileMenu = props => {
     return currentPage === page || isAccountSettingsPage || isInboxPage ? css.currentPage : null;
   };
   const inboxTab = currentUserHasListings ? 'sales' : 'orders';
+
+  const InstructorMatchingButtonLink = () => { // [SKYFARER]
+    return (
+      <div className={css.topbarButtonWrapper}>
+        <NamedLink name='AIMatchingPage'>
+          <PrimaryButtonInline style={{backgroundImage: `url(${SparklyBackground})`, backgroundPosition: '50% 35%'}}>
+            <FormattedMessage style={{all: "unset"}} id='TopbarDesktop.ai'/>
+          </PrimaryButtonInline>
+        </NamedLink>
+      </div>
+    );
+  };
 
   return (
     <div className={css.root}>
@@ -165,12 +186,15 @@ const TopbarMobileMenu = props => {
             <FormattedMessage id="TopbarMobileMenu.inboxLink" />
             {notificationCountBadge}
           </NamedLink>
-          <NamedLink
-            className={classNames(css.navigationLink, currentPageClass('ManageListingsPage'))}
-            name="ManageListingsPage"
-          >
-            <FormattedMessage id="TopbarMobileMenu.yourListingsLink" />
-          </NamedLink>
+          { // [SKYFARER]
+            isInstructor &&
+              <NamedLink
+                className={classNames(css.navigationLink, currentPageClass('ManageListingsPage'))}
+                name="ManageListingsPage"
+              >
+                <FormattedMessage id="TopbarMobileMenu.yourListingsLink" />
+              </NamedLink>
+          }
           <NamedLink
             className={classNames(css.navigationLink, currentPageClass('ProfileSettingsPage'))}
             name="ProfileSettingsPage"
@@ -183,15 +207,21 @@ const TopbarMobileMenu = props => {
           >
             <FormattedMessage id="TopbarMobileMenu.accountSettingsLink" />
           </NamedLink>
+          { // [SKYFARER]
+            isAuthenticated && isLowerEnv && <InstructorMatchingButtonLink/>
+          }
         </div>
         <div className={css.customLinksWrapper}>{extraLinks}</div>
         <div className={css.spacer} />
       </div>
-      <div className={css.footer}>
-        <NamedLink className={css.createNewListingLink} name="NewListingPage">
-          <FormattedMessage id="TopbarMobileMenu.newListingLink" />
-        </NamedLink>
-      </div>
+      { // [SKYFARER]
+        isInstructor &&
+          <div className={css.footer}>
+            <NamedLink className={css.createNewListingLink} name="NewListingPage">
+              <FormattedMessage id="TopbarMobileMenu.newListingLink" />
+            </NamedLink>
+          </div>
+      }
     </div>
   );
 };

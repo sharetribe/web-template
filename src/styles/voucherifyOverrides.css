@@ -1,0 +1,5 @@
+button.voucherifyValidate {
+  border: none !important;
+  background-color: var(--colorPrimaryButton) !important;
+  color: var(--colorWhite) !important;
+}

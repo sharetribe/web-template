@@ -35,6 +35,8 @@ export const TimeRange = props => {
 
   const classes = classNames(rootClassName || css.root, className);
 
+  const timeZoneAbbreviation = new Date(startDate).toLocaleTimeString('en-US', { timeZone, timeZoneName: 'short' }).split(' ')[2]; // [SKYFARER]
+
   if (isSingleDay && dateType === DATE_TYPE_DATE) {
     return (
       <div className={classes}>
@@ -87,6 +89,7 @@ export const TimeRange = props => {
     return (
       <div className={classes}>
         <span className={css.dateSection}>{`${start.date}, ${start.time} - ${end.time}`}</span>
+        <span className={css.dateSection}>{`${timeZoneAbbreviation}`}</span>{/* [SKYFARER] */}
       </div>
     );
   } else {

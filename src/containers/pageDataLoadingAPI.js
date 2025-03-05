@@ -7,6 +7,7 @@ import { setInitialValues as CheckoutPageInitialValues } from './CheckoutPage/Ch
 import { loadData as CMSPageLoader } from './CMSPage/CMSPage.duck';
 import { loadData as ContactDetailsPageLoader } from './ContactDetailsPage/ContactDetailsPage.duck';
 import { loadData as EditListingPageLoader } from './EditListingPage/EditListingPage.duck';
+import { loadData as GoogleAuthRedirectPageLoader } from './GoogleAuthRedirectPage/GoogleAuthRedirectPage.duck'; // [SKYFARER]
 import { loadData as EmailVerificationPageLoader } from './EmailVerificationPage/EmailVerificationPage.duck';
 import { loadData as InboxPageLoader } from './InboxPage/InboxPage.duck';
 import { loadData as ListingPageLoader } from './ListingPage/ListingPage.duck';
@@ -41,6 +42,9 @@ const getPageDataLoadingAPI = () => {
     },
     EditListingPage: {
       loadData: EditListingPageLoader,
+    },
+    GoogleAuthRedirectPage: { // [SKYFARER]
+      loadData: GoogleAuthRedirectPageLoader,
     },
     EmailVerificationPage: {
       loadData: EmailVerificationPageLoader,

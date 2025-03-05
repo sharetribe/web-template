@@ -311,5 +311,4 @@ const EnhancedPaymentMethodsForm = props => {
   const intl = useIntl();
   return <PaymentMethodsForm config={config} intl={intl} {...props} />;
 };
-
 export default EnhancedPaymentMethodsForm;

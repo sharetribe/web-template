@@ -138,3 +138,20 @@
     padding-bottom: 21px;
   }
 }
+
+/* [SKYFARER MERGE: +rescheduleRequest*] */
+.rescheduleRequest {
+  border: 1px solid var(--colorGrey100);
+  margin: 0;
+  padding: 1rem;
+  text-align: center;
+
+  & p {
+    font-weight: var(--fontWeightBold);
+  }
+}
+
+.rescheduleRequestDetails {
+  display: flex;
+  justify-content: space-between;
+}

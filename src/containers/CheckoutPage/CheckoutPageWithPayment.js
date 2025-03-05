@@ -73,6 +73,7 @@ const getOrderParams = (pageData, shippingDetails, optionalPaymentParams, config
   const seatsMaybe = seats ? { seats } : {};
   const deliveryMethod = pageData.orderData?.deliveryMethod;
   const deliveryMethodMaybe = deliveryMethod ? { deliveryMethod } : {};
+  const voucherCode = pageData.orderData?.voucherCode; // [SKYFARER]
 
   const { listingType, unitType } = pageData?.listing?.attributes?.publicData || {};
   const protectedDataMaybe = {
@@ -257,7 +258,7 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
   const orderParams = getOrderParams(pageData, shippingDetails, optionalPaymentParams, config);
 
   // There are multiple XHR calls that needs to be made against Stripe API and Sharetribe Marketplace API on checkout with payments
-  processCheckoutWithPayment(orderParams, requestPaymentParams)
+  processCheckoutWithPayment(orderParams, requestPaymentParams, currentUser) // [SKYFARER MERGE: +currentUser]
     .then(response => {
       const { orderId, messageSuccess, paymentMethodSaved } = response;
       setSubmitting(false);
@@ -356,6 +357,7 @@ export const CheckoutPageWithPayment = props => {
     confirmPaymentError,
     intl,
     currentUser,
+    currentUserHasOrders, // [SKYFARER]
     confirmCardPaymentError,
     paymentIntent,
     retrievePaymentIntentError,
@@ -576,6 +578,7 @@ export const CheckoutPageWithPayment = props => {
           processName={processName}
           breakdown={breakdown}
           intl={intl}
+          currentUser={currentUser} // [SKYFARER]
         />
       </div>
     </Page>

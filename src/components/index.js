@@ -12,6 +12,7 @@
 import loadable from '@loadable/component';
 
 // Icons
+export { default as Icons } from './Icons/Icons'; // [SKYFARER]
 export { default as IconAdd } from './IconAdd/IconAdd';
 export { default as IconAlert } from './IconAlert/IconAlert';
 export { default as IconArrowHead } from './IconArrowHead/IconArrowHead';

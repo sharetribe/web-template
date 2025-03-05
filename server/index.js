@@ -45,6 +45,7 @@ const renderer = require('./renderer');
 const dataLoader = require('./dataLoader');
 const { generateCSPNonce, csp } = require('./csp');
 const sdkUtils = require('./api-util/sdk');
+const { pollTransactionEvents } = require('./events/sharetribe/transaction.event');
 
 const buildPath = path.resolve(__dirname, '..', 'build');
 const dev = process.env.REACT_APP_ENV === 'development';
@@ -226,7 +227,7 @@ app.get('*', async (req, res) => {
     .loadData(req.url, sdk, appInfo)
     .then(data => {
       const cspNonce = cspEnabled ? res.locals.cspNonce : null;
-      return renderer.render(req.url, context, data, renderApp, webExtractor, cspNonce);
+      return renderer.render(req.url, context, data, renderApp, webExtractor, cspNonce, hostname); // [SKYFARER MERGE: +hostname]
     })
     .then(html => {
       if (dev) {
@@ -292,6 +293,10 @@ if (cspEnabled) {
   });
 }
 
+// polling
+pollTransactionEvents(); // [SKYFARER]
+
+// Start server
 const server = app.listen(PORT, () => {
   const mode = dev ? 'development' : 'production';
   console.log(`Listening to port ${PORT} in ${mode} mode`);

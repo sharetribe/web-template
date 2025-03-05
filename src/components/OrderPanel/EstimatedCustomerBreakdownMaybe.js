@@ -90,12 +90,35 @@ const estimatedCustomerTransaction = (
   timeZone,
   process,
   processName,
-  marketplaceCurrency
+  marketplaceCurrency,
+  voucher // [SKYFARER]
 ) => {
   const transitions = process?.transitions;
   const now = new Date();
   const customerLineItems = lineItems.filter(item => item.includeFor.includes('customer'));
   const providerLineItems = lineItems.filter(item => item.includeFor.includes('provider'));
+  if (voucher) { // [SKYFARER]
+    // if the voucher isn't already in the line items, the user entered a voucher after selecting dates
+    if (!customerLineItems.some(item => item.code === `line-item/${voucher.campaign.replace(/ /g, '-')}`)) {
+      const unitPrice = estimatedTotalPrice(customerLineItems, marketplaceCurrency)
+      const lineTotal = new Money(unitPrice.amount * (-1 * (voucher.discount.percent_off / 100)), marketplaceCurrency);
+
+      switch (voucher.discount.type) {
+        case 'PERCENT':
+          if (voucher.discount.effect === 'APPLY_TO_ORDER') {
+            customerLineItems.push({
+              code: `line-item/${voucher.campaign}`,
+              unitPrice,
+              percentage: -1 * voucher.discount.percent_off,
+              lineTotal,
+              includeFor: ['customer'],
+              reversal: false,
+            });
+          }; break;
+      }
+    }
+  }
+
   const payinTotal = estimatedTotalPrice(customerLineItems, marketplaceCurrency);
   const payoutTotal = estimatedTotalPrice(providerLineItems, marketplaceCurrency);
 
@@ -115,6 +138,7 @@ const estimatedCustomerTransaction = (
       payinTotal,
       payoutTotal,
       lineItems: customerLineItems,
+      voucherCode: voucher?.code, // [SKYFARER]
       transitions: [
         {
           createdAt: now,
@@ -128,7 +152,7 @@ const estimatedCustomerTransaction = (
 };
 
 const EstimatedCustomerBreakdownMaybe = props => {
-  const { breakdownData = {}, lineItems, timeZone, currency, marketplaceName, processName } = props;
+  const { breakdownData = {}, lineItems, timeZone, currency, marketplaceName, processName, voucher } = props; // [SKYFARER MERGE: +voucher]
   const { startDate, endDate } = breakdownData;
 
   let process = null;
@@ -160,7 +184,8 @@ const EstimatedCustomerBreakdownMaybe = props => {
           timeZone,
           process,
           processName,
-          currency
+          currency,
+          voucher // [SKYFARER]
         )
       : null;
 

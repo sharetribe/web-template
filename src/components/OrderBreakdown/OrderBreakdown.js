@@ -16,7 +16,7 @@ import {
   propTypes,
 } from '../../util/types';
 
-import LineItemBookingPeriod from './LineItemBookingPeriod';
+import LineItemBookingPeriod, { BookingPeriod } from './LineItemBookingPeriod'; // [SKYFARER MERGE: +BookingPeriod]
 import LineItemBasePriceMaybe from './LineItemBasePriceMaybe';
 import LineItemSubTotalMaybe from './LineItemSubTotalMaybe';
 import LineItemShippingFeeMaybe from './LineItemShippingFeeMaybe';
@@ -108,6 +108,21 @@ export const OrderBreakdownComponent = props => {
         dateType={dateType}
         timeZone={timeZone}
       />
+
+      {transaction?.attributes?.metadata?.rescheduleRequest && (
+        <div className={css.rescheduleRequest}>
+          <p>
+            <FormattedMessage id="TransactionPage.default-booking.customer.reschedule-pending.title" />
+          </p>
+
+          <BookingPeriod
+            startDate={transaction.attributes.metadata.rescheduleRequest.start}
+            endDate={transaction.attributes.metadata.rescheduleRequest.end}
+            dateType={dateType}
+            timeZone={timeZone}
+          />
+        </div>
+      )}
 
       <LineItemBasePriceMaybe lineItems={lineItems} code={lineItemUnitType} intl={intl} />
       <LineItemShippingFeeMaybe lineItems={lineItems} intl={intl} />

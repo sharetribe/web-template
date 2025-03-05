@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
+import moment from 'moment'; // [SKYFARER]
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { displayPrice } from '../../../util/configHelpers';
@@ -8,7 +9,7 @@ import { userDisplayNameAsString } from '../../../util/data';
 import { isMobileSafari } from '../../../util/userAgent';
 import { createSlug } from '../../../util/urlHelpers';
 
-import { AvatarLarge, NamedLink, UserDisplayName } from '../../../components';
+import { AvatarLarge, ExternalLink, NamedLink, UserDisplayName, Modal } from '../../../components'; // [SKYFARER MERGE: +Modal]
 
 import { stateDataShape } from '../TransactionPage.stateData';
 import SendMessageForm from '../SendMessageForm/SendMessageForm';
@@ -26,6 +27,12 @@ import DiminishedActionButtonMaybe from './DiminishedActionButtonMaybe';
 import PanelHeading from './PanelHeading';
 
 import css from './TransactionPanel.module.css';
+
+// [SKYFARER]
+import { BookingPeriod } from '../../../components/OrderBreakdown/LineItemBookingPeriod';
+import { getGoogleCalendarEventDetails } from '../../../util/transactionDataExtractor';
+import { cancelGoogleEvent } from '../../../util/api';
+// [/SKYFARER]
 
 // Helper function to get display names for different roles
 const displayNames = (currentUser, provider, customer, intl) => {
@@ -54,6 +61,24 @@ const displayNames = (currentUser, provider, customer, intl) => {
     otherUserDisplayNameString,
   };
 };
+
+const CancelModal = ({ intl, isOpen, onClose, onManageDisableScrolling, cancel }) => {
+  return (
+    <Modal
+      id="cancel-booking-modal"
+      intl={intl}
+      isOpen={isOpen}
+      onClose={onClose}
+      onManageDisableScrolling={onManageDisableScrolling}
+      title={intl.formatMessage({ id: 'RescheduleCancelModal.title', defaultMessage: 'Cancel Booking' })}
+    >
+      <div className={css.cancelModalContent}>
+        <FormattedMessage id="RescheduleCancelModal.description" defaultMessage="Are you sure you want to cancel this booking?" />
+        <button className={`buttonPrimaryInline ${css.cancelButton}`} onClick={cancel}>{intl.formatMessage({ id: 'RescheduleCancelModal.confirmCancellation', defaultMessage: 'Confirm Cancellation' })}</button>
+      </div>
+    </Modal>
+  )
+}
 
 /**
  * Transaction panel
@@ -91,6 +116,7 @@ export class TransactionPanelComponent extends Component {
     super(props);
     this.state = {
       sendMessageFormFocused: false,
+      modal: false, // [SKYFARER]
     };
     this.isMobSaf = false;
     this.sendMessageFormName = 'TransactionPanel.SendMessageForm';
@@ -172,7 +198,20 @@ export class TransactionPanelComponent extends Component {
       orderPanel,
       config,
       hasViewingRights,
+      transaction, // [SKYFARER]
+      onManageDisableScrolling, // [SKYFARER]
     } = this.props;
+    // [SKYFARER]
+    const googleCalendarEventDetails = getGoogleCalendarEventDetails(transaction);
+    const eventStartTime = googleCalendarEventDetails?.eventStartTime;
+    const currentTime = moment();
+    // Parse the event start time
+    const eventTime = moment(eventStartTime);
+
+    const shouldEnableButton = () => {
+      return currentTime.isSameOrAfter(eventTime, 'minute');
+    };
+    // [/SKYFARER]
 
     const isCustomer = transactionRole === 'customer';
     const isProvider = transactionRole === 'provider';
@@ -200,6 +239,7 @@ export class TransactionPanelComponent extends Component {
     const actionButtons = (
       <ActionButtonsMaybe
         showButtons={stateData.showActionButtons}
+        setModal={(modal) => this.setState({ modal })} // [SKYFARER]
         primaryButtonProps={stateData?.primaryButtonProps}
         secondaryButtonProps={stateData?.secondaryButtonProps}
         isListingDeleted={listingDeleted}
@@ -236,6 +276,7 @@ export class TransactionPanelComponent extends Component {
               provider={provider}
               isCustomer={isCustomer}
               listingImageConfig={config.layout.listingImage}
+              transaction={transaction} // [SKYFARER]
             />
             {isProvider ? (
               <div className={css.avatarWrapperProviderDesktop}>
@@ -259,6 +300,11 @@ export class TransactionPanelComponent extends Component {
               listingId={listing?.id?.uuid}
               listingTitle={listingTitle}
               listingDeleted={listingDeleted}
+              headingTextId={ // [SKYFARER]
+                transaction.attributes.metadata.rescheduleRequest
+                  ? `TransactionPage.default-booking.${transactionRole}.reschedule-pending.title`
+                  : undefined
+              }
             />
 
             <InquiryMessageMaybe
@@ -337,12 +383,24 @@ export class TransactionPanelComponent extends Component {
               </div>
             )}
 
-            {stateData.showActionButtons ? (
+            {stateData.showActionButtons && (
               <>
                 <div className={css.mobileActionButtonSpacer}></div>
                 <div className={css.mobileActionButtons}>{actionButtons}</div>
+
+                {/* [SKYFARER] */}
+                <CancelModal
+                  intl={intl}
+                  isOpen={this.state.modal === 'cancel'}
+                  onClose={() => this.setState({ modal: false })}
+                  onManageDisableScrolling={onManageDisableScrolling}
+                  cancel={() => {
+                    stateData.secondaryButtonProps?.onAction();
+                    cancelGoogleEvent({ txId: transaction.id.uuid });
+                  }}
+                />
               </>
-            ) : null}
+            )}
           </div>
 
           <div className={css.asideDesktop}>
@@ -382,9 +440,37 @@ export class TransactionPanelComponent extends Component {
                   processName={stateData.processName}
                 />
 
-                {stateData.showActionButtons ? (
-                  <div className={css.desktopActionButtons}>{actionButtons}</div>
-                ) : null}
+                {/* [SKYFARER] */}
+                {googleCalendarEventDetails?.meetingLink && !transaction.attributes.lastTransition.includes('cancel') && (
+                  <div className={css.meetingLink}>
+                    <ExternalLink
+                      href={googleCalendarEventDetails?.meetingLink}
+                      className={classNames(css.buttonLink, {
+                        // [css.pointerEvents]: !shouldEnableButton(),
+                      })}
+                    >
+                      <FormattedMessage id="TransactionPanel.meetingLink" />
+                    </ExternalLink>
+                  </div>
+                )}
+                {/* [/SKYFARER] */}
+
+                {stateData.showActionButtons && (
+                  <>
+                    <div className={css.desktopActionButtons}>{actionButtons}</div>
+
+                    <CancelModal
+                      intl={intl}
+                      isOpen={this.state.modal === 'cancel'}
+                      onClose={() => this.setState({ modal: false })}
+                      onManageDisableScrolling={onManageDisableScrolling}
+                      cancel={() => {
+                        stateData.secondaryButtonProps?.onAction();
+                        cancelGoogleEvent({ txId: transaction.id.uuid });
+                      }}
+                    />
+                  </>
+                )}
               </div>
               <DiminishedActionButtonMaybe
                 showDispute={stateData.showDispute}

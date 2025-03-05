@@ -144,6 +144,12 @@ export const SecondaryButton = props => {
 };
 SecondaryButton.displayName = 'SecondaryButton';
 
+export const TertiaryButton = props => { // [SKYFARER]
+  const classes = classNames(props.rootClassName || css.tertiaryButtonRoot, css.tertiaryButton);
+  return <Button {...props} rootClassName={classes} />;
+};
+TertiaryButton.displayName = 'TertiaryButton';
+
 export const SecondaryButtonInline = props => {
   const classes = classNames(
     props.rootClassName || css.secondaryButtonInlineRoot,

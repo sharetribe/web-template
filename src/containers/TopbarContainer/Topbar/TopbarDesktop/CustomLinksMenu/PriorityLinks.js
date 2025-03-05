@@ -77,7 +77,11 @@ const PriorityLinks = props => {
         cumulatedWidth = cumulatedWidth + width;
         return [...links, { ...l, width, cumulatedWidth }];
       }, []);
-      props.setLinks(linksWithWidths);
+
+      let finalLinks = linksWithWidths; // [SKYFARER]
+      if (!props.isInstructor) finalLinks = linksWithWidths.filter(link => link.route?.name !== 'EditListingPage'); // [SKYFARER]
+
+      props.setLinks(finalLinks); // [SKYFARER]
     }
   }, [containerRef]);
 

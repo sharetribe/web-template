@@ -1,0 +1,40 @@
+@import '../../styles/customMediaQueries.css';
+
+.swiperWrapper {
+  width: 100vw;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.swiperContainer {
+  width: 80%;
+}
+
+.swiperSlideContent {
+  height: 150vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.swiperResults {
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap onto the next row */
+  justify-content: center; /* Align items in the first row to the left */
+  align-items: center; /* Vertically center items in their rows */
+  gap: 40px; /* Add spacing between items */
+}
+
+.swiperResult {
+  flex: 1 1 auto;
+}
+
+@media (max-width: 550px) {
+  font-size: 16px;
+  .swiper-slide {
+    height: 90%;
+  }
+}

@@ -70,6 +70,22 @@ export const IncludeScripts = props => {
     );
   }
 
+  // [SKYFARER]
+  // hotjar must be pushed to template if SSR page is being used. Avoid nodejs library because it will break except on client-side
+  analyticsLibraries.push(<script key="hotjar">
+    {`
+            (function (c, s, q, u, a, r, e) {
+              c.hj=c.hj||function(){(c.hj.q=c.hj.q||[]).push(arguments)};
+              c._hjSettings = { hjid: a };
+              r = s.getElementsByTagName('head')[0];
+              e = s.createElement('script');
+              e.async = true;
+              e.src = q + c._hjSettings.hjid + u;
+              r.appendChild(e);
+            })(window, document, 'https://static.hj.contentsquare.net/c/csq-', '.js', 5234828);
+          `}
+  </script>);
+
   if (googleAnalyticsId && hasGoogleAnalyticsv4Id) {
     // Google Analytics: gtag.js
     // NOTE: This template is a single-page application (SPA).

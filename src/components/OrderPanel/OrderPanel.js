@@ -48,6 +48,9 @@ import {
 import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2 } from '../../components';
 
 import css from './OrderPanel.module.css';
+// [SKYFARER MERGE: +useConfiguration, +voucherifyBackend]
+import { useConfiguration } from '../../context/configurationContext';
+import { voucherifyBackend } from '../../util/api';
 
 const BookingTimeForm = loadable(() =>
   import(/* webpackChunkName: "BookingTimeForm" */ './BookingTimeForm/BookingTimeForm')
@@ -214,6 +217,8 @@ const OrderPanel = props => {
     setMounted(true);
   }, []);
   const {
+    currentUser, // [SKYFARER]
+    currentUserHasOrders, // [SKYFARER]
     rootClassName,
     className,
     titleClassName,
@@ -240,11 +245,13 @@ const OrderPanel = props => {
     fetchLineItemsInProgress,
     fetchLineItemsError,
     payoutDetailsWarning,
+    reschedule, // [SKYFARER]
   } = props;
+
+  const config = useConfiguration(); // [SKYFARER]
 
   const publicData = listing?.attributes?.publicData || {};
   const { listingType, unitType, transactionProcessAlias = '' } = publicData || {};
-
   const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
   const lineItemUnitType = lineItemUnitTypeMaybe || `line-item/${unitType}`;
 
@@ -316,6 +323,23 @@ const OrderPanel = props => {
   const classes = classNames(rootClassName || css.root, className);
   const titleClasses = classNames(titleClassName || css.orderTitle);
 
+  // [SKYFARER]
+  // Make sure Voucherify customer is created
+  // TODO: refactor and move this to a hook
+  useEffect(() => {
+    if (currentUser && config.vouchers.ENABLED) {
+      try {
+        voucherifyBackend.customers.createOrGet({
+          source_id: currentUser.id.uuid,
+          email: currentUser.attributes.email,
+          name: currentUser.attributes.profile.displayName,
+          createdAt: currentUser.attributes.createdAt.toString(),
+          userType: currentUser.attributes.profile.publicData.userType,
+        })
+      } catch {}
+    }
+  }, [currentUser])
+
   return (
     <div className={classes}>
       <ModalInMobile
@@ -354,6 +378,20 @@ const OrderPanel = props => {
           </span>
         </div>
 
+        { // [SKYFARER]
+          reschedule && (
+            <div className={css.rescheduleInfo}>
+              <FormattedMessage
+                id="BookingTimeForm.rescheduleCurrentBookingInfo"
+                values={{
+                  start: intl.formatDate(reschedule.booking.attributes.start, { month: 'short', day: 'numeric', weekday: 'short', hour: '2-digit', minute: '2-digit' }),
+                  end: intl.formatDate(reschedule.booking.attributes.end, { hour: '2-digit', minute: '2-digit' }),
+                }}
+              />
+            </div>
+          )
+        }
+
         {showPriceMissing ? (
           <PriceMissing />
         ) : showInvalidCurrency ? (
@@ -365,6 +403,8 @@ const OrderPanel = props => {
             formId="OrderPanelBookingTimeForm"
             lineItemUnitType={lineItemUnitType}
             onSubmit={onSubmit}
+            onContactUser={onContactUser} // [SKYFARER]
+            authorDisplayName={authorDisplayName} // [SKYFARER]
             price={price}
             marketplaceCurrency={marketplaceCurrency}
             dayCountAvailableForBooking={dayCountAvailableForBooking}
@@ -403,6 +443,10 @@ const OrderPanel = props => {
             fetchLineItemsInProgress={fetchLineItemsInProgress}
             fetchLineItemsError={fetchLineItemsError}
             payoutDetailsWarning={payoutDetailsWarning}
+            config={config} // [SKYFARER]
+            currentUser={currentUser} // [SKYFARER]
+            currentUserHasOrders={currentUserHasOrders} // [SKYFARER]
+            reschedule={reschedule} // [SKYFARER]
           />
         ) : showProductOrderForm ? (
           <ProductOrderForm
@@ -420,10 +464,14 @@ const OrderPanel = props => {
             marketplaceName={marketplaceName}
             onFetchTransactionLineItems={onFetchTransactionLineItems}
             onContactUser={onContactUser}
+            authorDisplayName={authorDisplayName} // [SKYFARER]
             lineItems={lineItems}
             fetchLineItemsInProgress={fetchLineItemsInProgress}
             fetchLineItemsError={fetchLineItemsError}
             payoutDetailsWarning={payoutDetailsWarning}
+            config={config} // [SKYFARER]
+            currentUser={currentUser} // [SKYFARER]
+            currentUserHasOrders={currentUserHasOrders} // [SKYFARER]
           />
         ) : showInquiryForm ? (
           <InquiryWithoutPaymentForm formId="OrderPanelInquiryForm" onSubmit={onSubmit} />

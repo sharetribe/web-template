@@ -8,7 +8,7 @@ import { AVAILABILITY_MULTIPLE_SEATS, LISTING_STATE_DRAFT } from '../../../../ut
 import { DAY, isFullDay } from '../../../../transactions/transaction';
 
 // Import shared components
-import { Button, H3, InlineTextButton, ListingLink, Modal } from '../../../../components';
+import { Button, H3, Icons, InlineTextButton, ListingLink, Modal } from '../../../../components'; // [SKYFARER MERGE: +Icons]
 
 // Import modules from this directory
 import EditListingAvailabilityPlanForm from './EditListingAvailabilityPlanForm';
@@ -16,6 +16,19 @@ import EditListingAvailabilityExceptionForm from './EditListingAvailabilityExcep
 import WeeklyCalendar from './WeeklyCalendar/WeeklyCalendar';
 
 import css from './EditListingAvailabilityPanel.module.css';
+// [SKYFARER]
+import { useDispatch, useSelector } from 'react-redux';
+import { googleAuthSelector, InitiateGoogleAuth } from '../../../../ducks/googleCalendar.duck';
+import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
+import { setCurrentPathnameAndInitiateAuth } from '../../../../util/editListingHelpers';
+import { currentUserSelector } from '../../../../ducks/user.duck';
+import { getGoogleAccessToken } from '../../../../util/userDataExtractor';
+import {
+  disconnectGoogleAccount,
+  disconnectGoogleSelector,
+  requestAddWeeklyAvailabilityException,
+} from '../../EditListingPage.duck';
+// [/SKYFARER]
 
 // This is the order of days as JavaScript understands them
 // The number returned by "new Date().getDay()" refers to day of week starting from sunday.
@@ -176,6 +189,17 @@ const EditListingAvailabilityPanel = props => {
     history,
   } = props;
   // Hooks
+
+  // [SKYFARER]
+  const { disconnectGoogleInProgress } = useSelector(disconnectGoogleSelector);
+  const currentUser = useSelector(currentUserSelector);
+  const hasGoogleAccessToken = getGoogleAccessToken(currentUser);
+  const location = useLocation();
+  const currentPathname = location?.pathname;
+  const dispatch = useDispatch();
+
+  const { authInProgress } = useSelector(googleAuthSelector);
+  // [/SKYFARER]
   const [isEditPlanModalOpen, setIsEditPlanModalOpen] = useState(false);
   const [isEditExceptionsModalOpen, setIsEditExceptionsModalOpen] = useState(false);
   const [valuesFromLastSubmit, setValuesFromLastSubmit] = useState(null);
@@ -215,6 +239,9 @@ const EditListingAvailabilityPanel = props => {
     // Final Form can wait for Promises to return.
     return onSubmit(createAvailabilityPlan(values))
       .then(() => {
+        dispatch( // [SKYFARER]
+          requestAddWeeklyAvailabilityException(listingId?.uuid, values, currentUser?.id?.uuid)
+        );
         setIsEditPlanModalOpen(false);
       })
       .catch(e => {
@@ -248,7 +275,11 @@ const EditListingAvailabilityPanel = props => {
       ...range,
     };
 
-    return onAddAvailabilityException(params)
+    return onAddAvailabilityException({ // [SKYFARER]
+      ...params,
+      currentUserId: currentUser?.id?.uuid,
+      config,
+    })
       .then(() => {
         setIsEditExceptionsModalOpen(false);
       })
@@ -272,6 +303,40 @@ const EditListingAvailabilityPanel = props => {
           />
         )}
       </H3>
+
+      {/* [SKYFARER] */}
+      {hasGoogleAccessToken ? (
+        <div className={css.planInfo}>
+          <p>
+            <FormattedMessage id="EditListingAvailabilityPanel.disconnectGoogleCalendar" />
+          </p>
+          <Button
+            inProgress={disconnectGoogleInProgress}
+            className={css.googleConnectButton}
+            onClick={() => dispatch(disconnectGoogleAccount())}
+          >
+            <Icons name="googleLogo" />
+            <FormattedMessage id="EditListingAvailabilityPanel.disconnectGoogleCalendar" />
+          </Button>
+        </div>
+      ) : (
+        <div className={css.planInfo}>
+          <p>
+            <FormattedMessage id="EditListingAvailabilityPanel.connectWithGoogle" />
+          </p>
+          <Button
+            inProgress={authInProgress}
+            className={css.googleConnectButton}
+            onClick={() =>
+              setCurrentPathnameAndInitiateAuth(currentPathname, dispatch, InitiateGoogleAuth)
+            }
+          >
+            <Icons name="googleLogo" />
+            <FormattedMessage id="EditListingAvailabilityPanel.connectWithGoogleCalendar" />
+          </Button>
+        </div>
+      )}
+      {/* [/SKYFARER] */}
 
       <div className={css.planInfo}>
         {!hasAvailabilityPlan ? (
@@ -297,6 +362,7 @@ const EditListingAvailabilityPanel = props => {
           <WeeklyCalendar
             className={css.section}
             headerClassName={css.sectionHeader}
+            listing={listing} // [SKYFARER]
             listingId={listing.id}
             availabilityPlan={availabilityPlan}
             availabilityExceptions={sortedAvailabilityExceptions}

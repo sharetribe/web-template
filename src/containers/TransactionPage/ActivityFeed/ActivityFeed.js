@@ -6,6 +6,7 @@ import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { richText } from '../../../util/richText';
 import { formatDateWithProximity } from '../../../util/dates';
 import { propTypes } from '../../../util/types';
+import { types as sdkTypes } from '../../../util/sdkLoader';
 import {
   getProcess,
   getUserTxRole,
@@ -140,6 +141,20 @@ const TransitionMessage = props => {
     { actor, otherUsersName, listingTitle, reviewLink, deliveryMethod, stateStatus }
   );
 
+  if (transition.transition.includes('reschedule')) { // [SKYFARER]
+    return intl.formatMessage(
+      { id: 'TransactionPage.ActivityFeed.reschedule' },
+      {
+        actor:
+          transition.transition === 'transition/customer-reschedule'
+            ? 'the customer'
+            : transition.transition === 'transition/provider-reschedule'
+            ? 'the provider'
+            : actor,
+      }
+    );
+  }
+
   return message;
 };
 
@@ -197,8 +212,8 @@ const compareItems = (a, b) => {
   return itemDate(a) - itemDate(b);
 };
 
-const organizedItems = (messages, transitions, hideOldTransitions) => {
-  const items = messages.concat(transitions).sort(compareItems);
+const organizedItems = (messages, transitions, hideOldTransitions, emails = []) => { // [SKYFARER MERGE: +emails]
+  const items = messages.concat(transitions).concat(emails).sort(compareItems);
   if (hideOldTransitions) {
     // Hide transitions that happened before the oldest message. Since
     // we have older items (messages) that we are not showing, seeing
@@ -207,6 +222,25 @@ const organizedItems = (messages, transitions, hideOldTransitions) => {
   } else {
     return items;
   }
+};
+
+const formatEmails = emails => {
+  return !emails ? [] : emails.map(email => ({
+    ...email,
+    id: new sdkTypes.UUID(email.id),
+    attributes: {
+      ...email.attributes,
+      createdAt: new Date(email.attributes.createdAt),
+    },
+    sender: {
+      ...email.sender,
+      id: new sdkTypes.UUID(email.sender.id),
+      attributes: {
+        ...email.sender.attributes,
+        createdAt: new Date(email.sender.attributes.createdAt),
+      },
+    },
+  }));
 };
 
 /**
@@ -252,9 +286,16 @@ export const ActivityFeed = props => {
   );
   const todayString = intl.formatMessage({ id: 'TransactionPage.ActivityFeed.today' });
 
+  const rescheduleRequests = transaction?.attributes?.metadata?.rescheduleRequests || []; // [SKYFARER]
+
   // combine messages and transaction transitions
   const hideOldTransitions = hasOlderMessages || fetchMessagesInProgress;
-  const items = organizedItems(messages, relevantTransitions, hideOldTransitions);
+  const items = organizedItems(
+    messages,
+    relevantTransitions,
+    hideOldTransitions,
+    formatEmails(transaction?.attributes?.metadata?.emails)
+  );
 
   const messageListItem = message => {
     const formattedDate = formatDateWithProximity(message.attributes.createdAt, intl, todayString);
@@ -302,6 +343,7 @@ export const ActivityFeed = props => {
           formattedDate={formattedDate}
           transitionMessageComponent={
             <TransitionMessage
+              transaction={transaction} // [SKYFARER]
               transition={transition}
               nextState={nextState}
               stateData={stateData}
@@ -325,7 +367,7 @@ export const ActivityFeed = props => {
       );
     }
     return (
-      <li key={transition.transition} className={css.transitionItem}>
+      <li key={`${transition.transition}-${transition.createdAt}`} className={css.transitionItem}>{/* [SKYFARER MERGE: +transition.createdAt] */}
         {transitionComponent}
       </li>
     );

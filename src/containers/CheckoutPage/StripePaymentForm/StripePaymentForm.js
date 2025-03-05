@@ -454,6 +454,7 @@ class StripePaymentForm extends Component {
       inProgress: submitInProgress,
       loadingData,
       formId,
+      paymentInfo, // [SKYFARER]
       authorDisplayName,
       showInitialMessageInput,
       intl,

@@ -5,6 +5,8 @@ import { createResourceLocatorString, findRouteByRouteName } from '../../util/ro
 import { convertMoneyToNumber, formatMoney } from '../../util/currency';
 import { timestampToDate } from '../../util/dates';
 import { hasPermissionToInitiateTransactions, isUserAuthorized } from '../../util/userHelpers';
+import { showErrorToast } from '../../util/toast'; // [SKYFARER]
+
 import {
   NO_ACCESS_PAGE_INITIATE_TRANSACTIONS,
   NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
@@ -15,6 +17,7 @@ import { Page, LayoutSingleColumn } from '../../components';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import css from './ListingPage.module.css';
+import { rescheduleGoogleEvent, rescheduleRequest } from '../../util/api'; // [SKYFARER]
 
 /**
  * This file contains shared functions from each ListingPage variants.
@@ -142,7 +145,6 @@ export const handleContactUser = parameters => () => {
  */
 export const handleSubmitInquiry = parameters => values => {
   const { history, params, getListing, onSendInquiry, routes, setInquiryModalOpen } = parameters;
-
   const listingId = new UUID(params.id);
   const listing = getListing(listingId);
   const { message } = values;
@@ -164,7 +166,7 @@ export const handleSubmitInquiry = parameters => values => {
  *
  * @param {Object} parameters all the info needed to redirect user to CheckoutPage.
  */
-export const handleSubmit = parameters => values => {
+export const handleSubmit = parameters => async values => { // [SKYFARER MERGE: +async]
   const {
     history,
     params,
@@ -173,6 +175,7 @@ export const handleSubmit = parameters => values => {
     callSetInitialValues,
     onInitializeCardPaymentData,
     routes,
+    sdk // [SKYFARER]
   } = parameters;
   const listingId = new UUID(params.id);
   const listing = getListing(listingId);
@@ -231,6 +234,68 @@ export const handleSubmit = parameters => values => {
 
   // Clear previous Stripe errors from store if there is any
   onInitializeCardPaymentData();
+
+  // [SKYFARER]
+  // Handle reschedule transition
+  const queryParams = new URLSearchParams(window.location.search);
+  const reschedule = queryParams.get('reschedule');
+  const isProvider = currentUser?.id?.uuid === listing.author.id.uuid;
+  const start = initialValues?.orderData?.bookingDates?.bookingStart;
+  const end = initialValues?.orderData?.bookingDates?.bookingEnd;
+
+  if (reschedule && !isProvider) {
+    const { data: transaction } = await sdk.transactions.show({ id: new UUID(reschedule) });
+    const request = transaction?.data?.attributes?.metadata?.rescheduleRequest;
+
+    if (request) {
+      showErrorToast('You have already requested a reschedule for this booking');
+      return;
+    }
+
+    const result = await rescheduleRequest({ txId: reschedule, start, end });
+    if (!result?.rescheduleRequest) {
+      console.error(result);
+      showErrorToast(result.data?.error || 'Error rescheduling booking');
+      return;
+    }
+
+    return history.push(createResourceLocatorString('OrderDetailsPage', routes, { id: reschedule }, {}));
+  }
+
+  if (reschedule && isProvider) {
+    try {
+      const transition = 'transition/provider-reschedule';
+
+      const { data: transaction } = await sdk.transactions.show({ id: new UUID(reschedule) });
+      if (transaction?.data?.attributes?.metadata?.googleCalendarEventDetails) {
+        try {
+          rescheduleGoogleEvent({ txId: reschedule, startDateTimeOverride: start, endDateTimeOverride: end });
+        } catch (error) {
+          console.error(error);
+          showErrorToast('Error rescheduling Google Calendar event: ' + error.message);
+        }
+      }
+
+      const result = await sdk.transactions.transition({
+        id: new UUID(reschedule),
+        params: { bookingStart: start, bookingEnd: end },
+        transition
+      });
+
+      if (result.status === 200) {
+        history.push(createResourceLocatorString('SaleDetailsPage', routes, { id: reschedule }, {}));
+      } else {
+        console.error(result);
+        showErrorToast(result.data?.data?.errors?.join(', ') || 'Error rescheduling booking');
+      }
+    } catch (error) {
+      console.error(error);
+      showErrorToast(error.message);
+    }
+
+    return;
+  }
+  // [/SKYFARER]
 
   // Redirect to CheckoutPage
   history.push(

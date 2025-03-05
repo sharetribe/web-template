@@ -10,6 +10,9 @@ import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { LISTING_STATE_PENDING_APPROVAL, LISTING_STATE_CLOSED, propTypes } from '../../util/types';
 import { types as sdkTypes } from '../../util/sdkLoader';
+import { showErrorToast } from '../../util/toast';
+import { error as logError } from '../../util/log';
+import { sdk } from '../../index';
 import {
   LISTING_PAGE_DRAFT_VARIANT,
   LISTING_PAGE_PENDING_APPROVAL_VARIANT,
@@ -81,9 +84,10 @@ import SectionReviews from './SectionReviews';
 import SectionAuthorMaybe from './SectionAuthorMaybe';
 import SectionMapMaybe from './SectionMapMaybe';
 import SectionGallery from './SectionGallery';
+import SectionLinks from './SectionLinks'; // [SKYFARER]
 import CustomListingFields from './CustomListingFields';
-
 import css from './ListingPage.module.css';
+import { CustomUserFields } from '../ProfilePage/ProfilePage'; // [SKYFARER]
 
 const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
 
@@ -102,6 +106,7 @@ export const ListingPageComponent = props => {
   const {
     isAuthenticated,
     currentUser,
+    currentUserHasOrders, // [SKYFARER]
     getListing,
     getOwnListing,
     intl,
@@ -127,6 +132,7 @@ export const ListingPageComponent = props => {
     config,
     routeConfiguration,
     showOwnListingsOnly,
+    reschedule, // [SKYFARER]
   } = props;
 
   const listingConfig = config.listing;
@@ -235,7 +241,7 @@ export const ListingPageComponent = props => {
 
   const { formattedPrice } = priceData(price, config.currency, intl);
 
-  const commonParams = { params, history, routes: routeConfiguration };
+  const commonParams = { params, history, routes: routeConfiguration, sdk }; // [SKYFARER MERGE: +sdk]
   const onContactUser = handleContactUser({
     ...commonParams,
     currentUser,
@@ -261,6 +267,12 @@ export const ListingPageComponent = props => {
 
   const handleOrderSubmit = values => {
     const isCurrentlyClosed = currentListing.attributes.state === LISTING_STATE_CLOSED;
+    // [SKYFARER]
+    const urlParams = new URLSearchParams(location.search);
+    const rescheduleParam = urlParams.get('reschedule');
+    if (rescheduleParam) return onSubmit(values);
+    // [/SKYFARER]
+
     if (isOwnListing || isCurrentlyClosed) {
       window.scrollTo(0, 0);
     } else {
@@ -379,9 +391,28 @@ export const ListingPageComponent = props => {
               currentUser={currentUser}
               onManageDisableScrolling={onManageDisableScrolling}
             />
+
+            {/* [SKYFARER] */}
+            {process.env.REACT_APP_LISTING_PAGE_SHOW_USER_FIELDS === 'true' && (
+              <>
+                <hr style={{ marginBlock: '1rem' }} />
+                <CustomUserFields
+                  {...props}
+                  displayName={authorDisplayName}
+                  userFieldConfig={config.user.userFields}
+                  publicData={ensuredAuthor?.attributes?.profile?.publicData}
+                />
+              </>
+            )}
+
+            <hr style={{ marginBlock: '1rem' }} />
+            <SectionLinks />
+            {/* [/SKYFARER] */}
           </div>
           <div className={css.orderColumnForProductLayout}>
             <OrderPanel
+              currentUser={currentUser}
+              currentUserHasOrders={currentUserHasOrders}
               className={css.productOrderPanel}
               listing={currentListing}
               isOwnListing={isOwnListing}
@@ -416,6 +447,7 @@ export const ListingPageComponent = props => {
               marketplaceCurrency={config.currency}
               dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
               marketplaceName={config.marketplaceName}
+              reschedule={reschedule} // [SKYFARER]
             />
           </div>
         </div>
@@ -462,9 +494,31 @@ const EnhancedListingPage = props => {
   const intl = useIntl();
   const history = useHistory();
   const location = useLocation();
+  const [reschedule, setReschedule] = useState(null) // [SKYFARER]
+
+  // [SKYFARER]
+  useEffect(() => {
+    (async () => {
+      try {
+        const queryParams = new URLSearchParams(location.search)
+        const param = queryParams.get('reschedule')
+
+        if (param) {
+          const { data } = await sdk.transactions.show({ id: param, include: 'booking' })
+          setReschedule({ ...data.data, booking: data.included.find(i => i.type === 'booking') })
+        }
+      } catch (err) {
+        console.error('Error fetching transaction:', err)
+        showErrorToast('Error fetching transaction')
+        logError(err, 'reschedule:error_fetching_transaction', { reschedule })
+        history.push(`/order/${reschedule}`)
+      }
+    })()
+  }, [sdk, location.search]);
+  // [/SKYFARER]
 
   const showListingError = props.showListingError;
-  const isVariant = props.params?.variant != null;
+  const isVariant = props.params?.variant?.length > 0;
   const currentUser = props.currentUser;
   if (isForbiddenError(showListingError) && !isVariant && !currentUser) {
     // This can happen if private marketplace mode is active
@@ -510,6 +564,7 @@ const EnhancedListingPage = props => {
       history={history}
       location={location}
       showOwnListingsOnly={hasNoViewingRights}
+      reschedule={reschedule} // [SKYFARER]
       {...props}
     />
   );
@@ -529,7 +584,7 @@ const mapStateToProps = state => {
     fetchLineItemsError,
     inquiryModalOpenForListingId,
   } = state.ListingPage;
-  const { currentUser } = state.user;
+  const { currentUser, currentUserHasOrders } = state.user; // [SKYFARER MERGE: +currentUserHasOrders]
 
   const getListing = id => {
     const ref = { id, type: 'listing' };
@@ -546,6 +601,7 @@ const mapStateToProps = state => {
   return {
     isAuthenticated,
     currentUser,
+    currentUserHasOrders, // [SKYFARER]
     getListing,
     getOwnListing,
     scrollingDisabled: isScrollingDisabled(state),

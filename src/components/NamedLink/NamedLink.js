@@ -57,6 +57,7 @@ export const NamedLink = withRouter(props => {
     className,
     style = {},
     activeClassName = 'NamedLink_active',
+    target = '_self'
   } = props;
 
   const onOver = () => {
@@ -78,8 +79,9 @@ export const NamedLink = withRouter(props => {
     title,
   };
 
+  // [SKYFARER MERGE: +target]
   return (
-    <Link onMouseOver={onOver} onTouchStart={onOver} to={{ pathname, ...to }} {...aElemProps}>
+    <Link onMouseOver={onOver} onTouchStart={onOver} to={{ pathname, ...to }} {...aElemProps} target={target || '_self'}>
       {children}
     </Link>
   );

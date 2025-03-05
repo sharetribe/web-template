@@ -598,3 +598,38 @@
     margin-top: 16px;
   }
 }
+
+/* [SKYFARER] */
+.pointerEvents {
+  pointer-events: none;
+  opacity: 0.5;
+}
+.meetingLink {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & .buttonLink {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: var(--marketplaceColor);
+    width: 300px;
+    border: none;
+    border-radius: 4px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+}
+
+.cancelModalContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+/* [/SKYFARER] */

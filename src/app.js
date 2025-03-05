@@ -1,7 +1,13 @@
 import React from 'react';
 import { any, string } from 'prop-types';
+import ReactDOMServer from 'react-dom/server';
 
-import { HelmetProvider } from 'react-helmet-async';
+// [SKYFARER]
+// react-dates needs to be initialized before using any react-dates component
+// https://github.com/airbnb/react-dates#initialize
+// NOTE: Initializing it here will initialize it also for app.test.js
+import 'react-dates/initialize';
+import { HelmetProvider, Helmet } from 'react-helmet-async';
 import { BrowserRouter, StaticRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import loadable from '@loadable/component';
@@ -30,6 +36,7 @@ import Routes from './routing/Routes';
 
 // Sharetribe Web Template uses English translations as default translations.
 import defaultMessages from './translations/en.json';
+import { ErrorBoundary } from './components/ErrorBoundary/ErrorBoundary'; // [SKYFARER]
 
 // If you want to change the language of default (fallback) translations,
 // change the imports to match the wanted locale:
@@ -241,30 +248,33 @@ export const ClientApp = props => {
   // This gives good input for debugging issues on live environments, but with test it's not needed.
   const logLoadDataCalls = appSettings?.env !== 'test';
 
+  // [SKYFARER MERGE: ErrorBoundary]
   return (
-    <Configurations appConfig={appConfig}>
-      <IntlProvider
-        locale={appConfig.localization.locale}
-        messages={{ ...localeMessages, ...hostedTranslations }}
-        textComponent="span"
-      >
-        <Provider store={store}>
-          <HelmetProvider>
-            <IncludeScripts config={appConfig} />
-            <BrowserRouter>
-              <Routes logLoadDataCalls={logLoadDataCalls} />
-            </BrowserRouter>
-          </HelmetProvider>
-        </Provider>
-      </IntlProvider>
-    </Configurations>
+    <ErrorBoundary>
+      <Configurations appConfig={appConfig}>
+        <IntlProvider
+          locale={appConfig.localization.locale}
+          messages={{ ...localeMessages, ...hostedTranslations }}
+          textComponent="span"
+        >
+          <Provider store={store}>
+            <HelmetProvider>
+              <IncludeScripts config={appConfig} />
+              <BrowserRouter>
+                <Routes logLoadDataCalls={logLoadDataCalls} />
+              </BrowserRouter>
+            </HelmetProvider>
+          </Provider>
+        </IntlProvider>
+      </Configurations>
+    </ErrorBoundary>
   );
 };
 
 ClientApp.propTypes = { store: any.isRequired };
 
 export const ServerApp = props => {
-  const { url, context, helmetContext, store, hostedTranslations = {}, hostedConfig = {} } = props;
+  const { url, hostname, context, helmetContext, store, hostedTranslations = {}, hostedConfig = {} } = props; // [SKYFARER MERGE: +hostname]
   const appConfig = mergeConfig(hostedConfig, defaultConfig);
   HelmetProvider.canUseDOM = false;
 
@@ -288,6 +298,17 @@ export const ServerApp = props => {
       >
         <Provider store={store}>
           <HelmetProvider context={helmetContext}>
+            {
+              // [SKYFARER]
+              /**
+                If we're running on Render, let's assume we don't want it indexed
+                TODO: Make more generic so it can be used for other platforms too; emergency fix
+              */
+              !process.env.REACT_APP_ROBOTS_INDEX_RENDER &&
+              hostname.includes('onrender.com') ? (
+                <Helmet><meta name="robots" content="noindex,nofollow" /></Helmet>
+              ) : null
+            }
             <IncludeScripts config={appConfig} />
             <StaticRouter location={url} context={context}>
               <Routes />
@@ -317,7 +338,8 @@ export const renderApp = (
   preloadedState,
   hostedTranslations,
   hostedConfig,
-  collectChunks
+  collectChunks,
+  hostname // [SKYFARER]
 ) => {
   // Don't pass an SDK instance since we're only rendering the
   // component tree with the preloaded store state and components
@@ -332,6 +354,7 @@ export const renderApp = (
   const WithChunks = collectChunks(
     <ServerApp
       url={url}
+      hostname={hostname} // [SKYFARER]
       context={serverContext}
       helmetContext={helmetContext}
       store={store}

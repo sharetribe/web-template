@@ -1,0 +1,9 @@
+.spinner {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.formRow {
+  text-align: center;
+}

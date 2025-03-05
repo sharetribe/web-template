@@ -7,6 +7,7 @@ const {
 } = require('./lineItemHelpers');
 const { types } = require('sharetribe-flex-sdk');
 const { Money } = types;
+const { Voucherify } = require('./voucherHelpers'); // [SKYFARER]
 
 /**
  * Get quantity and add extra line-items that are related to delivery method
@@ -129,7 +130,7 @@ const getDateRangeWithSeatsAndLineItems = (orderData, code) => {
  * @param {Object} customerCommission
  * @returns {Array} lineItems
  */
-exports.transactionLineItems = (listing, orderData, providerCommission, customerCommission) => {
+exports.transactionLineItems = async (listing, orderData, providerCommission, customerCommission) => { // [SKYFARER MERGE: async]
   const publicData = listing.attributes.publicData;
   const unitPrice = listing.attributes.price;
   const currency = unitPrice.currency;
@@ -240,6 +241,39 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
         },
       ]
     : [];
+
+  if (orderData.voucherCode) { // [SKYFARER]
+    try {
+      const voucher = await Voucherify.vouchers.get(orderData.voucherCode);
+
+      switch (voucher?.discount?.type) {
+        case 'PERCENT':
+          if (voucher.discount.effect === 'APPLY_TO_ORDER') {
+            extraLineItems.push({
+              code: `line-item/${voucher.campaign?.replace(/ /g, '-') || 'promo-discount'}`,
+              unitPrice: calculateTotalFromLineItems([order]),
+              percentage: getNegation(voucher.discount.percent_off),
+              includeFor: ['customer', 'provider'],
+            }); break;
+          }
+        case 'AMOUNT':
+          if (voucher.discount.effect === 'APPLY_TO_ORDER') {
+            const code = voucher.campaign
+              ? `line-item/voucher-${voucher.campaign?.replace(/ /g, '-') || 'promo-discount'}`
+              : `line-item/voucher-${voucher.code.replace(/ /g, '-')}`;
+            extraLineItems.push({
+              code,
+              unitPrice: new Money(getNegation(voucher.discount.amount_off), currency),
+              quantity: 1,
+              includeFor: ['customer', 'provider'],
+            }); break;
+          }
+      }
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
 
   // Let's keep the base price (order) as first line item and provider and customer commissions as last.
   // Note: the order matters only if OrderBreakdown component doesn't recognize line-item.

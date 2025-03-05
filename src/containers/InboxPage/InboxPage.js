@@ -77,7 +77,7 @@ const bookingData = (tx, lineItemUnitType, timeZone) => {
 };
 
 const BookingTimeInfoMaybe = props => {
-  const { transaction, ...rest } = props;
+  const { currentUser, transaction, ...rest } = props; // [SKYFARER MERGE: +currentUser]
   const processName = resolveLatestProcessName(transaction?.attributes?.processName);
   const process = getProcess(processName);
   const isInquiry = process.getState(transaction) === process.states.INQUIRY;
@@ -98,13 +98,14 @@ const BookingTimeInfoMaybe = props => {
 
   const timeZone = transaction?.listing?.attributes?.availabilityPlan?.timezone || 'Etc/UTC';
   const { bookingStart, bookingEnd } = bookingData(transaction, lineItemUnitType, timeZone);
+  const displayTimezone = currentUser?.attributes?.profile?.publicData?.timeZone?.replace(/-/g, '/') || getDefaultTimeZoneOnBrowser() || timeZone; // [SKYFARER]
 
   return (
     <TimeRange
       startDate={bookingStart}
       endDate={bookingEnd}
       dateType={dateType}
-      timeZone={timeZone}
+      timeZone={displayTimezone} // [SKYFARER MERGE: +displayTimezone]
       {...rest}
     />
   );
@@ -128,6 +129,7 @@ export const InboxItem = props => {
     intl,
     stateData,
     isBooking,
+    currentUser, // [SKYFARER]
     availabilityType,
     stockType = STOCK_MULTIPLE_ITEMS,
   } = props;
@@ -169,8 +171,8 @@ export const InboxItem = props => {
         <div className={css.itemUsername}>{otherUserDisplayName}</div>
         <div className={css.itemTitle}>{listing?.attributes?.title}</div>
         <div className={css.itemDetails}>
-          {isBooking ? (
-            <BookingTimeInfoMaybe transaction={tx} />
+          {isBooking ? ( // [SKYFARER MERGE: +currentUser]
+            <BookingTimeInfoMaybe transaction={tx} currentUser={currentUser} />
           ) : hasPricingData && showStock ? (
             <FormattedMessage id="InboxPage.quantity" values={{ quantity }} />
           ) : null}
@@ -269,6 +271,7 @@ export const InboxPageComponent = props => {
           stockType={stockType}
           availabilityType={availabilityType}
           isBooking={isBooking}
+          currentUser={currentUser} // [SKYFARER]
         />
       </li>
     ) : null;

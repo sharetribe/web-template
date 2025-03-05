@@ -14,10 +14,14 @@ const wellKnownRouter = require('./wellKnownRouter');
 const webmanifestResourceRoute = require('./resources/webmanifest');
 const robotsTxtRoute = require('./resources/robotsTxt');
 const sitemapResourceRoute = require('./resources/sitemap');
+const { pollTransactionEvents } = require('./events/sharetribe/transaction.event');
 
 const radix = 10;
 const PORT = parseInt(process.env.REACT_APP_DEV_API_SERVER_PORT, radix);
 const app = express();
+
+// Initialize client to connect to AWS
+require('./aws/aws-ai-client').startupAWSAIClient();
 
 // NOTE: CORS is only needed in this dev API server because it's
 // running in a different port than the main app.
@@ -46,6 +50,11 @@ app.get('/robots.txt', robotsTxtRoute);
 
 // Handle different sitemap-* resources. E.g. /sitemap-index.xml
 app.get('/sitemap-:resource', sitemapResourceRoute);
+
+// Events
+// pollCalendarEvents();
+
+pollTransactionEvents();
 
 app.listen(PORT, () => {
   console.log(`API server listening on ${PORT}`);

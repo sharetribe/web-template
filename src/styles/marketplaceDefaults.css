@@ -45,6 +45,8 @@
 
   --colorLightTransparent: rgba(255, 255, 255, 0.65);
 
+  --colorTertiary: #91caff; /* [SKYFARER] */
+
   /**
   * Marketplace color comes by default from src/config/brandingConfig.js
   * It overwrites these CSS Properties.
@@ -55,7 +57,7 @@
   --marketplaceColorLight: #7748d5; /* hsl(260, 63%, 56%), +10L from marketplaceColor */
   --marketplaceColorDark: #492296; /* hsl(260, 63%, 26%), -10L from marketplaceColor */
 
-  /** 
+  /**
    * The fill color used by <PrimaryButton>
    * These might be overwritten by values from hosted assets
    */
@@ -63,7 +65,7 @@
   --colorPrimaryButtonDark: var(--colorSuccessDark);
   --colorPrimaryButtonLight: var(--colorSuccessLight);
 
-  /** 
+  /**
    * The fill color used by <SecondaryButton>
    */
   --colorSecondaryButton: var(--colorWhite);
@@ -585,7 +587,7 @@ textarea {
 /* ================ Plain global CSS glasses ================ */
 
 /**
- * Note: even though these reflect element styles, 
+ * Note: even though these reflect element styles,
  * these are below element styles to allow overwrites using classes.
  */
 
@@ -746,6 +748,7 @@ textarea {
 .buttonPrimaryInline,
 .buttonSecondary,
 .buttonSecondaryInline,
+.buttonTertiary, /* [SKYFARER] */
 .marketplaceMessageFontStyles,
 .marketplaceTxTransitionFontStyles,
 .marketplaceListingAttributeFontStyles,
@@ -954,7 +957,7 @@ textarea {
  * For actual buttons, use components: <Button>, <PrimaryButton>, <SecondaryButton>
  *
  * To create button look-and-feel for links, etc. combine button classes in CSS Modules:
- * 
+ *
  * <Button>:
  *   composes: buttonDefault from global;
  * <PrimaryButton>:
@@ -1178,6 +1181,67 @@ textarea {
   background-color: var(--colorGrey100);
   color: var(--colorWhite);
 }
+
+/**
+ * [SKYFARER]
+ * Styles for <TertiaryButton>
+ */
+.buttonTertiary {
+  /* button defaults */
+  display: block;
+  width: 100%;
+  min-height: 56px;
+  margin: 0;
+
+  /* Padding is only for <a> elements where button styles are applied,
+  buttons elements should have zero padding */
+  padding: 16px 0 16px 0;
+
+  transition: all var(--transitionStyleButton);
+  cursor: pointer;
+
+  /*
+   * Font: most font styles are defined earlier in this file
+   */
+  font-weight: var(--fontWeightSemiBold);
+
+  /* Button text styles */
+  /* Secondary button text is centered without decorations */
+  text-align: center;
+  text-decoration: none;
+
+  /* Secondary button has clear borders */
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--colorGrey100);
+  border-radius: var(--borderRadiusMedium);
+
+  /* Button colors: secondary */
+  background-color: var(--colorTertiaryButton);
+  color: var(--colorGrey700);
+
+  @media (--viewportMedium) {
+    padding: 20px 0 20px 0;
+  }
+}
+.buttonTertiary:focus,
+.buttonTertiary:hover {
+  outline: none;
+  box-shadow: var(--boxShadowButton);
+  border-color: var(--colorGrey300);
+  background-color: var(--colorTertiaryButton);
+}
+.buttonTertiary:hover {
+  text-decoration: none;
+}
+.buttonTertiary:disabled {
+  box-shadow: none;
+  cursor: not-allowed;
+  border-color: var(--colorGrey100);
+  background-color: var(--colorGrey100);
+  color: var(--colorWhite);
+}
+
 
 /**
  * Styles for <SecondaryButtonInline>

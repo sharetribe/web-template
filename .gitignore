@@ -14,3 +14,12 @@ build
 .env
 npm-debug.log
 yarn-error.log
+
+# Sentry Config File
+.sentryclirc
+
+# Sharetribe artifacts
+*.state
+
+# Jetbrains Artifacts
+.idea

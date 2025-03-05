@@ -147,9 +147,13 @@ exports.csp = (reportUri, reportOnly) => {
   // const { imgSrc = [self] } = defaultDirectives;
   // const exampleImgSrc = imgSrc.concat('my-custom-domain.example.com');
 
+  // [SKYFARER]
+  const { connectSrc = [self] } = defaultDirectives;
   const customDirectives = {
-    // Example: Add custom directive override
-    // imgSrc: exampleImgSrc,
+    connectSrc: connectSrc.concat([
+      '*.contentsquare.net',
+      '*.voucherify.io'
+    ])
   };
 
   // ================ END CUSTOM CSP URLs ================ //

@@ -103,6 +103,7 @@ const EnhancedCheckoutPage = props => {
     scrollingDisabled,
     speculateTransactionInProgress,
     onInquiryWithoutPayment,
+    currentUserHasOrders, // [SKYFARER]
     initiateOrderError,
   } = props;
   const processName = getProcessName(pageData);
@@ -184,6 +185,7 @@ const EnhancedCheckoutPage = props => {
       listingTitle={listingTitle}
       title={title}
       onSubmitCallback={onSubmitCallback}
+      currentUserHasOrders={currentUserHasOrders} // [SKYFARER]
       {...props}
     />
   ) : (
@@ -207,7 +209,7 @@ const mapStateToProps = state => {
     initiateOrderError,
     confirmPaymentError,
   } = state.CheckoutPage;
-  const { currentUser } = state.user;
+  const { currentUser, currentUserHasOrders } = state.user; // [SKYFARER]
   const { confirmCardPaymentError, paymentIntent, retrievePaymentIntentError } = state.stripe;
   return {
     scrollingDisabled: isScrollingDisabled(state),
@@ -226,6 +228,7 @@ const mapStateToProps = state => {
     confirmPaymentError,
     paymentIntent,
     retrievePaymentIntentError,
+    currentUserHasOrders, // [SKYFARER]
   };
 };
 

@@ -13,7 +13,7 @@ import { subtractTime } from '../../util/dates';
 
 import css from './OrderBreakdown.module.css';
 
-const BookingPeriod = props => {
+export const BookingPeriod = props => {
   const { startDate, endDate, dateType, timeZone } = props;
   const timeZoneMaybe = timeZone ? { timeZone } : null;
 

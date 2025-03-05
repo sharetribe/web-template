@@ -21,6 +21,10 @@ import { loadableReady } from '@loadable/component';
 // as first ones in the final build CSS build file.
 import './styles/marketplaceDefaults.css';
 
+// [SKYFARER]
+// Import the voucherify overrides
+import './styles/voucherifyOverrides.css';
+
 // Configs and store setup
 import appSettings from './config/settings';
 import defaultConfig from './config/configDefault';
@@ -52,7 +56,6 @@ const render = (store, shouldHydrate) => {
   const cdnAssetsVersion = state.hostedAssets.version;
   const authInfoLoaded = state.auth.authInfoLoaded;
   const info = authInfoLoaded ? Promise.resolve({}) : store.dispatch(authInfo());
-
   info
     .then(() => {
       // Ensure that Loadable Components is ready
@@ -118,6 +121,8 @@ const setupAnalyticsHandlers = googleAnalyticsId => {
   return handlers;
 };
 
+export let sdk; // [SKYFARER]
+
 // If we're in a browser already, render the client application.
 if (typeof window !== 'undefined') {
   // set up logger with Sentry DSN client key and environment
@@ -131,7 +136,7 @@ if (typeof window !== 'undefined') {
   // eslint-disable-next-line no-underscore-dangle
   const preloadedState = window.__PRELOADED_STATE__ || '{}';
   const initialState = JSON.parse(preloadedState, sdkTypes.reviver);
-  const sdk = createInstance({
+  sdk = createInstance({ // [SKYFARER]
     transitVerbose: appSettings.sdk.transitVerbose,
     clientId: appSettings.sdk.clientId,
     secure: appSettings.usingSSL,

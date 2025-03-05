@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
+  </head>{{#with message}}
+<!--    {{>logo}} Todo put this back when we have CDN, else will flag as spam in encoding-->
+    <table style="background-color:#FFF;margin:0 auto;padding:24px 12px 0;font-family:-apple-system, BlinkMacSystemFont, &#x27;Segoe UI&#x27;, &#x27;Roboto&#x27;, &#x27;Oxygen&#x27;, &#x27;Ubuntu&#x27;, &#x27;Cantarell&#x27;, &#x27;Fira Sans&#x27;, &#x27;Droid Sans&#x27;, &#x27;Helvetica Neue&#x27;, sans-serif" align="center" role="presentation" cellSpacing="0" cellPadding="0" border="0" width="100%">
+      <tbody>
+        <tr>
+          <td>
+            <table align="center" role="presentation" cellSpacing="0" cellPadding="0" border="0" width="100%" style="max-width:600px;margin:0 auto">
+              <tr style="width:100%">
+                <td>
+                  <h1 style="color:#484848;font-size:26px;line-height:1.3;font-weight:700">{{t "NotSent.Title" "Your message has not been sent"}}</h1>
+                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "NotSent.Content" "We're sorry, but your message has not been sent. We weren't able to detect a sale ID in your message. Please be sure to reply to the original notification email you received."}}</p>
+                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;background-color:#F2F3F3;padding:18px 24px;border-radius:8px;white-space:pre-line;">{{content}}</p>
+
+                  <div>
+                    <hr style="width:100%;border:none;border-top:1px solid #eaeaea;border-color:#E1E1E1;margin:20px 0" />
+                    <p style="font-size:12px;line-height:15px;margin:0 auto;color:#b7b7b7;text-align:left;margin-bottom:50px">{{t "TransactionEmails.MembershipParagraph" "You have received this email notification because you are a member of {marketplaceName}. If you no longer wish to receive these emails, please contact {marketplaceName} team." marketplaceName=marketplace.name}}</p>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  {{/with}}
+</html>

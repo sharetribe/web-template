@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
 
+// [SKYFARER]
+// TODO: When voucherify merges PR #275, we can switch to the original package
+// Don't forget to change the dynamic CSS import ~ line 149
+// import { VoucherifyValidate } from '@voucherify/react-widget';
+import { VoucherifyValidate } from '@mathiscode/voucherify-react-widget';
+
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import { numberAtLeast, required } from '../../../util/validators';
@@ -33,6 +39,7 @@ const handleFetchLineItems = ({
   isOwnListing,
   fetchLineItemsInProgress,
   onFetchTransactionLineItems,
+  voucherCode, // [SKYFARER]
 }) => {
   const stockReservationQuantity = Number.parseInt(quantity, 10);
   const deliveryMethodMaybe = deliveryMethod ? { deliveryMethod } : {};
@@ -44,7 +51,7 @@ const handleFetchLineItems = ({
     !fetchLineItemsInProgress
   ) {
     onFetchTransactionLineItems({
-      orderData: { stockReservationQuantity, ...deliveryMethodMaybe },
+      orderData: { stockReservationQuantity, ...deliveryMethodMaybe, voucherCode }, // [SKYFARER MERGE: +voucherCode]
       listingId,
       isOwnListing,
     });
@@ -109,6 +116,7 @@ const DeliveryMethodMaybe = props => {
 
 const renderForm = formRenderProps => {
   const [mounted, setMounted] = useState(false);
+  const [voucherInfo, setVoucherInfo] = useState(''); // [SKYFARER]
   const {
     // FormRenderProps from final-form
     handleSubmit,
@@ -132,14 +140,61 @@ const renderForm = formRenderProps => {
     payoutDetailsWarning,
     marketplaceName,
     values,
+    config, // [SKYFARER]
+    currentUser, // [SKYFARER]
+    currentUserHasOrders, // [SKYFARER]
   } = formRenderProps;
+
+  // [SKYFARER]
+  if (typeof window !== 'undefined') import('@mathiscode/voucherify-react-widget/dist/voucherify.css');
+
+  const codeValidated = (data) => {
+    // TODO: i18n this
+    // TODO: hookify this and DRY between ProductOrderForm and BookingTimeForm
+    try {
+      if (!data || !data.valid) {
+        if (data?.error?.code === 404) return setVoucherInfo("This code doesn't look right. Check your code and try again.");
+        return setVoucherInfo(data?.error?.message || data?.reason || 'Invalid voucher code');
+      }
+
+      let output = `${data.code} has been applied!`;
+      if (data.discount.type === 'PERCENT') output += ` You're saving ${data.discount.percent_off}%!`;
+      else output += ` You're saving ${formatMoney(intl, new Money(data.discount.amount_off, price.currency))}!`;
+
+      setVoucherInfo(output);
+      if (data?.valid) {
+        values.voucherCode = data.code;
+        document.querySelector('button.voucherifyValidate')?.remove();
+        handleOnChange({ values });
+      }
+    } catch (e) {
+      console.error(e);
+      setVoucherInfo('An error occurred while applying the voucher code. Please try again or contact support.');
+    }
+  }
+
+  const voucherifyItems = !config.vouchers.ENABLED ? null : lineItems?.map(item => {
+    return {
+      source_id: item.code,
+      related_object: 'sku',
+      price: item.unitPrice.amount,
+      quantity: item.quantity?.toNumber() || 1,
+      amount: item.unitPrice.amount * (item.quantity?.toNumber() || 1),
+      metadata: {
+        includeFor: item.includeFor,
+        lineTotal: item.lineTotal.amount,
+        reversal: item.reversal || false,
+      }
+    }
+  })
+  // [/SKYFARER]
 
   // Note: don't add custom logic before useEffect
   useEffect(() => {
     setMounted(true);
 
     // Side-effect: fetch line-items after mounting if possible
-    const { quantity, deliveryMethod } = values;
+    const { quantity, deliveryMethod, voucherCode } = values; // [SKYFARER]
     if (quantity && !formRenderProps.hasMultipleDeliveryMethods) {
       handleFetchLineItems({
         quantity,
@@ -149,13 +204,14 @@ const renderForm = formRenderProps => {
         isOwnListing,
         fetchLineItemsInProgress,
         onFetchTransactionLineItems,
+        voucherCode, // [SKYFARER]
       });
     }
   }, []);
 
   // If form values change, update line-items for the order breakdown
   const handleOnChange = formValues => {
-    const { quantity, deliveryMethod } = formValues.values;
+    const { quantity, deliveryMethod, voucherCode } = formValues.values; // [SKYFARER]
     if (mounted) {
       handleFetchLineItems({
         quantity,
@@ -164,6 +220,7 @@ const renderForm = formRenderProps => {
         isOwnListing,
         fetchLineItemsInProgress,
         onFetchTransactionLineItems,
+        voucherCode, // [SKYFARER]
       });
     }
   };
@@ -257,6 +314,44 @@ const renderForm = formRenderProps => {
         intl={intl}
       />
 
+      { // [SKYFARER]
+        config.vouchers.ENABLED && currentUser && (
+          <div className={css.promoCodeArea}>
+            <p style={{ textAlign: 'center', fontWeight: 'bold' }}>
+              <FormattedMessage id="ProductOrderForm.promoCode" defaultMessage="Promo Code" />
+            </p>
+
+            <VoucherifyValidate
+              textValidate='Apply'
+              textPlaceholder=' '
+              logoSrc={Logo}
+              apiUrl={config.vouchers.API_URL}
+              clientApplicationId={config.vouchers.APPLICATION_ID}
+              clientSecretKey={config.vouchers.SECRET_KEY}
+              origin={process.env.REACT_APP_MARKETPLACE_ROOT_URL}
+              onValidated={codeValidated}
+              onInvalid={codeValidated}
+              onError={e => setVoucherInfo(e.details)}
+              items={voucherifyItems}
+              metadata={{
+                userHasOrders: currentUser ? currentUserHasOrders : false
+              }}
+              customer={currentUser && {
+                source_id: currentUser.id.uuid,
+                email: currentUser.attributes.email,
+                name: currentUser.attributes.profile.displayName,
+                metadata: {
+                  userType: currentUser.attributes.profile.publicData.userType,
+                  createdAt: currentUser.attributes.createdAt.toString()
+                }
+              }}
+            />
+
+            <p style={{ textAlign: 'center' }}>{voucherInfo}</p>
+          </div>
+        )
+      }
+
       {showBreakdown ? (
         <div className={css.breakdownWrapper}>
           <H6 as="h3" className={css.bookingBreakdownTitle}>
@@ -330,6 +425,9 @@ const ProductOrderForm = props => {
     shippingEnabled,
     displayDeliveryMethod,
     allowOrdersOfMultipleItems,
+    config, // [SKYFARER]
+    currentUser, // [SKYFARER]
+    currentUserHasOrders, // [SKYFARER]
   } = props;
 
   // Should not happen for listings that go through EditListingWizard.

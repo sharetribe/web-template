@@ -288,3 +288,9 @@
     padding: 0;
   }
 }
+
+.rescheduleInfo { /* [SKYFARER] */
+  margin-bottom: 2rem;
+  text-align: center;
+  font-weight: var(--fontWeightSemiBold);
+}

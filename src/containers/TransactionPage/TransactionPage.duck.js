@@ -5,7 +5,7 @@ import isEmpty from 'lodash/isEmpty';
 import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
 import { findNextBoundary, getStartOf, monthIdString } from '../../util/dates';
 import { isTransactionsTransitionInvalidTransition, storableError } from '../../util/errors';
-import { transactionLineItems } from '../../util/api';
+import { createGoogleMeeting, transactionLineItems } from '../../util/api'; // [SKYFARER MERGE: +createGoogleMeeting]
 import * as log from '../../util/log';
 import {
   updatedEntities,
@@ -25,6 +25,12 @@ const { UUID } = sdkTypes;
 
 const MESSAGES_PAGE_SIZE = 100;
 const REVIEW_TX_INCLUDES = ['reviews', 'reviews.author', 'reviews.subject'];
+
+// [SKYFARER]
+const TRANSITION_ACCEPT = 'transition/accept';
+const TRANSITION_CUSTOMER_RESCHEDULE = 'transition/customer-reschedule';
+const TRANSITION_PROVIDER_RESCHEDULE = 'transition/provider-reschedule';
+// [/SKYFARER]
 
 // ================ Action types ================ //
 
@@ -458,7 +464,6 @@ export const fetchTransaction = (id, txRole, config) => (dispatch, getState, sdk
       const listing = denormalised[0];
       const transaction = denormalised[1];
       const processName = resolveLatestProcessName(transaction.attributes.processName);
-
       try {
         const process = getProcess(processName);
         const isInquiry = process.getState(transaction) === process.states.INQUIRY;
@@ -527,6 +532,10 @@ export const makeTransition = (txId, transitionName, params) => (dispatch, getSt
       dispatch(addMarketplaceEntities(response));
       dispatch(transitionSuccess());
       dispatch(fetchCurrentUserNotifications());
+
+      if (transitionName === TRANSITION_ACCEPT) { // [SKYFARER]
+        createGoogleMeeting({ txId: txId?.uuid });
+      }
 
       // There could be automatic transitions after this transition
       // For example mark-received-from-purchased > auto-complete.

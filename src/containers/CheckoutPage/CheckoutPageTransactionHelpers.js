@@ -1,4 +1,5 @@
 // Import contexts and util modules
+import { voucherifyBackend } from '../../util/api'; // [SKYFARER]
 import { findRouteByRouteName } from '../../util/routes';
 import { ensureStripeCustomer, ensureTransaction } from '../../util/data';
 import { minutesBetween } from '../../util/dates';
@@ -175,7 +176,7 @@ const persistTransaction = (order, pageData, storeData, setPageData, sessionStor
  * @param {Object} extraPaymentParams contains extra params needed by one of the following calls in the checkout sequence
  * @returns Promise that goes through each step in the checkout sequence.
  */
-export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
+export const processCheckoutWithPayment = (orderParams, extraPaymentParams, currentUser) => { // [SKYFARER MERGE: +currentUser]
   const {
     hasPaymentIntentUserActionsDone,
     isPaymentFlowUseSavedCard,
@@ -220,7 +221,30 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
       ? Promise.resolve(storedTx)
       : onInitiateOrder(fnParams, processAlias, storedTx.id, requestTransition, isPrivileged);
 
-    orderPromise.then(order => {
+    orderPromise.then(async (order) => { // [SKYFARER MERGE: +async]
+      if (order?.attributes?.lastTransition === 'transition/request-payment') {
+        const voucherCode = pageData?.orderData?.voucherCode;
+        if (voucherCode) {
+          const { email, profile } = currentUser.attributes;
+          const { displayName: name } = profile;
+
+          try {
+            const customer = await voucherifyBackend.customers.createOrGet({ email, name });
+            if (!customer) throw new Error('Customer not found and not created');
+            const redemption = await voucherifyBackend.vouchers.redeem({ order, voucherCode, customerId: customer.id });
+            const result = redemption.result || redemption.redemptions[0].result;
+
+            if (result !== 'SUCCESS') {
+              console.error(result, { redemption, customer })
+              throw new Error('Voucher redemption failed');
+            }
+          } catch (error) {
+            console.error({ error })
+            throw error;
+          }
+        }
+      }
+
       // Store the returned transaction (order)
       persistTransaction(order, pageData, storeData, setPageData, sessionStorageKey);
     });

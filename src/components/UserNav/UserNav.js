@@ -17,10 +17,11 @@ import css from './UserNav.module.css';
  * @returns {JSX.Element} User navigation component
  */
 const UserNav = props => {
-  const { className, rootClassName, currentPage } = props;
+  const { className, rootClassName, currentPage, currentUser } = props;
   const classes = classNames(rootClassName || css.root, className);
+  const isInstructor = currentUser?.attributes?.profile?.publicData?.userType.toLowerCase() === 'instructor'; // [SKYFARER]
 
-  const tabs = [
+  let tabs = [ // [SKYFARER MERGE: +let/-const]
     {
       text: <FormattedMessage id="UserNav.yourListings" />,
       selected: currentPage === 'ManageListingsPage',
@@ -45,6 +46,8 @@ const UserNav = props => {
       },
     },
   ];
+
+  if (!isInstructor) tabs = tabs.filter(tab => tab.linkProps.name !== 'ManageListingsPage') // [SKYFARER]
 
   return (
     <LinkTabNavHorizontal className={classes} tabRootClassName={css.tab} tabs={tabs} skin="dark" />

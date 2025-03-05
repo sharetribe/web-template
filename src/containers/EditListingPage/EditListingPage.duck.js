@@ -24,8 +24,18 @@ import {
   fetchStripeAccount,
 } from '../../ducks/stripeConnectAccount.duck';
 import { fetchCurrentUser } from '../../ducks/user.duck';
+import { // [SKYFARER]
+  deleteGoogleEventByID,
+  fetchEventsFromGoogleCalendar,
+  revokeGoogleAuthToken,
+} from '../../util/api';
+import { StatusCode } from '../../util/enums';
+import { showErrorToast, showSuccessToast } from '../../util/toast'; // [SKYFARER]
+import { AVAILABILITY, NEW } from '../../util/constants';
 
 const { UUID } = sdkTypes;
+
+const WEEKDAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']; // [SKYFARER]
 
 // Create array of N items where indexing starts from 1
 const getArrayOfNItems = n =>
@@ -114,6 +124,31 @@ const mergeToMonthlyExceptionQueries = (monthlyExceptionQueries, monthId, newDat
     : {};
 };
 
+const processWeeklyAvailability = values => { // [SKYFARER]
+  const { timezone } = values;
+  const availability = [];
+
+  WEEKDAYS.forEach(day => {
+    if (values[day] && values[day].length > 0) {
+      values[day].forEach(timeSlot => {
+        const { startTime, endTime } = timeSlot;
+
+        // Prepare the event data for each time slot
+        const event = {
+          dayOfWeek: day,
+          startTime,
+          endTime,
+          timezone,
+        };
+
+        availability.push(event);
+      });
+    }
+  });
+
+  return availability;
+};
+
 const requestAction = actionType => params => ({ type: actionType, payload: { params } });
 
 const successAction = actionType => result => ({ type: actionType, payload: result.data });
@@ -170,6 +205,15 @@ export const SAVE_PAYOUT_DETAILS_REQUEST = 'app/EditListingPage/SAVE_PAYOUT_DETA
 export const SAVE_PAYOUT_DETAILS_SUCCESS = 'app/EditListingPage/SAVE_PAYOUT_DETAILS_SUCCESS';
 export const SAVE_PAYOUT_DETAILS_ERROR = 'app/EditListingPage/SAVE_PAYOUT_DETAILS_ERROR';
 
+// [SKYFARER]
+export const DISCONNECT_GOOGLE_ACCOUNT_REQUEST =
+  'app/EditListingPage/DISCONNECT_GOOGLE_ACCOUNT_REQUEST';
+export const DISCONNECT_GOOGLE_ACCOUNT_SUCCESS =
+  'app/EditListingPage/DISCONNECT_GOOGLE_ACCOUNT_SUCCESS';
+export const DISCONNECT_GOOGLE_ACCOUNT_ERROR =
+  'app/EditListingPage/DISCONNECT_GOOGLE_ACCOUNT_ERROR';
+// [/SKYFARER]
+
 // ================ Reducer ================ //
 
 const initialState = {
@@ -210,6 +254,8 @@ const initialState = {
   updateInProgress: false,
   payoutDetailsSaveInProgress: false,
   payoutDetailsSaved: false,
+  disconnectGoogleInProgress: false, // [SKYFARER]
+  disconnectGoogleError: null, // [SKYFARER]
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -456,12 +502,28 @@ export default function reducer(state = initialState, action = {}) {
     case SAVE_PAYOUT_DETAILS_SUCCESS:
       return { ...state, payoutDetailsSaveInProgress: false, payoutDetailsSaved: true };
 
+    // [SKYFARER]
+    case DISCONNECT_GOOGLE_ACCOUNT_REQUEST:
+      return { ...state, disconnectGoogleInProgress: true, disconnectGoogleError: null };
+    case DISCONNECT_GOOGLE_ACCOUNT_SUCCESS:
+      return { ...state, disconnectGoogleInProgress: false, disconnectGoogleError: null };
+    case DISCONNECT_GOOGLE_ACCOUNT_ERROR:
+      return { ...state, disconnectGoogleInProgress: false, disconnectGoogleError: payload };
+    // [/SKYFARER]
+
     default:
       return state;
   }
 }
 
 // ================ Selectors ================ //
+export const disconnectGoogleSelector = state => { // [SKYFARER]
+  const { disconnectGoogleInProgress, disconnectGoogleError } = state.EditListingPage;
+  return {
+    disconnectGoogleInProgress,
+    disconnectGoogleError,
+  };
+};
 
 // ================ Action creators ================ //
 
@@ -539,6 +601,12 @@ export const deleteAvailabilityExceptionError = errorAction(DELETE_EXCEPTION_ERR
 export const savePayoutDetailsRequest = requestAction(SAVE_PAYOUT_DETAILS_REQUEST);
 export const savePayoutDetailsSuccess = successAction(SAVE_PAYOUT_DETAILS_SUCCESS);
 export const savePayoutDetailsError = errorAction(SAVE_PAYOUT_DETAILS_ERROR);
+
+// [SKYFARER]
+export const disconnectGoogleRequest = requestAction(DISCONNECT_GOOGLE_ACCOUNT_REQUEST);
+export const disconnectGoogleSuccess = successAction(DISCONNECT_GOOGLE_ACCOUNT_SUCCESS);
+export const disconnectGoogleError = errorAction(DISCONNECT_GOOGLE_ACCOUNT_ERROR);
+// [/SKYFARER]
 
 // ================ Thunk ================ //
 
@@ -734,37 +802,89 @@ export function requestImageUpload(actionPayload, listingImageConfig) {
   };
 }
 
-export const requestAddAvailabilityException = params => (dispatch, getState, sdk) => {
+export const requestAddWeeklyAvailabilityException = (listingId, values, currentUserId) => async ( // [SKYFARER]
+  dispatch,
+  getState,
+  sdk
+) => {
+  delete values.activePlanDays;
+
+  const weeklyAvailability = processWeeklyAvailability(values);
+
+  // Once all exceptions are created, make a batched call to fetchEventsFromGoogleCalendar
+  await fetchEventsFromGoogleCalendar({ listingId, currentUserId, weeklyAvailability });
+
+  // // Dispatch a success action or any other necessary follow-up actions
+  // dispatch(addAvailabilityExceptionSuccess({ data: allExceptions }));
+};
+
+export const requestAddAvailabilityException = params => async (dispatch, getState, sdk) => { // [SKYFARER]
   dispatch(addAvailabilityExceptionRequest(params));
 
-  return sdk.availabilityExceptions
-    .create(params, { expand: true })
-    .then(response => {
-      const availabilityException = response.data.data;
-      return dispatch(addAvailabilityExceptionSuccess({ data: availabilityException }));
-    })
-    .catch(e => {
-      dispatch(addAvailabilityExceptionError({ error: storableError(e) }));
-      throw e;
-    });
+  const { listingId, currentUserId, config, ...rest } = params; // Here rest contains all params except listingId and currentUserId for exceptions
+
+  try {
+    // Create the availability exception
+    const response = await sdk.availabilityExceptions.create(
+      { ...rest, listingId },
+      { expand: true }
+    );
+    const availabilityException = response.data.data;
+
+    // Wait for fetchEventsFromGoogleCalendar to complete
+    await fetchEventsFromGoogleCalendar({ listingId, currentUserId, availabilityException });
+    dispatch(requestShowListing({ id: listingId }, config));
+    // Dispatch success action after the calendar events are fetched
+    dispatch(addAvailabilityExceptionSuccess({ data: availabilityException }));
+
+    return;
+  } catch (e) {
+    // Dispatch error action if something goes wrong
+    dispatch(addAvailabilityExceptionError({ error: storableError(e) }));
+    throw e;
+  }
 };
 
-export const requestDeleteAvailabilityException = params => (dispatch, getState, sdk) => {
+export const requestDeleteAvailabilityException = params => async (dispatch, getState, sdk) => { // [SKYFARER]
   dispatch(deleteAvailabilityExceptionRequest(params));
 
-  return sdk.availabilityExceptions
-    .delete(params, { expand: true })
-    .then(response => {
-      const availabilityException = response.data.data;
-      return dispatch(deleteAvailabilityExceptionSuccess({ data: availabilityException }));
-    })
-    .catch(e => {
-      dispatch(deleteAvailabilityExceptionError({ error: storableError(e) }));
-      throw e;
-    });
+  const { currentUserId, listingId, config, ...rest } = params;
+
+  try {
+    // Delete the availability exception
+    const response = await sdk.availabilityExceptions.delete({ ...rest }, { expand: true });
+    const availabilityException = response.data.data;
+
+    // Delete the corresponding Google Calendar event
+    await deleteGoogleEventByID({ exceptionId: params?.id?.uuid, currentUserId, listingId });
+
+    // Dispatch the success action
+    return dispatch(deleteAvailabilityExceptionSuccess({ data: availabilityException }));
+  } catch (e) {
+    // Dispatch the error action if something goes wrong
+    dispatch(deleteAvailabilityExceptionError({ error: storableError(e) }));
+    throw e; // Rethrow the error to ensure it propagates if needed
+  }
 };
 
-export const requestFetchAvailabilityExceptions = params => (dispatch, getState, sdk) => {
+export const disconnectGoogleAccount = () => async (dispatch, getState, sdk) => { // [SKYFARER]
+  dispatch(disconnectGoogleRequest());
+
+  try {
+    const response = await revokeGoogleAuthToken();
+    if (response.statusCode === StatusCode.SUCCESS) {
+      dispatch(disconnectGoogleSuccess(response));
+      dispatch(fetchCurrentUser());
+      showSuccessToast('Successfully disconnected');
+      return response;
+    }
+  } catch (error) {
+    showErrorToast('Error while disconnecting google');
+    dispatch(disconnectGoogleError({ error: storableError(error) }));
+  }
+};
+
+export const requestFetchAvailabilityExceptions = params => (dispatch, getState, sdk) => { // [SKYFARER]
   const { listingId, start, end, timeZone, page, isWeekly } = params;
   const fetchParams = { listingId, start, end };
   const timeUnitIdProp = isWeekly

@@ -160,6 +160,9 @@ export const hasCurrentUserErrors = state => {
 export const verificationSendingInProgress = state => {
   return state.user.sendVerificationEmailInProgress;
 };
+export const currentUserSelector = state => { // [SKYFARER]
+  return state.user.currentUser;
+};
 
 // ================ Action creators ================ //
 
@@ -406,13 +409,17 @@ export const fetchCurrentUser = options => (dispatch, getState, sdk) => {
           dispatch(fetchCurrentUserNotifications());
         }
 
-        if (!currentUser.attributes.emailVerified) {
-          dispatch(fetchCurrentUserHasOrders());
-        }
+        // [SKYFARER]
+        // This is commented out to help with Voucherify processing
+        // In a nutshell: We always want to fetchCurrentUserHasOrders()
+        // if (!currentUser.attributes.emailVerified) {
+        dispatch(fetchCurrentUserHasOrders());
+        // }
       }
 
       // Make sure auth info is up to date
       dispatch(authInfo());
+      return currentUser; // [SKYFARER]
     })
     .catch(e => {
       // Make sure auth info is up to date

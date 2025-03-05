@@ -48,6 +48,16 @@ export const transitions = {
   // Admin can also cancel the transition.
   CANCEL: 'transition/cancel',
 
+  // [SKYFARER]
+  // The customer or provider can cancel the booking.
+  CUSTOMER_CANCEL: 'transition/customer-cancel',
+  PROVIDER_CANCEL: 'transition/provider-cancel',
+
+  // The customer or provider can reschedule the booking.
+  CUSTOMER_RESCHEDULE: 'transition/customer-reschedule',
+  PROVIDER_RESCHEDULE: 'transition/provider-reschedule',
+  // [/SKYFARER]
+
   // The backend will mark the transaction completed.
   COMPLETE: 'transition/complete',
   OPERATOR_COMPLETE: 'transition/operator-complete',
@@ -143,9 +153,13 @@ export const graph = {
     [states.EXPIRED]: {},
     [states.ACCEPTED]: {
       on: {
-        [transitions.CANCEL]: states.CANCELED,
         [transitions.COMPLETE]: states.DELIVERED,
         [transitions.OPERATOR_COMPLETE]: states.DELIVERED,
+        [transitions.CANCEL]: states.CANCELED,
+        [transitions.CUSTOMER_CANCEL]: states.CANCELED,
+        [transitions.PROVIDER_CANCEL]: states.CANCELED,
+        [transitions.CUSTOMER_RESCHEDULE]: states.ACCEPTED,
+        [transitions.PROVIDER_RESCHEDULE]: states.ACCEPTED,
       },
     },
 
@@ -182,6 +196,10 @@ export const isRelevantPastTransition = transition => {
     transitions.ACCEPT,
     transitions.OPERATOR_ACCEPT,
     transitions.CANCEL,
+    transitions.CUSTOMER_CANCEL, // [SKYFARER]
+    transitions.PROVIDER_CANCEL, // [SKYFARER]
+    transitions.CUSTOMER_RESCHEDULE, // [SKYFARER]
+    transitions.PROVIDER_RESCHEDULE, // [SKYFARER]
     transitions.COMPLETE,
     transitions.OPERATOR_COMPLETE,
     transitions.CONFIRM_PAYMENT,

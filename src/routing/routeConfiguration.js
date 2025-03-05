@@ -37,6 +37,11 @@ const TermsOfServicePage = loadable(() => import(/* webpackChunkName: "TermsOfSe
 const TransactionPage = loadable(() => import(/* webpackChunkName: "TransactionPage" */ '../containers/TransactionPage/TransactionPage'));
 const NoAccessPage = loadable(() => import(/* webpackChunkName: "NoAccessPage" */ '../containers/NoAccessPage/NoAccessPage'));
 
+// [SKYFARER]
+const GoogleAuthRedirectPage = loadable(() => import(/* webpackChunkName: "GoogleAuthRedirectPage" */ '../containers/GoogleAuthRedirectPage/GoogleAuthRedirectPage'));
+const AIMatchingPage = loadable(() => import(/* webpackChunkName: "AIMatchingPage" */ '../containers/AIMatchingPage/AIMatchingPage'), {ssr: false});
+// [/SKYFARER]
+
 // Styleguide helps you to review current components and develop new ones
 const StyleguidePage = loadable(() => import(/* webpackChunkName: "StyleguidePage" */ '../containers/StyleguidePage/StyleguidePage'));
 
@@ -62,16 +67,16 @@ const RedirectToLandingPage = () => <NamedRedirect name="LandingPage" />;
 // Our routes are exact by default.
 // See behaviour from Routes.js where Route is created.
 const routeConfiguration = (layoutConfig, accessControlConfig) => {
-  const SearchPage = layoutConfig.searchPage?.variantType === 'map' 
-    ? SearchPageWithMap 
+  const SearchPage = layoutConfig.searchPage?.variantType === 'map'
+    ? SearchPageWithMap
     : SearchPageWithGrid;
-  const ListingPage = layoutConfig.listingPage?.variantType === 'carousel' 
-    ? ListingPageCarousel 
+  const ListingPage = layoutConfig.listingPage?.variantType === 'carousel'
+    ? ListingPageCarousel
     : ListingPageCoverPhoto;
 
   const isPrivateMarketplace = accessControlConfig?.marketplace?.private === true;
   const authForPrivateMarketplace = isPrivateMarketplace ? { auth: true } : {};
-  
+
   return [
     {
       path: '/',
@@ -402,6 +407,18 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       path: '/preview',
       name: 'PreviewResolverPage',
       component: PreviewResolverPage ,
+    },
+    { // [SKYFARER]
+      path: '/account/google/auth',
+      name: 'GoogleAuthRedirectPage',
+      auth: true,
+      component: GoogleAuthRedirectPage,
+      loadData: pageDataLoadingAPI.GoogleAuthRedirectPage.loadData,
+    },
+    { // [SKYFARER]
+      path: '/ai-instructor-matching',
+      name: 'AIMatchingPage',
+      component: AIMatchingPage
     },
   ];
 };

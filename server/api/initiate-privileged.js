@@ -1,3 +1,4 @@
+
 const { transactionLineItems } = require('../api-util/lineItems');
 const {
   getSdk,
@@ -6,6 +7,7 @@ const {
   serialize,
   fetchCommission,
 } = require('../api-util/sdk');
+const { extractOverridingProviderCommissionPercent, extractOverridingCustomerCommissionPercent } = require('./util/commission-override');
 
 module.exports = (req, res) => {
   const { isSpeculative, orderData, bodyParams, queryParams } = req.body;
@@ -13,21 +15,28 @@ module.exports = (req, res) => {
   const sdk = getSdk(req, res);
   let lineItems = null;
 
-  const listingPromise = () => sdk.listings.show({ id: bodyParams?.params?.listingId });
+  const userDataPromise = () => sdk.authInfo().then(authInfo => {
+    if (authInfo && authInfo.isAnonymous === false) {
+      return sdk.currentUser.show({});
+    }
+    return Promise.resolve("Unauthenticated");
+  });
 
-  Promise.all([listingPromise(), fetchCommission(sdk)])
-    .then(([showListingResponse, fetchAssetsResponse]) => {
+  const listingPromise = () => sdk.listings.show({ id: bodyParams?.params?.listingId, include: 'author' });
+
+  Promise.all([listingPromise(), userDataPromise(), fetchCommission(sdk)])
+    .then(async ([showListingResponse, userDataResponse, fetchAssetsResponse]) => {
       const listing = showListingResponse.data.data;
       const commissionAsset = fetchAssetsResponse.data.data[0];
 
       const { providerCommission, customerCommission } =
         commissionAsset?.type === 'jsonAsset' ? commissionAsset.attributes.data : {};
 
-      lineItems = transactionLineItems(
+      lineItems = await transactionLineItems(
         listing,
         { ...orderData, ...bodyParams.params },
-        providerCommission,
-        customerCommission
+        extractOverridingProviderCommissionPercent(showListingResponse, providerCommission),
+        extractOverridingCustomerCommissionPercent(userDataResponse, customerCommission)
       );
 
       return getTrustedSdk(req);
