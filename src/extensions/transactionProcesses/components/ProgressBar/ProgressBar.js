@@ -11,7 +11,7 @@ import {
 
 import css from './ProgressBar.module.css';
 
-function ProgressBar({ steps, stateData }) {
+function ProgressBar({ steps, stateData, rootClassName, className }) {
   if (!Array.isArray(steps) || steps.length === 0 || !stateData) {
     return null;
   }
@@ -41,13 +41,40 @@ function ProgressBar({ steps, stateData }) {
     return PROGRESS_STEP_PENDING;
   };
 
+  const rootClasses = classNames(rootClassName || css.root);
+  const containerClasses = classNames(css.container, className);
+
   if (currentStepIndex === -1) {
     // For Checkout Page & Listing Page
     // we render every step as in progress step
     return (
-      <div className={css.container}>
+      <div className={rootClasses}>
+        <div className={containerClasses}>
+          {steps.map((step, stepIndex) => {
+            const isFinal = stepIndex === steps.length - 1;
+            return (
+              <ProgressStep
+                key={stepIndex}
+                step={step}
+                stepCount={stepIndex + 1}
+                processName={processName}
+                isFinal={isFinal}
+                state={PROGRESS_STEP_PENDING}
+              />
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={rootClasses}>
+      <div className={containerClasses}>
         {steps.map((step, stepIndex) => {
           const isFinal = stepIndex === steps.length - 1;
+          const isHidden = isCanceledProcess && stepIndex > currentStepIndex;
+
           return (
             <ProgressStep
               key={stepIndex}
@@ -55,32 +82,12 @@ function ProgressBar({ steps, stateData }) {
               stepCount={stepIndex + 1}
               processName={processName}
               isFinal={isFinal}
-              state={PROGRESS_STEP_PENDING}
+              state={getStepState(stepIndex)}
+              className={classNames({ [css.hiddenStep]: isHidden })}
             />
           );
         })}
       </div>
-    );
-  }
-
-  return (
-    <div className={css.container}>
-      {steps.map((step, stepIndex) => {
-        const isFinal = stepIndex === steps.length - 1;
-        const isHidden = isCanceledProcess && stepIndex > currentStepIndex;
-
-        return (
-          <ProgressStep
-            key={stepIndex}
-            step={step}
-            stepCount={stepIndex + 1}
-            processName={processName}
-            isFinal={isFinal}
-            state={getStepState(stepIndex)}
-            className={classNames({ [css.hiddenStep]: isHidden })}
-          />
-        );
-      })}
     </div>
   );
 }

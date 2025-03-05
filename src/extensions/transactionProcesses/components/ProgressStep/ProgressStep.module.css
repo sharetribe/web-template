@@ -8,12 +8,10 @@
 
 .container {
   flex: 1 0 0;
-  max-width: 144px;
   min-width: 60px;
   padding-right: 4px;
 
   @media (--viewportMedium) {
-    max-width: 256px;
     min-width: 80px;
     padding-right: 16px;
   }
