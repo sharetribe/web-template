@@ -135,7 +135,6 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
         showActionButtons: true,
         primaryButtonProps: actionButtonProps(transitions.SELLER_CONFIRM_PURCHASE, PROVIDER, {
           isConfirmNeeded: true,
-          showConfirmStatement: true,
           showReminderStatement: true,
           formConfigs: [
             getFieldTextConfig('managerName'),
