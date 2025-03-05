@@ -15,9 +15,9 @@ class StorageManagerClient {
     }, Promise.reject);
   }
 
-  async uploadOriginalAssets(data) {
+  async uploadOriginalAsset(data) {
     try {
-      const response = await this.client.post(ASSET_UPLOAD_URL, { data });
+      const response = await this.client.post(ASSET_UPLOAD_URL, data);
       return response.data;
     } catch (error) {
       const parsedError = error?.response?.data || '';
