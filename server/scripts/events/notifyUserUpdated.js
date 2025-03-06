@@ -28,9 +28,8 @@ const RESOURCE_TYPE = 'user';
 const QUERY_PARAMS = { expand: true };
 
 function script() {
-  const integrationSdk = integrationSdkInit();
-
   const queryEvents = args => {
+    const integrationSdk = integrationSdkInit();
     const filter = { eventTypes: EVENT_TYPES };
     return integrationSdk.events.query({ ...args, ...filter });
   };
@@ -43,6 +42,7 @@ function script() {
     email,
     portfolioURL
   ) {
+    const integrationSdk = integrationSdkInit();
     const buyerAppliedToBeSeller = userTypeEvent === USER_UPDATE_TYPE.USER_TYPE_BUYER_TO_SELLER;
     const waitListedSellerAskedForReview =
       sellerStatusEvent === USER_UPDATE_TYPE.SELLER_STATUS_WAITLISTED_TO_APPLIED;
@@ -86,6 +86,7 @@ function script() {
   }
 
   async function shouldUpdateBrandUsers(userAttributes, previousValues) {
+    const integrationSdk = integrationSdkInit();
     const { profile } = userAttributes;
     const { isBrandAdmin, brandUsers } = profile.metadata || {};
     const { brandStudioId } = profile.privateData || {};
@@ -124,6 +125,7 @@ function script() {
   }
 
   async function getProfileImage(userId, profileImageId) {
+    const integrationSdk = integrationSdkInit();
     if (!profileImageId) return;
     const result = await integrationSdk.users.show(
       { id: userId, 'fields.image': ['variants.default'], include: ['profileImage'] },
@@ -237,6 +239,7 @@ function script() {
   }
 
   async function shouldSyncProfileListing(resource, previousValues) {
+    const integrationSdk = integrationSdkInit();
     const userAttributes = resource.attributes;
     const { profile } = userAttributes;
     const { userType } = profile.publicData || {};

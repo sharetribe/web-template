@@ -1,14 +1,43 @@
 const sharetribeIntegrationSdk = require('sharetribe-flex-integration-sdk');
 const { StudioManagerClient: SMClient } = require('./studioHelper');
 
+let IDLE_TIMER = null;
+let RESTART_COUNTER = 0;
 let INTEGRATION_SDK = null;
+const EVENTS_BATCH_SIZE = 10;
 const MS_IN_MINUTE = 60 * 1000; // (1 minutes = 60 seconds) && (1 second = 1000 ms) && (1 minute = 60*1000 ms)
 const POLL_TIMEOUT_LIMIT = 5 * MS_IN_MINUTE; // 5 minutes
-const EVENTS_BATCH_SIZE = 10;
+const RESTART_COUNTER_TIMEOUT = 15 * MS_IN_MINUTE; // 15 minutes
 
-function integrationSdkInit() {
+function clearIdleTimer() {
+  if (IDLE_TIMER) {
+    clearTimeout(IDLE_TIMER);
+    IDLE_TIMER = null;
+  }
+  RESTART_COUNTER = 0;
+}
+
+function idleTimerHandler() {
+  if (RESTART_COUNTER > 2) {
+    console.error('[idleTimerHandler] - ❌ INTEGRATION-SDK is NOT working');
+    integrationSdkInit(true);
+    clearIdleTimer();
+  } else {
+    RESTART_COUNTER++;
+    console.error(`[idleTimerHandler] - ⏳ INTEGRATION-SDK failed - ${RESTART_COUNTER}`);
+    if (!IDLE_TIMER) {
+      IDLE_TIMER = setTimeout(() => {
+        console.warn(`[idleTimerHandler] - Back online! Resetting RESTART_COUNTER`);
+        clearIdleTimer();
+      }, RESTART_COUNTER_TIMEOUT);
+    }
+  }
+}
+
+function integrationSdkInit(force = false) {
   const withExistingIntance = !!INTEGRATION_SDK;
-  if (!withExistingIntance) {
+  const shouldInitialize = force || !withExistingIntance;
+  if (shouldInitialize) {
     const dev = process.env.REACT_APP_ENV === 'development';
     const clientId = process.env.SHARETRIBE_INTEGRATION_CLIENT_ID;
     const clientSecret = process.env.SHARETRIBE_INTEGRATION_CLIENT_SECRET;
@@ -107,6 +136,7 @@ async function generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, anal
           if (withLogs) {
             console.warn('\n*******************************\n\n\n');
           }
+          clearIdleTimer();
           resolve();
         } catch (error) {
           reject(error);
@@ -119,6 +149,7 @@ async function generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, anal
         await Promise.race([executeWithTimeout, poolTimeout]); // Whichever finishes first
       } catch (error) {
         console.log(`--- [pollLoop] | [${SCRIPT_NAME}] - Restarted due to timeout`);
+        idleTimerHandler();
         delay = pollWait;
       }
       setTimeout(

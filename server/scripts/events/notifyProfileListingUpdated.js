@@ -10,14 +10,14 @@ const RESOURCE_TYPE = 'listing';
 const QUERY_PARAMS = { expand: true };
 
 function script() {
-  const integrationSdk = integrationSdkInit();
-
   const queryEvents = args => {
+    const integrationSdk = integrationSdkInit();
     const filter = { eventTypes: EVENT_TYPES };
     return integrationSdk.events.query({ ...args, ...filter });
   };
 
   async function getAuthor(userId) {
+    const integrationSdk = integrationSdkInit();
     const result = await integrationSdk.users.show({ id: userId }, QUERY_PARAMS);
     const { profile } = result?.data?.data?.attributes || {};
     const { studioId, profileListingId } = profile?.metadata || {};

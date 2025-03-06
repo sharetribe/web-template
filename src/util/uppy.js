@@ -12,10 +12,7 @@ export async function createUppyInstance(meta, onBeforeUpload) {
       '@uppy/transloadit'
     );
     const { default: Dropbox } = await import('@uppy/dropbox/lib/Dropbox');
-    const { default: Box } = await import('@uppy/box/lib/Box');
     const { default: GoogleDrive } = await import('@uppy/google-drive/lib/GoogleDrive');
-    const { default: Url } = await import('@uppy/url/lib/Url');
-    const { default: OneDrive } = await import('@uppy/onedrive/lib/OneDrive');
     const { default: GoldenRetriever } = await import('@uppy/golden-retriever');
     const uppy = new Uppy({
       onBeforeUpload,
@@ -52,10 +49,7 @@ export async function createUppyInstance(meta, onBeforeUpload) {
       })
       .use(GoldenRetriever, { serviceWorker: true })
       .use(Dropbox, config)
-      .use(Box, config)
-      .use(GoogleDrive, config)
-      .use(Url, config)
-      .use(OneDrive, config);
+      .use(GoogleDrive, config);
 
     // Register Service Worker if available
     if ('serviceWorker' in navigator) {

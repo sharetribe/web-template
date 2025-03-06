@@ -50,9 +50,8 @@ const analyzeEventGroup = events => {
 };
 
 function scriptHelper() {
-  const integrationSdk = integrationSdkInit();
-
   async function getAuthor(authorId) {
+    const integrationSdk = integrationSdkInit();
     const result = await integrationSdk.users.show({ id: authorId });
     const { profile } = result?.data?.data?.attributes || {};
     return profile;
@@ -101,6 +100,7 @@ function scriptHelper() {
   };
 
   const analyzeEvent = async (event, originalAssetData) => {
+    const integrationSdk = integrationSdkInit();
     const { resourceId, resource } = event.attributes;
     const { attributes: listing } = resource;
     const listingId = resourceId?.uuid;
@@ -158,10 +158,13 @@ function scriptHelper() {
 }
 
 function script() {
-  const integrationSdk = integrationSdkInit();
   const eventsBatchManager = scriptHelper();
 
-  const queryEvents = args => integrationSdk.events.query({ ...args, eventTypes: EVENT_TYPES });
+  const queryEvents = args => {
+    const integrationSdk = integrationSdkInit();
+    const filter = { eventTypes: EVENT_TYPES };
+    return integrationSdk.events.query({ ...args, ...filter });
+  };
 
   const analyzeEventsBatch = async events => {
     const parsedEvents = events.filter(filterEvents);
@@ -182,7 +185,7 @@ function script() {
         return listingId;
       });
       slackProductListingsErrorWorkflow(failList);
-      console.warn(
+      console.error(
         `[notifyProductListingCreated] - Error storing the originals: ${failList.join(', ')}`
       );
       return;
