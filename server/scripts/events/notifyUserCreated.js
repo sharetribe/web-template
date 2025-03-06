@@ -19,14 +19,14 @@ const RESOURCE_TYPE = 'user';
 const QUERY_PARAMS = { expand: true };
 
 function script() {
-  const integrationSdk = integrationSdkInit();
-
   const queryEvents = args => {
+    const integrationSdk = integrationSdkInit();
     const filter = { eventTypes: EVENT_TYPES };
     return integrationSdk.events.query({ ...args, ...filter });
   };
 
   async function addBrandUser(brandAdminId, userId, brandUsers) {
+    const integrationSdk = integrationSdkInit();
     const parsedBrandUsers = [...new Set([...brandUsers, userId])];
     await integrationSdk.users.updateProfile(
       {
@@ -40,6 +40,7 @@ function script() {
   }
 
   async function getBrandData(userId, brandStudioId) {
+    const integrationSdk = integrationSdkInit();
     const response = await integrationSdk.users.query(
       {
         priv_brandStudioId: brandStudioId,
@@ -132,6 +133,7 @@ function script() {
   }
 
   const analyzeEvent = async event => {
+    const integrationSdk = integrationSdkInit();
     const { resourceType, eventType } = event.attributes;
     const isValidEvent = resourceType === RESOURCE_TYPE && eventType === EVENT_TYPES;
     if (isValidEvent) {

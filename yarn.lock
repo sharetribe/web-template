@@ -3485,7 +3485,7 @@
   resolved "https://registry.yarnpkg.com/@ungap/structured-clone/-/structured-clone-1.2.0.tgz#756641adb587851b5ccb3e095daf27ae581c8406"
   integrity sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==
 
-"@uppy/box@^3.0.0", "@uppy/box@^3.1.0":
+"@uppy/box@^3.1.0":
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/@uppy/box/-/box-3.1.1.tgz#c5a8d68be9693256cd50bb2660d3be8048b18ed1"
   integrity sha512-a2PoArWoWvTYWO5gTTUaC5zYeIPnZYyTwwf1owL6evad1A3JEQnWOVOBU5G/qXjKZ9yK9LBE98Ur25g38RhfGg==
@@ -3618,7 +3618,7 @@
     "@uppy/utils" "^6.0.4"
     preact "^10.5.13"
 
-"@uppy/onedrive@^4.0.0", "@uppy/onedrive@^4.1.0":
+"@uppy/onedrive@^4.1.0":
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/@uppy/onedrive/-/onedrive-4.1.1.tgz#d00135958b88980dfe51cb4e1d05a2f7e2d39514"
   integrity sha512-uc0tZrj0zZH6gRIl7mklTlMQh1GcIiH+tBmsh5kwZbX4gqvuR72TVqmSlxr9aa9v97VqIajQjqo7x4dfqhaWfw==
@@ -3732,7 +3732,7 @@
     "@uppy/utils" "^6.0.4"
     preact "^10.5.13"
 
-"@uppy/url@^4.0.0", "@uppy/url@^4.1.0":
+"@uppy/url@^4.1.0":
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/@uppy/url/-/url-4.1.1.tgz#b56555c1292adcc917f5cb64da242c82523d2d74"
   integrity sha512-xdI9a4Vdem7QfqnZ1JQSsHjTArNpk269mx1YjFj+1AesNook63PrACMGCzy/zHvu3IpMt23zQAFit+WyI8Xbjw==
