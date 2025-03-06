@@ -1,4 +1,3 @@
-import { sendMessage } from '../../../../containers/TransactionPage/TransactionPage.duck';
 import {
   TX_TRANSITION_ACTOR_CUSTOMER as CUSTOMER,
   TX_TRANSITION_ACTOR_PROVIDER as PROVIDER,
@@ -21,7 +20,6 @@ import {
   getDisputeReasonField,
   getRefundReasonField,
 } from '../../common/helpers/getActionModalFormField';
-import { getSellPurchaseManagerInfoMessage } from '../../common/helpers/getSellPurchaseManagerInfoMessage';
 import { getSellPurchaseProgressStep } from '../../common/helpers/getSellPurchaseProgressStep';
 import { states, transitions } from '../transactions/transactionProcessSellPurchase';
 
@@ -102,7 +100,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
       const showOrderPanel = !isProviderBanned && hasCorrectNextTransition;
       return {
         ...defaultStateData,
-        showDetailCardHeadings: true,
+        showDetailCardHeadings: false,
         showOrderPanel,
       };
     })
@@ -176,10 +174,6 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
           ],
           confirmModalTitleTranslationId:
             'TransactionPage.PrimaryConfirmActionModal.sell-purchase.purchase-confirmed-by-buyer.provider.modalTitle',
-          requestOptions: {
-            callbackDispatch: ({ txId, params, config }) =>
-              sendMessage(txId, getSellPurchaseManagerInfoMessage(params.protectedData), config),
-          },
         }),
         secondaryButtonProps: actionButtonProps(
           transitions.SELLER_REFUND_BEFORE_SELLER_CONFIRMED,

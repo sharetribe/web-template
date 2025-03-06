@@ -456,6 +456,7 @@ export const CheckoutPageWithPayment = props => {
         <ProgressBar
           steps={SELL_PURCHASE_PROGRESS_BAR_STEPS_CUSTOMER}
           stateData={{ processName }}
+          stepInProgress={0}
         />
       )}
       <div className={css.contentContainer}>
