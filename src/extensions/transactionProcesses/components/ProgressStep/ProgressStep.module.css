@@ -8,12 +8,10 @@
 
 .container {
   flex: 1 0 0;
-  max-width: 144px;
   min-width: 60px;
   padding-right: 4px;
 
   @media (--viewportMedium) {
-    max-width: 256px;
     min-width: 80px;
     padding-right: 16px;
   }
@@ -146,7 +144,6 @@
 
 .stepTitle {
   display: block;
-  margin-top: 4px;
 
   font-size: 12px;
   line-height: 16px;
@@ -154,7 +151,6 @@
   font-weight: var(--fontWeightSemiBold);
 
   @media (--viewportMedium) {
-    margin-top: 12px;
     font-size: 18px;
     line-height: 27px;
   }

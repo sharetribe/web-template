@@ -11,7 +11,7 @@ import {
 
 import css from './ProgressBar.module.css';
 
-function ProgressBar({ steps, stateData }) {
+function ProgressBar({ steps, stateData, rootClassName, className, stepInProgress }) {
   if (!Array.isArray(steps) || steps.length === 0 || !stateData) {
     return null;
   }
@@ -25,12 +25,12 @@ function ProgressBar({ steps, stateData }) {
 
   const currentStepIndex = steps.findIndex(step => step === progressStep);
 
-  const getStepState = stepIndex => {
-    if (stepIndex < currentStepIndex || isCompletedProcess) {
+  const getStepState = (stepIndex, currentStep = currentStepIndex) => {
+    if (stepIndex < currentStep || isCompletedProcess) {
       return PROGRESS_STEP_COMPLETED;
     }
 
-    const isInProgress = stepIndex === currentStepIndex;
+    const isInProgress = stepIndex === currentStep;
     if (isInProgress && isCanceledProcess) {
       return PROGRESS_STEP_CANCELED;
     }
@@ -41,13 +41,40 @@ function ProgressBar({ steps, stateData }) {
     return PROGRESS_STEP_PENDING;
   };
 
+  const rootClasses = classNames(rootClassName || css.root);
+  const containerClasses = classNames(css.container, className);
+
   if (currentStepIndex === -1) {
-    // For Checkout Page & Listing Page
-    // we render every step as in progress step
+    // Render pending steps for Listing page
+    // Render in progress first step for checkout page
     return (
-      <div className={css.container}>
+      <div className={rootClasses}>
+        <div className={containerClasses}>
+          {steps.map((step, stepIndex) => {
+            const isFinal = stepIndex === steps.length - 1;
+            return (
+              <ProgressStep
+                key={stepIndex}
+                step={step}
+                stepCount={stepIndex + 1}
+                processName={processName}
+                isFinal={isFinal}
+                state={getStepState(stepIndex, stepInProgress)}
+              />
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={rootClasses}>
+      <div className={containerClasses}>
         {steps.map((step, stepIndex) => {
           const isFinal = stepIndex === steps.length - 1;
+          const isHidden = isCanceledProcess && stepIndex > currentStepIndex;
+
           return (
             <ProgressStep
               key={stepIndex}
@@ -55,32 +82,12 @@ function ProgressBar({ steps, stateData }) {
               stepCount={stepIndex + 1}
               processName={processName}
               isFinal={isFinal}
-              state={PROGRESS_STEP_PENDING}
+              state={getStepState(stepIndex)}
+              className={classNames({ [css.hiddenStep]: isHidden })}
             />
           );
         })}
       </div>
-    );
-  }
-
-  return (
-    <div className={css.container}>
-      {steps.map((step, stepIndex) => {
-        const isFinal = stepIndex === steps.length - 1;
-        const isHidden = isCanceledProcess && stepIndex > currentStepIndex;
-
-        return (
-          <ProgressStep
-            key={stepIndex}
-            step={step}
-            stepCount={stepIndex + 1}
-            processName={processName}
-            isFinal={isFinal}
-            state={getStepState(stepIndex)}
-            className={classNames({ [css.hiddenStep]: isHidden })}
-          />
-        );
-      })}
     </div>
   );
 }
