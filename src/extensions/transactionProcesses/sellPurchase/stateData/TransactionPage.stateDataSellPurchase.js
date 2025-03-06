@@ -96,7 +96,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
       const showOrderPanel = !isProviderBanned && hasCorrectNextTransition;
       return {
         ...defaultStateData,
-        showDetailCardHeadings: true,
+        showDetailCardHeadings: false,
         showOrderPanel,
       };
     })

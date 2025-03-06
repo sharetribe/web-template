@@ -144,7 +144,6 @@
 
 .stepTitle {
   display: block;
-  margin-top: 4px;
 
   font-size: 12px;
   line-height: 16px;
@@ -152,7 +151,6 @@
   font-weight: var(--fontWeightSemiBold);
 
   @media (--viewportMedium) {
-    margin-top: 12px;
     font-size: 18px;
     line-height: 27px;
   }
