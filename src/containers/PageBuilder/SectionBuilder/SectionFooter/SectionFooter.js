@@ -106,7 +106,7 @@ const SectionFooter = props => {
           </div>
         </div>
         <div className={css.footerLegalInfo}>
-          <p>© 2024 Ketchup. All rights reserved.</p>
+          <p>© 2025 Chic-Chic.bg Всички права запазени.</p>
           <a href='/terms-of-service' target='blank'>Условия за ползване</a>
           <a href='/privacy-policy' target='blank'>Политика за Поверителност и Бисквитки</a>
         </div>

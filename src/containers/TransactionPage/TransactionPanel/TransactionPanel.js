@@ -383,7 +383,7 @@ export class TransactionPanelComponent extends Component {
                 ) : null}
 
                 {stateData.showActionButtons ? (
-                   <div className={css.desktopActionButtons}>{actionButtons}</div>
+                  <div className={css.desktopActionButtons}>{actionButtons}</div>
                 ) : null}
               </div>
               <DiminishedActionButtonMaybe

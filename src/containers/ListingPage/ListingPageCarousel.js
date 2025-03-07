@@ -75,7 +75,9 @@ import {
   handleSubmitInquiry,
   handleSubmit,
   priceForSchemaMaybe,
+  handleToggleFavorites,
 } from './ListingPage.shared';
+import { updateProfile } from '../ProfileSettingsPage/ProfileSettingsPage.duck';
 import ActionBarMaybe from './ActionBarMaybe';
 import SectionTextMaybe from './SectionTextMaybe';
 import SectionReviews from './SectionReviews';
@@ -123,6 +125,7 @@ export const ListingPageComponent = props => {
     config,
     routeConfiguration,
     showOwnListingsOnly,
+    onUpdateFavorites,
   } = props;
 
   const listingConfig = config.listing;
@@ -286,6 +289,13 @@ export const ListingPageComponent = props => {
     : 'https://schema.org/OutOfStock';
 
   const availabilityMaybe = schemaAvailability ? { availability: schemaAvailability } : {};
+
+  const onToggleFavorites = handleToggleFavorites({
+    ...commonParams,
+    currentUser,
+    onUpdateFavorites,
+    location,
+  });
 
   return (
     <Page
@@ -601,6 +611,7 @@ const mapDispatchToProps = dispatch => ({
   onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
   onFetchTimeSlots: (listingId, start, end, timeZone) =>
     dispatch(fetchTimeSlots(listingId, start, end, timeZone)),
+  onUpdateFavorites: (payload) => dispatch(updateProfile(payload)),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the
