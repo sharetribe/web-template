@@ -368,6 +368,7 @@ export class TransactionPanelComponent extends Component {
                       >
                         <option value="speedy">Speedy</option>
                         <option value="econt">Econt</option>
+                        <option value="econt">Boxnow</option>
                       </select>
                       <label htmlFor="orderTrackingCode">Тракинг код</label>
                       <input
