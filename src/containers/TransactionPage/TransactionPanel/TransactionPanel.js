@@ -61,7 +61,7 @@ export class TransactionPanelComponent extends Component {
     super(props);
     this.state = {
       sendMessageFormFocused: false,
-      orderShippingProvider: 'speedy',
+      orderShippingProvider: '',
       orderTrackingCode: ''
     };
     this.isMobSaf = false;
@@ -172,7 +172,11 @@ export class TransactionPanelComponent extends Component {
     const actionButtons = (
       <ActionButtonsMaybe
         showButtons={stateData.showActionButtons}
-        primaryButtonProps={{ ...stateData?.primaryButtonProps, orderShippingProvider: this.state.orderShippingProvider, orderTrackingCode: this.state.orderTrackingCode }}
+        primaryButtonProps={{
+          ...stateData?.primaryButtonProps,
+          orderShippingProvider: this.state.orderShippingProvider || protectedData.orderShippingProvider,
+          orderTrackingCode: this.state.orderTrackingCode || protectedData.orderTrackingCode
+        }}
         secondaryButtonProps={stateData?.secondaryButtonProps}
         isListingDeleted={listingDeleted}
         isProvider={isProvider}
@@ -366,9 +370,9 @@ export class TransactionPanelComponent extends Component {
                         }}
                         value={this.state.orderShippingProvider}
                       >
-                        <option value="speedy">Speedy</option>
-                        <option value="econt">Econt</option>
-                        <option value="econt">Boxnow</option>
+                        <option value="Speedy">Speedy</option>
+                        <option value="Econt">Econt</option>
+                        <option value="BOX NOW">BOX NOW</option>
                       </select>
                       <label htmlFor="orderTrackingCode">Тракинг код</label>
                       <input
