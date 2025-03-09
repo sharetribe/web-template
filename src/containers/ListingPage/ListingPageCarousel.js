@@ -421,6 +421,8 @@ export const ListingPageComponent = props => {
               marketplaceCurrency={config.currency}
               dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
               marketplaceName={config.marketplaceName}
+              currentUser={currentUser}
+              onToggleFavorites={onToggleFavorites}
             />
           </div>
         </div>
