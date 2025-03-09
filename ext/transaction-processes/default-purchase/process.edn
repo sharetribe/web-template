@@ -51,7 +51,7 @@
    :to :state/received}
   {:name :transition/mark-delivered,
    :actor :actor.role/provider,
-   :actions [],
+   :actions [{:name :action/update-protected-data}],
    :from :state/purchased,
    :to :state/delivered}
   {:name :transition/operator-mark-delivered,

@@ -36,6 +36,7 @@ const StripePayoutPage = loadable(() => import(/* webpackChunkName: "StripePayou
 const TermsOfServicePage = loadable(() => import(/* webpackChunkName: "TermsOfServicePage" */ '../containers/TermsOfServicePage/TermsOfServicePage'));
 const TransactionPage = loadable(() => import(/* webpackChunkName: "TransactionPage" */ '../containers/TransactionPage/TransactionPage'));
 const NoAccessPage = loadable(() => import(/* webpackChunkName: "NoAccessPage" */ '../containers/NoAccessPage/NoAccessPage'));
+const FavoriteListingsPage = loadable(() => import(/* webpackChunkName: "FavoriteListingsPage" */ '../containers/FavoriteListingsPage/FavoriteListingsPage'));
 
 // Styleguide helps you to review current components and develop new ones
 const StyleguidePage = loadable(() => import(/* webpackChunkName: "StyleguidePage" */ '../containers/StyleguidePage/StyleguidePage'));
@@ -400,6 +401,14 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       path: '/preview',
       name: 'PreviewResolverPage',
       component: PreviewResolverPage ,
+    },
+    {
+      path: '/favorites',
+      name: 'FavoriteListingsPage',
+      auth: true, // user must be signed in to view this page
+      authPage: 'LoginPage',
+      component: FavoriteListingsPage,
+      loadData: pageDataLoadingAPI.FavoriteListingsPage.loadData,
     },
   ];
 };
