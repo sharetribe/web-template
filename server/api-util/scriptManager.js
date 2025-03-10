@@ -142,11 +142,11 @@ async function generateScript(SCRIPT_NAME, queryEvents, analyzeEventsBatch, anal
           reject(error);
         }
       });
-      const poolTimeout = new Promise((_, reject) =>
+      const pollTimeout = new Promise((_, reject) =>
         setTimeout(() => reject(new Error('TIMEOUT: pollLoop took too long')), POLL_TIMEOUT_LIMIT)
       );
       try {
-        await Promise.race([executeWithTimeout, poolTimeout]); // Whichever finishes first
+        await Promise.race([executeWithTimeout, pollTimeout]); // Whichever finishes first
       } catch (error) {
         console.log(`--- [pollLoop] | [${SCRIPT_NAME}] - Restarted due to timeout`);
         idleTimerHandler();
