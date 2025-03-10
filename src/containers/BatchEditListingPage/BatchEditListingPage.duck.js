@@ -47,7 +47,7 @@ function listingsFromSdkResponse(sdkResponse, listingDefaults) {
     const image =
       images.data.length > 0 ? included.find(img => img.id.uuid === images.data[0].id.uuid) : null;
     const preview = image?.attributes?.variants?.default?.url;
-    const keywords = stringToArray(ownListing.attributes.publicData.keywords);
+    const keywords = stringToArray(ownListing.attributes.publicData.keywords, ' ');
     const category = stringToArray(ownListing.attributes.publicData.imageryCategory);
     const price = convertMoneyToNumber(ownListing.attributes.price || new Money(0, currency));
 
@@ -70,15 +70,12 @@ function listingsFromSdkResponse(sdkResponse, listingDefaults) {
 
 function uppyFileToListing(file) {
   const { id, meta, name, size, preview, type } = file;
-
   const { keywords, height, width } = meta;
   const dimensions = getDimensions(width, height);
-
   let keywordsOptions = [];
   if (keywords) {
     keywordsOptions = Array.isArray(keywords) ? keywords : keywords.split(',');
   }
-
   return {
     key: id,
     id,
@@ -462,7 +459,7 @@ export function initializeUppy(meta) {
                   imageryCategory: listing.category,
                   usage: listing.usage,
                   releases: listing.releases ? YES_RELEASES : NO_RELEASES,
-                  keywords: listing.keywords,
+                  keywords: listing.keywords.join(' '),
                   imageSize: listing.dimensions,
                   fileType: listing.type,
                   // aiTerms: listing.isAi ? 'yes' : 'no',
@@ -568,7 +565,7 @@ export function requestSaveBatchListings(pageMode = PAGE_MODE_NEW) {
                   imageryCategory: listing.category,
                   usage: listing.usage,
                   releases: listing.releases ? YES_RELEASES : NO_RELEASES,
-                  keywords: listing.keywords,
+                  keywords: listing.keywords.join(' '),
                   imageSize: listing.dimensions,
                   // aiTerms: listing.isAi ? 'yes' : 'no',
                 },
