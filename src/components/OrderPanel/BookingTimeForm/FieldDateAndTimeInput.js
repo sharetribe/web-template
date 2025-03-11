@@ -75,13 +75,8 @@ const getAvailableStartTimes = params => {
   return allHours;
 };
 
-const getAvailableEndTimes = (
-  intl,
-  timeZone,
-  bookingStartTime,
-  bookingEndDate,
-  selectedTimeSlot
-) => {
+const getAvailableEndTimes = params => {
+  const { intl, timeZone, bookingStartTime, bookingEndDate, selectedTimeSlot } = params;
   if (!selectedTimeSlot || !selectedTimeSlot.attributes || !bookingEndDate || !bookingStartTime) {
     return [];
   }
@@ -257,7 +252,13 @@ const getAllTimeValues = (
 
   const combinedTimeSlot = combineTimeSlots(selectedTimeSlotIndex, timeSlots, seatsEnabled) || {};
 
-  const endTimes = getAvailableEndTimes(intl, timeZone, startTime, endDate, combinedTimeSlot);
+  const endTimes = getAvailableEndTimes({
+    intl,
+    timeZone,
+    bookingStartTime: startTime,
+    bookingEndDate: endDate,
+    selectedTimeSlot: combinedTimeSlot,
+  });
 
   // We need to convert the timestamp we use as a default value
   // for endTime to string for consistency. This is expected later when we
@@ -616,13 +617,13 @@ const FieldDateAndTimeInput = props => {
     setSeatsOptions(seatsOptions);
   }, [selectedTimeSlot?.attributes?.seats]);
 
-  const availableEndTimes = getAvailableEndTimes(
+  const availableEndTimes = getAvailableEndTimes({
     intl,
     timeZone,
-    bookingStartTime || startTime,
-    bookingEndDate || endDate,
-    selectedTimeSlot
-  );
+    bookingStartTime: bookingStartTime || startTime,
+    bookingEndDate: bookingEndDate || endDate,
+    selectedTimeSlot,
+  });
 
   const onMonthClick = handleMonthClick(
     currentMonth,
