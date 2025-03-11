@@ -482,7 +482,7 @@ const FieldDateAndTimeInput = props => {
 
   const [currentMonth, setCurrentMonth] = useState(getStartOf(TODAY, 'month', timeZone));
 
-  const allTimeSlots = getAllTimeSlots(monthlyTimeSlots);
+  const pickerTimeSlots = getAllTimeSlots(monthlyTimeSlots, seatsEnabled);
   const monthId = monthIdString(currentMonth);
   const currentMonthInProgress = monthlyTimeSlots[monthId]?.fetchTimeSlotsInProgress;
   const nextMonthId = monthIdString(nextMonthFn(currentMonth, timeZone));
@@ -497,7 +497,7 @@ const FieldDateAndTimeInput = props => {
   const [startMonth, endMonth] = getMonthlyFetchRange(monthlyTimeSlots, timeZone);
   const minDurationStartingInDay = 60;
   const options = { minDurationStartingInDay };
-  const timeSlotsData = timeSlotsPerDate(
+  const monthlyTimeSlotsData = timeSlotsPerDate(
     startMonth,
     endMonth,
     pickerTimeSlots,
@@ -506,7 +506,7 @@ const FieldDateAndTimeInput = props => {
   );
 
   const bookingStartIdString = stringifyDateToISO8601(bookingStartDate, timeZone);
-  const timeSlotsOnSelectedDate = timeSlotsData[bookingStartIdString]?.timeSlots || [];
+  const timeSlotsOnSelectedDate = monthlyTimeSlotsData[bookingStartIdString]?.timeSlots || [];
 
   const availableStartTimes = getAvailableStartTimes({
     intl,
@@ -618,7 +618,7 @@ const FieldDateAndTimeInput = props => {
     const dayInListingTZ = getStartOf(timeOfDay, 'day', timeZone);
 
     const dateIdString = stringifyDateToISO8601(dayInListingTZ, timeZone);
-    const timeSlotData = timeSlotsData[dateIdString];
+    const timeSlotData = monthlyTimeSlotsData[dateIdString];
     return !timeSlotData?.hasAvailability;
   };
 
