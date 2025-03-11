@@ -373,6 +373,7 @@ const updateBookingFieldsOnStartDateChange = params => {
 
 const onBookingStartDateChange = (props, setCurrentMonth) => value => {
   const {
+    timeSlotsForDate,
     monthlyTimeSlots,
     timeZone,
     intl,
@@ -408,13 +409,9 @@ const onBookingStartDateChange = (props, setCurrentMonth) => value => {
     : findNextBoundary(startDate, 1, timeUnit, timeZone);
   const startLimit = isDateSameOrAfter(startDate, nextBoundaryToday) ? startDate : nextBoundary;
   const endLimit = nextDay; // Note: the endLimit could be pushed to the next day: getStartOf(nextDay, 'minute', timeZone, 300, 'minutes');
+  const cachedTimeSlotsForDate =
+    timeSlotsForDate[stringifyDateToISO8601(startDate, timeZone)]?.timeSlots || [];
 
-  formApi.batch(() => {
-    formApi.change('bookingStartTime', startTime);
-    formApi.change('bookingEndTime', endTime);
-    if (seatsEnabled) {
-      formApi.change('seats', 1);
-    }
   const commonParamsForUpdateBookingFields = {
     monthlyTimeSlots,
     startDate,
@@ -423,6 +420,11 @@ const onBookingStartDateChange = (props, setCurrentMonth) => value => {
     formApi,
     intl,
   };
+  // Update booking fields with the initial time slot from the reduced set of monthly time slots.
+  // Fetching date specific time slots and then line-items takes slightly longer
+  const { startTime, endTime } = updateBookingFieldsOnStartDateChange({
+    timeSlotsOnDate: cachedTimeSlotsForDate,
+    ...commonParamsForUpdateBookingFields,
   });
 
   // Note: the first fetch for start-times (and line-items) is using monthlyTimeSlots.
@@ -447,7 +449,7 @@ const onBookingStartDateChange = (props, setCurrentMonth) => value => {
 
 const onBookingStartTimeChange = props => value => {
   const {
-    monthlyTimeSlots,
+    timeSlotsForDate,
     timeZone,
     intl,
     form: formApi,
@@ -456,7 +458,8 @@ const onBookingStartTimeChange = props => value => {
     seatsEnabled,
   } = props;
   const startDate = values.bookingStartDate.date;
-  const timeSlotsOnSelectedDate = getTimeSlotsOnDate(monthlyTimeSlots, startDate, timeZone);
+  const bookingStartIdString = stringifyDateToISO8601(startDate, timeZone);
+  const timeSlotsOnSelectedDate = timeSlotsForDate[bookingStartIdString]?.timeSlots || [];
 
   const { endTime } = getAllTimeValues(intl, timeZone, timeSlotsOnSelectedDate, startDate, value);
 
@@ -502,6 +505,13 @@ const onBookingEndTimeChange = props => value => {
  * @property {boolean} fetchTimeSlotsInProgress - Whether the time slots are being fetched
  */
 /**
+ * @typedef {Object} TimeSlotData
+ * @property {Array<propTypes.timeSlot>} timeSlots - The time slots for the month
+ * @property {propTypes.error} fetchTimeSlotsError - The error for the time slots
+ * @property {boolean} fetchTimeSlotsInProgress - Whether the time slots are being fetched
+ * @property {number} timestamp - The timestamp of the time slot
+ */
+/**
  * A component that provides a date and time input for Final Forms.
  *
  * @component
@@ -516,6 +526,7 @@ const onBookingEndTimeChange = props => value => {
  * @param {Object} props.values - The values object from Final Form
  * @param {propTypes.uuid} [props.listingId] - The ID of the listing
  * @param {Object<string, MonthlyTimeSlotData>} [props.monthlyTimeSlots] - The monthly time slots object
+ * @param {Object<string, TimeSlotData>} [props.timeSlotsForDate] - The time slots for the date
  * @param {Function} [props.onFetchTimeSlots] - The function to handle the fetching of time slots
  * @param {string} [props.timeZone] - The time zone of the listing
  * @param {number} [props.dayCountAvailableForBooking] - The number of days available for booking
@@ -532,6 +543,7 @@ const FieldDateAndTimeInput = props => {
     listingId,
     onFetchTimeSlots,
     monthlyTimeSlots,
+    timeSlotsForDate,
     onMonthChanged,
     timeZone,
     setSeatsOptions,
@@ -567,8 +579,18 @@ const FieldDateAndTimeInput = props => {
     options
   );
 
+  // Currently available date-specific data
   const bookingStartIdString = stringifyDateToISO8601(bookingStartDate, timeZone);
-  const timeSlotsOnSelectedDate = monthlyTimeSlotsData[bookingStartIdString]?.timeSlots || [];
+  const timeSlotsOnSelectedDate = timeSlotsForDate[bookingStartIdString]?.timeSlots || [];
+
+  const timeSlotsOnDate = getTimeSlotsOnSelectedDate(
+    timeSlotsOnSelectedDate,
+    monthlyTimeSlots,
+    bookingStartDate,
+    timeZone,
+    seatsEnabled,
+    minDurationStartingInDay
+  );
 
   const availableStartTimes = getAvailableStartTimes({
     intl,
@@ -585,7 +607,7 @@ const FieldDateAndTimeInput = props => {
   const { startTime, endDate, selectedTimeSlot } = getAllTimeValues(
     intl,
     timeZone,
-    timeSlotsOnSelectedDate,
+    timeSlotsOnDate,
     bookingStartDate,
     bookingStartTime || firstAvailableStartTime,
     bookingEndDate || bookingStartDate,

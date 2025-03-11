@@ -103,6 +103,7 @@ export const BookingTimeForm = props => {
           listingId,
           values,
           monthlyTimeSlots,
+          timeSlotsForDate,
           onFetchTimeSlots,
           timeZone,
           lineItems,
@@ -150,6 +151,7 @@ export const BookingTimeForm = props => {
                 listingId={listingId}
                 onFetchTimeSlots={onFetchTimeSlots}
                 monthlyTimeSlots={monthlyTimeSlots}
+                timeSlotsForDate={timeSlotsForDate}
                 values={values}
                 intl={intl}
                 form={form}
