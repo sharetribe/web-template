@@ -15,8 +15,9 @@ import {
   LISTING_STATE_CLOSED,
   LINE_ITEM_NIGHT,
   LINE_ITEM_DAY,
-  LINE_ITEM_ITEM,
   LINE_ITEM_HOUR,
+  LINE_ITEM_FIXED,
+  LINE_ITEM_ITEM,
   STOCK_MULTIPLE_ITEMS,
   STOCK_INFINITE_MULTIPLE_ITEMS,
 } from '../../util/types';
@@ -40,6 +41,11 @@ const BookingTimeForm = loadable(() =>
 );
 const BookingDatesForm = loadable(() =>
   import(/* webpackChunkName: "BookingDatesForm" */ './BookingDatesForm/BookingDatesForm')
+);
+const BookingFixedDurationForm = loadable(() =>
+  import(
+    /* webpackChunkName: "BookingFixedDurationForm" */ './BookingFixedDurationForm/BookingFixedDurationForm'
+  )
 );
 const InquiryWithoutPaymentForm = loadable(() =>
   import(
@@ -228,7 +234,8 @@ const OrderPanel = props => {
   } = props;
 
   const publicData = listing?.attributes?.publicData || {};
-  const { listingType, unitType, transactionProcessAlias = '' } = publicData || {};
+  const { listingType, unitType, transactionProcessAlias = '', priceVariants, startTimeInterval } =
+    publicData || {};
 
   const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
   const lineItemUnitType = lineItemUnitTypeMaybe || `line-item/${unitType}`;
@@ -257,6 +264,10 @@ const OrderPanel = props => {
   const isClosed = listing?.attributes?.state === LISTING_STATE_CLOSED;
 
   const isBooking = isBookingProcess(processName);
+  const shouldHaveFixedBookingDuration = isBooking && [LINE_ITEM_FIXED].includes(lineItemUnitType);
+  const showBookingFixedDurationForm =
+    mounted && shouldHaveFixedBookingDuration && !isClosed && timeZone && priceVariants?.length > 0;
+
   const shouldHaveBookingTime = isBooking && [LINE_ITEM_HOUR].includes(lineItemUnitType);
   const showBookingTimeForm = mounted && shouldHaveBookingTime && !isClosed && timeZone;
 
@@ -358,6 +369,21 @@ const OrderPanel = props => {
           <PriceMissing />
         ) : showInvalidCurrency ? (
           <InvalidCurrency />
+        ) : showBookingFixedDurationForm ? (
+          <BookingFixedDurationForm
+            seatsEnabled={seatsEnabled}
+            className={css.bookingForm}
+            formId="OrderPanelBookingFixedDurationForm"
+            dayCountAvailableForBooking={dayCountAvailableForBooking}
+            monthlyTimeSlots={monthlyTimeSlots}
+            timeSlotsForDate={timeSlotsForDate}
+            onFetchTimeSlots={onFetchTimeSlots}
+            startDatePlaceholder={intl.formatDate(TODAY, dateFormattingOptions)}
+            priceVariants={priceVariants}
+            startTimeInterval={startTimeInterval}
+            timeZone={timeZone}
+            {...sharedProps}
+          />
         ) : showBookingTimeForm ? (
           <BookingTimeForm
             seatsEnabled={seatsEnabled}
