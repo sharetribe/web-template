@@ -151,7 +151,7 @@ const getAllTimeValues = (
   const endDate = selectedEndDate
     ? selectedEndDate
     : startTimeAsDate
-    ? new Date(findNextBoundary(startTimeAsDate, 'hour', timeZone).getTime() - 1)
+    ? new Date(findNextBoundary(startTimeAsDate, 1, 'hour', timeZone).getTime() - 1)
     : null;
 
   const selectedEndTimeAsDateObject = selectedEndTime ? timestampToDate(selectedEndTime) : null;
@@ -495,7 +495,16 @@ const FieldDateAndTimeInput = props => {
 
   // Currently available monthly data
   const [startMonth, endMonth] = getMonthlyFetchRange(monthlyTimeSlots, timeZone);
-  const timeSlotsData = timeSlotsPerDate(startMonth, endMonth, allTimeSlots, timeZone);
+  const minDurationStartingInDay = 60;
+  const options = { minDurationStartingInDay };
+  const timeSlotsData = timeSlotsPerDate(
+    startMonth,
+    endMonth,
+    pickerTimeSlots,
+    timeZone,
+    options
+  );
+
   const bookingStartIdString = stringifyDateToISO8601(bookingStartDate, timeZone);
   const timeSlotsOnSelectedDate = timeSlotsData[bookingStartIdString]?.timeSlots || [];
 
@@ -547,7 +556,14 @@ const FieldDateAndTimeInput = props => {
       // Note: endMonth is exclusive end time of the range.
       const tz = timeZone;
       const nextMonth = nextMonthFn(currentMonth, tz);
-      const timeSlotsData = timeSlotsPerDate(currentMonth, nextMonth, allTimeSlots, tz);
+      const options = { minDurationStartingInDay: 60 };
+      const monthlyTimeSlotsData = timeSlotsPerDate(
+        currentMonth,
+        nextMonth,
+        pickerTimeSlots,
+        tz,
+        options
+      );
       const [startMonth, endMonth] = getMonthlyFetchRange(monthlyTimeSlots, tz);
       const lastFetchedMonth = new Date(endMonth.getTime() - 1);
 
@@ -557,7 +573,7 @@ const FieldDateAndTimeInput = props => {
           tz
         )}`,
         '\nTime slots for the current month:',
-        timeSlotsData
+        monthlyTimeSlotsData
       );
     }
   }, [currentMonth, currentMonthInProgress, nextMonthInProgress, monthlyTimeSlots, timeZone]);
