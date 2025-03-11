@@ -223,11 +223,11 @@ const getAllTimeValues = (
   };
 
   const combineTimeSlots = (currentTimeSlotIndex, timeSlots, seatsEnabled) => {
-    if (!timeSlots) {
+    if (currentTimeSlotIndex < 0 || !timeSlots || timeSlots.length === 0) {
       return null;
     }
 
-    if (timeSlots.length <= 1 || seatsEnabled === false) {
+    if (timeSlots.length === 1 || seatsEnabled === false) {
       return timeSlots[0];
     }
     const lastIndex = findLastAdjacent(currentTimeSlotIndex);
