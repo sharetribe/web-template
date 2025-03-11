@@ -4,6 +4,7 @@ import isEmpty from 'lodash/isEmpty';
 
 import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
 import {
+  bookingTimeUnits,
   findNextBoundary,
   getStartOf,
   monthIdString,
@@ -454,16 +455,53 @@ const fetchMonthlyTimeSlots = (dispatch, listing) => {
 
   // Fetch time-zones on client side only.
   if (hasWindow && listing.id && !!tz) {
-    const unitType = publicData?.unitType;
-    const timeUnit = unitType === 'hour' ? 'hour' : 'day';
-    const nextBoundary = findNextBoundary(new Date(), 1, timeUnit, tz);
+    const { unitType, priceVariants, startTimeInterval } = publicData || {};
+    const now = new Date();
+    const startOfToday = getStartOf(now, 'day', tz);
+    const isFixed = unitType === 'fixed';
+
+    const timeUnit = startTimeInterval
+      ? bookingTimeUnits[startTimeInterval]?.timeUnit
+      : unitType === 'hour'
+      ? 'hour'
+      : 'day';
+    const nextBoundary = findNextBoundary(now, 1, timeUnit, tz);
 
     const nextMonth = getStartOf(nextBoundary, 'month', tz, 1, 'months');
     const nextAfterNextMonth = getStartOf(nextMonth, 'month', tz, 1, 'months');
 
+    const variants = priceVariants || [];
+    const bookingLengthInMinutes = variants.reduce((min, priceVariant) => {
+      return Math.min(min, priceVariant.bookingLengthInMinutes);
+    }, Number.MAX_SAFE_INTEGER);
+
+    const nextMonthEnd = isFixed
+      ? getStartOf(nextMonth, 'minute', tz, bookingLengthInMinutes, 'minutes')
+      : nextMonth;
+    const followingMonthEnd = isFixed
+      ? getStartOf(nextAfterNextMonth, 'minute', tz, bookingLengthInMinutes, 'minutes')
+      : nextAfterNextMonth;
+
+    const minDurationStartingInInterval = isFixed ? bookingLengthInMinutes : 60;
+
+    const options = intervalAlign => {
+      return ['fixed', 'hour'].includes(unitType)
+        ? {
+            extraQueryParams: {
+              intervalDuration: 'P1D',
+              intervalAlign,
+              maxPerInterval: 1,
+              minDurationStartingInInterval,
+              perPage: 31,
+              page: 1,
+            },
+          }
+        : null;
+    };
+
     return Promise.all([
-      dispatch(fetchTimeSlots(listing.id, nextBoundary, nextMonth, tz)),
-      dispatch(fetchTimeSlots(listing.id, nextMonth, nextAfterNextMonth, tz)),
+      dispatch(fetchTimeSlots(listing.id, nextBoundary, nextMonthEnd, tz, options(startOfToday))),
+      dispatch(fetchTimeSlots(listing.id, nextMonth, followingMonthEnd, tz, options(nextMonth))),
     ]);
   }
 
