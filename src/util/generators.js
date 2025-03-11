@@ -12,6 +12,8 @@ import {
 // The number returned by "new Date().getDay()" refers to day of week starting from sunday.
 const WEEKDAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 
+const getMinutes = ms => Math.floor(ms / 60000);
+
 /**
  * Omit duplicates from given array according to function
  * that identifies relevant data.
@@ -477,9 +479,10 @@ export const availabilityPerDate = (start, end, plan, exceptions) => {
  * @param {Array<Date>} dateRange array with start of date and end of date
  * @param {Array<TimeSlot>} timeSlots
  * @param {String} timeZone IANA time zone key (e.g. "Europe/Helsinki")
+ * @param {Number} minDurationStartingInDay minimum length of time slot. It needs to start in generated day
  * @returns filtered list of time slots or an empty array
  */
-const getTimeSlotsOnDate = (dateRange, timeSlots, timeZone) => {
+const getTimeSlotsOnDate = (dateRange, timeSlots, timeZone, minDurationStartingInDay) => {
   const [dayStart, dayEnd] = dateRange;
   return timeSlots.filter(ts => {
     const timeSlotRange = [ts.attributes.start, ts.attributes.end];
@@ -500,8 +503,16 @@ const getTimeSlotsOnDate = (dateRange, timeSlots, timeZone) => {
       ...dateRange,
       timeZone
     );
+
+    // Check if the time slot has enough duration to be considered
+    const startingInDay = timeSlotStartIsInsideDate ? timeSlotRange[0] : dayStart;
+    const hasEnoughDuration =
+      getMinutes(timeSlotRange[1] - startingInDay) >= minDurationStartingInDay;
+
     // Pick slots that overlap with the 'day'.
-    return dayIsInsideTimeSlot || timeSlotStartIsInsideDate || timeSlotEndIsInsideDate;
+    const overlapsWithDay =
+      dayIsInsideTimeSlot || timeSlotStartIsInsideDate || timeSlotEndIsInsideDate;
+    return hasEnoughDuration && overlapsWithDay;
   });
 };
 
@@ -512,16 +523,22 @@ const getTimeSlotsOnDate = (dateRange, timeSlots, timeZone) => {
  * @param {Array<TimeSlot>} timeSlots
  * @param {String} timeZone IANA time zone key (e.g. "Europe/Helsinki")
  * @param {Number} minSeats timeSlot should have at least this many seats available
+ * @param {Number} minDurationStartingInDay minimum length of time slot. It needs to start in generated day
  * @returns info of time slots relavant to the given "day" and seats-ranges inside it
  */
-const toTimeSlotsPerDate = (timeSlots, timeZone, minSeats = 1) => day => {
+const toTimeSlotsPerDate = (timeSlots, timeZone, minSeats = 1, minDurationStartingInDay) => day => {
   const entries = Array.isArray(timeSlots)
     ? timeSlots.filter(ts => ts.attributes.seats >= minSeats)
     : [];
   const dayStart = getStartOf(day, 'day', timeZone);
   const dayEnd = getStartOf(day, 'day', timeZone, 1, 'day');
   const dateRange = [dayStart, dayEnd];
-  const timeSlotsOnDate = getTimeSlotsOnDate(dateRange, entries, timeZone);
+  const timeSlotsOnDate = getTimeSlotsOnDate(
+    dateRange,
+    entries,
+    timeZone,
+    minDurationStartingInDay
+  );
 
   return {
     id: stringifyDateToISO8601(day, timeZone), // "2022-12-24"
@@ -543,15 +560,17 @@ const toTimeSlotsPerDate = (timeSlots, timeZone, minSeats = 1) => day => {
  * @param {Array<TimeSlot>} timeSlots
  * @param {String} timeZone
  * @param {Object} options
+ * @param {number} options.seats minimum number of seats available in time slot
+ * @param {number} options.minDurationStartingInDay minimum length of time slot. It needs to start in the given day
  * @returns hashmap of date info grouped by date id (e.g. "2023-01-01" )
  */
 export const timeSlotsPerDate = (start, end, timeSlots, timeZone, options) => {
-  const { seats = 1 } = options || {};
+  const { seats = 1, minDurationStartingInDay = 5 } = options || {};
   const s = getStartOf(start, 'day', timeZone);
   const e = getStartOf(end, 'day', timeZone);
   return pipe(
     generateDates(s, e, timeZone),
-    map(toTimeSlotsPerDate(timeSlots, timeZone, seats)),
+    map(toTimeSlotsPerDate(timeSlots, timeZone, seats, minDurationStartingInDay)),
     toHashMap(x => [x.id, x])
   );
 };
