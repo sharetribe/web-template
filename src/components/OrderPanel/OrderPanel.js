@@ -215,6 +215,7 @@ const OrderPanel = props => {
     onManageDisableScrolling,
     onFetchTimeSlots,
     monthlyTimeSlots,
+    timeSlotsForDate,
     onFetchTransactionLineItems,
     onContactUser,
     lineItems,
@@ -364,6 +365,7 @@ const OrderPanel = props => {
             formId="OrderPanelBookingTimeForm"
             dayCountAvailableForBooking={dayCountAvailableForBooking}
             monthlyTimeSlots={monthlyTimeSlots}
+            timeSlotsForDate={timeSlotsForDate}
             onFetchTimeSlots={onFetchTimeSlots}
             startDatePlaceholder={intl.formatDate(TODAY, dateFormattingOptions)}
             endDatePlaceholder={intl.formatDate(TODAY, dateFormattingOptions)}
