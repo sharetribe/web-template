@@ -293,8 +293,18 @@ const fetchMonthData = (
       ? getStartOf(endOfRangeDate, 'day', timeZone)
       : nextMonthDate;
 
+    const options = {
+      extraQueryParams: {
+        intervalDuration: 'P1D',
+        maxPerInterval: 1,
+        minDurationStartingInInterval: 60,
+        perPage: 31,
+        page: 1,
+      },
+    };
+
     // Fetch time slots for given time range
-    onFetchTimeSlots(listingId, start, end, timeZone);
+    onFetchTimeSlots(listingId, start, end, timeZone, options);
   }
 };
 
@@ -567,7 +577,7 @@ const FieldDateAndTimeInput = props => {
   const bookingEndDate = values.bookingEndDate?.date || null; // not used
   const bookingEndTime = values.bookingEndTime || null;
 
-  // Currently available monthly data
+  // Currently available monthly data (reduced set of time slots data using intervalDuration: P1D)
   const [startMonth, endMonth] = getMonthlyFetchRange(monthlyTimeSlots, timeZone);
   const minDurationStartingInDay = 60;
   const options = { minDurationStartingInDay };
