@@ -119,7 +119,12 @@ export const loadData = (params, search) => (dispatch, getState, sdk) => {
       'lineItems',
       'messages',
     ],
-    'fields.listing': ['title', 'availabilityPlan', 'publicData.listingType'],
+    'fields.listing': [
+      'title',
+      'availabilityPlan',
+      'publicData.listingType',
+      'publicData.categoryLevel1',
+    ],
     'fields.user': ['profile.displayName', 'profile.abbreviatedName', 'deleted', 'banned'],
     'fields.image': ['variants.square-small', 'variants.square-small2x'],
     page,
