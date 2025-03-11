@@ -22,6 +22,7 @@ const today = new Date();
 const currentYear = today.getUTCFullYear();
 const m = today.getUTCMonth() + 1;
 const currentMonth = m < 10 ? `0${m}` : m;
+const currentDay = today.getUTCDate();
 
 const listingTypes = [
   {
@@ -172,6 +173,16 @@ const monthlyTimeSlots = {
     timeSlots,
     fetchTimeSlotsError: null,
     fetchTimeSlotsInProgress: null,
+  },
+};
+
+const dayId = `${currentYear}-${currentMonth}-${currentDay}`;
+const timeSlotsForDate = {
+  [dayId]: {
+    timeSlots,
+    fetchTimeSlotsError: null,
+    fetchTimeSlotsInProgress: null,
+    fetchedAt: new Date().getTime(),
   },
 };
 
@@ -347,7 +358,13 @@ describe('OrderPanel', () => {
       },
     });
 
-    const props = { ...commonProps, listing, isOwnListing: false, validListingTypes };
+    const props = {
+      ...commonProps,
+      timeSlotsForDate,
+      listing,
+      isOwnListing: false,
+      validListingTypes,
+    };
     const { getByText, queryAllByText } = render(<OrderPanel {...props} />, {
       config,
       routeConfiguration,
