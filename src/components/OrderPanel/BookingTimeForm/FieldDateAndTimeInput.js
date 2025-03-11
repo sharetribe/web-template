@@ -444,41 +444,6 @@ const onBookingEndTimeChange = props => value => {
   });
 };
 
-// // Note: Not in use atm.
-// const onBookingEndDateChange = props => value => {
-//   const { monthlyTimeSlots, timeZone, intl, form: formApi, values } = props;
-//   if (!value || !value.date) {
-//     formApi.change('bookingEndTime', null);
-//     return;
-//   }
-
-//   // This callback function (onBookingStartDateChange) is called from DatePicker component.
-//   // It gets raw value as a param - browser's local time instead of time in listing's timezone.
-//   const endDate = timeOfDayFromLocalToTimeZone(value.date, timeZone);
-
-//   const { bookingStartDate, bookingStartTime } = values;
-//   const startDate = bookingStartDate.date;
-//   const timeSlotsOnSelectedDate = getTimeSlotsOnDate(monthlyTimeSlots, startDate, timeZone);
-
-//   const { endTime } = getAllTimeValues(
-//     intl,
-//     timeZone,
-//     timeSlotsOnSelectedDate,
-//     startDate,
-//     bookingStartTime,
-//     endDate
-//   );
-
-//   formApi.change('bookingEndTime', endTime);
-//   handleFetchLineItems({ values: {
-//     bookingStartDate: values.bookingStartDate,
-//     bookingStartTime: values.bookingStartTime,
-//     bookingEndDate: value,
-//     bookingEndTime: endTime,
-//   }});
-
-// };
-
 /////////////////////////////////////
 // FieldDateAndTimeInput component //
 /////////////////////////////////////
@@ -516,7 +481,6 @@ const FieldDateAndTimeInput = props => {
     className,
     formId,
     startDateInputProps,
-    // endDateInputProps,
     values,
     listingId,
     onFetchTimeSlots,
@@ -541,7 +505,7 @@ const FieldDateAndTimeInput = props => {
 
   const bookingStartDate = values.bookingStartDate?.date || null;
   const bookingStartTime = values.bookingStartTime || null;
-  const bookingEndDate = values.bookingEndDate?.date || null;
+  const bookingEndDate = values.bookingEndDate?.date || null; // not used
   const bookingEndTime = values.bookingEndTime || null;
 
   // Currently available monthly data
