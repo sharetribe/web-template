@@ -12,16 +12,29 @@ import {
   isDateSameOrAfter,
   findNextBoundary,
   timestampToDate,
-  formatDateIntoPartials,
   monthIdString,
   getStartOf,
-  parseDateFromISO8601,
   stringifyDateToISO8601,
 } from '../../../util/dates';
 import { propTypes } from '../../../util/types';
 import { timeSlotsPerDate } from '../../../util/generators';
 import { bookingDateRequired } from '../../../util/validators';
 import { FieldSingleDatePicker, FieldSelect } from '../../../components';
+
+import {
+  TODAY,
+  isToday,
+  nextMonthFn,
+  prevMonthFn,
+  endOfRange,
+  getPlaceholder,
+  getMonthlyFetchRange,
+  getAllTimeSlots,
+  getTimeSlotsOnDate,
+  getTimeSlotsOnSelectedDate,
+  showNextMonthStepper,
+  showPreviousMonthStepper,
+} from '../booking.shared';
 
 import css from './FieldDateAndTimeInput.module.css';
 
@@ -33,87 +46,6 @@ import css from './FieldDateAndTimeInput.module.css';
 // See also the API reference for querying time slots:
 // https://www.sharetribe.com/api-reference/marketplace.html#query-time-slots
 
-const TODAY = new Date();
-
-const nextMonthFn = (currentMoment, timeZone, offset = 1) =>
-  getStartOf(currentMoment, 'month', timeZone, offset, 'months');
-const prevMonthFn = (currentMoment, timeZone, offset = 1) =>
-  getStartOf(currentMoment, 'month', timeZone, -1 * offset, 'months');
-
-const endOfRange = (date, dayCountAvailableForBooking, timeZone) => {
-  return getStartOf(date, 'day', timeZone, dayCountAvailableForBooking - 1, 'days');
-};
-
-/**
- * Get the start of the month in given time zone.
- *
- * @param {String} monthId (e.g. '2024-07')
- * @param {String} timeZone time zone id (E.g. 'Europe/Helsinki')
- * @returns {Date} start of month
- */
-const getMonthStartInTimeZone = (monthId, timeZone) => {
-  const month = parseDateFromISO8601(`${monthId}-01`, timeZone); // E.g. new Date('2022-12')
-  return getStartOf(month, 'month', timeZone, 0, 'months');
-};
-
-/**
- * Get the range of months that we have already fetched time slots.
- * (This range expands when user clicks Next-button on date picker).
- * monthlyTimeSlots look like this: { '2024-07': { timeSlots: []}, '2024-08': { timeSlots: []} }
- *
- * @param {Object} monthlyTimeSlots { '2024-07': { timeSlots: [] }, }
- * @param {String} timeZone IANA time zone key ('Europe/Helsinki')
- * @returns {Array<Date>} a tuple containing dates: the start and exclusive end month
- */
-const getMonthlyFetchRange = (monthlyTimeSlots, timeZone) => {
-  const monthStrings = Object.entries(monthlyTimeSlots).reduce((picked, entry) => {
-    return Array.isArray(entry[1].timeSlots) ? [...picked, entry[0]] : picked;
-  }, []);
-  const firstMonth = getMonthStartInTimeZone(monthStrings[0], timeZone);
-  const lastMonth = getMonthStartInTimeZone(monthStrings[monthStrings.length - 1], timeZone);
-  const exclusiveEndMonth = nextMonthFn(lastMonth, timeZone);
-  return [firstMonth, exclusiveEndMonth];
-};
-
-/**
- * This merges the time slots, when consecutive time slots are back to back with same "seats" count.
- *
- * @param {Array<TimeSlot>} timeSlots
- * @returns {Array<TimeSlot>} array of time slots where unnecessary boundaries have been removed.
- */
-const removeUnnecessaryBoundaries = timeSlots => {
-  return timeSlots.reduce((picked, ts) => {
-    const hasPicked = picked.length > 0;
-    if (hasPicked) {
-      const rest = picked.slice(0, -1);
-      const lastPicked = picked.slice(-1)[0];
-
-      const isBackToBack = lastPicked.attributes.end.getTime() === ts.attributes.start.getTime();
-      const hasSameSeatsCount = lastPicked.attributes.seats === ts.attributes.seats;
-      const createJoinedTimeSlot = (ts1, ts2) => ({
-        ...ts1,
-        attributes: { ...ts1.attributes, end: ts2.attributes.end },
-      });
-      return isBackToBack && hasSameSeatsCount
-        ? [...rest, createJoinedTimeSlot(lastPicked, ts)]
-        : [...picked, ts];
-    }
-    return [ts];
-  }, []);
-};
-
-/**
- * Join monthly time slots into a single array and remove unnecessary boundaries on month changes.
- *
- * @param {Object} monthlyTimeSlots { '2024-07': { timeSlots: [] }, }
- * @returns {Array<TimeSlot>}
- */
-const getAllTimeSlots = monthlyTimeSlots => {
-  const timeSlotsRaw = Object.values(monthlyTimeSlots).reduce((picked, mts) => {
-    return [...picked, ...(mts.timeSlots || [])];
-  }, []);
-  return removeUnnecessaryBoundaries(timeSlotsRaw);
-};
 
 const getAvailableStartTimes = (intl, timeZone, bookingStart, timeSlotsOnSelectedDate) => {
   if (timeSlotsOnSelectedDate.length === 0 || !timeSlotsOnSelectedDate[0] || !bookingStart) {
@@ -181,14 +113,6 @@ const getAvailableEndTimes = (
   }
 
   return getEndHours(startLimit, endLimit, timeZone, intl);
-};
-
-const getTimeSlots = (timeSlots, date, timeZone) => {
-  return timeSlots && timeSlots[0]
-    ? timeSlots.filter(t => {
-        return isInRange(date, t.attributes.start, t.attributes.end, 'day', timeZone);
-      })
-    : [];
 };
 
 // Use start date to calculate the first possible start time or times, end date and end time or times.
@@ -345,37 +269,6 @@ const getAllTimeValues = (
   const finalTimeSlots = seatsEnabled ? combinedTimeSlot : selectedTimeSlot;
 
   return { startTime, endDate, endTime, selectedTimeSlot: finalTimeSlots };
-};
-
-/**
- * Get all the time slots that touch the given date.
- *
- * @param {Object} monthlyTimeSlots { '2024-07': { timeSlots: [] }, }
- * @param {Date} date
- * @param {String} timeZone IANA time zone key
- * @returns {Array<TimeSlot>}
- */
-const getTimeSlotsOnDate = (monthlyTimeSlots, date, timeZone) => {
-  const allTimeSlots = getAllTimeSlots(monthlyTimeSlots);
-  const [startMonth, endMonth] = getMonthlyFetchRange(monthlyTimeSlots, timeZone);
-  const timeSlotsData = timeSlotsPerDate(startMonth, endMonth, allTimeSlots, timeZone);
-  const startIdString = stringifyDateToISO8601(date, timeZone);
-  return timeSlotsData[startIdString]?.timeSlots || [];
-};
-
-const showNextMonthStepper = (currentMonth, dayCountAvailableForBooking, timeZone) => {
-  const nextMonthDate = nextMonthFn(currentMonth, timeZone);
-
-  return !isDateSameOrAfter(
-    nextMonthDate,
-    endOfRange(TODAY, dayCountAvailableForBooking, timeZone)
-  );
-};
-
-const showPreviousMonthStepper = (currentMonth, timeZone) => {
-  const prevMonthDate = prevMonthFn(currentMonth, timeZone);
-  const currentMonthDate = getStartOf(TODAY, 'month', timeZone);
-  return isDateSameOrAfter(prevMonthDate, currentMonthDate);
 };
 
 const fetchMonthData = (
@@ -762,13 +655,7 @@ const FieldDateAndTimeInput = props => {
     return !timeSlotData?.hasAvailability;
   };
 
-  const nextBoundary = findNextBoundary(TODAY, 'hour', timeZone);
-  let placeholderTime = '08:00';
-  try {
-    placeholderTime = formatDateIntoPartials(nextBoundary, intl, { timeZone })?.time;
-  } catch (error) {
-    // No need to handle error
-  }
+  let placeholderTime = getPlaceholder('08:00', intl, timeZone);
 
   const startOfToday = getStartOf(TODAY, 'day', timeZone);
   const bookingEndTimeAvailable = bookingStartDate && (bookingStartTime || startTime);
