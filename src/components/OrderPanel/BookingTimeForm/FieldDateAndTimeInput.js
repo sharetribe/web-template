@@ -331,6 +331,46 @@ const handleMonthClick = (
   }
 };
 
+const updateBookingFieldsOnStartDateChange = params => {
+  const {
+    timeSlotsOnDate,
+    monthlyTimeSlots,
+    startDate,
+    timeZone,
+    seatsEnabled,
+    formApi,
+    intl,
+  } = params;
+  const minDurationStartingInDay = 60;
+  const timeSlotsOnSelectedDate = getTimeSlotsOnSelectedDate(
+    timeSlotsOnDate,
+    monthlyTimeSlots,
+    startDate,
+    timeZone,
+    seatsEnabled,
+    minDurationStartingInDay
+  );
+  const { startTime, endTime } = getAllTimeValues(
+    intl,
+    timeZone,
+    timeSlotsOnSelectedDate,
+    startDate,
+    null,
+    null,
+    null,
+    seatsEnabled
+  );
+
+  formApi.batch(() => {
+    formApi.change('bookingStartTime', startTime);
+    formApi.change('bookingEndTime', endTime);
+    if (seatsEnabled) {
+      formApi.change('seats', 1);
+    }
+  });
+  return { startTime, endTime };
+};
+
 const onBookingStartDateChange = (props, setCurrentMonth) => value => {
   const {
     monthlyTimeSlots,
@@ -339,6 +379,8 @@ const onBookingStartDateChange = (props, setCurrentMonth) => value => {
     form: formApi,
     handleFetchLineItems,
     seatsEnabled,
+    listingId,
+    onFetchTimeSlots,
   } = props;
   if (!value || !value.date) {
     formApi.batch(() => {
@@ -357,14 +399,15 @@ const onBookingStartDateChange = (props, setCurrentMonth) => value => {
   // This callback function (onBookingStartDateChange) is called from DatePicker component.
   // It gets raw value as a param - browser's local time instead of time in listing's timezone.
   const startDate = timeOfDayFromLocalToTimeZone(value.date, timeZone);
-  const timeSlotsOnSelectedDate = getTimeSlotsOnDate(monthlyTimeSlots, startDate, timeZone);
+  const nextDay = getStartOf(startDate, 'day', timeZone, 1, 'days');
 
-  const { startTime, endDate, endTime } = getAllTimeValues(
-    intl,
-    timeZone,
-    timeSlotsOnSelectedDate,
-    startDate
-  );
+  const timeUnit = 'hour';
+  const nextBoundaryToday = findNextBoundary(new Date(), 1, timeUnit, timeZone);
+  const nextBoundary = isToday(startDate, timeZone)
+    ? nextBoundaryToday
+    : findNextBoundary(startDate, 1, timeUnit, timeZone);
+  const startLimit = isDateSameOrAfter(startDate, nextBoundaryToday) ? startDate : nextBoundary;
+  const endLimit = nextDay; // Note: the endLimit could be pushed to the next day: getStartOf(nextDay, 'minute', timeZone, 300, 'minutes');
 
   formApi.batch(() => {
     formApi.change('bookingStartTime', startTime);
@@ -372,14 +415,33 @@ const onBookingStartDateChange = (props, setCurrentMonth) => value => {
     if (seatsEnabled) {
       formApi.change('seats', 1);
     }
+  const commonParamsForUpdateBookingFields = {
+    monthlyTimeSlots,
+    startDate,
+    timeZone,
+    seatsEnabled,
+    formApi,
+    intl,
+  };
   });
 
-  handleFetchLineItems({
-    values: {
-      bookingStartTime: startTime,
-      bookingEndTime: endTime,
-      seats: seatsEnabled ? 1 : undefined,
-    },
+  // Note: the first fetch for start-times (and line-items) is using monthlyTimeSlots.
+  // This fetches all the date-specific time slots, which are update to option list asynchronously.
+  onFetchTimeSlots(listingId, startLimit, endLimit, timeZone, {
+    useFetchTimeSlotsForDate: true,
+  }).then(timeSlots => {
+    updateBookingFieldsOnStartDateChange({
+      timeSlotsOnDate: timeSlots,
+      ...commonParamsForUpdateBookingFields,
+    });
+
+    handleFetchLineItems({
+      values: {
+        bookingStartTime: startTime,
+        bookingEndTime: endTime,
+        seats: seatsEnabled ? 1 : undefined,
+      },
+    });
   });
 };
 

@@ -127,10 +127,17 @@ export const getTimeSlotsOnDate = (timeSlots, date, timeZone) => {
  * @param {String} timeZone IANA time zone key
  * @returns {Array<TimeSlot>}
  */
-export const getMonthlyTimeSlotsOnDate = (monthlyTimeSlots, date, timeZone, seatsEnabled) => {
+const getMonthlyTimeSlotsOnDate = (
+  monthlyTimeSlots,
+  date,
+  timeZone,
+  seatsEnabled,
+  minDurationStartingInDay
+) => {
   const timeSlots = getAllTimeSlots(monthlyTimeSlots, seatsEnabled);
   const [startMonth, endMonth] = getMonthlyFetchRange(monthlyTimeSlots, timeZone);
-  const monthlyTimeSlotsData = timeSlotsPerDate(startMonth, endMonth, timeSlots, timeZone);
+  const opts = { minDurationStartingInDay };
+  const monthlyTimeSlotsData = timeSlotsPerDate(startMonth, endMonth, timeSlots, timeZone, opts);
   const startIdString = stringifyDateToISO8601(date, timeZone);
   return monthlyTimeSlotsData[startIdString]?.timeSlots || [];
 };
@@ -140,7 +147,8 @@ export const getTimeSlotsOnSelectedDate = (
   monthlyTimeSlots,
   bookingStartDate,
   timeZone,
-  seatsEnabled
+  seatsEnabled,
+  minDurationStartingInDay
 ) => {
   if (!bookingStartDate) {
     return [];
@@ -149,7 +157,13 @@ export const getTimeSlotsOnSelectedDate = (
   return timeSlotsOnSelectedDate.length > 0
     ? removeUnnecessaryBoundaries(timeSlotsOnSelectedDate, seatsEnabled)
     : bookingStartDate
-    ? getMonthlyTimeSlotsOnDate(monthlyTimeSlots, bookingStartDate, timeZone, seatsEnabled)
+    ? getMonthlyTimeSlotsOnDate(
+        monthlyTimeSlots,
+        bookingStartDate,
+        timeZone,
+        seatsEnabled,
+        minDurationStartingInDay
+      )
     : [];
 };
 
