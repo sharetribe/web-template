@@ -343,7 +343,6 @@ const onBookingStartDateChange = (props, setCurrentMonth) => value => {
   if (!value || !value.date) {
     formApi.batch(() => {
       formApi.change('bookingStartTime', null);
-      formApi.change('bookingEndDate', { date: null });
       formApi.change('bookingEndTime', null);
       if (seatsEnabled) {
         formApi.change('seats', 1);
@@ -369,7 +368,6 @@ const onBookingStartDateChange = (props, setCurrentMonth) => value => {
 
   formApi.batch(() => {
     formApi.change('bookingStartTime', startTime);
-    formApi.change('bookingEndDate', { date: endDate });
     formApi.change('bookingEndTime', endTime);
     if (seatsEnabled) {
       formApi.change('seats', 1);
@@ -378,9 +376,7 @@ const onBookingStartDateChange = (props, setCurrentMonth) => value => {
 
   handleFetchLineItems({
     values: {
-      bookingStartDate: value,
       bookingStartTime: startTime,
-      bookingEndDate: { date: endDate },
       bookingEndTime: endTime,
       seats: seatsEnabled ? 1 : undefined,
     },
@@ -400,16 +396,9 @@ const onBookingStartTimeChange = props => value => {
   const startDate = values.bookingStartDate.date;
   const timeSlotsOnSelectedDate = getTimeSlotsOnDate(monthlyTimeSlots, startDate, timeZone);
 
-  const { endDate, endTime } = getAllTimeValues(
-    intl,
-    timeZone,
-    timeSlotsOnSelectedDate,
-    startDate,
-    value
-  );
+  const { endTime } = getAllTimeValues(intl, timeZone, timeSlotsOnSelectedDate, startDate, value);
 
   formApi.batch(() => {
-    formApi.change('bookingEndDate', { date: endDate });
     formApi.change('bookingEndTime', endTime);
     if (seatsEnabled) {
       formApi.change('seats', 1);
@@ -417,9 +406,7 @@ const onBookingStartTimeChange = props => value => {
   });
   handleFetchLineItems({
     values: {
-      bookingStartDate: values.bookingStartDate,
       bookingStartTime: value,
-      bookingEndDate: { date: endDate },
       bookingEndTime: endTime,
       seats: seatsEnabled ? 1 : undefined,
     },
@@ -435,9 +422,7 @@ const onBookingEndTimeChange = props => value => {
 
   handleFetchLineItems({
     values: {
-      bookingStartDate: values.bookingStartDate,
       bookingStartTime: values.bookingStartTime,
-      bookingEndDate: values.bookingEndDate,
       bookingEndTime: value,
       seats: seatsEnabled ? 1 : undefined,
     },
