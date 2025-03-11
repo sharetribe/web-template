@@ -46,8 +46,9 @@ import css from './FieldDateAndTimeInput.module.css';
 // See also the API reference for querying time slots:
 // https://www.sharetribe.com/api-reference/marketplace.html#query-time-slots
 
+const getAvailableStartTimes = params => {
+  const { intl, timeZone, bookingStart, timeSlotsOnSelectedDate } = params;
 
-const getAvailableStartTimes = (intl, timeZone, bookingStart, timeSlotsOnSelectedDate) => {
   if (timeSlotsOnSelectedDate.length === 0 || !timeSlotsOnSelectedDate[0] || !bookingStart) {
     return [];
   }
@@ -129,12 +130,12 @@ const getAllTimeValues = (
 ) => {
   const startTimes = selectedStartTime
     ? []
-    : getAvailableStartTimes(
+    : getAvailableStartTimes({
         intl,
         timeZone,
-        startDate,
-        getTimeSlots(timeSlots, startDate, timeZone)
-      );
+        bookingStart: startDate,
+        timeSlotsOnSelectedDate: getTimeSlotsOnDate(timeSlots, startDate, timeZone),
+      });
 
   // Value selectedStartTime is a string when user has selected it through the form.
   // That's why we need to convert also the timestamp we use as a default
@@ -548,12 +549,12 @@ const FieldDateAndTimeInput = props => {
   const bookingStartIdString = stringifyDateToISO8601(bookingStartDate, timeZone);
   const timeSlotsOnSelectedDate = timeSlotsData[bookingStartIdString]?.timeSlots || [];
 
-  const availableStartTimes = getAvailableStartTimes(
+  const availableStartTimes = getAvailableStartTimes({
     intl,
     timeZone,
-    bookingStartDate,
-    timeSlotsOnSelectedDate
-  );
+    bookingStart: bookingStartDate,
+    timeSlotsOnSelectedDate: timeSlotsOnDate,
+  });
 
   const firstAvailableStartTime =
     availableStartTimes.length > 0 && availableStartTimes[0] && availableStartTimes[0].timestamp
