@@ -68,6 +68,7 @@ import * as NamedLink from './components/NamedLink/NamedLink.example';
 import * as OrderBreakdown from './components/OrderBreakdown/OrderBreakdown.example';
 import * as BookingDatesForm from './components/OrderPanel/BookingDatesForm/BookingDatesForm.example';
 import * as BookingTimeForm from './components/OrderPanel/BookingTimeForm/BookingTimeForm.example';
+import * as BookingFixedDurationForm from './components/OrderPanel/BookingFixedDurationForm/BookingFixedDurationForm.example';
 import * as ProductOrderForm from './components/OrderPanel/ProductOrderForm/ProductOrderForm.example';
 import * as FieldDateAndTimeInput from './components/OrderPanel/BookingTimeForm/FieldDateAndTimeInput.example';
 import * as OrderPanel from './components/OrderPanel/OrderPanel.example';
@@ -136,6 +137,7 @@ export {
   BookingDateRangeFilter,
   BookingDatesForm,
   BookingTimeForm,
+  BookingFixedDurationForm,
   ProductOrderForm,
   Button,
   Colors,
