@@ -17,7 +17,7 @@
                 <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">
                 {{t "TransactionEmails.Greetings" "Dear {name}," name=customer.display-name }}</p>
                 <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">
-                {{t "SellPurchaseIntroduceManager.ContentProviderShareDetails" "{providerDisplayName} shared the property manager's contact info with you:" providerDisplayName=provider.display-name}}</p>
+                {{t "SellPurchaseIntroduceManager.ContentProviderShareDetails" "{providerDisplayName} shared the property manager's contact info with you for <salelink>{listingTitle}</salelink>:" providerDisplayName=provider.display-name listingTitle=listing.title salelink=(html-tag "a" target=(concat "_blank") style=(concat "text-decoration:none;color:" (asset "design/branding.json" "marketplaceColors.notificationPrimaryButton" "#fb7327")) href=(concat marketplace.url "/order/" (url-encode id) "/"))}}</p>
                 <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "SellPurchaseIntroduceManager.ManagerName" "Name: {managerName}" managerName=protected-data.managerName}}</p>
                 <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "SellPurchaseIntroduceManager.ManagerPhoneNumber" "Phone: {managerPhoneNumber}" managerPhoneNumber=protected-data.managerPhoneNumber}}</p>
                 <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "SellPurchaseIntroduceManager.ManagerEmail" "Email: {managerEmail}" managerEmail=protected-data.managerEmail}}</p>
