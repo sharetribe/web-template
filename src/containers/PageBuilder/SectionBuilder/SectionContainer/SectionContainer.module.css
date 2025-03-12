@@ -23,6 +23,8 @@
   padding: 32px 0;
   position: relative;
   word-break: break-word;
+  width: 100%;
+  /* also, TODO, see if this breaks anyting */
 
   @media (--viewportMedium) {
     padding: 64px 0;
