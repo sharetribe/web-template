@@ -1,7 +1,10 @@
 import React from 'react';
 import classNames from 'classnames';
-
 import { Field, Form as FinalForm } from 'react-final-form';
+import { stringify } from 'query-string';
+import { useHistory } from 'react-router-dom';
+import { createResourceLocatorString } from '../../../../util/routes';
+import { useRouteConfiguration } from '../../../../context/routeConfigurationContext';
 
 import FilterCategories from './FilterCategories';
 import FilterDateRange from './FilterDateRange';
@@ -27,6 +30,8 @@ const getGridCount = numberOfFields => {
 };
 
 export const SearchCTA = React.forwardRef((props, ref) => {
+  const history = useHistory();
+  const routeConfiguration = useRouteConfiguration();
   const { categories, dateRange, keywordSearch, locationSearch } = props.searchFields;
 
   //  If no search fields are enabled, we return null (Console won't allow you to enable 0 search fields)
@@ -35,11 +40,36 @@ export const SearchCTA = React.forwardRef((props, ref) => {
     return null;
   }
 
-  const handleSubmit = values => {
-    console.log({ values });
+  const onSubmit = values => {
+    // Convert form values to query parameters
+    const queryParams = {};
+
+    // WIP
+    Object.entries(values).forEach(([key, value]) => {
+      if (value) {
+        if (Array.isArray(value)) {
+          queryParams[key] = value;
+        } else if (typeof value === 'object') {
+          Object.entries(value).forEach(([subKey, subValue]) => {
+            if (subValue) {
+              queryParams[`${key}_${subKey}`] = subValue;
+            }
+          });
+        } else {
+          queryParams[key] = value;
+        }
+      }
+    });
+
+    // Create search string
+    const searchString = stringify(queryParams);
+
+    // Use history.push to navigate without page refresh
+    const to = createResourceLocatorString('SearchPage', routeConfiguration, {}, {});
+    history.push(`${to}${searchString ? `?${searchString}` : ''}`);
   };
 
-  // Count the number search fields that are enabled. The value is used to do something with CSS grid
+  // Count the number search fields that are enabled
   const fieldCount = [categories, dateRange, keywordSearch, locationSearch].filter(field => !!field)
     .length;
 
@@ -51,11 +81,14 @@ export const SearchCTA = React.forwardRef((props, ref) => {
   return (
     <div className={classNames(css.searchBarContainer, getGridCount(fieldCount))}>
       <FinalForm
-        onSubmit={handleSubmit}
+        onSubmit={onSubmit}
         {...props}
-        render={fieldRenderProps => {
+        render={({ fieldRenderProps, handleSubmit }) => {
           return (
-            <Form className={classNames(css.gridContainer, getGridCount(fieldCount))}>
+            <Form
+              onSubmit={handleSubmit}
+              className={classNames(css.gridContainer, getGridCount(fieldCount))}
+            >
               {categoriesMaybe}
               {keywordsMaybe}
               {locationMaybe}
