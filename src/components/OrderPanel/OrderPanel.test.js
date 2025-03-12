@@ -384,6 +384,70 @@ describe('OrderPanel', () => {
     });
   });
 
+  it('Booking: fixed', async () => {
+    const listing = createListing('listing-fixed', {
+      title: 'the listing',
+      description: 'Lorem ipsum',
+      price: new Money(1000, 'USD'),
+      availabilityPlan: {
+        type: 'availability-plan/time',
+        timezone: 'Etc/UTC',
+        entries: [
+          { dayOfWeek: 'mon', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'tue', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'wed', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'thu', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'fri', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'sat', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 0 },
+        ],
+      },
+
+      publicData: {
+        listingType: 'rent-bicycles-fixed',
+        transactionProcessAlias: 'default-booking/release-1',
+        unitType: 'fixed',
+        amenities: ['dog_1'],
+        location: {
+          address: 'Main Street 123',
+          building: 'A 1',
+        },
+        priceVariants: [
+          {
+            price: new Money(1000, 'USD'),
+            bookingLengthInMinutes: 30,
+          },
+        ],
+        startTimeInterval: 'quarterHour',
+      },
+    });
+
+    const props = {
+      ...commonProps,
+      timeSlotsForDate,
+      listing,
+      isOwnListing: false,
+      validListingTypes,
+    };
+    const { getByText, queryAllByText, queryByText } = render(<OrderPanel {...props} />, {
+      config,
+      routeConfiguration,
+    });
+
+    await waitFor(() => {
+      expect(queryAllByText('title!')).toHaveLength(2);
+      expect(queryAllByText('$10.00')).toHaveLength(2);
+      expect(queryAllByText('OrderPanel.perUnit')).toHaveLength(2);
+      expect(queryAllByText('OrderPanel.author')).toHaveLength(2);
+      expect(getByText('BookingTimeForm.bookingStartTitle')).toBeInTheDocument();
+      expect(getByText('FieldDateAndTimeInput.startTime')).toBeInTheDocument();
+      expect(queryByText('FieldDateAndTimeInput.endTime')).not.toBeInTheDocument();
+      expect(getByText('BookingTimeForm.requestToBook')).toBeInTheDocument();
+      expect(getByText('BookingTimeForm.youWontBeChargedInfo')).toBeInTheDocument();
+      expect(getByText('OrderPanel.ctaButtonMessageBooking')).toBeInTheDocument();
+    });
+  });
+
   it('Purchase: item ', async () => {
     const listing = createListing(
       'listing-product',
