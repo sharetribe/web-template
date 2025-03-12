@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import classNames from 'classnames';
 
 // Import configs and util modules
@@ -41,6 +41,21 @@ const getInitialValues = props => {
     : { price: listing?.attributes?.price };
 };
 
+const getEstimatedListing = (listing, updateValues) => {
+  const tmpListing = {
+    ...listing,
+    attributes: {
+      ...listing.attributes,
+      ...updateValues,
+      publicData: {
+        ...listing.attributes?.publicData,
+        ...updateValues?.publicData,
+      },
+    },
+  };
+  return tmpListing;
+};
+
 /**
  * The EditListingPricingPanel component.
  *
@@ -62,6 +77,8 @@ const getInitialValues = props => {
  * @returns {JSX.Element}
  */
 const EditListingPricingPanel = props => {
+  const [state, setState] = useState({ initialValues: getInitialValues(props) });
+
   const {
     className,
     rootClassName,
@@ -79,7 +96,7 @@ const EditListingPricingPanel = props => {
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
-  const initialValues = getInitialValues(props);
+  const initialValues = state.initialValues;
   const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
 
   const publicData = listing?.attributes?.publicData;
@@ -153,6 +170,13 @@ const EditListingPricingPanel = props => {
               updateValues = { price };
             }
 
+            // Save the initialValues to state
+            // Otherwise, re-rendering would overwrite the values during XHR call.
+            setState({
+              initialValues: getInitialValues({
+                listing: getEstimatedListing(listing, updateValues),
+              }),
+            });
             onSubmit(updateValues);
           }}
           marketplaceCurrency={marketplaceCurrency}
