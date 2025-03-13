@@ -294,13 +294,28 @@
                           </tbody>
                         </table>
                         {{/if}}{{/eq}}
-                        {{#eq "line-item/fixed" code}}
+                        {{#eq "line-item/fixed" code}}{{#if seats}}
                         <table align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                           <tbody>
                             <tr>
                               <td>
                                 <td>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "BookingMoneyPaid.PriceForFixedQuantityWithSeats" "{amount, number, ::.00} {currency} × {seats, number} {seats, plural, one {seat} other {seats}}" amount=unit-price.amount currency=unit-price.currency seats=seats}}</p>
+                                </td>
+                                <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{> format-money money=line-total}}</p>
+                                </td>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>  
+                        {{else}}
+                        <table align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <td>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "BookingMoneyPaid.PriceForFixedQuantity" "{amount, number, ::.00} {currency}" amount=unit-price.amount currency=unit-price.currency}}</p>
                                 </td>
                                 <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{> format-money money=line-total}}</p>
@@ -309,7 +324,7 @@
                             </tr>
                           </tbody>
                         </table>
-                        {{/eq}}
+                        {{/if}}{{/eq}}
                         {{#eq "line-item/provider-commission" code}}
                         <table align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                           <tbody>
