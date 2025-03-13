@@ -11,8 +11,8 @@ sdk.assetByAlias({ path: 'design/branding.json', alias: 'latest' }).then(({ data
 sdk.assetByAlias({ path: 'content/email-texts.json', alias: 'latest' }).then(({ data }) => assets.set('content/email-texts.json', data));
 
 const t = (key, defaultText, options) => {
-  return (assets.get('content/email-texts.json')?.data?.[key] || defaultText)
-  .replace(/\{([^}]+)\}/g, (match, p1) => options.hash[p1]);
+  return (assets.get('content/email-texts.json')?.data?.[key] ?? defaultText)
+  .replace(/\{([^}]+)\}/g, (match, p1) => options.hash?.[p1] ?? match);
 };
 
 handlebars.registerHelper('t', t);
