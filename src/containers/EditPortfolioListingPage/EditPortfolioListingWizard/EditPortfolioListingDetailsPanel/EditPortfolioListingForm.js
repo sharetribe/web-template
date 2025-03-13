@@ -30,14 +30,17 @@ const EditPortfolioListingForm = props => {
       if (isEditing) {
         if (title !== initialTitle) {
           savedPortfolio = await dispatch(
-            updatePortfolioListing({
-              id: portfolioListing.id,
-              title,
-            })
+            updatePortfolioListing(
+              {
+                id: portfolioListing.id,
+                title,
+              },
+              config
+            )
           );
         }
       } else {
-        savedPortfolio = await dispatch(requestCreateListingDraft({ title }, config));
+        savedPortfolio = await dispatch(requestCreateListingDraft(title));
       }
 
       onSubmit(savedPortfolio);

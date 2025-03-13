@@ -1,15 +1,19 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
+
 import { createResourceLocatorString } from '../../../util/routes';
 import { EditPortfolioListingDetailsPanel } from './EditPortfolioListingDetailsPanel/EditPortfolioListingDetailsPanel';
 import css from './EditPortfolioListingWizardTab.module.css';
 import { EditPortfolioListingItemsPanel } from './EditPortfolioListingItemsPanel/EditPortfolioListingItemsPanel';
 import { PAGE_MODE_EDIT } from '../../BatchEditListingPage/constants';
+import { updateListingMedia } from '../EditPortfolioListingPage.duck';
 
 export const DETAILS = 'details';
 export const ITEMS = 'items';
 
 export const EditPortfolioListingWizardTab = props => {
   const { tab, params, history, routeConfiguration, config, isLoading } = props;
+  const dispatch = useDispatch();
 
   const onCompleteDetailsTab = listing => {
     const nextTab = { ...params, id: listing.id.uuid, tab: ITEMS, mode: PAGE_MODE_EDIT };
@@ -22,7 +26,8 @@ export const EditPortfolioListingWizardTab = props => {
     history.push(to);
   };
 
-  const onPublishListing = listing => {
+  const onUpdateListing = async listing => {
+    await dispatch(updateListingMedia(listing, config));
     const to = createResourceLocatorString(
       'ManageListingsPage',
       routeConfiguration,
@@ -51,7 +56,7 @@ export const EditPortfolioListingWizardTab = props => {
         <EditPortfolioListingItemsPanel
           className={css.panel}
           config={config}
-          onPublishListing={onPublishListing}
+          onUpdateListing={onUpdateListing}
           isLoading={isLoading}
         ></EditPortfolioListingItemsPanel>
       );

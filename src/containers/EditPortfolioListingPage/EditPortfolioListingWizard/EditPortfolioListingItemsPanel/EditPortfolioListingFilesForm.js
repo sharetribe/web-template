@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ARRAY_ERROR } from 'final-form';
 import { Field, Form as FinalForm } from 'react-final-form';
@@ -7,6 +7,7 @@ import { FieldArray } from 'react-final-form-arrays';
 import classNames from 'classnames';
 import { FormattedMessage, injectIntl } from '../../../../util/reactIntl';
 import { isUploadImageOverLimitError } from '../../../../util/errors';
+import { nonEmptyArray, composeValidators } from '../../../../util/validators';
 import { AspectRatioWrapper, Button, Form } from '../../../../components';
 import ListingImage, { RemoveImageButton } from './ListingImage';
 import css from './EditPortfolioListingFilesForm.module.css';
@@ -36,6 +37,13 @@ const PublishListingError = ({ error }) =>
   error ? (
     <p className={css.error}>
       <FormattedMessage id="EditListingPhotosForm.publishListingFailed" />
+    </p>
+  ) : null;
+
+const UpdateListingError = ({ error }) =>
+  error ? (
+    <p className={css.error}>
+      <FormattedMessage id="EditListingPhotosForm.updateFailed" />
     </p>
   ) : null;
 
@@ -94,76 +102,56 @@ const FieldListingImage = props => {
 };
 
 const EditPortfolioListingFilesFormComponent = props => {
-  const { onPublishListing, config } = props;
+  const { onUpdateListing, config } = props;
   const dispatch = useDispatch();
-  const uploadedMedia = useSelector(state => state.EditPortfolioListingPage.uploadedMedia);
+
+  const updating = useSelector(state => state.EditPortfolioListingPage.updating);
+  const updateError = useSelector(state => state.EditPortfolioListingPage.updateError);
+  const imageUploading = useSelector(state => state.EditPortfolioListingPage.uploading);
   const uploadImageError = useSelector(state => state.EditPortfolioListingPage.uploadError);
   const publishListingError = useSelector(state => state.EditPortfolioListingPage.saveError);
   const showListingsError = useSelector(state => state.EditPortfolioListingPage.error);
   const existingImages = useSelector(state => state.EditPortfolioListingPage.images);
+  const existingVideos = useSelector(state => state.EditPortfolioListingPage.videos);
   const listing = useSelector(state => state.EditPortfolioListingPage.portfolioListing);
   const listingId = listing?.id;
-  const existingVideos = listing?.attributes?.publicData?.videos || [];
   const listingState = listing?.attributes?.state;
   const isDraft = listingState === LISTING_STATE_DRAFT;
 
-  const [imageUploading, setImageUploading] = useState(false);
-  const [localImages, setLocalImages] = useState(existingImages);
-
   const onImageUploadHandler = file => {
     if (file) {
-      setImageUploading(true); // Show loading state
-
       const tempImageId = `${file.name}_${Date.now()}`;
-
-      dispatch(uploadMedia({ id: tempImageId, file }, config))
-        .then(() => {
-          setImageUploading(false);
-        })
-        .catch(() => {
-          setImageUploading(false);
-        });
+      dispatch(uploadMedia({ id: tempImageId, file }, config));
     }
   };
-
-  const onPublishHandler = () => {
+  const onPublishHandler = values => {
+    const updateListingValues = { ...values, id: listingId };
     if (!listingId) return;
     if (isDraft) {
       dispatch(publishPortfolioListing(listingId)).then(updatedListing => {
         if (updatedListing) {
-          onPublishListing(updatedListing);
+          onUpdateListing(updateListingValues);
         }
       });
     } else {
-      onPublishListing(listing);
+      onUpdateListing(updateListingValues);
     }
   };
-
   const onSaveVideo = video => {
-    if (listingId) {
-      dispatch(saveVideoToListing(listingId, video, config));
-    }
+    dispatch(saveVideoToListing(video));
   };
-
-  useEffect(() => {
-    setLocalImages([...existingImages, ...uploadedMedia]);
-  }, [existingImages, uploadedMedia]);
-
   const handleRemoveVideo = videoId => {
-    dispatch(removeVideoFromListing(listingId, videoId, config));
+    dispatch(removeVideoFromListing(videoId));
   };
-
   const handleRemoveImage = imageId => {
-    dispatch(removeImageFromListing(listingId, imageId, config)).then(() => {
-      setLocalImages(prev => prev.filter(img => img.id !== imageId));
-    });
+    dispatch(removeImageFromListing(imageId));
   };
 
   return (
     <FinalForm
       onSubmit={onPublishHandler}
       {...props}
-      initialValues={{ images: localImages, videos: existingVideos }}
+      initialValues={{ images: existingImages, videos: existingVideos }}
       mutators={{ ...arrayMutators }}
       render={({
         form,
@@ -172,13 +160,13 @@ const EditPortfolioListingFilesFormComponent = props => {
         intl,
         invalid,
         disabled,
-        updateInProgress,
         touched,
         errors,
         listingImageConfig = {},
       }) => {
         const { aspectWidth = 1, aspectHeight = 1 } = listingImageConfig;
-        const submitDisabled = invalid || disabled || updateInProgress;
+        const submitInProgress = updating;
+        const submitDisabled = invalid || disabled || submitInProgress || imageUploading;
         const imagesError = touched.images && errors?.images && errors.images[ARRAY_ERROR];
         const uploadOverLimit = isUploadImageOverLimitError(uploadImageError);
         const classes = classNames(css.root, className);
@@ -186,39 +174,62 @@ const EditPortfolioListingFilesFormComponent = props => {
         return (
           <Form className={classes} onSubmit={handleSubmit}>
             <div className={css.imagesFieldArray}>
-              <FieldArray name="images">
-                {() =>
-                  localImages.map((image, index) => (
-                    <FieldListingImage
-                      listingId={listingId}
-                      key={image.id.uuid || image.id}
-                      name={`images[${index}]`}
-                      image={image}
-                      intl={intl}
-                      onRemoveImage={() => handleRemoveImage(image.id)}
-                    />
-                  ))
+              <FieldArray
+                name="images"
+                validate={composeValidators(
+                  nonEmptyArray(
+                    intl.formatMessage({
+                      id: 'EditListingPhotosForm.imageRequired',
+                    })
+                  )
+                )}
+              >
+                {({ fields }) =>
+                  fields.map((name, index) => {
+                    const image = fields.value?.[index];
+                    const imageId = image.id || image.id.uuid;
+                    return (
+                      <FieldListingImage
+                        key={imageId}
+                        name={name}
+                        intl={intl}
+                        listingId={listingId}
+                        image={image}
+                        onRemoveImage={() => {
+                          fields.remove(index);
+                          handleRemoveImage(imageId);
+                        }}
+                      />
+                    );
+                  })
                 }
               </FieldArray>
 
               <FieldArray name="videos">
-                {() =>
-                  existingVideos.map((video, index) => (
-                    <FieldListingVideo
-                      key={video.id}
-                      name={`videos[${index}]`}
-                      aspectWidth={aspectWidth}
-                      aspectHeight={aspectHeight}
-                      onRemoveVideo={() => handleRemoveVideo(video.id)}
-                    />
-                  ))
+                {({ fields }) =>
+                  fields.map((name, index) => {
+                    const video = fields.value?.[index];
+                    const videoId = video.id;
+                    return (
+                      <FieldListingVideo
+                        key={videoId}
+                        name={name}
+                        aspectWidth={aspectWidth}
+                        aspectHeight={aspectHeight}
+                        onRemoveVideo={() => {
+                          fields.remove(index);
+                          handleRemoveVideo(videoId);
+                        }}
+                      />
+                    );
+                  })
                 }
               </FieldArray>
 
               <FieldAddMedia
                 id="addMedia"
                 name="addMedia"
-                disabled={updateInProgress}
+                disabled={updating}
                 formApi={form}
                 onImageUploadHandler={onImageUploadHandler}
                 onSaveVideo={onSaveVideo}
@@ -234,15 +245,15 @@ const EditPortfolioListingFilesFormComponent = props => {
               uploadImageError={uploadImageError}
             />
             <PublishListingError error={publishListingError} />
+            <UpdateListingError error={updateError} />
             <ShowListingsError error={showListingsError} />
-
             <Button
               className={css.submitButton}
               type="submit"
-              inProgress={updateInProgress}
+              inProgress={submitInProgress}
               disabled={submitDisabled}
             >
-              {isDraft ? 'Publish' : 'Return'}
+              {isDraft ? 'Publish' : 'Save changes'}
             </Button>
           </Form>
         );
