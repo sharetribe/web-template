@@ -21,9 +21,6 @@ const GRID_CONFIG = [
   { gridCss: css.gridCol4 },
 ];
 
-// idk i think this adds complexity if this isn't used more than once
-// const getIndex = numberOfFields => numberOfFields - 1;
-
 const getGridCount = numberOfFields => {
   const gridConfig = GRID_CONFIG[numberOfFields - 1];
   return gridConfig ? gridConfig.gridCss : GRID_CONFIG[0].gridCss;
@@ -73,10 +70,26 @@ export const SearchCTA = React.forwardRef((props, ref) => {
   const fieldCount = [categories, dateRange, keywordSearch, locationSearch].filter(field => !!field)
     .length;
 
-  const categoriesMaybe = categories ? <FilterCategories className={css.filterField} /> : null;
-  const locationMaybe = locationSearch ? <FilterLocation className={css.filterField} /> : null;
-  const keywordsMaybe = keywordSearch ? <FilterKeyword className={css.filterField} /> : null;
-  const dateRangeMaybe = dateRange ? <FilterDateRange className={css.filterField} /> : null;
+  const categoriesMaybe = categories ? (
+    <div className={css.filterField}>
+      <FilterCategories />
+    </div>
+  ) : null;
+  const locationMaybe = locationSearch ? (
+    <div className={css.filterField}>
+      <FilterLocation />
+    </div>
+  ) : null;
+  const keywordsMaybe = keywordSearch ? (
+    <div className={css.filterField}>
+      <FilterKeyword />
+    </div>
+  ) : null;
+  const dateRangeMaybe = dateRange ? (
+    <div className={css.filterField}>
+      <FilterDateRange />
+    </div>
+  ) : null;
 
   return (
     <div className={classNames(css.searchBarContainer, getGridCount(fieldCount))}>
