@@ -19,7 +19,7 @@
                 <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">
                 {{t "SellPurchaseMarkIntroducedReminder.ContentMarkIntroduced" "You have {days} days left to mark your order for <salelink>{listingTitle}</salelink> or your order will automatically be canceled and {customerDisplayName} will be refunded." days="2" customerDisplayName=customer.display-name listingTitle=listing.title salelink=(html-tag "a" target=(concat "_blank") style=(concat "text-decoration:none;color:" (asset "design/branding.json" "marketplaceColors.notificationPrimaryButton" "#fb7327")) href=(concat marketplace.url "/sale/" (url-encode id) "/"))}}</p>
                 <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "SellPurchaseMarkIntroducedReminder.ContentActionNeeded" "To avoid the order being canceled, please take action now."}}</p>
-                <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "SellPurchaseMarkIntroducedReminder.ContentAssistance" "If you need any assistance, please contact us."}}</p>
+                <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "SellPurchaseMarkIntroducedReminder.ContentAssistance" "If you have any questions or need further assistance, please don’t hesitate to reach out to us."}}</p>
                 <table style="padding:16px 0 0" align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                   <tbody>
                     <tr>

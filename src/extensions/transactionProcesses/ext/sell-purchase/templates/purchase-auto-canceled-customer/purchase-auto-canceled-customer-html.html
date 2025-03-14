@@ -19,7 +19,7 @@
                 <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">
                 {{t "SellPurchaseAutoCanceledCustomer.ContentOrderCanceled" "{providerDisplayName} has canceled your order for <salelink>{listingTitle}</salelink>. Your credit card was not charged." providerDisplayName=provider.display-name listingTitle=listing.title salelink=(html-tag "a" target=(concat "_blank") style=(concat "text-decoration:none;color:" (asset "design/branding.json" "marketplaceColors.notificationPrimaryButton" "#fb7327")) href=(concat marketplace.url "/order/" (url-encode id) "/"))}}</p>
                 <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "SellPurchaseAutoCanceledCustomer.ContentContactStore" "If this was unexpected and you need further clarification, please contact {providerDisplayName} for more information." providerDisplayName=provider.display-name}}</p>
-                <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "SellPurchaseAutoCanceledCustomer.ContentAssistance" "If you still have any questions or need help, please contact us."}}</p>
+                <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "SellPurchaseAutoCanceledCustomer.ContentAssistance" "If you have any questions or need further assistance, please don’t hesitate to reach out to us."}}</p>
                 <table style="padding:16px 0 0" align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                   <tbody>
                     <tr>
