@@ -1,0 +1,46 @@
+@import '../../../styles/customMediaQueries.css';
+
+.labelPlain {
+  color: var(--colorGrey700);
+}
+
+.labelPlainSelected {
+  color: var(--marketplaceColor);
+}
+
+.fieldPlain {
+  composes: h4 from global;
+  margin: 0;
+  padding: 16px 0 30px 12px;
+  border: none;
+
+  @media (--viewportMedium) {
+    padding: 16px 0 24px 12px;
+  }
+}
+
+.locationAutocompleteInput {
+}
+
+.locationAutocompleteInputIcon {
+  display: none;
+}
+
+.predictionsRoot {
+  position: absolute;
+  width: 100%;
+  top: 36px;
+  left: 0;
+  background-color: var(--marketplaceColor);
+  border-bottom-left-radius: var(--borderRadius);
+  border-bottom-right-radius: var(--borderRadius);
+  box-shadow: var(--boxShadowPopup);
+  z-index: calc(var(--zIndexPopup) + 1);
+
+  @media (--viewportMedium) {
+    top: 40px;
+  }
+}
+
+.validLocation {
+}

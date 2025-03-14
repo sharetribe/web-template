@@ -77,6 +77,7 @@ export class SearchPageComponent extends Component {
 
     // Filter functions
     this.resetAll = this.resetAll.bind(this);
+    this.getListingFields = this.getListingFields.bind(this);
     this.getHandleChangedValueFn = this.getHandleChangedValueFn.bind(this);
 
     // SortBy
@@ -95,26 +96,55 @@ export class SearchPageComponent extends Component {
     this.setState({ isMobileModalOpen: false });
   }
 
+  // Manage the custom 'location' field for Creative users
+  getListingFields() {
+    const { config } = this.props;
+    const { listingFields } = config?.listing || {};
+    const isKeywordSearch = isMainSearchTypeKeywords(config);
+    return [
+      ...listingFields,
+      ...(isKeywordSearch
+        ? [
+            {
+              key: 'location',
+              scope: 'public',
+              schemaType: 'location',
+              filterConfig: {
+                indexForSearch: true,
+                group: 'primary',
+              },
+              categoryConfig: {
+                limitToCategoryIds: true,
+                categoryIds: ['creatives'],
+              },
+              listingTypeConfig: {
+                limitToListingTypeIds: true,
+                listingTypeIds: ['profile-listing'],
+              },
+            },
+          ]
+        : []),
+    ];
+  }
+
   // Reset all filter query parameters
   resetAll(e) {
     const { history, routeConfiguration, config } = this.props;
-    const { listingFields: listingFieldsConfig } = config?.listing || {};
+    const listingFieldsConfig = this.getListingFields();
     const { defaultFilters: defaultFiltersConfig } = config?.search || {};
-
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
+    const keywordsMaybe = isMainSearchTypeKeywords(config) ? ['keywords', 'address', 'bounds'] : [];
     const filterQueryParamNames = getQueryParamNames(listingFieldsConfig, defaultFiltersConfig);
-
     // Reset state
     this.setState({ currentQueryParams: {} });
-
     // Reset routing params
-    const queryParams = omit(urlQueryParams, filterQueryParamNames);
+    const queryParams = omit(urlQueryParams, [...filterQueryParamNames, ...keywordsMaybe]);
     history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, queryParams));
   }
 
   getHandleChangedValueFn(useHistoryPush) {
     const { history, routeConfiguration, config } = this.props;
-    const { listingFields: listingFieldsConfig } = config?.listing || {};
+    const listingFieldsConfig = this.getListingFields();
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
     const listingCategories = config.categoryConfiguration.categories;
     const filterConfigs = {
@@ -122,33 +152,27 @@ export class SearchPageComponent extends Component {
       defaultFiltersConfig,
       listingCategories,
     };
-
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
-
     return updatedURLParams => {
       const updater = prevState => {
         const { address, bounds, keywords } = urlQueryParams;
         const mergedQueryParams = { ...urlQueryParams, ...prevState.currentQueryParams };
-
         // Address and bounds are handled outside of MainPanel.
         // I.e. TopbarSearchForm && search by moving the map.
         // We should always trust urlQueryParams with those.
         // The same applies to keywords, if the main search type is keyword search.
-        const keywordsMaybe = isMainSearchTypeKeywords(config) ? { keywords } : {};
+        const keywordsMaybe = isMainSearchTypeKeywords(config) ? { keywords } : { address, bounds };
         return {
           currentQueryParams: omitLimitedListingFieldParams(
             {
               ...mergedQueryParams,
               ...updatedURLParams,
               ...keywordsMaybe,
-              address,
-              bounds,
             },
             filterConfigs
           ),
         };
       };
-
       const callback = () => {
         if (useHistoryPush) {
           const searchParams = this.state.currentQueryParams;
@@ -156,7 +180,6 @@ export class SearchPageComponent extends Component {
           history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, search));
         }
       };
-
       this.setState(updater, callback);
     };
   }
@@ -196,8 +219,7 @@ export class SearchPageComponent extends Component {
       routeConfiguration,
       config,
     } = this.props;
-
-    const { listingFields } = config?.listing || {};
+    const listingFields = this.getListingFields();
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
     const activeListingTypes = config?.listing?.listingTypes.map(config => config.listingType);
     const marketplaceCurrency = config.currency;

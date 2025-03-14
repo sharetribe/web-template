@@ -34,3 +34,7 @@
   font-size: 36px;
   color: white;
 }
+
+.unsupportedLabel {
+  text-align: center;
+}
