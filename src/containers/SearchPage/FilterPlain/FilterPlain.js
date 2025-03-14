@@ -51,6 +51,7 @@ class FilterPlainComponent extends Component {
       children,
       initialValues,
       keepDirtyOnReinitialize,
+      noForm,
     } = this.props;
     const classes = classNames(rootClassName || css.root, className);
 
@@ -81,15 +82,19 @@ class FilterPlainComponent extends Component {
             this.filterContent = node;
           }}
         >
-          <FilterForm
-            id={`${id}.form`}
-            liveEdit
-            onChange={this.handleChange}
-            initialValues={initialValues}
-            keepDirtyOnReinitialize={keepDirtyOnReinitialize}
-          >
-            {children}
-          </FilterForm>
+          {noForm ? (
+            <>{children}</>
+          ) : (
+            <FilterForm
+              id={`${id}.form`}
+              liveEdit
+              onChange={this.handleChange}
+              initialValues={initialValues}
+              keepDirtyOnReinitialize={keepDirtyOnReinitialize}
+            >
+              {children}
+            </FilterForm>
+          )}
           <button className={css.clearButton} onClick={this.handleClear}>
             <FormattedMessage id={'FilterPlain.clear'} />
           </button>
@@ -107,6 +112,7 @@ FilterPlainComponent.defaultProps = {
   keepDirtyOnReinitialize: false,
   labelSelection: null,
   labelSelectionSeparator: null,
+  noForm: false,
 };
 
 FilterPlainComponent.propTypes = {
@@ -122,6 +128,7 @@ FilterPlainComponent.propTypes = {
   children: node.isRequired,
   initialValues: object,
   keepDirtyOnReinitialize: bool,
+  noForm: bool,
 
   // form injectIntl
   intl: intlShape.isRequired,

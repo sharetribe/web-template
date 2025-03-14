@@ -150,6 +150,20 @@ export const EditListingPageComponent = props => {
         params={{ missingAccessRight: NO_ACCESS_PAGE_USER_PENDING_APPROVAL }}
       />
     );
+  } else if (shouldRedirectNoPostingRights) {
+    return (
+      <NamedRedirect
+        name="NoAccessPage"
+        params={{ missingAccessRight: NO_ACCESS_PAGE_POST_LISTINGS }}
+      />
+    );
+  } else if (isForbiddenListingTypePage) {
+    return (
+      <NamedRedirect
+        name="NoAccessPage"
+        params={{ missingAccessRight: NO_ACCESS_PAGE_FORBIDDEN_LISTING_TYPE }}
+      />
+    );
   } else if (shouldRedirectAfterPosting) {
     const isPendingApproval =
       currentListing && currentListingState === LISTING_STATE_PENDING_APPROVAL;

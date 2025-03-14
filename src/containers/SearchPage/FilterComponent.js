@@ -9,6 +9,7 @@ import SelectSingleFilter from './SelectSingleFilter/SelectSingleFilter';
 import SelectMultipleFilter from './SelectMultipleFilter/SelectMultipleFilter';
 import BookingDateRangeFilter from './BookingDateRangeFilter/BookingDateRangeFilter';
 import KeywordFilter from './KeywordFilter/KeywordFilter';
+import LocationFilter from './LocationFilter/LocationFilter';
 import PriceFilter from './PriceFilter/PriceFilter';
 import IntegerRangeFilter from './IntegerRangeFilter/IntegerRangeFilter';
 
@@ -84,6 +85,16 @@ const FilterComponent = props => {
           name={name}
           queryParamNames={[key]}
           initialValues={initialValues([key], liveEdit)}
+          onSubmit={getHandleChangedValueFn(useHistoryPush)}
+          {...rest}
+        />
+      );
+    case 'location':
+      return (
+        <LocationFilter
+          id={componentId}
+          label={intl.formatMessage({ id: 'FilterComponent.locationLabel' })}
+          name={name}
           onSubmit={getHandleChangedValueFn(useHistoryPush)}
           {...rest}
         />
