@@ -79,10 +79,11 @@ export const queryFavoritesError = e => ({
 export const queryFavoriteListings = queryParams => (dispatch, getState, sdk) => {
   dispatch(queryFavoritesRequest(queryParams));
   const { currentUser } = getState().user;
-  const favorites = currentUser?.attributes.profile.privateData?.favorites;
+  const favorites = currentUser?.attributes.profile.privateData?.favorites || [];
   const listingType = queryParams.pub_listingType;
   const validRequestParams = !!listingType;
-  const withFavorites = !!favorites;
+  const parsedFavorites = favorites[listingType];
+  const withFavorites = !!parsedFavorites;
   const shouldRequest = withFavorites && validRequestParams;
 
   if (!shouldRequest) {
@@ -94,7 +95,7 @@ export const queryFavoriteListings = queryParams => (dispatch, getState, sdk) =>
           totalPages: 1,
           page: 1,
           paginationLimit: 1,
-          perPage: 42,
+          perPage: RESULT_PAGE_SIZE,
         },
       },
     };
@@ -102,7 +103,6 @@ export const queryFavoriteListings = queryParams => (dispatch, getState, sdk) =>
     return emptyObject;
   }
 
-  const parsedFavorites = favorites[listingType];
   const favoritesMaybe = !!parsedFavorites ? { ids: parsedFavorites } : {};
   const { perPage, ...rest } = queryParams;
   const params = { ...favoritesMaybe, ...rest, perPage };

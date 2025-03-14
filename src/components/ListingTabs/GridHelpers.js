@@ -23,7 +23,7 @@ export function getTabsFeaturesForRole(role, hideReviews) {
       return {
         enableCategoryTabs: true,
         enableListingManagement: false,
-        pageName: 'ManageListingsPage',
+        pageName: 'ProfilePage',
         tabs: [
           { key: LISTING_TAB_TYPES.PRODUCT, label: 'Shop' },
           { key: LISTING_TAB_TYPES.PORTFOLIO, label: 'Portfolio' },
@@ -65,11 +65,12 @@ export const Error = ({ messageId }) => {
   );
 };
 
-export const Pagination = ({ pageName, pageSearchParams, pagination }) => {
+export const Pagination = ({ pageName, pagePathParams, pageSearchParams, pagination }) => {
   return (
     <PaginationLinks
       className={css.pagination}
       pageName={pageName}
+      pagePathParams={pagePathParams}
       pageSearchParams={pageSearchParams}
       pagination={pagination}
     />
