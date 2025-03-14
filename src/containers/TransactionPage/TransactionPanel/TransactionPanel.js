@@ -202,7 +202,7 @@ export class TransactionPanelComponent extends Component {
     const showOrderPanel = stateData.showOrderPanel && hasViewingRights;
     const showDetailCardHeadings = stateData.showDetailCardHeadings || !hasViewingRights;
 
-    const deliveryMethod = protectedData?.deliveryMethod || 'none';
+    const { deliveryMethod = 'none', managerAddress } = protectedData;
 
     const classes = classNames(rootClassName || css.root, className);
 
@@ -291,17 +291,22 @@ export class TransactionPanelComponent extends Component {
                     />
                   </p>
                 ) : null}
-                <DeliveryInfoMaybe
-                  className={css.deliveryInfoSection}
-                  protectedData={protectedData}
-                  listing={listing}
-                  locale={config.localization.locale}
-                />
-                <BookingLocationMaybe
-                  className={css.deliveryInfoSection}
-                  listing={listing}
-                  showBookingLocation={showBookingLocation}
-                />
+
+                {!managerAddress && (
+                  <>
+                    <DeliveryInfoMaybe
+                      className={css.deliveryInfoSection}
+                      protectedData={protectedData}
+                      listing={listing}
+                      locale={config.localization.locale}
+                    />
+                    <BookingLocationMaybe
+                      className={css.deliveryInfoSection}
+                      listing={listing}
+                      showBookingLocation={showBookingLocation}
+                    />
+                  </>
+                )}
 
                 <ManagerInformationMaybe
                   protectedData={protectedData}
