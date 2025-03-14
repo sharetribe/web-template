@@ -11,8 +11,8 @@ export async function createUppyInstance(meta, onBeforeUpload) {
     const { default: Transloadit, COMPANION_ALLOWED_HOSTS, COMPANION_URL } = await import(
       '@uppy/transloadit'
     );
-    const { default: Dropbox } = await import('@uppy/dropbox/lib/Dropbox');
-    const { default: GoogleDrive } = await import('@uppy/google-drive/lib/GoogleDrive');
+    // const { default: Dropbox } = await import('@uppy/dropbox/lib/Dropbox');
+    // const { default: GoogleDrive } = await import('@uppy/google-drive/lib/GoogleDrive');
     const { default: GoldenRetriever } = await import('@uppy/golden-retriever');
     const uppy = new Uppy({
       onBeforeUpload,
@@ -48,8 +48,8 @@ export async function createUppyInstance(meta, onBeforeUpload) {
         limit: 5,
       })
       .use(GoldenRetriever, { serviceWorker: true })
-      .use(Dropbox, config)
-      .use(GoogleDrive, config);
+      // .use(Dropbox, config)
+      // .use(GoogleDrive, config);
 
     // Register Service Worker if available
     if ('serviceWorker' in navigator) {
