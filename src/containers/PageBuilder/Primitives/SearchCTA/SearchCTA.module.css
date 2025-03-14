@@ -1,46 +1,41 @@
 @import '../../../../styles/customMediaQueries.css';
 
 .filterField {
-  color: var(--colorGrey300);
   height: 100%;
   align-items: center;
   display: grid;
-  padding: 12px 16px;
-  /* maybe not the best accesibility feature */
-  input:focus {
-    outline: none;
-    box-shadow: none;
-  }
-  input {
-    border: 0;
+  min-height: 40px;
+}
+
+.align {
+  justify-self: start;
+  @media (--viewportMedium) {
+    justify-self: center;
   }
 }
 
 .searchBarContainer {
+  composes: align;
   background-color: var(--colorWhite);
-  /* we assing a fixed height to grid container (48px) and the total height is 48+8 = 64 */
-  padding: 8px;
   border-color: var(--colorGrey800);
   border-width: 1px;
   color: var(--colorGrey500);
   border-radius: 8px;
   box-shadow: var(--boxShadowPopup);
   width: 100%;
+  padding: 8px;
 }
 
 .gridContainer {
   height: 100%;
   display: grid;
-  grid-gap: 13px;
   align-items: center;
   justify-content: center;
   align-items: center;
-  padding-top: 8px;
 }
 
 .gridContainer > *:not(:last-child):not(:nth-last-child(2)) {
   border-bottom: 1px solid var(--colorGrey200);
-  padding-bottom: 20px;
 }
 
 /* applies in mobile styles, we specify that there should always be just one column so the items stack in mobile view*/
@@ -51,10 +46,17 @@
   grid-template-columns: 1fr;
 }
 
+.submitButton {
+  min-height: 40px;
+}
+
 /* tablet */
 @media (--viewportMedium) {
   .searchBarContainer {
     width: 576px;
+  }
+  .submitButton {
+    height: 48px;
   }
 }
 
@@ -66,11 +68,9 @@
     border-bottom: none;
     padding-bottom: 0;
   }
-  .submitButton {
-    height: 48px;
-  }
   .filterField {
     padding: 0;
+    color: var(--colorGrey300);
   }
   /* force the button to the very right of the search bar */
   .gridContainer > *:last-child {
@@ -79,7 +79,6 @@
 
   .gridContainer {
     padding-top: 0;
-    padding-left: 13px;
   }
 
   .searchBarContainer {

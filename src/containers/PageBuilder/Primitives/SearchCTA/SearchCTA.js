@@ -1,16 +1,23 @@
 import React from 'react';
 import classNames from 'classnames';
-import { Field, Form as FinalForm } from 'react-final-form';
-import { stringify } from 'query-string';
+import { Form as FinalForm } from 'react-final-form';
 import { useHistory } from 'react-router-dom';
-import { createResourceLocatorString } from '../../../../util/routes';
+
+// Contexts
 import { useRouteConfiguration } from '../../../../context/routeConfigurationContext';
+import { useConfiguration } from '../../../../context/configurationContext';
+
+// Utility
+import { FormattedMessage } from '../../../../util/reactIntl';
+import { createResourceLocatorString } from '../../../../util/routes';
+
+// Shared components
+import { Form, PrimaryButton } from '../../../../components';
 
 import FilterCategories from './FilterCategories';
 import FilterDateRange from './FilterDateRange';
 import FilterLocation from './FilterLocation';
 import FilterKeyword from './FilterKeyword';
-import { Button, Form } from '../../../../components';
 
 import css from './SearchCTA.module.css';
 
@@ -26,13 +33,23 @@ const getGridCount = numberOfFields => {
   return gridConfig ? gridConfig.gridCss : GRID_CONFIG[0].gridCss;
 };
 
+const isEmpty = value => {
+  const isNullish = value == null;
+  const isZeroLength = value.hasOwnProperty('length') && value.length === 0;
+  return isNullish || isZeroLength;
+};
+
 export const SearchCTA = React.forwardRef((props, ref) => {
   const history = useHistory();
   const routeConfiguration = useRouteConfiguration();
+  const config = useConfiguration();
+
   const { categories, dateRange, keywordSearch, locationSearch } = props.searchFields;
 
   //  If no search fields are enabled, we return null (Console won't allow you to enable 0 search fields)
-  const noSearchFields = !(categories || dateRange || keywordSearch || locationSearch);
+  const noSearchFields = isEmpty(
+    [categories, dateRange, keywordSearch, locationSearch].filter(f => !isEmpty(f))
+  );
   if (noSearchFields) {
     return null;
   }
@@ -41,58 +58,45 @@ export const SearchCTA = React.forwardRef((props, ref) => {
     // Convert form values to query parameters
     const queryParams = {};
 
-    // WIP
     Object.entries(values).forEach(([key, value]) => {
-      if (value) {
-        if (Array.isArray(value)) {
-          queryParams[key] = value;
-        } else if (typeof value === 'object') {
-          Object.entries(value).forEach(([subKey, subValue]) => {
-            if (subValue) {
-              queryParams[`${key}_${subKey}`] = subValue;
-            }
-          });
-        } else {
-          queryParams[key] = value;
-        }
+      if (!isEmpty(value)) {
+        queryParams[key] = value;
       }
     });
 
-    // Create search string
-    const searchString = stringify(queryParams);
-
+    const to = createResourceLocatorString('SearchPage', routeConfiguration, {}, queryParams);
     // Use history.push to navigate without page refresh
-    const to = createResourceLocatorString('SearchPage', routeConfiguration, {}, {});
-    history.push(`${to}${searchString ? `?${searchString}` : ''}`);
+    history.push(to);
   };
+
+  const categoryConfig = config.categoryConfiguration;
 
   // Count the number search fields that are enabled
   const fieldCount = [categories, dateRange, keywordSearch, locationSearch].filter(field => !!field)
     .length;
 
-  const categoriesMaybe = categories ? (
-    <div className={css.filterField}>
-      <FilterCategories />
-    </div>
-  ) : null;
+  // conditional; even if categories are enabled, we won't render categories if none are present. So need to do a bit of calculations here
+  const fieldCountForGrid = categoryConfig.categories.length > 0 ? fieldCount : fieldCount - 1;
+
+  // categoriesMaybe also checks if any categories are specified
+  const categoriesMaybe =
+    categories && categoryConfig.categories.length > 0 ? (
+      <div className={css.filterField}>
+        {/* <FilterCategories categories={categoryConfig.categories}/> */}
+      </div>
+    ) : null;
   const locationMaybe = locationSearch ? (
-    <div className={css.filterField}>
-      <FilterLocation />
-    </div>
+    <div className={css.filterField}>{/* <FilterLocation /> */}</div>
   ) : null;
   const keywordsMaybe = keywordSearch ? (
-    <div className={css.filterField}>
-      <FilterKeyword />
-    </div>
+    <div className={css.filterField}>{/* <FilterKeyword /> */}</div>
   ) : null;
   const dateRangeMaybe = dateRange ? (
-    <div className={css.filterField}>
-      <FilterDateRange />
-    </div>
+    <div className={css.filterField}>{/* <FilterDateRange /> */}</div>
   ) : null;
 
   return (
-    <div className={classNames(css.searchBarContainer, getGridCount(fieldCount))}>
+    <div className={classNames(css.searchBarContainer, getGridCount(fieldCountForGrid))}>
       <FinalForm
         onSubmit={onSubmit}
         {...props}
@@ -100,15 +104,15 @@ export const SearchCTA = React.forwardRef((props, ref) => {
           return (
             <Form
               onSubmit={handleSubmit}
-              className={classNames(css.gridContainer, getGridCount(fieldCount))}
+              className={classNames(css.gridContainer, getGridCount(fieldCountForGrid))}
             >
               {categoriesMaybe}
               {keywordsMaybe}
               {locationMaybe}
               {dateRangeMaybe}
-              <Button className={css.submitButton} type="submit">
-                Search
-              </Button>
+              <PrimaryButton className={css.submitButton} type="submit">
+                <FormattedMessage id="SearchCTA.buttonLabel" />
+              </PrimaryButton>
             </Form>
           );
         }}

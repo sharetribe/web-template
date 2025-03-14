@@ -770,6 +770,7 @@
   "SavedCardDetails.replaceCardTitle": "Use another payment card",
   "SavedCardDetails.savedPaymentMethodPlaceholderDesktop": "•••• •••• •••• {last4Digits}",
   "SavedCardDetails.savedPaymentMethodPlaceholderMobile": "…{last4Digits}",
+  "SearchCTA.buttonLabel": "Search",
   "SearchFiltersMobile.cancel": "CANCEL",
   "SearchFiltersMobile.filtersButtonLabel": "Filters",
   "SearchFiltersMobile.foundResults": "{count, number} {count, plural, one {result} other {results}}",
