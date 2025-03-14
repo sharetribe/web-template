@@ -2,26 +2,13 @@ import React from 'react';
 import { FormattedMessage } from '../../util/reactIntl';
 import { INQUIRY_PROCESS_NAME, resolveLatestProcessName } from '../../transactions/transaction';
 
-import { Heading, Modal } from '../../components';
+import { Heading } from '../../components';
 import UserCard from './UserCard/UserCard';
-import InquiryForm from './InquiryForm/InquiryForm';
 
 import css from './ListingPage.module.css';
 
 const SectionAuthorMaybe = props => {
-  const {
-    title,
-    listing,
-    authorDisplayName,
-    onContactUser,
-    isInquiryModalOpen,
-    onCloseInquiryModal,
-    sendInquiryError,
-    sendInquiryInProgress,
-    onSubmitInquiry,
-    currentUser,
-    onManageDisableScrolling,
-  } = props;
+  const { listing, onContactUser, currentUser } = props;
 
   if (!listing.author) {
     return null;
@@ -42,24 +29,6 @@ const SectionAuthorMaybe = props => {
         onContactUser={onContactUser}
         showContact={!isInquiryProcess}
       />
-      <Modal
-        id="ListingPage.inquiry"
-        contentClassName={css.inquiryModalContent}
-        isOpen={isInquiryModalOpen}
-        onClose={onCloseInquiryModal}
-        usePortal
-        onManageDisableScrolling={onManageDisableScrolling}
-      >
-        <InquiryForm
-          className={css.inquiryForm}
-          submitButtonWrapperClassName={css.inquirySubmitButtonWrapper}
-          listingTitle={title}
-          authorDisplayName={authorDisplayName}
-          sendInquiryError={sendInquiryError}
-          onSubmit={onSubmitInquiry}
-          inProgress={sendInquiryInProgress}
-        />
-      </Modal>
     </section>
   );
 };

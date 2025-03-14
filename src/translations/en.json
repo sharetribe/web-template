@@ -769,6 +769,7 @@
   "ProfilePage.mobileHeading": "{name}",
   "ProfilePage.noResults": "Nothing to see here yet — check back soon!",
   "ProfilePage.noReviews": "No reviews yet.",
+  "ProfilePage.requestToBook": "Request to book",
   "ProfilePage.reviewsAsACustomerTitle": "Reviews as a customer ({count})",
   "ProfilePage.reviewsFromMyCustomersTitle": "Reviews from customers ({count})",
   "ProfilePage.schemaTitle": "{name} | {marketplaceName}",

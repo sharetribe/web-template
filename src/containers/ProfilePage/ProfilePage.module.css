@@ -365,3 +365,21 @@
     max-width: 640px;
   }
 }
+
+.actionsContainer {
+  flex-direction: column;
+  align-items: baseline;
+  display: flex;
+  gap: 12px;
+
+  @media (--viewportMedium) {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.actionButton {
+  font-size: 14px;
+  padding: 20px;
+  text-transform: uppercase;
+}

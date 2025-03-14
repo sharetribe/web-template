@@ -108,6 +108,7 @@ function ProfileInfo({
   isFavorite,
   config,
 }) {
+  const userId = user?.id?.uuid;
   const { bio, displayName, publicData } = user?.attributes?.profile || {};
   const { publicData: creativePublicData } = creativeProfile?.attributes || {};
   const { userFields } = config.user;
@@ -141,6 +142,8 @@ function ProfileInfo({
   const hasBio = !!bio;
   const hasPortfolioURL = !!portfolioURL;
   const parsedPortfolioURL = `${isValidURL(portfolioURL) ? '' : 'http://'}${portfolioURL}`;
+  const parsedBookingFormURL = `https://theluupe.typeform.com/booking#creatorname=${displayName}&creatorid=${userId}`;
+
   const bioWithLinks = richText(bio, {
     linkify: true,
     longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
@@ -150,14 +153,14 @@ function ProfileInfo({
   const favoriteButton = isFavorite ? (
     <Button
       type="text"
-      icon={<HeartFilled style={{ fontSize: '25px' }} />}
+      icon={<HeartFilled style={{ fontSize: '30px' }} />}
       onClick={toggleFavorites}
       className={css.favoriteButton}
     />
   ) : (
     <Button
       type="text"
-      icon={<HeartOutlined style={{ fontSize: '25px' }} />}
+      icon={<HeartOutlined style={{ fontSize: '30px' }} />}
       onClick={toggleFavorites}
       className={css.favoriteButton}
     />
@@ -179,7 +182,12 @@ function ProfileInfo({
                 </NamedLink>
               </div>
             ) : (
-              favoriteButton
+              <div className={css.actionsContainer}>
+                <Button type="primary" className={css.actionButton} href={parsedBookingFormURL}>
+                  <FormattedMessage id="ProfilePage.requestToBook" />
+                </Button>
+                {favoriteButton}
+              </div>
             )}
           </div>
         </div>
@@ -216,7 +224,12 @@ function ProfileInfo({
             </NamedLink>
           </div>
         ) : (
-          favoriteButton
+          <div className={css.actionsContainer}>
+            {favoriteButton}
+            <Button type="primary" className={css.actionButton} href={parsedBookingFormURL}>
+              <FormattedMessage id="ProfilePage.requestToBook" />
+            </Button>
+          </div>
         )}
       </div>
     </div>
