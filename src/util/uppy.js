@@ -47,9 +47,9 @@ export async function createUppyInstance(meta, onBeforeUpload) {
         waitForMetadata: true,
         limit: 5,
       })
-      .use(GoldenRetriever, { serviceWorker: true })
-      // .use(Dropbox, config)
-      // .use(GoogleDrive, config);
+      .use(GoldenRetriever, { serviceWorker: true });
+    // .use(Dropbox, config)
+    // .use(GoogleDrive, config);
 
     // Register Service Worker if available
     if ('serviceWorker' in navigator) {
