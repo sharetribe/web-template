@@ -762,14 +762,14 @@ export const LISTING_TABS_PRODUCT_CATEGORIES = [
     name: 'Photos',
     id: 'photos',
   },
-  {
-    name: 'Videos',
-    id: 'videos',
-  },
-  {
-    name: 'Illustrations',
-    id: 'illustrations',
-  },
+  // {
+  //   name: 'Videos',
+  //   id: 'videos',
+  // },
+  // {
+  //   name: 'Illustrations',
+  //   id: 'illustrations',
+  // },
   // [TODO:] Disabled for the time being
   // {
   //   name: 'AI Images',
