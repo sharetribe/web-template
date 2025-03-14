@@ -18,7 +18,7 @@
                 {{t "TransactionEmails.Greetings" "Dear {name}," name=provider.display-name }}</p>
                 <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">
                 {{t "SellPurchaseRefundApprovedProvider.ContentRefundApproved" "The refund for the order of <salelink>{listingTitle}</salelink>. The payment will be returned to the buyer, {customerDisplayName}, within 7-10 business days." listingTitle=listing.title salelink=(html-tag "a" target=(concat "_blank") style=(concat "text-decoration:none;color:" (asset "design/branding.json" "marketplaceColors.notificationPrimaryButton" "#fb7327")) href=(concat marketplace.url "/sale/" (url-encode id) "/")) customerDisplayName=customer.display-name}}</p>
-                <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "SellPurchaseRefundApprovedProvider.ContentAssistance" "If you have any concerns about this refund or need assistance, please contact us."}}</p>
+                <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "SellPurchaseRefundApprovedProvider.ContentAssistance" "If you have any questions or need further assistance, please don’t hesitate to reach out to us."}}</p>
                 <table style="padding:16px 0 0" align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                   <tbody>
                     <tr>
