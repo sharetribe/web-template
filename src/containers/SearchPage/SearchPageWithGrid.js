@@ -103,27 +103,27 @@ export class SearchPageComponent extends Component {
     const isKeywordSearch = isMainSearchTypeKeywords(config);
     return [
       ...listingFields,
-      ...(isKeywordSearch ? [{
-          key: "location",
-          scope: "public",
-          schemaType: "location",
-          filterConfig: {
-            indexForSearch: true,
-              group: "primary",
-          },
-          categoryConfig: {
-            limitToCategoryIds: true,
-            categoryIds: [
-                  "creatives"
-              ]
-          },
-          listingTypeConfig: {
-            limitToListingTypeIds: true,
-            listingTypeIds: [
-                  "profile-listing"
-              ]
-          }
-        }] : []),
+      ...(isKeywordSearch
+        ? [
+            {
+              key: 'location',
+              scope: 'public',
+              schemaType: 'location',
+              filterConfig: {
+                indexForSearch: true,
+                group: 'primary',
+              },
+              categoryConfig: {
+                limitToCategoryIds: true,
+                categoryIds: ['creatives'],
+              },
+              listingTypeConfig: {
+                limitToListingTypeIds: true,
+                listingTypeIds: ['profile-listing'],
+              },
+            },
+          ]
+        : []),
     ];
   }
 
