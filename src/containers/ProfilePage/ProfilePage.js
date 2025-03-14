@@ -190,6 +190,7 @@ export const ProfilePageComponent = props => {
         isFavorite={isFavorite}
         listings={listings}
         reviews={reviews}
+        pathParams={pathParams}
       />
     </Page>
   );

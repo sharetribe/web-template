@@ -114,9 +114,8 @@ export const handleContactUser = parameters => () => {
     location,
     routes,
     setInitialValues,
-    setInquiryModalOpen,
+    onRequestToBook,
   } = parameters;
-
   if (!currentUser) {
     const state = { from: `${location.pathname}${location.search}${location.hash}` };
 
@@ -135,33 +134,8 @@ export const handleContactUser = parameters => () => {
     const pathParams = { missingAccessRight: NO_ACCESS_PAGE_INITIATE_TRANSACTIONS };
     history.push(createResourceLocatorString('NoAccessPage', routes, pathParams, {}));
   } else {
-    setInquiryModalOpen(true);
+    onRequestToBook();
   }
-};
-
-/**
- * Callback for the inquiry modal to submit aka create inquiry transaction on ListingPage.
- * Note: this is for booking and purchase processes. Inquiry process is handled through handleSubmit.
- *
- * @param {Object} parameters all the info needed to create inquiry.
- */
-export const handleSubmitInquiry = parameters => values => {
-  const { history, params, getListing, onSendInquiry, routes, setInquiryModalOpen } = parameters;
-
-  const listingId = new UUID(params.id);
-  const listing = getListing(listingId);
-  const { message } = values;
-
-  onSendInquiry(listing, message.trim())
-    .then(txId => {
-      setInquiryModalOpen(false);
-
-      // Redirect to OrderDetailsPage
-      history.push(createResourceLocatorString('OrderDetailsPage', routes, { id: txId.uuid }, {}));
-    })
-    .catch(() => {
-      // Ignore, error handling in duck file
-    });
 };
 
 /**

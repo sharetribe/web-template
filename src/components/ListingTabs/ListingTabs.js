@@ -22,6 +22,7 @@ import css from './ListingTabs.module.css';
 
 export const ListingTabs = ({
   items = [],
+  pathParams,
   pagination,
   queryInProgress,
   queryListingsError,
@@ -158,6 +159,7 @@ export const ListingTabs = ({
         {enablePagination && (
           <Pagination
             pageName={pageName}
+            pagePathParams={pathParams}
             pageSearchParams={listingsQueryParams}
             pagination={pagination}
           />

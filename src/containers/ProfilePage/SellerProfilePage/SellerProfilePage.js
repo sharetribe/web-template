@@ -55,6 +55,7 @@ function SellerProfilePage({
   isFavorite = false,
   listings = [],
   reviews = [],
+  pathParams = {},
 }) {
   const routeConfiguration = useRouteConfiguration();
   const config = useConfiguration();
@@ -117,11 +118,11 @@ function SellerProfilePage({
   );
 
   function createManageLocatorString(queryParams) {
-    const pathParams = { id: userId };
+    const newPathParams = { id: userId };
     const destination = createResourceLocatorString(
       'ProfilePage',
       routeConfiguration,
-      pathParams,
+      newPathParams,
       queryParams
     );
     history.replace(destination);
@@ -243,6 +244,7 @@ function SellerProfilePage({
       {enableListingTabs ? (
         <ListingTabs
           items={items}
+          pathParams={pathParams}
           pagination={pagination}
           queryInProgress={queryStatus.queryInProgress}
           queryListingsError={queryStatus.queryListingsError}
