@@ -142,6 +142,16 @@
   }
 }
 
+.txExpired {
+  composes: paymentInfo;
+  text-align: left;
+  margin: 0 0 12px 0;
+
+  @media (--viewportLarge) {
+    margin: 0 0 12px 0;
+  }
+}
+
 .submitButton {
   margin-top: 22px;
 
