@@ -317,15 +317,15 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
     .then(response => {
       const portfolioListing = response.data.data;
       const included = response.data.included || [];
-      const images =
-        included
-          .filter(item => item.type === 'image')
-          .map(img => ({
-            id: img.id.uuid,
-            attributes: img.attributes || { variants: {} },
-            type: 'imageAsset',
-          })) || [];
-
+      const listingImages = portfolioListing?.relationships?.images?.data || [];
+      const images = listingImages.map(image => {
+        const asset = included.find(element => element.id.uuid === image.id.uuid);
+        return {
+          id: asset.id.uuid,
+          attributes: asset.attributes || { variants: {} },
+          type: 'imageAsset',
+        };
+      });
       const videos = portfolioListing?.attributes?.publicData?.videos || [];
       dispatch(fetchPortfolioSuccess({ portfolioListing, images, videos }));
       return { ...portfolioListing, images, videos };
