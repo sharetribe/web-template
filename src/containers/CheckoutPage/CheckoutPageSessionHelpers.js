@@ -185,7 +185,8 @@ export const handlePageData = ({ orderData, listing, transaction }, storageKey, 
 
   const listingProcessName = getListingProcessName(pageDataListing);
   const txProcessName = getTxProcessName(pageDataTx);
-  const isTxExpired = txProcessName !== listingProcessName;
+  const isTxExpired =
+    !!txProcessName && !!listingProcessName && txProcessName !== listingProcessName;
 
   return {
     ...restPageData,
