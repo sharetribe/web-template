@@ -338,7 +338,7 @@ export const sendInquiry = (listing, message, { isOwn = false, listingConfig } =
   dispatch(sendInquiryRequest());
 
   const { lastTransaction } = getState().ListingPage;
-  const existedTxId = getInProgressTxId({ lastTransaction, listing });
+  const existedTxId = getInProgressTxId({ tx: lastTransaction, listing });
 
   if (existedTxId && isSingleItemStockType({ listing, listingConfig }) && !isOwn) {
     return sdk.messages
