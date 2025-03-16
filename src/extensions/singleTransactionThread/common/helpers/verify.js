@@ -4,6 +4,7 @@ import {
   resolveLatestProcessName,
 } from '../../../../transactions/transaction';
 import { STOCK_ONE_ITEM } from '../../../../util/types';
+import { getListingProcessName } from '../../../common/helpers/getProcessName';
 
 /**
  * Function to check whether we should reuse the transaction to avoid multiple threads
@@ -11,15 +12,17 @@ import { STOCK_ONE_ITEM } from '../../../../util/types';
  * Check if the tx is not finsished yet by getting available transitions
  *
  * @param {Object?} tx Transation info from sdk response
+ * @param {Object?} listing Current listing
  */
-export const getInProgressTxId = tx => {
+export const getInProgressTxId = ({ tx, listing }) => {
   if (!tx) {
     return null;
   }
 
   const { lastTransition, processName: txProcessName } = tx.attributes;
   const processName = resolveLatestProcessName(txProcessName);
-  if (!processName) {
+  const listingProcessName = getListingProcessName(listing);
+  if (!processName || processName !== listingProcessName) {
     return null;
   }
   const process = getProcess(processName);

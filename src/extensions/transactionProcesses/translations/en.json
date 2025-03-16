@@ -18,5 +18,6 @@
   "TransactionPanel.managerNameContent": "Name: {managerName}",
   "TransactionPanel.managerPhoneNumberContent": "Phone Number: {managerPhoneNumber}",
   "TransactionPanel.managerEmailTitle": "Email: ",
-  "TransactionPanel.managerAddressTitle": "Address of location: "
+  "TransactionPanel.managerAddressTitle": "Address of location: ",
+  "StripePaymentForm.txExpired": "Your previous inquiry has expired due to listings updating. Submitting this form will create a new transaction without the old inquiries."
 }

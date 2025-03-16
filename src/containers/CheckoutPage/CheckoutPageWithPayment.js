@@ -331,7 +331,7 @@ export const CheckoutPageWithPayment = props => {
     isTransactionInitiateListingNotFoundError(speculateTransactionError) ||
     isTransactionInitiateListingNotFoundError(initiateOrderError);
 
-  const { listing, transaction, orderData } = pageData;
+  const { listing, transaction, orderData, isTxExpired } = pageData;
   const existingTransaction = ensureTransaction(transaction);
   const speculatedTransaction = ensureTransaction(speculatedTransactionMaybe, {}, null);
 
@@ -521,6 +521,7 @@ export const CheckoutPageWithPayment = props => {
                 marketplaceName={config.marketplaceName}
                 isBooking={isBookingProcessAlias(transactionProcessAlias)}
                 isFuzzyLocation={config.maps.fuzzy.enabled}
+                isTxExpired={isTxExpired}
               />
             ) : null}
           </section>

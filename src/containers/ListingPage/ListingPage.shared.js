@@ -147,7 +147,7 @@ export const handleContactUser = parameters => () => {
     history.push(createResourceLocatorString('NoAccessPage', routes, pathParams, {}));
   } else if (
     lastTransaction &&
-    getInProgressTxId(lastTransaction) &&
+    getInProgressTxId({ lastTransaction, listing }) &&
     isSingleItemStockType({ listing, listingConfig }) &&
     !isOwnListing
   ) {
@@ -243,7 +243,8 @@ export const handleSubmit = parameters => values => {
   const quantityMaybe = Number.isInteger(quantity) ? { quantity } : {};
   const deliveryMethodMaybe = deliveryMethod ? { deliveryMethod } : {};
   const transactionMaybe =
-    getInProgressTxId(lastTransaction) && isSingleItemStockType({ listing, listingConfig })
+    getInProgressTxId({ lastTransaction, listing }) &&
+    isSingleItemStockType({ listing, listingConfig })
       ? { transaction: lastTransaction }
       : {};
 
