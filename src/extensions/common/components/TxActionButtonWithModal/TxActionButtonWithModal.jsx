@@ -44,9 +44,15 @@ const TxActionButtonWithModal = ({
     }
   };
 
-  const handleConfirmModal = values => {
+  const handleConfirmModal = async values => {
+    await onAction?.(values);
     setIsConfirmModalOpen(false);
-    onAction?.(values);
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth',
+    });
+    //TODO: Add toast
   };
 
   return (
@@ -109,7 +115,7 @@ const TxActionButtonWithModal = ({
               )}
 
               <div className={css.ctaButtonWrapper}>
-                <PrimaryButton>
+                <PrimaryButton inProgress={inProgress} disabled={buttonDisabled}>
                   {intl.formatMessage({
                     id:
                       confirmButtonTranslationId ||

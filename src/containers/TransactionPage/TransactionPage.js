@@ -79,7 +79,14 @@ const onDisputeOrder = (
   const params = disputeReason ? { protectedData: { disputeReason } } : {};
   onTransition(currentTransactionId, transitionName, params)
     .then(r => {
-      return setDisputeSubmitted(true);
+      setDisputeSubmitted(true);
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
+      });
+
+      //TODO: Add toast
     })
     .catch(e => {
       // Do nothing.
@@ -281,6 +288,12 @@ export const TransactionPageComponent = props => {
       .then(r => {
         setReviewModalOpen(false);
         setReviewSubmitted(true);
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: 'smooth',
+        });
+      //TODO: Add toast
       })
       .catch(e => {
         // Do nothing.
