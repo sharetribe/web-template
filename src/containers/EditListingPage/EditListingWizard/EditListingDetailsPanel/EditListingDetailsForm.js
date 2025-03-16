@@ -155,6 +155,7 @@ const CategoryField = props => {
     handleCategoryChange,
     intl,
     formApi,
+    listingTypes,
   } = props;
 
   const currentCategoryKey = `${prefix}${level}`;
@@ -168,6 +169,12 @@ const CategoryField = props => {
     if (alias && unitType) {
       formApi.change('transactionProcessAlias', alias);
       formApi.change('unitType', unitType);
+    } else {
+      const selectedListingType = listingTypes.find(
+        config => config.listingType === values.listingType
+      );
+      formApi.change('transactionProcessAlias', selectedListingType.transactionProcessAlias);
+      formApi.change('unitType', selectedListingType.unitType);
     }
 
     if (handleCategoryChange) {
@@ -218,6 +225,7 @@ const CategoryField = props => {
           prefix={prefix}
           handleCategoryChange={handleCategoryChange}
           intl={intl}
+          listingTypes={listingTypes}
         />
       ) : null}
     </>
@@ -229,7 +237,15 @@ const FieldSelectCategory = props => {
     checkIfInitialValuesExist();
   }, []);
 
-  const { prefix, listingCategories, formApi, intl, setAllCategoriesChosen, values } = props;
+  const {
+    prefix,
+    listingCategories,
+    formApi,
+    intl,
+    setAllCategoriesChosen,
+    values,
+    listingTypes,
+  } = props;
 
   // Counts the number of selected categories in the form values based on the given prefix.
   const countSelectedCategories = () => {
@@ -264,6 +280,7 @@ const FieldSelectCategory = props => {
       handleCategoryChange={handleCategoryChange}
       intl={intl}
       formApi={formApi}
+      listingTypes={listingTypes}
     />
   );
 };
@@ -444,6 +461,7 @@ const EditListingDetailsFormComponent = props => (
               intl={intl}
               allCategoriesChosen={allCategoriesChosen}
               setAllCategoriesChosen={setAllCategoriesChosen}
+              listingTypes={selectableListingTypes}
             />
           )}
 

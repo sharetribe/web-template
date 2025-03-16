@@ -6,7 +6,7 @@ import * as branding from './configBranding';
 import * as layout from './configLayout';
 import * as analytics from './configAnalytics';
 import * as user from './configUser';
-import { categories } from '../extensions/common/config/configCategories';
+import { categories as categoryConfiguration } from '../extensions/common/config/configCategories';
 
 // NOTE: only expose configuration that should be visible in the
 // client side, don't add any server secrets to this file.
@@ -48,7 +48,7 @@ const defaultConfig = {
   listing,
 
   // Modify listing category in src/extensions/common
-  categories,
+  categoryConfiguration,
 
   user,
   // Modify search settings data in configSearch.js

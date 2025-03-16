@@ -1420,7 +1420,7 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     user: mergeUserConfig(configAsset, defaultConfigs),
 
     // Set category configuration (includes fixed key, array of categories etc.
-    categoryConfiguration: mergeListingCategoryConfigs(categoryConfiguration, defaultConfigs.categories),
+    categoryConfiguration: mergeListingCategoryConfigs(categoryConfiguration, defaultConfigs.categoryConfiguration),
 
     // Listing configuration comes entirely from hosted assets by default.
     listing: mergeListingConfig(configAsset, defaultConfigs, validHostedCategories),
