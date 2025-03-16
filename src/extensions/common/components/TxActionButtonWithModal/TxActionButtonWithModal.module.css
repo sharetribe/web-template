@@ -1,0 +1,13 @@
+.modalTitle {
+  composes: marketplaceModalTitleStyles from global;
+}
+
+.ctaButtonWrapper {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+}
+
+.confirmModalCheckBoxIcon {
+  margin-right: 4px;
+}
