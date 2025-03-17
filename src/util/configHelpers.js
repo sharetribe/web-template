@@ -307,8 +307,8 @@ const mergeLayouts = (layoutConfig, defaultLayout) => {
   );
 
   const listingImage = validVariantConfig(
-    layoutConfig?.listingImage,
     defaultLayout?.listingImage,
+    layoutConfig?.listingImage,
     ['cropImage'],
     { variantType: 'cropImage', aspectWidth: 1, aspectHeight: 1, variantPrefix: 'listing-card' }
   );
