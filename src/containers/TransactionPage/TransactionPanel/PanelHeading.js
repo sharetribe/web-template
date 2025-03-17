@@ -44,11 +44,13 @@ const PanelHeading = props => {
     listingTitle,
     listingDeleted,
     isCustomerBanned,
-    nextStepTranslationId
+    listing,
+    nextStepTranslationId,
   } = props;
 
   const isProvider = transactionRole === 'provider';
   const isCustomer = !isProvider;
+  const { listingType, categoryLevel1 } = listing.attributes.publicData;
 
   const defaultRootClassName = isCustomer ? css.headingOrder : css.headingSale;
   const titleClasses = classNames(rootClassName || defaultRootClassName, className);
@@ -61,7 +63,14 @@ const PanelHeading = props => {
         <span className={css.mainTitle}>
           <FormattedMessage
             id={`TransactionPage.${processName}.${transactionRole}.${processState}.title`}
-            values={{ customerName, providerName, breakline }}
+            values={{
+              customerName,
+              providerName,
+              breakline,
+              deliveryMethod,
+              listingType: listingType?.replaceAll('-', '_'),
+              categoryLevel1: categoryLevel1?.replaceAll('-', '_'),
+            }}
           />
         </span>
       </H1>
@@ -77,7 +86,9 @@ const PanelHeading = props => {
       </H2>
       {!!intl.messages[nextStepTranslationId] && (
         <div className={css.nextStepContainer}>
-          <span className={css.nextStepTitle}>{intl.formatMessage({ id: 'TransactionPage.nextStep' })}</span>
+          <span className={css.nextStepTitle}>
+            {intl.formatMessage({ id: 'TransactionPage.nextStep' })}
+          </span>
           <span>{intl.formatMessage({ id: nextStepTranslationId })}</span>
         </div>
       )}
