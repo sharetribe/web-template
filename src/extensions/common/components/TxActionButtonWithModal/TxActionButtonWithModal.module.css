@@ -1,5 +1,6 @@
 .modalTitle {
   composes: marketplaceModalTitleStyles from global;
+  text-align: center;
 }
 
 .ctaButtonWrapper {

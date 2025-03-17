@@ -98,7 +98,7 @@ const TxActionButtonWithModal = ({
           usePortal
         >
           <div>
-            <h2 className={css.confirmModalCheckBoxIcon}>
+            <h2 className={css.modalTitle}>
               {intl.formatMessage({
                 id:
                   confirmModalTitleTranslationId ||
