@@ -224,7 +224,6 @@ const OrderPanel = props => {
     currentUser,
     listingCategoryConfigs,
   } = props;
-  console.log(listingCategoryConfigs);
 
   const publicData = listing?.attributes?.publicData || {};
   const { listingType, unitType, transactionProcessAlias = '', categoryLevel1 } = publicData || {};

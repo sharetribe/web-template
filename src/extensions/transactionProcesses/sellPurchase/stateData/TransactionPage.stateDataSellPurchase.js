@@ -92,6 +92,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
     processState,
     showDetailCardHeadings: true,
     progressStep,
+    nextStepTranslationId: `TransactionPage.sell-purchase.${transactionRole}.${processState}.nextStep`,
   };
 
   return new ConditionalResolver([processState, transactionRole])
@@ -205,6 +206,8 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
         },
       });
 
+      const processStatePostfix = buyerMarkMetManager ? '' : `.${MARK_MET_MANAGER_TRANSITION_NAME}`;
+
       return {
         ...defaultStateData,
         showRefundAvailabileNotice: true,
@@ -227,6 +230,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
             formConfigs: [getRefundReasonField({ role: CUSTOMER })],
           }
         ),
+        nextStepTranslationId: `TransactionPage.sell-purchase.${transactionRole}.${processState}${processStatePostfix}.nextStep`,
       };
     })
     .cond([states.PURCHASED, PROVIDER], () => {
@@ -239,6 +243,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
               getProviderUpdateProgressPrimaryButtonProps({ categoryLevel1 })
             ),
           };
+      const processStatePostfix = sellerMarkMachinePlaced ? '' : `.${MARK_MACHINE_PLACE_TRANSITION_NAME}`;
 
       return {
         ...defaultStateData,
@@ -253,6 +258,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
             formConfigs: [getRefundReasonField({ role: PROVIDER })],
           }
         ),
+        nextStepTranslationId: `TransactionPage.sell-purchase.${transactionRole}.${processState}${processStatePostfix}.nextStep`,
         ...primaryButtonMaybe,
       };
     })
@@ -269,6 +275,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
         },
       });
 
+      const processStatePostfix = buyerMarkMetManager ? '' : `.${MARK_MET_MANAGER_TRANSITION_NAME}`;
       return {
         ...defaultStateData,
         showRefundAvailabileNotice: true,
@@ -291,6 +298,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
             formConfigs: [getRefundReasonField({ name: 'disputeReason' })],
           }
         ),
+        nextStepTranslationId: `TransactionPage.sell-purchase.${transactionRole}.${processState}${processStatePostfix}.nextStep`,
       };
     })
     .cond([states.STRIPE_INTENT_CAPTURED, PROVIDER], () => {
@@ -303,6 +311,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
               getProviderUpdateProgressPrimaryButtonProps({ categoryLevel1 })
             ),
           };
+      const processStatePostfix = sellerMarkMachinePlaced ? '' : `.${MARK_MACHINE_PLACE_TRANSITION_NAME}`;
 
       return {
         ...defaultStateData,
@@ -317,6 +326,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
             formConfigs: [getRefundReasonField({ name: 'disputeReason' })],
           }
         ),
+        nextStepTranslationId: `TransactionPage.sell-purchase.${transactionRole}.${processState}${processStatePostfix}.nextStep`,
         ...primaryButtonMaybe,
       };
     })
@@ -329,6 +339,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
           categoryLevel1,
         },
       });
+      const processStatePostfix = buyerMarkMetManager ? '' : `.${MARK_MET_MANAGER_TRANSITION_NAME}`;
 
       return {
         ...defaultStateData,
@@ -339,6 +350,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
           CUSTOMER,
           primaryButtonProps
         ),
+        nextStepTranslationId: `TransactionPage.sell-purchase.${transactionRole}.${processState}${processStatePostfix}.nextStep`,
       };
     })
     .cond([states.REFUND_DISABLED, PROVIDER], () => {
@@ -351,12 +363,14 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
               getProviderUpdateProgressPrimaryButtonProps({ categoryLevel1 })
             ),
           };
+      const processStatePostfix = sellerMarkMachinePlaced ? '' : `.${MARK_MACHINE_PLACE_TRANSITION_NAME}`;
 
       return {
         ...defaultStateData,
         showRefundAvailabileNotice: true,
         showActionButtons: true,
         ...primaryButtonMaybe,
+        nextStepTranslationId: `TransactionPage.sell-purchase.${transactionRole}.${processState}${processStatePostfix}.nextStep`,
       };
     })
     .cond([states.SELLER_HANDLE_DISPUTED, CUSTOMER], () => {

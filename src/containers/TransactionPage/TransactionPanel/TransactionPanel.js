@@ -251,6 +251,7 @@ export class TransactionPanelComponent extends Component {
               listingId={listing?.id?.uuid}
               listingTitle={listingTitle}
               listingDeleted={listingDeleted}
+              nextStepTranslationId={stateData.nextStepTranslationId}
             />
 
             <InquiryMessageMaybe

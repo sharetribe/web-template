@@ -622,3 +622,18 @@
 .refundAvailableNoticeTitle {
   font-weight: var(--fontWeightBold);
 }
+
+.nextStepContainer {
+  margin: 0 24px;
+  padding: 18px 0;
+
+  border-bottom: 1px solid var(--colorGrey100);
+
+  @media (--viewportLarge) {
+    margin: 0;
+    padding: 0 0 32px 0;
+  }
+}
+.nextStepTitle {
+  font-weight: var(--fontWeightBold);
+}

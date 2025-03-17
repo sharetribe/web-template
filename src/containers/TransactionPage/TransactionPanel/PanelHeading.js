@@ -44,6 +44,7 @@ const PanelHeading = props => {
     listingTitle,
     listingDeleted,
     isCustomerBanned,
+    nextStepTranslationId
   } = props;
 
   const isProvider = transactionRole === 'provider';
@@ -74,6 +75,12 @@ const PanelHeading = props => {
           </>
         ) : null}
       </H2>
+      {!!intl.messages[nextStepTranslationId] && (
+        <div className={css.nextStepContainer}>
+          <span className={css.nextStepTitle}>{intl.formatMessage({ id: 'TransactionPage.nextStep' })}</span>
+          <span>{intl.formatMessage({ id: nextStepTranslationId })}</span>
+        </div>
+      )}
       {isCustomer && listingDeleted ? (
         <p className={css.transactionInfoMessage}>
           <FormattedMessage id="TransactionPanel.messageDeletedListing" />
