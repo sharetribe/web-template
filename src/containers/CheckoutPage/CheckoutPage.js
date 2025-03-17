@@ -47,10 +47,13 @@ import { toastSuccess } from '../../extensions/common/components/Toast/Toast';
 
 const STORAGE_KEY = 'CheckoutPage';
 
-const onSubmitCallback = () => {
+const onSubmitCallback = intl => {
   toastSuccess({
-    titleId: 'CheckoutPage.sell-purchase.toast.title.completePayment',
-    contentId: 'CheckoutPage.sell-purchase.toast.content.completePayment',
+    toastProps: {
+      titleId: 'CheckoutPage.sell-purchase.toast.title.completePayment',
+      contentId: 'CheckoutPage.sell-purchase.toast.content.completePayment',
+      intl,
+    },
   });
   clearData(STORAGE_KEY);
 };
@@ -173,7 +176,7 @@ const EnhancedCheckoutPage = props => {
       listingTitle={listingTitle}
       title={title}
       onInquiryWithoutPayment={onInquiryWithoutPayment}
-      onSubmitCallback={onSubmitCallback}
+      onSubmitCallback={() => onSubmitCallback(intl)}
       {...props}
     />
   ) : processName && !isInquiryProcess && !speculateTransactionInProgress ? (
@@ -188,7 +191,7 @@ const EnhancedCheckoutPage = props => {
       setPageData={setPageData}
       listingTitle={listingTitle}
       title={title}
-      onSubmitCallback={onSubmitCallback}
+      onSubmitCallback={() => onSubmitCallback(intl)}
       {...props}
     />
   ) : (
