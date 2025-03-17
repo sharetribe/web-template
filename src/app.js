@@ -5,6 +5,8 @@ import ReactDOMServer from 'react-dom/server';
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter, StaticRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { Slide, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import loadable from '@loadable/component';
 import difference from 'lodash/difference';
 import mapValues from 'lodash/mapValues';
@@ -263,6 +265,7 @@ export const ClientApp = props => {
             <IncludeScripts config={appConfig} />
             <BrowserRouter>
               <Routes logLoadDataCalls={logLoadDataCalls} />
+              <ToastContainer draggable transition={Slide} limit={3} />
             </BrowserRouter>
           </HelmetProvider>
         </Provider>
@@ -301,6 +304,7 @@ export const ServerApp = props => {
             <IncludeScripts config={appConfig} />
             <StaticRouter location={url} context={context}>
               <Routes />
+              <ToastContainer draggable transition={Slide} limit={3} />
             </StaticRouter>
           </HelmetProvider>
         </Provider>

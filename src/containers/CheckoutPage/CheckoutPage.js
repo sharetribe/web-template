@@ -43,10 +43,15 @@ import CheckoutPageWithPayment, {
   loadInitialDataForStripePayments,
 } from './CheckoutPageWithPayment';
 import CheckoutPageWithInquiryProcess from './CheckoutPageWithInquiryProcess';
+import { toastSuccess } from '../../extensions/common/components/Toast/Toast';
 
 const STORAGE_KEY = 'CheckoutPage';
 
 const onSubmitCallback = () => {
+  toastSuccess({
+    titleId: 'CheckoutPage.sell-purchase.toast.title.completePayment',
+    contentId: 'CheckoutPage.sell-purchase.toast.content.completePayment',
+  });
   clearData(STORAGE_KEY);
 };
 
@@ -247,12 +252,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(savePaymentMethod(stripeCustomer, stripePaymentMethodId)),
 });
 
-const CheckoutPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(EnhancedCheckoutPage);
+const CheckoutPage = compose(connect(mapStateToProps, mapDispatchToProps))(EnhancedCheckoutPage);
 
 CheckoutPage.setInitialValues = (initialValues, saveToSessionStorage = false) => {
   if (saveToSessionStorage) {

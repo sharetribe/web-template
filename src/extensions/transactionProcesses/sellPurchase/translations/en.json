@@ -6,6 +6,8 @@
   "EditListingWizard.sell-purchase.new.saveLocation": "Next",
   "CheckoutPage.sell-purchase.orderBreakdown": "Order breakdown",
   "CheckoutPage.sell-purchase.title": "Complete order",
+  "CheckoutPage.sell-purchase.toast.title.completePayment": "Payment successful!",
+  "CheckoutPage.sell-purchase.toast.content.completePayment": "Check the next steps above for further instructions.",
   "TransactionPanel.sell-purchase.orderBreakdownTitle": "Order breakdown",
 
   "InboxPage.sell-purchase.inquiry.status": "Inquiry",
