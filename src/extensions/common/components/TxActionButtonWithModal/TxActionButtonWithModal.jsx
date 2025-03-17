@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { SquareCheck } from 'lucide-react';
+import { useDispatch } from 'react-redux';
 
 import { Modal, PrimaryButton } from '../../../../components';
 import TransactionModalForm from '../../../transactionProcesses/components/TransactionModalForm/TransactionModalForm';
 import { toastSuccess } from '../Toast/Toast';
+import { manageDisableScrolling } from '../../../../ducks/ui.duck';
 
 import css from './TxActionButtonWithModal.module.css';
 import modalCss from '../../../../components/Modal/Modal.module.css';
@@ -19,6 +21,9 @@ const TxActionButtonWithModal = ({
   intl,
 }) => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const dispatch = useDispatch();
+  const onManageDisableScrolling = (componentId, disableScrolling) =>
+    dispatch(manageDisableScrolling(componentId, disableScrolling));
 
   const {
     inProgress,
@@ -52,6 +57,10 @@ const TxActionButtonWithModal = ({
   const handleConfirmModal = async values => {
     await onAction?.(values);
     setIsConfirmModalOpen(false);
+
+    // Wait 0.5 second to auto scroll
+    await new Promise(r => setTimeout(r, 500));
+
     window.scrollTo({
       top: 0,
       left: 0,
@@ -82,7 +91,7 @@ const TxActionButtonWithModal = ({
           id={`${id}ConfirmActionModal`}
           isOpen={isConfirmModalOpen}
           onClose={() => setIsConfirmModalOpen(false)}
-          onManageDisableScrolling={() => {}}
+          onManageDisableScrolling={onManageDisableScrolling}
           closeButtonMessage="Close"
           containerClassName={modalCss.modalContainer}
           contentClassName={modalCss.modalContent}
