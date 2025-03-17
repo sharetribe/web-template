@@ -546,7 +546,7 @@ export function requestShowListing(actionPayload, config) {
   return (dispatch, getState, sdk) => {
     const imageVariantInfo = getImageVariantInfo(config.layout.listingImage);
     const queryParams = {
-      include: ['author', 'images', 'currentStock'],
+      include: ['author', 'images', 'currentStock', 'author.profileImage'],
       'fields.image': imageVariantInfo.fieldsImage,
       ...imageVariantInfo.imageVariants,
     };
