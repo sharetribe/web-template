@@ -73,7 +73,7 @@ const EditListingPhotosPanel = props => {
       cityRegion: cityRegion,
     }
     console.log('params', params)
-    const url = `http://localhost:3001/image-generator?${new URLSearchParams(params)}`;
+    const url = `https://agent.vendingvillage.com/image-generator?${new URLSearchParams(params)}`;
     const maxWidth = 1120;
     const maxHeight = 500;
     // Calculate 90% of available screen dimensions
