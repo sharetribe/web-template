@@ -31,11 +31,13 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
     categoryLevel1: rawCategoryLevel1,
     listingType: rawListingType,
   } = transaction.listing.attributes.publicData;
+  const { deliveryMethod = 'none' } = transaction.attributes.protectedData;
   const categoryLevel1 = rawCategoryLevel1?.replaceAll('-', '_');
   const listingType = rawListingType?.replaceAll('-', '_');
   const translationValues = {
     categoryLevel1,
     listingType,
+    deliveryMethod,
   };
 
   const defaultStateData = {
@@ -66,6 +68,7 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
         primaryButtonProps: actionButtonProps(transitions.MARK_RECEIVED_FROM_PURCHASED, CUSTOMER, {
           isConfirmNeeded: true,
           showConfirmStatement: true,
+          showReminderStatement: true,
           confirmStatementTranslationValues: translationValues,
           txInfo: translationValues,
         }),
@@ -96,6 +99,7 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
         primaryButtonProps: actionButtonProps(transitions.MARK_RECEIVED, CUSTOMER, {
           isConfirmNeeded: true,
           showConfirmStatement: true,
+          showReminderStatement: true,
           confirmStatementTranslationValues: translationValues,
           txInfo: translationValues,
         }),
