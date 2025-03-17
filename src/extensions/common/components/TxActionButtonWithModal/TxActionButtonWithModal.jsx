@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
+import { SquareCheck } from 'lucide-react';
 
 import { Modal, PrimaryButton } from '../../../../components';
 import TransactionModalForm from '../../../transactionProcesses/components/TransactionModalForm/TransactionModalForm';
+import { toastSuccess } from '../Toast/Toast';
 
 import css from './TxActionButtonWithModal.module.css';
 import modalCss from '../../../../components/Modal/Modal.module.css';
-import { SquareCheck } from 'lucide-react';
 
 const TxActionButtonWithModal = ({
   buttonProps,
@@ -31,9 +32,13 @@ const TxActionButtonWithModal = ({
     reminderStatementTranslationId,
     confirmButtonTranslationId,
     confirmModalTitleTranslationId,
+    toastTitleTranslationId,
+    toastContentTranslationId,
     error: actionError,
     errorText,
     formConfigs,
+    transitionKey,
+    txInfo,
   } = buttonProps || {};
 
   const handleClick = () => {
@@ -52,7 +57,16 @@ const TxActionButtonWithModal = ({
       left: 0,
       behavior: 'smooth',
     });
-    //TODO: Add toast
+    toastSuccess({
+      titleId:
+        toastTitleTranslationId ||
+        `TransactionPage.${processName}.${transactionRole}.transition-${transitionKey}.toastTitle`,
+      contentId:
+        toastContentTranslationId ||
+        `TransactionPage.${processName}.${transactionRole}.transition-${transitionKey}.toastContent`,
+      intl,
+      translationValues: txInfo,
+    });
   };
 
   return (

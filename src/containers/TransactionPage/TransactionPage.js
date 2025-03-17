@@ -293,7 +293,6 @@ export const TransactionPageComponent = props => {
           left: 0,
           behavior: 'smooth',
         });
-      //TODO: Add toast
       })
       .catch(e => {
         // Do nothing.

@@ -63,7 +63,7 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
           showConfirmStatement: true,
           confirmStatementTranslationValues: translationValues,
           showReminderStatement: true,
-          buttonTextValues: translationValues,
+          txInfo: translationValues,
         }),
       };
     })
@@ -83,7 +83,7 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
           confirmStatementTranslationValues: translationValues,
           showReminderStatement: true,
           actionButtonTranslationId,
-          buttonTextValues: translationValues,
+          txInfo: translationValues,
         }),
       };
     })
@@ -99,7 +99,7 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
           showConfirmStatement: true,
           confirmStatementTranslationValues: translationValues,
           showReminderStatement: true,
-          buttonTextValues: translationValues,
+          txInfo: translationValues,
         }),
       };
     })

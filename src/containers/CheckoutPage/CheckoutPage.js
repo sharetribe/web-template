@@ -49,11 +49,9 @@ const STORAGE_KEY = 'CheckoutPage';
 
 const onSubmitCallback = intl => {
   toastSuccess({
-    toastProps: {
-      titleId: 'CheckoutPage.sell-purchase.toast.title.completePayment',
-      contentId: 'CheckoutPage.sell-purchase.toast.content.completePayment',
-      intl,
-    },
+    titleId: 'CheckoutPage.sell-purchase.completePayment.toastTitle',
+    contentId: 'CheckoutPage.sell-purchase.completePayment.toastContent',
+    intl,
   });
   clearData(STORAGE_KEY);
 };
