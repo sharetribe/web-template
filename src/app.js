@@ -6,7 +6,6 @@ import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter, StaticRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { Slide, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import loadable from '@loadable/component';
 import difference from 'lodash/difference';
 import mapValues from 'lodash/mapValues';
