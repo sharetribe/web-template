@@ -69,7 +69,6 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
           isConfirmNeeded: true,
           showConfirmStatement: true,
           showReminderStatement: true,
-          confirmStatementTranslationValues: translationValues,
           txInfo: translationValues,
         }),
       };
@@ -85,7 +84,6 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
         primaryButtonProps: actionButtonProps(transitions.MARK_DELIVERED, PROVIDER, {
           isConfirmNeeded: true,
           showConfirmStatement: true,
-          confirmStatementTranslationValues: translationValues,
           actionButtonTranslationId,
           txInfo: translationValues,
         }),
@@ -100,7 +98,6 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
           isConfirmNeeded: true,
           showConfirmStatement: true,
           showReminderStatement: true,
-          confirmStatementTranslationValues: translationValues,
           txInfo: translationValues,
         }),
       };

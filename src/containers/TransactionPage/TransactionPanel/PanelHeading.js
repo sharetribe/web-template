@@ -56,6 +56,10 @@ const PanelHeading = props => {
   const titleClasses = classNames(rootClassName || defaultRootClassName, className);
   const listingLink = createListingLink(listingId, listingTitle, listingDeleted);
   const breakline = <br />;
+  const listingTranslationValues = {
+    listingType: listingType?.replaceAll('-', '_'),
+    categoryLevel1: categoryLevel1?.replaceAll('-', '_'),
+  };
 
   return (
     <>
@@ -68,8 +72,7 @@ const PanelHeading = props => {
               providerName,
               breakline,
               deliveryMethod,
-              listingType: listingType?.replaceAll('-', '_'),
-              categoryLevel1: categoryLevel1?.replaceAll('-', '_'),
+              ...listingTranslationValues,
             }}
           />
         </span>
@@ -89,7 +92,7 @@ const PanelHeading = props => {
           <span className={css.nextStepTitle}>
             {intl.formatMessage({ id: 'TransactionPage.nextStep' })}
           </span>
-          <span>{intl.formatMessage({ id: nextStepTranslationId })}</span>
+          <span>{intl.formatMessage({ id: nextStepTranslationId }, listingTranslationValues)}</span>
         </div>
       )}
       {isCustomer && listingDeleted ? (

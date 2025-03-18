@@ -33,7 +33,6 @@ const TxActionButtonWithModal = ({
     showConfirmStatement,
     showReminderStatement,
     confirmStatementTranslationId,
-    confirmStatementTranslationValues = {},
     reminderStatementTranslationId,
     confirmButtonTranslationId,
     confirmModalTitleTranslationId,
@@ -43,7 +42,7 @@ const TxActionButtonWithModal = ({
     errorText,
     formConfigs,
     transitionKey,
-    txInfo,
+    txInfo = {},
   } = buttonProps || {};
 
   const handleClick = () => {
@@ -118,9 +117,7 @@ const TxActionButtonWithModal = ({
                         confirmStatementTranslationId ||
                         `TransactionPage.${id}ConfirmActionModal.${processName}.${processState}.${transactionRole}.confirmStatement`,
                     },
-                    {
-                      ...confirmStatementTranslationValues,
-                    }
+                    txInfo
                   )}
                 </p>
               )}
@@ -129,11 +126,14 @@ const TxActionButtonWithModal = ({
                 <div className="reminderBox">
                   <SquareCheck className={css.confirmModalCheckBoxIcon} />
 
-                  {intl.formatMessage({
-                    id:
-                      reminderStatementTranslationId ||
-                      `TransactionPage.${id}ConfirmActionModal.${processName}.${processState}.${transactionRole}.reminderStatement`,
-                  })}
+                  {intl.formatMessage(
+                    {
+                      id:
+                        reminderStatementTranslationId ||
+                        `TransactionPage.${id}ConfirmActionModal.${processName}.${processState}.${transactionRole}.reminderStatement`,
+                    },
+                    txInfo
+                  )}
                 </div>
               )}
 

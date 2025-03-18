@@ -243,7 +243,9 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
               getProviderUpdateProgressPrimaryButtonProps({ categoryLevel1 })
             ),
           };
-      const processStatePostfix = sellerMarkMachinePlaced ? '' : `.${MARK_MACHINE_PLACE_TRANSITION_NAME}`;
+      const processStatePostfix = sellerMarkMachinePlaced
+        ? ''
+        : `.${MARK_MACHINE_PLACE_TRANSITION_NAME}`;
 
       return {
         ...defaultStateData,
@@ -311,7 +313,9 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
               getProviderUpdateProgressPrimaryButtonProps({ categoryLevel1 })
             ),
           };
-      const processStatePostfix = sellerMarkMachinePlaced ? '' : `.${MARK_MACHINE_PLACE_TRANSITION_NAME}`;
+      const processStatePostfix = sellerMarkMachinePlaced
+        ? ''
+        : `.${MARK_MACHINE_PLACE_TRANSITION_NAME}`;
 
       return {
         ...defaultStateData,
@@ -363,7 +367,9 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
               getProviderUpdateProgressPrimaryButtonProps({ categoryLevel1 })
             ),
           };
-      const processStatePostfix = sellerMarkMachinePlaced ? '' : `.${MARK_MACHINE_PLACE_TRANSITION_NAME}`;
+      const processStatePostfix = sellerMarkMachinePlaced
+        ? ''
+        : `.${MARK_MACHINE_PLACE_TRANSITION_NAME}`;
 
       return {
         ...defaultStateData,
