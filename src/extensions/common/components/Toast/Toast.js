@@ -1,5 +1,4 @@
 import React from 'react';
-import { useIntl } from 'react-intl';
 import { toast } from 'react-toastify';
 
 import css from './Toast.module.css';
