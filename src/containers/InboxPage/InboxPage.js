@@ -285,9 +285,20 @@ export const InboxPageComponent = props => {
     const listingTypeConfigs = config.listing?.listingTypes;
     const listingCategoryConfigs = config.categoryConfiguration.categories;
     const { listingType, categoryLevel1 } = publicData || {};
-    const foundConfig =
-      listingCategoryConfigs.find(conf => conf.id === categoryLevel1) ||
-      listingTypeConfigs?.find(pickType(listingType));
+
+    const {
+      transactionType: transactionTypeCategoryConfig,
+      stockType: stockTypeCategoryConfig,
+    } = listingCategoryConfigs.find(conf => conf.id === categoryLevel1);
+    const {
+      transactionType: transactionTypeListingTypeConfig,
+      stockType: stockTypeListingTypeConfig,
+    } = listingTypeConfigs?.find(pickType(listingType));
+
+    const foundConfig = {
+      transactionType: transactionTypeCategoryConfig || transactionTypeListingTypeConfig,
+      stockType: stockTypeCategoryConfig || stockTypeListingTypeConfig,
+    };
     return foundConfig;
   };
   const toTxItem = tx => {
