@@ -29,7 +29,7 @@
                   "text-decoration:none;color:" (asset "design/branding.json" "marketplaceColors.notificationPrimaryButton" "#fb7327"))
                   href=(concat marketplace.url "/order/" (url-encode id) "/"))}}
 
-                <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "PurchaseMarkOrderReceivedReminder.ContentParagraph2" "If you don't react to this email, we will consider the order completed and release the payment on {date,date,::YYYYMMMd}" date=delayed-transition.run-at}}.</p>
+                <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "PurchaseMarkOrderReceivedReminder.ContentParagraph2" "If you don't react to this email, we will consider the order completed and release the payment on {date,date,::YYYYMMMd}." date=delayed-transition.run-at}}</p>
                 <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "PurchaseMarkOrderReceivedReminder.ContentParagraph3" "If you did not receive what you ordered, please either contact {providerDisplayName} on the order details page or reach out to {marketplaceName} support." providerDisplayName=provider.display-name marketplaceName=marketplace.name}}</p>
                 <table style="padding:16px 0 0" align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                   <tbody>
