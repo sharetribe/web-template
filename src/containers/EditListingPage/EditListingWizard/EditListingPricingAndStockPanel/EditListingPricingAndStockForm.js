@@ -118,7 +118,6 @@ export const EditListingPricingAndStockFormComponent = props => {
           marketplaceCurrency,
           unitType,
           listingMinimumPriceSubUnits,
-          listingType,
           saveActionMsg,
           updated,
           updateInProgress,
@@ -128,6 +127,7 @@ export const EditListingPricingAndStockFormComponent = props => {
           // Custom props
           providerCommission,
           providerFlatFee,
+          stockType,
         } = formRenderProps;
 
         const currentUser = useSelector(state => state.user.currentUser);
@@ -141,12 +141,12 @@ export const EditListingPricingAndStockFormComponent = props => {
         );
         // Note: outdated listings don't have listingType!
         // I.e. listings that are created with previous listing type setup.
-        const hasStockManagement = listingType?.stockType === STOCK_MULTIPLE_ITEMS;
+        const hasStockManagement = stockType === STOCK_MULTIPLE_ITEMS;
         const stockValidator = validators.numberAtLeast(
           intl.formatMessage({ id: 'EditListingPricingAndStockForm.stockIsRequired' }),
           0
         );
-        const hasInfiniteStock = STOCK_INFINITE_ITEMS.includes(listingType?.stockType);
+        const hasInfiniteStock = STOCK_INFINITE_ITEMS.includes(stockType);
         const currentStock = values.stock;
 
         const classes = classNames(css.root, className);

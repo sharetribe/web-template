@@ -14,10 +14,20 @@
             <tr style="width:100%">
               <td>{{#eq "shipping" protected-data.deliveryMethod}}
                 <h1 style="color:#484848;font-size:26px;line-height:1.3;font-weight:700">{{t "PurchaseOrderMarkedAsDelivered.TitleShipped" "Your order was shipped"}}</h1>
-                <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "PurchaseOrderMarkedAsDelivered.ContentShipped" "Your order is on its way! {providerDisplayName} shipped {listingTitle}."  providerDisplayName=provider.display-name listingTitle=listing.title}}</p>
+                <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t
+                  "PurchaseOrderMarkedAsDelivered.ContentShipped" "Your order is on its way! {providerDisplayName} shipped
+                  <orderlink>{listingTitle}</orderlink>." providerDisplayName=provider.display-name listingTitle=listing.title orderlink=(html-tag "a"
+                  target=(concat "_blank") style=(concat
+                  "text-decoration:none;color:" (asset "design/branding.json" "marketplaceColors.notificationPrimaryButton" "#fb7327"))
+                  href=(concat marketplace.url "/order/" (url-encode id) "/"))}}</p>
                 {{else}}
                 <h1 style="color:#484848;font-size:26px;line-height:1.3;font-weight:700">{{t "PurchaseOrderMarkedAsDelivered.TitleDelivered" "Your order was delivered"}}</h1>
-                <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "PurchaseOrderMarkedAsDelivered.ContentDelivered" "{providerDisplayName} delivered {listingTitle} to you."  providerDisplayName=provider.display-name listingTitle=listing.title}}</p>
+                <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t
+                  "PurchaseOrderMarkedAsDelivered.ContentDelivered" "{providerDisplayName} delivered <orderlink>{listingTitle}
+                  </orderlink> to you." providerDisplayName=provider.display-name listingTitle=listing.title orderlink=(html-tag "a"
+                  target=(concat "_blank") style=(concat
+                  "text-decoration:none;color:" (asset "design/branding.json" "marketplaceColors.notificationPrimaryButton" "#fb7327"))
+                  href=(concat marketplace.url "/order/" (url-encode id) "/"))}}</p>
                 {{/eq}}
                 <table style="padding:16px 0 0" align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                   <tbody>

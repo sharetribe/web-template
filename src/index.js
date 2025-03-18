@@ -16,6 +16,7 @@
 import 'core-js/features/map';
 import 'core-js/features/set';
 import 'raf/polyfill';
+import { injectStyle } from 'react-toastify/dist/inject-style';
 
 // Dependency libs
 import React from 'react';
@@ -123,6 +124,7 @@ const setupAnalyticsHandlers = googleAnalyticsId => {
 
 // If we're in a browser already, render the client application.
 if (typeof window !== 'undefined') {
+  injectStyle();
   // set up logger with Sentry DSN client key and environment
   log.setup();
 

@@ -43,10 +43,16 @@ import CheckoutPageWithPayment, {
   loadInitialDataForStripePayments,
 } from './CheckoutPageWithPayment';
 import CheckoutPageWithInquiryProcess from './CheckoutPageWithInquiryProcess';
+import { toastSuccess } from '../../extensions/common/components/Toast/Toast';
 
 const STORAGE_KEY = 'CheckoutPage';
 
-const onSubmitCallback = () => {
+const onSubmitCallback = intl => {
+  toastSuccess({
+    titleId: 'CheckoutPage.sell-purchase.completePayment.toastTitle',
+    contentId: 'CheckoutPage.sell-purchase.completePayment.toastContent',
+    intl,
+  });
   clearData(STORAGE_KEY);
 };
 
@@ -168,7 +174,7 @@ const EnhancedCheckoutPage = props => {
       listingTitle={listingTitle}
       title={title}
       onInquiryWithoutPayment={onInquiryWithoutPayment}
-      onSubmitCallback={onSubmitCallback}
+      onSubmitCallback={() => onSubmitCallback(intl)}
       {...props}
     />
   ) : processName && !isInquiryProcess && !speculateTransactionInProgress ? (
@@ -183,7 +189,7 @@ const EnhancedCheckoutPage = props => {
       setPageData={setPageData}
       listingTitle={listingTitle}
       title={title}
-      onSubmitCallback={onSubmitCallback}
+      onSubmitCallback={() => onSubmitCallback(intl)}
       {...props}
     />
   ) : (
@@ -247,12 +253,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(savePaymentMethod(stripeCustomer, stripePaymentMethodId)),
 });
 
-const CheckoutPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(EnhancedCheckoutPage);
+const CheckoutPage = compose(connect(mapStateToProps, mapDispatchToProps))(EnhancedCheckoutPage);
 
 CheckoutPage.setInitialValues = (initialValues, saveToSessionStorage = false) => {
   if (saveToSessionStorage) {

@@ -64,26 +64,45 @@ import {
   intiateDisputeSellPurchase,
 } from './TransactionPage.duck';
 import { convertListingPrices } from '../../extensions/MultipleCurrency/utils/currency.js';
+import { hasPermissionToViewData } from '../../util/userHelpers.js';
+import { toastSuccess } from '../../extensions/common/components/Toast/Toast.js';
 
 import css from './TransactionPage.module.css';
-import { hasPermissionToViewData } from '../../util/userHelpers.js';
 
 // Submit dispute and close the review modal
 const onDisputeOrder = (
   currentTransactionId,
   transitionName,
   onTransition,
-  setDisputeSubmitted
-) => values => {
+  setDisputeSubmitted,
+  setDisputeModalOpen,
+  intl
+) => async values => {
   const { disputeReason } = values;
   const params = disputeReason ? { protectedData: { disputeReason } } : {};
-  onTransition(currentTransactionId, transitionName, params)
-    .then(r => {
-      return setDisputeSubmitted(true);
-    })
-    .catch(e => {
-      // Do nothing.
+  try {
+    await onTransition(currentTransactionId, transitionName, params);
+    setDisputeSubmitted(true);
+
+    // Wait 3 second to scroll to top
+    // await new Promise(r => setTimeout(r, 2500));
+    // setDisputeModalOpen(false);
+    // await new Promise(r => setTimeout(r, 500));
+    // window.scrollTo({
+    //   top: 0,
+    //   left: 0,
+    //   behavior: 'smooth',
+    // });
+
+    toastSuccess({
+      titleId: 'TransactionPage.sell-purchase.dispute.toastTitle',
+      contentId: 'TransactionPage.sell-purchase.dispute.toastContent',
+      intl,
     });
+  } catch (e) {
+    console.error(e);
+    // Do nothing.
+  }
 };
 
 // TransactionPage handles data loading for Sale and Order views to transaction pages in Inbox.
@@ -255,7 +274,7 @@ export const TransactionPageComponent = props => {
   };
 
   // Submit review and close the review modal
-  const onSubmitReview = values => {
+  const onSubmitReview = async values => {
     const { reviewRating, reviewContent } = values;
     const rating = Number.parseInt(reviewRating, 10);
     const { states, transitions } = process;
@@ -277,14 +296,21 @@ export const TransactionPageComponent = props => {
           };
     const params = { reviewRating: rating, reviewContent };
 
-    onSendReview(transaction, transitionOptions, params, config)
-      .then(r => {
-        setReviewModalOpen(false);
-        setReviewSubmitted(true);
-      })
-      .catch(e => {
-        // Do nothing.
+    try {
+      await onSendReview(transaction, transitionOptions, params, config);
+      setReviewModalOpen(false);
+      setReviewSubmitted(true);
+
+      // Wait 0.5 second to auto scroll
+      await new Promise(r => setTimeout(r, 500));
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
       });
+    } catch (e) {
+      // Do nothing
+    }
   };
 
   // Open dispute modal
@@ -506,6 +532,7 @@ export const TransactionPageComponent = props => {
           dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
           marketplaceName={config.marketplaceName}
           showCurrencyNotify={false}
+          listingCategoryConfigs={config.categoryConfiguration}
         />
       }
     />
@@ -542,7 +569,9 @@ export const TransactionPageComponent = props => {
               transaction?.id,
               process.transitions.DISPUTE,
               onTransition,
-              setDisputeSubmitted
+              setDisputeSubmitted,
+              setDisputeModalOpen,
+              intl
             )}
             disputeSubmitted={disputeSubmitted}
             disputeInProgress={transitionInProgress === process.transitions.DISPUTE}

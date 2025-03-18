@@ -283,8 +283,11 @@ export const InboxPageComponent = props => {
   const pickType = lt => conf => conf.listingType === lt;
   const findListingTypeConfig = publicData => {
     const listingTypeConfigs = config.listing?.listingTypes;
-    const { listingType } = publicData || {};
-    const foundConfig = listingTypeConfigs?.find(pickType(listingType));
+    const listingCategoryConfigs = config.categoryConfiguration.categories;
+    const { listingType, categoryLevel1 } = publicData || {};
+    const foundConfig =
+      listingCategoryConfigs.find(conf => conf.id === categoryLevel1) ||
+      listingTypeConfigs?.find(pickType(listingType));
     return foundConfig;
   };
   const toTxItem = tx => {

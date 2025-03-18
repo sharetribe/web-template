@@ -147,11 +147,40 @@ const findCategoryConfig = (categories, categoryIdToFind) => {
  * The select field is used for choosing a category or subcategory.
  */
 const CategoryField = props => {
-  const { currentCategoryOptions, level, values, prefix, handleCategoryChange, intl } = props;
+  const {
+    currentCategoryOptions,
+    level,
+    values,
+    prefix,
+    handleCategoryChange,
+    intl,
+    formApi,
+    listingTypes,
+  } = props;
 
   const currentCategoryKey = `${prefix}${level}`;
 
   const categoryConfig = findCategoryConfig(currentCategoryOptions, values[`${prefix}${level}`]);
+
+  const handleOnChange = value => {
+    const { alias, unitType } =
+      findCategoryConfig(currentCategoryOptions, value)?.transactionType || {};
+
+    if (alias && unitType) {
+      formApi.change('transactionProcessAlias', alias);
+      formApi.change('unitType', unitType);
+    } else {
+      const selectedListingType = listingTypes.find(
+        config => config.listingType === values.listingType
+      );
+      formApi.change('transactionProcessAlias', selectedListingType.transactionProcessAlias);
+      formApi.change('unitType', selectedListingType.unitType);
+    }
+
+    if (handleCategoryChange) {
+      handleCategoryChange(value, level, currentCategoryOptions);
+    }
+  };
 
   return (
     <>
@@ -161,7 +190,7 @@ const CategoryField = props => {
           id={currentCategoryKey}
           name={currentCategoryKey}
           className={css.listingTypeSelect}
-          onChange={event => handleCategoryChange(event, level, currentCategoryOptions)}
+          onChange={handleOnChange}
           label={intl.formatMessage(
             { id: 'EditListingDetailsForm.categoryLabel' },
             { categoryLevel: currentCategoryKey }
@@ -196,6 +225,7 @@ const CategoryField = props => {
           prefix={prefix}
           handleCategoryChange={handleCategoryChange}
           intl={intl}
+          listingTypes={listingTypes}
         />
       ) : null}
     </>
@@ -207,7 +237,15 @@ const FieldSelectCategory = props => {
     checkIfInitialValuesExist();
   }, []);
 
-  const { prefix, listingCategories, formApi, intl, setAllCategoriesChosen, values } = props;
+  const {
+    prefix,
+    listingCategories,
+    formApi,
+    intl,
+    setAllCategoriesChosen,
+    values,
+    listingTypes,
+  } = props;
 
   // Counts the number of selected categories in the form values based on the given prefix.
   const countSelectedCategories = () => {
@@ -241,6 +279,8 @@ const FieldSelectCategory = props => {
       prefix={prefix}
       handleCategoryChange={handleCategoryChange}
       intl={intl}
+      formApi={formApi}
+      listingTypes={listingTypes}
     />
   );
 };
@@ -421,6 +461,7 @@ const EditListingDetailsFormComponent = props => (
               intl={intl}
               allCategoriesChosen={allCategoriesChosen}
               setAllCategoriesChosen={setAllCategoriesChosen}
+              listingTypes={selectableListingTypes}
             />
           )}
 

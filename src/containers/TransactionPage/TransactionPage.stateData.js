@@ -58,7 +58,7 @@ const getActionButtonPropsMaybe = (params, onlyForRole = 'both') => {
     actionButtonTranslationId,
     actionButtonTranslationErrorId,
     intl,
-    buttonTextValues = {},
+    txInfo = {},
     ...rest
   } = params;
   const transitionKey = getTransitionKey(transitionName);
@@ -75,8 +75,10 @@ const getActionButtonPropsMaybe = (params, onlyForRole = 'both') => {
         inProgress,
         error: transitionError,
         onAction,
-        buttonText: intl.formatMessage({ id: actionButtonTrId }, buttonTextValues),
+        buttonText: intl.formatMessage({ id: actionButtonTrId }, txInfo),
         errorText: intl.formatMessage({ id: actionButtonTrErrorId }),
+        transitionKey,
+        txInfo,
         ...rest,
       }
     : {};

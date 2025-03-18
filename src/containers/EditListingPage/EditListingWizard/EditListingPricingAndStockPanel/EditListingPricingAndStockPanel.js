@@ -25,14 +25,13 @@ const getListingTypeConfig = (publicData, listingTypes) => {
   return listingTypes.find(conf => conf.listingType === selectedListingType);
 };
 
-const getInitialValues = (props, uiCurrency) => {
-  const { listing, listingTypes } = props;
+const getInitialValues = (props, uiCurrency, { stockType }) => {
+  const { listing } = props;
   const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
   const currentStock = listing?.currentStock;
 
   const publicData = listing?.attributes?.publicData;
-  const listingTypeConfig = getListingTypeConfig(publicData, listingTypes);
-  const hasInfiniteStock = STOCK_INFINITE_ITEMS.includes(listingTypeConfig?.stockType);
+  const hasInfiniteStock = STOCK_INFINITE_ITEMS.includes(stockType);
   const isDefaultCurrency = uiCurrency === DEFAULT_CURRENCY;
   const currencyPrice = publicData.exchangePrice?.[uiCurrency];
   const price = isDefaultCurrency
@@ -78,15 +77,12 @@ const EditListingPricingAndStockPanel = props => {
     panelUpdated,
     updateInProgress,
     errors,
-    
+
     // Custom props
     providerCommission,
     providerFlatFee,
+    categoryConfigs,
   } = props;
-
-  useEffect(() => {
-    setInitialValues(getInitialValues(props, uiCurrency));
-  }, [uiCurrency]);
 
   const classes = classNames(rootClassName || css.root, className);
 
@@ -94,9 +90,13 @@ const EditListingPricingAndStockPanel = props => {
   const publicData = listing?.attributes?.publicData;
   const unitType = publicData.unitType;
   const listingTypeConfig = getListingTypeConfig(publicData, listingTypes);
-  const transactionProcessAlias = listingTypeConfig.transactionType.alias;
+  const listingCategoryConfig = categoryConfigs.find(conf => conf.id === publicData.categoryLevel1);
+  const transactionType =
+    listingCategoryConfig?.transactionType || listingTypeConfig?.transactionType;
+  const stockType = listingCategoryConfig?.stockType || listingTypeConfig?.stockType;
+  const transactionProcessAlias = transactionType.alias;
 
-  const hasInfiniteStock = STOCK_INFINITE_ITEMS.includes(listingTypeConfig?.stockType);
+  const hasInfiniteStock = STOCK_INFINITE_ITEMS.includes(stockType);
   const listingCurrency = uiCurrency || marketplaceCurrency;
   const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
 
@@ -104,6 +104,10 @@ const EditListingPricingAndStockPanel = props => {
     listingCurrency && initialValues.price instanceof Money && !updateInProgress
       ? initialValues.price?.currency === listingCurrency
       : !!listingCurrency;
+
+  useEffect(() => {
+    setInitialValues(getInitialValues(props, uiCurrency, { stockType }));
+  }, [uiCurrency]);
 
   return (
     <div className={classes}>
@@ -191,10 +195,10 @@ const EditListingPricingAndStockPanel = props => {
           updated={panelUpdated}
           updateInProgress={updateInProgress}
           fetchErrors={errors}
-
           // Custom props
           providerCommission={providerCommission}
           providerFlatFee={providerFlatFee}
+          stockType={stockType}
         />
       ) : (
         <div className={css.priceCurrencyInvalid}>

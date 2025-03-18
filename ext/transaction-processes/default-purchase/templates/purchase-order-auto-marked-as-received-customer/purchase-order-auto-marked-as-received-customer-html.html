@@ -13,13 +13,30 @@
           <table align="center" role="presentation" cellSpacing="0" cellPadding="0" border="0" width="100%" style="max-width:600px;margin:0 auto">
             <tr style="width:100%">
               <td>
-                <h1 style="color:#484848;font-size:26px;line-height:1.3;font-weight:700">{{t "PurchaseOrderAutoMarkedAsReceivedCustomer.Title" "Your order for {listingTitle} is now considered completed" listingTitle=listing.title }}</h1>{{#eq "shipping" protected-data.deliveryMethod}}
+                <h1 style="color:#484848;font-size:26px;line-height:1.3;font-weight:700">{{t
+                  "PurchaseOrderAutoMarkedAsReceivedCustomer.Title" "Your order for <orderlink>{listingTitle}</orderlink>
+                  is now considered completed" listingTitle=listing.title orderlink=(html-tag "a"
+                  target=(concat "_blank") style=(concat
+                  "text-decoration:none;color:" (asset "design/branding.json" "marketplaceColors.notificationPrimaryButton" "#fb7327"))
+                  href=(concat marketplace.url "/order/" (url-encode id) "/")) }}</h1>{{#eq "shipping" protected-data.deliveryMethod}}
                 <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">
-                  {{t "PurchaseOrderAutoMarkedAsReceivedCustomer.ShippingMessage" "{providerDisplayName} shipped {listingTitle} to you two weeks ago. As we haven't heard from you since, we assume that you have received what you ordered. We now consider your order completed. {providerDisplayName} has received your payment." providerDisplayName=provider.display-name listingTitle=listing.title }}
+                  {{t "PurchaseOrderAutoMarkedAsReceivedCustomer.ShippingMessage" "{providerDisplayName} shipped orderlink>{listingTitle}
+                  </orderlink> to you two weeks ago. As we haven't heard from you since, we assume that you have received what you
+                  ordered. We now consider your order completed. {providerDisplayName} has received your payment."
+                  providerDisplayName=provider.display-name listingTitle=listing.title orderlink=(html-tag "a"
+                  target=(concat "_blank") style=(concat
+                  "text-decoration:none;color:" (asset "design/branding.json" "marketplaceColors.notificationPrimaryButton" "#fb7327"))
+                  href=(concat marketplace.url "/order/" (url-encode id) "/")) }}
                   </p>
                 {{else}}
                 <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">
-                  {{t "PurchaseOrderAutoMarkedAsReceivedCustomer.DeliveryMessage" "{providerDisplayName} delivered {listingTitle} to you two weeks ago. As we haven't heard from you since, we assume that you have received what you ordered. We now consider your order completed. {providerDisplayName} has received your payment." providerDisplayName=provider.display-name listingTitle=listing.title}}</p>
+                  {{t "PurchaseOrderAutoMarkedAsReceivedCustomer.DeliveryMessage" "{providerDisplayName} delivered <orderlink>
+                    {listingTitle}</orderlink> to you two weeks ago. As we haven't heard from you since, we assume that you have received
+                  what you ordered. We now consider your order completed. {providerDisplayName} has received your payment."
+                  providerDisplayName=provider.display-name listingTitle=listing.title orderlink=(html-tag "a"
+                  target=(concat "_blank") style=(concat
+                  "text-decoration:none;color:" (asset "design/branding.json" "marketplaceColors.notificationPrimaryButton" "#fb7327"))
+                  href=(concat marketplace.url "/order/" (url-encode id) "/"))}}</p>
                 {{/eq}}
                 <table style="padding:16px 0 0" align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                   <tbody>
