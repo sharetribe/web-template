@@ -1,4 +1,5 @@
 import { subUnitDivisors } from '../config/settingsCurrency';
+import { mergeListingCategoryConfigs } from '../extensions/common/helpers/configHelpers';
 import { getSupportedProcessesInfo } from '../transactions/transaction';
 
 // Generic helpers for validating config values
@@ -1170,6 +1171,7 @@ const validCategoryConfig = (config, categoryConfiguration) => {
     return null;
   }
 
+
   const { key, scope, categoryLevelKeys } = categoryConfiguration;
   // This ensures that flat category structure still uses categoryLevel1 key
   const isNestedEnum = true;
@@ -1418,7 +1420,7 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     user: mergeUserConfig(configAsset, defaultConfigs),
 
     // Set category configuration (includes fixed key, array of categories etc.
-    categoryConfiguration,
+    categoryConfiguration: mergeListingCategoryConfigs(categoryConfiguration, defaultConfigs.categoryConfiguration),
 
     // Listing configuration comes entirely from hosted assets by default.
     listing: mergeListingConfig(configAsset, defaultConfigs, validHostedCategories),

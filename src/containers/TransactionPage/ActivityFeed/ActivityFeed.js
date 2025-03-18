@@ -105,6 +105,7 @@ const TransitionMessage = props => {
     otherUsersName,
     onOpenReviewModal,
     intl,
+    listingCategory,
   } = props;
   const { processName, processState, showReviewAsFirstLink, showReviewAsSecondLink } = stateData;
   const stateStatus = nextState === processState ? 'current' : 'past';
@@ -137,7 +138,16 @@ const TransitionMessage = props => {
       id: `TransactionPage.ActivityFeed.${processName}.${nextState ||
         transition.messageTranslationId}`,
     },
-    { actor, otherUsersName, listingTitle, reviewLink, deliveryMethod, stateStatus, ownRole }
+    {
+      actor,
+      otherUsersName,
+      listingTitle,
+      reviewLink,
+      deliveryMethod,
+      stateStatus,
+      ownRole,
+      categoryLevel1: listingCategory.replaceAll('-', '_'),
+    }
   );
 
   return message;
@@ -287,6 +297,7 @@ export const ActivityFeedComponent = props => {
       const listingTitle = listing.attributes.deleted
         ? intl.formatMessage({ id: 'TransactionPage.ActivityFeed.deletedListing' })
         : listing.attributes.title;
+      const listingCategory = listing.attributes.publicData.categoryLevel1;
 
       const ownRole = getUserTxRole(currentUser.id, transaction);
       const otherUser = ownRole === TX_TRANSITION_ACTOR_PROVIDER ? customer : provider;
@@ -305,6 +316,7 @@ export const ActivityFeedComponent = props => {
               otherUsersName={<UserDisplayName user={otherUser} intl={intl} />}
               onOpenReviewModal={onOpenReviewModal}
               intl={intl}
+              listingCategory={listingCategory}
             />
           }
           reviewComponent={

@@ -453,6 +453,7 @@ export const ListingPageComponent = props => {
               onToggleFavorites={onToggleFavorites}
               currentUser={currentUser}
               lastTransaction={lastTransaction}
+              listingCategoryConfigs={config.categoryConfiguration}
             />
           </div>
         </div>

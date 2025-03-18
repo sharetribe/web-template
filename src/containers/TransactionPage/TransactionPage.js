@@ -74,16 +74,23 @@ const onDisputeOrder = (
   transitionName,
   onTransition,
   setDisputeSubmitted
-) => values => {
+) => async values => {
   const { disputeReason } = values;
   const params = disputeReason ? { protectedData: { disputeReason } } : {};
-  onTransition(currentTransactionId, transitionName, params)
-    .then(r => {
-      return setDisputeSubmitted(true);
-    })
-    .catch(e => {
-      // Do nothing.
+  try {
+    await onTransition(currentTransactionId, transitionName, params);
+    setDisputeSubmitted(true);
+
+    // Wait 0.5second to scroll to top
+    await new Promise(r => setTimeout(r, 500));
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth',
     });
+  } catch (e) {
+    // Do nothing.
+  }
 };
 
 // TransactionPage handles data loading for Sale and Order views to transaction pages in Inbox.
@@ -255,7 +262,7 @@ export const TransactionPageComponent = props => {
   };
 
   // Submit review and close the review modal
-  const onSubmitReview = values => {
+  const onSubmitReview = async values => {
     const { reviewRating, reviewContent } = values;
     const rating = Number.parseInt(reviewRating, 10);
     const { states, transitions } = process;
@@ -277,14 +284,21 @@ export const TransactionPageComponent = props => {
           };
     const params = { reviewRating: rating, reviewContent };
 
-    onSendReview(transaction, transitionOptions, params, config)
-      .then(r => {
-        setReviewModalOpen(false);
-        setReviewSubmitted(true);
-      })
-      .catch(e => {
-        // Do nothing.
+    try {
+      await onSendReview(transaction, transitionOptions, params, config);
+      setReviewModalOpen(false);
+      setReviewSubmitted(true);
+
+      // Wait 0.5 second to auto scroll
+      await new Promise(r => setTimeout(r, 500));
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
       });
+    } catch (e) {
+      // Do nothing
+    }
   };
 
   // Open dispute modal
@@ -506,6 +520,7 @@ export const TransactionPageComponent = props => {
           dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
           marketplaceName={config.marketplaceName}
           showCurrencyNotify={false}
+          listingCategoryConfigs={config.categoryConfiguration}
         />
       }
     />

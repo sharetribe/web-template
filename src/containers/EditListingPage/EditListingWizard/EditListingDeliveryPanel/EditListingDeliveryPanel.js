@@ -90,14 +90,23 @@ const EditListingDeliveryPanel = props => {
     panelUpdated,
     updateInProgress,
     errors,
+    categoryConfigs
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
-  const isPublished = listing?.id && listing?.attributes.state !== LISTING_STATE_DRAFT;
-  const priceCurrencyValid = listing?.attributes?.price?.currency === marketplaceCurrency;
-  const listingType = listing?.attributes?.publicData?.listingType;
+
+  const {
+    id: listingId,
+    attributes: { state: listingState, price: listingPrice, publicData } = {},
+  } = listing || {};
+  const { listingType, categoryLevel1 } = publicData || {};
+
+  const isPublished = listingId && listingState !== LISTING_STATE_DRAFT;
+  const priceCurrencyValid = listingPrice?.currency === marketplaceCurrency;
   const listingTypeConfig = listingTypes.find(conf => conf.listingType === listingType);
-  const hasStockInUse = listingTypeConfig.stockType === STOCK_MULTIPLE_ITEMS;
+  const listingCategoryConfig = categoryConfigs.find(conf => conf.id === categoryLevel1);
+  const stockType = listingCategoryConfig?.stockType || listingTypeConfig?.stockType;
+  const hasStockInUse = stockType === STOCK_MULTIPLE_ITEMS;
 
   return (
     <div className={classes}>

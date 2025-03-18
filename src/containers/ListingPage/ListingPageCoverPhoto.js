@@ -412,6 +412,7 @@ export const ListingPageComponent = props => {
               marketplaceCurrency={uiCurrency}
               dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
               marketplaceName={config.marketplaceName}
+              listingCategoryConfigs={config.categoryConfiguration}
             />
           </div>
         </div>
