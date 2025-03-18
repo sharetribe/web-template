@@ -64,9 +64,10 @@ import {
   intiateDisputeSellPurchase,
 } from './TransactionPage.duck';
 import { convertListingPrices } from '../../extensions/MultipleCurrency/utils/currency.js';
+import { hasPermissionToViewData } from '../../util/userHelpers.js';
+import { toastSuccess } from '../../extensions/common/components/Toast/Toast.js';
 
 import css from './TransactionPage.module.css';
-import { hasPermissionToViewData } from '../../util/userHelpers.js';
 
 // Submit dispute and close the review modal
 const onDisputeOrder = (
@@ -87,6 +88,12 @@ const onDisputeOrder = (
       top: 0,
       left: 0,
       behavior: 'smooth',
+    });
+
+    toastSuccess({
+      titleId: 'TransactionPage.sell-purchase.dispute.toastTitle',
+      contentId: 'TransactionPage.sell-purchase.dispute.toastContent',
+      intl,
     });
   } catch (e) {
     // Do nothing.
