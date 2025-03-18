@@ -46,6 +46,7 @@ const PanelHeading = props => {
     isCustomerBanned,
     listing,
     nextStepTranslationId,
+    lastCustomTransition = '',
   } = props;
 
   const isProvider = transactionRole === 'provider';
@@ -72,6 +73,7 @@ const PanelHeading = props => {
               providerName,
               breakline,
               deliveryMethod,
+              lastCustomTransition,
               ...listingTranslationValues,
             }}
           />

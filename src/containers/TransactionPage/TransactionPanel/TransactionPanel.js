@@ -253,6 +253,7 @@ export class TransactionPanelComponent extends Component {
               listingDeleted={listingDeleted}
               listing={listing}
               nextStepTranslationId={stateData.nextStepTranslationId}
+              lastCustomTransition={stateData.lastCustomTransition}
             />
 
             <InquiryMessageMaybe

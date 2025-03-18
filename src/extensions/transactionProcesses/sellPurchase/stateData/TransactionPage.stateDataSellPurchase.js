@@ -1,3 +1,4 @@
+import moment from 'moment';
 import {
   TX_TRANSITION_ACTOR_CUSTOMER as CUSTOMER,
   TX_TRANSITION_ACTOR_PROVIDER as PROVIDER,
@@ -59,6 +60,44 @@ const getProviderUpdateProgressPrimaryButtonProps = (txInfo = {}) => ({
   toastContentTranslationId: `TransactionPage.sell-purchase.provider.${MARK_MACHINE_PLACE_TRANSITION_NAME}.toastContent`,
 });
 
+const getLastCustomTransition = ({
+  sellerMarkMachinePlaced,
+  buyerMarkMetManager,
+  processState,
+}) => {
+  if (
+    ![states.PURCHASED, states.STRIPE_INTENT_CAPTURED, states.REFUND_DISABLED].includes(
+      processState
+    )
+  ) {
+    return {};
+  }
+
+  if (!sellerMarkMachinePlaced && !buyerMarkMetManager) {
+    return {
+      lastCustomTransition: 'a' || transitions.SELLER_CONFIRM_PURCHASE,
+    };
+  }
+
+  if (!sellerMarkMachinePlaced) {
+    return {
+      lastCustomTransition: MARK_MET_MANAGER_TRANSITION_NAME,
+    };
+  }
+
+  if (!buyerMarkMetManager) {
+    return {
+      lastCustomTransition: MARK_MACHINE_PLACE_TRANSITION_NAME,
+    };
+  }
+
+  return {
+    lastCustomTransition: moment(sellerMarkMachinePlaced).isAfter(buyerMarkMetManager)
+      ? MARK_MACHINE_PLACE_TRANSITION_NAME
+      : MARK_MET_MANAGER_TRANSITION_NAME,
+  };
+};
+
 /**
  * Get state data against product process for TransactionPage's UI.
  * I.e. info about showing action buttons, current state etc.
@@ -87,12 +126,19 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
   } = processInfo;
 
   const progressStep = getSellPurchaseProgressStep({ isCustomer, processState, transaction });
+  const lastCustomTransitionMaybe = getLastCustomTransition({
+    sellerMarkMachinePlaced,
+    buyerMarkMetManager,
+    processState,
+  });
+
   const defaultStateData = {
     processName,
     processState,
     showDetailCardHeadings: true,
     progressStep,
     nextStepTranslationId: `TransactionPage.sell-purchase.${transactionRole}.${processState}.nextStep`,
+    ...lastCustomTransitionMaybe,
   };
 
   return new ConditionalResolver([processState, transactionRole])
