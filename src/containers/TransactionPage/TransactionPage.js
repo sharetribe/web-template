@@ -74,7 +74,9 @@ const onDisputeOrder = (
   currentTransactionId,
   transitionName,
   onTransition,
-  setDisputeSubmitted
+  setDisputeSubmitted,
+  setDisputeModalOpen,
+  intl
 ) => async values => {
   const { disputeReason } = values;
   const params = disputeReason ? { protectedData: { disputeReason } } : {};
@@ -82,13 +84,15 @@ const onDisputeOrder = (
     await onTransition(currentTransactionId, transitionName, params);
     setDisputeSubmitted(true);
 
-    // Wait 0.5second to scroll to top
-    await new Promise(r => setTimeout(r, 500));
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: 'smooth',
-    });
+    // Wait 3 second to scroll to top
+    // await new Promise(r => setTimeout(r, 2500));
+    // setDisputeModalOpen(false);
+    // await new Promise(r => setTimeout(r, 500));
+    // window.scrollTo({
+    //   top: 0,
+    //   left: 0,
+    //   behavior: 'smooth',
+    // });
 
     toastSuccess({
       titleId: 'TransactionPage.sell-purchase.dispute.toastTitle',
@@ -96,6 +100,7 @@ const onDisputeOrder = (
       intl,
     });
   } catch (e) {
+    console.error(e);
     // Do nothing.
   }
 };
@@ -564,7 +569,9 @@ export const TransactionPageComponent = props => {
               transaction?.id,
               process.transitions.DISPUTE,
               onTransition,
-              setDisputeSubmitted
+              setDisputeSubmitted,
+              setDisputeModalOpen,
+              intl
             )}
             disputeSubmitted={disputeSubmitted}
             disputeInProgress={transitionInProgress === process.transitions.DISPUTE}
