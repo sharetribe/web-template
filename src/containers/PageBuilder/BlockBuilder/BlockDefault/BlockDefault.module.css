@@ -1,38 +1,4 @@
 .root {
-  p > a{
-    display: inline-block !important;
-    padding: 8px 20px;
-    font-size: 15px;
-    background-color: var(--marketplaceColor);
-    border:1px solid var(--marketplaceColor);
-    border-radius: 4px;
-    text-decoration: none !important;
-    box-shadow: 0 8px 16px 0 rgb(0 0 0 / 20%);
-    font-weight: 500;
-    margin-top: 12px;
-    white-space: nowrap;
-  
-    &:hover {
-      text-decoration: none;
-      color:white !important;
-      border-color: var(--marketplaceColorDark);
-      background-color: var(--marketplaceColorDark);
-    }
-  }
-  p > a:first-child{
-    color: white;
-  }
-  p > a:last-child{
-    background-color:rgba(255,255,255,0.9);
-    border:1px solid white;
-    color:var(--marketplaceColor);
-    box-shadow:none;
-    &:hover{
-      color:var(--marketplaceColorDark) !important;
-      background-color:white;
-    }
-  }
-  
 }
 
 .media {
