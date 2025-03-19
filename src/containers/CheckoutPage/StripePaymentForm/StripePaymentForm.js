@@ -450,6 +450,7 @@ class StripePaymentForm extends Component {
       isBooking,
       isFuzzyLocation,
       values,
+      isTxExpired,
     } = formRenderProps;
 
     this.finalFormAPI = formApi;
@@ -638,13 +639,19 @@ class StripePaymentForm extends Component {
               placeholder={messagePlaceholder}
               className={css.message}
             />
-            <ReminderBox/>
+            <ReminderBox />
           </div>
         ) : null}
         <div className={css.submitContainer}>
           {hasPaymentErrors ? (
             <span className={css.errorMessage}>{paymentErrorMessage}</span>
           ) : null}
+
+          {isTxExpired && (
+            <p className={css.txExpired}>
+              <FormattedMessage id="StripePaymentForm.txExpired" />
+            </p>
+          )}
           <PrimaryButton
             className={css.submitButton}
             type="submit"
@@ -700,6 +707,7 @@ StripePaymentForm.defaultProps = {
   listingLocation: null,
   totalPrice: null,
   isFuzzyLocation: false,
+  isTxExpired: false,
 };
 
 StripePaymentForm.propTypes = {
@@ -728,6 +736,7 @@ StripePaymentForm.propTypes = {
   marketplaceName: string.isRequired,
   isBooking: bool.isRequired,
   isFuzzyLocation: bool,
+  isTxExpired: bool,
 
   // from injectIntl
   intl: intlShape.isRequired,

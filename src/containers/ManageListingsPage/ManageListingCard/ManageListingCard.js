@@ -397,19 +397,21 @@ export const ManageListingCardComponent = props => {
   const isClosed = state === LISTING_STATE_CLOSED;
   const isDraft = state === LISTING_STATE_DRAFT;
 
-  const { listingType, transactionProcessAlias } = publicData || {};
+  const { listingType, transactionProcessAlias, categoryLevel1 } = publicData || {};
   const isBookable = isBookingProcessAlias(transactionProcessAlias);
   const isProductOrder = isPurchaseProcessAlias(transactionProcessAlias);
   const hasListingType = !!listingType;
   const validListingTypes = config.listing.listingTypes;
   const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
+  const listingCategoryConfig = config.categoryConfiguration.categories.find(conf => conf.id === categoryLevel1 );
+  const listingStockType = listingCategoryConfig?.stockType || foundListingTypeConfig?.stockType;
 
   const currentStock = currentListing.currentStock?.attributes?.quantity;
   const isOutOfStock = currentStock === 0;
   const showOutOfStockOverlay =
     !isBookable && isOutOfStock && !isPendingApproval && !isClosed && !isDraft;
   const hasStockManagementInUse =
-    isProductOrder && foundListingTypeConfig?.stockType === STOCK_MULTIPLE_ITEMS;
+    isProductOrder && listingStockType === STOCK_MULTIPLE_ITEMS;
 
   const firstImage =
     currentListing.images && currentListing.images.length > 0 ? currentListing.images[0] : null;

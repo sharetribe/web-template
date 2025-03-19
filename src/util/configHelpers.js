@@ -1,4 +1,5 @@
 import { subUnitDivisors } from '../config/settingsCurrency';
+import { mergeListingCategoryConfigs } from '../extensions/common/helpers/configHelpers';
 import { getSupportedProcessesInfo } from '../transactions/transaction';
 
 // Generic helpers for validating config values
@@ -307,8 +308,8 @@ const mergeLayouts = (layoutConfig, defaultLayout) => {
   );
 
   const listingImage = validVariantConfig(
-    layoutConfig?.listingImage,
     defaultLayout?.listingImage,
+    layoutConfig?.listingImage,
     ['cropImage'],
     { variantType: 'cropImage', aspectWidth: 1, aspectHeight: 1, variantPrefix: 'listing-card' }
   );
@@ -1121,13 +1122,8 @@ const mergeListingConfig = (hostedConfig, defaultConfigs, categoriesInUse) => {
 
   // When debugging, include default configs by passing 'true' here.
   // Otherwise, use listing types and fields from hosted assets.
-  const shouldMerge = mergeDefaultTypesAndFieldsForDebugging(false);
-  const listingTypes = shouldMerge
-    ? union(hostedListingTypes, defaultListingTypes, 'listingType')
-    : hostedListingTypes;
-  const listingFields = shouldMerge
-    ? union(hostedListingFields, defaultListingFields, 'key')
-    : hostedListingFields;
+  const listingTypes = union(hostedListingTypes, defaultListingTypes, 'listingType');
+  const listingFields = union(hostedListingFields, defaultListingFields, 'key');
 
   const listingTypesInUse = listingTypes.map(lt => `${lt.listingType}`);
 
@@ -1174,6 +1170,7 @@ const validCategoryConfig = (config, categoryConfiguration) => {
   if (!enabled) {
     return null;
   }
+
 
   const { key, scope, categoryLevelKeys } = categoryConfiguration;
   // This ensures that flat category structure still uses categoryLevel1 key
@@ -1423,7 +1420,7 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     user: mergeUserConfig(configAsset, defaultConfigs),
 
     // Set category configuration (includes fixed key, array of categories etc.
-    categoryConfiguration,
+    categoryConfiguration: mergeListingCategoryConfigs(categoryConfiguration, defaultConfigs.categoryConfiguration),
 
     // Listing configuration comes entirely from hosted assets by default.
     listing: mergeListingConfig(configAsset, defaultConfigs, validHostedCategories),

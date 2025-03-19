@@ -37,3 +37,15 @@
 .modalMessage {
   composes: marketplaceModalParagraphStyles from global;
 }
+
+
+.generateImageButton {
+ 
+  margin-bottom: 24px;
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 0 0 24px 0;
+  
+}

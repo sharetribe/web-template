@@ -221,6 +221,10 @@
   order: 1;
 }
 
+.managerInfoSection {
+  order: 3;
+}
+
 /* "aside" section in desktop layout */
 .asideDesktop {
   margin: 1px 0 0 0;
@@ -339,7 +343,7 @@
 
   @media (--viewportLarge) {
     display: block;
-    padding-bottom:24px;
+    padding-bottom: 24px;
   }
 }
 
@@ -604,4 +608,32 @@
   @media (--viewportLarge) {
     display: block;
   }
+}
+
+.confirmModalCheckBoxIcon {
+  margin-right: 4px;
+}
+
+.refundAvailableNotice {
+  font-size: 11px;
+  line-height: 15px;
+  font-style: italic;
+}
+.refundAvailableNoticeTitle {
+  font-weight: var(--fontWeightBold);
+}
+
+.nextStepContainer {
+  margin: 0 24px;
+  padding: 18px 0;
+
+  border-bottom: 1px solid var(--colorGrey100);
+
+  @media (--viewportLarge) {
+    margin: 0;
+    padding: 0 0 32px 0;
+  }
+}
+.nextStepTitle {
+  font-weight: var(--fontWeightBold);
 }

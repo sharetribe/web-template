@@ -14,10 +14,12 @@ import {
   TX_TRANSITION_ACTOR_OPERATOR,
   TX_TRANSITION_ACTOR_SYSTEM,
 } from '../../../transactions/transaction';
+import { SELL_PURCHASE_PROCESS_NAME } from '../../../extensions/transactionProcesses/sellPurchase/transactions/transactionProcessSellPurchase';
 
 import { Avatar, InlineTextButton, ReviewRating, UserDisplayName } from '../../../components';
 
 import { stateDataShape } from '../TransactionPage.stateData';
+import { getSellPurchaseProgressTransitions } from '../../../extensions/transactionProcesses/common/helpers/getSellPurchaseProgressTransitions';
 
 import css from './ActivityFeed.module.css';
 
@@ -103,6 +105,7 @@ const TransitionMessage = props => {
     otherUsersName,
     onOpenReviewModal,
     intl,
+    listingCategory,
   } = props;
   const { processName, processState, showReviewAsFirstLink, showReviewAsSecondLink } = stateData;
   const stateStatus = nextState === processState ? 'current' : 'past';
@@ -131,8 +134,20 @@ const TransitionMessage = props => {
   // ActivityFeed messages are tied to transaction process and transitions.
   // However, in practice, transitions leading to same state have had the same message.
   const message = intl.formatMessage(
-    { id: `TransactionPage.ActivityFeed.${processName}.${nextState}` },
-    { actor, otherUsersName, listingTitle, reviewLink, deliveryMethod, stateStatus }
+    {
+      id: `TransactionPage.ActivityFeed.${processName}.${nextState ||
+        transition.messageTranslationId}`,
+    },
+    {
+      actor,
+      otherUsersName,
+      listingTitle,
+      reviewLink,
+      deliveryMethod,
+      stateStatus,
+      ownRole,
+      categoryLevel1: listingCategory.replaceAll('-', '_'),
+    }
   );
 
   return message;
@@ -188,8 +203,12 @@ const compareItems = (a, b) => {
   return itemDate(a) - itemDate(b);
 };
 
-const organizedItems = (messages, transitions, hideOldTransitions) => {
-  const items = messages.concat(transitions).sort(compareItems);
+const organizedItems = (messages, transitions, hideOldTransitions, ...extendedTransitions) => {
+  const items = extendedTransitions
+    .concat(messages)
+    .concat(transitions)
+    .flat()
+    .sort(compareItems);
   if (hideOldTransitions) {
     // Hide transitions that happened before the oldest message. Since
     // we have older items (messages) that we are not showing, seeing
@@ -229,8 +248,17 @@ export const ActivityFeedComponent = props => {
   const todayString = intl.formatMessage({ id: 'TransactionPage.ActivityFeed.today' });
 
   // combine messages and transaction transitions
+  const sellPurchaseProgressTransitions =
+    processName === SELL_PURCHASE_PROCESS_NAME
+      ? getSellPurchaseProgressTransitions(transaction.attributes?.metadata)
+      : [];
   const hideOldTransitions = hasOlderMessages || fetchMessagesInProgress;
-  const items = organizedItems(messages, relevantTransitions, hideOldTransitions);
+  const items = organizedItems(
+    messages,
+    relevantTransitions,
+    hideOldTransitions,
+    sellPurchaseProgressTransitions
+  );
 
   const messageListItem = message => {
     const formattedDate = formatDateWithProximity(message.attributes.createdAt, intl, todayString);
@@ -269,6 +297,7 @@ export const ActivityFeedComponent = props => {
       const listingTitle = listing.attributes.deleted
         ? intl.formatMessage({ id: 'TransactionPage.ActivityFeed.deletedListing' })
         : listing.attributes.title;
+      const listingCategory = listing.attributes.publicData.categoryLevel1;
 
       const ownRole = getUserTxRole(currentUser.id, transaction);
       const otherUser = ownRole === TX_TRANSITION_ACTOR_PROVIDER ? customer : provider;
@@ -287,6 +316,7 @@ export const ActivityFeedComponent = props => {
               otherUsersName={<UserDisplayName user={otherUser} intl={intl} />}
               onOpenReviewModal={onOpenReviewModal}
               intl={intl}
+              listingCategory={listingCategory}
             />
           }
           reviewComponent={

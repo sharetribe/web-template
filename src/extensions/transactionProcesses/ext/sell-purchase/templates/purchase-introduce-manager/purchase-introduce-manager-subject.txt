@@ -1,0 +1,1 @@
+{{set-translations (asset "content/email-texts.json")}}{{t "SellPurchaseIntroduceManager.Subject" "Property Manager Details"}}

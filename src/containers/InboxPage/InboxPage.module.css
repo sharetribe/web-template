@@ -50,7 +50,7 @@
   box-shadow: var(--boxShadow);
 
   width: auto;
-  margin:0;
+  margin: 0;
 
   position: sticky;
   top: 10px;
@@ -78,7 +78,7 @@
   display: flex;
   gap: 40px;
   @media (--viewportLarge) {
-    display:block;
+    display: block;
   }
 }
 .title {
@@ -118,7 +118,7 @@
 
   @media (--viewportLarge) {
     padding-top: 24px;
-    padding-left:12px;
+    padding-left: 12px;
     flex-direction: column;
   }
 }
@@ -234,7 +234,7 @@
     'dot name    state'
     '... item    state'
     '... details state'
-    '... message state';
+    '... message message';
   padding: 2px 0 6px;
   gap: 4px 0;
 
@@ -252,29 +252,51 @@
 
 .itemMessage {
   grid-area: message;
-  grid-column: 2 / span 2;
-  color: var(--colorGrey700);
-  margin-left: 24px;
-  
-  font-size: 12px; 
+
+  font-size: 12px;
   line-height: 16px;
+  color: var(--colorGrey700);
+
   display: flex;
   flex-direction: row;
-  gap:8px;
-  justify-content:space-between;
+  gap: 8px;
+  justify-content: space-between;
 
   > .messageDate {
     color: var(--colorGrey300);
   }
-  
-  background-color: var(--colorGrey75); 
-  padding:3px 8px;
+
+  background-color: var(--colorGrey75);
+  padding: 3px 8px;
   border-radius: 6px;
+
+  @media (--viewportMedium) {
+    margin-left: 24px;
+  }
+}
+.messageContainer {
+  display: flex;
+  gap: 12px;
+  @media (--viewportMedium) {
+    margin-left: -32px;
+  }
 }
 .messageIcon {
-  margin-left:-30px;
-  margin-right:10px;
+  display: none;
   color: var(--colorGrey300);
+
+  @media (--viewportMedium) {
+    display: inline;
+    flex: 1 0 16px;
+  }
+}
+.messageContent {
+  word-break: break-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
 }
 
 .rowNotificationDot {
@@ -425,10 +447,10 @@
   background-color: transparent;
   border: none;
   position: relative;
-  margin-left:-8px;
-  
+  margin-left: -8px;
+
   @media (--viewportMedium) {
-    margin-left:0;
+    margin-left: 0;
     width: 230px;
   }
   @media (--viewportLarge) {
@@ -437,18 +459,18 @@
 }
 .searchIcon {
   position: absolute;
-  left: 14px; 
-  color: #999; 
-  pointer-events: none; 
+  left: 14px;
+  color: #999;
+  pointer-events: none;
   transform: scaleX(-1);
 }
 
 .searchBox {
   width: 100%;
-  padding: 0.3rem 0.5rem 0.3rem 2.5rem; 
+  padding: 0.3rem 0.5rem 0.3rem 2.5rem;
   border: 1px solid var(--colorGrey100);
   outline: none;
-  background-color: white; 
-  font-size: 1rem; 
+  background-color: white;
+  font-size: 1rem;
   border-radius: 30px;
 }

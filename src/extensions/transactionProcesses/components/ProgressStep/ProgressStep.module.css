@@ -1,0 +1,187 @@
+@import '../../../../styles/customMediaQueries.css';
+
+.root {
+  --colorProgressStepDone: #06739c;
+  --colorProgressStepInProgress: #56a5c4;
+  --colorProgressStepPending: #bbe1f0;
+}
+
+.container {
+  flex: 1 0 0;
+  min-width: 60px;
+  padding-right: 4px;
+
+  @media (--viewportMedium) {
+    min-width: 80px;
+    padding-right: 16px;
+  }
+}
+
+.iconLineContainer {
+  display: flex;
+  align-items: center;
+}
+
+.containerDone {
+  background-color: var(--colorProgressStepDone);
+  color: var(--colorWhite);
+}
+.containerInProgress {
+  background-color: var(--colorProgressStepInProgress);
+  color: var(--colorWhite);
+}
+.containerPending {
+  background-color: var(--colorProgressStepPending);
+  color: var(--colorGrey300);
+}
+.containerCanceled {
+  background-color: var(--colorFail);
+  color: var(--colorWhite);
+}
+
+.iconContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 999px;
+  padding: 4px;
+
+  & :global(svg.lucide) {
+    margin-bottom: unset;
+  }
+
+  @media (--viewportMedium) {
+    & :global(svg.lucide) {
+      width: 24px;
+      height: 24px;
+    }
+  }
+}
+.iconContainerDone {
+  composes: iconContainer;
+  composes: containerDone;
+}
+.iconContainerInProgress {
+  composes: iconContainer;
+  background-color: var(--colorWhite);
+  color: var(--colorWhite);
+  border: 1px solid var(--colorProgressStepInProgress);
+}
+.iconContainerPending {
+  composes: iconContainer;
+  composes: containerPending;
+}
+.iconContainerCanceled {
+  composes: iconContainer;
+  composes: containerCanceled;
+}
+
+.innerCircle {
+  display: block;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+
+  @media (--viewportMedium) {
+    width: 24px;
+    height: 24px;
+  }
+}
+.innerCirclePending {
+  composes: innerCircle;
+  composes: containerPending;
+}
+.innerCircleInProgress {
+  composes: innerCircle;
+  composes: containerInProgress;
+}
+
+.progressLineContainer {
+  composes: containerPending;
+  flex: 1 0 0;
+
+  height: 4px;
+  margin-left: 4px;
+
+  @media (--viewportMedium) {
+    margin-left: 16px;
+  }
+}
+
+.hideProgressLine {
+  visibility: hidden;
+}
+
+.progressLineDone {
+  width: 100%;
+  height: 100%;
+
+  composes: containerDone;
+}
+.progressLineInProgress {
+  width: 50%;
+  height: 100%;
+
+  composes: containerInProgress;
+}
+
+.stepCount {
+  display: block;
+  margin-top: 4px;
+
+  font-size: 8px;
+  line-height: 12px;
+  color: var(--colorGrey400);
+  font-weight: var(--fontWeightBold);
+
+  @media (--viewportMedium) {
+    margin-top: 12px;
+    font-size: 12px;
+    line-height: 18px;
+  }
+}
+
+.stepTitle {
+  display: block;
+
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--colorBlack);
+  font-weight: var(--fontWeightSemiBold);
+
+  @media (--viewportMedium) {
+    font-size: 18px;
+    line-height: 27px;
+  }
+}
+
+.stepState {
+  display: block;
+
+  font-size: 8px;
+  line-height: 10px;
+  font-weight: var(--fontWeightBold);
+  background-color: unset;
+
+  @media (--viewportMedium) {
+    font-size: 11px;
+    line-height: 17px;
+  }
+}
+.stepStateDone {
+  composes: stepState;
+  color: var(--colorProgressStepDone);
+}
+.stepStateInProgress {
+  composes: stepState;
+  color: var(--colorProgressStepInProgress);
+}
+.stepStatePending {
+  composes: stepState;
+  color: var(--colorGrey300);
+}
+.stepStateCanceled {
+  composes: stepState;
+  color: var(--colorFail);
+}

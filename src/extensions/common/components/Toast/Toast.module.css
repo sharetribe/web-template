@@ -1,0 +1,22 @@
+.progressBar {
+  background: none;
+  background-color: var(--colorWhite);
+}
+
+.successToast {
+  background-color: var(--marketplaceColor);
+  color: var(--colorWhite);
+}
+
+.toastTitle {
+  font-size: 17px;
+  line-height: 22px;
+  margin: 0;
+}
+
+.toastText {
+  font-size: 14px;
+  line-height: 18px;
+  margin: 0;
+  padding: 0;
+}

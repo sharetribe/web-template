@@ -10,6 +10,10 @@ import Decimal from 'decimal.js';
 import { isAfterDate, subtractTime } from '../../util/dates';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { getProcess } from '../../transactions/transaction';
+import {
+  getListingProcessName,
+  getTxProcessName,
+} from '../../extensions/common/helpers/getProcessName';
 
 const { UUID, Money } = sdkTypes;
 
@@ -175,6 +179,19 @@ export const handlePageData = ({ orderData, listing, transaction }, storageKey, 
   }
 
   // NOTE: stored data can be empty if user has already successfully completed transaction.
-  const pageData = hasDataInProps ? { orderData, listing, transaction } : storedData(storageKey);
-  return pageData;
+  const { listing: pageDataListing, transaction: pageDataTx, ...restPageData } = hasDataInProps
+    ? { orderData, listing, transaction }
+    : storedData(storageKey);
+
+  const listingProcessName = getListingProcessName(pageDataListing);
+  const txProcessName = getTxProcessName(pageDataTx);
+  const isTxExpired =
+    !!txProcessName && !!listingProcessName && txProcessName !== listingProcessName;
+
+  return {
+    ...restPageData,
+    listing: pageDataListing,
+    transaction: isTxExpired ? null : pageDataTx,
+    isTxExpired,
+  };
 };

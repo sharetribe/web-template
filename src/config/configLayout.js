@@ -26,7 +26,7 @@ export const listingImage = {
   // Aspect ratio for listing image variants (width/height)
   // Note: This will be converted to separate aspectWidth and aspectHeight values
   // to make calculations easier.
-  aspectRatio: '4/3',
+  aspectRatio: '191/100',
   // Listings have custom image variants, which are named here.
   variantPrefix: 'listing-card',
 };

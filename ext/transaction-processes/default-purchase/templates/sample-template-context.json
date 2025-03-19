@@ -1,0 +1,237 @@
+{
+  "recipient": {
+    "id": "fd180cc2-a99c-4e43-b960-9b94daec5265",
+    "first-name": "Joe",
+    "last-name": "Dunphy",
+    "display-name": "Joe D",
+    "public-data": {
+      "phoneNumberVerified": true
+    },
+    "protected-data": {
+      "phoneNumber": "123456"
+    },
+    "private-data": {
+      "language": "en"
+    },
+    "metadata": {
+      "membership": "premium"
+    }
+  },
+  "recipient-role": "provider",
+  "other-party": {
+    "id": "ef7f40d5-da66-489a-957b-641313b68204",
+    "first-name": "Jane",
+    "last-name": "Pritchett",
+    "display-name": "Jane P",
+    "public-data": {
+      "phoneNumberVerified": true
+    },
+    "protected-data": {
+      "phoneNumber": "789101112"
+    },
+    "private-data": {
+      "language": "fr"
+    },
+    "metadata": {
+      "membership": "standard"
+    }
+  },
+  "marketplace": {
+    "name": "Bikesoil",
+    "url": "https://www.sharetribe.com"
+  },
+  "transaction": {
+    "booking": {
+      "start": {
+        "year": 2017,
+        "month": 12,
+        "day": 1,
+        "hours": 0,
+        "minutes": 0,
+        "seconds": 0,
+        "milliseconds": 0
+      },
+      "end": {
+        "year": 2017,
+        "month": 12,
+        "day": 12,
+        "hours": 0,
+        "minutes": 0,
+        "seconds": 0,
+        "milliseconds": 0
+      },
+      "displayStart": {
+        "year": 2017,
+        "month": 12,
+        "day": 1,
+        "hours": 0,
+        "minutes": 0,
+        "seconds": 0,
+        "milliseconds": 0
+      },
+      "displayEnd": {
+        "year": 2017,
+        "month": 12,
+        "day": 12,
+        "hours": 0,
+        "minutes": 0,
+        "seconds": 0,
+        "milliseconds": 0
+      },
+      "seats": 2,
+      "state": "accepted"
+    },
+    "stock-reservation": {
+      "state": "accepted",
+      "quantity": 2
+    },
+    "listing": {
+      "id": "d892dfe6-9407-4400-9e81-8100d7a87b7f",
+      "title": "Wooden sauna",
+      "private-data": {},
+      "public-data": {},
+      "metadata": {},
+      "availability-plan": {
+        "type": "availability-plan/time",
+        "timezone": "Europe/Helsinki"
+      },
+      "current-stock": {
+        "quantity": 10
+      }
+    },
+    "delayed-transition": {
+      "run-at": {
+        "year": 2017,
+        "month": 11,
+        "day": 29,
+        "hours": 0,
+        "minutes": 0,
+        "seconds": 0,
+        "milliseconds": 0
+      }
+    },
+    "payout-total": {
+      "amount": 810,
+      "currency": "USD"
+    },
+    "customer": {
+      "id": "ef7f40d5-da66-489a-957b-641313b68204",
+      "first-name": "Jane",
+      "last-name": "Pritchett",
+      "display-name": "Jane P",
+      "public-data": {
+        "phoneNumberVerified": true
+      },
+      "protected-data": {
+        "phoneNumber": "789101112"
+      },
+      "private-data": {
+        "language": "fr"
+      },
+      "metadata": {
+        "membership": "standard"
+      }
+    },
+    "payin-total": {
+      "amount": 900,
+      "currency": "USD"
+    },
+    "id": "d8893061-c860-4e44-8d4d-61587a497e6e",
+    "reviews": [
+      {
+        "subject": {
+          "id": "ef7f40d5-da66-489a-957b-641313b68204",
+          "first-name": "Jane",
+          "last-name": "Pritchett",
+          "display-name": "Jane P",
+          "public-data": {
+            "phoneNumberVerified": true
+          },
+          "protected-data": {
+            "phoneNumber": "789101112"
+          },
+          "private-data": {
+            "language": "fr"
+          },
+          "metadata": {
+            "membership": "standard"
+          }
+        },
+        "content": "Well done, customer Jane P!"
+      },
+      {
+        "subject": {
+          "id": "fd180cc2-a99c-4e43-b960-9b94daec5265",
+          "first-name": "Joe",
+          "last-name": "Dunphy",
+          "display-name": "Joe D",
+          "public-data": {
+            "phoneNumberVerified": true
+          },
+          "protected-data": {
+            "phoneNumber": "123456"
+          },
+          "private-data": {
+            "language": "en"
+          },
+          "metadata": {
+            "membership": "premium"
+          }
+        },
+        "content": "Good job, provider Joe D!"
+      }
+    ],
+    "tx-line-items": [
+      {
+        "code": "line-item/night",
+        "unit-price": {
+          "amount": 300,
+          "currency": "USD"
+        },
+        "line-total": {
+          "amount": 900,
+          "currency": "USD"
+        },
+        "include-for": ["customer", "provider"],
+        "quantity": 3
+      },
+      {
+        "code": "line-item/provider-commission",
+        "unit-price": {
+          "amount": 900,
+          "currency": "USD"
+        },
+        "line-total": {
+          "amount": -90,
+          "currency": "USD"
+        },
+        "include-for": ["provider"],
+        "percentage": -10
+      }
+    ],
+    "provider": {
+      "id": "fd180cc2-a99c-4e43-b960-9b94daec5265",
+      "first-name": "Joe",
+      "last-name": "Dunphy",
+      "display-name": "Joe D",
+      "public-data": {
+        "phoneNumberVerified": true
+      },
+      "protected-data": {
+        "phoneNumber": "123456"
+      },
+      "private-data": {
+        "language": "en"
+      },
+      "metadata": {
+        "membership": "premium"
+      }
+    },
+    "protected-data": {
+      "customerPhoneNumber": "123456"
+    },
+    "metadata": {
+      "discountCode": "abc-123"
+    }
+  }
+}

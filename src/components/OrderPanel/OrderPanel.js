@@ -44,7 +44,16 @@ import {
   resolveLatestProcessName,
 } from '../../transactions/transaction';
 
-import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2, InlineTextButton, Button, SecondaryButton } from '../../components';
+import {
+  ModalInMobile,
+  PrimaryButton,
+  AvatarSmall,
+  H1,
+  H2,
+  InlineTextButton,
+  Button,
+  SecondaryButton,
+} from '../../components';
 
 import { Heart } from 'lucide-react';
 
@@ -165,10 +174,10 @@ const PriceMaybe = props => {
 };
 
 const SendMessageIcon = () => (
-  <svg 
-    width="14" 
-    height="14" 
-    viewBox="0 0 14 14" 
+  <svg
+    width="14"
+    height="14"
+    viewBox="0 0 14 14"
     xmlns="http://www.w3.org/2000/svg"
     className={css.sendIcon}
   >
@@ -213,10 +222,11 @@ const OrderPanel = props => {
     existingMessageHistory,
     onToggleFavorites,
     currentUser,
+    listingCategoryConfigs,
   } = props;
 
   const publicData = listing?.attributes?.publicData || {};
-  const { listingType, unitType, transactionProcessAlias = '' } = publicData || {};
+  const { listingType, unitType, transactionProcessAlias = '', categoryLevel1 } = publicData || {};
   const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
   const lineItemUnitType = lineItemUnitTypeMaybe || `line-item/${unitType}`;
 
@@ -271,8 +281,12 @@ const OrderPanel = props => {
   const listingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
   const displayShipping = displayDeliveryShipping(listingTypeConfig);
   const displayPickup = displayDeliveryPickup(listingTypeConfig);
+  const listingCategory = listingCategoryConfigs.categories.find(
+    conf => conf.id === categoryLevel1
+  );
+  const stockType = listingCategory?.stockType || listingTypeConfig?.stockType;
   const allowOrdersOfMultipleItems = [STOCK_MULTIPLE_ITEMS, STOCK_INFINITE_MULTIPLE_ITEMS].includes(
-    listingTypeConfig?.stockType
+    stockType
   );
 
   const showClosedListingHelpText = listing.id && isClosed;
@@ -288,8 +302,8 @@ const OrderPanel = props => {
   const titleClasses = classNames(titleClassName || css.orderTitle);
 
   const isListingPage = location.pathname.startsWith('/l/');
-  
-  const ContactButton = () => 
+
+  const ContactButton = () =>
     isListingPage ? (
       <InlineTextButton className={css.contactSellerButton} onClick={() => onContactUser(author)}>
         <SendMessageIcon />
@@ -299,24 +313,21 @@ const OrderPanel = props => {
       </InlineTextButton>
     ) : null;
 
-    const isFavorite = currentUser?.attributes.profile.privateData.favorites?.includes(
-      listing.id.uuid
-    );
-    
-    const toggleFavorites = () => onToggleFavorites(isFavorite);
-    
-    const favoriteButton = isFavorite ? (
-      <InlineTextButton
-        className={`${css.favoriteButton} ${css.active}`}
-        onClick={toggleFavorites}
-      >
-        <Heart />
-      </InlineTextButton>
-    ) : (
-      <InlineTextButton className={css.favoriteButton} onClick={toggleFavorites}>
-        <Heart />
-      </InlineTextButton>
-    );
+  const isFavorite = currentUser?.attributes.profile.privateData.favorites?.includes(
+    listing.id.uuid
+  );
+
+  const toggleFavorites = () => onToggleFavorites(isFavorite);
+
+  const favoriteButton = isFavorite ? (
+    <InlineTextButton className={`${css.favoriteButton} ${css.active}`} onClick={toggleFavorites}>
+      <Heart />
+    </InlineTextButton>
+  ) : (
+    <InlineTextButton className={css.favoriteButton} onClick={toggleFavorites}>
+      <Heart />
+    </InlineTextButton>
+  );
 
   return (
     <div className={classes}>
@@ -346,22 +357,19 @@ const OrderPanel = props => {
           marketplaceCurrency={marketplaceCurrency}
         />
 
-       {isListingPage && (
-        
-        <>
-        <div className={css.author}>
-          <AvatarSmall user={author} className={css.providerAvatar} />
-          <span className={css.providerNameLinked}>
-            <FormattedMessage id="OrderPanel.author" values={{ name: authorLink }} />
-          </span>
-          <span className={css.providerNamePlain}>
-            <FormattedMessage id="OrderPanel.author" values={{ name: authorDisplayName }} />
-          </span>
-        </div>
-         
-         </>
-
-       )}
+        {isListingPage && (
+          <>
+            <div className={css.author}>
+              <AvatarSmall user={author} className={css.providerAvatar} />
+              <span className={css.providerNameLinked}>
+                <FormattedMessage id="OrderPanel.author" values={{ name: authorLink }} />
+              </span>
+              <span className={css.providerNamePlain}>
+                <FormattedMessage id="OrderPanel.author" values={{ name: authorDisplayName }} />
+              </span>
+            </div>
+          </>
+        )}
 
         {showPriceMissing ? (
           <PriceMissing />
@@ -413,13 +421,13 @@ const OrderPanel = props => {
           />
         ) : showProductOrderForm ? (
           <>
-             <div className={css.hideOnMobile}>
+            <div className={css.hideOnMobile}>
               <div className={css.buttonGroup}>
                 <ContactButton />
                 {favoriteButton}
               </div>
             </div>
-            
+
             <ProductOrderForm
               formId="OrderPanelProductOrderForm"
               onSubmit={onSubmit}
@@ -450,7 +458,6 @@ const OrderPanel = props => {
             <FormattedMessage id="OrderPanel.unknownTransactionProcess" />
           </p>
         ) : null}
-        
       </ModalInMobile>
       <div className={css.openOrderForm}>
         <PriceMaybe
@@ -565,7 +572,4 @@ OrderPanel.propTypes = {
   intl: intlShape.isRequired,
 };
 
-export default compose(
-  withRouter,
-  injectIntl
-)(OrderPanel);
+export default compose(withRouter, injectIntl)(OrderPanel);
