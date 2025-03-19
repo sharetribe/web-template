@@ -289,11 +289,11 @@ export const InboxPageComponent = props => {
     const {
       transactionType: transactionTypeCategoryConfig,
       stockType: stockTypeCategoryConfig,
-    } = listingCategoryConfigs.find(conf => conf.id === categoryLevel1);
+    } = listingCategoryConfigs.find(conf => conf.id === categoryLevel1) || {};
     const {
       transactionType: transactionTypeListingTypeConfig,
       stockType: stockTypeListingTypeConfig,
-    } = listingTypeConfigs?.find(pickType(listingType));
+    } = listingTypeConfigs?.find(pickType(listingType)) || {};
 
     const foundConfig = {
       transactionType: transactionTypeCategoryConfig || transactionTypeListingTypeConfig,
