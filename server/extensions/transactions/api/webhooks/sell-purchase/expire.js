@@ -6,13 +6,9 @@ const {
 } = require('../../../transactions/transactionProcessSellPurchase');
 
 const handleExpireIntent = async chargeObject => {
-  //TODO: paymentIntentObjectId is of payment_intent.canceled event type
-  //It's only for testing dev build
-  const { ['payment_intent']: paymentIntentId, id: paymentIntentObjectId } = chargeObject;
+  const { ['payment_intent']: paymentIntentId } = chargeObject;
 
-  const paymentIntent = await stripeInstance.paymentIntents.retrieve(
-    paymentIntentId || paymentIntentObjectId
-  );
+  const paymentIntent = await stripeInstance.paymentIntents.retrieve(paymentIntentId);
   const { 'sharetribe-transaction-id': txId } = paymentIntent.metadata;
 
   if (!txId) {

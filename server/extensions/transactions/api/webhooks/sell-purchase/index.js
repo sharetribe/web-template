@@ -13,9 +13,6 @@ const handleWebhook = async (req, res) => {
     // Handle the event
     switch (event.type) {
       case 'charge.expired':
-      //TODO: Remove testing case below
-      case 'charge.failed':
-      case 'payment_intent.canceled':
         const chargeObject = event.data.object;
 
         await handleExpireIntent(chargeObject);
