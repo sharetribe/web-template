@@ -64,8 +64,6 @@
 .sideNav {
   /* Layout */
   display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
   position: relative;
 
   box-sizing: content-box;
@@ -75,11 +73,14 @@
   background-color: var(--colorWhite);
   box-shadow: var(--boxShadow);
 
-  @media (--viewportLarge) {
-    width: 30%;
-    margin:82px 20px 0 0;
-    justify-items: right;
+  flex-direction: column;
+  padding: 20px 0 0 20px;
+  margin: 0;
+  width: auto;
 
+  @media (--viewportLarge) {
+   
+    justify-items: right;
     border: none;
     box-shadow: none;
     background-color: transparent;
