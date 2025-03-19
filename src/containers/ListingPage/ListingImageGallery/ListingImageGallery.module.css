@@ -190,7 +190,7 @@
   z-index: 1;
 
   @media (--viewportLarge) {
-    display: block;
+    /*display: block;*/
   }
 }
 
