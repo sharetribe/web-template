@@ -748,11 +748,13 @@
 }
 
 .wrapperKeywords {
+  flex-wrap: wrap;
   display: flex;
   gap: 10px;
 }
 
 .wrapperCategories {
+  flex-wrap: wrap;
   display: flex;
   gap: 10px;
 
