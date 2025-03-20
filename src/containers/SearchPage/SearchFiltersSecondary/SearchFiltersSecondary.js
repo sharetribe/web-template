@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { func, object, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { FormattedMessage } from '../../../util/reactIntl';
@@ -8,6 +7,19 @@ import { InlineTextButton } from '../../../components';
 
 import css from './SearchFiltersSecondary.module.css';
 
+/**
+ * SearchFiltersSecondary component
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {Object} props.urlQueryParams - The URL query params
+ * @param {Function} props.applyFilters - The function to apply the filters
+ * @param {Function} props.resetAll - The function to reset all
+ * @param {Function} props.onClosePanel - The function to close the panel
+ * @returns {JSX.Element}
+ */
 class SearchFiltersSecondaryComponent extends Component {
   constructor(props) {
     super(props);
@@ -80,20 +92,6 @@ class SearchFiltersSecondaryComponent extends Component {
     );
   }
 }
-
-SearchFiltersSecondaryComponent.defaultProps = {
-  rootClassName: null,
-  className: null,
-};
-
-SearchFiltersSecondaryComponent.propTypes = {
-  rootClassName: string,
-  className: string,
-  urlQueryParams: object.isRequired,
-  applyFilters: func.isRequired,
-  resetAll: func.isRequired,
-  onClosePanel: func.isRequired,
-};
 
 const SearchFiltersSecondary = SearchFiltersSecondaryComponent;
 

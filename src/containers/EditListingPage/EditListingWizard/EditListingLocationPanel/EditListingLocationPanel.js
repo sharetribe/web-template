@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 // Import configs and util modules
@@ -34,6 +33,23 @@ const getInitialValues = props => {
   };
 };
 
+/**
+ * The EditListingLocationPanel component.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {propTypes.ownListing} props.listing - The listing object
+ * @param {boolean} props.disabled - Whether the form is disabled
+ * @param {boolean} props.ready - Whether the form is ready
+ * @param {Function} props.onSubmit - The submit function
+ * @param {string} props.submitButtonText - The submit button text
+ * @param {boolean} props.panelUpdated - Whether the panel is updated
+ * @param {boolean} props.updateInProgress - Whether the update is in progress
+ * @param {Object} props.errors - The errors object
+ * @returns {JSX.Element}
+ */
 const EditListingLocationPanel = props => {
   // State is needed since LocationAutocompleteInput doesn't have internal state
   // and therefore re-rendering would overwrite the values during XHR call.
@@ -106,30 +122,6 @@ const EditListingLocationPanel = props => {
       />
     </div>
   );
-};
-
-const { func, object, string, bool } = PropTypes;
-
-EditListingLocationPanel.defaultProps = {
-  className: null,
-  rootClassName: null,
-  listing: null,
-};
-
-EditListingLocationPanel.propTypes = {
-  className: string,
-  rootClassName: string,
-
-  // We cannot use propTypes.listing since the listing might be a draft.
-  listing: object,
-
-  disabled: bool.isRequired,
-  ready: bool.isRequired,
-  onSubmit: func.isRequired,
-  submitButtonText: string.isRequired,
-  panelUpdated: bool.isRequired,
-  updateInProgress: bool.isRequired,
-  errors: object.isRequired,
 };
 
 export default EditListingLocationPanel;

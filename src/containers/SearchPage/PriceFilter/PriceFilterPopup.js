@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { arrayOf, func, node, number, shape, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { injectIntl, intlShape } from '../../../util/reactIntl';
@@ -39,6 +38,28 @@ const format = (range, queryParamName) => {
   return { [queryParamName]: value };
 };
 
+/**
+ * PriceFilterPopup component
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} props.id - The ID
+ * @param {React.Node} props.label - The label
+ * @param {Array<string>} props.queryParamNames - The query param names
+ * @param {Object} props.initialValues - The initial values
+ * @param {string} props.initialValues.minPrice - The price range: min
+ * @param {string} props.initialValues.maxPrice - The price range: max
+ * @param {number} props.contentPlacementOffset - The content placement offset
+ * @param {number} props.min - The minimum price for the price range filter
+ * @param {number} props.max - The maximum price for the price range filter
+ * @param {number} props.step - The step for the price range filter
+ * @param {string} props.marketplaceCurrency - The marketplace currency (e.g. 'USD')
+ * @param {Function} props.onSubmit - The function to submit
+ * @param {intlShape} props.intl - The intl object
+ * @returns {JSX.Element}
+ */
 class PriceFilterPopup extends Component {
   constructor(props) {
     super(props);
@@ -105,7 +126,7 @@ class PriceFilterPopup extends Component {
       const contentWidth = this.filterContent.offsetWidth;
       const contentWidthBiggerThanLabel = contentWidth - labelWidth;
       const renderToRight = distanceToRight > contentWidthBiggerThanLabel;
-      const contentPlacementOffset = this.props.contentPlacementOffset;
+      const contentPlacementOffset = this.props.contentPlacementOffset || 0;
 
       const offset = renderToRight
         ? { left: contentPlacementOffset }
@@ -192,34 +213,5 @@ class PriceFilterPopup extends Component {
     );
   }
 }
-
-PriceFilterPopup.defaultProps = {
-  rootClassName: null,
-  className: null,
-  initialValues: null,
-  contentPlacementOffset: 0,
-  liveEdit: false,
-  step: number,
-};
-
-PriceFilterPopup.propTypes = {
-  rootClassName: string,
-  className: string,
-  id: string.isRequired,
-  label: node,
-  queryParamNames: arrayOf(string).isRequired,
-  onSubmit: func.isRequired,
-  initialValues: shape({
-    price: string,
-  }),
-  contentPlacementOffset: number,
-  min: number.isRequired,
-  max: number.isRequired,
-  step: number,
-  marketplaceCurrency: string.isRequired,
-
-  // form injectIntl
-  intl: intlShape.isRequired,
-};
 
 export default injectIntl(PriceFilterPopup);

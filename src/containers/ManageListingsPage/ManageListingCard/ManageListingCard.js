@@ -1,12 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { compose } from 'redux';
-import { withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import classNames from 'classnames';
 
 import { useConfiguration } from '../../../context/configurationContext';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
-import { FormattedMessage, intlShape, injectIntl } from '../../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { displayPrice } from '../../../util/configHelpers';
 import {
   LISTING_STATE_PENDING_APPROVAL,
@@ -367,17 +365,37 @@ const PriceMaybe = props => {
   );
 };
 
-export const ManageListingCardComponent = props => {
+/**
+ * Manage listing card
+ *
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {boolean} props.hasClosingError - Whether the closing error is present
+ * @param {boolean} props.hasDiscardingError - Whether the discarding error is present
+ * @param {boolean} props.hasOpeningError - Whether the opening error is present
+ * @param {boolean} props.isMenuOpen - Whether the menu is open
+ * @param {Object} [props.actionsInProgressListingId] - The actions in progress for the specific listing
+ * @param {propTypes.uuid} [props.actionsInProgressListingId.uuid] - The uuid of the listing
+ * @param {propTypes.ownListing} props.listing - The listing
+ * @param {function} props.onCloseListing - The function to close the listing
+ * @param {function} props.onOpenListing - The function to open the listing
+ * @param {function} props.onDiscardDraft - The function to discard the draft
+ * @param {function} props.onToggleMenu - The function to toggle the menu
+ * @param {string} [props.renderSizes] - The render sizes
+ * @returns {JSX.Element} Manage listing card component
+ */
+export const ManageListingCard = props => {
   const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();
+  const intl = props.intl || useIntl();
+  const history = useHistory();
   const {
     className,
     rootClassName,
     hasClosingError,
     hasDiscardingError,
     hasOpeningError,
-    history,
-    intl,
     isMenuOpen,
     actionsInProgressListingId,
     listing,
@@ -612,38 +630,4 @@ export const ManageListingCardComponent = props => {
   );
 };
 
-ManageListingCardComponent.defaultProps = {
-  className: null,
-  rootClassName: null,
-  actionsInProgressListingId: null,
-  renderSizes: null,
-};
-
-const { bool, func, shape, string } = PropTypes;
-
-ManageListingCardComponent.propTypes = {
-  className: string,
-  rootClassName: string,
-  hasClosingError: bool.isRequired,
-  hasOpeningError: bool.isRequired,
-  intl: intlShape.isRequired,
-  listing: propTypes.ownListing.isRequired,
-  isMenuOpen: bool.isRequired,
-  actionsInProgressListingId: shape({ uuid: string.isRequired }),
-  onCloseListing: func.isRequired,
-  onOpenListing: func.isRequired,
-  onToggleMenu: func.isRequired,
-
-  // Responsive image sizes hint
-  renderSizes: string,
-
-  // from withRouter
-  history: shape({
-    push: func.isRequired,
-  }).isRequired,
-};
-
-export default compose(
-  withRouter,
-  injectIntl
-)(ManageListingCardComponent);
+export default ManageListingCard;

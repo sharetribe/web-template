@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { act } from 'react';
 import '@testing-library/jest-dom';
 
 import { fakeIntl } from '../../util/testData';
@@ -6,12 +6,12 @@ import { renderWithProviders as render, testingLibrary } from '../../util/testHe
 
 import { PasswordRecoveryPageComponent } from './PasswordRecoveryPage';
 
-const { screen, userEvent } = testingLibrary;
+const { screen, userEvent, waitFor } = testingLibrary;
 
 const noop = () => null;
 
 describe('PasswordRecoveryPageComponent', () => {
-  it('Check that email input shows error and submit is enabled if form is filled', () => {
+  it('Check that email input shows error and submit is enabled if form is filled', async () => {
     render(
       <PasswordRecoveryPageComponent
         params={{ displayName: 'my-shop' }}
@@ -42,16 +42,19 @@ describe('PasswordRecoveryPageComponent', () => {
       screen.getByRole('button', { name: 'PasswordRecoveryForm.sendInstructions' })
     ).toBeDisabled();
 
-    // There's a too short password, there is error text visible
-    userEvent.type(emailInput, 'foobar');
-    emailInput.blur();
-
+    await act(async () => {
+      // There's a too short password, there is error text visible
+      userEvent.type(emailInput, 'foobar');
+      emailInput.blur();
+    });
     const emailInvalid = 'PasswordRecoveryForm.emailInvalid';
     expect(screen.getByText(emailInvalid)).toBeInTheDocument();
 
-    // There's a valid email written to input => there is no error text visible
-    userEvent.type(emailInput, 'foo@bar.com');
-    emailInput.blur();
+    await act(async () => {
+      // There's a valid email written to input => there is no error text visible
+      userEvent.type(emailInput, '@bar.com');
+      emailInput.blur();
+    });
     expect(screen.queryByText(emailInvalid)).not.toBeInTheDocument();
 
     // Save button is enabled

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { array, arrayOf, bool, func, number, object, oneOf, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -7,7 +6,7 @@ import classNames from 'classnames';
 
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
-import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { createResourceLocatorString, findRouteByRouteName } from '../../util/routes';
 import {
   DATE_TYPE_DATE,
@@ -82,7 +81,52 @@ const onDisputeOrder = (
     });
 };
 
-// TransactionPage handles data loading for Sale and Order views to transaction pages in Inbox.
+/**
+ * TransactionPage handles data loading for Sale and Order views to transaction pages in Inbox.
+ *
+ * @component
+ * @param {Object} props
+ * @param {Object} props.params - The path params
+ * @param {string} props.params.id - The transaction id
+ * @param {PROVIDER|CUSTOMER} props.transactionRole - The transaction role
+ * @param {propTypes.currentUser} props.currentUser - The current user
+ * @param {Object} props.history - The history object
+ * @param {Function} props.history.push - The push function
+ * @param {Object} props.location - The location object
+ * @param {string} props.location.search - The search string
+ * @param {propTypes.transaction} props.transaction - The transaction
+ * @param {propTypes.error} props.fetchTransactionError - The fetch transaction error
+ * @param {Array<propTypes.message>} props.messages - The messages
+ * @param {boolean} props.fetchMessagesInProgress - Whether the fetch messages is in progress
+ * @param {propTypes.error} props.fetchMessagesError - The fetch messages error
+ * @param {number} props.totalMessagePages - The total message pages
+ * @param {number} props.oldestMessagePageFetched - The oldest message page fetched
+ * @param {propTypes.uuid} props.initialMessageFailedToTransaction - The initial message failed to be send to transaction
+ * @param {boolean} props.sendMessageInProgress - Whether the send message is in progress
+ * @param {propTypes.error} props.sendMessageError - The send message error
+ * @param {boolean} props.savePaymentMethodFailed - Whether the payment method is saved
+ * @param {string} props.transitionInProgress - The transition in progress
+ * @param {propTypes.error} props.transitionError - The transition error
+ * @param {Object<string, Object>} props.monthlyTimeSlots - The monthly time slots: { '2019-11': { timeSlots: [], fetchTimeSlotsInProgress: false, fetchTimeSlotsError: null } }
+ * @param {propTypes.error} props.fetchTimeSlotsError - The fetch time slots error
+ * @param {Array<propTypes.lineItem>} props.lineItems - The line items
+ * @param {propTypes.error} props.fetchLineItemsError - The fetch line items error
+ * @param {boolean} props.fetchLineItemsInProgress - Whether the fetch line items is in progress
+ * @param {boolean} props.sendReviewInProgress - Whether the send review is in progress
+ * @param {boolean} props.sendReviewError - The send review error
+ * @param {boolean} props.scrollingDisabled - Whether the scrolling is disabled
+ * @param {Function} props.callSetInitialValues - The call set initial values function
+ * @param {Function} props.onInitializeCardPaymentData - The on initialize card payment data function
+ * @param {Function} props.onFetchTransactionLineItems - The on fetch transaction line items function
+ * @param {Function} props.onManageDisableScrolling - The on manage disable scrolling function
+ * @param {Function} props.onSendMessage - The on send message function
+ * @param {Function} props.onSendReview - The on send review function
+ * @param {Function} props.onShowMoreMessages - The on show more messages function
+ * @param {Function} props.onTransition - The on transition function
+ * @param {Function} props.onFetchTimeSlots - The on fetch time slots function
+ * @param {Array<propTypes.transition>} props.nextTransitions - The next transitions
+ * @returns {JSX.Element}
+ */
 export const TransactionPageComponent = props => {
   const [isDisputeModalOpen, setDisputeModalOpen] = useState(false);
   const [disputeSubmitted, setDisputeSubmitted] = useState(false);
@@ -91,17 +135,17 @@ export const TransactionPageComponent = props => {
 
   const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();
+  const intl = useIntl();
   const {
     currentUser,
     initialMessageFailedToTransaction,
-    savePaymentMethodFailed,
+    savePaymentMethodFailed = false,
     fetchMessagesError,
     fetchMessagesInProgress,
     totalMessagePages,
     oldestMessagePageFetched,
     fetchTransactionError,
     history,
-    intl,
     messages,
     onManageDisableScrolling,
     onSendMessage,
@@ -199,6 +243,7 @@ export const TransactionPageComponent = props => {
       bookingStartTime,
       bookingEndTime,
       quantity: quantityRaw,
+      seats: seatsRaw,
       deliveryMethod,
       ...otherOrderData
     } = values;
@@ -221,6 +266,8 @@ export const TransactionPageComponent = props => {
 
     const quantity = Number.parseInt(quantityRaw, 10);
     const quantityMaybe = Number.isInteger(quantity) ? { quantity } : {};
+    const seats = Number.parseInt(seatsRaw, 10);
+    const seatsMaybe = Number.isInteger(seats) ? { seats } : {};
     const deliveryMethodMaybe = deliveryMethod ? { deliveryMethod } : {};
 
     const initialValues = {
@@ -230,6 +277,7 @@ export const TransactionPageComponent = props => {
       orderData: {
         ...bookingMaybe,
         ...quantityMaybe,
+        ...seatsMaybe,
         ...deliveryMethodMaybe,
         ...otherOrderData,
       },
@@ -540,73 +588,6 @@ export const TransactionPageComponent = props => {
   );
 };
 
-TransactionPageComponent.defaultProps = {
-  currentUser: null,
-  fetchTransactionError: null,
-  transitionInProgress: null,
-  transitionError: null,
-  transaction: null,
-  fetchMessagesError: null,
-  initialMessageFailedToTransaction: null,
-  savePaymentMethodFailed: false,
-  sendMessageError: null,
-  monthlyTimeSlots: null,
-  fetchTimeSlotsError: null,
-  lineItems: null,
-  fetchLineItemsError: null,
-};
-
-TransactionPageComponent.propTypes = {
-  params: shape({ id: string }).isRequired,
-  transactionRole: oneOf([PROVIDER, CUSTOMER]).isRequired,
-  currentUser: propTypes.currentUser,
-  fetchTransactionError: propTypes.error,
-  transitionInProgress: string,
-  transitionError: propTypes.error,
-  onTransition: func.isRequired,
-  scrollingDisabled: bool.isRequired,
-  transaction: propTypes.transaction,
-  fetchMessagesError: propTypes.error,
-  totalMessagePages: number.isRequired,
-  oldestMessagePageFetched: number.isRequired,
-  messages: arrayOf(propTypes.message).isRequired,
-  initialMessageFailedToTransaction: propTypes.uuid,
-  savePaymentMethodFailed: bool,
-  sendMessageInProgress: bool.isRequired,
-  sendMessageError: propTypes.error,
-  onShowMoreMessages: func.isRequired,
-  onSendMessage: func.isRequired,
-  onFetchTimeSlots: func.isRequired,
-  monthlyTimeSlots: object,
-  // monthlyTimeSlots could be something like:
-  // monthlyTimeSlots: {
-  //   '2019-11': {
-  //     timeSlots: [],
-  //     fetchTimeSlotsInProgress: false,
-  //     fetchTimeSlotsError: null,
-  //   }
-  // }
-  callSetInitialValues: func.isRequired,
-  onInitializeCardPaymentData: func.isRequired,
-  onFetchTransactionLineItems: func.isRequired,
-
-  // line items
-  lineItems: array,
-  fetchLineItemsInProgress: bool.isRequired,
-  fetchLineItemsError: propTypes.error,
-
-  // from withRouter
-  history: shape({
-    push: func.isRequired,
-  }).isRequired,
-  location: shape({
-    search: string,
-  }).isRequired,
-
-  // from injectIntl
-  intl: intlShape.isRequired,
-};
-
 const mapStateToProps = state => {
   const {
     fetchTransactionError,
@@ -685,8 +666,7 @@ const TransactionPage = compose(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  ),
-  injectIntl
+  )
 )(TransactionPageComponent);
 
 export default TransactionPage;

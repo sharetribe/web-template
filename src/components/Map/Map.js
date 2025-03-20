@@ -2,14 +2,32 @@ import React from 'react';
 import classNames from 'classnames';
 
 import { useConfiguration } from '../../context/configurationContext';
-import { bool, number, object, string } from 'prop-types';
-import { propTypes } from '../../util/types';
 import { getMapProviderApiAccess } from '../../util/maps';
 import * as mapboxMap from './MapboxMap';
 import * as googleMapsMap from './GoogleMap';
 
 import css from './Map.module.css';
 
+/**
+ * Map component that uses StaticMap or DynamicMap from the configured map provider: Mapbox or Google Maps
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to component's own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string?} props.mapRootClassName add style rules for the root container
+ * @param {string?} props.address
+ * @param {Object} props.center LatLng
+ * @param {number} props.center.lat latitude
+ * @param {number} props.center.lng longitude
+ * @param {Object} props.obfuscatedCenter LatLng
+ * @param {number} props.obfuscatedCenter.lat latitude
+ * @param {number} props.obfuscatedCenter.lng longitude
+ * @param {number} props.zoom
+ * @param {Object} props.mapsConfig
+ * @param {boolean} props.useStaticMap
+ * @returns {JSX.Element} Map component
+ */
 export const Map = props => {
   const config = useConfiguration();
   const {
@@ -68,28 +86,6 @@ export const Map = props => {
       mapsConfig={mapsConfiguration}
     />
   );
-};
-
-Map.defaultProps = {
-  className: null,
-  rootClassName: null,
-  mapRootClassName: null,
-  address: '',
-  zoom: null,
-  mapsConfig: null,
-  useStaticMap: false,
-};
-
-Map.propTypes = {
-  className: string,
-  rootClassName: string,
-  mapRootClassName: string,
-  address: string,
-  center: propTypes.latlng,
-  obfuscatedCenter: propTypes.latlng,
-  zoom: number,
-  mapsConfig: object,
-  useStaticMap: bool,
 };
 
 export default Map;

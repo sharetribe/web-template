@@ -15,12 +15,12 @@
   composes: marketplaceTabNavHorizontalFontStyles from global;
 
   /* Layout */
-  /* display: grid;
-  grid-template-columns: 24px 140px minmax(300px, 1fr);
-  grid-template-areas: "checkbox dayOfWeek pickers"; */
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex-wrap: wrap;
+  align-items: flex-start;
+  align-content: flex-start;
+  gap: 12px;
 
   padding-top: 10px;
   padding-bottom: 13px;
@@ -30,8 +30,13 @@
     border-bottom: solid 1px var(--colorGrey100);
   }
 
+  @media (--viewportSmall) {
+    flex-direction: row;
+    gap: 16px;
+  }
+
   @media (--viewportMedium) {
-    padding-top: 8px;
+    padding-top: 16px;
     padding-bottom: 16px;
   }
 }
@@ -40,92 +45,142 @@
   background-color: var(--colorWhite);
 }
 
-.dayToggle {
-  padding-top: 3px;
-
-  @media (--viewportMedium) {
-    padding-top: 8px;
-  }
-}
-
 .dayOfWeek {
+  display: flex;
+  align-items: center;
+  height: 36px;
+  min-width: 120px;
+  max-width: 160px;
   width: 140px;
-  padding-top: 6px;
+  flex-grow: 1;
 
   @media (--viewportMedium) {
-    width: 140px;
-    padding-top: 8px;
+    height: 40px;
   }
 }
-.pickerArea {
+.dayOfWeekContent {
+  display: flex;
   flex-grow: 1;
 }
-.timePicker {
+
+.planEntriesForDay {
+  flex-grow: 1;
+
+  display: flex;
+  flex-direction: column;
+  min-width: 264px;
   width: 100%;
+  gap: 24px;
+  padding: 6px 0;
+
+  @media (--viewportSmall) {
+    width: unset;
+    padding: 8px 0;
+  }
 }
 
-.fieldWrapper {
-  /* This container uses flexbox layout */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-
+.segmentWrapper {
   /* parent aka root is flexbox, this container takes all available space */
   flex-grow: 1;
   flex-shrink: 0;
-  flex-wrap: nowrap;
-  padding-bottom: 6px;
-
-  position: relative;
-
-  @media (--viewportMedium) {
-    padding-bottom: 8px;
-  }
-}
-
-.formRow {
-  /* parent aka fieldWrapper is flexbox, this container takes all available space */
-  flex-grow: 1;
-  flex-shrink: 0;
-  flex-wrap: nowrap;
 
   /* This container uses flexbox layout */
   display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 264px;
+  padding: 0px 0px 17px 0px;
+  gap: 18px;
+
+  position: relative;
+  border-bottom: solid 1px var(--colorGrey100);
+
+  @media (--viewportMedium) {
+    padding: 0px 0px 16px 0px;
+    gap: 16px;
+  }
+}
+
+.segment {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.timeRangeRow {
+  /* parent aka segmentWrapper is flexbox, this container takes all available space */
+  flex-grow: 1;
+  flex-shrink: 0;
+
+  /* This container uses flexbox layout */
+  display: flex;
+  flex-wrap: nowrap;
   justify-content: flex-start;
   align-items: center;
+  gap: 4px;
+
+  width: 100%;
+  position: relative;
 
   z-index: 1;
 }
-.formRowHidden {
+
+.timeRangeHidden {
   display: none;
 }
 
-.closeIcon {
-  composes: marketplaceModalCloseIcon from global;
+.seatsField {
+  width: 100%;
+}
+.hourField {
+  flex-grow: 1;
+}
+.dashBetweenTimes {
+  stroke: var(--colorGrey700);
+}
 
-  stroke: none;
-  fill: var(--colorGrey300);
-  /* align icon with the select fields */
-  padding: 5px 0 7px 0;
+.seatsInput {
+  height: 36px;
+  padding: 5px 12px;
+}
+
+.fieldArrayDelete {
+  cursor: pointer;
 
   &:hover {
-    fill: var(--colorGrey700);
-  }
+    color: var(--colorBlack);
 
-  @media (--viewportMedium) {
-    padding: 6px 0;
+    .deleteIcon {
+      stroke: var(--colorFail);
+    }
   }
 }
 
-.dashBetweenTimes {
-  padding-left: 6px;
-  padding-right: 6px;
+.deleteIcon {
+  display: inline-block;
+  box-sizing: content-box;
+  stroke: var(--colorGrey300);
+
+  /* align icon with the select fields */
+  padding: 1px 0 4px 0;
+  margin: 0 8px 0 0;
+
+  &:hover {
+    stroke: var(--colorFail);
+  }
+
+  @media (--viewportMedium) {
+    padding: 2px 0 6px 0;
+  }
 }
 
 .plus1Day {
   composes: marketplaceTinyFontStyles from global;
   color: var(--colorGrey300);
+  position: absolute;
+  bottom: -24px;
+  right: 0px;
   visibility: hidden;
   opacity: 0;
   padding: 5px 0 1px 0;
@@ -144,18 +199,15 @@
 .buttonAddNew {
   composes: h5 from global;
   color: var(--colorGrey700);
-
-  @media (--viewportMedium) {
-    margin-bottom: 6px;
-  }
+  width: fit-content;
+  margin: 0;
 }
 
 .fieldSelect {
   composes: marketplaceTabNavHorizontalFontStyles from global;
-  background: none;
   padding: 6px 12px 4px 12px;
   min-width: 87px;
-  text-align: center;
+  text-align: left;
 
   &:select {
     margin-right: 0;

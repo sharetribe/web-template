@@ -9,7 +9,7 @@ import {
 } from '../../../util/testHelpers';
 import { createOwnListing, createStock, fakeIntl } from '../../../util/testData';
 
-import { ManageListingCardComponent } from './ManageListingCard';
+import { ManageListingCard } from './ManageListingCard';
 
 const { screen, waitFor } = testingLibrary;
 
@@ -61,7 +61,7 @@ describe('ManageListingCard', () => {
     ]);
 
     const tree = render(
-      <ManageListingCardComponent
+      <ManageListingCard
         history={{ push: noop }}
         listing={listing}
         intl={fakeIntl}
@@ -120,7 +120,7 @@ describe('ManageListingCard', () => {
     ]);
 
     const tree = render(
-      <ManageListingCardComponent
+      <ManageListingCard
         history={{ push: noop }}
         listing={listing}
         intl={fakeIntl}
@@ -177,7 +177,7 @@ describe('ManageListingCard', () => {
     });
 
     const tree = render(
-      <ManageListingCardComponent
+      <ManageListingCard
         history={{ push: noop }}
         listing={listing}
         intl={fakeIntl}
@@ -232,7 +232,7 @@ describe('ManageListingCard', () => {
     });
 
     const tree = render(
-      <ManageListingCardComponent
+      <ManageListingCard
         history={{ push: noop }}
         listing={listing}
         intl={fakeIntl}
@@ -290,7 +290,7 @@ describe('ManageListingCard', () => {
     });
 
     const tree = render(
-      <ManageListingCardComponent
+      <ManageListingCard
         history={{ push: noop }}
         listing={listing}
         intl={fakeIntl}
@@ -347,7 +347,7 @@ describe('ManageListingCard', () => {
     });
 
     const tree = render(
-      <ManageListingCardComponent
+      <ManageListingCard
         history={{ push: noop }}
         listing={listing}
         intl={fakeIntl}
@@ -405,7 +405,7 @@ describe('ManageListingCard', () => {
     });
 
     const tree = render(
-      <ManageListingCardComponent
+      <ManageListingCard
         history={{ push: noop }}
         listing={listing}
         intl={fakeIntl}
@@ -464,7 +464,7 @@ describe('ManageListingCard', () => {
     ]);
 
     const tree = render(
-      <ManageListingCardComponent
+      <ManageListingCard
         history={{ push: noop }}
         listing={listing}
         intl={fakeIntl}
@@ -526,7 +526,7 @@ describe('ManageListingCard', () => {
     ]);
 
     const tree = render(
-      <ManageListingCardComponent
+      <ManageListingCard
         history={{ push: noop }}
         listing={listing}
         intl={fakeIntl}
@@ -593,7 +593,7 @@ describe('ManageListingCard', () => {
     ]);
 
     const tree = render(
-      <ManageListingCardComponent
+      <ManageListingCard
         history={{ push: noop }}
         listing={listing}
         intl={fakeIntl}
@@ -657,7 +657,7 @@ describe('ManageListingCard', () => {
     ]);
 
     const tree = render(
-      <ManageListingCardComponent
+      <ManageListingCard
         history={{ push: noop }}
         listing={listing}
         intl={fakeIntl}
@@ -712,7 +712,7 @@ describe('ManageListingCard', () => {
     ]);
 
     const tree = render(
-      <ManageListingCardComponent
+      <ManageListingCard
         history={{ push: noop }}
         listing={listing}
         intl={fakeIntl}
@@ -767,7 +767,7 @@ describe('ManageListingCard', () => {
     ]);
 
     const tree = render(
-      <ManageListingCardComponent
+      <ManageListingCard
         history={{ push: noop }}
         listing={listing}
         intl={fakeIntl}
@@ -804,7 +804,7 @@ describe('ManageListingCard', () => {
       },
     ]);
     const tree = render(
-      <ManageListingCardComponent
+      <ManageListingCard
         history={{ push: noop }}
         listing={createOwnListing('listing1', {
           publicData: {

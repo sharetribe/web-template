@@ -1,17 +1,33 @@
 import React from 'react';
-import { bool, func, node, object } from 'prop-types';
 import classNames from 'classnames';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 
-import { injectIntl, intlShape } from '../../../util/reactIntl';
+import { useIntl } from '../../../util/reactIntl';
 
 import { Form } from '../../../components';
 
 import css from './FilterForm.module.css';
 
-const FilterFormComponent = props => {
-  const { liveEdit, onChange, onSubmit, onCancel, onClear, ...rest } = props;
+/**
+ * FilterForm component
+ * Note:
+ * - If liveEdit is true, you need to provide onChange function.
+ * - If liveEdit is false, you need to provide onSubmit, onCancel, and onClear functions.
+ * @component
+ * @param {Object} props
+ * @param {boolean} [props.liveEdit] - Whether to live edit
+ * @param {Function} [props.onChange] - The function to change
+ * @param {Function} [props.onSubmit] - The function to submit
+ * @param {Function} [props.onCancel] - The function to cancel
+ * @param {Function} [props.onClear] - The function to clear
+ * @param {Object} [props.style] - The style
+ * @param {React.Node} props.children - The children
+ * @returns {JSX.Element}
+ */
+const FilterForm = props => {
+  const intl = useIntl();
+  const { liveEdit = false, onChange, onSubmit, onCancel, onClear, ...rest } = props;
 
   if (liveEdit && !onChange) {
     throw new Error('FilterForm: if liveEdit is true you need to provide onChange function');
@@ -44,7 +60,6 @@ const FilterFormComponent = props => {
           onCancel,
           style,
           paddingClasses,
-          intl,
           children,
         } = formRenderProps;
 
@@ -91,29 +106,5 @@ const FilterFormComponent = props => {
     />
   );
 };
-
-FilterFormComponent.defaultProps = {
-  liveEdit: false,
-  style: null,
-  onCancel: null,
-  onChange: null,
-  onClear: null,
-  onSubmit: null,
-};
-
-FilterFormComponent.propTypes = {
-  liveEdit: bool,
-  onCancel: func,
-  onChange: func,
-  onClear: func,
-  onSubmit: func,
-  style: object,
-  children: node.isRequired,
-
-  // form injectIntl
-  intl: intlShape.isRequired,
-};
-
-const FilterForm = injectIntl(FilterFormComponent);
 
 export default FilterForm;

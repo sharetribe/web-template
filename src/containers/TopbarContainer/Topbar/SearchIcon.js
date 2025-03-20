@@ -1,9 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import css from './Topbar.module.css';
 
+/**
+ * Search icon (magnifier icon)
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @returns {JSX.Element} search icon
+ */
 const SearchIcon = props => {
   const { className, rootClassName } = props;
   const classes = classNames(rootClassName || css.rootSearchIcon, className);
@@ -29,18 +37,6 @@ const SearchIcon = props => {
       </g>
     </svg>
   );
-};
-
-const { string } = PropTypes;
-
-SearchIcon.defaultProps = {
-  className: null,
-  rootClassName: null,
-};
-
-SearchIcon.propTypes = {
-  className: string,
-  rootClassName: string,
 };
 
 export default SearchIcon;

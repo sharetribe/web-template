@@ -1,9 +1,8 @@
 import React from 'react';
-import { instanceOf, string } from 'prop-types';
 import classNames from 'classnames';
 import { isSameDay, formatDateIntoPartials } from '../../util/dates';
-import { injectIntl, intlShape } from '../../util/reactIntl';
-import { DATE_TYPE_DATE, DATE_TYPE_TIME, DATE_TYPE_DATETIME, propTypes } from '../../util/types';
+import { useIntl } from '../../util/reactIntl';
+import { DATE_TYPE_DATE, DATE_TYPE_TIME, DATE_TYPE_DATETIME } from '../../util/types';
 
 import css from './TimeRange.module.css';
 
@@ -12,8 +11,22 @@ import css from './TimeRange.module.css';
 const DASH = '–';
 const BREAK_WORD_MIN_LENGTH = 27;
 
-export const TimeRangeComponent = props => {
-  const { rootClassName, className, startDate, endDate, dateType, timeZone, intl } = props;
+/**
+ * A component that renders a time range.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {Date} props.startDate - The start date
+ * @param {Date} props.endDate - The end date
+ * @param {DATE_TYPE_DATE|DATE_TYPE_TIME|DATE_TYPE_DATETIME} [props.dateType] - The date type
+ * @param {string} [props.timeZone] - The time zone (e.g. 'America/New_York')
+ * @returns {JSX.Element} Time range component
+ */
+export const TimeRange = props => {
+  const intl = useIntl();
+  const { rootClassName, className, startDate, endDate, dateType, timeZone } = props;
   const start = formatDateIntoPartials(startDate, intl, { timeZone });
   const end = formatDateIntoPartials(endDate, intl, { timeZone });
   const isSingleDay = isSameDay(startDate, endDate, timeZone);
@@ -86,23 +99,4 @@ export const TimeRangeComponent = props => {
   }
 };
 
-TimeRangeComponent.defaultProps = {
-  rootClassName: null,
-  className: null,
-  dateType: null,
-  timeZone: null,
-};
-
-TimeRangeComponent.propTypes = {
-  rootClassName: string,
-  className: string,
-  startDate: instanceOf(Date).isRequired,
-  endDate: instanceOf(Date).isRequired,
-  dateType: propTypes.dateType,
-  timeZone: string,
-
-  // from injectIntl
-  intl: intlShape.isRequired,
-};
-
-export default injectIntl(TimeRangeComponent);
+export default TimeRange;

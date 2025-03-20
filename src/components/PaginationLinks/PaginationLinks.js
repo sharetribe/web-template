@@ -1,16 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import range from 'lodash/range';
 
-import { injectIntl, intlShape } from '../../util/reactIntl';
+import { useIntl } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { stringify } from '../../util/urlHelpers';
 import { IconArrowHead, NamedLink } from '../../components';
 
 import css from './PaginationLinks.module.css';
-
-const { string, object } = PropTypes;
 
 let pgKey = 0;
 const paginationGapKey = () => {
@@ -48,15 +45,25 @@ const getPageNumbersArray = (page, totalPages) => {
  * information.
  *
  * The links will be disabled when no previous/next page exists.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} props.pageName - The name of the page
+ * @param {object} props.pagePathParams - The path parameters for the page route
+ * @param {object} props.pageSearchParams - The search parameters for the page route
+ * @param {propTypes.pagination} props.pagination - The pagination information
+ * @returns {JSX.Element}
  */
-export const PaginationLinksComponent = props => {
+export const PaginationLinks = props => {
+  const intl = useIntl();
   const {
     className,
     rootClassName,
-    intl,
     pageName,
-    pagePathParams,
-    pageSearchParams,
+    pagePathParams = {},
+    pageSearchParams = {},
     pagination,
   } = props;
   const classes = classNames(rootClassName || css.root, className);
@@ -160,21 +167,4 @@ export const PaginationLinksComponent = props => {
   );
 };
 
-PaginationLinksComponent.defaultProps = {
-  className: '',
-  rootClassName: '',
-  pagePathParams: {},
-  pageSearchParams: {},
-};
-
-PaginationLinksComponent.propTypes = {
-  className: string,
-  rootClassName: string,
-  intl: intlShape.isRequired,
-  pageName: string.isRequired,
-  pagePathParams: object,
-  pageSearchParams: object,
-  pagination: propTypes.pagination.isRequired,
-};
-
-export default injectIntl(PaginationLinksComponent);
+export default PaginationLinks;

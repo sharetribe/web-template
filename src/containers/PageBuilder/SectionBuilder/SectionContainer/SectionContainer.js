@@ -1,13 +1,32 @@
 import React from 'react';
-import { func, node, object, shape, string } from 'prop-types';
 import classNames from 'classnames';
 
 import Field from '../../Field';
 
 import css from './SectionContainer.module.css';
 
-// This component can be used to wrap some common styles and features of Section-level components.
-// E.g: const SectionHero = props => (<SectionContainer><H1>Hello World!</H1></SectionContainer>);
+/**
+ * @typedef {Object} FieldComponentConfig
+ * @property {ReactNode} component
+ * @property {Function} pickValidProps
+ */
+
+/**
+ * This component can be used to wrap some common styles and features of Section-level components.
+ * E.g: const SectionHero = props => (<SectionContainer><H1>Hello World!</H1></SectionContainer>);
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string?} props.id id of the section
+ * @param {string?} props.as tag/element name. Defaults to 'section'.
+ * @param {ReactNode} props.children
+ * @param {Object} props.appearance
+ * @param {Object} props.options extra options for the section component (e.g. custom fieldComponents)
+ * @param {Object<string,FieldComponentConfig>?} props.options.fieldComponents custom fields
+ * @returns {JSX.Element} containing wrapper that can be used inside Block components.
+ */
 const SectionContainer = props => {
   const { className, rootClassName, id, as, children, appearance, options, ...otherProps } = props;
   const Tag = as || 'section';
@@ -26,27 +45,6 @@ const SectionContainer = props => {
       <div className={css.sectionContent}>{children}</div>
     </Tag>
   );
-};
-
-const propTypeOption = shape({
-  fieldComponents: shape({ component: node, pickValidProps: func }),
-});
-
-SectionContainer.defaultProps = {
-  rootClassName: null,
-  className: null,
-  as: 'section',
-  children: null,
-  appearance: null,
-};
-
-SectionContainer.propTypes = {
-  rootClassName: string,
-  className: string,
-  as: string,
-  children: node,
-  appearance: object,
-  options: propTypeOption,
 };
 
 export default SectionContainer;

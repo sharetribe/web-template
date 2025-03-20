@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
-import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import * as validators from '../../../util/validators';
 import { ensureCurrentUser } from '../../../util/data';
@@ -16,7 +14,24 @@ import css from './PasswordChangeForm.module.css';
 
 const RESET_TIMEOUT = 800;
 
-class PasswordChangeFormComponent extends Component {
+/**
+ * The change-password form.
+ * TODO: change to functional component
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.formId] - The form ID
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {function} props.onSubmit - The function to submit the form
+ * @param {boolean} [props.inProgress] - Whether the form is in progress
+ * @param {boolean} [props.resetPasswordInProgress] - Whether the reset password is in progress
+ * @param {boolean} props.ready - Whether the form is ready
+ * @param {propTypes.error} [props.changePasswordError] - The change password error
+ * @param {propTypes.error} [props.resetPasswordError] - The reset password error
+ * @returns {JSX.Element} Change-password form component
+ */
+class PasswordChangeForm extends Component {
   constructor(props) {
     super(props);
     this.state = { showResetPasswordMessage: false };
@@ -47,9 +62,8 @@ class PasswordChangeFormComponent extends Component {
             changePasswordError,
             currentUser,
             handleSubmit,
-            inProgress,
-            resetPasswordInProgress,
-            intl,
+            inProgress = false,
+            resetPasswordInProgress = false,
             invalid,
             pristine,
             ready,
@@ -57,6 +71,7 @@ class PasswordChangeFormComponent extends Component {
             values,
           } = fieldRenderProps;
 
+          const intl = useIntl();
           const user = ensureCurrentUser(currentUser);
 
           if (!user.id) {
@@ -247,32 +262,5 @@ class PasswordChangeFormComponent extends Component {
     );
   }
 }
-
-PasswordChangeFormComponent.defaultProps = {
-  rootClassName: null,
-  className: null,
-  changePasswordError: null,
-  inProgress: false,
-  formId: null,
-  resetPasswordInProgress: false,
-  resetPasswordError: null,
-};
-
-const { bool, string } = PropTypes;
-
-PasswordChangeFormComponent.propTypes = {
-  rootClassName: string,
-  className: string,
-  changePasswordError: propTypes.error,
-  inProgress: bool,
-  intl: intlShape.isRequired,
-  ready: bool.isRequired,
-  formId: string,
-  resetPasswordInProgress: bool,
-  resetPasswordError: propTypes.error,
-};
-
-const PasswordChangeForm = compose(injectIntl)(PasswordChangeFormComponent);
-PasswordChangeForm.displayName = 'PasswordChangeForm';
 
 export default PasswordChangeForm;

@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import PropTypes, { arrayOf, number, oneOf, shape } from 'prop-types';
 import classNames from 'classnames';
 
 // Import configs and util modules
 import { FormattedMessage } from '../../../../util/reactIntl';
-import { LISTING_STATE_DRAFT, STOCK_INFINITE_ITEMS, STOCK_TYPES } from '../../../../util/types';
+import { LISTING_STATE_DRAFT, STOCK_INFINITE_ITEMS, propTypes } from '../../../../util/types';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
 import { isValidCurrencyForTransactionProcess } from '../../../../util/fieldHelpers';
 
@@ -50,6 +49,26 @@ const getInitialValues = props => {
   return { price, stock, stockTypeInfinity };
 };
 
+/**
+ * The EditListingPricingAndStockPanel component.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {propTypes.ownListing} props.listing - The listing object
+ * @param {string} props.marketplaceCurrency - The marketplace currency (e.g. 'USD')
+ * @param {number} props.listingMinimumPriceSubUnits - The listing minimum price sub units
+ * @param {Array<propTypes.listingType>} props.listingTypes - The listing types
+ * @param {boolean} props.disabled - Whether the form is disabled
+ * @param {boolean} props.ready - Whether the form is ready
+ * @param {Function} props.onSubmit - The submit function
+ * @param {string} props.submitButtonText - The submit button text
+ * @param {boolean} props.panelUpdated - Whether the panel is updated
+ * @param {boolean} props.updateInProgress - Whether the update is in progress
+ * @param {Object} props.errors - The errors object
+ * @returns {JSX.Element}
+ */
 const EditListingPricingAndStockPanel = props => {
   // State is needed since re-rendering would overwrite the values during XHR call.
   const [state, setState] = useState({ initialValues: getInitialValues(props) });
@@ -182,37 +201,6 @@ const EditListingPricingAndStockPanel = props => {
       )}
     </div>
   );
-};
-
-const { func, object, string, bool } = PropTypes;
-
-EditListingPricingAndStockPanel.defaultProps = {
-  className: null,
-  rootClassName: null,
-  listing: null,
-};
-
-EditListingPricingAndStockPanel.propTypes = {
-  className: string,
-  rootClassName: string,
-
-  // We cannot use propTypes.listing since the listing might be a draft.
-  listing: object,
-  marketplaceCurrency: string.isRequired,
-  listingMinimumPriceSubUnits: number.isRequired,
-  listingTypes: arrayOf(
-    shape({
-      stockType: oneOf(STOCK_TYPES),
-    })
-  ).isRequired,
-
-  disabled: bool.isRequired,
-  ready: bool.isRequired,
-  onSubmit: func.isRequired,
-  submitButtonText: string.isRequired,
-  panelUpdated: bool.isRequired,
-  updateInProgress: bool.isRequired,
-  errors: object.isRequired,
 };
 
 export default EditListingPricingAndStockPanel;

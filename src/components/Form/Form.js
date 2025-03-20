@@ -1,5 +1,4 @@
 import React from 'react';
-import { func, node, string } from 'prop-types';
 
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { findRouteByRouteName } from '../../util/routes';
@@ -46,21 +45,21 @@ const FormWithPagePreload = props => {
   return <PlainForm {...restProps} {...onOverFormProps} />;
 };
 
+/**
+ * This component returns a clickable logo.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string?} props.enforcePagePreloadFor Name of a route
+ * @param {ReactNode} props.children
+ * @param {Function} props.contentRef
+ * @returns {JSX.Element} linked logo component
+ */
 const Form = props => {
   const { enforcePagePreloadFor, ...restProps } = props;
   return enforcePagePreloadFor ? <FormWithPagePreload {...props} /> : <PlainForm {...restProps} />;
-};
-
-Form.defaultProps = {
-  children: null,
-  contentRef: null,
-  enforcePagePreloadFor: null,
-};
-
-Form.propTypes = {
-  children: node,
-  contentRef: func,
-  enforcePagePreloadFor: string,
 };
 
 export default Form;

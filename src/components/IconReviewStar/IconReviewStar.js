@@ -1,9 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import css from './IconReviewStar.module.css';
 
+/**
+ * Review star icon.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {boolean?} props.isFilled is filled with color
+ * @returns {JSX.Element} SVG icon
+ */
 const IconReviewStar = props => {
   const { className, rootClassName, isFilled } = props;
   const filledOrDefault = isFilled ? css.filled : css.root;
@@ -23,16 +32,6 @@ const IconReviewStar = props => {
       />
     </svg>
   );
-};
-
-IconReviewStar.defaultProps = { className: null, rootClassName: null, isFilled: false };
-
-const { bool, string } = PropTypes;
-
-IconReviewStar.propTypes = {
-  className: string,
-  rootClassName: string,
-  isFilled: bool,
 };
 
 export default IconReviewStar;

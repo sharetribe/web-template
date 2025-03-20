@@ -3,7 +3,6 @@
  * Navigational 'aside' content should be added to this wrapper.
  */
 import React, { useEffect, useState } from 'react';
-import { node, string } from 'prop-types';
 
 import { FormattedMessage } from '../../../util/reactIntl';
 
@@ -56,7 +55,15 @@ const scrollToTab = (currentPage, scrollLeft, setScrollLeft) => {
   }
 };
 
-const LayoutWrapperAccountSettingsSideNavComponent = props => {
+/**
+ * Side nav with navigation to different account settings.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.currentPage
+ * @returns {JSX.Element} Side nav with navigation to different account settings
+ */
+const LayoutWrapperAccountSettingsSideNav = props => {
   const [mounted, setMounted] = useState(false);
   const [scrollLeft, setScrollLeft] = useGlobalState('scrollLeft');
 
@@ -118,21 +125,5 @@ const LayoutWrapperAccountSettingsSideNavComponent = props => {
 
   return <TabNav rootClassName={css.tabs} tabRootClassName={css.tab} tabs={tabs} />;
 };
-
-LayoutWrapperAccountSettingsSideNavComponent.defaultProps = {
-  className: null,
-  rootClassName: null,
-  children: null,
-  currentPage: null,
-};
-
-LayoutWrapperAccountSettingsSideNavComponent.propTypes = {
-  children: node,
-  className: string,
-  rootClassName: string,
-  currentPage: string,
-};
-
-const LayoutWrapperAccountSettingsSideNav = LayoutWrapperAccountSettingsSideNavComponent;
 
 export default LayoutWrapperAccountSettingsSideNav;

@@ -85,6 +85,8 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       component: CMSPage,
       loadData: pageDataLoadingAPI.CMSPage.loadData,
     },
+    // NOTE: when the private marketplace feature is enabled, the '/s' route is disallowed by the robots.txt resource.
+    // If you add new routes that start with '/s*' (e.g. /support), you should add them to the robotsPrivateMarketplace.txt file.
     {
       path: '/s',
       name: 'SearchPage',

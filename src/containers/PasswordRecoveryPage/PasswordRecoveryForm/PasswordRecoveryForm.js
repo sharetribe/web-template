@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
 import isEqual from 'lodash/isEqual';
 import classNames from 'classnames';
 
-import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import * as validators from '../../../util/validators';
 import { isPasswordRecoveryEmailNotFoundError } from '../../../util/errors';
@@ -14,7 +12,19 @@ import { Form, PrimaryButton, FieldTextInput, NamedLink } from '../../../compone
 
 import css from './PasswordRecoveryForm.module.css';
 
-class PasswordRecoveryFormComponent extends Component {
+/**
+ * The password recovery form.
+ * TODO: change to functional component
+ *
+ * @param {Object} props
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.formId] - The form ID
+ * @param {boolean} [props.inProgress] - Whether the form is in progress
+ * @param {propTypes.error} [props.recoveryError] - The recovery error
+ * @returns {JSX.Element} Password recovery form component
+ */
+class PasswordRecoveryForm extends Component {
   constructor(props) {
     super(props);
     this.submittedValues = {};
@@ -32,11 +42,12 @@ class PasswordRecoveryFormComponent extends Component {
             handleSubmit,
             pristine,
             initialValues,
-            intl,
-            inProgress,
+            inProgress = false,
             recoveryError,
             values,
           } = fieldRenderProps;
+
+          const intl = useIntl();
 
           // email
           const emailLabel = intl.formatMessage({
@@ -124,30 +135,5 @@ class PasswordRecoveryFormComponent extends Component {
     );
   }
 }
-
-PasswordRecoveryFormComponent.defaultProps = {
-  rootClassName: null,
-  className: null,
-  formId: null,
-  inProgress: false,
-  recoveryError: null,
-};
-
-const { bool, string } = PropTypes;
-
-PasswordRecoveryFormComponent.propTypes = {
-  rootClassName: string,
-  className: string,
-  formId: string,
-
-  inProgress: bool,
-  recoveryError: propTypes.error,
-
-  // from injectIntl
-  intl: intlShape.isRequired,
-};
-
-const PasswordRecoveryForm = compose(injectIntl)(PasswordRecoveryFormComponent);
-PasswordRecoveryForm.displayName = 'PasswordRecoveryForm';
 
 export default PasswordRecoveryForm;

@@ -1,9 +1,15 @@
+import React from 'react';
+import classNames from 'classnames';
+import { TabNav } from '../../components';
+
+import css from './Tabs.module.css';
+
 /**
  * Tabs creates view area that has tabs made out of its children.
  * It only expects all its children to have 'tabLabel', 'tabLinkProps' props.
  * In addition, 'selected' prop specifies which tab is open and 'disabled' renders tab inaccessible.
  *
- * e.g.
+ * @example
  *  <Tabs>
  *    <Child tabLabel="Tab1" tabLinkProps={{ name: 'SomeTab1Page' }}>
  *      Tab1 stuff
@@ -13,15 +19,15 @@
  *    </Child>
  *  </Tabs>
  *
+ * @component
+ * @param {Object} props
+ * @param {React.ReactNode} props.children - The children to render
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} [props.navRootClassName] - Custom class that overrides the default class for the nav element
+ * @param {string} [props.tabRootClassName] - Custom class that overrides the default class for the tab element
+ * @returns {JSX.Element} Tab navigation component
  */
-
-import React from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
-import { TabNav } from '../../components';
-
-import css from './Tabs.module.css';
-
 const Tabs = props => {
   const { children, className, rootClassName, navRootClassName, tabRootClassName } = props;
   const rootClasses = rootClassName || css.root;
@@ -67,23 +73,6 @@ const Tabs = props => {
       {selectedTabPanel}
     </div>
   );
-};
-
-const { node, string } = PropTypes;
-
-Tabs.defaultProps = {
-  className: null,
-  rootClassName: null,
-  navRootClassName: null,
-  tabRootClassName: null,
-};
-
-Tabs.propTypes = {
-  children: node.isRequired,
-  className: string,
-  rootClassName: string,
-  navRootClassName: string,
-  tabRootClassName: string,
 };
 
 export default Tabs;

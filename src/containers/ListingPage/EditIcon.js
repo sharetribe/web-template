@@ -1,6 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
+/**
+ * The EditIcon component.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @returns {JSX.Element} edit icon component
+ */
 const EditIcon = props => {
   const { className } = props;
   return (
@@ -33,11 +40,5 @@ const EditIcon = props => {
     </svg>
   );
 };
-
-EditIcon.defaultProps = { className: null };
-
-const { string } = PropTypes;
-
-EditIcon.propTypes = { className: string };
 
 export default EditIcon;
