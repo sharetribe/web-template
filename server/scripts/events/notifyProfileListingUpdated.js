@@ -57,6 +57,9 @@ function script() {
     const { resourceType, eventType } = event.attributes;
     const isValidEvent = resourceType === RESOURCE_TYPE && eventType === EVENT_TYPES;
     if (isValidEvent) {
+      console.warn('\n\n----------------');
+      console.warn('\n[notifyProfileListingUpdated] - START!');
+
       const { resourceId, resource: listing, previousValues } = event.attributes;
       const listingId = resourceId.uuid;
       const author = listing?.relationships?.author?.data;
@@ -65,7 +68,13 @@ function script() {
       const isValidListingType = listingType === LISTING_TYPES.PROFILE;
       try {
         if (isValidListingType) {
-          await profileListingSync(listingId, authorId, listing, previousValues);
+          // await profileListingSync(listingId, authorId, listing, previousValues);
+          // console.warn(`\n[notifyProfileListingUpdated] - listingId: ${listingId}`);
+          // console.warn(`\n[notifyProfileListingUpdated] - authorId: ${authorId}`);
+          // console.warn('\n[notifyProfileListingUpdated] - listing:', listing);
+          // console.warn('\n[notifyProfileListingUpdated] - previousValues:', previousValues);
+          const result = await profileListingSync(listingId, authorId, listing, previousValues);
+          console.warn('\n[notifyProfileListingUpdated] - END! | result:', result);
         }
       } catch (error) {
         slackProfileListingUpdateErrorWorkflow(authorId);

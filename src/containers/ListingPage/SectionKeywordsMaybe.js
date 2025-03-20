@@ -19,10 +19,10 @@ export default function SectionKeywordsMaybe({ keywords }) {
         <FormattedMessage id="ListingPage.keywordsTitle" />
       </Heading>
       <div className={css.wrapperKeywords}>
-        {keywordsOptions.map(item => {
+        {keywordsOptions.map((item, index) => {
           const keyword = item.toLowerCase();
           return (
-            <Button type="primary" shape="round" ghost>
+            <Button key={`keyword-${index}`} type="primary" shape="round" ghost>
               <NamedLink
                 name="SearchPage"
                 to={{ search: stringify({ ...BASE_SEARCH_QUERY_PARAMS, keywords: keyword }) }}

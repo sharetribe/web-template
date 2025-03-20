@@ -43,7 +43,7 @@ export default function SectionCategoriesMaybe({
           const category = categoryFieldOptions.find(config => config.option === item);
           const isLast = index + 1 === selectedCategories.length;
           return (
-            <Button type="link">
+            <Button type="link" key={`category-${index}`}>
               <NamedLink
                 name="SearchPage"
                 to={{
