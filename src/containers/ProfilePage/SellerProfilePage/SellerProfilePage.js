@@ -150,12 +150,11 @@ function SellerProfilePage({
       case LISTING_TAB_TYPES.PROFILE: {
         break;
       }
-      case LISTING_TAB_TYPES.PORTFOLIO: {
-        const invalidCategoryType = !queryParams.pub_listingId;
-        const listingsAvailable = !queryInProgress && !!currentCategory;
-        const shouldUpdate = invalidCategoryType && listingsAvailable;
-        if (shouldUpdate) {
-          updatePortfolioRoute(currentCategory);
+      case LISTING_TAB_TYPES.PRODUCT: {
+        const invalidCategoryType = !queryParams.pub_categoryLevel1;
+        const shouldUpdateRoute = invalidCategoryType;
+        if (shouldUpdateRoute) {
+          updateProductRoute();
         }
         break;
       }
@@ -164,10 +163,11 @@ function SellerProfilePage({
           listingTypeParamValue && Object.values(LISTING_TAB_TYPES).includes(listingTypeParamValue)
         );
         const invalidCategoryType =
-          listingTypeParamValue === LISTING_TAB_TYPES.PRODUCT && !queryParams.pub_categoryLevel1;
-        const shouldUpdateRoute = invalidListingType || invalidCategoryType;
+          listingTypeParamValue === LISTING_TAB_TYPES.PORTFOLIO && !queryParams.pub_listingId;
+        const listingsAvailable = !queryInProgress && !!currentCategory;
+        const shouldUpdateRoute = invalidListingType || (invalidCategoryType && listingsAvailable);
         if (shouldUpdateRoute) {
-          updateProductRoute();
+          updatePortfolioRoute(currentCategory);
         }
         break;
       }

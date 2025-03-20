@@ -256,3 +256,15 @@ export const getUserTypeFieldInputs = (
   }
   return true;
 };
+
+export const getListingBaseFields = fieldKey => {
+  switch (fieldKey) {
+    case 'releases':
+    case 'keywords':
+    case 'imageryCategory':
+    case 'originalFileName':
+      return false;
+    default:
+      return true;
+  }
+};

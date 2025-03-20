@@ -96,12 +96,11 @@ export const ManageListingsPageComponent = props => {
   useEffect(() => {
     const listingTypeParamValue = queryParams.pub_listingType;
     switch (listingTypeParamValue) {
-      case LISTING_TAB_TYPES.PORTFOLIO: {
-        const invalidCategoryType = !queryParams.pub_listingId;
-        const listingsAvailable = !queryInProgress && !!currentCategory;
-        const shouldUpdateRoute = invalidCategoryType && listingsAvailable;
+      case LISTING_TAB_TYPES.PRODUCT: {
+        const invalidCategoryType = !queryParams.pub_categoryLevel1;
+        const shouldUpdateRoute = invalidCategoryType;
         if (shouldUpdateRoute) {
-          updatePortfolioRoute(currentCategory);
+          updateProductRoute();
         }
         break;
       }
@@ -110,10 +109,11 @@ export const ManageListingsPageComponent = props => {
           listingTypeParamValue && Object.values(LISTING_TAB_TYPES).includes(listingTypeParamValue)
         );
         const invalidCategoryType =
-          listingTypeParamValue === LISTING_TAB_TYPES.PRODUCT && !queryParams.pub_categoryLevel1;
-        const shouldUpdateRoute = invalidListingType || invalidCategoryType;
+          listingTypeParamValue === LISTING_TAB_TYPES.PORTFOLIO && !queryParams.pub_listingId;
+        const listingsAvailable = !queryInProgress && !!currentCategory;
+        const shouldUpdateRoute = invalidListingType || (invalidCategoryType && listingsAvailable);
         if (shouldUpdateRoute) {
-          updateProductRoute();
+          updatePortfolioRoute(currentCategory);
         }
         break;
       }

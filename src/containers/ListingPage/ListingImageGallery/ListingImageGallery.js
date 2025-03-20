@@ -23,6 +23,9 @@ import css from './ListingImageGallery.module.css';
 
 const IMAGE_GALLERY_OPTIONS = {
   showPlayButton: false,
+  showBullets: false,
+  showThumbnails: false,
+  showNav: false,
   disableThumbnailScroll: true,
 };
 const MAX_LANDSCAPE_ASPECT_RATIO = 2; // 2:1

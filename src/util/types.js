@@ -747,7 +747,7 @@ export const LISTING_TAB_TYPES = {
 };
 
 export const LISTING_GRID_DEFAULTS = {
-  TYPE: LISTING_TAB_TYPES.PRODUCT,
+  TYPE: LISTING_TAB_TYPES.PORTFOLIO,
   CATEGORY: categories => (categories && categories.length ? categories[0].id : null),
 };
 

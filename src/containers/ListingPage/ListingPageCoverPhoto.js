@@ -19,12 +19,9 @@ import { types as sdkTypes } from '../../util/sdkLoader';
 import {
   LISTING_PAGE_DRAFT_VARIANT,
   LISTING_PAGE_PENDING_APPROVAL_VARIANT,
-  LISTING_PAGE_PARAM_TYPE_DRAFT,
-  LISTING_PAGE_PARAM_TYPE_EDIT,
   createSlug,
   NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
   NO_ACCESS_PAGE_VIEW_LISTINGS,
-  NO_ACCESS_PAGE_FORBIDDEN_LISTING_TYPE,
 } from '../../util/urlHelpers';
 import {
   isErrorNoViewingPermission,
@@ -136,14 +133,8 @@ export const ListingPageComponent = props => {
   const listingSlug = rawParams.slug || createSlug(currentListing.attributes.title || '');
   const params = { slug: listingSlug, ...rawParams };
 
-  const listingPathParamType = isDraftVariant
-    ? LISTING_PAGE_PARAM_TYPE_DRAFT
-    : LISTING_PAGE_PARAM_TYPE_EDIT;
-  const listingTab = isDraftVariant ? 'photos' : 'details';
-
   const isApproved =
     currentListing.id && currentListing.attributes.state !== LISTING_STATE_PENDING_APPROVAL;
-
   const pendingIsApproved = isPendingApprovalVariant && isApproved;
 
   // If a /pending-approval URL is shared, the UI requires
@@ -178,8 +169,9 @@ export const ListingPageComponent = props => {
   if (isPortfolioListing) {
     return (
       <NamedRedirect
-        name="NoAccessPage"
-        params={{ missingAccessRight: NO_ACCESS_PAGE_FORBIDDEN_LISTING_TYPE }}
+        name="ProfilePage"
+        params={{ id: authorId }}
+        search={`?pub_listingType=portfolio-showcase&pub_listingId=${rawParams.id}`}
       />
     );
   }
@@ -340,13 +332,6 @@ export const ListingPageComponent = props => {
           title={title}
           listing={currentListing}
           isOwnListing={isOwnListing}
-          currentUser={currentUser}
-          editParams={{
-            id: listingId.uuid,
-            slug: listingSlug,
-            type: listingPathParamType,
-            tab: listingTab,
-          }}
           imageCarouselOpen={imageCarouselOpen}
           onImageCarouselClose={() => setImageCarouselOpen(false)}
           handleViewPhotosClick={handleViewPhotosClick}

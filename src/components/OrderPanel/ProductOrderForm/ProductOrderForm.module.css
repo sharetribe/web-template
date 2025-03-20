@@ -86,3 +86,13 @@
     padding: 0;
   }
 }
+
+.licenseOptions {
+  font-size: 14px;
+  margin-top: 36px;
+
+  .licenseReachOutCTA {
+    color: var(--colorGrey700);
+    text-decoration: underline;
+  }
+}
