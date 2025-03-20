@@ -12,6 +12,7 @@ import {
   FieldSelect,
   FieldTextInput,
   InlineTextButton,
+  NamedLink,
   PrimaryButton,
   H3,
   H6,
@@ -218,6 +219,17 @@ const renderForm = formRenderProps => {
   const submitInProgress = fetchLineItemsInProgress;
   const submitDisabled = !hasStock;
 
+  const licenseLink = (
+    <NamedLink name="CMSPage" params={{ pageId: 'standard-royalty-free-license' }}>
+      <FormattedMessage id="ProductOrderForm.licensePurchase.ctaLabel" />
+    </NamedLink>
+  );
+  const reachOutLink = (
+    <a href="mailto:hi@theluupe.com" className={css.licenseReachOutCTA}>
+      <FormattedMessage id="ProductOrderForm.licenseReachOut.ctaLabel" />
+    </a>
+  );
+
   return (
     <Form onSubmit={handleFormSubmit}>
       <FormSpy subscription={{ values: true }} onChange={handleOnChange} />
@@ -273,6 +285,15 @@ const renderForm = formRenderProps => {
           />
         </div>
       ) : null}
+
+      <div className={css.licenseOptions}>
+        <div>
+          <FormattedMessage id="ProductOrderForm.licensePurchase" values={{ licenseLink }} />
+        </div>
+        <div>
+          <FormattedMessage id="ProductOrderForm.licenseReachOut" values={{ reachOutLink }} />
+        </div>
+      </div>
 
       <div className={css.submitButton}>
         <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>

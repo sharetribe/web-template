@@ -7,6 +7,7 @@ import {
   pickCategoryFields,
   pickCustomFieldProps,
 } from '../../util/fieldHelpers.js';
+import { getListingBaseFields } from '../../util/userHelpers.js';
 
 import SectionDetailsMaybe from './SectionDetailsMaybe';
 import SectionMultiEnumMaybe from './SectionMultiEnumMaybe';
@@ -30,8 +31,10 @@ const CustomListingFields = props => {
   const currentCategories = Object.values(categoriesObj);
 
   const isFieldForSelectedCategories = fieldConfig => {
+    const fieldKey = fieldConfig.key;
     const isTargetCategory = isFieldForCategory(currentCategories, fieldConfig);
-    return isTargetCategory;
+    const displayInListing = getListingBaseFields(fieldKey);
+    return isTargetCategory && displayInListing;
   };
   const propsForCustomFields =
     pickCustomFieldProps(

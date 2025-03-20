@@ -13,8 +13,6 @@ const SectionHero = props => {
     title,
     listing,
     isOwnListing,
-    editParams,
-    currentUser,
     handleViewPhotosClick,
     imageCarouselOpen,
     onImageCarouselClose,
@@ -48,7 +46,6 @@ const SectionHero = props => {
                 isOwnListing={isOwnListing}
                 listing={listing}
                 showNoPayoutDetailsSet={noPayoutDetailsSetWithOwnListing}
-                currentUser={currentUser}
               />
             ) : null}
 
@@ -56,8 +53,6 @@ const SectionHero = props => {
               className={css.actionBarForHeroLayout}
               isOwnListing={isOwnListing}
               listing={listing}
-              editParams={editParams}
-              currentUser={currentUser}
             />
           </div>
         ) : null}
