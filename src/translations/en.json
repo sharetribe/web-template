@@ -403,6 +403,7 @@
   "EditableListingsTable.description.placeholder": "The listing description",
   "EditableListingsTable.dimensions": "Dimensions",
   "EditableListingsTable.fileName": "File Name",
+  "EditableListingsTable.imageSize": "Image Size",
   "EditableListingsTable.isAi": "AI Generated?",
   "EditableListingsTable.isAi.helperText": "It's important to us that all AI-generated content is clearly marked as so. We allow AI-generated listings that are created by real artists using ethical means of generation.",
   "EditableListingsTable.isIllustration": "Illustration?",

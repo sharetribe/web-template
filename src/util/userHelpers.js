@@ -263,6 +263,7 @@ export const getListingBaseFields = fieldKey => {
     case 'keywords':
     case 'imageryCategory':
     case 'originalFileName':
+    case 'imageSize':
       return false;
     default:
       return true;

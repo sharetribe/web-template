@@ -27,7 +27,7 @@ import {
   USAGE_EDITORIAL,
   YES_RELEASES,
 } from './constants';
-import { getDimensions } from './imageHelpers';
+import { getImageSize } from './imageHelpers';
 import { stringToArray } from '../../util/string';
 
 const { UUID, Money } = sdkTypes;
@@ -60,7 +60,8 @@ function listingsFromSdkResponse(sdkResponse, listingDefaults) {
       category,
       usage: ownListing.attributes.publicData.usage,
       releases: ownListing.attributes.publicData.releases,
-      dimensions: ownListing.attributes.publicData.imageSize,
+      dimensions: ownListing.attributes.publicData.dimensions,
+      imageSize: ownListing.attributes.publicData.imageSize,
       price,
       // isAi: ownListing.attributes.publicData.aiTerms === 'yes',
       preview,
@@ -71,7 +72,8 @@ function listingsFromSdkResponse(sdkResponse, listingDefaults) {
 function uppyFileToListing(file) {
   const { id, meta, name, size, preview, type } = file;
   const { keywords, height, width } = meta;
-  const dimensions = getDimensions(width, height);
+  const dimensions = `${width}px × ${height}px`;
+  const imageSize = getImageSize(width, height);
   let keywordsOptions = [];
   if (keywords) {
     keywordsOptions = Array.isArray(keywords) ? keywords : keywords.split(',');
@@ -94,6 +96,7 @@ function uppyFileToListing(file) {
     releases: false,
     price: DEFAULT_PRODUCT_LISTING_PRICE,
     dimensions: dimensions,
+    imageSize: imageSize,
     isAi: false,
     isIllustration: false,
     type,
@@ -460,7 +463,8 @@ export function initializeUppy(meta) {
                   usage: listing.usage,
                   releases: listing.releases ? YES_RELEASES : NO_RELEASES,
                   keywords: listing.keywords.join(' '),
-                  imageSize: listing.dimensions,
+                  dimensions: listing.dimensions,
+                  imageSize: listing.imageSize,
                   fileType: listing.type,
                   // aiTerms: listing.isAi ? 'yes' : 'no',
                   originalFileName: listing.name,
@@ -566,7 +570,8 @@ export function requestSaveBatchListings(pageMode = PAGE_MODE_NEW) {
                   usage: listing.usage,
                   releases: listing.releases ? YES_RELEASES : NO_RELEASES,
                   keywords: listing.keywords.join(' '),
-                  imageSize: listing.dimensions,
+                  dimensions: listing.dimensions,
+                  imageSize: listing.imageSize,
                   // aiTerms: listing.isAi ? 'yes' : 'no',
                 },
                 price: {

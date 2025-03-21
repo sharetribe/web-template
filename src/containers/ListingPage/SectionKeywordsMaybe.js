@@ -22,7 +22,7 @@ export default function SectionKeywordsMaybe({ keywords }) {
         {keywordsOptions.map((item, index) => {
           const keyword = item.toLowerCase();
           return (
-            <Button key={`keyword-${index}`} type="primary" shape="round" ghost>
+            <Button key={`keyword-${index}`} type="primary" shape="round" size="small" ghost>
               <NamedLink
                 name="SearchPage"
                 to={{ search: stringify({ ...BASE_SEARCH_QUERY_PARAMS, keywords: keyword }) }}
