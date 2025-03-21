@@ -78,7 +78,8 @@
 .tabContentDarkSkin {
   color: var(--colorGrey300);
 
-  &:hover {
+  &:hover,
+  &:focus {
     color: var(--colorWhite);
   }
 }

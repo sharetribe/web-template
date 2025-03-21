@@ -68,6 +68,22 @@ const handleKeyDown = setIsOpen => e => {
   }
 };
 
+/**
+ * A selector for a week.
+ * Note: extra props are passed to FieldDateRangeController
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className
+ * @param {string?} props.rootClassName
+ * @param {string?} props.label
+ * @param {Date} props.date
+ * @param {Function} props.onDateChange
+ * @param {string} props.timeZone IANA time zone key
+ * @param {Object?} props.initialValues
+ * @param {Object?} props.initialValues.dates date range from the start of the week to its end
+ * @returns {JSX.Element} containing a form that allows picking a specific week
+ */
 const WeekPicker = props => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(props.date);

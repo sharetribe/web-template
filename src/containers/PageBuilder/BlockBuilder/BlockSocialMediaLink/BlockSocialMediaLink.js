@@ -1,5 +1,4 @@
 import React from 'react';
-import { func, node, object, shape, string } from 'prop-types';
 import classNames from 'classnames';
 
 import Field from '../../Field';
@@ -7,6 +6,30 @@ import BlockContainer from '../BlockContainer';
 
 import css from './BlockSocialMediaLink.module.css';
 
+/**
+ * @typedef {Object} FieldComponentConfig
+ * @property {ReactNode} component
+ * @property {Function} pickValidProps
+ */
+
+/**
+ * This returns a component that can render 'socialMediaLink' config.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.blockId id from the block config
+ * @param {string} props.blockName name from the block config (not used)
+ * @param {'socialMediaLink'} props.blockType blockType is set to 'socialMediaLink'
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {Object} props.link content config for the block (can be markdown)
+ * @param {'socialMediaLink'} props.link.fieldType socialMediaLink type of field config
+ * @param {'facebook' | 'instagram' | 'linkedin' | 'pinterest' | 'tiktok' | 'twitter' | 'youtube'} props.link.platform which supported service platform
+ * @param {string} props.link.url url to social media service profile
+ * @param {Object} props.options extra options for the block component (e.g. custom fieldComponents)
+ * @param {Object<string,FieldComponentConfig>?} props.options.fieldComponents Custom fieldComponents
+ * @returns {JSX.Element} component that renders block type: 'socialMediaLink'
+ */
 const BlockSocialMediaLink = props => {
   const { blockId, className, rootClassName, link, options } = props;
 
@@ -17,30 +40,6 @@ const BlockSocialMediaLink = props => {
       <Field data={link} options={options} className={css.link} />
     </BlockContainer>
   );
-};
-
-const propTypeOption = shape({
-  fieldComponents: shape({ component: node, pickValidProps: func }),
-});
-
-const propTypeLink = shape({
-  fieldType: string,
-  platform: string,
-  url: string,
-});
-
-BlockSocialMediaLink.defaultProps = {
-  className: null,
-  rootClassName: null,
-  link: null,
-};
-
-BlockSocialMediaLink.propTypes = {
-  blockId: string,
-  className: string,
-  rootClassName: string,
-  link: propTypeLink,
-  options: propTypeOption,
 };
 
 export default BlockSocialMediaLink;

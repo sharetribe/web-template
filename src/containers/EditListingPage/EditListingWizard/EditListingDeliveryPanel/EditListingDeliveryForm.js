@@ -6,7 +6,7 @@ import classNames from 'classnames';
 
 // Import configs and util modules
 import appSettings from '../../../../config/settings';
-import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactIntl';
+import { intlShape, injectIntl, FormattedMessage, useIntl } from '../../../../util/reactIntl';
 import { propTypes } from '../../../../util/types';
 import { displayDeliveryPickup, displayDeliveryShipping } from '../../../../util/configHelpers';
 import {
@@ -31,30 +31,52 @@ import css from './EditListingDeliveryForm.module.css';
 
 const identity = v => v;
 
-export const EditListingDeliveryFormComponent = props => (
+/**
+ * The EditListingDeliveryForm component.
+ *
+ * @component
+ * @param {Object} props - The component props
+ * @param {string} props.formId - The form ID
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {Function} props.onSubmit - The submit function
+ * @param {string} props.saveActionMsg - The save action message
+ * @param {Object} props.selectedPlace - The selected place
+ * @param {string} props.marketplaceCurrency - The marketplace currency
+ * @param {boolean} props.hasStockInUse - Whether the stock is in use
+ * @param {boolean} props.disabled - Whether the form is disabled
+ * @param {boolean} props.ready - Whether the form is ready
+ * @param {boolean} props.updated - Whether the form is updated
+ * @param {boolean} props.updateInProgress - Whether the form is in progress
+ * @param {Object} props.fetchErrors - The fetch errors
+ * @param {propTypes.error} [props.fetchErrors.showListingsError] - The show listings error
+ * @param {propTypes.error} [props.fetchErrors.updateListingError] - The update listing error
+ * @param {boolean} props.autoFocus - Whether the form is auto focused
+ * @returns {JSX.Element} The EditListingDeliveryForm component
+ */
+export const EditListingDeliveryForm = props => (
   <FinalForm
     {...props}
     render={formRenderProps => {
       const {
-        formId,
+        formId = 'EditListingDeliveryForm',
         form,
         autoFocus,
         className,
         disabled,
         ready,
         handleSubmit,
-        intl,
         pristine,
         invalid,
         listingTypeConfig,
         marketplaceCurrency,
-        hasStockInUse,
+        hasStockInUse = true,
         saveActionMsg,
         updated,
         updateInProgress,
         fetchErrors,
         values,
       } = formRenderProps;
+      const intl = useIntl();
 
       // This is a bug fix for Final Form.
       // Without this, React will return a warning:
@@ -279,29 +301,4 @@ export const EditListingDeliveryFormComponent = props => (
   />
 );
 
-EditListingDeliveryFormComponent.defaultProps = {
-  selectedPlace: null,
-  fetchErrors: null,
-  formId: 'EditListingDeliveryForm',
-  hasStockInUse: true,
-};
-
-EditListingDeliveryFormComponent.propTypes = {
-  formId: string,
-  intl: intlShape.isRequired,
-  onSubmit: func.isRequired,
-  saveActionMsg: string.isRequired,
-  selectedPlace: propTypes.place,
-  marketplaceCurrency: string.isRequired,
-  hasStockInUse: bool,
-  disabled: bool.isRequired,
-  ready: bool.isRequired,
-  updated: bool.isRequired,
-  updateInProgress: bool.isRequired,
-  fetchErrors: shape({
-    showListingsError: propTypes.error,
-    updateListingError: propTypes.error,
-  }),
-};
-
-export default compose(injectIntl)(EditListingDeliveryFormComponent);
+export default EditListingDeliveryForm;

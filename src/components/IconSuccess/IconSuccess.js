@@ -1,9 +1,18 @@
 import React from 'react';
-import { string } from 'prop-types';
 import classNames from 'classnames';
 
 import css from './IconSuccess.module.css';
 
+/**
+ * Success icon.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string?} props.fillColor overwrite components own css.fillColor
+ * @returns {JSX.Element} SVG icon
+ */
 const IconSuccess = props => {
   const { rootClassName, className, fillColor } = props;
   const classes = classNames(rootClassName || css.root, className);
@@ -21,18 +30,6 @@ const IconSuccess = props => {
       </g>
     </svg>
   );
-};
-
-IconSuccess.defaultProps = {
-  rootClassName: null,
-  className: null,
-  fillColor: null,
-};
-
-IconSuccess.propTypes = {
-  rootClassName: string,
-  className: string,
-  fillColor: string,
 };
 
 export default IconSuccess;

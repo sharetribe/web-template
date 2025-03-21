@@ -1,5 +1,4 @@
-import React from 'react';
-import { array, arrayOf, bool, func, shape, string, oneOf, object } from 'prop-types';
+import React, { useState, useEffect } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -8,7 +7,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 // Utils
-import { FormattedMessage, intlShape, useIntl } from '../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import {
   LISTING_STATE_PENDING_APPROVAL,
   LISTING_STATE_CLOSED,
@@ -94,6 +93,12 @@ const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
 const { UUID } = sdkTypes;
 
 export const ListingPageComponent = props => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const {
     currentUser,
     getListing,
@@ -104,7 +109,7 @@ export const ListingPageComponent = props => {
     location,
     scrollingDisabled,
     showListingError,
-    reviews,
+    reviews = [],
     fetchReviewsError,
     monthlyTimeSlots,
     onFetchTimeSlots,
@@ -323,7 +328,7 @@ export const ListingPageComponent = props => {
         offers: {
           '@type': 'Offer',
           url: productURL,
-          ...priceForSchemaMaybe(price, intl),
+          ...priceForSchemaMaybe(price),
           ...availabilityMaybe,
         },
       }}
@@ -331,13 +336,7 @@ export const ListingPageComponent = props => {
       <LayoutSingleColumn className={css.pageRoot} topbar={topbar} footer={<FooterContainer />}>
         <div className={css.contentWrapperForProductLayout}>
           <div className={css.mainColumnForProductLayout}>
-            {/* [TODO:] REMOVE ONCE THE NEW FLOW IS IMPLEMENTED */}
-            <H4 as="h1">
-              Under Construction — we’re in pre-launch mode, so if something looks off, that’s why.
-              Thanks for your patience — exciting things are coming!
-            </H4>
-
-            {currentListing.id && noPayoutDetailsSetWithOwnListing ? (
+            {mounted && currentListing.id && noPayoutDetailsSetWithOwnListing ? (
               <ActionBarMaybe
                 className={css.actionBarForProductLayout}
                 isOwnListing={isOwnListing}
@@ -346,7 +345,7 @@ export const ListingPageComponent = props => {
                 currentUser={currentUser}
               />
             ) : null}
-            {currentListing.id ? (
+            {mounted && currentListing.id ? (
               <ActionBarMaybe
                 className={css.actionBarForProductLayout}
                 isOwnListing={isOwnListing}
@@ -438,65 +437,37 @@ export const ListingPageComponent = props => {
   );
 };
 
-ListingPageComponent.defaultProps = {
-  currentUser: null,
-  showListingError: null,
-  reviews: [],
-  fetchReviewsError: null,
-  monthlyTimeSlots: null,
-  lineItems: null,
-  fetchLineItemsError: null,
-};
-
-ListingPageComponent.propTypes = {
-  // from useHistory
-  history: shape({
-    push: func.isRequired,
-  }).isRequired,
-  // from useLocation
-  location: shape({
-    search: string,
-  }).isRequired,
-
-  // from useIntl
-  intl: intlShape.isRequired,
-
-  // from useConfiguration
-  config: object.isRequired,
-  // from useRouteConfiguration
-  routeConfiguration: arrayOf(propTypes.route).isRequired,
-
-  params: shape({
-    id: string.isRequired,
-    slug: string,
-    variant: oneOf([LISTING_PAGE_DRAFT_VARIANT, LISTING_PAGE_PENDING_APPROVAL_VARIANT]),
-  }).isRequired,
-
-  currentUser: propTypes.currentUser,
-  getListing: func.isRequired,
-  getOwnListing: func.isRequired,
-  onManageDisableScrolling: func.isRequired,
-  scrollingDisabled: bool.isRequired,
-  showListingError: propTypes.error,
-  callSetInitialValues: func.isRequired,
-  reviews: arrayOf(propTypes.review),
-  fetchReviewsError: propTypes.error,
-  monthlyTimeSlots: object,
-  // monthlyTimeSlots could be something like:
-  // monthlyTimeSlots: {
-  //   '2019-11': {
-  //     timeSlots: [],
-  //     fetchTimeSlotsInProgress: false,
-  //     fetchTimeSlotsError: null,
-  //   }
-  // }
-  onInitializeCardPaymentData: func.isRequired,
-  onFetchTransactionLineItems: func.isRequired,
-  lineItems: array,
-  fetchLineItemsInProgress: bool.isRequired,
-  fetchLineItemsError: propTypes.error,
-};
-
+/**
+ * The ListingPage component with carousel layout.
+ *
+ * @component
+ * @param {Object} props
+ * @param {Object} props.params - The path params object
+ * @param {string} props.params.id - The listing id
+ * @param {string} props.params.slug - The listing slug
+ * @param {LISTING_PAGE_DRAFT_VARIANT | LISTING_PAGE_PENDING_APPROVAL_VARIANT} props.params.variant - The listing variant
+ * @param {Function} props.onManageDisableScrolling - The on manage disable scrolling function
+ * @param {boolean} props.isAuthenticated - Whether the user is authenticated
+ * @param {Function} props.getListing - The get listing function
+ * @param {Function} props.getOwnListing - The get own listing function
+ * @param {Object} props.currentUser - The current user
+ * @param {boolean} props.scrollingDisabled - Whether scrolling is disabled
+ * @param {propTypes.error} props.showListingError - The show listing error
+ * @param {Function} props.callSetInitialValues - The call setInitialValues function, which is given to this function as a parameter
+ * @param {Array<propTypes.review>} props.reviews - The reviews
+ * @param {propTypes.error} props.fetchReviewsError - The fetch reviews error
+ * @param {Object<string, Object>} props.monthlyTimeSlots - The monthly time slots. E.g. { '2019-11': { timeSlots: [], fetchTimeSlotsInProgress: false, fetchTimeSlotsError: null } }
+ * @param {boolean} props.sendInquiryInProgress - Whether the send inquiry is in progress
+ * @param {propTypes.error} props.sendInquiryError - The send inquiry error
+ * @param {Function} props.onSendInquiry - The on send inquiry function
+ * @param {Function} props.onInitializeCardPaymentData - The on initialize card payment data function
+ * @param {Function} props.onFetchTimeSlots - The on fetch time slots function
+ * @param {Function} props.onFetchTransactionLineItems - The on fetch transaction line items function
+ * @param {Array<propTypes.transactionLineItem>} props.lineItems - The line items
+ * @param {boolean} props.fetchLineItemsInProgress - Whether the fetch line items is in progress
+ * @param {propTypes.error} props.fetchLineItemsError - The fetch line items error
+ * @returns {JSX.Element} listing page component
+ */
 const EnhancedListingPage = props => {
   const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();

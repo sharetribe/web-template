@@ -63,6 +63,12 @@ const LoadingSpinner = () => {
 //////////////////
 
 /**
+ * @typedef {Object} FieldComponentConfig
+ * @property {ReactNode} component
+ * @property {Function} pickValidProps
+ */
+
+/**
  * PageBuilder can be used to build content pages using page-asset.json.
  *
  * Note: props can include a lot of things that depend on
@@ -78,7 +84,20 @@ const LoadingSpinner = () => {
  * - pageProps: props that are passed to src/components/Page/Page.js component
  *
  * @param {Object} props
- * @returns page component
+ * @param {Object} props.pageAssetsData
+ * @param {Array<Object>} props.pageAssetsData.sections
+ * @param {Object} props.pageAssetsData.meta
+ * @param {Object} props.pageAssetsData.meta.pageTitle
+ * @param {Object} props.pageAssetsData.meta.pageDescription
+ * @param {Object} props.pageAssetsData.meta.socialSharing
+ * @param {boolean?} props.inProgress
+ * @param {Object?} props.error
+ * @param {ReactNode?} props.fallbackPage
+ * @param {string} props.schemaType type from schema.org (e.g. 'Article', 'Website')
+ * @param {string?} props.currentPage name of the current page based on route configuration
+ * @param {Object} props.options
+ * @param {Object<string,FieldComponentConfig>} props.options.fieldComponents custom field components
+ * @returns {JSX.Element} page component
  */
 const PageBuilder = props => {
   const {

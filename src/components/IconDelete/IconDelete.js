@@ -1,9 +1,17 @@
 import React from 'react';
-import { string } from 'prop-types';
 import classNames from 'classnames';
 
 import css from './IconDelete.module.css';
 
+/**
+ * Delete icon.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @returns {JSX.Element} SVG icon
+ */
 const IconDelete = props => {
   const { className, rootClassName } = props;
   const classes = classNames(rootClassName || css.root, className);
@@ -20,13 +28,6 @@ const IconDelete = props => {
       />
     </svg>
   );
-};
-
-IconDelete.defaultProps = { className: null };
-
-IconDelete.propTypes = {
-  className: string,
-  rootClassName: string,
 };
 
 export default IconDelete;

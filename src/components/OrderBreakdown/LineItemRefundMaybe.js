@@ -42,6 +42,15 @@ const nonCommissionReversalLineItems = lineItems => {
   return lineItems.filter(item => !isCommission(item) && item.reversal);
 };
 
+/**
+ * A component that renders the refund as a line item.
+ *
+ * @component
+ * @param {Object} props
+ * @param {Array<propTypes.lineItem>} props.lineItems - The line items to render
+ * @param {intlShape} props.intl - The intl object
+ * @returns {JSX.Element}
+ */
 const LineItemRefundMaybe = props => {
   const { lineItems, intl, marketplaceCurrency } = props;
 
@@ -60,11 +69,6 @@ const LineItemRefundMaybe = props => {
       <span className={css.itemValue}>{formattedRefund}</span>
     </div>
   ) : null;
-};
-
-LineItemRefundMaybe.propTypes = {
-  lineItems: propTypes.lineItems.isRequired,
-  intl: intlShape.isRequired,
 };
 
 export default LineItemRefundMaybe;

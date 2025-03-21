@@ -496,14 +496,11 @@ const DatePicker = props => {
       return;
     }
     calendarsPanel.classList.add(css.slide);
-    const posInitial = -1 * SLIDE_WIDTH + OUTLINE_WIDTH;
 
     if (allowSlide) {
       if (direction == 1) {
-        calendarsPanel.style.transform = `translateX(${posInitial - SLIDE_WIDTH}px)`;
         setCalendarIndex(prevIndex => ++prevIndex);
       } else if (direction == -1) {
-        calendarsPanel.style.transform = `translateX(${posInitial + SLIDE_WIDTH}px)`;
         setCalendarIndex(prevIndex => --prevIndex);
       }
     }
@@ -521,8 +518,6 @@ const DatePicker = props => {
       return;
     }
     calendarsPanel.classList.remove(css.slide);
-
-    calendarsPanel.style.transform = `translateX(${-(1 * SLIDE_WIDTH - OUTLINE_WIDTH)}px)`;
 
     if (calendarIndex == -1) {
       updateCurrentDate(getPreviousMonth(currentDate));
@@ -555,6 +550,18 @@ const DatePicker = props => {
     intl,
   };
 
+  const translateX = index => {
+    const initialPosition = -1 * (1 * SLIDE_WIDTH - OUTLINE_WIDTH);
+    return index === -1
+      ? initialPosition + SLIDE_WIDTH
+      : index === 1
+      ? initialPosition - SLIDE_WIDTH
+      : initialPosition;
+  };
+  const style = {
+    transform: `translateX(${translateX(calendarIndex)}px)`,
+  };
+
   return (
     <div
       aria-disabled={String(disabled)}
@@ -581,7 +588,12 @@ const DatePicker = props => {
 
         <div className={css.body} style={{ height }}>
           <div className={css.calendarViewport}>
-            <div id="calendars" className={css.calendars} onTransitionEnd={handleTransitionEnd}>
+            <div
+              id="calendars"
+              className={css.calendars}
+              onTransitionEnd={handleTransitionEnd}
+              style={style}
+            >
               <CalendarMonth
                 currentMonth={getPreviousMonth(currentDate)}
                 visible={!allowSlide}

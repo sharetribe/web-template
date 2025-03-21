@@ -1,17 +1,25 @@
 import React from 'react';
-import { node, string } from 'prop-types';
 import classNames from 'classnames';
 import { Field } from 'react-final-form';
 
 import css from './FieldRadioButton.module.css';
 
+/**
+ * IconRadioButton
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.checkedClassName overwrite components own css.checkedStyle
+ * @param {boolean?} props.showAsRequired adds attention color for the icon if not selected
+ * @returns {JSX.Element} checkbox svg that places the native radio button
+ */
 const IconRadioButton = props => {
-  const { checkedClassName } = props;
+  const { className, checkedClassName, showAsRequired } = props;
   return (
     <div>
-      <svg className={props.className} width="14" height="14" xmlns="http://www.w3.org/2000/svg">
+      <svg className={className} width="14" height="14" xmlns="http://www.w3.org/2000/svg">
         <circle
-          className={props.showAsRequired ? css.required : css.notChecked}
+          className={showAsRequired ? css.required : css.notChecked}
           cx="5"
           cy="19"
           r="6"
@@ -35,11 +43,23 @@ const IconRadioButton = props => {
   );
 };
 
-IconRadioButton.defaultProps = { className: null };
-
-IconRadioButton.propTypes = { className: string };
-
-const FieldRadioButtonComponent = props => {
+/**
+ * Final Form Field containing radio button input
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string?} props.svgClassName is passed to radio button svg as className
+ * @param {string?} props.checkedClassName overwrite components own css.checkedStyle given to icon
+ * @param {string} props.id Id is needed to connect the label with input.
+ * @param {string} props.name Name groups several RadioButtons to be alternative values for this "key"
+ * @param {string} props.value RadioButton needs a value that is passed forward when user checks the RadioButton
+ * @param {ReactNode} props.label
+ * @param {boolean?} props.showAsRequired adds attention color for the icon if not selected
+ * @returns {JSX.Element} Final Form Field containing radio button input
+ */
+const FieldRadioButton = props => {
   const {
     rootClassName,
     className,
@@ -77,29 +97,4 @@ const FieldRadioButtonComponent = props => {
   );
 };
 
-FieldRadioButtonComponent.defaultProps = {
-  className: null,
-  rootClassName: null,
-  svgClassName: null,
-  checkedClassName: null,
-  label: null,
-};
-
-FieldRadioButtonComponent.propTypes = {
-  className: string,
-  rootClassName: string,
-  svgClassName: string,
-  checkedClassName: string,
-
-  // Id is needed to connect the label with input.
-  id: string.isRequired,
-  label: node,
-
-  // Name groups several RadioButtones to an array of selected values
-  name: string.isRequired,
-
-  // RadioButton needs a value that is passed forward when user checks the RadioButton
-  value: string.isRequired,
-};
-
-export default FieldRadioButtonComponent;
+export default FieldRadioButton;

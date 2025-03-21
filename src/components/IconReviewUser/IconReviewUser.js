@@ -1,9 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import css from './IconReviewUser.module.css';
 
+/**
+ * Review icon.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @returns {JSX.Element} SVG icon
+ */
 const IconReviewUser = props => {
   const { className, rootClassName } = props;
   const classes = classNames(rootClassName || css.root, className);
@@ -30,15 +38,6 @@ const IconReviewUser = props => {
       </g>
     </svg>
   );
-};
-
-IconReviewUser.defaultProps = { className: null, rootClassName: null };
-
-const { string } = PropTypes;
-
-IconReviewUser.propTypes = {
-  className: string,
-  rootClassName: string,
 };
 
 export default IconReviewUser;

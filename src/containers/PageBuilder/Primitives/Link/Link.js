@@ -1,5 +1,4 @@
 import React from 'react';
-import { node, string } from 'prop-types';
 import classNames from 'classnames';
 import { useLocation } from 'react-router-dom';
 
@@ -9,6 +8,17 @@ import { matchPathname } from '../../../../util/routes.js';
 import { NamedLink, ExternalLink } from '../../../../components/index.js';
 import css from './Link.module.css';
 
+/**
+ * Link element which internally uses NamedLink or ExternalLink
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {ReactNode} props.children
+ * @param {string} props.href link destination. In-app links need to start with '/'.
+ * @returns {JSX.Element} link element
+ */
 export const Link = React.forwardRef((props, ref) => {
   const location = useLocation();
   const routes = useRouteConfiguration();
@@ -64,15 +74,3 @@ export const Link = React.forwardRef((props, ref) => {
 });
 
 Link.displayName = 'Link';
-
-Link.defaultProps = {
-  rootClassName: null,
-  className: null,
-};
-
-Link.propTypes = {
-  rootClassName: string,
-  className: string,
-  children: node.isRequired,
-  href: string.isRequired,
-};

@@ -1,11 +1,23 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import { propTypes } from '../../../util/types';
 
 import css from './SearchMapGroupLabel.module.css';
 
+/**
+ * SearchMapGroupLabel component
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that extends the default class for the root element
+ * @param {Array<propTypes.listing>} props.listings - The listings
+ * @param {Function} props.onListingClicked - The function to handle the listing click
+ * @param {boolean} [props.isActive] - The active status
+ * @param {string} [props.mapComponentRefreshToken] - The map component refresh token
+ * @returns {JSX.Element}
+ */
 class SearchMapGroupLabel extends Component {
   shouldComponentUpdate(nextProps) {
     const hasSameAmountOfListings = nextProps.listings.length === this.props.listings.length;
@@ -31,19 +43,5 @@ class SearchMapGroupLabel extends Component {
     );
   }
 }
-
-SearchMapGroupLabel.defaultProps = {
-  className: null,
-  rootClassName: null,
-};
-
-const { arrayOf, func, string } = PropTypes;
-
-SearchMapGroupLabel.propTypes = {
-  className: string,
-  rootClassName: string,
-  listings: arrayOf(propTypes.listing).isRequired,
-  onListingClicked: func.isRequired,
-};
 
 export default SearchMapGroupLabel;

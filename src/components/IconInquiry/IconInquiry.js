@@ -1,9 +1,17 @@
 import React from 'react';
-import { string } from 'prop-types';
 import classNames from 'classnames';
 
 import css from './IconInquiry.module.css';
 
+/**
+ * Inquiry icon.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @returns {JSX.Element} SVG icon
+ */
 const IconInquiry = props => {
   const { rootClassName, className } = props;
   const classes = classNames(rootClassName || css.root, className);
@@ -27,16 +35,6 @@ const IconInquiry = props => {
       </g>
     </svg>
   );
-};
-
-IconInquiry.defaultProps = {
-  rootClassName: null,
-  className: null,
-};
-
-IconInquiry.propTypes = {
-  rootClassName: string,
-  className: string,
 };
 
 export default IconInquiry;

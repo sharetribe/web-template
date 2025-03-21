@@ -1,12 +1,10 @@
 import React from 'react';
-import { bool, func, number, shape, string } from 'prop-types';
-import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
 // Import configs and util modules
 import appSettings from '../../../../config/settings';
-import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../../../util/reactIntl';
 import { propTypes } from '../../../../util/types';
 import * as validators from '../../../../util/validators';
 import { formatMoney } from '../../../../util/currency';
@@ -39,36 +37,60 @@ const getPriceValidators = (listingMinimumPriceSubUnits, marketplaceCurrency, in
     : priceRequired;
 };
 
-export const EditListingPricingFormComponent = props => (
+/**
+ * The EditListingPricingForm component.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.formId] - The form id
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} props.unitType - The unit type
+ * @param {string} props.marketplaceCurrency - The marketplace currency
+ * @param {number} [props.listingMinimumPriceSubUnits] - The listing minimum price sub units
+ * @param {boolean} [props.autoFocus] - Whether the input should be focused
+ * @param {boolean} [props.disabled] - Whether the form is disabled
+ * @param {boolean} [props.ready] - Whether the form is ready
+ * @param {Function} props.onSubmit - The submit function
+ * @param {boolean} [props.invalid] - Whether the form is invalid
+ * @param {boolean} [props.pristine] - Whether the form is pristine
+ * @param {string} props.saveActionMsg - The save action message
+ * @param {boolean} [props.updated] - Whether the form is updated
+ * @param {boolean} [props.updateInProgress] - Whether the form is updating
+ * @param {Object} [props.fetchErrors] - The fetch errors
+ * @returns {JSX.Element}
+ */
+export const EditListingPricingForm = props => (
   <FinalForm
     {...props}
     render={formRenderProps => {
       const {
-        formId,
+        formId = 'EditListingPricingForm',
         autoFocus,
         className,
+        rootClassName,
         disabled,
         ready,
         handleSubmit,
         marketplaceCurrency,
         unitType,
-        listingMinimumPriceSubUnits,
-        intl,
+        listingMinimumPriceSubUnits = 0,
         invalid,
         pristine,
         saveActionMsg,
         updated,
-        updateInProgress,
+        updateInProgress = false,
         fetchErrors,
       } = formRenderProps;
 
+      const intl = useIntl();
       const priceValidators = getPriceValidators(
         listingMinimumPriceSubUnits,
         marketplaceCurrency,
         intl
       );
 
-      const classes = classNames(css.root, className);
+      const classes = classNames(rootClassName || css.root, className);
       const submitReady = (updated && pristine) || ready;
       const submitInProgress = updateInProgress;
       const submitDisabled = invalid || disabled || submitInProgress;
@@ -115,28 +137,4 @@ export const EditListingPricingFormComponent = props => (
   />
 );
 
-EditListingPricingFormComponent.defaultProps = {
-  fetchErrors: null,
-  listingMinimumPriceSubUnits: 0,
-  formId: 'EditListingPricingForm',
-};
-
-EditListingPricingFormComponent.propTypes = {
-  formId: string,
-  intl: intlShape.isRequired,
-  onSubmit: func.isRequired,
-  marketplaceCurrency: string.isRequired,
-  unitType: string.isRequired,
-  listingMinimumPriceSubUnits: number,
-  saveActionMsg: string.isRequired,
-  disabled: bool.isRequired,
-  ready: bool.isRequired,
-  updated: bool.isRequired,
-  updateInProgress: bool.isRequired,
-  fetchErrors: shape({
-    showListingsError: propTypes.error,
-    updateListingError: propTypes.error,
-  }),
-};
-
-export default compose(injectIntl)(EditListingPricingFormComponent);
+export default EditListingPricingForm;

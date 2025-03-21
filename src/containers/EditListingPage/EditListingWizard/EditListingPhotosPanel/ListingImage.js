@@ -1,5 +1,4 @@
 import React from 'react';
-import { func, object, string } from 'prop-types';
 import classNames from 'classnames';
 
 // Import shared components
@@ -41,9 +40,22 @@ const RemoveImageButton = props => {
   );
 };
 
-// Cropped "thumbnail" of given listing image.
-// The image might be one already uploaded and attached to listing entity
-// or representing local image file (before it's uploaded & attached to listing).
+/**
+ * Cropped "thumbnail" of given listing image.
+ * The image might be one already uploaded and attached to listing entity
+ * or representing local image file (before it's uploaded & attached to listing).
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {Object} props.image - The image object
+ * @param {string} props.savedImageAltText - The saved image alt text
+ * @param {Function} props.onRemoveImage - The remove image function
+ * @param {number} [props.aspectWidth] - The aspect width
+ * @param {number} [props.aspectHeight] - The aspect height
+ * @param {string} [props.variantPrefix] - The variant prefix
+ * @returns {JSX.Element}
+ */
 const ListingImage = props => {
   const {
     className,
@@ -124,15 +136,6 @@ const ListingImage = props => {
       </div>
     );
   }
-};
-
-ListingImage.defaultProps = { className: null };
-
-ListingImage.propTypes = {
-  className: string,
-  image: object.isRequired,
-  savedImageAltText: string.isRequired,
-  onRemoveImage: func.isRequired,
 };
 
 export default ListingImage;

@@ -37,6 +37,33 @@ import { getLinks, getItems, getCurrentCategory, routeHandler } from './utils';
 
 import css from './ManageListingsPage.module.css';
 
+/**
+ * The ManageListingsPage component.
+ *
+ * @component
+ * @param {Object} props
+ * @param {propTypes.currentUser} props.currentUser - The current user
+ * @param {propTypes.uuid} props.closingListing - The closing listing
+ * @param {Object} props.closingListingError - The closing listing error
+ * @param {propTypes.error} props.closingListingError.listingId - The closing listing id
+ * @param {propTypes.error} props.closingListingError.error - The closing listing error
+ * @param {propTypes.ownListing[]} props.listings - The listings
+ * @param {function} props.onCloseListing - The onCloseListing function
+ * @param {function} props.onDiscardDraft - The onDiscardDraft function
+ * @param {function} props.onOpenListing - The onOpenListing function
+ * @param {Object} props.openingListing - The opening listing
+ * @param {propTypes.uuid} props.openingListing.uuid - The opening listing uuid
+ * @param {Object} props.openingListingError - The opening listing error
+ * @param {propTypes.uuid} props.openingListingError.listingId - The opening listing id
+ * @param {propTypes.error} props.openingListingError.error - The opening listing error
+ * @param {propTypes.pagination} props.pagination - The pagination
+ * @param {boolean} props.queryInProgress - Whether the query is in progress
+ * @param {propTypes.error} props.queryListingsError - The query listings error
+ * @param {Object} props.queryParams - The query params
+ * @param {boolean} props.scrollingDisabled - Whether the scrolling is disabled
+ * @param {function} props.onManageDisableScrolling - The onManageDisableScrolling function
+ * @returns {JSX.Element} manage listings page component
+ */
 export const ManageListingsPageComponent = props => {
   const [listingMenuOpen, setListingMenuOpen] = useState(null);
   const [discardDraftModalOpen, setDiscardDraftModalOpen] = useState(null);

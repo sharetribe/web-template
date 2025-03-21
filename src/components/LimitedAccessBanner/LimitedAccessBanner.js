@@ -1,9 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import { FormattedMessage } from '../../util/reactIntl';
-import { propTypes } from '../../util/types';
 import { ensureCurrentUser } from '../../util/data';
 
 import { Button } from '../../components';
@@ -13,13 +11,28 @@ import css from './LimitedAccessBanner.module.css';
 // Due to the layout structure, do not render the banner on the following pages
 const disabledPages = ['SearchPage'];
 
+/**
+ * This component returns a limited-access banner.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {boolean} props.isAuthenticated
+ * @param {boolean} props.isLoggedInAs
+ * @param {Array<string>} props.authScopes
+ * @param {Object} props.currentUser
+ * @param {Function} props.onLogout
+ * @param {string?} props.currentPage
+ * @returns {JSX.Element} LimitedAccessBanner component
+ */
 const LimitedAccessBanner = props => {
   const {
     rootClassName,
     className,
     isAuthenticated,
     isLoggedInAs,
-    authScopes,
+    authScopes = [],
     currentUser,
     onLogout,
     currentPage,
@@ -57,27 +70,6 @@ const LimitedAccessBanner = props => {
       </Button>
     </div>
   ) : null;
-};
-
-LimitedAccessBanner.defaultProps = {
-  rootClassName: null,
-  className: null,
-  currentUser: null,
-  authScopes: [],
-  currentPage: null,
-};
-
-const { array, bool, func, string } = PropTypes;
-
-LimitedAccessBanner.propTypes = {
-  rootClassName: string,
-  className: string,
-  isAuthenticated: bool.isRequired,
-  isLoggedInAs: bool.isRequired,
-  authScopes: array,
-  currentUser: propTypes.currentUser,
-  onLogout: func.isRequired,
-  currentPage: string,
 };
 
 export default LimitedAccessBanner;

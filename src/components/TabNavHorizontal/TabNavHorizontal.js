@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { InlineTextButton, NamedLink } from '../../components';
 
@@ -7,8 +6,6 @@ import css from './TabNavHorizontal.module.css';
 
 export const LIGHT_SKIN = 'light';
 export const DARK_SKIN = 'dark';
-
-const { arrayOf, bool, func, node, object, oneOf, string, shape } = PropTypes;
 
 const Tab = props => {
   const { className, disabled, text, selected, onClick, linkProps, isDark } = props;
@@ -55,20 +52,8 @@ const Tab = props => {
   );
 };
 
-Tab.defaultProps = { className: null, disabled: false, selected: false };
-
-Tab.propTypes = {
-  className: string,
-  text: node.isRequired,
-  disabled: bool,
-  selected: bool,
-  onClick: func,
-  linkProps: object,
-  isDark: bool.isRequired,
-};
-
 const TabNavHorizontal = props => {
-  const { className, rootClassName, tabRootClassName, tabs, skin } = props;
+  const { className, rootClassName, tabRootClassName, tabs, skin = LIGHT_SKIN } = props;
   const isDark = skin === DARK_SKIN;
   const classes = classNames(rootClassName || css.root, { [css.darkSkin]: isDark }, className);
   const tabClasses = tabRootClassName || css.tab;
@@ -83,59 +68,43 @@ const TabNavHorizontal = props => {
 };
 
 /**
+ * @typedef {Object} TabConfig
+ * @property {string} text - The text to be rendered in the tab
+ * @property {boolean} disabled - Whether the tab is disabled
+ * @property {boolean} selected - Whether the tab is selected
+ * @property {Object} onClick - The onClick function to be passed to the tab component
+ * @property {Object} linkProps - The props to be passed to the link component
+ * @property {string} linkProps.name - The name of the link
+ * @property {string} linkProps.params - The path params to be passed to the link component
+ * @property {string} linkProps.to - The rest of the URL params needed
+ * @property {boolean} isDark - Whether the tab is dark
+ */
+
+/**
  * A tab navigation element with buttons. Requires onClick
  * function param for tab objects passed as parameter.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} [props.tabRootClassName] - Custom class that overrides the default class for the tab element
+ * @param {Array<TabConfig>} props.tabs - The tabs to render
+ * @param {LIGHT_SKIN | DARK_SKIN} [props.skin] - The skin of the tab navigation
+ * @returns {JSX.Element}
  */
 export const ButtonTabNavHorizontal = props => <TabNavHorizontal {...props} />;
 
-ButtonTabNavHorizontal.defaultProps = {
-  className: null,
-  rootClassName: null,
-  tabRootClassName: null,
-  tabClassName: null,
-  skin: LIGHT_SKIN,
-};
-
-ButtonTabNavHorizontal.propTypes = {
-  className: string,
-  rootClassName: string,
-  tabRootClassName: string,
-  tabs: arrayOf(
-    shape({
-      text: node.isRequired,
-      disabled: bool,
-      selected: bool,
-      onClick: func.isRequired,
-    })
-  ).isRequired,
-  skin: oneOf([LIGHT_SKIN, DARK_SKIN]),
-};
-
 /**
- * A tab navigation element with links. Requires linkProps
- * object param for tab objects passed as parameter.
+ * A tab navigation element with links. Requires tabs prop (an array of TabConfig objects)
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} [props.tabRootClassName] - Custom class that overrides the default class for the tab element
+ * @param {Array<TabConfig>} props.tabs - The tabs to render
+ * @param {LIGHT_SKIN | DARK_SKIN} [props.skin] - The skin of the tab navigation
+ * @returns {JSX.Element}
  */
 export const LinkTabNavHorizontal = props => <TabNavHorizontal {...props} />;
-
-LinkTabNavHorizontal.defaultProps = {
-  className: null,
-  rootClassName: null,
-  tabRootClassName: null,
-  tabClassName: null,
-  skin: LIGHT_SKIN,
-};
-
-LinkTabNavHorizontal.propTypes = {
-  className: string,
-  rootClassName: string,
-  tabRootClassName: string,
-  tabs: arrayOf(
-    shape({
-      text: node.isRequired,
-      disabled: bool,
-      selected: bool,
-      linkProps: object.isRequired,
-    })
-  ).isRequired,
-  skin: oneOf([LIGHT_SKIN, DARK_SKIN]),
-};

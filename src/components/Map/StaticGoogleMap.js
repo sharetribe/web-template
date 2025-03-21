@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { number, object, shape, string } from 'prop-types';
 import pick from 'lodash/pick';
 import isEqual from 'lodash/isEqual';
 import polyline from '@mapbox/polyline';
@@ -64,6 +63,25 @@ const drawFuzzyCircle = (mapsConfig, center) => {
   return polylineGraphicTokens.join('|');
 };
 
+/**
+ * Static version of Google Maps
+ * Note: Google supports max 640px wide static map tile.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to component's own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string?} props.address
+ * @param {Object} props.center LatLng
+ * @param {number} props.center.lat latitude
+ * @param {number} props.center.lng longitude
+ * @param {number} props.zoom zoom level
+ * @param {Object} props.mapsConfig
+ * @param {Object} props.dimensions
+ * @param {number} props.dimensions.width
+ * @param {number} props.dimensions.height
+ * @returns {JSX.Element} static version of Google Maps
+ */
 class StaticGoogleMap extends Component {
   shouldComponentUpdate(nextProps, prevState) {
     // Do not draw the map unless center, zoom or dimensions change
@@ -103,30 +121,5 @@ class StaticGoogleMap extends Component {
     );
   }
 }
-
-StaticGoogleMap.defaultProps = {
-  className: null,
-  rootClassName: null,
-  address: '',
-  center: null,
-};
-
-StaticGoogleMap.propTypes = {
-  className: string,
-  rootClassName: string,
-  address: string,
-  center: shape({
-    lat: number.isRequired,
-    lng: number.isRequired,
-  }).isRequired,
-  zoom: number.isRequired,
-  mapsConfig: object.isRequired,
-
-  // from withDimensions
-  dimensions: shape({
-    width: number.isRequired,
-    height: number.isRequired,
-  }).isRequired,
-};
 
 export default lazyLoadWithDimensions(StaticGoogleMap, { maxWidth: '640px' });

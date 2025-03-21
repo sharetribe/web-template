@@ -1,12 +1,23 @@
 import React from 'react';
-import { node, string } from 'prop-types';
 import classNames from 'classnames';
 
 import LayoutComposer from '../LayoutComposer';
 
 import css from './LayoutSingleColumn.module.css';
 
-// Commonly used layout
+/**
+ * Commonly used layout: single column
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to component's own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string?} props.mainColumnClassName add more style rules in addition to css.main
+ * @param {ReactNode} props.children
+ * @param {ReactNode} props.topbar
+ * @param {ReactNode?} props.footer
+ * @returns {JSX.Element} LayoutComposer that expects children to be a function.
+ */
 const LayoutSingleColumn = props => {
   const {
     className,
@@ -46,19 +57,5 @@ const LayoutSingleColumn = props => {
 };
 
 LayoutSingleColumn.displayName = 'LayoutSingleColumn';
-
-LayoutSingleColumn.defaultProps = {
-  className: null,
-  rootClassName: null,
-  footer: null,
-};
-
-LayoutSingleColumn.propTypes = {
-  className: string,
-  rootClassName: string,
-  children: node.isRequired,
-  topbar: node.isRequired,
-  footer: node,
-};
 
 export default LayoutSingleColumn;

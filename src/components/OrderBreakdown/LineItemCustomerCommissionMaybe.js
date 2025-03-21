@@ -1,5 +1,4 @@
 import React from 'react';
-import { bool, string } from 'prop-types';
 import { FormattedMessage, intlShape } from '../../util/reactIntl';
 import { formatMoney } from '../../util/currency';
 import { types as sdkTypes } from '../../util/sdkLoader';
@@ -19,6 +18,17 @@ const isValidCommission = commissionLineItem => {
   );
 };
 
+/**
+ * A component that renders the customer commission as a line item.
+ *
+ * @component
+ * @param {Object} props
+ * @param {Array<propTypes.lineItem>} props.lineItems - The line items to render
+ * @param {boolean} props.isCustomer - Whether the customer is the one paying the commission
+ * @param {string} props.marketplaceName - The name of the marketplace
+ * @param {intlShape} props.intl - The intl object
+ * @returns {JSX.Element}
+ */
 const LineItemCustomerCommissionMaybe = props => {
   const { lineItems, isCustomer, marketplaceName, intl } = props;
 
@@ -53,13 +63,6 @@ const LineItemCustomerCommissionMaybe = props => {
   }
 
   return commissionItem;
-};
-
-LineItemCustomerCommissionMaybe.propTypes = {
-  lineItems: propTypes.lineItems.isRequired,
-  isCustomer: bool.isRequired,
-  marketplaceName: string.isRequired,
-  intl: intlShape.isRequired,
 };
 
 export default LineItemCustomerCommissionMaybe;

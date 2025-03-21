@@ -26,6 +26,7 @@ import * as FieldCurrencyInput from './components/FieldCurrencyInput/FieldCurren
 import * as FieldSingleDatePicker from './components/DatePicker/FieldSingleDatePicker/FieldSingleDatePicker.example';
 import * as FieldDateRangeController from './components/DatePicker/FieldDateRangeController/FieldDateRangeController.example';
 import * as FieldDateRangePicker from './components/DatePicker/FieldDateRangePicker/FieldDateRangePicker.example';
+import * as FieldNumber from './components/FieldNumber/FieldNumber.example';
 import * as FieldPhoneNumberInput from './components/FieldPhoneNumberInput/FieldPhoneNumberInput.example';
 import * as FieldRadioButton from './components/FieldRadioButton/FieldRadioButton.example';
 import * as FieldRangeSlider from './components/FieldRangeSlider/FieldRangeSlider.example';
@@ -105,6 +106,7 @@ import * as SelectMultipleFilter from './containers/SearchPage/SelectMultipleFil
 import * as BookingDateRangeFilter from './containers/SearchPage/BookingDateRangeFilter/BookingDateRangeFilter.example';
 import * as KeywordFilter from './containers/SearchPage/KeywordFilter/KeywordFilter.example';
 import * as PriceFilter from './containers/SearchPage/PriceFilter/PriceFilter.example';
+import * as SeatsFilter from './containers/SearchPage/SeatsFilter/SeatsFilter.example';
 import * as FilterForm from './containers/SearchPage/FilterForm/FilterForm.example';
 import * as FilterPlain from './containers/SearchPage/FilterPlain/FilterPlain.example';
 import * as FilterPopup from './containers/SearchPage/FilterPopup/FilterPopup.example';
@@ -155,6 +157,7 @@ export {
   FieldDateAndTimeInput,
   FieldDateRangeController,
   FieldDateRangePicker,
+  FieldNumber,
   FieldPhoneNumberInput,
   FieldRadioButton,
   FieldRangeSlider,
@@ -220,6 +223,7 @@ export {
   ReviewRating,
   Reviews,
   SavedCardDetails,
+  SeatsFilter,
   SelectMultipleFilter,
   SendMessageForm,
   StripePaymentForm,

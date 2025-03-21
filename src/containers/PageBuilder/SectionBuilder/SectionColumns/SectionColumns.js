@@ -1,5 +1,4 @@
 import React from 'react';
-import { arrayOf, bool, func, node, number, object, shape, string } from 'prop-types';
 import classNames from 'classnames';
 
 import Field, { hasDataInFields } from '../../Field';
@@ -25,7 +24,43 @@ const getResponsiveImageSizes = numColumns => {
   return config ? config.responsiveImageSizes : COLUMN_CONFIG[0].responsiveImageSizes;
 };
 
-// Section component that's able to show blocks in multiple different columns (defined by "numColumns" prop)
+/**
+ * @typedef {Object} BlockConfig
+ * @property {string} blockId
+ * @property {string} blockName
+ * @property {'defaultBlock' | 'footerBlock' | 'socialMediaLink'} blockType
+ */
+
+/**
+ * @typedef {Object} FieldComponentConfig
+ * @property {ReactNode} component
+ * @property {Function} pickValidProps
+ */
+
+/**
+ * Section component that's able to show blocks in multiple different columns (defined by "numColumns" prop)
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {Object} props.defaultClasses
+ * @param {string} props.defaultClasses.sectionDetails
+ * @param {string} props.defaultClasses.title
+ * @param {string} props.defaultClasses.description
+ * @param {string} props.defaultClasses.ctaButton
+ * @param {string} props.sectionId id of the section
+ * @param {'columns'} props.sectionType
+ * @param {Object?} props.title
+ * @param {Object?} props.description
+ * @param {Object?} props.appearance
+ * @param {Object?} props.callToAction
+ * @param {Array<BlockConfig>?} props.blocks array of block configs
+ * @param {boolean?} props.isInsideContainer
+ * @param {Object} props.options extra options for the section component (e.g. custom fieldComponents)
+ * @param {Object<string,FieldComponentConfig>?} props.options.fieldComponents custom fields
+ * @returns {JSX.Element} Section for article content
+ */
 const SectionColumns = props => {
   const {
     sectionId,
@@ -37,8 +72,8 @@ const SectionColumns = props => {
     description,
     appearance,
     callToAction,
-    blocks,
-    isInsideContainer,
+    blocks = [],
+    isInsideContainer = false,
     options,
   } = props;
 
@@ -82,45 +117,6 @@ const SectionColumns = props => {
       ) : null}
     </SectionContainer>
   );
-};
-
-const propTypeOption = shape({
-  fieldComponents: shape({ component: node, pickValidProps: func }),
-});
-
-SectionColumns.defaultProps = {
-  className: null,
-  rootClassName: null,
-  defaultClasses: null,
-  textClassName: null,
-  numColumns: 1,
-  title: null,
-  description: null,
-  appearance: null,
-  callToAction: null,
-  blocks: [],
-  isInsideContainer: false,
-  options: null,
-};
-
-SectionColumns.propTypes = {
-  sectionId: string.isRequired,
-  className: string,
-  rootClassName: string,
-  defaultClasses: shape({
-    sectionDetails: string,
-    title: string,
-    description: string,
-    ctaButton: string,
-  }),
-  numColumns: number,
-  title: object,
-  description: object,
-  appearance: object,
-  callToAction: object,
-  blocks: arrayOf(object),
-  isInsideContainer: bool,
-  options: propTypeOption,
 };
 
 export default SectionColumns;

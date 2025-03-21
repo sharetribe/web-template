@@ -1,22 +1,9 @@
 import React, { Component } from 'react';
-import {
-  any,
-  arrayOf,
-  bool,
-  func,
-  number,
-  shape,
-  string,
-  oneOfType,
-  object,
-  node,
-} from 'prop-types';
 import classNames from 'classnames';
 import debounce from 'lodash/debounce';
 
 import { useConfiguration } from '../../context/configurationContext';
 import { FormattedMessage } from '../../util/reactIntl';
-import { propTypes } from '../../util/types';
 
 import { IconSpinner } from '../../components';
 
@@ -24,6 +11,7 @@ import IconHourGlass from './IconHourGlass';
 import IconCurrentLocation from './IconCurrentLocation';
 import * as geocoderMapbox from './GeocoderMapbox';
 import * as geocoderGoogleMaps from './GeocoderGoogleMaps';
+import * as geocoderGoogleMapsNew from './GeocoderGoogleMapsNew';
 
 import css from './LocationAutocompleteInput.module.css';
 
@@ -47,7 +35,17 @@ const getTouchCoordinates = nativeEvent => {
 // Get correct geocoding variant: geocoderGoogleMaps or geocoderMapbox
 const getGeocoderVariant = mapProvider => {
   const isGoogleMapsInUse = mapProvider === 'googleMaps';
-  return isGoogleMapsInUse ? geocoderGoogleMaps : geocoderMapbox;
+
+  // Determine if the new version of the Google Places API is enabled
+  const useNewGooglePlacesAPI =
+    typeof window !== 'undefined' &&
+    typeof window?.useNewGooglePlacesAPI !== 'undefined' &&
+    window?.useNewGooglePlacesAPI;
+  return isGoogleMapsInUse && useNewGooglePlacesAPI
+    ? geocoderGoogleMapsNew
+    : isGoogleMapsInUse
+    ? geocoderGoogleMaps
+    : geocoderMapbox;
 };
 
 // Renders the autocompletion prediction results in a list
@@ -127,25 +125,6 @@ const LocationPredictionsList = props => {
   );
 };
 
-LocationPredictionsList.defaultProps = {
-  rootClassName: null,
-  className: null,
-  highlightedIndex: null,
-};
-
-LocationPredictionsList.propTypes = {
-  rootClassName: string,
-  className: string,
-  children: node,
-  predictions: arrayOf(object).isRequired,
-  currentLocationId: string.isRequired,
-  geocoder: object.isRequired,
-  highlightedIndex: number,
-  onSelectStart: func.isRequired,
-  onSelectMove: func.isRequired,
-  onSelectEnd: func.isRequired,
-};
-
 // Get the current value with defaults from the given
 // LocationAutocompleteInput props.
 const currentValue = props => {
@@ -154,21 +133,6 @@ const currentValue = props => {
   return { search, predictions, selectedPlace };
 };
 
-/*
-  Location auto completion input component
-
-  This component can work as the `component` prop to Final Form's
-  <Field /> component. It takes a custom input value shape, and
-  controls the onChange callback that is called with the input value.
-
-  The component works by listening to the underlying input component
-  and calling a Geocoder implementation for predictions. When the
-  predictions arrive, those are passed to Final Form in the onChange
-  callback.
-
-  See the LocationAutocompleteInput.example.js file for a usage
-  example within a form.
-*/
 class LocationAutocompleteInputImplementation extends Component {
   constructor(props) {
     super(props);
@@ -208,6 +172,32 @@ class LocationAutocompleteInputImplementation extends Component {
 
   componentDidMount() {
     this._isMounted = true;
+
+    // Check whether the new version of the Google Places API is in use.
+    // The useNewGooglePlacesAPI property indicates whether the updated
+    // Google Places API is available and being utilized. If the useNewGooglePlacesAPI
+    // property is undefined, it means we haven't determined the API version yet.
+    const googleMapsStatus = typeof window?.useNewGooglePlacesAPI !== 'undefined';
+    // Development against localhost:3000 aka Webpack Dev Server has a bit random loading order.
+    const hasGoogle = window?.google;
+
+    // If the map provider configured in the application is Google Maps and we
+    // haven't yet determined the API version, we make a test API call
+    // to Google Maps Places Autocomplete to check its behavior.
+    // The fetchAutocompleteSuggestions function is only supported by
+    // the newer version of Google Places API.
+    if (this.props.config.maps.mapProvider === 'googleMaps' && hasGoogle && !googleMapsStatus) {
+      window?.google.maps.places.AutocompleteSuggestion.fetchAutocompleteSuggestions({
+        input: 'test',
+      })
+        .then(response => {
+          // A response means that the new Places API is enabled
+          window.useNewGooglePlacesAPI = true;
+        })
+        .catch(e => {
+          window.useNewGooglePlacesAPI = false;
+        });
+    }
   }
 
   componentWillUnmount() {
@@ -228,7 +218,7 @@ class LocationAutocompleteInputImplementation extends Component {
 
   currentPredictions() {
     const { search, predictions: fetchedPredictions } = currentValue(this.props);
-    const { useDefaultPredictions, config } = this.props;
+    const { useDefaultPredictions = true, config } = this.props;
     const hasFetchedPredictions = fetchedPredictions && fetchedPredictions.length > 0;
     const showDefaultPredictions = !search && !hasFetchedPredictions && useDefaultPredictions;
     const geocoderVariant = getGeocoderVariant(config.maps.mapProvider);
@@ -263,11 +253,11 @@ class LocationAutocompleteInputImplementation extends Component {
         e.preventDefault();
         e.stopPropagation();
         this.selectItemIfNoneSelected();
-        this.input.blur();
+        this.input?.blur();
       }
     } else if (e.keyCode === KEY_CODE_TAB) {
       this.selectItemIfNoneSelected();
-      this.input.blur();
+      this.input?.blur();
     } else if (e.keyCode === KEY_CODE_ESC && this.input) {
       this.input.blur();
     }
@@ -485,7 +475,7 @@ class LocationAutocompleteInputImplementation extends Component {
       predictionsClassName,
       predictionsAttributionClassName,
       validClassName,
-      placeholder,
+      placeholder = '',
       input,
       meta,
       inputRef,
@@ -515,6 +505,21 @@ class LocationAutocompleteInputImplementation extends Component {
     const renderPredictions = this.state.inputHasFocus;
     const geocoderVariant = getGeocoderVariant(config.maps.mapProvider);
     const GeocoderAttribution = geocoderVariant.GeocoderAttribution;
+    // The first ref option in this optional chain is about callback ref,
+    // which was used in previous version of this Template.
+    const refMaybe =
+      typeof inputRef === 'function'
+        ? {
+            ref: node => {
+              this.input = node;
+              if (inputRef) {
+                inputRef(node);
+              }
+            },
+          }
+        : inputRef
+        ? { ref: inputRef }
+        : {};
 
     return (
       <div className={rootClass}>
@@ -538,12 +543,7 @@ class LocationAutocompleteInputImplementation extends Component {
           onBlur={this.handleOnBlur}
           onChange={this.onChange}
           onKeyDown={this.onKeyDown}
-          ref={node => {
-            this.input = node;
-            if (inputRef) {
-              inputRef(node);
-            }
-          }}
+          {...refMaybe}
           title={search}
           data-testid="location-search"
         />
@@ -567,59 +567,62 @@ class LocationAutocompleteInputImplementation extends Component {
   }
 }
 
+/**
+ * @typedef {Object} SearchData
+ * @property {string} search
+ * @property {Object} predictions
+ * @property {Object} selectedPlace
+ */
+
+/**
+ * @typedef {Object} SearchData
+ * @property {Object} current
+ */
+
+/**
+ * Location auto completion input component
+ *
+ * This component can work as the `component` prop to Final Form's
+ * <Field /> component. It takes a custom input value shape, and
+ * controls the onChange callback that is called with the input value.
+ *
+ * The component works by listening to the underlying input component
+ * and calling a Geocoder implementation for predictions. When the
+ * predictions arrive, those are passed to Final Form in the onChange
+ * callback.
+ *
+ * See the LocationAutocompleteInput.example.js file for a usage
+ * example within a form.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string?} props.iconClassName
+ * @param {string?} props.inputClassName
+ * @param {string?} props.predictionsClassName
+ * @param {string?} props.predictionsAttributionClassName
+ * @param {string?} props.validClassName
+ * @param {boolean} props.autoFocus
+ * @param {boolean} props.closeOnBlur
+ * @param {string?} props.placeholder
+ * @param {boolean} props.useDefaultPredictions
+ * @param {Object} props.input
+ * @param {string} props.input.name
+ * @param {string|SearchData} props.input.value
+ * @param {Function} props.input.onChange
+ * @param {Function} props.input.onFocus
+ * @param {Function} props.input.onBlur
+ * @param {Object} props.meta
+ * @param {boolean} props.meta.valid
+ * @param {boolean} props.meta.touched
+ * @param {Function | RefHook} props.inputRef
+ * @returns {JSX.Element} LocationAutocompleteInputImpl component
+ */
 const LocationAutocompleteInputImpl = props => {
   const config = useConfiguration();
 
   return <LocationAutocompleteInputImplementation config={config} {...props} />;
-};
-
-LocationAutocompleteInputImpl.defaultProps = {
-  autoFocus: false,
-  closeOnBlur: true,
-  rootClassName: null,
-  className: null,
-  iconClassName: null,
-  inputClassName: null,
-  predictionsClassName: null,
-  predictionsAttributionClassName: null,
-  validClassName: null,
-  placeholder: '',
-  useDefaultPredictions: true,
-  meta: null,
-  inputRef: null,
-};
-
-LocationAutocompleteInputImpl.propTypes = {
-  autoFocus: bool,
-  rootClassName: string,
-  className: string,
-  closeOnBlur: bool,
-  iconClassName: string,
-  inputClassName: string,
-  predictionsClassName: string,
-  predictionsAttributionClassName: string,
-  validClassName: string,
-  placeholder: string,
-  useDefaultPredictions: bool,
-  input: shape({
-    name: string.isRequired,
-    value: oneOfType([
-      shape({
-        search: string,
-        predictions: any,
-        selectedPlace: propTypes.place,
-      }),
-      string,
-    ]),
-    onChange: func.isRequired,
-    onFocus: func.isRequired,
-    onBlur: func.isRequired,
-  }).isRequired,
-  meta: shape({
-    valid: bool.isRequired,
-    touched: bool.isRequired,
-  }),
-  inputRef: func,
 };
 
 export default LocationAutocompleteInputImpl;

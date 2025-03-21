@@ -10,9 +10,8 @@
  */
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
+import { FormattedMessage, injectIntl } from '../../util/reactIntl';
 import { Button, IconClose } from '../../components';
 
 import css from './Modal.module.css';
@@ -46,6 +45,26 @@ class Portal extends React.Component {
   }
 }
 
+/**
+ * Modal
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.scrollLayerClassName overwrite components own css.scrollLayer
+ * @param {string?} props.containerClassName overwrite components own css.container
+ * @param {string?} props.contentClassName overwrite components own css.content
+ * @param {string?} props.isClosedClassName overwrite components own css.isClosed
+ * @param {ReactNode} props.closeButtonMessage
+ * @param {Object} props.lightCloseButton use lighter close button styles
+ * @param {string} props.id
+ * @param {Object} props.intl
+ * @param {boolean} props.isOpen
+ * @param {Function} props.onClose
+ * @param {Function} props.onManageDisableScrolling
+ * @param {boolean} props.usePortal
+ * @returns {JSX.Element} Modal element
+ */
 export class ModalComponent extends Component {
   constructor(props) {
     super(props);
@@ -126,7 +145,7 @@ export class ModalComponent extends Component {
       contentClassName,
       lightCloseButton,
       intl,
-      isClosedClassName,
+      isClosedClassName = css.isClosed,
       isOpen,
       usePortal,
     } = this.props;
@@ -192,40 +211,5 @@ export class ModalComponent extends Component {
     ) : null;
   }
 }
-
-ModalComponent.defaultProps = {
-  children: null,
-  className: null,
-  scrollLayerClassName: null,
-  closeButtonMessage: null,
-  containerClassName: null,
-  contentClassName: null,
-  lightCloseButton: false,
-  isClosedClassName: css.isClosed,
-  isOpen: false,
-  onClose: null,
-  usePortal: false,
-};
-
-const { bool, func, node, string } = PropTypes;
-
-ModalComponent.propTypes = {
-  children: node,
-  className: string,
-  scrollLayerClassName: string,
-  closeButtonMessage: node,
-  containerClassName: string,
-  contentClassName: string,
-  lightCloseButton: bool,
-  id: string.isRequired,
-  intl: intlShape.isRequired,
-  isClosedClassName: string,
-  isOpen: bool,
-  onClose: func.isRequired,
-  usePortal: bool,
-
-  // eslint-disable-next-line react/no-unused-prop-types
-  onManageDisableScrolling: func.isRequired,
-};
 
 export default injectIntl(ModalComponent);

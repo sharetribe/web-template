@@ -1,11 +1,20 @@
 import React from 'react';
-import { bool, string } from 'prop-types';
 import classNames from 'classnames';
 
 import css from './IconPlus.module.css';
 
+/**
+ * IconPlus component
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {boolean} [props.isOpen] - Whether the icon is showing the 'open' mode
+ * @returns {JSX.Element}
+ */
 const IconPlus = props => {
-  const { className, rootClassName, isOpen } = props;
+  const { className, rootClassName, isOpen = true } = props;
   const classes = classNames(rootClassName || css.root, className);
 
   return (
@@ -21,18 +30,6 @@ const IconPlus = props => {
       />
     </svg>
   );
-};
-
-IconPlus.defaultProps = {
-  className: null,
-  rootClassName: null,
-  isOpen: true,
-};
-
-IconPlus.propTypes = {
-  className: string,
-  rootClassName: string,
-  isOpen: bool,
 };
 
 export default IconPlus;

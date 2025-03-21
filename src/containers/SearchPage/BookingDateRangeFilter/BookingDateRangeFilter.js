@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { arrayOf, bool, func, node, number, object, string } from 'prop-types';
 
 import { injectIntl, intlShape } from '../../../util/reactIntl';
 import { parseDateFromISO8601, stringifyDateToISO8601 } from '../../../util/dates';
@@ -37,6 +36,24 @@ const formatValue = (dateRange, queryParamName) => {
   return { [queryParamName]: value };
 };
 
+/**
+ * BookingDateRangeFilter component
+ *
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} props.id - The ID
+ * @param {React.Node} [props.label] - The label
+ * @param {boolean} [props.showAsPopup] - Whether to show as popup
+ * @param {boolean} [props.liveEdit] - Whether to live edit
+ * @param {Array<string>} [props.queryParamNames] - The query param names (e.g. ['dates'])
+ * @param {Function} props.onSubmit - The function to submit
+ * @param {number} [props.minimumNights] - The minimum nights (default: 0)
+ * @param {Object} [props.initialValues] - The initial values
+ * @param {number} [props.contentPlacementOffset] - The content placement offset
+ * @param {intlShape} props.intl - The intl object
+ * @returns {JSX.Element}
+ */
 export class BookingDateRangeFilterComponent extends Component {
   constructor(props) {
     super(props);
@@ -57,16 +74,16 @@ export class BookingDateRangeFilterComponent extends Component {
     const {
       className,
       rootClassName,
-      showAsPopup,
-      isDesktop,
+      showAsPopup = true,
+      isDesktop = false,
       initialValues,
       id,
-      contentPlacementOffset,
+      contentPlacementOffset = 0,
       onSubmit,
       queryParamNames,
       label,
       intl,
-      minimumNights,
+      minimumNights = 0,
       ...rest
     } = this.props;
 
@@ -213,33 +230,6 @@ export class BookingDateRangeFilterComponent extends Component {
     );
   }
 }
-
-BookingDateRangeFilterComponent.defaultProps = {
-  rootClassName: null,
-  className: null,
-  showAsPopup: true,
-  liveEdit: false,
-  minimumNights: 0,
-  initialValues: null,
-  contentPlacementOffset: 0,
-};
-
-BookingDateRangeFilterComponent.propTypes = {
-  rootClassName: string,
-  className: string,
-  id: string.isRequired,
-  label: node,
-  showAsPopup: bool,
-  liveEdit: bool,
-  queryParamNames: arrayOf(string).isRequired,
-  onSubmit: func.isRequired,
-  minimumNights: number,
-  initialValues: object,
-  contentPlacementOffset: number,
-
-  // form injectIntl
-  intl: intlShape.isRequired,
-};
 
 const BookingDateRangeFilter = injectIntl(BookingDateRangeFilterComponent);
 

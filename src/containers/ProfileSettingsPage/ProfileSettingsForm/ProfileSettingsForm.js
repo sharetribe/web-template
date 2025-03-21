@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { bool, string } from 'prop-types';
 import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
 import isEqual from 'lodash/isEqual';
@@ -32,6 +31,30 @@ import css from './ProfileSettingsForm.module.css';
 
 const identity = v => v;
 
+/**
+ * ProfileSettingsForm
+ * TODO: change to functional component
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.formId] - The form id
+ * @param {propTypes.currentUser} props.currentUser - The current user
+ * @param {Object} props.userTypeConfig - The user type config
+ * @param {string} props.userTypeConfig.userType - The user type
+ * @param {Array<Object>} props.userFields - The user fields
+ * @param {Object} [props.profileImage] - The profile image
+ * @param {string} props.marketplaceName - The marketplace name
+ * @param {Function} props.onImageUpload - The function to handle image upload
+ * @param {Function} props.onSubmit - The function to handle form submission
+ * @param {boolean} props.uploadInProgress - Whether the upload is in progress
+ * @param {propTypes.error} [props.uploadImageError] - The upload image error
+ * @param {boolean} props.updateInProgress - Whether the update is in progress
+ * @param {propTypes.error} [props.updateProfileError] - The update profile error
+ * @param {intlShape} props.intl - The intl object
+ * @returns {JSX.Element}
+ */
 class ProfileSettingsFormComponent extends Component {
   constructor(props) {
     super(props);
@@ -253,32 +276,6 @@ class ProfileSettingsFormComponent extends Component {
     );
   }
 }
-
-ProfileSettingsFormComponent.defaultProps = {
-  rootClassName: null,
-  className: null,
-  formId: null,
-  uploadImageError: null,
-  updateProfileError: null,
-  updateProfileReady: false,
-};
-
-ProfileSettingsFormComponent.propTypes = {
-  rootClassName: string,
-  className: string,
-  formId: string,
-
-  uploadImageError: propTypes.error,
-  uploadInProgress: bool.isRequired,
-  updateInProgress: bool.isRequired,
-  updateProfileError: propTypes.error,
-  userTypes: propTypes.userTypes.isRequired,
-  updateProfileReady: bool,
-  sellerStatus: propTypes.sellerStatus,
-
-  // from injectIntl
-  intl: intlShape.isRequired,
-};
 
 const ProfileSettingsForm = compose(injectIntl)(ProfileSettingsFormComponent);
 

@@ -72,6 +72,14 @@ const getHourQuantityAndLineItems = orderData => {
   return { quantity, extraLineItems: [] };
 };
 
+const getHoursWithSeatsAndLineItems = orderData => {
+  const { bookingStart, bookingEnd, seats } = orderData || {};
+  const units =
+    bookingStart && bookingEnd ? calculateQuantityFromHours(bookingStart, bookingEnd) : null;
+
+  return { units, seats, extraLineItems: [] };
+};
+
 /**
  * Calculate quantity based on days or nights between given bookingDates.
  *
@@ -85,6 +93,13 @@ const getDateRangeQuantityAndLineItems = (orderData, code) => {
     bookingStart && bookingEnd ? calculateQuantityFromDates(bookingStart, bookingEnd, code) : null;
 
   return { quantity, extraLineItems: [] };
+};
+
+const getDateRangeWithSeatsAndLineItems = (orderData, code) => {
+  const { bookingStart, bookingEnd, seats } = orderData;
+  const units =
+    bookingStart && bookingEnd ? calculateQuantityFromDates(bookingStart, bookingEnd, code) : null;
+  return { units, seats, extraLineItems: [] };
 };
 
 /**
@@ -140,18 +155,30 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
   const quantityAndExtraLineItems =
     unitType === 'item'
       ? getItemQuantityAndLineItems(orderData, publicData, currency)
+      : unitType === 'hour' && orderData.seats
+      ? getHoursWithSeatsAndLineItems(orderData)
       : unitType === 'hour'
       ? getHourQuantityAndLineItems(orderData)
+      : ['day', 'night'].includes(unitType) && orderData.seats
+      ? getDateRangeWithSeatsAndLineItems(orderData, code)
       : ['day', 'night'].includes(unitType)
       ? getDateRangeQuantityAndLineItems(orderData, code)
       : {};
 
-  const { quantity, extraLineItems } = quantityAndExtraLineItems;
+  const { quantity, units, seats, extraLineItems } = quantityAndExtraLineItems;
 
   // Throw error if there is no quantity information given
-  if (!quantity) {
-    const message = `Error: transition should contain quantity information: 
-      stockReservationQuantity, quantity, or bookingStart & bookingEnd (if "line-item/day" or "line-item/night" is used)`;
+  if (!quantity && !(units && seats)) {
+    const missingFields = [];
+
+    if (!quantity) missingFields.push('quantity');
+    if (!units) missingFields.push('units');
+    if (!seats) missingFields.push('seats');
+
+    const message = `Error: orderData is missing the following information: ${missingFields.join(
+      ', '
+    )}. Quantity or either units & seats is required.`;
+
     const error = new Error(message);
     error.status = 400;
     error.statusText = message;
@@ -169,10 +196,11 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
    *
    * By default OrderBreakdown prints line items inside LineItemUnknownItemsMaybe if the lineItem code is not recognized. */
 
+  const quantityOrSeats = !!units && !!seats ? { units, seats } : { quantity };
   const order = {
     code,
     unitPrice,
-    quantity,
+    ...quantityOrSeats,
     includeFor: ['customer', 'provider'],
   };
 

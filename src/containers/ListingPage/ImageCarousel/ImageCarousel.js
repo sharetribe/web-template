@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import ReactImageGallery from 'react-image-gallery';
 
 import { propTypes } from '../../../util/types';
-import { injectIntl, intlShape } from '../../../util/reactIntl';
+import { useIntl } from '../../../util/reactIntl';
 import { IconArrowHead, ResponsiveImage } from '../../../components';
 
 // Copied directly from
@@ -23,9 +22,21 @@ const IMAGE_GALLERY_OPTIONS = {
   slideDuration: 350,
 };
 
+/**
+ * The ImageCarousel component.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {Array<propTypes.image>} props.images - The images
+ * @param {Array<string>} props.imageVariants - The image variants
+ * @returns {JSX.Element} image carousel component
+ */
 const ImageCarousel = props => {
   const [currentIndex, setIndex] = useState(0);
-  const { intl, rootClassName, className, images, imageVariants } = props;
+  const intl = useIntl();
+  const { rootClassName, className, images, imageVariants } = props;
 
   const items = images.map((img, i) => {
     return {
@@ -113,21 +124,4 @@ const ImageCarousel = props => {
   );
 };
 
-ImageCarousel.defaultProps = {
-  rootClassName: null,
-  className: null,
-};
-
-const { string, arrayOf } = PropTypes;
-
-ImageCarousel.propTypes = {
-  rootClassName: string,
-  className: string,
-  images: arrayOf(propTypes.image).isRequired,
-  imageVariants: arrayOf(string).isRequired,
-
-  // from injectIntl
-  intl: intlShape.isRequired,
-};
-
-export default injectIntl(ImageCarousel);
+export default ImageCarousel;
