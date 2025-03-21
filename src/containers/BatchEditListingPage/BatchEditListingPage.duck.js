@@ -31,6 +31,7 @@ import { getImageSize } from './imageHelpers';
 import { stringToArray } from '../../util/string';
 
 const { UUID, Money } = sdkTypes;
+const BILLIARD = 1000000000000000;
 
 function getListingFieldOptions(config, listingFieldKey) {
   const { listing } = config;
@@ -157,6 +158,10 @@ export const CSV_UPLOAD_REQUEST = 'app/BatchEditListingPage/CSV_UPLOAD_REQUEST';
 export const CSV_UPLOAD_SUCCESS = 'app/BatchEditListingPage/CSV_UPLOAD_SUCCESS';
 export const CSV_UPLOAD_ERROR = 'app/BatchEditListingPage/CSV_UPLOAD_ERROR';
 
+export const SET_STOCK_REQUEST = 'app/BatchEditListingPage/SET_STOCK_REQUEST';
+export const SET_STOCK_SUCCESS = 'app/BatchEditListingPage/SET_STOCK_SUCCESS';
+export const SET_STOCK_ERROR = 'app/BatchEditListingPage/SET_STOCK_ERROR';
+
 // ================ Reducer ================ //
 const initialState = {
   listings: [],
@@ -187,6 +192,8 @@ const initialState = {
   },
   csvUploadInProgress: false,
   csvUploadError: null,
+  setStockInProgress: false,
+  setStockError: null,
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -310,6 +317,14 @@ export default function reducer(state = initialState, action = {}) {
       return { ...state, csvUploadInProgress: false, csvUploadError: null };
     case CSV_UPLOAD_ERROR:
       return { ...state, csvUploadInProgress: false, csvUploadError: payload };
+
+    case SET_STOCK_REQUEST:
+      return { ...state, setStockInProgress: true, setStockError: null };
+    case SET_STOCK_SUCCESS:
+      return { ...state, setStockInProgress: false };
+    case SET_STOCK_ERROR:
+      return { ...state, setStockInProgress: false, setStockError: payload };
+
     default:
       return state;
   }
@@ -378,6 +393,22 @@ function getOnBeforeUpload(getState) {
 }
 
 // ================ Thunk ================ //
+function compareAndSetStock(listingId) {
+  return (dispatch, getState, sdk) => {
+    dispatch({ type: SET_STOCK_REQUEST });
+    return sdk.stock
+      .compareAndSet({ listingId, oldTotal: null, newTotal: BILLIARD }, { expand: true })
+      .then(() => {
+        dispatch({ type: SET_STOCK_SUCCESS });
+      })
+      .catch(e => {
+        console.error(`Failed updating stock for listingId: ${listingId}`, e);
+        dispatch({ type: SET_STOCK_ERROR, payload: storableError(e) });
+        throw e;
+      });
+  };
+}
+
 export function initializeUppy(meta) {
   return (dispatch, getState, sdk) => {
     createUppyInstance(meta, getOnBeforeUpload(getState)).then(uppyInstance => {
@@ -480,9 +511,11 @@ export function initializeUppy(meta) {
                   currency: currency,
                 },
               };
-              await sdk.ownListings.create(listingData, {
+              const sdkListing = await sdk.ownListings.create(listingData, {
                 expand: true,
               });
+              const listingId = sdkListing.data.data.id;
+              await dispatch(compareAndSetStock(listingId));
               dispatch({ type: ADD_SUCCESSFUL_LISTING, payload: listing });
             } else {
               dispatch({ type: ADD_FAILED_LISTING, payload: listing });
