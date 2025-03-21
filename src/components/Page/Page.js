@@ -104,7 +104,7 @@ class PageComponent extends Component {
       scrollingDisabled,
       referrer,
       author,
-      openGraphType,
+      openGraphType = 'website',
       description,
       facebookImages,
       published,
@@ -243,7 +243,7 @@ class PageComponent extends Component {
     const styles = getCustomCSSPropertiesFromConfig(config.branding);
 
     return (
-      <div className={classes} style={styles} id="page">
+      <div id="page" className={classes} style={styles}>
         <Helmet
           htmlAttributes={{
             lang: intl.locale,
@@ -294,93 +294,42 @@ class PageComponent extends Component {
   }
 }
 
-PageComponent.defaultProps = {
-  className: null,
-  rootClassName: null,
-  children: null,
-  author: null,
-  openGraphType: 'website',
-  description: null,
-  facebookImages: null,
-  twitterImages: null,
-  published: null,
-  referrer: null,
-  schema: null,
-  socialSharing: null,
-  twitterHandle: null,
-  updated: null,
-};
-
-PageComponent.propTypes = {
-  className: string,
-  rootClassName: string,
-  children: any,
-  scrollingDisabled: bool.isRequired,
-
-  // Handle referrer policy
-  referrer: string,
-
-  // SEO related props
-  author: string,
-  openGraphType: string, // og:type
-  description: string, // page description
-  facebookImages: arrayOf(
-    shape({
-      width: number.isRequired,
-      height: number.isRequired,
-      url: string.isRequired,
-    })
-  ),
-  twitterImages: arrayOf(
-    shape({
-      width: number.isRequired,
-      height: number.isRequired,
-      url: string.isRequired,
-    })
-  ),
-  published: string, // article:published_time
-  schema: oneOfType([object, array]), // http://schema.org
-  socialSharing: shape({
-    title: string,
-    description: string,
-    images1200: arrayOf(
-      // Page asset file can define this
-      shape({
-        width: number.isRequired,
-        height: number.isRequired,
-        url: string.isRequired,
-      })
-    ),
-    images600: arrayOf(
-      // Page asset file can define this
-      shape({
-        width: number.isRequired,
-        height: number.isRequired,
-        url: string.isRequired,
-      })
-    ),
-  }),
-  title: string, // page title
-  twitterHandle: string, // twitter handle
-  updated: string, // article:modified_time
-
-  // from useConfiguration
-  config: object.isRequired,
-
-  // from useRouteConfiguration
-  routeConfiguration: arrayOf(propTypes.route).isRequired,
-
-  // from useIntl
-  intl: intlShape.isRequired,
-
-  // from useLocation
-  location: shape({
-    pathname: string.isRequired,
-    search: string.isRequired,
-    hash: string.isRequired,
-  }).isRequired,
-};
-
+/**
+ * @typedef {Object} ImageConfig
+ * @property {string} width - The width of the image
+ * @property {string} height - The height of the image
+ * @property {string} url - The URL of the image
+ */
+/**
+ * @typedef {Object} SocialSharingConfig
+ * @property {string} title - The title for the social sharing service
+ * @property {string} description - The description for the social sharing service
+ * @property {Array<ImageConfig>} images1200 - The images for social sharing (1200x630)
+ * @property {Array<ImageConfig>} images600 - The images for social sharing (600x314)
+ */
+/**
+ * A component that renders a page.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {ReactNode} props.children - The children to render
+ * @param {boolean} props.scrollingDisabled - Whether the scrolling is disabled
+ * @param {string} props.referrer - Handle referrer policy
+ * @param {string} props.author - The author
+ * @param {string} props.openGraphType - The open graph type (aka 'og:type')
+ * @param {string} props.description - The description
+ * @param {Array<ImageConfig>} props.facebookImages - The facebook images
+ * @param {Array<ImageConfig>} props.twitterImages - The twitter images
+ * @param {string} props.published - The published date (article:published_time)
+ * @param {object|array} props.schema - The schema from
+ * @param {SocialSharingConfig} props.socialSharing - The social sharing
+ * @param {string} props.title - The page title
+ * @param {string} props.twitterHandle - The twitter handle
+ * @param {string} props.updated - The updated date article:modified_time
+ * @returns {JSX.Element} Page component that handles SEO and social sharing
+ */
 const Page = props => {
   const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();

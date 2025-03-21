@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import { bool, func, object, node, number, shape, string, arrayOf } from 'prop-types';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
-import { FormattedMessage, useIntl, intlShape } from '../../../util/reactIntl';
-import { propTypes } from '../../../util/types';
+import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { createResourceLocatorString } from '../../../util/routes';
 
 import { ModalInMobile, Button } from '../../../components';
@@ -71,14 +69,14 @@ class SearchFiltersMobileComponent extends Component {
       sortByComponent,
       listingsAreLoaded,
       resultsCount,
-      searchInProgress,
+      searchInProgress = false,
       showAsModalMaxWidth,
-      onMapIconClick,
+      onMapIconClick = () => {},
       onManageDisableScrolling,
-      selectedFiltersCount,
+      selectedFiltersCount = 0,
       noResultsInfo,
       intl,
-      isMapVariant,
+      isMapVariant = true,
     } = this.props;
 
     const classes = classNames(rootClassName || css.root, className);
@@ -151,46 +149,28 @@ class SearchFiltersMobileComponent extends Component {
   }
 }
 
-SearchFiltersMobileComponent.defaultProps = {
-  rootClassName: null,
-  className: null,
-  sortByComponent: null,
-  resultsCount: null,
-  searchInProgress: false,
-  selectedFiltersCount: 0,
-  isMapVariant: true,
-  onMapIconClick: () => {},
-};
-
-SearchFiltersMobileComponent.propTypes = {
-  rootClassName: string,
-  className: string,
-  urlQueryParams: object.isRequired,
-  sortByComponent: node,
-  listingsAreLoaded: bool.isRequired,
-  resultsCount: number,
-  searchInProgress: bool,
-  showAsModalMaxWidth: number.isRequired,
-  onMapIconClick: func,
-  onManageDisableScrolling: func.isRequired,
-  onOpenModal: func.isRequired,
-  onCloseModal: func.isRequired,
-  resetAll: func.isRequired,
-  selectedFiltersCount: number,
-  isMapVariant: bool,
-
-  // from useIntl
-  intl: intlShape.isRequired,
-
-  // from useRouteConfiguration
-  routeConfiguration: arrayOf(propTypes.route).isRequired,
-
-  // from useHistory
-  history: shape({
-    push: func.isRequired,
-  }).isRequired,
-};
-
+/**
+ * SearchFiltersMobile component
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {Object} props.urlQueryParams - The URL query params
+ * @param {React.Node} props.sortByComponent - The sort by component
+ * @param {boolean} props.listingsAreLoaded - Whether the listings are loaded
+ * @param {number} props.resultsCount - The number of results
+ * @param {boolean} props.searchInProgress - Whether the search is in progress
+ * @param {number} props.showAsModalMaxWidth - The maximum width of the modal
+ * @param {Function} props.onMapIconClick - The function to click the map icon
+ * @param {Function} props.onManageDisableScrolling - The function to manage disable scrolling
+ * @param {Function} props.onOpenModal - The function to open the modal
+ * @param {Function} props.onCloseModal - The function to close the modal
+ * @param {Function} props.resetAll - The function to reset all
+ * @param {number} props.selectedFiltersCount - The number of selected filters
+ * @param {boolean} props.isMapVariant - Whether the map variant is enabled
+ * @returns {JSX.Element}
+ */
 const SearchFiltersMobile = props => {
   const routeConfiguration = useRouteConfiguration();
   const intl = useIntl();

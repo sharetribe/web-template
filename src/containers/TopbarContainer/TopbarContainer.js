@@ -1,5 +1,4 @@
 import React from 'react';
-import { array, bool, func, number, object, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -13,87 +12,16 @@ import { manageDisableScrolling } from '../../ducks/ui.duck';
 
 const Topbar = loadable(() => import(/* webpackChunkName: "Topbar" */ './Topbar/Topbar'));
 
+/**
+ * Topbar container component, which is connected to Redux Store.
+ * @component
+ * @param {Object} props
+ * @returns {JSX.Element}
+ */
 export const TopbarContainerComponent = props => {
-  const {
-    authInProgress,
-    currentPage,
-    currentSearchParams,
-    currentUser,
-    currentUserHasListings,
-    currentUserHasOrders,
-    history,
-    isAuthenticated,
-    isLoggedInAs,
-    authScopes,
-    hasGenericError,
-    location,
-    notificationCount,
-    onLogout,
-    onManageDisableScrolling,
-    sendVerificationEmailInProgress,
-    sendVerificationEmailError,
-    onResendVerificationEmail,
-    ...rest
-  } = props;
+  const { notificationCount = 0, ...rest } = props;
 
-  return (
-    <Topbar
-      authInProgress={authInProgress}
-      currentPage={currentPage}
-      currentSearchParams={currentSearchParams}
-      currentUser={currentUser}
-      currentUserHasListings={currentUserHasListings}
-      currentUserHasOrders={currentUserHasOrders}
-      history={history}
-      isAuthenticated={isAuthenticated}
-      isLoggedInAs={isLoggedInAs}
-      authScopes={authScopes}
-      location={location}
-      notificationCount={notificationCount}
-      onLogout={onLogout}
-      onManageDisableScrolling={onManageDisableScrolling}
-      onResendVerificationEmail={onResendVerificationEmail}
-      sendVerificationEmailInProgress={sendVerificationEmailInProgress}
-      sendVerificationEmailError={sendVerificationEmailError}
-      showGenericError={hasGenericError}
-      {...rest}
-    />
-  );
-};
-
-TopbarContainerComponent.defaultProps = {
-  currentPage: null,
-  currentSearchParams: null,
-  currentUser: null,
-  currentUserHasOrders: null,
-  notificationCount: 0,
-  sendVerificationEmailError: null,
-  authScopes: null,
-};
-
-TopbarContainerComponent.propTypes = {
-  authInProgress: bool.isRequired,
-  currentPage: string,
-  currentSearchParams: object,
-  currentUser: propTypes.currentUser,
-  currentUserHasListings: bool.isRequired,
-  currentUserHasOrders: bool,
-  isAuthenticated: bool.isRequired,
-  isLoggedInAs: bool.isRequired,
-  authScopes: array,
-  notificationCount: number,
-  onLogout: func.isRequired,
-  onManageDisableScrolling: func.isRequired,
-  sendVerificationEmailInProgress: bool.isRequired,
-  sendVerificationEmailError: propTypes.error,
-  onResendVerificationEmail: func.isRequired,
-  hasGenericError: bool.isRequired,
-
-  // from withRouter
-  history: shape({
-    push: func.isRequired,
-  }).isRequired,
-  location: shape({ state: object }).isRequired,
+  return <Topbar notificationCount={notificationCount} {...rest} />;
 };
 
 const mapStateToProps = state => {

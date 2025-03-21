@@ -1,5 +1,4 @@
 import React from 'react';
-import { node, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { ExternalLink } from '../../../../components/index.js';
@@ -43,6 +42,18 @@ export const supportedPlatforms = [
   'youtube',
 ];
 
+/**
+ * Link element which internally uses NamedLink or ExternalLink
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string?} props.title
+ * @param {('facebook' | 'instagram' | 'linkedin' | 'pinterest' | 'tiktok' | 'twitter' | 'youtube')} props.platform social media service platform
+ * @param {string} props.href social media service profile
+ * @returns {JSX.Element} social media link (wraps a platform-specific SVG icon)
+ */
 export const SocialMediaLink = React.forwardRef((props, ref) => {
   const Icon = getIconConf(props.platform);
 
@@ -61,17 +72,3 @@ export const SocialMediaLink = React.forwardRef((props, ref) => {
 });
 
 SocialMediaLink.displayName = 'SocialMediaLink';
-
-SocialMediaLink.defaultProps = {
-  title: null,
-  rootClassName: null,
-  className: null,
-};
-
-SocialMediaLink.propTypes = {
-  title: string,
-  rootClassName: string,
-  className: string,
-  platform: node.isRequired,
-  href: string.isRequired,
-};

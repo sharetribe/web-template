@@ -1,5 +1,4 @@
 import React from 'react';
-import { bool } from 'prop-types';
 import { FormattedMessage, intlShape } from '../../util/reactIntl';
 import { formatMoney } from '../../util/currency';
 import { propTypes } from '../../util/types';
@@ -7,6 +6,16 @@ import { resolveLatestProcessName, getProcess } from '../../transactions/transac
 
 import css from './OrderBreakdown.module.css';
 
+/**
+ * A component that renders the total price as a line item.
+ *
+ * @component
+ * @param {Object} props
+ * @param {propTypes.transaction} props.transaction - The transaction to render
+ * @param {boolean} props.isProvider - Whether the provider is the one receiving the commission
+ * @param {intlShape} props.intl - The intl object
+ * @returns {JSX.Element}
+ */
 const LineItemTotalPrice = props => {
   const { transaction, isProvider, intl } = props;
   const processName = resolveLatestProcessName(transaction?.attributes?.processName);
@@ -44,12 +53,6 @@ const LineItemTotalPrice = props => {
       </div>
     </>
   );
-};
-
-LineItemTotalPrice.propTypes = {
-  transaction: propTypes.transaction.isRequired,
-  isProvider: bool.isRequired,
-  intl: intlShape.isRequired,
 };
 
 export default LineItemTotalPrice;

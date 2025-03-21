@@ -12,7 +12,7 @@ import {
 } from '../../../util/testData';
 import { TX_TRANSITION_ACTOR_CUSTOMER, getProcess } from '../../../transactions/transaction';
 
-import { ActivityFeedComponent } from './ActivityFeed';
+import { ActivityFeed } from './ActivityFeed';
 
 const processTransitions = getProcess('default-purchase')?.transitions;
 
@@ -77,7 +77,7 @@ describe('ActivityFeed', () => {
       intl: fakeIntl,
     };
 
-    render(<ActivityFeedComponent {...props} />);
+    render(<ActivityFeed {...props} />);
 
     const list = screen.getByRole('list');
     expect(list).toBeInTheDocument();

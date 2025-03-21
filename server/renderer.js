@@ -97,44 +97,44 @@ exports.render = function(requestUrl, context, data, renderApp, webExtractor, no
   const collectWebChunks = webExtractor.collectChunks.bind(webExtractor);
 
   // Render the app with given route, preloaded state, hosted translations.
-  const { head, body } = renderApp(
+  return renderApp(
     requestUrl,
     context,
     preloadedState,
     translations,
     hostedConfig,
     collectWebChunks
-  );
+  ).then(({ head, body }) => {
+    // Preloaded state needs to be passed for client side too.
+    // For security reasons we ensure that preloaded state is considered as a string
+    // by replacing '<' character with its unicode equivalent.
+    // http://redux.js.org/docs/recipes/ServerRendering.html#security-considerations
+    const serializedState = JSON.stringify(preloadedState, replacer).replace(/</g, '\\u003c');
 
-  // Preloaded state needs to be passed for client side too.
-  // For security reasons we ensure that preloaded state is considered as a string
-  // by replacing '<' character with its unicode equivalent.
-  // http://redux.js.org/docs/recipes/ServerRendering.html#security-considerations
-  const serializedState = JSON.stringify(preloadedState, replacer).replace(/</g, '\\u003c');
+    // At this point the serializedState is a string, the second
+    // JSON.stringify wraps it within double quotes and escapes the
+    // contents properly so the value can be injected in the script tag
+    // as a string.
+    const nonceMaybe = nonce ? `nonce="${nonce}"` : '';
+    const preloadedStateScript = `
+        <script ${nonceMaybe}>window.__PRELOADED_STATE__ = ${JSON.stringify(
+      serializedState
+    )};</script>
+    `;
+    // Add nonce to server-side rendered script tags
+    const nonceParamMaybe = nonce ? { nonce } : {};
 
-  // At this point the serializedState is a string, the second
-  // JSON.stringify wraps it within double quotes and escapes the
-  // contents properly so the value can be injected in the script tag
-  // as a string.
-  const nonceMaybe = nonce ? `nonce="${nonce}"` : '';
-  const preloadedStateScript = `
-      <script ${nonceMaybe}>window.__PRELOADED_STATE__ = ${JSON.stringify(
-    serializedState
-  )};</script>
-  `;
-  // Add nonce to server-side rendered script tags
-  const nonceParamMaybe = nonce ? { nonce } : {};
-
-  return template({
-    htmlAttributes: head.htmlAttributes.toString(),
-    title: head.title.toString(),
-    link: head.link.toString(),
-    meta: head.meta.toString(),
-    script: head.script.toString(),
-    preloadedStateScript,
-    ssrStyles: webExtractor.getStyleTags(),
-    ssrLinks: webExtractor.getLinkTags(),
-    ssrScripts: webExtractor.getScriptTags(nonceParamMaybe),
-    body,
+    return template({
+      htmlAttributes: head.htmlAttributes.toString(),
+      title: head.title.toString(),
+      link: head.link.toString(),
+      meta: head.meta.toString(),
+      script: head.script.toString(),
+      preloadedStateScript,
+      ssrStyles: webExtractor.getStyleTags(),
+      ssrLinks: webExtractor.getLinkTags(),
+      ssrScripts: webExtractor.getScriptTags(nonceParamMaybe),
+      body,
+    });
   });
 };

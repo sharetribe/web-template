@@ -1,5 +1,4 @@
 import React from 'react';
-import { oneOf, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { useConfiguration } from '../../context/configurationContext';
@@ -110,30 +109,33 @@ export const LogoComponent = props => {
   );
 };
 
+/**
+ * This component returns a logo
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {('desktop' | 'mobile')} props.layout
+ * @param {string?} props.alt alt text for logo image
+ * @returns {JSX.Element} logo component
+ */
 const Logo = props => {
   const config = useConfiguration();
+  const { layout = 'desktop', ...rest } = props;
   // NOTE: logo images are set in hosted branding.json asset or src/config/brandingConfig.js
   const { logoImageDesktop, logoImageMobile, logoSettings } = config.branding;
 
   return (
     <LogoComponent
-      {...props}
+      {...rest}
+      layout={layout}
       logoImageDesktop={logoImageDesktop}
       logoImageMobile={logoImageMobile}
       logoSettings={logoSettings}
       marketplaceName={config.marketplaceName}
     />
   );
-};
-
-Logo.defaultProps = {
-  className: null,
-  layout: 'desktop',
-};
-
-Logo.propTypes = {
-  className: string,
-  layout: oneOf(['desktop', 'mobile']),
 };
 
 export default Logo;

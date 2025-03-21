@@ -1,6 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
+/**
+ * "No image" icon.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @returns {JSX.Element} SVG icon
+ */
 const NoImageIcon = props => {
   const { className } = props;
 
@@ -26,16 +33,6 @@ const NoImageIcon = props => {
       </g>
     </svg>
   );
-};
-
-const { string } = PropTypes;
-
-NoImageIcon.defaultProps = {
-  className: null,
-};
-
-NoImageIcon.propTypes = {
-  className: string,
 };
 
 export default NoImageIcon;

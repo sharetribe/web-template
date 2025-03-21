@@ -1,5 +1,4 @@
 import React from 'react';
-import { bool, node, oneOfType, string } from 'prop-types';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames';
 
@@ -41,7 +40,18 @@ const createFakeImageEntity = url => {
  * Container component that places ResponsiveImage component into the background
  * of actual children given to it.
  *
- * @param {object} props
+ * @component
+ * @param {Object} props
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.as] - The tag to render the component as
+ * @param {ReactNode} props.children - The children to render
+ * @param {string} [props.childrenWrapperClassName] - Custom class that extends the default class for the children wrapper element
+ * @param {string|propTypes.imageAsset} props.image - The image to render
+ * @param {string} [props.alt] - The alt text for the image
+ * @param {string} props.sizes - The sizes attribute for the image
+ * @param {boolean} [props.useOverlay] - Whether to use an overlay
+ * @returns {JSX.Element}
  */
 const ResponsiveBackgroundImageContainer = props => {
   const intl = useIntl();
@@ -89,29 +99,6 @@ const ResponsiveBackgroundImageContainer = props => {
       <div {...childrenWrapperClassNameMaybe}>{children}</div>
     </Tag>
   );
-};
-
-ResponsiveBackgroundImageContainer.defaultProps = {
-  className: null,
-  rootClassName: null,
-  as: 'div',
-  children: null,
-  image: null,
-  alt: null,
-  sizes: null,
-  useOverlay: true,
-};
-
-ResponsiveBackgroundImageContainer.propTypes = {
-  className: string,
-  rootClassName: string,
-  as: string,
-  children: node,
-  childrenWrapperClassName: string,
-  image: oneOfType([string, propTypes.imageAsset]),
-  alt: string,
-  sizes: string.isRequired,
-  useOverlay: bool,
 };
 
 export default ResponsiveBackgroundImageContainer;

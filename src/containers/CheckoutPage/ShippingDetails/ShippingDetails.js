@@ -1,5 +1,4 @@
 import React from 'react';
-import { bool, object, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { FormattedMessage, intlShape } from '../../../util/reactIntl';
@@ -10,6 +9,19 @@ import { FieldSelect, FieldTextInput, Heading } from '../../../components';
 
 import css from './ShippingDetails.module.css';
 
+/**
+ * A component that displays the shipping details form on the checkout page.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} props.rootClassName - The root class name for the shipping details
+ * @param {string} props.className - The class name for the shipping details
+ * @param {string} props.locale - The locale
+ * @param {intlShape} props.intl - The intl object
+ * @param {boolean} props.disabled - Whether the form is disabled
+ * @param {Object} props.formApi - The form API from React Final Form
+ * @param {string} props.fieldId - The field ID
+ */
 const ShippingDetails = props => {
   const { rootClassName, className, locale, intl, disabled, formApi, fieldId } = props;
   const classes = classNames(rootClassName || css.root, className);
@@ -164,24 +176,6 @@ const ShippingDetails = props => {
       </div>
     </div>
   );
-};
-
-ShippingDetails.defaultProps = {
-  rootClassName: null,
-  className: null,
-  disabled: false,
-  fieldId: null,
-};
-
-ShippingDetails.propTypes = {
-  rootClassName: string,
-  className: string,
-  disabled: bool,
-  formApi: object.isRequired,
-  fieldId: string,
-
-  // from injectIntl
-  intl: intlShape.isRequired,
 };
 
 export default ShippingDetails;

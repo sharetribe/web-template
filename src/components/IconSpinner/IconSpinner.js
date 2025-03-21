@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { number, string } from 'prop-types';
 import classNames from 'classnames';
 
 import css from './IconSpinner.module.css';
@@ -51,26 +50,20 @@ const DelayedSpinner = props => {
   return showSpinner ? <IconSpinner {...restOfProps} /> : null;
 };
 
-DelayedSpinner.propTypes = {
-  delay: number.isRequired,
-};
-
+/**
+ * Spinner icon.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {number?} props.delay delay in milliseconds
+ * @returns {JSX.Element} SVG icon
+ */
 const Spinner = props => {
   const { delay, ...restOfProps } = props;
 
   return delay != null ? <DelayedSpinner {...props} /> : <IconSpinner {...restOfProps} />;
-};
-
-Spinner.defaultProps = {
-  rootClassName: null,
-  className: null,
-  delay: null,
-};
-
-Spinner.propTypes = {
-  rootClassName: string,
-  className: string,
-  delay: number,
 };
 
 export default Spinner;

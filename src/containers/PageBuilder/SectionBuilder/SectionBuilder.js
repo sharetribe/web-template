@@ -1,5 +1,4 @@
 import React from 'react';
-import { arrayOf, bool, func, node, oneOf, shape, string } from 'prop-types';
 import classNames from 'classnames';
 
 // Section components
@@ -45,8 +44,44 @@ const defaultSectionComponents = {
 // Section builder //
 //////////////////////
 
+/**
+ * @typedef {Object} FieldOption
+ * @property {ReactNode} component
+ * @property {Function} pickValidProps
+ */
+
+/**
+ * @typedef {Object} BlockOption
+ * @property {ReactNode} component
+ */
+
+/**
+ * @typedef {Object} SectionOption
+ * @property {ReactNode} component
+ */
+
+/**
+ * @typedef {Object} SectionConfig
+ * @property {string} sectionId
+ * @property {string} sectionName
+ * @property {('article' | 'carousel' | 'columns' | 'features' | 'hero')} sectionType
+ */
+
+/**
+ * Build section elements from given section config array.
+ *
+ * @component
+ * @param {Object} props
+ * @param {Array<SectionConfig>} props.sections
+ * @param {Object} props.options
+ * @param {Object<string,FieldOption>} props.options.fieldComponents
+ * @param {Object<string,BlockOption>} props.options.blockComponents
+ * @param {Object<string,SectionOption>} props.options.sectionComponents
+ * @param {boolean} props.options.isInsideContainer
+ * @returns {JSX.Element} element containing array of sections according from given config array.
+ */
 const SectionBuilder = props => {
-  const { sections, options } = props;
+  const { sections = [], options } = props;
   const { sectionComponents = {}, isInsideContainer, ...otherOption } = options || {};
 
   // If there's no sections, we can't render the correct section component
@@ -113,54 +148,5 @@ const SectionBuilder = props => {
     </>
   );
 };
-
-const propTypeSection = shape({
-  sectionId: string,
-  sectionName: string,
-  sectionType: oneOf(['article', 'carousel', 'columns', 'features', 'hero']).isRequired,
-  // Plus all kind of unknown fields.
-  // BlockBuilder doesn't really need to care about those
-});
-
-const propTypeOption = shape({
-  fieldComponents: shape({ component: node, pickValidProps: func }),
-  blockComponents: shape({ component: node }),
-  sectionComponents: shape({ component: node }),
-  // isInsideContainer boolean means that the section is not taking
-  // the full viewport width but is run inside some wrapper.
-  isInsideContainer: bool,
-});
-
-const defaultSections = shape({
-  sections: arrayOf(propTypeSection),
-  options: propTypeOption,
-});
-
-const customSection = shape({
-  sectionId: string.isRequired,
-  sectionType: string.isRequired,
-  // Plus all kind of unknown fields.
-  // BlockBuilder doesn't really need to care about those
-});
-const propTypeOptionForCustomSections = shape({
-  fieldComponents: shape({ component: node, pickValidProps: func }),
-  blockComponents: shape({ component: node }),
-  sectionComponents: shape({ component: node }).isRequired,
-  // isInsideContainer boolean means that the section is not taking
-  // the full viewport width but is run inside some wrapper.
-  isInsideContainer: bool,
-});
-
-const customSections = shape({
-  sections: arrayOf(customSection),
-  options: propTypeOptionForCustomSections.isRequired,
-});
-
-SectionBuilder.defaultProps = {
-  sections: [],
-  options: null,
-};
-
-SectionBuilder.propTypes = oneOf([defaultSections, customSections]).isRequired;
 
 export default SectionBuilder;

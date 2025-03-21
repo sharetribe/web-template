@@ -41,6 +41,13 @@
   border-left-style: solid;
   border-left-width: 1px;
   border-left-color: var(--colorGrey100);
+  margin-right: auto;
+}
+
+.spacer {
+  min-width: 320px;
+  height: 100%;
+  margin-right: auto;
 }
 
 .search {

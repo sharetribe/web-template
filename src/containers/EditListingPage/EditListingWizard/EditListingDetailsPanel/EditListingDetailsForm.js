@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { arrayOf, bool, func, shape, string } from 'prop-types';
-import { compose } from 'redux';
 import { Field, Form as FinalForm } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
 
 // Import util modules
-import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../../../util/reactIntl';
 import { EXTENDED_DATA_SCHEMA_TYPES, propTypes } from '../../../../util/types';
 import {
   isFieldForCategory,
@@ -276,9 +274,34 @@ const AddListingFields = props => {
   return <>{fields}</>;
 };
 
-// Form that asks title, description, transaction process and unit type for pricing
-// In addition, it asks about custom fields according to marketplace-custom-config.js
-const EditListingDetailsFormComponent = props => (
+/**
+ * Form that asks title, description, transaction process and unit type for pricing
+ * In addition, it asks about custom fields according to marketplace-custom-config.js
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.formId] - The form id
+ * @param {boolean} props.disabled - Whether the form is disabled
+ * @param {boolean} props.ready - Whether the form is ready
+ * @param {boolean} props.updated - Whether the form is updated
+ * @param {boolean} props.updateInProgress - Whether the update is in progress
+ * @param {Object} props.fetchErrors - The fetch errors object
+ * @param {propTypes.error} [props.fetchErrors.createListingDraftError] - The create listing draft error
+ * @param {propTypes.error} [props.fetchErrors.showListingsError] - The show listings error
+ * @param {propTypes.error} [props.fetchErrors.updateListingError] - The update listing error
+ * @param {Function} props.pickSelectedCategories - The pick selected categories function
+ * @param {Array<Object>} props.selectableListingTypes - The selectable listing types
+ * @param {boolean} props.hasExistingListingType - Whether the listing type is existing
+ * @param {propTypes.listingFields} props.listingFieldsConfig - The listing fields config
+ * @param {string} props.listingCurrency - The listing currency
+ * @param {string} props.saveActionMsg - The save action message
+ * @param {boolean} [props.autoFocus] - Whether the form should autofocus
+ * @param {Function} props.onListingTypeChange - The listing type change function
+ * @param {Function} props.onSubmit - The submit function
+ * @returns {JSX.Element}
+ */
+const EditListingDetailsForm = props => (
   <FinalForm
     {...props}
     mutators={{ ...arrayMutators }}
@@ -288,29 +311,29 @@ const EditListingDetailsFormComponent = props => (
         className,
         disabled,
         ready,
-        formId,
+        formId = 'EditListingDetailsForm',
         form: formApi,
         handleSubmit,
         onListingTypeChange,
-        intl,
         invalid,
         pristine,
         marketplaceCurrency,
         marketplaceName,
         selectableListingTypes,
         selectableCategories,
-        hasExistingListingType,
+        hasExistingListingType = false,
         pickSelectedCategories,
         categoryPrefix,
         saveActionMsg,
         updated,
         updateInProgress,
         fetchErrors,
-        listingFieldsConfig,
+        listingFieldsConfig = [],
         listingCurrency,
         values,
       } = formRenderProps;
 
+      const intl = useIntl();
       const { listingType, transactionProcessAlias, unitType } = values;
       const [allCategoriesChosen, setAllCategoriesChosen] = useState(false);
 
@@ -451,40 +474,4 @@ const EditListingDetailsFormComponent = props => (
   />
 );
 
-EditListingDetailsFormComponent.defaultProps = {
-  className: null,
-  formId: 'EditListingDetailsForm',
-  fetchErrors: null,
-  hasExistingListingType: false,
-  listingFieldsConfig: [],
-};
-
-EditListingDetailsFormComponent.propTypes = {
-  className: string,
-  formId: string,
-  intl: intlShape.isRequired,
-  onSubmit: func.isRequired,
-  onListingTypeChange: func.isRequired,
-  saveActionMsg: string.isRequired,
-  disabled: bool.isRequired,
-  ready: bool.isRequired,
-  updated: bool.isRequired,
-  updateInProgress: bool.isRequired,
-  fetchErrors: shape({
-    createListingDraftError: propTypes.error,
-    showListingsError: propTypes.error,
-    updateListingError: propTypes.error,
-  }),
-  pickSelectedCategories: func.isRequired,
-  selectableListingTypes: arrayOf(
-    shape({
-      listingType: string.isRequired,
-      transactionProcessAlias: string.isRequired,
-      unitType: string.isRequired,
-    })
-  ).isRequired,
-  hasExistingListingType: bool,
-  listingFieldsConfig: propTypes.listingFields,
-};
-
-export default compose(injectIntl)(EditListingDetailsFormComponent);
+export default EditListingDetailsForm;

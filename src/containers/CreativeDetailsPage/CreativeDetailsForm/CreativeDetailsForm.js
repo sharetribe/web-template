@@ -41,7 +41,7 @@ export const CreativeDetailsForm = ({
   listingId,
   listing,
   errors,
-  updateInProgress,
+  updateInProgress = false,
   onUpdateListing,
 }) => {
   const [updated, setUpdated] = useState(false);
@@ -170,12 +170,6 @@ export const CreativeDetailsForm = ({
       }}
     />
   );
-};
-
-CreativeDetailsForm.defaultProps = {
-  listingId: null,
-  listing: null,
-  updateInProgress: false,
 };
 
 CreativeDetailsForm.propTypes = {

@@ -34,14 +34,32 @@
  */
 
 import React from 'react';
-import { arrayOf, oneOfType, string } from 'prop-types';
 import classNames from 'classnames';
 import { FormattedMessage } from '../../util/reactIntl';
-import { propTypes } from '../../util/types';
 
 import NoImageIcon from './NoImageIcon';
 import css from './ResponsiveImage.module.css';
 
+/**
+ * Responsive image
+ * Usage without sizes:
+ *   <ResponsiveImage
+ *     alt="ListingX"
+ *     image={imageDataFromSDK}
+ *     variants={['landscape-crop', 'landscape-crop2x']}
+ *   />
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string} props.alt alt attribute for the img element
+ * @param {Object?} props.image API entity (image or imageAsset)
+ * @param {Array<string>} props.variants
+ * @param {string?} props.sizes sizes attribute for the img element (to be used with srcset)
+ * @param {string?} props.noImageMessage message to be shown, when no image was given
+ * @returns {JSX.Element} responsive image
+ */
 const ResponsiveImage = props => {
   const {
     className,
@@ -91,24 +109,6 @@ const ResponsiveImage = props => {
   };
 
   return <img alt={alt} {...imgProps} />;
-};
-
-ResponsiveImage.defaultProps = {
-  className: null,
-  rootClassName: null,
-  image: null,
-  sizes: null,
-  noImageMessage: null,
-};
-
-ResponsiveImage.propTypes = {
-  className: string,
-  rootClassName: string,
-  alt: string.isRequired,
-  image: oneOfType([propTypes.image, propTypes.imageAsset]),
-  variants: arrayOf(string).isRequired,
-  sizes: string,
-  noImageMessage: string,
 };
 
 export default ResponsiveImage;

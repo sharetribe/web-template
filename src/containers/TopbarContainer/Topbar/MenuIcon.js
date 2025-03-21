@@ -1,9 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import css from './Topbar.module.css';
 
+/**
+ * Menu icon (hamburger icon)
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @returns {JSX.Element} menu icon
+ */
 const MenuIcon = props => {
   const { className, rootClassName } = props;
   const classes = classNames(rootClassName || css.rootMenuIcon, className);
@@ -23,18 +31,6 @@ const MenuIcon = props => {
       </g>
     </svg>
   );
-};
-
-const { string } = PropTypes;
-
-MenuIcon.defaultProps = {
-  className: null,
-  rootClassName: null,
-};
-
-MenuIcon.propTypes = {
-  className: string,
-  rootClassName: string,
 };
 
 export default MenuIcon;

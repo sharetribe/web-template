@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { arrayOf, func, number, string, shape, object } from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import classNames from 'classnames';
 
@@ -134,23 +133,24 @@ export class SearchMapComponent extends Component {
 
   render() {
     const {
-      id,
+      id = 'searchMap',
       className,
       rootClassName,
       reusableContainerClassName,
       bounds,
-      center,
+      center = null,
       location,
       listings: originalListings,
       onMapMoveEnd,
-      zoom,
+      zoom = 11,
       config,
       activeListingId,
       messages,
     } = this.props;
     const classes = classNames(rootClassName || css.root, className);
 
-    const listingsWithLocation = originalListings.filter(l => !!l.attributes.geolocation);
+    const listingsArray = originalListings || [];
+    const listingsWithLocation = listingsArray.filter(l => !!l.attributes.geolocation);
     const listings = config.maps.fuzzy.enabled
       ? withCoordinatesObfuscated(listingsWithLocation, config.maps.fuzzy.offset)
       : listingsWithLocation;
@@ -203,50 +203,26 @@ export class SearchMapComponent extends Component {
   }
 }
 
-SearchMapComponent.defaultProps = {
-  id: 'searchMap',
-  className: null,
-  rootClassName: null,
-  mapRootClassName: null,
-  reusableContainerClassName: null,
-  bounds: null,
-  center: null,
-  activeListingId: null,
-  listings: [],
-  onCloseAsModal: null,
-  zoom: 11,
-};
-
-SearchMapComponent.propTypes = {
-  id: string,
-  className: string,
-  rootClassName: string,
-  mapRootClassName: string,
-  reusableContainerClassName: string,
-  bounds: propTypes.latlngBounds,
-  center: propTypes.latlng,
-  location: shape({
-    search: string.isRequired,
-  }).isRequired,
-  activeListingId: propTypes.uuid,
-  listings: arrayOf(propTypes.listing),
-  onCloseAsModal: func,
-  onMapMoveEnd: func.isRequired,
-  zoom: number,
-  messages: object.isRequired,
-
-  // from useConfiguration
-  config: object.isRequired,
-
-  // from useRouteConfiguration
-  routeConfiguration: arrayOf(propTypes.route).isRequired,
-
-  // from useHistory
-  history: shape({
-    push: func.isRequired,
-  }).isRequired,
-};
-
+/**
+ * SearchMap component
+ * @component
+ * @param {Object} props
+ * @param {string} [props.id] - The ID
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} [props.reusableContainerClassName] - Custom class that overrides the default class for the reusable container
+ * @param {propTypes.latlngBounds} props.bounds - The bounds
+ * @param {propTypes.latlng} props.center - The center
+ * @param {Object} props.location - The location
+ * @param {string} props.location.search - The search query params
+ * @param {propTypes.uuid} props.activeListingId - The active listing ID
+ * @param {Array<propTypes.listing>} props.listings - The listings
+ * @param {Function} props.onCloseAsModal - The function to close as modal
+ * @param {Function} props.onMapMoveEnd - The function to move end
+ * @param {number} props.zoom - The zoom
+ * @param {Object} props.messages - The messages for the IntlProvider
+ * @returns {JSX.Element}
+ */
 const SearchMap = props => {
   const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();

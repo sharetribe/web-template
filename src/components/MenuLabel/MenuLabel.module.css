@@ -11,7 +11,7 @@
   }
 }
 
-.clickedWithMouse {
+.clicked {
   &:focus {
     outline: none;
   }

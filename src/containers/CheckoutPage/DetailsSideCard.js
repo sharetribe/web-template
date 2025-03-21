@@ -1,5 +1,4 @@
 import React from 'react';
-import { node, object, string } from 'prop-types';
 
 import { FormattedMessage } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
@@ -17,6 +16,22 @@ import {
 
 import css from './CheckoutPage.module.css';
 
+/**
+ * A card that displays the listing and booking details on the checkout page.
+ *
+ * @component
+ * @param {Object} props
+ * @param {propTypes.listing} props.listing - The listing
+ * @param {string} props.listingTitle - The listing title
+ * @param {propTypes.user} props.author - The author
+ * @param {propTypes.image} props.firstImage - The first image
+ * @param {Object} props.layoutListingImageConfig - The layout listing image config
+ * @param {ReactNode} props.speculateTransactionErrorMessage - The speculate transaction error message
+ * @param {boolean} props.showPrice - Whether to show the price
+ * @param {string} props.processName - The process name
+ * @param {ReactNode} props.breakdown - The breakdown
+ * @param {intlShape} props.intl - The intl object
+ */
 const DetailsSideCard = props => {
   const {
     listing,
@@ -93,22 +108,6 @@ const DetailsSideCard = props => {
       {breakdown}
     </div>
   );
-};
-
-DetailsSideCard.defaultProps = {
-  speculateTransactionErrorMessage: null,
-  breakdown: null,
-};
-
-DetailsSideCard.propTypes = {
-  listing: propTypes.listing.isRequired,
-  listingTitle: string.isRequired,
-  author: propTypes.user.isRequired,
-  firstImage: propTypes.image.isRequired,
-  layoutListingImageConfig: object.isRequired,
-  speculateTransactionErrorMessage: node,
-  processName: string.isRequired,
-  breakdown: node,
 };
 
 export default DetailsSideCard;

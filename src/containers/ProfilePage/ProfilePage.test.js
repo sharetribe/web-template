@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { act } from 'react';
 import '@testing-library/jest-dom';
 
 import { types as sdkTypes } from '../../util/sdkLoader';
@@ -126,21 +126,26 @@ describe('ProfilePage', () => {
     params: {},
   };
 
-  it('Check that user name and bio is shown correctly', () => {
-    render(<ProfilePage {...props} />, {
-      initialState: getInitialState(),
-      config,
+  it('Check that user name and bio is shown correctly', async () => {
+    await act(async () => {
+      render(<ProfilePage {...props} />, {
+        initialState: getInitialState(),
+        config,
+      });
     });
     expect(screen.getByText('ProfilePage.desktopHeading')).toBeInTheDocument();
     expect(screen.getByText('I am a great cook!')).toBeInTheDocument();
   });
 
-  it('Check that custom user information is shown correctly', () => {
-    const { getByRole } = render(<ProfilePage {...props} />, {
-      initialState: getInitialState(),
-      config,
+  it('Check that custom user information is shown correctly', async () => {
+    let rendered = {};
+    await act(async () => {
+      rendered = render(<ProfilePage {...props} />, {
+        initialState: getInitialState(),
+        config,
+      });
     });
-
+    const { getByRole } = rendered;
     // Show custom fields correctly
     expect(getByRole('heading', { name: 'ProfilePage.detailsTitle' })).toBeInTheDocument();
     expect(getByRole('heading', { name: 'Dietary preferences' })).toBeInTheDocument();
@@ -158,10 +163,12 @@ describe('ProfilePage', () => {
     expect(screen.queryByText('Not shown in profile')).toBeNull();
   });
 
-  it('Check that listing information is shown correctly', () => {
-    render(<ProfilePage {...props} />, {
-      initialState: getInitialState(),
-      config,
+  it('Check that listing information is shown correctly', async () => {
+    await act(async () => {
+      render(<ProfilePage {...props} />, {
+        initialState: getInitialState(),
+        config,
+      });
     });
 
     expect(screen.getByText('ProfilePage.listingsTitle')).toBeInTheDocument();
@@ -169,11 +176,15 @@ describe('ProfilePage', () => {
     expect(screen.getByText('$55.00')).toBeInTheDocument();
   });
 
-  it('Check that review information is shown correctly', () => {
-    const { getByRole } = render(<ProfilePage {...props} />, {
-      initialState: getInitialState(),
-      config,
+  it('Check that review information is shown correctly', async () => {
+    let rendered = {};
+    await act(async () => {
+      rendered = render(<ProfilePage {...props} />, {
+        initialState: getInitialState(),
+        config,
+      });
     });
+    const { getByRole } = rendered;
 
     expect(
       getByRole('heading', { name: 'ProfilePage.reviewsFromMyCustomersTitle' })

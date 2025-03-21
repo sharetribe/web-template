@@ -1,5 +1,4 @@
 import React, { Component, useEffect } from 'react';
-import { array, arrayOf, bool, func, number, object, oneOf, shape, string } from 'prop-types';
 import classNames from 'classnames';
 
 // Import configs and util modules
@@ -16,16 +15,15 @@ import {
 import {
   LISTING_PAGE_PARAM_TYPE_DRAFT,
   LISTING_PAGE_PARAM_TYPE_NEW,
-  LISTING_PAGE_PARAM_TYPES,
 } from '../../../util/urlHelpers';
 import { createResourceLocatorString } from '../../../util/routes';
-import { withViewport } from '../../../util/uiHelpers';
 import {
   SCHEMA_TYPE_ENUM,
   SCHEMA_TYPE_MULTI_ENUM,
   SCHEMA_TYPE_TEXT,
   SCHEMA_TYPE_LONG,
   SCHEMA_TYPE_BOOLEAN,
+  SCHEMA_TYPE_YOUTUBE,
   propTypes,
 } from '../../../util/types';
 import {
@@ -191,6 +189,8 @@ const hasValidListingFieldsInExtendedData = (publicData, privateData, config) =>
         ? typeof savedListingField === 'number' && Number.isInteger(savedListingField)
         : schemaType === SCHEMA_TYPE_BOOLEAN
         ? savedListingField === true || savedListingField === false
+        : schemaType === SCHEMA_TYPE_YOUTUBE
+        ? typeof savedListingField === 'string'
         : false;
     }
     return true;
@@ -275,7 +275,7 @@ const tabsActive = (isNew, listing, tabs, config) => {
 
 const scrollToTab = (tabPrefix, tabId) => {
   const el = document.querySelector(`#${tabPrefix}_${tabId}`);
-  if (el) {
+  if (el && el.scrollIntoView) {
     el.scrollIntoView({
       block: 'start',
       behavior: 'smooth',
@@ -340,7 +340,49 @@ const getListingTypeConfig = (listing, selectedListingType, config) => {
   return listingTypeConfig;
 };
 
-// Create a new or edit listing through EditListingWizard
+/**
+ * EditListingWizard is a component that renders the tabs that update the different parts of the listing.
+ * It also handles the payout details modal and the Stripe onboarding form if the listing is a new one.
+ * TODO: turn this into a functional component
+ *
+ * @component
+ * @param {Object} props - The props object
+ * @param {string} props.id - The id of the listing
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {Object} props.config - The config object
+ * @param {Object} props.routeConfiguration - The route configuration object
+ * @param {Object} props.params - The params object
+ * @param {string} props.params.id - The id of the listing
+ * @param {string} props.params.slug - The slug of the listing
+ * @param {'new'|'draft'|'edit'} props.params.type - The type of the listing
+ * @param {DETAILS | PRICING | PRICING_AND_STOCK | DELIVERY | LOCATION | AVAILABILITY | PHOTOS} props.params.tab - The name of the tab
+ * @param {propTypes.ownListing} props.listing - The listing object
+ * @param {propTypes.error} [props.errors.createListingDraftError] - The error object for createListingDraft
+ * @param {propTypes.error} [props.errors.publishListingError] - The error object for publishListing
+ * @param {propTypes.error} [props.errors.updateListingError] - The error object for updateListing
+ * @param {propTypes.error} [props.errors.showListingsError] - The error object for showListings
+ * @param {propTypes.error} [props.errors.uploadImageError] - The upload image error object
+ * @param {propTypes.error} [props.errors.createStripeAccountError] - The error object for createStripeAccount
+ * @param {propTypes.error} [props.errors.addExceptionError] - The error object for addException
+ * @param {propTypes.error} [props.errors.deleteExceptionError] - The error object for deleteException
+ * @param {propTypes.error} [props.errors.setStockError] - The error object for setStock
+ * @param {boolean} props.fetchInProgress - Whether the fetch is in progress
+ * @param {boolean} props.getAccountLinkInProgress - Whether the get account link is in progress
+ * @param {boolean} props.payoutDetailsSaveInProgress - Whether the payout details save is in progress
+ * @param {boolean} props.payoutDetailsSaved - Whether the payout details saved is in progress
+ * @param {Function} props.onPayoutDetailsChange - The on payout details change function
+ * @param {Function} props.onPayoutDetailsSubmit - The on payout details submit function
+ * @param {Function} props.onGetStripeConnectAccountLink - The get StripeConnectAccountLink function
+ * @param {propTypes.error} [props.createStripeAccountError] - The error object for createStripeAccount (TODO: errors object contains this)
+ * @param {propTypes.error} [props.updateStripeAccountError] - The error object for updateStripeAccount (TODO: errors object contains this)
+ * @param {propTypes.error} [props.fetchStripeAccountError] - The error object for fetchStripeAccount
+ * @param {propTypes.error} [props.stripeAccountError] - The error object for stripeAccount (TODO: errors object contains this)
+ * @param {propTypes.error} [props.stripeAccountLinkError] - The error object for stripeAccountLink
+ * @param {Function} props.onManageDisableScrolling - The on manage disable scrolling function
+ * @param {intlShape} props.intl - The intl object
+ * @returns {JSX.Element} EditListingWizard component
+ */
 class EditListingWizard extends Component {
   constructor(props) {
     super(props);
@@ -352,6 +394,7 @@ class EditListingWizard extends Component {
       draftId: null,
       showPayoutDetails: false,
       selectedListingType: null,
+      mounted: false,
     };
     this.handleCreateFlowTabScrolling = this.handleCreateFlowTabScrolling.bind(this);
     this.handlePublishListing = this.handlePublishListing.bind(this);
@@ -363,6 +406,9 @@ class EditListingWizard extends Component {
 
     if (stripeOnboardingReturnURL != null && !this.showPayoutDetails) {
       this.setState({ showPayoutDetails: true });
+    }
+    if (!this.mounted) {
+      this.mounted = true;
     }
   }
 
@@ -413,7 +459,6 @@ class EditListingWizard extends Component {
       rootClassName,
       params,
       listing,
-      viewport,
       intl,
       errors,
       fetchInProgress,
@@ -507,10 +552,14 @@ class EditListingWizard extends Component {
       return <NamedRedirect name="EditListingPage" params={{ ...params, tab: nearestActiveTab }} />;
     }
 
-    const { width } = viewport;
-    const hasViewport = width > 0;
-    const hasHorizontalTabLayout = hasViewport && width <= MAX_HORIZONTAL_NAV_SCREEN_WIDTH;
-    const hasVerticalTabLayout = hasViewport && width > MAX_HORIZONTAL_NAV_SCREEN_WIDTH;
+    const isBrowser = typeof window !== 'undefined';
+    const hasMatchMedia = isBrowser && window?.matchMedia;
+    const isMobileLayout = hasMatchMedia
+      ? window.matchMedia(`(max-width: ${MAX_HORIZONTAL_NAV_SCREEN_WIDTH}px)`)?.matches
+      : true;
+
+    const hasHorizontalTabLayout = this.mounted && isMobileLayout;
+    const hasVerticalTabLayout = this.mounted && !isMobileLayout;
 
     // Check if scrollToTab call is needed (tab is not visible on mobile)
     if (hasVerticalTabLayout) {
@@ -690,85 +739,6 @@ class EditListingWizard extends Component {
   }
 }
 
-EditListingWizard.defaultProps = {
-  className: null,
-  currentUser: null,
-  rootClassName: null,
-  listing: null,
-  stripeAccount: null,
-  stripeAccountFetched: null,
-  updateInProgress: false,
-  createStripeAccountError: null,
-  updateStripeAccountError: null,
-  fetchStripeAccountError: null,
-  stripeAccountError: null,
-  stripeAccountLinkError: null,
-};
-
-EditListingWizard.propTypes = {
-  id: string.isRequired,
-  className: string,
-  currentUser: propTypes.currentUser,
-  rootClassName: string,
-  params: shape({
-    id: string.isRequired,
-    slug: string.isRequired,
-    type: oneOf(LISTING_PAGE_PARAM_TYPES).isRequired,
-    tab: oneOf(TABS_ALL).isRequired,
-  }).isRequired,
-  stripeAccount: object,
-  stripeAccountFetched: bool,
-
-  // We cannot use propTypes.listing since the listing might be a draft.
-  listing: shape({
-    attributes: shape({
-      publicData: object,
-      description: string,
-      geolocation: object,
-      price: object,
-      title: string,
-    }),
-    images: array,
-  }),
-
-  errors: shape({
-    createListingDraftError: object,
-    updateListingError: object,
-    publishListingError: object,
-    showListingsError: object,
-    uploadImageError: object,
-  }).isRequired,
-  createStripeAccountError: propTypes.error,
-  updateStripeAccountError: propTypes.error,
-  fetchStripeAccountError: propTypes.error,
-  stripeAccountError: propTypes.error,
-  stripeAccountLinkError: propTypes.error,
-
-  fetchInProgress: bool.isRequired,
-  getAccountLinkInProgress: bool.isRequired,
-  payoutDetailsSaveInProgress: bool.isRequired,
-  payoutDetailsSaved: bool.isRequired,
-  onPayoutDetailsChange: func.isRequired,
-  onPayoutDetailsSubmit: func.isRequired,
-  onGetStripeConnectAccountLink: func.isRequired,
-  onManageDisableScrolling: func.isRequired,
-
-  // from withViewport
-  viewport: shape({
-    width: number.isRequired,
-    height: number.isRequired,
-  }).isRequired,
-
-  // from useIntl
-  intl: intlShape.isRequired,
-
-  // from useConfiguration
-  config: object.isRequired,
-
-  // from useRouteConfiguration
-  routeConfiguration: arrayOf(propTypes.route).isRequired,
-};
-
 const EnhancedEditListingWizard = props => {
   const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();
@@ -783,4 +753,4 @@ const EnhancedEditListingWizard = props => {
   );
 };
 
-export default withViewport(EnhancedEditListingWizard);
+export default EnhancedEditListingWizard;

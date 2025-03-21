@@ -1,5 +1,4 @@
 import React from 'react';
-import { bool, oneOfType, string, shape } from 'prop-types';
 import classNames from 'classnames';
 
 import { useConfiguration } from '../../context/configurationContext';
@@ -16,6 +15,24 @@ import EditIcon from './EditIcon';
 
 import css from './ListingPage.module.css';
 
+/**
+ * The ActionBarMaybe component.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {boolean} props.isOwnListing - Whether the listing is own
+ * @param {propTypes.listing | propTypes.ownListing} props.listing - The listing
+ * @param {propTypes.currentUser} props.currentUser - The current user
+ * @param {Object} props.editParams - The path params for the named route to edit the listing
+ * @param {string} props.editParams.id - The id
+ * @param {string} props.editParams.slug - The slug
+ * @param {'edit' | 'draft'} props.editParams.type - The type
+ * @param {string} props.editParams.tab - The tab (e.g. 'details' or 'pricing')
+ * @param {boolean} props.showNoPayoutDetailsSet - Show info about missing payout details
+ * @returns {JSX.Element} action bar maybe component
+ */
 export const ActionBarMaybe = props => {
   const { rootClassName, className, isOwnListing, listing, showNoPayoutDetailsSet } = props;
   const classes = classNames(rootClassName || css.actionBar, className);
@@ -75,18 +92,5 @@ export const ActionBarMaybe = props => {
   }
   return null;
 };
-ActionBarMaybe.defaultProps = {
-  rootClassName: null,
-  className: null,
-};
-
-ActionBarMaybe.propTypes = {
-  rootClassName: string,
-  className: string,
-  isOwnListing: bool.isRequired,
-  listing: oneOfType([propTypes.listing, propTypes.ownListing]).isRequired,
-};
-
-ActionBarMaybe.displayName = 'ActionBarMaybe';
 
 export default ActionBarMaybe;

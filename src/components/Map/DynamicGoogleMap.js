@@ -1,9 +1,20 @@
 import React, { Component } from 'react';
-import { number, object, shape, string } from 'prop-types';
 import { circlePolyline } from '../../util/maps';
 
 /**
- * DynamicGoogleMap uses Google Maps API.
+ * Map that uses Google Maps and is fully dynamic (zoom, pan, etc.).
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.containerClassName add style rules for the root container
+ * @param {string?} props.mapClassName add style rules for the map div
+ * @param {string?} props.address
+ * @param {Object} props.center LatLng
+ * @param {number} props.center.lat latitude
+ * @param {number} props.center.lng longitude
+ * @param {number} props.zoom
+ * @param {Object} props.mapsConfig
+ * @returns {JSX.Element} dynamic version of Google Maps
  */
 class DynamicGoogleMap extends Component {
   constructor(props) {
@@ -93,20 +104,5 @@ class DynamicGoogleMap extends Component {
     );
   }
 }
-
-DynamicGoogleMap.defaultProps = {
-  address: '',
-  center: null,
-};
-
-DynamicGoogleMap.propTypes = {
-  address: string,
-  center: shape({
-    lat: number.isRequired,
-    lng: number.isRequired,
-  }).isRequired,
-  zoom: number.isRequired,
-  mapsConfig: object.isRequired,
-};
 
 export default DynamicGoogleMap;

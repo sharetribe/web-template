@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { act } from 'react';
 import '@testing-library/jest-dom';
 
 import { fakeIntl } from '../../../../util/testData';
@@ -10,21 +10,38 @@ const { screen, userEvent, fireEvent } = testingLibrary;
 
 const noop = () => null;
 
+beforeAll(() => {
+  // Mock window.scroll - otherwise, Jest/JSDOM will print a not-implemented error.
+  window.mapboxgl = { accessToken: 'test' };
+  window.mapboxSdk = () => ({
+    geocoding: {
+      forwardGeocode: () => ({
+        send: () =>
+          Promise.resolve({
+            body: { features: [] },
+          }),
+      }),
+    },
+  });
+});
+
 describe('EditListingDeliveryForm', () => {
-  it('Check that shipping fees can be given and submit button activates', () => {
+  it('Check that shipping fees can be given and submit button activates', async () => {
     const saveActionMsg = 'Save location';
-    render(
-      <EditListingLocationForm
-        intl={fakeIntl}
-        dispatch={noop}
-        onSubmit={noop}
-        saveActionMsg={saveActionMsg}
-        updated={false}
-        updateInProgress={false}
-        disabled={false}
-        ready={false}
-      />
-    );
+    await act(async () => {
+      render(
+        <EditListingLocationForm
+          intl={fakeIntl}
+          dispatch={noop}
+          onSubmit={noop}
+          saveActionMsg={saveActionMsg}
+          updated={false}
+          updateInProgress={false}
+          disabled={false}
+          ready={false}
+        />
+      );
+    });
 
     // Pickup fields
     const address = 'EditListingLocationForm.address';
@@ -36,8 +53,9 @@ describe('EditListingDeliveryForm', () => {
     // Test that save button is disabled at first
     expect(screen.getByRole('button', { name: saveActionMsg })).toBeDisabled();
 
-    // TODO: this should be tested some other way (address is actually a LocationAutocompleteInput, which is code-splitted)
-    // userEvent.type(screen.getByRole('textbox', { name: address }), 'Erottajankatu 19, Helsinki');
-    userEvent.type(screen.getByRole('textbox', { name: building }), 'B');
+    await act(async () => {
+      userEvent.type(screen.getByTestId('location-search'), 'Erottajankatu 19, Helsinki');
+      userEvent.type(screen.getByRole('textbox', { name: building }), 'B');
+    });
   });
 });

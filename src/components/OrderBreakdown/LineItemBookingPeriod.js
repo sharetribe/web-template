@@ -1,6 +1,14 @@
 import React from 'react';
 import { FormattedMessage, FormattedDate } from '../../util/reactIntl';
-import { LINE_ITEM_NIGHT, DATE_TYPE_DATE, LINE_ITEM_HOUR, propTypes } from '../../util/types';
+import {
+  DATE_TYPE_DATE,
+  DATE_TYPE_TIME,
+  DATE_TYPE_DATETIME,
+  LINE_ITEM_DAY,
+  LINE_ITEM_HOUR,
+  LINE_ITEM_NIGHT,
+  propTypes,
+} from '../../util/types';
 import { subtractTime } from '../../util/dates';
 
 import css from './OrderBreakdown.module.css';
@@ -56,6 +64,17 @@ const BookingPeriod = props => {
   );
 };
 
+/**
+ * A line-item to show booking period for the OrderBreakdown
+ *
+ * @component
+ * @param {Object} props
+ * @param {propTypes.booking?} props.booking
+ * @param {LINE_ITEM_NIGHT | LINE_ITEM_DAY | LINE_ITEM_HOUR} props.code
+ * @param {DATE_TYPE_DATE | DATE_TYPE_TIME | DATE_TYPE_DATETIME} props.dateType
+ * @param {string} props.timeZone IANA time zone name
+ * @returns {JSX.Element} line-item element for the order breakdown
+ */
 const LineItemBookingPeriod = props => {
   const { booking, code, dateType, timeZone } = props;
 
@@ -87,12 +106,6 @@ const LineItemBookingPeriod = props => {
       <hr className={css.totalDivider} />
     </>
   );
-};
-LineItemBookingPeriod.defaultProps = { booking: null, dateType: null };
-
-LineItemBookingPeriod.propTypes = {
-  booking: propTypes.booking,
-  dateType: propTypes.dateType,
 };
 
 export default LineItemBookingPeriod;

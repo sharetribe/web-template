@@ -1,9 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import css from './IconEmailSuccess.module.css';
 
+/**
+ * Email icon with success mark
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @returns {JSX.Element} SVG icon
+ */
 const IconEmailSuccess = props => {
   const { rootClassName, className } = props;
   const classes = classNames(rootClassName || css.root, className);
@@ -42,11 +50,5 @@ const IconEmailSuccess = props => {
     </svg>
   );
 };
-
-IconEmailSuccess.defaultProps = { rootClassName: null, className: null };
-
-const { string } = PropTypes;
-
-IconEmailSuccess.propTypes = { rootClassName: string, className: string };
 
 export default IconEmailSuccess;

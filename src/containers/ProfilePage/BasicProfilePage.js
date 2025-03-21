@@ -145,10 +145,10 @@ const MainContent = ({
 };
 
 function BasicProfilePage({
-  isCurrentUser,
+  isCurrentUser = false,
   profileUser,
-  hideReviews,
-  reviews,
+  hideReviews = false,
+  reviews = [],
   queryReviewsError,
   userShowError,
 }) {
@@ -184,15 +184,6 @@ function BasicProfilePage({
     </LayoutSideNavigation>
   );
 }
-
-BasicProfilePage.defaultProps = {
-  isCurrentUser: false,
-  profileUser: null,
-  hideReviews: false,
-  reviews: [],
-  queryReviewsError: null,
-  userShowError: null,
-};
 
 BasicProfilePage.propTypes = {
   isCurrentUser: bool.isRequired,

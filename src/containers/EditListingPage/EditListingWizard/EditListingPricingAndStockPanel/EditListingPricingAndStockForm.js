@@ -1,13 +1,11 @@
 import React from 'react';
-import { bool, func, number, shape, string } from 'prop-types';
-import { compose } from 'redux';
 import { Field, Form as FinalForm } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
 
 // Import configs and util modules
 import appSettings from '../../../../config/settings';
-import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../../../util/reactIntl';
 import { STOCK_INFINITE_ITEMS, STOCK_MULTIPLE_ITEMS, propTypes } from '../../../../util/types';
 import { isOldTotalMismatchStockError } from '../../../../util/errors';
 import * as validators from '../../../../util/validators';
@@ -93,24 +91,49 @@ const UpdateStockToInfinityCheckboxMaybe = ({ hasInfiniteStock, currentStock, fo
   ) : null;
 };
 
-export const EditListingPricingAndStockFormComponent = props => (
+/**
+ * The EditListingPricingAndStockForm component.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.formId] - The form id
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {propTypes.ownListing} props.listing - The listing object
+ * @param {propTypes.listingType} props.listingType - The listing types config
+ * @param {string} props.unitType - The unit type (e.g. 'item')
+ * @param {string} props.marketplaceCurrency - The marketplace currency (e.g. 'USD')
+ * @param {number} props.listingMinimumPriceSubUnits - The listing minimum price sub units
+ * @param {boolean} [props.autoFocus] - Whether the form should autofocus
+ * @param {boolean} props.disabled - Whether the form is disabled
+ * @param {boolean} props.ready - Whether the form is ready
+ * @param {boolean} props.updated - Whether the form is updated
+ * @param {boolean} props.updateInProgress - Whether the form is updating
+ * @param {Object} props.fetchErrors - The fetch errors
+ * @param {propTypes.error} [props.fetchErrors.showListingsError] - The show listings error
+ * @param {propTypes.error} [props.fetchErrors.updateListingError] - The update listing error
+ * @param {Function} props.onSubmit - The submit function
+ * @param {string} props.saveActionMsg - The save action message
+ * @returns {JSX.Element}
+ */
+export const EditListingPricingAndStockForm = props => (
   <FinalForm
     {...props}
     mutators={{ ...arrayMutators }}
     render={formRenderProps => {
       const {
-        formId,
+        formId = 'EditListingPricingAndStockForm',
         autoFocus,
         className,
+        rootClassName,
         disabled,
         ready,
         handleSubmit,
-        intl,
         invalid,
         pristine,
         marketplaceCurrency,
         unitType,
-        listingMinimumPriceSubUnits,
+        listingMinimumPriceSubUnits = 0,
         listingType,
         saveActionMsg,
         updated,
@@ -119,6 +142,7 @@ export const EditListingPricingAndStockFormComponent = props => (
         values,
       } = formRenderProps;
 
+      const intl = useIntl();
       const priceValidators = getPriceValidators(
         listingMinimumPriceSubUnits,
         marketplaceCurrency,
@@ -134,7 +158,7 @@ export const EditListingPricingAndStockFormComponent = props => (
       const hasInfiniteStock = STOCK_INFINITE_ITEMS.includes(listingType?.stockType);
       const currentStock = values.stock;
 
-      const classes = classNames(css.root, className);
+      const classes = classNames(rootClassName || css.root, className);
       const submitReady = (updated && pristine) || ready;
       const submitInProgress = updateInProgress;
       const submitDisabled = invalid || disabled || submitInProgress;
@@ -191,6 +215,18 @@ export const EditListingPricingAndStockFormComponent = props => (
               type="number"
               min={0}
               validate={stockValidator}
+              onWheel={e => {
+                // fix: number input should not change value on scroll
+                if (e.target === document.activeElement) {
+                  // Prevent the input value change, because we prefer page scrolling
+                  e.target.blur();
+
+                  // Refocus immediately, on the next tick (after the current function is done)
+                  setTimeout(() => {
+                    e.target.focus();
+                  }, 0);
+                }
+              }}
             />
           ) : (
             <Field id="stock" name="stock" type="hidden" className={css.unitTypeHidden}>
@@ -214,29 +250,4 @@ export const EditListingPricingAndStockFormComponent = props => (
   />
 );
 
-EditListingPricingAndStockFormComponent.defaultProps = {
-  fetchErrors: null,
-  listingMinimumPriceSubUnits: 0,
-  formId: 'EditListingPricingAndStockForm',
-};
-
-EditListingPricingAndStockFormComponent.propTypes = {
-  formId: string,
-  intl: intlShape.isRequired,
-  onSubmit: func.isRequired,
-  marketplaceCurrency: string.isRequired,
-  listingMinimumPriceSubUnits: number,
-  unitType: string.isRequired,
-  listingType: shape({ stockType: string }).isRequired,
-  saveActionMsg: string.isRequired,
-  disabled: bool.isRequired,
-  ready: bool.isRequired,
-  updated: bool.isRequired,
-  updateInProgress: bool.isRequired,
-  fetchErrors: shape({
-    showListingsError: propTypes.error,
-    updateListingError: propTypes.error,
-  }),
-};
-
-export default compose(injectIntl)(EditListingPricingAndStockFormComponent);
+export default EditListingPricingAndStockForm;

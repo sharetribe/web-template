@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { bool, func, number, shape, string } from 'prop-types';
 import classNames from 'classnames';
-import { injectIntl, intlShape } from '../../util/reactIntl';
+import { useIntl } from '../../util/reactIntl';
 import {
   IconClose,
   IconCheckmark,
@@ -20,15 +19,33 @@ import css from './SavedCardDetails.module.css';
 const DEFAULT_CARD = 'defaultCard';
 const REPLACE_CARD = 'replaceCard';
 
+/**
+ * A component that renders a saved card details.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {Object} props.card - The card to render
+ * @param {string} props.card.brand - The brand of the card
+ * @param {number} props.card.expirationMonth - The expiration month of the card
+ * @param {number} props.card.expirationYear - The expiration year of the card
+ * @param {string} props.card.last4Digits - The last 4 digits of the card
+ * @param {function} [props.onChange] - The function to call when the card is changed
+ * @param {function} [props.onDeleteCard] - The function to call when the card is deleted
+ * @param {function} [props.onManageDisableScrolling] - The function to call when the modal is opened
+ * @param {boolean} [props.deletePaymentMethodInProgress] - Whether the delete payment method is in progress
+ * @returns {JSX.Element}
+ */
 const SavedCardDetails = props => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [active, setActive] = useState(DEFAULT_CARD);
+  const intl = useIntl();
 
   const {
     rootClassName,
     className,
-    intl,
     card,
     onChange,
     onDeleteCard,
@@ -210,30 +227,4 @@ const SavedCardDetails = props => {
   );
 };
 
-SavedCardDetails.defaultProps = {
-  rootClassName: null,
-  className: null,
-  card: null,
-  onChange: null,
-  onDeleteCard: null,
-  deletePaymentMethodInProgress: false,
-  onManageDisableScrolling: null,
-};
-
-SavedCardDetails.propTypes = {
-  rootClassName: string,
-  className: string,
-  intl: intlShape.isRequired,
-  card: shape({
-    brand: string.isRequired,
-    expirationMonth: number.isRequired,
-    expirationYear: number.isRequired,
-    last4Digits: string.isRequired,
-  }),
-  onChange: func,
-  onDeleteCard: func,
-  onManageDisableScrolling: func,
-  deletePaymentMethodInProgress: bool,
-};
-
-export default injectIntl(SavedCardDetails);
+export default SavedCardDetails;

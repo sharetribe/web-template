@@ -3,12 +3,10 @@
  * shows login actions for those who are not authenticated.
  */
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import { ACCOUNT_SETTINGS_PAGES } from '../../../../routing/routeConfiguration';
 import { FormattedMessage } from '../../../../util/reactIntl';
-import { propTypes } from '../../../../util/types';
 import { ensureCurrentUser } from '../../../../util/data';
 
 import {
@@ -55,13 +53,27 @@ const CustomLinkComponent = ({ linkConfig, currentPage }) => {
   );
 };
 
+/**
+ * Menu for mobile layout (opens through hamburger icon)
+ *
+ * @component
+ * @param {Object} props
+ * @param {boolean} props.isAuthenticated
+ * @param {string?} props.currentPage
+ * @param {boolean} props.currentUserHasListings
+ * @param {Object?} props.currentUser API entity
+ * @param {number} props.notificationCount
+ * @param {Array<Object>} props.customLinks Contains object like { group, text, type, href, route }
+ * @param {Function} props.onLogout
+ * @returns {JSX.Element} search icon
+ */
 const TopbarMobileMenu = props => {
   const {
     isAuthenticated,
     currentPage,
     currentUserHasListings,
     currentUser,
-    notificationCount,
+    notificationCount = 0,
     customLinks,
     onLogout,
   } = props;
@@ -182,19 +194,6 @@ const TopbarMobileMenu = props => {
       </div>
     </div>
   );
-};
-
-TopbarMobileMenu.defaultProps = { currentUser: null, notificationCount: 0, currentPage: null };
-
-const { bool, func, number, string } = PropTypes;
-
-TopbarMobileMenu.propTypes = {
-  isAuthenticated: bool.isRequired,
-  currentUserHasListings: bool.isRequired,
-  currentUser: propTypes.currentUser,
-  currentPage: string,
-  notificationCount: number,
-  onLogout: func.isRequired,
 };
 
 export default TopbarMobileMenu;

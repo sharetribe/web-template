@@ -16,7 +16,7 @@ export const FETCH_LISTINGS_ERROR = 'app/FavoriteListingsPage/FETCH_LISTINGS_ERR
 
 const initialState = {
   pagination: null,
-  queryParams: null,
+  queryParams: {},
   queryInProgress: false,
   queryFavoritesError: null,
   currentPageResultIds: [],

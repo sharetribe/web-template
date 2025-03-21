@@ -1,8 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import css from './IconKeys.module.css';
 
+/**
+ * Keys icon.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @returns {JSX.Element} SVG icon
+ */
 const IconKeys = props => {
   const { className } = props;
   return (
@@ -47,14 +54,6 @@ const IconKeys = props => {
       </g>
     </svg>
   );
-};
-
-IconKeys.defaultProps = { className: null };
-
-const { string } = PropTypes;
-
-IconKeys.propTypes = {
-  className: string,
 };
 
 export default IconKeys;
