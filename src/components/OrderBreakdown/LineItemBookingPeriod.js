@@ -14,7 +14,12 @@ import { subtractTime, isDST } from '../../util/dates';
 import css from './OrderBreakdown.module.css';
 
 const DSTMaybe = props => {
-  const { startDate, endDate, isStart, timeZone } = props;
+  const { startDate, endDate, isStart, dateType, timeZone } = props;
+  const isDayTimeRange = dateType === DATE_TYPE_DATETIME;
+  if (!isDayTimeRange) {
+    return null;
+  }
+
   const isStartInDST = isDST(startDate, timeZone);
   const isEndInDST = isDST(endDate, timeZone);
   const isDSTChanged = isStartInDST !== isEndInDST;
@@ -61,7 +66,13 @@ const BookingPeriod = props => {
           <div className={css.itemLabel}>
             <FormattedDate value={startDate} {...dateFormatOptions} {...timeZoneMaybe} />
           </div>
-          <DSTMaybe startDate={startDate} endDate={endDate} isStart={true} timeZone={timeZone} />
+          <DSTMaybe
+            startDate={startDate}
+            endDate={endDate}
+            isStart={true}
+            dateType={dateType}
+            timeZone={timeZone}
+          />
         </div>
 
         <div className={css.bookingPeriodSectionRight}>
@@ -74,7 +85,13 @@ const BookingPeriod = props => {
           <div className={css.itemLabel}>
             <FormattedDate value={endDate} {...dateFormatOptions} {...timeZoneMaybe} />
           </div>
-          <DSTMaybe startDate={startDate} endDate={endDate} isStart={false} timeZone={timeZone} />
+          <DSTMaybe
+            startDate={startDate}
+            endDate={endDate}
+            isStart={false}
+            dateType={dateType}
+            timeZone={timeZone}
+          />
         </div>
       </div>
     </>
