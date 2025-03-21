@@ -140,7 +140,8 @@
     "test-server": "jest ./server/**/*.test.js",
     "heroku-postbuild": "yarn run build",
     "postinstall": "patch-package",
-    "translate": "node scripts/translations.js"
+    "translate": "node scripts/translations.js",
+    "version:patch": "npm version prerelease --preid=theluuupe"
   },
   "browserslist": {
     "production": [
