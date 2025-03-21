@@ -6,7 +6,7 @@ import React from 'react';
 import { NamedLink } from '../../../../components';
 import { EditableCellComponents } from './EditableCellComponents';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { getImageDimensionLabel } from '../../imageHelpers';
+import { getImageSizeLabel } from '../../imageHelpers';
 import { CsvUpload } from '../CsvUpload/CsvUpload';
 import { TableHeaderTitle } from './TableHeaderTitle';
 
@@ -229,13 +229,22 @@ export const EditableListingsTable = props => {
     {
       title: (
         <TableHeaderTitle>
+          <FormattedMessage id="EditableListingsTable.imageSize" defaultMessage="Image Size" />
+        </TableHeaderTitle>
+      ),
+      dataIndex: 'imageSize',
+      width: 240,
+      render: getImageSizeLabel,
+      sorter: stringSorter,
+    },
+    {
+      title: (
+        <TableHeaderTitle>
           <FormattedMessage id="EditableListingsTable.dimensions" defaultMessage="Dimensions" />
         </TableHeaderTitle>
       ),
       dataIndex: 'dimensions',
       width: 200,
-      render: getImageDimensionLabel,
-      sorter: stringSorter,
     },
     {
       title: (

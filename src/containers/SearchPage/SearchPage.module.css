@@ -89,15 +89,12 @@
   padding: 8px 24px 0 0;
 
   @media (--viewportMedium) {
+    width: 260px;
     padding: 8px 24px 24px 0;
   }
 
-  @media (--viewportLarge) {
-    width: 400px;
-    padding: 8px 36px 24px 0;
-  }
-
-  @media (min-width: 1440px) {
+  @media (--viewportXLarge) {
+    width: 380px;
     padding: 8px 60px 24px 0;
   }
 }
