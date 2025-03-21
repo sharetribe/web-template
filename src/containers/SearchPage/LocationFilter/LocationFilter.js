@@ -140,12 +140,6 @@ function LocationFilter(props) {
   );
 }
 
-LocationFilter.defaultProps = {
-  rootClassName: null,
-  className: null,
-  initialValues: null,
-};
-
 LocationFilter.propTypes = {
   rootClassName: string,
   className: string,

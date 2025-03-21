@@ -17,7 +17,7 @@ import css from './EditLocationForm.module.css';
 
 const identity = v => v;
 
-export const EditLocationForm = ({ values }) => {
+export const EditLocationForm = ({ values = {} }) => {
   const intl = useIntl();
 
   const addressRequiredMessage = intl.formatMessage({
@@ -48,10 +48,6 @@ export const EditLocationForm = ({ values }) => {
       )}
     />
   );
-};
-
-EditLocationForm.defaultProps = {
-  values: {},
 };
 
 EditLocationForm.propTypes = {

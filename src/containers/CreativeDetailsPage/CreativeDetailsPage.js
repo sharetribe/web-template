@@ -27,7 +27,7 @@ export const CreativeDetailsPageComponent = props => {
     listingId,
     updateListingError,
     showListingsError,
-    updateInProgress,
+    updateInProgress = false,
     getOwnListing,
     scrollingDisabled,
     onUpdateListing,
@@ -87,14 +87,6 @@ export const CreativeDetailsPageComponent = props => {
       </LayoutSideNavigation>
     </Page>
   );
-};
-
-CreativeDetailsPageComponent.defaultProps = {
-  currentUser: null,
-  listingId: null,
-  updateListingError: null,
-  showListingsError: null,
-  updateInProgress: false,
 };
 
 CreativeDetailsPageComponent.propTypes = {

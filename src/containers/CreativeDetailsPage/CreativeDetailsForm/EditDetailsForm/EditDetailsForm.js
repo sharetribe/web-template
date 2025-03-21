@@ -39,7 +39,12 @@ const AddListingFields = props => {
   return <>{fields}</>;
 };
 
-const EditDetailsForm = ({ formId, pickSelectedCategories, listingFieldsConfig, values }) => {
+const EditDetailsForm = ({
+  formId,
+  pickSelectedCategories,
+  listingFieldsConfig = [],
+  values: {},
+}) => {
   const intl = useIntl();
   const { listingType } = values;
   return (
@@ -51,12 +56,6 @@ const EditDetailsForm = ({ formId, pickSelectedCategories, listingFieldsConfig, 
       intl={intl}
     />
   );
-};
-
-EditDetailsForm.defaultProps = {
-  formId: 'EditDetailsForm',
-  listingFieldsConfig: [],
-  values: {},
 };
 
 EditDetailsForm.propTypes = {

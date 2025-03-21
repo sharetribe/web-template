@@ -21,7 +21,7 @@ import css from './FavoriteListingsPage.module.css';
 
 export const FavoriteListingsPageComponent = props => {
   const {
-    listings,
+    listings = [],
     pagination,
     queryInProgress,
     queryFavoritesError,
@@ -108,13 +108,6 @@ export const FavoriteListingsPageComponent = props => {
       </LayoutSingleColumn>
     </Page>
   );
-};
-
-FavoriteListingsPageComponent.defaultProps = {
-  listings: [],
-  pagination: null,
-  queryFavoritesError: null,
-  queryParams: null,
 };
 
 const { arrayOf, bool, object } = PropTypes;

@@ -149,8 +149,6 @@ const ListingImage = props => {
   }
 };
 
-ListingImage.defaultProps = { className: null };
-
 ListingImage.propTypes = {
   className: string,
   image: object.isRequired,
