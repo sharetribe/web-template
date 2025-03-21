@@ -1,5 +1,6 @@
-const url = require('url');
+const { URL } = require('node:url');
 const log = require('./log');
+const { getRootURL } = require('./api-util/rootURL');
 
 const PREVENT_DATA_LOADING_IN_SSR = process.env.PREVENT_DATA_LOADING_IN_SSR === 'true';
 
@@ -19,7 +20,7 @@ exports.loadData = function(requestUrl, sdk, appInfo) {
     mergeConfig,
     fetchAppAssets,
   } = appInfo;
-  const { pathname, query } = url.parse(requestUrl);
+  const { pathname, search } = new URL(`${getRootURL()}${requestUrl}`);
 
   let translations = {};
   let hostedConfig = {};
@@ -43,7 +44,7 @@ exports.loadData = function(requestUrl, sdk, appInfo) {
     return matchedRoutes.reduce((calls, match) => {
       const { route, params } = match;
       if (typeof route.loadData === 'function' && !route.auth) {
-        calls.push(store.dispatch(route.loadData(params, query, config)));
+        calls.push(store.dispatch(route.loadData(params, search, config)));
       }
       return calls;
     }, []);

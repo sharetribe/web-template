@@ -15,10 +15,12 @@ const InquiryMessageMaybe = props => {
   const { className, rootClassName, protectedData, showInquiryMessage, isCustomer } = props;
   const classes = classNames(rootClassName || css.deliveryInfoContainer, className);
   const inquiryMsgClasses = isCustomer ? css.ownInquiryMessage : css.inquiryMessage;
+  const inquiryMsgLinkClassMaybe = isCustomer ? { linkClass: css.ownMessageContentLink } : {};
 
   if (showInquiryMessage) {
     const inquiryMessage = richText(protectedData?.inquiryMessage, {
       linkify: true,
+      ...inquiryMsgLinkClassMaybe,
       longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
       longWordClass: css.longWord,
     });

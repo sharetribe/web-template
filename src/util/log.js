@@ -103,3 +103,40 @@ export const error = (e, code, data) => {
     printAPIErrorsAsConsoleTable(apiErrors);
   }
 };
+
+const setCause = (error, cause) => {
+  const seenErrors = new WeakSet();
+
+  const setCauseIfNoExistingCause = (error, cause) => {
+    if (seenErrors.has(error)) {
+      return;
+    }
+    if (error.cause) {
+      seenErrors.add(error);
+      return setCauseIfNoExistingCause(error.cause, cause);
+    }
+    error.cause = cause;
+  };
+
+  setCauseIfNoExistingCause(error, cause);
+};
+
+export const onRecoverableError = (error, componentStack) => {
+  let data = {};
+
+  if (componentStack) {
+    // Generating this synthetic error allows monitoring services to apply sourcemaps
+    // to unminify the stacktrace and make it readable.
+    const errorBoundaryError = new Error(error.message);
+    errorBoundaryError.name = `React ErrorBoundary ${errorBoundaryError.name}`;
+    errorBoundaryError.stack = componentStack;
+
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/cause
+    setCause(error, errorBoundaryError);
+
+    data.componentStack = componentStack;
+  }
+
+  // Replace with your error monitoring service.
+  error(error, 'recoverable-error', data);
+};

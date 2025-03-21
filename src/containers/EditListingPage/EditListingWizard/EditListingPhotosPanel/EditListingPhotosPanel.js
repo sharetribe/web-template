@@ -1,5 +1,4 @@
 import React from 'react';
-import { array, bool, func, object, string } from 'prop-types';
 import classNames from 'classnames';
 
 // Import configs and util modules
@@ -14,10 +13,31 @@ import EditListingPhotosForm from './EditListingPhotosForm';
 import css from './EditListingPhotosPanel.module.css';
 
 const getInitialValues = params => {
-  const { images } = params;
+  const { images = [] } = params;
   return { images };
 };
 
+/**
+ * The EditListingPhotosPanel component.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {Object} props.errors - The errors object
+ * @param {boolean} props.disabled - Whether the form is disabled
+ * @param {boolean} props.ready - Whether the form is ready
+ * @param {Array} props.images - The images array
+ * @param {propTypes.ownListing} props.listing - The listing object
+ * @param {Function} props.onImageUpload - The image upload function
+ * @param {string} props.submitButtonText - The submit button text
+ * @param {boolean} props.panelUpdated - Whether the panel is updated
+ * @param {boolean} props.updateInProgress - Whether the update is in progress
+ * @param {Function} props.onSubmit - The submit function
+ * @param {Function} props.onRemoveImage - The remove image function
+ * @param {Object} props.listingImageConfig - The listing image config
+ * @returns {JSX.Element}
+ */
 const EditListingPhotosPanel = props => {
   const {
     className,
@@ -73,34 +93,6 @@ const EditListingPhotosPanel = props => {
       />
     </div>
   );
-};
-
-EditListingPhotosPanel.defaultProps = {
-  className: null,
-  rootClassName: null,
-  errors: null,
-  images: [],
-  listing: null,
-};
-
-EditListingPhotosPanel.propTypes = {
-  className: string,
-  rootClassName: string,
-  errors: object,
-  disabled: bool.isRequired,
-  ready: bool.isRequired,
-  images: array,
-
-  // We cannot use propTypes.listing since the listing might be a draft.
-  listing: object,
-
-  onImageUpload: func.isRequired,
-  onSubmit: func.isRequired,
-  submitButtonText: string.isRequired,
-  panelUpdated: bool.isRequired,
-  updateInProgress: bool.isRequired,
-  onRemoveImage: func.isRequired,
-  listingImageConfig: object.isRequired,
 };
 
 export default EditListingPhotosPanel;

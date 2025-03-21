@@ -1,11 +1,9 @@
 import React from 'react';
-import { bool, func, shape, string } from 'prop-types';
-import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
 // Import configs and util modules
-import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../../../util/reactIntl';
 import { propTypes } from '../../../../util/types';
 import {
   autocompleteSearchRequired,
@@ -26,27 +24,49 @@ import css from './EditListingLocationForm.module.css';
 
 const identity = v => v;
 
-export const EditListingLocationFormComponent = props => (
+/**
+ * The EditListingLocationForm component.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} props.formId - The form id
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {boolean} props.autoFocus - Whether the form is auto focused
+ * @param {boolean} props.disabled - Whether the form is disabled
+ * @param {boolean} props.ready - Whether the form is ready
+ * @param {boolean} props.updated - Whether the form is updated
+ * @param {boolean} props.updateInProgress - Whether the update is in progress
+ * @param {Object} props.fetchErrors - The fetch errors object
+ * @param {string} props.saveActionMsg - The save action message
+ * @param {Function} props.onSubmit - The submit function
+ * @param {Object} props.errors - The errors object
+ * @param {propTypes.error} props.errors.showListingsError - The show listings error
+ * @param {propTypes.error} props.errors.updateListingError - The update listing error
+ * @returns {JSX.Element}
+ */
+export const EditListingLocationForm = props => (
   <FinalForm
     {...props}
     render={formRenderProps => {
       const {
-        formId,
+        formId = 'EditListingLocationForm',
         autoFocus,
         className,
+        rootClassName,
         disabled,
         ready,
         handleSubmit,
-        intl,
         invalid,
         pristine,
         saveActionMsg,
         updated,
-        updateInProgress,
+        updateInProgress = false,
         fetchErrors,
         values,
       } = formRenderProps;
 
+      const intl = useIntl();
       const addressRequiredMessage = intl.formatMessage({
         id: 'EditListingLocationForm.addressRequired',
       });
@@ -60,7 +80,7 @@ export const EditListingLocationFormComponent = props => (
 
       const { updateListingError, showListingsError } = fetchErrors || {};
 
-      const classes = classNames(css.root, className);
+      const classes = classNames(rootClassName || css.root, className);
       const submitReady = (updated && pristine) || ready;
       const submitInProgress = updateInProgress;
       const submitDisabled = invalid || disabled || submitInProgress;
@@ -126,26 +146,4 @@ export const EditListingLocationFormComponent = props => (
   />
 );
 
-EditListingLocationFormComponent.defaultProps = {
-  selectedPlace: null,
-  fetchErrors: null,
-  formId: 'EditListingLocationForm',
-};
-
-EditListingLocationFormComponent.propTypes = {
-  formId: string,
-  intl: intlShape.isRequired,
-  onSubmit: func.isRequired,
-  saveActionMsg: string.isRequired,
-  selectedPlace: propTypes.place,
-  disabled: bool.isRequired,
-  ready: bool.isRequired,
-  updated: bool.isRequired,
-  updateInProgress: bool.isRequired,
-  fetchErrors: shape({
-    showListingsError: propTypes.error,
-    updateListingError: propTypes.error,
-  }),
-};
-
-export default compose(injectIntl)(EditListingLocationFormComponent);
+export default EditListingLocationForm;

@@ -45,7 +45,7 @@ const initialState = {
   queryCreativeProfileInProgress: false,
   queryCreativeProfileError: null,
   pagination: null,
-  queryParams: null,
+  queryParams: {},
   queryInProgress: false,
   queryListingsError: null,
   currentPageResultIds: [],

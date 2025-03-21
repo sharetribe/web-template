@@ -1,9 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import css from './IconSocialMediaFacebook.module.css';
 
+/**
+ * Facebook icon.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @returns {JSX.Element} SVG icon
+ */
 const IconSocialMediaFacebook = props => {
   const { rootClassName, className } = props;
   const classes = classNames(rootClassName || css.root, className);
@@ -22,11 +30,5 @@ const IconSocialMediaFacebook = props => {
     </svg>
   );
 };
-
-IconSocialMediaFacebook.defaultProps = { rootClassName: null, className: null };
-
-const { string } = PropTypes;
-
-IconSocialMediaFacebook.propTypes = { rootClassName: string, className: string };
 
 export default IconSocialMediaFacebook;

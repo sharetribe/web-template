@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { bool, func, node, number, object, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { injectIntl, intlShape } from '../../../util/reactIntl';
@@ -13,6 +12,25 @@ import css from './FilterPopupForSidebar.module.css';
 
 const KEY_CODE_ESCAPE = 27;
 
+/**
+ * FilterPopupForSidebar component
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} [props.popupClassName] - Custom class that overrides the default class css.popupSize
+ * @param {string} props.id - The ID
+ * @param {React.Node} props.label - The label
+ * @param {boolean} props.isSelected - Whether the filter is selected
+ * @param {boolean} props.keepDirtyOnReinitialize - Whether to keep the dirty state on reinitialize
+ * @param {number} props.contentPlacementOffset - The content placement offset
+ * @param {React.Node} props.children - The children
+ * @param {Object} props.initialValues - The initial values
+ * @param {Function} props.onSubmit - The function to submit
+ * @param {intlShape} props.intl - The intl object
+ * @returns {JSX.Element}
+ */
 class FilterPopupForSidebar extends Component {
   constructor(props) {
     super(props);
@@ -87,7 +105,7 @@ class FilterPopupForSidebar extends Component {
       const contentWidth = this.filterContent.offsetWidth;
       const contentWidthBiggerThanLabel = contentWidth - labelWidth;
       const renderToRight = distanceToRight > contentWidthBiggerThanLabel;
-      const contentPlacementOffset = this.props.contentPlacementOffset;
+      const contentPlacementOffset = this.props.contentPlacementOffset || 0;
 
       const offset = renderToRight
         ? { left: contentPlacementOffset }
@@ -111,7 +129,7 @@ class FilterPopupForSidebar extends Component {
       isSelected,
       children,
       initialValues,
-      keepDirtyOnReinitialize,
+      keepDirtyOnReinitialize = false,
     } = this.props;
 
     const classes = classNames(rootClassName || css.root, className);
@@ -176,34 +194,5 @@ class FilterPopupForSidebar extends Component {
     );
   }
 }
-
-FilterPopupForSidebar.defaultProps = {
-  rootClassName: null,
-  className: null,
-  popupClassName: null,
-  initialValues: null,
-  keepDirtyOnReinitialize: false,
-  contentPlacementOffset: 0,
-  liveEdit: false,
-  label: null,
-  labelMaxWidth: null,
-};
-
-FilterPopupForSidebar.propTypes = {
-  rootClassName: string,
-  className: string,
-  popupClassName: string,
-  id: string.isRequired,
-  onSubmit: func.isRequired,
-  initialValues: object,
-  keepDirtyOnReinitialize: bool,
-  contentPlacementOffset: number,
-  label: string.isRequired,
-  isSelected: bool.isRequired,
-  children: node.isRequired,
-
-  // form injectIntl
-  intl: intlShape.isRequired,
-};
 
 export default injectIntl(FilterPopupForSidebar);

@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
 import { ACCOUNT_SETTINGS_PAGES } from '../../routing/routeConfiguration';
@@ -7,6 +6,16 @@ import { LinkTabNavHorizontal } from '../../components';
 
 import css from './UserNav.module.css';
 
+/**
+ * A component that renders a navigation bar for a user-specific pages.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} props.currentPage - The current page (e.g. 'ManageListingsPage')
+ * @returns {JSX.Element} User navigation component
+ */
 const UserNav = props => {
   const { className, rootClassName, currentPage } = props;
   const classes = classNames(rootClassName || css.root, className);
@@ -40,19 +49,6 @@ const UserNav = props => {
   return (
     <LinkTabNavHorizontal className={classes} tabRootClassName={css.tab} tabs={tabs} skin="dark" />
   );
-};
-
-UserNav.defaultProps = {
-  className: null,
-  rootClassName: null,
-};
-
-const { string } = PropTypes;
-
-UserNav.propTypes = {
-  className: string,
-  rootClassName: string,
-  currentPage: string.isRequired,
 };
 
 export default UserNav;

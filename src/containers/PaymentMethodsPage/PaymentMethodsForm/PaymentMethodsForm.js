@@ -4,12 +4,11 @@
  * It's also handled separately in handleSubmit function.
  */
 import React, { Component } from 'react';
-import { func, object, string } from 'prop-types';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
 import { useConfiguration } from '../../../context/configurationContext';
-import { FormattedMessage, useIntl, intlShape } from '../../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 
 import { Form, PrimaryButton, FieldTextInput, StripePaymentAddress, H4 } from '../../../components';
 
@@ -294,36 +293,23 @@ class PaymentMethodsForm extends Component {
   }
 }
 
-PaymentMethodsForm.defaultProps = {
-  className: null,
-  rootClassName: null,
-  inProgress: false,
-  onSubmit: null,
-  addPaymentMethodError: null,
-  deletePaymentMethodError: null,
-  createStripeCustomerError: null,
-  handleCardSetupError: null,
-  form: null,
-};
-
-PaymentMethodsForm.propTypes = {
-  formId: string,
-  onSubmit: func,
-  addPaymentMethodError: object,
-  deletePaymentMethodError: object,
-  createStripeCustomerError: object,
-  handleCardSetupError: object,
-  form: object,
-
-  // from useIntl
-  intl: intlShape.isRequired,
-  // from useConfiguration
-  config: object.isRequired,
-};
-
+/**
+ * PaymentMethodsForm
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.formId] - The form ID
+ * @param {Function} props.onSubmit - The function to handle form submission
+ * @param {propTypes.error} props.addPaymentMethodError - The add payment method error
+ * @param {propTypes.error} props.deletePaymentMethodError - The delete payment method error
+ * @param {propTypes.error} props.createStripeCustomerError - The create stripe customer error
+ * @param {propTypes.error} props.handleCardSetupError - The handle card setup error
+ * @returns {JSX.Element} EnhancedPaymentMethodsForm component
+ */
 const EnhancedPaymentMethodsForm = props => {
   const config = useConfiguration();
   const intl = useIntl();
   return <PaymentMethodsForm config={config} intl={intl} {...props} />;
 };
+
 export default EnhancedPaymentMethodsForm;

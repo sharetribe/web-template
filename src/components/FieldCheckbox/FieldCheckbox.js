@@ -1,10 +1,19 @@
 import React from 'react';
-import { node, string } from 'prop-types';
 import classNames from 'classnames';
 import { Field } from 'react-final-form';
 
 import css from './FieldCheckbox.module.css';
 
+/**
+ * IconCheckbox
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.checkedClassName overwrite components own css.checked
+ * @param {string?} props.boxClassName overwrite components own css.box
+ * @returns {JSX.Element} checkbox svg that places the native checkbox
+ */
 const IconCheckbox = props => {
   const { className, checkedClassName, boxClassName } = props;
   return (
@@ -30,11 +39,22 @@ const IconCheckbox = props => {
   );
 };
 
-IconCheckbox.defaultProps = { className: null, checkedClassName: null, boxClassName: null };
-
-IconCheckbox.propTypes = { className: string, checkedClassName: string, boxClassName: string };
-
-const FieldCheckboxComponent = props => {
+/**
+ * Final Form Field containing checkbox input
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string?} props.svgClassName is passed to checkbox svg as className
+ * @param {string?} props.textClassName overwrite components own css.textRoot given to label
+ * @param {string} props.id givent to input
+ * @param {string} props.name Name groups several checkboxes to an array of selected values
+ * @param {string} props.value Checkbox needs a value that is passed forward when user checks the checkbox
+ * @param {ReactNode} props.label
+ * @returns {JSX.Element} Final Form Field containing checkbox input
+ */
+const FieldCheckbox = props => {
   const {
     rootClassName,
     className,
@@ -104,29 +124,4 @@ const FieldCheckboxComponent = props => {
   );
 };
 
-FieldCheckboxComponent.defaultProps = {
-  className: null,
-  rootClassName: null,
-  svgClassName: null,
-  textClassName: null,
-  label: null,
-};
-
-FieldCheckboxComponent.propTypes = {
-  className: string,
-  rootClassName: string,
-  svgClassName: string,
-  textClassName: string,
-
-  // Id is needed to connect the label with input.
-  id: string.isRequired,
-  label: node,
-
-  // Name groups several checkboxes to an array of selected values
-  name: string.isRequired,
-
-  // Checkbox needs a value that is passed forward when user checks the checkbox
-  value: string.isRequired,
-};
-
-export default FieldCheckboxComponent;
+export default FieldCheckbox;

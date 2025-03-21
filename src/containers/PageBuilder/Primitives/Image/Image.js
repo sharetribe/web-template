@@ -1,5 +1,4 @@
 import React from 'react';
-import { number, objectOf, oneOf, shape, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { AspectRatioWrapper, ResponsiveImage } from '../../../../components/index.js';
@@ -7,32 +6,51 @@ import { Link } from '../Link';
 
 import css from './Image.module.css';
 
-// Images in markdown point to elsewhere (they don't support responsive image variants)
+/**
+ * Images in markdown point to elsewhere (they don't support responsive image variants)
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string} props.src image source
+ * @param {string?} props.alt alt text for the image
+ * @returns {JSX.Element} image element for markdown processor
+ */
 export const MarkdownImage = React.forwardRef((props, ref) => {
-  const { className, rootClassName, ...otherProps } = props;
+  const { className, rootClassName, alt = 'image', ...otherProps } = props;
   const classes = classNames(rootClassName || css.markdownImage, className);
 
-  return <img className={classes} {...otherProps} ref={ref} crossOrigin="anonymous" />;
+  return <img className={classes} alt={alt} {...otherProps} ref={ref} crossOrigin="anonymous" />;
 });
 
 MarkdownImage.displayName = 'MarkdownImage';
 
-MarkdownImage.defaultProps = {
-  rootClassName: null,
-  className: null,
-  alt: 'image',
-};
+/**
+ * @typedef {Object} ImageVariant
+ * @property {number} width
+ * @property {number} height
+ * @property {string} url image source
+ */
 
-MarkdownImage.propTypes = {
-  rootClassName: string,
-  className: string,
-  src: string.isRequired,
-  alt: string,
-};
-
-// Image as a Field (by default these are only allowed inside a block).
+/**
+ * Image as a Field (by default these are only allowed inside a block).
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string?} props.alt alt text for the image
+ * @param {Object} props.image
+ * @param {Object} props.image.id
+ * @param {'imageAsset'} props.image.type
+ * @param {Object} props.image.attributes
+ * @param {Object.<key,ImageVariant>} props.image.attributes.variants
+ * @param {string?} props.sizes responsive sizes string to be used with srcset
+ * @returns {JSX.Element} image element
+ */
 export const FieldImage = React.forwardRef((props, ref) => {
-  const { className, rootClassName, alt, image, sizes, link, ...otherProps } = props;
+  const { className, rootClassName, alt = 'image', image, sizes, link, ...otherProps } = props;
 
   const { variants } = image?.attributes || {};
   const variantNames = Object.keys(variants);
@@ -75,30 +93,3 @@ export const FieldImage = React.forwardRef((props, ref) => {
 });
 
 FieldImage.displayName = 'FieldImage';
-
-FieldImage.defaultProps = {
-  rootClassName: null,
-  className: null,
-  alt: 'image',
-  sizes: null,
-};
-
-FieldImage.propTypes = {
-  rootClassName: string,
-  className: string,
-  alt: string,
-  image: shape({
-    id: string.isRequired,
-    type: oneOf(['imageAsset']).isRequired,
-    attributes: shape({
-      variants: objectOf(
-        shape({
-          width: number.isRequired,
-          height: number.isRequired,
-          url: string.isRequired,
-        })
-      ).isRequired,
-    }).isRequired,
-  }).isRequired,
-  sizes: string,
-};

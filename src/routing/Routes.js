@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { arrayOf, bool, object, func, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Switch, Route, withRouter } from 'react-router-dom';
@@ -100,6 +99,22 @@ const handleLocationChanged = (dispatch, location, routeConfiguration, delayed) 
  * (aka "auth: true" is set in routeConfiguration.js)
  *
  * This component is a container: it needs to be connected to Redux.
+ *
+ * @component
+ * @param {Object} props - The props
+ * @param {boolean} props.isAuthenticated - Whether the user is authenticated
+ * @param {boolean} props.logoutInProgress - Whether the logout is in progress
+ * @param {propTypes.currentUser} props.currentUser - The current user
+ * @param {propTypes.route} props.route - The route
+ * @param {Array<propTypes.route} props.routeConfiguration - The route configuration
+ * @param {Object} props.match - The match
+ * @param {Object} props.match.params - The match params
+ * @param {string} props.match.url - The match url
+ * @param {Object} props.location - The location
+ * @param {Object} props.location.search - The location search
+ * @param {Object} props.staticContext - The static context
+ * @param {Function} props.dispatch - The dispatch function of
+ * @returns {JSX.Element} The RouteComponentRenderer component
  */
 class RouteComponentRenderer extends Component {
   componentDidMount() {
@@ -130,7 +145,7 @@ class RouteComponentRenderer extends Component {
   }
 
   render() {
-    const { route, match, location, staticContext, currentUser } = this.props;
+    const { route, match, location, staticContext = {}, currentUser } = this.props;
     const { component: RouteComponent, authPage = 'SignupPage', extraProps } = route;
     const canShow = canShowComponent(this.props);
     if (!canShow) {
@@ -160,25 +175,6 @@ class RouteComponentRenderer extends Component {
     );
   }
 }
-
-RouteComponentRenderer.defaultProps = { staticContext: {} };
-
-RouteComponentRenderer.propTypes = {
-  isAuthenticated: bool.isRequired,
-  logoutInProgress: bool.isRequired,
-  currentUser: propTypes.currentUser,
-  route: propTypes.route.isRequired,
-  routeConfiguration: arrayOf(propTypes.route).isRequired,
-  match: shape({
-    params: object.isRequired,
-    url: string.isRequired,
-  }).isRequired,
-  location: shape({
-    search: string.isRequired,
-  }).isRequired,
-  staticContext: object,
-  dispatch: func.isRequired,
-};
 
 const mapStateToProps = state => {
   const { isAuthenticated, logoutInProgress } = state.auth;

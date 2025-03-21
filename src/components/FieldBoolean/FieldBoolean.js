@@ -1,9 +1,10 @@
 import React from 'react';
-import { injectIntl, intlShape } from '../../util/reactIntl';
+import { useIntl } from '../../util/reactIntl';
 import { FieldSelect } from '../../components';
 
 const FieldBoolean = props => {
-  const { placeholder, intl, ...rest } = props;
+  const intl = useIntl();
+  const { placeholder, ...rest } = props;
   const trueLabel = intl.formatMessage({
     id: 'FieldBoolean.yes',
   });
@@ -38,8 +39,4 @@ const FieldBoolean = props => {
   );
 };
 
-FieldBoolean.propTypes = {
-  intl: intlShape.isRequired,
-};
-
-export default injectIntl(FieldBoolean);
+export default FieldBoolean;

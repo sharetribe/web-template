@@ -53,6 +53,9 @@
   margin-bottom: 24px;
 }
 
+.timeZoneField {
+  width: 100%;
+}
 .week {
   display: flex;
   flex-direction: column;

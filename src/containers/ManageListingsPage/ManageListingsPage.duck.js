@@ -35,7 +35,7 @@ export const CLEAR_OPEN_LISTING_ERROR = 'app/ManageListingsPage/CLEAR_OPEN_LISTI
 
 const initialState = {
   pagination: null,
-  queryParams: null,
+  queryParams: {},
   queryInProgress: false,
   queryListingsError: null,
   currentPageResultIds: [],

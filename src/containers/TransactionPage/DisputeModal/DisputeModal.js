@@ -1,10 +1,9 @@
 import React from 'react';
-import { bool, func, string } from 'prop-types';
 import classNames from 'classnames';
 import { Form as FinalForm } from 'react-final-form';
 
 import { useConfiguration } from '../../../context/configurationContext';
-import { FormattedMessage, intlShape, injectIntl } from '../../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import { required } from '../../../util/validators';
 
@@ -103,19 +102,35 @@ const DisputeSentInfo = props => (
   </>
 );
 
-// Dispute modal
+/**
+ * Dispute modal
+ *
+ * @component
+ * @param {Object} props - The props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that extends the default class for the root element
+ * @param {string} props.id - The id
+ * @param {boolean} props.isOpen - Whether the modal is open
+ * @param {Function} props.onCloseModal - The on close modal function
+ * @param {Function} props.onManageDisableScrolling - The on manage disable scrolling function
+ * @param {Function} props.onDisputeOrder - The on dispute order function
+ * @param {boolean} props.disputeSubmitted - Whether the dispute is submitted
+ * @param {boolean} props.disputeInProgress - Whether the dispute is in progress
+ * @param {propTypes.error} props.disputeError - The dispute error
+ * @returns {JSX.Element} The DisputeModal component
+ */
 const DisputeModal = props => {
+  const intl = useIntl();
   const {
     className,
     rootClassName,
     id,
-    intl,
-    isOpen,
+    isOpen = false,
     onCloseModal,
     onManageDisableScrolling,
     onDisputeOrder,
-    disputeSubmitted,
-    disputeInProgress,
+    disputeSubmitted = false,
+    disputeInProgress = false,
     disputeError,
   } = props;
   const classes = classNames(rootClassName || css.root, className);
@@ -147,27 +162,4 @@ const DisputeModal = props => {
   );
 };
 
-DisputeModal.defaultProps = {
-  className: null,
-  rootClassName: null,
-  isOpen: false,
-  disputeSubmitted: false,
-  disputeInProgress: false,
-  disputeError: null,
-};
-
-DisputeModal.propTypes = {
-  className: string,
-  rootClassName: string,
-  id: string.isRequired,
-  isOpen: bool,
-  intl: intlShape.isRequired,
-  onCloseModal: func.isRequired,
-  onManageDisableScrolling: func.isRequired,
-  onDisputeOrder: func.isRequired,
-  disputeSubmitted: bool,
-  disputeInProgress: bool,
-  disputeError: propTypes.error,
-};
-
-export default injectIntl(DisputeModal);
+export default DisputeModal;

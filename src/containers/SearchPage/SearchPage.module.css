@@ -302,6 +302,7 @@
     position: fixed;
     top: var(--topbarHeightDesktop);
     right: 0;
+    left: unset;
 
     /* Fixed content needs width relative to viewport */
     width: 50vw;
@@ -311,4 +312,8 @@
   @media (--viewportLarge) {
     width: 37.5vw;
   }
+}
+
+.mapRoot {
+  background-color: var(--colorGrey100);
 }

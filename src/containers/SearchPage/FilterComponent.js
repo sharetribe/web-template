@@ -12,6 +12,7 @@ import KeywordFilter from './KeywordFilter/KeywordFilter';
 import LocationFilter from './LocationFilter/LocationFilter';
 import PriceFilter from './PriceFilter/PriceFilter';
 import IntegerRangeFilter from './IntegerRangeFilter/IntegerRangeFilter';
+import SeatsFilter from './SeatsFilter/SeatsFilter';
 
 /**
  * FilterComponent is used to map configured filter types
@@ -110,6 +111,19 @@ const FilterComponent = props => {
           initialValues={initialValues([key], liveEdit)}
           onSubmit={getHandleChangedValueFn(useHistoryPush)}
           minimumNights={isNightlyMode ? 1 : 0}
+          {...rest}
+        />
+      );
+    }
+    case 'seats': {
+      return (
+        <SeatsFilter
+          id={componentId}
+          name={name}
+          label={intl.formatMessage({ id: 'FilterComponent.seatsLabel' })}
+          queryParamNames={[key]}
+          initialValues={initialValues([key], liveEdit)}
+          onSubmit={getHandleChangedValueFn(useHistoryPush)}
           {...rest}
         />
       );

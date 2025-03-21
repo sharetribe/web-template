@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { bool, func, object, oneOf, shape } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter, Redirect } from 'react-router-dom';
@@ -8,7 +7,7 @@ import classNames from 'classnames';
 
 import { useConfiguration } from '../../context/configurationContext';
 import { camelize } from '../../util/string';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { ensureCurrentUser } from '../../util/data';
 import { isTooManyEmailVerificationRequestsError } from '../../util/errors';
@@ -18,6 +17,7 @@ import { sendVerificationEmail } from '../../ducks/user.duck';
 
 import {
   Page,
+  IconSpinner,
   NamedRedirect,
   ResponsiveBackgroundImageContainer,
   Marquee,
@@ -51,12 +51,69 @@ const getAuthErrorFromCookies = () => {
     : null;
 };
 
+const BlankPage = props => {
+  const { schemaTitle, schemaDescription, scrollingDisabled, topbarClasses } = props;
+  return (
+    <Page
+      title={schemaTitle}
+      scrollingDisabled={scrollingDisabled}
+      schema={{
+        '@context': 'http://schema.org',
+        '@type': 'WebPage',
+        name: schemaTitle,
+        description: schemaDescription,
+      }}
+    >
+      <LayoutSingleColumn
+        topbar={<TopbarContainer className={topbarClasses} />}
+        footer={<FooterContainer />}
+      >
+        <div className={css.spinnerContainer}>
+          <IconSpinner />
+        </div>
+      </LayoutSingleColumn>
+    </Page>
+  );
+};
+
+/**
+ * The AuthenticationPage component.
+ *
+ * @component
+ * @param {Object} props
+ * @param {boolean} props.authInProgress - Whether the authentication is in progress
+ * @param {propTypes.currentUser} props.currentUser - The current user
+ * @param {boolean} props.isAuthenticated - Whether the user is authenticated
+ * @param {propTypes.error} props.loginError - The login error
+ * @param {propTypes.error} props.signupError - The signup error
+ * @param {propTypes.error} props.confirmError - The confirm error
+ * @param {Function} props.submitLogin - The login submit function
+ * @param {Function} props.submitSignup - The signup submit function
+ * @param {Function} props.submitSingupWithIdp - The signup with IdP submit function
+ * @param {'login' | 'signup'| 'confirm'} props.tab - The tab to render
+ * @param {boolean} props.sendVerificationEmailInProgress - Whether the verification email is in progress
+ * @param {propTypes.error} props.sendVerificationEmailError - The verification email error
+ * @param {Function} props.onResendVerificationEmail - The resend verification email function
+ * @param {Function} props.onManageDisableScrolling - The manage disable scrolling function
+ * @param {object} props.privacyAssetsData - The privacy assets data
+ * @param {boolean} props.privacyFetchInProgress - Whether the privacy fetch is in progress
+ * @param {propTypes.error} props.privacyFetchError - The privacy fetch error
+ * @param {object} props.tosAssetsData - The terms of service assets data
+ * @param {boolean} props.tosFetchInProgress - Whether the terms of service fetch is in progress
+ * @param {propTypes.error} props.tosFetchError - The terms of service fetch error
+ * @param {object} props.location - The location object
+ * @param {object} props.params - The path parameters
+ * @param {boolean} props.scrollingDisabled - Whether the scrolling is disabled
+ * @returns {JSX.Element}
+ */
 export const AuthenticationPageComponent = props => {
   const [tosModalOpen, setTosModalOpen] = useState(false);
   const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
   const [authInfo] = useState(getAuthInfoFromCookies());
   const [authError] = useState(getAuthErrorFromCookies());
+  const [mounted, setMounted] = useState(false);
   const config = useConfiguration();
+  const intl = useIntl();
 
   useEffect(() => {
     // Remove the autherror cookie once the content is saved to state
@@ -64,6 +121,7 @@ export const AuthenticationPageComponent = props => {
     if (authError) {
       Cookies.remove('st-autherror');
     }
+    setMounted(true);
   }, []);
 
   // On mobile, it's better to scroll to top.
@@ -74,14 +132,13 @@ export const AuthenticationPageComponent = props => {
   const {
     authInProgress,
     currentUser,
-    intl,
     isAuthenticated,
     location,
     params: pathParams,
     scrollingDisabled,
     confirmError,
     submitSingupWithIdp,
-    tab,
+    tab = 'signup',
     sendVerificationEmailInProgress,
     sendVerificationEmailError,
     onResendVerificationEmail,
@@ -115,12 +172,42 @@ export const AuthenticationPageComponent = props => {
   // (i.e. `from` is present). We must also check the `emailVerified`
   // flag only when the current user is fully loaded.
   const showEmailVerification = !isLogin && currentUserLoaded && !user.attributes.emailVerified;
-  // Already authenticated, redirect away from auth page
-  if (isAuthenticated && from) {
+
+  const marketplaceName = config.marketplaceName;
+  const schemaTitle = isLogin
+    ? intl.formatMessage({ id: 'AuthenticationPage.schemaTitleLogin' }, { marketplaceName })
+    : intl.formatMessage({ id: 'AuthenticationPage.schemaTitleSignup' }, { marketplaceName });
+  const schemaDescription = isLogin
+    ? intl.formatMessage({ id: 'AuthenticationPage.schemaDescriptionLogin' }, { marketplaceName })
+    : intl.formatMessage({ id: 'AuthenticationPage.schemaDescriptionSignup' }, { marketplaceName });
+  const topbarClasses = classNames({
+    [css.hideOnMobile]: showEmailVerification,
+  });
+
+  const shouldRedirectToFrom = isAuthenticated && from;
+  const shouldRedirectToLandingPage =
+    isAuthenticated && currentUserLoaded && !showEmailVerification;
+  if (!mounted && shouldRedirectToLandingPage) {
+    // Show a blank page for already authenticated users,
+    // when the first rendering on client side is not yet done
+    // This is done to avoid hydration issues when full page load is happening.
+    return (
+      <BlankPage
+        schemaTitle={schemaTitle}
+        schemaDescription={schemaDescription}
+        topbarClasses={topbarClasses}
+      />
+    );
+  }
+
+  if (shouldRedirectToFrom) {
+    // Already authenticated, redirect back to the page the user tried to access
     return <Redirect to={from} />;
-  } else if (isAuthenticated && currentUserLoaded && !showEmailVerification) {
+  } else if (shouldRedirectToLandingPage) {
+    // Already authenticated, redirect to the landing page (this was direct access to /login or /signup)
     return <NamedRedirect name="LandingPage" />;
   } else if (show404) {
+    // User type not found, show 404
     return <NotFoundPage staticContext={props.staticContext} />;
   }
 
@@ -147,18 +234,6 @@ export const AuthenticationPageComponent = props => {
       <FormattedMessage id={resendErrorTranslationId} />
     </p>
   ) : null;
-  const marketplaceName = config.marketplaceName;
-  const schemaTitle = intl.formatMessage(
-    { id: 'AuthenticationPage.schemaTitleSignup' },
-    { marketplaceName }
-  );
-  const schemaDescription = intl.formatMessage(
-    { id: 'AuthenticationPage.schemaDescriptionSignup' },
-    { marketplaceName }
-  );
-  const topbarClasses = classNames({
-    [css.hideOnMobile]: showEmailVerification,
-  });
 
   return (
     <Page
@@ -249,47 +324,6 @@ export const AuthenticationPageComponent = props => {
   );
 };
 
-AuthenticationPageComponent.defaultProps = {
-  currentUser: null,
-  confirmError: null,
-  tab: 'signup',
-  sendVerificationEmailError: null,
-  showSocialLoginsForTests: false,
-  privacyAssetsData: null,
-  privacyFetchInProgress: false,
-  privacyFetchError: null,
-  tosAssetsData: null,
-  tosFetchInProgress: false,
-  tosFetchError: null,
-};
-
-AuthenticationPageComponent.propTypes = {
-  authInProgress: bool.isRequired,
-  currentUser: propTypes.currentUser,
-  isAuthenticated: bool.isRequired,
-  scrollingDisabled: bool.isRequired,
-  confirmError: propTypes.error,
-  tab: oneOf(['login', 'signup', 'confirm']),
-  sendVerificationEmailInProgress: bool.isRequired,
-  sendVerificationEmailError: propTypes.error,
-  onResendVerificationEmail: func.isRequired,
-  onManageDisableScrolling: func.isRequired,
-  // to fetch privacy-policy page asset
-  // which is shown in modal
-  privacyAssetsData: object,
-  privacyFetchInProgress: bool,
-  privacyFetchError: propTypes.error,
-  // to fetch terms-of-service page asset
-  // which is shown in modal
-  tosAssetsData: object,
-  tosFetchInProgress: bool,
-  tosFetchError: propTypes.error,
-  // from withRouter
-  location: shape({ state: object }).isRequired,
-  // from injectIntl
-  intl: intlShape.isRequired,
-};
-
 const mapStateToProps = state => {
   const { isAuthenticated, confirmError } = state.auth;
   const { currentUser, sendVerificationEmailInProgress, sendVerificationEmailError } = state.user;
@@ -332,8 +366,7 @@ const mapDispatchToProps = dispatch => ({
 // See: https://github.com/ReactTraining/react-router/issues/4671
 const AuthenticationPage = compose(
   withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
-  injectIntl
+  connect(mapStateToProps, mapDispatchToProps)
 )(AuthenticationPageComponent);
 
 export default AuthenticationPage;

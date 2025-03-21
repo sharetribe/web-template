@@ -2,9 +2,27 @@ import { types as sdkTypes } from '../util/sdkLoader';
 
 const { LatLng: SDKLatLng, LatLngBounds: SDKLatLngBounds } = sdkTypes;
 
+const isDev = process.env.NODE_ENV === 'development';
+
 const placeOrigin = place => {
   if (place && place.geometry && place.geometry.location) {
     return new SDKLatLng(place.geometry.location.lat(), place.geometry.location.lng());
+  }
+  return null;
+};
+
+/**
+ * Extracts the geographic location (origin) from a Google Maps Place object
+ * using the new Google Places API structure, and converts it into an SDKLatLng object.
+ *
+ * @param {google.maps.places.Place} place - An instance of the Google Maps Place class.
+ * @returns {SDKLatLng|null} An SDKLatLng object representing the latitude and longitude
+ *                           of the place's location.
+ *                           Returns null if the place or its location is invalid.
+ */
+const placeOriginNew = place => {
+  if (place && place.location) {
+    return new SDKLatLng(place.location.lat(), place.location.lng());
   }
   return null;
 };
@@ -13,6 +31,27 @@ const placeBounds = place => {
   if (place && place.geometry && place.geometry.viewport) {
     const ne = place.geometry.viewport.getNorthEast();
     const sw = place.geometry.viewport.getSouthWest();
+    return new SDKLatLngBounds(
+      new SDKLatLng(ne.lat(), ne.lng()),
+      new SDKLatLng(sw.lat(), sw.lng())
+    );
+  }
+  return null;
+};
+
+/**
+ * Extracts the viewport bounds from a Google Maps Place object using the new Places API,
+ * and converts them into an SDKLatLngBounds object.
+ *
+ * @param {google.maps.places.Place} place - An instance of the Google Maps Place class.
+ * @returns {SDKLatLngBounds|null} An SDKLatLngBounds object representing the northeast and
+ *                                 southwest corners of the place's viewport.
+ *                                 Returns null if the place or its viewport is invalid.
+ */
+const placeBoundsNew = place => {
+  if (place && place.viewport) {
+    const ne = place.viewport.getNorthEast();
+    const sw = place.viewport.getSouthWest();
     return new SDKLatLngBounds(
       new SDKLatLng(ne.lat(), ne.lng()),
       new SDKLatLng(sw.lat(), sw.lng())
@@ -55,6 +94,36 @@ export const getPlaceDetails = (placeId, sessionToken) =>
     });
   });
 
+/**
+ * Fetches detailed information about a specific place using the new Google Maps Places API.
+ *
+ * @param {string} placeId - ID for a place received from the
+ * autocomplete service
+ * @returns {Promise<Object|undefined>} A promise that resolves to an object containing:
+ *   - `adress` (string): The formatted address of the place.
+ *   - `origin` (object): The geographic origin of the place (calculated using `placeOriginNew`).
+ *   - `bounds` (object): The viewport bounds of the place (calculated using `placeBoundsNew`).
+ */
+export const getPlaceDetailsNew = async placeId => {
+  try {
+    const place = await new window.google.maps.places.Place({ id: placeId });
+    const fields = ['addressComponents', 'formattedAddress', 'viewport', 'id', 'location'];
+
+    await place.fetchFields({ fields: fields });
+
+    return {
+      address: place.formattedAddress,
+      origin: placeOriginNew(place),
+      bounds: placeBoundsNew(place),
+    };
+  } catch (error) {
+    if (isDev) {
+      console.error(`Could not get details for place id "${placeId}": `, error);
+    }
+    return error;
+  }
+};
+
 const predictionSuccessful = status => {
   const { OK, ZERO_RESULTS } = window.google.maps.places.PlacesServiceStatus;
   return status === OK || status === ZERO_RESULTS;
@@ -93,6 +162,47 @@ export const getPlacePredictions = (search, sessionToken, searchConfigurations) 
       }
     );
   });
+
+/**
+ * Fetches autocomplete predictions using the new Google Places API.
+ *
+ * @param {string} search - Place name or address to search
+ * @param {object} sessionToken - Token to tie different autocomplete character searches together
+ * with getPlaceDetails call
+ * @param {object} searchConfigurations - Defines the search configurations that can be used with
+ * the autocomplete service. Used to restrict search to specific region (or regions).
+ *
+ * @returns {Promise<object>} - An object containing the original search query and predictions array:
+ *   - `search` (string): The search query.
+ *   - `predictions` (array): An array of prediction objects returned from the Google Places API.
+ */
+export const getPlacePredictionsNew = async (search, sessionToken, searchConfigurations) => {
+  try {
+    const sessionTokenMaybe = sessionToken ? { sessionToken } : {};
+    const request = {
+      input: search,
+      ...searchConfigurations,
+      ...sessionTokenMaybe,
+    };
+
+    const {
+      suggestions,
+    } = await google.maps.places.AutocompleteSuggestion.fetchAutocompleteSuggestions(request);
+
+    return {
+      search,
+      predictions: suggestions || [],
+    };
+  } catch (error) {
+    if (isDev) {
+      console.error(
+        `Could not get autocomplete suggestions using search query "${search}": `,
+        error
+      );
+    }
+    return error;
+  }
+};
 
 /**
  * Deprecation: use function from src/util/maps.js

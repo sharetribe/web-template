@@ -12,8 +12,96 @@ way to update this template, but currently, we follow a pattern:
 
 ---
 
-## Upcoming version 2024-XX-XX
+## Upcoming version 2025-XX-XX
+- [fix] Fix currently available translations for FR.
+  [#559](https://github.com/sharetribe/web-template/pull/559)
 
+## [v7.3.0] 2025-02-19
+
+- [fix] Remove obsolete Flex CLI references
+  [#550](https://github.com/sharetribe/web-template/pull/550)
+- [fix] BookingTimeForm (hourly booking): calendar day was not localized causing isDayBlocked fn to
+  choose past day, if listing's time zone was to the west of the browser's location / time zone.
+  [#556](https://github.com/sharetribe/web-template/pull/556)
+- [fix] AuthenticationPage: fix a bug with autenticated users accessing the auth pages.
+  [#555](https://github.com/sharetribe/web-template/pull/555)
+- [fix] CheckoutPageWithPayment & PaymentMethodsPage had a typo in a variable name.
+  [#554](https://github.com/sharetribe/web-template/pull/554)
+- [fix] DatePicker: fix a bug with the calendar transition.
+  [#553](https://github.com/sharetribe/web-template/pull/553)
+- [add] Add fixed bookings and price variant name support to booking process email templates.
+  [#552](https://github.com/sharetribe/web-template/pull/552)
+- [fix] LocationAutocompleteInput: fix a bug with Google Maps API loading order with Webpack Dev
+  Server. [#548](https://github.com/sharetribe/web-template/pull/548)
+
+  [v7.3.0]: https://github.com/sharetribe/web-template/compare/v7.2.0...v7.3.0
+
+## [v7.2.0] 2025-01-30
+
+- [add] Add support for the new Google Places API
+  [#539](https://github.com/sharetribe/web-template/pull/539)
+- [fix] SearchPageWithMap: duplicate class caused positioning issue on localhost:3000.
+  [#546](https://github.com/sharetribe/web-template/pull/546)
+- [fix] TopbarDesktop: fix a typo (non-existent element attribute), when the search form was not
+  shown. [#545](https://github.com/sharetribe/web-template/pull/545)
+- [change] priceForSchemaMaybe: render offer price when price is 0. This helps customizations, but
+  it's not enough for no-code features to support 0 price for inquiries.
+  [#544](https://github.com/sharetribe/web-template/pull/544)
+- [fix] TabNavHorizontal: Dark skin tab focus styles overriding hover font color.
+  [#543](https://github.com/sharetribe/web-template/pull/543)
+- [fix] Private marketplace: allow search crawlers to access the `/sitemap` route.
+  [#541](https://github.com/sharetribe/web-template/pull/541)
+
+  [v7.2.0]: https://github.com/sharetribe/web-template/compare/v7.1.0...v7.2.0
+
+## [v7.1.0] 2025-01-23
+
+- [add] Add support for hiding the Topbar search based on configuration.
+  [#531](https://github.com/sharetribe/web-template/pull/531)
+- [fix] TransactionPage: fetchMonthlyTimeSlots didn't work correctly with day unitType.
+  [#536](https://github.com/sharetribe/web-template/pull/536)
+- [change] Google's search schema requires a price that uses dot as decimal separator.
+  [#535](https://github.com/sharetribe/web-template/pull/535)
+
+  [v7.1.0]: https://github.com/sharetribe/web-template/compare/v7.0.0...v7.1.0
+
+## [v7.0.0] 2025-01-15
+
+This major release takes the React v18.3.1 into use.
+
+- [fix] EditListingWizard: fix a bug with YouTube field.
+  [#533](https://github.com/sharetribe/web-template/pull/533)
+- [fix] CustomExtendedDataField.module.css: add missing customMediaQuery import.
+  [#532](https://github.com/sharetribe/web-template/pull/532)
+- [change] This updates Sharetribe Web Template to use React v18 (v18.3.1). Some highlights:
+
+  - Several dependency libraries have been updated.
+  - Hydration is much more strict now. First render on client-side must match the server-side
+    render.
+
+  [#523](https://github.com/sharetribe/web-template/pull/523)
+
+- [add] Add currently available translations for DE.
+  [#529](https://github.com/sharetribe/web-template/pull/529)
+- [fix] a link inside the inquiry message was invisible for the sender of the inquiry.
+  [#528](https://github.com/sharetribe/web-template/pull/528)
+- [add] Add currently available translations for DE, ES, FR.
+  [#527](https://github.com/sharetribe/web-template/pull/527)
+- [fix] AvailabilityPlanForm had a hard-coded "Delete" text.
+  [#525](https://github.com/sharetribe/web-template/pull/525)
+- [add] Add currently available translations for DE, ES, FR.
+  [#524](https://github.com/sharetribe/web-template/pull/524)
+- [change] Update the wording of the numberTooSmall error message for consistency.
+  [#522](https://github.com/sharetribe/web-template/pull/522)
+
+  [v7.0.0]: https://github.com/sharetribe/web-template/compare/v6.3.0...v7.0.0
+
+## [v6.3.0] 2025-01-08
+
+- [fix] fix a bug with seats handling in email templates.
+  [#518](https://github.com/sharetribe/web-template/pull/518)
+- [add] Add support for using multiple seats on default-booking process.
+  [#502](https://github.com/sharetribe/web-template/pull/502)
 - [fix] ListingPageVariant: the #author anchor was not pointing to ListingPageVariant.
   [#515](https://github.com/sharetribe/web-template/pull/515)
 - [fix] target element didn't seem to work well with scroll-margin.
@@ -22,6 +110,8 @@ way to update this template, but currently, we follow a pattern:
   [#512](https://github.com/sharetribe/web-template/pull/512)
 - [add] Add currently available translations for DE, ES, FR.
   [#511](https://github.com/sharetribe/web-template/pull/511)
+
+  [v6.3.0]: https://github.com/sharetribe/web-template/compare/v6.2.0...v6.3.0
 
 ## [v6.2.0] 2024-11-26
 

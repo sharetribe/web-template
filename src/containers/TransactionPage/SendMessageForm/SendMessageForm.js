@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { string, bool, func } from 'prop-types';
 import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
@@ -31,6 +30,23 @@ const IconSendMessage = () => {
   );
 };
 
+/**
+ * Send message form
+ *
+ * @component
+ * @param {Object} props - The props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that extends the default class for the root element
+ * @param {string} props.formId - The form id
+ * @param {boolean} props.inProgress - Whether the form is in progress
+ * @param {string} props.messagePlaceholder - The message placeholder
+ * @param {Function} props.onSubmit - The on submit function
+ * @param {Function} props.onFocus - The on focus function
+ * @param {Function} props.onBlur - The on blur function
+ * @param {propTypes.error} props.sendMessageError - The send message error
+ * @param {intlShape} props.intl - The intl
+ * @returns {JSX.Element} The SendMessageForm component
+ */
 class SendMessageFormComponent extends Component {
   constructor(props) {
     super(props);
@@ -40,7 +56,9 @@ class SendMessageFormComponent extends Component {
   }
 
   handleFocus() {
-    this.props.onFocus();
+    if (this.props.onFocus) {
+      this.props.onFocus();
+    }
     window.clearTimeout(this.blurTimeoutId);
   }
 
@@ -50,7 +68,9 @@ class SendMessageFormComponent extends Component {
     // focus is switched between the message area and the submit
     // button.
     this.blurTimeoutId = window.setTimeout(() => {
-      this.props.onBlur();
+      if (this.props.onBlur) {
+        this.props.onBlur();
+      }
     }, BLUR_TIMEOUT_MS);
   }
 
@@ -64,7 +84,7 @@ class SendMessageFormComponent extends Component {
             className,
             messagePlaceholder,
             handleSubmit,
-            inProgress,
+            inProgress = false,
             sendMessageError,
             invalid,
             form,
@@ -111,31 +131,6 @@ class SendMessageFormComponent extends Component {
     );
   }
 }
-
-SendMessageFormComponent.defaultProps = {
-  rootClassName: null,
-  className: null,
-  inProgress: false,
-  messagePlaceholder: null,
-  onFocus: () => null,
-  onBlur: () => null,
-  sendMessageError: null,
-};
-
-SendMessageFormComponent.propTypes = {
-  rootClassName: string,
-  className: string,
-  inProgress: bool,
-
-  messagePlaceholder: string,
-  onSubmit: func.isRequired,
-  onFocus: func,
-  onBlur: func,
-  sendMessageError: propTypes.error,
-
-  // from injectIntl
-  intl: intlShape.isRequired,
-};
 
 const SendMessageForm = compose(injectIntl)(SendMessageFormComponent);
 

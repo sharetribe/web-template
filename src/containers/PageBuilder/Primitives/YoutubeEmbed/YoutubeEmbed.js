@@ -1,5 +1,4 @@
 import React from 'react';
-import { string } from 'prop-types';
 import classNames from 'classnames';
 
 import { lazyLoadWithDimensions } from '../../../../util/uiHelpers.js';
@@ -17,8 +16,19 @@ const IFrame = props => {
 };
 const LazyIFrame = lazyLoadWithDimensions(IFrame);
 
+/**
+ * Embeds a YouTube video inside an iframe that has given aspect ratio.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string} props.youtubeVideoId video id of a youtube video
+ * @param {string?} props.aspectRatio e.g. '16/9'
+ * @returns {JSX.Element} an element with given aspect ratio that contains iframe showing youtube video
+ */
 export const YoutubeEmbed = props => {
-  const { className, rootClassName, youtubeVideoId, aspectRatio } = props;
+  const { className, rootClassName, youtubeVideoId, aspectRatio = '16/9' } = props;
   const hasSlash = aspectRatio.indexOf('/') > 0;
   const [aspectWidth, aspectHeight] = hasSlash ? aspectRatio.split('/') : [16, 9];
   const width = Number.parseInt(aspectWidth, RADIX);
@@ -41,16 +51,3 @@ export const YoutubeEmbed = props => {
 };
 
 YoutubeEmbed.displayName = 'YoutubeEmbed';
-
-YoutubeEmbed.defaultProps = {
-  rootClassName: null,
-  className: null,
-  aspectRatio: '16/9',
-};
-
-YoutubeEmbed.propTypes = {
-  rootClassName: string,
-  className: string,
-  youtubeVideoId: string.isRequired,
-  aspectRatio: string,
-};

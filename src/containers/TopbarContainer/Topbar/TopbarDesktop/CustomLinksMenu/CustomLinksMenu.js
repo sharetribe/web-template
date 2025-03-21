@@ -207,7 +207,7 @@ const CustomLinksMenu = ({
   return (
     <div className={css.customLinksMenu} ref={containerRef} {...styleMaybe}>
       <PriorityLinks links={links} priorityLinks={priorityLinks} setLinks={setLinks} />
-      {hasMenuLinks ? (
+      {mounted && hasMenuLinks ? (
         <LinksMenu
           id="linksMenu"
           currentPage={currentPage}

@@ -28,23 +28,14 @@ export const Heading = props => {
   return <Tag className={classes} ref={tagRef} {...otherProps} />;
 };
 
-const defaultPropsHeading = {
-  rootClassName: null,
-  className: null,
-  children: null,
-  as: null,
-};
-
-const propTypesHeading = {
-  rootClassName: string,
-  className: string,
-  children: node,
-  as: string,
-};
-Heading.displayName = 'Heading';
-Heading.defaultProps = defaultPropsHeading;
-Heading.propTypes = propTypesHeading;
-
+/**
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own root class
+ * @param {string?} props.rootClassName overwrite components own root class
+ * @param {string?} props.as alternative tag. Defaults to 'h1'.
+ * @returns {JSX.Element} heading component
+ */
 export const H1 = React.forwardRef((props, ref) => {
   const { rootClassName: rootClass, as, ...otherProps } = props;
   return (
@@ -52,9 +43,15 @@ export const H1 = React.forwardRef((props, ref) => {
   );
 });
 H1.displayName = 'H1';
-H1.defaultProps = defaultPropsHeading;
-H1.propTypes = propTypesHeading;
 
+/**
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own root class
+ * @param {string?} props.rootClassName overwrite components own root class
+ * @param {string?} props.as alternative tag. Defaults to 'h2'.
+ * @returns {JSX.Element} heading component
+ */
 export const H2 = React.forwardRef((props, ref) => {
   const { rootClassName: rootClass, as, ...otherProps } = props;
   return (
@@ -62,9 +59,15 @@ export const H2 = React.forwardRef((props, ref) => {
   );
 });
 H2.displayName = 'H2';
-H2.defaultProps = defaultPropsHeading;
-H2.propTypes = propTypesHeading;
 
+/**
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own root class
+ * @param {string?} props.rootClassName overwrite components own root class
+ * @param {string?} props.as alternative tag. Defaults to 'h3'.
+ * @returns {JSX.Element} heading component
+ */
 export const H3 = React.forwardRef((props, ref) => {
   const { rootClassName: rootClass, as, ...otherProps } = props;
   return (
@@ -72,9 +75,15 @@ export const H3 = React.forwardRef((props, ref) => {
   );
 });
 H3.displayName = 'H3';
-H3.defaultProps = defaultPropsHeading;
-H3.propTypes = propTypesHeading;
 
+/**
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own root class
+ * @param {string?} props.rootClassName overwrite components own root class
+ * @param {string?} props.as alternative tag. Defaults to 'h4'.
+ * @returns {JSX.Element} heading component
+ */
 export const H4 = React.forwardRef((props, ref) => {
   const { rootClassName: rootClass, as, ...otherProps } = props;
   return (
@@ -82,9 +91,15 @@ export const H4 = React.forwardRef((props, ref) => {
   );
 });
 H4.displayName = 'H4';
-H4.defaultProps = defaultPropsHeading;
-H4.propTypes = propTypesHeading;
 
+/**
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own root class
+ * @param {string?} props.rootClassName overwrite components own root class
+ * @param {string?} props.as alternative tag. Defaults to 'h5'.
+ * @returns {JSX.Element} heading component
+ */
 export const H5 = React.forwardRef((props, ref) => {
   const { rootClassName: rootClass, as, ...otherProps } = props;
   return (
@@ -92,9 +107,15 @@ export const H5 = React.forwardRef((props, ref) => {
   );
 });
 H5.displayName = 'H5';
-H5.defaultProps = defaultPropsHeading;
-H5.propTypes = propTypesHeading;
 
+/**
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own root class
+ * @param {string?} props.rootClassName overwrite components own root class
+ * @param {string?} props.as alternative tag. Defaults to 'h6'.
+ * @returns {JSX.Element} heading component
+ */
 export const H6 = React.forwardRef((props, ref) => {
   const { rootClassName: rootClass, as, ...otherProps } = props;
   return (
@@ -102,5 +123,3 @@ export const H6 = React.forwardRef((props, ref) => {
   );
 });
 H6.displayName = 'H6';
-H6.defaultProps = defaultPropsHeading;
-H6.propTypes = propTypesHeading;

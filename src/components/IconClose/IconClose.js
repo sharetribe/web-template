@@ -1,10 +1,19 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import css from './IconClose.module.css';
 const SIZE_SMALL = 'small';
 
+/**
+ * Close icon. "x"
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own root class
+ * @param {string?} props.rootClassName overwrite components own root class
+ * @param {'small' | null} props.size
+ * @returns {JSX.Element} SVG icon
+ */
 const IconClose = props => {
   const { className, rootClassName, size } = props;
   const classes = classNames(rootClassName || css.root, className);
@@ -34,18 +43,6 @@ const IconClose = props => {
       </g>
     </svg>
   );
-};
-
-const { string } = PropTypes;
-
-IconClose.defaultProps = {
-  className: null,
-  rootClassName: null,
-};
-
-IconClose.propTypes = {
-  className: string,
-  rootClassName: string,
 };
 
 export default IconClose;

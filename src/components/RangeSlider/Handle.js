@@ -1,9 +1,23 @@
 import React, { Component } from 'react';
-import { func, number, string } from 'prop-types';
 import classNames from 'classnames';
 
 import css from './Handle.module.css';
 
+/**
+ * A component that renders a handle for a range slider.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {number} props.min - The minimum value of the range slider
+ * @param {number} props.max - The maximum value of the range slider
+ * @param {Function} props.valueToPosition - The function to convert the value to the position
+ * @param {Function} props.positionToValue - The function to convert the position to the value
+ * @param {Function} props.onChange - The function to call when the value changes
+ * @param {Function} props.changeActive - The function to call when the active state changes
+ * @returns {JSX.Element}
+ */
 class Handle extends Component {
   constructor(props) {
     super(props);
@@ -123,19 +137,5 @@ class Handle extends Component {
     );
   }
 }
-
-Handle.defaultProps = {
-  rootClassName: null,
-  className: null,
-};
-
-Handle.propTypes = {
-  rootClassName: string,
-  className: string,
-  min: number.isRequired,
-  max: number.isRequired,
-  valueToPosition: func.isRequired,
-  positionToValue: func.isRequired,
-};
 
 export default Handle;

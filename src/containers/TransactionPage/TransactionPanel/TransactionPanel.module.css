@@ -406,6 +406,16 @@
   color: var(--colorWhite);
 }
 
+.ownMessageContentLink {
+  color: var(--colorWhite);
+  text-decoration: underline;
+
+  &:hover {
+    text-decoration: none;
+    background-color: var(--marketplaceColorDark);
+  }
+}
+
 .messageError {
   color: var(--colorFail);
   margin: 13px 0 22px 0;

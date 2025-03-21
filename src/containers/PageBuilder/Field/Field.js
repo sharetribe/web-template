@@ -1,16 +1,4 @@
 import React from 'react';
-import {
-  exact,
-  func,
-  node,
-  number,
-  object,
-  objectOf,
-  oneOf,
-  oneOfType,
-  shape,
-  string,
-} from 'prop-types';
 
 // Primitive components that are actually used for rendering field data
 // These are essentially calling the index.js
@@ -195,7 +183,88 @@ export const hasDataInFields = (fields, fieldOptions) => {
 
 const isEmpty = obj => Object.keys(obj).length === 0;
 
-// Generic field component that picks a specific UI component based on 'fieldType'
+// Field's prop types:
+/**
+ * @typedef {Object} FieldTypeTextContent
+ * @property {('heading1' | 'heading2' | 'heading3' | 'heading4' | 'heading5' | 'heading6' | 'paragraph' | 'markdown' | 'metaTitle' | 'metaDescription' | 'text')} fieldType
+ * @property {string?} content link text content
+ */
+
+/**
+ * @typedef {Object} FieldTypeLink
+ * @property {('externalButtonLink' | 'internalButtonLink')} fieldType
+ * @property {string?} content link text content
+ * @property {string} url href of the link
+ */
+
+/**
+ * @typedef {Object} FieldTypeSocialMediaLink
+ * @property {'socialMediaLink'} fieldType
+ * @property {string} platform social media platform
+ * @property {string} url url to the profile on given platform
+ */
+
+/**
+ * @typedef {Object} FieldTypeImage
+ * @property {'image'} fieldType
+ * @property {string?} alt
+ * @property {Object} image image-asset field config
+ */
+
+/**
+ * @typedef {Object} FieldTypeCustomAppearance
+ * @property {'customAppearance'} fieldType
+ * @property {string?} backgroundColor hexadecimal color value e.g. "#ffaa00"
+ * @property {string?} textColor hexadecimal color value e.g. "#ffaa00"
+ * @property {Object} backgroundImage backgroundImage config
+ * @property {Object} backgroundImageOverlay backgroundImage overlay config
+ */
+
+/**
+ * @typedef {Object} FieldTypeYoutube
+ * @property {'youtube'} fieldType
+ * @property {string?} aspectRatio default '16/9'
+ * @property {string} youtubeVideoId video id on youtube
+ */
+
+/**
+ * @typedef {Object} FieldComponentConfig
+ * @property {ReactNode} component
+ * @property {Function} pickValidProps
+ */
+
+// Empty objects might be received through page data asset for optional fields.
+// If you get a warning "Failed prop type: Invalid prop `data` supplied to `Field`."
+// on localhost environment.
+/**
+ * @typedef {Object} FieldTypeEmptyObject
+ */
+
+/**
+ * @typedef {Object} FieldTypeTextEmptyObject
+ * @property {('heading1' | 'heading2' | 'heading3' | 'heading4' | 'heading5' | 'heading6' | 'paragraph' | 'markdown' | 'metaTitle' | 'metaDescription' | 'text')} fieldType
+ */
+
+/**
+ * @typedef {Object} FieldTypeDefaultAppearance
+ * @property {'defaultAppearancenone'} fieldType
+ */
+
+/**
+ * @typedef {Object} FieldTypeNone
+ * @property {'none'} fieldType
+ */
+
+/**
+ * Generic field component that picks a specific UI component based on 'fieldType'
+ *
+ * @component
+ * @param {Object} props
+ * @param {(FieldTypeTextContent|FieldTypeLink|FieldTypeSocialMediaLink|FieldTypeImage|FieldTypeCustomAppearance|FieldTypeYoutube|FieldTypeEmptyObject|FieldTypeTextEmptyObject|FieldTypeDefaultAppearance|FieldTypeNone)} props.data
+ * @param {Object} props.options extra options for the field component (e.g. custom fieldComponents)
+ * @param {Object<string,FieldComponentConfig>} props.options.fieldComponents custom fieldComponents
+ * @returns {JSX.Element} field component that internally renders one of the primitive components
+ */
 const Field = props => {
   const { data, options: fieldOptions, ...propsFromParent } = props;
 
@@ -214,96 +283,6 @@ const Field = props => {
   }
 
   return null;
-};
-
-// Field's prop types:
-const propTypeTextContent = shape({
-  fieldType: oneOf(TEXT_CONTENT).isRequired,
-  content: string.isRequired,
-});
-
-const propTypeLink = shape({
-  fieldType: oneOf(['externalButtonLink', 'internalButtonLink']).isRequired,
-  content: string,
-  href: string.isRequired,
-});
-
-const propTypeSocialMediaLink = shape({
-  fieldType: oneOf(['socialMediaLink']).isRequired,
-  platform: string.isRequired,
-  url: string.isRequired,
-});
-
-const propTypeImageAsset = shape({
-  id: string.isRequired,
-  type: oneOf(['imageAsset']).isRequired,
-  attributes: shape({
-    variants: objectOf(
-      shape({
-        width: number.isRequired,
-        height: number.isRequired,
-        url: string.isRequired,
-      })
-    ).isRequired,
-  }).isRequired,
-});
-
-const propTypeImage = shape({
-  fieldType: oneOf(['image']).isRequired,
-  alt: string,
-  image: propTypeImageAsset.isRequired,
-});
-
-const propTypeCustomAppearance = shape({
-  fieldType: oneOf(['customAppearance']).isRequired,
-  backgroundColor: string,
-  textColor: string,
-  backgroundImage: propTypeImageAsset,
-  backgroundImageOverlay: object,
-});
-
-const propTypeYoutube = shape({
-  fieldType: oneOf(['youtube']).isRequired,
-  aspectRatio: string,
-  youtubeVideoId: string.isRequired,
-});
-
-const propTypeOption = shape({
-  fieldComponents: shape({ component: node, pickValidProps: func }),
-});
-
-// Empty objects might be received through page data asset for optional fields.
-// If you get a warning "Failed prop type: Invalid prop `data` supplied to `Field`."
-// on localhost environment.
-const propTypeEmptyObject = exact({});
-const propTypeTextEmptyObject = exact({
-  fieldType: oneOf(TEXT_CONTENT).isRequired,
-});
-const propTypeDefaultAppearance = shape({
-  fieldType: oneOf(['defaultAppearance']).isRequired,
-});
-const propTypeNone = shape({
-  fieldType: oneOf(['none']).isRequired,
-});
-
-Field.defaultProps = {
-  options: null,
-};
-
-Field.propTypes = {
-  data: oneOfType([
-    propTypeTextContent,
-    propTypeLink,
-    propTypeSocialMediaLink,
-    propTypeImage,
-    propTypeCustomAppearance,
-    propTypeYoutube,
-    propTypeEmptyObject,
-    propTypeTextEmptyObject,
-    propTypeDefaultAppearance,
-    propTypeNone,
-  ]),
-  options: propTypeOption,
 };
 
 export default Field;

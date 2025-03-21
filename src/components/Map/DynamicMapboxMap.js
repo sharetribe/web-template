@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { string, shape, number, object } from 'prop-types';
 // This MultiTouch lib is used for 2-finger panning.
 // which prevents user to experience map-scroll trap, while scrolling the page.
 // https://github.com/mapbox/mapbox-gl-js/issues/2618
@@ -39,6 +38,21 @@ const generateFuzzyLayerId = () => {
   return uniqueId('fuzzy_layer_');
 };
 
+/**
+ * Map that uses Mapbox and is fully dynamic (zoom, pan, etc.).
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.containerClassName add style rules for the root container
+ * @param {string?} props.mapClassName add style rules for the map div
+ * @param {string?} props.address
+ * @param {Object} props.center LatLng
+ * @param {number} props.center.lat latitude
+ * @param {number} props.center.lng longitude
+ * @param {number} props.zoom
+ * @param {Object} props.mapsConfig
+ * @returns {JSX.Element} dynamic version of Mapbox
+ */
 class DynamicMapboxMap extends Component {
   constructor(props) {
     super(props);
@@ -139,20 +153,5 @@ class DynamicMapboxMap extends Component {
     );
   }
 }
-
-DynamicMapboxMap.defaultProps = {
-  address: '',
-  center: null,
-};
-
-DynamicMapboxMap.propTypes = {
-  address: string, // not used
-  center: shape({
-    lat: number.isRequired,
-    lng: number.isRequired,
-  }).isRequired,
-  zoom: number.isRequired,
-  mapsConfig: object.isRequired,
-};
 
 export default DynamicMapboxMap;

@@ -1,11 +1,9 @@
 import React from 'react';
-import { bool, object, string } from 'prop-types';
-import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
 
-import { FormattedMessage, injectIntl, intlShape } from '../../../../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../../../../util/reactIntl';
 import { Form, Heading, H3, PrimaryButton } from '../../../../../components';
 import FieldTimeZoneSelect from '../FieldTimeZoneSelect';
 import AvailabilityPlanEntries from './AvailabilityPlanEntries';
@@ -47,10 +45,33 @@ const submit = (onSubmit, weekdays) => values => {
 };
 
 /**
+ * @typedef {'sun'|'mon'|'tue'|'wed'|'thu'|'fri'|'sat'} Weekday
+ */
+
+/**
  * Create and edit availability plan of the listing.
  * This is essentially the weekly schedule.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className
+ * @param {string?} props.rootClassName
+ * @param {string?} props.formId
+ * @param {Object} props.form form API from React Final Form
+ * @param {Function} props.handleSubmit
+ * @param {boolean} props.inProgress
+ * @param {string} props.listingTitle
+ * @param {Array<Weekday>} props.weekdays
+ * @param {boolean} props.useFullDays
+ * @param {boolean} props.useMultipleSeats
+ * @param {'hour'|'day'|'night'} props.unitType
+ * @param {boolean} props.fetchErrors
+ * @param {Object|null} props.fetchErrors.updateListingError
+ * @param {Object} props.values form's values
+ * @returns {JSX.Element} containing form that allows adding availability exceptions
  */
-const EditListingAvailabilityPlanFormComponent = props => {
+const EditListingAvailabilityPlanForm = props => {
+  const intl = useIntl();
   const { onSubmit, ...restOfprops } = props;
   return (
     <FinalForm
@@ -67,10 +88,11 @@ const EditListingAvailabilityPlanFormComponent = props => {
           form: formApi,
           handleSubmit,
           inProgress,
-          intl,
           listingTitle,
           weekdays,
           useFullDays,
+          useMultipleSeats,
+          unitType,
           fetchErrors,
           values,
         } = fieldRenderProps;
@@ -100,7 +122,12 @@ const EditListingAvailabilityPlanFormComponent = props => {
               <FormattedMessage id="EditListingAvailabilityPlanForm.timezonePickerTitle" />
             </Heading>
             <div className={css.timezonePicker}>
-              <FieldTimeZoneSelect id="timezone" name="timezone" />
+              <FieldTimeZoneSelect
+                id="timezone"
+                name="timezone"
+                selectClassName={css.timeZoneSelect}
+                rootClassName={css.timeZoneField}
+              />
             </div>
             <Heading as="h3" rootClassName={css.subheading}>
               <FormattedMessage id="EditListingAvailabilityPlanForm.hoursOfOperationTitle" />
@@ -111,6 +138,8 @@ const EditListingAvailabilityPlanFormComponent = props => {
                   <AvailabilityPlanEntries
                     dayOfWeek={w}
                     useFullDays={useFullDays}
+                    useMultipleSeats={useMultipleSeats}
+                    unitType={unitType}
                     key={w}
                     values={values}
                     formApi={formApi}
@@ -136,32 +165,5 @@ const EditListingAvailabilityPlanFormComponent = props => {
     />
   );
 };
-
-EditListingAvailabilityPlanFormComponent.defaultProps = {
-  rootClassName: null,
-  className: null,
-  submitButtonWrapperClassName: null,
-  inProgress: false,
-};
-
-EditListingAvailabilityPlanFormComponent.propTypes = {
-  rootClassName: string,
-  className: string,
-  submitButtonWrapperClassName: string,
-
-  inProgress: bool,
-  fetchErrors: object.isRequired,
-
-  listingTitle: string.isRequired,
-
-  // from injectIntl
-  intl: intlShape.isRequired,
-};
-
-const EditListingAvailabilityPlanForm = compose(injectIntl)(
-  EditListingAvailabilityPlanFormComponent
-);
-
-EditListingAvailabilityPlanForm.displayName = 'EditListingAvailabilityPlanForm';
 
 export default EditListingAvailabilityPlanForm;

@@ -1,13 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { string } from 'prop-types';
 import classNames from 'classnames';
-
-import { intlShape } from '../../util/reactIntl';
 
 import { LinkedLogo } from '../../components';
 
 import css from './CheckoutPage.module.css';
 
+/**
+ * A component that renders the custom topbar for the checkout page.
+ * We don't want to use the default topbar because there are too many
+ * links leading away from the checkout page.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} props.className - The class name for the topbar
+ * @param {string} props.rootClassName - The root class name for the topbar
+ * @param {Object} props.intl - The intl object
+ * @param {boolean} props.linkToExternalSite - Whether to link to the external site
+ * @returns {JSX.Element}
+ */
 const CustomTopbar = props => {
   const [isMobile, setIsMobile] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -52,17 +62,6 @@ const CustomTopbar = props => {
       />
     </div>
   );
-};
-
-CustomTopbar.defaultProps = {
-  className: null,
-  rootClassName: null,
-};
-
-CustomTopbar.propTypes = {
-  className: string,
-  rootClassName: string,
-  intl: intlShape.isRequired,
 };
 
 export default CustomTopbar;
