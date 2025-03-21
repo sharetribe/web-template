@@ -3,10 +3,16 @@ import ReactDOM from 'react-dom';
 import classNames from 'classnames';
 
 import { FormattedMessage } from '../../../../../util/reactIntl';
+import { LISTING_TAB_TYPES } from '../../../../../util/types';
+import { stringify } from '../../../../../util/urlHelpers';
 
 import { ExternalLink, NamedLink } from '../../../../../components';
 
 import css from './PriorityLinks.module.css';
+
+export const BASE_CREATE_LISTING_SEARCH_QUERY_PARAMS = stringify({
+  pub_listingType: LISTING_TAB_TYPES.PRODUCT,
+});
 
 /**
  * Create component that shows only a single "Post a new listing" link.
@@ -17,7 +23,11 @@ import css from './PriorityLinks.module.css';
 export const CreateListingMenuLink = props => {
   return (
     <div className={props.customLinksMenuClass}>
-      <NamedLink name="ManageListingsPage" className={classNames(css.priorityLink, css.highlight)}>
+      <NamedLink
+        name="ManageListingsPage"
+        to={{ search: BASE_CREATE_LISTING_SEARCH_QUERY_PARAMS }}
+        className={classNames(css.priorityLink, css.highlight)}
+      >
         <span className={css.priorityLinkLabel}>
           <FormattedMessage id="TopbarDesktop.yourListingsLink" />
         </span>

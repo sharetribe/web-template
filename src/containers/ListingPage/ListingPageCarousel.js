@@ -18,12 +18,9 @@ import { types as sdkTypes } from '../../util/sdkLoader';
 import {
   LISTING_PAGE_DRAFT_VARIANT,
   LISTING_PAGE_PENDING_APPROVAL_VARIANT,
-  LISTING_PAGE_PARAM_TYPE_DRAFT,
-  LISTING_PAGE_PARAM_TYPE_EDIT,
   createSlug,
   NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
   NO_ACCESS_PAGE_VIEW_LISTINGS,
-  NO_ACCESS_PAGE_FORBIDDEN_LISTING_TYPE,
 } from '../../util/urlHelpers';
 import {
   isErrorNoViewingPermission,
@@ -79,6 +76,8 @@ import {
   priceForSchemaMaybe,
 } from './ListingPage.shared';
 import ActionBarMaybe from './ActionBarMaybe';
+import SectionCategoriesMaybe from './SectionCategoriesMaybe';
+import SectionKeywordsMaybe from './SectionKeywordsMaybe';
 import SectionTextMaybe from './SectionTextMaybe';
 import SectionReviews from './SectionReviews';
 import SectionAuthorMaybe from './SectionAuthorMaybe';
@@ -140,14 +139,8 @@ export const ListingPageComponent = props => {
   const listingSlug = rawParams.slug || createSlug(currentListing.attributes.title || '');
   const params = { slug: listingSlug, ...rawParams };
 
-  const listingPathParamType = isDraftVariant
-    ? LISTING_PAGE_PARAM_TYPE_DRAFT
-    : LISTING_PAGE_PARAM_TYPE_EDIT;
-  const listingTab = isDraftVariant ? 'photos' : 'details';
-
   const isApproved =
     currentListing.id && currentListing.attributes.state !== LISTING_STATE_PENDING_APPROVAL;
-
   const pendingIsApproved = isPendingApprovalVariant && isApproved;
 
   // If a /pending-approval URL is shared, the UI requires
@@ -183,8 +176,9 @@ export const ListingPageComponent = props => {
   if (isPortfolioListing) {
     return (
       <NamedRedirect
-        name="NoAccessPage"
-        params={{ missingAccessRight: NO_ACCESS_PAGE_FORBIDDEN_LISTING_TYPE }}
+        name="ProfilePage"
+        params={{ id: authorId }}
+        search={`?pub_listingType=portfolio-showcase&pub_listingId=${rawParams.id}`}
       />
     );
   }
@@ -246,8 +240,8 @@ export const ListingPageComponent = props => {
   // Because listing can be never showed with banned or deleted user we don't have to provide
   // banned or deleted display names for the function
   const authorDisplayName = userDisplayNameAsString(ensuredAuthor, '');
-
   const { formattedPrice } = priceData(price, config.currency, intl);
+  const keywords = publicData?.keywords || '';
 
   function onRequestToBook() {
     const parsedBookingFormURL = `https://theluupe.typeform.com/booking#creatorname=${authorDisplayName}&creatorid=${authorId}`;
@@ -269,7 +263,6 @@ export const ListingPageComponent = props => {
     getListing,
     onInitializeCardPaymentData,
   });
-
   const handleOrderSubmit = values => {
     const isCurrentlyClosed = currentListing.attributes.state === LISTING_STATE_CLOSED;
     if (isOwnListing || isCurrentlyClosed) {
@@ -342,7 +335,6 @@ export const ListingPageComponent = props => {
                 isOwnListing={isOwnListing}
                 listing={currentListing}
                 showNoPayoutDetailsSet={noPayoutDetailsSetWithOwnListing}
-                currentUser={currentUser}
               />
             ) : null}
             {mounted && currentListing.id ? (
@@ -350,19 +342,14 @@ export const ListingPageComponent = props => {
                 className={css.actionBarForProductLayout}
                 isOwnListing={isOwnListing}
                 listing={currentListing}
-                currentUser={currentUser}
-                editParams={{
-                  id: listingId.uuid,
-                  slug: listingSlug,
-                  type: listingPathParamType,
-                  tab: listingTab,
-                }}
               />
             ) : null}
+
             <SectionGallery
               listing={currentListing}
               variantPrefix={config.layout.listingImage.variantPrefix}
             />
+
             <div className={css.mobileHeading}>
               <H4 as="h1" className={css.orderPanelTitle}>
                 <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
@@ -378,6 +365,13 @@ export const ListingPageComponent = props => {
               intl={intl}
             />
 
+            <SectionCategoriesMaybe
+              publicData={publicData}
+              listingFieldConfigs={listingConfig.listingFields}
+              categoryConfiguration={config.categoryConfiguration}
+            />
+            <SectionKeywordsMaybe keywords={keywords} />
+
             <SectionMapMaybe
               geolocation={geolocation}
               publicData={publicData}
@@ -391,6 +385,7 @@ export const ListingPageComponent = props => {
               currentUser={currentUser}
             />
           </div>
+
           <div className={css.orderColumnForProductLayout}>
             <OrderPanel
               className={css.productOrderPanel}

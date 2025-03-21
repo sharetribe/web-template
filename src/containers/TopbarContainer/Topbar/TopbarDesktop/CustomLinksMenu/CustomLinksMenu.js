@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import PriorityLinks, { CreateListingMenuLink } from './PriorityLinks';
+import PriorityLinks, {
+  CreateListingMenuLink,
+  BASE_CREATE_LISTING_SEARCH_QUERY_PARAMS,
+} from './PriorityLinks';
 import LinksMenu from './LinksMenu';
 
 import css from './CustomLinksMenu.module.css';
@@ -11,6 +14,7 @@ const manageListingsLinkConfig = intl => ({
   type: 'internal',
   route: {
     name: 'ManageListingsPage',
+    to: { search: BASE_CREATE_LISTING_SEARCH_QUERY_PARAMS },
   },
   highlight: true,
 });

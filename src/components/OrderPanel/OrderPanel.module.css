@@ -129,8 +129,10 @@
   display: none;
 
   @media (--viewportLarge) {
-    display: block;
     margin-bottom: 0;
+    justify-content: space-between;
+    display: flex;
+    gap: 14px;
   }
 }
 
@@ -289,5 +291,5 @@
   }
 }
 .favoriteButton {
-  margin: 12px 0 36px 0;
+  color: var(--marketplaceColor);
 }

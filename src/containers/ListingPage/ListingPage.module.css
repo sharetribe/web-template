@@ -110,34 +110,6 @@
   border-radius: var(--borderRadiusMedium);
 }
 
-.actionBarCTA {
-  composes: buttonSmall from global;
-  display: inline-block;
-  width: 100%;
-  margin: 10px 0px 20px 0px;
-
-  &:hover,
-  &:focus {
-    background-color: var(--marketplaceColor);
-    border-color: var(--marketplaceColor);
-    color: var(--colorWhite);
-    text-decoration: none;
-  }
-
-  @media (--viewportMedium) {
-    width: auto;
-    margin: 20px 0 20px 15px;
-  }
-}
-
-.linkContainer {
-  display: inline-flex;
-  justify-content: center;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 0 8px;
-}
-
 .ownListingText {
   composes: h5 from global;
   margin: 14px 24px 0 0;
@@ -155,11 +127,6 @@
   }
 }
 
-.noShrink {
-  display: flex;
-  flex-shrink: 0;
-}
-
 .ownListingTextPendingApproval {
   color: var(--colorAttention);
 }
@@ -175,8 +142,7 @@
   }
 }
 
-.addPayoutDetails,
-.editListingLink {
+.addPayoutDetails {
   composes: h5 from global;
   margin: 23px 24px 11px 0px;
   color: var(--colorGrey100);
@@ -615,7 +581,9 @@
 }
 
 .sectionReviews,
-.sectionAuthor {
+.sectionAuthor,
+.sectionKeywords,
+.sectionCategories {
   padding: 0 24px;
   margin-top: 42px;
   scroll-margin-top: calc(var(--topbarHeight) + 24px);
@@ -777,4 +745,19 @@
   right: 0;
   width: 100%;
   height: 100%;
+}
+
+.wrapperKeywords {
+  display: flex;
+  gap: 10px;
+}
+
+.wrapperCategories {
+  display: flex;
+  gap: 10px;
+
+  button {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }

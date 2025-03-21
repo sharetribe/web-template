@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { Button as AButton } from 'antd';
+import { HeartOutlined, HeartFilled } from '@ant-design/icons';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import loadable from '@loadable/component';
@@ -33,15 +35,7 @@ import {
   resolveLatestProcessName,
 } from '../../transactions/transaction';
 
-import {
-  ModalInMobile,
-  PrimaryButton,
-  AvatarSmall,
-  H1,
-  H2,
-  Button,
-  SecondaryButton,
-} from '../../components';
+import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2 } from '../../components';
 
 import css from './OrderPanel.module.css';
 
@@ -271,6 +265,7 @@ const OrderPanel = props => {
   // The listing resource has a relationship: `currentStock`,
   // which you should include when making API calls.
   const isPurchase = isPurchaseProcess(processName);
+  const listingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
   const currentStock = listing.currentStock?.attributes?.quantity;
   const isOutOfStock = isPurchase && lineItemUnitType === LINE_ITEM_ITEM && currentStock === 0;
   // Show form only when stock is fully loaded. This avoids "Out of stock" UI by
@@ -280,7 +275,6 @@ const OrderPanel = props => {
   const supportedProcessesInfo = getSupportedProcessesInfo();
   const isKnownProcess = supportedProcessesInfo.map(info => info.name).includes(processName);
   const { pickupEnabled, shippingEnabled } = listing?.attributes?.publicData || {};
-  const listingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
   const displayShipping = displayDeliveryShipping(listingTypeConfig);
   const displayPickup = displayDeliveryPickup(listingTypeConfig);
   const allowOrdersOfMultipleItems = [STOCK_MULTIPLE_ITEMS, STOCK_INFINITE_MULTIPLE_ITEMS].includes(
@@ -295,18 +289,23 @@ const OrderPanel = props => {
   const authorDisplayName = userDisplayNameAsString(author, '');
   const classes = classNames(rootClassName || css.root, className);
   const titleClasses = classNames(titleClassName || css.orderTitle);
-  const isFavorite = currentUser?.attributes.profile.privateData.favorites?.[listingType]?.includes(
-    listing.id.uuid
-  );
+  const currentUserFavorites = currentUser?.attributes?.profile?.privateData?.favorites || {};
+  const isFavorite = currentUserFavorites?.[listingType]?.includes(listing.id.uuid);
   const toggleFavorites = () => onToggleFavorites(isFavorite);
   const favoriteButton = isFavorite ? (
-    <SecondaryButton className={css.favoriteButton} onClick={toggleFavorites}>
-      <FormattedMessage id="OrderPanel.unfavoriteButton" />
-    </SecondaryButton>
+    <AButton
+      type="text"
+      icon={<HeartFilled style={{ fontSize: '30px' }} />}
+      onClick={toggleFavorites}
+      className={css.favoriteButton}
+    />
   ) : (
-    <Button className={css.favoriteButton} onClick={toggleFavorites}>
-      <FormattedMessage id="OrderPanel.addFavoriteButton" />
-    </Button>
+    <AButton
+      type="text"
+      icon={<HeartOutlined style={{ fontSize: '30px' }} />}
+      onClick={toggleFavorites}
+      className={css.favoriteButton}
+    />
   );
 
   return (
@@ -324,8 +323,11 @@ const OrderPanel = props => {
           <H1 className={css.heading}>{title}</H1>
         </div>
         <div className={css.orderHeading}>
-          {titleDesktop ? titleDesktop : <H2 className={titleClasses}>{title}</H2>}
-          {subTitleText ? <div className={css.orderHelp}>{subTitleText}</div> : null}
+          <div>
+            {titleDesktop ? titleDesktop : <H2 className={titleClasses}>{title}</H2>}
+            {subTitleText ? <div className={css.orderHelp}>{subTitleText}</div> : null}
+          </div>
+          {favoriteButton}
         </div>
         <PriceMaybe
           price={price}
@@ -343,7 +345,7 @@ const OrderPanel = props => {
             <FormattedMessage id="OrderPanel.author" values={{ name: authorDisplayName }} />
           </span>
         </div>
-        {favoriteButton}
+
         {showPriceMissing ? (
           <PriceMissing />
         ) : showInvalidCurrency ? (
