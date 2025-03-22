@@ -10,9 +10,14 @@ const fetchAllListings = async (integrationSdk, page = 1) => {
     perPage: PER_PAGE,
     page,
     minStock: 1,
-    pub_listingType: 'sell',
+    pub_listingType: 'sell,sell-service',
     pub_transactionProcessAlias: 'default-purchase/release-1',
-    'fields.listing': [],
+    pub_categoryLevel1: 'location,location-find,location-machine,atm-location',
+    'fields.listing': [
+      // 'publicData.listingType',
+      // 'publicData.categoryLevel1',
+      // 'publicData.transactionProcessAlias',
+    ],
   });
   const listings = denormalisedResponseEntities(res);
 
