@@ -81,8 +81,8 @@ const PanelHeading = props => {
   //find the date that seller intro'd buyer to manager
   const introDate = transaction?.attributes?.transitions?.find(tx => tx.transition === 'transition/seller-confirm-purchase');
 
-  console.log('transaction', transaction);
-  console.log('introDate', introDate);
+  //console.log('transaction', transaction);
+  //console.log('introDate', introDate);
 
   const listingTranslationValues = {
     listingType: listingType?.replaceAll('-', '_'),
@@ -94,7 +94,7 @@ const PanelHeading = props => {
     customerName,
   };
 
-  console.log('listingTranslationValues', listingTranslationValues);
+  //console.log('listingTranslationValues', listingTranslationValues);
 
   return (
     <>
