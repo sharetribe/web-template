@@ -6,6 +6,8 @@ import { createSlug, stringify } from '../../../util/urlHelpers';
 
 import { H1, H2, NamedLink } from '../../../components';
 import { formatMoney } from '../../../util/currency';
+import { getCategoryLabel } from '../../../config/categories';
+
 
 import css from './TransactionPanel.module.css';
 
@@ -21,6 +23,20 @@ const createListingLink = (listingId, label, listingDeleted, searchParams = {}, 
   } else {
     return <FormattedMessage id="TransactionPanel.deletedListingOrderTitle" />;
   }
+};
+
+// Calculate and format a deadline date (X days from a given date)
+const calculateAndFormatDeadline = (startDate, daysToAdd) => {
+  if (!startDate) return null;
+  
+  const deadlineDate = new Date(startDate);
+  deadlineDate.setDate(deadlineDate.getDate() + daysToAdd);
+  
+  // Get month name and day number
+  const month = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(deadlineDate);
+  const day = deadlineDate.getDate();
+  
+  return `${month} ${day}`;
 };
 
 // Component to render the main heading for an order or a sale. Optionally also
@@ -46,6 +62,7 @@ const PanelHeading = props => {
     isCustomerBanned,
     listing,
     nextStepTranslationId,
+    transaction,
     lastCustomTransition = '',
   } = props;
 
@@ -57,10 +74,26 @@ const PanelHeading = props => {
   const titleClasses = classNames(rootClassName || defaultRootClassName, className);
   const listingLink = createListingLink(listingId, listingTitle, listingDeleted);
   const breakline = <br />;
+  
+  // Calculate deadline date (7 days from creation date)
+  const transactionCreatedAt = transaction?.attributes?.createdAt;
+
+  //find the date that seller intro'd buyer to manager
+  const introDate = transaction?.attributes?.transitions?.find(tx => tx.transition === 'transition/seller-confirm-purchase');
+
+  console.log('transaction', transaction);
+  console.log('introDate', introDate);
+
   const listingTranslationValues = {
     listingType: listingType?.replaceAll('-', '_'),
     categoryLevel1: categoryLevel1?.replaceAll('-', '_'),
+    categoryLabel: getCategoryLabel(categoryLevel1),
+    deadlineForIntro: calculateAndFormatDeadline(transactionCreatedAt, 7),
+    deadlineForRefund: calculateAndFormatDeadline(introDate?.createdAt, 20),
+    customerName,
   };
+
+  console.log('listingTranslationValues', listingTranslationValues);
 
   return (
     <>

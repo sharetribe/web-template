@@ -4,7 +4,7 @@
 }
 
 .successToast {
-  background-color: var(--marketplaceColor);
+  background-color: var(--colorSuccessDark);
   color: var(--colorWhite);
 }
 

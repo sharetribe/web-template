@@ -124,10 +124,6 @@
 .avatarWrapperProviderDesktop {
   display: none;
 
-  @media (--viewportLarge) {
-    display: block;
-    margin-top: 120px;
-  }
 }
 .avatarDesktop {
   @media (--viewportLarge) {
