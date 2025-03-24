@@ -3,7 +3,7 @@
   "SellPurchaseNewOrder.FeeLabel": "Processing fee",
   "SellPurchaseNewOrder.FlatFeeLabel": "Platform fee",
   "SellPurchaseNewOrder.MarkAsShipped": "If the order has not been marked as shipped within a week, it will expire automatically and you won't get paid.",
-  "SellPurchaseNewOrder.DeliveryDetails": "Once you have introduced {customerDisplayName} to the manager, remember to mark it as introduced from <salelink>order details</salelink> to receive your payment.",
+  "SellPurchaseNewOrder.DeliveryDetails": "Once you have introduced {customerDisplayName} to the manager, remember to mark it as introduced from <salelink>order details</salelink> to move the order to the next step.",
   "SellPurchaseNewOrder.MarkAsIntroduced": "If the order has not been marked as delivered within a week, it will expire automatically and you won't get paid.",
   "SellPurchaseNewOrder.Subject": "{customerDisplayName} placed an order for {transactionListingTitle}",
   "SellPurchaseMarkIntroducedReminder.Subject": "Order Confirmation",

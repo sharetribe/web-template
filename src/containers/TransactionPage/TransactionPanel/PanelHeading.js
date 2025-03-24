@@ -88,8 +88,9 @@ const PanelHeading = props => {
     listingType: listingType?.replaceAll('-', '_'),
     categoryLevel1: categoryLevel1?.replaceAll('-', '_'),
     categoryLabel: getCategoryLabel(categoryLevel1),
-    deadlineForIntro: calculateAndFormatDeadline(transactionCreatedAt, 7),
-    deadlineForRefund: calculateAndFormatDeadline(introDate?.createdAt, 20),
+    deadlineForIntro: calculateAndFormatDeadline(transactionCreatedAt, 6),
+    deadlineForRefund: calculateAndFormatDeadline(introDate?.createdAt, 19),
+    deadlineForCompletion: calculateAndFormatDeadline(introDate?.createdAt, 29),
     customerName,
   };
 
