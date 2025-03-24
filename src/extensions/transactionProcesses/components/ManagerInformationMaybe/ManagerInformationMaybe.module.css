@@ -2,9 +2,13 @@
 
 .root {
   margin: 42px 24px 0 24px;
+  background-color: var(--colorGrey75);
+  border-radius: 10px;
+  border: 1px solid var(--colorGrey100);
+  padding: 16px;
 
   @media (--viewportMedium) {
-    padding: 7px 0 1px 0;
+    
     margin: 40px 24px 0 24px;
   }
   @media (--viewportLarge) {
@@ -13,6 +17,11 @@
 }
 
 .heading {
+  margin-top:0;
+  background-color: var(--colorGrey100);
+  padding:8px;
+  border-radius: 10px 10px 0 0;
+  margin:-16px -16px 16px -16px;
 }
 
 .sectionContent {
@@ -29,7 +38,14 @@
 }
 
 .locationAddress {
-  @media (--viewportMedium) {
-    padding: 3px 0 5px 0;
+  display: inline-block;
+  margin-top: 16px;
+  padding: 6px 10px;
+  border-radius: var(--borderRadiusMedium);
+  background-color: var(--colorGrey50);
+
+  &:hover {
+    background-color: var(--colorWhite);
+    text-decoration: none;
   }
 }

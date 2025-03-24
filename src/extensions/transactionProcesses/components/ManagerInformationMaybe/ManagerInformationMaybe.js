@@ -6,6 +6,8 @@ import { Heading } from '../../../../components';
 import AddressLinkMaybe from '../../../../containers/TransactionPage/TransactionPanel/AddressLinkMaybe';
 import { SELL_PURCHASE_PROCESS_NAME } from '../../sellPurchase/transactions/transactionProcessSellPurchase';
 
+import { Contact } from 'lucide-react';
+
 import css from './ManagerInformationMaybe.module.css';
 
 function ManagerInformationMaybe({
@@ -35,7 +37,7 @@ function ManagerInformationMaybe({
   return (
     <div className={classes}>
       <Heading as="h3" rootClassName={headingClasses}>
-        <FormattedMessage id="TransactionPanel.managerInformationHeading" />
+        <Contact /> <FormattedMessage id="TransactionPanel.managerInformationHeading" />
       </Heading>
       {!!managerName && (
         <p className={css.sectionContent}>
@@ -44,10 +46,8 @@ function ManagerInformationMaybe({
       )}
       {!!managerPhoneNumber && (
         <p className={css.sectionContent}>
-          <FormattedMessage
-            id="TransactionPanel.managerPhoneNumberContent"
-            values={{ managerPhoneNumber }}
-          />
+          <FormattedMessage id="TransactionPanel.managerPhoneNumberContent" />  
+           <a href={`tel:${managerPhoneNumber}`}>{managerPhoneNumber}</a>
         </p>
       )}
       {!!managerEmail && (
@@ -59,11 +59,11 @@ function ManagerInformationMaybe({
 
       {!!managerAddress && !!managerAddressGeo && (
         <AddressLinkMaybe
-          linkRootClassName={css.locationAddress}
-          location={{ address: managerAddress }}
-          geolocation={managerAddressGeo}
-          showAddress={true}
-          prefixElement={<FormattedMessage id="TransactionPanel.managerAddressTitle" />}
+            linkRootClassName={css.locationAddress}
+            location={{ address: managerAddress }}
+            geolocation={managerAddressGeo}
+            showAddress={true}
+            prefixElement={ <><FormattedMessage id="TransactionPanel.managerAddressTitle" /> </>}
         />
       )}
     </div>

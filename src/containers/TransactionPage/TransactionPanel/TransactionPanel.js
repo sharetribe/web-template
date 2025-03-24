@@ -14,7 +14,7 @@ import {
   SELL_PURCHASE_PROGRESS_BAR_STEPS_SELLER,
 } from '../../../extensions/transactionProcesses/common/constants';
 
-import { AvatarLarge, NamedLink, UserDisplayName } from '../../../components';
+import { AvatarSmall, NamedLink, UserDisplayName } from '../../../components';
 
 import { stateDataShape } from '../TransactionPage.stateData';
 import SendMessageForm from '../SendMessageForm/SendMessageForm';
@@ -130,6 +130,7 @@ export class TransactionPanelComponent extends Component {
       className,
       currentUser,
       transactionRole,
+      transaction,
       listing,
       customer,
       provider,
@@ -231,7 +232,7 @@ export class TransactionPanelComponent extends Component {
             />
             {isProvider ? (
               <div className={css.avatarWrapperProviderDesktop}>
-                <AvatarLarge user={customer} className={css.avatarDesktop} />
+                <AvatarSmall user={customer} className={css.avatarDesktop} />
               </div>
             ) : null}
 
@@ -254,6 +255,7 @@ export class TransactionPanelComponent extends Component {
               listing={listing}
               nextStepTranslationId={stateData.nextStepTranslationId}
               lastCustomTransition={stateData.lastCustomTransition}
+              transaction={transaction}
             />
 
             <InquiryMessageMaybe

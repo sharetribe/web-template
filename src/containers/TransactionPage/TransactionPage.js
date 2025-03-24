@@ -476,6 +476,7 @@ export const TransactionPageComponent = props => {
       onOpenDisputeModal={onOpenDisputeModal}
       stateData={stateData}
       transactionRole={transactionRole}
+      transaction={transaction}
       showBookingLocation={showBookingLocation}
       hasViewingRights={hasViewingRights}
       activityFeed={
