@@ -1,5 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
+import moment from 'moment';
 
 import { FormattedMessage } from '../../../util/reactIntl';
 import { createSlug, stringify } from '../../../util/urlHelpers';
@@ -29,14 +30,9 @@ const createListingLink = (listingId, label, listingDeleted, searchParams = {}, 
 const calculateAndFormatDeadline = (startDate, daysToAdd) => {
   if (!startDate) return null;
   
-  const deadlineDate = new Date(startDate);
-  deadlineDate.setDate(deadlineDate.getDate() + daysToAdd);
-  
-  // Get month name and day number
-  const month = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(deadlineDate);
-  const day = deadlineDate.getDate();
-  
-  return `${month} ${day}`;
+  // Use moment to add days and format the date
+  const deadlineDate = moment(startDate).add(daysToAdd, 'days');
+  return deadlineDate.format('MMMM D');
 };
 
 // Component to render the main heading for an order or a sale. Optionally also
@@ -75,26 +71,21 @@ const PanelHeading = props => {
   const listingLink = createListingLink(listingId, listingTitle, listingDeleted);
   const breakline = <br />;
   
-  // Calculate deadline date (7 days from creation date)
-  const transactionCreatedAt = transaction?.attributes?.createdAt;
+  // Calculate deadline date (7 days from payment date)
+  const paymentDate = transaction?.attributes?.transitions?.find(tx => tx.transition === 'transition/confirm-payment');
 
   //find the date that seller intro'd buyer to manager
   const introDate = transaction?.attributes?.transitions?.find(tx => tx.transition === 'transition/seller-confirm-purchase');
-
-  //console.log('transaction', transaction);
-  //console.log('introDate', introDate);
 
   const listingTranslationValues = {
     listingType: listingType?.replaceAll('-', '_'),
     categoryLevel1: categoryLevel1?.replaceAll('-', '_'),
     categoryLabel: getCategoryLabel(categoryLevel1),
-    deadlineForIntro: calculateAndFormatDeadline(transactionCreatedAt, 6),
+    deadlineForIntro: calculateAndFormatDeadline(paymentDate?.createdAt, 6),
     deadlineForRefund: calculateAndFormatDeadline(introDate?.createdAt, 19),
     deadlineForCompletion: calculateAndFormatDeadline(introDate?.createdAt, 29),
     customerName,
   };
-
-  //console.log('listingTranslationValues', listingTranslationValues);
 
   return (
     <>

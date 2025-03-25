@@ -1,12 +1,11 @@
 import React from 'react';
 import classNames from 'classnames';
 import { FormattedMessage } from 'react-intl';
+import { Contact } from 'lucide-react';
 
 import { Heading } from '../../../../components';
 import AddressLinkMaybe from '../../../../containers/TransactionPage/TransactionPanel/AddressLinkMaybe';
 import { SELL_PURCHASE_PROCESS_NAME } from '../../sellPurchase/transactions/transactionProcessSellPurchase';
-
-import { Contact } from 'lucide-react';
 
 import css from './ManagerInformationMaybe.module.css';
 
@@ -47,7 +46,7 @@ function ManagerInformationMaybe({
       {!!managerPhoneNumber && (
         <p className={css.sectionContent}>
           <FormattedMessage id="TransactionPanel.managerPhoneNumberContent" />  
-           <a href={`tel:${managerPhoneNumber}`}>{managerPhoneNumber}</a>
+          <a href={`tel:${managerPhoneNumber}`}>{managerPhoneNumber}</a>
         </p>
       )}
       {!!managerEmail && (
@@ -63,7 +62,7 @@ function ManagerInformationMaybe({
             location={{ address: managerAddress }}
             geolocation={managerAddressGeo}
             showAddress={true}
-            prefixElement={ <><FormattedMessage id="TransactionPanel.managerAddressTitle" /> </>}
+            prefixElement={ <FormattedMessage id="TransactionPanel.managerAddressTitle" />}
         />
       )}
     </div>
