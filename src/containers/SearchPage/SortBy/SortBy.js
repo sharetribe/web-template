@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { useConfiguration } from '../../../context/configurationContext';
+import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
 import { useIntl } from '../../../util/reactIntl';
+import { createResourceLocatorString } from '../../../util/routes';
 import { isMainSearchTypeKeywords } from '../../../util/search';
 
 import SortByPlain from './SortByPlain';
@@ -22,7 +25,9 @@ import css from './SortBy.module.css';
  * @returns {JSX.Element}
  */
 const SortBy = props => {
+  const routeConfiguration = useRouteConfiguration();
   const config = useConfiguration();
+  const history = useHistory();
   const intl = useIntl();
   const {
     sort,
@@ -35,6 +40,7 @@ const SortBy = props => {
   } = props;
 
   const { relevanceKey, relevanceFilter, queryParamName } = config.search.sortConfig;
+  const creativeSearch = selectedFilters?.['pub_categoryLevel1'] === 'creatives';
 
   const mobileClassesMaybe =
     mode === 'mobile'
@@ -87,7 +93,7 @@ const SortBy = props => {
           },
         ];
   }, []);
-  const defaultValue = 'createdAt';
+  const defaultValue = '-createdAt';
   const isRelevanceSortActive = isRelevanceOptionActive && !sort;
   const relevanceValue =
     isRelevanceSortActive && selectedFilters[relevanceFilter]?.length > 0 ? relevanceKey : null;
@@ -95,6 +101,23 @@ const SortBy = props => {
     hasConflictingFilters && !isConflictingFilterActive
       ? relevanceKey
       : sort || relevanceValue || defaultValue;
+
+  useEffect(() => {
+    if (!sort) {
+      if (creativeSearch) {
+        const pathParams = {};
+        const queryParams = { ...selectedFilters, [queryParamName]: defaultValue };
+        const destination = createResourceLocatorString(
+          'SearchPage',
+          routeConfiguration,
+          pathParams,
+          queryParams
+        );
+        history.replace(destination);
+      }
+    }
+  }, [sort, creativeSearch]);
+
   const componentProps = {
     urlParam: queryParamName,
     label: intl.formatMessage({ id: 'SortBy.heading' }),

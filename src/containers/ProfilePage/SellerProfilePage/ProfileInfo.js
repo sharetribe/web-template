@@ -209,7 +209,12 @@ function ProfileInfo({
             <p className={css.addressLabel}>{address}</p>
             {hasBio && <span className={css.bioLabel}>{bioWithLinks}</span>}
             {hasPortfolioURL && (
-              <Button type="link" href={parsedPortfolioURL} className={css.portfolioLink}>
+              <Button
+                type="link"
+                target="_blank"
+                href={parsedPortfolioURL}
+                className={css.portfolioLink}
+              >
                 {portfolioURL}
               </Button>
             )}

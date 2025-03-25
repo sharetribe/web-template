@@ -43,7 +43,7 @@ const EditDetailsForm = ({
   formId,
   pickSelectedCategories,
   listingFieldsConfig = [],
-  values: {},
+  values = {},
 }) => {
   const intl = useIntl();
   const { listingType } = values;
