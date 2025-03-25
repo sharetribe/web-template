@@ -123,7 +123,7 @@ const TxActionButtonWithModal = ({
               )}
 
               {showReminderStatement && (
-                <div className={`reminderBox ${css.confirmBox}`}>
+                <div className={css.confirmBox}>
                   <CircleAlert className={css.confirmModalCheckBoxIcon} />
                   {intl.formatMessage(
                     {

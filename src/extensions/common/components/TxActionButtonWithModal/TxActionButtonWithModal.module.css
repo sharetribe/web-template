@@ -1,6 +1,7 @@
 .modalTitle {
   composes: marketplaceModalTitleStyles from global;
-  text-align: center;
+  text-align: left;
+  margin-bottom: 8px;
 }
 
 .ctaButtonWrapper {
@@ -9,7 +10,13 @@
   justify-content: flex-end;
 }
 .confirmBox {
-  font-size: 90%;
+  padding: 12px;
+  line-height: 1.2;
+  margin: 13px auto;
+  border-radius: 4px;
+  font-size: 13px;
+  border: 1px solid var(--colorAttention);
+  background: var(--colorAttentionLight);
 }
 
 .confirmModalCheckBoxIcon {
