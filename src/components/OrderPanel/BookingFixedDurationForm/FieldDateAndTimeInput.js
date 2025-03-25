@@ -748,7 +748,7 @@ const FieldDateAndTimeInput = props => {
           />
         </div>
 
-        <div className={css.field}>
+        <div className={classNames(css.field, css.startTime)}>
           <FieldSelect
             name="bookingStartTime"
             id={formId ? `${formId}.bookingStartTime` : 'bookingStartTime'}

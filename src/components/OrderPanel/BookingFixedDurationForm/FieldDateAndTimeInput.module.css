@@ -51,6 +51,16 @@
 .startDate {
 }
 
+.startTime {
+  width: calc(100% - 48px);
+  margin: 0 24px;
+
+  @media (--viewportMedium) {
+    width: calc(50% - 12px);
+    margin: 0;
+  }
+}
+
 .fieldDisabled {
   background: none;
   color: var(--colorGrey100);
