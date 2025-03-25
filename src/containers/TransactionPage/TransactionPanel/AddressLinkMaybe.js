@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { FormattedMessage } from '../../../util/reactIntl';
 
 import { ExternalLink } from '../../../components';
+import { MapPin } from 'lucide-react';
 
 import css from './TransactionPanel.module.css';
 
@@ -27,7 +28,7 @@ const AddressLinkMaybe = props => {
       {prefixElement}{fullAddress} <br />
       <span className={css.viewOnGoogleMapsWrapper}>
         <ExternalLink className={linkRootClassName} href={hrefToGoogleMaps}>
-          <FormattedMessage id="AddressLinkMaybe.viewOnGoogleMaps" />
+        <MapPin /> <FormattedMessage id="AddressLinkMaybe.viewOnGoogleMaps" />
         </ExternalLink>
       </span>
     </p>

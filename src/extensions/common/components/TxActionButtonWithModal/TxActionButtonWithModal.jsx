@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SquareCheck } from 'lucide-react';
+import { CircleAlert } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 
 import { Modal, PrimaryButton } from '../../../../components';
@@ -123,9 +123,8 @@ const TxActionButtonWithModal = ({
               )}
 
               {showReminderStatement && (
-                <div className="reminderBox">
-                  <SquareCheck className={css.confirmModalCheckBoxIcon} />
-
+                <div className={css.confirmBox}>
+                  <CircleAlert className={css.confirmModalCheckBoxIcon} />
                   {intl.formatMessage(
                     {
                       id:
