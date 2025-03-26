@@ -439,11 +439,11 @@ describe('OrderPanel', () => {
       expect(queryAllByText('$10.00')).toHaveLength(2);
       expect(queryAllByText('OrderPanel.perUnit')).toHaveLength(2);
       expect(queryAllByText('OrderPanel.author')).toHaveLength(2);
-      expect(getByText('BookingTimeForm.bookingStartTitle')).toBeInTheDocument();
+      expect(getByText('BookingFixedDurationForm.bookingStartTitle')).toBeInTheDocument();
       expect(getByText('FieldDateAndTimeInput.startTime')).toBeInTheDocument();
       expect(queryByText('FieldDateAndTimeInput.endTime')).not.toBeInTheDocument();
-      expect(getByText('BookingTimeForm.requestToBook')).toBeInTheDocument();
-      expect(getByText('BookingTimeForm.youWontBeChargedInfo')).toBeInTheDocument();
+      expect(getByText('BookingFixedDurationForm.requestToBook')).toBeInTheDocument();
+      expect(getByText('BookingFixedDurationForm.youWontBeChargedInfo')).toBeInTheDocument();
       expect(getByText('OrderPanel.ctaButtonMessageBooking')).toBeInTheDocument();
     });
   });
