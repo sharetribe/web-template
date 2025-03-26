@@ -14,12 +14,19 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+## [v8.0.0] 2025-03-26
+
+This major release adds support for bookings with a fixed duration. The feature is touching so many
+parts of the codebase, that we decided to bump the major version.
+
 - [add] Add support for bookings with a fixed duration.
   [#560](https://github.com/sharetribe/web-template/pull/560)
 - [fix] Fix the positioning of the camera control otpions on Google Maps
   [#565](https://github.com/sharetribe/web-template/pull/565)
 - [fix] Fix currently available translations for FR.
   [#559](https://github.com/sharetribe/web-template/pull/559)
+
+  [v8.0.0]: https://github.com/sharetribe/web-template/compare/v7.3.0...v8.0.0
 
 ## [v7.3.0] 2025-02-19
 
