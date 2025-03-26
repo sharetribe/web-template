@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form as FinalForm } from 'react-final-form';
+import { Field, Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
@@ -12,7 +12,16 @@ import { Form, H6, PrimaryButton, FieldSelect } from '../../../components';
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
 import FieldDateAndTimeInput from './FieldDateAndTimeInput';
 
-import css from './BookingTimeForm.module.css';
+import css from './BookingFixedDurationForm.module.css';
+
+const FieldHidden = props => {
+  const { name, ...rest } = props;
+  return (
+    <Field id={name} name={name} type="hidden" className={css.unitTypeHidden} {...rest}>
+      {fieldRenderProps => <input {...fieldRenderProps?.input} />}
+    </Field>
+  );
+};
 
 // When the values of the form are updated we need to fetch
 // lineItems from this template's backend for the EstimatedTransactionMaybe
@@ -35,7 +44,7 @@ const handleFetchLineItems = props => formValues => {
   const isStartBeforeEnd = bookingStartTime < bookingEndTime;
   const seatsMaybe = seatsEnabled && seats > 0 ? { seats: parseInt(seats, 10) } : {};
 
-  if (bookingStartTime && bookingEndTime && isStartBeforeEnd && !fetchLineItemsInProgress) {
+  if (startDate && endDate && isStartBeforeEnd && !fetchLineItemsInProgress) {
     const orderData = {
       bookingStart: startDate,
       bookingEnd: endDate,
@@ -59,6 +68,7 @@ const handleFetchLineItems = props => formValues => {
  * @param {propTypes.money} props.price - The unit price of the listing
  * @param {boolean} props.isOwnListing - Whether the listing is owned by the current user
  * @param {propTypes.uuid} props.listingId - The ID of the listing
+ * @param {Array<Object>} [props.priceVariants] - The price variants for the fixed bookings
  * @param {Object} props.monthlyTimeSlots - The monthly time slots
  * @param {Function} props.onFetchTimeSlots - The function to fetch the time slots
  * @param {string} props.timeZone - The time zone of the listing (e.g. "America/New_York")
@@ -67,12 +77,11 @@ const handleFetchLineItems = props => formValues => {
  * @param {boolean} props.fetchLineItemsInProgress - Whether line items are being fetched
  * @param {propTypes.error} props.fetchLineItemsError - The error for fetching line items
  * @param {string} [props.startDatePlaceholder] - The placeholder text for the start date
- * @param {string} [props.endDatePlaceholder] - The placeholder text for the end date
  * @param {number} props.dayCountAvailableForBooking - Number of days available for booking
  * @param {string} props.marketplaceName - Name of the marketplace
  * @returns {JSX.Element}
  */
-export const BookingTimeForm = props => {
+export const BookingFixedDurationForm = props => {
   const intl = useIntl();
   const {
     rootClassName,
@@ -81,26 +90,31 @@ export const BookingTimeForm = props => {
     dayCountAvailableForBooking,
     marketplaceName,
     seatsEnabled,
+    priceVariants,
     ...rest
   } = props;
 
   const [seatsOptions, setSeatsOptions] = useState([1]);
-
+  const priceVariant = priceVariants?.[0];
+  const minDurationStartingInInterval = priceVariants.reduce((min, priceVariant) => {
+    return Math.min(min, priceVariant.bookingLengthInMinutes);
+  }, Number.MAX_SAFE_INTEGER);
   const classes = classNames(rootClassName || css.root, className);
 
   return (
     <FinalForm
+      initialValues={{ priceVariant }}
       {...rest}
       unitPrice={unitPrice}
       render={formRenderProps => {
         const {
-          endDatePlaceholder,
           startDatePlaceholder,
           form,
           pristine,
           handleSubmit,
           isOwnListing,
           listingId,
+          startTimeInterval,
           values,
           monthlyTimeSlots,
           timeSlotsForDate,
@@ -135,6 +149,20 @@ export const BookingTimeForm = props => {
 
         return (
           <Form onSubmit={handleSubmit} className={classes} enforcePagePreloadFor="CheckoutPage">
+            <FieldHidden
+              name="priceVariant"
+              format={value => {
+                return value?.name == null ? 'default' : value.name;
+              }}
+              parse={value => {
+                const response =
+                  value === 'default'
+                    ? priceVariants?.[0]
+                    : priceVariants.find(pv => pv.name === value);
+                return response;
+              }}
+            />
+
             {monthlyTimeSlots && timeZone ? (
               <FieldDateAndTimeInput
                 seatsEnabled={seatsEnabled}
@@ -143,15 +171,13 @@ export const BookingTimeForm = props => {
                   label: intl.formatMessage({ id: 'BookingTimeForm.bookingStartTitle' }),
                   placeholderText: startDatePlaceholder,
                 }}
-                endDateInputProps={{
-                  label: intl.formatMessage({ id: 'BookingTimeForm.bookingEndTitle' }),
-                  placeholderText: endDatePlaceholder,
-                }}
                 className={css.bookingDates}
                 listingId={listingId}
+                startTimeInterval={startTimeInterval}
                 onFetchTimeSlots={onFetchTimeSlots}
                 monthlyTimeSlots={monthlyTimeSlots}
                 timeSlotsForDate={timeSlotsForDate}
+                minDurationStartingInInterval={minDurationStartingInInterval}
                 values={values}
                 intl={intl}
                 form={form}
@@ -171,9 +197,7 @@ export const BookingTimeForm = props => {
                 onChange={values => {
                   onHandleFetchLineItems({
                     values: {
-                      bookingStartDate: startDate,
                       bookingStartTime: startTime,
-                      bookingEndDate: endDate,
                       bookingEndTime: endTime,
                       seats: values,
                     },
@@ -240,4 +264,4 @@ export const BookingTimeForm = props => {
   );
 };
 
-export default BookingTimeForm;
+export default BookingFixedDurationForm;
