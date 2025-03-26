@@ -726,7 +726,7 @@ const FieldDateAndTimeInput = props => {
             }
             useMobileMargins
             validate={bookingDateRequired(
-              intl.formatMessage({ id: 'BookingTimeForm.requiredDate' })
+              intl.formatMessage({ id: 'BookingFixedDurationForm.requiredDate' })
             )}
             isDayBlocked={isDayBlocked}
             isOutsideRange={isOutsideRange}

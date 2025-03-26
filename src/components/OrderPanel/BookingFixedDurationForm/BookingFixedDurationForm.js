@@ -168,7 +168,7 @@ export const BookingFixedDurationForm = props => {
                 seatsEnabled={seatsEnabled}
                 setSeatsOptions={setSeatsOptions}
                 startDateInputProps={{
-                  label: intl.formatMessage({ id: 'BookingTimeForm.bookingStartTitle' }),
+                  label: intl.formatMessage({ id: 'BookingFixedDurationForm.bookingStartTitle' }),
                   placeholderText: startDatePlaceholder,
                 }}
                 className={css.bookingDates}
@@ -192,7 +192,7 @@ export const BookingFixedDurationForm = props => {
                 name="seats"
                 id="seats"
                 disabled={!startTime}
-                label={intl.formatMessage({ id: 'BookingTimeForm.seatsTitle' })}
+                label={intl.formatMessage({ id: 'BookingFixedDurationForm.seatsTitle' })}
                 className={css.fieldSeats}
                 onChange={values => {
                   onHandleFetchLineItems({
@@ -205,7 +205,7 @@ export const BookingFixedDurationForm = props => {
                 }}
               >
                 <option disabled value="">
-                  {intl.formatMessage({ id: 'BookingTimeForm.seatsPlaceholder' })}
+                  {intl.formatMessage({ id: 'BookingFixedDurationForm.seatsPlaceholder' })}
                 </option>
                 {seatsOptions.map(s => (
                   <option value={s} key={s}>
@@ -218,7 +218,7 @@ export const BookingFixedDurationForm = props => {
             {showEstimatedBreakdown ? (
               <div className={css.priceBreakdownContainer}>
                 <H6 as="h3" className={css.bookingBreakdownTitle}>
-                  <FormattedMessage id="BookingTimeForm.priceBreakdownTitle" />
+                  <FormattedMessage id="BookingFixedDurationForm.priceBreakdownTitle" />
                 </H6>
                 <hr className={css.totalDivider} />
                 <EstimatedCustomerBreakdownMaybe
@@ -234,13 +234,13 @@ export const BookingFixedDurationForm = props => {
 
             {fetchLineItemsError ? (
               <span className={css.sideBarError}>
-                <FormattedMessage id="BookingTimeForm.fetchLineItemsError" />
+                <FormattedMessage id="BookingFixedDurationForm.fetchLineItemsError" />
               </span>
             ) : null}
 
             <div className={css.submitButton}>
               <PrimaryButton type="submit" inProgress={fetchLineItemsInProgress}>
-                <FormattedMessage id="BookingTimeForm.requestToBook" />
+                <FormattedMessage id="BookingFixedDurationForm.requestToBook" />
               </PrimaryButton>
             </div>
 
@@ -251,8 +251,8 @@ export const BookingFixedDurationForm = props => {
                 <FormattedMessage
                   id={
                     isOwnListing
-                      ? 'BookingTimeForm.ownListing'
-                      : 'BookingTimeForm.youWontBeChargedInfo'
+                      ? 'BookingFixedDurationForm.ownListing'
+                      : 'BookingFixedDurationForm.youWontBeChargedInfo'
                   }
                 />
               )}
