@@ -8,14 +8,7 @@ import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { createResourceLocatorString, findRouteByRouteName } from '../../util/routes';
-import {
-  DATE_TYPE_DATE,
-  DATE_TYPE_DATETIME,
-  LISTING_UNIT_TYPES,
-  LINE_ITEM_HOUR,
-  LINE_ITEM_ITEM,
-  propTypes,
-} from '../../util/types';
+import { LISTING_UNIT_TYPES, propTypes } from '../../util/types';
 import { timestampToDate } from '../../util/dates';
 import { createSlug } from '../../util/urlHelpers';
 import {
@@ -108,6 +101,7 @@ const onDisputeOrder = (
  * @param {string} props.transitionInProgress - The transition in progress
  * @param {propTypes.error} props.transitionError - The transition error
  * @param {Object<string, Object>} props.monthlyTimeSlots - The monthly time slots: { '2019-11': { timeSlots: [], fetchTimeSlotsInProgress: false, fetchTimeSlotsError: null } }
+ * @param {Object<string, Object>} props.timeSlotsForDate - The time slots for date. E.g. { '2019-11-01': { timeSlots: [], fetchedAt: 1572566400000, fetchTimeSlotsError: null, fetchTimeSlotsInProgress: false } }
  * @param {propTypes.error} props.fetchTimeSlotsError - The fetch time slots error
  * @param {Array<propTypes.lineItem>} props.lineItems - The line items
  * @param {propTypes.error} props.fetchLineItemsError - The fetch line items error
@@ -162,15 +156,10 @@ export const TransactionPageComponent = props => {
     transitionInProgress,
     transitionError,
     onTransition,
-    monthlyTimeSlots,
-    onFetchTimeSlots,
     nextTransitions,
     callSetInitialValues,
     onInitializeCardPaymentData,
-    onFetchTransactionLineItems,
-    lineItems,
-    fetchLineItemsInProgress,
-    fetchLineItemsError,
+    ...restOfProps
   } = props;
 
   const { listing, provider, customer, booking } = transaction || {};
@@ -438,11 +427,10 @@ export const TransactionPageComponent = props => {
     : null;
 
   const timeZone = listing?.attributes?.availabilityPlan?.timezone;
-  const dateType = lineItemUnitType === LINE_ITEM_HOUR ? DATE_TYPE_DATETIME : DATE_TYPE_DATE;
 
   const hasViewingRights = currentUser && hasPermissionToViewData(currentUser);
 
-  const txBookingMaybe = booking?.id ? { booking, dateType, timeZone } : {};
+  const txBookingMaybe = booking?.id ? { booking, timeZone } : {};
   const orderBreakdownMaybe = hasLineItems
     ? {
         orderBreakdown: (
@@ -530,12 +518,7 @@ export const TransactionPageComponent = props => {
           author={provider}
           onSubmit={handleSubmitOrderRequest}
           onManageDisableScrolling={onManageDisableScrolling}
-          onFetchTimeSlots={onFetchTimeSlots}
-          monthlyTimeSlots={monthlyTimeSlots}
-          onFetchTransactionLineItems={onFetchTransactionLineItems}
-          lineItems={lineItems}
-          fetchLineItemsInProgress={fetchLineItemsInProgress}
-          fetchLineItemsError={fetchLineItemsError}
+          {...restOfProps}
           validListingTypes={config.listing.listingTypes}
           marketplaceCurrency={config.currency}
           dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
@@ -606,6 +589,7 @@ const mapStateToProps = state => {
     sendReviewInProgress,
     sendReviewError,
     monthlyTimeSlots,
+    timeSlotsForDate,
     processTransitions,
     lineItems,
     fetchLineItemsInProgress,
@@ -634,11 +618,12 @@ const mapStateToProps = state => {
     sendMessageError,
     sendReviewInProgress,
     sendReviewError,
-    monthlyTimeSlots,
     nextTransitions: processTransitions,
-    lineItems,
-    fetchLineItemsInProgress,
-    fetchLineItemsError,
+    monthlyTimeSlots, // for OrderPanel
+    timeSlotsForDate, // for OrderPanel
+    lineItems, // for OrderPanel
+    fetchLineItemsInProgress, // for OrderPanel
+    fetchLineItemsError, // for OrderPanel
   };
 };
 
@@ -655,9 +640,9 @@ const mapDispatchToProps = dispatch => {
     callSetInitialValues: (setInitialValues, values) => dispatch(setInitialValues(values)),
     onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
     onFetchTransactionLineItems: (orderData, listingId, isOwnListing) =>
-      dispatch(fetchTransactionLineItems(orderData, listingId, isOwnListing)),
-    onFetchTimeSlots: (listingId, start, end, timeZone) =>
-      dispatch(fetchTimeSlots(listingId, start, end, timeZone)),
+      dispatch(fetchTransactionLineItems(orderData, listingId, isOwnListing)), // for OrderPanel
+    onFetchTimeSlots: (listingId, start, end, timeZone, options) =>
+      dispatch(fetchTimeSlots(listingId, start, end, timeZone, options)), // for OrderPanel
   };
 };
 

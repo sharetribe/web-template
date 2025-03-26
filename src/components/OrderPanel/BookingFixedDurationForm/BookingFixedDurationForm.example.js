@@ -1,10 +1,10 @@
 import loadable from '@loadable/component';
 import { types as sdkTypes } from '../../../util/sdkLoader';
 import { injectIntl } from '../../../util/reactIntl';
-import { LINE_ITEM_HOUR, TIME_SLOT_TIME } from '../../../util/types';
+import { LINE_ITEM_FIXED, TIME_SLOT_TIME } from '../../../util/types';
 
-const BookingTimeForm = loadable(() =>
-  import(/* webpackChunkName: "BookingTimeForm" */ './BookingTimeForm')
+const BookingFixedDurationForm = loadable(() =>
+  import(/* webpackChunkName: "BookingFixedDurationForm" */ './BookingFixedDurationForm')
 );
 
 const { UUID, Money } = sdkTypes;
@@ -13,7 +13,7 @@ const today = new Date();
 const currentYear = today.getUTCFullYear();
 const m = today.getUTCMonth() + 1;
 const currentMonth = m < 10 ? `0${m}` : m;
-const currentDay = today.getUTCDate();
+
 const timeSlots = [
   {
     id: new UUID(1),
@@ -75,28 +75,58 @@ const monthlyTimeSlots = {
     fetchTimeSlotsInProgress: null,
   },
 };
-const dayId = `${currentYear}-${currentMonth}-${currentDay}`;
 const timeSlotsForDate = {
-  [dayId]: {
-    timeSlots,
+  [`${currentYear}-${currentMonth}-14`]: {
+    timeSlots: [timeSlots[0], timeSlots[1]],
     fetchTimeSlotsError: null,
     fetchTimeSlotsInProgress: null,
-    fetchedAt: today.getTime(),
+    fetchedAt: new Date().getTime(),
+  },
+  [`${currentYear}-${currentMonth}-20`]: {
+    timeSlots: [timeSlots[2]],
+    fetchTimeSlotsError: null,
+    fetchTimeSlotsInProgress: null,
+    fetchedAt: new Date().getTime(),
+  },
+  [`${currentYear}-${currentMonth}-21`]: {
+    timeSlots: [timeSlots[2]],
+    fetchTimeSlotsError: null,
+    fetchTimeSlotsInProgress: null,
+    fetchedAt: new Date().getTime(),
+  },
+  [`${currentYear}-${currentMonth}-22`]: {
+    timeSlots: [timeSlots[2]],
+    fetchTimeSlotsError: null,
+    fetchTimeSlotsInProgress: null,
+    fetchedAt: new Date().getTime(),
   },
 };
 
+const priceVariants = [
+  {
+    // price: new Money(1000, 'USD'),
+    priceInSubUnits: 1000,
+    bookingLengthInMinutes: 30,
+  },
+];
+
 export const Form = {
-  component: BookingTimeForm,
+  component: injectIntl(BookingFixedDurationForm),
   props: {
     formId: 'OrderPanelBookingTimeFormExample',
     listingId: new UUID('listing.id'),
-    unitType: LINE_ITEM_HOUR,
+    unitType: LINE_ITEM_FIXED,
     monthlyTimeSlots,
     timeSlotsForDate,
+    seatsEnabled: false,
+    startTimeInterval: 'quarterHour',
+    priceVariants,
     startDatePlaceholder: new Date(2022, 3, 14).toString(),
     endDatePlaceholder: new Date(2022, 3, 14).toString(),
+    // override initialValues prop that's set inside BookingFixedDurationForm
     initialValues: {
       bookingStartDate: { date: new Date(Date.UTC(currentYear, today.getUTCMonth(), 14)) },
+      priceVariant: priceVariants[0],
     },
     onSubmit: values => {
       console.log('Submit BookingTimeForm with values:', values);

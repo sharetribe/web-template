@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { FormattedMessage, intlShape } from '../../util/reactIntl';
 import { pathByRouteName } from '../../util/routes';
 import { isValidCurrencyForTransactionProcess } from '../../util/fieldHelpers.js';
-import { propTypes, LINE_ITEM_HOUR, DATE_TYPE_DATE, DATE_TYPE_DATETIME } from '../../util/types';
+import { propTypes } from '../../util/types';
 import { ensureTransaction } from '../../util/data';
 import { createSlug } from '../../util/urlHelpers';
 import { isTransactionInitiateListingNotFoundError } from '../../util/errors';
@@ -54,6 +54,35 @@ const paymentFlow = (selectedPaymentMethod, saveAfterOnetimePayment) => {
     : ONETIME_PAYMENT;
 };
 
+const capitalizeString = s => `${s.charAt(0).toUpperCase()}${s.substr(1)}`;
+
+/**
+ * Prefix the properties of the chosen price variant as first level properties for the protected data of the transaction
+ *
+ * @example
+ * const priceVariant = {
+ *   name: 'something',
+ * }
+ *
+ * will be returned as:
+ * const priceVariant = {
+ *   priceVariantName: 'something',
+ * }
+ *
+ * @param {Object} priceVariant - The price variant object
+ * @returns {Object} The price variant object with the properties prefixed with priceVariant*
+ */
+const prefixPriceVariantProperties = priceVariant => {
+  if (!priceVariant) {
+    return {};
+  }
+
+  const entries = Object.entries(priceVariant).map(([key, value]) => {
+    return [`priceVariant${capitalizeString(key)}`, value];
+  });
+  return Object.fromEntries(entries);
+};
+
 /**
  * Construct orderParams object using pageData from session storage, shipping details, and optional payment params.
  * Note: This is used for both speculate transition and real transition
@@ -73,6 +102,9 @@ const getOrderParams = (pageData, shippingDetails, optionalPaymentParams, config
   const seatsMaybe = seats ? { seats } : {};
   const deliveryMethod = pageData.orderData?.deliveryMethod;
   const deliveryMethodMaybe = deliveryMethod ? { deliveryMethod } : {};
+  // price variant data for fixed duration bookings
+  const priceVariant = pageData.orderData?.priceVariant;
+  const priceVariantMaybe = priceVariant ? prefixPriceVariantProperties(priceVariant) : {};
 
   const { listingType, unitType } = pageData?.listing?.attributes?.publicData || {};
   const protectedDataMaybe = {
@@ -80,6 +112,7 @@ const getOrderParams = (pageData, shippingDetails, optionalPaymentParams, config
       ...getTransactionTypeData(listingType, unitType, config),
       ...deliveryMethodMaybe,
       ...shippingDetails,
+      ...priceVariantMaybe,
     },
   };
 
@@ -389,10 +422,8 @@ export const CheckoutPageWithPayment = props => {
       : speculatedTransaction;
   const timeZone = listing?.attributes?.availabilityPlan?.timezone;
   const transactionProcessAlias = listing?.attributes?.publicData?.transactionProcessAlias;
-  const unitType = listing?.attributes?.publicData?.unitType;
-  const lineItemUnitType = `line-item/${unitType}`;
-  const dateType = lineItemUnitType === LINE_ITEM_HOUR ? DATE_TYPE_DATETIME : DATE_TYPE_DATE;
-  const txBookingMaybe = tx?.booking?.id ? { booking: tx.booking, dateType, timeZone } : {};
+
+  const txBookingMaybe = tx?.booking?.id ? { booking: tx.booking, timeZone } : {};
 
   // Show breakdown only when (speculated?) transaction is loaded
   // (i.e. it has an id and lineItems)
