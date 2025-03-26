@@ -79,6 +79,14 @@
     margin: 0;
   }
 }
+
+.fieldDateInputFallback {
+  padding: 5px 0 5px 30px;
+  @media (--viewportMedium) {
+    padding: 7px 0 7px 30px;
+  }
+}
+
 .fieldDatePopup {
   position: absolute;
   z-index: 1;

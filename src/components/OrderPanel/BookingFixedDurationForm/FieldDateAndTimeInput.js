@@ -745,6 +745,15 @@ const FieldDateAndTimeInput = props => {
             onClose={() => {
               setCurrentMonth(bookingStartDate || startOfToday);
             }}
+            fallback={
+              <div className={css.fieldDatePicker}>
+                <label>{startDateInputProps.label}</label>
+                <input
+                  className={classNames(css.fieldDateInput, css.fieldDateInputFallback)}
+                  placeholder={startDateInputProps.placeholderText}
+                />
+              </div>
+            }
           />
         </div>
 
