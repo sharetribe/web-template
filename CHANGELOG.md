@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] Fix the transition of the SavedCardDetails menu.
+  [#567](https://github.com/sharetribe/web-template/pull/567)
+
 ## [v8.0.0] 2025-03-26
 
 This major release adds support for bookings with a fixed duration. The feature is touching so many
