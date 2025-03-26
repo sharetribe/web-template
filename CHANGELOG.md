@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Add support for bookings with a fixed duration.
+  [#560](https://github.com/sharetribe/web-template/pull/560)
 - [fix] Fix the positioning of the camera control otpions on Google Maps
   [#565](https://github.com/sharetribe/web-template/pull/565)
 - [fix] Fix currently available translations for FR.
