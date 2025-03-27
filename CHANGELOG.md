@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] Topbar/LinksMenu: align the menu label correctly.
+  [#569](https://github.com/sharetribe/web-template/pull/569)
 - [fix] BookingFixedDurationForm: form was using wrong translation keys.
   [#568](https://github.com/sharetribe/web-template/pull/568)
 - [fix] Fix the transition of the SavedCardDetails menu.
