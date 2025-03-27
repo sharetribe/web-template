@@ -446,9 +446,7 @@ export const CheckoutPageWithPayment = props => {
     listingLink
   );
 
-  const txTransitions = existingTransaction?.attributes?.transitions || [];
-  const hasInquireTransition = txTransitions.find(tr => tr.transition === transitions.INQUIRE);
-  const showInitialMessageInput = !hasInquireTransition;
+  const showInitialMessageInput = false;
 
   // Get first and last name of the current user and use it in the StripePaymentForm to autofill the name field
   const userName = currentUser?.attributes?.profile

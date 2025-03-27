@@ -24,6 +24,7 @@ import FeedSection from './FeedSection';
 import ActionButtonsMaybe from './ActionButtonsMaybe';
 import DiminishedActionButtonMaybe from './DiminishedActionButtonMaybe';
 import PanelHeading from './PanelHeading';
+import DigitalProductDownload from './DigitalProductDownload';
 
 import css from './TransactionPanel.module.css';
 
@@ -172,6 +173,7 @@ export class TransactionPanelComponent extends Component {
       orderPanel,
       config,
       hasViewingRights,
+      transactionId,
     } = this.props;
 
     const isCustomer = transactionRole === 'customer';
@@ -212,6 +214,7 @@ export class TransactionPanelComponent extends Component {
     const listingTypeConfig = listingTypeConfigs.find(conf => conf.listingType === listingType);
     const showPrice = isInquiryProcess && displayPrice(listingTypeConfig);
 
+    const enableChat = false;
     const showSendMessageForm =
       !isCustomerBanned && !isCustomerDeleted && !isProviderBanned && !isProviderDeleted;
 
@@ -259,6 +262,14 @@ export class TransactionPanelComponent extends Component {
               listingId={listing?.id?.uuid}
               listingTitle={listingTitle}
               listingDeleted={listingDeleted}
+            />
+
+            <DigitalProductDownload
+              currentUser={currentUser}
+              transactionId={transactionId.uuid}
+              transactionRole={transactionRole}
+              processState={stateData.processState}
+              processStates={stateData.states}
             />
 
             <InquiryMessageMaybe
@@ -317,25 +328,26 @@ export class TransactionPanelComponent extends Component {
               activityFeed={activityFeed}
               isConversation={isInquiryProcess}
             />
-            {showSendMessageForm ? (
-              <SendMessageForm
-                formId={this.sendMessageFormName}
-                rootClassName={css.sendMessageForm}
-                messagePlaceholder={intl.formatMessage(
-                  { id: 'TransactionPanel.sendMessagePlaceholder' },
-                  { name: otherUserDisplayNameString }
-                )}
-                inProgress={sendMessageInProgress}
-                sendMessageError={sendMessageError}
-                onFocus={this.onSendMessageFormFocus}
-                onBlur={this.onSendMessageFormBlur}
-                onSubmit={this.onMessageSubmit}
-              />
-            ) : (
-              <div className={css.sendingMessageNotAllowed}>
-                <FormattedMessage id="TransactionPanel.sendingMessageNotAllowed" />
-              </div>
-            )}
+            {enableChat &&
+              (showSendMessageForm ? (
+                <SendMessageForm
+                  formId={this.sendMessageFormName}
+                  rootClassName={css.sendMessageForm}
+                  messagePlaceholder={intl.formatMessage(
+                    { id: 'TransactionPanel.sendMessagePlaceholder' },
+                    { name: otherUserDisplayNameString }
+                  )}
+                  inProgress={sendMessageInProgress}
+                  sendMessageError={sendMessageError}
+                  onFocus={this.onSendMessageFormFocus}
+                  onBlur={this.onSendMessageFormBlur}
+                  onSubmit={this.onMessageSubmit}
+                />
+              ) : (
+                <div className={css.sendingMessageNotAllowed}>
+                  <FormattedMessage id="TransactionPanel.sendingMessageNotAllowed" />
+                </div>
+              ))}
 
             {stateData.showActionButtons ? (
               <>

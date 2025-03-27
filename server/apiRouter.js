@@ -14,6 +14,7 @@ const loginAs = require('./api/login-as');
 const transactionLineItems = require('./api/transaction-line-items');
 const initiatePrivileged = require('./api/initiate-privileged');
 const { verifySlackRequestMiddleware, slackInteractivity } = require('./api/slack');
+const { generateDownloadUrls } = require('./api/digital-product-download');
 const { retryProductListingCreatedScript } = require('./api/scripts-retry');
 const transitionPrivileged = require('./api/transition-privileged');
 const createUserWithIdp = require('./api/auth/createUserWithIdp');
@@ -69,6 +70,7 @@ router.post('/transaction-line-items', transactionLineItems);
 router.post('/initiate-privileged', initiatePrivileged);
 router.post('/transition-privileged', transitionPrivileged);
 router.post('/transloadit-params', transloaditParams);
+router.post('/transaction/product-download', generateDownloadUrls);
 
 // Create user with identity provider (e.g. Facebook or Google)
 // This endpoint is called to create a new user after user has confirmed

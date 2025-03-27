@@ -139,6 +139,7 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       path: '/l/:slug/:id/checkout',
       name: 'CheckoutPage',
       auth: true,
+      authPage: 'LoginPage',
       component: CheckoutPage,
       setInitialValues: pageDataLoadingAPI.CheckoutPage.setInitialValues,
     },

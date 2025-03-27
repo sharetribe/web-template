@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import { PrimaryButton, SecondaryButton } from '../../../components';
+import { SecondaryButton } from '../../../components';
 
 import css from './TransactionPanel.module.css';
 
@@ -27,13 +27,13 @@ const ActionButtonsMaybe = props => {
   const buttonsDisabled = primaryButtonProps?.inProgress || secondaryButtonProps?.inProgress;
 
   const primaryButton = primaryButtonProps ? (
-    <PrimaryButton
+    <SecondaryButton
       inProgress={primaryButtonProps.inProgress}
       disabled={buttonsDisabled}
       onClick={primaryButtonProps.onAction}
     >
       {primaryButtonProps.buttonText}
-    </PrimaryButton>
+    </SecondaryButton>
   ) : null;
   const primaryErrorMessage = primaryButtonProps?.error ? (
     <p className={css.actionError}>{primaryButtonProps?.errorText}</p>

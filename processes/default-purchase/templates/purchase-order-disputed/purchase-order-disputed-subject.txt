@@ -1,0 +1,1 @@
+{{set-translations (asset "content/email-texts.json")}}{{t "PurchaseOrderDisputed.Subject" "{customerDisplayName} disputed an order for {listingTitle}" customerDisplayName=transaction.customer.display-name listingTitle=transaction.listing.title}}

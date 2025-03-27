@@ -1,0 +1,1 @@
+{{set-translations (asset "content/email-texts.json")}}{{t "PurchaseOrderReviewByCustomerWanted.Subject" "Leave a review for {listingTitle}" listingTitle=transaction.listing.title}}

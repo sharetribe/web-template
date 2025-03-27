@@ -148,3 +148,7 @@ export const createUserWithIdp = body => {
 export const createUploadSignature = body => {
   return post('/api/transloadit-params', body);
 };
+
+export const generateDownloadUrls = body => {
+  return post(`/api/transaction/product-download`, body);
+};
