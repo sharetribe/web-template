@@ -1,12 +1,13 @@
 @import '../../styles/customMediaQueries.css';
 
+
 .root {
-  margin: 0;
-  max-width: calc(100vw - 48px);
+  margin: 0 20px;
+  max-width: calc(100vw - 88px);
   position: relative;
 
   @media (--viewportLarge) {
-    max-width: calc(70vw - 48px);
+    max-width: calc(70vw - 88px);
   }
 }
 
@@ -14,7 +15,7 @@
   margin-bottom: 32px;
 
   &:last-of-type {
-    margin-bottom: 0;
+    margin-bottom: 20px;
   }
 
   @media (--viewportMedium) {
@@ -84,6 +85,7 @@
 
   @media (--viewportMedium) {
     display: inline-flex;
+    margin-top: 6px;
   }
 }
 

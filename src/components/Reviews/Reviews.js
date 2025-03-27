@@ -76,60 +76,12 @@ const ReviewsComponent = props => {
     ]
   };
 
-  const carouselRef = useRef(null);
-  const [currentSlide, setCurrentSlide] = React.useState(0);
-  const [slidesToShow, setSlidesToShow] = React.useState(settings.slidesToShow);
-
-  const updateSlidesToShow = () => {
-    const width = window.innerWidth;
-    const responsiveSetting = settings.responsive.find(r => width <= r.breakpoint);
-    setSlidesToShow(responsiveSetting ? responsiveSetting.settings.slidesToShow : settings.slidesToShow);
-  };
-
-  React.useEffect(() => {
-    updateSlidesToShow();
-    window.addEventListener('resize', updateSlidesToShow);
-
-    // Mimic a window resize event
-    const resizeEvent = new Event('resize');
-
-    setTimeout(() => {
-      window.dispatchEvent(resizeEvent);
-      carouselRef.current.slickGoTo(0);
-    }, 300);
-
-    return () => {
-      window.removeEventListener('resize', updateSlidesToShow);
-    };
-  }, []);
-
-  const totalSlides = Math.ceil(reviews.length / slidesToShow);
-
-  //for use with carousel buttons
-  const handleAfterChange = (current) => {
-    setCurrentSlide(current);
-    console.log('current', current);
-    console.log('totalSlides', totalSlides);
-  };
 
   return (
     <div className={classes}>
-      <div className="carousel-button-group">
-        <SecondaryButton 
-          className={currentSlide === 0 ? 'disable' : ''} 
-          onClick={() => carouselRef.current.slickPrev()}
-        >
-          <ChevronLeft/>
-        </SecondaryButton>
-        <SecondaryButton 
-          className={currentSlide == totalSlides -1 ? 'disable' : ''}
-          onClick={() => carouselRef.current.slickNext()}
-        >
-          <ChevronRight/>
-        </SecondaryButton>
-      </div>
+      
 
-      <Slider ref={carouselRef} {...settings} afterChange={handleAfterChange}>
+      <Slider  {...settings}>
         {reviews.map(r => {
           return (
             <div key={`Review_${r.id.uuid}`} className={css.reviewItem}>

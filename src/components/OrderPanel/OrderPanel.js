@@ -499,8 +499,10 @@ const OrderPanel = props => {
                 <FormattedMessage id="OrderPanel.ctaButtonMessageInquiry" />
               )}
             </PrimaryButton>
+            
           )}
         </div>
+        <div className={css.moneyBackGuarantee}><img src="/static/badges/money-back-guarantee.png" alt="Money Back Guarantee" width="120" /></div>
       </div>
     </div>
   );

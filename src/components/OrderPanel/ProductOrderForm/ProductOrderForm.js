@@ -326,7 +326,10 @@ const renderForm = formRenderProps => {
         ) : hasStock && isOwnListing ? (
           <FormattedMessage id="ProductOrderForm.ownListing" />
         ) : hasStock ? (
+          <>
           <FormattedMessage id="ProductOrderForm.finePrint" />
+          <div className={css.moneyBackGuarantee}><img src="/static/badges/money-back-guarantee.png" alt="Money Back Guarantee" width="120" /></div>
+          </>
         ) : showContactUser ? (
           <FormattedMessage id="ProductOrderForm.finePrintNoStock" values={{ contactSellerLink }} />
         ) : null}
