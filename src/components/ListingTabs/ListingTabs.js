@@ -152,7 +152,7 @@ export const ListingTabs = ({
       {title}
       <div>
         <Tabs
-          defaultActiveKey={currentListingType}
+          activeKey={currentListingType}
           onChange={onTabChange}
           items={tabs.map(tab => ({ ...tab, children: contentRenderer }))}
         />

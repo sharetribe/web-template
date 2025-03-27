@@ -251,7 +251,14 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
   const datesMaybe = datesSearchParams(dates);
   const stockMaybe = stockFilters(datesMaybe);
   const seatsMaybe = seatsSearchParams(seats, datesMaybe);
-  const sortMaybe = sort === config.search.sortConfig.relevanceKey ? {} : { sort };
+  const creativeDefaultSort = '-createdAt';
+  const creativeSearch = restOfParams?.['pub_categoryLevel1'] === 'creatives';
+  const sortByRelevance = sort === config.search.sortConfig.relevanceKey;
+  const sortMaybe = sortByRelevance
+    ? {}
+    : creativeSearch
+    ? { sort: sort || creativeDefaultSort }
+    : { sort };
 
   const params = {
     // The rest of the params except invalid nested category-related params

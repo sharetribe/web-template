@@ -1,0 +1,1 @@
+{{set-translations (asset "content/email-texts.json")}}{{t "PurchaseOrderReceipt.Subject" "Thank you for purchasing {listingTitle}" listingTitle=transaction.listing.title}}

@@ -8,6 +8,7 @@
     "@babel/runtime": "^7.17.9",
     "@craco/craco": "^7.1.0",
     "@google-cloud/secret-manager": "^5.6.0",
+    "@google-cloud/storage": "^7.15.2",
     "@loadable/component": "^5.16.4",
     "@loadable/server": "^5.16.5",
     "@mapbox/polyline": "^1.2.1",

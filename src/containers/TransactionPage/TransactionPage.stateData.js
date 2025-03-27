@@ -132,14 +132,17 @@ export const getStateData = (params, process) => {
       leaveReviewProps: getLeaveReviewProps,
     };
   };
-
-  if (processName === PURCHASE_PROCESS_NAME) {
-    return getStateDataForPurchaseProcess(params, processInfo());
-  } else if (processName === BOOKING_PROCESS_NAME) {
-    return getStateDataForBookingProcess(params, processInfo());
-  } else if (processName === INQUIRY_PROCESS_NAME) {
-    return getStateDataForInquiryProcess(params, processInfo());
-  } else {
-    return {};
-  }
+  const getCustomState = () => {
+    if (processName === PURCHASE_PROCESS_NAME) {
+      return getStateDataForPurchaseProcess(params, processInfo());
+    } else if (processName === BOOKING_PROCESS_NAME) {
+      return getStateDataForBookingProcess(params, processInfo());
+    } else if (processName === INQUIRY_PROCESS_NAME) {
+      return getStateDataForInquiryProcess(params, processInfo());
+    } else {
+      return null;
+    }
+  };
+  const customState = getCustomState();
+  return customState ? { ...customState, states: process.states } : {};
 };

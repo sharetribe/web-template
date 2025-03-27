@@ -1,0 +1,1 @@
+{{set-translations (asset "content/email-texts.json")}}{{t "PurchaseOrderReceivedFromDisputedCustomer.Subject" "Your disputed order for {listingTitle} is now considered completed" listingTitle=transaction.listing.title}}
