@@ -63,7 +63,7 @@ function SellerProfilePage({
   const intl = useIntl();
 
   const enableListingTabs = !userShowError && !queryCreativeProfileError;
-  const defaultListingType = LISTING_GRID_DEFAULTS.TYPE;
+  const defaultListingType = LISTING_GRID_DEFAULTS.TYPE(LISTING_GRID_ROLE.PROFILE);
   const currentListingType = queryParams.pub_listingType || defaultListingType;
   const userId = profileUser?.id?.uuid;
   const reviewsOfProvider = reviews.filter(r => r.attributes.type === REVIEW_TYPE_OF_PROVIDER);

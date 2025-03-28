@@ -1,4 +1,5 @@
 const { Storage } = require('@google-cloud/storage');
+const { extname } = require('path');
 
 const { integrationSdkInit } = require('../api-util/scriptManager');
 const { resolveLatestProcessName, getProcess } = require('../api-util/transactions/transaction');
@@ -6,6 +7,11 @@ const { resolveLatestProcessName, getProcess } = require('../api-util/transactio
 const storage = new Storage();
 const publicStorageRegex = /^https:\/\/storage.googleapis.com\/(.*)$/;
 const gsBaseURL = 'gs://';
+
+function tlFilename(listingId, filename) {
+  const fileExt = extname(filename);
+  return `TheLuupe_${listingId}${fileExt}`;
+}
 
 function uriToFile(source) {
   const parsedSource = source.replace(publicStorageRegex, `${gsBaseURL}$1`);
@@ -58,16 +64,14 @@ async function generateDownloadUrls(req, res) {
     const process = getProcess(processName);
     const { processState, states } = getStateData(transaction, process);
     switch (processState) {
-      case states.COMPLETED:
-      case states.DELIVERED:
       case states.PURCHASED:
-      case states.RECEIVED:
-      case states.REVIEWED:
-      case states.REVIEWED_BY_CUSTOMER:
-      case states.REVIEWED_BY_PROVIDER: {
+      case states.COMPLETED:
+      case states.REVIEWED: {
         const originalFileName = listing?.attributes?.publicData?.originalFileName;
         const source = listing?.attributes?.privateData?.originalAssetUrl;
-        const signedDownloadUrl = await generateSignedDownloadUrl(source, originalFileName);
+        const listingId = listing?.id?.uuid;
+        const filename = tlFilename(listingId, originalFileName);
+        const signedDownloadUrl = await generateSignedDownloadUrl(source, filename);
         return res.json(signedDownloadUrl);
       }
       default:

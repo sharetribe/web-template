@@ -42,7 +42,7 @@ export const ListingTabs = ({
   const history = useHistory();
 
   const listingsAreLoaded = !queryInProgress;
-  const defaultListingType = LISTING_GRID_DEFAULTS.TYPE;
+  const defaultListingType = LISTING_GRID_DEFAULTS.TYPE(role);
   const listingsQueryParams = listingsQueryParamsHandler(queryParams);
   const currentListingType = queryParams.pub_listingType || defaultListingType;
   const hasNoResults = listingsAreLoaded && !items.length;

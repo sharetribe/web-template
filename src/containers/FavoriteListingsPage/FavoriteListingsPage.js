@@ -32,7 +32,7 @@ export const FavoriteListingsPageComponent = props => {
   const history = useHistory();
   const routeConfiguration = useRouteConfiguration();
   const title = intl.formatMessage({ id: 'FavoriteListingsPage.title' });
-  const defaultListingType = LISTING_GRID_DEFAULTS.TYPE;
+  const defaultListingType = LISTING_GRID_DEFAULTS.TYPE(LISTING_GRID_ROLE.FAVORITE);
 
   useEffect(() => {
     const validListingType = !queryParams.pub_listingType;

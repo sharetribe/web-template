@@ -29,14 +29,15 @@ export default function DigitalProductDownload({
     document.body.removeChild(link);
   }
 
+  const isCustomer = transactionRole === 'customer';
+  if (!isCustomer) {
+    return null;
+  }
+
   switch (processState) {
-    case processStates.COMPLETED:
-    case processStates.DELIVERED:
     case processStates.PURCHASED:
-    case processStates.RECEIVED:
+    case processStates.COMPLETED:
     case processStates.REVIEWED:
-    case processStates.REVIEWED_BY_CUSTOMER:
-    case processStates.REVIEWED_BY_PROVIDER:
       return (
         <div className={css.downloadButtonWrapper}>
           <Button
@@ -45,7 +46,7 @@ export default function DigitalProductDownload({
             className={css.downloadButton}
             onClick={downloadHanlder}
           >
-            <FormattedMessage id="ListingTabs.manageButton" />
+            <FormattedMessage id="TransactionPanel.downloadDigitalProductButton" />
           </Button>
         </div>
       );

@@ -91,7 +91,7 @@ export const ManageListingsPageComponent = props => {
     scrollingDisabled,
     onManageDisableScrolling,
   } = props;
-  const defaultListingType = LISTING_GRID_DEFAULTS.TYPE;
+  const defaultListingType = LISTING_GRID_DEFAULTS.TYPE(LISTING_GRID_ROLE.MANAGE);
   const currentListingType = queryParams.pub_listingType || defaultListingType;
 
   const currentCategory = useMemo(
