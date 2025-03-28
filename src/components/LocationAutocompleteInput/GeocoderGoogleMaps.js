@@ -46,9 +46,7 @@ class GeocoderGoogleMaps {
   getPlacePredictions(search, countryLimit) {
     const limitCountriesMaybe = countryLimit
       ? {
-          componentRestrictions: {
-            country: countryLimit,
-          },
+          includedRegionCodes: countryLimit,
         }
       : {};
 
@@ -70,8 +68,7 @@ class GeocoderGoogleMaps {
       // default prediction defined above
       return prediction.id;
     }
-    // prediction from Google Maps Places API
-    return prediction.place_id;
+    return prediction.placePrediction.placeId;
   }
 
   /**
@@ -83,7 +80,8 @@ class GeocoderGoogleMaps {
       return prediction.predictionPlace.address;
     }
     // prediction from Google Maps Places API
-    return prediction.description;
+
+    return prediction.placePrediction.text.text;
   }
 
   /**
@@ -108,12 +106,10 @@ class GeocoderGoogleMaps {
       return Promise.resolve(prediction.predictionPlace);
     }
 
-    return googleMapsUtil
-      .getPlaceDetails(prediction.place_id, this.getSessionToken())
-      .then(place => {
-        this.sessionToken = null;
-        return place;
-      });
+    return googleMapsUtil.getPlaceDetails(this.getPredictionId(prediction)).then(place => {
+      this.sessionToken = null;
+      return place;
+    });
   }
 }
 
