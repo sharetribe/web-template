@@ -4,13 +4,6 @@ const { LatLng: SDKLatLng, LatLngBounds: SDKLatLngBounds } = sdkTypes;
 
 const isDev = process.env.NODE_ENV === 'development';
 
-const placeOrigin = place => {
-  if (place && place.geometry && place.geometry.location) {
-    return new SDKLatLng(place.geometry.location.lat(), place.geometry.location.lng());
-  }
-  return null;
-};
-
 /**
  * Extracts the geographic location (origin) from a Google Maps Place object
  * using the new Google Places API structure, and converts it into an SDKLatLng object.
@@ -23,18 +16,6 @@ const placeOrigin = place => {
 const placeOriginNew = place => {
   if (place && place.location) {
     return new SDKLatLng(place.location.lat(), place.location.lng());
-  }
-  return null;
-};
-
-const placeBounds = place => {
-  if (place && place.geometry && place.geometry.viewport) {
-    const ne = place.geometry.viewport.getNorthEast();
-    const sw = place.geometry.viewport.getSouthWest();
-    return new SDKLatLngBounds(
-      new SDKLatLng(ne.lat(), ne.lng()),
-      new SDKLatLng(sw.lat(), sw.lng())
-    );
   }
   return null;
 };
@@ -61,40 +42,6 @@ const placeBoundsNew = place => {
 };
 
 /**
- * Get a detailed place object
- *
- * @param {String} placeId - ID for a place received from the
- * autocomplete service
- * @param {String} sessionToken - token to tie different autocomplete character searches together
- * with getPlaceDetails call
- *
- * @return {Promise<util.propTypes.place>} Promise that
- * resolves to the detailed place, rejects if the request failed
- */
-export const getPlaceDetails = (placeId, sessionToken) =>
-  new Promise((resolve, reject) => {
-    const serviceStatus = window.google.maps.places.PlacesServiceStatus;
-    const el = document.createElement('div');
-    const service = new window.google.maps.places.PlacesService(el);
-    const fields = ['address_component', 'formatted_address', 'geometry', 'place_id'];
-    const sessionTokenMaybe = sessionToken ? { sessionToken } : {};
-
-    service.getDetails({ placeId, fields, ...sessionTokenMaybe }, (place, status) => {
-      if (status !== serviceStatus.OK) {
-        reject(
-          new Error(`Could not get details for place id "${placeId}", error status was "${status}"`)
-        );
-      } else {
-        resolve({
-          address: place.formatted_address,
-          origin: placeOrigin(place),
-          bounds: placeBounds(place),
-        });
-      }
-    });
-  });
-
-/**
  * Fetches detailed information about a specific place using the new Google Maps Places API.
  *
  * @param {string} placeId - ID for a place received from the
@@ -104,7 +51,7 @@ export const getPlaceDetails = (placeId, sessionToken) =>
  *   - `origin` (object): The geographic origin of the place (calculated using `placeOriginNew`).
  *   - `bounds` (object): The viewport bounds of the place (calculated using `placeBoundsNew`).
  */
-export const getPlaceDetailsNew = async placeId => {
+export const getPlaceDetails = async placeId => {
   try {
     const place = await new window.google.maps.places.Place({ id: placeId });
     const fields = ['addressComponents', 'formattedAddress', 'viewport', 'id', 'location'];
@@ -130,40 +77,6 @@ const predictionSuccessful = status => {
 };
 
 /**
- * Get place predictions for the given search
- *
- * @param {String} search - place name or address to search
- * @param {String} sessionToken - token to tie different autocomplete character searches together
- * with getPlaceDetails call
- * @param {Object} searchConfigurations - defines the search configurations that can be used with
- * the autocomplete service. Used to restrict search to specific country (or countries).
- *
- * @return {Promise<{ search, predictions[] }>} - Promise of an object
- * with the original search query and an array of
- * `google.maps.places.AutocompletePrediction` objects
- */
-export const getPlacePredictions = (search, sessionToken, searchConfigurations) =>
-  new Promise((resolve, reject) => {
-    const service = new window.google.maps.places.AutocompleteService();
-    const sessionTokenMaybe = sessionToken ? { sessionToken } : {};
-
-    service.getPlacePredictions(
-      { input: search, ...sessionTokenMaybe, ...searchConfigurations },
-      (predictions, status) => {
-        if (!predictionSuccessful(status)) {
-          reject(new Error(`Prediction service status not OK: ${status}`));
-        } else {
-          const results = {
-            search,
-            predictions: predictions || [],
-          };
-          resolve(results);
-        }
-      }
-    );
-  });
-
-/**
  * Fetches autocomplete predictions using the new Google Places API.
  *
  * @param {string} search - Place name or address to search
@@ -176,7 +89,7 @@ export const getPlacePredictions = (search, sessionToken, searchConfigurations) 
  *   - `search` (string): The search query.
  *   - `predictions` (array): An array of prediction objects returned from the Google Places API.
  */
-export const getPlacePredictionsNew = async (search, sessionToken, searchConfigurations) => {
+export const getPlacePredictions = async (search, sessionToken, searchConfigurations) => {
   try {
     const sessionTokenMaybe = sessionToken ? { sessionToken } : {};
     const request = {
