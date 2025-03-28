@@ -1,0 +1,85 @@
+{:format :v3,
+ :transitions
+ [{:name :transition/request-payment,
+   :actor :actor.role/customer,
+   :privileged? true,
+   :actions
+   [{:name :action/update-protected-data}
+    {:name :action/create-pending-stock-reservation}
+    {:name :action/privileged-set-line-items}
+    {:name :action/stripe-create-payment-intent}],
+   :to :state/pending-payment}
+  {:name :transition/confirm-payment,
+   :actor :actor.role/customer,
+   :actions
+   [{:name :action/accept-stock-reservation}
+    {:name :action/stripe-confirm-payment-intent}
+    {:name :action/stripe-capture-payment-intent}],
+   :from :state/pending-payment,
+   :to :state/purchased}
+  {:name :transition/expire-payment,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/pending-payment]}
+     {:fn/period ["PT15M"]}]},
+   :actions
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}
+    {:name :action/decline-stock-reservation}],
+   :from :state/pending-payment,
+   :to :state/payment-expired}
+  {:name :transition/auto-complete,
+   :at {:fn/timepoint [:time/first-entered-state :state/purchased]},
+   :actions [{:name :action/stripe-create-payout}],
+   :from :state/purchased,
+   :to :state/completed}
+  {:name :transition/expire-review-period,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/completed]}
+     {:fn/period ["P7D"]}]},
+   :actions [],
+   :from :state/completed,
+   :to :state/reviewed}
+  {:name :transition/review-by-customer,
+   :actor :actor.role/customer,
+   :actions
+   [{:name :action/post-review-by-customer}
+    {:name :action/publish-reviews}],
+   :from :state/completed,
+   :to :state/reviewed
+   }],
+ :notifications
+ [{:name :notification/order-receipt,
+   :on :transition/confirm-payment,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/purchased]}
+     {:fn/period ["PT15M"]}]},
+   :to :actor.role/customer,
+   :template :purchase-order-receipt}
+  {:name :notification/purchase-new-order,
+   :on :transition/confirm-payment,
+   :to :actor.role/provider,
+   :template :purchase-new-order}
+  {:name :notification/purchase-marketing-follow-up
+   :on :transition/auto-complete,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/completed]}
+     {:fn/period ["P3D"]}]},
+   :to :actor.role/customer,
+   :template :purchase-mark-order-received-reminder}
+  {:name :notification/order-completed,
+   :on :transition/auto-complete,
+   :to :actor.role/provider,
+   :template :purchase-order-marked-as-received}
+  {:name :notification/review-period-start-customer,
+   :on :transition/auto-complete,
+   :to :actor.role/customer,
+   :template :purchase-order-review-by-customer-wanted}
+  {:name :notification/review-by-customer,
+   :on :transition/review-by-customer,
+   :to :actor.role/provider,
+   :template :purchase-review-by-other-party-published
+   }]}

@@ -253,7 +253,9 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
   const seatsMaybe = seatsSearchParams(seats, datesMaybe);
   const creativeDefaultSort = '-createdAt';
   const creativeSearch = restOfParams?.['pub_categoryLevel1'] === 'creatives';
-  const sortByRelevance = sort === config.search.sortConfig.relevanceKey;
+  const withKeywordSearch = !!restOfParams?.['keywords'];
+  const sortByRelevance =
+    sort === config.search.sortConfig.relevanceKey || (!sort && withKeywordSearch);
   const sortMaybe = sortByRelevance
     ? {}
     : creativeSearch

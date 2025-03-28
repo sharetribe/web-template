@@ -29,6 +29,11 @@ export default function DigitalProductDownload({
     document.body.removeChild(link);
   }
 
+  const isCustomer = transactionRole === 'customer';
+  if (!isCustomer) {
+    return null;
+  }
+
   switch (processState) {
     case processStates.COMPLETED:
     case processStates.DELIVERED:
@@ -45,7 +50,7 @@ export default function DigitalProductDownload({
             className={css.downloadButton}
             onClick={downloadHanlder}
           >
-            <FormattedMessage id="ListingTabs.manageButton" />
+            <FormattedMessage id="TransactionPanel.downloadDigitalProductButton" />
           </Button>
         </div>
       );
