@@ -64,13 +64,9 @@ async function generateDownloadUrls(req, res) {
     const process = getProcess(processName);
     const { processState, states } = getStateData(transaction, process);
     switch (processState) {
-      case states.COMPLETED:
-      case states.DELIVERED:
       case states.PURCHASED:
-      case states.RECEIVED:
-      case states.REVIEWED:
-      case states.REVIEWED_BY_CUSTOMER:
-      case states.REVIEWED_BY_PROVIDER: {
+      case states.COMPLETED:
+      case states.REVIEWED: {
         const originalFileName = listing?.attributes?.publicData?.originalFileName;
         const source = listing?.attributes?.privateData?.originalAssetUrl;
         const listingId = listing?.id?.uuid;

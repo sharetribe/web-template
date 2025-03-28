@@ -70,10 +70,6 @@
      {:fn/period ["P3D"]}]},
    :to :actor.role/customer,
    :template :purchase-mark-order-received-reminder}
-  {:name :notification/order-completed,
-   :on :transition/auto-complete,
-   :to :actor.role/provider,
-   :template :purchase-order-marked-as-received}
   {:name :notification/review-period-start-customer,
    :on :transition/auto-complete,
    :to :actor.role/customer,

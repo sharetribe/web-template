@@ -35,13 +35,9 @@ export default function DigitalProductDownload({
   }
 
   switch (processState) {
-    case processStates.COMPLETED:
-    case processStates.DELIVERED:
     case processStates.PURCHASED:
-    case processStates.RECEIVED:
+    case processStates.COMPLETED:
     case processStates.REVIEWED:
-    case processStates.REVIEWED_BY_CUSTOMER:
-    case processStates.REVIEWED_BY_PROVIDER:
       return (
         <div className={css.downloadButtonWrapper}>
           <Button

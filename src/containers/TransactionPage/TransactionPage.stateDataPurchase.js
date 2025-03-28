@@ -13,99 +13,44 @@ import {
  * @param {*} processInfo  details about process
  */
 export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
-  const { transaction, transactionRole, nextTransitions } = txInfo;
-  const isProviderBanned = transaction?.provider?.attributes?.banned;
-  const isShippable = transaction?.attributes?.protectedData?.deliveryMethod === 'shipping';
+  const { transactionRole } = txInfo;
   const _ = CONDITIONAL_RESOLVER_WILDCARD;
 
-  const {
-    processName,
-    processState,
-    states,
-    transitions,
-    isCustomer,
-    actionButtonProps,
-    leaveReviewProps,
-  } = processInfo;
+  const { processName, processState, states, leaveReviewProps } = processInfo;
 
   return new ConditionalResolver([processState, transactionRole])
-    .cond([states.INQUIRY, CUSTOMER], () => {
-      const transitionNames = Array.isArray(nextTransitions)
-        ? nextTransitions.map(t => t.attributes.name)
-        : [];
-      const requestAfterInquiry = transitions.REQUEST_PAYMENT_AFTER_INQUIRY;
-      const hasCorrectNextTransition = transitionNames.includes(requestAfterInquiry);
-      const showOrderPanel = !isProviderBanned && hasCorrectNextTransition;
-      return { processName, processState, showOrderPanel };
-    })
-    .cond([states.INQUIRY, PROVIDER], () => {
-      return { processName, processState, showDetailCardHeadings: true };
-    })
     .cond([states.PURCHASED, CUSTOMER], () => {
       return {
         processName,
         processState,
         showDetailCardHeadings: true,
-        showActionButtons: true,
-        showExtraInfo: true,
-        primaryButtonProps: actionButtonProps(transitions.MARK_RECEIVED_FROM_PURCHASED, CUSTOMER),
       };
     })
-    .cond([states.PURCHASED, PROVIDER], () => {
-      const actionButtonTranslationId = isShippable
-        ? `TransactionPage.${processName}.${PROVIDER}.transition-mark-delivered.actionButtonShipped`
-        : `TransactionPage.${processName}.${PROVIDER}.transition-mark-delivered.actionButton`;
+    .cond([states.COMPLETED, CUSTOMER], () => {
+      return {
+        processName,
+        processState,
+        showDetailCardHeadings: true,
+        showActionButtons: true,
+        primaryButtonProps: leaveReviewProps,
+      };
+    })
 
+    .cond([states.PURCHASED, PROVIDER], () => {
       return {
         processName,
         processState,
         showDetailCardHeadings: true,
-        showActionButtons: true,
-        primaryButtonProps: actionButtonProps(transitions.MARK_DELIVERED, PROVIDER, {
-          actionButtonTranslationId,
-        }),
       };
     })
-    .cond([states.DELIVERED, CUSTOMER], () => {
+    .cond([states.COMPLETED, PROVIDER], () => {
       return {
         processName,
         processState,
         showDetailCardHeadings: true,
-        showDispute: true,
-        showActionButtons: true,
-        primaryButtonProps: actionButtonProps(transitions.MARK_RECEIVED, CUSTOMER),
       };
     })
-    .cond([states.COMPLETED, _], () => {
-      return {
-        processName,
-        processState,
-        showDetailCardHeadings: true,
-        showReviewAsFirstLink: true,
-        showActionButtons: true,
-        primaryButtonProps: leaveReviewProps,
-      };
-    })
-    .cond([states.REVIEWED_BY_PROVIDER, CUSTOMER], () => {
-      return {
-        processName,
-        processState,
-        showDetailCardHeadings: true,
-        showReviewAsSecondLink: true,
-        showActionButtons: true,
-        primaryButtonProps: leaveReviewProps,
-      };
-    })
-    .cond([states.REVIEWED_BY_CUSTOMER, PROVIDER], () => {
-      return {
-        processName,
-        processState,
-        showDetailCardHeadings: true,
-        showReviewAsSecondLink: true,
-        showActionButtons: true,
-        primaryButtonProps: leaveReviewProps,
-      };
-    })
+
     .cond([states.REVIEWED, _], () => {
       return { processName, processState, showDetailCardHeadings: true, showReviews: true };
     })

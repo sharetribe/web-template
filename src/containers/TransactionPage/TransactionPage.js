@@ -25,6 +25,7 @@ import {
   resolveLatestProcessName,
   getProcess,
   isBookingProcess,
+  isPurchaseProcess,
 } from '../../transactions/transaction';
 
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
@@ -293,11 +294,16 @@ export const TransactionPageComponent = props => {
     setReviewModalOpen(true);
   };
 
-  // Submit review and close the review modal
-  const onSubmitReview = values => {
-    const { reviewRating, reviewContent } = values;
-    const rating = Number.parseInt(reviewRating, 10);
+  const getTransitionOptionsForReview = () => {
+    const isDigitalProductPurchase = isPurchaseProcess(stateData.processName);
     const { states, transitions } = process;
+    if (isDigitalProductPurchase) {
+      return {
+        reviewAsFirst: transitions.REVIEW_BY_CUSTOMER,
+        reviewAsSecond: transitions.REVIEW_BY_CUSTOMER,
+        hasOtherPartyReviewedFirst: false,
+      };
+    }
     const transitionOptions =
       transactionRole === CUSTOMER
         ? {
@@ -314,8 +320,15 @@ export const TransactionPageComponent = props => {
               .getTransitionsToStates([states.REVIEWED_BY_CUSTOMER])
               .includes(transaction.attributes.lastTransition),
           };
-    const params = { reviewRating: rating, reviewContent };
+    return transitionOptions;
+  };
 
+  // Submit review and close the review modal
+  const onSubmitReview = values => {
+    const { reviewRating, reviewContent } = values;
+    const rating = Number.parseInt(reviewRating, 10);
+    const transitionOptions = getTransitionOptionsForReview();
+    const params = { reviewRating: rating, reviewContent };
     onSendReview(transaction, transitionOptions, params, config)
       .then(r => {
         setReviewModalOpen(false);
