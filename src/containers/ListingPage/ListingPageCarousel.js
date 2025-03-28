@@ -343,7 +343,7 @@ export const ListingPageComponent = props => {
           <ProgressBar
             steps={SELL_PURCHASE_PROGRESS_BAR_STEPS_CUSTOMER}
             stateData={{ processName }}
-            categoryLevel1={currentListing?.attributes?.publicData?.categoryLevel1}
+            categoryLevel1={publicData.categoryLevel1}
           />
         )}
         <div className={css.contentWrapperForProductLayout}>

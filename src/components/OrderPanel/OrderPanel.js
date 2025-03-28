@@ -57,6 +57,8 @@ import {
 
 import { Heart } from 'lucide-react';
 
+import MoneyBackGuarantee from '../../extensions/common/components/moneyBackGuarantee/moneyBackGuarantee';
+
 import css from './OrderPanel.module.css';
 
 const BookingTimeForm = loadable(() =>
@@ -502,7 +504,9 @@ const OrderPanel = props => {
             
           )}
         </div>
-        <div className={css.moneyBackGuarantee}><img src="/static/badges/money-back-guarantee.png" alt="Money Back Guarantee" width="120" /></div>
+        
+        <MoneyBackGuarantee />
+        
       </div>
     </div>
   );
