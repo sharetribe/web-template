@@ -196,6 +196,7 @@ export const getStateDataForSellPurchaseProcess = (txInfo, processInfo) => {
           isConfirmNeeded: true,
           showReminderStatement: true,
           formConfigs: [
+            getFieldTextConfig('managerBusinessName'),
             getFieldTextConfig('managerName'),
             getFieldTextConfig('managerPhoneNumber'),
             getFieldTextConfig('managerEmail', [

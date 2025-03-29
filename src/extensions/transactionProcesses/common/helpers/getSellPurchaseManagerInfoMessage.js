@@ -4,7 +4,8 @@ export const getSellPurchaseManagerInfoMessage = ({
   managerName,
   managerPhoneNumber,
 }) => {
-  return `Manager Name: ${managerName},
+  return `Business: ${managerBusinessName}, 
+Manager Name: ${managerName},
 Manager Email: ${managerEmail},
 Manager Phone: ${managerPhoneNumber},
 Address of Location: ${managerAddress}`;

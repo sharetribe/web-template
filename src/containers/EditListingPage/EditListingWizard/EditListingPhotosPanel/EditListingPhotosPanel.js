@@ -67,7 +67,7 @@ const EditListingPhotosPanel = props => {
     const params = {
       agentName: listing?.author?.attributes?.profile?.displayName,
       agentAvatar: listing?.author?.profileImage?.attributes?.variants["listing-card-2x"]?.url,
-      title: listing?.attributes?.title,
+      title: encodeURIComponent(listing?.attributes?.title),
       locationType: listing?.attributes?.publicData?.categoryLevel1,
       buildingType: listing?.attributes?.publicData?.building_type,
       cityRegion: cityRegion,

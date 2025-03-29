@@ -224,6 +224,8 @@
 
   "TransactionPage.PrimaryConfirmActionModal.sell-purchase.purchase-confirmed-by-buyer.provider.modalTitle":  "Intro buyer to manager",
   
+  "TransactionPage.sell-purchase.managerBusinessName.label":"Business Name",
+  "TransactionPage.sell-purchase.managerBusinessName.requiredMessage":"A business name is required",
   "TransactionPage.sell-purchase.managerName.label":"Manager Name",
   "TransactionPage.sell-purchase.managerName.requiredMessage":"A name is required",
   "TransactionPage.sell-purchase.managerPhoneNumber.label":"Manager Phone Number",

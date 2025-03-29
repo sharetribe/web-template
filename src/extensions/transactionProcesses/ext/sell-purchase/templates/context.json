@@ -266,6 +266,7 @@
       }
     },
     "protected-data": {
+      "managerBusinessName": "Smith's Bakery",
       "managerName": "John Smith",
       "managerPhoneNumber": "415 444-34334",
       "managerEmail": "johnsmith@gmail.com",

@@ -21,6 +21,7 @@ function ManagerInformationMaybe({
     managerAddressGeo,
     managerEmail,
     managerName,
+    managerBusinessName,
     managerPhoneNumber,
   } = protectedData;
 
@@ -38,6 +39,11 @@ function ManagerInformationMaybe({
       <Heading as="h3" rootClassName={headingClasses}>
         <Contact /> <FormattedMessage id="TransactionPanel.managerInformationHeading" />
       </Heading>
+      {!!managerBusinessName && (
+        <p className={css.sectionContent}>
+          <FormattedMessage id="TransactionPanel.managerBusinessNameContent" values={{ managerBusinessName }} />
+        </p>
+      )}
       {!!managerName && (
         <p className={css.sectionContent}>
           <FormattedMessage id="TransactionPanel.managerNameContent" values={{ managerName }} />

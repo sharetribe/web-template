@@ -16,6 +16,7 @@
   border-radius: 8px;
   object-fit: cover;
   transition: 0.2s;
+  box-shadow: 0px 3px 7px rgba(0, 0, 0, 0.05);
 }
 
 .imageHoverEffect {
