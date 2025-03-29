@@ -57,6 +57,8 @@ import {
 
 import { Heart } from 'lucide-react';
 
+import MoneyBackGuarantee from '../../extensions/common/components/moneyBackGuarantee/moneyBackGuarantee';
+
 import css from './OrderPanel.module.css';
 
 const BookingTimeForm = loadable(() =>
@@ -499,8 +501,12 @@ const OrderPanel = props => {
                 <FormattedMessage id="OrderPanel.ctaButtonMessageInquiry" />
               )}
             </PrimaryButton>
+            
           )}
         </div>
+        
+        <MoneyBackGuarantee />
+        
       </div>
     </div>
   );

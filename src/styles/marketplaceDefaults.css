@@ -799,12 +799,13 @@ textarea {
 }
 
 .textSmall {
-  font-size: 14px;
+  font-size: 12px;
   line-height: 18px;
   font-weight: var(--fontWeightMedium);
   letter-spacing: -0.1px;
 
   @media (--viewportMedium) {
+    font-size: 14px;
     line-height: 16px;
   }
 }
@@ -1605,4 +1606,11 @@ svg.lucide{
 
 .slick-dots li button:before{
   color: var(--marketplaceColorDark) !important;
+}
+.slick-next:before, .slick-prev:before {
+  color: rgba(0,0,0,0.2);
+}
+.slick-next:focus:before, .slick-next:hover:before, .slick-prev:focus:before, .slick-prev:hover:before {
+  opacity: 1;
+  color: var(--marketplaceColor);
 }

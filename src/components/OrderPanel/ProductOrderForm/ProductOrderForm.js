@@ -19,6 +19,7 @@ import {
 } from '../../../components';
 
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
+import MoneyBackGuarantee from '../../../extensions/common/components/moneyBackGuarantee/moneyBackGuarantee';
 
 import css from './ProductOrderForm.module.css';
 import { getCategoryLabel } from '../../../config/categories';
@@ -326,7 +327,10 @@ const renderForm = formRenderProps => {
         ) : hasStock && isOwnListing ? (
           <FormattedMessage id="ProductOrderForm.ownListing" />
         ) : hasStock ? (
+          <>
           <FormattedMessage id="ProductOrderForm.finePrint" />
+          <MoneyBackGuarantee />
+          </>
         ) : showContactUser ? (
           <FormattedMessage id="ProductOrderForm.finePrintNoStock" values={{ contactSellerLink }} />
         ) : null}

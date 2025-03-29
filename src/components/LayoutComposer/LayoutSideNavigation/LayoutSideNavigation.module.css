@@ -74,12 +74,12 @@
   box-shadow: var(--boxShadow);
 
   flex-direction: column;
-  padding: 20px 0 0 20px;
+  padding: 0 0 0 16px;
   margin: 0;
   width: auto;
 
   @media (--viewportLarge) {
-   
+    padding: 20px 0 0 20px;
     justify-items: right;
     border: none;
     box-shadow: none;
@@ -106,6 +106,8 @@
     flex-direction: column;
     margin-top: 24px;
     padding-top: 0;
+    position: sticky;
+    top: 170px;
   }
 }
 
