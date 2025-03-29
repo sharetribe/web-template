@@ -190,7 +190,7 @@
   "TransactionPage.sell-purchase.provider.transition-seller-refund-before-capture-intent.toastTitle":   "You've successfully issued a refund!",
   "TransactionPage.sell-purchase.provider.transition-seller-refund-before-capture-intent.toastContent": "The order will be refunded.",
 
-  "TransactionPage.SecondaryConfirmActionModal.sell-purchase.purchased.provider.reminderStatement":     "Since the hold period has expired, the buyer will receive their purchase price less the transaction fee",
+  "TransactionPage.SecondaryConfirmActionModal.sell-purchase.purchased.provider.reminderStatement":     "The buyer will receive a full refund including the non-refundable transaction fee which Vending Village will cover.",
   
   "TransactionPage.sell-purchase.customer.transition-buyer-issue-refund.actionButton":    "Request a refund",
   "TransactionPage.sell-purchase.customer.transition-buyer-issue-refund.actionError":     "Oops, dispute failed. Please try again.",
@@ -206,7 +206,7 @@
   "TransactionPage.sell-purchase.provider.transition-seller-issue-refund.toastTitle":   "You've successfully issued a refund!",
   "TransactionPage.sell-purchase.provider.transition-seller-issue-refund.toastContent": "Your request will be reviewed soon.",
   
-  "TransactionPage.SecondaryConfirmActionModal.sell-purchase.stripe-intent-captured.provider.reminderStatement":  "Since the hold period has expired, the buyer will receive their purchase price less the transaction fee",
+  "TransactionPage.SecondaryConfirmActionModal.sell-purchase.stripe-intent-captured.provider.reminderStatement":  "The buyer will receive a full refund including the non-refundable transaction fee which Vending Village will cover.",
   "TransactionPage.sell-purchase.provider.transition-seller-approve-refund.actionButton":                         "Approve refund request",
   "TransactionPage.sell-purchase.provider.transition-seller-approve-refund.actionError":                          "Oops, approve failed. Please try again.",
  
@@ -253,8 +253,8 @@
   "TransactionPage.ActivityFeed.sell-purchase.reviewed-by-provider":  "{actor, select, you {You left a review for {otherUsersName}.} other {{otherUsersName} left a review for you. {reviewLink}}}",
   "TransactionPage.ActivityFeed.sell-purchase.reviewed-by-customer":  "{actor, select, you {You left a review for {otherUsersName}.} other {{otherUsersName} left a review for you. {reviewLink}}}",
 
-  "ProgressStep.stepTitle.sell-purchase.Customer.PendingPayment" :  "Buy Location",
-  "ProgressStep.stepTitle.sell-purchase.Customer.MeetManager" :     "Meet Manager",
+  "ProgressStep.stepTitle.sell-purchase.Customer.PendingPayment" :  "Buy {categoryLevel1, select, location_find {Service} other {Location}}",
+  "ProgressStep.stepTitle.sell-purchase.Customer.MeetManager" :     "{categoryLevel1, select, location_find {Approve Location} other {Meet Manager}}",
   "ProgressStep.stepTitle.sell-purchase.Customer.PlaceMachine" :    "Finalize Order",
   "ProgressStep.stepTitle.sell-purchase.Customer.Review" :          "Leave a Review",
 

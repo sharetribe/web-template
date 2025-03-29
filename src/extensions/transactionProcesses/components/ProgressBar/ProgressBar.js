@@ -11,7 +11,7 @@ import {
 
 import css from './ProgressBar.module.css';
 
-function ProgressBar({ steps, stateData, rootClassName, className, stepInProgress }) {
+function ProgressBar({ steps, stateData, rootClassName, className, stepInProgress, categoryLevel1 }) {
   if (!Array.isArray(steps) || steps.length === 0 || !stateData) {
     return null;
   }
@@ -59,6 +59,7 @@ function ProgressBar({ steps, stateData, rootClassName, className, stepInProgres
                 stepCount={stepIndex + 1}
                 processName={processName}
                 isFinal={isFinal}
+                categoryLevel1={categoryLevel1}
                 state={getStepState(stepIndex, stepInProgress)}
               />
             );

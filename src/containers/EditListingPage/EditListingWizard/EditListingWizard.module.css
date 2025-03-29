@@ -36,6 +36,9 @@
   box-shadow: var(--boxShadowLight);
   border-top: 1px solid var(--colorGrey100);
   overflow-x: scroll;
+  position: sticky;
+  top: 0;
+  z-index: 2;
 
   @media (--viewportLarge) {
     padding: 72px 0 82px 36px;
@@ -44,6 +47,8 @@
     background-color: var(--colorGrey50);
     box-shadow: none;
     border-top: none;
+    align-self: flex-start;
+
   }
 
   @media (--viewportLargeWithPaddings) {

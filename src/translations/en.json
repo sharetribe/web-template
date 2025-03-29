@@ -1035,7 +1035,7 @@
   "TopbarMobileMenu.signupOrLogin": "{signup} or {login}",
   "TopbarMobileMenu.unauthorizedGreeting": "Hello there,{lineBreak}would you like to {signupOrLogin}?",
   "TopbarMobileMenu.yourListingsLink": "Your listings",
-  "TopbarSearchForm.placeholder": "Find Machines & Locations",
+  "TopbarSearchForm.placeholder": "Find Vending Locations...",
   "TransactionPage.ActivityFeed.default-booking.accepted": "{actor, select, you {You accepted the booking request.} operator {The booking request was accepted.} other {{otherUsersName} accepted the booking request.}}",
   "TransactionPage.ActivityFeed.default-booking.canceled": "The booking was canceled.",
   "TransactionPage.ActivityFeed.default-booking.declined": "{actor, select, you {You declined the booking request.} operator {The booking request was declined.} other {{otherUsersName} declined the booking request.}}",
