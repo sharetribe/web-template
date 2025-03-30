@@ -18,6 +18,10 @@ export const transitions = {
   // After this transition, the actual payment must be made on client-side directly to Stripe.
   REQUEST_PAYMENT: 'transition/request-payment',
 
+  // THIS IS ONLY HERE TO AVOID VALIDATION ERRORS... on this particular transaction process we won't be able to inquire
+  INQUIRE: 'transition/inquire',
+  REQUEST_PAYMENT_AFTER_INQUIRY: 'transition/request-payment-after-inquiry',
+
   // Stripe SDK might need to ask 3D security from customer, in a separate front-end step.
   // Therefore we need to make another transition to Marketplace API,
   // to tell that the payment is confirmed.
