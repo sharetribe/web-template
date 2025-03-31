@@ -21,8 +21,9 @@ import {
   IconSpinner,
   SavedCardDetails,
   StripePaymentAddress,
-  ReminderBox,
 } from '../../../components';
+
+import ReminderBox from '../../../extensions/common/components/ReminderBox/ReminderBox';
 
 import ShippingDetails from '../ShippingDetails/ShippingDetails';
 
