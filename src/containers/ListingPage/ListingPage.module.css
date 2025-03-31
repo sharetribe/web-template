@@ -11,6 +11,10 @@
   }
 }
 
+.pageMainColumn {
+  display: block;
+}
+
 .loadingText {
   margin: 24px;
 }
