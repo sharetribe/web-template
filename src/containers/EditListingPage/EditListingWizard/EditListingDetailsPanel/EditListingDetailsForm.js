@@ -142,6 +142,32 @@ const findCategoryConfig = (categories, categoryIdToFind) => {
 };
 
 /**
+ * Change transaction process alias and unit type base on custom category configs
+ */
+const handleCategoryChange = ({
+  formApi,
+  categoryConfigs,
+  level,
+  listingTypes,
+  onCategoryChange,
+  values,
+}) => value => {
+  const { alias: categoryProcessAlias, unitType: categoryUnitType } =
+    findCategoryConfig(categoryConfigs, value)?.transactionType || {};
+  const {
+    transactionProcessAlias: listingTypeProcessAlias,
+    unitType: listingTypeUnitType,
+  } = listingTypes.find(config => config.listingType === values.listingType);
+
+  formApi.change('transactionProcessAlias', categoryProcessAlias || listingTypeProcessAlias);
+  formApi.change('unitType', categoryUnitType || listingTypeUnitType);
+
+  if (onCategoryChange) {
+    onCategoryChange(value, level, categoryConfigs);
+  }
+};
+
+/**
  * Recursively render subcategory field inputs if there are subcategories available.
  * This function calls itself with updated props to render nested category fields.
  * The select field is used for choosing a category or subcategory.
@@ -152,7 +178,7 @@ const CategoryField = props => {
     level,
     values,
     prefix,
-    handleCategoryChange,
+    onCategoryChange,
     intl,
     formApi,
     listingTypes,
@@ -162,26 +188,14 @@ const CategoryField = props => {
 
   const categoryConfig = findCategoryConfig(currentCategoryOptions, values[`${prefix}${level}`]);
 
-  const handleOnChange = value => {
-    const { alias, unitType } =
-      findCategoryConfig(currentCategoryOptions, value)?.transactionType || {};
-
-    if (alias && unitType) {
-      formApi.change('transactionProcessAlias', alias);
-      formApi.change('unitType', unitType);
-    } else {
-      const selectedListingType = listingTypes.find(
-        config => config.listingType === values.listingType
-      );
-      formApi.change('transactionProcessAlias', selectedListingType.transactionProcessAlias);
-      formApi.change('unitType', selectedListingType.unitType);
-    }
-
-    if (handleCategoryChange) {
-      handleCategoryChange(value, level, currentCategoryOptions);
-    }
-  };
-
+  const handleOnChange = handleCategoryChange({
+    formApi,
+    categoryConfigs: currentCategoryOptions,
+    level,
+    listingTypes,
+    onCategoryChange,
+    values,
+  });
   return (
     <>
       {currentCategoryOptions ? (
@@ -190,11 +204,11 @@ const CategoryField = props => {
           id={currentCategoryKey}
           name={currentCategoryKey}
           className={css.listingTypeSelect}
-          onChange={handleOnChange}
           label={intl.formatMessage(
             { id: 'EditListingDetailsForm.categoryLabel' },
             { categoryLevel: currentCategoryKey }
           )}
+          onChange={handleOnChange}
           validate={required(
             intl.formatMessage(
               { id: 'EditListingDetailsForm.categoryRequired' },
@@ -223,7 +237,7 @@ const CategoryField = props => {
           level={level + 1}
           values={values}
           prefix={prefix}
-          handleCategoryChange={handleCategoryChange}
+          onCategoryChange={onCategoryChange}
           intl={intl}
           listingTypes={listingTypes}
         />
@@ -267,7 +281,7 @@ const FieldSelectCategory = props => {
         formApi.change(`${prefix}${i}`, null);
       }
     }
-    const categoryConfig = findCategoryConfig(currentCategoryOptions, category).subcategories;
+    const categoryConfig = findCategoryConfig(currentCategoryOptions, category)?.subcategories;
     setAllCategoriesChosen(!categoryConfig || categoryConfig.length === 0);
   };
 
@@ -277,7 +291,7 @@ const FieldSelectCategory = props => {
       level={1}
       values={values}
       prefix={prefix}
-      handleCategoryChange={handleCategoryChange}
+      onCategoryChange={handleCategoryChange}
       intl={intl}
       formApi={formApi}
       listingTypes={listingTypes}
@@ -419,6 +433,16 @@ const EditListingDetailsFormComponent = props => (
         await formApi.change(`${categoryPrefix}1`, initialValue);
         // This line to rerender the label after change category field value
         formApi.focus(`${categoryPrefix}1`);
+        // Handle select only category
+        if (initialValue) {
+          handleCategoryChange({
+            formApi,
+            categoryConfigs: selectableCategories,
+            level: 1,
+            listingTypes: selectableListingTypes,
+            values,
+          })(initialValue);
+        }
 
         const selectedCatLength = Object.keys(values).filter(key => key.startsWith(categoryPrefix))
           .length;
@@ -429,7 +453,7 @@ const EditListingDetailsFormComponent = props => (
         }
 
         const categoryConfig = findCategoryConfig(selectableCategories, firstCategory)
-          .subcategories;
+          ?.subcategories;
         setAllCategoriesChosen(isOnlyCategory && (!categoryConfig || categoryConfig.length === 0));
       };
 
