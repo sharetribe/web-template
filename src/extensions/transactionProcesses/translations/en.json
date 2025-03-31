@@ -15,10 +15,11 @@
   "TransactionPage.DisputeField.label": "Please tell us the details If you dispute this refund request, we will take up to 5 days to manually investigate and resolve the issue. ",
   "TransactionPage.DisputeField.requiredMessage": "A reason is required.",
   "TransactionPanel.managerInformationHeading": "Property Manager Information",
+  "TransactionPanel.managerBusinessNameContent": "Business: {managerBusinessName}",
   "TransactionPanel.managerNameContent": "Name: {managerName}",
   "TransactionPanel.managerPhoneNumberContent": "Phone Number: ",
   "TransactionPanel.managerEmailTitle": "Email: ",
-  "TransactionPanel.managerAddressTitle": "Location's Exact Address: ",
+  "TransactionPanel.managerAddressTitle": "Address: ",
   "StripePaymentForm.txExpired": "Your previous inquiry has expired due to listings updating. Submitting this form will create a new transaction without the old inquiries.",
   "TransactionPage.nextStep": "Next step: "
 }
