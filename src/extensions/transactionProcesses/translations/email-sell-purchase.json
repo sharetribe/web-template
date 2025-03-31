@@ -23,6 +23,7 @@
   "SellPurchaseAutoCanceledCustomer.ContentAssistance": "If you still have any questions or need help, please contact us.",
   "SellPurchaseIntroduceManager.Subject": "Property Manager Details",
   "SellPurchaseIntroduceManager.ContentProviderShareDetails": "{providerDisplayName} shared the property manager's contact info with you for <salelink>{listingTitle}</salelink>:",
+  "SellPurchaseIntroduceManager.ManagerBusinessName": "Business: {managerBusinessName}",
   "SellPurchaseIntroduceManager.ManagerName": "Name: {managerName}",
   "SellPurchaseIntroduceManager.ManagerPhoneNumber": "Phone: {managerPhoneNumber}",
   "SellPurchaseIntroduceManager.ManagerEmail": "Email: {managerEmail}",
