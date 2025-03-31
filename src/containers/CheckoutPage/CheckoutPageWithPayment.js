@@ -515,6 +515,7 @@ export const CheckoutPageWithPayment = props => {
                 askShippingDetails={askShippingDetails}
                 showPickUplocation={orderData?.deliveryMethod === 'pickup'}
                 listingLocation={listing?.attributes?.publicData?.location}
+                listingType={listing?.attributes?.publicData?.listingType}
                 totalPrice={totalPrice}
                 locale={config.localization.locale}
                 stripePublishableKey={config.stripe.publishableKey}
