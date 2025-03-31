@@ -40,8 +40,8 @@ import {
 } from '../../transactions/transaction';
 import { SELL_PURCHASE_PROCESS_NAME } from '../../extensions/transactionProcesses/sellPurchase/transactions/transactionProcessSellPurchase.js';
 import { SELL_PURCHASE_PROGRESS_BAR_STEPS_CUSTOMER } from '../../extensions/transactionProcesses/common/constants.js';
-import { getCategoryLabel } from '../../config/categories';
 import { Info } from 'lucide-react';
+import { getCategoryLabel } from '../../config/categories';
 
 // Global ducks (for Redux actions and thunks)
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';

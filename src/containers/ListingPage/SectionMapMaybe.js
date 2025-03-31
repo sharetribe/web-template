@@ -33,7 +33,7 @@ class SectionMapMaybe extends Component {
     return (
       <section className={classes} id="listing-location">
         <Heading as="h2" rootClassName={css.sectionHeadingWithExtraMargin}>
-          <FormattedMessage id="ListingPage.locationTitle" values={{ listingType: publicData.listingType }} />
+          <FormattedMessage id="ListingPage.locationTitle" values={{ listingType: publicData.listingType.replace('-','_') }} />
         </Heading>
         {this.state.isStatic ? (
           <button
