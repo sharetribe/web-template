@@ -9,7 +9,8 @@ import SectionColumns from './SectionColumns';
 import SectionFeatures from './SectionFeatures';
 import SectionHero from './SectionHero';
 
-import { AdBanner, Testimonials } from '../../../components';
+import Testimonials from '../../../extensions/common/components/Testimonials/Testimonials';
+import AdBanner from '../../../extensions/common/components/AdBanner/AdBanner';
 
 // Styles
 // Note: these contain

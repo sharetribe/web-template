@@ -2,7 +2,7 @@ import React from 'react';
 import css from './Testimonials.module.css';
 
 import Slider from "react-slick";
-import { Link } from '../../containers/PageBuilder/Primitives/Link';
+import { Link } from '../../../../containers/PageBuilder/Primitives/Link';
 import { Quote } from 'lucide-react';
 
 
