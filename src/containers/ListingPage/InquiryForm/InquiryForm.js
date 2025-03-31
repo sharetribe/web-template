@@ -20,8 +20,9 @@ import {
   IconInquiry,
   Heading,
   NamedLink,
-  ReminderBox,
 } from '../../../components';
+
+import ReminderBox from '../../../extensions/common/components/ReminderBox/ReminderBox';
 
 import css from './InquiryForm.module.css';
 import { NO_ACCESS_PAGE_INITIATE_TRANSACTIONS } from '../../../util/urlHelpers';

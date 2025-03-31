@@ -7,8 +7,9 @@ import classNames from 'classnames';
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 
-import { Form, FieldTextInput, SecondaryButtonInline, ReminderBox } from '../../../components';
+import { Form, FieldTextInput, SecondaryButtonInline } from '../../../components';
 
+import ReminderBox from '../../../extensions/common/components/ReminderBox/ReminderBox';
 import css from './SendMessageForm.module.css';
 
 const BLUR_TIMEOUT_MS = 100;
