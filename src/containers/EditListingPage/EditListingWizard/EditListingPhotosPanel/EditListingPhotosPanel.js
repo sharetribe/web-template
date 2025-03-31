@@ -42,7 +42,6 @@ const EditListingPhotosPanel = props => {
   const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
 
   const handleGenerateImageButtonClick = () => {
-    console.log('handleGenerateImageButtonClick', listing);
     
     // Extract city and state from the full address
     const fullAddress = listing?.attributes?.publicData?.location?.address || '';
@@ -72,7 +71,6 @@ const EditListingPhotosPanel = props => {
       buildingType: listing?.attributes?.publicData?.building_type,
       cityRegion: cityRegion,
     }
-    console.log('params', params)
     const url = `https://agent.vendingvillage.com/image-generator?${new URLSearchParams(params)}`;
     const maxWidth = 1120;
     const maxHeight = 500;
