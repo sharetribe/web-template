@@ -75,4 +75,4 @@ StaticMapboxMap.propTypes = {
   }).isRequired,
 };
 
-export default lazyLoadWithDimensions(StaticMapboxMap, { maxWidth: '640px' });
+export default lazyLoadWithDimensions(StaticMapboxMap, { maxWidth: 'none' });
