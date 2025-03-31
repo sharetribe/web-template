@@ -338,7 +338,12 @@ export const ListingPageComponent = props => {
         },
       }}
     >
-      <LayoutSingleColumn className={css.pageRoot} topbar={topbar} footer={<FooterContainer />}>
+      <LayoutSingleColumn
+        className={css.pageRoot}
+        mainColumnClassName={css.pageMainColumn}
+        topbar={topbar}
+        footer={<FooterContainer />}
+      >
         {processName === SELL_PURCHASE_PROCESS_NAME && (
           <ProgressBar
             steps={SELL_PURCHASE_PROGRESS_BAR_STEPS_CUSTOMER}

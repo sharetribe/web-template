@@ -7,6 +7,6 @@ export const categories = [
       alias: 'sell-purchase/release-1',
       unitType: 'item',
     },
-    stockType: 'oneItem',
+    // stockType: 'oneItem',
   },
 ];
