@@ -9,7 +9,7 @@ export const CATEGORIES = {
     },
     'location-machine': {
       id: 'location-machine',
-      label: 'Location with machine(s)'
+      label: 'Location with machine'
     },
     'atm-location': {
       id: 'atm-location',

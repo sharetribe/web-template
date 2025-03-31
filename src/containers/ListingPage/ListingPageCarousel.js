@@ -40,6 +40,8 @@ import {
 } from '../../transactions/transaction';
 import { SELL_PURCHASE_PROCESS_NAME } from '../../extensions/transactionProcesses/sellPurchase/transactions/transactionProcessSellPurchase.js';
 import { SELL_PURCHASE_PROGRESS_BAR_STEPS_CUSTOMER } from '../../extensions/transactionProcesses/common/constants.js';
+import { Info } from 'lucide-react';
+import { getCategoryLabel } from '../../config/categories';
 
 // Global ducks (for Redux actions and thunks)
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
@@ -48,6 +50,7 @@ import { initializeCardPaymentData } from '../../ducks/stripe.duck.js';
 
 // Shared components
 import {
+  H2,
   H4,
   Page,
   NamedLink,
@@ -223,6 +226,8 @@ export const ListingPageComponent = props => {
   const isBooking = isBookingProcess(processName);
   const isPurchase = isPurchaseProcess(processName);
   const processType = isBooking ? 'booking' : isPurchase ? 'purchase' : 'inquiry';
+  const isLocationType = listingType === 'sell';
+  const categoryLabel = getCategoryLabel(publicData?.categoryLevel1);
 
   const currentAuthor = authorAvailable ? currentListing.author : null;
   const ensuredAuthor = ensureUser(currentAuthor);
@@ -316,6 +321,18 @@ export const ListingPageComponent = props => {
     location,
   });
 
+  //stylize map and show general area if type is location
+  const mapsConfig = {
+    ...config.maps,
+    fuzzy: {
+      ...config.maps.fuzzy,
+      enabled: isLocationType || config.maps.fuzzy.enabled,
+      circleColor: isLocationType ? '#fe7327' : config.maps.fuzzy.circleColor,
+    },
+  };
+
+  const descriptionTitle = intl.formatMessage({ id: 'ListingPage.descriptionTitle' });
+
   return (
     <Page
       title={schemaTitle}
@@ -376,16 +393,52 @@ export const ListingPageComponent = props => {
                 }}
               />
             ) : null}
-            <SectionGallery
-              listing={currentListing}
-              variantPrefix={config.layout.listingImage.variantPrefix}
-            />
+
+            <div className={css.listingTitleContainer}>
+              <H2 as="h1" className={css.listingTitle}>
+                <FormattedMessage id="ListingPage.listingTitle" values={{ categoryLabel }} />
+              </H2>
+              {isLocationType && (
+                <p className={css.listingTitleDescription}>
+                  <Info />{' '}
+                  <FormattedMessage
+                    id={`ListingPage.listingDescription.${publicData.categoryLevel1.replaceAll(
+                      '-',
+                      '_'
+                    )}`}
+                  />
+                </p>
+              )}
+            </div>
+
+            {isLocationType && (
+              <>
+                <SectionMapMaybe
+                  geolocation={geolocation}
+                  publicData={publicData}
+                  listingId={currentListing.id}
+                  mapsConfig={mapsConfig}
+                />
+                <div className={css.mapFooter}>
+                  <Info /> <FormattedMessage id="ListingPage.mapFooter" />
+                </div>
+              </>
+            )}
+
+            {!isLocationType && (
+              <SectionGallery
+                listing={currentListing}
+                variantPrefix={config.layout.listingImage.variantPrefix}
+              />
+            )}
+
             <div className={css.mobileHeading}>
               <H4 as="h1" className={css.orderPanelTitle}>
                 <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
               </H4>
             </div>
-            <SectionTextMaybe text={description} showAsIngress />
+
+            <SectionTextMaybe text={description} heading={descriptionTitle} showAsIngress />
 
             <CustomListingFields
               publicData={publicData}
@@ -395,12 +448,21 @@ export const ListingPageComponent = props => {
               intl={intl}
             />
 
-            <SectionMapMaybe
-              geolocation={geolocation}
-              publicData={publicData}
-              listingId={currentListing.id}
-              mapsConfig={config.maps}
-            />
+            {!isLocationType && (
+              <SectionMapMaybe
+                geolocation={geolocation}
+                publicData={publicData}
+                listingId={currentListing.id}
+                mapsConfig={mapsConfig}
+              />
+            )}
+
+            {isLocationType && currentListing.images.length > 1 && (
+              <SectionGallery
+                listing={currentListing}
+                variantPrefix={config.layout.listingImage.variantPrefix}
+              />
+            )}
 
             {reviews.length > 0 && (
               <SectionReviews reviews={reviews} fetchReviewsError={fetchReviewsError} />
