@@ -41,7 +41,7 @@ import {
 import { SELL_PURCHASE_PROCESS_NAME } from '../../extensions/transactionProcesses/sellPurchase/transactions/transactionProcessSellPurchase.js';
 import { SELL_PURCHASE_PROGRESS_BAR_STEPS_CUSTOMER } from '../../extensions/transactionProcesses/common/constants.js';
 import { getCategoryLabel } from '../../config/categories';
-import {Info} from 'lucide-react';
+import { Info } from 'lucide-react';
 
 // Global ducks (for Redux actions and thunks)
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
@@ -322,10 +322,14 @@ export const ListingPageComponent = props => {
   });
 
   //stylize map and show general area if type is location
-  if (isLocationType) {
-    config.maps.fuzzy.enabled = true;
-    config.maps.fuzzy.circleColor = '#fe7327';
-  }
+  const mapsConfig = {
+    ...config.maps,
+    fuzzy: {
+      ...config.maps.fuzzy,
+      enabled: isLocationType || config.maps.fuzzy.enabled,
+      circleColor: isLocationType ? '#fe7327' : config.maps.fuzzy.circleColor,
+    },
+  };
 
   const descriptionTitle = intl.formatMessage({ id: 'ListingPage.descriptionTitle' });
 
@@ -391,7 +395,13 @@ export const ListingPageComponent = props => {
               </H2>
               {isLocationType && (
                 <p className={css.listingTitleDescription}>
-                  <Info/> <FormattedMessage id={`ListingPage.listingDescription.${publicData.categoryLevel1.replace('-', '_')}`} />
+                  <Info />{' '}
+                  <FormattedMessage
+                    id={`ListingPage.listingDescription.${publicData.categoryLevel1.replace(
+                      '-',
+                      '_'
+                    )}`}
+                  />
                 </p>
               )}
             </div>
@@ -402,19 +412,19 @@ export const ListingPageComponent = props => {
                   geolocation={geolocation}
                   publicData={publicData}
                   listingId={currentListing.id}
-                  mapsConfig={config.maps}
+                  mapsConfig={mapsConfig}
                 />
                 <div className={css.mapFooter}>
-                  <Info/> <FormattedMessage id="ListingPage.mapFooter" />
+                  <Info /> <FormattedMessage id="ListingPage.mapFooter" />
                 </div>
               </>
             )}
 
             {!isLocationType && (
-            <SectionGallery
-              listing={currentListing}
-              variantPrefix={config.layout.listingImage.variantPrefix}
-            />
+              <SectionGallery
+                listing={currentListing}
+                variantPrefix={config.layout.listingImage.variantPrefix}
+              />
             )}
 
             <div className={css.mobileHeading}>
@@ -434,19 +444,19 @@ export const ListingPageComponent = props => {
             />
 
             {!isLocationType && (
-            <SectionMapMaybe
-              geolocation={geolocation}
-              publicData={publicData}
-              listingId={currentListing.id}
-              mapsConfig={config.maps}
-            />
+              <SectionMapMaybe
+                geolocation={geolocation}
+                publicData={publicData}
+                listingId={currentListing.id}
+                mapsConfig={mapsConfig}
+              />
             )}
 
             {isLocationType && currentListing.images.length > 1 && (
-            <SectionGallery
-              listing={currentListing}
-              variantPrefix={config.layout.listingImage.variantPrefix}
-            />
+              <SectionGallery
+                listing={currentListing}
+                variantPrefix={config.layout.listingImage.variantPrefix}
+              />
             )}
 
             {reviews.length > 0 && (

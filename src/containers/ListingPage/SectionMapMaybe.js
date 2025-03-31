@@ -28,7 +28,7 @@ class SectionMapMaybe extends Component {
     const mapProps = mapsConfig.fuzzy.enabled
       ? { obfuscatedCenter: obfuscatedCoordinates(geolocation, mapsConfig.fuzzy.offset, cacheKey) }
       : { address, center: geolocation };
-    const map = <Map {...mapProps} useStaticMap={this.state.isStatic} />;
+    const map = <Map {...mapProps} mapsConfig={mapsConfig} useStaticMap={this.state.isStatic} />;
 
     return (
       <section className={classes} id="listing-location">
