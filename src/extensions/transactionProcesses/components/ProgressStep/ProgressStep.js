@@ -71,7 +71,10 @@ function ProgressStep({
         {intl.formatMessage({ id: `ProgressStep.stepCount` }, { stepCount })}
       </span>
       <span className={css.stepTitle}>
-        {intl.formatMessage({ id: `ProgressStep.stepTitle.${processName}.${step}` }, {categoryLevel1: categoryLevel1?.replace('-', '_') || 'empty'})}
+        {intl.formatMessage(
+          { id: `ProgressStep.stepTitle.${processName}.${step}` },
+          { categoryLevel1: categoryLevel1?.replaceAll('-', '_') || 'empty' }
+        )}
       </span>
       <span
         className={classNames({

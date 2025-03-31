@@ -1,6 +1,10 @@
 .root {
-    margin-top: 20px;
+    margin-top: 30px;
     text-align: center;
+
+    @media (--viewportMedium) {
+        margin-top: 20px;
+    }
 
     img {
         width: 120px;

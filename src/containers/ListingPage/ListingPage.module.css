@@ -361,7 +361,7 @@
     margin-top: 24px;
   }
   /* Note: panel height might be too much on small viewport - hence min-height */
-  @media (--viewportLarge) and (min-height: 950px) {
+  @media (--viewportLarge) and (min-height: 740px) {
     position: sticky;
     top: 108px;
   }
@@ -606,7 +606,6 @@
 
 .sectionMap {
   padding: 0 24px;
-  margin-bottom: 35px;
 
   @media (--viewportMedium) {
     padding: 0;
@@ -701,12 +700,12 @@
 
 .map {
   /* Dimensions: Map takes all available space from viewport (excludes action button and section title) */
-  height: calc(100vh - 193px);
+  height: 240px;
   width: 100%;
 
   /* Static map: dimensions are 640px */
-  max-width: 640px;
-  max-height: 640px;
+  max-width: none;
+  max-height: 400px;
   background-color: #eee;
   padding: 0;
   border: 0;
@@ -718,7 +717,20 @@
 
   @media (--viewportLarge) {
     height: 417px;
-    margin-bottom: 7px;
+  }
+}
+.mapFooter {
+  margin: 0 24px;
+  font-size: 90%;
+  line-height: 1;
+  padding: 10px 12px;
+  margin-bottom: 30px;
+  background: #a09c90; /* matches map background */
+  box-sizing: border-box;
+  color: white;
+
+  @media (--viewportMedium) {
+    margin:0 0 48px;
   }
 }
 
@@ -785,4 +797,25 @@
   right: 0;
   width: 100%;
   height: 100%;
+}
+
+.listingTitleContainer {
+  margin: 24px 0;
+  padding: 0 24px;
+  @media (--viewportMedium) {
+    padding: 0;
+    margin: 0 0 48px;
+  }
+}
+.listingTitle {
+  font-size: 40px;
+  line-height: 40px;
+  margin: 0 0 12px;
+  font-weight: var(--fontWeightBlack);
+  text-transform: capitalize;
+}
+.listingTitleDescription {
+  font-style: italic;
+  margin: 0;
+  line-height: 18px;
 }
