@@ -1,88 +1,87 @@
 [
     {
-      "question": "How profitable will a location be?",
-      "answer": "Profitability of a location can vary due to several factors: daily foot traffic, hours/days of operation, and proximity to other options. Overall, it's up to you to determine the opportunity of each location based on all the information provided in the listing.",
-      "audience": "buyer",
-      "category": ["location","location-machine", "atm-location"]
+        "question": "Is this a secured location or a lead?",
+        "answer": "This is a secured location. In the off chance that you do not place your vending machine, simply click 'Cancel' to get a full refund. That's the power of our 100% money-back guarantee!",
+        "audience": "buyer",
+        "category": ["location"]
     },
     {
-      "question": "Is buying a location a one-time fee?",
-      "answer": "Yes, it is a one-time fee paid to the seller. Any agreements between you (the operator) and the location's property manager will be separate.",
-      "audience": "buyer",
-      "category": ["location","location-machine", "atm-location", "home"]
+        "question": "Is buying a location a one-time fee?",
+        "answer": "Yes, it is a one-time fee paid to the seller. Any agreements between you (the operator) and the location's property manager will be separate.",
+        "audience": "buyer",
+        "category": ["location","location-machine", "atm-location", "home"]
     },
     {
-      "question": "Is this a secured location or a lead?",
-      "answer": "This is a secured location. In the off chance that you do not place your vending machine, simply click 'Cancel' to get a full refund. That's the power of our 100% money-back guarantee!",
-      "audience": "buyer",
-      "category": ["location"]
+        "question": "Why can't I see the location's business name and address?",
+        "answer": "The seller receives multiple requests from vendors for the location's business name and address. To ensure sucess for the vending operator,this information is shared only after you purchase the listing.",
+        "audience": "buyer",
+        "category": ["location","location-machine", "atm-location"]
     },
     {
-      "question": "What is included in the sale price of a location?",
-      "answer": "Included in the sale price is a warm introduction to the location manager. These locations want your machine!<br><br>Any agreements with the location in terms of signed placement agreements, commissions, or product selection are between you (the vending operator) and the location's property manager.",
-      "audience": "buyer",
-      "category": ["location"]
+        "question": "Is there a vendor currently at this location?",
+        "answer": "The description will specifcy whether this location needs replacing a vendor or if you would be its first vendor. Please note that even if you're replacing a vendor, the seller will likely not have the previous vendor's sales data.",
+        "audience": "buyer",
+        "category": ["location","location-machine", "atm-location"]
     },
     {
-      "question": "What is included in the sale price of a location with machine?",
-      "answer": "Included in the sale price is the machine detailed in the listing, and the location itself. Any agreements with the location in terms of signed placement agreements, commissions, or product selection are between you (the vending operator) and the location's property manager.",
-      "audience": "buyer",
-      "category": ["location-machine", "atm-location"]
+        "question": "How does the 100% money back guarentee work?",
+        "answer": "Once you make a purchase, the money is hold in escrow via Stripe. Only once you (the buyer) confirm that you're ready to finalize the order, the money is released to the seller. Otherwise, as long as you cancel the order within 20 days of being introduced to the location's property manager, the money is fully refunded to you.",
+        "audience": "buyer",
+        "category": ["location","location-machine", "atm-location", "home"]
     },
     {
-      "question": "Why can't I see the location's business name and address?",
-      "answer": "The seller receives multiple requests from vendors for the location's business name and address. To ensure sucess for the vending operator,this information is shared only after you purchase the listing.",
-      "audience": "buyer",
-      "category": ["location","location-machine", "atm-location"]
+        "question": "What if I have additional questions about the location?",
+        "answer": "To ask any clarifying questions about the location, feel free to message the seller directly using the 'Message' button on the listing.",
+        "audience": "buyer",
+        "category": ["location","location-machine", "atm-location"]
     },
+    {
+        "question": "Who handles the placement agreement with the location?",
+        "answer": "You (the operator) are responsible for providing a placement agreement. When you meet the location's property manager, be sure to have your placement agreement ready to send them for signing (if you require it).",
+        "audience": "buyer",
+        "category": ["location","location-machine", "atm-location"]
+    },
+    {
+        "question": "How is the sale price determined?",
+        "answer": "The seller of this location sets the price based on factors such as foot traffic, hours of operation, proximity to competiton and diffculty to secure.",
+        "audience": "buyer",
+        "category": ["location","location-machine", "atm-location", "home"]
+    },
+    {
+        "question": "What is included in the sale price of a location?",
+        "answer": "Included in the sale price is a warm introduction to the location manager. These locations want your machine!<br><br>Any agreements with the location in terms of signed placement agreements, commissions, or product selection are between you (the vending operator) and the location's property manager.",
+        "audience": "buyer",
+        "category": ["location"]
+    },
+    {
+        "question": "What is included in the sale price of a location with machine?",
+        "answer": "Included in the sale price is the machine detailed in the listing, and the location itself. Any agreements with the location in terms of signed placement agreements, commissions, or product selection are between you (the vending operator) and the location's property manager.",
+        "audience": "buyer",
+        "category": ["location-machine", "atm-location"]
+    },
+   
+
     {
       "question": "How can I find out when new locations become available in my area?",
       "answer": "You can fill out our <a href='https://vendingvillage.com/request-location' target='_blank'>location request form</a>. This will subscribe you to email updates in your region, and notify our verified sellers of your interest.",
       "audience": "buyer",
-      "category": ["location","location-machine", "atm-location", "home"]
+      "category": ["home"]
     },
-    {
-      "question": "I already have a vending machine - will it work for this location?",
-      "answer": "Different locations require different machines. If the machine type isn't specifically listed in the description, you can message the seller directly to clarify.",
-      "audience": "buyer",
-      "category": ["location"]
-    },
-    {
-      "question": "Is there a vendor currently at this location?",
-      "answer": "The description will specifcy whether this location needs replacing a vendor or if you would be its first vendor. Please note that even if you're replacing a vendor, the seller will likely not have the previous vendor's sales data.",
-      "audience": "buyer",
-      "category": ["location","location-machine", "atm-location"]
-    },
-    {
-      "question": "How is the sale price determined?",
-      "answer": "The seller of this location sets the price based on factors such as foot traffic, hours of operation, proximity to competiton and diffculty to secure.",
-      "audience": "buyer",
-      "category": ["location","location-machine", "atm-location", "home"]
-    },
+    
+    
     {
       "question": "When can I place my machine?",
-      "answer": "Once you purchase the location, the seller will request your availability to meet the location's property manager to arrange a meeting. Once you meet the manager you can coordinate a date to place your machine.",
+      "answer": "Once you purchase a location that needs a machine, the seller will request your availability to meet the location's property manager to arrange a meeting. Once you meet the manager you can coordinate a date to place your machine.",
       "audience": "buyer",
-      "category": ["location"]
+      "category": []
     },
 
+    
     {
-      "question": "Who handles the placement agreement with the location?",
-      "answer": "You (the operator) are responsible for providing a placement agreement. When you meet the location's property manager, be sure to have your placement agreement ready to send them for signing (if you require it).",
-      "audience": "buyer",
-      "category": ["location","location-machine", "atm-location"]
-    },
-    {
-      "question": "What if I have additional questions about the location?",
-      "answer": "To ask any clarifying questions about the location, feel free to message the seller directly using the 'Message' button on the listing.",
-      "audience": "buyer",
-      "category": ["location","location-machine", "atm-location"]
-    },
-    {
-      "question": "How does the 100% money back guarentee work?",
-      "answer": "Once you make a purchase, the money is hold in escrow via Stripe. Only once you (the buyer) confirm that you're ready to finalize the order, the money is released to the seller. Otherwise, as long as you cancel the order within 20 days of being introduced to the location's property manager, the money is fully refunded to you.",
-      "audience": "buyer",
-      "category": ["location","location-machine", "atm-location", "home"]
+        "question": "How profitable will a location be?",
+        "answer": "Profitability of a location can vary due to several factors: daily foot traffic, hours/days of operation, and proximity to other options. Overall, it's up to you to determine the opportunity of each location based on all the information provided in the listing.",
+        "audience": "buyer",
+        "category": []
     },
 
     {
