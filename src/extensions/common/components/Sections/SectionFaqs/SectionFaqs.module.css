@@ -1,0 +1,14 @@
+@import '../../../../../styles/customMediaQueries.css';
+
+.root{
+    padding:20px 40px 60px;
+    max-width: 1020px;
+    height: auto;
+    margin: 0 auto;
+
+    h2 {
+        font-size: 32px;
+        margin-bottom: 40px;
+        text-align: center;
+    }
+}

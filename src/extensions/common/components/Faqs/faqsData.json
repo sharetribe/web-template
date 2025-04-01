@@ -1,0 +1,202 @@
+[
+    {
+      "question": "How profitable will a location be?",
+      "answer": "Profitability of a location can vary due to several factors: daily foot traffic, hours/days of operation, and proximity to other options. Overall, it's up to you to determine the opportunity of each location based on all the information provided in the listing.",
+      "audience": "buyer",
+      "category": ["location","location-machine", "atm-location"]
+    },
+    {
+      "question": "Is buying a location a one-time fee?",
+      "answer": "Yes, it is a one-time fee paid to the seller. Any agreements between you (the operator) and the location's property manager will be separate.",
+      "audience": "buyer",
+      "category": ["location","location-machine", "atm-location", "home"]
+    },
+    {
+      "question": "Is this a secured location or a lead?",
+      "answer": "This is a secured location. In the off chance that you do not place your vending machine, simply click 'Cancel' to get a full refund. That's the power of our 100% money-back guarantee!",
+      "audience": "buyer",
+      "category": ["location"]
+    },
+    {
+      "question": "What is included in the sale price of a location?",
+      "answer": "Included in the sale price is a warm introduction to the location manager. These locations want your machine!<br><br>Any agreements with the location in terms of signed placement agreements, commissions, or product selection are between you (the vending operator) and the location's property manager.",
+      "audience": "buyer",
+      "category": ["location"]
+    },
+    {
+      "question": "What is included in the sale price of a location with machine?",
+      "answer": "Included in the sale price is the machine detailed in the listing, and the location itself. Any agreements with the location in terms of signed placement agreements, commissions, or product selection are between you (the vending operator) and the location's property manager.",
+      "audience": "buyer",
+      "category": ["location-machine", "atm-location"]
+    },
+    {
+      "question": "Why can't I see the location's business name and address?",
+      "answer": "The seller receives multiple requests from vendors for the location's business name and address. To ensure sucess for the vending operator,this information is shared only after you purchase the listing.",
+      "audience": "buyer",
+      "category": ["location","location-machine", "atm-location"]
+    },
+    {
+      "question": "How can I find out when new locations become available in my area?",
+      "answer": "You can fill out our <a href='https://vendingvillage.com/request-location' target='_blank'>location request form</a>. This will subscribe you to email updates in your region, and notify our verified sellers of your interest.",
+      "audience": "buyer",
+      "category": ["location","location-machine", "atm-location", "home"]
+    },
+    {
+      "question": "I already have a vending machine - will it work for this location?",
+      "answer": "Different locations require different machines. If the machine type isn't specifically listed in the description, you can message the seller directly to clarify.",
+      "audience": "buyer",
+      "category": ["location"]
+    },
+    {
+      "question": "Is there a vendor currently at this location?",
+      "answer": "The description will specifcy whether this location needs replacing a vendor or if you would be its first vendor. Please note that even if you're replacing a vendor, the seller will likely not have the previous vendor's sales data.",
+      "audience": "buyer",
+      "category": ["location","location-machine", "atm-location"]
+    },
+    {
+      "question": "How is the sale price determined?",
+      "answer": "The seller of this location sets the price based on factors such as foot traffic, hours of operation, proximity to competiton and diffculty to secure.",
+      "audience": "buyer",
+      "category": ["location","location-machine", "atm-location", "home"]
+    },
+    {
+      "question": "When can I place my machine?",
+      "answer": "Once you purchase the location, the seller will request your availability to meet the location's property manager to arrange a meeting. Once you meet the manager you can coordinate a date to place your machine.",
+      "audience": "buyer",
+      "category": ["location"]
+    },
+
+    {
+      "question": "Who handles the placement agreement with the location?",
+      "answer": "You (the operator) are responsible for providing a placement agreement. When you meet the location's property manager, be sure to have your placement agreement ready to send them for signing (if you require it).",
+      "audience": "buyer",
+      "category": ["location","location-machine", "atm-location"]
+    },
+    {
+      "question": "What if I have additional questions about the location?",
+      "answer": "To ask any clarifying questions about the location, feel free to message the seller directly using the 'Message' button on the listing.",
+      "audience": "buyer",
+      "category": ["location","location-machine", "atm-location"]
+    },
+    {
+      "question": "How does the 100% money back guarentee work?",
+      "answer": "Once you make a purchase, the money is hold in escrow via Stripe. Only once you (the buyer) confirm that you're ready to finalize the order, the money is released to the seller. Otherwise, as long as you cancel the order within 20 days of being introduced to the location's property manager, the money is fully refunded to you.",
+      "audience": "buyer",
+      "category": ["location","location-machine", "atm-location", "home"]
+    },
+
+    {
+      "question": "How do I list a vending location for sale?",
+      "answer": "Once logged in, click &quot;post your listing&quot; at the top of the page. Follow the prompts to add all the important details about your vending location, set your price, and publish your listing.",
+      "audience": "seller",
+      "category": []
+    },
+
+    {
+        "question": "What are the fees for selling on Vending Village?",
+        "answer": "You can list locations and services for free. A transaction fee is charged only when you make a sale. We charge a flat $100 plus a 3% transaction fee. For example, if you list a location for $1,000, you will receive $870 ($1,000, less $100 flat fee, less $30 transaction fee) upon a sale.",
+        "audience": "seller",
+        "category": ["payment"]
+    },
+    {
+        "question": "How do I manage my listings on Vending Village?",
+        "answer": "You can manage your listings through your dashboard, where you can edit details, change prices, or remove listings if needed.",
+        "audience": "seller",
+        "category": []
+    },
+    {
+        "question": "What should I do if I receive a negative review from a buyer?",
+        "answer": "We recommend reaching out to the buyer to resolve any issues.",
+        "audience": "seller",
+        "category": []
+    },
+    {
+        "question": "How do payments work for sellers on Vending Village?",
+        "answer": "Payments from buyers are processed through our secure payment system and are held until the transaction is confirmed as successful by both parties. Funds are then transferred to your bank account within 5 business days. <a href='/p/guide-transaction-process'>This article</a> breaks down exactly how it works.",
+        "audience": "seller",
+        "category": []
+    },
+
+
+
+    {
+        "question": "What is Vending Village?",
+        "answer": "Vending Village is a peer-to-peer online marketplace specifically designed for the vending machine industry, where users can buy and sell vending locations either with or without machines", 
+        "audience": "all",
+        "category": ["general"]
+    },
+    {
+        "question": "How do I register on Vending Village?",
+        "answer": "<a href='/signup'>Sign up</a> to create your account and start exploring our marketplace.", 
+        "audience": "all",
+        "category": ["general"]
+    },
+    {
+        "question": "Is there a membership fee to join Vending Village?",
+        "answer": "No, signing up and creating an account on Vending Village is free. Transaction fees apply only when a sale is made.", 
+        "audience": "all",
+        "category": ["general", "home"]
+    },
+    {
+        "question": "Can I access Vending Village from any device?",
+        "answer": "Yes, Vending Village is accessible from any device with internet access. Our platform is designed to be user-friendly on both desktop and mobile devices.", 
+        "audience": "all",
+        "category": ["general"]
+    },
+    {
+        "question": "Who can use Vending Village?",
+        "answer": "Anyone who is involved in or interested in the vending machine business, whether you are an experienced vendor or new to the industry, is welcome to join our community.", 
+        "audience": "all",
+        "category": ["general"]
+    },
+
+    {
+        "question": "What payment methods can I use on Vending Village?",
+        "answer": "Currently all transactions are handled by Stripe using any major credit card such as Visa or Mastercard.", 
+        "audience": "all",
+        "category": ["payment", "home"]
+    },
+    {
+        "question": "When are payments released to sellers?",
+        "answer": "Payments are released to sellers immediately after the buyer gives final approval that they've reached an agreement with the property manager of the purchased location.", 
+        "audience": "all",
+        "category": ["payment"]
+    },
+    {
+        "question": "Is my financial information safe on Vending Village?",
+        "answer": "Yes, we partner with Stripe to ensure that all financial transactions and personal data are kept secure using the highest possible security methods available today.", 
+        "audience": "all",
+        "category": ["payment", "safety"]
+    },
+    {
+        "question": "How does Vending Village ensure the safety of transactions on the platform?",
+        "answer": "Vending Village employs advanced security measures to protect every transaction. This includes using secure socket layer (SSL) technology for data encryption, performing regular security audits, and utilizing reputable payment gateways to process all financial transactions. Additionally, all user activities are monitored to prevent fraudulent activities.", 
+        "audience": "all",
+        "category": ["safety"]
+    },
+    {
+        "question": "What should I do if I encounter a suspicious listing or user?",
+        "answer": "If you come across any listings or users that seem suspicious or potentially fraudulent, please report them immediately by emailing <a href='mailto:support@vendingvillage.com'>Support</a>. Our dedicated security team will investigate the issue promptly. We encourage users to rely on our platform for all communications and transactions to ensure safety.", 
+        "audience": "all",
+        "category": ["safety"]
+    },
+    {
+        "question": "Why is Stripe ID Verification required and how does it work?",
+        "answer": "Ensuring the safety and trustworthiness of our transactions is paramount to us. That's why we partner with <a href='https://stripe.com/identity'>Stripe for ID verification</a>. This process helps us confirm the identity of our users, reducing the risk of fraud and ensuring compliance with legal standards. To complete ID verification, you'll be prompted to provide a valid government-issued ID through a secure portal managed by Stripe. The information is processed and verified by Stripe's advanced security systems without storing any sensitive data on our servers. This step is essential for activating full buying and selling capabilities on Vending Village.", 
+        "audience": "all",
+        "category": ["safety"]
+    },
+    {
+        "question": "What measures are in place to protect personal and financial information on Vending Village?",
+        "answer": "Vending Village is committed to protecting your personal and financial information with multiple layers of security. This includes data encryption, firewalls, and secure data storage facilities. We comply with all applicable privacy laws and regulations to ensure your information is safeguarded against unauthorized access or breaches.", 
+        "audience": "all",
+        "category": ["safety"]
+    },
+    {
+        "question": "How does Vending Village handle disputes between buyers and sellers?",
+        "answer": "We have a comprehensive dispute resolution process in place to handle conflicts between (buyers and sellers. If an issue arises, parties are encouraged to first attempt to resolve the dispute among themselves using our messaging system. If the dispute persists, they can escalate the issue to our support team, which will intervene to mediate and help reach a fair resolution. Our aim is always to ensure a just outcome in accordance with our platform policies.", 
+        "audience": "all",
+        "category": ["safety"]
+    }
+
+  ]
