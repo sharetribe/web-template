@@ -35,9 +35,8 @@
 
 import React from 'react';
 import classNames from 'classnames';
-import { FormattedMessage } from '../../util/reactIntl';
 
-import NoImageIcon from './NoImageIcon';
+import NoImagePlaceholder from './NoImagePlaceholder';
 import css from './ResponsiveImage.module.css';
 
 /**
@@ -61,34 +60,14 @@ import css from './ResponsiveImage.module.css';
  * @returns {JSX.Element} responsive image
  */
 const ResponsiveImage = props => {
-  const {
-    className,
-    rootClassName,
-    alt,
-    noImageMessage,
-    image,
-    variants,
-    dimensions,
-    ...rest
-  } = props;
+  const { className, rootClassName, alt, image, variants, dimensions, ...rest } = props;
   const classes = classNames(rootClassName || css.root, className);
 
   if (image == null || variants.length === 0) {
-    const noImageClasses = classNames(rootClassName || css.root, css.noImageContainer, className);
-
-    const noImageMessageText = noImageMessage || <FormattedMessage id="ResponsiveImage.noImage" />;
-    return (
-      <div className={noImageClasses}>
-        <div className={css.noImageWrapper}>
-          <NoImageIcon className={css.noImageIcon} />
-          <div className={css.noImageText}>{noImageMessageText}</div>
-        </div>
-      </div>
-    );
+    return <NoImagePlaceholder {...props} withBranding={true} />;
   }
 
   const imageVariants = image.attributes.variants;
-
   const srcSet = variants
     .map(variantName => {
       const variant = imageVariants[variantName];
