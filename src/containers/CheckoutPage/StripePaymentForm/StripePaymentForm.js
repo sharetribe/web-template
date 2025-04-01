@@ -215,6 +215,7 @@ const LocationOrShippingDetails = props => {
     askShippingDetails,
     showPickUplocation,
     listingLocation,
+    listingType,
     formApi,
     locale,
     isBooking,
@@ -442,6 +443,7 @@ class StripePaymentForm extends Component {
       hasHandledCardPayment,
       defaultPaymentMethod,
       listingLocation,
+      listingType,
       askShippingDetails,
       showPickUplocation,
       totalPrice,
@@ -537,8 +539,11 @@ class StripePaymentForm extends Component {
     };
     const isBookingYesNo = isBooking ? 'yes' : 'no';
 
+    const isLocationType = listingType === 'sell';
+
     return hasStripeKey ? (
       <Form className={classes} onSubmit={handleSubmit} enforcePagePreloadFor="OrderDetailsPage">
+        {(!isLocationType &&
         <LocationOrShippingDetails
           askShippingDetails={askShippingDetails}
           showPickUplocation={showPickUplocation}
@@ -549,6 +554,7 @@ class StripePaymentForm extends Component {
           locale={locale}
           intl={intl}
         />
+        )}
 
         {billingDetailsNeeded && !loadingData ? (
           <React.Fragment>
