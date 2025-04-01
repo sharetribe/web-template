@@ -402,7 +402,7 @@ export const ListingPageComponent = props => {
                 <p className={css.listingTitleDescription}>
                   <Info />{' '}
                   <FormattedMessage
-                    id={`ListingPage.listingDescription.${publicData.categoryLevel1.replaceAll(
+                    id={`ListingPage.listingDescription.${publicData.categoryLevel1?.replaceAll(
                       '-',
                       '_'
                     )}`}
