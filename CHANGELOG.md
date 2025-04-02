@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Add currently available translations for FR.
+  [#571](https://github.com/sharetribe/web-template/pull/571)
 - [change] Remove Google Maps legacy Places API support
   [#570](https://github.com/sharetribe/web-template/pull/569)
 - [fix] Topbar/LinksMenu: align the menu label correctly.
