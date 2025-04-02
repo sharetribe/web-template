@@ -94,6 +94,7 @@ import SectionGallery from './SectionGallery';
 import CustomListingFields from './CustomListingFields';
 import { convertListingPrices } from '../../extensions/MultipleCurrency/utils/currency.js';
 import ProgressBar from '../../extensions/transactionProcesses/components/ProgressBar/ProgressBar.js';
+import Faqs from '../../extensions/common/components/Faqs/Faqs.js';
 
 import css from './ListingPage.module.css';
 
@@ -481,6 +482,12 @@ export const ListingPageComponent = props => {
               currentUser={currentUser}
               onManageDisableScrolling={onManageDisableScrolling}
             />
+
+            <div className={css.faqsContainer}>
+              <H4 as="h1" className={css.faqsTitle}>Frequently Asked Questions</H4>
+              <Faqs audience="buyer" category={publicData.categoryLevel1} />
+            </div>
+
           </div>
           <div className={css.orderColumnForProductLayout}>
             <OrderPanel

@@ -819,3 +819,13 @@
   margin: 0;
   line-height: 18px;
 }
+
+.faqsContainer {
+  margin-top: 40px;
+  padding-top: 40px;
+  border-top: 1px solid var(--colorGrey100);
+  padding: 0 24px;
+  @media (--viewportMedium) {
+    padding: 0;
+  }
+}

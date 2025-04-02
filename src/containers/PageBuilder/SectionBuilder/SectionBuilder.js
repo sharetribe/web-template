@@ -9,8 +9,10 @@ import SectionColumns from './SectionColumns';
 import SectionFeatures from './SectionFeatures';
 import SectionHero from './SectionHero';
 
+//custom section components
 import Testimonials from '../../../extensions/common/components/Testimonials/Testimonials';
 import AdBanner from '../../../extensions/common/components/AdBanner/AdBanner';
+import SectionFaqs from '../../../extensions/common/components/Sections/SectionFaqs/SectionFaqs';
 
 // Styles
 // Note: these contain
@@ -46,7 +48,8 @@ const defaultSectionComponents = {
 
 const customSectionComponents = {
   testimonials: <Testimonials />, 
-  adBanner: <AdBanner link="mailto:jamie@nayax.com" />
+  adBanner: <AdBanner link="mailto:jamie@nayax.com" />,
+  sectionFaqs: <SectionFaqs />
 };
 
 //////////////////////
