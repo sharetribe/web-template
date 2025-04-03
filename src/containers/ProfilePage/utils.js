@@ -102,7 +102,7 @@ export const getItems = (
           videoWithTitle.attributes = { title: selectedListing?.attributes?.title, variants: {} };
           return videoWithTitle;
         }) || [];
-      return [...videos, ...images];
+      return [...images, ...videos];
     }
     case LISTING_TAB_TYPES.PRODUCT:
     default: {

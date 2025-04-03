@@ -1,31 +1,43 @@
 .root {
   display: flex;
   align-items: center;
-  overflow: hidden;
-  position: relative;
   background: var(--boxShadowLight);
+  gap: 8px;
+}
+
+.scrollButtonLeft,
+.scrollButtonRight {
+  flex: 0 0 auto;
+  z-index: 2;
 }
 
 .linksContainer {
+  flex: 1 1 auto;
   display: flex;
   overflow-x: auto;
-  white-space: nowrap;
-  padding: 8px 0;
-  gap: 16px;
-  flex-grow: 1;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  padding: 8px 0;
+  gap: 16px;
 }
 
 .linksContainer::-webkit-scrollbar {
   display: none;
 }
 
+.truncated {
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 0 0 auto;
+  display: inline-block;
+}
+
 .defaultLink {
   color: var(--colorGrey500);
   text-decoration: none;
   font-size: 14px;
-  white-space: nowrap;
 }
 
 .defaultLink:hover {
@@ -36,17 +48,4 @@
 .activeLink {
   color: var(--marketplaceColor);
   font-weight: bold;
-}
-
-.scrollButtonLeft,
-.scrollButtonRight {
-  z-index: 2;
-}
-
-.scrollButtonLeft {
-  margin-right: 8px;
-}
-
-.scrollButtonRight {
-  margin-left: 8px;
 }

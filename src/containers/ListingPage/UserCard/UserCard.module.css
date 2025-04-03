@@ -90,13 +90,6 @@
     text-decoration: underline;
     cursor: pointer;
   }
-
-  @media (--viewportMedium) {
-    font-weight: var(--fontWeightMedium);
-    /* margin-top + n * line-height + margin-bottom => x * 8px */
-    margin-top: 17px;
-    margin-bottom: 15px;
-  }
 }
 
 .links {

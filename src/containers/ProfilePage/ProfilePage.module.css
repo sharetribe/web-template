@@ -326,7 +326,6 @@
 
 .creativeSpecialtyLabel {
   text-transform: uppercase;
-  font-family: 'Silka';
   font-size: 16px;
   font-weight: 600;
   margin: 0;
@@ -334,14 +333,13 @@
 
 .addressLabel {
   text-transform: uppercase;
-  font-family: 'Silka Mono';
+  font-family: 'SilkaMono';
   font-size: 13px;
   font-weight: 600;
   margin: 0;
 }
 
 .bioLabel {
-  font-family: 'Silka';
   font-size: 16px;
   font-weight: 400;
   margin: 0;

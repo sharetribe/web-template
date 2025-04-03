@@ -177,6 +177,15 @@ async function startServer() {
     // Server-side routes that do not render the application
     app.use('/api', apiRouter);
 
+    // Studio BLOG redirect
+    app.use((req, res, next) => {
+      if (req.url.startsWith('/blog')) {
+        const redirectTo = `https://studio.theluupe.com${req.url}`;
+        return res.redirect(302, redirectTo);
+      }
+      next();
+    });
+
     const noCacheHeaders = {
       'Cache-control': 'no-cache, no-store, must-revalidate',
     };

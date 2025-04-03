@@ -4,6 +4,7 @@ export const createTheme = branding => {
   const rootStyles = getComputedStyle(document.documentElement);
 
   return {
+    hashed: false,
     token: {
       colorPrimary: branding.marketplaceColor,
       colorPrimaryHover: branding.marketplaceColorLight,

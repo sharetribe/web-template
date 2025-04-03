@@ -1,5 +1,6 @@
 @import '../assets/sanitize.css';
 @import './customMediaQueries.css';
+@import './fonts.css';
 
 /* ================ Custom Properties aka CSS variables ================ */
 
@@ -72,7 +73,7 @@
   --colorSecondaryButtonLight: var(--colorWhite);
 
   /* ================ Font ================ */
-  --fontFamily: -apple-system, BlinkMacSystemFont, 'Inter', Helvetica, Arial, sans-serif,
+  --fontFamily: 'Silka', -apple-system, BlinkMacSystemFont, 'Inter', Helvetica, Arial, sans-serif,
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 
   --fontWeightRegular: 400;
