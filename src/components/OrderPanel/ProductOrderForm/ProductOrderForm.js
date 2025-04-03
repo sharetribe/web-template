@@ -175,7 +175,7 @@ const renderForm = formRenderProps => {
     }
   }, [uiCurrency]);
 
-  const showOnlyTotal = listing?.attributes?.publicData?.listingType == 'sell'; //location listing
+  const showOnlyTotal = listing?.attributes?.publicData?.transactionProcessAlias === 'sell-purchase/release-1'; //location listing
 
   // If form values change, update line-items for the order breakdown
   const handleOnChange = formValues => {
