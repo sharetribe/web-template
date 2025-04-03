@@ -426,7 +426,7 @@ const OrderPanel = props => {
             <div className={css.hideOnMobile}>
               <div className={css.buttonGroup}>
                 <ContactButton />
-                {favoriteButton}
+                {isListingPage && ( favoriteButton )}
               </div>
             </div>
 

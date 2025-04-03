@@ -9,7 +9,7 @@
         "question": "Is buying a location a one-time fee?",
         "answer": "Yes, it is a one-time fee paid to the seller. Any agreements between you (the operator) and the location's property manager will be separate.",
         "audience": "buyer",
-        "category": ["location","location-machine", "atm-location", "home"]
+        "category": ["location","location-find", "location-machine", "atm-location", "home"]
     },
     {
         "question": "Why can't I see the location's business name and address?",
@@ -27,7 +27,7 @@
         "question": "How does the 100% money back guarentee work?",
         "answer": "Once you make a purchase, the money is hold in escrow via Stripe. Only once you (the buyer) confirm that you're ready to finalize the order, the money is released to the seller. Otherwise, as long as you cancel the order within 20 days of being introduced to the location's property manager, the money is fully refunded to you.",
         "audience": "buyer",
-        "category": ["location","location-machine", "atm-location", "home"]
+        "category": ["location","location-find","location-machine", "atm-location", "home"]
     },
     {
         "question": "What if I have additional questions about the location?",
@@ -39,7 +39,7 @@
         "question": "Who handles the placement agreement with the location?",
         "answer": "You (the operator) are responsible for providing a placement agreement. When you meet the location's property manager, be sure to have your placement agreement ready to send them for signing (if you require it).",
         "audience": "buyer",
-        "category": ["location","location-machine", "atm-location"]
+        "category": ["location","location-find","location-machine", "atm-location"]
     },
     {
         "question": "How is the sale price determined?",
@@ -51,7 +51,7 @@
         "question": "What is included in the sale price of a location?",
         "answer": "Included in the sale price is a warm introduction to the location manager. These locations want your machine!<br><br>Any agreements with the location in terms of signed placement agreements, commissions, or product selection are between you (the vending operator) and the location's property manager.",
         "audience": "buyer",
-        "category": ["location"]
+        "category": ["location","location-find"]
     },
     {
         "question": "What is included in the sale price of a location with machine?",
