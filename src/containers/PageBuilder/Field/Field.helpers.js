@@ -50,6 +50,11 @@ export const exposeSocialMediaProps = data => {
   return cleanUrl ? { platform: validPlatform, href: cleanUrl } : {};
 };
 
+export const exposeSearchCtaProps = data => {
+  const { searchFields } = data;
+  return searchFields ? { searchFields } : {};
+};
+
 const getValidSanitizedImage = image => {
   const { id, type, attributes } = image || {};
   const variantEntries = Object.entries(attributes?.variants || {});

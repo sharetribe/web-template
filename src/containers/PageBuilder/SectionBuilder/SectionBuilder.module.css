@@ -101,6 +101,9 @@
 
   @media (--viewportMedium) {
     justify-content: center;
+    grid-template-columns: 1fr;
+    place-items: center;
+    /* Let's see if this breaks anything TODO */
   }
 }
 
