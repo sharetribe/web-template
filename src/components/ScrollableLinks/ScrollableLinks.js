@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Button } from 'antd';
+import { Tooltip, Button } from 'antd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { NamedLink } from '../index';
 import css from './ScrollableLinks.module.css';
@@ -9,6 +9,7 @@ export const ScrollableLinks = props => {
   const scrollContainerRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
+  const canScroll = canScrollLeft || canScrollRight;
 
   const updateScrollState = () => {
     if (scrollContainerRef.current) {
@@ -49,39 +50,46 @@ export const ScrollableLinks = props => {
 
   return (
     <div className={css.root}>
-      <Button
-        type="text"
-        icon={<LeftOutlined />}
-        onClick={scrollLeft}
-        className={css.scrollButtonLeft}
-        disabled={!canScrollLeft} // Disable button if not scrollable to the left
-      />
+      {canScroll && (
+        <Button
+          type="text"
+          icon={<LeftOutlined />}
+          onClick={scrollLeft}
+          className={css.scrollButtonLeft}
+          disabled={!canScrollLeft} // Disable button if not scrollable to the left
+        />
+      )}
 
       <div ref={scrollContainerRef} className={css.linksContainer}>
         {links.map((link, index) => {
           return (
-            <NamedLink
-              key={link.id}
-              name={link.name}
-              active={selectedLinkId === link.id}
-              activeClassName={css.activeLink}
-              to={link.to}
-              params={link.params}
-              className={css.defaultLink}
-            >
-              {link.displayText}
-            </NamedLink>
+            <Tooltip key={link.id} title={link.displayText}>
+              <span className={css.truncated}>
+                <NamedLink
+                  name={link.name}
+                  active={selectedLinkId === link.id}
+                  activeClassName={css.activeLink}
+                  to={link.to}
+                  params={link.params}
+                  className={css.defaultLink}
+                >
+                  {link.displayText}
+                </NamedLink>
+              </span>
+            </Tooltip>
           );
         })}
       </div>
 
-      <Button
-        type="text"
-        icon={<RightOutlined />}
-        onClick={scrollRight}
-        className={css.scrollButtonRight}
-        disabled={!canScrollRight} // Disable button if not scrollable to the right
-      />
+      {canScroll && (
+        <Button
+          type="text"
+          icon={<RightOutlined />}
+          onClick={scrollRight}
+          className={css.scrollButtonRight}
+          disabled={!canScrollRight} // Disable button if not scrollable to the right
+        />
+      )}
     </div>
   );
 };

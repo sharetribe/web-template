@@ -3,9 +3,11 @@ import { Field } from 'react-final-form';
 import css from './AddMediaField.module.css';
 import { AspectRatioWrapper } from '../../../../components';
 import Spinner from '../../../../components/IconSpinner/IconSpinner';
+import { videoURLHandler } from '../../../../components/VideoPlayer/VideoPlayer';
 import { Button, Space } from 'antd';
 
 const ACCEPT_IMAGES = 'image/*';
+const INITIAL_VIDEO_THUMB_TIME = '00:00:00';
 
 function videoId() {
   return (
@@ -28,7 +30,9 @@ export const FieldAddMedia = props => {
   } = props;
   const [showVideoInput, setShowVideoInput] = useState(false);
   const [videoUrl, setVideoUrl] = useState('');
-  const [videoThumbTime, setVideoThumbTime] = useState('00:00:00');
+  const [videoThumbTime, setVideoThumbTime] = useState(INITIAL_VIDEO_THUMB_TIME);
+  const [isHostedVideo] = videoURLHandler(videoUrl);
+
   const handleSaveVideo = () => {
     if (videoUrl) {
       onSaveVideo({
@@ -37,7 +41,7 @@ export const FieldAddMedia = props => {
         id: videoId(),
       });
       setVideoUrl('');
-      setVideoThumbTime('');
+      setVideoThumbTime(INITIAL_VIDEO_THUMB_TIME);
       setShowVideoInput(false);
     }
   };
@@ -103,17 +107,19 @@ export const FieldAddMedia = props => {
                             className={css.videoInput}
                           />
                         </div>
-                        <div className={css.videoInputField}>
-                          <label htmlFor="add-video-url">Thumbnail time</label>
-                          <input
-                            id="add-video-thumb"
-                            type="text"
-                            placeholder="Thumbnail time (HH:mm:ss)"
-                            value={videoThumbTime}
-                            onChange={e => setVideoThumbTime(e.target.value)}
-                            className={css.videoInput}
-                          />
-                        </div>
+                        {isHostedVideo && (
+                          <div className={css.videoInputField}>
+                            <label htmlFor="add-video-url">Thumbnail time</label>
+                            <input
+                              id="add-video-thumb"
+                              type="text"
+                              placeholder="Thumbnail time (HH:mm:ss)"
+                              value={videoThumbTime}
+                              onChange={e => setVideoThumbTime(e.target.value)}
+                              className={css.videoInput}
+                            />
+                          </div>
+                        )}
                         <Space className={css.addVideoButtons}>
                           <Button onClick={() => setShowVideoInput(false)}>Cancel</Button>
                           <Button type="primary" onClick={handleSaveVideo}>

@@ -1,0 +1,99 @@
+@font-face {
+  font-family: 'Sailec';
+  src: url('./fonts/Sailec/Sailec-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Sailec';
+  src: url('./fonts/Sailec/SailecLight-Regular.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Sailec';
+  src: url('./fonts/Sailec/SailecMedium-Regular.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Sailec';
+  src: url('./fonts/Sailec/Sailec-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Silka';
+  src: url('./fonts/Silka/Silka-Thin.otf') format('opentype');
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Silka';
+  src: url('./fonts/Silka/Silka-ExtraLight.otf') format('opentype');
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Silka';
+  src: url('./fonts/Silka/Silka-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Silka';
+  src: url('./fonts/Silka/Silka-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Silka';
+  src: url('./fonts/Silka/Silka-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Silka';
+  src: url('./fonts/Silka/Silka-SemiBold.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Silka';
+  src: url('./fonts/Silka/Silka-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Silka';
+  src: url('./fonts/Silka/Silka-Black.otf') format('opentype');
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SilkaMono';
+  src: url('./fonts/SilkaMono/SilkaMono-SemiBold.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'ABC Arizona Flare';
+  src: url('./fonts/ArizonaFlare/ABCArizonaFlare-Light.woff2') format('woff2'),
+    url('./fonts/ArizonaFlare/ABCArizonaFlare-Light.woff') format('woff'),
+    url('./fonts/ArizonaFlare/ABCArizonaFlare-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: 'normal';
+}

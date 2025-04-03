@@ -16,8 +16,8 @@ async function startServer() {
     // Load the Event Listeners Scripts
     loadScripts();
 
-    const apiRouter = require('./apiRouter');
     const { auth0RequestHandler } = require('./api/auth/auth0');
+    const apiRouter = require('./apiRouter');
     const wellKnownRouter = require('./wellKnownRouter');
     const webmanifestResourceRoute = require('./resources/webmanifest');
     const robotsTxtRoute = require('./resources/robotsTxt');
@@ -39,6 +39,15 @@ async function startServer() {
     app.use(auth0RequestHandler);
     app.use('/.well-known', wellKnownRouter);
     app.use('/api', apiRouter);
+
+    // Studio BLOG redirect
+    app.use((req, res, next) => {
+      if (req.url.startsWith('/blog')) {
+        const redirectTo = `https://studio.theluupe.com${req.url}`;
+        return res.redirect(302, redirectTo);
+      }
+      next();
+    });
 
     // Generate web app manifest
     // When developing with "yarn run dev",
