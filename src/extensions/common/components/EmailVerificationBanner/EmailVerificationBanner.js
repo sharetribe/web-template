@@ -11,7 +11,7 @@ const EmailVerificationBanner = () => {
   const location = useLocation();
 
   useEffect(() => {
-    if (location.pathname === '/account/contact-details') {
+    if (location.pathname === '/account/contact-details' || location.pathname === '/signup') {
       setIsVisible(false);
     }
   }, [location.pathname]);

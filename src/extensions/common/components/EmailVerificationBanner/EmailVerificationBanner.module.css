@@ -25,7 +25,7 @@
     @media (--viewportMedium) {
         margin-bottom: 30px;
         width: 500px;
-        transform: translateX(50%);
+        left: calc(50% - 250px);
         border-radius: 11px;
         font-size: 18px;
 
