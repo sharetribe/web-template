@@ -24,7 +24,7 @@
         "category": ["location","location-machine", "atm-location"]
     },
     {
-        "question": "How does the 100% money back guarentee work?",
+        "question": "How does the 100% money back guarantee work?",
         "answer": "Once you make a purchase, the money is hold in escrow via Stripe. Only once you (the buyer) confirm that you're ready to finalize the order, the money is released to the seller. Otherwise, as long as you cancel the order within 20 days of being introduced to the location's property manager, the money is fully refunded to you.",
         "audience": "buyer",
         "category": ["location","location-find","location-machine", "atm-location", "home"]

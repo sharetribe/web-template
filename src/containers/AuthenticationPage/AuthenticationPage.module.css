@@ -210,6 +210,11 @@
 
 .error {
   composes: marketplaceModalPasswordMargins from global;
+  color: var(--colorFail);
+  background-color: var(--colorFailLight);
+  padding: 10px;
+  line-height: 1.2;
+  border-radius: 4px;
 }
 
 /* ================ Social logins & SSO ================ */

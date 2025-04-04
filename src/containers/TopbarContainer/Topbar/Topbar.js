@@ -26,7 +26,7 @@ import TopbarSearchForm from './TopbarSearchForm/TopbarSearchForm';
 import TopbarMobileMenu from './TopbarMobileMenu/TopbarMobileMenu';
 import TopbarDesktop from './TopbarDesktop/TopbarDesktop';
 import CurrencyDropdown from '../../../extensions/MultipleCurrency/components/CurrencyDropdown/CurrencyDropdown';
-
+import EmailVerificationBanner from '../../../extensions/common/components/EmailVerificationBanner/EmailVerificationBanner';
 import css from './Topbar.module.css';
 
 const MAX_MOBILE_SCREEN_WIDTH = 1024;
@@ -246,6 +246,8 @@ class TopbarComponent extends Component {
     const isMobileMenuOpen = isMobileLayout && mobilemenu === 'open';
     const isMobileSearchOpen = isMobileLayout && mobilesearch === 'open';
 
+  const isUserEmailVerified = currentUser?.attributes?.emailVerified;
+
     const mobileMenu = (
       <TopbarMobileMenu
         isAuthenticated={isAuthenticated}
@@ -375,6 +377,11 @@ class TopbarComponent extends Component {
         />
 
         <GenericError show={showGenericError} />
+
+        {currentUser && !isUserEmailVerified && (
+          <EmailVerificationBanner />
+        )}
+
       </div>
     );
   }
