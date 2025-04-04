@@ -13,14 +13,14 @@
           <table align="center" role="presentation" cellSpacing="0" cellPadding="0" border="0" width="100%" style="max-width:600px;margin:0 auto">
             <tr style="width:100%">
               <td>
-                <h1 style="color:#484848;font-size:26px;line-height:1.3;font-weight:700">{{t "PurchaseOrderMarkedAsReceived.Title" "We sent you a payment for an order"}}</h1>
-                <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "PurchaseOrderMarkedAsReceived.Description"
+                <h1 style="color:#484848;font-size:26px;line-height:1.3;font-weight:700">{{t "SellPurchaseOrderMarkedAsReceived.Title" "We sent you a payment for an order"}}</h1>
+                <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "SellPurchaseOrderMarkedAsReceived.Description"
                   "{customerDisplayName} received <salelink>{listingTitle}</salelink> successfully."
                   customerDisplayName=customer.display-name listingTitle=listing.title salelink=(html-tag "a" target=(concat "_blank")
                   style=(concat "text-decoration:none;color:" (asset "design/branding.json"
                   "marketplaceColors.notificationPrimaryButton" "#fb7327")) href=(concat marketplace.url "/sale/" (url-encode id) "/"))
                   }}</p>
-                <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "PurchaseOrderMarkedAsReceived.BreakdownLabel" "We sent you {amount,number,::.00} {currency} for the payment. It might take up to seven days for the money to reach your bank account. Here's the breakdown." amount=payout-total.amount currency=payout-total.currency}}</p>
+                <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "SellPurchaseOrderMarkedAsReceived.BreakdownLabel" "We sent you {amount,number,::.00} {currency} for the payment. It might take up to seven days for the money to reach your bank account. Here's the breakdown." amount=payout-total.amount currency=payout-total.currency}}</p>
                 <table style="color:#484848;font-size:16px;line-height:1.4;background-color:#FFF;padding:8px 24px;border-radius:8px;border:1px solid;border-color:#E1E1E1;margin:24px 0" align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                   <tbody>
                     <tr>
@@ -30,7 +30,7 @@
                             <tr>
                               <td>
                                 <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "PurchaseOrderMarkedAsReceived.UnitPriceLabel" "Unit price"}}</p>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "SellPurchaseOrderMarkedAsReceived.UnitPriceLabel" "Unit price"}}</p>
                                 </td>
                                 <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{> format-money money=unit-price}}</p>
@@ -39,40 +39,15 @@
                             </tr>
                           </tbody>
                         </table>
+                        {{/eq}}
+
+                        {{#eq "line-item/shipping-fee" code}}
                         <table align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                           <tbody>
                             <tr>
                               <td>
                                 <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px;margin-bottom:1px">{{t "PurchaseOrderMarkedAsReceived.QuantityLabel" "Quantity"}}</p>
-                                </td>
-                                <td style="text-align:right">
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px;margin-bottom:1px">{{number quantity}}</p>
-                                </td>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                        <table align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;font-weight:700;margin-top:1px">{{t "PurchaseOrderMarkedAsReceived.SubtotalLabel" "Subtotal"}}</p>
-                                </td>
-                                <td style="text-align:right">
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;font-weight:700;margin-top:1px">{{> format-money money=line-total}}</p>
-                                </td>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>{{/eq}}{{#eq "line-item/shipping-fee" code}}
-                        <table align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px;margin-bottom:1px">{{t "PurchaseOrderMarkedAsReceived.ShippingLabel" "Shipping"}}</p>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px;margin-bottom:1px">{{t "SellPurchaseOrderMarkedAsReceived.ShippingLabel" "Shipping"}}</p>
                                 </td>
                                 <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px;margin-bottom:1px">{{> format-money money=unit-price}}</p>
@@ -81,13 +56,15 @@
                             </tr>
                           </tbody>
                         </table>
-                        {{/eq}}{{#eq "line-item/pickup-fee" code}}
+                        {{/eq}}
+
+                        {{#eq "line-item/pickup-fee" code}}
                         <table align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                           <tbody>
                             <tr>
                               <td>
                                 <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px;margin-bottom:1px">{{t "PurchaseOrderMarkedAsReceived.PickupLabel" "Pickup"}}</p>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px;margin-bottom:1px">{{t "SellPurchaseOrderMarkedAsReceived.PickupLabel" "Pickup"}}</p>
                                 </td>
                                 <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px;margin-bottom:1px">{{> format-money money=unit-price}}</p>
@@ -96,13 +73,32 @@
                             </tr>
                           </tbody>
                         </table>
-                        {{/eq}}{{#eq "line-item/provider-commission" code}}
+                        {{/eq}}
+
+                        {{#eq "line-item/provider-flat-fee" code}}
                         <table align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                           <tbody>
                             <tr>
                               <td>
                                 <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px;margin-bottom:1px">{{t "PurchaseOrderMarkedAsReceived.MarketplaceFeeLabel" "{ marketplaceName } fee" marketplaceName=marketplace.name}}</p>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px;margin-bottom:1px">{{t "SellPurchaseOrderMarkedAsReceived.FlatFeeLabel" "Platform fee"}}</p>
+                                </td>
+                                <td style="text-align:right">
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px;margin-bottom:1px">{{> format-money money=line-total}}</p>
+                                </td>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        {{/eq}}
+
+                        {{#eq "line-item/provider-commission" code}}
+                        <table align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <td>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px;margin-bottom:1px">{{t "SellPurchaseOrderMarkedAsReceived.FeeLabel" "Processing fee" marketplaceName=marketplace.name}}</p>
                                 </td>
                                 <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px;margin-bottom:1px">{{> format-money money=line-total}}</p>
@@ -118,7 +114,7 @@
                             <tr>
                               <td>
                                 <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px;font-weight:700">{{t "PurchaseOrderMarkedAsReceived.EarningLabel" "You'll earn"}}</p>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px;font-weight:700">{{t "SellPurchaseOrderMarkedAsReceived.EarningLabel" "You'll earn"}}</p>
                                 </td>
                                 <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px;font-weight:700">{{> format-money money=payout-total}}</p>
@@ -134,7 +130,7 @@
                 <table style="padding:16px 0 0" align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                   <tbody>
                     <tr>
-                      <td><a href="{{marketplace.url}}/sale/{{url-encode id}}/" target="_blank" style="color:#FFF;background-color:{{asset "design/branding.json" "marketplaceColors.notificationPrimaryButton" "#fb7327"}};border-radius:4px;font-size:15px;text-decoration:none;text-align:center;display:inline-block;min-width:210px;padding:0px 0px;line-height:100%;max-width:100%"><span><!--[if mso]><i style="letter-spacing: undefinedpx;mso-font-width:-100%;mso-text-raise:0" hidden>&nbsp;</i><![endif]--></span><span style="color:#FFF;background-color:{{asset "design/branding.json" "marketplaceColors.notificationPrimaryButton" "#fb7327"}};border-radius:4px;font-size:15px;text-decoration:none;text-align:center;display:inline-block;min-width:210px;padding:16px 32px;max-width:100%;line-height:120%;text-transform:none;mso-padding-alt:0px;mso-text-raise:0">{{t "PurchaseOrderMarkedAsReceived.Cta" "View order details"}}</span><span><!--[if mso]><i style="letter-spacing: undefinedpx;mso-font-width:-100%" hidden>&nbsp;</i><![endif]--></span></a>
+                      <td><a href="{{marketplace.url}}/sale/{{url-encode id}}/" target="_blank" style="color:#FFF;background-color:{{asset "design/branding.json" "marketplaceColors.notificationPrimaryButton" "#fb7327"}};border-radius:4px;font-size:15px;text-decoration:none;text-align:center;display:inline-block;min-width:210px;padding:0px 0px;line-height:100%;max-width:100%"><span><!--[if mso]><i style="letter-spacing: undefinedpx;mso-font-width:-100%;mso-text-raise:0" hidden>&nbsp;</i><![endif]--></span><span style="color:#FFF;background-color:{{asset "design/branding.json" "marketplaceColors.notificationPrimaryButton" "#fb7327"}};border-radius:4px;font-size:15px;text-decoration:none;text-align:center;display:inline-block;min-width:210px;padding:16px 32px;max-width:100%;line-height:120%;text-transform:none;mso-padding-alt:0px;mso-text-raise:0">{{t "SellPurchaseOrderMarkedAsReceived.Cta" "View order details"}}</span><span><!--[if mso]><i style="letter-spacing: undefinedpx;mso-font-width:-100%" hidden>&nbsp;</i><![endif]--></span></a>
                         <div>
                           <p style="font-size:14px;line-height:1.5;margin:16px 0;color:#484848">{{t "TransactionEmails.AccessibleLinkText" "Can't click the button? Here's a link for your convenience:"}} <a target="_blank" style="color:{{asset "design/branding.json" "marketplaceColors.notificationPrimaryButton" "#fb7327"}};text-decoration:none" href="{{marketplace.url}}/sale/{{url-encode id}}/">{{marketplace.url}}/sale/{{url-encode id}}/</a></p>
                         </div>
