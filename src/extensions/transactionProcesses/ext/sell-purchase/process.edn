@@ -427,6 +427,23 @@
    :to :actor.role/provider,
    :template :purchase-refund-declined-provider}
 
+  {:name :notification/buyer-mark-complete-before-capture-intent,
+   :on :transition/buyer-mark-complete-before-capture-intent,
+   :to :actor.role/provider,
+   :template :purchase-order-marked-as-received}
+  {:name :notification/buyer-mark-complete,
+   :on :transition/buyer-mark-complete,
+   :to :actor.role/provider,
+   :template :purchase-order-marked-as-received}
+  {:name :notification/buyer-mark-complete-refund-disabled,
+   :on :transition/buyer-mark-complete-refund-disabled,
+   :to :actor.role/provider,
+   :template :purchase-order-marked-as-received}
+  {:name :notification/auto-mark-complete,
+   :on :transition/auto-mark-complete,
+   :to :actor.role/provider,
+   :template :purchase-order-auto-marked-as-received-provider}
+
   {:name :notification/review-by-provider-first,
    :on :transition/review-1-by-provider,
    :to :actor.role/customer,
