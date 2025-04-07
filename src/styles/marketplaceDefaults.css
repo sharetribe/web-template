@@ -45,6 +45,8 @@
 
   --colorLightTransparent: rgba(255, 255, 255, 0.65);
 
+  --avGray1: hsl(0 0% 80%);
+
   /**
   * Marketplace color comes by default from src/config/brandingConfig.js
   * It overwrites these CSS Properties.
@@ -70,8 +72,26 @@
   --colorSecondaryButtonDark: var(--colorWhite);
   --colorSecondaryButtonLight: var(--colorWhite);
 
+  /** 
+   * The fill color used by CTA Primary
+   */
+   --ctaPrimary: var(--colorBlack);
+   --ctaPrimaryBG: var(--colorWhite);
+ 
+   /** 
+    * The fill color used by CTA Primary
+    */
+   --ctaSecondary: var(--colorWhite);
+   --ctaSecondaryBG: var(--marketplaceColor);
+
   /* ================ Font ================ */
-  --fontFamily: -apple-system, BlinkMacSystemFont, 'Inter', Helvetica, Arial, sans-serif,
+  --fontFamily: 'Arial', -apple-system, BlinkMacSystemFont, 'Inter', Helvetica, Arial, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+
+  --fontFamilyRoboto: 'Roboto', -apple-system, BlinkMacSystemFont, 'Inter', Helvetica, Arial, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+
+  --fontFamilyHeadings: 'Archivo Black', -apple-system, BlinkMacSystemFont, 'Inter', Helvetica, Arial, sans-serif,
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 
   --fontWeightRegular: 400;
@@ -188,6 +208,10 @@
   /* ================ PageBuilder ================ */
   /* --carouselWidth will be updated dynamically through JS */
   --carouselWidth: 100vw;
+
+  /* --TRANSITIONS */
+  --colorTransition: color 300ms ease-in,background-color 500ms ease-in, border 500ms ease-in;
+  --linkTransition: color 300ms ease-in, text-underline-offset 300ms ease-in;
 }
 
 /* ================ Global element styles ================ */
@@ -256,7 +280,7 @@ a:hover {
 h1 {
   font-size: 24px;
   line-height: 24px;
-  font-weight: var(--fontWeightBlack);
+  font-weight: var(--fontWeightRegular);
   padding: 3px 0 3px 0;
   /* margin-top + n * line-height + margin-bottom => x * 6px */
   margin-top: 18px;
@@ -275,7 +299,7 @@ h1 {
 h2 {
   font-size: 21px;
   line-height: 24px;
-  font-weight: var(--fontWeightBold);
+  font-weight: var(--fontWeightRegular);
 
   padding: 4px 0 2px 0;
   /* x * 6px */
@@ -293,7 +317,7 @@ h2 {
 }
 
 h3 {
-  font-weight: var(--fontWeightBold);
+  font-weight: var(--fontWeightRegular);
   font-size: 18px;
   line-height: 24px;
   /* x * 6px */
@@ -311,7 +335,7 @@ h3 {
 }
 
 h4 {
-  font-weight: var(--fontWeightBold);
+  font-weight: var(--fontWeightRegular);
   font-size: 21px;
   line-height: 30px;
   padding: 1px 0 5px 0;
@@ -790,18 +814,19 @@ textarea {
 }
 
 .textSmall {
-  font-size: 14px;
-  line-height: 18px;
+  font-size: 16px;
+  line-height: 20px;
   font-weight: var(--fontWeightMedium);
   letter-spacing: -0.1px;
 
   @media (--viewportMedium) {
-    line-height: 16px;
+    font-size: 18px;
+    line-height: 18px;
   }
 }
 
 .textXSmall {
-  font-size: 13px;
+  font-size: 14px;
   line-height: 18px;
   font-weight: var(--fontWeightMedium);
 
