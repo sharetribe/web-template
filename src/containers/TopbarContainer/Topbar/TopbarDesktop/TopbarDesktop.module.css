@@ -19,8 +19,12 @@
   /* shadows */
   box-shadow: var(--boxShadowLight);
 
-  @media (--viewportLarge) {
+  @media (--viewportMedium) {
     padding: 0 24px 0 0;
+  }
+
+  @media (--viewportLarge) {
+    padding: 0 60px 0 0;
   }
 }
 
@@ -36,16 +40,13 @@
 
 /* Search */
 .searchLink {
-  min-width: 320px;
+  max-width: 140px;
   height: 100%;
-  border-left-style: solid;
-  border-left-width: 1px;
-  border-left-color: var(--colorGrey100);
   margin-right: auto;
 }
 
 .spacer {
-  min-width: 320px;
+  min-width: 220px;
   height: 100%;
   margin-right: auto;
 }
@@ -58,7 +59,7 @@
   color: var(--colorGrey700);
 
   display: inline-block;
-  margin: 28px 0;
+  margin: 27px 0;
   text-decoration: inherit;
 
   @media (--viewportMedium) {
@@ -75,7 +76,7 @@
 
 .topbarSearchWithLeftPadding {
   padding-left: 24px;
-  padding-right: 24px;
+  padding-right: 6;
   height: var(--topbarHeightDesktop);
 
   @media (--viewportLarge) {
@@ -116,7 +117,7 @@
 .topbarLinkLabel {
   composes: textSmall from global;
   display: inline-block;
-  margin: 28px 0;
+  margin: 27px 0;
   text-decoration: inherit;
   position: relative;
 }

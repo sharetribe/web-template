@@ -76,7 +76,7 @@ const calculateContainerWidth = (containerRefTarget, parentWidth) => {
     ? containerRefTarget.parentElement.computedStyleMap()
     : null;
   const topbarPaddingRight = parentStyleMap?.get('padding-right')?.value;
-  const padding = topbarPaddingRight != null ? topbarPaddingRight : 24;
+  const padding = topbarPaddingRight != null ? topbarPaddingRight : 78;
 
   // We figure out available width from parent (TopbarDesktop/<nav>) and siblings
   const availableContainerWidth = parentWidth - siblingWidthsCombined - padding;

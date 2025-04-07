@@ -17,6 +17,8 @@ import {
 import TopbarSearchForm from '../TopbarSearchForm/TopbarSearchForm';
 import CustomLinksMenu from './CustomLinksMenu/CustomLinksMenu';
 
+import IconRegisterDesktop from './IconRegisterDesktop';
+
 import css from './TopbarDesktop.module.css';
 
 const SignupLink = () => {
@@ -29,9 +31,19 @@ const SignupLink = () => {
   );
 };
 
+const CartLink = () => {
+  return (
+    <a href="/cart" className={css.topbarLink}>
+      <span className={css.topbarLinkLabel}>
+        <IconRegisterDesktop />
+      </span>  
+    </a>
+  );
+};
+
 const LoginLink = () => {
   return (
-    <NamedLink name="LoginPage" className={css.topbarLink}>
+    <NamedLink name="LoginPage" style={{color: 'var(--marketplaceColor)'}} className={css.topbarLink}>
       <span className={css.topbarLinkLabel}>
         <FormattedMessage id="TopbarDesktop.login" />
       </span>
@@ -194,7 +206,6 @@ const TopbarDesktop = props => {
         alt={intl.formatMessage({ id: 'TopbarDesktop.logo' }, { marketplaceName })}
         linkToExternalSite={config?.topbar?.logoLink}
       />
-      {searchFormMaybe}
 
       <CustomLinksMenu
         currentPage={currentPage}
@@ -202,6 +213,8 @@ const TopbarDesktop = props => {
         intl={intl}
         hasClientSideContentReady={authenticatedOnClientSide || !isAuthenticatedOrJustHydrated}
       />
+
+      {searchFormMaybe}
 
       {inboxLinkMaybe}
       {profileMenuMaybe}

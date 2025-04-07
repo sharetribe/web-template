@@ -188,7 +188,7 @@
 
 .icon {
   display: flex;
-  width: 24px;
+  width: 16px;
   align-self: stretch;
   border-bottom: 2px solid var(--marketplaceColor);
   background-color: var(--colorWhite);
@@ -196,13 +196,17 @@
 
 .iconSvg {
   margin: auto;
+
+  svg:not(:root)& {
+    overflow: visible;
+  }
 }
 
 .iconSvgGroup {
   stroke: var(--marketplaceColor);
-  stroke-width: 2.5px;
+  stroke-width: 1px;
 
   @media (--viewportMedium) {
-    stroke-width: 2px;
+    stroke-width: 1px;
   }
 }
