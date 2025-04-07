@@ -1,5 +1,5 @@
 import { subUnitDivisors } from '../config/settingsCurrency';
-import { getSupportedProcessesInfo } from '../transactions/transaction';
+import { getSupportedProcessesInfo, isBookingProcessAlias } from '../transactions/transaction';
 
 // Generic helpers for validating config values
 
@@ -854,12 +854,22 @@ const validListingTypes = listingTypes => {
   const supportedProcessesInfo = getSupportedProcessesInfo();
 
   const validTypes = listingTypes.reduce((validConfigs, listingType) => {
-    const { listingType: type, label, transactionType, ...restOfListingType } = listingType;
+    const {
+      listingType: type,
+      label,
+      transactionType,
+      priceVariations,
+      ...restOfListingType
+    } = listingType;
     const { process: processName, alias, unitType, ...restOfTransactionType } = transactionType;
 
     const isSupportedProcessName = supportedProcessesInfo.find(p => p.name === processName);
     const isSupportedProcessAlias = supportedProcessesInfo.find(p => p.alias === alias);
     const isSupportedUnitType = supportedProcessesInfo.find(p => p.unitTypes.includes(unitType));
+
+    const priceVariationTypeMaybe = isBookingProcessAlias(alias)
+      ? { priceVariations: { enabled: priceVariations?.enabled } }
+      : {};
 
     if (isSupportedProcessName && isSupportedProcessAlias && isSupportedUnitType) {
       return [
@@ -873,6 +883,7 @@ const validListingTypes = listingTypes => {
             unitType,
             ...restOfTransactionType,
           },
+          ...priceVariationTypeMaybe,
           // e.g. stockType, availabilityType,...
           ...restOfListingType,
         },
