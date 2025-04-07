@@ -278,14 +278,16 @@ const OrderPanel = props => {
   // The listing resource has a relationship: `currentStock`,
   // which you should include when making API calls.
   const isPurchase = isPurchaseProcess(processName);
+  const shouldHavePurchase = isPurchase && lineItemUnitType === LINE_ITEM_ITEM;
   const currentStock = listing.currentStock?.attributes?.quantity;
-  const isOutOfStock = isPurchase && lineItemUnitType === LINE_ITEM_ITEM && currentStock === 0;
+  const isOutOfStock = shouldHavePurchase && !isClosed && currentStock === 0;
 
   // Show form only when stock is fully loaded. This avoids "Out of stock" UI by
   // default before all data has been downloaded.
-  const showProductOrderForm = mounted && isPurchase && typeof currentStock === 'number';
+  const showProductOrderForm =
+    mounted && shouldHavePurchase && !isClosed && typeof currentStock === 'number';
 
-  const showInquiryForm = mounted && processName === INQUIRY_PROCESS_NAME;
+  const showInquiryForm = mounted && !isClosed && processName === INQUIRY_PROCESS_NAME;
 
   const supportedProcessesInfo = getSupportedProcessesInfo();
   const isKnownProcess = supportedProcessesInfo.map(info => info.name).includes(processName);
