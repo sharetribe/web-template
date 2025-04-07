@@ -75,6 +75,7 @@ const SectionColumns = props => {
     blocks = [],
     isInsideContainer = false,
     options,
+    customOption,
   } = props;
 
   // If external mapping has been included for fields
@@ -92,6 +93,7 @@ const SectionColumns = props => {
       rootClassName={rootClassName}
       appearance={appearance}
       options={fieldOptions}
+      customOption={customOption}
     >
       {hasHeaderFields ? (
         <header className={defaultClasses.sectionDetails}>

@@ -62,6 +62,7 @@ const SectionFeatures = props => {
     blocks = [],
     isInsideContainer = false,
     options,
+    customOption,
   } = props;
 
   // If external mapping has been included for fields
@@ -79,6 +80,7 @@ const SectionFeatures = props => {
       rootClassName={rootClassName}
       appearance={appearance}
       options={fieldOptions}
+      customOption={customOption}
     >
       {hasHeaderFields ? (
         <header className={defaultClasses.sectionDetails}>

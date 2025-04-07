@@ -46,6 +46,7 @@
   --colorLightTransparent: rgba(255, 255, 255, 0.65);
 
   --avGray1: hsl(0 0% 80%);
+  --avBlue: hsl(234, 87%, 48%);
   --avPink: hsl(326, 63%, 59%);
 
   /**

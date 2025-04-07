@@ -79,6 +79,7 @@ const SectionCarousel = props => {
     callToAction,
     blocks = [],
     options,
+    customOption,
   } = props;
   const sliderContainerId = `${props.sectionId}-container`;
   const sliderId = `${props.sectionId}-slider`;
@@ -146,6 +147,7 @@ const SectionCarousel = props => {
       rootClassName={rootClassName}
       appearance={appearance}
       options={fieldOptions}
+      customOption={customOption}
     >
       {hasHeaderFields ? (
         <header className={defaultClasses.sectionDetails}>

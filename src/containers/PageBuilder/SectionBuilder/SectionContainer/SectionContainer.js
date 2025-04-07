@@ -28,9 +28,19 @@ import css from './SectionContainer.module.css';
  * @returns {JSX.Element} containing wrapper that can be used inside Block components.
  */
 const SectionContainer = props => {
-  const { className, rootClassName, id, as, children, appearance, options, ...otherProps } = props;
+  const { className, rootClassName, id, as, children, appearance, options, customOption, ...otherProps } = props;
   const Tag = as || 'section';
   const classes = classNames(rootClassName || css.root, className);
+
+  const innerCss = classNames(
+    css.sectionContent,
+    customOption?.isLarge ? css.sectionContentLarge : '',
+    customOption?.isMedium ? css.sectionContentMedium : '',
+    customOption?.isFullH ? css.sectionContentFullH : '',
+    customOption?.isFullW ? css.sectionContentFullW : '',
+    customOption?.hasTextGray ? css.sectionContentHasTextGray : '',
+    as == 'footer' ? css.customFooter : ''
+  );
 
   return (
     <Tag className={classes} id={id} {...otherProps}>
@@ -42,7 +52,7 @@ const SectionContainer = props => {
         />
       ) : null}
 
-      <div className={css.sectionContent}>{children}</div>
+      <div className={innerCss}>{children}</div>
     </Tag>
   );
 };
