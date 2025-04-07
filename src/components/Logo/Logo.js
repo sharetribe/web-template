@@ -4,6 +4,8 @@ import classNames from 'classnames';
 import { useConfiguration } from '../../context/configurationContext';
 import { ResponsiveImage } from '../../components/';
 
+import logoImageWhite from '../../assets/logo_av_white.png';
+
 import css from './Logo.module.css';
 
 const HEIGHT_24 = 24;
@@ -43,6 +45,7 @@ export const LogoComponent = props => {
     logoImageDesktop,
     logoImageMobile,
     logoSettings,
+    version,
     ...rest
   } = props;
 
@@ -50,11 +53,12 @@ export const LogoComponent = props => {
   const logoClasses = className || css.root;
   const logoImageClasses = classNames(
     logoImageClassName || css.logo,
-    getHeightClassName(logoSettings?.height)
+    getHeightClassName(logoSettings?.height),
+    version === 'white' ?css.logoWhite : ''
   );
 
   // Logo from hosted asset
-  if (isImageAsset(logoImageDesktop) && hasValidLogoSettings && layout === 'desktop') {
+  if (version !== 'white' && isImageAsset(logoImageDesktop) && hasValidLogoSettings && layout === 'desktop') {
     const variants = logoImageDesktop.attributes.variants;
     const variantNames = getVariantNames(variants);
     const { width } = getVariantData(variants);
@@ -63,7 +67,7 @@ export const LogoComponent = props => {
         <ResponsiveImage
           rootClassName={logoImageClasses}
           alt={marketplaceName}
-          image={logoImageDesktop}
+          image={(version === 'white' ? logoImageWhite : logoImageDesktop)}
           variants={variantNames}
           sizes={`${width}px`}
           width={width}
@@ -71,7 +75,7 @@ export const LogoComponent = props => {
         />
       </div>
     );
-  } else if (isImageAsset(logoImageMobile) && hasValidLogoSettings && layout === 'mobile') {
+  } else if (version !== 'white' && isImageAsset(logoImageMobile) && hasValidLogoSettings && layout === 'mobile') {
     const variants = logoImageMobile.attributes.variants;
     const variantNames = getVariantNames(variants);
     const { width } = getVariantData(variants);
@@ -94,6 +98,10 @@ export const LogoComponent = props => {
         />
       </div>
     );
+  } else if (version === 'white') {
+    return (<div>
+      <img className={logoImageClasses} src={logoImageWhite} alt={marketplaceName} {...rest} />
+    </div>);
   } else if (layout === 'desktop') {
     return (
       <div className={logoClasses}>
@@ -122,7 +130,7 @@ export const LogoComponent = props => {
  */
 const Logo = props => {
   const config = useConfiguration();
-  const { layout = 'desktop', ...rest } = props;
+  const { layout = 'desktop', version = '', ...rest } = props;
   // NOTE: logo images are set in hosted branding.json asset or src/config/brandingConfig.js
   const { logoImageDesktop, logoImageMobile, logoSettings } = config.branding;
 
@@ -134,6 +142,7 @@ const Logo = props => {
       logoImageMobile={logoImageMobile}
       logoSettings={logoSettings}
       marketplaceName={config.marketplaceName}
+      version={version}
     />
   );
 };

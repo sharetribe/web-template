@@ -122,6 +122,7 @@ const SectionFooter = props => {
               logoImageClassName={css.logoImage}
               linkToExternalSite={linkLogoToExternalSite}
               layout={logoLayout}
+              version="white"
             />
           </div>
           <div className={css.sloganMobile}>
