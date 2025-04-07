@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import loadable from '@loadable/component';
 
 import { bool, object } from 'prop-types';
@@ -8,10 +8,12 @@ import { connect } from 'react-redux';
 import { camelize } from '../../util/string';
 import { propTypes } from '../../util/types';
 
-import { ASSET_NAME, avHeroSecionId } from './LandingPage.duck';
-
 import FallbackPage from './FallbackPage';
-import { ASSET_NAME } from './LandingPage.duck';
+import { ASSET_NAME, avHeroSecionId, getRecommendedListingParams, avRecommendedsSectionId } from './LandingPage.duck';
+
+import { getListingsById } from '../../ducks/marketplaceData.duck';
+import { searchListings } from '../SearchPage/SearchPage.duck';
+import { useConfiguration } from '../../context/configurationContext';
 
 const PageBuilder = loadable(() =>
   import(/* webpackChunkName: "PageBuilder" */ '../PageBuilder/PageBuilder')
@@ -22,23 +24,67 @@ import { useIntl } from '../../util/reactIntl';
 
 // Import custom sections.
 import SectionHeroCustom from '../PageBuilder/SectionBuilder/SectionHeroCustom';
+import SectionRecommendedListings from '../PageBuilder/SectionBuilder/SectionRecommendedListings';
 
 // Define custom section types. (Based on what default section type?)
 const avHeroSectionType = 'hero';
+const avRecommendedsSectionType = 'recommendeds'
 
 export const LandingPageComponent = props => {
-  const intl = useIntl();
-  const { pageAssetsData, inProgress, error } = props;
+  const {
+    pageAssetsData,
+    inProgress,
+    error,
+    listings,
+    recommendedListingIds,
+    onFetchRecommendedListings,
+  } = props;
 
-  // We will customize the page date since we use custom sections...
-  // ... first we get the data setup in the console for this asset_name (landing-page)
+  const config = useConfiguration();
+  useEffect(() => {
+    const params = getRecommendedListingParams(config, recommendedListingIds);
+    onFetchRecommendedListings(params, config);
+  }, [recommendedListingIds]);
+
+  // Get the data setup in the console for this asset_name (landing-page)
   const pageData = pageAssetsData?.[camelize(ASSET_NAME)]?.data;
-  // ... then get the custom hero section index in the page sections
+  const customPageData = createCustomPageData(pageData, listings);
+
+  return (
+    <PageBuilder
+      pageAssetsData={customPageData}
+      options={{
+        sectionComponents: {
+          [avHeroSectionType]: { component: SectionHeroCustom },
+          [avRecommendedsSectionType]: {component: SectionRecommendedListings},
+        },
+      }}
+      inProgress={inProgress}
+      error={error}
+      fallbackPage={<FallbackPage error={error} />}
+    />
+  );
+};
+
+LandingPageComponent.propTypes = {
+  pageAssetsData: object,
+  inProgress: bool,
+  error: propTypes.error,
+};
+
+const createCustomPageData = (pageData, listings) => {
+  const intl = useIntl();
+  // We will customize the page date since we use custom sections...
+  // ... get the custom hero section index in the page sections
   const avHeroSectionIdx = pageData?.sections.findIndex(
     s => s.sectionId === avHeroSecionId
   );
+  const avRecommendedsSectionIdx = pageData?.sections.findIndex(
+    s => s.sectionId === avRecommendedsSectionId
+  );
   // ... and use the idx to get the data setup in the console for the base section (a hero section)
   const heroSection = pageData?.sections[avHeroSectionIdx];
+  const recommendedSection = pageData?.sections[avRecommendedsSectionIdx];
   // ... then add the custom data to use on our custom section
   const avHeroSection = {
     ...heroSection,
@@ -56,13 +102,21 @@ export const LandingPageComponent = props => {
       content: intl.formatMessage({ id: 'AVHero.ctaSecondText' }),
     },
   };
+  const avRecommendedSection = {
+    ...recommendedSection,
+    sectionId: avRecommendedsSectionId,
+    sectionType: avRecommendedsSectionType,
+    listings: listings,
+  };
   // ... finally, replace the section's default component with the custom one
   const customSections = pageData
     ? [
-        // customCurrentUserSection,
         ...pageData?.sections?.map((s, idx) => {
           if (idx === avHeroSectionIdx) {
             return avHeroSection;
+          }
+          if (idx === avRecommendedsSectionIdx) {
+            return avRecommendedSection;
           }
           return s;
           }),
@@ -76,31 +130,29 @@ export const LandingPageComponent = props => {
       }
     : pageData;
 
-  return (
-    <PageBuilder
-      pageAssetsData={customPageData}
-      inProgress={inProgress}
-      error={error}
-      fallbackPage={<FallbackPage error={error} />}
-      options={{
-        sectionComponents: {
-          [avHeroSectionType]: { component: SectionHeroCustom },
-        },
-      }}
-    />
-  );
-};
-
-LandingPageComponent.propTypes = {
-  pageAssetsData: object,
-  inProgress: bool,
-  error: propTypes.error,
-};
+  return customPageData;
+}
 
 const mapStateToProps = state => {
   const { pageAssetsData, inProgress, error } = state.hostedAssets || {};
-  return { pageAssetsData, inProgress, error };
+  const { recommendedListingIds } = state.LandingPage;
+  const { currentPageResultIds } = state.SearchPage;
+  const listings = getListingsById(state, currentPageResultIds);
+
+  return {
+    pageAssetsData,
+    inProgress,
+    error,
+    listings,
+    recommendedListingIds,
+  };
 };
+
+const mapDispatchToProps = dispatch => ({
+  onFetchRecommendedListings: (params, config) => {
+    dispatch(searchListings(params, config));
+  },
+});
 
 // Note: it is important that the withRouter HOC is **outside** the
 // connect HOC, otherwise React Router won't rerender any Route
@@ -108,6 +160,6 @@ const mapStateToProps = state => {
 // lifecycle hook.
 //
 // See: https://github.com/ReactTraining/react-router/issues/4671
-const LandingPage = compose(connect(mapStateToProps))(LandingPageComponent);
+const LandingPage = compose(connect(mapStateToProps, mapDispatchToProps))(LandingPageComponent);
 
 export default LandingPage;
