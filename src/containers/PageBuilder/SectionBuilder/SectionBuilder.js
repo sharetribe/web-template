@@ -24,6 +24,8 @@ const DEFAULT_CLASSES = {
   title: css.title,
   description: css.description,
   ctaButton: css.ctaButton,
+  ctaButtonPrimary: css.ctaButtonPrimary,
+  ctaButtonSecondary: css.ctaButtonSecondary,
   blockContainer: css.blockContainer,
 };
 
@@ -125,6 +127,18 @@ const SectionBuilder = props => {
         const classes = classNames({ [css.darkTheme]: isDarkTheme });
         const sectionId = getUniqueSectionId(section.sectionId, index);
 
+        // TODO: Move to function.
+        const customOption = {};
+        customOption.isLarge = section.sectionName?.indexOf('- Large') >= 0;
+        customOption.isMedium = section.sectionName?.indexOf('- Medium') >= 0;
+        customOption.isFullH = section.sectionName?.indexOf('- FullH') >= 0;
+        customOption.isFullW = section.sectionName?.indexOf('- FullW') >= 0;
+
+        // Content text is larger & gray.
+        if (section.sectionName?.includes('- TextGray')) {
+          customOption.hasTextGray = true;
+        }
+
         if (Section) {
           return (
             <Section
@@ -135,6 +149,7 @@ const SectionBuilder = props => {
               options={otherOption}
               {...section}
               sectionId={sectionId}
+              customOption={customOption}
             />
           );
         } else {

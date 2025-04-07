@@ -47,7 +47,7 @@ const SectionHeroCustom = props => {
     callToAction,
     callToAction2,
     options,
-    classDemo,
+    classWrap,
   } = props;
 
   // If external mapping has been included for fields
@@ -60,7 +60,7 @@ const SectionHeroCustom = props => {
   return (
     <SectionContainer
       id={sectionId}
-      className={classNames(className, css[classDemo])}
+      className={classNames(className, css[classWrap] ?? '')}
       rootClassName={classNames(rootClassName || css.root)}
       appearance={appearance}
       options={fieldOptions}

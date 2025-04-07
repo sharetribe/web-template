@@ -84,7 +84,7 @@
     * The fill color used by CTA Primary
     */
    --ctaSecondary: var(--colorWhite);
-   --ctaSecondaryBG: var(--marketplaceColor);
+   --ctaSecondaryBG: var(--avBlue);
 
   /* ================ Font ================ */
   --fontFamily: 'Arial', -apple-system, BlinkMacSystemFont, 'Inter', Helvetica, Arial, sans-serif,

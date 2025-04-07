@@ -105,10 +105,10 @@
 }
 
 .blockContainer {
-  padding: 64px 32px 0 32px;
+  padding: var(--contentPaddingY, 32px) var(--contentPaddingX, 32px) 0 var(--contentPaddingX, 32px);
 
   &:first-child {
-    padding: 0 32px;
+    padding: 0 var(--contentPaddingX, 32px);
   }
 }
 
@@ -135,19 +135,42 @@
 .ctaButton {
   composes: align;
   display: inline-block;
-  padding: 8px 20px;
-  font-size: 15px;
-  background-color: var(--marketplaceColor);
-  border-radius: 4px;
-  color: white;
+  padding: 11px 22px;
+  font-size: 14px;
+  background-color: var(--ctaPrimaryBG);
+  border-radius: 10px;
+  color: var(--ctaPrimary);
+  border: 1px solid var(--ctaPrimary);
   text-decoration: none;
-  box-shadow: 0 8px 16px 0 rgb(0 0 0 / 20%);
-  font-weight: 500;
+  /*box-shadow: 0 8px 16px 0 rgb(0 0 0 / 20%);*/
+  font-weight: 400;
   margin-top: 24px;
+  font-family: var(--fontFamilyHeadings);
+  line-height: 150%; /* 21px */
+  transition: var(--colorTransition);
 
   &:hover {
     text-decoration: none;
-    background-color: var(--marketplaceColorDark);
+    background-color: var(--ctaSecondaryBG);
+    color: var(--ctaSecondary);
+    border-color: var(--ctaSecondaryBG);
+  }
+}
+
+.ctaButtonPrimary {
+  composes: ctaButton;
+}
+
+.ctaButtonSecondary {
+  composes: ctaButton;
+  background-color: var(--ctaSecondaryBG);
+  color: var(--ctaSecondary);
+  border-color: var(--ctaSecondaryBG);
+
+  &:hover {
+    background-color: var(--ctaPrimaryBG);
+    color: var(--ctaPrimary);
+    border-color: var(--ctaPrimary);
   }
 }
 
