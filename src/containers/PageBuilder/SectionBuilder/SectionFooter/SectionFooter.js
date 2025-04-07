@@ -104,6 +104,8 @@ const SectionFooter = props => {
 
   // use block builder instead of mapping blocks manually
 
+  const blocksHasSocial = blocks.some((obj, idx, list) => obj.blockName?.startsWith('social links ::') ?? false);
+
   return (
     <SectionContainer
       as="footer"
@@ -132,7 +134,7 @@ const SectionFooter = props => {
             <div className={css.sloganDesktop}>
               <Field data={slogan} className={css.slogan} />
             </div>
-            {showSocialMediaLinks ? (
+            {!blocksHasSocial && showSocialMediaLinks ? (
               <div className={css.icons}>
                 <BlockBuilder blocks={linksWithBlockId} sectionId={sectionId} options={options} />
               </div>
@@ -140,7 +142,7 @@ const SectionFooter = props => {
             <Field data={copyright} className={css.copyright} />
           </div>
           <div className={classNames(css.grid, getGridCss(numberOfColumns))}>
-            <BlockBuilder blocks={blocks} sectionId={sectionId} options={options} />
+            <BlockBuilder blocks={blocks} sectionId={sectionId} options={options} customProps={{socialLinks: linksWithBlockId}} />
           </div>
         </div>
       </div>

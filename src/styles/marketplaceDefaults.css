@@ -46,6 +46,7 @@
   --colorLightTransparent: rgba(255, 255, 255, 0.65);
 
   --avGray1: hsl(0 0% 80%);
+  --avPink: hsl(326, 63%, 59%);
 
   /**
   * Marketplace color comes by default from src/config/brandingConfig.js
