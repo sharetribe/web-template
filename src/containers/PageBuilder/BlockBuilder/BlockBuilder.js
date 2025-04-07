@@ -2,8 +2,15 @@ import React from 'react';
 
 // Block components
 import BlockDefault from './BlockDefault';
+import BlockWithCols from './BlockWithCols';
+import BlockPriceSelector from './BlockPriceSelector';
 import BlockFooter from './BlockFooter';
 import BlockSocialMediaLink from './BlockSocialMediaLink';
+
+// To load Marketplace texts.
+import { useIntl } from '../../../util/reactIntl';
+
+import sectionCss from './../SectionBuilder/SectionBuilder.module.css';
 
 ///////////////////////////////////////////
 // Mapping of block types and components //
@@ -11,8 +18,15 @@ import BlockSocialMediaLink from './BlockSocialMediaLink';
 
 const defaultBlockComponents = {
   defaultBlock: { component: BlockDefault },
+  blockWithCols: { component: BlockWithCols },
+  blockPriceSelector: { component: BlockPriceSelector },
   footerBlock: { component: BlockFooter },
   socialMediaLink: { component: BlockSocialMediaLink },
+};
+
+const DEFAULT_CLASSES = {
+  ctaButtonPrimary: sectionCss.ctaButtonPrimary,
+  ctaButtonSecondary: sectionCss.ctaButtonSecondary,
 };
 
 ////////////////////
@@ -82,6 +96,11 @@ const BlockBuilder = props => {
         const Block = config?.component;
         const blockId = block.blockId || `${sectionId}-block-${index + 1}`;
 
+        const blockCustomProps = createBlockCustomProps(block);
+        if (block.blockName?.startsWith('2 cols buttons ::')) {
+          block.blockType = 'blockWithCols';
+        }
+
         if (Block) {
           return (
             <Block
@@ -90,6 +109,7 @@ const BlockBuilder = props => {
               blockId={blockId}
               {...blockOptionsMaybe}
               {...otherProps}
+              {...blockCustomProps}
             />
           );
         } else {
@@ -101,5 +121,178 @@ const BlockBuilder = props => {
     </>
   );
 };
+
+/**
+ * Create custom block properties object for block overrides.
+ * @param {Object} block The block object.
+ * @return {Object} Custom block properties
+ */
+function createBlockCustomProps(block) {
+  const intl = useIntl();
+  const blockCustomProps = {};
+  // Custom Blocks. Use name to enable.
+  blockCustomProps.ctaButtonPrimaryClass = DEFAULT_CLASSES.ctaButtonPrimary;
+  blockCustomProps.ctaButtonSecondaryClass = DEFAULT_CLASSES.ctaButtonSecondary;
+  // ie. blockName = '2 cols buttons :: name '
+  if (block.blockName?.includes('contact buttons ::')) {
+    blockCustomProps.contactButtons = {
+      ctaButtonPrimaryClass: DEFAULT_CLASSES.ctaButtonPrimary,
+      ctaButtonSecondaryClass: DEFAULT_CLASSES.ctaButtonSecondary,
+      callToAction1: {
+        fieldType: 'internalButtonLink',
+        href: intl.formatMessage({ id: 'ContactButtons.' + block.blockId + '.cta1Link', defaultMessage:'Hello' }),
+        content: intl.formatMessage({ id: 'ContactButtons.' + block.blockId + '.cta1Text', defaultMessage:'Hello' }),
+      },
+      callToAction2: {
+        fieldType: 'internalButtonLink',
+        href: intl.formatMessage({ id: 'ContactButtons.' + block.blockId + '.cta2Link', defaultMessage:'Hello' }),
+        content: intl.formatMessage({ id: 'ContactButtons.' + block.blockId + '.cta2Text', defaultMessage:'Hello' }),
+      },
+      social: {
+        fieldType: 'socialMediaLink',
+        href: intl.formatMessage({ id: 'ContactButtons.' + block.blockId + '.socialLink', defaultMessage:'Hello' }),
+        content: intl.formatMessage({ id: 'ContactButtons.' + block.blockId + '.socialText', defaultMessage:'Hello' }),
+      },
+    };
+  }
+  // Adds 2 columns to the end of the block content.
+  if (block.blockName?.includes('2 cols ::')) {
+    blockCustomProps.twoCols = {
+      col1Title: intl.formatMessage({ id: 'TwoCols.' + block.blockId + '.col1Title', defaultMessage:'Hello' }),
+      col1Text: intl.formatMessage({ id: 'TwoCols.' + block.blockId + '.col1Text', defaultMessage:'Hello' }),
+      col2Title: intl.formatMessage({ id: 'TwoCols.' + block.blockId + '.col2Title', defaultMessage:'Hello' }),
+      col2Text: intl.formatMessage({ id: 'TwoCols.' + block.blockId + '.col2Text', defaultMessage:'Hello' }),
+    };
+  }
+  // Adds 2 buttons to the end of the block content.
+  if (block.blockName?.includes('2 buttons ::')) {
+    blockCustomProps.twoButtons = {
+      callToAction1: {
+        fieldType: 'internalButtonLink',
+        href: intl.formatMessage({ id: 'TwoButtons.' + block.blockId + '.cta1Link', defaultMessage:'Hello' }),
+        content: intl.formatMessage({ id: 'TwoButtons.' + block.blockId + '.cta1Text', defaultMessage:'Hello' }),
+      },
+      callToAction2: {
+        fieldType: 'internalButtonLink',
+        href: intl.formatMessage({ id: 'TwoButtons.' + block.blockId + '.cta2Link', defaultMessage:'Hello' }),
+        content: intl.formatMessage({ id: 'TwoButtons.' + block.blockId + '.cta2Text', defaultMessage:'Hello' }),
+      },
+    };
+  }
+  // CTA is secondary style.
+  if (block.blockName?.includes('button secondary ::')) {
+    blockCustomProps.hasCTASecondary = true;
+  }
+  // CTA is tertiary style.
+  if (block.blockName?.includes('button tertiary ::')) {
+    blockCustomProps.hasCTATertiary = true;
+  }
+  // Content text is larger & gray.
+  if (block.blockName?.includes('text larger ::')) {
+    blockCustomProps.hasTextLarger = true;
+  }
+  // Content text is larger & gray.
+  if (block.blockName?.includes('text gray ::')) {
+    blockCustomProps.hasTextGray = true;
+  }
+  // Content text is smaller & darkgray.
+  if (block.blockName?.includes('text darkgray ::')) {
+    blockCustomProps.hasTextDarkGray = true;
+  }
+  // Content has numeric list large items.
+  if (block.blockName?.includes('large list :: ')) {
+    blockCustomProps.hasLargeList = true;
+  }
+  // Image is small Icon.
+  if (block.blockName?.includes('icon img ::')) {
+    blockCustomProps.hasIconImg = true;
+  }
+  // Social Link strip.
+  if (block.blockName?.startsWith('social links ::')) {
+    blockCustomProps.hasSocialLinks = true;
+  }
+  // Section with 2 colu,ms and 2 buttons.
+  if (block.blockName?.startsWith('2 cols buttons ::')) {
+    block.blockType = 'blockWithCols';
+
+    blockCustomProps.ctaButtonPrimaryClass = DEFAULT_CLASSES.ctaButtonPrimary;
+    blockCustomProps.ctaButtonSecondaryClass = DEFAULT_CLASSES.ctaButtonSecondary;
+
+    blockCustomProps.col1Title = intl.formatMessage({ id: 'BlockWithCols.' + block.blockId + '.col1Title', defaultMessage:'Hello' });
+    blockCustomProps.col2Title = intl.formatMessage({ id: 'BlockWithCols.' + block.blockId + '.col2Title', defaultMessage:'Hello' });
+    blockCustomProps.col1Text = intl.formatMessage({ id: 'BlockWithCols.' + block.blockId + '.col1Text', defaultMessage:'Hello' });
+    blockCustomProps.col2Text = intl.formatMessage({ id: 'BlockWithCols.' + block.blockId + '.col2Text', defaultMessage:'Hello' });
+    blockCustomProps.callToAction1 = {
+      fieldType: 'internalButtonLink',
+      href: intl.formatMessage({ id: 'BlockWithCols.' + block.blockId + '.cta1Link', defaultMessage:'Hello' }),
+      content: intl.formatMessage({ id: 'BlockWithCols.' + block.blockId + '.cta1Text', defaultMessage:'Hello' }),
+    };
+    blockCustomProps.callToAction2 = {
+      fieldType: 'internalButtonLink',
+      href: intl.formatMessage({ id: 'BlockWithCols.' + block.blockId + '.cta2Link', defaultMessage:'Hello' }),
+      content: intl.formatMessage({ id: 'BlockWithCols.' + block.blockId + '.cta2Text', defaultMessage:'Hello' }),
+    };
+  }
+  // Price Selector block data.
+  if (block?.blockId === 'price-selector') {
+    block.blockType = 'blockPriceSelector';
+    blockCustomProps.plans = {
+      set1: [
+        {
+          title: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set1.title1', defaultMessage:'Hello' }),
+          description: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set1.description1', defaultMessage:'Hello' }),
+          price: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set1.price1', defaultMessage:'Hello' }),
+          priceText: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set1.priceText1', defaultMessage:'Hello' }),
+          cta: {
+            link: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set1.cta1Link', defaultMessage:'Hello' }),
+            text: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set1.cta1Text', defaultMessage:'Hello' }),
+          },
+          features: ["Unlimited listings available", "24/7 customer support", "Easy payment processing"],
+        },
+        {
+          title: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set1.title2', defaultMessage:'Hello' }),
+          description: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set1.description2', defaultMessage:'Hello' }),
+          price: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set1.price2', defaultMessage:'Hello' }),
+          priceText: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set1.priceText2', defaultMessage:'Hello' }),
+          cta: {
+            link: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set1.cta2Link', defaultMessage:'Hello' }),
+            text: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set1.cta2Text', defaultMessage:'Hello' }),
+          },
+          features: ["Advanced analytics tools", "Promotional features included", "Priority customer support", "Custom branding options"],
+        },
+      ],
+      set2: [
+        {
+          title: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set2.title1', defaultMessage:'Hello' }),
+          description: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set2.description1', defaultMessage:'Hello' }),
+          price: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set2.price1', defaultMessage:'Hello' }),
+          priceText: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set2.priceText1', defaultMessage:'Hello' }),
+          cta: {
+            link: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set2.cta1Link', defaultMessage:'Hello' }),
+            text: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set2.cta1Text', defaultMessage:'Hello' }),
+          },
+          features: ["Unlimited listings available", "Team Access", "Dedicated Manager"],
+        },
+        {
+          title: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set2.title2', defaultMessage:'Hello' }),
+          description: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set2.description2', defaultMessage:'Hello' }),
+          price: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set2.price2', defaultMessage:'Hello' }),
+          priceText: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set2.priceText2', defaultMessage:'Hello' }),
+          cta: {
+            link: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set2.cta2Link', defaultMessage:'Hello' }),
+            text: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set2.cta2Text', defaultMessage:'Hello' }),
+          },
+          features: ["Custom Solutions", "24/7 Support", "Enterprise Tools"],
+        },
+      ],
+    };
+    blockCustomProps.toggles = {
+      cta1: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.toggleSet1', defaultMessage:'Hello' }),
+      cta2: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.toggleSet2', defaultMessage:'Hello' })
+    };
+  }
+
+  return blockCustomProps;
+}
 
 export default BlockBuilder;
