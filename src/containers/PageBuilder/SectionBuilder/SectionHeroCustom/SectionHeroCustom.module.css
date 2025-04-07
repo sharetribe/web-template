@@ -1,0 +1,54 @@
+.root {
+  /* SectionContainer defaults */
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  width: 100%;
+  position: relative;
+
+  /* Hero specific */
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  h1 {
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    font-weight: 400;
+    line-height: 120%; /* 60px */
+    text-align: center;
+  }
+
+  p {
+    color: var(--colorWhite);
+    text-align: center;
+    text-shadow: -3px 4px 5px rgba(0, 0, 0, 0.69);
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%; /* 30px */
+  }
+
+  header {
+    max-width: 650px;
+    margin-right: 0;
+  }
+}
+
+.buttonWrap {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.contentLeft {
+  justify-content: flex-end;
+
+  .buttonWrap {
+    justify-content: flex-start;
+  }
+
+  h1 {
+    text-align: left;
+  }
+}
