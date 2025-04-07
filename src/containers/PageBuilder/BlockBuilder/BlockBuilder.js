@@ -96,10 +96,14 @@ const BlockBuilder = props => {
         const Block = config?.component;
         const blockId = block.blockId || `${sectionId}-block-${index + 1}`;
 
-        const blockCustomProps = createBlockCustomProps(block);
         if (block.blockName?.startsWith('2 cols buttons ::')) {
           block.blockType = 'blockWithCols';
         }
+        if (block.blockId === 'price-selector') {
+          block.blockType = 'blockPriceSelector';
+        }
+
+        const blockCustomProps = createBlockCustomProps(block);
 
         if (Block) {
           return (
@@ -235,7 +239,6 @@ function createBlockCustomProps(block) {
   }
   // Price Selector block data.
   if (block?.blockId === 'price-selector') {
-    block.blockType = 'blockPriceSelector';
     blockCustomProps.plans = {
       set1: [
         {

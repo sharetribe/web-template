@@ -1,6 +1,5 @@
 .link {
   display: inline;
-  color: var(--marketplaceColor);
 
   /* fallback option */
   word-break: break-all;
