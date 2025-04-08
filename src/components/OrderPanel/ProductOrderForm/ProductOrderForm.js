@@ -153,6 +153,7 @@ const renderForm = formRenderProps => {
     values,
     showCurrencyNotify,
     listing,
+    isClosed,
   } = formRenderProps;
 
   // Note: don't add custom logic before useEffect
@@ -213,7 +214,7 @@ const renderForm = formRenderProps => {
 
   const breakdownData = {};
   const showBreakdown =
-    breakdownData && lineItems && !fetchLineItemsInProgress && !fetchLineItemsError;
+    breakdownData && lineItems && !fetchLineItemsInProgress && !fetchLineItemsError && !isClosed;
 
 
   const showContactUser = typeof onContactUser === 'function';
@@ -288,7 +289,7 @@ const renderForm = formRenderProps => {
       />
 
 
-      {showBreakdown  ? (
+      {showBreakdown ? (
         <div className={`${css.breakdownWrapper} ${showOnlyTotal ? css.showOnlyTotal : ''}`}>
           {!showOnlyTotal ? (
             <>
@@ -311,30 +312,34 @@ const renderForm = formRenderProps => {
       ) : null}
 
   
-
-      <div className={css.submitButton}>
-        <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
-          {hasStock ? (
-            <FormattedMessage id="ProductOrderForm.ctaButton" />
-          ) : (
-            <FormattedMessage id="ProductOrderForm.ctaButtonNoStock" />
-          )}
-        </PrimaryButton>
-      </div>
-      <p className={css.finePrint}>
-        {payoutDetailsWarning ? (
-          payoutDetailsWarning
-        ) : hasStock && isOwnListing ? (
-          <FormattedMessage id="ProductOrderForm.ownListing" />
-        ) : hasStock ? (
-          <>
-          <FormattedMessage id="ProductOrderForm.finePrint" />
-          <MoneyBackGuarantee />
-          </>
-        ) : showContactUser ? (
-          <FormattedMessage id="ProductOrderForm.finePrintNoStock" values={{ contactSellerLink }} />
-        ) : null}
-      </p>
+      {!isClosed && (
+        <>
+          <div className={css.submitButton}>
+            <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
+              {hasStock ? (
+                <FormattedMessage id="ProductOrderForm.ctaButton" />
+              ) : (
+                <FormattedMessage id="ProductOrderForm.ctaButtonNoStock" />
+              )}
+            </PrimaryButton>
+          </div>
+        
+          <p className={css.finePrint}>
+            {payoutDetailsWarning ? (
+              payoutDetailsWarning
+            ) : hasStock && isOwnListing ? (
+              <FormattedMessage id="ProductOrderForm.ownListing" />
+            ) : hasStock ? (
+              <>
+              <FormattedMessage id="ProductOrderForm.finePrint" />
+              <MoneyBackGuarantee />
+              </>
+            ) : showContactUser ? (
+              <FormattedMessage id="ProductOrderForm.finePrintNoStock" values={{ contactSellerLink }} />
+            ) : null}
+          </p>
+        </>
+      )}
     </Form>
   );
 };

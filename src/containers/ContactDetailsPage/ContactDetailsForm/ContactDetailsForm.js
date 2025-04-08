@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import isEqual from 'lodash/isEqual';
 import classNames from 'classnames';
+import { TriangleAlert } from 'lucide-react';
 import { Form as FinalForm } from 'react-final-form';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
@@ -197,6 +198,7 @@ class ContactDetailsFormComponent extends Component {
 
             emailVerifiedInfo = (
               <span className={css.emailUnverified}>
+                <TriangleAlert className={css.triangleAlert}/> 
                 <FormattedMessage
                   id="ContactDetailsForm.emailUnverified"
                   values={{ resendEmailMessage }}

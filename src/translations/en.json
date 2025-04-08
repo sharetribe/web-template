@@ -1183,5 +1183,7 @@
   "FavoriteListingsPage.youHaveListings": "You have {count} favorite {count, plural, one {listing} other {listings}}",
   "OrderPanel.addFavoriteButton": "Add to favorites",
   "OrderPanel.unfavoriteButton": "Unfavorite",
-  "UserNav.favoriteListings": "Your favorites"
+  "UserNav.favoriteListings": "Your favorites",
+  "EmailVerificationBanner.title": "Please verify your email address.",
+  "EmailVerificationBanner.buttonLabel": "Verify now"
 }

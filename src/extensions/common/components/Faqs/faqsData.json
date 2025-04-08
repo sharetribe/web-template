@@ -13,19 +13,19 @@
     },
     {
         "question": "Why can't I see the location's business name and address?",
-        "answer": "The seller receives multiple requests from vendors for the location's business name and address. To ensure sucess for the vending operator,this information is shared only after you purchase the listing.",
+        "answer": "The seller receives multiple requests from vendors for the location's business name and address. To ensure success for the vending operator, this information is shared only after you purchase the listing.",
         "audience": "buyer",
         "category": ["location","location-machine", "atm-location"]
     },
     {
         "question": "Is there a vendor currently at this location?",
-        "answer": "The description will specifcy whether this location needs replacing a vendor or if you would be its first vendor. Please note that even if you're replacing a vendor, the seller will likely not have the previous vendor's sales data.",
+        "answer": "The description will specify whether this location needs replacing a vendor or if you would be its first vendor. Please note that even if you're replacing a vendor, the seller will likely not have the previous vendor's sales data.",
         "audience": "buyer",
         "category": ["location","location-machine", "atm-location"]
     },
     {
-        "question": "How does the 100% money back guarentee work?",
-        "answer": "Once you make a purchase, the money is hold in escrow via Stripe. Only once you (the buyer) confirm that you're ready to finalize the order, the money is released to the seller. Otherwise, as long as you cancel the order within 20 days of being introduced to the location's property manager, the money is fully refunded to you.",
+        "question": "How does the 100% money back guarantee work?",
+        "answer": "Once you make a purchase, the money is held in escrow via Stripe. Only once you (the buyer) confirm that you're ready to finalize the order, the money is released to the seller. Otherwise, as long as you cancel the order within 20 days of being introduced to the location's property manager, the money is fully refunded to you.",
         "audience": "buyer",
         "category": ["location","location-find","location-machine", "atm-location", "home"]
     },
@@ -43,7 +43,7 @@
     },
     {
         "question": "How is the sale price determined?",
-        "answer": "The seller of this location sets the price based on factors such as foot traffic, hours of operation, proximity to competiton and diffculty to secure.",
+        "answer": "The seller of this location sets the price based on factors such as foot traffic, hours of operation, proximity to competition and difficulty to secure.",
         "audience": "buyer",
         "category": ["location","location-machine", "atm-location", "home"]
     },
@@ -93,7 +93,7 @@
 
     {
         "question": "What are the fees for selling on Vending Village?",
-        "answer": "You can list locations and services for free. A transaction fee is charged only when you make a sale. We charge a flat $100 plus a 3% transaction fee. For example, if you list a location for $1,000, you will receive $870 ($1,000, less $100 flat fee, less $30 transaction fee) upon a sale.",
+        "answer": "You can list locations and services for free. A transaction fee is charged only when you make a sale. We charge a flat $100 plus 3% transaction fee (for credit card processing) on locations and location finding services. For example, if you list a location for $1,000, you will receive $870 ($1,000, less $100 flat fee, less $30 transaction fee) upon a sale. Other listings such as locations with machines are charged a 10% transaction fee (which includes the credit card processing fee).",
         "audience": "seller",
         "category": ["payment"]
     },

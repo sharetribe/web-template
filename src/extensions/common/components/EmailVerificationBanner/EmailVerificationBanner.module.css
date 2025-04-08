@@ -1,0 +1,51 @@
+@import '../../../../styles/customMediaQueries.css';
+
+.root{
+    z-index: 9;
+    background: var(--colorGrey700);
+    display: flex;
+    position: fixed; 
+    padding: 10px 10px 10px 20px;
+    color: white;
+    text-align: center;
+    flex-direction: row;
+    justify-content: space-between;
+    line-height: 1;
+    gap: 5%;  
+    bottom: -200px; /* Start off-screen */
+    left:0;
+    width:100%;
+    white-space: nowrap;
+    animation: slideIn 400ms forwards 3s; /* Animate after 3 seconds */
+
+    div{
+        line-height: 34px;
+    }   
+    
+    @media (--viewportMedium) {
+        margin-bottom: 30px;
+        width: 500px;
+        left: calc(50% - 250px);
+        border-radius: 11px;
+        font-size: 18px;
+
+    }
+
+}
+
+@keyframes slideIn {
+    to {
+        bottom: 0; /* End position */
+    }
+}
+
+.button{
+    order: 0;
+    background: white;
+    color: var(--colorGrey700);
+    padding: 4px 16px;
+    border-radius: 4px;
+    font-size: 15px;
+    min-height: 0;
+    width: auto;
+}

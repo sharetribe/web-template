@@ -78,6 +78,8 @@
 .actionBarForProductLayout {
   margin: 0;
   width: 100%;
+  position: sticky;
+  top: 60px;
 
   &:nth-child(even) {
     margin-top: 24px;
@@ -86,6 +88,7 @@
   @media (--viewportMedium) {
     margin: 24px 0 24px 0;
     width: 100%;
+    position: static;
   }
 
   @media (--viewportLarge) {
@@ -166,13 +169,11 @@
 
 .closedListingText {
   composes: h4 from global;
-  margin: 14px 12px 11px 24px;
+  padding: 12px 24px;
+  line-height: 1;
   text-align: center;
   width: 100%;
 
-  @media (--viewportMedium) {
-    margin: 25px 12px 22px 24px;
-  }
 }
 
 .addPayoutDetails,
