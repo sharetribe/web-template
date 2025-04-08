@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
-import { FieldTextInput } from '../../../../components';
 import { useIntl } from '../../../../util/reactIntl';
+import { FieldTextInput } from '../../../../components';
 
 import css from './FilterKeyword.module.css';
 
@@ -15,6 +15,7 @@ const FilterKeyword = props => {
     <div className={classes}>
       <FieldTextInput
         className={css.customField}
+        inputClassName={css.input}
         name={'keywords'}
         type="text"
         placeholder={intl.formatMessage({

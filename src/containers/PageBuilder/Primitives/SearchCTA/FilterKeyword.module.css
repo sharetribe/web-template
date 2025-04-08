@@ -11,17 +11,6 @@
   align-items: center;
   color: var(--colorGrey800);
 
-  input {
-    border: 0;
-    text-overflow: ellipsis;
-  }
-
-  input:focus {
-    border: none;
-    outline: none;
-    box-shadow: none;
-  }
-
   &:hover,
   &:focus {
     border-bottom-color: var(--marketplaceColor);
@@ -30,12 +19,20 @@
     box-shadow: none;
   }
 
-  input {
-    height: 40px;
-  }
-
   @media (--viewportLarge) {
     height: 48px;
     margin-bottom: 0;
+  }
+}
+
+.input {
+  border: 0;
+  text-overflow: ellipsis;
+  height: 40px;
+  &:hover,
+  &:focus {
+    border: none;
+    outline: none;
+    box-shadow: none;
   }
 }
