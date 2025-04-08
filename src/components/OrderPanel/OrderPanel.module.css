@@ -1,5 +1,8 @@
 @import '../../styles/customMediaQueries.css';
 
+.root {
+}
+
 /* Order form inside modalContainer needs special handling */
 /* since "inMobile" breakpoint is actually --viewportLarge */
 .modalContainer {
