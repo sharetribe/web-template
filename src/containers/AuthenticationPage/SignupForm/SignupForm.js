@@ -62,9 +62,11 @@ const SignupFormComponent = props => {
         setPromoCode(cookiePromoCode);
       }
     
+    /*
     if(fprParam || cookiePromoCode){ 
       document.getElementById('pub_userPromoCode').setAttribute('readonly', true)
-    }
+    }*/
+
   }, []);
 
   return (
@@ -153,7 +155,6 @@ const SignupFormComponent = props => {
           .fieldConfig.schemaType='enum';
         userFieldProps.find(field => field.key == 'pub_userLocation')
           .fieldConfig.enumOptions= regions;
-        //console.log('user fields', userFieldProps)
 
         const noUserTypes = !userType && !(userTypes?.length > 0);
         const userTypeConfig = userTypes.find(config => config.userType === userType);

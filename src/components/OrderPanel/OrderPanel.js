@@ -426,7 +426,7 @@ const OrderPanel = props => {
             <div className={css.hideOnMobile}>
               <div className={css.buttonGroup}>
                 <ContactButton />
-                {isListingPage && ( favoriteButton )}
+                {isListingPage && !isClosed && ( favoriteButton )}
               </div>
             </div>
 
@@ -451,6 +451,7 @@ const OrderPanel = props => {
               payoutDetailsWarning={payoutDetailsWarning}
               showCurrencyNotify={showCurrencyNotify}
               listing={listing}
+              isClosed={isClosed}
             />
           </>
         ) : showInquiryForm ? (
@@ -473,13 +474,9 @@ const OrderPanel = props => {
 
         <div className={css.buttonGroup}>
           <ContactButton />
-          {favoriteButton}
+          {!isClosed && (favoriteButton)}
 
-          {isClosed ? (
-            <div className={css.closedListingButton}>
-              <FormattedMessage id="OrderPanel.closedListingButtonText" />
-            </div>
-          ) : (
+          {isClosed && (
             <PrimaryButton
               onClick={handleSubmit(
                 isOwnListing,
@@ -505,7 +502,9 @@ const OrderPanel = props => {
           )}
         </div>
         
-        <MoneyBackGuarantee />
+        {!isClosed && (
+          <MoneyBackGuarantee />
+        )}
         
       </div>
     </div>
