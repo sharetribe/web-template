@@ -73,6 +73,12 @@ const priceData = (price, currency, intl) => {
   return {};
 };
 
+const getCheapestPriceVariant = (priceVariants = []) => {
+  return priceVariants.reduce((cheapest, current) => {
+    return current.priceInSubunits < cheapest.priceInSubunits ? current : cheapest;
+  }, priceVariants[0]);
+};
+
 const formatMoneyIfSupportedCurrency = (price, intl) => {
   try {
     return formatMoney(intl, price);
@@ -301,6 +307,12 @@ const OrderPanel = props => {
     listingTypeConfig?.stockType
   );
   const seatsEnabled = [AVAILABILITY_MULTIPLE_SEATS].includes(listingTypeConfig?.availabilityType);
+  const isPriceVariationsInUse = listingTypeConfig?.priceVariations?.enabled;
+  const priceVariantsMaybe = isPriceVariationsInUse
+    ? { priceVariants }
+    : !isPriceVariationsInUse && showBookingFixedDurationForm
+    ? { priceVariants: [getCheapestPriceVariant(priceVariants)] }
+    : {};
 
   const sharedProps = {
     lineItemUnitType,
@@ -381,9 +393,9 @@ const OrderPanel = props => {
             timeSlotsForDate={timeSlotsForDate}
             onFetchTimeSlots={onFetchTimeSlots}
             startDatePlaceholder={intl.formatDate(TODAY, dateFormattingOptions)}
-            priceVariants={priceVariants}
             startTimeInterval={startTimeInterval}
             timeZone={timeZone}
+            {...priceVariantsMaybe}
             {...sharedProps}
           />
         ) : showBookingTimeForm ? (
@@ -398,6 +410,7 @@ const OrderPanel = props => {
             startDatePlaceholder={intl.formatDate(TODAY, dateFormattingOptions)}
             endDatePlaceholder={intl.formatDate(TODAY, dateFormattingOptions)}
             timeZone={timeZone}
+            {...priceVariantsMaybe}
             {...sharedProps}
           />
         ) : showBookingDatesForm ? (
@@ -409,6 +422,7 @@ const OrderPanel = props => {
             monthlyTimeSlots={monthlyTimeSlots}
             onFetchTimeSlots={onFetchTimeSlots}
             timeZone={timeZone}
+            {...priceVariantsMaybe}
             {...sharedProps}
           />
         ) : showProductOrderForm ? (
