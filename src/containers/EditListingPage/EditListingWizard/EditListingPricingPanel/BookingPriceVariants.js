@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Field } from 'react-final-form';
 import { FieldArray } from 'react-final-form-arrays';
 import Decimal from 'decimal.js';
@@ -13,7 +13,13 @@ import { types as sdkTypes } from '../../../../util/sdkLoader';
 import { FIXED } from '../../../../transactions/transaction';
 
 // Import shared components
-import { FieldCurrencyInput, InlineTextButton, ValidationError } from '../../../../components';
+import {
+  FieldCurrencyInput,
+  FieldTextInput,
+  IconDelete,
+  InlineTextButton,
+  ValidationError,
+} from '../../../../components';
 
 // Import modules from this directory
 import css from './BookingPriceVariants.module.css';
@@ -41,27 +47,85 @@ const getDurationFactors = durationInMinutes => {
 
 const setDefault = (value, defaultValue) => (value != null ? value : defaultValue);
 
-export const getInitialValuesForPriceVariants = params => {
-  const { listing } = params;
+/**
+ * Get the initial values for the price variants.
+ *
+ * @param {Object} props - The props given to the panel component.
+ * @param {Object} props.listing - The listing entity.
+ * @param {boolean} isUsingBookingPriceVariations - Whether the booking price variations are enabled.
+ * @returns {Object} An object including the priceVariants array or an empty object.
+ */
+export const getInitialValuesForPriceVariants = (props, isUsingBookingPriceVariations) => {
+  const { listing } = props;
   const { price, publicData } = listing?.attributes || {};
   const { unitType, priceVariants = [] } = publicData || {};
 
-  const variants =
-    priceVariants.length > 0
-      ? priceVariants.map(variant => {
-          const bookingLengthInMinutes = setDefault(variant.bookingLengthInMinutes, 60);
-          const priceInSubunits = setDefault(variant.priceInSubunits, null);
-          return {
-            bookingLengthInMinutes,
-            price: priceInSubunits ? new Money(priceInSubunits, price.currency) : null,
-          };
-        })
-      : [{ bookingLengthInMinutes: 60, price: null }];
-  return unitType === FIXED ? { priceVariants: variants } : {};
+  const hasPriceVariants = priceVariants.length > 0;
+  const isFixedUnitType = unitType === FIXED;
+
+  const variants = hasPriceVariants
+    ? priceVariants.map(variant => {
+        const nameMaybe = variant.name ? { name: variant.name } : {};
+        const bookingLengthInMinutes = setDefault(variant.bookingLengthInMinutes, 60);
+        const bookingLengthInMinutesMaybe = isFixedUnitType ? { bookingLengthInMinutes } : {};
+        const priceInSubunits = setDefault(variant.priceInSubunits, null);
+        return {
+          ...nameMaybe,
+          ...bookingLengthInMinutesMaybe,
+          price: priceInSubunits ? new Money(priceInSubunits, price.currency) : null,
+        };
+      })
+    : isFixedUnitType
+    ? [{ name: null, price: null, bookingLengthInMinutes: 60 }]
+    : isUsingBookingPriceVariations && !!price
+    ? [{ name: null, price }]
+    : [{ name: null, price: null }];
+
+  return variants ? { priceVariants: variants } : {};
 };
 
-export const handleSubmitValuesForPriceVariants = (values, publicData, unitType) => {
+const isEmpty = value => {
+  const isNullish = value == null;
+  const isZeroLength = value?.hasOwnProperty('length') && value?.length === 0;
+  return isNullish || isZeroLength;
+};
+const isPropertyMissing = (variants, property) =>
+  variants.some(variant => isEmpty(variant[property]));
+
+/**
+ * Format the submitted values so that they include the priceVariants array, if it's enabled.
+ *
+ * @param {Object} values - The submitted form values.
+ * @param {Object} publicData - The public data of the listing.
+ * @param {string} unitType - The unit type of the listing from publicData.
+ * @param {Object} listingTypeConfig - The listing type config.
+ * @returns {Object} The formatted values.
+ */
+export const handleSubmitValuesForPriceVariants = (
+  values,
+  publicData,
+  unitType,
+  listingTypeConfig
+) => {
   const { priceVariants } = values;
+  const hasPriceVariants = priceVariants.length > 0;
+  const isPriceVariationsInUse = listingTypeConfig?.priceVariations?.enabled; // TODO: check from config
+  const isFixedUnitType = unitType === FIXED;
+
+  if (hasPriceVariants && isPriceVariationsInUse) {
+    if (isPropertyMissing(priceVariants, 'name')) {
+      throw new Error('Price variants must have a name');
+    }
+    if (isPropertyMissing(priceVariants, 'price')) {
+      throw new Error('Price variants must have a price');
+    }
+  } else if (hasPriceVariants && isFixedUnitType) {
+    if (isPropertyMissing(priceVariants, 'bookingLengthInMinutes')) {
+      throw new Error('Price variants must have a booking length');
+    }
+  }
+
+  const shouldIncludeName = isPriceVariationsInUse || priceVariants?.length > 1;
   const firstPrice = priceVariants?.[0]?.price;
   const firstPriceInSubUnits = firstPrice?.amount;
   const currency = firstPrice?.currency;
@@ -71,16 +135,19 @@ export const handleSubmitValuesForPriceVariants = (values, publicData, unitType)
   }, firstPriceInSubUnits);
   const price = new Money(lowestPrice, currency);
 
-  return unitType === FIXED
+  return isFixedUnitType || hasPriceVariants
     ? {
         price,
         publicData: {
           ...publicData,
           priceVariants: priceVariants.map(variant => {
-            const { bookingLengthInMinutes, price: variantPrice } = variant;
+            const { name, bookingLengthInMinutes, price: variantPrice } = variant;
+            const nameMaybe = shouldIncludeName && name ? { name } : {};
+            const bookingLengthInMinutesMaybe = isFixedUnitType ? { bookingLengthInMinutes } : {};
             return {
+              ...nameMaybe,
               priceInSubunits: variantPrice.amount,
-              bookingLengthInMinutes,
+              ...bookingLengthInMinutesMaybe,
             };
           }),
         },
@@ -129,19 +196,23 @@ const FieldBookingLength = props => {
         const [hours, minutes] = factors;
         const { valid, invalid, touched, error } = meta;
         const handleHoursChange = e => {
-          // const [hours, minutes] = factors;
           const newHours = e.target.value;
           const bookingLengthInMinutes = getDurationInMinutes(newHours, minutes);
           setFactors([newHours, minutes]);
           input.onChange(bookingLengthInMinutes);
         };
         const handleMinutesChange = e => {
-          // const [hours, minutes] = factors;
           const newMinutes = e.target.value;
           const bookingLengthInMinutes = getDurationInMinutes(hours, newMinutes);
           setFactors([hours, newMinutes]);
           input.onChange(bookingLengthInMinutes);
         };
+
+        const hasError = touched && invalid && error;
+        const selectClasses = classNames(css.select, {
+          [css.selectSuccess]: valid,
+          [css.selectError]: hasError,
+        });
 
         return (
           <div className={classes}>
@@ -153,7 +224,7 @@ const FieldBookingLength = props => {
               <select
                 id={`${idPrefix}_hours`}
                 name={`${name}.hours`}
-                className={css.select}
+                className={selectClasses}
                 onChange={handleHoursChange}
                 onBlur={input.onBlur}
                 value={hours}
@@ -167,7 +238,7 @@ const FieldBookingLength = props => {
               <select
                 id={`${idPrefix}_minutes`}
                 name={`${name}.minutes`}
-                className={css.select}
+                className={selectClasses}
                 onChange={handleMinutesChange}
                 onBlur={input.onBlur}
                 value={minutes}
@@ -195,6 +266,9 @@ const PriceVariant = props => {
     unitType,
     listingMinimumPriceSubUnits,
     marketplaceCurrency,
+    isPriceVariationsInUse,
+    showDeleteButton,
+    onRemovePriceVariant,
     intl,
   } = props;
 
@@ -206,10 +280,23 @@ const PriceVariant = props => {
 
   return (
     <div className={css.priceVariant}>
+      {isPriceVariationsInUse ? (
+        <FieldTextInput
+          id={`${idPrefix}_name`}
+          name={`${name}.name`}
+          label={intl.formatMessage({ id: 'EditListingPricingForm.priceVariant.name' })}
+          placeholder={intl.formatMessage({
+            id: 'EditListingPricingForm.priceVariant.nameInputPlaceholder',
+          })}
+          validate={validators.required(
+            intl.formatMessage({ id: 'EditListingPricingForm.priceVariant.nameRequired' })
+          )}
+        />
+      ) : null}
+
       <FieldCurrencyInput
         id={`${idPrefix}_price`}
         name={`${name}.price`}
-        className={css.input}
         label={intl.formatMessage(
           { id: 'EditListingPricingForm.priceVariant.pricePerProduct' },
           { unitType }
@@ -221,41 +308,85 @@ const PriceVariant = props => {
         validate={priceValidators}
       />
 
-      <FieldBookingLength
-        name={`${name}.bookingLengthInMinutes`}
-        idPrefix={idPrefix}
-        intl={intl}
-        validate={validators.numberAtLeast(
-          intl.formatMessage({ id: 'EditListingPricingForm.priceVariant.bookingLengthRequired' }),
-          15
-        )}
-      />
+      {unitType === FIXED ? (
+        <FieldBookingLength
+          name={`${name}.bookingLengthInMinutes`}
+          idPrefix={idPrefix}
+          intl={intl}
+          validate={validators.numberAtLeast(
+            intl.formatMessage({ id: 'EditListingPricingForm.priceVariant.bookingLengthRequired' }),
+            15
+          )}
+        />
+      ) : null}
+
+      {isPriceVariationsInUse && showDeleteButton ? (
+        <InlineTextButton
+          className={css.fieldArrayDelete}
+          type="button"
+          onClick={onRemovePriceVariant}
+        >
+          <span>
+            <IconDelete rootClassName={css.deleteIcon} />
+            <FormattedMessage id="EditListingPricingForm.priceVariant.delete" />
+          </span>
+        </InlineTextButton>
+      ) : null}
     </div>
   );
 };
 
+// NOTE: we'll create unique keys for each price variant
+// This is needed because React virtual DOM needs to map with real DOM elements through unique keys.
+// https://github.com/final-form/react-final-form-arrays/issues/116
+const initVariantKeys = (initialLengthOfPriceVariants, counterRef) => {
+  if (initialLengthOfPriceVariants > 0) {
+    return [...Array(initialLengthOfPriceVariants)].map((_, i) => {
+      counterRef.current = i;
+      return `variantKey_${i}`;
+    });
+  }
+  return [];
+};
+
+const addNewVariantKey = (counterRef, variantKeysRef) => {
+  counterRef.current++;
+  variantKeysRef.current.push(`original_${counterRef.current}`);
+};
+
+const removeVariantKey = (index, variantKeysRef) => {
+  variantKeysRef.current.splice(index, 1);
+};
+
 /**
- * The FixedBookingPriceVariants component.
+ * The BookingPriceVariants component.
  *
  * @component
  * @param {Object} props
  * @param {string} [props.formId] - The form id
  * @param {string} props.unitType - The unit type
  * @param {number} props.listingMinimumPriceSubUnits - The minimum price subunits
+ * @param {number} props.initialLengthOfPriceVariants - The initial length of price variants
  * @param {string} props.marketplaceCurrency - The marketplace currency
  * @returns {JSX.Element}
  */
-export const FixedBookingPriceVariants = props => {
+export const BookingPriceVariants = props => {
   const intl = useIntl();
+  // NOTE: we'll create unique keys for each price variant
+  // This is needed because React virtual DOM needs to map with real DOM elements through unique keys.
+  // https://github.com/final-form/react-final-form-arrays/issues/116
+  const counter = useRef(0);
+  const variantKeys = useRef(initVariantKeys(props.initialLengthOfPriceVariants, counter));
+
   const {
     formId = 'EditListingPricingForm',
     unitType,
     listingMinimumPriceSubUnits = 0,
+    isPriceVariationsInUse,
     marketplaceCurrency,
   } = props;
-  const isFixedLengthBooking = unitType === FIXED;
 
-  return isFixedLengthBooking ? (
+  return (
     <FieldArray
       name="priceVariants"
       validate={validators.composeValidators(
@@ -275,7 +406,14 @@ export const FixedBookingPriceVariants = props => {
                 <InlineTextButton
                   className={css.addPriceVariantButton}
                   onClick={() => {
-                    fields.push({ bookingLengthInMinutes: 60, price: null });
+                    const initialPriceVariantValues =
+                      unitType === FIXED && isPriceVariationsInUse
+                        ? { name: null, price: null, bookingLengthInMinutes: 60 }
+                        : unitType === FIXED
+                        ? { price: null, bookingLengthInMinutes: 60 }
+                        : { name: null, price: null };
+                    fields.push(initialPriceVariantValues);
+                    addNewVariantKey(counter, variantKeys); // Handle unique keys for each array item.
                   }}
                 >
                   <FormattedMessage id="EditListingPricingForm.priceVariant.addPriceVariant" />
@@ -283,24 +421,53 @@ export const FixedBookingPriceVariants = props => {
               </div>
             ) : null}
 
-            {fields.map((name, index) => {
-              return (
-                <PriceVariant
-                  key={name}
-                  name={name}
-                  unitType={unitType}
-                  idPrefix={`${formId}_${index}`}
-                  listingMinimumPriceSubUnits={listingMinimumPriceSubUnits}
-                  marketplaceCurrency={marketplaceCurrency}
-                  intl={intl}
-                />
-              );
-            })}
+            <div className={css.priceVariants}>
+              {fields.map((name, index) => {
+                return (
+                  <PriceVariant
+                    key={variantKeys.current[index]}
+                    name={name}
+                    unitType={unitType}
+                    isPriceVariationsInUse={isPriceVariationsInUse || fields?.length > 1}
+                    idPrefix={`${formId}_${index}`}
+                    onRemovePriceVariant={() => {
+                      fields.remove(index);
+                      removeVariantKey(index, variantKeys); // Handle unique keys for each array item.
+                    }}
+                    listingMinimumPriceSubUnits={listingMinimumPriceSubUnits}
+                    marketplaceCurrency={marketplaceCurrency}
+                    showDeleteButton={fields?.length > 1}
+                    intl={intl}
+                  />
+                );
+              })}
+            </div>
+
+            {isPriceVariationsInUse && fields?.length < 20 ? (
+              <div className={css.addPriceVariants}>
+                <InlineTextButton
+                  className={css.addPriceVariantButton}
+                  type="button"
+                  onClick={() => {
+                    const initialPriceVariantValues =
+                      unitType === FIXED && isPriceVariationsInUse
+                        ? { name: null, price: null, bookingLengthInMinutes: 60 }
+                        : unitType === FIXED
+                        ? { price: null, bookingLengthInMinutes: 60 }
+                        : { name: null, price: null };
+                    fields.push(initialPriceVariantValues);
+                    addNewVariantKey(counter, variantKeys); // Handle unique keys for each array item.
+                  }}
+                >
+                  <FormattedMessage id="EditListingPricingForm.priceVariant.addPriceVariant" />
+                </InlineTextButton>
+              </div>
+            ) : null}
           </>
         );
       }}
     </FieldArray>
-  ) : null;
+  );
 };
 
-export default FixedBookingPriceVariants;
+export default BookingPriceVariants;
