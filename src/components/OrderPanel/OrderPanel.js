@@ -476,7 +476,7 @@ const OrderPanel = props => {
           <ContactButton />
           {!isClosed && (favoriteButton)}
 
-          {isClosed && (
+          {!isClosed && (
             <PrimaryButton
               onClick={handleSubmit(
                 isOwnListing,
