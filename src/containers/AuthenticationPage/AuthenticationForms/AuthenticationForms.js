@@ -16,7 +16,6 @@ import { Heading } from '../../../components';
 import ConfirmSignupForm from '../ConfirmSignupForm/ConfirmSignupForm';
 import BaseSignup from '../Signup/BaseSignup';
 import BrandSignup from '../Signup/BrandSignup';
-import { SSOButton } from '../SSOButton/SSOButton';
 
 import css from './AuthenticationForms.module.css';
 
@@ -47,10 +46,7 @@ const AuthenticationForms = props => {
       {isBrand ? (
         <BrandSignup from={from} brandStudioId={brandStudioId} />
       ) : (
-        <>
-          <BaseSignup from={from} />
-          {userType && <SSOButton isLogin={false} forceRedirect from={from} userType={userType} />}
-        </>
+        <BaseSignup from={from} />
       )}
     </div>
   );

@@ -11,6 +11,7 @@ import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { ensureCurrentUser } from '../../util/data';
 import { isTooManyEmailVerificationRequestsError } from '../../util/errors';
+import { isStudioBrand } from '../../util/userHelpers';
 import { authenticationInProgress, signupWithIdp } from '../../ducks/auth.duck';
 import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
 import { sendVerificationEmail } from '../../ducks/user.duck';
@@ -155,6 +156,8 @@ export const AuthenticationPageComponent = props => {
   const authinfoFrom = authInfo?.from || null;
   const from = locationFrom || authinfoFrom || null;
 
+  const isLogin = tab === 'login';
+  const isSignup = tab === 'signup';
   const isConfirm = tab === 'confirm';
   const userTypeInPushState = location.state?.userType || null;
   const userTypeInAuthInfo = isConfirm && authInfo?.userType ? authInfo?.userType : null;
@@ -164,7 +167,7 @@ export const AuthenticationPageComponent = props => {
   const show404 = userType && !preselectedUserType;
   const user = ensureCurrentUser(currentUser);
   const currentUserLoaded = !!user.id;
-  const isLogin = tab === 'login';
+  const isBrand = isStudioBrand(preselectedUserType);
   const { brandStudioId } = pathParams;
 
   // We only want to show the email verification dialog in the signup
@@ -222,6 +225,11 @@ export const AuthenticationPageComponent = props => {
         brandStudioId={brandStudioId}
       />
     );
+  }
+
+  // For users other than Brands we redirect directly to Auth0
+  if (isSignup && preselectedUserType && !isBrand) {
+    return <SSOButton isLogin={false} forceRedirect from={from} userType={preselectedUserType} />;
   }
 
   const resendErrorTranslationId = isTooManyEmailVerificationRequestsError(
