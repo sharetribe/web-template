@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
 import { pathByRouteName } from '../../../util/routes';
@@ -54,10 +54,17 @@ export const SSOButton = ({ isLogin, from, userType, brandStudioId, forceRedirec
     });
     window.location.href = auth0Route;
   };
+
+  useEffect(() => {
+    if (forceRedirect) {
+      authWithAuth0();
+    }
+  }, []);
+
   if (forceRedirect) {
-    authWithAuth0();
     return null;
   }
+
   return (
     <div className={css.socialButtonWrapper}>
       <SocialLoginButton onClick={() => authWithAuth0()}>
