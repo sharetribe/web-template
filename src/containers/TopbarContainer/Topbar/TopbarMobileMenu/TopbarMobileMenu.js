@@ -8,6 +8,7 @@ import classNames from 'classnames';
 import { ACCOUNT_SETTINGS_PAGES } from '../../../../routing/routeConfiguration';
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { ensureCurrentUser } from '../../../../util/data';
+import { isInstructor } from '../../../../util/skyfarer';
 
 import {
   AvatarLarge,
@@ -26,7 +27,6 @@ const isLowerEnv = process.env.REACT_APP_IS_LOWER_ENV === 'true'; // [SKYFARER]
 
 const CustomLinkComponent = ({ linkConfig, currentPage, currentUser }) => { // [SKYFARER MERGE: +currentUser]
   const { group, text, type, href, route } = linkConfig;
-  const isInstructor = currentUser?.attributes?.profile?.publicData?.userType.toLowerCase() === 'instructor'; // [SKYFARER]
 
   const getCurrentPageClass = page => {
     const hasPageName = name => currentPage?.indexOf(name) === 0;
@@ -86,7 +86,6 @@ const TopbarMobileMenu = props => {
   } = props;
 
   const user = ensureCurrentUser(currentUser);
-  const isInstructor = currentUser?.attributes?.profile?.publicData?.userType.toLowerCase() === 'instructor'; // [SKYFARER]
 
   const extraLinks = customLinks.map((linkConfig, index) => {
     return (
@@ -187,7 +186,7 @@ const TopbarMobileMenu = props => {
             {notificationCountBadge}
           </NamedLink>
           { // [SKYFARER]
-            isInstructor &&
+            isInstructor(currentUser) &&
               <NamedLink
                 className={classNames(css.navigationLink, currentPageClass('ManageListingsPage'))}
                 name="ManageListingsPage"
@@ -207,15 +206,15 @@ const TopbarMobileMenu = props => {
           >
             <FormattedMessage id="TopbarMobileMenu.accountSettingsLink" />
           </NamedLink>
-          { // [SKYFARER]
-            isAuthenticated && isLowerEnv && <InstructorMatchingButtonLink/>
+          {
+            // isAuthenticated && isLowerEnv && <InstructorMatchingButtonLink/>
           }
         </div>
         <div className={css.customLinksWrapper}>{extraLinks}</div>
         <div className={css.spacer} />
       </div>
       { // [SKYFARER]
-        isInstructor &&
+        isInstructor(currentUser) &&
           <div className={css.footer}>
             <NamedLink className={css.createNewListingLink} name="NewListingPage">
               <FormattedMessage id="TopbarMobileMenu.newListingLink" />

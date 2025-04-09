@@ -26,7 +26,7 @@ export const search = {
 
   // Distance in meters for calculating the bounding box around the
   // current location.
-  currentLocationBoundsDistance: 1000,
+  currentLocationBoundsDistance: 100000,
 
   // This affects location search.
   // These "default locations" can be edited in the

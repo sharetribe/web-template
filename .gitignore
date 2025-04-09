@@ -23,3 +23,5 @@ yarn-error.log
 
 # Jetbrains Artifacts
 .idea
+
+process*

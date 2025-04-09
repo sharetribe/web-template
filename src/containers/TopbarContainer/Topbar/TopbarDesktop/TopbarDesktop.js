@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import classNames from 'classnames';
 
-import { FormattedMessage } from '../../../../util/reactIntl';
-import { ACCOUNT_SETTINGS_PAGES } from '../../../../routing/routeConfiguration';
+import { FormattedMessage, intlShape } from '../../../../util/reactIntl';
+import { isInstructor } from '../../../../util/skyfarer';
+
+import {
+  ACCOUNT_SETTINGS_PAGES
+} from '../../../../routing/routeConfiguration';
+import { propTypes } from '../../../../util/types';
 import {
   Avatar,
   InlineTextButton,
@@ -74,8 +79,6 @@ const InboxLink = ({ notificationCount, currentUserHasListings }) => {
 };
 
 const ProfileMenu = ({ currentPage, currentUser, onLogout }) => {
-  const isInstructor = currentUser?.attributes?.profile?.publicData?.userType.toLowerCase() === 'instructor'; // [SKYFARER]
-
   const currentPageClass = page => {
     const isAccountSettingsPage =
       page === 'AccountSettingsPage' && ACCOUNT_SETTINGS_PAGES.includes(currentPage);
@@ -89,7 +92,7 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout }) => {
       </MenuLabel>
       <MenuContent className={css.profileMenuContent}>
         {
-          isInstructor ? ( // [SKYFARER]
+          isInstructor(currentUser) ? (
             <MenuItem key="ManageListingsPage">
               <NamedLink
                 className={classNames(css.menuLink, currentPageClass('ManageListingsPage'))}
@@ -192,9 +195,10 @@ const TopbarDesktop = props => {
   const classes = classNames(rootClassName || css.root, className);
 
   // [SKYFARER]
-  const instructorMatchingButtonLinkMaybe = isAuthenticated && isLowerEnv ? ( // TODO: remove env flag once validated (I'm not sure what Mike's plan was but we'll mess with it later)
-    <InstructorMatchingButtonLink/>
-  ) : null;
+  // const instructorMatchingButtonLinkMaybe = isAuthenticated && isLowerEnv ? ( // todo remove env flag once validated
+  //   <InstructorMatchingButtonLink/>
+  // ) : null;
+  const instructorMatchingButtonLinkMaybe = null;
 
   const inboxLinkMaybe = authenticatedOnClientSide ? (
     <InboxLink

@@ -131,7 +131,7 @@ module.exports = {
         to: isFromCustomer ? providerEmail : customerEmail,
         from: `${senderData.attributes.profile.displayName} ${t('General.Via', 'via')} ${process.env.REACT_APP_MARKETPLACE_NAME} <${process.env.SENDGRID_FROM_EMAIL}>`,
         replyTo: process.env.SENDGRID_REPLY_TO_EMAIL,
-        subject: t('NewMessage.Subject', `{{senderName}} has sent you a new message`, { senderName: senderData.attributes.profile.displayName }),
+        subject: t('NewMessage.Subject', `{{senderName}} has sent you a new message`, { hash: { senderName: senderData.attributes.profile.displayName } }),
         html
       });
 

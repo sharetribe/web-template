@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { FormattedMessage } from '../../util/reactIntl';
 import { ResponsiveImage, Modal } from '../../components';
@@ -27,6 +27,8 @@ const SectionHero = props => {
     noPayoutDetailsSetWithOwnListing,
   } = props;
 
+  const [showToast, setShowToast] = useState(false);
+
   const hasImages = listing.images && listing.images.length > 0;
   const firstImage = hasImages ? listing.images[0] : null;
   const variants = firstImage
@@ -41,6 +43,25 @@ const SectionHero = props => {
       />
     </button>
   ) : null;
+
+  const handleFacebookShare = () => {
+    const shareUrl = window.location.href;
+    const shareTitle = title || '';
+    const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareTitle)}`;
+    window.open(facebookShareUrl, '_blank', 'width=600,height=400');
+  };
+
+  const handleCopyUrl = () => {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url)
+      .then(() => {
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
+      })
+      .catch(err => {
+        console.error('Failed to copy URL: ', err);
+      });
+  };
 
   return (
     <section className={css.sectionHero} data-testid="hero">
@@ -74,6 +95,38 @@ const SectionHero = props => {
           variants={variants}
         />
         {viewPhotosButton}
+
+        <button
+          className={css.facebookShareButton}
+          onClick={e => {
+            e.stopPropagation();
+            handleFacebookShare();
+          }}
+          aria-label="Share on Facebook"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path fill="#1877F2" d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.989C18.343 21.129 22 16.99 22 12c0-5.523-4.477-10-10-10z"/>
+          </svg>
+        </button>
+
+        <button
+          className={css.copyUrlButton}
+          onClick={e => {
+            e.stopPropagation();
+            handleCopyUrl();
+          }}
+          aria-label="Copy URL"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path fill="#555555" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+          </svg>
+        </button>
+
+        {showToast && (
+          <div className={css.toast}>
+            URL copied to clipboard!
+          </div>
+        )}
       </div>
       <Modal
         id="ListingPage.imageCarousel"

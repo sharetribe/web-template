@@ -197,3 +197,13 @@ export const hasPermissionToViewData = currentUser => {
  * @returns {Boolean} true if currentUser has been approved (state is 'active').
  */
 export const isUserAuthorized = currentUser => currentUser?.attributes?.state === 'active';
+
+
+/**
+ * Check if currentUser is subscribed to the marketplac (relevant to instructor side only)
+ * in this case they can post premium listings
+ * Data is stored in user's profile metadata and is set by a webhook from Stripe
+ * @param {Object} currentUser API entity.
+ * @returns {Boolean} true if currentUser is subscribed to the marketplace.
+ */
+export const isUserSubscribed = currentUser => currentUser?.attributes?.profile?.metadata?.isSubscribed;

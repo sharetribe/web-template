@@ -2,7 +2,10 @@ import React from 'react';
 import { FormattedMessage, intlShape, useIntl } from '../../util/reactIntl';
 import css from './ListingPage.module.css';
 
-const SectionLinks = () => {
+// [SKYFARER]
+// This is disabled per client request
+const SectionLinks = () => null;
+const SectionLinksDisabled = () => {
   // TODO: Pull these from Sharetribe backend
   const links = [
     {

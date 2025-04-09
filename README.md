@@ -79,6 +79,20 @@ channel at https://www.sharetribe.com/dev-slack
 If you need help with development, you can hire a verified software developer with Sharetribe
 experience from the [Expert Network](https://www.sharetribe.com/experts/).
 
+## Stripe Webhooks
+
+To test the webhooks, you can use the Stripe CLI.
+
+```sh
+stripe listen --forward-to localhost:3500/api/webhooks/subscription-stripe
+```
+
+and then in another terminal call the webhook:
+
+```sh
+stripe trigger customer.subscription.created
+```
+
 ## License
 
 This project is licensed under the terms of the Apache-2.0 license.

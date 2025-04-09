@@ -1,6 +1,7 @@
 import { denormalizeAssetData } from '../util/data';
 import * as log from '../util/log';
 import { storableError } from '../util/errors';
+import { currentUserSelector } from './user.duck';
 
 // Pick paths from entries of appCdnAssets config (in configDefault.js)
 const pickHostedConfigPaths = (assetEntries, excludeAssetNames) => {
@@ -103,6 +104,27 @@ export const pageAssetsError = error => ({
 
 // ================ Thunks ================ //
 
+// Add this helper function before the thunks
+const replaceHrefValues = (obj, currentUser) => {
+  if (!obj || typeof obj !== 'object') return obj;
+  
+  if (Array.isArray(obj)) {
+    return obj.map(item => replaceHrefValues(item, currentUser));
+  }
+  
+  const email = currentUser?.attributes?.email;
+  const userId = currentUser?.id?.uuid;
+  const newObj = {};
+  for (const key in obj) {
+    if (key === 'href') {
+      newObj[key] = obj[key].replace('{userEmail}', email).replace('{userId}', userId);
+    } else {
+      newObj[key] = replaceHrefValues(obj[key], currentUser);
+    }
+  }
+  return newObj;
+};
+
 export const fetchAppAssets = (assets, version) => (dispatch, getState, sdk) => {
   dispatch(appAssetsRequested());
 
@@ -197,6 +219,8 @@ export const fetchPageAssets = (assets, hasFallback) => (dispatch, getState, sdk
       'App-wide assets were not fetched first. Asset version missing from Redux store.'
     );
   }
+  const state = getState();
+  const currentUser = currentUserSelector(state);
 
   dispatch(pageAssetsRequested(Object.keys(assets)));
 
@@ -238,10 +262,17 @@ export const fetchPageAssets = (assets, hasFallback) => (dispatch, getState, sdk
         (collectedAssets, assetEntry, i) => {
           const [name, path] = assetEntry;
           const assetData = denormalizeAssetData(responses[i].data);
-          return { ...collectedAssets, [name]: { path, data: assetData } };
+          // Process the asset data to replace href values
+          if (currentUser?.attributes?.email) { 
+            const processedData = replaceHrefValues(assetData, currentUser);
+            return { ...collectedAssets, [name]: { path, data: processedData } };
+          } else {
+            return { ...collectedAssets, [name]: { path, data: assetData } };
+          }
         },
         { ...fixedPageAssets, ...pickLatestPageAssetData }
       );
+      
       dispatch(pageAssetsSuccess(pageAssets));
       return pageAssets;
     })

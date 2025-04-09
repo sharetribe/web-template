@@ -3,6 +3,7 @@ import { FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
 import { ACCOUNT_SETTINGS_PAGES } from '../../routing/routeConfiguration';
 import { LinkTabNavHorizontal } from '../../components';
+import { isInstructor } from '../../util/skyfarer';
 
 import css from './UserNav.module.css';
 
@@ -19,7 +20,6 @@ import css from './UserNav.module.css';
 const UserNav = props => {
   const { className, rootClassName, currentPage, currentUser } = props;
   const classes = classNames(rootClassName || css.root, className);
-  const isInstructor = currentUser?.attributes?.profile?.publicData?.userType.toLowerCase() === 'instructor'; // [SKYFARER]
 
   let tabs = [ // [SKYFARER MERGE: +let/-const]
     {
@@ -47,7 +47,7 @@ const UserNav = props => {
     },
   ];
 
-  if (!isInstructor) tabs = tabs.filter(tab => tab.linkProps.name !== 'ManageListingsPage') // [SKYFARER]
+  if (!isInstructor(currentUser)) tabs = tabs.filter(tab => tab.linkProps.name !== 'ManageListingsPage')
 
   return (
     <LinkTabNavHorizontal className={classes} tabRootClassName={css.tab} tabs={tabs} skin="dark" />

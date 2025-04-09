@@ -21,7 +21,7 @@ import {
 import { LISTING_STATE_DRAFT, LISTING_STATE_PENDING_APPROVAL, propTypes } from '../../util/types';
 import { isErrorNoPermissionToPostListings } from '../../util/errors';
 import { ensureOwnListing } from '../../util/data';
-import { hasPermissionToPostListings, isUserAuthorized } from '../../util/userHelpers';
+import { hasPermissionToPostListings, isUserAuthorized, isUserSubscribed } from '../../util/userHelpers';
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
 import {

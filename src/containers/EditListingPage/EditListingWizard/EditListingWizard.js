@@ -31,6 +31,7 @@ import {
   isFieldForListingType,
   pickCategoryFields,
 } from '../../../util/fieldHelpers';
+import { isUserSubscribed } from '../../../util/userHelpers';
 import { ensureCurrentUser, ensureListing } from '../../../util/data';
 import {
   INQUIRY_PROCESS_NAME,
@@ -743,6 +744,14 @@ const EnhancedEditListingWizard = props => {
   const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();
   const intl = useIntl();
+  const { currentUser } = props;
+  const isSubscribed = isUserSubscribed(currentUser);
+  if (!isSubscribed) {
+    config.listing.listingTypes = config.listing.listingTypes.filter(
+      listingType => !listingType.label.includes('Skyfarer Plus')
+    );
+  }
+  console.log('config', config);
   return (
     <EditListingWizard
       config={config}

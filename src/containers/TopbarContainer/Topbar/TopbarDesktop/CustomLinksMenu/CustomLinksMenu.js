@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+import { isInstructor } from '../../../../../util/skyfarer';
+
 import PriorityLinks, { CreateListingMenuLink } from './PriorityLinks';
 import LinksMenu from './LinksMenu';
 
@@ -100,9 +102,7 @@ const calculateContainerWidth = (containerRefTarget, parentWidth) => {
  * @param {*} props contains currentPage, customLinks, intl, and hasClientSideContentReady
  * @returns component to be placed inside TopbarDesktop
  */
-const CustomLinksMenu = ({ currentPage, currentUser, customLinks = [], hasClientSideContentReady, intl }) => { // [SKYFARER MERGE: +currentUser]
-  const isInstructor = currentUser?.attributes?.profile?.publicData?.userType.toLowerCase() === 'instructor'; // [SKYFARER]
-
+const CustomLinksMenu = ({ currentPage, currentUser, customLinks = [], hasClientSideContentReady, intl }) => {
   const containerRef = useRef(null);
   const observer = useRef(null);
   const [mounted, setMounted] = useState(false);
@@ -191,8 +191,8 @@ const CustomLinksMenu = ({ currentPage, currentUser, customLinks = [], hasClient
 
   return (
     <div className={css.customLinksMenu} ref={containerRef} {...styleMaybe}>
-      <PriorityLinks links={links} priorityLinks={priorityLinks} setLinks={setLinks} isInstructor={isInstructor} />{/* [SKYFARER] */}
-      {mounted && hasMenuLinks ? (
+      <PriorityLinks links={links} priorityLinks={priorityLinks} setLinks={setLinks} isInstructor={isInstructor(currentUser)} />
+      {hasMenuLinks ? (
         <LinksMenu
           id="linksMenu"
           currentPage={currentPage}

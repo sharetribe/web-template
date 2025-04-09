@@ -36,18 +36,31 @@ const {
   cancelEvent,
 } = require('./api/google/google.calendar');
 const { generateInstructorMatches } = require('./api/ai/ai-gateway');
-
+const { subscriptionCreated } = require('./api/webhooks/webhooks');
 
 const router = express.Router();
 
 // ================ API router middleware: ================ //
 
-// Parse Transit body first to a string
-router.use(
-  bodyParser.text({
-    type: 'application/transit+json',
-  })
-);
+// Modify the bodyParser middleware to exclude the Stripe webhook path
+router.use((req, res, next) => {
+  if (req.path === '/webhooks/subscription-stripe') {
+    bodyParser.raw({ type: 'application/json' })(req, res, next);
+  } else {
+    bodyParser.json()(req, res, next);
+  }
+});
+
+// Parse Transit body first to a string (exclude Stripe webhook path)
+router.use((req, res, next) => {
+  if (req.path !== '/webhooks/subscription-stripe') {
+    bodyParser.text({
+      type: 'application/transit+json',
+    })(req, res, next);
+  } else {
+    next();
+  }
+});
 
 // Deserialize Transit body string to JS data
 router.use((req, res, next) => {
@@ -120,4 +133,5 @@ router.post('/chat/incoming', email.incoming);
 // AI-powered instructor matches for a given user based off base user profile, and additional context provided by the end user.
 router.post('/ai/instructor-matches', isAuthenticated, generateInstructorMatches); // make isAuthenticated once backend stubbed
 
+router.post('/webhooks/subscription-stripe', subscriptionCreated);
 module.exports = router;
