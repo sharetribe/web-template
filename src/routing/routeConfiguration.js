@@ -415,11 +415,11 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       component: GoogleAuthRedirectPage,
       loadData: pageDataLoadingAPI.GoogleAuthRedirectPage.loadData,
     },
-    { // [SKYFARER]
-      path: '/ai-instructor-matching',
-      name: 'AIMatchingPage',
-      component: AIMatchingPage
-    },
+    // { // [SKYFARER]
+    //   path: '/ai-instructor-matching',
+    //   name: 'AIMatchingPage',
+    //   component: AIMatchingPage
+    // },
   ];
 };
 
