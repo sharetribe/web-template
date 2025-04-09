@@ -39,7 +39,7 @@ const NoAccessPage = loadable(() => import(/* webpackChunkName: "NoAccessPage" *
 
 // [SKYFARER]
 const GoogleAuthRedirectPage = loadable(() => import(/* webpackChunkName: "GoogleAuthRedirectPage" */ '../containers/GoogleAuthRedirectPage/GoogleAuthRedirectPage'));
-const AIMatchingPage = loadable(() => import(/* webpackChunkName: "AIMatchingPage" */ '../containers/AIMatchingPage/AIMatchingPage'), {ssr: false});
+// const AIMatchingPage = loadable(() => import(/* webpackChunkName: "AIMatchingPage" */ '../containers/AIMatchingPage/AIMatchingPage'), {ssr: false});
 // [/SKYFARER]
 
 // Styleguide helps you to review current components and develop new ones
