@@ -5,7 +5,7 @@ import debounce from 'lodash/debounce';
 import { useConfiguration } from '../../context/configurationContext';
 import { FormattedMessage } from '../../util/reactIntl';
 
-import { IconSpinner } from '../../components';
+import { IconSpinner, IconLocation } from '../../components';
 
 import IconHourGlass from './IconHourGlass';
 import IconCurrentLocation from './IconCurrentLocation';
@@ -434,6 +434,7 @@ class LocationAutocompleteInputImplementation extends Component {
       rootClassName,
       className,
       iconClassName,
+      useAlternateIcon,
       inputClassName,
       predictionsClassName,
       predictionsAttributionClassName,
@@ -489,6 +490,8 @@ class LocationAutocompleteInputImplementation extends Component {
         <div className={iconClass}>
           {this.state.fetchingPlaceDetails ? (
             <IconSpinner className={css.iconSpinner} />
+          ) : useAlternateIcon ? (
+            <IconLocation />
           ) : (
             <IconHourGlass />
           )}

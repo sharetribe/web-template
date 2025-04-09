@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import classNames from 'classnames';
 import { Form as FinalForm } from 'react-final-form';
 import { useHistory } from 'react-router-dom';
@@ -10,6 +10,7 @@ import { useConfiguration } from '../../../../context/configurationContext';
 // Utility
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { createResourceLocatorString } from '../../../../util/routes';
+import { isOriginInUse } from '../../../../util/search';
 
 // Shared components
 import { Form, PrimaryButton } from '../../../../components';
@@ -48,6 +49,8 @@ export const SearchCTA = React.forwardRef((props, ref) => {
 
   const { categories, dateRange, keywordSearch, locationSearch } = props.searchFields;
 
+  const [submitDisabled, setSubmitDisabled] = useState(false);
+
   //  If no search fields are enabled, we return null (Console won't allow you to enable 0 search fields)
   const noSearchFields = isEmpty(
     [categories, dateRange, keywordSearch, locationSearch].filter(f => !isEmpty(f))
@@ -75,6 +78,20 @@ export const SearchCTA = React.forwardRef((props, ref) => {
         if (key == 'dateRange') {
           const { dates } = formatDateValue(value, 'dates');
           queryParams.dates = dates;
+        }
+        if (key == 'location') {
+          if (value.selectedPlace) {
+            const {
+              search,
+              selectedPlace: { origin, bounds },
+            } = value;
+            queryParams.bounds = bounds;
+            queryParams.address = search;
+
+            if (isOriginInUse(config) && origin) {
+              queryParams.origin = `${origin.lat},${origin.lng}`;
+            }
+          }
         } else {
           queryParams[key] = value;
         }
@@ -103,7 +120,9 @@ export const SearchCTA = React.forwardRef((props, ref) => {
       </div>
     ) : null;
   const locationMaybe = locationSearch ? (
-    <div className={css.filterField}>{/* <FilterLocation /> */}</div>
+    <div className={css.filterField}>
+      <FilterLocation setSubmitDisabled={setSubmitDisabled} />
+    </div>
   ) : null;
   const keywordsMaybe = keywordSearch ? (
     <div className={css.filterField}>{/* <FilterKeyword /> */}</div>
@@ -131,7 +150,11 @@ export const SearchCTA = React.forwardRef((props, ref) => {
               {keywordsMaybe}
               {locationMaybe}
               {dateRangeMaybe}
-              <PrimaryButton className={css.submitButton} type="submit">
+              <PrimaryButton
+                disabled={submitDisabled ? true : false}
+                className={css.submitButton}
+                type="submit"
+              >
                 <FormattedMessage id="SearchCTA.buttonLabel" />
               </PrimaryButton>
 
