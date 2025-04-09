@@ -78,7 +78,13 @@
     "sitemap": "^8.0.0",
     "smoothscroll-polyfill": "^0.4.0",
     "source-map-support": "^0.5.21",
-    "unified": "^9.2.2"
+    "unified": "^9.2.2",
+    "stripe": "^17.6.0",
+    "styled-components": "^6.1.14",
+    "swiper": "^11.2.0",
+    "url": "^0.11.0",
+    "uuid": "^10.0.0",
+    "uuidv4": "^6.2.13"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.0",
@@ -91,16 +97,7 @@
     "cross-env": "^7.0.3",
     "inquirer": "^8.2.6",
     "nodemon": "^3.1.7",
-    "prettier": "^1.18.2",
-    "smoothscroll-polyfill": "^0.4.0",
-    "source-map-support": "^0.5.21",
-    "stripe": "^17.6.0",
-    "styled-components": "^6.1.14",
-    "swiper": "^11.2.0",
-    "unified": "^9.2.2",
-    "url": "^0.11.0",
-    "uuid": "^10.0.0",
-    "uuidv4": "^6.2.13"
+    "prettier": "^1.18.2"
   },
   "resolutions": {
     "moment": "^2.30.1"
