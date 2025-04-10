@@ -1,0 +1,133 @@
+@import '../../../../styles/customMediaQueries.css';
+
+.root {
+  width: 100%;
+  height: 100%;
+}
+
+.dropdownContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  user-select: none;
+}
+
+.toggleButton {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 40px;
+  padding: 0 16px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--colorGrey700);
+  transition: all 0.1s;
+
+  @media (--viewportLarge) {
+    margin: 0;
+    padding: 10px 20px 10px 10px;
+  }
+
+  @media (--viewportMedium) {
+    height: 48px;
+  }
+}
+
+.dropdownContent {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% + 16px);
+  min-width: 288px;
+  padding: 14px 0 18px;
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: var(--boxShadowPopup);
+  z-index: 1;
+
+  @media (--viewportLarge) {
+    left: -8px;
+    transform: none;
+    width: 100%;
+  }
+}
+
+.option {
+  position: relative;
+  width: 100%;
+  padding: 7px 0 7px 22px;
+  text-align: left;
+  border: none;
+  background: white;
+  cursor: pointer;
+  display: block;
+  color: var(--colorGrey700);
+
+  &:hover {
+    color: var(--colorBlack);
+    text-decoration: none;
+  }
+}
+
+.dropdownItemBorder,
+.dropdownItemBorderSelected {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  height: calc(100% - 4px);
+  width: 0;
+  transition: width var(--transitionStyleButton);
+}
+
+/* When hovering over an option, expand the selection border */
+.option:hover .dropdownItemBorder,
+.option:hover .dropdownItemBorderSelected {
+  width: 6px;
+}
+
+.dropdownItemBorder {
+  background-color: var(--marketplaceColor);
+}
+
+.dropdownItemBorderSelected {
+  background-color: var(--colorGrey900);
+  width: 6px;
+}
+
+.chevron {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.4s;
+  -webkit-transition: -webkit-transform 0.4s;
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid var(--colorGrey400);
+    border-bottom: 2px solid var(--colorGrey400);
+    transform: rotate(45deg);
+  }
+}
+
+/* Chevron rotation when dropdown is open */
+.chevron.isOpen::before {
+  transform: rotate(-135deg);
+}
+
+.unselected {
+  color: var(--colorGrey300);
+
+  &:hover {
+    color: var(--colorGrey700);
+  }
+}
+
+.placeholderOpened {
+  color: var(--colorGrey300);
+}
