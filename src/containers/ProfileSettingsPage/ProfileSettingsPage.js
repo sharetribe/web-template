@@ -33,7 +33,7 @@ import {
 import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
 import { setCurrentPathnameAndInitiateAuth } from '../../util/editListingHelpers';
 import { googleAuthSelector, InitiateGoogleAuth } from '../../ducks/googleCalendar.duck';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 // [/SKYFARER]
 
 const onImageUploadHandler = (values, fn) => {
