@@ -4579,10 +4579,10 @@ bfj@^7.0.2:
     hoopy "^0.1.4"
     tryer "^1.0.1"
 
-bfj@^9.1.1:
-  version "9.1.1"
-  resolved "https://registry.yarnpkg.com/bfj/-/bfj-9.1.1.tgz#913f7cbf87b14ac63975e89f21c64ad18e83c502"
-  integrity sha512-f3uU0MzqtuOvnB62ZUyzr2qqHVy5zFu3KV9H0MBVacdb7hsRxKSa18KtiwLZCF/5oRE3O4udraOxOC3F3A+kzA==
+bfj@^9.1.2:
+  version "9.1.2"
+  resolved "https://registry.yarnpkg.com/bfj/-/bfj-9.1.2.tgz#38f2de40c7cfead261598043355bb4d9d197fd25"
+  integrity sha512-EetpSUewwznXQ7yRtxHCgE5RLZV718n9cOYXe5BlhYKuNs0UkidHaUOe6Jlgbf+viGTQeg8mYhm5Wr4c2AB3gA==
   dependencies:
     check-types "^11.2.3"
     hoopy "^0.1.4"
