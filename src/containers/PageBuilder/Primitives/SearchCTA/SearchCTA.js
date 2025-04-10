@@ -150,11 +150,7 @@ export const SearchCTA = React.forwardRef((props, ref) => {
               {keywordsMaybe}
               {locationMaybe}
               {dateRangeMaybe}
-              <PrimaryButton
-                disabled={submitDisabled ? true : false}
-                className={css.submitButton}
-                type="submit"
-              >
+              <PrimaryButton disabled={submitDisabled} className={css.submitButton} type="submit">
                 <FormattedMessage id="SearchCTA.buttonLabel" />
               </PrimaryButton>
 

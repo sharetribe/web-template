@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Field } from 'react-final-form';
-import { useIntl } from '../../../../util/reactIntl'
+import { useIntl } from '../../../../util/reactIntl';
 import classNames from 'classnames';
 
 import { LocationAutocompleteInput } from '../../../../components';
@@ -35,7 +35,11 @@ const LocationSearchField = props => {
             predictionsClassName={css.predictions}
             useAlternateIcon={true}
             iconClassName={css.locationAutocompleteInputIcon}
-            placeholder={isCurrentLocation ? intl.formatMessage({ id: 'SearchCTA.currentLocationPlaceholder' }) : intl.formatMessage({ id: 'SearchCTA.locationPlaceholder' })}
+            placeholder={
+              isCurrentLocation
+                ? intl.formatMessage({ id: 'SearchCTA.currentLocationPlaceholder' })
+                : intl.formatMessage({ id: 'SearchCTA.locationPlaceholder' })
+            }
             inputRef={inputRef}
             input={{ ...restInput, onChange: searchOnChange }}
             meta={meta}
@@ -49,9 +53,15 @@ const LocationSearchField = props => {
 const FilterLocation = props => {
   const searchInpuRef = useRef(null);
   const intl = useIntl();
-  const { appConfig, onSubmit, setSubmitDisabled, className, rootClassName, ...restOfProps } = props;
+  const {
+    appConfig,
+    onSubmit,
+    setSubmitDisabled,
+    className,
+    rootClassName,
+    ...restOfProps
+  } = props;
   const classes = classNames(rootClassName || css.root, className);
-
 
   const onChange = location => {
     if (location?.search?.length > 0 && !location?.selectedPlace) {
