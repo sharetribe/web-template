@@ -1,0 +1,35 @@
+import React from 'react';
+import classNames from 'classnames';
+
+import css from './IconDate.module.css';
+
+/**
+ * Magnifier icon.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string?} props.className add more style rules in addition to components own css.root
+ * @param {string?} props.rootClassName overwrite components own css.root
+ * @returns {JSX.Element} SVG icon
+ */
+const IconDate = props => {
+  const { rootClassName, className } = props;
+  const classes = classNames(rootClassName || css.root, className);
+  return (
+    <svg
+      className={classes}
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M5.33398 0.666504C5.70217 0.666504 6.00065 0.964981 6.00065 1.33317V1.99984H10.0007V1.33317C10.0007 0.964981 10.2991 0.666504 10.6673 0.666504C11.0355 0.666504 11.334 0.964981 11.334 1.33317V1.99984H13.2007C14.0634 1.99984 14.6673 2.74372 14.6673 3.5383V13.128C14.6673 13.9226 14.0634 14.6665 13.2007 14.6665H2.80065C1.93786 14.6665 1.33398 13.9226 1.33398 13.128V3.5383C1.33398 2.74372 1.93786 1.99984 2.80065 1.99984H4.66732V1.33317C4.66732 0.964981 4.96579 0.666504 5.33398 0.666504ZM4.66732 3.33317H2.80065C2.78336 3.33317 2.75655 3.33947 2.72616 3.37259C2.69489 3.40667 2.66732 3.46352 2.66732 3.5383V5.99984H13.334V3.5383C13.334 3.46352 13.3064 3.40667 13.2751 3.37259C13.2448 3.33947 13.2179 3.33317 13.2007 3.33317H11.334V3.99984C11.334 4.36803 11.0355 4.6665 10.6673 4.6665C10.2991 4.6665 10.0007 4.36803 10.0007 3.99984V3.33317H6.00065V3.99984C6.00065 4.36803 5.70217 4.6665 5.33398 4.6665C4.96579 4.6665 4.66732 4.36803 4.66732 3.99984V3.33317ZM13.334 7.33317H2.66732V13.128C2.66732 13.2028 2.69489 13.2597 2.72616 13.2937C2.75655 13.3269 2.78336 13.3332 2.80065 13.3332H13.2007C13.2179 13.3332 13.2448 13.3269 13.2751 13.2937C13.3064 13.2597 13.334 13.2028 13.334 13.128V7.33317Z"
+      />
+    </svg>
+  );
+};
+
+export default IconDate;

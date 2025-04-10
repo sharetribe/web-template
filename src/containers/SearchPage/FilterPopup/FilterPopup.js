@@ -51,6 +51,7 @@ class FilterPopup extends Component {
 
   handleSubmit(values) {
     const { onSubmit } = this.props;
+    console.log('HJERE');
     this.setState({ isOpen: false });
     onSubmit(values);
   }

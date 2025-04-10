@@ -19,6 +19,8 @@ import FilterDateRange from './FilterDateRange';
 import FilterLocation from './FilterLocation';
 import FilterKeyword from './FilterKeyword';
 
+import { stringifyDateToISO8601 } from '../../../../util/dates';
+
 import css from './SearchCTA.module.css';
 
 const GRID_CONFIG = [
@@ -54,13 +56,28 @@ export const SearchCTA = React.forwardRef((props, ref) => {
     return null;
   }
 
+  // copy paste from another fiel, format the dates for the query
+  const formatDateValue = (dateRange, queryParamName) => {
+    const hasDates = dateRange;
+    const { startDate, endDate } = hasDates ? dateRange : {};
+    const start = startDate ? stringifyDateToISO8601(startDate) : null;
+    const end = endDate ? stringifyDateToISO8601(endDate) : null;
+    const value = start && end ? `${start},${end}` : null;
+    return { [queryParamName]: value };
+  };
+
   const onSubmit = values => {
     // Convert form values to query parameters
     const queryParams = {};
 
     Object.entries(values).forEach(([key, value]) => {
       if (!isEmpty(value)) {
-        queryParams[key] = value;
+        if (key == 'dateRange') {
+          const { dates } = formatDateValue(value, 'dates');
+          queryParams.dates = dates;
+        } else {
+          queryParams[key] = value;
+        }
       }
     });
 
@@ -92,7 +109,10 @@ export const SearchCTA = React.forwardRef((props, ref) => {
     <div className={css.filterField}>{/* <FilterKeyword /> */}</div>
   ) : null;
   const dateRangeMaybe = dateRange ? (
-    <div className={css.filterField}>{/* <FilterDateRange /> */}</div>
+    <div className={css.filterField}>
+      {' '}
+      <FilterDateRange config={config} />{' '}
+    </div>
   ) : null;
 
   return (

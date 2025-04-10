@@ -18,6 +18,7 @@ export { default as IconArrowHead } from './IconArrowHead/IconArrowHead';
 export { default as IconBannedUser } from './IconBannedUser/IconBannedUser';
 export { default as IconCheckmark } from './IconCheckmark/IconCheckmark';
 export { default as IconClose } from './IconClose/IconClose';
+export { default as IconDate } from './IconDate/IconDate';
 export { default as IconDelete } from './IconDelete/IconDelete';
 export { default as IconDisputeOrder } from './IconDisputeOrder/IconDisputeOrder';
 export { default as IconEdit } from './IconEdit/IconEdit';

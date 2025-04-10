@@ -113,6 +113,7 @@ export class SearchPageComponent extends Component {
   }
 
   getHandleChangedValueFn(useHistoryPush) {
+    console.log('in here');
     const { history, routeConfiguration, config } = this.props;
     const { listingFields: listingFieldsConfig } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
