@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] SectionDetails (ListingPage & ProfilePage): fix line-height and padding for the details row.
+  [#576](https://github.com/sharetribe/web-template/pull/576)
 - [fix] OrderPanel: purchase and inquiries did not check closed status of the listing.
   [#573](https://github.com/sharetribe/web-template/pull/573)
 
