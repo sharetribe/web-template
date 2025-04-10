@@ -8,6 +8,7 @@ import {
   displayDeliveryPickup,
   displayDeliveryShipping,
   displayPrice,
+  isPriceVariationsEnabled,
 } from '../../util/configHelpers';
 import {
   propTypes,
@@ -33,6 +34,7 @@ import {
 } from '../../transactions/transaction';
 
 import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2 } from '../../components';
+import PriceVariantPicker from './PriceVariantPicker/PriceVariantPicker';
 
 import css from './OrderPanel.module.css';
 
@@ -134,7 +136,10 @@ const PriceMaybe = props => {
 
   const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
   const showPrice = displayPrice(foundListingTypeConfig);
-  if (!showPrice || !price) {
+  const isPriceVariationsInUse = isPriceVariationsEnabled(publicData, foundListingTypeConfig);
+  const hasMultiplePriceVariants = publicData?.priceVariants?.length > 1;
+
+  if (!showPrice || !price || (isPriceVariationsInUse && hasMultiplePriceVariants)) {
     return null;
   }
 
@@ -307,11 +312,21 @@ const OrderPanel = props => {
     listingTypeConfig?.stockType
   );
   const seatsEnabled = [AVAILABILITY_MULTIPLE_SEATS].includes(listingTypeConfig?.availabilityType);
-  const isPriceVariationsInUse = listingTypeConfig?.priceVariations?.enabled;
+  // Note: publicData contains priceVariationsEnabled if listing is created with priceVariations enabled.
+  const isPriceVariationsInUse = isPriceVariationsEnabled(publicData, listingTypeConfig);
+
   const priceVariantsMaybe = isPriceVariationsInUse
-    ? { priceVariants }
+    ? {
+        isPriceVariationsInUse,
+        priceVariants,
+        priceVariantFieldComponent: PriceVariantPicker,
+      }
     : !isPriceVariationsInUse && showBookingFixedDurationForm
-    ? { priceVariants: [getCheapestPriceVariant(priceVariants)] }
+    ? {
+        isPriceVariationsInUse: false,
+        priceVariants: [getCheapestPriceVariant(priceVariants)],
+        priceVariantFieldComponent: PriceVariantPicker,
+      }
     : {};
 
   const sharedProps = {
