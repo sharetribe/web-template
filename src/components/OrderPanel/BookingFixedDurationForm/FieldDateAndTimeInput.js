@@ -388,6 +388,7 @@ const onBookingStartDateChange = (props, setCurrentMonth) => value => {
     listingId,
     onFetchTimeSlots,
     startTimeInterval,
+    priceVariants,
     values,
   } = props;
   if (!value || !value.date) {
@@ -403,7 +404,10 @@ const onBookingStartDateChange = (props, setCurrentMonth) => value => {
 
     return;
   }
-  const bookingLengthInMinutes = values.priceVariant?.bookingLengthInMinutes;
+  const priceVariantName = values.priceVariantName || null;
+  const bookingLengthInMinutes = priceVariantName
+    ? priceVariants.find(pv => pv.name === priceVariantName)?.bookingLengthInMinutes
+    : priceVariants?.[0]?.bookingLengthInMinutes;
 
   // This callback function (onBookingStartDateChange) is called from DatePicker component.
   // It gets raw value as a param - browser's local time instead of time in listing's timezone.
@@ -450,6 +454,7 @@ const onBookingStartDateChange = (props, setCurrentMonth) => value => {
 
     handleFetchLineItems({
       values: {
+        priceVariantName,
         bookingStartTime: startTime,
         bookingEndTime: endTime,
         seats: seatsEnabled ? 1 : undefined,
@@ -459,8 +464,12 @@ const onBookingStartDateChange = (props, setCurrentMonth) => value => {
 };
 
 const onBookingStartTimeChange = props => value => {
-  const { form: formApi, handleFetchLineItems, seatsEnabled, values } = props;
-  const bookingLengthInMinutes = values.priceVariant?.bookingLengthInMinutes;
+  const { form: formApi, handleFetchLineItems, seatsEnabled, priceVariants, values } = props;
+  const priceVariantName = values.priceVariantName || null;
+  const bookingLengthInMinutes = priceVariantName
+    ? priceVariants.find(pv => pv.name === priceVariantName)?.bookingLengthInMinutes
+    : priceVariants?.[0]?.bookingLengthInMinutes;
+
   const endTime = getBookingEndTimeAsDate(
     new Date(Number.parseInt(value, 10)),
     bookingLengthInMinutes
@@ -474,6 +483,7 @@ const onBookingStartTimeChange = props => value => {
   });
   handleFetchLineItems({
     values: {
+      priceVariantName,
       bookingStartTime: value,
       bookingEndTime: endTime.getTime(),
       seats: seatsEnabled ? 1 : undefined,
@@ -534,6 +544,7 @@ const FieldDateAndTimeInput = props => {
     rootClassName,
     className,
     formId,
+    disabled,
     startDateInputProps,
     values,
     listingId,
@@ -546,12 +557,15 @@ const FieldDateAndTimeInput = props => {
     timeZone,
     setSeatsOptions,
     seatsEnabled,
+    priceVariants,
     intl,
     dayCountAvailableForBooking,
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
-  const bookingLengthInMinutes = values.priceVariant?.bookingLengthInMinutes;
+  const priceVariantName = values.priceVariantName;
+  const bookingLengthInMinutes = priceVariants.find(pv => pv.name === priceVariantName)
+    ?.bookingLengthInMinutes;
 
   const [currentMonth, setCurrentMonth] = useState(getStartOf(TODAY, 'month', timeZone));
 
@@ -714,6 +728,8 @@ const FieldDateAndTimeInput = props => {
             className={css.fieldDatePicker}
             inputClassName={css.fieldDateInput}
             popupClassName={css.fieldDatePopup}
+            disabled={disabled}
+            showLabelAsDisabled={disabled}
             name="bookingStartDate"
             id={formId ? `${formId}.bookingStartDate` : 'bookingStartDate'}
             label={startDateInputProps.label}
@@ -746,11 +762,12 @@ const FieldDateAndTimeInput = props => {
               setCurrentMonth(bookingStartDate || startOfToday);
             }}
             fallback={
-              <div className={css.fieldDatePicker}>
+              <div className={classNames(css.fieldDatePicker, { [css.disabled]: disabled })}>
                 <label>{startDateInputProps.label}</label>
                 <input
                   className={classNames(css.fieldDateInput, css.fieldDateInputFallback)}
                   placeholder={startDateInputProps.placeholderText}
+                  disabled={disabled}
                 />
               </div>
             }
@@ -765,6 +782,7 @@ const FieldDateAndTimeInput = props => {
             selectClassName={bookingStartDate ? css.select : css.selectDisabled}
             label={intl.formatMessage({ id: 'FieldDateAndTimeInput.startTime' })}
             disabled={!bookingStartDate}
+            showLabelAsDisabled={!bookingStartDate}
             onChange={onBookingStartTimeChange(props)}
           >
             {bookingStartDate ? (
