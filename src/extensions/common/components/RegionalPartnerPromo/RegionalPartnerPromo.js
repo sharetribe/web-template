@@ -60,7 +60,7 @@ const RegionalPartnerPromo = ({ address, varient }) => {
                 </div>
 
                 <div className={css.selfPromo}>
-                    <a href="https://vendingvillage.com/partnership">Become a partner</a>
+                    <a target="_blank" href="/p/partnership">Become a partner</a>
                 </div>
 
             </div>
