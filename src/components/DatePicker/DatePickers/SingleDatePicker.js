@@ -124,11 +124,13 @@ export const SingleDatePicker = props => {
     }
   };
 
+  const disabled = props.disabled;
   const inputProps = {
     type: 'text',
     onChange: handleOnChangeOnInput,
     onKeyDown: handleOnKeyDownOnInput,
     ...(readOnly ? { readOnly } : {}),
+    ...(disabled ? { disabled } : {}),
   };
 
   return (
