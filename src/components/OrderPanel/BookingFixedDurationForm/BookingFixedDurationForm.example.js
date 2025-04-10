@@ -3,6 +3,8 @@ import { types as sdkTypes } from '../../../util/sdkLoader';
 import { injectIntl } from '../../../util/reactIntl';
 import { LINE_ITEM_FIXED, TIME_SLOT_TIME } from '../../../util/types';
 
+import PriceVariantPicker from '../PriceVariantPicker/PriceVariantPicker';
+
 const BookingFixedDurationForm = loadable(() =>
   import(/* webpackChunkName: "BookingFixedDurationForm" */ './BookingFixedDurationForm')
 );
@@ -121,6 +123,7 @@ export const Form = {
     seatsEnabled: false,
     startTimeInterval: 'quarterHour',
     priceVariants,
+    priceVariantFieldComponent: PriceVariantPicker,
     startDatePlaceholder: new Date(2022, 3, 14).toString(),
     endDatePlaceholder: new Date(2022, 3, 14).toString(),
     // override initialValues prop that's set inside BookingFixedDurationForm
