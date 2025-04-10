@@ -72,8 +72,8 @@
   }
 }
 
-.menuItemBorder,
-.menuItemBorderSelected {
+.dropdownItemBorder,
+.dropdownItemBorderSelected {
   position: absolute;
   top: 2px;
   left: 0;
@@ -83,16 +83,16 @@
 }
 
 /* When hovering over an option, expand the selection border */
-.option:hover .menuItemBorder,
-.option:hover .menuItemBorderSelected {
+.option:hover .dropdownItemBorder,
+.option:hover .dropdownItemBorderSelected {
   width: 6px;
 }
 
-.menuItemBorder {
+.dropdownItemBorder {
   background-color: var(--marketplaceColor);
 }
 
-.menuItemBorderSelected {
+.dropdownItemBorderSelected {
   background-color: var(--colorGrey900);
   width: 6px;
 }

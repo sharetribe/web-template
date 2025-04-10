@@ -5,7 +5,6 @@
   align-items: center;
   display: grid;
   min-height: 40px;
-
 }
 
 .align {
@@ -13,7 +12,6 @@
   @media (--viewportMedium) {
     justify-self: center;
   }
-
 }
 
 .searchBarContainer {

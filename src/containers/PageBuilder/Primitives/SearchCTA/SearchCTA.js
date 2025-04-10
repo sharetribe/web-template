@@ -114,7 +114,6 @@ export const SearchCTA = React.forwardRef((props, ref) => {
               <PrimaryButton className={css.submitButton} type="submit">
                 <FormattedMessage id="SearchCTA.buttonLabel" />
               </PrimaryButton>
-
             </Form>
           );
         }}

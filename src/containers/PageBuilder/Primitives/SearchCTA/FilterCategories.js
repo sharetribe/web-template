@@ -63,8 +63,8 @@ const CategoryDropdown = ({ input, className, rootClassName, categories }) => {
               <span
                 className={
                   hasSelected && input.value === ''
-                    ? css.menuItemBorderSelected
-                    : css.menuItemBorder
+                    ? css.dropdownItemBorderSelected
+                    : css.dropdownItemBorder
                 }
               />
               <FormattedMessage id="CategoryFilter.selectAll" />
@@ -78,7 +78,9 @@ const CategoryDropdown = ({ input, className, rootClassName, categories }) => {
                 type="button"
               >
                 <span
-                  className={input.value === id ? css.menuItemBorderSelected : css.menuItemBorder}
+                  className={
+                    input.value === id ? css.dropdownItemBorderSelected : css.dropdownItemBorder
+                  }
                 />
                 {name}
               </div>
