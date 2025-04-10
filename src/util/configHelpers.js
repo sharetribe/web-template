@@ -916,6 +916,13 @@ export const requirePayoutDetails = listingTypeConfig => {
   return listingTypeConfig?.defaultListingFields?.payoutDetails !== false;
 };
 
+export const isPriceVariationsEnabled = (publicData, listingTypeConfig) => {
+  // Note: publicData contains priceVariationsEnabled if listing is created with priceVariations enabled.
+  return publicData?.priceVariationsEnabled != null
+    ? publicData?.priceVariationsEnabled
+    : listingTypeConfig?.priceVariations?.enabled;
+};
+
 ///////////////////////////////////////
 // Restructure hosted listing config //
 ///////////////////////////////////////
