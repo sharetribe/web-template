@@ -774,6 +774,7 @@
   "SavedCardDetails.savedPaymentMethodPlaceholderMobile": "…{last4Digits}",
   "SearchCTA.buttonLabel": "Search",
   "SearchCTA.dateFilterPlaceholder": "Dates",
+  "SearchCTA.keywordFilterPlaceholder": "Search listings",
   "SearchFiltersMobile.cancel": "CANCEL",
   "SearchFiltersMobile.filtersButtonLabel": "Filters",
   "SearchFiltersMobile.foundResults": "{count, number} {count, plural, one {result} other {results}}",

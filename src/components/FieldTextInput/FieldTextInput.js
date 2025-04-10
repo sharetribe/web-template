@@ -11,6 +11,7 @@ const FieldTextInputComponent = props => {
   const {
     rootClassName,
     className,
+    inputClassName,
     inputRootClass,
     customErrorText,
     id,
@@ -49,6 +50,7 @@ const FieldTextInputComponent = props => {
   const inputClasses =
     inputRootClass ||
     classNames(css.input, {
+      [inputClassName]: !!inputClassName,
       [css.inputSuccess]: valid,
       [css.inputError]: hasError,
       [css.textarea]: isTextarea,
