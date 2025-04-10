@@ -260,15 +260,15 @@ export const InboxPageComponent = props => {
     const { customer, provider, listing, messages } = tx;
     const searchLower = searchQuery.toLowerCase();
 
-    const customerName = customer.attributes.profile.displayName.toLowerCase();
-    const providerName = provider.attributes.profile.displayName.toLowerCase();
-    const listingTitle = listing.attributes.title.toLowerCase();
+    const customerName = customer.attributes.profile.displayName?.toLowerCase();
+    const providerName = provider.attributes.profile.displayName?.toLowerCase();
+    const listingTitle = listing.attributes.title?.toLowerCase();
     const messageContents = messages.map(msg => msg.attributes.content.toLowerCase());
 
     return (
-      customerName.includes(searchLower) ||
-      providerName.includes(searchLower) ||
-      listingTitle.includes(searchLower) ||
+      customerName?.includes(searchLower) ||
+      providerName?.includes(searchLower) ||
+      listingTitle?.includes(searchLower) ||
       messageContents.some(content => content.includes(searchLower))
     );
   });
@@ -286,10 +286,8 @@ export const InboxPageComponent = props => {
     const listingCategoryConfigs = config.categoryConfiguration.categories;
     const { listingType, categoryLevel1 } = publicData || {};
 
-    const {
-      transactionType: transactionTypeCategoryConfig,
-      stockType: stockTypeCategoryConfig,
-    } = listingCategoryConfigs.find(conf => conf.id === categoryLevel1) || {};
+    const { transactionType: transactionTypeCategoryConfig, stockType: stockTypeCategoryConfig } =
+      listingCategoryConfigs.find(conf => conf.id === categoryLevel1) || {};
     const {
       transactionType: transactionTypeListingTypeConfig,
       stockType: stockTypeListingTypeConfig,
