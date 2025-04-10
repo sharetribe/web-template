@@ -5,8 +5,9 @@ import classNames from 'classnames';
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { LISTING_STATE_DRAFT, propTypes } from '../../../../util/types';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
+import { isPriceVariationsEnabled } from '../../../../util/configHelpers';
 import { isValidCurrencyForTransactionProcess } from '../../../../util/fieldHelpers';
-import { FIXED } from '../../../../transactions/transaction';
+import { FIXED, isBookingProcess } from '../../../../transactions/transaction';
 
 // Import shared components
 import { H3, ListingLink } from '../../../../components';
@@ -38,7 +39,8 @@ const getInitialValues = props => {
   const { publicData } = listing?.attributes || {};
   const { unitType } = publicData || {};
   const listingTypeConfig = getListingTypeConfig(publicData, listingTypes);
-  const isPriceVariationsInUse = listingTypeConfig?.priceVariations?.enabled;
+  // Note: publicData contains priceVariationsEnabled if listing is created with priceVariations enabled.
+  const isPriceVariationsInUse = isPriceVariationsEnabled(publicData, listingTypeConfig);
 
   return unitType === FIXED || isPriceVariationsInUse
     ? {
@@ -112,7 +114,11 @@ const EditListingPricingPanel = props => {
   const publicData = listing?.attributes?.publicData;
   const listingTypeConfig = getListingTypeConfig(publicData, listingTypes);
   const transactionProcessAlias = listingTypeConfig?.transactionType?.alias;
-  const isPriceVariationsInUse = listingTypeConfig?.priceVariations?.enabled;
+  const process = listingTypeConfig?.transactionType?.process;
+  const isBooking = isBookingProcess(process);
+
+  // Note: publicData contains priceVariationsEnabled if listing is created with priceVariations enabled.
+  const isPriceVariationsInUse = isPriceVariationsEnabled(publicData, listingTypeConfig);
 
   const isCompatibleCurrency = isValidCurrencyForTransactionProcess(
     transactionProcessAlias,
@@ -174,6 +180,7 @@ const EditListingPricingPanel = props => {
                 ...priceVariantChanges,
                 ...startTimeIntervalChanges,
                 publicData: {
+                  priceVariationsEnabled: isPriceVariationsInUse,
                   ...startTimeIntervalChanges.publicData,
                   ...priceVariantChanges.publicData,
                 },

@@ -7,6 +7,7 @@ import classNames from 'classnames';
 // Import configs and util modules
 import appSettings from '../../../../config/settings';
 import { FormattedMessage, useIntl } from '../../../../util/reactIntl';
+import { isPriceVariationsEnabled } from '../../../../util/configHelpers';
 import * as validators from '../../../../util/validators';
 import { formatMoney } from '../../../../util/currency';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
@@ -109,7 +110,9 @@ export const handleSubmitValuesForPriceVariants = (
 ) => {
   const { priceVariants } = values;
   const hasPriceVariants = priceVariants.length > 0;
-  const isPriceVariationsInUse = listingTypeConfig?.priceVariations?.enabled; // TODO: check from config
+  // Note: publicData contains priceVariationsEnabled if listing is created with priceVariations enabled.
+  const isPriceVariationsInUse = isPriceVariationsEnabled(publicData, listingTypeConfig);
+
   const isFixedUnitType = unitType === FIXED;
 
   if (hasPriceVariants && isPriceVariationsInUse) {
