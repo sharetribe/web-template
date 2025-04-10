@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { FormattedMessage } from '../../util/reactIntl';
 import { ResponsiveImage, Modal } from '../../components';

@@ -227,7 +227,7 @@ app.get('*', async (req, res) => {
     .loadData(req.url, sdk, appInfo)
     .then(data => {
       const cspNonce = cspEnabled ? res.locals.cspNonce : null;
-      return renderer.render(req.url, context, data, renderApp, webExtractor, cspNonce, hostname); // [SKYFARER MERGE: +hostname]
+      return renderer.render(req.url, context, data, renderApp, webExtractor, cspNonce, req.hostname); // [SKYFARER MERGE: +req.hostname]
     })
     .then(html => {
       if (dev) {

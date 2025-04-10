@@ -13964,7 +13964,7 @@ shallowequal@1.1.0, shallowequal@^1.1.0:
   resolved "https://registry.yarnpkg.com/shallowequal/-/shallowequal-1.1.0.tgz#188d521de95b9087404fd4dcb68b13df0ae4e7f8"
   integrity sha512-y0m1JoUZSlPAjXVtPPW70aZWfIL/dSP7AFkRnniLCrK/8MDKog3TySTBmckD+RObVxH0v4Tox67+F14PdED2oQ==
 
-sharetribe-flex-integration-sdk@^1.10.1:
+sharetribe-flex-integration-sdk@^1.11.0:
   version "1.11.0"
   resolved "https://registry.yarnpkg.com/sharetribe-flex-integration-sdk/-/sharetribe-flex-integration-sdk-1.11.0.tgz#b1a967e5416cd8fd9006a84c248f29c06b7529ee"
   integrity sha512-oZuiX5u3nDaWinafdEf7c+CdhGyRvpMWuiBrTyXnqt8WpgxiqW1E3PHE3VJvGclW7rVcdZOZVXbZnWQGe1rzHw==
@@ -14745,9 +14745,9 @@ svgo@^2.7.0:
     stable "^0.1.8"
 
 swiper@^11.2.0:
-  version "11.2.0"
-  resolved "https://registry.yarnpkg.com/swiper/-/swiper-11.2.0.tgz#fbef83ab8fe165ceff82c69177a57033809cb1c2"
-  integrity sha512-rjjAKgDEs+grR2eQshVDCcE4KNPC7CI294nfcbV9gE8WCsLdvOYXDeZKUYevqAZZp8j5hE7kpT3dAGVKFBWlxQ==
+  version "11.2.6"
+  resolved "https://registry.yarnpkg.com/swiper/-/swiper-11.2.6.tgz#826943bf87158518ca0b1f57d387272b12a07c52"
+  integrity sha512-8aXpYKtjy3DjcbzZfz+/OX/GhcU5h+looA6PbAzHMZT6ESSycSp9nAjPCenczgJyslV+rUGse64LMGpWE3PX9Q==
 
 symbol-tree@^3.2.4:
   version "3.2.4"
