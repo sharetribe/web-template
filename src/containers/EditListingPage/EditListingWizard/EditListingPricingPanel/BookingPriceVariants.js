@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Field } from 'react-final-form';
 import { FieldArray } from 'react-final-form-arrays';
 import Decimal from 'decimal.js';
@@ -7,10 +7,10 @@ import classNames from 'classnames';
 // Import configs and util modules
 import appSettings from '../../../../config/settings';
 import { FormattedMessage, useIntl } from '../../../../util/reactIntl';
+import { types as sdkTypes } from '../../../../util/sdkLoader';
 import { isPriceVariationsEnabled } from '../../../../util/configHelpers';
 import * as validators from '../../../../util/validators';
 import { formatMoney } from '../../../../util/currency';
-import { types as sdkTypes } from '../../../../util/sdkLoader';
 import { FIXED } from '../../../../transactions/transaction';
 
 // Import shared components
@@ -342,23 +342,29 @@ const PriceVariant = props => {
 // NOTE: we'll create unique keys for each price variant
 // This is needed because React virtual DOM needs to map with real DOM elements through unique keys.
 // https://github.com/final-form/react-final-form-arrays/issues/116
-const initVariantKeys = (initialLengthOfPriceVariants, counterRef) => {
-  if (initialLengthOfPriceVariants > 0) {
-    return [...Array(initialLengthOfPriceVariants)].map((_, i) => {
-      counterRef.current = i;
-      return `variantKey_${i}`;
-    });
-  }
-  return [];
+const initVariantKeys = initialLengthOfPriceVariants => {
+  const counter = initialLengthOfPriceVariants || 0;
+  const keys =
+    counter > 0
+      ? [...Array(initialLengthOfPriceVariants)].map((_, i) => {
+          return `variantKey_${i}`;
+        })
+      : [];
+  return [counter, keys];
 };
 
-const addNewVariantKey = (counterRef, variantKeysRef) => {
-  counterRef.current++;
-  variantKeysRef.current.push(`original_${counterRef.current}`);
+const addNewVariantKey = setVariantKeys => {
+  setVariantKeys(([counter, variantKeys]) => [
+    counter + 1,
+    [...variantKeys, `variantKey_${counter}`],
+  ]);
 };
 
-const removeVariantKey = (index, variantKeysRef) => {
-  variantKeysRef.current.splice(index, 1);
+const removeVariantKey = (setVariantKeys, index) => {
+  setVariantKeys(([counter, variantKeys]) => [
+    counter,
+    [...variantKeys.slice(0, index), ...variantKeys.slice(index + 1)],
+  ]);
 };
 
 /**
@@ -378,8 +384,8 @@ export const BookingPriceVariants = props => {
   // NOTE: we'll create unique keys for each price variant
   // This is needed because React virtual DOM needs to map with real DOM elements through unique keys.
   // https://github.com/final-form/react-final-form-arrays/issues/116
-  const counter = useRef(0);
-  const variantKeys = useRef(initVariantKeys(props.initialLengthOfPriceVariants, counter));
+  const [data, setVariantKeys] = useState(initVariantKeys(props.initialLengthOfPriceVariants));
+  const [counter, variantKeys] = data;
 
   const {
     formId = 'EditListingPricingForm',
@@ -416,7 +422,7 @@ export const BookingPriceVariants = props => {
                         ? { price: null, bookingLengthInMinutes: 60 }
                         : { name: null, price: null };
                     fields.push(initialPriceVariantValues);
-                    addNewVariantKey(counter, variantKeys); // Handle unique keys for each array item.
+                    addNewVariantKey(setVariantKeys); // Handle unique keys for each array item.
                   }}
                 >
                   <FormattedMessage id="EditListingPricingForm.priceVariant.addPriceVariant" />
@@ -428,14 +434,14 @@ export const BookingPriceVariants = props => {
               {fields.map((name, index) => {
                 return (
                   <PriceVariant
-                    key={variantKeys.current[index]}
+                    key={variantKeys[index]}
                     name={name}
                     unitType={unitType}
                     isPriceVariationsInUse={isPriceVariationsInUse || fields?.length > 1}
                     idPrefix={`${formId}_${index}`}
                     onRemovePriceVariant={() => {
                       fields.remove(index);
-                      removeVariantKey(index, variantKeys); // Handle unique keys for each array item.
+                      removeVariantKey(setVariantKeys, index); // Handle unique keys for each array item.
                     }}
                     listingMinimumPriceSubUnits={listingMinimumPriceSubUnits}
                     marketplaceCurrency={marketplaceCurrency}
@@ -459,7 +465,7 @@ export const BookingPriceVariants = props => {
                         ? { price: null, bookingLengthInMinutes: 60 }
                         : { name: null, price: null };
                     fields.push(initialPriceVariantValues);
-                    addNewVariantKey(counter, variantKeys); // Handle unique keys for each array item.
+                    addNewVariantKey(setVariantKeys); // Handle unique keys for each array item.
                   }}
                 >
                   <FormattedMessage id="EditListingPricingForm.priceVariant.addPriceVariant" />
