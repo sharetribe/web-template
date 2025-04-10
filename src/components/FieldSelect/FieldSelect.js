@@ -16,6 +16,7 @@ const FieldSelectComponent = props => {
     meta,
     children,
     onChange,
+    showLabelAsDisabled,
     ...rest
   } = props;
 
@@ -45,7 +46,11 @@ const FieldSelectComponent = props => {
   const classes = classNames(rootClassName || css.root, className);
   return (
     <div className={classes}>
-      {label ? <label htmlFor={id}>{label}</label> : null}
+      {label ? (
+        <label htmlFor={id} className={classNames({ [css.labelDisabled]: showLabelAsDisabled })}>
+          {label}
+        </label>
+      ) : null}
       <select {...selectProps}>{children}</select>
       <ValidationError fieldMeta={meta} />
     </div>
