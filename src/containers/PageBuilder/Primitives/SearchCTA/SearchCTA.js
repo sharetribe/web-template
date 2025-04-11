@@ -11,6 +11,7 @@ import { useConfiguration } from '../../../../context/configurationContext';
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { createResourceLocatorString } from '../../../../util/routes';
 import { isOriginInUse } from '../../../../util/search';
+import { stringifyDateToISO8601 } from '../../../../util/dates';
 
 // Shared components
 import { Form, PrimaryButton } from '../../../../components';
@@ -19,8 +20,6 @@ import FilterCategories from './FilterCategories/FilterCategories';
 import FilterDateRange from './FilterDateRange/FilterDateRange';
 import FilterLocation from './FilterLocation/FilterLocation';
 import FilterKeyword from './FilterKeyword/FilterKeyword';
-
-import { stringifyDateToISO8601 } from '../../../../util/dates';
 
 import css from './SearchCTA.module.css';
 
@@ -41,6 +40,15 @@ const isEmpty = value => {
   return value.hasOwnProperty('length') && value.length === 0;
 };
 
+const formatDateValue = (dateRange, queryParamName) => {
+  const hasDates = dateRange;
+  const { startDate, endDate } = hasDates ? dateRange : {};
+  const start = startDate ? stringifyDateToISO8601(startDate) : null;
+  const end = endDate ? stringifyDateToISO8601(endDate) : null;
+  const value = start && end ? `${start},${end}` : null;
+  return { [queryParamName]: value };
+};
+
 export const SearchCTA = React.forwardRef((props, ref) => {
   const history = useHistory();
   const routeConfiguration = useRouteConfiguration();
@@ -50,22 +58,60 @@ export const SearchCTA = React.forwardRef((props, ref) => {
 
   const [submitDisabled, setSubmitDisabled] = useState(false);
 
+  const categoryConfig = config.categoryConfiguration;
+
+  const filters = {
+    categories: {
+      enabled: categories,
+      isValid: () => categoryConfig.categories.length > 0,
+      render: () => (
+        <div className={css.filterField}>
+          <FilterCategories categories={categoryConfig.categories} />
+        </div>
+      ),
+    },
+    locationSearch: {
+      enabled: locationSearch,
+      isValid: () => locationSearch,
+      render: () => (
+        <div className={css.filterField}>
+          <FilterLocation setSubmitDisabled={setSubmitDisabled} />
+        </div>
+      ),
+    },
+    keywordSearch: {
+      enabled: keywordSearch,
+      isValid: () => keywordSearch,
+      render: () => (
+        <div className={css.filterField}>
+          <FilterKeyword />
+        </div>
+      ),
+    },
+    dateRange: {
+      enabled: dateRange,
+      isValid: () => dateRange,
+      render: () => (
+        <div className={css.filterField}>
+          <FilterDateRange config={config} />
+        </div>
+      ),
+    },
+  };
+
+  const addFilterMaybe = key => {
+    const filter = filters[key];
+    return filter.enabled && filter.isValid() ? filter.render() : null;
+  };
+
+  // Count the number search fields that are enabled
+  const fieldCountForGrid = Object.values(filters).filter(field => field.enabled && field.isValid())
+    .length;
+
   //  If no search fields are enabled, we return null (Console won't allow you to enable 0 search fields)
-  const noSearchFields = isEmpty(
-    [categories, dateRange, keywordSearch, locationSearch].filter(f => !isEmpty(f))
-  );
-  if (noSearchFields) {
+  if (!fieldCountForGrid) {
     return null;
   }
-
-  const formatDateValue = (dateRange, queryParamName) => {
-    const hasDates = dateRange;
-    const { startDate, endDate } = hasDates ? dateRange : {};
-    const start = startDate ? stringifyDateToISO8601(startDate) : null;
-    const end = endDate ? stringifyDateToISO8601(endDate) : null;
-    const value = start && end ? `${start},${end}` : null;
-    return { [queryParamName]: value };
-  };
 
   const onSubmit = values => {
     // Convert form values to query parameters
@@ -76,8 +122,7 @@ export const SearchCTA = React.forwardRef((props, ref) => {
         if (key == 'dateRange') {
           const { dates } = formatDateValue(value, 'dates');
           queryParams.dates = dates;
-        }
-        if (key == 'location') {
+        } else if (key == 'location') {
           if (value.selectedPlace) {
             const {
               search,
@@ -101,36 +146,6 @@ export const SearchCTA = React.forwardRef((props, ref) => {
     history.push(to);
   };
 
-  const categoryConfig = config.categoryConfiguration;
-
-  // Count the number search fields that are enabled
-  const fieldCount = [categories, dateRange, keywordSearch, locationSearch].filter(field => !!field)
-    .length;
-
-  // conditional; even if categories are enabled, we won't render categories if none are present. So need to do a bit of calculations here
-  const fieldCountForGrid = categoryConfig.categories.length > 0 ? fieldCount : fieldCount - 1;
-
-  // categoriesMaybe also checks if any categories are specified
-  const categoriesMaybe =
-    categories && categoryConfig.categories.length > 0 ? (
-      <div className={css.filterField}>
-        <FilterCategories categories={categoryConfig.categories} />
-      </div>
-    ) : null;
-  const locationMaybe = locationSearch ? (
-    <div className={css.filterField}>
-      <FilterLocation setSubmitDisabled={setSubmitDisabled} />
-    </div>
-  ) : null;
-  const keywordsMaybe = keywordSearch ? (
-    <div className={css.filterField}><FilterKeyword /></div>
-  ) : null;
-  const dateRangeMaybe = dateRange ? (
-    <div className={css.filterField}>
-      <FilterDateRange config={config} />
-    </div>
-  ) : null;
-
   return (
     <div className={classNames(css.searchBarContainer, getGridCount(fieldCountForGrid))}>
       <FinalForm
@@ -143,14 +158,13 @@ export const SearchCTA = React.forwardRef((props, ref) => {
               onSubmit={handleSubmit}
               className={classNames(css.gridContainer, getGridCount(fieldCountForGrid))}
             >
-              {categoriesMaybe}
-              {keywordsMaybe}
-              {locationMaybe}
-              {dateRangeMaybe}
+              {addFilterMaybe('categories')}
+              {addFilterMaybe('locationSearch')}
+              {addFilterMaybe('keywordSearch')}
+              {addFilterMaybe('dateRange')}
               <PrimaryButton disabled={submitDisabled} className={css.submitButton} type="submit">
                 <FormattedMessage id="SearchCTA.buttonLabel" />
               </PrimaryButton>
-
             </Form>
           );
         }}

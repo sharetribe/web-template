@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import classNames from 'classnames';
 
-import FieldDateRangeController from '../../../../../components/DatePicker/FieldDateRangeController/FieldDateRangeController';
-import { OutsideClickHandler, IconDate } from '../../../../../components';
-
 import { useIntl } from '../../../../../util/reactIntl';
+
+import { OutsideClickHandler, IconDate, FieldDateRangeController } from '../../../../../components';
 
 import css from './FilterDateRange.module.css';
 
