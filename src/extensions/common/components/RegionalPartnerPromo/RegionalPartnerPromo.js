@@ -10,8 +10,6 @@ const RegionalPartnerPromo = ({ address, varient }) => {
     const regionMatch = address.match(/([^,]+?)(?:\s+\d{5})?,\s*(Canada|United States)$/);
     const region = regionMatch ? regionMatch[1].trim() : null;
 
-    console.log('region', region)
-
     useEffect(() => {
         if (region) {
             setLoading(true);
