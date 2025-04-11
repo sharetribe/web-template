@@ -434,6 +434,7 @@ class LocationAutocompleteInputImplementation extends Component {
       rootClassName,
       className,
       iconClassName,
+      CustomIcon,
       inputClassName,
       predictionsClassName,
       predictionsAttributionClassName,
@@ -489,6 +490,8 @@ class LocationAutocompleteInputImplementation extends Component {
         <div className={iconClass}>
           {this.state.fetchingPlaceDetails ? (
             <IconSpinner className={css.iconSpinner} />
+          ) : CustomIcon ? (
+            <CustomIcon />
           ) : (
             <IconHourGlass />
           )}
@@ -580,6 +583,7 @@ class LocationAutocompleteInputImplementation extends Component {
  * @param {boolean} props.meta.valid
  * @param {boolean} props.meta.touched
  * @param {Function | RefHook} props.inputRef
+ * @param {ReactNode} props.CustomIcon override the default icon
  * @returns {JSX.Element} LocationAutocompleteInputImpl component
  */
 const LocationAutocompleteInputImpl = props => {
