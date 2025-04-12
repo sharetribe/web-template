@@ -41,6 +41,7 @@ const SavedCardDetails = props => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [active, setActive] = useState(DEFAULT_CARD);
+  const [hasBeenOpened, setHasBeenOpened] = useState(false);
   const intl = useIntl();
 
   const {
@@ -129,6 +130,9 @@ const SavedCardDetails = props => {
 
   const onToggleActive = isOpen => {
     setMenuOpen(isOpen);
+    if (!hasBeenOpened && !isOpen) {
+      setHasBeenOpened(true);
+    }
   };
 
   const handleDeleteCard = () => {
@@ -158,7 +162,11 @@ const SavedCardDetails = props => {
           </div>
         </MenuLabel>
 
-        <MenuContent rootClassName={css.menuContent}>
+        <MenuContent
+          rootClassName={classNames(css.menuContent, {
+            [css.menuContentTransition]: hasBeenOpened,
+          })}
+        >
           <MenuItem key="first item" className={css.menuItem}>
             <IconCheckmark
               className={active === DEFAULT_CARD ? css.iconCheckmark : css.iconCheckmarkHidden}

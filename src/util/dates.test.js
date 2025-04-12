@@ -319,13 +319,48 @@ describe('date utils', () => {
 
   describe('findNextBoundary()', () => {
     it('should return 01:00 as next boundary when starting from 00:45', () => {
-      expect(findNextBoundary(new Date('2019-09-18T00:45:00.000Z'), 'hour', 'Etc/UTC')).toEqual(
-        new Date('2019-09-18T01:00:00.000Z')
+      expect(findNextBoundary(new Date('2025-02-02T00:45:00.000Z'), 1, 'hour', 'Etc/UTC')).toEqual(
+        new Date('2025-02-02T01:00:00.000Z')
       );
     });
     it('should return 02:00 as next boundary when starting from 01:00', () => {
-      expect(findNextBoundary(new Date('2019-09-18T01:00:00.000Z'), 'hour', 'Etc/UTC')).toEqual(
-        new Date('2019-09-18T02:00:00.000Z')
+      expect(findNextBoundary(new Date('2025-02-02T01:00:00.000Z'), 1, 'hour', 'Etc/UTC')).toEqual(
+        new Date('2025-02-02T02:00:00.000Z')
+      );
+    });
+
+    // Custom time units
+    it('should return 01:00 as next boundary when starting from 00:45 and time unit is quarter hour', () => {
+      expect(
+        findNextBoundary(new Date('2025-02-02T00:45:00.000Z'), 1, 'quarterHour', 'Etc/UTC')
+      ).toEqual(new Date('2025-02-02T01:00:00.000Z'));
+    });
+    it('should return 01:00 as next boundary when starting from 00:45 and time unit is half hour', () => {
+      expect(
+        findNextBoundary(new Date('2025-02-02T00:45:00.000Z'), 1, 'halfHour', 'Etc/UTC')
+      ).toEqual(new Date('2025-02-02T01:00:00.000Z'));
+    });
+
+    // Different time zones
+    it('should return 03:00 as next boundary when starting from 2:45 in Helsinki', () => {
+      const date_2_45_Helsinki = new Date('2025-02-02T00:45:00.000Z'); // UTC+2
+      const date_3_00_Helsinki = new Date('2025-02-02T01:00:00.000Z'); // UTC+2
+      expect(findNextBoundary(date_2_45_Helsinki, 1, 'hour', 'Europe/Helsinki')).toEqual(
+        date_3_00_Helsinki
+      );
+    });
+    it('should return 07:00 as next boundary when starting from 6:15 (local time) and time unit is hour in Calcutta', () => {
+      const date_6_15_Calcutta = new Date('2025-02-02T00:45:00.000Z'); // UTC+5.30
+      const date_7_00_Calcutta = new Date('2025-02-02T01:30:00.000Z'); // UTC+5.30
+      expect(findNextBoundary(date_6_15_Calcutta, 1, 'hour', 'Asia/Calcutta')).toEqual(
+        date_7_00_Calcutta
+      );
+    });
+    it('should return 07:00 as next boundary when starting from 6:30 (local time) and time unit is hour in Kathmandu', () => {
+      const date_6_30_Kathmandu = new Date('2025-02-02T00:45:00.000Z'); // UTC+5.45
+      const date_7_00_Kathmandu = new Date('2025-02-02T01:15:00.000Z'); // UTC+5.45
+      expect(findNextBoundary(date_6_30_Kathmandu, 1, 'hour', 'Asia/Kathmandu')).toEqual(
+        date_7_00_Kathmandu
       );
     });
   });

@@ -8,10 +8,11 @@ notification messages that are used by the process.
 
 These are visible here only as a reference. The active transaction processes you need to check from
 Console or
-[using Flex CLI](https://www.sharetribe.com/docs/how-to/edit-transaction-process-with-flex-cli/)
+[using Sharetribe CLI](https://www.sharetribe.com/docs/how-to/edit-transaction-process-with-sharetribe-cli/)
 
-If you don't have these processes visible on Console, you need to add them there using Flex CLI.
-[Tutorial: create a new transaction process](https://flex-docs-git-feat-docs-biketribe-sharetribe.vercel.app/tutorial/create-transaction-process/)
+If you don't have these processes visible on Console, you need to add them there using Sharetribe
+CLI.
+[Tutorial: create a new transaction process](https://www.sharetribe.com/docs/tutorial/create-transaction-process/)
 
 Pricing in these processes use privileged transitions and the
 [privileged-set-line-items](https://www.sharetribe.com/docs/references/transaction-process-actions/#actionprivileged-set-line-items)

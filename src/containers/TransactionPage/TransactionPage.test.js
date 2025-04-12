@@ -113,6 +113,7 @@ describe('TransactionPage', () => {
     onFetchTransactionLineItems: noop,
     nextTransitions: null,
     monthlyTimeSlots: {},
+    timeSlotsForDate: {},
     //transaction,
     //lineItems,
   };

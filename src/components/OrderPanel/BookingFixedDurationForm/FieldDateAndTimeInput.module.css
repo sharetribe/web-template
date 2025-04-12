@@ -12,7 +12,7 @@
 
   /* This container uses flexbox layout */
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   flex-wrap: wrap;
 
   width: 100%;
@@ -48,6 +48,19 @@
   }
 }
 
+.startDate {
+}
+
+.startTime {
+  width: calc(100% - 48px);
+  margin: 0 24px;
+
+  @media (--viewportMedium) {
+    width: calc(50% - 12px);
+    margin: 0;
+  }
+}
+
 .fieldDisabled {
   background: none;
   color: var(--colorGrey100);
@@ -66,6 +79,7 @@
     margin: 0;
   }
 }
+
 .fieldDateInputFallback {
   padding: 5px 0 5px 30px;
   @media (--viewportMedium) {
@@ -84,6 +98,7 @@
   }
   @media (--viewportMedium) {
     width: 100%;
+    width: calc(200% + 24px);
     margin: 0;
   }
 }
@@ -155,41 +170,6 @@
   fill: var(--colorWhite);
 }
 
-/**
-CSS for hiding the end date
-
-If you want to show the field for the end date e.g. for enabling longer bookings,
-you can remove the following code.
-Remember to do required code changes also in FieldDateAndTimeInput.js!
-**/
-
-.field {
-  width: calc(50% - 34px);
-
-  @media (--viewportMedium) {
-    width: calc(50% - 12px);
-  }
-}
-
-.startDate {
-  width: 100%;
-}
-.endDateHidden {
+.unitTypeHidden {
   display: none;
 }
-
-.lineBetween,
-.lineBetweenDisabled {
-  margin: 33px 6px 0 6px;
-
-  @media (--viewportMedium) {
-    margin: 40px 8px 0 8px;
-  }
-}
-.lineBetweenDisabled {
-  color: var(--colorGrey100);
-}
-
-/**
-CSS for hiding the end date above
-**/

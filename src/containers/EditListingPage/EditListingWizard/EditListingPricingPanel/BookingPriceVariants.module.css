@@ -1,0 +1,35 @@
+.root {
+}
+.selects {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+.select {
+  width: calc(50% - 8px);
+}
+.noPriceVariant {
+}
+.priceVariant {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.error {
+  color: var(--colorFail);
+  margin-bottom: 24px;
+}
+.addPriceVariantButton {
+  composes: h4 from global;
+  padding: 1px 0 5px 0;
+  margin: 0 0 24px 0;
+
+  @media (--viewportMedium) {
+    display: block;
+    padding: 1px 0 7px 0;
+    margin: 0 0 72px 0;
+  }
+}
