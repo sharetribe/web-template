@@ -217,6 +217,7 @@ export class TransactionPanelComponent extends Component {
                 : SELL_PURCHASE_PROGRESS_BAR_STEPS_SELLER
             }
             stateData={stateData}
+            categoryLevel1={listing?.attributes?.publicData?.categoryLevel1}
           />
         )}
         <div className={css.container}>

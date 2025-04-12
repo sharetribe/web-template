@@ -122,6 +122,7 @@ export class SearchPageComponent extends Component {
       const { listingFields: listingFieldsConfig } = config?.listing || {};
       const { defaultFilters: defaultFiltersConfig } = config?.search || {};
       const listingCategories = config.categoryConfiguration.categories;
+
       const filterConfigs = {
         listingFieldsConfig,
         defaultFiltersConfig,
@@ -287,6 +288,9 @@ export class SearchPageComponent extends Component {
     const marketplaceCurrency = config.currency;
     const categoryConfiguration = config.categoryConfiguration;
     const listingCategories = categoryConfiguration.categories;
+
+    //remove bids from available category search
+    const customListingCategories = listingCategories.filter(category => category.id !== "location-bid");
     const listingFieldsConfig = pickListingFieldFilters({
       listingFields,
       locationSearch: location.search,
@@ -295,7 +299,7 @@ export class SearchPageComponent extends Component {
     const filterConfigs = {
       listingFieldsConfig,
       defaultFiltersConfig,
-      listingCategories,
+      listingCategories: customListingCategories,
     };
 
     // Page transition might initially use values from previous search
@@ -356,7 +360,7 @@ export class SearchPageComponent extends Component {
       ? validFilterParams(validQueryParams, {
           listingFieldsConfig: customSecondaryFilters,
           defaultFiltersConfig: [],
-          listingCategories,
+          listingCategories: customListingCategories,
         })
       : {};
     const selectedSecondaryFiltersCount = Object.keys(selectedSecondaryFilters).length;
@@ -466,7 +470,7 @@ export class SearchPageComponent extends Component {
                     key={key}
                     idPrefix="SearchFiltersMobile"
                     config={filterConfig}
-                    listingCategories={listingCategories}
+                    listingCategories={customListingCategories}
                     marketplaceCurrency={marketplaceCurrency}
                     urlQueryParams={validQueryParams}
                     initialValues={initialValues(this.props, this.state.currentQueryParams)}
@@ -498,7 +502,7 @@ export class SearchPageComponent extends Component {
                       key={key}
                       idPrefix="SearchFiltersPrimary"
                       config={filterConfig}
-                      listingCategories={listingCategories}
+                      listingCategories={customListingCategories}
                       marketplaceCurrency={marketplaceCurrency}
                       urlQueryParams={validQueryParams}
                       initialValues={initialValues(this.props, this.state.currentQueryParams)}
@@ -530,7 +534,7 @@ export class SearchPageComponent extends Component {
                         key={key}
                         idPrefix="SearchFiltersSecondary"
                         config={filterConfig}
-                        listingCategories={listingCategories}
+                        listingCategories={customListingCategories}
                         marketplaceCurrency={marketplaceCurrency}
                         urlQueryParams={validQueryParams}
                         initialValues={initialValues(this.props, this.state.currentQueryParams)}
