@@ -11,3 +11,33 @@
 .form {
   flex-grow: 1;
 }
+
+.helpText {
+  background-color: var(--colorGrey50);
+  border-left: 4px solid var(--marketplaceColor);
+  border-radius: var(--borderRadiusMedium);
+  padding: 16px 20px 16px 48px;
+  margin-bottom: 24px;
+  color: var(--colorGrey700);
+  font-size: 16px;
+  line-height: 1.5;
+  box-shadow: var(--boxShadowLight);
+  position: relative;
+}
+
+.helpText::before {
+  content: 'i';
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: var(--marketplaceColor);
+  color: white;
+  font-size: 14px;
+  font-weight: var(--fontWeightBold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

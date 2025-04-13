@@ -330,6 +330,12 @@ const EditListingDetailsPanel = props => {
         )}
       </H3>
 
+      {!isPublished && (
+        <p className={css.helpText}>
+          <FormattedMessage id="EditListingDetailsPanel.createListingInstructions" />
+        </p>
+      )}
+
       {canShowEditListingDetailsForm ? (
         <EditListingDetailsForm
           className={css.form}
