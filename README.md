@@ -79,6 +79,19 @@ channel at https://www.sharetribe.com/dev-slack
 If you need help with development, you can hire a verified software developer with Sharetribe
 experience from the [Expert Network](https://www.sharetribe.com/experts/).
 
+## Modify transaction process
+Pull the process:
+`npx flex-cli process pull --path process --process default-booking -m skyfareracademy-dev`
+
+Push the process:
+`npx flex-cli process push --path process --process default-booking -m skyfareracademy-dev`
+
+Show aliases:
+`npx flex-cli process list --process default-booking -m skyfareracademy-dev`
+
+Update alias:
+`npx flex-cli process update-alias --process default-booking --alias release-1 --version 14 -m skyfareracademy-dev`
+
 ## Stripe Webhooks
 
 To test the webhooks, you can use the Stripe CLI.
