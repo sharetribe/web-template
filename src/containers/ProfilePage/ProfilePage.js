@@ -67,7 +67,7 @@ export const AsideContent = props => {
   
   const isVerified = user.attributes?.profile?.metadata?.verified === true;
 
-  //console.log('about user verified', isVerified)
+  const listingCount = listings.filter(listing => listing.attributes.publicData.categoryLevel1 !== 'location-bid').length;
 
   const avgRating = reviews.reduce((acc, review) => {
     return acc + review.attributes.rating;
@@ -111,8 +111,8 @@ export const AsideContent = props => {
             <p><FormattedMessage id="ProfilePage.statsLabel.reviews" values={{ count: reviews.length }} /></p>
           </div>
           <div className={css.asideStatsItem}>
-            <h4>{listings.length}</h4>
-            <p><FormattedMessage id="ProfilePage.statsLabel.listings" values={{ count: listings.length }} /></p>
+            <h4>{listingCount}</h4>
+            <p><FormattedMessage id="ProfilePage.statsLabel.listings" values={{ count: listingCount }} /></p>
           </div>
         </div>
 
@@ -283,13 +283,20 @@ export const MainContent = props => {
     userFieldConfig,
     intl,
     hideReviews,
+    isCurrentUser,
   } = props;
   
   const listingServices = listings.filter(listing => listing.attributes.publicData.listingType === 'sell-service');
-  const listingProducts = listings.filter(listing => listing.attributes.publicData.listingType !== 'sell-service');
+  const listingProducts = listings.filter(listing => (
+    listing.attributes.publicData.listingType !== 'sell-service' && 
+    listing.attributes.publicData.categoryLevel1 !== 'location-bid'
+  ));
+  const listingBids = listings.filter(listing => listing.attributes.publicData.categoryLevel1 === 'location-bid');
 
   const hasServiceListings = listingServices.length > 0;
   const hasProductListings = listingProducts.length > 0;
+  const hasBidListings    = listingBids.length > 0;
+
 
   const hasMatchMedia = typeof window !== 'undefined' && window?.matchMedia;
   const isMobileLayout = hasMatchMedia
@@ -368,6 +375,25 @@ export const MainContent = props => {
       {hideReviews || reviews.length === 0 ? null 
         : <CardReviews reviews={reviews} queryReviewsError={queryReviewsError} />
       }
+      
+      {hasBidListings && isCurrentUser ? (
+        <div className={listingsContainerClasses}>
+          <H4 as="h2" className={css.listingsTitle}>
+            <FormattedMessage id="ProfilePage.bidsTitle" />
+          </H4>
+          <ul className={css.listings}>
+            {listingBids.map(l => (
+              <li className={css.listing} key={l.id.uuid}>
+                  <ListingCard 
+                    listing={l} 
+                    showAuthorInfo={false}
+                  />
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+
       {hasServiceListings ? (
         <div className={listingsContainerClasses}>
           <H4 as="h2" className={css.listingsTitle}>
@@ -570,6 +596,7 @@ export const ProfilePageComponent = props => {
           //userFieldConfig={userFields}
           hideReviews={hasNoViewingRightsOnPrivateMarketplace}
           intl={intl}
+          isCurrentUser={isCurrentUser}
           {...rest}
         />
       </LayoutSideNavigation>

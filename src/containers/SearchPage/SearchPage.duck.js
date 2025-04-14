@@ -49,7 +49,6 @@ const resultIds = data => {
     .filter(l => !l.attributes.deleted && l.attributes.state === 'published')
     .map(l => l.id);
 };
-
 const convertPriceParams = (values, exchangeRate) => {
   //uiCurrency === DEFAULT_CURRENCY => exchangeRate === null
   const convertedValues =
@@ -166,7 +165,17 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
       {}
     );
 
-    return { ...nonCategoryKeys, ...categoryKeys };
+    //remove location-bid from posibile search results
+    const customCategoryKeys = categoryKeys.pub_categoryLevel1 && categoryKeys.pub_categoryLevel1 !== 'location-bid'
+      ? categoryKeys 
+      : {
+          pub_categoryLevel1: categories
+            .filter(cat => cat.id !== 'location-bid')
+            .map(cat => cat.id)
+            .join(',')
+        };
+
+    return { ...nonCategoryKeys, ...customCategoryKeys };
   };
 
   const priceSearchParams = (priceParam, uiCurrency) => {
@@ -343,6 +352,7 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
         // when transitioning from search page to listing page
         'publicData.pickupEnabled',
         'publicData.shippingEnabled',
+        'publicData.categoryLevel1',
       ],
       'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
       'fields.image': [

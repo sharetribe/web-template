@@ -457,6 +457,7 @@ export const CheckoutPageWithPayment = props => {
           steps={SELL_PURCHASE_PROGRESS_BAR_STEPS_CUSTOMER}
           stateData={{ processName }}
           stepInProgress={0}
+          categoryLevel1={listing?.attributes?.publicData?.categoryLevel1}
         />
       )}
       <div className={css.contentContainer}>

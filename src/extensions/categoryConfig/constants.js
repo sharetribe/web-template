@@ -4,6 +4,7 @@ export const CATEGORIES = {
   LOCATION_MACHINE: 'location-machine',
   ATM_LOCATION: 'atm-location',
   LOCATION_FIND: 'location-find',
+  LOCATION_BID: 'location-bid',
   PARTS: 'parts',
   SERVICES: 'services',
 };
@@ -18,7 +19,7 @@ export const LISTING_TYPES = {
 export const LISTING_TYPE_CATEGORIES = {
   [LISTING_TYPES.SELL]: {
     label: 'Sell a Location (with or without machine)',
-    categories: [CATEGORIES.LOCATION, CATEGORIES.LOCATION_MACHINE, CATEGORIES.ATM_LOCATION],
+    categories: [CATEGORIES.LOCATION, CATEGORIES.LOCATION_MACHINE, CATEGORIES.ATM_LOCATION, CATEGORIES.LOCATION_BID],
   },
   [LISTING_TYPES.SELL_MACHINE]: {
     label: 'Sell a Machine',

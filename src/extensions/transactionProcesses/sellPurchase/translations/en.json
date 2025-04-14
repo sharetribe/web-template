@@ -86,10 +86,10 @@
   "TransactionPage.sell-purchase.customer.reviewed-by-provider.nextStep":                   "Share your experience by writing a review.",
 
   "TransactionPage.sell-purchase.provider.purchase-confirmed-by-buyer.nextStep":              "You have until {deadlineForIntro} to provide {customerName} with the manager's contact information or the order will be canceled and they will be fully refunded.",
-  "TransactionPage.sell-purchase.provider.purchased.markMachinePlaced.nextStep":              "{customerName} has until {deadlineForRefund} to finalize the order or request a refund. If they do neither, the order will proceed.",
   
-  "TransactionPage.sell-purchase.provider.stripe-intent-captured.markMachinePlaced.nextStep": "Once {categoryLevel1, select, location {the machine is installed and operational} location_find {the machine is installed and operational} other {{customerName} has taken possession}}, you can confirm {categoryLevel1, select, location {its placement} location_find {its placement} other {the order}}.",
-  "TransactionPage.sell-purchase.provider.refund-disabled.markMachinePlaced.nextStep":        "Once {categoryLevel1, select, location {the machine is installed and operational} location_find {the machine is installed and operational} other {{customerName} has taken possession}}, you can confirm {categoryLevel1, select, location {its placement} location_find {its placement} other {the order}}.",
+  "TransactionPage.sell-purchase.provider.purchased.markMachinePlaced.nextStep":              "{customerName} has until {deadlineForRefund} to finalize the order or request a refund. If they do neither, the order will proceed.",
+  "TransactionPage.sell-purchase.provider.stripe-intent-captured.markMachinePlaced.nextStep": "{customerName} has until {deadlineForRefund} to finalize the order or request a refund. If they do neither, the order will proceed.",
+  "TransactionPage.sell-purchase.provider.refund-disabled.markMachinePlaced.nextStep":        "{customerName} had until {deadlineForRefund} to finalize the order or request a refund. Since they did not act in time, the order will proceed.",
   
   "TransactionPage.sell-purchase.provider.purchased.nextStep":                                "The buyer has until {deadlineForRefund} to finalize or cancel, otherwise the order will complete automatically.",
   "TransactionPage.sell-purchase.provider.stripe-intent-captured.nextStep":                   "The buyer has until {deadlineForRefund} to finalize or cancel, otherwise the order will complete automatically.",
@@ -255,8 +255,8 @@
   "TransactionPage.ActivityFeed.sell-purchase.reviewed-by-provider":  "{actor, select, you {You left a review for {otherUsersName}.} other {{otherUsersName} left a review for you. {reviewLink}}}",
   "TransactionPage.ActivityFeed.sell-purchase.reviewed-by-customer":  "{actor, select, you {You left a review for {otherUsersName}.} other {{otherUsersName} left a review for you. {reviewLink}}}",
 
-  "ProgressStep.stepTitle.sell-purchase.Customer.PendingPayment" :  "Buy {categoryLevel1, select, location_find {Service} other {Location}}",
-  "ProgressStep.stepTitle.sell-purchase.Customer.MeetManager" :     "{categoryLevel1, select, location_find {Approve Location} other {Meet Manager}}",
+  "ProgressStep.stepTitle.sell-purchase.Customer.PendingPayment" :  "Buy {categoryLevel1, select, location_find {Service} location_bid {Service Bid} other {Location}}",
+  "ProgressStep.stepTitle.sell-purchase.Customer.MeetManager" :     "{categoryLevel1, select, location_find {Approve Location} location_bid {Approve Location} other {Meet Manager}}",
   "ProgressStep.stepTitle.sell-purchase.Customer.PlaceMachine" :    "Finalize Order",
   "ProgressStep.stepTitle.sell-purchase.Customer.Review" :          "Leave a Review",
 
