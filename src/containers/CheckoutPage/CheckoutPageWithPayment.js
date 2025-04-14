@@ -426,6 +426,7 @@ export const CheckoutPageWithPayment = props => {
       : speculatedTransaction;
   const timeZone = listing?.attributes?.availabilityPlan?.timezone;
   const transactionProcessAlias = listing?.attributes?.publicData?.transactionProcessAlias;
+  const priceVariantName = tx.attributes.protectedData?.priceVariantName;
 
   const txBookingMaybe = tx?.booking?.id ? { booking: tx.booking, timeZone } : {};
 
@@ -552,6 +553,7 @@ export const CheckoutPageWithPayment = props => {
           <MobileOrderBreakdown
             speculateTransactionErrorMessage={errorMessages.speculateTransactionErrorMessage}
             breakdown={breakdown}
+            priceVariantName={priceVariantName}
           />
           <section className={css.paymentContainer}>
             {errorMessages.initiateOrderErrorMessage}
@@ -603,6 +605,7 @@ export const CheckoutPageWithPayment = props => {
         <DetailsSideCard
           listing={listing}
           listingTitle={listingTitle}
+          priceVariantName={priceVariantName}
           author={listing?.author}
           firstImage={firstImage}
           layoutListingImageConfig={config.layout.listingImage}
