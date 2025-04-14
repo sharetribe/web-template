@@ -221,6 +221,7 @@ export class TransactionPanelComponent extends Component {
     const showDetailCardHeadings = stateData.showDetailCardHeadings || !hasViewingRights;
 
     const deliveryMethod = protectedData?.deliveryMethod || 'none';
+    const priceVariantName = protectedData?.priceVariantName;
 
     const classes = classNames(rootClassName || css.root, className);
 
@@ -273,6 +274,7 @@ export class TransactionPanelComponent extends Component {
                   <BreakdownMaybe
                     orderBreakdown={orderBreakdown}
                     processName={stateData.processName}
+                    priceVariantName={priceVariantName}
                   />
                   <DiminishedActionButtonMaybe
                     showDispute={stateData.showDispute}
@@ -380,6 +382,7 @@ export class TransactionPanelComponent extends Component {
                   className={css.breakdownContainer}
                   orderBreakdown={orderBreakdown}
                   processName={stateData.processName}
+                  priceVariantName={priceVariantName}
                 />
 
                 {stateData.showActionButtons ? (
