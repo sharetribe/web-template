@@ -8,6 +8,7 @@ import classNames from 'classnames';
 import appSettings from '../../../../config/settings';
 import { FormattedMessage, useIntl } from '../../../../util/reactIntl';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
+import { createSlug } from '../../../../util/urlHelpers';
 import { isPriceVariationsEnabled } from '../../../../util/configHelpers';
 import * as validators from '../../../../util/validators';
 import { formatMoney } from '../../../../util/currency';
@@ -272,6 +273,9 @@ const PriceVariant = props => {
     isPriceVariationsInUse,
     showDeleteButton,
     onRemovePriceVariant,
+    priceVariantNames,
+    currentIndex,
+    formApi,
     intl,
   } = props;
 
@@ -280,6 +284,37 @@ const PriceVariant = props => {
     marketplaceCurrency,
     intl
   );
+
+  const requiredValidator = validators.required(
+    intl.formatMessage({ id: 'EditListingPricingForm.priceVariant.nameRequired' })
+  );
+
+  // Get error message when name is not unique.
+  // Note: name and slug are passed as arguments, so it's possible to use an explicit message like:
+  // "EditListingPricingForm.priceVariant.nameMustBeUnique": "The name, \"{name}\", must be unique when converted to a URL-friendly identifier. Another price variation already uses \"{slug}\".",
+  const getUniqueNameRequiredMessage = (name, slug) =>
+    intl.formatMessage(
+      { id: 'EditListingPricingForm.priceVariant.nameMustBeUnique' },
+      { name, slug }
+    );
+  const slugify = value => createSlug(value || '');
+
+  // Validate name only when the variant is active (on focus)
+  const formState = formApi.getState();
+  const isVariantActive = formState.active === `${name}.name`;
+  const hasNoActiveField = formState.active == null;
+  const validate =
+    isVariantActive || hasNoActiveField
+      ? validators.composeValidators(
+          requiredValidator,
+          validators.uniqueString(
+            currentIndex,
+            priceVariantNames,
+            getUniqueNameRequiredMessage,
+            slugify
+          )
+        )
+      : requiredValidator;
 
   return (
     <div className={css.priceVariant}>
@@ -291,9 +326,7 @@ const PriceVariant = props => {
           placeholder={intl.formatMessage({
             id: 'EditListingPricingForm.priceVariant.nameInputPlaceholder',
           })}
-          validate={validators.required(
-            intl.formatMessage({ id: 'EditListingPricingForm.priceVariant.nameRequired' })
-          )}
+          validate={validate}
         />
       ) : null}
 
@@ -389,6 +422,7 @@ export const BookingPriceVariants = props => {
 
   const {
     formId = 'EditListingPricingForm',
+    formApi,
     unitType,
     listingMinimumPriceSubUnits = 0,
     isPriceVariationsInUse,
@@ -405,6 +439,7 @@ export const BookingPriceVariants = props => {
       )}
     >
       {({ fields }) => {
+        const priceVariantNames = fields?.value?.map(field => field.name);
         return (
           <>
             {fields?.length === 0 ? (
@@ -436,6 +471,7 @@ export const BookingPriceVariants = props => {
                   <PriceVariant
                     key={variantKeys[index]}
                     name={name}
+                    formApi={formApi}
                     unitType={unitType}
                     isPriceVariationsInUse={isPriceVariationsInUse || fields?.length > 1}
                     idPrefix={`${formId}_${index}`}
@@ -446,6 +482,8 @@ export const BookingPriceVariants = props => {
                     listingMinimumPriceSubUnits={listingMinimumPriceSubUnits}
                     marketplaceCurrency={marketplaceCurrency}
                     showDeleteButton={fields?.length > 1}
+                    priceVariantNames={priceVariantNames}
+                    currentIndex={index}
                     intl={intl}
                   />
                 );

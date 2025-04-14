@@ -96,6 +96,7 @@ export const EditListingPricingForm = props => (
     render={formRenderProps => {
       const {
         formId = 'EditListingPricingForm',
+        form: formApi,
         autoFocus,
         className,
         rootClassName,
@@ -143,6 +144,7 @@ export const EditListingPricingForm = props => (
           {isUsingPriceVariants ? (
             <BookingPriceVariants
               formId={formId}
+              formApi={formApi}
               autoFocus={autoFocus}
               className={css.input}
               marketplaceCurrency={marketplaceCurrency}
