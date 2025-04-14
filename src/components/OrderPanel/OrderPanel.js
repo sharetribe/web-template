@@ -23,7 +23,7 @@ import {
   STOCK_INFINITE_MULTIPLE_ITEMS,
 } from '../../util/types';
 import { formatMoney } from '../../util/currency';
-import { parse, stringify } from '../../util/urlHelpers';
+import { createSlug, parse, stringify } from '../../util/urlHelpers';
 import { userDisplayNameAsString } from '../../util/data';
 import {
   INQUIRY_PROCESS_NAME,
@@ -177,6 +177,29 @@ const PriceMaybe = props => {
   );
 };
 
+const PriceMissing = () => {
+  return (
+    <p className={css.error}>
+      <FormattedMessage id="OrderPanel.listingPriceMissing" />
+    </p>
+  );
+};
+const InvalidCurrency = () => {
+  return (
+    <p className={css.error}>
+      <FormattedMessage id="OrderPanel.listingCurrencyInvalid" />
+    </p>
+  );
+};
+
+const InvalidPriceVariants = () => {
+  return (
+    <p className={css.error}>
+      <FormattedMessage id="OrderPanel.listingPriceVariantsAreNotUnique" />
+    </p>
+  );
+};
+
 /**
  * @typedef {Object} ListingTypeConfig
  * @property {string} listingType - The type of the listing
@@ -266,21 +289,7 @@ const OrderPanel = props => {
   const isPaymentProcess = processName !== INQUIRY_PROCESS_NAME;
 
   const showPriceMissing = isPaymentProcess && !price;
-  const PriceMissing = () => {
-    return (
-      <p className={css.error}>
-        <FormattedMessage id="OrderPanel.listingPriceMissing" />
-      </p>
-    );
-  };
   const showInvalidCurrency = isPaymentProcess && price?.currency !== marketplaceCurrency;
-  const InvalidCurrency = () => {
-    return (
-      <p className={css.error}>
-        <FormattedMessage id="OrderPanel.listingCurrencyInvalid" />
-      </p>
-    );
-  };
 
   const timeZone = listing?.attributes?.availabilityPlan?.timezone;
   const isClosed = listing?.attributes?.state === LISTING_STATE_CLOSED;
@@ -339,6 +348,11 @@ const OrderPanel = props => {
         priceVariantFieldComponent: PriceVariantPicker,
       }
     : {};
+
+  const hasUniqueVariants = priceVariants => {
+    const priceVariantsSlugs = priceVariants?.map(variant => createSlug(variant.name));
+    return new Set(priceVariantsSlugs).size === priceVariants.length;
+  };
 
   const sharedProps = {
     lineItemUnitType,
@@ -409,6 +423,8 @@ const OrderPanel = props => {
           <PriceMissing />
         ) : showInvalidCurrency ? (
           <InvalidCurrency />
+        ) : isPriceVariationsInUse && !hasUniqueVariants(priceVariants) ? (
+          <InvalidPriceVariants />
         ) : showBookingFixedDurationForm ? (
           <BookingFixedDurationForm
             seatsEnabled={seatsEnabled}
