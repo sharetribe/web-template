@@ -162,11 +162,13 @@ export const BookingTimeForm = props => {
 
         return (
           <Form onSubmit={handleSubmit} className={classes} enforcePagePreloadFor="CheckoutPage">
-            <PriceVariantFieldComponent
-              priceVariants={priceVariants}
-              priceVariantName={priceVariantName}
-              onPriceVariantChange={onPriceVariantChange(formRenderProps)}
-            />
+            {PriceVariantFieldComponent ? (
+              <PriceVariantFieldComponent
+                priceVariants={priceVariants}
+                priceVariantName={priceVariantName}
+                onPriceVariantChange={onPriceVariantChange(formRenderProps)}
+              />
+            ) : null}
 
             {monthlyTimeSlots && timeZone ? (
               <FieldDateAndTimeInput

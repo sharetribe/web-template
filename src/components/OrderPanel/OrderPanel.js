@@ -145,12 +145,24 @@ const PriceMaybe = props => {
 
   // Get formatted price or currency code if the currency does not match with marketplace currency
   const { formattedPrice, priceTitle } = priceData(price, marketplaceCurrency, intl);
+  const priceValue = (
+    <span className={css.priceValue}>{formatMoneyIfSupportedCurrency(price, intl)}</span>
+  );
+  const pricePerUnit = (
+    <span className={css.perUnit}>
+      <FormattedMessage id="OrderPanel.perUnit" values={{ unitType }} />
+    </span>
+  );
+
   // TODO: In CTA, we don't have space to show proper error message for a mismatch of marketplace currency
   //       Instead, we show the currency code in place of the price
   return showCurrencyMismatch ? (
     <div className={css.priceContainerInCTA}>
-      <div className={css.priceValue} title={priceTitle}>
-        {formattedPrice}
+      <div className={css.priceValueInCTA} title={priceTitle}>
+        <FormattedMessage
+          id="OrderPanel.priceInMobileCTA"
+          values={{ priceValue: formattedPrice }}
+        />
       </div>
       <div className={css.perUnitInCTA}>
         <FormattedMessage id="OrderPanel.perUnit" values={{ unitType }} />
@@ -158,10 +170,9 @@ const PriceMaybe = props => {
     </div>
   ) : (
     <div className={css.priceContainer}>
-      <p className={css.price}>{formatMoneyIfSupportedCurrency(price, intl)}</p>
-      <div className={css.perUnit}>
-        <FormattedMessage id="OrderPanel.perUnit" values={{ unitType }} />
-      </div>
+      <p className={css.price}>
+        <FormattedMessage id="OrderPanel.price" values={{ priceValue, pricePerUnit }} />
+      </p>
     </div>
   );
 };
