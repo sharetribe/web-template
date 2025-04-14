@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Phone } from 'lucide-react';
+import classNames from 'classnames';
+import { FormattedMessage } from '../../../../util/reactIntl';
+
 import css from './RegionalPartnerPromo.module.css';
 
 const RegionalPartnerPromo = ({ address, varient }) => {
@@ -35,40 +38,32 @@ const RegionalPartnerPromo = ({ address, varient }) => {
         }
     }, [region]);
 
-    if (loading) {
+    if (loading || !region || !promoData) {
         return null;
     }
 
-    if (region && promoData) {
-        return (
-            
-            <div className={`${css.root} ${css[varient] || ''}`}>
+    const classes = classNames(css.root, css[varient]);
 
-                <div className={css.promoContainer}>
-
-                    <h2 className={css.title}>{promoData['Promo Title']}</h2>
-                    <div className={css.promoTextContainer}>
-                        <p className={css.promoText}>
-                            <strong>{promoData['Company Name']}</strong> is our preferred partner in {region}
-                        </p>
-                        <a target="_blank" href={promoData['CTA Link']} className={css.ctaButton}>
-                            <Phone/> {promoData['CTA Label']}
-                        </a>
-                    </div>
+    return (
+        <div className={classes}>
+            <div className={css.promoContainer}>
+                <h2 className={css.title}>{promoData['Promo Title']}</h2>
+                <div className={css.promoTextContainer}>
+                    <p className={css.promoText}>
+                        <strong>{promoData['Company Name']} </strong>
+                        <FormattedMessage id="RegionalPartnerPromo.title" values={{region}} />
+                    </p>
+                    <a target="_blank" href={promoData['CTA Link']} className={css.ctaButton}>
+                        <Phone/> {promoData['CTA Label']}
+                    </a>
                 </div>
-
-                <div className={css.selfPromo}>
-                    <a target="_blank" href="/p/partnership">Become a partner</a>
-                </div>
-
             </div>
-            
 
-        );
-    }
-
-    // If no promo data, return null
-    return null;
+            <div className={css.selfPromo}>
+                <a target="_blank" href="/p/partnership"><FormattedMessage id="RegionalPartnerPromo.selfPromo" /></a>
+            </div>
+        </div>
+    );
 }
 
 export default RegionalPartnerPromo;
