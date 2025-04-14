@@ -199,11 +199,13 @@ export class SearchPageComponent extends Component {
     const { history, routeConfiguration, config } = this.props;
     const { listingFields: listingFieldsConfig } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
+    const activeListingTypes = config?.listing?.listingTypes.map(config => config.listingType);
     const listingCategories = config.categoryConfiguration.categories;
     const filterConfigs = {
       listingFieldsConfig,
       defaultFiltersConfig,
       listingCategories,
+      activeListingTypes,
     };
 
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
@@ -278,7 +280,6 @@ export class SearchPageComponent extends Component {
 
     const { listingFields } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
-
     const activeListingTypes = config?.listing?.listingTypes.map(config => config.listingType);
     const marketplaceCurrency = config.currency;
     const categoryConfiguration = config.categoryConfiguration;
@@ -314,11 +315,13 @@ export class SearchPageComponent extends Component {
 
     const isKeywordSearch = isMainSearchTypeKeywords(config);
     const builtInPrimaryFilters = defaultFiltersConfig.filter(f =>
-      ['categoryLevel'].includes(f.key)
+      ['categoryLevel', 'listingType'].includes(f.key)
     );
     const builtInFilters = isKeywordSearch
-      ? defaultFiltersConfig.filter(f => !['keywords', 'categoryLevel'].includes(f.key))
-      : defaultFiltersConfig.filter(f => !['categoryLevel'].includes(f.key));
+      ? defaultFiltersConfig.filter(
+          f => !['keywords', 'categoryLevel', 'listingType'].includes(f.key)
+        )
+      : defaultFiltersConfig.filter(f => !['categoryLevel', 'listingType'].includes(f.key));
     const [customPrimaryFilters, customSecondaryFilters] = groupListingFieldConfigs(
       listingFieldsConfig,
       activeListingTypes
@@ -334,6 +337,8 @@ export class SearchPageComponent extends Component {
       ...builtInFilters,
       ...customSecondaryFilters,
     ];
+
+    console.log({ availableFilters });
 
     const hasSecondaryFilters = !!(customSecondaryFilters && customSecondaryFilters.length > 0);
 

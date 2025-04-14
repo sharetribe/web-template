@@ -40,6 +40,8 @@ export const getQueryParamNames = (listingFieldsConfig, defaultFiltersConfig) =>
     const newKeys =
       schemaType === 'category' && nestedParams
         ? nestedParams?.map(p => constructQueryParamName(p, scope))
+        : schemaType === 'listingType'
+        ? [constructQueryParamName(key, scope)]
         : [key];
     return [...pickedKeys, ...newKeys];
   }, []);

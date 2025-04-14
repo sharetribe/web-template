@@ -89,3 +89,14 @@ export const sortConfig = {
     },
   ],
 };
+
+export const listingTypeFilter = {
+  enabled: false,
+  schemaType: 'listingType',
+  // schemaType, key, and other built-in config values are completely filled in configHelper.js
+};
+export const categoryFilter = {
+  enabled: false,
+  schemaType: 'category',
+  // schemaType, key, and other built-in config values are completely filled in configHelper.js
+};
