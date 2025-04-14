@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Field, Form as FinalForm } from 'react-final-form';
+import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
 import appSettings from '../../../config/settings';
@@ -691,11 +691,14 @@ export const BookingDatesForm = props => {
 
         return (
           <Form onSubmit={handleSubmit} className={classes} enforcePagePreloadFor="CheckoutPage">
-            <PriceVariantFieldComponent
-              priceVariants={priceVariants}
-              priceVariantName={priceVariantName}
-              onPriceVariantChange={onPriceVariantChange(formRenderProps)}
-            />
+            {PriceVariantFieldComponent ? (
+              <PriceVariantFieldComponent
+                priceVariants={priceVariants}
+                priceVariantName={priceVariantName}
+                onPriceVariantChange={onPriceVariantChange(formRenderProps)}
+              />
+            ) : null}
+
             <FieldDateRangePicker
               className={css.bookingDates}
               name="bookingDates"
