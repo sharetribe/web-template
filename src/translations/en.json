@@ -475,6 +475,7 @@
   "LimitedAccessBanner.fallbackMessage": "You're logged in as {firstName} {lastName}.",
   "ListingCard.author": "{authorName}",
   "ListingCard.perUnit": "{unitType, select, day {per day} night {per night} hour {per hour} other {}}",
+  "ListingCard.price": "{priceValue} {pricePerUnit}",
   "ListingCard.unsupportedPrice": "({currency})",
   "ListingCard.unsupportedPriceTitle": "Unsupported currency ({currency})",
   "ListingImageGallery.closeModal": "CLOSE",
