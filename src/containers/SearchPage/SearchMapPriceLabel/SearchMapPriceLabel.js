@@ -56,6 +56,10 @@ class SearchMapPriceLabel extends Component {
         ? price.currency
         : null;
 
+    const priceValue = formattedPrice
+      ? intl.formatMessage({ id: 'SearchMapPriceLabel.price' }, { priceValue: formattedPrice })
+      : null;
+
     const classes = classNames(rootClassName || css.root, className);
     const priceLabelClasses = classNames(css.priceLabel, {
       [css.mapLabelActive]: isActive,
@@ -66,7 +70,7 @@ class SearchMapPriceLabel extends Component {
     return (
       <button className={classes} onClick={() => onListingClicked(currentListing)}>
         <div className={css.caretShadow} />
-        <div className={priceLabelClasses}>{formattedPrice}</div>
+        <div className={priceLabelClasses}>{priceValue}</div>
         <div className={caretClasses} />
       </button>
     );
