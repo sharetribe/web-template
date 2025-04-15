@@ -8,7 +8,6 @@ import {
   displayDeliveryPickup,
   displayDeliveryShipping,
   displayPrice,
-  isPriceVariationsEnabled,
 } from '../../util/configHelpers';
 import {
   propTypes,
@@ -136,7 +135,7 @@ const PriceMaybe = props => {
 
   const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
   const showPrice = displayPrice(foundListingTypeConfig);
-  const isPriceVariationsInUse = isPriceVariationsEnabled(publicData, foundListingTypeConfig);
+  const isPriceVariationsInUse = !!publicData?.priceVariationsEnabled;
   const hasMultiplePriceVariants = publicData?.priceVariants?.length > 1;
 
   if (!showPrice || !price || (isPriceVariationsInUse && hasMultiplePriceVariants)) {
@@ -355,7 +354,7 @@ const OrderPanel = props => {
   const seatsEnabled = [AVAILABILITY_MULTIPLE_SEATS].includes(listingTypeConfig?.availabilityType);
 
   // Note: publicData contains priceVariationsEnabled if listing is created with priceVariations enabled.
-  const isPriceVariationsInUse = isPriceVariationsEnabled(publicData, listingTypeConfig);
+  const isPriceVariationsInUse = !!publicData?.priceVariationsEnabled;
   const preselectedPriceVariant =
     Array.isArray(priceVariants) && preselectedPriceVariantSlug && isPriceVariationsInUse
       ? priceVariants.find(pv => pv?.name && createSlug(pv?.name) === preselectedPriceVariantSlug)
