@@ -15,7 +15,7 @@ import {
   addTime,
   stringifyDateToISO8601,
 } from '../../util/dates';
-import { isFieldForCategory } from '../../util/fieldHelpers';
+import { isFieldForCategory, isFieldForListingType } from '../../util/fieldHelpers';
 
 /**
  * Omit those listing field parameters, that are not allowed with current category selection
@@ -25,10 +25,20 @@ import { isFieldForCategory } from '../../util/fieldHelpers';
  * @returns search parameters without currently restricted listing fields
  */
 export const omitLimitedListingFieldParams = (searchParams, filterConfigs) => {
-  const { listingFieldsConfig, defaultFiltersConfig, listingCategories } = filterConfigs;
+  const {
+    listingFieldsConfig,
+    defaultFiltersConfig,
+    listingCategories,
+    activeListingTypes,
+  } = filterConfigs;
   const categorySearchConfig = defaultFiltersConfig.find(f => f.schemaType === 'category');
+  const listingTypeSearchConfig = defaultFiltersConfig.find(f => f.schemaType === 'listingType');
   const validNestedCategoryParamNames = categorySearchConfig
     ? validURLParamForCategoryData(categorySearchConfig.key, listingCategories, 1, searchParams)
+    : {};
+
+  const validListingTypeParamNames = listingTypeSearchConfig
+    ? validURLParamForListingTypeData(activeListingTypes, searchParams)
     : {};
 
   return Object.entries(searchParams).reduce((picked, searchParam) => {
@@ -38,8 +48,12 @@ export const omitLimitedListingFieldParams = (searchParams, filterConfigs) => {
     );
     const currentCategories = Object.values(validNestedCategoryParamNames);
     const isForCategory = isFieldForCategory(currentCategories, foundConfig);
+    const currentListingType = Object.values(validListingTypeParamNames);
+    const isForListingType = isFieldForListingType(currentListingType, foundConfig);
     const searchParamMaybe =
-      !foundConfig || (foundConfig && isForCategory) ? { [searchParamKey]: searchParamValue } : {};
+      !foundConfig || (foundConfig && isForCategory && isForListingType)
+        ? { [searchParamKey]: searchParamValue }
+        : {};
     return { ...picked, ...searchParamMaybe };
   }, {});
 };
@@ -136,6 +150,12 @@ const validURLParamForCategoryData = (prefix, categories, level, params) => {
     : {};
 };
 
+const validURLParamForListingTypeData = (listingTypes, param) => {
+  const listingTypeValue = param?.pub_listingType;
+  const foundListingType = listingTypes.find(lt => lt === listingTypeValue);
+  return foundListingType && listingTypeValue ? { pub_listingType: listingTypeValue } : {};
+};
+
 /**
  * Checks filter param value validity.
  *
@@ -217,11 +237,13 @@ export const validUrlQueryParamsFromProps = props => {
   const { location, config } = props;
   const { listingFields: listingFieldsConfig } = config?.listing || {};
   const { defaultFilters: defaultFiltersConfig } = config?.search || {};
+  const activeListingTypes = config?.listing?.listingTypes.map(config => config.listingType);
   const listingCategories = config.categoryConfiguration.categories;
   const filterConfigs = {
     listingFieldsConfig,
     defaultFiltersConfig,
     listingCategories,
+    activeListingTypes,
   };
 
   // eslint-disable-next-line no-unused-vars
@@ -375,16 +397,22 @@ export const searchParamsPicker = (
 };
 
 export const pickListingFieldFilters = params => {
-  const { listingFields, locationSearch, categoryConfiguration } = params;
+  const { listingFields, locationSearch, categoryConfiguration, activeListingTypes } = params;
   const searchParams = parse(locationSearch);
   const categories = categoryConfiguration.categories;
   const validNestedCategoryParamNames = categories
     ? validURLParamForCategoryData(categoryConfiguration.key, categories, 1, searchParams)
     : {};
+
+  const validListingTypeParamNames = activeListingTypes
+    ? validURLParamForListingTypeData(activeListingTypes, searchParams)
+    : {};
   const currentCategories = Object.values(validNestedCategoryParamNames);
+  const currentListingType = Object.values(validListingTypeParamNames);
   const pickedFields = listingFields.reduce((picked, fieldConfig) => {
     const isTargetCategory = isFieldForCategory(currentCategories, fieldConfig);
-    return isTargetCategory ? [...picked, fieldConfig] : picked;
+    const isTargetListingField = isFieldForListingType(currentListingType, fieldConfig);
+    return isTargetCategory && isTargetListingField ? [...picked, fieldConfig] : picked;
   }, []);
   return pickedFields;
 };

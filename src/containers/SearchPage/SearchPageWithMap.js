@@ -114,11 +114,13 @@ export class SearchPageComponent extends Component {
       const { history, location, config } = this.props;
       const { listingFields: listingFieldsConfig } = config?.listing || {};
       const { defaultFilters: defaultFiltersConfig } = config?.search || {};
+      const activeListingTypes = config?.listing?.listingTypes.map(config => config.listingType);
       const listingCategories = config.categoryConfiguration.categories;
       const filterConfigs = {
         listingFieldsConfig,
         defaultFiltersConfig,
         listingCategories,
+        activeListingTypes,
       };
 
       // parse query parameters, including a custom attribute named category
@@ -288,11 +290,13 @@ export class SearchPageComponent extends Component {
       listingFields,
       locationSearch: location.search,
       categoryConfiguration,
+      activeListingTypes
     });
     const filterConfigs = {
       listingFieldsConfig,
       defaultFiltersConfig,
       listingCategories,
+      activeListingTypes,
     };
 
     // Page transition might initially use values from previous search
@@ -337,8 +341,6 @@ export class SearchPageComponent extends Component {
       ...builtInFilters,
       ...customSecondaryFilters,
     ];
-
-    console.log({ availableFilters });
 
     const hasSecondaryFilters = !!(customSecondaryFilters && customSecondaryFilters.length > 0);
 

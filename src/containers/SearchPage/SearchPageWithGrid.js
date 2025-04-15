@@ -116,11 +116,13 @@ export class SearchPageComponent extends Component {
     const { history, routeConfiguration, config } = this.props;
     const { listingFields: listingFieldsConfig } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
+    const activeListingTypes = config?.listing?.listingTypes.map(config => config.listingType);
     const listingCategories = config.categoryConfiguration.categories;
     const filterConfigs = {
       listingFieldsConfig,
       defaultFiltersConfig,
       listingCategories,
+      activeListingTypes,
     };
 
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
@@ -209,11 +211,13 @@ export class SearchPageComponent extends Component {
       listingFields,
       locationSearch: location.search,
       categoryConfiguration,
+      activeListingTypes,
     });
     const filterConfigs = {
       listingFieldsConfig,
       defaultFiltersConfig,
       listingCategories,
+      activeListingTypes,
     };
 
     // Page transition might initially use values from previous search
