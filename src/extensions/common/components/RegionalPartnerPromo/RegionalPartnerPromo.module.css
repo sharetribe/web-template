@@ -46,7 +46,7 @@
         font-size: 10px;
         text-align: right;
 
-        a{
+       & a{
             color: var(--colorGrey300);
             text-decoration: none;
             &:hover {
@@ -74,7 +74,7 @@
                 }
             }
 
-            a.ctaButton {
+            & a.ctaButton {
                 padding: 8px 12px;
             }
 
