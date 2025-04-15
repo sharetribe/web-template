@@ -18,6 +18,10 @@ export const CATEGORIES = {
     'location-find': {
       id: 'location-find',
       label: 'Location finding service'
+    },
+    'location-bid': {
+      id: 'location-bid',
+      label: 'Location request bid'
     }
   };
   

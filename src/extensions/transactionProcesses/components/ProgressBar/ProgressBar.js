@@ -15,7 +15,7 @@ function ProgressBar({ steps, stateData, rootClassName, className, stepInProgres
   if (!Array.isArray(steps) || steps.length === 0 || !stateData) {
     return null;
   }
-
+  
   const {
     isCanceled: isCanceledProcess,
     isCompleted: isCompletedProcess,
@@ -83,6 +83,7 @@ function ProgressBar({ steps, stateData, rootClassName, className, stepInProgres
               stepCount={stepIndex + 1}
               processName={processName}
               isFinal={isFinal}
+              categoryLevel1={categoryLevel1}
               state={getStepState(stepIndex)}
               className={classNames({ [css.hiddenStep]: isHidden })}
             />
