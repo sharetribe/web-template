@@ -2,6 +2,7 @@ import React from 'react';
 import { Field } from 'react-final-form';
 
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
+import { createSlug } from '../../../util/urlHelpers';
 
 import { FieldSelect } from '../../../components';
 
@@ -49,7 +50,7 @@ const PriceVariantPicker = props => {
         {intl.formatMessage({ id: 'PriceVariantPicker.priceVariantUnselected' })}
       </option>
       {priceVariants.map(pv => (
-        <option value={pv.name} key={pv.name}>
+        <option value={pv.name} key={pv.name} data-slug={createSlug(pv.name)}>
           {pv.name}
         </option>
       ))}

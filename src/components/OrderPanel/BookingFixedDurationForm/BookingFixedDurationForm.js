@@ -102,12 +102,15 @@ export const BookingFixedDurationForm = props => {
     isPriceVariationsInUse,
     priceVariants = [],
     priceVariantFieldComponent: PriceVariantFieldComponent,
+    preselectedPriceVariant,
     ...rest
   } = props;
 
   const [seatsOptions, setSeatsOptions] = useState([1]);
   const initialValuesMaybe =
-    priceVariants.length === 1
+    priceVariants.length > 1 && preselectedPriceVariant
+      ? { initialValues: { priceVariantName: preselectedPriceVariant?.name } }
+      : priceVariants.length === 1
       ? { initialValues: { priceVariantName: priceVariants?.[0]?.name || null } }
       : {};
 
