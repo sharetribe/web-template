@@ -200,6 +200,22 @@ const InvalidPriceVariants = () => {
   );
 };
 
+const hasUniqueVariants = priceVariants => {
+  const priceVariantsSlugs = priceVariants?.map(variant =>
+    variant.name ? createSlug(variant.name) : 'no-name'
+  );
+  return new Set(priceVariantsSlugs).size === priceVariants.length;
+};
+
+const hasValidPriceVariants = priceVariants => {
+  const isArray = Array.isArray(priceVariants);
+  const hasItems = isArray && priceVariants.length > 0;
+  const variantsHaveNames = hasItems && priceVariants.every(variant => variant.name);
+  const namesAreUnique = hasItems && hasUniqueVariants(priceVariants);
+
+  return variantsHaveNames && namesAreUnique;
+};
+
 /**
  * @typedef {Object} ListingTypeConfig
  * @property {string} listingType - The type of the listing
@@ -335,14 +351,15 @@ const OrderPanel = props => {
   const searchParams = parse(location.search);
   const isOrderOpen = !!searchParams.orderOpen;
   const preselectedPriceVariantSlug = searchParams.bookableOption;
-  const preselectedPriceVariant =
-    Array.isArray(priceVariants) && preselectedPriceVariantSlug
-      ? priceVariants.find(pv => createSlug(pv.name) === preselectedPriceVariantSlug)
-      : null;
 
   const seatsEnabled = [AVAILABILITY_MULTIPLE_SEATS].includes(listingTypeConfig?.availabilityType);
+
   // Note: publicData contains priceVariationsEnabled if listing is created with priceVariations enabled.
   const isPriceVariationsInUse = isPriceVariationsEnabled(publicData, listingTypeConfig);
+  const preselectedPriceVariant =
+    Array.isArray(priceVariants) && preselectedPriceVariantSlug && isPriceVariationsInUse
+      ? priceVariants.find(pv => pv?.name && createSlug(pv?.name) === preselectedPriceVariantSlug)
+      : null;
 
   const priceVariantsMaybe = isPriceVariationsInUse
     ? {
@@ -359,12 +376,8 @@ const OrderPanel = props => {
       }
     : {};
 
-  const hasUniqueVariants = priceVariants => {
-    const priceVariantsSlugs = priceVariants?.map(variant => createSlug(variant.name));
-    return new Set(priceVariantsSlugs).size === priceVariants.length;
-  };
   const showInvalidPriceVariantsMessage =
-    isPriceVariationsInUse && (!hasUniqueVariants(priceVariants) || priceVariants.length === 0);
+    isPriceVariationsInUse && !hasValidPriceVariants(priceVariants);
 
   const sharedProps = {
     lineItemUnitType,
