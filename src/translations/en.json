@@ -797,6 +797,8 @@
   "SearchFiltersSecondary.cancel": "Cancel",
   "SearchFiltersSecondary.resetAll": "Reset all",
   "SearchMapInfoCard.noImage": "No photo",
+  "SearchMapInfoCard.perUnit": "{unitType, select, day {per day} night {per night} hour {per hour} other {}}",
+  "SearchMapInfoCard.price": "{priceValue}",
   "SearchPage.createListing": "Post a new listing",
   "SearchPage.detailNo": "No",
   "SearchPage.detailYes": "Yes",
