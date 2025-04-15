@@ -3,7 +3,6 @@ import classNames from 'classnames';
 
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { ACCOUNT_SETTINGS_PAGES } from '../../../../routing/routeConfiguration';
-import { isCreativeSeller } from '../../../../util/userHelpers';
 import {
   Avatar,
   InlineTextButton,
@@ -170,7 +169,7 @@ const TopbarDesktop = props => {
 
   const signupLinkMaybe = isAuthenticatedOrJustHydrated ? null : <SignupLink />;
   const loginLinkMaybe = isAuthenticatedOrJustHydrated ? null : <LoginLink />;
-  const isSeller = isCreativeSeller(currentUser?.attributes?.profile?.publicData?.userType);
+  const userProfile = currentUser?.attributes?.profile || {};
 
   const searchFormMaybe = showSearchForm ? (
     <TopbarSearchForm
@@ -203,7 +202,7 @@ const TopbarDesktop = props => {
         customLinks={customLinks}
         intl={intl}
         hasClientSideContentReady={authenticatedOnClientSide || !isAuthenticatedOrJustHydrated}
-        isSeller={isSeller}
+        userProfile={userProfile}
       />
 
       {inboxLinkMaybe}

@@ -1,4 +1,4 @@
-import { EXTENDED_DATA_SCHEMA_TYPES, USER_TYPES } from './types';
+import { EXTENDED_DATA_SCHEMA_TYPES, USER_TYPES, COMMUNITY_STATUS, SELLER_STATUS } from './types';
 import { getFieldValue } from './fieldHelpers';
 
 /**
@@ -208,6 +208,39 @@ export const isBuyer = userType => {
 
 export const isCreativeSeller = userType => {
   return userType && userType === USER_TYPES.SELLER;
+};
+
+export const isCreativeSellerApproved = profile => {
+  const { publicData, metadata } = profile;
+  const withProfileListing = !!metadata?.profileListingId;
+  const approvedSellerStatus = metadata?.sellerStatus === SELLER_STATUS.APPROVED;
+  return isCreativeSeller(publicData?.userType) && withProfileListing && approvedSellerStatus;
+};
+
+export const isCommunityUser = profile => {
+  const { publicData, metadata } = profile;
+  const withCommunityId = !!metadata?.communityId;
+  if (isCreativeSeller(publicData?.userType)) {
+    const approvedCommunityStatus = metadata?.communityStatus === COMMUNITY_STATUS.APPROVED;
+    return withCommunityId && approvedCommunityStatus;
+  }
+  if (isStudioBrand(publicData?.userType)) {
+    return withCommunityId;
+  }
+  return false;
+};
+
+export const isStudioUser = profile => {
+  const { publicData, metadata } = profile;
+  const withStudioId = !!metadata?.studioId;
+  if (isCreativeSeller(publicData?.userType)) {
+    const approvedCommunityStatus = metadata?.communityStatus === COMMUNITY_STATUS.APPROVED;
+    return withStudioId && approvedCommunityStatus;
+  }
+  if (isStudioBrand(publicData?.userType)) {
+    return withStudioId;
+  }
+  return false;
 };
 
 export const getBrandUserFieldInputs = (fieldKey, isBrandAdmin) => {

@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { ensureCurrentUser, ensureOwnListing } from '../../util/data';
 import { propTypes } from '../../util/types';
-import { isCreativeSeller } from '../../util/userHelpers';
+import { isCreativeSellerApproved } from '../../util/userHelpers';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 
@@ -34,10 +34,7 @@ export const CreativeDetailsPageComponent = props => {
     intl,
   } = props;
   const user = ensureCurrentUser(currentUser);
-  const { publicData, metadata } = user?.attributes.profile;
-  const { userType } = publicData || {};
-  const withProfileListing = !!metadata?.profileListingId;
-  const withCreativeProfile = isCreativeSeller(userType) && withProfileListing;
+  const withCreativeProfile = isCreativeSellerApproved(user?.attributes.profile);
   const currentListing = ensureOwnListing(getOwnListing(listingId));
 
   if (!withCreativeProfile) {
