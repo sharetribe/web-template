@@ -1,7 +1,7 @@
 import { createImageVariantConfig } from '../../util/sdkLoader';
 import { storableError } from '../../util/errors';
 import * as log from '../../util/log';
-import { isCreativeSeller } from '../../util/userHelpers';
+import { isCreativeSellerApproved } from '../../util/userHelpers';
 
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { fetchCurrentUser } from '../../ducks/user.duck';
@@ -160,11 +160,9 @@ export const loadData = (params, search, config) => async (dispatch, getState) =
   };
   await dispatch(fetchCurrentUser(fetchCurrentUserOptions));
   const currentUser = getState().user.currentUser;
-  const { publicData, metadata } = currentUser?.attributes.profile;
-  const { userType } = publicData || {};
+  const { metadata } = currentUser?.attributes.profile;
   const profileListingId = metadata?.profileListingId;
-  const withProfileListing = !!profileListingId;
-  const withCreativeProfile = isCreativeSeller(userType) && withProfileListing;
+  const withCreativeProfile = isCreativeSellerApproved(currentUser?.attributes.profile);
   if (!withCreativeProfile) {
     return [];
   }

@@ -7,7 +7,7 @@ import { storableError } from '../../util/errors';
 import {
   hasPermissionToViewData,
   isUserAuthorized,
-  isCreativeSeller,
+  isCreativeSellerApproved,
 } from '../../util/userHelpers';
 import { LISTING_TAB_TYPES } from '../../util/types';
 import { RESULT_PAGE_SIZE } from '../ManageListingsPage/ManageListingsPage.duck';
@@ -277,11 +277,10 @@ export const showUser = (userId, config) => (dispatch, getState, sdk) => {
       'fields.image': ['variants.square-small', 'variants.square-small2x'],
     })
     .then(response => {
-      const { publicData, metadata } = response?.data?.data?.attributes?.profile || {};
-      const { userType } = publicData || {};
+      const userProfile = response?.data?.data?.attributes?.profile || {};
+      const { metadata } = userProfile;
       const profileListingId = metadata?.profileListingId;
-      const withProfileListing = !!profileListingId;
-      const withCreativeProfile = isCreativeSeller(userType) && withProfileListing;
+      const withCreativeProfile = isCreativeSellerApproved(userProfile);
       if (withCreativeProfile) {
         dispatch(requestShowCreativeProfile(profileListingId, config));
       }

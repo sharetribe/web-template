@@ -21,7 +21,7 @@ import {
 import {
   hasPermissionToViewData,
   isUserAuthorized,
-  isCreativeSeller,
+  isCreativeSellerApproved,
 } from '../../util/userHelpers';
 
 import { isScrollingDisabled } from '../../ducks/ui.duck';
@@ -172,11 +172,10 @@ export const ProfilePageComponent = props => {
     onFetchCurrentUser,
     location,
   });
-
-  // This is rendering normal profile page (not preview for pending-approval)
-  const { publicData } = profileUser?.attributes?.profile || {};
-  const isSeller = isCreativeSeller(publicData?.userType);
+  const userProfile = profileUser?.attributes?.profile || {};
+  const isSeller = isCreativeSellerApproved(userProfile);
   const ProfilePageContent = isSeller ? SellerProfilePage : BasicProfilePage;
+
   return (
     <Page
       scrollingDisabled={scrollingDisabled}

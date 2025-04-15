@@ -262,6 +262,7 @@ export class SearchPageComponent extends Component {
   render() {
     const {
       intl,
+      currentUser,
       listings = [],
       location,
       onManageDisableScrolling,
@@ -405,6 +406,7 @@ export class SearchPageComponent extends Component {
         totalItems={totalItems}
         location={location}
         resetAll={this.resetAll}
+        currentUser={currentUser}
       />
     );
 
@@ -633,7 +635,7 @@ const EnhancedSearchPage = props => {
     );
   }
 
-  const { currentUser, ...restOfProps } = props;
+  const { currentUser } = props;
   const isPrivateMarketplace = config.accessControl.marketplace.private === true;
   const isUnauthorizedUser = currentUser && !isUserAuthorized(currentUser);
   const hasNoViewingRightsUser = currentUser && !hasPermissionToViewData(currentUser);
@@ -663,7 +665,7 @@ const EnhancedSearchPage = props => {
       intl={intl}
       history={history}
       location={location}
-      {...restOfProps}
+      {...props}
     />
   );
 };

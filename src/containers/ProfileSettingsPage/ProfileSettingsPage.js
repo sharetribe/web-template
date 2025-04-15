@@ -11,7 +11,7 @@ import {
   initialValuesForUserFields,
   isUserAuthorized,
   pickUserFieldsData,
-  isCreativeSeller,
+  isCreativeSellerApproved,
 } from '../../util/userHelpers';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 
@@ -157,9 +157,7 @@ export const ProfileSettingsPageComponent = props => {
   const isDisplayNameIncluded = userTypeConfig?.defaultUserFields?.displayName !== false;
   // ProfileSettingsForm decides if it's allowed to show the input field.
   const displayNameMaybe = isDisplayNameIncluded && displayName ? { displayName } : {};
-  const withProfileListing = !!metadata?.profileListingId;
-  const withCreativeProfile = isCreativeSeller(userType) && withProfileListing;
-
+  const withCreativeProfile = isCreativeSellerApproved(user?.attributes.profile);
   const title = intl.formatMessage({ id: 'ProfileSettingsPage.title' });
   const profileSettingsForm = user.id ? (
     <ProfileSettingsForm

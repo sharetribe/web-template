@@ -6,8 +6,13 @@ import React from 'react';
 import classNames from 'classnames';
 
 import { ACCOUNT_SETTINGS_PAGES } from '../../../../routing/routeConfiguration';
-import { FormattedMessage } from '../../../../util/reactIntl';
 import { ensureCurrentUser } from '../../../../util/data';
+import { FormattedMessage } from '../../../../util/reactIntl';
+import {
+  isCreativeSellerApproved,
+  isCommunityUser,
+  isStudioUser,
+} from '../../../../util/userHelpers';
 
 import {
   AvatarLarge,
@@ -16,6 +21,11 @@ import {
   NamedLink,
   NotificationBadge,
 } from '../../../../components';
+import { BASE_CREATE_LISTING_SEARCH_QUERY_PARAMS } from '../TopbarDesktop/CustomLinksMenu/PriorityLinks';
+import {
+  communityLinkConfig,
+  studioLinkConfig,
+} from '../TopbarDesktop/CustomLinksMenu/CustomLinksMenu';
 
 import css from './TopbarMobileMenu.module.css';
 
@@ -65,6 +75,7 @@ const CustomLinkComponent = ({ linkConfig, currentPage }) => {
  * @param {number} props.notificationCount
  * @param {Array<Object>} props.customLinks Contains object like { group, text, type, href, route }
  * @param {Function} props.onLogout
+ * @param {Object} props.intl
  * @returns {JSX.Element} search icon
  */
 const TopbarMobileMenu = props => {
@@ -76,11 +87,25 @@ const TopbarMobileMenu = props => {
     notificationCount = 0,
     customLinks,
     onLogout,
+    intl,
   } = props;
 
   const user = ensureCurrentUser(currentUser);
+  const userProfile = currentUser?.attributes?.profile || {};
+  const isSeller = isCreativeSellerApproved(userProfile);
+  const showCommunityLink = isCommunityUser(userProfile);
+  const showStudioLink = isStudioUser(userProfile);
+  const parsedCustomLinks = [
+    ...customLinks,
+    ...(showCommunityLink
+      ? [communityLinkConfig(intl.formatMessage({ id: 'TopbarMobileMenu.communityLink' }))]
+      : []),
+    ...(showStudioLink
+      ? [studioLinkConfig(intl.formatMessage({ id: 'TopbarMobileMenu.studioLink' }))]
+      : []),
+  ];
 
-  const extraLinks = customLinks.map((linkConfig, index) => {
+  const extraLinks = parsedCustomLinks.map((linkConfig, index) => {
     return (
       <CustomLinkComponent
         key={`${linkConfig.text}_${index}`}
@@ -117,15 +142,8 @@ const TopbarMobileMenu = props => {
               values={{ lineBreak: <br />, signupOrLogin }}
             />
           </div>
-
           <div className={css.customLinksWrapper}>{extraLinks}</div>
-
           <div className={css.spacer} />
-        </div>
-        <div className={css.footer}>
-          <NamedLink className={css.createNewListingLink} name="NewListingPage">
-            <FormattedMessage id="TopbarMobileMenu.newListingLink" />
-          </NamedLink>
         </div>
       </div>
     );
@@ -187,11 +205,18 @@ const TopbarMobileMenu = props => {
         <div className={css.customLinksWrapper}>{extraLinks}</div>
         <div className={css.spacer} />
       </div>
-      <div className={css.footer}>
-        <NamedLink className={css.createNewListingLink} name="NewListingPage">
-          <FormattedMessage id="TopbarMobileMenu.newListingLink" />
-        </NamedLink>
-      </div>
+
+      {isSeller && (
+        <div className={css.footer}>
+          <NamedLink
+            name="ManageListingsPage"
+            to={{ search: BASE_CREATE_LISTING_SEARCH_QUERY_PARAMS }}
+            className={css.createNewListingLink}
+          >
+            <FormattedMessage id="TopbarMobileMenu.yourListingsLink" />
+          </NamedLink>
+        </div>
+      )}
     </div>
   );
 };

@@ -223,6 +223,7 @@ const TopbarComponent = props => {
       notificationCount={notificationCount}
       currentPage={resolvedCurrentPage}
       customLinks={customLinks}
+      intl={intl}
     />
   );
 

@@ -5,6 +5,7 @@ import classNames from 'classnames';
 
 import { useConfiguration } from '../../context/configurationContext';
 
+import { isCreativeSellerApproved } from '../../util/userHelpers';
 import { FormattedMessage, intlShape, useIntl } from '../../util/reactIntl';
 import {
   propTypes,
@@ -282,6 +283,7 @@ export const InboxPageComponent = props => {
   const hasTransactions =
     !fetchInProgress && hasOrderOrSaleTransactions(transactions, isOrders, currentUser);
 
+  const isSeller = isCreativeSellerApproved(currentUser?.attributes?.profile);
   const tabs = [
     {
       text: (
@@ -295,21 +297,26 @@ export const InboxPageComponent = props => {
         params: { tab: 'orders' },
       },
     },
-    {
-      text: (
-        <span>
-          <FormattedMessage id="InboxPage.salesTabTitle" />
-          {providerNotificationCount > 0 ? (
-            <NotificationBadge count={providerNotificationCount} />
-          ) : null}
-        </span>
-      ),
-      selected: !isOrders,
-      linkProps: {
-        name: 'InboxPage',
-        params: { tab: 'sales' },
-      },
-    },
+
+    ...(isSeller
+      ? [
+          {
+            text: (
+              <span>
+                <FormattedMessage id="InboxPage.salesTabTitle" />
+                {providerNotificationCount > 0 ? (
+                  <NotificationBadge count={providerNotificationCount} />
+                ) : null}
+              </span>
+            ),
+            selected: !isOrders,
+            linkProps: {
+              name: 'InboxPage',
+              params: { tab: 'sales' },
+            },
+          },
+        ]
+      : []),
   ];
 
   return (

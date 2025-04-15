@@ -1,5 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+import {
+  isCreativeSellerApproved,
+  isCommunityUser,
+  isStudioUser,
+} from '../../../../../util/userHelpers';
+
 import PriorityLinks, {
   CreateListingMenuLink,
   BASE_CREATE_LISTING_SEARCH_QUERY_PARAMS,
@@ -17,6 +23,18 @@ const manageListingsLinkConfig = intl => ({
     to: { search: BASE_CREATE_LISTING_SEARCH_QUERY_PARAMS },
   },
   highlight: true,
+});
+export const communityLinkConfig = text => ({
+  group: '"secondary"',
+  type: 'external',
+  href: process.env.REACT_APP_COMMUNITY_URL,
+  text,
+});
+export const studioLinkConfig = text => ({
+  group: '"secondary"',
+  type: 'external',
+  href: process.env.REACT_APP_STUDIO_URL,
+  text,
 });
 
 /**
@@ -111,15 +129,24 @@ const CustomLinksMenu = ({
   customLinks = [],
   hasClientSideContentReady,
   intl,
-  isSeller,
+  userProfile,
 }) => {
   const containerRef = useRef(null);
   const observer = useRef(null);
+  const isSeller = isCreativeSellerApproved(userProfile);
+  const showCommunityLink = isCommunityUser(userProfile);
+  const showStudioLink = isStudioUser(userProfile);
   const [mounted, setMounted] = useState(false);
   const [moreLabelWidth, setMoreLabelWidth] = useState(0);
   const [links, setLinks] = useState([
     ...(isSeller ? [manageListingsLinkConfig(intl)] : []),
     ...customLinks,
+    ...(showCommunityLink
+      ? [communityLinkConfig(intl.formatMessage({ id: 'TopbarDesktop.communityLink' }))]
+      : []),
+    ...(showStudioLink
+      ? [studioLinkConfig(intl.formatMessage({ id: 'TopbarDesktop.studioLink' }))]
+      : []),
   ]);
   const [layoutData, setLayoutData] = useState({
     priorityLinks: links,
