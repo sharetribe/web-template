@@ -33,9 +33,16 @@
   flex-direction: column;
   gap: 24px;
 }
+
 .error {
   color: var(--colorFail);
   margin-bottom: 24px;
+}
+
+.smallError {
+  composes: error;
+  font-size: 13px;
+  font-weight: var(--fontWeightBold);
 }
 
 .fieldArrayDelete {

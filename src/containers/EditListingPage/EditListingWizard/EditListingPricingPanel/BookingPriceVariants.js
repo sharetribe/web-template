@@ -94,6 +94,13 @@ const isEmpty = value => {
 const isPropertyMissing = (variants, property) =>
   variants.some(variant => isEmpty(variant[property]));
 
+const slugify = value => createSlug(value || '');
+const areNamesUnique = names => {
+  const slugs = names.map(slugify);
+  const uniqueNames = new Set(slugs);
+  return uniqueNames.size === slugs.length;
+};
+
 /**
  * Format the submitted values so that they include the priceVariants array, if it's enabled.
  *
@@ -297,7 +304,6 @@ const PriceVariant = props => {
       { id: 'EditListingPricingForm.priceVariant.nameMustBeUnique' },
       { name, slug }
     );
-  const slugify = value => createSlug(value || '');
 
   // Validate name only when the variant is active (on focus)
   const formState = formApi.getState();
@@ -488,6 +494,14 @@ export const BookingPriceVariants = props => {
                   />
                 );
               })}
+
+              {areNamesUnique(priceVariantNames) ? null : (
+                <div className={css.smallError}>
+                  {intl.formatMessage({
+                    id: 'EditListingPricingForm.priceVariant.variationNamesMustBeUnique',
+                  })}
+                </div>
+              )}
             </div>
 
             {isPriceVariationsInUse && fields?.length < 20 ? (

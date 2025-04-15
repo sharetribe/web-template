@@ -327,6 +327,7 @@
   "EditListingPricingForm.priceVariant.priceInputPlaceholder": "Add a price…",
   "EditListingPricingForm.priceVariant.pricePerProduct": "Price {unitType, select, day {per day} night {per night} hour {per hour} fixed {per session} other {}}",
   "EditListingPricingForm.priceVariant.required": "You need to add a price.",
+  "EditListingPricingForm.priceVariant.variationNamesMustBeUnique": "Each variation must have a unique name.",
   "EditListingPricingForm.showListingFailed": "Fetching listing data failed.",
   "EditListingPricingForm.updateFailed": "Failed to update listing. Please try again.",
   "EditListingPricingPanel.createListingTitle": "Pricing",
