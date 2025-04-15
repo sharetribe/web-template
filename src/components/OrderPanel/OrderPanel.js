@@ -195,7 +195,7 @@ const InvalidCurrency = () => {
 const InvalidPriceVariants = () => {
   return (
     <p className={css.error}>
-      <FormattedMessage id="OrderPanel.listingPriceVariantsAreNotUnique" />
+      <FormattedMessage id="OrderPanel.listingPriceVariantsAreInvalid" />
     </p>
   );
 };
@@ -331,6 +331,15 @@ const OrderPanel = props => {
   const allowOrdersOfMultipleItems = [STOCK_MULTIPLE_ITEMS, STOCK_INFINITE_MULTIPLE_ITEMS].includes(
     listingTypeConfig?.stockType
   );
+
+  const searchParams = parse(location.search);
+  const isOrderOpen = !!searchParams.orderOpen;
+  const preselectedPriceVariantSlug = searchParams.bookableOption;
+  const preselectedPriceVariant =
+    Array.isArray(priceVariants) && preselectedPriceVariantSlug
+      ? priceVariants.find(pv => createSlug(pv.name) === preselectedPriceVariantSlug)
+      : null;
+
   const seatsEnabled = [AVAILABILITY_MULTIPLE_SEATS].includes(listingTypeConfig?.availabilityType);
   // Note: publicData contains priceVariationsEnabled if listing is created with priceVariations enabled.
   const isPriceVariationsInUse = isPriceVariationsEnabled(publicData, listingTypeConfig);
@@ -340,6 +349,7 @@ const OrderPanel = props => {
         isPriceVariationsInUse,
         priceVariants,
         priceVariantFieldComponent: PriceVariantPicker,
+        preselectedPriceVariant,
       }
     : !isPriceVariationsInUse && showBookingFixedDurationForm
     ? {
@@ -353,6 +363,8 @@ const OrderPanel = props => {
     const priceVariantsSlugs = priceVariants?.map(variant => createSlug(variant.name));
     return new Set(priceVariantsSlugs).size === priceVariants.length;
   };
+  const showInvalidPriceVariantsMessage =
+    isPriceVariationsInUse && (!hasUniqueVariants(priceVariants) || priceVariants.length === 0);
 
   const sharedProps = {
     lineItemUnitType,
@@ -370,7 +382,6 @@ const OrderPanel = props => {
   };
 
   const showClosedListingHelpText = listing.id && isClosed;
-  const isOrderOpen = !!parse(location.search).orderOpen;
 
   const subTitleText = showClosedListingHelpText
     ? intl.formatMessage({ id: 'OrderPanel.subTitleClosedListing' })
@@ -423,7 +434,7 @@ const OrderPanel = props => {
           <PriceMissing />
         ) : showInvalidCurrency ? (
           <InvalidCurrency />
-        ) : isPriceVariationsInUse && !hasUniqueVariants(priceVariants) ? (
+        ) : showInvalidPriceVariantsMessage ? (
           <InvalidPriceVariants />
         ) : showBookingFixedDurationForm ? (
           <BookingFixedDurationForm

@@ -531,12 +531,15 @@ export const BookingDatesForm = props => {
     seatsEnabled,
     priceVariants = [],
     priceVariantFieldComponent: PriceVariantFieldComponent,
+    preselectedPriceVariant,
     ...rest
   } = props;
   const intl = useIntl();
   const [currentMonth, setCurrentMonth] = useState(getStartOf(TODAY, 'month', timeZone));
   const initialValuesMaybe =
-    priceVariants.length === 1
+    priceVariants.length > 1 && preselectedPriceVariant
+      ? { initialValues: { priceVariantName: preselectedPriceVariant?.name } }
+      : priceVariants.length === 1
       ? { initialValues: { priceVariantName: priceVariants?.[0]?.name } }
       : {};
 
