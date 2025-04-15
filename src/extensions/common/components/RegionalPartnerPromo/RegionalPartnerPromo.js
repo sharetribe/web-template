@@ -19,7 +19,8 @@ const RegionalPartnerPromo = ({ address, varient }) => {
             fetch(`https://partner-promo-api.vendingvillage.com/?region=${region}`)
                 .then(response => response.json())
                 .then(data => {
-                    if (data && data['Promo Title']) {
+                    console.log(region, data)
+                    if (data && data['Promo Title'] && data['Company Name'] && data['CTA Label'] && data['CTA Link']) {
                         setPromoData(data);
                     } else {
                         setPromoData(null);
