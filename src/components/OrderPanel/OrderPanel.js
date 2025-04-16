@@ -474,7 +474,7 @@ const OrderPanel = props => {
 
         <div className={css.buttonGroup}>
           <ContactButton />
-          {!isClosed && (favoriteButton)}
+          {isListingPage && !isClosed && (favoriteButton)}
 
           {!isClosed && (
             <PrimaryButton

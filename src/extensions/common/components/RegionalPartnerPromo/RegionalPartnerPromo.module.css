@@ -1,0 +1,130 @@
+@import '../../../../styles/customMediaQueries.css';
+
+.root {
+    animation: fadeIn 500ms forwards 2s; /* Animate after 3 seconds */
+    opacity: 0;
+
+    .promoContainer{
+   
+        background-color: white;
+        padding: 12px 12px 12px 16px;
+
+       & h2.title {
+            font-size: 20px;
+            line-height: 1;
+            font-weight: bold;
+            margin: 0 0 3px 0;
+            text-align: left;
+        }
+        
+       & p.promoText {
+            margin: 0;
+            font-size: 15px;
+            color: var(--colorGrey800);
+            line-height: 1.1;
+            text-align: left;
+
+        }
+        & a.ctaButton {
+            font-size: 13px;
+            background-color: var(--marketplaceColor);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: background-color 200ms ease-in-out;
+
+
+            &:hover {
+                background-color: var(--marketplaceColorDark);
+            }
+        }
+    }
+
+    .selfPromo {
+        font-size: 10px;
+        text-align: right;
+
+       & a{
+            color: var(--colorGrey300);
+            text-decoration: none;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    &.transaction { 
+
+        .promoContainer {
+
+            max-width: 400px;
+            margin: 20px 20px 0;
+            background-color: transparent;
+            border: 1px solid var(--colorGrey100);
+            border-radius: 2px;
+            padding: 16px;
+            &:hover {
+                background-color: white;
+            }
+            .promoTextContainer {
+                > * {
+                    margin-bottom: 16px;
+                }
+            }
+
+            & a.ctaButton {
+                padding: 8px 12px;
+            }
+
+            @media (--viewportMedium) {
+                max-width: 409px;
+                width: 409px;
+                margin: 30px 0 0 0;
+            }
+
+        }
+
+        .selfPromo{
+            margin: 4px 20px 20px 20px;
+            @media (--viewportMedium) {
+                margin: 4px 0 0 0;
+            }
+            
+        }
+    }
+
+    &.search{
+         .promoContainer{
+            max-width: 400px;
+            border-radius: 8px;
+            box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.05);
+            margin-top: -40px;
+            margin-bottom: 6px;
+            
+            &:hover {
+                box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.15);
+            }
+
+            .promoTextContainer {
+                display: flex;
+                flex-direction: row;
+                gap: 10px;
+                align-items: center;
+            }
+        }
+        .selfPromo{
+            text-align: left;
+            margin: 0 0 20px 10px;
+
+        }
+    }
+
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1; /* End position */
+    }
+}

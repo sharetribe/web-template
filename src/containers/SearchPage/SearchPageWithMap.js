@@ -59,6 +59,7 @@ import SortBy from './SortBy/SortBy';
 import SearchResultsPanel from './SearchResultsPanel/SearchResultsPanel';
 import NoSearchResultsMaybe from './NoSearchResultsMaybe/NoSearchResultsMaybe';
 import { convertListingPrices } from '../../extensions/MultipleCurrency/utils/currency';
+import RegionalPartnerPromo from '../../extensions/common/components/RegionalPartnerPromo/RegionalPartnerPromo';
 
 import css from './SearchPage.module.css';
 
@@ -431,6 +432,7 @@ export class SearchPageComponent extends Component {
       ? classNames(css.topbarBehindModal, css.topbar)
       : css.topbar;
 
+
     // N.B. openMobileMap button is sticky.
     // For some reason, stickyness doesn't work on Safari, if the element is <button>
     return (
@@ -570,6 +572,9 @@ export class SearchPageComponent extends Component {
                   setActiveListing={onActivateListing}
                   isMapVariant
                 />
+                
+                <RegionalPartnerPromo address={searchParamsInURL.address} varient="search" />
+
               </div>
             )}
           </div>

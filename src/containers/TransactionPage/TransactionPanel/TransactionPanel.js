@@ -34,6 +34,7 @@ import CurrencyNote from '../../../extensions/MultipleCurrency/components/Curren
 
 import ProgressBar from '../../../extensions/transactionProcesses/components/ProgressBar/ProgressBar';
 import ManagerInformationMaybe from '../../../extensions/transactionProcesses/components/ManagerInformationMaybe/ManagerInformationMaybe';
+import RegionalPartnerPromo from '../../../extensions/common/components/RegionalPartnerPromo/RegionalPartnerPromo';
 
 import css from './TransactionPanel.module.css';
 
@@ -419,6 +420,11 @@ export class TransactionPanelComponent extends Component {
                 showDispute={stateData.showDispute}
                 onOpenDisputeModal={onOpenDisputeModal}
               />
+             
+             {!isProvider && (
+              <RegionalPartnerPromo varient="transaction" address={managerAddress || listing?.attributes?.publicData?.location?.address} />
+             )}
+           
             </div>
           </div>
         </div>

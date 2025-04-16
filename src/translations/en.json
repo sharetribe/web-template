@@ -1187,5 +1187,7 @@
   "OrderPanel.unfavoriteButton": "Unfavorite",
   "UserNav.favoriteListings": "Your favorites",
   "EmailVerificationBanner.title": "Please verify your email address.",
-  "EmailVerificationBanner.buttonLabel": "Verify now"
+  "EmailVerificationBanner.buttonLabel": "Verify now",
+  "RegionalPartnerPromo.title": "is our preferred partner in {region}",
+  "RegionalPartnerPromo.selfPromo": "Become a partner"
 }
