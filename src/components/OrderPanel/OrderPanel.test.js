@@ -267,8 +267,9 @@ describe('OrderPanel', () => {
     });
     await waitFor(() => {
       expect(queryAllByText('title!')).toHaveLength(2);
-      expect(queryAllByText('$10.00')).toHaveLength(2);
-      expect(queryAllByText('OrderPanel.perUnit')).toHaveLength(2);
+      expect(queryAllByText('OrderPanel.price')).toHaveLength(1);
+      expect(queryAllByText('OrderPanel.priceInMobileCTA')).toHaveLength(1);
+      expect(queryAllByText('OrderPanel.perUnit')).toHaveLength(1);
       expect(queryAllByText('OrderPanel.author')).toHaveLength(2);
       expect(getByText('BookingDatesForm.bookingStartTitle')).toBeInTheDocument();
       expect(getByText('BookingDatesForm.bookingEndTitle')).toBeInTheDocument();
@@ -316,8 +317,9 @@ describe('OrderPanel', () => {
     });
     await waitFor(() => {
       expect(queryAllByText('title!')).toHaveLength(2);
-      expect(queryAllByText('$10.00')).toHaveLength(2);
-      expect(queryAllByText('OrderPanel.perUnit')).toHaveLength(2);
+      expect(queryAllByText('OrderPanel.price')).toHaveLength(1);
+      expect(queryAllByText('OrderPanel.priceInMobileCTA')).toHaveLength(1);
+      expect(queryAllByText('OrderPanel.perUnit')).toHaveLength(1);
       expect(queryAllByText('OrderPanel.author')).toHaveLength(2);
       expect(getByText('BookingDatesForm.bookingStartTitle')).toBeInTheDocument();
       expect(getByText('BookingDatesForm.bookingEndTitle')).toBeInTheDocument();
@@ -372,8 +374,9 @@ describe('OrderPanel', () => {
 
     await waitFor(() => {
       expect(queryAllByText('title!')).toHaveLength(2);
-      expect(queryAllByText('$10.00')).toHaveLength(2);
-      expect(queryAllByText('OrderPanel.perUnit')).toHaveLength(2);
+      expect(queryAllByText('OrderPanel.price')).toHaveLength(1);
+      expect(queryAllByText('OrderPanel.priceInMobileCTA')).toHaveLength(1);
+      expect(queryAllByText('OrderPanel.perUnit')).toHaveLength(1);
       expect(queryAllByText('OrderPanel.author')).toHaveLength(2);
       expect(getByText('BookingTimeForm.bookingStartTitle')).toBeInTheDocument();
       expect(getByText('FieldDateAndTimeInput.startTime')).toBeInTheDocument();
@@ -436,8 +439,9 @@ describe('OrderPanel', () => {
 
     await waitFor(() => {
       expect(queryAllByText('title!')).toHaveLength(2);
-      expect(queryAllByText('$10.00')).toHaveLength(2);
-      expect(queryAllByText('OrderPanel.perUnit')).toHaveLength(2);
+      expect(queryAllByText('OrderPanel.price')).toHaveLength(1);
+      expect(queryAllByText('OrderPanel.priceInMobileCTA')).toHaveLength(1);
+      expect(queryAllByText('OrderPanel.perUnit')).toHaveLength(1);
       expect(queryAllByText('OrderPanel.author')).toHaveLength(2);
       expect(getByText('BookingFixedDurationForm.bookingStartTitle')).toBeInTheDocument();
       expect(getByText('FieldDateAndTimeInput.startTime')).toBeInTheDocument();
@@ -481,8 +485,9 @@ describe('OrderPanel', () => {
 
     await waitFor(() => {
       expect(queryAllByText('title!')).toHaveLength(2);
-      expect(queryAllByText('$10.00')).toHaveLength(2);
-      expect(queryAllByText('OrderPanel.perUnit')).toHaveLength(2);
+      expect(queryAllByText('OrderPanel.price')).toHaveLength(1);
+      expect(queryAllByText('OrderPanel.priceInMobileCTA')).toHaveLength(1);
+      expect(queryAllByText('OrderPanel.perUnit')).toHaveLength(1);
       expect(queryAllByText('OrderPanel.author')).toHaveLength(2);
       expect(getByText('ProductOrderForm.quantityLabel')).toBeInTheDocument();
       expect(getByText('ProductOrderForm.deliveryMethodLabel')).toBeInTheDocument();
@@ -526,8 +531,9 @@ describe('OrderPanel', () => {
 
     await waitFor(() => {
       expect(queryAllByText('title!')).toHaveLength(2);
-      expect(queryAllByText('$10.00')).toHaveLength(2);
-      expect(queryAllByText('OrderPanel.perUnit')).toHaveLength(2);
+      expect(queryAllByText('OrderPanel.price')).toHaveLength(1);
+      expect(queryAllByText('OrderPanel.priceInMobileCTA')).toHaveLength(1);
+      expect(queryAllByText('OrderPanel.perUnit')).toHaveLength(1);
       expect(queryAllByText('OrderPanel.author')).toHaveLength(2);
       expect(getByText('ProductOrderForm.noDeliveryMethodSet')).toBeInTheDocument();
       expect(getByText('OrderPanel.ctaButtonMessagePurchase')).toBeInTheDocument();
@@ -560,8 +566,9 @@ describe('OrderPanel', () => {
 
     await waitFor(() => {
       expect(queryAllByText('title!')).toHaveLength(2);
-      expect(queryAllByText('$10.00')).toHaveLength(2);
-      expect(queryAllByText('OrderPanel.perUnit')).toHaveLength(2);
+      expect(queryAllByText('OrderPanel.price')).toHaveLength(1);
+      expect(queryAllByText('OrderPanel.priceInMobileCTA')).toHaveLength(1);
+      expect(queryAllByText('OrderPanel.perUnit')).toHaveLength(1);
       expect(queryAllByText('OrderPanel.author')).toHaveLength(2);
       expect(getByText('InquiryWithoutPaymentForm.ctaButton')).toBeInTheDocument();
       expect(getByText('OrderPanel.ctaButtonMessageInquiry')).toBeInTheDocument();

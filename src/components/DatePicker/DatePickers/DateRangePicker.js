@@ -212,11 +212,13 @@ export const DateRangePicker = props => {
       setIsOpen(prevState => !prevState);
     }
   };
+  const disabled = props.disabled;
   const inputProps = {
     type: 'text',
     onChange: handleOnChangeOnInput,
     onKeyDown: handleOnKeyDownOnInput,
     ...(readOnly ? { readOnly } : {}),
+    ...(disabled ? { disabled } : {}),
   };
   const inputClasses = classNames(css.input, inputClassName, {
     [css.inputPlaceholder]: !value || value.length === 0,

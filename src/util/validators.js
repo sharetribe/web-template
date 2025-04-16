@@ -45,6 +45,24 @@ export const requiredAndNonEmptyString = message => value => {
   return isNonEmptyString(value) ? VALID : message;
 };
 
+/**
+ * Validates that a string is unique in an array of strings.
+ * @param {Array<string>} stringArray - Array of strings to check against.
+ * @param {Function} getMessage - Function that returns an error message.
+ * @param {Function} toSlug - Function that converts a string to a slug.
+ * @returns {string} - VALID if the string is unique, otherwise the error message.
+ */
+export const uniqueString = (currentIndex, stringArray, getMessage, toSlug) => value => {
+  if (typeof value === 'undefined' || value === null) {
+    // undefined or null values are invalid
+    return getMessage('', '');
+  }
+  const slug = toSlug(value);
+  const otherSlugs = stringArray.map(toSlug).filter((_, i) => i !== currentIndex);
+  const isUnique = !otherSlugs.includes(slug);
+  return isUnique ? VALID : getMessage(value, slug);
+};
+
 export const requiredFieldArrayCheckbox = message => value => {
   if (!value) {
     return message;

@@ -398,12 +398,21 @@ export const speculateTransaction = (
   // initiate.
   const isTransition = !!transactionId;
 
-  const { deliveryMethod, quantity, bookingDates, ...otherOrderParams } = orderParams;
+  const {
+    deliveryMethod,
+    priceVariantName,
+    quantity,
+    bookingDates,
+    ...otherOrderParams
+  } = orderParams;
   const quantityMaybe = quantity ? { stockReservationQuantity: quantity } : {};
   const bookingParamsMaybe = bookingDates || {};
 
   // Parameters only for client app's server
-  const orderData = deliveryMethod ? { deliveryMethod } : {};
+  const orderData = {
+    ...(deliveryMethod ? { deliveryMethod } : {}),
+    ...(priceVariantName ? { priceVariantName } : {}),
+  };
 
   // Parameters for Marketplace API
   const transitionParams = {
@@ -482,6 +491,7 @@ export const stripeCustomer = () => (dispatch, getState, sdk) => {
     callParams: { include: ['stripeCustomer.defaultPaymentMethod'] },
     updateHasListings: false,
     updateNotifications: false,
+    enforce: true,
   };
 
   return dispatch(fetchCurrentUser(fetchCurrentUserOptions))
