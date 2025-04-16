@@ -211,14 +211,14 @@ export const isCreativeSeller = userType => {
 };
 
 export const isCreativeSellerApproved = profile => {
-  const { publicData, metadata } = profile;
+  const { publicData, metadata } = profile || {};
   const withProfileListing = !!metadata?.profileListingId;
   const approvedSellerStatus = metadata?.sellerStatus === SELLER_STATUS.APPROVED;
   return isCreativeSeller(publicData?.userType) && withProfileListing && approvedSellerStatus;
 };
 
 export const isCommunityUser = profile => {
-  const { publicData, metadata } = profile;
+  const { publicData, metadata } = profile || {};
   const withCommunityId = !!metadata?.communityId;
   if (isCreativeSeller(publicData?.userType)) {
     const approvedCommunityStatus = metadata?.communityStatus === COMMUNITY_STATUS.APPROVED;
@@ -231,7 +231,7 @@ export const isCommunityUser = profile => {
 };
 
 export const isStudioUser = profile => {
-  const { publicData, metadata } = profile;
+  const { publicData, metadata } = profile || {};
   const withStudioId = !!metadata?.studioId;
   if (isCreativeSeller(publicData?.userType)) {
     const approvedCommunityStatus = metadata?.communityStatus === COMMUNITY_STATUS.APPROVED;
