@@ -197,7 +197,9 @@ export const EditListingBatchProductDetails = props => {
           listingFieldsOptions={listingFieldsOptions}
           onSelectChange={onSelectChange}
           selectedRowKeys={selectedRowKeys}
-          loading={loading || showProgressModal || csvUploadInProgress}
+          loading={
+            loading || showProgressModal || csvUploadInProgress || listingsCreationInProgress
+          }
           listings={listings}
         ></EditableListingsTable>
       </div>

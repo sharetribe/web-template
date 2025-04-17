@@ -11,7 +11,7 @@ import {
   USER_TYPES,
 } from '../../../util/types';
 import { pickCustomFieldProps } from '../../../util/fieldHelpers';
-import { isValidURL } from '../../../util/urlHelpers';
+import { isValidURL, stripUrl } from '../../../util/urlHelpers';
 import { getUserTypeFieldInputs } from '../../../util/userHelpers';
 import { richText } from '../../../util/richText';
 
@@ -28,6 +28,7 @@ import SectionYoutubeVideoMaybe from '../SectionYoutubeVideoMaybe';
 import css from '../ProfilePage.module.css';
 
 const MIN_LENGTH_FOR_LONG_WORDS = 20;
+const PREFER_NOT_TO_SAY_PRONOUNS = 'prefer-not-to-say';
 
 const CustomUserFields = props => {
   const { publicData, metadata, userFieldConfig } = props;
@@ -42,7 +43,7 @@ const CustomUserFields = props => {
   const propsForCustomFields =
     pickCustomFieldProps(publicData, metadata, userFieldConfig, 'userType', shouldPickUserField) ||
     [];
-  const parsedUserFieldConfig = userFieldConfig.filter(field => field.key !== 'liabilityInsurance');
+  const parsedUserFieldConfig = userFieldConfig.filter(shouldPickUserField);
   return (
     <>
       <SectionDetailsMaybe {...{ ...props, userFieldConfig: parsedUserFieldConfig }} />
@@ -136,12 +137,14 @@ function ProfileInfo({
     }
   };
   const pronouns = pickFieldValue('pronouns', publicData, userFields);
+  const showPronouns = publicData?.pronouns !== PREFER_NOT_TO_SAY_PRONOUNS;
   const portfolioURL = pickFieldValue('portfolioURL', publicData, userFields);
   const creativeSpecialty = pickFieldValue('creativeSpecialty', creativePublicData, listingFields);
   const address = creativeProfile?.attributes?.publicData?.location?.address || '';
   const hasBio = !!bio;
   const hasPortfolioURL = !!portfolioURL;
   const parsedPortfolioURL = `${isValidURL(portfolioURL) ? '' : 'http://'}${portfolioURL}`;
+  const parsedPortfolioLabel = stripUrl(portfolioURL);
   const parsedBookingFormURL = `https://theluupe.typeform.com/booking#creatorname=${displayName}&creatorid=${userId}`;
 
   const bioWithLinks = richText(bio, {
@@ -197,7 +200,9 @@ function ProfileInfo({
           <H2 as="h1" className={css.desktopSellerHeading}>
             {displayName}
           </H2>
-          {!queryInProgress && <span className={css.pronounsLabel}>({pronouns})</span>}
+          {!queryInProgress && showPronouns && (
+            <span className={css.pronounsLabel}>({pronouns})</span>
+          )}
         </div>
         {queryInProgress ? (
           <H3 as="h2">
@@ -215,7 +220,7 @@ function ProfileInfo({
                 href={parsedPortfolioURL}
                 className={css.portfolioLink}
               >
-                {portfolioURL}
+                {parsedPortfolioLabel}
               </Button>
             )}
           </>

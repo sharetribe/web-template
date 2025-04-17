@@ -51,6 +51,7 @@ function listingsFromSdkResponse(sdkResponse, listingDefaults) {
     const keywords = stringToArray(ownListing.attributes.publicData.keywords, ' ');
     const category = stringToArray(ownListing.attributes.publicData.imageryCategory);
     const price = convertMoneyToNumber(ownListing.attributes.price || new Money(0, currency));
+    const releases = ownListing.attributes.publicData.releases;
 
     return {
       id: ownListing.id.uuid,
@@ -60,11 +61,12 @@ function listingsFromSdkResponse(sdkResponse, listingDefaults) {
       keywords,
       category,
       usage: ownListing.attributes.publicData.usage,
-      releases: ownListing.attributes.publicData.releases,
+      releases: releases === YES_RELEASES ? true : releases === NO_RELEASES ? false : releases,
       dimensions: ownListing.attributes.publicData.dimensions,
       imageSize: ownListing.attributes.publicData.imageSize,
       price,
       // isAi: ownListing.attributes.publicData.aiTerms === 'yes',
+      isIllustration: ownListing.attributes.publicData.categoryLevel1 === 'illustrations',
       preview,
     };
   });
@@ -114,10 +116,14 @@ function validateListingProperties(listing) {
 }
 
 function getListingCategory(listing) {
-  const isVideo = listing.type.startsWith('video/');
-  if (listing.isAi) return isVideo ? 'ai-video' : 'ai-image';
+  // if (listing.isAi) return 'ai-image';
   if (listing.isIllustration) return 'illustrations';
-  return isVideo ? 'videos' : 'photos';
+  return 'photos';
+  // [TODO:] Improve once we have the Video upload feature
+  // const isVideo = listing.type.startsWith('video/');
+  // if (listing.isAi) return isVideo ? 'ai-video' : 'ai-image';
+  // if (listing.isIllustration) return 'illustrations';
+  // return isVideo ? 'videos' : 'photos';
 }
 
 // ================ Action types ================ //
@@ -275,7 +281,6 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         createListingsSuccess: false,
         saveListingsInProgress: false,
-        selectedRowsKeys: [],
       };
     case SAVE_LISTINGS_ABORTED:
       return {
@@ -289,7 +294,6 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         createListingsSuccess: true,
         saveListingsInProgress: false,
-        selectedRowsKeys: [],
       };
     case ADD_FAILED_LISTING:
       return { ...state, failedListings: [...state.failedListings, payload] };
@@ -599,6 +603,7 @@ export function requestSaveBatchListings(pageMode = PAGE_MODE_NEW) {
                 title: listing.title,
                 description: listing.description,
                 publicData: {
+                  categoryLevel1: getListingCategory(listing),
                   imageryCategory: listing.category,
                   usage: listing.usage,
                   releases: listing.releases ? YES_RELEASES : NO_RELEASES,

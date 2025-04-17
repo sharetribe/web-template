@@ -257,9 +257,26 @@
   gap: 36px;
   margin-bottom: 48px;
   flex-wrap: wrap;
+  width: 100%;
+  max-width: calc(100vw - 64px);
+  overflow: hidden;
+
+  @media (--viewportMedium) {
+    max-width: calc(100vw - 88px);
+  }
 
   @media (--viewportLarge) {
     flex-wrap: nowrap;
+  }
+}
+
+.profileInfoAvatar,
+.profileInfoActionsDesktop {
+  flex: 1 1 100%;
+
+  @media (--viewportLarge) {
+    flex: 0 0 auto;
+    max-width: 100%;
   }
 }
 
@@ -276,7 +293,12 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  flex: 1 1 auto;
+  min-width: 0;
+  flex: 1 1 100%;
+
+  @media (--viewportLarge) {
+    flex: 1 1 auto;
+  }
 }
 
 .profileInfoActions {
@@ -285,12 +307,11 @@
 }
 
 .profileInfoActionsDesktop {
-  flex: 0 0 auto;
+  flex-direction: column;
   display: none;
 
   @media (--viewportLarge) {
     display: flex;
-    flex-direction: column;
   }
 }
 
@@ -352,7 +373,17 @@
 
   justify-content: flex-start;
   padding-left: 0;
-  padding-right: 0;
+  padding-right: 0px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  max-width: 100%;
+  text-align: start;
+
+  @media (--viewportLarge) {
+    padding-right: 36px;
+  }
 }
 
 .singleTabLayout {

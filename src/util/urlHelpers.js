@@ -271,3 +271,9 @@ export function listingsQueryParamsHandler(queryParams) {
     page,
   };
 }
+
+export function stripUrl(url) {
+  let stripped = url.replace(/^https?:\/\//i, '');
+  stripped = stripped.replace(/^www\./i, '');
+  return stripped;
+}
