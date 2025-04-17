@@ -114,12 +114,18 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
   //       ...and then turned enforceValidListingType config to true in configListing.js
   // Read More:
   // https://www.sharetribe.com/docs/how-to/manage-search-schemas-with-flex-cli/#adding-listing-search-schemas
-  const searchValidListingTypes = listingTypes => {
+  const searchValidListingTypes = (listingTypes, listingTypePathParam, isListingTypeVariant) => {
+    const isValidListingTypeParam =
+      listingTypePathParam && listingTypes.find(lt => lt.listingType === listingTypePathParam);
     return config.listing.enforceValidListingType
       ? {
           pub_listingType: listingTypes.map(l => l.listingType),
           // pub_transactionProcessAlias: listingTypes.map(l => l.transactionType.alias),
           // pub_unitType: listingTypes.map(l => l.transactionType.unitType),
+        }
+      : isListingTypeVariant && isValidListingTypeParam
+      ? {
+          pub_listingType: listingTypePathParam,
         }
       : {};
   };
@@ -242,7 +248,17 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
     return hasDatesFilterInUse && seatsFilter ? { seats } : {};
   };
 
-  const { perPage, price, dates, seats, sort, mapSearch, ...restOfParams } = searchParams;
+  const {
+    perPage,
+    price,
+    dates,
+    seats,
+    sort,
+    mapSearch,
+    listingTypePathParam,
+    isListingTypeVariant,
+    ...restOfParams
+  } = searchParams;
   const priceMaybe = priceSearchParams(price);
   const datesMaybe = datesSearchParams(dates);
   const stockMaybe = stockFilters(datesMaybe);
@@ -253,12 +269,24 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
     // The rest of the params except invalid nested category-related params
     // Note: invalid independent search params are still passed through
     ...omitInvalidCategoryParams(restOfParams),
+    // If the search page variant is of type /s/:listingType, this sets the pub_listingType
+    // query parameter to the value of the listing type path parameter. The ordering matters here,
+    // since this value overrides any possible pub_listingType value coming from query parameters
+    // i.e. the previous row.
+    //
+    // Only one value is currently supported in pub_listingType – if you want to support e.g.
+    // /s/:listingType?pub_listingType=[otherListingType] => pub_listingType=listingType,otherListingType,
+    // you'll need to customize a logic that merges the query param and path param values.
+    ...searchValidListingTypes(
+      config.listing.listingTypes,
+      listingTypePathParam,
+      isListingTypeVariant
+    ),
     ...priceMaybe,
     ...datesMaybe,
     ...stockMaybe,
     ...seatsMaybe,
     ...sortMaybe,
-    ...searchValidListingTypes(config.listing.listingTypes),
     perPage,
   };
 
@@ -288,6 +316,7 @@ export const setActiveListing = listingId => ({
 
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   // In private marketplace mode, this page won't fetch data if the user is unauthorized
+  const { listingType: listingTypePathParam } = params || {};
   const state = getState();
   const currentUser = state.user?.currentUser;
   const isAuthorized = currentUser && isUserAuthorized(currentUser);
@@ -307,6 +336,10 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   const { page = 1, address, origin, ...rest } = queryParams;
   const originMaybe = isOriginInUse(config) && origin ? { origin } : {};
 
+  const listingTypeVariantMaybe = listingTypePathParam
+    ? { listingTypePathParam, isListingTypeVariant: true }
+    : {};
+
   const {
     aspectWidth = 1,
     aspectHeight = 1,
@@ -318,6 +351,7 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
     {
       ...rest,
       ...originMaybe,
+      ...listingTypeVariantMaybe,
       page,
       perPage: RESULT_PAGE_SIZE,
       include: ['author', 'images'],

@@ -46,6 +46,8 @@ import {
   pickListingFieldFilters,
   omitLimitedListingFieldParams,
   getDatesAndSeatsMaybe,
+  getResourceLocatorStringParams,
+  getActiveListingTypes,
 } from './SearchPage.shared';
 
 import FilterComponent from './FilterComponent';
@@ -97,7 +99,7 @@ export class SearchPageComponent extends Component {
 
   // Reset all filter query parameters
   resetAll(e) {
-    const { history, routeConfiguration, config } = this.props;
+    const { history, routeConfiguration, config, location } = this.props;
     const { listingFields: listingFieldsConfig } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig } = config?.search || {};
 
@@ -109,20 +111,32 @@ export class SearchPageComponent extends Component {
 
     // Reset routing params
     const queryParams = omit(urlQueryParams, filterQueryParamNames);
-    history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, queryParams));
+
+    const { routeName, pathParams } = getResourceLocatorStringParams(routeConfiguration, location);
+    /**
+     * routeName,
+     * pathParams
+     *
+     */
+
+    history.push(
+      createResourceLocatorString(routeName, routeConfiguration, pathParams, queryParams)
+    );
   }
 
   getHandleChangedValueFn(useHistoryPush) {
-    const { history, routeConfiguration, config } = this.props;
+    const { history, routeConfiguration, config, location, params = {} } = this.props;
     const { listingFields: listingFieldsConfig } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
-    const activeListingTypes = config?.listing?.listingTypes.map(config => config.listingType);
+    const { listingType: listingTypePathParam } = params;
+    const { activeListingTypes } = getActiveListingTypes(config, listingTypePathParam);
     const listingCategories = config.categoryConfiguration.categories;
     const filterConfigs = {
       listingFieldsConfig,
       defaultFiltersConfig,
       listingCategories,
       activeListingTypes,
+      listingTypePathParam,
     };
 
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
@@ -157,7 +171,15 @@ export class SearchPageComponent extends Component {
         if (useHistoryPush) {
           const searchParams = this.state.currentQueryParams;
           const search = cleanSearchFromConflictingParams(searchParams, filterConfigs, sortConfig);
-          history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, search));
+
+          const { routeName, pathParams } = getResourceLocatorStringParams(
+            routeConfiguration,
+            location
+          );
+
+          history.push(
+            createResourceLocatorString(routeName, routeConfiguration, pathParams, search)
+          );
         }
       };
 
@@ -166,14 +188,18 @@ export class SearchPageComponent extends Component {
   }
 
   handleSortBy(urlParam, values) {
-    const { history, routeConfiguration } = this.props;
+    const { history, routeConfiguration, location } = this.props;
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
 
     const queryParams = values
       ? { ...urlQueryParams, [urlParam]: values }
       : omit(urlQueryParams, urlParam);
 
-    history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, queryParams));
+    const { routeName, pathParams } = getResourceLocatorStringParams(routeConfiguration, location);
+
+    history.push(
+      createResourceLocatorString(routeName, routeConfiguration, pathParams, queryParams)
+    );
   }
 
   // Reset all filter query parameters
@@ -199,11 +225,27 @@ export class SearchPageComponent extends Component {
       searchParams = {},
       routeConfiguration,
       config,
+      params = {},
     } = this.props;
 
+    // If the search page variant is of type /s/:listingType, this defines the :listingType
+    // path parameter used to filter the whole page.
+    //
+    // On a default search page (/s), this constant does not have a value, even when a
+    // query parameter ?pub_listingType=[queryParamListingType] is used.
+    const { listingType: listingTypePathParam } = params;
+
     const { listingFields } = config?.listing || {};
-    const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
-    const activeListingTypes = config?.listing?.listingTypes.map(config => config.listingType);
+    const { defaultFilters: defaultFiltersRaw, sortConfig } = config?.search || {};
+
+    const { isListingTypeVariant, activeListingTypes } = getActiveListingTypes(
+      config,
+      listingTypePathParam
+    );
+
+    const defaultFiltersConfig = isListingTypeVariant
+      ? defaultFiltersRaw.filter(f => f.key !== 'listingType')
+      : defaultFiltersRaw;
     const marketplaceCurrency = config.currency;
     const categoryConfiguration = config.categoryConfiguration;
     const listingCategories = categoryConfiguration.categories;
@@ -212,6 +254,7 @@ export class SearchPageComponent extends Component {
       locationSearch: location.search,
       categoryConfiguration,
       activeListingTypes,
+      listingTypeParam: listingTypePathParam,
     });
     const filterConfigs = {
       listingFieldsConfig,
@@ -429,6 +472,7 @@ export class SearchPageComponent extends Component {
                   pagination={listingsAreLoaded ? pagination : null}
                   search={parse(location.search)}
                   isMapVariant={false}
+                  listingTypeParam={listingTypePathParam}
                 />
               </div>
             </div>
