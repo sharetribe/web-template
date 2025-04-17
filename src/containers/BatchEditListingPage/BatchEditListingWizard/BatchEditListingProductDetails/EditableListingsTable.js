@@ -1,7 +1,6 @@
 import imagePlaceholder from '../../../../assets/image-placeholder.jpg';
 import { Flex, Image, Table } from 'antd';
 import { MAX_CATEGORIES, MAX_KEYWORDS } from '../../constants';
-import css from './EditListingBatchProductDetails.module.css';
 import React from 'react';
 import { NamedLink } from '../../../../components';
 import { EditableCellComponents } from './EditableCellComponents';
@@ -9,6 +8,8 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { getImageSizeLabel } from '../../imageHelpers';
 import { CsvUpload } from '../CsvUpload/CsvUpload';
 import { TableHeaderTitle } from './TableHeaderTitle';
+
+import css from './EditListingBatchProductDetails.module.css';
 
 const stringSorter = (strA, strB) => {
   return strA.name.localeCompare(strB.name, 'en', { sensitivity: 'base' });

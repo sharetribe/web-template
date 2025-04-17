@@ -268,6 +268,9 @@ export const getSellerUserFieldInputs = (fieldKey, isSellerApplication, isPublic
     case 'whyJoin':
     case 'mentorship':
     case 'birthday':
+    case 'pronouns':
+    case 'audienceSegment':
+    case 'liabilityInsurance':
       return !isPublicProfile;
     default:
       return true;
