@@ -400,6 +400,7 @@
   "FilterComponent.categoryLabel": "Category",
   "FilterComponent.datesLabel": "Dates",
   "FilterComponent.keywordsLabel": "Keywords",
+  "FilterComponent.listingTypeLabel": "Listing type",
   "FilterComponent.priceLabel": "Price",
   "FilterComponent.seatsLabel": "Seats",
   "FilterForm.cancel": "Cancel",
