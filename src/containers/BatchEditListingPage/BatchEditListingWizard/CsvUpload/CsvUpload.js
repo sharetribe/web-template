@@ -16,7 +16,6 @@ import {
   normalizeCategory,
   normalizeUsage,
 } from './CsvParsingHelpers';
-import { Link } from 'react-router-dom';
 import css from './CsvUpload.module.css';
 
 export const CsvUpload = ({ categories, usageOptions, onSaveListing }) => {
@@ -115,14 +114,14 @@ export const CsvUpload = ({ categories, usageOptions, onSaveListing }) => {
 
   return (
     <Space size="middle">
-      <Link
-        to="/static/assets/LuupeMarketplaceUploadTemplate.xlsx"
+      <Button
+        type="link"
         target="_blank"
-        download
+        href="https://docs.google.com/spreadsheets/d/1dTP5t2BMBMeHL3J4ipuCZeSYafAPSXysGPu6OHpDSyI/edit?usp=drive_link"
         className={css.downloadLink}
       >
-        <DownloadOutlined /> Download Template
-      </Link>
+        <DownloadOutlined /> Use Template
+      </Button>
 
       <Upload
         accept=".csv"
