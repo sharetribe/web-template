@@ -28,6 +28,7 @@ import SectionYoutubeVideoMaybe from '../SectionYoutubeVideoMaybe';
 import css from '../ProfilePage.module.css';
 
 const MIN_LENGTH_FOR_LONG_WORDS = 20;
+const PRONOUNS_NOT_LISTED = 'not-listed';
 const PREFER_NOT_TO_SAY_PRONOUNS = 'prefer-not-to-say';
 
 const CustomUserFields = props => {
@@ -136,8 +137,10 @@ function ProfileInfo({
         return value;
     }
   };
+  const rawPronouns = publicData?.pronouns;
   const pronouns = pickFieldValue('pronouns', publicData, userFields);
-  const showPronouns = publicData?.pronouns !== PREFER_NOT_TO_SAY_PRONOUNS;
+  const showPronouns =
+    rawPronouns !== PREFER_NOT_TO_SAY_PRONOUNS && rawPronouns !== PRONOUNS_NOT_LISTED;
   const portfolioURL = pickFieldValue('portfolioURL', publicData, userFields);
   const creativeSpecialty = pickFieldValue('creativeSpecialty', creativePublicData, listingFields);
   const address = creativeProfile?.attributes?.publicData?.location?.address || '';

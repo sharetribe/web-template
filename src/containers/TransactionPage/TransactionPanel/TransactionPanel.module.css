@@ -437,7 +437,8 @@
 /* Passed-in props for FeedSection subcomponent */
 .bookingLocationContainer,
 .deliveryInfoContainer,
-.feedContainer {
+.feedContainer,
+.licenseContainer {
   margin: 42px 24px 0 24px;
 
   @media (--viewportMedium) {
