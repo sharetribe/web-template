@@ -89,6 +89,10 @@ const BlockBuilder = props => {
   // Combine component-mapping from props together with the default one:
   const components = { ...defaultBlockComponents, ...blockComponents };
 
+  const blockCustomPropsList = blocks.map((block, index) => {
+    return createBlockCustomProps(block);
+  });
+
   return (
     <>
       {blocks.map((block, index) => {
@@ -99,11 +103,8 @@ const BlockBuilder = props => {
         if (block.blockName?.startsWith('2 cols buttons ::')) {
           block.blockType = 'blockWithCols';
         }
-        if (block.blockId === 'price-selector') {
-          block.blockType = 'blockPriceSelector';
-        }
 
-        const blockCustomProps = createBlockCustomProps(block);
+        const blockCustomProps = blockCustomPropsList[index];
 
         if (Block) {
           return (
@@ -235,63 +236,6 @@ function createBlockCustomProps(block) {
       fieldType: 'internalButtonLink',
       href: intl.formatMessage({ id: 'BlockWithCols.' + block.blockId + '.cta2Link', defaultMessage:'Hello' }),
       content: intl.formatMessage({ id: 'BlockWithCols.' + block.blockId + '.cta2Text', defaultMessage:'Hello' }),
-    };
-  }
-  // Price Selector block data.
-  if (block?.blockId === 'price-selector') {
-    blockCustomProps.plans = {
-      set1: [
-        {
-          title: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set1.title1', defaultMessage:'Hello' }),
-          description: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set1.description1', defaultMessage:'Hello' }),
-          price: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set1.price1', defaultMessage:'Hello' }),
-          priceText: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set1.priceText1', defaultMessage:'Hello' }),
-          cta: {
-            link: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set1.cta1Link', defaultMessage:'Hello' }),
-            text: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set1.cta1Text', defaultMessage:'Hello' }),
-          },
-          features: ["Unlimited listings available", "24/7 customer support", "Easy payment processing"],
-        },
-        {
-          title: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set1.title2', defaultMessage:'Hello' }),
-          description: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set1.description2', defaultMessage:'Hello' }),
-          price: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set1.price2', defaultMessage:'Hello' }),
-          priceText: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set1.priceText2', defaultMessage:'Hello' }),
-          cta: {
-            link: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set1.cta2Link', defaultMessage:'Hello' }),
-            text: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set1.cta2Text', defaultMessage:'Hello' }),
-          },
-          features: ["Advanced analytics tools", "Promotional features included", "Priority customer support", "Custom branding options"],
-        },
-      ],
-      set2: [
-        {
-          title: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set2.title1', defaultMessage:'Hello' }),
-          description: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set2.description1', defaultMessage:'Hello' }),
-          price: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set2.price1', defaultMessage:'Hello' }),
-          priceText: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set2.priceText1', defaultMessage:'Hello' }),
-          cta: {
-            link: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set2.cta1Link', defaultMessage:'Hello' }),
-            text: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set2.cta1Text', defaultMessage:'Hello' }),
-          },
-          features: ["Unlimited listings available", "Team Access", "Dedicated Manager"],
-        },
-        {
-          title: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set2.title2', defaultMessage:'Hello' }),
-          description: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set2.description2', defaultMessage:'Hello' }),
-          price: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set2.price2', defaultMessage:'Hello' }),
-          priceText: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set2.priceText2', defaultMessage:'Hello' }),
-          cta: {
-            link: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set2.cta2Link', defaultMessage:'Hello' }),
-            text: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.set2.cta2Text', defaultMessage:'Hello' }),
-          },
-          features: ["Custom Solutions", "24/7 Support", "Enterprise Tools"],
-        },
-      ],
-    };
-    blockCustomProps.toggles = {
-      cta1: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.toggleSet1', defaultMessage:'Hello' }),
-      cta2: intl.formatMessage({ id: 'PricingToggle.' + block?.blockId + '.toggleSet2', defaultMessage:'Hello' })
     };
   }
 

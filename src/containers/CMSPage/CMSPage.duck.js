@@ -1,6 +1,7 @@
 import { fetchPageAssets } from '../../ducks/hostedAssets.duck';
 
 export const avHeroSecionId = 'av-hero';
+export const avPriceSelectorSecionId = 'av-price-selector';
 
 export const loadData = (params, search) => dispatch => {
   const pageId = params.pageId;

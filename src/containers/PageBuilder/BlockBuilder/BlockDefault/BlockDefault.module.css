@@ -213,7 +213,7 @@
   border-radius: 10px;
   text-decoration: none;
   font-weight: 400;
-  margin-top: 24px;
+  margin-top: 12px;
   font-family: var(--fontFamilyHeadings);
   line-height: 150%; /* 21px */
   transition: var(--colorTransition);
