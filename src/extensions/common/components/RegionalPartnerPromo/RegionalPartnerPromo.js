@@ -10,7 +10,7 @@ const RegionalPartnerPromo = ({ address, varient }) => {
     const [loading, setLoading] = useState(true);
 
     // Extract region from location.search
-    const regionMatch = address.match(/([^,]+?)(?:\s+\d{5})?,\s*(Canada|United States)$/);
+    const regionMatch = address?.match(/([^,]+?)(?:\s+\d{5})?,\s*(Canada|United States)$/);
     const region = regionMatch ? regionMatch[1].trim() : null;
 
     useEffect(() => {

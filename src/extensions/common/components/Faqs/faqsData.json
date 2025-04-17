@@ -6,6 +6,12 @@
         "category": ["location"]
     },
     {
+        "question": "How do location request bids work?",
+        "answer": "A location request bid is an offer by a location finder to conduct a private search for a specific vending location based on the operator's request. Only the recipient of the bid has access to buy the listing. It is not discoverable on the marketplace like other listings.",
+        "audience": "buyer",
+        "category": ["location-bid"]
+    }, 
+    {
         "question": "Is buying a location a one-time fee?",
         "answer": "Yes, it is a one-time fee paid to the seller. Any agreements between you (the operator) and the location's property manager will be separate.",
         "audience": "buyer",
