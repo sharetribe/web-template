@@ -141,8 +141,6 @@
   border-radius: 6px;
   border: 1px solid var(--colorGrey100);
 
-  transition: all 0.15s ease-out;
-
   /* When the dropdown is open, we need to hack the box-shadow's position
     to fit the whole dropdown menu component with padding-top
 
@@ -150,6 +148,9 @@
   */
   padding: 63px 0 15px 0;
   top: 0px;
+}
+.menuContentTransition {
+  transition: all 0.15s ease-out;
 }
 
 .menuItem {

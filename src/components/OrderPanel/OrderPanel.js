@@ -1,23 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { compose } from 'redux';
-import { withRouter } from 'react-router-dom';
-import {
-  array,
-  arrayOf,
-  bool,
-  func,
-  node,
-  number,
-  object,
-  oneOfType,
-  shape,
-  string,
-} from 'prop-types';
+import { useLocation, useHistory } from 'react-router-dom';
 import loadable from '@loadable/component';
 import classNames from 'classnames';
-import omit from 'lodash/omit';
 
-import { intlShape, injectIntl, FormattedMessage, useIntl } from '../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import {
   displayDeliveryPickup,
   displayDeliveryShipping,
@@ -29,8 +15,9 @@ import {
   LISTING_STATE_CLOSED,
   LINE_ITEM_NIGHT,
   LINE_ITEM_DAY,
-  LINE_ITEM_ITEM,
   LINE_ITEM_HOUR,
+  LINE_ITEM_FIXED,
+  LINE_ITEM_ITEM,
   STOCK_MULTIPLE_ITEMS,
   STOCK_INFINITE_MULTIPLE_ITEMS,
 } from '../../util/types';
@@ -57,6 +44,11 @@ const BookingTimeForm = loadable(() =>
 );
 const BookingDatesForm = loadable(() =>
   import(/* webpackChunkName: "BookingDatesForm" */ './BookingDatesForm/BookingDatesForm')
+);
+const BookingFixedDurationForm = loadable(() =>
+  import(
+    /* webpackChunkName: "BookingFixedDurationForm" */ './BookingFixedDurationForm/BookingFixedDurationForm'
+  )
 );
 const InquiryWithoutPaymentForm = loadable(() =>
   import(
@@ -104,7 +96,7 @@ const openOrderModal = (isOwnListing, isClosed, history, location) => {
 
 const closeOrderModal = (history, location) => {
   const { pathname, search, state } = location;
-  const searchParams = omit(parse(search), 'orderOpen');
+  const { orderOpen, ...searchParams } = parse(search);
   const searchString = `?${stringify(searchParams)}`;
   history.push(`${pathname}${searchString}`, state);
 };
@@ -204,14 +196,14 @@ const PriceMaybe = props => {
  * @param {string} props.marketplaceCurrency - The currency used in the marketplace
  * @param {number} props.dayCountAvailableForBooking - Number of days available for booking
  * @param {string} props.marketplaceName - Name of the marketplace
- * @param {Object} props.history - React Router history object
- * @param {Object} props.location - React Router location object
  *
  * @returns {JSX.Element} Component that displays the order panel with appropriate form
  */
 const OrderPanel = props => {
   const [mounted, setMounted] = useState(false);
   const intl = useIntl();
+  const location = useLocation();
+  const history = useHistory();
 
   useEffect(() => {
     setMounted(true);
@@ -234,8 +226,7 @@ const OrderPanel = props => {
     onManageDisableScrolling,
     onFetchTimeSlots,
     monthlyTimeSlots,
-    history,
-    location,
+    timeSlotsForDate,
     onFetchTransactionLineItems,
     onContactUser,
     lineItems,
@@ -251,7 +242,9 @@ const OrderPanel = props => {
   const config = useConfiguration(); // [SKYFARER]
 
   const publicData = listing?.attributes?.publicData || {};
-  const { listingType, unitType, transactionProcessAlias = '' } = publicData || {};
+  const { listingType, unitType, transactionProcessAlias = '', priceVariants, startTimeInterval } =
+    publicData || {};
+
   const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
   const lineItemUnitType = lineItemUnitTypeMaybe || `line-item/${unitType}`;
 
@@ -279,6 +272,10 @@ const OrderPanel = props => {
   const isClosed = listing?.attributes?.state === LISTING_STATE_CLOSED;
 
   const isBooking = isBookingProcess(processName);
+  const shouldHaveFixedBookingDuration = isBooking && [LINE_ITEM_FIXED].includes(lineItemUnitType);
+  const showBookingFixedDurationForm =
+    mounted && shouldHaveFixedBookingDuration && !isClosed && timeZone && priceVariants?.length > 0;
+
   const shouldHaveBookingTime = isBooking && [LINE_ITEM_HOUR].includes(lineItemUnitType);
   const showBookingTimeForm = mounted && shouldHaveBookingTime && !isClosed && timeZone;
 
@@ -310,6 +307,21 @@ const OrderPanel = props => {
     listingTypeConfig?.stockType
   );
   const seatsEnabled = [AVAILABILITY_MULTIPLE_SEATS].includes(listingTypeConfig?.availabilityType);
+
+  const sharedProps = {
+    lineItemUnitType,
+    onSubmit,
+    price,
+    marketplaceCurrency,
+    listingId: listing.id,
+    isOwnListing,
+    marketplaceName,
+    onFetchTransactionLineItems,
+    lineItems,
+    fetchLineItemsInProgress,
+    fetchLineItemsError,
+    payoutDetailsWarning,
+  };
 
   const showClosedListingHelpText = listing.id && isClosed;
   const isOrderOpen = !!parse(location.search).orderOpen;
@@ -396,6 +408,21 @@ const OrderPanel = props => {
           <PriceMissing />
         ) : showInvalidCurrency ? (
           <InvalidCurrency />
+        ) : showBookingFixedDurationForm ? (
+          <BookingFixedDurationForm
+            seatsEnabled={seatsEnabled}
+            className={css.bookingForm}
+            formId="OrderPanelBookingFixedDurationForm"
+            dayCountAvailableForBooking={dayCountAvailableForBooking}
+            monthlyTimeSlots={monthlyTimeSlots}
+            timeSlotsForDate={timeSlotsForDate}
+            onFetchTimeSlots={onFetchTimeSlots}
+            startDatePlaceholder={intl.formatDate(TODAY, dateFormattingOptions)}
+            priceVariants={priceVariants}
+            startTimeInterval={startTimeInterval}
+            timeZone={timeZone}
+            {...sharedProps}
+          />
         ) : showBookingTimeForm ? (
           <BookingTimeForm
             seatsEnabled={seatsEnabled}
@@ -408,32 +435,20 @@ const OrderPanel = props => {
             price={price}
             marketplaceCurrency={marketplaceCurrency}
             dayCountAvailableForBooking={dayCountAvailableForBooking}
-            listingId={listing.id}
-            isOwnListing={isOwnListing}
             monthlyTimeSlots={monthlyTimeSlots}
+            timeSlotsForDate={timeSlotsForDate}
             onFetchTimeSlots={onFetchTimeSlots}
             startDatePlaceholder={intl.formatDate(TODAY, dateFormattingOptions)}
             endDatePlaceholder={intl.formatDate(TODAY, dateFormattingOptions)}
             timeZone={timeZone}
-            marketplaceName={marketplaceName}
-            onFetchTransactionLineItems={onFetchTransactionLineItems}
-            lineItems={lineItems}
-            fetchLineItemsInProgress={fetchLineItemsInProgress}
-            fetchLineItemsError={fetchLineItemsError}
-            payoutDetailsWarning={payoutDetailsWarning}
+            {...sharedProps}
           />
         ) : showBookingDatesForm ? (
           <BookingDatesForm
             seatsEnabled={seatsEnabled}
             className={css.bookingForm}
             formId="OrderPanelBookingDatesForm"
-            lineItemUnitType={lineItemUnitType}
-            onSubmit={onSubmit}
-            price={price}
-            marketplaceCurrency={marketplaceCurrency}
             dayCountAvailableForBooking={dayCountAvailableForBooking}
-            listingId={listing.id}
-            isOwnListing={isOwnListing}
             monthlyTimeSlots={monthlyTimeSlots}
             onFetchTimeSlots={onFetchTimeSlots}
             timeZone={timeZone}
@@ -447,22 +462,16 @@ const OrderPanel = props => {
             currentUser={currentUser} // [SKYFARER]
             currentUserHasOrders={currentUserHasOrders} // [SKYFARER]
             reschedule={reschedule} // [SKYFARER]
+            {...sharedProps}
           />
         ) : showProductOrderForm ? (
           <ProductOrderForm
             formId="OrderPanelProductOrderForm"
-            onSubmit={onSubmit}
-            price={price}
-            marketplaceCurrency={marketplaceCurrency}
             currentStock={currentStock}
             allowOrdersOfMultipleItems={allowOrdersOfMultipleItems}
             pickupEnabled={pickupEnabled && displayPickup}
             shippingEnabled={shippingEnabled && displayShipping}
             displayDeliveryMethod={displayPickup || displayShipping}
-            listingId={listing.id}
-            isOwnListing={isOwnListing}
-            marketplaceName={marketplaceName}
-            onFetchTransactionLineItems={onFetchTransactionLineItems}
             onContactUser={onContactUser}
             authorDisplayName={authorDisplayName} // [SKYFARER]
             lineItems={lineItems}
@@ -472,6 +481,7 @@ const OrderPanel = props => {
             config={config} // [SKYFARER]
             currentUser={currentUser} // [SKYFARER]
             currentUserHasOrders={currentUserHasOrders} // [SKYFARER]
+            {...sharedProps}
           />
         ) : showInquiryForm ? (
           <InquiryWithoutPaymentForm formId="OrderPanelInquiryForm" onSubmit={onSubmit} />
@@ -523,4 +533,4 @@ const OrderPanel = props => {
   );
 };
 
-export default compose(withRouter)(OrderPanel);
+export default OrderPanel;
