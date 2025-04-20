@@ -75,7 +75,7 @@ const RegionalPartnerPromo = ({ address, varient }) => {
                     />
                     
                     <ModalIframeButton 
-                        iframeUrl={`https://form.jotform.com/${promoData.formId}?region=${region}&promoTitle=${encodeURIComponent(promoData.promoTitle)}&contactName=${promoData.contactName}&contactEmail=${promoData.contactEmail}&companyName=${promoData.companyName}&logoUrl=${promoData.logoUrl}`} 
+                        iframeUrl={`https://form.jotform.com/${promoData.formId}?region=${region}&promoTitle=${encodeURIComponent(promoData.promoTitle)}&contactName=${promoData.contactName}&contactEmail=${promoData.contactEmail}&companyName=${promoData.companyName}`} 
                         buttonLabel={promoData.ctaLabel} 
                         icon={iconMap[promoData.icon] || Phone}
                         buttonClassName={css.ctaButton}
