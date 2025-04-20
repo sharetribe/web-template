@@ -54,8 +54,8 @@ class DynamicGoogleMap extends Component {
         fullscreenControl: false,
         // Street View control
         streetViewControl: false,
-        // Zoom control position
-        zoomControlOptions: {
+        // Camera control position
+        cameraControlOptions: {
           position: controlPosition,
         },
       };

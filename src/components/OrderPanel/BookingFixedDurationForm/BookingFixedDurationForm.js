@@ -1,29 +1,27 @@
 import React, { useState } from 'react';
-import { Form as FinalForm } from 'react-final-form';
+import { Field, Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { timestampToDate } from '../../../util/dates';
 import { propTypes } from '../../../util/types';
 import { BOOKING_PROCESS_NAME } from '../../../transactions/transaction';
-import { useConfiguration } from '../../../context/configurationContext';
-import { getDefaultTimeZoneOnBrowser, getTimeZoneBadgeContent } from '../../../util/dates';
 
 import { Form, H6, PrimaryButton, FieldSelect } from '../../../components';
-
-// [SKYFARER]
-// TODO: When voucherify merges PR #275, we can switch to the original package
-// Don't forget to change the dynamic CSS import ~ line 195
-// import { VoucherifyValidate } from '@voucherify/react-widget';
-import { VoucherifyValidate } from '@mathiscode/voucherify-react-widget/dist/voucherifywidget.umd.development.js';
-
-import Logo from '../../../assets/logo-icon.png';
 
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
 import FieldDateAndTimeInput from './FieldDateAndTimeInput';
 
-import css from './BookingTimeForm.module.css';
-import ConsultationBox from '../../ConsultationBox/ConsultationBox'; // [SKYFARER]
+import css from './BookingFixedDurationForm.module.css';
+
+const FieldHidden = props => {
+  const { name, ...rest } = props;
+  return (
+    <Field id={name} name={name} type="hidden" className={css.unitTypeHidden} {...rest}>
+      {fieldRenderProps => <input {...fieldRenderProps?.input} />}
+    </Field>
+  );
+};
 
 // When the values of the form are updated we need to fetch
 // lineItems from this template's backend for the EstimatedTransactionMaybe
@@ -46,7 +44,7 @@ const handleFetchLineItems = props => formValues => {
   const isStartBeforeEnd = bookingStartTime < bookingEndTime;
   const seatsMaybe = seatsEnabled && seats > 0 ? { seats: parseInt(seats, 10) } : {};
 
-  if (bookingStartTime && bookingEndTime && isStartBeforeEnd && !fetchLineItemsInProgress) {
+  if (startDate && endDate && isStartBeforeEnd && !fetchLineItemsInProgress) {
     const orderData = {
       bookingStart: startDate,
       bookingEnd: endDate,
@@ -70,6 +68,7 @@ const handleFetchLineItems = props => formValues => {
  * @param {propTypes.money} props.price - The unit price of the listing
  * @param {boolean} props.isOwnListing - Whether the listing is owned by the current user
  * @param {propTypes.uuid} props.listingId - The ID of the listing
+ * @param {Array<Object>} [props.priceVariants] - The price variants for the fixed bookings
  * @param {Object} props.monthlyTimeSlots - The monthly time slots
  * @param {Function} props.onFetchTimeSlots - The function to fetch the time slots
  * @param {string} props.timeZone - The time zone of the listing (e.g. "America/New_York")
@@ -78,12 +77,11 @@ const handleFetchLineItems = props => formValues => {
  * @param {boolean} props.fetchLineItemsInProgress - Whether line items are being fetched
  * @param {propTypes.error} props.fetchLineItemsError - The error for fetching line items
  * @param {string} [props.startDatePlaceholder] - The placeholder text for the start date
- * @param {string} [props.endDatePlaceholder] - The placeholder text for the end date
  * @param {number} props.dayCountAvailableForBooking - Number of days available for booking
  * @param {string} props.marketplaceName - Name of the marketplace
  * @returns {JSX.Element}
  */
-export const BookingTimeForm = props => {
+export const BookingFixedDurationForm = props => {
   const intl = useIntl();
   const {
     rootClassName,
@@ -91,52 +89,47 @@ export const BookingTimeForm = props => {
     price: unitPrice,
     dayCountAvailableForBooking,
     marketplaceName,
-    reschedule, // [SKYFARER]
     seatsEnabled,
+    priceVariants,
     ...rest
   } = props;
 
-  const config = useConfiguration();
-  const [voucherInfo, setVoucherInfo] = useState('');
-  const [voucher, setVoucher] = useState(null);
-  if (typeof window !== 'undefined') import('@mathiscode/voucherify-react-widget/dist/voucherify.css');
-
   const [seatsOptions, setSeatsOptions] = useState([1]);
-
+  const priceVariant = priceVariants?.[0];
+  const minDurationStartingInInterval = priceVariants.reduce((min, priceVariant) => {
+    return Math.min(min, priceVariant.bookingLengthInMinutes);
+  }, Number.MAX_SAFE_INTEGER);
   const classes = classNames(rootClassName || css.root, className);
 
   return (
     <FinalForm
+      initialValues={{ priceVariant }}
       {...rest}
       unitPrice={unitPrice}
       render={formRenderProps => {
         const {
-          endDatePlaceholder,
           startDatePlaceholder,
           form,
           pristine,
           handleSubmit,
           isOwnListing,
           listingId,
+          startTimeInterval,
           values,
           monthlyTimeSlots,
           timeSlotsForDate,
           onFetchTimeSlots,
           timeZone,
           lineItems,
-          onContactUser, // [SKYFARER]
-          authorDisplayName, // [SKYFARER]
           fetchLineItemsInProgress,
           fetchLineItemsError,
           payoutDetailsWarning,
-          voucher, // [SKYFARER]
         } = formRenderProps;
 
         const startTime = values && values.bookingStartTime ? values.bookingStartTime : null;
         const endTime = values && values.bookingEndTime ? values.bookingEndTime : null;
         const startDate = startTime ? timestampToDate(startTime) : null;
         const endDate = endTime ? timestampToDate(endTime) : null;
-        const voucherCode = values?.voucherCode; // [SKYFARER]
 
         // This is the place to collect breakdown estimation data. See the
         // EstimatedCustomerBreakdownMaybe component to change the calculations
@@ -152,86 +145,39 @@ export const BookingTimeForm = props => {
         const showEstimatedBreakdown =
           breakdownData && lineItems && !fetchLineItemsInProgress && !fetchLineItemsError;
 
-        const codeValidated = (data) => {
-          // TODO: i18n this in Sharetribe
-          // TODO: hookify this and DRY between ProductOrderForm and BookingTimeForm
-          try {
-            if (!data || !data.valid) {
-              if (data?.error?.code === 404) {
-                setVoucherInfo("This code doesn't look right. Check your code and try again.")
-                return
-              }
-              setVoucherInfo(data?.error?.message || data?.reason || 'Invalid voucher code')
-              return
-            }
-
-            const startDate = timestampToDate(values.bookingStartTime);
-            const endDate = timestampToDate(values.bookingEndTime);
-
-            let output = `${data.code} has been applied!`;
-            if (data.discount.type === 'PERCENT') output += ` You're saving ${data.discount.percent_off}%!`;
-            else output += ` You're saving ${formatMoney(intl, new Money(data.discount.amount_off, unitPrice.currency))}!`;
-
-            if (data?.valid) {
-              values.voucherCode = data.code
-              document.querySelector('button.voucherifyValidate')?.remove()
-              handleOnChange({ values })
-            }
-          } catch (e) {
-            console.error(e)
-            setVoucherInfo('An error occurred while applying the voucher code. Please try again or contact support.')
-          }
-        }
-
         const onHandleFetchLineItems = handleFetchLineItems(props);
-
-        // [SKYFARER]
-        const voucherifyItems = !config.vouchers.ENABLED ? null : lineItems?.map(item => {
-          return {
-            source_id: item.code,
-            related_object: 'sku',
-            price: item.unitPrice.amount,
-            quantity: item.quantity?.toNumber() || 1,
-            amount: item.unitPrice.amount * (item.quantity?.toNumber() || 1),
-            metadata: {
-              includeFor: item.includeFor,
-              lineTotal: item.lineTotal.amount,
-              reversal: item.reversal || false,
-            }
-          }
-        });
-
-        let currentUserTimezoneName = '';
-        if (typeof window !== 'undefined') {
-          const userPublicTimezone = props.currentUser?.attributes?.profile?.publicData?.timeZone;
-          const userTimeZone = userPublicTimezone ? userPublicTimezone.replace(/-/g, '/') : getDefaultTimeZoneOnBrowser();
-          currentUserTimezoneName = getTimeZoneBadgeContent(userTimeZone);
-        }
-
-        const rescheduleDifference = reschedule &&
-          (values.bookingEndTime - values.bookingStartTime) / 1000 / 60 / 60
-          !== reschedule?.attributes?.lineItems.reduce((acc, item) => acc + parseInt(item.quantity || 0), 0);
-        // [/SKYFARER]
 
         return (
           <Form onSubmit={handleSubmit} className={classes} enforcePagePreloadFor="CheckoutPage">
+            <FieldHidden
+              name="priceVariant"
+              format={value => {
+                return value?.name == null ? 'default' : value.name;
+              }}
+              parse={value => {
+                const response =
+                  value === 'default'
+                    ? priceVariants?.[0]
+                    : priceVariants.find(pv => pv.name === value);
+                return response;
+              }}
+            />
+
             {monthlyTimeSlots && timeZone ? (
               <FieldDateAndTimeInput
                 seatsEnabled={seatsEnabled}
                 setSeatsOptions={setSeatsOptions}
                 startDateInputProps={{
-                  label: intl.formatMessage({ id: 'BookingTimeForm.bookingStartTitle' }),
+                  label: intl.formatMessage({ id: 'BookingFixedDurationForm.bookingStartTitle' }),
                   placeholderText: startDatePlaceholder,
-                }}
-                endDateInputProps={{
-                  label: intl.formatMessage({ id: 'BookingTimeForm.bookingEndTitle' }),
-                  placeholderText: endDatePlaceholder,
                 }}
                 className={css.bookingDates}
                 listingId={listingId}
+                startTimeInterval={startTimeInterval}
                 onFetchTimeSlots={onFetchTimeSlots}
                 monthlyTimeSlots={monthlyTimeSlots}
                 timeSlotsForDate={timeSlotsForDate}
+                minDurationStartingInInterval={minDurationStartingInInterval}
                 values={values}
                 intl={intl}
                 form={form}
@@ -246,14 +192,12 @@ export const BookingTimeForm = props => {
                 name="seats"
                 id="seats"
                 disabled={!startTime}
-                label={intl.formatMessage({ id: 'BookingTimeForm.seatsTitle' })}
+                label={intl.formatMessage({ id: 'BookingFixedDurationForm.seatsTitle' })}
                 className={css.fieldSeats}
                 onChange={values => {
                   onHandleFetchLineItems({
                     values: {
-                      bookingStartDate: startDate,
                       bookingStartTime: startTime,
-                      bookingEndDate: endDate,
                       bookingEndTime: endTime,
                       seats: values,
                     },
@@ -261,7 +205,7 @@ export const BookingTimeForm = props => {
                 }}
               >
                 <option disabled value="">
-                  {intl.formatMessage({ id: 'BookingTimeForm.seatsPlaceholder' })}
+                  {intl.formatMessage({ id: 'BookingFixedDurationForm.seatsPlaceholder' })}
                 </option>
                 {seatsOptions.map(s => (
                   <option value={s} key={s}>
@@ -274,7 +218,7 @@ export const BookingTimeForm = props => {
             {showEstimatedBreakdown ? (
               <div className={css.priceBreakdownContainer}>
                 <H6 as="h3" className={css.bookingBreakdownTitle}>
-                  <FormattedMessage id="BookingTimeForm.priceBreakdownTitle" />
+                  <FormattedMessage id="BookingFixedDurationForm.priceBreakdownTitle" />
                 </H6>
                 <hr className={css.totalDivider} />
                 <EstimatedCustomerBreakdownMaybe
@@ -290,13 +234,13 @@ export const BookingTimeForm = props => {
 
             {fetchLineItemsError ? (
               <span className={css.sideBarError}>
-                <FormattedMessage id="BookingTimeForm.fetchLineItemsError" />
+                <FormattedMessage id="BookingFixedDurationForm.fetchLineItemsError" />
               </span>
             ) : null}
 
             <div className={css.submitButton}>
               <PrimaryButton type="submit" inProgress={fetchLineItemsInProgress}>
-                <FormattedMessage id="BookingTimeForm.requestToBook" />
+                <FormattedMessage id="BookingFixedDurationForm.requestToBook" />
               </PrimaryButton>
             </div>
 
@@ -307,17 +251,12 @@ export const BookingTimeForm = props => {
                 <FormattedMessage
                   id={
                     isOwnListing
-                      ? 'BookingTimeForm.ownListing'
-                      : 'BookingTimeForm.youWontBeChargedInfo'
+                      ? 'BookingFixedDurationForm.ownListing'
+                      : 'BookingFixedDurationForm.youWontBeChargedInfo'
                   }
                 />
               )}
             </p>
-            { // [SKYFARER]
-              !isOwnListing && onContactUser ? (<div className={css.submitButton}>
-                <ConsultationBox onContactUser={onContactUser} authorDisplayName={authorDisplayName} />
-              </div>) : null
-            }
           </Form>
         );
       }}
@@ -325,4 +264,4 @@ export const BookingTimeForm = props => {
   );
 };
 
-export default BookingTimeForm;
+export default BookingFixedDurationForm;

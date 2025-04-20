@@ -627,7 +627,7 @@ export const BookingDatesForm = props => {
           endDatePlaceholder || intl.formatDate(tomorrow, dateFormatOptions);
 
         const relevantTimeSlots =
-          seatsEnabled && startDate && !endDate
+          startDate && !endDate
             ? combineConsecutiveTimeSlots(allTimeSlots, startDate)
             : allTimeSlots;
 

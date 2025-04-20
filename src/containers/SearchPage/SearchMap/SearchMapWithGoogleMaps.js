@@ -486,7 +486,7 @@ class SearchMapWithGoogleMaps extends Component {
         clickableIcons: false,
         streetViewControl: false,
 
-        zoomControlOptions: {
+        cameraControlOptions: {
           position: controlPosition,
         },
 

@@ -15,6 +15,7 @@ import {
   LISTING_UNIT_TYPES,
   STOCK_MULTIPLE_ITEMS,
   AVAILABILITY_MULTIPLE_SEATS,
+  LINE_ITEM_FIXED,
 } from '../../util/types';
 import { subtractTime } from '../../util/dates';
 import {
@@ -94,7 +95,9 @@ const BookingTimeInfoMaybe = props => {
     : null;
 
   const lineItemUnitType = unitLineItem ? unitLineItem.code : null;
-  const dateType = lineItemUnitType === LINE_ITEM_HOUR ? DATE_TYPE_DATETIME : DATE_TYPE_DATE;
+  const dateType = [LINE_ITEM_HOUR, LINE_ITEM_FIXED].includes(lineItemUnitType)
+    ? DATE_TYPE_DATETIME
+    : DATE_TYPE_DATE;
 
   const timeZone = transaction?.listing?.attributes?.availabilityPlan?.timezone || 'Etc/UTC';
   const { bookingStart, bookingEnd } = bookingData(transaction, lineItemUnitType, timeZone);

@@ -635,10 +635,11 @@
   display: inline-flex;
   justify-content: space-between;
   width: 100%;
-  padding: 1px 0 4px 0;
-  line-height: 36px;
   list-style: none;
   font-weight: var(--fontWeightRegular);
+  line-height: 24px;
+  padding: 7px 0px 10px;
+  gap: 8px;
 
   &:not(:last-child) {
     border-bottom: 1px solid var(--colorGrey100);

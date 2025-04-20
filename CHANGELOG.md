@@ -14,6 +14,64 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Add currently available translations for DE, ES.
+  [#584](https://github.com/sharetribe/web-template/pull/584)
+- [change] update deeply nested dependency: path-to-regexp
+  [#580](https://github.com/sharetribe/web-template/pull/580)
+- [fix] SectionDetails (ListingPage & ProfilePage): fix line-height and padding for the details row.
+  [#576](https://github.com/sharetribe/web-template/pull/576)
+- [fix] OrderPanel: purchase and inquiries did not check closed status of the listing.
+  [#573](https://github.com/sharetribe/web-template/pull/573)
+
+## [v8.0.1] 2025-04-03
+
+- [add] Add currently available translations for FR.
+  [#571](https://github.com/sharetribe/web-template/pull/571)
+- [change] Remove Google Maps legacy Places API support
+  [#570](https://github.com/sharetribe/web-template/pull/569)
+- [fix] Topbar/LinksMenu: align the menu label correctly.
+  [#569](https://github.com/sharetribe/web-template/pull/569)
+- [fix] BookingFixedDurationForm: form was using wrong translation keys.
+  [#568](https://github.com/sharetribe/web-template/pull/568)
+- [fix] Fix the transition of the SavedCardDetails menu.
+  [#567](https://github.com/sharetribe/web-template/pull/567)
+
+  [v8.0.1]: https://github.com/sharetribe/web-template/compare/v8.0.0...v8.0.1
+
+## [v8.0.0] 2025-03-26
+
+This major release adds support for bookings with a fixed duration. The feature is touching so many
+parts of the codebase, that we decided to bump the major version.
+
+- [add] Add support for bookings with a fixed duration.
+  [#560](https://github.com/sharetribe/web-template/pull/560)
+- [fix] Fix the positioning of the camera control otpions on Google Maps
+  [#565](https://github.com/sharetribe/web-template/pull/565)
+- [fix] Fix currently available translations for FR.
+  [#559](https://github.com/sharetribe/web-template/pull/559)
+
+  [v8.0.0]: https://github.com/sharetribe/web-template/compare/v7.3.0...v8.0.0
+
+## [v7.3.0] 2025-02-19
+
+- [fix] Remove obsolete Flex CLI references
+  [#550](https://github.com/sharetribe/web-template/pull/550)
+- [fix] BookingTimeForm (hourly booking): calendar day was not localized causing isDayBlocked fn to
+  choose past day, if listing's time zone was to the west of the browser's location / time zone.
+  [#556](https://github.com/sharetribe/web-template/pull/556)
+- [fix] AuthenticationPage: fix a bug with autenticated users accessing the auth pages.
+  [#555](https://github.com/sharetribe/web-template/pull/555)
+- [fix] CheckoutPageWithPayment & PaymentMethodsPage had a typo in a variable name.
+  [#554](https://github.com/sharetribe/web-template/pull/554)
+- [fix] DatePicker: fix a bug with the calendar transition.
+  [#553](https://github.com/sharetribe/web-template/pull/553)
+- [add] Add fixed bookings and price variant name support to booking process email templates.
+  [#552](https://github.com/sharetribe/web-template/pull/552)
+- [fix] LocationAutocompleteInput: fix a bug with Google Maps API loading order with Webpack Dev
+  Server. [#548](https://github.com/sharetribe/web-template/pull/548)
+
+  [v7.3.0]: https://github.com/sharetribe/web-template/compare/v7.2.0...v7.3.0
+
 ## [v7.2.0] 2025-01-30
 
 - [add] Add support for the new Google Places API
