@@ -125,6 +125,7 @@ export class ModalComponent extends Component {
       containerClassName,
       contentClassName,
       lightCloseButton,
+      closeButtonClassName,
       intl,
       isClosedClassName,
       isOpen,
@@ -138,7 +139,7 @@ export class ModalComponent extends Component {
     const closeBtn = isOpen ? (
       <Button
         onClick={this.handleClose}
-        rootClassName={closeButtonClasses}
+        rootClassName={classNames(closeButtonClassName || closeButtonClasses)}
         title={closeModalMessage}
       >
         <span className={css.closeText}>

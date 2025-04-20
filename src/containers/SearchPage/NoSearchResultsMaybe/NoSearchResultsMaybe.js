@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FormattedMessage } from '../../../util/reactIntl';
-import { NamedLink, ModalInMobile } from '../../../components';
+import { NamedLink } from '../../../components';
+import ModalIframeButton from '../../../extensions/common/components/ModalIframeButton/ModalIframeButton';
 
 import { X, Plus, FilePenLine } from 'lucide-react';
 
@@ -15,15 +16,7 @@ const NoSearchResultsMaybe = props => {
   const params = Object.fromEntries(searchParams.entries());
   const category = params.pub_categoryLevel1;
     
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [iframeUrl, setIframeUrl] = useState('');
   const [formId, setFormId] = useState(''); // State for formId
-
-  //are we in a mobile experience?
-  const MODAL_BREAKPOINT = 768; 
-  const isWindowDefined = typeof window !== 'undefined';
-  const isMobileLayout = isWindowDefined && window.innerWidth < MODAL_BREAKPOINT;
-
 
   // Effect to update formId based on category
   useEffect(() => {
@@ -46,19 +39,7 @@ const NoSearchResultsMaybe = props => {
     setFormId(newFormId); // Update formId state
   }, [category]); // Dependency array to watch for changes in category
 
-  const handleButtonClick = () => {
-
-    const url = 'https://form.jotform.com/' + formId;
-    if(isMobileLayout){
-      window.open(url);
-    } else {
-      setIframeUrl( url );
-      setModalOpen(true);
-    }
-  };
-
   const getCategoryLabel = (category) => {
-
     switch (category) {
       case 'location':
         return 'Location';
@@ -67,11 +48,9 @@ const NoSearchResultsMaybe = props => {
       case 'location-machine':
         return 'Location with a Machine';
       default:
-        return; // Do nothing if category doesn't match
+        return ''; // Return an empty string if category doesn't match
     }
   };
-
-  const onManageDisableScrolling = (isDisabled) => {};
 
   return hasNoResult ? (
     <div className={css.noSearchResults}>
@@ -93,29 +72,15 @@ const NoSearchResultsMaybe = props => {
         </span>
         
         {formId && ( // Check if formId has a value
-          <span>
-           <button className={css.openLeadForm} onClick={handleButtonClick}>
-              <FilePenLine/> Request a {getCategoryLabel(category)}
-              </button>
-          </span>
+          
+            <ModalIframeButton 
+              iframeUrl={`https://form.jotform.com/${formId}`} 
+              buttonLabel={<FormattedMessage id="SearchPage.requestFormLabel" values={{categoryLabel: getCategoryLabel(category)}} />} 
+              icon={FilePenLine} 
+              buttonClassName={css.openLeadForm}
+            />
         )}
       </div>
-
-      <ModalInMobile
-        id="iframeModal"
-        isModalOpen={isModalOpen}
-        
-        onClose={() => {
-          setModalOpen(false);
-          onManageDisableScrolling(false); // Allow scrolling when modal is closed
-        }}
-        showAsModalMaxWidth={99999} // Adjust as needed
-        onManageDisableScrolling={onManageDisableScrolling} // Pass the function to manage scrolling
-        isModalOpenOnMobile={isModalOpen} // Pass the modal open state
-      >
-        <iframe src={iframeUrl} className={css.modal} border="0" width="100%" title="Modal Content" />
-
-      </ModalInMobile>
     </div>
   ) : null;
 };

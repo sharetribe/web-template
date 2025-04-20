@@ -1,13 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Phone } from 'lucide-react';
+import { Phone, FilePenLine } from 'lucide-react';
 import classNames from 'classnames';
 import { FormattedMessage } from '../../../../util/reactIntl';
+import ModalIframeButton from '../ModalIframeButton/ModalIframeButton';
 
 import css from './RegionalPartnerPromo.module.css';
+
+// Create a mapping of icon names to components
+const iconMap = {
+    Phone: Phone,
+    FilePenLine: FilePenLine,
+    // Add more icons as needed
+};
 
 const RegionalPartnerPromo = ({ address, varient }) => {
     const [promoData, setPromoData] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [isVisible, setIsVisible] = useState(true);
 
     // Extract region from location.search
     const regionMatch = address?.match(/([^,]+?)(?:\s+\d{5})?,\s*(Canada|United States)$/);
@@ -19,8 +28,8 @@ const RegionalPartnerPromo = ({ address, varient }) => {
             fetch(`https://partner-promo-api.vendingvillage.com/?region=${region}`)
                 .then(response => response.json())
                 .then(data => {
-                    console.log(region, data)
-                    if (data && data['Promo Title'] && data['Company Name'] && data['CTA Label'] && data['CTA Link']) {
+                    //console.log(region, data)
+                    if (data?.id) {
                         setPromoData(data);
                     } else {
                         setPromoData(null);
@@ -39,7 +48,11 @@ const RegionalPartnerPromo = ({ address, varient }) => {
         }
     }, [region]);
 
-    if (loading || !region || !promoData) {
+    const handleClose = () => {
+        setIsVisible(false);
+    };
+
+    if (!isVisible || loading || !region || !promoData) {
         return null;
     }
 
@@ -47,16 +60,27 @@ const RegionalPartnerPromo = ({ address, varient }) => {
 
     return (
         <div className={classes}>
+            <button onClick={handleClose} className={css.closeButton}>&times;</button>
+            
             <div className={css.promoContainer}>
-                <h2 className={css.title}>{promoData['Promo Title']}</h2>
+                <h2 className={css.title}>{promoData.promoTitle}</h2>
                 <div className={css.promoTextContainer}>
-                    <p className={css.promoText}>
-                        <strong>{promoData['Company Name']} </strong>
-                        <FormattedMessage id="RegionalPartnerPromo.title" values={{region}} />
-                    </p>
-                    <a target="_blank" href={promoData['CTA Link']} className={css.ctaButton}>
-                        <Phone/> {promoData['CTA Label']}
-                    </a>
+                    <p
+                        className={css.promoText}
+                        dangerouslySetInnerHTML={{
+                            __html: promoData.promoBody
+                                ?.replace('{companyName}', `<strong>${promoData.companyName}</strong>`)
+                                .replace('{region}', region),
+                        }}
+                    />
+                    
+                    <ModalIframeButton 
+                        iframeUrl={`https://form.jotform.com/${promoData.formId}?region=${region}&promoTitle=${encodeURIComponent(promoData.promoTitle)}&contactName=${promoData.contactName}&contactEmail=${promoData.contactEmail}&companyName=${promoData.companyName}&logoUrl=${promoData.logoUrl}`} 
+                        buttonLabel={promoData.ctaLabel} 
+                        icon={iconMap[promoData.icon] || Phone}
+                        buttonClassName={css.ctaButton}
+                    />
+                    
                 </div>
             </div>
 
