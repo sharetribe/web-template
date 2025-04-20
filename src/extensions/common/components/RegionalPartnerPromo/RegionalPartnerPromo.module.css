@@ -104,6 +104,8 @@
 
     &.search{
         padding-top:30px;
+        margin-right: 50px; /* to account for production chat widget */
+
          .promoContainer{
             
             border-radius: 8px;
