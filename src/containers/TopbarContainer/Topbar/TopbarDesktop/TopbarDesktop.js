@@ -242,6 +242,7 @@ const TopbarDesktop = props => {
 
       <CustomLinksMenu
         currentPage={currentPage}
+        currentUser={currentUser}
         customLinks={customLinks}
         intl={intl}
         hasClientSideContentReady={authenticatedOnClientSide || !isAuthenticatedOrJustHydrated}
