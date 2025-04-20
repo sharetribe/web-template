@@ -6,7 +6,7 @@
 }
 
 .listingCardsMapVariant {
-  padding: 0 0 96px 0;
+  padding: 0 0 40px 0;
 
   display: grid;
   grid-template-columns: repeat(1, 1fr);

@@ -4,6 +4,11 @@
     animation: fadeIn 500ms forwards 2s; /* Animate after 3 seconds */
     opacity: 0;
 
+    .closeButton{
+        border:0;
+        display:none;
+    }
+
     .promoContainer{
    
         background-color: white;
@@ -25,7 +30,7 @@
             text-align: left;
 
         }
-        & a.ctaButton {
+        & button.ctaButton {
             font-size: 13px;
             background-color: var(--marketplaceColor);
             color: white;
@@ -34,6 +39,8 @@
             text-decoration: none;
             white-space: nowrap;
             transition: background-color 200ms ease-in-out;
+            border:0;
+            cursor:pointer;
 
 
             &:hover {
@@ -74,7 +81,7 @@
                 }
             }
 
-            & a.ctaButton {
+            & button.ctaButton {
                 padding: 8px 12px;
             }
 
@@ -96,12 +103,11 @@
     }
 
     &.search{
+        padding-top:30px;
          .promoContainer{
-            max-width: 400px;
+            
             border-radius: 8px;
             box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.05);
-            margin-top: -40px;
-            margin-bottom: 6px;
             
             &:hover {
                 box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.15);
@@ -112,12 +118,54 @@
                 flex-direction: row;
                 gap: 10px;
                 align-items: center;
+                justify-content: space-between;
             }
         }
         .selfPromo{
             text-align: left;
             margin: 0 0 20px 10px;
 
+        }
+
+        @media (--viewportMedium) {
+            position: fixed;
+            z-index: 10;
+            bottom: 0;
+            left: 50vw;
+            padding:24px;
+
+            & .closeButton{
+                position: absolute;
+                cursor: pointer;
+                right: 0;
+                display: block;
+                margin-right: 28px;
+            }
+
+            & .promoContainer{
+                max-width: none;
+            }
+
+            & .selfPromo{
+                margin-bottom:0px;
+                text-align: center;
+
+                & a{
+                    color:white;
+                    text-shadow:1px 1px rgba(0, 0, 0, 0.25)
+                }
+            }
+        }
+        @media (--viewportLarge){
+            left: 62.5vw;
+            padding: 36px;
+
+            & .closeButton{
+                margin-right: 40px;
+            }
+            & .selfPromo{
+                margin-bottom:-10px;
+            }
         }
     }
 

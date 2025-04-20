@@ -572,12 +572,11 @@ export class SearchPageComponent extends Component {
                   setActiveListing={onActivateListing}
                   isMapVariant
                 />
-                
-                <RegionalPartnerPromo address={searchParamsInURL.address} varient="search" />
-
+<RegionalPartnerPromo address={searchParamsInURL.address} varient="search" />
               </div>
             )}
           </div>
+          
           <ModalInMobile
             className={css.mapPanel}
             id="SearchPage.map"
@@ -606,7 +605,9 @@ export class SearchPageComponent extends Component {
               ) : null}
             </div>
           </ModalInMobile>
+          
         </div>
+        
       </Page>
     );
   }

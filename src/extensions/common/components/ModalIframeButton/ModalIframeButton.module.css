@@ -1,0 +1,28 @@
+@import '../../../../styles/customMediaQueries.css';
+
+.root{
+    padding:0;
+
+    & .closeButton{
+        position: absolute;
+        right: calc(50% - 385px);
+        cursor:pointer;
+        border:0;
+        margin: 16px;
+        background: white;
+        padding: 6px 13px 9px 5px;
+        border-radius: 20px;
+
+        &:hover{
+            box-shadow: var(--boxShadowButton);
+        }
+    }
+
+    & .modal{
+        border:none;
+        height:100vh;
+        background: white;
+        width: 770px;
+    
+    }
+}
