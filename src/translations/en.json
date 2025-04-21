@@ -277,6 +277,7 @@
   "EditListingPhotosForm.updateFailed": "Failed to update listing. Please try again.",
   "EditListingPhotosPanel.createListingTitle": "Images",
   "EditListingPhotosPanel.title": "Edit the images of {listingTitle}",
+  "EditListingPhotosPanel.imageGenerator": "Image Generator",
   "EditListingPricingAndStockForm.oldStockTotalWasOutOfSync": "Oops, the stock of this listing is out of sync. Someone might just have bought this item. Please refresh the page and try again.",
   "EditListingPricingAndStockForm.priceInputPlaceholder": "Add a price…",
   "EditListingPricingAndStockForm.pricePerProduct": "Price",

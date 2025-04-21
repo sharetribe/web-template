@@ -7,11 +7,13 @@ import { FormattedMessage } from '../../../../util/reactIntl';
 import { LISTING_STATE_DRAFT } from '../../../../util/types';
 
 // Import shared components
-import { H3, ListingLink, SecondaryButton } from '../../../../components';
+import { H3, ListingLink } from '../../../../components';
 import {ImagePlus} from 'lucide-react';
 
 // Import modules from this directory
 import EditListingPhotosForm from './EditListingPhotosForm';
+import ModalIframeButton from '../../../../extensions/common/components/ModalIframeButton/ModalIframeButton';
+
 import css from './EditListingPhotosPanel.module.css';
 
 const getInitialValues = params => {
@@ -41,7 +43,7 @@ const EditListingPhotosPanel = props => {
   const classes = classNames(rootClass, className);
   const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
 
-  const handleGenerateImageButtonClick = () => {
+  const getImageGeneratorUrl = () => {
     
     // Extract city and state from the full address
     const fullAddress = listing?.attributes?.publicData?.location?.address || '';
@@ -72,16 +74,10 @@ const EditListingPhotosPanel = props => {
       cityRegion: cityRegion,
     }
     const url = `https://agent.vendingvillage.com/image-generator?${new URLSearchParams(params)}`;
-    const maxWidth = 1120;
-    const maxHeight = 500;
-    // Calculate 90% of available screen dimensions
-    const width = Math.min(maxWidth, Math.floor(window.screen.width * 0.9));
-    const height = Math.min(maxHeight, Math.floor(window.screen.height * 0.9));
-    const left = (window.screen.width - width) / 2;
-    const top = (window.screen.height - height) / 2;
-    const windowFeatures = `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`;
-    window.open(url, '_blank', windowFeatures);
+    return url;
   };
+
+  const imageGeneratorUrl = getImageGeneratorUrl();
 
   return (
     <div className={classes}>
@@ -102,8 +98,19 @@ const EditListingPhotosPanel = props => {
       {listing?.attributes?.publicData?.listingType === 'sell' && (
         
         <div className={css.generateImageButton}>
-          <SecondaryButton  onClick={handleGenerateImageButtonClick}><ImagePlus/> Image Generator</SecondaryButton>
+          
+          <ModalIframeButton 
+              iframeUrl={imageGeneratorUrl} 
+              buttonLabel={<FormattedMessage id="EditListingPhotosPanel.imageGenerator" />} 
+              icon={ImagePlus} 
+              buttonClassName="buttonSecondary"
+              modalWidth="1100px"
+              modalHeight="575px"
+            />
+
         </div>
+
+        
 
       )}
 
