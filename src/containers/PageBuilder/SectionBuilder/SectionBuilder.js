@@ -133,10 +133,14 @@ const SectionBuilder = props => {
         customOption.isMedium = section.sectionName?.indexOf('- Medium') >= 0;
         customOption.isFullH = section.sectionName?.indexOf('- FullH') >= 0;
         customOption.isFullW = section.sectionName?.indexOf('- FullW') >= 0;
-
         // Content text is larger & gray.
         if (section.sectionName?.includes('- TextGray')) {
           customOption.hasTextGray = true;
+        }
+        customOption.hasStar = section.sectionName?.indexOf('- Star') >= 0;
+        if (customOption.hasStar) {
+          const starPos = section.sectionName?.indexOf('- Star');
+          customOption.starDeco = parseInt(section.sectionName?.substring(starPos + 6, starPos + 7));
         }
 
         if (Section) {

@@ -39,6 +39,9 @@ const SectionContainer = props => {
     customOption?.isFullH ? css.sectionContentFullH : '',
     customOption?.isFullW ? css.sectionContentFullW : '',
     customOption?.hasTextGray ? css.sectionContentHasTextGray : '',
+    customOption?.hasStar ? css.starDeco : '',
+    customOption?.hasStar ? (
+      css[`starDeco${customOption?.starDeco}`] ?? '') : '',
     as == 'footer' ? css.customFooter : ''
   );
 

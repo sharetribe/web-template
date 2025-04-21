@@ -51,6 +51,7 @@ const LinkedLogo = props => {
         className={logoClassName}
         logoImageClassName={logoImageClassName}
         alt={alt}
+        version={version}
       />
     </NamedLink>
   );

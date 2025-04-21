@@ -239,10 +239,10 @@ function createBlockCustomProps(block) {
   // Section photo slider
   if (block.blockName?.includes('photo slider ::')) {
     blockCustomProps.sliderImages = [
-      intl.formatMessage({ id: 'PhotoSlider.' + block.blockId + '.image_1', defaultMessage:'# ' }),
-      intl.formatMessage({ id: 'PhotoSlider.' + block.blockId + '.image_2', defaultMessage:'#' }),
-      intl.formatMessage({ id: 'PhotoSlider.' + block.blockId + '.image_3', defaultMessage:'#' }),
-      intl.formatMessage({ id: 'PhotoSlider.' + block.blockId + '.image_4', defaultMessage:'#' }),
+      intl.formatMessage({ id: 'PhotoSlider.' + block.blockId + '.image_1', defaultMessage:'' }),
+      intl.formatMessage({ id: 'PhotoSlider.' + block.blockId + '.image_2', defaultMessage:'' }),
+      intl.formatMessage({ id: 'PhotoSlider.' + block.blockId + '.image_3', defaultMessage:'' }),
+      intl.formatMessage({ id: 'PhotoSlider.' + block.blockId + '.image_4', defaultMessage:'' }),
     ];
   }
 
