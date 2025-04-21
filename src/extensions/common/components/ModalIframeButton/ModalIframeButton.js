@@ -3,7 +3,7 @@ import { Modal } from '../../../../components';
 
 import css from './ModalIframeButton.module.css';
 
-const ModalIframeButton = ({ iframeUrl, buttonLabel, icon: Icon, buttonClassName }) => {
+const ModalIframeButton = ({ iframeUrl, buttonLabel, icon: Icon, buttonClassName, modalWidth, modalHeight }) => {
   const [isModalOpen, setModalOpen] = useState(false);
 
   const MODAL_BREAKPOINT = 768;
@@ -24,7 +24,7 @@ const ModalIframeButton = ({ iframeUrl, buttonLabel, icon: Icon, buttonClassName
   };
 
   return (
-    <>
+    <div>
       <button className={buttonClassName} onClick={handleOpen}>
         {Icon && <Icon />} {buttonLabel}
       </button>
@@ -42,10 +42,19 @@ const ModalIframeButton = ({ iframeUrl, buttonLabel, icon: Icon, buttonClassName
           onManageDisableScrolling={onManageDisableScrolling} // Pass the function to manage scrolling
           usePortal
         >
-          <iframe src={iframeUrl} className={css.modal} border="0" width="100%" title="Modal Content" />
+          <iframe 
+            src={iframeUrl} 
+            className={css.modal} 
+            border="0" 
+            style={{ 
+              width: modalWidth ?? "770px", 
+              height: modalHeight ?? "calc(100vh - 50px)" 
+            }} 
+            title="Modal Content" 
+          />
         </Modal>
       
-    </>
+    </div>
   );
 };
 
