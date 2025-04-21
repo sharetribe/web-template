@@ -92,6 +92,7 @@
 
   margin-top: 0;
   margin-bottom: 0;
+  font-size: 17px;
 
   &:hover,
   &:focus {
@@ -108,6 +109,8 @@
 
   /* Placeholder text might be too wide */
   &::placeholder {
+    font-size: 17px;
+    letter-spacing: -1px;
     text-overflow: ellipsis;
     overflow-x: hidden;
     transition: var(--transitionStyleButton);

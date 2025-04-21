@@ -61,6 +61,7 @@ const BlockWithCols = props => {
     alignment,
     ctaButtonPrimaryClass,
     ctaButtonSecondaryClass,
+    titleEyebrow,
     col1Title,
     col1Text,
     col2Title,
@@ -89,6 +90,7 @@ const BlockWithCols = props => {
       />
       {hasTextComponentFields ? (
         <div className={classNames(textClassName, alignmentClass, css.text)}>
+          <span className={css.titleEyebrow}>{ titleEyebrow }</span>
           <Field data={title} options={options} />
           <Field data={text} options={options} />
           <Field data={callToAction} className={ctaButtonClass} options={options} />

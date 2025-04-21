@@ -99,11 +99,6 @@ const BlockBuilder = props => {
         const config = components[block.blockType];
         const Block = config?.component;
         const blockId = block.blockId || `${sectionId}-block-${index + 1}`;
-
-        if (block.blockName?.startsWith('2 cols buttons ::')) {
-          block.blockType = 'blockWithCols';
-        }
-
         const blockCustomProps = blockCustomPropsList[index];
 
         if (Block) {
@@ -138,7 +133,7 @@ function createBlockCustomProps(block) {
   // Custom Blocks. Use name to enable.
   blockCustomProps.ctaButtonPrimaryClass = DEFAULT_CLASSES.ctaButtonPrimary;
   blockCustomProps.ctaButtonSecondaryClass = DEFAULT_CLASSES.ctaButtonSecondary;
-  // ie. blockName = '2 cols buttons :: name '
+  // ie. blockName = '2 cols buttons :: block_name';
   if (block.blockName?.includes('contact buttons ::')) {
     blockCustomProps.contactButtons = {
       ctaButtonPrimaryClass: DEFAULT_CLASSES.ctaButtonPrimary,
@@ -172,6 +167,7 @@ function createBlockCustomProps(block) {
   // Adds 2 buttons to the end of the block content.
   if (block.blockName?.includes('2 buttons ::')) {
     blockCustomProps.twoButtons = {
+      titleEyebrow: intl.formatMessage({ id: 'TwoButtons.' + block.blockId + '.titleEyebrow', defaultMessage:'Hello' }),
       callToAction1: {
         fieldType: 'internalButtonLink',
         href: intl.formatMessage({ id: 'TwoButtons.' + block.blockId + '.cta1Link', defaultMessage:'Hello' }),
@@ -213,16 +209,18 @@ function createBlockCustomProps(block) {
     blockCustomProps.hasIconImg = true;
   }
   // Social Link strip.
-  if (block.blockName?.startsWith('social links ::')) {
+  if (block.blockName?.includes('social links ::')) {
     blockCustomProps.hasSocialLinks = true;
   }
-  // Section with 2 colu,ms and 2 buttons.
-  if (block.blockName?.startsWith('2 cols buttons ::')) {
+  // Section with 2 columns and 2 buttons.
+  if (block.blockName?.includes('2 cols buttons ::')) {
     block.blockType = 'blockWithCols';
 
     blockCustomProps.ctaButtonPrimaryClass = DEFAULT_CLASSES.ctaButtonPrimary;
     blockCustomProps.ctaButtonSecondaryClass = DEFAULT_CLASSES.ctaButtonSecondary;
 
+    blockCustomProps.titleEyebrow = intl.formatMessage({ id: 'BlockWithCols.' + block.blockId + '.titleEyebrow', defaultMessage:'Hello' });
+    blockCustomProps.col1Title = intl.formatMessage({ id: 'BlockWithCols.' + block.blockId + '.col1Title', defaultMessage:'Hello' });
     blockCustomProps.col1Title = intl.formatMessage({ id: 'BlockWithCols.' + block.blockId + '.col1Title', defaultMessage:'Hello' });
     blockCustomProps.col2Title = intl.formatMessage({ id: 'BlockWithCols.' + block.blockId + '.col2Title', defaultMessage:'Hello' });
     blockCustomProps.col1Text = intl.formatMessage({ id: 'BlockWithCols.' + block.blockId + '.col1Text', defaultMessage:'Hello' });
@@ -237,6 +235,15 @@ function createBlockCustomProps(block) {
       href: intl.formatMessage({ id: 'BlockWithCols.' + block.blockId + '.cta2Link', defaultMessage:'Hello' }),
       content: intl.formatMessage({ id: 'BlockWithCols.' + block.blockId + '.cta2Text', defaultMessage:'Hello' }),
     };
+  }
+  // Section photo slider
+  if (block.blockName?.includes('photo slider ::')) {
+    blockCustomProps.sliderImages = [
+      intl.formatMessage({ id: 'PhotoSlider.' + block.blockId + '.image_1', defaultMessage:'# ' }),
+      intl.formatMessage({ id: 'PhotoSlider.' + block.blockId + '.image_2', defaultMessage:'#' }),
+      intl.formatMessage({ id: 'PhotoSlider.' + block.blockId + '.image_3', defaultMessage:'#' }),
+      intl.formatMessage({ id: 'PhotoSlider.' + block.blockId + '.image_4', defaultMessage:'#' }),
+    ];
   }
 
   return blockCustomProps;

@@ -16,6 +16,17 @@
   }
 }
 
+.titleEyebrow {
+  color: var(--gray, #BCBCBC);
+  font-family: Roboto;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%; /* 22.5px */
+  margin-bottom: 10px;
+}
+
+
 .alignLeft {
   text-align: left;
 }
@@ -67,10 +78,12 @@
   gap: 24px;
 
   h3 {
+    font-family: var(--fontFamilyHeadings);
     font-size: 18px;
     font-style: normal;
     font-weight: 400;
-    line-height: 138%; /* 24.84px */
+    line-height: 138%;
+    margin-top: 0;
   }
 
   h3, p {
@@ -84,6 +97,6 @@
   gap: 15px;
 
   a {
-    margin-top: 10px;
+    margin-top: 0;
   }
 }

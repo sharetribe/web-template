@@ -103,7 +103,6 @@ const SectionFooter = props => {
   const logoLayout = isMobileLayout ? 'mobile' : 'desktop';
 
   // use block builder instead of mapping blocks manually
-
   const blocksHasSocial = blocks.some((obj, idx, list) => obj.blockName?.startsWith('social links ::') ?? false);
 
   return (

@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 
 import Field, { hasDataInFields } from '../../Field';
 import BlockContainer from '../BlockContainer';
 
 import css from './BlockDefault.module.css';
+
+import sliderDefault1 from '../../../../assets/slider/slider_1.webp';
+import sliderDefault2 from '../../../../assets/slider/slider_2.webp';
+import sliderDefault3 from '../../../../assets/slider/slider_3.webp';
+import sliderDefault4 from '../../../../assets/slider/slider_4.webp';
+import sliderCss from './ImageSliderBlockComponent.module.css';
 
 const FieldMedia = props => {
   const { className, media, sizes, options } = props;
@@ -69,6 +75,7 @@ const BlockDefault = props => {
     hasTextLarger,
     hasCTASecondary,
     hasCTATertiary,
+    sliderImages,
     ...customProps
   } = props;
   const classes = classNames(rootClassName || css.root, className, hasLargeList ? css.reverseMediaPos : '');
@@ -106,14 +113,19 @@ const BlockDefault = props => {
 
   return (
     <BlockContainer id={blockId} className={classes}>
-      <FieldMedia
-        media={media}
-        sizes={responsiveImageSizes}
-        className={fieldMediaClass}
-        options={options}
-      />
+      {sliderImages?.length ? (
+        <ImageSliderBlockComponent images={sliderImages} className={fieldMediaClass} options={options}/>
+      ) : <FieldMedia
+          media={media}
+          sizes={responsiveImageSizes}
+          className={fieldMediaClass}
+          options={options}
+      />}
       {hasTextComponentFields ? (
         <div className={textComponentsClass}>
+          {twoButtons && twoButtons.titleEyebrow ? (
+            <span className={css.titleEyebrow}>{ twoButtons.titleEyebrow }</span>
+          ) : null}
           <Field data={title} options={options} />
           <Field data={text} options={options} />
           <Field data={callToAction} className={ctaCustomClass} options={options} />
@@ -158,3 +170,36 @@ const BlockDefault = props => {
 };
 
 export default BlockDefault;
+
+const ImageSliderBlockComponent = props => {
+  const { images } = props;
+  const [index, setIndex] = useState(0);
+
+  const defaultImages = [
+    sliderDefault1,
+    sliderDefault2,
+    sliderDefault3,
+    sliderDefault4,
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex(prev => (prev + 1) % images.length);
+    }, 7000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className={sliderCss.sliderWrapper}>
+      {defaultImages.map((src, i) => (
+        <img
+          key={i}
+          src={src}
+          alt={`Slide ${i}`}
+          className={`${sliderCss.sliderImage} ${index === i ? sliderCss.visible : ''}`}
+        />
+      ))}
+    </div>
+  );
+};

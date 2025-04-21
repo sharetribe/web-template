@@ -212,8 +212,8 @@
   --carouselWidth: 100vw;
 
   /* --TRANSITIONS */
-  --colorTransition: color 300ms ease-in,background-color 500ms ease-in, border 500ms ease-in;
-  --linkTransition: color 300ms ease-in, text-underline-offset 300ms ease-in;
+  --colorTransition: color 200ms ease-in,background-color 300ms ease-in, border 300ms ease-in;
+  --linkTransition: color 200ms ease-in, text-underline-offset 200ms ease-in;
 }
 
 /* ================ Global element styles ================ */

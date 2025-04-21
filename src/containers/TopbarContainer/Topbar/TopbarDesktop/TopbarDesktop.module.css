@@ -115,7 +115,9 @@
 }
 
 .topbarLinkLabel {
-  composes: textSmall from global;
+  font-weight: var(--fontWeightBold);
+  font-size: 17px;
+  letter-spacing: -1px;
   display: inline-block;
   margin: 27px 0;
   text-decoration: inherit;
@@ -212,7 +214,6 @@
 }
 
 .menuLink {
-  composes: textSmall from global;
   position: relative;
   display: block;
 
