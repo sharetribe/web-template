@@ -38,7 +38,12 @@ const getInitialValues = props => {
   const { unitType } = listing?.attributes?.publicData || {};
   return unitType === FIXED
     ? { ...getInitialValuesForPriceVariants(props), ...getInitialValuesForStartTimeInterval(props) }
-    : { price: listing?.attributes?.price };
+
+
+    : { price: listing?.attributes?.price ,
+      retailPrice: listing?.attributes?.publicData?.retailPrice || null,
+
+    };
 };
 
 const getEstimatedListing = (listing, updateValues) => {
@@ -134,30 +139,27 @@ const EditListingPricingPanel = props => {
         <EditListingPricingForm
           className={css.form}
           initialValues={initialValues}
-          onSubmit={values => {
-            const { price } = values;
 
+
+          onSubmit={values => {
+            const { price, retailPrice } = values;
+          
+            // Debug logging for retailPrice
+            console.log('🧾 Form values:', values);
+            console.log('📦 retailPrice type:', typeof retailPrice);
+            console.log('📦 retailPrice value:', retailPrice);
+            console.log('📦 retailPrice instanceof Money:', retailPrice instanceof Money);
+            console.log('📦 retailPrice structure:', retailPrice ? Object.keys(retailPrice) : null);
+          
             // New values for listing attributes
             let updateValues = {};
-
+          
             if (unitType === FIXED) {
               let publicDataUpdates = {};
-              // NOTE: components that handle price variants and start time interval are currently
-              // exporting helper functions that handle the initial values and the submission values.
-              // This is a tentative approach to contain logic in one place.
-              // We might remove or improve this setup in the future.
-
-              // This adds startTimeInterval to publicData
-              const startTimeIntervalChanges = handleSubmitValuesForStartTimeInterval(
-                values,
-                publicDataUpdates
-              );
-              // This adds lowest price variant to the listing.attributes.price and priceVariants to listing.attributes.publicData
-              const priceVariantChanges = handleSubmitValuesForPriceVariants(
-                values,
-                publicDataUpdates,
-                unitType
-              );
+          
+              const startTimeIntervalChanges = handleSubmitValuesForStartTimeInterval(values, publicDataUpdates);
+              const priceVariantChanges = handleSubmitValuesForPriceVariants(values, publicDataUpdates, unitType);
+          
               updateValues = {
                 ...priceVariantChanges,
                 ...startTimeIntervalChanges,
@@ -167,11 +169,38 @@ const EditListingPricingPanel = props => {
                 },
               };
             } else {
-              updateValues = { price };
+              // Handle retailPrice - ensure it's a number
+              let retailPriceValue = null;
+              
+              if (retailPrice) {
+                if (retailPrice instanceof Money) {
+                  // Convert Money to number (amount in subunits)
+                  retailPriceValue = retailPrice.amount;
+                } else if (typeof retailPrice === 'number') {
+                  retailPriceValue = retailPrice;
+                } else if (typeof retailPrice === 'string') {
+                  // Try to parse string to number
+                  const parsed = parseFloat(retailPrice);
+                  if (!isNaN(parsed)) {
+                    retailPriceValue = parsed;
+                  }
+                }
+              }
+              
+              console.log('📦 Final retailPriceValue:', retailPriceValue);
+              console.log('📦 Final retailPriceValue type:', typeof retailPriceValue);
+              
+              updateValues = {
+                price,
+                publicData: {
+                  ...listing?.attributes?.publicData,
+                  retailPrice: retailPriceValue,
+                },
+              };
             }
-
-            // Save the initialValues to state
-            // Otherwise, re-rendering would overwrite the values during XHR call.
+          
+            console.log('🧾 Final updateValues:', updateValues);
+          
             setState({
               initialValues: getInitialValues({
                 listing: getEstimatedListing(listing, updateValues),
@@ -179,6 +208,13 @@ const EditListingPricingPanel = props => {
             });
             onSubmit(updateValues);
           }}
+          
+
+
+
+
+
+          
           marketplaceCurrency={marketplaceCurrency}
           unitType={unitType}
           listingMinimumPriceSubUnits={listingMinimumPriceSubUnits}

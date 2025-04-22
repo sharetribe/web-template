@@ -196,6 +196,20 @@ export const EditListingPricingAndStockForm = props => (
             validate={priceValidators}
           />
 
+          <FieldCurrencyInput
+            id={`${formId}.retailPrice`}
+            name="retailPrice"
+            className={css.input}
+            label={intl.formatMessage(
+              { id: 'EditListingPricingAndStockForm.retailPricePerProduct' },
+              { unitType }
+            )}
+            placeholder={intl.formatMessage({
+              id: 'EditListingPricingAndStockForm.retailPriceInputPlaceholder',
+            })}
+            currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
+          />
+
           <UpdateStockToInfinityCheckboxMaybe
             formId={formId}
             hasInfiniteStock={hasInfiniteStock}

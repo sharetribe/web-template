@@ -116,6 +116,11 @@ export const EditListingPricingForm = props => (
         intl
       );
 
+      // Add required validation for retail price
+      const retailPriceRequiredMsgId = { id: 'EditListingPricingForm.retailPriceRequired' };
+      const retailPriceRequiredMsg = intl.formatMessage(retailPriceRequiredMsgId);
+      const retailPriceRequired = validators.required(retailPriceRequiredMsg);
+
       const classes = classNames(rootClassName || css.root, className);
       const submitReady = (updated && pristine) || ready;
       const submitInProgress = updateInProgress;
@@ -145,21 +150,24 @@ export const EditListingPricingForm = props => (
               />
             </>
           ) : (
-            <FieldCurrencyInput
-              id={`${formId}price`}
-              name="price"
-              className={css.input}
-              autoFocus={autoFocus}
-              label={intl.formatMessage(
-                { id: 'EditListingPricingForm.pricePerProduct' },
-                { unitType }
-              )}
-              placeholder={intl.formatMessage({
-                id: 'EditListingPricingForm.priceInputPlaceholder',
-              })}
-              currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
-              validate={priceValidators}
-            />
+            <>
+              <FieldCurrencyInput
+                id={`${formId}.retailPrice`}
+                name="retailPrice"
+                className={css.input}
+                autoFocus={autoFocus}
+                label="Price per wear (3-day rental baseline)"
+                placeholder={intl.formatMessage({
+                  id: 'EditListingPricingForm.priceInputPlaceholder',
+                })}
+                currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
+                validate={retailPriceRequired}
+              />
+
+              <p className={css.priceDescription}>
+                <FormattedMessage id="EditListingPricingForm.priceDescription" />
+              </p>
+            </>
           )}
 
           <Button

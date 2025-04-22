@@ -609,7 +609,12 @@ export function requestCreateListingDraft(data, config) {
     // If images should be saved, create array out of the image UUIDs for the API call
     // Note: in this template, image upload is not happening at the same time as listing creation.
     const imageProperty = typeof images !== 'undefined' ? { images: imageIds(images) } : {};
-    const ownListingValues = { ...imageProperty, ...rest };
+   
+    // Extract retailPrice from publicData
+    const { retailPrice, ...otherPublicData } = rest.publicData || {};
+    const publicData = { ...otherPublicData, retailPrice };
+    
+    const ownListingValues = { ...imageProperty, ...rest, publicData };
 
     const imageVariantInfo = getImageVariantInfo(config.layout.listingImage);
     const queryParams = {
@@ -651,7 +656,13 @@ export function requestUpdateListing(tab, data, config) {
 
     // If images should be saved, create array out of the image UUIDs for the API call
     const imageProperty = typeof images !== 'undefined' ? { images: imageIds(images) } : {};
-    const ownListingUpdateValues = { id, ...imageProperty, ...rest };
+    
+    // Extract retailPrice from publicData
+    const { retailPrice, ...otherPublicData } = rest.publicData || {};
+    const publicData = { ...otherPublicData, retailPrice };
+    
+    const ownListingUpdateValues = { id, ...imageProperty, ...rest, publicData };
+        
     const imageVariantInfo = getImageVariantInfo(config.layout.listingImage);
     const queryParams = {
       expand: true,

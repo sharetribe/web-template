@@ -16,6 +16,7 @@
     "compression": "^1.7.5",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
+    "date-fns": "^2.29.3",
     "decimal.js": "^10.5.0",
     "dotenv": "^10.0.0",
     "dotenv-expand": "^5.1.0",
@@ -39,6 +40,7 @@
     "prop-types": "^15.8.1",
     "query-string": "^7.1.3",
     "react": "^18.3.1",
+    "react-day-picker": "^8.7.0",
     "react-dom": "^18.3.1",
     "react-final-form": "6.5.9",
     "react-final-form-arrays": "3.1.4",
@@ -91,6 +93,8 @@
   },
   "scripts": {
     "audit": "yarn audit --json | node scripts/audit.js",
+    "sharetribe": "sharetribe-scripts fetch",
+
     "clean": "rm -rf build/*",
     "config": "node scripts/config.js",
     "config-check": "node scripts/config.js --check",
