@@ -6,6 +6,12 @@ import BlockDefault from './BlockDefault';
 import BlockFooter from './BlockFooter';
 import BlockSocialMediaLink from './BlockSocialMediaLink';
 
+// Custom block components
+import SearchRequestLinks from '../../../extensions/common/components/Sections/Blocks/SearchRequestLinks/SearchRequestLinks';
+import SocialProofReviews from '../../../extensions/common/components/Sections/Blocks/SocialProofReviews/SocialProofReviews';
+
+
+
 ///////////////////////////////////////////
 // Mapping of block types and components //
 ///////////////////////////////////////////
@@ -15,7 +21,10 @@ const defaultBlockComponents = {
   footerBlock: { component: BlockFooter },
   socialMediaLink: { component: BlockSocialMediaLink },
 };
-
+const customBlockComponents = {
+  searchRequestLinks: <SearchRequestLinks />, 
+  socialProofReviews: <SocialProofReviews/>
+};
 ////////////////////
 // Blocks builder //
 ////////////////////
@@ -45,16 +54,30 @@ const BlockBuilder = props => {
         const Block = config?.component;
         const blockId = block.blockId || `${sectionId}-block-${index + 1}`;
 
+        console.log("block", block);
+
         if (Block) {
-          return (
-            <Block
-              key={`${blockId}_i${index}`}
-              {...block}
-              blockId={blockId}
-              {...blockOptionsMaybe}
-              {...otherProps}
-            />
-          );
+          if(block.blockName?.indexOf('customTemplate:') > -1){
+            //console.log('section blocks inside custom SectionBuilder', section.blocks);
+            const customBlockName = block.blockName.split(':')[1];
+            const CustomComponent = customBlockComponents[customBlockName];
+
+            return (
+              <React.Fragment key={customBlockName}>
+                {React.cloneElement(CustomComponent, { block: block })}
+              </React.Fragment>
+            );
+          } else {
+            return (
+              <Block
+                key={`${blockId}_i${index}`}
+                {...block}
+                blockId={blockId}
+                {...blockOptionsMaybe}
+                {...otherProps}
+              />
+            );
+          }
         } else {
           // If the block type is unknown, the app can't know what to render
           console.warn(`Unknown block type (${block.blockType}) detected inside (${sectionId}).`);

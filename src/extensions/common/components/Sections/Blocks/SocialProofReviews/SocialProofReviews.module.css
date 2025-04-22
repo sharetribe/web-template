@@ -1,0 +1,39 @@
+.root{
+    display:flex;
+    flex-direction: column;
+    margin: auto;
+    align-items: center;
+    gap: 12px;
+
+    & .faces{
+        display: flex;
+        flex-direction: row;
+
+        & .face{
+            width: 50px;
+            height: 50px;
+            border-radius:27px;
+            border:2px solid white;
+            margin-right: -8px;
+        }
+    }
+
+    & .stars{
+        svg{
+            color: transparent;
+            width: 30px;
+            height: 30px;
+            fill: var(--marketplaceColor);
+        }
+    }
+    & .title{
+        text-align: center;
+        font-size: 18px;
+        font-weight: 600;
+        
+    }
+    & .caption{
+        font-size: 15px;
+        font-weight: 100;
+    }
+}

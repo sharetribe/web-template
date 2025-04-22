@@ -1190,5 +1190,10 @@
   "UserNav.favoriteListings": "Your favorites",
   "EmailVerificationBanner.title": "Please verify your email address.",
   "EmailVerificationBanner.buttonLabel": "Verify now",
-  "RegionalPartnerPromo.selfPromo": "Become a partner"
+  "RegionalPartnerPromo.selfPromo": "Become a partner",
+  "SearchRequestLinks.findLocations": "Find locations for sale",
+  "SearchRequestLinks.requestLocation": "Request a location",
+  "SocialProofReviews.title": "4.9/5 Reviews",
+  "SocialProofReviews.caption": "Overall average for buyers and sellers"
+
 }
