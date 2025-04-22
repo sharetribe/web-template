@@ -1,0 +1,51 @@
+@import '../../../../../../styles/customMediaQueries.css';
+
+.root{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin: 0 auto;
+    flex-direction: column;
+
+    @media (--viewportMedium) {
+        flex-direction: row;
+        gap: 16px;
+    }
+
+    & a, button{
+        display: inline-block;
+        cursor: pointer;
+        padding: 8px 20px;
+        border: 1px solid var(--marketplaceColor);
+        border-radius: var(--borderRadiusMedium);
+        box-shadow: 0 8px 16px 0 rgb(0 0 0 / 10%);
+        background-color: var(--marketplaceColor);
+        font-weight: 500;
+        font-size: 15px;
+        text-decoration: none;
+        white-space: nowrap;
+        color: var(--colorWhite);
+
+        &:hover{
+            background-color: var(--marketplaceColorDark);
+        }
+
+        &.requestButton{
+            box-shadow: 0 8px 16px 0 rgb(0 0 0 / 5%);
+            background-color: white;
+            border-color:white;
+            color: var(--marketplaceColor);
+
+            &:hover{
+                color: var(--marketplaceColorDark);
+                box-shadow: 0 8px 16px 0 rgb(0 0 0 / 10%);
+
+            }
+        }
+    }
+
+    & span.divider{
+        font-style:italic;
+    }
+}
