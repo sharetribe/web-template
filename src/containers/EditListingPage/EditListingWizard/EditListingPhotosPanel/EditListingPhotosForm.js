@@ -288,7 +288,7 @@ export const EditListingPhotosForm = props => {
               disabled={submitDisabled}
               ready={submitReady}
             >
-              {saveActionMsg}
+              <FormattedMessage id="EditListingPhotosForm.publishListing" />
             </Button>
           </Form>
         );

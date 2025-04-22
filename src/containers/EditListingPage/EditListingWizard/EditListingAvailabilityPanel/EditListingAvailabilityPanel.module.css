@@ -102,3 +102,25 @@
 .error {
   color: var(--colorFail);
 }
+.heading {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.description {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+.buttonWrapper {
+  margin-top: 2rem;
+  text-align: right;
+}
+
+.nextButton {
+  background-color: #FFAD86;
+  color: white;
+  border: none;
+}

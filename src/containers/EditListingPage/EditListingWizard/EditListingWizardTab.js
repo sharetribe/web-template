@@ -148,9 +148,11 @@ const EditListingWizardTab = props => {
 
     return onUpdateListingOrCreateListingDraft(tab, updateListingValues)
       .then(r => {
-        // In Availability tab, the submitted data (plan) is inside a modal
-        // We don't redirect provider immediately after plan is set
-        if (isNewListingFlow && tab !== AVAILABILITY) {
+        // If this is the photos tab (final step), publish the listing
+        if (isNewListingFlow && tab === PHOTOS) {
+          const listingId = r.data.data.id;
+          handlePublishListing(listingId);
+        } else if (isNewListingFlow) {
           const listingId = r.data.data.id;
           automaticRedirectsForNewListingFlow(tab, listingId);
         }
@@ -227,16 +229,7 @@ const EditListingWizardTab = props => {
           onFetchExceptions={onFetchExceptions}
           onAddAvailabilityException={onAddAvailabilityException}
           onDeleteAvailabilityException={onDeleteAvailabilityException}
-          onNextTab={() =>
-            redirectAfterDraftUpdate(
-              listing.id,
-              params,
-              tab,
-              marketplaceTabs,
-              history,
-              routeConfiguration
-            )
-          }
+          handlePublishListing={handlePublishListing}
           config={config}
           history={history}
           routeConfiguration={routeConfiguration}

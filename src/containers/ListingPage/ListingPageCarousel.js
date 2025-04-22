@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
+import { AvatarMedium } from '../../components';
+
 
 // Contexts
 import { useConfiguration } from '../../context/configurationContext';
@@ -93,59 +95,120 @@ export const ListingPageComponent = props => {
   const [inquiryModalOpen, setInquiryModalOpen] = useState(
     props.inquiryModalOpenForListingId === props.params.id
   );
+  
+
+
+
+
+
+
+
+
+
+
+
+
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+// Destructure props
+const {
+  isAuthenticated,
+  currentUser,
+  getListing,
+  getOwnListing,
+  intl,
+  onManageDisableScrolling,
+  params: rawParams,
+  location,
+  scrollingDisabled,
+  showListingError,
+  reviews = [],
+  fetchReviewsError,
+  sendInquiryInProgress,
+  sendInquiryError,
+  history,
+  callSetInitialValues,
+  onSendInquiry,
+  onInitializeCardPaymentData,
+  config,
+  routeConfiguration,
+  showOwnListingsOnly,
+  monthlyTimeSlots,
+  ...restOfProps
+} = props;
 
-  const {
-    isAuthenticated,
-    currentUser,
-    getListing,
-    getOwnListing,
-    intl,
-    onManageDisableScrolling,
-    params: rawParams,
-    location,
-    scrollingDisabled,
-    showListingError,
-    reviews = [],
-    fetchReviewsError,
-    sendInquiryInProgress,
-    sendInquiryError,
-    history,
-    callSetInitialValues,
-    onSendInquiry,
-    onInitializeCardPaymentData,
-    config,
-    routeConfiguration,
-    showOwnListingsOnly,
-    ...restOfProps
-  } = props;
+// Define listing-related constants
+const listingConfig = config.listing;
+const listingId = new UUID(rawParams.id);
+const isVariant = rawParams.variant != null;
+const isPendingApprovalVariant = rawParams.variant === LISTING_PAGE_PENDING_APPROVAL_VARIANT;
+const isDraftVariant = rawParams.variant === LISTING_PAGE_DRAFT_VARIANT;
 
-  const listingConfig = config.listing;
-  const listingId = new UUID(rawParams.id);
-  const isVariant = rawParams.variant != null;
-  const isPendingApprovalVariant = rawParams.variant === LISTING_PAGE_PENDING_APPROVAL_VARIANT;
-  const isDraftVariant = rawParams.variant === LISTING_PAGE_DRAFT_VARIANT;
-  const currentListing =
-    isPendingApprovalVariant || isDraftVariant || showOwnListingsOnly
-      ? ensureOwnListing(getOwnListing(listingId))
-      : ensureListing(getListing(listingId));
+const currentListing =
+  isPendingApprovalVariant || isDraftVariant || showOwnListingsOnly
+    ? ensureOwnListing(getOwnListing(listingId))
+    : ensureListing(getListing(listingId));
 
-  const listingSlug = rawParams.slug || createSlug(currentListing.attributes.title || '');
-  const params = { slug: listingSlug, ...rawParams };
+// Debug log (safe now)
+console.log('LOCAL currentListing publicData:', currentListing?.attributes?.publicData);
 
-  const listingPathParamType = isDraftVariant
-    ? LISTING_PAGE_PARAM_TYPE_DRAFT
-    : LISTING_PAGE_PARAM_TYPE_EDIT;
-  const listingTab = isDraftVariant ? 'photos' : 'details';
+useEffect(() => {
+  if (
+    currentListing?.id &&
+    currentListing?.attributes?.availabilityPlan &&
+    props.onFetchTimeSlots
+  ) {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth();
 
-  const isApproved =
-    currentListing.id && currentListing.attributes.state !== LISTING_STATE_PENDING_APPROVAL;
+    const start = new Date(year, month, 1);
+    const end = new Date(year, month + 1, 0);
+    const timeZone = currentListing.attributes.availabilityPlan.timezone || 'Etc/UTC';
 
-  const pendingIsApproved = isPendingApprovalVariant && isApproved;
+    console.log('🚀 Fetching time slots on mount:', {
+      listingId: currentListing.id.uuid,
+      start,
+      end,
+      timeZone,
+    });
+
+    props.onFetchTimeSlots(currentListing.id.uuid, start, end, timeZone);
+  }
+}, [currentListing?.id?.uuid]); // ✅ only reruns when listing changes
+
+
+
+
+
+
+// ✅ Set mounted flag for use elsewhere
+useEffect(() => {
+  setMounted(true);
+}, []);
+
+// Listing route params
+const listingSlug = rawParams.slug || createSlug(currentListing.attributes.title || '');
+const params = { slug: listingSlug, ...rawParams };
+
+const listingPathParamType = isDraftVariant
+  ? LISTING_PAGE_PARAM_TYPE_DRAFT
+  : LISTING_PAGE_PARAM_TYPE_EDIT;
+const listingTab = isDraftVariant ? 'photos' : 'details';
+
+const isApproved =
+  currentListing.id && currentListing.attributes.state !== LISTING_STATE_PENDING_APPROVAL;
+
+const pendingIsApproved = isPendingApprovalVariant && isApproved;
+
+
+
+
+
+
+
+
+
 
   // If a /pending-approval URL is shared, the UI requires
   // authentication and attempts to fetch the listing from own
@@ -183,6 +246,17 @@ export const ListingPageComponent = props => {
     publicData = {},
     metadata = {},
   } = currentListing.attributes;
+  
+  // Debug log to inspect retail price
+  console.log('Listing data:', {
+    price,
+    publicData,
+    retailPrice: publicData.retailPrice,
+    hasRetailPrice: !!publicData.retailPrice
+  });
+  
+
+
 
   const richTitle = (
     <span>
@@ -229,6 +303,12 @@ export const ListingPageComponent = props => {
   const authorDisplayName = userDisplayNameAsString(ensuredAuthor, '');
 
   const { formattedPrice } = priceData(price, config.currency, intl);
+  const formattedRetailPrice = publicData.retailPrice
+    ? intl.formatNumber(publicData.retailPrice, {
+        style: 'currency',
+        currency: config.currency,
+      })
+    : null;
 
   const commonParams = { params, history, routes: routeConfiguration };
   const onContactUser = handleContactUser({
@@ -267,7 +347,7 @@ export const ListingPageComponent = props => {
   const twitterImages = listingImages(currentListing, 'twitter');
   const schemaImages = listingImages(
     currentListing,
-    `${config.layout.listingImage.variantPrefix}-2x`
+    '${config.layout.listingImage.variantPrefix}-2x'
   ).map(img => img.url);
   const marketplaceName = config.marketplaceName;
   const schemaTitle = intl.formatMessage(
@@ -277,7 +357,7 @@ export const ListingPageComponent = props => {
   // You could add reviews, sku, etc. into page schema
   // Read more about product schema
   // https://developers.google.com/search/docs/advanced/structured-data/product
-  const productURL = `${config.marketplaceRootURL}${location.pathname}${location.search}${location.hash}`;
+  const productURL = '${config.marketplaceRootURL}${location.pathname}${location.search}${location.hash}';
   const currentStock = currentListing.currentStock?.attributes?.quantity || 0;
   const schemaAvailability = !currentListing.currentStock
     ? null
@@ -285,8 +365,28 @@ export const ListingPageComponent = props => {
     ? 'https://schema.org/InStock'
     : 'https://schema.org/OutOfStock';
 
-  const availabilityMaybe = schemaAvailability ? { availability: schemaAvailability } : {};
+    const availabilityMaybe = schemaAvailability ? { availability: schemaAvailability } : {};
 
+    const author = ensureUser(currentListing.author);
+    const rawAuthorDisplayName = author.attributes.profile.displayName;
+    
+    const authorAbbreviatedName = `${rawAuthorDisplayName.split(' ')[0]} ${rawAuthorDisplayName.split(' ')[1]?.charAt(0) || ''}.`;
+    
+  const authorSection = (
+    <section className={css.sectionAuthor}>
+      <h2 className={css.sectionTitle}>About the lender</h2>
+      <div className={css.authorCard}>
+        <AvatarMedium className={css.avatar} user={author} />
+        <div className={css.authorDetails}>
+          <p>Hello, I'm {authorAbbreviatedName}</p>
+          <NamedLink name="ProfilePage" params={{ id: author.id.uuid }}>
+            View profile
+          </NamedLink>
+        </div>
+      </div>
+    </section>
+  );
+  
   return (
     <Page
       title={schemaTitle}
@@ -309,107 +409,106 @@ export const ListingPageComponent = props => {
         },
       }}
     >
-      <LayoutSingleColumn className={css.pageRoot} topbar={topbar} footer={<FooterContainer />}>
-        <div className={css.contentWrapperForProductLayout}>
-          <div className={css.mainColumnForProductLayout}>
-            {mounted && currentListing.id && noPayoutDetailsSetWithOwnListing ? (
-              <ActionBarMaybe
-                className={css.actionBarForProductLayout}
-                isOwnListing={isOwnListing}
-                listing={currentListing}
-                showNoPayoutDetailsSet={noPayoutDetailsSetWithOwnListing}
-                currentUser={currentUser}
-              />
-            ) : null}
-            {mounted && currentListing.id ? (
-              <ActionBarMaybe
-                className={css.actionBarForProductLayout}
-                isOwnListing={isOwnListing}
-                listing={currentListing}
-                currentUser={currentUser}
-                editParams={{
-                  id: listingId.uuid,
-                  slug: listingSlug,
-                  type: listingPathParamType,
-                  tab: listingTab,
-                }}
-              />
-            ) : null}
-            <SectionGallery
-              listing={currentListing}
-              variantPrefix={config.layout.listingImage.variantPrefix}
-            />
-            <div className={css.mobileHeading}>
-              <H4 as="h1" className={css.orderPanelTitle}>
-                <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
-              </H4>
-            </div>
-            <SectionTextMaybe text={description} showAsIngress />
+<LayoutSingleColumn className={css.pageRoot} topbar={topbar} footer={<FooterContainer />}>
+  <div className={css.contentWrapperForProductLayout}>
+    <div className={css.mainColumnForProductLayout}>
+      {mounted && currentListing.id && noPayoutDetailsSetWithOwnListing ? (
+        <ActionBarMaybe
+          className={css.actionBarForProductLayout}
+          isOwnListing={isOwnListing}
+          listing={currentListing}
+          showNoPayoutDetailsSet={noPayoutDetailsSetWithOwnListing}
+          currentUser={currentUser}
+        />
+      ) : null}
+      {mounted && currentListing.id ? (
+        <ActionBarMaybe
+          className={css.actionBarForProductLayout}
+          isOwnListing={isOwnListing}
+          listing={currentListing}
+          currentUser={currentUser}
+          editParams={{
+            id: listingId.uuid,
+            slug: listingSlug,
+            type: listingPathParamType,
+            tab: listingTab,
+          }}
+        />
+      ) : null}
+      <SectionGallery
+        listing={currentListing}
+        variantPrefix={config.layout.listingImage.variantPrefix}
+      />
+        {authorSection}
 
-            <CustomListingFields
-              publicData={publicData}
-              metadata={metadata}
-              listingFieldConfigs={listingConfig.listingFields}
-              categoryConfiguration={config.categoryConfiguration}
-              intl={intl}
-            />
+    </div>
+    <div className={css.orderColumnForProductLayout}>
+    <div className={css.productInfoSection}>
+  <div className={css.brandLink}>
+    {publicData?.brand ? (
+      <NamedLink
+        name="SearchPage"
+        params={{ pub_brand: publicData.brand }}
+        className={css.brandLinkText}
+      >
+        {publicData.brand.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
+      </NamedLink>
+    ) : null}
+  </div>
 
-            <SectionMapMaybe
-              geolocation={geolocation}
-              publicData={publicData}
-              listingId={currentListing.id}
-              mapsConfig={config.maps}
-            />
-            <SectionReviews reviews={reviews} fetchReviewsError={fetchReviewsError} />
-            <SectionAuthorMaybe
-              title={title}
-              listing={currentListing}
-              authorDisplayName={authorDisplayName}
-              onContactUser={onContactUser}
-              isInquiryModalOpen={isAuthenticated && inquiryModalOpen}
-              onCloseInquiryModal={() => setInquiryModalOpen(false)}
-              sendInquiryError={sendInquiryError}
-              sendInquiryInProgress={sendInquiryInProgress}
-              onSubmitInquiry={onSubmitInquiry}
-              currentUser={currentUser}
-              onManageDisableScrolling={onManageDisableScrolling}
-            />
-          </div>
-          <div className={css.orderColumnForProductLayout}>
-            <OrderPanel
-              className={css.productOrderPanel}
-              listing={currentListing}
-              isOwnListing={isOwnListing}
-              onSubmit={handleOrderSubmit}
-              authorLink={
-                <NamedLink
-                  className={css.authorNameLink}
-                  name={isVariant ? 'ListingPageVariant' : 'ListingPage'}
-                  params={params}
-                  to={{ hash: '#author' }}
-                >
-                  {authorDisplayName}
-                </NamedLink>
-              }
-              title={<FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />}
-              titleDesktop={
-                <H4 as="h1" className={css.orderPanelTitle}>
-                  <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
-                </H4>
-              }
-              payoutDetailsWarning={payoutDetailsWarning}
-              author={ensuredAuthor}
-              onManageDisableScrolling={onManageDisableScrolling}
-              onContactUser={onContactUser}
-              {...restOfProps}
-              validListingTypes={config.listing.listingTypes}
-              marketplaceCurrency={config.currency}
-              dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
-              marketplaceName={config.marketplaceName}
-            />
-          </div>
-        </div>
-      </LayoutSingleColumn>
+  <H4 as="h1" className={css.listingTitle}>{title}</H4>
+
+  {/* Price + Retail Price */}
+  <div className={css.pricingRow}>
+    <span className={css.boldPrice}>{formattedPrice}</span>
+    {formattedRetailPrice ? (
+      <span className={css.retailPrice}>
+        {formattedRetailPrice}
+      </span>
+    ) : null}
+  </div>
+
+  {/* Description */}
+  <p className={css.descriptionText}>{description}</p>
+
+  {/* Size + Color */}
+  <p className={css.detailText}>Size: {publicData.size}</p>
+  <p className={css.detailText}>Color: {publicData.color}</p>
+
+  {/* Chat link */}
+  <p className={css.inquiryPrompt}>
+    <em>
+      Questions on style or fit?{' '}
+      <a href="mailto:bestie@shoponsherbet.com" className={css.inquiryLink}>Just ask!</a>
+    </em>
+  </p>
+</div>
+
+
+      <OrderPanel
+        className={css.productOrderPanel}
+        listing={currentListing}
+        isOwnListing={isOwnListing}
+        onSubmit={handleOrderSubmit}
+        titleDesktop={null}
+        payoutDetailsWarning={payoutDetailsWarning}
+        author={ensuredAuthor}
+        onManageDisableScrolling={onManageDisableScrolling}
+        onContactUser={onContactUser}
+        hidePrice={true}
+        {...restOfProps}
+        validListingTypes={config.listing.listingTypes}
+        marketplaceCurrency={config.currency}
+        dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
+        marketplaceName={config.marketplaceName}
+        monthlyTimeSlots={monthlyTimeSlots} 
+      />
+    </div>
+  </div>
+</LayoutSingleColumn>
+
+
+
     </Page>
   );
 };
@@ -462,7 +561,7 @@ const EnhancedListingPage = props => {
     return (
       <NamedRedirect
         name="SignupPage"
-        state={{ from: `${location.pathname}${location.search}${location.hash}` }}
+        state={{ from: '${location.pathname}${location.search}${location.hash}' }}
       />
     );
   }
@@ -563,7 +662,7 @@ const mapDispatchToProps = dispatch => ({
   onFetchTransactionLineItems: params => dispatch(fetchTransactionLineItems(params)), // for OrderPanel
   onSendInquiry: (listing, message) => dispatch(sendInquiry(listing, message)),
   onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
-  onFetchTimeSlots: (listingId, start, end, timeZone, options) =>
+  onFetchTimeSlots: (listingIfd, start, end, timeZone, options) =>
     dispatch(fetchTimeSlots(listingId, start, end, timeZone, options)), // for OrderPanel
 });
 

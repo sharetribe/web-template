@@ -123,12 +123,15 @@ const PriceMaybe = props => {
     intl,
     marketplaceCurrency,
     showCurrencyMismatch = false,
+    showPrice = true,
   } = props;
   const { listingType, unitType } = publicData || {};
 
   const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
-  const showPrice = displayPrice(foundListingTypeConfig);
-  if (!showPrice || !price) {
+  const displayPrice = foundListingTypeConfig?.displayPrice ?? true;
+  const shouldShowPrice = showPrice && displayPrice;
+  
+  if (!shouldShowPrice || !price) {
     return null;
   }
 
@@ -231,6 +234,7 @@ const OrderPanel = props => {
     fetchLineItemsInProgress,
     fetchLineItemsError,
     payoutDetailsWarning,
+    hidePrice = false,
   } = props;
 
   const publicData = listing?.attributes?.publicData || {};
@@ -355,6 +359,7 @@ const OrderPanel = props => {
           validListingTypes={validListingTypes}
           intl={intl}
           marketplaceCurrency={marketplaceCurrency}
+          showPrice={!hidePrice}
         />
 
         <div className={css.author}>
@@ -438,6 +443,7 @@ const OrderPanel = props => {
           intl={intl}
           marketplaceCurrency={marketplaceCurrency}
           showCurrencyMismatch
+          showPrice={!hidePrice}
         />
 
         {isClosed ? (
