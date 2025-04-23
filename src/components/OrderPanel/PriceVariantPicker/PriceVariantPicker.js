@@ -33,7 +33,7 @@ const FieldHidden = props => {
 
 const PriceVariantPicker = props => {
   const intl = useIntl();
-  const { priceVariants, onPriceVariantChange } = props;
+  const { priceVariants, onPriceVariantChange, disabled } = props;
   const hasMultiplePriceVariants = priceVariants?.length > 1;
   const hasOnePriceVariant = priceVariants?.length === 1;
 
@@ -45,6 +45,8 @@ const PriceVariantPicker = props => {
       selectClassName={css.priceVariantSelect}
       label={intl.formatMessage({ id: 'PriceVariantPicker.priceVariantLabel' })}
       onChange={onPriceVariantChange}
+      disabled={disabled}
+      showLabelAsDisabled={disabled}
     >
       <option disabled value="" key="unselected">
         {intl.formatMessage({ id: 'PriceVariantPicker.priceVariantUnselected' })}

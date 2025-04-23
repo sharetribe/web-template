@@ -20,6 +20,7 @@ import {
   LINE_ITEM_ITEM,
   STOCK_MULTIPLE_ITEMS,
   STOCK_INFINITE_MULTIPLE_ITEMS,
+  LISTING_STATE_PUBLISHED,
 } from '../../util/types';
 import { formatMoney } from '../../util/currency';
 import { createSlug, parse, stringify } from '../../util/urlHelpers';
@@ -60,6 +61,10 @@ const ProductOrderForm = loadable(() =>
 // This defines when ModalInMobile shows content as Modal
 const MODAL_BREAKPOINT = 1023;
 const TODAY = new Date();
+
+const isPublishedListing = listing => {
+  return listing.attributes.state === LISTING_STATE_PUBLISHED;
+};
 
 const priceData = (price, currency, intl) => {
   if (price && price.currency === currency) {
@@ -366,6 +371,7 @@ const OrderPanel = props => {
         priceVariants,
         priceVariantFieldComponent: PriceVariantPicker,
         preselectedPriceVariant,
+        isPublishedListing: isPublishedListing(listing),
       }
     : !isPriceVariationsInUse && showBookingFixedDurationForm
     ? {

@@ -511,6 +511,7 @@ const onPriceVariantChange = props => value => {
  * @param {number} props.dayCountAvailableForBooking - Number of days available for booking
  * @param {Array<Object>} [props.priceVariants] - The price variants
  * @param {ReactNode} [props.priceVariantFieldComponent] - The component to use for the price variant field
+ * @param {boolean} props.isPublishedListing - Whether the listing is published
  * @returns {JSX.Element}
  */
 export const BookingDatesForm = props => {
@@ -529,9 +530,11 @@ export const BookingDatesForm = props => {
     monthlyTimeSlots,
     onMonthChanged,
     seatsEnabled,
+    isPriceVariationsInUse,
     priceVariants = [],
     priceVariantFieldComponent: PriceVariantFieldComponent,
     preselectedPriceVariant,
+    isPublishedListing,
     ...rest
   } = props;
   const intl = useIntl();
@@ -691,6 +694,7 @@ export const BookingDatesForm = props => {
         );
 
         const isDaily = lineItemUnitType === LINE_ITEM_DAY;
+        const submitDisabled = isPriceVariationsInUse && !isPublishedListing;
 
         return (
           <Form onSubmit={handleSubmit} className={classes} enforcePagePreloadFor="CheckoutPage">
@@ -699,6 +703,7 @@ export const BookingDatesForm = props => {
                 priceVariants={priceVariants}
                 priceVariantName={priceVariantName}
                 onPriceVariantChange={onPriceVariantChange(formRenderProps)}
+                disabled={!isPublishedListing}
               />
             ) : null}
 
@@ -839,7 +844,11 @@ export const BookingDatesForm = props => {
             ) : null}
 
             <div className={css.submitButton}>
-              <PrimaryButton type="submit" inProgress={fetchLineItemsInProgress}>
+              <PrimaryButton
+                type="submit"
+                inProgress={fetchLineItemsInProgress}
+                disabled={submitDisabled}
+              >
                 <FormattedMessage id="BookingDatesForm.requestToBook" />
               </PrimaryButton>
             </div>
