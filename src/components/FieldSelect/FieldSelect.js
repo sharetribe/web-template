@@ -69,6 +69,8 @@ const FieldSelectComponent = props => {
  * @param {string} props.id Label is optional, but if it is given, an id is also required so the label can reference the input in the `for` attribute
  * @param {ReactNode} props.label
  * @param {ReactNode} props.children
+ * @param {boolean} props.disabled Whether the select element is disabled
+ * @param {boolean} props.showLabelAsDisabled Whether the label is disabled
  * @returns {JSX.Element} Final Form Field containing <select> input
  */
 const FieldSelect = props => {
