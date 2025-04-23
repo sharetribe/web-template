@@ -797,6 +797,7 @@ export const BookingDatesForm = props => {
                 onChange={values => {
                   onHandleFetchLineItems({
                     values: {
+                      priceVariantName,
                       startDate: startDate,
                       endDate: endDate,
                       seats: values,
