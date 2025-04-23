@@ -111,18 +111,20 @@ function getApproveAsMembersBlock(userId) {
   ];
 }
 
-function getBlocks(userId, displayName, email, portfolioURL) {
+function getBlocks(userId, displayName, email, portfolioURL, communityBlocksOnly) {
   const baseURL = process.env.REACT_APP_MARKETPLACE_ROOT_URL;
+  const mainText = `User *${displayName}* (\`${email}\`) just applied to be accepted as a Seller in the marketplace.`;
+  const communityOnlyText = `User *${displayName}* (\`${email}\`) just re-applied to be accepted as part of the Community in the marketplace.`;
   return [
     {
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: `User *${displayName}* (\`${email}\`) just applied to be accepted as a Seller in the marketplace.`,
+        text: communityBlocksOnly ? communityOnlyText : mainText,
       },
     },
     ...getLinksBlock(userId, baseURL, portfolioURL),
-    ...getApproveAsSellerBlock(userId),
+    ...(communityBlocksOnly ? [] : getApproveAsSellerBlock(userId)),
     ...getApproveAsMembersBlock(userId),
   ];
 }

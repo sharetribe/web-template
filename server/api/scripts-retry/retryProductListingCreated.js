@@ -1,6 +1,6 @@
-const { integrationSdkInit } = require('../api-util/scriptManager');
-const { slackProductListingsErrorWorkflow } = require('../api-util/slackHelper');
-const { scriptHelper } = require('../scripts/events/notifyProductListingCreated');
+const { integrationSdkInit } = require('../../api-util/scriptManager');
+const { slackProductListingsErrorWorkflow } = require('../../api-util/slackHelper');
+const { scriptHelper } = require('../../scripts/events/notifyProductListingCreated');
 
 const QUERY_PARAMS = { expand: true };
 

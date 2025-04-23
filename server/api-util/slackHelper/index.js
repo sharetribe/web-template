@@ -12,7 +12,13 @@ const getPortfolioListingUpdatedErrorBlocks = require('./portfolioListingUpdated
 const getUserCreatedErrorBlocks = require('./userCreatedErrorBlocks');
 const getUserUpdatedErrorBlocks = require('./userUpdatedErrorBlocks');
 
-const slackSellerValidationWorkflow = async (userId, displayName, email, portfolioURL) => {
+const slackSellerValidationWorkflow = async (
+  userId,
+  displayName,
+  email,
+  portfolioURL,
+  communityBlocksOnly = false
+) => {
   const slackUserManagerChannelId = process.env.SLACK_USER_MANAGER_CHANNEL_ID;
   const slackBotToken = process.env.SLACK_BOT_TOKEN;
   try {
@@ -22,7 +28,8 @@ const slackSellerValidationWorkflow = async (userId, displayName, email, portfol
       userId,
       displayName,
       email,
-      parsedPortfolioURL
+      parsedPortfolioURL,
+      communityBlocksOnly
     );
     await webClient.chat.postMessage({
       channel: slackUserManagerChannelId,

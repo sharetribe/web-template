@@ -175,7 +175,7 @@ function script() {
         if (userType === USER_TYPES.SELLER) {
           const { displayName } = profile;
           const { portfolioURL } = profile.publicData;
-          await slackSellerValidationWorkflow(userId, displayName, email, portfolioURL);
+          await slackSellerValidationWorkflow(userId, displayName, email, portfolioURL, false);
         }
       } catch (error) {
         slackUserCreatedErrorWorkflow(userId);

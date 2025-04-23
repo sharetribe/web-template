@@ -15,21 +15,13 @@ const transactionLineItems = require('./api/transaction-line-items');
 const initiatePrivileged = require('./api/initiate-privileged');
 const { verifySlackRequestMiddleware, slackInteractivity } = require('./api/slack');
 const { generateDownloadUrls } = require('./api/digital-product-download');
-const { retryProductListingCreatedScript } = require('./api/scripts-retry');
+const { retryProductListingCreatedScript, retryUserCreatedScript } = require('./api/scripts-retry');
 const transitionPrivileged = require('./api/transition-privileged');
 const createUserWithIdp = require('./api/auth/createUserWithIdp');
 const { authenticateAuth0, authenticateAuth0Callback } = require('./api/auth/auth0');
 const transloaditParams = require('./api/transloadit-params');
 
 const router = express.Router();
-
-// ================ API router Scripts Retries: ================ //
-router.get(
-  '/scrips-retry/productListingCreated/:listingId',
-  bodyParser.json(),
-  bodyParser.urlencoded({ extended: true }),
-  retryProductListingCreatedScript
-);
 
 // ================ API router Slack integration manager: ================ //
 router.post(
@@ -71,6 +63,10 @@ router.post('/initiate-privileged', initiatePrivileged);
 router.post('/transition-privileged', transitionPrivileged);
 router.post('/transloadit-params', transloaditParams);
 router.post('/transaction/product-download', generateDownloadUrls);
+
+// Scripts Retries:
+router.get('/scrips-retry/productListingCreated/:listingId', retryProductListingCreatedScript);
+router.get('/scrips-retry/userCreated/:userId', retryUserCreatedScript);
 
 // Create user with identity provider (e.g. Facebook or Google)
 // This endpoint is called to create a new user after user has confirmed

@@ -59,7 +59,7 @@ function script() {
       });
     }
     if (buyerAppliedToBeSeller || waitListedSellerAskedForReview) {
-      return await slackSellerValidationWorkflow(userId, displayName, email, portfolioURL);
+      return await slackSellerValidationWorkflow(userId, displayName, email, portfolioURL, false);
     }
   }
 
