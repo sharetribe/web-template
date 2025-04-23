@@ -2,6 +2,7 @@ import React from 'react';
 
 // Import configs and util modules
 import { FormattedMessage, useIntl } from '../../../../util/reactIntl';
+import { FIXED } from '../../../../transactions/transaction';
 
 // Import shared components
 import { FieldRadioButton } from '../../../../components';
@@ -12,14 +13,16 @@ import css from './StartTimeInterval.module.css';
 export const getInitialValuesForStartTimeInterval = params => {
   const { listing } = params;
   const { publicData } = listing?.attributes || {};
-  const { startTimeInterval } = publicData || {};
+  const { startTimeInterval, unitType } = publicData || {};
+  const isFixedUnitType = unitType === FIXED;
 
-  return { startTimeInterval: startTimeInterval || 'everyHour' };
+  return isFixedUnitType ? { startTimeInterval: startTimeInterval || 'everyHour' } : {};
 };
 
 export const handleSubmitValuesForStartTimeInterval = (values, publicData) => {
   const { startTimeInterval } = values;
-  return { publicData: { ...publicData, startTimeInterval } };
+  const startTimeIntervalMaybe = startTimeInterval ? { startTimeInterval } : {};
+  return { publicData: { ...publicData, ...startTimeIntervalMaybe } };
 };
 
 /**
