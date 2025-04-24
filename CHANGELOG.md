@@ -14,6 +14,10 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+## [v8.1.0] 2025-04-24
+
+- [add] Add support for price variations for bookable listings.
+  [#582](https://github.com/sharetribe/web-template/pull/582)
 - [add] Add currently available translations for DE, ES.
   [#584](https://github.com/sharetribe/web-template/pull/584)
 - [change] update deeply nested dependency: path-to-regexp
@@ -22,6 +26,8 @@ way to update this template, but currently, we follow a pattern:
   [#576](https://github.com/sharetribe/web-template/pull/576)
 - [fix] OrderPanel: purchase and inquiries did not check closed status of the listing.
   [#573](https://github.com/sharetribe/web-template/pull/573)
+
+  [v8.1.0]: https://github.com/sharetribe/web-template/compare/v8.0.1...v8.1.0
 
 ## [v8.0.1] 2025-04-03
 
