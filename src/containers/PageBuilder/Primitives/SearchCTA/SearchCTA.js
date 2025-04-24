@@ -115,7 +115,7 @@ export const SearchCTA = React.forwardRef((props, ref) => {
 
   const onSubmit = values => {
     // Convert form values to query parameters
-    const queryParams = {};
+    let queryParams = {};
 
     Object.entries(values).forEach(([key, value]) => {
       if (!isEmpty(value)) {
@@ -163,7 +163,7 @@ export const SearchCTA = React.forwardRef((props, ref) => {
               {addFilterMaybe('keywordSearch')}
               {addFilterMaybe('dateRange')}
               <PrimaryButton disabled={submitDisabled} className={css.submitButton} type="submit">
-                <FormattedMessage id="SearchCTA.buttonLabel" />
+                <FormattedMessage id="PageBuilder.SearchCTA.buttonLabel" />
               </PrimaryButton>
             </Form>
           );

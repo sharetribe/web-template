@@ -29,9 +29,9 @@ const CategoryDropdown = ({ input, className, rootClassName, categories }) => {
   const labelText = selectedCategory ? (
     selectedCategory.name
   ) : hasSelected && input.value === '' ? (
-    <FormattedMessage id="CategoryFilter.selectAll" />
+    <FormattedMessage id="PageBuilder.CategoryFilter.selectAll" />
   ) : (
-    <FormattedMessage id="CategoryFilter.placeholder" />
+    <FormattedMessage id="PageBuilder.CategoryFilter.placeholder" />
   );
 
   const rootClass = rootClassName || css.root;
@@ -40,24 +40,23 @@ const CategoryDropdown = ({ input, className, rootClassName, categories }) => {
   return (
     <OutsideClickHandler className={classes} onOutsideClick={() => setIsOpen(false)}>
       <div className={css.dropdownContainer}>
-        <div
-          className={classNames(
-            css.toggleButton,
+        <button
+          className={classNames(css.toggleButton, {
             // If no selection has been made, no category is selected, and dropdown is closed, apply 'unselected' style
             // else, if dropdown is open but no selection has been made, apply placeholderOpened style
-            !hasSelected && !selectedCategory && !isOpen && css.unselected,
-            isOpen && !hasSelected && css.placeholderOpened
-          )}
+            [css.unselected]: !hasSelected && !selectedCategory && !isOpen,
+            [css.placeholderOpened]: isOpen && !hasSelected,
+          })}
           onClick={toggleDropdown}
           type="button"
         >
-          <span>{labelText}</span>
+          <span className={css.dropdownItem}>{labelText}</span>
           <span className={classNames(css.chevron, isOpen && css.isOpen)} />
-        </div>
+        </button>
 
         {isOpen && (
           <div className={css.dropdownContent}>
-            <div
+            <button
               className={css.option}
               onClick={() => handleOptionClick('all-categories')}
               type="button"
@@ -69,11 +68,11 @@ const CategoryDropdown = ({ input, className, rootClassName, categories }) => {
                     : css.dropdownItemBorder
                 }
               />
-              <FormattedMessage id="CategoryFilter.selectAll" />
-            </div>
+              <FormattedMessage id="PageBuilder.CategoryFilter.selectAll" />
+            </button>
 
             {categories.map(({ id, name }) => (
-              <div
+              <button
                 key={id}
                 className={css.option}
                 onClick={() => handleOptionClick(id)}
@@ -85,7 +84,7 @@ const CategoryDropdown = ({ input, className, rootClassName, categories }) => {
                   }
                 />
                 {name}
-              </div>
+              </button>
             ))}
           </div>
         )}

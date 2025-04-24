@@ -36,7 +36,7 @@
   align-items: center;
   height: 40px;
   padding: 0 12px;
-  border-radius: 4px;
+  border-radius: var(--borderRadiusMedium);
   cursor: pointer;
   color: var(--colorGrey700);
   font-weight: 400;

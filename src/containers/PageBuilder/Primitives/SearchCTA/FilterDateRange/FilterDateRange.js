@@ -26,9 +26,11 @@ const FilterDateRange = props => {
   const classes = classNames(rootClassName || css.root, className);
 
   const formatDateRange = (start, end) => {
-    const formattedStart = intl.formatDate(start, { day: 'numeric', month: 'short' });
-    const formattedEnd = intl.formatDate(end, { day: 'numeric', month: 'short' });
-    return `${formattedStart} - ${formattedEnd}`;
+    const formattedDate = intl.formatDateTimeRange(start, end, {
+      day: 'numeric',
+      month: 'short',
+    });
+    return formattedDate;
   };
 
   const handleDateRangeChange = value => {
@@ -61,7 +63,7 @@ const FilterDateRange = props => {
         <span className={labelClasses}>
           {selectedDates
             ? selectedDates
-            : intl.formatMessage({ id: 'SearchCTA.dateFilterPlaceholder' })}
+            : intl.formatMessage({ id: 'PageBuilder.SearchCTA.dateFilterPlaceholder' })}
         </span>
       </div>
 

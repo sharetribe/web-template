@@ -24,10 +24,10 @@
 
 .toggleButton {
   display: flex;
+  border: 0;
   justify-content: space-between;
   align-items: center;
   height: 40px;
-  border-radius: 4px;
   cursor: pointer;
   color: var(--colorGrey700);
   transition: all 0.1s;
@@ -45,8 +45,8 @@
 
 .dropdownContent {
   position: absolute;
-  top: 51px;
   left: 50%;
+  top: 110%;
   transform: translateX(-50%);
   width: calc(100% + 16px);
   min-width: 288px;
@@ -60,23 +60,49 @@
     left: -8px;
     transform: none;
     width: 100%;
+    top: 51px;
   }
 }
 
 .option {
   position: relative;
   width: 100%;
-  padding: 7px 0 7px 22px;
+  padding: 7px 22px 7px 22px;
   text-align: left;
   border: none;
   background: white;
   cursor: pointer;
   display: block;
   color: var(--colorGrey700);
+  font-weight: 500;
 
   &:hover {
     color: var(--colorBlack);
     text-decoration: none;
+  }
+}
+
+.dropdownItem {
+  /* Applies to small viewports by default (no media query) */
+  max-width: 175px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @media (--viewportSmall) {
+    /* Override styles for medium viewports to undo them */
+    max-width: none;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: initial;
+  }
+
+  @media (--viewportLarge) {
+    /* Re-apply styles for large viewports */
+    max-width: 175px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
@@ -110,7 +136,6 @@
   align-items: center;
   justify-content: center;
   transition: transform 0.4s;
-  -webkit-transition: -webkit-transform 0.4s;
 
   &::before {
     content: '';

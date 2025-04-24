@@ -37,8 +37,8 @@ const LocationSearchField = props => {
             iconClassName={css.locationAutocompleteInputIcon}
             placeholder={
               isCurrentLocation
-                ? intl.formatMessage({ id: 'SearchCTA.currentLocationPlaceholder' })
-                : intl.formatMessage({ id: 'SearchCTA.locationPlaceholder' })
+                ? intl.formatMessage({ id: 'PageBuilder.SearchCTA.currentLocationPlaceholder' })
+                : intl.formatMessage({ id: 'PageBuilder.SearchCTA.locationPlaceholder' })
             }
             inputRef={inputRef}
             input={{ ...restInput, onChange: searchOnChange }}
