@@ -64,44 +64,56 @@ export const SearchCTA = React.forwardRef((props, ref) => {
     categories: {
       enabled: categories,
       isValid: () => categoryConfig.categories.length > 0,
-      render: () => (
-        <div className={css.filterField}>
-          <FilterCategories categories={categoryConfig.categories} />
-        </div>
-      ),
-    },
-    locationSearch: {
-      enabled: locationSearch,
-      isValid: () => locationSearch,
-      render: () => (
-        <div className={css.filterField}>
-          <FilterLocation setSubmitDisabled={setSubmitDisabled} />
+      render: alignLeft => (
+        <div className={css.filterField} key="categories">
+          <FilterCategories categories={categoryConfig.categories} alignLeft={alignLeft} />
         </div>
       ),
     },
     keywordSearch: {
       enabled: keywordSearch,
       isValid: () => keywordSearch,
-      render: () => (
-        <div className={css.filterField}>
+      render: alignLeft => (
+        <div className={css.filterField} key="keywordSearch">
           <FilterKeyword />
         </div>
       ),
     },
+    locationSearch: {
+      enabled: locationSearch,
+      isValid: () => locationSearch,
+      render: alignLeft => (
+        <div className={css.filterField} key="locationSearch">
+          <FilterLocation setSubmitDisabled={setSubmitDisabled} alignLeft={alignLeft} />
+        </div>
+      ),
+    },
+
     dateRange: {
       enabled: dateRange,
       isValid: () => dateRange,
-      render: () => (
-        <div className={css.filterField}>
-          <FilterDateRange config={config} />
+      render: alignLeft => (
+        <div className={css.filterField} key="dateRange">
+          <FilterDateRange config={config} alignLeft={alignLeft} />
         </div>
       ),
     },
   };
 
-  const addFilterMaybe = key => {
-    const filter = filters[key];
-    return filter.enabled && filter.isValid() ? filter.render() : null;
+  const addFilters = filterOrder => {
+    const enabledFilters = filterOrder.filter(
+      key => filters[key]?.enabled && filters[key]?.isValid()
+    );
+
+    const totalEnabled = enabledFilters.length;
+
+    return enabledFilters.map((key, index) => {
+      const filter = filters[key];
+      const isLast = index === totalEnabled - 1;
+      const alignLeft = totalEnabled === 1 || !isLast;
+
+      return filter.enabled && filter.isValid() ? filter.render(alignLeft) : null;
+    });
   };
 
   // Count the number search fields that are enabled
@@ -115,7 +127,7 @@ export const SearchCTA = React.forwardRef((props, ref) => {
 
   const onSubmit = values => {
     // Convert form values to query parameters
-    const queryParams = {};
+    let queryParams = {};
 
     Object.entries(values).forEach(([key, value]) => {
       if (!isEmpty(value)) {
@@ -158,12 +170,10 @@ export const SearchCTA = React.forwardRef((props, ref) => {
               onSubmit={handleSubmit}
               className={classNames(css.gridContainer, getGridCount(fieldCountForGrid))}
             >
-              {addFilterMaybe('categories')}
-              {addFilterMaybe('locationSearch')}
-              {addFilterMaybe('keywordSearch')}
-              {addFilterMaybe('dateRange')}
+              {addFilters(['categories', 'keywordSearch', 'locationSearch', 'dateRange'])}
+
               <PrimaryButton disabled={submitDisabled} className={css.submitButton} type="submit">
-                <FormattedMessage id="SearchCTA.buttonLabel" />
+                <FormattedMessage id="PageBuilder.SearchCTA.buttonLabel" />
               </PrimaryButton>
             </Form>
           );

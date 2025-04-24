@@ -10,7 +10,7 @@ const identity = v => v;
 
 const LocationSearchField = props => {
   const [isCurrentLocation, setIsCurrentLocation] = useState(false);
-  const { inputRootClass, intl, inputRef, onLocationChange } = props;
+  const { inputRootClass, intl, inputRef, onLocationChange, alignLeft } = props;
   return (
     <Field
       name="location"
@@ -30,15 +30,19 @@ const LocationSearchField = props => {
         return (
           <LocationAutocompleteInput
             className={css.customField}
-            inputClassName={inputRootClass}
+            useDarkText={true}
+            inputClassName={isCurrentLocation ? css.inputWithCurrentLocation : inputRootClass}
             closeOnBlur={true}
-            predictionsClassName={css.predictions}
+            predictionsClassName={classNames(css.predictions, {
+              [css.alignLeft]: alignLeft,
+            })}
             CustomIcon={IconLocation}
             iconClassName={css.locationAutocompleteInputIcon}
+            isCurrentLocation={isCurrentLocation}
             placeholder={
               isCurrentLocation
-                ? intl.formatMessage({ id: 'SearchCTA.currentLocationPlaceholder' })
-                : intl.formatMessage({ id: 'SearchCTA.locationPlaceholder' })
+                ? intl.formatMessage({ id: 'PageBuilder.SearchCTA.currentLocationPlaceholder' })
+                : intl.formatMessage({ id: 'PageBuilder.SearchCTA.locationPlaceholder' })
             }
             inputRef={inputRef}
             input={{ ...restInput, onChange: searchOnChange }}
@@ -59,6 +63,8 @@ const FilterLocation = props => {
     setSubmitDisabled,
     className,
     rootClassName,
+    alignLeft,
+    isCurrentLocation,
     ...restOfProps
   } = props;
   const classes = classNames(rootClassName || css.root, className);
@@ -78,6 +84,7 @@ const FilterLocation = props => {
         intl={intl}
         inputRef={searchInpuRef}
         onLocationChange={onChange}
+        alignLeft={alignLeft}
       />
     </div>
   );

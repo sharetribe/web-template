@@ -6,7 +6,6 @@
   text-overflow: ellipsis;
   cursor: pointer;
   font-size: 14px;
-
   &:hover,
   &:focus {
     border: none;
@@ -21,6 +20,13 @@
 
   @media (--viewportMedium) {
     font-size: inherit;
+  }
+}
+
+.inputWithCurrentLocation {
+  composes: input;
+  &::placeholder {
+    color: var(--colorGrey700);
   }
 }
 
@@ -64,15 +70,21 @@
   width: calc(100% + 16px);
   min-width: 288px;
   margin-top: 0;
-  background-color: var(--marketplaceColor);
-  border-radius: var(--borderRadius);
+  background-color: var(--colorWhite);
+  border-radius: var(--borderRadiusMedium);
   box-shadow: var(--boxShadowPopup);
   z-index: calc(var(--zIndexPopup) + 1);
 
   @media (--viewportLarge) {
-    top: 51px;
-    left: 0;
+    top: 50px;
+    right: 0;
+    left: auto;
     transform: none;
     width: 100%;
+
+    &.alignLeft {
+      left: -8px;
+      right: auto;
+    }
   }
 }

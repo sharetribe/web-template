@@ -19,7 +19,7 @@ const FilterKeyword = props => {
         name={'keywords'}
         type="text"
         placeholder={intl.formatMessage({
-          id: 'SearchCTA.keywordFilterPlaceholder',
+          id: 'PageBuilder.SearchCTA.keywordFilterPlaceholder',
         })}
       />
     </div>

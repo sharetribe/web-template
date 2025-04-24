@@ -42,6 +42,7 @@ const LocationPredictionsList = props => {
   const {
     rootClassName,
     className,
+    useDarkText,
     children,
     predictions,
     currentLocationId,
@@ -62,7 +63,10 @@ const LocationPredictionsList = props => {
 
     return (
       <li
-        className={isHighlighted ? css.highlighted : null}
+        className={classNames(
+          isHighlighted ? css.highlighted : null,
+          useDarkText ? css.listItemBlackText : css.listItemWhiteText
+        )}
         key={predictionId}
         onTouchStart={e => {
           e.preventDefault();
@@ -433,6 +437,7 @@ class LocationAutocompleteInputImplementation extends Component {
       autoFocus,
       rootClassName,
       className,
+      useDarkText,
       iconClassName,
       CustomIcon,
       inputClassName,
@@ -516,6 +521,7 @@ class LocationAutocompleteInputImplementation extends Component {
         {renderPredictions ? (
           <LocationPredictionsList
             rootClassName={predictionsClass}
+            useDarkText={useDarkText}
             predictions={predictions}
             currentLocationId={geocoderVariant.CURRENT_LOCATION_ID}
             isGoogleMapsInUse={config.maps.mapProvider === 'googleMaps'}
@@ -525,7 +531,10 @@ class LocationAutocompleteInputImplementation extends Component {
             onSelectMove={this.handlePredictionsSelectMove}
             onSelectEnd={this.handlePredictionsSelectEnd}
           >
-            <GeocoderAttribution className={predictionsAttributionClassName} />
+            <GeocoderAttribution
+              className={predictionsAttributionClassName}
+              useDarkText={useDarkText}
+            />
           </LocationPredictionsList>
         ) : null}
       </div>

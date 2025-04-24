@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import classNames from 'classnames';
 
 import { useIntl } from '../../../../../util/reactIntl';
@@ -20,15 +20,23 @@ import css from './FilterDateRange.module.css';
 const FilterDateRange = props => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedDates, setSelectedDates] = useState(null);
-  const { className, rootClassName, config } = props;
+  const { className, rootClassName, config, alignLeft } = props;
   const intl = useIntl();
+
+  useEffect(() => {
+    if (FieldDateRangeController.preload) {
+      FieldDateRangeController.preload();
+    }
+  }, []);
 
   const classes = classNames(rootClassName || css.root, className);
 
   const formatDateRange = (start, end) => {
-    const formattedStart = intl.formatDate(start, { day: 'numeric', month: 'short' });
-    const formattedEnd = intl.formatDate(end, { day: 'numeric', month: 'short' });
-    return `${formattedStart} - ${formattedEnd}`;
+    const formattedDate = intl.formatDateTimeRange(start, end, {
+      day: 'numeric',
+      month: 'short',
+    });
+    return formattedDate;
   };
 
   const handleDateRangeChange = value => {
@@ -56,20 +64,27 @@ const FilterDateRange = props => {
 
   return (
     <OutsideClickHandler className={classes} onOutsideClick={() => setIsOpen(false)}>
-      <div className={css.toggleButton} onClick={() => setIsOpen(prevState => !prevState)}>
+      <div
+        role="button"
+        className={css.toggleButton}
+        onClick={() => setIsOpen(prevState => !prevState)}
+        tabIndex={0}
+        onKeyDown={() => setIsOpen(prevState => !prevState)}
+      >
         <IconDate />
         <span className={labelClasses}>
           {selectedDates
             ? selectedDates
-            : intl.formatMessage({ id: 'SearchCTA.dateFilterPlaceholder' })}
+            : intl.formatMessage({ id: 'PageBuilder.SearchCTA.dateFilterPlaceholder' })}
         </span>
       </div>
-
       {isOpen ? (
         <FieldDateRangeController
           onChange={handleDateRangeChange}
           showClearButton
-          className={css.datePicker}
+          className={classNames(css.datePicker, {
+            [css.alignLeft]: alignLeft,
+          })}
           name="dateRange"
           minimumNights={isNightlyMode ? 1 : 0}
         />

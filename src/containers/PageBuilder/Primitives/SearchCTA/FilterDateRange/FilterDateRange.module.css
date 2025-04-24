@@ -12,11 +12,10 @@
   left: 50%;
   transform: translateX(-50%);
   width: calc(100% + 16px);
-  min-width: 288px;
   margin-top: 4px;
   background-color: white;
-
-  border-radius: var(--borderRadius);
+  padding-bottom: 16px;
+  border-radius: var(--borderRadiusMedium);
   box-shadow: var(--boxShadowPopup);
   z-index: calc(var(--zIndexPopup) + 1);
 
@@ -26,8 +25,12 @@
     left: auto;
     transform: none;
     width: 100%;
-    min-width: 288px;
+    min-width: 310px;
     margin-top: 0;
+    &.alignLeft {
+      left: -8px;
+      right: auto;
+    }
   }
 }
 
@@ -36,7 +39,7 @@
   align-items: center;
   height: 40px;
   padding: 0 12px;
-  border-radius: 4px;
+  border-radius: var(--borderRadiusMedium);
   cursor: pointer;
   color: var(--colorGrey700);
   font-weight: 400;
@@ -62,6 +65,7 @@
   transition: all 0.1s;
   margin-left: 8px;
   color: var(--colorGrey300);
+  white-space: nowrap;
 }
 
 .active {

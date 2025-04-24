@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Field } from 'react-final-form';
 import classNames from 'classnames';
 import { FormattedMessage } from '../../../../../util/reactIntl';
@@ -7,87 +7,136 @@ import { OutsideClickHandler } from '../../../../../components';
 
 import css from './FilterCategories.module.css';
 
-const CategoryDropdown = ({ input, className, rootClassName, categories }) => {
+const CategoryDropdown = ({ input, className, rootClassName, categories, alignLeft }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
   const [hasSelected, setHasSelected] = useState(false);
 
-  const toggleDropdown = () => setIsOpen(!isOpen);
+  const toggleDropdown = () => {
+    setIsOpen(prev => !prev);
+    if (!isOpen) {
+      // reset the index used to navigate menu items using keyboard when the menu is closed
+      setActiveIndex(-1);
+    }
+  };
 
   const handleOptionClick = optionId => {
-    // we want to submit an empty value to the form if the "All categories" value is selected
     const value = optionId === 'all-categories' ? '' : optionId;
     input.onChange(value);
     setHasSelected(true);
     setIsOpen(false);
   };
 
-  // Identify the selected category
+  // keydown handling when navigating menu using keyboard
+  const handleKeyDown = e => {
+    if (!isOpen) {
+      if (e.key === 'ArrowDown' || e.key === 'Enter') {
+        e.preventDefault();
+        setIsOpen(true);
+        setActiveIndex(0);
+      }
+      return;
+    }
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setActiveIndex(prev => {
+        if (prev < allOptions.length - 1) {
+          return prev + 1;
+        }
+        return prev;
+      });
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setActiveIndex(prev => {
+        if (prev > 0) {
+          return prev - 1;
+        }
+        return prev;
+      });
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      const selected = allOptions[activeIndex];
+      if (selected) handleOptionClick(selected.id);
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      setIsOpen(false);
+    }
+  };
+
   const selectedCategory = categories.find(category => category.id === input.value);
 
-  // Set the dropdown label: we store a hasSelected value in state to check if the user
-  // has interacted with the form yet, i.e. selected a value. If not, we show a placeholder value
   const labelText = selectedCategory ? (
     selectedCategory.name
   ) : hasSelected && input.value === '' ? (
-    <FormattedMessage id="CategoryFilter.selectAll" />
+    <FormattedMessage id="PageBuilder.CategoryFilter.selectAll" />
   ) : (
-    <FormattedMessage id="CategoryFilter.placeholder" />
+    <FormattedMessage id="PageBuilder.CategoryFilter.placeholder" />
   );
 
   const rootClass = rootClassName || css.root;
   const classes = classNames(rootClass, className);
 
+  // append the "all categories" option to the list of categories
+  const allOptions = [
+    { id: 'all-categories', name: <FormattedMessage id="PageBuilder.CategoryFilter.selectAll" /> },
+    ...categories,
+  ];
+
+  const optionRefs = useRef([]);
+
   return (
     <OutsideClickHandler className={classes} onOutsideClick={() => setIsOpen(false)}>
       <div className={css.dropdownContainer}>
         <div
-          className={classNames(
-            css.toggleButton,
-            // If no selection has been made, no category is selected, and dropdown is closed, apply 'unselected' style
-            // else, if dropdown is open but no selection has been made, apply placeholderOpened style
-            !hasSelected && !selectedCategory && !isOpen && css.unselected,
-            isOpen && !hasSelected && css.placeholderOpened
-          )}
+          role="combobox"
+          aria-haspopup="listbox"
+          aria-expanded={isOpen}
+          aria-owns="category-listbox"
+          aria-controls="category-listbox"
+          tabIndex={0}
           onClick={toggleDropdown}
-          type="button"
+          onKeyDown={handleKeyDown}
+          className={classNames(css.toggleButton, {
+            [css.unselected]: !hasSelected && !selectedCategory && !isOpen,
+            [css.placeholderOpened]: isOpen && !hasSelected,
+          })}
         >
-          <span>{labelText}</span>
+          <span className={css.dropdownItem}>{labelText}</span>
           <span className={classNames(css.chevron, isOpen && css.isOpen)} />
         </div>
 
         {isOpen && (
-          <div className={css.dropdownContent}>
-            <div
-              className={css.option}
-              onClick={() => handleOptionClick('all-categories')}
-              type="button"
-            >
-              <span
-                className={
-                  hasSelected && input.value === ''
-                    ? css.dropdownItemBorderSelected
-                    : css.dropdownItemBorder
-                }
-              />
-              <FormattedMessage id="CategoryFilter.selectAll" />
-            </div>
-
-            {categories.map(({ id, name }) => (
-              <div
-                key={id}
-                className={css.option}
-                onClick={() => handleOptionClick(id)}
-                type="button"
-              >
-                <span
-                  className={
-                    input.value === id ? css.dropdownItemBorderSelected : css.dropdownItemBorder
-                  }
-                />
-                {name}
-              </div>
-            ))}
-          </div>
+          <ul
+            className={classNames(css.dropdownContent, {
+              [css.alignLeft]: alignLeft,
+            })}
+            role="listbox"
+            id="category-listbox"
+          >
+            {allOptions.map(({ id, name }, index) => {
+              const isSelected =
+                id === input.value || (id === 'all-categories' && input.value === '');
+              const isActive = index === activeIndex;
+              return (
+                <li
+                  key={id}
+                  ref={option => (optionRefs.current[index] = option)}
+                  className={classNames(css.option, {
+                    [css.activeOption]: isActive,
+                  })}
+                  role="option"
+                  aria-selected={isSelected}
+                  onClick={() => handleOptionClick(id)}
+                >
+                  <span
+                    className={isSelected ? css.dropdownItemBorderSelected : css.dropdownItemBorder}
+                  />
+                  {name}
+                </li>
+              );
+            })}
+          </ul>
         )}
       </div>
     </OutsideClickHandler>
