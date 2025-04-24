@@ -14,7 +14,7 @@ import css from './SearchMapInfoCard.module.css';
 const ListingCard = props => {
   const { className, clickHandler, intl, isInCarousel, listing, urlToListing, config } = props;
 
-  const { title, price } = listing.attributes;
+  const { title, price, publicData } = listing.attributes;
   const formattedPrice =
     price && price.currency === config.currency
       ? formatMoney(intl, price)
@@ -31,6 +31,12 @@ const ListingCard = props => {
   const variants = firstImage
     ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
     : [];
+
+  const pricePerUnit = intl.formatMessage(
+    { id: 'SearchMapInfoCard.perUnit' },
+    { unitType: publicData?.unitType }
+  );
+  const priceValue = formattedPrice ? formattedPrice : '';
 
   // listing card anchor needs sometimes inherited border radius.
   const classes = classNames(
@@ -72,7 +78,7 @@ const ListingCard = props => {
         </AspectRatioWrapper>
         <div className={classNames(css.info, { [css.borderRadiusInheritBottom]: !isInCarousel })}>
           <div className={classNames(css.price, { [css.noPriceSetLabel]: !formattedPrice })}>
-            {formattedPrice}
+            {intl.formatMessage({ id: 'SearchMapInfoCard.price' }, { priceValue, pricePerUnit })}
           </div>
           <div className={css.name}>{title}</div>
         </div>
