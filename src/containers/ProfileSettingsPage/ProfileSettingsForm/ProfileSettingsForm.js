@@ -387,6 +387,9 @@ class ProfileSettingsFormComponent extends Component {
                     <p>
                       <FormattedMessage id="EditListingAvailabilityPanel.disconnectGoogleCalendar" />
                     </p>
+                    <p>
+                      <FormattedMessage id="EditListingAvailabilityPanel.connectWithGoogleUserConfusion" />
+                    </p>
                     <Button
                       type="button"
                       inProgress={disconnectGoogleInProgress}
@@ -401,6 +404,9 @@ class ProfileSettingsFormComponent extends Component {
                   <div className={css.planInfo}>
                     <p>
                       <FormattedMessage id="EditListingAvailabilityPanel.connectWithGoogle" />
+                    </p>
+                    <p>
+                      <FormattedMessage id="EditListingAvailabilityPanel.connectWithGoogleUserConfusion" />
                     </p>
                     <Button
                       type="button"

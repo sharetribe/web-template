@@ -310,6 +310,9 @@ const EditListingAvailabilityPanel = props => {
           <p>
             <FormattedMessage id="EditListingAvailabilityPanel.disconnectGoogleCalendar" />
           </p>
+          <p>
+            <FormattedMessage id="EditListingAvailabilityPanel.connectWithGoogleUserConfusion" />
+          </p>
           <Button
             inProgress={disconnectGoogleInProgress}
             className={css.googleConnectButton}
@@ -323,6 +326,9 @@ const EditListingAvailabilityPanel = props => {
         <div className={css.planInfo}>
           <p>
             <FormattedMessage id="EditListingAvailabilityPanel.connectWithGoogle" />
+          </p>
+          <p>
+            <FormattedMessage id="EditListingAvailabilityPanel.connectWithGoogleUserConfusion" />
           </p>
           <Button
             inProgress={authInProgress}
