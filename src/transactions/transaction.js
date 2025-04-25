@@ -2,6 +2,7 @@ import * as log from '../util/log';
 import * as purchaseProcess from './transactionProcessPurchase';
 import * as bookingProcess from './transactionProcessBooking';
 import * as inquiryProcess from './transactionProcessInquiry';
+import * as negotiationProcess from './transactionProcessNegotiation';
 
 // Supported unit types
 // Note: These are passed to translations/microcopy in certain cases.
@@ -12,11 +13,14 @@ export const NIGHT = 'night';
 export const HOUR = 'hour';
 export const FIXED = 'fixed';
 export const INQUIRY = 'inquiry';
+export const OFFER = 'offer'; // The unitType 'offer' means that provider created the listing on default-negotiation process
+export const REQUEST = 'request'; // The unitType 'request' means that customer created the listing on default-negotiation process
 
 // Then names of supported processes
 export const PURCHASE_PROCESS_NAME = 'default-purchase';
 export const BOOKING_PROCESS_NAME = 'default-booking';
 export const INQUIRY_PROCESS_NAME = 'default-inquiry';
+export const NEGOTIATION_PROCESS_NAME = 'default-negotiation';
 
 /**
  * A process should export:
@@ -49,6 +53,12 @@ const PROCESSES = [
     alias: `${INQUIRY_PROCESS_NAME}/release-1`,
     process: inquiryProcess,
     unitTypes: [INQUIRY],
+  },
+  {
+    name: NEGOTIATION_PROCESS_NAME,
+    alias: `${NEGOTIATION_PROCESS_NAME}/release-1`,
+    process: negotiationProcess,
+    unitTypes: [OFFER, REQUEST],
   },
 ];
 
@@ -217,6 +227,8 @@ export const resolveLatestProcessName = processName => {
       return BOOKING_PROCESS_NAME;
     case INQUIRY_PROCESS_NAME:
       return INQUIRY_PROCESS_NAME;
+    case NEGOTIATION_PROCESS_NAME:
+      return NEGOTIATION_PROCESS_NAME;
     default:
       return processName;
   }
@@ -302,6 +314,27 @@ export const isBookingProcess = processName => {
 export const isBookingProcessAlias = processAlias => {
   const processName = processAlias ? processAlias.split('/')[0] : null;
   return processAlias ? isBookingProcess(processName) : false;
+};
+
+/**
+ * Check if the process is negotiation process
+ *
+ * @param {String} processName
+ */
+export const isNegotiationProcess = processName => {
+  const latestProcessName = resolveLatestProcessName(processName);
+  const processInfo = PROCESSES.find(process => process.name === latestProcessName);
+  return [NEGOTIATION_PROCESS_NAME].includes(processInfo?.name);
+};
+
+/**
+ * Check if the process/alias points to a negotiation process
+ *
+ * @param {String} processAlias
+ */
+export const isNegotiationProcessAlias = processAlias => {
+  const processName = processAlias ? processAlias.split('/')[0] : null;
+  return processAlias ? isNegotiationProcess(processName) : false;
 };
 
 /**
