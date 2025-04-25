@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Add currently available translations for DE, ES, FR.
+  [#587](https://github.com/sharetribe/web-template/pull/587)
+
 ## [v8.1.0] 2025-04-24
 
 - [add] Add support for price variations for bookable listings.
