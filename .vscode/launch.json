@@ -23,6 +23,15 @@
       "env": {
         "NODE_ENV": "development"
       }
+    },
+
+    {
+      "name": "Debug Listing Update",
+      "type": "node",
+      "request": "attach",
+      "port": 9229,
+      "cwd": "${workspaceFolder}",
+      "skipFiles": ["<node_internals>/**"]
     }
   ]
 }
