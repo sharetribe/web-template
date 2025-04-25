@@ -17,7 +17,7 @@ import {
   AVAILABILITY_MULTIPLE_SEATS,
   LINE_ITEM_FIXED,
 } from '../../util/types';
-import { subtractTime } from '../../util/dates';
+import { getDefaultTimeZoneOnBrowser, subtractTime } from '../../util/dates'; // [SKYFARER]
 import {
   TX_TRANSITION_ACTOR_CUSTOMER,
   TX_TRANSITION_ACTOR_PROVIDER,
