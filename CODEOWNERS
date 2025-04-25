@@ -1,0 +1,11 @@
+##############################################################
+#
+# List of approvers/reviewers for Skyfarer-Academy/web-template
+#
+##############################################################
+#
+#  https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+
+# These owners will be the default owners for everything in the repo, and automatically asked for review. 
+*       @alexwitherspoon @gpavlov2016
