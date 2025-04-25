@@ -134,11 +134,11 @@ export const getStateData = (params, process) => {
   };
 
   if (processName === PURCHASE_PROCESS_NAME) {
-    return getStateDataForPurchaseProcess(params, processInfo());
+    return getStateDataForPurchaseProcess(params, processInfo(), intl); // [SKYFARER +intl]
   } else if (processName === BOOKING_PROCESS_NAME) {
-    return getStateDataForBookingProcess(params, processInfo());
+    return getStateDataForBookingProcess(params, processInfo(), intl); // [SKYFARER +intl]
   } else if (processName === INQUIRY_PROCESS_NAME) {
-    return getStateDataForInquiryProcess(params, processInfo());
+    return getStateDataForInquiryProcess(params, processInfo(), intl); // [SKYFARER +intl]
   } else {
     return {};
   }
