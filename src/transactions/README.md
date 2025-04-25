@@ -53,6 +53,17 @@ country, this process could be used instead.
 Note: you need to figure out the monetization model separately as payments (and commissions) don't
 happen through the platform with this process.
 
+## [transactionProcessNegotiation.js](transactionProcessNegotiation.js)
+
+This file defines the process graph for default-negotiation in the web app. It describes the price
+negotiation between the customer and the provider. There are separate initial transitions for both
+roles. The client app selects the appropriate transition based on the listing type configuration.
+
+The unit type of the listing is used to determine which initial transition is used. If the unit type
+is "offer", the transaction process follows the regular flow: the provider has created the listing.
+However, if the unit type is "request", the listing is created by the customer, and the transaction
+is initiated when the provider responds to the request by making an offer.
+
 ## [../../ext/transaction-processes](../../ext/transaction-processes/README.md)
 
 These files reference the actual transaction processes that are available by default on each
