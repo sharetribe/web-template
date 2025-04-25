@@ -15,7 +15,7 @@ import {
  * @param {*} txInfo detials about transaction
  * @param {*} processInfo  details about process
  */
-export const getStateDataForBookingProcess = (txInfo, processInfo) => {
+export const getStateDataForBookingProcess = (txInfo, processInfo, intl) => {
   const { transaction, transactionRole, nextTransitions } = txInfo;
   const isProviderBanned = transaction?.provider?.attributes?.banned;
   const isCustomerBanned = transaction?.provider?.attributes?.banned;
