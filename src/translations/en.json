@@ -1193,7 +1193,9 @@
   "RegionalPartnerPromo.selfPromo": "Become a partner",
   "SearchRequestLinks.findLocations": "Find locations for sale",
   "SearchRequestLinks.requestLocation": "Request a location",
+  "SearchRequestLinks.or": "or",
   "SocialProofReviews.title": "4.9/5 Reviews",
-  "SocialProofReviews.caption": "Overall average for buyers and sellers"
+  "SocialProofReviews.caption": "Overall average for buyers and sellers",
+  "AgentApplyNow.buttonLabel": "Apply now"
 
 }

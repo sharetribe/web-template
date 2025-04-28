@@ -24,7 +24,7 @@ const ModalIframeButton = ({ iframeUrl, buttonLabel, icon: Icon, buttonClassName
   };
 
   return (
-    <div>
+    <span>
       <button className={buttonClassName} onClick={handleOpen}>
         {Icon && <Icon />} {buttonLabel}
       </button>
@@ -54,7 +54,7 @@ const ModalIframeButton = ({ iframeUrl, buttonLabel, icon: Icon, buttonClassName
           />
         </Modal>
       
-    </div>
+    </span>
   );
 };
 
