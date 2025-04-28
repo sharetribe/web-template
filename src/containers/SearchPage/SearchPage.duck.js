@@ -335,6 +335,8 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
         // when transitioning from search page to listing page
         'publicData.pickupEnabled',
         'publicData.shippingEnabled',
+        'publicData.priceVariationsEnabled',
+        'publicData.priceVariants',
       ],
       'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
       'fields.image': [

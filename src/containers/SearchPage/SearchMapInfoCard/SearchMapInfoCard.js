@@ -5,6 +5,7 @@ import { useIntl } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import { formatMoney } from '../../../util/currency';
 import { ensureListing } from '../../../util/data';
+import { isPriceVariationsEnabled } from '../../../util/configHelpers';
 
 import { AspectRatioWrapper, ResponsiveImage } from '../../../components';
 
@@ -37,6 +38,20 @@ const ListingCard = props => {
     { unitType: publicData?.unitType }
   );
   const priceValue = formattedPrice ? formattedPrice : '';
+
+  const validListingTypes = config.listing.listingTypes;
+  const foundListingTypeConfig = validListingTypes.find(
+    conf => conf.listingType === publicData?.listingType
+  );
+  const isPriceVariationsInUse = isPriceVariationsEnabled(publicData, foundListingTypeConfig);
+  const hasMultiplePriceVariants = isPriceVariationsInUse && publicData?.priceVariants?.length > 1;
+
+  const priceMessage = hasMultiplePriceVariants
+    ? intl.formatMessage(
+        { id: 'SearchMapInfoCard.priceStartingFrom' },
+        { priceValue, pricePerUnit }
+      )
+    : intl.formatMessage({ id: 'SearchMapInfoCard.price' }, { priceValue, pricePerUnit });
 
   // listing card anchor needs sometimes inherited border radius.
   const classes = classNames(
@@ -78,7 +93,7 @@ const ListingCard = props => {
         </AspectRatioWrapper>
         <div className={classNames(css.info, { [css.borderRadiusInheritBottom]: !isInCarousel })}>
           <div className={classNames(css.price, { [css.noPriceSetLabel]: !formattedPrice })}>
-            {intl.formatMessage({ id: 'SearchMapInfoCard.price' }, { priceValue, pricePerUnit })}
+            {priceMessage}
           </div>
           <div className={css.name}>{title}</div>
         </div>
