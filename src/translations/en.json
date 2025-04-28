@@ -321,7 +321,7 @@
   "EditListingPricingForm.priceVariant.hoursOption": "{hours} {hours, plural, one {hour} other {hours}}",
   "EditListingPricingForm.priceVariant.minutesOption": "{minutes} {minutes, plural, one {minute} other {minutes}}",
   "EditListingPricingForm.priceVariant.name": "Variation name",
-  "EditListingPricingForm.priceVariant.nameInputPlaceholder": "Name the session…",
+  "EditListingPricingForm.priceVariant.nameInputPlaceholder": "Add a name…",
   "EditListingPricingForm.priceVariant.nameMustBeUnique": "The name must be unique.",
   "EditListingPricingForm.priceVariant.nameRequired": "You need to add a name.",
   "EditListingPricingForm.priceVariant.priceInputPlaceholder": "Add a price…",
