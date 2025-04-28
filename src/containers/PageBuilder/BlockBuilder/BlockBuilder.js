@@ -9,6 +9,7 @@ import BlockSocialMediaLink from './BlockSocialMediaLink';
 // Custom block components
 import SearchRequestLinks from '../../../extensions/common/components/Sections/Blocks/SearchRequestLinks/SearchRequestLinks';
 import SocialProofReviews from '../../../extensions/common/components/Sections/Blocks/SocialProofReviews/SocialProofReviews';
+import AgentApplyNow from '../../../extensions/common/components/Sections/Blocks/AgentApplyNow/AgentApplyNow';
 
 
 
@@ -23,7 +24,8 @@ const defaultBlockComponents = {
 };
 const customBlockComponents = {
   searchRequestLinks: <SearchRequestLinks />, 
-  socialProofReviews: <SocialProofReviews/>
+  socialProofReviews: <SocialProofReviews/>,
+  agentApplyNow: <AgentApplyNow/>
 };
 ////////////////////
 // Blocks builder //
