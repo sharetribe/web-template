@@ -132,7 +132,8 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
 
     const validURLParamForCategoryData = (prefix, categories, level, params) => {
       const levelKey = `${categoryParamPrefix}${level}`;
-      const levelValue = params?.[levelKey];
+      const levelValue =
+        typeof params?.[levelKey] !== 'undefined' ? `${params?.[levelKey]}` : undefined;
       const foundCategory = categories.find(cat => cat.id === levelValue);
       const subcategories = foundCategory?.subcategories || [];
       return foundCategory && subcategories.length > 0

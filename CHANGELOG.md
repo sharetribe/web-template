@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] Convert non-string category URL param to string
+  [#590](https://github.com/sharetribe/web-template/pull/590)
+
 - [add] Add currently available translations for DE, ES, FR.
   [#587](https://github.com/sharetribe/web-template/pull/587)
 
