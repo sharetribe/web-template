@@ -9,6 +9,7 @@ import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl
 import { propTypes } from '../../../util/types';
 import * as validators from '../../../util/validators';
 import { getPropsForCustomUserFieldInputs } from '../../../util/userHelpers';
+import { regions } from '../../../config/regions';
 
 import { Form, PrimaryButton, FieldTextInput, CustomExtendedDataField } from '../../../components';
 
@@ -61,6 +62,12 @@ const ConfirmSignupFormComponent = props => (
       // Custom user fields. Since user types are not supported here,
       // only fields with no user type id limitation are selected.
       const userFieldProps = getPropsForCustomUserFieldInputs(userFields, intl, userType);
+
+       //modify location to be a list of regions
+       userFieldProps.find(field => field.key == 'pub_userLocation')
+       .fieldConfig.schemaType='enum';
+      userFieldProps.find(field => field.key == 'pub_userLocation')
+       .fieldConfig.enumOptions= regions;
 
       const noUserTypes = !userType && !(userTypes?.length > 0);
       const userTypeConfig = userTypes.find(config => config.userType === userType);
