@@ -1,8 +1,8 @@
-import logoImageDesktop from '../assets/biketribe-logo-desktop.png';
-import logoImageMobile from '../assets/biketribe-logo-mobile.png';
-import brandImage from '../assets/biketribe-brandImage-1500.jpg';
-import facebookImage from '../assets/biketribe-facebook-sharing-1200x630.jpg';
-import twitterImage from '../assets/biketribe-twitter-sharing-600x314.jpg';
+import logoImageDesktop from '../assets/sherbet-logo-desktop.png';
+import logoImageMobile from '../assets/sherbet-logo-mobile.png';
+import brandImage from '../assets/sherbet-brandImage-1500x1000.jpg';
+import facebookImage from '../assets/sherbet-logo-facebook-sharing-1200x630.jpg';
+import twitterImage from '../assets/sherbet-logo-twitter-sharing-600x314.jpg';
 
 /////////////////////////////////////////////////////////
 // This file contains configs that affect branding     //

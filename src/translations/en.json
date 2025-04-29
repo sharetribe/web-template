@@ -316,7 +316,7 @@
   "EditListingPricingAndStockPanel.title": "Pricing & stock of {listingTitle}",
   "EditListingPricingForm.priceInputPlaceholder": "Enter price...",
   "EditListingPricingForm.pricePerProduct": "Price {unitType, select, day {per wear} night {per night} hour {per hour} other {}}",
-  "EditListingPricingForm.priceDescription": "Price per wear (3-day rental baseline)",
+  "EditListingPricingForm.priceDescription": "Price per day",
   "EditListingPricingForm.priceRequired": "Price is required",
   "EditListingPricingForm.priceTooLow": "Price must be at least {minPrice}",
   "EditListingPricingForm.retailPriceRequired": "Retail price is required",
