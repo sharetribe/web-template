@@ -1,8 +1,16 @@
+
 const extractOverridingProviderCommissionPercent = (authorJoinedListing, globalProviderCommission) => {
+  const listingAttributes = authorJoinedListing.data.data?.attributes;
+  const listingPublicData = listingAttributes?.publicData;
+
+  console.log("Listing Attributes:", listingAttributes);
+  console.log("Listing PublicData:", listingPublicData);
+  console.log("Listing Type (publicData.listingType):", listingPublicData?.listingType)
   let overrideProviderCommissionPercent =
     Array.isArray(authorJoinedListing.data.included) && authorJoinedListing.data.included[0]?.attributes?.profile?.metadata?.provider_commission_percentage != null
       ? authorJoinedListing.data.included[0].attributes.profile.metadata.provider_commission_percentage
       : null;
+  console.log("Listing data is: ", authorJoinedListing.data.included);
 
   const overrideValueIsANumber = typeof overrideProviderCommissionPercent === 'number';
 
