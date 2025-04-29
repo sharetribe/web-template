@@ -269,6 +269,8 @@ const getSearchParams = config => {
       // when transitioning from search page to listing page
       'publicData.pickupEnabled',
       'publicData.shippingEnabled',
+      'publicData.priceVariationsEnabled',
+      'publicData.priceVariants',
     ],
     'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
     'fields.image': [
