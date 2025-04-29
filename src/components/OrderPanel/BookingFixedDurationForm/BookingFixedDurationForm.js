@@ -13,6 +13,7 @@ import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe'
 import FieldDateAndTimeInput from './FieldDateAndTimeInput';
 
 import css from './BookingFixedDurationForm.module.css';
+import ConsultationBox from '../../ConsultationBox/ConsultationBox'; // [SKYFARER]
 
 const FieldHidden = props => {
   const { name, ...rest } = props;
@@ -124,6 +125,9 @@ export const BookingFixedDurationForm = props => {
           fetchLineItemsInProgress,
           fetchLineItemsError,
           payoutDetailsWarning,
+          onContactUser, // [SKYFARER]
+          authorDisplayName, // [SKYFARER],
+          voucher, // [SKYFARER]
         } = formRenderProps;
 
         const startTime = values && values.bookingStartTime ? values.bookingStartTime : null;
@@ -257,6 +261,11 @@ export const BookingFixedDurationForm = props => {
                 />
               )}
             </p>
+            { // [SKYFARER]
+              !isOwnListing && onContactUser ? (<div className={css.submitButton}>
+                <ConsultationBox onContactUser={onContactUser} authorDisplayName={authorDisplayName} />
+              </div>) : null
+            }
           </Form>
         );
       }}

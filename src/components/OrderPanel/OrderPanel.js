@@ -423,6 +423,8 @@ const OrderPanel = props => {
             priceVariants={priceVariants}
             startTimeInterval={startTimeInterval}
             timeZone={timeZone}
+            onContactUser={onContactUser} // [SKYFARER]
+            authorDisplayName={authorDisplayName} // [SKYFARER]
             {...sharedProps}
           />
         ) : showBookingTimeForm ? (
@@ -432,8 +434,6 @@ const OrderPanel = props => {
             formId="OrderPanelBookingTimeForm"
             lineItemUnitType={lineItemUnitType}
             onSubmit={onSubmit}
-            onContactUser={onContactUser} // [SKYFARER]
-            authorDisplayName={authorDisplayName} // [SKYFARER]
             price={price}
             marketplaceCurrency={marketplaceCurrency}
             dayCountAvailableForBooking={dayCountAvailableForBooking}
@@ -443,6 +443,8 @@ const OrderPanel = props => {
             startDatePlaceholder={intl.formatDate(TODAY, dateFormattingOptions)}
             endDatePlaceholder={intl.formatDate(TODAY, dateFormattingOptions)}
             timeZone={timeZone}
+            onContactUser={onContactUser} // [SKYFARER]
+            authorDisplayName={authorDisplayName} // [SKYFARER]
             {...sharedProps}
           />
         ) : showBookingDatesForm ? (
