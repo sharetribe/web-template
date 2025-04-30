@@ -16,7 +16,7 @@ export const getInitialValuesForStartTimeInterval = params => {
   const { startTimeInterval, unitType } = publicData || {};
   const isFixedUnitType = unitType === FIXED;
 
-  return isFixedUnitType ? { startTimeInterval: startTimeInterval || 'everyHour' } : {};
+  return isFixedUnitType ? { startTimeInterval: startTimeInterval || 'hour' } : {};
 };
 
 export const handleSubmitValuesForStartTimeInterval = (values, publicData) => {
@@ -33,7 +33,7 @@ export const handleSubmitValuesForStartTimeInterval = (values, publicData) => {
  * @param {string} props.name - The name of the input
  * @param {string} props.idPrefix - The id prefix for the input field
  * @param {Object} [props.formValues] - The values object from React Final Form
- * @param {'everyHour'|'everyHalfHour'|'everyQuarterHour'} props.formValues.startTimeInterval - The start time interval
+ * @param {'hour'|'halfHour'|'quarterHour'} props.formValues.startTimeInterval - The start time interval
  * @param {boolean} props.pristine
  * @returns {JSX.Element}
  */
