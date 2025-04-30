@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Add support to search pages for filtering listing search based on listing type
+  [#583](https://github.com/sharetribe/web-template/pull/583)
 - [fix] BookingFixedDurationForm: undefined booking length with single fixed price variant.
   [#595](https://github.com/sharetribe/web-template/pull/595)
 - [fix] EditListingPricingPanel: Add initial value for the startTimeInterval.
