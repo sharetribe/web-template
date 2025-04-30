@@ -15,7 +15,7 @@ if (isServer()) {
 const { createInstance, types, transit, util } = exportSdk;
 
 // create image variant from variant name, desired width and aspectRatio
-const createImageVariantConfig = (name, width, aspectRatio) => {
+const createImageVariantConfig = (name, width, aspectRatio, fit = 'crop') => {
   let variantWidth = width;
   let variantHeight = Math.round(aspectRatio * width);
 
@@ -38,7 +38,7 @@ const createImageVariantConfig = (name, width, aspectRatio) => {
     [`imageVariant.${name}`]: util.objectQueryString({
       w: variantWidth,
       h: variantHeight,
-      fit: 'crop',
+      fit,
     }),
   };
 };

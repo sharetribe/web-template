@@ -4,6 +4,8 @@ import classNames from 'classnames';
 import { FormattedMessage } from '../../../util/reactIntl';
 
 import css from './MainPanelHeader.module.css';
+import GridLayoutToggle from '../../../components/GridLayoutToggle/GridLayoutToggle';
+import { GRID_STYLE_MASONRY } from '../../../util/types';
 
 /**
  * MainPanelHeader component
@@ -32,12 +34,16 @@ const MainPanelHeader = props => {
     resultsCount,
     searchInProgress = false,
     noResultsInfo,
+    gridLayout = GRID_STYLE_MASONRY,
+    setGridLayout = () => {},
+    hideGridOptions = false,
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
 
   return (
     <div className={classes}>
+      <div> Layout {gridLayout}</div>
       <div className={css.searchOptions}>
         <div className={css.searchResultSummary}>
           <span className={css.resultsFound}>
@@ -51,14 +57,21 @@ const MainPanelHeader = props => {
             )}
           </span>
         </div>
-        {isSortByActive ? (
-          <div className={css.sortyByWrapper}>
-            <span className={css.sortyBy}>
-              <FormattedMessage id="MainPanelHeader.sortBy" />
-            </span>
-            {sortByComponent}
-          </div>
-        ) : null}
+        <div className={css.rightControls}>
+          {!hideGridOptions && (
+            <div className={css.gridLayoutToggle}>
+              <GridLayoutToggle onChange={setGridLayout} value={gridLayout} />
+            </div>
+          )}
+          {isSortByActive ? (
+            <div className={css.sortByWrapper}>
+              <span className={css.sortBy}>
+                <FormattedMessage id="MainPanelHeader.sortBy" />
+              </span>
+              {sortByComponent}
+            </div>
+          ) : null}
+        </div>
       </div>
 
       {children}

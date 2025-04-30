@@ -38,7 +38,11 @@
 }
 
 .listingPanel {
-  padding-top: 24px;
+  padding-top: 16px;
+}
+
+.displayOptions {
+  padding-bottom: 8px;
 }
 
 .listingCards {
@@ -60,9 +64,12 @@
   }
 }
 
+.masonryListingCard, .listingCard {
+  width: 100%;
+}
+
 .listingCard {
   margin-bottom: 36px;
-  width: 100%;
 }
 
 /**

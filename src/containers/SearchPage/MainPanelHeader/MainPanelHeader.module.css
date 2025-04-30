@@ -40,13 +40,24 @@
   white-space: nowrap;
 }
 
-.sortyByWrapper {
+.sortByWrapper {
   display: inline-flex;
   margin-left: auto;
 }
 
-.sortyBy {
+.sortBy {
   composes: marketplaceSmallFontStyles from global;
   font-weight: var(--fontWeightRegular);
   padding: 8px 8px 8px 0;
+}
+
+.rightControls {
+  display: flex;
+  margin-left: auto;
+  align-items: center;
+  gap: 12px; /* Adjust spacing as needed */
+}
+
+.gridLayoutToggle {
+  display: flex;
 }
