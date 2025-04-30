@@ -1,13 +1,20 @@
+/* eslint-disable no-undef */
+// TODO: Fix eslint to differentiate the server and client code
+
 require('dotenv').config()
 const fs = require('fs')
 const { getISdk } = require('../server/api-util/sdk')
 const sdk = getISdk()
 
-inPersonHourlyToFixed(false)
-inPersonAndOnlineInstructorProfileFixedToHourly(true)
+// -----------------------------------------------------------------------------------
+
+inPersonHourlyToFixed({ activate: false, dryRun: false, backup: false })
+inPersonAndOnlineInstructorProfileFixedToHourly({ activate: true, dryRun: false, backup: false })
+
+// -----------------------------------------------------------------------------------
 
 // Update all in-person hourly listings to fixed
-async function inPersonHourlyToFixed(activate = false) {
+async function inPersonHourlyToFixed({ activate = false, dryRun = false, backup = false }) {
   if (!activate) return
 
   let allListings = []
@@ -38,7 +45,7 @@ async function inPersonHourlyToFixed(activate = false) {
 
   console.log(`Finished fetching. Total listings: ${allListings.length}`)
 
-  // fs.writeFileSync('listings.backup.live.all.json', JSON.stringify(allListings, null, 2))
+  if (backup) fs.writeFileSync('listings.backup.live.all.json', JSON.stringify(allListings, null, 2))
 
   const inPerson = allListings.filter(listing => listing.attributes.publicData.listingType === 'in-person')
   console.log(`Found ${inPerson.length} in-person listings out of ${allListings.length} total`)
@@ -48,6 +55,7 @@ async function inPersonHourlyToFixed(activate = false) {
 
   for (const listing of hourlyListings) {
     console.log(`Processing listing ${listing.attributes.title} (${listing.id.uuid})`)
+    if (dryRun) continue
     sdk.listings.update({
       id: listing.id,
       publicData: {
@@ -61,7 +69,7 @@ async function inPersonHourlyToFixed(activate = false) {
 }
 
 // Update all in-person and online instructor profile (calendar booking) listings to hourly
-async function inPersonAndOnlineInstructorProfileFixedToHourly(activate = false) {
+async function inPersonAndOnlineInstructorProfileFixedToHourly({ activate = false, dryRun = false, backup = false }) {
   if (!activate) return
 
   let allListings = []
@@ -92,7 +100,7 @@ async function inPersonAndOnlineInstructorProfileFixedToHourly(activate = false)
 
   console.log(`Finished fetching. Total listings: ${allListings.length}`)
 
-  fs.writeFileSync('listings.backup.live.all.json', JSON.stringify(allListings, null, 2))
+  if (backup) fs.writeFileSync('listings.backup.live.all.json', JSON.stringify(allListings, null, 2))
 
   const inPersonAndInstructorProfile = allListings.filter(listing => listing.attributes.publicData.listingType === 'in-person' || listing.attributes.publicData.listingType === 'instruction_and_consultation')
   console.log(`Found ${inPersonAndInstructorProfile.length} in-person and instructor profile listings out of ${allListings.length} total`)
@@ -102,6 +110,7 @@ async function inPersonAndOnlineInstructorProfileFixedToHourly(activate = false)
 
   for (const listing of fixedListings) {
     console.log(`Processing listing ${listing.attributes.title} (${listing.id.uuid})`)
+    if (dryRun) continue
     sdk.listings.update({
       id: listing.id,
       publicData: {
