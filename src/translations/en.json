@@ -316,7 +316,7 @@
   "EditListingPricingAndStockPanel.title": "Pricing & stock of {listingTitle}",
   "EditListingPricingForm.priceInputPlaceholder": "Enter price...",
   "EditListingPricingForm.pricePerProduct": "Price {unitType, select, day {per wear} night {per night} hour {per hour} other {}}",
-  "EditListingPricingForm.priceDescription": "Price per day",
+  "EditListingPricingForm.priceDescription": "Price per wear is equivalent to a minimum 3-day period. This gives the borrower time to receive, try-on, accessorize and ship back. We'll update the price for you according to how long your item is borrowed.",
   "EditListingPricingForm.priceRequired": "Price is required",
   "EditListingPricingForm.priceTooLow": "Price must be at least {minPrice}",
   "EditListingPricingForm.retailPriceRequired": "Retail price is required",

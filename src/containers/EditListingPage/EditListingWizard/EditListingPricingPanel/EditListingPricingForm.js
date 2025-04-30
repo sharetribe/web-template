@@ -152,16 +152,23 @@ export const EditListingPricingForm = props => (
           ) : (
             <>
               <FieldCurrencyInput
-                id={`${formId}.retailPrice`}
-                name="retailPrice"
+                id={`${formId}.price`}
+                name="price"
                 className={css.input}
                 autoFocus={autoFocus}
-                label="Price per day"
+                label="Price per wear"
                 placeholder={intl.formatMessage({
                   id: 'EditListingPricingForm.priceInputPlaceholder',
                 })}
                 currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
                 validate={retailPriceRequired}
+
+
+
+
+
+
+                
               />
 
               <p className={css.priceDescription}>
