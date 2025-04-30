@@ -256,6 +256,7 @@
   "TransactionPage.ActivityFeed.sell-purchase.reviewed-by-customer":  "{actor, select, you {You left a review for {otherUsersName}.} other {{otherUsersName} left a review for you. {reviewLink}}}",
 
   "ProgressStep.stepTitle.sell-purchase.Customer.PendingPayment" :  "Buy {categoryLevel1, select, location_find {Service} location_bid {Location Bid} other {Location}}",
+
   "ProgressStep.stepTitle.sell-purchase.Customer.MeetManager" :     "{categoryLevel1, select, location_find {Approve Location} location_bid {Approve Location} other {Meet Manager}}",
   "ProgressStep.stepTitle.sell-purchase.Customer.PlaceMachine" :    "Finalize Order",
   "ProgressStep.stepTitle.sell-purchase.Customer.Review" :          "Leave a Review",

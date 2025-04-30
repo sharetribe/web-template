@@ -202,6 +202,37 @@
         "answer": "We have a comprehensive dispute resolution process in place to handle conflicts between (buyers and sellers. If an issue arises, parties are encouraged to first attempt to resolve the dispute among themselves using our messaging system. If the dispute persists, they can escalate the issue to our support team, which will intervene to mediate and help reach a fair resolution. Our aim is always to ensure a just outcome in accordance with our platform policies.", 
         "audience": "all",
         "category": ["safety"]
+    },
+    {
+        "question": "Is there a set schedule I have to work, or quota I have to meet?",
+        "answer": "No. You will set your own schedule and work as much or as little as you want. This role is designed for flexibility and we're here to help as you secure opportunities.",
+        "audience": "all",
+        "category": ["recruiting"]
+    },
+    {
+        "question": "What is the commission structure?",
+        "answer": "The average commission rate is 75% of a sale. Typical sales orders are $500, $1000, $1500 or above.",
+        "audience": "all",
+        "category": ["recruiting"]
+    },{
+        "question": "Is this a 100% commission-based role?",
+        "answer": "Yes this is a 100% commission-based role. You will keep on average 75% of what you sell.",
+        "audience": "all",
+        "category": ["recruiting"]
+    },{
+        "question": "Will you provide me with leads?",
+        "answer": "No. You will generate your own leads and in return keep most of the commission of the sale.",
+        "audience": "all",
+        "category": ["recruiting"]
+    },{
+        "question": "How often do I receive payment?",
+        "answer": "Payment is processed as soon as a sale completes. You will receive payment typically within 2-5 business days after a sales completes.",
+        "audience": "all",
+        "category": ["recruiting"]
+    },{
+        "question": "What exactly would I be doing in this role?",
+        "answer": "You will be calling Property Managers to secure appointments to place vending machines at their location. You will not have anything to do with vending machines themselves.",
+        "audience": "all",
+        "category": ["recruiting"]
     }
-
   ]
