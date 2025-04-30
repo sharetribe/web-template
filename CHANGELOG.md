@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+## [v8.3.0] 2025-04-30
+
 - [add] Add support to search pages for filtering listing search based on listing type
   [#583](https://github.com/sharetribe/web-template/pull/583)
 - [fix] BookingFixedDurationForm: undefined booking length with single fixed price variant.
@@ -22,6 +24,8 @@ way to update this template, but currently, we follow a pattern:
   [#594](https://github.com/sharetribe/web-template/pull/594)
 - [add] Add currently available translations for DE, ES, FR.
   [#593](https://github.com/sharetribe/web-template/pull/593)
+
+   [v8.3.0]: https://github.com/sharetribe/web-template/compare/v8.2.0...v8.3.0
 
 ## [v8.2.0] 2025-04-29
 
