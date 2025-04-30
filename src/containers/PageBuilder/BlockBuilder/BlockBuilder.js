@@ -56,8 +56,6 @@ const BlockBuilder = props => {
         const Block = config?.component;
         const blockId = block.blockId || `${sectionId}-block-${index + 1}`;
 
-        console.log("block", block);
-
         if (Block) {
           if(block.blockName?.indexOf('customTemplate:') > -1){
             //console.log('section blocks inside custom SectionBuilder', section.blocks);
