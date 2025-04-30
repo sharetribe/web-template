@@ -40,6 +40,8 @@ export const getQueryParamNames = (listingFieldsConfig, defaultFiltersConfig) =>
     const newKeys =
       schemaType === 'category' && nestedParams
         ? nestedParams?.map(p => constructQueryParamName(p, scope))
+        : schemaType === 'listingType'
+        ? [constructQueryParamName(key, scope)]
         : [key];
     return [...pickedKeys, ...newKeys];
   }, []);
@@ -81,12 +83,13 @@ export const isAnyFilterActive = (filterKeys, urlQueryParams, filterConfigs) => 
  *
  * @returns returns properties, which have a key that starts with the given prefix.
  */
-export const pickInitialValuesForFieldSelectTree = (prefix, values) => {
+export const pickInitialValuesForFieldSelectTree = (prefix, values, isNestedEnum) => {
   const pickValuesFn = (picked, entry) => {
     const [key, value] = entry;
     const prefixIndex = key.indexOf(prefix);
     const startsWithPrefix = prefixIndex > -1;
-    return startsWithPrefix ? { ...picked, [key.slice(prefixIndex)]: value } : picked;
+    const slicedKey = isNestedEnum ? key.slice(prefixIndex) : `${key.slice(prefixIndex)}1`;
+    return startsWithPrefix ? { ...picked, [slicedKey]: value } : picked;
   };
   const prefixCollection = Object.entries(values).reduce(pickValuesFn, {});
   return prefixCollection;
