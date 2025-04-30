@@ -564,8 +564,10 @@ const FieldDateAndTimeInput = props => {
 
   const classes = classNames(rootClassName || css.root, className);
   const priceVariantName = values.priceVariantName;
-  const bookingLengthInMinutes = priceVariants.find(pv => pv.name === priceVariantName)
-    ?.bookingLengthInMinutes;
+  const bookingLengthInMinutes =
+    priceVariants?.length > 1
+      ? priceVariants.find(pv => pv.name === priceVariantName)?.bookingLengthInMinutes
+      : priceVariants?.[0]?.bookingLengthInMinutes;
 
   const [currentMonth, setCurrentMonth] = useState(getStartOf(TODAY, 'month', timeZone));
 
