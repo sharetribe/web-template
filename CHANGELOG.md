@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Add currently available translations for DE, ES, FR.
+  [#593](https://github.com/sharetribe/web-template/pull/593)
+
 ## [v8.2.0] 2025-04-29
 
 - [add] Check that some of the environment variables are set (and crash the app if not):
