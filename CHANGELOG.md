@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] EditListingPricingPanel: Add initial value for the startTimeInterval.
+  [#594](https://github.com/sharetribe/web-template/pull/594)
 - [add] Add currently available translations for DE, ES, FR.
   [#593](https://github.com/sharetribe/web-template/pull/593)
 
