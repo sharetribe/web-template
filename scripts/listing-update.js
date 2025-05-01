@@ -8,8 +8,9 @@ const sdk = getISdk()
 
 // -----------------------------------------------------------------------------------
 
-inPersonHourlyToFixed({ activate: false, dryRun: false, backup: false })
-inPersonAndOnlineInstructorProfileFixedToHourly({ activate: true, dryRun: false, backup: false })
+inPersonHourlyToFixed({ activate: false, dryRun: true, backup: false })
+inPersonAndOnlineInstructorProfileFixedToHourly({ activate: false, dryRun: true, backup: false })
+updateListing({ activate: false, dryRun: true, backup: false, id: '', unitType: 'fixed' })
 
 // -----------------------------------------------------------------------------------
 
@@ -119,4 +120,26 @@ async function inPersonAndOnlineInstructorProfileFixedToHourly({ activate = fals
       }
     })
   }
+}
+
+// Update specific listing
+async function updateListing({ activate = false, dryRun = false, backup = false, id, unitType = 'hour' }) {
+  if (!activate || !id || id === '') return
+
+  const response = await sdk.listings.show({ id })
+  if (response.statusText !== 'OK') throw new Error(`Failed to get listing ${id}`)
+  const listing = response.data.data
+
+  if (backup) fs.writeFileSync(`listings.backup.live.${id}.json`, JSON.stringify(response, null, 2))
+
+  console.log(`Processing listing ${listing.attributes.title} (${listing.id.uuid})`)
+  if (dryRun) return
+
+  sdk.listings.update({
+    id: listing.id,
+    publicData: {
+      ...listing.attributes.publicData,
+      unitType
+    }
+  })
 }
