@@ -30,7 +30,7 @@ module.exports = (req, res) => {
         listing,
         orderData,
         extractOverridingProviderCommissionPercent(showListingResponse, providerCommission),
-        extractOverridingCustomerCommissionPercent(userDataResponse, customerCommission)
+        extractOverridingCustomerCommissionPercent(userDataResponse, customerCommission, listing?.attributes?.publicData?.listingType)
       );
 
       // Because we are using returned lineItems directly in this template we need to use the helper function

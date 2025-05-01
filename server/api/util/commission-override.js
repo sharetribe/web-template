@@ -1,12 +1,34 @@
+// Custom commission mapping by listing type
+//Customer commission is set to be 0% and the provider commission are given values
+const listingTypeCommissionMap = {
+  'online': { provider: 10, customer: 0 },
+  'online-profile-fixed': { provider: 10, customer: 0 },
+  'in-person': { provider: 5, customer: 0 },
+  'in-person-inquiry': { provider: 0, customer: 0 },
+  'Aircraft-Rental': { provider: 8, customer: 0 },
+  'hourly-booking': { provider: 0, customer: 0 },
+  'full_course': { provider: 8, customer: 0 },
+  'Full-Course-Live-Online': { provider: 10, customer: 0 },
+  'instructor': { provider: 0, customer: 0 },    
+};
+
 const extractOverridingProviderCommissionPercent = (authorJoinedListing, globalProviderCommission) => {
-  
   const listingAttributes = authorJoinedListing.data.data?.attributes;
   const listingPublicData = listingAttributes?.publicData;
+  const listingType = listingPublicData?.listingType;
 
   console.log("Listing Attributes:", listingAttributes);
   console.log("Listing PublicData:", listingPublicData);
-  console.log("Listing Type (publicData.listingType):", listingPublicData?.listingType);
-  
+  console.log("Listing Type (publicData.listingType):", listingType);
+
+  // Check for custom commission based on listingType
+  const customCommission = listingTypeCommissionMap[listingType];
+  if (customCommission?.provider != null) {
+    console.log(`Custom provider commission for listing type "${listingType}": ${customCommission.provider}%`);
+    return { percentage: customCommission.provider };
+  }
+
+  // Check for user override from metadata
   let overrideProviderCommissionPercent =
     Array.isArray(authorJoinedListing.data.included) && authorJoinedListing.data.included[0]?.attributes?.profile?.metadata?.provider_commission_percentage != null
       ? authorJoinedListing.data.included[0].attributes.profile.metadata.provider_commission_percentage
@@ -14,8 +36,7 @@ const extractOverridingProviderCommissionPercent = (authorJoinedListing, globalP
 
   const overrideValueIsANumber = typeof overrideProviderCommissionPercent === 'number';
 
-  // account for possibility of empty object on nullity chain
-  if(typeof overrideProviderCommissionPercent === "object" &&
+  if (typeof overrideProviderCommissionPercent === "object" &&
     overrideProviderCommissionPercent !== null &&
     Object.keys(overrideProviderCommissionPercent).length === 0) {
     overrideProviderCommissionPercent = null;
@@ -25,24 +46,31 @@ const extractOverridingProviderCommissionPercent = (authorJoinedListing, globalP
     console.warn(`provider_commission_percentage value was falsely passed as a ${typeof overrideProviderCommissionPercent}. Reverting to global value of ${globalProviderCommission?.percentage ?? 0}`);
   }
 
-  return (overrideProviderCommissionPercent != null && overrideValueIsANumber) ? { percentage: overrideProviderCommissionPercent } : globalProviderCommission;
+  return (overrideProviderCommissionPercent != null && overrideValueIsANumber)
+    ? { percentage: overrideProviderCommissionPercent }
+    : globalProviderCommission;
 };
 
-const extractOverridingCustomerCommissionPercent = (currentUserData, globalCustomerCommission) => {
-
+const extractOverridingCustomerCommissionPercent = (currentUserData, globalCustomerCommission, listingType) => {
   let overrideCustomerCommissionPercent = null;
 
-  if(currentUserData === "Unauthenticated") {
+  if (currentUserData === "Unauthenticated") {
     console.log("Checking customer commission in anonymous user session");
   } else {
     console.log("Checking customer commission in user session");
     overrideCustomerCommissionPercent = currentUserData.data.data?.attributes?.profile?.metadata?.customer_commission_percentage ?? null;
   }
 
+  // Check for custom commission based on listingType
+  const customCommission = listingTypeCommissionMap[listingType];
+  if (customCommission?.customer != null) {
+    console.log(`Custom customer commission for listing type "${listingType}": ${customCommission.customer}%`);
+    return { percentage: customCommission.customer };
+  }
+
   const overrideValueIsANumber = typeof overrideCustomerCommissionPercent === 'number';
 
-  // account for possibility of empty object on nullity chain
-  if(typeof overrideCustomerCommissionPercent === "object" &&
+  if (typeof overrideCustomerCommissionPercent === "object" &&
     overrideCustomerCommissionPercent !== null &&
     Object.keys(overrideCustomerCommissionPercent).length === 0) {
     overrideCustomerCommissionPercent = null;
@@ -52,10 +80,12 @@ const extractOverridingCustomerCommissionPercent = (currentUserData, globalCusto
     console.warn(`customer_commission_percentage value was falsely passed as a ${typeof overrideCustomerCommissionPercent}. Reverting to global value of ${globalCustomerCommission?.percentage ?? 0}`);
   }
 
-  return (overrideCustomerCommissionPercent != null && overrideValueIsANumber) ? { percentage: overrideCustomerCommissionPercent } : globalCustomerCommission;
+  return (overrideCustomerCommissionPercent != null && overrideValueIsANumber)
+    ? { percentage: overrideCustomerCommissionPercent }
+    : globalCustomerCommission;
 };
 
 module.exports = {
   extractOverridingProviderCommissionPercent,
   extractOverridingCustomerCommissionPercent
-}
+};
