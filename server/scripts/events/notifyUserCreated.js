@@ -1,3 +1,4 @@
+const { identifyUserEvent } = require('../../api-util/analytics');
 const { updateAuth0User } = require('../../api-util/auth0Helper');
 const {
   USER_TYPES,
@@ -142,7 +143,20 @@ function script() {
       const { profile, email, identityProviders } = user.attributes;
       const { displayName, firstName, lastName } = profile;
       const { userType } = profile.publicData;
-      if (userType === USER_TYPES.BUYER) {
+      const isBuyer = userType === USER_TYPES.BUYER;
+      const isSeller = userType === USER_TYPES.SELLER;
+      const isBrand = userType === USER_TYPES.BRAND;
+      const eventUser = { id: userId, email };
+      const eventTraits = {
+        firstName,
+        lastName,
+        type: isBrand ? 'BRAND' : 'BUYER',
+        creatorFoundingMember: 'NO',
+        subscribedToNewsletter: 'NO',
+        ...(isSeller ? { sellerStatus: SELLER_STATUS.APPLIED } : {}),
+      };
+      identifyUserEvent(eventUser, eventTraits);
+      if (isBuyer) {
         return;
       }
       try {
@@ -172,7 +186,7 @@ function script() {
           communityStatus,
           userType,
         });
-        if (userType === USER_TYPES.SELLER) {
+        if (isSeller) {
           const { displayName } = profile;
           const { portfolioURL } = profile.publicData;
           await slackSellerValidationWorkflow(userId, displayName, email, portfolioURL, false);
