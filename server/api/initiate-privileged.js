@@ -36,7 +36,7 @@ module.exports = (req, res) => {
         listing,
         { ...orderData, ...bodyParams.params },
         extractOverridingProviderCommissionPercent(showListingResponse, providerCommission),
-        extractOverridingCustomerCommissionPercent(userDataResponse, customerCommission)
+        extractOverridingCustomerCommissionPercent(userDataResponse, customerCommission, listing?.attributes?.publicData?.listingType)
       );
 
       return getTrustedSdk(req);
