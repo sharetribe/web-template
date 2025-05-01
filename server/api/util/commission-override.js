@@ -1,5 +1,5 @@
 // Custom commission mapping by listing type
-//Customer commission is set to be 0% and the provider commission are given values
+// Customer commission is set to be 0% and the provider commission values are specified
 const listingTypeCommissionMap = {
   'in-person': { provider: 5, customer: 0 },
   'in-person-school': { provider: 0, customer: 0 },
@@ -9,14 +9,8 @@ const listingTypeCommissionMap = {
   'Full-Course-Live-Online': { provider: 10, customer: 0 },
 };
 
-const extractOverridingProviderCommissionPercent = (authorJoinedListing, globalProviderCommission) => {
-  const listingAttributes = authorJoinedListing.data.data?.attributes;
-  const listingPublicData = listingAttributes?.publicData;
-
-  console.log("Listing Attributes:", listingAttributes);
-  console.log("Listing PublicData:", listingPublicData);
-  console.log("Listing Type (publicData.listingType):", listingType);
-
+// ✅ Updated to include listingType as a parameter
+const extractOverridingProviderCommissionPercent = (authorJoinedListing, globalProviderCommission, listingType) => {
   // Check for custom commission based on listingType
   const customCommission = listingTypeCommissionMap[listingType];
   if (customCommission?.provider != null) {
@@ -26,16 +20,18 @@ const extractOverridingProviderCommissionPercent = (authorJoinedListing, globalP
 
   // Check for user override from metadata
   let overrideProviderCommissionPercent =
-    Array.isArray(authorJoinedListing.data.included) && authorJoinedListing.data.included[0]?.attributes?.profile?.metadata?.provider_commission_percentage != null
+    Array.isArray(authorJoinedListing.data.included) &&
+    authorJoinedListing.data.included[0]?.attributes?.profile?.metadata?.provider_commission_percentage != null
       ? authorJoinedListing.data.included[0].attributes.profile.metadata.provider_commission_percentage
       : null;
+
   console.log("Listing data is: ", authorJoinedListing.data.included);
 
   const overrideValueIsANumber = typeof overrideProviderCommissionPercent === 'number';
 
   if (typeof overrideProviderCommissionPercent === "object" &&
-    overrideProviderCommissionPercent !== null &&
-    Object.keys(overrideProviderCommissionPercent).length === 0) {
+      overrideProviderCommissionPercent !== null &&
+      Object.keys(overrideProviderCommissionPercent).length === 0) {
     overrideProviderCommissionPercent = null;
   }
 
@@ -48,6 +44,7 @@ const extractOverridingProviderCommissionPercent = (authorJoinedListing, globalP
     : globalProviderCommission;
 };
 
+// This is already good and clean ✅
 const extractOverridingCustomerCommissionPercent = (currentUserData, globalCustomerCommission, listingType) => {
   let overrideCustomerCommissionPercent = null;
 
@@ -68,8 +65,8 @@ const extractOverridingCustomerCommissionPercent = (currentUserData, globalCusto
   const overrideValueIsANumber = typeof overrideCustomerCommissionPercent === 'number';
 
   if (typeof overrideCustomerCommissionPercent === "object" &&
-    overrideCustomerCommissionPercent !== null &&
-    Object.keys(overrideCustomerCommissionPercent).length === 0) {
+      overrideCustomerCommissionPercent !== null &&
+      Object.keys(overrideCustomerCommissionPercent).length === 0) {
     overrideCustomerCommissionPercent = null;
   }
 

@@ -29,7 +29,7 @@ module.exports = (req, res) => {
       const lineItems = await transactionLineItems(
         listing,
         orderData,
-        extractOverridingProviderCommissionPercent(showListingResponse, providerCommission),
+        extractOverridingProviderCommissionPercent(showListingResponse, providerCommission, listing?.attributes?.publicData?.listingType),
         extractOverridingCustomerCommissionPercent(userDataResponse, customerCommission, listing?.attributes?.publicData?.listingType)
       );
 
