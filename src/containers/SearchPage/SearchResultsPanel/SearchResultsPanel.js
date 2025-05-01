@@ -5,7 +5,7 @@ import { GRID_STYLE_MASONRY, propTypes } from '../../../util/types';
 import { ListingCard, PaginationLinks } from '../../../components';
 
 import css from './SearchResultsPanel.module.css';
-import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
+import MasonryGridWrapper from '../../../components/MasonryGridWrapper/MasonryGridWrapper';
 
 /**
  * SearchResultsPanel component
@@ -66,10 +66,10 @@ const SearchResultsPanel = props => {
     }
   };
 
-  const renderListingCards = () =>
+  const renderListingCards = (cssClass) =>
     listings.map(l => (
       <ListingCard
-        className={css.listingCard}
+        className={cssClass}
         key={l.id.uuid}
         listing={l}
         renderSizes={cardRenderSizes(isMapVariant)}
@@ -82,18 +82,13 @@ const SearchResultsPanel = props => {
   return (
     <div className={classes}>
       {gridLayout === GRID_STYLE_MASONRY ? (
-        <ResponsiveMasonry
-          columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}
-          gutterBreakpoints={{ 350: '12px', 750: '16px', 900: '24px' }}
-        >
-          <Masonry>
-            {renderListingCards()}
-            {props.children}
-          </Masonry>
-        </ResponsiveMasonry>
+        <MasonryGridWrapper>
+          {renderListingCards(css.masonryListingCard)}
+          {props.children}
+        </MasonryGridWrapper>
       ) : (
         <div className={isMapVariant ? css.listingCardsMapVariant : css.listingCards}>
-          {renderListingCards()}
+          {renderListingCards(css.listingCard)}
           {props.children}
         </div>
       )}

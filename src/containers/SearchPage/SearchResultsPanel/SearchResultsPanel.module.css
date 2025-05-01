@@ -52,8 +52,12 @@
   }
 }
 
-.listingCard {
+.listingCard, .masonryListingCard {
   width: 100%;
+}
+
+.masonryListingCard {
+  padding: 6px;
 }
 
 .pagination {

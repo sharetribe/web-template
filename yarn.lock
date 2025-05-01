@@ -11591,10 +11591,10 @@ react-refresh@^0.11.0:
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.11.0.tgz#77198b944733f0f1f1a90e791de4541f9f074046"
   integrity sha512-F27qZr8uUqwhWZboondsPx8tnC3Ct3SxZA3V5WyEvujRyyNv0VYPhoBg1gZ8/MV5tubQp76Trw8lTv9hzRBa+A==
 
-react-responsive-masonry@^2.7.1:
-  version "2.7.1"
-  resolved "https://registry.yarnpkg.com/react-responsive-masonry/-/react-responsive-masonry-2.7.1.tgz#d27b734fe579034cf26af12f42e42f29a332c0b3"
-  integrity sha512-Q+u+nOH87PzjqGFd2PgTcmLpHPZnCmUPREHYoNBc8dwJv6fi51p9U6hqwG8g/T8MN86HrFjrU+uQU6yvETU7cA==
+react-responsive-masonry@2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/react-responsive-masonry/-/react-responsive-masonry-2.2.0.tgz#95ba1fe16295f2071dbe98e72420167aad4e7e8f"
+  integrity sha512-IYbnfe2tWCZ3pvyTLyBWPj7uv5ZmNOULYMcAZi5a47ZLhSotOck1vkkISq6gP2qiyWdMvPfeMhjvYzUYGw9BOQ==
 
 react-router-dom@^5.3.4:
   version "5.3.4"
