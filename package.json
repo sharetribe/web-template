@@ -28,6 +28,7 @@
     "@uppy/store-redux": "^4.0.0",
     "@uppy/thumbnail-generator": "^4.0.0",
     "@uppy/transloadit": "^4.0.1",
+    "analytics-node": "^6.2.0",
     "antd": "^5.24.6",
     "auth0": "^4.8.0",
     "autosize": "^5.0.1",
@@ -87,6 +88,7 @@
     "transloadit": "^3.0.2",
     "unified": "^9.2.2",
     "url": "^0.11.0",
+    "uuid": "^11.1.0",
     "video-metadata-thumbnails": "^1.0.22",
     "workbox-precaching": "^7.3.0",
     "workbox-webpack-plugin": "^7.3.0"
