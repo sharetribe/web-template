@@ -406,6 +406,7 @@
   "FilterComponent.categoryLabel": "Categoría",
   "FilterComponent.datesLabel": "Fechas",
   "FilterComponent.keywordsLabel": "Palabras clave",
+  "FilterComponent.listingTypeLabel": "Tipo de anuncio",
   "FilterComponent.priceLabel": "Precio",
   "FilterComponent.seatsLabel": "Plazas",
   "FilterForm.cancel": "Cancelar",
