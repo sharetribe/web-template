@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Add currently available translations for DE, ES, FR.
+  [#597](https://github.com/sharetribe/web-template/pull/597)
+
 ## [v8.3.0] 2025-04-30
 
 - [add] Add support to search pages for filtering listing search based on listing type
@@ -25,7 +28,7 @@ way to update this template, but currently, we follow a pattern:
 - [add] Add currently available translations for DE, ES, FR.
   [#593](https://github.com/sharetribe/web-template/pull/593)
 
-   [v8.3.0]: https://github.com/sharetribe/web-template/compare/v8.2.0...v8.3.0
+  [v8.3.0]: https://github.com/sharetribe/web-template/compare/v8.2.0...v8.3.0
 
 ## [v8.2.0] 2025-04-29
 

@@ -406,6 +406,7 @@
   "FilterComponent.categoryLabel": "Kategorie",
   "FilterComponent.datesLabel": "Daten",
   "FilterComponent.keywordsLabel": "Schlüsselworte",
+  "FilterComponent.listingTypeLabel": "Eintragstyp",
   "FilterComponent.priceLabel": "Preis",
   "FilterComponent.seatsLabel": "Plätze",
   "FilterForm.cancel": "Abbrechen",
