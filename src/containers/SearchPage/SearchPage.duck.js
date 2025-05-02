@@ -265,7 +265,6 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
   return sdk.listings
     .query(params)
     .then(response => {
-
       const listingsSummary = response.data.data.map(listing => {
         return {
           id: listing.id.uuid, // or listing.id if you prefer the full ID object
