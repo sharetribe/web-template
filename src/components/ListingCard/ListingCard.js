@@ -5,7 +5,7 @@ import { useConfiguration } from '../../context/configurationContext';
 
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { displayPrice } from '../../util/configHelpers';
-import { lazyLoadWithDimensions } from '../../util/uiHelpers';
+import { createLazyLoader, lazyLoadWithDimensions } from '../../util/uiHelpers';
 import { GRID_STYLE_SQUARE, LISTING_TYPES } from '../../util/types';
 import { formatMoney } from '../../util/currency';
 import { ensureListing, ensureUser } from '../../util/data';
@@ -126,6 +126,12 @@ export const ListingCard = props => {
       }
     : null;
 
+  const lazyLoadWhenVisible = createLazyLoader({ withDimensions: false });
+
+  const LazyMasonryImage = lazyLoadWhenVisible(ResponsiveImage, {
+    loadAfterInitialRendering: 3000,
+  });
+
   return (
     <NamedLink className={classes} name="ListingPage" params={{ id, slug }}>
       <AspectRatioWrapperMaybe
@@ -144,12 +150,14 @@ export const ListingCard = props => {
             sizes={renderSizes}
           />
         ) : (
-          <ResponsiveImage
-            alt={title}
-            image={firstImage}
-            variants={variants}
-            sizes={renderSizes}
-          />
+          <div className={css.masonryImageWrapper}>
+            <LazyMasonryImage
+              alt={title}
+              image={firstImage}
+              variants={variants}
+              sizes={renderSizes}
+            />
+          </div>
         )}
       </AspectRatioWrapperMaybe>
       <div className={css.info}>

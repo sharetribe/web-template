@@ -11,7 +11,7 @@
   }
 }
 
-.aspectRatioWrapper {
+.aspectRatioWrapper, .masonryImageWrapper {
   transition: var(--transitionStyleButton);
   background: var(--colorGrey100); /* Loading BG color */
   border-radius: var(--borderRadiusMedium);
@@ -29,6 +29,19 @@
   border-radius: var(--borderRadiusMedium);
   width: 100%;
   height: 100%;
+}
+
+.masonryImageWrapper {
+  width: 100%;
+  overflow: hidden;
+}
+
+.masonryImageWrapper img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  transition: opacity 0.3s ease;
 }
 
 .info {

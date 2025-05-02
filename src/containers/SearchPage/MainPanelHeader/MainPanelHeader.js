@@ -43,7 +43,6 @@ const MainPanelHeader = props => {
 
   return (
     <div className={classes}>
-      <div> Layout {gridLayout}</div>
       <div className={css.searchOptions}>
         <div className={css.searchResultSummary}>
           <span className={css.resultsFound}>

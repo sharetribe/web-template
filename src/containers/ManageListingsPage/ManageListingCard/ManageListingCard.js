@@ -25,7 +25,6 @@ import { createResourceLocatorString, findRouteByRouteName } from '../../../util
 import { isBookingProcessAlias, isPurchaseProcessAlias } from '../../../transactions/transaction';
 
 import {
-  AspectRatioWrapper,
   IconSpinner,
   InlineTextButton,
   Menu,
@@ -40,6 +39,7 @@ import {
 import MenuIcon from './MenuIcon';
 import Overlay from './Overlay';
 import css from './ManageListingCard.module.css';
+import AspectRatioWrapperMaybe from '../../../components/AspectRatioWrapper/AspectRatioWrapperMaybe';
 
 // Menu content needs the same padding
 const MENU_CONTENT_OFFSET = -12;
@@ -410,19 +410,19 @@ export const ManageListingCard = props => {
         onMouseOver={onOverListingLink}
         onTouchStart={onOverListingLink}
       >
-        {gridLayout === GRID_STYLE_SQUARE ? (
-          <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
-            <ResponsiveImage
-              rootClassName={css.rootForImage}
-              alt={title}
-              image={firstImage}
-              variants={variants}
-              sizes={renderSizes}
-            />
-          </AspectRatioWrapper>
-        ) : (
-          <ResponsiveImage alt={title} image={firstImage} variants={variants} />
-        )}
+        <AspectRatioWrapperMaybe
+          width={aspectWidth}
+          height={aspectHeight}
+          isSquareLayout={gridLayout === GRID_STYLE_SQUARE}
+        >
+          <ResponsiveImage
+            rootClassName={gridLayout === GRID_STYLE_SQUARE ? css.rootForImage : ''}
+            alt={title}
+            image={firstImage}
+            variants={variants}
+            sizes={renderSizes}
+          />
+        </AspectRatioWrapperMaybe>
 
         <div className={classNames(css.menuOverlayWrapper)}>
           <div className={classNames(css.menuOverlay, { [css.menuOverlayOpen]: isMenuOpen })} />
