@@ -8,8 +8,12 @@ import {
   LINE_ITEM_NIGHT,
   propTypes,
 } from '../../util/types';
+import Decimal from 'decimal.js';
+import { types as sdkTypes } from '../../util/sdkLoader';
 
 import css from './OrderBreakdown.module.css';
+
+const { Money } = sdkTypes;
 
 /**
  * A component that renders the base price as a line item.
@@ -23,10 +27,12 @@ import css from './OrderBreakdown.module.css';
  */
 const LineItemBasePriceMaybe = props => {
   const { lineItems, code, intl } = props;
+
   const isNightly = code === LINE_ITEM_NIGHT;
   const isDaily = code === LINE_ITEM_DAY;
   const isHourly = code === LINE_ITEM_HOUR;
   const isFixed = code === LINE_ITEM_FIXED;
+
   const translationKey = isNightly
     ? 'OrderBreakdown.baseUnitNight'
     : isDaily
@@ -37,9 +43,7 @@ const LineItemBasePriceMaybe = props => {
     ? 'OrderBreakdown.baseUnitFixedBooking'
     : 'OrderBreakdown.baseUnitQuantity';
 
-  // Find correct line-item for given code prop.
-  // It should be one of the following: 'line-item/night, 'line-item/day', 'line-item/hour', or 'line-item/item'
-  // These are defined in '../../util/types';
+  // Find the relevant line item
   const unitPurchase = lineItems.find(item => item.code === code && !item.reversal);
 
   const quantity = unitPurchase?.units
@@ -47,7 +51,29 @@ const LineItemBasePriceMaybe = props => {
     : unitPurchase?.quantity
     ? unitPurchase.quantity.toString()
     : null;
-  const unitPrice = unitPurchase ? formatMoney(intl, unitPurchase.unitPrice) : null;
+
+    let unitPrice;
+    if (unitPurchase && quantity) {
+      const totalSubunits = unitPurchase.lineTotal.amount; // this is already in cents
+      const quantityNum = new Decimal(quantity);
+    
+      const perUnitSubunits = new Decimal(totalSubunits)
+        .dividedBy(quantityNum)
+        .toDecimalPlaces(0, Decimal.ROUND_HALF_UP) // cents, no need to convert again
+        .toNumber();
+    
+      const perUnitMoney = new Money(perUnitSubunits, unitPurchase.lineTotal.currency);
+      unitPrice = formatMoney(intl, perUnitMoney);
+    } else {
+      unitPrice = unitPurchase ? formatMoney(intl, unitPurchase.unitPrice) : null;
+    }
+    
+
+
+
+
+
+
   const total = unitPurchase ? formatMoney(intl, unitPurchase.lineTotal) : null;
 
   const message = unitPurchase?.seats ? (
