@@ -66,7 +66,7 @@ const SearchResultsPanel = props => {
     }
   };
 
-  const renderListingCards = (cssClass) =>
+  const renderListingCards = cssClass =>
     listings.map(l => (
       <ListingCard
         className={cssClass}
@@ -83,7 +83,7 @@ const SearchResultsPanel = props => {
     <div className={classes}>
       {gridLayout === GRID_STYLE_MASONRY ? (
         <MasonryGridWrapper>
-          {renderListingCards(css.masonryListingCard)}
+          {renderListingCards()}
           {props.children}
         </MasonryGridWrapper>
       ) : (

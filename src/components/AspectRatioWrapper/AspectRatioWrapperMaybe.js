@@ -4,7 +4,7 @@ const AspectRatioWrapperMaybe = ({ isSquareLayout, children, ...rest }) => {
   if (isSquareLayout) {
     return <AspectRatioWrapper {...rest}>{children}</AspectRatioWrapper>;
   }
-  return <>{children}</>;
+  return <div>{children}</div>;
 };
 
 export default AspectRatioWrapperMaybe;

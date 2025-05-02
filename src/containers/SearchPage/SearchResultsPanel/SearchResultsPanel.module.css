@@ -56,10 +56,6 @@
   width: 100%;
 }
 
-.masonryListingCard {
-  padding: 6px;
-}
-
 .pagination {
   /* margin-top: auto; pushes pagination to the end of the page. */
   margin-top: auto;
