@@ -21,8 +21,8 @@ import { H3, ScrollableLinks } from '../';
 import { Error, getTabsFeaturesForRole, Loader, Pagination } from './GridHelpers';
 
 import css from './ListingTabs.module.css';
-import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import GridLayoutToggle from '../GridLayoutToggle/GridLayoutToggle';
+import MasonryGridWrapper from '../MasonryGridWrapper/MasonryGridWrapper';
 
 export const ListingTabs = ({
   items = [],
@@ -119,19 +119,16 @@ export const ListingTabs = ({
       </Row>
       {gridLayout === GRID_STYLE_SQUARE ? (
         <div className={gridClassname}>
-          {items.map((item, index) => listingRenderer(item, css.listingCard, renderSizes, index))}
+          {items.map((item, index) =>
+            listingRenderer(item, css.listingCard, renderSizes, index, gridLayout)
+          )}
         </div>
       ) : (
-        <ResponsiveMasonry
-          columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}
-          gutterBreakpoints={{ 350: '12px', 750: '16px', 900: '24px' }}
-        >
-          <Masonry>
-            {items.map((item, index) =>
-              listingRenderer(item, css.masonryListingCard, renderSizes, index, gridLayout)
-            )}
-          </Masonry>
-        </ResponsiveMasonry>
+        <MasonryGridWrapper>
+          {items.map((item, index) =>
+            listingRenderer(item, css.masonryListingCard, renderSizes, index, gridLayout)
+          )}
+        </MasonryGridWrapper>
       )}
     </>
   );

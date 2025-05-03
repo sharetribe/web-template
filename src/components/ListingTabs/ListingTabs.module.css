@@ -64,6 +64,10 @@
   }
 }
 
+.masonryListingCard {
+  padding: 6px;
+}
+
 .masonryListingCard, .listingCard {
   width: 100%;
 }
