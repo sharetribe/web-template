@@ -8,12 +8,12 @@ import classNames from 'classnames';
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 
-import { useIntl, FormattedMessage } from '../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import {
+  getQueryParamNames,
   isAnyFilterActive,
   isMainSearchTypeKeywords,
   isOriginInUse,
-  getQueryParamNames,
 } from '../../util/search';
 import {
   NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
@@ -21,7 +21,7 @@ import {
   parse,
 } from '../../util/urlHelpers';
 import { createResourceLocatorString } from '../../util/routes';
-import { propTypes } from '../../util/types';
+import { GRID_STYLE_MASONRY, GRID_STYLE_SQUARE, propTypes } from '../../util/types';
 import {
   isErrorNoViewingPermission,
   isErrorUserPendingApproval,
@@ -29,23 +29,22 @@ import {
 } from '../../util/errors';
 import { hasPermissionToViewData, isUserAuthorized } from '../../util/userHelpers';
 import { getListingsById } from '../../ducks/marketplaceData.duck';
-import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
+import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
 
 import { H3, H5, NamedRedirect, Page } from '../../components';
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
 import FooterContainer from '../FooterContainer/FooterContainer';
 
 import {
-  groupListingFieldConfigs,
-  initialValues,
-  searchParamsPicker,
-  validUrlQueryParamsFromProps,
-  validFilterParams,
   cleanSearchFromConflictingParams,
   createSearchResultSchema,
-  pickListingFieldFilters,
-  omitLimitedListingFieldParams,
   getDatesAndSeatsMaybe,
+  groupListingFieldConfigs,
+  initialValues,
+  omitLimitedListingFieldParams,
+  pickListingFieldFilters,
+  searchParamsPicker,
+  validUrlQueryParamsFromProps,
 } from './SearchPage.shared';
 
 import FilterComponent from './FilterComponent';
@@ -70,6 +69,7 @@ export class SearchPageComponent extends Component {
     this.state = {
       isMobileModalOpen: false,
       currentQueryParams: validUrlQueryParamsFromProps(props),
+      gridLayout: GRID_STYLE_MASONRY,
     };
 
     this.onOpenMobileModal = this.onOpenMobileModal.bind(this);
@@ -82,6 +82,8 @@ export class SearchPageComponent extends Component {
 
     // SortBy
     this.handleSortBy = this.handleSortBy.bind(this);
+
+    this.setGridLayout = this.setGridLayout.bind(this);
   }
 
   // Invoked when a modal is opened from a child component,
@@ -94,6 +96,10 @@ export class SearchPageComponent extends Component {
   // for example when a filter modal is opened in mobile view
   onCloseMobileModal() {
     this.setState({ isMobileModalOpen: false });
+  }
+
+  setGridLayout(gridLayout) {
+    this.setState({ gridLayout });
   }
 
   // Manage the custom 'location' field for Creative users
@@ -334,6 +340,9 @@ export class SearchPageComponent extends Component {
       ? classNames(css.topbarBehindModal, css.topbar)
       : css.topbar;
 
+    const isCreativesSearch = this.props.searchParams.pub_categoryLevel1 === 'creatives';
+    const gridLayout = isCreativesSearch ? GRID_STYLE_SQUARE : this.state.gridLayout;
+    
     // N.B. openMobileMap button is sticky.
     // For some reason, stickyness doesn't work on Safari, if the element is <button>
     return (
@@ -416,6 +425,7 @@ export class SearchPageComponent extends Component {
                   );
                 })}
               </SearchFiltersMobile>
+
               <MainPanelHeader
                 className={css.mainPanel}
                 sortByComponent={sortBy('desktop')}
@@ -425,6 +435,9 @@ export class SearchPageComponent extends Component {
                 searchInProgress={searchInProgress}
                 searchListingsError={searchListingsError}
                 noResultsInfo={noResultsInfo}
+                gridLayout={gridLayout}
+                setGridLayout={this.setGridLayout}
+                hideGridOptions={isCreativesSearch}
               />
               <div
                 className={classNames(css.listingsForGridVariant, {
@@ -447,6 +460,7 @@ export class SearchPageComponent extends Component {
                   pagination={listingsAreLoaded ? pagination : null}
                   search={parse(location.search)}
                   isMapVariant={false}
+                  gridLayout={gridLayout}
                 />
               </div>
             </div>

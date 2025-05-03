@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button as AntButton, Col, Row, Space, Tabs } from 'antd';
 import classNames from 'classnames';
@@ -7,6 +7,8 @@ import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { FormattedMessage } from '../../util/reactIntl';
 import { createResourceLocatorString } from '../../util/routes';
 import {
+  GRID_STYLE_MASONRY,
+  GRID_STYLE_SQUARE,
   LISTING_GRID_DEFAULTS,
   LISTING_GRID_ROLE,
   LISTING_TAB_TYPES,
@@ -19,6 +21,8 @@ import { H3, ScrollableLinks } from '../';
 import { Error, getTabsFeaturesForRole, Loader, Pagination } from './GridHelpers';
 
 import css from './ListingTabs.module.css';
+import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
+import GridLayoutToggle from '../GridLayoutToggle/GridLayoutToggle';
 
 export const ListingTabs = ({
   items = [],
@@ -53,6 +57,7 @@ export const ListingTabs = ({
     role,
     hideReviews
   );
+  const [gridLayout, setGridLayout] = useState(GRID_STYLE_MASONRY);
 
   const goToManageListing = (mode = PAGE_MODE_NEW, searchParams = {}) => {
     if (currentListingType === LISTING_TYPES.PRODUCT) {
@@ -96,29 +101,53 @@ export const ListingTabs = ({
       role !== LISTING_GRID_ROLE.PROFILE ||
       ![LISTING_TAB_TYPES.REVIEWS, LISTING_TAB_TYPES.PROFILE].includes(currentListingType),
   });
-  const listingGridRenderer = hasNoResults ? (
+
+  const noResultRendered = (
     <div className={css.messagePanel}>
       <H3 as="h1" className={css.heading}>
         <FormattedMessage id={noResultsMessageId} />
       </H3>
     </div>
-  ) : (
-    <div className={gridClassname}>
-      {items.map((item, index) => listingRenderer(item, css.listingCard, renderSizes, index))}
-    </div>
   );
+
+  const gridRenderer = (
+    <>
+      <Row justify="end" className={css.displayOptions}>
+        <Col>
+          <GridLayoutToggle value={gridLayout} onChange={setGridLayout} />
+        </Col>
+      </Row>
+      {gridLayout === GRID_STYLE_SQUARE ? (
+        <div className={gridClassname}>
+          {items.map((item, index) => listingRenderer(item, css.listingCard, renderSizes, index))}
+        </div>
+      ) : (
+        <ResponsiveMasonry
+          columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}
+          gutterBreakpoints={{ 350: '12px', 750: '16px', 900: '24px' }}
+        >
+          <Masonry>
+            {items.map((item, index) =>
+              listingRenderer(item, css.masonryListingCard, renderSizes, index, gridLayout)
+            )}
+          </Masonry>
+        </ResponsiveMasonry>
+      )}
+    </>
+  );
+  const listingGridRenderer = hasNoResults ? noResultRendered : gridRenderer;
 
   const contentRenderer = (
     <div>
       {enableCategoryTabs && (
         <Row gutter={[16, 16]} align="middle" justify="space-between">
-          <Col xs={24} sm={16}>
+          <Col xs={24} sm={14}>
             {withCategories && (
               <ScrollableLinks links={categories} selectedLinkId={currentCategory} />
             )}
           </Col>
           {enableListingManagement && (
-            <Col xs={24} sm={8} style={{ textAlign: 'right' }}>
+            <Col xs={24} sm={10} style={{ textAlign: 'right' }}>
               <Space size="middle">
                 <AntButton
                   type="text"

@@ -377,6 +377,8 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
         'fields.image': [
           // Scaled variants for large images
           'variants.scaled-xlarge',
+          'variants.scaled-small',
+          'variants.scaled-medium',
 
           // Cropped variants for listing thumbnail images
           `variants.${variantPrefix}`,

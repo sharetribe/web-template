@@ -6,6 +6,7 @@ import { useConfiguration } from '../../../context/configurationContext';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import {
+  GRID_STYLE_SQUARE,
   LISTING_STATE_CLOSED,
   LISTING_STATE_DRAFT,
   LISTING_STATE_PENDING_APPROVAL,
@@ -329,6 +330,7 @@ export const ManageListingCard = props => {
     onDiscardDraft,
     onToggleMenu,
     renderSizes = null,
+    gridLayout = GRID_STYLE_SQUARE,
   } = props;
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureOwnListing(listing);
@@ -374,11 +376,6 @@ export const ManageListingCard = props => {
     }
   };
 
-  const titleClasses = classNames(css.title, {
-    [css.titlePending]: isPendingApproval,
-    [css.titleDraft]: isDraft,
-  });
-
   const editListingLinkType = isDraft
     ? LISTING_PAGE_PARAM_TYPE_DRAFT
     : LISTING_PAGE_PARAM_TYPE_EDIT;
@@ -389,7 +386,9 @@ export const ManageListingCard = props => {
     variantPrefix = 'listing-card',
   } = config.layout.listingImage;
   const variants = firstImage
-    ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
+    ? Object.keys(firstImage?.attributes?.variants).filter(k =>
+        k.startsWith(gridLayout === GRID_STYLE_SQUARE ? variantPrefix : 'scaled-medium')
+      )
     : [];
 
   return (
@@ -411,15 +410,19 @@ export const ManageListingCard = props => {
         onMouseOver={onOverListingLink}
         onTouchStart={onOverListingLink}
       >
-        <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
-          <ResponsiveImage
-            rootClassName={css.rootForImage}
-            alt={title}
-            image={firstImage}
-            variants={variants}
-            sizes={renderSizes}
-          />
-        </AspectRatioWrapper>
+        {gridLayout === GRID_STYLE_SQUARE ? (
+          <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
+            <ResponsiveImage
+              rootClassName={css.rootForImage}
+              alt={title}
+              image={firstImage}
+              variants={variants}
+              sizes={renderSizes}
+            />
+          </AspectRatioWrapper>
+        ) : (
+          <ResponsiveImage alt={title} image={firstImage} variants={variants} />
+        )}
 
         <div className={classNames(css.menuOverlayWrapper)}>
           <div className={classNames(css.menuOverlay, { [css.menuOverlayOpen]: isMenuOpen })} />
@@ -513,24 +516,26 @@ export const ManageListingCard = props => {
         ) : null}
       </div>
 
-      <div className={css.info}>
-        <div className={css.mainInfo}>
-          <div className={css.titleWrapper}>{listingTypeLabel}</div>
-        </div>
+      {gridLayout === GRID_STYLE_SQUARE && (
+        <div className={css.info}>
+          <div className={css.mainInfo}>
+            <div className={css.titleWrapper}>{listingTypeLabel}</div>
+          </div>
 
-        <div className={css.manageLinks}>
-          <LinkToStockOrAvailabilityTab
-            id={id}
-            slug={slug}
-            editListingLinkType={editListingLinkType}
-            isBookable={isBookable}
-            currentStock={currentStock}
-            hasListingType={hasListingType}
-            hasStockManagementInUse={hasStockManagementInUse}
-            intl={intl}
-          />
+          <div className={css.manageLinks}>
+            <LinkToStockOrAvailabilityTab
+              id={id}
+              slug={slug}
+              editListingLinkType={editListingLinkType}
+              isBookable={isBookable}
+              currentStock={currentStock}
+              hasListingType={hasListingType}
+              hasStockManagementInUse={hasStockManagementInUse}
+              intl={intl}
+            />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

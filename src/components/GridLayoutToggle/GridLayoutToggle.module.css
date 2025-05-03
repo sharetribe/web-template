@@ -1,0 +1,13 @@
+.gridViewButton {
+  color: var(--colorGrey300);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.gridViewButton:hover {
+  color: var(--colorGrey500);
+}
+
+.gridViewButton.active {
+  color: var(--colorGrey700);
+}

@@ -1,10 +1,11 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import { propTypes } from '../../../util/types';
+import { GRID_STYLE_MASONRY, propTypes } from '../../../util/types';
 import { ListingCard, PaginationLinks } from '../../../components';
 
 import css from './SearchResultsPanel.module.css';
+import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 
 /**
  * SearchResultsPanel component
@@ -29,6 +30,7 @@ const SearchResultsPanel = props => {
     search,
     setActiveListing,
     isMapVariant = true,
+    gridLayout = GRID_STYLE_MASONRY,
   } = props;
   const classes = classNames(rootClassName || css.root, className);
 
@@ -54,9 +56,6 @@ const SearchResultsPanel = props => {
         `${panelLargeWidth / 3}vw`,
       ].join(', ');
     } else {
-      // Panel width relative to the viewport
-      const panelMediumWidth = 50;
-      const panelLargeWidth = 62.5;
       return [
         '(max-width: 549px) 100vw',
         '(max-width: 767px) 50vw',
@@ -67,21 +66,38 @@ const SearchResultsPanel = props => {
     }
   };
 
+  const renderListingCards = () =>
+    listings.map(l => (
+      <ListingCard
+        className={css.listingCard}
+        key={l.id.uuid}
+        listing={l}
+        renderSizes={cardRenderSizes(isMapVariant)}
+        setActiveListing={setActiveListing}
+        hidePrice
+        gridLayout={gridLayout}
+      />
+    ));
+
   return (
     <div className={classes}>
-      <div className={isMapVariant ? css.listingCardsMapVariant : css.listingCards}>
-        {listings.map(l => (
-          <ListingCard
-            className={css.listingCard}
-            key={l.id.uuid}
-            listing={l}
-            renderSizes={cardRenderSizes(isMapVariant)}
-            setActiveListing={setActiveListing}
-            hidePrice
-          />
-        ))}
-        {props.children}
-      </div>
+      {gridLayout === GRID_STYLE_MASONRY ? (
+        <ResponsiveMasonry
+          columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}
+          gutterBreakpoints={{ 350: '12px', 750: '16px', 900: '24px' }}
+        >
+          <Masonry>
+            {renderListingCards()}
+            {props.children}
+          </Masonry>
+        </ResponsiveMasonry>
+      ) : (
+        <div className={isMapVariant ? css.listingCardsMapVariant : css.listingCards}>
+          {renderListingCards()}
+          {props.children}
+        </div>
+      )}
+
       {paginationLinks}
     </div>
   );
