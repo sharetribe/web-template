@@ -7,6 +7,8 @@ import { Form as FinalForm, FormSpy } from 'react-final-form';
 // import { VoucherifyValidate } from '@voucherify/react-widget';
 import { VoucherifyValidate } from '@mathiscode/voucherify-react-widget';
 
+import Logo from '../../../assets/logo-icon.png';
+
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import { numberAtLeast, required } from '../../../util/validators';

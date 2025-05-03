@@ -29,8 +29,8 @@ module.exports = (req, res) => {
       const lineItems = await transactionLineItems(
         listing,
         orderData,
-        extractOverridingProviderCommissionPercent(showListingResponse, providerCommission),
-        extractOverridingCustomerCommissionPercent(userDataResponse, customerCommission)
+        extractOverridingProviderCommissionPercent(showListingResponse, providerCommission, listing?.attributes?.publicData?.listingType),
+        extractOverridingCustomerCommissionPercent(userDataResponse, customerCommission, listing?.attributes?.publicData?.listingType)
       );
 
       // Because we are using returned lineItems directly in this template we need to use the helper function

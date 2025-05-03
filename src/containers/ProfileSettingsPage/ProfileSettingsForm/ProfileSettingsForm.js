@@ -388,6 +388,7 @@ class ProfileSettingsFormComponent extends Component {
                       <FormattedMessage id="EditListingAvailabilityPanel.disconnectGoogleCalendar" />
                     </p>
                     <p>
+                      <strong><em><FormattedMessage id="EditListingAvailabilityPanel.connectWithGoogleCalendarbold" /></em></strong><br/>
                       <FormattedMessage id="EditListingAvailabilityPanel.connectWithGoogleUserConfusion" />
                     </p>
                     <Button
@@ -403,6 +404,7 @@ class ProfileSettingsFormComponent extends Component {
                 ) : (
                   <div className={css.planInfo}>
                     <p>
+                      <strong><em><FormattedMessage id="EditListingAvailabilityPanel.connectWithGoogleCalendarbold" /></em></strong><br/>
                       <FormattedMessage id="EditListingAvailabilityPanel.connectWithGoogle" />
                     </p>
                     <p>

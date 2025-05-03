@@ -35,8 +35,8 @@ module.exports = (req, res) => {
       lineItems = await transactionLineItems(
         listing,
         { ...orderData, ...bodyParams.params },
-        extractOverridingProviderCommissionPercent(showListingResponse, providerCommission),
-        extractOverridingCustomerCommissionPercent(userDataResponse, customerCommission)
+        extractOverridingProviderCommissionPercent(showListingResponse, providerCommission, listing?.attributes?.publicData?.listingType),
+        extractOverridingCustomerCommissionPercent(userDataResponse, customerCommission, listing?.attributes?.publicData?.listingType)
       );
 
       return getTrustedSdk(req);

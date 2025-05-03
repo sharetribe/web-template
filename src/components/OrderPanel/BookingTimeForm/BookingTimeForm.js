@@ -124,11 +124,11 @@ export const BookingTimeForm = props => {
           onFetchTimeSlots,
           timeZone,
           lineItems,
-          onContactUser, // [SKYFARER]
-          authorDisplayName, // [SKYFARER]
           fetchLineItemsInProgress,
           fetchLineItemsError,
           payoutDetailsWarning,
+          onContactUser, // [SKYFARER]
+          authorDisplayName, // [SKYFARER]
           voucher, // [SKYFARER]
         } = formRenderProps;
 
