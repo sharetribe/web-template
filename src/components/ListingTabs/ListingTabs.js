@@ -23,6 +23,8 @@ import { Error, getTabsFeaturesForRole, Loader, Pagination } from './GridHelpers
 import css from './ListingTabs.module.css';
 import GridLayoutToggle from '../GridLayoutToggle/GridLayoutToggle';
 import MasonryGridWrapper from '../MasonryGridWrapper/MasonryGridWrapper';
+import { savePortfolioListingsOrder } from '../../containers/EditPortfolioListingPage/EditPortfolioListingPage.duck';
+import { useDispatch } from 'react-redux';
 
 export const ListingTabs = ({
   items = [],
@@ -63,6 +65,11 @@ export const ListingTabs = ({
   const [gridLayout, setGridLayout] = useState(
     withListingGrid ? GRID_STYLE_MASONRY : GRID_STYLE_SQUARE
   );
+  const dispatch = useDispatch();
+
+  const handlePortfolioSortEnd = newOrder => {
+    dispatch(savePortfolioListingsOrder(newOrder));
+  };
 
   const goToManageListing = (mode = PAGE_MODE_NEW, searchParams = {}) => {
     if (currentListingType === LISTING_TYPES.PRODUCT) {
@@ -145,7 +152,12 @@ export const ListingTabs = ({
         <Row gutter={[16, 16]} align="middle" justify="space-between">
           <Col xs={24} sm={14}>
             {withCategories && (
-              <ScrollableLinks links={categories} selectedLinkId={currentCategory} />
+              <ScrollableLinks
+                links={categories}
+                selectedLinkId={currentCategory}
+                sortable={currentListingType === LISTING_TYPES.PORTFOLIO}
+                onSortEnd={handlePortfolioSortEnd}
+              />
             )}
           </Col>
           {enableListingManagement && (

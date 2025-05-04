@@ -30,6 +30,7 @@ export const getLinks = (listings, currentListingType) => {
         name: 'ManageListingsPage',
         displayText: listing.attributes.title,
         to: { search: getSearch(listing.id.uuid, currentListingType) },
+        order: listing.attributes.privateData?.order,
       }));
     }
     case LISTING_TAB_TYPES.PRODUCT:

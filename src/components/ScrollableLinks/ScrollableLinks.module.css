@@ -49,3 +49,15 @@
   color: var(--marketplaceColor);
   font-weight: bold;
 }
+
+.dragHandle {
+  display: inline-flex;
+  margin-right: 6px;
+  cursor: grab;
+}
+
+.sortableLinkWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
