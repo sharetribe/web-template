@@ -136,6 +136,8 @@ const SectionFooter = props => {
                 <BlockBuilder blocks={linksWithBlockId} sectionId={sectionId} options={options} />
               </div>
             ) : null}
+            {/* SKYFARER +version */}
+            <span style={{ fontSize: '12px', color: 'gray', marginRight: '5px' }}>{`v${process.env.REACT_APP_VERSION}`}</span>
             <Field data={copyright} className={css.copyright} />
           </div>
           <div className={classNames(css.grid, getGridCss(numberOfColumns))}>
