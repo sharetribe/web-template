@@ -37,6 +37,7 @@ const DetailsSideCard = props => {
   const {
     listing,
     listingTitle,
+    priceVariantName,
     author,
     firstImage,
     layoutListingImageConfig,
@@ -110,6 +111,12 @@ const DetailsSideCard = props => {
 
       {!!breakdown ? (
         <div className={css.orderBreakdownHeader}>
+          {priceVariantName ? (
+            <div className={css.bookingPriceVariant}>
+              <p>{priceVariantName}</p>
+            </div>
+          ) : null}
+
           <H6 as="h3" className={css.orderBreakdownTitle}>
             <FormattedMessage id={`CheckoutPage.${processName}.orderBreakdown`} />
           </H6>

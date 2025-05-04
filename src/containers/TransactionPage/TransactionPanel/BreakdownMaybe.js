@@ -8,11 +8,17 @@ import css from './TransactionPanel.module.css';
 
 // Functional component as a helper to build OrderBreakdown
 const BreakdownMaybe = props => {
-  const { className, rootClassName, orderBreakdown, processName } = props;
+  const { className, rootClassName, orderBreakdown, processName, priceVariantName } = props;
   const classes = classNames(rootClassName || css.breakdownMaybe, className);
 
   return orderBreakdown ? (
     <div className={classes}>
+      {priceVariantName ? (
+        <div className={css.bookingPriceVariant}>
+          <p>{priceVariantName}</p>
+        </div>
+      ) : null}
+
       <H6 as="h3" className={css.orderBreakdownTitle}>
         <FormattedMessage id={`TransactionPanel.${processName}.orderBreakdownTitle`} />
       </H6>
