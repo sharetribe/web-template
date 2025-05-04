@@ -5,6 +5,7 @@ import { injectIntl, intlShape } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import { formatMoney } from '../../../util/currency';
 import { ensureListing } from '../../../util/data';
+import { isPriceVariationsEnabled } from '../../../util/configHelpers';
 
 import css from './SearchMapPriceLabel.module.css';
 
@@ -46,7 +47,7 @@ class SearchMapPriceLabel extends Component {
       config,
     } = this.props;
     const currentListing = ensureListing(listing);
-    const { price } = currentListing.attributes;
+    const { price, publicData } = currentListing.attributes;
 
     // Create formatted price if currency is known or alternatively show just the unknown currency.
     const formattedPrice =
@@ -55,6 +56,22 @@ class SearchMapPriceLabel extends Component {
         : price?.currency
         ? price.currency
         : null;
+
+    const priceValue = formattedPrice
+      ? intl.formatMessage({ id: 'SearchMapPriceLabel.price' }, { priceValue: formattedPrice })
+      : null;
+
+    const validListingTypes = config.listing.listingTypes;
+    const foundListingTypeConfig = validListingTypes.find(
+      conf => conf.listingType === publicData?.listingType
+    );
+    const isPriceVariationsInUse = isPriceVariationsEnabled(publicData, foundListingTypeConfig);
+    const hasMultiplePriceVariants =
+      isPriceVariationsInUse && publicData?.priceVariants?.length > 1;
+
+    const priceMessage = hasMultiplePriceVariants
+      ? intl.formatMessage({ id: 'SearchMapInfoCard.priceStartingFrom' }, { priceValue })
+      : intl.formatMessage({ id: 'SearchMapInfoCard.price' }, { priceValue });
 
     const classes = classNames(rootClassName || css.root, className);
     const priceLabelClasses = classNames(css.priceLabel, {
@@ -66,7 +83,7 @@ class SearchMapPriceLabel extends Component {
     return (
       <button className={classes} onClick={() => onListingClicked(currentListing)}>
         <div className={css.caretShadow} />
-        <div className={priceLabelClasses}>{formattedPrice}</div>
+        <div className={priceLabelClasses}>{priceMessage}</div>
         <div className={caretClasses} />
       </button>
     );

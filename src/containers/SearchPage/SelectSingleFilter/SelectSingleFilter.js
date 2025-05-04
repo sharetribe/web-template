@@ -59,7 +59,9 @@ const SelectSingleFilter = props => {
 
   // Pass the initial values with the name key so that
   // they can be passed to the correct field
-  const pickedInitialValues = { [name]: pickInitialValuesForFieldSelectTree(name, initialValues) };
+  const pickedInitialValues = {
+    [name]: pickInitialValuesForFieldSelectTree(name, initialValues, isNestedEnum),
+  };
 
   const handleSubmit = queryParamNames => values => {
     const isArray = Array.isArray(queryParamNames);
