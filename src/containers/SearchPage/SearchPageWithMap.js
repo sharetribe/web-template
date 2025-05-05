@@ -323,12 +323,8 @@ export class SearchPageComponent extends Component {
     const { listingFields } = config?.listing || {};
     const { defaultFilters: defaultFiltersRaw, sortConfig } = config?.search || {};
 
-    const { isListingTypeVariant, activeListingTypes } = getActiveListingTypes(
-      config,
-      listingTypePathParam
-    );
-
-    const defaultFiltersConfig = isListingTypeVariant
+    const { activeListingTypes } = getActiveListingTypes(config, listingTypePathParam);
+    const defaultFiltersConfig = listingTypePathParam
       ? defaultFiltersRaw.filter(f => f.key !== 'listingType')
       : defaultFiltersRaw;
 

@@ -568,10 +568,8 @@ export const getResourceLocatorStringParams = (routes, location) => {
 
 export const getActiveListingTypes = (config, listingTypePathParam) => {
   const availableListingTypes = config?.listing?.listingTypes.map(config => config.listingType);
-  const isListingTypeVariant =
-    listingTypePathParam && availableListingTypes.includes(listingTypePathParam);
-  const activeListingTypes = isListingTypeVariant
+  const activeListingTypes = listingTypePathParam
     ? availableListingTypes.filter(lt => lt === listingTypePathParam)
     : availableListingTypes;
-  return { isListingTypeVariant, activeListingTypes };
+  return { activeListingTypes };
 };
