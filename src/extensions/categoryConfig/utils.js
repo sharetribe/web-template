@@ -10,11 +10,11 @@ const getListingCategory = listing => {
 };
 
 const getProviderDefaultCommission = config => {
-  return config.categoryCustomConfiguration.default.providerCommission;
+  return config.categoryCustomConfiguration.default.providerCommission || {};
 };
 
 const getCustomerDefaultCommission = config => {
-  return config.categoryCustomConfiguration.default.customerCommission;
+  return config.categoryCustomConfiguration.default.customerCommission || {};
 };
 
 export const retrieveListingMinimumPrice = (listing, config) => {
@@ -33,7 +33,17 @@ export const retrieveProviderCommission = (listing, config) => {
 
 export const retrieveProviderFlatFee = (listing, config) => {
   const category = getListingCategory(listing);
-  return config.categoryCustomConfiguration.config[category]?.providerFlatFee ?? null;
+  const currentCategoryConfig = config.categoryCustomConfiguration.config[category];
+
+  if (!currentCategoryConfig) {
+    return null;
+  }
+
+  const { providerMinFlatFee = 0, providerFeePercentage = 0 } = currentCategoryConfig;
+  return {
+    providerMinFlatFee,
+    providerFeePercentage,
+  };
 };
 
 export const retrieveCustomerCommission = (listing, config) => {

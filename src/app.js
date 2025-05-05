@@ -214,7 +214,12 @@ const EnvironmentVariableWarning = props => {
 };
 
 export const ClientApp = props => {
-  const { store, hostedTranslations = {}, hostedConfig = {}, categoryCustomConfig = {} } = props;
+  const {
+    store,
+    hostedTranslations = {},
+    hostedConfig = {},
+    categoryCustomConfig = { config: {}, default: {} },
+  } = props;
   const appConfig = mergeConfig(hostedConfig, defaultConfig);
   attachCategoryConfigToAppConfig(appConfig, categoryCustomConfig);
 

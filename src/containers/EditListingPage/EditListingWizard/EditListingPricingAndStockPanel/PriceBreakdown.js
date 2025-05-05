@@ -5,11 +5,18 @@ import { types as sdkTypes } from '../../../../util/sdkLoader';
 import { FormattedMessage, injectIntl, intlShape } from '../../../../util/reactIntl';
 
 import css from './PriceBreakdown.module.css';
+import calculateMaxFlatFee from '../../../../extensions/categoryConfig/helpers/calculateMaxFlatFee';
 
 const { Money } = sdkTypes;
 
 const PriceBreakdownComponent = props => {
-  const { price, currencyConfig, intl, providerCommission, providerFlatFee } = props;
+  const {
+    price,
+    currencyConfig,
+    intl,
+    providerCommission,
+    providerFlatFee: providerFlatFeeConfig,
+  } = props;
 
   if (typeof price !== 'number' || isNaN(price)) {
     return (
@@ -30,6 +37,8 @@ const PriceBreakdownComponent = props => {
     Math.round(priceInCents * (providerCommission.percentage / 100)),
     currencyConfig.currency
   );
+
+  const providerFlatFee = calculateMaxFlatFee(priceInCents, providerFlatFeeConfig);
   const flatFeeAsMoney = new Money(providerFlatFee, currencyConfig.currency);
 
   const sellerReceives = new Money(

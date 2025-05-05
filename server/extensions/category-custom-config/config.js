@@ -16,19 +16,22 @@ const CATEGORY_ID_LOCATION_BID = 'location-bid';
 const categoriesExtraConfig = {
   [CATEGORY_ID_LOCATION]: {
     minimumPrice: 20000,
-    providerFlatFee: 10000,
+    providerMinFlatFee: 10000,
+    providerFeePercentage: 0,
     providerCommissionPercentage: 3,
     customerCommissionPercentage: 0,
   },
   [CATEGORY_ID_LOCATION_FIND]: {
     minimumPrice: 20000,
-    providerFlatFee: 10000,
+    providerMinFlatFee: 10000,
+    providerFeePercentage: 0,
     providerCommissionPercentage: 3,
     customerCommissionPercentage: 0,
   },
   [CATEGORY_ID_LOCATION_BID]: {
     minimumPrice: 30000,
-    providerFlatFee: 20000,
+    providerMinFlatFee: 20000,
+    providerFeePercentage: 0,
     providerCommissionPercentage: 3,
     customerCommissionPercentage: 0,
   },
