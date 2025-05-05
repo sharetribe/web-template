@@ -22,6 +22,7 @@
   align-items: baseline;
   margin: 27px 0;
   text-decoration: inherit;
+  white-space: nowrap;
 }
 
 .linkMenuLabel {
@@ -30,16 +31,16 @@
   border-bottom: 0px solid;
   transition: var(--transitionStyleButton);
 
-  font-weight: var(--fontWeightMedium);
-  font-size: 14px;
+  font-weight: var(--fontWeightBold);
+  font-size: 17px;
   line-height: 18px;
-  letter-spacing: 0;
+  letter-spacing: -1px;
   color: var(--colorGrey700);
 
   display: inline;
   height: 100%;
   margin: 0;
-  padding: 0 12px 0 12px;
+  padding: 0 12px 0 32px;
 
   &:hover {
     border-bottom: 4px solid var(--marketplaceColor);

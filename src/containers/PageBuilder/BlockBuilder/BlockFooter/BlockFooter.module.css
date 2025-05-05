@@ -63,7 +63,7 @@
 
   > * a {
     padding: 10px !important;
-    color: var(--avPink);
+    color: var(--colorWhite);
 
     @media (--viewportMedium) {
       padding-left: 35px!important /* :( */;

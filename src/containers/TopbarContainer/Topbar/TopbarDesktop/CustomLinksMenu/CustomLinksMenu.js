@@ -189,7 +189,6 @@ const CustomLinksMenu = ({ currentPage, customLinks = [], hasClientSideContentRe
 
   return (
     <div className={css.customLinksMenu} ref={containerRef} {...styleMaybe}>
-      <PriorityLinks links={links} priorityLinks={priorityLinks} setLinks={setLinks} />
       {mounted && hasMenuLinks ? (
         <LinksMenu
           id="linksMenu"
@@ -201,6 +200,7 @@ const CustomLinksMenu = ({ currentPage, customLinks = [], hasClientSideContentRe
           intl={intl}
         />
       ) : null}
+      <PriorityLinks links={links} priorityLinks={priorityLinks} setLinks={setLinks} />
     </div>
   );
 };

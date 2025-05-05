@@ -68,6 +68,7 @@ const BlockDefault = props => {
     twoButtons,
     twoCols,
     contactButtons,
+    hasFullHeightMedia,
     hasIconImg,
     hasTextGray,
     hasTextDarkGray,
@@ -108,7 +109,8 @@ const BlockDefault = props => {
 
   const fieldMediaClass = classNames(
     mediaClassName,
-    hasIconImg ? css.iconImg : ''
+    hasIconImg ? css.iconImg : '',
+    hasFullHeightMedia ? css.fullHeightMedia : '',
   );
 
   return (

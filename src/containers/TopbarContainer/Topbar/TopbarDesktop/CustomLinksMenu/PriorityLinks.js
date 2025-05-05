@@ -102,6 +102,9 @@ const PriorityLinks = props => {
   return isMeasured || isServer ? (
     <div className={css.priorityLinkWrapper} {...styleWrapper} ref={containerRef}>
       {linkConfigs.map((linkConfig, index) => {
+        if('' === linkConfig.text.trim()) {
+          return;
+        }
         return <PriorityLink key={`${linkConfig.text}_${index}`} linkConfig={linkConfig} />;
       })}
     </div>

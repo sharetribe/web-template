@@ -167,7 +167,7 @@ function createBlockCustomProps(block) {
   // Adds 2 buttons to the end of the block content.
   if (block.blockName?.includes('2 buttons ::')) {
     blockCustomProps.twoButtons = {
-      titleEyebrow: intl.formatMessage({ id: 'TwoButtons.' + block.blockId + '.titleEyebrow', defaultMessage:'Hello' }),
+      titleEyebrow: intl.formatMessage({ id: 'TwoButtons.' + block.blockId + '.titleEyebrow', defaultMessage:'' }),
       callToAction1: {
         fieldType: 'internalButtonLink',
         href: intl.formatMessage({ id: 'TwoButtons.' + block.blockId + '.cta1Link', defaultMessage:'Hello' }),
@@ -179,6 +179,9 @@ function createBlockCustomProps(block) {
         content: intl.formatMessage({ id: 'TwoButtons.' + block.blockId + '.cta2Text', defaultMessage:'Hello' }),
       },
     };
+  }
+  if (block.blockName?.includes('full height media ::')) {
+    blockCustomProps.hasFullHeightMedia = true;
   }
   // CTA is secondary style.
   if (block.blockName?.includes('button secondary ::')) {
@@ -219,7 +222,7 @@ function createBlockCustomProps(block) {
     blockCustomProps.ctaButtonPrimaryClass = DEFAULT_CLASSES.ctaButtonPrimary;
     blockCustomProps.ctaButtonSecondaryClass = DEFAULT_CLASSES.ctaButtonSecondary;
 
-    blockCustomProps.titleEyebrow = intl.formatMessage({ id: 'BlockWithCols.' + block.blockId + '.titleEyebrow', defaultMessage:'Hello' });
+    blockCustomProps.titleEyebrow = intl.formatMessage({ id: 'BlockWithCols.' + block.blockId + '.titleEyebrow', defaultMessage:'' });
     blockCustomProps.col1Title = intl.formatMessage({ id: 'BlockWithCols.' + block.blockId + '.col1Title', defaultMessage:'Hello' });
     blockCustomProps.col1Title = intl.formatMessage({ id: 'BlockWithCols.' + block.blockId + '.col1Title', defaultMessage:'Hello' });
     blockCustomProps.col2Title = intl.formatMessage({ id: 'BlockWithCols.' + block.blockId + '.col2Title', defaultMessage:'Hello' });

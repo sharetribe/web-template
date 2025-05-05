@@ -90,7 +90,7 @@ const BlockWithCols = props => {
       />
       {hasTextComponentFields ? (
         <div className={classNames(textClassName, alignmentClass, css.text)}>
-          <span className={css.titleEyebrow}>{ titleEyebrow }</span>
+          {titleEyebrow ? (<span className={css.titleEyebrow}>{ titleEyebrow }</span>) : ''}
           <Field data={title} options={options} />
           <Field data={text} options={options} />
           <Field data={callToAction} className={ctaButtonClass} options={options} />
