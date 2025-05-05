@@ -47,7 +47,7 @@ import {
   pickListingFieldFilters,
   omitLimitedListingFieldParams,
   getDatesAndSeatsMaybe,
-  getResourceLocatorStringParams,
+  getSearchPageResourceLocatorStringParams,
   getActiveListingTypes,
 } from './SearchPage.shared';
 
@@ -145,7 +145,7 @@ export class SearchPageComponent extends Component {
         ...validFilterParams(rest, filterConfigs, dropNonFilterParams),
       };
 
-      const { routeName, pathParams } = getResourceLocatorStringParams(routes, location);
+      const { routeName, pathParams } = getSearchPageResourceLocatorStringParams(routes, location);
 
       history.push(createResourceLocatorString(routeName, routes, pathParams, searchParams));
     }
@@ -183,7 +183,10 @@ export class SearchPageComponent extends Component {
     const searchParams = { ...urlQueryParams, ...this.state.currentQueryParams };
     const search = cleanSearchFromConflictingParams(searchParams, filterConfigs, sortConfig);
 
-    const { routeName, pathParams } = getResourceLocatorStringParams(routeConfiguration, location);
+    const { routeName, pathParams } = getSearchPageResourceLocatorStringParams(
+      routeConfiguration,
+      location
+    );
 
     history.push(createResourceLocatorString(routeName, routeConfiguration, pathParams, search));
   }
@@ -208,7 +211,10 @@ export class SearchPageComponent extends Component {
     // Reset routing params
     const queryParams = omit(urlQueryParams, filterQueryParamNames);
 
-    const { routeName, pathParams } = getResourceLocatorStringParams(routeConfiguration, location);
+    const { routeName, pathParams } = getSearchPageResourceLocatorStringParams(
+      routeConfiguration,
+      location
+    );
 
     history.push(
       createResourceLocatorString(routeName, routeConfiguration, pathParams, queryParams)
@@ -265,7 +271,7 @@ export class SearchPageComponent extends Component {
           const searchParams = this.state.currentQueryParams;
           const search = cleanSearchFromConflictingParams(searchParams, filterConfigs, sortConfig);
 
-          const { routeName, pathParams } = getResourceLocatorStringParams(
+          const { routeName, pathParams } = getSearchPageResourceLocatorStringParams(
             routeConfiguration,
             location
           );
@@ -288,7 +294,10 @@ export class SearchPageComponent extends Component {
       ? { ...urlQueryParams, [urlParam]: values }
       : omit(urlQueryParams, urlParam);
 
-    const { routeName, pathParams } = getResourceLocatorStringParams(routeConfiguration, location);
+    const { routeName, pathParams } = getSearchPageResourceLocatorStringParams(
+      routeConfiguration,
+      location
+    );
 
     history.push(
       createResourceLocatorString(routeName, routeConfiguration, pathParams, queryParams)
