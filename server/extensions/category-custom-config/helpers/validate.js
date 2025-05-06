@@ -1,23 +1,28 @@
 const { categoriesExtraConfig } = require('../config');
 
-exports.validateMinFlatFee = () => {
-  return Object.values(categoriesExtraConfig).reduce((acc, value) => {
+exports.getValidConfigs = () => {
+  return Object.entries(categoriesExtraConfig).reduce((acc, [key, value]) => {
     const {
-      minimumPrice,
-      providerMinFlatFee,
+      minimumPrice: rawMinimumPrice,
+      providerMinFlatFee: rawProviderMinFlatFee,
       providerCommissionPercentage,
       providerFeePercentage,
     } = value;
+
+    // Handle subunit rounding
+    const minimumPrice = rawMinimumPrice.toFixed(0);
+    const providerMinFlatFee = rawProviderMinFlatFee.toFixed(0);
+
     const minimumCommission = Math.round(minimumPrice * (providerCommissionPercentage / 100));
 
-    if (minimumPrice - providerMinFlatFee - minimumCommission <= 0) {
-      return false;
-    }
-
-    if (providerFeePercentage + minimumCommission >= 100) {
-      return false;
+    if (
+      (minimumPrice - providerMinFlatFee - minimumCommission > 0) &
+        (providerFeePercentage + providerCommissionPercentage < 100) &&
+      Object.values(value).every(val => val >= 0)
+    ) {
+      acc[key] = value;
     }
 
     return acc;
-  }, true);
+  }, {});
 };
