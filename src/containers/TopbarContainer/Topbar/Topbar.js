@@ -17,6 +17,7 @@ import {
   Modal,
   ModalMissingInformation,
 } from '../../../components';
+import { getSearchPageResourceLocatorStringParams } from '../../SearchPage/SearchPage.shared';
 
 import MenuIcon from './MenuIcon';
 import SearchIcon from './SearchIcon';
@@ -154,7 +155,7 @@ const TopbarComponent = props => {
   } = props;
 
   const handleSubmit = values => {
-    const { currentSearchParams, history, config, routeConfiguration } = props;
+    const { currentSearchParams, history, location, config, routeConfiguration } = props;
 
     const topbarSearchParams = () => {
       if (isMainSearchTypeKeywords(config)) {
@@ -175,7 +176,15 @@ const TopbarComponent = props => {
       ...currentSearchParams,
       ...topbarSearchParams(),
     };
-    history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, searchParams));
+
+    const { routeName, pathParams } = getSearchPageResourceLocatorStringParams(
+      routeConfiguration,
+      location
+    );
+
+    history.push(
+      createResourceLocatorString(routeName, routeConfiguration, pathParams, searchParams)
+    );
   };
 
   const handleLogout = () => {

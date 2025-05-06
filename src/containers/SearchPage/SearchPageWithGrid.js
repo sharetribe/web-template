@@ -46,7 +46,7 @@ import {
   pickListingFieldFilters,
   omitLimitedListingFieldParams,
   getDatesAndSeatsMaybe,
-  getResourceLocatorStringParams,
+  getSearchPageResourceLocatorStringParams,
   getActiveListingTypes,
 } from './SearchPage.shared';
 
@@ -112,7 +112,10 @@ export class SearchPageComponent extends Component {
     // Reset routing params
     const queryParams = omit(urlQueryParams, filterQueryParamNames);
 
-    const { routeName, pathParams } = getResourceLocatorStringParams(routeConfiguration, location);
+    const { routeName, pathParams } = getSearchPageResourceLocatorStringParams(
+      routeConfiguration,
+      location
+    );
 
     history.push(
       createResourceLocatorString(routeName, routeConfiguration, pathParams, queryParams)
@@ -167,7 +170,7 @@ export class SearchPageComponent extends Component {
           const searchParams = this.state.currentQueryParams;
           const search = cleanSearchFromConflictingParams(searchParams, filterConfigs, sortConfig);
 
-          const { routeName, pathParams } = getResourceLocatorStringParams(
+          const { routeName, pathParams } = getSearchPageResourceLocatorStringParams(
             routeConfiguration,
             location
           );
@@ -190,7 +193,10 @@ export class SearchPageComponent extends Component {
       ? { ...urlQueryParams, [urlParam]: values }
       : omit(urlQueryParams, urlParam);
 
-    const { routeName, pathParams } = getResourceLocatorStringParams(routeConfiguration, location);
+    const { routeName, pathParams } = getSearchPageResourceLocatorStringParams(
+      routeConfiguration,
+      location
+    );
 
     history.push(
       createResourceLocatorString(routeName, routeConfiguration, pathParams, queryParams)
@@ -233,12 +239,9 @@ export class SearchPageComponent extends Component {
     const { listingFields } = config?.listing || {};
     const { defaultFilters: defaultFiltersRaw, sortConfig } = config?.search || {};
 
-    const { isListingTypeVariant, activeListingTypes } = getActiveListingTypes(
-      config,
-      listingTypePathParam
-    );
+    const { activeListingTypes } = getActiveListingTypes(config, listingTypePathParam);
 
-    const defaultFiltersConfig = isListingTypeVariant
+    const defaultFiltersConfig = listingTypePathParam
       ? defaultFiltersRaw.filter(f => f.key !== 'listingType')
       : defaultFiltersRaw;
     const marketplaceCurrency = config.currency;

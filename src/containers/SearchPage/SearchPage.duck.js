@@ -115,9 +115,7 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
   // Read More:
   // https://www.sharetribe.com/docs/how-to/manage-search-schemas-with-flex-cli/#adding-listing-search-schemas
   const searchValidListingTypes = (listingTypes, listingTypePathParam, isListingTypeVariant) => {
-    const isValidListingTypeParam =
-      listingTypePathParam && listingTypes.find(lt => lt.listingType === listingTypePathParam);
-    return isListingTypeVariant && isValidListingTypeParam
+    return isListingTypeVariant
       ? {
           pub_listingType: listingTypePathParam,
         }

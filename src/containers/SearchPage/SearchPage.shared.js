@@ -547,20 +547,25 @@ export const getDatesAndSeatsMaybe = (currentParams, newParams) => {
  * @returns an object with the attributes routeName and pathParams, which can then be passed
  * as the corresponding parameters to createResourceLocatorString
  */
-export const getResourceLocatorStringParams = (routes, location) => {
+export const getSearchPageResourceLocatorStringParams = (routes, location) => {
   const matchedRoutes = matchPathname(location.pathname, routes);
+  const searchPageRoute = 'SearchPage';
+  const searchPageListingTypeRoute = 'SearchPageWithListingType';
 
   if (matchedRoutes.length > 0) {
     const matched = matchedRoutes[0];
     const { params: pathParams, route } = matched;
+    const routeName =
+      route.name === searchPageListingTypeRoute ? searchPageListingTypeRoute : searchPageRoute;
+
     return {
-      routeName: route.name,
+      routeName,
       pathParams,
     };
   } else {
     console.error(`Route not found for pathname ${location.pathname}, redirecting to SearchPage`);
     return {
-      routeName: 'SearchPage',
+      routeName: searchPageRoute,
       pathParams: {},
     };
   }
@@ -568,10 +573,8 @@ export const getResourceLocatorStringParams = (routes, location) => {
 
 export const getActiveListingTypes = (config, listingTypePathParam) => {
   const availableListingTypes = config?.listing?.listingTypes.map(config => config.listingType);
-  const isListingTypeVariant =
-    listingTypePathParam && availableListingTypes.includes(listingTypePathParam);
-  const activeListingTypes = isListingTypeVariant
+  const activeListingTypes = listingTypePathParam
     ? availableListingTypes.filter(lt => lt === listingTypePathParam)
     : availableListingTypes;
-  return { isListingTypeVariant, activeListingTypes };
+  return { activeListingTypes };
 };

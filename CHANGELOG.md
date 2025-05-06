@@ -14,8 +14,12 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] Fix listing type path param usage
+  [#599](https://github.com/sharetribe/web-template/pull/599)
+  
 - [fix] Avatar: use correct pending-approval variant link when user is pending approval.
   [#601](https://github.com/sharetribe/web-template/pull/601)
+  
 - [add] Add currently available translations for DE, ES, FR.
   [#597](https://github.com/sharetribe/web-template/pull/597)
 
