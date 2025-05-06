@@ -1,5 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
+import { Button as AButton } from 'antd';
+import { HeartOutlined, HeartFilled } from '@ant-design/icons';
 
 import { useConfiguration } from '../../context/configurationContext';
 
@@ -75,13 +77,24 @@ const PriceMaybe = props => {
  * @param {string?} props.rootClassName overwrite components own css.root
  * @param {Object} props.listing API entity: listing or ownListing
  * @param {string?} props.renderSizes for img/srcset
+ * @param {string?} props.isFavorite is it a currentUser's favorite
+ * @param {Function?} props.onToggleFavorites
  * @param {Function?} props.setActiveListing
  * @returns {JSX.Element} listing card to be used in search result panel etc.
  */
 export const ListingCard = props => {
   const config = useConfiguration();
   const intl = props.intl || useIntl();
-  const { className, rootClassName, listing, renderSizes, setActiveListing, hidePrice } = props;
+  const {
+    className,
+    rootClassName,
+    listing,
+    renderSizes,
+    setActiveListing,
+    hidePrice,
+    isFavorite,
+    onToggleFavorites,
+  } = props;
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureListing(listing);
   const id = currentListing.id.uuid;
@@ -114,6 +127,27 @@ export const ListingCard = props => {
       }
     : null;
 
+  const toggleFavorites = event => {
+    event.preventDefault();
+    event.stopPropagation();
+    onToggleFavorites(isFavorite);
+  };
+  const favoriteButton = isFavorite ? (
+    <AButton
+      type="text"
+      icon={<HeartFilled style={{ fontSize: '30px' }} />}
+      onClick={toggleFavorites}
+      className={css.favoriteButton}
+    />
+  ) : (
+    <AButton
+      type="text"
+      icon={<HeartOutlined style={{ fontSize: '30px' }} />}
+      onClick={toggleFavorites}
+      className={css.favoriteButton}
+    />
+  );
+
   return (
     <NamedLink className={classes} name="ListingPage" params={{ id, slug }}>
       <AspectRatioWrapper
@@ -130,6 +164,11 @@ export const ListingCard = props => {
           sizes={renderSizes}
         />
       </AspectRatioWrapper>
+      <div className={css.menubarWrapper}>
+        <div className={css.menubarGradient} />
+        <div className={css.menubar}>{favoriteButton}</div>
+      </div>
+
       <div className={css.info}>
         <PriceMaybe
           price={price}
@@ -138,7 +177,6 @@ export const ListingCard = props => {
           intl={intl}
           hidePrice={hidePrice}
         />
-
         {isCreativeProfile && (
           <div className={css.mainInfo}>
             <div className={css.title}>

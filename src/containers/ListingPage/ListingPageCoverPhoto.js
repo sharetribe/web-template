@@ -34,6 +34,7 @@ import {
   ensureUser,
   userDisplayNameAsString,
 } from '../../util/data';
+import { handleToggleFavorites } from '../../util/favorites';
 import { richText } from '../../util/richText';
 import {
   isBookingProcess,
@@ -72,7 +73,6 @@ import {
   listingImages,
   handleContactUser,
   handleSubmit,
-  handleToggleFavorites,
   priceForSchemaMaybe,
 } from './ListingPage.shared';
 import SectionHero from './SectionHero';
@@ -298,6 +298,7 @@ export const ListingPageComponent = props => {
 
   const onToggleFavorites = handleToggleFavorites({
     ...commonParams,
+    listingId: params.id,
     listingType,
     onUpdateFavorites,
     onFetchCurrentUser,

@@ -30,17 +30,18 @@ import {
 import { hasPermissionToViewData, isUserAuthorized } from '../../util/userHelpers';
 import { getListingsById } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
+import { fetchCurrentUser } from '../../ducks/user.duck';
 
 import { H3, H5, NamedRedirect, Page } from '../../components';
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
 import FooterContainer from '../FooterContainer/FooterContainer';
+import { updateProfile } from '../ProfileSettingsPage/ProfileSettingsPage.duck';
 
 import {
   groupListingFieldConfigs,
   initialValues,
   searchParamsPicker,
   validUrlQueryParamsFromProps,
-  validFilterParams,
   cleanSearchFromConflictingParams,
   createSearchResultSchema,
   pickListingFieldFilters,
@@ -221,7 +222,10 @@ export class SearchPageComponent extends Component {
       searchParams = {},
       routeConfiguration,
       config,
+      onUpdateFavorites,
+      onFetchCurrentUser,
     } = this.props;
+    const currentUserFavorites = currentUser?.attributes?.profile?.privateData?.favorites || {};
     const listingFields = this.getListingFields();
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
     const activeListingTypes = config?.listing?.listingTypes.map(config => config.listingType);
@@ -447,6 +451,9 @@ export class SearchPageComponent extends Component {
                   pagination={listingsAreLoaded ? pagination : null}
                   search={parse(location.search)}
                   isMapVariant={false}
+                  currentUserFavorites={currentUserFavorites}
+                  onUpdateFavorites={onUpdateFavorites}
+                  onFetchCurrentUser={onFetchCurrentUser}
                 />
               </div>
             </div>
@@ -550,6 +557,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
   onManageDisableScrolling: (componentId, disableScrolling) =>
     dispatch(manageDisableScrolling(componentId, disableScrolling)),
+  onUpdateFavorites: payload => dispatch(updateProfile(payload)),
+  onFetchCurrentUser: () => dispatch(fetchCurrentUser({})),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the
