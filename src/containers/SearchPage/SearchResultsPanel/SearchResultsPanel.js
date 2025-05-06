@@ -1,6 +1,9 @@
 import React from 'react';
 import classNames from 'classnames';
+import { useHistory, useLocation } from 'react-router-dom';
 
+import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
+import { handleToggleFavorites } from '../../../util/favorites';
 import { propTypes } from '../../../util/types';
 import { ListingCard, PaginationLinks } from '../../../components';
 
@@ -29,7 +32,13 @@ const SearchResultsPanel = props => {
     search,
     setActiveListing,
     isMapVariant = true,
+    currentUserFavorites,
+    onUpdateFavorites,
+    onFetchCurrentUser,
   } = props;
+  const history = useHistory();
+  const location = useLocation();
+  const routeConfiguration = useRouteConfiguration();
   const classes = classNames(rootClassName || css.root, className);
 
   const paginationLinks =
@@ -70,16 +79,32 @@ const SearchResultsPanel = props => {
   return (
     <div className={classes}>
       <div className={isMapVariant ? css.listingCardsMapVariant : css.listingCards}>
-        {listings.map(l => (
-          <ListingCard
-            className={css.listingCard}
-            key={l.id.uuid}
-            listing={l}
-            renderSizes={cardRenderSizes(isMapVariant)}
-            setActiveListing={setActiveListing}
-            hidePrice
-          />
-        ))}
+        {listings.map(listing => {
+          const listingId = listing.id.uuid;
+          const listingType = listing.attributes?.publicData?.listingType;
+          const isFavorite = currentUserFavorites?.[listingType]?.includes(listingId);
+          const routingParams = { params: {}, history, routes: routeConfiguration };
+          const onToggleFavorites = handleToggleFavorites({
+            ...routingParams,
+            listingId,
+            listingType,
+            onUpdateFavorites,
+            onFetchCurrentUser,
+            location,
+          });
+          return (
+            <ListingCard
+              className={css.listingCard}
+              key={listingId}
+              listing={listing}
+              renderSizes={cardRenderSizes(isMapVariant)}
+              setActiveListing={setActiveListing}
+              hidePrice
+              isFavorite={isFavorite}
+              onToggleFavorites={onToggleFavorites}
+            />
+          );
+        })}
         {props.children}
       </div>
       {paginationLinks}

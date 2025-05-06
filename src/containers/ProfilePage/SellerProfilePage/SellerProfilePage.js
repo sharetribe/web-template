@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 
 import { useConfiguration } from '../../../context/configurationContext';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
+import { handleToggleFavorites } from '../../../util/favorites';
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { createResourceLocatorString } from '../../../util/routes';
 import {
@@ -11,6 +12,7 @@ import {
   LISTING_GRID_DEFAULTS,
   LISTING_GRID_ROLE,
   LISTING_TAB_TYPES,
+  LISTING_TYPES,
 } from '../../../util/types';
 
 import {
@@ -56,6 +58,9 @@ function SellerProfilePage({
   listings = [],
   reviews = [],
   pathParams = {},
+  currentUserFavorites,
+  onUpdateFavorites,
+  onFetchCurrentUser,
 }) {
   const routeConfiguration = useRouteConfiguration();
   const config = useConfiguration();
@@ -204,7 +209,26 @@ function SellerProfilePage({
       case LISTING_TAB_TYPES.PRODUCT:
       default: {
         const listingId = item.id.uuid;
-        return <ListingCard key={listingId} listing={item} className={className} />;
+        const listingType = LISTING_TYPES.PRODUCT;
+        const isFavorite = currentUserFavorites?.[listingType]?.includes(listingId);
+        const routingParams = { params: {}, history, routes: routeConfiguration };
+        const onToggleFavorites = handleToggleFavorites({
+          ...routingParams,
+          listingId,
+          listingType,
+          onUpdateFavorites,
+          onFetchCurrentUser,
+          location,
+        });
+        return (
+          <ListingCard
+            key={listingId}
+            className={className}
+            listing={item}
+            isFavorite={isFavorite}
+            onToggleFavorites={onToggleFavorites}
+          />
+        );
       }
     }
   };
