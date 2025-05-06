@@ -25,6 +25,7 @@ import { createResourceLocatorString, findRouteByRouteName } from '../../../util
 import { isBookingProcessAlias, isPurchaseProcessAlias } from '../../../transactions/transaction';
 
 import {
+  AspectRatioWrapperMaybe,
   IconSpinner,
   InlineTextButton,
   Menu,
@@ -39,7 +40,6 @@ import {
 import MenuIcon from './MenuIcon';
 import Overlay from './Overlay';
 import css from './ManageListingCard.module.css';
-import AspectRatioWrapperMaybe from '../../../components/AspectRatioWrapper/AspectRatioWrapperMaybe';
 
 // Menu content needs the same padding
 const MENU_CONTENT_OFFSET = -12;

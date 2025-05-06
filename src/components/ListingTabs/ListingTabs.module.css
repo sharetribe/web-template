@@ -64,7 +64,8 @@
   }
 }
 
-.masonryListingCard, .listingCard {
+.masonryListingCard,
+.listingCard {
   width: 100%;
 }
 

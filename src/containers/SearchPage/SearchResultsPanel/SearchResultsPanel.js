@@ -1,6 +1,9 @@
 import React from 'react';
 import classNames from 'classnames';
+import { useHistory, useLocation } from 'react-router-dom';
 
+import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
+import { handleToggleFavorites } from '../../../util/favorites';
 import { GRID_STYLE_MASONRY, propTypes } from '../../../util/types';
 import { ListingCard, PaginationLinks } from '../../../components';
 
@@ -31,7 +34,13 @@ const SearchResultsPanel = props => {
     setActiveListing,
     isMapVariant = true,
     gridLayout = GRID_STYLE_MASONRY,
+    currentUserFavorites,
+    onUpdateFavorites,
+    onFetchCurrentUser,
   } = props;
+  const history = useHistory();
+  const location = useLocation();
+  const routeConfiguration = useRouteConfiguration();
   const classes = classNames(rootClassName || css.root, className);
 
   const paginationLinks =
@@ -67,17 +76,33 @@ const SearchResultsPanel = props => {
   };
 
   const renderListingCards = cssClass =>
-    listings.map(l => (
-      <ListingCard
-        className={cssClass}
-        key={l.id.uuid}
-        listing={l}
-        renderSizes={cardRenderSizes(isMapVariant)}
-        setActiveListing={setActiveListing}
-        hidePrice
-        gridLayout={gridLayout}
-      />
-    ));
+    listings.map(listing => {
+      const listingId = listing.id.uuid;
+      const listingType = listing.attributes?.publicData?.listingType;
+      const isFavorite = currentUserFavorites?.[listingType]?.includes(listingId);
+      const routingParams = { params: {}, history, routes: routeConfiguration };
+      const onToggleFavorites = handleToggleFavorites({
+        ...routingParams,
+        listingId,
+        listingType,
+        onUpdateFavorites,
+        onFetchCurrentUser,
+        location,
+      });
+      return (
+        <ListingCard
+          className={cssClass}
+          key={listingId}
+          listing={listing}
+          renderSizes={cardRenderSizes(isMapVariant)}
+          setActiveListing={setActiveListing}
+          hidePrice
+          isFavorite={isFavorite}
+          onToggleFavorites={onToggleFavorites}
+          gridLayout={gridLayout}
+        />
+      );
+    });
 
   return (
     <div className={classes}>

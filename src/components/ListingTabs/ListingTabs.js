@@ -57,7 +57,12 @@ export const ListingTabs = ({
     role,
     hideReviews
   );
-  const [gridLayout, setGridLayout] = useState(GRID_STYLE_MASONRY);
+  const withListingGrid = ![LISTING_TAB_TYPES.REVIEWS, LISTING_TAB_TYPES.PROFILE].includes(
+    currentListingType
+  );
+  const [gridLayout, setGridLayout] = useState(
+    withListingGrid ? GRID_STYLE_MASONRY : GRID_STYLE_SQUARE
+  );
 
   const goToManageListing = (mode = PAGE_MODE_NEW, searchParams = {}) => {
     if (currentListingType === LISTING_TYPES.PRODUCT) {
@@ -97,9 +102,7 @@ export const ListingTabs = ({
   ].join(', ');
 
   const gridClassname = classNames({
-    [css.listingCards]:
-      role !== LISTING_GRID_ROLE.PROFILE ||
-      ![LISTING_TAB_TYPES.REVIEWS, LISTING_TAB_TYPES.PROFILE].includes(currentListingType),
+    [css.listingCards]: role !== LISTING_GRID_ROLE.PROFILE || withListingGrid,
   });
 
   const noResultRendered = (
@@ -112,11 +115,13 @@ export const ListingTabs = ({
 
   const gridRenderer = (
     <>
-      <Row justify="end" className={css.displayOptions}>
-        <Col>
-          <GridLayoutToggle value={gridLayout} onChange={setGridLayout} />
-        </Col>
-      </Row>
+      {withListingGrid && (
+        <Row justify="end" className={css.displayOptions}>
+          <Col>
+            <GridLayoutToggle value={gridLayout} onChange={setGridLayout} />
+          </Col>
+        </Row>
+      )}
       {gridLayout === GRID_STYLE_SQUARE ? (
         <div className={gridClassname}>
           {items.map((item, index) =>

@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Modal } from 'antd';
 import { PlayCircleOutlined } from '@ant-design/icons';
+
+import { AspectRatioWrapperMaybe } from '../../../components';
 import { getEmbedUrl, videoURLHandler } from '../../VideoPlayer/VideoPlayer';
+import { GRID_STYLE_MASONRY, GRID_STYLE_SQUARE } from '../../../util/types';
 
 import css from './VideoCard.module.css';
-import { GRID_STYLE_MASONRY, GRID_STYLE_SQUARE } from '../../../util/types';
-import AspectRatioWrapperMaybe from '../../AspectRatioWrapper/AspectRatioWrapperMaybe';
 
 export const VideoCard = props => {
   const [modalVisible, setModalVisible] = useState(false);

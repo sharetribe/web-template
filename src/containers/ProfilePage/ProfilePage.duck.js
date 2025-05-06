@@ -211,6 +211,7 @@ export const queryUserListings = (userId, initQueryParams, config, ownProfileOnl
     'fields.image': [
       // Scaled variants for large images
       'variants.scaled-xlarge',
+      'variants.scaled-medium',
 
       // Cropped variants for listing thumbnail images
       `variants.${variantPrefix}`,

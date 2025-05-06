@@ -5,10 +5,10 @@ import { Image } from 'antd';
 
 import imagePlaceholder from '../../../assets/image-placeholder.jpg';
 import { useConfiguration } from '../../../context/configurationContext';
+import { AspectRatioWrapperMaybe } from '../../../components';
 
 import css from './ImageCard.module.css';
 import { GRID_STYLE_MASONRY, GRID_STYLE_SQUARE } from '../../../util/types';
-import AspectRatioWrapperMaybe from '../../AspectRatioWrapper/AspectRatioWrapperMaybe';
 
 export const ImageCard = props => {
   const config = useConfiguration();

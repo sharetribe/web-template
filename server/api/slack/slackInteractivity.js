@@ -100,6 +100,7 @@ async function approveSellerHandler(userId, userAttributes) {
   const eventUser = { id: userId, email };
   const eventTraits = {
     type: 'CREATOR',
+    hasProductListings: 'NO',
     sellerStatus: SELLER_STATUS.APPROVED,
   };
   identifyUserEvent(eventUser, eventTraits);
@@ -160,10 +161,6 @@ async function rejectCommunityHandler(userId, userAttributes) {
   console.warn(`--- REJECT COMMUNITY: ${userId}`);
   const { email } = userAttributes;
   const eventUser = { id: userId, email };
-  const eventTraits = {
-    communityStatus: COMMUNITY_STATUS.WAITLISTED,
-  };
-  identifyUserEvent(eventUser, eventTraits);
   trackManagementAPIEvent('NEW_CREATOR | COMMUNITY - Waitlisted', eventUser);
   const metadata = { communityStatus: COMMUNITY_STATUS.WAITLISTED };
   return metadata;
