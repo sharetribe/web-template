@@ -32,3 +32,4 @@ const AspectRatioWrapper = props => {
 };
 
 export default AspectRatioWrapper;
+export { default as AspectRatioWrapperMaybe } from './AspectRatioWrapperMaybe';

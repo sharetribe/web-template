@@ -138,7 +138,11 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
         perPage: RESULT_PAGE_SIZE,
         include: ['author', 'author.profileImage', 'images'],
         'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
-        'fields.image': [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`],
+        'fields.image': [
+          'variants.scaled-medium',
+          `variants.${variantPrefix}`,
+          `variants.${variantPrefix}-2x`,
+        ],
         ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
         ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
         'limit.images': 1,

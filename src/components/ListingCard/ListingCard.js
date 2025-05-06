@@ -7,15 +7,15 @@ import { useConfiguration } from '../../context/configurationContext';
 
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { displayPrice } from '../../util/configHelpers';
-import { lazyLoadWithDimensions } from '../../util/uiHelpers';
-import { LISTING_TYPES } from '../../util/types';
+import { createLazyLoader, lazyLoadWithDimensions } from '../../util/uiHelpers';
+import { GRID_STYLE_SQUARE, LISTING_TYPES } from '../../util/types';
 import { formatMoney } from '../../util/currency';
 import { ensureListing, ensureUser } from '../../util/data';
 import { richText } from '../../util/richText';
 import { createSlug } from '../../util/urlHelpers';
 import { isBookingProcessAlias } from '../../transactions/transaction';
 
-import { AspectRatioWrapper, NamedLink, ResponsiveImage } from '../../components';
+import { AspectRatioWrapperMaybe, NamedLink, ResponsiveImage } from '../../components';
 
 import css from './ListingCard.module.css';
 
@@ -40,6 +40,8 @@ const priceData = (price, currency, intl) => {
   return {};
 };
 
+const lazyLoadWhenVisible = createLazyLoader({ withDimensions: false });
+const LazyMasonryImage = lazyLoadWhenVisible(ResponsiveImage, { loadAfterInitialRendering: 3000 });
 const LazyImage = lazyLoadWithDimensions(ResponsiveImage, { loadAfterInitialRendering: 3000 });
 
 const PriceMaybe = props => {
@@ -94,6 +96,7 @@ export const ListingCard = props => {
     hidePrice,
     isFavorite,
     onToggleFavorites,
+    gridLayout,
   } = props;
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureListing(listing);
@@ -116,8 +119,11 @@ export const ListingCard = props => {
     aspectHeight = 1,
     variantPrefix = 'listing-card',
   } = config.layout.listingImage;
+  const isSquareLayout = gridLayout === GRID_STYLE_SQUARE;
   const variants = firstImage
-    ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
+    ? Object.keys(firstImage?.attributes?.variants).filter(k =>
+        k.startsWith(isSquareLayout ? variantPrefix : 'scaled-medium')
+      )
     : [];
 
   const setActivePropsMaybe = setActiveListing
@@ -150,20 +156,32 @@ export const ListingCard = props => {
 
   return (
     <NamedLink className={classes} name="ListingPage" params={{ id, slug }}>
-      <AspectRatioWrapper
+      <AspectRatioWrapperMaybe
         className={css.aspectRatioWrapper}
         width={aspectWidth}
         height={aspectHeight}
         {...setActivePropsMaybe}
+        isSquareLayout={isSquareLayout}
       >
-        <LazyImage
-          rootClassName={css.rootForImage}
-          alt={title}
-          image={firstImage}
-          variants={variants}
-          sizes={renderSizes}
-        />
-      </AspectRatioWrapper>
+        {isSquareLayout ? (
+          <LazyImage
+            rootClassName={css.rootForImage}
+            alt={title}
+            image={firstImage}
+            variants={variants}
+            sizes={renderSizes}
+          />
+        ) : (
+          <div className={css.masonryImageWrapper}>
+            <LazyMasonryImage
+              alt={title}
+              image={firstImage}
+              variants={variants}
+              sizes={renderSizes}
+            />
+          </div>
+        )}
+      </AspectRatioWrapperMaybe>
       <div className={css.menubarWrapper}>
         <div className={css.menubarGradient} />
         <div className={css.menubar}>{favoriteButton}</div>

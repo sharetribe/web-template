@@ -4,10 +4,11 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
 import { handleToggleFavorites } from '../../../util/favorites';
-import { propTypes } from '../../../util/types';
+import { GRID_STYLE_MASONRY, propTypes } from '../../../util/types';
 import { ListingCard, PaginationLinks } from '../../../components';
 
 import css from './SearchResultsPanel.module.css';
+import MasonryGridWrapper from '../../../components/MasonryGridWrapper/MasonryGridWrapper';
 
 /**
  * SearchResultsPanel component
@@ -32,6 +33,7 @@ const SearchResultsPanel = props => {
     search,
     setActiveListing,
     isMapVariant = true,
+    gridLayout = GRID_STYLE_MASONRY,
     currentUserFavorites,
     onUpdateFavorites,
     onFetchCurrentUser,
@@ -63,9 +65,6 @@ const SearchResultsPanel = props => {
         `${panelLargeWidth / 3}vw`,
       ].join(', ');
     } else {
-      // Panel width relative to the viewport
-      const panelMediumWidth = 50;
-      const panelLargeWidth = 62.5;
       return [
         '(max-width: 549px) 100vw',
         '(max-width: 767px) 50vw',
@@ -76,37 +75,49 @@ const SearchResultsPanel = props => {
     }
   };
 
+  const renderListingCards = cssClass =>
+    listings.map(listing => {
+      const listingId = listing.id.uuid;
+      const listingType = listing.attributes?.publicData?.listingType;
+      const isFavorite = currentUserFavorites?.[listingType]?.includes(listingId);
+      const routingParams = { params: {}, history, routes: routeConfiguration };
+      const onToggleFavorites = handleToggleFavorites({
+        ...routingParams,
+        listingId,
+        listingType,
+        onUpdateFavorites,
+        onFetchCurrentUser,
+        location,
+      });
+      return (
+        <ListingCard
+          className={cssClass}
+          key={listingId}
+          listing={listing}
+          renderSizes={cardRenderSizes(isMapVariant)}
+          setActiveListing={setActiveListing}
+          hidePrice
+          isFavorite={isFavorite}
+          onToggleFavorites={onToggleFavorites}
+          gridLayout={gridLayout}
+        />
+      );
+    });
+
   return (
     <div className={classes}>
-      <div className={isMapVariant ? css.listingCardsMapVariant : css.listingCards}>
-        {listings.map(listing => {
-          const listingId = listing.id.uuid;
-          const listingType = listing.attributes?.publicData?.listingType;
-          const isFavorite = currentUserFavorites?.[listingType]?.includes(listingId);
-          const routingParams = { params: {}, history, routes: routeConfiguration };
-          const onToggleFavorites = handleToggleFavorites({
-            ...routingParams,
-            listingId,
-            listingType,
-            onUpdateFavorites,
-            onFetchCurrentUser,
-            location,
-          });
-          return (
-            <ListingCard
-              className={css.listingCard}
-              key={listingId}
-              listing={listing}
-              renderSizes={cardRenderSizes(isMapVariant)}
-              setActiveListing={setActiveListing}
-              hidePrice
-              isFavorite={isFavorite}
-              onToggleFavorites={onToggleFavorites}
-            />
-          );
-        })}
-        {props.children}
-      </div>
+      {gridLayout === GRID_STYLE_MASONRY ? (
+        <MasonryGridWrapper>
+          {renderListingCards()}
+          {props.children}
+        </MasonryGridWrapper>
+      ) : (
+        <div className={isMapVariant ? css.listingCardsMapVariant : css.listingCards}>
+          {renderListingCards(css.listingCard)}
+          {props.children}
+        </div>
+      )}
+
       {paginationLinks}
     </div>
   );

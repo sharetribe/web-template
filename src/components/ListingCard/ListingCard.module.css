@@ -21,7 +21,8 @@
   }
 }
 
-.aspectRatioWrapper {
+.aspectRatioWrapper,
+.masonryImageWrapper {
   transition: var(--transitionStyleButton);
   background: var(--colorGrey100); /* Loading BG color */
   border-radius: var(--borderRadiusMedium);
@@ -41,11 +42,28 @@
   height: 100%;
 }
 
+.masonryImageWrapper {
+  width: 100%;
+  overflow: hidden;
+}
+
+.masonryImageWrapper img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  transition: opacity 0.3s ease;
+}
+
 .info {
   /* Layout */
   display: flex;
   flex-direction: column;
   padding: 14px 0 2px 0;
+}
+
+.info:empty {
+  display: none;
 }
 
 .price {

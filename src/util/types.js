@@ -795,3 +795,6 @@ export const LISTING_TABS_PRODUCT_CATEGORIES = [
 propTypes.sellerStatus = oneOfType(SELLER_STATUS);
 
 export { propTypes };
+
+export const GRID_STYLE_SQUARE = 'SQUARE';
+export const GRID_STYLE_MASONRY = 'MASONRY';

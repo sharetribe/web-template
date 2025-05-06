@@ -7,6 +7,7 @@ import { handleToggleFavorites } from '../../../util/favorites';
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { createResourceLocatorString } from '../../../util/routes';
 import {
+  GRID_STYLE_SQUARE,
   REVIEW_TYPE_OF_PROVIDER,
   REVIEW_TYPE_OF_CUSTOMER,
   LISTING_GRID_DEFAULTS,
@@ -179,7 +180,7 @@ function SellerProfilePage({
     }
   }, [queryInProgress]);
 
-  const listingRenderer = (item, className, _, index) => {
+  const listingRenderer = (item, className, _, index, gridLayout = GRID_STYLE_SQUARE) => {
     switch (currentListingType) {
       case LISTING_TAB_TYPES.REVIEWS: {
         const parsedReviews = reviews.filter(r => r.attributes.type === currentCategory);
@@ -203,6 +204,7 @@ function SellerProfilePage({
             key={`${currentCategory}-${index}`}
             className={className}
             item={item}
+            gridLayout={gridLayout}
           />
         );
       }
@@ -227,6 +229,7 @@ function SellerProfilePage({
             listing={item}
             isFavorite={isFavorite}
             onToggleFavorites={onToggleFavorites}
+            gridLayout={gridLayout}
           />
         );
       }

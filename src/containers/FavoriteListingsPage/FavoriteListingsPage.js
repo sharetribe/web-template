@@ -8,7 +8,12 @@ import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { handleToggleFavorites } from '../../util/favorites';
 import { injectIntl, intlShape, FormattedMessage } from '../../util/reactIntl';
 import { createResourceLocatorString } from '../../util/routes';
-import { LISTING_GRID_DEFAULTS, LISTING_GRID_ROLE, propTypes } from '../../util/types';
+import {
+  GRID_STYLE_SQUARE,
+  LISTING_GRID_DEFAULTS,
+  LISTING_GRID_ROLE,
+  propTypes,
+} from '../../util/types';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 import { fetchCurrentUser } from '../../ducks/user.duck';
 
@@ -70,7 +75,13 @@ export const FavoriteListingsPageComponent = props => {
     history.push(destination);
   };
 
-  const listingRenderer = (listing, className, renderSizes) => {
+  const listingRenderer = (
+    listing,
+    className,
+    renderSizes,
+    index,
+    gridLayout = GRID_STYLE_SQUARE
+  ) => {
     const listingId = listing.id.uuid;
     const listingType = listing.attributes?.publicData?.listingType;
     const isFavorite = currentUserFavorites?.[listingType]?.includes(listingId);
@@ -91,6 +102,7 @@ export const FavoriteListingsPageComponent = props => {
         renderSizes={renderSizes}
         isFavorite={isFavorite}
         onToggleFavorites={onToggleFavorites}
+        gridLayout={gridLayout}
       />
     );
   };

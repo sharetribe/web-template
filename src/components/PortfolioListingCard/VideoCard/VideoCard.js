@@ -4,8 +4,9 @@ import classNames from 'classnames';
 import { Modal } from 'antd';
 import { PlayCircleOutlined } from '@ant-design/icons';
 
-import { AspectRatioWrapper } from '../../../components';
-import { getEmbedUrl, videoURLHandler } from '../../../components/VideoPlayer/VideoPlayer';
+import { AspectRatioWrapperMaybe } from '../../../components';
+import { getEmbedUrl, videoURLHandler } from '../../VideoPlayer/VideoPlayer';
+import { GRID_STYLE_MASONRY, GRID_STYLE_SQUARE } from '../../../util/types';
 
 import css from './VideoCard.module.css';
 
@@ -13,10 +14,11 @@ export const VideoCard = props => {
   const [modalVisible, setModalVisible] = useState(false);
   const videoRef = useRef(null);
 
-  const { className = null, rootClassName = null, item } = props;
+  const { className = null, rootClassName = null, item, gridLayout } = props;
   const classes = classNames(rootClassName || css.root, className);
   const videoUrl = item.url;
   const [isHostedVideo, isStreamingService] = videoURLHandler(videoUrl);
+  const isSquareLayout = gridLayout === GRID_STYLE_SQUARE;
 
   if (isHostedVideo) {
     const timeToSeconds = timeStr => {
@@ -32,13 +34,19 @@ export const VideoCard = props => {
       }
       setModalVisible(false);
     };
+
     return (
       <>
         <div
           className={classNames(classes, css.videoWrapper)}
           onClick={() => setModalVisible(true)}
         >
-          <AspectRatioWrapper width={1} height={1} className={css.videoContainer}>
+          <AspectRatioWrapperMaybe
+            width={1}
+            height={1}
+            className={css.videoContainer}
+            isSquareLayout={isSquareLayout}
+          >
             <video
               className={css.videoThumbnail}
               src={videoUrl}
@@ -52,7 +60,7 @@ export const VideoCard = props => {
             <div className={css.playButton}>
               <PlayCircleOutlined className={css.playIcon} />
             </div>
-          </AspectRatioWrapper>
+          </AspectRatioWrapperMaybe>
         </div>
         <Modal
           open={modalVisible}
@@ -76,7 +84,12 @@ export const VideoCard = props => {
   if (isStreamingService) {
     const embedUrl = getEmbedUrl(videoUrl);
     return (
-      <AspectRatioWrapper width={1} height={1} className={css.videoContainer}>
+      <AspectRatioWrapperMaybe
+        width={1}
+        height={1}
+        className={css.videoContainer}
+        isSquareLayout={isSquareLayout}
+      >
         <iframe
           className={css.videoContainer}
           src={embedUrl}
@@ -85,21 +98,27 @@ export const VideoCard = props => {
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowFullScreen
         />
-      </AspectRatioWrapper>
+      </AspectRatioWrapperMaybe>
     );
   }
 
   return (
     <div className={classNames(classes, css.videoWrapper)}>
-      <AspectRatioWrapper width={1} height={1} className={css.videoContainer}>
+      <AspectRatioWrapperMaybe
+        width={1}
+        height={1}
+        className={css.videoContainer}
+        isSquareLayout={isSquareLayout}
+      >
         <p className={css.unsupportedLabel}>❌ Unsupported video format: {videoUrl}</p>
-      </AspectRatioWrapper>
+      </AspectRatioWrapperMaybe>
     </div>
   );
 };
 
 VideoCard.propTypes = {
   className: PropTypes.string,
+  gridLayout: PropTypes.oneOf([GRID_STYLE_SQUARE, GRID_STYLE_MASONRY]),
   item: PropTypes.shape({
     url: PropTypes.string,
     startTime: PropTypes.string,

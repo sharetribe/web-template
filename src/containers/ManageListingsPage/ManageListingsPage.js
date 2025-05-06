@@ -5,37 +5,42 @@ import { connect } from 'react-redux';
 
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
-import { useIntl, FormattedMessage } from '../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../util/reactIntl';
 
 import { createResourceLocatorString, pathByRouteName } from '../../util/routes';
-import { LISTING_GRID_DEFAULTS, LISTING_GRID_ROLE, LISTING_TAB_TYPES } from '../../util/types';
+import {
+  GRID_STYLE_SQUARE,
+  LISTING_GRID_DEFAULTS,
+  LISTING_GRID_ROLE,
+  LISTING_TAB_TYPES,
+} from '../../util/types';
 import { hasPermissionToPostListings } from '../../util/userHelpers';
 import { NO_ACCESS_PAGE_POST_LISTINGS } from '../../util/urlHelpers';
 
 import {
   H3,
   LayoutSingleColumn,
-  Page,
-  UserNav,
-  NamedRedirect,
   ListingTabs,
+  NamedRedirect,
+  Page,
   PortfolioListingCard,
+  UserNav,
 } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import DiscardDraftModal from './DiscardDraftModal/DiscardDraftModal';
-import ManageListingCard from './ManageListingCard/ManageListingCard';
 import {
   closeListing,
-  openListing,
-  getOwnListingsById,
   discardDraft,
+  getOwnListingsById,
+  openListing,
 } from './ManageListingsPage.duck';
-import { getLinks, getItems, getCurrentCategory, routeHandler } from './utils';
+import { getCurrentCategory, getItems, getLinks, routeHandler } from './utils';
 
 import css from './ManageListingsPage.module.css';
+import ManageListingCard from './ManageListingCard/ManageListingCard';
 
 /**
  * The ManageListingsPage component.
@@ -118,6 +123,7 @@ export const ManageListingsPageComponent = props => {
     );
     history.replace(destination);
   }
+
   const { updateProductRoute, updatePortfolioRoute } = routeHandler(createManageLocatorString);
 
   useEffect(() => {
@@ -168,7 +174,7 @@ export const ManageListingsPageComponent = props => {
     );
   }
 
-  const listingRenderer = (item, className, renderSizes, index) => {
+  const listingRenderer = (item, className, renderSizes, index, gridLayout = GRID_STYLE_SQUARE) => {
     switch (currentListingType) {
       case LISTING_TAB_TYPES.PORTFOLIO: {
         return (
@@ -176,6 +182,7 @@ export const ManageListingsPageComponent = props => {
             key={`${currentCategory}-${index}`}
             className={className}
             item={item}
+            gridLayout={gridLayout}
           />
         );
       }
@@ -213,6 +220,7 @@ export const ManageListingsPageComponent = props => {
             hasOpeningError={openingErrorListingId.uuid === listingId}
             hasClosingError={closingErrorListingId.uuid === listingId}
             hasDiscardingError={discardingErrorListingId.uuid === listingId}
+            gridLayout={gridLayout}
           />
         );
       }
