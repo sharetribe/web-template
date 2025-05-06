@@ -1,6 +1,7 @@
 import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 
 import { useConfiguration } from '../../context/configurationContext';
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
@@ -140,6 +141,10 @@ const EmailSubmittedContent = props => {
 export const PasswordRecoveryPageComponent = props => {
   const config = useConfiguration();
   const intl = useIntl();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const emailParam = searchParams.get('email');
+
   const {
     scrollingDisabled,
     initialEmail,
@@ -152,9 +157,10 @@ export const PasswordRecoveryPageComponent = props => {
     onRetypeEmail,
   } = props;
   const alreadyrequested = submittedEmail || passwordRequested;
+  const emailToUse = emailParam || initialEmail;
   const showPasswordRecoveryForm = (
     <PasswordRecovery
-      initialEmail={initialEmail}
+      initialEmail={emailToUse}
       onChange={onChange}
       onSubmitEmail={onSubmitEmail}
       recoveryInProgress={recoveryInProgress}
