@@ -513,6 +513,7 @@ export class SearchPageComponent extends Component {
               resetAll={this.resetAll}
               selectedFiltersCount={selectedFiltersCountForMobile}
               noResultsInfo={noResultsInfo}
+              location={location}
               isMapVariant
             >
               {availableFilters.map(filterConfig => {

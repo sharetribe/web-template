@@ -10,6 +10,7 @@ import { ModalInMobile, Button } from '../../../components';
 
 import PopupOpenerButton from '../PopupOpenerButton/PopupOpenerButton';
 import css from './SearchFiltersMobile.module.css';
+import { getSearchPageResourceLocatorStringParams } from '../SearchPage.shared';
 
 class SearchFiltersMobileComponent extends Component {
   constructor(props) {
@@ -31,13 +32,15 @@ class SearchFiltersMobileComponent extends Component {
 
   // Close the filters by clicking cancel, revert to the initial params
   cancelFilters() {
-    const { history, onCloseModal, routeConfiguration } = this.props;
+    const { history, onCloseModal, location, routeConfiguration } = this.props;
+
+    const { routeName, pathParams } = getSearchPageResourceLocatorStringParams(routeConfiguration, location);
 
     history.push(
       createResourceLocatorString(
-        'SearchPage',
+        routeName,
         routeConfiguration,
-        {},
+        pathParams,
         this.state.initialQueryParams
       )
     );
