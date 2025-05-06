@@ -101,6 +101,7 @@ const createCustomPageData = (pageData, listings) => {
       href: intl.formatMessage({ id: 'AVHero.ctaSecondLink' }),
       content: intl.formatMessage({ id: 'AVHero.ctaSecondText' }),
     },
+    isLanding: true,
   };
   const avRecommendedSection = {
     ...recommendedSection,

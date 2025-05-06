@@ -1,0 +1,19 @@
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .swatch {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    padding: 0;
+    cursor: pointer;
+  }
+  
+  .selected {
+    border: 2px solid #000;
+  }
+  

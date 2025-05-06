@@ -1,0 +1,68 @@
+@import '../../styles/customMediaQueries.css';
+
+.root {
+  position: relative;
+}
+
+.checked {
+  display: none;
+}
+
+.input {
+  position: absolute;
+  opacity: 0;
+  height: 0;
+  width: 0;
+
+  /* Highlight the borders if the checkbox is hovered, focused or checked */
+  &:hover + label .swatch,
+  &:focus + label .swatch,
+  &:checked + label .swatch {
+    opacity: .8;
+  }
+
+  /* Display the "check" when checked */
+  &:checked + label .checked {
+    display: block;
+    stroke: var(--colorBlack);
+    stroke-width: 1px;
+  }
+
+  /* Hightlight the text on checked, hover and focus */
+  &:focus + label .text,
+  &:hover + label .text,
+  &:checked + label .text {
+    color: var(--colorBlack);
+  }
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  margin-bottom: 0;
+}
+
+.text {
+}
+.textRoot {
+  composes: marketplaceListingAttributeFontStyles from global;
+  color: var(--colorGrey700);
+  padding: 0;
+  margin-top: -1px;
+  margin-bottom: 1px;
+  cursor: pointer;
+}
+
+.swatch {
+  display: block;
+  min-width: 20px;
+  min-height: 20px;
+  margin-right: 8px;
+  border-radius: 50%;
+  line-height: 18px;
+
+  > svg {
+    margin-left: 3px;
+  }
+}

@@ -5,7 +5,7 @@ import { useIntl } from '../../../util/reactIntl';
 import { parseSelectFilterOptions } from '../../../util/search';
 import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM } from '../../../util/types';
 
-import { FieldCheckbox } from '../../../components';
+import { FieldCheckbox, FieldSwatch } from '../../../components';
 
 import FilterPlain from '../FilterPlain/FilterPlain';
 import FilterPopup from '../FilterPopup/FilterPopup';
@@ -26,6 +26,25 @@ const GroupOfFieldCheckboxes = props => {
           return (
             <li key={fieldId} className={css.item}>
               <FieldCheckbox id={fieldId} name={name} label={label} value={option} />
+            </li>
+          );
+        })}
+      </ul>
+    </fieldset>
+  );
+};
+
+const ColorSwatches = props => {
+  const { id, className, name, options } = props;
+  return (
+    <fieldset className={className}>
+      <ul className={css.list2cols}>
+        {options.map(optionConfig => {
+          const { option, label } = optionConfig;
+          const fieldId = `${id}.${option}`;
+          return (
+            <li key={fieldId} className={css.item}>
+              <FieldSwatch id={fieldId} name={name} label={label} value={option} />
             </li>
           );
         })}
@@ -152,12 +171,21 @@ const SelectMultipleFilter = props => {
       initialValues={namedInitialValues}
       {...rest}
     >
-      <GroupOfFieldCheckboxes
-        className={css.fieldGroupPlain}
-        name={name}
-        id={`${id}-checkbox-group`}
-        options={options}
-      />
+      {name == 'color' ? (
+        <ColorSwatches
+          className={css.fieldGroupPlain}
+          name={name}
+          id={`${id}-checkbox-group`}
+          options={options}
+        />
+      ) : (
+        <GroupOfFieldCheckboxes
+          className={css.fieldGroupPlain}
+          name={name}
+          id={`${id}-checkbox-group`}
+          options={options}
+        />
+      )}
     </FilterPlain>
   );
 };

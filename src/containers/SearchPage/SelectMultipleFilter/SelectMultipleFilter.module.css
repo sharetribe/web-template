@@ -37,3 +37,10 @@
     padding: 4px 0;
   }
 }
+
+.list2cols {
+  margin: 0;
+  columns: 2;
+  -webkit-columns: 2;
+  -moz-columns: 2;
+}

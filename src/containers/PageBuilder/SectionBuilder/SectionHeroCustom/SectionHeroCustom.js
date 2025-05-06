@@ -48,6 +48,7 @@ const SectionHeroCustom = props => {
     callToAction2,
     options,
     classWrap,
+    isLanding,
   } = props;
 
   // If external mapping has been included for fields
@@ -66,8 +67,8 @@ const SectionHeroCustom = props => {
       options={fieldOptions}
     >
       {hasHeaderFields ? (
-        <header className={defaultClasses.sectionDetails}>
-          <Field data={title} className={defaultClasses.title} options={fieldOptions} />
+        <header className={classNames(defaultClasses.sectionDetails, isLanding ? css.landingVersion : '')}>
+          <Field data={title} className={classNames(defaultClasses.title)} options={fieldOptions} />
           <Field data={description} className={defaultClasses.description} options={fieldOptions} />
           <div className={css.buttonWrap}>
             <Field data={callToAction} className={defaultClasses.ctaButtonPrimary} options={fieldOptions} />

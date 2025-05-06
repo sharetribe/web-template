@@ -16,7 +16,6 @@
     text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     font-weight: 400;
     line-height: 120%; /* 60px */
-    text-align: center;
   }
 
   p {
@@ -47,8 +46,13 @@
   .buttonWrap {
     justify-content: flex-start;
   }
+}
 
+.landingVersion {
   h1 {
-    text-align: left;
+    font-size: 90px;
+    line-height: 1.1;
+    color: var(--marketplaceColor);
+    text-align: center;
   }
 }
