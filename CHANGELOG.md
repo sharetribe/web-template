@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+## [v8.3.1] 2025-05-06
+
 - [fix] Fix listing type path param usage
   [#599](https://github.com/sharetribe/web-template/pull/599)
   
@@ -22,6 +24,8 @@ way to update this template, but currently, we follow a pattern:
   
 - [add] Add currently available translations for DE, ES, FR.
   [#597](https://github.com/sharetribe/web-template/pull/597)
+
+  [v8.3.1]: https://github.com/sharetribe/web-template/compare/v8.3.0...v8.3.1
 
 ## [v8.3.0] 2025-04-30
 
