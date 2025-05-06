@@ -4,6 +4,8 @@ const { categoriesExtraConfig } = require('../category-custom-config/config');
 const { getExchangeRate } = require('../common/caching');
 
 const { DEFAULT_CURRENCY } = require('../common/config/constants/currency.constants');
+const { getListingPrice } = require('../../api-util/lineItemHelpers');
+const { calculateFlatFee } = require('../category-custom-config/helpers/calculate');
 
 const getListingCategory = listing => {
   return get(listing, 'attributes.publicData.categoryLevel1', null);
@@ -42,23 +44,24 @@ const retrieveCommission = listing => {
 
 const retrieveProviderFlatFeeRawValue = listing => {
   const category = getListingCategory(listing);
-  return categoriesExtraConfig[category]?.providerFlatFee ?? null;
+  const categoryConfig = categoriesExtraConfig[category];
+
+  if (!categoryConfig) {
+    return null;
+  }
+
+  const { providerMinFlatFee, providerFeePercentage } = categoryConfig;
+  return { providerMinFlatFee, providerFeePercentage };
 };
 
 const getListingCurrency = listing => {
   return get(listing, 'attributes.publicData.listingCurrency', DEFAULT_CURRENCY);
 };
 
-const calculateFlatFeeInCurrency = async (listing, currency) => {
-  const exchangeRate = await getExchangeRate();
-  const flatFee = retrieveProviderFlatFeeRawValue(listing);
-  const currencyExchangeRate = exchangeRate[currency] ?? 1;
-  const dailyExchangeRate = 1 / currencyExchangeRate;
-
-  const flatFeeInExchangeCurrency = Math.round(flatFee * dailyExchangeRate);
-  return flatFeeInExchangeCurrency;
-};
-
+/**
+ * Get commissions percentage and calculated flat fee
+ * Flat fee is not converted to order data yet
+ */
 const retrieveCommissionAndFlatFee = async (listing, commissionAsset) => {
   const {
     providerCommission: defaultProviderCommission,
@@ -67,21 +70,19 @@ const retrieveCommissionAndFlatFee = async (listing, commissionAsset) => {
 
   const { overrideProviderCommission, overrideCustomerCommission } = retrieveCommission(listing);
 
-  const providerFlatFee = retrieveProviderFlatFeeRawValue(listing);
+  const flatFeeConfig = retrieveProviderFlatFeeRawValue(listing);
   const listingCurrency = getListingCurrency(listing);
 
-  if (listingCurrency !== DEFAULT_CURRENCY) {
-    const convertedFlatFee = await calculateFlatFeeInCurrency(listing, listingCurrency);
-    return {
-      providerCommission: {
-        percentage: overrideProviderCommission.percentage || defaultProviderCommission.percentage,
-      },
-      customerCommission: {
-        percentage: overrideCustomerCommission.percentage || defaultCustomerCommission.percentage,
-      },
-      providerFlatFee: convertedFlatFee,
-    };
-  }
+  const exchangeRate = await getExchangeRate();
+  // Listing price will be exchanged base on currency rate
+  const listingPrice = await getListingPrice(listing, DEFAULT_CURRENCY, exchangeRate);
+  // flatFee will be exchanged base on currency rate to default currency
+  const flatFee = await calculateFlatFee({
+    flatFeeConfig,
+    listingPrice,
+    listingCurrency,
+    exchangeRate,
+  });
 
   return {
     providerCommission: {
@@ -90,17 +91,16 @@ const retrieveCommissionAndFlatFee = async (listing, commissionAsset) => {
     customerCommission: {
       percentage: overrideCustomerCommission.percentage || defaultCustomerCommission.percentage,
     },
-    providerFlatFee,
+    providerFlatFee: flatFee,
   };
 };
 
 const hasFlatFee = flatFee => {
-  return flatFee !== null && flatFee > 0 && typeof flatFee === 'number';
+  return flatFee !== null && typeof flatFee === 'number' && flatFee > 0;
 };
 
 module.exports = {
   retrieveProviderFlatFeeRawValue,
   retrieveCommissionAndFlatFee,
   hasFlatFee,
-  calculateFlatFeeInCurrency,
 };

@@ -10,6 +10,10 @@ const { types } = require('sharetribe-flex-sdk');
 const { Money } = types;
 
 const { hasFlatFee } = require('../extensions/line-items/utils');
+const {
+  calculateFlatFeeInCurrency,
+  calculateFlatFeeToCurrency,
+} = require('../extensions/category-custom-config/helpers/calculate');
 
 const DEFAULT_CURRENCY = 'USD';
 /**
@@ -123,14 +127,20 @@ exports.transactionLineItems = async (
   orderData,
   providerCommission,
   customerCommission,
-  providerFlatFee
+  rawFlatFee,
+  options = {}
 ) => {
-  const calculateCurrency = orderData.currency || DEFAULT_CURRENCY;
+  const { isAllowOrderDataCurrency = false } = options;
+  const calculateCurrency = (isAllowOrderDataCurrency && orderData.currency) || DEFAULT_CURRENCY;
   const unitPrice =
     calculateCurrency === DEFAULT_CURRENCY
       ? listing.attributes.price
       : await getListingPrice(listing, calculateCurrency);
   const publicData = listing.attributes.publicData;
+  const providerFlatFee = await calculateFlatFeeToCurrency({
+    currency: calculateCurrency,
+    flatFee: rawFlatFee,
+  });
 
   /**
    * Pricing starts with order's base price:
@@ -163,7 +173,7 @@ exports.transactionLineItems = async (
 
   // Throw error if there is no quantity information given
   if (!quantity) {
-    const message = `Error: transition should contain quantity information: 
+    const message = `Error: transition should contain quantity information:
       stockReservationQuantity, quantity, or bookingStart & bookingEnd (if "line-item/day" or "line-item/night" is used)`;
     const error = new Error(message);
     error.status = 400;

@@ -30,7 +30,10 @@ module.exports = async (req, res) => {
       orderData,
       providerCommission,
       customerCommission,
-      providerFlatFee
+      providerFlatFee,
+      {
+        isAllowOrderDataCurrency: true,
+      }
     );
 
     // Because we are using returned lineItems directly in this template we need to use the helper function

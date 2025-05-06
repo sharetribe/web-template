@@ -23,8 +23,12 @@ module.exports = async (req, res) => {
     ]);
     const listing = showListingResponse.data.data;
     const commissionAsset = fetchAssetsResponse.data.data[0];
-    
-    const { providerCommission, customerCommission, providerFlatFee } = await retrieveCommissionAndFlatFee(listing, commissionAsset);
+
+    const {
+      providerCommission,
+      customerCommission,
+      providerFlatFee,
+    } = await retrieveCommissionAndFlatFee(listing, commissionAsset);
 
     const lineItems = await transactionLineItems(
       listing,
