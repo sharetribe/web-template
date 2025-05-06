@@ -153,6 +153,7 @@ function script() {
         type: isBrand ? 'BRAND' : 'BUYER',
         creatorFoundingMember: 'NO',
         subscribedToNewsletter: 'NO',
+        communityUser: 'NO',
         ...(isSeller ? { sellerStatus: SELLER_STATUS.APPLIED } : {}),
       };
       identifyUserEvent(eventUser, eventTraits);

@@ -1,3 +1,4 @@
+const { identifyUserEvent } = require('../../api-util/analytics');
 const { generateScript, integrationSdkInit } = require('../../api-util/scriptManager');
 const { StorageManagerClient } = require('../../api-util/storageManagerHelper');
 const { httpFileUrlToStream } = require('../../api-util/httpHelpers');
@@ -53,12 +54,14 @@ function scriptHelper() {
   async function getAuthor(authorId) {
     const integrationSdk = integrationSdkInit();
     const result = await integrationSdk.users.show({ id: authorId });
-    const { profile } = result?.data?.data?.attributes || {};
-    return profile;
+    const userAttributes = result?.data?.data?.attributes || {};
+    const { email, profile } = userAttributes;
+    return { email, ...profile };
   }
 
   const storageHandler = async events => {
     const storageManagerClient = new StorageManagerClient();
+    const identifiedUsersSet = new Set();
     console.warn('\n\n----------------');
     console.warn(`\n[storageHandler] - START! | Total: ${events.length}`);
     const data = await Promise.all(
@@ -67,6 +70,12 @@ function scriptHelper() {
         const { attributes: listing, relationships } = resource;
         const authorId = relationships?.author?.data?.id?.uuid;
         const author = await getAuthor(authorId);
+        if (!identifiedUsersSet.has(authorId)) {
+          const eventUser = { id: authorId, email: author.email };
+          const eventTraits = { hasProductListings: 'YES' };
+          identifyUserEvent(eventUser, eventTraits);
+          identifiedUsersSet.add(authorId);
+        }
         const creator = `${author.firstName} ${author.lastName}`;
         const listingId = resourceId?.uuid;
         const tempOriginalAssetUrl =

@@ -31,9 +31,11 @@ import {
 import { hasPermissionToViewData, isUserAuthorized } from '../../util/userHelpers';
 import { getListingsById } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
+import { fetchCurrentUser } from '../../ducks/user.duck';
 
 import { H3, H5, ModalInMobile, NamedRedirect, Page } from '../../components';
-import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+import TopbarContainer from '../TopbarContainer/TopbarContainer';
+import { updateProfile } from '../ProfileSettingsPage/ProfileSettingsPage.duck';
 
 import { setActiveListing } from './SearchPage.duck';
 import {
@@ -275,11 +277,12 @@ export class SearchPageComponent extends Component {
       onActivateListing,
       routeConfiguration,
       config,
+      onUpdateFavorites,
+      onFetchCurrentUser,
     } = this.props;
-
+    const currentUserFavorites = currentUser?.attributes?.profile?.privateData?.favorites || {};
     const { listingFields } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
-
     const activeListingTypes = config?.listing?.listingTypes.map(config => config.listingType);
     const marketplaceCurrency = config.currency;
     const categoryConfiguration = config.categoryConfiguration;
@@ -563,6 +566,9 @@ export class SearchPageComponent extends Component {
                   search={parse(location.search)}
                   setActiveListing={onActivateListing}
                   isMapVariant
+                  currentUserFavorites={currentUserFavorites}
+                  onUpdateFavorites={onUpdateFavorites}
+                  onFetchCurrentUser={onFetchCurrentUser}
                 />
               </div>
             )}
@@ -698,6 +704,8 @@ const mapDispatchToProps = dispatch => ({
   onManageDisableScrolling: (componentId, disableScrolling) =>
     dispatch(manageDisableScrolling(componentId, disableScrolling)),
   onActivateListing: listingId => dispatch(setActiveListing(listingId)),
+  onUpdateFavorites: payload => dispatch(updateProfile(payload)),
+  onFetchCurrentUser: () => dispatch(fetchCurrentUser({})),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the

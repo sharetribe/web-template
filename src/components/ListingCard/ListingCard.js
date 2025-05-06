@@ -1,5 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
+import { Button as AButton } from 'antd';
+import { HeartOutlined, HeartFilled } from '@ant-design/icons';
 
 import { useConfiguration } from '../../context/configurationContext';
 
@@ -13,10 +15,9 @@ import { richText } from '../../util/richText';
 import { createSlug } from '../../util/urlHelpers';
 import { isBookingProcessAlias } from '../../transactions/transaction';
 
-import { NamedLink, ResponsiveImage } from '../../components';
+import { AspectRatioWrapperMaybe, NamedLink, ResponsiveImage } from '../../components';
 
 import css from './ListingCard.module.css';
-import AspectRatioWrapperMaybe from '../AspectRatioWrapper/AspectRatioWrapperMaybe';
 
 const MIN_LENGTH_FOR_LONG_WORDS = 10;
 
@@ -39,6 +40,8 @@ const priceData = (price, currency, intl) => {
   return {};
 };
 
+const lazyLoadWhenVisible = createLazyLoader({ withDimensions: false });
+const LazyMasonryImage = lazyLoadWhenVisible(ResponsiveImage, { loadAfterInitialRendering: 3000 });
 const LazyImage = lazyLoadWithDimensions(ResponsiveImage, { loadAfterInitialRendering: 3000 });
 
 const PriceMaybe = props => {
@@ -76,6 +79,8 @@ const PriceMaybe = props => {
  * @param {string?} props.rootClassName overwrite components own css.root
  * @param {Object} props.listing API entity: listing or ownListing
  * @param {string?} props.renderSizes for img/srcset
+ * @param {string?} props.isFavorite is it a currentUser's favorite
+ * @param {Function?} props.onToggleFavorites
  * @param {Function?} props.setActiveListing
  * @returns {JSX.Element} listing card to be used in search result panel etc.
  */
@@ -89,6 +94,8 @@ export const ListingCard = props => {
     renderSizes,
     setActiveListing,
     hidePrice,
+    isFavorite,
+    onToggleFavorites,
     gridLayout,
   } = props;
   const classes = classNames(rootClassName || css.root, className);
@@ -126,11 +133,26 @@ export const ListingCard = props => {
       }
     : null;
 
-  const lazyLoadWhenVisible = createLazyLoader({ withDimensions: false });
-
-  const LazyMasonryImage = lazyLoadWhenVisible(ResponsiveImage, {
-    loadAfterInitialRendering: 3000,
-  });
+  const toggleFavorites = event => {
+    event.preventDefault();
+    event.stopPropagation();
+    onToggleFavorites(isFavorite);
+  };
+  const favoriteButton = isFavorite ? (
+    <AButton
+      type="text"
+      icon={<HeartFilled style={{ fontSize: '30px' }} />}
+      onClick={toggleFavorites}
+      className={css.favoriteButton}
+    />
+  ) : (
+    <AButton
+      type="text"
+      icon={<HeartOutlined style={{ fontSize: '30px' }} />}
+      onClick={toggleFavorites}
+      className={css.favoriteButton}
+    />
+  );
 
   return (
     <NamedLink className={classes} name="ListingPage" params={{ id, slug }}>
@@ -160,6 +182,11 @@ export const ListingCard = props => {
           </div>
         )}
       </AspectRatioWrapperMaybe>
+      <div className={css.menubarWrapper}>
+        <div className={css.menubarGradient} />
+        <div className={css.menubar}>{favoriteButton}</div>
+      </div>
+
       <div className={css.info}>
         <PriceMaybe
           price={price}
@@ -168,7 +195,6 @@ export const ListingCard = props => {
           intl={intl}
           hidePrice={hidePrice}
         />
-
         {isCreativeProfile && (
           <div className={css.mainInfo}>
             <div className={css.title}>

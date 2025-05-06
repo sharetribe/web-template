@@ -1,19 +1,27 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
+import { handleToggleFavorites } from '../../util/favorites';
 import { injectIntl, intlShape, FormattedMessage } from '../../util/reactIntl';
 import { createResourceLocatorString } from '../../util/routes';
-import { LISTING_GRID_DEFAULTS, LISTING_GRID_ROLE, propTypes } from '../../util/types';
+import {
+  GRID_STYLE_SQUARE,
+  LISTING_GRID_DEFAULTS,
+  LISTING_GRID_ROLE,
+  propTypes,
+} from '../../util/types';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
+import { fetchCurrentUser } from '../../ducks/user.duck';
 
 import { H3, Page, UserNav, LayoutSingleColumn, ListingTabs, ListingCard } from '../../components';
 
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
-import FooterContainer from '../../containers/FooterContainer/FooterContainer';
+import FooterContainer from '../FooterContainer/FooterContainer';
+import { updateProfile } from '../ProfileSettingsPage/ProfileSettingsPage.duck';
 
 import { getListingsById } from '../../ducks/marketplaceData.duck';
 
@@ -21,18 +29,23 @@ import css from './FavoriteListingsPage.module.css';
 
 export const FavoriteListingsPageComponent = props => {
   const {
+    currentUser,
     listings = [],
     pagination,
     queryInProgress,
     queryFavoritesError,
     queryParams,
+    onUpdateFavorites,
+    onFetchCurrentUser,
     scrollingDisabled,
     intl,
   } = props;
   const history = useHistory();
+  const location = useLocation();
   const routeConfiguration = useRouteConfiguration();
   const title = intl.formatMessage({ id: 'FavoriteListingsPage.title' });
   const defaultListingType = LISTING_GRID_DEFAULTS.TYPE(LISTING_GRID_ROLE.FAVORITE);
+  const currentUserFavorites = currentUser?.attributes?.profile?.privateData?.favorites || {};
 
   useEffect(() => {
     const validListingType = !queryParams.pub_listingType;
@@ -62,14 +75,34 @@ export const FavoriteListingsPageComponent = props => {
     history.push(destination);
   };
 
-  const listingRenderer = (listing, className, renderSizes) => {
+  const listingRenderer = (
+    listing,
+    className,
+    renderSizes,
+    index,
+    gridLayout = GRID_STYLE_SQUARE
+  ) => {
     const listingId = listing.id.uuid;
+    const listingType = listing.attributes?.publicData?.listingType;
+    const isFavorite = currentUserFavorites?.[listingType]?.includes(listingId);
+    const routingParams = { params: {}, history, routes: routeConfiguration };
+    const onToggleFavorites = handleToggleFavorites({
+      ...routingParams,
+      listingId,
+      listingType,
+      onUpdateFavorites,
+      onFetchCurrentUser,
+      location,
+    });
     return (
       <ListingCard
         key={listingId}
         className={className}
         listing={listing}
         renderSizes={renderSizes}
+        isFavorite={isFavorite}
+        onToggleFavorites={onToggleFavorites}
+        gridLayout={gridLayout}
       />
     );
   };
@@ -131,9 +164,10 @@ const mapStateToProps = state => {
     queryFavoritesError,
     queryParams,
   } = state.FavoriteListingsPage;
+  const { currentUser } = state.user;
   const listings = getListingsById(state, currentPageResultIds);
   return {
-    currentPageResultIds,
+    currentUser,
     listings,
     pagination,
     queryInProgress,
@@ -143,8 +177,13 @@ const mapStateToProps = state => {
   };
 };
 
+const mapDispatchToProps = dispatch => ({
+  onUpdateFavorites: payload => dispatch(updateProfile(payload)),
+  onFetchCurrentUser: () => dispatch(fetchCurrentUser({})),
+});
+
 const FavoriteListingsPage = compose(
-  connect(mapStateToProps),
+  connect(mapStateToProps, mapDispatchToProps),
   injectIntl
 )(FavoriteListingsPageComponent);
 

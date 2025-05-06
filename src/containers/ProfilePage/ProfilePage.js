@@ -23,6 +23,7 @@ import {
   isUserAuthorized,
   isCreativeSellerApproved,
 } from '../../util/userHelpers';
+import { handleToggleFavorites } from '../../util/favorites';
 
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 import { fetchCurrentUser } from '../../ducks/user.duck';
@@ -30,7 +31,6 @@ import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { Page, NamedRedirect } from '../../components';
 
 import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
-import { handleToggleFavorites } from '../../containers/ListingPage/ListingPage.shared';
 import { updateProfile } from '../../containers/ProfileSettingsPage/ProfileSettingsPage.duck';
 
 import BasicProfilePage from './BasicProfilePage';
@@ -164,9 +164,10 @@ export const ProfilePageComponent = props => {
   const creativeProfileId = creativeProfile?.id?.uuid;
   const currentUserFavorites = currentUser?.attributes?.profile?.privateData?.favorites || {};
   const isFavorite = currentUserFavorites?.[LISTING_TYPES.PROFILE]?.includes(creativeProfileId);
-  const commonParams = { params: { id: creativeProfileId }, history, routes: routeConfiguration };
+  const routingParams = { params: {}, history, routes: routeConfiguration };
   const onToggleFavorites = handleToggleFavorites({
-    ...commonParams,
+    ...routingParams,
+    listingId: creativeProfileId,
     listingType: LISTING_TYPES.PROFILE,
     onUpdateFavorites,
     onFetchCurrentUser,
@@ -205,6 +206,9 @@ export const ProfilePageComponent = props => {
         listings={listings}
         reviews={reviews}
         pathParams={pathParams}
+        currentUserFavorites={currentUserFavorites}
+        onUpdateFavorites={onUpdateFavorites}
+        onFetchCurrentUser={onFetchCurrentUser}
       />
     </Page>
   );

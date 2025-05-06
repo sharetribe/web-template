@@ -8,7 +8,12 @@ import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
 
 import { createResourceLocatorString, pathByRouteName } from '../../util/routes';
-import { GRID_STYLE_SQUARE, LISTING_GRID_DEFAULTS, LISTING_GRID_ROLE, LISTING_TAB_TYPES } from '../../util/types';
+import {
+  GRID_STYLE_SQUARE,
+  LISTING_GRID_DEFAULTS,
+  LISTING_GRID_ROLE,
+  LISTING_TAB_TYPES,
+} from '../../util/types';
 import { hasPermissionToPostListings } from '../../util/userHelpers';
 import { NO_ACCESS_PAGE_POST_LISTINGS } from '../../util/urlHelpers';
 
@@ -26,7 +31,12 @@ import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import DiscardDraftModal from './DiscardDraftModal/DiscardDraftModal';
-import { closeListing, discardDraft, getOwnListingsById, openListing } from './ManageListingsPage.duck';
+import {
+  closeListing,
+  discardDraft,
+  getOwnListingsById,
+  openListing,
+} from './ManageListingsPage.duck';
 import { getCurrentCategory, getItems, getLinks, routeHandler } from './utils';
 
 import css from './ManageListingsPage.module.css';

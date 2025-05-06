@@ -25,7 +25,8 @@ function script() {
   }
 
   async function profileListingSync(listingId, authorId, listing, previousValues) {
-    const { creativeSpecialty, genres, location, skills } = listing.attributes.publicData || {};
+    const { creativeSpecialty = [], genres = [], skills = [], location } =
+      listing.attributes.publicData || {};
     const {
       creativeSpecialty: previousCreativeSpecialty,
       genres: previousGenres,
@@ -68,13 +69,7 @@ function script() {
       const isValidListingType = listingType === LISTING_TYPES.PROFILE;
       try {
         if (isValidListingType) {
-          // await profileListingSync(listingId, authorId, listing, previousValues);
-          // console.warn(`\n[notifyProfileListingUpdated] - listingId: ${listingId}`);
-          // console.warn(`\n[notifyProfileListingUpdated] - authorId: ${authorId}`);
-          // console.warn('\n[notifyProfileListingUpdated] - listing:', listing);
-          // console.warn('\n[notifyProfileListingUpdated] - previousValues:', previousValues);
-          const result = await profileListingSync(listingId, authorId, listing, previousValues);
-          console.warn('\n[notifyProfileListingUpdated] - END! | result:', result);
+          await profileListingSync(listingId, authorId, listing, previousValues);
         }
       } catch (error) {
         slackProfileListingUpdateErrorWorkflow(authorId);
