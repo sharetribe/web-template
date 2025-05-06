@@ -31,6 +31,10 @@ const calculateFlatFeeInCurrency = async ({
  * Convert to exchangeCurrency from default
  */
 const calculateFlatFeeToCurrency = async ({ currency, flatFee }) => {
+  if (currency === DEFAULT_CURRENCY) {
+    return flatFee;
+  }
+
   const exchangeRate = await getExchangeRate();
 
   const currencyExchangeRate = exchangeRate[currency] || 1;
