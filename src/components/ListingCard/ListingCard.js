@@ -119,7 +119,7 @@ export const ListingCard = props => {
     aspectHeight = 1,
     variantPrefix = 'listing-card',
   } = config.layout.listingImage;
-  const isSquareLayout = gridLayout === GRID_STYLE_SQUARE;
+  const isSquareLayout = gridLayout === GRID_STYLE_SQUARE || isCreativeProfile;
   const variants = firstImage
     ? Object.keys(firstImage?.attributes?.variants).filter(k =>
         k.startsWith(isSquareLayout ? variantPrefix : 'scaled-medium')
