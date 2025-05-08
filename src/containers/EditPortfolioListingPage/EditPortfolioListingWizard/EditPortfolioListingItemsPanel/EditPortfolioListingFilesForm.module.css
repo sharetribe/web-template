@@ -94,3 +94,17 @@
   gap: 10px;
   justify-content: flex-start;
 }
+
+
+.dragHandle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: grab;
+  font-size: 20px;
+  padding: 4px;
+  user-select: none;
+  z-index: 99;
+  color: var(--colorWhite);
+  background-color: rgba(0, 0, 0, 0.5);
+}

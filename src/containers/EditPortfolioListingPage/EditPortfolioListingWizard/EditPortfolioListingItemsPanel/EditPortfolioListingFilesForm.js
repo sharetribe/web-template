@@ -7,7 +7,7 @@ import { FieldArray } from 'react-final-form-arrays';
 import classNames from 'classnames';
 import { FormattedMessage, injectIntl } from '../../../../util/reactIntl';
 import { isUploadImageOverLimitError } from '../../../../util/errors';
-import { nonEmptyArray, composeValidators } from '../../../../util/validators';
+import { composeValidators, nonEmptyArray } from '../../../../util/validators';
 import { AspectRatioWrapper, Button, Form } from '../../../../components';
 import ListingImage, { RemoveImageButton } from './ListingImage';
 import css from './EditPortfolioListingFilesForm.module.css';
@@ -21,6 +21,10 @@ import {
 } from '../../EditPortfolioListingPage.duck';
 import { LISTING_STATE_DRAFT } from '../../../../util/types';
 import VideoPlayer from '../../../../components/VideoPlayer/VideoPlayer';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import SortableImage from './SortableImage';
+import { closestCenter, DndContext, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import IconDotsVertical from '../../../../components/IconDotsVertical/IconDotsVertical';
 
 const ImageUploadError = ({ uploadOverLimit, uploadImageError }) =>
   uploadOverLimit ? (
@@ -147,6 +151,14 @@ const EditPortfolioListingFilesFormComponent = props => {
     dispatch(removeImageFromListing(imageId));
   };
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    })
+  );
+
   return (
     <FinalForm
       onSubmit={onPublishHandler}
@@ -184,25 +196,55 @@ const EditPortfolioListingFilesFormComponent = props => {
                   )
                 )}
               >
-                {({ fields }) =>
-                  fields.map((name, index) => {
-                    const image = fields.value?.[index];
-                    const imageId = image.id || image.id.uuid;
-                    return (
-                      <FieldListingImage
-                        key={imageId}
-                        name={name}
-                        intl={intl}
-                        listingId={listingId}
-                        image={image}
-                        onRemoveImage={() => {
-                          fields.remove(index);
-                          handleRemoveImage(imageId);
-                        }}
-                      />
-                    );
-                  })
-                }
+                {({ fields }) => {
+                  const imageIds = fields.value.map(image => image.id?.uuid || image.id);
+                  return (
+                    <DndContext
+                      sensors={sensors}
+                      collisionDetection={closestCenter}
+                      onDragEnd={event => {
+                        const { active, over } = event;
+                        if (active.id !== over?.id) {
+                          const oldIndex = fields.value.findIndex(
+                            img => (img.id?.uuid || img.id) === active.id
+                          );
+                          const newIndex = fields.value.findIndex(
+                            img => (img.id?.uuid || img.id) === over.id
+                          );
+                          fields.move(oldIndex, newIndex);
+                        }
+                      }}
+                    >
+                      <SortableContext items={imageIds} strategy={verticalListSortingStrategy}>
+                        {imageIds.map((id, index) => {
+                          const name = `images[${index}]`;
+                          const image = fields.value[index];
+                          return (
+                            <SortableImage
+                              key={id}
+                              id={id}
+                              dragHandle={({ listeners, attributes }) => (
+                                <span {...listeners} {...attributes} className={css.dragHandle}>
+                                  <IconDotsVertical />
+                                </span>
+                              )}
+                            >
+                              <FieldListingImage
+                                name={name}
+                                intl={intl}
+                                image={image}
+                                onRemoveImage={() => {
+                                  fields.remove(index);
+                                  handleRemoveImage(id);
+                                }}
+                              />
+                            </SortableImage>
+                          );
+                        })}
+                      </SortableContext>
+                    </DndContext>
+                  );
+                }}
               </FieldArray>
 
               <FieldArray name="videos">
