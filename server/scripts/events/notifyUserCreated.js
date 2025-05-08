@@ -146,6 +146,7 @@ function script() {
       const isBuyer = userType === USER_TYPES.BUYER;
       const isSeller = userType === USER_TYPES.SELLER;
       const isBrand = userType === USER_TYPES.BRAND;
+      const isProd = process.env.NODE_ENV === 'production';
       const eventUser = { id: userId, email };
       const eventTraits = {
         firstName,
@@ -154,6 +155,7 @@ function script() {
         creatorFoundingMember: 'NO',
         subscribedToNewsletter: 'NO',
         communityUser: 'NO',
+        isProdUser: isProd ? 'YES' : 'NO',
         ...(isSeller ? { sellerStatus: SELLER_STATUS.APPLIED } : {}),
       };
       identifyUserEvent(eventUser, eventTraits);
