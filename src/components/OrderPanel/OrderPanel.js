@@ -32,7 +32,7 @@ import {
   resolveLatestProcessName,
 } from '../../transactions/transaction';
 
-import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2 } from '../../components';
+import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2, Button, Seco, SecondaryButtonndaryButton } from '../../components';
 
 import css from './OrderPanel.module.css';
 // [SKYFARER MERGE: +useConfiguration, +voucherifyBackend]
@@ -235,6 +235,7 @@ const OrderPanel = props => {
     marketplaceName,
     fetchLineItemsInProgress,
     fetchLineItemsError,
+    onToggleFavorites,
     payoutDetailsWarning,
     reschedule, // [SKYFARER]
   } = props;
@@ -354,6 +355,25 @@ const OrderPanel = props => {
     }
   }, [currentUser])
 
+  const isFavorite = currentUser?.attributes.profile.privateData.favorites?.includes(
+    listing.id.uuid
+  );
+  
+  const toggleFavorites = () => onToggleFavorites(isFavorite);
+  
+  const favoriteButton = isFavorite ? (
+    <SecondaryButton
+      className={css.favoriteButton}
+      onClick={toggleFavorites}
+    >
+      <FormattedMessage id="OrderPanel.unfavoriteButton" />
+    </SecondaryButton>
+  ) : (
+    <Button className={css.favoriteButton} onClick={toggleFavorites}>
+      <FormattedMessage id="OrderPanel.addFavoriteButton" />
+    </Button>
+  );
+
   return (
     <div className={classes}>
       <ModalInMobile
@@ -391,6 +411,8 @@ const OrderPanel = props => {
             <FormattedMessage id="OrderPanel.author" values={{ name: authorDisplayName }} />
           </span>
         </div>
+
+        {favoriteButton} { }
 
         { // [SKYFARER]
           reschedule && (
