@@ -32,7 +32,7 @@ import {
   resolveLatestProcessName,
 } from '../../transactions/transaction';
 
-import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2, Button, Seco, SecondaryButtonndaryButton } from '../../components';
+import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2, Button, SecondaryButton } from '../../components';
 
 import css from './OrderPanel.module.css';
 // [SKYFARER MERGE: +useConfiguration, +voucherifyBackend]
@@ -400,7 +400,6 @@ const OrderPanel = props => {
     </Button>
   );
   
-
   return (
     <div className={classes}>
       <ModalInMobile
