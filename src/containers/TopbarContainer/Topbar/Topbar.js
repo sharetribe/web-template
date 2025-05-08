@@ -25,6 +25,7 @@ import TopbarMobileMenu from './TopbarMobileMenu/TopbarMobileMenu';
 import TopbarDesktop from './TopbarDesktop/TopbarDesktop';
 
 import css from './Topbar.module.css';
+import { showCreateListingLinkForUser } from '../../../util/userHelpers';
 
 const MAX_MOBILE_SCREEN_WIDTH = 1024;
 
@@ -195,6 +196,8 @@ const TopbarComponent = props => {
     });
   };
 
+  const showCreateListingsLink = showCreateListingLinkForUser(config, currentUser);
+
   const { mobilemenu, mobilesearch, keywords, address, origin, bounds } = parse(location.search, {
     latlng: ['origin'],
     latlngBounds: ['bounds'],
@@ -223,6 +226,7 @@ const TopbarComponent = props => {
       notificationCount={notificationCount}
       currentPage={resolvedCurrentPage}
       customLinks={customLinks}
+      showCreateListingsLink={showCreateListingsLink}
     />
   );
 
@@ -314,6 +318,7 @@ const TopbarComponent = props => {
           config={config}
           customLinks={customLinks}
           showSearchForm={showSearchForm}
+          showCreateListingsLink={showCreateListingsLink}
         />
       </div>
       <Modal

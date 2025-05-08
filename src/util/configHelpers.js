@@ -1460,6 +1460,34 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     validHostedCategories
   );
 
+  // TODO: REMOVE ONCE CONFIG COMES FROM CONSOLE!
+  // ======== dev config starts
+  const postListingsTopBar = {
+    ...configAsset.topbar,
+    createListingsLink: {
+      display: false,
+    },
+  };
+
+  const mapUserTypeVisibility = (userType, idx) => ({
+    ...userType,
+    visibility: {
+      showCreateListings: (idx + 1) % 2 !== 0,
+    },
+  });
+
+  const postListingsUserConf = {
+    ...configAsset,
+    userTypes: {
+      ...configAsset.userTypes,
+      userTypes: configAsset.userTypes.userTypes.map(mapUserTypeVisibility),
+    },
+  };
+
+  console.log({ postListingsTopBar }, { postListingsUserConf });
+
+  // ======== dev config ends
+
   return {
     // Use default configs as a starting point for app config.
     ...defaultConfigs,
@@ -1494,7 +1522,8 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     layout: mergeLayouts(configAsset.layout, defaultConfigs.layout),
 
     // User configuration comes entirely from hosted assets by default.
-    user: mergeUserConfig(configAsset, defaultConfigs),
+    // user: mergeUserConfig(configAsset, defaultConfigs), // TODO REVERT ONCE CONFIG UPDATED
+    user: mergeUserConfig(postListingsUserConf, defaultConfigs),
 
     // Set category configuration (includes fixed key, array of categories etc.
     categoryConfiguration,
@@ -1524,7 +1553,8 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     // - Custom links are links specified by marketplace operator (both internal and external)
     //   - Topbar tries to fit primary links to the visible space,
     //     but secondary links are always behind dropdown menu.
-    topbar: configAsset.topbar, // defaultConfigs.topbar,
+    // topbar: configAsset.topbar, // defaultConfigs.topbar, // TODO REVERT ONCE CONFIG UPDATED
+    topbar: postListingsTopBar, // defaultConfigs.topbar,
 
     // Include hosted footer config, if it exists
     // Note: if footer asset is not set, Footer is not rendered.

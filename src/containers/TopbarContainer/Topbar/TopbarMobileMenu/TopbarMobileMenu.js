@@ -76,6 +76,7 @@ const TopbarMobileMenu = props => {
     notificationCount = 0,
     customLinks,
     onLogout,
+    showCreateListingsLink,
   } = props;
 
   const user = ensureCurrentUser(currentUser);
@@ -89,6 +90,12 @@ const TopbarMobileMenu = props => {
       />
     );
   });
+
+  const createListingsLinkMaybe = showCreateListingsLink ? (
+    <NamedLink className={css.createNewListingLink} name="NewListingPage">
+      <FormattedMessage id="TopbarMobileMenu.newListingLink" />
+    </NamedLink>
+  ) : null;
 
   if (!isAuthenticated) {
     const signup = (
@@ -122,11 +129,7 @@ const TopbarMobileMenu = props => {
 
           <div className={css.spacer} />
         </div>
-        <div className={css.footer}>
-          <NamedLink className={css.createNewListingLink} name="NewListingPage">
-            <FormattedMessage id="TopbarMobileMenu.newListingLink" />
-          </NamedLink>
-        </div>
+        <div className={css.footer}>{createListingsLinkMaybe}</div>
       </div>
     );
   }
@@ -187,11 +190,7 @@ const TopbarMobileMenu = props => {
         <div className={css.customLinksWrapper}>{extraLinks}</div>
         <div className={css.spacer} />
       </div>
-      <div className={css.footer}>
-        <NamedLink className={css.createNewListingLink} name="NewListingPage">
-          <FormattedMessage id="TopbarMobileMenu.newListingLink" />
-        </NamedLink>
-      </div>
+      <div className={css.footer}>{createListingsLinkMaybe}</div>
     </div>
   );
 };
