@@ -4,3 +4,7 @@
 .selectError {
   border: var(--borderErrorField);
 }
+
+.labelDisabled {
+  color: var(--colorGrey500);
+}

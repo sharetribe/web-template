@@ -186,7 +186,7 @@ export const handleSubmit = parameters => async values => { // [SKYFARER MERGE: 
     bookingEndTime,
     bookingStartDate, // not relevant (omit)
     bookingEndDate, // not relevant (omit)
-    priceVariant, // relevant for fixed duration bookings
+    priceVariantName, // relevant for bookings
     quantity: quantityRaw,
     seats: seatsRaw,
     deliveryMethod,
@@ -208,8 +208,8 @@ export const handleSubmit = parameters => async values => { // [SKYFARER MERGE: 
         },
       }
     : {};
-  // priceVariant is relevant for bookings with fixed duration
-  const priceVariantMaybe = priceVariant ? { priceVariant } : {};
+  // priceVariantName is relevant for bookings
+  const priceVariantNameMaybe = priceVariantName ? { priceVariantName } : {};
   const quantity = Number.parseInt(quantityRaw, 10);
   const quantityMaybe = Number.isInteger(quantity) ? { quantity } : {};
   const seats = Number.parseInt(seatsRaw, 10);
@@ -220,7 +220,7 @@ export const handleSubmit = parameters => async values => { // [SKYFARER MERGE: 
     listing,
     orderData: {
       ...bookingMaybe,
-      ...priceVariantMaybe,
+      ...priceVariantNameMaybe,
       ...quantityMaybe,
       ...seatsMaybe,
       ...deliveryMethodMaybe,

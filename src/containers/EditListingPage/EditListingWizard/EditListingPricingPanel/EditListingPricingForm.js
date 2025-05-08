@@ -9,7 +9,7 @@ import { FormattedMessage, useIntl } from '../../../../util/reactIntl';
 import * as validators from '../../../../util/validators';
 import { formatMoney } from '../../../../util/currency';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
-import { FIXED } from '../../../../transactions/transaction';
+import { FIXED, isBookingProcess } from '../../../../transactions/transaction';
 
 // Import shared components
 import { Button, Form, FieldCurrencyInput } from '../../../../components';
@@ -69,7 +69,12 @@ const ErrorMessages = props => {
  * @param {string} [props.formId] - The form id
  * @param {string} [props.className] - Custom class that extends the default class for the root element
  * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
- * @param {string} props.unitType - The unit type
+ * @param {string} props.unitType - The unitType from listing.attributes.publicData
+ * @param {Object} [props.listingTypeConfig] - The listing type config that matches with listingType on publicData.
+ * @param {Object} [props.listingTypeConfig.priceVariations] - The price variations config.
+ * @param {boolean} props.listingTypeConfig.priceVariations.enabled - Whether the price variations are enabled.
+ * @param {Object} [props.listingTypeConfig.transactionType] - The transaction type config.
+ * @param {string} props.listingTypeConfig.transactionType.process - The transaction process config.
  * @param {string} props.marketplaceCurrency - The marketplace currency
  * @param {number} [props.listingMinimumPriceSubUnits] - The listing minimum price sub units
  * @param {boolean} [props.autoFocus] - Whether the input should be focused
@@ -91,6 +96,7 @@ export const EditListingPricingForm = props => (
     render={formRenderProps => {
       const {
         formId = 'EditListingPricingForm',
+        form: formApi,
         autoFocus,
         className,
         rootClassName,
@@ -99,6 +105,8 @@ export const EditListingPricingForm = props => (
         handleSubmit,
         marketplaceCurrency,
         unitType,
+        listingTypeConfig,
+        isPriceVariationsInUse,
         listingMinimumPriceSubUnits = 0,
         invalid,
         pristine,
@@ -106,6 +114,7 @@ export const EditListingPricingForm = props => (
         updated,
         updateInProgress = false,
         fetchErrors,
+        initialValues: formInitialValues,
         values: formValues,
       } = formRenderProps;
 
@@ -120,30 +129,30 @@ export const EditListingPricingForm = props => (
       const submitReady = (updated && pristine) || ready;
       const submitInProgress = updateInProgress;
       const submitDisabled = invalid || disabled || submitInProgress;
-      const isFixedLengthBooking = unitType === FIXED;
+      const { transactionType } = listingTypeConfig || {};
+      const { process } = transactionType || {};
+      const isBooking = isBookingProcess(process);
+
+      const isFixedLengthBooking = isBooking && unitType === FIXED;
+      const isBookingPriceVariationsInUse = isBooking && isPriceVariationsInUse;
+      const isUsingPriceVariants = isFixedLengthBooking || isBookingPriceVariationsInUse;
 
       return (
         <Form onSubmit={handleSubmit} className={classes}>
           <ErrorMessages fetchErrors={fetchErrors} />
 
-          {isFixedLengthBooking ? (
-            <>
-              <BookingPriceVariants
-                formId={formId}
-                autoFocus={autoFocus}
-                className={css.input}
-                marketplaceCurrency={marketplaceCurrency}
-                unitType={unitType}
-                listingMinimumPriceSubUnits={listingMinimumPriceSubUnits}
-              />
-
-              <StartTimeInterval
-                name="startTimeInterval"
-                idPrefix={`${formId}_startTimeInterval`}
-                formValues={formValues}
-                pristine={pristine}
-              />
-            </>
+          {isUsingPriceVariants ? (
+            <BookingPriceVariants
+              formId={formId}
+              formApi={formApi}
+              autoFocus={autoFocus}
+              className={css.input}
+              marketplaceCurrency={marketplaceCurrency}
+              unitType={unitType}
+              isPriceVariationsInUse={isBookingPriceVariationsInUse}
+              initialLengthOfPriceVariants={formInitialValues?.priceVariants?.length || 0}
+              listingMinimumPriceSubUnits={listingMinimumPriceSubUnits}
+            />
           ) : (
             <FieldCurrencyInput
               id={`${formId}price`}
@@ -161,6 +170,15 @@ export const EditListingPricingForm = props => (
               validate={priceValidators}
             />
           )}
+
+          {isFixedLengthBooking ? (
+            <StartTimeInterval
+              name="startTimeInterval"
+              idPrefix={`${formId}_startTimeInterval`}
+              formValues={formValues}
+              pristine={pristine}
+            />
+          ) : null}
 
           <Button
             className={css.submitButton}

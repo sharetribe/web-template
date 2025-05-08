@@ -231,6 +231,7 @@ export const TransactionPageComponent = props => {
       bookingDates,
       bookingStartTime,
       bookingEndTime,
+      priceVariantName, // relevant for bookings
       quantity: quantityRaw,
       seats: seatsRaw,
       deliveryMethod,
@@ -253,6 +254,8 @@ export const TransactionPageComponent = props => {
         }
       : {};
 
+    // priceVariantName is relevant for bookings
+    const priceVariantNameMaybe = priceVariantName ? { priceVariantName } : {};
     const quantity = Number.parseInt(quantityRaw, 10);
     const quantityMaybe = Number.isInteger(quantity) ? { quantity } : {};
     const seats = Number.parseInt(seatsRaw, 10);
@@ -265,6 +268,7 @@ export const TransactionPageComponent = props => {
       transaction,
       orderData: {
         ...bookingMaybe,
+        ...priceVariantNameMaybe,
         ...quantityMaybe,
         ...seatsMaybe,
         ...deliveryMethodMaybe,
