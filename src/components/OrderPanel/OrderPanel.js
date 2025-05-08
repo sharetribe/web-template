@@ -360,21 +360,22 @@ const OrderPanel = props => {
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       style={{
-        height: '28px',       // increase as needed
+        height: '28px',
         width: '32px',
         marginLeft: '6px',
         marginTop: '-8px',
         verticalAlign: 'middle',
-        fill: 'hotpink',
+        fill: filled ? 'red' : 'none',
+        stroke: filled ? 'black' : 'black',
+        strokeWidth: 1,
+        transition: 'all 0.2s ease',
       }}
     >
       <path d={
         filled
-          ? "M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 \
-              2 6.5 3.5 5 5.5 5c1.54 0 3.04.99 \
-              3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5 \
-              18.5 5 20 6.5 20 8.5c0 3.78-3.4 6.86-8.55 \
-              11.54L12 21.35z"
+          ? "M12.1 8.64l-.1.1-.11-.1C10.14 6.6 7.4 6.6 5.5 8.5 \
+              c-1.9 1.9-1.9 4.63 0 6.54l6.6 6.6 6.6-6.6 \
+              c1.9-1.9 1.9-4.63 0-6.54-1.9-1.9-4.64-1.9-6.54 0z"
           : "M12.1 8.64l-.1.1-.11-.1C10.14 6.6 7.4 6.6 5.5 8.5 \
               c-1.9 1.9-1.9 4.63 0 6.54l6.6 6.6 6.6-6.6 \
               c1.9-1.9 1.9-4.63 0-6.54-1.9-1.9-4.64-1.9-6.54 0z"
@@ -388,7 +389,7 @@ const OrderPanel = props => {
   
   const toggleFavorites = () => onToggleFavorites(isFavorite);
   
-  const favoriteButton = isFavorite ? (
+  /*const favoriteButton = isFavorite ? (
     <SecondaryButton className={css.favoriteButton} onClick={toggleFavorites}>
       <FormattedMessage id="OrderPanel.unfavoriteButton" />
       <HeartIcon filled />
@@ -398,6 +399,17 @@ const OrderPanel = props => {
       <FormattedMessage id="OrderPanel.addFavoriteButton" />
       <HeartIcon filled={false} />
     </Button>
+  );*/
+
+  const buttonClass = classNames(css.favoriteButton, {
+    [css.favorited]: isFavorite,
+  });
+
+  const favoriteButton = (
+    <SecondaryButton className={buttonClass} onClick={toggleFavorites}>
+      <FormattedMessage id={isFavorite ? "OrderPanel.unfavoriteButton" : "OrderPanel.addFavoriteButton"} />
+      <HeartIcon filled={isFavorite} />
+    </SecondaryButton>
   );
   
   return (
