@@ -5,9 +5,16 @@ import { NamedLink } from '../../../components';
 import css from './NoSearchResultsMaybe.module.css';
 
 const NoSearchResultsMaybe = props => {
-  const { listingsAreLoaded, totalItems, location, resetAll } = props;
+  const { listingsAreLoaded, totalItems, location, resetAll, showCreateListingsLink } = props;
   const hasNoResult = listingsAreLoaded && totalItems === 0;
   const hasSearchParams = location.search?.length > 0;
+
+  const createListingLinkMaybe = showCreateListingsLink ? (
+    <NamedLink className={css.createListingLink} name="NewListingPage">
+      <FormattedMessage id="SearchPage.createListing" />
+    </NamedLink>
+  ) : null;
+
   return hasNoResult ? (
     <div className={css.noSearchResults}>
       <FormattedMessage id="SearchPage.noResults" />
@@ -17,11 +24,7 @@ const NoSearchResultsMaybe = props => {
           <FormattedMessage id={'SearchPage.resetAllFilters'} />
         </button>
       ) : null}
-      <p>
-        <NamedLink className={css.createListingLink} name="NewListingPage">
-          <FormattedMessage id="SearchPage.createListing" />
-        </NamedLink>
-      </p>
+      <p>{createListingLinkMaybe}</p>
     </div>
   ) : null;
 };
