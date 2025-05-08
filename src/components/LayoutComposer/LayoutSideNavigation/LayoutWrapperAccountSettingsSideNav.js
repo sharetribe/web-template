@@ -86,7 +86,34 @@ const LayoutWrapperAccountSettingsSideNav = props => {
     }
   }, [mounted]);
 
-  const { currentPage } = props;
+  const { currentPage, showPaymentMethods, showPayoutDetails } = props;
+  const payoutDetailsMaybe = showPayoutDetails
+    ? [
+        {
+          text: <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.paymentsTabTitle" />,
+          selected: currentPage === 'StripePayoutPage',
+          id: 'StripePayoutPageTab',
+          linkProps: {
+            name: 'StripePayoutPage',
+          },
+        },
+      ]
+    : [];
+
+  const paymentMethodsMaybe = showPaymentMethods
+    ? [
+        {
+          text: (
+            <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.paymentMethodsTabTitle" />
+          ),
+          selected: currentPage === 'PaymentMethodsPage',
+          id: 'PaymentMethodsPageTab',
+          linkProps: {
+            name: 'PaymentMethodsPage',
+          },
+        },
+      ]
+    : [];
 
   const tabs = [
     {
@@ -105,22 +132,8 @@ const LayoutWrapperAccountSettingsSideNav = props => {
         name: 'PasswordChangePage',
       },
     },
-    {
-      text: <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.paymentsTabTitle" />,
-      selected: currentPage === 'StripePayoutPage',
-      id: 'StripePayoutPageTab',
-      linkProps: {
-        name: 'StripePayoutPage',
-      },
-    },
-    {
-      text: <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.paymentMethodsTabTitle" />,
-      selected: currentPage === 'PaymentMethodsPage',
-      id: 'PaymentMethodsPageTab',
-      linkProps: {
-        name: 'PaymentMethodsPage',
-      },
-    },
+    ...payoutDetailsMaybe,
+    ...paymentMethodsMaybe,
   ];
 
   return <TabNav rootClassName={css.tabs} tabRootClassName={css.tab} tabs={tabs} />;

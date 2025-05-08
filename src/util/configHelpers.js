@@ -1473,6 +1473,8 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     ...userType,
     visibility: {
       showCreateListings: (idx + 1) % 2 !== 0,
+      showPayoutDetails: (idx + 1) % 2 !== 0,
+      showPaymentMethods: (idx + 1) % 3 !== 1,
     },
   });
 

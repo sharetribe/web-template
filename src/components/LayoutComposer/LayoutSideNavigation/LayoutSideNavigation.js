@@ -37,8 +37,11 @@ const LayoutSideNavigation = props => {
     sideNav: sideNavContent,
     useAccountSettingsNav,
     currentPage,
+    showPayoutDetails,
+    showPaymentMethods,
     ...rest
   } = props;
+  console.log({ props });
 
   const classes = classNames(rootClassName || css.root, className);
   const containerClasses = containerClassName || css.container;
@@ -63,7 +66,11 @@ const LayoutSideNavigation = props => {
             <Main as="div" className={containerClasses}>
               <aside className={classNames(css.sideNav, sideNavClassName)}>
                 {useAccountSettingsNav ? (
-                  <LayoutWrapperAccountSettingsSideNav currentPage={currentPage} />
+                  <LayoutWrapperAccountSettingsSideNav
+                    currentPage={currentPage}
+                    showPaymentMethods={showPaymentMethods}
+                    showPayoutDetails={showPayoutDetails}
+                  />
                 ) : null}
                 {sideNavContent}
               </aside>

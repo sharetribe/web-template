@@ -216,3 +216,21 @@ export const showCreateListingLinkForUser = (config, currentUser) => {
     ? currentUserTypeConfig?.visibility?.showCreateListings
     : topbar.createListingsLink?.display;
 };
+
+/**
+ * Check if payout details tab and payout methods tab should be shown for the user
+ * @param {Object} config Marketplace configuration
+ * @param {*} currentUser API entity
+ * @returns {Object} { showPayoutDetails: Boolean, showPaymentMethods: boolean }
+ */
+export const showPaymentDetailsForUser = (config, currentUser) => {
+  const { userTypes } = config.user;
+  const currentUserTypeConfig = userTypes.find(
+    ut => ut.userType === currentUser?.attributes?.profile?.publicData?.userType
+  );
+
+  return (currentUser && currentUserTypeConfig?.visibility) || {
+    showPaymentMethods: true,
+    showPayoutDetails: true,
+  };
+};

@@ -6,7 +6,7 @@ import { useConfiguration } from '../../context/configurationContext.js';
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { ensureCurrentUser, ensureStripeCustomer, ensurePaymentMethodCard } from '../../util/data';
 import { propTypes } from '../../util/types';
-import { showCreateListingLinkForUser } from '../../util/userHelpers.js';
+import { showCreateListingLinkForUser, showPaymentDetailsForUser } from '../../util/userHelpers.js';
 import { savePaymentMethod, deletePaymentMethod } from '../../ducks/paymentMethods.duck';
 import { handleCardSetup } from '../../ducks/stripe.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
@@ -163,6 +163,7 @@ const PaymentMethodsPageComponent = props => {
   const showCardDetails = !!hasDefaultPaymentMethod;
 
   const showManageListingsLink = showCreateListingLinkForUser(config, currentUser);
+  const { showPayoutDetails, showPaymentMethods } = showPaymentDetailsForUser(config, currentUser);
 
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
@@ -182,6 +183,8 @@ const PaymentMethodsPageComponent = props => {
         sideNav={null}
         useAccountSettingsNav
         currentPage="PaymentMethodsPage"
+        showPaymentMethods={showPaymentMethods}
+        showPayoutDetails={showPayoutDetails}
         footer={<FooterContainer />}
       >
         <div className={css.content}>
