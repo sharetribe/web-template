@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { useConfiguration } from '../../../context/configurationContext';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
@@ -65,6 +65,7 @@ function SellerProfilePage({
 }) {
   const routeConfiguration = useRouteConfiguration();
   const config = useConfiguration();
+  const location = useLocation();
   const history = useHistory();
   const intl = useIntl();
 
