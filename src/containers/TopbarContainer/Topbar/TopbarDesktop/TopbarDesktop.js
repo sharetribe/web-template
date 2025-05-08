@@ -142,6 +142,7 @@ const TopbarDesktop = props => {
     onSearchSubmit,
     initialSearchFormValues = {},
     showSearchForm,
+    showCreateListingsLink,
   } = props;
   const [mounted, setMounted] = useState(false);
 
@@ -201,6 +202,7 @@ const TopbarDesktop = props => {
         customLinks={customLinks}
         intl={intl}
         hasClientSideContentReady={authenticatedOnClientSide || !isAuthenticatedOrJustHydrated}
+        showCreateListingsLink={showCreateListingsLink}
       />
 
       {inboxLinkMaybe}
