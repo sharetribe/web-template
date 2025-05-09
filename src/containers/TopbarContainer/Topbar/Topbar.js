@@ -263,7 +263,8 @@ const TopbarComponent = props => {
   // the current page.
   const showSearchOnAllPages = searchFormDisplay === SEARCH_DISPLAY_ALWAYS;
   const showSearchOnSearchPage =
-    searchFormDisplay === SEARCH_DISPLAY_ONLY_SEARCH_PAGE && resolvedCurrentPage === 'SearchPage';
+    searchFormDisplay === SEARCH_DISPLAY_ONLY_SEARCH_PAGE &&
+    ['SearchPage', 'SearchPageWithListingType'].includes(resolvedCurrentPage);
   const showSearchNotOnLandingPage =
     searchFormDisplay === SEARCH_DISPLAY_NOT_LANDING_PAGE && resolvedCurrentPage !== 'LandingPage';
 

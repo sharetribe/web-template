@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] Handle multiple search page routes outside search page and clarify path param usage
+  [#605](https://github.com/sharetribe/web-template/pull/605)
+
 ## [v8.3.1] 2025-05-06
 
 - [fix] Fix listing type path param usage
