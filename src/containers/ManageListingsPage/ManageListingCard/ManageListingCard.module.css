@@ -188,28 +188,21 @@
 }
 
 .price {
+  composes: textSmall from global;
+
   /* Layout */
   display: flex;
   flex-direction: row;
   align-items: baseline;
   flex-shrink: 0;
-
-  padding-top: 4px;
-  padding-bottom: 2px;
-
-  @media (--viewportMedium) {
-    padding-top: 0;
-    padding-bottom: 0;
-  }
+  margin-bottom: 4px;
+  color: var(--colorGrey700);
 }
 
 .priceValue {
   /* Font */
-  composes: p from global;
   font-weight: var(--fontWeightSemiBold);
   color: var(--marketplaceColor);
-
-  margin-right: 4px;
 
   /* Remove default margins from font */
   margin-top: 0;
@@ -223,16 +216,14 @@
 
 .perUnit {
   /* Font */
-  composes: marketplaceTinyFontStyles from global;
-  color: var(--colorGrey700);
+  font-weight: var(--fontWeightSemiBold);
+  color: var(--marketplaceColor);
 
   /* Remove default margins from font */
   margin-top: 0;
   margin-bottom: 0;
-}
 
-@media (--viewportMedium) {
-  .perUnit {
+  @media (--viewportMedium) {
     margin-top: 0;
     margin-bottom: 0;
   }

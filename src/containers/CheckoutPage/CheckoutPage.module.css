@@ -155,6 +155,25 @@
   }
 }
 
+.bookingPriceVariant {
+  margin-bottom: 16px;
+}
+
+.bookingPriceVariantMobile {
+  margin-bottom: 12px;
+
+  @media (--viewportLarge) {
+    display: none;
+  }
+}
+
+.priceVariantNameMobile {
+  composes: p from global;
+  font-weight: var(--fontWeightBold);
+  padding: 0;
+  margin-bottom: 16px;
+}
+
 .priceBreakdownContainer {
   padding: 0 24px;
   margin-bottom: 37px;

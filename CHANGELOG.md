@@ -14,6 +14,44 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+## [v8.3.0] 2025-04-30
+
+- [add] Add support to search pages for filtering listing search based on listing type
+  [#583](https://github.com/sharetribe/web-template/pull/583)
+- [fix] BookingFixedDurationForm: undefined booking length with single fixed price variant.
+  [#595](https://github.com/sharetribe/web-template/pull/595)
+- [fix] EditListingPricingPanel: Add initial value for the startTimeInterval.
+  [#594](https://github.com/sharetribe/web-template/pull/594)
+- [add] Add currently available translations for DE, ES, FR.
+  [#593](https://github.com/sharetribe/web-template/pull/593)
+
+   [v8.3.0]: https://github.com/sharetribe/web-template/compare/v8.2.0...v8.3.0
+
+## [v8.2.0] 2025-04-29
+
+- [add] Check that some of the environment variables are set (and crash the app if not):
+
+  - REACT_APP_SHARETRIBE_SDK_CLIENT_ID
+  - SHARETRIBE_SDK_CLIENT_SECRET
+  - REACT_APP_MARKETPLACE_NAME
+  - REACT_APP_MARKETPLACE_ROOT_URL
+
+  [#589](https://github.com/sharetribe/web-template/pull/589)
+
+- [add] Separate translation keys for listing with price variations. This affects ListingCard,
+  ManageListingCard, SearchMapInfoCard, SearchMapPriceLabel.
+  [#591](https://github.com/sharetribe/web-template/pull/591)
+- [fix] Convert non-string category URL param to string
+  [#590](https://github.com/sharetribe/web-template/pull/590)
+- [add] Add currently available translations for DE, ES, FR.
+  [#587](https://github.com/sharetribe/web-template/pull/587)
+
+  [v8.2.0]: https://github.com/sharetribe/web-template/compare/v8.1.0...v8.2.0
+
+## [v8.1.0] 2025-04-24
+
+- [add] Add support for price variations for bookable listings.
+  [#582](https://github.com/sharetribe/web-template/pull/582)
 - [add] Add currently available translations for DE, ES.
   [#584](https://github.com/sharetribe/web-template/pull/584)
 - [change] update deeply nested dependency: path-to-regexp
@@ -22,6 +60,8 @@ way to update this template, but currently, we follow a pattern:
   [#576](https://github.com/sharetribe/web-template/pull/576)
 - [fix] OrderPanel: purchase and inquiries did not check closed status of the listing.
   [#573](https://github.com/sharetribe/web-template/pull/573)
+
+  [v8.1.0]: https://github.com/sharetribe/web-template/compare/v8.0.1...v8.1.0
 
 ## [v8.0.1] 2025-04-03
 
