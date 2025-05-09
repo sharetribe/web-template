@@ -48,7 +48,6 @@ import {
   omitLimitedListingFieldParams,
   getDatesAndSeatsMaybe,
   getSearchPageResourceLocatorStringParams,
-  getActiveListingTypes,
 } from './SearchPage.shared';
 
 import FilterComponent from './FilterComponent';
@@ -99,11 +98,11 @@ export class SearchPageComponent extends Component {
   // when map is moved by user or viewport has changed
   onMapMoveEnd(viewportBoundsChanged, data) {
     const { viewportBounds, viewportCenter } = data;
-    const { listingType: listingTypePathParam } = this.props.params || {};
+    const { params: currentPathParams } = this.props;
 
     const routes = this.props.routeConfiguration;
-    const searchPagePath = listingTypePathParam
-      ? pathByRouteName('SearchPageWithListingType', routes, { listingType: listingTypePathParam })
+    const searchPagePath = currentPathParams.listingType
+      ? pathByRouteName('SearchPageWithListingType', routes, currentPathParams)
       : pathByRouteName('SearchPage', routes);
     const currentPath =
       typeof window !== 'undefined' && window.location && window.location.pathname;
@@ -119,13 +118,14 @@ export class SearchPageComponent extends Component {
       const { history, location, config } = this.props;
       const { listingFields: listingFieldsConfig } = config?.listing || {};
       const { defaultFilters: defaultFiltersConfig } = config?.search || {};
-      const { activeListingTypes } = getActiveListingTypes(config, listingTypePathParam);
+      const activeListingTypes = config?.listing?.listingTypes.map(config => config.listingType);
       const listingCategories = config.categoryConfiguration.categories;
       const filterConfigs = {
         listingFieldsConfig,
         defaultFiltersConfig,
         listingCategories,
         activeListingTypes,
+        currentPathParams,
       };
 
       // parse query parameters, including a custom attribute named category
@@ -165,18 +165,17 @@ export class SearchPageComponent extends Component {
 
   // Apply the filters by redirecting to SearchPage with new filters.
   applyFilters() {
-    const { history, routeConfiguration, config, params, location } = this.props;
+    const { history, routeConfiguration, config, params: currentPathParams, location } = this.props;
     const { listingFields: listingFieldsConfig } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
-    const { listingType: listingTypePathParam } = params;
-    const { activeListingTypes } = getActiveListingTypes(config, listingTypePathParam);
+    const activeListingTypes = config?.listing?.listingTypes.map(config => config.listingType);
     const listingCategories = config.categoryConfiguration.categories;
     const filterConfigs = {
       listingFieldsConfig,
       defaultFiltersConfig,
       listingCategories,
       activeListingTypes,
-      listingTypePathParam,
+      currentPathParams,
     };
 
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
@@ -222,18 +221,23 @@ export class SearchPageComponent extends Component {
   }
 
   getHandleChangedValueFn(useHistoryPush) {
-    const { history, routeConfiguration, config, location, params = {} } = this.props;
+    const {
+      history,
+      routeConfiguration,
+      config,
+      location,
+      params: currentPathParams = {},
+    } = this.props;
     const { listingFields: listingFieldsConfig } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
-    const { listingType: listingTypePathParam } = params;
-    const { activeListingTypes } = getActiveListingTypes(config, listingTypePathParam);
+    const activeListingTypes = config?.listing?.listingTypes.map(config => config.listingType);
     const listingCategories = config.categoryConfiguration.categories;
     const filterConfigs = {
       listingFieldsConfig,
       defaultFiltersConfig,
       listingCategories,
       activeListingTypes,
-      listingTypePathParam,
+      currentPathParams,
     };
 
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
@@ -319,7 +323,7 @@ export class SearchPageComponent extends Component {
       onActivateListing,
       routeConfiguration,
       config,
-      params = {},
+      params: currentPathParams = {},
     } = this.props;
 
     // If the search page variant is of type /s/:listingType, this defines the :listingType
@@ -327,12 +331,12 @@ export class SearchPageComponent extends Component {
     //
     // On a default search page (/s), this constant does not have a value, even when a
     // query parameter ?pub_listingType=[queryParamListingType] is used.
-    const { listingType: listingTypePathParam } = params;
+    const { listingType: listingTypePathParam } = currentPathParams;
 
     const { listingFields } = config?.listing || {};
     const { defaultFilters: defaultFiltersRaw, sortConfig } = config?.search || {};
 
-    const { activeListingTypes } = getActiveListingTypes(config, listingTypePathParam);
+    const activeListingTypes = config?.listing?.listingTypes.map(config => config.listingType);
     const defaultFiltersConfig = listingTypePathParam
       ? defaultFiltersRaw.filter(f => f.key !== 'listingType')
       : defaultFiltersRaw;
@@ -345,13 +349,14 @@ export class SearchPageComponent extends Component {
       locationSearch: location.search,
       categoryConfiguration,
       activeListingTypes,
-      listingTypeParam: listingTypePathParam,
+      currentPathParams,
     });
     const filterConfigs = {
       listingFieldsConfig,
       defaultFiltersConfig,
       listingCategories,
       activeListingTypes,
+      currentPathParams,
     };
 
     // Page transition might initially use values from previous search
@@ -415,6 +420,7 @@ export class SearchPageComponent extends Component {
           listingFieldsConfig: customSecondaryFilters,
           defaultFiltersConfig: [],
           listingCategories,
+          currentPathParams,
         })
       : {};
     const selectedSecondaryFiltersCount = Object.keys(selectedSecondaryFilters).length;

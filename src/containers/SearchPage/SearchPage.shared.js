@@ -51,17 +51,20 @@ export const omitLimitedListingFieldParams = (searchParams, filterConfigs) => {
     defaultFiltersConfig,
     listingCategories,
     activeListingTypes,
-    listingTypePathParam,
+    currentPathParams = {},
   } = filterConfigs;
+
+  const { listingType: listingTypePathParam } = currentPathParams;
   const categorySearchConfig = defaultFiltersConfig.find(f => f.schemaType === 'category');
   const listingTypeSearchConfig = defaultFiltersConfig.find(f => f.schemaType === 'listingType');
   const validNestedCategoryParamNames = categorySearchConfig
     ? validURLParamForCategoryData(categorySearchConfig.key, listingCategories, 1, searchParams)
     : {};
 
-  const validListingTypeParamNames = listingTypeSearchConfig
-    ? validURLParamForListingTypeData(activeListingTypes, searchParams)
-    : {};
+  const validListingTypeParamNames =
+    activeListingTypes && listingTypeSearchConfig
+      ? validURLParamForListingTypeData(activeListingTypes, searchParams)
+      : {};
 
   return Object.entries(searchParams).reduce((picked, searchParam) => {
     const [searchParamKey, searchParamValue] = searchParam;
@@ -127,6 +130,8 @@ export const validURLParamForExtendedData = (
     return hasValidDates ? { [queryParamName]: paramValue } : {};
   } else if (queryParamName === 'seats') {
     return paramValue ? { [queryParamName]: paramValue } : {};
+  } else if (queryParamName === 'pub_listingType') {
+    return paramValue.length > 0 ? { [queryParamName]: paramValue } : {};
   }
 
   // Resolve configurations for extended data filters
@@ -181,7 +186,7 @@ export const validFilterParams = (params, filterConfigs, dropNonFilterParams = t
   //       even though it isn't a paramname that's used with nested category tree.
   //       (pub_categoryLevel1, pub_categoryLevel2, and pub_categoryLevel3 are used instead.)
   const builtInFilterParamNames = defaultFiltersConfig.map(f => {
-    return f.schemaType === 'category' ? `pub_${f.key}` : f.key;
+    return ['category', 'listingType'].includes(f.schemaType) ? `pub_${f.key}` : f.key;
   });
   const filterParamNames = [...listingFieldParamNames, ...builtInFilterParamNames];
 
@@ -237,18 +242,17 @@ export const validFilterParams = (params, filterConfigs, dropNonFilterParams = t
  * @returns picked search params against extended data config and default filter config
  */
 export const validUrlQueryParamsFromProps = props => {
-  const { location, config, params: pathParams = {} } = props;
+  const { location, config, params: currentPathParams = {} } = props;
   const { listingFields: listingFieldsConfig } = config?.listing || {};
   const { defaultFilters: defaultFiltersConfig } = config?.search || {};
-  const { listingType: listingTypePathParam } = pathParams;
-  const { activeListingTypes } = getActiveListingTypes(config, listingTypePathParam);
+  const activeListingTypes = config?.listing?.listingTypes.map(config => config.listingType);
   const listingCategories = config.categoryConfiguration.categories;
   const filterConfigs = {
     listingFieldsConfig,
     defaultFiltersConfig,
     listingCategories,
     activeListingTypes,
-    listingTypePathParam,
+    currentPathParams,
   };
 
   // eslint-disable-next-line no-unused-vars
@@ -407,7 +411,7 @@ export const pickListingFieldFilters = params => {
     locationSearch,
     categoryConfiguration,
     activeListingTypes,
-    listingTypeParam,
+    currentPathParams = {},
   } = params;
   const searchParams = parse(locationSearch);
   const categories = categoryConfiguration.categories;
@@ -415,6 +419,7 @@ export const pickListingFieldFilters = params => {
     ? validURLParamForCategoryData(categoryConfiguration.key, categories, 1, searchParams)
     : {};
 
+  const { listingType: listingTypeParam } = currentPathParams;
   const listingTypeParamMaybe = listingTypeParam ? { pub_listingType: listingTypeParam } : {};
   const validListingTypeParamNames = activeListingTypes
     ? validURLParamForListingTypeData(activeListingTypes, {
@@ -422,6 +427,7 @@ export const pickListingFieldFilters = params => {
         ...listingTypeParamMaybe,
       })
     : {};
+
   const currentCategories = Object.values(validNestedCategoryParamNames);
   const currentListingType = Object.values(validListingTypeParamNames);
   const pickedFields = listingFields.reduce((picked, fieldConfig) => {
@@ -445,7 +451,7 @@ export const groupListingFieldConfigs = (configs, activeListingTypes) =>
       const isIndexed = filterConfig?.indexForSearch === true;
       const isActiveListingTypes =
         !listingTypeConfig.limitToListingTypeIds ||
-        listingTypeConfig.listingTypeIds.every(lt => activeListingTypes.includes(lt));
+        listingTypeConfig.listingTypeIds.some(lt => activeListingTypes.includes(lt));
       const isPrimary = filterConfig?.group === 'primary';
       return isActiveListingTypes && isIndexed && isPrimary
         ? [[...primary, config], secondary]
