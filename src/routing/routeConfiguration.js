@@ -429,7 +429,7 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       authPage: 'LoginPage',
       component: FavoriteListingPage,
       loadData: pageDataLoadingAPI.FavoriteListingPage.loadData,
-    }
+    },
   ];
 };
 

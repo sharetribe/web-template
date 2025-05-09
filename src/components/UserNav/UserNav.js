@@ -51,7 +51,7 @@ const UserNav = props => {
       linkProps: {
         name: 'FavoriteListingPage',
       },
-    }
+    },
   ];
 
   if (!isInstructor(currentUser)) tabs = tabs.filter(tab => tab.linkProps.name !== 'ManageListingsPage')
