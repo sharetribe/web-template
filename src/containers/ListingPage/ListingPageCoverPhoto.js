@@ -334,6 +334,7 @@ export const ListingPageComponent = props => {
           listing={currentListing}
           isOwnListing={isOwnListing}
           currentUser={currentUser}
+          onToggleFavorites={onToggleFavorites}
           editParams={{
             id: listingId.uuid,
             slug: listingSlug,
