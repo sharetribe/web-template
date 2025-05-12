@@ -75,6 +75,14 @@ export const queryFavoritesError = e => ({
 
 // ================ Thunks ================ //
 
+const createFavoriteBatches = favorites => {
+  const batches = [];
+  for (let i = 0; i < favorites.length; i += RESULT_PAGE_SIZE) {
+    batches.push(favorites.slice(i, i + RESULT_PAGE_SIZE));
+  }
+  return batches;
+};
+
 // Throwing error for new (loadData may need that info)
 export const queryFavoriteListings = queryParams => (dispatch, getState, sdk) => {
   dispatch(queryFavoritesRequest(queryParams));
@@ -103,15 +111,31 @@ export const queryFavoriteListings = queryParams => (dispatch, getState, sdk) =>
     return emptyObject;
   }
 
-  const favoritesMaybe = !!parsedFavorites ? { ids: parsedFavorites } : {};
-  const { perPage, ...rest } = queryParams;
-  const params = { ...favoritesMaybe, ...rest, perPage };
+  const favoriteBatches = createFavoriteBatches(parsedFavorites);
+  const { perPage, page, ...rest } = queryParams;
+  const idsBatch = { ids: favoriteBatches[page - 1] };
+  // Overwrite the 'page' value because we're doing a FE pagination mix
+  const params = { ...idsBatch, ...rest, perPage, page: 1 };
   return sdk.listings
     .query(params)
     .then(response => {
-      dispatch(addMarketplaceEntities(response));
-      dispatch(queryFavoritesSuccess(response));
-      return response;
+      const meta = {
+        totalItems: parsedFavorites.length,
+        totalPages: favoriteBatches.length,
+        page,
+        paginationLimit: favoriteBatches.length,
+        perPage: RESULT_PAGE_SIZE,
+      };
+      const result = {
+        data: {
+          data: response?.data?.data,
+          included: response?.data?.included,
+          meta,
+        },
+      };
+      dispatch(addMarketplaceEntities(result));
+      dispatch(queryFavoritesSuccess(result));
+      return result;
     })
     .catch(e => {
       dispatch(queryFavoritesError(storableError(e)));
