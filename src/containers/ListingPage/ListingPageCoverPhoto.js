@@ -233,7 +233,7 @@ export const ListingPageComponent = props => {
   // banned or deleted display names for the function
   const authorDisplayName = userDisplayNameAsString(ensuredAuthor, '');
 
-  const { formattedPrice } = priceData(price, config.currency, intl);
+  const { formattedPrice } = priceData(price, config.currency, intl);  
 
   const commonParams = { params, history, routes: routeConfiguration };
   const onContactUser = handleContactUser({

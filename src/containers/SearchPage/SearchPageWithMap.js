@@ -614,6 +614,7 @@ export class SearchPageComponent extends Component {
                 <SearchResultsPanel
                   className={css.searchListingsPanel}
                   listings={listings}
+                  currentUser={this.props.currentUser}
                   pagination={listingsAreLoaded ? pagination : null}
                   search={parse(location.search)}
                   setActiveListing={onActivateListing}

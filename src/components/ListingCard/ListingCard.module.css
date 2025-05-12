@@ -2,6 +2,7 @@
 
 .root {
   /* Layout */
+  position: relative;
   display: flex;
   flex-direction: column;
 
@@ -117,4 +118,26 @@
   /* use break-word if available */
   word-break: break-word;
   hyphens: auto;
+}
+
+.favoriteShareButton {
+  position: absolute;
+  bottom: 80px;
+  left: 390px;
+  background-color: white;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  transition: transform 0.2s ease;
+}
+
+.favoriteShareButton:hover {
+  transform: scale(1.1);
 }

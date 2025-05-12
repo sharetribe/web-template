@@ -30,7 +30,7 @@ export const FavoriteListingPageComponent = props => {
   const loadingResults = (
     <div className={css.messagePanel}>
       <H3 as="h2" className={css.heading}>
-        <FormattedMessage id="FavoriteListingPage.loadingFavoriteListing" />
+        <FormattedMessage id="FavoriteListingPage.loadingFavoriteListings" />
       </H3>
     </div>
   );

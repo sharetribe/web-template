@@ -86,7 +86,19 @@ export const queryFavoriteListing = queryParams => (dispatch, getState, sdk) => 
   const { currentUser } = getState().user;
   const { favorites } = currentUser?.attributes.profile.privateData || {};
 
-  const favoritesMaybe = favorites ? { ids: favorites } : {};
+  const validFavorites = Array.isArray(favorites)
+  ? favorites.filter(id => typeof id === 'string' && id.length > 0)
+  : [];
+
+if (validFavorites.length === 0) {
+  // Early return: no valid favorites to query
+  const emptyResponse = { data: [], meta: { page: 1, perPage: 0, totalItems: 0, totalPages: 0 } };
+  dispatch(queryFavoritesSuccess(emptyResponse));
+  return Promise.resolve(emptyResponse);
+}
+
+const favoritesMaybe = { ids: validFavorites };
+
   const { perPage, ...rest } = queryParams;
   const params = { ...favoritesMaybe, ...rest, perPage };
 
