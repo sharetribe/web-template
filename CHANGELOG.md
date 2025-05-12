@@ -14,10 +14,14 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+## [v8.3.2] 2025-05-12
+
 - [fix] SearchPageWithMap: secondary filter count was not taking into use filters that were limited
   to category or listing type [#606](https://github.com/sharetribe/web-template/pull/606)
 - [fix] Handle multiple search page routes outside search page and clarify path param usage
   [#605](https://github.com/sharetribe/web-template/pull/605)
+
+  [v8.3.2]: https://github.com/sharetribe/web-template/compare/v8.3.1...v8.3.2
 
 ## [v8.3.1] 2025-05-06
 
