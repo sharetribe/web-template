@@ -69,6 +69,27 @@ const SEARCH_WITH_MAP_DEBOUNCE = 300; // Little bit of debounce before search is
 // With this offset we move the dropdown to the left a few pixels on desktop layout.
 const FILTER_DROPDOWN_OFFSET = -14;
 
+const getSelectedSecondaryFiltersCount = (
+  validQueryParams,
+  filterConfigs,
+  customSecondaryFilters
+) => {
+  const hasSecondaryFilters = !!(customSecondaryFilters && customSecondaryFilters.length > 0);
+  const potentialSecondaryFilters = hasSecondaryFilters
+    ? validFilterParams(validQueryParams, {
+        ...filterConfigs,
+        listingFieldsConfig: customSecondaryFilters,
+      })
+    : {};
+
+  const relevantQueryParamNames = customSecondaryFilters.map(f => {
+    return f.scope === 'public' ? `pub_${f.key}` : f.key;
+  });
+  const pickRelevant = name => relevantQueryParamNames.includes(name);
+  const selectedSecondaryFilters = Object.keys(potentialSecondaryFilters).filter(pickRelevant);
+  return selectedSecondaryFilters?.length;
+};
+
 export class SearchPageComponent extends Component {
   constructor(props) {
     super(props);
@@ -414,16 +435,11 @@ export class SearchPageComponent extends Component {
       searchParamsInURL.dates == null ||
       (searchParamsInURL.dates != null && searchParamsInURL.dates === selectedFilters.dates);
 
-    // Selected aka active secondary filters
-    const selectedSecondaryFilters = hasSecondaryFilters
-      ? validFilterParams(validQueryParams, {
-          listingFieldsConfig: customSecondaryFilters,
-          defaultFiltersConfig: [],
-          listingCategories,
-          currentPathParams,
-        })
-      : {};
-    const selectedSecondaryFiltersCount = Object.keys(selectedSecondaryFilters).length;
+    const selectedSecondaryFiltersCount = getSelectedSecondaryFiltersCount(
+      validQueryParams,
+      filterConfigs,
+      customSecondaryFilters
+    );
 
     const isSecondaryFiltersOpen = !!hasSecondaryFilters && this.state.isSecondaryFiltersOpen;
     const propsForSecondaryFiltersToggle = hasSecondaryFilters
