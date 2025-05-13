@@ -201,12 +201,12 @@ export const handleToggleFavorites = parameters => (isFavorite, listingId) => {
     return;
   }
 
-  console.log('✅ handleToggleFavorites called with:', {
+  /*console.log('✅ handleToggleFavorites called with:', {
     currentUserId: currentUser.id?.uuid || currentUser.id,
     resolvedListingId,
     isFavorite,
     favorites,
-  });
+  });*/
 
   let updatedFavorites;
   if (isFavorite) {

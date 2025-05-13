@@ -2,7 +2,6 @@ import React from 'react';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
 
-import { propTypes } from '../../../util/types';
 import { ListingCard, PaginationLinks } from '../../../components';
 import { useHistory, useLocation } from 'react-router-dom';
 import { updateProfile } from '../../ProfileSettingsPage/ProfileSettingsPage.duck';
@@ -98,7 +97,7 @@ const SearchResultsPanel = props => {
   );
 };
 
-// 🧠 Add this to pull currentUser from Redux:
+// {Faorite Button} Add this to pull currentUser from Redux:
 const mapStateToProps = state => {
   return {
     currentUser: state.user.currentUser,
@@ -109,5 +108,4 @@ const mapDispatchToProps = dispatch => ({
   onUpdateFavorites: payload => dispatch(updateProfile(payload)),
 });
 
-// 💥 Now connect it:
 export default connect(mapStateToProps, mapDispatchToProps)(SearchResultsPanel);

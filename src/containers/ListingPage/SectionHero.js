@@ -78,18 +78,6 @@ const SectionHero = props => {
     listing.id.uuid
   );
   
-  /*const toggleFavorites = () => onToggleFavorites(isFavorite);
-  
-  const buttonClass = classNames(css.favoriteButton, {
-    [css.favorited]: isFavorite,
-  });
-
-  const favoriteButton = (
-    <SecondaryButton className={buttonClass} onClick={toggleFavorites}>  
-    <HeartIcon filled={isFavorite} />
-    </SecondaryButton>
-  );*/
-
   const toggleFavorites = e => {
   e.stopPropagation(); // Prevent image click
   if (typeof onToggleFavorites === 'function') {

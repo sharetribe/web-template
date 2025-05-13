@@ -132,7 +132,7 @@
   display: block;
   object-fit: cover;
   z-index: 1;
-  position: relative; /* Ensure it's behind the icon */
+  position: relative; 
 }
 
 .favoriteButton {

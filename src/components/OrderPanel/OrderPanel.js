@@ -33,7 +33,7 @@ import {
   resolveLatestProcessName,
 } from '../../transactions/transaction';
 
-import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2, Button, SecondaryButton } from '../../components';
+import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2 } from '../../components';
 import PriceVariantPicker from './PriceVariantPicker/PriceVariantPicker';
 
 import css from './OrderPanel.module.css';
@@ -435,63 +435,6 @@ const OrderPanel = props => {
       } catch {}
     }
   }, [currentUser])
-
-  const HeartIcon = ({ filled }) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      style={{
-        height: '28px',
-        width: '32px',
-        marginLeft: '6px',
-        marginTop: '-8px',
-        verticalAlign: 'middle',
-        fill: filled ? 'red' : 'none',
-        stroke: filled ? 'black' : 'black',
-        strokeWidth: 1,
-        transition: 'all 0.2s ease',
-      }}
-    >
-      <path d={
-        filled
-          ? "M12.1 8.64l-.1.1-.11-.1C10.14 6.6 7.4 6.6 5.5 8.5 \
-              c-1.9 1.9-1.9 4.63 0 6.54l6.6 6.6 6.6-6.6 \
-              c1.9-1.9 1.9-4.63 0-6.54-1.9-1.9-4.64-1.9-6.54 0z"
-          : "M12.1 8.64l-.1.1-.11-.1C10.14 6.6 7.4 6.6 5.5 8.5 \
-              c-1.9 1.9-1.9 4.63 0 6.54l6.6 6.6 6.6-6.6 \
-              c1.9-1.9 1.9-4.63 0-6.54-1.9-1.9-4.64-1.9-6.54 0z"
-      } />
-    </svg>
-  );
-  
-  const isFavorite = currentUser?.attributes.profile.privateData.favorites?.includes(
-    listing.id.uuid
-  );
-  
-  const toggleFavorites = () => onToggleFavorites(isFavorite);
-  
-  /*const favoriteButton = isFavorite ? (
-    <SecondaryButton className={css.favoriteButton} onClick={toggleFavorites}>
-      <FormattedMessage id="OrderPanel.unfavoriteButton" />
-      <HeartIcon filled />
-    </SecondaryButton>
-  ) : (
-    <Button className={css.favoriteButton} onClick={toggleFavorites}>
-      <FormattedMessage id="OrderPanel.addFavoriteButton" />
-      <HeartIcon filled={false} />
-    </Button>
-  );*/
-
-  const buttonClass = classNames(css.favoriteButton, {
-    [css.favorited]: isFavorite,
-  });
-
-  const favoriteButton = (
-    <SecondaryButton className={buttonClass} onClick={toggleFavorites}>
-      <FormattedMessage id={isFavorite ? "OrderPanel.unfavoriteButton" : "OrderPanel.addFavoriteButton"} />
-      <HeartIcon filled={isFavorite} />
-    </SecondaryButton>
-  );
   
   return (
     <div className={classes}>
@@ -530,8 +473,6 @@ const OrderPanel = props => {
             <FormattedMessage id="OrderPanel.author" values={{ name: authorDisplayName }} />
           </span>
         </div>
-
-        {favoriteButton} { }
 
         { // [SKYFARER]
           reschedule && (

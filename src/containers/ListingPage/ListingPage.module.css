@@ -821,9 +821,9 @@
 }
 
 .favoriteShareButton {
-  position: relative;
+  position: absolute;
   bottom: 26px;
-  left: 116px;
+  left: 116px; /* Positioned to the right of the copy url button */
   background-color: white;
   border: none;
   border-radius: 50%;
@@ -835,7 +835,7 @@
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   z-index: 1;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease;;
 }
 
 .favoriteShareButton:hover {
