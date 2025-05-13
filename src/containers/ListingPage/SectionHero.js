@@ -57,7 +57,7 @@ const SectionHero = props => {
         marginTop: '-6px',
         verticalAlign: 'middle',
         fill: filled ? 'red' : 'none',
-        stroke: filled ? 'black' : 'black',
+        stroke: filled ? 'none' : 'black',
         strokeWidth: 1,
         transition: 'all 0.2s ease',
       }}
