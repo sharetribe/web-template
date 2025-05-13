@@ -162,7 +162,6 @@ export const ListingCard = props => {
         marginTop: '-4px',
         verticalAlign: 'middle',
         fill: filled ? 'red' : 'none',
-        stroke: filled ? 'black' : 'black',
         strokeWidth: 1,
         transition: 'all 0.1s ease',
       }}
@@ -209,19 +208,32 @@ export const ListingCard = props => {
       target={typeof window !== 'undefined' ? window.location.hostname === 'localhost' ? undefined : '_blank' : '_blank'}
     >
       <AspectRatioWrapper
-        className={css.aspectRatioWrapper}
-        width={aspectWidth}
-        height={aspectHeight}
-        {...setActivePropsMaybe}
+  className={css.aspectRatioWrapper}
+  width={aspectWidth}
+  height={aspectHeight}
+  {...setActivePropsMaybe}
+>
+  <div className={css.imageWrapper}>
+    <LazyImage
+      rootClassName={css.listingImage}
+      alt={title}
+      image={firstImage}
+      variants={variants}
+      sizes={renderSizes}
+    />
+    {showHeartIcon && (
+      <button
+        type="button"
+        className={css.favoriteButton}
+        onClick={toggleFavorites}
+        aria-label="Favorite listing"
       >
-        <LazyImage
-          rootClassName={css.rootForImage}
-          alt={title}
-          image={firstImage}
-          variants={variants}
-          sizes={renderSizes}
-        />
-      </AspectRatioWrapper>
+        <HeartIcon filled={isFavorite} />
+      </button>
+    )}
+  </div>
+</AspectRatioWrapper>
+
       <div className={css.info}>
         <PriceMaybe price={price} publicData={publicData} config={config} intl={intl} />
         <div className={css.mainInfo}>
@@ -236,17 +248,10 @@ export const ListingCard = props => {
               <FormattedMessage id="ListingCard.author" values={{ authorName }} />
             </div>
           ) : null}
+          
         </div>
       </div>
-      {showHeartIcon && (
-        <button
-        className={css.favoriteShareButton} // <- Use same base style as facebook button
-        onClick={toggleFavorites}
-        aria-label="Favorite listing"
-        >
-        <HeartIcon filled={isFavorite} />
-      </button>
-      )}
+      
     </NamedLink>
   );
 };

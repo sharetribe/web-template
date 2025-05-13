@@ -104,6 +104,7 @@ export const FavoriteListingPageComponent = props => {
                 className={css.listingCard}
                 key={l.id.uuid}
                 listing={l}
+                showHeartIcon={false}
                 renderSizes={renderSizes}
               />
             ))}

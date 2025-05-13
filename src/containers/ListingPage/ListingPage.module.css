@@ -821,7 +821,7 @@
 }
 
 .favoriteShareButton {
-  position: absolute;
+  position: relative;
   bottom: 26px;
   left: 116px;
   background-color: white;
