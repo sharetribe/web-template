@@ -10,6 +10,21 @@ import { handleToggleFavorites } from '../../ListingPage/ListingPage.shared';
 
 import css from './SearchResultsPanel.module.css';
 
+/**
+ * SearchResultsPanel component
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {string} [props.rootClassName] - Custom class that extends the default class for the root element
+ * @param {Array<propTypes.listing>} props.listings - The listings
+ * @param {propTypes.pagination} props.pagination - The pagination
+ * @param {Object} props.search - The search
+ * @param {Function} props.setActiveListing - The function to handle the active listing
+ * @param {boolean} [props.isMapVariant] - Whether the map variant is enabled
+ * @returns {JSX.Element}
+ */
+
 const SearchResultsPanel = props => {
   const location = useLocation();
   const history = useHistory();
