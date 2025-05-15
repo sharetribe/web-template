@@ -13,6 +13,8 @@ way to update this template, but currently, we follow a pattern:
 ---
 
 ## Upcoming version 2025-XX-XX
+- [add] Pass email from login to forgot password
+  [#609](https://github.com/sharetribe/web-template/pull/609)
 - [fix] EditListingPhotosForm: removing all images from a listing caused the screen to go blank
   [#608](https://github.com/sharetribe/web-template/pull/608)
 
