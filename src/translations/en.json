@@ -477,6 +477,7 @@
   "InquiryForm.tooManyRequestsError": "Sending inquiry failed. There have been too many requests made in a short amount of time. If the error persists, try refreshing the page or contact support.",
   "InquiryForm.userPendingApprovalError": "Oops, something went wrong. Your account is waiting for approval.",
   "InquiryWithoutPaymentForm.ctaButton": "Send an inquiry",
+  "InvokeMakeOfferForm.ctaButton": "Make an offer",
   "KeywordFilter.filterText": "Filter results by",
   "KeywordFilter.labelSelected": "\"{labelText}\"",
   "KeywordFilter.placeholder": "Enter a keyword…",
