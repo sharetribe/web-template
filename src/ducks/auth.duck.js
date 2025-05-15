@@ -142,6 +142,12 @@ export const logout = () => (dispatch, getState, sdk) => {
       log.clearUserId();
       dispatch(userLogout());
     })
+    .then(() => {
+      const AUTH0_DOMAIN = process.env.REACT_APP_AUTH0_DOMAIN;
+      const AUTH0_CLIENT_ID = process.env.REACT_APP_AUTH0_MARKETPLACE_CLIENT_ID;
+      const returnTo = encodeURIComponent(process.env.REACT_APP_MARKETPLACE_ROOT_URL);
+      window.location.href = `https://${AUTH0_DOMAIN}/v2/logout?client_id=${AUTH0_CLIENT_ID}&returnTo=${returnTo}`;
+    })
     .catch(e => dispatch(logoutError(storableError(e))));
 };
 
