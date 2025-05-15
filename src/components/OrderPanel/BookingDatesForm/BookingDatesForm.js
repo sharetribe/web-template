@@ -21,12 +21,16 @@ import {
 import { LINE_ITEM_DAY, propTypes } from '../../../util/types';
 import { timeSlotsPerDate } from '../../../util/generators';
 import { BOOKING_PROCESS_NAME } from '../../../transactions/transaction';
+import { types as sdkTypes } from '../../../util/sdkLoader';
 
 import { Form, PrimaryButton, FieldDateRangePicker, FieldSelect, H6 } from '../../../components';
 
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
 
 import css from './BookingDatesForm.module.css';
+
+const { Money } = sdkTypes;
+console.log('Money imported:', Money); // Verify Money is loaded correctly
 
 const TODAY = new Date();
 
@@ -332,6 +336,41 @@ const handleMonthClick = (
   }
 };
 
+// Add debug helper
+const safeStringify = (obj) => {
+  try {
+    return JSON.stringify(obj, (key, value) => {
+      if (value instanceof Money) {
+        return `Money(${value.amount}, ${value.currency})`;
+      }
+      return value;
+    }, 2);
+  } catch (e) {
+    return 'Error stringifying object';
+  }
+};
+
+// Add persistent logging helper
+const debugLog = (label, data) => {
+  try {
+    window._debug = window._debug || [];
+    const logEntry = {
+      timestamp: new Date().toISOString(),
+      label,
+      data: JSON.stringify(data, (key, value) => {
+        if (value instanceof Money) {
+          return `Money(${value.amount}, ${value.currency})`;
+        }
+        return value;
+      }, 2)
+    };
+    window._debug.push(logEntry);
+    window.console.log(`[DEBUG] ${label}:`, data);
+  } catch (e) {
+    window.console.error('Debug logging failed:', e);
+  }
+};
+
 // When the values of the form are updated we need to fetch
 // lineItems from this Template's backend for the EstimatedTransactionMaybe
 // In case you add more fields to the form, make sure you add
@@ -346,6 +385,14 @@ const calculateLineItems = (
 ) => formValues => {
   const { startDate, endDate, seats } = formValues?.values || {};
 
+  debugLog('calculateLineItems called', {
+    formValues: formValues?.values,
+    listingId,
+    isOwnListing,
+    fetchLineItemsInProgress,
+    seatsEnabled
+  });
+
   const seatCount = seats ? parseInt(seats, 10) : 1;
 
   const orderData = {
@@ -355,6 +402,12 @@ const calculateLineItems = (
   };
 
   if (startDate && endDate && !fetchLineItemsInProgress) {
+    debugLog('Calling onFetchTransactionLineItems', {
+      orderData,
+      listingId,
+      isOwnListing
+    });
+
     onFetchTransactionLineItems({
       orderData,
       listingId,
@@ -517,9 +570,24 @@ export const BookingDatesForm = props => {
     seatsEnabled,
     ...rest
   } = props;
+
+  // Add debugging for unitPrice prop
+  console.log('🔍 Debugging BookingDatesForm unitPrice prop:');
+  console.log('Is Money instance:', unitPrice instanceof Money);
+  console.log('Object details:', unitPrice);
+  console.log('Money constructor:', Money);
+
   const intl = useIntl();
   const [currentMonth, setCurrentMonth] = useState(getStartOf(TODAY, 'month', timeZone));
   const [errorMessage, setErrorMessage] = useState(null);
+
+  console.log('BookingDatesForm props:', {
+    unitPrice: safeStringify(unitPrice),
+    listingId,
+    isOwnListing,
+    timeZone,
+    marketplaceName
+  });
 
   const allTimeSlots = getAllTimeSlots(monthlyTimeSlots);
   const monthId = monthIdString(currentMonth);
@@ -564,6 +632,16 @@ export const BookingDatesForm = props => {
     }
   }, [currentMonth, currentMonthInProgress, nextMonthInProgress, timeZone, monthlyTimeSlots]);
 
+  useEffect(() => {
+    debugLog('BookingDatesForm mounted', {
+      unitPrice,
+      listingId,
+      isOwnListing,
+      timeZone,
+      marketplaceName
+    });
+  }, [unitPrice, listingId, isOwnListing, timeZone, marketplaceName]);
+
   const classes = classNames(rootClassName || css.root, className);
 
   const onHandleFetchLineItems = calculateLineItems(
@@ -574,10 +652,22 @@ export const BookingDatesForm = props => {
     seatsEnabled
   );
 
+  // Add onSubmit handler for form submission
+  const onSubmit = values => {
+    console.log('🔁 Booking form submitted', values);
+    if (props.onSubmit) {
+      props.onSubmit(values);
+    }
+  };
+
+  // Log the type of onSubmit received
+  console.log('📥 BookingDatesForm received onSubmit:', typeof props.onSubmit);
+
   return (
     <FinalForm
       {...rest}
       unitPrice={unitPrice}
+      onSubmit={onSubmit}
       render={formRenderProps => {
         const {
           endDatePlaceholder,
@@ -592,6 +682,18 @@ export const BookingDatesForm = props => {
           form: formApi,
         } = formRenderProps;
         const { startDate, endDate } = values && values.bookingDates ? values.bookingDates : {};
+
+        // Log if the form is ready to submit
+        const disabled = !!errorMessage || fetchLineItemsInProgress;
+        console.log('🖱️ Form ready to submit — is submitting allowed?', !disabled && !fetchLineItemsInProgress);
+        console.log('handleSubmit is a function:', typeof handleSubmit);
+
+        console.log('BookingDatesForm render props:', {
+          lineItems: safeStringify(lineItems),
+          values: safeStringify(values),
+          lineItemUnitType,
+          fetchLineItemsError
+        });
 
         const startDateErrorMessage = intl.formatMessage({
           id: 'FieldDateRangeInput.invalidStartDate',
@@ -614,6 +716,24 @@ export const BookingDatesForm = props => {
             : null;
         const showEstimatedBreakdown =
           breakdownData && lineItems && !fetchLineItemsInProgress && !fetchLineItemsError;
+
+        // Add debugging before passing to EstimatedCustomerBreakdownMaybe
+        if (showEstimatedBreakdown) {
+          console.log('🔍 Debugging before EstimatedCustomerBreakdownMaybe:');
+          console.log('Unit price:', unitPrice);
+          console.log('Is Money instance:', unitPrice instanceof Money);
+          console.log('Line items:', lineItems);
+          console.log('Currency:', unitPrice?.currency);
+          
+          console.log('Passing to EstimatedCustomerBreakdownMaybe:', {
+            breakdownData: safeStringify(breakdownData),
+            lineItems: safeStringify(lineItems),
+            timeZone,
+            currency: unitPrice?.currency,
+            marketplaceName,
+            processName: BOOKING_PROCESS_NAME
+          });
+        }
 
         const dateFormatOptions = {
           weekday: 'short',
