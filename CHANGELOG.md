@@ -13,6 +13,8 @@ way to update this template, but currently, we follow a pattern:
 ---
 
 ## Upcoming version 2025-XX-XX
+- [fix] EditListingPhotosForm: removing all images from a listing caused the screen to go blank
+  [#608](https://github.com/sharetribe/web-template/pull/608)
 
 ## [v8.3.2] 2025-05-12
 
