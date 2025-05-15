@@ -245,7 +245,12 @@ export const convertMoneyToNumber = value => {
  * @return {String} formatted money value
  */
 export const formatMoney = (intl, value) => {
+  // console.log('🟡 formatMoney: value:', value);
+  // console.log('🟡 formatMoney: value instanceof Money:', value instanceof Money);
+  // console.log('🟡 formatMoney: value.constructor === Money:', value && value.constructor === Money);
+  // console.log('🟡 formatMoney: Money from sdkTypes:', Money);
   if (!(value instanceof Money)) {
+    // console.error('❌ formatMoney error: value is not a Money type', value, new Error('StackTrace').stack);
     throw new Error('Value must be a Money type');
   }
   const valueAsNumber = convertMoneyToNumber(value);

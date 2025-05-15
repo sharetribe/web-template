@@ -215,6 +215,11 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
         : process.transitions.REQUEST_PAYMENT;
     const isPrivileged = process.isPrivileged(requestTransition);
 
+    // Add debug logging for transition
+    console.log('🧾 Using transition for initiatePrivileged:', requestTransition);
+    console.log('🧾 Is privileged transition:', isPrivileged);
+    console.log('🧾 Last transition:', storedTx?.attributes?.lastTransition);
+
     // If paymentIntent exists, order has been initiated previously.
     const orderPromise = hasPaymentIntents
       ? Promise.resolve(storedTx)
