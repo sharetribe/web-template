@@ -477,7 +477,7 @@
   "LimitedAccessBanner.fullRightsMessage": "You're logged in as {firstName} {lastName}. You have full access rights. In a Live environment, you will have limited rights.",
   "LimitedAccessBanner.fallbackMessage": "You're logged in as {firstName} {lastName}.",
   "ListingCard.author": "{authorName}",
-  "ListingCard.perUnit": "{unitType, select, day {per wear} night {per night} hour {per hour} other {}}",
+  "ListingCard.perUnit": "{unitType, select, day {per wear} night {per night} hour {per hour} other {per wear}}",
   "ListingCard.unsupportedPrice": "({currency})",
   "ListingCard.unsupportedPriceTitle": "Unsupported currency ({currency})",
   "ListingImageGallery.closeModal": "CLOSE",
