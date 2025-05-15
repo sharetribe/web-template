@@ -10,6 +10,7 @@ import {
   NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
   createSlug,
 } from '../../util/urlHelpers';
+import { REQUEST } from '../../transactions/transaction';
 
 import { Page, LayoutSingleColumn } from '../../components';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
@@ -151,12 +152,41 @@ export const handleSubmitInquiry = parameters => values => {
     .then(txId => {
       setInquiryModalOpen(false);
 
-      // Redirect to OrderDetailsPage
-      history.push(createResourceLocatorString('OrderDetailsPage', routes, { id: txId.uuid }, {}));
+      const transactionPage =
+        listing.attributes.publicData.unitType === REQUEST ? 'SaleDetailsPage' : 'OrderDetailsPage';
+      // Redirect to OrderDetailsPage or SaleDetailsPage
+      history.push(createResourceLocatorString(transactionPage, routes, { id: txId.uuid }, {}));
     })
     .catch(() => {
       // Ignore, error handling in duck file
     });
+};
+
+/**
+ * Handle navigation to InitiateNegotiationPage. Returns a function that can be used as a form submit handler.
+ * Note: this does not yet handle form values, it only navigates to the InitiateNegotiationPage.
+ *
+ * @param {Object} parameters all the info needed to navigate to InitiateNegotiationPage.
+ * @param {Object} parameters.getListing The getListing function from react-router.
+ * @param {Object} parameters.params The params object from react-router.
+ * @param {Object} parameters.history The history object from react-router.
+ * @param {Object} parameters.routes The routes object from react-router.
+ * @returns {Function} A function that navigates to InitiateNegotiationPage.
+ */
+export const handleNavigateToInitiateNegotiationPage = parameters => () => {
+  const { getListing, params, history, routes } = parameters;
+
+  const listingId = new UUID(params.id);
+  const listing = getListing(listingId);
+
+  history.push(
+    createResourceLocatorString(
+      'InitiateNegotiationPage',
+      routes,
+      { id: listing.id.uuid, slug: createSlug(listing.attributes.title) },
+      {}
+    )
+  );
 };
 
 /**
