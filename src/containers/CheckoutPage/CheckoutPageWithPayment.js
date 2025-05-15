@@ -234,6 +234,7 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     pageData,
     setPageData,
     sessionStorageKey,
+    getDiscountedPriceFromVariants,
   } = props;
   const { card, message, paymentMethod: selectedPaymentMethod, formValues } = values;
   const { saveAfterOnetimePayment: saveAfterOnetimePaymentRaw } = formValues;
@@ -246,8 +247,6 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     ? currentUser?.stripeCustomer?.defaultPaymentMethod?.attributes?.stripePaymentMethodId
     : null;
 
-  // If paymentIntent status is not waiting user action,
-  // confirmCardPayment has been called previously.
   const hasPaymentIntentUserActionsDone =
     paymentIntent && STRIPE_PI_USER_ACTIONS_DONE_STATUSES.includes(paymentIntent.status);
 
@@ -275,9 +274,6 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
   };
 
   const shippingDetails = getShippingDetailsMaybe(formValues);
-  // Note: optionalPaymentParams contains Stripe paymentMethod,
-  // but that can also be passed on Step 2
-  // stripe.confirmCardPayment(stripe, { payment_method: stripePaymentMethodId })
   const optionalPaymentParams =
     selectedPaymentFlow === USE_SAVED_CARD && hasDefaultPaymentMethodSaved
       ? { paymentMethod: stripePaymentMethodId }
@@ -285,11 +281,66 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
       ? { setupPaymentMethodForSaving: true }
       : {};
 
-  // These are the order parameters for the first payment-related transition
-  // which is either initiate-transition or initiate-transition-after-enquiry
-  const orderParams = getOrderParams(pageData, shippingDetails, optionalPaymentParams, config);
+  // Calculate booking duration in nights
+  const bookingStart = pageData?.orderData?.bookingStart;
+  const bookingEnd = pageData?.orderData?.bookingEnd;
+  const bookingStartDate = new Date(bookingStart);
+  const bookingEndDate = new Date(bookingEnd);
+  const oneNightInMs = 24 * 60 * 60 * 1000;
+  const nights = Math.round((bookingEndDate - bookingStartDate) / oneNightInMs);
 
-  // There are multiple XHR calls that needs to be made against Stripe API and Sharetribe Marketplace API on checkout with payments
+  const listing = pageData?.listing;
+  const baseNightlyPrice = listing?.attributes?.price?.amount;
+  const currency = listing?.attributes?.price?.currency;
+  const preDiscountTotal = baseNightlyPrice * nights;
+
+  let discountPercent = 0;
+  let discountCode = '';
+  if (nights >= 4 && nights <= 5) {
+    discountPercent = 0.25;
+    discountCode = 'line-item/discount-25';
+  } else if (nights >= 6 && nights <= 7) {
+    discountPercent = 0.40;
+    discountCode = 'line-item/discount-40';
+  } else if (nights >= 8 && nights <= 9) {
+    discountPercent = 0.50;
+    discountCode = 'line-item/discount-50';
+  } else if (nights >= 10) {
+    discountPercent = 0.60;
+    discountCode = 'line-item/discount-60';
+  }
+
+  const discountAmount = Math.round(preDiscountTotal * discountPercent);
+  const discountLineItem = discountPercent > 0
+    ? {
+        code: discountCode,
+        unitPrice: { amount: -discountAmount, currency },
+        quantity: 1,
+        includeFor: ['customer'],
+        reversal: false,
+        description: `${discountPercent * 100}% off`,
+      }
+    : null;
+
+  const lineItems = [
+    {
+      code: 'line-item/night',
+      unitPrice: { amount: baseNightlyPrice, currency },
+      quantity: nights,
+      includeFor: ['customer', 'provider'],
+    },
+    ...(discountLineItem ? [discountLineItem] : []),
+  ];
+
+  const orderParams = {
+    listingId: listing.id,
+    bookingStart,
+    bookingEnd,
+    lineItems,
+    ...optionalPaymentParams,
+    ...shippingDetails,
+  };
+
   processCheckoutWithPayment(orderParams, requestPaymentParams)
     .then(response => {
       const { orderId, messageSuccess, paymentMethodSaved } = response;
@@ -312,27 +363,6 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
       console.error(err);
       setSubmitting(false);
     });
-};
-
-const onStripeInitialized = (stripe, process, props) => {
-  const { paymentIntent, onRetrievePaymentIntent, pageData } = props;
-  const tx = pageData?.transaction || null;
-
-  // We need to get up to date PI, if payment is pending but it's not expired.
-  const shouldFetchPaymentIntent =
-    stripe &&
-    !paymentIntent &&
-    tx?.id &&
-    process?.getState(tx) === process?.states.PENDING_PAYMENT &&
-    !hasPaymentExpired(tx, process);
-
-  if (shouldFetchPaymentIntent) {
-    const { stripePaymentIntentClientSecret } =
-      tx.attributes.protectedData?.stripePaymentIntents?.default || {};
-
-    // Fetch up to date PaymentIntent from Stripe
-    onRetrievePaymentIntent({ stripe, stripePaymentIntentClientSecret });
-  }
 };
 
 /**
@@ -424,6 +454,14 @@ export const CheckoutPageWithPayment = props => {
   const transactionProcessAlias = listing?.attributes?.publicData?.transactionProcessAlias;
 
   const txBookingMaybe = tx?.booking?.id ? { booking: tx.booking, timeZone } : {};
+
+  if (tx && tx.attributes && tx.attributes.lineItems) {
+    // Log the lineItems and total price for verification
+    // eslint-disable-next-line no-console
+    console.log('🧾 Checkout breakdown lineItems:', tx.attributes.lineItems);
+    // eslint-disable-next-line no-console
+    console.log('🧾 Checkout breakdown total price:', getFormattedTotalPrice(tx, intl));
+  }
 
   // Show breakdown only when (speculated?) transaction is loaded
   // (i.e. it has an id and lineItems)
@@ -578,10 +616,7 @@ export const CheckoutPageWithPayment = props => {
                     : null
                 }
                 paymentIntent={paymentIntent}
-                onStripeInitialized={stripe => {
-                  setStripe(stripe);
-                  return onStripeInitialized(stripe, process, props);
-                }}
+                onStripeInitialized={stripe => setStripe(stripe)}
                 askShippingDetails={askShippingDetails}
                 showPickUplocation={orderData?.deliveryMethod === 'pickup'}
                 listingLocation={listing?.attributes?.publicData?.location}

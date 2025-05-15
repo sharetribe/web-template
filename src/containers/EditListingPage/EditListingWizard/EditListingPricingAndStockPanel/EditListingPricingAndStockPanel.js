@@ -23,7 +23,7 @@ const getListingTypeConfig = (publicData, listingTypes) => {
 };
 
 const getInitialValues = props => {
-  const { listing, listingTypes } = props;
+  const { listing, listingTypes, marketplaceCurrency } = props;
   const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
   const price = listing?.attributes?.price;
   const currentStock = listing?.currentStock;
@@ -47,7 +47,12 @@ const getInitialValues = props => {
       : 1;
   const stockTypeInfinity = [];
 
-  return { price, stock, stockTypeInfinity, retailPrice };
+  return {
+    price,
+    stock,
+    stockTypeInfinity,
+    retailPrice: retailPrice ? new Money(retailPrice.amount, retailPrice.currency) : null,
+  };
 };
 
 /**
@@ -165,15 +170,37 @@ const EditListingPricingAndStockPanel = props => {
                   }
                 : {};
 
+            // Format retailPrice as Money object if it exists and has a valid amount
+            const formattedRetailPrice =
+              retailPrice instanceof Money
+                ? retailPrice
+                : retailPrice && retailPrice.amount
+                ? new Money(retailPrice.amount, retailPrice.currency || marketplaceCurrency)
+                : null;
+
             // New values for listing attributes
             const updateValues = {
               price,
               publicData: {
                 ...listing?.attributes?.publicData,
-                retailPrice: retailPrice || null
+                
+                
+                retailPrice:
+                retailPrice instanceof Money
+                  ? retailPrice
+                  : typeof retailPrice === 'number'
+                  ? new Money(retailPrice * 100, marketplaceCurrency)
+                  : retailPrice && typeof retailPrice.amount === 'number'
+                  ? new Money(retailPrice.amount, retailPrice.currency || marketplaceCurrency)
+                  : null,
+              
+              
+
+
               },
               ...stockUpdateMaybe,
             };
+            
             // Save the initialValues to state
             // Otherwise, re-rendering would overwrite the values during XHR call.
             setState({
@@ -181,7 +208,16 @@ const EditListingPricingAndStockPanel = props => {
                 price,
                 stock: stockUpdateMaybe?.stockUpdate?.newTotal || stock,
                 stockTypeInfinity,
-                retailPrice
+            
+                retailPrice:
+                retailPrice instanceof Money
+                  ? retailPrice
+                  : typeof retailPrice === 'number'
+                  ? new Money(retailPrice * 100, marketplaceCurrency)
+                  : retailPrice && typeof retailPrice.amount === 'number'
+                  ? new Money(retailPrice.amount, retailPrice.currency || marketplaceCurrency)
+                  : null,
+              
               },
             });
             onSubmit(updateValues);

@@ -25,7 +25,7 @@ export const EmptyWithoutDates = {
     processName,
     lineItems: [
       {
-        code: 'line-item/day',
+        code: 'line-item/night',
         includeFor: ['customer', 'provider'],
         quantity: new Decimal(1),
         unitPrice: new Money(4500, CURRENCY),
@@ -61,7 +61,7 @@ export const BookingSingleDay = {
     },
     lineItems: [
       {
-        code: 'line-item/day',
+        code: 'line-item/night',
         includeFor: ['customer', 'provider'],
         quantity: new Decimal(1),
         unitPrice: new Money(4500, CURRENCY),

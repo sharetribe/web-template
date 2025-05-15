@@ -25,36 +25,169 @@
  * currently the API doesn't support that for logged out users, and we
  * are forced to estimate the information here.
  */
-import React from 'react';
+import React, { useEffect } from 'react';
 import Decimal from 'decimal.js';
 
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { FormattedMessage } from '../../util/reactIntl';
 import { LINE_ITEM_DAY, LINE_ITEM_NIGHT, LISTING_UNIT_TYPES } from '../../util/types';
-import { unitDivisor, convertMoneyToNumber, convertUnitToSubUnit } from '../../util/currency';
+import { unitDivisor, convertMoneyToNumber, convertUnitToSubUnit, formatMoney } from '../../util/currency';
 import { getProcess, TX_TRANSITION_ACTOR_CUSTOMER } from '../../transactions/transaction';
 
 import { OrderBreakdown } from '../../components';
 
 import css from './OrderPanel.module.css';
 
+import { differenceInCalendarDays } from 'date-fns'; // If not already imported
+
+
 const { Money, UUID } = sdkTypes;
 
+// Add DOM-based logging
+const domLog = (label, data) => {
+  // Commenting out DOM logging to prevent browser display
+  // if (typeof document === 'undefined') return;
+  
+  // const logDiv = document.getElementById('debug-log') || (() => {
+  //   const div = document.createElement('div');
+  //   div.id = 'debug-log';
+  //   div.style.cssText = 'position: fixed; bottom: 0; right: 0; max-height: 200px; overflow: auto; background: white; border: 1px solid black; padding: 10px; z-index: 9999; font-family: monospace;';
+  //   document.body.appendChild(div);
+  //   return div;
+  // })();
+
+  // const entry = document.createElement('div');
+  // entry.style.borderBottom = '1px solid #eee';
+  // entry.innerHTML = `
+  //   <strong>${new Date().toISOString()} - ${label}</strong><br/>
+  //   <pre>${JSON.stringify(data, (key, value) => {
+  //     if (value instanceof Money) {
+  //       return `Money(${value.amount}, ${value.currency})`;
+  //     }
+  //     return value;
+  //   }, 2)}</pre>
+  // `;
+  // logDiv.insertBefore(entry, logDiv.firstChild);
+};
+
+const debugLog = (label, data) => {
+  try {
+    window._debug = window._debug || [];
+    const logEntry = {
+      timestamp: new Date().toISOString(),
+      label,
+      data: JSON.stringify(data, (key, value) => {
+        if (value instanceof Money) {
+          return `Money(${value.amount}, ${value.currency})`;
+        }
+        return value;
+      }, 2)
+    };
+    window._debug.push(logEntry);
+    window.console.log(`[DEBUG] ${label}:`, data);
+    // domLog(label, data); // Commenting out DOM logging
+  } catch (e) {
+    window.console.error('Debug logging failed:', e);
+    // domLog('Error', e.toString()); // Commenting out DOM logging
+  }
+};
+
+// Add global error handler for Money type issues
+if (typeof window !== 'undefined') {
+  window.onerror = function(msg, url, lineNo, columnNo, error) {
+    if (msg.includes('Money type')) {
+      debugLog('Money Type Error', {
+        message: msg,
+        url,
+        lineNo,
+        columnNo,
+        error: error?.toString(),
+        stack: error?.stack
+      });
+    }
+    return false;
+  };
+}
+
+// Add SDK validation
+const validateSDK = () => {
+  debugLog('Validating SDK', {
+    sdkTypes,
+    Money: sdkTypes.Money,
+    isMoneyDefined: typeof Money === 'function',
+    MoneyPrototype: Money?.prototype
+  });
+
+  if (!sdkTypes || typeof Money !== 'function') {
+    debugLog('SDK Error', 'SDK or Money constructor not properly initialized');
+    return false;
+  }
+  return true;
+};
+
+// Update Money validation
+const validateMoneyObject = (obj, context) => {
+  if (!validateSDK()) {
+    return false;
+  }
+
+  debugLog(`Validating Money (${context})`, {
+    value: obj,
+    type: obj?.constructor?.name,
+    isMoneyInstance: obj instanceof Money,
+    hasAmount: obj?.amount !== undefined,
+    hasCurrency: obj?.currency !== undefined,
+    moneyConstructor: Money?.toString()
+  });
+
+  if (!obj) {
+    debugLog(`Invalid Money (${context})`, 'null or undefined');
+    return false;
+  }
+
+  if (!(obj instanceof Money)) {
+    // Try to coerce to Money if it has the right shape
+    if (obj && typeof obj === 'object' && typeof obj.amount === 'number' && typeof obj.currency === 'string') {
+      debugLog(`Attempting to coerce to Money (${context})`, obj);
+      try {
+        return new Money(obj.amount, obj.currency);
+      } catch (e) {
+        debugLog(`Coercion failed (${context})`, e.toString());
+        return false;
+      }
+    }
+    debugLog(`Invalid Money (${context})`, 'not a Money instance and cannot be coerced');
+    return false;
+  }
+
+  return true;
+};
+
 const estimatedTotalPrice = (lineItems, marketplaceCurrency) => {
+  // Log incoming data
+  debugLog('estimatedTotalPrice input', {
+    lineItems,
+    marketplaceCurrency
+  });
+
   const numericTotalPrice = lineItems.reduce((sum, lineItem) => {
+    // Validate each lineItem's lineTotal
+    validateMoneyObject(lineItem.lineTotal, 'lineItem.lineTotal');
     const numericPrice = convertMoneyToNumber(lineItem.lineTotal);
     return new Decimal(numericPrice).add(sum);
   }, new Decimal(0));
 
-  // All the lineItems should have same currency so we can use the first one to check that
-  // In case there are no lineItems we use currency from config.js as default
   const currency =
     lineItems[0] && lineItems[0].unitPrice ? lineItems[0].unitPrice.currency : marketplaceCurrency;
 
-  return new Money(
+  const result = new Money(
     convertUnitToSubUnit(numericTotalPrice.toNumber(), unitDivisor(currency)),
     currency
   );
+
+  // Log result
+  debugLog('estimatedTotalPrice result', result);
+  return result;
 };
 
 const estimatedBooking = (bookingStart, bookingEnd, lineItemUnitType, timeZone = 'Etc/UTC') => {
@@ -120,54 +253,255 @@ const estimatedCustomerTransaction = (
   };
 };
 
-const EstimatedCustomerBreakdownMaybe = props => {
-  const { breakdownData = {}, lineItems, timeZone, currency, marketplaceName, processName } = props;
-  const { startDate, endDate } = breakdownData;
-
-  let process = null;
-  try {
-    process = getProcess(processName);
-  } catch (e) {
-    return (
-      <div className={css.error}>
-        <FormattedMessage id="OrderPanel.unknownTransactionProcess" />
-      </div>
-    );
-  }
-
-  const unitLineItem = lineItems?.find(
-    item => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal
+// Add robust Money validation and coercion helpers
+const isMoney = obj => {
+  return (
+    obj &&
+    typeof obj === 'object' &&
+    typeof obj.amount === 'number' &&
+    !isNaN(obj.amount) &&
+    typeof obj.currency === 'string' &&
+    obj.currency.length > 0
   );
-  const lineItemUnitType = unitLineItem?.code;
-  const shouldHaveBooking = [LINE_ITEM_DAY, LINE_ITEM_NIGHT].includes(lineItemUnitType);
-  const hasLineItems = lineItems && lineItems.length > 0;
-  const hasRequiredBookingData = !shouldHaveBooking || (startDate && endDate);
+};
 
-  const tx =
-    hasLineItems && hasRequiredBookingData
-      ? estimatedCustomerTransaction(
-          lineItems,
-          startDate,
-          endDate,
-          lineItemUnitType,
-          timeZone,
-          process,
-          processName,
-          currency
-        )
-      : null;
+const ensureMoney = (value, currency, fallbackAmount = 0) => {
+  if (value instanceof Money) {
+    return value;
+  }
+  if (isMoney(value)) {
+    return new Money(Math.round(value.amount), value.currency);
+  }
+  if (typeof value === 'number' && !isNaN(value)) {
+    return new Money(Math.round(value), currency);
+  }
+  console.error('Failed to coerce value to Money:', { value, currency });
+  return new Money(fallbackAmount, currency);
+};
 
-  return tx ? (
-    <OrderBreakdown
-      className={css.receipt}
-      userRole="customer"
-      transaction={tx}
-      booking={tx.booking}
-      timeZone={timeZone}
-      currency={currency}
-      marketplaceName={marketplaceName}
-    />
-  ) : null;
+const formatMoneySafely = (money, fallbackText = 'Price unavailable') => {
+  try {
+    debugLog('Formatting money', {
+      input: money,
+      isMoneyInstance: money instanceof Money,
+      amount: money?.amount,
+      currency: money?.currency
+    });
+
+    // If it's not a Money instance but has the right shape, try to convert it
+    if (!(money instanceof Money) && money?.amount !== undefined && money?.currency) {
+      debugLog('Converting to Money instance', money);
+      money = new Money(money.amount, money.currency);
+    }
+
+    if (!(money instanceof Money)) {
+      throw new Error('Not a valid Money instance');
+    }
+
+    const formatted = formatMoney(money);
+    debugLog('Money formatted successfully', { input: money, output: formatted });
+    return formatted;
+  } catch (e) {
+    debugLog('Money formatting failed', { error: e.toString(), input: money });
+    return fallbackText;
+  }
+};
+
+const EstimatedCustomerBreakdownMaybe = props => {
+  useEffect(() => {
+    validateSDK();
+    // debugLog('EstimatedCustomerBreakdownMaybe mounted', {
+    //   props,
+    //   sdkTypes,
+    //   Money: sdkTypes.Money
+    // });
+  }, []);
+
+  try {
+    const { breakdownData = {}, lineItems, timeZone, currency, marketplaceName, processName } = props;
+    const { startDate, endDate } = breakdownData;
+
+    debugLog('Processing props', { lineItems, currency });
+
+    if (!lineItems?.length) {
+      debugLog('No line items', null);
+      return null;
+    }
+
+    // Find the unit line item and validate it
+    const unitLineItem = lineItems.find(
+      item => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal
+    );
+    
+    if (!unitLineItem) {
+      debugLog('No unit line item found', null);
+      return null;
+    }
+
+    debugLog('Unit line item', {
+      code: unitLineItem.code,
+      unitPrice: unitLineItem.unitPrice,
+      isValid: validateMoneyObject(unitLineItem.unitPrice, 'unitLineItem.unitPrice')
+    });
+
+    const lineItemUnitType = unitLineItem.code;
+    const numberOfDays = startDate && endDate ? differenceInCalendarDays(endDate, startDate) : 0;
+
+    // Early return if invalid booking duration
+    if (numberOfDays <= 0) {
+      debugLog('Invalid booking duration', { startDate, endDate, numberOfDays });
+      return null;
+    }
+
+    let adjustedLineItems = lineItems;
+    if (
+      (lineItemUnitType === LINE_ITEM_DAY || lineItemUnitType === LINE_ITEM_NIGHT) &&
+      numberOfDays > 0
+    ) {
+      // Ensure we have a valid Money object for the flat price
+      const flatPrice = validateMoneyObject(unitLineItem.unitPrice, 'flatPrice') 
+        ? unitLineItem.unitPrice 
+        : new Money(0, currency);
+      
+      debugLog('Flat price', {
+        original: unitLineItem.unitPrice,
+        validated: flatPrice,
+        isMoneyInstance: flatPrice instanceof Money,
+        amount: flatPrice?.amount,
+        currency: flatPrice?.currency
+      });
+
+      if (!flatPrice || flatPrice.amount <= 0) {
+        debugLog('Invalid flat price', flatPrice);
+        return null;
+      }
+
+      // Calculate base daily price (ensuring integer cents)
+      const baseDailyAmount = Math.round(flatPrice.amount / 3);
+      const baseDailyPrice = new Money(baseDailyAmount, currency);
+      const preDiscountTotalAmount = baseDailyAmount * numberOfDays;
+      const preDiscountTotal = new Money(preDiscountTotalAmount, currency);
+
+      debugLog('Price calculations', {
+        baseDailyAmount,
+        baseDailyPrice,
+        preDiscountTotal,
+        numberOfDays
+      });
+
+      // Format prices safely
+      const formattedPerDay = formatMoneySafely(baseDailyPrice);
+      const formattedTotal = formatMoneySafely(preDiscountTotal);
+      
+      debugLog('Formatted prices', {
+        formattedPerDay,
+        formattedTotal
+      });
+
+      const perDayDescription = `${formattedPerDay} per day x ${numberOfDays} = ${formattedTotal}`;
+      
+      const perDayLineItem = {
+        code: 'line-item/per-day',
+        unitPrice: baseDailyPrice,
+        quantity: numberOfDays,
+        lineTotal: preDiscountTotal,
+        includeFor: ['customer'],
+        reversal: false,
+        description: perDayDescription,
+      };
+
+      // Build adjusted line items array
+      let adjusted = [perDayLineItem, ...lineItems.filter(item => item !== unitLineItem)];
+      
+      // Determine discount percentage and label
+      let discountPercent = 0;
+      let discountLabel = '';
+      let discountCode = '';
+      if (numberOfDays >= 4 && numberOfDays <= 5) {
+        discountPercent = 0.25;
+        discountLabel = '25% off';
+        discountCode = 'line-item/discount-25';
+      } else if (numberOfDays >= 6 && numberOfDays <= 7) {
+        discountPercent = 0.40;
+        discountLabel = '40% off';
+        discountCode = 'line-item/discount-40';
+      } else if (numberOfDays >= 8 && numberOfDays <= 9) {
+        discountPercent = 0.50;
+        discountLabel = '50% off';
+        discountCode = 'line-item/discount-50';
+      } else if (numberOfDays >= 10) {
+        discountPercent = 0.60;
+        discountLabel = '60% off';
+        discountCode = 'line-item/discount-60';
+      }
+
+      // Calculate discount amount (ensuring integer cents)
+      const discountAmount = Math.round(preDiscountTotalAmount * discountPercent);
+      const discountMoney = new Money(-discountAmount, currency);
+
+      if (discountPercent > 0) {
+        const discountLineItem = {
+          code: discountCode,
+          unitPrice: discountMoney,
+          quantity: 1,
+          lineTotal: discountMoney,
+          includeFor: ['customer'],
+          reversal: false,
+          description: `${discountLabel} discount`,
+        };
+        adjusted = [perDayLineItem, discountLineItem, ...lineItems.filter(item => item !== unitLineItem)];
+      }
+      
+      adjustedLineItems = adjusted;
+    }
+
+    let process = null;
+    try {
+      process = getProcess(processName);
+    } catch (e) {
+      return (
+        <div className={css.error}>
+          <FormattedMessage id="OrderPanel.unknownTransactionProcess" />
+        </div>
+      );
+    }
+
+    const shouldHaveBooking = [LINE_ITEM_DAY, LINE_ITEM_NIGHT].includes(lineItemUnitType);
+    const hasLineItems = lineItems && lineItems.length > 0;
+    const hasRequiredBookingData = !shouldHaveBooking || (startDate && endDate);
+
+    const tx =
+      hasLineItems && hasRequiredBookingData
+        ? estimatedCustomerTransaction(
+            adjustedLineItems,
+            startDate,
+            endDate,
+            lineItemUnitType,
+            timeZone,
+            process,
+            processName,
+            currency
+          )
+        : null;
+
+    return tx ? (
+      <OrderBreakdown
+        className={css.receipt}
+        userRole="customer"
+        transaction={tx}
+        booking={tx.booking}
+        timeZone={timeZone}
+        currency={currency}
+        marketplaceName={marketplaceName}
+      />
+    ) : null;
+  } catch (error) {
+    debugLog('Component Error', {
+      error: error?.toString(),
+      stack: error?.stack
+    });
+    return null;
+  }
 };
 
 export default EstimatedCustomerBreakdownMaybe;

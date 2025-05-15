@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 
-// Import contexts and util modules
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { userDisplayNameAsString } from '../../util/data';
@@ -16,18 +15,13 @@ import { hasPermissionToInitiateTransactions, isUserAuthorized } from '../../uti
 import { isErrorNoPermissionForInitiateTransactions } from '../../util/errors';
 import { INQUIRY_PROCESS_NAME, resolveLatestProcessName } from '../../transactions/transaction';
 
-// Import global thunk functions
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 import { confirmCardPayment, retrievePaymentIntent } from '../../ducks/stripe.duck';
 import { savePaymentMethod } from '../../ducks/paymentMethods.duck';
 
-// Import shared components
 import { NamedRedirect, Page } from '../../components';
-
-// Session helpers file needs to be imported before CheckoutPageWithPayment and CheckoutPageWithInquiryProcess
 import { storeData, clearData, handlePageData } from './CheckoutPageSessionHelpers';
 
-// Import modules from this directory
 import {
   initiateOrder,
   setInitialValues,
@@ -45,6 +39,7 @@ import CheckoutPageWithPayment, {
 import CheckoutPageWithInquiryProcess from './CheckoutPageWithInquiryProcess';
 
 const STORAGE_KEY = 'CheckoutPage';
+const NIGHT_IN_MINUTES = 1440;
 
 const onSubmitCallback = () => {
   clearData(STORAGE_KEY);
@@ -58,6 +53,12 @@ const getProcessName = pageData => {
     ? listing?.attributes?.publicData?.transactionProcessAlias?.split('/')[0]
     : null;
   return resolveLatestProcessName(processName);
+};
+
+const getDiscountedPriceFromVariants = (priceVariants, nights) => {
+  const minutes = nights * NIGHT_IN_MINUTES;
+  const match = priceVariants?.find(v => v.bookingLengthInMinutes === minutes);
+  return match?.priceInSubunits || null;
 };
 
 const EnhancedCheckoutPage = props => {
@@ -82,11 +83,8 @@ const EnhancedCheckoutPage = props => {
     setPageData(data || {});
     setIsDataLoaded(true);
 
-    // Do not fetch extra data if user is not active (E.g. they are in pending-approval state.)
     if (isUserAuthorized(currentUser)) {
-      // This is for processes using payments with Stripe integration
       if (getProcessName(data) !== INQUIRY_PROCESS_NAME) {
-        // Fetch StripeCustomer and speculateTransition for transactions that include Stripe payments
         loadInitialDataForStripePayments({
           pageData: data || {},
           fetchSpeculatedTransaction,
@@ -108,30 +106,21 @@ const EnhancedCheckoutPage = props => {
   const processName = getProcessName(pageData);
   const isInquiryProcess = processName === INQUIRY_PROCESS_NAME;
 
-  // Handle redirection to ListingPage, if this is own listing or if required data is not available
   const listing = pageData?.listing;
   const isOwnListing = currentUser?.id && listing?.author?.id?.uuid === currentUser?.id?.uuid;
   const hasRequiredData = !!(listing?.id && listing?.author?.id && processName);
   const shouldRedirect = isDataLoaded && !(hasRequiredData && !isOwnListing);
   const shouldRedirectUnathorizedUser = isDataLoaded && !isUserAuthorized(currentUser);
-  // Redirect if the user has no transaction rights
   const shouldRedirectNoTransactionRightsUser =
     isDataLoaded &&
-    // - either when they first arrive on the checkout page
     (!hasPermissionToInitiateTransactions(currentUser) ||
-      // - or when they are sending the order (if the operator removed transaction rights
-      // when they were already on the checkout page and the user has not refreshed the page)
       isErrorNoPermissionForInitiateTransactions(initiateOrderError));
 
-  // Redirect back to ListingPage if data is missing.
-  // Redirection must happen before any data format error is thrown (e.g. wrong currency)
   if (shouldRedirect) {
-    // eslint-disable-next-line no-console
     console.error('Missing or invalid data for checkout, redirecting back to listing page.', {
       listing,
     });
     return <NamedRedirect name="ListingPage" params={params} />;
-    // Redirect to NoAccessPage if access rights are missing
   } else if (shouldRedirectUnathorizedUser) {
     return (
       <NamedRedirect
@@ -184,6 +173,7 @@ const EnhancedCheckoutPage = props => {
       listingTitle={listingTitle}
       title={title}
       onSubmitCallback={onSubmitCallback}
+      getDiscountedPriceFromVariants={getDiscountedPriceFromVariants}
       {...props}
     />
   ) : (

@@ -36,14 +36,14 @@ const getListingTypeConfig = (publicData, listingTypes) => {
 const getInitialValues = props => {
   const { listing } = props;
   const { unitType } = listing?.attributes?.publicData || {};
+  const retailPrice = listing?.attributes?.publicData?.retailPrice;
+  
   return unitType === FIXED
     ? { ...getInitialValuesForPriceVariants(props), ...getInitialValuesForStartTimeInterval(props) }
-
-
-    : { price: listing?.attributes?.price ,
-      retailPrice: listing?.attributes?.publicData?.retailPrice || null,
-
-    };
+    : {
+        price: listing?.attributes?.price,
+        retailPrice: retailPrice ? new Money(retailPrice.amount, retailPrice.currency) : null,
+      };
 };
 
 const getEstimatedListing = (listing, updateValues) => {
@@ -139,27 +139,25 @@ const EditListingPricingPanel = props => {
         <EditListingPricingForm
           className={css.form}
           initialValues={initialValues}
-
-
           onSubmit={values => {
             const { price, retailPrice } = values;
-          
+            
             // Debug logging for retailPrice
             console.log('🧾 Form values:', values);
             console.log('📦 retailPrice type:', typeof retailPrice);
             console.log('📦 retailPrice value:', retailPrice);
             console.log('📦 retailPrice instanceof Money:', retailPrice instanceof Money);
             console.log('📦 retailPrice structure:', retailPrice ? Object.keys(retailPrice) : null);
-          
+            
             // New values for listing attributes
             let updateValues = {};
-          
+            
             if (unitType === FIXED) {
               let publicDataUpdates = {};
-          
+              
               const startTimeIntervalChanges = handleSubmitValuesForStartTimeInterval(values, publicDataUpdates);
               const priceVariantChanges = handleSubmitValuesForPriceVariants(values, publicDataUpdates, unitType);
-          
+              
               updateValues = {
                 ...priceVariantChanges,
                 ...startTimeIntervalChanges,
@@ -169,38 +167,22 @@ const EditListingPricingPanel = props => {
                 },
               };
             } else {
-              // Handle retailPrice - ensure it's a number
-              let retailPriceValue = null;
-              
-              if (retailPrice) {
-                if (retailPrice instanceof Money) {
-                  // Convert Money to number (amount in subunits)
-                  retailPriceValue = retailPrice.amount;
-                } else if (typeof retailPrice === 'number') {
-                  retailPriceValue = retailPrice;
-                } else if (typeof retailPrice === 'string') {
-                  // Try to parse string to number
-                  const parsed = parseFloat(retailPrice);
-                  if (!isNaN(parsed)) {
-                    retailPriceValue = parsed;
-                  }
-                }
-              }
-              
-              console.log('📦 Final retailPriceValue:', retailPriceValue);
-              console.log('📦 Final retailPriceValue type:', typeof retailPriceValue);
-              
               updateValues = {
                 price,
                 publicData: {
                   ...listing?.attributes?.publicData,
-                  retailPrice: retailPriceValue,
+                  retailPrice:
+                    retailPrice instanceof Money &&
+                    typeof retailPrice.amount === 'number' &&
+                    typeof retailPrice.currency === 'string'
+                      ? retailPrice
+                      : null,
                 },
               };
             }
-          
+            
             console.log('🧾 Final updateValues:', updateValues);
-          
+            
             setState({
               initialValues: getInitialValues({
                 listing: getEstimatedListing(listing, updateValues),
@@ -208,13 +190,6 @@ const EditListingPricingPanel = props => {
             });
             onSubmit(updateValues);
           }}
-          
-
-
-
-
-
-          
           marketplaceCurrency={marketplaceCurrency}
           unitType={unitType}
           listingMinimumPriceSubUnits={listingMinimumPriceSubUnits}

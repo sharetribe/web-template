@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
 import classNames from 'classnames';
+import { differenceInCalendarDays } from 'date-fns';
 
 import appSettings from '../../../config/settings';
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
@@ -518,6 +519,7 @@ export const BookingDatesForm = props => {
   } = props;
   const intl = useIntl();
   const [currentMonth, setCurrentMonth] = useState(getStartOf(TODAY, 'month', timeZone));
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const allTimeSlots = getAllTimeSlots(monthlyTimeSlots);
   const monthId = monthIdString(currentMonth);
@@ -737,6 +739,17 @@ export const BookingDatesForm = props => {
                       timeZone
                     )
                   : {};
+                if (startDate && endDate) {
+                  const nights = differenceInCalendarDays(endDate, startDate);
+                  if (nights < 3) {
+                    setErrorMessage('Bookings must be at least 3 days.');
+                    return;
+                  } else {
+                    setErrorMessage(null);
+                  }
+                } else {
+                  setErrorMessage(null);
+                }
                 if (seatsEnabled) {
                   formApi.change('seats', 1);
                 }
@@ -749,6 +762,8 @@ export const BookingDatesForm = props => {
                 });
               }}
             />
+
+            {errorMessage ? <p className={css.error}>{errorMessage}</p> : null}
 
             {seatsEnabled ? (
               <FieldSelect
@@ -801,7 +816,11 @@ export const BookingDatesForm = props => {
             ) : null}
 
             <div className={css.submitButton}>
-              <PrimaryButton type="submit" inProgress={fetchLineItemsInProgress}>
+              <PrimaryButton
+                type="submit"
+                inProgress={fetchLineItemsInProgress}
+                disabled={!!errorMessage || fetchLineItemsInProgress}
+              >
                 <FormattedMessage id="BookingDatesForm.requestToBook" />
               </PrimaryButton>
             </div>

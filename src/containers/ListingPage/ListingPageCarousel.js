@@ -662,7 +662,7 @@ const mapDispatchToProps = dispatch => ({
   onFetchTransactionLineItems: params => dispatch(fetchTransactionLineItems(params)), // for OrderPanel
   onSendInquiry: (listing, message) => dispatch(sendInquiry(listing, message)),
   onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
-  onFetchTimeSlots: (listingIfd, start, end, timeZone, options) =>
+  onFetchTimeSlots: (listingId, start, end, timeZone, options) =>
     dispatch(fetchTimeSlots(listingId, start, end, timeZone, options)), // for OrderPanel
 });
 
