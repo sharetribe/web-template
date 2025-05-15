@@ -363,6 +363,8 @@ export const fetchReviews = listingId => (dispatch, getState, sdk) => {
 };
 
 const timeSlotsRequest = params => (dispatch, getState, sdk) => {
+  // Log the payload for debugging
+  console.log('Calling sdk.timeslots.query with params:', params);
   return sdk.timeslots.query(params).then(response => {
     return denormalisedResponseEntities(response);
   });
@@ -381,8 +383,15 @@ export const fetchTimeSlots = (listingId, start, end, timeZone, options) => (
     page: 1,
   };
 
-  // For small time units, we fetch the data per date.
-  // This is to avoid fetching too much data (with 15 minute intervals, there can be 24*4*31 = 2928 time slots)
+  // Ensure listingId is a string UUID
+  const listing_id = typeof listingId === 'object' && listingId.uuid ? listingId.uuid : listingId;
+
+  // Ensure start and end are ISO8601 strings
+  const startISO = typeof start === 'string' ? start : start?.toISOString();
+  const endISO = typeof end === 'string' ? end : end?.toISOString();
+
+  const params = { listing_id, start: startISO, end: endISO, ...extraParams };
+
   if (useFetchTimeSlotsForDate) {
     const dateId = stringifyDateToISO8601(start, timeZone);
     const dateData = getState().ListingPage.timeSlotsForDate[dateId];
@@ -393,7 +402,7 @@ export const fetchTimeSlots = (listingId, start, end, timeZone, options) => (
     }
 
     dispatch(fetchTimeSlotsForDateRequest(dateId));
-    return dispatch(timeSlotsRequest({ listingId, start, end, ...extraParams }))
+    return dispatch(timeSlotsRequest(params))
       .then(timeSlots => {
         dispatch(fetchTimeSlotsForDateSuccess(dateId, timeSlots));
         return timeSlots;
@@ -405,7 +414,7 @@ export const fetchTimeSlots = (listingId, start, end, timeZone, options) => (
   } else {
     const monthId = monthIdString(start, timeZone);
     dispatch(fetchMonthlyTimeSlotsRequest(monthId));
-    return dispatch(timeSlotsRequest({ listingId, start, end, ...extraParams }))
+    return dispatch(timeSlotsRequest(params))
       .then(timeSlots => {
         dispatch(fetchMonthlyTimeSlotsSuccess(monthId, timeSlots));
         return timeSlots;

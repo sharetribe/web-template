@@ -46,6 +46,13 @@ const getPriceValidators = (listingMinimumPriceSubUnits, marketplaceCurrency, in
     : priceRequired;
 };
 
+// Add retail price validators
+const getRetailPriceValidators = (intl) => {
+  const retailPriceRequiredMsgId = { id: 'EditListingPricingAndStockForm.retailPriceRequired' };
+  const retailPriceRequiredMsg = intl.formatMessage(retailPriceRequiredMsgId);
+  return validators.required(retailPriceRequiredMsg);
+};
+
 /**
  * If stock type is changed to infinity (on the fly),
  * we show checkbox for providers to update their current stock to infinity.
@@ -148,6 +155,7 @@ export const EditListingPricingAndStockForm = props => (
         marketplaceCurrency,
         intl
       );
+      const retailPriceValidators = getRetailPriceValidators(intl);
       // Note: outdated listings don't have listingType!
       // I.e. listings that are created with previous listing type setup.
       const hasStockManagement = listingType?.stockType === STOCK_MULTIPLE_ITEMS;
@@ -208,6 +216,7 @@ export const EditListingPricingAndStockForm = props => (
               id: 'EditListingPricingAndStockForm.retailPriceInputPlaceholder',
             })}
             currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
+            validate={retailPriceValidators}
           />
 
           <UpdateStockToInfinityCheckboxMaybe

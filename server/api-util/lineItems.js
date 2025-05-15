@@ -139,123 +139,81 @@ const getDateRangeQuantityAndLineItems = (orderData, code) => {
  * @returns {Array} lineItems
  */
 exports.transactionLineItems = (listing, orderData, providerCommission, customerCommission) => {
-  const publicData = listing.attributes.publicData;
-  const unitPrice = listing.attributes.price;
-  const currency = unitPrice.currency;
-
-  /**
-   * Pricing starts with order's base price:
-   * Listing's price is related to a single unit. It needs to be multiplied by quantity
-   *
-   * Initial line-item needs therefore:
-   * - code (based on unitType)
-   * - unitPrice
-   * - quantity
-   * - includedFor
-   */
-
-  // Unit type needs to be one of the following:
-  // day, night, hour or item
+  const { publicData, price: flatPrice } = listing.attributes;
   const unitType = publicData.unitType;
-  const code = `line-item/${unitType}`;
+  const currency = flatPrice.currency;
 
-  // Here "extra line-items" means line-items that are tied to unit type
-  // E.g. by default, "shipping-fee" is tied to 'item' aka buying products.
-  const quantityAndExtraLineItems =
-    unitType === 'item'
-      ? getItemQuantityAndLineItems(orderData, publicData, currency)
-      : unitType === 'fixed'
-      ? getFixedQuantityAndLineItems(orderData)
-      : unitType === 'hour'
-      ? getHourQuantityAndLineItems(orderData)
-      : ['day', 'night'].includes(unitType)
-      ? getDateRangeQuantityAndLineItems(orderData, code)
-      : {};
+  // Ensure 3-night minimum
+  const { bookingStart, bookingEnd } = orderData || {};
+  const startDate = new Date(bookingStart);
+  const endDate = new Date(bookingEnd);
+  const nights = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
 
-  const { quantity, units, seats, extraLineItems } = quantityAndExtraLineItems;
-
-  // Throw error if there is no quantity information given
-  if (!quantity && !(units && seats)) {
-    const missingFields = [];
-
-    if (!quantity) missingFields.push('quantity');
-    if (!units) missingFields.push('units');
-    if (!seats) missingFields.push('seats');
-
-    const message = `Error: orderData is missing the following information: ${missingFields.join(
-      ', '
-    )}. Quantity or either units & seats is required.`;
-
-    const error = new Error(message);
-    error.status = 400;
-    error.statusText = message;
-    error.data = {};
-    throw error;
+  if (nights < 3) {
+    throw new Error('Minimum booking is 3 nights');
   }
 
-  /**
-   * If you want to use pre-defined component and translations for printing the lineItems base price for order,
-   * you should use one of the codes:
-   * line-item/night, line-item/day, line-item/hour or line-item/item.
-   *
-   * Pre-definded commission components expects line item code to be one of the following:
-   * 'line-item/provider-commission', 'line-item/customer-commission'
-   *
-   * By default OrderBreakdown prints line items inside LineItemUnknownItemsMaybe if the lineItem code is not recognized. */
+  // Calculate base per-day rate from flat price (3-night value)
+  const basePerDay = Math.round(flatPrice.amount / 3);
+  const unitPrice = new Money(basePerDay, currency);
 
-  const quantityOrSeats = !!units && !!seats ? { units, seats } : { quantity };
   const order = {
-    code,
+    code: 'line-item/day',
     unitPrice,
-    ...quantityOrSeats,
+    quantity: nights,
     includeFor: ['customer', 'provider'],
   };
 
-  // Provider commission reduces the amount of money that is paid out to provider.
-  // Therefore, the provider commission line-item should have negative effect to the payout total.
-  const getNegation = percentage => {
-    return -1 * percentage;
-  };
+  // Calculate discount
+  let discountPercent = 0;
+  let discountCode = '';
+  if (nights >= 4 && nights <= 5) {
+    discountPercent = 0.25;
+    discountCode = 'line-item/discount-25';
+  } else if (nights >= 6 && nights <= 7) {
+    discountPercent = 0.4;
+    discountCode = 'line-item/discount-40';
+  } else if (nights >= 8) {
+    discountPercent = 0.5;
+    discountCode = 'line-item/discount-50';
+  }
 
-  // Note: extraLineItems for product selling (aka shipping fee)
-  // is not included in either customer or provider commission calculation.
+  const discountLineItem = discountPercent > 0 ? {
+    code: discountCode,
+    unitPrice: new Money(-Math.round(unitPrice.amount * nights * discountPercent), currency),
+    quantity: 1,
+    includeFor: ['customer']
+  } : null;
 
-  // The provider commission is what the provider pays for the transaction, and
-  // it is the subtracted from the order price to get the provider payout:
-  // orderPrice - providerCommission = providerPayout
+  const getNegation = percentage => -1 * percentage;
+
   const providerCommissionMaybe = hasCommissionPercentage(providerCommission)
-    ? [
-        {
-          code: 'line-item/provider-commission',
-          unitPrice: calculateTotalFromLineItems([order]),
-          percentage: getNegation(providerCommission.percentage),
-          includeFor: ['provider'],
-        },
-      ]
+    ? [{
+        code: 'line-item/provider-commission',
+        unitPrice: calculateTotalFromLineItems([order]),
+        percentage: getNegation(providerCommission.percentage),
+        includeFor: ['provider'],
+      }]
     : [];
 
-  // The customer commission is what the customer pays for the transaction, and
-  // it is added on top of the order price to get the customer's payin price:
-  // orderPrice + customerCommission = customerPayin
   const customerCommissionMaybe = hasCommissionPercentage(customerCommission)
-    ? [
-        {
-          code: 'line-item/customer-commission',
-          unitPrice: calculateTotalFromLineItems([order]),
-          percentage: customerCommission.percentage,
-          includeFor: ['customer'],
-        },
-      ]
+    ? [{
+        code: 'line-item/customer-commission',
+        unitPrice: calculateTotalFromLineItems([order]),
+        percentage: customerCommission.percentage,
+        includeFor: ['customer'],
+      }]
     : [];
 
-  // Let's keep the base price (order) as first line item and provider and customer commissions as last.
-  // Note: the order matters only if OrderBreakdown component doesn't recognize line-item.
+  // Final lineItems array: only order, discount (if any), and commission line items (no extraLineItems).
   const lineItems = [
     order,
-    ...extraLineItems,
+    ...(discountLineItem ? [discountLineItem] : []),
     ...providerCommissionMaybe,
-    ...customerCommissionMaybe,
+    ...customerCommissionMaybe
   ];
+
+  console.log('🧾 Final line items:', lineItems);
 
   return lineItems;
 };

@@ -68,7 +68,7 @@ import css from './EditListingWizard.module.css';
 //         Details tab asks for "title" and is therefore the first tab in the wizard flow.
 const TABS_DETAILS_ONLY = [DETAILS];
 const TABS_PRODUCT = [DETAILS, PRICING_AND_STOCK, DELIVERY, PHOTOS];
-const TABS_BOOKING = [DETAILS, LOCATION, PRICING, PHOTOS];
+const TABS_BOOKING = [DETAILS, PRICING, AVAILABILITY, PHOTOS];
 const TABS_INQUIRY = [DETAILS, LOCATION, PRICING, PHOTOS];
 const TABS_ALL = [...TABS_PRODUCT, ...TABS_BOOKING, ...TABS_INQUIRY];
 
@@ -111,7 +111,7 @@ const tabsForInquiryProcess = (processTabs, listingTypeConfig) => {
  * @param {boolean} isNewListingFlow
  * @param {string} processName
  */
-const tabLabelAndSubmit = (intl, tab, isNewListingFlow, isPriceDisabled, processName) => {
+const tabLabelAndSubmit = (intl, tab, isNewListingFlow, isPriceDisabled, processName, processTabs) => {
   const processNameString = isNewListingFlow ? `${processName}.` : '';
   const newOrEdit = isNewListingFlow ? 'new' : 'edit';
 
@@ -137,11 +137,15 @@ const tabLabelAndSubmit = (intl, tab, isNewListingFlow, isPriceDisabled, process
         : `EditListingWizard.${processNameString}${newOrEdit}.saveLocation`;
   } else if (tab === AVAILABILITY) {
     labelKey = 'EditListingWizard.tabLabelAvailability';
-    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveAvailability`;
+    const isLastTab = processTabs?.[processTabs.length - 1] === AVAILABILITY;
+    submitButtonKey = isNewListingFlow && isLastTab
+      ? 'EditListingWizard.publishListing'
+      : 'EditListingWizard.next';
   } else if (tab === PHOTOS) {
     labelKey = 'EditListingWizard.tabLabelPhotos';
-    submitButtonKey = isNewListingFlow 
-      ? 'EditListingPhotosForm.publishListing'
+    const isLastTab = processTabs?.[processTabs.length - 1] === PHOTOS;
+    submitButtonKey = isNewListingFlow && isLastTab
+      ? 'EditListingWizard.publishListing'
       : `EditListingWizard.${processNameString}${newOrEdit}.savePhotos`;
   }
 
@@ -645,7 +649,8 @@ class EditListingWizard extends Component {
               tab,
               isNewListingFlow,
               isPriceDisabled,
-              processName
+              processName,
+              tabs
             );
             return (
               <EditListingWizardTab

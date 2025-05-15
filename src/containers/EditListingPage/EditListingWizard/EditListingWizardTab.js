@@ -119,7 +119,8 @@ const EditListingWizardTab = props => {
   // New listing flow has automatic redirects to new tab on the wizard
   // and the last panel calls publishListing API endpoint.
   const automaticRedirectsForNewListingFlow = (tab, listingId) => {
-    if (tab !== marketplaceTabs[marketplaceTabs.length - 1]) {
+    const isLastTab = tab === marketplaceTabs[marketplaceTabs.length - 1];
+    if (!isLastTab) {
       // Create listing flow: smooth scrolling polyfill to scroll to correct tab
       handleCreateFlowTabScrolling(false);
 
@@ -148,11 +149,7 @@ const EditListingWizardTab = props => {
 
     return onUpdateListingOrCreateListingDraft(tab, updateListingValues)
       .then(r => {
-        // If this is the photos tab (final step), publish the listing
-        if (isNewListingFlow && tab === PHOTOS) {
-          const listingId = r.data.data.id;
-          handlePublishListing(listingId);
-        } else if (isNewListingFlow) {
+        if (isNewListingFlow) {
           const listingId = r.data.data.id;
           automaticRedirectsForNewListingFlow(tab, listingId);
         }
@@ -223,17 +220,18 @@ const EditListingWizardTab = props => {
     case AVAILABILITY: {
       return (
         <EditListingAvailabilityPanel
+          {...panelProps(AVAILABILITY)}
+          handlePublishListing={handlePublishListing}
           allExceptions={allExceptions}
           weeklyExceptionQueries={weeklyExceptionQueries}
           monthlyExceptionQueries={monthlyExceptionQueries}
           onFetchExceptions={onFetchExceptions}
           onAddAvailabilityException={onAddAvailabilityException}
           onDeleteAvailabilityException={onDeleteAvailabilityException}
-          handlePublishListing={handlePublishListing}
           config={config}
           history={history}
           routeConfiguration={routeConfiguration}
-          {...panelProps(AVAILABILITY)}
+          onNextTab={() => onCompleteEditListingWizardTab(AVAILABILITY, {})}
         />
       );
     }

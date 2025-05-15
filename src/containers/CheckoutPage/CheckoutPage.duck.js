@@ -9,6 +9,10 @@ import { fetchCurrentUserHasOrdersSuccess, fetchCurrentUser } from '../../ducks/
 
 export const SET_INITIAL_VALUES = 'app/CheckoutPage/SET_INITIAL_VALUES';
 
+export const FETCH_TRANSACTION_LINE_ITEMS_REQUEST = 'app/CheckoutPage/FETCH_TRANSACTION_LINE_ITEMS_REQUEST';
+export const FETCH_TRANSACTION_LINE_ITEMS_SUCCESS = 'app/CheckoutPage/FETCH_TRANSACTION_LINE_ITEMS_SUCCESS';
+export const FETCH_TRANSACTION_LINE_ITEMS_ERROR = 'app/CheckoutPage/FETCH_TRANSACTION_LINE_ITEMS_ERROR';
+
 export const INITIATE_ORDER_REQUEST = 'app/CheckoutPage/INITIATE_ORDER_REQUEST';
 export const INITIATE_ORDER_SUCCESS = 'app/CheckoutPage/INITIATE_ORDER_SUCCESS';
 export const INITIATE_ORDER_ERROR = 'app/CheckoutPage/INITIATE_ORDER_ERROR';
@@ -44,6 +48,8 @@ const initialState = {
   stripeCustomerFetched: false,
   initiateInquiryInProgress: false,
   initiateInquiryError: null,
+  fetchLineItemsInProgress: false,
+  fetchLineItemsError: null,
 };
 
 export default function checkoutPageReducer(state = initialState, action = {}) {
@@ -51,6 +57,13 @@ export default function checkoutPageReducer(state = initialState, action = {}) {
   switch (type) {
     case SET_INITIAL_VALUES:
       return { ...initialState, ...payload };
+
+    case FETCH_TRANSACTION_LINE_ITEMS_REQUEST:
+      return { ...state, fetchLineItemsInProgress: true, fetchLineItemsError: null };
+    case FETCH_TRANSACTION_LINE_ITEMS_SUCCESS:
+      return { ...state, fetchLineItemsInProgress: false };
+    case FETCH_TRANSACTION_LINE_ITEMS_ERROR:
+      return { ...state, fetchLineItemsInProgress: false, fetchLineItemsError: payload };
 
     case SPECULATE_TRANSACTION_REQUEST:
       return {
@@ -179,6 +192,14 @@ export const initiateInquiryError = e => ({
   payload: e,
 });
 
+export const fetchTransactionLineItemsRequest = () => ({ type: FETCH_TRANSACTION_LINE_ITEMS_REQUEST });
+export const fetchTransactionLineItemsSuccess = () => ({ type: FETCH_TRANSACTION_LINE_ITEMS_SUCCESS });
+export const fetchTransactionLineItemsError = e => ({
+  type: FETCH_TRANSACTION_LINE_ITEMS_ERROR,
+  error: true,
+  payload: e,
+});
+
 /* ================ Thunks ================ */
 
 export const initiateOrder = (
@@ -190,8 +211,10 @@ export const initiateOrder = (
 ) => (dispatch, getState, sdk) => {
   dispatch(initiateOrderRequest());
 
-  // If we already have a transaction ID, we should transition, not
-  // initiate.
+  // Log transactionId before determining flow
+  console.log('initiateOrder: transactionId =', transactionId);
+
+  // If we already have a transaction ID, we should transition, not initiate.
   const isTransition = !!transactionId;
 
   const { deliveryMethod, quantity, bookingDates, ...otherOrderParams } = orderParams;
@@ -224,6 +247,9 @@ export const initiateOrder = (
     expand: true,
   };
 
+  // Add API submission log
+  console.log('📡 Submitting booking request to API', bodyParams);
+
   const handleSuccess = response => {
     const entities = denormalisedResponseEntities(response);
     const order = entities[0];
@@ -246,11 +272,19 @@ export const initiateOrder = (
   };
 
   if (isTransition && isPrivilegedTransition) {
+    if (!transactionId) {
+      console.error('transitionPrivileged called without transactionId!');
+      return Promise.reject(new Error('transitionPrivileged called without transactionId!'));
+    }
     // transition privileged
     return transitionPrivileged({ isSpeculative: false, orderData, bodyParams, queryParams })
       .then(handleSuccess)
       .catch(handleError);
   } else if (isTransition) {
+    if (!transactionId) {
+      console.error('transition called without transactionId!');
+      return Promise.reject(new Error('transition called without transactionId!'));
+    }
     // transition non-privileged
     return sdk.transactions
       .transition(bodyParams, queryParams)
@@ -258,7 +292,24 @@ export const initiateOrder = (
       .catch(handleError);
   } else if (isPrivilegedTransition) {
     // initiate privileged
-    return initiatePrivileged({ isSpeculative: false, orderData, bodyParams, queryParams })
+    const transition = 'transition/request-payment';
+    const processAlias = 'default-booking/release-1';
+    console.log('Initiating privileged transaction with:', {
+      transactionId,
+      transition,
+      processAlias,
+    });
+    const bodyParams = {
+      transition,
+      processAlias,
+      params: transitionParams,
+    };
+    return initiatePrivileged({
+      isSpeculative: false,
+      orderData,
+      bodyParams,
+      queryParams,
+    })
       .then(handleSuccess)
       .catch(handleError);
   } else {
@@ -394,8 +445,10 @@ export const speculateTransaction = (
 ) => (dispatch, getState, sdk) => {
   dispatch(speculateTransactionRequest());
 
-  // If we already have a transaction ID, we should transition, not
-  // initiate.
+  // Log transactionId before determining flow
+  console.log('speculateTransaction: transactionId =', transactionId);
+
+  // If we already have a transaction ID, we should transition, not initiate.
   const isTransition = !!transactionId;
 
   const { deliveryMethod, quantity, bookingDates, ...otherOrderParams } = orderParams;
@@ -450,19 +503,44 @@ export const speculateTransaction = (
   };
 
   if (isTransition && isPrivilegedTransition) {
+    if (!transactionId) {
+      console.error('transitionPrivileged called without transactionId!');
+      return Promise.reject(new Error('transitionPrivileged called without transactionId!'));
+    }
     // transition privileged
     return transitionPrivileged({ isSpeculative: true, orderData, bodyParams, queryParams })
       .then(handleSuccess)
       .catch(handleError);
   } else if (isTransition) {
+    if (!transactionId) {
+      console.error('transition called without transactionId!');
+      return Promise.reject(new Error('transition called without transactionId!'));
+    }
     // transition non-privileged
     return sdk.transactions
       .transitionSpeculative(bodyParams, queryParams)
       .then(handleSuccess)
       .catch(handleError);
   } else if (isPrivilegedTransition) {
-    // initiate privileged
-    return initiatePrivileged({ isSpeculative: true, orderData, bodyParams, queryParams })
+    // initiate privileged (speculative)
+    const transition = 'transition/request-payment';
+    const processAlias = 'default-booking/release-1';
+    console.log('Initiating privileged speculative transaction with:', {
+      transactionId,
+      transition,
+      processAlias,
+    });
+    const bodyParams = {
+      transition,
+      processAlias,
+      params: transitionParams,
+    };
+    return initiatePrivileged({
+      isSpeculative: true,
+      orderData,
+      bodyParams,
+      queryParams,
+    })
       .then(handleSuccess)
       .catch(handleError);
   } else {
@@ -490,5 +568,31 @@ export const stripeCustomer = () => (dispatch, getState, sdk) => {
     })
     .catch(e => {
       dispatch(stripeCustomerError(storableError(e)));
+    });
+};
+
+export const fetchTransactionLineItems = ({ orderData, listingId, isOwnListing }) => (dispatch, getState, sdk) => {
+  dispatch(fetchTransactionLineItemsRequest());
+
+  return sdk.transactions
+    .initiateSpeculative(
+      {
+        params: {
+          ...orderData,
+          listingId,
+        },
+      },
+      {
+        include: ['lineItems'],
+        expand: true,
+      }
+    )
+    .then(response => {
+      dispatch(fetchTransactionLineItemsSuccess());
+      return response;
+    })
+    .catch(e => {
+      dispatch(fetchTransactionLineItemsError(storableError(e)));
+      throw e;
     });
 };
