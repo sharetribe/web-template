@@ -632,6 +632,7 @@
   "OrderPanel.closedListingButtonText": "Sorry, this listing has been closed.",
   "OrderPanel.ctaButtonMessageBooking": "Book now",
   "OrderPanel.ctaButtonMessageInquiry": "Send an inquiry",
+  "OrderPanel.ctaButtonMessageMakeOffer": "Make an offer",
   "OrderPanel.ctaButtonMessageNoStock": "Out of stock",
   "OrderPanel.ctaButtonMessagePurchase": "Buy now",
   "OrderPanel.listingCurrencyInvalid": "Oops, listing currency doesn't match the marketplace currency.",
