@@ -29,7 +29,7 @@ import React, { useEffect } from 'react';
 import Decimal from 'decimal.js';
 
 import { types as sdkTypes } from '../../util/sdkLoader';
-import { FormattedMessage } from '../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { LINE_ITEM_DAY, LINE_ITEM_NIGHT, LISTING_UNIT_TYPES } from '../../util/types';
 import { unitDivisor, convertMoneyToNumber, convertUnitToSubUnit, formatMoney } from '../../util/currency';
 import { getProcess, TX_TRANSITION_ACTOR_CUSTOMER } from '../../transactions/transaction';
@@ -165,6 +165,10 @@ const validateMoneyObject = (obj, context) => {
 
 const estimatedTotalPrice = (lineItems, marketplaceCurrency) => {
   // Log incoming data
+  console.log('🔍 Debugging estimatedTotalPrice input:');
+  console.log('Line items:', lineItems);
+  console.log('Marketplace currency:', marketplaceCurrency);
+
   debugLog('estimatedTotalPrice input', {
     lineItems,
     marketplaceCurrency
@@ -172,6 +176,10 @@ const estimatedTotalPrice = (lineItems, marketplaceCurrency) => {
 
   const numericTotalPrice = lineItems.reduce((sum, lineItem) => {
     // Validate each lineItem's lineTotal
+    console.log('🔍 Debugging lineItem.lineTotal:');
+    console.log('Is Money instance:', lineItem.lineTotal instanceof Money);
+    console.log('Object details:', lineItem.lineTotal);
+    
     validateMoneyObject(lineItem.lineTotal, 'lineItem.lineTotal');
     const numericPrice = convertMoneyToNumber(lineItem.lineTotal);
     return new Decimal(numericPrice).add(sum);
@@ -186,6 +194,10 @@ const estimatedTotalPrice = (lineItems, marketplaceCurrency) => {
   );
 
   // Log result
+  console.log('🔍 Debugging estimatedTotalPrice result:');
+  console.log('Is Money instance:', result instanceof Money);
+  console.log('Object details:', result);
+
   debugLog('estimatedTotalPrice result', result);
   return result;
 };
@@ -279,8 +291,13 @@ const ensureMoney = (value, currency, fallbackAmount = 0) => {
   return new Money(fallbackAmount, currency);
 };
 
-const formatMoneySafely = (money, fallbackText = 'Price unavailable') => {
+const formatMoneySafely = (intl, money, fallbackText = 'Price unavailable') => {
   try {
+    console.log('🔍 Debugging price formatting in EstimatedCustomerBreakdownMaybe:');
+    console.log('Is Money instance:', money instanceof Money);
+    console.log('Object details:', money);
+    console.log('Money constructor:', Money);
+
     debugLog('Formatting money', {
       input: money,
       isMoneyInstance: money instanceof Money,
@@ -290,7 +307,7 @@ const formatMoneySafely = (money, fallbackText = 'Price unavailable') => {
 
     // If it's not a Money instance but has the right shape, try to convert it
     if (!(money instanceof Money) && money?.amount !== undefined && money?.currency) {
-      debugLog('Converting to Money instance', money);
+      console.log('Attempting to convert to Money instance:', money);
       money = new Money(money.amount, money.currency);
     }
 
@@ -298,16 +315,19 @@ const formatMoneySafely = (money, fallbackText = 'Price unavailable') => {
       throw new Error('Not a valid Money instance');
     }
 
-    const formatted = formatMoney(money);
+    const formatted = formatMoney(intl, money);
+    console.log('Money formatted successfully:', { input: money, output: formatted });
     debugLog('Money formatted successfully', { input: money, output: formatted });
     return formatted;
   } catch (e) {
+    console.error('Money formatting failed:', e);
     debugLog('Money formatting failed', { error: e.toString(), input: money });
     return fallbackText;
   }
 };
 
 const EstimatedCustomerBreakdownMaybe = props => {
+  const intl = useIntl();
   useEffect(() => {
     validateSDK();
     // debugLog('EstimatedCustomerBreakdownMaybe mounted', {
@@ -353,107 +373,8 @@ const EstimatedCustomerBreakdownMaybe = props => {
       return null;
     }
 
+    // Remove all frontend discount logic. Only use the provided lineItems.
     let adjustedLineItems = lineItems;
-    if (
-      (lineItemUnitType === LINE_ITEM_DAY || lineItemUnitType === LINE_ITEM_NIGHT) &&
-      numberOfDays > 0
-    ) {
-      // Ensure we have a valid Money object for the flat price
-      const flatPrice = validateMoneyObject(unitLineItem.unitPrice, 'flatPrice') 
-        ? unitLineItem.unitPrice 
-        : new Money(0, currency);
-      
-      debugLog('Flat price', {
-        original: unitLineItem.unitPrice,
-        validated: flatPrice,
-        isMoneyInstance: flatPrice instanceof Money,
-        amount: flatPrice?.amount,
-        currency: flatPrice?.currency
-      });
-
-      if (!flatPrice || flatPrice.amount <= 0) {
-        debugLog('Invalid flat price', flatPrice);
-        return null;
-      }
-
-      // Calculate base daily price (ensuring integer cents)
-      const baseDailyAmount = Math.round(flatPrice.amount / 3);
-      const baseDailyPrice = new Money(baseDailyAmount, currency);
-      const preDiscountTotalAmount = baseDailyAmount * numberOfDays;
-      const preDiscountTotal = new Money(preDiscountTotalAmount, currency);
-
-      debugLog('Price calculations', {
-        baseDailyAmount,
-        baseDailyPrice,
-        preDiscountTotal,
-        numberOfDays
-      });
-
-      // Format prices safely
-      const formattedPerDay = formatMoneySafely(baseDailyPrice);
-      const formattedTotal = formatMoneySafely(preDiscountTotal);
-      
-      debugLog('Formatted prices', {
-        formattedPerDay,
-        formattedTotal
-      });
-
-      const perDayDescription = `${formattedPerDay} per day x ${numberOfDays} = ${formattedTotal}`;
-      
-      const perDayLineItem = {
-        code: 'line-item/per-day',
-        unitPrice: baseDailyPrice,
-        quantity: numberOfDays,
-        lineTotal: preDiscountTotal,
-        includeFor: ['customer'],
-        reversal: false,
-        description: perDayDescription,
-      };
-
-      // Build adjusted line items array
-      let adjusted = [perDayLineItem, ...lineItems.filter(item => item !== unitLineItem)];
-      
-      // Determine discount percentage and label
-      let discountPercent = 0;
-      let discountLabel = '';
-      let discountCode = '';
-      if (numberOfDays >= 4 && numberOfDays <= 5) {
-        discountPercent = 0.25;
-        discountLabel = '25% off';
-        discountCode = 'line-item/discount-25';
-      } else if (numberOfDays >= 6 && numberOfDays <= 7) {
-        discountPercent = 0.40;
-        discountLabel = '40% off';
-        discountCode = 'line-item/discount-40';
-      } else if (numberOfDays >= 8 && numberOfDays <= 9) {
-        discountPercent = 0.50;
-        discountLabel = '50% off';
-        discountCode = 'line-item/discount-50';
-      } else if (numberOfDays >= 10) {
-        discountPercent = 0.60;
-        discountLabel = '60% off';
-        discountCode = 'line-item/discount-60';
-      }
-
-      // Calculate discount amount (ensuring integer cents)
-      const discountAmount = Math.round(preDiscountTotalAmount * discountPercent);
-      const discountMoney = new Money(-discountAmount, currency);
-
-      if (discountPercent > 0) {
-        const discountLineItem = {
-          code: discountCode,
-          unitPrice: discountMoney,
-          quantity: 1,
-          lineTotal: discountMoney,
-          includeFor: ['customer'],
-          reversal: false,
-          description: `${discountLabel} discount`,
-        };
-        adjusted = [perDayLineItem, discountLineItem, ...lineItems.filter(item => item !== unitLineItem)];
-      }
-      
-      adjustedLineItems = adjusted;
-    }
 
     let process = null;
     try {
