@@ -448,7 +448,9 @@ const pendingIsApproved = isPendingApprovalVariant && isApproved;
     {publicData?.brand ? (
       <NamedLink
         name="SearchPage"
-        params={{ pub_brand: publicData.brand }}
+        to={{
+          search: `?pub_category=dresses&pub_brand=${encodeURIComponent(publicData.brand)}`
+        }}
         className={css.brandLinkText}
       >
         {publicData.brand.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
