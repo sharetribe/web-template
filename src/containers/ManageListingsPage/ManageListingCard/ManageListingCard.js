@@ -351,16 +351,8 @@ const PriceMaybe = props => {
   return (
     <div className={css.price}>
       <div className={css.priceValue} title={priceTitle}>
-        {formattedPrice}
+        Price per borrow: {formattedPrice}
       </div>
-      {isBookable ? (
-        <div className={css.perUnit}>
-          <FormattedMessage
-            id="ManageListingCard.perUnit"
-            values={{ unitType: publicData?.unitType }}
-          />
-        </div>
-      ) : null}
     </div>
   );
 };
