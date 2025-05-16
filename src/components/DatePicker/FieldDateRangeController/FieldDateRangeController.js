@@ -18,6 +18,15 @@ import DateRangeController from '../DatePickers/DateRangeController';
 import css from './FieldDateRangeController.module.css';
 
 const handleChange = (parentOnChange, fieldOnChange) => value => {
+  // When clearing datepicker values, the value passed is null
+  if (!value) {
+    if (parentOnChange) {
+      parentOnChange(value);
+    }
+    fieldOnChange(value);
+    return;
+  }
+
   const [startDate, endDate] = value;
   // If "onChange" callback is passed through the props,
   // it can notify the parent when the content of the input has changed.
