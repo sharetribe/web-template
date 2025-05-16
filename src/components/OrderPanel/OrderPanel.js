@@ -300,6 +300,7 @@ const OrderPanel = props => {
     marketplaceName,
     fetchLineItemsInProgress,
     fetchLineItemsError,
+    onToggleFavorites,
     payoutDetailsWarning,
     reschedule, // [SKYFARER]
   } = props;
@@ -434,7 +435,7 @@ const OrderPanel = props => {
       } catch {}
     }
   }, [currentUser])
-
+  
   return (
     <div className={classes}>
       <ModalInMobile
