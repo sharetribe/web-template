@@ -51,15 +51,16 @@ const PriceMaybe = props => {
 
   const isBookable = isBookingProcessAlias(publicData?.transactionProcessAlias);
   const { formattedPrice, priceTitle } = priceData(price, config.currency, intl);
+  
+  console.log('ListingCard PriceMaybe - unitType:', publicData?.unitType);
+  
   return (
     <div className={css.price}>
       <div className={css.priceValue} title={priceTitle}>
         {formattedPrice}
       </div>
       {isBookable ? (
-        <div className={css.perUnit}>
-          <FormattedMessage id="ListingCard.perUnit" values={{ unitType: publicData?.unitType }} />
-        </div>
+        <div className={css.perUnit}>per borrow</div>
       ) : null}
     </div>
   );
