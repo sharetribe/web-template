@@ -138,7 +138,7 @@ export const logout = () => (dispatch, getState, sdk) => {
     .then(() => {
       // The order of the dispatched actions
       dispatch(logoutSuccess());
-      dispatch(clearCurrentUser());
+      // dispatch(clearCurrentUser()); // This would redirect us to the login on protected routes and the auth0 logout wouldn't take place
       log.clearUserId();
       dispatch(userLogout());
     })
