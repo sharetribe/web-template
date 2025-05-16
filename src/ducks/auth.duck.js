@@ -133,22 +133,25 @@ export const logout = () => (dispatch, getState, sdk) => {
 
   // Note that the thunk does not reject when the logout fails, it
   // just dispatches the logout error action.
-  return sdk
-    .logout()
-    .then(() => {
-      // The order of the dispatched actions
-      dispatch(logoutSuccess());
-      // dispatch(clearCurrentUser()); // This would redirect us to the login on protected routes and the auth0 logout wouldn't take place
-      log.clearUserId();
-      dispatch(userLogout());
-    })
-    .then(() => {
-      const AUTH0_DOMAIN = process.env.REACT_APP_AUTH0_DOMAIN;
-      const AUTH0_CLIENT_ID = process.env.REACT_APP_AUTH0_MARKETPLACE_CLIENT_ID;
-      const returnTo = encodeURIComponent(process.env.REACT_APP_MARKETPLACE_ROOT_URL);
-      window.location.href = `https://${AUTH0_DOMAIN}/v2/logout?client_id=${AUTH0_CLIENT_ID}&returnTo=${returnTo}`;
-    })
-    .catch(e => dispatch(logoutError(storableError(e))));
+  return (
+    sdk
+      .logout()
+      // This would redirect us to the login on protected routes and the auth0 logout wouldn't take place
+      // .then(() => {
+      //   // The order of the dispatched actions
+      //   dispatch(logoutSuccess());
+      //   dispatch(clearCurrentUser());
+      //   log.clearUserId();
+      //   dispatch(userLogout());
+      // })
+      .then(() => {
+        const AUTH0_DOMAIN = process.env.REACT_APP_AUTH0_DOMAIN;
+        const AUTH0_CLIENT_ID = process.env.REACT_APP_AUTH0_MARKETPLACE_CLIENT_ID;
+        const returnTo = encodeURIComponent(process.env.REACT_APP_MARKETPLACE_ROOT_URL);
+        window.location.href = `https://${AUTH0_DOMAIN}/v2/logout?client_id=${AUTH0_CLIENT_ID}&returnTo=${returnTo}`;
+      })
+      .catch(e => dispatch(logoutError(storableError(e))))
+  );
 };
 
 export const signupWithIdp = params => (dispatch, getState, sdk) => {
