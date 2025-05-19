@@ -29,8 +29,6 @@ const ActionButtonsMaybe = props => {
   const primaryButton = primaryButtonProps ? (
     <PrimaryButton
       inProgress={primaryButtonProps.inProgress}
-      // next row from before fixing the issue with the orderShippingProvider and orderTrackingCode
-      // disabled={buttonsDisabled || !primaryButtonProps.orderShippingProvider || !primaryButtonProps.orderTrackingCode}
       disabled={buttonsDisabled || !primaryButtonProps.orderShippingProvider || !primaryButtonProps.orderTrackingCode}
       onClick={() => primaryButtonProps.onAction(primaryButtonProps.orderShippingProvider, primaryButtonProps.orderTrackingCode)}
     >
