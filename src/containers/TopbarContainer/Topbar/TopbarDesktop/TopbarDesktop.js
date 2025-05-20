@@ -55,7 +55,7 @@ const InboxLink = ({ notificationCount, currentUserHasListings }) => {
   );
 };
 
-const ProfileMenu = ({ currentPage, currentUser, onLogout }) => {
+const ProfileMenu = ({ currentPage, currentUser, onLogout, showManageListingsLink }) => {
   const currentPageClass = page => {
     const isAccountSettingsPage =
       page === 'AccountSettingsPage' && ACCOUNT_SETTINGS_PAGES.includes(currentPage);
@@ -68,15 +68,17 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout }) => {
         <Avatar className={css.avatar} user={currentUser} disableProfileLink />
       </MenuLabel>
       <MenuContent className={css.profileMenuContent}>
-        <MenuItem key="ManageListingsPage">
-          <NamedLink
-            className={classNames(css.menuLink, currentPageClass('ManageListingsPage'))}
-            name="ManageListingsPage"
-          >
-            <span className={css.menuItemBorder} />
-            <FormattedMessage id="TopbarDesktop.yourListingsLink" />
-          </NamedLink>
-        </MenuItem>
+        {showManageListingsLink ? (
+          <MenuItem key="ManageListingsPage">
+            <NamedLink
+              className={classNames(css.menuLink, currentPageClass('ManageListingsPage'))}
+              name="ManageListingsPage"
+            >
+              <span className={css.menuItemBorder} />
+              <FormattedMessage id="TopbarDesktop.yourListingsLink" />
+            </NamedLink>
+          </MenuItem>
+        ) : null}
         <MenuItem key="ProfileSettingsPage">
           <NamedLink
             className={classNames(css.menuLink, currentPageClass('ProfileSettingsPage'))}
@@ -165,7 +167,12 @@ const TopbarDesktop = props => {
   ) : null;
 
   const profileMenuMaybe = authenticatedOnClientSide ? (
-    <ProfileMenu currentPage={currentPage} currentUser={currentUser} onLogout={onLogout} />
+    <ProfileMenu
+      currentPage={currentPage}
+      currentUser={currentUser}
+      onLogout={onLogout}
+      showManageListingsLink={showCreateListingsLink}
+    />
   ) : null;
 
   const signupLinkMaybe = isAuthenticatedOrJustHydrated ? null : <SignupLink />;
