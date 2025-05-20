@@ -45,6 +45,13 @@ const UserNav = props => {
         name: 'ContactDetailsPage',
       },
     },
+    {
+      text: <FormattedMessage id="UserNav.favoriteListing" />,
+      selected: currentPage === 'FavoriteListingPage',
+      linkProps: {
+        name: 'FavoriteListingPage',
+      },
+    },
   ];
 
   if (!isInstructor(currentUser)) tabs = tabs.filter(tab => tab.linkProps.name !== 'ManageListingsPage')

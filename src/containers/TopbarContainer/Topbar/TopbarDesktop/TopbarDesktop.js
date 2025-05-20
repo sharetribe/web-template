@@ -115,6 +115,16 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout }) => {
             </MenuItem>
           )
         }
+        <MenuItem key="FavoriteListingPage">
+          <NamedLink
+            className={classNames(css.menuLink, currentPageClass('FavoriteListingPage'))}
+            name="FavoriteListingPage"
+          >
+            <span className={css.menuItemBorder} />
+            <FormattedMessage id="TopbarDesktop.favoriteListingLink" />
+          </NamedLink>
+        </MenuItem>
+
         <MenuItem key="ProfileSettingsPage">
           <NamedLink
             className={classNames(css.menuLink, currentPageClass('ProfileSettingsPage'))}

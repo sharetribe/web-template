@@ -36,6 +36,8 @@ const StripePayoutPage = loadable(() => import(/* webpackChunkName: "StripePayou
 const TermsOfServicePage = loadable(() => import(/* webpackChunkName: "TermsOfServicePage" */ '../containers/TermsOfServicePage/TermsOfServicePage'));
 const TransactionPage = loadable(() => import(/* webpackChunkName: "TransactionPage" */ '../containers/TransactionPage/TransactionPage'));
 const NoAccessPage = loadable(() => import(/* webpackChunkName: "NoAccessPage" */ '../containers/NoAccessPage/NoAccessPage'));
+const FavoriteListingPage = loadable(() => import(/* webpackChunkName: "FavoriteListingPage" */ '../containers/FavoriteListingPage/FavoriteListingPage'));
+
 
 // [SKYFARER]
 const GoogleAuthRedirectPage = loadable(() => import(/* webpackChunkName: "GoogleAuthRedirectPage" */ '../containers/GoogleAuthRedirectPage/GoogleAuthRedirectPage'));
@@ -427,6 +429,14 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
     //   name: 'AIMatchingPage',
     //   component: AIMatchingPage
     // },
+    {//Favorite listing
+      path: '/favorites',
+      name: 'FavoriteListingPage',
+      auth: true, // user must be signed in to view this page
+      authPage: 'LoginPage',
+      component: FavoriteListingPage,
+      loadData: pageDataLoadingAPI.FavoriteListingPage.loadData,
+    },
   ];
 };
 
