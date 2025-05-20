@@ -157,7 +157,7 @@ export const ListingCard = props => {
       viewBox="0 0 24 24"
       style={{
         height: '28px',
-        width: '32px',
+        width: '28px',
         marginLeft: '1px',
         marginTop: '-4px',
         verticalAlign: 'middle',
