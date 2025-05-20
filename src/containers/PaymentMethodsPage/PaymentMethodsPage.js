@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
+import { useConfiguration } from '../../context/configurationContext.js';
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { ensureCurrentUser, ensureStripeCustomer, ensurePaymentMethodCard } from '../../util/data';
 import { propTypes } from '../../util/types';
@@ -43,6 +44,7 @@ const PaymentMethodsPageComponent = props => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [cardState, setCardState] = useState(null);
   const intl = useIntl();
+  const config = useConfiguration();
 
   const {
     currentUser,
@@ -158,6 +160,8 @@ const PaymentMethodsPageComponent = props => {
 
   const showForm = cardState === 'replaceCard' || !hasDefaultPaymentMethod;
   const showCardDetails = !!hasDefaultPaymentMethod;
+
+  const showManageListingsLink = showCreateListingLinkForUser(config, currentUser);
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
       <LayoutSideNavigation
@@ -167,7 +171,10 @@ const PaymentMethodsPageComponent = props => {
               desktopClassName={css.desktopTopbar}
               mobileClassName={css.mobileTopbar}
             />
-            <UserNav currentPage="PaymentMethodsPage" />
+            <UserNav
+              currentPage="PaymentMethodsPage"
+              showManageListingsLink={showManageListingsLink}
+            />
           </>
         }
         sideNav={null}

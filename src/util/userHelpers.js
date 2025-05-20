@@ -198,6 +198,13 @@ export const hasPermissionToViewData = currentUser => {
  */
 export const isUserAuthorized = currentUser => currentUser?.attributes?.state === 'active';
 
+const getCurrentUserTypeConfig = (config, currentUser) => {
+  const { userTypes } = config.user;
+  return userTypes.find(
+    ut => ut.userType === currentUser?.attributes?.profile?.publicData?.userType
+  );
+};
+
 /**
  * Check if the links for creating a new listing should be shown to the
  * user currently browsing the marketplace.
@@ -206,11 +213,8 @@ export const isUserAuthorized = currentUser => currentUser?.attributes?.state ==
  * @returns {Boolean} true if the currentUser's user type, or the anonymous user configuration, is set to see the link
  */
 export const showCreateListingLinkForUser = (config, currentUser) => {
-  const { topbar, user } = config;
-  const { userTypes } = user;
-  const currentUserTypeConfig = userTypes.find(
-    ut => ut.userType === currentUser?.attributes?.profile?.publicData?.userType
-  );
+  const { topbar } = config;
+  const currentUserTypeConfig = getCurrentUserTypeConfig(config, currentUser);
 
   const { accountLinksVisibility } = currentUserTypeConfig || {};
 
