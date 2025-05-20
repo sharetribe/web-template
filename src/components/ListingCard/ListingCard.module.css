@@ -137,17 +137,27 @@
 
 .favoriteButton {
   position: absolute;
-  bottom: 5px;
-  right: 5px;
+  bottom: 8px;
+  right: 8px;
+  width: 40px;
+  height: 40px;
   z-index: 2;
+
   background: white;
   border: none;
-  border-radius: 70%;
-  padding: 4px;
-  box-shadow: 0 0 4px rgba(0,0,0,0.2);
+  border-radius: 50%; /* Perfect circle */
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   transition: transform 0.1s ease;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0; 
+  box-sizing: border-box;
 }
+
 
 .favoriteButton:hover {
   transform: scale(1.1);
