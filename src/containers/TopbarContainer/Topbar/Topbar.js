@@ -26,7 +26,7 @@ import TopbarMobileMenu from './TopbarMobileMenu/TopbarMobileMenu';
 import TopbarDesktop from './TopbarDesktop/TopbarDesktop';
 
 import css from './Topbar.module.css';
-import { showCreateListingLinkForUser } from '../../../util/userHelpers';
+import { getCurrentUserTypeRoles, showCreateListingLinkForUser } from '../../../util/userHelpers';
 
 const MAX_MOBILE_SCREEN_WIDTH = 1024;
 
@@ -206,6 +206,24 @@ const TopbarComponent = props => {
   };
 
   const showCreateListingsLink = showCreateListingLinkForUser(config, currentUser);
+  const { customer: isCustomer, provider: isProvider } = getCurrentUserTypeRoles(
+    config,
+    currentUser
+  );
+
+  /**
+   * Determine which tab to use in the inbox link:
+   * - if only provider role – sales
+   * - if only customer role – orders
+   * - if both roles – determine by currentUserHasListings value
+   */
+  const topbarInboxTab = !isCustomer
+    ? 'sales'
+    : !isProvider
+    ? 'orders'
+    : currentUserHasListings
+    ? 'sales'
+    : 'orders';
 
   const { mobilemenu, mobilesearch, keywords, address, origin, bounds } = parse(location.search, {
     latlng: ['origin'],
@@ -229,13 +247,13 @@ const TopbarComponent = props => {
   const mobileMenu = (
     <TopbarMobileMenu
       isAuthenticated={isAuthenticated}
-      currentUserHasListings={currentUserHasListings}
       currentUser={currentUser}
       onLogout={handleLogout}
       notificationCount={notificationCount}
       currentPage={resolvedCurrentPage}
       customLinks={customLinks}
       showCreateListingsLink={showCreateListingsLink}
+      inboxTab={topbarInboxTab}
     />
   );
 
@@ -329,6 +347,7 @@ const TopbarComponent = props => {
           customLinks={customLinks}
           showSearchForm={showSearchForm}
           showCreateListingsLink={showCreateListingsLink}
+          inboxTab={topbarInboxTab}
         />
       </div>
       <Modal
