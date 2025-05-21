@@ -236,11 +236,27 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     sessionStorageKey,
     getDiscountedPriceFromVariants,
   } = props;
+
   const { card, message, paymentMethod: selectedPaymentMethod, formValues } = values;
-  const { saveAfterOnetimePayment: saveAfterOnetimePaymentRaw } = formValues;
+
+  // 🌐 DEBUG: Check if pageData and booking dates are coming through
+  console.log("🧪 DEBUG pageData:", pageData);
+  console.log("🧪 DEBUG pageData.orderData:", pageData?.orderData);
+
+  const bookingStart = pageData?.orderData?.bookingDates?.bookingStart;
+  const bookingEnd = pageData?.orderData?.bookingDates?.bookingEnd;
+
+  console.log("🕓 DEBUG bookingStart:", bookingStart);
+  console.log("🕓 DEBUG bookingEnd:", bookingEnd);
+
+  if (!bookingStart || !bookingEnd) {
+    console.warn("⚠️ Booking dates are missing! Cannot continue with submission.");
+    setSubmitting(false);
+    return;
+  }
 
   const saveAfterOnetimePayment =
-    Array.isArray(saveAfterOnetimePaymentRaw) && saveAfterOnetimePaymentRaw.length > 0;
+    Array.isArray(formValues.saveAfterOnetimePayment) && formValues.saveAfterOnetimePayment.length > 0;
   const selectedPaymentFlow = paymentFlow(selectedPaymentMethod, saveAfterOnetimePayment);
   const hasDefaultPaymentMethodSaved = hasDefaultPaymentMethod(stripeCustomerFetched, currentUser);
   const stripePaymentMethodId = hasDefaultPaymentMethodSaved
@@ -282,8 +298,6 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
       : {};
 
   // Calculate booking duration in nights
-  const bookingStart = pageData?.orderData?.bookingStart;
-  const bookingEnd = pageData?.orderData?.bookingEnd;
   const bookingStartDate = new Date(bookingStart);
   const bookingEndDate = new Date(bookingEnd);
   const oneNightInMs = 24 * 60 * 60 * 1000;
@@ -313,7 +327,7 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
   const discountAmount = Math.round(preDiscountTotal * discountPercent);
   const discountLineItem = discountPercent > 0
     ? {
-        code: discountCode,
+        code: 'line-item/discount',
         unitPrice: { amount: -discountAmount, currency },
         quantity: 1,
         includeFor: ['customer'],
@@ -340,6 +354,10 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     ...optionalPaymentParams,
     ...shippingDetails,
   };
+
+  // Log line items for debugging
+  console.log('🔍 Line item codes being sent:', lineItems.map(item => item.code));
+  console.log('🔍 Full lineItems:', JSON.stringify(lineItems, null, 2));
 
   processCheckoutWithPayment(orderParams, requestPaymentParams)
     .then(response => {

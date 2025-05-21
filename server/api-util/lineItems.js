@@ -149,6 +149,14 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
   const endDate = new Date(bookingEnd);
   const nights = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
 
+  // Add debug logging
+  console.log('🕓 Booking dates debug:');
+  console.log('📅 bookingStart (raw):', bookingStart);
+  console.log('📅 bookingEnd (raw):', bookingEnd);
+  console.log('📆 Parsed startDate:', startDate);
+  console.log('📆 Parsed endDate:', endDate);
+  console.log('🌙 Calculated nights:', nights);
+
   if (nights < 3) {
     throw new Error('Minimum booking is 3 nights');
   }
