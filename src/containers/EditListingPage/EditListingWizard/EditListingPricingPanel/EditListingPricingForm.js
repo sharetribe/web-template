@@ -156,7 +156,7 @@ export const EditListingPricingForm = props => (
                 name="price"
                 className={css.input}
                 autoFocus={autoFocus}
-                label="Price per wear"
+                label="Price per borrow"
                 placeholder={intl.formatMessage({
                   id: 'EditListingPricingForm.priceInputPlaceholder',
                 })}

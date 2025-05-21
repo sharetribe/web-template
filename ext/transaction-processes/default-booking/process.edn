@@ -10,6 +10,10 @@
    [{:name :action/update-protected-data}
     {:name :action/create-pending-booking, :config {:type :time}}
     {:name :action/privileged-set-line-items}
+    {:name :add-line-item, :config {:code :line-item/night}}
+    {:name :add-line-item, :config {:code :line-item/discount}}
+    {:name :add-line-item, :config {:code :line-item/provider-commission}}
+    {:name :add-line-item, :config {:code :line-item/customer-commission}}
     {:name :action/stripe-create-payment-intent}],
    :to :state/pending-payment,
    :privileged? true}
@@ -19,6 +23,10 @@
    [{:name :action/update-protected-data}
     {:name :action/create-pending-booking, :config {:type :time}}
     {:name :action/privileged-set-line-items}
+    {:name :add-line-item, :config {:code :line-item/night}}
+    {:name :add-line-item, :config {:code :line-item/discount}}
+    {:name :add-line-item, :config {:code :line-item/provider-commission}}
+    {:name :add-line-item, :config {:code :line-item/customer-commission}}
     {:name :action/stripe-create-payment-intent}],
    :from :state/inquiry,
    :to :state/pending-payment,
