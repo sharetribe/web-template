@@ -6,7 +6,7 @@ import { useConfiguration } from '../../context/configurationContext';
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
-import { showCreateListingLinkForUser } from '../../util/userHelpers';
+import { showCreateListingLinkForUser, showPaymentDetailsForUser } from '../../util/userHelpers';
 
 import { Page, UserNav, H3, LayoutSideNavigation } from '../../components';
 
@@ -68,6 +68,12 @@ export const PasswordChangePageComponent = props => {
   const title = intl.formatMessage({ id: 'PasswordChangePage.title' });
 
   const showManageListingsLink = showCreateListingLinkForUser(config, currentUser);
+  const { showPayoutDetails, showPaymentMethods } = showPaymentDetailsForUser(config, currentUser);
+  const accountSettingsNavProps = {
+    currentPage: 'PasswordChangePage',
+    showPaymentMethods,
+    showPayoutDetails,
+  };
 
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
@@ -86,7 +92,7 @@ export const PasswordChangePageComponent = props => {
         }
         sideNav={null}
         useAccountSettingsNav
-        currentPage="PasswordChangePage"
+        accountSettingsNavProps={accountSettingsNavProps}
         footer={<FooterContainer />}
       >
         <div className={css.content}>

@@ -198,6 +198,12 @@ export const hasPermissionToViewData = currentUser => {
  */
 export const isUserAuthorized = currentUser => currentUser?.attributes?.state === 'active';
 
+/**
+ * Get the user type configuration for the current user's user type
+ * @param {*} config marketplace configuration
+ * @param {*} currentUser API entity
+ * @returns a single user type configuration, if found
+ */
 const getCurrentUserTypeConfig = (config, currentUser) => {
   const { userTypes } = config.user;
   return userTypes.find(
@@ -225,4 +231,23 @@ export const showCreateListingLinkForUser = (config, currentUser) => {
     : topbar?.postListingsLink
     ? topbar.postListingsLink.showToUnauthenticatedUsers
     : true;
+};
+
+/**
+ * Check if payout details tab and payout methods tab should be shown for the user
+ * @param {Object} config Marketplace configuration
+ * @param {*} currentUser API entity
+ * @returns {Object} { showPayoutDetails: Boolean, showPaymentMethods: boolean }
+ */
+export const showPaymentDetailsForUser = (config, currentUser) => {
+  const currentUserTypeConfig = getCurrentUserTypeConfig(config, currentUser);
+  const { paymentMethods = true, payoutDetails = true } =
+    currentUserTypeConfig?.accountLinksVisibility || {};
+
+  return (
+    currentUser && {
+      showPayoutDetails: payoutDetails,
+      showPaymentMethods: paymentMethods,
+    }
+  );
 };
