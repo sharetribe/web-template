@@ -7,7 +7,7 @@ import { useConfiguration } from '../../context/configurationContext';
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { ensureCurrentUser } from '../../util/data';
-import { showCreateListingLinkForUser } from '../../util/userHelpers';
+import { showCreateListingLinkForUser, showPaymentDetailsForUser } from '../../util/userHelpers';
 
 import { sendVerificationEmail } from '../../ducks/user.duck';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
@@ -106,6 +106,12 @@ export const ContactDetailsPageComponent = props => {
   const title = intl.formatMessage({ id: 'ContactDetailsPage.title' });
 
   const showManageListingsLink = showCreateListingLinkForUser(config, currentUser);
+  const { showPayoutDetails, showPaymentMethods } = showPaymentDetailsForUser(config, currentUser);
+  const accountSettingsNavProps = {
+    currentPage: 'ContactDetailsPage',
+    showPaymentMethods,
+    showPayoutDetails,
+  };
 
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
@@ -124,7 +130,7 @@ export const ContactDetailsPageComponent = props => {
         }
         sideNav={null}
         useAccountSettingsNav
-        currentPage="ContactDetailsPage"
+        accountSettingsNavProps={accountSettingsNavProps}
         footer={<FooterContainer />}
       >
         <div className={css.content}>
