@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] Corrected anchor link scrolling behavior on Privacy Policy and Terms of Service pages, when
+  opened as modals (in signup/login). [#612](https://github.com/sharetribe/web-template/pull/612)
+
 ## [v8.4.0] 2025-05-20
 
 - [add] Added a "Search as CTA" component for embedding a search bar on any dynamic content page
