@@ -251,3 +251,19 @@ export const showPaymentDetailsForUser = (config, currentUser) => {
     }
   );
 };
+
+/**
+ * Check the roles defined for the current user
+ * @param {*} config Marketplace configuration
+ * @param {*} currentUser API entity
+ * @returns Object with attributes 'customer' and 'provider' and boolean values for each
+ */
+export const getCurrentUserTypeRoles = (config, currentUser) => {
+  const currentUserTypeConfig = getCurrentUserTypeConfig(config, currentUser);
+  return (
+    currentUserTypeConfig?.roles || {
+      customer: true,
+      provider: true,
+    }
+  );
+};
