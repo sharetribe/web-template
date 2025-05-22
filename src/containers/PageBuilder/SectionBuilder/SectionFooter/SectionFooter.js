@@ -142,9 +142,7 @@ const SectionFooter = props => {
               </div>
             ) : null}
             {/* SKYFARER +version */}
-            {APP_VERSION && process.env.NODE_ENV === 'development' && (
-              <span style={{ fontSize: '12px', color: 'gray', marginRight: '5px' }}>{`v${APP_VERSION || '?.?.?'}`}</span>
-            )}
+            <span style={{ fontSize: '12px', color: 'gray', marginRight: '5px' }}>{`v${process.env.REACT_APP_VERSION || 'DEV'}`}</span>
             <Field data={copyright} className={css.copyright} />
           </div>
           <div className={classNames(css.grid, getGridCss(numberOfColumns))}>
