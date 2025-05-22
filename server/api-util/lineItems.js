@@ -179,26 +179,72 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
     discountPercent = 0.25;
     discountCode = 'line-item/discount-25';
   } else if (nights >= 6 && nights <= 7) {
+    discountPercent = 0.3;
+    discountCode = 'line-item/discount-30';
+  } else if (nights >= 8) {
     discountPercent = 0.4;
     discountCode = 'line-item/discount-40';
-  } else if (nights >= 8) {
-    discountPercent = 0.5;
-    discountCode = 'line-item/discount-50';
   }
 
   const discountLineItem = discountPercent > 0 ? {
     code: discountCode,
     unitPrice: new Money(-Math.round(unitPrice.amount * nights * discountPercent), currency),
     quantity: 1,
-    includeFor: ['customer']
+    includeFor: ['customer', 'provider']
   } : null;
 
   const getNegation = percentage => -1 * percentage;
 
+  // Calculate subtotal including any discounts
+  const subtotalLineItems = [
+    order,
+    ...(discountLineItem ? [discountLineItem] : [])
+  ];
+
+  // Calculate base subtotal for commission calculations
+  const subtotal = calculateTotalFromLineItems(subtotalLineItems);
+  
+  // Defensive logging to validate subtotal and commission calculations
+  console.log('=== Commission Calculation Debug ===');
+  console.log('💰 Raw subtotal:', subtotal);
+  console.log('💵 Subtotal amount (in minor units/cents):', subtotal.amount);
+  console.log('📊 Raw commission percentage:', customerCommission.percentage);
+  
+  // Convert percentage from whole number to decimal (e.g., 15 -> 0.15)
+  const decimalPercentage = customerCommission.percentage / 100;
+  console.log('📊 Converted decimal percentage:', decimalPercentage);
+  
+  // Validate percentage conversion
+  if (customerCommission.percentage < 0 || customerCommission.percentage > 100) {
+    console.warn('⚠️ Warning: Commission percentage seems invalid:', customerCommission.percentage);
+  }
+  
+  // Calculate expected commission amount for validation
+  const expectedCommissionAmount = Math.round(subtotal.amount * decimalPercentage);
+  console.log('💸 Expected commission amount (in minor units/cents):', expectedCommissionAmount);
+  console.log('💵 Expected commission amount (in dollars):', (expectedCommissionAmount / 100).toFixed(2));
+  
+  // Validate commission calculation
+  if (expectedCommissionAmount <= 0) {
+    console.warn('⚠️ Warning: Commission amount is zero or negative:', expectedCommissionAmount);
+  }
+  if (expectedCommissionAmount > subtotal.amount) {
+    console.warn('⚠️ Warning: Commission amount exceeds subtotal:', { expectedCommissionAmount, subtotal: subtotal.amount });
+  }
+
+  // Test case validation
+  if (subtotal.amount === 8001 && customerCommission.percentage === 15) {
+    console.log('✅ Test case validation:');
+    console.log('   Expected commission for $80.01 at 15%: 1200 cents ($12.00)');
+    console.log('   Actual commission calculated:', expectedCommissionAmount, 'cents');
+    console.log('   Test passed:', expectedCommissionAmount === 1200);
+  }
+  console.log('================================');
+
   const providerCommissionMaybe = hasCommissionPercentage(providerCommission)
     ? [{
         code: 'line-item/provider-commission',
-        unitPrice: calculateTotalFromLineItems([order]),
+        unitPrice: subtotal,
         percentage: getNegation(providerCommission.percentage),
         includeFor: ['provider'],
       }]
@@ -207,20 +253,30 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
   const customerCommissionMaybe = hasCommissionPercentage(customerCommission)
     ? [{
         code: 'line-item/customer-commission',
-        unitPrice: calculateTotalFromLineItems([order]),
+        unitPrice: subtotal,
         percentage: customerCommission.percentage,
-        includeFor: ['customer'],
+        includeFor: ['customer']
       }]
     : [];
 
   // Final lineItems array: only order, discount (if any), and commission line items (no extraLineItems).
   const lineItems = [
-    order,
-    ...(discountLineItem ? [discountLineItem] : []),
+    ...subtotalLineItems,
     ...providerCommissionMaybe,
     ...customerCommissionMaybe
   ];
 
+  // Calculate and log payin/payout totals for debugging
+  const payinItems = lineItems.filter(item => item.includeFor.includes('customer'));
+  const payoutItems = lineItems.filter(item => item.includeFor.includes('provider'));
+  
+  const payinTotal = calculateTotalFromLineItems(payinItems);
+  const payoutTotal = calculateTotalFromLineItems(payoutItems);
+  
+  console.log('💵 Transaction totals:');
+  console.log('📥 Payin total (customer pays):', payinTotal);
+  console.log('📤 Payout total (provider gets):', payoutTotal);
+  console.log('✅ Payin >= Payout:', payinTotal.amount >= payoutTotal.amount);
   console.log('🧾 Final line items:', lineItems);
 
   return lineItems;
