@@ -114,7 +114,8 @@ const localeMessages = isTestEnv
 const MomentLocaleLoader = props => {
   const { children, locale } = props;
   const isAlreadyImportedLocale =
-    typeof hardCodedLocale !== 'undefined' && locale === hardCodedLocale;
+    // [SKYFARER] shipped from sharetribe with error; ignored to reduce noise from custom development
+    typeof hardCodedLocale !== 'undefined' && locale === hardCodedLocale; // eslint-disable-line no-undef
 
   // Moment's built-in locale does not need loader
   const NoLoader = props => <>{props.children()}</>;

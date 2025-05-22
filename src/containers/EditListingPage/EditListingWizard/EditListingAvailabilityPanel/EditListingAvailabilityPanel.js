@@ -240,7 +240,7 @@ const EditListingAvailabilityPanel = props => {
     return onSubmit(createAvailabilityPlan(values))
       .then(() => {
         dispatch( // [SKYFARER]
-          requestAddWeeklyAvailabilityException(listingId?.uuid, values, currentUser?.id?.uuid)
+          requestAddWeeklyAvailabilityException(listing.id, values, currentUser?.id?.uuid)
         );
         setIsEditPlanModalOpen(false);
       })

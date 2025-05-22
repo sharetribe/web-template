@@ -23,5 +23,5 @@ export const getCalendarEvents = l => {
 
 export const isArrayLength = arr => {
   // Check if the input parameter is an array and has a length greater than zero.
-  return Array.isArray(arr) && (arr.length > 0 ?? false);
+  return Array.isArray(arr) && arr.length > 0;
 };

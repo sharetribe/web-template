@@ -1,3 +1,5 @@
+/* global gtag */
+
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
@@ -105,7 +107,7 @@ export const IncludeScripts = props => {
       window.dataLayer = window.dataLayer || [];
       // Ensure that gtag function is found from window scope
       window.gtag = function gtag() {
-        dataLayer.push(arguments);
+        window.dataLayer.push(arguments);
       };
       gtag('js', new Date());
       gtag('config', googleAnalyticsId, {

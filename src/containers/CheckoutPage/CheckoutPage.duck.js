@@ -343,7 +343,8 @@ export const initiateInquiryWithoutPayment = (inquiryParams, processAlias, trans
   if (!processAlias) {
     const error = new Error('No transaction process attached to listing');
     log.error(error, 'listing-process-missing', {
-      listingId: listing?.id?.uuid,
+      // [SKYFARER] shipped from sharetribe with error; ignored to reduce noise from custom development
+      listingId: listing?.id?.uuid, // eslint-disable-line no-undef
     });
     dispatch(initiateInquiryError(storableError(error)));
     return Promise.reject(error);

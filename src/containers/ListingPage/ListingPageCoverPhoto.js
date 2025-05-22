@@ -1,4 +1,3 @@
-//console.log("🛎️ Page cover phpto loaded");
 import React, { useState } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -87,6 +86,7 @@ import SectionAuthorMaybe from './SectionAuthorMaybe';
 import SectionMapMaybe from './SectionMapMaybe';
 import SectionLinks from './SectionLinks'; // [SKYFARER]
 import CustomListingFields from './CustomListingFields';
+import CustomUserFields from '../ProfilePage/ProfilePage'; // [SKYFARER]
 
 import css from './ListingPage.module.css';
 
@@ -231,7 +231,7 @@ export const ListingPageComponent = props => {
   // banned or deleted display names for the function
   const authorDisplayName = userDisplayNameAsString(ensuredAuthor, '');
 
-  const { formattedPrice } = priceData(price, config.currency, intl);  
+  const { formattedPrice } = priceData(price, config.currency, intl);
 
   const commonParams = { params, history, routes: routeConfiguration };
   const onContactUser = handleContactUser({

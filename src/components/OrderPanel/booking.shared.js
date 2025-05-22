@@ -186,7 +186,7 @@ export const getPlaceholder = (defaultPlaceholderTime = '08:00', timeZone, intl)
   let placeholder = defaultPlaceholderTime;
   try {
     const todayBoundary = findNextBoundary(TODAY, 1, 'hour', timeZone);
-    placeholderTime = formatDateIntoPartials(todayBoundary, intl, { timeZone })?.time;
+    placeholder = formatDateIntoPartials(todayBoundary, intl, { timeZone })?.time;
   } catch (error) {
     // No need to handle error
   }

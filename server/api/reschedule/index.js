@@ -22,7 +22,6 @@ const rescheduleRequest = asyncHandler(async (req, res) => {
   const transaction = transactionResult.data;
   const request = transaction.data.attributes.metadata.rescheduleRequest;
   const provider = transaction.included.find(item => item.type === 'user');
-  const booking = transaction.included.find(item => item.type === 'booking');
 
   if (request) return res.status(400).json({ error: 'Reschedule request already exists' });
   const rescheduleRequest = {
@@ -42,6 +41,7 @@ const rescheduleRequest = asyncHandler(async (req, res) => {
   }
 
   try {
+    const booking = transaction.included.find(item => item.type === 'booking');
     const template = handlebars.compile(fs.readFileSync(path.join(__dirname, '../../templates/reschedule-request.html'), 'utf8').toString());
     const html = template({
       message: {
@@ -101,12 +101,13 @@ const acceptRescheduleRequest = asyncHandler(async (req, res) => {
     }
 
     try {
+      const booking = transaction.included.find(item => item.type === 'booking');
       const template = handlebars.compile(fs.readFileSync(path.join(__dirname, '../../templates/reschedule-request-accepted.html'), 'utf8').toString());
       const html = template({
         message: {
           transaction: { id: txId },
           originalBooking: { start: booking.attributes.start, end: booking.attributes.end },
-          newBooking: { start, end },
+          newBooking: { start: request.start, end: request.end },
           marketplace: {
             name: process.env.REACT_APP_MARKETPLACE_NAME,
             url: process.env.REACT_APP_MARKETPLACE_ROOT_URL
