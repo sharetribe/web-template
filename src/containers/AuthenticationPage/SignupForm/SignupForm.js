@@ -8,13 +8,14 @@ import { propTypes } from '../../../util/types';
 import * as validators from '../../../util/validators';
 import { getPropsForCustomUserFieldInputs } from '../../../util/userHelpers';
 
-import { Form, PrimaryButton, FieldTextInput, CustomExtendedDataField } from '../../../components';
+import { Form, PrimaryButton, FieldTextInput, CustomExtendedDataField, FieldCheckbox } from '../../../components';
 
 import FieldSelectUserType from '../FieldSelectUserType';
 import UserFieldDisplayName from '../UserFieldDisplayName';
 import UserFieldPhoneNumber from '../UserFieldPhoneNumber';
 
 import css from './SignupForm.module.css';
+import termsCss from '../TermsAndConditions/TermsAndConditions.module.css';
 
 const getSoleUserTypeMaybe = userTypes =>
   Array.isArray(userTypes) && userTypes.length === 1 ? userTypes[0].userType : null;
@@ -205,6 +206,15 @@ const SignupFormComponent = props => (
           ) : null}
 
           <div className={css.bottomWrapper}>
+            <div style={{ marginBottom: '16px' }}>
+              <FieldCheckbox
+                id={formId ? `${formId}.smsOptIn` : 'smsOptIn'}
+                name="smsOptIn"
+                label="I agree to receive SMS notifications about my account"
+                textClassName={termsCss.finePrint}
+                required
+              />
+            </div>
             {termsAndConditions}
             <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
               <FormattedMessage id="SignupForm.signUp" />

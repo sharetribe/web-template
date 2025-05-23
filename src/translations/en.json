@@ -853,6 +853,7 @@
   "SignupForm.phoneNumberLabel": "Phone number",
   "SignupForm.phoneNumberPlaceholder": "Enter your phone number.",
   "SignupForm.phoneNumberRequired": "You need to add a phone number.",
+  "SignupForm.smsOptInLabel": "I agree to receive SMS notifications about my orders and account",
   "SignupForm.signUp": "Sign up",
   "SortBy.heading": "Sort by",
   "SortBy.newest": "Newest",

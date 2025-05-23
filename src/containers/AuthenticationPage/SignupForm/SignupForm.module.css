@@ -47,3 +47,28 @@
 .bottomWrapper {
   composes: marketplaceModalBottomWrapper from global;
 }
+
+.legalCheckbox,
+.legalCheckbox span,
+.legalCheckbox .text {
+  font-size: 0.75rem !important;
+  color: #333 !important;
+  line-height: 1.4 !important;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.smsConsentLabel {
+  font-size: 13px;
+  line-height: 18px;
+  color: #333;
+  white-space: normal;
+  word-break: break-word;
+}
+
+:global(.FieldCheckbox_label__*) {
+  align-items: flex-start !important;
+  flex-wrap: wrap !important;
+  width: 100% !important;
+  white-space: normal !important;
+}
