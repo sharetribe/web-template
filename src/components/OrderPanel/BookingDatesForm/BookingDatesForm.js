@@ -247,34 +247,21 @@ const isDayBlockedFn = params => {
   const [startMonth, endMonth] = getMonthlyFetchRange(monthlyTimeSlots, timeZone);
   const timeSlotsData = timeSlotsPerDate(startMonth, endMonth, allTimeSlots, timeZone);
 
+  // Get tomorrow's date in the listing's timezone
+  const startOfToday = getStartOf(TODAY, 'day', timeZone);
+  const tomorrow = addTime(startOfToday, 1, 'days');
+
   return day => {
-    const localizedDay = timeOfDayFromLocalToTimeZone(day, timeZone);
-    const dayInListingTZ = getStartOf(localizedDay, 'day', timeZone);
-
-    const dayIdString = stringifyDateToISO8601(dayInListingTZ, timeZone);
-    const hasAvailabilityOnDay = timeSlotsData[dayIdString]?.hasAvailability === true;
-
-    if (!isDaily && startDate) {
-      // Nightly
-      // For the unit type night, we check that the time slot of the selected startDate
-      // ends on a given _day_
-      const startDateIdString = stringifyDateToISO8601(startDate, timeZone);
-      const startDateTimeSlotsData = timeSlotsData[startDateIdString];
-      const startDateTimeSlot =
-        startDateTimeSlotsData == null ? true : startDateTimeSlotsData?.timeSlots?.[0];
-      const { start, end } = startDateTimeSlot?.attributes || {};
-      // If both startDate and endDate have been selected, we allow selecting other ranges
-      const hasAvailability =
-        startDate && endDate
-          ? hasAvailabilityOnDay
-          : isInRange(dayInListingTZ, start, end, 'day', timeZone);
-      const timeSlotEndsOnThisDay = end && isSameDay(dayInListingTZ, end, timeZone);
-
-      return !(hasAvailability || timeSlotEndsOnThisDay);
+    // Block tomorrow as a start date
+    if (isSameDay(day, tomorrow, timeZone)) {
+      return true;
     }
 
-    // Daily
-    return !hasAvailabilityOnDay;
+    // Original blocking logic
+    const dayId = stringifyDateToISO8601(day, timeZone);
+    const timeSlotData = timeSlotsData[dayId];
+    const isBlocked = !timeSlotData || !timeSlotData.timeSlots || timeSlotData.timeSlots.length === 0;
+    return isBlocked;
   };
 };
 
