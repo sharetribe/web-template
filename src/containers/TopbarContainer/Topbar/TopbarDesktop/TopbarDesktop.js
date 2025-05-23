@@ -153,7 +153,7 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout }) => {
     </Menu>
   );
 };
-
+ 
 /**
  * Topbar for desktop layout
  *
