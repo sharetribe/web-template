@@ -599,6 +599,7 @@
   "OrderBreakdown.bookingWithDSTInEffect": "Daylight saving time",
   "OrderBreakdown.commission": "{role, select, customer {{marketplaceName} fee *} provider {{marketplaceName} fee *} other {}}",
   "OrderBreakdown.commissionFeeNote": "* The fee helps us run this platform and provide the best possible service to you!",
+  "OrderBreakdown.discount": "Discount {percentage}% off 💰",
   "OrderBreakdown.pickupFee": "Pickup",
   "OrderBreakdown.providerTotalDefault": "You'll make",
   "OrderBreakdown.providerTotalReceived": "You made",
@@ -1150,5 +1151,12 @@
   "UserDisplayName.deleted": "Deleted user",
   "UserNav.accountSettings": "Account settings",
   "UserNav.profileSettings": "Profile settings",
-  "UserNav.yourListings": "Your listings"
+  "UserNav.yourListings": "Your listings",
+  "EditListingAvailabilityPanel.title": "Set availability",
+  "EditListingAvailabilityPanel.availabilityTitle": "When is this listing available for booking?",
+  "EditListingAvailabilityPanel.availabilityHelperText": "Select the dates this item is available. You can always update this later.",
+  "EditListingAvailabilityPanel.MonthlyCalendar.available": "Available date",
+  "EditListingAvailabilityPanel.MonthlyCalendar.today": "Today",
+  "EditListingAvailabilityPanel.startDate": "Start date",
+  "EditListingAvailabilityPanel.endDate": "End date"
 }
