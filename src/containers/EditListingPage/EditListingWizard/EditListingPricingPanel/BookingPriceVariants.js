@@ -21,15 +21,15 @@ const pricingTiers = [
   { nights: 3, discount: 0 },
   { nights: 4, discount: 0.25 },
   { nights: 5, discount: 0.25 },
-  { nights: 6, discount: 0.4 },
-  { nights: 7, discount: 0.4 },
-  { nights: 8, discount: 0.5 },
-  { nights: 9, discount: 0.5 },
-  { nights: 10, discount: 0.5 },
-  { nights: 11, discount: 0.6 },
-  { nights: 12, discount: 0.6 },
-  { nights: 13, discount: 0.6 },
-  { nights: 14, discount: 0.6 },
+  { nights: 6, discount: 0.3 },
+  { nights: 7, discount: 0.3 },
+  { nights: 8, discount: 0.4 },
+  { nights: 9, discount: 0.4 },
+  { nights: 10, discount: 0.4 },
+  { nights: 11, discount: 0.4 },
+  { nights: 12, discount: 0.4 },
+  { nights: 13, discount: 0.4 },
+  { nights: 14, discount: 0.4 },
 ];
 
 export const getInitialValuesForPriceVariants = params => {
@@ -124,7 +124,7 @@ export const FixedBookingPriceVariants = props => {
         validate={getPriceValidators(listingMinimumPriceSubUnits, marketplaceCurrency, intl)}
       />
       <p className={css.helperText}>
-        Sherbet will automatically apply discounts for longer borrows:
+        Sherbrt will automatically apply discounts for longer borrows:
         <br />
         4–5 nights: 25% off · 6–7: 40% · 8–10: 50% · 11+: 60%
       </p>
