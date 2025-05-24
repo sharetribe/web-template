@@ -179,7 +179,7 @@ ${chalk.dim(
       name: 'REACT_APP_MARKETPLACE_NAME',
       message: `What is the name of your marketplace?
 ${chalk.dim(
-  'The marketplace name is needed for the marketplace texts. If not set through environment variables, the name defaults to "Shop on Sherbet" (set in src/config/configDefault.js)'
+  'The marketplace name is needed for the marketplace texts. If not set through environment variables, the name defaults to "Sherbrt" (set in src/config/configDefault.js)'
 )}
 `,
       ...marketplaceNameDefaultMaybe,
