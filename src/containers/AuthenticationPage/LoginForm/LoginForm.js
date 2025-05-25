@@ -20,6 +20,8 @@ const LoginFormComponent = props => (
         inProgress,
         intl,
         invalid,
+        values,
+        errors,
       } = fieldRenderProps;
 
       // email
@@ -55,7 +57,14 @@ const LoginFormComponent = props => (
       const submitDisabled = invalid || submitInProgress;
 
       const passwordRecoveryLink = (
-        <NamedLink name="PasswordRecoveryPage" className={css.recoveryLink}>
+        <NamedLink
+          name="PasswordRecoveryPage"
+          className={css.recoveryLink}
+          to={{
+            search:
+              values?.email && !errors?.email ? `email=${encodeURIComponent(values.email)}` : '',
+          }}
+        >
           <FormattedMessage id="LoginForm.forgotPassword" />
         </NamedLink>
       );

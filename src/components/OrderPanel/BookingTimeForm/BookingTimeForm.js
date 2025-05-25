@@ -8,6 +8,8 @@ import { propTypes } from '../../../util/types';
 import { BOOKING_PROCESS_NAME } from '../../../transactions/transaction';
 import { useConfiguration } from '../../../context/configurationContext';
 import { getDefaultTimeZoneOnBrowser, getTimeZoneBadgeContent } from '../../../util/dates';
+import { formatMoney } from '../../../util/currency';
+import { types as sdkTypes } from '../../../util/sdkLoader';
 
 import { Form, H6, PrimaryButton, FieldSelect } from '../../../components';
 
@@ -24,6 +26,8 @@ import FieldDateAndTimeInput from './FieldDateAndTimeInput';
 
 import css from './BookingTimeForm.module.css';
 import ConsultationBox from '../../ConsultationBox/ConsultationBox'; // [SKYFARER]
+
+const { Money } = sdkTypes;
 
 // When the values of the form are updated we need to fetch
 // lineItems from this template's backend for the EstimatedTransactionMaybe
@@ -117,13 +121,17 @@ export const BookingTimeForm = props => {
     priceVariantFieldComponent: PriceVariantFieldComponent,
     preselectedPriceVariant,
     isPublishedListing,
+    handleOnChange, // [SKYFARER]
     ...rest
   } = props;
 
   const config = useConfiguration();
+
+  // [SKYFARER]
   const [voucherInfo, setVoucherInfo] = useState('');
   const [voucher, setVoucher] = useState(null);
   if (typeof window !== 'undefined') import('@mathiscode/voucherify-react-widget/dist/voucherify.css');
+  // [/SKYFARER]
 
   const [seatsOptions, setSeatsOptions] = useState([1]);
   const initialValuesMaybe =

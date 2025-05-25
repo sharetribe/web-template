@@ -17,6 +17,7 @@ import {
   Modal,
   ModalMissingInformation,
 } from '../../../components';
+import { getSearchPageResourceLocatorStringParams } from '../../SearchPage/SearchPage.shared';
 
 import MenuIcon from './MenuIcon';
 import SearchIcon from './SearchIcon';
@@ -154,7 +155,7 @@ const TopbarComponent = props => {
   } = props;
 
   const handleSubmit = values => {
-    const { currentSearchParams, history, config, routeConfiguration } = props;
+    const { currentSearchParams, history, location, config, routeConfiguration } = props;
 
     const topbarSearchParams = () => {
       if (isMainSearchTypeKeywords(config)) {
@@ -175,7 +176,15 @@ const TopbarComponent = props => {
       ...currentSearchParams,
       ...topbarSearchParams(),
     };
-    history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, searchParams));
+
+    const { routeName, pathParams } = getSearchPageResourceLocatorStringParams(
+      routeConfiguration,
+      location
+    );
+
+    history.push(
+      createResourceLocatorString(routeName, routeConfiguration, pathParams, searchParams)
+    );
   };
 
   const handleLogout = () => {
@@ -254,7 +263,8 @@ const TopbarComponent = props => {
   // the current page.
   const showSearchOnAllPages = searchFormDisplay === SEARCH_DISPLAY_ALWAYS;
   const showSearchOnSearchPage =
-    searchFormDisplay === SEARCH_DISPLAY_ONLY_SEARCH_PAGE && resolvedCurrentPage === 'SearchPage';
+    searchFormDisplay === SEARCH_DISPLAY_ONLY_SEARCH_PAGE &&
+    ['SearchPage', 'SearchPageWithListingType'].includes(resolvedCurrentPage);
   const showSearchNotOnLandingPage =
     searchFormDisplay === SEARCH_DISPLAY_NOT_LANDING_PAGE && resolvedCurrentPage !== 'LandingPage';
 

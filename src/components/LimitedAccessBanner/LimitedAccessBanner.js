@@ -9,7 +9,7 @@ import { Button } from '../../components';
 import css from './LimitedAccessBanner.module.css';
 
 // Due to the layout structure, do not render the banner on the following pages
-const disabledPages = ['SearchPage'];
+const disabledPages = ['SearchPage', 'SearchPageWithListingType'];
 
 /**
  * This component returns a limited-access banner.

@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { createResourceLocatorString } from '../../../util/routes';
+import { getSearchPageResourceLocatorStringParams } from '../SearchPage.shared';
 
 import { ModalInMobile, Button } from '../../../components';
 
@@ -31,13 +32,18 @@ class SearchFiltersMobileComponent extends Component {
 
   // Close the filters by clicking cancel, revert to the initial params
   cancelFilters() {
-    const { history, onCloseModal, routeConfiguration } = this.props;
+    const { history, onCloseModal, location, routeConfiguration } = this.props;
+
+    const { routeName, pathParams } = getSearchPageResourceLocatorStringParams(
+      routeConfiguration,
+      location
+    );
 
     history.push(
       createResourceLocatorString(
-        'SearchPage',
+        routeName,
         routeConfiguration,
-        {},
+        pathParams,
         this.state.initialQueryParams
       )
     );

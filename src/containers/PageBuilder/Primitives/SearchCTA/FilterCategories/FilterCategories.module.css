@@ -1,0 +1,165 @@
+@import '../../../../../styles/customMediaQueries.css';
+
+.root {
+  width: 100%;
+  height: 100%;
+}
+
+.dropdownContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  user-select: none;
+  padding: 0 12px;
+  @media (--viewportMedium) {
+    padding: 0 16px;
+  }
+  @media (--viewportLarge) {
+    padding: 0;
+  }
+}
+
+.toggleButton {
+  position: relative;
+  height: 40px;
+  padding: 8px 30px 0px 0px;
+  text-align: left;
+  cursor: pointer;
+  color: var(--colorGrey700);
+  font-weight: 400;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: all 0.1s;
+
+  @media (--viewportMedium) {
+    height: 48px;
+    padding-top: 12px;
+  }
+  @media (--viewportLarge) {
+    display: block;
+    margin: 0;
+    padding: 12px 30px 10px 16px;
+  }
+}
+
+.dropdownContent {
+  position: absolute;
+  left: 50%;
+  top: 110%;
+  transform: translateX(-50%);
+  width: calc(100% + 16px);
+  min-width: 288px;
+  padding: 14px 0 18px;
+  margin-top: 0;
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: var(--boxShadowPopup);
+  z-index: 1;
+
+  @media (--viewportLarge) {
+    top: 51px;
+    left: auto;
+    right: 0;
+    transform: none;
+    width: 100%;
+
+    &.alignLeft {
+      left: -8px;
+      right: auto;
+    }
+  }
+
+  .option {
+    position: relative;
+    width: 100%;
+    padding: 7px 22px;
+    text-align: left;
+    border: none;
+    background: white;
+    cursor: pointer;
+    display: block;
+    color: var(--colorGrey700);
+    font-weight: 500;
+
+    &:hover {
+      color: var(--colorBlack);
+      text-decoration: none;
+    }
+  }
+}
+
+.dropdownItem {
+  white-space: nowrap;
+
+  @media (--viewportLarge) {
+    white-space: nowrap;
+  }
+}
+
+.dropdownItemBorder,
+.dropdownItemBorderSelected {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  height: calc(100% - 4px);
+  width: 0;
+  transition: width var(--transitionStyleButton);
+}
+
+.option:hover .dropdownItemBorder,
+.option:hover .dropdownItemBorderSelected,
+.activeOption .dropdownItemBorder {
+  width: 6px;
+}
+
+.dropdownItemBorder {
+  background-color: var(--marketplaceColor);
+}
+
+.dropdownItemBorderSelected {
+  background-color: var(--colorGrey900);
+  width: 6px;
+}
+
+.chevron {
+  position: absolute;
+  right: 0px;
+  top: 14px;
+  width: 15px;
+  transition: transform 0.4s;
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid var(--colorGrey400);
+    border-bottom: 2px solid var(--colorGrey400);
+    transform: rotate(45deg);
+  }
+
+  @media (--viewportMedium) {
+    top: 18px;
+  }
+  @media (--viewportLarge) {
+    right: 8px;
+  }
+}
+
+.chevron.isOpen::before {
+  transform: rotate(-135deg);
+  top: 2px;
+}
+
+.unselected {
+  color: var(--colorGrey300);
+
+  &:hover {
+    color: var(--colorGrey700);
+  }
+}
+
+.placeholderOpened {
+  color: var(--colorGrey700);
+}

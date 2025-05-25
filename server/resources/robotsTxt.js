@@ -1,3 +1,5 @@
+/* global EmptyStream */
+
 const fs = require('fs');
 const { Transform, Writable } = require('stream');
 const log = require('../log.js');
