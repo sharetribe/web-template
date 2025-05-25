@@ -24,7 +24,11 @@ const initialState = {
   currentPageResultIds: [],
 };
 
-const resultIds = data => data.data.map(l => l.id);
+const resultIds = data => {
+  if (!data) return [];
+  const listingsArray = Array.isArray(data) ? data : data.data || [];
+  return listingsArray.map(l => l.id);
+};
 
 const FavoriteListingPageReducer = (state = initialState, action = {}) => {
   const { type, payload } = action;
@@ -84,7 +88,7 @@ export const queryFavoritesError = e => ({
 export const queryFavoriteListing = queryParams => (dispatch, getState, sdk) => {
   dispatch(queryFavoritesRequest(queryParams));
   const { currentUser } = getState().user;
-  const { favorites } = currentUser?.attributes.profile.privateData || {};
+  const favorites = currentUser?.attributes?.profile?.privateData?.favorites || [];
 
   const validFavorites = Array.isArray(favorites)
   ? favorites.filter(id => typeof id === 'string' && id.length > 0)
@@ -93,7 +97,7 @@ export const queryFavoriteListing = queryParams => (dispatch, getState, sdk) => 
 if (validFavorites.length === 0) {
   // Early return: no valid favorites to query
   const emptyResponse = { data: [], meta: { page: 1, perPage: 0, totalItems: 0, totalPages: 0 } };
-  dispatch(queryFavoritesSuccess(emptyResponse));
+  dispatch(queryFavoritesSuccess({ data: [], meta: emptyResponse.meta }));
   return Promise.resolve(emptyResponse);
 }
 
