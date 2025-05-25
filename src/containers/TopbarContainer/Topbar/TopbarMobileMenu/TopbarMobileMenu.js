@@ -195,19 +195,18 @@ const TopbarMobileMenu = props => {
               </NamedLink>
           }
           <NamedLink
-            className={classNames(css.menuLink, currentPageClass('FavoriteListingPage'))}
-            name="FavoriteListingPage"
-          >
-            <span className={css.menuItemBorder} />
-            <FormattedMessage id="TopbarDesktop.favoriteListingLink" />
-          </NamedLink>          
-          <NamedLink
             className={classNames(css.navigationLink, currentPageClass('ProfileSettingsPage'))}
             name="ProfileSettingsPage"
           >
             <FormattedMessage id="TopbarMobileMenu.profileSettingsLink" />
           </NamedLink>
           <NamedLink
+            className={classNames(css.navigationLink, currentPageClass('FavoriteListingPage'))}
+            name="FavoriteListingPage"
+          >
+            <FormattedMessage id="TopbarDesktop.favoriteListingLink" />
+          </NamedLink>          
+          <NamedLink 
             className={classNames(css.navigationLink, currentPageClass('AccountSettingsPage'))}
             name="AccountSettingsPage"
           >
