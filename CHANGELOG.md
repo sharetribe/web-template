@@ -13,6 +13,9 @@ way to update this template, but currently, we follow a pattern:
 ---
 
 ## Upcoming version 2025-XX-XX
+
+- [fix] Modify two translation keys that were using an incorrect namespace.
+  [#617](https://github.com/sharetribe/web-template/pull/617)
 - [fix] Add missing location prop to grid search page
   [#615](https://github.com/sharetribe/web-template/pull/615)
 - [fix] Corrected anchor link scrolling behavior on Privacy Policy and Terms of Service pages, when
