@@ -39,6 +39,14 @@ import {
 
 import css from './FieldDateAndTimeInput.module.css';
 
+const findLastAdjacent = (index, timeSlots) => {
+  const current = timeSlots[index];
+  const next = timeSlots[index + 1];
+  return next && isSameDate(current.attributes.end, next.attributes.start)
+    ? findLastAdjacent(index + 1, timeSlots)
+    : index;
+};
+
 // dayCountAvailableForBooking is the maximum number of days forwards during which a booking can be made.
 // This is limited due to Stripe holding funds up to 90 days from the
 // moment they are charged:
@@ -74,9 +82,11 @@ const getAvailableStartTimes = params => {
     'minutes'
   );
 
-  const allStartTimes = timeSlotsOnSelectedDate.reduce((availableStartTimes, t) => {
+  const allStartTimes = timeSlotsOnSelectedDate.reduce((availableStartTimes, t, i) => {
     const startDate = t.attributes.start;
-    const endDate = t.attributes.end;
+    const lastIndex = findLastAdjacent(i, timeSlotsOnSelectedDate);
+    const endDate =
+      lastIndex !== i ? timeSlotsOnSelectedDate[lastIndex].attributes.end : t.attributes.end;
 
     // If the time slot starts before the selected booking start date, use bookingStartDate
     const startLimit = isDateSameOrAfter(bookingStartDate, startDate)
@@ -103,7 +113,9 @@ const getAvailableStartTimes = params => {
       timeZone,
       intl
     );
-    return availableStartTimes.concat(startTimes);
+    const pickedTimestamps = availableStartTimes.map(t => t.timestamp);
+    const uniqueStartTimes = startTimes.filter(t => !pickedTimestamps.includes(t.timestamp));
+    return availableStartTimes.concat(uniqueStartTimes);
   }, []);
   return allStartTimes;
 };
@@ -160,13 +172,7 @@ const getAllTimeValues = (
   const selectedTimeSlot =
     selectedTimeSlotIndex >= 0 ? timeSlots[selectedTimeSlotIndex] : undefined;
 
-  const findLastAdjacent = index => {
-    const current = timeSlots[index];
-    const next = timeSlots[index + 1];
-    return next && isSameDate(current.attributes.end, next.attributes.start)
-      ? findLastAdjacent(index + 1)
-      : index;
-  };
+  // findLastAdjacent is defined at the top of the file
 
   const findFirstAdjacent = index => {
     const current = timeSlots[index];
@@ -201,7 +207,7 @@ const getAllTimeValues = (
       return selectedTimeSlot.attributes.seats; // Return the seats for the selected time slot if end time and start time are within the same timeslot.
     }
 
-    const lastIndex = findLastAdjacent(selectedTimeSlotIndex);
+    const lastIndex = findLastAdjacent(selectedTimeSlotIndex, timeSlots);
 
     // Extract the relevant time slots to check (we choose all slots between the first )
     const relevantTimeSlots = timeSlots.slice(selectedTimeSlotIndex, lastIndex + 1);
@@ -227,8 +233,8 @@ const getAllTimeValues = (
     if (timeSlots.length === 1 || seatsEnabled === false) {
       return timeSlots[0];
     }
-    const lastIndex = findLastAdjacent(currentTimeSlotIndex);
-    const firstIndex = findFirstAdjacent(currentTimeSlotIndex);
+    const lastIndex = findLastAdjacent(currentTimeSlotIndex, timeSlots);
+    const firstIndex = findFirstAdjacent(currentTimeSlotIndex, timeSlots);
 
     const smallestSeats = seatsEnabled
       ? findMinimumAvailableSeats(endTimeAsDate, timeSlots, currentTimeSlotIndex)

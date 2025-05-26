@@ -13,6 +13,10 @@ way to update this template, but currently, we follow a pattern:
 ---
 
 ## Upcoming version 2025-XX-XX
+
+- [fix] BookingFixedDurationForm: start time generation didn't count consecutive time-slots
+  correctly when multiple seats were allowed.
+  [#620](https://github.com/sharetribe/web-template/pull/620)
 - [add] Improve one copy text.
   [#621](https://github.com/sharetribe/web-template/pull/621)
 - [add] Add currently available translations for DE, ES, FR.
