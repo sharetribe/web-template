@@ -13,6 +13,8 @@ way to update this template, but currently, we follow a pattern:
 ---
 
 ## Upcoming version 2025-XX-XX
+- [add] Improve one copy text.
+  [#621](https://github.com/sharetribe/web-template/pull/621)
 - [add] Add currently available translations for DE, ES, FR.
   [#619](https://github.com/sharetribe/web-template/pull/619)
 
