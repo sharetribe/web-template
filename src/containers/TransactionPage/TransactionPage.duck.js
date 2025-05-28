@@ -24,7 +24,7 @@ import {
   isBookingProcess,
 } from '../../transactions/transaction';
 
-import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
+import { addMarketplaceEntities, getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { fetchCurrentUserNotifications } from '../../ducks/user.duck';
 
 const { UUID } = sdkTypes;
@@ -676,8 +676,60 @@ export const makeTransition = (txId, transitionName, params) => (dispatch, getSt
   }
   dispatch(transitionRequest(transitionName));
 
+  // Inject address info for transition/accept
+  let updatedParams = params;
+  if (transitionName === 'transition/accept') {
+    const state = getState();
+    const { transactionRef } = state.TransactionPage;
+    const transactions = getMarketplaceEntities(state, transactionRef ? [transactionRef] : []);
+    const transaction = transactions.length > 0 ? transactions[0] : null;
+    if (transaction) {
+      // Provider (lender)
+      const provider = transaction.provider;
+      const providerProfile = provider?.attributes?.profile || {};
+      const providerPublic = providerProfile.publicData || {};
+      const providerProtected = providerProfile.protectedData || {};
+      const providerName = providerProfile.displayName || `${providerProfile.firstName || ''} ${providerProfile.lastName || ''}`.trim();
+      const providerStreet = providerPublic.providerStreet || providerProtected.providerStreet || '';
+      const providerCity = providerPublic.providerCity || providerProtected.providerCity || '';
+      const providerState = providerPublic.providerState || providerProtected.providerState || '';
+      const providerZip = providerPublic.providerZip || providerProtected.providerZip || '';
+      const providerEmail = provider?.attributes?.email || '';
+      const providerPhone = providerProtected.phoneNumber || providerPublic.providerPhone || '';
+
+      // Customer (borrower)
+      const customer = transaction.customer;
+      const shippingDetails = transaction?.attributes?.protectedData?.shippingDetails || {};
+      const customerName = shippingDetails.name || '';
+      const customerStreet = shippingDetails.street || '';
+      const customerCity = shippingDetails.city || '';
+      const customerState = shippingDetails.state || '';
+      const customerZip = shippingDetails.zip || '';
+      const customerEmail = customer?.attributes?.email || '';
+      const customerPhone = shippingDetails.phoneNumber || '';
+
+      updatedParams = {
+        ...params,
+        providerName,
+        providerStreet,
+        providerCity,
+        providerState,
+        providerZip,
+        providerEmail,
+        providerPhone,
+        customerName,
+        customerStreet,
+        customerCity,
+        customerState,
+        customerZip,
+        customerEmail,
+        customerPhone,
+      };
+    }
+  }
+
   return sdk.transactions
-    .transition({ id: txId, transition: transitionName, params }, { expand: true })
+    .transition({ id: txId, transition: transitionName, params: updatedParams }, { expand: true })
     .then(response => {
       dispatch(addMarketplaceEntities(response));
       dispatch(transitionSuccess());
