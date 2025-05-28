@@ -1,3 +1,5 @@
+/* global google */
+
 import { types as sdkTypes } from '../util/sdkLoader';
 
 const { LatLng: SDKLatLng, LatLngBounds: SDKLatLngBounds } = sdkTypes;

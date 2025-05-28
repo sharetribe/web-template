@@ -12,6 +12,7 @@ import { richText } from '../../util/richText';
 import { createSlug } from '../../util/urlHelpers';
 import { isBookingProcessAlias } from '../../transactions/transaction';
 import { AspectRatioWrapper, NamedLink, ResponsiveImage } from '../../components';
+import { voucherifyBackend } from '../../util/api';
 import css from './ListingCard.module.css';
 
 const MIN_LENGTH_FOR_LONG_WORDS = 10;
@@ -94,7 +95,7 @@ export const ListingCard = props => {
   const intl = props.intl || useIntl();
   const location = useLocation();
   const history = useHistory();
-  
+
   const {
     className,
     currentUser,
@@ -149,8 +150,8 @@ export const ListingCard = props => {
         })
       } catch {}
     }
-  }, [currentUser])  
-  
+  }, [currentUser])
+
   const HeartIcon = ({ filled }) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -167,7 +168,7 @@ export const ListingCard = props => {
         transition: 'all 0.1s ease',
       }}
     >
-      <path d={ 
+      <path d={
         filled
           ? "M12.1 8.64l-.1.1-.11-.1C10.14 6.6 7.4 6.6 5.5 8.5 \
               c-1.9 1.9-1.9 4.63 0 6.54l6.6 6.6 6.6-6.6 \
@@ -249,10 +250,10 @@ export const ListingCard = props => {
               <FormattedMessage id="ListingCard.author" values={{ authorName }} />
             </div>
           ) : null}
-          
+
         </div>
       </div>
-      
+
     </NamedLink>
   );
 };
