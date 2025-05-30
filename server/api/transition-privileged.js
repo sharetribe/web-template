@@ -55,9 +55,9 @@ module.exports = (req, res) => {
           if (lenderAddress.street1 && borrowerAddress.street1) {
             try {
               const shipmentRes = await axios.post('https://api.goshippo.com/shipments/', { address_from: lenderAddress, address_to: borrowerAddress, parcels: [ { length: '15', width: '12', height: '2', distance_unit: 'in', weight: '2', mass_unit: 'lb' } ], extra: { qr_code_requested: true }, async: false }, { headers: { Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`, 'Content-Type': 'application/json' } });
-              const uspsRate = shipmentRes.data.rates.find((r) => r.provider === 'USPS');
-              if (uspsRate) {
-                const labelRes = await axios.post('https://api.goshippo.com/transactions', { rate: uspsRate.object_id, label_file_type: 'PNG', async: false }, { headers: { Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`, 'Content-Type': 'application/json' } });
+              const upsRate = shipmentRes.data.rates.find((r) => r.provider === 'UPS');
+              if (upsRate) {
+                const labelRes = await axios.post('https://api.goshippo.com/transactions', { rate: upsRate.object_id, label_file_type: 'PNG', async: false }, { headers: { Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`, 'Content-Type': 'application/json' } });
                 console.log('✅ Shippo QR Code:', labelRes.data.qr_code_url);
                 console.log('📦 Label URL:', labelRes.data.label_url);
                 console.log('🚚 Tracking URL:', labelRes.data.tracking_url_provider);
