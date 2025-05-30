@@ -10,6 +10,13 @@ const {
 
 module.exports = (req, res) => {
   const { isSpeculative, orderData, bodyParams, queryParams } = req.body;
+  console.log("🔔 transition-privileged called", {
+    transition: bodyParams?.transition,
+    isSpeculative,
+    hasOrderData: !!orderData,
+    hasQueryParams: !!queryParams,
+    params: bodyParams?.params
+  });
 
   const sdk = getSdk(req, res);
   let lineItems = null;
@@ -49,7 +56,12 @@ module.exports = (req, res) => {
       (async (trustedSdk) => {
         const transition = bodyParams?.transition;
         if (transition === 'transition/accept') {
-          console.log('🚀 transition/accept block triggered');
+          console.log('🚀 transition/accept block triggered', {
+            providerName: bodyParams?.params?.providerName,
+            customerName: bodyParams?.params?.customerName,
+            hasProviderAddress: !!(bodyParams?.params?.providerStreet && bodyParams?.params?.providerCity),
+            hasCustomerAddress: !!(bodyParams?.params?.customerStreet && bodyParams?.params?.customerCity)
+          });
           const lenderAddress = { name: bodyParams?.params?.providerName || 'Lender', street1: bodyParams?.params?.providerStreet, city: bodyParams?.params?.providerCity, state: bodyParams?.params?.providerState, zip: bodyParams?.params?.providerZip, country: 'US', email: bodyParams?.params?.providerEmail, phone: bodyParams?.params?.providerPhone };
           const borrowerAddress = { name: bodyParams?.params?.customerName || 'Borrower', street1: bodyParams?.params?.customerStreet, city: bodyParams?.params?.customerCity, state: bodyParams?.params?.customerState, zip: bodyParams?.params?.customerZip, country: 'US', email: bodyParams?.params?.customerEmail, phone: bodyParams?.params?.customerPhone };
           if (lenderAddress.street1 && borrowerAddress.street1) {
