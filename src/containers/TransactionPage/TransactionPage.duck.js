@@ -708,6 +708,18 @@ export const makeTransition = (txId, transitionName, params) => (dispatch, getSt
       const customerEmail = customer?.attributes?.email || '';
       const customerPhone = shippingDetails.phoneNumber || '';
 
+      // Add listingId and transactionId to params
+      const listingId = transaction?.listing?.id;
+      const transactionId = transaction?.id;
+
+      console.log('📝 Transition/accept params:', {
+        listingId,
+        transactionId,
+        hasListingId: !!listingId,
+        hasTransactionId: !!transactionId,
+        transaction: transaction?.id
+      });
+
       updatedParams = {
         ...params,
         providerName,
@@ -724,6 +736,9 @@ export const makeTransition = (txId, transitionName, params) => (dispatch, getSt
         customerZip,
         customerEmail,
         customerPhone,
+        // Add required IDs
+        listingId,
+        transactionId
       };
     }
   }
