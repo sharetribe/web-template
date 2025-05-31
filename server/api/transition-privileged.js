@@ -12,16 +12,26 @@ console.log('🚦 transition-privileged endpoint is wired up');
 
 module.exports = (req, res) => {
   const { isSpeculative, orderData, bodyParams, queryParams } = req.body;
-  console.log("🔔 transition-privileged called", {
-    transition: bodyParams?.transition,
+  
+  // Debug log for full request body
+  console.log('🔍 Full request body:', {
     isSpeculative,
-    hasOrderData: !!orderData,
-    hasQueryParams: !!queryParams,
-    params: bodyParams?.params
+    orderData,
+    bodyParams,
+    queryParams,
+    params: bodyParams?.params,
+    rawBody: req.body
   });
 
   const sdk = getSdk(req, res);
   let lineItems = null;
+
+  // Debug log for listingId
+  console.log('📋 Listing ID check:', {
+    listingId: bodyParams?.params?.listingId,
+    hasListingId: !!bodyParams?.params?.listingId,
+    params: bodyParams?.params
+  });
 
   const listingPromise = () => sdk.listings.show({ id: bodyParams?.params?.listingId });
 
@@ -39,6 +49,15 @@ module.exports = (req, res) => {
         providerCommission,
         customerCommission
       );
+
+      // Debug log for lineItems
+      console.log('💰 Generated lineItems:', {
+        hasLineItems: !!lineItems,
+        lineItemsCount: lineItems?.length,
+        lineItems,
+        orderData,
+        params: bodyParams?.params
+      });
 
       return getTrustedSdk(req);
     })
