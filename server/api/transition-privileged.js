@@ -8,6 +8,8 @@ const {
   fetchCommission,
 } = require('../api-util/sdk');
 
+console.log('🚦 transition-privileged endpoint is wired up');
+
 module.exports = (req, res) => {
   const { isSpeculative, orderData, bodyParams, queryParams } = req.body;
   console.log("🔔 transition-privileged called", {

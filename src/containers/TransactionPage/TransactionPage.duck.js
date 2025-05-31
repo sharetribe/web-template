@@ -728,8 +728,29 @@ export const makeTransition = (txId, transitionName, params) => (dispatch, getSt
     }
   }
 
-  return sdk.transactions
-    .transition({ id: txId, transition: transitionName, params: updatedParams }, { expand: true })
+  // Use our backend endpoint instead of SDK directly
+  const bodyParams = {
+    transition: transitionName,
+    params: updatedParams,
+  };
+
+  return fetch('/api/transition-privileged', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/transit+json',
+    },
+    body: JSON.stringify({
+      isSpeculative: false,
+      bodyParams,
+      queryParams: { expand: true }
+    }),
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw response;
+      }
+      return response.json();
+    })
     .then(response => {
       dispatch(addMarketplaceEntities(response));
       dispatch(transitionSuccess());
