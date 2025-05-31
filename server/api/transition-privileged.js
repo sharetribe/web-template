@@ -20,23 +20,51 @@ module.exports = (req, res) => {
     bodyParams,
     queryParams,
     params: bodyParams?.params,
-    rawBody: req.body
+    rawBody: req.body,
+    headers: req.headers
   });
 
   const sdk = getSdk(req, res);
   let lineItems = null;
 
-  // Debug log for listingId
-  console.log('📋 Listing ID check:', {
+  // Debug log for listingId and transaction details
+  console.log('📋 Request parameters check:', {
     listingId: bodyParams?.params?.listingId,
     hasListingId: !!bodyParams?.params?.listingId,
-    params: bodyParams?.params
+    transition: bodyParams?.transition,
+    params: bodyParams?.params,
+    transactionId: bodyParams?.params?.transactionId,
+    hasTransactionId: !!bodyParams?.params?.transactionId
   });
 
-  const listingPromise = () => sdk.listings.show({ id: bodyParams?.params?.listingId });
+  // Verify we have the required parameters before making the API call
+  if (!bodyParams?.params?.listingId) {
+    console.error('❌ Missing required listingId parameter');
+    return res.status(400).json({
+      errors: [{
+        status: 400,
+        code: 'validation-missing-key',
+        title: 'Missing required listingId parameter'
+      }]
+    });
+  }
+
+  const listingPromise = () => {
+    console.log('📡 Making listing API call with params:', {
+      listingId: bodyParams.params.listingId,
+      url: '/v1/api/listings/show'
+    });
+    return sdk.listings.show({ id: bodyParams.params.listingId });
+  };
 
   Promise.all([listingPromise(), fetchCommission(sdk)])
     .then(([showListingResponse, fetchAssetsResponse]) => {
+      console.log('✅ Listing API response:', {
+        status: showListingResponse?.status,
+        hasData: !!showListingResponse?.data?.data,
+        listingId: showListingResponse?.data?.data?.id
+      });
+
       const listing = showListingResponse.data.data;
       const commissionAsset = fetchAssetsResponse.data.data[0];
 
@@ -56,7 +84,8 @@ module.exports = (req, res) => {
         lineItemsCount: lineItems?.length,
         lineItems,
         orderData,
-        params: bodyParams?.params
+        params: bodyParams?.params,
+        listingId: listing?.id
       });
 
       return getTrustedSdk(req);
