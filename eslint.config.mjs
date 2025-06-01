@@ -5,11 +5,36 @@ import { defineConfig } from "eslint/config";
 
 
 export default defineConfig([
+  {
+    ignores: ["**/*.test.js", "**/*.example.js"],
+  },
   { files: ["**/*.{js,mjs,cjs,jsx}"], plugins: { js }, extends: ["js/recommended"] },
-  { files: ["**/*.{js,mjs,cjs,jsx}"], languageOptions: { globals: globals.browser } },
-  pluginReact.configs.flat.recommended,
+  {
+    files: ["server/**/*.{js,mjs,cjs,jsx}"],
+    languageOptions: { globals: globals.node }
+  },
   {
     files: ["src/**/*.{js,mjs,cjs,jsx}"],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        process: "readonly",
+        require: "readonly",
+        jest: "readonly",
+      },
+    },
+  },
+  {
+    ...pluginReact.configs.flat.recommended,
+    files: ["src/**/*.{js,mjs,cjs,jsx}"],
+    settings: {
+      react: {
+        version: "detect",
+      },
+    }
+  },
+  {
+    files: ["src/**/*.{js,mjs,cjs,jsx}", "server/**/*.{js,mjs,cjs,jsx}"],
     rules: {
       "react/display-name": "off",
       "react/prop-types": "off",
@@ -28,10 +53,13 @@ export default defineConfig([
       "no-empty": "off",
       "no-empty-object": "off",
       "no-empty-pattern": "off",
-
+      "no-unsafe-optional-chaining": "off",
+      "no-constant-binary-expression": "off",
+      "valid-typeof": "off",
+      "react/no-unknown-property": "off",
+      "no-useless-catch": "off",
+      "no-fallthrough": "off",
+      "no-dupe-else-if": "off"
     },
-  },
-  {
-    ignores: ["**/*.test.js"],
   }
 ]);

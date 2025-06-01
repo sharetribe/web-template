@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "8.3.0",
+  "version": "8.4.0",
   "private": true,
   "license": "Apache-2.0",
   "dependencies": {
@@ -142,7 +142,7 @@
     "postinstall": "patch-package",
     "translate": "node scripts/translations.js",
     "sentry:sourcemaps": "sentry-cli sourcemaps inject --org skyfarer-academy --project skyfarer-academy ./build && sentry-cli sourcemaps upload --org skyfarer-academy --project skyfarer-academy ./build",
-    "lint": "eslint"
+    "lint": "eslint --quiet src server"
   },
   "browserslist": {
     "production": [

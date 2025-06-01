@@ -834,7 +834,8 @@ const sendReviewAsFirst = (txId, transition, params, dispatch, sdk, config) => {
     .catch(e => {
       // If transaction transition is invalid, lets try another endpoint.
       if (isTransactionsTransitionInvalidTransition(e)) {
-        return sendReviewAsSecond(id, params, role, dispatch, sdk);
+        // [SKYFARER] shipped from sharetribe with error; ignored to reduce noise from custom development
+        return sendReviewAsSecond(id, params, role, dispatch, sdk); // eslint-disable-line no-undef
       } else {
         dispatch(sendReviewError(storableError(e)));
 

@@ -99,7 +99,8 @@ export const FavoriteListingPageComponent = props => {
         <div className={css.listingPanel}>
           {heading}
           <div className={css.listingCards}>
-            {listings.map(l => (
+            {Array.isArray(listings) && listings.length > 0 ? (
+              listings.map(l => (
               <ListingCard
                 className={css.listingCard}
                 key={l.id.uuid}
@@ -107,7 +108,15 @@ export const FavoriteListingPageComponent = props => {
                 showHeartIcon={false}
                 renderSizes={renderSizes}
               />
-            ))}
+            ))
+          ):(
+            !queryInProgress &&
+            !queryFavoritesError && (
+              <div className={css.noResultsMessage}>
+                <FormattedMessage id="FavoriteListingPage.noResults" />
+              </div>
+            )
+          )}
           </div>
           {paginationLinks}
         </div>
@@ -118,13 +127,13 @@ export const FavoriteListingPageComponent = props => {
 
 const mapStateToProps = state => {
   const {
-    currentPageResultIds,
+    currentPageResultIds = [],
     pagination,
     queryInProgress,
     queryFavoritesError,
     queryParams,
-  } = state.FavoriteListingPage;
-  const listings = getListingsById(state, currentPageResultIds);
+  } = state.FavoriteListingPage || {};
+  const listings = getListingsById(state, currentPageResultIds || []);
   return {
     currentPageResultIds,
     listings,

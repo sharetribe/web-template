@@ -52,9 +52,9 @@ const SectionHero = props => {
       viewBox="0 0 24 24"
       style={{
         height: '28px',
-        width: '32px',
+        width: '28px',
         marginLeft: '0px',
-        marginTop: '-6px',
+        marginTop: '-3px',
         verticalAlign: 'middle',
         fill: filled ? 'red' : 'none',
         stroke: filled ? 'none' : 'black',

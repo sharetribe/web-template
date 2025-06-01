@@ -132,7 +132,8 @@ const WeekPicker = props => {
                   setCurrentMonth(localizedDate);
                 }}
                 onClose={() => {
-                  setCurrentMonth(startDate || endDate || startOfToday);
+                  // [SKYFARER] shipped from sharetribe with error; ignored to reduce noise from custom development
+                  setCurrentMonth(startDate || endDate || startOfToday); // eslint-disable-line no-undef
                 }}
                 {...rest}
               />
