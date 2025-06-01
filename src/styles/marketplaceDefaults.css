@@ -1559,6 +1559,8 @@ textarea {
 
 /* add-ons */
 #home-hero {
+  display: flex;
+  justify-content: center;
   div:last-of-type {
     height: 85vh;
     display: flex;
@@ -1569,22 +1571,22 @@ textarea {
     }
   }
   header {
-    width: 90%;
+    /* width: 90%; */
     padding: 2rem;
     background: rgba(255,255,255,.85);
     @media (max-width: 600px) {
       margin: 0 auto;
     }
     @media (min-width: 1128px) and (max-width: 1400px) {
-      width: 70%;
-      margin: 0 0 0 10vw;
+      /* width: 70%; */
+      /* margin: 0 0 0 10vw; */
     }
     @media (min-width: 1401px) {
-      width: 65%;
-      margin: 0 0 0 20vw;
+      /* width: 65%; */
+      /* margin: 0 0 0 20vw; */
     }
     h1 {
-      justify-self: flex-start;
+      /* justify-self: flex-start; */
       font-size: 1.75rem;
       font-weight: 700;
       text-align: left;
@@ -1598,7 +1600,7 @@ textarea {
       color: var(--colorText);
       font-size: 1rem;
       font-weight: 300;
-      text-align: left;
+      /* text-align: left; */
       text-wrap: auto;
       color: var(--colorText);
       @media (--viewportLarge) {
@@ -1607,7 +1609,7 @@ textarea {
       }
     }
     a {
-      justify-self: flex-start;
+      /* justify-self: flex-start; */
       font-size: .75rem;
       font-weight: 800;
       text-transform: uppercase;
