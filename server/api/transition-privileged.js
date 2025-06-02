@@ -27,10 +27,13 @@ module.exports = (req, res) => {
   const sdk = getSdk(req, res);
   let lineItems = null;
 
+  // Extract uuid from listingId if needed
+  const listingId = bodyParams?.params?.listingId?.uuid || bodyParams?.params?.listingId;
+
   // Debug log for listingId and transaction details
   console.log('📋 Request parameters check:', {
-    listingId: bodyParams?.params?.listingId,
-    hasListingId: !!bodyParams?.params?.listingId,
+    listingId: listingId,
+    hasListingId: !!listingId,
     transition: bodyParams?.transition,
     params: bodyParams?.params,
     transactionId: bodyParams?.params?.transactionId,
@@ -38,7 +41,7 @@ module.exports = (req, res) => {
   });
 
   // Verify we have the required parameters before making the API call
-  if (!bodyParams?.params?.listingId) {
+  if (!listingId) {
     console.error('❌ Missing required listingId parameter');
     return res.status(400).json({
       errors: [{
@@ -51,10 +54,10 @@ module.exports = (req, res) => {
 
   const listingPromise = () => {
     console.log('📡 Making listing API call with params:', {
-      listingId: bodyParams.params.listingId,
+      listingId: listingId,
       url: '/v1/api/listings/show'
     });
-    return sdk.listings.show({ id: bodyParams.params.listingId });
+    return sdk.listings.show({ id: listingId });
   };
 
   Promise.all([listingPromise(), fetchCommission(sdk)])
@@ -106,6 +109,7 @@ module.exports = (req, res) => {
       (async (trustedSdk) => {
         const transition = bodyParams?.transition;
         if (transition === 'transition/accept') {
+          console.log('🧾 Incoming transition/accept params:', JSON.stringify(bodyParams?.params, null, 2));
           console.log('🚀 transition/accept block triggered', {
             providerName: bodyParams?.params?.providerName,
             customerName: bodyParams?.params?.customerName,
