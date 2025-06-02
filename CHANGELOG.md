@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+## [v8.4.2] 2025-06-02
+
 - [fix] Set the font size for the input fields in the Search as CTA component to 16px to prevent
   unintentional zooming on mobile.[#622](https://github.com/sharetribe/web-template/pull/622)
 - [fix] BookingFixedDurationForm: start time generation didn't count consecutive time-slots
@@ -22,6 +24,8 @@ way to update this template, but currently, we follow a pattern:
 - [add] Improve one copy text. [#621](https://github.com/sharetribe/web-template/pull/621)
 - [add] Add currently available translations for DE, ES, FR.
   [#619](https://github.com/sharetribe/web-template/pull/619)
+
+  [v8.4.2]: https://github.com/sharetribe/web-template/compare/v8.4.1...v8.4.2
 
 ## [v8.4.1] 2025-05-26
 
