@@ -111,8 +111,12 @@ module.exports = (req, res) => {
       (async (trustedSdk) => {
         const transition = bodyParams?.transition;
         if (transition === 'transition/accept') {
-          // Fetch transaction to get bookingStart and bookingEnd
+          // Debug log for raw transactionId param
+          console.log("🔎 Raw transactionId param:", bodyParams?.params?.transactionId);
+          // Safeguard extraction of transactionId
           const transactionId = bodyParams?.params?.transactionId?.uuid || bodyParams?.params?.transactionId;
+          // Log the transactionId to be used
+          console.log("📦 Using transactionId:", transactionId);
           let bookingStart, bookingEnd;
           try {
             const txRes = await trustedSdk.transactions.show({ id: transactionId });
