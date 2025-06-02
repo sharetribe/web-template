@@ -89,7 +89,6 @@ module.exports = (req, res) => {
         hasLineItems: !!lineItems,
         lineItemsCount: lineItems?.length,
         lineItems,
-        orderData,
         params: bodyParams?.params,
         listingId: listing?.id
       });
@@ -112,6 +111,26 @@ module.exports = (req, res) => {
       (async (trustedSdk) => {
         const transition = bodyParams?.transition;
         if (transition === 'transition/accept') {
+          // Fetch transaction to get bookingStart and bookingEnd
+          const transactionId = bodyParams?.params?.transactionId?.uuid || bodyParams?.params?.transactionId;
+          let bookingStart, bookingEnd;
+          try {
+            const txRes = await trustedSdk.transactions.show({ id: transactionId });
+            const booking = txRes.data.data.attributes.booking;
+            bookingStart = booking.start;
+            bookingEnd = booking.end;
+            console.log("🕓 bookingStart:", bookingStart);
+            console.log("🕓 bookingEnd:", bookingEnd);
+          } catch (err) {
+            console.error('❌ Failed to fetch transaction for booking dates:', err.message);
+          }
+          // Regenerate lineItems with bookingStart and bookingEnd
+          lineItems = transactionLineItems(
+            listing,
+            { bookingStart, bookingEnd, ...bodyParams.params },
+            providerCommission,
+            customerCommission
+          );
           console.log('🧾 Incoming transition/accept params:', JSON.stringify(bodyParams?.params, null, 2));
           console.log('🚀 transition/accept block triggered', {
             providerName: bodyParams?.params?.providerName,
