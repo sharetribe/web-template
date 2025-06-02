@@ -116,6 +116,7 @@ module.exports = (req, res) => {
           let bookingStart, bookingEnd;
           try {
             const txRes = await trustedSdk.transactions.show({ id: transactionId });
+            console.log("🧾 Full transaction object:", JSON.stringify(txRes.data.data, null, 2));
             const booking = txRes.data.data.attributes.booking;
             bookingStart = booking.start;
             bookingEnd = booking.end;
@@ -162,12 +163,11 @@ module.exports = (req, res) => {
                     }, 
                     { 
                       headers: { 
-                        Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`, 
-                        'Content-Type': 'application/json' 
-                      } 
+                        Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`,
+                        'Content-Type': 'application/json'
+                      }
                     }
                   );
-                  
                   const returnUpsRate = returnShipmentRes.data.rates.find((r) => r.provider === 'UPS');
                   if (returnUpsRate) {
                     const returnLabelRes = await axios.post('https://api.goshippo.com/transactions', 
@@ -178,7 +178,7 @@ module.exports = (req, res) => {
                       }, 
                       { 
                         headers: { 
-                          Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`, 
+                          Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`,
                           'Content-Type': 'application/json' 
                         } 
                       }
