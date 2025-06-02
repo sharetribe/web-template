@@ -98,11 +98,9 @@ module.exports = (req, res) => {
       });
 
       // Pass all needed variables forward
-      const trustedSdk = getTrustedSdk(req);
-      console.log("🛠 trustedSdk keys:", trustedSdk ? Object.keys(trustedSdk) : "undefined");
-      return { trustedSdk, listing, providerCommission, customerCommission, lineItems };
+      return { listing, providerCommission, customerCommission, lineItems };
     })
-    .then(async ({ trustedSdk, listing, providerCommission, customerCommission, lineItems }) => {
+    .then(async ({ listing, providerCommission, customerCommission, lineItems }) => {
       // Omit listingId from params (transition/request-payment-after-inquiry does not need it)
       const { listingId, ...restParams } = bodyParams?.params || {};
 
@@ -114,6 +112,10 @@ module.exports = (req, res) => {
           lineItems,
         },
       };
+
+      // Await the trusted SDK instance
+      const trustedSdk = await getTrustedSdk(req);
+      console.log("🛠 trustedSdk keys:", trustedSdk ? Object.keys(trustedSdk) : "undefined");
 
       const transition = bodyParams?.transition;
       if (transition === 'transition/accept') {
