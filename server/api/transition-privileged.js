@@ -77,12 +77,16 @@ module.exports = (req, res) => {
       // Debug log for orderData
       console.log("📦 orderData for lineItems:", orderData);
 
-      lineItems = transactionLineItems(
-        listing,
-        { ...orderData, ...bodyParams.params },
-        providerCommission,
-        customerCommission
-      );
+      // Only calculate lineItems here if not transition/accept
+      let transition = bodyParams?.transition;
+      if (transition !== 'transition/accept') {
+        lineItems = transactionLineItems(
+          listing,
+          { ...orderData, ...bodyParams.params },
+          providerCommission,
+          customerCommission
+        );
+      }
 
       // Debug log for lineItems
       console.log('💰 Generated lineItems:', {
