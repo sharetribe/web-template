@@ -123,6 +123,47 @@ module.exports = (req, res) => {
                 console.log('✅ Shippo QR Code:', labelRes.data.qr_code_url);
                 console.log('📦 Label URL:', labelRes.data.label_url);
                 console.log('🚚 Tracking URL:', labelRes.data.tracking_url_provider);
+
+                // Create return label (borrower ➜ lender)
+                try {
+                  const returnShipmentRes = await axios.post('https://api.goshippo.com/shipments/', 
+                    { 
+                      address_from: borrowerAddress, 
+                      address_to: lenderAddress, 
+                      parcels: [{ length: '15', width: '12', height: '2', distance_unit: 'in', weight: '2', mass_unit: 'lb' }], 
+                      extra: { qr_code_requested: true }, 
+                      async: false 
+                    }, 
+                    { 
+                      headers: { 
+                        Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`, 
+                        'Content-Type': 'application/json' 
+                      } 
+                    }
+                  );
+                  
+                  const returnUpsRate = returnShipmentRes.data.rates.find((r) => r.provider === 'UPS');
+                  if (returnUpsRate) {
+                    const returnLabelRes = await axios.post('https://api.goshippo.com/transactions', 
+                      { 
+                        rate: returnUpsRate.object_id, 
+                        label_file_type: 'PNG', 
+                        async: false 
+                      }, 
+                      { 
+                        headers: { 
+                          Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`, 
+                          'Content-Type': 'application/json' 
+                        } 
+                      }
+                    );
+                    console.log('✅ Shippo Return QR Code:', returnLabelRes.data.qr_code_url);
+                    console.log('📦 Return Label URL:', returnLabelRes.data.label_url);
+                    console.log('🚚 Return Tracking URL:', returnLabelRes.data.tracking_url_provider);
+                  }
+                } catch (err) {
+                  console.error('❌ Shippo return label creation failed:', err.message);
+                }
               }
             } catch (err) { console.error('❌ Shippo label creation failed:', err.message); }
           } else { console.warn('⚠️ Missing address info — skipping Shippo label creation.'); }
