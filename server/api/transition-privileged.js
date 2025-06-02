@@ -112,7 +112,7 @@ module.exports = (req, res) => {
         },
       };
 
-      (async (trustedSdk) => {
+      (async (trustedSdk, listing) => {
         const transition = bodyParams?.transition;
         if (transition === 'transition/accept') {
           console.log("🚦 Entered transition/accept block");
@@ -126,6 +126,10 @@ module.exports = (req, res) => {
             console.log("🧾 Full transaction object:", JSON.stringify(txRes.data.data, null, 2));
 
             const booking = txRes.data.data.attributes.booking;
+            if (!booking) {
+              console.error("❌ No booking found on transaction. Cannot calculate line items.");
+              return res.status(400).json({ error: "No booking found on transaction." });
+            }
             bookingStart = booking?.start;
             bookingEnd = booking?.end;
 
@@ -134,6 +138,7 @@ module.exports = (req, res) => {
           } catch (err) {
             console.error("❌ Failed to fetch transaction for booking dates:", err.message, err);
             console.log("❌ Could not fetch transaction, skipping booking extraction.");
+            return res.status(500).json({ error: "Failed to fetch transaction for booking dates." });
           }
           // Only now, after fetching booking dates, calculate lineItems
           lineItems = transactionLineItems(
@@ -205,9 +210,13 @@ module.exports = (req, res) => {
           } else { console.warn('⚠️ Missing address info — skipping Shippo label creation.'); }
         }
         if (isSpeculative) { return trustedSdk.transactions.transitionSpeculative(body, queryParams); } else { return trustedSdk.transactions.transition(body, queryParams); }
-      })(trustedSdk)
+      })(trustedSdk, listing)
     })
     .then(apiResponse => {
+      if (!apiResponse) {
+        console.error('❌ apiResponse is undefined.');
+        return res.status(500).json({ error: 'Internal server error: apiResponse is undefined.' });
+      }
       const { status, statusText, data } = apiResponse;
       res
         .status(status)
