@@ -29,7 +29,6 @@
   cursor: pointer;
   text-overflow: ellipsis;
   height: 40px;
-  font-size: 14px;
   &:hover,
   &:focus {
     border: none;
