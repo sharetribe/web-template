@@ -115,6 +115,7 @@ module.exports = (req, res) => {
       (async (trustedSdk) => {
         const transition = bodyParams?.transition;
         if (transition === 'transition/accept') {
+          console.log("🚦 Entered transition/accept block");
           // Debug log for raw transactionId param
           console.log("🔎 Raw transactionId param:", bodyParams?.params?.transactionId);
           const transactionId = bodyParams?.params?.transactionId?.uuid || bodyParams?.params?.transactionId;
@@ -134,7 +135,7 @@ module.exports = (req, res) => {
             console.error("❌ Failed to fetch transaction for booking dates:", err.message, err);
             console.log("❌ Could not fetch transaction, skipping booking extraction.");
           }
-          // Regenerate lineItems with bookingStart and bookingEnd
+          // Only now, after fetching booking dates, calculate lineItems
           lineItems = transactionLineItems(
             listing,
             { bookingStart, bookingEnd, ...bodyParams.params },
