@@ -98,7 +98,9 @@ module.exports = (req, res) => {
       });
 
       // Pass all needed variables forward
-      return { trustedSdk: getTrustedSdk(req), listing, providerCommission, customerCommission, lineItems };
+      const trustedSdk = getTrustedSdk(req);
+      console.log("🛠 trustedSdk keys:", trustedSdk ? Object.keys(trustedSdk) : "undefined");
+      return { trustedSdk, listing, providerCommission, customerCommission, lineItems };
     })
     .then(async ({ trustedSdk, listing, providerCommission, customerCommission, lineItems }) => {
       // Omit listingId from params (transition/request-payment-after-inquiry does not need it)
@@ -122,6 +124,10 @@ module.exports = (req, res) => {
         console.log("📦 Using transactionId:", transactionId);
         let bookingStart, bookingEnd;
         try {
+          if (!trustedSdk || !trustedSdk.transactions) {
+            console.error("❌ trustedSdk or trustedSdk.transactions is undefined!");
+            return res.status(500).json({ error: "Internal error: trustedSdk.transactions is undefined." });
+          }
           const txRes = await trustedSdk.transactions.show({ id: transactionId });
           console.log("🧾 Full transaction object:", JSON.stringify(txRes.data.data, null, 2));
 
@@ -233,5 +239,6 @@ module.exports = (req, res) => {
     })
     .catch(e => {
       handleError(res, e);
+      return;
     });
 };
