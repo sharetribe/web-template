@@ -74,6 +74,9 @@ module.exports = (req, res) => {
       const { providerCommission, customerCommission } =
         commissionAsset?.type === 'jsonAsset' ? commissionAsset.attributes.data : {};
 
+      // Debug log for orderData
+      console.log("📦 orderData for lineItems:", orderData);
+
       lineItems = transactionLineItems(
         listing,
         { ...orderData, ...bodyParams.params },
