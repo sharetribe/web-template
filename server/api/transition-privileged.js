@@ -113,21 +113,22 @@ module.exports = (req, res) => {
         if (transition === 'transition/accept') {
           // Debug log for raw transactionId param
           console.log("🔎 Raw transactionId param:", bodyParams?.params?.transactionId);
-          // Safeguard extraction of transactionId
           const transactionId = bodyParams?.params?.transactionId?.uuid || bodyParams?.params?.transactionId;
-          // Log the transactionId to be used
           console.log("📦 Using transactionId:", transactionId);
           let bookingStart, bookingEnd;
           try {
             const txRes = await trustedSdk.transactions.show({ id: transactionId });
             console.log("🧾 Full transaction object:", JSON.stringify(txRes.data.data, null, 2));
+
             const booking = txRes.data.data.attributes.booking;
-            bookingStart = booking.start;
-            bookingEnd = booking.end;
+            bookingStart = booking?.start;
+            bookingEnd = booking?.end;
+
             console.log("🕓 bookingStart:", bookingStart);
             console.log("🕓 bookingEnd:", bookingEnd);
           } catch (err) {
-            console.error('❌ Failed to fetch transaction for booking dates:', err.message);
+            console.error("❌ Failed to fetch transaction for booking dates:", err.message, err);
+            console.log("❌ Could not fetch transaction, skipping booking extraction.");
           }
           // Regenerate lineItems with bookingStart and bookingEnd
           lineItems = transactionLineItems(
