@@ -169,22 +169,13 @@ module.exports = (req, res) => {
           customerCommission
         );
         // Null-check and fallback
-        if (!Array.isArray(newLineItems) || newLineItems.length === 0) {
-          console.warn("⚠️ transactionLineItems returned null/invalid. Falling back to original lineItems if available.");
-          if (Array.isArray(body.params.lineItems) && body.params.lineItems.length > 0) {
-            newLineItems = body.params.lineItems;
-          } else {
-            console.warn("⚠️ No valid original lineItems to fall back to. Skipping lineItems assignment.");
-            newLineItems = undefined;
-          }
-        }
-        // Confirm final structure
-        if (newLineItems) {
+        if (Array.isArray(newLineItems) && newLineItems.length > 0) {
           body.params.lineItems = newLineItems;
+          console.log("✅ Final body.params.lineItems before transition:", body.params.lineItems);
         } else {
-          delete body.params.lineItems;
+          console.error("❌ No valid lineItems available. Aborting transition.");
+          return res.status(400).json({ error: "No valid lineItems available for transition." });
         }
-        console.log("✅ Final body.params.lineItems before transition:", body.params.lineItems);
         console.log('🧾 Incoming transition/accept params:', JSON.stringify(bodyParams?.params, null, 2));
         console.log('🚀 transition/accept block triggered', {
           providerName: bodyParams?.params?.providerName,
