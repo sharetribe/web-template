@@ -55,6 +55,7 @@ import {
 } from './TransactionPage.duck';
 import css from './TransactionPage.module.css';
 import { hasPermissionToViewData } from '../../util/userHelpers.js';
+import { storedData as loadCheckoutSessionData } from '../CheckoutPage/CheckoutPageSessionHelpers';
 
 // Submit dispute and close the review modal
 const onDisputeOrder = (
@@ -529,6 +530,13 @@ export const TransactionPageComponent = props => {
   ) : (
     loadingOrFailedFetching
   );
+
+  const { orderData } = loadCheckoutSessionData() || {};
+  // Log orderData for debugging
+  console.log('🧾 Loaded orderData for transition:', orderData);
+  if (!orderData) {
+    console.warn('⚠️ Missing orderData — shipping + line items may break.');
+  }
 
   return (
     <Page
