@@ -132,11 +132,16 @@ module.exports = (req, res) => {
           }
           const txRes = await trustedSdk.transactions.show({ id: transactionId });
           console.log("🧾 Full transaction object:", JSON.stringify(txRes.data.data, null, 2));
+          console.log("🔍 Transaction attributes:", txRes.data.data.attributes);
 
           const booking = txRes.data.data.attributes.booking;
           if (!booking) {
-            console.error("❌ No booking found on transaction. Cannot calculate line items.");
-            return res.status(400).json({ error: "No booking found on transaction." });
+            // In Flex, booking may not exist until a later transition (e.g., after accept/confirm-booking)
+            console.warn("⚠️ No booking found on transaction. Skipping recalculation.");
+            // Proceed with original lineItems (do not recalculate)
+            return isSpeculative
+              ? trustedSdk.transactions.transitionSpeculative(body, queryParams)
+              : trustedSdk.transactions.transition(body, queryParams);
           }
           bookingStart = booking?.start;
           bookingEnd = booking?.end;
