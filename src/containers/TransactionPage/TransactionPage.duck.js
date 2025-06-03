@@ -637,11 +637,7 @@ export const fetchTransaction = (id, txRole, config) => (dispatch, getState, sdk
       const listingFields = config?.listing?.listingFields;
       const sanitizeConfig = { listingFields };
 
-      if (!response || !response.data) {
-        console.warn('⚠️ Skipping marketplace entity merge due to missing sdkResponse in fetchTransaction');
-      } else {
-        dispatch(addMarketplaceEntities(response, sanitizeConfig));
-      }
+      dispatch(addMarketplaceEntities(response, sanitizeConfig));
       dispatch(fetchTransactionSuccess(response));
       return response;
     })
@@ -657,22 +653,14 @@ const refreshTransactionEntity = (sdk, txId, dispatch) => {
   delay(3000)
     .then(() => refreshTx(sdk, txId))
     .then(response => {
-      if (!response || !response.data) {
-        console.warn('⚠️ Skipping marketplace entity merge due to missing sdkResponse in refreshTransactionEntity');
-      } else {
-        dispatch(addMarketplaceEntities(response));
-      }
+      dispatch(addMarketplaceEntities(response));
       const lastTransition = response?.data?.data?.attributes?.lastTransition;
       // We'll make another attempt if mark-received-from-purchased from default-purchase process is still the latest.
       if (lastTransition === 'transition/mark-received-from-purchased') {
         return delay(8000)
           .then(() => refreshTx(sdk, txId))
           .then(response => {
-            if (!response || !response.data) {
-              console.warn('⚠️ Skipping marketplace entity merge due to missing sdkResponse in refreshTransactionEntity retry');
-            } else {
-              dispatch(addMarketplaceEntities(response));
-            }
+            dispatch(addMarketplaceEntities(response));
           });
       }
     })
@@ -693,66 +681,75 @@ export const makeTransition = (txId, transitionName, params) => (dispatch, getSt
   if (transitionName === 'transition/accept') {
     const state = getState();
     const { transactionRef } = state.TransactionPage;
+    // Log transactionRef for debugging
+    console.log('🔎 transactionRef:', transactionRef);
     const transactions = getMarketplaceEntities(state, transactionRef ? [transactionRef] : []);
+    // Log transactions array for debugging
+    console.log('🔎 transactions from getMarketplaceEntities:', transactions);
     const transaction = transactions.length > 0 ? transactions[0] : null;
-    if (transaction) {
-      // Provider (lender)
-      const provider = transaction.provider;
-      const providerProfile = provider?.attributes?.profile || {};
-      const providerPublic = providerProfile.publicData || {};
-      const providerProtected = providerProfile.protectedData || {};
-      const providerName = providerProfile.displayName || `${providerProfile.firstName || ''} ${providerProfile.lastName || ''}`.trim();
-      const providerStreet = providerPublic.providerStreet || providerProtected.providerStreet || '';
-      const providerCity = providerPublic.providerCity || providerProtected.providerCity || '';
-      const providerState = providerPublic.providerState || providerProtected.providerState || '';
-      const providerZip = providerPublic.providerZip || providerProtected.providerZip || '';
-      const providerEmail = provider?.attributes?.email || '';
-      const providerPhone = providerProtected.phoneNumber || providerPublic.providerPhone || '';
-
-      // Customer (borrower)
-      const customer = transaction.customer;
-      const shippingDetails = transaction?.attributes?.protectedData?.shippingDetails || {};
-      const customerName = shippingDetails.name || '';
-      const customerStreet = shippingDetails.street || '';
-      const customerCity = shippingDetails.city || '';
-      const customerState = shippingDetails.state || '';
-      const customerZip = shippingDetails.zip || '';
-      const customerEmail = customer?.attributes?.email || '';
-      const customerPhone = shippingDetails.phoneNumber || '';
-
-      // Add listingId and transactionId to params
-      const listingId = transaction?.listing?.id;
-      const transactionId = transaction?.id;
-
-      console.log('📝 Transition/accept params:', {
-        listingId,
-        transactionId,
-        hasListingId: !!listingId,
-        hasTransactionId: !!transactionId,
-        transaction: transaction?.id
-      });
-
-      updatedParams = {
-        ...params,
-        providerName,
-        providerStreet,
-        providerCity,
-        providerState,
-        providerZip,
-        providerEmail,
-        providerPhone,
-        customerName,
-        customerStreet,
-        customerCity,
-        customerState,
-        customerZip,
-        customerEmail,
-        customerPhone,
-        // Add required IDs
-        listingId,
-        transactionId
-      };
+    // Log transaction object for debugging
+    console.log('🚨 Transaction in transition/accept:', transaction);
+    if (!transaction) {
+      console.warn('⚠️ Cannot make transition — transaction not found for ID:', txId);
+      dispatch(transitionError(new Error('Transaction not found')));
+      return Promise.reject(new Error('Transaction not found'));
     }
+    // Provider (lender)
+    const provider = transaction.provider;
+    const providerProfile = provider?.attributes?.profile || {};
+    const providerPublic = providerProfile.publicData || {};
+    const providerProtected = providerProfile.protectedData || {};
+    const providerName = providerProfile.displayName || `${providerProfile.firstName || ''} ${providerProfile.lastName || ''}`.trim();
+    const providerStreet = providerPublic.providerStreet || providerProtected.providerStreet || '';
+    const providerCity = providerPublic.providerCity || providerProtected.providerCity || '';
+    const providerState = providerPublic.providerState || providerProtected.providerState || '';
+    const providerZip = providerPublic.providerZip || providerProtected.providerZip || '';
+    const providerEmail = provider?.attributes?.email || '';
+    const providerPhone = providerProtected.phoneNumber || providerPublic.providerPhone || '';
+
+    // Customer (borrower)
+    const customer = transaction.customer;
+    const shippingDetails = transaction?.attributes?.protectedData?.shippingDetails || {};
+    const customerName = shippingDetails.name || '';
+    const customerStreet = shippingDetails.street || '';
+    const customerCity = shippingDetails.city || '';
+    const customerState = shippingDetails.state || '';
+    const customerZip = shippingDetails.zip || '';
+    const customerEmail = customer?.attributes?.email || '';
+    const customerPhone = shippingDetails.phoneNumber || '';
+
+    // Add listingId and transactionId to params
+    const listingId = transaction?.listing?.id;
+    const transactionId = transaction?.id;
+
+    console.log('📝 Transition/accept params:', {
+      listingId,
+      transactionId,
+      hasListingId: !!listingId,
+      hasTransactionId: !!transactionId,
+      transaction: transaction?.id
+    });
+
+    updatedParams = {
+      ...params,
+      providerName,
+      providerStreet,
+      providerCity,
+      providerState,
+      providerZip,
+      providerEmail,
+      providerPhone,
+      customerName,
+      customerStreet,
+      customerCity,
+      customerState,
+      customerZip,
+      customerEmail,
+      customerPhone,
+      // Add required IDs
+      listingId,
+      transactionId
+    };
   }
 
   // Use our backend endpoint instead of SDK directly
@@ -779,10 +776,12 @@ export const makeTransition = (txId, transitionName, params) => (dispatch, getSt
       return response.json();
     })
     .then(response => {
-      if (!response || !response.data) {
-        console.warn('⚠️ Skipping marketplace entity merge due to missing sdkResponse in makeTransition');
-      } else {
-        dispatch(addMarketplaceEntities(response));
+      dispatch(addMarketplaceEntities(response));
+      // Log after adding marketplace entities
+      console.log('✅ addMarketplaceEntities dispatched. Response:', response);
+      // Check if transaction data is present in response
+      if (!response?.data?.data) {
+        console.warn('⚠️ No transaction data in response after transition.');
       }
       dispatch(transitionSuccess());
       dispatch(fetchCurrentUserNotifications());
@@ -895,11 +894,7 @@ const sendReviewAsSecond = (txId, transition, params, dispatch, sdk, config) => 
       { expand: true, include, ...getImageVariants(config.layout.listingImage) }
     )
     .then(response => {
-      if (!response || !response.data) {
-        console.warn('⚠️ Skipping marketplace entity merge due to missing sdkResponse in sendReviewAsSecond');
-      } else {
-        dispatch(addMarketplaceEntities(response));
-      }
+      dispatch(addMarketplaceEntities(response));
       dispatch(sendReviewSuccess());
       return response;
     })
@@ -926,11 +921,7 @@ const sendReviewAsFirst = (txId, transition, params, dispatch, sdk, config) => {
       { expand: true, include, ...getImageVariants(config.layout.listingImage) }
     )
     .then(response => {
-      if (!response || !response.data) {
-        console.warn('⚠️ Skipping marketplace entity merge due to missing sdkResponse in sendReviewAsFirst');
-      } else {
-        dispatch(addMarketplaceEntities(response));
-      }
+      dispatch(addMarketplaceEntities(response));
       dispatch(sendReviewSuccess());
       return response;
     })
