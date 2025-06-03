@@ -336,7 +336,11 @@ export const showListing = (listingId, config, isOwn = false) => (dispatch, getS
     .then(data => {
       const listingFields = config?.listing?.listingFields;
       const sanitizeConfig = { listingFields };
-      dispatch(addMarketplaceEntities(data, sanitizeConfig));
+      if (!data || !data.data) {
+        console.warn('⚠️ Skipping marketplace entity merge due to missing sdkResponse in showListing');
+      } else {
+        dispatch(addMarketplaceEntities(data, sanitizeConfig));
+      }
       return data;
     })
     .catch(e => {

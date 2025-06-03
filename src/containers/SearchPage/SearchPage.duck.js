@@ -268,7 +268,11 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
       const listingFields = config?.listing?.listingFields;
       const sanitizeConfig = { listingFields };
 
-      dispatch(addMarketplaceEntities(response, sanitizeConfig));
+      if (!response || !response.data) {
+        console.warn('⚠️ Skipping marketplace entity merge due to missing sdkResponse in searchListings');
+      } else {
+        dispatch(addMarketplaceEntities(response, sanitizeConfig));
+      }
       dispatch(searchListingsSuccess(response));
       return response;
     })

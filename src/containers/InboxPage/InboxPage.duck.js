@@ -120,7 +120,11 @@ export const loadData = (params, search) => (dispatch, getState, sdk) => {
   return sdk.transactions
     .query(apiQueryParams)
     .then(response => {
-      dispatch(addMarketplaceEntities(response));
+      if (!response || !response.data) {
+        console.warn('⚠️ Skipping marketplace entity merge due to missing sdkResponse in loadData');
+      } else {
+        dispatch(addMarketplaceEntities(response));
+      }
       dispatch(fetchOrdersOrSalesSuccess(response));
       return response;
     })

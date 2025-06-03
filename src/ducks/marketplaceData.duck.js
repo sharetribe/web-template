@@ -13,7 +13,7 @@ const initialState = {
 
 const merge = (state, payload) => {
   const { sdkResponse, sanitizeConfig } = payload;
-  const apiResponse = sdkResponse.data;
+  const apiResponse = sdkResponse?.data || {};
   return {
     ...state,
     entities: updatedEntities({ ...state.entities }, apiResponse, sanitizeConfig),

@@ -637,7 +637,11 @@ export const fetchTransaction = (id, txRole, config) => (dispatch, getState, sdk
       const listingFields = config?.listing?.listingFields;
       const sanitizeConfig = { listingFields };
 
-      dispatch(addMarketplaceEntities(response, sanitizeConfig));
+      if (!response || !response.data) {
+        console.warn('⚠️ Skipping marketplace entity merge due to missing sdkResponse in fetchTransaction');
+      } else {
+        dispatch(addMarketplaceEntities(response, sanitizeConfig));
+      }
       dispatch(fetchTransactionSuccess(response));
       return response;
     })
@@ -653,14 +657,22 @@ const refreshTransactionEntity = (sdk, txId, dispatch) => {
   delay(3000)
     .then(() => refreshTx(sdk, txId))
     .then(response => {
-      dispatch(addMarketplaceEntities(response));
+      if (!response || !response.data) {
+        console.warn('⚠️ Skipping marketplace entity merge due to missing sdkResponse in refreshTransactionEntity');
+      } else {
+        dispatch(addMarketplaceEntities(response));
+      }
       const lastTransition = response?.data?.data?.attributes?.lastTransition;
       // We'll make another attempt if mark-received-from-purchased from default-purchase process is still the latest.
       if (lastTransition === 'transition/mark-received-from-purchased') {
         return delay(8000)
           .then(() => refreshTx(sdk, txId))
           .then(response => {
-            dispatch(addMarketplaceEntities(response));
+            if (!response || !response.data) {
+              console.warn('⚠️ Skipping marketplace entity merge due to missing sdkResponse in refreshTransactionEntity retry');
+            } else {
+              dispatch(addMarketplaceEntities(response));
+            }
           });
       }
     })
@@ -767,7 +779,11 @@ export const makeTransition = (txId, transitionName, params) => (dispatch, getSt
       return response.json();
     })
     .then(response => {
-      dispatch(addMarketplaceEntities(response));
+      if (!response || !response.data) {
+        console.warn('⚠️ Skipping marketplace entity merge due to missing sdkResponse in makeTransition');
+      } else {
+        dispatch(addMarketplaceEntities(response));
+      }
       dispatch(transitionSuccess());
       dispatch(fetchCurrentUserNotifications());
 
@@ -879,7 +895,11 @@ const sendReviewAsSecond = (txId, transition, params, dispatch, sdk, config) => 
       { expand: true, include, ...getImageVariants(config.layout.listingImage) }
     )
     .then(response => {
-      dispatch(addMarketplaceEntities(response));
+      if (!response || !response.data) {
+        console.warn('⚠️ Skipping marketplace entity merge due to missing sdkResponse in sendReviewAsSecond');
+      } else {
+        dispatch(addMarketplaceEntities(response));
+      }
       dispatch(sendReviewSuccess());
       return response;
     })
@@ -906,7 +926,11 @@ const sendReviewAsFirst = (txId, transition, params, dispatch, sdk, config) => {
       { expand: true, include, ...getImageVariants(config.layout.listingImage) }
     )
     .then(response => {
-      dispatch(addMarketplaceEntities(response));
+      if (!response || !response.data) {
+        console.warn('⚠️ Skipping marketplace entity merge due to missing sdkResponse in sendReviewAsFirst');
+      } else {
+        dispatch(addMarketplaceEntities(response));
+      }
       dispatch(sendReviewSuccess());
       return response;
     })

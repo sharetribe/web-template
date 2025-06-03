@@ -127,12 +127,14 @@ module.exports = (req, res) => {
         const transactionId = bodyParams?.params?.transactionId?.uuid || bodyParams?.params?.transactionId;
         console.log("📦 Using transactionId:", transactionId);
         let bookingStart, bookingEnd;
+        let txRes; // Declare txRes outside try block so it's accessible in the catch block
+
         try {
           if (!trustedSdk || !trustedSdk.transactions) {
             console.error("❌ trustedSdk or trustedSdk.transactions is undefined!");
             return res.status(500).json({ error: "Internal error: trustedSdk.transactions is undefined." });
           }
-          const txRes = await trustedSdk.transactions.show({ id: transactionId });
+          txRes = await trustedSdk.transactions.show({ id: transactionId });
           console.log("🧾 Full transaction object:", JSON.stringify(txRes.data.data, null, 2));
           console.log("🔍 Transaction attributes:", txRes.data.data.attributes);
 
@@ -141,9 +143,23 @@ module.exports = (req, res) => {
             // In Flex, booking may not exist until a later transition (e.g., after accept/confirm-booking)
             console.warn("⚠️ No booking found on transaction. Skipping recalculation.");
             // Proceed with original lineItems (do not recalculate)
-            return isSpeculative
-              ? trustedSdk.transactions.transitionSpeculative(body, queryParams)
-              : trustedSdk.transactions.transition(body, queryParams);
+            try {
+              const response = isSpeculative
+                ? await trustedSdk.transactions.transitionSpeculative(body, queryParams)
+                : await trustedSdk.transactions.transition(body, queryParams);
+              console.log("✅ Transition successful (no booking):", {
+                status: response?.status,
+                hasData: !!response?.data?.data,
+                transition: bodyParams?.transition
+              });
+              return response;
+            } catch (err) {
+              console.error("❌ Transition failed (no booking):", err.message, err);
+              return res.status(500).json({ 
+                error: "Transaction transition failed",
+                details: err.message
+              });
+            }
           }
           bookingStart = booking?.start;
           bookingEnd = booking?.end;
@@ -153,8 +169,12 @@ module.exports = (req, res) => {
         } catch (err) {
           console.error("❌ Failed to fetch transaction for booking dates:", err.message, err);
           console.log("❌ Could not fetch transaction, skipping booking extraction.");
-          return res.status(500).json({ error: "Failed to fetch transaction for booking dates." });
+          return res.status(500).json({ 
+            error: "Failed to fetch transaction for booking dates",
+            details: err.message
+          });
         }
+
         // Only now, after fetching booking dates, calculate lineItems
         console.log("🔬 transactionLineItems input:", {
           listing,
@@ -179,8 +199,12 @@ module.exports = (req, res) => {
           body.params.lineItems = originalLineItems;
         } else {
           console.error("❌ No valid lineItems available. Aborting transition.");
-          return res.status(400).json({ error: "No valid lineItems available for transition." });
+          return res.status(400).json({ 
+            error: "No valid lineItems available for transition",
+            details: "Neither new nor original lineItems were valid"
+          });
         }
+
         // Log the final body before transition
         console.log("🚀 Final body sent to Flex API:", JSON.stringify(body, null, 2));
         console.log('🧾 Incoming transition/accept params:', JSON.stringify(bodyParams?.params, null, 2));
@@ -190,17 +214,23 @@ module.exports = (req, res) => {
           hasProviderAddress: !!(bodyParams?.params?.providerStreet && bodyParams?.params?.providerCity),
           hasCustomerAddress: !!(bodyParams?.params?.customerStreet && bodyParams?.params?.customerCity)
         });
+
+        // Handle shipping labels
         const lenderAddress = { name: bodyParams?.params?.providerName || 'Lender', street1: bodyParams?.params?.providerStreet, city: bodyParams?.params?.providerCity, state: bodyParams?.params?.providerState, zip: bodyParams?.params?.providerZip, country: 'US', email: bodyParams?.params?.providerEmail, phone: bodyParams?.params?.providerPhone };
         const borrowerAddress = { name: bodyParams?.params?.customerName || 'Borrower', street1: bodyParams?.params?.customerStreet, city: bodyParams?.params?.customerCity, state: bodyParams?.params?.customerState, zip: bodyParams?.params?.customerZip, country: 'US', email: bodyParams?.params?.customerEmail, phone: bodyParams?.params?.customerPhone };
-        if (lenderAddress.street1 && borrowerAddress.street1) {
+        
+        // Log addresses before Shippo logic
+        console.log('🏷️ Addresses received:', { lenderAddress, borrowerAddress });
+        // TEMP: force Shippo to run for debugging purposes
+        if (true || lenderAddress.street1 && borrowerAddress.street1) {
           try {
             const shipmentRes = await axios.post('https://api.goshippo.com/shipments/', { address_from: lenderAddress, address_to: borrowerAddress, parcels: [ { length: '15', width: '12', height: '2', distance_unit: 'in', weight: '2', mass_unit: 'lb' } ], extra: { qr_code_requested: true }, async: false }, { headers: { Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`, 'Content-Type': 'application/json' } });
             const upsRate = shipmentRes.data.rates.find((r) => r.provider === 'UPS');
             if (upsRate) {
               const labelRes = await axios.post('https://api.goshippo.com/transactions', { rate: upsRate.object_id, label_file_type: 'PNG', async: false }, { headers: { Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`, 'Content-Type': 'application/json' } });
               console.log('✅ Shippo QR Code:', labelRes.data.qr_code_url);
-              console.log('📦 Label URL:', labelRes.data.label_url);
-              console.log('🚚 Tracking URL:', labelRes.data.tracking_url_provider);
+              console.log('📦 Shippo Label URL:', labelRes.data.label_url);
+              console.log('🚚 Shippo Tracking URL:', labelRes.data.tracking_url_provider);
 
               // Create return label (borrower ➜ lender)
               try {
@@ -235,17 +265,61 @@ module.exports = (req, res) => {
                     }
                   );
                   console.log('✅ Shippo Return QR Code:', returnLabelRes.data.qr_code_url);
-                  console.log('📦 Return Label URL:', returnLabelRes.data.label_url);
-                  console.log('🚚 Return Tracking URL:', returnLabelRes.data.tracking_url_provider);
+                  console.log('📦 Shippo Return Label URL:', returnLabelRes.data.label_url);
+                  console.log('🚚 Shippo Return Tracking URL:', returnLabelRes.data.tracking_url_provider);
                 }
               } catch (err) {
                 console.error('❌ Shippo return label creation failed:', err.message);
+                // Continue with transition even if return label fails
               }
             }
-          } catch (err) { console.error('❌ Shippo label creation failed:', err.message); }
-        } else { console.warn('⚠️ Missing address info — skipping Shippo label creation.'); }
+          } catch (err) { 
+            console.error('❌ Shippo label creation failed:', err.message);
+            // Continue with transition even if shipping label fails
+          }
+        } else { 
+          console.warn('⚠️ Missing address info — skipping Shippo label creation.');
+          // Continue with transition even if address info is missing
+        }
+
+        // Perform the actual transition
+        try {
+          const response = await trustedSdk.transactions.transition(body, queryParams);
+          console.log("✅ Transition successful:", {
+            status: response?.status,
+            hasData: !!response?.data?.data,
+            transition: bodyParams?.transition,
+            transactionId: response?.data?.data?.id?.uuid
+          });
+          return response;
+        } catch (err) {
+          console.error("❌ Transition failed:", err.message, err);
+          return res.status(500).json({ 
+            error: "Transaction transition failed",
+            details: err.message
+          });
+        }
       }
-      if (isSpeculative) { return trustedSdk.transactions.transitionSpeculative(body, queryParams); } else { return trustedSdk.transactions.transition(body, queryParams); }
+
+      // Handle non-transition/accept cases
+      try {
+        const response = isSpeculative
+          ? await trustedSdk.transactions.transitionSpeculative(body, queryParams)
+          : await trustedSdk.transactions.transition(body, queryParams);
+        console.log("✅ Transition successful:", {
+          status: response?.status,
+          hasData: !!response?.data?.data,
+          transition: bodyParams?.transition,
+          transactionId: response?.data?.data?.id?.uuid
+        });
+        return response;
+      } catch (err) {
+        console.error("❌ Transition failed:", err.message, err);
+        return res.status(500).json({ 
+          error: "Transaction transition failed",
+          details: err.message
+        });
+      }
     })
     .then(apiResponse => {
       if (!apiResponse) {
