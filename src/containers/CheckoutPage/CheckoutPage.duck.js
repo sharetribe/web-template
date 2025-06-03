@@ -276,7 +276,8 @@ export const initiateOrder = (
       console.error('transitionPrivileged called without transactionId!');
       return Promise.reject(new Error('transitionPrivileged called without transactionId!'));
     }
-    // transition privileged
+    // Log orderData before sending to transition-privileged
+    console.log('🚨 orderData in thunk before sending to transition-privileged:', orderData);
     return transitionPrivileged({ isSpeculative: false, orderData, bodyParams, queryParams })
       .then(handleSuccess)
       .catch(handleError);
