@@ -168,10 +168,15 @@ module.exports = (req, res) => {
           providerCommission,
           customerCommission
         );
+        // Extract original lineItems from the transaction as a fallback
+        const originalLineItems = txRes.data.data.attributes.lineItems;
         // Null-check and fallback
         if (Array.isArray(newLineItems) && newLineItems.length > 0) {
           body.params.lineItems = newLineItems;
           console.log("✅ Final body.params.lineItems before transition:", body.params.lineItems);
+        } else if (Array.isArray(originalLineItems) && originalLineItems.length > 0) {
+          body.params.lineItems = originalLineItems;
+          console.warn("⚠️ Falling back to original transaction lineItems:", originalLineItems);
         } else {
           console.error("❌ No valid lineItems available. Aborting transition.");
           return res.status(400).json({ error: "No valid lineItems available for transition." });
