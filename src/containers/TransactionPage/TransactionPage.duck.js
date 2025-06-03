@@ -152,7 +152,7 @@ export default function transactionPageReducer(state = initialState, action = {}
     case FETCH_TRANSACTION_REQUEST:
       return { ...state, fetchTransactionInProgress: true, fetchTransactionError: null };
     case FETCH_TRANSACTION_SUCCESS: {
-      const transactionRef = { id: payload && payload.data && payload.data.data ? payload.data.data.id : null, type: 'transaction' };
+      const transactionRef = { id: payload.data.data.id, type: 'transaction' };
       return { ...state, fetchTransactionInProgress: false, transactionRef };
     }
     case FETCH_TRANSACTION_ERROR:
@@ -529,7 +529,7 @@ const getImageVariants = listingImageConfig => {
 };
 
 const listingRelationship = txResponse => {
-  return txResponse && txResponse.data && txResponse.data.data && txResponse.data.data.relationships && txResponse.data.data.relationships.listing ? txResponse.data.data.relationships.listing.data : null;
+  return txResponse.data.data.relationships.listing.data;
 };
 
 /**
@@ -545,7 +545,7 @@ const injectAuthorRelationship = txResponse => {
     data: {
       relationships: { provider },
     },
-  } = txResponse?.data ?? {};
+  } = txResponse.data;
 
   // If provider has not been included, return the response with no changes.
   if (!provider?.data?.id) {
@@ -564,7 +564,7 @@ const injectAuthorRelationship = txResponse => {
       ...included[includedListingIdx].relationships,
       author: {
         data: {
-          id: provider && provider.data ? provider.data.id : null,
+          id: provider?.data?.id,
           type: 'user',
         },
       },
@@ -574,7 +574,7 @@ const injectAuthorRelationship = txResponse => {
   return {
     ...txResponse,
     data: {
-      ...(txResponse?.data ?? {}),
+      ...txResponse.data,
       included: [...included],
     },
   };
@@ -605,8 +605,8 @@ export const fetchTransaction = (id, txRole, config) => (dispatch, getState, sdk
       { expand: true }
     )
     .then(response => {
-      const listingId = listingRelationship(response);
-      const entities = updatedEntities({}, response?.data ?? {});
+      const listingId = listingRelationship(response).id;
+      const entities = updatedEntities({}, response.data);
       const listingRef = { id: listingId, type: 'listing' };
       const transactionRef = { id, type: 'transaction' };
       const denormalised = denormalisedEntities(entities, [listingRef, transactionRef]);
@@ -654,7 +654,7 @@ const refreshTransactionEntity = (sdk, txId, dispatch) => {
     .then(() => refreshTx(sdk, txId))
     .then(response => {
       dispatch(addMarketplaceEntities(response));
-      const lastTransition = response && response.data && response.data.data && response.data.data.attributes && response.data.data.attributes.lastTransition;
+      const lastTransition = response?.data?.data?.attributes?.lastTransition;
       // We'll make another attempt if mark-received-from-purchased from default-purchase process is still the latest.
       if (lastTransition === 'transition/mark-received-from-purchased') {
         return delay(8000)
@@ -805,7 +805,7 @@ const fetchMessages = (txId, page, config) => (dispatch, getState, sdk) => {
     })
     .then(response => {
       const messages = denormalisedResponseEntities(response);
-      const { totalItems, totalPages, page: fetchedPage } = response?.data?.meta ?? {};
+      const { totalItems, totalPages, page: fetchedPage } = response.data.meta;
       const pagination = { totalItems, totalPages, page: fetchedPage };
       const totalMessages = getState().TransactionPage.totalMessages;
 
@@ -850,7 +850,7 @@ export const sendMessage = (txId, message, config) => (dispatch, getState, sdk) 
   return sdk.messages
     .send({ transactionId: txId, content: message })
     .then(response => {
-      const messageId = response?.data?.data?.id;
+      const messageId = response.data.data.id;
 
       // We fetch the first page again to add sent message to the page data
       // and update possible incoming messages too.
@@ -916,7 +916,7 @@ const sendReviewAsFirst = (txId, transition, params, dispatch, sdk, config) => {
     .catch(e => {
       // If transaction transition is invalid, lets try another endpoint.
       if (isTransactionsTransitionInvalidTransition(e)) {
-        return sendReviewAsSecond(txId, params, role, dispatch, sdk);
+        return sendReviewAsSecond(id, params, role, dispatch, sdk);
       } else {
         dispatch(sendReviewError(storableError(e)));
 
@@ -950,7 +950,7 @@ export const fetchNextTransitions = id => (dispatch, getState, sdk) => {
   return sdk.processTransitions
     .query({ transactionId: id })
     .then(res => {
-      dispatch(fetchTransitionsSuccess(res?.data?.data ?? null));
+      dispatch(fetchTransitionsSuccess(res.data.data));
     })
     .catch(e => {
       dispatch(fetchTransitionsError(storableError(e)));
@@ -961,7 +961,7 @@ export const fetchTransactionLineItems = ({ orderData, listingId, isOwnListing }
   dispatch(fetchLineItemsRequest());
   transactionLineItems({ orderData, listingId, isOwnListing })
     .then(response => {
-      const lineItems = response?.data ?? null;
+      const lineItems = response.data;
       dispatch(fetchLineItemsSuccess(lineItems));
     })
     .catch(e => {

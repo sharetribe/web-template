@@ -15,7 +15,6 @@ const ActionButtonsMaybe = props => {
     secondaryButtonProps,
     isListingDeleted,
     isProvider,
-    acceptButtonEnabled = true,
   } = props;
 
   // In default processes default processes need special handling
@@ -30,7 +29,7 @@ const ActionButtonsMaybe = props => {
   const primaryButton = primaryButtonProps ? (
     <PrimaryButton
       inProgress={primaryButtonProps.inProgress}
-      disabled={buttonsDisabled || !acceptButtonEnabled}
+      disabled={buttonsDisabled}
       onClick={primaryButtonProps.onAction}
     >
       {primaryButtonProps.buttonText}

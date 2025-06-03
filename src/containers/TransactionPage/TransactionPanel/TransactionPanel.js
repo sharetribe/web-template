@@ -197,8 +197,6 @@ export class TransactionPanelComponent extends Component {
     const listingTitle = listingDeleted ? deletedListingTitle : listing?.attributes?.title;
     const firstImage = listing?.images?.length > 0 ? listing?.images[0] : null;
 
-    const acceptButtonEnabled = transaction?.attributes?.state === 'preauthorized';
-
     const actionButtons = (
       <ActionButtonsMaybe
         showButtons={stateData.showActionButtons}
@@ -206,7 +204,6 @@ export class TransactionPanelComponent extends Component {
         secondaryButtonProps={stateData?.secondaryButtonProps}
         isListingDeleted={listingDeleted}
         isProvider={isProvider}
-        acceptButtonEnabled={acceptButtonEnabled}
       />
     );
 
