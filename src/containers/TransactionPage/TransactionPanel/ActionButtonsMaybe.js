@@ -35,19 +35,9 @@ const ActionButtonsMaybe = props => {
       {primaryButtonProps.buttonText}
     </PrimaryButton>
   ) : null;
-
-  const getErrorMessage = errorObj => {
-    if (!errorObj) return null;
-    if (errorObj.data && errorObj.data.errors && errorObj.data.errors[0] && errorObj.data.errors[0].title) {
-      return errorObj.data.errors[0].title;
-    }
-    if (errorObj.message) return errorObj.message;
-    return null;
-  };
-
-  const primaryErrorMessage = primaryButtonProps?.error
-    ? <p className={css.actionError}>{getErrorMessage(primaryButtonProps.error) || primaryButtonProps?.errorText}</p>
-    : null;
+  const primaryErrorMessage = primaryButtonProps?.error ? (
+    <p className={css.actionError}>{primaryButtonProps?.errorText}</p>
+  ) : null;
 
   const secondaryButton = secondaryButtonProps ? (
     <SecondaryButton
@@ -58,9 +48,9 @@ const ActionButtonsMaybe = props => {
       {secondaryButtonProps.buttonText}
     </SecondaryButton>
   ) : null;
-  const secondaryErrorMessage = secondaryButtonProps?.error
-    ? <p className={css.actionError}>{getErrorMessage(secondaryButtonProps.error) || secondaryButtonProps?.errorText}</p>
-    : null;
+  const secondaryErrorMessage = secondaryButtonProps?.error ? (
+    <p className={css.actionError}>{secondaryButtonProps?.errorText}</p>
+  ) : null;
 
   const classes = classNames(rootClassName || css.actionButtons, className);
 

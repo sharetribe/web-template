@@ -760,26 +760,23 @@ export const makeTransition = (txId, transitionName, params) => (dispatch, getSt
       queryParams: { expand: true }
     }),
   })
-    .then(async response => {
-      let json;
-      try {
-        json = await response.json();
-      } catch (err) {
-        json = null;
-      }
+    .then(response => {
       if (!response.ok) {
-        // Attach .data for frontend error handling
-        const error = new Error(json && json.message ? json.message : 'Transition failed');
-        error.data = json && json.data ? json.data : json;
-        throw error;
+        throw response;
       }
-      return json;
+      return response.json();
     })
     .then(response => {
       dispatch(addMarketplaceEntities(response));
       dispatch(transitionSuccess());
       dispatch(fetchCurrentUserNotifications());
+
+      // There could be automatic transitions after this transition
+      // For example mark-received-from-purchased > auto-complete.
+      // Here, we make 1-2 delayed updates for the tx entity.
+      // This way "leave a review" link should show up for the customer.
       refreshTransactionEntity(sdk, txId, dispatch);
+
       return response;
     })
     .catch(e => {
