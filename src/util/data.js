@@ -130,7 +130,7 @@ export const denormalisedEntities = (entities, resources, throwIfNotFound = true
  */
 export const denormalisedResponseEntities = sdkResponse => {
   const apiResponse = sdkResponse.data;
-  const data = apiResponse.data;
+  const data = apiResponse && apiResponse.data ? apiResponse.data : null;
   const resources = Array.isArray(data) ? data : [data];
 
   if (!data || resources.length === 0) {
