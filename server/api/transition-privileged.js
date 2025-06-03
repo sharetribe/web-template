@@ -173,14 +173,14 @@ module.exports = (req, res) => {
         // Null-check and fallback
         if (Array.isArray(newLineItems) && newLineItems.length > 0) {
           body.params.lineItems = newLineItems;
-          console.log("✅ Final body.params.lineItems before transition:", body.params.lineItems);
         } else if (Array.isArray(originalLineItems) && originalLineItems.length > 0) {
           body.params.lineItems = originalLineItems;
-          console.warn("⚠️ Falling back to original transaction lineItems:", originalLineItems);
         } else {
           console.error("❌ No valid lineItems available. Aborting transition.");
           return res.status(400).json({ error: "No valid lineItems available for transition." });
         }
+        // Log the final body before transition
+        console.log("🚀 Final body sent to Flex API:", JSON.stringify(body, null, 2));
         console.log('🧾 Incoming transition/accept params:', JSON.stringify(bodyParams?.params, null, 2));
         console.log('🚀 transition/accept block triggered', {
           providerName: bodyParams?.params?.providerName,
@@ -264,6 +264,7 @@ module.exports = (req, res) => {
         .end();
     })
     .catch(e => {
+      console.error("❌ Flex API error:", e.response?.data || e);
       handleError(res, e);
       return;
     });
