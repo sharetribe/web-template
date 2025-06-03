@@ -10,6 +10,91 @@ const {
 
 console.log('🚦 transition-privileged endpoint is wired up');
 
+// --- Shippo label creation logic extracted to a function ---
+async function createShippingLabels(bodyParams) {
+  // Extract addresses from bodyParams
+  const lenderAddress = {
+    name: bodyParams?.params?.providerName || 'Lender',
+    street1: bodyParams?.params?.providerStreet,
+    city: bodyParams?.params?.providerCity,
+    state: bodyParams?.params?.providerState,
+    zip: bodyParams?.params?.providerZip,
+    country: 'US',
+    email: bodyParams?.params?.providerEmail,
+    phone: bodyParams?.params?.providerPhone,
+  };
+  const borrowerAddress = {
+    name: bodyParams?.params?.customerName || 'Borrower',
+    street1: bodyParams?.params?.customerStreet,
+    city: bodyParams?.params?.customerCity,
+    state: bodyParams?.params?.customerState,
+    zip: bodyParams?.params?.customerZip,
+    country: 'US',
+    email: bodyParams?.params?.customerEmail,
+    phone: bodyParams?.params?.customerPhone,
+  };
+  // Log addresses before Shippo logic
+  console.log('🏷️ Addresses received:', { lenderAddress, borrowerAddress });
+  if (lenderAddress.street1 && borrowerAddress.street1) {
+    try {
+      const shipmentRes = await axios.post('https://api.goshippo.com/shipments/', { address_from: lenderAddress, address_to: borrowerAddress, parcels: [ { length: '15', width: '12', height: '2', distance_unit: 'in', weight: '2', mass_unit: 'lb' } ], extra: { qr_code_requested: true }, async: false }, { headers: { Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`, 'Content-Type': 'application/json' } });
+      const upsRate = shipmentRes.data.rates.find((r) => r.provider === 'UPS');
+      if (upsRate) {
+        const labelRes = await axios.post('https://api.goshippo.com/transactions', { rate: upsRate.object_id, label_file_type: 'PNG', async: false }, { headers: { Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`, 'Content-Type': 'application/json' } });
+        console.log('✅ Shippo QR Code:', labelRes.data.qr_code_url);
+        console.log('📦 Shippo Label URL:', labelRes.data.label_url);
+        console.log('🚚 Shippo Tracking URL:', labelRes.data.tracking_url_provider);
+        // Create return label (borrower ➜ lender)
+        try {
+          const returnShipmentRes = await axios.post('https://api.goshippo.com/shipments/', 
+            { 
+              address_from: borrowerAddress, 
+              address_to: lenderAddress, 
+              parcels: [{ length: '15', width: '12', height: '2', distance_unit: 'in', weight: '2', mass_unit: 'lb' }], 
+              extra: { qr_code_requested: true }, 
+              async: false 
+            }, 
+            { 
+              headers: { 
+                Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`,
+                'Content-Type': 'application/json'
+              }
+            }
+          );
+          const returnUpsRate = returnShipmentRes.data.rates.find((r) => r.provider === 'UPS');
+          if (returnUpsRate) {
+            const returnLabelRes = await axios.post('https://api.goshippo.com/transactions', 
+              { 
+                rate: returnUpsRate.object_id, 
+                label_file_type: 'PNG', 
+                async: false 
+              }, 
+              { 
+                headers: { 
+                  Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`,
+                  'Content-Type': 'application/json' 
+                } 
+              }
+            );
+            console.log('✅ Shippo Return QR Code:', returnLabelRes.data.qr_code_url);
+            console.log('📦 Shippo Return Label URL:', returnLabelRes.data.label_url);
+            console.log('🚚 Shippo Return Tracking URL:', returnLabelRes.data.tracking_url_provider);
+          }
+        } catch (err) {
+          console.error('❌ Shippo return label creation failed:', err.message);
+          // Continue with transition even if return label fails
+        }
+      }
+    } catch (err) { 
+      console.error('❌ Shippo label creation failed:', err.message);
+      // Continue with transition even if shipping label fails
+    }
+  } else { 
+    console.warn('⚠️ Missing address info — skipping Shippo label creation.');
+    // Continue with transition even if address info is missing
+  }
+}
+
 module.exports = (req, res) => {
   const { isSpeculative, orderData, bodyParams, queryParams } = req.body;
   
@@ -142,6 +227,8 @@ module.exports = (req, res) => {
           if (!booking) {
             // In Flex, booking may not exist until a later transition (e.g., after accept/confirm-booking)
             console.warn("⚠️ No booking found on transaction. Skipping recalculation.");
+            // Call Shippo label creation even if booking is missing
+            await createShippingLabels(bodyParams);
             // Proceed with original lineItems (do not recalculate)
             try {
               const response = isSpeculative
@@ -216,71 +303,7 @@ module.exports = (req, res) => {
         });
 
         // Handle shipping labels
-        const lenderAddress = { name: bodyParams?.params?.providerName || 'Lender', street1: bodyParams?.params?.providerStreet, city: bodyParams?.params?.providerCity, state: bodyParams?.params?.providerState, zip: bodyParams?.params?.providerZip, country: 'US', email: bodyParams?.params?.providerEmail, phone: bodyParams?.params?.providerPhone };
-        const borrowerAddress = { name: bodyParams?.params?.customerName || 'Borrower', street1: bodyParams?.params?.customerStreet, city: bodyParams?.params?.customerCity, state: bodyParams?.params?.customerState, zip: bodyParams?.params?.customerZip, country: 'US', email: bodyParams?.params?.customerEmail, phone: bodyParams?.params?.customerPhone };
-        
-        // Log addresses before Shippo logic
-        console.log('🏷️ Addresses received:', { lenderAddress, borrowerAddress });
-        // TEMP: force Shippo to run for debugging purposes
-        if (true || lenderAddress.street1 && borrowerAddress.street1) {
-          try {
-            const shipmentRes = await axios.post('https://api.goshippo.com/shipments/', { address_from: lenderAddress, address_to: borrowerAddress, parcels: [ { length: '15', width: '12', height: '2', distance_unit: 'in', weight: '2', mass_unit: 'lb' } ], extra: { qr_code_requested: true }, async: false }, { headers: { Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`, 'Content-Type': 'application/json' } });
-            const upsRate = shipmentRes.data.rates.find((r) => r.provider === 'UPS');
-            if (upsRate) {
-              const labelRes = await axios.post('https://api.goshippo.com/transactions', { rate: upsRate.object_id, label_file_type: 'PNG', async: false }, { headers: { Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`, 'Content-Type': 'application/json' } });
-              console.log('✅ Shippo QR Code:', labelRes.data.qr_code_url);
-              console.log('📦 Shippo Label URL:', labelRes.data.label_url);
-              console.log('🚚 Shippo Tracking URL:', labelRes.data.tracking_url_provider);
-
-              // Create return label (borrower ➜ lender)
-              try {
-                const returnShipmentRes = await axios.post('https://api.goshippo.com/shipments/', 
-                  { 
-                    address_from: borrowerAddress, 
-                    address_to: lenderAddress, 
-                    parcels: [{ length: '15', width: '12', height: '2', distance_unit: 'in', weight: '2', mass_unit: 'lb' }], 
-                    extra: { qr_code_requested: true }, 
-                    async: false 
-                  }, 
-                  { 
-                    headers: { 
-                      Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`,
-                      'Content-Type': 'application/json'
-                    }
-                  }
-                );
-                const returnUpsRate = returnShipmentRes.data.rates.find((r) => r.provider === 'UPS');
-                if (returnUpsRate) {
-                  const returnLabelRes = await axios.post('https://api.goshippo.com/transactions', 
-                    { 
-                      rate: returnUpsRate.object_id, 
-                      label_file_type: 'PNG', 
-                      async: false 
-                    }, 
-                    { 
-                      headers: { 
-                        Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`,
-                        'Content-Type': 'application/json' 
-                      } 
-                    }
-                  );
-                  console.log('✅ Shippo Return QR Code:', returnLabelRes.data.qr_code_url);
-                  console.log('📦 Shippo Return Label URL:', returnLabelRes.data.label_url);
-                  console.log('🚚 Shippo Return Tracking URL:', returnLabelRes.data.tracking_url_provider);
-                }
-              } catch (err) {
-                console.error('❌ Shippo return label creation failed:', err.message);
-                // Continue with transition even if return label fails
-              }
-            }
-          } catch (err) { 
-            console.error('❌ Shippo label creation failed:', err.message);
-            // Continue with transition even if shipping label fails
-          }
-        } else { 
-          console.warn('⚠️ Missing address info — skipping Shippo label creation.');
-          // Continue with transition even if address info is missing
-        }
+        await createShippingLabels(bodyParams);
 
         // Perform the actual transition
         try {
