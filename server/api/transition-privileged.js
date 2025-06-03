@@ -104,8 +104,10 @@ module.exports = (req, res) => {
       // Omit listingId from params (transition/request-payment-after-inquiry does not need it)
       const { listingId, ...restParams } = bodyParams?.params || {};
 
-      // Add lineItems to the body params
+      // Add lineItems and id to the body params
+      const transactionId = bodyParams?.params?.transactionId?.uuid || bodyParams?.params?.transactionId;
       const body = {
+        id: transactionId, // Flex API expects id at the top level
         ...bodyParams,
         params: {
           ...restParams,
