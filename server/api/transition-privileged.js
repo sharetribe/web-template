@@ -154,14 +154,37 @@ module.exports = (req, res) => {
           return res.status(500).json({ error: "Failed to fetch transaction for booking dates." });
         }
         // Only now, after fetching booking dates, calculate lineItems
-        lineItems = transactionLineItems(
+        console.log("🔬 transactionLineItems input:", {
+          listing,
+          bookingStart,
+          bookingEnd,
+          params: bodyParams.params,
+          providerCommission,
+          customerCommission
+        });
+        let newLineItems = transactionLineItems(
           listing,
           { bookingStart, bookingEnd, ...bodyParams.params },
           providerCommission,
           customerCommission
         );
-        // Update body with new lineItems
-        body.params.lineItems = lineItems;
+        // Null-check and fallback
+        if (!Array.isArray(newLineItems) || newLineItems.length === 0) {
+          console.warn("⚠️ transactionLineItems returned null/invalid. Falling back to original lineItems if available.");
+          if (Array.isArray(body.params.lineItems) && body.params.lineItems.length > 0) {
+            newLineItems = body.params.lineItems;
+          } else {
+            console.warn("⚠️ No valid original lineItems to fall back to. Skipping lineItems assignment.");
+            newLineItems = undefined;
+          }
+        }
+        // Confirm final structure
+        if (newLineItems) {
+          body.params.lineItems = newLineItems;
+        } else {
+          delete body.params.lineItems;
+        }
+        console.log("✅ Final body.params.lineItems before transition:", body.params.lineItems);
         console.log('🧾 Incoming transition/accept params:', JSON.stringify(bodyParams?.params, null, 2));
         console.log('🚀 transition/accept block triggered', {
           providerName: bodyParams?.params?.providerName,
