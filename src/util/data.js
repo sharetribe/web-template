@@ -46,6 +46,10 @@ export const updatedEntities = (oldEntities, apiResponse, sanitizeConfig = {}) =
   const objects = (Array.isArray(data) ? data : [data]).concat(included);
 
   const newEntities = objects.reduce((entities, curr) => {
+    if (!curr || !curr.id || !curr.type) {
+      console.warn('⚠️ Skipping invalid entity in updatedEntities:', curr);
+      return entities;
+    }
     const { id, type } = curr;
 
     // Some entities (e.g. listing and user) might include extended data,
