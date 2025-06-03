@@ -165,12 +165,18 @@ module.exports = (req, res) => {
       // Only calculate lineItems here if not transition/accept
       let transition = bodyParams?.transition;
       if (transition !== 'transition/accept') {
-        lineItems = transactionLineItems(
-          listing,
-          { ...orderData, ...bodyParams.params },
-          providerCommission,
-          customerCommission
-        );
+        if (orderData) {
+          lineItems = transactionLineItems(
+            listing,
+            { ...orderData, ...bodyParams.params },
+            providerCommission,
+            customerCommission
+          );
+        } else {
+          console.warn("⚠️ No orderData provided for non-accept transition. This may cause issues.");
+        }
+      } else {
+        console.log("ℹ️ Skipping lineItems generation — transition/accept will calculate from booking.");
       }
 
       // Debug log for lineItems
