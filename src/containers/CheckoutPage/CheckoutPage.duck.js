@@ -221,6 +221,24 @@ export const initiateOrder = (
   const quantityMaybe = quantity ? { stockReservationQuantity: quantity } : {};
   const bookingParamsMaybe = bookingDates || {};
 
+  // Extract protected data from orderData
+  const protectedData = {
+    providerName: orderParams?.providerName || '',
+    providerStreet: orderParams?.providerStreet || '',
+    providerCity: orderParams?.providerCity || '',
+    providerState: orderParams?.providerState || '',
+    providerZip: orderParams?.providerZip || '',
+    providerEmail: orderParams?.providerEmail || '',
+    providerPhone: orderParams?.providerPhone || '',
+    customerName: orderParams?.customerName || '',
+    customerStreet: orderParams?.customerStreet || '',
+    customerCity: orderParams?.customerCity || '',
+    customerState: orderParams?.customerState || '',
+    customerZip: orderParams?.customerZip || '',
+    customerEmail: orderParams?.customerEmail || '',
+    customerPhone: orderParams?.customerPhone || '',
+  };
+
   // Parameters only for client app's server
   const orderData = deliveryMethod ? { deliveryMethod } : {};
 
@@ -229,6 +247,7 @@ export const initiateOrder = (
     ...quantityMaybe,
     ...bookingParamsMaybe,
     ...otherOrderParams,
+    protectedData, // Include protected data in transition params
   };
 
   const bodyParams = isTransition
@@ -249,6 +268,7 @@ export const initiateOrder = (
 
   // Add API submission log
   console.log('📡 Submitting booking request to API', bodyParams);
+  console.log('🔒 Protected data being sent:', protectedData);
 
   const handleSuccess = response => {
     const entities = denormalisedResponseEntities(response);
@@ -276,8 +296,7 @@ export const initiateOrder = (
       console.error('transitionPrivileged called without transactionId!');
       return Promise.reject(new Error('transitionPrivileged called without transactionId!'));
     }
-    // Log orderData before sending to transition-privileged
-    console.log('🚨 orderData in thunk before sending to transition-privileged:', orderData);
+    // transition privileged
     return transitionPrivileged({ isSpeculative: false, orderData, bodyParams, queryParams })
       .then(handleSuccess)
       .catch(handleError);
