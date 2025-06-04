@@ -425,7 +425,7 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
   // Log line items for debugging
   console.log('🧾 Line items constructed:', lineItems);
 
-  const orderParams = {
+  const params = {
     listingId: pageData?.listing?.id,
     bookingStart,
     bookingEnd,
@@ -433,6 +433,11 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     protectedData,  // Include the protectedData object
     ...optionalPaymentParams,
   };
+
+  // Log the params object for debugging
+  console.log('🚚 Final params for transition:', params);
+
+  const orderParams = { params };
 
   // Log line items for debugging
   console.log('🔍 Line item codes being sent:', lineItems.map(item => item.code));
