@@ -346,6 +346,64 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
   console.log('📦 Shipping address extracted:', shippingAddress);
   console.log('🔐 Protected data constructed:', protectedData);
 
+  // Calculate pricing and booking duration
+  const unitPrice = pageData?.listing?.attributes?.price;
+  const currency = unitPrice?.currency;
+  const baseNightlyPrice = unitPrice?.amount;
+
+  const start = new Date(bookingStart);
+  const end = new Date(bookingEnd);
+  const millisecondsPerNight = 1000 * 60 * 60 * 24;
+  const nights = Math.round((end - start) / millisecondsPerNight);
+
+  // Log pricing calculations for debugging
+  console.log('💰 Pricing calculations:', {
+    baseNightlyPrice,
+    currency,
+    nights,
+    bookingStart: start.toISOString(),
+    bookingEnd: end.toISOString()
+  });
+
+  // Calculate discount based on nights
+  let discountPercent = 0;
+  let discountCode = '';
+  if (nights >= 4 && nights <= 5) {
+    discountPercent = 0.25;
+    discountCode = 'line-item/discount-25';
+  } else if (nights >= 6 && nights <= 7) {
+    discountPercent = 0.40;
+    discountCode = 'line-item/discount-40';
+  } else if (nights >= 8 && nights <= 9) {
+    discountPercent = 0.50;
+    discountCode = 'line-item/discount-50';
+  } else if (nights >= 10) {
+    discountPercent = 0.60;
+    discountCode = 'line-item/discount-60';
+  }
+
+  const preDiscountTotal = baseNightlyPrice * nights;
+  const discountAmount = Math.round(preDiscountTotal * discountPercent);
+  
+  // Log discount calculations
+  console.log('🎯 Discount calculations:', {
+    discountPercent,
+    discountCode,
+    preDiscountTotal,
+    discountAmount
+  });
+
+  const discountLineItem = discountPercent > 0
+    ? {
+        code: 'line-item/discount',
+        unitPrice: { amount: -discountAmount, currency },
+        quantity: 1,
+        includeFor: ['customer'],
+        reversal: false,
+        description: `${discountPercent * 100}% off`,
+      }
+    : null;
+
   const lineItems = [
     {
       code: 'line-item/night',
@@ -357,7 +415,7 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
   ];
 
   const orderParams = {
-    listingId: listing.id,
+    listingId: pageData?.listing?.id,
     bookingStart,
     bookingEnd,
     lineItems,
