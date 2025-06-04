@@ -406,13 +406,24 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
 
   const lineItems = [
     {
-      code: 'line-item/night',
+      code: 'line-item/day',
       unitPrice: { amount: baseNightlyPrice, currency },
       quantity: nights,
       includeFor: ['customer', 'provider'],
     },
     ...(discountLineItem ? [discountLineItem] : []),
   ];
+
+  // Restore optionalPaymentParams definition
+  const optionalPaymentParams =
+    selectedPaymentFlow === USE_SAVED_CARD && hasDefaultPaymentMethodSaved
+      ? { paymentMethod: stripePaymentMethodId }
+      : selectedPaymentFlow === PAY_AND_SAVE_FOR_LATER_USE
+      ? { setupPaymentMethodForSaving: true }
+      : {};
+
+  // Log line items for debugging
+  console.log('🧾 Line items constructed:', lineItems);
 
   const orderParams = {
     listingId: pageData?.listing?.id,
