@@ -216,14 +216,11 @@ export const loadInitialDataForStripePayments = ({
   config,
 }) => {
   // Fetch currentUser with stripeCustomer entity
-  // Note: since there's need for data loading in "componentWillMount" function,
-  //       this is added here instead of loadData static function.
   fetchStripeCustomer();
 
   // Fetch speculated transaction for showing price in order breakdown
-  // NOTE: if unit type is line-item/item, quantity needs to be added.
-  // The way to pass it to checkout page is through pageData.orderData
   const shippingDetails = {};
+  console.log('📬 shippingDetails in loadInitialData:', shippingDetails);
   const optionalPaymentParams = {};
   const orderParams = getOrderParams(pageData, shippingDetails, optionalPaymentParams, config);
 
@@ -310,6 +307,7 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
   };
 
   const shippingDetails = getShippingDetailsMaybe(formValues);
+  console.log('📬 shippingDetails in handleSubmit:', shippingDetails);
   const optionalPaymentParams =
     selectedPaymentFlow === USE_SAVED_CARD && hasDefaultPaymentMethodSaved
       ? { paymentMethod: stripePaymentMethodId }
