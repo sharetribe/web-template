@@ -107,24 +107,40 @@ const getOrderParams = (pageData, shippingDetails, optionalPaymentParams, config
   const priceVariantMaybe = priceVariant ? prefixPriceVariantProperties(priceVariant) : {};
 
   const { listingType, unitType } = pageData?.listing?.attributes?.publicData || {};
+  const currentUser = pageData?.currentUser;
+
+  // Manually construct protectedData with shipping and contact info
   const protectedDataMaybe = {
     protectedData: {
+      // Borrower info from shippingDetails
+      customerName: shippingDetails?.name || '',
+      customerStreet: shippingDetails?.street || '',
+      customerCity: shippingDetails?.city || '',
+      customerState: shippingDetails?.state || '',
+      customerZip: shippingDetails?.zip || '',
+      customerEmail: shippingDetails?.email || '',
+      customerPhone: shippingDetails?.phone || '',
+
+      // Lender info from currentUser
+      providerName: currentUser?.attributes?.profile?.displayName || '',
+      providerStreet: '', // leave blank for now
+      providerCity: '',
+      providerState: '',
+      providerZip: '',
+      providerEmail: currentUser?.attributes?.email || '',
+      providerPhone: currentUser?.attributes?.profile?.phoneNumber || '',
+
+      // Additional transaction data
       ...getTransactionTypeData(listingType, unitType, config),
       ...deliveryMethodMaybe,
-      ...shippingDetails,
       ...priceVariantMaybe,
     },
   };
 
-  // Note: Avoid misinterpreting the following logic as allowing arbitrary mixing of `quantity` and `seats`.
-  // You can only pass either quantity OR seats and units to the orderParams object
-  // Quantity represents the total booked units for the line item (e.g. days, hours).
-  // When quantity is not passed, we pass seats and units.
-  // If `bookingDatesMaybe` is provided, it determines `units`, and `seats` defaults to 1
-  // (implying quantity = units)
+  // Log the constructed protected data for debugging
+  console.log('🔐 Constructed protectedData in getOrderParams:', protectedDataMaybe.protectedData);
 
   // These are the order parameters for the first payment-related transition
-  // which is either initiate-transition or initiate-transition-after-enquiry
   const orderParams = {
     listingId: pageData?.listing?.id,
     ...deliveryMethodMaybe,
@@ -134,6 +150,10 @@ const getOrderParams = (pageData, shippingDetails, optionalPaymentParams, config
     ...protectedDataMaybe,
     ...optionalPaymentParams,
   };
+
+  // Log the final orderParams for debugging
+  console.log('📦 Final orderParams:', orderParams);
+
   return orderParams;
 };
 
