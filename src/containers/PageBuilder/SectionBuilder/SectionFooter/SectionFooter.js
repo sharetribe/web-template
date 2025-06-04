@@ -142,7 +142,7 @@ const SectionFooter = props => {
               </div>
             ) : null}
             {/* SKYFARER +version */}
-            {APP_VERSION && process.env.NODE_ENV === 'development' && (
+           {APP_VERSION && process.env.NODE_ENV === 'development' && (
                <span style={{ fontSize: '12px', color: 'gray', marginRight: '5px' }}>{`v${APP_VERSION || '?.?.?'}`}</span>
              )}
             <Field data={copyright} className={css.copyright} />
