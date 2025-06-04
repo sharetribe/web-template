@@ -365,33 +365,34 @@ module.exports = (req, res) => {
       } else if (transition === 'transition/request-payment' || transition === 'transition/confirm-payment') {
         console.log(`🚦 Entered ${transition} block`);
         
-        // Add protected data if orderData exists
-        if (orderData) {
-          const protectedData = {
-            providerName: orderData.providerName || '',
-            providerStreet: orderData.providerStreet || '',
-            providerCity: orderData.providerCity || '',
-            providerState: orderData.providerState || '',
-            providerZip: orderData.providerZip || '',
-            providerEmail: orderData.providerEmail || '',
-            providerPhone: orderData.providerPhone || '',
-            customerName: orderData.customerName || '',
-            customerStreet: orderData.customerStreet || '',
-            customerCity: orderData.customerCity || '',
-            customerState: orderData.customerState || '',
-            customerZip: orderData.customerZip || '',
-            customerEmail: orderData.customerEmail || '',
-            customerPhone: orderData.customerPhone || '',
-          };
+        // Extract protected data from orderData
+        const protectedData = {
+          // Provider information
+          providerName: orderData?.providerName || '',
+          providerStreet: orderData?.providerStreet || '',
+          providerCity: orderData?.providerCity || '',
+          providerState: orderData?.providerState || '',
+          providerZip: orderData?.providerZip || '',
+          providerEmail: orderData?.providerEmail || '',
+          providerPhone: orderData?.providerPhone || '',
+          // Customer information
+          customerName: orderData?.customerName || '',
+          customerStreet: orderData?.customerStreet || '',
+          customerCity: orderData?.customerCity || '',
+          customerState: orderData?.customerState || '',
+          customerZip: orderData?.customerZip || '',
+          customerEmail: orderData?.customerEmail || '',
+          customerPhone: orderData?.customerPhone || '',
+        };
 
-          // Add protectedData to the transition params
-          body.params = {
-            ...body.params,
-            protectedData,
-          };
+        // Log the protected data being stored
+        console.log('🔐 Storing protectedData during request-payment:', protectedData);
 
-          console.log("🔒 Added protected data to transition:", protectedData);
-        }
+        // Include protected data in the transition parameters
+        bodyParams.params = {
+          ...bodyParams.params,
+          protectedData,
+        };
 
         // Handle non-transition/accept cases
         try {
