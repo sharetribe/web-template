@@ -177,6 +177,10 @@ export const handleSubmit = parameters => values => {
   const listingId = new UUID(params.id);
   const listing = getListing(listingId);
 
+  // Get user profile data from currentUser
+  const userProfile = currentUser?.attributes?.profile || {};
+  const userAddress = userProfile?.address || {};
+
   const {
     bookingDates,
     bookingStartTime,
@@ -222,6 +226,22 @@ export const handleSubmit = parameters => values => {
       ...seatsMaybe,
       ...deliveryMethodMaybe,
       ...otherOrderData,
+      // Add provider information
+      providerName: currentUser?.attributes?.profile?.displayName || '',
+      providerStreet: userAddress?.street || '',
+      providerCity: userAddress?.city || '',
+      providerState: userAddress?.state || '',
+      providerZip: userAddress?.zip || '',
+      providerEmail: currentUser?.attributes?.email || '',
+      providerPhone: userProfile?.phoneNumber || '',
+      // Add customer information (same as provider for now)
+      customerName: currentUser?.attributes?.profile?.displayName || '',
+      customerStreet: userAddress?.street || '',
+      customerCity: userAddress?.city || '',
+      customerState: userAddress?.state || '',
+      customerZip: userAddress?.zip || '',
+      customerEmail: currentUser?.attributes?.email || '',
+      customerPhone: userProfile?.phoneNumber || '',
     },
     confirmPaymentError: null,
   };

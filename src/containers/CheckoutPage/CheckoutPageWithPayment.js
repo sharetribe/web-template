@@ -359,8 +359,6 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
   console.log('🔍 Line item codes being sent:', lineItems.map(item => item.code));
   console.log('🔍 Full lineItems:', JSON.stringify(lineItems, null, 2));
 
-  // Log orderData before payment request
-  console.log('🚨 orderData passed to requestPayment:', pageData?.orderData);
   processCheckoutWithPayment(orderParams, requestPaymentParams)
     .then(response => {
       const { orderId, messageSuccess, paymentMethodSaved } = response;

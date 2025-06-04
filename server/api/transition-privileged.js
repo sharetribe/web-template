@@ -229,6 +229,40 @@ module.exports = (req, res) => {
           console.log("🧾 Full transaction object:", JSON.stringify(txRes.data.data, null, 2));
           console.log("🔍 Transaction attributes:", txRes.data.data.attributes);
 
+          // Get protected data from transaction
+          const protectedData = txRes.data.data.attributes.protectedData || {};
+          console.log("🔒 Protected data from transaction:", protectedData);
+
+          // Use protected data for addresses if available
+          const lenderAddress = {
+            name: protectedData.providerName || 'Lender',
+            street1: protectedData.providerStreet || '',
+            city: protectedData.providerCity || '',
+            state: protectedData.providerState || '',
+            zip: protectedData.providerZip || '',
+            country: 'US',
+            email: protectedData.providerEmail || '',
+            phone: protectedData.providerPhone || '',
+          };
+
+          const borrowerAddress = {
+            name: protectedData.customerName || 'Borrower',
+            street1: protectedData.customerStreet || '',
+            city: protectedData.customerCity || '',
+            state: protectedData.customerState || '',
+            zip: protectedData.customerZip || '',
+            country: 'US',
+            email: protectedData.customerEmail || '',
+            phone: protectedData.customerPhone || '',
+          };
+
+          // Update bodyParams with addresses for shipping label creation
+          bodyParams.params = {
+            ...bodyParams.params,
+            ...lenderAddress,
+            ...borrowerAddress,
+          };
+
           const booking = txRes.data.data.attributes.booking;
           if (!booking) {
             // In Flex, booking may not exist until a later transition (e.g., after accept/confirm-booking)
@@ -328,9 +362,59 @@ module.exports = (req, res) => {
             details: err.message
           });
         }
+      } else if (transition === 'transition/request-payment' || transition === 'transition/confirm-payment') {
+        console.log(`🚦 Entered ${transition} block`);
+        
+        // Add protected data if orderData exists
+        if (orderData) {
+          const protectedData = {
+            providerName: orderData.providerName || '',
+            providerStreet: orderData.providerStreet || '',
+            providerCity: orderData.providerCity || '',
+            providerState: orderData.providerState || '',
+            providerZip: orderData.providerZip || '',
+            providerEmail: orderData.providerEmail || '',
+            providerPhone: orderData.providerPhone || '',
+            customerName: orderData.customerName || '',
+            customerStreet: orderData.customerStreet || '',
+            customerCity: orderData.customerCity || '',
+            customerState: orderData.customerState || '',
+            customerZip: orderData.customerZip || '',
+            customerEmail: orderData.customerEmail || '',
+            customerPhone: orderData.customerPhone || '',
+          };
+
+          // Add protectedData to the transition params
+          body.params = {
+            ...body.params,
+            protectedData,
+          };
+
+          console.log("🔒 Added protected data to transition:", protectedData);
+        }
+
+        // Handle non-transition/accept cases
+        try {
+          const response = isSpeculative
+            ? await trustedSdk.transactions.transitionSpeculative(body, queryParams)
+            : await trustedSdk.transactions.transition(body, queryParams);
+          console.log("✅ Transition successful:", {
+            status: response?.status,
+            hasData: !!response?.data?.data,
+            transition: bodyParams?.transition,
+            transactionId: response?.data?.data?.id?.uuid
+          });
+          return response;
+        } catch (err) {
+          console.error("❌ Transition failed:", err.message, err);
+          return res.status(500).json({ 
+            error: "Transaction transition failed",
+            details: err.message
+          });
+        }
       }
 
-      // Handle non-transition/accept cases
+      // Handle other transitions
       try {
         const response = isSpeculative
           ? await trustedSdk.transactions.transitionSpeculative(body, queryParams)
