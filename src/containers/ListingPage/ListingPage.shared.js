@@ -174,42 +174,20 @@ export const handleSubmit = parameters => values => {
     onInitializeCardPaymentData,
     routes,
   } = parameters;
-
-  // Comprehensive diagnostic logging
-  console.log('🔍 handleSubmit - Full currentUser object:', currentUser);
-  console.log('🔍 handleSubmit - User attributes:', currentUser?.attributes);
-  console.log('🔍 handleSubmit - User profile:', currentUser?.attributes?.profile);
-  console.log('🔍 handleSubmit - Protected data:', currentUser?.attributes?.protectedData);
-  console.log('🔍 handleSubmit - Profile address:', currentUser?.attributes?.profile?.address);
-  console.log('🔍 handleSubmit - Protected data address:', currentUser?.attributes?.protectedData?.address);
-
   const listingId = new UUID(params.id);
   const listing = getListing(listingId);
 
-  // Safely extract user data with fallbacks
-  const protectedData = currentUser?.attributes?.protectedData || {};
-  const profile = currentUser?.attributes?.profile || {};
-  const profileAddress = profile?.address || {};
-  const protectedAddress = protectedData?.address || {};
-
-  // Log extracted values
-  console.log('🔍 handleSubmit - Extracted data:', {
-    protectedData,
-    profile,
-    profileAddress,
-    protectedAddress,
-    displayName: profile?.displayName || protectedData?.displayName,
-    email: currentUser?.attributes?.email || protectedData?.email,
-    phone: profile?.phoneNumber || protectedData?.phoneNumber,
-  });
+  // Get user profile data from currentUser
+  const userProfile = currentUser?.attributes?.profile || {};
+  const userAddress = userProfile?.address || {};
 
   const {
     bookingDates,
     bookingStartTime,
     bookingEndTime,
-    bookingStartDate,
-    bookingEndDate,
-    priceVariant,
+    bookingStartDate, // not relevant (omit)
+    bookingEndDate, // not relevant (omit)
+    priceVariant, // relevant for fixed duration bookings
     quantity: quantityRaw,
     seats: seatsRaw,
     deliveryMethod,
@@ -248,28 +226,25 @@ export const handleSubmit = parameters => values => {
       ...seatsMaybe,
       ...deliveryMethodMaybe,
       ...otherOrderData,
-      // Provider information - try protectedData first, then fall back to profile
-      providerName: protectedData?.displayName || profile?.displayName || '',
-      providerStreet: protectedAddress?.street || profileAddress?.street || '',
-      providerCity: protectedAddress?.city || profileAddress?.city || '',
-      providerState: protectedAddress?.state || profileAddress?.state || '',
-      providerZip: protectedAddress?.zip || profileAddress?.zip || '',
-      providerEmail: protectedData?.email || currentUser?.attributes?.email || '',
-      providerPhone: protectedData?.phoneNumber || profile?.phoneNumber || '',
-      // Customer information - same as provider for now
-      customerName: protectedData?.displayName || profile?.displayName || '',
-      customerStreet: protectedAddress?.street || profileAddress?.street || '',
-      customerCity: protectedAddress?.city || profileAddress?.city || '',
-      customerState: protectedAddress?.state || profileAddress?.state || '',
-      customerZip: protectedAddress?.zip || profileAddress?.zip || '',
-      customerEmail: protectedData?.email || currentUser?.attributes?.email || '',
-      customerPhone: protectedData?.phoneNumber || profile?.phoneNumber || '',
+      // Add provider information
+      providerName: currentUser?.attributes?.profile?.displayName || '',
+      providerStreet: userAddress?.street || '',
+      providerCity: userAddress?.city || '',
+      providerState: userAddress?.state || '',
+      providerZip: userAddress?.zip || '',
+      providerEmail: currentUser?.attributes?.email || '',
+      providerPhone: userProfile?.phoneNumber || '',
+      // Add customer information (same as provider for now)
+      customerName: currentUser?.attributes?.profile?.displayName || '',
+      customerStreet: userAddress?.street || '',
+      customerCity: userAddress?.city || '',
+      customerState: userAddress?.state || '',
+      customerZip: userAddress?.zip || '',
+      customerEmail: currentUser?.attributes?.email || '',
+      customerPhone: userProfile?.phoneNumber || '',
     },
     confirmPaymentError: null,
   };
-
-  // Log the final orderData being sent
-  console.log('🔍 handleSubmit - Final orderData:', initialValues.orderData);
 
   const saveToSessionStorage = !currentUser;
 

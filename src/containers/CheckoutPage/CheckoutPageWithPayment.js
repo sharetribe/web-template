@@ -109,17 +109,21 @@ const getOrderParams = (pageData, shippingDetails, optionalPaymentParams, config
   const { listingType, unitType } = pageData?.listing?.attributes?.publicData || {};
   const currentUser = pageData?.currentUser;
 
+  // Extract shipping details from the nested structure
+  const shippingInfo = shippingDetails?.shippingDetails || {};
+  const shippingAddress = shippingInfo?.address || {};
+
   // Manually construct protectedData with shipping and contact info
   const protectedDataMaybe = {
     protectedData: {
       // Borrower info from shippingDetails
-      customerName: shippingDetails?.name || '',
-      customerStreet: shippingDetails?.street || '',
-      customerCity: shippingDetails?.city || '',
-      customerState: shippingDetails?.state || '',
-      customerZip: shippingDetails?.zip || '',
-      customerEmail: shippingDetails?.email || '',
-      customerPhone: shippingDetails?.phone || '',
+      customerName: shippingInfo?.name || '',
+      customerStreet: shippingAddress?.line1 || '',
+      customerCity: shippingAddress?.city || '',
+      customerState: shippingAddress?.state || '',
+      customerZip: shippingAddress?.postalCode || '',
+      customerEmail: currentUser?.attributes?.email || '', // Using current user's email for now
+      customerPhone: shippingInfo?.phoneNumber || '',
 
       // Lender info from currentUser
       providerName: currentUser?.attributes?.profile?.displayName || '',
@@ -139,6 +143,9 @@ const getOrderParams = (pageData, shippingDetails, optionalPaymentParams, config
 
   // Log the constructed protected data for debugging
   console.log('🔐 Constructed protectedData in getOrderParams:', protectedDataMaybe.protectedData);
+  console.log('📦 Raw shipping details:', shippingDetails);
+  console.log('📦 Extracted shipping info:', shippingInfo);
+  console.log('📦 Extracted shipping address:', shippingAddress);
 
   // These are the order parameters for the first payment-related transition
   const orderParams = {
