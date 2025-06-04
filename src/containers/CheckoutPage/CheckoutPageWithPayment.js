@@ -315,51 +315,36 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
 
   const shippingDetails = getShippingDetailsMaybe(formValues);
   console.log('📬 shippingDetails in handleSubmit:', shippingDetails);
-  const optionalPaymentParams =
-    selectedPaymentFlow === USE_SAVED_CARD && hasDefaultPaymentMethodSaved
-      ? { paymentMethod: stripePaymentMethodId }
-      : selectedPaymentFlow === PAY_AND_SAVE_FOR_LATER_USE
-      ? { setupPaymentMethodForSaving: true }
-      : {};
+  
+  // Extract shipping info from the nested structure
+  const shippingInfo = shippingDetails?.shippingDetails || {};
+  const shippingAddress = shippingInfo?.address || {};
 
-  // Calculate booking duration in nights
-  const bookingStartDate = new Date(bookingStart);
-  const bookingEndDate = new Date(bookingEnd);
-  const oneNightInMs = 24 * 60 * 60 * 1000;
-  const nights = Math.round((bookingEndDate - bookingStartDate) / oneNightInMs);
+  // Construct protectedData with shipping and contact info
+  const protectedData = {
+    // Borrower info from shippingDetails
+    customerName: shippingInfo?.name || '',
+    customerStreet: shippingAddress?.line1 || '',
+    customerCity: shippingAddress?.city || '',
+    customerState: shippingAddress?.state || '',
+    customerZip: shippingAddress?.postalCode || '',
+    customerEmail: currentUser?.attributes?.email || '',
+    customerPhone: shippingInfo?.phoneNumber || '',
 
-  const listing = pageData?.listing;
-  const baseNightlyPrice = listing?.attributes?.price?.amount;
-  const currency = listing?.attributes?.price?.currency;
-  const preDiscountTotal = baseNightlyPrice * nights;
+    // Lender info from currentUser
+    providerName: currentUser?.attributes?.profile?.displayName || '',
+    providerStreet: '', // leave blank for now
+    providerCity: '',
+    providerState: '',
+    providerZip: '',
+    providerEmail: currentUser?.attributes?.email || '',
+    providerPhone: currentUser?.attributes?.profile?.phoneNumber || '',
+  };
 
-  let discountPercent = 0;
-  let discountCode = '';
-  if (nights >= 4 && nights <= 5) {
-    discountPercent = 0.25;
-    discountCode = 'line-item/discount-25';
-  } else if (nights >= 6 && nights <= 7) {
-    discountPercent = 0.40;
-    discountCode = 'line-item/discount-40';
-  } else if (nights >= 8 && nights <= 9) {
-    discountPercent = 0.50;
-    discountCode = 'line-item/discount-50';
-  } else if (nights >= 10) {
-    discountPercent = 0.60;
-    discountCode = 'line-item/discount-60';
-  }
-
-  const discountAmount = Math.round(preDiscountTotal * discountPercent);
-  const discountLineItem = discountPercent > 0
-    ? {
-        code: 'line-item/discount',
-        unitPrice: { amount: -discountAmount, currency },
-        quantity: 1,
-        includeFor: ['customer'],
-        reversal: false,
-        description: `${discountPercent * 100}% off`,
-      }
-    : null;
+  // Log the shipping details and protected data for debugging
+  console.log('📦 Shipping info extracted:', shippingInfo);
+  console.log('📦 Shipping address extracted:', shippingAddress);
+  console.log('🔐 Protected data constructed:', protectedData);
 
   const lineItems = [
     {
@@ -376,8 +361,8 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     bookingStart,
     bookingEnd,
     lineItems,
+    protectedData,  // Include the protectedData object
     ...optionalPaymentParams,
-    ...shippingDetails,
   };
 
   // Log line items for debugging
