@@ -277,7 +277,7 @@ module.exports = (req, res) => {
       // Perform the actual transition
       try {
         // If this is transition/accept, log the transaction state before attempting
-        if (bodyParams.transition === 'transition/accept') {
+        if (bodyParams && bodyParams.transition === 'transition/accept') {
           try {
             const transactionShow = await sdk.transactions.show({ id: id });
             console.log('🔎 Transaction state before accept:', transactionShow.data.data.attributes.state);
@@ -289,10 +289,15 @@ module.exports = (req, res) => {
         const response = isSpeculative
           ? await getTrustedSdk(req).transactions.transitionSpeculative(body, queryParams)
           : await getTrustedSdk(req).transactions.transition(body, queryParams);
+        // Defensive: Only access .transition if response and response.data are defined
+        let transitionName = undefined;
+        if (response && response.data && response.data.data && response.data.data.attributes) {
+          transitionName = response.data.data.attributes.transition;
+        }
         console.log("✅ Transition successful:", {
           status: response?.status,
           hasData: !!response?.data?.data,
-          transition: bodyParams?.transition,
+          transition: transitionName || bodyParams?.transition,
           transactionId: response?.data?.data?.id?.uuid
         });
         return response;
@@ -338,3 +343,10 @@ module.exports = (req, res) => {
       });
     });
 };
+
+// Add a top-level handler for unhandled promise rejections to help diagnose Render 'failed service' issues
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
+  // Optionally exit the process if desired:
+  // process.exit(1);
+});
