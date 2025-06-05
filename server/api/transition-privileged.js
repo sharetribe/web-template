@@ -396,6 +396,8 @@ module.exports = (req, res) => {
 
         // Handle non-transition/accept cases
         try {
+          // Log the final body before transition
+          console.log("🚀 Final body sent to Flex API:", JSON.stringify(body, null, 2));
           const response = isSpeculative
             ? await trustedSdk.transactions.transitionSpeculative(body, queryParams)
             : await trustedSdk.transactions.transition(body, queryParams);
@@ -417,6 +419,8 @@ module.exports = (req, res) => {
 
       // Handle other transitions
       try {
+        // Log the final body before transition
+        console.log("🚀 Final body sent to Flex API:", JSON.stringify(body, null, 2));
         const response = isSpeculative
           ? await trustedSdk.transactions.transitionSpeculative(body, queryParams)
           : await trustedSdk.transactions.transition(body, queryParams);
