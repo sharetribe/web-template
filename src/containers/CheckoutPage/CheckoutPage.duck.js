@@ -269,6 +269,10 @@ export const initiateOrder = (
   // Add API submission log
   console.log('📡 Submitting booking request to API', bodyParams);
   console.log('🔒 Protected data being sent:', protectedData);
+  // TEMP: Log all protectedData fields before API call
+  if (protectedData) {
+    console.log('📝 [TEMP] Full protectedData in initiateOrder:', JSON.stringify(protectedData, null, 2));
+  }
 
   const handleSuccess = response => {
     const entities = denormalisedResponseEntities(response);

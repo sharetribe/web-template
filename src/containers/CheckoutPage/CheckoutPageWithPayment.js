@@ -290,6 +290,18 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
   const hasPaymentIntentUserActionsDone =
     paymentIntent && STRIPE_PI_USER_ACTIONS_DONE_STATUSES.includes(paymentIntent.status);
 
+  // Extract address/contact fields from formValues
+  const addressFields = [
+    'customerStreet', 'customerCity', 'customerState', 'customerZip', 'customerEmail', 'customerPhone',
+    'providerStreet', 'providerCity', 'providerState', 'providerZip', 'providerEmail', 'providerPhone'
+  ];
+  const addressFieldValues = {};
+  addressFields.forEach(field => {
+    if (formValues && formValues[field] !== undefined) {
+      addressFieldValues[field] = formValues[field];
+    }
+  });
+
   const requestPaymentParams = {
     pageData,
     speculatedTransaction,
@@ -431,8 +443,12 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     bookingEnd,
     lineItems,
     protectedData,  // Include the protectedData object
+    ...addressFieldValues, // Pass address fields explicitly
     ...optionalPaymentParams,
   };
+
+  // TEMP: Log orderParams before API call
+  console.log('📝 Final orderParams being sent to initiateOrder:', orderParams);
 
   // Log line items for debugging
   console.log('🔍 Line item codes being sent:', lineItems.map(item => item.code));
