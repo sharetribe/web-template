@@ -283,7 +283,7 @@ export const initiateOrder = (
     const transactionIdMaybe = transactionId ? { transactionId: transactionId.uuid } : {};
     log.error(e, 'initiate-order-failed', {
       ...transactionIdMaybe,
-      listingId: orderParams.listingId.uuid,
+      listingId: orderParams.params?.listingId?.uuid || orderParams.params?.listingId,
       ...quantityMaybe,
       ...bookingParamsMaybe,
       ...orderData,
@@ -514,7 +514,7 @@ export const speculateTransaction = (
 
   const handleError = e => {
     log.error(e, 'speculate-transaction-failed', {
-      listingId: transitionParams.listingId.uuid,
+      listingId: transitionParams.listingId?.uuid || transitionParams.listingId,
       ...quantityMaybe,
       ...bookingParamsMaybe,
       ...orderData,
