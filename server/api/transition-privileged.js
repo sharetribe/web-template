@@ -275,7 +275,27 @@ module.exports = (req, res) => {
         }
       }
 
+      // Validate required provider and customer address fields before making the SDK call
+      const {
+        providerStreet, providerCity, providerState, providerZip, providerEmail, providerPhone,
+        customerStreet, customerCity, customerState, customerZip, customerEmail, customerPhone
+      } = bodyParams.params || {};
+
+      if (!providerStreet || !providerCity || !providerState || !providerZip || !providerEmail || !providerPhone) {
+        console.error('❌ Missing required provider address info');
+        if (!res.headersSent) {
+          return res.status(400).json({ error: 'Missing provider address info' });
+        }
+      }
+      if (!customerStreet || !customerCity || !customerState || !customerZip || !customerEmail || !customerPhone) {
+        console.error('❌ Missing required customer address info');
+        if (!res.headersSent) {
+          return res.status(400).json({ error: 'Missing customer address info' });
+        }
+      }
+
       // Perform the actual transition
+      let transitionName;
       try {
         // If this is transition/accept, log the transaction state before attempting
         if (bodyParams && bodyParams.transition === 'transition/accept') {
@@ -291,31 +311,21 @@ module.exports = (req, res) => {
           ? await getTrustedSdk(req).transactions.transitionSpeculative(body, queryParams)
           : await getTrustedSdk(req).transactions.transition(body, queryParams);
         // Defensive: Only access .transition if response and response.data are defined
-        let transitionName = undefined;
-        if (response && response.data && response.data.data && response.data.data.attributes && typeof response.data.data.attributes.transition !== 'undefined') {
+        if (
+          response &&
+          response.data &&
+          response.data.data &&
+          response.data.data.attributes &&
+          typeof response.data.data.attributes.transition !== 'undefined'
+        ) {
           transitionName = response.data.data.attributes.transition;
         }
-        console.log("✅ Transition successful:", {
-          status: response?.status,
-          hasData: !!response?.data?.data,
-          transition: transitionName || (bodyParams && bodyParams.transition),
-          transactionId: response?.data?.data?.id?.uuid
-        });
-        return response;
+        return res.status(200).json({ transition: transitionName });
       } catch (err) {
-        console.error("❌ Transition failed: message:", err.message);
-        console.error("❌ Transition failed: stack:", err.stack);
-        console.error("❌ Transition failed: response:", err.response);
-        if (err.response) {
-          console.error("❌ Transition failed: response.data:", err.response.data);
-          console.error("❌ Transition failed: response.status:", err.response.status);
-          console.error("❌ Transition failed: response.headers:", err.response.headers);
+        console.error('❌ Transition failed:', err);
+        if (!res.headersSent) {
+          return res.status(500).json({ error: 'Transition failed' });
         }
-        if (res.headersSent) return; // ✅ Prevent double response
-        return res.status(500).json({ 
-          error: "Transaction transition failed",
-          details: (err.response && err.response.data) || err.message
-        });
       }
     })
     .then(apiResponse => {
