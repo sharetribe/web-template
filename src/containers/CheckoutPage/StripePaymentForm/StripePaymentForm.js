@@ -434,6 +434,9 @@ class StripePaymentForm extends Component {
       return;
     }
 
+    // TEMP: Log protectedData (all form values)
+    console.log('Submitting booking, protectedData:', values);
+
     const params = {
       message: initialMessage ? initialMessage.trim() : null,
       card: this.card,
@@ -665,6 +668,28 @@ class StripePaymentForm extends Component {
             />
           </div>
         ) : null}
+        <div className={css.addressSection}>
+          <Heading as="h4" rootClassName={css.heading}>
+            <FormattedMessage id="StripePaymentForm.customerAddressHeading" defaultMessage="Customer Address" />
+          </Heading>
+          <FieldTextInput className={css.field} type="text" id="customerStreet" name="customerStreet" label="Customer Street" required />
+          <FieldTextInput className={css.field} type="text" id="customerCity" name="customerCity" label="Customer City" required />
+          <FieldTextInput className={css.field} type="text" id="customerState" name="customerState" label="Customer State" required />
+          <FieldTextInput className={css.field} type="text" id="customerZip" name="customerZip" label="Customer Zip" required />
+          <FieldTextInput className={css.field} type="email" id="customerEmail" name="customerEmail" label="Customer Email" required pattern="^[^@\s]+@[^@\s]+\.[^@\s]+$" />
+          <FieldTextInput className={css.field} type="tel" id="customerPhone" name="customerPhone" label="Customer Phone" required pattern="^[0-9\-\+\s\(\)]+$" />
+        </div>
+        <div className={css.addressSection}>
+          <Heading as="h4" rootClassName={css.heading}>
+            <FormattedMessage id="StripePaymentForm.providerAddressHeading" defaultMessage="Provider Address" />
+          </Heading>
+          <FieldTextInput className={css.field} type="text" id="providerStreet" name="providerStreet" label="Provider Street" required />
+          <FieldTextInput className={css.field} type="text" id="providerCity" name="providerCity" label="Provider City" required />
+          <FieldTextInput className={css.field} type="text" id="providerState" name="providerState" label="Provider State" required />
+          <FieldTextInput className={css.field} type="text" id="providerZip" name="providerZip" label="Provider Zip" required />
+          <FieldTextInput className={css.field} type="email" id="providerEmail" name="providerEmail" label="Provider Email" required pattern="^[^@\s]+@[^@\s]+\.[^@\s]+$" />
+          <FieldTextInput className={css.field} type="tel" id="providerPhone" name="providerPhone" label="Provider Phone" required pattern="^[0-9\-\+\s\(\)]+$" />
+        </div>
         <div className={css.submitContainer}>
           {hasPaymentErrors ? (
             <span className={css.errorMessage}>{paymentErrorMessage}</span>
@@ -704,7 +729,23 @@ class StripePaymentForm extends Component {
 
   render() {
     const { onSubmit, ...rest } = this.props;
-    return <FinalForm onSubmit={this.handleSubmit} {...rest} render={this.paymentForm} />;
+    // Add full initialValues for all address/contact fields
+    const initialValues = {
+      customerStreet: '',
+      customerCity: '',
+      customerState: '',
+      customerZip: '',
+      customerEmail: '',
+      customerPhone: '',
+      providerStreet: '',
+      providerCity: '',
+      providerState: '',
+      providerZip: '',
+      providerEmail: '',
+      providerPhone: '',
+      // Add any other fields you want to always initialize
+    };
+    return <FinalForm onSubmit={this.handleSubmit} initialValues={initialValues} {...rest} render={this.paymentForm} />;
   }
 }
 
