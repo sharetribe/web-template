@@ -276,6 +276,16 @@ module.exports = (req, res) => {
 
       // Perform the actual transition
       try {
+        // If this is transition/accept, log the transaction state before attempting
+        if (bodyParams.transition === 'transition/accept') {
+          try {
+            const transactionShow = await sdk.transactions.show({ id: id });
+            console.log('🔎 Transaction state before accept:', transactionShow.data.data.attributes.state);
+            console.log('🔎 Last transition:', transactionShow.data.data.attributes.lastTransition);
+          } catch (showErr) {
+            console.error('❌ Failed to fetch transaction before accept:', showErr.message);
+          }
+        }
         const response = isSpeculative
           ? await getTrustedSdk(req).transactions.transitionSpeculative(body, queryParams)
           : await getTrustedSdk(req).transactions.transition(body, queryParams);
@@ -287,10 +297,10 @@ module.exports = (req, res) => {
         });
         return response;
       } catch (err) {
-        console.error("❌ Transition failed:", err.message, err);
+        console.error("❌ Transition failed:", err.message, err.response?.data || err);
         return res.status(500).json({ 
           error: "Transaction transition failed",
-          details: err.message
+          details: err.response?.data || err.message
         });
       }
     })
