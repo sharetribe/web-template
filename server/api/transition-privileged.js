@@ -297,10 +297,15 @@ module.exports = (req, res) => {
         });
         return response;
       } catch (err) {
-        console.error("❌ Transition failed:", err.message, err.response?.data || err);
+        try {
+          console.error("❌ Transition failed (full error):", JSON.stringify(err, null, 2));
+        } catch (stringifyErr) {
+          console.error("❌ Transition failed (raw error):", err);
+        }
+        const errorData = err.response?.data;
         return res.status(500).json({ 
           error: "Transaction transition failed",
-          details: err.response?.data || err.message
+          details: errorData || err.message
         });
       }
     })
