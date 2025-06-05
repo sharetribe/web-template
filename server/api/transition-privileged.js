@@ -114,6 +114,7 @@ module.exports = (req, res) => {
 
   // Extract uuid from listingId if needed
   const listingId = bodyParams?.params?.listingId?.uuid || bodyParams?.params?.listingId;
+  console.log('🟠 About to call sdk.listings.show with listingId:', listingId);
 
   // Debug log for listingId and transaction details
   console.log('📋 Request parameters check:', {
