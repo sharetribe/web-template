@@ -339,6 +339,7 @@ module.exports = (req, res) => {
     .catch(e => {
       const errorData = e.response?.data;
       console.error("❌ Flex API error:", errorData || e);
+      if (res.headersSent) return; // ✅ Prevent second response
       return res.status(500).json({ 
         error: "Flex API error",
         details: errorData || e.message
