@@ -199,7 +199,7 @@ module.exports = (req, res) => {
       const transactionId = bodyParams?.params?.transactionId?.uuid || bodyParams?.params?.transactionId;
       const body = {
         id: transactionId, // Flex API expects id at the top level
-        ...bodyParams,
+        transition: bodyParams.transition,
         params: {
           ...restParams,
           lineItems,
