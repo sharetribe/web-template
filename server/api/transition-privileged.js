@@ -209,9 +209,10 @@ module.exports = (req, res) => {
 
       // Set id for transition/request-payment and transition/accept
       let id = null;
-      if (bodyParams.transition === 'transition/request-payment' || bodyParams.transition === 'transition/confirm-payment') {
+      // Defensive check for bodyParams and .transition
+      if (bodyParams && (bodyParams.transition === 'transition/request-payment' || bodyParams.transition === 'transition/confirm-payment')) {
         id = transactionId;
-      } else if (bodyParams.transition === 'transition/accept') {
+      } else if (bodyParams && bodyParams.transition === 'transition/accept') {
         id = transactionId;
       } else {
         id = listingId;
@@ -222,7 +223,7 @@ module.exports = (req, res) => {
 
       const body = {
         id,
-        transition: bodyParams.transition,
+        transition: bodyParams?.transition,
         params,
       };
 
@@ -291,13 +292,13 @@ module.exports = (req, res) => {
           : await getTrustedSdk(req).transactions.transition(body, queryParams);
         // Defensive: Only access .transition if response and response.data are defined
         let transitionName = undefined;
-        if (response && response.data && response.data.data && response.data.data.attributes) {
+        if (response && response.data && response.data.data && response.data.data.attributes && typeof response.data.data.attributes.transition !== 'undefined') {
           transitionName = response.data.data.attributes.transition;
         }
         console.log("✅ Transition successful:", {
           status: response?.status,
           hasData: !!response?.data?.data,
-          transition: transitionName || bodyParams?.transition,
+          transition: transitionName || (bodyParams && bodyParams.transition),
           transactionId: response?.data?.data?.id?.uuid
         });
         return response;
@@ -310,6 +311,7 @@ module.exports = (req, res) => {
           console.error("❌ Transition failed: response.status:", err.response.status);
           console.error("❌ Transition failed: response.headers:", err.response.headers);
         }
+        if (res.headersSent) return; // ✅ Prevent double response
         return res.status(500).json({ 
           error: "Transaction transition failed",
           details: (err.response && err.response.data) || err.message
