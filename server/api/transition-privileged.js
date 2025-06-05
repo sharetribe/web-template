@@ -114,6 +114,7 @@ module.exports = (req, res) => {
 
   // Extract uuid from listingId if needed
   const listingId = bodyParams?.params?.listingId?.uuid || bodyParams?.params?.listingId;
+  const transactionId = bodyParams?.params?.transactionId?.uuid || bodyParams?.params?.transactionId;
   console.log('🟠 About to call sdk.listings.show with listingId:', listingId);
 
   // Debug log for listingId and transaction details
@@ -122,8 +123,8 @@ module.exports = (req, res) => {
     hasListingId: !!listingId,
     transition: bodyParams?.transition,
     params: bodyParams?.params,
-    transactionId: bodyParams?.params?.transactionId,
-    hasTransactionId: !!bodyParams?.params?.transactionId
+    transactionId: transactionId,
+    hasTransactionId: !!transactionId
   });
 
   // Verify we have the required parameters before making the API call
@@ -196,235 +197,88 @@ module.exports = (req, res) => {
       // Omit listingId from params (transition/request-payment-after-inquiry does not need it)
       const { listingId, ...restParams } = bodyParams?.params || {};
 
-      // Add lineItems and id to the body params
-      const transactionId = bodyParams?.params?.transactionId?.uuid || bodyParams?.params?.transactionId;
+      // Always include protectedData in params if present
+      let params = { ...restParams };
+      if (orderData && orderData.protectedData) {
+        params.protectedData = orderData.protectedData;
+      }
+      // Always include lineItems if present
+      if (lineItems) {
+        params.lineItems = lineItems;
+      }
+
+      // Set id for transition/request-payment and transition/accept
+      let id = null;
+      if (bodyParams.transition === 'transition/request-payment' || bodyParams.transition === 'transition/confirm-payment') {
+        id = transactionId;
+      } else if (bodyParams.transition === 'transition/accept') {
+        id = transactionId;
+      } else {
+        id = listingId;
+      }
+
+      // Defensive log for id
+      console.log('🟢 Using id for Flex API call:', id);
+
       const body = {
-        id: transactionId, // Flex API expects id at the top level
+        id,
         transition: bodyParams.transition,
-        params: {
-          ...restParams,
-          lineItems,
-        },
+        params,
       };
 
-      // Await the trusted SDK instance
-      const trustedSdk = await getTrustedSdk(req);
-      console.log("🛠 trustedSdk keys:", trustedSdk ? Object.keys(trustedSdk) : "undefined");
+      // Log the final body before transition
+      console.log("🚀 Final body sent to Flex API:", JSON.stringify(body, null, 2));
 
-      const transition = bodyParams?.transition;
-      if (transition === 'transition/accept') {
-        console.log("🚦 Entered transition/accept block");
-        // Debug log for raw transactionId param
-        console.log("🔎 Raw transactionId param:", bodyParams?.params?.transactionId);
-        const transactionId = bodyParams?.params?.transactionId?.uuid || bodyParams?.params?.transactionId;
-        console.log("📦 Using transactionId:", transactionId);
-        let bookingStart, bookingEnd;
-        let txRes; // Declare txRes outside try block so it's accessible in the catch block
+      // Shippo integration: check for env var
+      if (!process.env.SHIPPO_API_TOKEN) {
+        console.error('❌ SHIPPO_API_TOKEN is missing! Shippo integration will not work.');
+      }
 
+      // Shippo address extraction (fallback to protectedData)
+      let protectedData = params.protectedData || {};
+      let lenderAddress = {
+        name: protectedData.providerName || 'Lender',
+        street1: protectedData.providerStreet || '',
+        city: protectedData.providerCity || '',
+        state: protectedData.providerState || '',
+        zip: protectedData.providerZip || '',
+        country: 'US',
+        email: protectedData.providerEmail || '',
+        phone: protectedData.providerPhone || '',
+      };
+      let borrowerAddress = {
+        name: protectedData.customerName || 'Borrower',
+        street1: protectedData.customerStreet || '',
+        city: protectedData.customerCity || '',
+        state: protectedData.customerState || '',
+        zip: protectedData.customerZip || '',
+        country: 'US',
+        email: protectedData.customerEmail || '',
+        phone: protectedData.customerPhone || '',
+      };
+      // Log addresses before Shippo logic
+      console.log('🏷️ Addresses received:', { lenderAddress, borrowerAddress });
+
+      // Shippo label creation (with fallback and logging)
+      if (lenderAddress.street1 && borrowerAddress.street1 && process.env.SHIPPO_API_TOKEN) {
         try {
-          if (!trustedSdk || !trustedSdk.transactions) {
-            console.error("❌ trustedSdk or trustedSdk.transactions is undefined!");
-            return res.status(500).json({ error: "Internal error: trustedSdk.transactions is undefined." });
-          }
-          txRes = await trustedSdk.transactions.show({ id: transactionId });
-          console.log("🧾 Full transaction object:", JSON.stringify(txRes.data.data, null, 2));
-          console.log("🔍 Transaction attributes:", txRes.data.data.attributes);
-
-          // Get protected data from transaction
-          const protectedData = txRes.data.data.attributes.protectedData || {};
-          console.log("🔒 Protected data from transaction:", protectedData);
-
-          // Use protected data for addresses if available
-          const lenderAddress = {
-            name: protectedData.providerName || 'Lender',
-            street1: protectedData.providerStreet || '',
-            city: protectedData.providerCity || '',
-            state: protectedData.providerState || '',
-            zip: protectedData.providerZip || '',
-            country: 'US',
-            email: protectedData.providerEmail || '',
-            phone: protectedData.providerPhone || '',
-          };
-
-          const borrowerAddress = {
-            name: protectedData.customerName || 'Borrower',
-            street1: protectedData.customerStreet || '',
-            city: protectedData.customerCity || '',
-            state: protectedData.customerState || '',
-            zip: protectedData.customerZip || '',
-            country: 'US',
-            email: protectedData.customerEmail || '',
-            phone: protectedData.customerPhone || '',
-          };
-
-          // Update bodyParams with addresses for shipping label creation
-          bodyParams.params = {
-            ...bodyParams.params,
-            ...lenderAddress,
-            ...borrowerAddress,
-          };
-
-          const booking = txRes.data.data.attributes.booking;
-          if (!booking) {
-            // In Flex, booking may not exist until a later transition (e.g., after accept/confirm-booking)
-            console.warn("⚠️ No booking found on transaction. Skipping recalculation.");
-            // Call Shippo label creation even if booking is missing
-            await createShippingLabels(bodyParams);
-            // Proceed with original lineItems (do not recalculate)
-            try {
-              const response = isSpeculative
-                ? await trustedSdk.transactions.transitionSpeculative(body, queryParams)
-                : await trustedSdk.transactions.transition(body, queryParams);
-              console.log("✅ Transition successful (no booking):", {
-                status: response?.status,
-                hasData: !!response?.data?.data,
-                transition: bodyParams?.transition
-              });
-              return response;
-            } catch (err) {
-              console.error("❌ Transition failed (no booking):", err.message, err);
-              return res.status(500).json({ 
-                error: "Transaction transition failed",
-                details: err.message
-              });
-            }
-          }
-          bookingStart = booking?.start;
-          bookingEnd = booking?.end;
-
-          console.log("🕓 bookingStart:", bookingStart);
-          console.log("🕓 bookingEnd:", bookingEnd);
+          await createShippingLabels(bodyParams);
         } catch (err) {
-          console.error("❌ Failed to fetch transaction for booking dates:", err.message, err);
-          console.log("❌ Could not fetch transaction, skipping booking extraction.");
-          return res.status(500).json({ 
-            error: "Failed to fetch transaction for booking dates",
-            details: err.message
-          });
+          console.error('❌ Shippo label creation failed:', err.message);
         }
-
-        // Only now, after fetching booking dates, calculate lineItems
-        console.log("🔬 transactionLineItems input:", {
-          listing,
-          bookingStart,
-          bookingEnd,
-          params: bodyParams.params,
-          providerCommission,
-          customerCommission
-        });
-        let newLineItems = transactionLineItems(
-          listing,
-          { bookingStart, bookingEnd, ...bodyParams.params },
-          providerCommission,
-          customerCommission
-        );
-        // Extract original lineItems from the transaction as a fallback
-        const originalLineItems = txRes.data.data.attributes.lineItems;
-        // Null-check and fallback
-        if (Array.isArray(newLineItems) && newLineItems.length > 0) {
-          body.params.lineItems = newLineItems;
-        } else if (Array.isArray(originalLineItems) && originalLineItems.length > 0) {
-          body.params.lineItems = originalLineItems;
+      } else {
+        if (!process.env.SHIPPO_API_TOKEN) {
+          console.warn('⚠️ SHIPPO_API_TOKEN missing, skipping Shippo label creation.');
         } else {
-          console.error("❌ No valid lineItems available. Aborting transition.");
-          return res.status(400).json({ 
-            error: "No valid lineItems available for transition",
-            details: "Neither new nor original lineItems were valid"
-          });
-        }
-
-        // Log the final body before transition
-        console.log("🚀 Final body sent to Flex API:", JSON.stringify(body, null, 2));
-        console.log('🧾 Incoming transition/accept params:', JSON.stringify(bodyParams?.params, null, 2));
-        console.log('🚀 transition/accept block triggered', {
-          providerName: bodyParams?.params?.providerName,
-          customerName: bodyParams?.params?.customerName,
-          hasProviderAddress: !!(bodyParams?.params?.providerStreet && bodyParams?.params?.providerCity),
-          hasCustomerAddress: !!(bodyParams?.params?.customerStreet && bodyParams?.params?.customerCity)
-        });
-
-        // Handle shipping labels
-        await createShippingLabels(bodyParams);
-
-        // Perform the actual transition
-        try {
-          const response = await trustedSdk.transactions.transition(body, queryParams);
-          console.log("✅ Transition successful:", {
-            status: response?.status,
-            hasData: !!response?.data?.data,
-            transition: bodyParams?.transition,
-            transactionId: response?.data?.data?.id?.uuid
-          });
-          return response;
-        } catch (err) {
-          console.error("❌ Transition failed:", err.message, err);
-          return res.status(500).json({ 
-            error: "Transaction transition failed",
-            details: err.message
-          });
-        }
-      } else if (transition === 'transition/request-payment' || transition === 'transition/confirm-payment') {
-        console.log(`🚦 Entered ${transition} block`);
-        
-        // Extract protected data from orderData
-        const protectedData = {
-          // Provider information
-          providerName: orderData?.providerName || '',
-          providerStreet: orderData?.providerStreet || '',
-          providerCity: orderData?.providerCity || '',
-          providerState: orderData?.providerState || '',
-          providerZip: orderData?.providerZip || '',
-          providerEmail: orderData?.providerEmail || '',
-          providerPhone: orderData?.providerPhone || '',
-          // Customer information
-          customerName: orderData?.customerName || '',
-          customerStreet: orderData?.customerStreet || '',
-          customerCity: orderData?.customerCity || '',
-          customerState: orderData?.customerState || '',
-          customerZip: orderData?.customerZip || '',
-          customerEmail: orderData?.customerEmail || '',
-          customerPhone: orderData?.customerPhone || '',
-        };
-
-        // Log the protected data being stored
-        console.log('🔐 Storing protectedData during request-payment:', protectedData);
-
-        // Include protected data in the transition parameters
-        bodyParams.params = {
-          ...bodyParams.params,
-          protectedData,
-        };
-
-        // Handle non-transition/accept cases
-        try {
-          // Log the final body before transition
-          console.log("🚀 Final body sent to Flex API:", JSON.stringify(body, null, 2));
-          const response = isSpeculative
-            ? await trustedSdk.transactions.transitionSpeculative(body, queryParams)
-            : await trustedSdk.transactions.transition(body, queryParams);
-          console.log("✅ Transition successful:", {
-            status: response?.status,
-            hasData: !!response?.data?.data,
-            transition: bodyParams?.transition,
-            transactionId: response?.data?.data?.id?.uuid
-          });
-          return response;
-        } catch (err) {
-          console.error("❌ Transition failed:", err.message, err);
-          return res.status(500).json({ 
-            error: "Transaction transition failed",
-            details: err.message
-          });
+          console.warn('⚠️ Missing address info — skipping Shippo label creation.');
         }
       }
 
-      // Handle other transitions
+      // Perform the actual transition
       try {
-        // Log the final body before transition
-        console.log("🚀 Final body sent to Flex API:", JSON.stringify(body, null, 2));
         const response = isSpeculative
-          ? await trustedSdk.transactions.transitionSpeculative(body, queryParams)
-          : await trustedSdk.transactions.transition(body, queryParams);
+          ? await getTrustedSdk(req).transactions.transitionSpeculative(body, queryParams)
+          : await getTrustedSdk(req).transactions.transition(body, queryParams);
         console.log("✅ Transition successful:", {
           status: response?.status,
           hasData: !!response?.data?.data,
