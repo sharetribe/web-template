@@ -323,8 +323,11 @@ module.exports = (req, res) => {
         .end();
     })
     .catch(e => {
-      console.error("❌ Flex API error:", e.response?.data || e);
-      handleError(res, e);
-      return;
+      const errorData = e.response?.data;
+      console.error("❌ Flex API error:", errorData || e);
+      return res.status(500).json({ 
+        error: "Flex API error",
+        details: errorData || e.message
+      });
     });
 };
