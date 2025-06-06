@@ -249,24 +249,17 @@ module.exports = (req, res) => {
               customerEmail,
               customerPhone,
             } = protectedData;
+            // SAFER: Merge protectedData first, then bodyParams.params so frontend values take priority
             bodyParams.params = {
+              ...protectedData,
               ...bodyParams.params,
-              providerName,
-              providerStreet,
-              providerCity,
-              providerState,
-              providerZip,
-              providerEmail,
-              providerPhone,
-              customerName,
-              customerStreet,
-              customerCity,
-              customerState,
-              customerZip,
-              customerEmail,
-              customerPhone,
             };
             console.log('🔄 Overwrote bodyParams.params with protectedData from transaction:', bodyParams.params);
+            // Ensure params.protectedData is always up-to-date with latest merged values
+            params.protectedData = {
+              ...params.protectedData,
+              ...bodyParams.params,
+            };
           } catch (err) {
             console.error('❌ Failed to fetch or apply protectedData from transaction:', err.message);
           }
@@ -325,36 +318,44 @@ module.exports = (req, res) => {
       console.log('🏷️ Addresses received:', { lenderAddress, borrowerAddress });
 
       // Shippo label creation (with fallback and logging)
-      if (lenderAddress.street1 && borrowerAddress.street1 && process.env.SHIPPO_API_TOKEN) {
-        try {
-          await createShippingLabels(bodyParams);
-        } catch (err) {
-          console.error('❌ Shippo label creation failed:', err.message);
-        }
-      } else {
-        if (!process.env.SHIPPO_API_TOKEN) {
-          console.warn('⚠️ SHIPPO_API_TOKEN missing, skipping Shippo label creation.');
+      if (bodyParams?.transition === 'transition/accept') {
+        if (lenderAddress.street1 && borrowerAddress.street1 && process.env.SHIPPO_API_TOKEN) {
+          try {
+            await createShippingLabels(params);
+          } catch (err) {
+            console.error('❌ Shippo label creation failed:', err.message);
+          }
         } else {
-          console.warn('⚠️ Missing address info — skipping Shippo label creation.');
+          if (!process.env.SHIPPO_API_TOKEN) {
+            console.warn('⚠️ SHIPPO_API_TOKEN missing, skipping Shippo label creation.');
+          } else {
+            console.warn('⚠️ Missing address info — skipping Shippo label creation.');
+          }
         }
+      }
+
+      // Add required validation for provider address fields
+      const requiredFields = [
+        'providerStreet', 'providerCity', 'providerState',
+        'providerZip', 'providerEmail', 'providerPhone'
+      ];
+      const missing = requiredFields.filter(key => !params[key]);
+      if (missing.length > 0) {
+        console.warn('❌ Missing required provider address info:', missing);
+        res.status(400).json({ error: `Missing provider address fields: ${missing.join(', ')}` });
+        return;
       }
 
       // Validate required provider and customer address fields before making the SDK call
       const {
-        providerStreet, providerCity, providerState, providerZip, providerEmail, providerPhone,
         customerStreet, customerCity, customerState, customerZip, customerEmail, customerPhone
       } = bodyParams.params || {};
 
-      if (!providerStreet || !providerCity || !providerState || !providerZip || !providerEmail || !providerPhone) {
-        console.error('❌ Missing required provider address info');
-        if (!res.headersSent) {
-          return res.status(400).json({ error: 'Missing provider address info' });
-        }
-      }
       if (!customerStreet || !customerCity || !customerState || !customerZip || !customerEmail || !customerPhone) {
         console.error('❌ Missing required customer address info');
         if (!res.headersSent) {
-          return res.status(400).json({ error: 'Missing customer address info' });
+          res.status(400).json({ error: 'Missing customer address info' });
+          return;
         }
       }
 
@@ -406,7 +407,8 @@ module.exports = (req, res) => {
     .then(apiResponse => {
       if (!apiResponse) {
         console.error('❌ apiResponse is undefined.');
-        return res.status(500).json({ error: 'Internal server error: apiResponse is undefined.' });
+        res.status(500).json({ error: 'Internal server error: apiResponse is undefined.' });
+        return;
       }
       const { status, statusText, data } = apiResponse;
       res
@@ -425,10 +427,11 @@ module.exports = (req, res) => {
       const errorData = e.response?.data;
       console.error("❌ Flex API error:", errorData || e);
       if (res.headersSent) return; // ✅ Prevent second response
-      return res.status(500).json({ 
+      res.status(500).json({ 
         error: "Flex API error",
         details: errorData || e.message
       });
+      return;
     });
 };
 
