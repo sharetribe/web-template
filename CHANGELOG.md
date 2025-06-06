@@ -14,6 +14,17 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+## [v8.4.1] 2025-05-26
+
+- [fix] Modify two translation keys that were using an incorrect namespace.
+  [#617](https://github.com/sharetribe/web-template/pull/617)
+- [fix] Add missing location prop to grid search page
+  [#615](https://github.com/sharetribe/web-template/pull/615)
+- [fix] Corrected anchor link scrolling behavior on Privacy Policy and Terms of Service pages, when
+  opened as modals (in signup/login). [#612](https://github.com/sharetribe/web-template/pull/612)
+
+  [v8.4.1]: https://github.com/sharetribe/web-template/compare/v8.4.0...v8.4.1
+
 ## [v8.4.0] 2025-05-20
 
 - [add] Added a "Search as CTA" component for embedding a search bar on any dynamic content page

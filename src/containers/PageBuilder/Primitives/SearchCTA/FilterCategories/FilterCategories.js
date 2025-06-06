@@ -69,9 +69,9 @@ const CategoryDropdown = ({ input, className, rootClassName, categories, alignLe
   const labelText = selectedCategory ? (
     selectedCategory.name
   ) : hasSelected && input.value === '' ? (
-    <FormattedMessage id="PageBuilder.CategoryFilter.selectAll" />
+    <FormattedMessage id="PageBuilder.SearchCTA.CategoryFilter.selectAll" />
   ) : (
-    <FormattedMessage id="PageBuilder.CategoryFilter.placeholder" />
+    <FormattedMessage id="PageBuilder.SearchCTA.CategoryFilter.placeholder" />
   );
 
   const rootClass = rootClassName || css.root;
@@ -79,7 +79,10 @@ const CategoryDropdown = ({ input, className, rootClassName, categories, alignLe
 
   // append the "all categories" option to the list of categories
   const allOptions = [
-    { id: 'all-categories', name: <FormattedMessage id="PageBuilder.CategoryFilter.selectAll" /> },
+    {
+      id: 'all-categories',
+      name: <FormattedMessage id="PageBuilder.SearchCTA.CategoryFilter.selectAll" />,
+    },
     ...categories,
   ];
 
