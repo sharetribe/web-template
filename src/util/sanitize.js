@@ -178,7 +178,13 @@ const sanitizeConfiguredPublicData = (publicData, config = {}) => {
     const [key, value] = entry;
     const foundListingFieldConfig = config?.listingFields?.find(d => d.key === key);
     const foundUserFieldConfig = config?.userFields?.find(d => d.key === key);
-    const knownKeysWithString = ['listingType', 'transactionProcessAlias', 'unitType', 'userType'];
+    const knownKeysWithString = [
+      'listingType',
+      'transactionProcessAlias',
+      'unitType',
+      'userType',
+      'cardStyle',
+    ];
     const sanitizedValue = knownKeysWithString.includes(key)
       ? sanitizeText(value)
       : foundListingFieldConfig

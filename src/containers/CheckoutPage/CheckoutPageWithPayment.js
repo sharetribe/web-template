@@ -357,6 +357,7 @@ const onStripeInitialized = (stripe, process, props) => {
  * @param {boolean} props.stripeCustomerFetched - Whether the stripe customer has been fetched
  * @param {Object} props.pageData - The page data
  * @param {propTypes.listing} props.pageData.listing - The listing entity
+ * @param {boolean} props.showListingImage - A boolean indicating whether images are enabled with this listing type
  * @param {propTypes.transaction} props.pageData.transaction - The transaction entity
  * @param {Object} props.pageData.orderData - The order data
  * @param {string} props.processName - The process name
@@ -394,6 +395,7 @@ export const CheckoutPageWithPayment = props => {
     intl,
     currentUser,
     confirmCardPaymentError,
+    showListingImage,
     paymentIntent,
     retrievePaymentIntentError,
     stripeCustomerFetched,
@@ -540,6 +542,7 @@ export const CheckoutPageWithPayment = props => {
           author={listing?.author}
           firstImage={firstImage}
           layoutListingImageConfig={config.layout.listingImage}
+          showListingImage={showListingImage}
         />
         <div className={css.orderFormContainer}>
           <div className={css.headingContainer}>
@@ -613,6 +616,7 @@ export const CheckoutPageWithPayment = props => {
           isInquiryProcess={false}
           processName={processName}
           breakdown={breakdown}
+          showListingImage={showListingImage}
           intl={intl}
         />
       </div>

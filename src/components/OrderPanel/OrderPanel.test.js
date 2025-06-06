@@ -205,6 +205,7 @@ const commonProps = {
   marketplaceCurrency: 'USD',
   dayCountAvailableForBooking: 90,
   marketplaceName: 'Test marketplace',
+  showListingImage: true,
 
   history: {
     push: noop,

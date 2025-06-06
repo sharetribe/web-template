@@ -92,6 +92,15 @@
     width: unset;
     padding: 2px 0;
   }
+  &.noListingImage {
+    margin-top: 24px;
+    @media (--viewportMedium) {
+      margin-top: 32px;
+    }
+    @media (--viewportLarge) {
+      margin-top: 40px;
+    }
+  }
 }
 
 /* Passed-in props for DetailCardImage subcomponent */
@@ -259,6 +268,9 @@
   @media (--viewportLarge) {
     display: block;
     margin: 24px 48px 32px 48px;
+    &.noListingImage {
+      margin-top: 32px;
+    }
   }
 }
 

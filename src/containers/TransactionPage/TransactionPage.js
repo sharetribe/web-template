@@ -11,6 +11,8 @@ import { createResourceLocatorString, findRouteByRouteName } from '../../util/ro
 import { LISTING_UNIT_TYPES, propTypes } from '../../util/types';
 import { timestampToDate } from '../../util/dates';
 import { createSlug } from '../../util/urlHelpers';
+import { requireListingImage } from '../../util/configHelpers';
+
 import {
   INQUIRY_PROCESS_NAME,
   TX_TRANSITION_ACTOR_CUSTOMER as CUSTOMER,
@@ -345,6 +347,12 @@ export const TransactionPageComponent = props => {
   const isOwnOrder =
     isDataAvailable && isCustomerRole && currentUser.id.uuid === customer?.id?.uuid;
 
+  const validListingTypes = config.listing.listingTypes;
+  const foundListingTypeConfig = validListingTypes.find(
+    conf => conf.listingType === listing?.attributes?.publicData?.listingType
+  );
+  const showListingImage = requireListingImage(foundListingTypeConfig);
+
   if (isDataAvailable && isProviderRole && !isOwnSale) {
     // eslint-disable-next-line no-console
     console.error('Tried to access a sale that was not owned by the current user');
@@ -479,6 +487,7 @@ export const TransactionPageComponent = props => {
       transactionRole={transactionRole}
       showBookingLocation={showBookingLocation}
       hasViewingRights={hasViewingRights}
+      showListingImage={showListingImage}
       activityFeed={
         <ActivityFeed
           messages={messages}

@@ -94,6 +94,15 @@
   @media (--viewportLarge) {
     margin-left: 0;
   }
+  &.noListingImage {
+    margin-top: 24px;
+    @media (--viewportMedium) {
+      margin-top: 32px;
+    }
+    @media (--viewportLarge) {
+      margin-top: 40px;
+    }
+  }
 }
 
 .avatarMobile {
@@ -282,6 +291,9 @@
   @media (--viewportLarge) {
     display: block;
     margin: 0;
+    &.noListingImage {
+      margin-top: 32px;
+    }
   }
 }
 

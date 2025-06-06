@@ -60,6 +60,7 @@ const hasClashWithBuiltInPublicDataKey = listingFields => {
     'categoryLevel1',
     'categoryLevel2',
     'categoryLevel3',
+    'cardStyle',
   ];
   let hasClash = false;
   listingFields.forEach(field => {
@@ -912,6 +913,10 @@ export const displayDeliveryShipping = listingTypeConfig => {
   return listingTypeConfig?.defaultListingFields?.shipping !== false;
 };
 
+export const requireListingImage = listingTypeConfig => {
+  return listingTypeConfig?.defaultListingFields?.images !== false;
+};
+
 export const requirePayoutDetails = listingTypeConfig => {
   return listingTypeConfig?.defaultListingFields?.payoutDetails !== false;
 };
@@ -1139,7 +1144,7 @@ const mergeListingConfig = (hostedConfig, defaultConfigs, categoriesInUse) => {
 
   // When debugging, include default configs by passing 'true' here.
   // Otherwise, use listing types and fields from hosted assets.
-  const shouldMerge = mergeDefaultTypesAndFieldsForDebugging(false);
+  const shouldMerge = mergeDefaultTypesAndFieldsForDebugging(true);
   const listingTypes = shouldMerge
     ? union(hostedListingTypes, defaultListingTypes, 'listingType')
     : hostedListingTypes;
