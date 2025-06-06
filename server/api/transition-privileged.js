@@ -109,6 +109,11 @@ module.exports = (req, res) => {
     headers: req.headers
   });
 
+  // Log protectedData received from frontend
+  if (bodyParams?.params?.protectedData) {
+    console.log('🛬 [BACKEND] Received protectedData:', bodyParams.params.protectedData);
+  }
+
   const sdk = getSdk(req, res);
   let lineItems = null;
 
@@ -354,6 +359,8 @@ module.exports = (req, res) => {
             const transactionShow = await sdk.transactions.show({ id: id });
             console.log('🔎 Transaction state before accept:', transactionShow.data.data.attributes.state);
             console.log('🔎 Last transition:', transactionShow.data.data.attributes.lastTransition);
+            // Log protectedData from transaction entity
+            console.log('🔎 [BACKEND] Transaction protectedData:', transactionShow.data.data.attributes.protectedData);
           } catch (showErr) {
             console.error('❌ Failed to fetch transaction before accept:', showErr.message);
           }

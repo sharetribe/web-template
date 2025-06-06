@@ -290,6 +290,9 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
   const hasPaymentIntentUserActionsDone =
     paymentIntent && STRIPE_PI_USER_ACTIONS_DONE_STATUSES.includes(paymentIntent.status);
 
+  // Log formValues for debugging
+  console.log('Form values on submit:', formValues);
+
   // Construct protectedData directly from shipping form fields
   const protectedData = {
     customerName: formValues.customerName || '',
