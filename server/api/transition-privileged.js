@@ -232,6 +232,7 @@ module.exports = (req, res) => {
               include: ['booking'],
             });
             const protectedData = transaction?.data?.data?.attributes?.protectedData || {};
+            console.log('🔎 [BACKEND] Transaction protectedData:', protectedData);
             const {
               providerName,
               providerStreet,
@@ -274,6 +275,9 @@ module.exports = (req, res) => {
         id = listingId;
       }
 
+      // Log bodyParams.params after protectedData is applied
+      console.log('📝 [DEBUG] bodyParams.params after protectedData applied:', bodyParams.params);
+
       // Defensive log for id
       console.log('🟢 Using id for Flex API call:', id);
 
@@ -284,7 +288,10 @@ module.exports = (req, res) => {
       };
 
       // Log the final body before transition
-      console.log("🚀 Final body sent to Flex API:", JSON.stringify(body, null, 2));
+      console.log('🚀 [DEBUG] Final body sent to Flex API:', JSON.stringify(body, null, 2));
+      if (body.params && body.params.protectedData) {
+        console.log('🔒 [DEBUG] protectedData in final body:', body.params.protectedData);
+      }
 
       // Shippo integration: check for env var
       if (!process.env.SHIPPO_API_TOKEN) {
