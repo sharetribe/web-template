@@ -214,6 +214,51 @@ module.exports = (req, res) => {
         id = transactionId;
       } else if (bodyParams && bodyParams.transition === 'transition/accept') {
         id = transactionId;
+        // --- [AI EDIT] Fetch protectedData from transaction and overwrite address fields ---
+        try {
+          const transaction = await sdk.transactions.show({
+            id: bodyParams.params.transactionId || id,
+            include: ['booking'],
+          });
+          const protectedData = transaction?.data?.data?.attributes?.protectedData || {};
+          const {
+            providerName,
+            providerStreet,
+            providerCity,
+            providerState,
+            providerZip,
+            providerEmail,
+            providerPhone,
+            customerName,
+            customerStreet,
+            customerCity,
+            customerState,
+            customerZip,
+            customerEmail,
+            customerPhone,
+          } = protectedData;
+          // Overwrite the bodyParams.params with fetched values
+          bodyParams.params = {
+            ...bodyParams.params,
+            providerName,
+            providerStreet,
+            providerCity,
+            providerState,
+            providerZip,
+            providerEmail,
+            providerPhone,
+            customerName,
+            customerStreet,
+            customerCity,
+            customerState,
+            customerZip,
+            customerEmail,
+            customerPhone,
+          };
+          console.log('🔄 Overwrote bodyParams.params with protectedData from transaction:', bodyParams.params);
+        } catch (err) {
+          console.error('❌ Failed to fetch or apply protectedData from transaction:', err.message);
+        }
       } else {
         id = listingId;
       }
