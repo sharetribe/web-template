@@ -279,6 +279,8 @@ export const initiateOrder = (
     const order = entities[0];
     dispatch(initiateOrderSuccess(order));
     dispatch(fetchCurrentUserHasOrdersSuccess(true));
+    // Debug: Log the full response to confirm protectedData is present
+    console.log('✅ Initiate success:', JSON.stringify(response, null, 2));
     return order;
   };
 
