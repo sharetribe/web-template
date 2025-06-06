@@ -361,6 +361,11 @@ module.exports = (req, res) => {
             console.log('🔎 Last transition:', transactionShow.data.data.attributes.lastTransition);
             // Log protectedData from transaction entity
             console.log('🔎 [BACKEND] Transaction protectedData:', transactionShow.data.data.attributes.protectedData);
+            // If params.protectedData is missing or empty, fallback to transaction's protectedData
+            if (!params.protectedData || Object.values(params.protectedData).every(v => v === '' || v === undefined)) {
+              params.protectedData = transactionShow.data.data.attributes.protectedData || {};
+              console.log('🔁 [BACKEND] Fallback: Using transaction protectedData for accept:', params.protectedData);
+            }
           } catch (showErr) {
             console.error('❌ Failed to fetch transaction before accept:', showErr.message);
           }
@@ -368,6 +373,10 @@ module.exports = (req, res) => {
         const response = isSpeculative
           ? await getTrustedSdk(req).transactions.transitionSpeculative(body, queryParams)
           : await getTrustedSdk(req).transactions.transition(body, queryParams);
+        // After booking (request-payment), log the transaction's protectedData
+        if (bodyParams && bodyParams.transition === 'transition/request-payment' && response && response.data && response.data.data && response.data.data.attributes) {
+          console.log('🧾 Booking complete. Transaction protectedData:', response.data.data.attributes.protectedData);
+        }
         // Defensive: Only access .transition if response and response.data are defined
         if (
           response &&
