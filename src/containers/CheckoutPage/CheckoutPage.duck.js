@@ -221,23 +221,25 @@ export const initiateOrder = (
   const quantityMaybe = quantity ? { stockReservationQuantity: quantity } : {};
   const bookingParamsMaybe = bookingDates || {};
 
-  // Extract protected data from orderData
-  const protectedData = {
-    providerName: orderParams?.providerName || '',
-    providerStreet: orderParams?.providerStreet || '',
-    providerCity: orderParams?.providerCity || '',
-    providerState: orderParams?.providerState || '',
-    providerZip: orderParams?.providerZip || '',
-    providerEmail: orderParams?.providerEmail || '',
-    providerPhone: orderParams?.providerPhone || '',
-    customerName: orderParams?.customerName || '',
-    customerStreet: orderParams?.customerStreet || '',
-    customerCity: orderParams?.customerCity || '',
-    customerState: orderParams?.customerState || '',
-    customerZip: orderParams?.customerZip || '',
-    customerEmail: orderParams?.customerEmail || '',
-    customerPhone: orderParams?.customerPhone || '',
-  };
+  // Use protectedData from orderParams if present, otherwise fallback to legacy mapping
+  const protectedData = orderParams?.protectedData
+    ? orderParams.protectedData
+    : {
+        providerName: orderParams?.providerName || '',
+        providerStreet: orderParams?.providerStreet || '',
+        providerCity: orderParams?.providerCity || '',
+        providerState: orderParams?.providerState || '',
+        providerZip: orderParams?.providerZip || '',
+        providerEmail: orderParams?.providerEmail || '',
+        providerPhone: orderParams?.providerPhone || '',
+        customerName: orderParams?.customerName || '',
+        customerStreet: orderParams?.customerStreet || '',
+        customerCity: orderParams?.customerCity || '',
+        customerState: orderParams?.customerState || '',
+        customerZip: orderParams?.customerZip || '',
+        customerEmail: orderParams?.customerEmail || '',
+        customerPhone: orderParams?.customerPhone || '',
+      };
 
   // Parameters only for client app's server
   const orderData = deliveryMethod ? { deliveryMethod } : {};
