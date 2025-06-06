@@ -281,10 +281,11 @@ module.exports = (req, res) => {
       // Defensive log for id
       console.log('🟢 Using id for Flex API call:', id);
 
+      // Use the updated bodyParams.params for the Flex API call
       const body = {
         id,
         transition: bodyParams?.transition,
-        params,
+        params: bodyParams.params,
       };
 
       // Log the final body before transition
