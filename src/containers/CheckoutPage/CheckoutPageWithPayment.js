@@ -290,62 +290,17 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
   const hasPaymentIntentUserActionsDone =
     paymentIntent && STRIPE_PI_USER_ACTIONS_DONE_STATUSES.includes(paymentIntent.status);
 
-  // Extract address/contact fields from formValues
-  const addressFields = [
-    'customerStreet', 'customerCity', 'customerState', 'customerZip', 'customerEmail', 'customerPhone',
-    'providerStreet', 'providerCity', 'providerState', 'providerZip', 'providerEmail', 'providerPhone'
-  ];
-  const addressFieldValues = {};
-  addressFields.forEach(field => {
-    if (formValues && formValues[field] !== undefined) {
-      addressFieldValues[field] = formValues[field];
-    }
-  });
-
-  const requestPaymentParams = {
-    pageData,
-    speculatedTransaction,
-    stripe,
-    card,
-    billingDetails: getBillingDetails(formValues, currentUser),
-    message,
-    paymentIntent,
-    hasPaymentIntentUserActionsDone,
-    stripePaymentMethodId,
-    process,
-    onInitiateOrder,
-    onConfirmCardPayment,
-    onConfirmPayment,
-    onSendMessage,
-    onSavePaymentMethod,
-    sessionStorageKey,
-    stripeCustomer: currentUser?.stripeCustomer,
-    isPaymentFlowUseSavedCard: selectedPaymentFlow === USE_SAVED_CARD,
-    isPaymentFlowPayAndSaveCard: selectedPaymentFlow === PAY_AND_SAVE_FOR_LATER_USE,
-    setPageData,
-  };
-
-  const shippingDetails = getShippingDetailsMaybe(formValues);
-  console.log('📬 shippingDetails in handleSubmit:', shippingDetails);
-  
-  // Extract shipping info from the nested structure
-  const shippingInfo = shippingDetails?.shippingDetails || {};
-  const shippingAddress = shippingInfo?.address || {};
-
-  // Construct protectedData with shipping and contact info
+  // Construct protectedData directly from shipping form fields
   const protectedData = {
-    // Borrower info from shippingDetails
-    customerName: shippingInfo?.name || '',
-    customerStreet: shippingAddress?.line1 || '',
-    customerCity: shippingAddress?.city || '',
-    customerState: shippingAddress?.state || '',
-    customerZip: shippingAddress?.postalCode || '',
-    customerEmail: currentUser?.attributes?.email || '',
-    customerPhone: shippingInfo?.phoneNumber || '',
-
-    // Lender info from currentUser
+    customerName: formValues.customerName || '',
+    customerStreet: formValues.customerStreet || '',
+    customerCity: formValues.customerCity || '',
+    customerState: formValues.customerState || '',
+    customerZip: formValues.customerZip || '',
+    customerEmail: formValues.customerEmail || '',
+    customerPhone: formValues.customerPhone || '',
     providerName: currentUser?.attributes?.profile?.displayName || '',
-    providerStreet: '', // leave blank for now
+    providerStreet: '',
     providerCity: '',
     providerState: '',
     providerZip: '',
@@ -353,10 +308,8 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     providerPhone: currentUser?.attributes?.profile?.phoneNumber || '',
   };
 
-  // Log the shipping details and protected data for debugging
-  console.log('📦 Shipping info extracted:', shippingInfo);
-  console.log('📦 Shipping address extracted:', shippingAddress);
-  console.log('🔐 Protected data constructed:', protectedData);
+  // Log the protected data for debugging
+  console.log('🔐 Protected data constructed from formValues:', protectedData);
 
   // Calculate pricing and booking duration
   const unitPrice = pageData?.listing?.attributes?.price;
@@ -442,8 +395,7 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     bookingStart,
     bookingEnd,
     lineItems,
-    protectedData,  // Include the protectedData object
-    ...addressFieldValues, // Pass address fields explicitly
+    protectedData,  // Now built from form fields
     ...optionalPaymentParams,
   };
 
