@@ -5,18 +5,37 @@ import { createResourceLocatorString } from '../../../util/routes';
 import { EditPortfolioListingDetailsPanel } from './EditPortfolioListingDetailsPanel/EditPortfolioListingDetailsPanel';
 import css from './EditPortfolioListingWizardTab.module.css';
 import { EditPortfolioListingItemsPanel } from './EditPortfolioListingItemsPanel/EditPortfolioListingItemsPanel';
+import { EditPortfolioListingVideosPanel } from './EditPortfolioListingVideosPanel/EditPortfolioListingVideosPanel';
 import { PAGE_MODE_EDIT } from '../../BatchEditListingPage/constants';
 import { updateListingMedia } from '../EditPortfolioListingPage.duck';
 
 export const DETAILS = 'details';
-export const ITEMS = 'items';
+export const IMAGES = 'images';
+export const VIDEOS = 'videos';
 
 export const EditPortfolioListingWizardTab = props => {
   const { tab, params, history, routeConfiguration, config, isLoading } = props;
   const dispatch = useDispatch();
 
   const onCompleteDetailsTab = listing => {
-    const nextTab = { ...params, id: listing.id.uuid, tab: ITEMS, mode: PAGE_MODE_EDIT };
+    const nextTab = { ...params, id: listing.id.uuid, tab: IMAGES, mode: PAGE_MODE_EDIT };
+    const to = createResourceLocatorString(
+      'EditPortfolioListingPage',
+      routeConfiguration,
+      nextTab,
+      {}
+    );
+    history.push(to);
+  };
+
+  const onSaveImagesAndNavigateToVideos = async listing => {
+    await dispatch(updateListingMedia(listing, config));
+    const nextTab = {
+      ...params,
+      id: listing.id.uuid || listing.id,
+      tab: VIDEOS,
+      mode: PAGE_MODE_EDIT,
+    };
     const to = createResourceLocatorString(
       'EditPortfolioListingPage',
       routeConfiguration,
@@ -33,7 +52,7 @@ export const EditPortfolioListingWizardTab = props => {
       routeConfiguration,
       {},
       {
-        pub_listingId: listing.id.uuid,
+        pub_listingId: listing.id.uuid || listing.id,
         pub_listingType: 'portfolio-showcase',
       }
     );
@@ -51,14 +70,26 @@ export const EditPortfolioListingWizardTab = props => {
         />
       );
     }
-    case ITEMS: {
+    case IMAGES: {
       return (
         <EditPortfolioListingItemsPanel
           className={css.panel}
           config={config}
           onUpdateListing={onUpdateListing}
+          onNavigateToVideos={onSaveImagesAndNavigateToVideos}
           isLoading={isLoading}
-        ></EditPortfolioListingItemsPanel>
+          mediaType={IMAGES}
+        />
+      );
+    }
+    case VIDEOS: {
+      return (
+        <EditPortfolioListingVideosPanel
+          className={css.panel}
+          config={config}
+          onUpdateListing={onUpdateListing}
+          isLoading={isLoading}
+        />
       );
     }
     default:
