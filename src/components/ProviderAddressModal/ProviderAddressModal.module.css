@@ -1,0 +1,85 @@
+.root {
+  /* Modal root styles */
+}
+
+.modalContent {
+  padding: 24px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 16px 0;
+  color: var(--colorText);
+}
+
+.description {
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 0 0 24px 0;
+  color: var(--colorTextLight);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cityStateRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.submitButton {
+  min-width: 120px;
+}
+
+.submitButtonDisabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.error {
+  color: var(--colorFail);
+  margin: 8px 0;
+}
+
+/* Mobile styles */
+@media screen and (max-width: 480px) {
+  .modalContent {
+    padding: 16px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .description {
+    font-size: 14px;
+  }
+
+  .cityStateRow {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .buttons {
+    flex-direction: column-reverse;
+    gap: 12px;
+  }
+
+  .buttons button {
+    width: 100%;
+  }
+} 

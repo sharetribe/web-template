@@ -44,6 +44,7 @@ import ActivityFeed from './ActivityFeed/ActivityFeed';
 import DisputeModal from './DisputeModal/DisputeModal';
 import ReviewModal from './ReviewModal/ReviewModal';
 import TransactionPanel from './TransactionPanel/TransactionPanel';
+import ProviderAddressModal from '../../components/ProviderAddressModal/ProviderAddressModal';
 
 import {
   makeTransition,
@@ -126,6 +127,9 @@ export const TransactionPageComponent = props => {
   const [disputeSubmitted, setDisputeSubmitted] = useState(false);
   const [isReviewModalOpen, setReviewModalOpen] = useState(false);
   const [reviewSubmitted, setReviewSubmitted] = useState(false);
+  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+  const [addressData, setAddressData] = useState(null);
+  const [isSubmittingAddress, setIsSubmittingAddress] = useState(false);
 
   const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();
@@ -530,6 +534,62 @@ export const TransactionPageComponent = props => {
     loadingOrFailedFetching
   );
 
+  const handleTransition = (transitionName, params = {}) => {
+    // For provider accepting a request, check if we need to collect address
+    if (transitionName === 'transition/accept' && isProviderRole) {
+      const providerProfile = provider?.attributes?.profile || {};
+      const providerProtected = providerProfile.protectedData || {};
+      const hasAddress = providerProtected.providerStreet && 
+                        providerProtected.providerCity && 
+                        providerProtected.providerState && 
+                        providerProtected.providerZipCode;
+
+      if (!hasAddress) {
+        setIsAddressModalOpen(true);
+        return;
+      }
+    }
+
+    // If we have address data from the modal, include it in the transition
+    const transitionParams = addressData
+      ? {
+          ...params,
+          protectedData: {
+            ...params.protectedData,
+            providerStreet: addressData.streetAddress,
+            providerCity: addressData.city,
+            providerState: addressData.state,
+            providerZipCode: addressData.zipCode,
+            providerPhone: addressData.phoneNumber,
+          },
+        }
+      : params;
+
+    onTransition(transitionName, transitionParams);
+  };
+
+  const handleAddressSubmit = async (formData) => {
+    setIsSubmittingAddress(true);
+    try {
+      setAddressData(formData);
+      setIsAddressModalOpen(false);
+      // Trigger the accept transition with the address data
+      handleTransition('transition/accept', {
+        protectedData: {
+          providerStreet: formData.streetAddress,
+          providerCity: formData.city,
+          providerState: formData.state,
+          providerZipCode: formData.zipCode,
+          providerPhone: formData.phoneNumber,
+        },
+      });
+    } catch (error) {
+      console.error('Error submitting address:', error);
+    } finally {
+      setIsSubmittingAddress(false);
+    }
+  };
+
   return (
     <Page
       title={intl.formatMessage({ id: 'TransactionPage.schemaTitle' }, { title: listingTitle })}
@@ -566,6 +626,17 @@ export const TransactionPageComponent = props => {
             disputeError={transitionError}
           />
         ) : null}
+        <ProviderAddressModal
+          id="ProviderAddressModal"
+          isOpen={isAddressModalOpen}
+          onCloseModal={() => setIsAddressModalOpen(false)}
+          onManageDisableScrolling={onManageDisableScrolling}
+          onSubmit={handleAddressSubmit}
+          currentUser={currentUser}
+          initialValues={addressData}
+          inProgress={isSubmittingAddress}
+          submitError={transitionError}
+        />
       </LayoutSingleColumn>
     </Page>
   );

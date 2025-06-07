@@ -84,6 +84,7 @@ const displayNames = (currentUser, provider, customer, intl) => {
  * @param {React.ReactNode} props.orderPanel - The order panel
  * @param {object} props.config - The config
  * @param {intlShape} props.intl - The intl
+ * @param {Function} props.onTransition - The on transition function
  * @returns {JSX.Element} The TransactionPanel component
  */
 export class TransactionPanelComponent extends Component {
@@ -172,6 +173,7 @@ export class TransactionPanelComponent extends Component {
       orderPanel,
       config,
       hasViewingRights,
+      onTransition,
     } = this.props;
 
     const isCustomer = transactionRole === 'customer';
@@ -199,11 +201,34 @@ export class TransactionPanelComponent extends Component {
 
     const actionButtons = (
       <ActionButtonsMaybe
+        className={css.actionButtons}
         showButtons={stateData.showActionButtons}
-        primaryButtonProps={stateData?.primaryButtonProps}
-        secondaryButtonProps={stateData?.secondaryButtonProps}
-        isListingDeleted={listingDeleted}
-        isProvider={isProvider}
+        primaryButtonProps={
+          stateData.primaryButtonProps
+            ? {
+                ...stateData.primaryButtonProps,
+                onAction: () => {
+                  if (typeof onTransition === 'function') {
+                    onTransition(stateData.primaryButtonProps.transitionName, stateData.primaryButtonProps.params);
+                  }
+                },
+              }
+            : null
+        }
+        secondaryButtonProps={
+          stateData.secondaryButtonProps
+            ? {
+                ...stateData.secondaryButtonProps,
+                onAction: () => {
+                  if (typeof onTransition === 'function') {
+                    onTransition(stateData.secondaryButtonProps.transitionName, stateData.secondaryButtonProps.params);
+                  }
+                },
+              }
+            : null
+        }
+        isListingDeleted={listing?.attributes?.deleted}
+        isProvider={transactionRole === 'provider'}
       />
     );
 
@@ -223,6 +248,12 @@ export class TransactionPanelComponent extends Component {
     const deliveryMethod = protectedData?.deliveryMethod || 'none';
 
     const classes = classNames(rootClassName || css.root, className);
+
+    const handleTransition = (transitionName, params = {}) => {
+      if (typeof onTransition === 'function') {
+        onTransition(transitionName, params);
+      }
+    };
 
     return (
       <div className={classes}>
