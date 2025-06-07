@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage, useIntl } from 'react-intl';
 import classNames from 'classnames';
@@ -21,58 +21,12 @@ const ProviderAddressModal = props => {
   } = props;
 
   const intl = useIntl();
-  const [formValues, setFormValues] = useState({
-    fullName: '',
-    streetAddress: '',
-    city: '',
-    state: '',
-    zipCode: '',
-    email: '',
-    phoneNumber: '',
-  });
-
-  // Initialize form with user data
-  useEffect(() => {
-    if (currentUser) {
-      setFormValues(prev => ({
-        ...prev,
-        fullName: currentUser.profile?.displayName || '',
-        email: currentUser.attributes?.email || '',
-        ...initialValues,
-      }));
-    }
-  }, [currentUser, initialValues]);
-
-  const handleChange = e => {
-    const { name, value } = e.target;
-    setFormValues(prev => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = e => {
-    e.preventDefault();
-    onSubmit(formValues);
-  };
-
-  const isFormValid = () => {
-    const { fullName, streetAddress, city, state, zipCode, email, phoneNumber } = formValues;
-    return (
-      fullName.trim() &&
-      streetAddress.trim() &&
-      city.trim() &&
-      state.trim() &&
-      zipCode.trim() &&
-      email.trim() &&
-      phoneNumber.trim()
-    );
-  };
 
   const classes = classNames(rootClassName || css.root, className);
-  const submitButtonClasses = classNames(css.submitButton, {
-    [css.submitButtonDisabled]: !isFormValid(),
-  });
+
+  const handleSubmit = values => {
+    onSubmit(values);
+  };
 
   return (
     <Modal
@@ -91,101 +45,93 @@ const ProviderAddressModal = props => {
           <FormattedMessage id="ProviderAddressModal.description" />
         </p>
 
-        <Form className={css.form} onSubmit={handleSubmit}>
-          <FieldTextInput
-            id="fullName"
-            name="fullName"
-            label={intl.formatMessage({ id: 'ProviderAddressModal.fullNameLabel' })}
-            placeholder={intl.formatMessage({ id: 'ProviderAddressModal.fullNamePlaceholder' })}
-            value={formValues.fullName}
-            onChange={handleChange}
-            required
-          />
+        <Form
+          onSubmit={handleSubmit}
+          initialValues={initialValues}
+          render={({ handleSubmit, values, invalid, submitting }) => (
+            <form className={css.form} onSubmit={handleSubmit}>
+              <FieldTextInput
+                id="fullName"
+                name="fullName"
+                label={intl.formatMessage({ id: 'ProviderAddressModal.fullNameLabel' })}
+                placeholder={intl.formatMessage({ id: 'ProviderAddressModal.fullNamePlaceholder' })}
+                required
+              />
 
-          <FieldTextInput
-            id="streetAddress"
-            name="streetAddress"
-            label={intl.formatMessage({ id: 'ProviderAddressModal.streetAddressLabel' })}
-            placeholder={intl.formatMessage({ id: 'ProviderAddressModal.streetAddressPlaceholder' })}
-            value={formValues.streetAddress}
-            onChange={handleChange}
-            required
-          />
+              <FieldTextInput
+                id="streetAddress"
+                name="streetAddress"
+                label={intl.formatMessage({ id: 'ProviderAddressModal.streetAddressLabel' })}
+                placeholder={intl.formatMessage({ id: 'ProviderAddressModal.streetAddressPlaceholder' })}
+                required
+              />
 
-          <div className={css.cityStateRow}>
-            <FieldTextInput
-              id="city"
-              name="city"
-              label={intl.formatMessage({ id: 'ProviderAddressModal.cityLabel' })}
-              placeholder={intl.formatMessage({ id: 'ProviderAddressModal.cityPlaceholder' })}
-              value={formValues.city}
-              onChange={handleChange}
-              required
-            />
+              <div className={css.cityStateRow}>
+                <FieldTextInput
+                  id="city"
+                  name="city"
+                  label={intl.formatMessage({ id: 'ProviderAddressModal.cityLabel' })}
+                  placeholder={intl.formatMessage({ id: 'ProviderAddressModal.cityPlaceholder' })}
+                  required
+                />
 
-            <FieldTextInput
-              id="state"
-              name="state"
-              label={intl.formatMessage({ id: 'ProviderAddressModal.stateLabel' })}
-              placeholder={intl.formatMessage({ id: 'ProviderAddressModal.statePlaceholder' })}
-              value={formValues.state}
-              onChange={handleChange}
-              required
-            />
-          </div>
+                <FieldTextInput
+                  id="state"
+                  name="state"
+                  label={intl.formatMessage({ id: 'ProviderAddressModal.stateLabel' })}
+                  placeholder={intl.formatMessage({ id: 'ProviderAddressModal.statePlaceholder' })}
+                  required
+                />
+              </div>
 
-          <FieldTextInput
-            id="zipCode"
-            name="zipCode"
-            label={intl.formatMessage({ id: 'ProviderAddressModal.zipCodeLabel' })}
-            placeholder={intl.formatMessage({ id: 'ProviderAddressModal.zipCodePlaceholder' })}
-            value={formValues.zipCode}
-            onChange={handleChange}
-            required
-          />
+              <FieldTextInput
+                id="zipCode"
+                name="zipCode"
+                label={intl.formatMessage({ id: 'ProviderAddressModal.zipCodeLabel' })}
+                placeholder={intl.formatMessage({ id: 'ProviderAddressModal.zipCodePlaceholder' })}
+                required
+              />
 
-          <FieldTextInput
-            id="email"
-            name="email"
-            type="email"
-            label={intl.formatMessage({ id: 'ProviderAddressModal.emailLabel' })}
-            placeholder={intl.formatMessage({ id: 'ProviderAddressModal.emailPlaceholder' })}
-            value={formValues.email}
-            onChange={handleChange}
-            required
-          />
+              <FieldTextInput
+                id="email"
+                name="email"
+                type="email"
+                label={intl.formatMessage({ id: 'ProviderAddressModal.emailLabel' })}
+                placeholder={intl.formatMessage({ id: 'ProviderAddressModal.emailPlaceholder' })}
+                required
+              />
 
-          <FieldTextInput
-            id="phoneNumber"
-            name="phoneNumber"
-            type="tel"
-            label={intl.formatMessage({ id: 'ProviderAddressModal.phoneNumberLabel' })}
-            placeholder={intl.formatMessage({ id: 'ProviderAddressModal.phoneNumberPlaceholder' })}
-            value={formValues.phoneNumber}
-            onChange={handleChange}
-            required
-          />
+              <FieldTextInput
+                id="phoneNumber"
+                name="phoneNumber"
+                type="tel"
+                label={intl.formatMessage({ id: 'ProviderAddressModal.phoneNumberLabel' })}
+                placeholder={intl.formatMessage({ id: 'ProviderAddressModal.phoneNumberPlaceholder' })}
+                required
+              />
 
-          {submitError ? (
-            <p className={css.error}>
-              <FormattedMessage id="ProviderAddressModal.submitError" />
-            </p>
-          ) : null}
+              {submitError ? (
+                <p className={css.error}>
+                  <FormattedMessage id="ProviderAddressModal.submitError" />
+                </p>
+              ) : null}
 
-          <div className={css.buttons}>
-            <SecondaryButton onClick={onCloseModal}>
-              <FormattedMessage id="ProviderAddressModal.cancel" />
-            </SecondaryButton>
-            <PrimaryButton
-              type="submit"
-              inProgress={inProgress}
-              disabled={!isFormValid() || inProgress}
-              className={submitButtonClasses}
-            >
-              <FormattedMessage id="ProviderAddressModal.submit" />
-            </PrimaryButton>
-          </div>
-        </Form>
+              <div className={css.buttons}>
+                <SecondaryButton onClick={onCloseModal} type="button">
+                  <FormattedMessage id="ProviderAddressModal.cancel" />
+                </SecondaryButton>
+                <PrimaryButton
+                  type="submit"
+                  inProgress={inProgress || submitting}
+                  disabled={invalid || inProgress || submitting}
+                  className={css.submitButton}
+                >
+                  <FormattedMessage id="ProviderAddressModal.submit" />
+                </PrimaryButton>
+              </div>
+            </form>
+          )}
+        />
       </div>
     </Modal>
   );
