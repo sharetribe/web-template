@@ -227,3 +227,8 @@ export const aiBackend = {
   }
 }
 // [/SKYFARER]
+
+export const adjustBooking = body => {
+  return post('/api/adjust-booking', body);
+};
+
