@@ -569,11 +569,19 @@ export const TransactionPageComponent = props => {
   };
 
   const handleAddressSubmit = async (formData) => {
+    console.log("Submitting address", formData);
     setIsSubmittingAddress(true);
     try {
       setAddressData(formData);
       setIsAddressModalOpen(false);
       // Trigger the accept transition with the address data
+      console.log("Calling onTransition with address data", {
+        providerStreet: formData.streetAddress,
+        providerCity: formData.city,
+        providerState: formData.state,
+        providerZipCode: formData.zipCode,
+        providerPhone: formData.phoneNumber,
+      });
       handleTransition('transition/accept', {
         protectedData: {
           providerStreet: formData.streetAddress,

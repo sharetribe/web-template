@@ -283,6 +283,7 @@ module.exports = (req, res) => {
 
       // Log the final body before transition
       console.log('🚀 [DEBUG] Final body sent to Flex API:', JSON.stringify(body, null, 2));
+      console.log('📦 [DEBUG] Full body object:', body);
       if (body.params && body.params.protectedData) {
         console.log('🔒 [DEBUG] protectedData in final body:', body.params.protectedData);
       }
@@ -366,7 +367,7 @@ module.exports = (req, res) => {
         if (bodyParams && bodyParams.transition === 'transition/accept') {
           try {
             const transactionShow = await sdk.transactions.show({ id: id });
-            console.log('🔎 Transaction state before accept:', transactionShow.data.data.attributes.state);
+            console.log('🔎 Current state:', transactionShow.data.data.attributes.state);
             console.log('🔎 Last transition:', transactionShow.data.data.attributes.lastTransition);
             // Log protectedData from transaction entity
             console.log('🔎 [BACKEND] Transaction protectedData:', transactionShow.data.data.attributes.protectedData);
