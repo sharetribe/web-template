@@ -16,6 +16,7 @@ import ManageListingsPage from './ManageListingsPage/ManageListingsPage.duck';
 import PaymentMethodsPage from './PaymentMethodsPage/PaymentMethodsPage.duck';
 import ProfilePage from './ProfilePage/ProfilePage.duck';
 import ProfileSettingsPage from './ProfileSettingsPage/ProfileSettingsPage.duck';
+import ReferralProgramPage from './ReferralProgramPage/ReferralProgramPage.duck';
 import SearchPage from './SearchPage/SearchPage.duck';
 import StripePayoutPage from './StripePayoutPage/StripePayoutPage.duck';
 import TransactionPage from './TransactionPage/TransactionPage.duck';
@@ -34,6 +35,7 @@ export {
   PaymentMethodsPage,
   ProfilePage,
   ProfileSettingsPage,
+  ReferralProgramPage,
   SearchPage,
   StripePayoutPage,
   TransactionPage,

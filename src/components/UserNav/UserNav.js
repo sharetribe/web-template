@@ -29,6 +29,13 @@ const UserNav = props => {
       },
     },
     {
+      text: <FormattedMessage id="UserNav.referralProgram" />,
+      selected: currentPage === 'ReferralProgramPage',
+      linkProps: {
+        name: 'ReferralProgramPage',
+      },
+    },
+    {
       text: <FormattedMessage id="UserNav.profileSettings" />,
       selected: currentPage === 'ProfileSettingsPage' || currentPage === 'CreativeDetailsPage',
       disabled: false,

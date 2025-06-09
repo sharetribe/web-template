@@ -7,6 +7,7 @@ const {
   BRAND_MEMBERSHIP_TYPES,
   SELLER_MEMBERSHIP_TYPES,
 } = require('../../api-util/metadataHelper');
+const { ReferralAPIManagerClient: RAMClient } = require('../../api-util/referralManager');
 const { integrationSdkInit, generateScript } = require('../../api-util/scriptManager');
 const {
   slackSellerValidationWorkflow,
@@ -133,6 +134,20 @@ function script() {
     }
   }
 
+  async function referralProgramOptIn(userId, email, firstName, lastName) {
+    const integrationSdk = integrationSdkInit();
+    const referralManagerClient = new RAMClient();
+    const rfUser = await referralManagerClient.qualifyReferral(userId, email, firstName, lastName);
+    const { code } = rfUser || {};
+    await integrationSdk.users.updateProfile({
+      id: userId,
+      privateData: {
+        referralCode: code,
+      },
+    });
+    return;
+  }
+
   const analyzeEvent = async event => {
     const integrationSdk = integrationSdkInit();
     const { resourceType, eventType } = event.attributes;
@@ -159,10 +174,11 @@ function script() {
         ...(isSeller ? { sellerStatus: SELLER_STATUS.APPLIED } : {}),
       };
       identifyUserEvent(eventUser, eventTraits);
-      if (isBuyer) {
-        return;
-      }
       try {
+        await referralProgramOptIn(userId, email, firstName, lastName);
+        if (isBuyer) {
+          return;
+        }
         const { metadata, privateData, publicData } = await getExtendedData(
           userId,
           user.attributes

@@ -152,3 +152,7 @@ export const createUploadSignature = body => {
 export const generateDownloadUrls = body => {
   return post(`/api/transaction/product-download`, body);
 };
+
+export const referralProgramOptIn = body => {
+  return post(`/api/referral-program/opt-in`, body);
+};

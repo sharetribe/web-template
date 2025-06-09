@@ -42,7 +42,7 @@ exports.authenticateAuth0 = (req, res) => {
   const { from, defaultReturn, defaultConfirm, userType, brandStudioId, screenHint } =
     req.query || {};
   const params = {
-    ...(from ? { 'ext-mp-from': from } : {}),
+    ...(from ? { 'ext-mp-from': Buffer.from(from).toString('base64') } : {}),
     ...(defaultReturn ? { 'ext-mp-default-return': defaultReturn } : {}),
     ...(defaultConfirm ? { 'ext-mp-default-confirm': defaultConfirm } : {}),
     ...(userType ? { 'ext-mp-user-type': userType } : {}),
@@ -86,9 +86,9 @@ exports.authenticateAuth0Callback = (req, res) => {
     firstName,
     lastName,
     idpToken,
-    ...(from ? { from } : {}),
     defaultReturn,
     defaultConfirm,
+    ...(from ? { from: Buffer.from(from, 'base64').toString('utf8') } : {}),
     ...(userType ? { userType } : {}),
     ...(brandStudioId ? { brandStudioId } : {}),
   };
