@@ -96,6 +96,10 @@ async function createShippingLabels(bodyParams) {
 }
 
 module.exports = (req, res) => {
+  console.log('🚀 transition-privileged endpoint HIT!');
+  console.log('📋 Request method:', req.method);
+  console.log('📋 Request URL:', req.url);
+  
   const { isSpeculative, orderData, bodyParams, queryParams } = req.body;
   
   // Debug log for full request body
@@ -134,7 +138,7 @@ module.exports = (req, res) => {
 
   // Verify we have the required parameters before making the API call
   if (!listingId) {
-    console.error('❌ Missing required listingId parameter');
+    console.error('❌ EARLY RETURN: Missing required listingId parameter');
     return res.status(400).json({
       errors: [{
         status: 400,
@@ -342,7 +346,15 @@ module.exports = (req, res) => {
       ];
       const missing = requiredFields.filter(key => !params[key]);
       if (missing.length > 0) {
-        console.warn('❌ Missing required provider address info:', missing);
+        console.warn('❌ EARLY RETURN: Missing required provider address info:', missing);
+        console.log('❌ Provider params available:', {
+          providerStreet: params.providerStreet,
+          providerCity: params.providerCity,
+          providerState: params.providerState,
+          providerZip: params.providerZip,
+          providerEmail: params.providerEmail,
+          providerPhone: params.providerPhone
+        });
         res.status(400).json({ error: `Missing provider address fields: ${missing.join(', ')}` });
         return;
       }
@@ -353,7 +365,10 @@ module.exports = (req, res) => {
       } = bodyParams.params || {};
 
       if (!customerStreet || !customerCity || !customerState || !customerZip || !customerEmail || !customerPhone) {
-        console.error('❌ Missing required customer address info');
+        console.error('❌ EARLY RETURN: Missing required customer address info');
+        console.log('❌ Customer params available:', {
+          customerStreet, customerCity, customerState, customerZip, customerEmail, customerPhone
+        });
         if (!res.headersSent) {
           res.status(400).json({ error: 'Missing customer address info' });
           return;
@@ -363,6 +378,12 @@ module.exports = (req, res) => {
       // Perform the actual transition
       let transitionName;
       try {
+        console.log('🎯 About to make SDK transition call:', {
+          transition: bodyParams?.transition,
+          id: id,
+          isSpeculative: isSpeculative
+        });
+        
         // If this is transition/accept, log the transaction state before attempting
         if (bodyParams && bodyParams.transition === 'transition/accept') {
           try {
@@ -380,9 +401,18 @@ module.exports = (req, res) => {
             console.error('❌ Failed to fetch transaction before accept:', showErr.message);
           }
         }
+        
+        console.log('🚀 Making final SDK transition call...');
         const response = isSpeculative
           ? await getTrustedSdk(req).transactions.transitionSpeculative(body, queryParams)
           : await getTrustedSdk(req).transactions.transition(body, queryParams);
+        
+        console.log('✅ SDK transition call SUCCESSFUL:', {
+          status: response?.status,
+          hasData: !!response?.data,
+          transition: response?.data?.data?.attributes?.transition
+        });
+        
         // After booking (request-payment), log the transaction's protectedData
         if (bodyParams && bodyParams.transition === 'transition/request-payment' && response && response.data && response.data.data && response.data.data.attributes) {
           console.log('🧾 Booking complete. Transaction protectedData:', response.data.data.attributes.protectedData);
@@ -397,9 +427,17 @@ module.exports = (req, res) => {
         ) {
           transitionName = response.data.data.attributes.transition;
         }
+        console.log('✅ Transition completed successfully, returning:', { transition: transitionName });
         return res.status(200).json({ transition: transitionName });
       } catch (err) {
-        console.error('❌ Transition failed:', err);
+        console.error('❌ SDK transition call FAILED:', {
+          error: err,
+          errorMessage: err.message,
+          errorResponse: err.response?.data,
+          errorStatus: err.response?.status,
+          errorStatusText: err.response?.statusText,
+          fullError: JSON.stringify(err, null, 2)
+        });
         if (!res.headersSent) {
           return res.status(500).json({ error: 'Transition failed' });
         }

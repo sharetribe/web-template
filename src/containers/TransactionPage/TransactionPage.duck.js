@@ -671,14 +671,20 @@ const refreshTransactionEntity = (sdk, txId, dispatch) => {
 };
 
 export const makeTransition = (txId, transitionName, params) => (dispatch, getState, sdk) => {
+  console.log('🚀 makeTransition called:', { txId, transitionName, params });
+  
   if (transitionInProgress(getState())) {
+    console.log('❌ Transition already in progress, rejecting');
     return Promise.reject(new Error('Transition already in progress'));
   }
+  
+  console.log('📤 Dispatching transitionRequest:', transitionName);
   dispatch(transitionRequest(transitionName));
 
   // Inject address info for transition/accept
   let updatedParams = params;
   if (transitionName === 'transition/accept') {
+    console.log('🎯 Processing transition/accept with address injection');
     const state = getState();
     const { transactionRef } = state.TransactionPage;
     // Log transactionRef for debugging
@@ -758,6 +764,12 @@ export const makeTransition = (txId, transitionName, params) => (dispatch, getSt
     params: updatedParams,
   };
 
+  console.log('📡 Making API call to /api/transition-privileged:', {
+    transition: transitionName,
+    params: updatedParams,
+    bodyParams
+  });
+
   return fetch('/api/transition-privileged', {
     method: 'POST',
     headers: {
@@ -770,12 +782,19 @@ export const makeTransition = (txId, transitionName, params) => (dispatch, getSt
     }),
   })
     .then(response => {
+      console.log('📥 API response received:', {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok
+      });
       if (!response.ok) {
+        console.error('❌ API response not ok:', response.status, response.statusText);
         throw response;
       }
       return response.json();
     })
     .then(response => {
+      console.log('✅ API response parsed successfully:', response);
       dispatch(addMarketplaceEntities(response));
       // Log after adding marketplace entities
       console.log('✅ addMarketplaceEntities dispatched. Response:', response);
@@ -795,6 +814,7 @@ export const makeTransition = (txId, transitionName, params) => (dispatch, getSt
       return response;
     })
     .catch(e => {
+      console.error('❌ makeTransition failed:', e);
       dispatch(transitionError(storableError(e)));
       log.error(e, `${transitionName}-failed`, {
         txId,
