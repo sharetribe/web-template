@@ -208,6 +208,7 @@ export class TransactionPanelComponent extends Component {
             ? {
                 ...stateData.primaryButtonProps,
                 onAction: () => {
+                  console.log('📤 Dispatching makeTransition with:', stateData.primaryButtonProps.transitionName, stateData.primaryButtonProps.params);
                   if (typeof onTransition === 'function') {
                     onTransition(stateData.primaryButtonProps.transitionName, stateData.primaryButtonProps.params);
                   }
@@ -220,6 +221,7 @@ export class TransactionPanelComponent extends Component {
             ? {
                 ...stateData.secondaryButtonProps,
                 onAction: () => {
+                  console.log('📤 Dispatching makeTransition with:', stateData.secondaryButtonProps.transitionName, stateData.secondaryButtonProps.params);
                   if (typeof onTransition === 'function') {
                     onTransition(stateData.secondaryButtonProps.transitionName, stateData.secondaryButtonProps.params);
                   }
