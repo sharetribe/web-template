@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] Fix an issue with the date filter in the Search CTA component, which was not observing
+  nightly search configuration correctly.[#625](https://github.com/sharetribe/web-template/pull/625)
+
 ## [v8.4.2] 2025-06-02
 
 - [fix] Set the font size for the input fields in the Search as CTA component to 16px to prevent
