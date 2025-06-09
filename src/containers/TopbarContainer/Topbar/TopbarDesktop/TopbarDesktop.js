@@ -77,6 +77,15 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout }) => {
             <FormattedMessage id="TopbarDesktop.favoriteListings" />
           </NamedLink>
         </MenuItem>
+        <MenuItem key="ReferralProgramPage">
+          <NamedLink
+            className={classNames(css.menuLink, currentPageClass('ReferralProgramPage'))}
+            name="ReferralProgramPage"
+          >
+            <span className={css.menuItemBorder} />
+            <FormattedMessage id="TopbarDesktop.referralProgram" />
+          </NamedLink>
+        </MenuItem>
         <MenuItem key="ProfileSettingsPage">
           <NamedLink
             className={classNames(css.menuLink, currentPageClass('ProfileSettingsPage'))}

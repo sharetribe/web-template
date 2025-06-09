@@ -190,6 +190,12 @@ const TopbarMobileMenu = props => {
             <FormattedMessage id="TopbarMobileMenu.favoriteListings" />
           </NamedLink>
           <NamedLink
+            className={classNames(css.navigationLink, currentPageClass('ReferralProgramPage'))}
+            name="ReferralProgramPage"
+          >
+            <FormattedMessage id="TopbarMobileMenu.referralProgram" />
+          </NamedLink>
+          <NamedLink
             className={classNames(css.navigationLink, currentPageClass('ProfileSettingsPage'))}
             name="ProfileSettingsPage"
           >
