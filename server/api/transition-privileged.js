@@ -114,7 +114,7 @@ module.exports = (req, res) => {
     console.log('🛬 [BACKEND] Received protectedData:', bodyParams.params.protectedData);
   }
 
-  const sdk = getSdk(req, res);
+  const sdk = getTrustedSdk(req);
   let lineItems = null;
 
   // Extract uuid from listingId if needed
