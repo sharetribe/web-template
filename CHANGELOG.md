@@ -14,6 +14,15 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Add conditional visibility for the following elements depending on Console configuration:
+    - Visibility for create listings links for unauthenticated users configured in Top bar
+    - Visibility for elements configured in User types:
+      - Create listings and Manage listings links
+      - Payment method and payout detail tab links
+      - Inbox links for orders and sales
+      - Profile page review tabs
+  
+  [#614](https://github.com/sharetribe/web-template/pull/614)
 - [fix] Fix an issue with the date filter in the Search CTA component, which was not observing
   nightly search configuration correctly.[#625](https://github.com/sharetribe/web-template/pull/625)
 
