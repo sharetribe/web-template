@@ -174,12 +174,11 @@ export default function transactionPageReducer(state = initialState, action = {}
         transitionError: null,
       };
     case TRANSITION_SUCCESS:
-      return { ...state, transitionInProgress: null };
     case TRANSITION_ERROR:
       return {
         ...state,
         transitionInProgress: null,
-        transitionError: payload,
+        transitionError: type === TRANSITION_ERROR ? payload : null,
       };
 
     case FETCH_MESSAGES_REQUEST:
@@ -671,10 +670,11 @@ const refreshTransactionEntity = (sdk, txId, dispatch) => {
 };
 
 export const makeTransition = (txId, transitionName, params) => (dispatch, getState, sdk) => {
-  console.log('makeTransition ENTRY:', { txId, transitionName, params, transitionInProgress: transitionInProgress(getState()) });
-  if (transitionInProgress(getState())) {
-    console.warn('Transition already in progress, aborting.');
-    return Promise.reject(new Error('Transition already in progress'));
+  console.log('makeTransition ENTRY:', transitionName, getState().TransactionPage.transitionInProgress);
+  const transitionInProgress = getState().TransactionPage.transitionInProgress;
+  if (transitionInProgress) {
+    console.warn('🛑 Transition already in progress, aborting:', transitionInProgress);
+    return Promise.resolve(null);
   }
   
   console.log('📤 Dispatching transitionRequest:', transitionName);
