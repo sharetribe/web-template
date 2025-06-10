@@ -223,18 +223,22 @@ export class TransactionPanelComponent extends Component {
             ? {
                 ...stateData.primaryButtonProps,
                 onAction: () => {
-                  if (typeof onTransition === 'function') {
-                    const params = { ...stateData.primaryButtonProps.params };
-                    if (isProvider) {
-                      params.protectedData = {
-                        ...params.protectedData,
-                        providerStreet: this.state.addressValues.streetAddress,
-                        providerCity: this.state.addressValues.city,
-                        providerState: this.state.addressValues.state,
-                        providerZip: this.state.addressValues.zipCode,
-                        providerPhone: this.state.addressValues.phoneNumber,
-                      };
-                    }
+                  const params = { ...stateData.primaryButtonProps.params };
+                  if (isProvider) {
+                    params.protectedData = {
+                      ...params.protectedData,
+                      providerStreet: this.state.addressValues.streetAddress,
+                      providerCity: this.state.addressValues.city,
+                      providerState: this.state.addressValues.state,
+                      providerZip: this.state.addressValues.zipCode,
+                      providerPhone: this.state.addressValues.phoneNumber,
+                    };
+                  }
+                  console.log("🔥 Checking transition props:", stateData.primaryButtonProps);
+                  console.log("🔥 Transition name:", stateData.primaryButtonProps?.transitionName);
+                  console.log("🔥 Params before transition:", params);
+                  console.log("🔥 Transaction ID:", transaction?.id);
+                  if (typeof onTransition === 'function' && stateData.primaryButtonProps?.transitionName) {
                     onTransition(transaction?.id, stateData.primaryButtonProps.transitionName, params);
                   }
                 },
