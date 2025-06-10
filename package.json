@@ -60,6 +60,7 @@
     "sitemap": "^8.0.0",
     "smoothscroll-polyfill": "^0.4.0",
     "source-map-support": "^0.5.21",
+    "to-fast-properties": "^4.0.0",
     "unified": "^9.2.2"
   },
   "devDependencies": {
