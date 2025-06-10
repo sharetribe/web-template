@@ -212,7 +212,7 @@ export class TransactionPanelComponent extends Component {
       id: 'TransactionPanel.deletedListingTitle',
     });
 
-    const listingTitle = listingDeleted ? deletedListingTitle : stateDataListing?.attributes?.title;
+    const listingTitle = listingDeleted ? deletedListingTitle : stateDataListing?.attributes?.title || '';
     const firstImage = stateDataListing?.images?.length > 0 ? stateDataListing?.images[0] : null;
 
     const primaryButtonProps = stateData.primaryButtonProps
@@ -222,8 +222,8 @@ export class TransactionPanelComponent extends Component {
             console.log('🔥 Checking transition props:', stateData.primaryButtonProps);
             // Prepare params
             const params = {
-              transactionId: transaction?.id,
-              listingId: stateDataListing?.id,
+              transactionId: transaction?.id || '',
+              listingId: stateDataListing?.id || '',
             };
             if (isProvider) {
               params.protectedData = {
@@ -240,7 +240,7 @@ export class TransactionPanelComponent extends Component {
               typeof onTransition === 'function' &&
               stateData.primaryButtonProps?.transitionName
             ) {
-              onTransition(transaction?.id, stateData.primaryButtonProps.transitionName, params);
+              onTransition(transaction?.id || '', stateData.primaryButtonProps.transitionName, params);
             } else {
               console.error('⚠️ onTransition not triggered — missing function or transitionName');
             }
@@ -259,7 +259,7 @@ export class TransactionPanelComponent extends Component {
                 ...stateData.secondaryButtonProps,
                 onAction: () => {
                   if (typeof onTransition === 'function') {
-                    onTransition(transaction?.id, stateData.secondaryButtonProps.transitionName, stateData.secondaryButtonProps.params);
+                    onTransition(transaction?.id || '', stateData.secondaryButtonProps.transitionName, stateData.secondaryButtonProps.params);
                   }
                 },
               }
@@ -289,7 +289,7 @@ export class TransactionPanelComponent extends Component {
 
     const handleTransition = (transitionName, params = {}) => {
       if (typeof onTransition === 'function') {
-        onTransition(transaction?.id, transitionName, params);
+        onTransition(transaction?.id || '', transitionName, params);
       }
     };
 
