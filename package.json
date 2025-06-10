@@ -60,10 +60,10 @@
     "sitemap": "^8.0.0",
     "smoothscroll-polyfill": "^0.4.0",
     "source-map-support": "^0.5.21",
-    "typescript": "^5.8.3",
     "unified": "^9.2.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.27.4",
     "@babel/plugin-syntax-flow": "^7.27.1",
     "@babel/plugin-transform-react-jsx": "^7.14.9",
     "@testing-library/dom": "^10.4.0",
@@ -76,7 +76,8 @@
     "cross-env": "^7.0.3",
     "inquirer": "^8.2.6",
     "nodemon": "^3.1.7",
-    "prettier": "^1.18.2"
+    "prettier": "^1.18.2",
+    "typescript": "^5.8.3"
   },
   "resolutions": {
     "moment": "^2.30.1"
