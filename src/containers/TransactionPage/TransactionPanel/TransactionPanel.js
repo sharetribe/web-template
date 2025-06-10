@@ -93,6 +93,13 @@ export class TransactionPanelComponent extends Component {
     super(props);
     this.state = {
       sendMessageFormFocused: false,
+      addressValues: {
+        streetAddress: '',
+        city: '',
+        state: '',
+        zipCode: '',
+        phoneNumber: '',
+      },
     };
     this.isMobSaf = false;
     this.sendMessageFormName = 'TransactionPanel.SendMessageForm';
@@ -101,14 +108,7 @@ export class TransactionPanelComponent extends Component {
     this.onSendMessageFormBlur = this.onSendMessageFormBlur.bind(this);
     this.onMessageSubmit = this.onMessageSubmit.bind(this);
     this.scrollToMessage = this.scrollToMessage.bind(this);
-
-    const [addressValues, setAddressValues] = useState({
-      streetAddress: '',
-      city: '',
-      state: '',
-      zipCode: '',
-      phoneNumber: '',
-    });
+    this.handleAddressFormChange = this.handleAddressFormChange.bind(this);
   }
 
   componentDidMount() {
@@ -153,6 +153,10 @@ export class TransactionPanelComponent extends Component {
         behavior: 'smooth',
       });
     }
+  }
+
+  handleAddressFormChange(updatedValues) {
+    this.setState({ addressValues: updatedValues });
   }
 
   render() {
@@ -217,20 +221,19 @@ export class TransactionPanelComponent extends Component {
             ? {
                 ...stateData.primaryButtonProps,
                 onAction: () => {
-                  console.log('📤 Dispatching makeTransition with:', stateData.primaryButtonProps.transitionName, stateData.primaryButtonProps.params);
                   if (typeof onTransition === 'function') {
-                    const paramsWithAddress = {
-                      ...stateData.primaryButtonProps.params,
-                      protectedData: {
-                        ...stateData.primaryButtonProps.params.protectedData,
-                        providerStreet: addressValues.streetAddress,
-                        providerCity: addressValues.city,
-                        providerState: addressValues.state,
-                        providerZipCode: addressValues.zipCode,
-                        providerPhone: addressValues.phoneNumber,
-                      },
-                    };
-                    onTransition(transaction?.id, stateData.primaryButtonProps.transitionName, paramsWithAddress);
+                    const params = { ...stateData.primaryButtonProps.params };
+                    if (isProvider) {
+                      params.protectedData = {
+                        ...params.protectedData,
+                        providerStreet: this.state.addressValues.streetAddress,
+                        providerCity: this.state.addressValues.city,
+                        providerState: this.state.addressValues.state,
+                        providerZip: this.state.addressValues.zipCode,
+                        providerPhone: this.state.addressValues.phoneNumber,
+                      };
+                    }
+                    onTransition(transaction?.id, stateData.primaryButtonProps.transitionName, params);
                   }
                 },
               }
@@ -241,7 +244,6 @@ export class TransactionPanelComponent extends Component {
             ? {
                 ...stateData.secondaryButtonProps,
                 onAction: () => {
-                  console.log('📤 Dispatching makeTransition with:', stateData.secondaryButtonProps.transitionName, stateData.secondaryButtonProps.params);
                   if (typeof onTransition === 'function') {
                     onTransition(transaction?.id, stateData.secondaryButtonProps.transitionName, stateData.secondaryButtonProps.params);
                   }
@@ -250,7 +252,7 @@ export class TransactionPanelComponent extends Component {
             : null
         }
         isListingDeleted={listing?.attributes?.deleted}
-        isProvider={transactionRole === 'provider'}
+        isProvider={isProvider}
       />
     );
 
@@ -281,6 +283,8 @@ export class TransactionPanelComponent extends Component {
     const acceptTransitionAvailable = (nextTransitions || []).some(
       t => t.attributes && t.attributes.name === 'transition/accept'
     );
+
+    const { addressValues } = this.state;
 
     return (
       <div className={classes}>
@@ -403,7 +407,7 @@ export class TransactionPanelComponent extends Component {
             ) : null}
 
             {isProvider && acceptTransitionAvailable && (
-              <ProviderAddressForm values={addressValues} onChange={setAddressValues} />
+              <ProviderAddressForm values={addressValues} onChange={this.handleAddressFormChange} />
             )}
           </div>
 
