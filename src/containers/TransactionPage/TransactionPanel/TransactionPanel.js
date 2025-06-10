@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
@@ -9,6 +9,7 @@ import { isMobileSafari } from '../../../util/userAgent';
 import { createSlug } from '../../../util/urlHelpers';
 
 import { AvatarLarge, NamedLink, UserDisplayName } from '../../../components';
+import ProviderAddressForm from '../../../components/ProviderAddressForm/ProviderAddressForm';
 
 import { stateDataShape } from '../TransactionPage.stateData';
 import SendMessageForm from '../SendMessageForm/SendMessageForm';
@@ -100,6 +101,14 @@ export class TransactionPanelComponent extends Component {
     this.onSendMessageFormBlur = this.onSendMessageFormBlur.bind(this);
     this.onMessageSubmit = this.onMessageSubmit.bind(this);
     this.scrollToMessage = this.scrollToMessage.bind(this);
+
+    const [addressValues, setAddressValues] = useState({
+      streetAddress: '',
+      city: '',
+      state: '',
+      zipCode: '',
+      phoneNumber: '',
+    });
   }
 
   componentDidMount() {
@@ -210,7 +219,18 @@ export class TransactionPanelComponent extends Component {
                 onAction: () => {
                   console.log('📤 Dispatching makeTransition with:', stateData.primaryButtonProps.transitionName, stateData.primaryButtonProps.params);
                   if (typeof onTransition === 'function') {
-                    onTransition(transaction?.id, stateData.primaryButtonProps.transitionName, stateData.primaryButtonProps.params);
+                    const paramsWithAddress = {
+                      ...stateData.primaryButtonProps.params,
+                      protectedData: {
+                        ...stateData.primaryButtonProps.params.protectedData,
+                        providerStreet: addressValues.streetAddress,
+                        providerCity: addressValues.city,
+                        providerState: addressValues.state,
+                        providerZipCode: addressValues.zipCode,
+                        providerPhone: addressValues.phoneNumber,
+                      },
+                    };
+                    onTransition(transaction?.id, stateData.primaryButtonProps.transitionName, paramsWithAddress);
                   }
                 },
               }
@@ -256,6 +276,11 @@ export class TransactionPanelComponent extends Component {
         onTransition(transaction?.id, transitionName, params);
       }
     };
+
+    // Determine if provider and transition/accept is available
+    const acceptTransitionAvailable = (nextTransitions || []).some(
+      t => t.attributes && t.attributes.name === 'transition/accept'
+    );
 
     return (
       <div className={classes}>
@@ -376,6 +401,10 @@ export class TransactionPanelComponent extends Component {
                 <div className={css.mobileActionButtons}>{actionButtons}</div>
               </>
             ) : null}
+
+            {isProvider && acceptTransitionAvailable && (
+              <ProviderAddressForm values={addressValues} onChange={setAddressValues} />
+            )}
           </div>
 
           <div className={css.asideDesktop}>

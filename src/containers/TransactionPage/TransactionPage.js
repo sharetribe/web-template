@@ -44,7 +44,6 @@ import ActivityFeed from './ActivityFeed/ActivityFeed';
 import DisputeModal from './DisputeModal/DisputeModal';
 import ReviewModal from './ReviewModal/ReviewModal';
 import TransactionPanel from './TransactionPanel/TransactionPanel';
-import ProviderAddressModal from '../../components/ProviderAddressModal/ProviderAddressModal';
 
 import {
   makeRequestPayment,
@@ -128,9 +127,6 @@ export const TransactionPageComponent = props => {
   const [disputeSubmitted, setDisputeSubmitted] = useState(false);
   const [isReviewModalOpen, setReviewModalOpen] = useState(false);
   const [reviewSubmitted, setReviewSubmitted] = useState(false);
-  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
-  const [addressData, setAddressData] = useState(null);
-  const [isSubmittingAddress, setIsSubmittingAddress] = useState(false);
 
   const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();
@@ -551,7 +547,6 @@ export const TransactionPageComponent = props => {
                         providerProtected.providerZipCode;
 
       if (!hasAddress) {
-        setIsAddressModalOpen(true);
         return;
       }
     }
@@ -572,36 +567,6 @@ export const TransactionPageComponent = props => {
       : params;
 
     onTransition(transitionName, transitionParams);
-  };
-
-  const handleAddressSubmit = async (formData) => {
-    console.log("Submitting address", formData);
-    setIsSubmittingAddress(true);
-    try {
-      setAddressData(formData);
-      setIsAddressModalOpen(false);
-      // Trigger the accept transition with the address data
-      console.log("Calling onTransition with address data", {
-        providerStreet: formData.streetAddress,
-        providerCity: formData.city,
-        providerState: formData.state,
-        providerZipCode: formData.zipCode,
-        providerPhone: formData.phoneNumber,
-      });
-      handleTransition('transition/accept', {
-        protectedData: {
-          providerStreet: formData.streetAddress,
-          providerCity: formData.city,
-          providerState: formData.state,
-          providerZipCode: formData.zipCode,
-          providerPhone: formData.phoneNumber,
-        },
-      });
-    } catch (error) {
-      console.error('Error submitting address:', error);
-    } finally {
-      setIsSubmittingAddress(false);
-    }
   };
 
   return (
@@ -640,17 +605,6 @@ export const TransactionPageComponent = props => {
             disputeError={transitionError}
           />
         ) : null}
-        <ProviderAddressModal
-          id="ProviderAddressModal"
-          isOpen={isAddressModalOpen}
-          onCloseModal={() => setIsAddressModalOpen(false)}
-          onManageDisableScrolling={onManageDisableScrolling}
-          onSubmit={handleAddressSubmit}
-          currentUser={currentUser}
-          initialValues={addressData}
-          inProgress={isSubmittingAddress}
-          submitError={transitionError}
-        />
       </LayoutSingleColumn>
     </Page>
   );
