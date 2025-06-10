@@ -189,12 +189,13 @@ export class TransactionPanelComponent extends Component {
       onTransition,
     } = this.props;
 
-    const { nextTransitions } = stateData;
+    const { nextTransitions, listing: stateDataListing, transaction: stateDataTransaction } = stateData;
+    const transaction = stateDataTransaction || this.props.transaction;
 
     const isCustomer = transactionRole === 'customer';
     const isProvider = transactionRole === 'provider';
 
-    const listingDeleted = !!listing?.attributes?.deleted;
+    const listingDeleted = !!stateDataListing?.attributes?.deleted;
     const isCustomerBanned = !!customer?.attributes?.banned;
     const isCustomerDeleted = !!customer?.attributes?.deleted;
     const isProviderBanned = !!provider?.attributes?.banned;
@@ -211,40 +212,47 @@ export class TransactionPanelComponent extends Component {
       id: 'TransactionPanel.deletedListingTitle',
     });
 
-    const listingTitle = listingDeleted ? deletedListingTitle : listing?.attributes?.title;
-    const firstImage = listing?.images?.length > 0 ? listing?.images[0] : null;
+    const listingTitle = listingDeleted ? deletedListingTitle : stateDataListing?.attributes?.title;
+    const firstImage = stateDataListing?.images?.length > 0 ? stateDataListing?.images[0] : null;
+
+    const primaryButtonProps = stateData.primaryButtonProps
+      ? {
+          ...stateData.primaryButtonProps,
+          onAction: () => {
+            console.log('🔥 Checking transition props:', stateData.primaryButtonProps);
+            // Prepare params
+            const params = {
+              transactionId: transaction?.id,
+              listingId: stateDataListing?.id,
+            };
+            if (isProvider) {
+              params.protectedData = {
+                providerStreet: this.state.addressValues.streetAddress,
+                providerCity: this.state.addressValues.city,
+                providerState: this.state.addressValues.state,
+                providerZip: this.state.addressValues.zipCode,
+                providerPhone: this.state.addressValues.phoneNumber,
+              };
+            }
+            console.log('🔥 Transition name:', stateData.primaryButtonProps?.transitionName);
+            console.log('🔥 Params before transition:', params);
+            if (
+              typeof onTransition === 'function' &&
+              stateData.primaryButtonProps?.transitionName
+            ) {
+              onTransition(transaction?.id, stateData.primaryButtonProps.transitionName, params);
+            } else {
+              console.error('⚠️ onTransition not triggered — missing function or transitionName');
+            }
+          },
+        }
+      : null;
 
     const actionButtons = (
       <ActionButtonsMaybe
         className={css.actionButtons}
         showButtons={stateData.showActionButtons}
-        primaryButtonProps={
-          stateData.primaryButtonProps
-            ? {
-                ...stateData.primaryButtonProps,
-                onAction: () => {
-                  const params = { ...stateData.primaryButtonProps.params };
-                  if (isProvider) {
-                    params.protectedData = {
-                      ...params.protectedData,
-                      providerStreet: this.state.addressValues.streetAddress,
-                      providerCity: this.state.addressValues.city,
-                      providerState: this.state.addressValues.state,
-                      providerZip: this.state.addressValues.zipCode,
-                      providerPhone: this.state.addressValues.phoneNumber,
-                    };
-                  }
-                  console.log("🔥 Checking transition props:", stateData.primaryButtonProps);
-                  console.log("🔥 Transition name:", stateData.primaryButtonProps?.transitionName);
-                  console.log("🔥 Params before transition:", params);
-                  console.log("🔥 Transaction ID:", transaction?.id);
-                  if (typeof onTransition === 'function' && stateData.primaryButtonProps?.transitionName) {
-                    onTransition(transaction?.id, stateData.primaryButtonProps.transitionName, params);
-                  }
-                },
-              }
-            : null
-        }
+        primaryButtonProps={primaryButtonProps}
         secondaryButtonProps={
           stateData.secondaryButtonProps
             ? {
@@ -257,12 +265,12 @@ export class TransactionPanelComponent extends Component {
               }
             : null
         }
-        isListingDeleted={listing?.attributes?.deleted}
+        isListingDeleted={stateDataListing?.attributes?.deleted}
         isProvider={isProvider}
       />
     );
 
-    const listingType = listing?.attributes?.publicData?.listingType;
+    const listingType = stateDataListing?.attributes?.publicData?.listingType;
     const listingTypeConfigs = config.listing.listingTypes;
     const listingTypeConfig = listingTypeConfigs.find(conf => conf.listingType === listingType);
     const showPrice = isInquiryProcess && displayPrice(listingTypeConfig);
@@ -316,7 +324,7 @@ export class TransactionPanelComponent extends Component {
               processState={stateData.processState}
               showExtraInfo={stateData.showExtraInfo}
               showPriceOnMobile={showPrice}
-              price={listing?.attributes?.price}
+              price={stateDataListing?.attributes?.price}
               intl={intl}
               deliveryMethod={deliveryMethod}
               isPendingPayment={!!stateData.isPendingPayment}
@@ -324,7 +332,7 @@ export class TransactionPanelComponent extends Component {
               providerName={authorDisplayName}
               customerName={customerDisplayName}
               isCustomerBanned={isCustomerBanned}
-              listingId={listing?.id?.uuid}
+              listingId={stateDataListing?.id?.uuid}
               listingTitle={listingTitle}
               listingDeleted={listingDeleted}
             />
@@ -365,12 +373,12 @@ export class TransactionPanelComponent extends Component {
                 <DeliveryInfoMaybe
                   className={css.deliveryInfoSection}
                   protectedData={protectedData}
-                  listing={listing}
+                  listing={stateDataListing}
                   locale={config.localization.locale}
                 />
                 <BookingLocationMaybe
                   className={css.deliveryInfoSection}
-                  listing={listing}
+                  listing={stateDataListing}
                   showBookingLocation={showBookingLocation}
                 />
               </div>
@@ -437,14 +445,14 @@ export class TransactionPanelComponent extends Component {
                     ) : (
                       <NamedLink
                         name="ListingPage"
-                        params={{ id: listing.id?.uuid, slug: createSlug(listingTitle) }}
+                        params={{ id: stateDataListing.id?.uuid, slug: createSlug(stateDataListing.attributes?.title) }}
                       >
-                        {listingTitle}
+                        {stateDataListing.attributes?.title}
                       </NamedLink>
                     )
                   }
                   showPrice={showPrice}
-                  price={listing?.attributes?.price}
+                  price={stateDataListing?.attributes?.price}
                   intl={intl}
                 />
                 {showOrderPanel ? orderPanel : null}
