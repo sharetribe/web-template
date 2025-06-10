@@ -213,7 +213,8 @@ export class TransactionPanelComponent extends Component {
     });
 
     const listingTitle = listingDeleted ? deletedListingTitle : stateDataListing?.attributes?.title || '';
-    const firstImage = stateDataListing?.images?.length > 0 ? stateDataListing?.images[0] : null;
+    const listingImages = stateDataListing?.images?.length ? stateDataListing.images : listing?.images || [];
+    const firstImage = listingImages.length > 0 ? listingImages[0] : null;
 
     let listingTitleNode;
     if (listingDeleted) {
@@ -261,7 +262,7 @@ export class TransactionPanelComponent extends Component {
             ) {
               onTransition(transaction?.id || '', stateData.primaryButtonProps.transitionName, params);
             } else {
-              console.error('⚠️ onTransition not triggered — missing function or transitionName');
+              console.warn('onTransition is not defined or not a function');
             }
           },
         }
