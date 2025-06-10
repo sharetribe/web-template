@@ -47,6 +47,7 @@ import TransactionPanel from './TransactionPanel/TransactionPanel';
 import ProviderAddressModal from '../../components/ProviderAddressModal/ProviderAddressModal';
 
 import {
+  makeRequestPayment,
   makeTransition,
   sendMessage,
   sendReview,
