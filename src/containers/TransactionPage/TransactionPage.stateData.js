@@ -104,7 +104,14 @@ export const getStateData = (params, process) => {
         intl,
         inProgress: transitionInProgress === transitionName,
         transitionError,
-        onAction: () => onTransition(transaction?.id, transitionName, {}),
+        onAction: () => onTransition(transaction?.id, transitionName, {
+          transactionId: transaction?.id,
+          listingId: transaction?.listing?.id,
+        }),
+        params: {
+          transactionId: transaction?.id,
+          listingId: transaction?.listing?.id,
+        },
         ...extra,
       },
       forRole
