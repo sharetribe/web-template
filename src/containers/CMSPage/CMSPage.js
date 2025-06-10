@@ -51,7 +51,7 @@ export const CMSPageComponent = props => {
     ...heroSection,
     sectionId: avHeroSecionId,
     sectionType: avHeroSectionType,
-    classWrap: '',
+    classWrap: 'contentLeft',
     callToAction: {
       fieldType: 'internalButtonLink',
       href: intl.formatMessage({ id: 'AVHero.ctaFirstLink' }),

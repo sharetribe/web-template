@@ -129,7 +129,9 @@
 
 .description {
   composes: align;
-  max-width: 65ch;
+  /*max-width: 65ch;*/
+  max-width: 545px;
+  text-wrap: auto;
 }
 
 .ctaButton {

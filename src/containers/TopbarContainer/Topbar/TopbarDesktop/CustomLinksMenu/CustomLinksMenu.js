@@ -1,7 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
+import classNames from 'classnames';
 
 import PriorityLinks, { CreateListingMenuLink } from './PriorityLinks';
 import LinksMenu from './LinksMenu';
+import LinksMenuDropdown from './LinksMenuDropdown';
+import { ExternalLink } from '../../../../../components';
 
 import css from './CustomLinksMenu.module.css';
 
@@ -50,13 +53,13 @@ const groupMeasuredLinks = (links, containerWidth, menuMoreWidth) => {
 
       return isPrimary && hasSpace
         ? {
-            priorityLinks: [...pickedLinks.priorityLinks, link],
-            menuLinks: pickedLinks.menuLinks,
-          }
+          priorityLinks: [...pickedLinks.priorityLinks, link],
+          menuLinks: pickedLinks.menuLinks,
+        }
         : {
-            priorityLinks: pickedLinks.priorityLinks,
-            menuLinks: [...pickedLinks.menuLinks, link],
-          };
+          priorityLinks: pickedLinks.priorityLinks,
+          menuLinks: [...pickedLinks.menuLinks, link],
+        };
     },
     { priorityLinks: [], menuLinks: [] }
   );
@@ -177,6 +180,102 @@ const CustomLinksMenu = ({ currentPage, customLinks = [], hasClientSideContentRe
 
   const { priorityLinks, menuLinks, containerWidth } = layoutData;
 
+  const menuLinksDropdown1 = [
+    {
+      group: 'primary',
+      href: '/s?pub_categoryLevel1=ropa',
+      text: 'Ver Todo',
+    },
+    {
+      group: 'primary',
+      href: '/s?pub_categoryLevel1=ropa&pub_categoryLevel2=ropa-tops',
+      text: 'Tops',
+    },
+    {
+      group: 'primary',
+      href: '/s?pub_categoryLevel1=ropa&pub_categoryLevel2=ropa-camisetas',
+      text: 'Camisetas',
+    },
+    {
+      group: 'primary',
+      href: '/s?pub_categoryLevel1=ropa&pub_categoryLevel2=ropa-camisas',
+      text: 'Camisas',
+    },
+    {
+      group: 'primary',
+      href: '/s?pub_categoryLevel1=ropa&pub_categoryLevel2=ropa-sacos-chamarras',
+      text: 'Chamarras/Sacos',
+    },
+    {
+      group: 'primary',
+      href: '/s?pub_categoryLevel1=ropa&pub_categoryLevel2=ropa-pantalones',
+      text: 'Pantalones',
+    },
+    {
+      group: 'primary',
+      href: '/s?pub_categoryLevel1=ropa&pub_categoryLevel2=ropa-jeans',
+      text: 'Jeans',
+    },
+    {
+      group: 'primary',
+      href: '/s?pub_categoryLevel1=ropa&pub_categoryLevel2=ropa-faldas',
+      text: 'Faldas',
+    },
+    {
+      group: 'primary',
+      href: '/s?pub_categoryLevel1=ropa&pub_categoryLevel2=ropa-vestidos',
+      text: 'Vestidos',
+    },
+    {
+      group: 'primary',
+      href: '/s?pub_categoryLevel1=ropa&pub_categoryLevel2=ropa-deportiva',
+      text: 'Ropa Deportiva',
+    },
+    {
+      group: 'primary',
+      href: '/s?pub_categoryLevel1=ropa&pub_categoryLevel2=ropa-jumpsuits',
+      text: 'Jumpsuits',
+    },
+    {
+      group: 'primary',
+      href: '/s?pub_categoryLevel1=ropa&pub_categoryLevel2=ropa-trajes',
+      text: 'Sets',
+    },
+  ];
+
+  const menuLinksDropdown2 = [
+    {
+      group: 'primary',
+      href: '/s?pub_categoryLevel1=accesorios',
+      text: 'Ver Todo',
+    },
+    {
+      group: 'primary',
+      href: '/s?pub_categoryLevel1=bolsas',
+      text: 'Bolsas',
+    },
+    {
+      group: 'primary',
+      href: '/s?pub_categoryLevel1=zapatos',
+      text: 'Zapatos',
+    },
+    {
+      group: 'primary',
+      href: '/s?pub_categoryLevel1=accesorios&pub_categoryLevel2=accesorios-cinturones',
+      text: 'Cinturones',
+    },
+    {
+      group: 'primary',
+      href: '/s?pub_categoryLevel1=accesorios&pub_categoryLevel2=accesorios-gorras_gorros',
+      text: 'Gorras/Gorros',
+    },
+    {
+      group: 'primary',
+      href: '/s?pub_categoryLevel1=accesorios&pub_categoryLevel2=accesorios-joyerias',
+      text: 'Joyería',
+    },
+  ];
+
   // If there are no custom links, just render createListing link.
   if (customLinks?.length === 0) {
     return <CreateListingMenuLink customLinksMenuClass={css.createListingLinkOnly} />;
@@ -186,10 +285,36 @@ const CustomLinksMenu = ({ currentPage, customLinks = [], hasClientSideContentRe
   const isMeasured = !!links?.[0]?.width;
   const hasMenuLinks = menuLinks?.length > 0;
   const hasPriorityLinks = isMeasured && priorityLinks.length > 0;
+  const leftHref = '/p/hot-list';
 
   return (
     <div className={css.customLinksMenu} ref={containerRef} {...styleMaybe}>
-      {mounted && hasMenuLinks ? (
+
+      <div className={css.leftLinkWrapper}>
+        <ExternalLink href={leftHref} target="_self" className={classNames(css.leftLink)}>
+          <span className={css.leftLinkLabel}>
+            {intl.formatMessage({ id: 'Topbar.custom.leftOne' })}
+          </span>
+        </ExternalLink>
+      </div>
+      <LinksMenuDropdown
+        id="linksMenuDropdown1"
+        label={intl.formatMessage({ id: 'Topbar.custom.menuOne' })}
+        currentPage={currentPage}
+        items={menuLinksDropdown1}
+        intl={intl}
+      />
+      <LinksMenuDropdown
+        id="linksMenuDropdown2"
+        label={intl.formatMessage({ id: 'Topbar.custom.menuTwo' })}
+        currentPage={currentPage}
+        items={menuLinksDropdown2}
+        intl={intl}
+      />
+
+      <PriorityLinks links={links} priorityLinks={priorityLinks} setLinks={setLinks} />
+
+      { mounted && hasMenuLinks ? (
         <LinksMenu
           id="linksMenu"
           currentPage={currentPage}
@@ -200,8 +325,7 @@ const CustomLinksMenu = ({ currentPage, customLinks = [], hasClientSideContentRe
           intl={intl}
         />
       ) : null}
-      <PriorityLinks links={links} priorityLinks={priorityLinks} setLinks={setLinks} />
-    </div>
+    </div >
   );
 };
 

@@ -72,6 +72,7 @@ const BlockDefault = props => {
     hasIconImg,
     hasTextGray,
     hasTextDarkGray,
+    hasTextNoGap,
     hasLargeList,
     hasTextLarger,
     hasCTASecondary,
@@ -103,6 +104,7 @@ const BlockDefault = props => {
     hasIconImg ? css.slimContent : '',
     hasTextGray ? css.textGray : '',
     hasTextDarkGray ? css.textDarkGray : '',
+    hasTextNoGap ? css.textNoGap : '',
     hasLargeList ? css.largeList : '',
     hasTextLarger ? css.textLarger : ''
   );

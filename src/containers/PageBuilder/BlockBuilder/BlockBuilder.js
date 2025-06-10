@@ -203,6 +203,10 @@ function createBlockCustomProps(block) {
   if (block.blockName?.includes('text darkgray ::')) {
     blockCustomProps.hasTextDarkGray = true;
   }
+  // Content text is smaller & darkgray.
+  if (block.blockName?.includes('text nogap ::')) {
+    blockCustomProps.hasTextNoGap = true;
+  }
   // Content has numeric list large items.
   if (block.blockName?.includes('large list :: ')) {
     blockCustomProps.hasLargeList = true;

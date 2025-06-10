@@ -50,13 +50,14 @@
   }
 
   &:active {
-    border-bottom: 0;
+   
   }
 }
 
 .linkMenuIsOpen {
+  border-bottom: 4px solid var(--marketplaceColor);
   &:hover {
-    border-bottom: 0;
+    
   }
 }
 
