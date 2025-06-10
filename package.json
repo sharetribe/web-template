@@ -4,6 +4,7 @@
   "private": true,
   "license": "Apache-2.0",
   "dependencies": {
+    "@babel/core": "^7.27.4",
     "@loadable/component": "^5.16.4",
     "@loadable/server": "^5.16.5",
     "@mapbox/polyline": "^1.2.1",
@@ -60,10 +61,10 @@
     "sitemap": "^8.0.0",
     "smoothscroll-polyfill": "^0.4.0",
     "source-map-support": "^0.5.21",
+    "to-fast-properties": "^4.0.0",
     "unified": "^9.2.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.27.4",
     "@babel/plugin-syntax-flow": "^7.27.1",
     "@babel/plugin-transform-react-jsx": "^7.14.9",
     "@testing-library/dom": "^10.4.0",
