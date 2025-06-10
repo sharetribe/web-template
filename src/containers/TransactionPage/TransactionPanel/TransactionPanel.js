@@ -215,6 +215,25 @@ export class TransactionPanelComponent extends Component {
     const listingTitle = listingDeleted ? deletedListingTitle : stateDataListing?.attributes?.title || '';
     const firstImage = stateDataListing?.images?.length > 0 ? stateDataListing?.images[0] : null;
 
+    let listingTitleNode;
+    if (listingDeleted) {
+      listingTitleNode = listingTitle;
+    } else if (stateDataListing?.id && stateDataListing?.attributes?.title) {
+      listingTitleNode = (
+        <NamedLink
+          name="ListingPage"
+          params={{
+            id: stateDataListing.id.uuid,
+            slug: createSlug(stateDataListing.attributes.title),
+          }}
+        >
+          {stateDataListing.attributes.title}
+        </NamedLink>
+      );
+    } else {
+      listingTitleNode = <span>{listingTitle}</span>;
+    }
+
     const primaryButtonProps = stateData.primaryButtonProps
       ? {
           ...stateData.primaryButtonProps,
@@ -439,18 +458,7 @@ export class TransactionPanelComponent extends Component {
 
                 <DetailCardHeadingsMaybe
                   showDetailCardHeadings={showDetailCardHeadings}
-                  listingTitle={
-                    listingDeleted ? (
-                      listingTitle
-                    ) : (
-                      <NamedLink
-                        name="ListingPage"
-                        params={{ id: stateDataListing.id?.uuid, slug: createSlug(stateDataListing.attributes?.title) }}
-                      >
-                        {stateDataListing.attributes?.title}
-                      </NamedLink>
-                    )
-                  }
+                  listingTitle={listingTitleNode}
                   showPrice={showPrice}
                   price={stateDataListing?.attributes?.price}
                   intl={intl}
