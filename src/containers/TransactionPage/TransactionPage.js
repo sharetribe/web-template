@@ -408,6 +408,11 @@ export const TransactionPageComponent = props => {
       )
     : {};
 
+  console.log('DEBUG stateData:', stateData);
+  console.log('DEBUG transaction:', transaction);
+  console.log('DEBUG transaction state:', transaction?.attributes?.state);
+  console.log('DEBUG nextTransitions:', nextTransitions);
+
   const hasLineItems = transaction?.attributes?.lineItems?.length > 0;
   const unitLineItem = hasLineItems
     ? transaction.attributes?.lineItems?.find(
