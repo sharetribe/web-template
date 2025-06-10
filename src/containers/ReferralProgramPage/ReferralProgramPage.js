@@ -31,6 +31,7 @@ export const ReferralProgramPageComponent = props => {
           <div className={css.root}>
             <iframe
               src={referralCampaignURL}
+              allow="clipboard-write"
               id="referral-campaign-iframe"
               title="referral-campaign-iframe"
               width="100%"
