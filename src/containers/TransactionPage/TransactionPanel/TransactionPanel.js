@@ -189,6 +189,8 @@ export class TransactionPanelComponent extends Component {
       onTransition,
     } = this.props;
 
+    const { nextTransitions } = stateData;
+
     const isCustomer = transactionRole === 'customer';
     const isProvider = transactionRole === 'provider';
 
