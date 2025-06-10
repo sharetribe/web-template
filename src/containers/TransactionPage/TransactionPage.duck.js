@@ -671,10 +671,9 @@ const refreshTransactionEntity = (sdk, txId, dispatch) => {
 };
 
 export const makeTransition = (txId, transitionName, params) => (dispatch, getState, sdk) => {
-  console.log('🚀 makeTransition called:', { txId, transitionName, params });
-  
+  console.log('makeTransition ENTRY:', { txId, transitionName, params, transitionInProgress: transitionInProgress(getState()) });
   if (transitionInProgress(getState())) {
-    console.log('❌ Transition already in progress, rejecting');
+    console.warn('Transition already in progress, aborting.');
     return Promise.reject(new Error('Transition already in progress'));
   }
   
