@@ -670,6 +670,7 @@ const refreshTransactionEntity = (sdk, txId, dispatch) => {
 };
 
 export const makeTransition = (txId, transitionName, params) => (dispatch, getState, sdk) => {
+  console.log('🔥 makeTransition LIVE');
   console.log('makeTransition ENTRY:', transitionName, getState().TransactionPage.transitionInProgress);
   const transitionInProgress = getState().TransactionPage.transitionInProgress;
   if (transitionInProgress) {
