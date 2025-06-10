@@ -71,11 +71,12 @@ const TopbarMobileMenu = props => {
   const {
     isAuthenticated,
     currentPage,
-    currentUserHasListings,
+    inboxTab,
     currentUser,
     notificationCount = 0,
     customLinks,
     onLogout,
+    showCreateListingsLink,
   } = props;
 
   const user = ensureCurrentUser(currentUser);
@@ -89,6 +90,12 @@ const TopbarMobileMenu = props => {
       />
     );
   });
+
+  const createListingsLinkMaybe = showCreateListingsLink ? (
+    <NamedLink className={css.createNewListingLink} name="NewListingPage">
+      <FormattedMessage id="TopbarMobileMenu.newListingLink" />
+    </NamedLink>
+  ) : null;
 
   if (!isAuthenticated) {
     const signup = (
@@ -122,11 +129,7 @@ const TopbarMobileMenu = props => {
 
           <div className={css.spacer} />
         </div>
-        <div className={css.footer}>
-          <NamedLink className={css.createNewListingLink} name="NewListingPage">
-            <FormattedMessage id="TopbarMobileMenu.newListingLink" />
-          </NamedLink>
-        </div>
+        <div className={css.footer}>{createListingsLinkMaybe}</div>
       </div>
     );
   }
@@ -143,7 +146,15 @@ const TopbarMobileMenu = props => {
     const isInboxPage = currentPage?.indexOf('InboxPage') === 0 && page?.indexOf('InboxPage') === 0;
     return currentPage === page || isAccountSettingsPage || isInboxPage ? css.currentPage : null;
   };
-  const inboxTab = currentUserHasListings ? 'sales' : 'orders';
+
+  const manageListingsLinkMaybe = showCreateListingsLink ? (
+    <NamedLink
+      className={classNames(css.navigationLink, currentPageClass('ManageListingsPage'))}
+      name="ManageListingsPage"
+    >
+      <FormattedMessage id="TopbarMobileMenu.yourListingsLink" />
+    </NamedLink>
+  ) : null;
 
   return (
     <div className={css.root}>
@@ -165,12 +176,7 @@ const TopbarMobileMenu = props => {
             <FormattedMessage id="TopbarMobileMenu.inboxLink" />
             {notificationCountBadge}
           </NamedLink>
-          <NamedLink
-            className={classNames(css.navigationLink, currentPageClass('ManageListingsPage'))}
-            name="ManageListingsPage"
-          >
-            <FormattedMessage id="TopbarMobileMenu.yourListingsLink" />
-          </NamedLink>
+          {manageListingsLinkMaybe}
           <NamedLink
             className={classNames(css.navigationLink, currentPageClass('ProfileSettingsPage'))}
             name="ProfileSettingsPage"
@@ -187,11 +193,7 @@ const TopbarMobileMenu = props => {
         <div className={css.customLinksWrapper}>{extraLinks}</div>
         <div className={css.spacer} />
       </div>
-      <div className={css.footer}>
-        <NamedLink className={css.createNewListingLink} name="NewListingPage">
-          <FormattedMessage id="TopbarMobileMenu.newListingLink" />
-        </NamedLink>
-      </div>
+      <div className={css.footer}>{createListingsLinkMaybe}</div>
     </div>
   );
 };
