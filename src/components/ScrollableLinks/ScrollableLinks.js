@@ -15,12 +15,10 @@ import IconDotsVertical from '../IconDotsVertical/IconDotsVertical';
 
 const SortableLink = ({ id, children, dragHandle }) => {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
-
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
   };
-
   return (
     <span ref={setNodeRef} style={style} className={css.sortableLinkWrapper}>
       {dragHandle({ listeners, attributes })}
@@ -62,17 +60,14 @@ export const ScrollableLinks = props => {
 
   const handleDragEnd = event => {
     const { active, over } = event;
-
     if (active.id !== over?.id) {
       setItems(prevItems => {
         const oldIndex = prevItems.indexOf(active.id);
         const newIndex = prevItems.indexOf(over.id);
         const newOrder = arrayMove(prevItems, oldIndex, newIndex);
-
         if (onSortEnd) {
           onSortEnd(newOrder);
         }
-
         reorderSuccessMessage();
         return newOrder;
       });

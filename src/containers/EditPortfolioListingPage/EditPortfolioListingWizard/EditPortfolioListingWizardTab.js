@@ -7,7 +7,12 @@ import css from './EditPortfolioListingWizardTab.module.css';
 import { EditPortfolioListingItemsPanel } from './EditPortfolioListingItemsPanel/EditPortfolioListingItemsPanel';
 import { EditPortfolioListingVideosPanel } from './EditPortfolioListingVideosPanel/EditPortfolioListingVideosPanel';
 import { PAGE_MODE_EDIT } from '../../BatchEditListingPage/constants';
-import { updateListingMedia } from '../EditPortfolioListingPage.duck';
+import {
+  updateListingMedia,
+  requestCreateListingDraft,
+  updatePortfolioListing,
+  publishPortfolioListing,
+} from '../EditPortfolioListingPage.duck';
 
 export const DETAILS = 'details';
 export const IMAGES = 'images';
@@ -17,7 +22,15 @@ export const EditPortfolioListingWizardTab = props => {
   const { tab, params, history, routeConfiguration, config, isLoading } = props;
   const dispatch = useDispatch();
 
-  const onCompleteDetailsTab = listing => {
+  const onDetailsSubmit = async (listingDetails, isEditing, shouldUpdate) => {
+    let listing = listingDetails;
+    if (isEditing) {
+      if (shouldUpdate) {
+        await dispatch(updatePortfolioListing({ id: listingDetails.id, title }, config));
+      }
+    } else {
+      listing = await dispatch(requestCreateListingDraft(listingDetails.title));
+    }
     const nextTab = { ...params, id: listing.id.uuid, tab: IMAGES, mode: PAGE_MODE_EDIT };
     const to = createResourceLocatorString(
       'EditPortfolioListingPage',
@@ -28,11 +41,11 @@ export const EditPortfolioListingWizardTab = props => {
     history.push(to);
   };
 
-  const onSaveImagesAndNavigateToVideos = async listing => {
+  const onImagesSubmit = async listing => {
     await dispatch(updateListingMedia(listing, config));
     const nextTab = {
       ...params,
-      id: listing.id.uuid || listing.id,
+      id: listing?.id?.uuid || listing?.id,
       tab: VIDEOS,
       mode: PAGE_MODE_EDIT,
     };
@@ -45,14 +58,21 @@ export const EditPortfolioListingWizardTab = props => {
     history.push(to);
   };
 
-  const onUpdateListing = async listing => {
+  const onVideosSubmit = async (listing, isDraft) => {
+    if (isDraft) {
+      const listingId = listing?.id;
+      const updatedListing = await dispatch(publishPortfolioListing(listingId));
+      if (!updatedListing) {
+        return;
+      }
+    }
     await dispatch(updateListingMedia(listing, config));
     const to = createResourceLocatorString(
       'ManageListingsPage',
       routeConfiguration,
       {},
       {
-        pub_listingId: listing.id.uuid || listing.id,
+        pub_listingId: listing?.id?.uuid || listing?.id,
         pub_listingType: 'portfolio-showcase',
       }
     );
@@ -64,7 +84,7 @@ export const EditPortfolioListingWizardTab = props => {
       return (
         <EditPortfolioListingDetailsPanel
           className={css.panel}
-          onSubmit={onCompleteDetailsTab}
+          onSubmit={onDetailsSubmit}
           config={config}
           isLoading={isLoading}
         />
@@ -75,10 +95,8 @@ export const EditPortfolioListingWizardTab = props => {
         <EditPortfolioListingItemsPanel
           className={css.panel}
           config={config}
-          onUpdateListing={onUpdateListing}
-          onNavigateToVideos={onSaveImagesAndNavigateToVideos}
+          onSubmit={onImagesSubmit}
           isLoading={isLoading}
-          mediaType={IMAGES}
         />
       );
     }
@@ -87,7 +105,7 @@ export const EditPortfolioListingWizardTab = props => {
         <EditPortfolioListingVideosPanel
           className={css.panel}
           config={config}
-          onUpdateListing={onUpdateListing}
+          onSubmit={onVideosSubmit}
           isLoading={isLoading}
         />
       );

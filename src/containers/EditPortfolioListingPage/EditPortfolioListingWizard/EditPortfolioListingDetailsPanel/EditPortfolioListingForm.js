@@ -5,18 +5,13 @@ import { Button, FieldTextInput, Form } from '../../../../components';
 import { composeValidators, maxLength, required } from '../../../../util/validators';
 import React from 'react';
 import css from './EditPortfolioListingForm.module.css';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  requestCreateListingDraft,
-  updatePortfolioListing,
-} from '../../EditPortfolioListingPage.duck';
+import { useSelector } from 'react-redux';
 import { message } from 'antd';
 
 const TITLE_MAX_LENGTH = 60;
 
 const EditPortfolioListingForm = props => {
-  const { intl, onSubmit, config } = props;
-  const dispatch = useDispatch();
+  const { intl, onSubmit } = props;
   const saving = useSelector(state => state.EditPortfolioListingPage.saving);
   const portfolioListing = useSelector(state => state.EditPortfolioListingPage.portfolioListing);
   const isEditing = !!portfolioListing?.id;
@@ -24,26 +19,11 @@ const EditPortfolioListingForm = props => {
   const [messageApi, contextHolder] = message.useMessage();
 
   const handleSubmit = async values => {
-    const { title } = values;
-    let savedPortfolio = portfolioListing;
     try {
-      if (isEditing) {
-        if (title !== initialTitle) {
-          savedPortfolio = await dispatch(
-            updatePortfolioListing(
-              {
-                id: portfolioListing.id,
-                title,
-              },
-              config
-            )
-          );
-        }
-      } else {
-        savedPortfolio = await dispatch(requestCreateListingDraft(title));
-      }
-
-      onSubmit(savedPortfolio);
+      const { title } = values;
+      const shouldUpdate = title !== initialTitle;
+      const listingDetails = { ...portfolioListing, title };
+      onSubmit(listingDetails, isEditing, shouldUpdate);
     } catch (error) {
       messageApi.error('Error saving portfolio. Please try again.');
     }

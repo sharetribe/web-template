@@ -8,17 +8,11 @@ import classNames from 'classnames';
 import { FormattedMessage, injectIntl } from '../../../../util/reactIntl';
 import { isUploadImageOverLimitError } from '../../../../util/errors';
 import { composeValidators, nonEmptyArray } from '../../../../util/validators';
-import { AspectRatioWrapper, Button, Form } from '../../../../components';
-import ListingImage, { RemoveImageButton } from './ListingImage';
+import { Button, Form } from '../../../../components';
+import ListingImage from './ListingImage';
 import css from './EditPortfolioListingFilesForm.module.css';
 import { FieldAddMedia } from './AddMediaField';
-import {
-  publishPortfolioListing,
-  removeImageFromListing,
-  uploadMedia,
-} from '../../EditPortfolioListingPage.duck';
-import { LISTING_STATE_DRAFT } from '../../../../util/types';
-import VideoPlayer from '../../../../components/VideoPlayer/VideoPlayer';
+import { removeImageFromListing, uploadMedia } from '../../EditPortfolioListingPage.duck';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import SortableImage from './SortableImage';
 import { closestCenter, DndContext, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
@@ -57,34 +51,10 @@ const ShowListingsError = ({ error }) =>
     </p>
   ) : null;
 
-const FieldListingVideo = props => {
-  const { name, aspectWidth, aspectHeight, onRemoveVideo } = props;
-
-  return (
-    <Field name={name}>
-      {({ input }) =>
-        input.value ? (
-          <div className={css.thumbnail}>
-            <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
-              <VideoPlayer src={input.value.url} previewTime={input.value.thumbnailTime} />
-              <RemoveImageButton
-                onClick={onRemoveVideo}
-                confirmTitle="Delete Video?"
-                confirmMessage="This action cannot be undone."
-              />
-            </AspectRatioWrapper>
-          </div>
-        ) : null
-      }
-    </Field>
-  );
-};
-
 const FieldListingImage = props => {
   const {
     name,
     intl,
-    image,
     onRemoveImage,
     aspectWidth,
     aspectHeight,
@@ -115,7 +85,7 @@ const FieldListingImage = props => {
 };
 
 const EditPortfolioListingFilesFormComponent = props => {
-  const { onUpdateListing, onNavigateToVideos, config, mediaType = IMAGES } = props;
+  const { onSubmit, config } = props;
   const dispatch = useDispatch();
 
   const updating = useSelector(state => state.EditPortfolioListingPage.updating);
@@ -128,9 +98,6 @@ const EditPortfolioListingFilesFormComponent = props => {
   const existingVideos = useSelector(state => state.EditPortfolioListingPage.videos);
   const listing = useSelector(state => state.EditPortfolioListingPage.portfolioListing);
   const listingId = listing?.id;
-  const listingState = listing?.attributes?.state;
-  const isDraft = listingState === LISTING_STATE_DRAFT;
-  const draftButtonText = (onNavigateToVideos ? 'Next' : 'Publish');
 
   const onImageUploadHandler = file => {
     if (file) {
@@ -138,6 +105,7 @@ const EditPortfolioListingFilesFormComponent = props => {
       dispatch(uploadMedia({ id: tempImageId, file }, config));
     }
   };
+
   const onPublishHandler = async values => {
     const updateListingValues = {
       ...values,
@@ -145,22 +113,9 @@ const EditPortfolioListingFilesFormComponent = props => {
       id: listingId,
     };
     if (!listingId) return;
-
-    if (isDraft && onNavigateToVideos) {
-      await onNavigateToVideos(updateListingValues);
-      return;
-    }
-
-    if (isDraft) {
-      dispatch(publishPortfolioListing(listingId)).then(updatedListing => {
-        if (updatedListing) {
-          onUpdateListing(updateListingValues);
-        }
-      });
-    } else {
-      onUpdateListing(updateListingValues);
-    }
+    onSubmit(updateListingValues);
   };
+
   const handleRemoveImage = imageId => {
     dispatch(removeImageFromListing(imageId));
   };
@@ -175,8 +130,8 @@ const EditPortfolioListingFilesFormComponent = props => {
 
   return (
     <FinalForm
-      onSubmit={onPublishHandler}
       {...props}
+      onSubmit={onPublishHandler}
       initialValues={{ images: existingImages }}
       mutators={{ ...arrayMutators }}
       render={({
@@ -297,7 +252,7 @@ const EditPortfolioListingFilesFormComponent = props => {
               inProgress={submitInProgress}
               disabled={submitDisabled}
             >
-              {isDraft ? draftButtonText : 'Save changes'}
+              Next
             </Button>
           </Form>
         );

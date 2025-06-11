@@ -6,7 +6,12 @@ import { withViewport } from '../../../util/uiHelpers';
 
 import { Tabs } from '../../../components';
 
-import { DETAILS, EditPortfolioListingWizardTab, IMAGES, VIDEOS } from './EditPortfolioListingWizardTab';
+import {
+  DETAILS,
+  EditPortfolioListingWizardTab,
+  IMAGES,
+  VIDEOS,
+} from './EditPortfolioListingWizardTab';
 import css from './EditPortfolioListingWizard.module.css';
 import classNames from 'classnames';
 import { useConfiguration } from '../../../context/configurationContext';

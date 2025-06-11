@@ -93,7 +93,10 @@ export const FieldAddMedia = props => {
                     )}
 
                     {mediaType === VIDEOS && (
-                      <div className={css.videoEmbedSection} onClick={() => setShowVideoInput(true)}>
+                      <div
+                        className={css.videoEmbedSection}
+                        onClick={() => setShowVideoInput(true)}
+                      >
                         <span className={css.embedVideoText}>+ Embed a video</span>
                       </div>
                     )}

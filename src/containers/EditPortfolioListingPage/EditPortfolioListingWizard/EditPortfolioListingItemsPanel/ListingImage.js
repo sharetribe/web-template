@@ -75,13 +75,14 @@ const ListingImage = props => {
   } = props;
 
   if (image.file && !image.attributes) {
-    const removeButton = image.imageId && onRemoveImage ? (
-      <RemoveImageButton
-        onClick={onRemoveImage}
-        confirmTitle="Delete Image?"
-        confirmMessage="This action cannot be undone."
-      />
-    ) : null;
+    const removeButton =
+      image.imageId && onRemoveImage ? (
+        <RemoveImageButton
+          onClick={onRemoveImage}
+          confirmTitle="Delete Image?"
+          confirmMessage="This action cannot be undone."
+        />
+      ) : null;
 
     const uploadingOverlay = !image.imageId ? (
       <div className={css.thumbnailLoading}>
