@@ -235,33 +235,32 @@ module.exports = async (req, res) => {
           });
           const protectedData = transaction?.data?.data?.attributes?.protectedData || {};
           console.log('🔎 [BACKEND] Transaction protectedData:', protectedData);
-          const {
-            providerName,
-            providerStreet,
-            providerCity,
-            providerState,
-            providerZip,
-            providerEmail,
-            providerPhone,
-            customerName,
-            customerStreet,
-            customerCity,
-            customerState,
-            customerZip,
-            customerEmail,
-            customerPhone,
-          } = protectedData;
-          // SAFER: Merge protectedData first, then bodyParams.params so frontend values take priority
+          // Smarter merge: only overwrite with non-empty, defined values
+          const cleanMergedParams = { ...protectedData };
+          Object.keys(bodyParams.params || {}).forEach(key => {
+            const value = bodyParams.params[key];
+            if (value !== '' && value !== undefined) {
+              cleanMergedParams[key] = value;
+            }
+          });
           bodyParams.params = {
-            ...protectedData,
             ...bodyParams.params,
+            ...cleanMergedParams
           };
-          console.log('🔄 Overwrote bodyParams.params with protectedData from transaction:', bodyParams.params);
           // Ensure params.protectedData is always up-to-date with latest merged values
           params.protectedData = {
             ...params.protectedData,
             ...bodyParams.params,
           };
+          // Debug log for final merged provider fields
+          console.log('✅ [MERGE FIX] Final merged provider fields:', {
+            providerStreet: params.protectedData.providerStreet,
+            providerCity: params.protectedData.providerCity,
+            providerState: params.protectedData.providerState,
+            providerZip: params.protectedData.providerZip,
+            providerEmail: params.protectedData.providerEmail,
+            providerPhone: params.protectedData.providerPhone
+          });
         } catch (err) {
           console.error('❌ Failed to fetch or apply protectedData from transaction:', err.message);
         }
