@@ -116,18 +116,18 @@ const getOrderParams = (pageData, shippingDetails, optionalPaymentParams, config
   // Manually construct protectedData with shipping and contact info
   const protectedDataMaybe = {
     protectedData: {
-      // Borrower info from shippingDetails
+      // Customer info from shippingDetails (using correct field names)
       customerName: shippingInfo?.name || '',
       customerStreet: shippingAddress?.line1 || '',
       customerCity: shippingAddress?.city || '',
       customerState: shippingAddress?.state || '',
       customerZip: shippingAddress?.postalCode || '',
-      customerEmail: currentUser?.attributes?.email || '', // Using current user's email for now
+      customerEmail: currentUser?.attributes?.email || '',
       customerPhone: shippingInfo?.phoneNumber || '',
 
-      // Lender info from currentUser
+      // Provider info from currentUser
       providerName: currentUser?.attributes?.profile?.displayName || '',
-      providerStreet: '', // leave blank for now
+      providerStreet: '', // Will be filled by provider in TransactionPanel
       providerCity: '',
       providerState: '',
       providerZip: '',
@@ -293,17 +293,20 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
   // Log formValues for debugging
   console.log('Form values on submit:', formValues);
 
-  // Construct protectedData directly from shipping form fields
+  // Construct protectedData directly from shipping form fields using correct field names
   const protectedData = {
-    customerName: formValues.customerName || '',
-    customerStreet: formValues.customerStreet || '',
-    customerCity: formValues.customerCity || '',
-    customerState: formValues.customerState || '',
-    customerZip: formValues.customerZip || '',
-    customerEmail: formValues.customerEmail || '',
-    customerPhone: formValues.customerPhone || '',
+    // Customer shipping info from ShippingDetails form fields
+    customerName: formValues.recipientName || '',
+    customerStreet: formValues.recipientAddressLine1 || '',
+    customerCity: formValues.recipientCity || '',
+    customerState: formValues.recipientState || '',
+    customerZip: formValues.recipientPostal || '',
+    customerEmail: currentUser?.attributes?.email || '',
+    customerPhone: formValues.recipientPhoneNumber || '',
+    
+    // Provider info from current user
     providerName: currentUser?.attributes?.profile?.displayName || '',
-    providerStreet: '',
+    providerStreet: '', // Will be filled by provider in TransactionPanel
     providerCity: '',
     providerState: '',
     providerZip: '',
@@ -313,6 +316,7 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
 
   // Log the protected data for debugging
   console.log('🔐 Protected data constructed from formValues:', protectedData);
+  console.log('📦 Raw formValues:', formValues);
 
   // Calculate pricing and booking duration
   const unitPrice = pageData?.listing?.attributes?.price;

@@ -263,15 +263,34 @@ export class TransactionPanelComponent extends Component {
                 return;
               }
               
+              // Get existing protectedData from transaction (includes customer shipping info)
+              const existingProtectedData = protectedData || {};
+              
+              console.log('🔐 Existing protectedData from transaction:', existingProtectedData);
+              console.log('🏠 Provider address values from form:', this.state.addressValues);
+              
               params.protectedData = {
+                // Provider address info from form
                 providerStreet: streetAddress,
                 providerCity: city,
                 providerState: state,
                 providerZip: zipCode,
                 providerPhone: phoneNumber,
-                // Include any existing protectedData fields
-                ...(protectedData || {}),
+                
+                // Customer shipping info from existing protectedData (saved during booking)
+                customerName: existingProtectedData.customerName || '',
+                customerStreet: existingProtectedData.customerStreet || '',
+                customerCity: existingProtectedData.customerCity || '',
+                customerState: existingProtectedData.customerState || '',
+                customerZip: existingProtectedData.customerZip || '',
+                customerEmail: existingProtectedData.customerEmail || '',
+                customerPhone: existingProtectedData.customerPhone || '',
+                
+                // Include any other existing protectedData fields
+                ...existingProtectedData,
               };
+              
+              console.log('🔐 Final protectedData being sent to transition:', params.protectedData);
             }
             
             console.log('🔥 Transition name:', stateData.primaryButtonProps?.transitionName);
@@ -347,6 +366,16 @@ export class TransactionPanelComponent extends Component {
     console.log('🧪 transactionId:', transaction?.id);
     console.log('🧪 listingId:', stateDataListing?.id);
     console.log('🎯 nextTransitions:', nextTransitions?.map(t => t?.attributes?.name));
+    console.log('🔐 protectedData received in TransactionPanel:', protectedData);
+    console.log('📦 Customer shipping info in protectedData:', {
+      customerName: protectedData?.customerName,
+      customerStreet: protectedData?.customerStreet,
+      customerCity: protectedData?.customerCity,
+      customerState: protectedData?.customerState,
+      customerZip: protectedData?.customerZip,
+      customerEmail: protectedData?.customerEmail,
+      customerPhone: protectedData?.customerPhone,
+    });
 
     return (
       <div className={classes}>
