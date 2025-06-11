@@ -247,28 +247,23 @@ export class TransactionPanelComponent extends Component {
               listingId: stateDataListing?.id || '',
             };
             
-            // If this is a provider and we have address values, include them in protectedData
             if (isProvider && this.state.addressValues) {
               const { streetAddress, city, state, zipCode, phoneNumber } = this.state.addressValues;
-              
               // Validate that all required address fields are filled
               const requiredFields = { streetAddress, city, state, zipCode, phoneNumber };
               const missingFields = Object.entries(requiredFields)
                 .filter(([key, value]) => !value || value.trim() === '')
                 .map(([key]) => key);
-              
               if (missingFields.length > 0) {
                 console.error('❌ Missing required address fields:', missingFields);
                 alert(`Please fill in all required address fields: ${missingFields.join(', ')}`);
                 return;
               }
-              
               // Get existing protectedData from transaction (includes customer shipping info)
               const existingProtectedData = protectedData || {};
-              
-              console.log('🔐 Existing protectedData from transaction:', existingProtectedData);
-              console.log('🏠 Provider address values from form:', this.state.addressValues);
-              
+              // Get provider email and name from currentUser
+              const providerEmail = currentUser?.attributes?.email || '';
+              const providerName = currentUser?.attributes?.profile?.displayName || '';
               params.protectedData = {
                 // Provider address info from form
                 providerStreet: streetAddress,
@@ -276,7 +271,8 @@ export class TransactionPanelComponent extends Component {
                 providerState: state,
                 providerZip: zipCode,
                 providerPhone: phoneNumber,
-                
+                providerEmail,
+                providerName,
                 // Customer shipping info from existing protectedData (saved during booking)
                 customerName: existingProtectedData.customerName || '',
                 customerStreet: existingProtectedData.customerStreet || '',
@@ -285,12 +281,10 @@ export class TransactionPanelComponent extends Component {
                 customerZip: existingProtectedData.customerZip || '',
                 customerEmail: existingProtectedData.customerEmail || '',
                 customerPhone: existingProtectedData.customerPhone || '',
-                
                 // Include any other existing protectedData fields
                 ...existingProtectedData,
               };
-              
-              console.log('🔐 Final protectedData being sent to transition:', params.protectedData);
+              console.log('🔐 Final protectedData being sent to transition (with provider info):', params.protectedData);
             }
             
             console.log('🔥 Transition name:', stateData.primaryButtonProps?.transitionName);
