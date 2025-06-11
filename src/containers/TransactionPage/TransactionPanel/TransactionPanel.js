@@ -156,6 +156,7 @@ export class TransactionPanelComponent extends Component {
   }
 
   handleAddressFormChange(updatedValues) {
+    console.log('🏠 Address form values updated:', updatedValues);
     this.setState({ addressValues: updatedValues });
   }
 
@@ -240,22 +241,43 @@ export class TransactionPanelComponent extends Component {
           ...stateData.primaryButtonProps,
           onAction: () => {
             console.log('🔥 Checking transition props:', stateData.primaryButtonProps);
-            // Prepare params
+            // Prepare params with all required protectedData fields
             const params = {
               transactionId: transaction?.id || '',
               listingId: stateDataListing?.id || '',
             };
-            if (isProvider) {
+            
+            // If this is a provider and we have address values, include them in protectedData
+            if (isProvider && this.state.addressValues) {
+              const { streetAddress, city, state, zipCode, phoneNumber } = this.state.addressValues;
+              
+              // Validate that all required address fields are filled
+              const requiredFields = { streetAddress, city, state, zipCode, phoneNumber };
+              const missingFields = Object.entries(requiredFields)
+                .filter(([key, value]) => !value || value.trim() === '')
+                .map(([key]) => key);
+              
+              if (missingFields.length > 0) {
+                console.error('❌ Missing required address fields:', missingFields);
+                alert(`Please fill in all required address fields: ${missingFields.join(', ')}`);
+                return;
+              }
+              
               params.protectedData = {
-                providerStreet: this.state.addressValues.streetAddress,
-                providerCity: this.state.addressValues.city,
-                providerState: this.state.addressValues.state,
-                providerZip: this.state.addressValues.zipCode,
-                providerPhone: this.state.addressValues.phoneNumber,
+                providerStreet: streetAddress,
+                providerCity: city,
+                providerState: state,
+                providerZip: zipCode,
+                providerPhone: phoneNumber,
+                // Include any existing protectedData fields
+                ...(protectedData || {}),
               };
             }
+            
             console.log('🔥 Transition name:', stateData.primaryButtonProps?.transitionName);
             console.log('🔥 Params before transition:', params);
+            console.log('🔥 Address values being passed:', this.state.addressValues);
+            
             if (transaction?.id && stateDataListing?.id && stateData.primaryButtonProps?.transitionName) {
               onTransition(transaction.id, stateData.primaryButtonProps.transitionName, params);
             } else {
@@ -447,15 +469,19 @@ export class TransactionPanelComponent extends Component {
             ) : null}
 
             {isProvider && acceptTransitionAvailable && transaction?.id && stateDataListing?.id && (
-              <ProviderAddressForm
-                initialValues={addressValues}
-                onSubmit={values => {
-                  // Save address values to state and optionally trigger transition
-                  this.setState({ addressValues: values });
-                  // You may want to call a transition here, e.g.:
-                  // handleTransition('transition/accept', { protectedData: values });
-                }}
-              />
+              <>
+                {console.log('🏠 Rendering ProviderAddressForm with conditions:', {
+                  isProvider,
+                  acceptTransitionAvailable,
+                  transactionId: transaction?.id,
+                  listingId: stateDataListing?.id,
+                  addressValues: this.state.addressValues
+                })}
+                <ProviderAddressForm
+                  initialValues={addressValues}
+                  onChange={this.handleAddressFormChange}
+                />
+              </>
             )}
           </div>
 
