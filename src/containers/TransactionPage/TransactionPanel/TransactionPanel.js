@@ -266,15 +266,7 @@ export class TransactionPanelComponent extends Component {
               const providerEmail = currentUser?.attributes?.email || '';
               const providerName = currentUser?.attributes?.profile?.displayName || '';
               const mergedProtectedData = {
-                // Provider address info from form
-                providerStreet: streetAddress,
-                providerCity: city,
-                providerState: state,
-                providerZip: zipCode,
-                providerPhone: phoneNumber,
-                providerEmail,
-                providerName,
-                // Customer shipping info from existing protectedData (saved during booking)
+                // Customer shipping info from existingProtectedData (saved during booking)
                 customerName: existingProtectedData.customerName || '',
                 customerStreet: existingProtectedData.customerStreet || '',
                 customerCity: existingProtectedData.customerCity || '',
@@ -282,8 +274,16 @@ export class TransactionPanelComponent extends Component {
                 customerZip: existingProtectedData.customerZip || '',
                 customerEmail: existingProtectedData.customerEmail || '',
                 customerPhone: existingProtectedData.customerPhone || '',
-                // Include any other existing protectedData fields
+                // Any other existing protectedData fields
                 ...existingProtectedData,
+                // Provider address info from form (these overwrite any existing/blank values)
+                providerStreet: streetAddress,
+                providerCity: city,
+                providerState: state,
+                providerZip: zipCode,
+                providerPhone: phoneNumber,
+                providerEmail,
+                providerName,
               };
               console.log('🔀 [onAction] mergedProtectedData:', mergedProtectedData);
               params.protectedData = mergedProtectedData;
@@ -295,7 +295,7 @@ export class TransactionPanelComponent extends Component {
             console.log('🧪 acceptTransitionAvailable:', (nextTransitions || []).some(t => t.attributes && t.attributes.name === 'transition/accept'));
             console.log('🧪 transactionId:', transaction?.id);
             console.log('🧪 listingId:', stateDataListing?.id);
-            console.log('�� nextTransitions:', nextTransitions?.map(t => t?.attributes?.name));
+            console.log('🎯 nextTransitions:', nextTransitions?.map(t => t?.attributes?.name));
             console.log('🔐 protectedData received in TransactionPanel:', protectedData);
             console.log('📦 Customer shipping info in protectedData:', {
               customerName: protectedData?.customerName,
