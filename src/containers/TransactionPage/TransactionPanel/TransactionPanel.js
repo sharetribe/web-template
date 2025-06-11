@@ -297,6 +297,12 @@ export class TransactionPanelComponent extends Component {
             console.log('🔥 Params before transition:', params);
             console.log('🔥 Address values being passed:', this.state.addressValues);
             
+            console.log('🚀 Calling onTransition with:', {
+              txId: transaction.id,
+              transitionName: stateData.primaryButtonProps?.transitionName,
+              params
+            });
+            
             if (transaction?.id && stateDataListing?.id && stateData.primaryButtonProps?.transitionName) {
               onTransition(transaction.id, stateData.primaryButtonProps.transitionName, params);
             } else {

@@ -670,8 +670,12 @@ const refreshTransactionEntity = (sdk, txId, dispatch) => {
 };
 
 export const makeTransition = (txId, transitionName, params) => (dispatch, getState, sdk) => {
-  console.log('🔥 makeTransition LIVE');
-  console.log('makeTransition ENTRY:', transitionName, getState().TransactionPage.transitionInProgress);
+  console.log('🛠️ [makeTransition] txId:', txId);
+  console.log('🛠️ [makeTransition] transitionName:', transitionName);
+  console.log('🛠️ [makeTransition] params:', params);
+  if (params?.protectedData) {
+    console.log('🔐 protectedData keys:', Object.keys(params.protectedData));
+  }
   const transitionInProgress = getState().TransactionPage.transitionInProgress;
   if (transitionInProgress) {
     console.warn('🛑 Transition already in progress, aborting:', transitionInProgress);
