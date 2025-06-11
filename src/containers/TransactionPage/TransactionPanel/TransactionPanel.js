@@ -265,17 +265,27 @@ export class TransactionPanelComponent extends Component {
               // Get provider email and name from currentUser
               const providerEmail = currentUser?.attributes?.email || '';
               const providerName = currentUser?.attributes?.profile?.displayName || '';
+              const {
+                providerStreet: _providerStreet,
+                providerCity: _providerCity,
+                providerState: _providerState,
+                providerZip: _providerZip,
+                providerPhone: _providerPhone,
+                providerEmail: _providerEmail,
+                providerName: _providerName,
+                ...restProtectedData
+              } = existingProtectedData;
               const mergedProtectedData = {
                 // Customer shipping info from existingProtectedData (saved during booking)
-                customerName: existingProtectedData.customerName || '',
-                customerStreet: existingProtectedData.customerStreet || '',
-                customerCity: existingProtectedData.customerCity || '',
-                customerState: existingProtectedData.customerState || '',
-                customerZip: existingProtectedData.customerZip || '',
-                customerEmail: existingProtectedData.customerEmail || '',
-                customerPhone: existingProtectedData.customerPhone || '',
-                // Any other existing protectedData fields
-                ...existingProtectedData,
+                customerName: restProtectedData.customerName || '',
+                customerStreet: restProtectedData.customerStreet || '',
+                customerCity: restProtectedData.customerCity || '',
+                customerState: restProtectedData.customerState || '',
+                customerZip: restProtectedData.customerZip || '',
+                customerEmail: restProtectedData.customerEmail || '',
+                customerPhone: restProtectedData.customerPhone || '',
+                // Any other existing protectedData fields (excluding provider fields)
+                ...restProtectedData,
                 // Provider address info from form (these overwrite any existing/blank values)
                 providerStreet: streetAddress,
                 providerCity: city,
