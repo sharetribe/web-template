@@ -256,13 +256,13 @@ export class TransactionPanelComponent extends Component {
             }
             console.log('🔥 Transition name:', stateData.primaryButtonProps?.transitionName);
             console.log('🔥 Params before transition:', params);
-            if (
-              typeof onTransition === 'function' &&
-              stateData.primaryButtonProps?.transitionName
-            ) {
-              onTransition(transaction?.id || '', stateData.primaryButtonProps.transitionName, params);
+            if (transaction?.id && stateDataListing?.id && stateData.primaryButtonProps?.transitionName) {
+              onTransition(transaction.id, stateData.primaryButtonProps.transitionName, params);
             } else {
-              console.warn('onTransition is not defined or not a function');
+              console.error('❌ Cannot call onTransition: Missing transactionId or listingId', {
+                transactionId: transaction?.id,
+                listingId: stateDataListing?.id,
+              });
             }
           },
         }
