@@ -18,4 +18,4 @@ const SortableVideo = ({ id, children, dragHandle }) => {
   );
 };
 
-export default SortableVideo; 
+export default SortableVideo;

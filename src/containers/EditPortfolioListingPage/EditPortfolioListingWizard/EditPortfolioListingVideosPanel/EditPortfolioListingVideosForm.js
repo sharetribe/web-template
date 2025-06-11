@@ -9,11 +9,7 @@ import { AspectRatioWrapper, Button, Form } from '../../../../components';
 import { RemoveImageButton } from '../EditPortfolioListingItemsPanel/ListingImage';
 import css from './EditPortfolioListingVideosForm.module.css';
 import { FieldAddMedia } from '../EditPortfolioListingItemsPanel/AddMediaField';
-import {
-  publishPortfolioListing,
-  removeVideoFromListing,
-  saveVideoToListing,
-} from '../../EditPortfolioListingPage.duck';
+import { removeVideoFromListing, saveVideoToListing } from '../../EditPortfolioListingPage.duck';
 import { LISTING_STATE_DRAFT } from '../../../../util/types';
 import VideoPlayer from '../../../../components/VideoPlayer/VideoPlayer';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
@@ -69,7 +65,7 @@ const FieldListingVideo = props => {
 };
 
 const EditPortfolioListingVideosFormComponent = props => {
-  const { onUpdateListing, config } = props;
+  const { onSubmit } = props;
   const dispatch = useDispatch();
 
   const updating = useSelector(state => state.EditPortfolioListingPage.updating);
@@ -90,15 +86,7 @@ const EditPortfolioListingVideosFormComponent = props => {
       id: listingId,
     };
     if (!listingId) return;
-    if (isDraft) {
-      dispatch(publishPortfolioListing(listingId)).then(updatedListing => {
-        if (updatedListing) {
-          onUpdateListing(updateListingValues);
-        }
-      });
-    } else {
-      onUpdateListing(updateListingValues);
-    }
+    onSubmit(updateListingValues, isDraft);
   };
 
   const onSaveVideo = video => {
@@ -119,21 +107,11 @@ const EditPortfolioListingVideosFormComponent = props => {
 
   return (
     <FinalForm
-      onSubmit={onPublishHandler}
       {...props}
+      onSubmit={onPublishHandler}
       initialValues={{ videos: existingVideos || [] }}
       mutators={{ ...arrayMutators }}
-      render={({
-        form,
-        className,
-        handleSubmit,
-        intl,
-        invalid,
-        disabled,
-        touched,
-        errors,
-        listingImageConfig = {},
-      }) => {
+      render={({ form, className, handleSubmit, invalid, disabled, listingImageConfig = {} }) => {
         const { aspectWidth = 1, aspectHeight = 1 } = listingImageConfig;
         const submitInProgress = updating;
         const submitDisabled = invalid || disabled || submitInProgress;
@@ -147,7 +125,6 @@ const EditPortfolioListingVideosFormComponent = props => {
                   if (!fields.value || !Array.isArray(fields.value)) {
                     return null;
                   }
-
                   const videoIds = fields.value.map(video => video.id);
                   return (
                     <DndContext

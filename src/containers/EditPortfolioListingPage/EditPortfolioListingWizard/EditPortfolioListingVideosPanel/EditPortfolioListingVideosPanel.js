@@ -6,12 +6,7 @@ import css from './EditPortfolioListingVideosPanel.module.css';
 import EditPortfolioListingVideosForm from './EditPortfolioListingVideosForm';
 import { Skeleton } from 'antd';
 
-export const EditPortfolioListingVideosPanel = ({
-  className,
-  config,
-  onUpdateListing,
-  isLoading,
-}) => {
+export const EditPortfolioListingVideosPanel = ({ className, config, onSubmit, isLoading }) => {
   return (
     <div className={classNames(css.root, className)}>
       <H3 as="h1">
@@ -24,11 +19,7 @@ export const EditPortfolioListingVideosPanel = ({
       {isLoading ? (
         <Skeleton.Node active style={{ width: 460, height: 460 }} />
       ) : (
-        <EditPortfolioListingVideosForm
-          className={css.form}
-          config={config}
-          onUpdateListing={onUpdateListing}
-        />
+        <EditPortfolioListingVideosForm className={css.form} config={config} onSubmit={onSubmit} />
       )}
     </div>
   );
