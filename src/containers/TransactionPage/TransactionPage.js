@@ -457,6 +457,13 @@ export const TransactionPageComponent = props => {
     isBookingProcess(stateData.processName) &&
     process?.hasPassedState(process?.states?.ACCEPTED, transaction);
 
+  // Before rendering TransactionPanel:
+  console.log('🧩 Passing props to TransactionPanel:', {
+    transaction: stateData.transaction,
+    listing: stateData.listing,
+    nextTransitions: stateData.nextTransitions,
+  });
+
   // TransactionPanel is presentational component
   // that currently handles showing everything inside layout's main view area.
   const panel = isDataAvailable ? (
