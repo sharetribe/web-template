@@ -328,7 +328,7 @@ export class TransactionPanelComponent extends Component {
 
     if (!transaction?.id || !stateDataListing?.id || !acceptTransitionAvailable) {
       console.warn('⚠️ Data incomplete, skipping render of action buttons');
-      return null;
+      return <div>Loading booking details...</div>;
     }
 
     return (
