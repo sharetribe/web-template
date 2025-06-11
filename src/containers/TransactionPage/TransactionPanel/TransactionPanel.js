@@ -156,7 +156,7 @@ export class TransactionPanelComponent extends Component {
   }
 
   handleAddressFormChange(updatedValues) {
-    console.log('🏠 Address form values updated:', updatedValues);
+    console.log('🏠 [handleAddressFormChange] Address form values updated:', updatedValues);
     this.setState({ addressValues: updatedValues });
   }
 
@@ -248,6 +248,7 @@ export class TransactionPanelComponent extends Component {
             };
             
             if (isProvider && this.state.addressValues) {
+              console.log('🏠 [onAction] addressValues before merge:', this.state.addressValues);
               const { streetAddress, city, state, zipCode, phoneNumber } = this.state.addressValues;
               // Validate that all required address fields are filled
               const requiredFields = { streetAddress, city, state, zipCode, phoneNumber };
@@ -264,7 +265,7 @@ export class TransactionPanelComponent extends Component {
               // Get provider email and name from currentUser
               const providerEmail = currentUser?.attributes?.email || '';
               const providerName = currentUser?.attributes?.profile?.displayName || '';
-              params.protectedData = {
+              const mergedProtectedData = {
                 // Provider address info from form
                 providerStreet: streetAddress,
                 providerCity: city,
@@ -284,7 +285,8 @@ export class TransactionPanelComponent extends Component {
                 // Include any other existing protectedData fields
                 ...existingProtectedData,
               };
-              console.log('🔐 Final protectedData being sent to transition (with provider info):', params.protectedData);
+              console.log('🔀 [onAction] mergedProtectedData:', mergedProtectedData);
+              params.protectedData = mergedProtectedData;
             }
             
             console.log('🔥 Transition name:', stateData.primaryButtonProps?.transitionName);
