@@ -447,7 +447,15 @@ export class TransactionPanelComponent extends Component {
             ) : null}
 
             {isProvider && acceptTransitionAvailable && transaction?.id && stateDataListing?.id && (
-              <ProviderAddressForm values={addressValues} onChange={this.handleAddressFormChange} />
+              <ProviderAddressForm
+                initialValues={addressValues}
+                onSubmit={values => {
+                  // Save address values to state and optionally trigger transition
+                  this.setState({ addressValues: values });
+                  // You may want to call a transition here, e.g.:
+                  // handleTransition('transition/accept', { protectedData: values });
+                }}
+              />
             )}
           </div>
 
