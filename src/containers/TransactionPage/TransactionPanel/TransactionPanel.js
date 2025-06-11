@@ -291,13 +291,23 @@ export class TransactionPanelComponent extends Component {
             
             console.log('🔥 Transition name:', stateData.primaryButtonProps?.transitionName);
             console.log('🔥 Params before transition:', params);
-            console.log('🔥 Address values being passed:', this.state.addressValues);
-            
-            console.log('🚀 Calling onTransition with:', {
-              txId: transaction.id,
-              transitionName: stateData.primaryButtonProps?.transitionName,
-              params
+            console.log('🧪 isProvider:', isProvider);
+            console.log('🧪 acceptTransitionAvailable:', (nextTransitions || []).some(t => t.attributes && t.attributes.name === 'transition/accept'));
+            console.log('🧪 transactionId:', transaction?.id);
+            console.log('🧪 listingId:', stateDataListing?.id);
+            console.log('�� nextTransitions:', nextTransitions?.map(t => t?.attributes?.name));
+            console.log('🔐 protectedData received in TransactionPanel:', protectedData);
+            console.log('📦 Customer shipping info in protectedData:', {
+              customerName: protectedData?.customerName,
+              customerStreet: protectedData?.customerStreet,
+              customerCity: protectedData?.customerCity,
+              customerState: protectedData?.customerState,
+              customerZip: protectedData?.customerZip,
+              customerEmail: protectedData?.customerEmail,
+              customerPhone: protectedData?.customerPhone,
             });
+            console.log('[TransactionPanel] addressValues in state:', this.state.addressValues);
+            console.log('[onAction] FINAL params sent to onTransition:', params);
             
             if (transaction?.id && stateDataListing?.id && stateData.primaryButtonProps?.transitionName) {
               onTransition(transaction.id, stateData.primaryButtonProps.transitionName, params);
