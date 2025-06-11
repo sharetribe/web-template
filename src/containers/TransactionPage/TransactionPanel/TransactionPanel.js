@@ -378,6 +378,7 @@ export class TransactionPanelComponent extends Component {
       customerEmail: protectedData?.customerEmail,
       customerPhone: protectedData?.customerPhone,
     });
+    console.log('[TransactionPanel] addressValues in state:', this.state.addressValues);
 
     return (
       <div className={classes}>
@@ -509,7 +510,7 @@ export class TransactionPanelComponent extends Component {
                   addressValues: this.state.addressValues
                 })}
                 <ProviderAddressForm
-                  initialValues={addressValues}
+                  initialValues={this.state.addressValues}
                   onChange={this.handleAddressFormChange}
                 />
               </>

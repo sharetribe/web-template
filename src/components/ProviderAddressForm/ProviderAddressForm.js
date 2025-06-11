@@ -15,6 +15,7 @@ const ProviderAddressForm = ({ initialValues, onChange }) => (
       onSubmit={() => {}}
       render={({ handleSubmit, values }) => {
         React.useEffect(() => {
+          console.log('[ProviderAddressForm] values:', values);
           if (onChange) {
             onChange(values);
           }
