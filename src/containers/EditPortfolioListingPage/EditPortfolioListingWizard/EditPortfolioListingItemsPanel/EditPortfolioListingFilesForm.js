@@ -7,20 +7,17 @@ import { FieldArray } from 'react-final-form-arrays';
 import classNames from 'classnames';
 import { FormattedMessage, injectIntl } from '../../../../util/reactIntl';
 import { isUploadImageOverLimitError } from '../../../../util/errors';
-import { nonEmptyArray, composeValidators } from '../../../../util/validators';
-import { AspectRatioWrapper, Button, Form } from '../../../../components';
-import ListingImage, { RemoveImageButton } from './ListingImage';
+import { composeValidators, nonEmptyArray } from '../../../../util/validators';
+import { Button, Form } from '../../../../components';
+import ListingImage from './ListingImage';
 import css from './EditPortfolioListingFilesForm.module.css';
 import { FieldAddMedia } from './AddMediaField';
-import {
-  publishPortfolioListing,
-  removeImageFromListing,
-  removeVideoFromListing,
-  saveVideoToListing,
-  uploadMedia,
-} from '../../EditPortfolioListingPage.duck';
-import { LISTING_STATE_DRAFT } from '../../../../util/types';
-import VideoPlayer from '../../../../components/VideoPlayer/VideoPlayer';
+import { removeImageFromListing, uploadMedia } from '../../EditPortfolioListingPage.duck';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import SortableImage from './SortableImage';
+import { closestCenter, DndContext, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import IconDotsVertical from '../../../../components/IconDotsVertical/IconDotsVertical';
+import { IMAGES } from '../EditPortfolioListingWizardTab';
 
 const ImageUploadError = ({ uploadOverLimit, uploadImageError }) =>
   uploadOverLimit ? (
@@ -54,31 +51,17 @@ const ShowListingsError = ({ error }) =>
     </p>
   ) : null;
 
-const FieldListingVideo = props => {
-  const { name, aspectWidth, aspectHeight, onRemoveVideo } = props;
-
-  return (
-    <Field name={name}>
-      {({ input }) =>
-        input.value ? (
-          <div className={css.thumbnail}>
-            <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
-              <VideoPlayer src={input.value.url} previewTime={input.value.thumbnailTime} />
-              <RemoveImageButton
-                onClick={onRemoveVideo}
-                confirmTitle="Delete Video?"
-                confirmMessage="This action cannot be undone."
-              />
-            </AspectRatioWrapper>
-          </div>
-        ) : null
-      }
-    </Field>
-  );
-};
-
 const FieldListingImage = props => {
-  const { name, intl, aspectWidth, aspectHeight, variantPrefix, onRemoveImage } = props;
+  const {
+    name,
+    intl,
+    onRemoveImage,
+    aspectWidth,
+    aspectHeight,
+    variantPrefix,
+    canDelete = true,
+  } = props;
+
   return (
     <Field name={name}>
       {({ input }) =>
@@ -90,7 +73,7 @@ const FieldListingImage = props => {
             savedImageAltText={intl.formatMessage({
               id: 'EditListingPhotosForm.savedImageAltText',
             })}
-            onRemoveImage={onRemoveImage}
+            onRemoveImage={canDelete ? onRemoveImage : undefined}
             aspectWidth={aspectWidth}
             aspectHeight={aspectHeight}
             variantPrefix={variantPrefix}
@@ -102,7 +85,7 @@ const FieldListingImage = props => {
 };
 
 const EditPortfolioListingFilesFormComponent = props => {
-  const { onUpdateListing, config } = props;
+  const { onSubmit, config } = props;
   const dispatch = useDispatch();
 
   const updating = useSelector(state => state.EditPortfolioListingPage.updating);
@@ -115,8 +98,6 @@ const EditPortfolioListingFilesFormComponent = props => {
   const existingVideos = useSelector(state => state.EditPortfolioListingPage.videos);
   const listing = useSelector(state => state.EditPortfolioListingPage.portfolioListing);
   const listingId = listing?.id;
-  const listingState = listing?.attributes?.state;
-  const isDraft = listingState === LISTING_STATE_DRAFT;
 
   const onImageUploadHandler = file => {
     if (file) {
@@ -124,34 +105,34 @@ const EditPortfolioListingFilesFormComponent = props => {
       dispatch(uploadMedia({ id: tempImageId, file }, config));
     }
   };
-  const onPublishHandler = values => {
-    const updateListingValues = { ...values, id: listingId };
+
+  const onPublishHandler = async values => {
+    const updateListingValues = {
+      ...values,
+      videos: existingVideos || [],
+      id: listingId,
+    };
     if (!listingId) return;
-    if (isDraft) {
-      dispatch(publishPortfolioListing(listingId)).then(updatedListing => {
-        if (updatedListing) {
-          onUpdateListing(updateListingValues);
-        }
-      });
-    } else {
-      onUpdateListing(updateListingValues);
-    }
+    onSubmit(updateListingValues);
   };
-  const onSaveVideo = video => {
-    dispatch(saveVideoToListing(video));
-  };
-  const handleRemoveVideo = videoId => {
-    dispatch(removeVideoFromListing(videoId));
-  };
+
   const handleRemoveImage = imageId => {
     dispatch(removeImageFromListing(imageId));
   };
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    })
+  );
+
   return (
     <FinalForm
-      onSubmit={onPublishHandler}
       {...props}
-      initialValues={{ images: existingImages, videos: existingVideos }}
+      onSubmit={onPublishHandler}
+      initialValues={{ images: existingImages }}
       mutators={{ ...arrayMutators }}
       render={({
         form,
@@ -175,7 +156,7 @@ const EditPortfolioListingFilesFormComponent = props => {
           <Form className={classes} onSubmit={handleSubmit}>
             <div className={css.imagesFieldArray}>
               <FieldArray
-                name="images"
+                name={IMAGES}
                 validate={composeValidators(
                   nonEmptyArray(
                     intl.formatMessage({
@@ -184,46 +165,64 @@ const EditPortfolioListingFilesFormComponent = props => {
                   )
                 )}
               >
-                {({ fields }) =>
-                  fields.map((name, index) => {
-                    const image = fields.value?.[index];
-                    const imageId = image.id || image.id.uuid;
-                    return (
-                      <FieldListingImage
-                        key={imageId}
-                        name={name}
-                        intl={intl}
-                        listingId={listingId}
-                        image={image}
-                        onRemoveImage={() => {
-                          fields.remove(index);
-                          handleRemoveImage(imageId);
-                        }}
-                      />
-                    );
-                  })
-                }
-              </FieldArray>
+                {({ fields }) => {
+                  if (!fields.value || !Array.isArray(fields.value)) {
+                    return null;
+                  }
 
-              <FieldArray name="videos">
-                {({ fields }) =>
-                  fields.map((name, index) => {
-                    const video = fields.value?.[index];
-                    const videoId = video.id;
-                    return (
-                      <FieldListingVideo
-                        key={videoId}
-                        name={name}
-                        aspectWidth={aspectWidth}
-                        aspectHeight={aspectHeight}
-                        onRemoveVideo={() => {
-                          fields.remove(index);
-                          handleRemoveVideo(videoId);
-                        }}
-                      />
-                    );
-                  })
-                }
+                  const imageIds = fields.value.map(image => image.id?.uuid || image.id);
+                  return (
+                    <DndContext
+                      sensors={sensors}
+                      collisionDetection={closestCenter}
+                      onDragEnd={event => {
+                        const { active, over } = event;
+                        if (active.id !== over?.id) {
+                          const oldIndex = fields.value.findIndex(
+                            img => (img.id?.uuid || img.id) === active.id
+                          );
+                          const newIndex = fields.value.findIndex(
+                            img => (img.id?.uuid || img.id) === over.id
+                          );
+                          fields.move(oldIndex, newIndex);
+                        }
+                      }}
+                    >
+                      <SortableContext items={imageIds} strategy={verticalListSortingStrategy}>
+                        {imageIds.map((id, index) => {
+                          const name = `images[${index}]`;
+                          const image = fields.value[index];
+                          const canDelete = fields.value.length > 1;
+                          return (
+                            <SortableImage
+                              key={id}
+                              id={id}
+                              dragHandle={({ listeners, attributes }) => (
+                                <span {...listeners} {...attributes} className={css.dragHandle}>
+                                  <IconDotsVertical />
+                                </span>
+                              )}
+                            >
+                              <FieldListingImage
+                                name={name}
+                                intl={intl}
+                                image={image}
+                                canDelete={canDelete}
+                                onRemoveImage={() => {
+                                  fields.remove(index);
+                                  handleRemoveImage(id);
+                                }}
+                                aspectWidth={aspectWidth}
+                                aspectHeight={aspectHeight}
+                                variantPrefix="listing-card"
+                              />
+                            </SortableImage>
+                          );
+                        })}
+                      </SortableContext>
+                    </DndContext>
+                  );
+                }}
               </FieldArray>
 
               <FieldAddMedia
@@ -232,10 +231,10 @@ const EditPortfolioListingFilesFormComponent = props => {
                 disabled={updating}
                 formApi={form}
                 onImageUploadHandler={onImageUploadHandler}
-                onSaveVideo={onSaveVideo}
                 aspectWidth={aspectWidth}
                 aspectHeight={aspectHeight}
                 isUploading={imageUploading}
+                mediaType={IMAGES}
               />
             </div>
 
@@ -253,7 +252,7 @@ const EditPortfolioListingFilesFormComponent = props => {
               inProgress={submitInProgress}
               disabled={submitDisabled}
             >
-              {isDraft ? 'Publish' : 'Save changes'}
+              Next
             </Button>
           </Form>
         );

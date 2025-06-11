@@ -6,7 +6,12 @@ import { withViewport } from '../../../util/uiHelpers';
 
 import { Tabs } from '../../../components';
 
-import { DETAILS, EditPortfolioListingWizardTab, ITEMS } from './EditPortfolioListingWizardTab';
+import {
+  DETAILS,
+  EditPortfolioListingWizardTab,
+  IMAGES,
+  VIDEOS,
+} from './EditPortfolioListingWizardTab';
 import css from './EditPortfolioListingWizard.module.css';
 import classNames from 'classnames';
 import { useConfiguration } from '../../../context/configurationContext';
@@ -15,7 +20,8 @@ import { useSelector } from 'react-redux';
 function getTabsStatus(portfolioListing) {
   return {
     [DETAILS]: true,
-    [ITEMS]: !!(portfolioListing && portfolioListing.id),
+    [IMAGES]: !!(portfolioListing && portfolioListing.id),
+    [VIDEOS]: !!(portfolioListing && portfolioListing.id),
   };
 }
 
@@ -34,7 +40,7 @@ const EditPortfolioListingWizard = props => {
     ...rest
   } = props;
   const selectedTab = params.tab;
-  const tabs = [DETAILS, ITEMS];
+  const tabs = [DETAILS, IMAGES, VIDEOS];
   const isLoading = useSelector(state => state.EditPortfolioListingPage.loading);
   const tabsStatus = useMemo(() => getTabsStatus(currentListing), [currentListing]);
 
@@ -46,7 +52,14 @@ const EditPortfolioListingWizard = props => {
     <div className={classNames(css.root, className)}>
       <Tabs rootClassName={css.tabsContainer} navRootClassName={css.nav} tabRootClassName={css.tab}>
         {tabs.map(tab => {
-          const tabLabel = tab === DETAILS ? 'Details' : 'Items';
+          let tabLabel;
+          if (tab === DETAILS) {
+            tabLabel = 'Details';
+          } else if (tab === IMAGES) {
+            tabLabel = 'Images';
+          } else if (tab === VIDEOS) {
+            tabLabel = 'Videos';
+          }
 
           return (
             <EditPortfolioListingWizardTab

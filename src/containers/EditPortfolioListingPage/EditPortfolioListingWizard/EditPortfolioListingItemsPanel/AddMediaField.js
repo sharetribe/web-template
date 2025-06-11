@@ -5,6 +5,7 @@ import { AspectRatioWrapper } from '../../../../components';
 import Spinner from '../../../../components/IconSpinner/IconSpinner';
 import { videoURLHandler } from '../../../../components/VideoPlayer/VideoPlayer';
 import { Button, Space } from 'antd';
+import { IMAGES, VIDEOS } from '../EditPortfolioListingWizardTab';
 
 const ACCEPT_IMAGES = 'image/*';
 const INITIAL_VIDEO_THUMB_TIME = '00:00:00';
@@ -26,6 +27,7 @@ export const FieldAddMedia = props => {
     aspectWidth = 1,
     aspectHeight = 1,
     isUploading,
+    mediaType = IMAGES,
     ...rest
   } = props;
   const [showVideoInput, setShowVideoInput] = useState(false);
@@ -69,7 +71,7 @@ export const FieldAddMedia = props => {
                   </div>
                 ) : (
                   <>
-                    {!showVideoInput && (
+                    {mediaType === IMAGES && !showVideoInput && (
                       <div className={css.imageUploadSection}>
                         {!fieldDisabled && (
                           <input
@@ -90,9 +92,14 @@ export const FieldAddMedia = props => {
                       </div>
                     )}
 
-                    <div className={css.videoEmbedSection} onClick={() => setShowVideoInput(true)}>
-                      <span className={css.embedVideoText}>+ Embed a video</span>
-                    </div>
+                    {mediaType === VIDEOS && (
+                      <div
+                        className={css.videoEmbedSection}
+                        onClick={() => setShowVideoInput(true)}
+                      >
+                        <span className={css.embedVideoText}>+ Embed a video</span>
+                      </div>
+                    )}
 
                     {showVideoInput && (
                       <div className={css.videoInputContainer}>

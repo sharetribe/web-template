@@ -75,13 +75,14 @@ const ListingImage = props => {
   } = props;
 
   if (image.file && !image.attributes) {
-    const removeButton = image.imageId ? (
-      <RemoveImageButton
-        onClick={onRemoveImage}
-        confirmTitle="Delete Image?"
-        confirmMessage="This action cannot be undone."
-      />
-    ) : null;
+    const removeButton =
+      image.imageId && onRemoveImage ? (
+        <RemoveImageButton
+          onClick={onRemoveImage}
+          confirmTitle="Delete Image?"
+          confirmMessage="This action cannot be undone."
+        />
+      ) : null;
 
     const uploadingOverlay = !image.imageId ? (
       <div className={css.thumbnailLoading}>
@@ -138,11 +139,13 @@ const ListingImage = props => {
               variants={variants}
             />
           </AspectRatioWrapper>
-          <RemoveImageButton
-            onClick={onRemoveImage}
-            confirmTitle="Delete Image?"
-            confirmMessage="This action cannot be undone."
-          />
+          {onRemoveImage && (
+            <RemoveImageButton
+              onClick={onRemoveImage}
+              confirmTitle="Delete Image?"
+              confirmMessage="This action cannot be undone."
+            />
+          )}
         </div>
       </div>
     );
@@ -153,7 +156,7 @@ ListingImage.propTypes = {
   className: string,
   image: object.isRequired,
   savedImageAltText: string.isRequired,
-  onRemoveImage: func.isRequired,
+  onRemoveImage: func,
 };
 
 export default ListingImage;

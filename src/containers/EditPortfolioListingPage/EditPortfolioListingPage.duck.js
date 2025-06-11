@@ -335,3 +335,20 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
       throw error;
     });
 };
+
+export const savePortfolioListingsOrder = orderedIds => async (dispatch, getState, sdk) => {
+  try {
+    await Promise.all(
+      orderedIds.map((id, index) => {
+        return sdk.ownListings.update({
+          id,
+          privateData: {
+            order: index + 1,
+          },
+        });
+      })
+    );
+  } catch (e) {
+    console.error('Failed to update listing order:', e);
+  }
+};
