@@ -83,7 +83,9 @@ const getActionButtonPropsMaybe = (params, onlyForRole = 'both') => {
 export const getStateData = (params, process) => {
   const {
     transaction,
+    listing,
     transactionRole,
+    nextTransitions,
     intl,
     transitionInProgress,
     transitionError,
@@ -143,13 +145,23 @@ export const getStateData = (params, process) => {
     };
   };
 
+  // Base state data that should always be included
+  const baseStateData = {
+    transaction,
+    listing,
+    nextTransitions,
+  };
+
   if (processName === PURCHASE_PROCESS_NAME) {
-    return getStateDataForPurchaseProcess(params, processInfo());
+    const processStateData = getStateDataForPurchaseProcess(params, processInfo());
+    return { ...baseStateData, ...processStateData };
   } else if (processName === BOOKING_PROCESS_NAME) {
-    return getStateDataForBookingProcess(params, processInfo());
+    const processStateData = getStateDataForBookingProcess(params, processInfo());
+    return { ...baseStateData, ...processStateData };
   } else if (processName === INQUIRY_PROCESS_NAME) {
-    return getStateDataForInquiryProcess(params, processInfo());
+    const processStateData = getStateDataForInquiryProcess(params, processInfo());
+    return { ...baseStateData, ...processStateData };
   } else {
-    return {};
+    return baseStateData;
   }
 };

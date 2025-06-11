@@ -326,11 +326,6 @@ export class TransactionPanelComponent extends Component {
     console.log('🧪 listingId:', stateDataListing?.id);
     console.log('🎯 nextTransitions:', nextTransitions?.map(t => t?.attributes?.name));
 
-    if (!transaction?.id || !stateDataListing?.id || !acceptTransitionAvailable) {
-      console.warn('⚠️ Data incomplete, skipping render of action buttons');
-      return <div>Loading booking details...</div>;
-    }
-
     return (
       <div className={classes}>
         <div className={css.container}>

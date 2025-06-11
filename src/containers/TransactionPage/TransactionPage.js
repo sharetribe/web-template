@@ -391,6 +391,7 @@ export const TransactionPageComponent = props => {
     ? getStateData(
         {
           transaction,
+          listing,
           transactionRole,
           nextTransitions,
           transitionInProgress,
@@ -458,11 +459,9 @@ export const TransactionPageComponent = props => {
     process?.hasPassedState(process?.states?.ACCEPTED, transaction);
 
   // Before rendering TransactionPanel:
-  console.log('🧩 Passing props to TransactionPanel:', {
-    transaction: stateData.transaction,
-    listing: stateData.listing,
-    nextTransitions: stateData.nextTransitions,
-  });
+  console.log('🧩 stateData.transaction:', stateData.transaction);
+  console.log('🧩 stateData.listing:', stateData.listing);
+  console.log('🧩 stateData.nextTransitions:', stateData.nextTransitions);
 
   // TransactionPanel is presentational component
   // that currently handles showing everything inside layout's main view area.
@@ -559,22 +558,8 @@ export const TransactionPageComponent = props => {
       }
     }
 
-    // If we have address data from the modal, include it in the transition
-    const transitionParams = addressData
-      ? {
-          ...params,
-          protectedData: {
-            ...params.protectedData,
-            providerStreet: addressData.streetAddress,
-            providerCity: addressData.city,
-            providerState: addressData.state,
-            providerZipCode: addressData.zipCode,
-            providerPhone: addressData.phoneNumber,
-          },
-        }
-      : params;
-
-    onTransition(transitionName, transitionParams);
+    // Use the params directly since addressData is not defined
+    onTransition(transaction?.id, transitionName, params);
   };
 
   return (
