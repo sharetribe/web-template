@@ -531,6 +531,7 @@ export const TransactionPageComponent = props => {
           marketplaceName={config.marketplaceName}
         />
       }
+      onTransition={onTransition}
     />
   ) : (
     loadingOrFailedFetching

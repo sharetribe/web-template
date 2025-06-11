@@ -320,6 +320,11 @@ export class TransactionPanelComponent extends Component {
 
     const { addressValues } = this.state;
 
+    console.log('🧪 isProvider:', isProvider);
+    console.log('🧪 acceptTransitionAvailable:', acceptTransitionAvailable);
+    console.log('🧪 transactionId:', transaction?.id);
+    console.log('🧪 listingId:', stateDataListing?.id);
+
     return (
       <div className={classes}>
         <div className={css.container}>
@@ -440,7 +445,7 @@ export class TransactionPanelComponent extends Component {
               </>
             ) : null}
 
-            {isProvider && acceptTransitionAvailable && (
+            {isProvider && acceptTransitionAvailable && transaction?.id && stateDataListing?.id && (
               <ProviderAddressForm values={addressValues} onChange={this.handleAddressFormChange} />
             )}
           </div>
