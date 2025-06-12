@@ -234,11 +234,17 @@ module.exports = async (req, res) => {
           });
           const txProtectedData = transaction?.data?.data?.attributes?.protectedData || {};
           const incomingProtectedData = bodyParams?.params?.protectedData || {};
+          
+          // Debug logging to understand the data flow
+          console.log('🔍 [DEBUG] Transaction protectedData:', txProtectedData);
+          console.log('🔍 [DEBUG] Incoming protectedData:', incomingProtectedData);
+          console.log('🔍 [DEBUG] Transaction customer relationship:', transaction?.data?.data?.relationships?.customer);
+          
           // Helper: prefer non-empty value from params, else from transaction, else ''
           function preferNonEmpty(paramVal, txVal) {
             return (paramVal !== undefined && paramVal !== '') ? paramVal : (txVal !== undefined && txVal !== '') ? txVal : '';
           }
-          // Merge, preferring non-empty values from incoming, else from transaction
+          // Merge, preferring non-empty values from incoming, else from transaction, else ''
           const mergedProtectedData = {
             // Customer fields
             customerName: preferNonEmpty(incomingProtectedData.customerName, txProtectedData.customerName),
@@ -260,6 +266,7 @@ module.exports = async (req, res) => {
             ...txProtectedData,
             ...incomingProtectedData,
           };
+
           // Set both params.protectedData and top-level fields from mergedProtectedData
           params.protectedData = mergedProtectedData;
           Object.assign(params, mergedProtectedData); // Overwrite top-level fields with merged values
@@ -343,7 +350,11 @@ module.exports = async (req, res) => {
 
     // Shippo label creation (with fallback and logging)
     if (bodyParams?.transition === 'transition/accept') {
-      if (lenderAddress.street1 && borrowerAddress.street1 && process.env.SHIPPO_API_TOKEN) {
+      // Check if we have complete address information for both parties
+      const hasCompleteProviderAddress = lenderAddress.street1 && lenderAddress.city && lenderAddress.state && lenderAddress.zip;
+      const hasCompleteCustomerAddress = borrowerAddress.street1 && borrowerAddress.city && borrowerAddress.state && borrowerAddress.zip;
+      
+      if (hasCompleteProviderAddress && hasCompleteCustomerAddress && process.env.SHIPPO_API_TOKEN) {
         try {
           await createShippingLabels(params);
         } catch (err) {
@@ -352,20 +363,28 @@ module.exports = async (req, res) => {
       } else {
         if (!process.env.SHIPPO_API_TOKEN) {
           console.warn('⚠️ SHIPPO_API_TOKEN missing, skipping Shippo label creation.');
+        } else if (!hasCompleteProviderAddress) {
+          console.warn('⚠️ Incomplete provider address — skipping Shippo label creation.');
+        } else if (!hasCompleteCustomerAddress) {
+          console.warn('⚠️ Incomplete customer address — skipping Shippo label creation.');
         } else {
           console.warn('⚠️ Missing address info — skipping Shippo label creation.');
         }
       }
     }
 
-    // Add required validation for provider address fields
-    const requiredFields = [
-      'providerStreet', 'providerCity', 'providerState',
-      'providerZip', 'providerEmail', 'providerPhone'
+    // Validate required provider and customer address fields before making the SDK call
+    const requiredProviderFields = [
+      'providerStreet', 'providerCity', 'providerState', 'providerZip', 'providerEmail', 'providerPhone'
     ];
-    const missing = requiredFields.filter(key => !params[key]);
-    if (missing.length > 0) {
-      console.warn('❌ EARLY RETURN: Missing required provider address info:', missing);
+    const requiredCustomerFields = [
+      'customerEmail', 'customerName'
+    ];
+    
+    // Check provider fields (required for shipping)
+    const missingProviderFields = requiredProviderFields.filter(key => !params[key] || params[key] === '');
+    if (missingProviderFields.length > 0) {
+      console.error('❌ EARLY RETURN: Missing required provider address fields:', missingProviderFields);
       console.log('❌ Provider params available:', {
         providerStreet: params.providerStreet,
         providerCity: params.providerCity,
@@ -374,21 +393,45 @@ module.exports = async (req, res) => {
         providerEmail: params.providerEmail,
         providerPhone: params.providerPhone
       });
-      return res.status(400).json({ error: `Missing provider address fields: ${missing.join(', ')}` });
+      return res.status(400).json({ error: `Missing required provider address fields: ${missingProviderFields.join(', ')}` });
     }
-
-    // Validate required provider and customer address fields before making the SDK call
-    const {
-      customerStreet, customerCity, customerState, customerZip, customerEmail, customerPhone
-    } = bodyParams.params || {};
-
-    if (!customerStreet || !customerCity || !customerState || !customerZip || !customerEmail || !customerPhone) {
-      console.error('❌ EARLY RETURN: Missing required customer address info');
+    
+    // Check customer fields (only email and name are required)
+    const missingCustomerFields = requiredCustomerFields.filter(key => !params[key] || params[key] === '');
+    if (missingCustomerFields.length > 0) {
+      console.error('❌ EARLY RETURN: Missing required customer fields:', missingCustomerFields);
       console.log('❌ Customer params available:', {
-        customerStreet, customerCity, customerState, customerZip, customerEmail, customerPhone
+        customerName: params.customerName,
+        customerEmail: params.customerEmail,
+        customerStreet: params.customerStreet,
+        customerCity: params.customerCity,
+        customerState: params.customerState,
+        customerZip: params.customerZip,
+        customerPhone: params.customerPhone
       });
-      return res.status(400).json({ error: 'Missing customer address info' });
+      return res.status(400).json({ error: `Missing required customer fields: ${missingCustomerFields.join(', ')}` });
     }
+    
+    // Log successful validation
+    console.log('✅ Address validation passed:', {
+      providerFields: {
+        providerStreet: params.providerStreet,
+        providerCity: params.providerCity,
+        providerState: params.providerState,
+        providerZip: params.providerZip,
+        providerEmail: params.providerEmail,
+        providerPhone: params.providerPhone
+      },
+      customerFields: {
+        customerName: params.customerName,
+        customerEmail: params.customerEmail,
+        customerStreet: params.customerStreet || 'Not provided',
+        customerCity: params.customerCity || 'Not provided',
+        customerState: params.customerState || 'Not provided',
+        customerZip: params.customerZip || 'Not provided',
+        customerPhone: params.customerPhone || 'Not provided'
+      }
+    });
 
     // Perform the actual transition
     let transitionName;
