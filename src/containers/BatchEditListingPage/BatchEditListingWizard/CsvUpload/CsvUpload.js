@@ -91,9 +91,7 @@ export const CsvUpload = ({ categories, usageOptions, onSaveListing }) => {
             releases: normalizeBoolean(
               getCsvFieldValue(row, headers, 'released', fallbackRow),
               listing.releases === 'yes'
-            )
-              ? 'yes'
-              : 'no',
+            ),
             keywords: getCsvFieldValue(row, headers, 'keywords', fallbackRow)
               ? getCsvFieldValue(row, headers, 'keywords', fallbackRow)
                   .split(',')
