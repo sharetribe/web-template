@@ -262,13 +262,13 @@ module.exports = async (req, res) => {
           };
           // Set both params.protectedData and top-level fields from mergedProtectedData
           params.protectedData = mergedProtectedData;
-          Object.assign(params, mergedProtectedData);
-          // Validation: check all required fields
+          Object.assign(params, mergedProtectedData); // Overwrite top-level fields with merged values
+          // Validation: check all required fields on params
           const requiredFields = [
             'providerStreet', 'providerCity', 'providerState', 'providerZip', 'providerEmail', 'providerPhone',
             'customerStreet', 'customerCity', 'customerState', 'customerZip', 'customerEmail', 'customerPhone'
           ];
-          const missing = requiredFields.filter(key => !mergedProtectedData[key]);
+          const missing = requiredFields.filter(key => !params[key]);
           if (missing.length > 0) {
             return res.status(400).json({ error: `Missing required fields: ${missing.join(', ')}` });
           }
