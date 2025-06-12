@@ -140,16 +140,26 @@ export const EditListingPhotosForm = props => {
   const [submittedImages, setSubmittedImages] = useState([]);
 
   const onImageUploadHandler = file => {
-    const { listingImageConfig, onImageUpload } = props;
+    const { listingImageConfig, onImageUpload, form } = props;
     if (file) {
       setState({ imageUploadRequested: true });
 
+      console.log("📸 Attempting to upload file", file);
       onImageUpload({ id: `${file.name}_${Date.now()}`, file }, listingImageConfig)
-        .then(() => {
+        .then(res => {
           setState({ imageUploadRequested: false });
+          console.log("✅ Upload success", res);
+
+          // Add the uploaded image to the form's images array using array mutators
+          if (res && res.data && form && form.mutators && typeof form.mutators.push === 'function') {
+            form.mutators.push('images', res.data);
+          } else {
+            console.warn('⚠️ Could not add uploaded image to form images array:', res, form);
+          }
         })
-        .catch(() => {
+        .catch(err => {
           setState({ imageUploadRequested: false });
+          console.error("❌ Upload error", err);
         });
     }
   };
