@@ -295,8 +295,25 @@ export class TransactionPanelComponent extends Component {
                 providerEmail,
                 providerName,
               };
+              // --- FRONTEND FIX: Add all required fields at top-level of params as well ---
+              Object.assign(params, {
+                protectedData: mergedProtectedData,
+                providerStreet: mergedProtectedData.providerStreet,
+                providerCity: mergedProtectedData.providerCity,
+                providerState: mergedProtectedData.providerState,
+                providerZip: mergedProtectedData.providerZip,
+                providerPhone: mergedProtectedData.providerPhone,
+                providerEmail: mergedProtectedData.providerEmail,
+                providerName: mergedProtectedData.providerName,
+                customerStreet: mergedProtectedData.customerStreet,
+                customerCity: mergedProtectedData.customerCity,
+                customerState: mergedProtectedData.customerState,
+                customerZip: mergedProtectedData.customerZip,
+                customerPhone: mergedProtectedData.customerPhone,
+                customerEmail: mergedProtectedData.customerEmail,
+                customerName: mergedProtectedData.customerName,
+              });
               console.log('🔀 [onAction] mergedProtectedData:', mergedProtectedData);
-              params.protectedData = mergedProtectedData;
             }
             
             console.log('🔥 Transition name:', stateData.primaryButtonProps?.transitionName);

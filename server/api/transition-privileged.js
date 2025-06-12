@@ -221,8 +221,7 @@ module.exports = async (req, res) => {
       id = transactionId;
     } else if (bodyParams && bodyParams.transition === 'transition/accept') {
       id = transactionId;
-      // --- [AI EDIT] Fetch protectedData from transaction and overwrite address fields ---
-      // Fix: Always extract the UUID string for the transaction
+      // --- [AI EDIT] Fetch protectedData from transaction and robustly merge with incoming params ---
       const transactionIdUUID =
         (bodyParams?.params?.transactionId?.uuid) ||
         (transactionId?.uuid) ||
@@ -233,33 +232,54 @@ module.exports = async (req, res) => {
             id: transactionIdUUID,
             include: ['booking'],
           });
-          const protectedData = transaction?.data?.data?.attributes?.protectedData || {};
-          console.log('🔎 [BACKEND] Transaction protectedData:', protectedData);
-          // Smarter merge: only overwrite with non-empty, defined values
-          const cleanMergedParams = { ...protectedData };
-          Object.keys(bodyParams.params || {}).forEach(key => {
-            const value = bodyParams.params[key];
-            if (value !== '' && value !== undefined) {
-              cleanMergedParams[key] = value;
-            }
-          });
-          bodyParams.params = {
-            ...bodyParams.params,
-            ...cleanMergedParams
+          const txProtectedData = transaction?.data?.data?.attributes?.protectedData || {};
+          const incomingProtectedData = bodyParams?.params?.protectedData || {};
+          // Helper: prefer non-empty value from params, else from transaction, else ''
+          function preferNonEmpty(paramVal, txVal) {
+            return (paramVal !== undefined && paramVal !== '') ? paramVal : (txVal !== undefined && txVal !== '') ? txVal : '';
+          }
+          // Merge, preferring non-empty values from incoming, else from transaction
+          const mergedProtectedData = {
+            // Customer fields
+            customerName: preferNonEmpty(incomingProtectedData.customerName, txProtectedData.customerName),
+            customerStreet: preferNonEmpty(incomingProtectedData.customerStreet, txProtectedData.customerStreet),
+            customerCity: preferNonEmpty(incomingProtectedData.customerCity, txProtectedData.customerCity),
+            customerState: preferNonEmpty(incomingProtectedData.customerState, txProtectedData.customerState),
+            customerZip: preferNonEmpty(incomingProtectedData.customerZip, txProtectedData.customerZip),
+            customerEmail: preferNonEmpty(incomingProtectedData.customerEmail, txProtectedData.customerEmail),
+            customerPhone: preferNonEmpty(incomingProtectedData.customerPhone, txProtectedData.customerPhone),
+            // Provider fields
+            providerName: preferNonEmpty(incomingProtectedData.providerName, txProtectedData.providerName),
+            providerStreet: preferNonEmpty(incomingProtectedData.providerStreet, txProtectedData.providerStreet),
+            providerCity: preferNonEmpty(incomingProtectedData.providerCity, txProtectedData.providerCity),
+            providerState: preferNonEmpty(incomingProtectedData.providerState, txProtectedData.providerState),
+            providerZip: preferNonEmpty(incomingProtectedData.providerZip, txProtectedData.providerZip),
+            providerEmail: preferNonEmpty(incomingProtectedData.providerEmail, txProtectedData.providerEmail),
+            providerPhone: preferNonEmpty(incomingProtectedData.providerPhone, txProtectedData.providerPhone),
+            // ...any other fields
+            ...txProtectedData,
+            ...incomingProtectedData,
           };
-          // Ensure params.protectedData is always up-to-date with latest merged values
-          params.protectedData = {
-            ...params.protectedData,
-            ...bodyParams.params,
-          };
+          // Set both params.protectedData and top-level fields from mergedProtectedData
+          params.protectedData = mergedProtectedData;
+          Object.assign(params, mergedProtectedData);
+          // Validation: check all required fields
+          const requiredFields = [
+            'providerStreet', 'providerCity', 'providerState', 'providerZip', 'providerEmail', 'providerPhone',
+            'customerStreet', 'customerCity', 'customerState', 'customerZip', 'customerEmail', 'customerPhone'
+          ];
+          const missing = requiredFields.filter(key => !mergedProtectedData[key]);
+          if (missing.length > 0) {
+            return res.status(400).json({ error: `Missing required fields: ${missing.join(', ')}` });
+          }
           // Debug log for final merged provider fields
           console.log('✅ [MERGE FIX] Final merged provider fields:', {
-            providerStreet: params.protectedData.providerStreet,
-            providerCity: params.protectedData.providerCity,
-            providerState: params.protectedData.providerState,
-            providerZip: params.protectedData.providerZip,
-            providerEmail: params.protectedData.providerEmail,
-            providerPhone: params.protectedData.providerPhone
+            providerStreet: mergedProtectedData.providerStreet,
+            providerCity: mergedProtectedData.providerCity,
+            providerState: mergedProtectedData.providerState,
+            providerZip: mergedProtectedData.providerZip,
+            providerEmail: mergedProtectedData.providerEmail,
+            providerPhone: mergedProtectedData.providerPhone
           });
         } catch (err) {
           console.error('❌ Failed to fetch or apply protectedData from transaction:', err.message);
