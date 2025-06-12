@@ -23,19 +23,16 @@ const fieldMapping = {
 
 export const getCsvFieldValue = (row, headers, fieldKey, fallbackRow) => {
   const field = fieldMapping[fieldKey];
-
   // Try to find the column by its aliases
   const columnName = field.aliases.find(alias => headers.includes(alias));
   if (columnName) {
     return row[columnName];
   }
-
   // If no alias matches, fall back to the position
   const position = field.position;
   if (position !== undefined && position < fallbackRow.length) {
     return fallbackRow[position];
   }
-
   return undefined; // Return undefined if not found
 };
 
