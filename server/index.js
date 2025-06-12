@@ -61,6 +61,14 @@ const cspReportUrl = '/csp-report';
 const cspEnabled = CSP === 'block' || CSP === 'report';
 const app = express();
 
+// Allow CORS for sherbrt.com
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://www.sherbrt.com'); // allow your custom domain
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  next();
+});
+
 // Add CORS middleware configuration
 const allowedOrigins = [
   'https://web-template-1.onrender.com',
