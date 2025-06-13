@@ -1,0 +1,115 @@
+@import '../../../../styles/customMediaQueries.css';
+
+.filterField {
+  display: grid;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  min-height: 40px;
+  padding-bottom: 8px;
+  padding-top: 8px;
+  font-size: 16px;
+  @media (--viewportLarge) {
+    padding-bottom: 0;
+    padding: 0;
+    color: var(--colorGrey300);
+  }
+}
+
+.align {
+  justify-self: start;
+  @media (--viewportMedium) {
+    justify-self: center;
+  }
+}
+
+.searchBarContainer {
+  composes: align;
+  background-color: var(--colorWhite);
+  border-color: var(--colorGrey800);
+  border-width: 1px;
+  color: var(--colorGrey500);
+  border-radius: 8px;
+  box-shadow: var(--boxShadowPopup);
+  width: calc(100vw - 83px);
+  padding: 0 8px 8px 8px;
+  margin-top: 40px;
+  @media (--viewportMedium) {
+    width: 576px;
+  }
+  @media (--viewportLarge) {
+    width: 100%;
+    padding: 8px;
+    &.gridCol1 {
+      width: 576px;
+    }
+    &.gridCol2 {
+      width: 768px;
+    }
+    &.gridCol3 {
+      width: 960px;
+    }
+    &.gridCol4 {
+      max-width: 1056px;
+      min-width: 960px;
+    }
+  }
+}
+
+.gridContainer {
+  height: 100%;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  & > *:not(:last-child):not(:nth-last-child(2)) {
+    border-bottom: 1px solid var(--colorGrey200);
+  }
+  @media (--viewportLarge) {
+    padding-top: 0;
+    &.gridCol1 {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+    &.gridCol2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
+    }
+    &.gridCol3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+    }
+    &.gridCol4 {
+      /* we force the last column to be a fixed width in order to force the form to take the max width it is allowed to take (see .searchBarContainer) */
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(239px, 1fr) auto;
+    }
+    & > *:not(:last-child):not(:nth-last-child(2)) {
+      border-right: 1px solid var(--colorGrey200);
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    > *:last-child {
+      justify-self: end;
+    }
+  }
+}
+
+/* applies in mobile styles, we specify that there should always be just one column so the items stack in mobile view*/
+.gridCol1,
+.gridCol2,
+.gridCol3,
+.gridCol4 {
+  grid-template-columns: 1fr;
+}
+
+.submitButton {
+  min-height: 40px;
+  min-width: 86px;
+  padding-left: 16px;
+  padding-right: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  @media (--viewportMedium) {
+    height: 48px;
+  }
+  @media (--viewportLarge) {
+    max-width: 270px;
+  }
+}

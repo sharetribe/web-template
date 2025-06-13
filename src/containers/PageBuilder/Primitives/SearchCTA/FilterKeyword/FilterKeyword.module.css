@@ -1,0 +1,48 @@
+@import '../../../../../styles/customMediaQueries.css';
+
+.root {
+  width: 100%;
+}
+
+.customField {
+  height: 40px;
+  display: grid;
+  align-items: center;
+  color: var(--colorGrey800);
+
+  &:hover,
+  &:focus {
+    border-bottom-color: var(--marketplaceColor);
+    outline: none;
+    border: 0;
+    box-shadow: none;
+  }
+
+  @media (--viewportMedium) {
+    height: 48px;
+    margin-bottom: 0;
+  }
+}
+
+.input {
+  border: 0;
+  cursor: pointer;
+  text-overflow: ellipsis;
+  height: 40px;
+  &:hover,
+  &:focus {
+    border: none;
+    outline: none;
+    box-shadow: none;
+  }
+
+  &:hover::placeholder,
+  &:focus::placeholder {
+    transition: 0.1s all;
+    color: var(--colorGrey700);
+  }
+
+  @media (--viewportMedium) {
+    font-size: inherit;
+  }
+}

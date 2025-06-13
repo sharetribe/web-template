@@ -113,6 +113,7 @@ describe('TransactionPage', () => {
     onFetchTransactionLineItems: noop,
     nextTransitions: null,
     monthlyTimeSlots: {},
+    timeSlotsForDate: {},
     //transaction,
     //lineItems,
   };
@@ -1161,8 +1162,9 @@ describe('TransactionPage', () => {
         // Listing's title (side card)
         expect(getAllByText('listing-item title')).toHaveLength(2);
         // Default unit price is $55
-        expect(getAllByText('$55.00')).toHaveLength(2);
-        expect(getAllByText('OrderPanel.perUnit')).toHaveLength(2);
+        expect(getAllByText('OrderPanel.price')).toHaveLength(1);
+        expect(getAllByText('OrderPanel.priceInMobileCTA')).toHaveLength(1);
+        expect(getAllByText('OrderPanel.perUnit')).toHaveLength(1);
 
         // BookingTimeForm inputs
         expect(getByText('BookingTimeForm.bookingStartTitle')).toBeInTheDocument();
@@ -1245,7 +1247,8 @@ describe('TransactionPage', () => {
         expect(getAllByText('listing-item title')).toHaveLength(1);
 
         // Don't show listing pricing
-        expect(screen.queryByText('$55.00')).toBeNull();
+        expect(screen.queryByText('OrderPanel.price')).toBeNull();
+        expect(screen.queryByText('OrderPanel.priceInMobileCTA')).toBeNull();
         expect(screen.queryByText('OrderPanel.perUnit')).toBeNull();
 
         // Don't show BookingTimeForm inputs
@@ -1328,8 +1331,9 @@ describe('TransactionPage', () => {
         // Listing's title (side card)
         expect(getAllByText('listing-item title')).toHaveLength(2);
         // Default unit price is $55
-        expect(getAllByText('$55.00')).toHaveLength(2);
-        expect(getAllByText('OrderPanel.perUnit')).toHaveLength(2);
+        expect(getAllByText('OrderPanel.price')).toHaveLength(1);
+        expect(getAllByText('OrderPanel.priceInMobileCTA')).toHaveLength(1);
+        expect(getAllByText('OrderPanel.perUnit')).toHaveLength(1);
 
         // BookingTimeForm inputs
         expect(getByText('BookingDatesForm.bookingStartTitle')).toBeInTheDocument();
@@ -1411,7 +1415,8 @@ describe('TransactionPage', () => {
         expect(getAllByText('listing-item title')).toHaveLength(1);
 
         // Don't show listing pricing
-        expect(screen.queryByText('$55.00')).toBeNull();
+        expect(screen.queryByText('OrderPanel.price')).toBeNull();
+        expect(screen.queryByText('OrderPanel.priceInMobileCTA')).toBeNull();
         expect(screen.queryByText('OrderPanel.perUnit')).toBeNull();
 
         // Don't show BookingDatesForm inputs
@@ -1493,8 +1498,9 @@ describe('TransactionPage', () => {
         // Listing's title (side card)
         expect(getAllByText('listing-item title')).toHaveLength(2);
         // Default unit price is $55
-        expect(getAllByText('$55.00')).toHaveLength(2);
-        expect(getAllByText('OrderPanel.perUnit')).toHaveLength(2);
+        expect(getAllByText('OrderPanel.price')).toHaveLength(1);
+        expect(getAllByText('OrderPanel.priceInMobileCTA')).toHaveLength(1);
+        expect(getAllByText('OrderPanel.perUnit')).toHaveLength(1);
 
         // Order purchase CTA
         expect(getByText('OrderPanel.ctaButtonMessagePurchase')).toBeInTheDocument();
@@ -1574,7 +1580,8 @@ describe('TransactionPage', () => {
         expect(getAllByText('listing-item title')).toHaveLength(1);
 
         // Don't show listing pricing
-        expect(screen.queryByText('$55.00')).toBeNull();
+        expect(screen.queryByText('OrderPanel.price')).toBeNull();
+        expect(screen.queryByText('OrderPanel.priceInMobileCTA')).toBeNull();
         expect(screen.queryByText('OrderPanel.perUnit')).toBeNull();
 
         // Don't show order purchase CTA

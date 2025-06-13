@@ -39,14 +39,10 @@ const LoginLink = () => {
   );
 };
 
-const InboxLink = ({ notificationCount, currentUserHasListings }) => {
+const InboxLink = ({ notificationCount, inboxTab }) => {
   const notificationDot = notificationCount > 0 ? <div className={css.notificationDot} /> : null;
   return (
-    <NamedLink
-      className={css.topbarLink}
-      name="InboxPage"
-      params={{ tab: currentUserHasListings ? 'sales' : 'orders' }}
-    >
+    <NamedLink className={css.topbarLink} name="InboxPage" params={{ tab: inboxTab }}>
       <span className={css.topbarLinkLabel}>
         <FormattedMessage id="TopbarDesktop.inbox" />
         {notificationDot}
@@ -55,7 +51,7 @@ const InboxLink = ({ notificationCount, currentUserHasListings }) => {
   );
 };
 
-const ProfileMenu = ({ currentPage, currentUser, onLogout }) => {
+const ProfileMenu = ({ currentPage, currentUser, onLogout, showManageListingsLink }) => {
   const currentPageClass = page => {
     const isAccountSettingsPage =
       page === 'AccountSettingsPage' && ACCOUNT_SETTINGS_PAGES.includes(currentPage);
@@ -68,15 +64,17 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout }) => {
         <Avatar className={css.avatar} user={currentUser} disableProfileLink />
       </MenuLabel>
       <MenuContent className={css.profileMenuContent}>
-        <MenuItem key="ManageListingsPage">
-          <NamedLink
-            className={classNames(css.menuLink, currentPageClass('ManageListingsPage'))}
-            name="ManageListingsPage"
-          >
-            <span className={css.menuItemBorder} />
-            <FormattedMessage id="TopbarDesktop.yourListingsLink" />
-          </NamedLink>
-        </MenuItem>
+        {showManageListingsLink ? (
+          <MenuItem key="ManageListingsPage">
+            <NamedLink
+              className={classNames(css.menuLink, currentPageClass('ManageListingsPage'))}
+              name="ManageListingsPage"
+            >
+              <span className={css.menuItemBorder} />
+              <FormattedMessage id="TopbarDesktop.yourListingsLink" />
+            </NamedLink>
+          </MenuItem>
+        ) : null}
         <MenuItem key="ProfileSettingsPage">
           <NamedLink
             className={classNames(css.menuLink, currentPageClass('ProfileSettingsPage'))}
@@ -113,7 +111,6 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout }) => {
  * @param {Object} props
  * @param {string?} props.className add more style rules in addition to components own css.root
  * @param {string?} props.rootClassName overwrite components own css.root
- * @param {boolean} props.currentUserHasListings
  * @param {CurrentUser} props.currentUser API entity
  * @param {string?} props.currentPage
  * @param {boolean} props.isAuthenticated
@@ -124,6 +121,8 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout }) => {
  * @param {Object} props.intl
  * @param {Object} props.config
  * @param {boolean} props.showSearchForm
+ * @param {boolean} props.showCreateListingsLink
+ * @param {string} props.inboxTab
  * @returns {JSX.Element} search icon
  */
 const TopbarDesktop = props => {
@@ -134,7 +133,6 @@ const TopbarDesktop = props => {
     currentUser,
     currentPage,
     rootClassName,
-    currentUserHasListings,
     notificationCount = 0,
     intl,
     isAuthenticated,
@@ -142,6 +140,8 @@ const TopbarDesktop = props => {
     onSearchSubmit,
     initialSearchFormValues = {},
     showSearchForm,
+    showCreateListingsLink,
+    inboxTab,
   } = props;
   const [mounted, setMounted] = useState(false);
 
@@ -157,14 +157,16 @@ const TopbarDesktop = props => {
   const classes = classNames(rootClassName || css.root, className);
 
   const inboxLinkMaybe = authenticatedOnClientSide ? (
-    <InboxLink
-      notificationCount={notificationCount}
-      currentUserHasListings={currentUserHasListings}
-    />
+    <InboxLink notificationCount={notificationCount} inboxTab={inboxTab} />
   ) : null;
 
   const profileMenuMaybe = authenticatedOnClientSide ? (
-    <ProfileMenu currentPage={currentPage} currentUser={currentUser} onLogout={onLogout} />
+    <ProfileMenu
+      currentPage={currentPage}
+      currentUser={currentUser}
+      onLogout={onLogout}
+      showManageListingsLink={showCreateListingsLink}
+    />
   ) : null;
 
   const signupLinkMaybe = isAuthenticatedOrJustHydrated ? null : <SignupLink />;
@@ -201,6 +203,7 @@ const TopbarDesktop = props => {
         customLinks={customLinks}
         intl={intl}
         hasClientSideContentReady={authenticatedOnClientSide || !isAuthenticatedOrJustHydrated}
+        showCreateListingsLink={showCreateListingsLink}
       />
 
       {inboxLinkMaybe}

@@ -311,12 +311,23 @@
   /* default "root" class for breakdown container */
 }
 
+.bookingPriceVariant {
+  margin: 0 24px 18px 24px;
+
+  @media (--viewportMedium) {
+    margin: 0 24px 16px 24px;
+  }
+  @media (--viewportLarge) {
+    margin: 0 48px;
+  }
+}
+
 .orderBreakdownTitle {
   letter-spacing: 1px;
   font-weight: var(--fontWeightMedium);
   margin: 0 24px;
 
-  @media (--viewportMedium) {
+  @media (--viewportLarge) {
     margin: 0 48px;
   }
 }
@@ -329,7 +340,7 @@
   border: none;
   background-color: var(--colorGrey100);
 
-  @media (--viewportMedium) {
+  @media (--viewportLarge) {
     margin: 7px 48px 0 48px;
   }
 }

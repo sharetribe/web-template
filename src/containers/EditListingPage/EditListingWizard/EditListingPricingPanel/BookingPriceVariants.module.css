@@ -1,0 +1,99 @@
+.root {
+}
+.selects {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+.select {
+  width: calc(50% - 8px);
+}
+.selectSuccess {
+}
+.selectError {
+  border: var(--borderErrorField);
+}
+
+.noPriceVariant {
+}
+
+.priceVariants {
+  & .priceVariant {
+    padding: 0 0 32px 0;
+    margin: 0 0 24px 0;
+    border-bottom: 1px solid var(--colorGrey200);
+  }
+}
+
+.priceVariant {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.error {
+  color: var(--colorFail);
+  margin-bottom: 24px;
+}
+
+.smallError {
+  composes: error;
+  font-size: 13px;
+  font-weight: var(--fontWeightBold);
+}
+
+.fieldArrayDelete {
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+  color: var(--colorGrey700);
+
+  &:hover {
+    color: var(--colorBlack);
+    text-decoration: none;
+
+    .deleteIcon {
+      stroke: var(--colorFail);
+    }
+  }
+}
+
+.deleteIcon {
+  display: inline-block;
+  box-sizing: content-box;
+  stroke: var(--colorGrey300);
+
+  /* align icon with the select fields */
+  padding: 1px 0 4px 0;
+  margin: 0 8px 0 0;
+
+  &:hover {
+    stroke: var(--colorFail);
+  }
+
+  @media (--viewportMedium) {
+    padding: 2px 0 6px 0;
+  }
+}
+
+.addPriceVariants {
+  display: flex;
+  flex-direction: row;
+  margin: 24px 0 0 0;
+}
+
+.addPriceVariantButton {
+  composes: h4 from global;
+  padding: 1px 0 5px 0;
+  margin: 0 0 24px 0;
+
+  @media (--viewportMedium) {
+    display: block;
+    padding: 1px 0 7px 0;
+    margin: 0 0 72px 0;
+  }
+}

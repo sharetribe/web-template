@@ -1,7 +1,7 @@
 import intersection from 'lodash/intersection';
 
 import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM } from '../../util/types';
-import { createResourceLocatorString } from '../../util/routes';
+import { createResourceLocatorString, matchPathname } from '../../util/routes';
 import {
   isAnyFilterActive,
   parseSelectFilterOptions,
@@ -15,7 +15,28 @@ import {
   addTime,
   stringifyDateToISO8601,
 } from '../../util/dates';
-import { isFieldForCategory } from '../../util/fieldHelpers';
+import { isFieldForCategory, isFieldForListingType } from '../../util/fieldHelpers';
+
+const validURLParamForCategoryData = (prefix, categories, level, params) => {
+  const levelKey = constructQueryParamName(`${prefix}${level}`, 'public');
+  const levelValue = params?.[levelKey];
+  const foundCategory = categories.find(cat => cat.id === params?.[levelKey]);
+  const subcategories = foundCategory?.subcategories || [];
+  return foundCategory && subcategories.length > 0
+    ? {
+        [levelKey]: levelValue,
+        ...validURLParamForCategoryData(prefix, subcategories, level + 1, params),
+      }
+    : foundCategory
+    ? { [levelKey]: levelValue }
+    : {};
+};
+
+const validURLParamForListingTypeData = (listingTypes, param) => {
+  const listingTypeValue = param?.pub_listingType;
+  const foundListingType = listingTypes.find(lt => lt === listingTypeValue);
+  return foundListingType && listingTypeValue ? { pub_listingType: listingTypeValue } : {};
+};
 
 /**
  * Omit those listing field parameters, that are not allowed with current category selection
@@ -25,11 +46,25 @@ import { isFieldForCategory } from '../../util/fieldHelpers';
  * @returns search parameters without currently restricted listing fields
  */
 export const omitLimitedListingFieldParams = (searchParams, filterConfigs) => {
-  const { listingFieldsConfig, defaultFiltersConfig, listingCategories } = filterConfigs;
+  const {
+    listingFieldsConfig,
+    defaultFiltersConfig,
+    listingCategories,
+    activeListingTypes,
+    currentPathParams = {},
+  } = filterConfigs;
+
+  const { listingType: listingTypePathParam } = currentPathParams;
   const categorySearchConfig = defaultFiltersConfig.find(f => f.schemaType === 'category');
+  const listingTypeSearchConfig = defaultFiltersConfig.find(f => f.schemaType === 'listingType');
   const validNestedCategoryParamNames = categorySearchConfig
     ? validURLParamForCategoryData(categorySearchConfig.key, listingCategories, 1, searchParams)
     : {};
+
+  const validListingTypeParamNames =
+    activeListingTypes && listingTypeSearchConfig
+      ? validURLParamForListingTypeData(activeListingTypes, searchParams)
+      : {};
 
   return Object.entries(searchParams).reduce((picked, searchParam) => {
     const [searchParamKey, searchParamValue] = searchParam;
@@ -38,8 +73,14 @@ export const omitLimitedListingFieldParams = (searchParams, filterConfigs) => {
     );
     const currentCategories = Object.values(validNestedCategoryParamNames);
     const isForCategory = isFieldForCategory(currentCategories, foundConfig);
+    const currentListingType = listingTypePathParam
+      ? [listingTypePathParam]
+      : Object.values(validListingTypeParamNames);
+    const isForListingType = isFieldForListingType(currentListingType, foundConfig);
     const searchParamMaybe =
-      !foundConfig || (foundConfig && isForCategory) ? { [searchParamKey]: searchParamValue } : {};
+      !foundConfig || (foundConfig && isForCategory && isForListingType)
+        ? { [searchParamKey]: searchParamValue }
+        : {};
     return { ...picked, ...searchParamMaybe };
   }, {});
 };
@@ -89,6 +130,8 @@ export const validURLParamForExtendedData = (
     return hasValidDates ? { [queryParamName]: paramValue } : {};
   } else if (queryParamName === 'seats') {
     return paramValue ? { [queryParamName]: paramValue } : {};
+  } else if (queryParamName === 'pub_listingType') {
+    return paramValue.length > 0 ? { [queryParamName]: paramValue } : {};
   }
 
   // Resolve configurations for extended data filters
@@ -121,21 +164,6 @@ export const validURLParamForExtendedData = (
   return {};
 };
 
-const validURLParamForCategoryData = (prefix, categories, level, params) => {
-  const levelKey = constructQueryParamName(`${prefix}${level}`, 'public');
-  const levelValue = params?.[levelKey];
-  const foundCategory = categories.find(cat => cat.id === params?.[levelKey]);
-  const subcategories = foundCategory?.subcategories || [];
-  return foundCategory && subcategories.length > 0
-    ? {
-        [levelKey]: levelValue,
-        ...validURLParamForCategoryData(prefix, subcategories, level + 1, params),
-      }
-    : foundCategory
-    ? { [levelKey]: levelValue }
-    : {};
-};
-
 /**
  * Checks filter param value validity.
  *
@@ -158,7 +186,7 @@ export const validFilterParams = (params, filterConfigs, dropNonFilterParams = t
   //       even though it isn't a paramname that's used with nested category tree.
   //       (pub_categoryLevel1, pub_categoryLevel2, and pub_categoryLevel3 are used instead.)
   const builtInFilterParamNames = defaultFiltersConfig.map(f => {
-    return f.schemaType === 'category' ? `pub_${f.key}` : f.key;
+    return ['category', 'listingType'].includes(f.schemaType) ? `pub_${f.key}` : f.key;
   });
   const filterParamNames = [...listingFieldParamNames, ...builtInFilterParamNames];
 
@@ -214,14 +242,17 @@ export const validFilterParams = (params, filterConfigs, dropNonFilterParams = t
  * @returns picked search params against extended data config and default filter config
  */
 export const validUrlQueryParamsFromProps = props => {
-  const { location, config } = props;
+  const { location, config, params: currentPathParams = {} } = props;
   const { listingFields: listingFieldsConfig } = config?.listing || {};
   const { defaultFilters: defaultFiltersConfig } = config?.search || {};
+  const activeListingTypes = config?.listing?.listingTypes.map(config => config.listingType);
   const listingCategories = config.categoryConfiguration.categories;
   const filterConfigs = {
     listingFieldsConfig,
     defaultFiltersConfig,
     listingCategories,
+    activeListingTypes,
+    currentPathParams,
   };
 
   // eslint-disable-next-line no-unused-vars
@@ -375,16 +406,34 @@ export const searchParamsPicker = (
 };
 
 export const pickListingFieldFilters = params => {
-  const { listingFields, locationSearch, categoryConfiguration } = params;
+  const {
+    listingFields,
+    locationSearch,
+    categoryConfiguration,
+    activeListingTypes,
+    currentPathParams = {},
+  } = params;
   const searchParams = parse(locationSearch);
   const categories = categoryConfiguration.categories;
   const validNestedCategoryParamNames = categories
     ? validURLParamForCategoryData(categoryConfiguration.key, categories, 1, searchParams)
     : {};
+
+  const { listingType: listingTypeParam } = currentPathParams;
+  const listingTypeParamMaybe = listingTypeParam ? { pub_listingType: listingTypeParam } : {};
+  const validListingTypeParamNames = activeListingTypes
+    ? validURLParamForListingTypeData(activeListingTypes, {
+        ...searchParams,
+        ...listingTypeParamMaybe,
+      })
+    : {};
+
   const currentCategories = Object.values(validNestedCategoryParamNames);
+  const currentListingType = Object.values(validListingTypeParamNames);
   const pickedFields = listingFields.reduce((picked, fieldConfig) => {
     const isTargetCategory = isFieldForCategory(currentCategories, fieldConfig);
-    return isTargetCategory ? [...picked, fieldConfig] : picked;
+    const isTargetListingField = isFieldForListingType(currentListingType, fieldConfig);
+    return isTargetCategory && isTargetListingField ? [...picked, fieldConfig] : picked;
   }, []);
   return pickedFields;
 };
@@ -402,7 +451,7 @@ export const groupListingFieldConfigs = (configs, activeListingTypes) =>
       const isIndexed = filterConfig?.indexForSearch === true;
       const isActiveListingTypes =
         !listingTypeConfig.limitToListingTypeIds ||
-        listingTypeConfig.listingTypeIds.every(lt => activeListingTypes.includes(lt));
+        listingTypeConfig.listingTypeIds.some(lt => activeListingTypes.includes(lt));
       const isPrimary = filterConfig?.group === 'primary';
       return isActiveListingTypes && isIndexed && isPrimary
         ? [[...primary, config], secondary]
@@ -494,4 +543,44 @@ export const getDatesAndSeatsMaybe = (currentParams, newParams) => {
       ? { seats, dates: `${today},${aWeekFromNow}` }
       : { seats: null, dates: null };
   return datesAndSeatsMaybe;
+};
+
+/**
+ * Returns params for createResourceLocatorString function based on the current
+ * location and route configuration
+ * @param {*} routes current route configuration
+ * @param {*} location current ReactRouter location
+ * @returns an object with the attributes routeName and pathParams, which can then be passed
+ * as the corresponding parameters to createResourceLocatorString
+ */
+export const getSearchPageResourceLocatorStringParams = (routes, location) => {
+  const matchedRoutes = matchPathname(location.pathname, routes);
+  const searchPageRoute = 'SearchPage';
+  const searchPageListingTypeRoute = 'SearchPageWithListingType';
+
+  if (matchedRoutes.length > 0) {
+    const matched = matchedRoutes[0];
+    const { params: pathParams, route } = matched;
+    const routeName =
+      route.name === searchPageListingTypeRoute ? searchPageListingTypeRoute : searchPageRoute;
+
+    return {
+      routeName,
+      pathParams,
+    };
+  } else {
+    console.error(`Route not found for pathname ${location.pathname}, redirecting to SearchPage`);
+    return {
+      routeName: searchPageRoute,
+      pathParams: {},
+    };
+  }
+};
+
+export const getActiveListingTypes = (config, listingTypePathParam) => {
+  const availableListingTypes = config?.listing?.listingTypes.map(config => config.listingType);
+  const activeListingTypes = listingTypePathParam
+    ? availableListingTypes.filter(lt => lt === listingTypePathParam)
+    : availableListingTypes;
+  return { activeListingTypes };
 };
