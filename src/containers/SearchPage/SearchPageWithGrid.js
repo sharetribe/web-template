@@ -421,6 +421,7 @@ export class SearchPageComponent extends Component {
                 selectedFiltersCount={selectedFiltersCountForMobile}
                 isMapVariant={false}
                 noResultsInfo={noResultsInfo}
+                location={location}
               >
                 {availableFilters.map(filterConfig => {
                   const key = `SearchFiltersMobile.${filterConfig.scope || 'built-in'}.${

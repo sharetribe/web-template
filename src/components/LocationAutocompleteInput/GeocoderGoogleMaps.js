@@ -108,9 +108,12 @@ class GeocoderGoogleMaps {
       return Promise.resolve(prediction.predictionPlace);
     }
 
-    return googleMapsUtil.getPlaceDetails(this.getPredictionId(prediction)).then(place => {
-      this.sessionToken = null;
-      return place;
+    return googleMapsUtil.getPlaceDetails(
+        this.getPredictionId(prediction), 
+        currentLocationBoundsDistance)
+      .then(place => {
+        this.sessionToken = null;
+        return place;
     });
   }
 }
