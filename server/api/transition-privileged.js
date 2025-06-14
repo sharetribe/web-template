@@ -381,6 +381,28 @@ module.exports = async (req, res) => {
       'customerEmail', 'customerName'
     ];
     
+    // Add debug logging before validation
+    console.log('🔍 [DEBUG] Starting validation checks...');
+    console.log('🔍 [DEBUG] Required provider fields:', requiredProviderFields);
+    console.log('🔍 [DEBUG] Required customer fields:', requiredCustomerFields);
+    console.log('🔍 [DEBUG] Provider field values:', {
+      providerStreet: params.providerStreet,
+      providerCity: params.providerCity,
+      providerState: params.providerState,
+      providerZip: params.providerZip,
+      providerEmail: params.providerEmail,
+      providerPhone: params.providerPhone
+    });
+    console.log('🔍 [DEBUG] Customer field values:', {
+      customerName: params.customerName,
+      customerEmail: params.customerEmail,
+      customerStreet: params.customerStreet,
+      customerCity: params.customerCity,
+      customerState: params.customerState,
+      customerZip: params.customerZip,
+      customerPhone: params.customerPhone
+    });
+    
     // Check provider fields (required for shipping)
     const missingProviderFields = requiredProviderFields.filter(key => !params[key] || params[key] === '');
     if (missingProviderFields.length > 0) {
