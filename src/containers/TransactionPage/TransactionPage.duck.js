@@ -704,7 +704,8 @@ export const makeTransition = (txId, transitionName, params) => (dispatch, getSt
       dispatch(transitionError(new Error('Transaction not found')));
       return Promise.reject(new Error('Transaction not found'));
     }
-    // Provider (lender)
+    
+    // Provider (lender) - only use as fallback if not already provided in params
     const provider = transaction.provider;
     const providerProfile = provider?.attributes?.profile || {};
     const providerPublic = providerProfile.publicData || {};
@@ -740,22 +741,28 @@ export const makeTransition = (txId, transitionName, params) => (dispatch, getSt
       transaction: transaction?.id
     });
 
+    // Helper function to prefer non-empty values from params over transaction data
+    const preferNonEmpty = (paramValue, transactionValue) => {
+      return (paramValue && paramValue.trim() !== '') ? paramValue : transactionValue;
+    };
+
     updatedParams = {
       ...params,
-      providerName,
-      providerStreet,
-      providerCity,
-      providerState,
-      providerZip,
-      providerEmail,
-      providerPhone,
-      customerName,
-      customerStreet,
-      customerCity,
-      customerState,
-      customerZip,
-      customerEmail,
-      customerPhone,
+      // Only use transaction data as fallback if params don't have the values
+      providerName: preferNonEmpty(params.providerName, providerName),
+      providerStreet: preferNonEmpty(params.providerStreet, providerStreet),
+      providerCity: preferNonEmpty(params.providerCity, providerCity),
+      providerState: preferNonEmpty(params.providerState, providerState),
+      providerZip: preferNonEmpty(params.providerZip, providerZip),
+      providerEmail: preferNonEmpty(params.providerEmail, providerEmail),
+      providerPhone: preferNonEmpty(params.providerPhone, providerPhone),
+      customerName: preferNonEmpty(params.customerName, customerName),
+      customerStreet: preferNonEmpty(params.customerStreet, customerStreet),
+      customerCity: preferNonEmpty(params.customerCity, customerCity),
+      customerState: preferNonEmpty(params.customerState, customerState),
+      customerZip: preferNonEmpty(params.customerZip, customerZip),
+      customerEmail: preferNonEmpty(params.customerEmail, customerEmail),
+      customerPhone: preferNonEmpty(params.customerPhone, customerPhone),
       // Add required IDs
       listingId,
       transactionId
