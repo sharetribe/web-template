@@ -373,67 +373,6 @@ module.exports = async (req, res) => {
       }
     }
 
-    // Validate required provider and customer address fields before making the SDK call
-    const requiredProviderFields = [
-      'providerStreet', 'providerCity', 'providerState', 'providerZip', 'providerEmail', 'providerPhone'
-    ];
-    const requiredCustomerFields = [
-      'customerEmail', 'customerName'
-    ];
-    
-    // Add debug logging before validation
-    console.log('🔍 [DEBUG] Starting validation checks...');
-    console.log('🔍 [DEBUG] Required provider fields:', requiredProviderFields);
-    console.log('🔍 [DEBUG] Required customer fields:', requiredCustomerFields);
-    console.log('🔍 [DEBUG] Provider field values:', {
-      providerStreet: params.providerStreet,
-      providerCity: params.providerCity,
-      providerState: params.providerState,
-      providerZip: params.providerZip,
-      providerEmail: params.providerEmail,
-      providerPhone: params.providerPhone
-    });
-    console.log('🔍 [DEBUG] Customer field values:', {
-      customerName: params.customerName,
-      customerEmail: params.customerEmail,
-      customerStreet: params.customerStreet,
-      customerCity: params.customerCity,
-      customerState: params.customerState,
-      customerZip: params.customerZip,
-      customerPhone: params.customerPhone
-    });
-    
-    // Check provider fields (required for shipping)
-    const missingProviderFields = requiredProviderFields.filter(key => !params[key] || params[key] === '');
-    if (missingProviderFields.length > 0) {
-      console.error('❌ EARLY RETURN: Missing required provider address fields:', missingProviderFields);
-      console.log('❌ Provider params available:', {
-        providerStreet: params.providerStreet,
-        providerCity: params.providerCity,
-        providerState: params.providerState,
-        providerZip: params.providerZip,
-        providerEmail: params.providerEmail,
-        providerPhone: params.providerPhone
-      });
-      return res.status(400).json({ error: `Missing required provider address fields: ${missingProviderFields.join(', ')}` });
-    }
-    
-    // Check customer fields (only email and name are required)
-    const missingCustomerFields = requiredCustomerFields.filter(key => !params[key] || params[key] === '');
-    if (missingCustomerFields.length > 0) {
-      console.error('❌ EARLY RETURN: Missing required customer fields:', missingCustomerFields);
-      console.log('❌ Customer params available:', {
-        customerName: params.customerName,
-        customerEmail: params.customerEmail,
-        customerStreet: params.customerStreet,
-        customerCity: params.customerCity,
-        customerState: params.customerState,
-        customerZip: params.customerZip,
-        customerPhone: params.customerPhone
-      });
-      return res.status(400).json({ error: `Missing required customer fields: ${missingCustomerFields.join(', ')}` });
-    }
-    
     // Log successful validation
     console.log('✅ Address validation passed:', {
       providerFields: {
@@ -454,6 +393,76 @@ module.exports = async (req, res) => {
         customerPhone: params.customerPhone || 'Not provided'
       }
     });
+
+    // Add error handling around validation logic
+    try {
+      console.log('🔍 [DEBUG] Starting validation checks...');
+      
+      // Validate required provider and customer address fields before making the SDK call
+      const requiredProviderFields = [
+        'providerStreet', 'providerCity', 'providerState', 'providerZip', 'providerEmail', 'providerPhone'
+      ];
+      const requiredCustomerFields = [
+        'customerEmail', 'customerName'
+      ];
+      
+      console.log('🔍 [DEBUG] Required provider fields:', requiredProviderFields);
+      console.log('🔍 [DEBUG] Required customer fields:', requiredCustomerFields);
+      console.log('🔍 [DEBUG] Provider field values:', {
+        providerStreet: params.providerStreet,
+        providerCity: params.providerCity,
+        providerState: params.providerState,
+        providerZip: params.providerZip,
+        providerEmail: params.providerEmail,
+        providerPhone: params.providerPhone
+      });
+      console.log('🔍 [DEBUG] Customer field values:', {
+        customerName: params.customerName,
+        customerEmail: params.customerEmail,
+        customerStreet: params.customerStreet,
+        customerCity: params.customerCity,
+        customerState: params.customerState,
+        customerZip: params.customerZip,
+        customerPhone: params.customerPhone
+      });
+      
+      // Check provider fields (required for shipping)
+      const missingProviderFields = requiredProviderFields.filter(key => !params[key] || params[key] === '');
+      if (missingProviderFields.length > 0) {
+        console.error('❌ EARLY RETURN: Missing required provider address fields:', missingProviderFields);
+        console.log('❌ Provider params available:', {
+          providerStreet: params.providerStreet,
+          providerCity: params.providerCity,
+          providerState: params.providerState,
+          providerZip: params.providerZip,
+          providerEmail: params.providerEmail,
+          providerPhone: params.providerPhone
+        });
+        return res.status(400).json({ error: `Missing required provider address fields: ${missingProviderFields.join(', ')}` });
+      }
+      
+      // Check customer fields (only email and name are required)
+      const missingCustomerFields = requiredCustomerFields.filter(key => !params[key] || params[key] === '');
+      if (missingCustomerFields.length > 0) {
+        console.error('❌ EARLY RETURN: Missing required customer fields:', missingCustomerFields);
+        console.log('❌ Customer params available:', {
+          customerName: params.customerName,
+          customerEmail: params.customerEmail,
+          customerStreet: params.customerStreet,
+          customerCity: params.customerCity,
+          customerState: params.customerState,
+          customerZip: params.customerZip,
+          customerPhone: params.customerPhone
+        });
+        return res.status(400).json({ error: `Missing required customer fields: ${missingCustomerFields.join(', ')}` });
+      }
+      
+      console.log('✅ Validation completed successfully');
+    } catch (validationError) {
+      console.error('❌ Validation error:', validationError);
+      console.error('❌ Validation error stack:', validationError.stack);
+      return res.status(500).json({ error: 'Validation error', details: validationError.message });
+    }
 
     // Perform the actual transition
     let transitionName;
