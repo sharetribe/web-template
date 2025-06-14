@@ -279,7 +279,23 @@ module.exports = async (req, res) => {
           ];
           const missing = requiredFields.filter(key => !params[key] || params[key] === '');
           if (missing.length > 0) {
-            return res.status(400).json({ error: `Missing required fields: ${missing.join(', ')}` });
+            console.error('❌ EARLY RETURN: Missing required fields:', missing);
+            console.log('❌ Customer address fields are empty - this suggests a frontend issue');
+            console.log('❌ Available params:', {
+              providerStreet: params.providerStreet,
+              providerCity: params.providerCity,
+              providerState: params.providerState,
+              providerZip: params.providerZip,
+              providerEmail: params.providerEmail,
+              providerPhone: params.providerPhone,
+              customerStreet: params.customerStreet,
+              customerCity: params.customerCity,
+              customerState: params.customerState,
+              customerZip: params.customerZip,
+              customerEmail: params.customerEmail,
+              customerPhone: params.customerPhone
+            });
+            return res.status(400).json({ error: `Missing required customer address fields: ${missing.join(', ')}. Please ensure customer shipping information is filled out.` });
           }
           // Debug log for final merged provider fields
           console.log('✅ [MERGE FIX] Final merged provider fields:', {

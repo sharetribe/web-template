@@ -295,14 +295,14 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
 
   // Construct protectedData directly from shipping form fields using correct field names
   const protectedData = {
-    // Customer shipping info from ShippingDetails form fields
-    customerName: formValues.recipientName || '',
-    customerStreet: formValues.recipientAddressLine1 || '',
-    customerCity: formValues.recipientCity || '',
-    customerState: formValues.recipientState || '',
-    customerZip: formValues.recipientPostal || '',
-    customerEmail: currentUser?.attributes?.email || '',
-    customerPhone: formValues.recipientPhoneNumber || '',
+    // Customer shipping info from custom shipping form fields (not ShippingDetails form)
+    customerName: formValues.customerName || '',
+    customerStreet: formValues.customerStreet || '',
+    customerCity: formValues.customerCity || '',
+    customerState: formValues.customerState || '',
+    customerZip: formValues.customerZip || '',
+    customerEmail: formValues.customerEmail || currentUser?.attributes?.email || '',
+    customerPhone: formValues.customerPhone || '',
     
     // Provider info from current user
     providerName: currentUser?.attributes?.profile?.displayName || '',
