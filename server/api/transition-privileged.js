@@ -373,6 +373,8 @@ module.exports = async (req, res) => {
       }
     }
 
+    console.log('🔍 [DEBUG] About to start validation logic...');
+
     // Add error handling around validation logic
     try {
       console.log('🔍 [DEBUG] Starting validation checks...');
@@ -435,27 +437,6 @@ module.exports = async (req, res) => {
         });
         return res.status(400).json({ error: `Missing required customer fields: ${missingCustomerFields.join(', ')}` });
       }
-      
-      // Log successful validation only if all checks pass
-      console.log('✅ Address validation passed:', {
-        providerFields: {
-          providerStreet: params.providerStreet,
-          providerCity: params.providerCity,
-          providerState: params.providerState,
-          providerZip: params.providerZip,
-          providerEmail: params.providerEmail,
-          providerPhone: params.providerPhone
-        },
-        customerFields: {
-          customerName: params.customerName,
-          customerEmail: params.customerEmail,
-          customerStreet: params.customerStreet || 'Not provided',
-          customerCity: params.customerCity || 'Not provided',
-          customerState: params.customerState || 'Not provided',
-          customerZip: params.customerZip || 'Not provided',
-          customerPhone: params.customerPhone || 'Not provided'
-        }
-      });
       
       console.log('✅ Validation completed successfully');
     } catch (validationError) {
