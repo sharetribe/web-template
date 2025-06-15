@@ -20,8 +20,8 @@ export const IncludeScripts = props => {
   const { googleAnalyticsId, plausibleDomains } = analytics;
 
   const { mapProvider, googleMapsAPIKey, mapboxAccessToken } = maps || {};
-  const isGoogleMapsInUse = mapProvider === 'googleMaps';
-  const isMapboxInUse = mapProvider === 'mapbox';
+  const isGoogleMapsInUse = false; //mapProvider === 'googleMaps';
+  const isMapboxInUse = false; // mapProvider === 'mapbox';
 
   // Add Google Analytics script if correct id exists (it should start with 'G-' prefix)
   // See: https://developers.google.com/analytics/devguides/collection/gtagjs
@@ -31,41 +31,41 @@ export const IncludeScripts = props => {
   let mapLibraries = [];
   let analyticsLibraries = [];
 
-  // if (isMapboxInUse) {
-  //   // NOTE: remember to update mapbox-sdk.min.js to a new version regularly.
-  //   // mapbox-sdk.min.js is included from static folder for CSP purposes.
-  //   mapLibraries.push(
-  //     <script key="mapboxSDK" src={`${rootURL}/static/scripts/mapbox/mapbox-sdk.min.js`}></script>
-  //   );
-  //   // Add CSS for Mapbox map
-  //   mapLibraries.push(
-  //     <link
-  //       key="mapbox_GL_CSS"
-  //       href="https://api.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css"
-  //       rel="stylesheet"
-  //       crossOrigin
-  //     />
-  //   );
-  //   // Add Mapbox library
-  //   mapLibraries.push(
-  //     <script
-  //       id={MAPBOX_SCRIPT_ID}
-  //       key="mapbox_GL_JS"
-  //       src="https://api.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.js"
-  //       crossOrigin
-  //     ></script>
-  //   );
-  // } else if (isGoogleMapsInUse) {
-  //   // Add Google Maps library
-  //   mapLibraries.push(
-  //     <script
-  //       id={GOOGLE_MAPS_SCRIPT_ID}
-  //       key="GoogleMapsApi"
-  //       src={`https://maps.googleapis.com/maps/api/js?key=${googleMapsAPIKey}&libraries=places`}
-  //       crossOrigin
-  //     ></script>
-  //   );
-  // }
+  if (isMapboxInUse) {
+    // NOTE: remember to update mapbox-sdk.min.js to a new version regularly.
+    // mapbox-sdk.min.js is included from static folder for CSP purposes.
+    mapLibraries.push(
+      <script key="mapboxSDK" src={`${rootURL}/static/scripts/mapbox/mapbox-sdk.min.js`}></script>
+    );
+    // Add CSS for Mapbox map
+    mapLibraries.push(
+      <link
+        key="mapbox_GL_CSS"
+        href="https://api.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css"
+        rel="stylesheet"
+        crossOrigin
+      />
+    );
+    // Add Mapbox library
+    mapLibraries.push(
+      <script
+        id={MAPBOX_SCRIPT_ID}
+        key="mapbox_GL_JS"
+        src="https://api.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.js"
+        crossOrigin
+      ></script>
+    );
+  } else if (isGoogleMapsInUse) {
+    // Add Google Maps library
+    mapLibraries.push(
+      <script
+        id={GOOGLE_MAPS_SCRIPT_ID}
+        key="GoogleMapsApi"
+        src={`https://maps.googleapis.com/maps/api/js?key=${googleMapsAPIKey}&libraries=places`}
+        crossOrigin
+      ></script>
+    );
+  }
 
   analyticsLibraries.push(
     <script nonce="6770d74824cc53512837f5654ab230448eb462060b125345d743c1a60c4229d5">
