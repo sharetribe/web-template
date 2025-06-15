@@ -103,8 +103,6 @@ const defaultDirectives = {
     '*.google.com',
     'google.com',
 
-    // Zappier
-    '*.zapier.com',
     // Youtube (static image)
     '*.ytimg.com',
 
@@ -124,6 +122,8 @@ const defaultDirectives = {
     'js.stripe.com',
     // Plausible analytics
     'plausible.io',
+    // Zapier
+    '*.zapier.com',
   ],
   styleSrc: [self, unsafeInline, 'fonts.googleapis.com', 'api.mapbox.com'],
 };
@@ -149,7 +149,7 @@ exports.csp = (reportUri, reportOnly) => {
   // const exampleImgSrc = imgSrc.concat('my-custom-domain.example.com');
 
   // new FB code
-  
+
   const { imgSrc = [self] } = defaultDirectives;
   const imgSrcOverride = imgSrc.concat('www.facebook.com');
 
@@ -173,7 +173,7 @@ exports.csp = (reportUri, reportOnly) => {
     frameSrc: frameSrcOverride,
     connectSrc: connectSrcOverride
   };
-  
+
   // ================ END CUSTOM CSP URLs ================ //
 
   // Helmet v4 expects every value to be iterable so strings or booleans are not supported directly
