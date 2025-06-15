@@ -103,6 +103,8 @@ const defaultDirectives = {
     '*.google.com',
     'google.com',
 
+    // Zappier
+    '*.zapier.com',
     // Youtube (static image)
     '*.ytimg.com',
 
