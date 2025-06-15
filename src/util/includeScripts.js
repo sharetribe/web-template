@@ -68,13 +68,11 @@ export const IncludeScripts = props => {
   // }
 
   analyticsLibraries.push(
-    <script>
+    <script nonce="6770d74824cc53512837f5654ab230448eb462060b125345d743c1a60c4229d5">
       {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
       new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
       j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-      'https://www.googletagmanager.com/gtm.js?id='+i+dl;
-      console.log('GTM', f, j);
-      ;f.parentNode.insertBefore(j,f);
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
       })(window,document,'script','dataLayer','GTM-TDW76S9S');`}
     </script>
   );

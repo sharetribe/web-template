@@ -74,7 +74,8 @@ const defaultDirectives = {
     'https://bid.g.doubleclick.net',
     'https://td.doubleclick.net',
     // Zapier
-    '*.zapier.com',
+    '*.zapier.app',
+    '*.zapier.com'
   ],
   imgSrc: [
     self,
