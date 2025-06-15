@@ -39,38 +39,6 @@ const ShippingDetails = props => {
         <FormattedMessage id="ShippingDetails.title" />
       </Heading>
       <FieldTextInput
-        id={`${fieldId}.recipientName`}
-        name="recipientName"
-        disabled={disabled}
-        className={css.fieldFullWidth}
-        type="text"
-        autoComplete="shipping name"
-        label={intl.formatMessage({ id: 'ShippingDetails.recipientNameLabel' })}
-        placeholder={intl.formatMessage({
-          id: 'ShippingDetails.recipientNamePlaceholder',
-        })}
-        validate={validators.required(
-          intl.formatMessage({ id: 'ShippingDetails.recipientNameRequired' })
-        )}
-        onUnmount={() => formApi.change('recipientName', undefined)}
-      />
-      <FieldTextInput
-        id={`${fieldId}.recipientPhoneNumber`}
-        name="recipientPhoneNumber"
-        disabled={disabled}
-        className={css.fieldFullWidth}
-        type="text"
-        autoComplete="shipping phoneNumber"
-        label={intl.formatMessage(
-          { id: 'ShippingDetails.recipientPhoneNumberLabel' },
-          { optionalText: optionalText }
-        )}
-        placeholder={intl.formatMessage({
-          id: 'ShippingDetails.recipientPhoneNumberPlaceholder',
-        })}
-        onUnmount={() => formApi.change('recipientPhoneNumber', undefined)}
-      />
-      <FieldTextInput
         id={`${fieldId}.recipientAddressLine1`}
         name="recipientAddressLine1"
         disabled={disabled}
@@ -162,6 +130,38 @@ const ShippingDetails = props => {
           })}
         </FieldSelect>
       </div>
+      <FieldTextInput
+        id={`${fieldId}.recipientName`}
+        name="recipientName"
+        disabled={disabled}
+        className={css.fieldFullWidth}
+        type="text"
+        autoComplete="shipping name"
+        label={intl.formatMessage({ id: 'ShippingDetails.recipientNameLabel' })}
+        placeholder={intl.formatMessage({
+          id: 'ShippingDetails.recipientNamePlaceholder',
+        })}
+        validate={validators.required(
+          intl.formatMessage({ id: 'ShippingDetails.recipientNameRequired' })
+        )}
+        onUnmount={() => formApi.change('recipientName', undefined)}
+      />
+      <FieldTextInput
+        id={`${fieldId}.recipientPhoneNumber`}
+        name="recipientPhoneNumber"
+        disabled={disabled}
+        className={css.fieldFullWidth}
+        type="text"
+        autoComplete="shipping phoneNumber"
+        label={intl.formatMessage(
+          { id: 'ShippingDetails.recipientPhoneNumberLabel' },
+          { optionalText: optionalText }
+        )}
+        placeholder={intl.formatMessage({
+          id: 'ShippingDetails.recipientPhoneNumberPlaceholder',
+        })}
+        onUnmount={() => formApi.change('recipientPhoneNumber', undefined)}
+      />
     </div>
   );
 };
