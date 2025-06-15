@@ -64,23 +64,30 @@ async function createShippingLabels(protectedData, transactionId) {
   try {
     console.log('📦 [SHIPPO] Creating outbound shipment (provider → customer)...');
     
+    // Define the required parcel
+    const parcel = {
+      length: '12',
+      width: '10',
+      height: '1',
+      distance_unit: 'in',
+      weight: '0.75',
+      mass_unit: 'lb'
+    };
+
+    // Outbound shipment payload
+    const outboundPayload = {
+      address_from: providerAddress,
+      address_to: customerAddress,
+      parcels: [parcel],
+      extra: { qr_code_requested: true },
+      async: false
+    };
+    console.log('📦 [SHIPPO] Outbound shipment payload:', JSON.stringify(outboundPayload, null, 2));
+
     // Create outbound shipment (provider → customer)
     const shipmentRes = await axios.post(
       'https://api.goshippo.com/shipments/',
-      {
-        address_from: providerAddress,
-        address_to: customerAddress,
-        parcels: [{
-          length: '15',
-          width: '12',
-          height: '2',
-          distance_unit: 'in',
-          weight: '2',
-          mass_unit: 'lb'
-        }],
-        extra: { qr_code_requested: true },
-        async: false
-      },
+      outboundPayload,
       {
         headers: {
           Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`,
@@ -116,25 +123,20 @@ async function createShippingLabels(protectedData, transactionId) {
     console.log('   📱 QR Code URL:', labelRes.data.qr_code_url);
     console.log('   🚚 Tracking URL:', labelRes.data.tracking_url_provider);
     
+    // Return shipment payload
+    const returnPayload = {
+      address_from: customerAddress,
+      address_to: providerAddress,
+      parcels: [parcel],
+      extra: { qr_code_requested: true },
+      async: false
+    };
+    console.log('📦 [SHIPPO] Return shipment payload:', JSON.stringify(returnPayload, null, 2));
+
     // Create return shipment (customer → provider)
-    console.log('📦 [SHIPPO] Creating return shipment (customer → provider)...');
-    
     const returnShipmentRes = await axios.post(
       'https://api.goshippo.com/shipments/',
-      {
-        address_from: customerAddress,
-        address_to: providerAddress,
-        parcels: [{
-          length: '15',
-          width: '12',
-          height: '2',
-          distance_unit: 'in',
-          weight: '2',
-          mass_unit: 'lb'
-        }],
-        extra: { qr_code_requested: true },
-        async: false
-      },
+      returnPayload,
       {
         headers: {
           Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`,
