@@ -73,6 +73,8 @@ const defaultDirectives = {
     '*.youtube-nocookie.com',
     'https://bid.g.doubleclick.net',
     'https://td.doubleclick.net',
+    // Zapier
+    '*.zapier.com',
   ],
   imgSrc: [
     self,
