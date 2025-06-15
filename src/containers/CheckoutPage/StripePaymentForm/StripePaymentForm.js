@@ -656,8 +656,17 @@ class StripePaymentForm extends Component {
                     type="text"
                     id="customerStreet"
                     name="customerStreet"
-                    label="Street Address"
+                    label="Street *"
+                    placeholder="123 Example Street"
                     required
+                  />
+                  <FieldTextInput
+                    className={css.field}
+                    type="text"
+                    id="customerStreet2"
+                    name="customerStreet2"
+                    label="Street (line 2)"
+                    placeholder="Apt 7"
                   />
                   <FieldTextInput
                     className={css.field}
