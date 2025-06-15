@@ -11,87 +11,171 @@ const {
 console.log('🚦 transition-privileged endpoint is wired up');
 
 // --- Shippo label creation logic extracted to a function ---
-async function createShippingLabels(bodyParams) {
-  // Extract addresses from bodyParams
-  const lenderAddress = {
-    name: bodyParams?.params?.providerName || 'Lender',
-    street1: bodyParams?.params?.providerStreet,
-    city: bodyParams?.params?.providerCity,
-    state: bodyParams?.params?.providerState,
-    zip: bodyParams?.params?.providerZip,
+async function createShippingLabels(protectedData, transactionId) {
+  console.log('🚀 [SHIPPO] Starting label creation for transaction:', transactionId);
+  console.log('📋 [SHIPPO] Using protectedData:', protectedData);
+  
+  // Extract addresses from protectedData
+  const providerAddress = {
+    name: protectedData.providerName || 'Provider',
+    street1: protectedData.providerStreet,
+    city: protectedData.providerCity,
+    state: protectedData.providerState,
+    zip: protectedData.providerZip,
     country: 'US',
-    email: bodyParams?.params?.providerEmail,
-    phone: bodyParams?.params?.providerPhone,
+    email: protectedData.providerEmail,
+    phone: protectedData.providerPhone,
   };
-  const borrowerAddress = {
-    name: bodyParams?.params?.customerName || 'Borrower',
-    street1: bodyParams?.params?.customerStreet,
-    city: bodyParams?.params?.customerCity,
-    state: bodyParams?.params?.customerState,
-    zip: bodyParams?.params?.customerZip,
+  
+  const customerAddress = {
+    name: protectedData.customerName || 'Customer',
+    street1: protectedData.customerStreet,
+    city: protectedData.customerCity,
+    state: protectedData.customerState,
+    zip: protectedData.customerZip,
     country: 'US',
-    email: bodyParams?.params?.customerEmail,
-    phone: bodyParams?.params?.customerPhone,
+    email: protectedData.customerEmail,
+    phone: protectedData.customerPhone,
   };
-  // Log addresses before Shippo logic
-  console.log('🏷️ Addresses received:', { lenderAddress, borrowerAddress });
-  if (lenderAddress.street1 && borrowerAddress.street1) {
-    try {
-      const shipmentRes = await axios.post('https://api.goshippo.com/shipments/', { address_from: lenderAddress, address_to: borrowerAddress, parcels: [ { length: '15', width: '12', height: '2', distance_unit: 'in', weight: '2', mass_unit: 'lb' } ], extra: { qr_code_requested: true }, async: false }, { headers: { Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`, 'Content-Type': 'application/json' } });
-      const upsRate = shipmentRes.data.rates.find((r) => r.provider === 'UPS');
-      if (upsRate) {
-        const labelRes = await axios.post('https://api.goshippo.com/transactions', { rate: upsRate.object_id, label_file_type: 'PNG', async: false }, { headers: { Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`, 'Content-Type': 'application/json' } });
-        console.log('✅ Shippo QR Code:', labelRes.data.qr_code_url);
-        console.log('📦 Shippo Label URL:', labelRes.data.label_url);
-        console.log('🚚 Shippo Tracking URL:', labelRes.data.tracking_url_provider);
-        // Create return label (borrower ➜ lender)
-        try {
-          const returnShipmentRes = await axios.post('https://api.goshippo.com/shipments/', 
-            { 
-              address_from: borrowerAddress, 
-              address_to: lenderAddress, 
-              parcels: [{ length: '15', width: '12', height: '2', distance_unit: 'in', weight: '2', mass_unit: 'lb' }], 
-              extra: { qr_code_requested: true }, 
-              async: false 
-            }, 
-            { 
-              headers: { 
-                Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`,
-                'Content-Type': 'application/json'
-              }
-            }
-          );
-          const returnUpsRate = returnShipmentRes.data.rates.find((r) => r.provider === 'UPS');
-          if (returnUpsRate) {
-            const returnLabelRes = await axios.post('https://api.goshippo.com/transactions', 
-              { 
-                rate: returnUpsRate.object_id, 
-                label_file_type: 'PNG', 
-                async: false 
-              }, 
-              { 
-                headers: { 
-                  Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`,
-                  'Content-Type': 'application/json' 
-                } 
-              }
-            );
-            console.log('✅ Shippo Return QR Code:', returnLabelRes.data.qr_code_url);
-            console.log('📦 Shippo Return Label URL:', returnLabelRes.data.label_url);
-            console.log('🚚 Shippo Return Tracking URL:', returnLabelRes.data.tracking_url_provider);
-          }
-        } catch (err) {
-          console.error('❌ Shippo return label creation failed:', err.message);
-          // Continue with transition even if return label fails
+  
+  // Log addresses for debugging
+  console.log('🏷️ [SHIPPO] Provider address:', providerAddress);
+  console.log('🏷️ [SHIPPO] Customer address:', customerAddress);
+  
+  // Validate that we have complete address information
+  const hasCompleteProviderAddress = providerAddress.street1 && providerAddress.city && providerAddress.state && providerAddress.zip;
+  const hasCompleteCustomerAddress = customerAddress.street1 && customerAddress.city && customerAddress.state && customerAddress.zip;
+  
+  if (!hasCompleteProviderAddress) {
+    console.warn('⚠️ [SHIPPO] Incomplete provider address — skipping label creation');
+    return { success: false, reason: 'incomplete_provider_address' };
+  }
+  
+  if (!hasCompleteCustomerAddress) {
+    console.warn('⚠️ [SHIPPO] Incomplete customer address — skipping label creation');
+    return { success: false, reason: 'incomplete_customer_address' };
+  }
+  
+  if (!process.env.SHIPPO_API_TOKEN) {
+    console.warn('⚠️ [SHIPPO] SHIPPO_API_TOKEN missing — skipping label creation');
+    return { success: false, reason: 'missing_api_token' };
+  }
+  
+  try {
+    console.log('📦 [SHIPPO] Creating outbound shipment (provider → customer)...');
+    
+    // Create outbound shipment (provider → customer)
+    const shipmentRes = await axios.post(
+      'https://api.goshippo.com/shipments/',
+      {
+        address_from: providerAddress,
+        address_to: customerAddress,
+        parcels: [{
+          length: '15',
+          width: '12',
+          height: '2',
+          distance_unit: 'in',
+          weight: '2',
+          mass_unit: 'lb'
+        }],
+        extra: { qr_code_requested: true },
+        async: false
+      },
+      {
+        headers: {
+          Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`,
+          'Content-Type': 'application/json'
         }
       }
-    } catch (err) { 
-      console.error('❌ Shippo label creation failed:', err.message);
-      // Continue with transition even if shipping label fails
+    );
+    
+    const upsRate = shipmentRes.data.rates.find((r) => r.provider === 'UPS');
+    if (!upsRate) {
+      console.warn('⚠️ [SHIPPO] No UPS rate found for outbound shipment');
+      return { success: false, reason: 'no_ups_rate' };
     }
-  } else { 
-    console.warn('⚠️ Missing address info — skipping Shippo label creation.');
-    // Continue with transition even if address info is missing
+    
+    // Create outbound label
+    const labelRes = await axios.post(
+      'https://api.goshippo.com/transactions',
+      {
+        rate: upsRate.object_id,
+        label_file_type: 'PNG',
+        async: false
+      },
+      {
+        headers: {
+          Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+    
+    console.log('✅ [SHIPPO] Outbound label created successfully:');
+    console.log('   📦 Label URL:', labelRes.data.label_url);
+    console.log('   📱 QR Code URL:', labelRes.data.qr_code_url);
+    console.log('   🚚 Tracking URL:', labelRes.data.tracking_url_provider);
+    
+    // Create return shipment (customer → provider)
+    console.log('📦 [SHIPPO] Creating return shipment (customer → provider)...');
+    
+    const returnShipmentRes = await axios.post(
+      'https://api.goshippo.com/shipments/',
+      {
+        address_from: customerAddress,
+        address_to: providerAddress,
+        parcels: [{
+          length: '15',
+          width: '12',
+          height: '2',
+          distance_unit: 'in',
+          weight: '2',
+          mass_unit: 'lb'
+        }],
+        extra: { qr_code_requested: true },
+        async: false
+      },
+      {
+        headers: {
+          Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+    
+    const returnUpsRate = returnShipmentRes.data.rates.find((r) => r.provider === 'UPS');
+    if (returnUpsRate) {
+      const returnLabelRes = await axios.post(
+        'https://api.goshippo.com/transactions',
+        {
+          rate: returnUpsRate.object_id,
+          label_file_type: 'PNG',
+          async: false
+        },
+        {
+          headers: {
+            Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      
+      console.log('✅ [SHIPPO] Return label created successfully:');
+      console.log('   📦 Return Label URL:', returnLabelRes.data.label_url);
+      console.log('   📱 Return QR Code URL:', returnLabelRes.data.qr_code_url);
+      console.log('   🚚 Return Tracking URL:', returnLabelRes.data.tracking_url_provider);
+    } else {
+      console.warn('⚠️ [SHIPPO] No UPS rate found for return shipment');
+    }
+    
+    return { success: true, outboundLabel: labelRes.data, returnLabel: returnLabelRes?.data };
+    
+  } catch (err) {
+    console.error('❌ [SHIPPO] Label creation failed:', err.message);
+    if (err.response?.data) {
+      console.error('❌ [SHIPPO] Shippo API error details:', err.response.data);
+    }
+    return { success: false, reason: 'api_error', error: err.message };
   }
 }
 
@@ -334,61 +418,6 @@ module.exports = async (req, res) => {
       console.log('🔒 [DEBUG] protectedData in final body:', body.params.protectedData);
     }
 
-    // Shippo integration: check for env var
-    if (!process.env.SHIPPO_API_TOKEN) {
-      console.error('❌ SHIPPO_API_TOKEN is missing! Shippo integration will not work.');
-    }
-
-    // Shippo address extraction (fallback to protectedData)
-    let protectedData = params.protectedData || {};
-    let lenderAddress = {
-      name: protectedData.providerName || 'Lender',
-      street1: protectedData.providerStreet || '',
-      city: protectedData.providerCity || '',
-      state: protectedData.providerState || '',
-      zip: protectedData.providerZip || '',
-      country: 'US',
-      email: protectedData.providerEmail || '',
-      phone: protectedData.providerPhone || '',
-    };
-    let borrowerAddress = {
-      name: protectedData.customerName || 'Borrower',
-      street1: protectedData.customerStreet || '',
-      city: protectedData.customerCity || '',
-      state: protectedData.customerState || '',
-      zip: protectedData.customerZip || '',
-      country: 'US',
-      email: protectedData.customerEmail || '',
-      phone: protectedData.customerPhone || '',
-    };
-    // Log addresses before Shippo logic
-    console.log('🏷️ Addresses received:', { lenderAddress, borrowerAddress });
-
-    // Shippo label creation (with fallback and logging)
-    if (bodyParams?.transition === 'transition/accept') {
-      // Check if we have complete address information for both parties
-      const hasCompleteProviderAddress = lenderAddress.street1 && lenderAddress.city && lenderAddress.state && lenderAddress.zip;
-      const hasCompleteCustomerAddress = borrowerAddress.street1 && borrowerAddress.city && borrowerAddress.state && borrowerAddress.zip;
-      
-      if (hasCompleteProviderAddress && hasCompleteCustomerAddress && process.env.SHIPPO_API_TOKEN) {
-        try {
-          await createShippingLabels(params);
-        } catch (err) {
-          console.error('❌ Shippo label creation failed:', err.message);
-        }
-      } else {
-        if (!process.env.SHIPPO_API_TOKEN) {
-          console.warn('⚠️ SHIPPO_API_TOKEN missing, skipping Shippo label creation.');
-        } else if (!hasCompleteProviderAddress) {
-          console.warn('⚠️ Incomplete provider address — skipping Shippo label creation.');
-        } else if (!hasCompleteCustomerAddress) {
-          console.warn('⚠️ Incomplete customer address — skipping Shippo label creation.');
-        } else {
-          console.warn('⚠️ Missing address info — skipping Shippo label creation.');
-        }
-      }
-    }
-
     console.log('🔍 [DEBUG] About to start validation logic...');
 
     // Add error handling around validation logic
@@ -503,6 +532,29 @@ module.exports = async (req, res) => {
       if (bodyParams && bodyParams.transition === 'transition/request-payment' && response && response.data && response.data.data && response.data.data.attributes) {
         console.log('🧾 Booking complete. Transaction protectedData:', response.data.data.attributes.protectedData);
       }
+      
+      // Shippo label creation - only for transition/accept after successful transition
+      if (bodyParams?.transition === 'transition/accept' && !isSpeculative) {
+        console.log('🚀 [SHIPPO] Transition successful, triggering Shippo label creation...');
+        
+        // Use the validated and merged protectedData from params
+        const finalProtectedData = params.protectedData || {};
+        console.log('📋 [SHIPPO] Final protectedData for label creation:', finalProtectedData);
+        
+        // Trigger Shippo label creation asynchronously (don't await to avoid blocking response)
+        createShippingLabels(finalProtectedData, transactionId)
+          .then(result => {
+            if (result.success) {
+              console.log('✅ [SHIPPO] Label creation completed successfully');
+            } else {
+              console.warn('⚠️ [SHIPPO] Label creation failed:', result.reason);
+            }
+          })
+          .catch(err => {
+            console.error('❌ [SHIPPO] Unexpected error in label creation:', err.message);
+          });
+      }
+      
       // Defensive: Only access .transition if response and response.data are defined
       if (
         response &&
