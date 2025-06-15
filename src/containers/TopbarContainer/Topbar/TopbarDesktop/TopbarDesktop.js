@@ -90,7 +90,6 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout }) => {
         </MenuItem>
         <MenuItem key="AccountSettingsPage">
           <NamedLink
-            id="account-settings-link"
             className={classNames(css.menuLink, currentPageClass('AccountSettingsPage'))}
             name="AccountSettingsPage"
           >
