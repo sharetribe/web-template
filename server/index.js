@@ -55,7 +55,7 @@ const redirectSSL =
     : process.env.REACT_APP_SHARETRIBE_USING_SSL;
 const REDIRECT_SSL = redirectSSL === 'true';
 const TRUST_PROXY = process.env.SERVER_SHARETRIBE_TRUST_PROXY || null;
-const CSP = process.env.REACT_APP_CSP;
+const CSP = false; //process.env.REACT_APP_CSP;
 const cspReportUrl = '/csp-report';
 const cspEnabled = CSP === 'block' || CSP === 'report';
 const app = express();
