@@ -215,7 +215,15 @@ export const signup = params => (dispatch, getState, sdk) => {
   // do that automatically.
   return sdk.currentUser
     .create(params)
-    .then(() => dispatch(signupSuccess()))
+    .then(() => {
+      window.dataLayer?.push({
+        event: 'Lead',
+        eventProps: {
+          type: params.publicData.userType
+        }
+      });
+      return dispatch(signupSuccess());
+    })
     .then(() => dispatch(login(params.email, params.password)))
     .catch(e => {
       dispatch(signupError(storableError(e)));
