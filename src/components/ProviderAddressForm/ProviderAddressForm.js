@@ -26,29 +26,35 @@ const ProviderAddressForm = ({ initialValues, onChange }) => (
             <FieldTextInput
               id="streetAddress"
               name="streetAddress"
-              label="Street Address"
-              placeholder="Enter street address"
+              label="Street *"
+              placeholder="1795 Chestnut St"
               required
+            />
+            <FieldTextInput
+              id="streetAddress2"
+              name="streetAddress2"
+              label="Street (line 2)"
+              placeholder="Apt 7"
             />
             <FieldTextInput
               id="city"
               name="city"
-              label="City"
-              placeholder="Enter city"
+              label="City *"
+              placeholder="San Francisco"
               required
             />
             <FieldTextInput
               id="state"
               name="state"
-              label="State"
-              placeholder="Enter state"
+              label="State *"
+              placeholder="California"
               required
             />
             <FieldTextInput
               id="zipCode"
               name="zipCode"
-              label="ZIP Code"
-              placeholder="Enter ZIP code"
+              label="Postal code / zip *"
+              placeholder="94123-2935"
               required
             />
             <FieldTextInput
