@@ -148,8 +148,10 @@ async function createShippingLabels(protectedData, transactionId) {
     );
     
     const returnUpsRate = returnShipmentRes.data.rates.find((r) => r.provider === 'UPS');
+    let returnLabelRes = null; // Declare outside the if block
+    
     if (returnUpsRate) {
-      const returnLabelRes = await axios.post(
+      returnLabelRes = await axios.post(
         'https://api.goshippo.com/transactions',
         {
           rate: returnUpsRate.object_id,
