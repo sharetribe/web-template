@@ -264,11 +264,6 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
       setOrderPageInitialValues(initialValues, routeConfiguration, dispatch);
       onSubmitCallback();
       history.push(orderDetailsPath);
-
-      window.dataLayer?.push({
-        event: 'Purchase',
-        id: listingId?.uuid
-      });
     })
     .catch(err => {
       console.error(err);

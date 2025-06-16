@@ -270,7 +270,7 @@ export const initiateOrder = (
   }
 };
 
-export const confirmPayment = (transactionId, transitionName, transitionParams = {}) => (
+export const confirmPayment = (transactionId, transitionName, transitionParams = {}, fnParams = {}) => (
   dispatch,
   getState,
   sdk
@@ -291,6 +291,11 @@ export const confirmPayment = (transactionId, transitionName, transitionParams =
     .transition(bodyParams, queryParams)
     .then(response => {
       const order = response.data.data;
+      window.dataLayer?.push({
+        event: 'Purchase',
+        transactionTotal: fnParams?.amount / 100,
+        currency: fnParams?.currency
+      });
       dispatch(confirmPaymentSuccess(order.id));
       return order;
     })
