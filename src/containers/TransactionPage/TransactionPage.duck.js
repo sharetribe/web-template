@@ -174,12 +174,11 @@ export default function transactionPageReducer(state = initialState, action = {}
         transitionError: null,
       };
     case TRANSITION_SUCCESS:
-      return { ...state, transitionInProgress: null };
     case TRANSITION_ERROR:
       return {
         ...state,
         transitionInProgress: null,
-        transitionError: payload,
+        transitionError: type === TRANSITION_ERROR ? payload : null,
       };
 
     case FETCH_MESSAGES_REQUEST:
@@ -671,67 +670,149 @@ const refreshTransactionEntity = (sdk, txId, dispatch) => {
 };
 
 export const makeTransition = (txId, transitionName, params) => (dispatch, getState, sdk) => {
-  if (transitionInProgress(getState())) {
-    return Promise.reject(new Error('Transition already in progress'));
+  console.log('🛠️ [makeTransition] txId:', txId);
+  console.log('🛠️ [makeTransition] transitionName:', transitionName);
+  console.log('🛠️ [makeTransition] params:', params);
+  if (params?.protectedData) {
+    console.log('🔐 protectedData keys:', Object.keys(params.protectedData));
   }
+  const transitionInProgress = getState().TransactionPage.transitionInProgress;
+  if (transitionInProgress) {
+    console.warn('🛑 Transition already in progress, aborting:', transitionInProgress);
+    return Promise.resolve(null);
+  }
+  
+  console.log('📤 Dispatching transitionRequest:', transitionName);
   dispatch(transitionRequest(transitionName));
 
   // Inject address info for transition/accept
   let updatedParams = params;
   if (transitionName === 'transition/accept') {
+    console.log('🎯 Processing transition/accept with address injection');
     const state = getState();
     const { transactionRef } = state.TransactionPage;
+    // Log transactionRef for debugging
+    console.log('🔎 transactionRef:', transactionRef);
     const transactions = getMarketplaceEntities(state, transactionRef ? [transactionRef] : []);
+    // Log transactions array for debugging
+    console.log('🔎 transactions from getMarketplaceEntities:', transactions);
     const transaction = transactions.length > 0 ? transactions[0] : null;
-    if (transaction) {
-      // Provider (lender)
-      const provider = transaction.provider;
-      const providerProfile = provider?.attributes?.profile || {};
-      const providerPublic = providerProfile.publicData || {};
-      const providerProtected = providerProfile.protectedData || {};
-      const providerName = providerProfile.displayName || `${providerProfile.firstName || ''} ${providerProfile.lastName || ''}`.trim();
-      const providerStreet = providerPublic.providerStreet || providerProtected.providerStreet || '';
-      const providerCity = providerPublic.providerCity || providerProtected.providerCity || '';
-      const providerState = providerPublic.providerState || providerProtected.providerState || '';
-      const providerZip = providerPublic.providerZip || providerProtected.providerZip || '';
-      const providerEmail = provider?.attributes?.email || '';
-      const providerPhone = providerProtected.phoneNumber || providerPublic.providerPhone || '';
-
-      // Customer (borrower)
-      const customer = transaction.customer;
-      const shippingDetails = transaction?.attributes?.protectedData?.shippingDetails || {};
-      const customerName = shippingDetails.name || '';
-      const customerStreet = shippingDetails.street || '';
-      const customerCity = shippingDetails.city || '';
-      const customerState = shippingDetails.state || '';
-      const customerZip = shippingDetails.zip || '';
-      const customerEmail = customer?.attributes?.email || '';
-      const customerPhone = shippingDetails.phoneNumber || '';
-
-      updatedParams = {
-        ...params,
-        providerName,
-        providerStreet,
-        providerCity,
-        providerState,
-        providerZip,
-        providerEmail,
-        providerPhone,
-        customerName,
-        customerStreet,
-        customerCity,
-        customerState,
-        customerZip,
-        customerEmail,
-        customerPhone,
-      };
+    // Log transaction object for debugging
+    console.log('🚨 Transaction in transition/accept:', transaction);
+    if (!transaction) {
+      console.warn('⚠️ Cannot make transition — transaction not found for ID:', txId);
+      dispatch(transitionError(new Error('Transaction not found')));
+      return Promise.reject(new Error('Transaction not found'));
     }
+    
+    // Provider (lender) - only use as fallback if not already provided in params
+    const provider = transaction.provider;
+    const providerProfile = provider?.attributes?.profile || {};
+    const providerPublic = providerProfile.publicData || {};
+    const providerProtected = providerProfile.protectedData || {};
+    const providerName = providerProfile.displayName || `${providerProfile.firstName || ''} ${providerProfile.lastName || ''}`.trim();
+    const providerStreet = providerPublic.providerStreet || providerProtected.providerStreet || '';
+    const providerCity = providerPublic.providerCity || providerProtected.providerCity || '';
+    const providerState = providerPublic.providerState || providerProtected.providerState || '';
+    const providerZip = providerPublic.providerZip || providerProtected.providerZip || '';
+    const providerEmail = provider?.attributes?.email || '';
+    const providerPhone = providerProtected.phoneNumber || providerPublic.providerPhone || '';
+
+    // Customer (borrower)
+    const customer = transaction.customer;
+    const shippingDetails = transaction?.attributes?.protectedData?.shippingDetails || {};
+    const customerName = shippingDetails.name || '';
+    const customerStreet = shippingDetails.street || '';
+    const customerCity = shippingDetails.city || '';
+    const customerState = shippingDetails.state || '';
+    const customerZip = shippingDetails.zip || '';
+    const customerEmail = customer?.attributes?.email || '';
+    const customerPhone = shippingDetails.phoneNumber || '';
+
+    // Add listingId and transactionId to params
+    const listingId = transaction?.listing?.id;
+    const transactionId = transaction?.id;
+
+    console.log('📝 Transition/accept params:', {
+      listingId,
+      transactionId,
+      hasListingId: !!listingId,
+      hasTransactionId: !!transactionId,
+      transaction: transaction?.id
+    });
+
+    // Helper function to prefer non-empty values from params over transaction data
+    const preferNonEmpty = (paramValue, transactionValue) => {
+      return (paramValue && paramValue.trim() !== '') ? paramValue : transactionValue;
+    };
+
+    updatedParams = {
+      ...params,
+      // Only use transaction data as fallback if params don't have the values
+      providerName: preferNonEmpty(params.providerName, providerName),
+      providerStreet: preferNonEmpty(params.providerStreet, providerStreet),
+      providerCity: preferNonEmpty(params.providerCity, providerCity),
+      providerState: preferNonEmpty(params.providerState, providerState),
+      providerZip: preferNonEmpty(params.providerZip, providerZip),
+      providerEmail: preferNonEmpty(params.providerEmail, providerEmail),
+      providerPhone: preferNonEmpty(params.providerPhone, providerPhone),
+      customerName: preferNonEmpty(params.customerName, customerName),
+      customerStreet: preferNonEmpty(params.customerStreet, customerStreet),
+      customerCity: preferNonEmpty(params.customerCity, customerCity),
+      customerState: preferNonEmpty(params.customerState, customerState),
+      customerZip: preferNonEmpty(params.customerZip, customerZip),
+      customerEmail: preferNonEmpty(params.customerEmail, customerEmail),
+      customerPhone: preferNonEmpty(params.customerPhone, customerPhone),
+      // Add required IDs
+      listingId,
+      transactionId
+    };
   }
 
-  return sdk.transactions
-    .transition({ id: txId, transition: transitionName, params: updatedParams }, { expand: true })
+  // Use our backend endpoint instead of SDK directly
+  const bodyParams = {
+    transition: transitionName,
+    params: updatedParams,
+  };
+
+  console.log('📡 Making API call to /api/transition-privileged:', {
+    transition: transitionName,
+    params: updatedParams,
+    bodyParams
+  });
+
+  return fetch('/api/transition-privileged', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/transit+json',
+    },
+    body: JSON.stringify({
+      isSpeculative: false,
+      bodyParams,
+      queryParams: { expand: true }
+    }),
+  })
     .then(response => {
+      console.log('📥 API response received:', {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok
+      });
+      if (!response.ok) {
+        console.error('❌ API response not ok:', response.status, response.statusText);
+        throw response;
+      }
+      return response.json();
+    })
+    .then(response => {
+      console.log('✅ API response parsed successfully:', response);
       dispatch(addMarketplaceEntities(response));
+      // Log after adding marketplace entities
+      console.log('✅ addMarketplaceEntities dispatched. Response:', response);
+      // Check if transaction data is present in response
+      if (!response?.data?.data) {
+        console.warn('⚠️ No transaction data in response after transition.');
+      }
       dispatch(transitionSuccess());
       dispatch(fetchCurrentUserNotifications());
 
@@ -744,6 +825,7 @@ export const makeTransition = (txId, transitionName, params) => (dispatch, getSt
       return response;
     })
     .catch(e => {
+      console.error('❌ makeTransition failed:', e);
       dispatch(transitionError(storableError(e)));
       log.error(e, `${transitionName}-failed`, {
         txId,

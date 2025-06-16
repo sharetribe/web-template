@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
@@ -9,6 +9,7 @@ import { isMobileSafari } from '../../../util/userAgent';
 import { createSlug } from '../../../util/urlHelpers';
 
 import { AvatarLarge, NamedLink, UserDisplayName } from '../../../components';
+import ProviderAddressForm from '../../../components/ProviderAddressForm/ProviderAddressForm';
 
 import { stateDataShape } from '../TransactionPage.stateData';
 import SendMessageForm from '../SendMessageForm/SendMessageForm';
@@ -84,6 +85,7 @@ const displayNames = (currentUser, provider, customer, intl) => {
  * @param {React.ReactNode} props.orderPanel - The order panel
  * @param {object} props.config - The config
  * @param {intlShape} props.intl - The intl
+ * @param {Function} props.onTransition - The on transition function
  * @returns {JSX.Element} The TransactionPanel component
  */
 export class TransactionPanelComponent extends Component {
@@ -91,6 +93,14 @@ export class TransactionPanelComponent extends Component {
     super(props);
     this.state = {
       sendMessageFormFocused: false,
+      addressValues: {
+        streetAddress: '',
+        streetAddress2: '',
+        city: '',
+        state: '',
+        zipCode: '',
+        phoneNumber: '',
+      },
     };
     this.isMobSaf = false;
     this.sendMessageFormName = 'TransactionPanel.SendMessageForm';
@@ -99,6 +109,7 @@ export class TransactionPanelComponent extends Component {
     this.onSendMessageFormBlur = this.onSendMessageFormBlur.bind(this);
     this.onMessageSubmit = this.onMessageSubmit.bind(this);
     this.scrollToMessage = this.scrollToMessage.bind(this);
+    this.handleAddressFormChange = this.handleAddressFormChange.bind(this);
   }
 
   componentDidMount() {
@@ -145,6 +156,11 @@ export class TransactionPanelComponent extends Component {
     }
   }
 
+  handleAddressFormChange(updatedValues) {
+    console.log('🏠 [handleAddressFormChange] Address form values updated:', updatedValues);
+    this.setState({ addressValues: updatedValues });
+  }
+
   render() {
     const {
       rootClassName,
@@ -172,12 +188,16 @@ export class TransactionPanelComponent extends Component {
       orderPanel,
       config,
       hasViewingRights,
+      onTransition,
     } = this.props;
+
+    const { nextTransitions, listing: stateDataListing, transaction: stateDataTransaction } = stateData;
+    const transaction = stateDataTransaction || this.props.transaction;
 
     const isCustomer = transactionRole === 'customer';
     const isProvider = transactionRole === 'provider';
 
-    const listingDeleted = !!listing?.attributes?.deleted;
+    const listingDeleted = !!stateDataListing?.attributes?.deleted;
     const isCustomerBanned = !!customer?.attributes?.banned;
     const isCustomerDeleted = !!customer?.attributes?.deleted;
     const isProviderBanned = !!provider?.attributes?.banned;
@@ -194,20 +214,169 @@ export class TransactionPanelComponent extends Component {
       id: 'TransactionPanel.deletedListingTitle',
     });
 
-    const listingTitle = listingDeleted ? deletedListingTitle : listing?.attributes?.title;
-    const firstImage = listing?.images?.length > 0 ? listing?.images[0] : null;
+    const listingTitle = listingDeleted ? deletedListingTitle : stateDataListing?.attributes?.title || '';
+    const listingImages = stateDataListing?.images?.length ? stateDataListing.images : listing?.images || [];
+    const firstImage = listingImages.length > 0 ? listingImages[0] : null;
+
+    let listingTitleNode;
+    if (listingDeleted) {
+      listingTitleNode = listingTitle;
+    } else if (stateDataListing?.id && stateDataListing?.attributes?.title) {
+      listingTitleNode = (
+        <NamedLink
+          name="ListingPage"
+          params={{
+            id: stateDataListing.id.uuid,
+            slug: createSlug(stateDataListing.attributes.title),
+          }}
+        >
+          {stateDataListing.attributes.title}
+        </NamedLink>
+      );
+    } else {
+      listingTitleNode = <span>{listingTitle}</span>;
+    }
+
+    const primaryButtonProps = stateData.primaryButtonProps
+      ? {
+          ...stateData.primaryButtonProps,
+          onAction: () => {
+            console.log('🔥 Checking transition props:', stateData.primaryButtonProps);
+            // Prepare params with all required protectedData fields
+            const params = {
+              transactionId: transaction?.id || '',
+              listingId: stateDataListing?.id || '',
+            };
+            
+            if (isProvider && this.state.addressValues) {
+              console.log('🏠 [onAction] addressValues before merge:', this.state.addressValues);
+              const { streetAddress, streetAddress2, city, state, zipCode, phoneNumber } = this.state.addressValues;
+              // Validate that all required address fields are filled
+              const requiredFields = { streetAddress, city, state, zipCode, phoneNumber };
+              const missingFields = Object.entries(requiredFields)
+                .filter(([key, value]) => !value || value.trim() === '')
+                .map(([key]) => key);
+              if (missingFields.length > 0) {
+                console.error('❌ Missing required address fields:', missingFields);
+                alert(`Please fill in all required address fields: ${missingFields.join(', ')}`);
+                return;
+              }
+              // Get existing protectedData from transaction (includes customer shipping info)
+              const existingProtectedData = protectedData || {};
+              // Get provider email and name from currentUser
+              const providerEmail = currentUser?.attributes?.email || '';
+              const providerName = currentUser?.attributes?.profile?.displayName || '';
+              const {
+                providerStreet: _providerStreet,
+                providerStreet2: _providerStreet2,
+                providerCity: _providerCity,
+                providerState: _providerState,
+                providerZip: _providerZip,
+                providerPhone: _providerPhone,
+                providerEmail: _providerEmail,
+                providerName: _providerName,
+                ...restProtectedData
+              } = existingProtectedData;
+              const mergedProtectedData = {
+                // Customer shipping info from existingProtectedData (saved during booking)
+                customerName: restProtectedData.customerName || '',
+                customerStreet: restProtectedData.customerStreet || '',
+                customerStreet2: restProtectedData.customerStreet2 || '',
+                customerCity: restProtectedData.customerCity || '',
+                customerState: restProtectedData.customerState || '',
+                customerZip: restProtectedData.customerZip || '',
+                customerEmail: restProtectedData.customerEmail || '',
+                customerPhone: restProtectedData.customerPhone || '',
+                // Any other existing protectedData fields (excluding provider fields)
+                ...restProtectedData,
+                // Provider address info from form (these overwrite any existing/blank values)
+                providerStreet: streetAddress,
+                providerStreet2: streetAddress2 || '',
+                providerCity: city,
+                providerState: state,
+                providerZip: zipCode,
+                providerPhone: phoneNumber,
+                providerEmail,
+                providerName,
+              };
+              // --- FRONTEND FIX: Add all required fields at top-level of params as well ---
+              Object.assign(params, {
+                protectedData: mergedProtectedData,
+                providerStreet: mergedProtectedData.providerStreet,
+                providerStreet2: mergedProtectedData.providerStreet2,
+                providerCity: mergedProtectedData.providerCity,
+                providerState: mergedProtectedData.providerState,
+                providerZip: mergedProtectedData.providerZip,
+                providerPhone: mergedProtectedData.providerPhone,
+                providerEmail: mergedProtectedData.providerEmail,
+                providerName: mergedProtectedData.providerName,
+                customerStreet: mergedProtectedData.customerStreet,
+                customerStreet2: mergedProtectedData.customerStreet2,
+                customerCity: mergedProtectedData.customerCity,
+                customerState: mergedProtectedData.customerState,
+                customerZip: mergedProtectedData.customerZip,
+                customerPhone: mergedProtectedData.customerPhone,
+                customerEmail: mergedProtectedData.customerEmail,
+                customerName: mergedProtectedData.customerName,
+              });
+              console.log('🔀 [onAction] mergedProtectedData:', mergedProtectedData);
+            }
+            
+            console.log('🔥 Transition name:', stateData.primaryButtonProps?.transitionName);
+            console.log('🔥 Params before transition:', params);
+            console.log('🧪 isProvider:', isProvider);
+            console.log('🧪 acceptTransitionAvailable:', (nextTransitions || []).some(t => t.attributes && t.attributes.name === 'transition/accept'));
+            console.log('🧪 transactionId:', transaction?.id);
+            console.log('🧪 listingId:', stateDataListing?.id);
+            console.log('🎯 nextTransitions:', nextTransitions?.map(t => t?.attributes?.name));
+            console.log('🔐 protectedData received in TransactionPanel:', protectedData);
+            console.log('📦 Customer shipping info in protectedData:', {
+              customerName: protectedData?.customerName,
+              customerStreet: protectedData?.customerStreet,
+              customerCity: protectedData?.customerCity,
+              customerState: protectedData?.customerState,
+              customerZip: protectedData?.customerZip,
+              customerEmail: protectedData?.customerEmail,
+              customerPhone: protectedData?.customerPhone,
+            });
+            console.log('[TransactionPanel] addressValues in state:', this.state.addressValues);
+            console.log('[onAction] FINAL params sent to onTransition:', params);
+            
+            if (transaction?.id && stateDataListing?.id && stateData.primaryButtonProps?.transitionName) {
+              onTransition(transaction.id, stateData.primaryButtonProps.transitionName, params);
+            } else {
+              console.error('❌ Cannot call onTransition: Missing transactionId or listingId', {
+                transactionId: transaction?.id,
+                listingId: stateDataListing?.id,
+              });
+            }
+          },
+        }
+      : null;
 
     const actionButtons = (
       <ActionButtonsMaybe
+        className={css.actionButtons}
         showButtons={stateData.showActionButtons}
-        primaryButtonProps={stateData?.primaryButtonProps}
-        secondaryButtonProps={stateData?.secondaryButtonProps}
-        isListingDeleted={listingDeleted}
+        primaryButtonProps={primaryButtonProps}
+        secondaryButtonProps={
+          stateData.secondaryButtonProps
+            ? {
+                ...stateData.secondaryButtonProps,
+                onAction: () => {
+                  if (typeof onTransition === 'function') {
+                    onTransition(transaction?.id || '', stateData.secondaryButtonProps.transitionName, stateData.secondaryButtonProps.params);
+                  }
+                },
+              }
+            : null
+        }
+        isListingDeleted={stateDataListing?.attributes?.deleted}
         isProvider={isProvider}
       />
     );
 
-    const listingType = listing?.attributes?.publicData?.listingType;
+    const listingType = stateDataListing?.attributes?.publicData?.listingType;
     const listingTypeConfigs = config.listing.listingTypes;
     const listingTypeConfig = listingTypeConfigs.find(conf => conf.listingType === listingType);
     const showPrice = isInquiryProcess && displayPrice(listingTypeConfig);
@@ -223,6 +392,36 @@ export class TransactionPanelComponent extends Component {
     const deliveryMethod = protectedData?.deliveryMethod || 'none';
 
     const classes = classNames(rootClassName || css.root, className);
+
+    const handleTransition = (transitionName, params = {}) => {
+      if (typeof onTransition === 'function') {
+        onTransition(transaction?.id || '', transitionName, params);
+      }
+    };
+
+    // Determine if provider and transition/accept is available
+    const acceptTransitionAvailable = (nextTransitions || []).some(
+      t => t.attributes && t.attributes.name === 'transition/accept'
+    );
+
+    const { addressValues } = this.state;
+
+    console.log('🧪 isProvider:', isProvider);
+    console.log('🧪 acceptTransitionAvailable:', acceptTransitionAvailable);
+    console.log('🧪 transactionId:', transaction?.id);
+    console.log('🧪 listingId:', stateDataListing?.id);
+    console.log('🎯 nextTransitions:', nextTransitions?.map(t => t?.attributes?.name));
+    console.log('🔐 protectedData received in TransactionPanel:', protectedData);
+    console.log('📦 Customer shipping info in protectedData:', {
+      customerName: protectedData?.customerName,
+      customerStreet: protectedData?.customerStreet,
+      customerCity: protectedData?.customerCity,
+      customerState: protectedData?.customerState,
+      customerZip: protectedData?.customerZip,
+      customerEmail: protectedData?.customerEmail,
+      customerPhone: protectedData?.customerPhone,
+    });
+    console.log('[TransactionPanel] addressValues in state:', this.state.addressValues);
 
     return (
       <div className={classes}>
@@ -248,7 +447,7 @@ export class TransactionPanelComponent extends Component {
               processState={stateData.processState}
               showExtraInfo={stateData.showExtraInfo}
               showPriceOnMobile={showPrice}
-              price={listing?.attributes?.price}
+              price={stateDataListing?.attributes?.price}
               intl={intl}
               deliveryMethod={deliveryMethod}
               isPendingPayment={!!stateData.isPendingPayment}
@@ -256,7 +455,7 @@ export class TransactionPanelComponent extends Component {
               providerName={authorDisplayName}
               customerName={customerDisplayName}
               isCustomerBanned={isCustomerBanned}
-              listingId={listing?.id?.uuid}
+              listingId={stateDataListing?.id?.uuid || listing?.id?.uuid || ''}
               listingTitle={listingTitle}
               listingDeleted={listingDeleted}
             />
@@ -297,12 +496,12 @@ export class TransactionPanelComponent extends Component {
                 <DeliveryInfoMaybe
                   className={css.deliveryInfoSection}
                   protectedData={protectedData}
-                  listing={listing}
+                  listing={stateDataListing}
                   locale={config.localization.locale}
                 />
                 <BookingLocationMaybe
                   className={css.deliveryInfoSection}
-                  listing={listing}
+                  listing={stateDataListing}
                   showBookingLocation={showBookingLocation}
                 />
               </div>
@@ -343,6 +542,22 @@ export class TransactionPanelComponent extends Component {
                 <div className={css.mobileActionButtons}>{actionButtons}</div>
               </>
             ) : null}
+
+            {isProvider && acceptTransitionAvailable && transaction?.id && stateDataListing?.id && (
+              <>
+                {console.log('🏠 Rendering ProviderAddressForm with conditions:', {
+                  isProvider,
+                  acceptTransitionAvailable,
+                  transactionId: transaction?.id,
+                  listingId: stateDataListing?.id,
+                  addressValues: this.state.addressValues
+                })}
+                <ProviderAddressForm
+                  initialValues={this.state.addressValues}
+                  onChange={this.handleAddressFormChange}
+                />
+              </>
+            )}
           </div>
 
           <div className={css.asideDesktop}>
@@ -359,20 +574,9 @@ export class TransactionPanelComponent extends Component {
 
                 <DetailCardHeadingsMaybe
                   showDetailCardHeadings={showDetailCardHeadings}
-                  listingTitle={
-                    listingDeleted ? (
-                      listingTitle
-                    ) : (
-                      <NamedLink
-                        name="ListingPage"
-                        params={{ id: listing.id?.uuid, slug: createSlug(listingTitle) }}
-                      >
-                        {listingTitle}
-                      </NamedLink>
-                    )
-                  }
+                  listingTitle={listingTitleNode}
                   showPrice={showPrice}
-                  price={listing?.attributes?.price}
+                  price={stateDataListing?.attributes?.price}
                   intl={intl}
                 />
                 {showOrderPanel ? orderPanel : null}

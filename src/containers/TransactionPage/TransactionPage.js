@@ -46,6 +46,7 @@ import ReviewModal from './ReviewModal/ReviewModal';
 import TransactionPanel from './TransactionPanel/TransactionPanel';
 
 import {
+  makeRequestPayment,
   makeTransition,
   sendMessage,
   sendReview,
@@ -390,6 +391,7 @@ export const TransactionPageComponent = props => {
     ? getStateData(
         {
           transaction,
+          listing,
           transactionRole,
           nextTransitions,
           transitionInProgress,
@@ -403,6 +405,11 @@ export const TransactionPageComponent = props => {
         process
       )
     : {};
+
+  console.log('DEBUG stateData:', stateData);
+  console.log('DEBUG transaction:', transaction);
+  console.log('DEBUG transaction state:', transaction?.attributes?.state);
+  console.log('DEBUG nextTransitions:', nextTransitions);
 
   const hasLineItems = transaction?.attributes?.lineItems?.length > 0;
   const unitLineItem = hasLineItems
@@ -450,6 +457,11 @@ export const TransactionPageComponent = props => {
   const showBookingLocation =
     isBookingProcess(stateData.processName) &&
     process?.hasPassedState(process?.states?.ACCEPTED, transaction);
+
+  // Before rendering TransactionPanel:
+  console.log('🧩 stateData.transaction:', stateData.transaction);
+  console.log('🧩 stateData.listing:', stateData.listing);
+  console.log('🧩 stateData.nextTransitions:', stateData.nextTransitions);
 
   // TransactionPanel is presentational component
   // that currently handles showing everything inside layout's main view area.
@@ -525,10 +537,30 @@ export const TransactionPageComponent = props => {
           marketplaceName={config.marketplaceName}
         />
       }
+      onTransition={onTransition}
     />
   ) : (
     loadingOrFailedFetching
   );
+
+  const handleTransition = (transitionName, params = {}) => {
+    // For provider accepting a request, check if we need to collect address
+    if (transitionName === 'transition/accept' && isProviderRole) {
+      const providerProfile = provider?.attributes?.profile || {};
+      const providerProtected = providerProfile.protectedData || {};
+      const hasAddress = providerProtected.providerStreet && 
+                        providerProtected.providerCity && 
+                        providerProtected.providerState && 
+                        providerProtected.providerZipCode;
+
+      if (!hasAddress) {
+        return;
+      }
+    }
+
+    // Use the params directly since addressData is not defined
+    onTransition(transaction?.id, transitionName, params);
+  };
 
   return (
     <Page

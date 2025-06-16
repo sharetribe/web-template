@@ -556,7 +556,11 @@ export function requestShowListing(actionPayload, config) {
       .show({ ...actionPayload, ...queryParams })
       .then(response => {
         // EditListingPage fetches new listing data, which also needs to be added to global data
-        dispatch(addMarketplaceEntities(response));
+        if (!response || !response.data) {
+          console.warn('⚠️ Skipping marketplace entity merge due to missing sdkResponse in requestShowListing');
+        } else {
+          dispatch(addMarketplaceEntities(response));
+        }
         // In case of success, we'll clear state.EditListingPage (user will be redirected away)
         dispatch(showListingsSuccess(response));
         return response;
@@ -575,7 +579,11 @@ export function compareAndSetStock(listingId, oldTotal, newTotal) {
       .then(response => {
         // NOTE: compareAndSet returns the stock resource of the listing.
         // We update client app's internal state with these updated API entities.
-        dispatch(addMarketplaceEntities(response));
+        if (!response || !response.data) {
+          console.warn('⚠️ Skipping marketplace entity merge due to missing sdkResponse in compareAndSetStock');
+        } else {
+          dispatch(addMarketplaceEntities(response));
+        }
         dispatch(setStockSuccess(response));
       })
       .catch(e => {
@@ -682,7 +690,11 @@ export function requestUpdateListing(tab, data, config) {
       .then(() => sdk.ownListings.update(ownListingUpdateValues, queryParams))
       .then(response => {
         dispatch(updateListingSuccess(response));
-        dispatch(addMarketplaceEntities(response));
+        if (!response || !response.data) {
+          console.warn('⚠️ Skipping marketplace entity merge due to missing sdkResponse in requestUpdateListing');
+        } else {
+          dispatch(addMarketplaceEntities(response));
+        }
         dispatch(markTabUpdated(tab));
 
         // If time zone has changed, we need to fetch exceptions again
@@ -710,7 +722,11 @@ export const requestPublishListingDraft = listingId => (dispatch, getState, sdk)
     .publishDraft({ id: listingId }, { expand: true })
     .then(response => {
       // Add the created listing to the marketplace data
-      dispatch(addMarketplaceEntities(response));
+      if (!response || !response.data) {
+        console.warn('⚠️ Skipping marketplace entity merge due to missing sdkResponse in requestPublishListingDraft');
+      } else {
+        dispatch(addMarketplaceEntities(response));
+      }
       dispatch(publishListingSuccess(response));
       return response;
     })

@@ -13,10 +13,15 @@ const initialState = {
 
 const merge = (state, payload) => {
   const { sdkResponse, sanitizeConfig } = payload;
-  const apiResponse = sdkResponse.data;
+  const apiResponse = sdkResponse?.data || {};
+  // Log the incoming sdkResponse and sanitizeConfig for debugging
+  console.log('🟢 [marketplaceData.duck.js] Merging entities. sdkResponse:', sdkResponse, 'sanitizeConfig:', sanitizeConfig);
+  const newEntities = updatedEntities({ ...state.entities }, apiResponse, sanitizeConfig);
+  // Log the new entities after merge
+  console.log('🟢 [marketplaceData.duck.js] Entities after merge:', newEntities);
   return {
     ...state,
-    entities: updatedEntities({ ...state.entities }, apiResponse, sanitizeConfig),
+    entities: newEntities,
   };
 };
 
@@ -24,6 +29,8 @@ export default function marketplaceDataReducer(state = initialState, action = {}
   const { type, payload } = action;
   switch (type) {
     case ADD_MARKETPLACE_ENTITIES:
+      // Log when reducer receives ADD_MARKETPLACE_ENTITIES
+      console.log('🟢 [marketplaceData.duck.js] Reducer received ADD_MARKETPLACE_ENTITIES:', payload);
       return merge(state, payload);
 
     default:

@@ -46,6 +46,10 @@ export const updatedEntities = (oldEntities, apiResponse, sanitizeConfig = {}) =
   const objects = (Array.isArray(data) ? data : [data]).concat(included);
 
   const newEntities = objects.reduce((entities, curr) => {
+    if (!curr || !curr.id || !curr.type) {
+      console.warn('⚠️ Skipping invalid entity in updatedEntities:', curr);
+      return entities;
+    }
     const { id, type } = curr;
 
     // Some entities (e.g. listing and user) might include extended data,
@@ -130,7 +134,7 @@ export const denormalisedEntities = (entities, resources, throwIfNotFound = true
  */
 export const denormalisedResponseEntities = sdkResponse => {
   const apiResponse = sdkResponse.data;
-  const data = apiResponse.data;
+  const data = apiResponse && apiResponse.data ? apiResponse.data : null;
   const resources = Array.isArray(data) ? data : [data];
 
   if (!data || resources.length === 0) {

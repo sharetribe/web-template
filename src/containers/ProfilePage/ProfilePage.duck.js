@@ -164,7 +164,11 @@ export const queryUserListings = (userId, config, ownProfileOnly = false) => (
       const listingRefs = listings
         .filter(l => l => !l.attributes.deleted && l.attributes.state === 'published')
         .map(({ id, type }) => ({ id, type }));
-      dispatch(addMarketplaceEntities(response));
+      if (!response || !response.data) {
+        console.warn('⚠️ Skipping marketplace entity merge due to missing sdkResponse in queryUserListings');
+      } else {
+        dispatch(addMarketplaceEntities(response));
+      }
       dispatch(queryListingsSuccess(listingRefs));
       return response;
     })
@@ -197,7 +201,11 @@ export const showUser = (userId, config) => (dispatch, getState, sdk) => {
     .then(response => {
       const userFields = config?.user?.userFields;
       const sanitizeConfig = { userFields };
-      dispatch(addMarketplaceEntities(response, sanitizeConfig));
+      if (!response || !response.data) {
+        console.warn('⚠️ Skipping marketplace entity merge due to missing sdkResponse in showUser');
+      } else {
+        dispatch(addMarketplaceEntities(response, sanitizeConfig));
+      }
       dispatch(showUserSuccess());
       return response;
     })

@@ -33,6 +33,7 @@ const bodyParser = require('body-parser');
 const enforceSsl = require('express-enforces-ssl');
 const path = require('path');
 const passport = require('passport');
+const cors = require('cors');
 
 const auth = require('./auth');
 const apiRouter = require('./apiRouter');
@@ -59,6 +60,31 @@ const CSP = process.env.REACT_APP_CSP;
 const cspReportUrl = '/csp-report';
 const cspEnabled = CSP === 'block' || CSP === 'report';
 const app = express();
+
+// Allow CORS for sherbrt.com
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://www.sherbrt.com'); // allow your custom domain
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  next();
+});
+
+// Add CORS middleware configuration
+const allowedOrigins = [
+  'https://web-template-1.onrender.com',
+  'http://localhost:3000',
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+}));
 
 const errorPage500 = fs.readFileSync(path.join(buildPath, '500.html'), 'utf-8');
 const errorPage404 = fs.readFileSync(path.join(buildPath, '404.html'), 'utf-8');

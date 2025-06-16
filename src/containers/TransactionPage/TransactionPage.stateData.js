@@ -56,6 +56,7 @@ const getActionButtonPropsMaybe = (params, onlyForRole = 'both') => {
     actionButtonTranslationId,
     actionButtonTranslationErrorId,
     intl,
+    params: actionParams = {},
   } = params;
   const transitionKey = getTransitionKey(transitionName);
 
@@ -73,6 +74,8 @@ const getActionButtonPropsMaybe = (params, onlyForRole = 'both') => {
         onAction,
         buttonText: intl.formatMessage({ id: actionButtonTrId }),
         errorText: intl.formatMessage({ id: actionButtonTrErrorId }),
+        transitionName,
+        params: actionParams,
       }
     : {};
 };
@@ -80,7 +83,9 @@ const getActionButtonPropsMaybe = (params, onlyForRole = 'both') => {
 export const getStateData = (params, process) => {
   const {
     transaction,
+    listing,
     transactionRole,
+    nextTransitions,
     intl,
     transitionInProgress,
     transitionError,
@@ -101,7 +106,14 @@ export const getStateData = (params, process) => {
         intl,
         inProgress: transitionInProgress === transitionName,
         transitionError,
-        onAction: () => onTransition(transaction?.id, transitionName, {}),
+        onAction: () => onTransition(transaction?.id, transitionName, {
+          transactionId: transaction?.id,
+          listingId: transaction?.listing?.id,
+        }),
+        params: {
+          transactionId: transaction?.id,
+          listingId: transaction?.listing?.id,
+        },
         ...extra,
       },
       forRole
@@ -133,13 +145,23 @@ export const getStateData = (params, process) => {
     };
   };
 
+  // Base state data that should always be included
+  const baseStateData = {
+    transaction,
+    listing,
+    nextTransitions,
+  };
+
   if (processName === PURCHASE_PROCESS_NAME) {
-    return getStateDataForPurchaseProcess(params, processInfo());
+    const processStateData = getStateDataForPurchaseProcess(params, processInfo());
+    return { ...baseStateData, ...processStateData };
   } else if (processName === BOOKING_PROCESS_NAME) {
-    return getStateDataForBookingProcess(params, processInfo());
+    const processStateData = getStateDataForBookingProcess(params, processInfo());
+    return { ...baseStateData, ...processStateData };
   } else if (processName === INQUIRY_PROCESS_NAME) {
-    return getStateDataForInquiryProcess(params, processInfo());
+    const processStateData = getStateDataForInquiryProcess(params, processInfo());
+    return { ...baseStateData, ...processStateData };
   } else {
-    return {};
+    return baseStateData;
   }
 };

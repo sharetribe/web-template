@@ -221,6 +221,26 @@ export const initiateOrder = (
   const quantityMaybe = quantity ? { stockReservationQuantity: quantity } : {};
   const bookingParamsMaybe = bookingDates || {};
 
+  // Use protectedData from orderParams if present, otherwise fallback to legacy mapping
+  const protectedData = orderParams?.protectedData
+    ? orderParams.protectedData
+    : {
+        providerName: orderParams?.providerName || '',
+        providerStreet: orderParams?.providerStreet || '',
+        providerCity: orderParams?.providerCity || '',
+        providerState: orderParams?.providerState || '',
+        providerZip: orderParams?.providerZip || '',
+        providerEmail: orderParams?.providerEmail || '',
+        providerPhone: orderParams?.providerPhone || '',
+        customerName: orderParams?.customerName || '',
+        customerStreet: orderParams?.customerStreet || '',
+        customerCity: orderParams?.customerCity || '',
+        customerState: orderParams?.customerState || '',
+        customerZip: orderParams?.customerZip || '',
+        customerEmail: orderParams?.customerEmail || '',
+        customerPhone: orderParams?.customerPhone || '',
+      };
+
   // Parameters only for client app's server
   const orderData = deliveryMethod ? { deliveryMethod } : {};
 
@@ -229,6 +249,7 @@ export const initiateOrder = (
     ...quantityMaybe,
     ...bookingParamsMaybe,
     ...otherOrderParams,
+    protectedData, // Include protected data in transition params
   };
 
   const bodyParams = isTransition
@@ -249,12 +270,19 @@ export const initiateOrder = (
 
   // Add API submission log
   console.log('📡 Submitting booking request to API', bodyParams);
+  console.log('🔒 Protected data being sent:', protectedData);
+  // TEMP: Log all protectedData fields before API call
+  if (protectedData) {
+    console.log('📝 [TEMP] Full protectedData in initiateOrder:', JSON.stringify(protectedData, null, 2));
+  }
 
   const handleSuccess = response => {
     const entities = denormalisedResponseEntities(response);
     const order = entities[0];
     dispatch(initiateOrderSuccess(order));
     dispatch(fetchCurrentUserHasOrdersSuccess(true));
+    // Debug: Log the full response to confirm protectedData is present
+    console.log('✅ Initiate success:', JSON.stringify(response, null, 2));
     return order;
   };
 
@@ -263,7 +291,7 @@ export const initiateOrder = (
     const transactionIdMaybe = transactionId ? { transactionId: transactionId.uuid } : {};
     log.error(e, 'initiate-order-failed', {
       ...transactionIdMaybe,
-      listingId: orderParams.listingId.uuid,
+      listingId: orderParams.params?.listingId?.uuid || orderParams.params?.listingId,
       ...quantityMaybe,
       ...bookingParamsMaybe,
       ...orderData,
@@ -494,7 +522,7 @@ export const speculateTransaction = (
 
   const handleError = e => {
     log.error(e, 'speculate-transaction-failed', {
-      listingId: transitionParams.listingId.uuid,
+      listingId: transitionParams.listingId?.uuid || transitionParams.listingId,
       ...quantityMaybe,
       ...bookingParamsMaybe,
       ...orderData,

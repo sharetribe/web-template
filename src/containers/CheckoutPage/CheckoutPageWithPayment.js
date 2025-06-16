@@ -107,24 +107,47 @@ const getOrderParams = (pageData, shippingDetails, optionalPaymentParams, config
   const priceVariantMaybe = priceVariant ? prefixPriceVariantProperties(priceVariant) : {};
 
   const { listingType, unitType } = pageData?.listing?.attributes?.publicData || {};
+  const currentUser = pageData?.currentUser;
+
+  // Extract shipping details from the nested structure
+  const shippingInfo = shippingDetails?.shippingDetails || {};
+  const shippingAddress = shippingInfo?.address || {};
+
+  // Manually construct protectedData with shipping and contact info
   const protectedDataMaybe = {
     protectedData: {
+      // Customer info from shippingDetails (using correct field names)
+      customerName: shippingInfo?.name || '',
+      customerStreet: shippingAddress?.line1 || '',
+      customerCity: shippingAddress?.city || '',
+      customerState: shippingAddress?.state || '',
+      customerZip: shippingAddress?.postalCode || '',
+      customerEmail: currentUser?.attributes?.email || '',
+      customerPhone: shippingInfo?.phoneNumber || '',
+
+      // Provider info from currentUser
+      providerName: currentUser?.attributes?.profile?.displayName || '',
+      providerStreet: '', // Will be filled by provider in TransactionPanel
+      providerCity: '',
+      providerState: '',
+      providerZip: '',
+      providerEmail: currentUser?.attributes?.email || '',
+      providerPhone: currentUser?.attributes?.profile?.phoneNumber || '',
+
+      // Additional transaction data
       ...getTransactionTypeData(listingType, unitType, config),
       ...deliveryMethodMaybe,
-      ...shippingDetails,
       ...priceVariantMaybe,
     },
   };
 
-  // Note: Avoid misinterpreting the following logic as allowing arbitrary mixing of `quantity` and `seats`.
-  // You can only pass either quantity OR seats and units to the orderParams object
-  // Quantity represents the total booked units for the line item (e.g. days, hours).
-  // When quantity is not passed, we pass seats and units.
-  // If `bookingDatesMaybe` is provided, it determines `units`, and `seats` defaults to 1
-  // (implying quantity = units)
+  // Log the constructed protected data for debugging
+  console.log('🔐 Constructed protectedData in getOrderParams:', protectedDataMaybe.protectedData);
+  console.log('📦 Raw shipping details:', shippingDetails);
+  console.log('📦 Extracted shipping info:', shippingInfo);
+  console.log('📦 Extracted shipping address:', shippingAddress);
 
   // These are the order parameters for the first payment-related transition
-  // which is either initiate-transition or initiate-transition-after-enquiry
   const orderParams = {
     listingId: pageData?.listing?.id,
     ...deliveryMethodMaybe,
@@ -134,6 +157,10 @@ const getOrderParams = (pageData, shippingDetails, optionalPaymentParams, config
     ...protectedDataMaybe,
     ...optionalPaymentParams,
   };
+
+  // Log the final orderParams for debugging
+  console.log('📦 Final orderParams:', orderParams);
+
   return orderParams;
 };
 
@@ -196,14 +223,11 @@ export const loadInitialDataForStripePayments = ({
   config,
 }) => {
   // Fetch currentUser with stripeCustomer entity
-  // Note: since there's need for data loading in "componentWillMount" function,
-  //       this is added here instead of loadData static function.
   fetchStripeCustomer();
 
   // Fetch speculated transaction for showing price in order breakdown
-  // NOTE: if unit type is line-item/item, quantity needs to be added.
-  // The way to pass it to checkout page is through pageData.orderData
   const shippingDetails = {};
+  console.log('📬 shippingDetails in loadInitialData:', shippingDetails);
   const optionalPaymentParams = {};
   const orderParams = getOrderParams(pageData, shippingDetails, optionalPaymentParams, config);
 
@@ -266,6 +290,131 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
   const hasPaymentIntentUserActionsDone =
     paymentIntent && STRIPE_PI_USER_ACTIONS_DONE_STATUSES.includes(paymentIntent.status);
 
+  // Log formValues for debugging
+  console.log('Form values on submit:', formValues);
+
+  // Construct protectedData directly from shipping form fields using correct field names
+  const protectedData = {
+    // Customer shipping info from custom shipping form fields (not ShippingDetails form)
+    customerName: formValues.customerName || '',
+    customerStreet: formValues.customerStreet || '',
+    customerStreet2: formValues.customerStreet2 || '',
+    customerCity: formValues.customerCity || '',
+    customerState: formValues.customerState || '',
+    customerZip: formValues.customerZip || '',
+    customerEmail: formValues.customerEmail || currentUser?.attributes?.email || '',
+    customerPhone: formValues.customerPhone || '',
+    
+    // Provider info from current user
+    providerName: currentUser?.attributes?.profile?.displayName || '',
+    providerStreet: '', // Will be filled by provider in TransactionPanel
+    providerCity: '',
+    providerState: '',
+    providerZip: '',
+    providerEmail: currentUser?.attributes?.email || '',
+    providerPhone: currentUser?.attributes?.profile?.phoneNumber || '',
+  };
+
+  // Log the protected data for debugging
+  console.log('🔐 Protected data constructed from formValues:', protectedData);
+  console.log('📦 Raw formValues:', formValues);
+
+  // Calculate pricing and booking duration
+  const unitPrice = pageData?.listing?.attributes?.price;
+  const currency = unitPrice?.currency;
+  const baseNightlyPrice = unitPrice?.amount;
+
+  const start = new Date(bookingStart);
+  const end = new Date(bookingEnd);
+  const millisecondsPerNight = 1000 * 60 * 60 * 24;
+  const nights = Math.round((end - start) / millisecondsPerNight);
+
+  // Log pricing calculations for debugging
+  console.log('💰 Pricing calculations:', {
+    baseNightlyPrice,
+    currency,
+    nights,
+    bookingStart: start.toISOString(),
+    bookingEnd: end.toISOString()
+  });
+
+  // Calculate discount based on nights
+  let discountPercent = 0;
+  let discountCode = '';
+  if (nights >= 4 && nights <= 5) {
+    discountPercent = 0.25;
+    discountCode = 'line-item/discount-25';
+  } else if (nights >= 6 && nights <= 7) {
+    discountPercent = 0.40;
+    discountCode = 'line-item/discount-40';
+  } else if (nights >= 8 && nights <= 9) {
+    discountPercent = 0.50;
+    discountCode = 'line-item/discount-50';
+  } else if (nights >= 10) {
+    discountPercent = 0.60;
+    discountCode = 'line-item/discount-60';
+  }
+
+  const preDiscountTotal = baseNightlyPrice * nights;
+  const discountAmount = Math.round(preDiscountTotal * discountPercent);
+  
+  // Log discount calculations
+  console.log('🎯 Discount calculations:', {
+    discountPercent,
+    discountCode,
+    preDiscountTotal,
+    discountAmount
+  });
+
+  const discountLineItem = discountPercent > 0
+    ? {
+        code: 'line-item/discount',
+        unitPrice: { amount: -discountAmount, currency },
+        quantity: 1,
+        includeFor: ['customer'],
+        reversal: false,
+        description: `${discountPercent * 100}% off`,
+      }
+    : null;
+
+  const lineItems = [
+    {
+      code: 'line-item/day',
+      unitPrice: { amount: baseNightlyPrice, currency },
+      quantity: nights,
+      includeFor: ['customer', 'provider'],
+    },
+    ...(discountLineItem ? [discountLineItem] : []),
+  ];
+
+  // Restore optionalPaymentParams definition
+  const optionalPaymentParams =
+    selectedPaymentFlow === USE_SAVED_CARD && hasDefaultPaymentMethodSaved
+      ? { paymentMethod: stripePaymentMethodId }
+      : selectedPaymentFlow === PAY_AND_SAVE_FOR_LATER_USE
+      ? { setupPaymentMethodForSaving: true }
+      : {};
+
+  // Log line items for debugging
+  console.log('🧾 Line items constructed:', lineItems);
+
+  const orderParams = {
+    listingId: pageData?.listing?.id,
+    bookingStart,
+    bookingEnd,
+    lineItems,
+    protectedData,  // Now built from form fields
+    ...optionalPaymentParams,
+  };
+
+  // TEMP: Log orderParams before API call
+  console.log('📝 Final orderParams being sent to initiateOrder:', orderParams);
+
+  // Log line items for debugging
+  console.log('🔍 Line item codes being sent:', lineItems.map(item => item.code));
+  console.log('🔍 Full lineItems:', JSON.stringify(lineItems, null, 2));
+
+  // Construct requestPaymentParams before calling processCheckoutWithPayment
   const requestPaymentParams = {
     pageData,
     speculatedTransaction,
@@ -289,76 +438,7 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     setPageData,
   };
 
-  const shippingDetails = getShippingDetailsMaybe(formValues);
-  const optionalPaymentParams =
-    selectedPaymentFlow === USE_SAVED_CARD && hasDefaultPaymentMethodSaved
-      ? { paymentMethod: stripePaymentMethodId }
-      : selectedPaymentFlow === PAY_AND_SAVE_FOR_LATER_USE
-      ? { setupPaymentMethodForSaving: true }
-      : {};
-
-  // Calculate booking duration in nights
-  const bookingStartDate = new Date(bookingStart);
-  const bookingEndDate = new Date(bookingEnd);
-  const oneNightInMs = 24 * 60 * 60 * 1000;
-  const nights = Math.round((bookingEndDate - bookingStartDate) / oneNightInMs);
-
-  const listing = pageData?.listing;
-  const baseNightlyPrice = listing?.attributes?.price?.amount;
-  const currency = listing?.attributes?.price?.currency;
-  const preDiscountTotal = baseNightlyPrice * nights;
-
-  let discountPercent = 0;
-  let discountCode = '';
-  if (nights >= 4 && nights <= 5) {
-    discountPercent = 0.25;
-    discountCode = 'line-item/discount-25';
-  } else if (nights >= 6 && nights <= 7) {
-    discountPercent = 0.40;
-    discountCode = 'line-item/discount-40';
-  } else if (nights >= 8 && nights <= 9) {
-    discountPercent = 0.50;
-    discountCode = 'line-item/discount-50';
-  } else if (nights >= 10) {
-    discountPercent = 0.60;
-    discountCode = 'line-item/discount-60';
-  }
-
-  const discountAmount = Math.round(preDiscountTotal * discountPercent);
-  const discountLineItem = discountPercent > 0
-    ? {
-        code: 'line-item/discount',
-        unitPrice: { amount: -discountAmount, currency },
-        quantity: 1,
-        includeFor: ['customer'],
-        reversal: false,
-        description: `${discountPercent * 100}% off`,
-      }
-    : null;
-
-  const lineItems = [
-    {
-      code: 'line-item/night',
-      unitPrice: { amount: baseNightlyPrice, currency },
-      quantity: nights,
-      includeFor: ['customer', 'provider'],
-    },
-    ...(discountLineItem ? [discountLineItem] : []),
-  ];
-
-  const orderParams = {
-    listingId: listing.id,
-    bookingStart,
-    bookingEnd,
-    lineItems,
-    ...optionalPaymentParams,
-    ...shippingDetails,
-  };
-
-  // Log line items for debugging
-  console.log('🔍 Line item codes being sent:', lineItems.map(item => item.code));
-  console.log('🔍 Full lineItems:', JSON.stringify(lineItems, null, 2));
-
+  console.log('🚦 processCheckoutWithPayment called:', { orderParams, requestPaymentParams });
   processCheckoutWithPayment(orderParams, requestPaymentParams)
     .then(response => {
       const { orderId, messageSuccess, paymentMethodSaved } = response;

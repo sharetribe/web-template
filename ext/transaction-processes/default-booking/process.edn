@@ -52,7 +52,8 @@
   {:name :transition/accept,
    :actor :actor.role/provider,
    :actions
-   [{:name :action/accept-booking}
+   [{:name :action/update-protected-data}
+    {:name :action/accept-booking}
     {:name :action/stripe-capture-payment-intent}],
    :from :state/preauthorized,
    :to :state/accepted}

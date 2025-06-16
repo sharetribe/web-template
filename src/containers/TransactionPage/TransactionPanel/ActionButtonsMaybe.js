@@ -17,10 +17,22 @@ const ActionButtonsMaybe = props => {
     isProvider,
   } = props;
 
+  // Debug logging for Accept button
+  console.log('🔘 ActionButtonsMaybe props:', {
+    showButtons,
+    hasPrimaryButton: !!primaryButtonProps,
+    hasSecondaryButton: !!secondaryButtonProps,
+    primaryButtonText: primaryButtonProps?.buttonText,
+    secondaryButtonText: secondaryButtonProps?.buttonText,
+    isProvider,
+    isListingDeleted
+  });
+
   // In default processes default processes need special handling
   // Booking: provider should not be able to accept on-going transactions
   // Product: customer should be able to dispute etc. on-going transactions
   if (isListingDeleted && isProvider) {
+    console.log('❌ ActionButtonsMaybe: Returning null due to deleted listing and provider role');
     return null;
   }
 
@@ -30,7 +42,17 @@ const ActionButtonsMaybe = props => {
     <PrimaryButton
       inProgress={primaryButtonProps.inProgress}
       disabled={buttonsDisabled}
-      onClick={primaryButtonProps.onAction}
+      onClick={() => {
+        console.log('🔘 Primary button clicked!', {
+          buttonText: primaryButtonProps.buttonText,
+          inProgress: primaryButtonProps.inProgress,
+          disabled: buttonsDisabled,
+          onAction: primaryButtonProps.onAction
+        });
+        if (primaryButtonProps.onAction) {
+          primaryButtonProps.onAction();
+        }
+      }}
     >
       {primaryButtonProps.buttonText}
     </PrimaryButton>

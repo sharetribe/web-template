@@ -637,6 +637,80 @@ class StripePaymentForm extends Component {
                 />
 
                 {billingAddress}
+
+                {/* Shipping Details Section */}
+                <div className={css.billingDetails}>
+                  <Heading as="h3" rootClassName={css.heading}>
+                    Shipping Details
+                  </Heading>
+                  <FieldTextInput
+                    className={css.field}
+                    type="text"
+                    id="customerName"
+                    name="customerName"
+                    label="Full Name"
+                    required
+                  />
+                  <FieldTextInput
+                    className={css.field}
+                    type="text"
+                    id="customerStreet"
+                    name="customerStreet"
+                    label="Street *"
+                    placeholder="123 Example Street"
+                    required
+                  />
+                  <FieldTextInput
+                    className={css.field}
+                    type="text"
+                    id="customerStreet2"
+                    name="customerStreet2"
+                    label="Street (line 2)"
+                    placeholder="Apt 7"
+                  />
+                  <FieldTextInput
+                    className={css.field}
+                    type="text"
+                    id="customerCity"
+                    name="customerCity"
+                    label="City"
+                    required
+                  />
+                  <FieldTextInput
+                    className={css.field}
+                    type="text"
+                    id="customerState"
+                    name="customerState"
+                    label="State"
+                    required
+                  />
+                  <FieldTextInput
+                    className={css.field}
+                    type="text"
+                    id="customerZip"
+                    name="customerZip"
+                    label="ZIP Code"
+                    required
+                  />
+                  <FieldTextInput
+                    className={css.field}
+                    type="email"
+                    id="customerEmail"
+                    name="customerEmail"
+                    label="Email"
+                    required
+                    validate={value => (!value ? 'Required' : !/^\S+@\S+\.\S+$/.test(value) ? 'Invalid email' : undefined)}
+                  />
+                  <FieldTextInput
+                    className={css.field}
+                    type="tel"
+                    id="customerPhone"
+                    name="customerPhone"
+                    label="Phone Number"
+                    required
+                    validate={value => (!value ? 'Required' : !/^\+?\d{7,15}$/.test(value) ? 'Invalid phone' : undefined)}
+                  />
+                </div>
               </div>
             ) : null}
           </React.Fragment>
@@ -704,7 +778,19 @@ class StripePaymentForm extends Component {
 
   render() {
     const { onSubmit, ...rest } = this.props;
-    return <FinalForm onSubmit={this.handleSubmit} {...rest} render={this.paymentForm} />;
+    // Add initialValues for shipping fields
+    const initialValues = {
+      customerName: '',
+      customerStreet: '',
+      customerStreet2: '',
+      customerCity: '',
+      customerState: '',
+      customerZip: '',
+      customerEmail: '',
+      customerPhone: '',
+      ...(rest.initialValues || {})
+    };
+    return <FinalForm onSubmit={this.handleSubmit} initialValues={initialValues} {...rest} render={this.paymentForm} />;
   }
 }
 
