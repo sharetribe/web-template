@@ -698,6 +698,10 @@ export const requestPublishListingDraft = listingId => (dispatch, getState, sdk)
   return sdk.ownListings
     .publishDraft({ id: listingId }, { expand: true })
     .then(response => {
+      window.dataLayer?.push({
+        event: 'customize_product',
+        id: listingId
+      });
       // Add the created listing to the marketplace data
       dispatch(addMarketplaceEntities(response));
       dispatch(publishListingSuccess(response));
