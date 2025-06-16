@@ -782,6 +782,7 @@ class StripePaymentForm extends Component {
     const initialValues = {
       customerName: '',
       customerStreet: '',
+      customerStreet2: '',
       customerCity: '',
       customerState: '',
       customerZip: '',

@@ -19,6 +19,7 @@ async function createShippingLabels(protectedData, transactionId) {
   const providerAddress = {
     name: protectedData.providerName || 'Provider',
     street1: protectedData.providerStreet,
+    street2: protectedData.providerStreet2 || '',
     city: protectedData.providerCity,
     state: protectedData.providerState,
     zip: protectedData.providerZip,
@@ -30,6 +31,7 @@ async function createShippingLabels(protectedData, transactionId) {
   const customerAddress = {
     name: protectedData.customerName || 'Customer',
     street1: protectedData.customerStreet,
+    street2: protectedData.customerStreet2 || '',
     city: protectedData.customerCity,
     state: protectedData.customerState,
     zip: protectedData.customerZip,
@@ -330,11 +332,12 @@ module.exports = async (req, res) => {
           function preferNonEmpty(paramVal, txVal) {
             return (paramVal !== undefined && paramVal !== '') ? paramVal : (txVal !== undefined && txVal !== '') ? txVal : '';
           }
-          // Merge, preferring non-empty values from incoming, else from transaction, else ''
+          // Merge protectedData from transaction with incoming protectedData
           const mergedProtectedData = {
             // Customer fields
             customerName: preferNonEmpty(incomingProtectedData.customerName, txProtectedData.customerName),
             customerStreet: preferNonEmpty(incomingProtectedData.customerStreet, txProtectedData.customerStreet),
+            customerStreet2: preferNonEmpty(incomingProtectedData.customerStreet2, txProtectedData.customerStreet2),
             customerCity: preferNonEmpty(incomingProtectedData.customerCity, txProtectedData.customerCity),
             customerState: preferNonEmpty(incomingProtectedData.customerState, txProtectedData.customerState),
             customerZip: preferNonEmpty(incomingProtectedData.customerZip, txProtectedData.customerZip),
@@ -343,6 +346,7 @@ module.exports = async (req, res) => {
             // Provider fields
             providerName: preferNonEmpty(incomingProtectedData.providerName, txProtectedData.providerName),
             providerStreet: preferNonEmpty(incomingProtectedData.providerStreet, txProtectedData.providerStreet),
+            providerStreet2: preferNonEmpty(incomingProtectedData.providerStreet2, txProtectedData.providerStreet2),
             providerCity: preferNonEmpty(incomingProtectedData.providerCity, txProtectedData.providerCity),
             providerState: preferNonEmpty(incomingProtectedData.providerState, txProtectedData.providerState),
             providerZip: preferNonEmpty(incomingProtectedData.providerZip, txProtectedData.providerZip),

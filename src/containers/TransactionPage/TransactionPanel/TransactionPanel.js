@@ -95,6 +95,7 @@ export class TransactionPanelComponent extends Component {
       sendMessageFormFocused: false,
       addressValues: {
         streetAddress: '',
+        streetAddress2: '',
         city: '',
         state: '',
         zipCode: '',
@@ -249,7 +250,7 @@ export class TransactionPanelComponent extends Component {
             
             if (isProvider && this.state.addressValues) {
               console.log('🏠 [onAction] addressValues before merge:', this.state.addressValues);
-              const { streetAddress, city, state, zipCode, phoneNumber } = this.state.addressValues;
+              const { streetAddress, streetAddress2, city, state, zipCode, phoneNumber } = this.state.addressValues;
               // Validate that all required address fields are filled
               const requiredFields = { streetAddress, city, state, zipCode, phoneNumber };
               const missingFields = Object.entries(requiredFields)
@@ -267,6 +268,7 @@ export class TransactionPanelComponent extends Component {
               const providerName = currentUser?.attributes?.profile?.displayName || '';
               const {
                 providerStreet: _providerStreet,
+                providerStreet2: _providerStreet2,
                 providerCity: _providerCity,
                 providerState: _providerState,
                 providerZip: _providerZip,
@@ -279,6 +281,7 @@ export class TransactionPanelComponent extends Component {
                 // Customer shipping info from existingProtectedData (saved during booking)
                 customerName: restProtectedData.customerName || '',
                 customerStreet: restProtectedData.customerStreet || '',
+                customerStreet2: restProtectedData.customerStreet2 || '',
                 customerCity: restProtectedData.customerCity || '',
                 customerState: restProtectedData.customerState || '',
                 customerZip: restProtectedData.customerZip || '',
@@ -288,6 +291,7 @@ export class TransactionPanelComponent extends Component {
                 ...restProtectedData,
                 // Provider address info from form (these overwrite any existing/blank values)
                 providerStreet: streetAddress,
+                providerStreet2: streetAddress2 || '',
                 providerCity: city,
                 providerState: state,
                 providerZip: zipCode,
@@ -299,6 +303,7 @@ export class TransactionPanelComponent extends Component {
               Object.assign(params, {
                 protectedData: mergedProtectedData,
                 providerStreet: mergedProtectedData.providerStreet,
+                providerStreet2: mergedProtectedData.providerStreet2,
                 providerCity: mergedProtectedData.providerCity,
                 providerState: mergedProtectedData.providerState,
                 providerZip: mergedProtectedData.providerZip,
@@ -306,6 +311,7 @@ export class TransactionPanelComponent extends Component {
                 providerEmail: mergedProtectedData.providerEmail,
                 providerName: mergedProtectedData.providerName,
                 customerStreet: mergedProtectedData.customerStreet,
+                customerStreet2: mergedProtectedData.customerStreet2,
                 customerCity: mergedProtectedData.customerCity,
                 customerState: mergedProtectedData.customerState,
                 customerZip: mergedProtectedData.customerZip,

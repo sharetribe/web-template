@@ -298,6 +298,7 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     // Customer shipping info from custom shipping form fields (not ShippingDetails form)
     customerName: formValues.customerName || '',
     customerStreet: formValues.customerStreet || '',
+    customerStreet2: formValues.customerStreet2 || '',
     customerCity: formValues.customerCity || '',
     customerState: formValues.customerState || '',
     customerZip: formValues.customerZip || '',
