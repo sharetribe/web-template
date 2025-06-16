@@ -98,17 +98,39 @@ async function createShippingLabels(protectedData, transactionId) {
       }
     );
     
-    const upsRate = shipmentRes.data.rates.find((r) => r.provider === 'UPS');
-    if (!upsRate) {
-      console.warn('⚠️ [SHIPPO] No UPS rate found for outbound shipment');
-      return { success: false, reason: 'no_ups_rate' };
+    // Log all available rates for debugging
+    console.log('📊 [SHIPPO] Available rates for outbound shipment:', shipmentRes.data.rates?.map(r => ({
+      provider: r.provider,
+      servicelevel: r.servicelevel,
+      rate: r.rate,
+      object_id: r.object_id
+    })));
+    
+    // Try UPS first, then fallback to other providers
+    let selectedRate = shipmentRes.data.rates.find((r) => r.provider === 'UPS');
+    if (!selectedRate) {
+      console.warn('⚠️ [SHIPPO] No UPS rate found, trying other providers...');
+      // Try USPS as fallback
+      selectedRate = shipmentRes.data.rates.find((r) => r.provider === 'USPS');
+      if (!selectedRate) {
+        // Take the first available rate
+        selectedRate = shipmentRes.data.rates[0];
+        console.log('📦 [SHIPPO] Using first available rate:', selectedRate?.provider);
+      } else {
+        console.log('📦 [SHIPPO] Using USPS as fallback');
+      }
+    }
+    
+    if (!selectedRate) {
+      console.warn('⚠️ [SHIPPO] No shipping rates found for outbound shipment');
+      return { success: false, reason: 'no_shipping_rates' };
     }
     
     // Create outbound label
     const labelRes = await axios.post(
       'https://api.goshippo.com/transactions',
       {
-        rate: upsRate.object_id,
+        rate: selectedRate.object_id,
         label_file_type: 'PNG',
         async: false
       },
@@ -124,6 +146,8 @@ async function createShippingLabels(protectedData, transactionId) {
     console.log('   📦 Label URL:', labelRes.data.label_url);
     console.log('   📱 QR Code URL:', labelRes.data.qr_code_url);
     console.log('   🚚 Tracking URL:', labelRes.data.tracking_url_provider);
+    console.log('   🚚 Provider:', selectedRate.provider);
+    console.log('   🚚 Service:', selectedRate.servicelevel);
     
     // Return shipment payload
     const returnPayload = {
@@ -147,14 +171,36 @@ async function createShippingLabels(protectedData, transactionId) {
       }
     );
     
-    const returnUpsRate = returnShipmentRes.data.rates.find((r) => r.provider === 'UPS');
-    let returnLabelRes = null; // Declare outside the if block
+    // Log all available rates for return shipment
+    console.log('📊 [SHIPPO] Available rates for return shipment:', returnShipmentRes.data.rates?.map(r => ({
+      provider: r.provider,
+      servicelevel: r.servicelevel,
+      rate: r.rate,
+      object_id: r.object_id
+    })));
     
-    if (returnUpsRate) {
+    // Try UPS first, then fallback to other providers for return
+    let returnSelectedRate = returnShipmentRes.data.rates.find((r) => r.provider === 'UPS');
+    let returnLabelRes = null;
+    
+    if (!returnSelectedRate) {
+      console.warn('⚠️ [SHIPPO] No UPS rate found for return, trying other providers...');
+      // Try USPS as fallback
+      returnSelectedRate = returnShipmentRes.data.rates.find((r) => r.provider === 'USPS');
+      if (!returnSelectedRate) {
+        // Take the first available rate
+        returnSelectedRate = returnShipmentRes.data.rates[0];
+        console.log('📦 [SHIPPO] Using first available rate for return:', returnSelectedRate?.provider);
+      } else {
+        console.log('📦 [SHIPPO] Using USPS as fallback for return');
+      }
+    }
+    
+    if (returnSelectedRate) {
       returnLabelRes = await axios.post(
         'https://api.goshippo.com/transactions',
         {
-          rate: returnUpsRate.object_id,
+          rate: returnSelectedRate.object_id,
           label_file_type: 'PNG',
           async: false
         },
@@ -170,8 +216,10 @@ async function createShippingLabels(protectedData, transactionId) {
       console.log('   📦 Return Label URL:', returnLabelRes.data.label_url);
       console.log('   📱 Return QR Code URL:', returnLabelRes.data.qr_code_url);
       console.log('   🚚 Return Tracking URL:', returnLabelRes.data.tracking_url_provider);
+      console.log('   🚚 Return Provider:', returnSelectedRate.provider);
+      console.log('   🚚 Return Service:', returnSelectedRate.servicelevel);
     } else {
-      console.warn('⚠️ [SHIPPO] No UPS rate found for return shipment');
+      console.warn('⚠️ [SHIPPO] No shipping rates found for return shipment');
     }
     
     return { success: true, outboundLabel: labelRes.data, returnLabel: returnLabelRes?.data };
