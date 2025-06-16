@@ -71,19 +71,30 @@ app.use((req, res, next) => {
 
 // Add CORS middleware configuration
 const allowedOrigins = [
+  'https://sherbrt.com',
   'https://web-template-1.onrender.com',
   'http://localhost:3000',
 ];
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) {
+      return callback(null, true);
     }
+    
+    // Check if the origin is in our allowed list
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    
+    // Log the blocked origin for debugging
+    console.log(`CORS blocked origin: ${origin}`);
+    return callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
 }));
 
 const errorPage500 = fs.readFileSync(path.join(buildPath, '500.html'), 'utf-8');
