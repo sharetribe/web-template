@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: shop-on-sherbet
+    env: node
+    plan: starter
+    buildCommand: yarn install && yarn run render-build
+    startCommand: yarn start
+    nodeVersion: 20.10.0
+    envVars:
+      - key: NODE_ENV
+        value: production 

@@ -114,6 +114,7 @@
     "dev-server": "cross-env-shell NODE_ENV=development PORT=4000 REACT_APP_MARKETPLACE_ROOT_URL=http://localhost:4000 \"yarn run build&&nodemon --watch server server/index.js\"",
     "test-server": "jest ./server/**/*.test.js",
     "heroku-postbuild": "yarn run build",
+    "render-build": "yarn run build",
     "postinstall": "patch-package",
     "translate": "node scripts/translations.js"
   },
@@ -130,7 +131,7 @@
     ]
   },
   "engines": {
-    "node": ">=18.20.1 <23.2.0"
+    "node": "20.10.0"
   },
   "prettier": {
     "singleQuote": true,
