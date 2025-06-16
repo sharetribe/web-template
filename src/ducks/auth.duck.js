@@ -217,7 +217,7 @@ export const signup = params => (dispatch, getState, sdk) => {
     .create(params)
     .then(() => {
       window.dataLayer?.push({
-        event: 'lead',
+        event: 'Lead',
         account_type: params.publicData.userType
       });
       return dispatch(signupSuccess());
@@ -238,7 +238,7 @@ export const signupWithIdp = params => (dispatch, getState, sdk) => {
   return createUserWithIdp(params)
     .then(res => {
       window.dataLayer?.push({
-        event: 'lead',
+        event: 'Lead',
         account_type: params.publicData.userType
       });
       return dispatch(confirmSuccess());
