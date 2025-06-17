@@ -253,41 +253,23 @@ async function createShippingLabels(protectedData, transactionId, listing) {
     }
     
     // Zapier webhook integration
-    const zapierWebhookUrl = process.env.ZAPIER_BOOKING_HOOK_URL;
+    const zapierWebhookUrl = process.env.ZAPIER_REQUEST_WEBHOOK;
  
-
-    try {
-      await axios.post(zapierWebhookUrl, {
-        phone: protectedData.providerPhone,
-        name: protectedData.providerName,
-        listing: listing.attributes.title,
-        qrCodeUrl: labelRes.data.qr_code_url,
-        labelUrl: labelRes.data.label_url,
-      });
-      console.log('✅ [ZAPIER] Webhook sent successfully');
-    } catch (zapierError) {
-      console.error('❌ [ZAPIER] Webhook failed:', zapierError.message);
-    }
-    
-    // Additional webhook call
-    try {
-      await fetch('', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          providerName: protectedData.providerName,
-          providerPhone: protectedData.providerPhone,
-          trackingUrl: labelRes.data.tracking_url_provider,
+    if (zapierWebhookUrl) {
+      try {
+        await axios.post(zapierWebhookUrl, {
+          phone: protectedData.providerPhone,
+          name: protectedData.providerName,
+          listing: listing.attributes.title,
           qrCodeUrl: labelRes.data.qr_code_url,
-          customerName: protectedData.customerName,
-          customerStreet: protectedData.customerStreet,
-          customerCity: protectedData.customerCity,
-          customerZip: protectedData.customerZip
-        }),
-      });
-      console.log('✅ [FETCH] Additional webhook sent successfully');
-    } catch (fetchError) {
-      console.error('❌ [FETCH] Additional webhook failed:', fetchError.message);
+          labelUrl: labelRes.data.label_url,
+        });
+        console.log('✅ [ZAPIER] Webhook sent successfully');
+      } catch (zapierError) {
+        console.error('❌ [ZAPIER] Webhook failed:', zapierError.message);
+      }
+    } else {
+      console.log('⚠️ [ZAPIER] ZAPIER_REQUEST_WEBHOOK not configured, skipping webhook');
     }
     
     return { success: true, outboundLabel: labelRes.data, returnLabel: returnLabelRes?.data };
