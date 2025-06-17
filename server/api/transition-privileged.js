@@ -654,8 +654,12 @@ module.exports = async (req, res) => {
         
         // 1. Borrower requests to borrow an item - notify provider
         if (!isSpeculative && params.protectedData?.providerPhone && listing) {
+          console.log('🔔 [ZAPIER] About to send request-payment webhook');
+          console.log('🧾 Webhook target:', process.env.ZAPIER_REQUEST_WEBHOOK);
+          console.log('📞 Provider phone:', params.protectedData?.providerPhone);
+          console.log('👗 Listing title:', listing?.attributes?.title);
+          
           console.log('📤 Attempting to send Zapier webhook for booking request');
-          console.log('🌐 Webhook URL:', process.env.ZAPIER_REQUEST_WEBHOOK);
           
           if (!process.env.ZAPIER_REQUEST_WEBHOOK) {
             console.log('⚠️ TODO: ZAPIER_REQUEST_WEBHOOK environment variable is missing. Please check environment setup.');
