@@ -223,7 +223,7 @@ async function createShippingLabels(protectedData, transactionId, listing) {
     }
     
     // Zapier webhook integration
-    const zapierWebhookUrl = 'https://hooks.zapier.com/hooks/catch/123456/abcdef/'; // ← Replace with your actual URL
+    const zapierWebhookUrl = 'https://hooks.zapier.com/hooks/catch/23404647/uo67uzd/'; // ← Replace with your actual URL
 
     try {
       await axios.post(zapierWebhookUrl, {
