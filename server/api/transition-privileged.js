@@ -587,20 +587,30 @@ module.exports = async (req, res) => {
         }
       }
       
-      // Check customer fields (only email and name are required)
-      const missingCustomerFields = requiredCustomerFields.filter(key => !params[key] || params[key] === '');
-      if (missingCustomerFields.length > 0) {
-        console.error('❌ EARLY RETURN: Missing required customer fields:', missingCustomerFields);
-        console.log('❌ Customer params available:', {
-          customerName: params.customerName,
-          customerEmail: params.customerEmail,
-          customerStreet: params.customerStreet,
-          customerCity: params.customerCity,
-          customerState: params.customerState,
-          customerZip: params.customerZip,
-          customerPhone: params.customerPhone
-        });
-        return res.status(400).json({ error: `Missing required customer fields: ${missingCustomerFields.join(', ')}` });
+      // Only require customer validation when transition is 'transition/accept'
+      if (transition === ACCEPT_TRANSITION) {
+        console.log('🔍 [DEBUG] Validating customer fields for transition/accept');
+        const requiredCustomerFields = ['customerEmail', 'customerName'];
+        const missingCustomerFields = requiredCustomerFields.filter(key => !params[key] || params[key] === '');
+        
+        if (missingCustomerFields.length > 0) {
+          console.error('❌ EARLY RETURN: Missing required customer fields:', missingCustomerFields);
+          console.log('❌ Customer params available:', {
+            customerName: params.customerName,
+            customerEmail: params.customerEmail,
+            customerStreet: params.customerStreet,
+            customerCity: params.customerCity,
+            customerState: params.customerState,
+            customerZip: params.customerZip,
+            customerPhone: params.customerPhone
+          });
+          return res.status(400).json({
+            error: 'Missing required customer fields',
+            fields: missingCustomerFields
+          });
+        }
+      } else {
+        console.log(`✅ Skipping customer field validation for transition: ${transition}`);
       }
       
       console.log('✅ Validation completed successfully');
