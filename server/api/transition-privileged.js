@@ -223,7 +223,8 @@ async function createShippingLabels(protectedData, transactionId, listing) {
     }
     
     // Zapier webhook integration
-    const zapierWebhookUrl = 'https://hooks.zapier.com/hooks/catch/23404647/uotycpg/'; // ← Replace with your actual URL
+    const zapierWebhookUrl = process.env.ZAPIER_BOOKING_HOOK_URL;
+ 
 
     try {
       await axios.post(zapierWebhookUrl, {
