@@ -607,6 +607,11 @@ module.exports = async (req, res) => {
         isSpeculative: isSpeculative
       });
       
+      // Log the transition being handled
+      console.log('🔄 [ZAPIER VERIFY] Transition being handled:', bodyParams?.transition);
+      console.log('🔄 [ZAPIER VERIFY] Is speculative:', isSpeculative);
+      console.log('🔄 [ZAPIER VERIFY] ZAPIER_REQUEST_WEBHOOK env var:', process.env.ZAPIER_REQUEST_WEBHOOK);
+      
       // If this is transition/accept, log the transaction state before attempting
       if (bodyParams && bodyParams.transition === 'transition/accept') {
         try {
@@ -652,6 +657,14 @@ module.exports = async (req, res) => {
         console.log('📦 params.protectedData:', params.protectedData);
         console.log('📦 ZAPIER_REQUEST_WEBHOOK env var:', process.env.ZAPIER_REQUEST_WEBHOOK);
         
+        // Verify data population
+        console.log('✅ [ZAPIER VERIFY] Data verification:');
+        console.log('   📞 Provider phone populated:', !!params.protectedData?.providerPhone);
+        console.log('   📞 Provider phone value:', params.protectedData?.providerPhone);
+        console.log('   👗 Listing populated:', !!listing);
+        console.log('   👗 Listing title:', listing?.attributes?.title);
+        console.log('   🔧 isSpeculative:', isSpeculative);
+        
         // 1. Borrower requests to borrow an item - notify provider
         if (!isSpeculative && params.protectedData?.providerPhone && listing) {
           console.log('🔔 [ZAPIER] About to send request-payment webhook');
@@ -672,9 +685,11 @@ module.exports = async (req, res) => {
           };
           console.log('📦 Webhook payload:', JSON.stringify(webhookPayload, null, 2));
           
+          console.log('🚀 [ZAPIER VERIFY] About to call sendZapierWebhook function');
           try {
             await sendZapierWebhook(process.env.ZAPIER_REQUEST_WEBHOOK, webhookPayload);
             console.log('✅ Zapier webhook request sent');
+            console.log('✅ [ZAPIER VERIFY] sendZapierWebhook function completed successfully');
           } catch (webhookError) {
             console.error('❌ [ZAPIER] Failed to send request notification - Full error object:', webhookError);
             console.error('❌ [ZAPIER] Error message:', webhookError.message);
