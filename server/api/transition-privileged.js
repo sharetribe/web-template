@@ -532,6 +532,9 @@ module.exports = async (req, res) => {
     try {
       console.log('🔍 [DEBUG] Starting validation checks...');
       
+      const ACCEPT_TRANSITION = 'transition/accept';
+      const transition = bodyParams?.transition;
+      
       // Validate required provider and customer address fields before making the SDK call
       const requiredProviderFields = [
         'providerStreet', 'providerCity', 'providerState', 'providerZip', 'providerEmail', 'providerPhone'
@@ -560,19 +563,28 @@ module.exports = async (req, res) => {
         customerPhone: params.customerPhone
       });
       
-      // Check provider fields (required for shipping)
-      const missingProviderFields = requiredProviderFields.filter(key => !params[key] || params[key] === '');
-      if (missingProviderFields.length > 0) {
-        console.error('❌ EARLY RETURN: Missing required provider address fields:', missingProviderFields);
-        console.log('❌ Provider params available:', {
-          providerStreet: params.providerStreet,
-          providerCity: params.providerCity,
-          providerState: params.providerState,
-          providerZip: params.providerZip,
-          providerEmail: params.providerEmail,
-          providerPhone: params.providerPhone
-        });
-        return res.status(400).json({ error: `Missing required provider address fields: ${missingProviderFields.join(', ')}` });
+      // Only require provider shipping details when transition is 'transition/accept'
+      if (transition !== ACCEPT_TRANSITION) {
+        console.log('✅ Skipping provider address validation for transition:', transition);
+      } else {
+        console.log('🔍 [DEBUG] Validating provider address fields for transition/accept');
+        // Check provider fields (required for shipping)
+        const missingProviderFields = requiredProviderFields.filter(key => !params[key] || params[key] === '');
+        if (missingProviderFields.length > 0) {
+          console.error('❌ EARLY RETURN: Missing required provider address fields:', missingProviderFields);
+          console.log('❌ Provider params available:', {
+            providerStreet: params.providerStreet,
+            providerCity: params.providerCity,
+            providerState: params.providerState,
+            providerZip: params.providerZip,
+            providerEmail: params.providerEmail,
+            providerPhone: params.providerPhone
+          });
+          return res.status(400).json({ 
+            error: 'Missing required provider address fields',
+            fields: missingProviderFields
+          });
+        }
       }
       
       // Check customer fields (only email and name are required)
