@@ -648,6 +648,10 @@ module.exports = async (req, res) => {
           listingTitle: listing?.attributes?.title
         });
         
+        console.log('🧭 [ZAPIER DEBUG] Checking if Zapier request webhook should fire');
+        console.log('📦 params.protectedData:', params.protectedData);
+        console.log('📦 ZAPIER_REQUEST_WEBHOOK env var:', process.env.ZAPIER_REQUEST_WEBHOOK);
+        
         // 1. Borrower requests to borrow an item - notify provider
         if (!isSpeculative && params.protectedData?.providerPhone && listing) {
           console.log('📤 Attempting to send Zapier webhook for booking request');
