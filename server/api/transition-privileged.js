@@ -12,6 +12,8 @@ console.log('🚦 transition-privileged endpoint is wired up');
 
 // --- Zapier webhook helper function ---
 async function sendZapierWebhook(webhookUrl, payload) {
+  console.log('🚀 [ZAPIER] sendZapierWebhook function called');
+  
   if (!webhookUrl) {
     console.log('⚠️ [ZAPIER] Webhook URL not configured, skipping');
     return;
@@ -637,17 +639,49 @@ module.exports = async (req, res) => {
       // After booking (request-payment), log the transaction's protectedData
       if (bodyParams && bodyParams.transition === 'transition/request-payment' && response && response.data && response.data.data && response.data.data.attributes) {
         console.log('🧾 Booking complete. Transaction protectedData:', response.data.data.attributes.protectedData);
+        console.log('🔍 [ZAPIER] Entering transition/request-payment webhook flow');
+        console.log('🔍 [ZAPIER] Flow conditions:', {
+          isSpeculative,
+          hasProtectedData: !!params.protectedData,
+          hasProviderPhone: !!params.protectedData?.providerPhone,
+          hasListing: !!listing,
+          listingTitle: listing?.attributes?.title
+        });
         
         // 1. Borrower requests to borrow an item - notify provider
         if (!isSpeculative && params.protectedData?.providerPhone && listing) {
-          try {
-            await sendZapierWebhook(process.env.ZAPIER_REQUEST_WEBHOOK, {
-              to: params.protectedData.providerPhone,
-              message: `📦 New borrow request for "${listing.attributes.title}". Log in to review.`
-            });
-          } catch (webhookError) {
-            console.error('❌ [ZAPIER] Failed to send request notification:', webhookError.message);
+          console.log('📤 Attempting to send Zapier webhook for booking request');
+          console.log('🌐 Webhook URL:', process.env.ZAPIER_REQUEST_WEBHOOK);
+          
+          if (!process.env.ZAPIER_REQUEST_WEBHOOK) {
+            console.log('⚠️ TODO: ZAPIER_REQUEST_WEBHOOK environment variable is missing. Please check environment setup.');
+            return;
           }
+          
+          const webhookPayload = {
+            to: params.protectedData.providerPhone,
+            message: `📦 New borrow request for "${listing.attributes.title}". Log in to review.`
+          };
+          console.log('📦 Webhook payload:', JSON.stringify(webhookPayload, null, 2));
+          
+          try {
+            await sendZapierWebhook(process.env.ZAPIER_REQUEST_WEBHOOK, webhookPayload);
+            console.log('✅ Zapier webhook request sent');
+          } catch (webhookError) {
+            console.error('❌ [ZAPIER] Failed to send request notification - Full error object:', webhookError);
+            console.error('❌ [ZAPIER] Error message:', webhookError.message);
+            console.error('❌ [ZAPIER] Error stack:', webhookError.stack);
+            if (webhookError.response) {
+              console.error('❌ [ZAPIER] Response status:', webhookError.response.status);
+              console.error('❌ [ZAPIER] Response data:', webhookError.response.data);
+            }
+          }
+        } else {
+          console.log('⚠️ [ZAPIER] Skipping webhook call - conditions not met:', {
+            isSpeculative,
+            hasProviderPhone: !!params.protectedData?.providerPhone,
+            hasListing: !!listing
+          });
         }
       }
       
