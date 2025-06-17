@@ -10,6 +10,36 @@ const {
 
 console.log('🚦 transition-privileged endpoint is wired up');
 
+// --- Zapier webhook helper function ---
+async function sendZapierWebhook(webhookUrl, payload) {
+  if (!webhookUrl) {
+    console.log('⚠️ [ZAPIER] Webhook URL not configured, skipping');
+    return;
+  }
+  
+  try {
+    console.log('📱 [ZAPIER] Sending webhook to:', webhookUrl);
+    console.log('📱 [ZAPIER] Payload:', payload);
+    
+    const response = await axios.post(webhookUrl, payload, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      timeout: 10000 // 10 second timeout
+    });
+    
+    console.log('✅ [ZAPIER] Webhook sent successfully:', response.status);
+    return response;
+  } catch (error) {
+    console.error('❌ [ZAPIER] Webhook failed:', error.message);
+    if (error.response) {
+      console.error('❌ [ZAPIER] Response status:', error.response.status);
+      console.error('❌ [ZAPIER] Response data:', error.response.data);
+    }
+    return null;
+  }
+}
+
 // --- Shippo label creation logic extracted to a function ---
 async function createShippingLabels(protectedData, transactionId, listing) {
   console.log('🚀 [SHIPPO] Starting label creation for transaction:', transactionId);
@@ -625,6 +655,42 @@ module.exports = async (req, res) => {
       // After booking (request-payment), log the transaction's protectedData
       if (bodyParams && bodyParams.transition === 'transition/request-payment' && response && response.data && response.data.data && response.data.data.attributes) {
         console.log('🧾 Booking complete. Transaction protectedData:', response.data.data.attributes.protectedData);
+        
+        // 1. Borrower requests to borrow an item - notify provider
+        if (!isSpeculative && params.protectedData?.providerPhone && listing) {
+          try {
+            await sendZapierWebhook(process.env.ZAPIER_REQUEST_WEBHOOK, {
+              to: params.protectedData.providerPhone,
+              message: `📦 New borrow request for "${listing.attributes.title}". Log in to review.`
+            });
+          } catch (webhookError) {
+            console.error('❌ [ZAPIER] Failed to send request notification:', webhookError.message);
+          }
+        }
+      }
+      
+      // 2. Lender accepts the request - notify customer
+      if (bodyParams && bodyParams.transition === 'transition/accept' && !isSpeculative && params.protectedData?.customerPhone && listing) {
+        try {
+          await sendZapierWebhook(process.env.ZAPIER_ACCEPT_WEBHOOK, {
+            to: params.protectedData.customerPhone,
+            message: `✅ Your borrow request for "${listing.attributes.title}" was accepted!`
+          });
+        } catch (webhookError) {
+          console.error('❌ [ZAPIER] Failed to send accept notification:', webhookError.message);
+        }
+      }
+      
+      // 3. Lender declines the request - notify customer
+      if (bodyParams && bodyParams.transition === 'transition/decline' && !isSpeculative && params.protectedData?.customerPhone && listing) {
+        try {
+          await sendZapierWebhook(process.env.ZAPIER_DECLINE_WEBHOOK, {
+            to: params.protectedData.customerPhone,
+            message: `❌ Your borrow request for "${listing.attributes.title}" was declined.`
+          });
+        } catch (webhookError) {
+          console.error('❌ [ZAPIER] Failed to send decline notification:', webhookError.message);
+        }
       }
       
       // Shippo label creation - only for transition/accept after successful transition
@@ -640,6 +706,17 @@ module.exports = async (req, res) => {
           .then(result => {
             if (result.success) {
               console.log('✅ [SHIPPO] Label creation completed successfully');
+              
+              // 4. QR code/shipping label sent - notify provider
+              if (finalProtectedData.providerPhone && listing && result.outboundLabel) {
+                sendZapierWebhook(process.env.ZAPIER_LABEL_SENT_WEBHOOK, {
+                  to: finalProtectedData.providerPhone,
+                  message: `📮 Your shipping label for "${listing.attributes.title}" is ready.`,
+                  labelUrl: result.outboundLabel.label_url
+                }).catch(webhookError => {
+                  console.error('❌ [ZAPIER] Failed to send label notification:', webhookError.message);
+                });
+              }
             } else {
               console.warn('⚠️ [SHIPPO] Label creation failed:', result.reason);
             }
@@ -647,6 +724,21 @@ module.exports = async (req, res) => {
           .catch(err => {
             console.error('❌ [SHIPPO] Unexpected error in label creation:', err.message);
           });
+      }
+      
+      // 6. Borrower notified when item is shipped
+      if (bodyParams && bodyParams.transition === 'transition/mark-shipped' && !isSpeculative && params.protectedData?.customerPhone && listing) {
+        try {
+          // Note: trackingUrl would need to be passed in params or fetched from transaction
+          const trackingUrl = params.trackingUrl || '';
+          await sendZapierWebhook(process.env.ZAPIER_ITEM_SHIPPED_WEBHOOK, {
+            to: params.protectedData.customerPhone,
+            message: `📦 Your item "${listing.attributes.title}" is on the way!`,
+            trackingUrl: trackingUrl
+          });
+        } catch (webhookError) {
+          console.error('❌ [ZAPIER] Failed to send shipped notification:', webhookError.message);
+        }
       }
       
       // Defensive: Only access .transition if response and response.data are defined

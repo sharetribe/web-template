@@ -1,0 +1,197 @@
+.root {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  /* Ensure root container doesn't clip calendar */
+  overflow: visible;
+  position: relative;
+}
+
+.calendarWrapper {
+  margin: 24px 0;
+  background-color: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* Ensure wrapper doesn't clip calendar */
+  overflow: visible;
+  position: relative;
+}
+
+/* Calendar positioning styles */
+.calendarWrapper :global(.DateRangePicker_picker) {
+  z-index: 9999;
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Ensure calendar days are clickable */
+.calendarWrapper :global(.CalendarDay) {
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+/* Ensure calendar container is properly positioned */
+.calendarWrapper :global(.DateRangePicker) {
+  position: relative;
+  display: inline-block;
+}
+
+/* Ensure input fields are clickable */
+.calendarWrapper :global(.DateInput) {
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+/* Ensure the calendar is visible and properly styled */
+.calendarWrapper :global(.DateRangePickerInput) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.calendarWrapper :global(.DateInput) {
+  background: white;
+  width: auto;
+}
+
+.calendarWrapper :global(.DateInput_input) {
+  background: white;
+  border: none;
+  color: #333;
+  font-size: 14px;
+  padding: 8px;
+  text-align: center;
+}
+
+.calendarWrapper :global(.DateInput_input__focused) {
+  border-bottom: 2px solid #FFAD86;
+}
+
+.calendarWrapper :global(.DateRangePickerInput_arrow) {
+  color: #666;
+}
+
+.calendarWrapper :global(.DateRangePickerInput_clearDates) {
+  color: #666;
+  margin: 0;
+  padding: 4px;
+  background: transparent;
+  border: none;
+}
+
+.calendarWrapper :global(.DateRangePickerInput_clearDates:hover) {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 50%;
+}
+
+/* Calendar popup styles */
+.calendarWrapper :global(.DayPicker) {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.calendarWrapper :global(.CalendarDay) {
+  border-radius: 50%;
+  border: 1px solid transparent;
+  margin: 0;
+  padding: 0;
+  height: 36px;
+  width: 36px;
+  line-height: 36px;
+  font-size: 14px;
+  color: #333;
+}
+
+.calendarWrapper :global(.CalendarDay:hover) {
+  background: rgba(255, 173, 134, 0.1);
+  border: 1px solid #FFAD86;
+}
+
+.calendarWrapper :global(.CalendarDay__selected) {
+  background: #FFAD86;
+  color: white;
+  border: 1px solid #FFAD86;
+}
+
+.calendarWrapper :global(.CalendarDay__selected_span) {
+  background: rgba(255, 173, 134, 0.2);
+  color: #333;
+  border: 1px solid #FFAD86;
+}
+
+.calendarWrapper :global(.CalendarDay__hovered_span) {
+  background: rgba(255, 173, 134, 0.1);
+  color: #333;
+  border: 1px solid #FFAD86;
+}
+
+.calendarWrapper :global(.CalendarDay__today) {
+  border: 1px solid #94EED5;
+  color: #94EED5;
+}
+
+.calendarWrapper :global(.DayPickerNavigation_button) {
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  color: #666;
+  padding: 8px;
+}
+
+.calendarWrapper :global(.DayPickerNavigation_button:hover) {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.calendarWrapper :global(.CalendarMonth__caption) {
+  color: #333;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 8px 0;
+}
+
+.calendarWrapper :global(.DayPicker__weekHeader) {
+  color: #666;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 8px 0;
+}
+
+/* Legend styles */
+.legend {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #666;
+}
+
+.legendDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.legendDot.selectedDate {
+  background-color: #FFAD86;
+}
+
+.legendDot.today {
+  border: 2px solid #94EED5;
+  background-color: transparent;
+} 
