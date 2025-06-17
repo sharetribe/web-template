@@ -12,5 +12,9 @@ build
 # misc
 .DS_Store
 .env
+.env.*
 npm-debug.log
 yarn-error.log
+
+# ...except the example file
+!.env.example
