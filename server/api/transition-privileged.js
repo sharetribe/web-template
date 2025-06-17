@@ -502,6 +502,10 @@ module.exports = async (req, res) => {
           console.error('❌ Failed to fetch or apply protectedData from transaction:', err.message);
         }
       }
+    } else if (bodyParams && (bodyParams.transition === 'transition/decline' || bodyParams.transition === 'transition/expire' || bodyParams.transition === 'transition/cancel')) {
+      // Use transactionId for transaction-based transitions
+      id = transactionId;
+      console.log('🔧 Using transactionId for transaction-based transition:', bodyParams.transition);
     } else {
       id = listingId;
     }
