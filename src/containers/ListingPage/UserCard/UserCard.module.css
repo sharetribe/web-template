@@ -155,3 +155,22 @@
   composes: a from global;
   font-weight: var(--fontWeightMedium);
 }
+
+.measurements {
+  margin-top: 1em;
+}
+
+.measurementsTitle {
+  font-weight: 600;
+  margin-bottom: 0.5em;
+}
+
+.measurementsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.measurementsList li {
+  margin-bottom: 0.25em;
+}

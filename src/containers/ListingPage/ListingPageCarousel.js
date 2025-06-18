@@ -369,23 +369,44 @@ const pendingIsApproved = isPendingApprovalVariant && isApproved;
 
     const author = ensureUser(currentListing.author);
     const rawAuthorDisplayName = author.attributes.profile.displayName;
-    
+    const authorPublicData = author.attributes.profile.publicData || {};
+    console.log('authorPublicData:', authorPublicData);
     const authorAbbreviatedName = `${rawAuthorDisplayName.split(' ')[0]} ${rawAuthorDisplayName.split(' ')[1]?.charAt(0) || ''}.`;
-    
-  const authorSection = (
-    <section className={css.sectionAuthor}>
-      <h2 className={css.sectionTitle}>About the lender</h2>
-      <div className={css.authorCard}>
-        <AvatarMedium className={css.avatar} user={author} />
-        <div className={css.authorDetails}>
-          <p>Hello, I'm {authorAbbreviatedName}</p>
-          <NamedLink name="ProfilePage" params={{ id: author.id.uuid }}>
-            View profile
-          </NamedLink>
-        </div>
+
+    // Formatting helpers
+    const formatHeight = h => h ? h.replace('_', "'") + '"' : '—';
+    const formatDressSizeLetter = l => l ? l.replace('_', '/').toUpperCase() : '—';
+    const formatDressSizeNumber = n => n ? n.replace('_', '/') : '—';
+
+    // Measurements section
+    const measurements = (
+      <div className={css.measurements}>
+        <h3 className={css.measurementsTitle}>Details</h3>
+        <ul className={css.measurementsList}>
+          <li><strong>Height:</strong> {formatHeight(authorPublicData.height)}</li>
+          <li><strong>Bra Size:</strong> {authorPublicData.bra_size || '—'}</li>
+          <li><strong>Dress Size Number:</strong> {formatDressSizeNumber(authorPublicData.dress_size_number)}</li>
+          <li><strong>Dress Size Letter:</strong> {formatDressSizeLetter(authorPublicData.dress_size_letter)}</li>
+          <li><strong>Waist:</strong> {authorPublicData.waist || '—'}</li>
+        </ul>
       </div>
-    </section>
-  );
+    );
+
+    const authorSection = (
+      <section className={css.sectionAuthor}>
+        <h2 className={css.sectionTitle}>About the lender</h2>
+        <div className={css.authorCard}>
+          <AvatarMedium className={css.avatar} user={author} />
+          <div className={css.authorDetails}>
+            <p>Hello, I'm {authorAbbreviatedName}</p>
+            <NamedLink name="ProfilePage" params={{ id: author.id.uuid }}>
+              View profile
+            </NamedLink>
+            {measurements}
+          </div>
+        </div>
+      </section>
+    );
   
   return (
     <Page
