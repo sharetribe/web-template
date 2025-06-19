@@ -690,6 +690,31 @@ module.exports = async (req, res) => {
       // After booking (request-payment), log the transaction's protectedData
       if (bodyParams && bodyParams.transition === 'transition/request-payment' && response && response.data && response.data.data && response.data.data.attributes) {
         console.log('🧾 Booking complete. Transaction protectedData:', response.data.data.attributes.protectedData);
+        
+        // SMS notification for transition/request-payment
+        try {
+          // Get the listing to find the provider
+          const listing = await sdk.listings.show({ id: listingId });
+          const provider = listing.data.data.relationships.provider.data;
+          
+          if (provider && provider.attributes && provider.attributes.profile && provider.attributes.profile.protectedData) {
+            const lenderPhone = provider.attributes.profile.protectedData.phone;
+            if (lenderPhone) {
+              await sendSMS(
+                lenderPhone,
+                `👗 New Sherbrt rental request! Someone wants to borrow your item — tap your dashboard to review and respond.`
+              );
+              console.log(`📱 SMS sent to lender (${lenderPhone}) for rental request-payment`);
+            } else {
+              console.warn('⚠️ Lender phone number not found in protected data');
+            }
+          } else {
+            console.warn('⚠️ Provider or protected data not found for SMS notification');
+          }
+        } catch (smsError) {
+          console.error('❌ Failed to send SMS notification:', smsError.message);
+          // Don't fail the transaction if SMS fails
+        }
       }
       
       // Defensive: Only access .transition if response and response.data are defined
