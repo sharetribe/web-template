@@ -21,7 +21,7 @@ try {
 console.log('🚦 transition-privileged endpoint is wired up');
 
 // --- Shippo label creation logic extracted to a function ---
-async function createShippingLabels(protectedData, transactionId, listing) {
+async function createShippingLabels(protectedData, transactionId, listing, sendSMS) {
   console.log('🚀 [SHIPPO] Starting label creation for transaction:', transactionId);
   console.log('📋 [SHIPPO] Using protectedData:', protectedData);
   
@@ -751,19 +751,26 @@ module.exports = async (req, res) => {
         transitionName = response.data.data.attributes.transition;
       }
       
+      // Debug transitionName
+      console.log('🔍 transitionName after response:', transitionName);
+      console.log('🔍 bodyParams.transition:', bodyParams?.transition);
+      
       // STEP 4: Add a forced test log
       console.log('🧪 Inside transition-privileged — beginning SMS evaluation');
       
       // STEP 8: Temporarily force an SMS to confirm Twilio works
       try {
-        await sendSMS('+15555555555', '🧪 Fallback test SMS to verify Twilio setup works');
+        await sendSMS('+14155552671', '🧪 Fallback test SMS to verify Twilio setup works');
         console.log('✅ Fallback test SMS sent successfully');
       } catch (err) {
         console.error('❌ Fallback test SMS failed:', err.message);
       }
       
-      // SMS Triggers
-      if (transitionName === 'transition/request') {
+      // SMS Triggers - use bodyParams.transition as fallback if transitionName is undefined
+      const effectiveTransition = transitionName || bodyParams?.transition;
+      console.log('🔍 Using effective transition for SMS:', effectiveTransition);
+      
+      if (effectiveTransition === 'transition/request') {
         console.log('📨 Preparing to send SMS for transition/request');
         
         try {
@@ -801,7 +808,7 @@ module.exports = async (req, res) => {
         }
       }
 
-      if (transitionName === 'transition/accept') {
+      if (effectiveTransition === 'transition/accept') {
         console.log('📨 Preparing to send SMS for transition/accept');
         
         try {
@@ -839,7 +846,7 @@ module.exports = async (req, res) => {
         }
       }
 
-      if (transitionName === 'transition/decline') {
+      if (effectiveTransition === 'transition/decline') {
         console.log('📨 Preparing to send SMS for transition/decline');
         
         try {
@@ -886,7 +893,7 @@ module.exports = async (req, res) => {
         console.log('📋 [SHIPPO] Final protectedData for label creation:', finalProtectedData);
         
         // Trigger Shippo label creation asynchronously (don't await to avoid blocking response)
-        createShippingLabels(finalProtectedData, transactionId, listing)
+        createShippingLabels(finalProtectedData, transactionId, listing, sendSMS)
           .then(result => {
             if (result.success) {
               console.log('✅ [SHIPPO] Label creation completed successfully');
