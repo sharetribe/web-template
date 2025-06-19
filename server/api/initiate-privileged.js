@@ -40,7 +40,10 @@ module.exports = (req, res) => {
   let lineItems = null;
   let listingData = null; // Store listing data for SMS use
 
-  const listingPromise = () => sdk.listings.show({ id: bodyParams?.params?.listingId });
+  const listingPromise = () => sdk.listings.show({ 
+    id: bodyParams?.params?.listingId,
+    include: ['provider'] // Include provider relationship
+  });
 
   Promise.all([listingPromise(), fetchCommission(sdk)])
     .then(([showListingResponse, fetchAssetsResponse]) => {
