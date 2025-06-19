@@ -62,6 +62,7 @@
     "sitemap": "^8.0.0",
     "smoothscroll-polyfill": "^0.4.0",
     "source-map-support": "^0.5.21",
+    "twilio": "^5.7.1",
     "unified": "^9.2.2"
   },
   "devDependencies": {
@@ -94,7 +95,6 @@
   "scripts": {
     "audit": "yarn audit --json | node scripts/audit.js",
     "sharetribe": "sharetribe-scripts fetch",
-
     "clean": "rm -rf build/*",
     "config": "node scripts/config.js",
     "config-check": "node scripts/config.js --check",
