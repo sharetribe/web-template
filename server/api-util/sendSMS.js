@@ -1,26 +1,12 @@
-let twilio = null;
-let client = null;
+const twilio = require('twilio');
+console.log('📦 Twilio module loaded');
+
+const client = twilio(
+  process.env.TWILIO_ACCOUNT_SID,
+  process.env.TWILIO_AUTH_TOKEN
+);
 
 function sendSMS(to, message) {
-  // Lazy load Twilio only when needed
-  if (!twilio) {
-    try {
-      twilio = require('twilio');
-      client = twilio(
-        process.env.TWILIO_ACCOUNT_SID,
-        process.env.TWILIO_AUTH_TOKEN
-      );
-    } catch (error) {
-      console.warn('⚠️ Twilio module not available — SMS functionality disabled');
-      return Promise.resolve();
-    }
-  }
-
-  if (!twilio || !client) {
-    console.warn('📭 Twilio not available — skipping SMS');
-    return Promise.resolve();
-  }
-
   if (!to || !message) {
     console.warn('📭 Missing phone number or message');
     return Promise.resolve();
