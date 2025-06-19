@@ -1,17 +1,21 @@
 let twilio = null;
 let client = null;
 
-try {
-  twilio = require('twilio');
-  client = twilio(
-    process.env.TWILIO_ACCOUNT_SID,
-    process.env.TWILIO_AUTH_TOKEN
-  );
-} catch (error) {
-  console.warn('⚠️ Twilio module not available — SMS functionality disabled');
-}
-
 function sendSMS(to, message) {
+  // Lazy load Twilio only when needed
+  if (!twilio) {
+    try {
+      twilio = require('twilio');
+      client = twilio(
+        process.env.TWILIO_ACCOUNT_SID,
+        process.env.TWILIO_AUTH_TOKEN
+      );
+    } catch (error) {
+      console.warn('⚠️ Twilio module not available — SMS functionality disabled');
+      return Promise.resolve();
+    }
+  }
+
   if (!twilio || !client) {
     console.warn('📭 Twilio not available — skipping SMS');
     return Promise.resolve();
