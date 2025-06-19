@@ -562,17 +562,6 @@ class StripePaymentForm extends Component {
 
     return hasStripeKey ? (
       <Form className={classes} onSubmit={handleSubmit} enforcePagePreloadFor="OrderDetailsPage">
-        <LocationOrShippingDetails
-          askShippingDetails={askShippingDetails}
-          showPickUplocation={showPickUplocation}
-          listingLocation={listingLocation}
-          isBooking={isBooking}
-          isFuzzyLocation={isFuzzyLocation}
-          formApi={formApi}
-          locale={locale}
-          intl={intl}
-        />
-
         {billingDetailsNeeded && !loadingData ? (
           <React.Fragment>
             {hasDefaultPaymentMethod ? (

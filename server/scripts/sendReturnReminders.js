@@ -1,7 +1,17 @@
 #!/usr/bin/env node
 
 require('dotenv').config();
-const { sendSMS } = require('../api-util/sendSMS');
+
+// Conditional import of sendSMS to prevent module loading errors
+let sendSMS = null;
+try {
+  const smsModule = require('../api-util/sendSMS');
+  sendSMS = smsModule.sendSMS;
+} catch (error) {
+  console.warn('⚠️ SMS module not available — SMS functionality disabled');
+  sendSMS = () => Promise.resolve(); // No-op function
+}
+
 const { getTrustedSdk } = require('../api-util/sdk');
 
 async function sendReturnReminders() {

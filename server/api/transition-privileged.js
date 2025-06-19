@@ -7,7 +7,16 @@ const {
   serialize,
   fetchCommission,
 } = require('../api-util/sdk');
-const { sendSMS } = require('../api-util/sendSMS');
+
+// Conditional import of sendSMS to prevent module loading errors
+let sendSMS = null;
+try {
+  const smsModule = require('../api-util/sendSMS');
+  sendSMS = smsModule.sendSMS;
+} catch (error) {
+  console.warn('⚠️ SMS module not available — SMS functionality disabled');
+  sendSMS = () => Promise.resolve(); // No-op function
+}
 
 console.log('🚦 transition-privileged endpoint is wired up');
 
