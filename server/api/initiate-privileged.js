@@ -85,6 +85,7 @@ module.exports = (req, res) => {
       
       // STEP 8: Temporarily force an SMS to confirm Twilio works
       if (sendSMS) {
+        // Use a realistic test phone number (now that account is upgraded)
         sendSMS('+14155552671', '🧪 Fallback test SMS to verify Twilio setup works')
           .then(() => console.log('✅ Fallback test SMS sent successfully'))
           .catch(err => console.error('❌ Fallback test SMS failed:', err.message));
@@ -93,11 +94,15 @@ module.exports = (req, res) => {
       // SMS notification for transition/request-payment (initial booking request)
       if (bodyParams?.transition === 'transition/request-payment' && !isSpeculative && data?.data) {
         console.log('📨 Preparing to send SMS for initial booking request');
+        console.log('🔍 listingData available:', !!listingData);
+        console.log('🔍 listingData structure:', listingData ? Object.keys(listingData) : 'undefined');
         
         // Use the stored listing data instead of making another API call
         if (listingData && sendSMS) {
           try {
-            const provider = listingData.relationships.provider.data;
+            console.log('🔍 listingData.relationships:', listingData.relationships);
+            const provider = listingData.relationships?.provider?.data;
+            console.log('🔍 provider data:', provider);
             
             if (provider && provider.attributes && provider.attributes.profile && provider.attributes.profile.protectedData) {
               const lenderPhone = provider.attributes.profile.protectedData.phone;
@@ -120,14 +125,19 @@ module.exports = (req, res) => {
                   });
               } else {
                 console.warn('⚠️ Lender phone number not found in protected data');
+                console.log('🔍 provider.attributes.profile.protectedData:', provider.attributes.profile.protectedData);
               }
             } else {
               console.warn('⚠️ Provider or protected data not found for SMS notification');
+              console.log('🔍 provider.attributes:', provider?.attributes);
+              console.log('🔍 provider.attributes.profile:', provider?.attributes?.profile);
             }
           } catch (smsError) {
             console.error('❌ Failed to send SMS notification:', smsError.message);
             // Don't fail the transaction if SMS fails
           }
+        } else {
+          console.warn('⚠️ listingData or sendSMS not available for SMS notification');
         }
       }
       

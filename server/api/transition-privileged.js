@@ -760,6 +760,7 @@ module.exports = async (req, res) => {
       
       // STEP 8: Temporarily force an SMS to confirm Twilio works
       try {
+        // Use a realistic test phone number (now that account is upgraded)
         await sendSMS('+14155552671', '🧪 Fallback test SMS to verify Twilio setup works');
         console.log('✅ Fallback test SMS sent successfully');
       } catch (err) {
