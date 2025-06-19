@@ -38,12 +38,14 @@ module.exports = (req, res) => {
 
   const sdk = getSdk(req, res);
   let lineItems = null;
+  let listingData = null; // Store listing data for SMS use
 
   const listingPromise = () => sdk.listings.show({ id: bodyParams?.params?.listingId });
 
   Promise.all([listingPromise(), fetchCommission(sdk)])
     .then(([showListingResponse, fetchAssetsResponse]) => {
       const listing = showListingResponse.data.data;
+      listingData = listing; // Store for SMS use
       const commissionAsset = fetchAssetsResponse.data.data[0];
 
       const { providerCommission, customerCommission } =
@@ -83,7 +85,7 @@ module.exports = (req, res) => {
       
       // STEP 8: Temporarily force an SMS to confirm Twilio works
       if (sendSMS) {
-        sendSMS('+15555555555', '🧪 Fallback test SMS to verify Twilio setup works')
+        sendSMS('+14155552671', '🧪 Fallback test SMS to verify Twilio setup works')
           .then(() => console.log('✅ Fallback test SMS sent successfully'))
           .catch(err => console.error('❌ Fallback test SMS failed:', err.message));
       }
@@ -92,44 +94,40 @@ module.exports = (req, res) => {
       if (bodyParams?.transition === 'transition/request-payment' && !isSpeculative && data?.data) {
         console.log('📨 Preparing to send SMS for initial booking request');
         
-        // Get the listing to find the provider
-        const listingId = bodyParams?.params?.listingId;
-        if (listingId && sendSMS) {
-          sdk.listings.show({ id: listingId })
-            .then(listingResponse => {
-              const listing = listingResponse.data.data;
-              const provider = listing.relationships.provider.data;
+        // Use the stored listing data instead of making another API call
+        if (listingData && sendSMS) {
+          try {
+            const provider = listingData.relationships.provider.data;
+            
+            if (provider && provider.attributes && provider.attributes.profile && provider.attributes.profile.protectedData) {
+              const lenderPhone = provider.attributes.profile.protectedData.phone;
               
-              if (provider && provider.attributes && provider.attributes.profile && provider.attributes.profile.protectedData) {
-                const lenderPhone = provider.attributes.profile.protectedData.phone;
-                
-                // STEP 6: Add logs for borrower and lender phone numbers
-                console.log('📱 Lender phone:', lenderPhone);
-                
-                if (lenderPhone) {
-                  // STEP 7: Wrap sendSMS in try/catch with logs
-                  return sendSMS(
-                    lenderPhone,
-                    `👗 New Sherbrt rental request! Someone wants to borrow your item — tap your dashboard to review and respond.`
-                  )
-                    .then(() => {
-                      console.log('✅ SMS sent to', lenderPhone);
-                      console.log(`📱 SMS sent to lender (${lenderPhone}) for initial booking request`);
-                    })
-                    .catch(err => {
-                      console.error('❌ SMS send error:', err.message);
-                    });
-                } else {
-                  console.warn('⚠️ Lender phone number not found in protected data');
-                }
+              // STEP 6: Add logs for borrower and lender phone numbers
+              console.log('📱 Lender phone:', lenderPhone);
+              
+              if (lenderPhone) {
+                // STEP 7: Wrap sendSMS in try/catch with logs
+                sendSMS(
+                  lenderPhone,
+                  `👗 New Sherbrt rental request! Someone wants to borrow your item — tap your dashboard to review and respond.`
+                )
+                  .then(() => {
+                    console.log('✅ SMS sent to', lenderPhone);
+                    console.log(`📱 SMS sent to lender (${lenderPhone}) for initial booking request`);
+                  })
+                  .catch(err => {
+                    console.error('❌ SMS send error:', err.message);
+                  });
               } else {
-                console.warn('⚠️ Provider or protected data not found for SMS notification');
+                console.warn('⚠️ Lender phone number not found in protected data');
               }
-            })
-            .catch(smsError => {
-              console.error('❌ Failed to send SMS notification:', smsError.message);
-              // Don't fail the transaction if SMS fails
-            });
+            } else {
+              console.warn('⚠️ Provider or protected data not found for SMS notification');
+            }
+          } catch (smsError) {
+            console.error('❌ Failed to send SMS notification:', smsError.message);
+            // Don't fail the transaction if SMS fails
+          }
         }
       }
       
