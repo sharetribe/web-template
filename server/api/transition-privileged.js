@@ -7,40 +7,9 @@ const {
   serialize,
   fetchCommission,
 } = require('../api-util/sdk');
+const { sendSMS } = require('../api-util/sendSMS');
 
 console.log('🚦 transition-privileged endpoint is wired up');
-
-// --- Zapier webhook helper function ---
-async function sendZapierWebhook(webhookUrl, payload) {
-  console.log('🚀 [ZAPIER] sendZapierWebhook function called');
-  
-  if (!webhookUrl) {
-    console.log('⚠️ [ZAPIER] Webhook URL not configured, skipping');
-    return;
-  }
-  
-  try {
-    console.log('📱 [ZAPIER] Sending webhook to:', webhookUrl);
-    console.log('📱 [ZAPIER] Payload:', payload);
-    
-    const response = await axios.post(webhookUrl, payload, {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      timeout: 10000 // 10 second timeout
-    });
-    
-    console.log('✅ [ZAPIER] Webhook sent successfully:', response.status);
-    return response;
-  } catch (error) {
-    console.error('❌ [ZAPIER] Webhook failed:', error.message);
-    if (error.response) {
-      console.error('❌ [ZAPIER] Response status:', error.response.status);
-      console.error('❌ [ZAPIER] Response data:', error.response.data);
-    }
-    return null;
-  }
-}
 
 // --- Shippo label creation logic extracted to a function ---
 async function createShippingLabels(protectedData, transactionId, listing) {
@@ -254,24 +223,71 @@ async function createShippingLabels(protectedData, transactionId, listing) {
       console.warn('⚠️ [SHIPPO] No shipping rates found for return shipment');
     }
     
-    // Zapier webhook integration
-    const zapierWebhookUrl = process.env.ZAPIER_REQUEST_WEBHOOK;
- 
-    if (zapierWebhookUrl) {
-      try {
-        await axios.post(zapierWebhookUrl, {
-          phone: protectedData.providerPhone,
-          name: protectedData.providerName,
-          listing: listing.attributes.title,
-          qrCodeUrl: labelRes.data.qr_code_url,
-          labelUrl: labelRes.data.label_url,
-        });
-        console.log('✅ [ZAPIER] Webhook sent successfully');
-      } catch (zapierError) {
-        console.error('❌ [ZAPIER] Webhook failed:', zapierError.message);
+    // SMS Triggers 4 & 5: After successful label creation
+    try {
+      // Get the transaction to find customer and provider
+      const transaction = await sdk.transactions.show({ id: transactionId });
+      const customer = transaction.data.data.relationships.customer.data;
+      const listing = transaction.data.data.relationships.listing.data;
+      
+      // Get provider from listing
+      const listingDetails = await sdk.listings.show({ id: listing.id });
+      const provider = listingDetails.data.data.relationships.provider.data;
+      
+      // Save return label URL to transaction protectedData for return reminders
+      if (returnLabelRes?.data?.label_url) {
+        try {
+          const currentProtectedData = transaction.data.data.attributes.protectedData || {};
+          const updatedProtectedData = {
+            ...currentProtectedData,
+            returnLabelUrl: returnLabelRes.data.label_url,
+            returnQrCodeUrl: returnLabelRes.data.qr_code_url,
+            returnTrackingUrl: returnLabelRes.data.tracking_url_provider
+          };
+          
+          await sdk.transactions.update({
+            id: transactionId,
+            protectedData: updatedProtectedData
+          });
+          
+          console.log('💾 Return label URLs saved to transaction protectedData');
+        } catch (updateError) {
+          console.error('❌ Failed to save return label URLs to transaction:', updateError.message);
+        }
       }
-    } else {
-      console.log('⚠️ [ZAPIER] ZAPIER_REQUEST_WEBHOOK not configured, skipping webhook');
+      
+      // Extract phone numbers
+      const lenderPhone = provider?.attributes?.profile?.protectedData?.phone;
+      const borrowerPhone = customer?.attributes?.profile?.protectedData?.phone;
+      
+      // Trigger 4: Lender receives text when QR code/shipping label is sent to them
+      if (lenderPhone) {
+        await sendSMS(
+          lenderPhone,
+          `📬 Your Sherbrt shipping label is ready! Please package and ship the item using the QR code link provided.`
+        );
+        console.log(`📱 SMS sent to lender (${lenderPhone}) for shipping label ready`);
+      } else {
+        console.warn('⚠️ Lender phone number not found for shipping label notification');
+      }
+      
+      // Trigger 5: Borrower receives text when item is shipped (include tracking link)
+      if (borrowerPhone && labelRes.data.tracking_url_provider) {
+        const trackingUrl = labelRes.data.tracking_url_provider;
+        await sendSMS(
+          borrowerPhone,
+          `🚚 Your Sherbrt item has been shipped! Track it here: ${trackingUrl}`
+        );
+        console.log(`📱 SMS sent to borrower (${borrowerPhone}) for item shipped with tracking: ${trackingUrl}`);
+      } else if (borrowerPhone) {
+        console.warn('⚠️ Borrower phone found but no tracking URL available');
+      } else {
+        console.warn('⚠️ Borrower phone number not found for shipping notification');
+      }
+      
+    } catch (smsError) {
+      console.error('❌ Failed to send shipping SMS notifications:', smsError.message);
+      // Don't fail the label creation if SMS fails
     }
     
     return { success: true, outboundLabel: labelRes.data, returnLabel: returnLabelRes?.data };
@@ -633,11 +649,6 @@ module.exports = async (req, res) => {
         isSpeculative: isSpeculative
       });
       
-      // Log the transition being handled
-      console.log('🔄 [ZAPIER VERIFY] Transition being handled:', bodyParams?.transition);
-      console.log('🔄 [ZAPIER VERIFY] Is speculative:', isSpeculative);
-      console.log('🔄 [ZAPIER VERIFY] ZAPIER_REQUEST_WEBHOOK env var:', process.env.ZAPIER_REQUEST_WEBHOOK);
-      
       // If this is transition/accept, log the transaction state before attempting
       if (bodyParams && bodyParams.transition === 'transition/accept') {
         try {
@@ -670,91 +681,95 @@ module.exports = async (req, res) => {
       // After booking (request-payment), log the transaction's protectedData
       if (bodyParams && bodyParams.transition === 'transition/request-payment' && response && response.data && response.data.data && response.data.data.attributes) {
         console.log('🧾 Booking complete. Transaction protectedData:', response.data.data.attributes.protectedData);
-        console.log('🔍 [ZAPIER] Entering transition/request-payment webhook flow');
-        console.log('🔍 [ZAPIER] Flow conditions:', {
-          isSpeculative,
-          hasProtectedData: !!params.protectedData,
-          hasProviderPhone: !!params.protectedData?.providerPhone,
-          hasListing: !!listing,
-          listingTitle: listing?.attributes?.title
-        });
-        
-        console.log('🧭 [ZAPIER DEBUG] Checking if Zapier request webhook should fire');
-        console.log('📦 params.protectedData:', params.protectedData);
-        console.log('📦 ZAPIER_REQUEST_WEBHOOK env var:', process.env.ZAPIER_REQUEST_WEBHOOK);
-        
-        // Verify data population
-        console.log('✅ [ZAPIER VERIFY] Data verification:');
-        console.log('   📞 Provider phone populated:', !!params.protectedData?.providerPhone);
-        console.log('   📞 Provider phone value:', params.protectedData?.providerPhone);
-        console.log('   👗 Listing populated:', !!listing);
-        console.log('   👗 Listing title:', listing?.attributes?.title);
-        console.log('   🔧 isSpeculative:', isSpeculative);
-        
-        // 1. Borrower requests to borrow an item - notify provider
-        if (!isSpeculative && params.protectedData?.providerPhone && listing) {
-          console.log('🔔 [ZAPIER] About to send request-payment webhook');
-          console.log('🧾 Webhook target:', process.env.ZAPIER_REQUEST_WEBHOOK);
-          console.log('📞 Provider phone:', params.protectedData?.providerPhone);
-          console.log('👗 Listing title:', listing?.attributes?.title);
+      }
+      
+      // Defensive: Only access .transition if response and response.data are defined
+      if (
+        response &&
+        response.data &&
+        response.data.data &&
+        response.data.data.attributes &&
+        typeof response.data.data.attributes.transition !== 'undefined'
+      ) {
+        transitionName = response.data.data.attributes.transition;
+      }
+      
+      // SMS Triggers
+      if (transitionName === 'transition/request') {
+        try {
+          // Get the listing to find the provider
+          const listing = await sdk.listings.show({ id: listingId });
+          const provider = listing.data.data.relationships.provider.data;
           
-          console.log('📤 Attempting to send Zapier webhook for booking request');
-          
-          if (!process.env.ZAPIER_REQUEST_WEBHOOK) {
-            console.log('⚠️ TODO: ZAPIER_REQUEST_WEBHOOK environment variable is missing. Please check environment setup.');
-            return;
-          }
-          
-          const webhookPayload = {
-            to: params.protectedData.providerPhone,
-            message: `📦 New borrow request for "${listing.attributes.title}". Log in to review.`
-          };
-          console.log('📦 Webhook payload:', JSON.stringify(webhookPayload, null, 2));
-          
-          console.log('🚀 [ZAPIER VERIFY] About to call sendZapierWebhook function');
-          try {
-            await sendZapierWebhook(process.env.ZAPIER_REQUEST_WEBHOOK, webhookPayload);
-            console.log('✅ Zapier webhook request sent');
-            console.log('✅ [ZAPIER VERIFY] sendZapierWebhook function completed successfully');
-          } catch (webhookError) {
-            console.error('❌ [ZAPIER] Failed to send request notification - Full error object:', webhookError);
-            console.error('❌ [ZAPIER] Error message:', webhookError.message);
-            console.error('❌ [ZAPIER] Error stack:', webhookError.stack);
-            if (webhookError.response) {
-              console.error('❌ [ZAPIER] Response status:', webhookError.response.status);
-              console.error('❌ [ZAPIER] Response data:', webhookError.response.data);
+          if (provider && provider.attributes && provider.attributes.profile && provider.attributes.profile.protectedData) {
+            const lenderPhone = provider.attributes.profile.protectedData.phone;
+            if (lenderPhone) {
+              await sendSMS(
+                lenderPhone,
+                `👗 New Sherbrt rental request! Someone wants to borrow your item — tap your dashboard to review and respond.`
+              );
+              console.log(`📱 SMS sent to lender (${lenderPhone}) for rental request`);
+            } else {
+              console.warn('⚠️ Lender phone number not found in protected data');
             }
+          } else {
+            console.warn('⚠️ Provider or protected data not found for SMS notification');
           }
-        } else {
-          console.log('⚠️ [ZAPIER] Skipping webhook call - conditions not met:', {
-            isSpeculative,
-            hasProviderPhone: !!params.protectedData?.providerPhone,
-            hasListing: !!listing
-          });
+        } catch (smsError) {
+          console.error('❌ Failed to send SMS notification:', smsError.message);
+          // Don't fail the transaction if SMS fails
         }
       }
-      
-      // 2. Lender accepts the request - notify customer
-      if (bodyParams && bodyParams.transition === 'transition/accept' && !isSpeculative && params.protectedData?.customerPhone && listing) {
+
+      if (transitionName === 'transition/accept') {
         try {
-          await sendZapierWebhook(process.env.ZAPIER_ACCEPT_WEBHOOK, {
-            to: params.protectedData.customerPhone,
-            message: `✅ Your borrow request for "${listing.attributes.title}" was accepted!`
-          });
-        } catch (webhookError) {
-          console.error('❌ [ZAPIER] Failed to send accept notification:', webhookError.message);
+          // Get the transaction to find the customer
+          const transaction = await sdk.transactions.show({ id: transactionId });
+          const customer = transaction.data.data.relationships.customer.data;
+          
+          if (customer && customer.attributes && customer.attributes.profile && customer.attributes.profile.protectedData) {
+            const borrowerPhone = customer.attributes.profile.protectedData.phone;
+            if (borrowerPhone) {
+              await sendSMS(
+                borrowerPhone,
+                `🎉 Your Sherbrt request was accepted! You'll get your shipping label and details soon.`
+              );
+              console.log(`📱 SMS sent to borrower (${borrowerPhone}) for accepted request`);
+            } else {
+              console.warn('⚠️ Borrower phone number not found in protected data');
+            }
+          } else {
+            console.warn('⚠️ Customer or protected data not found for SMS notification');
+          }
+        } catch (smsError) {
+          console.error('❌ Failed to send SMS notification:', smsError.message);
+          // Don't fail the transaction if SMS fails
         }
       }
-      
-      // 3. Lender declines the request - notify customer
-      if (bodyParams && bodyParams.transition === 'transition/decline' && !isSpeculative && params.protectedData?.customerPhone && listing) {
+
+      if (transitionName === 'transition/decline') {
         try {
-          await sendZapierWebhook(process.env.ZAPIER_DECLINE_WEBHOOK, {
-            to: params.protectedData.customerPhone,
-            message: `❌ Your borrow request for "${listing.attributes.title}" was declined.`
-          });
-        } catch (webhookError) {
-          console.error('❌ [ZAPIER] Failed to send decline notification:', webhookError.message);
+          // Get the transaction to find the customer
+          const transaction = await sdk.transactions.show({ id: transactionId });
+          const customer = transaction.data.data.relationships.customer.data;
+          
+          if (customer && customer.attributes && customer.attributes.profile && customer.attributes.profile.protectedData) {
+            const borrowerPhone = customer.attributes.profile.protectedData.phone;
+            if (borrowerPhone) {
+              await sendSMS(
+                borrowerPhone,
+                `😔 Your Sherbrt request was declined. Don't worry — more fabulous looks are waiting to be borrowed!`
+              );
+              console.log(`📱 SMS sent to borrower (${borrowerPhone}) for declined request`);
+            } else {
+              console.warn('⚠️ Borrower phone number not found in protected data');
+            }
+          } else {
+            console.warn('⚠️ Customer or protected data not found for SMS notification');
+          }
+        } catch (smsError) {
+          console.error('❌ Failed to send SMS notification:', smsError.message);
+          // Don't fail the transaction if SMS fails
         }
       }
       
@@ -771,17 +786,6 @@ module.exports = async (req, res) => {
           .then(result => {
             if (result.success) {
               console.log('✅ [SHIPPO] Label creation completed successfully');
-              
-              // 4. QR code/shipping label sent - notify provider
-              if (finalProtectedData.providerPhone && listing && result.outboundLabel) {
-                sendZapierWebhook(process.env.ZAPIER_LABEL_SENT_WEBHOOK, {
-                  to: finalProtectedData.providerPhone,
-                  message: `📮 Your shipping label for "${listing.attributes.title}" is ready.`,
-                  labelUrl: result.outboundLabel.label_url
-                }).catch(webhookError => {
-                  console.error('❌ [ZAPIER] Failed to send label notification:', webhookError.message);
-                });
-              }
             } else {
               console.warn('⚠️ [SHIPPO] Label creation failed:', result.reason);
             }
@@ -791,31 +795,6 @@ module.exports = async (req, res) => {
           });
       }
       
-      // 6. Borrower notified when item is shipped
-      if (bodyParams && bodyParams.transition === 'transition/mark-shipped' && !isSpeculative && params.protectedData?.customerPhone && listing) {
-        try {
-          // Note: trackingUrl would need to be passed in params or fetched from transaction
-          const trackingUrl = params.trackingUrl || '';
-          await sendZapierWebhook(process.env.ZAPIER_ITEM_SHIPPED_WEBHOOK, {
-            to: params.protectedData.customerPhone,
-            message: `📦 Your item "${listing.attributes.title}" is on the way!`,
-            trackingUrl: trackingUrl
-          });
-        } catch (webhookError) {
-          console.error('❌ [ZAPIER] Failed to send shipped notification:', webhookError.message);
-        }
-      }
-      
-      // Defensive: Only access .transition if response and response.data are defined
-      if (
-        response &&
-        response.data &&
-        response.data.data &&
-        response.data.data.attributes &&
-        typeof response.data.data.attributes.transition !== 'undefined'
-      ) {
-        transitionName = response.data.data.attributes.transition;
-      }
       console.log('✅ Transition completed successfully, returning:', { transition: transitionName });
       return res.status(200).json({ transition: transitionName });
     } catch (err) {
