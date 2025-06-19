@@ -1,18 +1,9 @@
-import React from 'react';
+// util/listingFieldUtils.js
 
-import { FormattedMessage } from '../../util/reactIntl';
-import { isFieldForListingType } from '../../util/fieldHelpers';
+import { isFieldForListingType } from './fieldHelpers';
 
-import { Heading } from '../../components';
-
-import css from './ListingPage.module.css';
-
-const SectionDetailsMaybe = props => {
-  const { publicData, metadata = {}, listingFieldConfigs, isFieldForCategory, intl } = props;
-
-  if (!publicData || !listingFieldConfigs) {
-    return null;
-  }
+export const getListingDetails = (publicData, metadata = {}, listingFieldConfigs, isFieldForCategory, intl) => {
+  if (!publicData || !listingFieldConfigs) return [];
 
   const pickListingFields = (filteredConfigs, config) => {
     const { key, schemaType, enumOptions, showConfig = {} } = config;
@@ -44,25 +35,5 @@ const SectionDetailsMaybe = props => {
     return filteredConfigs;
   };
 
-  const existingListingFields = listingFieldConfigs.reduce(pickListingFields, []);
-  console.log('Listing details:', existingListingFields);
-
-
-  return existingListingFields.length > 0 ? (
-    <section className={css.sectionDetails}>
-      <Heading as="h2" rootClassName={css.sectionHeading}>
-        <FormattedMessage id="ListingPage.detailsTitle" />
-      </Heading>
-      <ul className={css.details}>
-        {existingListingFields.map(detail => (
-          <li key={detail.key} className={css.detailsRow}>
-            <span className={css.detailLabel}>{detail.label}</span>
-            <span>{detail.value}</span>
-          </li>
-        ))}
-      </ul>
-    </section>
-  ) : null;
+  return listingFieldConfigs.reduce(pickListingFields, []);
 };
-
-export default SectionDetailsMaybe;

@@ -1,3 +1,5 @@
+
+
 import classNames from 'classnames';
 import React, { useEffect } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
@@ -115,6 +117,7 @@ export const ListingCard = props => {
   const { title = '', price, publicData } = currentListing.attributes;
   const slug = createSlug(title);
   const author = ensureUser(listing.author);
+  //console.log(listing.author);
   const authorName = author.attributes.profile.displayName;
   const firstImage =
     currentListing.images && currentListing.images.length > 0 ? currentListing.images[0] : null;
@@ -130,7 +133,11 @@ export const ListingCard = props => {
 
   const setActivePropsMaybe = setActiveListing
     ? {
-        onMouseEnter: () => setActiveListing(currentListing.id),
+        onMouseEnter: () => {
+          setActiveListing(currentListing.id);
+
+          console.log("Attributes are ------------>", currentListing.attributes.publicData);
+        },
         onMouseLeave: () => setActiveListing(null),
       }
     : null;
