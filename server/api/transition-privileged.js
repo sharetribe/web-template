@@ -315,7 +315,17 @@ module.exports = async (req, res) => {
   console.log('📋 Request method:', req.method);
   console.log('📋 Request URL:', req.url);
   
+  // STEP 1: Confirm the endpoint is hit
+  console.log('🚦 transition-privileged endpoint is wired up');
+  
   const { isSpeculative, orderData, bodyParams, queryParams } = req.body;
+  
+  // STEP 2: Log the transition type
+  console.log('🔁 Transition received:', bodyParams?.transition);
+  
+  // STEP 3: Check that sendSMS is properly imported
+  console.log('📱 sendSMS function available:', !!sendSMS);
+  console.log('📱 sendSMS function type:', typeof sendSMS);
   
   // Debug log for full request body
   console.log('🔍 Full request body:', {
@@ -691,6 +701,9 @@ module.exports = async (req, res) => {
       if (bodyParams && bodyParams.transition === 'transition/request-payment' && response && response.data && response.data.data && response.data.data.attributes) {
         console.log('🧾 Booking complete. Transaction protectedData:', response.data.data.attributes.protectedData);
         
+        // STEP 5: Confirm SMS logic is reached on booking request
+        console.log('📨 Preparing to send SMS for booking request');
+        
         // SMS notification for transition/request-payment
         try {
           // Get the listing to find the provider
@@ -699,12 +712,22 @@ module.exports = async (req, res) => {
           
           if (provider && provider.attributes && provider.attributes.profile && provider.attributes.profile.protectedData) {
             const lenderPhone = provider.attributes.profile.protectedData.phone;
+            
+            // STEP 6: Add logs for borrower and lender phone numbers
+            console.log('📱 Lender phone:', lenderPhone);
+            
             if (lenderPhone) {
-              await sendSMS(
-                lenderPhone,
-                `👗 New Sherbrt rental request! Someone wants to borrow your item — tap your dashboard to review and respond.`
-              );
-              console.log(`📱 SMS sent to lender (${lenderPhone}) for rental request-payment`);
+              // STEP 7: Wrap sendSMS in try/catch with logs
+              try {
+                await sendSMS(
+                  lenderPhone,
+                  `👗 New Sherbrt rental request! Someone wants to borrow your item — tap your dashboard to review and respond.`
+                );
+                console.log('✅ SMS sent to', lenderPhone);
+                console.log(`📱 SMS sent to lender (${lenderPhone}) for rental request-payment`);
+              } catch (err) {
+                console.error('❌ SMS send error:', err.message);
+              }
             } else {
               console.warn('⚠️ Lender phone number not found in protected data');
             }
@@ -728,8 +751,21 @@ module.exports = async (req, res) => {
         transitionName = response.data.data.attributes.transition;
       }
       
+      // STEP 4: Add a forced test log
+      console.log('🧪 Inside transition-privileged — beginning SMS evaluation');
+      
+      // STEP 8: Temporarily force an SMS to confirm Twilio works
+      try {
+        await sendSMS('+15555555555', '🧪 Fallback test SMS to verify Twilio setup works');
+        console.log('✅ Fallback test SMS sent successfully');
+      } catch (err) {
+        console.error('❌ Fallback test SMS failed:', err.message);
+      }
+      
       // SMS Triggers
       if (transitionName === 'transition/request') {
+        console.log('📨 Preparing to send SMS for transition/request');
+        
         try {
           // Get the listing to find the provider
           const listing = await sdk.listings.show({ id: listingId });
@@ -737,12 +773,22 @@ module.exports = async (req, res) => {
           
           if (provider && provider.attributes && provider.attributes.profile && provider.attributes.profile.protectedData) {
             const lenderPhone = provider.attributes.profile.protectedData.phone;
+            
+            // STEP 6: Add logs for borrower and lender phone numbers
+            console.log('📱 Lender phone:', lenderPhone);
+            
             if (lenderPhone) {
-              await sendSMS(
-                lenderPhone,
-                `👗 New Sherbrt rental request! Someone wants to borrow your item — tap your dashboard to review and respond.`
-              );
-              console.log(`📱 SMS sent to lender (${lenderPhone}) for rental request`);
+              // STEP 7: Wrap sendSMS in try/catch with logs
+              try {
+                await sendSMS(
+                  lenderPhone,
+                  `👗 New Sherbrt rental request! Someone wants to borrow your item — tap your dashboard to review and respond.`
+                );
+                console.log('✅ SMS sent to', lenderPhone);
+                console.log(`📱 SMS sent to lender (${lenderPhone}) for rental request`);
+              } catch (err) {
+                console.error('❌ SMS send error:', err.message);
+              }
             } else {
               console.warn('⚠️ Lender phone number not found in protected data');
             }
@@ -756,6 +802,8 @@ module.exports = async (req, res) => {
       }
 
       if (transitionName === 'transition/accept') {
+        console.log('📨 Preparing to send SMS for transition/accept');
+        
         try {
           // Get the transaction to find the customer
           const transaction = await sdk.transactions.show({ id: transactionId });
@@ -763,12 +811,22 @@ module.exports = async (req, res) => {
           
           if (customer && customer.attributes && customer.attributes.profile && customer.attributes.profile.protectedData) {
             const borrowerPhone = customer.attributes.profile.protectedData.phone;
+            
+            // STEP 6: Add logs for borrower and lender phone numbers
+            console.log('📱 Borrower phone:', borrowerPhone);
+            
             if (borrowerPhone) {
-              await sendSMS(
-                borrowerPhone,
-                `🎉 Your Sherbrt request was accepted! You'll get your shipping label and details soon.`
-              );
-              console.log(`📱 SMS sent to borrower (${borrowerPhone}) for accepted request`);
+              // STEP 7: Wrap sendSMS in try/catch with logs
+              try {
+                await sendSMS(
+                  borrowerPhone,
+                  `🎉 Your Sherbrt request was accepted! You'll get your shipping label and details soon.`
+                );
+                console.log('✅ SMS sent to', borrowerPhone);
+                console.log(`📱 SMS sent to borrower (${borrowerPhone}) for accepted request`);
+              } catch (err) {
+                console.error('❌ SMS send error:', err.message);
+              }
             } else {
               console.warn('⚠️ Borrower phone number not found in protected data');
             }
@@ -782,6 +840,8 @@ module.exports = async (req, res) => {
       }
 
       if (transitionName === 'transition/decline') {
+        console.log('📨 Preparing to send SMS for transition/decline');
+        
         try {
           // Get the transaction to find the customer
           const transaction = await sdk.transactions.show({ id: transactionId });
@@ -789,12 +849,22 @@ module.exports = async (req, res) => {
           
           if (customer && customer.attributes && customer.attributes.profile && customer.attributes.profile.protectedData) {
             const borrowerPhone = customer.attributes.profile.protectedData.phone;
+            
+            // STEP 6: Add logs for borrower and lender phone numbers
+            console.log('📱 Borrower phone:', borrowerPhone);
+            
             if (borrowerPhone) {
-              await sendSMS(
-                borrowerPhone,
-                `😔 Your Sherbrt request was declined. Don't worry — more fabulous looks are waiting to be borrowed!`
-              );
-              console.log(`📱 SMS sent to borrower (${borrowerPhone}) for declined request`);
+              // STEP 7: Wrap sendSMS in try/catch with logs
+              try {
+                await sendSMS(
+                  borrowerPhone,
+                  `😔 Your Sherbrt request was declined. Don't worry — more fabulous looks are waiting to be borrowed!`
+                );
+                console.log('✅ SMS sent to', borrowerPhone);
+                console.log(`📱 SMS sent to borrower (${borrowerPhone}) for declined request`);
+              } catch (err) {
+                console.error('❌ SMS send error:', err.message);
+              }
             } else {
               console.warn('⚠️ Borrower phone number not found in protected data');
             }
