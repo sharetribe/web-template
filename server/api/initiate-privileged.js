@@ -45,28 +45,42 @@ module.exports = (req, res) => {
     id: bodyParams?.params?.listingId
   });
 
-  // Separate promise to get provider data
-  const providerPromise = () => {
+  // Get provider data by first getting the listing, then the user
+  const providerPromise = async () => {
     const listingId = bodyParams?.params?.listingId;
     if (listingId) {
-      return sdk.listings.show({ 
-        id: listingId,
-        include: ['provider'],
-        expand: true
-      }).catch(err => {
+      try {
+        // First get the listing to find the provider ID
+        const listingResponse = await sdk.listings.show({ id: listingId });
+        const listing = listingResponse.data.data;
+        
+        // Check if we have the provider ID in the listing
+        if (listing && listing.relationships && listing.relationships.provider) {
+          const providerId = listing.relationships.provider.data.id;
+          console.log('🔍 Found provider ID:', providerId);
+          
+          // Now get the user data for this provider
+          const userResponse = await sdk.users.show({ id: providerId });
+          return userResponse;
+        } else {
+          console.warn('⚠️ No provider relationship found in listing');
+          return null;
+        }
+      } catch (err) {
         console.warn('⚠️ Failed to get provider data:', err.message);
         return null;
-      });
+      }
     }
-    return Promise.resolve(null);
+    return null;
   };
 
-  Promise.all([listingPromise(), fetchCommission(sdk), providerPromise()])
-    .then(([showListingResponse, fetchAssetsResponse, providerResponse]) => {
+  Promise.all([listingPromise(), fetchCommission(sdk)])
+    .then(async ([showListingResponse, fetchAssetsResponse]) => {
       const listing = showListingResponse.data.data;
       listingData = listing; // Store for SMS use
       
-      // Store provider data if available
+      // Get provider data separately
+      const providerResponse = await providerPromise();
       if (providerResponse && providerResponse.data && providerResponse.data.data) {
         providerData = providerResponse.data.data;
         console.log('🔍 Provider data available:', !!providerData);
@@ -134,12 +148,12 @@ module.exports = (req, res) => {
         // Use the stored provider data instead of trying to get it from listingData
         if (providerData && sendSMS) {
           try {
-            console.log('🔍 providerData.relationships:', providerData.relationships);
-            const provider = providerData.relationships?.provider?.data;
-            console.log('🔍 provider data:', provider);
+            console.log('🔍 providerData structure:', Object.keys(providerData));
+            console.log('🔍 providerData.attributes:', providerData.attributes);
             
-            if (provider && provider.attributes && provider.attributes.profile && provider.attributes.profile.protectedData) {
-              const lenderPhone = provider.attributes.profile.protectedData.phone;
+            // providerData is now user data, so we access profile directly
+            if (providerData.attributes && providerData.attributes.profile && providerData.attributes.profile.protectedData) {
+              const lenderPhone = providerData.attributes.profile.protectedData.phone;
               
               // STEP 6: Add logs for borrower and lender phone numbers
               console.log('📱 Lender phone:', lenderPhone);
@@ -159,12 +173,12 @@ module.exports = (req, res) => {
                   });
               } else {
                 console.warn('⚠️ Lender phone number not found in protected data');
-                console.log('🔍 provider.attributes.profile.protectedData:', provider.attributes.profile.protectedData);
+                console.log('🔍 providerData.attributes.profile.protectedData:', providerData.attributes.profile.protectedData);
               }
             } else {
               console.warn('⚠️ Provider or protected data not found for SMS notification');
-              console.log('🔍 provider.attributes:', provider?.attributes);
-              console.log('🔍 provider.attributes.profile:', provider?.attributes?.profile);
+              console.log('🔍 providerData.attributes:', providerData.attributes);
+              console.log('🔍 providerData.attributes.profile:', providerData.attributes?.profile);
             }
           } catch (smsError) {
             console.error('❌ Failed to send SMS notification:', smsError.message);
