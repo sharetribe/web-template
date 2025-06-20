@@ -54,16 +54,39 @@ module.exports = (req, res) => {
         const listingResponse = await sdk.listings.show({ id: listingId });
         const listing = listingResponse.data.data;
         
-        // Check if we have the provider ID in the listing
-        if (listing && listing.relationships && listing.relationships.provider) {
-          const providerId = listing.relationships.provider.data.id;
-          console.log('🔍 Found provider ID:', providerId);
-          
+        console.log('🔍 Listing attributes:', listing.attributes);
+        console.log('🔍 Listing relationships:', listing.relationships);
+        
+        // Try to get provider ID from different possible locations
+        let providerId = null;
+        
+        // Method 1: Try relationships
+        if (listing.relationships && listing.relationships.provider) {
+          providerId = listing.relationships.provider.data.id;
+          console.log('🔍 Found provider ID from relationships:', providerId);
+        }
+        // Method 2: Try attributes
+        else if (listing.attributes && listing.attributes.author) {
+          providerId = listing.attributes.author;
+          console.log('🔍 Found provider ID from attributes.author:', providerId);
+        }
+        // Method 3: Try other possible attribute names
+        else if (listing.attributes && listing.attributes.provider) {
+          providerId = listing.attributes.provider;
+          console.log('🔍 Found provider ID from attributes.provider:', providerId);
+        }
+        else if (listing.attributes && listing.attributes.userId) {
+          providerId = listing.attributes.userId;
+          console.log('🔍 Found provider ID from attributes.userId:', providerId);
+        }
+        
+        if (providerId) {
           // Now get the user data for this provider
           const userResponse = await sdk.users.show({ id: providerId });
           return userResponse;
         } else {
-          console.warn('⚠️ No provider relationship found in listing');
+          console.warn('⚠️ No provider ID found in listing data');
+          console.log('🔍 Available listing attributes:', Object.keys(listing.attributes || {}));
           return null;
         }
       } catch (err) {
