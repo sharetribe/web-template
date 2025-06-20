@@ -39,17 +39,39 @@ module.exports = (req, res) => {
   const sdk = getSdk(req, res);
   let lineItems = null;
   let listingData = null; // Store listing data for SMS use
+  let providerData = null; // Store provider data for SMS use
 
   const listingPromise = () => sdk.listings.show({ 
-    id: bodyParams?.params?.listingId,
-    include: ['provider'],
-    expand: true
+    id: bodyParams?.params?.listingId
   });
 
-  Promise.all([listingPromise(), fetchCommission(sdk)])
-    .then(([showListingResponse, fetchAssetsResponse]) => {
+  // Separate promise to get provider data
+  const providerPromise = () => {
+    const listingId = bodyParams?.params?.listingId;
+    if (listingId) {
+      return sdk.listings.show({ 
+        id: listingId,
+        include: ['provider'],
+        expand: true
+      }).catch(err => {
+        console.warn('⚠️ Failed to get provider data:', err.message);
+        return null;
+      });
+    }
+    return Promise.resolve(null);
+  };
+
+  Promise.all([listingPromise(), fetchCommission(sdk), providerPromise()])
+    .then(([showListingResponse, fetchAssetsResponse, providerResponse]) => {
       const listing = showListingResponse.data.data;
       listingData = listing; // Store for SMS use
+      
+      // Store provider data if available
+      if (providerResponse && providerResponse.data && providerResponse.data.data) {
+        providerData = providerResponse.data.data;
+        console.log('🔍 Provider data available:', !!providerData);
+        console.log('🔍 Provider data structure:', providerData ? Object.keys(providerData) : 'undefined');
+      }
       
       // Debug the listing response
       console.log('🔍 showListingResponse structure:', Object.keys(showListingResponse));
@@ -106,13 +128,14 @@ module.exports = (req, res) => {
       if (bodyParams?.transition === 'transition/request-payment' && !isSpeculative && data?.data) {
         console.log('📨 Preparing to send SMS for initial booking request');
         console.log('🔍 listingData available:', !!listingData);
+        console.log('🔍 providerData available:', !!providerData);
         console.log('🔍 listingData structure:', listingData ? Object.keys(listingData) : 'undefined');
         
-        // Use the stored listing data instead of making another API call
-        if (listingData && sendSMS) {
+        // Use the stored provider data instead of trying to get it from listingData
+        if (providerData && sendSMS) {
           try {
-            console.log('🔍 listingData.relationships:', listingData.relationships);
-            const provider = listingData.relationships?.provider?.data;
+            console.log('🔍 providerData.relationships:', providerData.relationships);
+            const provider = providerData.relationships?.provider?.data;
             console.log('🔍 provider data:', provider);
             
             if (provider && provider.attributes && provider.attributes.profile && provider.attributes.profile.protectedData) {
@@ -148,7 +171,7 @@ module.exports = (req, res) => {
             // Don't fail the transaction if SMS fails
           }
         } else {
-          console.warn('⚠️ listingData or sendSMS not available for SMS notification');
+          console.warn('⚠️ providerData or sendSMS not available for SMS notification');
         }
       }
       
