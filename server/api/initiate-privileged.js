@@ -42,13 +42,21 @@ module.exports = (req, res) => {
 
   const listingPromise = () => sdk.listings.show({ 
     id: bodyParams?.params?.listingId,
-    include: ['provider'] // Include provider relationship
+    include: ['provider'],
+    expand: true
   });
 
   Promise.all([listingPromise(), fetchCommission(sdk)])
     .then(([showListingResponse, fetchAssetsResponse]) => {
       const listing = showListingResponse.data.data;
       listingData = listing; // Store for SMS use
+      
+      // Debug the listing response
+      console.log('🔍 showListingResponse structure:', Object.keys(showListingResponse));
+      console.log('🔍 showListingResponse.data structure:', Object.keys(showListingResponse.data));
+      console.log('🔍 listing structure:', Object.keys(listing));
+      console.log('🔍 listing.relationships:', listing.relationships);
+      
       const commissionAsset = fetchAssetsResponse.data.data[0];
 
       const { providerCommission, customerCommission } =
