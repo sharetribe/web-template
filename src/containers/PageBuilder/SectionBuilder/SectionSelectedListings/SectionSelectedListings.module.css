@@ -1,0 +1,82 @@
+@import '../../../../styles/customMediaQueries.css';
+
+header.sectionHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  .textBlock {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  h2 + p {
+    margin-top: 8px;
+  }
+}
+
+.title {
+  color: #000;
+  font-family: var(--fontFamilyHeadings);
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%; /* 36px */
+}
+
+.description {
+  color: var(--Text-primary, #000);
+  font-family: var(--fontFamilyRoboto);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 24px */
+}
+
+.ctaButton {
+  color: #000;
+  font-family: var(--fontFamilyHeadings);;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 139%; /* 19.46px */
+}
+
+.baseColumn {
+  max-width: var(--contentMaxWidthPages);
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 32px;
+  margin: 0 auto;
+  padding: 32px;
+}
+
+.oneColumn {
+  composes: baseColumn;
+}
+
+.twoColumns {
+  composes: baseColumn;
+  @media (--viewportMedium) {
+    grid-template-columns: repeat(2, calc((100% - 32px) / 2));
+  }
+}
+.threeColumns {
+  composes: baseColumn;
+  @media (--viewportMedium) {
+    grid-template-columns: repeat(3, calc((100% - 2 * 32px) / 3));
+  }
+}
+.fourColumns {
+  composes: baseColumn;
+  @media (--viewportMedium) {
+    grid-template-columns: repeat(4, calc((100% - 3 * 32px) / 4));
+  }
+}
+
+.noSidePaddings {
+  padding-left: 0;
+  padding-right: 0;
+}

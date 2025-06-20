@@ -214,6 +214,10 @@
     margin: 0 auto;
     line-height: 150%; /* 24px */
   }
+
+  a {
+    display: inline-block;
+  }
 }
 
 .colsSecondary {

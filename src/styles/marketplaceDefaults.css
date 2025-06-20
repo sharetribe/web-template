@@ -31,6 +31,7 @@
   /* B&W and Grey palette */
 
   --colorWhite: hsl(0 0% 100%);
+  --colorGrey25: hsl(240 3% 99%);
   --colorGrey50: hsl(240 3% 98%);
   --colorGrey100: hsl(240 3% 90%);
   --colorGrey200: hsl(240 3% 80%);
@@ -146,6 +147,7 @@
 
   --borderRadius: 2px;
   --borderRadiusMedium: 4px;
+  --borderRadiusLarger: 12px;
 
   /* ================ Transition styles ================ */
 
