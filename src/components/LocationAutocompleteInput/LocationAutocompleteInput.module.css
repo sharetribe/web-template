@@ -105,7 +105,6 @@ bottom of the container.
   padding: 14px 0;
 
   & li {
-    color: var(--colorWhite);
     transition: var(--transitionStyleButton);
     margin: 0; /* Remove the double white space */
     line-height: 24px;
@@ -116,7 +115,6 @@ bottom of the container.
     padding: 9px 24px;
 
     @media (--viewportMedium) {
-      color: var(--colorLightTransparent);
       padding: 10px 36px;
       margin: 0;
     }
@@ -124,9 +122,26 @@ bottom of the container.
     &:hover,
     &.highlighted {
       cursor: pointer;
-      border-left: 6px solid var(--colorWhite);
       border-top-right-radius: 20px;
       border-bottom-right-radius: 20px;
+    }
+  }
+  .listItemBlackText {
+    color: var(--colorGrey700);
+    &:hover,
+    &.highlighted {
+      border-left: 6px solid var(--colorGrey900);
+      color: var(--colorBlack);
+    }
+  }
+  .listItemWhiteText {
+    color: var(--colorWhite);
+    @media (--viewportMedium) {
+      color: var(--colorLightTransparent);
+    }
+    &:hover,
+    &.highlighted {
+      border-left: 6px solid var(--colorWhite);
       color: var(--colorWhite);
     }
   }
@@ -139,4 +154,8 @@ bottom of the container.
 .currentLocationIcon {
   margin-right: 10px;
   margin-bottom: 1px;
+}
+
+.invert {
+  filter: invert(80%);
 }

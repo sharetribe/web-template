@@ -140,8 +140,25 @@ const getDateRangeQuantityAndLineItems = (orderData, code) => {
  */
 exports.transactionLineItems = (listing, orderData, providerCommission, customerCommission) => {
   const publicData = listing.attributes.publicData;
-  const unitPrice = listing.attributes.price;
-  const currency = unitPrice.currency;
+  // Note: the unitType needs to be one of the following:
+  // day, night, hour, fixed, or item (these are related to payment processes)
+  const { unitType, priceVariants, priceVariationsEnabled } = publicData;
+
+  const isBookable = ['day', 'night', 'hour', 'fixed'].includes(unitType);
+  const priceAttribute = listing.attributes.price;
+  const currency = priceAttribute.currency;
+
+  const { priceVariantName } = orderData || {};
+  const priceVariantConfig = priceVariants
+    ? priceVariants.find(pv => pv.name === priceVariantName)
+    : null;
+  const { priceInSubunits } = priceVariantConfig || {};
+  const isPriceInSubunitsValid = Number.isInteger(priceInSubunits) && priceInSubunits >= 0;
+
+  const unitPrice =
+    isBookable && priceVariationsEnabled && isPriceInSubunitsValid
+      ? new Money(priceInSubunits, currency)
+      : priceAttribute;
 
   /**
    * Pricing starts with order's base price:
@@ -154,9 +171,6 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
    * - includedFor
    */
 
-  // Unit type needs to be one of the following:
-  // day, night, hour or item
-  const unitType = publicData.unitType;
   const code = `line-item/${unitType}`;
 
   // Here "extra line-items" means line-items that are tied to unit type

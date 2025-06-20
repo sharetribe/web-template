@@ -173,7 +173,7 @@ describe('ProfilePage', () => {
 
     expect(screen.getByText('ProfilePage.listingsTitle')).toBeInTheDocument();
     expect(screen.getByText('l1 title')).toBeInTheDocument();
-    expect(screen.getByText('$55.00')).toBeInTheDocument();
+    expect(screen.getByText('ListingCard.price')).toBeInTheDocument();
   });
 
   it('Check that review information is shown correctly', async () => {

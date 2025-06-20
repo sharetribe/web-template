@@ -10,6 +10,7 @@ import { P } from '../Primitives/P';
 import { Text } from '../Primitives/Text';
 import { Code, CodeBlock } from '../Primitives/Code';
 import { Link, SocialMediaLink } from '../Primitives/Link';
+import { SearchCTA } from '../Primitives/SearchCTA/SearchCTA';
 import { MarkdownImage, FieldImage } from '../Primitives/Image';
 import { CustomAppearance } from '../Primitives/CustomAppearance';
 import { YoutubeEmbed } from '../Primitives/YoutubeEmbed';
@@ -26,6 +27,7 @@ import {
   exposeYoutubeProps,
   exposeOpenGraphData,
   exposeSocialMediaProps,
+  exposeSearchCtaProps,
 } from './Field.helpers';
 
 const TEXT_CONTENT = [
@@ -75,6 +77,7 @@ const defaultFieldComponents = {
   text: { component: Text, pickValidProps: exposeContentAsChildren, omitInvalidPropsWarning },
   externalButtonLink: { component: Link, pickValidProps: exposeLinkProps },
   internalButtonLink: { component: Link, pickValidProps: exposeLinkProps },
+  search: { component: SearchCTA, pickValidProps: exposeSearchCtaProps },
   socialMediaLink: { component: SocialMediaLink, pickValidProps: exposeSocialMediaProps },
   image: { component: FieldImage, pickValidProps: exposeImageProps },
   customAppearance: { component: CustomAppearance, pickValidProps: exposeCustomAppearanceProps },

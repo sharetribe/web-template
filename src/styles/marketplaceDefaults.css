@@ -542,6 +542,8 @@ select:focus {
 }
 select:disabled {
   opacity: 0.5;
+  appearance: none;
+  color: var(--colorGrey300);
 
   &:hover {
     cursor: not-allowed;

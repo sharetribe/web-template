@@ -178,7 +178,7 @@ export const EditListingPhotosForm = props => {
           listingImageConfig,
         } = formRenderProps;
 
-        const images = values.images;
+        const images = values.images || [];
         const { aspectWidth = 1, aspectHeight = 1, variantPrefix } = listingImageConfig;
 
         const { publishListingError, showListingsError, updateListingError, uploadImageError } =
@@ -186,7 +186,7 @@ export const EditListingPhotosForm = props => {
         const uploadOverLimit = isUploadImageOverLimitError(uploadImageError);
 
         // imgs can contain added images (with temp ids) and submitted images with uniq ids.
-        const arrayOfImgIds = imgs => imgs.map(i => (typeof i.id === 'string' ? i.imageId : i.id));
+        const arrayOfImgIds = imgs => imgs?.map(i => (typeof i.id === 'string' ? i.imageId : i.id));
         const imageIdsFromProps = arrayOfImgIds(images);
         const imageIdsFromPreviousSubmit = arrayOfImgIds(submittedImages);
         const imageArrayHasSameImages = isEqual(imageIdsFromProps, imageIdsFromPreviousSubmit);

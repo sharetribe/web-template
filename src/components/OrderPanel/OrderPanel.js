@@ -20,9 +20,10 @@ import {
   LINE_ITEM_ITEM,
   STOCK_MULTIPLE_ITEMS,
   STOCK_INFINITE_MULTIPLE_ITEMS,
+  LISTING_STATE_PUBLISHED,
 } from '../../util/types';
 import { formatMoney } from '../../util/currency';
-import { parse, stringify } from '../../util/urlHelpers';
+import { createSlug, parse, stringify } from '../../util/urlHelpers';
 import { userDisplayNameAsString } from '../../util/data';
 import {
   INQUIRY_PROCESS_NAME,
@@ -33,6 +34,7 @@ import {
 } from '../../transactions/transaction';
 
 import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2 } from '../../components';
+import PriceVariantPicker from './PriceVariantPicker/PriceVariantPicker';
 
 import css from './OrderPanel.module.css';
 
@@ -60,6 +62,10 @@ const ProductOrderForm = loadable(() =>
 const MODAL_BREAKPOINT = 1023;
 const TODAY = new Date();
 
+const isPublishedListing = listing => {
+  return listing.attributes.state === LISTING_STATE_PUBLISHED;
+};
+
 const priceData = (price, currency, intl) => {
   if (price && price.currency === currency) {
     const formattedPrice = formatMoney(intl, price);
@@ -71,6 +77,12 @@ const priceData = (price, currency, intl) => {
     };
   }
   return {};
+};
+
+const getCheapestPriceVariant = (priceVariants = []) => {
+  return priceVariants.reduce((cheapest, current) => {
+    return current.priceInSubunits < cheapest.priceInSubunits ? current : cheapest;
+  }, priceVariants[0]);
 };
 
 const formatMoneyIfSupportedCurrency = (price, intl) => {
@@ -128,18 +140,33 @@ const PriceMaybe = props => {
 
   const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
   const showPrice = displayPrice(foundListingTypeConfig);
-  if (!showPrice || !price) {
+  const isPriceVariationsInUse = !!publicData?.priceVariationsEnabled;
+  const hasMultiplePriceVariants = publicData?.priceVariants?.length > 1;
+
+  if (!showPrice || !price || (isPriceVariationsInUse && hasMultiplePriceVariants)) {
     return null;
   }
 
   // Get formatted price or currency code if the currency does not match with marketplace currency
   const { formattedPrice, priceTitle } = priceData(price, marketplaceCurrency, intl);
+  const priceValue = (
+    <span className={css.priceValue}>{formatMoneyIfSupportedCurrency(price, intl)}</span>
+  );
+  const pricePerUnit = (
+    <span className={css.perUnit}>
+      <FormattedMessage id="OrderPanel.perUnit" values={{ unitType }} />
+    </span>
+  );
+
   // TODO: In CTA, we don't have space to show proper error message for a mismatch of marketplace currency
   //       Instead, we show the currency code in place of the price
   return showCurrencyMismatch ? (
     <div className={css.priceContainerInCTA}>
-      <div className={css.priceValue} title={priceTitle}>
-        {formattedPrice}
+      <div className={css.priceValueInCTA} title={priceTitle}>
+        <FormattedMessage
+          id="OrderPanel.priceInMobileCTA"
+          values={{ priceValue: formattedPrice }}
+        />
       </div>
       <div className={css.perUnitInCTA}>
         <FormattedMessage id="OrderPanel.perUnit" values={{ unitType }} />
@@ -147,12 +174,50 @@ const PriceMaybe = props => {
     </div>
   ) : (
     <div className={css.priceContainer}>
-      <p className={css.price}>{formatMoneyIfSupportedCurrency(price, intl)}</p>
-      <div className={css.perUnit}>
-        <FormattedMessage id="OrderPanel.perUnit" values={{ unitType }} />
-      </div>
+      <p className={css.price}>
+        <FormattedMessage id="OrderPanel.price" values={{ priceValue, pricePerUnit }} />
+      </p>
     </div>
   );
+};
+
+const PriceMissing = () => {
+  return (
+    <p className={css.error}>
+      <FormattedMessage id="OrderPanel.listingPriceMissing" />
+    </p>
+  );
+};
+const InvalidCurrency = () => {
+  return (
+    <p className={css.error}>
+      <FormattedMessage id="OrderPanel.listingCurrencyInvalid" />
+    </p>
+  );
+};
+
+const InvalidPriceVariants = () => {
+  return (
+    <p className={css.error}>
+      <FormattedMessage id="OrderPanel.listingPriceVariantsAreInvalid" />
+    </p>
+  );
+};
+
+const hasUniqueVariants = priceVariants => {
+  const priceVariantsSlugs = priceVariants?.map(variant =>
+    variant.name ? createSlug(variant.name) : 'no-name'
+  );
+  return new Set(priceVariantsSlugs).size === priceVariants.length;
+};
+
+const hasValidPriceVariants = priceVariants => {
+  const isArray = Array.isArray(priceVariants);
+  const hasItems = isArray && priceVariants.length > 0;
+  const variantsHaveNames = hasItems && priceVariants.every(variant => variant.name);
+  const namesAreUnique = hasItems && hasUniqueVariants(priceVariants);
+
+  return variantsHaveNames && namesAreUnique;
 };
 
 /**
@@ -244,21 +309,7 @@ const OrderPanel = props => {
   const isPaymentProcess = processName !== INQUIRY_PROCESS_NAME;
 
   const showPriceMissing = isPaymentProcess && !price;
-  const PriceMissing = () => {
-    return (
-      <p className={css.error}>
-        <FormattedMessage id="OrderPanel.listingPriceMissing" />
-      </p>
-    );
-  };
   const showInvalidCurrency = isPaymentProcess && price?.currency !== marketplaceCurrency;
-  const InvalidCurrency = () => {
-    return (
-      <p className={css.error}>
-        <FormattedMessage id="OrderPanel.listingCurrencyInvalid" />
-      </p>
-    );
-  };
 
   const timeZone = listing?.attributes?.availabilityPlan?.timezone;
   const isClosed = listing?.attributes?.state === LISTING_STATE_CLOSED;
@@ -278,14 +329,16 @@ const OrderPanel = props => {
   // The listing resource has a relationship: `currentStock`,
   // which you should include when making API calls.
   const isPurchase = isPurchaseProcess(processName);
+  const shouldHavePurchase = isPurchase && lineItemUnitType === LINE_ITEM_ITEM;
   const currentStock = listing.currentStock?.attributes?.quantity;
-  const isOutOfStock = isPurchase && lineItemUnitType === LINE_ITEM_ITEM && currentStock === 0;
+  const isOutOfStock = shouldHavePurchase && !isClosed && currentStock === 0;
 
   // Show form only when stock is fully loaded. This avoids "Out of stock" UI by
   // default before all data has been downloaded.
-  const showProductOrderForm = mounted && isPurchase && typeof currentStock === 'number';
+  const showProductOrderForm =
+    mounted && shouldHavePurchase && !isClosed && typeof currentStock === 'number';
 
-  const showInquiryForm = mounted && processName === INQUIRY_PROCESS_NAME;
+  const showInquiryForm = mounted && !isClosed && processName === INQUIRY_PROCESS_NAME;
 
   const supportedProcessesInfo = getSupportedProcessesInfo();
   const isKnownProcess = supportedProcessesInfo.map(info => info.name).includes(processName);
@@ -298,7 +351,38 @@ const OrderPanel = props => {
   const allowOrdersOfMultipleItems = [STOCK_MULTIPLE_ITEMS, STOCK_INFINITE_MULTIPLE_ITEMS].includes(
     listingTypeConfig?.stockType
   );
+
+  const searchParams = parse(location.search);
+  const isOrderOpen = !!searchParams.orderOpen;
+  const preselectedPriceVariantSlug = searchParams.bookableOption;
+
   const seatsEnabled = [AVAILABILITY_MULTIPLE_SEATS].includes(listingTypeConfig?.availabilityType);
+
+  // Note: publicData contains priceVariationsEnabled if listing is created with priceVariations enabled.
+  const isPriceVariationsInUse = !!publicData?.priceVariationsEnabled;
+  const preselectedPriceVariant =
+    Array.isArray(priceVariants) && preselectedPriceVariantSlug && isPriceVariationsInUse
+      ? priceVariants.find(pv => pv?.name && createSlug(pv?.name) === preselectedPriceVariantSlug)
+      : null;
+
+  const priceVariantsMaybe = isPriceVariationsInUse
+    ? {
+        isPriceVariationsInUse,
+        priceVariants,
+        priceVariantFieldComponent: PriceVariantPicker,
+        preselectedPriceVariant,
+        isPublishedListing: isPublishedListing(listing),
+      }
+    : !isPriceVariationsInUse && showBookingFixedDurationForm
+    ? {
+        isPriceVariationsInUse: false,
+        priceVariants: [getCheapestPriceVariant(priceVariants)],
+        priceVariantFieldComponent: PriceVariantPicker,
+      }
+    : {};
+
+  const showInvalidPriceVariantsMessage =
+    isPriceVariationsInUse && !hasValidPriceVariants(priceVariants);
 
   const sharedProps = {
     lineItemUnitType,
@@ -316,7 +400,6 @@ const OrderPanel = props => {
   };
 
   const showClosedListingHelpText = listing.id && isClosed;
-  const isOrderOpen = !!parse(location.search).orderOpen;
 
   const subTitleText = showClosedListingHelpText
     ? intl.formatMessage({ id: 'OrderPanel.subTitleClosedListing' })
@@ -369,6 +452,8 @@ const OrderPanel = props => {
           <PriceMissing />
         ) : showInvalidCurrency ? (
           <InvalidCurrency />
+        ) : showInvalidPriceVariantsMessage ? (
+          <InvalidPriceVariants />
         ) : showBookingFixedDurationForm ? (
           <BookingFixedDurationForm
             seatsEnabled={seatsEnabled}
@@ -379,9 +464,9 @@ const OrderPanel = props => {
             timeSlotsForDate={timeSlotsForDate}
             onFetchTimeSlots={onFetchTimeSlots}
             startDatePlaceholder={intl.formatDate(TODAY, dateFormattingOptions)}
-            priceVariants={priceVariants}
             startTimeInterval={startTimeInterval}
             timeZone={timeZone}
+            {...priceVariantsMaybe}
             {...sharedProps}
           />
         ) : showBookingTimeForm ? (
@@ -396,6 +481,7 @@ const OrderPanel = props => {
             startDatePlaceholder={intl.formatDate(TODAY, dateFormattingOptions)}
             endDatePlaceholder={intl.formatDate(TODAY, dateFormattingOptions)}
             timeZone={timeZone}
+            {...priceVariantsMaybe}
             {...sharedProps}
           />
         ) : showBookingDatesForm ? (
@@ -407,6 +493,7 @@ const OrderPanel = props => {
             monthlyTimeSlots={monthlyTimeSlots}
             onFetchTimeSlots={onFetchTimeSlots}
             timeZone={timeZone}
+            {...priceVariantsMaybe}
             {...sharedProps}
           />
         ) : showProductOrderForm ? (

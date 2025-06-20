@@ -9,16 +9,21 @@ import { ExternalLink } from '../../../../../components';
 import css from './CustomLinksMenu.module.css';
 
 const draftId = '00000000-0000-0000-0000-000000000000';
-const createListingLinkConfig = intl => ({
-  group: 'primary',
-  text: intl.formatMessage({ id: 'TopbarDesktop.createListing' }),
-  type: 'internal',
-  route: {
-    name: 'EditListingPage',
-    params: { slug: 'draft', id: draftId, type: 'new', tab: 'details' },
-  },
-  highlight: true,
-});
+const createListingLinkConfigMaybe = (intl, showLink) =>
+  showLink
+    ? [
+        {
+          group: 'primary',
+          text: intl.formatMessage({ id: 'TopbarDesktop.createListing' }),
+          type: 'internal',
+          route: {
+            name: 'EditListingPage',
+            params: { slug: 'draft', id: draftId, type: 'new', tab: 'details' },
+          },
+          highlight: true,
+        },
+      ]
+    : [];
 
 /**
  * Group links to 2 groups:
@@ -103,12 +108,22 @@ const calculateContainerWidth = (containerRefTarget, parentWidth) => {
  * @param {*} props contains currentPage, customLinks, intl, and hasClientSideContentReady
  * @returns component to be placed inside TopbarDesktop
  */
-const CustomLinksMenu = ({ currentPage, customLinks = [], hasClientSideContentReady, intl }) => {
+const CustomLinksMenu = ({
+  currentPage,
+  customLinks = [],
+  hasClientSideContentReady,
+  intl,
+  showCreateListingsLink,
+}) => {
   const containerRef = useRef(null);
   const observer = useRef(null);
   const [mounted, setMounted] = useState(false);
   const [moreLabelWidth, setMoreLabelWidth] = useState(0);
-  const [links, setLinks] = useState([createListingLinkConfig(intl), ...customLinks]);
+  const [links, setLinks] = useState([
+    ...createListingLinkConfigMaybe(intl, showCreateListingsLink),
+    ...customLinks,
+  ]);
+
   const [layoutData, setLayoutData] = useState({
     priorityLinks: links,
     menuLinks: links,
@@ -277,7 +292,7 @@ const CustomLinksMenu = ({ currentPage, customLinks = [], hasClientSideContentRe
   ];
 
   // If there are no custom links, just render createListing link.
-  if (customLinks?.length === 0) {
+  if (customLinks?.length === 0 && showCreateListingsLink) {
     return <CreateListingMenuLink customLinksMenuClass={css.createListingLinkOnly} />;
   }
 

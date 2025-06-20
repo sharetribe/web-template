@@ -102,11 +102,14 @@ const getOrderParams = (pageData, shippingDetails, optionalPaymentParams, config
   const seatsMaybe = seats ? { seats } : {};
   const deliveryMethod = pageData.orderData?.deliveryMethod;
   const deliveryMethodMaybe = deliveryMethod ? { deliveryMethod } : {};
+  const { listingType, unitType, priceVariants } = pageData?.listing?.attributes?.publicData || {};
+
   // price variant data for fixed duration bookings
-  const priceVariant = pageData.orderData?.priceVariant;
+  const priceVariantName = pageData.orderData?.priceVariantName;
+  const priceVariantNameMaybe = priceVariantName ? { priceVariantName } : {};
+  const priceVariant = priceVariants?.find(pv => pv.name === priceVariantName);
   const priceVariantMaybe = priceVariant ? prefixPriceVariantProperties(priceVariant) : {};
 
-  const { listingType, unitType } = pageData?.listing?.attributes?.publicData || {};
   const protectedDataMaybe = {
     protectedData: {
       ...getTransactionTypeData(listingType, unitType, config),
@@ -131,6 +134,7 @@ const getOrderParams = (pageData, shippingDetails, optionalPaymentParams, config
     ...quantityMaybe,
     ...seatsMaybe,
     ...bookingDatesMaybe(pageData.orderData?.bookingDates),
+    ...priceVariantNameMaybe,
     ...protectedDataMaybe,
     ...optionalPaymentParams,
   };
@@ -422,6 +426,7 @@ export const CheckoutPageWithPayment = props => {
       : speculatedTransaction;
   const timeZone = listing?.attributes?.availabilityPlan?.timezone;
   const transactionProcessAlias = listing?.attributes?.publicData?.transactionProcessAlias;
+  const priceVariantName = tx.attributes.protectedData?.priceVariantName;
 
   const txBookingMaybe = tx?.booking?.id ? { booking: tx.booking, timeZone } : {};
 
@@ -548,6 +553,7 @@ export const CheckoutPageWithPayment = props => {
           <MobileOrderBreakdown
             speculateTransactionErrorMessage={errorMessages.speculateTransactionErrorMessage}
             breakdown={breakdown}
+            priceVariantName={priceVariantName}
           />
           <section className={css.paymentContainer}>
             {errorMessages.initiateOrderErrorMessage}
@@ -599,6 +605,7 @@ export const CheckoutPageWithPayment = props => {
         <DetailsSideCard
           listing={listing}
           listingTitle={listingTitle}
+          priceVariantName={priceVariantName}
           author={listing?.author}
           firstImage={firstImage}
           layoutListingImageConfig={config.layout.listingImage}

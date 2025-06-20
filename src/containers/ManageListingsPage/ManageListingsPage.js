@@ -4,9 +4,10 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
+import { useConfiguration } from '../../context/configurationContext';
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { pathByRouteName } from '../../util/routes';
-import { hasPermissionToPostListings } from '../../util/userHelpers';
+import { hasPermissionToPostListings, showCreateListingLinkForUser } from '../../util/userHelpers';
 import { NO_ACCESS_PAGE_POST_LISTINGS } from '../../util/urlHelpers';
 import { propTypes } from '../../util/types';
 import { isErrorNoPermissionToPostListings } from '../../util/errors';
@@ -107,6 +108,7 @@ export const ManageListingsPageComponent = props => {
   const [discardDraftModalId, setDiscardDraftModalId] = useState(null);
   const history = useHistory();
   const routeConfiguration = useRouteConfiguration();
+  const config = useConfiguration();
   const intl = useIntl();
 
   const {
@@ -197,6 +199,8 @@ export const ManageListingsPageComponent = props => {
     `${panelWidth / 3}vw`,
   ].join(', ');
 
+  const showManageListingsLink = showCreateListingLinkForUser(config, currentUser);
+
   return (
     <Page
       title={intl.formatMessage({ id: 'ManageListingsPage.title' })}
@@ -206,7 +210,10 @@ export const ManageListingsPageComponent = props => {
         topbar={
           <>
             <TopbarContainer />
-            <UserNav currentPage="ManageListingsPage" />
+            <UserNav
+              currentPage="ManageListingsPage"
+              showManageListingsLink={showManageListingsLink}
+            />
           </>
         }
         footer={<FooterContainer />}

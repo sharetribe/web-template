@@ -24,6 +24,18 @@ export const mainSearch = {
  * To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeSearchConfig func)
  */
 
+export const listingTypeFilter = {
+  enabled: false,
+  schemaType: 'listingType',
+  // schemaType, key, and other built-in config values are completely filled in configHelper.js
+};
+
+export const categoryFilter = {
+  enabled: false,
+  schemaType: 'category',
+  // schemaType, key, and other built-in config values are completely filled in configHelper.js
+};
+
 export const dateRangeFilter = {
   schemaType: 'dates',
   // Should the entire date range be available, or just part of it

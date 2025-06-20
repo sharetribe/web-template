@@ -197,3 +197,73 @@ export const hasPermissionToViewData = currentUser => {
  * @returns {Boolean} true if currentUser has been approved (state is 'active').
  */
 export const isUserAuthorized = currentUser => currentUser?.attributes?.state === 'active';
+
+/**
+ * Get the user type configuration for the current user's user type
+ * @param {*} config marketplace configuration
+ * @param {*} currentUser API entity
+ * @returns a single user type configuration, if found
+ */
+const getCurrentUserTypeConfig = (config, currentUser) => {
+  const { userTypes } = config.user;
+  return userTypes.find(
+    ut => ut.userType === currentUser?.attributes?.profile?.publicData?.userType
+  );
+};
+
+/**
+ * Check if the links for creating a new listing should be shown to the
+ * user currently browsing the marketplace.
+ * @param {Object} config Marketplace configuration
+ * @param {Object} currentUser API entity
+ * @returns {Boolean} true if the currentUser's user type, or the anonymous user configuration, is set to see the link
+ */
+export const showCreateListingLinkForUser = (config, currentUser) => {
+  const { topbar } = config;
+  const currentUserTypeConfig = getCurrentUserTypeConfig(config, currentUser);
+
+  const { accountLinksVisibility } = currentUserTypeConfig || {};
+
+  return currentUser && accountLinksVisibility
+    ? accountLinksVisibility.postListings
+    : currentUser
+    ? true
+    : topbar?.postListingsLink
+    ? topbar.postListingsLink.showToUnauthenticatedUsers
+    : true;
+};
+
+/**
+ * Check if payout details tab and payout methods tab should be shown for the user
+ * @param {Object} config Marketplace configuration
+ * @param {*} currentUser API entity
+ * @returns {Object} { showPayoutDetails: Boolean, showPaymentMethods: boolean }
+ */
+export const showPaymentDetailsForUser = (config, currentUser) => {
+  const currentUserTypeConfig = getCurrentUserTypeConfig(config, currentUser);
+  const { paymentMethods = true, payoutDetails = true } =
+    currentUserTypeConfig?.accountLinksVisibility || {};
+
+  return (
+    currentUser && {
+      showPayoutDetails: payoutDetails,
+      showPaymentMethods: paymentMethods,
+    }
+  );
+};
+
+/**
+ * Check the roles defined for the current user
+ * @param {*} config Marketplace configuration
+ * @param {*} currentUser API entity
+ * @returns Object with attributes 'customer' and 'provider' and boolean values for each
+ */
+export const getCurrentUserTypeRoles = (config, currentUser) => {
+  const currentUserTypeConfig = getCurrentUserTypeConfig(config, currentUser);
+  return (
+    currentUserTypeConfig?.roles || {
+      customer: true,
+      provider: true,
+    }
+  );
+};

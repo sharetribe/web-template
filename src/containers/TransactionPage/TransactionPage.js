@@ -54,7 +54,7 @@ import {
   fetchTransactionLineItems,
 } from './TransactionPage.duck';
 import css from './TransactionPage.module.css';
-import { hasPermissionToViewData } from '../../util/userHelpers.js';
+import { getCurrentUserTypeRoles, hasPermissionToViewData } from '../../util/userHelpers.js';
 
 // Submit dispute and close the review modal
 const onDisputeOrder = (
@@ -231,6 +231,7 @@ export const TransactionPageComponent = props => {
       bookingDates,
       bookingStartTime,
       bookingEndTime,
+      priceVariantName, // relevant for bookings
       quantity: quantityRaw,
       seats: seatsRaw,
       deliveryMethod,
@@ -253,6 +254,8 @@ export const TransactionPageComponent = props => {
         }
       : {};
 
+    // priceVariantName is relevant for bookings
+    const priceVariantNameMaybe = priceVariantName ? { priceVariantName } : {};
     const quantity = Number.parseInt(quantityRaw, 10);
     const quantityMaybe = Number.isInteger(quantity) ? { quantity } : {};
     const seats = Number.parseInt(seatsRaw, 10);
@@ -265,6 +268,7 @@ export const TransactionPageComponent = props => {
       transaction,
       orderData: {
         ...bookingMaybe,
+        ...priceVariantNameMaybe,
         ...quantityMaybe,
         ...seatsMaybe,
         ...deliveryMethodMaybe,
@@ -341,14 +345,25 @@ export const TransactionPageComponent = props => {
   const isOwnOrder =
     isDataAvailable && isCustomerRole && currentUser.id.uuid === customer?.id?.uuid;
 
+  const {
+    customer: isCustomerUserTypeRole,
+    provider: isProviderUserTypeRole,
+  } = getCurrentUserTypeRoles(config, currentUser);
+
   if (isDataAvailable && isProviderRole && !isOwnSale) {
+    // If the user's user type does not have a provider role set, redirect
+    // to 'orders' inbox tab. Otherwise, redirect to 'sales' tab.
+    const tab = !isProviderUserTypeRole ? 'orders' : 'sales';
     // eslint-disable-next-line no-console
     console.error('Tried to access a sale that was not owned by the current user');
-    return <NamedRedirect name="InboxPage" params={{ tab: 'sales' }} />;
+    return <NamedRedirect name="InboxPage" params={{ tab }} />;
   } else if (isDataAvailable && isCustomerRole && !isOwnOrder) {
+    // If the user's user type does not have a customer role set, redirect
+    // to 'sales' inbox tab. Otherwise, redirect to 'orders' tab.
+    const tab = !isCustomerUserTypeRole ? 'sales' : 'orders';
     // eslint-disable-next-line no-console
     console.error('Tried to access an order that was not owned by the current user');
-    return <NamedRedirect name="InboxPage" params={{ tab: 'orders' }} />;
+    return <NamedRedirect name="InboxPage" params={{ tab }} />;
   }
 
   const detailsClassName = classNames(css.tabContent, css.tabContentVisible);
