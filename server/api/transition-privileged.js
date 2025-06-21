@@ -844,8 +844,8 @@ module.exports = async (req, res) => {
             const providerProfile = await sdk.users.show({
               id: providerId,
               include: ['profile'],
-              'fields.user': ['profile'],
-              'fields.profile': ['protectedData'],
+              'fields.user': ['profile', 'protectedData'],
+              'fields.profile': ['protectedData', 'publicData'],
             });
             
             // 🔍 DETAILED DEBUGGING: Log the full providerProfile response
