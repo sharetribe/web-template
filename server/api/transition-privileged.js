@@ -700,44 +700,6 @@ module.exports = async (req, res) => {
       // After booking (request-payment), log the transaction's protectedData
       if (bodyParams && bodyParams.transition === 'transition/request-payment' && response && response.data && response.data.data && response.data.data.attributes) {
         console.log('🧾 Booking complete. Transaction protectedData:', response.data.data.attributes.protectedData);
-        
-        // STEP 5: Confirm SMS logic is reached on booking request
-        console.log('📨 Preparing to send SMS for booking request');
-        
-        // SMS notification for transition/request-payment
-        try {
-          // Get the listing to find the provider
-          const listing = await sdk.listings.show({ id: listingId });
-          const provider = listing.data.data.relationships.provider.data;
-          
-          if (provider && provider.attributes && provider.attributes.profile && provider.attributes.profile.protectedData) {
-            const lenderPhone = provider.attributes.profile.protectedData.phone;
-            
-            // STEP 6: Add logs for borrower and lender phone numbers
-            console.log('📱 Lender phone:', lenderPhone);
-            
-            if (lenderPhone) {
-              // STEP 7: Wrap sendSMS in try/catch with logs
-              try {
-                await sendSMS(
-                  lenderPhone,
-                  `👗 New Sherbrt rental request! Someone wants to borrow your item — tap your dashboard to review and respond.`
-                );
-                console.log('✅ SMS sent to', lenderPhone);
-                console.log(`📱 SMS sent to lender (${lenderPhone}) for rental request-payment`);
-              } catch (err) {
-                console.error('❌ SMS send error:', err.message);
-              }
-            } else {
-              console.warn('⚠️ Lender phone number not found in protected data');
-            }
-          } else {
-            console.warn('⚠️ Provider or protected data not found for SMS notification');
-          }
-        } catch (smsError) {
-          console.error('❌ Failed to send SMS notification:', smsError.message);
-          // Don't fail the transaction if SMS fails
-        }
       }
       
       // Defensive: Only access .transition if response and response.data are defined
@@ -758,53 +720,46 @@ module.exports = async (req, res) => {
       // STEP 4: Add a forced test log
       console.log('🧪 Inside transition-privileged — beginning SMS evaluation');
       
-      // STEP 8: Temporarily force an SMS to confirm Twilio works
-      try {
-        // Use a realistic test phone number (now that account is upgraded)
-        await sendSMS('+14155552671', '🧪 Fallback test SMS to verify Twilio setup works');
-        console.log('✅ Fallback test SMS sent successfully');
-      } catch (err) {
-        console.error('❌ Fallback test SMS failed:', err.message);
-      }
-      
-      // SMS Triggers - use bodyParams.transition as fallback if transitionName is undefined
+      // Dynamic provider SMS for booking requests - replace hardcoded test SMS
       const effectiveTransition = transitionName || bodyParams?.transition;
       console.log('🔍 Using effective transition for SMS:', effectiveTransition);
       
-      if (effectiveTransition === 'transition/request') {
-        console.log('📨 Preparing to send SMS for transition/request');
+      // Handle booking request SMS (transition/request or transition/request-payment)
+      if (effectiveTransition === 'transition/request' || effectiveTransition === 'transition/request-payment') {
+        console.log('📨 Preparing to send SMS for booking request');
         
         try {
-          // Get the listing to find the provider
-          const listing = await sdk.listings.show({ id: listingId });
-          const provider = listing.data.data.relationships.provider.data;
-          
-          if (provider && provider.attributes && provider.attributes.profile && provider.attributes.profile.protectedData) {
-            const lenderPhone = provider.attributes.profile.protectedData.phone;
-            
-            // STEP 6: Add logs for borrower and lender phone numbers
-            console.log('📱 Lender phone:', lenderPhone);
-            
-            if (lenderPhone) {
-              // STEP 7: Wrap sendSMS in try/catch with logs
-              try {
-                await sendSMS(
-                  lenderPhone,
-                  `👗 New Sherbrt rental request! Someone wants to borrow your item — tap your dashboard to review and respond.`
-                );
-                console.log('✅ SMS sent to', lenderPhone);
-                console.log(`📱 SMS sent to lender (${lenderPhone}) for rental request`);
-              } catch (err) {
-                console.error('❌ SMS send error:', err.message);
-              }
-            } else {
-              console.warn('⚠️ Lender phone number not found in protected data');
-            }
+          // Step 1: Get listing with provider relationship included
+          const showListingResponse = await sdk.listings.show({
+            id: listingId,
+            include: ['author'],
+          });
+
+          const listing = showListingResponse?.data?.data;
+          const included = showListingResponse?.data?.included || [];
+
+          const providerUser = included.find(i => i.type === 'user');
+          const providerId = providerUser?.id;
+
+          if (!providerId) {
+            console.warn('⚠️ Provider ID not found — skipping SMS');
           } else {
-            console.warn('⚠️ Provider or protected data not found for SMS notification');
+            // Step 2: Fetch provider profile to get phone number
+            const providerProfileRes = await sdk.users.show({ id: providerId });
+            const providerPhoneNumber = providerProfileRes?.data?.data?.attributes?.protectedData?.phoneNumber;
+
+            if (sendSMS && providerPhoneNumber) {
+              await sendSMS(
+                providerPhoneNumber, 
+                `👗 New booking request for your item: ${listing?.attributes?.title || 'your listing'} — log in to Sherbrt to accept or decline.`
+              );
+              console.log(`📱 SMS sent to provider (${providerPhoneNumber}) for booking request`);
+            } else {
+              console.warn('⚠️ Missing phone number or sendSMS not available');
+            }
           }
         } catch (smsError) {
-          console.error('❌ Failed to send SMS notification:', smsError.message);
+          console.error('❌ Failed to send booking request SMS notification:', smsError.message);
           // Don't fail the transaction if SMS fails
         }
       }
