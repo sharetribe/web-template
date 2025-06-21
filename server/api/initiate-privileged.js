@@ -51,26 +51,42 @@ module.exports = (req, res) => {
     if (listingId) {
       try {
         // First get the listing to find the provider ID
-        const listingResponse = await sdk.listings.show({ id: listingId });
+        const listingResponse = await sdk.listings.show({ 
+          id: listingId,
+          include: ['author', 'author.profileImage'],
+          'fields.user': ['profile', 'profile.protectedData', 'profile.publicData', 'email'],
+          'fields.profile': ['protectedData', 'publicData']
+        });
         const listing = listingResponse.data.data;
         
         console.log('🔍 Listing attributes:', listing.attributes);
         console.log('🔍 Listing relationships:', listing.relationships);
+        console.log('🔍 Listing response included data:', listingResponse.data.included?.map(item => ({
+          type: item.type,
+          id: item.id,
+          hasProfile: !!item.attributes?.profile,
+          hasProtectedData: !!item.attributes?.profile?.protectedData
+        })) || 'No included data');
         
         // Try to get provider ID from different possible locations
         let providerId = null;
         
-        // Method 1: Try relationships
-        if (listing.relationships && listing.relationships.provider) {
-          providerId = listing.relationships.provider.data.id;
-          console.log('🔍 Found provider ID from relationships:', providerId);
+        // Method 1: Try author relationship (most common in Sharetribe Flex)
+        if (listing.relationships && listing.relationships.author) {
+          providerId = listing.relationships.author.data.id;
+          console.log('🔍 Found provider ID from author relationship:', providerId);
         }
-        // Method 2: Try attributes
+        // Method 2: Try provider relationship (alternative)
+        else if (listing.relationships && listing.relationships.provider) {
+          providerId = listing.relationships.provider.data.id;
+          console.log('🔍 Found provider ID from provider relationship:', providerId);
+        }
+        // Method 3: Try attributes
         else if (listing.attributes && listing.attributes.author) {
           providerId = listing.attributes.author;
           console.log('🔍 Found provider ID from attributes.author:', providerId);
         }
-        // Method 3: Try other possible attribute names
+        // Method 4: Try other possible attribute names
         else if (listing.attributes && listing.attributes.provider) {
           providerId = listing.attributes.provider;
           console.log('🔍 Found provider ID from attributes.provider:', providerId);
@@ -78,6 +94,40 @@ module.exports = (req, res) => {
         else if (listing.attributes && listing.attributes.userId) {
           providerId = listing.attributes.userId;
           console.log('🔍 Found provider ID from attributes.userId:', providerId);
+        }
+        // Method 5: Try to get from current user context (if this is the provider)
+        else {
+          try {
+            console.log('🔍 Trying to get current user as provider...');
+            const currentUser = await sdk.currentUser.show();
+            console.log('🔍 Current user response structure:', Object.keys(currentUser || {}));
+            console.log('🔍 Current user data structure:', Object.keys(currentUser?.data || {}));
+            console.log('🔍 Current user data.data structure:', Object.keys(currentUser?.data?.data || {}));
+            
+            if (currentUser && currentUser.data && currentUser.data.data) {
+              providerId = currentUser.data.data.id;
+              console.log('🔍 Using current user as provider ID:', providerId);
+            }
+          } catch (userErr) {
+            console.warn('⚠️ Could not get current user:', userErr.message);
+          }
+        }
+        
+        // Method 6: Try to get from transaction data if available
+        if (!providerId && bodyParams?.params?.transactionId) {
+          try {
+            console.log('🔍 Trying to get provider from transaction data...');
+            const transactionResponse = await sdk.transactions.show({ id: bodyParams.params.transactionId });
+            console.log('🔍 Transaction response structure:', Object.keys(transactionResponse || {}));
+            console.log('🔍 Transaction data structure:', Object.keys(transactionResponse?.data || {}));
+            
+            if (transactionResponse?.data?.data?.relationships?.provider) {
+              providerId = transactionResponse.data.data.relationships.provider.data.id;
+              console.log('🔍 Found provider ID from transaction:', providerId);
+            }
+          } catch (transactionErr) {
+            console.warn('⚠️ Could not get transaction data:', transactionErr.message);
+          }
         }
         
         if (providerId) {
