@@ -132,7 +132,12 @@ module.exports = (req, res) => {
         
         if (providerId) {
           // Now get the user data for this provider
-          const userResponse = await sdk.users.show({ id: providerId });
+          const userResponse = await sdk.users.show({
+            id: providerId,
+            include: ['profile'],
+            'fields.user': ['profile'],
+            'fields.profile': ['protectedData'],
+          });
           return userResponse;
         } else {
           console.warn('⚠️ No provider ID found in listing data');
@@ -215,7 +220,7 @@ module.exports = (req, res) => {
 
         try {
           const protectedData = providerData?.attributes?.profile?.protectedData || {};
-          const lenderPhone = protectedData.phone;
+          const lenderPhone = protectedData.phoneNumber;
 
           if (sendSMS && lenderPhone) {
             const listingTitle = listingData?.attributes?.title || 'your listing';

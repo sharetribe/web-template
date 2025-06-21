@@ -840,9 +840,14 @@ module.exports = async (req, res) => {
             console.warn('⚠️ Provider ID not found — skipping SMS');
           } else {
             // Fetch provider profile to get phone number
-            const providerProfile = await sdk.users.show({ id: providerId });
+            const providerProfile = await sdk.users.show({
+              id: providerId,
+              include: ['profile'],
+              'fields.user': ['profile'],
+              'fields.profile': ['protectedData'],
+            });
             const protectedData = providerProfile?.data?.data?.attributes?.profile?.protectedData || {};
-            const lenderPhone = protectedData.phone;
+            const lenderPhone = protectedData.phoneNumber;
 
             if (sendSMS && lenderPhone) {
               const message = `👗 New Sherbrt rental request! Someone wants to borrow your item "${listing?.attributes?.title || 'your listing'}". Tap your dashboard to respond.`;
