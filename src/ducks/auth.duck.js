@@ -1,7 +1,7 @@
 import * as log from '../util/log';
 import { storableError } from '../util/errors';
 import { clearCurrentUser, fetchCurrentUser } from './user.duck';
-import { createUserWithIdp } from '../util/api';
+import { createUserWithIdp, post } from '../util/api';
 
 const authenticated = authInfo => authInfo?.isAnonymous === false;
 const loggedInAs = authInfo => authInfo?.isLoggedInAs === true;
@@ -217,6 +217,21 @@ export const signup = params => (dispatch, getState, sdk) => {
     .create(params)
     .then(() => dispatch(signupSuccess()))
     .then(() => dispatch(login(params.email, params.password)))
+    .then(() => {
+      // After successful signup and login, ensure phone number is in protectedData
+      const phoneNumber = params.protectedData?.phoneNumber;
+      if (phoneNumber) {
+        console.log('📱 [auth.duck] Ensuring phone number is saved to protectedData:', phoneNumber);
+        return post('/api/ensure-phone-number', { phoneNumber })
+          .then(() => {
+            console.log('✅ [auth.duck] Phone number ensured in protectedData');
+          })
+          .catch(error => {
+            console.warn('⚠️ [auth.duck] Failed to ensure phone number:', error.message);
+            // Don't fail the signup process if this fails
+          });
+      }
+    })
     .catch(e => {
       dispatch(signupError(storableError(e)));
       log.error(e, 'signup-failed', {
@@ -234,6 +249,21 @@ export const signupWithIdp = params => (dispatch, getState, sdk) => {
       return dispatch(confirmSuccess());
     })
     .then(() => dispatch(fetchCurrentUser()))
+    .then(() => {
+      // After successful IdP signup, ensure phone number is in protectedData
+      const phoneNumber = params.protectedData?.phoneNumber;
+      if (phoneNumber) {
+        console.log('📱 [auth.duck] Ensuring phone number is saved to protectedData (IdP):', phoneNumber);
+        return post('/api/ensure-phone-number', { phoneNumber })
+          .then(() => {
+            console.log('✅ [auth.duck] Phone number ensured in protectedData (IdP)');
+          })
+          .catch(error => {
+            console.warn('⚠️ [auth.duck] Failed to ensure phone number (IdP):', error.message);
+            // Don't fail the signup process if this fails
+          });
+      }
+    })
     .catch(e => {
       log.error(e, 'create-user-with-idp-failed', { params });
       return dispatch(confirmError(storableError(e)));

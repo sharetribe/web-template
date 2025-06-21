@@ -1,0 +1,88 @@
+const { getTrustedSdk, handleError, serialize } = require('../api-util/sdk');
+
+/**
+ * API endpoint to ensure phone number is saved to protectedData
+ * This can be called after sign-up to guarantee the phone number is stored correctly
+ */
+module.exports = async (req, res) => {
+  console.log('📱 [ensurePhoneNumber] Endpoint called');
+  
+  try {
+    const { phoneNumber } = req.body;
+    
+    if (!phoneNumber) {
+      console.warn('⚠️ [ensurePhoneNumber] No phone number provided');
+      return res.status(400).json({ 
+        error: 'Phone number is required',
+        message: 'Please provide a phone number to save to protectedData'
+      });
+    }
+    
+    console.log('📱 [ensurePhoneNumber] Phone number received:', phoneNumber);
+    
+    // Get trusted SDK to access current user
+    const sdk = await getTrustedSdk(req);
+    
+    // First, get current user to see if phone number is already in protectedData
+    console.log('🔍 [ensurePhoneNumber] Fetching current user data...');
+    const currentUserResponse = await sdk.currentUser.show({
+      include: ['profile'],
+      'fields.user': ['profile', 'protectedData'],
+      'fields.profile': ['protectedData', 'publicData'],
+    });
+    
+    const currentUser = currentUserResponse?.data?.data;
+    const existingProtectedData = currentUser?.attributes?.profile?.protectedData || {};
+    const existingPhoneNumber = existingProtectedData.phoneNumber;
+    
+    console.log('🔍 [ensurePhoneNumber] Current protectedData:', existingProtectedData);
+    console.log('🔍 [ensurePhoneNumber] Existing phone number:', existingPhoneNumber);
+    
+    // Only update if the phone number is different or missing
+    if (existingPhoneNumber !== phoneNumber) {
+      console.log('📝 [ensurePhoneNumber] Updating phone number in protectedData...');
+      
+      const updatedProtectedData = {
+        ...existingProtectedData,
+        phoneNumber: phoneNumber
+      };
+      
+      const updateResponse = await sdk.currentUser.updateProfile({
+        protectedData: updatedProtectedData
+      }, {
+        expand: true,
+        include: ['profileImage'],
+        'fields.image': ['variants.square-small', 'variants.square-small2x'],
+      });
+      
+      console.log('✅ [ensurePhoneNumber] Phone number updated successfully');
+      
+      return res.status(200).json({
+        success: true,
+        message: 'Phone number saved to protectedData',
+        data: updateResponse.data
+      });
+    } else {
+      console.log('ℹ️ [ensurePhoneNumber] Phone number already exists in protectedData');
+      
+      return res.status(200).json({
+        success: true,
+        message: 'Phone number already exists in protectedData',
+        data: currentUserResponse.data
+      });
+    }
+    
+  } catch (error) {
+    console.error('❌ [ensurePhoneNumber] Error:', {
+      message: error.message,
+      status: error.status,
+      statusText: error.statusText,
+      errorCode: error.data?.errors?.[0]?.code,
+      errorTitle: error.data?.errors?.[0]?.title,
+      errorDetail: error.data?.errors?.[0]?.detail,
+      fullError: JSON.stringify(error, null, 2)
+    });
+    
+    handleError(res, error);
+  }
+}; 

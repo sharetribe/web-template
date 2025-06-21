@@ -841,41 +841,65 @@ module.exports = async (req, res) => {
           } else {
             // Fetch provider profile to get phone number
             console.log('🔍 [DEBUG] About to fetch provider profile for ID:', providerId);
-            const providerProfile = await sdk.users.show({
-              id: providerId,
-              include: ['profile'],
-              'fields.user': ['profile', 'protectedData'],
-              'fields.profile': ['protectedData', 'publicData'],
-            });
-            
-            // 🔍 DETAILED DEBUGGING: Log the full providerProfile response
-            console.log('🔍 [DEBUG] Full providerProfile response structure:', {
-              hasData: !!providerProfile?.data,
-              hasDataData: !!providerProfile?.data?.data,
-              hasAttributes: !!providerProfile?.data?.data?.attributes,
-              hasProfile: !!providerProfile?.data?.data?.attributes?.profile,
-              hasProtectedData: !!providerProfile?.data?.data?.attributes?.profile?.protectedData,
-              profileKeys: providerProfile?.data?.data?.attributes?.profile ? Object.keys(providerProfile.data.data.attributes.profile) : 'No profile',
-              protectedDataKeys: providerProfile?.data?.data?.attributes?.profile?.protectedData ? Object.keys(providerProfile.data.data.attributes.profile.protectedData) : 'No protectedData'
-            });
-            
-            console.log('🔍 [DEBUG] Full providerProfile response:', JSON.stringify(providerProfile, null, 2));
-            
-            const protectedData = providerProfile?.data?.data?.attributes?.profile?.protectedData || {};
-            console.log('🔍 [DEBUG] Extracted protectedData:', protectedData);
-            console.log('🔍 [DEBUG] protectedData.phoneNumber:', protectedData.phoneNumber);
-            
-            const lenderPhone = protectedData.phoneNumber;
-            console.log('🔍 [DEBUG] Final lenderPhone value:', lenderPhone);
+            try {
+              const providerProfile = await sdk.users.show({
+                id: providerId,
+                include: ['profile'],
+                'fields.user': ['profile', 'protectedData'],
+                'fields.profile': ['protectedData', 'publicData'],
+              });
+              
+              console.log('✅ [DEBUG] Provider profile fetch SUCCESSFUL');
+              console.log('🔍 [DEBUG] Provider response status:', providerProfile?.status);
+              console.log('🔍 [DEBUG] Provider response has data:', !!providerProfile?.data);
+              
+              // 🔍 DETAILED DEBUGGING: Log the full providerProfile response
+              console.log('🔍 [DEBUG] Full providerProfile response structure:', {
+                hasData: !!providerProfile?.data,
+                hasDataData: !!providerProfile?.data?.data,
+                hasAttributes: !!providerProfile?.data?.data?.attributes,
+                hasProfile: !!providerProfile?.data?.data?.attributes?.profile,
+                hasProtectedData: !!providerProfile?.data?.data?.attributes?.profile?.protectedData,
+                profileKeys: providerProfile?.data?.data?.attributes?.profile ? Object.keys(providerProfile.data.data.attributes.profile) : 'No profile',
+                protectedDataKeys: providerProfile?.data?.data?.attributes?.profile?.protectedData ? Object.keys(providerProfile.data.data.attributes.profile.protectedData) : 'No protectedData'
+              });
+              
+              console.log('🔍 [DEBUG] Full providerProfile response:', JSON.stringify(providerProfile, null, 2));
+              
+              const protectedData = providerProfile?.data?.data?.attributes?.profile?.protectedData || {};
+              console.log('🔍 [DEBUG] Extracted protectedData:', protectedData);
+              console.log('🔍 [DEBUG] protectedData.phoneNumber:', protectedData.phoneNumber);
+              
+              const lenderPhone = protectedData.phoneNumber;
+              console.log('🔍 [DEBUG] Final lenderPhone value:', lenderPhone);
 
-            if (sendSMS && lenderPhone) {
-              const message = `👗 New Sherbrt rental request! Someone wants to borrow your item "${listing?.attributes?.title || 'your listing'}". Tap your dashboard to respond.`;
-              await sendSMS(lenderPhone, message);
-              console.log(`✅ SMS sent to ${lenderPhone}`);
-            } else {
-              console.warn('⚠️ Missing lenderPhone or sendSMS unavailable');
-              console.log('🔍 [DEBUG] sendSMS available:', !!sendSMS);
-              console.log('🔍 [DEBUG] lenderPhone value:', lenderPhone);
+              if (sendSMS && lenderPhone) {
+                const message = `👗 New Sherbrt rental request! Someone wants to borrow your item "${listing?.attributes?.title || 'your listing'}". Tap your dashboard to respond.`;
+                await sendSMS(lenderPhone, message);
+                console.log(`✅ SMS sent to ${lenderPhone}`);
+              } else {
+                console.warn('⚠️ Missing lenderPhone or sendSMS unavailable');
+                console.log('🔍 [DEBUG] sendSMS available:', !!sendSMS);
+                console.log('🔍 [DEBUG] lenderPhone value:', lenderPhone);
+              }
+            } catch (userError) {
+              console.error('❌ [DEBUG] Provider profile fetch FAILED:', {
+                error: userError.message,
+                status: userError.status,
+                statusText: userError.statusText,
+                errorCode: userError.data?.errors?.[0]?.code,
+                errorTitle: userError.data?.errors?.[0]?.title,
+                errorDetail: userError.data?.errors?.[0]?.detail,
+                fullError: JSON.stringify(userError, null, 2)
+              });
+              
+              // Check for specific permission errors
+              if (userError.status === 403) {
+                console.error('🚫 [DEBUG] PERMISSION DENIED - 403 error detected');
+                if (userError.data?.errors?.[0]?.code === 'permission-denied-read') {
+                  console.error('🚫 [DEBUG] READ PERMISSION DENIED - Cannot read user data');
+                }
+              }
             }
           }
         } catch (err) {
