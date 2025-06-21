@@ -724,46 +724,6 @@ module.exports = async (req, res) => {
       const effectiveTransition = transitionName || bodyParams?.transition;
       console.log('🔍 Using effective transition for SMS:', effectiveTransition);
       
-      // Handle booking request SMS (transition/request or transition/request-payment)
-      if (effectiveTransition === 'transition/request' || effectiveTransition === 'transition/request-payment') {
-        console.log('📨 Preparing to send SMS for booking request');
-        
-        try {
-          // Step 1: Get listing with provider relationship included
-          const showListingResponse = await sdk.listings.show({
-            id: listingId,
-            include: ['author'],
-          });
-
-          const listing = showListingResponse?.data?.data;
-          const included = showListingResponse?.data?.included || [];
-
-          const providerUser = included.find(i => i.type === 'user');
-          const providerId = providerUser?.id;
-
-          if (!providerId) {
-            console.warn('⚠️ Provider ID not found — skipping SMS');
-          } else {
-            // Step 2: Fetch provider profile to get phone number
-            const providerProfileRes = await sdk.users.show({ id: providerId });
-            const providerPhoneNumber = providerProfileRes?.data?.data?.attributes?.protectedData?.phoneNumber;
-
-            if (sendSMS && providerPhoneNumber) {
-              await sendSMS(
-                providerPhoneNumber, 
-                `👗 New booking request for your item: ${listing?.attributes?.title || 'your listing'} — log in to Sherbrt to accept or decline.`
-              );
-              console.log(`📱 SMS sent to provider (${providerPhoneNumber}) for booking request`);
-            } else {
-              console.warn('⚠️ Missing phone number or sendSMS not available');
-            }
-          }
-        } catch (smsError) {
-          console.error('❌ Failed to send booking request SMS notification:', smsError.message);
-          // Don't fail the transaction if SMS fails
-        }
-      }
-
       if (effectiveTransition === 'transition/accept') {
         console.log('📨 Preparing to send SMS for transition/accept');
         
@@ -860,6 +820,41 @@ module.exports = async (req, res) => {
           .catch(err => {
             console.error('❌ [SHIPPO] Unexpected error in label creation:', err.message);
           });
+      }
+      
+      // 📩 --- SMS Notification for Booking Request --- //
+      if (
+        bodyParams?.transition === 'transition/request-payment' &&
+        !isSpeculative &&
+        response?.data?.data
+      ) {
+        console.log('📨 Preparing to send SMS for initial booking request');
+        console.log('🔍 listing available:', !!listing);
+
+        try {
+          // Get provider data from listing relationship
+          const provider = listing?.relationships?.author?.data;
+          const providerId = provider?.id;
+
+          if (!providerId) {
+            console.warn('⚠️ Provider ID not found — skipping SMS');
+          } else {
+            // Fetch provider profile to get phone number
+            const providerProfile = await sdk.users.show({ id: providerId });
+            const protectedData = providerProfile?.data?.data?.attributes?.profile?.protectedData || {};
+            const lenderPhone = protectedData.phone;
+
+            if (sendSMS && lenderPhone) {
+              const message = `👗 New Sherbrt rental request! Someone wants to borrow your item "${listing?.attributes?.title || 'your listing'}". Tap your dashboard to respond.`;
+              await sendSMS(lenderPhone, message);
+              console.log(`✅ SMS sent to ${lenderPhone}`);
+            } else {
+              console.warn('⚠️ Missing lenderPhone or sendSMS unavailable');
+            }
+          }
+        } catch (err) {
+          console.error('❌ SMS send error:', err.message);
+        }
       }
       
       console.log('✅ Transition completed successfully, returning:', { transition: transitionName });
