@@ -867,10 +867,14 @@ module.exports = async (req, res) => {
               console.log('🔍 [DEBUG] Full providerProfile response:', JSON.stringify(providerProfile, null, 2));
               
               const protectedData = providerProfile?.data?.data?.attributes?.profile?.protectedData || {};
+              const publicData = providerProfile?.data?.data?.attributes?.profile?.publicData || {};
               console.log('🔍 [DEBUG] Extracted protectedData:', protectedData);
+              console.log('🔍 [DEBUG] Extracted publicData:', publicData);
               console.log('🔍 [DEBUG] protectedData.phoneNumber:', protectedData.phoneNumber);
+              console.log('🔍 [DEBUG] publicData.phoneNumber:', publicData.phoneNumber);
               
-              const lenderPhone = protectedData.phoneNumber;
+              // Try to get phone number from publicData first (accessible), then protectedData as fallback
+              const lenderPhone = publicData.phoneNumber || protectedData.phoneNumber;
               console.log('🔍 [DEBUG] Final lenderPhone value:', lenderPhone);
 
               if (sendSMS && lenderPhone) {

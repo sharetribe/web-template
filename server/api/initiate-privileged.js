@@ -304,19 +304,36 @@ module.exports = (req, res) => {
         console.log('🔍 providerData available:', !!providerData);
 
         try {
-          const protectedData = providerData?.attributes?.profile?.protectedData || {};
-          console.log('🔍 [DEBUG] providerData structure:', {
-            hasAttributes: !!providerData?.attributes,
-            hasProfile: !!providerData?.attributes?.profile,
-            hasProtectedData: !!providerData?.attributes?.profile?.protectedData,
-            profileKeys: providerData?.attributes?.profile ? Object.keys(providerData.attributes.profile) : 'No profile',
-            protectedDataKeys: providerData?.attributes?.profile?.protectedData ? Object.keys(providerData.attributes.profile.protectedData) : 'No protectedData'
-          });
-          console.log('🔍 [DEBUG] Full providerData response:', JSON.stringify(providerData, null, 2));
-          console.log('🔍 [DEBUG] Extracted protectedData:', protectedData);
+          // Get phone number from transaction protectedData first (most secure)
+          const transactionProtectedData = data?.data?.attributes?.protectedData || {};
+          const transactionPhoneNumber = transactionProtectedData.providerPhone;
           
-          const lenderPhone = protectedData.phoneNumber;
-          console.log('🔍 [DEBUG] protectedData.phoneNumber:', protectedData.phoneNumber);
+          console.log('🔍 [DEBUG] Transaction protectedData:', transactionProtectedData);
+          console.log('🔍 [DEBUG] Transaction providerPhone:', transactionPhoneNumber);
+          
+          // If not in transaction, try to get from provider profile (less secure)
+          let lenderPhone = transactionPhoneNumber;
+          
+          if (!lenderPhone && providerData) {
+            const protectedData = providerData?.attributes?.profile?.protectedData || {};
+            const publicData = providerData?.attributes?.profile?.publicData || {};
+            
+            console.log('🔍 [DEBUG] providerData structure:', {
+              hasAttributes: !!providerData?.attributes,
+              hasProfile: !!providerData?.attributes?.profile,
+              hasProtectedData: !!providerData?.attributes?.profile?.protectedData,
+              hasPublicData: !!providerData?.attributes?.profile?.publicData,
+              profileKeys: providerData?.attributes?.profile ? Object.keys(providerData.attributes.profile) : 'No profile',
+              protectedDataKeys: providerData?.attributes?.profile?.protectedData ? Object.keys(providerData.attributes.profile.protectedData) : 'No protectedData',
+              publicDataKeys: providerData?.attributes?.profile?.publicData ? Object.keys(providerData.attributes.profile.publicData) : 'No publicData'
+            });
+            
+            // Only use publicData as absolute last resort
+            lenderPhone = protectedData.phoneNumber || publicData.phoneNumber;
+            console.log('🔍 [DEBUG] Fallback to profile data - protectedData.phoneNumber:', protectedData.phoneNumber);
+            console.log('🔍 [DEBUG] Fallback to profile data - publicData.phoneNumber:', publicData.phoneNumber);
+          }
+          
           console.log('🔍 [DEBUG] Final lenderPhone value:', lenderPhone);
 
           if (sendSMS && lenderPhone) {
@@ -334,7 +351,7 @@ module.exports = (req, res) => {
             console.warn('⚠️ Missing lenderPhone or sendSMS unavailable');
             console.log('🔍 [DEBUG] sendSMS available:', !!sendSMS);
             console.log('🔍 [DEBUG] lenderPhone value:', lenderPhone);
-            console.log('🔍 Protected data contents:', protectedData);
+            console.log('🔍 Transaction protectedData contents:', transactionProtectedData);
           }
         } catch (err) {
           console.error('❌ SMS send error:', err.message);

@@ -3,6 +3,7 @@ const { getTrustedSdk, handleError, serialize } = require('../api-util/sdk');
 /**
  * API endpoint to ensure phone number is saved to protectedData
  * This can be called after sign-up to guarantee the phone number is stored correctly
+ * We only save to protectedData for privacy - publicData is not used for phone numbers
  */
 module.exports = async (req, res) => {
   console.log('📱 [ensurePhoneNumber] Endpoint called');
@@ -55,7 +56,7 @@ module.exports = async (req, res) => {
         'fields.image': ['variants.square-small', 'variants.square-small2x'],
       });
       
-      console.log('✅ [ensurePhoneNumber] Phone number updated successfully');
+      console.log('✅ [ensurePhoneNumber] Phone number updated successfully in protectedData');
       
       return res.status(200).json({
         success: true,
