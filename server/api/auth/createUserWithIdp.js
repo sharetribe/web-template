@@ -1,8 +1,7 @@
 const http = require('http');
 const https = require('https');
 const sharetribeSdk = require('sharetribe-flex-sdk');
-const { handleError, serialize, typeHandlers } = require('../../api-util/sdk');
-const { getTrustedSdk } = require('../api-util/sdk');
+const { handleError, serialize, typeHandlers, getTrustedSdk } = require('../../api-util/sdk');
 
 const CLIENT_ID = process.env.REACT_APP_SHARETRIBE_SDK_CLIENT_ID;
 const CLIENT_SECRET = process.env.SHARETRIBE_SDK_CLIENT_SECRET;
