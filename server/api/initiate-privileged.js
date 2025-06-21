@@ -220,7 +220,19 @@ module.exports = (req, res) => {
 
         try {
           const protectedData = providerData?.attributes?.profile?.protectedData || {};
+          console.log('🔍 [DEBUG] providerData structure:', {
+            hasAttributes: !!providerData?.attributes,
+            hasProfile: !!providerData?.attributes?.profile,
+            hasProtectedData: !!providerData?.attributes?.profile?.protectedData,
+            profileKeys: providerData?.attributes?.profile ? Object.keys(providerData.attributes.profile) : 'No profile',
+            protectedDataKeys: providerData?.attributes?.profile?.protectedData ? Object.keys(providerData.attributes.profile.protectedData) : 'No protectedData'
+          });
+          console.log('🔍 [DEBUG] Full providerData response:', JSON.stringify(providerData, null, 2));
+          console.log('🔍 [DEBUG] Extracted protectedData:', protectedData);
+          
           const lenderPhone = protectedData.phoneNumber;
+          console.log('🔍 [DEBUG] protectedData.phoneNumber:', protectedData.phoneNumber);
+          console.log('🔍 [DEBUG] Final lenderPhone value:', lenderPhone);
 
           if (sendSMS && lenderPhone) {
             const listingTitle = listingData?.attributes?.title || 'your listing';
@@ -235,6 +247,8 @@ module.exports = (req, res) => {
               });
           } else {
             console.warn('⚠️ Missing lenderPhone or sendSMS unavailable');
+            console.log('🔍 [DEBUG] sendSMS available:', !!sendSMS);
+            console.log('🔍 [DEBUG] lenderPhone value:', lenderPhone);
             console.log('🔍 Protected data contents:', protectedData);
           }
         } catch (err) {
