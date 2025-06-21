@@ -90,7 +90,7 @@ const request = (path, options = {}) => {
 
 // Keep the previous parameter order for the post method.
 // For now, only POST has own specific function, but you can create more or use request directly.
-const post = (path, body, options = {}) => {
+export const post = (path, body, options = {}) => {
   const requestOptions = {
     ...options,
     method: methods.POST,
