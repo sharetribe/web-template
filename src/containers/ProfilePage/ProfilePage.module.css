@@ -81,11 +81,13 @@
 }
 
 .desktopHeading {
+  composes: h2 from global;
   display: none;
+  margin: 0 0 12px 0;
+  color: var(--color-black);
 
-  @media (--viewportLarge) {
+  @media (--viewportMedium) {
     display: block;
-    margin: 0 0 24px 0;
   }
 }
 
@@ -95,9 +97,11 @@
 }
 
 .bio {
+  composes: marketplaceBodyFontStyles from global;
+  margin: 0 0 24px 0;
+
   /* Preserve newlines, but collapse other whitespace */
   white-space: pre-line;
-  margin: 5px 0 24px 0;
 
   @media (--viewportMedium) {
     margin: 4px 0 51px 0;
@@ -323,4 +327,22 @@
   right: 0;
   width: 100%;
   height: 100%;
+}
+
+.zodiacAndInstagram {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 24px;
+}
+
+.zodiac,
+.instagram {
+  font-weight: bold;
+  color: #ff4e4e;
+  text-decoration: none;
+}
+
+.zodiacValue {
+  font-weight: normal;
+  color: var(--color-black);
 }

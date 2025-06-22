@@ -197,6 +197,7 @@ export const showUser = (userId, config) => (dispatch, getState, sdk) => {
       id: userId,
       include: ['profileImage'],
       'fields.image': ['variants.square-small', 'variants.square-small2x'],
+      'fields.user': ['profile', 'protectedData'],
     })
     .then(response => {
       const userFields = config?.user?.userFields;
