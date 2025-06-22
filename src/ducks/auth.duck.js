@@ -2,6 +2,7 @@ import * as log from '../util/log';
 import { storableError } from '../util/errors';
 import { clearCurrentUser, fetchCurrentUser } from './user.duck';
 import { createUserWithIdp } from '../util/api';
+import { getCookies } from '../util/data';
 
 const authenticated = authInfo => authInfo?.isAnonymous === false;
 const loggedInAs = authInfo => authInfo?.isLoggedInAs === true;
@@ -204,6 +205,7 @@ export const logout = () => (dispatch, getState, sdk) => {
     .catch(e => dispatch(logoutError(storableError(e))));
 };
 
+
 export const signup = params => (dispatch, getState, sdk) => {
   if (authenticationInProgress(getState())) {
     return Promise.reject(new Error('Login or logout already in progress'));
@@ -216,9 +218,11 @@ export const signup = params => (dispatch, getState, sdk) => {
   return sdk.currentUser
     .create(params)
     .then(() => {
+      const cookies = getCookies(document.cookie);
       window.dataLayer?.push({
-        event: 'Lead',
-        account_type: params.publicData.userType
+        accountType: params.publicData.userType,
+        fbc: cookies._fbc,
+        event: 'Lead'
       });
       return dispatch(signupSuccess());
     })
@@ -237,9 +241,11 @@ export const signupWithIdp = params => (dispatch, getState, sdk) => {
   dispatch(confirmRequest());
   return createUserWithIdp(params)
     .then(res => {
+      const cookies = getCookies(document.cookie);
       window.dataLayer?.push({
-        event: 'Lead',
-        account_type: params.publicData.userType
+        accountType: params.publicData.userType,
+        fbc: cookies._fbc,
+        event: 'Lead'
       });
       return dispatch(confirmSuccess());
     })

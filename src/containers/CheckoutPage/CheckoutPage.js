@@ -240,8 +240,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(initiateOrder(params, processAlias, transactionId, transitionName, isPrivileged)),
   onRetrievePaymentIntent: params => dispatch(retrievePaymentIntent(params)),
   onConfirmCardPayment: params => dispatch(confirmCardPayment(params)),
-  onConfirmPayment: (transactionId, transitionName, transitionParams, fnParams) =>
-    dispatch(confirmPayment(transactionId, transitionName, transitionParams, fnParams)),
+  onConfirmPayment: (transactionId, transitionName, transitionParams) =>
+    dispatch(confirmPayment(transactionId, transitionName, transitionParams)),
   onSendMessage: params => dispatch(sendMessage(params)),
   onSavePaymentMethod: (stripeCustomer, stripePaymentMethodId) =>
     dispatch(savePaymentMethod(stripeCustomer, stripePaymentMethodId)),

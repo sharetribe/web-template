@@ -286,7 +286,7 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
     const isTransitionedAlready = storedTx?.attributes?.lastTransition === transitionName;
     const orderPromise = isTransitionedAlready
       ? Promise.resolve(storedTx)
-      : onConfirmPayment(transactionId, transitionName, {}, fnParams);
+      : onConfirmPayment(transactionId, transitionName, {});
 
     orderPromise.then(order => {
       // Store the returned transaction (order)

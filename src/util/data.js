@@ -446,3 +446,11 @@ export const humanizeLineItemCode = code => {
 
   return lowercase.charAt(0).toUpperCase() + lowercase.slice(1);
 };
+
+export const getCookies = (cookieStr) =>
+  cookieStr.split(";")
+    .map(str => str.trim().split(/=(.+)/))
+    .reduce((acc, curr) => {
+        acc[curr[0]] = curr[1];
+        return acc;
+    }, {})

@@ -1,7 +1,7 @@
 import omit from 'lodash/omit';
 
 import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
-import { denormalisedResponseEntities } from '../../util/data';
+import { denormalisedResponseEntities, getCookies } from '../../util/data';
 import {
   getDefaultTimeZoneOnBrowser,
   getStartOf,
@@ -698,9 +698,11 @@ export const requestPublishListingDraft = listingId => (dispatch, getState, sdk)
   return sdk.ownListings
     .publishDraft({ id: listingId }, { expand: true })
     .then(response => {
+      const cookies = getCookies(document.cookie);
       window.dataLayer?.push({
+        fbc: cookies._fbc,
         event: 'CustomizeProduct',
-        id: listingId?.uuid
+        listingId: listingId?.uuid
       });
       // Add the created listing to the marketplace data
       dispatch(addMarketplaceEntities(response));

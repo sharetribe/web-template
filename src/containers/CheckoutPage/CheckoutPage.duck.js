@@ -1,6 +1,6 @@
 import pick from 'lodash/pick';
 import { initiatePrivileged, transitionPrivileged } from '../../util/api';
-import { denormalisedResponseEntities } from '../../util/data';
+import { denormalisedResponseEntities, getCookies } from '../../util/data';
 import { storableError } from '../../util/errors';
 import * as log from '../../util/log';
 import { fetchCurrentUserHasOrdersSuccess, fetchCurrentUser } from '../../ducks/user.duck';
@@ -270,7 +270,7 @@ export const initiateOrder = (
   }
 };
 
-export const confirmPayment = (transactionId, transitionName, transitionParams = {}, fnParams = {}) => (
+export const confirmPayment = (transactionId, transitionName, transitionParams = {}) => (
   dispatch,
   getState,
   sdk
@@ -290,11 +290,13 @@ export const confirmPayment = (transactionId, transitionName, transitionParams =
   return sdk.transactions
     .transition(bodyParams, queryParams)
     .then(response => {
+      const cookies = getCookies(document.cookie);
       const order = response.data.data;
       window.dataLayer?.push({
+        fbc: cookies._fbc,
+        currency: order.attributes?.payinTotal?.currency,
         event: 'Purchase',
-        transactionTotal: fnParams?.amount / 100,
-        currency: fnParams?.currency
+        transactionTotal: (order.attributes?.payinTotal?.amount || 0) / 100
       });
       dispatch(confirmPaymentSuccess(order.id));
       return order;
