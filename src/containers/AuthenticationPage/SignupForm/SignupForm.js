@@ -150,6 +150,7 @@ const SignupFormComponent = props => (
         birthdayMonth,
         birthdayDay,
         birthdayYear,
+        instagramHandle,
         ...restOfValues
       } = values;
 
@@ -175,9 +176,12 @@ const SignupFormComponent = props => (
           birthdayMonth,
           birthdayDay,
           birthdayYear: birthdayYear || null,
-          zodiacSign: zodiac,
         },
-        protectedData,
+        protectedData: {
+          ...protectedData,
+          zodiacSign: zodiac,
+          instagramHandle,
+        },
       };
 
       return (
@@ -271,6 +275,16 @@ const SignupFormComponent = props => (
                 userTypeConfig={userTypeConfig}
                 intl={intl}
               />
+
+              {userType === 'lender' ? (
+                <FieldTextInput
+                  id="instagramHandle"
+                  name="instagramHandle"
+                  label="Instagram handle (optional)"
+                  placeholder="@"
+                  className={css.row}
+                />
+              ) : null}
 
               <div className={css.birthdayContainer}>
                 <FieldSelect

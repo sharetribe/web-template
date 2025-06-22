@@ -206,13 +206,15 @@ export const MainContent = props => {
     queryListingsError,
     reviews = [],
     queryReviewsError,
-    publicData,
-    metadata,
+    user,
     userFieldConfig,
     intl,
     hideReviews,
-    zodiac,
   } = props;
+  const { zodiacSign, instagramHandle } = user?.attributes?.protectedData || {};
+
+  console.log('Zodiac:', zodiacSign);
+  console.log('Instagram:', instagramHandle);
 
   const hasListings = listings.length > 0;
   const hasMatchMedia = typeof window !== 'undefined' && window?.matchMedia;
@@ -244,21 +246,27 @@ export const MainContent = props => {
       <H2 as="h1" className={css.desktopHeading}>
         <FormattedMessage id="ProfilePage.desktopHeading" values={{ name: displayName }} />
       </H2>
-      {zodiac ? (
-        <div className={css.zodiac}>
-          ✨ Zodiac sign: {zodiac}
-        </div>
-      ) : null}
-      {hasBio ? <p className={css.bio}>{bioWithLinks}</p> : null}
+      {hasBio ? <div className={css.bio}>{bioWithLinks}</div> : null}
 
-      {displayName ? (
-        <CustomUserFields
-          publicData={publicData}
-          metadata={metadata}
-          userFieldConfig={userFieldConfig}
-          intl={intl}
-        />
-      ) : null}
+      <div className={css.zodiacAndInstagram}>
+        {zodiacSign ? <span className={css.zodiac}>Zodiac: {zodiacSign}</span> : null}
+        {instagramHandle && (
+          <a
+            href={`https://instagram.com/${instagramHandle.replace('@', '')}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={css.instagram}
+          >
+            {instagramHandle}
+          </a>
+        )}
+      </div>
+
+      <CustomUserFields
+        publicData={user.attributes.profile.publicData}
+        metadata={user.attributes.profile.metadata}
+        userFieldConfig={userFieldConfig}
+      />
 
       {hasListings ? (
         <div className={listingsContainerClasses}>
@@ -315,7 +323,10 @@ export const ProfilePageComponent = props => {
     useCurrentUser,
     userShowError,
     user,
-    ...rest
+    userListingRefs,
+    queryListingsError,
+    queryReviewsError,
+    reviews,
   } = props;
   const isVariant = pathParams.variant?.length > 0;
   const isPreview = isVariant && pathParams.variant === PROFILE_PAGE_PENDING_APPROVAL_VARIANT;
@@ -324,7 +335,7 @@ export const ProfilePageComponent = props => {
   // too empty for the provider at the time they are creating their first listing.
   // To remedy the situation, we redirect Stripe's crawler to the landing page of the marketplace.
   // TODO: When there's more content on the profile page, we should consider by-passing this redirection.
-  const searchParams = rest?.location?.search;
+  const searchParams = props?.location?.search;
   const isStorefront = searchParams
     ? new URLSearchParams(searchParams)?.get('mode') === 'storefront'
     : false;
@@ -334,7 +345,8 @@ export const ProfilePageComponent = props => {
 
   const isCurrentUser = currentUser?.id && currentUser?.id?.uuid === pathParams.id;
   const profileUser = useCurrentUser ? currentUser : user;
-  const { bio, displayName, publicData, metadata } = profileUser?.attributes?.profile || {};
+  const { bio, displayName, publicData, privateData, metadata } =
+    profileUser?.attributes?.profile || {};
   const { userFields } = config.user;
   const isPrivateMarketplace = config.accessControl.marketplace.private === true;
   const isUnauthorizedUser = currentUser && !isUserAuthorized(currentUser);
@@ -342,6 +354,7 @@ export const ProfilePageComponent = props => {
   const hasUserPendingApprovalError = isErrorUserPendingApproval(userShowError);
   const hasNoViewingRightsUser = currentUser && !hasPermissionToViewData(currentUser);
   const hasNoViewingRightsOnPrivateMarketplace = isPrivateMarketplace && hasNoViewingRightsUser;
+  const hideReviews = hasNoViewingRightsOnPrivateMarketplace;
 
   const isDataLoaded = isPreview
     ? currentUser != null || userShowError != null
@@ -419,13 +432,14 @@ export const ProfilePageComponent = props => {
         <MainContent
           bio={bio}
           displayName={displayName}
-          userShowError={userShowError}
-          publicData={publicData}
-          metadata={metadata}
+          listings={userListingRefs.map(l => getMarketplaceEntities(l.id, l.type))}
+          queryListingsError={queryListingsError}
+          reviews={reviews}
+          queryReviewsError={queryReviewsError}
+          user={profileUser}
           userFieldConfig={userFields}
-          hideReviews={hasNoViewingRightsOnPrivateMarketplace}
           intl={intl}
-          {...rest}
+          hideReviews={hideReviews}
         />
       </LayoutSideNavigation>
     </Page>
@@ -458,7 +472,7 @@ const mapStateToProps = state => {
     user,
     userShowError,
     queryListingsError,
-    listings: getMarketplaceEntities(state, userListingRefs),
+    userListingRefs,
     reviews,
     queryReviewsError,
     zodiac,
