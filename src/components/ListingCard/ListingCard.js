@@ -1,6 +1,5 @@
 import React from 'react';
 import classNames from 'classnames';
-
 import { useConfiguration } from '../../context/configurationContext';
 
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
@@ -95,8 +94,6 @@ export const ListingCard = props => {
   const id = currentListing.id.uuid;
   const { title = '', price, publicData } = currentListing.attributes;
   const slug = createSlug(title);
-  const author = ensureUser(listing.author);
-  const authorName = author.attributes.profile.displayName;
   const firstImage =
     currentListing.images && currentListing.images.length > 0 ? currentListing.images[0] : null;
 
@@ -115,6 +112,18 @@ export const ListingCard = props => {
         onMouseLeave: () => setActiveListing(null),
       }
     : null;
+
+  const getBrandLabel = (config, brandKey) => {
+    try {
+      const listingFields = config?.listing?.listingFields;
+      if (!listingFields) return brandKey;
+      const brandField = listingFields.find(field => field.key === 'brand');
+      const brandOption = brandField?.enumOptions?.find(option => option.option === brandKey);
+      return brandOption ? brandOption.label : brandKey;
+    } catch (e) {
+      return brandKey;
+    }
+  };
 
   return (
     <NamedLink className={classes} name="ListingPage" params={{ id, slug }}>
@@ -143,13 +152,20 @@ export const ListingCard = props => {
           </div>
           {showAuthorInfo ? (
             <div className={css.authorInfo}>
-              <FormattedMessage id="ListingCard.author" values={{ authorName }} />
+              {getBrandLabel(config, publicData?.brand) || 'Unknown Brand'}
             </div>
           ) : null}
         </div>
       </div>
     </NamedLink>
   );
+};
+
+ListingCard.defaultProps = {
+  className: null,
+  rootClassName: null,
+  listing: null,
+  showAuthorInfo: true,
 };
 
 export default ListingCard;
