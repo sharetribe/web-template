@@ -211,6 +211,7 @@ export const MainContent = props => {
     userFieldConfig,
     intl,
     hideReviews,
+    zodiac,
   } = props;
 
   const hasListings = listings.length > 0;
@@ -243,6 +244,11 @@ export const MainContent = props => {
       <H2 as="h1" className={css.desktopHeading}>
         <FormattedMessage id="ProfilePage.desktopHeading" values={{ name: displayName }} />
       </H2>
+      {zodiac ? (
+        <div className={css.zodiac}>
+          ✨ Zodiac sign: {zodiac}
+        </div>
+      ) : null}
       {hasBio ? <p className={css.bio}>{bioWithLinks}</p> : null}
 
       {displayName ? (
@@ -438,6 +444,7 @@ const mapStateToProps = state => {
   } = state.ProfilePage;
   const userMatches = getMarketplaceEntities(state, [{ type: 'user', id: userId }]);
   const user = userMatches.length === 1 ? userMatches[0] : null;
+  const zodiac = user?.attributes?.privateData?.zodiacSign;
 
   // Show currentUser's data if it's not approved yet
   const isCurrentUser = userId?.uuid === currentUser?.id?.uuid;
@@ -454,6 +461,7 @@ const mapStateToProps = state => {
     listings: getMarketplaceEntities(state, userListingRefs),
     reviews,
     queryReviewsError,
+    zodiac,
   };
 };
 
