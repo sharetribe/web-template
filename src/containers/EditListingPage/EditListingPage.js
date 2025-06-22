@@ -157,6 +157,7 @@ export const EditListingPageComponent = props => {
     stripeAccountFetched,
     stripeAccount,
     updateStripeAccountError,
+    authScopes,
   } = props;
 
   const { id, type, returnURLType } = params;
@@ -308,6 +309,7 @@ export const EditListingPageComponent = props => {
             createStripeAccountError || updateStripeAccountError || fetchStripeAccountError
           }
           stripeAccountLinkError={getAccountLinkError}
+          authScopes={authScopes}
         />
       </Page>
     );
@@ -347,6 +349,8 @@ const mapStateToProps = state => {
     return listings.length === 1 ? listings[0] : null;
   };
 
+  const { authScopes } = state.auth;
+
   return {
     getAccountLinkInProgress,
     getAccountLinkError,
@@ -360,6 +364,7 @@ const mapStateToProps = state => {
     getOwnListing,
     page,
     scrollingDisabled: isScrollingDisabled(state),
+    authScopes,
   };
 };
 

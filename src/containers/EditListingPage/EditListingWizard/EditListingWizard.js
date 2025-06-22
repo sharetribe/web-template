@@ -478,6 +478,7 @@ class EditListingWizard extends Component {
       currentUser,
       config,
       routeConfiguration,
+      authScopes,
       ...rest
     } = this.props;
 
@@ -625,6 +626,12 @@ class EditListingWizard extends Component {
     const returnedAbnormallyFromStripe = returnURLType === STRIPE_ONBOARDING_RETURN_URL_FAILURE;
     const showVerificationNeeded = stripeConnected && requirementsMissing;
 
+    // Check if user has limited rights and set button titles accordingly
+    const limitedRights = authScopes?.indexOf('user:limited') >= 0;
+    const stripeButtonTitle = limitedRights
+      ? intl.formatMessage({ id: 'StripePayoutPage.submitButtonText' })
+      : null;
+
     // Redirect from success URL to basic path for StripePayoutPage
     if (returnedNormallyFromStripe && stripeConnected && !requirementsMissing) {
       return <NamedRedirect name="EditListingPage" params={pathParams} />;
@@ -710,6 +717,7 @@ class EditListingWizard extends Component {
                   onChange={onPayoutDetailsChange}
                   onSubmit={rest.onPayoutDetailsSubmit}
                   stripeConnected={stripeConnected}
+                  authScopes={authScopes}
                 >
                   {stripeConnected && !returnedAbnormallyFromStripe && showVerificationNeeded ? (
                     <StripeConnectAccountStatusBox
@@ -718,15 +726,18 @@ class EditListingWizard extends Component {
                       onGetStripeConnectAccountLink={handleGetStripeConnectAccountLink(
                         'custom_account_verification'
                       )}
+                      disabled={limitedRights}
+                      title={stripeButtonTitle}
                     />
                   ) : stripeConnected && savedCountry && !returnedAbnormallyFromStripe ? (
                     <StripeConnectAccountStatusBox
                       type="verificationSuccess"
                       inProgress={getAccountLinkInProgress}
-                      disabled={payoutDetailsSaveInProgress}
+                      disabled={payoutDetailsSaveInProgress || limitedRights}
                       onGetStripeConnectAccountLink={handleGetStripeConnectAccountLink(
                         'custom_account_update'
                       )}
+                      title={stripeButtonTitle}
                     />
                   ) : null}
                 </StripeConnectAccountForm>
