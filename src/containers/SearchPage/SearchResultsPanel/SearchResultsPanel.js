@@ -94,7 +94,7 @@ const SearchResultsPanel = props => {
           <ListingCard
             className={css.listingCard}
             key={l.id.uuid}
-            listing={l}
+            listing={l} 
             location={location}
             history={history}
             routeConfiguration={routeConfiguration}
@@ -103,6 +103,10 @@ const SearchResultsPanel = props => {
             renderSizes={cardRenderSizes(isMapVariant)}
             setActiveListing={setActiveListing}
             showHeartIcon={true}
+
+            //state info in listing card
+            listingFieldConfigs={props.listingFieldConfigs}
+            isFieldForCategory={props.isFieldForCategory}
           />
         ))}
         {props.children}

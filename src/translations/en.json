@@ -489,6 +489,7 @@
   "LimitedAccessBanner.fullRightsMessage": "You're logged in as {firstName} {lastName}. You have full access rights. In a Live environment, you will have limited rights.",
   "LimitedAccessBanner.fallbackMessage": "You're logged in as {firstName} {lastName}.",
   "ListingCard.author": "{authorName}",
+  "ListingCard.state": "{stateInfo}",
   "ListingCard.perUnit": "{unitType, select, day {per day} night {per night} hour {per hour} other {}}",
   "ListingCard.price": "{priceValue} {pricePerUnit}",
   "ListingCard.priceStartingFrom": "From {priceValue} {pricePerUnit}",
