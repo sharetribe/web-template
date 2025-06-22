@@ -40,6 +40,21 @@
   width: calc(66% - 9px);
 }
 
+.birthdayContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+  gap: 1rem;
+
+  @media (--viewportMedium) {
+    margin-top: 32px;
+  }
+}
+
+.birthdayField {
+  flex-grow: 1;
+}
+
 .password {
   composes: marketplaceModalPasswordMargins from global;
 }

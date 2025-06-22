@@ -7,8 +7,9 @@ import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import * as validators from '../../../util/validators';
 import { getPropsForCustomUserFieldInputs } from '../../../util/userHelpers';
+import getZodiacSign from '../../../util/getZodiacSign';
 
-import { Form, PrimaryButton, FieldTextInput, CustomExtendedDataField, FieldCheckbox } from '../../../components';
+import { Form, PrimaryButton, FieldTextInput, FieldSelect, CustomExtendedDataField, FieldCheckbox } from '../../../components';
 
 import FieldSelectUserType from '../FieldSelectUserType';
 import UserFieldDisplayName from '../UserFieldDisplayName';
@@ -19,6 +20,44 @@ import termsCss from '../TermsAndConditions/TermsAndConditions.module.css';
 
 const getSoleUserTypeMaybe = userTypes =>
   Array.isArray(userTypes) && userTypes.length === 1 ? userTypes[0].userType : null;
+
+/**
+ * Get values for submission. By default, the values that have been touched get submitted.
+ *
+ * @param {Object} values
+ * @param {Object} registeredFields
+ * @param {Array<Object>} userFields
+ * @param {string} userType
+ * @param {Array<Object>} userTypes
+ * @param {Object} intl
+ * @returns {Object}
+ */
+const getValuesForSubmission = (values, registeredFields, userFields, userType, userTypes, intl) => {
+  const { fname, lname, ...restOfValues } = values;
+  const publicData = {
+    // There are several custom user fields, so we need to filter out the ones
+    // that are not in the form.
+    ...registeredFields.reduce((acc, v) => {
+      const isFName = v === 'firstName';
+      const isLName = v === 'lastName';
+
+      // The backend has a validation that requires the first name to be present.
+      const fNameMaybe = isLName ? { firstName: values.firstName } : {};
+
+      // The backend has a validation that requires the last name to be present.
+      const lNameMaybe = isFName ? { lastName: values.lastName } : {};
+
+      return { ...acc, ...fNameMaybe, ...lNameMaybe, [v]: values[v] };
+    }, {}),
+  };
+
+  // The protected data object contains the user's private information.
+  // We need to add the user's phone number to the protected data if it's present.
+  const { phoneNumber, ...restOfPublicData } = publicData;
+  const protectedData = phoneNumber ? { phoneNumber } : {};
+
+  return { publicData: restOfPublicData, protectedData };
+};
 
 const SignupFormComponent = props => (
   <FinalForm
@@ -102,6 +141,44 @@ const SignupFormComponent = props => (
       const classes = classNames(rootClassName || css.root, className);
       const submitInProgress = inProgress;
       const submitDisabled = invalid || submitInProgress;
+
+      const {
+        email,
+        password,
+        firstName,
+        lastName,
+        birthdayMonth,
+        birthdayDay,
+        birthdayYear,
+        ...restOfValues
+      } = values;
+
+      const zodiac = getZodiacSign(birthdayMonth, birthdayDay);
+
+      const { publicData, protectedData } = getValuesForSubmission(
+        values,
+        formRenderProps.form.getRegisteredFields(),
+        userFields,
+        userType,
+        userTypes,
+        intl
+      );
+
+      // pass all the form values to the parent component
+      const signupParams = {
+        email,
+        password,
+        firstName,
+        lastName,
+        publicData,
+        privateData: {
+          birthdayMonth,
+          birthdayDay,
+          birthdayYear: birthdayYear || null,
+          zodiacSign: zodiac,
+        },
+        protectedData,
+      };
 
       return (
         <Form className={classes} onSubmit={handleSubmit}>
@@ -194,6 +271,77 @@ const SignupFormComponent = props => (
                 userTypeConfig={userTypeConfig}
                 intl={intl}
               />
+
+              <div className={css.birthdayContainer}>
+                <FieldSelect
+                  id="birthdayMonth"
+                  name="birthdayMonth"
+                  label="Month"
+                  className={css.birthdayField}
+                  validate={validators.required('Month is required')}
+                >
+                  <option disabled value="">
+                    Month
+                  </option>
+                  {[
+                    { key: '1', label: 'January' },
+                    { key: '2', label: 'February' },
+                    { key: '3', label: 'March' },
+                    { key: '4', label: 'April' },
+                    { key: '5', label: 'May' },
+                    { key: '6', label: 'June' },
+                    { key: '7', label: 'July' },
+                    { key: '8', label: 'August' },
+                    { key: '9', label: 'September' },
+                    { key: '10', label: 'October' },
+                    { key: '11', label: 'November' },
+                    { key: '12', label: 'December' },
+                  ].map(option => (
+                    <option key={option.key} value={option.key}>
+                      {option.label}
+                    </option>
+                  ))}
+                </FieldSelect>
+
+                <FieldSelect
+                  id="birthdayDay"
+                  name="birthdayDay"
+                  label="Day"
+                  className={css.birthdayField}
+                  validate={validators.required('Day is required')}
+                >
+                  <option disabled value="">
+                    Day
+                  </option>
+                  {Array.from({ length: 31 }, (_, i) => ({
+                    key: `${i + 1}`,
+                    label: `${i + 1}`,
+                  })).map(option => (
+                    <option key={option.key} value={option.key}>
+                      {option.label}
+                    </option>
+                  ))}
+                </FieldSelect>
+
+                <FieldSelect
+                  id="birthdayYear"
+                  name="birthdayYear"
+                  label="Year (optional)"
+                  className={css.birthdayField}
+                >
+                  <option disabled value="">
+                    Year
+                  </option>
+                  {Array.from({ length: new Date().getFullYear() - 1919 }, (_, i) => ({
+                    key: `${new Date().getFullYear() - i}`,
+                    label: `${new Date().getFullYear() - i}`,
+                  })).map(option => (
+                    <option key={option.key} value={option.key}>
+                      {option.label}
+                    </option>
+                  ))}
+                </FieldSelect>
+              </div>
             </div>
           ) : null}
 
