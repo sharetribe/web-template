@@ -68,10 +68,11 @@ export const getSelectionsListingParams = (config, selectionIds) => {
   } = config.layout.listingImage;
 
   const aspectRatio = aspectHeight / aspectWidth;
+  const uniqueIds = [...new Set(selectionIds)];
 
   return {
-    ids: selectionIds,
-    include: ['author', 'images'],
+    ids: uniqueIds,
+    include: ['author', 'author.profileImage', 'images'],
     'fields.listing': [
       'title',
       'price',
@@ -81,8 +82,9 @@ export const getSelectionsListingParams = (config, selectionIds) => {
       'publicData.brand',
       'publicData.talla'
     ],
-    'fields.user': ['profile.displayName', 'profile.abbreviatedName', 'profile.image', 'profile.publicData', 'profile.metadata'],
+    'fields.user': ['profile.displayName', 'profile.abbreviatedName', 'profile.image'],
     'fields.image': [
+      'variants.square-xsmall2x',
       'variants.scaled-small',
       'variants.scaled-medium',
       `variants.${variantPrefix}`,
@@ -90,6 +92,7 @@ export const getSelectionsListingParams = (config, selectionIds) => {
     ],
     ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
     ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
+    ...createImageVariantConfig('square-xsmall2x', 60, aspectRatio),
     'limit.images': 1,
   };
 };
@@ -111,16 +114,19 @@ export const getRecommendedListingParams = (config, listingIds) => {
 
   return {
     ids: listingIds,
-    include: ['author', 'images'],
+    include: ['author', 'author.profileImage', 'images'],
     'fields.listing': [
       'title',
       'price',
       'deleted',
       'state',
-      'publicData.transactionProcessAlias'
+      'publicData.transactionProcessAlias',
+      'publicData.brand',
+      'publicData.talla'
     ],
     'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
     'fields.image': [
+      'variants.square-xsmall2x',
       'variants.scaled-small',
       'variants.scaled-medium',
       `variants.${variantPrefix}`,
@@ -128,6 +134,7 @@ export const getRecommendedListingParams = (config, listingIds) => {
     ],
     ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
     ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
+    ...createImageVariantConfig('square-xsmall2x', 60, aspectRatio),
     'limit.images': 1,
   };
 };

@@ -365,12 +365,19 @@
 
 .orderPanelTitle {
   /* Font */
-  font-weight: var(--fontWeightBold);
+  composes: marketplaceAuthTitleStyles from global;
+  font-size: 28px;
+  line-height: 32px;
 
   /* Layout */
   width: 100%;
   margin-top: 0;
   margin-bottom: 0;
+
+  @media (--viewportLarge) {
+    font-size: 38px;
+    line-height: 42px;
+  }
 }
 
 .sectionAvatar {
@@ -425,7 +432,7 @@
 .desktopPriceValue {
   /* Font */
   composes: marketplaceModalTitleStyles from global;
-  color: var(--marketplaceColor);
+  color: var(--avBlue);
 
   @media (--viewportMedium) {
     margin-top: 0;
@@ -485,7 +492,7 @@
 
 .authorNameLink {
   composes: textSmall from global;
-  color: var(--colorGrey700);
+  color: var(--avBlue);
 }
 
 .contactWrapper {
@@ -543,7 +550,7 @@
 .sectionHeading,
 .sectionHeadingWithExtraMargin {
   /* Font for sections titles */
-  composes: p from global;
+  composes: marketplaceListingSectionTitleStyles from global;
   padding: 0;
   font-weight: var(--fontWeightBold);
 
@@ -635,11 +642,10 @@
   display: inline-flex;
   justify-content: space-between;
   width: 100%;
+  padding: 1px 0 4px 0;
+  line-height: 36px;
   list-style: none;
   font-weight: var(--fontWeightRegular);
-  line-height: 24px;
-  padding: 7px 0px 10px;
-  gap: 8px;
 
   &:not(:last-child) {
     border-bottom: 1px solid var(--colorGrey100);

@@ -45,10 +45,11 @@
 }
 
 .tab {
-  composes: marketplaceModalTitleStyles from global;
+  composes: marketplaceAuthTitleStyles from global;
   padding: 0;
   margin-top: 0;
   margin-bottom: 0;
+  white-space: nowrap;
 
   @media (--viewportMedium) {
     padding: 0;
@@ -62,6 +63,13 @@
   @media (--viewportMedium) {
     margin-top: 30px;
     padding-top: 2px;
+  }
+}
+
+.loginForm,
+.signupForm {
+  label {
+    font-size: 16px;
   }
 }
 
@@ -220,6 +228,7 @@
 
 .error {
   composes: marketplaceModalPasswordMargins from global;
+  color: var(--colorFail);
 }
 
 /* ================ Social logins & SSO ================ */

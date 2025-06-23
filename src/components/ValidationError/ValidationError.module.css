@@ -6,7 +6,7 @@
   margin-bottom: 0;
   color: var(--colorFail);
   overflow: hidden;
-  font-size: 13px;
+  font-size: 14px;
 
   @media (--viewportMedium) {
     margin-top: 8px;

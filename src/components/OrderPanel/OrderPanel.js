@@ -79,6 +79,18 @@ const priceData = (price, currency, intl) => {
   return {};
 };
 
+const customFormatPrice = (price, currency, intl) => {
+  const amount = price.amount;
+  if (currency === 'MXN') {
+    const decimal = ( amount / 100).toFixed(2); // Convert from cents.
+    const formattedPrice = `$${decimal.replace(',', '.')}`;
+    return {formattedPrice, priceTitle: formattedPrice};   // Force dot.
+  }
+
+  const formattedPrice = formatMoney(intl, { amount, currency });
+  return { formattedPrice, priceTitle: formattedPrice };
+};
+
 const getCheapestPriceVariant = (priceVariants = []) => {
   return priceVariants.reduce((cheapest, current) => {
     return current.priceInSubunits < cheapest.priceInSubunits ? current : cheapest;
@@ -148,9 +160,14 @@ const PriceMaybe = props => {
   }
 
   // Get formatted price or currency code if the currency does not match with marketplace currency
-  const { formattedPrice, priceTitle } = priceData(price, marketplaceCurrency, intl);
+  // const { formattedPrice, priceTitle } = priceData(price, marketplaceCurrency, intl);
+  const { formattedPrice, priceTitle } = customFormatPrice(price, marketplaceCurrency, intl);
+  // Original money format.
+  const formattedPriceOriginal = formatMoneyIfSupportedCurrency(price, intl);
+
+  
   const priceValue = (
-    <span className={css.priceValue}>{formatMoneyIfSupportedCurrency(price, intl)}</span>
+    <span className={css.priceValue}>{formattedPrice}</span>
   );
   const pricePerUnit = (
     <span className={css.perUnit}>

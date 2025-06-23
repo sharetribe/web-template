@@ -46,6 +46,7 @@
 }
 
 .mobileHeading {
+  font-family: var(--fontFamilyHeadings);
   flex-shrink: 0;
   margin: 60px 0 0 0;
 
@@ -82,6 +83,7 @@
 
 .desktopHeading {
   display: none;
+  font-family: var(--fontFamilyHeadings);
 
   @media (--viewportLarge) {
     display: block;
@@ -119,6 +121,8 @@
 }
 
 .listingsTitle {
+  font-family: var(--fontFamilyHeadings);
+  font-size: 24px;
   color: var(--colorGrey700);
   margin-bottom: 0;
 
@@ -179,6 +183,7 @@
 }
 
 .mobileReviewsTitle {
+  font-family: var(--fontFamilyHeadings);
   margin: 24px 0 26px 0;
 }
 
@@ -205,7 +210,9 @@
 }
 
 .desktopReviewsTitle {
-  composes: textLarge from global;
+  font-size: 24px;
+  line-height: 30px;
+  font-family: var(--fontFamilyHeadings);
   margin-bottom: 0;
 }
 

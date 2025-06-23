@@ -78,7 +78,11 @@
 }
 
 .h3 {
-  font-size: 30px;
+  font-size: 24px;
+
+  @media (--viewportMedium) {
+    font-size: 30px;
+  }
 }
 
 .h4 {

@@ -353,7 +353,12 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
       ...listingTypeVariantMaybe,
       page,
       perPage: RESULT_PAGE_SIZE,
-      include: ['author', 'images'],
+      include: [
+        'author',
+        // For AV custom Listing Card.
+        'author.profileImage',
+        'images',
+      ],
       'fields.listing': [
         'title',
         'geolocation',
@@ -369,9 +374,13 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
         'publicData.shippingEnabled',
         'publicData.priceVariationsEnabled',
         'publicData.priceVariants',
+        // For AV custom Listing Card.
+        'publicData.brand',
+        'publicData.talla'
       ],
       'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
       'fields.image': [
+        'variants.square-xsmall2x',
         'variants.scaled-small',
         'variants.scaled-medium',
         `variants.${variantPrefix}`,
@@ -379,6 +388,7 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
       ],
       ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
       ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
+      ...createImageVariantConfig('square-xsmall2x', 60, aspectRatio),
       'limit.images': 1,
     },
     config

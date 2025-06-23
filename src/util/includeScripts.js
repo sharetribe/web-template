@@ -148,7 +148,7 @@ export const IncludeScripts = props => {
   };
 
   const fontScript = (<style key="font">
-    {`@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Roboto:ital@0;1&display=swap');`}
+    {`@import url('https://fonts.googleapis.com/css2?family=Archivo&family=Archivo+Black&family=Roboto:ital@0;1&display=swap');`}
     </style>);
 
   const allScripts = [fontScript, ...analyticsLibraries, ...mapLibraries];

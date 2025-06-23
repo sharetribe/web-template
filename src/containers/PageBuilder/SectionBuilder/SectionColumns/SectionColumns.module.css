@@ -27,7 +27,12 @@
 }
 .fourColumns {
   composes: baseColumn;
-  @media (--viewportMedium) {
+
+  @media (--viewportXSmall) {
+    grid-template-columns: repeat(2, calc((100% - 1 * 32px) / 2));
+  }
+
+  @media (--viewportLarge) {
     grid-template-columns: repeat(4, calc((100% - 3 * 32px) / 4));
   }
 }

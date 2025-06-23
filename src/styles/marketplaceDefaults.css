@@ -21,7 +21,8 @@
   --colorSuccess: #2ecc71;
   --colorSuccessDark: #239954;
   --colorSuccessLight: #f0fff6;
-  --colorFail: #ff0000;
+  /*--colorFail: #ff0000;*/
+  --colorFail: var(--avPink);
   --colorFailLight: #fff0f0;
   --colorAttention: #ffaa00;
   --colorAttentionLight: #fff7f0;
@@ -88,7 +89,7 @@
    --ctaSecondaryBG: var(--avBlue);
 
   /* ================ Font ================ */
-  --fontFamily: 'Arial', -apple-system, BlinkMacSystemFont, 'Inter', Helvetica, Arial, sans-serif,
+  --fontFamily: 'Archivo', -apple-system, BlinkMacSystemFont, 'Inter', Helvetica, Arial, sans-serif,
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 
   --fontFamilyRoboto: 'Roboto', -apple-system, BlinkMacSystemFont, 'Inter', Helvetica, Arial, sans-serif,
@@ -1446,7 +1447,7 @@ textarea {
 
 .marketplaceModalHelperLink {
   font-weight: var(--fontWeightRegular);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 18px;
 
   -webkit-font-smoothing: subpixel-antialiased;
@@ -1568,5 +1569,33 @@ textarea {
 
   @media (--viewportMedium) {
     margin-top: 32px;
+  }
+}
+
+.marketplaceAuthTitleStyles {
+  font-family: var(--fontFamilyHeadings);
+  font-weight: var(--fontWeightBold);
+  font-size: 24px;
+  line-height: 36px;
+  margin: 0;
+
+  @media (--viewportMedium) {
+    font-weight: var(--fontWeightBold);
+    line-height: 30px;
+    font-size: 28px;
+    margin: 0;
+  }
+}
+
+.marketplaceListingSectionTitleStyles {
+  font-family: var(--fontFamilyHeadings);
+  font-weight: var(--fontWeightBold);
+  font-size: 24px;
+  line-height: 36px;
+
+  @media (--viewportMedium) {
+  font-size: 24px;
+    line-height: 30px;
+    font-size: 28px;
   }
 }

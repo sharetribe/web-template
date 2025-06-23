@@ -84,6 +84,7 @@
   justify-content: flex-start;
   align-items: center;
   gap: 15px;
+  flex-wrap: wrap;
 
   a {
     margin-top: 0;
@@ -208,6 +209,11 @@
     font-size: 20px;
     font-weight: 700;
     line-height: 140%; /* 28px */
+
+    + h4, + h3 {
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
   }
 
   p {

@@ -8,6 +8,7 @@ import { displayPrice } from '../../util/configHelpers';
 import { lazyLoadWithDimensions } from '../../util/uiHelpers';
 import { formatMoney } from '../../util/currency';
 import { ensureListing, ensureUser } from '../../util/data';
+import { richText } from '../../util/richText';
 import { createSlug } from '../../util/urlHelpers';
 import { isBookingProcessAlias } from '../../transactions/transaction';
 
@@ -15,6 +16,7 @@ import { AspectRatioWrapper, NamedLink, ResponsiveImage, AvatarSmall } from '../
 
 import css from './AVListingCard.module.css';
 
+const MIN_LENGTH_FOR_LONG_WORDS = 10;
 const LazyImage = lazyLoadWithDimensions(ResponsiveImage, { loadAfterInitialRendering: 3000 });
 
 const PriceMaybe = props => {
@@ -77,6 +79,8 @@ export const AVListingCard = props => {
     renderSizes,
     setActiveListing,
     showAuthorInfo = true,
+    showTallCards = true,
+    showListingTitle = false
   } = props;
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureListing(listing);
@@ -89,8 +93,8 @@ export const AVListingCard = props => {
     currentListing.images && currentListing.images.length > 0 ? currentListing.images[0] : null;
 
   const {
-    // aspectWidth = 1,
-    // aspectHeight = 1,
+    aspectWidth = 1,
+    aspectHeight = 1,
     variantPrefix = 'listing-card',
   } = config.layout.listingImage;
   const variants = firstImage
@@ -104,16 +108,16 @@ export const AVListingCard = props => {
       }
     : null;
 
-    const aspectWidth = 3,
-          aspectHeight = 4.85;
+    const aspectWidthTall = 3,
+          aspectHeightTall = 4.85;
 
   return (
     <div className={classes}>
       <NamedLink className={css.cardLink} name="ListingPage" params={{ id, slug }}>
         <AspectRatioWrapper
           className={css.aspectRatioWrapper}
-          width={aspectWidth}
-          height={aspectHeight}
+          width={showTallCards ? aspectWidthTall : aspectWidth}
+          height={showTallCards ? aspectHeightTall : aspectHeight}
           {...setActivePropsMaybe}
         >
           <LazyImage
@@ -126,16 +130,28 @@ export const AVListingCard = props => {
         </AspectRatioWrapper>
       </NamedLink>
       <div className={css.info}>
-        <NamedLink
-          name="SearchPage"
-          to={{ search: `?pub_brand=${publicData?.brand}` }}
-          className={css.brand}
-        >
-          {
-            (config.listing.listingFields.find(f => f.key === 'brand')?.enumOptions || [])
-              .find(opt => opt.option === publicData?.brand)?.label || publicData?.brand
-          }
-        </NamedLink>
+        {publicData?.brand ? (
+          <NamedLink
+            name="SearchPage"
+            to={{ search: `?pub_brand=${publicData?.brand}` }}
+            className={css.brand}
+          >
+            {
+              (config.listing.listingFields.find(f => f.key === 'brand')?.enumOptions || [])
+                .find(opt => opt.option === publicData?.brand)?.label || publicData?.brand
+            }
+          </NamedLink>
+        ) : null}
+
+        {showListingTitle && title ? (
+          <div className={css.title}>
+            {richText(title, {
+              longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
+              longWordClass: css.longWord,
+            })}
+          </div>
+        ) : null}
+
         {publicData?.talla ? (
           <div className={css.sizes}>
             Talla:{' '}
@@ -150,7 +166,9 @@ export const AVListingCard = props => {
           {showAuthorInfo ? (
             <div className={css.authorInfo}>
               <AvatarSmall user={author} className={css.providerAvatar} />
-              <FormattedMessage id="ListingCard.author" values={{ authorName }} />
+              <NamedLink title={authorName} name="ProfilePage" params={{ id: author.id.uuid }}>
+                <FormattedMessage id="ListingCard.author" values={{ authorName }} />
+              </NamedLink>
             </div>
           ) : null}
         </div>

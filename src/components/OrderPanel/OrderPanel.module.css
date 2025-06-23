@@ -66,11 +66,11 @@
   }
 }
 .priceValue {
-  color: var(--marketplaceColor);
+  color: var(--avBlue);
 }
 
 .perUnit {
-  color: var(--marketplaceColor);
+  color: var(--avBlue);
 }
 
 .author {

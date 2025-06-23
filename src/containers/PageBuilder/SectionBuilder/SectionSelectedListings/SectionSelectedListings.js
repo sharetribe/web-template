@@ -68,7 +68,7 @@ const SectionSelectedListings = props => {
       ) : null}
       {hasListings ? (
         <div
-          className={classNames(defaultClasses.blockContainer, getColumnCSS(numColumns), {
+          className={classNames(defaultClasses.blockContainer, css.baseColumn, {
             [css.noSidePaddings]: isInsideContainer,
           })}
         >
