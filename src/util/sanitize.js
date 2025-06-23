@@ -103,13 +103,22 @@ export function sanitizeUrl(url) {
 export const sanitizeUser = (entity, config = {}) => {
   const { attributes, ...restEntity } = entity || {};
   const { profile, ...restAttributes } = attributes || {};
-  const { bio, displayName, abbreviatedName, publicData = {}, metadata = {}, ...restProfile } =
+  const { bio, displayName, abbreviatedName, publicData = {}, protectedData = {}, metadata = {}, ...restProfile } =
     profile || {};
+
+  console.log('🔍 [sanitizeUser] Original entity:', entity);
+  console.log('🔍 [sanitizeUser] Original profile:', profile);
+  console.log('🔍 [sanitizeUser] Original protectedData:', protectedData);
 
   const sanitizePublicData = publicData => {
     // TODO: If you add public data, you should probably sanitize it here.
     const sanitizedConfiguredPublicData = sanitizeConfiguredPublicData(publicData, config);
     return publicData ? { publicData: sanitizedConfiguredPublicData } : {};
+  };
+  const sanitizeProtectedData = protectedData => {
+    // TODO: If you add protected data, you should probably sanitize it here.
+    console.log('🔍 [sanitizeUser] Sanitizing protectedData:', protectedData);
+    return protectedData ? { protectedData } : {};
   };
   const sanitizeMetadata = metadata => {
     // TODO: If you add user-generated metadata through Integration API,
@@ -124,6 +133,7 @@ export const sanitizeUser = (entity, config = {}) => {
           displayName: sanitizeText(displayName),
           bio: sanitizeText(bio),
           ...sanitizePublicData(publicData),
+          ...sanitizeProtectedData(protectedData),
           ...sanitizeMetadata(metadata),
           ...restProfile,
         },
@@ -131,7 +141,9 @@ export const sanitizeUser = (entity, config = {}) => {
     : {};
   const attributesMaybe = attributes ? { attributes: { ...profileMaybe, ...restAttributes } } : {};
 
-  return { ...attributesMaybe, ...restEntity };
+  const result = { ...attributesMaybe, ...restEntity };
+  console.log('🔍 [sanitizeUser] Final sanitized result:', result);
+  return result;
 };
 
 /**

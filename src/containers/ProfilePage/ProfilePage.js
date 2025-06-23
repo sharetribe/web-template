@@ -215,6 +215,12 @@ export const MainContent = props => {
 
   console.log('Zodiac:', zodiacSign);
   console.log('Instagram:', instagramHandle);
+  console.log('Full user object:', user);
+  console.log('User attributes:', user?.attributes);
+  console.log('User profile:', user?.attributes?.profile);
+  console.log('Protected data:', user?.attributes?.protectedData);
+  console.log('User attributes keys:', user?.attributes ? Object.keys(user.attributes) : 'No attributes');
+  console.log('User profile keys:', user?.attributes?.profile ? Object.keys(user.attributes.profile) : 'No profile');
 
   const hasListings = listings.length > 0;
   const hasMatchMedia = typeof window !== 'undefined' && window?.matchMedia;
@@ -324,6 +330,7 @@ export const ProfilePageComponent = props => {
     userShowError,
     user,
     userListingRefs,
+    listings,
     queryListingsError,
     queryReviewsError,
     reviews,
@@ -432,7 +439,7 @@ export const ProfilePageComponent = props => {
         <MainContent
           bio={bio}
           displayName={displayName}
-          listings={userListingRefs.map(l => getMarketplaceEntities(l.id, l.type))}
+          listings={listings}
           queryListingsError={queryListingsError}
           reviews={reviews}
           queryReviewsError={queryReviewsError}
@@ -460,6 +467,12 @@ const mapStateToProps = state => {
   const user = userMatches.length === 1 ? userMatches[0] : null;
   const zodiac = user?.attributes?.privateData?.zodiacSign;
 
+  // Process userListingRefs into actual listings
+  const listings = userListingRefs.map(l => {
+    const listingMatches = getMarketplaceEntities(state, [{ type: l.type, id: l.id }]);
+    return listingMatches.length === 1 ? listingMatches[0] : null;
+  }).filter(Boolean);
+
   // Show currentUser's data if it's not approved yet
   const isCurrentUser = userId?.uuid === currentUser?.id?.uuid;
   const useCurrentUser =
@@ -473,6 +486,7 @@ const mapStateToProps = state => {
     userShowError,
     queryListingsError,
     userListingRefs,
+    listings,
     reviews,
     queryReviewsError,
     zodiac,

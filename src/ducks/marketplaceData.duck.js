@@ -47,7 +47,7 @@ export default function marketplaceDataReducer(state = initialState, action = {}
  * @param {Array<UUID>} listingIds listing IDs to select from the store
  */
 export const getListingsById = (state, listingIds) => {
-  const { entities } = state.marketplaceData;
+  const { entities } = state.marketplaceData || { entities: {} };
   const resources = listingIds.map(id => ({
     id,
     type: 'listing',
@@ -68,7 +68,7 @@ export const getListingsById = (state, listingIds) => {
  * @return {Array<Object>} denormalised entities
  */
 export const getMarketplaceEntities = (state, entityRefs) => {
-  const { entities } = state.marketplaceData;
+  const { entities } = state.marketplaceData || { entities: {} };
   const throwIfNotFound = false;
   return denormalisedEntities(entities, entityRefs, throwIfNotFound);
 };

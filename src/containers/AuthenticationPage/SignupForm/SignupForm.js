@@ -184,6 +184,11 @@ const SignupFormComponent = props => (
         },
       };
 
+      console.log('🔍 [SignupForm] Form values:', values);
+      console.log('🔍 [SignupForm] Instagram handle from form:', instagramHandle);
+      console.log('🔍 [SignupForm] Protected data from getValuesForSubmission:', protectedData);
+      console.log('🔍 [SignupForm] Final signup params:', signupParams);
+
       return (
         <Form className={classes} onSubmit={handleSubmit}>
           <FieldSelectUserType

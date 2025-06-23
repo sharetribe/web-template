@@ -223,6 +223,10 @@ export const AuthenticationForms = props => {
       },
     };
 
+    console.log('🔍 [AuthenticationPage] Values received from SignupForm:', values);
+    console.log('🔍 [AuthenticationPage] Rest of values:', rest);
+    console.log('🔍 [AuthenticationPage] Final params for signup:', params);
+
     submitSignup(params);
   };
 
