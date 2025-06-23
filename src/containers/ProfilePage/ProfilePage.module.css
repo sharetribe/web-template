@@ -338,11 +338,20 @@
 .zodiac,
 .instagram {
   font-weight: bold;
-  color: #ff4e4e;
+  color: #FFAD86;
   text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .zodiacValue {
   font-weight: normal;
   color: var(--color-black);
+}
+
+.instagramIcon {
+  width: 16px;
+  height: 16px;
+  fill: #444;
 }

@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
+import { FormattedMessage, useIntl } from 'react-intl';
+import { withRouter } from 'react-router-dom';
 
 import { useConfiguration } from '../../context/configurationContext';
-import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import {
   REVIEW_TYPE_OF_PROVIDER,
   REVIEW_TYPE_OF_CUSTOMER,
@@ -42,6 +43,7 @@ import {
   ButtonTabNavHorizontal,
   LayoutSideNavigation,
   NamedRedirect,
+  IconSocialMediaInstagram,
 } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
@@ -211,10 +213,19 @@ export const MainContent = props => {
     intl,
     hideReviews,
   } = props;
-  const { zodiacSign, instagramHandle } = user?.attributes?.protectedData || {};
+  const { zodiacSign } = user?.attributes?.protectedData || {};
+  const { instagramHandle } = user?.attributes?.profile?.publicData || {};
 
   console.log('Zodiac:', zodiacSign);
   console.log('Instagram:', instagramHandle);
+  console.log('Full user object:', user);
+  console.log('User attributes:', user?.attributes);
+  console.log('User profile:', user?.attributes?.profile);
+  console.log('Protected data:', user?.attributes?.protectedData);
+  console.log('Public data:', user?.attributes?.profile?.publicData);
+  console.log('User attributes keys:', user?.attributes ? Object.keys(user.attributes) : 'No attributes');
+  console.log('User profile keys:', user?.attributes?.profile ? Object.keys(user.attributes.profile) : 'No profile');
+  console.log('User profile full object:', JSON.stringify(user?.attributes?.profile, null, 2));
 
   const hasListings = listings.length > 0;
   const hasMatchMedia = typeof window !== 'undefined' && window?.matchMedia;
@@ -257,7 +268,8 @@ export const MainContent = props => {
             rel="noopener noreferrer"
             className={css.instagram}
           >
-            {instagramHandle}
+            <IconSocialMediaInstagram className={css.instagramIcon} />
+            @{instagramHandle.replace('@', '')}
           </a>
         )}
       </div>
@@ -298,7 +310,6 @@ export const MainContent = props => {
  * @param {Object} props
  * @param {boolean} props.scrollingDisabled - Whether the scrolling is disabled
  * @param {propTypes.currentUser} props.currentUser - The current user
- * @param {boolean} props.useCurrentUser - Whether to use the current user
  * @param {propTypes.user|propTypes.currentUser} props.user - The user
  * @param {propTypes.error} props.userShowError - The user show error
  * @param {propTypes.error} props.queryListingsError - The query listings error
@@ -345,8 +356,16 @@ export const ProfilePageComponent = props => {
 
   const isCurrentUser = currentUser?.id && currentUser?.id?.uuid === pathParams.id;
   const profileUser = useCurrentUser ? currentUser : user;
+  
+  // For debugging: log which user we're using
+  console.log('🔍 [ProfilePage] isCurrentUser:', isCurrentUser);
+  console.log('🔍 [ProfilePage] useCurrentUser:', useCurrentUser);
+  console.log('🔍 [ProfilePage] profileUser type:', profileUser === currentUser ? 'currentUser' : 'user');
+  
   const { bio, displayName, publicData, privateData, metadata } =
     profileUser?.attributes?.profile || {};
+  const { zodiacSign } = profileUser?.attributes?.protectedData || {};
+  const { instagramHandle } = publicData || {};
   const { userFields } = config.user;
   const isPrivateMarketplace = config.accessControl.marketplace.private === true;
   const isUnauthorizedUser = currentUser && !isUserAuthorized(currentUser);
@@ -460,6 +479,17 @@ const mapStateToProps = state => {
   const user = userMatches.length === 1 ? userMatches[0] : null;
   const zodiac = user?.attributes?.privateData?.zodiacSign;
 
+  // Debug currentUser protectedData
+  console.log('🔍 [mapStateToProps] currentUser:', currentUser);
+  console.log('🔍 [mapStateToProps] currentUser protectedData:', currentUser?.attributes?.protectedData);
+  console.log('🔍 [mapStateToProps] user protectedData:', user?.attributes?.protectedData);
+
+  // Process userListingRefs into actual listings
+  const listings = userListingRefs.map(l => {
+    const listingMatches = getMarketplaceEntities(state, [{ type: l.type, id: l.id }]);
+    return listingMatches.length === 1 ? listingMatches[0] : null;
+  }).filter(Boolean);
+
   // Show currentUser's data if it's not approved yet
   const isCurrentUser = userId?.uuid === currentUser?.id?.uuid;
   const useCurrentUser =
@@ -473,6 +503,7 @@ const mapStateToProps = state => {
     userShowError,
     queryListingsError,
     userListingRefs,
+    listings,
     reviews,
     queryReviewsError,
     zodiac,
