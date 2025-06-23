@@ -34,41 +34,60 @@ module.exports = async (req, res) => {
     
     const currentUser = currentUserResponse?.data?.data;
     const existingProtectedData = currentUser?.attributes?.profile?.protectedData || {};
+    const existingPublicData = currentUser?.attributes?.profile?.publicData || {};
     const existingPhoneNumber = existingProtectedData.phoneNumber;
+    const existingInstagramHandle = existingProtectedData.instagramHandle;
     
     console.log('🔍 [ensurePhoneNumber] Current protectedData:', existingProtectedData);
+    console.log('🔍 [ensurePhoneNumber] Current publicData:', existingPublicData);
     console.log('🔍 [ensurePhoneNumber] Existing phone number:', existingPhoneNumber);
+    console.log('🔍 [ensurePhoneNumber] Existing Instagram handle:', existingInstagramHandle);
     
-    // Only update if the phone number is different or missing
+    // Prepare updates
+    let updatedProtectedData = { ...existingProtectedData };
+    let updatedPublicData = { ...existingPublicData };
+    let hasUpdates = false;
+    
+    // Update phone number in protectedData if different
     if (existingPhoneNumber !== phoneNumber) {
+      updatedProtectedData.phoneNumber = phoneNumber;
+      hasUpdates = true;
       console.log('📝 [ensurePhoneNumber] Updating phone number in protectedData...');
-      
-      const updatedProtectedData = {
-        ...existingProtectedData,
-        phoneNumber: phoneNumber
-      };
+    }
+    
+    // Move Instagram handle from protectedData to publicData if it exists
+    if (existingInstagramHandle && !existingPublicData.instagramHandle) {
+      updatedPublicData.instagramHandle = existingInstagramHandle;
+      delete updatedProtectedData.instagramHandle;
+      hasUpdates = true;
+      console.log('📝 [ensurePhoneNumber] Moving Instagram handle from protectedData to publicData...');
+    }
+    
+    if (hasUpdates) {
+      console.log('📝 [ensurePhoneNumber] Updating user profile...');
       
       const updateResponse = await sdk.currentUser.updateProfile({
-        protectedData: updatedProtectedData
+        protectedData: updatedProtectedData,
+        publicData: updatedPublicData
       }, {
         expand: true,
         include: ['profileImage'],
         'fields.image': ['variants.square-small', 'variants.square-small2x'],
       });
       
-      console.log('✅ [ensurePhoneNumber] Phone number updated successfully in protectedData');
+      console.log('✅ [ensurePhoneNumber] Profile updated successfully');
       
       return res.status(200).json({
         success: true,
-        message: 'Phone number saved to protectedData',
+        message: 'Profile updated successfully',
         data: updateResponse.data
       });
     } else {
-      console.log('ℹ️ [ensurePhoneNumber] Phone number already exists in protectedData');
+      console.log('ℹ️ [ensurePhoneNumber] No updates needed');
       
       return res.status(200).json({
         success: true,
-        message: 'Phone number already exists in protectedData',
+        message: 'Profile already up to date',
         data: currentUserResponse.data
       });
     }
