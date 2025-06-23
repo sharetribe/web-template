@@ -171,7 +171,10 @@ const SignupFormComponent = props => (
         password,
         firstName,
         lastName,
-        publicData,
+        publicData: {
+          ...publicData,
+          instagramHandle,
+        },
         privateData: {
           birthdayMonth,
           birthdayDay,
@@ -180,7 +183,6 @@ const SignupFormComponent = props => (
         protectedData: {
           ...protectedData,
           zodiacSign: zodiac,
-          instagramHandle,
         },
       };
 
