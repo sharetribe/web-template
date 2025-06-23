@@ -8,16 +8,6 @@ This template is bootstrapped with
 [create-react-app](https://github.com/facebookincubator/create-react-app) with some additions,
 namely server side rendering, code-splitting, and a custom CSS setup.
 
-> **Note**: You should start your customization project on top of this one instead of the old
-> templates:
->
-> - [FTW-daily](https://github.com/sharetribe/ftw-daily)
-> - [FTW-hourly](https://github.com/sharetribe/ftw-hourly)
-> - [FTW-product](https://github.com/sharetribe/ftw-hourly)
->
-> Read more from
-> [Sharetribe Developer Docs](https://www.sharetribe.com/docs/template/sharetribe-web-template/)
-
 ## Quick start
 
 ### Setup localhost
