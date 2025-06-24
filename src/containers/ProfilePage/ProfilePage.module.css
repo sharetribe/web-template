@@ -333,6 +333,7 @@
   display: flex;
   gap: 1.5rem;
   margin-bottom: 24px;
+  align-items: center;
 }
 
 .zodiac,
@@ -343,6 +344,11 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.zodiacLabel {
+  font-weight: bold;
+  color: #FFAD86;
 }
 
 .zodiacValue {

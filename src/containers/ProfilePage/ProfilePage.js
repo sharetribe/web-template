@@ -266,8 +266,13 @@ export const MainContent = props => {
       {hasBio ? <div className={css.bio}>{bioWithLinks}</div> : null}
 
       <div className={css.zodiacAndInstagram}>
-        {zodiacSignToDisplay ? <span className={css.zodiac}>Zodiac: {zodiacSignToDisplay}</span> : null}
-        {instagramHandle && (
+        {zodiacSignToDisplay && user?.attributes?.profile?.publicData?.userType === 'lender' ? (
+          <span className={css.zodiac}>
+            <span className={css.zodiacLabel}>Zodiac:</span>
+            <span className={css.zodiacValue}>{zodiacSignToDisplay}</span>
+          </span>
+        ) : null}
+        {instagramHandle && user?.attributes?.profile?.publicData?.userType === 'lender' && (
           <a
             href={`https://instagram.com/${instagramHandle.replace('@', '')}`}
             target="_blank"
