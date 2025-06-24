@@ -19,7 +19,7 @@ import {
   isTooManyEmailVerificationRequestsError,
 } from '../../util/errors';
 import { pickUserFieldsData, addScopePrefix } from '../../util/userHelpers';
-import { getZodiacSign } from '../../util/getZodiacSign';
+import getZodiacSign from '../../util/getZodiacSign';
 
 import { login, authenticationInProgress, signup, signupWithIdp } from '../../ducks/auth.duck';
 import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';

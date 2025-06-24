@@ -28,7 +28,7 @@ import {
 import { pickCustomFieldProps } from '../../util/fieldHelpers';
 import { hasPermissionToViewData, isUserAuthorized } from '../../util/userHelpers';
 import { richText } from '../../util/richText';
-import { getZodiacSign } from '../../util/getZodiacSign';
+import getZodiacSign from '../../util/getZodiacSign';
 
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
