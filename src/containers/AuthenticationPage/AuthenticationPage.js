@@ -19,6 +19,7 @@ import {
   isTooManyEmailVerificationRequestsError,
 } from '../../util/errors';
 import { pickUserFieldsData, addScopePrefix } from '../../util/userHelpers';
+import getZodiacSign from '../../util/getZodiacSign';
 
 import { login, authenticationInProgress, signup, signupWithIdp } from '../../ducks/auth.duck';
 import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
@@ -312,41 +313,48 @@ const ConfirmIdProviderInfoForm = props => {
     const { idpToken, email, firstName, lastName, idpId } = authInfo;
 
     const {
-      userType,
       email: newEmail,
       firstName: newFirstName,
       lastName: newLastName,
       displayName,
       instagramHandle,
+      birthdayMonth,
+      birthdayDay,
+      birthdayYear,
       ...rest
     } = values;
 
     const displayNameMaybe = displayName ? { displayName: displayName.trim() } : {};
 
+    // Calculate zodiac sign for lenders
+    const zodiac = userType === 'lender' && birthdayMonth && birthdayDay 
+      ? getZodiacSign(birthdayMonth, birthdayDay) 
+      : null;
+
     // Pass email, fistName or lastName to Marketplace API only if user has edited them
     // and they can't be fetched directly from idp provider (e.g. Facebook)
 
     const authParams = {
-      ...(newEmail !== email && { email: newEmail }),
       ...(newFirstName !== firstName && { firstName: newFirstName }),
       ...(newLastName !== lastName && { lastName: newLastName }),
     };
 
     // Pass other values as extended data according to user field configuration
-    const extendedDataMaybe = !isEmpty(rest) || instagramHandle
+    const extendedDataMaybe = !isEmpty(rest) || instagramHandle || birthdayMonth || birthdayDay
       ? {
           publicData: {
             userType,
             ...(instagramHandle && { instagramHandle }),
+            ...(birthdayMonth && { birthdayMonth }),
+            ...(birthdayDay && { birthdayDay }),
+            ...(birthdayYear && { birthdayYear }),
             ...pickUserFieldsData(rest, 'public', userType, userFields),
           },
-          privateData: {
-            ...pickUserFieldsData(rest, 'private', userType, userFields),
-          },
+          // Remove birthday data from privateData and protectedData
+          privateData: {},
           protectedData: {
+            ...(zodiac && { zodiacSign: zodiac }),
             ...pickUserFieldsData(rest, 'protected', userType, userFields),
-            // If the confirm form has any additional values, pass them forward as user's protected data
-            ...getNonUserFieldParams(rest, userFields),
           },
         }
       : {};
