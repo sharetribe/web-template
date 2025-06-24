@@ -268,8 +268,7 @@ export const MainContent = props => {
       <div className={css.zodiacAndInstagram}>
         {zodiacSignToDisplay && user?.attributes?.profile?.publicData?.userType === 'lender' ? (
           <span className={css.zodiac}>
-            <span className={css.zodiacLabel}>Zodiac:</span>
-            <span className={css.zodiacValue}>{zodiacSignToDisplay}</span>
+            <span className={css.zodiacValue}>{getZodiacEmoji(zodiacSignToDisplay)} {zodiacSignToDisplay}</span>
           </span>
         ) : null}
         {instagramHandle && user?.attributes?.profile?.publicData?.userType === 'lender' && (
@@ -312,6 +311,25 @@ export const MainContent = props => {
       )}
     </div>
   );
+};
+
+// Function to get zodiac emoji
+const getZodiacEmoji = (zodiacSign) => {
+  const zodiacEmojis = {
+    'Aries': '♈️',
+    'Taurus': '♉️',
+    'Gemini': '♊️',
+    'Cancer': '♋️',
+    'Leo': '♌️',
+    'Virgo': '♍️',
+    'Libra': '♎️',
+    'Scorpio': '♏️',
+    'Sagittarius': '♐️',
+    'Capricorn': '♑️',
+    'Aquarius': '♒️',
+    'Pisces': '♓️'
+  };
+  return zodiacEmojis[zodiacSign] || '';
 };
 
 /**

@@ -346,11 +346,6 @@
   gap: 0.5rem;
 }
 
-.zodiacLabel {
-  font-weight: bold;
-  color: #FFAD86;
-}
-
 .zodiacValue {
   font-weight: normal;
   color: var(--color-black);
