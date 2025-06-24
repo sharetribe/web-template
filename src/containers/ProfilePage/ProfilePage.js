@@ -346,6 +346,7 @@ export const ProfilePageComponent = props => {
     userShowError,
     user,
     userListingRefs,
+    listings,
     queryListingsError,
     queryReviewsError,
     reviews,
@@ -468,7 +469,7 @@ export const ProfilePageComponent = props => {
         <MainContent
           bio={bio}
           displayName={displayName}
-          listings={userListingRefs.map(l => getMarketplaceEntities(l.id, l.type))}
+          listings={listings}
           queryListingsError={queryListingsError}
           reviews={reviews}
           queryReviewsError={queryReviewsError}
