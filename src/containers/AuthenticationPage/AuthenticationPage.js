@@ -355,6 +355,7 @@ const ConfirmIdProviderInfoForm = props => {
           protectedData: {
             ...(zodiac && { zodiacSign: zodiac }),
             ...pickUserFieldsData(rest, 'protected', userType, userFields),
+            ...getNonUserFieldParams(rest, userFields),
           },
         }
       : {};
