@@ -358,6 +358,15 @@ const ConfirmIdProviderInfoForm = props => {
         }
       : {};
 
+    // Debug log
+    console.log('CONFIRM SIGNUP PAYLOAD:', JSON.stringify({
+      idpToken,
+      idpId,
+      ...authParams,
+      ...displayNameMaybe,
+      ...extendedDataMaybe,
+    }, null, 2));
+
     submitSingupWithIdp({
       idpToken,
       idpId,

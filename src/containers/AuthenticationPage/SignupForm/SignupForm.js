@@ -178,12 +178,14 @@ const SignupFormComponent = props => (
           birthdayDay,
           birthdayYear: birthdayYear || null,
         },
-        // Remove birthday data from privateData and protectedData
         privateData: {},
         protectedData: {
           zodiacSign: zodiac,
         },
       };
+
+      // Debug log
+      console.log('SIGNUP PAYLOAD:', JSON.stringify(signupParams, null, 2));
 
       return (
         <Form className={classes} onSubmit={handleSubmit}>

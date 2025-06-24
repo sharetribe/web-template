@@ -62,6 +62,22 @@ module.exports = async (req, res) => {
       hasUpdates = true;
       console.log('📝 [ensurePhoneNumber] Moving Instagram handle from protectedData to publicData...');
     }
+
+    // Move birthdayDay from protectedData to publicData if it exists
+    if (existingProtectedData.birthdayDay && !existingPublicData.birthdayDay) {
+      updatedPublicData.birthdayDay = existingProtectedData.birthdayDay;
+      delete updatedProtectedData.birthdayDay;
+      hasUpdates = true;
+      console.log('📝 [ensurePhoneNumber] Moving birthdayDay from protectedData to publicData...');
+    }
+
+    // Move birthdayMonth from protectedData to publicData if it exists
+    if (existingProtectedData.birthdayMonth && !existingPublicData.birthdayMonth) {
+      updatedPublicData.birthdayMonth = existingProtectedData.birthdayMonth;
+      delete updatedProtectedData.birthdayMonth;
+      hasUpdates = true;
+      console.log('📝 [ensurePhoneNumber] Moving birthdayMonth from protectedData to publicData...');
+    }
     
     if (hasUpdates) {
       console.log('📝 [ensurePhoneNumber] Updating user profile...');
