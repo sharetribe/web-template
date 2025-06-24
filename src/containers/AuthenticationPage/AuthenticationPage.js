@@ -313,6 +313,7 @@ const ConfirmIdProviderInfoForm = props => {
       firstName: newFirstName,
       lastName: newLastName,
       displayName,
+      instagramHandle,
       ...rest
     } = values;
 
@@ -328,10 +329,11 @@ const ConfirmIdProviderInfoForm = props => {
     };
 
     // Pass other values as extended data according to user field configuration
-    const extendedDataMaybe = !isEmpty(rest)
+    const extendedDataMaybe = !isEmpty(rest) || instagramHandle
       ? {
           publicData: {
             userType,
+            ...(instagramHandle && { instagramHandle }),
             ...pickUserFieldsData(rest, 'public', userType, userFields),
           },
           privateData: {

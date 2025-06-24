@@ -155,6 +155,16 @@ const ConfirmSignupFormComponent = props => (
                 userTypeConfig={userTypeConfig}
                 intl={intl}
               />
+
+              {userType === 'lender' ? (
+                <FieldTextInput
+                  id="instagramHandle"
+                  name="instagramHandle"
+                  label="Instagram handle (optional)"
+                  placeholder="@"
+                  className={css.row}
+                />
+              ) : null}
             </div>
           ) : null}
 
@@ -198,4 +208,4 @@ const ConfirmSignupForm = props => {
   return <ConfirmSignupFormComponent {...props} intl={intl} />;
 };
 
-export default ConfirmSignupForm;
+export default ConfirmSignupForm; 
