@@ -178,11 +178,9 @@ const SignupFormComponent = props => (
           birthdayDay,
           birthdayYear: birthdayYear || null,
         },
-        privateData: {
-          // Remove birthday data from privateData since we're storing it in publicData
-        },
+        // Remove birthday data from privateData and protectedData
+        privateData: {},
         protectedData: {
-          ...protectedData,
           zodiacSign: zodiac,
         },
       };

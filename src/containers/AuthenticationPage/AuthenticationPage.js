@@ -348,13 +348,11 @@ const ConfirmIdProviderInfoForm = props => {
             ...(birthdayYear && { birthdayYear }),
             ...pickUserFieldsData(rest, 'public', userType, userFields),
           },
-          privateData: {
-            ...pickUserFieldsData(rest, 'private', userType, userFields),
-          },
+          // Remove birthday data from privateData and protectedData
+          privateData: {},
           protectedData: {
-            ...pickUserFieldsData(rest, 'protected', userType, userFields),
             ...(zodiac && { zodiacSign: zodiac }),
-            // If the confirm form has any additional values, pass them forward as user's protected data
+            ...pickUserFieldsData(rest, 'protected', userType, userFields),
             ...getNonUserFieldParams(rest, userFields),
           },
         }
