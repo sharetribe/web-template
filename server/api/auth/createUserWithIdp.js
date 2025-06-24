@@ -43,23 +43,28 @@ module.exports = (req, res) => {
     ...baseUrl,
   });
 
-  const { idpToken, idpId, ...rest } = req.body;
+  const { idpToken, idpId, protectedData, ...rest } = req.body;
 
   // Choose the idpClientId based on which authentication method is used.
   const idpClientId =
     idpId === FACEBOOK_IDP_ID ? FACBOOK_APP_ID : idpId === GOOGLE_IDP_ID ? GOOGLE_CLIENT_ID : null;
 
+  console.log('🔐 [createUserWithIdp] Starting user creation with IdP:', idpId);
+  console.log('🔐 [createUserWithIdp] Protected data received:', protectedData);
+
   sdk.currentUser
-    .createWithIdp({ idpId, idpClientId, idpToken, ...rest })
-    .then(() =>
+    .createWithIdp({ idpId, idpClientId, idpToken, protectedData, ...rest })
+    .then(() => {
+      console.log('✅ [createUserWithIdp] User created successfully');
+      
       // After the user is created, we need to call loginWithIdp endpoint
       // so that the user will be logged in.
-      sdk.loginWithIdp({
+      return sdk.loginWithIdp({
         idpId,
         idpClientId: `${idpClientId}`,
         idpToken: `${idpToken}`,
-      })
-    )
+      });
+    })
     .then(apiResponse => {
       const { status, statusText, data } = apiResponse;
       res
@@ -76,6 +81,7 @@ module.exports = (req, res) => {
         .end();
     })
     .catch(e => {
+      console.error('❌ [createUserWithIdp] Error:', e.message);
       handleError(res, e);
     });
 };
