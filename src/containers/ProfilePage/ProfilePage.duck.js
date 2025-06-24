@@ -197,11 +197,18 @@ export const showUser = (userId, config) => (dispatch, getState, sdk) => {
       id: userId,
       include: ['profileImage'],
       'fields.image': ['variants.square-small', 'variants.square-small2x'],
-      'fields.user': ['profile', 'protectedData'],
+      'fields.profile': ['publicData', 'protectedData'],
     })
     .then(response => {
       const userFields = config?.user?.userFields;
       const sanitizeConfig = { userFields };
+      
+      console.log('🔍 [ProfilePage.duck] API response:', response);
+      console.log('🔍 [ProfilePage.duck] User data from API:', response?.data?.data);
+      console.log('🔍 [ProfilePage.duck] User attributes from API:', response?.data?.data?.attributes);
+      console.log('🔍 [ProfilePage.duck] User profile from API:', response?.data?.data?.attributes?.profile);
+      console.log('🔍 [ProfilePage.duck] Protected data from API:', response?.data?.data?.attributes?.profile?.protectedData);
+      
       if (!response || !response.data) {
         console.warn('⚠️ Skipping marketplace entity merge due to missing sdkResponse in showUser');
       } else {

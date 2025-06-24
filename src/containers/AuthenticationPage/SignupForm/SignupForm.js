@@ -278,6 +278,7 @@ const SignupFormComponent = props => (
                 intl={intl}
               />
 
+              {console.log('userType at render:', userType)}
               {userType === 'lender' ? (
                 <FieldTextInput
                   id="instagramHandle"
