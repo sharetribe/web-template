@@ -175,21 +175,15 @@ const SignupFormComponent = props => (
           ...publicData,
           instagramHandle,
         },
-        privateData: {
-          birthdayMonth,
-          birthdayDay,
-          birthdayYear: birthdayYear || null,
-        },
+        privateData: {},
         protectedData: {
           ...protectedData,
           zodiacSign: zodiac,
         },
       };
 
-      console.log('🔍 [SignupForm] Form values:', values);
-      console.log('🔍 [SignupForm] Instagram handle from form:', instagramHandle);
-      console.log('🔍 [SignupForm] Protected data from getValuesForSubmission:', protectedData);
-      console.log('🔍 [SignupForm] Final signup params:', signupParams);
+      // Debug log
+      console.log('SIGNUP PAYLOAD:', JSON.stringify(signupParams, null, 2));
 
       return (
         <Form className={classes} onSubmit={handleSubmit}>
