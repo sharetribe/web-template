@@ -8,7 +8,7 @@ import { propTypes } from '../../../util/types';
 import * as validators from '../../../util/validators';
 import { getPropsForCustomUserFieldInputs } from '../../../util/userHelpers';
 
-import { Form, PrimaryButton, FieldTextInput, CustomExtendedDataField } from '../../../components';
+import { Form, PrimaryButton, FieldTextInput, CustomExtendedDataField, FieldSelect } from '../../../components';
 
 import FieldSelectUserType from '../FieldSelectUserType';
 import UserFieldDisplayName from '../UserFieldDisplayName';
@@ -164,6 +164,79 @@ const ConfirmSignupFormComponent = props => (
                   placeholder="@"
                   className={css.row}
                 />
+              ) : null}
+
+              {userType === 'lender' ? (
+                <div className={css.birthdayContainer}>
+                  <FieldSelect
+                    id="birthdayMonth"
+                    name="birthdayMonth"
+                    label="Month"
+                    className={css.birthdayField}
+                    validate={validators.required('Month is required')}
+                  >
+                    <option disabled value="">
+                      Month
+                    </option>
+                    {[
+                      { key: '1', label: 'January' },
+                      { key: '2', label: 'February' },
+                      { key: '3', label: 'March' },
+                      { key: '4', label: 'April' },
+                      { key: '5', label: 'May' },
+                      { key: '6', label: 'June' },
+                      { key: '7', label: 'July' },
+                      { key: '8', label: 'August' },
+                      { key: '9', label: 'September' },
+                      { key: '10', label: 'October' },
+                      { key: '11', label: 'November' },
+                      { key: '12', label: 'December' },
+                    ].map(option => (
+                      <option key={option.key} value={option.key}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </FieldSelect>
+
+                  <FieldSelect
+                    id="birthdayDay"
+                    name="birthdayDay"
+                    label="Day"
+                    className={css.birthdayField}
+                    validate={validators.required('Day is required')}
+                  >
+                    <option disabled value="">
+                      Day
+                    </option>
+                    {Array.from({ length: 31 }, (_, i) => ({
+                      key: `${i + 1}`,
+                      label: `${i + 1}`,
+                    })).map(option => (
+                      <option key={option.key} value={option.key}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </FieldSelect>
+
+                  <FieldSelect
+                    id="birthdayYear"
+                    name="birthdayYear"
+                    label="Year (optional)"
+                    className={css.birthdayField}
+                  >
+                    <option disabled value="">
+                      Year
+                    </option>
+                    {Array.from({ length: 100 }, (_, i) => {
+                      const year = new Date().getFullYear() - i;
+                      return { key: `${year}`, label: `${year}` };
+                    }).map(option => (
+                      <option key={option.key} value={option.key}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </FieldSelect>
+                </div>
               ) : null}
             </div>
           ) : null}

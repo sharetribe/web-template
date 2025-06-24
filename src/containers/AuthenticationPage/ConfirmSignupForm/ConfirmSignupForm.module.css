@@ -47,3 +47,18 @@
     margin-top: 32px;
   }
 }
+
+.birthdayContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+  gap: 1rem;
+
+  @media (--viewportMedium) {
+    margin-top: 32px;
+  }
+}
+
+.birthdayField {
+  flex-grow: 1;
+}

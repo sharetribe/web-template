@@ -28,6 +28,7 @@ import {
 import { pickCustomFieldProps } from '../../util/fieldHelpers';
 import { hasPermissionToViewData, isUserAuthorized } from '../../util/userHelpers';
 import { richText } from '../../util/richText';
+import getZodiacSign from '../../util/getZodiacSign';
 
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
@@ -216,7 +217,12 @@ export const MainContent = props => {
   const { zodiacSign } = user?.attributes?.protectedData || {};
   const { instagramHandle } = user?.attributes?.profile?.publicData || {};
 
-  console.log('Zodiac:', zodiacSign);
+  // Calculate zodiac sign from birthday data in publicData
+  const { birthdayMonth, birthdayDay } = user?.attributes?.profile?.publicData || {};
+  const calculatedZodiacSign = birthdayMonth && birthdayDay ? getZodiacSign(birthdayMonth, birthdayDay) : null;
+  const zodiacSignToDisplay = calculatedZodiacSign || zodiacSign;
+
+  console.log('Zodiac:', zodiacSignToDisplay);
   console.log('Instagram:', instagramHandle);
   console.log('Full user object:', user);
   console.log('User attributes:', user?.attributes);
@@ -260,7 +266,7 @@ export const MainContent = props => {
       {hasBio ? <div className={css.bio}>{bioWithLinks}</div> : null}
 
       <div className={css.zodiacAndInstagram}>
-        {zodiacSign ? <span className={css.zodiac}>Zodiac: {zodiacSign}</span> : null}
+        {zodiacSignToDisplay ? <span className={css.zodiac}>Zodiac: {zodiacSignToDisplay}</span> : null}
         {instagramHandle && (
           <a
             href={`https://instagram.com/${instagramHandle.replace('@', '')}`}
@@ -367,6 +373,12 @@ export const ProfilePageComponent = props => {
     profileUser?.attributes?.profile || {};
   const { zodiacSign } = profileUser?.attributes?.protectedData || {};
   const { instagramHandle } = publicData || {};
+  
+  // Calculate zodiac sign from birthday data in publicData
+  const { birthdayMonth, birthdayDay } = publicData || {};
+  const calculatedZodiacSign = birthdayMonth && birthdayDay ? getZodiacSign(birthdayMonth, birthdayDay) : null;
+  const zodiacSignToDisplay = calculatedZodiacSign || zodiacSign;
+
   const { userFields } = config.user;
   const isPrivateMarketplace = config.accessControl.marketplace.private === true;
   const isUnauthorizedUser = currentUser && !isUserAuthorized(currentUser);
@@ -478,7 +490,11 @@ const mapStateToProps = state => {
   } = state.ProfilePage;
   const userMatches = getMarketplaceEntities(state, [{ type: 'user', id: userId }]);
   const user = userMatches.length === 1 ? userMatches[0] : null;
-  const zodiac = user?.attributes?.privateData?.zodiacSign;
+  
+  // Calculate zodiac sign from birthday data in publicData
+  const { birthdayMonth, birthdayDay } = user?.attributes?.profile?.publicData || {};
+  const calculatedZodiacSign = birthdayMonth && birthdayDay ? getZodiacSign(birthdayMonth, birthdayDay) : null;
+  const zodiac = calculatedZodiacSign || user?.attributes?.protectedData?.zodiacSign;
 
   // Process userListingRefs into actual listings
   const listings = userListingRefs.map(l => {
