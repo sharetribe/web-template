@@ -260,8 +260,13 @@ export const MainContent = props => {
       {hasBio ? <div className={css.bio}>{bioWithLinks}</div> : null}
 
       <div className={css.zodiacAndInstagram}>
-        {zodiacSign ? <span className={css.zodiac}>Zodiac: {zodiacSign}</span> : null}
-        {instagramHandle && (
+        {zodiacSign && user?.attributes?.profile?.publicData?.userType === 'lender' ? (
+          <span className={css.zodiac}>
+            <span className={css.zodiacLabel}>Zodiac:</span>
+            <span className={css.zodiacValue}>{zodiacSign}</span>
+          </span>
+        ) : null}
+        {instagramHandle && user?.attributes?.profile?.publicData?.userType === 'lender' && (
           <a
             href={`https://instagram.com/${instagramHandle.replace('@', '')}`}
             target="_blank"
@@ -477,7 +482,7 @@ const mapStateToProps = state => {
   } = state.ProfilePage;
   const userMatches = getMarketplaceEntities(state, [{ type: 'user', id: userId }]);
   const user = userMatches.length === 1 ? userMatches[0] : null;
-  const zodiac = user?.attributes?.privateData?.zodiacSign;
+  const zodiac = user?.attributes?.protectedData?.zodiacSign;
 
   // Debug currentUser protectedData
   console.log('🔍 [mapStateToProps] currentUser:', currentUser);
