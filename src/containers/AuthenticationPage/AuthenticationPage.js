@@ -202,8 +202,13 @@ export const AuthenticationForms = props => {
   ];
 
   const handleSubmitSignup = values => {
-    const { userType, email, password, fname, lname, displayName, ...rest } = values;
+    const { userType, email, password, fname, lname, displayName, instagramHandle, birthdayMonth, birthdayDay, birthdayYear, ...rest } = values;
     const displayNameMaybe = displayName ? { displayName: displayName.trim() } : {};
+
+    // Calculate zodiac sign for lenders
+    const zodiac = userType === 'lender' && birthdayMonth && birthdayDay 
+      ? getZodiacSign(birthdayMonth, birthdayDay) 
+      : null;
 
     const params = {
       email,
@@ -213,12 +218,17 @@ export const AuthenticationForms = props => {
       ...displayNameMaybe,
       publicData: {
         userType,
+        ...(instagramHandle && { instagramHandle }),
+        ...(birthdayMonth && { birthdayMonth }),
+        ...(birthdayDay && { birthdayDay }),
+        ...(birthdayYear && { birthdayYear }),
         ...pickUserFieldsData(rest, 'public', userType, userFields),
       },
       privateData: {
         ...pickUserFieldsData(rest, 'private', userType, userFields),
       },
       protectedData: {
+        ...(zodiac && { zodiacSign: zodiac }),
         ...pickUserFieldsData(rest, 'protected', userType, userFields),
         ...getNonUserFieldParams(rest, userFields),
       },
