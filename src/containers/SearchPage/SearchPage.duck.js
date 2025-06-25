@@ -115,11 +115,15 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
   //       ...and then turned enforceValidListingType config to true in configListing.js
   // Read More:
   // https://www.sharetribe.com/docs/how-to/manage-search-schemas-with-flex-cli/#adding-listing-search-schemas
-  const searchValidListingTypes = listingTypes => {
+  const searchValidListingTypes = (listingTypes, listingTypePathParam, isListingTypeVariant) => {
     const validListingTypes = listingTypes.filter(
       l => l.listingType !== LISTING_TAB_TYPES.PORTFOLIO
     );
-    return config.listing.enforceValidListingType
+    return isListingTypeVariant
+      ? {
+          pub_listingType: listingTypePathParam,
+        }
+      : config.listing.enforceValidListingType
       ? {
           pub_listingType: validListingTypes.map(l => l.listingType),
           // pub_transactionProcessAlias: listingTypes.map(l => l.transactionType.alias),
@@ -136,7 +140,8 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
 
     const validURLParamForCategoryData = (prefix, categories, level, params) => {
       const levelKey = `${categoryParamPrefix}${level}`;
-      const levelValue = params?.[levelKey];
+      const levelValue =
+        typeof params?.[levelKey] !== 'undefined' ? `${params?.[levelKey]}` : undefined;
       const foundCategory = categories.find(cat => cat.id === levelValue);
       const subcategories = foundCategory?.subcategories || [];
       return foundCategory && subcategories.length > 0
@@ -246,7 +251,17 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
     return hasDatesFilterInUse && seatsFilter ? { seats } : {};
   };
 
-  const { perPage, price, dates, seats, sort, mapSearch, ...restOfParams } = searchParams;
+  const {
+    perPage,
+    price,
+    dates,
+    seats,
+    sort,
+    mapSearch,
+    listingTypePathParam,
+    isListingTypeVariant,
+    ...restOfParams
+  } = searchParams;
   const priceMaybe = priceSearchParams(price);
   const datesMaybe = datesSearchParams(dates);
   const stockMaybe = stockFilters(datesMaybe);
@@ -271,7 +286,19 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
     ...stockMaybe,
     ...seatsMaybe,
     ...sortMaybe,
-    ...searchValidListingTypes(config.listing.listingTypes),
+    // If the search page variant is of type /s/:listingType, this sets the pub_listingType
+    // query parameter to the value of the listing type path parameter. The ordering matters here,
+    // since this value overrides any possible pub_listingType value coming from query parameters
+    // i.e. the previous row.
+    //
+    // Only one value is currently supported in pub_listingType – if you want to support e.g.
+    // /s/:listingType?pub_listingType=[otherListingType] => pub_listingType=listingType,otherListingType,
+    // you'll need to customize a logic that merges the query param and path param values.
+    ...searchValidListingTypes(
+      config.listing.listingTypes,
+      listingTypePathParam,
+      isListingTypeVariant
+    ),
     perPage,
   };
 
@@ -301,6 +328,7 @@ export const setActiveListing = listingId => ({
 
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   // In private marketplace mode, this page won't fetch data if the user is unauthorized
+  const { listingType: listingTypePathParam } = params || {};
   const state = getState();
   const currentUser = state.user?.currentUser;
   const isAuthorized = currentUser && isUserAuthorized(currentUser);
@@ -320,6 +348,10 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   const { page = 1, address, origin, ...rest } = queryParams;
   const originMaybe = isOriginInUse(config) && origin ? { origin } : {};
 
+  const listingTypeVariantMaybe = listingTypePathParam
+    ? { listingTypePathParam, isListingTypeVariant: true }
+    : {};
+
   const {
     aspectWidth = 1,
     aspectHeight = 1,
@@ -331,6 +363,7 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
     {
       ...rest,
       ...originMaybe,
+      ...listingTypeVariantMaybe,
       page,
       perPage: RESULT_PAGE_SIZE,
       include: ['author', 'author.profileImage', 'images'],
@@ -347,6 +380,8 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
         // when transitioning from search page to listing page
         'publicData.pickupEnabled',
         'publicData.shippingEnabled',
+        'publicData.priceVariationsEnabled',
+        'publicData.priceVariants',
       ],
       'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
       'fields.image': [

@@ -6,7 +6,7 @@ import { HeartOutlined, HeartFilled } from '@ant-design/icons';
 import { useConfiguration } from '../../context/configurationContext';
 
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
-import { displayPrice } from '../../util/configHelpers';
+import { displayPrice, isPriceVariationsEnabled } from '../../util/configHelpers';
 import { createLazyLoader, lazyLoadWithDimensions } from '../../util/uiHelpers';
 import { GRID_STYLE_SQUARE, LISTING_TYPES } from '../../util/types';
 import { formatMoney } from '../../util/currency';
@@ -54,18 +54,30 @@ const PriceMaybe = props => {
     return null;
   }
 
+  const isPriceVariationsInUse = isPriceVariationsEnabled(publicData, foundListingTypeConfig);
+  const hasMultiplePriceVariants = isPriceVariationsInUse && publicData?.priceVariants?.length > 1;
   const isBookable = isBookingProcessAlias(publicData?.transactionProcessAlias);
   const { formattedPrice, priceTitle } = priceData(price, config.currency, intl);
+
+  const priceValue = <span className={css.priceValue}>{formattedPrice}</span>;
+  const pricePerUnit = isBookable ? (
+    <span className={css.perUnit}>
+      <FormattedMessage id="ListingCard.perUnit" values={{ unitType: publicData?.unitType }} />
+    </span>
+  ) : (
+    ''
+  );
+
   return (
-    <div className={css.price}>
-      <div className={css.priceValue} title={priceTitle}>
-        {formattedPrice}
-      </div>
-      {isBookable ? (
-        <div className={css.perUnit}>
-          <FormattedMessage id="ListingCard.perUnit" values={{ unitType: publicData?.unitType }} />
-        </div>
-      ) : null}
+    <div className={css.price} title={priceTitle}>
+      {hasMultiplePriceVariants ? (
+        <FormattedMessage
+          id="ListingCard.priceStartingFrom"
+          values={{ priceValue, pricePerUnit }}
+        />
+      ) : (
+        <FormattedMessage id="ListingCard.price" values={{ priceValue, pricePerUnit }} />
+      )}
     </div>
   );
 };

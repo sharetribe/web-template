@@ -22,7 +22,10 @@ import css from './LayoutSideNavigation.module.css';
  * @param {ReactNode?} props.sideNav
  * @param {ReactNode?} props.footer
  * @param {boolean?} props.useAccountSettingsNav
- * @param {string?} props.currentPage
+ * @param {Object} props.accountSettingsNavProps
+ * @param {string?} props.accountSettingsNavProps.currentPage
+ * @param {boolean?} props.accountSettingsNavProps.showPaymentMethods
+ * @param {boolean?} props.accountSettingsNavProps.showPayoutDetails
  * @returns {JSX.Element} LayoutComposer that expects children to be a function.
  */
 const LayoutSideNavigation = props => {
@@ -39,7 +42,7 @@ const LayoutSideNavigation = props => {
     useAccountSettingsNav,
     useProfileSettingsNav,
     withCreativeProfile,
-    currentPage,
+    accountSettingsNavProps,
     ...rest
   } = props;
 
@@ -66,11 +69,13 @@ const LayoutSideNavigation = props => {
             <Main as="div" className={containerClasses}>
               <aside className={classNames(css.sideNav, sideNavClassName)}>
                 {useAccountSettingsNav ? (
-                  <LayoutWrapperAccountSettingsSideNav currentPage={currentPage} />
+                  <LayoutWrapperAccountSettingsSideNav
+                    accountSettingsNavProps={accountSettingsNavProps}
+                  />
                 ) : null}
                 {useProfileSettingsNav ? (
                   <LayoutWrapperProfileSettingsSideNav
-                    currentPage={currentPage}
+                    accountSettingsNavProps={accountSettingsNavProps}
                     withCreativeProfile={withCreativeProfile}
                   />
                 ) : null}

@@ -13,8 +13,155 @@ way to update this template, but currently, we follow a pattern:
 ---
 
 ## Upcoming version 2025-XX-XX
+
+
+## [v8.5.0] 2025-06-10
+- [add] Add conditional visibility for the following elements depending on Console configuration:
+    - Visibility for create listings links for unauthenticated users configured in Top bar
+    - Visibility for elements configured in User types:
+      - Create listings and Manage listings links
+      - Payment method and payout detail tab links
+      - Inbox links for orders and sales
+      - Profile page review tabs
+  
+  [#614](https://github.com/sharetribe/web-template/pull/614)
+- [fix] Fix an issue with the date filter in the Search CTA component, which was not observing
+  nightly search configuration correctly.[#625](https://github.com/sharetribe/web-template/pull/625)
+
+[v8.5.0]: https://github.com/sharetribe/web-template/compare/v8.4.2...v8.5.0
+
+## [v8.4.2] 2025-06-02
+
+- [fix] Set the font size for the input fields in the Search as CTA component to 16px to prevent
+  unintentional zooming on mobile.[#622](https://github.com/sharetribe/web-template/pull/622)
+- [fix] BookingFixedDurationForm: start time generation didn't count consecutive time-slots
+  correctly when multiple seats were allowed.
+  [#620](https://github.com/sharetribe/web-template/pull/620)
+- [add] Improve one copy text. [#621](https://github.com/sharetribe/web-template/pull/621)
+- [add] Add currently available translations for DE, ES, FR.
+  [#619](https://github.com/sharetribe/web-template/pull/619)
+
+  [v8.4.2]: https://github.com/sharetribe/web-template/compare/v8.4.1...v8.4.2
+
+## [v8.4.1] 2025-05-26
+
+- [fix] Modify two translation keys that were using an incorrect namespace.
+  [#617](https://github.com/sharetribe/web-template/pull/617)
+- [fix] Add missing location prop to grid search page
+  [#615](https://github.com/sharetribe/web-template/pull/615)
+- [fix] Corrected anchor link scrolling behavior on Privacy Policy and Terms of Service pages, when
+  opened as modals (in signup/login). [#612](https://github.com/sharetribe/web-template/pull/612)
+
+  [v8.4.1]: https://github.com/sharetribe/web-template/compare/v8.4.0...v8.4.1
+
+## [v8.4.0] 2025-05-20
+
+- [add] Added a "Search as CTA" component for embedding a search bar on any dynamic content page
+  [#561](https://github.com/sharetribe/web-template/pull/561)
+- [add] Pass email from login to forgot password
+  [#609](https://github.com/sharetribe/web-template/pull/609)
+- [fix] EditListingPhotosForm: removing all images from a listing caused the screen to go blank
+  [#608](https://github.com/sharetribe/web-template/pull/608)
+
+  [v8.4.0]: https://github.com/sharetribe/web-template/compare/v8.3.2...v8.4.0
+
+## [v8.3.2] 2025-05-12
+
+- [fix] SearchPageWithMap: secondary filter count was not taking into use filters that were limited
+  to category or listing type [#606](https://github.com/sharetribe/web-template/pull/606)
+- [fix] Handle multiple search page routes outside search page and clarify path param usage
+  [#605](https://github.com/sharetribe/web-template/pull/605)
+
+  [v8.3.2]: https://github.com/sharetribe/web-template/compare/v8.3.1...v8.3.2
+
+## [v8.3.1] 2025-05-06
+
+- [fix] Fix listing type path param usage
+  [#599](https://github.com/sharetribe/web-template/pull/599)
+- [fix] Avatar: use correct pending-approval variant link when user is pending approval.
+  [#601](https://github.com/sharetribe/web-template/pull/601)
+- [add] Add currently available translations for DE, ES, FR.
+  [#597](https://github.com/sharetribe/web-template/pull/597)
+
+  [v8.3.1]: https://github.com/sharetribe/web-template/compare/v8.3.0...v8.3.1
+
+## [v8.3.0] 2025-04-30
+
+- [add] Add support to search pages for filtering listing search based on listing type
+  [#583](https://github.com/sharetribe/web-template/pull/583)
+- [fix] BookingFixedDurationForm: undefined booking length with single fixed price variant.
+  [#595](https://github.com/sharetribe/web-template/pull/595)
+- [fix] EditListingPricingPanel: Add initial value for the startTimeInterval.
+  [#594](https://github.com/sharetribe/web-template/pull/594)
+- [add] Add currently available translations for DE, ES, FR.
+  [#593](https://github.com/sharetribe/web-template/pull/593)
+
+  [v8.3.0]: https://github.com/sharetribe/web-template/compare/v8.2.0...v8.3.0
+
+## [v8.2.0] 2025-04-29
+
+- [add] Check that some of the environment variables are set (and crash the app if not):
+
+  - REACT_APP_SHARETRIBE_SDK_CLIENT_ID
+  - SHARETRIBE_SDK_CLIENT_SECRET
+  - REACT_APP_MARKETPLACE_NAME
+  - REACT_APP_MARKETPLACE_ROOT_URL
+
+  [#589](https://github.com/sharetribe/web-template/pull/589)
+
+- [add] Separate translation keys for listing with price variations. This affects ListingCard,
+  ManageListingCard, SearchMapInfoCard, SearchMapPriceLabel.
+  [#591](https://github.com/sharetribe/web-template/pull/591)
+- [fix] Convert non-string category URL param to string
+  [#590](https://github.com/sharetribe/web-template/pull/590)
+- [add] Add currently available translations for DE, ES, FR.
+  [#587](https://github.com/sharetribe/web-template/pull/587)
+
+  [v8.2.0]: https://github.com/sharetribe/web-template/compare/v8.1.0...v8.2.0
+
+## [v8.1.0] 2025-04-24
+
+- [add] Add support for price variations for bookable listings.
+  [#582](https://github.com/sharetribe/web-template/pull/582)
+- [add] Add currently available translations for DE, ES.
+  [#584](https://github.com/sharetribe/web-template/pull/584)
+- [change] update deeply nested dependency: path-to-regexp
+  [#580](https://github.com/sharetribe/web-template/pull/580)
+- [fix] SectionDetails (ListingPage & ProfilePage): fix line-height and padding for the details row.
+  [#576](https://github.com/sharetribe/web-template/pull/576)
+- [fix] OrderPanel: purchase and inquiries did not check closed status of the listing.
+  [#573](https://github.com/sharetribe/web-template/pull/573)
+
+  [v8.1.0]: https://github.com/sharetribe/web-template/compare/v8.0.1...v8.1.0
+
+## [v8.0.1] 2025-04-03
+
+- [add] Add currently available translations for FR.
+  [#571](https://github.com/sharetribe/web-template/pull/571)
+- [change] Remove Google Maps legacy Places API support
+  [#570](https://github.com/sharetribe/web-template/pull/569)
+- [fix] Topbar/LinksMenu: align the menu label correctly.
+  [#569](https://github.com/sharetribe/web-template/pull/569)
+- [fix] BookingFixedDurationForm: form was using wrong translation keys.
+  [#568](https://github.com/sharetribe/web-template/pull/568)
+- [fix] Fix the transition of the SavedCardDetails menu.
+  [#567](https://github.com/sharetribe/web-template/pull/567)
+
+  [v8.0.1]: https://github.com/sharetribe/web-template/compare/v8.0.0...v8.0.1
+
+## [v8.0.0] 2025-03-26
+
+This major release adds support for bookings with a fixed duration. The feature is touching so many
+parts of the codebase, that we decided to bump the major version.
+
+- [add] Add support for bookings with a fixed duration.
+  [#560](https://github.com/sharetribe/web-template/pull/560)
+- [fix] Fix the positioning of the camera control otpions on Google Maps
+  [#565](https://github.com/sharetribe/web-template/pull/565)
 - [fix] Fix currently available translations for FR.
   [#559](https://github.com/sharetribe/web-template/pull/559)
+
+  [v8.0.0]: https://github.com/sharetribe/web-template/compare/v7.3.0...v8.0.0
 
 ## [v7.3.0] 2025-02-19
 

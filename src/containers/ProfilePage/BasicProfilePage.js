@@ -102,25 +102,32 @@ const DesktopReviews = props => {
   );
 };
 
-const MainContent = ({
-  userShowError,
-  bio,
-  displayName,
-  reviews,
-  queryReviewsError,
-  hideReviews,
-}) => {
+const MainContent = props => {
+  const [mounted, setMounted] = useState(false);
+  const {
+    userShowError,
+    bio,
+    displayName,
+    reviews = [],
+    queryReviewsError,
+    hideReviews,
+  } = props;
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const hasMatchMedia = typeof window !== 'undefined' && window?.matchMedia;
-  const isMobileLayout = hasMatchMedia
-    ? window.matchMedia(`(max-width: ${MAX_MOBILE_SCREEN_WIDTH}px)`)?.matches
-    : true;
+  const isMobileLayout =
+    mounted && hasMatchMedia
+      ? window.matchMedia(`(max-width: ${MAX_MOBILE_SCREEN_WIDTH}px)`)?.matches
+      : true;
   const hasBio = !!bio;
   const bioWithLinks = richText(bio, {
     linkify: true,
     longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
     longWordClass: css.longWord,
   });
-
   if (userShowError) {
     return (
       <p className={css.error}>
@@ -128,7 +135,6 @@ const MainContent = ({
       </p>
     );
   }
-
   return (
     <div>
       <H2 as="h1" className={css.desktopHeading}>

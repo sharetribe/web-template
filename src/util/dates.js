@@ -7,6 +7,63 @@ export const START_DATE = 'startDate';
 export const END_DATE = 'endDate';
 
 /**
+ * Time unit configurations.
+ * These contain custom time units as well as the time units that moment.js supports.
+ */
+export const bookingTimeUnits = {
+  day: { timeUnit: 'day', isCustom: false },
+  // The unity type 'night' is handled by 'day' unit, when working with moment.js
+  night: { timeUnit: 'day', isCustom: false },
+  hour: {
+    timeUnit: 'hour',
+    timeUnitInMinutes: 60,
+    isCustom: false,
+  },
+  halfHour: {
+    timeUnit: 'halfHour',
+    timeUnitInMinutes: 30,
+    isCustom: true,
+  },
+  quarterHour: {
+    timeUnit: 'quarterHour',
+    timeUnitInMinutes: 15,
+    isCustom: true,
+  },
+};
+
+/**
+ * Rounding function for moment.js. Rounds a moment instance
+ * to the start of the specified duration in minutes.
+ *
+ * Note 1: working with other time units (like 'day') would require handling time zones
+ *        and DST changes.
+ *
+ * Note 2: moment uses the previously set time zone for UTC offset.
+ *         The same thing could be done without the moment library,
+ *         but you'd need to check the UTC offset on every adjustment to the time.
+ *         https://stackoverflow.com/a/74377652
+ *
+ * @example
+ * moment('2025-02-06T10:33:00.000Z').tz('Etc/UTC').startOfDuration(30).toISOString()
+ * // => 2025-02-06T10:30:00.000Z
+ *
+ * @example
+ * moment('2025-02-06T10:48:00.000Z').tz('Etc/UTC').startOfDuration(15).toISOString()
+ * // => 2025-02-06T10:45:00.000Z
+ *
+ * @param {number} unitCount the number of units in the duration
+ * @returns Moment rounded to the start of the specified duration interval
+ */
+moment.fn.startOfMinuteBasedInterval = function(unitCount) {
+  const durationInMs = moment.duration(unitCount, 'minutes').asMilliseconds();
+
+  // Calculate the number of durations since 1970-01-01 00:00:00
+  const durationCount = Math.floor(this.valueOf() / durationInMs);
+  // Return a moment that is rounded to the start of the previous whole number of durations
+  return moment(durationCount * durationInMs);
+};
+
+/**
  * Check if the browser's DateTimeFormat API supports time zones.
  *
  * @returns {Boolean} true if the browser returns current time zone.
@@ -89,6 +146,18 @@ export const isValidTimeZone = timeZone => {
 export const getTimeZoneNames = relevantZonesRegExp => {
   const allTimeZones = moment.tz.names();
   return relevantZonesRegExp ? allTimeZones.filter(z => relevantZonesRegExp.test(z)) : allTimeZones;
+};
+
+/**
+ * Check if the given date is in Daylight Saving Time (DST) for the given time zone.
+ *
+ * @param {Date} date
+ * @param {string} timeZone IANA time zone key
+ * @returns {boolean} true if the given date is in DST for the given time zone
+ */
+export const isDST = (date, timeZone) => {
+  const dateMoment = moment.tz(date, timeZone);
+  return dateMoment.isDST();
 };
 
 /**
@@ -607,50 +676,107 @@ const findBookingUnitBoundaries = params => {
     intl,
     timeZone,
     timeUnit = 'hour',
+    unitCount = 1,
   } = params;
 
   if (moment(currentBoundary).isBetween(startMoment, endMoment, null, '[]')) {
     const timeOfDay = formatDateIntoPartials(currentBoundary, intl, { timeZone })?.time;
 
-    // Choose the previous (aka first) sharp hour boundary,
-    // if daylight saving time (DST) creates the same time of day two times.
-    const newBoundary =
-      cumulatedResults &&
-      cumulatedResults.length > 0 &&
-      cumulatedResults.slice(-1)[0].timeOfDay === timeOfDay
-        ? []
-        : [
-            {
-              timestamp: currentBoundary.valueOf(),
-              timeOfDay,
-            },
-          ];
+    // NOTE: the daylight saving time (DST) can create the same time of day two times.
+    const newBoundary = [
+      {
+        timestamp: currentBoundary.valueOf(),
+        timeOfDay,
+      },
+    ];
 
     return findBookingUnitBoundaries({
       ...params,
       cumulatedResults: [...cumulatedResults, ...newBoundary],
-      currentBoundary: moment(nextBoundaryFn(currentBoundary, timeUnit, timeZone)),
+      currentBoundary: nextBoundaryFn(currentBoundary, unitCount, timeUnit, timeZone),
     });
   }
   return cumulatedResults;
 };
 
 /**
- * Find the next sharp hour after the current moment.
+ * Find the next boundary for the given time unit.
+ *
+ * @example
+ * findNextBoundary(new Date('2025-02-06T00:22:00.000Z'), 1, 'hour', 'Europe/Helsinki').toISOString()
+ * => 2025-02-06T01:00:00.000Z
+ * findNextBoundary(new Date('2025-02-06T00:22:00.000Z'), 1, 'quarterHour', 'Europe/Helsinki').toISOString()
+ * => 2025-02-06T00:30:00.000Z
  *
  * @param {Moment|Date} Start point for looking next sharp hour.
+ * @param {Number} unitCount number of time units to add.
  * @param {String} timeUnit scope. e.g. 'hour', 'day'
  * @param {String} timezone name. It should represent IANA timezone key.
  *
- * @returns {Array} an array of localized hours.
+ * @returns {Array} an array of boundary data. e.g. [{timestamp: 1707484800000, timeOfDay: '12:00'}]
  */
-export const findNextBoundary = (currentMomentOrDate, timeUnit, timeZone) =>
-  moment(currentMomentOrDate)
-    .clone()
-    .tz(timeZone)
-    .add(1, timeUnit)
-    .startOf(timeUnit)
-    .toDate();
+export const findNextBoundary = (currentDate, unitCount, timeUnit, timeZone) => {
+  const customTimeUnitConfig = bookingTimeUnits[timeUnit]?.isCustom
+    ? bookingTimeUnits[timeUnit]
+    : null;
+
+  if (!!customTimeUnitConfig) {
+    // If the time unit is custom, we need to use startOfMinuteBasedInterval function to adjust 00, 15, 30, 45 rounding.
+    const customTimeUnitInMinutes = customTimeUnitConfig?.timeUnitInMinutes;
+    const minuteOffset = !!customTimeUnitInMinutes
+      ? unitCount * customTimeUnitInMinutes
+      : unitCount;
+
+    return moment(currentDate)
+      .clone()
+      .tz(timeZone)
+      .add(minuteOffset, 'minute')
+      .startOfMinuteBasedInterval(customTimeUnitInMinutes)
+      .toDate();
+  } else {
+    // Other time units are handled with the default moment.js functions
+    return moment(currentDate)
+      .clone()
+      .tz(timeZone)
+      .add(unitCount, timeUnit)
+      .startOf(timeUnit)
+      .toDate();
+  }
+};
+
+/**
+ * Find the boundaries using the given time unit.
+ *
+ * @param {Date} startTime - find boundaries from this time
+ * @param {Date} endTime - find boundaries until this time
+ * @param {Number} unitCount - The number of time units to add between boundaries.
+ * @param {String} timeUnit - The time unit. (E.g. 'hour')
+ * @param {String} timeZone - The time zone key. (E.g. 'Europe/Helsinki')
+ * @param {Object} intl - The intl object.
+ * @returns {Array} The boundaries of the time unit.
+ */
+export const getBoundaries = (startTime, endTime, unitCount, timeUnit, timeZone, intl) => {
+  if (!moment.tz.zone(timeZone)) {
+    throw new Error(
+      'Time zones are not loaded into moment-timezone. "getBoundaries" function uses time zones.'
+    );
+  }
+
+  // Select a moment before startTime to find next possible sharp hour.
+  // I.e. startTime might be a sharp hour.
+  const millisecondBeforeStartTime = new Date(startTime.getTime() - 1);
+  return findBookingUnitBoundaries({
+    currentBoundary: findNextBoundary(millisecondBeforeStartTime, 1, timeUnit, timeZone),
+    startMoment: moment(startTime),
+    endMoment: moment(endTime),
+    nextBoundaryFn: findNextBoundary,
+    cumulatedResults: [],
+    intl,
+    timeZone,
+    timeUnit,
+    unitCount,
+  });
+};
 
 /**
  * Find sharp hours inside given time window. Returned strings are localized to given time zone.
@@ -683,25 +809,7 @@ export const findNextBoundary = (currentMomentOrDate, timeUnit, timeZone) =>
  * @returns {Array} an array of objects with keys timestamp and timeOfDay.
  */
 export const getSharpHours = (startTime, endTime, timeZone, intl) => {
-  if (!moment.tz.zone(timeZone)) {
-    throw new Error(
-      'Time zones are not loaded into moment-timezone. "getSharpHours" function uses time zones.'
-    );
-  }
-
-  // Select a moment before startTime to find next possible sharp hour.
-  // I.e. startTime might be a sharp hour.
-  const millisecondBeforeStartTime = new Date(startTime.getTime() - 1);
-  return findBookingUnitBoundaries({
-    currentBoundary: findNextBoundary(millisecondBeforeStartTime, 'hour', timeZone),
-    startMoment: moment(startTime),
-    endMoment: moment(endTime),
-    nextBoundaryFn: findNextBoundary,
-    cumulatedResults: [],
-    intl,
-    timeZone,
-    timeUnit: 'hour',
-  });
+  return getBoundaries(startTime, endTime, 1, 'hour', timeZone, intl);
 };
 
 /**

@@ -2,14 +2,13 @@ import React from 'react';
 import pickBy from 'lodash/pickBy';
 import classNames from 'classnames';
 
-import appSettings from '../../../config/settings';
 import { useConfiguration } from '../../../context/configurationContext';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
 
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { isMainSearchTypeKeywords, isOriginInUse } from '../../../util/search';
 import { parse, stringify } from '../../../util/urlHelpers';
-import { createResourceLocatorString, matchPathname, pathByRouteName } from '../../../util/routes';
+import { createResourceLocatorString, matchPathname } from '../../../util/routes';
 import {
   Button,
   LimitedAccessBanner,
@@ -17,6 +16,7 @@ import {
   Modal,
   ModalMissingInformation,
 } from '../../../components';
+import { getSearchPageResourceLocatorStringParams } from '../../SearchPage/SearchPage.shared';
 
 import MenuIcon from './MenuIcon';
 import SearchIcon from './SearchIcon';
@@ -25,6 +25,7 @@ import TopbarMobileMenu from './TopbarMobileMenu/TopbarMobileMenu';
 import TopbarDesktop from './TopbarDesktop/TopbarDesktop';
 
 import css from './Topbar.module.css';
+import { getCurrentUserTypeRoles } from '../../../util/userHelpers';
 
 const MAX_MOBILE_SCREEN_WIDTH = 1024;
 
@@ -154,7 +155,7 @@ const TopbarComponent = props => {
   } = props;
 
   const handleSubmit = values => {
-    const { currentSearchParams, history, config, routeConfiguration } = props;
+    const { currentSearchParams, history, location, config, routeConfiguration } = props;
 
     const topbarSearchParams = () => {
       if (isMainSearchTypeKeywords(config)) {
@@ -175,7 +176,15 @@ const TopbarComponent = props => {
       ...currentSearchParams,
       ...topbarSearchParams(),
     };
-    history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, searchParams));
+
+    const { routeName, pathParams } = getSearchPageResourceLocatorStringParams(
+      routeConfiguration,
+      location
+    );
+
+    history.push(
+      createResourceLocatorString(routeName, routeConfiguration, pathParams, searchParams)
+    );
   };
 
   const handleLogout = () => {
@@ -184,6 +193,25 @@ const TopbarComponent = props => {
       console.log('logged out'); // eslint-disable-line
     });
   };
+
+  const { customer: isCustomer, provider: isProvider } = getCurrentUserTypeRoles(
+    config,
+    currentUser
+  );
+
+  /**
+   * Determine which tab to use in the inbox link:
+   * - if only provider role – sales
+   * - if only customer role – orders
+   * - if both roles – determine by currentUserHasListings value
+   */
+  const topbarInboxTab = !isCustomer
+    ? 'sales'
+    : !isProvider
+    ? 'orders'
+    : currentUserHasListings
+    ? 'sales'
+    : 'orders';
 
   const { mobilemenu, mobilesearch, keywords, address, origin, bounds } = parse(location.search, {
     latlng: ['origin'],
@@ -207,13 +235,13 @@ const TopbarComponent = props => {
   const mobileMenu = (
     <TopbarMobileMenu
       isAuthenticated={isAuthenticated}
-      currentUserHasListings={currentUserHasListings}
       currentUser={currentUser}
       onLogout={handleLogout}
       notificationCount={notificationCount}
       currentPage={resolvedCurrentPage}
       customLinks={customLinks}
       intl={intl}
+      inboxTab={topbarInboxTab}
     />
   );
 
@@ -245,7 +273,8 @@ const TopbarComponent = props => {
   // the current page.
   const showSearchOnAllPages = searchFormDisplay === SEARCH_DISPLAY_ALWAYS;
   const showSearchOnSearchPage =
-    searchFormDisplay === SEARCH_DISPLAY_ONLY_SEARCH_PAGE && resolvedCurrentPage === 'SearchPage';
+    searchFormDisplay === SEARCH_DISPLAY_ONLY_SEARCH_PAGE &&
+    ['SearchPage', 'SearchPageWithListingType'].includes(resolvedCurrentPage);
   const showSearchNotOnLandingPage =
     searchFormDisplay === SEARCH_DISPLAY_NOT_LANDING_PAGE && resolvedCurrentPage !== 'LandingPage';
 
@@ -293,7 +322,6 @@ const TopbarComponent = props => {
       <div className={css.desktop}>
         <TopbarDesktop
           className={desktopClassName}
-          currentUserHasListings={currentUserHasListings}
           currentUser={currentUser}
           currentPage={resolvedCurrentPage}
           initialSearchFormValues={initialSearchFormValues}
@@ -305,6 +333,7 @@ const TopbarComponent = props => {
           config={config}
           customLinks={customLinks}
           showSearchForm={showSearchForm}
+          inboxTab={topbarInboxTab}
         />
       </div>
       <Modal

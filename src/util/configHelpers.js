@@ -1,5 +1,5 @@
 import { subUnitDivisors } from '../config/settingsCurrency';
-import { getSupportedProcessesInfo } from '../transactions/transaction';
+import { getSupportedProcessesInfo, isBookingProcessAlias } from '../transactions/transaction';
 
 // Generic helpers for validating config values
 
@@ -857,12 +857,22 @@ const validListingTypes = listingTypes => {
   const supportedProcessesInfo = getSupportedProcessesInfo();
 
   const validTypes = listingTypes.reduce((validConfigs, listingType) => {
-    const { listingType: type, label, transactionType, ...restOfListingType } = listingType;
+    const {
+      listingType: type,
+      label,
+      transactionType,
+      priceVariations,
+      ...restOfListingType
+    } = listingType;
     const { process: processName, alias, unitType, ...restOfTransactionType } = transactionType;
 
     const isSupportedProcessName = supportedProcessesInfo.find(p => p.name === processName);
     const isSupportedProcessAlias = supportedProcessesInfo.find(p => p.alias === alias);
     const isSupportedUnitType = supportedProcessesInfo.find(p => p.unitTypes.includes(unitType));
+
+    const priceVariationTypeMaybe = isBookingProcessAlias(alias)
+      ? { priceVariations: { enabled: priceVariations?.enabled } }
+      : {};
 
     if (isSupportedProcessName && isSupportedProcessAlias && isSupportedUnitType) {
       return [
@@ -876,6 +886,7 @@ const validListingTypes = listingTypes => {
             unitType,
             ...restOfTransactionType,
           },
+          ...priceVariationTypeMaybe,
           // e.g. stockType, availabilityType,...
           ...restOfListingType,
         },
@@ -906,6 +917,13 @@ export const displayDeliveryShipping = listingTypeConfig => {
 
 export const requirePayoutDetails = listingTypeConfig => {
   return listingTypeConfig?.defaultListingFields?.payoutDetails !== false;
+};
+
+export const isPriceVariationsEnabled = (publicData, listingTypeConfig) => {
+  // Note: publicData contains priceVariationsEnabled if listing is created with priceVariations enabled.
+  return publicData?.priceVariationsEnabled != null
+    ? publicData?.priceVariationsEnabled
+    : listingTypeConfig?.priceVariations?.enabled;
 };
 
 ///////////////////////////////////////
@@ -1189,6 +1207,23 @@ const validCategoryConfig = (config, categoryConfiguration) => {
   return { key, schemaType: 'category', scope, isNestedEnum, nestedParams };
 };
 
+const validListingTypeSearchConfig = (config, listingTypeConfig) => {
+  const { enabled = true } = config;
+
+  if (!enabled) {
+    return null;
+  }
+
+  const options = listingTypeConfig.map(lt => ({ option: lt.listingType, label: lt.label }));
+
+  return {
+    key: 'listingType',
+    schemaType: 'listingType',
+    scope: 'public',
+    options,
+  };
+};
+
 const validDatesConfig = config => {
   const {
     enabled = true,
@@ -1246,12 +1281,14 @@ const validKeywordsConfig = config => {
   return { key: 'keywords', schemaType: 'keywords' };
 };
 
-const validDefaultFilters = (defaultFilters, categoryConfiguration) => {
+const validDefaultFilters = (defaultFilters, categoryConfiguration, listingTypeConfig) => {
   return defaultFilters
     .map(data => {
       const schemaType = data.schemaType;
       return schemaType === 'category'
         ? validCategoryConfig(data, categoryConfiguration)
+        : schemaType === 'listingType'
+        ? validListingTypeSearchConfig(data, listingTypeConfig)
         : schemaType === 'dates'
         ? validDatesConfig(data)
         : schemaType === 'seats'
@@ -1280,12 +1317,21 @@ const validSortConfig = config => {
   return { active, queryParamName, relevanceKey, relevanceFilter, conflictingFilters, options };
 };
 
-const mergeSearchConfig = (hostedSearchConfig, defaultSearchConfig, categoryConfiguration) => {
+const mergeSearchConfig = (
+  hostedSearchConfig,
+  defaultSearchConfig,
+  categoryConfiguration,
+  listingTypeConfig
+) => {
   // The sortConfig is not yet configurable through Console / hosted assets,
   // but other default search configs come from hosted assets
   const searchConfig = hostedSearchConfig?.mainSearch
     ? {
         sortConfig: defaultSearchConfig.sortConfig,
+        // This just shows how to add custom built-in filters.
+        // Note: listingTypeFilter and categoryFilter might be overwritten by hostedSearchConfig
+        listingTypeFilter: defaultSearchConfig.listingTypeFilter,
+        categoryFilter: defaultSearchConfig.categoryFilter,
         ...hostedSearchConfig,
       }
     : defaultSearchConfig;
@@ -1293,6 +1339,7 @@ const mergeSearchConfig = (hostedSearchConfig, defaultSearchConfig, categoryConf
   const {
     mainSearch,
     categoryFilter,
+    listingTypeFilter,
     dateRangeFilter,
     seatsFilter,
     priceFilter,
@@ -1315,6 +1362,9 @@ const mergeSearchConfig = (hostedSearchConfig, defaultSearchConfig, categoryConf
 
   const seatsFilterMaybe = typeof seatsFilter?.enabled === 'boolean' ? [seatsFilter] : [];
 
+  const listingTypeFilterMaybe =
+    typeof listingTypeFilter?.enabled === 'boolean' ? [listingTypeFilter] : [];
+
   // This will define the order of default filters
   // The reason: These default filters come from config assets and
   // there they'll be their own separate entities and not wrapped in an array.
@@ -1322,15 +1372,17 @@ const mergeSearchConfig = (hostedSearchConfig, defaultSearchConfig, categoryConf
   //       It might be somewhat strange experience if a primary filter is among those filters
   //       that are affected by category selection.
   const defaultFilters = [
+    ...listingTypeFilterMaybe,
     ...categoryFilterMaybe,
     dateRangeFilter,
     ...seatsFilterMaybe,
     priceFilter,
     ...keywordsFilterMaybe,
   ];
+
   return {
     mainSearch: { searchType },
-    defaultFilters: validDefaultFilters(defaultFilters, categoryConfiguration),
+    defaultFilters: validDefaultFilters(defaultFilters, categoryConfiguration, listingTypeConfig),
     sortConfig: validSortConfig(sortConfig),
     ...rest,
   };
@@ -1405,6 +1457,11 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
 
   const validHostedCategories = validateCategoryConfig(configAsset.categories);
   const categoryConfiguration = getBuiltInCategorySpecs(validHostedCategories);
+  const listingConfiguration = mergeListingConfig(
+    configAsset,
+    defaultConfigs,
+    validHostedCategories
+  );
 
   return {
     // Use default configs as a starting point for app config.
@@ -1446,10 +1503,15 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     categoryConfiguration,
 
     // Listing configuration comes entirely from hosted assets by default.
-    listing: mergeListingConfig(configAsset, defaultConfigs, validHostedCategories),
+    listing: listingConfiguration,
 
     // Hosted search configuration does not yet contain sortConfig
-    search: mergeSearchConfig(configAsset.search, defaultConfigs.search, categoryConfiguration),
+    search: mergeSearchConfig(
+      configAsset.search,
+      defaultConfigs.search,
+      categoryConfiguration,
+      listingConfiguration.listingTypes
+    ),
 
     // Map provider info might come from hosted assets. Other map configs come from defaultConfigs.
     maps: mergeMapConfig(configAsset.maps, defaultConfigs.maps),

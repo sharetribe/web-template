@@ -3,10 +3,11 @@ import { bool, func, object } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
+import { useConfiguration } from '../../context/configurationContext';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { ensureCurrentUser, ensureOwnListing } from '../../util/data';
 import { propTypes } from '../../util/types';
-import { isCreativeSellerApproved } from '../../util/userHelpers';
+import { isCreativeSellerApproved, showPaymentDetailsForUser } from '../../util/userHelpers';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 
@@ -33,6 +34,7 @@ export const CreativeDetailsPageComponent = props => {
     onUpdateListing,
     intl,
   } = props;
+  const config = useConfiguration();
   const user = ensureCurrentUser(currentUser);
   const withCreativeProfile = isCreativeSellerApproved(user?.attributes.profile);
   const currentListing = ensureOwnListing(getOwnListing(listingId));
@@ -47,6 +49,13 @@ export const CreativeDetailsPageComponent = props => {
     showListingsError,
   };
 
+  const { showPayoutDetails, showPaymentMethods } = showPaymentDetailsForUser(config, currentUser);
+  const accountSettingsNavProps = {
+    currentPage: 'CreativeDetailsPage',
+    showPaymentMethods,
+    showPayoutDetails,
+  };
+
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
       <LayoutSideNavigation
@@ -59,7 +68,7 @@ export const CreativeDetailsPageComponent = props => {
         sideNav={null}
         useProfileSettingsNav
         withCreativeProfile
-        currentPage="CreativeDetailsPage"
+        accountSettingsNavProps={accountSettingsNavProps}
         footer={<FooterContainer />}
       >
         <div className={css.content}>

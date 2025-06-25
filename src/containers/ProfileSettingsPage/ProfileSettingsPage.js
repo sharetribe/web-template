@@ -12,6 +12,7 @@ import {
   isUserAuthorized,
   pickUserFieldsData,
   isCreativeSellerApproved,
+  showPaymentDetailsForUser,
 } from '../../util/userHelpers';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 
@@ -189,6 +190,13 @@ export const ProfileSettingsPageComponent = props => {
     />
   ) : null;
 
+  const { showPayoutDetails, showPaymentMethods } = showPaymentDetailsForUser(config, currentUser);
+  const accountSettingsNavProps = {
+    currentPage: 'ProfileSettingsPage',
+    showPaymentMethods,
+    showPayoutDetails,
+  };
+
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
       <LayoutSideNavigation
@@ -201,7 +209,7 @@ export const ProfileSettingsPageComponent = props => {
         sideNav={null}
         useProfileSettingsNav
         withCreativeProfile={withCreativeProfile}
-        currentPage="ProfileSettingsPage"
+        accountSettingsNavProps={accountSettingsNavProps}
         footer={<FooterContainer />}
       >
         <div className={css.content}>

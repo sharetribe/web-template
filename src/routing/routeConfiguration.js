@@ -96,6 +96,13 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       component: SearchPage,
       loadData: pageDataLoadingAPI.SearchPage.loadData,
     },
+    {
+      path: '/s/:listingType',
+      name: 'SearchPageWithListingType',
+      ...authForPrivateMarketplace,
+      component: SearchPage,
+      loadData: pageDataLoadingAPI.SearchPage.loadData,
+    },
 
     /**
      * Listing Routes

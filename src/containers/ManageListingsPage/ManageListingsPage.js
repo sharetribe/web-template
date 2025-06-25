@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
-
 import { createResourceLocatorString, pathByRouteName } from '../../util/routes';
 import {
   GRID_STYLE_SQUARE,

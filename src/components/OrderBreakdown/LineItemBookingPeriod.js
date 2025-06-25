@@ -9,9 +9,29 @@ import {
   LINE_ITEM_NIGHT,
   propTypes,
 } from '../../util/types';
-import { subtractTime } from '../../util/dates';
+import { subtractTime, isDST } from '../../util/dates';
 
 import css from './OrderBreakdown.module.css';
+
+const DSTMaybe = props => {
+  const { startDate, endDate, isStart, dateType, timeZone } = props;
+  const isDayTimeRange = dateType === DATE_TYPE_DATETIME;
+  if (!isDayTimeRange) {
+    return null;
+  }
+
+  const isStartInDST = isDST(startDate, timeZone);
+  const isEndInDST = isDST(endDate, timeZone);
+  const isDSTChanged = isStartInDST !== isEndInDST;
+  const showDSTMsgForStart = isDSTChanged && isStart && isStartInDST;
+  const showDSTMsgForEnd = isDSTChanged && !isStart && isEndInDST;
+
+  return showDSTMsgForStart || showDSTMsgForEnd ? (
+    <div className={css.itemLabel}>
+      <FormattedMessage id="OrderBreakdown.bookingWithDSTInEffect" />
+    </div>
+  ) : null;
+};
 
 const BookingPeriod = props => {
   const { startDate, endDate, dateType, timeZone } = props;
@@ -46,6 +66,13 @@ const BookingPeriod = props => {
           <div className={css.itemLabel}>
             <FormattedDate value={startDate} {...dateFormatOptions} {...timeZoneMaybe} />
           </div>
+          <DSTMaybe
+            startDate={startDate}
+            endDate={endDate}
+            isStart={true}
+            dateType={dateType}
+            timeZone={timeZone}
+          />
         </div>
 
         <div className={css.bookingPeriodSectionRight}>
@@ -58,6 +85,13 @@ const BookingPeriod = props => {
           <div className={css.itemLabel}>
             <FormattedDate value={endDate} {...dateFormatOptions} {...timeZoneMaybe} />
           </div>
+          <DSTMaybe
+            startDate={startDate}
+            endDate={endDate}
+            isStart={false}
+            dateType={dateType}
+            timeZone={timeZone}
+          />
         </div>
       </div>
     </>
@@ -89,9 +123,8 @@ const LineItemBookingPeriod = props => {
   const localStartDate = displayStart || start;
   const localEndDateRaw = displayEnd || end;
 
-  const isNightly = code === LINE_ITEM_NIGHT;
-  const isHour = code === LINE_ITEM_HOUR;
-  const endDay = isNightly || isHour ? localEndDateRaw : subtractTime(localEndDateRaw, 1, 'days');
+  const showInclusiveEndDate = [LINE_ITEM_DAY].includes(code);
+  const endDay = showInclusiveEndDate ? subtractTime(localEndDateRaw, 1, 'days') : localEndDateRaw;
 
   return (
     <>

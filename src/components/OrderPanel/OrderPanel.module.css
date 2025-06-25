@@ -1,5 +1,8 @@
 @import '../../styles/customMediaQueries.css';
 
+.root {
+}
+
 /* Order form inside modalContainer needs special handling */
 /* since "inMobile" breakpoint is actually --viewportLarge */
 .modalContainer {
@@ -55,8 +58,6 @@
 .price {
   composes: h4 from global;
   font-weight: var(--fontWeightBold);
-
-  color: var(--marketplaceColor);
   margin: 0 0 0 24px;
 
   @media (--viewportMedium) {
@@ -64,25 +65,12 @@
     padding: 0;
   }
 }
+.priceValue {
+  color: var(--marketplaceColor);
+}
 
 .perUnit {
-  /* Font */
-  composes: h4 from global;
-  font-weight: var(--fontWeightBold);
-
   color: var(--marketplaceColor);
-  padding: 0;
-
-  margin-top: 0;
-  margin-bottom: 0;
-
-  @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 0;
-  }
-
-  @media (--viewportLarge) {
-  }
 }
 
 .author {
@@ -229,7 +217,7 @@
   gap: unset;
 }
 
-.priceValue {
+.priceValueInCTA {
   /* Font */
   composes: h3 from global;
   color: var(--marketplaceColor);

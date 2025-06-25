@@ -110,12 +110,6 @@ export const ListingPageComponent = props => {
     showListingError,
     reviews = [],
     fetchReviewsError,
-    monthlyTimeSlots,
-    onFetchTimeSlots,
-    onFetchTransactionLineItems,
-    lineItems,
-    fetchLineItemsInProgress,
-    fetchLineItemsError,
     history,
     callSetInitialValues,
     onInitializeCardPaymentData,
@@ -124,6 +118,7 @@ export const ListingPageComponent = props => {
     showOwnListingsOnly,
     onUpdateFavorites,
     onFetchCurrentUser,
+    ...restOfProps
   } = props;
 
   const listingConfig = config.listing;
@@ -413,12 +408,7 @@ export const ListingPageComponent = props => {
               author={ensuredAuthor}
               onManageDisableScrolling={onManageDisableScrolling}
               onContactUser={onContactUser}
-              monthlyTimeSlots={monthlyTimeSlots}
-              onFetchTimeSlots={onFetchTimeSlots}
-              onFetchTransactionLineItems={onFetchTransactionLineItems}
-              lineItems={lineItems}
-              fetchLineItemsInProgress={fetchLineItemsInProgress}
-              fetchLineItemsError={fetchLineItemsError}
+              {...restOfProps}
               validListingTypes={config.listing.listingTypes}
               marketplaceCurrency={config.currency}
               dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
@@ -453,9 +443,7 @@ export const ListingPageComponent = props => {
  * @param {Array<propTypes.review>} props.reviews - The reviews
  * @param {propTypes.error} props.fetchReviewsError - The fetch reviews error
  * @param {Object<string, Object>} props.monthlyTimeSlots - The monthly time slots. E.g. { '2019-11': { timeSlots: [], fetchTimeSlotsInProgress: false, fetchTimeSlotsError: null } }
- * @param {boolean} props.sendInquiryInProgress - Whether the send inquiry is in progress
- * @param {propTypes.error} props.sendInquiryError - The send inquiry error
- * @param {Function} props.onSendInquiry - The on send inquiry function
+ * @param {Object<string, Object>} props.timeSlotsForDate - The time slots for date. E.g. { '2019-11-01': { timeSlots: [], fetchedAt: 1572566400000, fetchTimeSlotsError: null, fetchTimeSlotsInProgress: false } }
  * @param {Function} props.onInitializeCardPaymentData - The on initialize card payment data function
  * @param {Function} props.onFetchTimeSlots - The on fetch time slots function
  * @param {Function} props.onFetchTransactionLineItems - The on fetch transaction line items function
@@ -529,6 +517,7 @@ const mapStateToProps = state => {
     reviews,
     fetchReviewsError,
     monthlyTimeSlots,
+    timeSlotsForDate,
     lineItems,
     fetchLineItemsInProgress,
     fetchLineItemsError,
@@ -556,6 +545,7 @@ const mapStateToProps = state => {
     reviews,
     fetchReviewsError,
     monthlyTimeSlots,
+    timeSlotsForDate,
     lineItems,
     fetchLineItemsInProgress,
     fetchLineItemsError,
@@ -569,8 +559,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(setInitialValues(values, saveToSessionStorage)),
   onFetchTransactionLineItems: params => dispatch(fetchTransactionLineItems(params)),
   onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
-  onFetchTimeSlots: (listingId, start, end, timeZone) =>
-    dispatch(fetchTimeSlots(listingId, start, end, timeZone)),
+  onFetchTimeSlots: (listingId, start, end, timeZone, options) =>
+    dispatch(fetchTimeSlots(listingId, start, end, timeZone, options)),
   onUpdateFavorites: payload => dispatch(updateProfile(payload)),
   onFetchCurrentUser: () => dispatch(fetchCurrentUser({})),
 });

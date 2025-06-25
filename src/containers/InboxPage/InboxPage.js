@@ -16,6 +16,7 @@ import {
   LISTING_UNIT_TYPES,
   STOCK_MULTIPLE_ITEMS,
   AVAILABILITY_MULTIPLE_SEATS,
+  LINE_ITEM_FIXED,
 } from '../../util/types';
 import { subtractTime } from '../../util/dates';
 import {
@@ -48,6 +49,7 @@ import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
 
 import { stateDataShape, getStateData } from './InboxPage.stateData';
 import css from './InboxPage.module.css';
+import { getCurrentUserTypeRoles } from '../../util/userHelpers';
 
 // Check if the transaction line-items use booking-related units
 const getUnitLineItem = lineItems => {
@@ -95,7 +97,9 @@ const BookingTimeInfoMaybe = props => {
     : null;
 
   const lineItemUnitType = unitLineItem ? unitLineItem.code : null;
-  const dateType = lineItemUnitType === LINE_ITEM_HOUR ? DATE_TYPE_DATETIME : DATE_TYPE_DATE;
+  const dateType = [LINE_ITEM_HOUR, LINE_ITEM_FIXED].includes(lineItemUnitType)
+    ? DATE_TYPE_DATETIME
+    : DATE_TYPE_DATE;
 
   const timeZone = transaction?.listing?.attributes?.availabilityPlan?.timezone || 'Etc/UTC';
   const { bookingStart, bookingEnd } = bookingData(transaction, lineItemUnitType, timeZone);
@@ -230,6 +234,11 @@ export const InboxPageComponent = props => {
     return <NotFoundPage staticContext={props.staticContext} />;
   }
 
+  const { customer: isCustomerUserType, provider: isProviderUserType } = getCurrentUserTypeRoles(
+    config,
+    currentUser
+  );
+
   const isOrders = tab === 'orders';
   const hasNoResults = !fetchInProgress && transactions.length === 0 && !fetchOrdersOrSalesError;
   const ordersTitle = intl.formatMessage({ id: 'InboxPage.ordersTitle' });
@@ -284,40 +293,54 @@ export const InboxPageComponent = props => {
     !fetchInProgress && hasOrderOrSaleTransactions(transactions, isOrders, currentUser);
 
   const isSeller = isCreativeSellerApproved(currentUser?.attributes?.profile);
-  const tabs = [
-    {
-      text: (
-        <span>
-          <FormattedMessage id="InboxPage.ordersTabTitle" />
-        </span>
-      ),
-      selected: isOrders,
-      linkProps: {
-        name: 'InboxPage',
-        params: { tab: 'orders' },
-      },
-    },
-
-    ...(isSeller
-      ? [
-          {
-            text: (
-              <span>
-                <FormattedMessage id="InboxPage.salesTabTitle" />
-                {providerNotificationCount > 0 ? (
-                  <NotificationBadge count={providerNotificationCount} />
-                ) : null}
-              </span>
-            ),
-            selected: !isOrders,
-            linkProps: {
-              name: 'InboxPage',
-              params: { tab: 'sales' },
-            },
+  const ordersTabMaybe = isCustomerUserType
+    ? [
+        {
+          text: (
+            <span>
+              <FormattedMessage id="InboxPage.ordersTabTitle" />
+            </span>
+          ),
+          selected: isOrders,
+          linkProps: {
+            name: 'InboxPage',
+            params: { tab: 'orders' },
           },
-        ]
-      : []),
-  ];
+        },
+      ]
+    : [];
+
+
+
+
+
+
+
+    /**
+     * [TODO:]
+     *    - Ponerle a los Sellers en la consola el valor de Provider y a los Buyers el de Customer!!!
+     *        - Probar como se ve todo antes de hacer esto...!!
+     */
+  const salesTabMaybe = isProviderUserType && isSeller
+    ? [
+        {
+          text: (
+            <span>
+              <FormattedMessage id="InboxPage.salesTabTitle" />
+              {providerNotificationCount > 0 ? (
+                <NotificationBadge count={providerNotificationCount} />
+              ) : null}
+            </span>
+          ),
+          selected: !isOrders,
+          linkProps: {
+            name: 'InboxPage',
+            params: { tab: 'sales' },
+          },
+        },
+      ]
+    : [];
+  const tabs = [...ordersTabMaybe, ...salesTabMaybe];
 
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>

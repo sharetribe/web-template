@@ -6,7 +6,13 @@ import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { transactionLineItems } from '../../util/api';
 import * as log from '../../util/log';
 import { denormalisedResponseEntities } from '../../util/data';
-import { findNextBoundary, getStartOf, monthIdString } from '../../util/dates';
+import {
+  bookingTimeUnits,
+  findNextBoundary,
+  getStartOf,
+  monthIdString,
+  stringifyDateToISO8601,
+} from '../../util/dates';
 import {
   hasPermissionToInitiateTransactions,
   hasPermissionToViewData,
@@ -20,6 +26,18 @@ import { getProcess, isBookingProcessAlias } from '../../transactions/transactio
 import { fetchCurrentUser, fetchCurrentUserHasOrdersSuccess } from '../../ducks/user.duck';
 
 const { UUID } = sdkTypes;
+const MINUTE_IN_MS = 1000 * 60;
+
+// Day-based time slots queries are cached for 1 minute.
+const removeOutdatedDateData = timeSlotsForDate => {
+  const now = new Date().getTime();
+  const minuteAgo = now - MINUTE_IN_MS;
+  return Object.fromEntries(
+    Object.entries(timeSlotsForDate).filter(([dateId, data]) => {
+      return data.fetchedAt && data.fetchedAt > minuteAgo;
+    })
+  );
+};
 
 // ================ Action types ================ //
 
@@ -32,9 +50,15 @@ export const FETCH_REVIEWS_REQUEST = 'app/ListingPage/FETCH_REVIEWS_REQUEST';
 export const FETCH_REVIEWS_SUCCESS = 'app/ListingPage/FETCH_REVIEWS_SUCCESS';
 export const FETCH_REVIEWS_ERROR = 'app/ListingPage/FETCH_REVIEWS_ERROR';
 
-export const FETCH_TIME_SLOTS_REQUEST = 'app/ListingPage/FETCH_TIME_SLOTS_REQUEST';
-export const FETCH_TIME_SLOTS_SUCCESS = 'app/ListingPage/FETCH_TIME_SLOTS_SUCCESS';
-export const FETCH_TIME_SLOTS_ERROR = 'app/ListingPage/FETCH_TIME_SLOTS_ERROR';
+export const FETCH_MONTHLY_TIME_SLOTS_REQUEST = 'app/ListingPage/FETCH_MONTHLY_TIME_SLOTS_REQUEST';
+export const FETCH_MONTHLY_TIME_SLOTS_SUCCESS = 'app/ListingPage/FETCH_MONTHLY_TIME_SLOTS_SUCCESS';
+export const FETCH_MONTHLY_TIME_SLOTS_ERROR = 'app/ListingPage/FETCH_MONTHLY_TIME_SLOTS_ERROR';
+
+export const FETCH_TIME_SLOTS_FOR_DATE_REQUEST =
+  'app/ListingPage/FETCH_TIME_SLOTS_FOR_DATE_REQUEST';
+export const FETCH_TIME_SLOTS_FOR_DATE_SUCCESS =
+  'app/ListingPage/FETCH_TIME_SLOTS_FOR_DATE_SUCCESS';
+export const FETCH_TIME_SLOTS_FOR_DATE_ERROR = 'app/ListingPage/FETCH_TIME_SLOTS_FOR_DATE_ERROR';
 
 export const FETCH_LINE_ITEMS_REQUEST = 'app/ListingPage/FETCH_LINE_ITEMS_REQUEST';
 export const FETCH_LINE_ITEMS_SUCCESS = 'app/ListingPage/FETCH_LINE_ITEMS_SUCCESS';
@@ -54,6 +78,16 @@ const initialState = {
   monthlyTimeSlots: {
     // '2022-03': {
     //   timeSlots: [],
+    //   fetchTimeSlotsError: null,
+    //   fetchTimeSlotsInProgress: null,
+    // },
+  },
+  timeSlotsForDate: {
+    // For small time units, we fetch monthly time slots with sparse mode for calendar view
+    // and when the user clicks on a day, we make a full time slot query. This is for that purpose.
+    // '2025-02-03': {
+    //   timeSlots: [],
+    //   fetchedAt: 1738569600000,
     //   fetchTimeSlotsError: null,
     //   fetchTimeSlotsInProgress: null,
     // },
@@ -84,7 +118,7 @@ const listingPageReducer = (state = initialState, action = {}) => {
     case FETCH_REVIEWS_ERROR:
       return { ...state, fetchReviewsError: payload };
 
-    case FETCH_TIME_SLOTS_REQUEST: {
+    case FETCH_MONTHLY_TIME_SLOTS_REQUEST: {
       const monthlyTimeSlots = {
         ...state.monthlyTimeSlots,
         [payload]: {
@@ -95,7 +129,7 @@ const listingPageReducer = (state = initialState, action = {}) => {
       };
       return { ...state, monthlyTimeSlots };
     }
-    case FETCH_TIME_SLOTS_SUCCESS: {
+    case FETCH_MONTHLY_TIME_SLOTS_SUCCESS: {
       const monthId = payload.monthId;
       const monthlyTimeSlots = {
         ...state.monthlyTimeSlots,
@@ -107,7 +141,7 @@ const listingPageReducer = (state = initialState, action = {}) => {
       };
       return { ...state, monthlyTimeSlots };
     }
-    case FETCH_TIME_SLOTS_ERROR: {
+    case FETCH_MONTHLY_TIME_SLOTS_ERROR: {
       const monthId = payload.monthId;
       const monthlyTimeSlots = {
         ...state.monthlyTimeSlots,
@@ -118,6 +152,44 @@ const listingPageReducer = (state = initialState, action = {}) => {
         },
       };
       return { ...state, monthlyTimeSlots };
+    }
+    case FETCH_TIME_SLOTS_FOR_DATE_REQUEST: {
+      const timeSlotsForDate = {
+        ...removeOutdatedDateData(state.timeSlotsForDate),
+        [payload]: {
+          ...state.timeSlotsForDate[payload],
+          fetchTimeSlotsError: null,
+          fetchedAt: null,
+          fetchTimeSlotsInProgress: true,
+          timeSlots: [],
+        },
+      };
+      return { ...state, timeSlotsForDate };
+    }
+    case FETCH_TIME_SLOTS_FOR_DATE_SUCCESS: {
+      const dateId = payload.dateId;
+      const timeSlotsForDate = {
+        ...state.timeSlotsForDate,
+        [dateId]: {
+          ...state.timeSlotsForDate[dateId],
+          fetchTimeSlotsInProgress: false,
+          fetchedAt: new Date().getTime(),
+          timeSlots: payload.timeSlots,
+        },
+      };
+      return { ...state, timeSlotsForDate };
+    }
+    case FETCH_TIME_SLOTS_FOR_DATE_ERROR: {
+      const dateId = payload.dateId;
+      const timeSlotsForDate = {
+        ...state.timeSlotsForDate,
+        [dateId]: {
+          ...state.timeSlotsForDate[dateId],
+          fetchTimeSlotsInProgress: false,
+          fetchTimeSlotsError: payload.error,
+        },
+      };
+      return { ...state, timeSlotsForDate };
     }
 
     case FETCH_LINE_ITEMS_REQUEST:
@@ -167,18 +239,32 @@ export const fetchReviewsError = error => ({
   payload: error,
 });
 
-export const fetchTimeSlotsRequest = monthId => ({
-  type: FETCH_TIME_SLOTS_REQUEST,
+export const fetchMonthlyTimeSlotsRequest = monthId => ({
+  type: FETCH_MONTHLY_TIME_SLOTS_REQUEST,
   payload: monthId,
 });
-export const fetchTimeSlotsSuccess = (monthId, timeSlots) => ({
-  type: FETCH_TIME_SLOTS_SUCCESS,
+export const fetchMonthlyTimeSlotsSuccess = (monthId, timeSlots) => ({
+  type: FETCH_MONTHLY_TIME_SLOTS_SUCCESS,
   payload: { timeSlots, monthId },
 });
-export const fetchTimeSlotsError = (monthId, error) => ({
-  type: FETCH_TIME_SLOTS_ERROR,
+export const fetchMonthlyTimeSlotsError = (monthId, error) => ({
+  type: FETCH_MONTHLY_TIME_SLOTS_ERROR,
   error: true,
   payload: { monthId, error },
+});
+
+export const fetchTimeSlotsForDateRequest = dateId => ({
+  type: FETCH_TIME_SLOTS_FOR_DATE_REQUEST,
+  payload: dateId,
+});
+export const fetchTimeSlotsForDateSuccess = (dateId, timeSlots) => ({
+  type: FETCH_TIME_SLOTS_FOR_DATE_SUCCESS,
+  payload: { timeSlots, dateId },
+});
+export const fetchTimeSlotsForDateError = (dateId, error) => ({
+  type: FETCH_TIME_SLOTS_FOR_DATE_ERROR,
+  error: true,
+  payload: { dateId, error },
 });
 
 export const fetchLineItemsRequest = () => ({ type: FETCH_LINE_ITEMS_REQUEST });
@@ -282,24 +368,53 @@ const timeSlotsRequest = params => (dispatch, getState, sdk) => {
   });
 };
 
-export const fetchTimeSlots = (listingId, start, end, timeZone) => (dispatch, getState, sdk) => {
-  const monthId = monthIdString(start, timeZone);
-
-  dispatch(fetchTimeSlotsRequest(monthId));
+export const fetchTimeSlots = (listingId, start, end, timeZone, options) => (
+  dispatch,
+  getState,
+  sdk
+) => {
+  const { extraQueryParams = null, useFetchTimeSlotsForDate = false } = options || {};
 
   // The maximum pagination page size for timeSlots is 500
-  const extraParams = {
+  const extraParams = extraQueryParams || {
     perPage: 500,
     page: 1,
   };
 
-  return dispatch(timeSlotsRequest({ listingId, start, end, ...extraParams }))
-    .then(timeSlots => {
-      dispatch(fetchTimeSlotsSuccess(monthId, timeSlots));
-    })
-    .catch(e => {
-      dispatch(fetchTimeSlotsError(monthId, storableError(e)));
-    });
+  // For small time units, we fetch the data per date.
+  // This is to avoid fetching too much data (with 15 minute intervals, there can be 24*4*31 = 2928 time slots)
+  if (useFetchTimeSlotsForDate) {
+    const dateId = stringifyDateToISO8601(start, timeZone);
+    const dateData = getState().ListingPage.timeSlotsForDate[dateId];
+    const minuteAgo = new Date().getTime() - MINUTE_IN_MS;
+    const hasRecentlyFetchedData = dateData?.fetchedAt > minuteAgo;
+    if (hasRecentlyFetchedData) {
+      return Promise.resolve(dateData?.timeSlots || []);
+    }
+
+    dispatch(fetchTimeSlotsForDateRequest(dateId));
+    return dispatch(timeSlotsRequest({ listingId, start, end, ...extraParams }))
+      .then(timeSlots => {
+        dispatch(fetchTimeSlotsForDateSuccess(dateId, timeSlots));
+        return timeSlots;
+      })
+      .catch(e => {
+        dispatch(fetchTimeSlotsForDateError(dateId, storableError(e)));
+        return [];
+      });
+  } else {
+    const monthId = monthIdString(start, timeZone);
+    dispatch(fetchMonthlyTimeSlotsRequest(monthId));
+    return dispatch(timeSlotsRequest({ listingId, start, end, ...extraParams }))
+      .then(timeSlots => {
+        dispatch(fetchMonthlyTimeSlotsSuccess(monthId, timeSlots));
+        return timeSlots;
+      })
+      .catch(e => {
+        dispatch(fetchMonthlyTimeSlotsError(monthId, storableError(e)));
+        return [];
+      });
+  }
 };
 
 export const sendInquiry = (listing, message) => (dispatch, getState, sdk) => {
@@ -350,16 +465,53 @@ const fetchMonthlyTimeSlots = (dispatch, listing) => {
 
   // Fetch time-zones on client side only.
   if (hasWindow && listing.id && !!tz) {
-    const unitType = publicData?.unitType;
-    const timeUnit = unitType === 'hour' ? 'hour' : 'day';
-    const nextBoundary = findNextBoundary(new Date(), timeUnit, tz);
+    const { unitType, priceVariants, startTimeInterval } = publicData || {};
+    const now = new Date();
+    const startOfToday = getStartOf(now, 'day', tz);
+    const isFixed = unitType === 'fixed';
+
+    const timeUnit = startTimeInterval
+      ? bookingTimeUnits[startTimeInterval]?.timeUnit
+      : unitType === 'hour'
+      ? 'hour'
+      : 'day';
+    const nextBoundary = findNextBoundary(now, 1, timeUnit, tz);
 
     const nextMonth = getStartOf(nextBoundary, 'month', tz, 1, 'months');
     const nextAfterNextMonth = getStartOf(nextMonth, 'month', tz, 1, 'months');
 
+    const variants = priceVariants || [];
+    const bookingLengthInMinutes = variants.reduce((min, priceVariant) => {
+      return Math.min(min, priceVariant.bookingLengthInMinutes);
+    }, Number.MAX_SAFE_INTEGER);
+
+    const nextMonthEnd = isFixed
+      ? getStartOf(nextMonth, 'minute', tz, bookingLengthInMinutes, 'minutes')
+      : nextMonth;
+    const followingMonthEnd = isFixed
+      ? getStartOf(nextAfterNextMonth, 'minute', tz, bookingLengthInMinutes, 'minutes')
+      : nextAfterNextMonth;
+
+    const minDurationStartingInInterval = isFixed ? bookingLengthInMinutes : 60;
+
+    const options = intervalAlign => {
+      return ['fixed', 'hour'].includes(unitType)
+        ? {
+            extraQueryParams: {
+              intervalDuration: 'P1D',
+              intervalAlign,
+              maxPerInterval: 1,
+              minDurationStartingInInterval,
+              perPage: 31,
+              page: 1,
+            },
+          }
+        : null;
+    };
+
     return Promise.all([
-      dispatch(fetchTimeSlots(listing.id, nextBoundary, nextMonth, tz)),
-      dispatch(fetchTimeSlots(listing.id, nextMonth, nextAfterNextMonth, tz)),
+      dispatch(fetchTimeSlots(listing.id, nextBoundary, nextMonthEnd, tz, options(startOfToday))),
+      dispatch(fetchTimeSlots(listing.id, nextMonth, followingMonthEnd, tz, options(nextMonth))),
     ]);
   }
 

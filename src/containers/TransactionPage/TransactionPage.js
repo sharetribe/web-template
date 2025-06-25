@@ -8,14 +8,7 @@ import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { createResourceLocatorString, findRouteByRouteName } from '../../util/routes';
-import {
-  DATE_TYPE_DATE,
-  DATE_TYPE_DATETIME,
-  LISTING_UNIT_TYPES,
-  LINE_ITEM_HOUR,
-  LINE_ITEM_ITEM,
-  propTypes,
-} from '../../util/types';
+import { LISTING_UNIT_TYPES, propTypes } from '../../util/types';
 import { timestampToDate } from '../../util/dates';
 import { createSlug } from '../../util/urlHelpers';
 import {
@@ -62,7 +55,7 @@ import {
   fetchTransactionLineItems,
 } from './TransactionPage.duck';
 import css from './TransactionPage.module.css';
-import { hasPermissionToViewData } from '../../util/userHelpers.js';
+import { getCurrentUserTypeRoles, hasPermissionToViewData } from '../../util/userHelpers.js';
 
 // Submit dispute and close the review modal
 const onDisputeOrder = (
@@ -109,6 +102,7 @@ const onDisputeOrder = (
  * @param {string} props.transitionInProgress - The transition in progress
  * @param {propTypes.error} props.transitionError - The transition error
  * @param {Object<string, Object>} props.monthlyTimeSlots - The monthly time slots: { '2019-11': { timeSlots: [], fetchTimeSlotsInProgress: false, fetchTimeSlotsError: null } }
+ * @param {Object<string, Object>} props.timeSlotsForDate - The time slots for date. E.g. { '2019-11-01': { timeSlots: [], fetchedAt: 1572566400000, fetchTimeSlotsError: null, fetchTimeSlotsInProgress: false } }
  * @param {propTypes.error} props.fetchTimeSlotsError - The fetch time slots error
  * @param {Array<propTypes.lineItem>} props.lineItems - The line items
  * @param {propTypes.error} props.fetchLineItemsError - The fetch line items error
@@ -163,15 +157,10 @@ export const TransactionPageComponent = props => {
     transitionInProgress,
     transitionError,
     onTransition,
-    monthlyTimeSlots,
-    onFetchTimeSlots,
     nextTransitions,
     callSetInitialValues,
     onInitializeCardPaymentData,
-    onFetchTransactionLineItems,
-    lineItems,
-    fetchLineItemsInProgress,
-    fetchLineItemsError,
+    ...restOfProps
   } = props;
 
   const { listing, provider, customer, booking } = transaction || {};
@@ -243,6 +232,7 @@ export const TransactionPageComponent = props => {
       bookingDates,
       bookingStartTime,
       bookingEndTime,
+      priceVariantName, // relevant for bookings
       quantity: quantityRaw,
       seats: seatsRaw,
       deliveryMethod,
@@ -265,6 +255,8 @@ export const TransactionPageComponent = props => {
         }
       : {};
 
+    // priceVariantName is relevant for bookings
+    const priceVariantNameMaybe = priceVariantName ? { priceVariantName } : {};
     const quantity = Number.parseInt(quantityRaw, 10);
     const quantityMaybe = Number.isInteger(quantity) ? { quantity } : {};
     const seats = Number.parseInt(seatsRaw, 10);
@@ -277,6 +269,7 @@ export const TransactionPageComponent = props => {
       transaction,
       orderData: {
         ...bookingMaybe,
+        ...priceVariantNameMaybe,
         ...quantityMaybe,
         ...seatsMaybe,
         ...deliveryMethodMaybe,
@@ -365,14 +358,25 @@ export const TransactionPageComponent = props => {
   const isOwnOrder =
     isDataAvailable && isCustomerRole && currentUser.id.uuid === customer?.id?.uuid;
 
+  const {
+    customer: isCustomerUserTypeRole,
+    provider: isProviderUserTypeRole,
+  } = getCurrentUserTypeRoles(config, currentUser);
+
   if (isDataAvailable && isProviderRole && !isOwnSale) {
+    // If the user's user type does not have a provider role set, redirect
+    // to 'orders' inbox tab. Otherwise, redirect to 'sales' tab.
+    const tab = !isProviderUserTypeRole ? 'orders' : 'sales';
     // eslint-disable-next-line no-console
     console.error('Tried to access a sale that was not owned by the current user');
-    return <NamedRedirect name="InboxPage" params={{ tab: 'sales' }} />;
+    return <NamedRedirect name="InboxPage" params={{ tab }} />;
   } else if (isDataAvailable && isCustomerRole && !isOwnOrder) {
+    // If the user's user type does not have a customer role set, redirect
+    // to 'sales' inbox tab. Otherwise, redirect to 'orders' tab.
+    const tab = !isCustomerUserTypeRole ? 'sales' : 'orders';
     // eslint-disable-next-line no-console
     console.error('Tried to access an order that was not owned by the current user');
-    return <NamedRedirect name="InboxPage" params={{ tab: 'orders' }} />;
+    return <NamedRedirect name="InboxPage" params={{ tab }} />;
   }
 
   const detailsClassName = classNames(css.tabContent, css.tabContentVisible);
@@ -451,11 +455,10 @@ export const TransactionPageComponent = props => {
     : null;
 
   const timeZone = listing?.attributes?.availabilityPlan?.timezone;
-  const dateType = lineItemUnitType === LINE_ITEM_HOUR ? DATE_TYPE_DATETIME : DATE_TYPE_DATE;
 
   const hasViewingRights = currentUser && hasPermissionToViewData(currentUser);
 
-  const txBookingMaybe = booking?.id ? { booking, dateType, timeZone } : {};
+  const txBookingMaybe = booking?.id ? { booking, timeZone } : {};
   const orderBreakdownMaybe = hasLineItems
     ? {
         orderBreakdown: (
@@ -543,12 +546,7 @@ export const TransactionPageComponent = props => {
           author={provider}
           onSubmit={handleSubmitOrderRequest}
           onManageDisableScrolling={onManageDisableScrolling}
-          onFetchTimeSlots={onFetchTimeSlots}
-          monthlyTimeSlots={monthlyTimeSlots}
-          onFetchTransactionLineItems={onFetchTransactionLineItems}
-          lineItems={lineItems}
-          fetchLineItemsInProgress={fetchLineItemsInProgress}
-          fetchLineItemsError={fetchLineItemsError}
+          {...restOfProps}
           validListingTypes={config.listing.listingTypes}
           marketplaceCurrency={config.currency}
           dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
@@ -619,6 +617,7 @@ const mapStateToProps = state => {
     sendReviewInProgress,
     sendReviewError,
     monthlyTimeSlots,
+    timeSlotsForDate,
     processTransitions,
     lineItems,
     fetchLineItemsInProgress,
@@ -647,11 +646,12 @@ const mapStateToProps = state => {
     sendMessageError,
     sendReviewInProgress,
     sendReviewError,
-    monthlyTimeSlots,
     nextTransitions: processTransitions,
-    lineItems,
-    fetchLineItemsInProgress,
-    fetchLineItemsError,
+    monthlyTimeSlots, // for OrderPanel
+    timeSlotsForDate, // for OrderPanel
+    lineItems, // for OrderPanel
+    fetchLineItemsInProgress, // for OrderPanel
+    fetchLineItemsError, // for OrderPanel
   };
 };
 
@@ -668,9 +668,9 @@ const mapDispatchToProps = dispatch => {
     callSetInitialValues: (setInitialValues, values) => dispatch(setInitialValues(values)),
     onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
     onFetchTransactionLineItems: (orderData, listingId, isOwnListing) =>
-      dispatch(fetchTransactionLineItems(orderData, listingId, isOwnListing)),
-    onFetchTimeSlots: (listingId, start, end, timeZone) =>
-      dispatch(fetchTimeSlots(listingId, start, end, timeZone)),
+      dispatch(fetchTransactionLineItems(orderData, listingId, isOwnListing)), // for OrderPanel
+    onFetchTimeSlots: (listingId, start, end, timeZone, options) =>
+      dispatch(fetchTimeSlots(listingId, start, end, timeZone, options)), // for OrderPanel
   };
 };
 

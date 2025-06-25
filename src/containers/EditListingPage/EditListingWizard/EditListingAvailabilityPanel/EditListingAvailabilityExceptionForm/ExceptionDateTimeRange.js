@@ -155,7 +155,7 @@ const getAllTimeValues = ({
   const endDate = selectedEndDate
     ? selectedEndDate
     : startTimeAsDate
-    ? new Date(findNextBoundary(startTimeAsDate, 'hour', timeZone).getTime() - 1)
+    ? new Date(findNextBoundary(startTimeAsDate, 1, 'hour', timeZone).getTime() - 1)
     : null;
 
   const params = {
@@ -392,7 +392,7 @@ const ExceptionDateTimeRange = props => {
   const startTimeDisabled = !exceptionStartDate;
   const endDateDisabled = !exceptionStartDate || !exceptionStartTime;
   const endTimeDisabled = !exceptionStartDate || !exceptionStartTime || !exceptionEndDate;
-  const nextBoundary = findNextBoundary(TODAY, 'hour', timeZone);
+  const nextBoundary = findNextBoundary(TODAY, 1, 'hour', timeZone);
   let placeholderTime = '08:00';
   try {
     placeholderTime = formatDateIntoPartials(nextBoundary, intl, { timeZone })?.time;

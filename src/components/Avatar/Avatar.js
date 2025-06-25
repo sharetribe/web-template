@@ -7,6 +7,7 @@ import {
   userDisplayNameAsString,
   userAbbreviatedName,
 } from '../../util/data';
+import { PROFILE_PAGE_PENDING_APPROVAL_VARIANT } from '../../util/urlHelpers';
 import { isUserAuthorized } from '../../util/userHelpers';
 
 import { ResponsiveImage, IconBannedUser, NamedLink } from '../../components/';
@@ -61,8 +62,10 @@ export const Avatar = props => {
   const avatarUser = userIsCurrentUser ? ensureCurrentUser(user) : ensureUser(user);
   // I.e. the status is active, not pending-approval or banned
   const isUnauthorizedUser = userIsCurrentUser && !isUserAuthorized(user);
-  const variant = user?.attributes?.state;
-  //'pending-approval'
+  const variant =
+    user?.attributes?.state === 'pendingApproval'
+      ? PROFILE_PAGE_PENDING_APPROVAL_VARIANT
+      : user?.attributes?.state;
 
   const isBannedUser = avatarUser.attributes.banned;
   const isDeletedUser = avatarUser.attributes.deleted;

@@ -8,6 +8,7 @@ import { createResourceLocatorString } from '../../util/routes';
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { ensureCurrentUser } from '../../util/data';
 import { propTypes } from '../../util/types';
+import { showPaymentDetailsForUser } from '../../util/userHelpers';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 import {
   stripeAccountClearError,
@@ -167,6 +168,13 @@ export const StripePayoutPageComponent = props => {
     handleGetStripeConnectAccountLink('custom_account_verification')();
   }
 
+  const { showPayoutDetails, showPaymentMethods } = showPaymentDetailsForUser(config, currentUser);
+  const accountSettingsNavProps = {
+    currentPage: 'StripePayoutPage',
+    showPaymentMethods,
+    showPayoutDetails,
+  };
+
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
       <LayoutSideNavigation
@@ -181,7 +189,7 @@ export const StripePayoutPageComponent = props => {
         }
         sideNav={null}
         useAccountSettingsNav
-        currentPage="StripePayoutPage"
+        accountSettingsNavProps={accountSettingsNavProps}
         footer={<FooterContainer />}
       >
         <div className={css.content}>

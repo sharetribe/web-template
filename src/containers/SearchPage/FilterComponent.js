@@ -61,6 +61,22 @@ const FilterComponent = props => {
         />
       );
     }
+    case 'listingType': {
+      const { scope, options } = config;
+      const paramNames = [constructQueryParamName(key, scope)];
+      return (
+        <SelectSingleFilter
+          id={componentId}
+          name={key}
+          label={intl.formatMessage({ id: 'FilterComponent.listingTypeLabel' })}
+          queryParamNames={[paramNames]}
+          initialValues={initialValues(paramNames, liveEdit)}
+          onSubmit={getHandleChangedValueFn(useHistoryPush)}
+          options={options}
+          {...rest}
+        />
+      );
+    }
     case 'price': {
       const { min, max, step } = config;
       return (

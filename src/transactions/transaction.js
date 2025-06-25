@@ -10,6 +10,7 @@ export const ITEM = 'item';
 export const DAY = 'day';
 export const NIGHT = 'night';
 export const HOUR = 'hour';
+export const FIXED = 'fixed';
 export const INQUIRY = 'inquiry';
 
 // Then names of supported processes
@@ -41,7 +42,7 @@ const PROCESSES = [
     name: BOOKING_PROCESS_NAME,
     alias: `${BOOKING_PROCESS_NAME}/release-1`,
     process: bookingProcess,
-    unitTypes: [DAY, NIGHT, HOUR],
+    unitTypes: [DAY, NIGHT, HOUR, FIXED],
   },
   {
     name: INQUIRY_PROCESS_NAME,

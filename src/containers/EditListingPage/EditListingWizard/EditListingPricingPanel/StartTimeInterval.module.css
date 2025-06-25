@@ -1,0 +1,22 @@
+@import '../../../../styles/customMediaQueries.css';
+
+.root {
+  display: flex;
+  flex-direction: column;
+  margin: 24px 0 0 0;
+  padding: 0;
+  border: none;
+}
+
+.label {
+  font-size: 13px;
+  margin-bottom: 6px;
+
+  @media (--viewportMedium) {
+    margin-bottom: 0;
+  }
+}
+
+.option {
+  width: fit-content;
+}

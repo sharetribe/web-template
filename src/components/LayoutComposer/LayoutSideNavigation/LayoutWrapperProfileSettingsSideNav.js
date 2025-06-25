@@ -1,5 +1,4 @@
 import React from 'react';
-import { bool, string } from 'prop-types';
 
 import { FormattedMessage } from '../../../util/reactIntl';
 
@@ -7,7 +6,18 @@ import { TabNav } from '../../../components';
 
 import css from './LayoutSideNavigation.module.css';
 
-const LayoutWrapperProfileSettingsSideNav = ({ currentPage, withCreativeProfile = false }) => {
+/**
+ * Side nav with navigation to different account settings.
+ *
+ * @component
+ * @param {Object} props
+ * @param {Object} props.accountSettingsNavProps
+ * @param {string?} props.accountSettingsNavProps.currentPage
+ * @param {boolean?} props.withCreativeProfile
+ * @returns {JSX.Element} Side nav with navigation to different account settings
+ */
+const LayoutWrapperProfileSettingsSideNav = ({ accountSettingsNavProps, withCreativeProfile = false }) => {
+  const { currentPage } = accountSettingsNavProps;
   const isProfileSettingsPage = currentPage === 'ProfileSettingsPage';
   const isCreativeDetailsPage = currentPage === 'CreativeDetailsPage';
   const tabs = [
@@ -34,11 +44,6 @@ const LayoutWrapperProfileSettingsSideNav = ({ currentPage, withCreativeProfile 
   ];
 
   return <TabNav rootClassName={css.tabs} tabRootClassName={css.tab} tabs={tabs} />;
-};
-
-LayoutWrapperProfileSettingsSideNav.propTypes = {
-  currentPage: string,
-  withCreativeProfile: bool,
 };
 
 export default LayoutWrapperProfileSettingsSideNav;

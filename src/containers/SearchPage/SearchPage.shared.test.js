@@ -11,11 +11,26 @@ import {
 } from './SearchPage.shared.js';
 
 const urlParams = {
-  pub_rider: 'men',
-  pub_amenities: 'towels,bathroom',
+  pub_generalParam: 'one',
+  pub_generalMultienum: 'towels,bathroom',
 };
 
 const listingFieldsConfig = [
+  {
+    key: 'generalParam',
+    scope: 'public',
+    schemaType: 'enum',
+    enumOptions: [
+      { option: 'one', label: 'One' },
+      { option: 'two', label: 'Two' },
+      { option: 'three', label: 'Three' },
+    ],
+    filterConfig: {
+      indexForSearch: true,
+      label: 'General information',
+      group: 'primary',
+    },
+  },
   {
     key: 'rider',
     scope: 'public',
@@ -73,6 +88,18 @@ const listingFieldsConfig = [
     },
   },
   {
+    key: 'generalMultienum',
+    scope: 'public',
+    schemaType: 'multi-enum',
+    enumOptions: [{ option: 'towels', label: 'Towels' }, { option: 'bathroom', label: 'Bathroom' }],
+    filterConfig: {
+      indexForSearch: true,
+      label: 'Generic multi-enum',
+      //searchMode: 'has_all',
+      group: 'secondary',
+    },
+  },
+  {
     key: 'cat',
     scope: 'public',
     listingTypeConfig: {
@@ -97,6 +124,18 @@ const listingFieldsConfig = [
   },
 ];
 
+const activeListingTypes = [
+  'sell-bicycles',
+  'rent-bicycles-daily',
+  'rent-bicycles-nightly',
+  'rent-bicycles-hourly',
+];
+
+const listingTypesConfig = activeListingTypes.map(lt => ({
+  id: lt,
+  label: lt,
+}));
+
 const defaultFiltersConfig = [
   {
     key: 'categoryLevel',
@@ -119,6 +158,11 @@ const defaultFiltersConfig = [
     schemaType: 'text',
     label: 'Keyword',
   },
+  {
+    key: 'listingType',
+    schemaType: 'listingType',
+    label: 'Listing type',
+  },
 ];
 
 const listingCategories = [
@@ -134,6 +178,7 @@ const filterConfigs = {
   listingFieldsConfig,
   defaultFiltersConfig,
   listingCategories,
+  activeListingTypes,
 };
 
 const sortConfig = {
@@ -153,22 +198,33 @@ const sortConfig = {
 describe('SearchPage.helpers', () => {
   describe('omitLimitedListingFieldParams', () => {
     it('returns everything if no category limit is set', () => {
+      const params = { pub_generalParam: 'one', other_param: 'somevalue' };
+      const validParam = omitLimitedListingFieldParams(params, filterConfigs);
+      expect(validParam).toEqual({ pub_generalParam: 'one', other_param: 'somevalue' });
+    });
+    it('returns filtered parameters if listing type limit affects', () => {
       const params = { pub_rider: 'women', other_param: 'somevalue' };
       const validParam = omitLimitedListingFieldParams(params, filterConfigs);
-      expect(validParam).toEqual({ pub_rider: 'women', other_param: 'somevalue' });
+      expect(validParam).toEqual({ other_param: 'somevalue' });
     });
     it('returns filtered parameters if category limit affects', () => {
       const params = { pub_cat: 'cat1', other_param: 'somevalue' };
       const validParam = omitLimitedListingFieldParams(params, filterConfigs);
       expect(validParam).toEqual({ other_param: 'somevalue' });
     });
-    it('returns everything if correct category is set', () => {
-      const params = { pub_categoryLevel1: 'a', pub_cat: 'cat1', other_param: 'somevalue' };
+    it('returns everything if correct category and listing type is set', () => {
+      const params = {
+        pub_categoryLevel1: 'a',
+        pub_cat: 'cat1',
+        other_param: 'somevalue',
+        pub_listingType: 'sell-bicycles',
+      };
       const validParam = omitLimitedListingFieldParams(params, filterConfigs);
       expect(validParam).toEqual({
         pub_categoryLevel1: 'a',
         pub_cat: 'cat1',
         other_param: 'somevalue',
+        pub_listingType: 'sell-bicycles',
       });
     });
   });
@@ -242,15 +298,15 @@ describe('SearchPage.helpers', () => {
     });
 
     it('drops an invalid filter param value', () => {
-      const params = { pub_rider: 'men', pub_amenities: 'invalid1,invalid2' };
+      const params = { pub_generalParam: 'one', pub_generalMultienum: 'invalid1,invalid2' };
       const validParams = validFilterParams(params, filterConfigs);
-      expect(validParams).toEqual({ pub_rider: 'men' });
+      expect(validParams).toEqual({ pub_generalParam: 'one' });
     });
 
     it('drops non-filter params', () => {
-      const params = { pub_rider: 'men', other_param: 'somevalue' };
+      const params = { pub_generalParam: 'one', other_param: 'somevalue' };
       const validParams = validFilterParams(params, filterConfigs);
-      expect(validParams).toEqual({ pub_rider: 'men' });
+      expect(validParams).toEqual({ pub_generalParam: 'one' });
     });
 
     it('returns valid parameters, when "dropNonFilterParams" is false', () => {
@@ -264,13 +320,13 @@ describe('SearchPage.helpers', () => {
     });
 
     it('drops an invalid filter param value, when "dropNonFilterParams" is false', () => {
-      const params = { pub_rider: 'men', pub_amenities: 'invalid1,invalid2' };
+      const params = { pub_generalParam: 'one', pub_generalMultienum: 'invalid1,invalid2' };
       const validParams = validFilterParams(params, filterConfigs, false);
-      expect(validParams).toEqual({ pub_rider: 'men' });
+      expect(validParams).toEqual({ pub_generalParam: 'one' });
     });
 
     it('returns non-filter params, when "dropNonFilterParams" is false', () => {
-      const params = { pub_rider: 'men', other_param: 'somevalue' };
+      const params = { pub_generalParam: 'one', other_param: 'somevalue' };
       const validParams = validFilterParams(params, filterConfigs, false);
       expect(validParams).toEqual(params);
     });
@@ -278,12 +334,13 @@ describe('SearchPage.helpers', () => {
 
   describe('validUrlQueryParamsFromProps', () => {
     it('returns a valid parameter', () => {
-      const location = { search: '?pub_rider=men&pub_amenities=towels,bathroom' };
+      const location = { search: '?pub_generalParam=one&pub_generalMultienum=towels,bathroom' };
       const pickedParams = validUrlQueryParamsFromProps({
         location,
         config: {
           listing: {
             listingFields: listingFieldsConfig,
+            listingTypes: listingTypesConfig,
           },
           search: {
             defaultFilters: defaultFiltersConfig,
@@ -291,17 +348,21 @@ describe('SearchPage.helpers', () => {
           categoryConfiguration: { categories: listingCategories },
         },
       });
+
       expect(pickedParams).toEqual(urlParams);
     });
 
     it('returns valid values for parameters when also invalid is given', () => {
       // asdf is invalid value
-      const location = { search: '?pub_rider=men&pub_amenities=towels,bathroom,asdf' };
+      const location = {
+        search: '?pub_generalParam=one&pub_generalMultienum=towels,bathroom,asdf',
+      };
       const pickedParams = validUrlQueryParamsFromProps({
         location,
         config: {
           listing: {
             listingFields: listingFieldsConfig,
+            listingTypes: listingTypesConfig,
           },
           search: {
             defaultFilters: defaultFiltersConfig,
@@ -314,12 +375,13 @@ describe('SearchPage.helpers', () => {
   });
 
   describe('initialValues', () => {
-    const location = { search: '?pub_rider=men&pub_amenities=towels,bathroom' };
+    const location = { search: '?pub_generalParam=one&pub_generalMultienum=towels,bathroom' };
     const props = {
       location,
       config: {
         listing: {
           listingFields: listingFieldsConfig,
+          listingTypes: listingTypesConfig,
         },
         search: {
           defaultFilters: defaultFiltersConfig,
@@ -330,15 +392,15 @@ describe('SearchPage.helpers', () => {
     const currentQueryParams = {};
 
     it('returns a valid parameter for a selected queryParamName', () => {
-      const queryParamNames = ['pub_amenities'];
+      const queryParamNames = ['pub_generalMultienum'];
       const isLiveEdit = true;
 
       const iv = initialValues(props, currentQueryParams)(queryParamNames, isLiveEdit);
-      expect(iv).toEqual({ pub_amenities: urlParams.pub_amenities });
+      expect(iv).toEqual({ pub_generalMultienum: urlParams.pub_generalMultienum });
     });
 
     it('returns a valid parameter for a selected queryParamNames', () => {
-      const queryParamNames = ['pub_rider', 'pub_amenities'];
+      const queryParamNames = ['pub_generalParam', 'pub_generalMultienum'];
       const isLiveEdit = true;
 
       const iv = initialValues(props, currentQueryParams)(queryParamNames, isLiveEdit);
@@ -354,31 +416,31 @@ describe('SearchPage.helpers', () => {
     });
 
     it('returns a valid parameter for a selected queryParamNames if currentQueryParams is overwritten', () => {
-      const queryParamNames = ['pub_rider', 'pub_amenities'];
+      const queryParamNames = ['pub_generalParam', 'pub_generalMultienum'];
       const isLiveEdit = true;
 
-      const iv = initialValues(props, { pub_rider: 'women' })(queryParamNames, isLiveEdit);
+      const iv = initialValues(props, { pub_generalParam: 'two' })(queryParamNames, isLiveEdit);
       expect(iv).toEqual(urlParams);
     });
 
     it('returns a valid parameters lisLiveEdit=false (uses currentQueryParams)', () => {
-      const amenitiesOnly = { search: '?pub_amenities=towels,bathroom' };
-      const props2 = { ...props, location: amenitiesOnly };
-      const queryParamNames = ['pub_rider', 'pub_amenities'];
+      const multiEnumOnly = { search: '?pub_generalMultienum=towels,bathroom' };
+      const props2 = { ...props, location: multiEnumOnly };
+      const queryParamNames = ['pub_generalParam', 'pub_generalMultienum'];
       const isLiveEdit = false;
 
-      const iv = initialValues(props2, { pub_rider: 'men' })(queryParamNames, isLiveEdit);
+      const iv = initialValues(props2, { pub_generalParam: 'one' })(queryParamNames, isLiveEdit);
       expect(iv).toEqual(urlParams);
     });
 
     it("returns a valid parameters lisLiveEdit=true (doesn't use currentQueryParams)", () => {
-      const amenitiesOnly = { search: '?pub_amenities=towels,bathroom' };
-      const props2 = { ...props, location: amenitiesOnly };
-      const queryParamNames = ['pub_rider', 'pub_amenities'];
+      const multiEnumOnly = { search: '?pub_generalMultienum=towels,bathroom' };
+      const props2 = { ...props, location: multiEnumOnly };
+      const queryParamNames = ['pub_generalParam', 'pub_generalMultienum'];
       const isLiveEdit = true;
 
-      const iv = initialValues(props2, { pub_rider: 'men' })(queryParamNames, isLiveEdit);
-      expect(iv).toEqual({ ...urlParams, pub_rider: undefined });
+      const iv = initialValues(props2, { pub_generalParam: 'one' })(queryParamNames, isLiveEdit);
+      expect(iv).toEqual({ ...urlParams, pub_generalParam: undefined });
     });
   });
 
@@ -440,15 +502,15 @@ describe('SearchPage.helpers', () => {
     });
 
     it('drops an invalid filter param value', () => {
-      const params = { pub_rider: 'men', pub_amenities: 'invalid1,invalid2' };
+      const params = { pub_generalParam: 'one', pub_generalMultienum: 'invalid1,invalid2' };
       const validParams = pickSearchParamsOnly(params, filterConfigs, sortConfig, isOriginInUse);
-      expect(validParams).toEqual({ pub_rider: 'men' });
+      expect(validParams).toEqual({ pub_generalParam: 'one' });
     });
 
     it('drops non-search params', () => {
-      const params = { pub_rider: 'men', other_param: 'somevalue' };
+      const params = { pub_generalParam: 'one', other_param: 'somevalue' };
       const validParams = pickSearchParamsOnly(params, filterConfigs, sortConfig, isOriginInUse);
-      expect(validParams).toEqual({ pub_rider: 'men' });
+      expect(validParams).toEqual({ pub_generalParam: 'one' });
     });
 
     it('returns sort param', () => {
@@ -461,7 +523,7 @@ describe('SearchPage.helpers', () => {
   describe('searchParamsPicker', () => {
     const isOriginInUse = false;
     it("returns searchParamsAreInSync: false if searchParamsInProps and location.search don't match", () => {
-      const location = { search: '?pub_rider=men&pub_amenities=towels,bathroom' };
+      const location = { search: '?pub_generalParam=one&pub_generalMultienum=towels,bathroom' };
       const searchParamsInProps = {
         address: 'address value',
         origin: 'origin value',
@@ -478,14 +540,17 @@ describe('SearchPage.helpers', () => {
 
       expect(paramsInfo).toEqual({
         searchParamsAreInSync: false,
-        searchParamsInURL: { pub_amenities: 'towels,bathroom', pub_rider: 'men' },
-        urlQueryParams: { pub_amenities: 'towels,bathroom', pub_rider: 'men' },
+        searchParamsInURL: { pub_generalMultienum: 'towels,bathroom', pub_generalParam: 'one' },
+        urlQueryParams: { pub_generalMultienum: 'towels,bathroom', pub_generalParam: 'one' },
       });
     });
 
     it('returns searchParamsAreInSync: true if searchParamsInProps and location.search match', () => {
-      const location = { search: '?pub_rider=men&pub_amenities=towels,bathroom' };
-      const searchParamsInProps = { pub_amenities: 'towels,bathroom', pub_rider: 'men' };
+      const location = { search: '?pub_generalParam=one&pub_generalMultienum=towels,bathroom' };
+      const searchParamsInProps = {
+        pub_generalMultienum: 'towels,bathroom',
+        pub_generalParam: 'one',
+      };
 
       const paramsInfo = searchParamsPicker(
         location.search,
@@ -497,16 +562,19 @@ describe('SearchPage.helpers', () => {
 
       expect(paramsInfo).toEqual({
         searchParamsAreInSync: true,
-        searchParamsInURL: { pub_amenities: 'towels,bathroom', pub_rider: 'men' },
-        urlQueryParams: { pub_amenities: 'towels,bathroom', pub_rider: 'men' },
+        searchParamsInURL: { pub_generalMultienum: 'towels,bathroom', pub_generalParam: 'one' },
+        urlQueryParams: { pub_generalMultienum: 'towels,bathroom', pub_generalParam: 'one' },
       });
     });
 
     it('returns correct info even if location.search contains page and mapSearch params', () => {
       const location = {
-        search: '?pub_rider=men&pub_amenities=towels,bathroom&page=2&mapSearch=true',
+        search: '?pub_generalParam=one&pub_generalMultienum=towels,bathroom&page=2&mapSearch=true',
       };
-      const searchParamsInProps = { pub_amenities: 'towels,bathroom', pub_rider: 'men' };
+      const searchParamsInProps = {
+        pub_generalMultienum: 'towels,bathroom',
+        pub_generalParam: 'one',
+      };
 
       const paramsInfo = searchParamsPicker(
         location.search,
@@ -518,14 +586,19 @@ describe('SearchPage.helpers', () => {
 
       expect(paramsInfo).toEqual({
         searchParamsAreInSync: true,
-        searchParamsInURL: { pub_amenities: 'towels,bathroom', pub_rider: 'men' },
-        urlQueryParams: { pub_amenities: 'towels,bathroom', pub_rider: 'men' },
+        searchParamsInURL: { pub_generalMultienum: 'towels,bathroom', pub_generalParam: 'one' },
+        urlQueryParams: { pub_generalMultienum: 'towels,bathroom', pub_generalParam: 'one' },
       });
     });
 
     it('returns correct urlQueryParams even if location.search contains unknown search params', () => {
-      const location = { search: '?pub_rider=men&pub_amenities=towels,bathroom&pub_asdf=true' };
-      const searchParamsInProps = { pub_amenities: 'towels,bathroom', pub_rider: 'men' };
+      const location = {
+        search: '?pub_generalParam=one&pub_generalMultienum=towels,bathroom&pub_asdf=true',
+      };
+      const searchParamsInProps = {
+        pub_generalMultienum: 'towels,bathroom',
+        pub_generalParam: 'one',
+      };
 
       const paramsInfo = searchParamsPicker(
         location.search,
@@ -538,29 +611,32 @@ describe('SearchPage.helpers', () => {
       expect(paramsInfo).toEqual({
         searchParamsAreInSync: true,
         searchParamsInURL: {
-          pub_amenities: 'towels,bathroom',
-          pub_rider: 'men',
+          pub_generalMultienum: 'towels,bathroom',
+          pub_generalParam: 'one',
           pub_asdf: true,
         },
-        urlQueryParams: { pub_amenities: 'towels,bathroom', pub_rider: 'men' },
+        urlQueryParams: { pub_generalMultienum: 'towels,bathroom', pub_generalParam: 'one' },
       });
     });
   });
 
   describe('groupListingFieldConfigs', () => {
     it('returns grouped configs for the extended data of the listinga', () => {
-      const activeListingTypes = [
-        'sell-bicycles',
-        'rent-bicycles-daily',
-        'rent-bicycles-nightly',
-        'rent-bicycles-hourly',
-      ];
       const [primary, secondary] = groupListingFieldConfigs(
         listingFieldsConfig,
         activeListingTypes
       );
-      expect(primary).toEqual([listingFieldsConfig[0], listingFieldsConfig[3]]);
-      expect(secondary).toEqual([listingFieldsConfig[1], listingFieldsConfig[2]]);
+
+      expect(primary).toEqual([
+        listingFieldsConfig[0],
+        listingFieldsConfig[1],
+        listingFieldsConfig[5],
+      ]);
+      expect(secondary).toEqual([
+        listingFieldsConfig[2],
+        listingFieldsConfig[3],
+        listingFieldsConfig[4],
+      ]);
     });
   });
 });

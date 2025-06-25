@@ -1,17 +1,21 @@
 import React from 'react';
 import { Form as FinalForm } from 'react-final-form';
+import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
 
 // Import configs and util modules
 import appSettings from '../../../../config/settings';
 import { FormattedMessage, useIntl } from '../../../../util/reactIntl';
-import { propTypes } from '../../../../util/types';
 import * as validators from '../../../../util/validators';
 import { formatMoney } from '../../../../util/currency';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
+import { FIXED, isBookingProcess } from '../../../../transactions/transaction';
 
 // Import shared components
-import { Button, Form, FieldCurrencyInput, FieldTextInput } from '../../../../components';
+import { Button, Form, FieldCurrencyInput } from '../../../../components';
+
+import BookingPriceVariants from './BookingPriceVariants';
+import StartTimeInterval from './StartTimeInverval';
 
 // Import modules from this directory
 import css from './EditListingPricingForm.module.css';
@@ -37,6 +41,25 @@ const getPriceValidators = (listingMinimumPriceSubUnits, marketplaceCurrency, in
     : priceRequired;
 };
 
+const ErrorMessages = props => {
+  const { fetchErrors } = props;
+  const { updateListingError, showListingsError } = fetchErrors || {};
+  return (
+    <>
+      {updateListingError ? (
+        <p className={css.error}>
+          <FormattedMessage id="EditListingPricingForm.updateFailed" />
+        </p>
+      ) : null}
+      {showListingsError ? (
+        <p className={css.error}>
+          <FormattedMessage id="EditListingPricingForm.showListingFailed" />
+        </p>
+      ) : null}
+    </>
+  );
+};
+
 /**
  * The EditListingPricingForm component.
  *
@@ -45,7 +68,12 @@ const getPriceValidators = (listingMinimumPriceSubUnits, marketplaceCurrency, in
  * @param {string} [props.formId] - The form id
  * @param {string} [props.className] - Custom class that extends the default class for the root element
  * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
- * @param {string} props.unitType - The unit type
+ * @param {string} props.unitType - The unitType from listing.attributes.publicData
+ * @param {Object} [props.listingTypeConfig] - The listing type config that matches with listingType on publicData.
+ * @param {Object} [props.listingTypeConfig.priceVariations] - The price variations config.
+ * @param {boolean} props.listingTypeConfig.priceVariations.enabled - Whether the price variations are enabled.
+ * @param {Object} [props.listingTypeConfig.transactionType] - The transaction type config.
+ * @param {string} props.listingTypeConfig.transactionType.process - The transaction process config.
  * @param {string} props.marketplaceCurrency - The marketplace currency
  * @param {number} [props.listingMinimumPriceSubUnits] - The listing minimum price sub units
  * @param {boolean} [props.autoFocus] - Whether the input should be focused
@@ -62,10 +90,12 @@ const getPriceValidators = (listingMinimumPriceSubUnits, marketplaceCurrency, in
  */
 export const EditListingPricingForm = props => (
   <FinalForm
+    mutators={{ ...arrayMutators }}
     {...props}
     render={formRenderProps => {
       const {
         formId = 'EditListingPricingForm',
+        form: formApi,
         autoFocus,
         className,
         rootClassName,
@@ -74,6 +104,8 @@ export const EditListingPricingForm = props => (
         handleSubmit,
         marketplaceCurrency,
         unitType,
+        listingTypeConfig,
+        isPriceVariationsInUse,
         listingMinimumPriceSubUnits = 0,
         invalid,
         pristine,
@@ -81,6 +113,8 @@ export const EditListingPricingForm = props => (
         updated,
         updateInProgress = false,
         fetchErrors,
+        initialValues: formInitialValues,
+        values: formValues,
       } = formRenderProps;
 
       const intl = useIntl();
@@ -94,33 +128,56 @@ export const EditListingPricingForm = props => (
       const submitReady = (updated && pristine) || ready;
       const submitInProgress = updateInProgress;
       const submitDisabled = invalid || disabled || submitInProgress;
-      const { updateListingError, showListingsError } = fetchErrors || {};
+      const { transactionType } = listingTypeConfig || {};
+      const { process } = transactionType || {};
+      const isBooking = isBookingProcess(process);
+
+      const isFixedLengthBooking = isBooking && unitType === FIXED;
+      const isBookingPriceVariationsInUse = isBooking && isPriceVariationsInUse;
+      const isUsingPriceVariants = isFixedLengthBooking || isBookingPriceVariationsInUse;
 
       return (
         <Form onSubmit={handleSubmit} className={classes}>
-          {updateListingError ? (
-            <p className={css.error}>
-              <FormattedMessage id="EditListingPricingForm.updateFailed" />
-            </p>
+          <ErrorMessages fetchErrors={fetchErrors} />
+
+          {isUsingPriceVariants ? (
+            <BookingPriceVariants
+              formId={formId}
+              formApi={formApi}
+              autoFocus={autoFocus}
+              className={css.input}
+              marketplaceCurrency={marketplaceCurrency}
+              unitType={unitType}
+              isPriceVariationsInUse={isBookingPriceVariationsInUse}
+              initialLengthOfPriceVariants={formInitialValues?.priceVariants?.length || 0}
+              listingMinimumPriceSubUnits={listingMinimumPriceSubUnits}
+            />
+          ) : (
+            <FieldCurrencyInput
+              id={`${formId}price`}
+              name="price"
+              className={css.input}
+              autoFocus={autoFocus}
+              label={intl.formatMessage(
+                { id: 'EditListingPricingForm.pricePerProduct' },
+                { unitType }
+              )}
+              placeholder={intl.formatMessage({
+                id: 'EditListingPricingForm.priceInputPlaceholder',
+              })}
+              currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
+              validate={priceValidators}
+            />
+          )}
+
+          {isFixedLengthBooking ? (
+            <StartTimeInterval
+              name="startTimeInterval"
+              idPrefix={`${formId}_startTimeInterval`}
+              formValues={formValues}
+              pristine={pristine}
+            />
           ) : null}
-          {showListingsError ? (
-            <p className={css.error}>
-              <FormattedMessage id="EditListingPricingForm.showListingFailed" />
-            </p>
-          ) : null}
-          <FieldCurrencyInput
-            id={`${formId}price`}
-            name="price"
-            className={css.input}
-            autoFocus={autoFocus}
-            label={intl.formatMessage(
-              { id: 'EditListingPricingForm.pricePerProduct' },
-              { unitType }
-            )}
-            placeholder={intl.formatMessage({ id: 'EditListingPricingForm.priceInputPlaceholder' })}
-            currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
-            validate={priceValidators}
-          />
 
           <Button
             className={css.submitButton}

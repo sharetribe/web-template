@@ -39,6 +39,7 @@ const FieldDateRangePickerComponent = props => {
     startDateLabel,
     endDateId,
     endDateLabel,
+    showLabelAsDisabled,
     input,
     onChange: parentOnChange,
     meta,
@@ -85,10 +86,16 @@ const FieldDateRangePickerComponent = props => {
     <div className={classes}>
       {startDateLabel && endDateLabel ? (
         <div className={classNames(css.labels)}>
-          <label className={classNames(css.startDateLabel)} htmlFor={startDateId}>
+          <label
+            className={classNames(css.startDateLabel, { [css.labelDisabled]: showLabelAsDisabled })}
+            htmlFor={startDateId}
+          >
             {startDateLabel}
           </label>
-          <label className={classNames(css.endDateLabel)} htmlFor={endDateId}>
+          <label
+            className={classNames(css.endDateLabel, { [css.labelDisabled]: showLabelAsDisabled })}
+            htmlFor={endDateId}
+          >
             {endDateLabel}
           </label>
         </div>
@@ -113,6 +120,7 @@ const FieldDateRangePickerComponent = props => {
  * @param {string} [props.endDateLabel] - The label of the end date input
  * @param {string} [props.startDateId] - The ID of the start date input
  * @param {string} [props.startDateLabel] - The label of the start date input
+ * @param {boolean} [props.showLabelAsDisabled] - Whether to show the label as disabled
  * @param {Function} [props.isOutsideRange] - The function to check if a day is outside the range
  * @param {number} [props.firstDayOfWeek] - The first day of the week (0-6, default to value set in configuration)
  * @returns {JSX.Element} FieldDateRangePicker component

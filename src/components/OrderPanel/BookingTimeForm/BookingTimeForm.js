@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { array, bool, func, number, object, string } from 'prop-types';
-import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
-import { FormattedMessage, intlShape, injectIntl, useIntl } from '../../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { timestampToDate } from '../../../util/dates';
 import { propTypes } from '../../../util/types';
 import { BOOKING_PROCESS_NAME } from '../../../transactions/transaction';
@@ -28,7 +26,7 @@ const handleFetchLineItems = props => formValues => {
     onFetchTransactionLineItems,
     seatsEnabled,
   } = props;
-  const { bookingStartTime, bookingEndTime, seats } = formValues.values;
+  const { bookingStartTime, bookingEndTime, seats, priceVariantName } = formValues.values;
   const startDate = bookingStartTime ? timestampToDate(bookingStartTime) : null;
   const endDate = bookingEndTime ? timestampToDate(bookingEndTime) : null;
 
@@ -37,11 +35,14 @@ const handleFetchLineItems = props => formValues => {
   const isStartBeforeEnd = bookingStartTime < bookingEndTime;
   const seatsMaybe = seatsEnabled && seats > 0 ? { seats: parseInt(seats, 10) } : {};
 
+  const priceVariantMaybe = priceVariantName ? { priceVariantName } : {};
+
   if (bookingStartTime && bookingEndTime && isStartBeforeEnd && !fetchLineItemsInProgress) {
     const orderData = {
       bookingStart: startDate,
       bookingEnd: endDate,
       ...seatsMaybe,
+      ...priceVariantMaybe,
     };
     onFetchTransactionLineItems({
       orderData,
@@ -49,6 +50,19 @@ const handleFetchLineItems = props => formValues => {
       isOwnListing,
     });
   }
+};
+
+const onPriceVariantChange = props => value => {
+  const { form: formApi, seatsEnabled } = props;
+
+  formApi.batch(() => {
+    formApi.change('bookingStartDate', null);
+    formApi.change('bookingStartTime', null);
+    formApi.change('bookingEndTime', null);
+    if (seatsEnabled) {
+      formApi.change('seats', 1);
+    }
+  });
 };
 
 /**
@@ -72,6 +86,9 @@ const handleFetchLineItems = props => formValues => {
  * @param {string} [props.endDatePlaceholder] - The placeholder text for the end date
  * @param {number} props.dayCountAvailableForBooking - Number of days available for booking
  * @param {string} props.marketplaceName - Name of the marketplace
+ * @param {Array<Object>} [props.priceVariants] - The price variants
+ * @param {ReactNode} [props.priceVariantFieldComponent] - The component to use for the price variant field
+ * @param {boolean} props.isPublishedListing - Whether the listing is published
  * @returns {JSX.Element}
  */
 export const BookingTimeForm = props => {
@@ -83,15 +100,27 @@ export const BookingTimeForm = props => {
     dayCountAvailableForBooking,
     marketplaceName,
     seatsEnabled,
+    isPriceVariationsInUse,
+    priceVariants = [],
+    priceVariantFieldComponent: PriceVariantFieldComponent,
+    preselectedPriceVariant,
+    isPublishedListing,
     ...rest
   } = props;
 
   const [seatsOptions, setSeatsOptions] = useState([1]);
+  const initialValuesMaybe =
+    priceVariants.length > 1 && preselectedPriceVariant
+      ? { initialValues: { priceVariantName: preselectedPriceVariant?.name } }
+      : priceVariants.length === 1
+      ? { initialValues: { priceVariantName: priceVariants?.[0]?.name } }
+      : {};
 
   const classes = classNames(rootClassName || css.root, className);
 
   return (
     <FinalForm
+      {...initialValuesMaybe}
       {...rest}
       unitPrice={unitPrice}
       render={formRenderProps => {
@@ -105,6 +134,7 @@ export const BookingTimeForm = props => {
           listingId,
           values,
           monthlyTimeSlots,
+          timeSlotsForDate,
           onFetchTimeSlots,
           timeZone,
           lineItems,
@@ -113,10 +143,11 @@ export const BookingTimeForm = props => {
           payoutDetailsWarning,
         } = formRenderProps;
 
-        const startTime = values && values.bookingStartTime ? values.bookingStartTime : null;
-        const endTime = values && values.bookingEndTime ? values.bookingEndTime : null;
+        const startTime = values?.bookingStartTime ? values.bookingStartTime : null;
+        const endTime = values?.bookingEndTime ? values.bookingEndTime : null;
         const startDate = startTime ? timestampToDate(startTime) : null;
         const endDate = endTime ? timestampToDate(endTime) : null;
+        const priceVariantName = values?.priceVariantName || null;
 
         // This is the place to collect breakdown estimation data. See the
         // EstimatedCustomerBreakdownMaybe component to change the calculations
@@ -133,9 +164,19 @@ export const BookingTimeForm = props => {
           breakdownData && lineItems && !fetchLineItemsInProgress && !fetchLineItemsError;
 
         const onHandleFetchLineItems = handleFetchLineItems(props);
+        const submitDisabled = isPriceVariationsInUse && !isPublishedListing;
 
         return (
           <Form onSubmit={handleSubmit} className={classes} enforcePagePreloadFor="CheckoutPage">
+            {PriceVariantFieldComponent ? (
+              <PriceVariantFieldComponent
+                priceVariants={priceVariants}
+                priceVariantName={priceVariantName}
+                onPriceVariantChange={onPriceVariantChange(formRenderProps)}
+                disabled={!isPublishedListing}
+              />
+            ) : null}
+
             {monthlyTimeSlots && timeZone ? (
               <FieldDateAndTimeInput
                 seatsEnabled={seatsEnabled}
@@ -152,10 +193,12 @@ export const BookingTimeForm = props => {
                 listingId={listingId}
                 onFetchTimeSlots={onFetchTimeSlots}
                 monthlyTimeSlots={monthlyTimeSlots}
+                timeSlotsForDate={timeSlotsForDate}
                 values={values}
                 intl={intl}
                 form={form}
                 pristine={pristine}
+                disabled={isPriceVariationsInUse && !priceVariantName}
                 timeZone={timeZone}
                 dayCountAvailableForBooking={dayCountAvailableForBooking}
                 handleFetchLineItems={onHandleFetchLineItems}
@@ -166,11 +209,13 @@ export const BookingTimeForm = props => {
                 name="seats"
                 id="seats"
                 disabled={!startTime}
+                showLabelAsDisabled={!startTime}
                 label={intl.formatMessage({ id: 'BookingTimeForm.seatsTitle' })}
                 className={css.fieldSeats}
                 onChange={values => {
                   onHandleFetchLineItems({
                     values: {
+                      priceVariantName,
                       bookingStartDate: startDate,
                       bookingStartTime: startTime,
                       bookingEndDate: endDate,
@@ -215,7 +260,11 @@ export const BookingTimeForm = props => {
             ) : null}
 
             <div className={css.submitButton}>
-              <PrimaryButton type="submit" inProgress={fetchLineItemsInProgress}>
+              <PrimaryButton
+                type="submit"
+                inProgress={fetchLineItemsInProgress}
+                disabled={submitDisabled}
+              >
                 <FormattedMessage id="BookingTimeForm.requestToBook" />
               </PrimaryButton>
             </div>
