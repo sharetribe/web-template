@@ -72,11 +72,14 @@ async function startServer() {
       'REACT_APP_MARKETPLACE_NAME',
       'REACT_APP_MARKETPLACE_ROOT_URL',
     ];
-    const isEmpty = value => value == null || (value.hasOwnProperty('length') && value.length === 0);
+    const isEmpty = value =>
+      value == null || (value.hasOwnProperty('length') && value.length === 0);
     const checkEnvVariables = variables => {
       const missingEnvVariables = variables.filter(v => isEmpty(process.env?.[v]));
       if (missingEnvVariables.length > 0) {
-        console.error(`Required environment variable is not set: ${missingEnvVariables.join(', ')}`);
+        console.error(
+          `Required environment variable is not set: ${missingEnvVariables.join(', ')}`
+        );
         process.exit(9);
       }
     };

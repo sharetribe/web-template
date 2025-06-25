@@ -16,7 +16,10 @@ import css from './LayoutSideNavigation.module.css';
  * @param {boolean?} props.withCreativeProfile
  * @returns {JSX.Element} Side nav with navigation to different account settings
  */
-const LayoutWrapperProfileSettingsSideNav = ({ accountSettingsNavProps, withCreativeProfile = false }) => {
+const LayoutWrapperProfileSettingsSideNav = ({
+  accountSettingsNavProps,
+  withCreativeProfile = false,
+}) => {
   const { currentPage } = accountSettingsNavProps;
   const isProfileSettingsPage = currentPage === 'ProfileSettingsPage';
   const isCreativeDetailsPage = currentPage === 'CreativeDetailsPage';

@@ -110,23 +110,6 @@ export class SearchPageComponent extends Component {
     const { config } = this.props;
     const { listingFields } = config?.listing || {};
     const isKeywordSearch = isMainSearchTypeKeywords(config);
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /**
-     * [TODO:]
-     *    Revisar si debe ser con {} o con []
-     */
     return [
       ...listingFields,
       ...(isKeywordSearch
@@ -151,18 +134,6 @@ export class SearchPageComponent extends Component {
           ]
         : []),
     ];
-
-
-
-
-
-
-
-
-
-
-
-
   }
 
   // Reset all filter query parameters

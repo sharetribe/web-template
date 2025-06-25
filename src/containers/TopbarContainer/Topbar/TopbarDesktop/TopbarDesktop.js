@@ -166,11 +166,7 @@ const TopbarDesktop = props => {
   ) : null;
 
   const profileMenuMaybe = authenticatedOnClientSide ? (
-    <ProfileMenu
-      currentPage={currentPage}
-      currentUser={currentUser}
-      onLogout={onLogout}
-    />
+    <ProfileMenu currentPage={currentPage} currentUser={currentUser} onLogout={onLogout} />
   ) : null;
 
   const signupLinkMaybe = isAuthenticatedOrJustHydrated ? null : <SignupLink />;

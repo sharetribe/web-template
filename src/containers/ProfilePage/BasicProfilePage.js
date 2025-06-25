@@ -104,14 +104,7 @@ const DesktopReviews = props => {
 
 const MainContent = props => {
   const [mounted, setMounted] = useState(false);
-  const {
-    userShowError,
-    bio,
-    displayName,
-    reviews = [],
-    queryReviewsError,
-    hideReviews,
-  } = props;
+  const { userShowError, bio, displayName, reviews = [], queryReviewsError, hideReviews } = props;
 
   useEffect(() => {
     setMounted(true);

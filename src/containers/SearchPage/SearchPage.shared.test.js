@@ -91,7 +91,10 @@ const listingFieldsConfig = [
     key: 'generalMultienum',
     scope: 'public',
     schemaType: 'multi-enum',
-    enumOptions: [{ option: 'towels', label: 'Towels' }, { option: 'bathroom', label: 'Bathroom' }],
+    enumOptions: [
+      { option: 'towels', label: 'Towels' },
+      { option: 'bathroom', label: 'Bathroom' },
+    ],
     filterConfig: {
       indexForSearch: true,
       label: 'Generic multi-enum',

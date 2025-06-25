@@ -309,37 +309,26 @@ export const InboxPageComponent = props => {
         },
       ]
     : [];
-
-
-
-
-
-
-
-    /**
-     * [TODO:]
-     *    - Ponerle a los Sellers en la consola el valor de Provider y a los Buyers el de Customer!!!
-     *        - Probar como se ve todo antes de hacer esto...!!
-     */
-  const salesTabMaybe = isProviderUserType && isSeller
-    ? [
-        {
-          text: (
-            <span>
-              <FormattedMessage id="InboxPage.salesTabTitle" />
-              {providerNotificationCount > 0 ? (
-                <NotificationBadge count={providerNotificationCount} />
-              ) : null}
-            </span>
-          ),
-          selected: !isOrders,
-          linkProps: {
-            name: 'InboxPage',
-            params: { tab: 'sales' },
+  const salesTabMaybe =
+    isProviderUserType && isSeller
+      ? [
+          {
+            text: (
+              <span>
+                <FormattedMessage id="InboxPage.salesTabTitle" />
+                {providerNotificationCount > 0 ? (
+                  <NotificationBadge count={providerNotificationCount} />
+                ) : null}
+              </span>
+            ),
+            selected: !isOrders,
+            linkProps: {
+              name: 'InboxPage',
+              params: { tab: 'sales' },
+            },
           },
-        },
-      ]
-    : [];
+        ]
+      : [];
   const tabs = [...ordersTabMaybe, ...salesTabMaybe];
 
   return (

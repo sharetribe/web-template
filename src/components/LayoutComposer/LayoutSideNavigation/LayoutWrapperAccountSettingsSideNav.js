@@ -107,7 +107,9 @@ const LayoutWrapperAccountSettingsSideNav = props => {
   const paymentMethodsMaybe = showPaymentMethods
     ? [
         {
-          text: <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.paymentMethodsTabTitle" />,
+          text: (
+            <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.paymentMethodsTabTitle" />
+          ),
           selected: currentPage === 'PaymentMethodsPage',
           id: 'PaymentMethodsPageTab',
           linkProps: {
