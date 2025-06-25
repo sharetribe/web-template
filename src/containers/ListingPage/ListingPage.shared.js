@@ -157,6 +157,7 @@ export const handleSubmit = parameters => values => {
     bookingEndTime,
     bookingStartDate, // not relevant (omit)
     bookingEndDate, // not relevant (omit)
+    priceVariantName, // relevant for bookings
     quantity: quantityRaw,
     seats: seatsRaw,
     deliveryMethod,
@@ -178,6 +179,8 @@ export const handleSubmit = parameters => values => {
         },
       }
     : {};
+  // priceVariantName is relevant for bookings
+  const priceVariantNameMaybe = priceVariantName ? { priceVariantName } : {};
   const quantity = Number.parseInt(quantityRaw, 10);
   const quantityMaybe = Number.isInteger(quantity) ? { quantity } : {};
   const seats = Number.parseInt(seatsRaw, 10);
@@ -188,6 +191,7 @@ export const handleSubmit = parameters => values => {
     listing,
     orderData: {
       ...bookingMaybe,
+      ...priceVariantNameMaybe,
       ...quantityMaybe,
       ...seatsMaybe,
       ...deliveryMethodMaybe,

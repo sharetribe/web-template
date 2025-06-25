@@ -27,16 +27,17 @@ import { ASSET_NAME } from './TermsOfServicePage.duck';
 const TermsOfServiceContent = props => {
   const { inProgress, error, data } = props;
 
-  if (inProgress) {
-    return null;
-  }
-
   // We don't want to add h1 heading twice to the HTML (SEO issue).
   // Modal's header is mapped as h2
   const hasContent = data => typeof data?.content === 'string';
   const exposeContentAsChildren = data => {
     return hasContent(data) ? { children: data.content } : {};
   };
+
+  if (!hasContent && inProgress) {
+    return null;
+  }
+
   const CustomHeading1 = props => <H1 as="h2" {...props} />;
 
   const hasData = error === null && data;

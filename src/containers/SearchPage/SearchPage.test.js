@@ -80,10 +80,6 @@ const listingFields = [
     // Formerly used for category, but now there's dedicated category setup
     key: 'cat',
     scope: 'public',
-    listingTypeConfig: {
-      limitToListingTypeIds: true,
-      listingTypeIds: ['sell-bicycles'],
-    },
     categoryConfig: {
       limitToCategoryIds: true,
       categoryIds: ['cats'],
@@ -106,17 +102,38 @@ const listingFields = [
     },
   },
   {
-    key: 'singleSelectTest',
+    key: 'boat ',
     scope: 'public',
     listingTypeConfig: {
       limitToListingTypeIds: true,
       listingTypeIds: ['sell-bicycles'],
     },
     schemaType: 'enum',
+<<<<<<< HEAD
     enumOptions: [
       { option: 'enum1', label: 'Enum 1' },
       { option: 'enum2', label: 'Enum 2' },
     ],
+=======
+    enumOptions: [{ option: 'boat_1', label: 'Boat 1' }, { option: 'boat_2', label: 'Boat 2' }],
+    filterConfig: {
+      indexForSearch: true,
+      label: 'Boat',
+      group: 'primary',
+    },
+    showConfig: {
+      label: 'Boat',
+    },
+    saveConfig: {
+      label: 'Boat',
+    },
+  },
+  {
+    key: 'singleSelectTest',
+    scope: 'public',
+    schemaType: 'enum',
+    enumOptions: [{ option: 'enum1', label: 'Enum 1' }, { option: 'enum2', label: 'Enum 2' }],
+>>>>>>> original
     filterConfig: {
       indexForSearch: true,
       filterType: 'SelectSingleFilter',
@@ -133,10 +150,6 @@ const listingFields = [
   {
     key: 'amenities',
     scope: 'public',
-    listingTypeConfig: {
-      limitToListingTypeIds: true,
-      listingTypeIds: ['rent-bicycles-daily', 'rent-bicycles-nightly', 'rent-bicycles-hourly'],
-    },
     schemaType: 'multi-enum',
     enumOptions: [
       { option: 'dog_1', label: 'Dog 1' },
@@ -157,6 +170,8 @@ const listingFields = [
   },
 ];
 
+const listingTypeOptions = listingTypes.map(lt => ({ option: lt.id, label: labelize(lt.id) }));
+
 const defaultFiltersConfig = [
   {
     key: 'categoryLevel',
@@ -164,6 +179,12 @@ const defaultFiltersConfig = [
     scope: 'public',
     isNestedEnum: true,
     nestedParams: ['categoryLevel1', 'categoryLevel2', 'categoryLevel3'],
+  },
+  {
+    key: 'listingType',
+    schemaType: 'listingType',
+    scope: 'public',
+    options: listingTypeOptions,
   },
   {
     key: 'price',
@@ -278,6 +299,8 @@ const getSearchParams = config => {
       // when transitioning from search page to listing page
       'publicData.pickupEnabled',
       'publicData.shippingEnabled',
+      'publicData.priceVariationsEnabled',
+      'publicData.priceVariants',
     ],
     'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
     'fields.image': [
@@ -333,6 +356,8 @@ describe('SearchPage', () => {
 
       // Has no Cat filter (primary filter tied to 'Cats' category)
       expect(queryByText('Cat')).not.toBeInTheDocument();
+      // Has no Boat filter (primary filter tied to 'sell-bicycles' listing type)
+      expect(queryByText('Boat')).not.toBeInTheDocument();
       // Has(!) Amenities filter (secondary filter)
       expect(getByText('Amenities')).toBeInTheDocument();
       // Has Single Select Test filter
@@ -349,6 +374,13 @@ describe('SearchPage', () => {
       expect(getByText('Fish')).toBeInTheDocument();
       expect(queryByText('Freshwater')).not.toBeInTheDocument();
 
+      // Has Listing type filter
+      expect(getByText('FilterComponent.listingTypeLabel')).toBeInTheDocument();
+      expect(getByText('Rent bicycles daily')).toBeInTheDocument();
+      expect(getByText('Rent bicycles nightly')).toBeInTheDocument();
+      expect(getByText('Rent bicycles hourly')).toBeInTheDocument();
+      expect(getByText('Sell bicycles')).toBeInTheDocument();
+
       // Has Price filter
       expect(getByText('FilterComponent.priceLabel')).toBeInTheDocument();
 
@@ -358,7 +390,7 @@ describe('SearchPage', () => {
       // Has listing with title
       expect(getByText('l2 title')).toBeInTheDocument();
       // 2 listings with the same price
-      expect(getAllByText('$55.00')).toHaveLength(2);
+      expect(getAllByText('ListingCard.price')).toHaveLength(2);
     });
 
     // Test category intercation: click "Fish"
@@ -423,6 +455,13 @@ describe('SearchPage', () => {
       expect(queryByText('Cats')).not.toBeInTheDocument();
       expect(queryByText('Fish')).not.toBeInTheDocument();
 
+      // Has Listing type filter
+      expect(getByText('FilterComponent.listingTypeLabel')).toBeInTheDocument();
+      expect(queryByText('Rent bicycles daily')).not.toBeInTheDocument();
+      expect(queryByText('Rent bicycles nightly')).not.toBeInTheDocument();
+      expect(queryByText('Rent bicycles hourly')).not.toBeInTheDocument();
+      expect(queryByText('Sell bicycles')).not.toBeInTheDocument();
+
       // Has "more filters" button for secondary filters
       expect(getByText('SearchFiltersPrimary.moreFiltersButton')).toBeInTheDocument();
 
@@ -435,7 +474,7 @@ describe('SearchPage', () => {
       // Has listing with title
       expect(getByText('l2 title')).toBeInTheDocument();
       // 2 listings with the same price
-      expect(getAllByText('$55.00')).toHaveLength(2);
+      expect(getAllByText('ListingCard.price')).toHaveLength(2);
     });
 
     // Test category intercation
@@ -511,6 +550,73 @@ describe('SearchPage', () => {
     expect(getByText('Fish')).toBeInTheDocument();
     expect(queryByText('Freshwater')).not.toBeInTheDocument();
     expect(queryByText('Saltwater')).not.toBeInTheDocument();
+  });
+
+  it('Check that Boat filters is revealed in grid variant', async () => {
+    // Select correct SearchPage variant according to route configuration
+    const config = getConfig('grid');
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const props = { ...commonProps };
+    const searchRouteConfig = routeConfiguration.find(conf => conf.name === 'SearchPage');
+    const SearchPage = searchRouteConfig.component;
+
+    const { getByPlaceholderText, getByText, getAllByText, queryByText, getByRole } = render(
+      <SearchPage {...props} />,
+      {
+        initialState,
+        config,
+        routeConfiguration,
+      }
+    );
+
+    await waitFor(() => {
+      // Has no Boat filter (primary)
+      expect(queryByText('Boat')).not.toBeInTheDocument();
+
+      // Has Listing type filter
+      expect(getByText('FilterComponent.listingTypeLabel')).toBeInTheDocument();
+      expect(getByText('Rent bicycles daily')).toBeInTheDocument();
+      expect(getByText('Rent bicycles nightly')).toBeInTheDocument();
+      expect(getByText('Rent bicycles hourly')).toBeInTheDocument();
+      expect(getByText('Sell bicycles')).toBeInTheDocument();
+    });
+
+    // Test category intercation: click "Sell bicycles"
+    await waitFor(() => {
+      userEvent.click(getByRole('button', { name: 'Sell bicycles' }));
+    });
+
+    // Has Boat filter filter (primary)
+    expect(getByText('Boat')).toBeInTheDocument();
+  });
+
+  it('Check that Listing type filter is not revealed when using a listing type path param', async () => {
+    // Select correct SearchPage variant according to route configuration
+    const config = getConfig('grid');
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const props = { ...commonProps, params: { listingType: 'sell-bicycles' } };
+    const searchRouteConfig = routeConfiguration.find(
+      conf => conf.name === 'SearchPageWithListingType'
+    );
+    const SearchPage = searchRouteConfig.component;
+
+    const { getByPlaceholderText, getByText, getAllByText, queryByText, getByRole } = render(
+      <SearchPage {...props} />,
+      {
+        initialState,
+        config,
+        routeConfiguration,
+      }
+    );
+
+    await waitFor(() => {
+      // Does not have Listing type filter
+      expect(queryByText('FilterComponent.listingTypeLabel')).not.toBeInTheDocument();
+      expect(queryByText('Rent bicycles daily')).not.toBeInTheDocument();
+      expect(queryByText('Rent bicycles nightly')).not.toBeInTheDocument();
+      expect(queryByText('Rent bicycles hourly')).not.toBeInTheDocument();
+      expect(queryByText('Sell bicycles')).not.toBeInTheDocument();
+    });
   });
 });
 

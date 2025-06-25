@@ -60,46 +60,55 @@ const getItemQuantityAndLineItems = (orderData, publicData, currency) => {
 };
 
 /**
- * Get quantity for arbitrary units for time-based bookings.
- *
- * @param {*} orderData should contain quantity
+ * Get quantity for fixed bookings with seats.
+ * @param {Object} orderData
+ * @param {number} [orderData.seats]
  */
-const getHourQuantityAndLineItems = orderData => {
-  const { bookingStart, bookingEnd } = orderData || {};
-  const quantity =
-    bookingStart && bookingEnd ? calculateQuantityFromHours(bookingStart, bookingEnd) : null;
-
-  return { quantity, extraLineItems: [] };
+const getFixedQuantityAndLineItems = orderData => {
+  const { seats } = orderData || {};
+  const hasSeats = !!seats;
+  // If there are seats, the quantity is split to factors: units and seats.
+  // E.g. 1 session x 2 seats (aka unit price is multiplied by 2)
+  return hasSeats ? { units: 1, seats, extraLineItems: [] } : { quantity: 1, extraLineItems: [] };
 };
 
-const getHoursWithSeatsAndLineItems = orderData => {
+/**
+ * Get quantity for arbitrary units for time-based bookings.
+ *
+ * @param {Object} orderData
+ * @param {string} orderData.bookingStart
+ * @param {string} orderData.bookingEnd
+ * @param {number} [orderData.seats]
+ */
+const getHourQuantityAndLineItems = orderData => {
   const { bookingStart, bookingEnd, seats } = orderData || {};
+  const hasSeats = !!seats;
   const units =
     bookingStart && bookingEnd ? calculateQuantityFromHours(bookingStart, bookingEnd) : null;
 
-  return { units, seats, extraLineItems: [] };
+  // If there are seats, the quantity is split to factors: units and seats.
+  // E.g. 3 hours x 2 seats (aka unit price is multiplied by 6)
+  return hasSeats ? { units, seats, extraLineItems: [] } : { quantity: units, extraLineItems: [] };
 };
 
 /**
  * Calculate quantity based on days or nights between given bookingDates.
  *
- * @param {*} orderData should contain bookingDates
- * @param {*} code should be either 'line-item/day' or 'line-item/night'
+ * @param {Object} orderData
+ * @param {string} orderData.bookingStart
+ * @param {string} orderData.bookingEnd
+ * @param {number} [orderData.seats]
+ * @param {'line-item/day' | 'line-item/night'} code
  */
 const getDateRangeQuantityAndLineItems = (orderData, code) => {
-  // bookingStart & bookingend are used with day-based bookings (how many days / nights)
-  const { bookingStart, bookingEnd } = orderData || {};
-  const quantity =
-    bookingStart && bookingEnd ? calculateQuantityFromDates(bookingStart, bookingEnd, code) : null;
-
-  return { quantity, extraLineItems: [] };
-};
-
-const getDateRangeWithSeatsAndLineItems = (orderData, code) => {
   const { bookingStart, bookingEnd, seats } = orderData;
+  const hasSeats = !!seats;
   const units =
     bookingStart && bookingEnd ? calculateQuantityFromDates(bookingStart, bookingEnd, code) : null;
-  return { units, seats, extraLineItems: [] };
+
+  // If there are seats, the quantity is split to factors: units and seats.
+  // E.g. 3 nights x 4 seats (aka unit price is multiplied by 12)
+  return hasSeats ? { units, seats, extraLineItems: [] } : { quantity: units, extraLineItems: [] };
 };
 
 /**
@@ -131,8 +140,25 @@ const getDateRangeWithSeatsAndLineItems = (orderData, code) => {
  */
 exports.transactionLineItems = (listing, orderData, providerCommission, customerCommission) => {
   const publicData = listing.attributes.publicData;
-  const unitPrice = listing.attributes.price;
-  const currency = unitPrice.currency;
+  // Note: the unitType needs to be one of the following:
+  // day, night, hour, fixed, or item (these are related to payment processes)
+  const { unitType, priceVariants, priceVariationsEnabled } = publicData;
+
+  const isBookable = ['day', 'night', 'hour', 'fixed'].includes(unitType);
+  const priceAttribute = listing.attributes.price;
+  const currency = priceAttribute.currency;
+
+  const { priceVariantName } = orderData || {};
+  const priceVariantConfig = priceVariants
+    ? priceVariants.find(pv => pv.name === priceVariantName)
+    : null;
+  const { priceInSubunits } = priceVariantConfig || {};
+  const isPriceInSubunitsValid = Number.isInteger(priceInSubunits) && priceInSubunits >= 0;
+
+  const unitPrice =
+    isBookable && priceVariationsEnabled && isPriceInSubunitsValid
+      ? new Money(priceInSubunits, currency)
+      : priceAttribute;
 
   /**
    * Pricing starts with order's base price:
@@ -145,9 +171,6 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
    * - includedFor
    */
 
-  // Unit type needs to be one of the following:
-  // day, night, hour or item
-  const unitType = publicData.unitType;
   const code = `line-item/${unitType}`;
 
   // Here "extra line-items" means line-items that are tied to unit type
@@ -155,12 +178,10 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
   const quantityAndExtraLineItems =
     unitType === 'item'
       ? getItemQuantityAndLineItems(orderData, publicData, currency)
-      : unitType === 'hour' && orderData.seats
-      ? getHoursWithSeatsAndLineItems(orderData)
+      : unitType === 'fixed'
+      ? getFixedQuantityAndLineItems(orderData)
       : unitType === 'hour'
       ? getHourQuantityAndLineItems(orderData)
-      : ['day', 'night'].includes(unitType) && orderData.seats
-      ? getDateRangeWithSeatsAndLineItems(orderData, code)
       : ['day', 'night'].includes(unitType)
       ? getDateRangeQuantityAndLineItems(orderData, code)
       : {};

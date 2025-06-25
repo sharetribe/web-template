@@ -30,14 +30,7 @@ import Decimal from 'decimal.js';
 
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { FormattedMessage } from '../../util/reactIntl';
-import {
-  DATE_TYPE_DATE,
-  LINE_ITEM_DAY,
-  LINE_ITEM_NIGHT,
-  LINE_ITEM_HOUR,
-  LISTING_UNIT_TYPES,
-  DATE_TYPE_DATETIME,
-} from '../../util/types';
+import { LINE_ITEM_DAY, LINE_ITEM_NIGHT, LISTING_UNIT_TYPES } from '../../util/types';
 import { unitDivisor, convertMoneyToNumber, convertUnitToSubUnit } from '../../util/currency';
 import { getProcess, TX_TRANSITION_ACTOR_CUSTOMER } from '../../transactions/transaction';
 
@@ -149,7 +142,7 @@ const EstimatedCustomerBreakdownMaybe = props => {
   const shouldHaveBooking = [LINE_ITEM_DAY, LINE_ITEM_NIGHT].includes(lineItemUnitType);
   const hasLineItems = lineItems && lineItems.length > 0;
   const hasRequiredBookingData = !shouldHaveBooking || (startDate && endDate);
-  const dateType = lineItemUnitType === LINE_ITEM_HOUR ? DATE_TYPE_DATETIME : DATE_TYPE_DATE;
+
   const tx =
     hasLineItems && hasRequiredBookingData
       ? estimatedCustomerTransaction(
@@ -170,7 +163,6 @@ const EstimatedCustomerBreakdownMaybe = props => {
       userRole="customer"
       transaction={tx}
       booking={tx.booking}
-      dateType={dateType}
       timeZone={timeZone}
       currency={currency}
       marketplaceName={marketplaceName}

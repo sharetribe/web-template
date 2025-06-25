@@ -4,12 +4,11 @@
  * onBlur: formats the given input: "9 999,99 €"
  */
 import React, { Component } from 'react';
-import { bool, func, number, object, oneOfType, shape, string } from 'prop-types';
 import { Field } from 'react-final-form';
 import classNames from 'classnames';
 import Decimal from 'decimal.js';
 
-import { intlShape, injectIntl } from '../../util/reactIntl';
+import { injectIntl } from '../../util/reactIntl';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import {
   isSafeNumber,
@@ -21,7 +20,6 @@ import {
   truncateToSubUnitPrecision,
 } from '../../util/currency';
 import * as log from '../../util/log';
-import { propTypes } from '../../util/types';
 
 import { ValidationError } from '../../components';
 

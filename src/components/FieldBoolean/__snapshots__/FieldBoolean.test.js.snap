@@ -6,6 +6,7 @@ exports[`FieldBoolean matches snapshot 1`] = `
     class="root"
   >
     <label
+      class=""
       for="test.boolOption"
     >
       Boolean option

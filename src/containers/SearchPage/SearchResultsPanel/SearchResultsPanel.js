@@ -37,17 +37,20 @@ const SearchResultsPanel = props => {
     currentUserFavorites,
     onUpdateFavorites,
     onFetchCurrentUser,
+    listingTypeParam,
   } = props;
   const history = useHistory();
   const location = useLocation();
   const routeConfiguration = useRouteConfiguration();
   const classes = classNames(rootClassName || css.root, className);
+  const pageName = listingTypeParam ? 'SearchPageWithListingType' : 'SearchPage';
 
   const paginationLinks =
     pagination && pagination.totalPages > 1 ? (
       <PaginationLinks
         className={css.pagination}
-        pageName="SearchPage"
+        pageName={pageName}
+        pagePathParams={{ listingType: listingTypeParam }}
         pageSearchParams={search}
         pagination={pagination}
       />

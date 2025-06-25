@@ -64,8 +64,28 @@ async function startServer() {
     const CSP = process.env.REACT_APP_CSP;
     const cspReportUrl = '/csp-report';
     const cspEnabled = CSP === 'block' || CSP === 'report';
-    const app = express();
 
+    // Without these, something will break for sure
+    const MANDATORY_ENV_VARIABLES = [
+      'REACT_APP_SHARETRIBE_SDK_CLIENT_ID',
+      'SHARETRIBE_SDK_CLIENT_SECRET',
+      'REACT_APP_MARKETPLACE_NAME',
+      'REACT_APP_MARKETPLACE_ROOT_URL',
+    ];
+    const isEmpty = value =>
+      value == null || (value.hasOwnProperty('length') && value.length === 0);
+    const checkEnvVariables = variables => {
+      const missingEnvVariables = variables.filter(v => isEmpty(process.env?.[v]));
+      if (missingEnvVariables.length > 0) {
+        console.error(
+          `Required environment variable is not set: ${missingEnvVariables.join(', ')}`
+        );
+        process.exit(9);
+      }
+    };
+    checkEnvVariables(MANDATORY_ENV_VARIABLES);
+
+    const app = express();
     const errorPage500 = fs.readFileSync(path.join(buildPath, '500.html'), 'utf-8');
     const errorPage404 = fs.readFileSync(path.join(buildPath, '404.html'), 'utf-8');
 

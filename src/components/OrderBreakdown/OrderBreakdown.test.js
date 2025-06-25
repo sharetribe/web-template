@@ -132,14 +132,14 @@ describe('OrderBreakdown', () => {
     const bookingStart = screen.getByText('OrderBreakdown.bookingStart');
     expect(bookingStart).toBeInTheDocument();
     const bookingStartInfo = within(bookingStart.parentNode.parentNode);
-    expect(bookingStartInfo.getByText('Fri 12:00 AM')).toBeInTheDocument();
+    expect(bookingStartInfo.getByText('Friday')).toBeInTheDocument();
     expect(bookingStartInfo.getByText('Apr 14')).toBeInTheDocument();
 
     // Booking: end
     const bookingEnd = screen.getByText('OrderBreakdown.bookingEnd');
     expect(bookingEnd).toBeInTheDocument();
     const bookingEndInfo = within(bookingEnd.parentNode.parentNode);
-    expect(bookingEndInfo.getByText('Sun 12:00 AM')).toBeInTheDocument();
+    expect(bookingEndInfo.getByText('Sunday')).toBeInTheDocument();
     expect(bookingEndInfo.getByText('Apr 16')).toBeInTheDocument();
 
     // Base price
@@ -201,14 +201,14 @@ describe('OrderBreakdown', () => {
     const bookingStart = screen.getByText('OrderBreakdown.bookingStart');
     expect(bookingStart).toBeInTheDocument();
     const bookingStartInfo = within(bookingStart.parentNode.parentNode);
-    expect(bookingStartInfo.getByText('Fri 12:00 AM')).toBeInTheDocument();
+    expect(bookingStartInfo.getByText('Friday')).toBeInTheDocument();
     expect(bookingStartInfo.getByText('Apr 14')).toBeInTheDocument();
 
     // Booking: end
     const bookingEnd = screen.getByText('OrderBreakdown.bookingEnd');
     expect(bookingEnd).toBeInTheDocument();
     const bookingEndInfo = within(bookingEnd.parentNode.parentNode);
-    expect(bookingEndInfo.getByText('Sun 12:00 AM')).toBeInTheDocument();
+    expect(bookingEndInfo.getByText('Sunday')).toBeInTheDocument();
     expect(bookingEndInfo.getByText('Apr 16')).toBeInTheDocument();
 
     // Base price

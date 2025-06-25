@@ -1,0 +1,89 @@
+@import '../../../../../styles/customMediaQueries.css';
+
+.input {
+  border: 0;
+  padding-left: 8px;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  &:hover,
+  &:focus {
+    border: none;
+    outline: none;
+    box-shadow: none;
+  }
+  &:hover::placeholder,
+  &:focus::placeholder {
+    color: var(--colorGrey700);
+    transition: 0.1s all;
+  }
+
+  @media (--viewportMedium) {
+    font-size: inherit;
+  }
+}
+
+.inputWithCurrentLocation {
+  composes: input;
+  &::placeholder {
+    color: var(--colorGrey700);
+  }
+}
+
+.locationAutocompleteInputIcon {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  border: none;
+  background-color: var(--colorWhite);
+}
+
+.icon {
+  flex: 0 0 auto;
+}
+
+.root {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  @media (--viewportMedium) {
+    height: 48px;
+  }
+}
+
+.customField {
+  flex: 1;
+  color: var(--colorGrey800);
+  padding-left: 12px;
+
+  @media (--viewportMedium) {
+    margin-bottom: 0;
+    padding-left: 16px;
+  }
+}
+
+.predictions {
+  position: absolute;
+  top: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% + 16px);
+  min-width: 288px;
+  margin-top: 0;
+  background-color: var(--colorWhite);
+  border-radius: var(--borderRadiusMedium);
+  box-shadow: var(--boxShadowPopup);
+  z-index: calc(var(--zIndexPopup) + 1);
+
+  @media (--viewportLarge) {
+    top: 50px;
+    right: 0;
+    left: auto;
+    transform: none;
+    width: 100%;
+
+    &.alignLeft {
+      left: -8px;
+      right: auto;
+    }
+  }
+}

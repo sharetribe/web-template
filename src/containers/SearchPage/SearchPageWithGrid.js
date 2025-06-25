@@ -47,6 +47,7 @@ import {
   pickListingFieldFilters,
   searchParamsPicker,
   validUrlQueryParamsFromProps,
+  getSearchPageResourceLocatorStringParams,
 } from './SearchPage.shared';
 
 import FilterComponent from './FilterComponent';
@@ -137,7 +138,7 @@ export class SearchPageComponent extends Component {
 
   // Reset all filter query parameters
   resetAll(e) {
-    const { history, routeConfiguration, config } = this.props;
+    const { history, routeConfiguration, config, location } = this.props;
     const listingFieldsConfig = this.getListingFields();
     const { defaultFilters: defaultFiltersConfig } = config?.search || {};
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
@@ -147,18 +148,33 @@ export class SearchPageComponent extends Component {
     this.setState({ currentQueryParams: {} });
     // Reset routing params
     const queryParams = omit(urlQueryParams, [...filterQueryParamNames, ...keywordsMaybe]);
-    history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, queryParams));
+    const { routeName, pathParams } = getSearchPageResourceLocatorStringParams(
+      routeConfiguration,
+      location
+    );
+    history.push(
+      createResourceLocatorString(routeName, routeConfiguration, pathParams, queryParams)
+    );
   }
 
   getHandleChangedValueFn(useHistoryPush) {
-    const { history, routeConfiguration, config } = this.props;
+    const {
+      history,
+      routeConfiguration,
+      config,
+      location,
+      params: currentPathParams = {},
+    } = this.props;
     const listingFieldsConfig = this.getListingFields();
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
+    const activeListingTypes = config?.listing?.listingTypes.map(config => config.listingType);
     const listingCategories = config.categoryConfiguration.categories;
     const filterConfigs = {
       listingFieldsConfig,
       defaultFiltersConfig,
       listingCategories,
+      activeListingTypes,
+      currentPathParams,
     };
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
     return updatedURLParams => {
@@ -187,7 +203,13 @@ export class SearchPageComponent extends Component {
         if (useHistoryPush) {
           const searchParams = this.state.currentQueryParams;
           const search = cleanSearchFromConflictingParams(searchParams, filterConfigs, sortConfig);
-          history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, search));
+          const { routeName, pathParams } = getSearchPageResourceLocatorStringParams(
+            routeConfiguration,
+            location
+          );
+          history.push(
+            createResourceLocatorString(routeName, routeConfiguration, pathParams, search)
+          );
         }
       };
       this.setState(updater, callback);
@@ -195,20 +217,23 @@ export class SearchPageComponent extends Component {
   }
 
   handleSortBy(urlParam, values) {
-    const { history, routeConfiguration } = this.props;
+    const { history, routeConfiguration, location } = this.props;
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
-
     const queryParams = values
       ? { ...urlQueryParams, [urlParam]: values }
       : omit(urlQueryParams, urlParam);
-
-    history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, queryParams));
+    const { routeName, pathParams } = getSearchPageResourceLocatorStringParams(
+      routeConfiguration,
+      location
+    );
+    history.push(
+      createResourceLocatorString(routeName, routeConfiguration, pathParams, queryParams)
+    );
   }
 
   // Reset all filter query parameters
   handleResetAll(e) {
     this.resetAll(e);
-
     // blur event target if event is passed
     if (e && e.currentTarget) {
       e.currentTarget.blur();
@@ -231,11 +256,25 @@ export class SearchPageComponent extends Component {
       config,
       onUpdateFavorites,
       onFetchCurrentUser,
+      params: currentPathParams = {},
     } = this.props;
+
     const currentUserFavorites = currentUser?.attributes?.profile?.privateData?.favorites || {};
     const listingFields = this.getListingFields();
-    const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
+    const { defaultFilters: defaultFiltersRaw, sortConfig } = config?.search || {};
+
+    // If the search page variant is of type /s/:listingType, this defines the :listingType
+    // path parameter used to filter the whole page.
+    //
+    // On a default search page (/s), this constant does not have a value, even when a
+    // query parameter ?pub_listingType=[queryParamListingType] is used.
+    const { listingType: listingTypePathParam } = currentPathParams;
+
     const activeListingTypes = config?.listing?.listingTypes.map(config => config.listingType);
+    const defaultFiltersConfig = listingTypePathParam
+      ? defaultFiltersRaw.filter(f => f.key !== 'listingType')
+      : defaultFiltersRaw;
+
     const marketplaceCurrency = config.currency;
     const categoryConfiguration = config.categoryConfiguration;
     const listingCategories = categoryConfiguration.categories;
@@ -243,11 +282,15 @@ export class SearchPageComponent extends Component {
       listingFields,
       locationSearch: location.search,
       categoryConfiguration,
+      activeListingTypes,
+      currentPathParams,
     });
     const filterConfigs = {
       listingFieldsConfig,
       defaultFiltersConfig,
       listingCategories,
+      activeListingTypes,
+      currentPathParams,
     };
 
     // Page transition might initially use values from previous search
@@ -264,11 +307,13 @@ export class SearchPageComponent extends Component {
 
     const isKeywordSearch = isMainSearchTypeKeywords(config);
     const builtInPrimaryFilters = defaultFiltersConfig.filter(f =>
-      ['categoryLevel'].includes(f.key)
+      ['categoryLevel', 'listingType'].includes(f.key)
     );
     const builtInFilters = isKeywordSearch
-      ? defaultFiltersConfig.filter(f => !['keywords', 'categoryLevel'].includes(f.key))
-      : defaultFiltersConfig.filter(f => !['categoryLevel'].includes(f.key));
+      ? defaultFiltersConfig.filter(
+          f => !['keywords', 'categoryLevel', 'listingType'].includes(f.key)
+        )
+      : defaultFiltersConfig.filter(f => !['categoryLevel', 'listingType'].includes(f.key));
     const [customPrimaryFilters, customSecondaryFilters] = groupListingFieldConfigs(
       listingFieldsConfig,
       activeListingTypes
@@ -408,6 +453,7 @@ export class SearchPageComponent extends Component {
                 selectedFiltersCount={selectedFiltersCountForMobile}
                 isMapVariant={false}
                 noResultsInfo={noResultsInfo}
+                location={location}
               >
                 {availableFilters.map(filterConfig => {
                   const key = `SearchFiltersMobile.${filterConfig.scope || 'built-in'}.${
@@ -470,6 +516,7 @@ export class SearchPageComponent extends Component {
                   onUpdateFavorites={onUpdateFavorites}
                   onFetchCurrentUser={onFetchCurrentUser}
                   gridLayout={gridLayout}
+                  listingTypeParam={listingTypePathParam}
                 />
               </div>
             </div>

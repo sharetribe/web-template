@@ -4,6 +4,7 @@ import classNames from 'classnames';
 
 import { useConfiguration } from '../../../context/configurationContext';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
+import { ensureOwnListing } from '../../../util/data';
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import {
   GRID_STYLE_SQUARE,
@@ -13,7 +14,6 @@ import {
   propTypes,
   STOCK_MULTIPLE_ITEMS,
 } from '../../../util/types';
-import { ensureOwnListing } from '../../../util/data';
 import {
   createSlug,
   LISTING_PAGE_DRAFT_VARIANT,

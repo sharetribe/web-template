@@ -1,0 +1,73 @@
+@import '../../../../../styles/customMediaQueries.css';
+
+.root {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.datePicker {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% + 16px);
+  margin-top: 4px;
+  background-color: white;
+  padding-bottom: 16px;
+  border-radius: var(--borderRadiusMedium);
+  box-shadow: var(--boxShadowPopup);
+  z-index: calc(var(--zIndexPopup) + 1);
+
+  @media (--viewportLarge) {
+    top: 51px;
+    right: 0;
+    left: auto;
+    transform: none;
+    width: 100%;
+    min-width: 310px;
+    margin-top: 0;
+    &.alignLeft {
+      left: -8px;
+      right: auto;
+    }
+  }
+}
+
+.toggleButton {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: var(--borderRadiusMedium);
+  cursor: pointer;
+  color: var(--colorGrey700);
+  font-weight: 400;
+
+  @media (--viewportMedium) {
+    height: 48px;
+    padding: 0 16px;
+  }
+
+  @media (--viewportLarge) {
+    margin: 0;
+    padding: 10px 20px 10px 16px;
+  }
+
+  &:hover {
+    .label {
+      color: var(--colorGrey700);
+    }
+  }
+}
+
+.label {
+  transition: all 0.1s;
+  margin-left: 8px;
+  color: var(--colorGrey300);
+  white-space: nowrap;
+}
+
+.active {
+  color: var(--colorGrey700);
+}
