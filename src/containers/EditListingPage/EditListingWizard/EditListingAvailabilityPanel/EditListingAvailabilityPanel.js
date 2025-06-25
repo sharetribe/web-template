@@ -191,19 +191,15 @@ const EditListingAvailabilityPanel = props => {
 
   const hasAvailabilityPlan = !!listingAttributes?.availabilityPlan;
   const isPublished = listing?.id && listingAttributes?.state !== LISTING_STATE_DRAFT;
-  const defaultAvailabilityPlan = {
-    type: 'availability-plan/time',
-    timezone: defaultTimeZone(),
-    entries: [
-      // { dayOfWeek: 'mon', startTime: '09:00', endTime: '17:00', seats: 1 },
-      // { dayOfWeek: 'tue', startTime: '09:00', endTime: '17:00', seats: 1 },
-      // { dayOfWeek: 'wed', startTime: '09:00', endTime: '17:00', seats: 1 },
-      // { dayOfWeek: 'thu', startTime: '09:00', endTime: '17:00', seats: 1 },
-      // { dayOfWeek: 'fri', startTime: '09:00', endTime: '17:00', seats: 1 },
-      // { dayOfWeek: 'sat', startTime: '09:00', endTime: '17:00', seats: 1 },
-      // { dayOfWeek: 'sun', startTime: '09:00', endTime: '17:00', seats: 1 },
-    ],
-  };
+  // If new listing, auto-fill all days in current month as available
+  const isNewListing = !listing?.id;
+  const defaultAvailabilityPlan = isNewListing
+    ? getAllDaysInCurrentMonth()
+    : {
+        type: 'availability-plan/time',
+        timezone: defaultTimeZone(),
+        entries: [],
+      };
   const availabilityPlan = listingAttributes?.availabilityPlan || defaultAvailabilityPlan;
   const initialPlanValues = valuesFromLastSubmit
     ? valuesFromLastSubmit
@@ -255,6 +251,29 @@ const EditListingAvailabilityPanel = props => {
       .catch(e => {
         // Don't close modal if there was an error
       });
+  };
+
+  // Helper to generate all days in the current month as available
+  const getAllDaysInCurrentMonth = (timezone) => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const entries = [];
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(year, month, day);
+      entries.push({
+        dayOfWeek: WEEKDAYS[date.getDay()],
+        startTime: '00:00',
+        endTime: '24:00',
+        seats: 1,
+      });
+    }
+    return {
+      type: 'availability-plan/time',
+      timezone: timezone || defaultTimeZone(),
+      entries,
+    };
   };
 
   return (
