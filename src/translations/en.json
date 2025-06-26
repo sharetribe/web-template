@@ -1158,8 +1158,14 @@
   "EditListingAvailabilityPanel.availabilityHelperText": "Select the dates this item is available. You can always update this later.",
   "EditListingAvailabilityPanel.MonthlyCalendar.available": "Available date",
   "EditListingAvailabilityPanel.MonthlyCalendar.today": "Today",
-  "EditListingAvailabilityPanel.startDate": "Start date",
-  "EditListingAvailabilityPanel.endDate": "End date",
+  "EditListingAvailabilityPanel.MonthlyCalendar.scheduleTitle": "Monthly Schedule",
+  "EditListingAvailabilityPanel.MonthlyCalendar.sun": "Sun",
+  "EditListingAvailabilityPanel.MonthlyCalendar.mon": "Mon",
+  "EditListingAvailabilityPanel.MonthlyCalendar.tue": "Tue",
+  "EditListingAvailabilityPanel.MonthlyCalendar.wed": "Wed",
+  "EditListingAvailabilityPanel.MonthlyCalendar.thu": "Thu",
+  "EditListingAvailabilityPanel.MonthlyCalendar.fri": "Fri",
+  "EditListingAvailabilityPanel.MonthlyCalendar.sat": "Sat",
   "ProviderAddressModal.title": "Shipping Address Required",
   "ProviderAddressModal.description": "Please provide your shipping address to proceed with accepting this booking request.",
   "ProviderAddressModal.fullNameLabel": "Full Name",
@@ -1179,5 +1185,9 @@
   "ProviderAddressModal.submit": "Continue & Accept",
   "ProviderAddressModal.cancel": "Cancel",
   "ProviderAddressModal.closeModal": "Close address form",
-  "ProviderAddressModal.submitError": "There was an error submitting your address. Please try again."
+  "ProviderAddressModal.submitError": "There was an error submitting your address. Please try again.",
+  "EditListingAvailabilityPanel.MonthlyCalendar.fri": "Fri",
+  "EditListingAvailabilityPanel.MonthlyCalendar.sat": "Sat",
+  "EditListingAvailabilityPanel.startDate": "Start date",
+  "EditListingAvailabilityPanel.endDate": "End date"
 }

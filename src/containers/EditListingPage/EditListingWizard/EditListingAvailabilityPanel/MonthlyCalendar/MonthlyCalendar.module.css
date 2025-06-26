@@ -1,197 +1,264 @@
 .root {
   width: 100%;
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
-  /* Ensure root container doesn't clip calendar */
-  overflow: visible;
-  position: relative;
 }
 
-.calendarWrapper {
-  margin: 24px 0;
-  background-color: white;
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  /* Ensure wrapper doesn't clip calendar */
-  overflow: visible;
-  position: relative;
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 16px 0;
+  border-bottom: 1px solid #e1e8ed;
 }
 
-/* Calendar positioning styles */
-.calendarWrapper :global(.DateRangePicker_picker) {
-  z-index: 9999;
-  position: absolute;
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.titleWrapper {
+  display: flex;
+  align-items: center;
 }
 
-/* Ensure calendar days are clickable */
-.calendarWrapper :global(.CalendarDay) {
-  cursor: pointer;
-  pointer-events: auto;
+.sectionTitle {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
 }
 
-/* Ensure calendar container is properly positioned */
-.calendarWrapper :global(.DateRangePicker) {
-  position: relative;
-  display: inline-block;
+.navigation {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
-/* Ensure input fields are clickable */
-.calendarWrapper :global(.DateInput) {
-  cursor: pointer;
-  pointer-events: auto;
-}
-
-/* Ensure the calendar is visible and properly styled */
-.calendarWrapper :global(.DateRangePickerInput) {
+.navButton {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #e1e8ed;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.calendarWrapper :global(.DateInput) {
-  background: white;
-  width: auto;
+.navButton:hover {
+  background: #f8f9fa;
+  border-color: #94EED5;
 }
 
-.calendarWrapper :global(.DateInput_input) {
-  background: white;
-  border: none;
+.navButton:focus {
+  outline: none;
+  border-color: #94EED5;
+  box-shadow: 0 0 0 2px rgba(148, 238, 213, 0.2);
+}
+
+.monthDisplay {
+  font-size: 18px;
+  font-weight: 600;
   color: #333;
-  font-size: 14px;
-  padding: 8px;
+  min-width: 120px;
   text-align: center;
 }
 
-.calendarWrapper :global(.DateInput_input__focused) {
-  border-bottom: 2px solid #FFAD86;
-}
-
-.calendarWrapper :global(.DateRangePickerInput_arrow) {
-  color: #666;
-}
-
-.calendarWrapper :global(.DateRangePickerInput_clearDates) {
-  color: #666;
-  margin: 0;
-  padding: 4px;
-  background: transparent;
-  border: none;
-}
-
-.calendarWrapper :global(.DateRangePickerInput_clearDates:hover) {
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 50%;
-}
-
-/* Calendar popup styles */
-.calendarWrapper :global(.DayPicker) {
+.calendarGrid {
   background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  border: 1px solid #e1e8ed;
+  overflow: hidden;
 }
 
-.calendarWrapper :global(.CalendarDay) {
-  border-radius: 50%;
-  border: 1px solid transparent;
-  margin: 0;
-  padding: 0;
-  height: 36px;
-  width: 36px;
-  line-height: 36px;
+.weekdayHeaders {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: #f8f9fa;
+  border-bottom: 1px solid #e1e8ed;
+}
+
+.weekdayHeader {
+  padding: 12px 8px;
+  text-align: center;
+  font-weight: 600;
   font-size: 14px;
-  color: #333;
-}
-
-.calendarWrapper :global(.CalendarDay:hover) {
-  background: rgba(255, 173, 134, 0.1);
-  border: 1px solid #FFAD86;
-}
-
-.calendarWrapper :global(.CalendarDay__selected) {
-  background: #FFAD86;
-  color: white;
-  border: 1px solid #FFAD86;
-}
-
-.calendarWrapper :global(.CalendarDay__selected_span) {
-  background: rgba(255, 173, 134, 0.2);
-  color: #333;
-  border: 1px solid #FFAD86;
-}
-
-.calendarWrapper :global(.CalendarDay__hovered_span) {
-  background: rgba(255, 173, 134, 0.1);
-  color: #333;
-  border: 1px solid #FFAD86;
-}
-
-.calendarWrapper :global(.CalendarDay__today) {
-  border: 1px solid #94EED5;
-  color: #94EED5;
-}
-
-.calendarWrapper :global(.DayPickerNavigation_button) {
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 4px;
   color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.calendarDays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: minmax(120px, auto);
+}
+
+.calendarDay {
+  border-right: 1px solid #e1e8ed;
+  border-bottom: 1px solid #e1e8ed;
   padding: 8px;
-}
-
-.calendarWrapper :global(.DayPickerNavigation_button:hover) {
-  background: rgba(0, 0, 0, 0.05);
-}
-
-.calendarWrapper :global(.CalendarMonth__caption) {
-  color: #333;
-  font-size: 16px;
-  font-weight: 500;
-  padding: 8px 0;
-}
-
-.calendarWrapper :global(.DayPicker__weekHeader) {
-  color: #666;
-  font-size: 12px;
-  font-weight: 500;
-  padding: 8px 0;
-}
-
-/* Legend styles */
-.legend {
+  position: relative;
+  min-height: 120px;
   display: flex;
-  gap: 24px;
-  justify-content: center;
-  margin-top: 16px;
+  flex-direction: column;
 }
 
-.legendItem {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  color: #666;
+.calendarDay:nth-child(7n) {
+  border-right: none;
 }
 
-.legendDot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
+.calendarDay.otherMonth {
+  background: #fafbfc;
+  color: #999;
 }
 
-.legendDot.selectedDate {
-  background-color: #FFAD86;
-}
-
-.legendDot.today {
+.calendarDay.today {
+  background: rgba(148, 238, 213, 0.1);
   border: 2px solid #94EED5;
-  background-color: transparent;
+}
+
+.calendarDay.hasAvailability {
+  background: rgba(255, 173, 134, 0.05);
+}
+
+.calendarDay.noAvailability {
+  background: rgba(255, 0, 0, 0.05);
+}
+
+.dayNumber {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.otherMonth .dayNumber {
+  color: #999;
+}
+
+.today .dayNumber {
+  color: #94EED5;
+  font-weight: 700;
+}
+
+.dayEntries {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dayEntry {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.8);
+  font-size: 11px;
+  line-height: 1.2;
+}
+
+.availabilityDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ccc;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.availabilityDot.isAvailable {
+  background: #94EED5;
+}
+
+.daySchedule {
+  flex: 1;
+  min-width: 0;
+}
+
+.entryRange {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 2px;
+}
+
+.seats {
+  font-size: 10px;
+  color: #666;
+  margin-bottom: 2px;
+}
+
+.sourceMaybe {
+  font-size: 10px;
+  color: #FFAD86;
+  font-style: italic;
+}
+
+.timeRange {
+  font-size: 10px;
+  color: #666;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .navigation {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .calendarDays {
+    grid-auto-rows: minmax(100px, auto);
+  }
+
+  .calendarDay {
+    min-height: 100px;
+    padding: 6px;
+  }
+
+  .dayNumber {
+    font-size: 12px;
+  }
+
+  .dayEntry {
+    font-size: 10px;
+    padding: 2px;
+  }
+
+  .entryRange {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .calendarDays {
+    grid-auto-rows: minmax(80px, auto);
+  }
+
+  .calendarDay {
+    min-height: 80px;
+    padding: 4px;
+  }
+
+  .dayNumber {
+    font-size: 11px;
+    margin-bottom: 4px;
+  }
+
+  .dayEntry {
+    font-size: 9px;
+    gap: 4px;
+  }
+
+  .availabilityDot {
+    width: 6px;
+    height: 6px;
+  }
 } 

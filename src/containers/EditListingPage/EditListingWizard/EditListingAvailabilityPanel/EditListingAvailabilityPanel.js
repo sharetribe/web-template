@@ -13,7 +13,7 @@ import { Button, H3, InlineTextButton, ListingLink, Modal } from '../../../../co
 // Import modules from this directory
 import EditListingAvailabilityPlanForm from './EditListingAvailabilityPlanForm';
 import EditListingAvailabilityExceptionForm from './EditListingAvailabilityExceptionForm';
-import WeeklyCalendar from './WeeklyCalendar/WeeklyCalendar';
+import MonthlyCalendar from './MonthlyCalendar/MonthlyCalendar';
 
 import css from './EditListingAvailabilityPanel.module.css';
 
@@ -313,7 +313,7 @@ const EditListingAvailabilityPanel = props => {
 
       {hasAvailabilityPlan ? (
         <>
-          <WeeklyCalendar
+          <MonthlyCalendar
             className={css.section}
             headerClassName={css.sectionHeader}
             listingId={listing.id}
@@ -330,6 +330,7 @@ const EditListingAvailabilityPanel = props => {
             firstDayOfWeek={firstDayOfWeek}
             routeConfiguration={routeConfiguration}
             history={history}
+            timeZone={availabilityPlan.timezone}
           />
 
           <section className={css.section}>
