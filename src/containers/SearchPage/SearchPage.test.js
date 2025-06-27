@@ -109,13 +109,10 @@ const listingFields = [
       listingTypeIds: ['sell-bicycles'],
     },
     schemaType: 'enum',
-<<<<<<< HEAD
     enumOptions: [
-      { option: 'enum1', label: 'Enum 1' },
-      { option: 'enum2', label: 'Enum 2' },
+      { option: 'boat_1', label: 'Boat 1' },
+      { option: 'boat_2', label: 'Boat 2' },
     ],
-=======
-    enumOptions: [{ option: 'boat_1', label: 'Boat 1' }, { option: 'boat_2', label: 'Boat 2' }],
     filterConfig: {
       indexForSearch: true,
       label: 'Boat',
@@ -132,8 +129,10 @@ const listingFields = [
     key: 'singleSelectTest',
     scope: 'public',
     schemaType: 'enum',
-    enumOptions: [{ option: 'enum1', label: 'Enum 1' }, { option: 'enum2', label: 'Enum 2' }],
->>>>>>> original
+    enumOptions: [
+      { option: 'enum1', label: 'Enum 1' },
+      { option: 'enum2', label: 'Enum 2' },
+    ],
     filterConfig: {
       indexForSearch: true,
       filterType: 'SelectSingleFilter',
