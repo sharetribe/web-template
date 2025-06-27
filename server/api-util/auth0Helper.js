@@ -29,26 +29,33 @@ async function updateAuth0User({
   communityStatus,
   userType,
 }) {
-  const auth0 = getClient();
-  const params = { id: auth0UserId };
-  const appMetadata = {
-    marketId,
-    ...(studioId ? { studioId } : {}),
-    ...(communityId ? { communityId } : {}),
-    ...(sellerStatus ? { sellerStatus } : {}),
-    ...(communityStatus ? { communityStatus } : {}),
-    userType,
-  };
-  const userMetadata = {
-    given_name: firstName,
-    family_name: lastName,
-  };
-  return await auth0.users.update(params, {
-    name: displayName,
-    nickname: displayName,
-    app_metadata: appMetadata,
-    user_metadata: userMetadata,
-  });
+  try {
+    const auth0 = getClient();
+    const params = { id: auth0UserId };
+    const appMetadata = {
+      marketId,
+      ...(studioId ? { studioId } : {}),
+      ...(communityId ? { communityId } : {}),
+      ...(sellerStatus ? { sellerStatus } : {}),
+      ...(communityStatus ? { communityStatus } : {}),
+      userType,
+    };
+    const userMetadata = {
+      given_name: firstName,
+      family_name: lastName,
+    };
+    return await auth0.users.update(params, {
+      name: displayName,
+      nickname: displayName,
+      app_metadata: appMetadata,
+      user_metadata: userMetadata,
+    });
+  } catch (error) {
+    console.error(
+      `[updateAuth0User] NOT BLOCKING ERROR updating Auth0 user | userId: ${marketId} | Error:`,
+      error
+    );
+  }
 }
 
 module.exports = {
