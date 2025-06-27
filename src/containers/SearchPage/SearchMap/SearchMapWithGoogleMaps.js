@@ -1,3 +1,5 @@
+console.log("SearchMapWithGoogleMaps is being used");
+
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import invariant from 'invariant';
@@ -480,11 +482,14 @@ class SearchMapWithGoogleMaps extends Component {
       const mapConfig = {
         // Disable all controls except zoom
         // https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions
+        disableDefaultUI: true,
         mapTypeControl: false,
         scrollwheel: false,
         fullscreenControl: false,
-        clickableIcons: false,
+        clickableIcons: true,
         streetViewControl: false,
+        zoomControl: true,
+        cameraControl: true,
 
         cameraControlOptions: {
           position: controlPosition,
