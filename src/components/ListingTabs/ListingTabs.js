@@ -146,6 +146,7 @@ export const ListingTabs = ({
   );
   const listingGridRenderer = hasNoResults ? noResultRendered : gridRenderer;
 
+  const isSortable = currentListingType === LISTING_TYPES.PORTFOLIO && enableListingManagement;
   const contentRenderer = (
     <div>
       {enableCategoryTabs && (
@@ -155,7 +156,7 @@ export const ListingTabs = ({
               <ScrollableLinks
                 links={categories}
                 selectedLinkId={currentCategory}
-                sortable={currentListingType === LISTING_TYPES.PORTFOLIO}
+                sortable={isSortable}
                 onSortEnd={handlePortfolioSortEnd}
               />
             )}

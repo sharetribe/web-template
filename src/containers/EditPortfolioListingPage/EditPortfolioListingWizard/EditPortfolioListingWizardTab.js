@@ -26,7 +26,9 @@ export const EditPortfolioListingWizardTab = props => {
     let listing = listingDetails;
     if (isEditing) {
       if (shouldUpdate) {
-        await dispatch(updatePortfolioListing({ id: listingDetails.id, title }, config));
+        await dispatch(
+          updatePortfolioListing({ id: listingDetails.id, title: listingDetails.title }, config)
+        );
       }
     } else {
       listing = await dispatch(requestCreateListingDraft(listingDetails.title));
