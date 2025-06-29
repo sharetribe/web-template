@@ -482,15 +482,19 @@ class SearchMapWithGoogleMaps extends Component {
       const mapConfig = {
         // Disable all controls except zoom
         // https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions
-        disableDefaultUI: true,
+        disableDefaultUI: false,
         mapTypeControl: false,
         scrollwheel: false,
         fullscreenControl: false,
         clickableIcons: true,
         streetViewControl: false,
         zoomControl: true,
-        cameraControl: true,
+        cameraControl: false,
 
+        zoomControlOptions: {
+        position: window.google.maps.ControlPosition.TOP_LEFT,
+        },
+        
         cameraControlOptions: {
           position: controlPosition,
         },
