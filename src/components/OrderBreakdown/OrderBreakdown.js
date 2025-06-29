@@ -114,7 +114,7 @@ export const OrderBreakdownComponent = props => {
       />
 
       {/* Adjustment Section */}
-      {transaction?.attributes?.metadata?.adjustment && (
+      {/* {transaction?.attributes?.metadata?.adjustment && (
         <div className={css.adjustmentSection} style={{ background: '#fffbe6', border: '1px solid #ffe58f', borderRadius: 4, padding: 16, margin: '16px 0' }}>
           <strong>Adjustment</strong>
           <div style={{ marginTop: 8 }}>
@@ -138,7 +138,7 @@ export const OrderBreakdownComponent = props => {
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
       {transaction?.attributes?.metadata?.rescheduleRequest && (
         <div className={css.rescheduleRequest}>

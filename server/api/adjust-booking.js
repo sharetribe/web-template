@@ -1,15 +1,16 @@
 const { asyncHandler } = require('../api-util/asyncHandler');
-const { getISdk } = require('../api-util/sdk');
-const { transactionLineItems } = require('../api-util/lineItems');
+const { getTrustedSdk } = require('../api-util/sdk');
 
 // Use Sharetribe process transitions for adjustment
 module.exports = asyncHandler(async (req, res) => {
     try {
         const { transactionId, newHours, newPrice } = req.body;
-        const isdk = getISdk();
+        
+        // Use trusted SDK with user authentication context
+        const sdk = await getTrustedSdk(req);
 
         // Fetch the transaction
-        const transactionResult = await isdk.transactions.show({ id: transactionId, include: ['booking', 'provider', 'customer', 'listing'] });
+        const transactionResult = await sdk.transactions.show({ id: transactionId, include: ['booking', 'provider', 'customer', 'listing'] });
         console.log('[AdjustBooking] transactionResult:', JSON.stringify(transactionResult, null, 2));
         if (transactionResult.status !== 200) {
             return res.status(transactionResult.status).json({ success: false, error: transactionResult.data });
@@ -61,25 +62,44 @@ module.exports = asyncHandler(async (req, res) => {
 
         console.log('[AdjustBooking] Attempting transition:', transition);
 
-        // Build new line items for the adjustment (assume hourly booking)
-        const orderData = {
-            bookingStart: booking.attributes.start,
-            bookingEnd: booking.attributes.end,
-            // For hourly, quantity is hours; for other types, adjust accordingly
-            quantity: newHours,
-            // If you want to override price, you may need to adjust price logic in transactionLineItems
-        };
-        // For now, pass commissions as null (or fetch from listing if needed)
-        const lineItems = await transactionLineItems(listing, orderData, null, null);
-        // Override the unitPrice and lineTotal for the main line item to match newPrice
-        if (lineItems.length > 0) {
-            lineItems[0].unitPrice.amount = Math.round(newPrice * 100); // newPrice is in major units
-            lineItems[0].lineTotal = { _sdkType: 'Money', amount: Math.round(newPrice * 100), currency: lineItems[0].unitPrice.currency };
-            lineItems[0].quantity = newHours;
-        }
+        // Use existing transaction line items and update amounts
+        const existingLineItems = transaction.attributes.lineItems || [];
+        console.log('[AdjustBooking] Existing line items:', JSON.stringify(existingLineItems, null, 2));
+        
+        // Create new line items based on existing structure
+        const lineItems = existingLineItems.map(item => {
+            const newItem = { ...item };
+            
+            if (item.code === 'line-item/hour') {
+                newItem.unitPrice = { ...item.unitPrice, amount: newPrice };
+                // Calculate new line total based on unit price * new hours
+                const newLineTotal = Math.round(newPrice * newHours);
+                newItem.lineTotal = { ...item.lineTotal, amount: newLineTotal };
+                newItem.quantity = newHours.toString();
+            } else if (item.code === 'line-item/provider-commission') {
+                // Update provider commission based on new total
+                const newTotal = Math.round(newPrice * newHours);
+                const commissionAmount = Math.round(newTotal * (item.percentage / 100));
+                newItem.unitPrice = { ...item.unitPrice, amount: newTotal };
+                newItem.lineTotal = { ...item.lineTotal, amount: commissionAmount };
+            }
+            
+            return newItem;
+        });
+        
+        console.log('[AdjustBooking] Modified line items:', JSON.stringify(lineItems, null, 2));
+        
+        // Calculate total to verify it matches
+        const totalAmount = lineItems.reduce((sum, item) => {
+            if (item.includeFor.includes('customer')) {
+                return sum + item.lineTotal.amount;
+            }
+            return sum;
+        }, 0);
+        console.log('[AdjustBooking] Calculated total amount:', totalAmount, 'Expected:', Math.round(newPrice * 100));
 
         // Call the transition with adjustment metadata and new line items
-        const transitionResult = await isdk.transactions.transition({
+        const transitionResult = await sdk.transactions.transition({
             id: transactionId,
             transition,
             params: {
@@ -103,11 +123,10 @@ module.exports = asyncHandler(async (req, res) => {
 
         return res.status(200).json({
             success: true,
-            adjustment: transitionResult.data.attributes.metadata.adjustment,
             transaction: transitionResult.data,
         });
     } catch (err) {
-        console.error('[AdjustBooking] Unexpected error:', err);
+        // console.error('[AdjustBooking] Unexpected error:', err);
         if (err.response && err.response.data) {
             console.error('[AdjustBooking] Flex error response:', JSON.stringify(err.response.data, null, 2));
         } else if (err.data) {

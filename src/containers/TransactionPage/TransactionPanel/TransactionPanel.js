@@ -85,7 +85,7 @@ const AdjustBookingModal = ({ transaction, onClose, onSubmit, onManageDisableScr
   const [hours, setHours] = useState(transaction.booking?.attributes?.hours || 1);
   // Prepopulate price with the listing price and make it non-editable
   const price = transaction.listing?.attributes?.price?.amount
-    ? transaction.listing.attributes.price.amount / 100
+    ? transaction.listing.attributes.price.amount
     : 0;
   const currency = transaction.listing?.attributes?.price?.currency || 'USD';
   const handleSubmit = () => {
@@ -115,7 +115,7 @@ const AdjustBookingModal = ({ transaction, onClose, onSubmit, onManageDisableScr
           Price (in {currency}):
           <input
             type="number"
-            value={price}
+            value={price / 100}
             readOnly
             style={{ marginLeft: 8, marginBottom: 16, background: '#f5f5f5', color: '#888' }}
           />
