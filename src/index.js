@@ -90,6 +90,7 @@ const render = (store, shouldHydrate) => {
           <h1style={{ color:'green'}}>Test successful</h1>
         );
       }
+      }
     })
     .catch(e => {
       log.error(e, 'browser-side-render-failed');
