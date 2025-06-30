@@ -1,5 +1,6 @@
 // Import contexts and util modules
 import { voucherifyBackend } from '../../util/api'; // [SKYFARER]
+import { updateTransactionMetadata } from '../../util/api'; // [SKYFARER]
 import { findRouteByRouteName } from '../../util/routes';
 import { ensureStripeCustomer, ensureTransaction } from '../../util/data';
 import { minutesBetween } from '../../util/dates';
@@ -308,13 +309,70 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams, curr
     const transactionId = fnParams.transactionId;
     const transitionName = process.transitions.CONFIRM_PAYMENT;
     const isTransitionedAlready = storedTx?.attributes?.lastTransition === transitionName;
+    
+    console.log('[CheckoutPage] fnConfirmPayment - storedTx:', storedTx);
+    console.log('[CheckoutPage] fnConfirmPayment - createdPaymentIntent:', createdPaymentIntent);
+    
     const orderPromise = isTransitionedAlready
       ? Promise.resolve(storedTx)
       : onConfirmPayment(transactionId, transitionName, {});
 
-    orderPromise.then(order => {
-      // Store the returned transaction (order)
-      persistTransaction(order, pageData, storeData, setPageData, sessionStorageKey);
+    orderPromise.then(async order => {
+      console.log('[CheckoutPage] fnConfirmPayment - order after transition:', order);
+      console.log('[CheckoutPage] fnConfirmPayment - order protected data:', order?.attributes?.protectedData);
+      console.log('[CheckoutPage] fnConfirmPayment - order metadata:', order?.attributes?.metadata);
+      
+      // Store payment intent information in metadata from the returned order
+      const stripePaymentIntents = order?.attributes?.protectedData?.stripePaymentIntents;
+      if (stripePaymentIntents?.default) {
+        const paymentIntentData = {
+          stripePaymentIntentId: stripePaymentIntents.default.stripePaymentIntentId,
+          stripePaymentIntentClientSecret: stripePaymentIntents.default.stripePaymentIntentClientSecret,
+          storedAt: new Date().toISOString(),
+          paymentIntent: createdPaymentIntent
+        };
+        
+        console.log('[CheckoutPage] fnConfirmPayment - found payment intent in order, storing in metadata:', paymentIntentData);
+        
+        try {
+          // Call API to update transaction metadata
+          const updateResult = await updateTransactionMetadata({
+            transactionId: order.id.uuid,
+            metadata: {
+              ...order.attributes?.metadata,
+              persistentPaymentIntent: paymentIntentData
+            }
+          });
+          
+          if (updateResult.success) {
+            console.log('[CheckoutPage] fnConfirmPayment - successfully updated transaction metadata');
+            // Store the updated transaction (order) with new metadata
+            const updatedOrder = {
+              ...order,
+              attributes: {
+                ...order.attributes,
+                metadata: {
+                  ...order.attributes?.metadata,
+                  persistentPaymentIntent: paymentIntentData
+                }
+              }
+            };
+            persistTransaction(updatedOrder, pageData, storeData, setPageData, sessionStorageKey);
+          } else {
+            console.error('[CheckoutPage] fnConfirmPayment - failed to update metadata:', updateResult.error);
+            // Store the returned transaction (order) as is
+            persistTransaction(order, pageData, storeData, setPageData, sessionStorageKey);
+          }
+        } catch (error) {
+          console.error('[CheckoutPage] fnConfirmPayment - error updating metadata:', error);
+          // Store the returned transaction (order) as is
+          persistTransaction(order, pageData, storeData, setPageData, sessionStorageKey);
+        }
+      } else {
+        console.log('[CheckoutPage] fnConfirmPayment - no stripePaymentIntents found in order protected data');
+        // Store the returned transaction (order) as is
+        persistTransaction(order, pageData, storeData, setPageData, sessionStorageKey);
+      }
     });
 
     return orderPromise;

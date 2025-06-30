@@ -232,3 +232,7 @@ export const adjustBooking = body => {
   return post('/api/adjust-booking', body);
 };
 
+export const updateTransactionMetadata = body => {
+  return post('/api/update-transaction-metadata', body);
+};
+

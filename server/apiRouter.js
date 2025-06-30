@@ -38,6 +38,7 @@ const {
 const { generateInstructorMatches } = require('./api/ai/ai-gateway');
 const { subscriptionCreated } = require('./api/webhooks/webhooks');
 const adjustBooking = require('./api/adjust-booking');
+const updateTransactionMetadata = require('./api/update-transaction-metadata');
 
 const router = express.Router();
 
@@ -136,5 +137,6 @@ router.post('/ai/instructor-matches', isAuthenticated, generateInstructorMatches
 
 router.post('/webhooks/subscription-stripe', subscriptionCreated);
 router.post('/adjust-booking', adjustBooking);
+router.post('/update-transaction-metadata', updateTransactionMetadata);
 
 module.exports = router;
