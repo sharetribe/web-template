@@ -1,0 +1,1 @@
+{{set-translations (asset "content/email-texts.json")}}{{t "BookingReviewByProviderWanted.Subject" "Leave a review for {customerDisplayName}" customerDisplayName=transaction.customer.display-name }}

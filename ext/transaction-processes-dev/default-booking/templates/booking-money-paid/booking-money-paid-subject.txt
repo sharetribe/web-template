@@ -1,0 +1,1 @@
+{{set-translations (asset "content/email-texts.json")}}{{t "BookingMoneyPaid.Subject" "You have been paid {amount,number,::.00} {currency}" amount=transaction.payout-total.amount currency=transaction.payout-total.currency}}
