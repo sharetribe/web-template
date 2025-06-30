@@ -293,7 +293,7 @@
   "EditListingPage.loadingListingData": "Loading listing data…",
   "EditListingPage.titleCreateListing": "Post a new listing",
   "EditListingPage.titleEditListing": "Edit listing",
-  "EditListingPhotosForm.addImagesTip": "Tip: Upload the best 2-3 photos from different angles and with a good quality.",
+  "EditListingPhotosForm.addImagesTip": "Tip: Upload 2-3 good-quality photos from different angles.",
   "EditListingPhotosForm.chooseImage": "+ Add a photo…",
   "EditListingPhotosForm.imageRequired": "You need to add at least one photo.",
   "EditListingPhotosForm.imageTypes": ".JPG or .PNG. Max. 20 MB",
