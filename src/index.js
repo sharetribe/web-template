@@ -87,7 +87,7 @@ const render = (store, shouldHydrate) => {
         const container = document.getElementById('root');
         const root = ReactDOMClient.createRoot(container);
         root.render(
-          <ClientApp store={store} hostedTranslations={translations} hostedConfig={hostedConfig} />
+          <h1style={{ color:'green'}}>Test successful</h1>
         );
       }
     })
