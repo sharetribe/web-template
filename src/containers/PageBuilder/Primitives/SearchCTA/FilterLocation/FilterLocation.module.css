@@ -5,7 +5,6 @@
   padding-left: 8px;
   text-overflow: ellipsis;
   cursor: pointer;
-  font-size: 14px;
   &:hover,
   &:focus {
     border: none;
