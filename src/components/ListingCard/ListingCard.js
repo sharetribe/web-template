@@ -15,7 +15,9 @@ import { createSlug } from '../../util/urlHelpers';
 import { isBookingProcessAlias } from '../../transactions/transaction';
 import { AspectRatioWrapper, NamedLink, ResponsiveImage } from '../../components';
 import { voucherifyBackend } from '../../util/api';
+
 import { isFieldForListingType, isFieldForCategory } from '../../util/fieldHelpers';
+
 import css from './ListingCard.module.css';
 
 const MIN_LENGTH_FOR_LONG_WORDS = 10;
@@ -101,7 +103,6 @@ export const ListingCard = props => {
   const history = useHistory();
   //console.log('listingFieldConfigs in ListingCard:', listingFieldConfigs);
   //console.log('isFieldForCategory in ListingCard:', isFieldForCategory);
-
 
   const {
     className,
