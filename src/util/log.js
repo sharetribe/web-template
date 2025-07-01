@@ -121,18 +121,18 @@ const setCause = (error, cause) => {
   setCauseIfNoExistingCause(error, cause);
 };
 
-export const onRecoverableError = (error, componentStack) => {
+export const onRecoverableError = (e, componentStack) => {
   let data = {};
 
   if (componentStack) {
     // Generating this synthetic error allows monitoring services to apply sourcemaps
     // to unminify the stacktrace and make it readable.
-    const errorBoundaryError = new Error(error.message);
+    const errorBoundaryError = new Error(e.message);
     errorBoundaryError.name = `React ErrorBoundary ${errorBoundaryError.name}`;
     errorBoundaryError.stack = componentStack;
 
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/cause
-    setCause(error, errorBoundaryError);
+    setCause(e, errorBoundaryError);
 
     data.componentStack = componentStack;
   }

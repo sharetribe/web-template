@@ -14,17 +14,30 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] Small fixes
+
+  - [fix] Renamed onRecoverableError param
+  - [add] Improved schema for ProfilePage
+  - [add] Added role, aria-label, and titles to social media icons
+  - [change] Limited editing and added communication for operators using the 'log-in as' feature
+  - [fix] Removed additional padding on primary integer filters
+  - [fix] Added word-break to Message and OwnMessage in ActivityFeed.js
+
+[#631](https://github.com/sharetribe/web-template/pull/631)
 
 ## [v8.5.0] 2025-06-10
+
 - [add] Add conditional visibility for the following elements depending on Console configuration:
-    - Visibility for create listings links for unauthenticated users configured in Top bar
-    - Visibility for elements configured in User types:
-      - Create listings and Manage listings links
-      - Payment method and payout detail tab links
-      - Inbox links for orders and sales
-      - Profile page review tabs
-  
+
+  - Visibility for create listings links for unauthenticated users configured in Top bar
+  - Visibility for elements configured in User types:
+    - Create listings and Manage listings links
+    - Payment method and payout detail tab links
+    - Inbox links for orders and sales
+    - Profile page review tabs
+
   [#614](https://github.com/sharetribe/web-template/pull/614)
+
 - [fix] Fix an issue with the date filter in the Search CTA component, which was not observing
   nightly search configuration correctly.[#625](https://github.com/sharetribe/web-template/pull/625)
 

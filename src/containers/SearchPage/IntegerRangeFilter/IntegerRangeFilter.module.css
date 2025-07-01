@@ -2,16 +2,7 @@
 
 .root {
   position: relative;
-  padding-top: 24px;
-  margin-top: 12px;
-  padding-bottom: 17px;
-  border-bottom: 1px solid var(--colorGrey100);
-
-  @media (--viewportMedium) {
-    padding-top: 16px;
-    padding-bottom: 0;
-    border-bottom: 0;
-  }
+  display: inline-block;
 }
 
 .contentWrapper {

@@ -244,7 +244,11 @@ const StripeConnectAccountForm = props => {
           values,
           stripeConnected,
           currentUser,
+          authScopes,
         } = fieldRenderProps;
+
+        // Check if current user has limited rights in order to disable the submit button
+        const limitedRights = authScopes?.indexOf('user:limited') >= 0;
 
         const accountDataLoaded = stripeConnected && stripeAccountFetched && savedCountry;
         const submitInProgress = inProgress;
@@ -253,6 +257,7 @@ const StripeConnectAccountForm = props => {
           invalid ||
           disabled ||
           submitInProgress ||
+          limitedRights ||
           (!stripeConnected && !values?.accountType);
 
         const countryLabel = intl.formatMessage({ id: 'StripeConnectAccountForm.countryLabel' });
@@ -303,6 +308,11 @@ const StripeConnectAccountForm = props => {
           </ExternalLink>
         );
 
+        // Add button title for hovering to explain why the button is disabled when user has limited rights
+        const submitButtonTitle = limitedRights
+          ? intl.formatMessage({ id: 'StripeConnectAccountForm.buttonTitleLimitedAccess' })
+          : null;
+
         // Don't show the submit button while fetching the Stripe account data
         const submitButtonMaybe =
           !stripeConnected || accountDataLoaded ? (
@@ -319,6 +329,7 @@ const StripeConnectAccountForm = props => {
                 inProgress={submitInProgress}
                 disabled={submitDisabled}
                 ready={ready}
+                title={submitButtonTitle}
               >
                 {submitButtonText || (
                   <FormattedMessage id="StripeConnectAccountForm.submitButtonText" />

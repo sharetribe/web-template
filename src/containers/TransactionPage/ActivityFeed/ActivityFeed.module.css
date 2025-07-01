@@ -79,6 +79,9 @@
   color: var(--colorWhite);
   text-decoration: underline;
 
+  word-break: break-word;
+  hyphens: auto;
+
   &:hover {
     text-decoration: none;
     background-color: var(--marketplaceColorDark);
@@ -187,4 +190,9 @@
 }
 
 .showOlderButton {
+}
+
+.longWord {
+  word-break: break-word;
+  hyphens: auto;
 }
