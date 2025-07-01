@@ -1,3 +1,5 @@
+
+
 import classNames from 'classnames';
 import React, { useEffect } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
@@ -13,6 +15,9 @@ import { createSlug } from '../../util/urlHelpers';
 import { isBookingProcessAlias } from '../../transactions/transaction';
 import { AspectRatioWrapper, NamedLink, ResponsiveImage } from '../../components';
 import { voucherifyBackend } from '../../util/api';
+
+import { isFieldForListingType, isFieldForCategory } from '../../util/fieldHelpers';
+
 import css from './ListingCard.module.css';
 
 const MIN_LENGTH_FOR_LONG_WORDS = 10;
@@ -92,9 +97,12 @@ const PriceMaybe = props => {
  */
 export const ListingCard = props => {
   const config = useConfiguration();
+  const listingFieldConfigs = config.listing?.listingFields || [];
   const intl = props.intl || useIntl();
   const location = useLocation();
   const history = useHistory();
+  //console.log('listingFieldConfigs in ListingCard:', listingFieldConfigs);
+  //console.log('isFieldForCategory in ListingCard:', isFieldForCategory);
 
   const {
     className,
@@ -106,20 +114,23 @@ export const ListingCard = props => {
     onToggleFavorites,
     showAuthorInfo = true,
     showHeartIcon,
+    showStateInfo = true, 
   } = props;
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureListing(listing);
   const id = currentListing.id.uuid;
   //console.log("----------------->", currentListing, currentListing.id, currentListing.id.uuid);
 
-  const { title = '', price, publicData } = currentListing.attributes;
+  const { title = '', price, publicData, metadata = {} } = currentListing.attributes;
   const slug = createSlug(title);
   const author = ensureUser(listing.author);
+  //console.log(listing.author);
   const authorName = author.attributes.profile.displayName;
+  const stateInfo = publicData.State;
   const firstImage =
     currentListing.images && currentListing.images.length > 0 ? currentListing.images[0] : null;
 
-  const {
+  const {  
     aspectWidth = 1,
     aspectHeight = 1,
     variantPrefix = 'listing-card',
@@ -130,7 +141,11 @@ export const ListingCard = props => {
 
   const setActivePropsMaybe = setActiveListing
     ? {
-        onMouseEnter: () => setActiveListing(currentListing.id),
+        onMouseEnter: () => {
+          setActiveListing(currentListing.id);
+
+          console.log('publicData:', publicData);
+          console.log('listingType:', publicData?.listingType);        },
         onMouseLeave: () => setActiveListing(null),
       }
     : null;
@@ -201,6 +216,8 @@ export const ListingCard = props => {
   }
 };
 
+console.log('ListingCard → stateInfo:', stateInfo);
+
 
   return (
     <NamedLink
@@ -245,6 +262,10 @@ export const ListingCard = props => {
               longWordClass: css.longWord,
             })}
           </div>
+          {showStateInfo ? (
+            <div className={css.stateInfo}>{stateInfo}
+            </div>
+          ) : null}
           {showAuthorInfo ? (
             <div className={css.authorInfo}>
               <FormattedMessage id="ListingCard.author" values={{ authorName }} />
