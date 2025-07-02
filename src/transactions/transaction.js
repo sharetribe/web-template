@@ -349,24 +349,28 @@ export const isFullDay = unitType => {
 };
 
 /**
- * Get transitions that need provider's attention for every supported process
+ * Get states that need provider's attention for every supported process
  */
-export const getTransitionsNeedingProviderAttention = () => {
-  return PROCESSES.reduce((accTransitions, processInfo) => {
-    const statesNeedingProviderAttention = Object.values(
-      processInfo.process.statesNeedingProviderAttention
-    );
-    const process = processInfo.process;
-    const processTransitions = statesNeedingProviderAttention.reduce(
-      (pickedTransitions, stateName) => {
-        return [...pickedTransitions, ...getTransitionsToState(process, stateName)];
-      },
-      []
-    );
-    // Return only unique transitions names
-    // TODO: this setup is subject to problems if one process has important transition named
-    // similarly as unimportant transition in another process.
-    return [...new Set([...accTransitions, ...processTransitions])];
+export const getStatesNeedingProviderAttention = () => {
+  return PROCESSES.reduce((accStates, processInfo) => {
+    const statesNeedingProviderAttention = processInfo.process.statesNeedingProviderAttention || [];
+    // Return only unique state names
+    // TODO: this setup is subject to problems if one process has important state named
+    // similarly as unimportant state in another process.
+    return [...new Set([...accStates, ...statesNeedingProviderAttention])];
+  }, []);
+};
+
+/**
+ * Get states that need customer's attention for every supported process
+ */
+export const getStatesNeedingCustomerAttention = () => {
+  return PROCESSES.reduce((accStates, processInfo) => {
+    const statesNeedingCustomerAttention = processInfo.process.statesNeedingCustomerAttention || [];
+    // Return only unique state names
+    // TODO: this setup is subject to problems if one process has important state named
+    // similarly as unimportant state in another process.
+    return [...new Set([...accStates, ...statesNeedingCustomerAttention])];
   }, []);
 };
 
