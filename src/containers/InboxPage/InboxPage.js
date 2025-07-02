@@ -160,7 +160,14 @@ export const InboxItem = props => {
     stockType = STOCK_MULTIPLE_ITEMS,
   } = props;
   const { customer, provider, listing } = tx;
-  const { processName, processState, actionNeeded, isSaleNotification, isFinal } = stateData;
+  const {
+    processName,
+    processState,
+    actionNeeded,
+    isSaleNotification,
+    isOrderNotification,
+    isFinal,
+  } = stateData;
   const isCustomer = transactionRole === TX_TRANSITION_ACTOR_CUSTOMER;
 
   const lineItems = tx.attributes?.lineItems;
@@ -172,7 +179,8 @@ export const InboxItem = props => {
   const otherUserDisplayName = <UserDisplayName user={otherUser} intl={intl} />;
   const isOtherUserBanned = otherUser.attributes.banned;
 
-  const rowNotificationDot = isSaleNotification ? <div className={css.notificationDot} /> : null;
+  const rowNotificationDot =
+    isSaleNotification || isOrderNotification ? <div className={css.notificationDot} /> : null;
 
   const linkClasses = classNames(css.itemLink, {
     [css.bannedUserLink]: isOtherUserBanned,
@@ -233,6 +241,7 @@ export const InboxItem = props => {
  * @param {Object} props.params - The params object
  * @param {string} props.params.tab - The tab
  * @param {number} props.providerNotificationCount - The provider notification count
+ * @param {number} props.customerNotificationCount - The customer notification count
  * @param {boolean} props.scrollingDisabled - Whether scrolling is disabled
  * @param {Array<propTypes.transaction>} props.transactions - The transactions array
  * @param {Object} props.intl - The intl object
@@ -251,6 +260,7 @@ export const InboxPageComponent = props => {
     pagination,
     params,
     providerNotificationCount = 0,
+    customerNotificationCount = 0,
     scrollingDisabled,
     transactions,
   } = props;
@@ -325,6 +335,9 @@ export const InboxPageComponent = props => {
           text: (
             <span>
               <FormattedMessage id="InboxPage.ordersTabTitle" />
+              {customerNotificationCount > 0 ? (
+                <NotificationBadge count={customerNotificationCount} />
+              ) : null}
             </span>
           ),
           selected: isOrders,
@@ -423,13 +436,18 @@ export const InboxPageComponent = props => {
 
 const mapStateToProps = state => {
   const { fetchInProgress, fetchOrdersOrSalesError, pagination, transactionRefs } = state.InboxPage;
-  const { currentUser, currentUserNotificationCount: providerNotificationCount } = state.user;
+  const {
+    currentUser,
+    currentUserSaleNotificationCount,
+    currentUserOrderNotificationCount,
+  } = state.user;
   return {
     currentUser,
     fetchInProgress,
     fetchOrdersOrSalesError,
     pagination,
-    providerNotificationCount,
+    providerNotificationCount: currentUserSaleNotificationCount,
+    customerNotificationCount: currentUserOrderNotificationCount,
     scrollingDisabled: isScrollingDisabled(state),
     transactions: getMarketplaceEntities(state, transactionRefs),
   };
