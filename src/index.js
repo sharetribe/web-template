@@ -44,6 +44,11 @@ import routeConfiguration from './routing/routeConfiguration';
 // App it self
 import { ClientApp, renderApp } from './app';
 
+// Environment variable debugging
+console.log("🔐 Stripe Key in use:", process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
+console.log("🏪 Marketplace ID in use:", process.env.REACT_APP_SHARETRIBE_MARKETPLACE_ID);
+console.log("🚚 Shippo Token (first 6 chars):", (process.env.SHIPPO_API_TOKEN || "").slice(0, 6));
+
 const render = (store, shouldHydrate) => {
   // If the server already loaded the auth information, render the app
   // immediately. Otherwise wait for the flag to be loaded and render

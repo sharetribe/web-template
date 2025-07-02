@@ -132,7 +132,7 @@ const getOrderParams = (pageData, shippingDetails, optionalPaymentParams, config
       providerState: '',
       providerZip: '',
       providerEmail: currentUser?.attributes?.email || '',
-      providerPhone: currentUser?.attributes?.profile?.phoneNumber || '',
+      providerPhone: currentUser?.attributes?.profile?.protectedData?.phoneNumber || currentUser?.attributes?.profile?.publicData?.phoneNumber || '',
 
       // Additional transaction data
       ...getTransactionTypeData(listingType, unitType, config),
@@ -312,7 +312,7 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     providerState: '',
     providerZip: '',
     providerEmail: currentUser?.attributes?.email || '',
-    providerPhone: currentUser?.attributes?.profile?.phoneNumber || '',
+    providerPhone: currentUser?.attributes?.profile?.protectedData?.phoneNumber || currentUser?.attributes?.profile?.publicData?.phoneNumber || '',
   };
 
   // Log the protected data for debugging

@@ -144,3 +144,22 @@ export const transitionPrivileged = body => {
 export const createUserWithIdp = body => {
   return post('/api/auth/create-user-with-idp', body);
 };
+
+// Ensure phone number is saved to protectedData
+// This can be called after sign-up or profile updates to guarantee the phone number is stored correctly
+export const ensurePhoneNumber = phoneNumber => {
+  if (!phoneNumber) {
+    console.warn('⚠️ [api] No phone number provided to ensurePhoneNumber');
+    return Promise.resolve();
+  }
+  
+  console.log('📱 [api] Ensuring phone number is saved to protectedData:', phoneNumber);
+  return post('/api/ensure-phone-number', { phoneNumber })
+    .then(() => {
+      console.log('✅ [api] Phone number ensured in protectedData');
+    })
+    .catch(error => {
+      console.warn('⚠️ [api] Failed to ensure phone number:', error.message);
+      throw error;
+    });
+};

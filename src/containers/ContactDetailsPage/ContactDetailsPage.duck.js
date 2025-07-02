@@ -2,6 +2,7 @@ import merge from 'lodash/merge';
 import { denormalisedResponseEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
 import { fetchCurrentUser, currentUserShowSuccess } from '../../ducks/user.duck';
+import { ensurePhoneNumber } from '../../util/api';
 
 // ================ Action types ================ //
 
@@ -118,6 +119,22 @@ const requestSavePhoneNumber = params => (dispatch, getState, sdk) => {
       }
 
       const currentUser = entities[0];
+      
+      // Ensure the phone number is properly saved to protectedData
+      if (phoneNumber) {
+        console.log('📱 [ContactDetailsPage] Ensuring phone number is saved to protectedData:', phoneNumber);
+        return ensurePhoneNumber(phoneNumber)
+          .then(() => {
+            console.log('✅ [ContactDetailsPage] Phone number ensured in protectedData');
+            return currentUser;
+          })
+          .catch(error => {
+            console.warn('⚠️ [ContactDetailsPage] Failed to ensure phone number:', error.message);
+            // Return the user anyway since the update was successful
+            return currentUser;
+          });
+      }
+      
       return currentUser;
     })
     .catch(e => {

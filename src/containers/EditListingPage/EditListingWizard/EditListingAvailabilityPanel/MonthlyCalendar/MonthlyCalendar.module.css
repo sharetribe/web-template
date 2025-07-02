@@ -1,0 +1,264 @@
+.root {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 16px 0;
+  border-bottom: 1px solid #e1e8ed;
+}
+
+.titleWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+}
+
+.navigation {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.navButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #e1e8ed;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.navButton:hover {
+  background: #f8f9fa;
+  border-color: #94EED5;
+}
+
+.navButton:focus {
+  outline: none;
+  border-color: #94EED5;
+  box-shadow: 0 0 0 2px rgba(148, 238, 213, 0.2);
+}
+
+.monthDisplay {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  min-width: 120px;
+  text-align: center;
+}
+
+.calendarGrid {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e1e8ed;
+  overflow: hidden;
+}
+
+.weekdayHeaders {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: #f8f9fa;
+  border-bottom: 1px solid #e1e8ed;
+}
+
+.weekdayHeader {
+  padding: 12px 8px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.calendarDays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: minmax(120px, auto);
+}
+
+.calendarDay {
+  border-right: 1px solid #e1e8ed;
+  border-bottom: 1px solid #e1e8ed;
+  padding: 8px;
+  position: relative;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+}
+
+.calendarDay:nth-child(7n) {
+  border-right: none;
+}
+
+.calendarDay.otherMonth {
+  background: #fafbfc;
+  color: #999;
+}
+
+.calendarDay.today {
+  background: rgba(148, 238, 213, 0.1);
+  border: 2px solid #94EED5;
+}
+
+.calendarDay.hasAvailability {
+  background: rgba(255, 173, 134, 0.05);
+}
+
+.calendarDay.noAvailability {
+  background: rgba(255, 0, 0, 0.05);
+}
+
+.dayNumber {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.otherMonth .dayNumber {
+  color: #999;
+}
+
+.today .dayNumber {
+  color: #94EED5;
+  font-weight: 700;
+}
+
+.dayEntries {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dayEntry {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.8);
+  font-size: 11px;
+  line-height: 1.2;
+}
+
+.availabilityDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ccc;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.availabilityDot.isAvailable {
+  background: #94EED5;
+}
+
+.daySchedule {
+  flex: 1;
+  min-width: 0;
+}
+
+.entryRange {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 2px;
+}
+
+.seats {
+  font-size: 10px;
+  color: #666;
+  margin-bottom: 2px;
+}
+
+.sourceMaybe {
+  font-size: 10px;
+  color: #FFAD86;
+  font-style: italic;
+}
+
+.timeRange {
+  font-size: 10px;
+  color: #666;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .navigation {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .calendarDays {
+    grid-auto-rows: minmax(100px, auto);
+  }
+
+  .calendarDay {
+    min-height: 100px;
+    padding: 6px;
+  }
+
+  .dayNumber {
+    font-size: 12px;
+  }
+
+  .dayEntry {
+    font-size: 10px;
+    padding: 2px;
+  }
+
+  .entryRange {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .calendarDays {
+    grid-auto-rows: minmax(80px, auto);
+  }
+
+  .calendarDay {
+    min-height: 80px;
+    padding: 4px;
+  }
+
+  .dayNumber {
+    font-size: 11px;
+    margin-bottom: 4px;
+  }
+
+  .dayEntry {
+    font-size: 9px;
+    gap: 4px;
+  }
+
+  .availabilityDot {
+    width: 6px;
+    height: 6px;
+  }
+} 

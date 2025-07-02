@@ -8,10 +8,20 @@ const {
   fetchCommission,
 } = require('../api-util/sdk');
 
+// Conditional import of sendSMS to prevent module loading errors
+let sendSMS = null;
+try {
+  const smsModule = require('../api-util/sendSMS');
+  sendSMS = smsModule.sendSMS;
+} catch (error) {
+  console.warn('⚠️ SMS module not available — SMS functionality disabled');
+  sendSMS = () => Promise.resolve(); // No-op function
+}
+
 console.log('🚦 transition-privileged endpoint is wired up');
 
 // --- Shippo label creation logic extracted to a function ---
-async function createShippingLabels(protectedData, transactionId) {
+async function createShippingLabels(protectedData, transactionId, listing, sendSMS) {
   console.log('🚀 [SHIPPO] Starting label creation for transaction:', transactionId);
   console.log('📋 [SHIPPO] Using protectedData:', protectedData);
   
@@ -222,6 +232,73 @@ async function createShippingLabels(protectedData, transactionId) {
       console.warn('⚠️ [SHIPPO] No shipping rates found for return shipment');
     }
     
+    // SMS Triggers 4 & 5: After successful label creation
+    try {
+      // Get the transaction to find customer and provider
+      const transaction = await sdk.transactions.show({ id: transactionId });
+      const customer = transaction.data.data.relationships.customer.data;
+      const listing = transaction.data.data.relationships.listing.data;
+      
+      // Get provider from listing
+      const listingDetails = await sdk.listings.show({ id: listing.id });
+      const provider = listingDetails.data.data.relationships.provider.data;
+      
+      // Save return label URL to transaction protectedData for return reminders
+      if (returnLabelRes?.data?.label_url) {
+        try {
+          const currentProtectedData = transaction.data.data.attributes.protectedData || {};
+          const updatedProtectedData = {
+            ...currentProtectedData,
+            returnLabelUrl: returnLabelRes.data.label_url,
+            returnQrCodeUrl: returnLabelRes.data.qr_code_url,
+            returnTrackingUrl: returnLabelRes.data.tracking_url_provider
+          };
+          
+          await sdk.transactions.update({
+            id: transactionId,
+            protectedData: updatedProtectedData
+          });
+          
+          console.log('💾 Return label URLs saved to transaction protectedData');
+        } catch (updateError) {
+          console.error('❌ Failed to save return label URLs to transaction:', updateError.message);
+        }
+      }
+      
+      // Extract phone numbers
+      const lenderPhone = provider?.attributes?.profile?.protectedData?.phone;
+      const borrowerPhone = customer?.attributes?.profile?.protectedData?.phone;
+      
+      // Trigger 4: Lender receives text when QR code/shipping label is sent to them
+      if (lenderPhone) {
+        await sendSMS(
+          lenderPhone,
+          `📬 Your Sherbrt shipping label is ready! Please package and ship the item using the QR code link provided.`
+        );
+        console.log(`📱 SMS sent to lender (${lenderPhone}) for shipping label ready`);
+      } else {
+        console.warn('⚠️ Lender phone number not found for shipping label notification');
+      }
+      
+      // Trigger 5: Borrower receives text when item is shipped (include tracking link)
+      if (borrowerPhone && labelRes.data.tracking_url_provider) {
+        const trackingUrl = labelRes.data.tracking_url_provider;
+        await sendSMS(
+          borrowerPhone,
+          `🚚 Your Sherbrt item has been shipped! Track it here: ${trackingUrl}`
+        );
+        console.log(`📱 SMS sent to borrower (${borrowerPhone}) for item shipped with tracking: ${trackingUrl}`);
+      } else if (borrowerPhone) {
+        console.warn('⚠️ Borrower phone found but no tracking URL available');
+      } else {
+        console.warn('⚠️ Borrower phone number not found for shipping notification');
+      }
+      
+    } catch (smsError) {
+      console.error('❌ Failed to send shipping SMS notifications:', smsError.message);
+      // Don't fail the label creation if SMS fails
+    }
+    
     return { success: true, outboundLabel: labelRes.data, returnLabel: returnLabelRes?.data };
     
   } catch (err) {
@@ -238,7 +315,17 @@ module.exports = async (req, res) => {
   console.log('📋 Request method:', req.method);
   console.log('📋 Request URL:', req.url);
   
+  // STEP 1: Confirm the endpoint is hit
+  console.log('🚦 transition-privileged endpoint is wired up');
+  
   const { isSpeculative, orderData, bodyParams, queryParams } = req.body;
+  
+  // STEP 2: Log the transition type
+  console.log('🔁 Transition received:', bodyParams?.transition);
+  
+  // STEP 3: Check that sendSMS is properly imported
+  console.log('📱 sendSMS function available:', !!sendSMS);
+  console.log('📱 sendSMS function type:', typeof sendSMS);
   
   // Debug log for full request body
   console.log('🔍 Full request body:', {
@@ -615,6 +702,104 @@ module.exports = async (req, res) => {
         console.log('🧾 Booking complete. Transaction protectedData:', response.data.data.attributes.protectedData);
       }
       
+      // Defensive: Only access .transition if response and response.data are defined
+      if (
+        response &&
+        response.data &&
+        response.data.data &&
+        response.data.data.attributes &&
+        typeof response.data.data.attributes.transition !== 'undefined'
+      ) {
+        transitionName = response.data.data.attributes.transition;
+      }
+      
+      // Debug transitionName
+      console.log('🔍 transitionName after response:', transitionName);
+      console.log('🔍 bodyParams.transition:', bodyParams?.transition);
+      
+      // STEP 4: Add a forced test log
+      console.log('🧪 Inside transition-privileged — beginning SMS evaluation');
+      
+      // Dynamic provider SMS for booking requests - replace hardcoded test SMS
+      const effectiveTransition = transitionName || bodyParams?.transition;
+      console.log('🔍 Using effective transition for SMS:', effectiveTransition);
+      
+      if (effectiveTransition === 'transition/accept') {
+        console.log('📨 Preparing to send SMS for transition/accept');
+        
+        try {
+          // Get the transaction to find the customer
+          const transaction = await sdk.transactions.show({ id: transactionId });
+          const customer = transaction.data.data.relationships.customer.data;
+          
+          if (customer && customer.attributes && customer.attributes.profile && customer.attributes.profile.protectedData) {
+            const borrowerPhone = customer.attributes.profile.protectedData.phone;
+            
+            // STEP 6: Add logs for borrower and lender phone numbers
+            console.log('📱 Borrower phone:', borrowerPhone);
+            
+            if (borrowerPhone) {
+              // STEP 7: Wrap sendSMS in try/catch with logs
+              try {
+                await sendSMS(
+                  borrowerPhone,
+                  `🎉 Your Sherbrt request was accepted! You'll get your shipping label and details soon.`
+                );
+                console.log('✅ SMS sent to', borrowerPhone);
+                console.log(`📱 SMS sent to borrower (${borrowerPhone}) for accepted request`);
+              } catch (err) {
+                console.error('❌ SMS send error:', err.message);
+              }
+            } else {
+              console.warn('⚠️ Borrower phone number not found in protected data');
+            }
+          } else {
+            console.warn('⚠️ Customer or protected data not found for SMS notification');
+          }
+        } catch (smsError) {
+          console.error('❌ Failed to send SMS notification:', smsError.message);
+          // Don't fail the transaction if SMS fails
+        }
+      }
+
+      if (effectiveTransition === 'transition/decline') {
+        console.log('📨 Preparing to send SMS for transition/decline');
+        
+        try {
+          // Get the transaction to find the customer
+          const transaction = await sdk.transactions.show({ id: transactionId });
+          const customer = transaction.data.data.relationships.customer.data;
+          
+          if (customer && customer.attributes && customer.attributes.profile && customer.attributes.profile.protectedData) {
+            const borrowerPhone = customer.attributes.profile.protectedData.phone;
+            
+            // STEP 6: Add logs for borrower and lender phone numbers
+            console.log('📱 Borrower phone:', borrowerPhone);
+            
+            if (borrowerPhone) {
+              // STEP 7: Wrap sendSMS in try/catch with logs
+              try {
+                await sendSMS(
+                  borrowerPhone,
+                  `😔 Your Sherbrt request was declined. Don't worry — more fabulous looks are waiting to be borrowed!`
+                );
+                console.log('✅ SMS sent to', borrowerPhone);
+                console.log(`📱 SMS sent to borrower (${borrowerPhone}) for declined request`);
+              } catch (err) {
+                console.error('❌ SMS send error:', err.message);
+              }
+            } else {
+              console.warn('⚠️ Borrower phone number not found in protected data');
+            }
+          } else {
+            console.warn('⚠️ Customer or protected data not found for SMS notification');
+          }
+        } catch (smsError) {
+          console.error('❌ Failed to send SMS notification:', smsError.message);
+          // Don't fail the transaction if SMS fails
+        }
+      }
+      
       // Shippo label creation - only for transition/accept after successful transition
       if (bodyParams?.transition === 'transition/accept' && !isSpeculative) {
         console.log('🚀 [SHIPPO] Transition successful, triggering Shippo label creation...');
@@ -624,7 +809,7 @@ module.exports = async (req, res) => {
         console.log('📋 [SHIPPO] Final protectedData for label creation:', finalProtectedData);
         
         // Trigger Shippo label creation asynchronously (don't await to avoid blocking response)
-        createShippingLabels(finalProtectedData, transactionId)
+        createShippingLabels(finalProtectedData, transactionId, listing, sendSMS)
           .then(result => {
             if (result.success) {
               console.log('✅ [SHIPPO] Label creation completed successfully');
@@ -637,16 +822,95 @@ module.exports = async (req, res) => {
           });
       }
       
-      // Defensive: Only access .transition if response and response.data are defined
+      // 📩 --- SMS Notification for Booking Request --- //
       if (
-        response &&
-        response.data &&
-        response.data.data &&
-        response.data.data.attributes &&
-        typeof response.data.data.attributes.transition !== 'undefined'
+        bodyParams?.transition === 'transition/request-payment' &&
+        !isSpeculative &&
+        response?.data?.data
       ) {
-        transitionName = response.data.data.attributes.transition;
+        console.log('📨 Preparing to send SMS for initial booking request');
+        console.log('🔍 listing available:', !!listing);
+
+        try {
+          // Get provider data from listing relationship
+          const provider = listing?.relationships?.author?.data;
+          const providerId = provider?.id;
+
+          if (!providerId) {
+            console.warn('⚠️ Provider ID not found — skipping SMS');
+          } else {
+            // Fetch provider profile to get phone number
+            console.log('🔍 [DEBUG] About to fetch provider profile for ID:', providerId);
+            try {
+              const providerProfile = await sdk.users.show({
+                id: providerId,
+                include: ['profile'],
+                'fields.user': ['profile', 'protectedData'],
+                'fields.profile': ['protectedData', 'publicData'],
+              });
+              
+              console.log('✅ [DEBUG] Provider profile fetch SUCCESSFUL');
+              console.log('🔍 [DEBUG] Provider response status:', providerProfile?.status);
+              console.log('🔍 [DEBUG] Provider response has data:', !!providerProfile?.data);
+              
+              // 🔍 DETAILED DEBUGGING: Log the full providerProfile response
+              console.log('🔍 [DEBUG] Full providerProfile response structure:', {
+                hasData: !!providerProfile?.data,
+                hasDataData: !!providerProfile?.data?.data,
+                hasAttributes: !!providerProfile?.data?.data?.attributes,
+                hasProfile: !!providerProfile?.data?.data?.attributes?.profile,
+                hasProtectedData: !!providerProfile?.data?.data?.attributes?.profile?.protectedData,
+                profileKeys: providerProfile?.data?.data?.attributes?.profile ? Object.keys(providerProfile.data.data.attributes.profile) : 'No profile',
+                protectedDataKeys: providerProfile?.data?.data?.attributes?.profile?.protectedData ? Object.keys(providerProfile.data.data.attributes.profile.protectedData) : 'No protectedData'
+              });
+              
+              console.log('🔍 [DEBUG] Full providerProfile response:', JSON.stringify(providerProfile, null, 2));
+              
+              const protectedData = providerProfile?.data?.data?.attributes?.profile?.protectedData || {};
+              const publicData = providerProfile?.data?.data?.attributes?.profile?.publicData || {};
+              console.log('🔍 [DEBUG] Extracted protectedData:', protectedData);
+              console.log('🔍 [DEBUG] Extracted publicData:', publicData);
+              console.log('🔍 [DEBUG] protectedData.phoneNumber:', protectedData.phoneNumber);
+              console.log('🔍 [DEBUG] publicData.phoneNumber:', publicData.phoneNumber);
+              
+              // Try to get phone number from publicData first (accessible), then protectedData as fallback
+              const lenderPhone = publicData.phoneNumber || protectedData.phoneNumber;
+              console.log('🔍 [DEBUG] Final lenderPhone value:', lenderPhone);
+
+              if (sendSMS && lenderPhone) {
+                const message = `👗 New Sherbrt rental request! Someone wants to borrow your item "${listing?.attributes?.title || 'your listing'}". Tap your dashboard to respond.`;
+                await sendSMS(lenderPhone, message);
+                console.log(`✅ SMS sent to ${lenderPhone}`);
+              } else {
+                console.warn('⚠️ Missing lenderPhone or sendSMS unavailable');
+                console.log('🔍 [DEBUG] sendSMS available:', !!sendSMS);
+                console.log('🔍 [DEBUG] lenderPhone value:', lenderPhone);
+              }
+            } catch (userError) {
+              console.error('❌ [DEBUG] Provider profile fetch FAILED:', {
+                error: userError.message,
+                status: userError.status,
+                statusText: userError.statusText,
+                errorCode: userError.data?.errors?.[0]?.code,
+                errorTitle: userError.data?.errors?.[0]?.title,
+                errorDetail: userError.data?.errors?.[0]?.detail,
+                fullError: JSON.stringify(userError, null, 2)
+              });
+              
+              // Check for specific permission errors
+              if (userError.status === 403) {
+                console.error('🚫 [DEBUG] PERMISSION DENIED - 403 error detected');
+                if (userError.data?.errors?.[0]?.code === 'permission-denied-read') {
+                  console.error('🚫 [DEBUG] READ PERMISSION DENIED - Cannot read user data');
+                }
+              }
+            }
+          }
+        } catch (err) {
+          console.error('❌ SMS send error:', err.message);
+        }
       }
+      
       console.log('✅ Transition completed successfully, returning:', { transition: transitionName });
       return res.status(200).json({ transition: transitionName });
     } catch (err) {
