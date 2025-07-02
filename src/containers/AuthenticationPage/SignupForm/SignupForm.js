@@ -376,7 +376,7 @@ const SignupFormComponent = props => (
               <FieldCheckbox
                 id={formId ? `${formId}.smsOptIn` : 'smsOptIn'}
                 name="smsOptIn"
-                label="I agree to receive SMS notifications about my account"
+                label="I agree to receive SMS notifications about my account, including booking, shipping, and return updates."
                 textClassName={termsCss.finePrint}
                 required
               />
