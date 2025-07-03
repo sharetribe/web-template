@@ -260,11 +260,9 @@ console.log('ListingCard → stateInfo:', stateInfo);
               longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
               longWordClass: css.longWord,
             })}
+            {showStateInfo ? `, ${stateInfo}` : null}
           </div>
-          {showStateInfo ? (
-            <div className={css.stateInfo}>{stateInfo}
-            </div>
-          ) : null}
+          
           {showAuthorInfo ? (
             <div className={css.authorInfo}>
               <FormattedMessage id="ListingCard.author" values={{ authorName }} />
