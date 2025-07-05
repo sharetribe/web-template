@@ -266,6 +266,7 @@ export const ListingPageComponent = props => {
     }
   };
 
+  const stateInfo = publicData.State;
   const facebookImages = listingImages(currentListing, 'facebook');
   const twitterImages = listingImages(currentListing, 'twitter');
   const schemaImages = listingImages(
@@ -273,10 +274,8 @@ export const ListingPageComponent = props => {
     `${config.layout.listingImage.variantPrefix}-2x`
   ).map(img => img.url);
   const marketplaceName = config.marketplaceName;
-  const schemaTitle = intl.formatMessage(
-    { id: 'ListingPage.schemaTitle' },
-    { title, price: formattedPrice, marketplaceName }
-  );
+  const schemaTitle = `${title} - Flight training in ${stateInfo ?? ''}`;
+
   // You could add reviews, sku, etc. into page schema
   // Read more about product schema
   // https://developers.google.com/search/docs/advanced/structured-data/product
