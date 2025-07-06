@@ -331,7 +331,7 @@ export const showListing = (listingId, config, isOwn = false) => (dispatch, getS
   };
 
   const show = isOwn ? sdk.ownListings.show(params) : sdk.listings.show(params);
-  console.log("Data is", show);
+  //console.log("Data is", show);
 
   return show
     .then(data => {

@@ -267,6 +267,8 @@ export const ListingPageComponent = props => {
   };
 
   const stateInfo = publicData.State;
+  const cityInfo = publicData.City;
+  console.log("City infromartion----->", cityInfo);
   const facebookImages = listingImages(currentListing, 'facebook');
   const twitterImages = listingImages(currentListing, 'twitter');
   const schemaImages = listingImages(
@@ -274,7 +276,7 @@ export const ListingPageComponent = props => {
     `${config.layout.listingImage.variantPrefix}-2x`
   ).map(img => img.url);
   const marketplaceName = config.marketplaceName;
-  const schemaTitle = `${title} - Flight training in ${stateInfo ?? ''}`;
+  const schemaTitle = `${title} - Pilot Flight training in ${cityInfo ?? ''}, ${stateInfo ?? ''}`;
 
   // You could add reviews, sku, etc. into page schema
   // Read more about product schema
