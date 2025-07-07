@@ -54,7 +54,8 @@ const FilterDateRange = props => {
     }
   };
 
-  const { dateRangeMode } = config;
+  const datesFilter = config.search.defaultFilters.find(f => f.key === 'dates');
+  const { dateRangeMode } = datesFilter || {};
   const isNightlyMode = dateRangeMode === 'night';
 
   // Compute the CSS class for the label with an "active" modifier if there is a selection or if the picker is open.

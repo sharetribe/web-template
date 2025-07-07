@@ -112,6 +112,14 @@
   }
 }
 
+.stateInfo {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #444;
+  margin: 4px 0;
+}
+
+
 .longWord {
   /* fallback option */
   word-break: break-all;

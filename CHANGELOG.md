@@ -14,6 +14,35 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+
+## [v8.5.0] 2025-06-10
+- [add] Add conditional visibility for the following elements depending on Console configuration:
+    - Visibility for create listings links for unauthenticated users configured in Top bar
+    - Visibility for elements configured in User types:
+      - Create listings and Manage listings links
+      - Payment method and payout detail tab links
+      - Inbox links for orders and sales
+      - Profile page review tabs
+  
+  [#614](https://github.com/sharetribe/web-template/pull/614)
+- [fix] Fix an issue with the date filter in the Search CTA component, which was not observing
+  nightly search configuration correctly.[#625](https://github.com/sharetribe/web-template/pull/625)
+
+[v8.5.0]: https://github.com/sharetribe/web-template/compare/v8.4.2...v8.5.0
+
+## [v8.4.2] 2025-06-02
+
+- [fix] Set the font size for the input fields in the Search as CTA component to 16px to prevent
+  unintentional zooming on mobile.[#622](https://github.com/sharetribe/web-template/pull/622)
+- [fix] BookingFixedDurationForm: start time generation didn't count consecutive time-slots
+  correctly when multiple seats were allowed.
+  [#620](https://github.com/sharetribe/web-template/pull/620)
+- [add] Improve one copy text. [#621](https://github.com/sharetribe/web-template/pull/621)
+- [add] Add currently available translations for DE, ES, FR.
+  [#619](https://github.com/sharetribe/web-template/pull/619)
+
+  [v8.4.2]: https://github.com/sharetribe/web-template/compare/v8.4.1...v8.4.2
+
 ## [v8.4.1] 2025-05-26
 
 - [fix] Modify two translation keys that were using an incorrect namespace.
