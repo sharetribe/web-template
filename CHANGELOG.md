@@ -14,36 +14,34 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
-## [v8.4.0] 2025-05-20
 
-- [add] Added a "Search as CTA" component for embedding a search bar on any dynamic content page
-  [#561](https://github.com/sharetribe/web-template/pull/561)
-- [add] Pass email from login to forgot password
-  [#609](https://github.com/sharetribe/web-template/pull/609)
-- [fix] EditListingPhotosForm: removing all images from a listing caused the screen to go blank
-  [#608](https://github.com/sharetribe/web-template/pull/608)
+## [v8.5.0] 2025-06-10
+- [add] Add conditional visibility for the following elements depending on Console configuration:
+    - Visibility for create listings links for unauthenticated users configured in Top bar
+    - Visibility for elements configured in User types:
+      - Create listings and Manage listings links
+      - Payment method and payout detail tab links
+      - Inbox links for orders and sales
+      - Profile page review tabs
+  
+  [#614](https://github.com/sharetribe/web-template/pull/614)
+- [fix] Fix an issue with the date filter in the Search CTA component, which was not observing
+  nightly search configuration correctly.[#625](https://github.com/sharetribe/web-template/pull/625)
 
-  [v8.4.0]: https://github.com/sharetribe/web-template/compare/v8.3.2...v8.4.0
+[v8.5.0]: https://github.com/sharetribe/web-template/compare/v8.4.2...v8.5.0
 
-## [v8.3.2] 2025-05-12
+## [v8.4.2] 2025-06-02
 
-- [fix] SearchPageWithMap: secondary filter count was not taking into use filters that were limited
-  to category or listing type [#606](https://github.com/sharetribe/web-template/pull/606)
-- [fix] Handle multiple search page routes outside search page and clarify path param usage
-  [#605](https://github.com/sharetribe/web-template/pull/605)
-
-  [v8.3.2]: https://github.com/sharetribe/web-template/compare/v8.3.1...v8.3.2
-
-## [v8.3.1] 2025-05-06
-
-- [fix] Fix listing type path param usage
-  [#599](https://github.com/sharetribe/web-template/pull/599)
-- [fix] Avatar: use correct pending-approval variant link when user is pending approval.
-  [#601](https://github.com/sharetribe/web-template/pull/601)
+- [fix] Set the font size for the input fields in the Search as CTA component to 16px to prevent
+  unintentional zooming on mobile.[#622](https://github.com/sharetribe/web-template/pull/622)
+- [fix] BookingFixedDurationForm: start time generation didn't count consecutive time-slots
+  correctly when multiple seats were allowed.
+  [#620](https://github.com/sharetribe/web-template/pull/620)
+- [add] Improve one copy text. [#621](https://github.com/sharetribe/web-template/pull/621)
 - [add] Add currently available translations for DE, ES, FR.
-  [#597](https://github.com/sharetribe/web-template/pull/597)
+  [#619](https://github.com/sharetribe/web-template/pull/619)
 
-  [v8.3.1]: https://github.com/sharetribe/web-template/compare/v8.3.0...v8.3.1
+  [v8.4.2]: https://github.com/sharetribe/web-template/compare/v8.4.1...v8.4.2
 
 ## [v8.4.1] 2025-05-26
 
