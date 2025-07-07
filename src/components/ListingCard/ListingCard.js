@@ -114,7 +114,8 @@ export const ListingCard = props => {
     showAuthorInfo = true,
     showHeartIcon,
     showStateInfo = true, 
-    showCityInfo =true,
+    //showCityInfo = true,
+    showwhereIam = true,
   } = props;
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureListing(listing);
@@ -128,6 +129,7 @@ export const ListingCard = props => {
   const authorName = author.attributes.profile.displayName;
   const stateInfo = publicData.State;
   const cityInfo = publicData.City;
+  const whereIam = publicData.where_i_am;
   const firstImage =
     currentListing.images && currentListing.images.length > 0 ? currentListing.images[0] : null;
 
@@ -264,7 +266,7 @@ export const ListingCard = props => {
               longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
               longWordClass: css.longWord,
             })}
-            {showStateInfo ? `, ${stateInfo}` : null}
+            {showStateInfo && (stateInfo || whereIam) ? `, ${stateInfo || whereIam}` : null} 
           </div>
           
           {showAuthorInfo ? (
