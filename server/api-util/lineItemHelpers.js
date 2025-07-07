@@ -14,6 +14,12 @@ const isNumber = value => {
   return typeof value === 'number' && !isNaN(value);
 };
 
+// Provider commission reduces the amount of money that is paid out to provider.
+// Therefore, the provider commission line-item should have negative effect to the payout total.
+const getNegation = numberValue => {
+  return -1 * numberValue;
+};
+
 /**
  * Calculates shipping fee based on saved public data fields and quantity.
  * The total will be `shippingPriceInSubunitsOneItem + (shippingPriceInSubunitsAdditionalItems * (quantity - 1))`.
@@ -297,4 +303,51 @@ exports.hasCommissionPercentage = commission => {
   // Only create a line item if the percentage is set to be more than zero
   const isMoreThanZero = percentage > 0;
   return isDefined && isMoreThanZero;
+};
+
+/**
+ * Get provider commission
+ * @param {Object} providerCommission object containing provider commission info
+ * @returns {Array} provider commission line item
+ */
+exports.getProviderCommissionMaybe = (providerCommission, order) => {
+  // Note: extraLineItems for product selling (aka shipping fee)
+  // is not included in either customer or provider commission calculation.
+  
+
+  // The provider commission is what the provider pays for the transaction, and
+  // it is the subtracted from the order price to get the provider payout:
+  // orderPrice - providerCommission = providerPayout
+  return this.hasCommissionPercentage(providerCommission)
+    ? [
+        {
+          code: 'line-item/provider-commission',
+          unitPrice: this.calculateTotalFromLineItems([order]),
+          percentage: getNegation(providerCommission.percentage),
+          includeFor: ['provider'],
+        },
+      ]
+    : [];
+};
+
+/**
+ * Get customer commission
+ * @param {Object} customerCommission object containing customer commission info
+ * @returns {Array} customer commission line item
+ */
+exports.getCustomerCommissionMaybe = (customerCommission, order) => {
+  // The customer commission is what the customer pays for the transaction, and
+  // it is added on top of the order price to get the customer's payin price:
+  // orderPrice + customerCommission = customerPayin
+  
+  return this.hasCommissionPercentage(customerCommission)
+    ? [
+        {
+          code: 'line-item/customer-commission',
+          unitPrice: this.calculateTotalFromLineItems([order]),
+          percentage: customerCommission.percentage,
+          includeFor: ['customer'],
+        },
+      ]
+    : [];
 };
