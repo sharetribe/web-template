@@ -14,6 +14,8 @@ const {
   calculateTotalForCustomer,
   constructValidLineItems,
   hasCommissionPercentage,
+  getProviderCommissionMaybe,
+  getCustomerCommissionMaybe,
 } = require('./lineItemHelpers');
 
 describe('calculateTotalPriceFromQuantity()', () => {
@@ -419,6 +421,142 @@ describe('hasCommissionPercentage()', () => {
     expect(() => hasCommissionPercentage({ percentage: '10' })).toThrowError('10 is not a number.');
     expect(() => hasCommissionPercentage({ percentage: 'asdf' })).toThrowError(
       'asdf is not a number.'
+    );
+  });
+});
+
+describe('getProviderCommissionMaybe()', () => {
+  const providerCommission = {
+      percentage: 5,
+      minimum_amount: 250
+  };
+
+  const providerCommissionNoPercentage = {
+      minimum_amount: 250
+  };
+
+  const providerCommissionNullPercentage = {
+      percentage: null,
+      minimum_amount: 250
+  };
+
+  const providerCommissionNegativeNumber = {
+      percentage: -5,
+      minimum_amount: 250
+  };
+
+  const providerCommissionNonNumber = {
+      percentage: '5',
+      minimum_amount: 250
+  };
+
+  const order =   {
+    code: 'line-item/night',
+    unitPrice: new Money(10000, 'USD'),
+    units: 1,
+    seats: 1,
+    includeFor: [
+        'customer',
+        'provider',
+    ]
+  };
+
+  const lineItems = [
+    {
+      code: 'line-item/provider-commission',
+      unitPrice: new Money(10000, 'USD'),
+      percentage: -5,
+      includeFor: ['provider'],
+    },
+  ];
+
+  it('should return correct provider comission line items when a percentage is provided', () => {
+    expect(getProviderCommissionMaybe(providerCommission, order)).toEqual(lineItems);
+  });
+
+  it('should return an empty array when percentage is missing in provider commission', () => {
+    expect(getProviderCommissionMaybe(providerCommissionNoPercentage, order)).toEqual([]);
+  });
+
+  it('should return an empty array when percentage is null in provider commission', () => {
+    expect(getProviderCommissionMaybe(providerCommissionNullPercentage, order)).toEqual([]);
+  });
+
+  it('should return an empty array when percentage is a negative number in provider commission', () => {
+    expect(getProviderCommissionMaybe(providerCommissionNegativeNumber, order)).toEqual([]);
+  });
+
+  it('should return throw an error when percentage is not a number in provider commission', () => {
+    expect(() => getProviderCommissionMaybe(providerCommissionNonNumber, order)).toThrowError(
+      "5 is not a number"
+    );
+  });
+});
+
+describe('getCustomerCommissionMaybe()', () => {
+  const customerCommission = {
+      percentage: 5,
+      minimum_amount: 250
+  };
+
+  const customerCommissionNoPercentage = {
+      minimum_amount: 250
+  };
+
+  const customerCommissionNullPercentage = {
+      percentage: null,
+      minimum_amount: 250
+  };
+
+  const customerCommissionNegativeNumber = {
+      percentage: -5,
+      minimum_amount: 250
+  };
+
+  const customerCommissionNonNumber = {
+      percentage: '5',
+      minimum_amount: 250
+  };
+
+  const order =   {
+    code: 'line-item/night',
+    unitPrice: new Money(10000, 'USD'),
+    units: 1,
+    seats: 1,
+    includeFor: [
+        'customer',
+        'provider',
+    ]
+  };
+
+  const lineItems = [
+    {
+      code: 'line-item/customer-commission',
+      unitPrice: new Money(10000, 'USD'),
+      percentage: 5,
+      includeFor: ['customer'],
+    },
+  ];
+
+  it('should return correct customer comission line items when a percentage is provided', () => {
+    expect(getCustomerCommissionMaybe(customerCommission, order)).toEqual(lineItems);
+  });
+
+  it('should return an empty array when percentage is missing in customer commission', () => {
+    expect(getCustomerCommissionMaybe(customerCommissionNoPercentage, order)).toEqual([]);
+  });
+
+  it('should return an empty array when percentage is null in customer commission', () => {
+    expect(getCustomerCommissionMaybe(customerCommissionNullPercentage, order)).toEqual([]);
+  });
+
+  it('should return an empty array when percentage is a negative number in customer commission', () => {
+    expect(getCustomerCommissionMaybe(customerCommissionNegativeNumber, order)).toEqual([]);
+  });
+
+  it('should return throw an error when percentage is not a number in customer commission', () => {
+    expect(() => getCustomerCommissionMaybe(customerCommissionNonNumber, order)).toThrowError(
+      "5 is not a number"
     );
   });
 });
