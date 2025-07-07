@@ -135,6 +135,7 @@ class PageComponent extends Component {
     const pageTitle = title || schemaTitle;
     const pageDescription = description || schemaDescription;
     const {
+      
       title: socialSharingTitle,
       description: socialSharingDescription,
       images1200: socialSharingImages1200,

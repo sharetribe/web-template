@@ -13,7 +13,7 @@ const SectionDetailsMaybe = props => {
   if (!publicData || !listingFieldConfigs) {
     return null;
   }
-  console.log('publicData:', publicData);
+  //console.log('publicData:', publicData);
 
   const pickListingFields = (filteredConfigs, config) => {
     const { key, schemaType, enumOptions, showConfig = {} } = config;
@@ -46,7 +46,7 @@ const SectionDetailsMaybe = props => {
   };
 
   const existingListingFields = listingFieldConfigs.reduce(pickListingFields, []);
-  console.log('Listing details:', existingListingFields);
+  //console.log('Listing details:', existingListingFields);
 
 
   return existingListingFields.length > 0 ? (
