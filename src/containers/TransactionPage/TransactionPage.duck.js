@@ -878,6 +878,7 @@ export const fetchTransactionLineItems = ({ orderData, listingId, isOwnListing }
       log.error(e, 'fetching-line-items-failed', {
         listingId: listingId.uuid,
         orderData,
+        statusText: e.statusText,
       });
     });
 };
