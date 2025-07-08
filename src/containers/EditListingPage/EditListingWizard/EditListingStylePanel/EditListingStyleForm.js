@@ -16,7 +16,10 @@ import css from './EditListingStyleForm.module.css';
 const FieldCardStyle = props => {
   const { className, id, value, name } = props;
 
-  // Tell what this is and how to change this if needed.
+  // A `cardStyle` attribute is stored in the listing extended data. This value is used to select the correct background
+  // style when rendering the listing card. The colorSchemeMap object maps the value stored in extended data (cardStyle)
+  // to a color value. This color is used to fill the radio button on the StyleForm page. See also types.js and ListingCardThumbnail.module.css
+  // if you are modifying this map.
   const colorSchemeMap = {
     white: '--colorWhite',
     grey: '--colorGrey50',
@@ -71,7 +74,6 @@ export const EditListingStyleForm = props => {
         const submitReady = updated || ready;
         const submitDisabled = submitInProgress;
 
-        // Tell about colorSchemes and where to find them
         const fieldOptions = colorSchemes.map(colorScheme => {
           return (
             <FieldCardStyle

@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Add support for listing types that do not require images.
+  [#624](https://github.com/sharetribe/web-template/pull/624)
 - [fix] Remove mentions to legacy templates from README.md
   [#630](https://github.com/sharetribe/web-template/pull/630)
 - [fix] Small fixes
