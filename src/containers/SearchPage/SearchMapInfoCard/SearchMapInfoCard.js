@@ -5,9 +5,9 @@ import { useIntl } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import { formatMoney } from '../../../util/currency';
 import { ensureListing } from '../../../util/data';
-import { isPriceVariationsEnabled } from '../../../util/configHelpers';
+import { isPriceVariationsEnabled, requireListingImage } from '../../../util/configHelpers';
 
-import { AspectRatioWrapper, ResponsiveImage } from '../../../components';
+import { AspectRatioWrapper, ResponsiveImage, ListingCardThumbnail } from '../../../components';
 
 import css from './SearchMapInfoCard.module.css';
 
@@ -16,6 +16,7 @@ const ListingCard = props => {
   const { className, clickHandler, intl, isInCarousel, listing, urlToListing, config } = props;
 
   const { title, price, publicData } = listing.attributes;
+  const { cardStyle } = publicData || {};
   const formattedPrice =
     price && price.currency === config.currency
       ? formatMoney(intl, price)
@@ -43,6 +44,7 @@ const ListingCard = props => {
   const foundListingTypeConfig = validListingTypes.find(
     conf => conf.listingType === publicData?.listingType
   );
+  const showListingImage = requireListingImage(foundListingTypeConfig);
   const isPriceVariationsInUse = isPriceVariationsEnabled(publicData, foundListingTypeConfig);
   const hasMultiplePriceVariants = isPriceVariationsInUse && publicData?.priceVariants?.length > 1;
 
@@ -77,20 +79,30 @@ const ListingCard = props => {
           [css.borderRadiusInheritBottom]: !isInCarousel,
         })}
       >
-        <AspectRatioWrapper
-          className={css.aspectRatioWrapper}
-          width={aspectWidth}
-          height={aspectHeight}
-        >
-          <ResponsiveImage
-            rootClassName={classNames(css.rootForImage, css.borderRadiusInheritTop)}
-            alt={title}
-            noImageMessage={intl.formatMessage({ id: 'SearchMapInfoCard.noImage' })}
-            image={firstImage}
-            variants={variants}
-            sizes="250px"
+        {showListingImage ? (
+          <AspectRatioWrapper
+            className={css.aspectRatioWrapper}
+            width={aspectWidth}
+            height={aspectHeight}
+          >
+            <ResponsiveImage
+              rootClassName={classNames(css.rootForImage, css.borderRadiusInheritTop)}
+              alt={title}
+              noImageMessage={intl.formatMessage({ id: 'SearchMapInfoCard.noImage' })}
+              image={firstImage}
+              variants={variants}
+              sizes="250px"
+            />
+          </AspectRatioWrapper>
+        ) : (
+          <ListingCardThumbnail
+            style={cardStyle}
+            listingTitle={title}
+            className={css.aspectRatioWrapper}
+            width={aspectWidth}
+            height={aspectHeight}
           />
-        </AspectRatioWrapper>
+        )}
         <div className={classNames(css.info, { [css.borderRadiusInheritBottom]: !isInCarousel })}>
           <div className={classNames(css.price, { [css.noPriceSetLabel]: !formattedPrice })}>
             {priceMessage}
