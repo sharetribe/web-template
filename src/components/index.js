@@ -51,6 +51,7 @@ export { default as Logo } from './Logo/Logo';
 export { default as NamedLink } from './NamedLink/NamedLink';
 export { default as NamedRedirect } from './NamedRedirect/NamedRedirect';
 export { default as NotificationBadge } from './NotificationBadge/NotificationBadge';
+export { default as ListingCardThumbnail } from './ListingCardThumbnail/ListingCardThumbnail';
 export { default as OutsideClickHandler } from './OutsideClickHandler/OutsideClickHandler';
 export { default as Promised } from './Promised/Promised';
 export { default as PropertyGroup } from './PropertyGroup/PropertyGroup';
