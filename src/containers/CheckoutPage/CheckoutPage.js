@@ -15,6 +15,7 @@ import {
 import { hasPermissionToInitiateTransactions, isUserAuthorized } from '../../util/userHelpers';
 import { isErrorNoPermissionForInitiateTransactions } from '../../util/errors';
 import { INQUIRY_PROCESS_NAME, resolveLatestProcessName } from '../../transactions/transaction';
+import { requireListingImage } from '../../util/configHelpers';
 
 // Import global thunk functions
 import { isScrollingDisabled } from '../../ducks/ui.duck';
@@ -148,6 +149,12 @@ const EnhancedCheckoutPage = props => {
     );
   }
 
+  const validListingTypes = config.listing.listingTypes;
+  const foundListingTypeConfig = validListingTypes.find(
+    conf => conf.listingType === listing?.attributes?.publicData?.listingType
+  );
+  const showListingImage = requireListingImage(foundListingTypeConfig);
+
   const listingTitle = listing?.attributes?.title;
   const authorDisplayName = userDisplayNameAsString(listing?.author, '');
   const title = processName
@@ -169,6 +176,7 @@ const EnhancedCheckoutPage = props => {
       title={title}
       onInquiryWithoutPayment={onInquiryWithoutPayment}
       onSubmitCallback={onSubmitCallback}
+      showListingImage={showListingImage}
       {...props}
     />
   ) : processName && !isInquiryProcess && !speculateTransactionInProgress ? (
@@ -184,6 +192,7 @@ const EnhancedCheckoutPage = props => {
       listingTitle={listingTitle}
       title={title}
       onSubmitCallback={onSubmitCallback}
+      showListingImage={showListingImage}
       {...props}
     />
   ) : (
