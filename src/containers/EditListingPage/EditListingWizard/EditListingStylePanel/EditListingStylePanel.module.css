@@ -1,0 +1,21 @@
+@import '../../../../styles/customMediaQueries.css';
+
+.root {
+  flex-grow: 1;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.form {
+  flex-grow: 1;
+}
+
+.chooseStyleHeading {
+  font-weight: var(--fontWeightSemiBold);
+}
+
+.helpText {
+  margin-bottom: 5px;
+}
