@@ -3,7 +3,7 @@ const {
   calculateQuantityFromHours,
   calculateShippingFee,
   getProviderCommissionMaybe,
-  getCustomerCommissionMaybe
+  getCustomerCommissionMaybe,
 } = require('./lineItemHelpers');
 const { types } = require('sharetribe-flex-sdk');
 const { Money } = types;
@@ -230,7 +230,7 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
   const lineItems = [
     order,
     ...extraLineItems,
-    ...getProviderCommissionMaybe(providerCommission, order),
+    ...getProviderCommissionMaybe(providerCommission, order, priceAttribute),
     ...getCustomerCommissionMaybe(customerCommission, order),
   ];
 

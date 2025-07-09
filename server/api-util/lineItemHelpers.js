@@ -20,6 +20,20 @@ const getNegation = numberValue => {
   return -1 * numberValue;
 };
 
+// Returns percentage applied to a given amount if applicable and valid, otherwise returns 0
+const calculateCommissionWithPercentage = (percentage, amount) => {
+  const hasValidAmountAndPercentage = amount != null && percentage != null && percentage > 0;
+
+  if (hasValidAmountAndPercentage) {
+    return new Decimal(amount)
+      .times(percentage)
+      .dividedBy(100)
+      .toNearest(1, Decimal.ROUND_HALF_UP)
+      .toNumber();
+  }
+  return 0;
+};
+
 /**
  * Calculates shipping fee based on saved public data fields and quantity.
  * The total will be `shippingPriceInSubunitsOneItem + (shippingPriceInSubunitsAdditionalItems * (quantity - 1))`.
@@ -306,40 +320,90 @@ exports.hasCommissionPercentage = commission => {
 };
 
 /**
+ * Check if commission object has minimum commission property defined.
+ * @param {Object} commission object potentially containing minimum commission property.
+ * @returns boolean
+ */
+exports.hasMinimumCommission = commission => {
+  const minimum = commission?.minimum_amount;
+  const isDefined = minimum != null;
+  const isNumber = typeof minimum === 'number' && !isNaN(minimum);
+  if (isDefined && !isNumber) {
+    throw new Error(`${minimum} is not a number.`);
+  }
+
+  const isMoreThanZero = minimum > 0;
+  return isDefined && isMoreThanZero;
+};
+
+/**
  * Get provider commission
  * @param {Object} providerCommission object containing provider commission info
+ * @param {Object} order object containing order line items
+ * @param {Object} priceAttribute object containing listing price information
  * @returns {Array} provider commission line item
  */
-exports.getProviderCommissionMaybe = (providerCommission, order) => {
+exports.getProviderCommissionMaybe = (providerCommission, order, priceAttribute) => {
+  // Check if either minimum commission or percentage are defined in the commission object
+  const hasMinimumCommission = this.hasMinimumCommission(providerCommission);
+  const hasCommissionPercentage = this.hasCommissionPercentage(providerCommission);
+
+  if (!hasMinimumCommission && !hasCommissionPercentage) {
+    return [];
+  }
+
+  // Calculate the total money paid into the transaction
+  const totalMoneyIn = this.calculateTotalFromLineItems([order]);
+  // Calculate the estimated commission with percentage applied, if applicable
+  const estimatedCommissionFromPercentage = calculateCommissionWithPercentage(
+    providerCommission?.percentage,
+    totalMoneyIn.amount
+  );
+
+  // Minimum commission is preferred if it is greated than the estimated transaction amount
+  const useMinimumCommission =
+    providerCommission?.minimum_amount > estimatedCommissionFromPercentage;
+
+  if (providerCommission?.minimum_amount > totalMoneyIn.amount) {
+    throw new Error('Minimum commission amount is greater than the amount of money paid in');
+  }
+
   // Note: extraLineItems for product selling (aka shipping fee)
   // is not included in either customer or provider commission calculation.
-  
 
   // The provider commission is what the provider pays for the transaction, and
   // it is the subtracted from the order price to get the provider payout:
   // orderPrice - providerCommission = providerPayout
-  return this.hasCommissionPercentage(providerCommission)
+  return useMinimumCommission
     ? [
         {
           code: 'line-item/provider-commission',
-          unitPrice: this.calculateTotalFromLineItems([order]),
-          percentage: getNegation(providerCommission.percentage),
+          unitPrice: new Money(providerCommission?.minimum_amount, priceAttribute?.currency),
+          quantity: getNegation(1),
           includeFor: ['provider'],
         },
       ]
-    : [];
+    : [
+        {
+          code: 'line-item/provider-commission',
+          unitPrice: totalMoneyIn,
+          percentage: getNegation(providerCommission.percentage),
+          includeFor: ['provider'],
+        },
+      ];
 };
 
 /**
  * Get customer commission
  * @param {Object} customerCommission object containing customer commission info
+ * @param {Object} order object containing order line items
  * @returns {Array} customer commission line item
  */
 exports.getCustomerCommissionMaybe = (customerCommission, order) => {
   // The customer commission is what the customer pays for the transaction, and
   // it is added on top of the order price to get the customer's payin price:
   // orderPrice + customerCommission = customerPayin
-  
+
   return this.hasCommissionPercentage(customerCommission)
     ? [
         {
