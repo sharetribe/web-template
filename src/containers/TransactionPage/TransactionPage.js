@@ -42,6 +42,7 @@ import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import { getStateData } from './TransactionPage.stateData';
+import ActionButtons from './ActionButtons/ActionButtons';
 import ActivityFeed from './ActivityFeed/ActivityFeed';
 import DisputeModal from './DisputeModal/DisputeModal';
 import ReviewModal from './ReviewModal/ReviewModal';
@@ -485,7 +486,7 @@ export const TransactionPageComponent = props => {
       listing={listing}
       customer={customer}
       provider={provider}
-      hasTransitions={txTransitions.length > 0}
+      transitions={txTransitions}
       protectedData={transaction?.attributes?.protectedData}
       messages={messages}
       initialMessageFailed={initialMessageFailed}
@@ -500,6 +501,17 @@ export const TransactionPageComponent = props => {
       showBookingLocation={showBookingLocation}
       hasViewingRights={hasViewingRights}
       showListingImage={showListingImage}
+      actionButtons={
+        <ActionButtons
+          showButtons={stateData.showActionButtons}
+          primaryButtonProps={stateData?.primaryButtonProps}
+          secondaryButtonProps={stateData?.secondaryButtonProps}
+          isListingDeleted={listingDeleted}
+          isProvider={isProviderRole}
+          transitions={txTransitions}
+          timeZone={listing?.attributes?.availabilityPlan?.timezone || 'Etc/UTC'}
+        />
+      }
       activityFeed={
         <ActivityFeed
           messages={messages}
