@@ -21,7 +21,6 @@ import DeliveryInfoMaybe from './DeliveryInfoMaybe';
 import BookingLocationMaybe from './BookingLocationMaybe';
 import InquiryMessageMaybe from './InquiryMessageMaybe';
 import FeedSection from './FeedSection';
-import ActionButtonsMaybe from './ActionButtonsMaybe';
 import DiminishedActionButtonMaybe from './DiminishedActionButtonMaybe';
 import PanelHeading from './PanelHeading';
 
@@ -154,7 +153,7 @@ export class TransactionPanelComponent extends Component {
       listing,
       customer,
       provider,
-      hasTransitions = false,
+      transitions,
       protectedData,
       messages,
       initialMessageFailed = false,
@@ -168,6 +167,7 @@ export class TransactionPanelComponent extends Component {
       stateData = {},
       showBookingLocation = false,
       activityFeed,
+      actionButtons,
       isInquiryProcess,
       orderBreakdown,
       orderPanel,
@@ -175,6 +175,7 @@ export class TransactionPanelComponent extends Component {
       hasViewingRights,
     } = this.props;
 
+    const hasTransitions = transitions.length > 0;
     const isCustomer = transactionRole === 'customer';
     const isProvider = transactionRole === 'provider';
 
@@ -197,16 +198,6 @@ export class TransactionPanelComponent extends Component {
 
     const listingTitle = listingDeleted ? deletedListingTitle : listing?.attributes?.title;
     const firstImage = listing?.images?.length > 0 ? listing?.images[0] : null;
-
-    const actionButtons = (
-      <ActionButtonsMaybe
-        showButtons={stateData.showActionButtons}
-        primaryButtonProps={stateData?.primaryButtonProps}
-        secondaryButtonProps={stateData?.secondaryButtonProps}
-        isListingDeleted={listingDeleted}
-        isProvider={isProvider}
-      />
-    );
 
     const listingType = listing?.attributes?.publicData?.listingType;
     const listingTypeConfigs = config.listing.listingTypes;
