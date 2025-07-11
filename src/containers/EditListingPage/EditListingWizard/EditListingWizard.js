@@ -37,6 +37,7 @@ import {
   INQUIRY_PROCESS_NAME,
   isBookingProcess,
   isPurchaseProcess,
+  resolveLatestProcessName,
 } from '../../../transactions/transaction';
 
 // Import shared components
@@ -670,7 +671,7 @@ class EditListingWizard extends Component {
               tab,
               isNewListingFlow,
               isPriceDisabled,
-              processName
+              resolveLatestProcessName(processName)
             );
             return (
               <EditListingWizardTab
