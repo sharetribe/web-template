@@ -231,7 +231,7 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
     order,
     ...extraLineItems,
     ...getProviderCommissionMaybe(providerCommission, order, priceAttribute),
-    ...getCustomerCommissionMaybe(customerCommission, order),
+    ...getCustomerCommissionMaybe(customerCommission, order, priceAttribute),
   ];
 
   return lineItems;

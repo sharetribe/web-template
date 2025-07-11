@@ -399,19 +399,45 @@ exports.getProviderCommissionMaybe = (providerCommission, order, priceAttribute)
  * @param {Object} order object containing order line items
  * @returns {Array} customer commission line item
  */
-exports.getCustomerCommissionMaybe = (customerCommission, order) => {
+exports.getCustomerCommissionMaybe = (customerCommission, order, priceAttribute) => {
+  // Check if either minimum commission or percentage are defined in the commission object
+  const hasMinimumCommission = this.hasMinimumCommission(customerCommission);
+  const hasCommissionPercentage = this.hasCommissionPercentage(customerCommission);
+
+  if (!hasMinimumCommission && !hasCommissionPercentage) {
+    return [];
+  }
+
+  // Calculate the total money paid into the transaction
+  const totalMoneyIn = this.calculateTotalFromLineItems([order]);
+  // Calculate the estimated commission with percentage applied, if applicable
+  const estimatedCommissionFromPercentage = calculateCommissionWithPercentage(
+    customerCommission?.percentage,
+    totalMoneyIn.amount
+  );
+
+  // Minimum commission is preferred if it is greated than the estimated transaction amount
+  const useMinimumCommission =
+    customerCommission?.minimum_amount > estimatedCommissionFromPercentage;
+
   // The customer commission is what the customer pays for the transaction, and
   // it is added on top of the order price to get the customer's payin price:
   // orderPrice + customerCommission = customerPayin
-
-  return this.hasCommissionPercentage(customerCommission)
+  return useMinimumCommission
     ? [
+        {
+          code: 'line-item/customer-commission',
+          unitPrice: new Money(customerCommission?.minimum_amount, priceAttribute?.currency),
+          quantity: 1,
+          includeFor: ['customer'],
+        },
+      ]
+    : [
         {
           code: 'line-item/customer-commission',
           unitPrice: this.calculateTotalFromLineItems([order]),
           percentage: customerCommission.percentage,
           includeFor: ['customer'],
         },
-      ]
-    : [];
+      ];
 };
