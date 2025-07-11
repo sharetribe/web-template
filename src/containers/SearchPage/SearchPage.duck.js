@@ -382,6 +382,8 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
         'publicData.Aircraft_Type',
         'publicData.Location',
         'publicData.Airport',
+        'publicData.City',
+        'publicData.where_i_am',
       ],
       'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
       'fields.image': [
