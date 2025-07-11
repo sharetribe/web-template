@@ -266,7 +266,7 @@ export const ListingPageComponent = props => {
     }
   };
 
-  const stateInfo = publicData.State;
+  const stateInfo = publicData.State_for_inperson;
   const cityInfo = publicData.City;
   const whereIam = publicData.where_i_am;
 
