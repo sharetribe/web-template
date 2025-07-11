@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Added support for Provider and Customer minimum commission handling
+  [#631](https://github.com/sharetribe/web-template/pull/635)
 - [fix] Remove mentions to legacy templates from README.md
   [#630](https://github.com/sharetribe/web-template/pull/630)
 - [fix] Small fixes
