@@ -128,7 +128,7 @@ export const ListingCard = props => {
   const author = ensureUser(listing.author);
   //console.log(listing.author);
   const authorName = author.attributes.profile.displayName;
-  const stateInfo = publicData.State;
+  const stateInfo = publicData.State_for_inperson;
   const cityInfo = publicData.City;
   const whereIam = publicData.where_i_am;
   const firstImage =
