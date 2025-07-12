@@ -266,6 +266,22 @@ export const ListingPageComponent = props => {
     }
   };
 
+  const stateInfo = publicData.State_for_inperson;
+  const cityInfo = publicData.City;
+  const whereIam = publicData.where_i_am;
+
+  let locationInfo = '';
+  if (cityInfo && stateInfo) {
+    locationInfo = `${cityInfo}, ${stateInfo}`;
+  } else if (stateInfo) {
+    locationInfo = stateInfo;
+  } else if (cityInfo) {
+    locationInfo = cityInfo;
+  } else if (whereIam) {
+    locationInfo = whereIam;
+  }
+
+  console.log("City infromartion----->", cityInfo);
   const facebookImages = listingImages(currentListing, 'facebook');
   const twitterImages = listingImages(currentListing, 'twitter');
   const schemaImages = listingImages(
@@ -273,10 +289,10 @@ export const ListingPageComponent = props => {
     `${config.layout.listingImage.variantPrefix}-2x`
   ).map(img => img.url);
   const marketplaceName = config.marketplaceName;
-  const schemaTitle = intl.formatMessage(
-    { id: 'ListingPage.schemaTitle' },
-    { title, price: formattedPrice, marketplaceName }
-  );
+  // Final fallback logic for schemaTitle
+  const schemaTitle = locationInfo
+    ? `${title} - Pilot Flight training in ${locationInfo}`
+    : title;
   // You could add reviews, sku, etc. into page schema
   // Read more about product schema
   // https://developers.google.com/search/docs/advanced/structured-data/product

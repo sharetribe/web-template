@@ -28,7 +28,11 @@ import {
   isErrorUserPendingApproval,
   isForbiddenError,
 } from '../../util/errors';
-import { hasPermissionToViewData, isUserAuthorized } from '../../util/userHelpers';
+import {
+  hasPermissionToViewData,
+  isUserAuthorized,
+  showCreateListingLinkForUser,
+} from '../../util/userHelpers';
 import { getListingsById } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
 
@@ -345,6 +349,7 @@ export class SearchPageComponent extends Component {
       routeConfiguration,
       config,
       params: currentPathParams = {},
+      currentUser,
     } = this.props;
 
     // If the search page variant is of type /s/:listingType, this defines the :listingType
@@ -469,6 +474,8 @@ export class SearchPageComponent extends Component {
       validQueryParams,
       filterConfigs
     );
+
+    const showCreateListingsLink = showCreateListingLinkForUser(config, currentUser);
     const sortBy = mode => {
       return sortConfig.active ? (
         <SortBy
@@ -489,6 +496,7 @@ export class SearchPageComponent extends Component {
         totalItems={totalItems}
         location={location}
         resetAll={this.resetAll}
+        showCreateListingsLink={showCreateListingsLink}
       />
     );
 
@@ -750,6 +758,7 @@ const EnhancedSearchPage = props => {
       intl={intl}
       history={history}
       location={location}
+      currentUser={currentUser}
       {...restOfProps}
     />
   );
