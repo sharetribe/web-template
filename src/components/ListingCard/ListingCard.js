@@ -1,5 +1,3 @@
-
-
 import classNames from 'classnames';
 import React, { useEffect } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
@@ -128,8 +126,12 @@ export const ListingCard = props => {
   const author = ensureUser(listing.author);
   //console.log(listing.author);
   const authorName = author.attributes.profile.displayName;
-  const stateInfo = publicData.State_for_inperson;
-  const cityInfo = publicData.City;
+  const stateInfo = publicData.State_for_inperson
+    ? publicData.State_for_inperson.replace(/_/g, ' ')
+    : '';
+  const cityInfo = publicData.City
+    ? publicData.City.replace(/_/g, ' ')
+    : '';
   const whereIam = publicData.where_i_am;
   const firstImage =
     currentListing.images && currentListing.images.length > 0 ? currentListing.images[0] : null;
