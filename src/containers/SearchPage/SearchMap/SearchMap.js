@@ -195,6 +195,14 @@ export class SearchMapComponent extends Component {
           reusableMapHiddenHandle={REUSABLE_MAP_HIDDEN_HANDLE}
           zoom={zoom}
           config={config}
+          // Add Google Maps options for scroll-to-zoom and always-on controls
+          options={{
+            scrollwheel: true,
+            zoomControl: true,
+            mapTypeControl: true,
+            fullscreenControl: true,
+            streetViewControl: true,
+          }}
         />
       </ReusableMapContainer>
     ) : (

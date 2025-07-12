@@ -331,6 +331,7 @@ export const showListing = (listingId, config, isOwn = false) => (dispatch, getS
   };
 
   const show = isOwn ? sdk.ownListings.show(params) : sdk.listings.show(params);
+  //console.log("Data is", show);
 
   return show
     .then(data => {
@@ -539,6 +540,7 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   const hasWindow = typeof window !== 'undefined'; // [SKYFARER]
   const listingId = new UUID(params.id);
   const state = getState();
+  //console.log(state);
   const currentUser = state.user?.currentUser;
   const inquiryModalOpenForListingId =
     isUserAuthorized(currentUser) && hasPermissionToInitiateTransactions(currentUser)

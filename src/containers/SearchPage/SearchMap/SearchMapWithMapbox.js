@@ -1,3 +1,5 @@
+//console.log("This filee renders the  map");
+
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import differenceBy from 'lodash/differenceBy';

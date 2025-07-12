@@ -78,11 +78,12 @@ const TopbarMobileMenu = props => {
   const {
     isAuthenticated,
     currentPage,
-    currentUserHasListings,
+    inboxTab,
     currentUser,
     notificationCount = 0,
     customLinks,
     onLogout,
+    showCreateListingsLink,
   } = props;
 
   const user = ensureCurrentUser(currentUser);
@@ -96,6 +97,12 @@ const TopbarMobileMenu = props => {
       />
     );
   });
+
+  const createListingsLinkMaybe = showCreateListingsLink ? (
+    <NamedLink className={css.createNewListingLink} name="NewListingPage">
+      <FormattedMessage id="TopbarMobileMenu.newListingLink" />
+    </NamedLink>
+  ) : null;
 
   if (!isAuthenticated) {
     const signup = (
@@ -129,12 +136,7 @@ const TopbarMobileMenu = props => {
 
           <div className={css.spacer} />
         </div>
-        {/* [SKYFARER] Client does not want this shown for unauthenticated users */}
-        {/* <div className={css.footer}>
-          <NamedLink className={css.createNewListingLink} name="NewListingPage">
-            <FormattedMessage id="TopbarMobileMenu.newListingLink" />
-          </NamedLink>
-        </div> */}
+        <div className={css.footer}>{createListingsLinkMaybe}</div>
       </div>
     );
   }
@@ -151,7 +153,15 @@ const TopbarMobileMenu = props => {
     const isInboxPage = currentPage?.indexOf('InboxPage') === 0 && page?.indexOf('InboxPage') === 0;
     return currentPage === page || isAccountSettingsPage || isInboxPage ? css.currentPage : null;
   };
-  const inboxTab = currentUserHasListings ? 'sales' : 'orders';
+
+  const manageListingsLinkMaybe = showCreateListingsLink ? (
+    <NamedLink
+      className={classNames(css.navigationLink, currentPageClass('ManageListingsPage'))}
+      name="ManageListingsPage"
+    >
+      <FormattedMessage id="TopbarMobileMenu.yourListingsLink" />
+    </NamedLink>
+  ) : null;
 
   const InstructorMatchingButtonLink = () => { // [SKYFARER]
     return (
@@ -185,15 +195,7 @@ const TopbarMobileMenu = props => {
             <FormattedMessage id="TopbarMobileMenu.inboxLink" />
             {notificationCountBadge}
           </NamedLink>
-          { // [SKYFARER]
-            isInstructor(currentUser) &&
-              <NamedLink
-                className={classNames(css.navigationLink, currentPageClass('ManageListingsPage'))}
-                name="ManageListingsPage"
-              >
-                <FormattedMessage id="TopbarMobileMenu.yourListingsLink" />
-              </NamedLink>
-          }
+          {manageListingsLinkMaybe}
           <NamedLink
             className={classNames(css.navigationLink, currentPageClass('ProfileSettingsPage'))}
             name="ProfileSettingsPage"
@@ -205,8 +207,8 @@ const TopbarMobileMenu = props => {
             name="FavoriteListingPage"
           >
             <FormattedMessage id="TopbarDesktop.favoriteListingLink" />
-          </NamedLink>          
-          <NamedLink 
+          </NamedLink>
+          <NamedLink
             className={classNames(css.navigationLink, currentPageClass('AccountSettingsPage'))}
             name="AccountSettingsPage"
           >
@@ -219,14 +221,7 @@ const TopbarMobileMenu = props => {
         <div className={css.customLinksWrapper}>{extraLinks}</div>
         <div className={css.spacer} />
       </div>
-      { // [SKYFARER]
-        isInstructor(currentUser) &&
-          <div className={css.footer}>
-            <NamedLink className={css.createNewListingLink} name="NewListingPage">
-              <FormattedMessage id="TopbarMobileMenu.newListingLink" />
-            </NamedLink>
-          </div>
-      }
+      <div className={css.footer}>{createListingsLinkMaybe}</div>
     </div>
   );
 };

@@ -48,6 +48,15 @@ const STORAGE_KEY = 'CheckoutPage';
 
 const onSubmitCallback = () => {
   clearData(STORAGE_KEY);
+
+  // Google Analytics event for successful booking
+  if (window.gtag) {
+    window.gtag('event', 'book_session', {
+      event_category: 'Checkout',
+      event_label: 'Session Booked',
+      // Optionally add more details, e.g. value: bookingValue
+    });
+  }
 };
 
 const getProcessName = pageData => {
