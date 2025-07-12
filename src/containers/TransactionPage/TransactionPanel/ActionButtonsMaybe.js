@@ -17,6 +17,7 @@ const ActionButtonsMaybe = props => {
     isListingDeleted,
     isProvider,
     onShowAdjustModal,
+    adjustDisabled, // [ADJUST BOOKING]
   } = props;
 
   // In default processes default processes need special handling
@@ -56,8 +57,8 @@ const ActionButtonsMaybe = props => {
 
   const classes = classNames(rootClassName || css.actionButtons, className);
 
-  // [ADJUST BOOKING] Add Adjust Hours/Price button for providers
-  const adjustButton = isProvider ? (
+  // [ADJUST BOOKING] Only show Adjust Hours/Price button if allowed
+  const adjustButton = isProvider && !adjustDisabled ? (
     <SecondaryButton
       className={css.secondaryButton}
       style={{ marginTop: 8 }}

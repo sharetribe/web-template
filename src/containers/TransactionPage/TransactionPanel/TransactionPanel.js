@@ -32,6 +32,9 @@ import css from './TransactionPanel.module.css';
 import { BookingPeriod } from '../../../components/OrderBreakdown/LineItemBookingPeriod';
 import { getGoogleCalendarEventDetails } from '../../../util/transactionDataExtractor';
 import { cancelGoogleEvent, request, adjustBooking } from '../../../util/api';
+import { getProcess } from '../../../transactions/transaction'; // [ADJUST BOOKING]
+import { PrimaryButton, SecondaryButton } from '../../../components'; // [ADJUST BOOKING BUTTONS]
+import { IconSpinner } from '../../../components'; // [ADJUST BOOKING SPINNER]
 // [/SKYFARER]
 
 // Helper function to get display names for different roles
@@ -83,14 +86,21 @@ const CancelModal = ({ intl, isOpen, onClose, onManageDisableScrolling, cancel }
 // [ADJUST BOOKING] Move AdjustBookingModal to top-level
 const AdjustBookingModal = ({ transaction, onClose, onSubmit, onManageDisableScrolling }) => {
   const [hours, setHours] = useState(transaction.booking?.attributes?.hours || 1);
+  const [submitting, setSubmitting] = useState(false);
   // Prepopulate price with the listing price and make it non-editable
   const price = transaction.listing?.attributes?.price?.amount
     ? transaction.listing.attributes.price.amount
     : 0;
   const currency = transaction.listing?.attributes?.price?.currency || 'USD';
-  const handleSubmit = () => {
-    onSubmit(hours, price);
-    onClose();
+  const total = ((hours * price) / 100).toFixed(2); // [ADJUST BOOKING] total field
+  const handleSubmit = async () => {
+    setSubmitting(true);
+    try {
+      await onSubmit(hours, price);
+      onClose();
+    } finally {
+      setSubmitting(false);
+    }
   };
   return (
     <Modal
@@ -100,6 +110,9 @@ const AdjustBookingModal = ({ transaction, onClose, onSubmit, onManageDisableScr
       onManageDisableScrolling={onManageDisableScrolling}
     >
       <div style={{ padding: 24 }}>
+        <div style={{ marginBottom: 4, color: '#b85c00', fontWeight: 500 }}>
+          This adjustment can only be made once and should reflect the actual hours flown. Please make changes after the flight.
+        </div>
         <label>
           Hours:
           <input
@@ -107,7 +120,8 @@ const AdjustBookingModal = ({ transaction, onClose, onSubmit, onManageDisableScr
             min={1}
             value={hours}
             onChange={e => setHours(Number(e.target.value))}
-            style={{ marginLeft: 8, marginBottom: 16 }}
+            style={{ marginLeft: 8, marginBottom: 4 }}
+            disabled={submitting}
           />
         </label>
         <br />
@@ -117,11 +131,30 @@ const AdjustBookingModal = ({ transaction, onClose, onSubmit, onManageDisableScr
             type="number"
             value={price / 100}
             readOnly
-            style={{ marginLeft: 8, marginBottom: 16, background: '#f5f5f5', color: '#888' }}
+            style={{ marginLeft: 8, marginBottom: 4, background: '#f5f5f5', color: '#888' }}
           />
         </label>
         <br />
-        <button onClick={handleSubmit} style={{ marginTop: 16 }}>Submit Adjustment</button>
+        <label>
+          Total (in {currency}):
+          <input
+            type="text"
+            value={total}
+            readOnly
+            style={{ marginLeft: 8, marginBottom: 4, background: '#f5f5f5', color: '#222', fontWeight: 'bold' }}
+          />
+        </label>
+        <br />
+        {submitting && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, margin: '8px 0', color: '#555' }}>
+            <IconSpinner />
+            <span>Submitting adjustment...</span>
+          </div>
+        )}
+        <div style={{ display: 'flex', gap: 12, marginTop: 16, justifyContent: 'flex-end' }}>
+          <PrimaryButton type="button" onClick={handleSubmit} disabled={submitting}>Submit Adjustment</PrimaryButton>
+          <SecondaryButton type="button" onClick={onClose} disabled={submitting}>Cancel</SecondaryButton>
+        </div>
       </div>
     </Modal>
   );
@@ -326,6 +359,16 @@ export class TransactionPanelComponent extends Component {
         isListingDeleted={listingDeleted}
         isProvider={isProvider}
         onShowAdjustModal={this.handleShowAdjustModal} // [ADJUST BOOKING]
+        adjustDisabled={(() => {
+          const process = getProcess(stateData.processName);
+          const isAccepted = process && process.getState(transaction) === process.states.ACCEPTED;
+          const transitions = transaction?.attributes?.transitions || [];
+          const hasAdjusted = transitions.some(t =>
+            t.transition === 'transition/provider-adjust-booking-charge' ||
+            t.transition === 'transition/provider-adjust-booking-refund'
+          );
+          return !process || !isAccepted || hasAdjusted;
+        })()}
       />
     );
 
