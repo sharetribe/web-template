@@ -1,0 +1,52 @@
+.preview {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  /* align */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  border: 1px solid var(--colorGrey100);
+  border-radius: 4px;
+
+  padding: 32px;
+  text-align: center;
+  font-weight: var(--fontWeightSemiBold);
+}
+
+/* Hard coded styles */
+/*  Modify or extend the available fallback styles here. */
+.white {
+  color: var(--colorGrey800);
+  background-color: var(--colorWhite);
+}
+
+.grey {
+  color: var(--colorGrey800);
+  background-color: var(--colorGrey50);
+}
+
+.black {
+  color: var(--colorWhite);
+  background-color: var(--colorBlack);
+}
+
+.main-brand {
+  color: var(--colorWhite);
+  background-color: var(--marketplaceColor);
+}
+
+.primary-button {
+  color: var(--colorWhite);
+  background-color: var(--colorPrimaryButton);
+}
+
+.longWord {
+  word-break: break-word;
+  hyphens: auto;
+}

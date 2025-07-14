@@ -5,7 +5,11 @@ import classNames from 'classnames';
 import { useConfiguration } from '../../../context/configurationContext';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
-import { displayPrice, isPriceVariationsEnabled } from '../../../util/configHelpers';
+import {
+  displayPrice,
+  isPriceVariationsEnabled,
+  requireListingImage,
+} from '../../../util/configHelpers';
 import {
   LISTING_STATE_PENDING_APPROVAL,
   LISTING_STATE_CLOSED,
@@ -36,6 +40,7 @@ import {
   IconSpinner,
   PrimaryButtonInline,
   ResponsiveImage,
+  ListingCardThumbnail,
 } from '../../../components';
 
 import MenuIcon from './MenuIcon';
@@ -330,10 +335,7 @@ const LinkToStockOrAvailabilityTab = props => {
 };
 
 const PriceMaybe = props => {
-  const { price, publicData, config, intl } = props;
-  const { listingType } = publicData || {};
-  const validListingTypes = config.listing.listingTypes;
-  const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
+  const { price, publicData, config, intl, foundListingTypeConfig } = props;
 
   const showPrice = displayPrice(foundListingTypeConfig);
   if (showPrice && !price) {
@@ -427,12 +429,14 @@ export const ManageListingCard = props => {
   const isClosed = state === LISTING_STATE_CLOSED;
   const isDraft = state === LISTING_STATE_DRAFT;
 
-  const { listingType, transactionProcessAlias } = publicData || {};
+  const { listingType, transactionProcessAlias, cardStyle } = publicData || {};
   const isBookable = isBookingProcessAlias(transactionProcessAlias);
   const isProductOrder = isPurchaseProcessAlias(transactionProcessAlias);
   const hasListingType = !!listingType;
   const validListingTypes = config.listing.listingTypes;
+
   const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
+  const showListingImage = requireListingImage(foundListingTypeConfig);
 
   const currentStock = currentListing.currentStock?.attributes?.quantity;
   const isOutOfStock = currentStock === 0;
@@ -498,15 +502,19 @@ export const ManageListingCard = props => {
         onMouseOver={onOverListingLink}
         onTouchStart={onOverListingLink}
       >
-        <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
-          <ResponsiveImage
-            rootClassName={css.rootForImage}
-            alt={title}
-            image={firstImage}
-            variants={variants}
-            sizes={renderSizes}
-          />
-        </AspectRatioWrapper>
+        {showListingImage ? (
+          <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
+            <ResponsiveImage
+              rootClassName={css.rootForImage}
+              alt={title}
+              image={firstImage}
+              variants={variants}
+              sizes={renderSizes}
+            />
+          </AspectRatioWrapper>
+        ) : (
+          <ListingCardThumbnail style={cardStyle} width={aspectWidth} height={aspectHeight} />
+        )}
 
         <div className={classNames(css.menuOverlayWrapper)}>
           <div className={classNames(css.menuOverlay, { [css.menuOverlayOpen]: isMenuOpen })} />
@@ -601,7 +609,13 @@ export const ManageListingCard = props => {
       </div>
 
       <div className={css.info}>
-        <PriceMaybe price={price} publicData={publicData} config={config} intl={intl} />
+        <PriceMaybe
+          price={price}
+          publicData={publicData}
+          config={config}
+          intl={intl}
+          foundListingTypeConfig={foundListingTypeConfig}
+        />
 
         <div className={css.mainInfo}>
           <div className={css.titleWrapper}>

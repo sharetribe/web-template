@@ -11,6 +11,7 @@ import {
   displayLocation,
   displayPrice,
   requirePayoutDetails,
+  requireListingImage,
 } from '../../../util/configHelpers';
 import {
   LISTING_PAGE_PARAM_TYPE_DRAFT,
@@ -57,6 +58,7 @@ import EditListingWizardTab, {
   LOCATION,
   AVAILABILITY,
   PHOTOS,
+  STYLE,
 } from './EditListingWizardTab';
 import css from './EditListingWizard.module.css';
 
@@ -67,9 +69,9 @@ import css from './EditListingWizard.module.css';
 // Note 3: The first tab creates a draft listing and title is mandatory attribute for it.
 //         Details tab asks for "title" and is therefore the first tab in the wizard flow.
 const TABS_DETAILS_ONLY = [DETAILS];
-const TABS_PRODUCT = [DETAILS, PRICING_AND_STOCK, DELIVERY, PHOTOS];
-const TABS_BOOKING = [DETAILS, LOCATION, PRICING, AVAILABILITY, PHOTOS];
-const TABS_INQUIRY = [DETAILS, LOCATION, PRICING, PHOTOS];
+const TABS_PRODUCT = [DETAILS, PRICING_AND_STOCK, DELIVERY, PHOTOS, STYLE];
+const TABS_BOOKING = [DETAILS, LOCATION, PRICING, AVAILABILITY, PHOTOS, STYLE];
+const TABS_INQUIRY = [DETAILS, LOCATION, PRICING, PHOTOS, STYLE];
 const TABS_ALL = [...TABS_PRODUCT, ...TABS_BOOKING, ...TABS_INQUIRY];
 
 // Tabs are horizontal in small screens
@@ -86,21 +88,28 @@ const getTabs = (processTabs, disallowedTabs) => {
 };
 // Pick only allowed booking tabs (location could be omitted)
 const tabsForBookingProcess = (processTabs, listingTypeConfig) => {
-  const disallowedTabs = !displayLocation(listingTypeConfig) ? [LOCATION] : [];
+  const locationTabMaybe = !displayLocation(listingTypeConfig) ? [LOCATION] : [];
+  const styleOrPhotosTab = !requireListingImage(listingTypeConfig) ? [PHOTOS] : [STYLE];
+  const disallowedTabs = [...locationTabMaybe, ...styleOrPhotosTab];
   return getTabs(processTabs, disallowedTabs);
 };
 // Pick only allowed purchase tabs (delivery could be omitted)
 const tabsForPurchaseProcess = (processTabs, listingTypeConfig) => {
   const isDeliveryDisabled =
     !displayDeliveryPickup(listingTypeConfig) && !displayDeliveryShipping(listingTypeConfig);
-  const disallowedTabs = isDeliveryDisabled ? [DELIVERY] : [];
+  const deliveryTabMaybe = isDeliveryDisabled ? [DELIVERY] : [];
+  const styleOrPhotosTab = !requireListingImage(listingTypeConfig) ? [PHOTOS] : [STYLE];
+  const disallowedTabs = [...deliveryTabMaybe, ...styleOrPhotosTab];
   return getTabs(processTabs, disallowedTabs);
 };
 // Pick only allowed inquiry tabs (location and pricing could be omitted)
 const tabsForInquiryProcess = (processTabs, listingTypeConfig) => {
-  const locationMaybe = !displayLocation(listingTypeConfig) ? [LOCATION] : [];
-  const priceMaybe = !displayPrice(listingTypeConfig) ? [PRICING] : [];
-  return getTabs(processTabs, [...locationMaybe, ...priceMaybe]);
+  const locationTabMaybe = !displayLocation(listingTypeConfig) ? [LOCATION] : [];
+  const priceTabMaybe = !displayPrice(listingTypeConfig) ? [PRICING] : [];
+  const styleOrPhotosTab = !requireListingImage(listingTypeConfig) ? [PHOTOS] : [STYLE];
+  const disallowedTabs = [...locationTabMaybe, ...priceTabMaybe, ...styleOrPhotosTab];
+
+  return getTabs(processTabs, disallowedTabs);
 };
 
 /**
@@ -141,6 +150,9 @@ const tabLabelAndSubmit = (intl, tab, isNewListingFlow, isPriceDisabled, process
   } else if (tab === PHOTOS) {
     labelKey = 'EditListingWizard.tabLabelPhotos';
     submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.savePhotos`;
+  } else if (tab === STYLE) {
+    labelKey = 'EditListingWizard.tabLabelStyle';
+    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveStyle`;
   }
 
   return {
@@ -220,8 +232,14 @@ const tabCompleted = (tab, listing, config) => {
     privateData,
   } = listing.attributes;
   const images = listing.images;
-  const { listingType, transactionProcessAlias, unitType, shippingEnabled, pickupEnabled } =
-    publicData || {};
+  const {
+    listingType,
+    transactionProcessAlias,
+    unitType,
+    shippingEnabled,
+    pickupEnabled,
+    cardStyle,
+  } = publicData || {};
   const deliveryOptionPicked = publicData && (shippingEnabled || pickupEnabled);
 
   switch (tab) {
@@ -246,6 +264,8 @@ const tabCompleted = (tab, listing, config) => {
       return !!availabilityPlan;
     case PHOTOS:
       return images && images.length > 0;
+    case STYLE:
+      return !!cardStyle;
     default:
       return false;
   }

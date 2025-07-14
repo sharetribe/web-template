@@ -124,6 +124,7 @@ export const CheckoutPageWithInquiryProcess = props => {
     pageData,
     listingTitle,
     title,
+    showListingImage,
     initiateInquiryError,
   } = props;
 
@@ -155,6 +156,7 @@ export const CheckoutPageWithInquiryProcess = props => {
           author={listing?.author}
           firstImage={firstImage}
           layoutListingImageConfig={config.layout.listingImage}
+          showListingImage={showListingImage}
         />
         <div className={css.orderFormContainer}>
           <div className={css.headingContainer}>
@@ -252,6 +254,7 @@ export const CheckoutPageWithInquiryProcess = props => {
           layoutListingImageConfig={config.layout.listingImage}
           processName={processName}
           showPrice={showPrice && !!price}
+          showListingImage={showListingImage}
           intl={intl}
         />
       </div>
