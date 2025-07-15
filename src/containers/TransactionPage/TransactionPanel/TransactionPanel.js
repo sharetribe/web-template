@@ -203,6 +203,7 @@ export class TransactionPanelComponent extends Component {
     const listingTypeConfigs = config.listing.listingTypes;
     const listingTypeConfig = listingTypeConfigs.find(conf => conf.listingType === listingType);
     const showPrice = isInquiryProcess && displayPrice(listingTypeConfig);
+    const showBreakDown = stateData.showBreakDown !== false; // NOTE: undefined defaults to true due to historical reasons.
 
     const showSendMessageForm =
       !isCustomerBanned && !isCustomerDeleted && !isProviderBanned && !isProviderDeleted;
@@ -264,11 +265,13 @@ export class TransactionPanelComponent extends Component {
             {!isInquiryProcess ? (
               <div className={css.orderDetails}>
                 <div className={css.orderDetailsMobileSection}>
-                  <BreakdownMaybe
-                    orderBreakdown={orderBreakdown}
-                    processName={stateData.processName}
-                    priceVariantName={priceVariantName}
-                  />
+                  {showBreakDown ? (
+                    <BreakdownMaybe
+                      orderBreakdown={orderBreakdown}
+                      processName={stateData.processName}
+                      priceVariantName={priceVariantName}
+                    />
+                  ) : null}
                   <DiminishedActionButtonMaybe
                     showDispute={stateData.showDispute}
                     onOpenDisputeModal={onOpenDisputeModal}
@@ -373,12 +376,14 @@ export class TransactionPanelComponent extends Component {
                   intl={intl}
                 />
                 {showOrderPanel ? orderPanel : null}
-                <BreakdownMaybe
-                  className={css.breakdownContainer}
-                  orderBreakdown={orderBreakdown}
-                  processName={stateData.processName}
-                  priceVariantName={priceVariantName}
-                />
+                {showBreakDown ? (
+                  <BreakdownMaybe
+                    className={css.breakdownContainer}
+                    orderBreakdown={orderBreakdown}
+                    processName={stateData.processName}
+                    priceVariantName={priceVariantName}
+                  />
+                ) : null}
 
                 {stateData.showActionButtons ? (
                   <div className={css.desktopActionButtons}>{actionButtons}</div>
