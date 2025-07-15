@@ -24,6 +24,8 @@ import {
   resolveLatestProcessName,
   getProcess,
   isBookingProcess,
+  isPurchaseProcess,
+  isNegotiationProcess,
 } from '../../transactions/transaction';
 
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
@@ -132,6 +134,7 @@ export const InboxItem = props => {
     intl,
     stateData,
     isBooking,
+    isPurchase,
     availabilityType,
     stockType = STOCK_MULTIPLE_ITEMS,
   } = props;
@@ -149,7 +152,7 @@ export const InboxItem = props => {
   const lineItems = tx.attributes?.lineItems;
   const hasPricingData = lineItems.length > 0;
   const unitLineItem = getUnitLineItem(lineItems);
-  const quantity = hasPricingData && !isBooking ? unitLineItem.quantity.toString() : null;
+  const quantity = hasPricingData && isPurchase ? unitLineItem.quantity.toString() : null;
   const showStock = stockType === STOCK_MULTIPLE_ITEMS || (quantity && unitLineItem.quantity > 1);
   const otherUser = isCustomer ? provider : customer;
   const otherUserDisplayName = <UserDisplayName user={otherUser} intl={intl} />;
@@ -183,7 +186,7 @@ export const InboxItem = props => {
         <div className={css.itemDetails}>
           {isBooking ? (
             <BookingTimeInfoMaybe transaction={tx} />
-          ) : hasPricingData && showStock ? (
+          ) : isPurchase && hasPricingData && showStock ? (
             <FormattedMessage id="InboxPage.quantity" values={{ quantity }} />
           ) : null}
         </div>
@@ -276,6 +279,8 @@ export const InboxPageComponent = props => {
     const process = tx?.attributes?.processName || transactionType?.transactionType;
     const transactionProcess = resolveLatestProcessName(process);
     const isBooking = isBookingProcess(transactionProcess);
+    const isPurchase = isPurchaseProcess(transactionProcess);
+    const isNegotiation = isNegotiationProcess(transactionProcess);
 
     // Render InboxItem only if the latest transition of the transaction is handled in the `txState` function.
     return stateData ? (
@@ -288,6 +293,7 @@ export const InboxPageComponent = props => {
           stockType={stockType}
           availabilityType={availabilityType}
           isBooking={isBooking}
+          isPurchase={isPurchase}
         />
       </li>
     ) : null;
