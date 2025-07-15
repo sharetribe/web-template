@@ -1186,6 +1186,7 @@
   "TransactionPanel.deletedListingOrderTitle": "a listing",
   "TransactionPanel.deletedListingTitle": "Deleted listing",
   "TransactionPanel.disputeOrder": "Dispute order",
+  "TransactionPanel.extraDetailsMessageHeading": "Offer details",
   "TransactionPanel.initialMessageFailed": "Oops, failed to send message from checkout.",
   "TransactionPanel.inquiryMessageHeading": "Inquiry message",
   "TransactionPanel.messageDeletedListing": "However, the listing is deleted and can't be viewed anymore.",

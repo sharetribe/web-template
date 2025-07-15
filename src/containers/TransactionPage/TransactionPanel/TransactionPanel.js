@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
-import { displayPrice } from '../../../util/configHelpers';
 import { propTypes } from '../../../util/types';
 import { userDisplayNameAsString } from '../../../util/data';
 import { isMobileSafari } from '../../../util/userAgent';
 import { createSlug } from '../../../util/urlHelpers';
+import { NEGOTIATION_PROCESS_NAME } from '../../../transactions/transaction';
+import { displayPrice } from '../../../util/configHelpers';
 
 import { AvatarLarge, NamedLink, UserDisplayName } from '../../../components';
 
@@ -19,6 +20,7 @@ import DetailCardHeadingsMaybe from './DetailCardHeadingsMaybe';
 import DetailCardImage from './DetailCardImage';
 import DeliveryInfoMaybe from './DeliveryInfoMaybe';
 import BookingLocationMaybe from './BookingLocationMaybe';
+import ExtraDetailsMaybe from './ExtraDetailsMaybe';
 import InquiryMessageMaybe from './InquiryMessageMaybe';
 import FeedSection from './FeedSection';
 import DiminishedActionButtonMaybe from './DiminishedActionButtonMaybe';
@@ -202,6 +204,7 @@ export class TransactionPanelComponent extends Component {
     const listingType = listing?.attributes?.publicData?.listingType;
     const listingTypeConfigs = config.listing.listingTypes;
     const listingTypeConfig = listingTypeConfigs.find(conf => conf.listingType === listingType);
+    const isNegotiationProcess = stateData.processName === NEGOTIATION_PROCESS_NAME;
     const showPrice = isInquiryProcess && displayPrice(listingTypeConfig);
     const showBreakDown = stateData.showBreakDown !== false; // NOTE: undefined defaults to true due to historical reasons.
 
@@ -260,6 +263,13 @@ export class TransactionPanelComponent extends Component {
               protectedData={protectedData}
               showInquiryMessage={isInquiryProcess}
               isCustomer={isCustomer}
+            />
+
+            <ExtraDetailsMaybe
+              protectedData={protectedData}
+              msgKey="offerDetails"
+              showExtraDetailsMessage={isNegotiationProcess}
+              isOwnMessage={isNegotiationProcess && isProvider}
             />
 
             {!isInquiryProcess ? (
