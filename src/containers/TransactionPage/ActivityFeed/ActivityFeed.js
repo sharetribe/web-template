@@ -324,7 +324,7 @@ export const ActivityFeed = props => {
       );
     }
     return (
-      <li key={transition.transition} className={css.transitionItem}>
+      <li key={`${transition.transition}-${transition.createdAt}`} className={css.transitionItem}>
         {transitionComponent}
       </li>
     );
