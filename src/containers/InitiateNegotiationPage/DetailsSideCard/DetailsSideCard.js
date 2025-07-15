@@ -10,7 +10,6 @@ import {
   AspectRatioWrapper,
   AvatarMedium,
   H4,
-  H6,
   NamedLink,
   ResponsiveImage,
 } from '../../../components';
@@ -30,8 +29,6 @@ import css from './DetailsSideCard.module.css';
  * @param {Object} props.layoutListingImageConfig - The layout listing image config
  * @param {ReactNode} props.speculateTransactionErrorMessage - The speculate transaction error message
  * @param {boolean} props.showPrice - Whether to show the price
- * @param {string} props.processName - The process name
- * @param {ReactNode} props.breakdown - The breakdown
  * @param {intlShape} props.intl - The intl object
  */
 const DetailsSideCard = props => {
@@ -43,11 +40,10 @@ const DetailsSideCard = props => {
     layoutListingImageConfig,
     speculateTransactionErrorMessage,
     showPrice,
-    processName,
-    breakdown,
     showListingImage,
     intl,
   } = props;
+  // TODO: consider if a order breakdown is needed?
 
   const { price, publicData } = listing?.attributes || {};
   const unitType = publicData.unitType || 'unknown';
@@ -100,16 +96,6 @@ const DetailsSideCard = props => {
         </div>
         {speculateTransactionErrorMessage}
       </div>
-
-      {!!breakdown ? (
-        <div className={css.orderBreakdownHeader}>
-          <H6 as="h3" className={css.orderBreakdownTitle}>
-            <FormattedMessage id={`CheckoutPage.${processName}.orderBreakdown`} />
-          </H6>
-          <hr className={css.totalDivider} />
-        </div>
-      ) : null}
-      {breakdown}
     </div>
   );
 };
