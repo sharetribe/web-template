@@ -1,0 +1,27 @@
+# InitiateNegotiationPage
+
+The provider is navigated to this page when they are about to make an offer for a listing. The main
+purpose of this page is to add a quote, which is then used to set the line items for the
+transaction. This quote constitutes the initial offer in the negotiation.
+
+In addition, the quote is saved to the transaction metadata as an entry in the offers array. The
+"offers" array is used to track the history of offers made during the negotiation loop.
+
+## Metadata
+
+The metadata is saved to the transaction as an entry in the "offers" array. This array contains
+objects with the following properties:
+
+- **quoteInSubunits**: the quote amount in subunits
+- **by**: the actor who made the offer (either "provider" or "customer"). Currently, the actor is
+  always "provider".
+- **transition**: the transition that was triggered to initiate the negotiation:
+  - `transition/make-offer`
+  - `transition/make-offer-from-quote-requested`
+  - `transition/custom-make-counter-offer`
+
+## Line-items
+
+Line items are added to the transaction using the `:action/privileged-set-line-items` action, which
+is configured on the transition. These items define the price of the listing, including any
+commissions and similar costs.
