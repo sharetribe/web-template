@@ -468,6 +468,7 @@
   "InboxSearchForm.sortLabel": "Sort by:",
   "InitiateNegotiationPage.default-negotiation.title": "Make an offer",
   "InitiateNegotiationPage.goToLandingPage": "Go to the homepage",
+  "InitiateNegotiationPage.listingTitle": "{listingTitle}",
   "InquiryForm.heading": "Inquire about {listingTitle}",
   "InquiryForm.messageLabel": "Message to {authorDisplayName}",
   "InquiryForm.messagePlaceholder": "Hello {authorDisplayName}! I'm looking forward to…",
