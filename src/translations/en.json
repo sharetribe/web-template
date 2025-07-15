@@ -462,6 +462,7 @@
   "InboxPage.salesTitle": "Inbox: As a listing author",
   "InboxPage.seats": "Number of seats: {seats}",
   "InboxPage.title": "Inbox",
+  "InitiateNegotiationPage.default-negotiation.title": "Make an offer",
   "InquiryForm.heading": "Inquire about {listingTitle}",
   "InquiryForm.messageLabel": "Message to {authorDisplayName}",
   "InquiryForm.messagePlaceholder": "Hello {authorDisplayName}! I'm looking forward to…",
