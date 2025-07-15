@@ -79,7 +79,7 @@ const PanelHeading = props => {
           <FormattedMessage id="TransactionPanel.messageDeletedListing" />
         </p>
       ) : null}
-      {isCustomer && !listingDeleted && showExtraInfo ? (
+      {!listingDeleted && showExtraInfo ? (
         <p className={css.transactionInfoMessage}>
           <FormattedMessage
             id={`TransactionPage.${processName}.${transactionRole}.${processState}.extraInfo`}
