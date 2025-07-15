@@ -2,7 +2,7 @@ import reverse from 'lodash/reverse';
 import sortBy from 'lodash/sortBy';
 import { storableError } from '../../util/errors';
 import { parse } from '../../util/urlHelpers';
-import { getAllTransitionsForEveryProcess } from '../../transactions/transaction';
+import { getSupportedProcessesInfo } from '../../transactions/transaction';
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 
 const sortedTransactions = txs =>
@@ -89,10 +89,11 @@ export const loadData = (params, search) => (dispatch, getState, sdk) => {
   dispatch(fetchOrdersOrSalesRequest());
 
   const { page = 1 } = parse(search);
+  const processNames = getSupportedProcessesInfo().map(p => p.name);
 
   const apiQueryParams = {
     only: onlyFilter,
-    lastTransitions: getAllTransitionsForEveryProcess(),
+    processNames,
     include: [
       'listing',
       'provider',
