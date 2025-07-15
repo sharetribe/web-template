@@ -20,6 +20,7 @@ import {
   resolveLatestProcessName,
   getProcess,
   isBookingProcess,
+  NEGOTIATION_PROCESS_NAME,
 } from '../../transactions/transaction';
 
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
@@ -75,6 +76,30 @@ const onDisputeOrder = (
     .catch(e => {
       // Do nothing.
     });
+};
+
+/**
+ * Handle navigation to InitiateNegotiationPage. Returns a function that can be used as a form submit handler.
+ * Note: this does not yet handle form values, it only navigates to the InitiateNegotiationPage.
+ *
+ * @param {Object} parameters all the info needed to navigate to InitiateNegotiationPage.
+ * @param {Object} parameters.getListing The getListing function from react-router.
+ * @param {Object} parameters.params The params object from react-router.
+ * @param {Object} parameters.history The history object from react-router.
+ * @param {Object} parameters.routes The routes object from react-router.
+ * @returns {Function} A function that navigates to InitiateNegotiationPage.
+ */
+const handleNavigateToInitiateNegotiationPage = parameters => () => {
+  const { listing, transaction, history, routes } = parameters;
+
+  history.push(
+    createResourceLocatorString(
+      'InitiateNegotiationPage',
+      routes,
+      { id: listing.id.uuid, slug: createSlug(listing.attributes.title) },
+      { transactionId: transaction.id.uuid }
+    )
+  );
 };
 
 /**
@@ -476,6 +501,14 @@ export const TransactionPageComponent = props => {
     isBookingProcess(stateData.processName) &&
     process?.hasPassedState(process?.states?.ACCEPTED, transaction);
 
+  const onMakeOffer = handleNavigateToInitiateNegotiationPage({
+    listing,
+    transaction,
+    history,
+    routes: routeConfiguration,
+  });
+  const isNegotiationProcess = processName === NEGOTIATION_PROCESS_NAME;
+
   // TransactionPanel is presentational component
   // that currently handles showing everything inside layout's main view area.
   const panel = isDataAvailable ? (
@@ -553,7 +586,7 @@ export const TransactionPageComponent = props => {
             </H4>
           }
           author={provider}
-          onSubmit={handleSubmitOrderRequest}
+          onSubmit={isNegotiationProcess ? onMakeOffer : handleSubmitOrderRequest}
           onManageDisableScrolling={onManageDisableScrolling}
           {...restOfProps}
           validListingTypes={config.listing.listingTypes}
