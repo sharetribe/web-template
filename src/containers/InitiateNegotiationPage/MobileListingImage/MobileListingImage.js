@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import { AspectRatioWrapper, AvatarMedium, ResponsiveImage } from '../../components';
+import { AspectRatioWrapper, AvatarMedium, ResponsiveImage } from '../../../components';
 
 import css from './MobileListingImage.module.css';
 
