@@ -472,6 +472,7 @@
   "InitiateNegotiationPage.initiateNegotiationErrorNoProcess": "Oops, no transaction process attached to the listing. Please contact support",
   "InitiateNegotiationPage.listingNotFoundError": "Unfortunately, this listing is no longer available.",
   "InitiateNegotiationPage.listingTitle": "{listingTitle}",
+  "InitiateNegotiationPage.locationDetailsTitle": "Location",
   "InitiateNegotiationPage.perUnit": "{unitType, select, day {per day} night {per night} hour {per hour} other {}}",
   "InquiryForm.heading": "Inquire about {listingTitle}",
   "InquiryForm.messageLabel": "Message to {authorDisplayName}",
