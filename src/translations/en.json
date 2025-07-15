@@ -469,6 +469,7 @@
   "InitiateNegotiationPage.default-negotiation.title": "Make an offer",
   "InitiateNegotiationPage.goToLandingPage": "Go to the homepage",
   "InitiateNegotiationPage.listingTitle": "{listingTitle}",
+  "InitiateNegotiationPage.perUnit": "{unitType, select, day {per day} night {per night} hour {per hour} other {}}",
   "InquiryForm.heading": "Inquire about {listingTitle}",
   "InquiryForm.messageLabel": "Message to {authorDisplayName}",
   "InquiryForm.messagePlaceholder": "Hello {authorDisplayName}! I'm looking forward to…",
