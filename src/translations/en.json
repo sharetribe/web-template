@@ -73,6 +73,8 @@
   "CheckoutPage.default-booking.title": "Complete booking request",
   "CheckoutPage.default-inquiry.orderBreakdown": "Order breakdown",
   "CheckoutPage.default-inquiry.title": "Send an inquiry to {authorDisplayName}",
+  "CheckoutPage.default-negotiation.orderBreakdown": "Order breakdown",
+  "CheckoutPage.default-negotiation.title": "Complete order",
   "CheckoutPage.default-purchase.orderBreakdown": "Order breakdown",
   "CheckoutPage.default-purchase.title": "Complete order",
   "CheckoutPage.destinationAccountNotCompleteStripeError": "This listing is currently unavailable because the listing author's payout information is incomplete. Your card hasn't been charged. Please contact support.",
