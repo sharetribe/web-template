@@ -1,0 +1,55 @@
+@import '../../../styles/customMediaQueries.css';
+
+.listingImageMobile {
+  position: relative;
+  background-color: var(--colorGrey100); /* Loading BG color */
+
+  @media (--viewportLarge) {
+    display: none;
+  }
+}
+
+.rootForImage {
+  /* Layout - image will take space defined by aspect ratio wrapper */
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+
+  @media (--viewportLarge) {
+    border-radius: 2px 2px 0 0;
+  }
+}
+
+.avatarWrapper {
+  /* Position (over the listing image)*/
+  margin-left: 24px;
+  margin-top: -31px;
+
+  /* Rendering context to the same lavel as listing image */
+  position: relative;
+
+  /* Layout */
+  display: block;
+
+  @media (--viewportLarge) {
+    margin-left: 0;
+  }
+  &.noListingImage {
+    margin-top: 24px;
+    @media (--viewportMedium) {
+      margin-top: 32px;
+    }
+    @media (--viewportLarge) {
+      margin-top: 40px;
+    }
+  }
+}
+
+.avatarMobile {
+  @media (--viewportLarge) {
+    display: none;
+  }
+}
