@@ -466,6 +466,7 @@
   "InboxPage.sortBy.lastTransitionedAt": "Latest status change",
   "InboxPage.title": "Inbox",
   "InboxSearchForm.sortLabel": "Sort by:",
+  "InitiateNegotiationPage.default-negotiation.title": "Make an offer",
   "InquiryForm.heading": "Inquire about {listingTitle}",
   "InquiryForm.messageLabel": "Message to {authorDisplayName}",
   "InquiryForm.messagePlaceholder": "Hello {authorDisplayName}! I'm looking forward to…",
