@@ -3,6 +3,7 @@ import {
   BOOKING_PROCESS_NAME,
   INQUIRY_PROCESS_NAME,
   PURCHASE_PROCESS_NAME,
+  NEGOTIATION_PROCESS_NAME,
   resolveLatestProcessName,
   getProcess,
 } from '../../transactions/transaction';
@@ -10,6 +11,7 @@ import {
 import { getStateDataForBookingProcess } from './InboxPage.stateDataBooking.js';
 import { getStateDataForInquiryProcess } from './InboxPage.stateDataInquiry.js';
 import { getStateDataForPurchaseProcess } from './InboxPage.stateDataPurchase.js';
+import { getStateDataForNegotiationProcess } from './InboxPage.stateDataNegotiation.js';
 
 export const stateDataShape = shape({
   processName: string.isRequired,
@@ -41,6 +43,8 @@ export const getStateData = params => {
     return getStateDataForBookingProcess(params, processInfo());
   } else if (processName === INQUIRY_PROCESS_NAME) {
     return getStateDataForInquiryProcess(params, processInfo());
+  } else if (processName === NEGOTIATION_PROCESS_NAME) {
+    return getStateDataForNegotiationProcess(params, processInfo());
   } else {
     return {};
   }
