@@ -403,6 +403,7 @@
   }
 }
 
+.extraDetailsMessage,
 .inquiryMessage {
   /* Preserve newlines, but collapse other whitespace */
   display: inline-block;
@@ -423,6 +424,7 @@
   }
 }
 
+.ownExtraDetailsMessage,
 .ownInquiryMessage {
   composes: inquiryMessage;
   background-color: var(--marketplaceColor);
