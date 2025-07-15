@@ -47,6 +47,7 @@ import ActionButtons from './ActionButtons/ActionButtons';
 import ActivityFeed from './ActivityFeed/ActivityFeed';
 import DisputeModal from './DisputeModal/DisputeModal';
 import ReviewModal from './ReviewModal/ReviewModal';
+import RequestChangesModal from './RequestChangesModal/RequestChangesModal.js';
 import TransactionPanel from './TransactionPanel/TransactionPanel';
 
 import {
@@ -75,6 +76,33 @@ const onDisputeOrder = (
     })
     .catch(e => {
       // Do nothing.
+    });
+};
+
+// Submit change request, make transition, and send message
+const onChangeRequest = (
+  currentTransactionId,
+  transitionName,
+  onTransition,
+  onSendMessage,
+  config,
+  setRequestChangesModalOpen,
+  setChangeRequestSubmitted
+) => values => {
+  const { changeRequestMessage } = values;
+
+  // First make the transition
+  onTransition(currentTransactionId, transitionName, {})
+    .then(r => {
+      // Then send the change request content as a message
+      return onSendMessage(currentTransactionId, changeRequestMessage, config);
+    })
+    .then(r => {
+      setRequestChangesModalOpen(false);
+      return setChangeRequestSubmitted(true);
+    })
+    .catch(e => {
+      // Do nothing, error will be handled by the form
     });
 };
 
@@ -154,6 +182,8 @@ export const TransactionPageComponent = props => {
   const [disputeSubmitted, setDisputeSubmitted] = useState(false);
   const [isReviewModalOpen, setReviewModalOpen] = useState(false);
   const [reviewSubmitted, setReviewSubmitted] = useState(false);
+  const [isRequestChangesModalOpen, setRequestChangesModalOpen] = useState(false);
+  const [changeRequestSubmitted, setChangeRequestSubmitted] = useState(false);
 
   const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();
@@ -314,6 +344,12 @@ export const TransactionPageComponent = props => {
     setReviewModalOpen(true);
   };
 
+  // Open change request modal
+  // This is called from ActivityFeed and from action buttons
+  const onOpenRequestChangesModal = () => {
+    setRequestChangesModalOpen(true);
+  };
+
   // Submit review and close the review modal
   const onSubmitReview = values => {
     const { reviewRating, reviewContent } = values;
@@ -448,6 +484,8 @@ export const TransactionPageComponent = props => {
           sendReviewError,
           onTransition,
           onOpenReviewModal,
+          onOpenRequestChangesModal,
+          onCheckoutRedirect: handleSubmitOrderRequest,
           intl,
         },
         process
@@ -634,6 +672,26 @@ export const TransactionPageComponent = props => {
             disputeSubmitted={disputeSubmitted}
             disputeInProgress={transitionInProgress === process.transitions.DISPUTE}
             disputeError={transitionError}
+          />
+        ) : null}
+        {process?.transitions?.REQUEST_CHANGES ? (
+          <RequestChangesModal
+            id="RequestChangesModal"
+            isOpen={isRequestChangesModalOpen}
+            onCloseModal={() => setRequestChangesModalOpen(false)}
+            onManageDisableScrolling={onManageDisableScrolling}
+            onChangeRequest={onChangeRequest(
+              transaction?.id,
+              process.transitions.REQUEST_CHANGES,
+              onTransition,
+              onSendMessage,
+              config,
+              setRequestChangesModalOpen,
+              setChangeRequestSubmitted
+            )}
+            changeRequestSubmitted={changeRequestSubmitted}
+            changeRequestInProgress={transitionInProgress === process.transitions.REQUEST_CHANGES}
+            changeRequestError={transitionError}
           />
         ) : null}
       </LayoutSingleColumn>
