@@ -11,8 +11,10 @@ import { isTransactionInitiateListingNotFoundError } from '../../util/errors';
 import {
   getProcess,
   isBookingProcessAlias,
-  PURCHASE_PROCESS_NAME,
+  resolveLatestProcessName,
   BOOKING_PROCESS_NAME,
+  NEGOTIATION_PROCESS_NAME,
+  PURCHASE_PROCESS_NAME,
 } from '../../transactions/transaction';
 
 // Import shared components
@@ -166,9 +168,15 @@ const fetchSpeculatedTransactionIfNeeded = (orderParams, pageData, fetchSpeculat
     const transactionId = tx ? tx.id : null;
     const isInquiryInPaymentProcess =
       tx?.attributes?.lastTransition === process.transitions.INQUIRE;
+    const resolvedProcessName = resolveLatestProcessName(processName);
+    const isOfferPendingInNegotiationProcess =
+      resolvedProcessName === NEGOTIATION_PROCESS_NAME &&
+      tx.attributes.state === `state/${process.states.OFFER_PENDING}`;
 
     const requestTransition = isInquiryInPaymentProcess
       ? process.transitions.REQUEST_PAYMENT_AFTER_INQUIRY
+      : isOfferPendingInNegotiationProcess
+      ? process.transitions.REQUEST_PAYMENT_TO_ACCEPT_OFFER
       : process.transitions.REQUEST_PAYMENT;
     const isPrivileged = process.isPrivileged(requestTransition);
 
