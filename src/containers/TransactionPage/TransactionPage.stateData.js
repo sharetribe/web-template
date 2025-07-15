@@ -3,11 +3,13 @@ import {
   BOOKING_PROCESS_NAME,
   INQUIRY_PROCESS_NAME,
   PURCHASE_PROCESS_NAME,
+  NEGOTIATION_PROCESS_NAME,
   resolveLatestProcessName,
 } from '../../transactions/transaction';
 import { getStateDataForBookingProcess } from './TransactionPage.stateDataBooking.js';
 import { getStateDataForInquiryProcess } from './TransactionPage.stateDataInquiry.js';
 import { getStateDataForPurchaseProcess } from './TransactionPage.stateDataPurchase.js';
+import { getStateDataForNegotiationProcess } from './TransactionPage.stateDataNegotiation.js';
 
 const errorShape = shape({
   type: oneOf(['error']).isRequired,
@@ -56,6 +58,7 @@ const getActionButtonPropsMaybe = (params, onlyForRole = 'both') => {
     actionButtonTranslationId,
     actionButtonTranslationErrorId,
     intl,
+    ...extraParams
   } = params;
   const transitionKey = getTransitionKey(transitionName);
 
@@ -73,6 +76,7 @@ const getActionButtonPropsMaybe = (params, onlyForRole = 'both') => {
         onAction,
         buttonText: intl.formatMessage({ id: actionButtonTrId }),
         errorText: intl.formatMessage({ id: actionButtonTrErrorId }),
+        ...extraParams,
       }
     : {};
 };
@@ -88,6 +92,8 @@ export const getStateData = (params, process) => {
     sendReviewInProgress,
     sendReviewError,
     onOpenReviewModal,
+    //onOpenRequestChangesModal,
+    //onCheckoutRedirect,
   } = params;
   const isCustomer = transactionRole === 'customer';
   const processName = resolveLatestProcessName(transaction?.attributes?.processName);
@@ -139,6 +145,8 @@ export const getStateData = (params, process) => {
     return getStateDataForBookingProcess(params, processInfo());
   } else if (processName === INQUIRY_PROCESS_NAME) {
     return getStateDataForInquiryProcess(params, processInfo());
+  } else if (processName === NEGOTIATION_PROCESS_NAME) {
+    return getStateDataForNegotiationProcess(params, processInfo());
   } else {
     return {};
   }
