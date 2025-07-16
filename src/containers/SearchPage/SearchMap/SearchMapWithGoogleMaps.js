@@ -476,7 +476,7 @@ class SearchMapWithGoogleMaps extends Component {
       const { bounds, center = new sdkTypes.LatLng(0, 0), zoom = 11 } = this.props;
       const maps = window.google.maps;
       const controlPosition = maps.ControlPosition.LEFT_TOP;
-      const zoomOutToShowEarth = { zoom: 2, center: { lat: 39.8283, lng: -98.5795 } };
+      const zoomOutToShowEarth = { zoom: 4, center: { lat: 39.8283, lng: -98.5795 } };
       const zoomAndCenter = !bounds && !center ? zoomOutToShowEarth : { zoom, center };
 
       const mapConfig = {
@@ -490,7 +490,7 @@ class SearchMapWithGoogleMaps extends Component {
         streetViewControl: false,
         zoomControl: true,
         cameraControl: false,
-        zoom: 2, // Default zoom level to show USA
+        zoom: 4, // Default zoom level to show USA
         zoomControlOptions: {
         position: window.google.maps.ControlPosition.TOP_LEFT,
         },
