@@ -490,7 +490,7 @@ class SearchMapWithGoogleMaps extends Component {
         streetViewControl: false,
         zoomControl: true,
         cameraControl: false,
-
+        zoom: 2, // Default zoom level to show USA
         zoomControlOptions: {
         position: window.google.maps.ControlPosition.TOP_LEFT,
         },
@@ -499,7 +499,7 @@ class SearchMapWithGoogleMaps extends Component {
           position: controlPosition,
         },
 
-        // Add default viewport (the whole world)
+        // Add default viewport (the USA)
         ...zoomAndCenter,
       };
 
