@@ -20,6 +20,7 @@ describe('EditListingDeliveryForm', () => {
         onSubmit={noop}
         saveActionMsg={saveActionMsg}
         marketplaceCurrency="USD"
+        allowOrdersOfMultipleItems={true}
         updated={false}
         updateInProgress={false}
         disabled={false}
