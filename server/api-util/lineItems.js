@@ -59,6 +59,10 @@ const getItemQuantityAndLineItems = (orderData, publicData, currency) => {
   return { quantity, extraLineItems: deliveryLineItem };
 };
 
+const getOfferQuantityAndLineItems = orderData => {
+  return { quantity: 1, extraLineItems: [] };
+};
+
 /**
  * Get quantity for fixed bookings with seats.
  * @param {Object} orderData
@@ -134,6 +138,9 @@ const getDateRangeQuantityAndLineItems = (orderData, code) => {
  *
  * @param {Object} listing
  * @param {Object} orderData
+ * @param {string} [orderData.priceVariantName] - The name of the price variant (potentially used with bookable unit types)
+ * @param {string} [orderData.transitionIntent] - Used to determine if the purpose is to make an offer (or an order)
+ * @param {Money} [orderData.quote] - The quote for the offer (if transition intent is "make-offer")
  * @param {Object} providerCommission
  * @param {Object} customerCommission
  * @returns {Array} lineItems
@@ -145,10 +152,11 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
   const { unitType, priceVariants, priceVariationsEnabled } = publicData;
 
   const isBookable = ['day', 'night', 'hour', 'fixed'].includes(unitType);
+  const isNegotiationUnitType = ['offer', 'request'].includes(unitType);
   const priceAttribute = listing.attributes.price;
   const currency = priceAttribute.currency;
 
-  const { priceVariantName } = orderData || {};
+  const { priceVariantName, quote, transitionIntent } = orderData || {};
   const priceVariantConfig = priceVariants
     ? priceVariants.find(pv => pv.name === priceVariantName)
     : null;
@@ -158,6 +166,8 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
   const unitPrice =
     isBookable && priceVariationsEnabled && isPriceInSubunitsValid
       ? new Money(priceInSubunits, currency)
+      : quote instanceof Money && isNegotiationUnitType
+      ? quote
       : priceAttribute;
 
   /**
@@ -184,6 +194,8 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
       ? getHourQuantityAndLineItems(orderData)
       : ['day', 'night'].includes(unitType)
       ? getDateRangeQuantityAndLineItems(orderData, code)
+      : isNegotiationUnitType
+      ? getOfferQuantityAndLineItems(orderData)
       : {};
 
   const { quantity, units, seats, extraLineItems } = quantityAndExtraLineItems;
