@@ -378,7 +378,7 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
         'publicData.shippingEnabled',
         'publicData.priceVariationsEnabled',
         'publicData.priceVariants',
-        'publicData.State',
+        'publicData.State_for_inperson',
         'publicData.Aircraft_Type',
         'publicData.Location',
         'publicData.Airport',

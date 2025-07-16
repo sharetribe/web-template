@@ -32,32 +32,17 @@ const truncated = s => {
 };
 
 const ExpandableBio = props => {
-  const [expand, setExpand] = useState(false);
+  // Always expanded
   const { className, bio } = props;
   const bioWithLinks = richText(bio, {
     linkify: true,
     longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
     longWordClass: css.longWord,
   });
-  const truncatedBio = richText(truncated(bio), {
-    linkify: true,
-    longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
-    longWordClass: css.longWord,
-    breakChars: '/',
-  });
 
-  const handleShowMoreClick = () => {
-    setExpand(true);
-  };
-  const showMore = (
-    <InlineTextButton rootClassName={css.showMore} onClick={handleShowMoreClick}>
-      <FormattedMessage id="UserCard.showFullBioLink" />
-    </InlineTextButton>
-  );
   return (
     <p className={className}>
-      {expand ? bioWithLinks : truncatedBio}
-      {bio.length >= BIO_COLLAPSED_LENGTH && !expand ? showMore : null}
+      {bioWithLinks}
     </p>
   );
 };
