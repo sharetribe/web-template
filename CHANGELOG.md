@@ -14,8 +14,11 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+## [v8.6.0] 2025-07-17
+
 - [fix] EditListingDeliveryPanel: additional shipping fee was not asked and the related shipping fee
   was missing, when selecting multiple items.
+  [#636](https://github.com/sharetribe/web-template/pull/636)
 - [add] Add support for listing types that do not require images.
   [#624](https://github.com/sharetribe/web-template/pull/624)
 - [fix] Remove mentions to legacy templates from README.md
@@ -29,7 +32,9 @@ way to update this template, but currently, we follow a pattern:
   - [fix] Removed additional padding on primary integer filters
   - [fix] Added word-break to Message and OwnMessage in ActivityFeed.js
 
-[#631](https://github.com/sharetribe/web-template/pull/631)
+  [#631](https://github.com/sharetribe/web-template/pull/631)
+
+  [v8.6.0]: https://github.com/sharetribe/web-template/compare/v8.5.0...v8.6.0
 
 ## [v8.5.0] 2025-06-10
 
