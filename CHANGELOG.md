@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] EditListingDeliveryPanel: additional shipping fee was not asked and the related shipping fee
+  was missing, when selecting multiple items.
 - [add] Add support for listing types that do not require images.
   [#624](https://github.com/sharetribe/web-template/pull/624)
 - [fix] Remove mentions to legacy templates from README.md

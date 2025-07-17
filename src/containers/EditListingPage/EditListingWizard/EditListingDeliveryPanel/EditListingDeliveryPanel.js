@@ -3,7 +3,12 @@ import classNames from 'classnames';
 
 // Import configs and util modules
 import { FormattedMessage } from '../../../../util/reactIntl';
-import { LISTING_STATE_DRAFT, STOCK_MULTIPLE_ITEMS, propTypes } from '../../../../util/types';
+import {
+  LISTING_STATE_DRAFT,
+  STOCK_INFINITE_MULTIPLE_ITEMS,
+  STOCK_MULTIPLE_ITEMS,
+  propTypes,
+} from '../../../../util/types';
 import { displayDeliveryPickup, displayDeliveryShipping } from '../../../../util/configHelpers';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
 
@@ -115,7 +120,9 @@ const EditListingDeliveryPanel = props => {
   const priceCurrencyValid = listing?.attributes?.price?.currency === marketplaceCurrency;
   const listingType = listing?.attributes?.publicData?.listingType;
   const listingTypeConfig = listingTypes.find(conf => conf.listingType === listingType);
-  const hasStockInUse = listingTypeConfig.stockType === STOCK_MULTIPLE_ITEMS;
+  const allowOrdersOfMultipleItems = [STOCK_MULTIPLE_ITEMS, STOCK_INFINITE_MULTIPLE_ITEMS].includes(
+    listingTypeConfig?.stockType
+  );
 
   return (
     <div className={classes}>
@@ -191,7 +198,7 @@ const EditListingDeliveryPanel = props => {
           }}
           listingTypeConfig={listingTypeConfig}
           marketplaceCurrency={marketplaceCurrency}
-          hasStockInUse={hasStockInUse}
+          allowOrdersOfMultipleItems={allowOrdersOfMultipleItems}
           saveActionMsg={submitButtonText}
           disabled={disabled}
           ready={ready}

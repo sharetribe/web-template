@@ -67,7 +67,7 @@ export const EditListingDeliveryForm = props => (
         invalid,
         listingTypeConfig,
         marketplaceCurrency,
-        hasStockInUse = true,
+        allowOrdersOfMultipleItems = false,
         saveActionMsg,
         updated,
         updateInProgress,
@@ -246,7 +246,7 @@ export const EditListingDeliveryForm = props => (
               key={shippingEnabled ? 'oneItemValidation' : 'noOneItemValidation'}
             />
 
-            {hasStockInUse ? (
+            {allowOrdersOfMultipleItems ? (
               <FieldCurrencyInput
                 id={
                   formId
