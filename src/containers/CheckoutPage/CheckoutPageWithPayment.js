@@ -8,7 +8,12 @@ import { propTypes } from '../../util/types';
 import { ensureTransaction } from '../../util/data';
 import { createSlug } from '../../util/urlHelpers';
 import { isTransactionInitiateListingNotFoundError } from '../../util/errors';
-import { getProcess, isBookingProcessAlias } from '../../transactions/transaction';
+import {
+  getProcess,
+  isBookingProcessAlias,
+  PURCHASE_PROCESS_NAME,
+  BOOKING_PROCESS_NAME,
+} from '../../transactions/transaction';
 
 // Import shared components
 import { H3, H4, NamedLink, OrderBreakdown, Page } from '../../components';
@@ -506,6 +511,12 @@ export const CheckoutPageWithPayment = props => {
     orderData?.deliveryMethod === 'shipping' &&
     !hasTransactionPassedPendingPayment(existingTransaction, process);
 
+  const listingLocation = listing?.attributes?.publicData?.location;
+  const isBooking = processName === BOOKING_PROCESS_NAME;
+  const isPurchase = processName === PURCHASE_PROCESS_NAME;
+  const showPickUpLocation = isPurchase && orderData?.deliveryMethod === 'pickup';
+  const showLocation = isBooking && listingLocation?.address;
+
   // Check if the listing currency is compatible with Stripe for the specified transaction process.
   // This function validates the currency against the transaction process requirements and
   // ensures it is supported by Stripe, as indicated by the 'stripe' parameter.
@@ -592,8 +603,9 @@ export const CheckoutPageWithPayment = props => {
                   return onStripeInitialized(stripe, process, props);
                 }}
                 askShippingDetails={askShippingDetails}
-                showPickUplocation={orderData?.deliveryMethod === 'pickup'}
-                listingLocation={listing?.attributes?.publicData?.location}
+                showPickUpLocation={showPickUpLocation}
+                showLocation={showLocation}
+                listingLocation={listingLocation}
                 totalPrice={totalPrice}
                 locale={config.localization.locale}
                 stripePublishableKey={config.stripe.publishableKey}
