@@ -300,7 +300,7 @@ const CustomLinksMenu = ({
   const isMeasured = !!links?.[0]?.width;
   const hasMenuLinks = menuLinks?.length > 0;
   const hasPriorityLinks = isMeasured && priorityLinks.length > 0;
-  const leftHref = '/p/hot-list';
+  const leftHref = intl.formatMessage({ id: 'Topbar.custom.leftOneHref' });
 
   return (
     <div className={css.customLinksMenu} ref={containerRef} {...styleMaybe}>
