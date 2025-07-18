@@ -522,8 +522,9 @@ export const CheckoutPageWithPayment = props => {
   const listingLocation = listing?.attributes?.publicData?.location;
   const isBooking = processName === BOOKING_PROCESS_NAME;
   const isPurchase = processName === PURCHASE_PROCESS_NAME;
+  const isNegotiation = processName === NEGOTIATION_PROCESS_NAME;
   const showPickUpLocation = isPurchase && orderData?.deliveryMethod === 'pickup';
-  const showLocation = isBooking && listingLocation?.address;
+  const showLocation = (isBooking || isNegotiation) && listingLocation?.address;
 
   // Check if the listing currency is compatible with Stripe for the specified transaction process.
   // This function validates the currency against the transaction process requirements and
