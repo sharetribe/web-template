@@ -117,6 +117,29 @@ module.exports = asyncHandler(async (req, res) => {
     try {
         const { transactionId, newHours, newPrice } = req.body;
 
+        // Validate input parameters
+        if (!transactionId || !newHours || !newPrice) {
+            return res.status(400).json({ 
+                success: false, 
+                error: 'Missing required parameters: transactionId, newHours, and newPrice are required' 
+            });
+        }
+
+        // Validate hours limit (max 8 hours)
+        if (newHours > 8) {
+            return res.status(400).json({ 
+                success: false, 
+                error: 'Booking adjustment cannot exceed 8 hours. Please contact support for larger adjustments.' 
+            });
+        }
+
+        if (newHours < 0) {
+            return res.status(400).json({ 
+                success: false, 
+                error: 'Booking adjustment cannot be negative' 
+            });
+        }
+
         // Use trusted SDK with user authentication context
         const sdk = await getTrustedSdk(req);
 

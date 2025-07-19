@@ -87,14 +87,39 @@ const CancelModal = ({ intl, isOpen, onClose, onManageDisableScrolling, cancel }
 const AdjustBookingModal = ({ transaction, onClose, onSubmit, onManageDisableScrolling }) => {
   const [hours, setHours] = useState(transaction.booking?.attributes?.hours || 1);
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
   // Prepopulate price with the listing price and make it non-editable
   const price = transaction.listing?.attributes?.price?.amount
     ? transaction.listing.attributes.price.amount
     : 0;
   const currency = transaction.listing?.attributes?.price?.currency || 'USD';
   const total = ((hours * price) / 100).toFixed(2); // [ADJUST BOOKING] total field
+  
+  const validateHours = (value) => {
+    if (!value || value < 0) {
+      return 'Hours cannot be negative';
+    }
+    if (value > 8) {
+      return 'Hours cannot exceed 8';
+    }
+    return '';
+  };
+
+  const handleHoursChange = (e) => {
+    const value = Number(e.target.value);
+    setHours(value);
+    setError(validateHours(value));
+  };
+
   const handleSubmit = async () => {
+    const validationError = validateHours(hours);
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+    
     setSubmitting(true);
+    setError('');
     try {
       await onSubmit(hours, price);
       onClose();
@@ -111,19 +136,34 @@ const AdjustBookingModal = ({ transaction, onClose, onSubmit, onManageDisableScr
     >
       <div style={{ padding: 24 }}>
         <div style={{ marginBottom: 4, color: '#b85c00', fontWeight: 500 }}>
-          This adjustment can only be made once and should reflect the actual hours flown. Please make changes after the flight.
+          This adjustment can only be made once and should reflect the actual hours flown. Please make changes after the flight. Maximum adjustment is 8 hours.
         </div>
         <label>
           Hours:
           <input
             type="number"
-            min={1}
+            min={0}
+            max={8}
             value={hours}
-            onChange={e => setHours(Number(e.target.value))}
-            style={{ marginLeft: 8, marginBottom: 4 }}
+            onChange={handleHoursChange}
+            style={{ 
+              marginLeft: 8, 
+              marginBottom: 4,
+              border: error ? '1px solid #d9534f' : '1px solid #ccc'
+            }}
             disabled={submitting}
           />
         </label>
+        {error && (
+          <div style={{ 
+            color: '#d9534f', 
+            fontSize: '12px', 
+            marginTop: '4px',
+            marginBottom: '8px' 
+          }}>
+            {error}
+          </div>
+        )}
         <br />
         <label>
           Price (in {currency}):
@@ -152,7 +192,7 @@ const AdjustBookingModal = ({ transaction, onClose, onSubmit, onManageDisableScr
           </div>
         )}
         <div style={{ display: 'flex', gap: 12, marginTop: 16, justifyContent: 'flex-end' }}>
-          <PrimaryButton type="button" onClick={handleSubmit} disabled={submitting}>Submit Adjustment</PrimaryButton>
+          <PrimaryButton type="button" onClick={handleSubmit} disabled={submitting || !!error}>Submit Adjustment</PrimaryButton>
           <SecondaryButton type="button" onClick={onClose} disabled={submitting}>Cancel</SecondaryButton>
         </div>
       </div>
