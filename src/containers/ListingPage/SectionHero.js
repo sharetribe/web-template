@@ -4,7 +4,6 @@ import { FormattedMessage } from '../../util/reactIntl';
 import { ResponsiveImage, Modal } from '../../components';
 
 import ImageCarousel from './ImageCarousel/ImageCarousel';
-import ActionBarMaybe from './ActionBarMaybe';
 
 import css from './ListingPage.module.css';
 
@@ -18,13 +17,11 @@ const SectionHero = props => {
     title,
     listing,
     isOwnListing,
-    editParams,
-    currentUser,
     handleViewPhotosClick,
     imageCarouselOpen,
     onImageCarouselClose,
     onManageDisableScrolling,
-    noPayoutDetailsSetWithOwnListing,
+    actionBar,
   } = props;
 
   const hasImages = listing.images && listing.images.length > 0;
@@ -47,23 +44,7 @@ const SectionHero = props => {
       <div className={css.imageWrapperForSectionHero} onClick={handleViewPhotosClick}>
         {mounted && listing.id && isOwnListing ? (
           <div onClick={e => e.stopPropagation()} className={css.actionBarContainerForHeroLayout}>
-            {noPayoutDetailsSetWithOwnListing ? (
-              <ActionBarMaybe
-                className={css.actionBarForHeroLayout}
-                isOwnListing={isOwnListing}
-                listing={listing}
-                showNoPayoutDetailsSet={noPayoutDetailsSetWithOwnListing}
-                currentUser={currentUser}
-              />
-            ) : null}
-
-            <ActionBarMaybe
-              className={css.actionBarForHeroLayout}
-              isOwnListing={isOwnListing}
-              listing={listing}
-              editParams={editParams}
-              currentUser={currentUser}
-            />
+            {actionBar}
           </div>
         ) : null}
 

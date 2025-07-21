@@ -15,6 +15,7 @@ const DetailCardImage = props => {
     provider,
     isCustomer,
     listingImageConfig,
+    showListingImage,
   } = props;
   const classes = classNames(rootClassName || css.detailCardImageWrapper, className);
   const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = listingImageConfig;
@@ -24,16 +25,22 @@ const DetailCardImage = props => {
 
   return (
     <React.Fragment>
-      <AspectRatioWrapper width={aspectWidth} height={aspectHeight} className={classes}>
-        <ResponsiveImage
-          rootClassName={css.rootForImage}
-          alt={listingTitle}
-          image={image}
-          variants={variants}
-        />
-      </AspectRatioWrapper>
+      {showListingImage && (
+        <AspectRatioWrapper width={aspectWidth} height={aspectHeight} className={classes}>
+          <ResponsiveImage
+            rootClassName={css.rootForImage}
+            alt={listingTitle}
+            image={image}
+            variants={variants}
+          />
+        </AspectRatioWrapper>
+      )}
       {isCustomer ? (
-        <div className={avatarWrapperClassName || css.avatarWrapper}>
+        <div
+          className={classNames(css.avatarWrapper, avatarWrapperClassName, {
+            [css.noListingImage]: !showListingImage,
+          })}
+        >
           <AvatarMedium user={provider} />
         </div>
       ) : null}

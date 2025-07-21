@@ -55,6 +55,14 @@ exports.calculateShippingFee = (
     const additionalItemsTotal = additionalItemsFee.times(quantity - 1);
     const numericShippingFee = convertDecimalJSToNumber(oneItemFee.plus(additionalItemsTotal));
     return new Money(numericShippingFee, currency);
+  } else if (
+    currency &&
+    quantity > 1 &&
+    (!isNumber(shippingPriceInSubunitsOneItem) || !isNumber(shippingPriceInSubunitsAdditionalItems))
+  ) {
+    // If both shippingPriceInSubunitsOneItem and shippingPriceInSubunitsAdditionalItems are NOT set,
+    // when quantity is greater than 1, there's an error somewhere in the code
+    throw new Error('Shipping fee is not set correctly for multiple items');
   }
   return null;
 };

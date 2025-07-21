@@ -6,7 +6,7 @@ import { AspectRatioWrapper, AvatarMedium, ResponsiveImage } from '../../compone
 import css from './CheckoutPage.module.css';
 
 const MobileListingImage = props => {
-  const { listingTitle, author, firstImage, layoutListingImageConfig } = props;
+  const { listingTitle, author, firstImage, layoutListingImageConfig, showListingImage } = props;
 
   const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } =
     layoutListingImageConfig || {};
@@ -16,19 +16,25 @@ const MobileListingImage = props => {
 
   return (
     <>
-      <AspectRatioWrapper
-        width={aspectWidth}
-        height={aspectHeight}
-        className={css.listingImageMobile}
+      {showListingImage && (
+        <AspectRatioWrapper
+          width={aspectWidth}
+          height={aspectHeight}
+          className={css.listingImageMobile}
+        >
+          <ResponsiveImage
+            rootClassName={css.rootForImage}
+            alt={listingTitle}
+            image={firstImage}
+            variants={variants}
+          />
+        </AspectRatioWrapper>
+      )}
+      <div
+        className={classNames(css.avatarWrapper, css.avatarMobile, {
+          [css.noListingImage]: !showListingImage,
+        })}
       >
-        <ResponsiveImage
-          rootClassName={css.rootForImage}
-          alt={listingTitle}
-          image={firstImage}
-          variants={variants}
-        />
-      </AspectRatioWrapper>
-      <div className={classNames(css.avatarWrapper, css.avatarMobile)}>
         <AvatarMedium user={author} disableProfileLink />
       </div>
     </>

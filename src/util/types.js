@@ -722,4 +722,8 @@ export const DATE_TYPE_DATETIME = 'datetime';
 
 propTypes.dateType = oneOf([DATE_TYPE_DATE, DATE_TYPE_TIME, DATE_TYPE_DATETIME]);
 
+// This array defines the color schemes that are in use when listing images are disabled.
+// These values are stored in the listing public data, under the property "cardStyle".
+export const colorSchemes = ['white', 'grey', 'black', 'main-brand', 'primary-button'];
+
 export { propTypes };

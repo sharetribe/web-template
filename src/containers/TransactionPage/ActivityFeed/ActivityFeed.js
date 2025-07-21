@@ -61,7 +61,6 @@ const OwnMessage = props => {
     linkify: true,
     linkClass: css.ownMessageContentLink,
     longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
-    longWordClass: css.longWord,
   });
 
   return (

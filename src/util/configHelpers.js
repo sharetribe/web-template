@@ -60,6 +60,7 @@ const hasClashWithBuiltInPublicDataKey = listingFields => {
     'categoryLevel1',
     'categoryLevel2',
     'categoryLevel3',
+    'cardStyle',
   ];
   let hasClash = false;
   listingFields.forEach(field => {
@@ -910,6 +911,10 @@ export const displayDeliveryPickup = listingTypeConfig => {
 
 export const displayDeliveryShipping = listingTypeConfig => {
   return listingTypeConfig?.defaultListingFields?.shipping !== false;
+};
+
+export const requireListingImage = listingTypeConfig => {
+  return listingTypeConfig?.defaultListingFields?.images !== false;
 };
 
 export const requirePayoutDetails = listingTypeConfig => {

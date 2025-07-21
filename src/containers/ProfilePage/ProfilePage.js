@@ -416,6 +416,7 @@ export const ProfilePageComponent = props => {
     // and the first pass on client-side should render the same UI.
     return null;
   }
+
   // This is rendering normal profile page (not preview for pending-approval)
   return (
     <Page
@@ -424,6 +425,10 @@ export const ProfilePageComponent = props => {
       schema={{
         '@context': 'http://schema.org',
         '@type': 'ProfilePage',
+        mainEntity: {
+          '@type': 'Person',
+          name: profileUser?.attributes?.profile?.displayName,
+        },
         name: schemaTitle,
       }}
     >

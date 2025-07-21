@@ -114,6 +114,7 @@ describe('TransactionPage', () => {
     nextTransitions: null,
     monthlyTimeSlots: {},
     timeSlotsForDate: {},
+    showListingImage: true,
     //transaction,
     //lineItems,
   };

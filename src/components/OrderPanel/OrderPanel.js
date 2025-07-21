@@ -313,6 +313,7 @@ const OrderPanel = props => {
     fetchLineItemsInProgress,
     fetchLineItemsError,
     payoutDetailsWarning,
+    showListingImage,
   } = props;
 
   const publicData = listing?.attributes?.publicData || {};
@@ -442,10 +443,12 @@ const OrderPanel = props => {
           <H1 className={css.heading}>{title}</H1>
         </div>
 
-        <div className={css.orderHeading}>
-          {titleDesktop ? titleDesktop : <H2 className={titleClasses}>{title}</H2>}
-          {subTitleText ? <div className={css.orderHelp}>{subTitleText}</div> : null}
-        </div>
+        {showListingImage && (
+          <div className={css.orderHeading}>
+            {titleDesktop ? titleDesktop : <H2 className={titleClasses}>{title}</H2>}
+            {subTitleText ? <div className={css.orderHelp}>{subTitleText}</div> : null}
+          </div>
+        )}
 
         <PriceMaybe
           price={price}

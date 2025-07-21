@@ -9,7 +9,7 @@ const STATUS_VERIFICATION_SUCCESS = 'verificationSuccess';
 const STATUS_VERIFICATION_ERROR = 'verificationError';
 
 const StripeConnectAccountStatusBox = props => {
-  const { type, onGetStripeConnectAccountLink, inProgress, disabled } = props;
+  const { type, onGetStripeConnectAccountLink, inProgress, disabled, buttonTitle } = props;
 
   if (type === STATUS_VERIFICATION_NEEDED) {
     return (
@@ -30,6 +30,7 @@ const StripeConnectAccountStatusBox = props => {
           inProgress={inProgress}
           disabled={disabled}
           onClick={onGetStripeConnectAccountLink}
+          title={buttonTitle}
         >
           <FormattedMessage id="StripeConnectAccountStatusBox.getVerifiedButton" />
         </PrimaryButton>
@@ -57,6 +58,7 @@ const StripeConnectAccountStatusBox = props => {
           inProgress={inProgress}
           disabled={disabled}
           onClick={onGetStripeConnectAccountLink}
+          title={buttonTitle}
         >
           <IconEdit className={css.icon} pencilClassName={css.iconEditPencil} />
           <FormattedMessage id="StripeConnectAccountStatusBox.editAccountButton" />
@@ -81,6 +83,7 @@ const StripeConnectAccountStatusBox = props => {
           type="button"
           inProgress={inProgress}
           disabled={disabled}
+          title={buttonTitle}
           onClick={onGetStripeConnectAccountLink}
         >
           <FormattedMessage id="StripeConnectAccountStatusBox.getVerifiedButton" />
