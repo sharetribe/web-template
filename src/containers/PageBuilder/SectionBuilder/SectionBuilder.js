@@ -133,6 +133,8 @@ const SectionBuilder = props => {
         customOption.isMedium = section.sectionName?.indexOf('- Medium') >= 0;
         customOption.isFullH = section.sectionName?.indexOf('- FullH') >= 0;
         customOption.isFullW = section.sectionName?.indexOf('- FullW') >= 0;
+        customOption.isShortC = section.sectionName?.indexOf('- ShortContent') >= 0;
+
         // Content text is larger & gray.
         if (section.sectionName?.includes('- TextGray')) {
           customOption.hasTextGray = true;

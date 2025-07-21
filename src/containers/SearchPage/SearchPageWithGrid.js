@@ -303,6 +303,35 @@ export class SearchPageComponent extends Component {
       ...customSecondaryFilters,
     ];
 
+    //// TODO: AV - MOVE THIS TO FUNCTION
+    // Custom sizes filters.
+    const customSizesKeys = ['standard_sizes', 'us_sizes', 'mx_sizes', 'curvy_sizes'];
+    const tmpSizeFilters = [];
+
+    availableFilters.forEach((itm, idx) => {
+      if (customSizesKeys.includes(itm.key)) {
+        tmpSizeFilters.push({...itm});
+        availableFilters[idx] = null;
+      }
+    });
+
+    if (tmpSizeFilters.length > 0) {
+      const groupedFilter = {};
+      groupedFilter.key = 'grouped_sizes';
+      groupedFilter.scope = 'public';
+      groupedFilter.schemaType = 'grouped_enum';
+      groupedFilter.filterConfig = {};
+      groupedFilter.filterConfig.label = 'Talla';
+      groupedFilter.filterConfig.filterType = 'GroupedSelectMultipleFilter';
+      groupedFilter.childFilters = tmpSizeFilters;
+      
+      // Add custom grouped filter item for sizes.
+      availableFilters.splice(3, 0, groupedFilter);
+    }
+
+    const availableFiltered = availableFilters.filter(n => n);
+    /////////////
+
     // Selected aka active filters
     const selectedFilters = validQueryParams;
     const isValidDatesFilter =
@@ -383,7 +412,7 @@ export class SearchPageComponent extends Component {
         <div className={css.layoutWrapperContainer}>
           <aside className={css.layoutWrapperFilterColumn} data-testid="filterColumnAside">
             <div className={css.filterColumnContent}>
-              {availableFilters.map(filterConfig => {
+              {availableFiltered.map(filterConfig => {
                 const key = `SearchFiltersDesktop.${filterConfig.scope || 'built-in'}.${
                   filterConfig.key
                 }`;
@@ -431,7 +460,7 @@ export class SearchPageComponent extends Component {
                 noResultsInfo={noResultsInfo}
                 location={location}
               >
-                {availableFilters.map(filterConfig => {
+                {availableFiltered.map(filterConfig => {
                   const key = `SearchFiltersMobile.${filterConfig.scope || 'built-in'}.${
                     filterConfig.key
                   }`;

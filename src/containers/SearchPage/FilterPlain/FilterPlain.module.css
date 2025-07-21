@@ -59,6 +59,11 @@
   @media (--viewportMedium) {
     margin-bottom: 8px;
   }
+
+  .grouped & {
+    font-size: 13px;
+    line-height: 23px;
+  }
 }
 
 .label {
@@ -110,4 +115,19 @@
 
 .isOpen {
   display: block;
+}
+
+.grouped {
+  padding: 0 8px;
+
+  .plain {
+    display: block;
+  }
+  .openSign {
+    display: none;
+  }
+
+  fieldset ul {
+    columns: 2;
+  }
 }

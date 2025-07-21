@@ -157,11 +157,13 @@ function createBlockCustomProps(block) {
   }
   // Adds 2 columns to the end of the block content.
   if (block.blockName?.includes('2 cols ::')) {
-    blockCustomProps.twoCols = {
-      col1Title: intl.formatMessage({ id: 'TwoCols.' + block.blockId + '.col1Title', defaultMessage:'Hello' }),
-      col1Text: intl.formatMessage({ id: 'TwoCols.' + block.blockId + '.col1Text', defaultMessage:'Hello' }),
-      col2Title: intl.formatMessage({ id: 'TwoCols.' + block.blockId + '.col2Title', defaultMessage:'Hello' }),
-      col2Text: intl.formatMessage({ id: 'TwoCols.' + block.blockId + '.col2Text', defaultMessage:'Hello' }),
+    blockCustomProps.blueCols = {
+      col1Title: intl.formatMessage({ id: 'BlueCols.' + block.blockId + '.col1Title', defaultMessage:' ' }),
+      col1Text: intl.formatMessage({ id: 'BlueCols.' + block.blockId + '.col1Text', defaultMessage:' ' }),
+      col2Title: intl.formatMessage({ id: 'BlueCols.' + block.blockId + '.col2Title', defaultMessage:' ' }),
+      col2Text: intl.formatMessage({ id: 'BlueCols.' + block.blockId + '.col2Text', defaultMessage:' ' }),
+      col3Title: intl.formatMessage({ id: 'BlueCols.' + block.blockId + '.col3Title', defaultMessage:' ' }),
+      col3Text: intl.formatMessage({ id: 'BlueCols.' + block.blockId + '.col3Text', defaultMessage:' ' }),
     };
   }
   // Adds 2 buttons to the end of the block content.

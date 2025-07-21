@@ -66,7 +66,7 @@ const BlockDefault = props => {
     options,
     alignment,
     twoButtons,
-    twoCols,
+    blueCols,
     contactButtons,
     hasFullHeightMedia,
     hasIconImg,
@@ -149,16 +149,24 @@ const BlockDefault = props => {
               </div>
             </div>  
           ) : null}
-          {twoCols ? (
+          {blueCols ? (
             <div className={classNames(css.colWrap, css.colsSecondary)}>
               <div>
-                <h3>{twoCols.col1Title}</h3>
-                <p>{twoCols.col1Text}</p>
+                <h3>{blueCols.col1Title}</h3>
+                <p>{blueCols.col1Text}</p>
               </div>
-              <div>
-                <h3>{twoCols.col2Title}</h3>
-                <p>{twoCols.col2Text}</p>
-              </div>
+              {blueCols.col2Title.trim() ? (
+                <div>
+                  <h3>{blueCols.col2Title}</h3>
+                  <p>{blueCols.col2Text}</p>
+                </div>
+              ) : null}
+              {blueCols.col3Title.trim() ? (
+                <div>
+                  <h3>{blueCols.col3Title}</h3>
+                  <p>{blueCols.col3Text}</p>
+                </div>
+              ) : null}
             </div>
           ) : null}
           {twoButtons ? (

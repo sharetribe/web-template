@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 // utils
 import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM, SCHEMA_TYPE_LONG } from '../../util/types';
@@ -12,6 +12,11 @@ import KeywordFilter from './KeywordFilter/KeywordFilter';
 import PriceFilter from './PriceFilter/PriceFilter';
 import IntegerRangeFilter from './IntegerRangeFilter/IntegerRangeFilter';
 import SeatsFilter from './SeatsFilter/SeatsFilter';
+
+// TODO: move to component.
+import classNames from 'classnames';
+import FilterPlainCss from './FilterPlain/FilterPlain.module.css';
+import IconPlus from './IconPlus/IconPlus';
 
 /**
  * FilterComponent is used to map configured filter types
@@ -137,6 +142,59 @@ const FilterComponent = props => {
 
   // Custom extended data filters
   switch (schemaType) {
+    case 'grouped_enum': {
+      const { childFilters = [], filterConfig = {} } = config;
+      if (filterConfig.filterType === 'GroupedSelectMultipleFilter') {
+        // TODO: move to component.
+        const [isOpen, setOpened] = useState(false);
+        const toggleIsOpen = () => {
+          setOpened(!isOpen)
+        };
+
+        return (<div className={FilterPlainCss.root}>
+          <button className={FilterPlainCss.labelButton} onClick={toggleIsOpen}>
+            <span className={FilterPlainCss.labelButtonContent}>
+              <span className={FilterPlainCss.labelWrapper}>
+                <span className={FilterPlainCss.label}>
+                  {filterConfig.label}
+                </span>
+              </span>
+              <span className={FilterPlainCss.openSign}>
+                <IconPlus isOpen={isOpen} isSelected={true} />
+              </span>
+            </span>
+          </button>
+
+          <div
+            id={componentId}
+            className={classNames(FilterPlainCss.plain, FilterPlainCss.grouped, { [FilterPlainCss.isOpen]: isOpen })}
+          >
+            {childFilters.map(elementConfig => {
+              const { key, schemaType } = elementConfig;
+              const componentId = `${prefix}.${key.toLowerCase()}`;
+              const { scope, enumOptions, filterConfig = {} } = elementConfig;
+              const { label, filterType } = filterConfig;
+              const name = key.replace(/\s+/g, '-');
+              const queryParamNames = [constructQueryParamName(key, scope)];
+
+              return (<div>
+                  <SelectMultipleFilter
+                  id={componentId}
+                  label={label}
+                  name={name}
+                  queryParamNames={queryParamNames}
+                  initialValues={initialValues(queryParamNames, liveEdit)}
+                  onSubmit={getHandleChangedValueFn(useHistoryPush)}
+                  options={enumOptions}
+                  schemaType={schemaType}
+                  {...rest}
+                />
+              </div>);
+            })}
+          </div>
+        </div>);
+      }
+    }
     case SCHEMA_TYPE_ENUM: {
       const { scope, enumOptions, filterConfig = {} } = config;
       const { label, filterType } = filterConfig;
