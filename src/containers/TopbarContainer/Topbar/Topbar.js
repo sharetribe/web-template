@@ -299,7 +299,10 @@ const TopbarComponent = props => {
       onClick={() => redirectToURLWithModalState(history, location, 'mobilesearch')}
       title={intl.formatMessage({ id: 'Topbar.searchIcon' })}
     >
-      <SearchIcon className={css.searchMenuIcon} />
+      <SearchIcon
+        className={css.searchMenuIcon}
+        ariaLabel={intl.formatMessage({ id: 'Topbar.searchIcon' })}
+      />
     </Button>
   ) : (
     <div className={css.searchMenu} />
