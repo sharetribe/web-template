@@ -37,9 +37,12 @@ const BlockFooter = props => {
   return (
     <BlockContainer id={blockId} className={classes}>
       {hasTextComponentFields ? (
-        <div className={classNames(textClassName, css.text)}>
+        <nav
+          className={classNames(textClassName, css.text)}
+          aria-label={blockId || 'Footer navigation'}
+        >
           <Field data={text} options={options} />
-        </div>
+        </nav>
       ) : null}
     </BlockContainer>
   );
