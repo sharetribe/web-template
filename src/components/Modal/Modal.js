@@ -151,20 +151,22 @@ export class ModalComponent extends Component {
     } = this.props;
 
     const closeModalMessage = intl.formatMessage({ id: 'Modal.closeModal' });
+    const closeMessage = closeButtonMessage || intl.formatMessage({ id: 'Modal.close' });
     const closeButtonClasses = classNames(css.close, {
       [css.closeLight]: lightCloseButton,
     });
     const closeBtn = isOpen ? (
-      <Button
-        onClick={this.handleClose}
-        rootClassName={closeButtonClasses}
-        title={closeModalMessage}
-      >
-        <span className={css.closeText}>
-          {closeButtonMessage || <FormattedMessage id="Modal.close" />}
-        </span>
-        <IconClose rootClassName={css.closeIcon} />
-      </Button>
+      <nav className={css.marketplaceModalCloseNav} aria-label={closeModalMessage}>
+        <Button
+          onClick={this.handleClose}
+          rootClassName={closeButtonClasses}
+          title={closeModalMessage}
+          aria-expanded={isOpen}
+        >
+          <span className={css.closeText}>{closeMessage}</span>
+          <IconClose rootClassName={css.closeIcon} ariaLabel={closeMessage} />
+        </Button>
+      </nav>
     ) : null;
 
     // Modal uses given styles to wrap child components.
