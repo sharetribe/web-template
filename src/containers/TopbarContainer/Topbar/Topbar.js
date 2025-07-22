@@ -324,7 +324,10 @@ const TopbarComponent = props => {
           onClick={() => redirectToURLWithModalState(history, location, 'mobilemenu')}
           title={intl.formatMessage({ id: 'Topbar.menuIcon' })}
         >
-          <MenuIcon className={css.menuIcon} />
+          <MenuIcon
+            className={css.menuIcon}
+            ariaLabel={intl.formatMessage({ id: 'Topbar.menuIcon' })}
+          />
           {notificationDot}
         </Button>
         <LinkedLogo
