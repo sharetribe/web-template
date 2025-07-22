@@ -376,7 +376,7 @@ const SignupFormComponent = props => (
               <FieldCheckbox
                 id={formId ? `${formId}.smsOptIn` : 'smsOptIn'}
                 name="smsOptIn"
-                label="I agree to receive SMS notifications about my Sherbrt account, including booking, shipping, and return updates."
+                label="By providing your phone number, you agree to receive SMS notifications from Sherbrt about your account, including booking, shipping, and return updates. Message and data rates may apply. Message frequency may vary. Reply STOP to unsubscribe or HELP for assistance."
                 textClassName={termsCss.finePrint}
                 required
               />
