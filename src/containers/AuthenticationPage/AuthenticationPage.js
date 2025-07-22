@@ -165,6 +165,7 @@ export const AuthenticationForms = props => {
     termsAndConditions,
   } = props;
   const config = useConfiguration();
+  const intl = useIntl();
   const { userFields, userTypes = [] } = config.user;
   const preselectedUserType = userTypes.find(conf => conf.userType === userType)?.userType || null;
 
@@ -257,9 +258,13 @@ export const AuthenticationForms = props => {
       ? signupErrorMessage
       : null;
 
+  const ariaLabel = `${intl.formatMessage({
+    id: 'AuthenticationPage.signupLinkText',
+  })} & ${intl.formatMessage({ id: 'AuthenticationPage.loginLinkText' })}`;
+
   return (
     <div className={css.content}>
-      <LinkTabNavHorizontal className={css.tabs} tabs={tabs} />
+      <LinkTabNavHorizontal className={css.tabs} tabs={tabs} ariaLabel={ariaLabel} />
       {loginOrSignupError}
 
       {isLogin ? (
