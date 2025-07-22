@@ -53,12 +53,13 @@ const Tab = props => {
 };
 
 const TabNavHorizontal = props => {
-  const { className, rootClassName, tabRootClassName, tabs, skin = LIGHT_SKIN } = props;
+  const { className, rootClassName, tabRootClassName, tabs, skin = LIGHT_SKIN, ariaLabel } = props;
   const isDark = skin === DARK_SKIN;
   const classes = classNames(rootClassName || css.root, { [css.darkSkin]: isDark }, className);
   const tabClasses = tabRootClassName || css.tab;
+  const ariaLabelMaybe = ariaLabel ? { ['aria-label']: ariaLabel } : {};
   return (
-    <nav className={classes}>
+    <nav className={classes} {...ariaLabelMaybe}>
       {tabs.map((tab, index) => {
         const key = typeof tab.text === 'string' ? tab.text : index;
         return <Tab key={key} className={tabClasses} {...tab} isDark={isDark} />;
