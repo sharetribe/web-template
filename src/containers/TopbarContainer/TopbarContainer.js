@@ -16,12 +16,21 @@ const Topbar = loadable(() => import(/* webpackChunkName: "Topbar" */ './Topbar/
  * Topbar container component, which is connected to Redux Store.
  * @component
  * @param {Object} props
+ * @param {number} props.notificationCount number of notifications
+ * @param {Function} props.onLogout logout function
+ * @param {Function} props.onManageDisableScrolling manage disable scrolling function
+ * @param {Function} props.onResendVerificationEmail resend verification email function
+ * @param {Object} props.sendVerificationEmailInProgress send verification email in progress
+ * @param {Object} props.sendVerificationEmailError send verification email error
+ * @param {boolean} props.hasGenericError has generic error
  * @returns {JSX.Element}
  */
 export const TopbarContainerComponent = props => {
-  const { notificationCount = 0, ...rest } = props;
+  const { notificationCount = 0, hasGenericError, ...rest } = props;
 
-  return <Topbar notificationCount={notificationCount} {...rest} />;
+  return (
+    <Topbar notificationCount={notificationCount} showGenericError={hasGenericError} {...rest} />
+  );
 };
 
 const mapStateToProps = state => {

@@ -116,15 +116,15 @@ const GenericError = props => {
   const classes = classNames(css.genericError, {
     [css.genericErrorVisible]: show,
   });
-  return (
-    <div className={classes}>
+  return show ? (
+    <div className={classes} role="alert">
       <div className={css.genericErrorContent}>
         <p className={css.genericErrorText}>
           <FormattedMessage id="Topbar.genericError" />
         </p>
       </div>
     </div>
-  );
+  ) : null;
 };
 
 const TopbarComponent = props => {
