@@ -61,6 +61,7 @@ import { FacebookLogo, GoogleLogo } from './socialLoginLogos';
 // Social login buttons are needed by AuthenticationForms
 export const SocialLoginButtonsMaybe = props => {
   const routeConfiguration = useRouteConfiguration();
+  const intl = useIntl();
   const { isLogin, showFacebookLogin, showGoogleLogin, from, userType } = props;
   const showSocialLogins = showFacebookLogin || showGoogleLogin;
 
@@ -96,6 +97,13 @@ export const SocialLoginButtonsMaybe = props => {
     window.location.href = `${baseUrl}/api/auth/google?${queryParams}`;
   };
 
+  const facebookAuthenticationMessage = isLogin
+    ? intl.formatMessage({ id: 'AuthenticationPage.loginWithFacebook' })
+    : intl.formatMessage({ id: 'AuthenticationPage.signupWithFacebook' });
+
+  const googleAuthenticationMessage = isLogin
+    ? intl.formatMessage({ id: 'AuthenticationPage.loginWithGoogle' })
+    : intl.formatMessage({ id: 'AuthenticationPage.signupWithGoogle' });
   return showSocialLogins ? (
     <div className={css.idpButtons}>
       <div className={css.socialButtonsOr}>
@@ -107,12 +115,10 @@ export const SocialLoginButtonsMaybe = props => {
       {showFacebookLogin ? (
         <div className={css.socialButtonWrapper}>
           <SocialLoginButton onClick={() => authWithFacebook()}>
-            <span className={css.buttonIcon}>{FacebookLogo}</span>
-            {isLogin ? (
-              <FormattedMessage id="AuthenticationPage.loginWithFacebook" />
-            ) : (
-              <FormattedMessage id="AuthenticationPage.signupWithFacebook" />
-            )}
+            <span className={css.buttonIcon}>
+              <FacebookLogo ariaLabelledBy="facebook-authentication-msg" />
+            </span>
+            <span id="facebook-authentication-msg">{facebookAuthenticationMessage}</span>
           </SocialLoginButton>
         </div>
       ) : null}
@@ -120,12 +126,10 @@ export const SocialLoginButtonsMaybe = props => {
       {showGoogleLogin ? (
         <div className={css.socialButtonWrapper}>
           <SocialLoginButton onClick={() => authWithGoogle()}>
-            <span className={css.buttonIcon}>{GoogleLogo}</span>
-            {isLogin ? (
-              <FormattedMessage id="AuthenticationPage.loginWithGoogle" />
-            ) : (
-              <FormattedMessage id="AuthenticationPage.signupWithGoogle" />
-            )}
+            <span className={css.buttonIcon}>
+              <GoogleLogo ariaLabelledBy="google-authentication-msg" />
+            </span>
+            <span id="google-authentication-msg">{googleAuthenticationMessage}</span>
           </SocialLoginButton>
         </div>
       ) : null}
