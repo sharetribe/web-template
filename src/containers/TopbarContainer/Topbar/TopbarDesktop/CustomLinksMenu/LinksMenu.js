@@ -110,14 +110,22 @@ const MeasureMoreMenu = props => {
  * @param {*} props contain keys: showMoreLabel, isOpen, intl
  * @returns span containing menu label text and IconArrowHead
  */
-const MenuLabelContent = ({ showMoreLabel, isOpen, intl }) => (
-  <span className={css.linkMenuLabelWrapper}>
-    {showMoreLabel
-      ? intl.formatMessage({ id: 'TopbarDesktop.LinksMenu.more' })
-      : intl.formatMessage({ id: 'TopbarDesktop.LinksMenu.all' })}
-    <IconArrowHead direction="down" size="small" rootClassName={css.arrowIcon} />
-  </span>
-);
+const MenuLabelContent = ({ showMoreLabel, isOpen, intl }) => {
+  const menuLabel = showMoreLabel
+    ? intl.formatMessage({ id: 'TopbarDesktop.LinksMenu.more' })
+    : intl.formatMessage({ id: 'TopbarDesktop.LinksMenu.all' });
+  return (
+    <span className={css.linkMenuLabelWrapper}>
+      {menuLabel}
+      <IconArrowHead
+        direction="down"
+        size="small"
+        rootClassName={css.arrowIcon}
+        ariaLabel={menuLabel}
+      />
+    </span>
+  );
+};
 
 /**
  * Menu that shows custom links with label showing either "Menu" or "More".
