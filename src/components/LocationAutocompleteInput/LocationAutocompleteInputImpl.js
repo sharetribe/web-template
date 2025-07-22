@@ -7,7 +7,7 @@ import { FormattedMessage } from '../../util/reactIntl';
 
 import { IconSpinner } from '../../components';
 
-import IconHourGlass from './IconHourGlass';
+import IconLookingGlass from './IconLookingGlass';
 import IconCurrentLocation from './IconCurrentLocation';
 import * as geocoderMapbox from './GeocoderMapbox';
 import * as geocoderGoogleMaps from './GeocoderGoogleMaps';
@@ -498,7 +498,7 @@ class LocationAutocompleteInputImplementation extends Component {
           ) : CustomIcon ? (
             <CustomIcon />
           ) : (
-            <IconHourGlass />
+            <IconLookingGlass />
           )}
         </div>
         <input

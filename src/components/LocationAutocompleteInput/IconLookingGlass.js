@@ -2,13 +2,14 @@ import React from 'react';
 
 import css from './LocationAutocompleteInput.module.css';
 
-const IconHourGlass = () => (
+const IconLookingGlass = () => (
   <svg
     className={css.iconSvg}
     width="21"
     height="22"
     viewBox="0 0 21 22"
     xmlns="http://www.w3.org/2000/svg"
+    role="img"
   >
     <g
       className={css.iconSvgGroup}
@@ -25,4 +26,4 @@ const IconHourGlass = () => (
   </svg>
 );
 
-export default IconHourGlass;
+export default IconLookingGlass;

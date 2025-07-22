@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Field } from 'react-final-form';
 import loadable from '@loadable/component';
 import { ValidationError } from '../../components';
