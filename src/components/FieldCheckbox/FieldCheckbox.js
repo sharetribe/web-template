@@ -17,7 +17,13 @@ import css from './FieldCheckbox.module.css';
 const IconCheckbox = props => {
   const { className, checkedClassName, boxClassName } = props;
   return (
-    <svg className={className} width="14" height="14" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      className={className}
+      width="14"
+      height="14"
+      xmlns="http://www.w3.org/2000/svg"
+      role="presentation"
+    >
       <g fill="none" fillRule="evenodd">
         <g transform="translate(2 2)">
           <path
