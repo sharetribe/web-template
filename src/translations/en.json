@@ -58,7 +58,6 @@
   "BookingFixedDurationForm.youWontBeChargedInfo": "You won't be charged yet",
   "BookingTimeForm.bookingEndTitle": "End date",
   "BookingTimeForm.bookingStartTitle": "Pick a date",
-  "BookingTimeForm.fetchLineItemsError": "Oops, something went wrong. Please refresh the page and try again.",
   "BookingTimeForm.ownListing": "You can't book your own listing.",
   "BookingTimeForm.placeholder": "mm/dd/yyyy",
   "BookingTimeForm.priceBreakdownTitle": "Booking breakdown",

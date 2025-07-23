@@ -58,7 +58,6 @@
   "BookingFixedDurationForm.youWontBeChargedInfo": "Du musst zu diesem Zeitpunkt noch nicht bezahlen",
   "BookingTimeForm.bookingEndTitle": "Bis",
   "BookingTimeForm.bookingStartTitle": "Wähle ein Datum",
-  "BookingTimeForm.fetchLineItemsError": "Hoppla! Etwas ist schiefgelaufen. Bitte aktualisiere die Seite und versuche es erneut.",
   "BookingTimeForm.ownListing": "Du kannst deinen eigenen Eintrag nicht buchen.",
   "BookingTimeForm.placeholder": "dd/mm/yyyy",
   "BookingTimeForm.priceBreakdownTitle": "Buchungsaufschlüsselung",

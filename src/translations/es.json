@@ -58,7 +58,6 @@
   "BookingFixedDurationForm.youWontBeChargedInfo": "No se te cobrará nada todavía",
   "BookingTimeForm.bookingEndTitle": "Fecha final",
   "BookingTimeForm.bookingStartTitle": "Elige una fecha",
-  "BookingTimeForm.fetchLineItemsError": "Algo salió mal. Actualiza la página e inténtalo de nuevo.",
   "BookingTimeForm.ownListing": "No puedes reservar tu propio anuncio.",
   "BookingTimeForm.placeholder": "dd/mm/yyyy",
   "BookingTimeForm.priceBreakdownTitle": "Desglose de la reserva",
