@@ -39,7 +39,6 @@
   "BookingDateRangeFilter.labelSelectedPopup": "{dates}",
   "BookingDatesForm.bookingEndTitle": "Fecha final",
   "BookingDatesForm.bookingStartTitle": "Fecha de inicio",
-  "BookingDatesForm.fetchLineItemsError": "Algo salió mal. Actualiza la página e inténtalo de nuevo.",
   "BookingDatesForm.ownListing": "Este anuncio es tuyo.",
   "BookingDatesForm.priceBreakdownTitle": "Desglose de la reserva",
   "BookingDatesForm.requestToBook": "Iniciar reserva",
