@@ -1,0 +1,11 @@
+@import '../../../styles/customMediaQueries.css';
+
+.error {
+  composes: h4 from global;
+  color: var(--colorFail);
+  margin: 0 24px 12px 24px;
+
+  @media (--viewportMedium) {
+    margin: 24px 0 12px 0;
+  }
+}

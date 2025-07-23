@@ -391,6 +391,8 @@
   "EmailVerificationForm.verifying": "Verifying…",
   "EmailVerificationPage.loadingUserInformation": "Loading user information…",
   "EmailVerificationPage.title": "Verify your email address",
+  "FetchLineItemsError.providerCommissionBiggerThanMinPrice": "Oops, the pricing of this listing is not set properly. Please contact support.",
+  "FetchLineItemsError.unknownError": "Oops, something went wrong. Please refresh the page and try again.",
   "FieldBoolean.no": "No",
   "FieldBoolean.yes": "Yes",
   "FieldDateAndTimeInput.endTime": "End time",
