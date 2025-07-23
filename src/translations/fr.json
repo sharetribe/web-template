@@ -48,7 +48,6 @@
   "BookingDatesForm.timeSlotsError": "Nous avons rencontré une erreur lors du chargement des dates disponibles. Veuillez actualiser la page.",
   "BookingDatesForm.youWontBeChargedInfo": "Vous ne serez pas encore débité",
   "BookingFixedDurationForm.bookingStartTitle": "Choisir une date",
-  "BookingFixedDurationForm.fetchLineItemsError": "Oups, quelque chose n'a pas fonctionné. Veuillez actualiser la page et réessayer.",
   "BookingFixedDurationForm.ownListing": "Vous ne pouvez pas réserver votre propre annonce.",
   "BookingFixedDurationForm.priceBreakdownTitle": "Détails de la réservation",
   "BookingFixedDurationForm.requestToBook": "Réserver",

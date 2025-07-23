@@ -48,7 +48,6 @@
   "BookingDatesForm.timeSlotsError": "Beim Laden der verfügbaren Daten ist ein Fehler aufgetreten. Bitte aktualisiere die Seite. ",
   "BookingDatesForm.youWontBeChargedInfo": "Du musst zu diesem Zeitpunkt noch nicht bezahlen",
   "BookingFixedDurationForm.bookingStartTitle": "Wähle ein Datum",
-  "BookingFixedDurationForm.fetchLineItemsError": "Hoppla! Etwas ist schiefgelaufen. Bitte aktualisiere die Seite und versuche es erneut.",
   "BookingFixedDurationForm.ownListing": "Du kannst deinen eigenen Eintrag nicht buchen.",
   "BookingFixedDurationForm.priceBreakdownTitle": "Buchungsaufschlüsselung",
   "BookingFixedDurationForm.requestToBook": "Buchungsanfrage senden",
