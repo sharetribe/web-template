@@ -12,6 +12,7 @@ const IconSpinner = props => {
       viewBox="0 0 30 30"
       preserveAspectRatio="xMidYMid"
       xmlns="http://www.w3.org/2000/svg"
+      role="img"
     >
       <circle cx="15" cy="15" r="12" fill="none" strokeLinecap="round">
         <animateTransform

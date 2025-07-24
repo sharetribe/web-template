@@ -15,8 +15,9 @@ const SIZE_SMALL = 'small';
  * @returns {JSX.Element} SVG icon
  */
 const IconClose = props => {
-  const { className, rootClassName, size } = props;
+  const { className, rootClassName, size, ariaLabel } = props;
   const classes = classNames(rootClassName || css.root, className);
+  const ariaLabelMaybe = ariaLabel ? { ['aria-label']: ariaLabel } : {};
 
   if (size === SIZE_SMALL) {
     return (
@@ -36,6 +37,8 @@ const IconClose = props => {
       height="12"
       viewBox="0 0 12 12"
       xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      {...ariaLabelMaybe}
     >
       <g transform="translate(-1 -1)" fillRule="evenodd">
         <rect transform="rotate(45 7 7)" x="-1" y="6" width="16" height="2" rx="1" />

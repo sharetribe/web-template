@@ -29,9 +29,10 @@ const FieldCheckboxRenderer = props => {
 
   const classes = classNames(rootClassName || css.root, className);
   const listClasses = twoColumns ? classNames(css.list, css.twoColumns) : css.list;
+  const Tag = label ? 'fieldset' : 'div';
 
   return (
-    <fieldset className={classes}>
+    <Tag className={classes}>
       {label ? <legend>{label}</legend> : null}
       <ul className={listClasses}>
         {options.map((option, index) => {
@@ -52,7 +53,7 @@ const FieldCheckboxRenderer = props => {
         })}
       </ul>
       <ValidationError fieldMeta={{ ...meta }} />
-    </fieldset>
+    </Tag>
   );
 };
 

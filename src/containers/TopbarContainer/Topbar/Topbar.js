@@ -116,15 +116,15 @@ const GenericError = props => {
   const classes = classNames(css.genericError, {
     [css.genericErrorVisible]: show,
   });
-  return (
-    <div className={classes}>
+  return show ? (
+    <div className={classes} role="alert">
       <div className={css.genericErrorContent}>
         <p className={css.genericErrorText}>
           <FormattedMessage id="Topbar.genericError" />
         </p>
       </div>
     </div>
-  );
+  ) : null;
 };
 
 const TopbarComponent = props => {
@@ -299,7 +299,10 @@ const TopbarComponent = props => {
       onClick={() => redirectToURLWithModalState(history, location, 'mobilesearch')}
       title={intl.formatMessage({ id: 'Topbar.searchIcon' })}
     >
-      <SearchIcon className={css.searchMenuIcon} />
+      <SearchIcon
+        className={css.searchMenuIcon}
+        ariaLabel={intl.formatMessage({ id: 'Topbar.searchIcon' })}
+      />
     </Button>
   ) : (
     <div className={css.searchMenu} />
@@ -321,7 +324,10 @@ const TopbarComponent = props => {
           onClick={() => redirectToURLWithModalState(history, location, 'mobilemenu')}
           title={intl.formatMessage({ id: 'Topbar.menuIcon' })}
         >
-          <MenuIcon className={css.menuIcon} />
+          <MenuIcon
+            className={css.menuIcon}
+            ariaLabel={intl.formatMessage({ id: 'Topbar.menuIcon' })}
+          />
           {notificationDot}
         </Button>
         <LinkedLogo

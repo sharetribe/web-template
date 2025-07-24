@@ -13,7 +13,7 @@ import css from './Topbar.module.css';
  * @returns {JSX.Element} search icon
  */
 const SearchIcon = props => {
-  const { className, rootClassName } = props;
+  const { className, rootClassName, ariaLabel } = props;
   const classes = classNames(rootClassName || css.rootSearchIcon, className);
 
   return (
@@ -23,6 +23,8 @@ const SearchIcon = props => {
       height="18"
       viewBox="0 0 18 18"
       xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      aria-label={ariaLabel}
     >
       <g
         transform="matrix(-1 0 0 1 17 1)"

@@ -10,6 +10,7 @@ exports[`PaginationLinks should match snapshot with both links disabled 1`] = `
     <svg
       class="arrowIcon disabled"
       height="15"
+      role="none"
       viewBox="0 0 11 15"
       width="11"
       xmlns="http://www.w3.org/2000/svg"
@@ -37,6 +38,7 @@ exports[`PaginationLinks should match snapshot with both links disabled 1`] = `
     <svg
       class="arrowIcon disabled"
       height="15"
+      role="none"
       viewBox="0 0 11 15"
       width="11"
       xmlns="http://www.w3.org/2000/svg"
@@ -62,6 +64,7 @@ exports[`PaginationLinks should match snapshot with both links enabled 1`] = `
     <svg
       class="arrowIcon"
       height="15"
+      role="none"
       viewBox="0 0 11 15"
       width="11"
       xmlns="http://www.w3.org/2000/svg"
@@ -105,6 +108,7 @@ exports[`PaginationLinks should match snapshot with both links enabled 1`] = `
     <svg
       class="arrowIcon"
       height="15"
+      role="none"
       viewBox="0 0 11 15"
       width="11"
       xmlns="http://www.w3.org/2000/svg"
@@ -128,6 +132,7 @@ exports[`PaginationLinks should match snapshot with prev disabled and next enabl
     <svg
       class="arrowIcon disabled"
       height="15"
+      role="none"
       viewBox="0 0 11 15"
       width="11"
       xmlns="http://www.w3.org/2000/svg"
@@ -171,6 +176,7 @@ exports[`PaginationLinks should match snapshot with prev disabled and next enabl
     <svg
       class="arrowIcon"
       height="15"
+      role="none"
       viewBox="0 0 11 15"
       width="11"
       xmlns="http://www.w3.org/2000/svg"
@@ -196,6 +202,7 @@ exports[`PaginationLinks should match snapshot with prev enabled and next disabl
     <svg
       class="arrowIcon"
       height="15"
+      role="none"
       viewBox="0 0 11 15"
       width="11"
       xmlns="http://www.w3.org/2000/svg"
@@ -237,6 +244,7 @@ exports[`PaginationLinks should match snapshot with prev enabled and next disabl
     <svg
       class="arrowIcon disabled"
       height="15"
+      role="none"
       viewBox="0 0 11 15"
       width="11"
       xmlns="http://www.w3.org/2000/svg"

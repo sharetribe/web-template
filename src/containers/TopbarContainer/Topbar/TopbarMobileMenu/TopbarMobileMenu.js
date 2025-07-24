@@ -116,7 +116,7 @@ const TopbarMobileMenu = props => {
       </span>
     );
     return (
-      <div className={css.root}>
+      <nav className={css.root}>
         <div className={css.content}>
           <div className={css.authenticationGreeting}>
             <FormattedMessage
@@ -130,7 +130,7 @@ const TopbarMobileMenu = props => {
           <div className={css.spacer} />
         </div>
         <div className={css.footer}>{createListingsLinkMaybe}</div>
-      </div>
+      </nav>
     );
   }
 

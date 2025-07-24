@@ -60,7 +60,8 @@ export const SocialMediaLink = React.forwardRef((props, ref) => {
   const { className, rootClassName, href, platform } = props;
   const classes = classNames(rootClassName || css.link, className);
   const titleMaybe = Icon ? { title: getIconTitle(platform) } : {};
-  const children = Icon ? <Icon /> : platform;
+  const ariaLabelMaybe = titleMaybe.title ? { ariaLabel: titleMaybe.title } : {};
+  const children = Icon ? <Icon {...ariaLabelMaybe} /> : platform;
   const linkProps = { className: classes, href, children, ...titleMaybe };
 
   // Markdown parser (rehype-sanitize) might return undefined href

@@ -13,7 +13,7 @@ import css from './Topbar.module.css';
  * @returns {JSX.Element} menu icon
  */
 const MenuIcon = props => {
-  const { className, rootClassName } = props;
+  const { className, rootClassName, ariaLabel } = props;
   const classes = classNames(rootClassName || css.rootMenuIcon, className);
 
   return (
@@ -23,6 +23,8 @@ const MenuIcon = props => {
       height="12"
       viewBox="0 0 18 12"
       xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      aria-label={ariaLabel}
     >
       <g fillRule="evenodd">
         <rect width="18" height="2" rx="1" />
