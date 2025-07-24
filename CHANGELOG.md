@@ -16,6 +16,9 @@ way to update this template, but currently, we follow a pattern:
 
 - [add] Add currently available translations for DE, ES, FR.
   [#641](https://github.com/sharetribe/web-template/pull/641)
+- [fix] SearchPageWithMap: existing pagination page needs to be reset with map-based search. When
+  bounds change, the search results are different and the previous pagination page number is not
+  valid anymore. [#640](https://github.com/sharetribe/web-template/pull/640)
 
 ## [v8.6.0] 2025-07-17
 
