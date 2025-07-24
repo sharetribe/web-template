@@ -328,6 +328,16 @@ export const isTransitionQuantityInfoMissingError = error =>
   error?.status === 400 &&
   error?.statusText.startsWith('Error: transition should contain quantity information');
 
+/**
+ * Check if the minimum provider commission is larger than the
+ * minimum price set for the listing
+ */
+export const isProviderCommissionBiggerThanMinPrice = error =>
+  error?.status === 400 &&
+  error?.statusText.startsWith(
+    'Minimum commission amount is greater than the amount of money paid in'
+  );
+
 export const storableError = err => {
   const error = err || {};
   const { name, message, status, statusText } = error;

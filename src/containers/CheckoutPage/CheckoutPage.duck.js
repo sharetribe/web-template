@@ -241,6 +241,7 @@ export const initiateOrder = (
       ...quantityMaybe,
       ...bookingParamsMaybe,
       ...orderData,
+      statusText: e.statusText,
     });
     throw e;
   };
@@ -454,6 +455,7 @@ export const speculateTransaction = (
       ...quantityMaybe,
       ...bookingParamsMaybe,
       ...orderData,
+      statusText: e.statusText,
     });
     return dispatch(speculateTransactionError(storableError(e)));
   };

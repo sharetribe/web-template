@@ -11,6 +11,7 @@ import {
   isTransitionQuantityInfoMissingError,
   isTooManyRequestsError,
   transactionInitiateOrderStripeErrors,
+  isProviderCommissionBiggerThanMinPrice,
 } from '../../util/errors';
 
 import css from './CheckoutPage.module.css';
@@ -72,6 +73,10 @@ export const getErrorMessages = (
   } else if (isTooManyRequestsError(initiateOrderError)) {
     // 429 Too Many Requests
     initiateOrderErrorMessage = <FormattedMessage id="CheckoutPage.tooManyRequestsError" />;
+  } else if (isProviderCommissionBiggerThanMinPrice(initiateOrderError)) {
+    speculateErrorMessage = (
+      <FormattedMessage id="CheckoutPage.providerCommissionBiggerThanMinPrice" />
+    );
   } else if (initiateOrderError) {
     // Generic initiate order error
     initiateOrderErrorMessage = (
@@ -93,6 +98,10 @@ export const getErrorMessages = (
   } else if (isTransitionQuantityInfoMissingError(speculateTransactionError)) {
     speculateErrorMessage = (
       <FormattedMessage id="CheckoutPage.correctQuantityInformationMissing" />
+    );
+  } else if (isProviderCommissionBiggerThanMinPrice(speculateTransactionError)) {
+    speculateErrorMessage = (
+      <FormattedMessage id="CheckoutPage.providerCommissionBiggerThanMinPrice" />
     );
   } else if (speculateTransactionError) {
     speculateErrorMessage = <FormattedMessage id="CheckoutPage.speculateFailedMessage" />;

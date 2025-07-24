@@ -84,6 +84,18 @@ exports.handleError = (res, error) => {
         data,
       })
       .end();
+  } else if (
+    error.message == 'Minimum commission amount is greater than the amount of money paid in'
+  ) {
+    res
+      .status(400)
+      .json({
+        name: 'LocalAPIError',
+        message: 'Local API request failed',
+        status: 400,
+        statusText: error.message,
+      })
+      .end();
   } else {
     res
       .status(500)
