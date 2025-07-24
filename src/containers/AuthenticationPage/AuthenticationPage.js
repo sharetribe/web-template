@@ -700,7 +700,7 @@ export const AuthenticationPageComponent = props => {
         usePortal
         onManageDisableScrolling={onManageDisableScrolling}
       >
-        <div className={css.termsWrapper}>
+        <div className={css.termsWrapper} role="complementary">
           <TermsOfServiceContent
             inProgress={tosFetchInProgress}
             error={tosFetchError}
@@ -715,7 +715,7 @@ export const AuthenticationPageComponent = props => {
         usePortal
         onManageDisableScrolling={onManageDisableScrolling}
       >
-        <div className={css.privacyWrapper}>
+        <div className={css.privacyWrapper} role="complementary">
           <PrivacyPolicyContent
             inProgress={tosFetchInProgress}
             error={tosFetchError}
