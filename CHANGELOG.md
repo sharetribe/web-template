@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Add currently available translations for DE, ES, FR.
+  [#641](https://github.com/sharetribe/web-template/pull/641)
+
 ## [v8.6.0] 2025-07-17
 
 - [fix] EditListingDeliveryPanel: additional shipping fee was not asked and the related shipping fee
