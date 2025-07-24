@@ -154,7 +154,8 @@ export class SearchPageComponent extends Component {
       };
 
       // parse query parameters, including a custom attribute named category
-      const { address, bounds, mapSearch, ...rest } = parse(location.search, {
+      // when onMapMoveEnd is called, pagination needs to be reset.
+      const { address, bounds, mapSearch, page, ...rest } = parse(location.search, {
         latlng: ['origin'],
         latlngBounds: ['bounds'],
       });
