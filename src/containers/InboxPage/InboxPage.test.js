@@ -317,6 +317,7 @@ describe('InboxPage', () => {
           intl={fakeIntl}
           stateData={stateDataOrder}
           isBooking={false}
+          isPurchase={false}
         />
       );
       expect(tree.asFragment().firstChild).toMatchSnapshot();
@@ -365,6 +366,7 @@ describe('InboxPage', () => {
           intl={fakeIntl}
           stateData={stateDataOrder}
           isBooking={false}
+          isPurchase={true}
           stockType="multipleItems"
         />
       );
@@ -400,6 +402,7 @@ describe('InboxPage', () => {
           intl={fakeIntl}
           stateData={stateDataOrder}
           isBooking={false}
+          isPurchase={true}
           stockType="oneItem"
         />
       );
@@ -461,6 +464,7 @@ describe('InboxPage', () => {
           intl={fakeIntl}
           stateData={stateDataBooking}
           isBooking={true}
+          isPurchase={false}
         />
       );
       expect(tree.asFragment().firstChild).toMatchSnapshot();
@@ -525,6 +529,7 @@ describe('InboxPage', () => {
           intl={fakeIntl}
           stateData={stateDataBooking}
           isBooking={true}
+          isPurchase={false}
         />
       );
 
@@ -588,6 +593,7 @@ describe('InboxPage', () => {
           intl={fakeIntl}
           stateData={stateDataBooking}
           isBooking={true}
+          isPurchase={false}
         />
       );
       expect(tree.asFragment().firstChild).toMatchSnapshot();
