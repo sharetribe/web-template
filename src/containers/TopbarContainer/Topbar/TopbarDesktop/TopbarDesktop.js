@@ -21,6 +21,8 @@ import IconRegisterDesktop from './IconRegisterDesktop';
 
 import css from './TopbarDesktop.module.css';
 
+import { CreateListingMenuLink } from './CustomLinksMenu/PriorityLinks';
+
 const SignupLink = () => {
   return (
     <NamedLink name="SignupPage" className={css.topbarLink}>
@@ -200,6 +202,10 @@ const TopbarDesktop = props => {
     />
   );
 
+  const createListingMaybe = authenticatedOnClientSide ? (
+    <CreateListingMenuLink customLinksMenuClass={css.createListingLinkOnly} />
+  ) : null;
+
   return (
     <nav className={classes}>
       <LinkedLogo
@@ -218,6 +224,8 @@ const TopbarDesktop = props => {
       />
 
       {searchFormMaybe}
+
+      {createListingMaybe}
 
       {inboxLinkMaybe}
       {profileMenuMaybe}

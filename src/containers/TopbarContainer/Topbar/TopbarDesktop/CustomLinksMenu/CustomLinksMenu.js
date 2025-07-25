@@ -1,10 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 
-import PriorityLinks, { CreateListingMenuLink } from './PriorityLinks';
+import PriorityLinks, { CreateListingMenuLink, CreateCusomMenusLinks } from './PriorityLinks';
 import LinksMenu from './LinksMenu';
 import LinksMenuDropdown from './LinksMenuDropdown';
-import { ExternalLink } from '../../../../../components';
+
+import { FormattedMessage } from '../../../../../util/reactIntl';
+
+import { ExternalLink, NamedLink } from '../../../../../components';
 
 import css from './CustomLinksMenu.module.css';
 
@@ -120,7 +123,7 @@ const CustomLinksMenu = ({
   const [mounted, setMounted] = useState(false);
   const [moreLabelWidth, setMoreLabelWidth] = useState(0);
   const [links, setLinks] = useState([
-    ...createListingLinkConfigMaybe(intl, showCreateListingsLink),
+    /// ...createListingLinkConfigMaybe(intl, showCreateListingsLink),
     ...customLinks,
   ]);
 
@@ -292,40 +295,20 @@ const CustomLinksMenu = ({
   ];
 
   // If there are no custom links, just render createListing link.
-  if (customLinks?.length === 0 && showCreateListingsLink) {
-    return <CreateListingMenuLink customLinksMenuClass={css.createListingLinkOnly} />;
+  if (customLinks?.length === 0) {
+    const wrapperStyle = { display: 'flex', width: '100%' };
+    return <CreateCusomMenusLinks intl={intl} menuLinksDropdown1={menuLinksDropdown1} menuLinksDropdown2={menuLinksDropdown2} customLinksCss={css} wrapperStyle={wrapperStyle} />;
   }
 
   const styleMaybe = mounted ? { style: { width: `${containerWidth}px` } } : {};
   const isMeasured = !!links?.[0]?.width;
   const hasMenuLinks = menuLinks?.length > 0;
   const hasPriorityLinks = isMeasured && priorityLinks.length > 0;
-  const leftHref = intl.formatMessage({ id: 'Topbar.custom.leftOneHref' });
+  const wrapperStyle = { display: 'flex' };
 
   return (
     <div className={css.customLinksMenu} ref={containerRef} {...styleMaybe}>
-
-      <div className={css.leftLinkWrapper}>
-        <ExternalLink href={leftHref} target="_self" className={classNames(css.leftLink)}>
-          <span className={css.leftLinkLabel}>
-            {intl.formatMessage({ id: 'Topbar.custom.leftOne' })}
-          </span>
-        </ExternalLink>
-      </div>
-      <LinksMenuDropdown
-        id="linksMenuDropdown1"
-        label={intl.formatMessage({ id: 'Topbar.custom.menuOne' })}
-        currentPage={currentPage}
-        items={menuLinksDropdown1}
-        intl={intl}
-      />
-      <LinksMenuDropdown
-        id="linksMenuDropdown2"
-        label={intl.formatMessage({ id: 'Topbar.custom.menuTwo' })}
-        currentPage={currentPage}
-        items={menuLinksDropdown2}
-        intl={intl}
-      />
+      <CreateCusomMenusLinks intl={intl} menuLinksDropdown1={menuLinksDropdown1} menuLinksDropdown2={menuLinksDropdown2} customLinksCss={css} wrapperStyle={wrapperStyle} />
 
       <PriorityLinks links={links} priorityLinks={priorityLinks} setLinks={setLinks} />
 

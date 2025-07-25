@@ -410,6 +410,15 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       name: 'PreviewResolverPage',
       component: PreviewResolverPage ,
     },
+
+
+    // CUSTOM:
+    {
+      path: '/s',
+      name: 'HotListPage',
+      extra: { pub_tags: 'hot-list' },
+      component: SearchPage,
+    },
   ];
 };
 

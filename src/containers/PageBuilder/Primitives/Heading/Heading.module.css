@@ -19,6 +19,8 @@
   /* use break-word if available */
   word-break: break-word;
   hyphens: auto;
+  
+  text-transform: uppercase;
 }
 
 /* Specific styles */

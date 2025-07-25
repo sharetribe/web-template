@@ -71,7 +71,7 @@
   flex-grow: 1;
 
   /* At 1024px, the translations might need more space than what searchLink otherwise gets. */
-  min-width: 220px;
+  min-width: 280px;
 }
 
 .topbarSearchWithLeftPadding {
@@ -308,4 +308,10 @@
       background-color: var(--colorBlack);
     }
   }
+}
+
+.createListingLinkOnly {
+  display: flex;
+  justify-content: right;
+  height: 100%;
 }

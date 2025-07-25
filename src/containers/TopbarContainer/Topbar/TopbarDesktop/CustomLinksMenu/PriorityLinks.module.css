@@ -35,6 +35,39 @@
   }
 }
 
+.button {
+  display: flex;
+
+   &:hover {
+    border-bottom: 0;
+   }
+
+  .priorityLinkLabel {
+    margin: auto;
+    padding: 11px 22px;
+    font-size: 14px;
+    background-color: var(--ctaPrimaryBG);
+    border-radius: 10px;
+    color: var(--ctaPrimary);
+    border: 1px solid var(--ctaPrimary);
+    text-decoration: none;
+    /* box-shadow: 0 8px 16px 0 rgb(0 0 0 / 20%); */
+    font-weight: 400;
+    font-family: var(--fontFamilyHeadings);
+    transition: var(--colorTransition);
+
+    background-color: var(--ctaSecondaryBG);
+    color: var(--ctaSecondary);
+    border-color: var(--ctaSecondaryBG);
+
+    &:hover {
+      background-color: var(--ctaPrimaryBG);
+      color: var(--ctaPrimary);
+      border-color: var(--ctaPrimary);
+    }
+  }
+}
+
 .highlight {
   color: var(--marketplaceColor);
   &:hover {
