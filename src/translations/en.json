@@ -981,7 +981,7 @@
   "StripePaymentForm.genericError": "Couldn't handle payment data. Please try again.",
   "StripePaymentForm.locationDetailsTitle": "Location of the listing",
   "StripePaymentForm.locationUnknown": "Unknown location",
-  "StripePaymentForm.messageHeading": "Additional information",
+  "StripePaymentForm.messageHeading": "Give us more details",
   "StripePaymentForm.messageLabel": "Is there something the listing owner should know? {messageOptionalText}",
   "StripePaymentForm.messageOptionalText": "(optional)",
   "StripePaymentForm.messagePlaceholder": "Hello {name}! You should know that…",
