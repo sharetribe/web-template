@@ -473,15 +473,28 @@ class SearchMapWithGoogleMaps extends Component {
     const hasDimensions = offsetHeight > 0 && offsetWidth > 0;
 
     if (hasDimensions) {
-      const { bounds, center = new sdkTypes.LatLng(0, 0), zoom = 11 } = this.props;
       const maps = window.google.maps;
-      const controlPosition = maps.ControlPosition.LEFT_TOP;
-      const zoomOutToShowEarth = { zoom: 1, center: { lat: 0, lng: 0 } };
-      const zoomAndCenter = !bounds && !center ? zoomOutToShowEarth : { zoom, center };
+
+      // Default center/zoom: USA
+      let center = { lat: 39.8283, lng: -98.5795 };
+      let zoom = 4;
+
+      // Try browser geolocation
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            center = { lat: position.coords.latitude, lng: position.coords.longitude };
+            zoom = 6;
+            this.map.setCenter(center);
+            this.map.setZoom(zoom);
+          },
+          () => {
+            // If geolocation fails, keep default center/zoom
+          }
+        );
+      }
 
       const mapConfig = {
-        // Disable all controls except zoom
-        // https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions
         disableDefaultUI: false,
         mapTypeControl: false,
         scrollwheel: false,
@@ -490,17 +503,11 @@ class SearchMapWithGoogleMaps extends Component {
         streetViewControl: false,
         zoomControl: true,
         cameraControl: false,
-
         zoomControlOptions: {
-        position: window.google.maps.ControlPosition.TOP_LEFT,
+          position: window.google.maps.ControlPosition.TOP_LEFT,
         },
-        
-        cameraControlOptions: {
-          position: controlPosition,
-        },
-
-        // Add default viewport (the whole world)
-        ...zoomAndCenter,
+        center,
+        zoom,
       };
 
       this.map = new maps.Map(this.state.mapContainer, mapConfig);
