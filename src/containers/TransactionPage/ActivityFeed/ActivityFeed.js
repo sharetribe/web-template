@@ -110,6 +110,7 @@ const TransitionMessage = props => {
   } = props;
   const { processName, processState, showReviewAsFirstLink, showReviewAsSecondLink } = stateData;
   const stateStatus = nextState === processState ? 'current' : 'past';
+  const transitionName = transition.transition;
 
   // actor: 'you', 'system', 'operator', or display name of the other party
   const actor =
@@ -132,14 +133,23 @@ const TransitionMessage = props => {
     </InlineTextButton>
   ) : null;
 
+  // If there is a transition specific message, use it.
+  const messageConfig = stateData.transitionMessages?.find(m => m.transition === transitionName);
+  const transitionMessage = messageConfig
+    ? intl.formatMessage(
+        { id: messageConfig.translationId },
+        { actor, otherUsersName, listingTitle, reviewLink, deliveryMethod, stateStatus }
+      )
+    : '';
+
   // ActivityFeed messages are tied to transaction process and transitions.
   // However, in practice, transitions leading to same state have had the same message.
-  const message = intl.formatMessage(
+  const defaultMessage = intl.formatMessage(
     { id: `TransactionPage.ActivityFeed.${processName}.${nextState}` },
     { actor, otherUsersName, listingTitle, reviewLink, deliveryMethod, stateStatus }
   );
 
-  return message;
+  return messageConfig ? transitionMessage : defaultMessage;
 };
 
 /**

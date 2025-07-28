@@ -1113,6 +1113,7 @@
   "TransactionPage.ActivityFeed.default-booking.reviewed-by-customer": "{actor, select, you {You left a review for {otherUsersName}.} other {{otherUsersName} left a review for you. {reviewLink}}}",
   "TransactionPage.ActivityFeed.default-booking.reviewed-by-provider": "{actor, select, you {You left a review for {otherUsersName}.} other {{otherUsersName} left a review for you. {reviewLink}}}",
   "TransactionPage.ActivityFeed.default-inquiry.free-inquiry": "{actor, select, you {You started a conversation.} other {{otherUsersName} started a conversation.}}",
+  "TransactionPage.ActivityFeed.default-negotiation.transition.customer-make-counter-offer": "{actor, select, you {You accepted the counter offer.} other {{otherUsersName} accepted the counter offer.}}",
   "TransactionPage.ActivityFeed.default-purchase.canceled": "The order was canceled.",
   "TransactionPage.ActivityFeed.default-purchase.completed": "{stateStatus, select, current {The listing was received. {reviewLink}} other {The listing was received.}}",
   "TransactionPage.ActivityFeed.default-purchase.delivered": "{deliveryMethod, select, shipping {The listing was shipped.} other {The listing was delivered.}}",
