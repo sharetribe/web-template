@@ -577,6 +577,7 @@ export const TransactionPageComponent = props => {
           showButtons={stateData.showActionButtons}
           primaryButtonProps={stateData?.primaryButtonProps}
           secondaryButtonProps={stateData?.secondaryButtonProps}
+          tertiaryButtonProps={stateData?.tertiaryButtonProps}
           isListingDeleted={listingDeleted}
           isProvider={isProviderRole}
           transitions={txTransitions}
