@@ -69,6 +69,13 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
           overwrites
         ),
         secondaryButtonProps: actionButtonProps(transitions.CUSTOMER_REJECT_OFFER, CUSTOMER),
+        transitionMessages: [
+          {
+            transition: transitions.PROVIDER_ACCEPT_COUNTER_OFFER,
+            translationId:
+              'TransactionPage.ActivityFeed.default-negotiation.transition.customer-make-counter-offer',
+          },
+        ],
       };
     })
     .cond([states.OFFER_PENDING, PROVIDER], () => {
@@ -79,6 +86,13 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
         showExtraInfo: true,
         showActionButtons: true,
         secondaryButtonProps: actionButtonProps(transitions.PROVIDER_WITHDRAW_OFFER, PROVIDER),
+        transitionMessages: [
+          {
+            transition: transitions.PROVIDER_ACCEPT_COUNTER_OFFER,
+            translationId:
+              'TransactionPage.ActivityFeed.default-negotiation.transition.customer-make-counter-offer',
+          },
+        ],
       };
     })
     .cond([states.OFFER_REJECTED, _], () => {
