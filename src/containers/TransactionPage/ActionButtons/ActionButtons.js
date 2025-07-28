@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { useIntl } from '../../../util/reactIntl';
 import { getStartOf } from '../../../util/dates';
 
-import { PrimaryButton, SecondaryButton } from '../../../components';
+import { PrimaryButton, SecondaryButton, Button } from '../../../components';
 
 import css from './ActionButtons.module.css';
 
@@ -42,6 +42,11 @@ const getDisabledState = (buttonProps, transitions, timeZone, intl) => {
         // Use disabledReason.translationKey if present
         const translationKey = c.disabledReason?.translationKey;
         const fallbackReason = 'You cannot perform this action right now.'; // This should not be shown ever.
+
+        if (!translationKey) {
+          console.warn(`Translation key not found for condition: ${c.type}`);
+        }
+
         return {
           disabled: true,
           reason: translationKey ? intl.formatMessage({ id: translationKey }) : fallbackReason,
@@ -103,6 +108,7 @@ const getDisabledState = (buttonProps, transitions, timeZone, intl) => {
  * @param {boolean} props.showButtons
  * @param {ButtonProps} [props.primaryButtonProps]
  * @param {ButtonProps} [props.secondaryButtonProps]
+ * @param {ButtonProps} [props.tertiaryButtonProps]
  * @param {boolean} props.isListingDeleted
  * @param {boolean} props.isProvider
  * @param {Array} props.transitions
@@ -114,6 +120,7 @@ const ActionButtons = props => {
     showButtons,
     primaryButtonProps,
     secondaryButtonProps,
+    tertiaryButtonProps,
     isListingDeleted,
     isProvider,
     transitions = [],
@@ -139,6 +146,12 @@ const ActionButtons = props => {
     timeZone,
     intl
   );
+  const { disabled: tertiaryDisabled, reason: tertiaryReason } = getDisabledState(
+    tertiaryButtonProps,
+    transitions,
+    timeZone,
+    intl
+  );
 
   const buttonsDisabled = primaryButtonProps?.inProgress || secondaryButtonProps?.inProgress;
 
@@ -150,12 +163,36 @@ const ActionButtons = props => {
     <p className={css.actionError}>{secondaryButtonProps?.errorText}</p>
   ) : null;
 
+  const tertiaryErrorMessage = tertiaryButtonProps?.error ? (
+    <p className={css.actionError}>{tertiaryButtonProps?.errorText}</p>
+  ) : null;
+
+  const hasMultipleButtons = primaryButtonProps && secondaryButtonProps && tertiaryButtonProps;
+
   const classes = classNames(rootClassName || css.root, className);
 
   return showButtons ? (
     <div className={classes}>
-      <div className={css.actionErrors}>{primaryErrorMessage || secondaryErrorMessage}</div>
-      <div className={css.actionButtonsWrapper}>
+      <div className={css.actionErrors}>
+        {primaryErrorMessage || secondaryErrorMessage || tertiaryErrorMessage}
+      </div>
+      <div
+        className={classNames(css.actionButtonsWrapper, {
+          [css.multipleButtons]: !!hasMultipleButtons,
+        })}
+      >
+        {tertiaryButtonProps ? (
+          <div className={css.actionButtonWrapper}>
+            <Button
+              inProgress={tertiaryButtonProps.inProgress}
+              disabled={buttonsDisabled || tertiaryDisabled}
+              onClick={tertiaryButtonProps.onAction}
+            >
+              {tertiaryButtonProps.buttonText}
+            </Button>
+            {tertiaryDisabled && <div className={css.finePrint}>{tertiaryReason}</div>}
+          </div>
+        ) : null}
         {secondaryButtonProps ? (
           <div className={css.actionButtonWrapper}>
             <SecondaryButton

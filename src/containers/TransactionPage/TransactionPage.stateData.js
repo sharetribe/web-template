@@ -30,6 +30,7 @@ export const stateDataShape = shape({
   processState: string.isRequired,
   primaryButtonProps: actionButtonsShape,
   secondaryButtonProps: actionButtonsShape,
+  tertiaryButtonProps: actionButtonsShape,
   showActionButtons: bool,
   showDetailCardHeadings: bool,
   showDispute: bool,

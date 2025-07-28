@@ -29,22 +29,18 @@
   width: 100%;
   display: flex;
   flex-direction: row;
+  gap: 12px;
 
   @media (--viewportLarge) {
-    flex-direction: column;
-  }
-
-  & div:first-child {
-    margin: 0 12px 0 0;
-
-    @media (--viewportLarge) {
-      margin: 8px 0 0 0;
-
-      /* Switch order in desktop layout with accept button being on the top */
-      order: 1;
-    }
+    flex-direction: column-reverse;
+    gap: 8px;
   }
 }
+
+.multipleButtons {
+  flex-direction: column-reverse;
+}
+
 .actionButtonWrapper {
   display: block;
   width: 100%;
