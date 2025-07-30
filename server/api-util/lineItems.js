@@ -130,7 +130,6 @@ const getDateRangeQuantityAndLineItems = (orderData, code) => {
  * @param {Object} listing
  * @param {Object} orderData
  * @param {string} [orderData.priceVariantName] - The name of the price variant (potentially used with bookable unit types)
- * @param {string} [orderData.transitionIntent] - Used to determine if the purpose is to make an offer (or an order)
  * @param {Money} [orderData.quote] - The quote for the offer (if transition intent is "make-offer")
  * @param {Object} providerCommission
  * @param {Object} customerCommission
@@ -147,7 +146,7 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
   const priceAttribute = listing.attributes.price;
   const currency = priceAttribute.currency;
 
-  const { priceVariantName, quote, transitionIntent } = orderData || {};
+  const { priceVariantName, quote } = orderData || {};
   const priceVariantConfig = priceVariants
     ? priceVariants.find(pv => pv.name === priceVariantName)
     : null;

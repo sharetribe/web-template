@@ -275,9 +275,7 @@ export const initiateNegotiation = (
   const { quoteInSubunits, ...transitionParams } = negotiationParams;
 
   // Parameters only for client app's server to be used when making a privileged transition
-  const orderData = quoteInSubunits
-    ? { transitionIntent: 'make-offer', actor: 'provider', quoteInSubunits, transactionId }
-    : {};
+  const orderData = quoteInSubunits ? { actor: 'provider', quoteInSubunits } : {};
 
   const bodyParams = isTransition
     ? {
