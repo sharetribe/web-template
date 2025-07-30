@@ -84,7 +84,7 @@ const handleSubmit = (submitting, setSubmitting, props) => values => {
   const searchParams = parse(location.search);
   const transactionId = searchParams.transactionId;
 
-  const { offerDetails, quote } = values;
+  const { offerDetails, offer } = values;
 
   const { listingType, transactionProcessAlias, unitType } = listing?.attributes?.publicData || {};
 
@@ -95,7 +95,7 @@ const handleSubmit = (submitting, setSubmitting, props) => values => {
       ...(offerDetails ? { offerDetails } : {}),
       ...getTransactionTypeData(listingType, unitType, config),
     },
-    quoteInSubunits: quote?.amount,
+    offerInSubunits: offer?.amount,
   };
   const isPrivilegedTransition = true;
 

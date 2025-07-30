@@ -130,7 +130,7 @@ const getDateRangeQuantityAndLineItems = (orderData, code) => {
  * @param {Object} listing
  * @param {Object} orderData
  * @param {string} [orderData.priceVariantName] - The name of the price variant (potentially used with bookable unit types)
- * @param {Money} [orderData.quote] - The quote for the offer (if transition intent is "make-offer")
+ * @param {Money} [orderData.offer] - The offer for the offer (if transition intent is "make-offer")
  * @param {Object} providerCommission
  * @param {Object} customerCommission
  * @returns {Array} lineItems
@@ -146,7 +146,7 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
   const priceAttribute = listing.attributes.price;
   const currency = priceAttribute.currency;
 
-  const { priceVariantName, quote } = orderData || {};
+  const { priceVariantName, offer } = orderData || {};
   const priceVariantConfig = priceVariants
     ? priceVariants.find(pv => pv.name === priceVariantName)
     : null;
@@ -156,8 +156,8 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
   const unitPrice =
     isBookable && priceVariationsEnabled && isPriceInSubunitsValid
       ? new Money(priceInSubunits, currency)
-      : quote instanceof Money && isNegotiationUnitType
-      ? quote
+      : offer instanceof Money && isNegotiationUnitType
+      ? offer
       : priceAttribute;
 
   /**

@@ -3,7 +3,7 @@ const { transactionLineItems } = require('../api-util/lineItems');
 const {
   addOfferToMetadata,
   getPreviousOffer,
-  getQuoteFromPreviousOffer,
+  getAmountFromPreviousOffer,
   isIntentionToMakeCounterOffer,
   isIntentionToMakeOffer,
   isIntentionToRevokeCounterOffer,
@@ -28,37 +28,37 @@ const getListingRelationShip = transactionShowAPIData => {
 };
 
 const getFullOrderData = (orderData, bodyParams, currency, offers) => {
-  const { quoteInSubunits } = orderData || {};
+  const { offerInSubunits } = orderData || {};
   const transitionName = bodyParams.transition;
   const orderDataAndParams = { ...orderData, ...bodyParams.params };
 
-  return isIntentionToMakeOffer(quoteInSubunits, transitionName) ||
-    isIntentionToMakeCounterOffer(quoteInSubunits, transitionName)
+  return isIntentionToMakeOffer(offerInSubunits, transitionName) ||
+    isIntentionToMakeCounterOffer(offerInSubunits, transitionName)
     ? {
         ...orderDataAndParams,
-        quote: new Money(quoteInSubunits, currency),
+        offer: new Money(offerInSubunits, currency),
       }
     : isIntentionToRevokeCounterOffer(transitionName)
     ? {
         ...orderDataAndParams,
-        quote: new Money(getQuoteFromPreviousOffer(offers), currency), // TODO: fix this!
+        offer: new Money(getAmountFromPreviousOffer(offers), currency), // TODO: fix this!
       }
     : orderDataAndParams;
 };
 
 const getUpdatedMetadata = (orderData, transition, existingMetadata) => {
-  const { actor, quoteInSubunits } = orderData || {};
+  const { actor, offerInSubunits } = orderData || {};
   // NOTE: for default-negotiation process, the actor is always "provider" when making an offer.
   const hasActor = ['provider', 'customer'].includes(actor);
   const by = hasActor ? actor : null;
 
   const isNewOffer =
-    isIntentionToMakeOffer(quoteInSubunits, transition) ||
-    isIntentionToMakeCounterOffer(quoteInSubunits, transition);
+    isIntentionToMakeOffer(offerInSubunits, transition) ||
+    isIntentionToMakeCounterOffer(offerInSubunits, transition);
 
   return isNewOffer
     ? addOfferToMetadata(existingMetadata, {
-        quoteInSubunits,
+        offerInSubunits,
         by,
         transition,
       })

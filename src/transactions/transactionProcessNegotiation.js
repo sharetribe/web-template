@@ -293,7 +293,7 @@ const isValidNegotiationOffersArray = (offers, transitions, offerTransitions) =>
  * @typedef {Object} NegotiationOffer
  * @property {string} transition - The transition name that was triggered to make this offer
  * @property {string} by - The actor who made the offer ('provider' or 'customer')
- * @property {number} quoteInSubunits - The offer amount in subunits (smallest currency unit)
+ * @property {number} offerInSubunits - The offer amount in subunits (smallest currency unit)
  */
 
 /**
@@ -304,19 +304,19 @@ const isValidNegotiationOffersArray = (offers, transitions, offerTransitions) =>
  */
 
 /**
- * @typedef {Object} TransitionWithQuoteInSubunitsRecord
+ * @typedef {Object} TransitionWithOfferInSubunitsRecord
  * @property {string} transition - The transition name
  * @property {string} by - The actor who made the transition ('provider' or 'customer')
  * @property {string} createdAt - ISO timestamp when the transition was created
- * @property {number} [quoteInSubunits] - The offer amount in subunits (smallest currency unit)
+ * @property {number} [offerInSubunits] - The offer amount in subunits (smallest currency unit)
  */
 
 /**
- * Returns a new array of transitions with the quoteInSubunits property added to the transitions that have a matching offer.
+ * Returns a new array of transitions with the offerInSubunits property added to the transitions that have a matching offer.
  *
  * @param {Array<TransitionRecord>} transitions
  * @param {Array<NegotiationOffer>} offers
- * @returns {Array<TransitionWithQuoteInSubunitsRecord>}
+ * @returns {Array<TransitionWithOfferInSubunitsRecord>}
  */
 export const getTransitionsWithMatchingOffers = (transitions, offers) => {
   const isValidOffersArray = isValidNegotiationOffersArray(offers, transitions, offerTransitions);

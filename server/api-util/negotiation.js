@@ -28,7 +28,7 @@ const offerTransitionsInNegotiationProcess = [
  * @typedef {Object} NegotiationOffer
  * @property {string} transition - The transition name that was triggered to make this offer
  * @property {string} by - The actor who made the offer ('provider' or 'customer')
- * @property {number} quoteInSubunits - The offer amount in subunits (smallest currency unit)
+ * @property {number} offerInSubunits - The offer amount in subunits (smallest currency unit)
  */
 
 /**
@@ -39,28 +39,28 @@ const offerTransitionsInNegotiationProcess = [
  */
 
 /**
- * Checks if the transition is a make offer transition and if the quote is greater than 0.
+ * Checks if the transition is a make offer transition and if the offer is greater than 0.
  *
- * @param {number} quoteInSubunits
+ * @param {number} offerInSubunits
  * @param {string} transitionName
  * @returns {boolean}
  */
-exports.isIntentionToMakeOffer = (quoteInSubunits, transitionName) => {
+exports.isIntentionToMakeOffer = (offerInSubunits, transitionName) => {
   const isIntentionToMakeOffer = makeOfferTransitions.includes(transitionName);
-  const hasQuote = quoteInSubunits > 0;
-  return isIntentionToMakeOffer && hasQuote;
+  const hasOffer = offerInSubunits > 0;
+  return isIntentionToMakeOffer && hasOffer;
 };
 /**
- * Checks if the transition is a make counter offer transition and if the quote is greater than 0.
+ * Checks if the transition is a make counter offer transition and if the offer is greater than 0.
  *
- * @param {number} quoteInSubunits
+ * @param {number} offerInSubunits
  * @param {string} transitionName
  * @returns {boolean}
  */
-exports.isIntentionToMakeCounterOffer = (quoteInSubunits, transitionName) => {
+exports.isIntentionToMakeCounterOffer = (offerInSubunits, transitionName) => {
   const isIntentionToMakeCounterOffer = counterOfferTransitions.includes(transitionName);
-  const hasQuote = quoteInSubunits > 0;
-  return isIntentionToMakeCounterOffer && hasQuote;
+  const hasOffer = offerInSubunits > 0;
+  return isIntentionToMakeCounterOffer && hasOffer;
 };
 /**
  * Checks if the transition is a revoke counter offer transition.
@@ -150,13 +150,13 @@ exports.getPreviousOffer = offers => {
 };
 
 /**
- * Returns the quote from the previous offer.
+ * Returns the offer from the previous offer.
  * @param {Array<NegotiationOffer>} offers - Array of negotiation offers
- * @returns {number} quote from the previous offer (in subunits)
+ * @returns {number} offer from the previous offer (in subunits)
  */
-exports.getQuoteFromPreviousOffer = offers => {
+exports.getAmountFromPreviousOffer = offers => {
   const offer = this.getPreviousOffer(offers);
-  return offer.quoteInSubunits;
+  return offer.offerInSubunits;
 };
 
 /**
