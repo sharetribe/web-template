@@ -20,6 +20,7 @@ import ListingImage from './ListingImage';
 import css from './EditListingPhotosForm.module.css';
 
 const ACCEPT_IMAGES = 'image/*';
+const MAX_IMAGES = 10; // Maximum number of images allowed
 
 const ImageUploadError = props => {
   return props.uploadOverLimit ? (
@@ -52,26 +53,38 @@ const ShowListingsError = props => {
   ) : null;
 };
 
-// Field component that uses file-input to allow user to select images.
+// Field component that uses file-input to allow user to select multiple images.
 export const FieldAddImage = props => {
-  const { formApi, onImageUploadHandler, aspectWidth = 1, aspectHeight = 1, ...rest } = props;
+  const { formApi, onImageUploadHandler, aspectWidth = 1, aspectHeight = 1, currentImageCount = 0, ...rest } = props;
   return (
     <Field form={null} {...rest}>
       {fieldprops => {
         const { accept, input, label, disabled: fieldDisabled } = fieldprops;
         const { name, type } = input;
         const onChange = e => {
-          const file = e.target.files[0];
-          formApi.change(`addImage`, file);
-          formApi.blur(`addImage`);
-          onImageUploadHandler(file);
+          const files = Array.from(e.target.files || []);
+          if (files.length > 0) {
+            // Check if adding these files would exceed the maximum limit
+            const totalImages = currentImageCount + files.length;
+            if (totalImages > MAX_IMAGES) {
+              // Show error or truncate to max allowed
+              const allowedFiles = files.slice(0, MAX_IMAGES - currentImageCount);
+              onImageUploadHandler(allowedFiles);
+            } else {
+              onImageUploadHandler(files);
+            }
+          }
+          // Clear the input value to allow selecting the same files again
+          e.target.value = '';
         };
-        const inputProps = { accept, id: name, name, onChange, type };
+        const inputProps = { accept, id: name, name, onChange, type: 'file', multiple: true };
+        const isDisabled = fieldDisabled || currentImageCount >= MAX_IMAGES;
+        
         return (
           <div className={css.addImageWrapper}>
             <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
-              {fieldDisabled ? null : <input {...inputProps} className={css.addImageInput} />}
-              <label htmlFor={name} className={css.addImage}>
+              {isDisabled ? null : <input {...inputProps} className={css.addImageInput} />}
+              <label htmlFor={name} className={classNames(css.addImage, { [css.disabled]: isDisabled })}>
                 {label}
               </label>
             </AspectRatioWrapper>
@@ -136,23 +149,44 @@ const FieldListingImage = props => {
  * @returns {JSX.Element}
  */
 export const EditListingPhotosForm = props => {
-  const [state, setState] = useState({ imageUploadRequested: false });
+  const [state, setState] = useState({ imageUploadRequested: false, uploadingCount: 0 });
   const [submittedImages, setSubmittedImages] = useState([]);
 
-  const onImageUploadHandler = file => {
+  const onImageUploadHandler = files => {
     const { listingImageConfig, onImageUpload } = props;
-    if (file) {
-      setState({ imageUploadRequested: true });
+    if (files && files.length > 0) {
+      setState(prevState => ({ 
+        imageUploadRequested: true, 
+        uploadingCount: prevState.uploadingCount + files.length 
+      }));
 
-      onImageUpload({ id: `${file.name}_${Date.now()}`, file }, listingImageConfig)
-        .then(() => {
-          setState({ imageUploadRequested: false });
-        })
-        .catch(() => {
-          setState({ imageUploadRequested: false });
-        });
+      // Upload files sequentially to avoid overwhelming the server
+      const uploadPromises = files.map(file => {
+        const imagePayload = { id: `${file.name}_${Date.now()}_${Math.random()}`, file };
+        return onImageUpload(imagePayload, listingImageConfig)
+          .then(() => {
+            setState(prevState => ({ 
+              ...prevState, 
+              uploadingCount: prevState.uploadingCount - 1 
+            }));
+          })
+          .catch(() => {
+            setState(prevState => ({ 
+              ...prevState, 
+              uploadingCount: prevState.uploadingCount - 1 
+            }));
+          });
+      });
+
+      Promise.all(uploadPromises).finally(() => {
+        setState(prevState => ({ 
+          ...prevState, 
+          imageUploadRequested: prevState.uploadingCount > 1 
+        }));
+      });
     }
   };
+
   const intl = useIntl();
 
   return (
@@ -251,11 +285,19 @@ export const EditListingPhotosForm = props => {
                 label={
                   <span className={css.chooseImageText}>
                     <span className={css.chooseImage}>
-                      <FormattedMessage id="EditListingPhotosForm.chooseImage" />
+                      <FormattedMessage id="EditListingPhotosForm.chooseImages" />
                     </span>
                     <span className={css.imageTypes}>
                       <FormattedMessage id="EditListingPhotosForm.imageTypes" />
                     </span>
+                    {images.length > 0 && (
+                      <span className={css.imageCount}>
+                        <FormattedMessage 
+                          id="EditListingPhotosForm.imageCount" 
+                          values={{ count: images.length, max: MAX_IMAGES }}
+                        />
+                      </span>
+                    )}
                   </span>
                 }
                 type="file"
@@ -264,6 +306,7 @@ export const EditListingPhotosForm = props => {
                 onImageUploadHandler={onImageUploadHandler}
                 aspectWidth={aspectWidth}
                 aspectHeight={aspectHeight}
+                currentImageCount={images.length}
               />
             </div>
 
@@ -273,6 +316,15 @@ export const EditListingPhotosForm = props => {
               uploadOverLimit={uploadOverLimit}
               uploadImageError={uploadImageError}
             />
+
+            {state.uploadingCount > 0 && (
+              <p className={css.uploadingMessage}>
+                <FormattedMessage 
+                  id="EditListingPhotosForm.uploadingImages" 
+                  values={{ count: state.uploadingCount }}
+                />
+              </p>
+            )}
 
             <p className={css.tip}>
               <FormattedMessage id="EditListingPhotosForm.addImagesTip" />
