@@ -55,6 +55,9 @@
 .orderPanel {
   margin: 16px 48px 48px 48px;
 }
+.orderPanelNextToTitle {
+  margin: -24px 48px 48px 48px;
+}
 
 .orderTitle {
   /* Font */

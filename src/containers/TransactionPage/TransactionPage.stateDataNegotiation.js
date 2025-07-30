@@ -42,7 +42,7 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
       const makeOfferAfterInquiry = transitions.MAKE_OFFER_AFTER_INQUIRY;
       const hasCorrectNextTransition = transitionNames.includes(makeOfferAfterInquiry);
       const showOrderPanel = !isCustomerBanned && hasCorrectNextTransition;
-      return { processName, processState, showOrderPanel };
+      return { processName, processState, showOrderPanel, showDetailCardHeadings: true };
     })
     .cond([states.INQUIRY, CUSTOMER], () => {
       return { processName, processState, showDetailCardHeadings: true };
