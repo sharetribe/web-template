@@ -235,6 +235,120 @@ export const graph = {
   },
 };
 
+// transitions that make the first offer
+const makeOfferTransitions = [
+  'transition/make-offer',
+  'transition/make-offer-after-inquiry',
+  'transition/make-offer-from-quote-requested',
+];
+
+// transitions that make a counter offer
+const counterOfferTransitions = [
+  'transition/customer-make-counter-offer',
+  'transition/provider-make-counter-offer',
+];
+
+// transitions that revoke a counter offer
+const revokeCounterOfferTransitions = [
+  'transition/customer-withdraw-counter-offer',
+  'transition/provider-reject-counter-offer',
+];
+
+// transitions that affect pricing on negotiation loop
+const offerTransitions = [
+  ...makeOfferTransitions,
+  ...counterOfferTransitions,
+  ...revokeCounterOfferTransitions,
+];
+
+const filterRelevantTransitions = (transitions, offerTransitions) => {
+  return transitions.filter(t => offerTransitions.includes(t.transition));
+};
+
+const isValidNegotiationOffersArray = (offers, transitions, offerTransitions) => {
+  const pickedTransitions = filterRelevantTransitions(transitions, offerTransitions);
+  const isOffersAnArray = !!offers && Array.isArray(offers);
+
+  // First check if we have the same number of offers and transitions
+  if (!isOffersAnArray || offers.length !== pickedTransitions.length) {
+    return false;
+  }
+
+  // Then verify that each offer corresponds to the transition at the same index
+  // and that the order matches
+  for (let i = 0; i < offers.length; i++) {
+    const offer = offers[i];
+    const transition = pickedTransitions[i];
+
+    // Check if the offer's transition and actor match the transition at the same index
+    if (offer.transition !== transition.transition || offer.by !== transition.by) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+/**
+ * @typedef {Object} NegotiationOffer
+ * @property {string} transition - The transition name that was triggered to make this offer
+ * @property {string} by - The actor who made the offer ('provider' or 'customer')
+ * @property {number} quoteInSubunits - The offer amount in subunits (smallest currency unit)
+ */
+
+/**
+ * @typedef {Object} TransitionRecord
+ * @property {string} transition - The transition name
+ * @property {string} by - The actor who made the transition ('provider' or 'customer')
+ * @property {string} createdAt - ISO timestamp when the transition was created
+ */
+
+/**
+ * @typedef {Object} TransitionWithQuoteInSubunitsRecord
+ * @property {string} transition - The transition name
+ * @property {string} by - The actor who made the transition ('provider' or 'customer')
+ * @property {string} createdAt - ISO timestamp when the transition was created
+ * @property {number} [quoteInSubunits] - The offer amount in subunits (smallest currency unit)
+ */
+
+/**
+ * Returns a new array of transitions with the quoteInSubunits property added to the transitions that have a matching offer.
+ *
+ * @param {Array<TransitionRecord>} transitions
+ * @param {Array<NegotiationOffer>} offers
+ * @returns {Array<TransitionWithQuoteInSubunitsRecord>}
+ */
+export const getTransitionsWithMatchingOffers = (transitions, offers) => {
+  const isValidOffersArray = isValidNegotiationOffersArray(offers, transitions, offerTransitions);
+  if (isValidOffersArray) {
+    const transitionsWithOffers = [];
+    let offerIndex = 0;
+    for (let i = 0; i < transitions.length; i++) {
+      let transition = { ...transitions[i] };
+
+      if (offerTransitions.includes(transition.transition)) {
+        transition.offerInSubunits = offers[offerIndex]?.offerInSubunits;
+        transitionsWithOffers.push(transition);
+        offerIndex++;
+      } else {
+        transitionsWithOffers.push(transition);
+      }
+    }
+    return transitionsWithOffers;
+  }
+
+  return transitions;
+};
+
+export const isNegotiationState = state => {
+  if (state == null) {
+    return false;
+  }
+
+  const unprefixedState = state.indexOf('/') === -1 ? state : state.split('/')[1];
+  return [states.OFFER_PENDING, states.CUSTOMER_OFFER_PENDING].includes(unprefixedState);
+};
+
 // Check if a transition is the kind that should be rendered
 // when showing transition history (e.g. ActivityFeed)
 // The first transition and most of the expiration transitions made by system are not relevant
