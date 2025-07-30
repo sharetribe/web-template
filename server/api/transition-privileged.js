@@ -1,5 +1,14 @@
-const { transactionLineItems } = require('../api-util/lineItems');
 const sharetribeSdk = require('sharetribe-flex-sdk');
+const { transactionLineItems } = require('../api-util/lineItems');
+const {
+  addOfferToMetadata,
+  getPreviousOffer,
+  getQuoteFromPreviousOffer,
+  isIntentionToMakeCounterOffer,
+  isIntentionToMakeOffer,
+  isIntentionToRevokeCounterOffer,
+  throwErrorIfNegotiationOfferHasInvalidHistory,
+} = require('../api-util/negotiation');
 const {
   getSdk,
   getTrustedSdk,
@@ -10,79 +19,88 @@ const {
 
 const { Money } = sharetribeSdk.types;
 
-const listingPromise = (sdk, id) => sdk.listings.show({ id });
-const transactionPromise = (sdk, id) => sdk.transactions.show({ id });
-
-const getFullOrderData = (orderData, bodyParams, currency) => {
-  const { quoteInSubunits, transitionIntent } = orderData || {};
-  const isIntentionToMakeOffer = transitionIntent === 'make-offer' && quoteInSubunits > 0;
-  return isIntentionToMakeOffer
-    ? {
-        ...orderData,
-        ...bodyParams.params,
-        quote: new Money(quoteInSubunits, currency),
-      }
-    : { ...orderData, ...bodyParams.params };
+const transactionPromise = (sdk, id) => sdk.transactions.show({ id, include: ['listing'] });
+const getListingRelationShip = transactionShowAPIData => {
+  const { data, included } = transactionShowAPIData;
+  const { relationships } = data;
+  const { listing: listingRef } = relationships;
+  return included.find(i => i.id.uuid === listingRef.data.id.uuid);
 };
 
-const getMetadata = (orderData, transition, actor, existingMetadata) => {
-  const { quoteInSubunits, transitionIntent } = orderData || {};
-  const isIntentionToMakeOffer = transitionIntent === 'make-offer' && quoteInSubunits > 0;
-  return isIntentionToMakeOffer
+const getFullOrderData = (orderData, bodyParams, currency, offers) => {
+  const { quoteInSubunits } = orderData || {};
+  const transitionName = bodyParams.transition;
+  const orderDataAndParams = { ...orderData, ...bodyParams.params };
+
+  return isIntentionToMakeOffer(quoteInSubunits, transitionName) ||
+    isIntentionToMakeCounterOffer(quoteInSubunits, transitionName)
     ? {
-        metadata: {
-          ...existingMetadata,
-          offers: [
-            ...(existingMetadata.offers || []),
-            {
-              quoteInSubunits,
-              by: actor,
-              transition,
-            },
-          ],
-        },
+        ...orderDataAndParams,
+        quote: new Money(quoteInSubunits, currency),
       }
-    : existingMetadata
-    ? { metadata: existingMetadata }
-    : {};
+    : isIntentionToRevokeCounterOffer(transitionName)
+    ? {
+        ...orderDataAndParams,
+        quote: new Money(getQuoteFromPreviousOffer(offers), currency), // TODO: fix this!
+      }
+    : orderDataAndParams;
+};
+
+const getUpdatedMetadata = (orderData, transition, existingMetadata) => {
+  const { actor, quoteInSubunits } = orderData || {};
+  // NOTE: for default-negotiation process, the actor is always "provider" when making an offer.
+  const hasActor = ['provider', 'customer'].includes(actor);
+  const by = hasActor ? actor : null;
+
+  const isNewOffer =
+    isIntentionToMakeOffer(quoteInSubunits, transition) ||
+    isIntentionToMakeCounterOffer(quoteInSubunits, transition);
+
+  return isNewOffer
+    ? addOfferToMetadata(existingMetadata, {
+        quoteInSubunits,
+        by,
+        transition,
+      })
+    : isIntentionToRevokeCounterOffer(transition)
+    ? addOfferToMetadata(existingMetadata, getPreviousOffer(existingMetadata.offers))
+    : addOfferToMetadata(existingMetadata, null);
 };
 
 module.exports = (req, res) => {
   const { isSpeculative, orderData, bodyParams, queryParams } = req.body;
 
   const sdk = getSdk(req, res);
+  const transitionName = bodyParams.transition;
   let lineItems = null;
   let metadataMaybe = {};
 
-  Promise.all([
-    listingPromise(sdk, bodyParams?.params?.listingId),
-    transactionPromise(sdk, orderData?.transactionId),
-    fetchCommission(sdk),
-  ])
+  Promise.all([transactionPromise(sdk, bodyParams?.id), fetchCommission(sdk)])
     .then(responses => {
-      const [showListingResponse, showTransactionResponse, fetchAssetsResponse] = responses;
-      const listing = showListingResponse.data.data;
+      const [showTransactionResponse, fetchAssetsResponse] = responses;
       const transaction = showTransactionResponse.data.data;
+      const listing = getListingRelationShip(showTransactionResponse.data);
       const commissionAsset = fetchAssetsResponse.data.data[0];
 
       const existingMetadata = transaction?.attributes?.metadata;
-      // NOTE: for now, the actor is always "provider".
-      const hasActor = ['provider', 'customer'].includes(orderData.actor);
-      const actor = hasActor ? orderData.actor : null;
-      const currency = listing.attributes.price.currency;
-      const fullOrderData = getFullOrderData(orderData, bodyParams, currency);
+      const existingOffers = existingMetadata?.offers || [];
+      const transitions = transaction.attributes.transitions;
 
+      // Check if the transition is related to negotiation offers and if the offers are valid
+      throwErrorIfNegotiationOfferHasInvalidHistory(transitionName, existingOffers, transitions);
+
+      const currency = listing.attributes.price.currency;
       const { providerCommission, customerCommission } =
         commissionAsset?.type === 'jsonAsset' ? commissionAsset.attributes.data : {};
 
       lineItems = transactionLineItems(
         listing,
-        fullOrderData,
+        getFullOrderData(orderData, bodyParams, currency, existingOffers),
         providerCommission,
         customerCommission
       );
 
-      metadataMaybe = getMetadata(orderData, bodyParams.transition, actor, existingMetadata);
+      metadataMaybe = getUpdatedMetadata(orderData, transitionName, existingMetadata);
 
       return getTrustedSdk(req);
     })
