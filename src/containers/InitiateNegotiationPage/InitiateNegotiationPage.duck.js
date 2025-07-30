@@ -247,10 +247,10 @@ const getTransitionName = (transactionId, processAlias, state) => {
 };
 
 /**
- * Initiate the negotiation by making a transition with a quote/offer.
+ * Initiate the negotiation by making a transition with an offer.
  *
  * @param {Object} negotiationParams
- * @param {Number} negotiationParams.quoteInSubunits offer amount in subunits
+ * @param {Number} negotiationParams.offerInSubunits offer amount in subunits
  * @param {string} processAlias E.g. 'default-negotiation/release-1'
  * @param {string} transactionId uuid string
  * @param {boolean} isPrivilegedTransition
@@ -272,10 +272,10 @@ export const initiateNegotiation = (
   const transitionName = getTransitionName(transactionId, processAlias, state);
 
   // Note: transitionParams are parameters for Marketplace API
-  const { quoteInSubunits, ...transitionParams } = negotiationParams;
+  const { offerInSubunits, ...transitionParams } = negotiationParams;
 
   // Parameters only for client app's server to be used when making a privileged transition
-  const orderData = quoteInSubunits ? { actor: 'provider', quoteInSubunits } : {};
+  const orderData = offerInSubunits ? { actor: 'provider', offerInSubunits } : {};
 
   const bodyParams = isTransition
     ? {
