@@ -11,7 +11,7 @@ import {
   stringifyDateToISO8601,
 } from '../../util/dates';
 import { isTransactionsTransitionInvalidTransition, storableError } from '../../util/errors';
-import { transactionLineItems } from '../../util/api';
+import { transactionLineItems, transitionPrivileged } from '../../util/api';
 import * as log from '../../util/log';
 import {
   updatedEntities,
@@ -623,13 +623,35 @@ const refreshTransactionEntity = (sdk, txId, dispatch) => {
 };
 
 export const makeTransition = (txId, transitionName, params) => (dispatch, getState, sdk) => {
-  if (transitionInProgress(getState())) {
+  const state = getState();
+  if (transitionInProgress(state)) {
     return Promise.reject(new Error('Transition already in progress'));
   }
   dispatch(transitionRequest(transitionName));
 
-  return sdk.transactions
-    .transition({ id: txId, transition: transitionName, params }, { expand: true })
+  const transaction = state?.marketplaceData?.entities?.transaction?.[txId?.uuid];
+  const processName = resolveLatestProcessName(transaction?.attributes?.processName);
+  const process = getProcess(processName);
+
+  // This calls the client app's server to make a privileged transition.
+  const privilegedTransition = () =>
+    transitionPrivileged({
+      isSpeculative: false,
+      orderData: params?.orderData || {},
+      bodyParams: {
+        id: txId,
+        transition: transitionName,
+        params: {}, // NOTE: lineItems and metadata are included on the server-side.
+      },
+      queryParams: {
+        expand: true,
+      },
+    });
+  const normalTransition = () =>
+    sdk.transactions.transition({ id: txId, transition: transitionName, params }, { expand: true });
+  const makeCall = process?.isPrivileged(transitionName) ? privilegedTransition : normalTransition;
+
+  return makeCall()
     .then(response => {
       dispatch(addMarketplaceEntities(response));
       dispatch(transitionSuccess());
