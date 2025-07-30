@@ -66,9 +66,13 @@ const getActionButtonPropsMaybe = (params, onlyForRole = 'both') => {
   const actionButtonTrId =
     actionButtonTranslationId ||
     `TransactionPage.${processName}.${transactionRole}.transition-${transitionKey}.actionButton`;
-  const actionButtonTrErrorId =
-    actionButtonTranslationErrorId ||
-    `TransactionPage.${processName}.${transactionRole}.transition-${transitionKey}.actionError`;
+
+  const isPastNegotiationOffersInvalidError =
+    transitionError?.statusText === 'Past negotiation offers are invalid';
+  const actionButtonTrErrorId = isPastNegotiationOffersInvalidError
+    ? `TransactionPage.${processName}.actionError.pastNegotiationOffersInvalid`
+    : actionButtonTranslationErrorId ||
+      `TransactionPage.${processName}.${transactionRole}.transition-${transitionKey}.actionError`;
 
   return onlyForRole === 'both' || onlyForRole === transactionRole
     ? {
@@ -99,8 +103,10 @@ export const getStateData = (params, process) => {
   const isCustomer = transactionRole === 'customer';
   const processName = resolveLatestProcessName(transaction?.attributes?.processName);
 
-  const getActionButtonProps = (transitionName, forRole, extra = {}) =>
-    getActionButtonPropsMaybe(
+  const getActionButtonProps = (transitionName, forRole, extra = {}) => {
+    const { orderData, ...rest } = extra;
+    const params = orderData ? { orderData } : {};
+    return getActionButtonPropsMaybe(
       {
         processName,
         transitionName,
@@ -108,11 +114,12 @@ export const getStateData = (params, process) => {
         intl,
         inProgress: transitionInProgress === transitionName,
         transitionError,
-        onAction: () => onTransition(transaction?.id, transitionName, {}),
-        ...extra,
+        onAction: () => onTransition(transaction?.id, transitionName, params),
+        ...rest,
       },
       forRole
     );
+  };
 
   const getLeaveReviewProps = getActionButtonPropsMaybe({
     processName,
