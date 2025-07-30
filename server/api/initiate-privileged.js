@@ -1,5 +1,6 @@
-const { transactionLineItems } = require('../api-util/lineItems');
 const sharetribeSdk = require('sharetribe-flex-sdk');
+const { transactionLineItems } = require('../api-util/lineItems');
+const { isIntentionToMakeOffer } = require('../api-util/negotiation');
 const {
   getSdk,
   getTrustedSdk,
@@ -13,9 +14,10 @@ const { Money } = sharetribeSdk.types;
 const listingPromise = (sdk, id) => sdk.listings.show({ id });
 
 const getFullOrderData = (orderData, bodyParams, currency) => {
-  const { quoteInSubunits, transitionIntent } = orderData || {};
-  const isIntentionToMakeOffer = transitionIntent === 'make-offer' && quoteInSubunits > 0;
-  return isIntentionToMakeOffer
+  const { quoteInSubunits } = orderData || {};
+  const transitionName = bodyParams.transition;
+
+  return isIntentionToMakeOffer(quoteInSubunits, transitionName)
     ? {
         ...orderData,
         ...bodyParams.params,
@@ -24,16 +26,19 @@ const getFullOrderData = (orderData, bodyParams, currency) => {
     : { ...orderData, ...bodyParams.params };
 };
 
-const getMetadata = (orderData, transition, actor) => {
-  const { quoteInSubunits, transitionIntent } = orderData || {};
-  const isIntentionToMakeOffer = transitionIntent === 'make-offer' && quoteInSubunits > 0;
-  return isIntentionToMakeOffer
+const getMetadata = (orderData, transition) => {
+  const { actor, quoteInSubunits } = orderData || {};
+  // NOTE: for now, the actor is always "provider".
+  const hasActor = ['provider', 'customer'].includes(actor);
+  const by = hasActor ? actor : null;
+
+  return isIntentionToMakeOffer(quoteInSubunits, transition)
     ? {
         metadata: {
           offers: [
             {
               quoteInSubunits,
-              by: actor,
+              by,
               transition,
             },
           ],
@@ -44,7 +49,7 @@ const getMetadata = (orderData, transition, actor) => {
 
 module.exports = (req, res) => {
   const { isSpeculative, orderData, bodyParams, queryParams } = req.body;
-
+  const transitionName = bodyParams.transition;
   const sdk = getSdk(req, res);
   let lineItems = null;
   let metadataMaybe = {};
@@ -54,22 +59,17 @@ module.exports = (req, res) => {
       const listing = showListingResponse.data.data;
       const commissionAsset = fetchAssetsResponse.data.data[0];
 
-      // NOTE: for now, the actor is always "provider".
-      const hasActor = ['provider', 'customer'].includes(orderData.actor);
-      const actor = hasActor ? orderData.actor : null;
       const currency = listing.attributes.price.currency;
-      const fullOrderData = getFullOrderData(orderData, bodyParams, currency);
-
       const { providerCommission, customerCommission } =
         commissionAsset?.type === 'jsonAsset' ? commissionAsset.attributes.data : {};
 
       lineItems = transactionLineItems(
         listing,
-        fullOrderData,
+        getFullOrderData(orderData, bodyParams, currency),
         providerCommission,
         customerCommission
       );
-      metadataMaybe = getMetadata(orderData, bodyParams.transition, actor);
+      metadataMaybe = getMetadata(orderData, transitionName);
 
       return getTrustedSdk(req);
     })
