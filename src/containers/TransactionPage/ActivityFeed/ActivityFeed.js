@@ -334,9 +334,9 @@ export const ActivityFeed = props => {
       const ownRole = getUserTxRole(currentUser.id, transaction);
       const otherUser = ownRole === TX_TRANSITION_ACTOR_PROVIDER ? customer : provider;
 
-      const quoteInSubunits = transition.quoteInSubunits;
-      const negotiationOffer = quoteInSubunits
-        ? formatMoney(intl, new Money(quoteInSubunits, currency))
+      const offerInSubunits = transition.offerInSubunits;
+      const negotiationOffer = offerInSubunits
+        ? formatMoney(intl, new Money(offerInSubunits, currency))
         : null;
 
       transitionComponent = (

@@ -93,7 +93,7 @@ export const MakeOfferForm = props => {
     onSubmit,
   } = props;
 
-  const initialValuesMaybe = price ? { quote: price } : {};
+  const initialValuesMaybe = price ? { offer: price } : {};
 
   const marketplaceCurrency = config.currency;
   const priceValidators = getPriceValidators(
@@ -124,7 +124,7 @@ export const MakeOfferForm = props => {
         return (
           <Form className={classes} onSubmit={handleSubmit} enforcePagePreloadFor="SaleDetailsPage">
             <div className={css.section}>
-              <Heading as="label" htmlFor={`${formId}quote`} rootClassName={css.sectionHeading}>
+              <Heading as="label" htmlFor={`${formId}offer`} rootClassName={css.sectionHeading}>
                 <FormattedMessage
                   id="InitiateNegotiationPage.quoteLabel"
                   values={{ authorDisplayName }}
@@ -132,8 +132,8 @@ export const MakeOfferForm = props => {
               </Heading>
 
               <FieldCurrencyInput
-                id={`${formId}quote`}
-                name="quote"
+                id={`${formId}offer`}
+                name="offer"
                 className={css.input}
                 placeholder={intl.formatMessage(
                   {

@@ -14,30 +14,30 @@ const { Money } = sharetribeSdk.types;
 const listingPromise = (sdk, id) => sdk.listings.show({ id });
 
 const getFullOrderData = (orderData, bodyParams, currency) => {
-  const { quoteInSubunits } = orderData || {};
+  const { offerInSubunits } = orderData || {};
   const transitionName = bodyParams.transition;
 
-  return isIntentionToMakeOffer(quoteInSubunits, transitionName)
+  return isIntentionToMakeOffer(offerInSubunits, transitionName)
     ? {
         ...orderData,
         ...bodyParams.params,
-        quote: new Money(quoteInSubunits, currency),
+        offer: new Money(offerInSubunits, currency),
       }
     : { ...orderData, ...bodyParams.params };
 };
 
 const getMetadata = (orderData, transition) => {
-  const { actor, quoteInSubunits } = orderData || {};
+  const { actor, offerInSubunits } = orderData || {};
   // NOTE: for now, the actor is always "provider".
   const hasActor = ['provider', 'customer'].includes(actor);
   const by = hasActor ? actor : null;
 
-  return isIntentionToMakeOffer(quoteInSubunits, transition)
+  return isIntentionToMakeOffer(offerInSubunits, transition)
     ? {
         metadata: {
           offers: [
             {
-              quoteInSubunits,
+              offerInSubunits,
               by,
               transition,
             },
