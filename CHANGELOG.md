@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Add currently available translations for DE, ES, FR.
+  [#644](https://github.com/sharetribe/web-template/pull/644)
 - [add] Add some accessibility improvements to Topbar, Footer, and AuthenticationPage.
   [#639](https://github.com/sharetribe/web-template/pull/639)
 - [add] Add currently available translations for DE, ES, FR.
