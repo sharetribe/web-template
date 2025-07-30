@@ -604,7 +604,9 @@ export const TransactionPageComponent = props => {
       {...orderBreakdownMaybe}
       orderPanel={
         <OrderPanel
-          className={css.orderPanel}
+          className={classNames(css.orderPanel, {
+            [css.orderPanelNextToTitle]: stateData.showDetailCardHeadings,
+          })}
           titleClassName={css.orderTitle}
           listing={listing}
           isOwnListing={isOwnSale}
