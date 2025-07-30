@@ -24,6 +24,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## [v8.6.0] 2025-07-17
 
+- [add] Added support for Provider and Customer minimum commission handling
+  [#631](https://github.com/sharetribe/web-template/pull/635)
 - [fix] EditListingDeliveryPanel: additional shipping fee was not asked and the related shipping fee
   was missing, when selecting multiple items.
   [#636](https://github.com/sharetribe/web-template/pull/636)

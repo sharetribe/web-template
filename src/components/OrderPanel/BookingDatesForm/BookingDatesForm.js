@@ -25,6 +25,8 @@ import { Form, PrimaryButton, FieldDateRangePicker, FieldSelect, H6 } from '../.
 
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
 
+import FetchLineItemsError from '../FetchLineItemsError/FetchLineItemsError.js';
+
 import css from './BookingDatesForm.module.css';
 
 const TODAY = new Date();
@@ -837,11 +839,7 @@ export const BookingDatesForm = props => {
                 />
               </div>
             ) : null}
-            {fetchLineItemsError ? (
-              <span className={css.sideBarError}>
-                <FormattedMessage id="BookingDatesForm.fetchLineItemsError" />
-              </span>
-            ) : null}
+            <FetchLineItemsError error={fetchLineItemsError} />
 
             <div className={css.submitButton}>
               <PrimaryButton
