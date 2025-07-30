@@ -1173,6 +1173,7 @@
   "TransactionPage.default-booking.provider.transition-decline.actionError": "Oops, declining failed. Please try again.",
   "TransactionPage.default-inquiry.customer.free-inquiry.title": "You sent an inquiry.",
   "TransactionPage.default-inquiry.provider.free-inquiry.title": "You received an inquiry from {customerName}.",
+  "TransactionPage.default-negotiation.actionError.pastNegotiationOffersInvalid": "Oops, action failed. Please contact support.",
   "TransactionPage.default-negotiation.customer.canceled.title": "The order was canceled.",
   "TransactionPage.default-negotiation.customer.changes-requested.extraInfo": "You'll be notified when {providerName} delivers the changes.",
   "TransactionPage.default-negotiation.customer.changes-requested.title": "Changes requested",
