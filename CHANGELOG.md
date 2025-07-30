@@ -14,8 +14,12 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+## [v8.7.0] 2025-07-30
+
 - [add] Add currently available translations for DE, ES, FR.
   [#644](https://github.com/sharetribe/web-template/pull/644)
+- [add] Added support for Provider and Customer minimum commission handling
+  [#631](https://github.com/sharetribe/web-template/pull/635)
 - [add] Add some accessibility improvements to Topbar, Footer, and AuthenticationPage.
   [#639](https://github.com/sharetribe/web-template/pull/639)
 - [add] Add currently available translations for DE, ES, FR.
@@ -24,10 +28,10 @@ way to update this template, but currently, we follow a pattern:
   bounds change, the search results are different and the previous pagination page number is not
   valid anymore. [#640](https://github.com/sharetribe/web-template/pull/640)
 
+  [v8.7.0]: https://github.com/sharetribe/web-template/compare/v8.6.0...v8.7.0
+
 ## [v8.6.0] 2025-07-17
 
-- [add] Added support for Provider and Customer minimum commission handling
-  [#631](https://github.com/sharetribe/web-template/pull/635)
 - [fix] EditListingDeliveryPanel: additional shipping fee was not asked and the related shipping fee
   was missing, when selecting multiple items.
   [#636](https://github.com/sharetribe/web-template/pull/636)
