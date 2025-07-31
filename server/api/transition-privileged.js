@@ -92,7 +92,10 @@ module.exports = (req, res) => {
       // Check if the transition is related to negotiation offers and if the offers are valid
       throwErrorIfNegotiationOfferHasInvalidHistory(transitionName, existingOffers, transitions);
 
-      const currency = listing.attributes.price.currency;
+      const currency =
+        transaction.attributes.payinTotal?.currency ||
+        listing.attributes.price?.currency ||
+        orderData.currency;
       const { providerCommission, customerCommission } =
         commissionAsset?.type === 'jsonAsset' ? commissionAsset.attributes.data : {};
 

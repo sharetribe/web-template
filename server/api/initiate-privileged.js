@@ -59,7 +59,7 @@ module.exports = (req, res) => {
       const listing = showListingResponse.data.data;
       const commissionAsset = fetchAssetsResponse.data.data[0];
 
-      const currency = listing.attributes.price.currency;
+      const currency = listing.attributes.price?.currency || orderData.currency;
       const { providerCommission, customerCommission } =
         commissionAsset?.type === 'jsonAsset' ? commissionAsset.attributes.data : {};
 
