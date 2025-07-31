@@ -144,7 +144,7 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
   const isBookable = ['day', 'night', 'hour', 'fixed'].includes(unitType);
   const isNegotiationUnitType = ['offer', 'request'].includes(unitType);
   const priceAttribute = listing.attributes.price;
-  const currency = priceAttribute.currency;
+  const currency = priceAttribute?.currency || orderData.currency;
 
   const { priceVariantName, offer } = orderData || {};
   const priceVariantConfig = priceVariants
@@ -232,8 +232,8 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
   const lineItems = [
     order,
     ...extraLineItems,
-    ...getProviderCommissionMaybe(providerCommission, order, priceAttribute),
-    ...getCustomerCommissionMaybe(customerCommission, order, priceAttribute),
+    ...getProviderCommissionMaybe(providerCommission, order, currency),
+    ...getCustomerCommissionMaybe(customerCommission, order, currency),
   ];
 
   return lineItems;
