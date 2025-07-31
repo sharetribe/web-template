@@ -4,6 +4,7 @@ import classNames from 'classnames';
 
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { types as sdkTypes } from '../../../util/sdkLoader';
+import { useConfiguration } from '../../../context/configurationContext';
 import { formatMoney } from '../../../util/currency';
 import { richText } from '../../../util/richText';
 import { formatDateWithProximity } from '../../../util/dates';
@@ -256,6 +257,7 @@ const organizedItems = (messages, transitions, hideOldTransitions) => {
  */
 export const ActivityFeed = props => {
   const intl = props.intl || useIntl();
+  const config = useConfiguration();
   const {
     rootClassName,
     className,
@@ -283,7 +285,11 @@ export const ActivityFeed = props => {
     offers && process.getTransitionsWithMatchingOffers
       ? process.getTransitionsWithMatchingOffers(transitions, offers)
       : transitions;
-  const currency = transaction?.listing?.attributes?.price?.currency;
+  // Check currency primarily from tx, secondarily from listing, the fallback is marketplace currency
+  const currency =
+    transaction?.attributes?.payinTotal?.currency ||
+    transaction?.listing?.attributes?.price?.currency ||
+    config.currency;
   const relevantTransitions = enhancedTransitions.filter(t =>
     process.isRelevantPastTransition(t.transition)
   );
