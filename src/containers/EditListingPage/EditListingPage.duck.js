@@ -216,6 +216,7 @@ export default function reducer(state = initialState, action = {}) {
   const { type, payload } = action;
   switch (type) {
     case MARK_TAB_UPDATED:
+      console.log('[DEBUG] MARK_TAB_UPDATED dispatched with payload:', payload);
       return { ...state, updatedTab: payload };
     case CLEAR_UPDATED_TAB:
       return { ...state, updatedTab: null, updateListingError: null };
@@ -276,15 +277,25 @@ export default function reducer(state = initialState, action = {}) {
     }
 
     case UPDATE_LISTING_REQUEST:
+      console.log('[DEBUG] UPDATE_LISTING_REQUEST dispatched');
       return { ...state, updateInProgress: true, updateListingError: null };
     case UPDATE_LISTING_SUCCESS:
-      return {
+      console.log('[DEBUG] UPDATE_LISTING_SUCCESS dispatched with payload:', payload);
+      console.log('[DEBUG] Updated listing data:', payload?.data?.data);
+      console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - Reducer received availabilityPlan:', !!payload?.data?.data?.attributes?.availabilityPlan);
+      if (payload?.data?.data?.attributes?.availabilityPlan) {
+        console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - Reducer plan structure:', JSON.stringify(payload.data.data.attributes.availabilityPlan, null, 2));
+      }
+      const newState = {
         ...state,
         ...updateUploadedImagesState(state, payload),
         updateInProgress: false,
         // availabilityCalendar: { ...state.availabilityCalendar },
       };
+      console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - New state created, checking if listing was updated in marketplaceData');
+      return newState;
     case UPDATE_LISTING_ERROR:
+      console.error('[DEBUG] UPDATE_LISTING_ERROR dispatched with payload:', payload);
       return { ...state, updateInProgress: false, updateListingError: payload };
 
     case SHOW_LISTINGS_REQUEST:
@@ -611,8 +622,15 @@ const updateStockOfListingMaybe = (listingId, stockTotals, dispatch) => {
 // create, set stock, show listing (to get updated currentStock entity)
 export function requestCreateListingDraft(data, config) {
   return (dispatch, getState, sdk) => {
-    dispatch(createListingDraftRequest(data));
-    const { stockUpdate, images, ...rest } = data;
+    console.log("requestCreateListingDraft reached");
+    console.log('[DEBUG] requestCreateListingDraft called with:', { data, config });
+    console.log("requestCreateListingDraft data structure:", JSON.stringify(data, null, 2));
+    console.log("requestCreateListingDraft listing ID:", data?.id);
+    console.log("requestCreateListingDraft availabilityPlan:", data?.availabilityPlan);
+    
+    try {
+      dispatch(createListingDraftRequest(data));
+      const { stockUpdate, images, ...rest } = data;
 
     // If images should be saved, create array out of the image UUIDs for the API call
     // Note: in this template, image upload is not happening at the same time as listing creation.
@@ -636,20 +654,27 @@ export function requestCreateListingDraft(data, config) {
     return sdk.ownListings
       .createDraft(ownListingValues, queryParams)
       .then(response => {
+        console.log("requestCreateListingDraft API call succeeded:", response);
         createDraftResponse = response;
         const listingId = response.data.data.id;
         // If stockUpdate info is passed through, update stock
         return updateStockOfListingMaybe(listingId, stockUpdate, dispatch);
       })
       .then(() => {
+        console.log("requestCreateListingDraft stock update completed");
         // Modify store to understand that we have created listing and can redirect away
         dispatch(createListingDraftSuccess(createDraftResponse));
         return createDraftResponse;
       })
       .catch(e => {
+        console.error("requestCreateListingDraft failed:", e);
         log.error(e, 'create-listing-draft-failed', { listingData: data });
         return dispatch(createListingDraftError(storableError(e)));
       });
+    } catch (error) {
+      console.error("requestCreateListingDraft outer catch:", error);
+      throw error;
+    }
   };
 }
 
@@ -659,8 +684,19 @@ export function requestCreateListingDraft(data, config) {
 // NOTE: what comes to stock management, this follows the same pattern used in create listing call
 export function requestUpdateListing(tab, data, config) {
   return (dispatch, getState, sdk) => {
-    dispatch(updateListingRequest(data));
-    const { id, stockUpdate, images, ...rest } = data;
+    console.log("requestUpdateListing reached");
+    console.log('[DEBUG] requestUpdateListing called with:', { tab, data, config });
+    console.log("requestUpdateListing data structure:", JSON.stringify(data, null, 2));
+    console.log("requestUpdateListing listing ID:", data?.id);
+    console.log("requestUpdateListing availabilityPlan:", data?.availabilityPlan);
+    console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - Payload contains availabilityPlan:', !!data?.availabilityPlan);
+    if (data?.availabilityPlan) {
+      console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - Plan structure:', JSON.stringify(data.availabilityPlan, null, 2));
+    }
+    
+    try {
+      dispatch(updateListingRequest(data));
+      const { id, stockUpdate, images, ...rest } = data;
 
     // If images should be saved, create array out of the image UUIDs for the API call
     const imageProperty = typeof images !== 'undefined' ? { images: imageIds(images) } : {};
@@ -687,12 +723,31 @@ export function requestUpdateListing(tab, data, config) {
     // Note: if update values include stockUpdate, we'll do that first
     // That way we get updated currentStock info among ownListings.update
     return updateStockOfListingMaybe(id, stockUpdate, dispatch)
-      .then(() => sdk.ownListings.update(ownListingUpdateValues, queryParams))
+      .then(() => {
+        console.log("requestUpdateListing stock update completed");
+        return sdk.ownListings.update(ownListingUpdateValues, queryParams);
+      })
       .then(response => {
+        console.log("requestUpdateListing API call succeeded:", response);
+        console.log('[DEBUG] Response data structure:', response?.data?.data);
+        console.log('[DEBUG] Updated availabilityPlan:', response?.data?.data?.attributes?.availabilityPlan);
+        console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - Response contains availabilityPlan:', !!response?.data?.data?.attributes?.availabilityPlan);
+        if (response?.data?.data?.attributes?.availabilityPlan) {
+          console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - Response plan structure:', JSON.stringify(response.data.data.attributes.availabilityPlan, null, 2));
+        }
         dispatch(updateListingSuccess(response));
         if (!response || !response.data) {
           console.warn('⚠️ Skipping marketplace entity merge due to missing sdkResponse in requestUpdateListing');
         } else {
+          console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - Dispatching addMarketplaceEntities with response');
+          console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - Response structure for addMarketplaceEntities:', {
+            hasData: !!response.data,
+            hasDataData: !!response.data?.data,
+            dataType: response.data?.data?.type,
+            dataId: response.data?.data?.id?.uuid,
+            hasAttributes: !!response.data?.data?.attributes,
+            hasAvailabilityPlan: !!response.data?.data?.attributes?.availabilityPlan
+          });
           dispatch(addMarketplaceEntities(response));
         }
         dispatch(markTabUpdated(tab));
@@ -709,9 +764,14 @@ export function requestUpdateListing(tab, data, config) {
         return response;
       })
       .catch(e => {
+        console.error("requestUpdateListing failed:", e);
         log.error(e, 'update-listing-failed', { listingData: data });
         return dispatch(updateListingError(storableError(e)));
       });
+    } catch (error) {
+      console.error("requestUpdateListing outer catch:", error);
+      throw error;
+    }
   };
 }
 
@@ -764,13 +824,50 @@ export function requestImageUpload(actionPayload, listingImageConfig) {
 export const requestAddAvailabilityException = params => (dispatch, getState, sdk) => {
   dispatch(addAvailabilityExceptionRequest(params));
 
+  console.log('🧪 [DEBUG] SDK requestAddAvailabilityException called with params:', params);
+  console.log('🧪 [DEBUG] Params type:', typeof params);
+  console.log('🧪 [DEBUG] Params keys:', Object.keys(params));
+  if (params.data) {
+    console.log('🧪 [DEBUG] Data structure:', JSON.stringify(params.data, null, 2));
+  }
+
   return sdk.availabilityExceptions
     .create(params, { expand: true })
     .then(response => {
+      console.log('🧪 [DEBUG] SDK availabilityException.create success:', response);
       const availabilityException = response.data.data;
       return dispatch(addAvailabilityExceptionSuccess({ data: availabilityException }));
     })
     .catch(e => {
+      console.error('🧪 [DEBUG] SDK availabilityException.create error:', {
+        message: e.message,
+        status: e.status,
+        data: e.data,
+        errors: e.data?.errors,
+        fullError: e,
+      });
+      // Log the actual error response if available
+      if (e.response) {
+        console.error('🧪 [DEBUG] Error response details:', {
+          status: e.response.status,
+          statusText: e.response.statusText,
+          data: e.response.data,
+          headers: e.response.headers
+        });
+      }
+      // Log the request that was sent
+      if (e.config) {
+        console.error('🧪 [DEBUG] Request that failed:', {
+          url: e.config.url,
+          method: e.config.method,
+          data: e.config.data,
+          headers: e.config.headers
+        });
+      }
+      // Log any API errors in detail
+      if (e.data && e.data.errors) {
+        console.error('🧪 [DEBUG] API validation errors:', e.data.errors);
+      }
       dispatch(addAvailabilityExceptionError({ error: storableError(e) }));
       throw e;
     });
@@ -779,13 +876,23 @@ export const requestAddAvailabilityException = params => (dispatch, getState, sd
 export const requestDeleteAvailabilityException = params => (dispatch, getState, sdk) => {
   dispatch(deleteAvailabilityExceptionRequest(params));
 
+  console.log('🧪 [DEBUG] SDK requestDeleteAvailabilityException called with params:', params);
+
   return sdk.availabilityExceptions
     .delete(params, { expand: true })
     .then(response => {
+      console.log('🧪 [DEBUG] SDK availabilityException.delete success:', response);
       const availabilityException = response.data.data;
       return dispatch(deleteAvailabilityExceptionSuccess({ data: availabilityException }));
     })
     .catch(e => {
+      console.error('🧪 [DEBUG] SDK availabilityException.delete error:', {
+        message: e.message,
+        status: e.status,
+        data: e.data,
+        errors: e.data?.errors,
+        fullError: e,
+      });
       dispatch(deleteAvailabilityExceptionError({ error: storableError(e) }));
       throw e;
     });

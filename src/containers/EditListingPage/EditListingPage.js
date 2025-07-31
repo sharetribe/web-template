@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { bool, func, object, shape, string, oneOf } from 'prop-types';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
@@ -128,6 +128,7 @@ const pickRenderableImages = (
  * @returns {JSX.Element}
  */
 export const EditListingPageComponent = props => {
+  console.log('[DEBUG] EditListingPage route render', { location: window.location.pathname, params: props.params });
   const intl = useIntl();
   const {
     currentUser,
@@ -165,7 +166,13 @@ export const EditListingPageComponent = props => {
   const isNewListingFlow = isNewURI || isDraftURI;
 
   const listingId = page.submittedListingId || (id ? new UUID(id) : null);
-  const currentListing = ensureOwnListing(getOwnListing(listingId));
+  const currentListing = useMemo(() => ensureOwnListing(getOwnListing(listingId)), [listingId, getOwnListing]);
+  const images = useMemo(() => pickRenderableImages(
+    currentListing,
+    page.uploadedImages,
+    page.uploadedImagesOrder,
+    page.removedImageIds
+  ), [currentListing, page.uploadedImages, page.uploadedImagesOrder, page.removedImageIds]);
   const { state: currentListingState } = currentListing.attributes;
 
   const hasPostingRights = hasPermissionToPostListings(currentUser);
@@ -250,12 +257,6 @@ export const EditListingPageComponent = props => {
 
     // Show form if user is posting a new listing or editing existing one
     const disableForm = page.redirectToListing && !showListingsError;
-    const images = pickRenderableImages(
-      currentListing,
-      uploadedImages,
-      uploadedImagesOrder,
-      removedImageIds
-    );
 
     const title = isNewListingFlow
       ? intl.formatMessage({ id: 'EditListingPage.titleCreateListing' })

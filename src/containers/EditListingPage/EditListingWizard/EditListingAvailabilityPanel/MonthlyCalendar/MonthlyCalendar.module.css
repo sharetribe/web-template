@@ -125,6 +125,37 @@
   background: rgba(255, 0, 0, 0.05);
 }
 
+.calendarDay.pastDate {
+  background: #f5f5f5;
+  color: #999;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.calendarDay.pastDate .dayNumber {
+  color: #999;
+}
+
+.calendarDay.pastDate .dayEntries {
+  opacity: 0.4;
+}
+
+.calendarDay.pastDate .availabilityDot {
+  background: #ccc;
+}
+
+.calendarDay.pastDate .entryRange {
+  color: #999;
+}
+
+.calendarDay.pastDate .seats {
+  color: #999;
+}
+
+.calendarDay.pastDate .sourceMaybe {
+  color: #999;
+}
+
 .dayNumber {
   font-size: 14px;
   font-weight: 600;
