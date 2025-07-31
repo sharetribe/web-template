@@ -34,6 +34,31 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
     leaveReviewProps,
   } = processInfo;
 
+  // These overwrite the default transition messages on the ActivityFeed component.
+  // The defaults are tied to the process state.
+  const transitionMessages = [
+    {
+      transition: transitions.PROVIDER_ACCEPT_COUNTER_OFFER,
+      translationId:
+        'TransactionPage.ActivityFeed.default-negotiation.transition.customer-make-counter-offer',
+    },
+    {
+      transition: transitions.CUSTOMER_WITHDRAW_COUNTER_OFFER,
+      translationId:
+        'TransactionPage.ActivityFeed.default-negotiation.transition.customer-withdraw-counter-offer',
+    },
+    {
+      transition: transitions.PROVIDER_REJECT_COUNTER_OFFER,
+      translationId:
+        'TransactionPage.ActivityFeed.default-negotiation.transition.provider-reject-counter-offer',
+    },
+  ];
+  const sharedStateData = {
+    processName,
+    processState,
+    transitionMessages,
+  };
+
   return new ConditionalResolver([processState, transactionRole])
     .cond([states.INQUIRY, PROVIDER], () => {
       const transitionNames = Array.isArray(nextTransitions)
@@ -42,10 +67,10 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
       const makeOfferAfterInquiry = transitions.MAKE_OFFER_AFTER_INQUIRY;
       const hasCorrectNextTransition = transitionNames.includes(makeOfferAfterInquiry);
       const showOrderPanel = !isCustomerBanned && hasCorrectNextTransition;
-      return { processName, processState, showOrderPanel, showDetailCardHeadings: true };
+      return { ...sharedStateData, showOrderPanel, showDetailCardHeadings: true };
     })
     .cond([states.INQUIRY, CUSTOMER], () => {
-      return { processName, processState, showDetailCardHeadings: true };
+      return { ...sharedStateData, showDetailCardHeadings: true };
     })
     .cond([states.OFFER_PENDING, CUSTOMER], () => {
       // When customer clicks on the accept button, we just redirect them to the checkout page.
@@ -58,8 +83,7 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
       };
 
       return {
-        processName,
-        processState,
+        ...sharedStateData,
         showDetailCardHeadings: true,
         showExtraInfo: true,
         showActionButtons: true,
@@ -69,42 +93,28 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
           overwrites
         ),
         secondaryButtonProps: actionButtonProps(transitions.CUSTOMER_REJECT_OFFER, CUSTOMER),
-        transitionMessages: [
-          {
-            transition: transitions.PROVIDER_ACCEPT_COUNTER_OFFER,
-            translationId:
-              'TransactionPage.ActivityFeed.default-negotiation.transition.customer-make-counter-offer',
           },
-        ],
       };
     })
     .cond([states.OFFER_PENDING, PROVIDER], () => {
       return {
-        processName,
-        processState,
+        ...sharedStateData,
         showDetailCardHeadings: true,
         showExtraInfo: true,
         showActionButtons: true,
         secondaryButtonProps: actionButtonProps(transitions.PROVIDER_WITHDRAW_OFFER, PROVIDER),
-        transitionMessages: [
-          {
-            transition: transitions.PROVIDER_ACCEPT_COUNTER_OFFER,
-            translationId:
-              'TransactionPage.ActivityFeed.default-negotiation.transition.customer-make-counter-offer',
           },
-        ],
       };
     })
     .cond([states.OFFER_REJECTED, _], () => {
-      return { processName, processState, showDetailCardHeadings: true, showBreakDown: false };
+      return { ...sharedStateData, showDetailCardHeadings: true, showBreakDown: false };
     })
     .cond([states.OFFER_ACCEPTED, CUSTOMER], () => {
-      return { processName, processState, showDetailCardHeadings: true, showExtraInfo: true };
+      return { ...sharedStateData, showDetailCardHeadings: true, showExtraInfo: true };
     })
     .cond([states.OFFER_ACCEPTED, PROVIDER], () => {
       return {
-        processName,
-        processState,
+        ...sharedStateData,
         showDetailCardHeadings: true,
         showExtraInfo: true,
         showActionButtons: true,
@@ -138,8 +148,7 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
       };
 
       return {
-        processName,
-        processState,
+        ...sharedStateData,
         showDetailCardHeadings: true,
         showExtraInfo: true,
         showActionButtons: true,
@@ -153,8 +162,7 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
     })
     .cond([states.DELIVERED, PROVIDER], () => {
       return {
-        processName,
-        processState,
+        ...sharedStateData,
         showDetailCardHeadings: true,
         showExtraInfo: true,
         // showActionButtons: true,
@@ -162,16 +170,14 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
     })
     .cond([states.CHANGES_REQUESTED, CUSTOMER], () => {
       return {
-        processName,
-        processState,
+        ...sharedStateData,
         showDetailCardHeadings: true,
         showExtraInfo: true,
       };
     })
     .cond([states.CHANGES_REQUESTED, PROVIDER], () => {
       return {
-        processName,
-        processState,
+        ...sharedStateData,
         showDetailCardHeadings: true,
         showExtraInfo: true,
         showActionButtons: true,
@@ -180,8 +186,7 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
     })
     .cond([states.COMPLETED, _], () => {
       return {
-        processName,
-        processState,
+        ...sharedStateData,
         showDetailCardHeadings: true,
         showReviewAsFirstLink: true,
         showActionButtons: true,
@@ -190,8 +195,7 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
     })
     .cond([states.REVIEWED_BY_PROVIDER, CUSTOMER], () => {
       return {
-        processName,
-        processState,
+        ...sharedStateData,
         showDetailCardHeadings: true,
         showReviewAsSecondLink: true,
         showActionButtons: true,
@@ -200,8 +204,7 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
     })
     .cond([states.REVIEWED_BY_CUSTOMER, PROVIDER], () => {
       return {
-        processName,
-        processState,
+        ...sharedStateData,
         showDetailCardHeadings: true,
         showReviewAsSecondLink: true,
         showActionButtons: true,
@@ -209,11 +212,11 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
       };
     })
     .cond([states.REVIEWED, _], () => {
-      return { processName, processState, showDetailCardHeadings: true, showReviews: true };
+      return { ...sharedStateData, showDetailCardHeadings: true, showReviews: true };
     })
     .default(() => {
       // Default values for other states
-      return { processName, processState, showDetailCardHeadings: true };
+      return { ...sharedStateData, showDetailCardHeadings: true };
     })
     .resolve();
 };
