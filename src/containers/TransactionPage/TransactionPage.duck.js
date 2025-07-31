@@ -446,10 +446,38 @@ export const fetchTimeSlots = (listingId, start, end, timeZone, options) => (
   }
 };
 
+// Helper function to ensure listing has a proper availability plan
+const ensureAvailabilityPlan = (listing) => {
+  const { availabilityPlan, publicData } = listing?.attributes || {};
+  
+  // If no availability plan exists, create a default 24/7 plan
+  if (!availabilityPlan || !availabilityPlan.type) {
+    console.log('⚠️ [TransactionPage.duck] No availability plan found, creating default 24/7 plan');
+    return {
+      type: 'availability-plan/time',
+      timezone: 'Etc/UTC',
+      entries: [
+        { dayOfWeek: 'mon', startTime: '00:00', endTime: '24:00', seats: 1 },
+        { dayOfWeek: 'tue', startTime: '00:00', endTime: '24:00', seats: 1 },
+        { dayOfWeek: 'wed', startTime: '00:00', endTime: '24:00', seats: 1 },
+        { dayOfWeek: 'thu', startTime: '00:00', endTime: '24:00', seats: 1 },
+        { dayOfWeek: 'fri', startTime: '00:00', endTime: '24:00', seats: 1 },
+        { dayOfWeek: 'sat', startTime: '00:00', endTime: '24:00', seats: 1 },
+        { dayOfWeek: 'sun', startTime: '00:00', endTime: '24:00', seats: 1 },
+      ],
+    };
+  }
+  
+  return availabilityPlan;
+};
+
 // Helper function for loadData call.
 const fetchMonthlyTimeSlots = (dispatch, listing) => {
   const hasWindow = typeof window !== 'undefined';
-  const { availabilityPlan, publicData } = listing?.attributes || {};
+  const { publicData } = listing?.attributes || {};
+  
+  // Ensure listing has a proper availability plan
+  const availabilityPlan = ensureAvailabilityPlan(listing);
   const tz = availabilityPlan?.timezone;
 
   // Fetch time-zones on client side only.
@@ -464,7 +492,27 @@ const fetchMonthlyTimeSlots = (dispatch, listing) => {
       : unitType === 'hour'
       ? 'hour'
       : 'day';
+    
+    // Debug logging for availability start date calculation
+    console.log('🔍 [TransactionPage.duck] Availability start date debug:', {
+      listingId: listing.id?.uuid,
+      now: now.toISOString(),
+      timeUnit,
+      timezone: tz,
+      unitType,
+      startTimeInterval,
+    });
+    
+    // For listings that should be available immediately, use current time as start
+    // instead of next boundary which can push availability into the future
+    const startDate = now;
     const nextBoundary = findNextBoundary(now, 1, timeUnit, tz);
+    
+    console.log('🔍 [TransactionPage.duck] Start date calculation:', {
+      startDate: startDate.toISOString(),
+      nextBoundary: nextBoundary.toISOString(),
+      differenceInHours: (nextBoundary.getTime() - startDate.getTime()) / (1000 * 60 * 60),
+    });
 
     const nextMonth = getStartOf(nextBoundary, 'month', tz, 1, 'months');
     const nextAfterNextMonth = getStartOf(nextMonth, 'month', tz, 1, 'months');
@@ -499,7 +547,7 @@ const fetchMonthlyTimeSlots = (dispatch, listing) => {
     };
 
     return Promise.all([
-      dispatch(fetchTimeSlots(listing.id, nextBoundary, nextMonthEnd, tz, options(startOfToday))),
+      dispatch(fetchTimeSlots(listing.id, startDate, nextMonthEnd, tz, options(startOfToday))),
       dispatch(fetchTimeSlots(listing.id, nextMonth, followingMonthEnd, tz, options(nextMonth))),
     ]);
   }

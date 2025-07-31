@@ -173,31 +173,40 @@ const initialValuesForListingFields = (
 };
 
 /**
- * If listing represents something else than a bookable listing, we set availability-plan to seats=0.
+ * Set availability plan based on listing type.
+ * For bookable listings, don't set availability plan during creation.
+ * For non-bookable listings, set availability-plan to seats=0.
  * Note: this is a performance improvement since the API is backwards compatible.
  *
  * @param {string} processAlias selected for this listing
- * @returns availabilityPlan without any seats available for the listing
+ * @returns availabilityPlan configuration
  */
-const setNoAvailabilityForUnbookableListings = processAlias => {
-  return isBookingProcessAlias(processAlias)
-    ? {}
-    : {
-        availabilityPlan: {
-          type: 'availability-plan/time',
-          timezone: 'Etc/UTC',
-          entries: [
-            // Note: "no entries" is the same as seats=0 for every entry.
-            // { dayOfWeek: 'mon', startTime: '00:00', endTime: '00:00', seats: 0 },
-            // { dayOfWeek: 'tue', startTime: '00:00', endTime: '00:00', seats: 0 },
-            // { dayOfWeek: 'wed', startTime: '00:00', endTime: '00:00', seats: 0 },
-            // { dayOfWeek: 'thu', startTime: '00:00', endTime: '00:00', seats: 0 },
-            // { dayOfWeek: 'fri', startTime: '00:00', endTime: '00:00', seats: 0 },
-            // { dayOfWeek: 'sat', startTime: '00:00', endTime: '00:00', seats: 0 },
-            // { dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 0 },
-          ],
-        },
-      };
+const setAvailabilityPlanForListing = processAlias => {
+  const isBooking = isBookingProcessAlias(processAlias);
+  
+  if (isBooking) {
+    // For bookable listings, don't set availability plan during creation
+    // Let the availability panel handle it later to avoid API validation issues
+    return {};
+  } else {
+    // For non-bookable listings, set availability-plan to seats=0
+    return {
+      availabilityPlan: {
+        type: 'availability-plan/time',
+        timezone: 'Etc/UTC',
+        entries: [
+          // Note: "no entries" is the same as seats=0 for every entry.
+          // { dayOfWeek: 'mon', startTime: '00:00', endTime: '00:00', seats: 0 },
+          // { dayOfWeek: 'tue', startTime: '00:00', endTime: '00:00', seats: 0 },
+          // { dayOfWeek: 'wed', startTime: '00:00', endTime: '00:00', seats: 0 },
+          // { dayOfWeek: 'thu', startTime: '00:00', endTime: '00:00', seats: 0 },
+          // { dayOfWeek: 'fri', startTime: '00:00', endTime: '00:00', seats: 0 },
+          // { dayOfWeek: 'sat', startTime: '00:00', endTime: '00:00', seats: 0 },
+          // { dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 0 },
+        ],
+      },
+    };
+  }
 };
 
 /**
@@ -366,6 +375,12 @@ const EditListingDetailsPanel = props => {
               listingFields
             );
             // New values for listing attributes
+            const availabilityPlanData = setAvailabilityPlanForListing(transactionProcessAlias);
+            console.log('🔧 [EditListingDetailsPanel] Setting availability plan for new listing:', {
+              transactionProcessAlias,
+              availabilityPlanData,
+            });
+            
             const updateValues = {
               title: title.trim(),
               description,
@@ -377,8 +392,17 @@ const EditListingDetailsPanel = props => {
                 ...publicListingFields,
               },
               privateData: privateListingFields,
-              ...setNoAvailabilityForUnbookableListings(transactionProcessAlias),
+              ...availabilityPlanData,
             };
+
+            console.log('🔧 [EditListingDetailsPanel] Final updateValues being sent to API:', {
+              title: updateValues.title,
+              hasDescription: !!updateValues.description,
+              publicDataKeys: Object.keys(updateValues.publicData || {}),
+              hasPrivateData: !!updateValues.privateData,
+              hasAvailabilityPlan: !!updateValues.availabilityPlan,
+              availabilityPlanStructure: updateValues.availabilityPlan,
+            });
 
             onSubmit(updateValues);
           }}

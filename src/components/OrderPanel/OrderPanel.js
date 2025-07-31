@@ -264,10 +264,21 @@ const OrderPanel = props => {
     );
   };
 
-  const timeZone = listing?.attributes?.availabilityPlan?.timezone;
+  const timeZone = listing?.attributes?.availabilityPlan?.timezone || 'Etc/UTC';
   const isClosed = listing?.attributes?.state === LISTING_STATE_CLOSED;
-
   const isBooking = isBookingProcess(processName);
+
+  // Debug logging for booking calendar rendering
+  console.log('🔍 [OrderPanel] Booking calendar debug:', {
+    listingId: listing?.id?.uuid,
+    hasAvailabilityPlan: !!listing?.attributes?.availabilityPlan,
+    timeZone,
+    isBooking,
+    shouldHaveBookingDates: isBooking && [LINE_ITEM_DAY, LINE_ITEM_NIGHT].includes(lineItemUnitType),
+    isClosed,
+    mounted,
+    showBookingDatesForm: mounted && isBooking && [LINE_ITEM_DAY, LINE_ITEM_NIGHT].includes(lineItemUnitType) && !isClosed && timeZone,
+  });
   const shouldHaveFixedBookingDuration = isBooking && [LINE_ITEM_FIXED].includes(lineItemUnitType);
   const showBookingFixedDurationForm =
     mounted && shouldHaveFixedBookingDuration && !isClosed && timeZone && priceVariants?.length > 0;

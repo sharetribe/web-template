@@ -252,14 +252,47 @@ const EditListingWizardTab = props => {
         return onUpdateListingOrCreateListingDraft(tab, updateListingValues)
           .then(r => {
             console.log('[DEBUG] API call succeeded in onCompleteEditListingWizardTab', r);
+            console.log('[DEBUG] Response structure:', {
+              hasR: !!r,
+              hasData: !!r?.data,
+              hasDataData: !!r?.data?.data,
+              hasId: !!r?.data?.data?.id,
+              responseType: typeof r,
+              dataType: typeof r?.data,
+              dataDataType: typeof r?.data?.data
+            });
             if (isNewListingFlow) {
-              const listingId = r.data.data.id;
-              console.log('[DEBUG] New listing flow - calling automaticRedirectsForNewListingFlow with:', { tab, listingId });
-              // Use setTimeout to ensure the dispatch completes before navigation
-              setTimeout(() => {
-                console.log('[DEBUG] setTimeout callback - calling automaticRedirectsForNewListingFlow');
-                automaticRedirectsForNewListingFlow(tab, listingId);
-              }, 0);
+              // Try different possible response structures
+              let listingId = null;
+              if (r?.data?.data?.id) {
+                listingId = r.data.data.id;
+              } else if (r?.data?.id) {
+                listingId = r.data.id;
+              } else if (r?.id) {
+                listingId = r.id;
+              } else if (r?.listingId) {
+                listingId = r.listingId;
+              }
+              
+              if (listingId) {
+                console.log('[DEBUG] New listing flow - calling automaticRedirectsForNewListingFlow with:', { tab, listingId });
+                // Use setTimeout to ensure the dispatch completes before navigation
+                setTimeout(() => {
+                  console.log('[DEBUG] setTimeout callback - calling automaticRedirectsForNewListingFlow');
+                  automaticRedirectsForNewListingFlow(tab, listingId);
+                }, 0);
+              } else {
+                console.error('[DEBUG] Could not find listingId in response structure:', r);
+                console.error('[DEBUG] Response keys:', r ? Object.keys(r) : 'null');
+                if (r?.data) {
+                  console.error('[DEBUG] Data keys:', Object.keys(r.data));
+                }
+                if (r?.data?.data) {
+                  console.error('[DEBUG] Data.data keys:', Object.keys(r.data.data));
+                }
+                // Don't throw error, just log and continue
+                console.warn('[DEBUG] Continuing without automatic redirect due to missing listingId');
+              }
             }
           })
           .catch(e => {

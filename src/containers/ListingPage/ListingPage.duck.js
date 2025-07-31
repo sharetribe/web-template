@@ -396,6 +396,15 @@ export const fetchTimeSlots = (listingId, start, end, timeZone, options) => (
 
   const params = { listing_id, start: startISO, end: endISO, ...extraParams };
 
+  // Debug logging for time slot API call
+  console.log('📤 [ListingPage.duck] Time slot API call params:', {
+    listing_id,
+    start: startISO,
+    end: endISO,
+    timeZone,
+    extraParams,
+  });
+
   if (useFetchTimeSlotsForDate) {
     const dateId = stringifyDateToISO8601(start, timeZone);
     const dateData = getState().ListingPage.timeSlotsForDate[dateId];
@@ -420,10 +429,24 @@ export const fetchTimeSlots = (listingId, start, end, timeZone, options) => (
     dispatch(fetchMonthlyTimeSlotsRequest(monthId));
     return dispatch(timeSlotsRequest(params))
       .then(timeSlots => {
+        // Debug logging for returned time slots
+        console.log('📆 [ListingPage.duck] Time slots returned:', {
+          monthId,
+          timeSlotsCount: timeSlots?.length || 0,
+          firstSlotDate: timeSlots?.[0]?.attributes?.start,
+          lastSlotDate: timeSlots?.[timeSlots.length - 1]?.attributes?.start,
+          timeSlots: timeSlots?.slice(0, 3), // Log first 3 slots for debugging
+        });
+        
         dispatch(fetchMonthlyTimeSlotsSuccess(monthId, timeSlots));
         return timeSlots;
       })
       .catch(e => {
+        console.error('❌ [ListingPage.duck] Time slot fetch error:', {
+          monthId,
+          error: e.message,
+          params,
+        });
         dispatch(fetchMonthlyTimeSlotsError(monthId, storableError(e)));
         return [];
       });
@@ -469,12 +492,50 @@ export const sendInquiry = (listing, message) => (dispatch, getState, sdk) => {
     });
 };
 
+// Helper function to ensure listing has a proper availability plan
+const ensureAvailabilityPlan = (listing) => {
+  const { availabilityPlan, publicData } = listing?.attributes || {};
+  
+  // If no availability plan exists, create a default 24/7 plan
+  if (!availabilityPlan || !availabilityPlan.type) {
+    console.log('⚠️ [ListingPage.duck] No availability plan found, creating default 24/7 plan');
+    return {
+      type: 'availability-plan/time',
+      timezone: 'Etc/UTC',
+      entries: [
+        { dayOfWeek: 'mon', startTime: '00:00', endTime: '24:00', seats: 1 },
+        { dayOfWeek: 'tue', startTime: '00:00', endTime: '24:00', seats: 1 },
+        { dayOfWeek: 'wed', startTime: '00:00', endTime: '24:00', seats: 1 },
+        { dayOfWeek: 'thu', startTime: '00:00', endTime: '24:00', seats: 1 },
+        { dayOfWeek: 'fri', startTime: '00:00', endTime: '24:00', seats: 1 },
+        { dayOfWeek: 'sat', startTime: '00:00', endTime: '24:00', seats: 1 },
+        { dayOfWeek: 'sun', startTime: '00:00', endTime: '24:00', seats: 1 },
+      ],
+    };
+  }
+  
+  return availabilityPlan;
+};
+
 // Helper function for loadData call.
 // Note: listing could be ownListing entity too
 const fetchMonthlyTimeSlots = (dispatch, listing) => {
   const hasWindow = typeof window !== 'undefined';
-  const { availabilityPlan, publicData } = listing?.attributes || {};
+  const { publicData } = listing?.attributes || {};
+  
+  // Ensure listing has a proper availability plan
+  const availabilityPlan = ensureAvailabilityPlan(listing);
   const tz = availabilityPlan?.timezone;
+
+  // Debug logging for availability plan
+  console.log('📦 [ListingPage.duck] AvailabilityPlan on listing:', {
+    listingId: listing.id?.uuid,
+    hasAvailabilityPlan: !!availabilityPlan,
+    availabilityPlanType: availabilityPlan?.type,
+    availabilityPlanTimezone: availabilityPlan?.timezone,
+    availabilityPlanEntries: availabilityPlan?.entries?.length || 0,
+    publicData: publicData,
+  });
 
   // Fetch time-zones on client side only.
   if (hasWindow && listing.id && !!tz) {
@@ -488,7 +549,27 @@ const fetchMonthlyTimeSlots = (dispatch, listing) => {
       : unitType === 'hour'
       ? 'hour'
       : 'day';
+    
+    // Debug logging for availability start date calculation
+    console.log('🔍 [ListingPage.duck] Availability start date debug:', {
+      listingId: listing.id?.uuid,
+      now: now.toISOString(),
+      timeUnit,
+      timezone: tz,
+      unitType,
+      startTimeInterval,
+    });
+    
+    // For listings that should be available immediately, use current time as start
+    // instead of next boundary which can push availability into the future
+    const startDate = now;
     const nextBoundary = findNextBoundary(now, 1, timeUnit, tz);
+    
+    console.log('🔍 [ListingPage.duck] Start date calculation:', {
+      startDate: startDate.toISOString(),
+      nextBoundary: nextBoundary.toISOString(),
+      differenceInHours: (nextBoundary.getTime() - startDate.getTime()) / (1000 * 60 * 60),
+    });
 
     const nextMonth = getStartOf(nextBoundary, 'month', tz, 1, 'months');
     const nextAfterNextMonth = getStartOf(nextMonth, 'month', tz, 1, 'months');
@@ -522,10 +603,33 @@ const fetchMonthlyTimeSlots = (dispatch, listing) => {
         : null;
     };
 
+    // Debug logging for time slot fetching
+    console.log('📅 [ListingPage.duck] Fetching time slots from:', {
+      listingId: listing.id?.uuid,
+      startDate: startDate.toISOString(),
+      nextMonthEnd: nextMonthEnd.toISOString(),
+      nextMonth: nextMonth.toISOString(),
+      followingMonthEnd: followingMonthEnd.toISOString(),
+      timezone: tz,
+      timeUnit,
+      unitType,
+      currentDate: new Date().toISOString(),
+      currentMonth: new Date().getMonth() + 1,
+      currentYear: new Date().getFullYear(),
+    });
+
     return Promise.all([
-      dispatch(fetchTimeSlots(listing.id, nextBoundary, nextMonthEnd, tz, options(startOfToday))),
+      dispatch(fetchTimeSlots(listing.id, startDate, nextMonthEnd, tz, options(startOfToday))),
       dispatch(fetchTimeSlots(listing.id, nextMonth, followingMonthEnd, tz, options(nextMonth))),
     ]);
+  } else {
+    console.log('⚠️ [ListingPage.duck] Skipping time slot fetch:', {
+      listingId: listing.id?.uuid,
+      hasWindow,
+      hasListingId: !!listing.id,
+      hasTimezone: !!tz,
+      availabilityPlan: availabilityPlan,
+    });
   }
 
   // By default return an empty array

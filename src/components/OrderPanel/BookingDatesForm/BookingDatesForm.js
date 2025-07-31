@@ -582,6 +582,19 @@ export const BookingDatesForm = props => {
   const nextMonthId = monthIdString(nextMonthFn(currentMonth, timeZone));
   const nextMonthInProgress = monthlyTimeSlots[nextMonthId]?.fetchTimeSlotsInProgress;
 
+  // Debug logging for time slots processing
+  console.log('📊 [BookingDatesForm] Time slots debug:', {
+    listingId,
+    monthlyTimeSlotsKeys: Object.keys(monthlyTimeSlots || {}),
+    allTimeSlotsCount: allTimeSlots?.length || 0,
+    currentMonth: currentMonth.toISOString(),
+    monthId,
+    nextMonthId,
+    timeZone,
+    firstTimeSlot: allTimeSlots?.[0]?.attributes?.start,
+    lastTimeSlot: allTimeSlots?.[allTimeSlots.length - 1]?.attributes?.start,
+  });
+
   useEffect(() => {
     // Call onMonthChanged function if it has been passed in among props.
     if (onMonthChanged) {

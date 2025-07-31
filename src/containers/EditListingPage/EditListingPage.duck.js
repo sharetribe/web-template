@@ -281,10 +281,14 @@ export default function reducer(state = initialState, action = {}) {
       return { ...state, updateInProgress: true, updateListingError: null };
     case UPDATE_LISTING_SUCCESS:
       console.log('[DEBUG] UPDATE_LISTING_SUCCESS dispatched with payload:', payload);
-      console.log('[DEBUG] Updated listing data:', payload?.data?.data);
-      console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - Reducer received availabilityPlan:', !!payload?.data?.data?.attributes?.availabilityPlan);
-      if (payload?.data?.data?.attributes?.availabilityPlan) {
-        console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - Reducer plan structure:', JSON.stringify(payload.data.data.attributes.availabilityPlan, null, 2));
+      if (payload && payload.data && payload.data.data) {
+        console.log('[DEBUG] Updated listing data:', payload.data.data);
+        console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - Reducer received availabilityPlan:', !!payload.data.data.attributes?.availabilityPlan);
+        if (payload.data.data.attributes?.availabilityPlan) {
+          console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - Reducer plan structure:', JSON.stringify(payload.data.data.attributes.availabilityPlan, null, 2));
+        }
+      } else {
+        console.log('[DEBUG] No payload data available');
       }
       const newState = {
         ...state,
@@ -656,9 +660,14 @@ export function requestCreateListingDraft(data, config) {
       .then(response => {
         console.log("requestCreateListingDraft API call succeeded:", response);
         createDraftResponse = response;
-        const listingId = response.data.data.id;
-        // If stockUpdate info is passed through, update stock
-        return updateStockOfListingMaybe(listingId, stockUpdate, dispatch);
+        if (response && response.data && response.data.data && response.data.data.id) {
+          const listingId = response.data.data.id;
+          // If stockUpdate info is passed through, update stock
+          return updateStockOfListingMaybe(listingId, stockUpdate, dispatch);
+        } else {
+          console.error("requestCreateListingDraft: Invalid response structure", response);
+          throw new Error("Invalid response structure from create listing draft");
+        }
       })
       .then(() => {
         console.log("requestCreateListingDraft stock update completed");
@@ -729,25 +738,33 @@ export function requestUpdateListing(tab, data, config) {
       })
       .then(response => {
         console.log("requestUpdateListing API call succeeded:", response);
-        console.log('[DEBUG] Response data structure:', response?.data?.data);
-        console.log('[DEBUG] Updated availabilityPlan:', response?.data?.data?.attributes?.availabilityPlan);
-        console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - Response contains availabilityPlan:', !!response?.data?.data?.attributes?.availabilityPlan);
-        if (response?.data?.data?.attributes?.availabilityPlan) {
-          console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - Response plan structure:', JSON.stringify(response.data.data.attributes.availabilityPlan, null, 2));
+        if (response && response.data && response.data.data) {
+          console.log('[DEBUG] Response data structure:', response.data.data);
+          console.log('[DEBUG] Updated availabilityPlan:', response.data.data.attributes?.availabilityPlan);
+          console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - Response contains availabilityPlan:', !!response.data.data.attributes?.availabilityPlan);
+          if (response.data.data.attributes?.availabilityPlan) {
+            console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - Response plan structure:', JSON.stringify(response.data.data.attributes.availabilityPlan, null, 2));
+          }
+        } else {
+          console.log('[DEBUG] No response data available');
         }
         dispatch(updateListingSuccess(response));
         if (!response || !response.data) {
           console.warn('⚠️ Skipping marketplace entity merge due to missing sdkResponse in requestUpdateListing');
         } else {
           console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - Dispatching addMarketplaceEntities with response');
-          console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - Response structure for addMarketplaceEntities:', {
-            hasData: !!response.data,
-            hasDataData: !!response.data?.data,
-            dataType: response.data?.data?.type,
-            dataId: response.data?.data?.id?.uuid,
-            hasAttributes: !!response.data?.data?.attributes,
-            hasAvailabilityPlan: !!response.data?.data?.attributes?.availabilityPlan
-          });
+          if (response && response.data && response.data.data) {
+            console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - Response structure for addMarketplaceEntities:', {
+              hasData: !!response.data,
+              hasDataData: !!response.data.data,
+              dataType: response.data.data.type,
+              dataId: response.data.data.id?.uuid,
+              hasAttributes: !!response.data.data.attributes,
+              hasAvailabilityPlan: !!response.data.data.attributes?.availabilityPlan
+            });
+          } else {
+            console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - No response data for addMarketplaceEntities');
+          }
           dispatch(addMarketplaceEntities(response));
         }
         dispatch(markTabUpdated(tab));
@@ -757,8 +774,12 @@ export function requestUpdateListing(tab, data, config) {
         if (!!includedTimeZone && includedTimeZone !== existingTimeZone) {
           const searchString = '';
           const firstDayOfWeek = config.localization.firstDayOfWeek;
-          const listing = response.data.data;
-          fetchLoadDataExceptions(dispatch, listing, searchString, firstDayOfWeek);
+          if (response && response.data && response.data.data) {
+            const listing = response.data.data;
+            fetchLoadDataExceptions(dispatch, listing, searchString, firstDayOfWeek);
+          } else {
+            console.warn('⚠️ Cannot fetch exceptions due to invalid response structure');
+          }
         }
 
         return response;
@@ -810,12 +831,17 @@ export function requestImageUpload(actionPayload, listingImageConfig) {
     return sdk.images
       .upload({ image: actionPayload.file }, queryParams)
       .then(resp => {
-        const img = resp.data.data;
-        // Uploaded image has an existing id that refers to file
-        // The UUID was created as a consequence of this upload call - it's saved to imageId property
-        return dispatch(
-          uploadImageSuccess({ data: { ...img, id, imageId: img.id, file: actionPayload.file } })
-        );
+        if (resp && resp.data && resp.data.data) {
+          const img = resp.data.data;
+          // Uploaded image has an existing id that refers to file
+          // The UUID was created as a consequence of this upload call - it's saved to imageId property
+          return dispatch(
+            uploadImageSuccess({ data: { ...img, id, imageId: img.id, file: actionPayload.file } })
+          );
+        } else {
+          console.error("requestImageUpload: Invalid response structure", resp);
+          throw new Error("Invalid response structure from image upload");
+        }
       })
       .catch(e => dispatch(uploadImageError({ id, error: storableError(e) })));
   };
@@ -835,8 +861,13 @@ export const requestAddAvailabilityException = params => (dispatch, getState, sd
     .create(params, { expand: true })
     .then(response => {
       console.log('🧪 [DEBUG] SDK availabilityException.create success:', response);
-      const availabilityException = response.data.data;
-      return dispatch(addAvailabilityExceptionSuccess({ data: availabilityException }));
+      if (response && response.data && response.data.data) {
+        const availabilityException = response.data.data;
+        return dispatch(addAvailabilityExceptionSuccess({ data: availabilityException }));
+      } else {
+        console.error("requestAddAvailabilityException: Invalid response structure", response);
+        throw new Error("Invalid response structure from availability exception creation");
+      }
     })
     .catch(e => {
       console.error('🧪 [DEBUG] SDK availabilityException.create error:', {
@@ -882,8 +913,13 @@ export const requestDeleteAvailabilityException = params => (dispatch, getState,
     .delete(params, { expand: true })
     .then(response => {
       console.log('🧪 [DEBUG] SDK availabilityException.delete success:', response);
-      const availabilityException = response.data.data;
-      return dispatch(deleteAvailabilityExceptionSuccess({ data: availabilityException }));
+      if (response && response.data && response.data.data) {
+        const availabilityException = response.data.data;
+        return dispatch(deleteAvailabilityExceptionSuccess({ data: availabilityException }));
+      } else {
+        console.error("requestDeleteAvailabilityException: Invalid response structure", response);
+        throw new Error("Invalid response structure from availability exception deletion");
+      }
     })
     .catch(e => {
       console.error('🧪 [DEBUG] SDK availabilityException.delete error:', {
