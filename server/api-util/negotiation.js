@@ -130,13 +130,7 @@ exports.throwErrorIfNegotiationOfferHasInvalidHistory = (transitionName, offers,
   }
 };
 
-/**
- * Returns the previous offer from the offers array.
- *
- * @param {Array<NegotiationOffer>} offers - Array of negotiation offers
- * @returns {NegotiationOffer} The previous offer in the negotiation history
- */
-exports.getPreviousOffer = offers => {
+const getPreviousOffer = offers => {
   if (offers?.length < 2) {
     const error = new Error('Past negotiation offers are invalid');
     error.status = 400;
@@ -150,12 +144,13 @@ exports.getPreviousOffer = offers => {
 };
 
 /**
- * Returns the offer from the previous offer.
+ * Returns the offerInSubunits from the previous offer.
+ *
  * @param {Array<NegotiationOffer>} offers - Array of negotiation offers
  * @returns {number} offer from the previous offer (in subunits)
  */
 exports.getAmountFromPreviousOffer = offers => {
-  const offer = this.getPreviousOffer(offers);
+  const offer = getPreviousOffer(offers);
   return offer.offerInSubunits;
 };
 
