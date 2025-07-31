@@ -387,9 +387,33 @@ const MonthlyCalendar = ({
   // Generate calendar days for the current month (but only within the 3-month window)
   const monthStart = currentMonth;
   const monthEnd = endOfMonth(currentMonth);
+  
+  // FIXED: Calculate the correct start date based on firstDayOfWeek
+  // The original calculation assumed Sunday-first week, but we need to respect firstDayOfWeek
+  const daysToSubtractFromStart = (getDay(monthStart) - firstDayOfWeek + 7) % 7;
+  const calendarStart = new Date(monthStart.getFullYear(), monthStart.getMonth(), 1 - daysToSubtractFromStart);
+  
+  // FIXED: Calculate the correct end date to complete the week
+  const daysToAddToEnd = (7 - getDay(monthEnd) + firstDayOfWeek - 1) % 7;
+  const calendarEnd = new Date(monthEnd.getFullYear(), monthEnd.getMonth(), monthEnd.getDate() + daysToAddToEnd);
+  
   const allDays = eachDayOfInterval({
-    start: new Date(monthStart.getFullYear(), monthStart.getMonth(), 1 - getDay(monthStart)),
-    end: new Date(monthEnd.getFullYear(), monthEnd.getMonth() + 1, 7 - getDay(monthEnd)),
+    start: calendarStart,
+    end: calendarEnd,
+  });
+  
+  // Debug: Log the calendar grid calculation
+  console.log('🧪 [DEBUG] Calendar grid calculation:', {
+    monthStart: monthStart.toDateString(),
+    monthEnd: monthEnd.toDateString(),
+    firstDayOfWeek,
+    daysToSubtractFromStart,
+    daysToAddToEnd,
+    calendarStart: calendarStart.toDateString(),
+    calendarEnd: calendarEnd.toDateString(),
+    allDaysCount: allDays.length,
+    firstDay: allDays[0]?.toDateString(),
+    lastDay: allDays[allDays.length - 1]?.toDateString(),
   });
 
   // Generate availability data for the rolling 3-month window
