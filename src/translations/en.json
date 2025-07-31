@@ -1126,6 +1126,8 @@
   "TransactionPage.ActivityFeed.default-negotiation.reviewed-by-customer": "{actor, select, you {You left a review for {otherUsersName}.} other {{otherUsersName} left a review for you. {reviewLink}}}",
   "TransactionPage.ActivityFeed.default-negotiation.reviewed-by-provider": "{actor, select, you {You left a review for {otherUsersName}.} other {{otherUsersName} left a review for you. {reviewLink}}}",
   "TransactionPage.ActivityFeed.default-negotiation.transition.customer-make-counter-offer": "{actor, select, you {You accepted the counter offer.} other {{otherUsersName} accepted the counter offer.}}",
+  "TransactionPage.ActivityFeed.default-negotiation.transition.customer-withdraw-counter-offer": "{actor, select, you {You withdraw the counter offer.} other {{otherUsersName} withdraw the counter offer.}}",
+  "TransactionPage.ActivityFeed.default-negotiation.transition.provider-reject-counter-offer": "{actor, select, you {You rejected the counter offer.} other {{otherUsersName} rejected the counter offer.}}",
   "TransactionPage.ActivityFeed.default-purchase.canceled": "The order was canceled.",
   "TransactionPage.ActivityFeed.default-purchase.completed": "{stateStatus, select, current {The listing was received. {reviewLink}} other {The listing was received.}}",
   "TransactionPage.ActivityFeed.default-purchase.delivered": "{deliveryMethod, select, shipping {The listing was shipped.} other {The listing was delivered.}}",
