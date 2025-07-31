@@ -45,6 +45,15 @@ export const updatedEntities = (oldEntities, apiResponse, sanitizeConfig = {}) =
   const { data, included = [] } = apiResponse;
   const objects = (Array.isArray(data) ? data : [data]).concat(included);
 
+  console.log('🟢 [data.js] updatedEntities called with:', {
+    hasData: !!data,
+    hasIncluded: !!included,
+    dataType: data?.type,
+    dataId: data?.id?.uuid,
+    hasAttributes: !!data?.attributes,
+    hasAvailabilityPlan: !!data?.attributes?.availabilityPlan
+  });
+
   const newEntities = objects.reduce((entities, curr) => {
     if (!curr || !curr.id || !curr.type) {
       console.warn('⚠️ Skipping invalid entity in updatedEntities:', curr);
@@ -52,13 +61,23 @@ export const updatedEntities = (oldEntities, apiResponse, sanitizeConfig = {}) =
     }
     const { id, type } = curr;
 
+    console.log(`🟢 [data.js] Processing entity: ${type} ${id.uuid}`);
+
     // Some entities (e.g. listing and user) might include extended data,
     // you should check if src/util/sanitize.js needs to be updated.
     const current = sanitizeEntity(curr, sanitizeConfig);
 
+    if (type === 'ownListing' && current?.attributes?.availabilityPlan) {
+      console.log(`🟢 [data.js] OwnListing ${id.uuid} has availabilityPlan after sanitization:`, JSON.stringify(current.attributes.availabilityPlan, null, 2));
+    }
+
     entities[type] = entities[type] || {};
     const entity = entities[type][id.uuid];
     entities[type][id.uuid] = entity ? combinedResourceObjects({ ...entity }, current) : current;
+
+    if (type === 'ownListing') {
+      console.log(`🟢 [data.js] Final ownListing ${id.uuid} availabilityPlan:`, entities[type][id.uuid]?.attributes?.availabilityPlan);
+    }
 
     return entities;
   }, oldEntities);

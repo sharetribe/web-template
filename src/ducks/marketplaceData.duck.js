@@ -16,9 +16,29 @@ const merge = (state, payload) => {
   const apiResponse = sdkResponse?.data || {};
   // Log the incoming sdkResponse and sanitizeConfig for debugging
   console.log('🟢 [marketplaceData.duck.js] Merging entities. sdkResponse:', sdkResponse, 'sanitizeConfig:', sanitizeConfig);
+  console.log('🟢 [marketplaceData.duck.js] API response structure:', {
+    hasData: !!apiResponse.data,
+    hasIncluded: !!apiResponse.included,
+    dataType: apiResponse.data?.type,
+    dataId: apiResponse.data?.id?.uuid,
+    hasAttributes: !!apiResponse.data?.attributes,
+    hasAvailabilityPlan: !!apiResponse.data?.attributes?.availabilityPlan
+  });
+  if (apiResponse.data?.attributes?.availabilityPlan) {
+    console.log('🟢 [marketplaceData.duck.js] Availability plan in API response:', JSON.stringify(apiResponse.data.attributes.availabilityPlan, null, 2));
+  }
   const newEntities = updatedEntities({ ...state.entities }, apiResponse, sanitizeConfig);
   // Log the new entities after merge
   console.log('🟢 [marketplaceData.duck.js] Entities after merge:', newEntities);
+  console.log('🟢 [marketplaceData.duck.js] OwnListing entities after merge:', newEntities.ownListing);
+  if (newEntities.ownListing) {
+    const listingIds = Object.keys(newEntities.ownListing);
+    console.log('🟢 [marketplaceData.duck.js] OwnListing IDs after merge:', listingIds);
+    listingIds.forEach(id => {
+      const listing = newEntities.ownListing[id];
+      console.log(`🟢 [marketplaceData.duck.js] Listing ${id} availabilityPlan:`, listing?.attributes?.availabilityPlan);
+    });
+  }
   return {
     ...state,
     entities: newEntities,

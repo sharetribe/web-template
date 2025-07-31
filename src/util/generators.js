@@ -254,27 +254,21 @@ export const exceptionFreeSlotsPerDate = (start, end, exceptions, timeZone) => {
  */
 const getExceptionsOnDate = (dateRange, exceptions, timeZone) => {
   const [dayStart, dayEnd] = dateRange;
+  // Use UTC midnight for dayStart
+  const dayUTC = new Date(Date.UTC(dayStart.getFullYear(), dayStart.getMonth(), dayStart.getDate()));
   return exceptions.filter(e => {
-    const exceptionRange = [e.attributes.start, e.attributes.end];
-
-    const inclusiveEndTime = end => new Date(end.getTime() - 1);
-    const dayStartInsideException = isInRange(dayStart, ...exceptionRange, undefined, timeZone);
-    const dayEndInsideException = isInRange(
-      inclusiveEndTime(dayEnd),
-      ...exceptionRange,
-      undefined,
-      timeZone
-    );
-    const dayIsInsideException = dayStartInsideException && dayEndInsideException;
-
-    const exceptionStartIsInsideDate = isInRange(e.attributes.start, ...dateRange, timeZone);
-    const exceptionEndIsInsideDate = isInRange(
-      inclusiveEndTime(e.attributes.end),
-      ...dateRange,
-      timeZone
-    );
-    // Pick slots that overlap with the 'day'.
-    return dayIsInsideException || exceptionStartIsInsideDate || exceptionEndIsInsideDate;
+    const exStart = new Date(e.attributes.start);
+    const exEnd = new Date(e.attributes.end);
+    // A day is covered if exStart <= dayUTC < exEnd
+    const isCovered = exStart <= dayUTC && dayUTC < exEnd;
+    console.log('[DEBUG] getExceptionsOnDate:', {
+      day: dayUTC.toISOString(),
+      exStart: exStart.toISOString(),
+      exEnd: exEnd.toISOString(),
+      isCovered,
+      exceptionId: e.id
+    });
+    return isCovered;
   });
 };
 
