@@ -2,7 +2,6 @@ const sharetribeSdk = require('sharetribe-flex-sdk');
 const { transactionLineItems } = require('../api-util/lineItems');
 const {
   addOfferToMetadata,
-  getPreviousOffer,
   getAmountFromPreviousOffer,
   isIntentionToMakeCounterOffer,
   isIntentionToMakeOffer,
@@ -41,7 +40,7 @@ const getFullOrderData = (orderData, bodyParams, currency, offers) => {
     : isIntentionToRevokeCounterOffer(transitionName)
     ? {
         ...orderDataAndParams,
-        offer: new Money(getAmountFromPreviousOffer(offers), currency), // TODO: fix this!
+        offer: new Money(getAmountFromPreviousOffer(offers), currency),
       }
     : orderDataAndParams;
 };
@@ -63,7 +62,11 @@ const getUpdatedMetadata = (orderData, transition, existingMetadata) => {
         transition,
       })
     : isIntentionToRevokeCounterOffer(transition)
-    ? addOfferToMetadata(existingMetadata, getPreviousOffer(existingMetadata.offers))
+    ? addOfferToMetadata(existingMetadata, {
+        offerInSubunits: getAmountFromPreviousOffer(existingMetadata.offers),
+        by,
+        transition,
+      })
     : addOfferToMetadata(existingMetadata, null);
 };
 

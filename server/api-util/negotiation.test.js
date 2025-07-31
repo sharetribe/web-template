@@ -3,7 +3,6 @@ const {
   isIntentionToMakeCounterOffer,
   isIntentionToRevokeCounterOffer,
   throwErrorIfNegotiationOfferHasInvalidHistory,
-  getPreviousOffer,
   getAmountFromPreviousOffer,
   addOfferToMetadata,
 } = require('./negotiation');
@@ -622,70 +621,6 @@ describe('negotiation utils', () => {
             mockTransitions
           );
         }).toThrow('Past negotiation offers are invalid');
-      });
-    });
-  });
-
-  describe('getPreviousOffer(offers)', () => {
-    const mockOffers = [
-      {
-        transition: 'transition/make-offer',
-        by: 'provider',
-        offerInSubunits: 1000,
-      },
-      {
-        transition: 'transition/customer-make-counter-offer',
-        by: 'customer',
-        offerInSubunits: 800,
-      },
-      {
-        transition: 'transition/provider-make-counter-offer',
-        by: 'provider',
-        offerInSubunits: 900,
-      },
-    ];
-
-    describe('valid scenarios', () => {
-      it('should return the second-to-last offer', () => {
-        const previousOffer = getPreviousOffer(mockOffers);
-        expect(previousOffer).toEqual({
-          transition: 'transition/customer-make-counter-offer',
-          by: 'customer',
-          offerInSubunits: 800,
-        });
-      });
-
-      it('should work with exactly 2 offers', () => {
-        const twoOffers = mockOffers.slice(0, 2);
-        const previousOffer = getPreviousOffer(twoOffers);
-        expect(previousOffer).toEqual({
-          transition: 'transition/make-offer',
-          by: 'provider',
-          offerInSubunits: 1000,
-        });
-      });
-    });
-
-    describe('invalid scenarios', () => {
-      it('should throw error when offers array has less than 2 elements', () => {
-        expect(() => {
-          getPreviousOffer([mockOffers[0]]);
-        }).toThrow('Past negotiation offers are invalid');
-
-        expect(() => {
-          getPreviousOffer([]);
-        }).toThrow('Past negotiation offers are invalid');
-      });
-
-      it('should throw error with correct error properties', () => {
-        try {
-          getPreviousOffer([mockOffers[0]]);
-        } catch (error) {
-          expect(error.message).toBe('Past negotiation offers are invalid');
-          expect(error.status).toBe(400);
-          expect(error.statusText).toBe('Past negotiation offers are invalid');
-          expect(error.data).toHaveProperty('offers');
-        }
       });
     });
   });
