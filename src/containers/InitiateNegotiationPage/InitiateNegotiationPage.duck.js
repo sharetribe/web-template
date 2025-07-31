@@ -272,10 +272,10 @@ export const initiateNegotiation = (
   const transitionName = getTransitionName(transactionId, processAlias, state);
 
   // Note: transitionParams are parameters for Marketplace API
-  const { offerInSubunits, ...transitionParams } = negotiationParams;
+  const { offerInSubunits, currency, ...transitionParams } = negotiationParams;
 
   // Parameters only for client app's server to be used when making a privileged transition
-  const orderData = offerInSubunits ? { actor: 'provider', offerInSubunits } : {};
+  const orderData = offerInSubunits ? { actor: 'provider', offerInSubunits, currency } : {};
 
   const bodyParams = isTransition
     ? {

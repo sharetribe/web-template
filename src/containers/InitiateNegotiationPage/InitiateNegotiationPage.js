@@ -96,6 +96,7 @@ const handleSubmit = (submitting, setSubmitting, props) => values => {
       ...getTransactionTypeData(listingType, unitType, config),
     },
     offerInSubunits: offer?.amount,
+    currency: offer?.currency,
   };
   const isPrivilegedTransition = true;
 
