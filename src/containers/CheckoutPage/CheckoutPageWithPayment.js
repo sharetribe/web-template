@@ -530,9 +530,11 @@ export const CheckoutPageWithPayment = props => {
   // This function validates the currency against the transaction process requirements and
   // ensures it is supported by Stripe, as indicated by the 'stripe' parameter.
   // If using a transaction process without any stripe actions, leave out the 'stripe' parameter.
+  const currency =
+    existingTransaction?.attributes?.payinTotal?.currency || listing.attributes.price?.currency;
   const isStripeCompatibleCurrency = isValidCurrencyForTransactionProcess(
     transactionProcessAlias,
-    listing.attributes.price.currency,
+    currency,
     'stripe'
   );
 
