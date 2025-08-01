@@ -19,6 +19,7 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
     nextTransitions,
     onCheckoutRedirect,
     onOpenRequestChangesModal,
+    onOpenMakeCounterOfferModal,
   } = txInfo;
   const isProviderBanned = transaction?.provider?.attributes?.banned;
   const isCustomerBanned = transaction?.provider?.attributes?.banned;
@@ -93,7 +94,9 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
           overwrites
         ),
         secondaryButtonProps: actionButtonProps(transitions.CUSTOMER_REJECT_OFFER, CUSTOMER),
-          },
+        tertiaryButtonProps: actionButtonProps(transitions.CUSTOMER_MAKE_COUNTER_OFFER, CUSTOMER, {
+          onAction: onOpenMakeCounterOfferModal,
+        }),
       };
     })
     .cond([states.OFFER_PENDING, PROVIDER], () => {
@@ -103,7 +106,44 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
         showExtraInfo: true,
         showActionButtons: true,
         secondaryButtonProps: actionButtonProps(transitions.PROVIDER_WITHDRAW_OFFER, PROVIDER),
-          },
+      };
+    })
+    .cond([states.CUSTOMER_OFFER_PENDING, CUSTOMER], () => {
+      return {
+        ...sharedStateData,
+        showDetailCardHeadings: true,
+        showExtraInfo: true,
+        showActionButtons: true,
+        secondaryButtonProps: actionButtonProps(
+          transitions.CUSTOMER_WITHDRAW_COUNTER_OFFER,
+          CUSTOMER,
+          {
+            orderData: {
+              actor: CUSTOMER,
+            },
+          }
+        ),
+      };
+    })
+    .cond([states.CUSTOMER_OFFER_PENDING, PROVIDER], () => {
+      return {
+        ...sharedStateData,
+        showDetailCardHeadings: true,
+        showExtraInfo: true,
+        showActionButtons: true,
+        primaryButtonProps: actionButtonProps(transitions.PROVIDER_ACCEPT_COUNTER_OFFER, PROVIDER),
+        secondaryButtonProps: actionButtonProps(
+          transitions.PROVIDER_REJECT_COUNTER_OFFER,
+          PROVIDER,
+          {
+            orderData: {
+              actor: PROVIDER,
+            },
+          }
+        ),
+        tertiaryButtonProps: actionButtonProps(transitions.PROVIDER_MAKE_COUNTER_OFFER, PROVIDER, {
+          onAction: onOpenMakeCounterOfferModal,
+        }),
       };
     })
     .cond([states.OFFER_REJECTED, _], () => {

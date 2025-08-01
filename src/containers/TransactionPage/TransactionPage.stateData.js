@@ -98,6 +98,7 @@ export const getStateData = (params, process) => {
     sendReviewError,
     onOpenReviewModal,
     //onOpenRequestChangesModal,
+    //onOpenMakeCounterOfferModal,
     //onCheckoutRedirect,
   } = params;
   const isCustomer = transactionRole === 'customer';
