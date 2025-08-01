@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Form as FinalForm, Field } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
+import classNames from 'classnames';
 
 // Import configs and util modules
-import { FormattedMessage, useIntl } from '../../../../util/reactIntl';
+import { FormattedMessage } from '../../../../util/reactIntl';
 
 // Import shared components
 import { Button, Form, ListingCardThumbnail, H5 } from '../../../../components';
@@ -50,6 +51,25 @@ const FieldCardStyle = props => {
   );
 };
 
+// NOTE: PublishListingError is here since Style panel is the last visible panel
+// before creating a new listing. If that order is changed, these should be changed too.
+// Create and show listing errors are shown above submit button
+const PublishListingError = props => {
+  return props.error ? (
+    <p className={css.error}>
+      <FormattedMessage id="EditListingStyleForm.publishListingFailed" />
+    </p>
+  ) : null;
+};
+
+const UpdateListingError = props => {
+  return props.error ? (
+    <p className={css.error}>
+      <FormattedMessage id="EditListingStyleForm.updateFailed" />
+    </p>
+  ) : null;
+};
+
 export const EditListingStyleForm = props => {
   const { listingTitle } = props;
 
@@ -61,6 +81,8 @@ export const EditListingStyleForm = props => {
         const {
           formId = 'EditListingStyleForm',
           form,
+          className,
+          fetchErrors,
           handleSubmit,
           ready,
           saveActionMsg,
@@ -68,7 +90,8 @@ export const EditListingStyleForm = props => {
           updateInProgress,
           values,
         } = formRenderProps;
-        const intl = useIntl();
+        const classes = classNames(css.root, className);
+        const { publishListingError, updateListingError } = fetchErrors || {};
 
         const submitInProgress = updateInProgress;
         const submitReady = updated || ready;
@@ -86,7 +109,7 @@ export const EditListingStyleForm = props => {
         });
 
         return (
-          <Form className={css.root} onSubmit={handleSubmit}>
+          <Form className={classes} onSubmit={handleSubmit}>
             <div className={css.radioButtonsContainer}>{fieldOptions}</div>
             <H5 as="h2" className={css.previewText}>
               <FormattedMessage id="EditListingStyleForm.preview" />
@@ -98,6 +121,10 @@ export const EditListingStyleForm = props => {
               listingTitle={listingTitle}
               className={css.aspectRatioWrapper}
             ></ListingCardThumbnail>
+
+            <PublishListingError error={publishListingError} />
+            <UpdateListingError error={updateListingError} />
+
             <Button
               className={css.submitButton}
               inProgress={submitInProgress}
