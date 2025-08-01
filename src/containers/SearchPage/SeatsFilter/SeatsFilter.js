@@ -101,7 +101,7 @@ const SeatsFilter = props => {
       keepDirtyOnReinitialize
       {...rest}
     >
-      <fieldset className={css.fieldPopup}>
+      <div className={css.fieldPopup}>
         <label className={css.fieldPopupLabel} htmlFor={`${id}-input`}>
           {label}
         </label>
@@ -115,7 +115,7 @@ const SeatsFilter = props => {
           minValue={1}
           maxValue={99}
         />
-      </fieldset>
+      </div>
     </FilterPopup>
   ) : (
     <FilterPlain
@@ -130,7 +130,7 @@ const SeatsFilter = props => {
       initialValues={seatsInitialValue}
       {...rest}
     >
-      <fieldset className={css.fieldPlain}>
+      <div className={css.fieldPlain}>
         <FieldNumber
           className={css.field}
           name={name}
@@ -139,7 +139,7 @@ const SeatsFilter = props => {
           initialValue={initialSeats}
           minValue={1}
         />
-      </fieldset>
+      </div>
     </FilterPlain>
   );
 };
