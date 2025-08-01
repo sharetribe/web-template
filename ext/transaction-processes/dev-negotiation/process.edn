@@ -1,0 +1,248 @@
+{:format :v3,
+ :transitions
+ [{:name :transition/make-offer,
+   :to :state/offer-pending,
+   :actor :actor.role/provider,
+   :actions
+   [{:name :action/privileged-set-line-items}
+    {:name :action/update-protected-data}
+    {:name :action/privileged-update-metadata}],
+   :privileged? true}
+  {:name :transition/inquire,
+   :to :state/inquiry,
+   :actor :actor.role/provider,
+   :actions []}
+  {:name :transition/request-quote,
+   :to :state/quote-requested,
+   :actor :actor.role/customer,
+   :actions [{:name :action/update-protected-data}]}
+  {:name :transition/make-offer-from-quote-requested,
+   :from :state/quote-requested,
+   :to :state/offer-pending,
+   :actor :actor.role/provider,
+   :actions
+   [{:name :action/privileged-set-line-items}
+    {:name :action/update-protected-data}
+    {:name :action/privileged-update-metadata}],
+   :privileged? true}
+  {:name :transition/make-offer-after-inquiry,
+   :from :state/inquiry,
+   :to :state/offer-pending,
+   :actor :actor.role/provider,
+   :actions
+   [{:name :action/privileged-set-line-items}
+    {:name :action/update-protected-data}
+    {:name :action/privileged-update-metadata}],
+   :privileged? true}
+  {:name :transition/customer-make-counter-offer,
+   :from :state/offer-pending,
+   :to :state/customer-offer-pending,
+   :actor :actor.role/customer,
+   :actions
+   [{:name :action/privileged-set-line-items}
+    {:name :action/privileged-update-metadata}],
+   :privileged? true}
+  {:name :transition/provider-make-counter-offer,
+   :from :state/customer-offer-pending,
+   :to :state/offer-pending,
+   :actor :actor.role/provider,
+   :actions
+   [{:name :action/privileged-set-line-items}
+    {:name :action/privileged-update-metadata}],
+   :privileged? true}
+  {:name :transition/provider-accept-counter-offer,
+   :from :state/customer-offer-pending,
+   :to :state/offer-pending,
+   :actor :actor.role/provider,
+   :actions []}
+  {:name :transition/operator-reject-offer,
+   :from :state/offer-pending,
+   :to :state/offer-rejected,
+   :actor :actor.role/operator,
+   :actions []}
+  {:name :transition/customer-reject-offer,
+   :from :state/offer-pending,
+   :to :state/offer-rejected,
+   :actor :actor.role/customer,
+   :actions []}
+  {:name :transition/provider-withdraw-offer,
+   :from :state/offer-pending,
+   :to :state/offer-rejected,
+   :actor :actor.role/provider,
+   :actions []}
+  {:name :transition/customer-withdraw-counter-offer,
+   :from :state/customer-offer-pending,
+   :to :state/offer-pending,
+   :actor :actor.role/customer,
+   :actions
+   [{:name :action/privileged-set-line-items}
+    {:name :action/privileged-update-metadata}],
+   :privileged? true}
+  {:name :transition/operator-reject-from-customer-counter-offer,
+   :from :state/customer-offer-pending,
+   :to :state/offer-rejected,
+   :actor :actor.role/operator,
+   :actions []}
+  {:name :transition/provider-reject-counter-offer,
+   :from :state/customer-offer-pending,
+   :to :state/offer-pending,
+   :actor :actor.role/provider,
+   :actions
+   [{:name :action/privileged-set-line-items}
+    {:name :action/privileged-update-metadata}],
+   :privileged? true}
+  {:name :transition/request-payment-to-accept-offer,
+   :from :state/offer-pending,
+   :to :state/pending-payment,
+   :actor :actor.role/customer,
+   :actions [{:name :action/stripe-create-payment-intent}]}
+  {:name :transition/expire-payment,
+   :from :state/pending-payment,
+   :to :state/payment-expired,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/pending-payment]}
+     {:fn/period ["PT15M"]}]},
+   :actions
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}]}
+  {:name :transition/confirm-payment,
+   :from :state/pending-payment,
+   :to :state/offer-accepted,
+   :actor :actor.role/customer,
+   :actions
+   [{:name :action/stripe-confirm-payment-intent}
+    {:name :action/stripe-capture-payment-intent}]}
+  {:name :transition/auto-cancel,
+   :from :state/offer-accepted,
+   :to :state/canceled,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/offer-accepted]}
+     {:fn/period ["P75D"]}]},
+   :actions
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}]}
+  {:name :transition/operator-cancel,
+   :from :state/offer-accepted,
+   :to :state/canceled,
+   :actor :actor.role/operator,
+   :actions
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}]}
+  {:name :transition/deliver,
+   :from :state/offer-accepted,
+   :to :state/delivered,
+   :actor :actor.role/provider,
+   :actions []}
+  {:name :transition/request-changes,
+   :from :state/delivered,
+   :to :state/changes-requested,
+   :actor :actor.role/customer,
+   :actions []}
+  {:name :transition/operator-request-changes,
+   :from :state/delivered,
+   :to :state/changes-requested,
+   :actor :actor.role/operator,
+   :actions []}
+  {:name :transition/deliver-changes,
+   :from :state/changes-requested,
+   :to :state/delivered,
+   :actor :actor.role/provider,
+   :actions []}
+  {:name :transition/operator-mark-changes-delivered,
+   :from :state/changes-requested,
+   :to :state/delivered,
+   :actor :actor.role/operator,
+   :actions []}
+  {:name :transition/auto-cancel-from-changes-requested,
+   :from :state/changes-requested,
+   :to :state/canceled,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/offer-accepted]}
+     {:fn/period ["P75D"]}]},
+   :actions
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}]}
+  {:name :transition/operator-cancel-from-changes-requested,
+   :from :state/changes-requested,
+   :to :state/canceled,
+   :actor :actor.role/operator,
+   :actions
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}]}
+  {:name :transition/operator-cancel-from-delivered,
+   :from :state/delivered,
+   :to :state/canceled,
+   :actor :actor.role/operator,
+   :actions
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}]}
+  {:name :transition/accept-deliverable,
+   :from :state/delivered,
+   :to :state/completed,
+   :actor :actor.role/customer,
+   :actions [{:name :action/stripe-create-payout}]}
+  {:name :transition/operator-accept-deliverable,
+   :from :state/delivered,
+   :to :state/completed,
+   :actor :actor.role/operator,
+   :actions [{:name :action/stripe-create-payout}]}
+  {:name :transition/auto-accept-deliverable,
+   :from :state/delivered,
+   :to :state/completed,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/last-entered-state :state/delivered]}
+     {:fn/period ["P14D"]}]},
+   :actions [{:name :action/stripe-create-payout}]}
+  {:name :transition/review-1-by-provider,
+   :from :state/completed,
+   :to :state/reviewed-by-provider,
+   :actor :actor.role/provider,
+   :actions [{:name :action/post-review-by-provider}]}
+  {:name :transition/review-2-by-provider,
+   :from :state/reviewed-by-customer,
+   :to :state/reviewed,
+   :actor :actor.role/provider,
+   :actions
+   [{:name :action/post-review-by-provider}
+    {:name :action/publish-reviews}]}
+  {:name :transition/review-1-by-customer,
+   :from :state/completed,
+   :to :state/reviewed-by-customer,
+   :actor :actor.role/customer,
+   :actions [{:name :action/post-review-by-customer}]}
+  {:name :transition/review-2-by-customer,
+   :from :state/reviewed-by-provider,
+   :to :state/reviewed,
+   :actor :actor.role/customer,
+   :actions
+   [{:name :action/post-review-by-customer}
+    {:name :action/publish-reviews}]}
+  {:name :transition/expire-review-period,
+   :from :state/completed,
+   :to :state/reviewed,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/completed]}
+     {:fn/period ["P7D"]}]},
+   :actions []}
+  {:name :transition/expire-provider-review-period,
+   :from :state/reviewed-by-customer,
+   :to :state/reviewed,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/completed]}
+     {:fn/period ["P7D"]}]},
+   :actions [{:name :action/publish-reviews}]}
+  {:name :transition/expire-customer-review-period,
+   :from :state/reviewed-by-provider,
+   :to :state/reviewed,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/completed]}
+     {:fn/period ["P7D"]}]},
+   :actions [{:name :action/publish-reviews}]}],
+ :notifications []}
