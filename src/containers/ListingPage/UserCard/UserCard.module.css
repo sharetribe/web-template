@@ -151,6 +151,14 @@
   }
 }
 
+.followerCount {
+  margin: 8px 0;
+}
+
+.followButton {
+  margin-top: 16px;
+}
+
 .contact {
   composes: a from global;
   font-weight: var(--fontWeightMedium);

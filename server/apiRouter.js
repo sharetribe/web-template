@@ -17,6 +17,8 @@ const initiatePrivileged = require('./api/initiate-privileged');
 const transitionPrivileged = require('./api/transition-privileged');
 
 const createUserWithIdp = require('./api/auth/createUserWithIdp');
+const followUser = require('./api/follow-user');
+const getFollowers = require('./api/get-followers');
 
 const { authenticateFacebook, authenticateFacebookCallback } = require('./api/auth/facebook');
 const { authenticateGoogle, authenticateGoogleCallback } = require('./api/auth/google');
@@ -59,6 +61,10 @@ router.post('/transition-privileged', transitionPrivileged);
 // This endpoint is called to create a new user after user has confirmed
 // they want to continue with the data fetched from IdP (e.g. name and email)
 router.post('/auth/create-user-with-idp', createUserWithIdp);
+
+// Follow/unfollow user endpoints
+router.post('/follow-user', followUser);
+router.get('/get-followers', getFollowers);
 
 // Facebook authentication endpoints
 

@@ -34,6 +34,7 @@ import { richText } from '../../util/richText';
 
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
+import { followUser, unfollowUser, getFollowers } from '../../ducks/follow.duck';
 import {
   Heading,
   H2,
@@ -46,6 +47,8 @@ import {
   ButtonTabNavHorizontal,
   LayoutSideNavigation,
   NamedRedirect,
+  FollowButton,
+  FollowerCount,
 } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
@@ -62,7 +65,21 @@ const MAX_MOBILE_SCREEN_WIDTH = 768;
 const MIN_LENGTH_FOR_LONG_WORDS = 20;
 
 export const AsideContent = props => {
-  const { user, displayName, showLinkToProfileSettingsPage } = props;
+  const { 
+    user, 
+    displayName, 
+    showLinkToProfileSettingsPage, 
+    followerCount,
+    isFollowing,
+    onFollow,
+    onUnfollow,
+    followInProgress,
+    unfollowInProgress,
+    currentUser,
+  } = props;
+  
+  const isCurrentUser = currentUser?.id && user?.id && currentUser.id.uuid === user.id.uuid;
+  
   return (
     <div className={css.asideContent}>
       <AvatarLarge className={css.avatar} user={user} disableProfileLink />
@@ -71,6 +88,11 @@ export const AsideContent = props => {
           <FormattedMessage id="ProfilePage.mobileHeading" values={{ name: displayName }} />
         ) : null}
       </H2>
+      
+      {/* Follower count */}
+      <FollowerCount count={followerCount} className={css.followerCount} />
+      
+      {/* Edit profile or follow button */}
       {showLinkToProfileSettingsPage ? (
         <>
           <NamedLink className={css.editLinkMobile} name="ProfileSettingsPage">
@@ -80,6 +102,15 @@ export const AsideContent = props => {
             <FormattedMessage id="ProfilePage.editProfileLinkDesktop" />
           </NamedLink>
         </>
+      ) : !isCurrentUser && currentUser ? (
+        <FollowButton
+          className={css.followButton}
+          isFollowing={isFollowing}
+          onFollow={onFollow}
+          onUnfollow={onUnfollow}
+          followInProgress={followInProgress}
+          unfollowInProgress={unfollowInProgress}
+        />
       ) : null}
     </div>
   );
@@ -336,6 +367,12 @@ export const ProfilePageComponent = props => {
     useCurrentUser,
     userShowError,
     user,
+    onFollowUser,
+    onUnfollowUser,
+    onGetFollowers,
+    followInProgress,
+    unfollowInProgress,
+    followersData,
     ...rest
   } = props;
   const isVariant = pathParams.variant?.length > 0;
@@ -356,6 +393,42 @@ export const ProfilePageComponent = props => {
   const isCurrentUser = currentUser?.id && currentUser?.id?.uuid === pathParams.id;
   const profileUser = useCurrentUser ? currentUser : user;
   const { bio, displayName, publicData, metadata } = profileUser?.attributes?.profile || {};
+
+  // Follow functionality
+  const profileUserId = profileUser?.id?.uuid;
+  const followerData = profileUserId ? followersData[profileUserId] : null;
+  const followerCount = followerData?.followerCount ?? 0;
+  const isFollowing = followerData?.isFollowing ?? false;
+
+  // Debug logging
+  console.log('ProfilePage debug:', {
+    profileUserId,
+    followersData,
+    followerData,
+    followerCount,
+    isFollowing
+  });
+
+
+
+  // Load followers data when component mounts or user changes
+  useEffect(() => {
+    if (profileUserId && mounted) {
+      onGetFollowers(profileUserId);
+    }
+  }, [profileUserId, mounted]);
+
+  const handleFollow = () => {
+    if (profileUserId) {
+      onFollowUser(profileUserId);
+    }
+  };
+
+  const handleUnfollow = () => {
+    if (profileUserId) {
+      onUnfollowUser(profileUserId);
+    }
+  };
   const { userFields } = config.user;
   const isPrivateMarketplace = config.accessControl.marketplace.private === true;
   const isUnauthorizedUser = currentUser && !isUserAuthorized(currentUser);
@@ -438,8 +511,15 @@ export const ProfilePageComponent = props => {
         sideNav={
           <AsideContent
             user={profileUser}
+            currentUser={currentUser}
             showLinkToProfileSettingsPage={mounted && isCurrentUser}
             displayName={displayName}
+            followerCount={followerCount}
+            isFollowing={isFollowing}
+            onFollow={handleFollow}
+            onUnfollow={handleUnfollow}
+            followInProgress={followInProgress}
+            unfollowInProgress={unfollowInProgress}
           />
         }
         footer={<FooterContainer />}
@@ -471,6 +551,11 @@ const mapStateToProps = state => {
     reviews = [],
     queryReviewsError,
   } = state.ProfilePage;
+  const {
+    followInProgress,
+    unfollowInProgress,
+    followersData,
+  } = state.follow;
   const userMatches = getMarketplaceEntities(state, [{ type: 'user', id: userId }]);
   const user = userMatches.length === 1 ? userMatches[0] : null;
 
@@ -489,9 +574,18 @@ const mapStateToProps = state => {
     listings: getMarketplaceEntities(state, userListingRefs),
     reviews,
     queryReviewsError,
+    followInProgress,
+    unfollowInProgress,
+    followersData,
   };
 };
 
-const ProfilePage = compose(connect(mapStateToProps))(ProfilePageComponent);
+const mapDispatchToProps = dispatch => ({
+  onFollowUser: userId => dispatch(followUser(userId)),
+  onUnfollowUser: userId => dispatch(unfollowUser(userId)),
+  onGetFollowers: userId => dispatch(getFollowers(userId)),
+});
+
+const ProfilePage = compose(connect(mapStateToProps, mapDispatchToProps))(ProfilePageComponent);
 
 export default ProfilePage;

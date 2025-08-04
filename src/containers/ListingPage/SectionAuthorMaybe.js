@@ -21,6 +21,12 @@ const SectionAuthorMaybe = props => {
     onSubmitInquiry,
     currentUser,
     onManageDisableScrolling,
+    followerCount,
+    isFollowing,
+    onFollow,
+    onUnfollow,
+    followInProgress,
+    unfollowInProgress,
   } = props;
 
   if (!listing.author) {
@@ -41,6 +47,12 @@ const SectionAuthorMaybe = props => {
         currentUser={currentUser}
         onContactUser={onContactUser}
         showContact={!isInquiryProcess}
+        followerCount={followerCount}
+        isFollowing={isFollowing}
+        onFollow={onFollow}
+        onUnfollow={onUnfollow}
+        followInProgress={followInProgress}
+        unfollowInProgress={unfollowInProgress}
       />
       <Modal
         id="ListingPage.inquiry"
