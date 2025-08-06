@@ -51,16 +51,29 @@ const PriceMaybe = props => {
   const isBookable = isBookingProcessAlias(publicData?.transactionProcessAlias);
   const { formattedPrice, priceTitle } = priceData(price, config.currency, intl);
   
+  // Format retail price if available
+  const formattedRetailPrice = publicData?.retailPrice
+    ? intl.formatNumber(publicData.retailPrice, {
+        style: 'currency',
+        currency: config.currency,
+      })
+    : null;
+  
   console.log('ListingCard PriceMaybe - unitType:', publicData?.unitType);
   
   return (
     <div className={css.price}>
       <div className={css.priceValue} title={priceTitle}>
         {formattedPrice}
+        {isBookable ? (
+          <span className={css.perUnit}> per borrow</span>
+        ) : null}
       </div>
-      {isBookable ? (
-        <div className={css.perUnit}>per borrow</div>
-      ) : null}
+      {formattedRetailPrice && (
+        <div className={css.retailPrice}>
+          {formattedRetailPrice}
+        </div>
+      )}
     </div>
   );
 };

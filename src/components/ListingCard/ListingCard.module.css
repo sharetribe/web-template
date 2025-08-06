@@ -45,6 +45,9 @@
   justify-content: flex-start;
   flex-shrink: 0;
   margin-bottom: 4px;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .priceValue {
@@ -68,9 +71,24 @@
   font-weight: var(--fontWeightSemiBold);
 
   color: var(--marketplaceColor);
-  display: inline-flex;
-  align-items: center;
-  margin-left: 2px;
+  display: inline;
+
+  /* Remove default margins from font */
+  margin-top: 0;
+  margin-bottom: 0;
+
+  @media (--viewportMedium) {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+
+.retailPrice {
+  /* Font */
+  composes: textSmall from global;
+  font-weight: var(--fontWeightMedium);
+  color: var(--colorGrey500);
+  text-decoration: line-through;
 
   /* Remove default margins from font */
   margin-top: 0;

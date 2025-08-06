@@ -14,13 +14,22 @@ import css from './SearchMapInfoCard.module.css';
 const ListingCard = props => {
   const { className, clickHandler, intl, isInCarousel, listing, urlToListing, config } = props;
 
-  const { title, price } = listing.attributes;
+  const { title, price, publicData } = listing.attributes;
   const formattedPrice =
     price && price.currency === config.currency
       ? formatMoney(intl, price)
       : price?.currency
       ? price.currency
       : null;
+  
+  // Format retail price if available
+  const formattedRetailPrice = publicData?.retailPrice
+    ? intl.formatNumber(publicData.retailPrice, {
+        style: 'currency',
+        currency: config.currency,
+      })
+    : null;
+    
   const firstImage = listing.images && listing.images.length > 0 ? listing.images[0] : null;
 
   const {
@@ -73,6 +82,11 @@ const ListingCard = props => {
         <div className={classNames(css.info, { [css.borderRadiusInheritBottom]: !isInCarousel })}>
           <div className={classNames(css.price, { [css.noPriceSetLabel]: !formattedPrice })}>
             {formattedPrice}
+            {formattedRetailPrice && (
+              <span className={css.retailPrice}>
+                {formattedRetailPrice}
+              </span>
+            )}
           </div>
           <div className={css.name}>{title}</div>
         </div>

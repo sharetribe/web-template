@@ -87,6 +87,16 @@
   color: var(--marketplaceColor);
 
   margin-right: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.retailPrice {
+  font-size: 12px;
+  font-weight: var(--fontWeightMedium);
+  color: var(--colorGrey500);
+  text-decoration: line-through;
 }
 
 .name {
