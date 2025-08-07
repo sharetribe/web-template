@@ -226,6 +226,12 @@
   }
 }
 
+.shortContent {
+  > * {
+    max-width: 500px;
+  }
+}
+
 .colsSecondary {
   h1, h2, h3 {
     color: var(--ctaSecondaryBG);

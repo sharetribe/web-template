@@ -75,6 +75,7 @@ const BlockDefault = props => {
     hasTextNoGap,
     hasLargeList,
     hasTextLarger,
+    hasShortContent,
     hasCTASecondary,
     hasCTATertiary,
     sliderImages,
@@ -106,7 +107,8 @@ const BlockDefault = props => {
     hasTextDarkGray ? css.textDarkGray : '',
     hasTextNoGap ? css.textNoGap : '',
     hasLargeList ? css.largeList : '',
-    hasTextLarger ? css.textLarger : ''
+    hasTextLarger ? css.textLarger : '',
+    hasShortContent ? css.shortContent : '',
   );
 
   const fieldMediaClass = classNames(

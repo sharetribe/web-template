@@ -221,6 +221,10 @@ function createBlockCustomProps(block) {
   if (block.blockName?.includes('social links ::')) {
     blockCustomProps.hasSocialLinks = true;
   }
+  // Short Content for block.
+  if (block.blockName?.includes('content short ::')) {
+    blockCustomProps.hasShortContent = true;
+  }
   // Section with 2 columns and 2 buttons.
   if (block.blockName?.includes('2 cols buttons ::')) {
     block.blockType = 'blockWithCols';

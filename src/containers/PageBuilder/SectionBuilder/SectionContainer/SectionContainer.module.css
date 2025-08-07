@@ -87,6 +87,18 @@
   }
 }
 
+.sectionContentShortC {
+  header + div {
+    gap: 60px;
+    max-width: 880px;
+
+    
+  }
+  header + div > div {
+
+  }
+}
+
 .sectionContentFullH {
   padding-top: 0;
   padding-bottom: 0;
@@ -94,6 +106,42 @@
   @media (--viewportMedium) {
     
   }
+}
+
+.sectionContentSmallerTitle {
+  header {
+    margin-top: 50px;
+  }
+  header + div {
+    margin-top: 30px;
+    margin-bottom: 50px;
+  }
+  header h1,
+  header h2,
+  header h3 {
+    font-size: 28px;
+    line-height: 1.5;
+    font-weight: 700;
+    margin-bottom: 0;
+  } 
+}
+
+.sectionContentMediumTitle {
+  header {
+    margin-top: 30px;
+  }
+  header + div {
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+  header h1,
+  header h2,
+  header h3 {
+    font-size: 34px;
+    line-height: 1.5;
+    font-weight: 700;
+    margin-bottom: 0;
+  } 
 }
 
 .sectionContentHasTextGray {
