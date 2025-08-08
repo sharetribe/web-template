@@ -94,13 +94,20 @@ const EditListingLocationPanel = props => {
             selectedPlace: { address, origin },
           } = location;
 
+          // Get existing publicData to preserve retailPrice and other fields
+          const existingPublicData = listing?.attributes?.publicData || {};
+
           // New values for listing attributes
           const updateValues = {
             geolocation: origin,
             publicData: {
+              ...existingPublicData, // Preserve existing publicData including retailPrice
               location: { address, building },
             },
           };
+          
+          console.debug('[EditListingLocationPanel] onSubmit publicData=', updateValues.publicData);
+          
           // Save the initialValues to state
           // LocationAutocompleteInput doesn't have internal state
           // and therefore re-rendering would overwrite the values during XHR call.

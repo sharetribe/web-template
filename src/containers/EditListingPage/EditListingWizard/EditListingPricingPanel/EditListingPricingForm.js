@@ -116,11 +116,6 @@ export const EditListingPricingForm = props => (
         intl
       );
 
-      // Add required validation for retail price
-      const retailPriceRequiredMsgId = { id: 'EditListingPricingForm.retailPriceRequired' };
-      const retailPriceRequiredMsg = intl.formatMessage(retailPriceRequiredMsgId);
-      const retailPriceRequired = validators.required(retailPriceRequiredMsg);
-
       const classes = classNames(rootClassName || css.root, className);
       const submitReady = (updated && pristine) || ready;
       const submitInProgress = updateInProgress;
@@ -161,14 +156,7 @@ export const EditListingPricingForm = props => (
                   id: 'EditListingPricingForm.priceInputPlaceholder',
                 })}
                 currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
-                validate={retailPriceRequired}
-
-
-
-
-
-
-                
+                validate={priceValidators}
               />
 
               <p className={css.priceDescription}>

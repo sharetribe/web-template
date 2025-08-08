@@ -47,11 +47,21 @@ const getInitialValues = props => {
       : 1;
   const stockTypeInfinity = [];
 
+  // Ensure retailPrice uses marketplace currency when creating a new listing
+  // Add proper validation to prevent undefined values
+  const formattedRetailPrice = retailPrice && 
+    typeof retailPrice.amount === 'number' && 
+    retailPrice.amount !== undefined && 
+    retailPrice.amount !== null &&
+    (marketplaceCurrency || retailPrice.currency)
+    ? new Money(retailPrice.amount, marketplaceCurrency || retailPrice.currency)
+    : null;
+
   return {
     price,
     stock,
     stockTypeInfinity,
-    retailPrice: retailPrice ? new Money(retailPrice.amount, retailPrice.currency) : null,
+    retailPrice: formattedRetailPrice,
   };
 };
 
@@ -171,35 +181,25 @@ const EditListingPricingAndStockPanel = props => {
                 : {};
 
             // Format retailPrice as Money object if it exists and has a valid amount
-            const formattedRetailPrice =
-              retailPrice instanceof Money
-                ? retailPrice
-                : retailPrice && retailPrice.amount
-                ? new Money(retailPrice.amount, retailPrice.currency || marketplaceCurrency)
+            const formattedRetailPrice = retailPrice && 
+              typeof retailPrice.amount === 'number' && 
+              retailPrice.amount !== undefined && 
+              retailPrice.amount !== null
+                ? new Money(retailPrice.amount, marketplaceCurrency)
                 : null;
 
             // New values for listing attributes
+            const existingPublicData = listing?.attributes?.publicData || {};
             const updateValues = {
               price,
               publicData: {
-                ...listing?.attributes?.publicData,
-                
-                
-                retailPrice:
-                retailPrice instanceof Money
-                  ? retailPrice
-                  : typeof retailPrice === 'number'
-                  ? new Money(retailPrice * 100, marketplaceCurrency)
-                  : retailPrice && typeof retailPrice.amount === 'number'
-                  ? new Money(retailPrice.amount, retailPrice.currency || marketplaceCurrency)
-                  : null,
-              
-              
-
-
+                ...existingPublicData,
+                retailPrice: formattedRetailPrice,
               },
               ...stockUpdateMaybe,
             };
+            
+            console.debug('[EditListingPricingAndStockPanel] onSubmit publicData=', updateValues.publicData);
             
             // Save the initialValues to state
             // Otherwise, re-rendering would overwrite the values during XHR call.
@@ -208,16 +208,7 @@ const EditListingPricingAndStockPanel = props => {
                 price,
                 stock: stockUpdateMaybe?.stockUpdate?.newTotal || stock,
                 stockTypeInfinity,
-            
-                retailPrice:
-                retailPrice instanceof Money
-                  ? retailPrice
-                  : typeof retailPrice === 'number'
-                  ? new Money(retailPrice * 100, marketplaceCurrency)
-                  : retailPrice && typeof retailPrice.amount === 'number'
-                  ? new Money(retailPrice.amount, retailPrice.currency || marketplaceCurrency)
-                  : null,
-              
+                retailPrice: formattedRetailPrice,
               },
             });
             onSubmit(updateValues);

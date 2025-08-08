@@ -397,8 +397,25 @@ const EditListingAvailabilityPanel = props => {
   const handlePlanSubmit = values => {
     setValuesFromLastSubmit(values);
 
+    // Get existing publicData to preserve retailPrice and other fields
+    const existingPublicData = listing?.attributes?.publicData || {};
+    
+    // Create availability plan data
+    const availabilityPlanData = createAvailabilityPlan(values);
+    
+    // Merge existing publicData with any new publicData to prevent overwriting
+    const updateValues = {
+      ...availabilityPlanData,
+      publicData: {
+        ...existingPublicData, // Preserve existing publicData including retailPrice
+        ...(availabilityPlanData.publicData || {}),
+      },
+    };
+    
+    console.debug('[EditListingAvailabilityPanel] handlePlanSubmit publicData=', updateValues.publicData);
+
     // Final Form can wait for Promises to return.
-    return onSubmit(createAvailabilityPlan(values))
+    return onSubmit(updateValues)
       .then(() => {
         // setIsEditPlanModalOpen(false); // REMOVED
       })

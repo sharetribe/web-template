@@ -164,16 +164,22 @@ const EditListingDeliveryPanel = props => {
                   }
                 : {};
 
+            // Get existing publicData to preserve retailPrice and other fields
+            const existingPublicData = listing?.attributes?.publicData || {};
+
             // New values for listing attributes
             const updateValues = {
               geolocation: origin,
               publicData: {
+                ...existingPublicData, // Preserve existing publicData including retailPrice
                 pickupEnabled,
                 ...pickupDataMaybe,
                 shippingEnabled,
                 ...shippingDataMaybe,
               },
             };
+
+            console.debug('[EditListingDeliveryPanel] onSubmit publicData=', updateValues.publicData);
 
             // Save the initialValues to state
             // LocationAutocompleteInput doesn't have internal state

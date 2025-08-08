@@ -83,7 +83,22 @@ const EditListingPhotosPanel = props => {
         onImageUpload={onImageUpload}
         onSubmit={values => {
           const { addImage, ...updateValues } = values;
-          onSubmit(updateValues);
+          
+          // Get existing publicData to preserve retailPrice and other fields
+          const existingPublicData = listing?.attributes?.publicData || {};
+          
+          // Merge existing publicData with any new publicData to prevent overwriting
+          const mergedUpdateValues = {
+            ...updateValues,
+            publicData: {
+              ...existingPublicData, // Preserve existing publicData including retailPrice
+              ...(updateValues.publicData || {}),
+            },
+          };
+          
+          console.debug('[EditListingPhotosPanel] onSubmit publicData=', mergedUpdateValues.publicData);
+          
+          onSubmit(mergedUpdateValues);
         }}
         onRemoveImage={onRemoveImage}
         saveActionMsg={submitButtonText}

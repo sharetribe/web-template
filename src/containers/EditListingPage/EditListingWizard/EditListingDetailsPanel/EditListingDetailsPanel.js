@@ -381,10 +381,14 @@ const EditListingDetailsPanel = props => {
               availabilityPlanData,
             });
             
+            // Get existing publicData to preserve retailPrice and other fields
+            const existingPublicData = listing?.attributes?.publicData || {};
+            
             const updateValues = {
               title: title.trim(),
               description,
               publicData: {
+                ...existingPublicData, // Preserve existing publicData including retailPrice
                 listingType,
                 transactionProcessAlias,
                 unitType,
@@ -394,6 +398,8 @@ const EditListingDetailsPanel = props => {
               privateData: privateListingFields,
               ...availabilityPlanData,
             };
+
+            console.debug('[EditListingDetailsPanel] onSubmit publicData=', updateValues.publicData);
 
             console.log('🔧 [EditListingDetailsPanel] Final updateValues being sent to API:', {
               title: updateValues.title,

@@ -34,15 +34,16 @@ const getListingTypeConfig = (publicData, listingTypes) => {
 // exporting helper functions that handle the initial values and the submission values.
 // This is a tentative approach to contain logic in one place.
 const getInitialValues = props => {
-  const { listing } = props;
+  const { listing, marketplaceCurrency } = props;
   const { unitType } = listing?.attributes?.publicData || {};
-  const retailPrice = listing?.attributes?.publicData?.retailPrice;
   
   return unitType === FIXED
-    ? { ...getInitialValuesForPriceVariants(props), ...getInitialValuesForStartTimeInterval(props) }
+    ? { 
+        ...getInitialValuesForPriceVariants(props), 
+        ...getInitialValuesForStartTimeInterval(props),
+      }
     : {
         price: listing?.attributes?.price,
-        retailPrice: retailPrice ? new Money(retailPrice.amount, retailPrice.currency) : null,
       };
 };
 
@@ -140,14 +141,7 @@ const EditListingPricingPanel = props => {
           className={css.form}
           initialValues={initialValues}
           onSubmit={values => {
-            const { price, retailPrice } = values;
-            
-            // Debug logging for retailPrice
-            console.log('🧾 Form values:', values);
-            console.log('📦 retailPrice type:', typeof retailPrice);
-            console.log('📦 retailPrice value:', retailPrice);
-            console.log('📦 retailPrice instanceof Money:', retailPrice instanceof Money);
-            console.log('📦 retailPrice structure:', retailPrice ? Object.keys(retailPrice) : null);
+            const { price } = values;
             
             // New values for listing attributes
             let updateValues = {};
@@ -158,34 +152,34 @@ const EditListingPricingPanel = props => {
               const startTimeIntervalChanges = handleSubmitValuesForStartTimeInterval(values, publicDataUpdates);
               const priceVariantChanges = handleSubmitValuesForPriceVariants(values, publicDataUpdates, unitType);
               
+              // Get existing publicData to preserve retailPrice and other fields
+              const existingPublicData = listing?.attributes?.publicData || {};
+              
               updateValues = {
                 ...priceVariantChanges,
                 ...startTimeIntervalChanges,
                 publicData: {
+                  ...existingPublicData, // Preserve existing publicData including retailPrice
                   ...startTimeIntervalChanges.publicData,
                   ...priceVariantChanges.publicData,
                 },
               };
             } else {
+              const existingPublicData = listing?.attributes?.publicData || {};
               updateValues = {
                 price,
                 publicData: {
-                  ...listing?.attributes?.publicData,
-                  retailPrice:
-                    retailPrice instanceof Money &&
-                    typeof retailPrice.amount === 'number' &&
-                    typeof retailPrice.currency === 'string'
-                      ? retailPrice
-                      : null,
+                  ...existingPublicData, // Preserve existing publicData including retailPrice
                 },
               };
             }
             
-            console.log('🧾 Final updateValues:', updateValues);
+            console.debug('[EditListingPricingPanel] onSubmit publicData=', updateValues.publicData);
             
             setState({
               initialValues: getInitialValues({
                 listing: getEstimatedListing(listing, updateValues),
+                marketplaceCurrency,
               }),
             });
             onSubmit(updateValues);

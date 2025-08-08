@@ -46,11 +46,10 @@ const getPriceValidators = (listingMinimumPriceSubUnits, marketplaceCurrency, in
     : priceRequired;
 };
 
-// Add retail price validators
+// Add retail price validators (optional)
 const getRetailPriceValidators = (intl) => {
-  const retailPriceRequiredMsgId = { id: 'EditListingPricingAndStockForm.retailPriceRequired' };
-  const retailPriceRequiredMsg = intl.formatMessage(retailPriceRequiredMsgId);
-  return validators.required(retailPriceRequiredMsg);
+  // Retail price is optional, so no validation needed
+  return null;
 };
 
 /**

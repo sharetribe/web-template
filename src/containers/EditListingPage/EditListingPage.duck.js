@@ -25,7 +25,7 @@ import {
 } from '../../ducks/stripeConnectAccount.duck';
 import { fetchCurrentUser } from '../../ducks/user.duck';
 
-const { UUID } = sdkTypes;
+const { UUID, Money } = sdkTypes;
 
 // Create array of N items where indexing starts from 1
 const getArrayOfNItems = n =>
@@ -281,14 +281,10 @@ export default function reducer(state = initialState, action = {}) {
       return { ...state, updateInProgress: true, updateListingError: null };
     case UPDATE_LISTING_SUCCESS:
       console.log('[DEBUG] UPDATE_LISTING_SUCCESS dispatched with payload:', payload);
-      if (payload && payload.data && payload.data.data) {
-        console.log('[DEBUG] Updated listing data:', payload.data.data);
-        console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - Reducer received availabilityPlan:', !!payload.data.data.attributes?.availabilityPlan);
-        if (payload.data.data.attributes?.availabilityPlan) {
-          console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - Reducer plan structure:', JSON.stringify(payload.data.data.attributes.availabilityPlan, null, 2));
-        }
-      } else {
-        console.log('[DEBUG] No payload data available');
+      console.log('[DEBUG] Updated listing data:', payload?.data?.data);
+      console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - Reducer received availabilityPlan:', !!payload?.data?.data?.attributes?.availabilityPlan);
+      if (payload?.data?.data?.attributes?.availabilityPlan) {
+        console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - Reducer plan structure:', JSON.stringify(payload.data.data.attributes.availabilityPlan, null, 2));
       }
       const newState = {
         ...state,
@@ -640,9 +636,18 @@ export function requestCreateListingDraft(data, config) {
     // Note: in this template, image upload is not happening at the same time as listing creation.
     const imageProperty = typeof images !== 'undefined' ? { images: imageIds(images) } : {};
    
-    // Extract retailPrice from publicData
+    // Extract retailPrice from publicData and convert Money object to plain object
     const { retailPrice, ...otherPublicData } = rest.publicData || {};
-    const publicData = { ...otherPublicData, retailPrice };
+    const publicData = { 
+      ...otherPublicData, 
+      ...(retailPrice !== undefined && {
+        retailPrice: retailPrice instanceof Money 
+          ? { amount: retailPrice.amount, currency: retailPrice.currency }
+          : retailPrice 
+      })
+    };
+    
+    console.debug('[createDraft] publicData:', publicData);
     
     const ownListingValues = { ...imageProperty, ...rest, publicData };
 
@@ -660,14 +665,9 @@ export function requestCreateListingDraft(data, config) {
       .then(response => {
         console.log("requestCreateListingDraft API call succeeded:", response);
         createDraftResponse = response;
-        if (response && response.data && response.data.data && response.data.data.id) {
-          const listingId = response.data.data.id;
-          // If stockUpdate info is passed through, update stock
-          return updateStockOfListingMaybe(listingId, stockUpdate, dispatch);
-        } else {
-          console.error("requestCreateListingDraft: Invalid response structure", response);
-          throw new Error("Invalid response structure from create listing draft");
-        }
+        const listingId = response.data.data.id;
+        // If stockUpdate info is passed through, update stock
+        return updateStockOfListingMaybe(listingId, stockUpdate, dispatch);
       })
       .then(() => {
         console.log("requestCreateListingDraft stock update completed");
@@ -710,11 +710,30 @@ export function requestUpdateListing(tab, data, config) {
     // If images should be saved, create array out of the image UUIDs for the API call
     const imageProperty = typeof images !== 'undefined' ? { images: imageIds(images) } : {};
     
-    // Extract retailPrice from publicData
-    const { retailPrice, ...otherPublicData } = rest.publicData || {};
-    const publicData = { ...otherPublicData, retailPrice };
+    // Get existing listing data for comparison
+    const state = getState();
+    const existingListing = state.marketplaceData.entities.ownListing[id.uuid];
+    const existingPublicData = existingListing?.attributes?.publicData || {};
     
-    const ownListingUpdateValues = { id, ...imageProperty, ...rest, publicData };
+    // Extract retailPrice from publicData and convert Money object to plain object
+    // Only update retailPrice if it's explicitly provided in the new data
+    const { retailPrice: newRetailPrice, ...otherPublicData } = rest.publicData || {};
+    const newPublicData = { 
+      ...otherPublicData, 
+      // Only set retailPrice if it's explicitly provided, otherwise preserve existing
+      ...(newRetailPrice !== undefined && {
+        retailPrice: newRetailPrice instanceof Money 
+          ? { amount: newRetailPrice.amount, currency: newRetailPrice.currency }
+          : newRetailPrice 
+      })
+    };
+    
+    // Merge existing publicData with new publicData to prevent overwriting
+    const mergedPublicData = { ...existingPublicData, ...newPublicData };
+    
+    console.debug('[updateListing] step=', tab, 'publicData:', mergedPublicData, 'existing:', existingPublicData, 'new:', newPublicData);
+    
+    const ownListingUpdateValues = { id, ...imageProperty, ...rest, publicData: mergedPublicData };
         
     const imageVariantInfo = getImageVariantInfo(config.layout.listingImage);
     const queryParams = {
@@ -724,9 +743,8 @@ export function requestUpdateListing(tab, data, config) {
       ...imageVariantInfo.imageVariants,
     };
 
-    const state = getState();
     const existingTimeZone =
-      state.marketplaceData.entities.ownListing[id.uuid]?.attributes?.availabilityPlan?.timezone;
+      existingListing?.attributes?.availabilityPlan?.timezone;
     const includedTimeZone = rest?.availabilityPlan?.timezone;
 
     // Note: if update values include stockUpdate, we'll do that first
@@ -738,50 +756,28 @@ export function requestUpdateListing(tab, data, config) {
       })
       .then(response => {
         console.log("requestUpdateListing API call succeeded:", response);
-        if (response && response.data && response.data.data) {
-          console.log('[DEBUG] Response data structure:', response.data.data);
-          console.log('[DEBUG] Updated availabilityPlan:', response.data.data.attributes?.availabilityPlan);
-          console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - Response contains availabilityPlan:', !!response.data.data.attributes?.availabilityPlan);
-          if (response.data.data.attributes?.availabilityPlan) {
-            console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - Response plan structure:', JSON.stringify(response.data.data.attributes.availabilityPlan, null, 2));
-          }
-        } else {
-          console.log('[DEBUG] No response data available');
+        console.log('[DEBUG] Response data structure:', response?.data?.data);
+        console.log('[DEBUG] Updated availabilityPlan:', response?.data?.data?.attributes?.availabilityPlan);
+        console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - Response contains availabilityPlan:', !!response?.data?.data?.attributes?.availabilityPlan);
+        if (response?.data?.data?.attributes?.availabilityPlan) {
+          console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - Response plan structure:', JSON.stringify(response.data.data.attributes.availabilityPlan, null, 2));
         }
         dispatch(updateListingSuccess(response));
         if (!response || !response.data) {
           console.warn('⚠️ Skipping marketplace entity merge due to missing sdkResponse in requestUpdateListing');
         } else {
           console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - Dispatching addMarketplaceEntities with response');
-          if (response && response.data && response.data.data) {
-            console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - Response structure for addMarketplaceEntities:', {
-              hasData: !!response.data,
-              hasDataData: !!response.data.data,
-              dataType: response.data.data.type,
-              dataId: response.data.data.id?.uuid,
-              hasAttributes: !!response.data.data.attributes,
-              hasAvailabilityPlan: !!response.data.data.attributes?.availabilityPlan
-            });
-          } else {
-            console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - No response data for addMarketplaceEntities');
-          }
+          console.log('[DEBUG] 🔍 AVAILABILITY PLAN DEBUG - Response structure for addMarketplaceEntities:', {
+            hasData: !!response.data,
+            hasDataData: !!response.data?.data,
+            dataType: response.data?.data?.type,
+            dataId: response.data?.data?.id?.uuid,
+            hasAttributes: !!response.data?.data?.attributes,
+            hasAvailabilityPlan: !!response.data?.data?.attributes?.availabilityPlan
+          });
           dispatch(addMarketplaceEntities(response));
         }
         dispatch(markTabUpdated(tab));
-
-        // If time zone has changed, we need to fetch exceptions again
-        // since week and month boundaries might have changed.
-        if (!!includedTimeZone && includedTimeZone !== existingTimeZone) {
-          const searchString = '';
-          const firstDayOfWeek = config.localization.firstDayOfWeek;
-          if (response && response.data && response.data.data) {
-            const listing = response.data.data;
-            fetchLoadDataExceptions(dispatch, listing, searchString, firstDayOfWeek);
-          } else {
-            console.warn('⚠️ Cannot fetch exceptions due to invalid response structure');
-          }
-        }
-
         return response;
       })
       .catch(e => {
@@ -831,17 +827,12 @@ export function requestImageUpload(actionPayload, listingImageConfig) {
     return sdk.images
       .upload({ image: actionPayload.file }, queryParams)
       .then(resp => {
-        if (resp && resp.data && resp.data.data) {
-          const img = resp.data.data;
-          // Uploaded image has an existing id that refers to file
-          // The UUID was created as a consequence of this upload call - it's saved to imageId property
-          return dispatch(
-            uploadImageSuccess({ data: { ...img, id, imageId: img.id, file: actionPayload.file } })
-          );
-        } else {
-          console.error("requestImageUpload: Invalid response structure", resp);
-          throw new Error("Invalid response structure from image upload");
-        }
+        const img = resp.data.data;
+        // Uploaded image has an existing id that refers to file
+        // The UUID was created as a consequence of this upload call - it's saved to imageId property
+        return dispatch(
+          uploadImageSuccess({ data: { ...img, id, imageId: img.id, file: actionPayload.file } })
+        );
       })
       .catch(e => dispatch(uploadImageError({ id, error: storableError(e) })));
   };
@@ -861,13 +852,8 @@ export const requestAddAvailabilityException = params => (dispatch, getState, sd
     .create(params, { expand: true })
     .then(response => {
       console.log('🧪 [DEBUG] SDK availabilityException.create success:', response);
-      if (response && response.data && response.data.data) {
-        const availabilityException = response.data.data;
-        return dispatch(addAvailabilityExceptionSuccess({ data: availabilityException }));
-      } else {
-        console.error("requestAddAvailabilityException: Invalid response structure", response);
-        throw new Error("Invalid response structure from availability exception creation");
-      }
+      const availabilityException = response.data.data;
+      return dispatch(addAvailabilityExceptionSuccess({ data: availabilityException }));
     })
     .catch(e => {
       console.error('🧪 [DEBUG] SDK availabilityException.create error:', {
@@ -913,13 +899,8 @@ export const requestDeleteAvailabilityException = params => (dispatch, getState,
     .delete(params, { expand: true })
     .then(response => {
       console.log('🧪 [DEBUG] SDK availabilityException.delete success:', response);
-      if (response && response.data && response.data.data) {
-        const availabilityException = response.data.data;
-        return dispatch(deleteAvailabilityExceptionSuccess({ data: availabilityException }));
-      } else {
-        console.error("requestDeleteAvailabilityException: Invalid response structure", response);
-        throw new Error("Invalid response structure from availability exception deletion");
-      }
+      const availabilityException = response.data.data;
+      return dispatch(deleteAvailabilityExceptionSuccess({ data: availabilityException }));
     })
     .catch(e => {
       console.error('🧪 [DEBUG] SDK availabilityException.delete error:', {
