@@ -16,6 +16,8 @@ const ActionButtonsMaybe = props => {
     secondaryButtonProps,
     isListingDeleted,
     isProvider,
+    onShowAdjustModal,
+    adjustDisabled, // [ADJUST BOOKING]
   } = props;
 
   // In default processes default processes need special handling
@@ -55,6 +57,17 @@ const ActionButtonsMaybe = props => {
 
   const classes = classNames(rootClassName || css.actionButtons, className);
 
+  // [ADJUST BOOKING] Only show Adjust Hours/Price button if allowed
+  const adjustButton = isProvider && !adjustDisabled ? (
+    <SecondaryButton
+      className={css.secondaryButton}
+      style={{ marginTop: 8 }}
+      onClick={onShowAdjustModal}
+    >
+      Adjust Hours/Price
+    </SecondaryButton>
+  ) : null;
+
   return showButtons ? (
     <div className={classes}>
       <div className={css.actionErrors}>
@@ -64,6 +77,7 @@ const ActionButtonsMaybe = props => {
       <div className={css.actionButtonWrapper}>
         {secondaryButton}
         {primaryButton}
+        {adjustButton}
       </div>
     </div>
   ) : null;

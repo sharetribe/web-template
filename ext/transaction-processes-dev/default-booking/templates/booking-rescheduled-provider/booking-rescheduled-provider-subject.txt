@@ -1,0 +1,1 @@
+{{set-translations (asset "content/email-texts.json")}}{{t "BookingRescheduled.Subject" "Your booking with {name} has been rescheduled" name=provider.display-name}}

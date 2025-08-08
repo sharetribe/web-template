@@ -1,0 +1,1 @@
+{{set-translations (asset "content/email-texts.json")}}{{t "BookingAdjustedProvider.Subject" "Booking adjustment confirmation for {listingTitle}" listingTitle=transaction.listing.title}} 

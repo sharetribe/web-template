@@ -113,6 +113,33 @@ export const OrderBreakdownComponent = props => {
         timeZone={timeZone}
       />
 
+      {/* Adjustment Section */}
+      {/* {transaction?.attributes?.metadata?.adjustment && (
+        <div className={css.adjustmentSection} style={{ background: '#fffbe6', border: '1px solid #ffe58f', borderRadius: 4, padding: 16, margin: '16px 0' }}>
+          <strong>Adjustment</strong>
+          <div style={{ marginTop: 8 }}>
+            <div>
+              <span style={{ fontWeight: 500 }}>Previous hours:</span> {booking?.attributes?.hours ?? 'N/A'}
+            </div>
+            <div>
+              <span style={{ fontWeight: 500 }}>Previous price:</span> {typeof booking?.attributes?.price?.amount === 'number' ? (booking.attributes.price.amount / 100).toFixed(2) : 'N/A'}
+            </div>
+            <div>
+              <span style={{ fontWeight: 500 }}>New hours:</span> {transaction.attributes.metadata.adjustment.newHours ?? 'N/A'}
+            </div>
+            <div>
+              <span style={{ fontWeight: 500 }}>New price:</span> {typeof transaction.attributes.metadata.adjustment.newPrice === 'number' ? (transaction.attributes.metadata.adjustment.newPrice / 100).toFixed(2) : 'N/A'}
+            </div>
+            <div>
+              <span style={{ fontWeight: 500 }}>Difference:</span> {typeof transaction.attributes.metadata.adjustment.diff === 'number' ? (transaction.attributes.metadata.adjustment.diff / 100).toFixed(2) : 'N/A'}
+            </div>
+            <div>
+              <span style={{ fontWeight: 500 }}>Adjusted at:</span> {transaction.attributes.metadata.adjustment.adjustedAt ? new Date(transaction.attributes.metadata.adjustment.adjustedAt).toLocaleString() : 'N/A'}
+            </div>
+          </div>
+        </div>
+      )} */}
+
       {transaction?.attributes?.metadata?.rescheduleRequest && (
         <div className={css.rescheduleRequest}>
           <p>

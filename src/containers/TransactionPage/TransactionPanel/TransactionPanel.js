@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import classNames from 'classnames';
 import moment from 'moment'; // [SKYFARER]
 
@@ -31,7 +31,10 @@ import css from './TransactionPanel.module.css';
 // [SKYFARER]
 import { BookingPeriod } from '../../../components/OrderBreakdown/LineItemBookingPeriod';
 import { getGoogleCalendarEventDetails } from '../../../util/transactionDataExtractor';
-import { cancelGoogleEvent } from '../../../util/api';
+import { cancelGoogleEvent, request, adjustBooking } from '../../../util/api';
+import { getProcess } from '../../../transactions/transaction'; // [ADJUST BOOKING]
+import { PrimaryButton, SecondaryButton } from '../../../components'; // [ADJUST BOOKING BUTTONS]
+import { IconSpinner } from '../../../components'; // [ADJUST BOOKING SPINNER]
 // [/SKYFARER]
 
 // Helper function to get display names for different roles
@@ -80,6 +83,123 @@ const CancelModal = ({ intl, isOpen, onClose, onManageDisableScrolling, cancel }
   )
 }
 
+// [ADJUST BOOKING] Move AdjustBookingModal to top-level
+const AdjustBookingModal = ({ transaction, onClose, onSubmit, onManageDisableScrolling }) => {
+  const [hours, setHours] = useState(transaction.booking?.attributes?.hours || 1);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
+  // Prepopulate price with the listing price and make it non-editable
+  const price = transaction.listing?.attributes?.price?.amount
+    ? transaction.listing.attributes.price.amount
+    : 0;
+  const currency = transaction.listing?.attributes?.price?.currency || 'USD';
+  const total = ((hours * price) / 100).toFixed(2); // [ADJUST BOOKING] total field
+  
+  const validateHours = (value) => {
+    if (!value || value < 0) {
+      return 'Hours cannot be negative';
+    }
+    if (value > 8) {
+      return 'Hours cannot exceed 8';
+    }
+    return '';
+  };
+
+  const handleHoursChange = (e) => {
+    const value = Number(e.target.value);
+    setHours(value);
+    setError(validateHours(value));
+  };
+
+  const handleSubmit = async () => {
+    const validationError = validateHours(hours);
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+    
+    setSubmitting(true);
+    setError('');
+    try {
+      await onSubmit(hours, price);
+      onClose();
+    } finally {
+      setSubmitting(false);
+    }
+  };
+  return (
+    <Modal
+      isOpen
+      onClose={onClose}
+      title="Adjust Booking"
+      onManageDisableScrolling={onManageDisableScrolling}
+    >
+      <div style={{ padding: 24 }}>
+        <div style={{ marginBottom: 4, color: '#b85c00', fontWeight: 500 }}>
+          This adjustment can only be made once and should reflect the actual hours flown. Please make changes after the flight. Maximum adjustment is 8 hours.
+        </div>
+        <label>
+          Hours:
+          <input
+            type="number"
+            min={0}
+            max={8}
+            value={hours}
+            onChange={handleHoursChange}
+            style={{ 
+              marginLeft: 8, 
+              marginBottom: 4,
+              border: error ? '1px solid #d9534f' : '1px solid #ccc'
+            }}
+            disabled={submitting}
+          />
+        </label>
+        {error && (
+          <div style={{ 
+            color: '#d9534f', 
+            fontSize: '12px', 
+            marginTop: '4px',
+            marginBottom: '8px' 
+          }}>
+            {error}
+          </div>
+        )}
+        <br />
+        <label>
+          Price (in {currency}):
+          <input
+            type="number"
+            value={price / 100}
+            readOnly
+            style={{ marginLeft: 8, marginBottom: 4, background: '#f5f5f5', color: '#888' }}
+          />
+        </label>
+        <br />
+        <label>
+          Total (in {currency}):
+          <input
+            type="text"
+            value={total}
+            readOnly
+            style={{ marginLeft: 8, marginBottom: 4, background: '#f5f5f5', color: '#222', fontWeight: 'bold' }}
+          />
+        </label>
+        <br />
+        {submitting && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, margin: '8px 0', color: '#555' }}>
+            <IconSpinner />
+            <span>Submitting adjustment...</span>
+          </div>
+        )}
+        <div style={{ display: 'flex', gap: 12, marginTop: 16, justifyContent: 'flex-end' }}>
+          <PrimaryButton type="button" onClick={handleSubmit} disabled={submitting || !!error}>Submit Adjustment</PrimaryButton>
+          <SecondaryButton type="button" onClick={onClose} disabled={submitting}>Cancel</SecondaryButton>
+        </div>
+      </div>
+    </Modal>
+  );
+};
+
 /**
  * Transaction panel
  *
@@ -117,6 +237,9 @@ export class TransactionPanelComponent extends Component {
     this.state = {
       sendMessageFormFocused: false,
       modal: false, // [SKYFARER]
+      showAdjustModal: false, // [ADJUST BOOKING]
+      adjustHours: null, // [ADJUST BOOKING]
+      adjustPrice: null, // [ADJUST BOOKING]
     };
     this.isMobSaf = false;
     this.sendMessageFormName = 'TransactionPanel.SendMessageForm';
@@ -125,6 +248,9 @@ export class TransactionPanelComponent extends Component {
     this.onSendMessageFormBlur = this.onSendMessageFormBlur.bind(this);
     this.onMessageSubmit = this.onMessageSubmit.bind(this);
     this.scrollToMessage = this.scrollToMessage.bind(this);
+    this.handleAdjustBooking = this.handleAdjustBooking.bind(this); // [ADJUST BOOKING]
+    this.handleShowAdjustModal = this.handleShowAdjustModal.bind(this); // [ADJUST BOOKING]
+    this.handleCloseAdjustModal = this.handleCloseAdjustModal.bind(this); // [ADJUST BOOKING]
   }
 
   componentDidMount() {
@@ -168,6 +294,34 @@ export class TransactionPanelComponent extends Component {
         block: 'start',
         behavior: 'smooth',
       });
+    }
+  }
+
+  // [ADJUST BOOKING] Handler for showing/hiding modal
+  handleShowAdjustModal() {
+    this.setState({ showAdjustModal: true });
+  }
+  handleCloseAdjustModal() {
+    this.setState({ showAdjustModal: false });
+  }
+
+  // [ADJUST BOOKING] Handler for submitting adjustment
+  async handleAdjustBooking(newHours, newPrice) {
+    try {
+      console.log('handleAdjustBooking', newHours, newPrice);
+      const response = await adjustBooking({
+        transactionId: this.props.transaction.id.uuid,
+        newHours,
+        newPrice,
+      });
+      if (!response.success) {
+        const errorMsg = response && response.error ? response.error : 'Unknown error';
+        alert('Failed to adjust booking: ' + errorMsg);
+        return;
+      }
+      window.location.reload();
+    } catch (err) {
+      alert('Network or server error: ' + (err.message || err));
     }
   }
 
@@ -244,6 +398,17 @@ export class TransactionPanelComponent extends Component {
         secondaryButtonProps={stateData?.secondaryButtonProps}
         isListingDeleted={listingDeleted}
         isProvider={isProvider}
+        onShowAdjustModal={this.handleShowAdjustModal} // [ADJUST BOOKING]
+        adjustDisabled={(() => {
+          const process = getProcess(stateData.processName);
+          const isAccepted = process && process.getState(transaction) === process.states.ACCEPTED;
+          const transitions = transaction?.attributes?.transitions || [];
+          const hasAdjusted = transitions.some(t =>
+            t.transition === 'transition/provider-adjust-booking-charge' ||
+            t.transition === 'transition/provider-adjust-booking-refund'
+          );
+          return !process || !isAccepted || hasAdjusted;
+        })()}
       />
     );
 
@@ -402,6 +567,15 @@ export class TransactionPanelComponent extends Component {
                   }}
                 />
               </>
+            )}
+
+            {this.state.showAdjustModal && (
+              <AdjustBookingModal
+                transaction={transaction}
+                onClose={this.handleCloseAdjustModal}
+                onSubmit={this.handleAdjustBooking}
+                onManageDisableScrolling={this.props.onManageDisableScrolling}
+              />
             )}
           </div>
 

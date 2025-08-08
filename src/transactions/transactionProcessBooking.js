@@ -56,6 +56,10 @@ export const transitions = {
   // The customer or provider can reschedule the booking.
   CUSTOMER_RESCHEDULE: 'transition/customer-reschedule',
   PROVIDER_RESCHEDULE: 'transition/provider-reschedule',
+
+  // [SKYFARER] Provider can adjust booking (charge or refund)
+  PROVIDER_ADJUST_BOOKING_CHARGE: 'transition/provider-adjust-booking-charge',
+  PROVIDER_ADJUST_BOOKING_REFUND: 'transition/provider-adjust-booking-refund',
   // [/SKYFARER]
 
   // The backend will mark the transaction completed.
@@ -160,6 +164,8 @@ export const graph = {
         [transitions.PROVIDER_CANCEL]: states.CANCELED,
         [transitions.CUSTOMER_RESCHEDULE]: states.ACCEPTED,
         [transitions.PROVIDER_RESCHEDULE]: states.ACCEPTED,
+        [transitions.PROVIDER_ADJUST_BOOKING_CHARGE]: states.ACCEPTED,
+        [transitions.PROVIDER_ADJUST_BOOKING_REFUND]: states.ACCEPTED,
       },
     },
 
@@ -200,6 +206,8 @@ export const isRelevantPastTransition = transition => {
     transitions.PROVIDER_CANCEL, // [SKYFARER]
     transitions.CUSTOMER_RESCHEDULE, // [SKYFARER]
     transitions.PROVIDER_RESCHEDULE, // [SKYFARER]
+    transitions.PROVIDER_ADJUST_BOOKING_CHARGE, // [SKYFARER]
+    transitions.PROVIDER_ADJUST_BOOKING_REFUND, // [SKYFARER]
     transitions.COMPLETE,
     transitions.OPERATOR_COMPLETE,
     transitions.CONFIRM_PAYMENT,
