@@ -44,6 +44,7 @@ import {
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
 import { initializeCardPaymentData } from '../../ducks/stripe.duck.js';
+import { followUser, unfollowUser, getFollowers } from '../../ducks/follow.duck';
 
 // Shared components
 import {
@@ -123,6 +124,12 @@ export const ListingPageComponent = props => {
     callSetInitialValues,
     onSendInquiry,
     onInitializeCardPaymentData,
+    onFollowUser,
+    onUnfollowUser,
+    onGetFollowers,
+    followInProgress,
+    unfollowInProgress,
+    followersData,
     config,
     routeConfiguration,
     showOwnListingsOnly,
@@ -236,6 +243,31 @@ export const ListingPageComponent = props => {
   // Because listing can be never showed with banned or deleted user we don't have to provide
   // banned or deleted display names for the function
   const authorDisplayName = userDisplayNameAsString(ensuredAuthor, '');
+
+  // Follow functionality
+  const authorId = currentAuthor?.id?.uuid;
+  const followerData = authorId ? followersData[authorId] : null;
+  const followerCount = followerData?.followerCount ?? 0;
+  const isFollowing = followerData?.isFollowing ?? false;
+
+  // Load followers data when component mounts or author changes
+  useEffect(() => {
+    if (authorId && !isOwnListing && mounted) {
+      onGetFollowers(authorId);
+    }
+  }, [authorId, isOwnListing, mounted, onGetFollowers]);
+
+  const handleFollow = () => {
+    if (authorId) {
+      onFollowUser(authorId);
+    }
+  };
+
+  const handleUnfollow = () => {
+    if (authorId) {
+      onUnfollowUser(authorId);
+    }
+  };
 
   const { formattedPrice } = priceData(price, config.currency, intl);
 
@@ -419,6 +451,12 @@ export const ListingPageComponent = props => {
               onSubmitInquiry={onSubmitInquiry}
               currentUser={currentUser}
               onManageDisableScrolling={onManageDisableScrolling}
+              followerCount={followerCount}
+              isFollowing={isFollowing}
+              onFollow={handleFollow}
+              onUnfollow={handleUnfollow}
+              followInProgress={followInProgress}
+              unfollowInProgress={unfollowInProgress}
             />
           </div>
           <div className={css.orderColumnForHeroLayout}>
@@ -570,6 +608,11 @@ const mapStateToProps = state => {
     inquiryModalOpenForListingId,
   } = state.ListingPage;
   const { currentUser } = state.user;
+  const {
+    followInProgress,
+    unfollowInProgress,
+    followersData,
+  } = state.follow;
 
   const getListing = id => {
     const ref = { id, type: 'listing' };
@@ -600,6 +643,9 @@ const mapStateToProps = state => {
     fetchLineItemsError, // for OrderPanel
     sendInquiryInProgress,
     sendInquiryError,
+    followInProgress,
+    unfollowInProgress,
+    followersData,
   };
 };
 
@@ -613,6 +659,9 @@ const mapDispatchToProps = dispatch => ({
   onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
   onFetchTimeSlots: (listingId, start, end, timeZone, options) =>
     dispatch(fetchTimeSlots(listingId, start, end, timeZone, options)), // for OrderPanel
+  onFollowUser: userId => dispatch(followUser(userId)),
+  onUnfollowUser: userId => dispatch(unfollowUser(userId)),
+  onGetFollowers: userId => dispatch(getFollowers(userId)),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the

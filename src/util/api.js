@@ -144,3 +144,14 @@ export const transitionPrivileged = body => {
 export const createUserWithIdp = body => {
   return post('/api/auth/create-user-with-idp', body);
 };
+
+// Follow/unfollow user
+export const followUser = body => {
+  return post('/api/follow-user', body);
+};
+
+// Get followers information
+export const getFollowers = params => {
+  const queryString = params ? `?${new URLSearchParams(params)}` : '';
+  return request(`/api/get-followers${queryString}`, { method: 'GET' });
+};

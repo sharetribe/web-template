@@ -1,0 +1,10 @@
+.root {
+  color: var(--matterColorAnti);
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.root strong {
+  font-weight: var(--fontWeightSemiBold);
+  color: var(--matterColor);
+} 

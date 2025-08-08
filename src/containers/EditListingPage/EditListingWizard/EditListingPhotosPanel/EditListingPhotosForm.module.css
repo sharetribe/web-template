@@ -71,6 +71,16 @@
   &:hover {
     border-color: var(--colorGrey300);
   }
+
+  &.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    background-color: var(--colorGrey50);
+
+    &:hover {
+      border-color: var(--colorGrey100);
+    }
+  }
 }
 
 .chooseImageText {
@@ -107,8 +117,25 @@
   }
 }
 
+.imageCount {
+  composes: marketplaceTinyFontStyles from global;
+  color: var(--colorGrey500);
+  margin-top: 4px;
+  margin-bottom: 0;
+  font-weight: var(--fontWeightMedium);
+}
+
 .addImageInput {
   display: none;
+}
+
+.uploadingMessage {
+  composes: marketplaceTinyFontStyles from global;
+  color: var(--colorGrey600);
+  margin-top: 12px;
+  margin-bottom: 0;
+  text-align: center;
+  font-style: italic;
 }
 
 .tip {

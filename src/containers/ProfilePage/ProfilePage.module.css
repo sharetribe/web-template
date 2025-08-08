@@ -324,3 +324,18 @@
   width: 100%;
   height: 100%;
 }
+
+.followerCount {
+  margin: 12px 0;
+}
+
+.followButton {
+  margin-top: 16px;
+}
+
+@media screen and (max-width: 768px) {
+  .followButton {
+    margin-top: 12px;
+    width: 100%;
+  }
+}

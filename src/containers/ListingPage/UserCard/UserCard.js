@@ -7,7 +7,7 @@ import { richText } from '../../../util/richText';
 import { ensureUser, ensureCurrentUser } from '../../../util/data';
 import { propTypes } from '../../../util/types';
 
-import { AvatarLarge, NamedLink, InlineTextButton } from '../../../components';
+import { AvatarLarge, NamedLink, InlineTextButton, FollowButton, FollowerCount } from '../../../components';
 
 import css from './UserCard.module.css';
 
@@ -81,7 +81,23 @@ const UserCard = props => {
     setMounted(true);
   }, []);
 
-  const { rootClassName, className, user, currentUser, onContactUser, showContact = true } = props;
+  const { 
+    rootClassName, 
+    className, 
+    user, 
+    currentUser, 
+    onContactUser, 
+    showContact = true,
+    followerCount = 0,
+    isFollowing = false,
+    onFollow,
+    onUnfollow,
+    followInProgress = false,
+    unfollowInProgress = false,
+  } = props;
+
+  // Debug logging
+  console.log('UserCard debug: received followerCount =', followerCount, 'isFollowing =', isFollowing);
 
   const userIsCurrentUser = user && user.type === 'currentUser';
   const ensuredUser = userIsCurrentUser ? ensureCurrentUser(user) : ensureUser(user);
@@ -114,6 +130,17 @@ const UserCard = props => {
     >
       <FormattedMessage id="UserCard.contactUser" />
     </InlineTextButton>
+  ) : null;
+
+  const followButton = !isCurrentUser && currentUser && onFollow && onUnfollow ? (
+    <FollowButton
+      className={css.followButton}
+      isFollowing={isFollowing}
+      onFollow={onFollow}
+      onUnfollow={onUnfollow}
+      followInProgress={followInProgress}
+      unfollowInProgress={unfollowInProgress}
+    />
   ) : null;
 
   const editProfileMobile = (
@@ -151,8 +178,10 @@ const UserCard = props => {
             <FormattedMessage id="UserCard.heading" values={{ name: displayName }} />
             {editProfileDesktop}
           </div>
+          <FollowerCount count={followerCount} className={css.followerCount} />
           {hasBio ? <ExpandableBio className={css.desktopBio} bio={bio} /> : null}
           {links}
+          {followButton}
         </div>
       </div>
       {hasBio ? <ExpandableBio className={css.mobileBio} bio={bio} /> : null}
