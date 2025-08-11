@@ -318,7 +318,7 @@
   "EditListingPricingAndStockPanel.title": "Pricing & stock of {listingTitle}",
   "EditListingPricingForm.priceInputPlaceholder": "Enter price...",
   "EditListingPricingForm.pricePerProduct": "Price {unitType, select, day {per borrow} night {per night} hour {per hour} other {}}",
-  "EditListingPricingForm.priceDescription": "Sherbrt accepts listings that are at least ~$150 in retail value, in good, gently used condition, and originally sold in retail within the past two years.",
+  "EditListingPricingForm.priceDescription": "Price per borrow is equivalent to a minimum 3-day period. This gives the borrower time to receive, try-on, accessorize and ship back. We'll update the price for you according to how long your item is borrowed.",
   "EditListingPricingForm.priceRequired": "Price is required",
   "EditListingPricingForm.priceTooLow": "Price must be at least {minPrice}",
   "EditListingPricingForm.retailPriceRequired": "Retail price is required",
