@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] render potential errors in EditListingStylePanel.
+  [#647](https://github.com/sharetribe/web-template/pull/647)
+
 ## [v8.7.0] 2025-07-30
 
 - [add] Add currently available translations for DE, ES, FR.
