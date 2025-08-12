@@ -169,6 +169,39 @@ const handleNavigateToInitiateNegotiationPage = parameters => () => {
 };
 
 /**
+ * Returns an object with the following properties:
+ * - hasValidData: boolean
+ * - errorMessageId: string | null
+ *
+ * This is currently needed for validating offers data in the transaction page.
+ *
+ * @param {propTypes.transaction} transaction
+ * @param {Object} process
+ * @param {Object} [process.isValidNegotiationOffersArray]
+ * @param {Object} [process.isNegotiationState]
+ * @returns {Object} E.g. { hasValidData: true, errorMessageId: null }
+ */
+const getDataValidationResult = (transaction, process) => {
+  const { state, transitions = [], metadata = {} } = transaction?.attributes || {};
+  const offers = metadata?.offers || [];
+
+  const hasFn = (property, obj) => !!obj?.[property];
+  const isNegotiationState = hasFn('isNegotiationState', process)
+    ? process?.isNegotiationState(state)
+    : false;
+
+  // With negotiation process, we need to check if the offers array is valid against the transitions array.
+  // Note: negotiation state refers to the state where the user can make an offer.
+  return hasFn('isValidNegotiationOffersArray', process) && isNegotiationState
+    ? {
+        hasValidData: process?.isValidNegotiationOffersArray(transitions, offers),
+        errorMessageId:
+          'TransactionPage.default-negotiation.validation.pastNegotiationOffersInvalid',
+      }
+    : { hasValidData: true, errorMessageId: null };
+};
+
+/**
  * TransactionPage handles data loading for Sale and Order views to transaction pages in Inbox.
  *
  * @component
@@ -628,6 +661,7 @@ export const TransactionPageComponent = props => {
           isListingDeleted={listingDeleted}
           isProvider={isProviderRole}
           transitions={txTransitions}
+          {...getDataValidationResult(transaction, process)}
           timeZone={listing?.attributes?.availabilityPlan?.timezone || 'Etc/UTC'}
         />
       }
