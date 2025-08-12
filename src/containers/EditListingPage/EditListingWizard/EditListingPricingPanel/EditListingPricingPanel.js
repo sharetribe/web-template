@@ -133,7 +133,7 @@ const EditListingPricingPanel = props => {
   const unitType = listing?.attributes?.publicData?.unitType;
 
   return (
-    <div className={classes}>
+    <main className={classes}>
       <H3 as="h1">
         {isPublished ? (
           <FormattedMessage
@@ -226,7 +226,7 @@ const EditListingPricingPanel = props => {
           />
         </div>
       )}
-    </div>
+    </main>
   );
 };
 
