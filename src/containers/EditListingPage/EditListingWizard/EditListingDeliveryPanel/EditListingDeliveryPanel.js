@@ -125,7 +125,7 @@ const EditListingDeliveryPanel = props => {
   );
 
   return (
-    <div className={classes}>
+    <main className={classes}>
       <H3 as="h1">
         {isPublished ? (
           <FormattedMessage
@@ -215,7 +215,7 @@ const EditListingDeliveryPanel = props => {
           />
         </div>
       )}
-    </div>
+    </main>
   );
 };
 
