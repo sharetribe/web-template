@@ -3,6 +3,12 @@ import { parse } from '../../util/urlHelpers';
 import { getAllTransitionsForEveryProcess } from '../../transactions/transaction';
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 
+// Check that the provided sort matches one of the accepted options
+const getValidSort = sort => {
+  const validOptions = ['createdAt', 'lastMessageAt', 'lastTransitionedAt'];
+  return validOptions.includes(sort) ? { sort } : {};
+};
+
 // ================ Action types ================ //
 
 export const FETCH_ORDERS_OR_SALES_REQUEST = 'app/InboxPage/FETCH_ORDERS_OR_SALES_REQUEST';
@@ -79,7 +85,7 @@ export const loadData = (params, search) => (dispatch, getState, sdk) => {
 
   dispatch(fetchOrdersOrSalesRequest());
 
-  const { page = 1 } = parse(search);
+  const { page = 1, sort } = parse(search);
 
   const apiQueryParams = {
     only: onlyFilter,
@@ -106,6 +112,7 @@ export const loadData = (params, search) => (dispatch, getState, sdk) => {
     'fields.image': ['variants.square-small', 'variants.square-small2x'],
     page,
     perPage: INBOX_PAGE_SIZE,
+    ...getValidSort(sort),
   };
 
   return sdk.transactions
