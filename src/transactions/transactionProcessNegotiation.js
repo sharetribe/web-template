@@ -261,32 +261,8 @@ const offerTransitions = [
   ...revokeCounterOfferTransitions,
 ];
 
-const filterRelevantTransitions = (transitions, offerTransitions) => {
+const filterOfferTransitions = (transitions, offerTransitions) => {
   return transitions.filter(t => offerTransitions.includes(t.transition));
-};
-
-const isValidNegotiationOffersArray = (offers, transitions, offerTransitions) => {
-  const pickedTransitions = filterRelevantTransitions(transitions, offerTransitions);
-  const isOffersAnArray = !!offers && Array.isArray(offers);
-
-  // First check if we have the same number of offers and transitions
-  if (!isOffersAnArray || offers.length !== pickedTransitions.length) {
-    return false;
-  }
-
-  // Then verify that each offer corresponds to the transition at the same index
-  // and that the order matches
-  for (let i = 0; i < offers.length; i++) {
-    const offer = offers[i];
-    const transition = pickedTransitions[i];
-
-    // Check if the offer's transition and actor match the transition at the same index
-    if (offer.transition !== transition.transition || offer.by !== transition.by) {
-      return false;
-    }
-  }
-
-  return true;
 };
 
 /**
@@ -312,6 +288,52 @@ const isValidNegotiationOffersArray = (offers, transitions, offerTransitions) =>
  */
 
 /**
+ * Checks if the offers array is valid against the (past) transitions array.
+ *
+ * @param {Array<TransitionRecord>} transitions
+ * @param {Array<NegotiationOffer>} offers
+ * @returns {boolean}
+ */
+export const isValidNegotiationOffersArray = (transitions, offers) => {
+  const pickedTransitions = filterOfferTransitions(transitions, offerTransitions);
+  const isOffersAnArray = !!offers && Array.isArray(offers);
+
+  // First check if we have the same number of offers and transitions
+  if (!isOffersAnArray || offers.length !== pickedTransitions.length) {
+    return false;
+  }
+
+  // Then verify that each offer corresponds to the transition at the same index
+  // and that the order matches
+  for (let i = 0; i < offers.length; i++) {
+    const offer = offers[i];
+    const transition = pickedTransitions[i];
+
+    // Check if the offer's transition and actor match the transition at the same index
+    if (offer.transition !== transition.transition || offer.by !== transition.by) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+/**
+ * Checks if the state is a negotiation state.
+ * Negotiation states are states where the user can make an offer.
+ *
+ * @param {string} state
+ * @returns {boolean}
+ */
+export const isNegotiationState = state => {
+  if (state == null) {
+    return false;
+  }
+  const unprefixedState = state.indexOf('/') === -1 ? state : state.split('/')[1];
+  return [states.OFFER_PENDING, states.CUSTOMER_OFFER_PENDING].includes(unprefixedState);
+};
+
+/**
  * Returns a new array of transitions with the offerInSubunits property added to the transitions that have a matching offer.
  *
  * @param {Array<TransitionRecord>} transitions
@@ -319,7 +341,7 @@ const isValidNegotiationOffersArray = (offers, transitions, offerTransitions) =>
  * @returns {Array<TransitionWithOfferInSubunitsRecord>}
  */
 export const getTransitionsWithMatchingOffers = (transitions, offers) => {
-  const isValidOffersArray = isValidNegotiationOffersArray(offers, transitions, offerTransitions);
+  const isValidOffersArray = isValidNegotiationOffersArray(transitions, offers);
   if (isValidOffersArray) {
     const transitionsWithOffers = [];
     let offerIndex = 0;
@@ -338,15 +360,6 @@ export const getTransitionsWithMatchingOffers = (transitions, offers) => {
   }
 
   return transitions;
-};
-
-export const isNegotiationState = state => {
-  if (state == null) {
-    return false;
-  }
-
-  const unprefixedState = state.indexOf('/') === -1 ? state : state.split('/')[1];
-  return [states.OFFER_PENDING, states.CUSTOMER_OFFER_PENDING].includes(unprefixedState);
 };
 
 // Check if a transition is the kind that should be rendered
