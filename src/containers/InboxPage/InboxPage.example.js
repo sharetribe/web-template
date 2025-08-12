@@ -256,3 +256,223 @@ export const Reviewed_Sale = {
   },
   group: 'page:InboxPage',
 };
+
+///////////////
+// Negotiation //
+///////////////
+
+// Get negotiation process transitions
+const negotiationTransitions = getProcess('default-negotiation')?.transitions;
+
+// Create negotiation transaction with different listing type
+const negotiationTx = lastTransition =>
+  createTransaction({
+    id: 'negotiation-1',
+    processName: 'default-negotiation',
+    processVersion: 1,
+    lastTransition,
+    lastTransitionedAt: new Date(Date.UTC(2017, 0, 15)),
+    customer: createUser('John Customer', {
+      banned: false,
+      deleted: false,
+      profile: {
+        displayName: 'John C',
+        abbreviatedName: 'JC',
+      },
+    }),
+    provider: createUser('Jane Provider', {
+      banned: false,
+      deleted: false,
+      profile: {
+        displayName: 'Jane P',
+        abbreviatedName: 'JP',
+      },
+    }),
+    listing: createListing('RequestX', {
+      publicData: {
+        listingType: 'request',
+        transactionProcessAlias: 'default-negotiation/release-1',
+        unitType: 'request',
+      },
+    }),
+    lineItems,
+  });
+
+// Forward mode examples (customer initiates)
+export const Negotiation_QuoteRequested = {
+  component: injectIntl(TranslatedInboxItem),
+  props: {
+    transactionRole: 'provider',
+    tx: negotiationTx(negotiationTransitions.REQUEST_QUOTE),
+  },
+  group: 'page:InboxPage',
+};
+
+export const Negotiation_OfferPending = {
+  component: injectIntl(TranslatedInboxItem),
+  props: {
+    transactionRole: 'customer',
+    tx: negotiationTx(negotiationTransitions.MAKE_OFFER_FROM_QUOTE_REQUESTED),
+  },
+  group: 'page:InboxPage',
+};
+
+// Reverse mode examples (provider initiates)
+export const Negotiation_Inquiry = {
+  component: injectIntl(TranslatedInboxItem),
+  props: {
+    transactionRole: 'customer',
+    tx: negotiationTx(negotiationTransitions.INQUIRE),
+  },
+  group: 'page:InboxPage',
+};
+
+export const Negotiation_OfferPendingReverse = {
+  component: injectIntl(TranslatedInboxItem),
+  props: {
+    transactionRole: 'customer',
+    tx: negotiationTx(negotiationTransitions.MAKE_OFFER),
+  },
+  group: 'page:InboxPage',
+};
+
+export const Negotiation_OfferPendingAfterInquiry = {
+  component: injectIntl(TranslatedInboxItem),
+  props: {
+    transactionRole: 'customer',
+    tx: negotiationTx(negotiationTransitions.MAKE_OFFER_AFTER_INQUIRY),
+  },
+  group: 'page:InboxPage',
+};
+
+// Counter offer examples
+export const Negotiation_CustomerCounterOfferPending = {
+  component: injectIntl(TranslatedInboxItem),
+  props: {
+    transactionRole: 'provider',
+    tx: negotiationTx(negotiationTransitions.CUSTOMER_MAKE_COUNTER_OFFER),
+  },
+  group: 'page:InboxPage',
+};
+
+export const Negotiation_ProviderCounterOfferPending = {
+  component: injectIntl(TranslatedInboxItem),
+  props: {
+    transactionRole: 'customer',
+    tx: negotiationTx(negotiationTransitions.PROVIDER_MAKE_COUNTER_OFFER),
+  },
+  group: 'page:InboxPage',
+};
+
+// Offer rejection examples
+export const Negotiation_OfferRejectedCustomer = {
+  component: injectIntl(TranslatedInboxItem),
+  props: {
+    transactionRole: 'provider',
+    tx: negotiationTx(negotiationTransitions.CUSTOMER_REJECT_OFFER),
+  },
+  group: 'page:InboxPage',
+};
+
+export const Negotiation_OfferRejectedProvider = {
+  component: injectIntl(TranslatedInboxItem),
+  props: {
+    transactionRole: 'customer',
+    tx: negotiationTx(negotiationTransitions.PROVIDER_WITHDRAW_OFFER),
+  },
+  group: 'page:InboxPage',
+};
+
+export const Negotiation_OfferRejectedOperator = {
+  component: injectIntl(TranslatedInboxItem),
+  props: {
+    transactionRole: 'customer',
+    tx: negotiationTx(negotiationTransitions.OPERATOR_REJECT_OFFER),
+  },
+  group: 'page:InboxPage',
+};
+
+// Payment examples
+export const Negotiation_PendingPayment = {
+  component: injectIntl(TranslatedInboxItem),
+  props: {
+    transactionRole: 'customer',
+    tx: negotiationTx(negotiationTransitions.REQUEST_PAYMENT_TO_ACCEPT_OFFER),
+  },
+  group: 'page:InboxPage',
+};
+
+export const Negotiation_PaymentExpired = {
+  component: injectIntl(TranslatedInboxItem),
+  props: {
+    transactionRole: 'customer',
+    tx: negotiationTx(negotiationTransitions.EXPIRE_PAYMENT),
+  },
+  group: 'page:InboxPage',
+};
+
+export const Negotiation_OfferAccepted = {
+  component: injectIntl(TranslatedInboxItem),
+  props: {
+    transactionRole: 'customer',
+    tx: negotiationTx(negotiationTransitions.CONFIRM_PAYMENT),
+  },
+  group: 'page:InboxPage',
+};
+
+// Delivery examples
+export const Negotiation_Delivered = {
+  component: injectIntl(TranslatedInboxItem),
+  props: {
+    transactionRole: 'customer',
+    tx: negotiationTx(negotiationTransitions.DELIVER),
+  },
+  group: 'page:InboxPage',
+};
+
+export const Negotiation_ChangesRequested = {
+  component: injectIntl(TranslatedInboxItem),
+  props: {
+    transactionRole: 'provider',
+    tx: negotiationTx(negotiationTransitions.REQUEST_CHANGES),
+  },
+  group: 'page:InboxPage',
+};
+
+export const Negotiation_ChangesDelivered = {
+  component: injectIntl(TranslatedInboxItem),
+  props: {
+    transactionRole: 'customer',
+    tx: negotiationTx(negotiationTransitions.DELIVER_CHANGES),
+  },
+  group: 'page:InboxPage',
+};
+
+// Completion examples
+export const Negotiation_Completed = {
+  component: injectIntl(TranslatedInboxItem),
+  props: {
+    transactionRole: 'customer',
+    tx: negotiationTx(negotiationTransitions.ACCEPT_DELIVERABLE),
+  },
+  group: 'page:InboxPage',
+};
+
+// Cancellation examples
+export const Negotiation_Canceled = {
+  component: injectIntl(TranslatedInboxItem),
+  props: {
+    transactionRole: 'customer',
+    tx: negotiationTx(negotiationTransitions.OPERATOR_CANCEL),
+  },
+  group: 'page:InboxPage',
+};
+
+export const Negotiation_AutoCanceled = {
+  component: injectIntl(TranslatedInboxItem),
+  props: {
+    transactionRole: 'customer',
+    tx: negotiationTx(negotiationTransitions.AUTO_CANCEL),
+  },
+  group: 'page:InboxPage',
+};
