@@ -76,11 +76,26 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
     .cond([states.OFFER_PENDING, CUSTOMER], () => {
       // When customer clicks on the accept button, we just redirect them to the checkout page.
       // The actual transition is handled there together with the payment
-      const overwrites = {
+      const overwritesForAcceptOffer = {
         onAction: () => {
           const initialValuesForCheckout = {};
           onCheckoutRedirect(initialValuesForCheckout);
         },
+      };
+
+      const overwritesForMakeCounterOffer = {
+        onAction: onOpenMakeCounterOfferModal,
+        // conditions to disable the button
+        conditions: [
+          {
+            type: 'maxTransitions',
+            action: 'disable',
+            max: 50,
+            disabledReason: {
+              translationKey: `TransactionPage.${processName}.${CUSTOMER}.${states.OFFER_PENDING}.disabled.maxRequests`,
+            },
+          },
+        ],
       };
 
       return {
@@ -91,12 +106,14 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
         primaryButtonProps: actionButtonProps(
           transitions.REQUEST_PAYMENT_TO_ACCEPT_OFFER,
           CUSTOMER,
-          overwrites
+          overwritesForAcceptOffer
         ),
         secondaryButtonProps: actionButtonProps(transitions.CUSTOMER_REJECT_OFFER, CUSTOMER),
-        tertiaryButtonProps: actionButtonProps(transitions.CUSTOMER_MAKE_COUNTER_OFFER, CUSTOMER, {
-          onAction: onOpenMakeCounterOfferModal,
-        }),
+        tertiaryButtonProps: actionButtonProps(
+          transitions.CUSTOMER_MAKE_COUNTER_OFFER,
+          CUSTOMER,
+          overwritesForMakeCounterOffer
+        ),
       };
     })
     .cond([states.OFFER_PENDING, PROVIDER], () => {
