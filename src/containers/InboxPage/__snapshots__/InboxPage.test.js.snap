@@ -2762,6 +2762,2210 @@ exports[`InboxPage InboxItem: default-inquiry process with "inquiry" item check 
 </div>
 `;
 
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/accept-deliverable 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-ACCEPT_DELIVERABLE-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.completed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/auto-accept-deliverable 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-AUTO_ACCEPT_DELIVERABLE-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.completed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/auto-cancel 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-AUTO_CANCEL-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.canceled.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/auto-cancel-from-changes-requested 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-AUTO_CANCEL_FROM_CHANGES_REQUESTED-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.canceled.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/confirm-payment 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-CONFIRM_PAYMENT-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.offer-accepted.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/customer-make-counter-offer 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-CUSTOMER_MAKE_COUNTER_OFFER-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.customer-offer-pending.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/customer-reject-offer 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-CUSTOMER_REJECT_OFFER-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.offer-rejected.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/customer-withdraw-counter-offer 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-CUSTOMER_WITHDRAW_COUNTER_OFFER-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.offer-pending.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/deliver 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-DELIVER-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.delivered.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/deliver-changes 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-DELIVER_CHANGES-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.delivered.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/expire-customer-review-period 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-EXPIRE_CUSTOMER_REVIEW_PERIOD-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.reviewed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/expire-payment 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-EXPIRE_PAYMENT-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.payment-expired.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/expire-provider-review-period 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-EXPIRE_PROVIDER_REVIEW_PERIOD-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.reviewed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/expire-review-period 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-EXPIRE_REVIEW_PERIOD-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.reviewed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/inquire 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-INQUIRE-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.inquiry.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/make-offer 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-MAKE_OFFER-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.offer-pending.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/make-offer-after-inquiry 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-MAKE_OFFER_AFTER_INQUIRY-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.offer-pending.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/make-offer-from-quote-requested 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-MAKE_OFFER_FROM_QUOTE_REQUESTED-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.offer-pending.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/operator-accept-deliverable 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-OPERATOR_ACCEPT_DELIVERABLE-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.completed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/operator-cancel 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-OPERATOR_CANCEL-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.canceled.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/operator-cancel-from-changes-requested 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-OPERATOR_CANCEL_FROM_CHANGES_REQUESTED-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.canceled.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/operator-cancel-from-delivered 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-OPERATOR_CANCEL_FROM_DELIVERED-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.canceled.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/operator-mark-changes-delivered 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-OPERATOR_MARK_CHANGES_DELIVERED-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.delivered.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/operator-mark-delivered 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-OPERATOR_MARK_DELIVERED-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.delivered.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/operator-reject-from-customer-counter-offer 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-OPERATOR_REJECT_FROM_CUSTOMER_COUNTER_OFFER-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.offer-rejected.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/operator-reject-offer 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-OPERATOR_REJECT_OFFER-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.offer-rejected.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/operator-request-changes 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-OPERATOR_REQUEST_CHANGES-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.changes-requested.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/provider-accept-counter-offer 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-PROVIDER_ACCEPT_COUNTER_OFFER-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.offer-pending.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/provider-make-counter-offer 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-PROVIDER_MAKE_COUNTER_OFFER-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.offer-pending.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/provider-reject-counter-offer 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-PROVIDER_REJECT_COUNTER_OFFER-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.offer-pending.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/provider-withdraw-offer 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-PROVIDER_WITHDRAW_OFFER-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.offer-rejected.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/request-changes 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-REQUEST_CHANGES-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.changes-requested.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/request-payment-to-accept-offer 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-REQUEST_PAYMENT_TO_ACCEPT_OFFER-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.pending-payment.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/request-quote 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-REQUEST_QUOTE-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.quote-requested.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/review-1-by-customer 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-REVIEW_1_BY_CUSTOMER-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.reviewed-by-customer.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/review-1-by-provider 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-REVIEW_1_BY_PROVIDER-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.reviewed-by-provider.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/review-2-by-customer 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-REVIEW_2_BY_CUSTOMER-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.reviewed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/review-2-by-provider 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-REVIEW_2_BY_PROVIDER-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.reviewed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
 exports[`InboxPage InboxItem: default-purchase process with "item" InboxItem with stockType "oneItem" matches snapshot of purchase sale 1`] = `
 <div
   class="item"
