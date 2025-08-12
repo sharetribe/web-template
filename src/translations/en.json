@@ -1245,6 +1245,7 @@
   "TransactionPage.default-negotiation.provider.transition-provider-reject-counter-offer.actionError": "Oops, rejecting the counter offer failed. Please try again.",
   "TransactionPage.default-negotiation.provider.transition-provider-withdraw-offer.actionButton": "Withdraw offer",
   "TransactionPage.default-negotiation.provider.transition-provider-withdraw-offer.actionError": "Oops, withdraw failed. Please try again.",
+  "TransactionPage.default-negotiation.validation.pastNegotiationOffersInvalid": "Transaction data is invalid. Please contact support.",
   "TransactionPage.default-purchase.customer.canceled.title": "Your order was canceled.",
   "TransactionPage.default-purchase.customer.completed.title": "You've received your order!",
   "TransactionPage.default-purchase.customer.delivered.title": "Your order is on its way!",

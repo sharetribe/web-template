@@ -124,6 +124,8 @@ const ActionButtons = props => {
     isListingDeleted,
     isProvider,
     transitions = [],
+    hasValidData = true,
+    errorMessageId,
     timeZone = 'Etc/UTC',
   } = props;
 
@@ -181,7 +183,7 @@ const ActionButtons = props => {
           [css.multipleButtons]: !!hasMultipleButtons,
         })}
       >
-        {tertiaryButtonProps ? (
+        {tertiaryButtonProps && hasValidData ? (
           <div className={css.actionButtonWrapper}>
             <Button
               inProgress={tertiaryButtonProps.inProgress}
@@ -193,7 +195,7 @@ const ActionButtons = props => {
             {tertiaryDisabled && <div className={css.finePrint}>{tertiaryReason}</div>}
           </div>
         ) : null}
-        {secondaryButtonProps ? (
+        {secondaryButtonProps && hasValidData ? (
           <div className={css.actionButtonWrapper}>
             <SecondaryButton
               inProgress={secondaryButtonProps?.inProgress}
@@ -205,7 +207,7 @@ const ActionButtons = props => {
             {secondaryDisabled && <div className={css.finePrint}>{secondaryReason}</div>}
           </div>
         ) : null}
-        {primaryButtonProps ? (
+        {primaryButtonProps && hasValidData ? (
           <div className={css.actionButtonWrapper}>
             <PrimaryButton
               inProgress={primaryButtonProps.inProgress}
@@ -215,6 +217,11 @@ const ActionButtons = props => {
               {primaryButtonProps.buttonText}
             </PrimaryButton>
             {primaryDisabled && <div className={css.finePrint}>{primaryReason}</div>}
+          </div>
+        ) : null}
+        {!hasValidData ? (
+          <div className={css.actionButtonWrapper}>
+            <p className={css.error}>{intl.formatMessage({ id: errorMessageId })}</p>
           </div>
         ) : null}
       </div>

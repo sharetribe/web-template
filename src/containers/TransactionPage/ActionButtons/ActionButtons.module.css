@@ -46,6 +46,7 @@
   width: 100%;
 }
 
+.error,
 .actionError {
   composes: h5 from global;
   color: var(--colorFail);

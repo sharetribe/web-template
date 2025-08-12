@@ -315,7 +315,7 @@ export const ActivityFeed = props => {
     );
   };
 
-  const transitionListItem = (transition, offers) => {
+  const transitionListItem = transition => {
     const formattedDate = formatDateWithProximity(transition.createdAt, intl, todayString);
     const { customer, provider, listing } = transaction || {};
 
@@ -393,7 +393,7 @@ export const ActivityFeed = props => {
         if (isMessage(item)) {
           return messageListItem(item);
         } else {
-          return transitionListItem(item, offers);
+          return transitionListItem(item);
         }
       })}
     </ul>
