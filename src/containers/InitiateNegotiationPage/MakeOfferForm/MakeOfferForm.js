@@ -25,21 +25,21 @@ import css from './MakeOfferForm.module.css';
 const { Money } = sdkTypes;
 
 const getPriceValidators = (listingMinimumPriceSubUnits, marketplaceCurrency, intl) => {
-  const quoteRequiredMsgId = { id: 'InitiateNegotiationPage.quoteRequired' };
-  const quoteRequiredMsg = intl.formatMessage(quoteRequiredMsgId);
-  const quoteRequired = validators.required(quoteRequiredMsg);
+  const offerRequiredMsgId = { id: 'InitiateNegotiationPage.offerRequired' };
+  const offerRequiredMsg = intl.formatMessage(offerRequiredMsgId);
+  const offerRequired = validators.required(offerRequiredMsg);
 
   const minPriceRaw = new Money(listingMinimumPriceSubUnits, marketplaceCurrency);
   const minPrice = formatMoney(intl, minPriceRaw);
-  const quoteTooLowMsgId = { id: 'InitiateNegotiationPage.quoteTooLow' };
-  const quoteTooLowMsg = intl.formatMessage(quoteTooLowMsgId, { minPrice });
-  const minQuoteRequired = validators.moneySubUnitAmountAtLeast(
-    quoteTooLowMsg,
+  const offerTooLowMsgId = { id: 'InitiateNegotiationPage.offerTooLow' };
+  const offerTooLowMsg = intl.formatMessage(offerTooLowMsgId, { minPrice });
+  const minOfferRequired = validators.moneySubUnitAmountAtLeast(
+    offerTooLowMsg,
     listingMinimumPriceSubUnits
   );
 
   return listingMinimumPriceSubUnits
-    ? validators.composeValidators(quoteRequired, minQuoteRequired)
+    ? validators.composeValidators(offerRequired, minOfferRequired)
     : priceRequired;
 };
 
@@ -126,7 +126,7 @@ export const MakeOfferForm = props => {
             <div className={css.section}>
               <Heading as="label" htmlFor={`${formId}offer`} rootClassName={css.sectionHeading}>
                 <FormattedMessage
-                  id="InitiateNegotiationPage.quoteLabel"
+                  id="InitiateNegotiationPage.offerLabel"
                   values={{ authorDisplayName }}
                 />
               </Heading>
@@ -137,7 +137,7 @@ export const MakeOfferForm = props => {
                 className={css.input}
                 placeholder={intl.formatMessage(
                   {
-                    id: 'InitiateNegotiationPage.quotePlaceholder',
+                    id: 'InitiateNegotiationPage.offerPlaceholder',
                   },
                   { marketplaceCurrency }
                 )}
