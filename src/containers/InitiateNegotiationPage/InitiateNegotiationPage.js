@@ -130,6 +130,15 @@ const handleSubmit = (submitting, setSubmitting, props) => values => {
     });
 };
 
+const getStripeAccountData = stripeAccount => stripeAccount.attributes.stripeAccountData || null;
+
+// Check if there's requirements on selected type: 'past_due', 'currently_due' etc.
+const hasRequirements = (stripeAccountData, requirementType) =>
+  stripeAccountData != null &&
+  stripeAccountData.requirements &&
+  Array.isArray(stripeAccountData.requirements[requirementType]) &&
+  stripeAccountData.requirements[requirementType].length > 0;
+
 const InitiateNegotiationPageComponent = props => {
   const [submitting, setSubmitting] = useState(false);
 
@@ -139,6 +148,8 @@ const InitiateNegotiationPageComponent = props => {
     config,
     processName,
     currentUser,
+    stripeAccount,
+    stripeAccountFetched,
     listing,
     pageTitle,
     makeOfferError,
@@ -154,6 +165,14 @@ const InitiateNegotiationPageComponent = props => {
   const listingTypeConfig = listingTypeConfigs.find(conf => conf.listingType === listingType);
   const showPrice = displayPrice(listingTypeConfig);
   const showListingImage = requireListingImage(listingTypeConfig);
+
+  const stripeConnected = currentUser?.attributes?.stripeConnected;
+  const stripeAccountData = stripeConnected ? getStripeAccountData(stripeAccount) : null;
+  const requirementsMissing =
+    stripeAccount &&
+    stripeAccountData &&
+    (hasRequirements(stripeAccountData, 'past_due') ||
+      hasRequirements(stripeAccountData, 'currently_due'));
 
   return (
     <Page title={pageTitle} scrollingDisabled={scrollingDisabled}>
@@ -192,7 +211,7 @@ const InitiateNegotiationPageComponent = props => {
               intl={intl}
               config={config}
               price={price}
-              stripeConnected={currentUser?.attributes?.stripeConnected}
+              stripeConnected={stripeConnected && stripeAccountData && !requirementsMissing}
               onSubmit={onSubmit}
               errorMessageComponent={ErrorMessage}
               makeOfferError={makeOfferError}
@@ -325,6 +344,13 @@ const mapStateToProps = state => {
   };
 
   const { currentUser } = state.user;
+
+  const {
+    fetchStripeAccountError,
+    stripeAccount,
+    stripeAccountFetched,
+  } = state.stripeConnectAccount;
+
   return {
     scrollingDisabled: isScrollingDisabled(state),
     currentUser,
@@ -335,6 +361,9 @@ const mapStateToProps = state => {
     showListingError,
     makeOfferInProgress,
     makeOfferError,
+    fetchStripeAccountError,
+    stripeAccount,
+    stripeAccountFetched,
   };
 };
 
