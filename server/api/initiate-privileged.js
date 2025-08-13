@@ -338,7 +338,7 @@ module.exports = (req, res) => {
 
           if (sendSMS && lenderPhone) {
             const listingTitle = listingData?.attributes?.title || 'your listing';
-            const message = `👗 New Sherbrt rental request! Someone wants to borrow your item "${listingTitle}". Tap your dashboard to respond.`;
+            const message = `👗 New Sherbrt booking request! Someone wants to borrow your item "${listingTitle}". Tap your dashboard to respond.`;
 
             sendSMS(lenderPhone, message)
               .then(() => {

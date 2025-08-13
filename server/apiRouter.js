@@ -15,6 +15,7 @@ const loginAs = require('./api/login-as');
 const transactionLineItems = require('./api/transaction-line-items');
 const initiatePrivileged = require('./api/initiate-privileged');
 const transitionPrivileged = require('./api/transition-privileged');
+const shippoWebhook = require('./webhooks/shippoTracking');
 
 const createUserWithIdp = require('./api/auth/createUserWithIdp');
 const loginWithIdp = require('./api/auth/loginWithIdp');
@@ -56,6 +57,9 @@ router.get('/login-as', loginAs);
 router.post('/transaction-line-items', transactionLineItems);
 router.post('/initiate-privileged', initiatePrivileged);
 router.post('/transition-privileged', transitionPrivileged);
+
+// Shippo webhook endpoint
+router.use('/webhooks', shippoWebhook);
 
 // Create user with identity provider (e.g. Facebook or Google)
 // This endpoint is called to create a new user after user has confirmed
