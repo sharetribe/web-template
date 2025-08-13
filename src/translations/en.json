@@ -283,7 +283,7 @@
   "EditListingPage.loadingListingData": "Loading listing data…",
   "EditListingPage.titleCreateListing": "Post a new listing",
   "EditListingPage.titleEditListing": "Edit listing",
-  "EditListingPhotosForm.addImagesTip": "Tip: Upload the best 2-3 photos from different angles and with a good quality.",
+  "EditListingPhotosForm.addImagesTip": "Tip: Show borrowers how good you looked in real life and upload the best 2-3 photos from different angles. We encourage you to share pics from your socials rather than try-on mirror selfies.",
   "EditListingPhotosForm.chooseImage": "+ Add a photo…",
   "EditListingPhotosForm.imageRequired": "You need to add at least one photo.",
   "EditListingPhotosForm.imageTypes": ".JPG or .PNG. Max. 20 MB",
