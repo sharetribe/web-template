@@ -10,6 +10,7 @@ import { hasPermissionToViewData, isUserAuthorized } from '../../util/userHelper
 import { getProcess, resolveLatestProcessName } from '../../transactions/transaction';
 import { fetchCurrentUserHasOrdersSuccess } from '../../ducks/user.duck';
 import { addMarketplaceEntities, getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
+import { fetchStripeAccount } from '../../ducks/stripeConnectAccount.duck';
 
 const { UUID } = sdkTypes;
 
@@ -372,8 +373,11 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
 
   const hasNoViewingRights = currentUser && !hasPermissionToViewData(currentUser);
 
+  const fetchStripeAccountMaybe = () =>
+    currentUser?.stripeAccount ? [dispatch(fetchStripeAccount())] : [];
+
   const dataPromises = transactionId
-    ? [dispatch(showTransaction(transactionId, config))]
-    : [dispatch(showListing(listingId, config, hasNoViewingRights))];
+    ? [dispatch(showTransaction(transactionId, config)), ...fetchStripeAccountMaybe()]
+    : [dispatch(showListing(listingId, config, hasNoViewingRights)), ...fetchStripeAccountMaybe()];
   return Promise.all(dataPromises);
 };
