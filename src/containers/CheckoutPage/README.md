@@ -10,9 +10,10 @@ This Sharetribe Web Template supports 3 processes:
 
 - **_default-booking_**
 - **_default-purchase_**
+- **_default-negotiation_**
 - **_default-inquiry_**
 
-The first 2 transaction processes include Stripe payments, but the last one (**_default-inquiry_**)
+The first 3 transaction processes include Stripe payments, but the last one (**_default-inquiry_**)
 does not.
 
 ## How customers navigate to CheckoutPage
@@ -26,11 +27,13 @@ On both of those pages, there's a component called OrderPanel, which shows a cor
 order data. The order data and listing entity are then passed to the CheckoutPage as initial data
 for the page.
 
-In addition, _default-booking_ and _default-purchase_ processes have a separate inquiry state at the
-beginning of the process graph (to enable discussion between customer and provider). If the
-transaction entity has been created with inquire transition, the transaction exists already and it
-is also passed along with order data and listing entity for the CheckoutPage. In this scenario, the
-customer navigates to CheckoutPage from TransactionPage.
+In addition, _default-booking_, _default-purchase_, and _default-negotiation_ processes have a
+separate inquiry state at the beginning of the process graph (to enable discussion between customer
+and provider). If the transaction entity has been created with inquire transition, the transaction
+exists already and it is also passed along with order data and listing entity for the CheckoutPage.
+In this scenario, the customer navigates to CheckoutPage from TransactionPage. This also happens
+with the negotiation process, which contains a negotiation phase before customer navigates to
+CheckoutPage.
 
 ## Order data and session storage
 
@@ -69,6 +72,9 @@ In addition, there's actually a sequence of XHR calls that the app needs to make
 1. First step is to kickstart the payment process through Marketplace API.  
    This call is proxied through the client app's server, where custom pricing is done by creating
    line items for the transaction.
+   - Note: the negotiation process does not use proxied call since it doesn't use privileged
+     transition. The line-items have been added to the transaction entity already by the time the
+     customer navigates to CheckoutPage.
 2. Then there's potentially 3D security verification that Stripe might show.  
    It's shown if the card issuer enforces it for the current payment intent.
 3. If the Stripe verification succeeded, the payment needs to be confirmed against Marketplace API
