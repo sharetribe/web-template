@@ -60,6 +60,12 @@ const PROCESSES = [
     process: negotiationProcess,
     unitTypes: [OFFER, REQUEST],
   },
+  {
+    name: 'dev-negotiation',
+    alias: `dev-negotiation/release-1`,
+    process: negotiationProcess,
+    unitTypes: [OFFER, REQUEST],
+  },
 ];
 
 /**
@@ -227,6 +233,7 @@ export const resolveLatestProcessName = processName => {
       return BOOKING_PROCESS_NAME;
     case INQUIRY_PROCESS_NAME:
       return INQUIRY_PROCESS_NAME;
+    case 'dev-negotiation':
     case NEGOTIATION_PROCESS_NAME:
       return NEGOTIATION_PROCESS_NAME;
     default:
