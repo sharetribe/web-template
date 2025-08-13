@@ -86,12 +86,13 @@ listings might need to be updated (which can be made with Integration API).
 The unit type's main functionality is to work as a pricing unit. Changing unit type should always
 also mean that pricing needs to be updated.
 
-Some processes could support multiple unit types. E.g. booking process supports _day_, _night_, and
-_hour_.
+Some processes could support multiple unit types. E.g. booking process supports _day_, _night_,
+_hour_, and _fixed_.
 
 We recommend that you don't use the same unit types with different processes. By default, the
-_"item"_ is for the product selling process; and _"day"_, _"night"_, and _"hour"_ are for the
-booking process.
+_"item"_ is for the product selling process (default-purchase); and _"day"_, _"night"_, _"hour"_,
+and _"fixed"_ are for the default-booking process. Then _"request"_ and _"offer"_ are for the
+default-negotiation process and _"inquiry"_ is for the default-inquiry process.
 
 ### [src/util/configHelpers.js](../util/configHelpers.js)
 
