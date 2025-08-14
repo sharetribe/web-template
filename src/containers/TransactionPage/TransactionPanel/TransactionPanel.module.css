@@ -250,6 +250,10 @@
     top: -200px; /* This is a hack to showcase how the component would look when the image isn't sticky */
     width: 409px;
     z-index: 1;
+
+    &.noListingImage {
+      top: 72px;
+    }
   }
 }
 
