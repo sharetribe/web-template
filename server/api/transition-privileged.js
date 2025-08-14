@@ -896,7 +896,7 @@ module.exports = async (req, res) => {
             const message = `👗 New Sherbrt booking request! Someone wants to borrow your item "${listing?.attributes?.title || 'your listing'}". Tap your dashboard to respond.`;
             
             await sendSMS(providerPhone, message);
-            console.log(`✅ [SMS][booking-request] SMS sent to provider ${maskPhone(providerPhone)}`);
+            console.log(`✅ [SMS][booking-request] SMS sent to provider ${providerPhone}`);
           } else {
             console.warn('⚠️ [SMS][booking-request] sendSMS unavailable');
           }
