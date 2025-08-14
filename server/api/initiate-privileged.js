@@ -6,10 +6,6 @@ const {
   serialize,
   fetchCommission,
 } = require('../api-util/sdk');
-const { getIntegrationSdk } = require('../api-util/integrationSdk');
-const { maskPhone } = require('../api-util/phone');
-const { alreadySent } = require('../api-util/idempotency');
-const { attempt, sent, failed } = require('../api-util/metrics');
 
 // Conditional import of sendSMS to prevent module loading errors
 let sendSMS = null;
@@ -22,16 +18,6 @@ try {
 }
 
 console.log('🚦 initiate-privileged endpoint is wired up');
-
-// Helper function to build lender SMS message
-function buildLenderMsg(tx, listingTitle) {
-  const lenderInboxUrl = 'https://sherbrt.com/inbox/sales';
-  const lenderMsg =
-    `👗 New Sherbrt booking request! ` +
-    `Someone wants to borrow your listing "${listingTitle}". ` +
-    `Check your inbox to respond: ${lenderInboxUrl}`;
-  return lenderMsg;
-}
 
 module.exports = (req, res) => {
   console.log('🚀 initiate-privileged endpoint HIT!');
@@ -50,37 +36,244 @@ module.exports = (req, res) => {
   console.log('📱 sendSMS function available:', !!sendSMS);
   console.log('📱 sendSMS function type:', typeof sendSMS);
 
-  // 🔧 FIXED: Remove unused state variables and client SDK usage
-  // We'll get listing data and line items inside the trusted SDK chain
+  const sdk = getSdk(req, res);
+  let lineItems = null;
+  let listingData = null; // Store listing data for SMS use
+  let providerData = null; // Store provider data for SMS use
 
-  // 🔧 FIXED: Start with trusted SDK and handle everything in one clean chain
-  return getTrustedSdk(req)
-    .then(async (trustedSdk) => {
-      const sdk = trustedSdk; // Single SDK variable throughout
+  const listingPromise = () => sdk.listings.show({ 
+    id: bodyParams?.params?.listingId
+  });
+
+  // Get provider data by first getting the listing, then the user
+  const providerPromise = async () => {
+    const listingId = bodyParams?.params?.listingId;
+    if (listingId) {
+      try {
+        // First get the listing to find the provider ID
+        const listingResponse = await sdk.listings.show({ 
+          id: listingId,
+          include: ['author', 'author.profileImage'],
+          'fields.user': ['profile', 'profile.protectedData', 'profile.publicData', 'email'],
+          'fields.profile': ['protectedData', 'publicData']
+        });
+        const listing = listingResponse.data.data;
+        
+        console.log('🔍 Listing attributes:', listing.attributes);
+        console.log('🔍 Listing relationships:', listing.relationships);
+        console.log('🔍 Listing response included data:', listingResponse.data.included?.map(item => ({
+          type: item.type,
+          id: item.id,
+          hasProfile: !!item.attributes?.profile,
+          hasProtectedData: !!item.attributes?.profile?.protectedData
+        })) || 'No included data');
+        
+        // Try to get provider ID from different possible locations
+        let providerId = null;
+        
+        // Method 1: Try to get from listing relationships
+        if (listing.relationships?.author?.data?.id) {
+          providerId = listing.relationships.author.data.id;
+          console.log('🔍 Found provider ID from listing.author:', providerId);
+        }
+        
+        // Method 2: Try to get from included data
+        if (!providerId && listingResponse.data.included) {
+          const authorIncluded = listingResponse.data.included.find(item => 
+            item.type === 'user' && item.id === listing.relationships?.author?.data?.id
+          );
+          if (authorIncluded) {
+            providerId = authorIncluded.id;
+            console.log('🔍 Found provider ID from included data:', providerId);
+            console.log('🔍 [DEBUG] Author included data structure:', {
+              hasAttributes: !!authorIncluded.attributes,
+              hasProfile: !!authorIncluded.attributes?.profile,
+              hasProtectedData: !!authorIncluded.attributes?.profile?.protectedData,
+              profileKeys: authorIncluded.attributes?.profile ? Object.keys(authorIncluded.attributes.profile) : 'No profile',
+              protectedDataKeys: authorIncluded.attributes?.profile?.protectedData ? Object.keys(authorIncluded.attributes.profile.protectedData) : 'No protectedData'
+            });
+            console.log('🔍 [DEBUG] Author included data:', JSON.stringify(authorIncluded, null, 2));
+          }
+        }
+        
+        // Method 3: Try to get from listing attributes
+        if (!providerId && listing.attributes?.authorId) {
+          providerId = listing.attributes.authorId;
+          console.log('🔍 Found provider ID from listing.authorId:', providerId);
+        }
+        
+        // Method 4: Try to get from listing publicData
+        if (!providerId && listing.attributes?.publicData?.authorId) {
+          providerId = listing.attributes.publicData.authorId;
+          console.log('🔍 Found provider ID from listing.publicData.authorId:', providerId);
+        }
+        
+        // Method 5: Try to get from listing metadata
+        if (!providerId && listing.attributes?.metadata?.authorId) {
+          providerId = listing.attributes.metadata.authorId;
+          console.log('🔍 Found provider ID from listing.metadata.authorId:', providerId);
+        }
+        
+        // Method 6: Try to get from transaction data if available
+        if (!providerId && bodyParams?.params?.transactionId) {
+          try {
+            console.log('🔍 Trying to get provider from transaction data...');
+            const transactionResponse = await sdk.transactions.show({ id: bodyParams.params.transactionId });
+            console.log('🔍 Transaction response structure:', Object.keys(transactionResponse || {}));
+            console.log('🔍 Transaction data structure:', Object.keys(transactionResponse?.data || {}));
+            
+            if (transactionResponse?.data?.data?.relationships?.provider) {
+              providerId = transactionResponse.data.data.relationships.provider.data.id;
+              console.log('🔍 Found provider ID from transaction:', providerId);
+            }
+          } catch (transactionErr) {
+            console.warn('⚠️ Could not get transaction data:', transactionErr.message);
+          }
+        }
+        
+        // TEST: Try to access current user's own protected data first
+        console.log('🧪 [TEST] Testing current user protected data access...');
+        try {
+          const currentUserResponse = await sdk.currentUser.show({
+            include: ['profile'],
+            'fields.user': ['profile', 'protectedData'],
+            'fields.profile': ['protectedData', 'publicData'],
+          });
+          
+          console.log('✅ [TEST] Current user access SUCCESSFUL');
+          const currentUserProtectedData = currentUserResponse?.data?.data?.attributes?.profile?.protectedData || {};
+          console.log('🔍 [TEST] Current user protectedData:', currentUserProtectedData);
+          console.log('🔍 [TEST] Current user protectedData.phoneNumber:', currentUserProtectedData.phoneNumber);
+        } catch (currentUserError) {
+          console.error('❌ [TEST] Current user access FAILED:', {
+            error: currentUserError.message,
+            status: currentUserError.status,
+            errorCode: currentUserError.data?.errors?.[0]?.code
+          });
+        }
+        
+        if (providerId) {
+          // Now get the user data for this provider
+          console.log('🔍 [DEBUG] About to fetch provider profile for ID:', providerId);
+          try {
+            // Test different field specification approaches
+            console.log('🧪 [TEST] Testing different field specifications...');
+            
+            // Approach 1: Current approach
+            console.log('🧪 [TEST] Approach 1: Current field specification');
+            const userResponse = await sdk.users.show({
+              id: providerId,
+              include: ['profile'],
+              'fields.user': ['profile', 'protectedData'],
+              'fields.profile': ['protectedData', 'publicData'],
+            });
+            
+            console.log('✅ [DEBUG] Provider profile fetch SUCCESSFUL');
+            console.log('🔍 [DEBUG] User response status:', userResponse?.status);
+            console.log('🔍 [DEBUG] User response has data:', !!userResponse?.data);
+            
+            // Test Approach 2: Alternative field specification
+            console.log('🧪 [TEST] Approach 2: Alternative field specification');
+            try {
+              const userResponse2 = await sdk.users.show({
+                id: providerId,
+                include: ['profile'],
+                'fields.user': ['profile', 'profile.protectedData', 'profile.publicData'],
+                'fields.profile': ['protectedData', 'publicData'],
+              });
+              console.log('✅ [TEST] Approach 2 SUCCESSFUL');
+              const protectedData2 = userResponse2?.data?.data?.attributes?.profile?.protectedData || {};
+              console.log('🔍 [TEST] Approach 2 protectedData:', protectedData2);
+            } catch (approach2Error) {
+              console.error('❌ [TEST] Approach 2 FAILED:', approach2Error.message);
+            }
+            
+            // Test Approach 3: Minimal field specification
+            console.log('🧪 [TEST] Approach 3: Minimal field specification');
+            try {
+              const userResponse3 = await sdk.users.show({
+                id: providerId,
+                include: ['profile'],
+              });
+              console.log('✅ [TEST] Approach 3 SUCCESSFUL');
+              const protectedData3 = userResponse3?.data?.data?.attributes?.profile?.protectedData || {};
+              console.log('🔍 [TEST] Approach 3 protectedData:', protectedData3);
+            } catch (approach3Error) {
+              console.error('❌ [TEST] Approach 3 FAILED:', approach3Error.message);
+            }
+            
+            return userResponse;
+          } catch (userError) {
+            console.error('❌ [DEBUG] Provider profile fetch FAILED:', {
+              error: userError.message,
+              status: userError.status,
+              statusText: userError.statusText,
+              errorCode: userError.data?.errors?.[0]?.code,
+              errorTitle: userError.data?.errors?.[0]?.title,
+              errorDetail: userError.data?.errors?.[0]?.detail,
+              fullError: JSON.stringify(userError, null, 2)
+            });
+            
+            // Check for specific permission errors
+            if (userError.status === 403) {
+              console.error('🚫 [DEBUG] PERMISSION DENIED - 403 error detected');
+              if (userError.data?.errors?.[0]?.code === 'permission-denied-read') {
+                console.error('🚫 [DEBUG] READ PERMISSION DENIED - Cannot read user data');
+              }
+            }
+            
+            return null;
+          }
+        } else {
+          console.warn('⚠️ No provider ID found in listing data');
+          console.log('🔍 Available listing attributes:', Object.keys(listing.attributes || {}));
+          return null;
+        }
+      } catch (err) {
+        console.warn('⚠️ Failed to get provider data:', err.message);
+        return null;
+      }
+    }
+    return null;
+  };
+
+  Promise.all([listingPromise(), fetchCommission(sdk)])
+    .then(async ([showListingResponse, fetchAssetsResponse]) => {
+      const listing = showListingResponse.data.data;
+      listingData = listing; // Store for SMS use
       
-      // Get listing data for line items and SMS
-      const listingResponse = await sdk.listings.show({ 
-        id: bodyParams?.params?.listingId,
-        include: ['author', 'author.profile']
-      });
-      const listing = listingResponse.data.data;
+      // Get provider data separately
+      const providerResponse = await providerPromise();
+      if (providerResponse && providerResponse.data && providerResponse.data.data) {
+        providerData = providerResponse.data.data;
+        console.log('🔍 Provider data available:', !!providerData);
+        console.log('🔍 Provider data structure:', providerData ? Object.keys(providerData) : 'undefined');
+      }
       
-      // Get commission data
-      const commissionResponse = await fetchCommission(sdk);
-      const commissionAsset = commissionResponse.data.data[0];
+      // Debug the listing response
+      console.log('🔍 showListingResponse structure:', Object.keys(showListingResponse));
+      console.log('🔍 showListingResponse.data structure:', Object.keys(showListingResponse.data));
+      console.log('🔍 listing structure:', Object.keys(listing));
+      console.log('🔍 listing.relationships:', listing.relationships);
+      
+      const commissionAsset = fetchAssetsResponse.data.data[0];
+
       const { providerCommission, customerCommission } =
         commissionAsset?.type === 'jsonAsset' ? commissionAsset.attributes.data : {};
 
-      // Calculate line items
-      const lineItems = transactionLineItems(
+      lineItems = transactionLineItems(
         listing,
         { ...orderData, ...bodyParams.params },
         providerCommission,
         customerCommission
       );
 
-      // Prepare transaction body
+      return getTrustedSdk(req);
+    })
+    .then(trustedSdk => {
       const { params } = bodyParams;
+
+      // Add lineItems to the body params
       const body = {
         ...bodyParams,
         params: {
@@ -89,16 +282,13 @@ module.exports = (req, res) => {
         },
       };
 
-      // Initiate transaction
-      let apiResponse;
       if (isSpeculative) {
-        apiResponse = await sdk.transactions.initiateSpeculative(body, queryParams);
-      } else {
-        apiResponse = await sdk.transactions.initiate(body, queryParams);
+        return trustedSdk.transactions.initiateSpeculative(body, queryParams);
       }
-
-      // 🔧 FIXED: Use fresh transaction data from the API response
-      const tx = apiResponse?.data?.data;  // Flex SDK shape
+      return trustedSdk.transactions.initiate(body, queryParams);
+    })
+    .then(async (apiResponse) => {
+      const { status, statusText, data } = apiResponse;
       
       // STEP 4: Add a forced test log
       console.log('🧪 Inside initiate-privileged — beginning SMS evaluation');
@@ -107,141 +297,120 @@ module.exports = (req, res) => {
       if (
         bodyParams?.transition === 'transition/request-payment' &&
         !isSpeculative &&
-        tx
+        data?.data
       ) {
+        console.log('📨 [SMS][booking-request] Preparing to send lender notification SMS');
+        
         try {
-          console.log('📨 [SMS][booking-request] Preparing to send lender notification SMS');
+          const transaction = data?.data;
+          const sdk = getTrustedSdk(req);
           
-          // Provider resolution (you already have this pattern)
-          const txProviderId = tx?.relationships?.provider?.data?.id || null;
-          const listingAuthorId = listing?.relationships?.author?.data?.id || null;
+          // 🔧 FIXED: Resolve provider ID from transaction/listing (normalized)
+          const txProviderId = (transaction?.relationships?.provider?.data?.id) || 
+                              (transaction?.attributes?.providerId) || 
+                              (transaction?.attributes?.publicData?.providerId);
+          const listingAuthorId = listingData?.relationships?.author?.data?.id;
+          
+          // Helper for ID equality checks
+          const eq = (a, b) => (a && b) ? String(a) === String(b) : false;
+          
+          console.log('[INVEST] match provider?', eq(txProviderId, listingAuthorId));
+          console.log('[INVEST] txProviderId:', txProviderId);
+          console.log('[INVEST] listingAuthorId:', listingAuthorId);
+          
+          // 🔧 FIXED: Fetch provider user/profile by ID (do not use currentUser or transaction.protectedData)
           const providerId = txProviderId || listingAuthorId;
-
-          console.log('[SMS][booking-request] Provider ID resolution:', {
-            txProviderId: txProviderId?.uuid || txProviderId,
-            listingAuthorId: listingAuthorId?.uuid || listingAuthorId,
-            chosenProviderId: providerId?.uuid || providerId,
-          });
-
           if (!providerId) {
-            console.warn('[SMS][booking-request] No provider ID from tx/listing; skipping lender SMS');
-          } else {
-            // 🔑 Integration fetch (operator permissions) — can read profile.protectedData
-            const iSdk = getIntegrationSdk();
-            const idStr = providerId?.uuid ?? providerId; // Integration SDK expects a string UUID
-            const prov = await iSdk.users.show({ id: idStr });
-            const prof = prov?.data?.data?.attributes?.profile || null;
-
-            // Inspect what we got (avoid logging full PII)
-            console.log('[SMS][booking-request] Provider profile fields present:', {
-              hasProtected: !!prof?.protectedData,
-              hasPublic: !!prof?.publicData,
-            });
-
-            const provPhone =
-              prof?.protectedData?.phone ??
-              prof?.protectedData?.phoneNumber ??
-              prof?.publicData?.phone ??
-              prof?.publicData?.phoneNumber ??
-              null;
-
-            console.log('[SMS][booking-request] Provider phone (raw, masked):',
-              maskPhone(provPhone)
-            );
-
-            // Optional: safety — don't accidentally send to borrower's phone
-            const borrowerId = tx?.relationships?.customer?.data?.id || null;
-            if (borrowerId && (borrowerId?.uuid ?? borrowerId) === (providerId?.uuid ?? providerId)) {
-              console.warn('[SMS][booking-request] Provider equals customer; aborting lender SMS');
-            } else if (provPhone) {
-              // Your sendSMS util should normalize to E.164 and log the final +1… number
-              const listingTitle = listing?.attributes?.title || 'your listing';
-              
-              const key = `${tx?.id?.uuid || 'no-tx'}:transition/request-payment:lender`;
-              if (alreadySent(key)) {
-                console.log('[SMS] duplicate suppressed (lender):', key);
-              } else {
-                attempt('lender');
-                try {
-                  await sendSMS(provPhone, buildLenderMsg(tx, listingTitle));
-                  sent('lender');
-                  console.log(`📱 [SMS][booking-request] Lender notification sent to ${maskPhone(provPhone)}`);
-                } catch (e) {
-                  const code = e?.code || e?.status || 'unknown';
-                  failed('lender', code);
-                  console.error('[SMS][booking-request] Lender SMS failed:', e.message);
-                }
-              }
-            } else {
-              console.warn('[SMS][booking-request] Provider missing phone; skipping lender SMS');
-            }
+            console.warn('[SMS][booking-request] No provider ID found; not sending SMS');
+            return;
           }
-
-          // 🔧 FIXED: Fetch customer profile if available (borrower SMS - unchanged)
+          
+          const provider = await sdk.users.show({ 
+            id: providerId,
+            include: ['profile'],
+            'fields.user': ['profile'],
+            'fields.profile': ['protectedData', 'publicData']
+          });
+          
+          const prof = provider?.data?.data;
+          if (!prof) {
+            console.warn('[SMS][booking-request] Provider profile not found; not sending SMS');
+            return;
+          }
+          
+          // 🔧 FIXED: Get provider phone from profile only (no transaction fallback)
+          const providerPhone = 
+            prof?.attributes?.profile?.protectedData?.phone ??
+            prof?.attributes?.profile?.protectedData?.phoneNumber ??
+            prof?.attributes?.profile?.publicData?.phone ??
+            prof?.attributes?.profile?.publicData?.phoneNumber ?? 
+            null;
+          
+          // 🔧 FIXED: Also resolve customerId and borrowerPhone for safety check
+          const customerId = transaction?.relationships?.customer?.data?.id;
           let borrowerPhone = null;
-          const customerId = tx?.relationships?.customer?.data?.id;
+          
           if (customerId) {
             try {
               const customer = await sdk.users.show({ 
                 id: customerId,
-                include: ['profile']
+                include: ['profile'],
+                'fields.user': ['profile'],
+                'fields.profile': ['protectedData', 'publicData']
               });
               
-              const customerProf = customer?.data?.data?.attributes?.profile;
-              borrowerPhone = customerProf?.protectedData?.phone
-                ?? customerProf?.protectedData?.phoneNumber
-                ?? customerProf?.publicData?.phone
-                ?? customerProf?.publicData?.phoneNumber
-                ?? null;
+              const customerProf = customer?.data?.data;
+              borrowerPhone = 
+                customerProf?.attributes?.profile?.protectedData?.phone ??
+                customerProf?.attributes?.profile?.protectedData?.phoneNumber ??
+                customerProf?.attributes?.profile?.publicData?.phone ??
+                customerProf?.attributes?.profile?.publicData?.phoneNumber ?? 
+                null;
             } catch (customerErr) {
-              console.warn('[SMS][booking-request] Could not fetch customer profile:', customerErr.message);
+              console.warn('[SMS][booking-request] Could not fetch customer profile for safety check:', customerErr.message);
             }
           }
-
-          // Send customer confirmation SMS
-          if (customerId && borrowerPhone) {
-            try {
-              console.log('📨 [SMS][customer-confirmation] Preparing to send customer confirmation SMS');
-              
-              const listingTitle = listing?.attributes?.title || 'your listing';
-              const borrowerInboxUrl = 'https://sherbrt.com/inbox/orders';
-              const borrowerMsg =
-                `✅ Request sent! Your booking request for "${listingTitle}" was delivered. ` +
-                `Track and reply in your inbox: ${borrowerInboxUrl}`;
-              
-              const key = `${tx?.id?.uuid || 'no-tx'}:transition/request-payment:borrower`;
-              if (alreadySent(key)) {
-                console.log('[SMS] duplicate suppressed (borrower):', key);
-              } else {
-                attempt('borrower');
-                try {
-                  await sendSMS(borrowerPhone, borrowerMsg);
-                  sent('borrower');
-                  console.log(`✅ [SMS][customer-confirmation] Customer confirmation sent to ${maskPhone(borrowerPhone)}`);
-                } catch (e) {
-                  const code = e?.code || e?.status || 'unknown';
-                  failed('borrower', code);
-                  console.error('[SMS][customer-confirmation] Customer SMS failed:', e.message);
-                }
-              }
-              
-            } catch (customerSmsErr) {
-              console.error('[SMS][customer-confirmation] Customer SMS failed:', customerSmsErr.message);
-            }
-          } else {
-            console.log('[SMS][customer-confirmation] Skipping customer SMS - missing customerId or phone:', { customerId, borrowerPhone });
+          
+          // 🔧 FIXED: Guard against misroute - block if provider missing phone or if we accidentally selected borrower
+          if (!providerPhone) {
+            console.warn('[SMS][booking-request] Provider missing phone; not sending.', { 
+              txId: transaction?.id, 
+              txProviderId, 
+              listingAuthorId 
+            });
+            return;
           }
+          
+          if (providerPhone === borrowerPhone) {
+            console.error('[SMS][booking-request] Detected borrower phone for lender notification; aborting send.', { 
+              txId: transaction?.id, 
+              txProviderId, 
+              customerId 
+            });
+            return;
+          }
+          
+          // 🔧 FIXED: Final verification logs before SMS send
+          console.log('[SMS][booking-request] Final verification before send:', {
+            txId: transaction?.id,
+            txProviderId,
+            customerId,
+            providerPhone,
+            borrowerPhone,
+            to: providerPhone
+          });
+          
+          // Send the SMS to provider only
+          const listingTitle = listingData?.attributes?.title || 'your listing';
+          const message = `👗 New Sherbrt booking request! Someone wants to borrow your item "${listingTitle}". Tap your dashboard to respond.`;
+          
+          await sendSMS(providerPhone, message);
+          console.log(`✅ [SMS][booking-request] Lender notification sent to ${providerPhone}`);
+          
         } catch (err) {
-          console.error('❌ [SMS][booking-request] Error in SMS logic:', err.message);
+          console.error('❌ [SMS][booking-request] Error sending lender notification:', err.message);
         }
       }
-      
-      // 🔧 FIXED: Return the API response to be handled by the final .then()
-      return apiResponse;
-    })
-    .then((apiResponse) => {
-      // 🔧 FIXED: Handle the final response to the client
-      const { status, statusText, data } = apiResponse;
       
       res
         .status(status)
@@ -259,4 +428,3 @@ module.exports = (req, res) => {
       handleError(res, e);
     });
 };
-
