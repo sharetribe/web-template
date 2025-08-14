@@ -354,7 +354,9 @@ export class TransactionPanelComponent extends Component {
           </div>
 
           <div className={css.asideDesktop}>
-            <div className={css.stickySection}>
+            <div
+              className={classNames(css.stickySection, { [css.noListingImage]: !showListingImage })}
+            >
               <div className={css.detailCard}>
                 <DetailCardImage
                   avatarWrapperClassName={css.avatarWrapperDesktop}
