@@ -110,72 +110,43 @@ module.exports = (req, res) => {
         tx
       ) {
         try {
-          console.log('📨 [SMS][booking-request] Preparing to send lender notification SMS');
-          
-          // Provider resolution (you already have this pattern)
-          const txProviderId = tx?.relationships?.provider?.data?.id || null;
+          // 🔧 FIXED: Extract IDs from fresh transaction data with fallback to listing author
+          const txProviderId = tx?.relationships?.provider?.data?.id;
           const listingAuthorId = listing?.relationships?.author?.data?.id || null;
           const providerId = txProviderId || listingAuthorId;
-
-          console.log('[SMS][booking-request] Provider ID resolution:', {
-            txProviderId: txProviderId?.uuid || txProviderId,
-            listingAuthorId: listingAuthorId?.uuid || listingAuthorId,
-            chosenProviderId: providerId?.uuid || providerId,
-          });
-
-          if (!providerId) {
-            console.warn('[SMS][booking-request] No provider ID from tx/listing; skipping lender SMS');
-          } else {
-            // 🔑 Integration fetch (operator permissions) — can read profile.protectedData
-            const iSdk = getIntegrationSdk();
-            const idStr = providerId?.uuid ?? providerId; // Integration SDK expects a string UUID
-            const prov = await iSdk.users.show({ id: idStr });
-            const prof = prov?.data?.data?.attributes?.profile || null;
-
-            // Inspect what we got (avoid logging full PII)
-            console.log('[SMS][booking-request] Provider profile fields present:', {
-              hasProtected: !!prof?.protectedData,
-              hasPublic: !!prof?.publicData,
-            });
-
-            const provPhone =
-              prof?.protectedData?.phone ??
-              prof?.protectedData?.phoneNumber ??
-              prof?.publicData?.phone ??
-              prof?.publicData?.phoneNumber ??
-              null;
-
-            console.log('[SMS][booking-request] Provider phone (raw, masked):',
-              maskPhone(provPhone)
-            );
-
-            // Optional: safety — don't accidentally send to borrower's phone
-            const borrowerId = tx?.relationships?.customer?.data?.id || null;
-            if (borrowerId && (borrowerId?.uuid ?? borrowerId) === (providerId?.uuid ?? providerId)) {
-              console.warn('[SMS][booking-request] Provider equals customer; aborting lender SMS');
-            } else if (provPhone) {
-              // Your sendSMS util should normalize to E.164 and log the final +1… number
-              const listingTitle = listing?.attributes?.title || 'your listing';
-              
-              const key = `${tx?.id?.uuid || 'no-tx'}:transition/request-payment:lender`;
-              if (alreadySent(key)) {
-                console.log('[SMS] duplicate suppressed (lender):', key);
-              } else {
-                try {
-                  await sendSMS(provPhone, buildLenderMsg(tx, listingTitle), { role: 'lender' });
-                  console.log(`📱 [SMS][booking-request] Lender notification sent to ${maskPhone(provPhone)}`);
-                } catch (e) {
-                  console.error('[SMS][booking-request] Lender SMS failed:', e.message);
-                }
-              }
-            } else {
-              console.warn('[SMS][booking-request] Provider missing phone; skipping lender SMS');
-            }
-          }
-
-          // 🔧 FIXED: Fetch customer profile if available (borrower SMS - unchanged)
-          let borrowerPhone = null;
           const customerId = tx?.relationships?.customer?.data?.id;
+          
+          if (!providerId) {
+            console.warn('[SMS][booking-request] No provider ID found in transaction or listing; not sending SMS');
+            return apiResponse; // 🔧 FIXED: Return on all paths
+          }
+          
+          // 🔧 FIXED: Fetch provider profile with proper includes
+          const provider = await sdk.users.show({ 
+            id: providerId,
+            include: ['profile']
+          });
+          
+          const prof = provider?.data?.data?.attributes?.profile;
+          if (!prof) {
+            console.warn('[SMS][booking-request] Provider profile not found; not sending SMS');
+            return apiResponse; // 🔧 FIXED: Return on all paths
+          }
+          
+          // 🔧 FIXED: Simplified phone extraction
+          const providerPhone = prof?.protectedData?.phone
+            ?? prof?.protectedData?.phoneNumber
+            ?? prof?.publicData?.phone
+            ?? prof?.publicData?.phoneNumber
+            ?? null;
+          
+          if (!providerPhone) {
+            console.warn('[SMS][booking-request] Provider missing phone; not sending SMS');
+            return apiResponse; // 🔧 FIXED: Return on all paths
+          }
+          
+          // 🔧 FIXED: Fetch customer profile if available
+          let borrowerPhone = null;
           if (customerId) {
             try {
               const customer = await sdk.users.show({ 
@@ -193,29 +164,33 @@ module.exports = (req, res) => {
               console.warn('[SMS][booking-request] Could not fetch customer profile:', customerErr.message);
             }
           }
-
+          
+          // 🔧 FIXED: Guard against misroute
+          if (providerPhone === borrowerPhone) {
+            console.error('[SMS][booking-request] Detected borrower phone for lender notification; aborting send');
+            return apiResponse; // 🔧 FIXED: Return on all paths
+          }
+          
+          // Send lender SMS
+          const listingTitle = listing?.attributes?.title || 'your listing';
+          const lenderMessage = `👗 New Sherbrt booking request! Someone wants to borrow your item "${listingTitle}". Tap your dashboard to respond.`;
+          
+          try {
+            await sendSMS(providerPhone, lenderMessage);
+            console.log(`✅ [SMS][booking-request] Lender notification sent to ${providerPhone}`);
+          } catch (lenderSmsErr) {
+            console.error('[SMS][booking-request] Lender SMS failed:', lenderSmsErr.message);
+          }
+          
           // Send customer confirmation SMS
           if (customerId && borrowerPhone) {
             try {
               console.log('📨 [SMS][customer-confirmation] Preparing to send customer confirmation SMS');
               
-              const listingTitle = listing?.attributes?.title || 'your listing';
-              const borrowerInboxUrl = 'https://sherbrt.com/inbox/orders';
-              const borrowerMsg =
-                `✅ Request sent! Your booking request for "${listingTitle}" was delivered. ` +
-                `Track and reply in your inbox: ${borrowerInboxUrl}`;
+              const customerMessage = `✅ Your booking request for "${listingTitle}" has been sent! The lender will review and respond soon.`;
               
-              const key = `${tx?.id?.uuid || 'no-tx'}:transition/request-payment:borrower`;
-              if (alreadySent(key)) {
-                console.log('[SMS] duplicate suppressed (borrower):', key);
-              } else {
-                try {
-                  await sendSMS(borrowerPhone, borrowerMsg, { role: 'borrower' });
-                  console.log(`✅ [SMS][customer-confirmation] Customer confirmation sent to ${maskPhone(borrowerPhone)}`);
-                } catch (e) {
-                  console.error('[SMS][customer-confirmation] Customer SMS failed:', e.message);
-                }
-              }
+              await sendSMS(borrowerPhone, customerMessage);
+              console.log(`✅ [SMS][customer-confirmation] Customer confirmation sent to ${borrowerPhone}`);
               
             } catch (customerSmsErr) {
               console.error('[SMS][customer-confirmation] Customer SMS failed:', customerSmsErr.message);
@@ -223,6 +198,7 @@ module.exports = (req, res) => {
           } else {
             console.log('[SMS][customer-confirmation] Skipping customer SMS - missing customerId or phone:', { customerId, borrowerPhone });
           }
+          
         } catch (err) {
           console.error('❌ [SMS][booking-request] Error in SMS logic:', err.message);
         }
