@@ -116,6 +116,13 @@ module.exports = (req, res) => {
           const providerId = txProviderId || listingAuthorId;
           const customerId = tx?.relationships?.customer?.data?.id;
           
+          // 🔧 DEBUG: Log provider ID resolution
+          console.log('[SMS][booking-request] Provider ID resolution:', {
+            txProviderId,
+            listingAuthorId,
+            chosenProviderId: providerId
+          });
+          
           if (!providerId) {
             console.warn('[SMS][booking-request] No provider ID found in transaction or listing; not sending SMS');
             return apiResponse; // 🔧 FIXED: Return on all paths
@@ -133,16 +140,25 @@ module.exports = (req, res) => {
             return apiResponse; // 🔧 FIXED: Return on all paths
           }
           
-          // 🔧 FIXED: Simplified phone extraction
+          // 🔧 DEBUG: Log profile data structure
+          console.log('[SMS][booking-request] Provider profile data:', {
+            protectedData: prof?.protectedData,
+            publicData: prof?.publicData
+          });
+          
+          // 🔧 FIXED: Simplified phone extraction with fallback chain
           const providerPhone = prof?.protectedData?.phone
             ?? prof?.protectedData?.phoneNumber
             ?? prof?.publicData?.phone
             ?? prof?.publicData?.phoneNumber
             ?? null;
           
+          // 🔧 DEBUG: Log provider phone (raw) before normalization
+          console.log('[SMS][booking-request] Provider phone (raw):', providerPhone);
+          
           if (!providerPhone) {
-            console.warn('[SMS][booking-request] Provider missing phone; not sending SMS');
-            return apiResponse; // 🔧 FIXED: Return on all paths
+            console.warn('[SMS][booking-request] Provider missing phone; continuing to borrower block');
+            // 🔧 FIXED: Don't return early, continue to borrower SMS
           }
           
           // 🔧 FIXED: Fetch customer profile if available
@@ -171,15 +187,19 @@ module.exports = (req, res) => {
             return apiResponse; // 🔧 FIXED: Return on all paths
           }
           
-          // Send lender SMS
-          const listingTitle = listing?.attributes?.title || 'your listing';
-          const lenderMessage = `👗 New Sherbrt booking request! Someone wants to borrow your item "${listingTitle}". Tap your dashboard to respond.`;
-          
-          try {
-            await sendSMS(providerPhone, lenderMessage);
-            console.log(`✅ [SMS][booking-request] Lender notification sent to ${providerPhone}`);
-          } catch (lenderSmsErr) {
-            console.error('[SMS][booking-request] Lender SMS failed:', lenderSmsErr.message);
+          // Send lender SMS only if we have a phone number
+          if (providerPhone) {
+            const listingTitle = listing?.attributes?.title || 'your listing';
+            const lenderMessage = `👗 New Sherbrt booking request! Someone wants to borrow your item "${listingTitle}". Tap your dashboard to respond.`;
+            
+            try {
+              await sendSMS(providerPhone, lenderMessage);
+              console.log(`✅ [SMS][booking-request] Lender notification sent to ${providerPhone}`);
+            } catch (lenderSmsErr) {
+              console.error('[SMS][booking-request] Lender SMS failed:', lenderSmsErr.message);
+            }
+          } else {
+            console.log('[SMS][booking-request] Skipping lender SMS - no phone number available');
           }
           
           // Send customer confirmation SMS
