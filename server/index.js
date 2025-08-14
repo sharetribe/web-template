@@ -61,6 +61,13 @@ const cspReportUrl = '/csp-report';
 const cspEnabled = CSP === 'block' || CSP === 'report';
 const app = express();
 
+// Boot-time Integration creds presence log
+console.log(
+  process.env.INTEGRATION_CLIENT_ID && process.env.INTEGRATION_CLIENT_SECRET
+    ? '✅ Integration API credentials detected.'
+    : '⚠️ Missing Integration API credentials (lender SMS may fail to read protected phone).'
+);
+
 // Allow CORS for sherbrt.com
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', 'https://www.sherbrt.com'); // allow your custom domain

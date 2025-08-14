@@ -147,6 +147,10 @@ exports.csp = (reportUri, reportOnly) => {
   // const { imgSrc = [self] } = defaultDirectives;
   // const exampleImgSrc = imgSrc.concat('my-custom-domain.example.com');
 
+  // Parse extra hosts from environment variable
+  const EXTRA_HOSTS = (process.env.CSP_EXTRA_HOSTS || '').split(/\s+/).filter(Boolean);
+  // e.g., set CSP_EXTRA_HOSTS="https://sherbrt-test.onrender.com https://sherbrt.com"
+
   const customDirectives = {
     // Example: Add custom directive override
     // imgSrc: exampleImgSrc,
@@ -159,7 +163,33 @@ exports.csp = (reportUri, reportOnly) => {
   // See Helmet's default directives:
   // https://github.com/helmetjs/helmet/blob/bdb09348c17c78698b0c94f0f6cc6b3968cd43f9/middlewares/content-security-policy/index.ts#L51
 
+  // Extend relevant directives with extra hosts
   const directives = Object.assign({ reportUri: [reportUri] }, defaultDirectives, customDirectives);
+  
+  if (EXTRA_HOSTS.length > 0) {
+    // Add extra hosts to relevant directives
+    if (directives.scriptSrc) {
+      directives.scriptSrc = [...directives.scriptSrc, ...EXTRA_HOSTS];
+    }
+    if (directives.scriptSrcElem) {
+      directives.scriptSrcElem = [...directives.scriptSrcElem, ...EXTRA_HOSTS];
+    }
+    if (directives.connectSrc) {
+      directives.connectSrc = [...directives.connectSrc, ...EXTRA_HOSTS];
+    }
+    if (directives.styleSrc) {
+      directives.styleSrc = [...directives.styleSrc, ...EXTRA_HOSTS];
+    }
+    if (directives.imgSrc) {
+      directives.imgSrc = [...directives.imgSrc, ...EXTRA_HOSTS];
+    }
+    if (directives.manifestSrc) {
+      directives.manifestSrc = [...directives.manifestSrc, ...EXTRA_HOSTS];
+    } else {
+      directives.manifestSrc = [self, ...EXTRA_HOSTS];
+    }
+  }
+  
   if (!reportOnly && !dev) {
     directives.upgradeInsecureRequests = [];
   }

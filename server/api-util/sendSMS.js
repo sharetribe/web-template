@@ -8,12 +8,8 @@ const client = twilio(
   process.env.TWILIO_AUTH_TOKEN
 );
 
-// In-memory duplicate prevention (resets on restart)
-const recentSends = new Map(); // key: `${transactionId}:${transition}:${role}`, value: timestamp
-const DUPLICATE_WINDOW_MS = 60000; // 60 seconds
-
-// Helper function to normalize phone number to E.164 format
-function normalizePhoneNumber(phone) {
+// Helper function to format phone number to E.164
+function formatPhoneNumber(phone) {
   if (!phone) return null;
   
   // Remove all non-digit characters
@@ -49,7 +45,7 @@ function normalizePhoneNumber(phone) {
     return `+${digits}`;
   }
   
-  console.warn(`📱 Could not normalize phone number: ${phone}`);
+  console.warn(`📱 Could not format phone number: ${phone}`);
   return null;
 }
 
@@ -58,54 +54,10 @@ function isE164(num) {
   return /^\+\d{10,15}$/.test(String(num || '')); 
 }
 
-// Duplicate prevention helper
-function isDuplicateSend(transactionId, transition, role) {
-  if (!transactionId || !transition || !role) {
-    return false; // Can't prevent duplicates without all identifiers
-  }
-  
-  const key = `${transactionId}:${transition}:${role}`;
-  const now = Date.now();
-  const lastSent = recentSends.get(key);
-  
-  if (lastSent && (now - lastSent) < DUPLICATE_WINDOW_MS) {
-    return true; // Duplicate detected within window
-  }
-  
-  // Update the timestamp and clean old entries
-  recentSends.set(key, now);
-  
-  // Clean up old entries (older than 5 minutes) to prevent memory leaks
-  if (recentSends.size > 1000) { // Only clean when we have many entries
-    const cutoff = now - (5 * 60 * 1000); // 5 minutes
-    for (const [k, timestamp] of recentSends.entries()) {
-      if (timestamp < cutoff) {
-        recentSends.delete(k);
-      }
-    }
-  }
-  
-  return false;
-}
-
 // Optional in-memory STOP list (resets on restart)
 const stopList = new Set();
 
-/**
- * sendSMS(phone, message, opts?)
- * opts: { 
- *   role?: 'lender' | 'borrower' | 'customer',
- *   transactionId?: string,
- *   transition?: string
- * }
- */
-async function sendSMS(to, message, opts = {}) {
-  const { role, transactionId, transition } = opts;
-  
-  if (!role && process.env.METRICS_LOG === '1') {
-    console.warn('[metrics] skipped: no role provided to sendSMS');
-  }
-
+function sendSMS(to, message) {
   if (!to || !message) {
     console.warn('📭 Missing phone number or message');
     return Promise.resolve();
@@ -116,33 +68,23 @@ async function sendSMS(to, message, opts = {}) {
     return Promise.resolve();
   }
 
-  // Duplicate prevention check
-  if (transactionId && transition && role) {
-    if (isDuplicateSend(transactionId, transition, role)) {
-      console.warn(`🔄 [DUPLICATE] SMS suppressed for ${transactionId}:${transition}:${role} within ${DUPLICATE_WINDOW_MS}ms window`);
-      return { suppressed: true, reason: 'duplicate_within_window' };
-    }
-  }
-
-  // Normalize the phone number to E.164
-  const normalizedPhone = normalizePhoneNumber(to);
-  if (!normalizedPhone) {
+  // Format the phone number
+  const formattedPhone = formatPhoneNumber(to);
+  if (!formattedPhone) {
     console.warn(`📱 Invalid phone number format: ${to}`);
-    if (role) failed(role, 'invalid_format');
     return Promise.resolve();
   }
 
   // E.164 validation
-  if (!isE164(normalizedPhone)) {
+  if (!isE164(formattedPhone)) {
     console.warn('[SMS] invalid phone, aborting:', to ? maskPhone(to) : 'null');
-    if (role) failed(role, 'invalid_e164');
     throw new Error('Invalid E.164 phone');
   }
 
   // Check STOP list
-  if (stopList.has(normalizedPhone)) {
-    console.warn('[SMS] suppressed: number opted out (STOP):', maskPhone(normalizedPhone));
-    return { suppressed: true, reason: 'stop_list' };
+  if (stopList.has(formattedPhone)) {
+    console.warn('[SMS] suppressed: number opted out (STOP):', maskPhone(formattedPhone));
+    return { suppressed: true };
   }
 
   // 🔍 CRITICAL INVESTIGATION: Get call stack to identify which function called sendSMS
@@ -152,52 +94,35 @@ async function sendSMS(to, message, opts = {}) {
   // Gate full-number logs for local debugging only
   const devFullLogs = process.env.SMS_DEBUG_FULL === '1' && process.env.NODE_ENV !== 'production';
   
-  // Metrics: attempt only if role provided
-  if (role) attempt(role);
+  // Log attempt (caller should pass role-based metrics; if not possible, use 'unknown')
+  attempt('unknown');
   
-  // Enhanced logging with raw vs normalized phone comparison
   console.log(`📱 [CRITICAL] === SEND SMS CALLED ===`);
   console.log(`📱 [CRITICAL] Caller function: ${caller}`);
-  console.log(`📱 [CRITICAL] Raw phone: ${maskPhone(to)}`);
-  console.log(`📱 [CRITICAL] Normalized phone: ${maskPhone(normalizedPhone)}`);
+  console.log(`📱 [CRITICAL] Recipient phone: ${maskPhone(formattedPhone)} (original: ${maskPhone(to)})`);
   console.log(`📱 [CRITICAL] SMS message: ${message}`);
-  console.log(`📱 [CRITICAL] Role: ${role || 'none'}`);
-  if (transactionId && transition) {
-    console.log(`📱 [CRITICAL] Transaction: ${transactionId}:${transition}`);
-  }
-  if (devFullLogs) {
-    console.debug('[DEV ONLY] Raw number:', to);
-    console.debug('[DEV ONLY] Normalized number:', normalizedPhone);
-  }
+  if (devFullLogs) console.debug('[DEV ONLY] full number:', formattedPhone);
   console.log(`📱 [CRITICAL] ========================`);
 
   return client.messages
     .create({
       body: message,
       from: process.env.TWILIO_PHONE_NUMBER,
-      to: normalizedPhone,
+      to: formattedPhone,
     })
     .then(msg => {
-      // Success
-      if (role) sent(role);
-      console.log(`📤 [CRITICAL] SMS sent successfully to ${maskPhone(normalizedPhone)}`);
+      sent('unknown');
+      console.log(`📤 [CRITICAL] SMS sent successfully to ${maskPhone(formattedPhone)}`);
       console.log(`📤 [CRITICAL] Twilio message SID: ${msg.sid}`);
-      console.log(`📤 [CRITICAL] Raw → Normalized: ${maskPhone(to)} → ${maskPhone(normalizedPhone)}`);
       return msg;
     })
     .catch(err => {
-      // Optional: map Twilio error codes as before (21610 etc.)
       const code = err?.code || err?.status || 'unknown';
-      if (role) failed(role, code);
-      console.warn('[SMS] failed', { 
-        code, 
-        rawPhone: maskPhone(to), 
-        normalizedPhone: maskPhone(normalizedPhone),
-        error: err.message 
-      });
+      failed('unknown', code);
+      console.warn('[SMS] failed', { code, to: maskPhone(formattedPhone) });
 
       // 21610: STOP. Avoid future sends in this process.
-      if (String(code) === '21610') stopList.add(normalizedPhone);
+      if (String(code) === '21610') stopList.add(formattedPhone);
       throw err;
     });
 }
