@@ -20,6 +20,7 @@ const IconSendMessage = () => {
       height="14"
       viewBox="0 0 14 14"
       xmlns="http://www.w3.org/2000/svg"
+      role="none"
     >
       <g className={css.strokeMatter} fill="none" fillRule="evenodd" strokeLinejoin="round">
         <path d="M12.91 1L0 7.003l5.052 2.212z" />
