@@ -11,10 +11,11 @@ import css from './IconReviewStar.module.css';
  * @param {string?} props.className add more style rules in addition to components own css.root
  * @param {string?} props.rootClassName overwrite components own css.root
  * @param {boolean?} props.isFilled is filled with color
+ * @param {string} props.label aria-label for svg image
  * @returns {JSX.Element} SVG icon
  */
 const IconReviewStar = props => {
-  const { className, rootClassName, isFilled } = props;
+  const { className, rootClassName, isFilled, label } = props;
   const filledOrDefault = isFilled ? css.filled : css.root;
   const classes = classNames(rootClassName || filledOrDefault, className);
 
@@ -25,6 +26,8 @@ const IconReviewStar = props => {
       height="23"
       viewBox="0 0 23 23"
       xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      aria-label={label}
     >
       <path
         d="M22.938 8.008c-.15-.412-.544-.69-.985-.69H14.38L12.507.758C12.377.31 11.967 0 11.5 0c-.467 0-.88.31-1.006.76L8.618 7.317H1.046c-.442 0-.833.278-.983.69-.15.414-.025.876.314 1.16l5.7 4.75L3.2 21.59c-.16.43-.02.916.346 1.196.362.28.87.29 1.242.02l6.71-4.79 6.713 4.79c.375.27.88.26 1.245-.02.366-.28.504-.765.343-1.196l-2.875-7.67 5.7-4.75c.34-.284.463-.746.315-1.16"

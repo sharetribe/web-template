@@ -203,6 +203,8 @@ export class ModalComponent extends Component {
               className={classNames(containerClasses, css.focusedDiv)}
               ref={this.refDiv}
               tabIndex="-1"
+              role="main"
+              aria-label="modal"
             >
               {closeBtn}
               <div className={classNames(contentClassName || css.content)}>{children}</div>
