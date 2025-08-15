@@ -14,6 +14,13 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Add accessibility improvements to components related to
+    - search pages
+    - listing page
+    - listing editing pages
+    - transaction page
+  [#649](https://github.com/sharetribe/web-template/pull/649)
+
 - [add] render potential errors in EditListingStylePanel.
   [#647](https://github.com/sharetribe/web-template/pull/647)
 
