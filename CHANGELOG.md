@@ -14,6 +14,13 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Add accessibility improvements to components related to
+    - search pages
+    - listing page
+    - listing editing pages
+    - transaction page
+  [#649](https://github.com/sharetribe/web-template/pull/649)
+
 - [change] Remove pickup fee line-item from the order breakdown.
   [#655](https://github.com/sharetribe/web-template/pull/655)
 - [add] Update EditListingPage README.md to describe the data gathered and updated.
@@ -24,6 +31,7 @@ way to update this template, but currently, we follow a pattern:
   [#652](https://github.com/sharetribe/web-template/pull/652)
 - [fix] IntegerRangeFilter: fix a bug with small text on grid layout.
   [#650](https://github.com/sharetribe/web-template/pull/650)
+
 - [add] render potential errors in EditListingStylePanel.
   [#647](https://github.com/sharetribe/web-template/pull/647)
 
