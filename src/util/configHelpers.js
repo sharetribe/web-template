@@ -879,8 +879,8 @@ const validListingTypes = listingTypes => {
           listingType: type,
           label,
           transactionType: {
-            process: processName,
-            alias,
+            process: processName === 'default-negotiation' ? 'dev-negotiation' : processName,
+            alias: processName === 'default-negotiation' ? 'dev-negotiation/release-1' : alias,
             unitType,
             ...restOfTransactionType,
           },

@@ -217,8 +217,8 @@ describe('auth duck', () => {
           currentUserShowSuccess(fakeCurrentUser),
           fetchCurrentUserNotificationsRequest(),
           authInfoRequest(),
-          fetchCurrentUserNotificationsSuccess([]),
           authInfoSuccess({}),
+          fetchCurrentUserNotificationsSuccess(0, 0),
           loginSuccess(),
         ]);
       });
@@ -389,8 +389,8 @@ describe('auth duck', () => {
           currentUserShowSuccess(fakeCurrentUser),
           fetchCurrentUserNotificationsRequest(),
           authInfoRequest(),
-          fetchCurrentUserNotificationsSuccess([]),
           authInfoSuccess({}),
+          fetchCurrentUserNotificationsSuccess(0, 0),
           loginSuccess(),
         ]);
       });
