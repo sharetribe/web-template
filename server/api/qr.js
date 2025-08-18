@@ -132,7 +132,13 @@ module.exports = ({ sharetribeSdk, shippo }) => {
         expiresIn: outboundQrCodeExpiry ? outboundQrCodeExpiry - nowSec : 'unknown'
       });
       
-      // 302 redirect to the (fresh) Shippo QR URL
+      // 302 redirect to the (fresh) Shippo QR URL with cache control and robots headers
+      res.set({
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+        'X-Robots-Tag': 'noindex, nofollow'
+      });
       res.redirect(302, outboundQrCodeUrl);
       
     } catch (err) {
