@@ -105,7 +105,7 @@ async function createShippingLabels(protectedData, transactionId, listing, sendS
     console.log('📦 [SHIPPO] Outbound shipment payload:', JSON.stringify(outboundPayload, null, 2));
 
     // Create outbound shipment (provider → customer)
-    const labelRes = await axios.post(
+    const shipmentRes = await axios.post(
       'https://api.goshippo.com/shipments/',
       outboundPayload,
       {
@@ -117,12 +117,74 @@ async function createShippingLabels(protectedData, transactionId, listing, sendS
     );
 
     console.log('📦 [SHIPPO] Outbound shipment created successfully');
-    console.log('📦 [SHIPPO] Label URL:', labelRes.data.label_url);
-    console.log('📦 [SHIPPO] QR Code URL:', labelRes.data.qr_code_url);
-    console.log('📦 [SHIPPO] Tracking URL:', labelRes.data.tracking_url_provider);
+    console.log('📦 [SHIPPO] Shipment ID:', shipmentRes.data.object_id);
+    
+    // Select a shipping rate from the available rates
+    const availableRates = shipmentRes.data.rates || [];
+    console.log('📊 [SHIPPO] Available rates:', availableRates.length);
+    
+    if (availableRates.length === 0) {
+      console.error('❌ [SHIPPO] No shipping rates available for outbound shipment');
+      return { success: false, reason: 'no_shipping_rates' };
+    }
+    
+    // Rate selection logic: prefer USPS, fallback to first available
+    let selectedRate = availableRates.find(rate => rate.provider === 'USPS');
+    if (!selectedRate) {
+      selectedRate = availableRates[0];
+      console.log('⚠️ [SHIPPO] USPS rate not found, using first available:', selectedRate.provider);
+    } else {
+      console.log('✅ [SHIPPO] Selected USPS rate:', selectedRate.provider, selectedRate.servicelevel);
+    }
+    
+    console.log('📦 [SHIPPO] Selected rate:', {
+      provider: selectedRate.provider,
+      service: selectedRate.servicelevel,
+      rate: selectedRate.rate,
+      object_id: selectedRate.object_id
+    });
+    
+    // Create the actual label by purchasing the transaction
+    console.log('📦 [SHIPPO] Purchasing label for selected rate...');
+    const transactionRes = await axios.post(
+      'https://api.goshippo.com/transactions/',
+      {
+        rate: selectedRate.object_id,
+        async: false,
+        label_file_type: 'PNG',
+        qr_code_requested: true,
+      },
+      {
+        headers: {
+          'Authorization': `ShippoToken ${process.env.SHIPPO_API_TOKEN}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+    
+    // Check if label purchase was successful
+    if (transactionRes.data.status !== 'SUCCESS') {
+      console.error('❌ [SHIPPO] Label purchase failed:', transactionRes.data.messages);
+      console.error('❌ [SHIPPO] Transaction status:', transactionRes.data.status);
+      return { success: false, reason: 'label_purchase_failed', status: transactionRes.data.status };
+    }
+    
+    // Extract URLs from the successful transaction response
+    const labelUrl = transactionRes.data.label_url;
+    const qrCodeUrl = transactionRes.data.qr_code_url;
+    const trackingUrl = transactionRes.data.tracking_url_provider || transactionRes.data.tracking_url;
+    
+    console.log('📦 [SHIPPO] Label purchased successfully!');
+    console.log('📦 [SHIPPO] Label URL:', labelUrl);
+    console.log('📦 [SHIPPO] QR Code URL:', qrCodeUrl);
+    console.log('📦 [SHIPPO] Tracking URL:', trackingUrl);
+    console.log('📦 [SHIPPO] Transaction ID:', transactionRes.data.object_id);
 
     // Create return shipment (customer → provider) if we have return address
     let returnLabelRes = null;
+    let returnQrCodeUrl = null;
+    let returnTrackingUrl = null;
+    
     if (protectedData.providerStreet && protectedData.providerCity && protectedData.providerState && protectedData.providerZip) {
       console.log('📦 [SHIPPO] Creating return shipment (customer → provider)...');
       
@@ -134,7 +196,7 @@ async function createShippingLabels(protectedData, transactionId, listing, sendS
         async: false
       };
 
-      returnLabelRes = await axios.post(
+      const returnShipmentRes = await axios.post(
         'https://api.goshippo.com/shipments/',
         returnPayload,
         {
@@ -146,31 +208,67 @@ async function createShippingLabels(protectedData, transactionId, listing, sendS
       );
 
       console.log('📦 [SHIPPO] Return shipment created successfully');
-      console.log('📦 [SHIPPO] Return Label URL:', returnLabelRes.data.label_url);
-      console.log('📦 [SHIPPO] Return QR Code URL:', returnLabelRes.data.qr_code_url);
-      console.log('📦 [SHIPPO] Return Tracking URL:', returnLabelRes.data.tracking_url_provider);
+      console.log('📦 [SHIPPO] Return Shipment ID:', returnShipmentRes.data.object_id);
+      
+      // Get return rates and select one
+      const returnRates = returnShipmentRes.data.rates || [];
+      if (returnRates.length > 0) {
+        let returnSelectedRate = returnRates.find(rate => rate.provider === 'USPS');
+        if (!returnSelectedRate) {
+          returnSelectedRate = returnRates[0];
+        }
+        
+        console.log('📦 [SHIPPO] Selected return rate:', {
+          provider: returnSelectedRate.provider,
+          service: returnSelectedRate.servicelevel,
+          rate: returnSelectedRate.rate,
+          object_id: returnSelectedRate.object_id
+        });
+        
+        // Purchase return label
+        const returnTransactionRes = await axios.post(
+          'https://api.goshippo.com/transactions/',
+          {
+            rate: returnSelectedRate.object_id,
+            async: false,
+            label_file_type: 'PNG',
+            qr_code_requested: true,
+          },
+          {
+            headers: {
+              'Authorization': `ShippoToken ${process.env.SHIPPO_API_TOKEN}`,
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+        
+        if (returnTransactionRes.data.status === 'SUCCESS') {
+          returnQrCodeUrl = returnTransactionRes.data.qr_code_url;
+          returnTrackingUrl = returnTransactionRes.data.tracking_url_provider || returnTransactionRes.data.tracking_url;
+          
+          console.log('📦 [SHIPPO] Return label purchased successfully!');
+          console.log('📦 [SHIPPO] Return QR Code URL:', returnQrCodeUrl);
+          console.log('📦 [SHIPPO] Return Tracking URL:', returnTrackingUrl);
+        } else {
+          console.warn('⚠️ [SHIPPO] Return label purchase failed:', returnTransactionRes.data.messages);
+        }
+      }
     }
 
-    // Save label URLs to transaction protectedData
+    // Try to persist URLs to Flex transaction (skip if not available)
     try {
-      // Use the passed sharetribeSdk instead of undefined sdk
-      const transaction = await sharetribeSdk.transactions.show({ id: transactionId });
-      const currentProtectedData = transaction.data.data.attributes.protectedData || {};
-      const updatedProtectedData = {
-        ...currentProtectedData,
-        returnLabelUrl: returnLabelRes.data.label_url,
-        returnQrCodeUrl: returnLabelRes.data.qr_code_url,
-        returnTrackingUrl: returnLabelRes.data.tracking_url_provider
-      };
-      
-      await sharetribeSdk.transactions.update({
-        id: transactionId,
-        protectedData: updatedProtectedData
+      // Note: We'll skip persistence for now to avoid the SDK error
+      // TODO: Implement transition/store-shipping-urls when available
+      console.log('💾 [SHIPPO] Skipping URL persistence - transition not yet implemented');
+      console.log('💾 [SHIPPO] URLs available for this session:', {
+        outboundLabelUrl: labelUrl,
+        outboundQrCodeUrl: qrCodeUrl,
+        outboundTrackingUrl: trackingUrl,
+        returnQrCodeUrl: returnQrCodeUrl,
+        returnTrackingUrl: returnTrackingUrl
       });
-      
-      console.log('💾 Return label URLs saved to transaction protectedData');
-    } catch (updateError) {
-      console.error('❌ Failed to save return label URLs to transaction:', updateError.message);
+    } catch (persistError) {
+      console.warn('⚠️ [SHIPPO] URL persistence not available:', persistError.message);
     }
     
     // Send SMS notifications for shipping labels
@@ -181,18 +279,41 @@ async function createShippingLabels(protectedData, transactionId, listing, sendS
       
       // Trigger 4: Lender receives text when QR code/shipping label is sent to them
       if (lenderPhone) {
-        await sendSMS(
-          lenderPhone,
-          `📬 Your Sherbrt shipping label is ready! Please package and ship the item using the QR code link provided.`
-        );
-        console.log(`📱 SMS sent to lender (${maskPhone(lenderPhone)}) for shipping label ready`);
+        if (qrCodeUrl) {
+          const message = `📬 Your Sherbrt shipping label is ready! 🍧 Use this QR to ship: ${qrCodeUrl}`;
+          
+          await sendSMS(
+            lenderPhone,
+            message,
+            { 
+              role: 'lender',
+              transactionId: transactionId,
+              transition: 'transition/accept'
+            }
+          );
+          console.log(`📱 SMS sent to lender (${maskPhone(lenderPhone)}) for shipping label ready with QR code: ${qrCodeUrl}`);
+        } else {
+          // Fallback message if no QR code URL is available
+          const fallbackMessage = `📬 Your Sherbrt shipping label is ready! 🍧 Please package and ship the item using the QR code link provided.`;
+          
+          await sendSMS(
+            lenderPhone,
+            fallbackMessage,
+            { 
+              role: 'lender',
+              transactionId: transactionId,
+              transition: 'transition/accept'
+            }
+          );
+          console.warn('⚠️ QR code URL not available - sent fallback message without URL');
+          console.log(`📱 SMS sent to lender (${maskPhone(lenderPhone)}) for shipping label ready (fallback message)`);
+        }
       } else {
         console.warn('⚠️ Lender phone number not found for shipping label notification');
       }
       
       // Trigger 5: Borrower receives text when item is shipped (include tracking link)
-      if (borrowerPhone && labelRes.data.tracking_url_provider) {
-        const trackingUrl = labelRes.data.tracking_url_provider;
+      if (borrowerPhone && trackingUrl) {
         await sendSMS(
           borrowerPhone,
           `🚚 Your Sherbrt item has been shipped! Track it here: ${trackingUrl}`
@@ -209,7 +330,18 @@ async function createShippingLabels(protectedData, transactionId, listing, sendS
       // Don't fail the label creation if SMS fails
     }
     
-    return { success: true, outboundLabel: labelRes.data, returnLabel: returnLabelRes?.data };
+    return { 
+      success: true, 
+      outboundLabel: {
+        label_url: labelUrl,
+        qr_code_url: qrCodeUrl,
+        tracking_url_provider: trackingUrl
+      }, 
+      returnLabel: returnQrCodeUrl ? {
+        qr_code_url: returnQrCodeUrl,
+        tracking_url_provider: returnTrackingUrl
+      } : null
+    };
     
   } catch (err) {
     console.error('❌ [SHIPPO] Label creation failed:', err.message);
