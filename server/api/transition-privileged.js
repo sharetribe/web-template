@@ -21,8 +21,15 @@ try {
 
 console.log('🚦 transition-privileged endpoint is wired up');
 
+// Helper function to get borrower phone number with fallbacks
+const getBorrowerPhone = (params, tx) =>
+  params?.protectedData?.customerPhone ??
+  tx?.protectedData?.customerPhone ??
+  tx?.relationships?.customer?.attributes?.profile?.protectedData?.phone ?? // last resort if we have it
+  null;
+
 // --- Shippo label creation logic extracted to a function ---
-async function createShippingLabels(protectedData, transactionId, listing, sendSMS) {
+async function createShippingLabels(protectedData, transactionId, listing, sendSMS, sharetribeSdk) {
   console.log('🚀 [SHIPPO] Starting label creation for transaction:', transactionId);
   console.log('📋 [SHIPPO] Using protectedData:', protectedData);
   
@@ -98,177 +105,79 @@ async function createShippingLabels(protectedData, transactionId, listing, sendS
     console.log('📦 [SHIPPO] Outbound shipment payload:', JSON.stringify(outboundPayload, null, 2));
 
     // Create outbound shipment (provider → customer)
-    const shipmentRes = await axios.post(
+    const labelRes = await axios.post(
       'https://api.goshippo.com/shipments/',
       outboundPayload,
       {
         headers: {
-          Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`,
+          'Authorization': `ShippoToken ${process.env.SHIPPO_API_TOKEN}`,
           'Content-Type': 'application/json'
         }
       }
     );
-    
-    // Log all available rates for debugging
-    console.log('📊 [SHIPPO] Available rates for outbound shipment:', shipmentRes.data.rates?.map(r => ({
-      provider: r.provider,
-      servicelevel: r.servicelevel,
-      rate: r.rate,
-      object_id: r.object_id
-    })));
-    
-    // Try UPS first, then fallback to other providers
-    let selectedRate = shipmentRes.data.rates.find((r) => r.provider === 'UPS');
-    if (!selectedRate) {
-      console.warn('⚠️ [SHIPPO] No UPS rate found, trying other providers...');
-      // Try USPS as fallback
-      selectedRate = shipmentRes.data.rates.find((r) => r.provider === 'USPS');
-      if (!selectedRate) {
-        // Take the first available rate
-        selectedRate = shipmentRes.data.rates[0];
-        console.log('📦 [SHIPPO] Using first available rate:', selectedRate?.provider);
-      } else {
-        console.log('📦 [SHIPPO] Using USPS as fallback');
-      }
-    }
-    
-    if (!selectedRate) {
-      console.warn('⚠️ [SHIPPO] No shipping rates found for outbound shipment');
-      return { success: false, reason: 'no_shipping_rates' };
-    }
-    
-    // Create outbound label
-    const labelRes = await axios.post(
-      'https://api.goshippo.com/transactions',
-      {
-        rate: selectedRate.object_id,
-        label_file_type: 'PNG',
-        async: false
-      },
-      {
-        headers: {
-          Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`,
-          'Content-Type': 'application/json'
-        }
-      }
-    );
-    
-    console.log('✅ [SHIPPO] Outbound label created successfully:');
-    console.log('   📦 Label URL:', labelRes.data.label_url);
-    console.log('   📱 QR Code URL:', labelRes.data.qr_code_url);
-    console.log('   🚚 Tracking URL:', labelRes.data.tracking_url_provider);
-    console.log('   🚚 Provider:', selectedRate.provider);
-    console.log('   🚚 Service:', selectedRate.servicelevel);
-    
-    // Return shipment payload
-    const returnPayload = {
-      address_from: customerAddress,
-      address_to: providerAddress,
-      parcels: [parcel],
-      extra: { qr_code_requested: true },
-      async: false
-    };
-    console.log('📦 [SHIPPO] Return shipment payload:', JSON.stringify(returnPayload, null, 2));
 
-    // Create return shipment (customer → provider)
-    const returnShipmentRes = await axios.post(
-      'https://api.goshippo.com/shipments/',
-      returnPayload,
-      {
-        headers: {
-          Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`,
-          'Content-Type': 'application/json'
-        }
-      }
-    );
-    
-    // Log all available rates for return shipment
-    console.log('📊 [SHIPPO] Available rates for return shipment:', returnShipmentRes.data.rates?.map(r => ({
-      provider: r.provider,
-      servicelevel: r.servicelevel,
-      rate: r.rate,
-      object_id: r.object_id
-    })));
-    
-    // Try UPS first, then fallback to other providers for return
-    let returnSelectedRate = returnShipmentRes.data.rates.find((r) => r.provider === 'UPS');
+    console.log('📦 [SHIPPO] Outbound shipment created successfully');
+    console.log('📦 [SHIPPO] Label URL:', labelRes.data.label_url);
+    console.log('📦 [SHIPPO] QR Code URL:', labelRes.data.qr_code_url);
+    console.log('📦 [SHIPPO] Tracking URL:', labelRes.data.tracking_url_provider);
+
+    // Create return shipment (customer → provider) if we have return address
     let returnLabelRes = null;
-    
-    if (!returnSelectedRate) {
-      console.warn('⚠️ [SHIPPO] No UPS rate found for return, trying other providers...');
-      // Try USPS as fallback
-      returnSelectedRate = returnShipmentRes.data.rates.find((r) => r.provider === 'USPS');
-      if (!returnSelectedRate) {
-        // Take the first available rate
-        returnSelectedRate = returnShipmentRes.data.rates[0];
-        console.log('📦 [SHIPPO] Using first available rate for return:', returnSelectedRate?.provider);
-      } else {
-        console.log('📦 [SHIPPO] Using USPS as fallback for return');
-      }
-    }
-    
-    if (returnSelectedRate) {
+    if (protectedData.providerStreet && protectedData.providerCity && protectedData.providerState && protectedData.providerZip) {
+      console.log('📦 [SHIPPO] Creating return shipment (customer → provider)...');
+      
+      const returnPayload = {
+        address_from: customerAddress,
+        address_to: providerAddress,
+        parcels: [parcel],
+        extra: { qr_code_requested: true },
+        async: false
+      };
+
       returnLabelRes = await axios.post(
-        'https://api.goshippo.com/transactions',
-        {
-          rate: returnSelectedRate.object_id,
-          label_file_type: 'PNG',
-          async: false
-        },
+        'https://api.goshippo.com/shipments/',
+        returnPayload,
         {
           headers: {
-            Authorization: `ShippoToken ${process.env.SHIPPO_API_TOKEN}`,
+            'Authorization': `ShippoToken ${process.env.SHIPPO_API_TOKEN}`,
             'Content-Type': 'application/json'
           }
         }
       );
+
+      console.log('📦 [SHIPPO] Return shipment created successfully');
+      console.log('📦 [SHIPPO] Return Label URL:', returnLabelRes.data.label_url);
+      console.log('📦 [SHIPPO] Return QR Code URL:', returnLabelRes.data.qr_code_url);
+      console.log('📦 [SHIPPO] Return Tracking URL:', returnLabelRes.data.tracking_url_provider);
+    }
+
+    // Save label URLs to transaction protectedData
+    try {
+      // Use the passed sharetribeSdk instead of undefined sdk
+      const transaction = await sharetribeSdk.transactions.show({ id: transactionId });
+      const currentProtectedData = transaction.data.data.attributes.protectedData || {};
+      const updatedProtectedData = {
+        ...currentProtectedData,
+        returnLabelUrl: returnLabelRes.data.label_url,
+        returnQrCodeUrl: returnLabelRes.data.qr_code_url,
+        returnTrackingUrl: returnLabelRes.data.tracking_url_provider
+      };
       
-      console.log('✅ [SHIPPO] Return label created successfully:');
-      console.log('   📦 Return Label URL:', returnLabelRes.data.label_url);
-      console.log('   📱 Return QR Code URL:', returnLabelRes.data.qr_code_url);
-      console.log('   🚚 Return Tracking URL:', returnLabelRes.data.tracking_url_provider);
-      console.log('   🚚 Return Provider:', returnSelectedRate.provider);
-      console.log('   🚚 Return Service:', returnSelectedRate.servicelevel);
-    } else {
-      console.warn('⚠️ [SHIPPO] No shipping rates found for return shipment');
+      await sharetribeSdk.transactions.update({
+        id: transactionId,
+        protectedData: updatedProtectedData
+      });
+      
+      console.log('💾 Return label URLs saved to transaction protectedData');
+    } catch (updateError) {
+      console.error('❌ Failed to save return label URLs to transaction:', updateError.message);
     }
     
-    // SMS Triggers 4 & 5: After successful label creation
+    // Send SMS notifications for shipping labels
     try {
-      // Get the transaction to find customer and provider
-      const transaction = await sdk.transactions.show({ id: transactionId });
-      const customer = transaction.data.data.relationships.customer.data;
-      const listing = transaction.data.data.relationships.listing.data;
-      
-      // Get provider from listing
-      const listingDetails = await sdk.listings.show({ id: listing.id });
-      const provider = listingDetails.data.data.relationships.provider.data;
-      
-      // Save return label URL to transaction protectedData for return reminders
-      if (returnLabelRes?.data?.label_url) {
-        try {
-          const currentProtectedData = transaction.data.data.attributes.protectedData || {};
-          const updatedProtectedData = {
-            ...currentProtectedData,
-            returnLabelUrl: returnLabelRes.data.label_url,
-            returnQrCodeUrl: returnLabelRes.data.qr_code_url,
-            returnTrackingUrl: returnLabelRes.data.tracking_url_provider
-          };
-          
-          await sdk.transactions.update({
-            id: transactionId,
-            protectedData: updatedProtectedData
-          });
-          
-          console.log('💾 Return label URLs saved to transaction protectedData');
-        } catch (updateError) {
-          console.error('❌ Failed to save return label URLs to transaction:', updateError.message);
-        }
-      }
-      
-      // Extract phone numbers
-      const lenderPhone = provider?.attributes?.profile?.protectedData?.phone;
-      const borrowerPhone = customer?.attributes?.profile?.protectedData?.phone;
+      // Extract phone numbers from protectedData (more reliable than nested objects)
+      const lenderPhone = protectedData.providerPhone;
+      const borrowerPhone = protectedData.customerPhone;
       
       // Trigger 4: Lender receives text when QR code/shipping label is sent to them
       if (lenderPhone) {
@@ -728,75 +637,87 @@ module.exports = async (req, res) => {
       if (effectiveTransition === 'transition/accept') {
         console.log('📨 Preparing to send SMS for transition/accept');
         
-        try {
-          // Get the transaction to find the customer
-          const transaction = await sdk.transactions.show({ id: transactionId });
-          const customer = transaction.data.data.relationships.customer.data;
-          
-          if (customer && customer.attributes && customer.attributes.profile && customer.attributes.profile.protectedData) {
-            const borrowerPhone = customer.attributes.profile.protectedData.phone;
-            
-            // STEP 6: Add logs for borrower and lender phone numbers
-            console.log('📱 Borrower phone:', maskPhone(borrowerPhone));
-            
-            if (borrowerPhone) {
-              // STEP 7: Wrap sendSMS in try/catch with logs
-              try {
-                await sendSMS(
-                  borrowerPhone,
-                  `🎉 Your Sherbrt request was accepted! You'll get your tracking label details once shipped.`
-                );
-                console.log('✅ SMS sent to', maskPhone(borrowerPhone));
-                console.log(`📱 SMS sent to borrower (${maskPhone(borrowerPhone)}) for accepted request`);
-              } catch (err) {
-                console.error('❌ SMS send error:', err.message);
-              }
-            } else {
-              console.warn('⚠️ Borrower phone number not found in protected data');
-            }
-          } else {
-            console.warn('⚠️ Customer or protected data not found for SMS notification');
-          }
-        } catch (smsError) {
-          console.error('❌ Failed to send SMS notification:', smsError.message);
-          // Don't fail the transaction if SMS fails
+        // Skip SMS on speculative calls
+        if (isSpeculative) {
+          console.log('⏭️ Skipping SMS - speculative call');
+          return;
         }
+        
+        try {
+          // Use the helper function to get borrower phone with fallbacks
+          const borrowerPhone = getBorrowerPhone(params, response?.data?.data);
+          
+          // Log the selected phone number and role for debugging
+          console.log('📱 Selected borrower phone:', maskPhone(borrowerPhone));
+          console.log('📱 SMS role: customer');
+          console.log('🔍 Transition: transition/accept');
+          
+          if (borrowerPhone) {
+            // Get listing title and provider name for the message
+          const listingTitle = listing?.attributes?.title || 'your item';
+          const providerName = params?.protectedData?.providerName || 'the lender';
+          
+          const message = `👗 Your Sherbrt request was accepted! 
+"${listingTitle}" is confirmed by ${providerName}. 
+Check your inbox for next steps: https://sherbrt.com/inbox/purchases`;
+          
+          // Wrap sendSMS in try/catch with logs
+          try {
+            await sendSMS(borrowerPhone, message, { role: 'customer' });
+            console.log('✅ SMS sent successfully to borrower');
+            console.log(`📱 SMS sent to borrower (${maskPhone(borrowerPhone)}) for accepted request`);
+          } catch (err) {
+            console.error('❌ SMS send error:', err.message);
+            console.error('❌ SMS send error stack:', err.stack);
+          }
+        } else {
+          console.warn('⚠️ Borrower phone number not found - cannot send acceptance SMS');
+          console.warn('⚠️ Check params.protectedData.customerPhone or transaction data');
+        }
+      } catch (smsError) {
+        console.error('❌ Failed to send SMS notification:', smsError.message);
+        console.error('❌ SMS error stack:', smsError.stack);
+        // Don't fail the transaction if SMS fails
       }
+    }
 
       if (effectiveTransition === 'transition/decline') {
         console.log('📨 Preparing to send SMS for transition/decline');
         
+        // Skip SMS on speculative calls
+        if (isSpeculative) {
+          console.log('⏭️ Skipping SMS - speculative call');
+          return;
+        }
+        
         try {
-          // Get the transaction to find the customer
-          const transaction = await sdk.transactions.show({ id: transactionId });
-          const customer = transaction.data.data.relationships.customer.data;
+          // Use the helper function to get borrower phone with fallbacks
+          const borrowerPhone = getBorrowerPhone(params, response?.data?.data);
           
-          if (customer && customer.attributes && customer.attributes.profile && customer.attributes.profile.protectedData) {
-            const borrowerPhone = customer.attributes.profile.protectedData.phone;
+          // Log the selected phone number and role for debugging
+          console.log('📱 Selected borrower phone:', maskPhone(borrowerPhone));
+          console.log('📱 SMS role: customer');
+          console.log('🔍 Transition: transition/decline');
+          
+          if (borrowerPhone) {
+            const message = `😔 Your Sherbrt request was declined. Don't worry — more fabulous looks are waiting to be borrowed!`;
             
-            // STEP 6: Add logs for borrower and lender phone numbers
-            console.log('📱 Borrower phone:', maskPhone(borrowerPhone));
-            
-            if (borrowerPhone) {
-              // STEP 7: Wrap sendSMS in try/catch with logs
-              try {
-                await sendSMS(
-                  borrowerPhone,
-                  `😔 Your Sherbrt request was declined. Don't worry — more fabulous looks are waiting to be borrowed!`
-                );
-                console.log('✅ SMS sent to', maskPhone(borrowerPhone));
-                console.log(`📱 SMS sent to borrower (${maskPhone(borrowerPhone)}) for declined request`);
-              } catch (err) {
-                console.error('❌ SMS send error:', err.message);
-              }
-            } else {
-              console.warn('⚠️ Borrower phone number not found in protected data');
+            // Wrap sendSMS in try/catch with logs
+            try {
+              await sendSMS(borrowerPhone, message, { role: 'customer' });
+              console.log('✅ SMS sent successfully to borrower');
+              console.log(`📱 SMS sent to borrower (${maskPhone(borrowerPhone)}) for declined request`);
+            } catch (err) {
+              console.error('❌ SMS send error:', err.message);
+              console.error('❌ SMS error stack:', err.stack);
             }
           } else {
-            console.warn('⚠️ Customer or protected data not found for SMS notification');
+            console.warn('⚠️ Borrower phone number not found - cannot send decline SMS');
+            console.warn('⚠️ Check params.protectedData.customerPhone or transaction data');
           }
         } catch (smsError) {
           console.error('❌ Failed to send SMS notification:', smsError.message);
+          console.error('❌ SMS error stack:', smsError.stack);
           // Don't fail the transaction if SMS fails
         }
       }
@@ -810,7 +731,7 @@ module.exports = async (req, res) => {
         console.log('📋 [SHIPPO] Final protectedData for label creation:', finalProtectedData);
         
         // Trigger Shippo label creation asynchronously (don't await to avoid blocking response)
-        createShippingLabels(finalProtectedData, transactionId, listing, sendSMS)
+        createShippingLabels(finalProtectedData, transactionId, listing, sendSMS, sdk)
           .then(result => {
             if (result.success) {
               console.log('✅ [SHIPPO] Label creation completed successfully');
