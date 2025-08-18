@@ -18,10 +18,10 @@ module.exports = ({ sharetribeSdk, shippo }) => {
   }
 
   /**
-   * GET /qr/:transactionId
+   * GET /api/qr/:transactionId
    * Redirects to a valid Shippo QR code, refreshing if expired
    */
-  router.get('/qr/:transactionId', async (req, res) => {
+  router.get('/api/qr/:transactionId', async (req, res) => {
     const { transactionId } = req.params;
     
     try {
