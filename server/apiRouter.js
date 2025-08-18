@@ -63,7 +63,7 @@ router.post('/transition-privileged', transitionPrivileged);
 router.use('/webhooks', shippoWebhook);
 
 // QR code redirect endpoint
-router.use('/', qrRouter({ 
+router.use('/qr', qrRouter({ 
   sharetribeSdk: require('./api-util/sdk').getTrustedSdk,
   shippo: require('axios').create({
     baseURL: 'https://api.goshippo.com',

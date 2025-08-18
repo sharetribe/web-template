@@ -18,140 +18,58 @@ module.exports = ({ sharetribeSdk, shippo }) => {
   }
 
   /**
-   * GET /api/qr/:transactionId
+   * GET /:transactionId
    * Redirects to a valid Shippo QR code, refreshing if expired
    */
-  router.get('/api/qr/:transactionId', async (req, res) => {
+  router.get('/:transactionId', async (req, res) => {
     const { transactionId } = req.params;
     
     try {
-      console.log(`🔍 [QR] Processing request for transaction: ${transactionId}`);
+      // Fetch the transaction with expand so we get protectedData
+      const tx = await sharetribeSdk.transactions.show({
+        id: req.params.transactionId,
+        queryParams: { expand: true }
+      });
+      const pd = tx?.data?.data?.attributes?.protectedData || {};
       
-      // Get the transaction with protectedData (privileged)
-      const txRes = await sharetribeSdk.transactions.show({ 
-        id: transactionId, 
-        include: [] 
+      // Log the keys we care about (masked)
+      const mask = v => (typeof v === 'string' ? v.slice(0,8) + '…' : v);
+      console.log('[QR] pd keys', {
+        hasQr: !!pd.outboundQrCodeUrl,
+        hasShippoTx: !!pd.outboundShippoTxId,
+        hasTrack: !!pd.outboundTrackingNumber,
       });
       
-      const tx = txRes?.data?.data;
-      if (!tx) {
-        console.warn(`⚠️ [QR] Transaction not found: ${transactionId}`);
-        return res.status(404).send(`
-          <html>
-            <body>
-              <h2>QR Code Not Found</h2>
-              <p>The requested QR code for transaction ${transactionId} could not be found.</p>
-              <p>Please contact support if you believe this is an error.</p>
-            </body>
-          </html>
-        `);
-      }
-      
-      const pd = tx?.attributes?.protectedData || {};
-      let { outboundQrCodeUrl, outboundQrCodeExpiry, outboundShippoTxId } = pd;
-      
-      console.log(`📱 [QR] Transaction found, checking QR code availability:`, {
-        hasQrUrl: !!outboundQrCodeUrl,
-        hasExpiry: !!outboundQrCodeExpiry,
-        hasShippoTxId: !!outboundShippoTxId,
-        currentTime: Math.floor(Date.now() / 1000),
-        expiryTime: outboundQrCodeExpiry
-      });
-      
-      const nowSec = Math.floor(Date.now() / 1000);
-      const freshNeeded = !outboundQrCodeUrl || 
-                         !outboundQrCodeExpiry || 
-                         outboundQrCodeExpiry < (nowSec + 120); // 2-minute buffer
-      
-      if (freshNeeded && outboundShippoTxId) {
-        console.log(`🔄 [QR] QR code expired or missing, refreshing from Shippo...`);
-        
-        try {
-          // Re-retrieve Shippo transaction to get fresh signed URLs
-          const shippoTx = await shippo.transaction.retrieve(outboundShippoTxId);
-          
-          if (shippoTx?.qr_code_url) {
-            outboundQrCodeUrl = shippoTx.qr_code_url;
-            outboundQrCodeExpiry = parseExpiresParam(outboundQrCodeUrl);
-            
-            console.log(`✅ [QR] Successfully refreshed QR code:`, {
-              newUrl: maskUrl(outboundQrCodeUrl),
-              newExpiry: outboundQrCodeExpiry,
-              expiresIn: outboundQrCodeExpiry ? outboundQrCodeExpiry - nowSec : 'unknown'
-            });
-            
-            // Save refreshed values back to Flex via privileged transition
-            try {
-              await sharetribeSdk.transactions.transition({
-                id: transactionId,
-                transition: 'transition/store-shipping-urls',
-                params: {
-                  protectedData: {
-                    outboundQrCodeUrl,
-                    outboundQrCodeExpiry
-                  }
-                }
-              });
-              console.log(`💾 [QR] Refreshed QR code saved to transaction`);
-            } catch (transitionError) {
-              console.warn(`⚠️ [QR] Failed to save refreshed QR code:`, transitionError.message);
-              // Continue with the redirect even if save fails
-            }
-          } else {
-            console.warn(`⚠️ [QR] Shippo transaction retrieval failed or no QR code URL`);
-          }
-        } catch (shippoError) {
-          console.error(`❌ [QR] Error refreshing from Shippo:`, shippoError.message);
-          // Continue with existing URL if available
+      // If no outboundQrCodeUrl, but outboundShippoTxId exists, retrieve from Shippo and update pd
+      if (!pd.outboundQrCodeUrl && pd.outboundShippoTxId) {
+        const rtx = await shippo.transaction.retrieve(pd.outboundShippoTxId);
+        const freshQr = rtx?.qr_code_url || null;
+        if (freshQr) {
+          // persist back via privileged transition (merge!)
+          await sharetribeSdk.transactions.transition({
+            id: req.params.transactionId,
+            transition: 'transition/store-shipping-urls',
+            params: { protectedData: { ...pd, outboundQrCodeUrl: freshQr } }
+          });
+          pd.outboundQrCodeUrl = freshQr;
         }
       }
       
-      if (!outboundQrCodeUrl) {
-        console.warn(`⚠️ [QR] No QR code URL available for transaction: ${transactionId}`);
-        return res.status(404).send(`
-          <html>
-            <body>
-              <h2>QR Code Not Available</h2>
-              <p>The QR code for transaction ${transactionId} is not currently available.</p>
-              <p>This may be due to:</p>
-              <ul>
-                <li>The shipping label has expired</li>
-                <li>The transaction is still being processed</li>
-                <li>A system error occurred</li>
-              </ul>
-              <p>Please contact support for assistance.</p>
-            </body>
-          </html>
-        `);
+      // If we now have pd.outboundQrCodeUrl, 302 to it with no-store headers; else return a 410
+      if (pd.outboundQrCodeUrl) {
+        res.set({
+          'Cache-Control': 'no-store',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+          'X-Robots-Tag': 'noindex, nofollow',
+        });
+        return res.redirect(302, pd.outboundQrCodeUrl);
       }
-      
-      // Log the redirect (masked for security)
-      console.log(`🔄 [QR] Redirecting to QR code:`, {
-        transactionId,
-        redirectUrl: maskUrl(outboundQrCodeUrl),
-        expiresIn: outboundQrCodeExpiry ? outboundQrCodeExpiry - nowSec : 'unknown'
-      });
-      
-      // 302 redirect to the (fresh) Shippo QR URL with cache control and robots headers
-      res.set({
-        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0',
-        'X-Robots-Tag': 'noindex, nofollow'
-      });
-      res.redirect(302, outboundQrCodeUrl);
+      return res.status(410).send('QR not available yet for this transaction. Try again in a minute.');
       
     } catch (err) {
-      console.error(`❌ [QR] Error processing QR request for ${transactionId}:`, err.message);
-      res.status(500).send(`
-        <html>
-          <body>
-            <h2>Service Temporarily Unavailable</h2>
-            <p>We're experiencing technical difficulties loading the QR code.</p>
-            <p>Please try again in a few minutes or contact support if the problem persists.</p>
-          </body>
-        </html>
-      `);
+      console.error(`❌ [QR] Error processing QR request for ${req.params.transactionId}:`, err.message);
+      res.status(500).send('Service temporarily unavailable. Please try again later.');
     }
   });
 
@@ -169,6 +87,27 @@ module.exports = ({ sharetribeSdk, shippo }) => {
       return '[invalid-url]';
     }
   }
+
+  // Debug routes for quick checks
+  router.get('/_debug/ping', (req, res) => res.status(204).end());
+  
+  router.get('/_debug/tx/:transactionId', async (req, res) => {
+    try {
+      const tx = await sharetribeSdk.transactions.show({ 
+        id: req.params.transactionId, 
+        queryParams: { expand: true } 
+      });
+      const pd = tx?.data?.data?.attributes?.protectedData || {};
+      res.json({ 
+        hasQr: !!pd.outboundQrCodeUrl, 
+        hasShippoTx: !!pd.outboundShippoTxId, 
+        hasTrack: !!pd.outboundTrackingNumber, 
+        pdKeys: Object.keys(pd) 
+      });
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  });
 
   return router;
 };
