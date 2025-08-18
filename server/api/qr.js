@@ -88,21 +88,26 @@ module.exports = ({ sharetribeSdk, shippo }) => {
     }
   }
 
-  // Debug routes for quick checks
-  router.get('/_debug/ping', (req, res) => res.status(204).end());
+  // Debug routes for quick checks (gated by QR_DEBUG env var)
+  router.get('/_debug/ping', (req, res) => {
+    if (process.env.QR_DEBUG !== 'true') return res.status(404).end();
+    res.status(204).end();
+  });
   
   router.get('/_debug/tx/:transactionId', async (req, res) => {
+    if (process.env.QR_DEBUG !== 'true') return res.status(404).end();
+    
     try {
       const tx = await sharetribeSdk.transactions.show({ 
         id: req.params.transactionId, 
         queryParams: { expand: true } 
       });
       const pd = tx?.data?.data?.attributes?.protectedData || {};
-      res.json({ 
-        hasQr: !!pd.outboundQrCodeUrl, 
-        hasShippoTx: !!pd.outboundShippoTxId, 
-        hasTrack: !!pd.outboundTrackingNumber, 
-        pdKeys: Object.keys(pd) 
+      res.json({
+        hasQr: !!pd.outboundQrCodeUrl,
+        hasShippoTx: !!pd.outboundShippoTxId,
+        hasTrack: !!pd.outboundTrackingNumber,
+        keys: Object.keys(pd)
       });
     } catch (e) {
       res.status(500).json({ error: e.message });
