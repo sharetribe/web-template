@@ -1,8 +1,6 @@
 @import '../../../styles/customMediaQueries.css';
 
 .root {
-  position: relative;
-  display: inline-block;
 }
 
 .contentWrapper {
