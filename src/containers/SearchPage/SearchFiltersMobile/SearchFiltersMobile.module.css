@@ -85,6 +85,8 @@
 }
 
 .filtersWrapper {
+  display: flex;
+  flex-direction: column;
   /* add bottom margin so that the last filter won't be hidden
    * under the mobile safari bottom bar or the "Show results"
    * button bar */
