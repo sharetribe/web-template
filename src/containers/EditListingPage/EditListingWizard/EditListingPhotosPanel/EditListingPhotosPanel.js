@@ -60,7 +60,7 @@ const EditListingPhotosPanel = props => {
   const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
 
   return (
-    <div className={classes}>
+    <main className={classes}>
       <H3 as="h1">
         {isPublished ? (
           <FormattedMessage
@@ -91,7 +91,7 @@ const EditListingPhotosPanel = props => {
         updateInProgress={updateInProgress}
         listingImageConfig={listingImageConfig}
       />
-    </div>
+    </main>
   );
 };
 

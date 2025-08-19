@@ -23,6 +23,7 @@ const IconReviewUser = props => {
       height="47"
       viewBox="0 0 46 47"
       xmlns="http://www.w3.org/2000/svg"
+      role="none"
     >
       <g fill="none" fillRule="evenodd" strokeLinecap="round" strokeLinejoin="round">
         <path strokeWidth="2.75" d="M8 45h32V2H8z" />
