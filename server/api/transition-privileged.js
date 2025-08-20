@@ -942,9 +942,13 @@ module.exports = async (req, res) => {
           const listingTitle = listing?.attributes?.title || 'your item';
           const providerName = params?.protectedData?.providerName || 'the lender';
           
-          const message = `👗 Your Sherbrt request was accepted! 
-"${listingTitle}" is confirmed by ${providerName}. 
-Check your inbox for next steps: https://sherbrt.com/inbox/purchases`;
+          // Build dynamic site base for borrower inbox link
+          const siteBase = process.env.ROOT_URL || (req ? `${req.protocol}://${req.get('host')}` : null);
+          const buyerLink = `${siteBase}/inbox/purchases`;
+          
+          const message = `🎉 Your Sherbrt request was accepted! 🍧
+"${listingTitle}" from ${providerName} is confirmed. 
+You'll receive tracking info once it ships! ✈️👗 ${buyerLink}`;
           
           // Wrap sendSMS in try/catch with logs
           try {

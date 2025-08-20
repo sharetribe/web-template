@@ -79,7 +79,6 @@ app.use((req, res, next) => {
 // Add CORS middleware configuration
 const allowedOrigins = [
   'https://sherbrt.com',        // live frontend
-  'https://web-template-1.onrender.com', // test environment
   'http://localhost:3000',      // local dev
 ];
 

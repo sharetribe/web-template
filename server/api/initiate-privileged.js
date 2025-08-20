@@ -22,9 +22,11 @@ console.log('🚦 initiate-privileged endpoint is wired up');
 
 // Helper function to build carrier-friendly lender SMS message
 function buildLenderMsg(tx, listingTitle) {
-  // Carrier-friendly: short, one link, no emojis
-  const lenderInboxUrl = process.env.ROOT_URL || 'https://sherbrt.com/inbox/sales';
-  const lenderMsg = `Sherbrt: new booking request for "${listingTitle}". Check your inbox: ${lenderInboxUrl}`;
+  const lenderInboxUrl = process.env.ROOT_URL ? `${process.env.ROOT_URL}/inbox/sales` : '/inbox/sales';
+  const lenderMsg =
+    `👗🍧 New Sherbrt booking request! ` +
+    `Someone wants to borrow your listing "${listingTitle}". ` +
+    `Check your inbox to respond: ${lenderInboxUrl}`;
   return lenderMsg;
 }
 
@@ -184,10 +186,11 @@ module.exports = (req, res) => {
             try {
               console.log('📨 [SMS][customer-confirmation] Preparing to send customer confirmation SMS');
               
-                              const listingTitle = listing?.attributes?.title || 'your listing';
-                // Carrier-friendly borrower message
-                const borrowerInboxUrl = process.env.ROOT_URL || 'https://sherbrt.com/inbox/orders';
-                const borrowerMsg = `Sherbrt: your booking request for "${listingTitle}" was sent. Track in your inbox: ${borrowerInboxUrl}`;
+              const listingTitle = listing?.attributes?.title || 'your listing';
+              const borrowerInboxUrl = process.env.ROOT_URL ? `${process.env.ROOT_URL}/inbox/orders` : '/inbox/orders';
+              const borrowerMsg =
+                `✅ Request sent! Your booking request for "${listingTitle}" was delivered. ` +
+                `Track and reply in your inbox: ${borrowerInboxUrl}`;
               
               await sendSMS(borrowerPhone, customerMessage);
               console.log(`✅ [SMS][customer-confirmation] Customer confirmation sent to ${borrowerPhone}`);
