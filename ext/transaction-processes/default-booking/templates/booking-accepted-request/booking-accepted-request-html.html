@@ -203,7 +203,7 @@
                             <tr>
                               <td>
                                 <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "BookingAcceptedRequest.PriceBreakdownHourlyWithSeats" "{amount, number, ::.00} {currency} × {multiplier, number} {multiplier, plural, one {hour} other {hours}} x {seats, number} {seats, plural, one {seat} other {seats}}" amount=unit-price.amount currency=unit-price.currency multiplier=units seats=seats}}</p>
+                                <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "BookingAcceptedRequest.PriceBreakdownHourlyWithSeats" "{amount, number, ::.00} {currency} × {multiplier, number} {multiplier, plural, one {hour} other {hours}} x {seats, number} {seats, plural, one {seat} other {seats}}" amount=unit-price.amount currency=unit-price.currency multiplier=units seats=seats}}</p>
                                 </td>
                                 <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{> format-money money=line-total}}</p>
@@ -233,8 +233,7 @@
                             <tr>
                               <td>
                                 <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "BookingAcceptedRequest.PriceBreakdownDaily" "{amount,number,::.00} {currency} x {multiplier, number} {multiplier, plural, one {day} other {days}}" amount=unit-price.amount currency=unit-price.currency multiplier=units}}</p>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "BookingAcceptedRequest.SeatsQuantity" "Seats x {multiplier, number}" multiplier=seats}}</p>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "BookingAcceptedRequest.PriceBreakdownDailyWithSeats" "{amount, number, ::.00} {currency} × {multiplier, number} {multiplier, plural, one {day} other {days}} x {seats, number} {seats, plural, one {seat} other {seats}}" amount=unit-price.amount currency=unit-price.currency multiplier=units seats=seats}}</p>
                                 </td>
                                 <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{> format-money money=line-total}}</p>
@@ -264,8 +263,7 @@
                             <tr>
                               <td>
                                 <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "BookingAcceptedRequest.PriceBreakdownNightly" "{amount,number,::.00} {currency} x {multiplier, number} {multiplier, plural, one {night} other {nights}}" amount=unit-price.amount currency=unit-price.currency multiplier=units}}</p>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "BookingAcceptedRequest.SeatsQuantity" "Seats x {multiplier, number}" multiplier=seats}}</p>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "BookingAcceptedRequest.PriceBreakdownNightlyWithSeats" "{amount, number, ::.00} {currency} × {multiplier, number} {multiplier, plural, one {night} other {nights}} x {seats, number} {seats, plural, one {seat} other {seats}}" amount=unit-price.amount currency=unit-price.currency multiplier=units seats=seats}}</p>
                                 </td>
                                 <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{> format-money money=line-total}}</p>
@@ -289,13 +287,14 @@
                             </tr>
                           </tbody>
                         </table>
-                        {{/if}}{{/eq}}{{#eq "line-item/fixed" code}}{{#if seats}}
+                        {{/if}}{{/eq}}
+                        {{#eq "line-item/fixed" code}}
                         <table align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                           <tbody>
                             <tr>
                               <td>
                                 <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "BookingAcceptedRequest.PriceBreakdownFixedWithSeats" "{amount, number, ::.00} {currency} × {seats, number} {seats, plural, one {seat} other {seats}}" amount=unit-price.amount currency=unit-price.currency seats=seats}}</p>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{> format-money money=line-total}}</p>
                                 </td>
                                 <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{> format-money money=line-total}}</p>
@@ -304,22 +303,8 @@
                             </tr>
                           </tbody>
                         </table>
-                        {{else}}
-                        <table align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "BookingAcceptedRequest.PriceBreakdownFixed" "{amount, number, ::.00} {currency}" amount=unit-price.amount currency=unit-price.currency}}</p>
-                                </td>
-                                <td style="text-align:right">
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{> format-money money=line-total}}</p>
-                                </td>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                        {{/if}}{{/eq}}{{#eq "line-item/customer-commission" code}}
+                        {{/eq}}
+                        {{#eq "line-item/customer-commission" code}}
                         <table align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                           <tbody>
                             <tr>

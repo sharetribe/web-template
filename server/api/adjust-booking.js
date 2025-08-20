@@ -115,13 +115,13 @@ const processAdditionalCharge = async (customerId, paymentMethodId, chargeAmount
 // Use Sharetribe process transitions for adjustment
 module.exports = asyncHandler(async (req, res) => {
     try {
-        const { transactionId, newHours, newPrice } = req.body;
+        const { transactionId, newHours } = req.body;
 
         // Validate input parameters
-        if (!transactionId || !newHours || !newPrice) {
+        if (!transactionId || !newHours) {
             return res.status(400).json({ 
                 success: false, 
-                error: 'Missing required parameters: transactionId, newHours, and newPrice are required' 
+                error: 'Missing required parameters: transactionId and newHours are required' 
             });
         }
 
@@ -180,7 +180,14 @@ module.exports = asyncHandler(async (req, res) => {
 
         // Get previous price from booking (for diff calculation)
         const prevTotal = transaction?.attributes?.payinTotal.amount;
-        const newTotal = newPrice * newHours;
+        // Preserve original booked unit price from the existing line items
+        const existingLineItems = transaction.attributes.lineItems || [];
+        const hourLineItem = existingLineItems.find(item => item.code === 'line-item/hour');
+        const originalUnitPrice = hourLineItem?.unitPrice?.amount;
+        if (!originalUnitPrice) {
+            return res.status(400).json({ success: false, error: 'Original unit price not found on transaction' });
+        }
+        const newTotal = originalUnitPrice * newHours;
         const diff = newTotal - prevTotal;
         console.log('[AdjustBooking] Previous total:', prevTotal);
         console.log('[AdjustBooking] New total:', newTotal);
@@ -196,7 +203,7 @@ module.exports = asyncHandler(async (req, res) => {
         console.log('[AdjustBooking] Attempting transition:', transition);
 
         // Use existing transaction line items and update amounts
-        const existingLineItems = transaction.attributes.lineItems || [];
+        // (existingLineItems defined above)
         console.log('[AdjustBooking] Existing line items:', JSON.stringify(existingLineItems, null, 2));
 
         // Create new line items based on existing structure
@@ -204,14 +211,14 @@ module.exports = asyncHandler(async (req, res) => {
             const newItem = { ...item };
 
             if (item.code === 'line-item/hour') {
-                newItem.unitPrice = { ...item.unitPrice, amount: newPrice };
+                newItem.unitPrice = { ...item.unitPrice, amount: originalUnitPrice };
                 // Calculate new line total based on unit price * new hours
-                const newLineTotal = Math.round(newPrice * newHours);
+                const newLineTotal = Math.round(originalUnitPrice * newHours);
                 newItem.lineTotal = { ...item.lineTotal, amount: newLineTotal };
                 newItem.quantity = newHours.toString();
             } else if (item.code === 'line-item/provider-commission') {
                 // Update provider commission based on new total
-                const newTotal = Math.round(newPrice * newHours);
+                const newTotal = Math.round(originalUnitPrice * newHours);
                 const commissionAmount = Math.round(newTotal * (item.percentage / 100));
                 newItem.unitPrice = { ...item.unitPrice, amount: newTotal };
                 newItem.lineTotal = { ...item.lineTotal, amount: commissionAmount };
@@ -239,7 +246,8 @@ module.exports = asyncHandler(async (req, res) => {
                 metadata: {
                     adjustment: {
                         newHours,
-                        newPrice: newTotal,
+                        unitPriceInSubunits: originalUnitPrice,
+                        newTotalInSubunits: newTotal,
                         diff,
                         adjustedAt: new Date().toISOString(),
                     },

@@ -31,8 +31,6 @@
    :actions
    [{:name :action/calculate-full-refund}
     {:name :action/stripe-refund-payment}
-    ;; Keep this action last in the list of actions for
-    ;; the transition
     {:name :action/decline-booking}],
    :from :state/pending-payment,
    :to :state/payment-expired}
@@ -60,8 +58,6 @@
    :actions
    [{:name :action/calculate-full-refund}
     {:name :action/stripe-refund-payment}
-    ;; Keep this action last in the list of actions for
-    ;; the transition
     {:name :action/decline-booking}],
    :from :state/preauthorized,
    :to :state/declined}
@@ -70,8 +66,6 @@
    :actions
    [{:name :action/calculate-full-refund}
     {:name :action/stripe-refund-payment}
-    ;; Keep this action last in the list of actions for
-    ;; the transition
     {:name :action/decline-booking}],
    :from :state/preauthorized,
    :to :state/declined}
@@ -87,8 +81,6 @@
    :actions
    [{:name :action/calculate-full-refund}
     {:name :action/stripe-refund-payment}
-    ;; Keep this action last in the list of actions for
-    ;; the transition
     {:name :action/decline-booking}],
    :from :state/preauthorized,
    :to :state/expired}
@@ -112,32 +104,6 @@
     {:name :action/cancel-booking}],
    :from :state/accepted,
    :to :state/cancelled}
-  ;; {:name :transition/customer-cancel,
-  ;;  :actor :actor.role/customer,
-  ;;  :actions
-  ;;  [{:name :action/calculate-full-refund}
-  ;;   {:name :action/stripe-refund-payment}
-  ;;   {:name :action/cancel-booking}],
-  ;;  :from :state/accepted,
-  ;;  :to :state/cancelled}
-  {:name :transition/provider-cancel,
-   :actor :actor.role/provider,
-   :actions
-   [{:name :action/calculate-full-refund}
-    {:name :action/stripe-refund-payment}
-    {:name :action/cancel-booking}],
-   :from :state/accepted,
-   :to :state/cancelled}
-  {:name :transition/customer-reschedule,
-   :actor :actor.role/operator,
-   :actions [{:name :action/update-booking, :config {:type :time}}],
-   :from :state/accepted,
-   :to :state/accepted}
-  {:name :transition/provider-reschedule,
-   :actor :actor.role/provider,
-   :actions [{:name :action/update-booking, :config {:type :time}}],
-   :from :state/accepted,
-   :to :state/accepted}
   {:name :transition/review-1-by-provider,
    :actor :actor.role/provider,
    :actions [{:name :action/post-review-by-provider}],
@@ -176,18 +142,31 @@
    :actions [{:name :action/publish-reviews}],
    :from :state/reviewed-by-customer,
    :to :state/reviewed}
-  {:name :transition/expire-customer-review-period,
-   :at
-   {:fn/plus
-    [{:fn/timepoint [:time/booking-end]} {:fn/period ["P7D"]}]},
-   :actions [{:name :action/publish-reviews}],
-   :from :state/reviewed-by-provider,
-   :to :state/reviewed}],
+   {:name :transition/expire-customer-review-period,
+    :at
+    {:fn/plus
+     [{:fn/timepoint [:time/booking-end]} {:fn/period ["P7D"]}]},
+    :actions [{:name :action/publish-reviews}],
+    :from :state/reviewed-by-provider,
+    :to :state/reviewed}
+   {:name :transition/provider-adjust-booking-charge,
+    :actor :actor.role/provider,
+    :actions [
+      {:name :action/privileged-update-metadata}
+      {:name :action/privileged-set-line-items}
+    ],
+    :from :state/accepted,
+    :to :state/accepted,
+    :privileged? true}],
  :notifications
  [{:name :notification/booking-new-request,
    :on :transition/confirm-payment,
    :to :actor.role/provider,
    :template :booking-new-request}
+  {:name :notification/booking-new-request-customer,
+   :on :transition/confirm-payment,
+   :to :actor.role/customer,
+   :template :booking-new-request-customer}
   {:name :notification/booking-accepted-request,
    :on :transition/accept,
    :to :actor.role/customer,
@@ -252,24 +231,15 @@
    :on :transition/review-2-by-provider,
    :to :actor.role/customer,
    :template :booking-review-by-other-party-published}
-  {:name :notification/review-by-customer-second,
-   :on :transition/review-2-by-customer,
-   :to :actor.role/provider,
-   :template :booking-review-by-other-party-published}
-  {:name :notification/booking-rescheduled-customer,
-   :on :transition/customer-reschedule,
-   :to :actor.role/provider,
-   :template :booking-rescheduled-customer}
-  {:name :notification/booking-rescheduled-provider,
-   :on :transition/provider-reschedule,
-   :to :actor.role/customer,
-   :template :booking-rescheduled-provider}
-  ;; {:name :notification/booking-canceled-customer,
-  ;;  :on :transition/customer-cancel,
-  ;;  :to :actor.role/provider,
-  ;;  :template :booking-canceled-customer}
-  {:name :notification/booking-canceled-provider,
-   :on :transition/provider-cancel,
-   :to :actor.role/customer,
-   :template :booking-canceled-provider}
-  ]}
+   {:name :notification/review-by-customer-second,
+    :on :transition/review-2-by-customer,
+    :to :actor.role/provider,
+    :template :booking-review-by-other-party-published}
+   {:name :notification/booking-adjusted-provider,
+    :on :transition/provider-adjust-booking-charge,
+    :to :actor.role/provider,
+    :template :booking-adjusted-provider}
+   {:name :notification/booking-adjusted-customer,
+    :on :transition/provider-adjust-booking-charge,
+    :to :actor.role/customer,
+    :template :booking-adjusted-customer}]}

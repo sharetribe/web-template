@@ -88,11 +88,10 @@ const AdjustBookingModal = ({ transaction, onClose, onSubmit, onManageDisableScr
   const [hours, setHours] = useState(transaction.booking?.attributes?.hours || 1);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
-  // Prepopulate price with the listing price and make it non-editable
-  const price = transaction.listing?.attributes?.price?.amount
-    ? transaction.listing.attributes.price.amount
-    : 0;
-  const currency = transaction.listing?.attributes?.price?.currency || 'USD';
+  // Prepopulate price from the transaction's original line items to preserve the booked rate
+  const hourLineItem = transaction?.attributes?.lineItems?.find(li => li.code === 'line-item/hour');
+  const price = hourLineItem?.unitPrice?.amount ?? (transaction.listing?.attributes?.price?.amount || 0);
+  const currency = hourLineItem?.unitPrice?.currency || transaction.listing?.attributes?.price?.currency || 'USD';
   const total = ((hours * price) / 100).toFixed(2); // [ADJUST BOOKING] total field
   
   const validateHours = (value) => {
