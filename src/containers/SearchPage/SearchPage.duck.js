@@ -128,35 +128,93 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
       : {};
   };
 
-  const omitInvalidCategoryParams = params => {
+  const constructCategoryPropertiesForAPI = (queryParamPrefix, categories, level, params) => {
+    const levelKey = `${queryParamPrefix}${level}`;
+    const levelValue =
+      typeof params?.[levelKey] !== 'undefined' ? `${params?.[levelKey]}` : undefined;
+    const foundCategory = categories.find(cat => cat.id === levelValue);
+    const subcategories = foundCategory?.subcategories || [];
+    // Note: we might need to prepare nested categories too: categoryLevel1, categoryLevel2, categoryLevel3
+    return foundCategory && subcategories.length > 0
+      ? {
+          [levelKey]: levelValue,
+          ...constructCategoryPropertiesForAPI(queryParamPrefix, subcategories, level + 1, params),
+        }
+      : foundCategory
+      ? { [levelKey]: levelValue }
+      : {};
+  };
+
+  /**
+   * Category filter params are prepared here. We omit invalid category names.
+   * I.e. params that are not part of the currently configured category tree.
+   *
+   * @param {string} paramName - The name of the parameter to prepare.
+   * @param {Object} params - The search params object.
+   * @returns {Object} The prepared parameter object.
+   */
+  const prepareCategoryParams = (paramName, params) => {
     const categoryConfig = config.search.defaultFilters?.find(f => f.schemaType === 'category');
     const categories = config.categoryConfiguration.categories;
-    const { key: prefix, scope } = categoryConfig || {};
-    const categoryParamPrefix = constructQueryParamName(prefix, scope);
+    const { key, scope } = categoryConfig || {};
+    const categoryParamPrefix = constructQueryParamName(key, scope);
+    return paramName.startsWith(categoryParamPrefix)
+      ? constructCategoryPropertiesForAPI(categoryParamPrefix, categories, 1, params)
+      : {};
+  };
 
-    const validURLParamForCategoryData = (prefix, categories, level, params) => {
-      const levelKey = `${categoryParamPrefix}${level}`;
-      const levelValue =
-        typeof params?.[levelKey] !== 'undefined' ? `${params?.[levelKey]}` : undefined;
-      const foundCategory = categories.find(cat => cat.id === levelValue);
-      const subcategories = foundCategory?.subcategories || [];
-      return foundCategory && subcategories.length > 0
-        ? {
-            [levelKey]: levelValue,
-            ...validURLParamForCategoryData(prefix, subcategories, level + 1, params),
-          }
-        : foundCategory
-        ? { [levelKey]: levelValue }
-        : {};
-    };
+  const constructIntegerRangePropertyForAPI = (queryParamPrefix, params) => {
+    const integerValue = params?.[queryParamPrefix];
+    const [min, max] = integerValue ? integerValue.split(',') : [];
+    // NOTE: long filter needs exclusive max value on API side
+    const inclusiveMin = Number.parseInt(min, 10);
+    const exclusiveMax = Number.parseInt(max, 10) + 1;
 
-    const categoryKeys = validURLParamForCategoryData(prefix, categories, 1, params);
-    const nonCategoryKeys = Object.entries(params).reduce(
-      (picked, [k, v]) => (k.startsWith(categoryParamPrefix) ? picked : { ...picked, [k]: v }),
-      {}
-    );
+    // NOTE: currently we don't validate the range values against the integer range config,
+    // but we might want to do that in the future.
 
-    return { ...nonCategoryKeys, ...categoryKeys };
+    return Number.isInteger(inclusiveMin) && Number.isInteger(exclusiveMax)
+      ? { [queryParamPrefix]: [inclusiveMin, exclusiveMax].join(',') }
+      : {};
+  };
+
+  /**
+   * Integer range filter values are converted to API params of type 'long'.
+   *
+   * The range end must be exclusive. E.g. 1000,2000 -> 1000,2001
+   *
+   * NOTE: currently we don't validate the range values against the integer range config,
+   * but we might want to do that in the future.
+   *
+   * @param {string} paramName - The name of the parameter to prepare.
+   * @param {Object} params - The search params object.
+   * @returns {Object} The prepared parameter object.
+   */
+  const prepareIntegerRangeParam = (paramName, params) => {
+    const integerRangeConfig = config.listing.listingFields?.find(f => f.schemaType === 'long');
+    const { key, scope } = integerRangeConfig || {};
+    const integerParamPrefix = constructQueryParamName(key, scope);
+    return paramName.startsWith(integerParamPrefix)
+      ? constructIntegerRangePropertyForAPI(integerParamPrefix, params)
+      : {};
+  };
+
+  // This function goes through given params and if there's a specific handler for the parameter type,
+  // it calls the handler to prepare the property for API.
+  // Otherwise, it just passes the param through.
+  const prepareAPIParams = (params, paramHandlers) => {
+    const pickedKeys = Object.entries(params).reduce((picked, [k, v]) => {
+      const preparedParams = paramHandlers.reduce((picked, fn) => {
+        return { ...picked, ...fn(k, params) };
+      }, {});
+
+      // If the param is not handled by any of the handlers, we pass it through.
+      const currentParam = Object.keys(preparedParams).length > 0 ? preparedParams : { [k]: v };
+
+      return { ...picked, ...currentParam };
+    }, {});
+
+    return pickedKeys;
   };
 
   const priceSearchParams = priceParam => {
@@ -258,6 +316,8 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
     isListingTypeVariant,
     ...restOfParams
   } = searchParams;
+  // The params related to default filters are prepared one-by-one
+  // We could consider moving them to the prepareAPIParams function too.
   const priceMaybe = priceSearchParams(price);
   const datesMaybe = datesSearchParams(dates);
   const stockMaybe = stockFilters(datesMaybe);
@@ -265,9 +325,14 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
   const sortMaybe = sort === config.search.sortConfig.relevanceKey ? {} : { sort };
 
   const params = {
-    // The rest of the params except invalid nested category-related params
+    // The params that are related to listing fields and categories are prepared here.
+    // We add handler functions that check category and integer range configurations.
+    // - With category params, we essentially just omit invalid category names.
+    //   I.e. params that are not part of the currently configured category tree.
+    // - With integer range params, we prepare the property for API.
+    //   I.e. the range end must be exclusive. E.g. 1000,2000 -> 1000,2001
     // Note: invalid independent search params are still passed through
-    ...omitInvalidCategoryParams(restOfParams),
+    ...prepareAPIParams(restOfParams, [prepareCategoryParams, prepareIntegerRangeParam]),
     // If the search page variant is of type /s/:listingType, this sets the pub_listingType
     // query parameter to the value of the listing type path parameter. The ordering matters here,
     // since this value overrides any possible pub_listingType value coming from query parameters
