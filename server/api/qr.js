@@ -1,68 +1,74 @@
 // server/api/qr.js
 
+const express = require('express');
+
 module.exports = ({ getTrustedSdk }) => {
-  const express = require('express');
   const router = express.Router();
 
-  // Healthcheck: GET /api/qr/_debug/ping -> 204
-  router.get('/_debug/ping', (req, res) => res.sendStatus(204));
+  // quick health-check
+  router.get('/_debug/ping', (_req, res) => res.sendStatus(204));
 
-  // GET /api/qr/:txId -> 302 redirect to Shippo QR/label/tracking URL saved on the transaction
+  // TEMP: visibility into what SDK the route sees
+  router.get('/_debug/sdk', async (req, res) => {
+    let sdk = null;
+    try {
+      if (typeof getTrustedSdk === 'function') {
+        // important: pass BOTH req and res, and await
+        sdk = await getTrustedSdk(req, res);
+      }
+    } catch (e) {
+      console.error('[QR] getTrustedSdk threw', e);
+    }
+    sdk = sdk || req.app.get('integrationSdk') || req.app.get('apiSdk');
+
+    return res.status(sdk ? 200 : 500).json({
+      hasSdk: !!sdk,
+      hasTransactionsShow: !!sdk?.transactions?.show,
+      from: {
+        getTrustedSdk: typeof getTrustedSdk === 'function',
+        integrationSdk: !!req.app.get('integrationSdk'),
+        apiSdk: !!req.app.get('apiSdk'),
+      },
+    });
+  });
+
   router.get('/:txId', async (req, res) => {
-    const { txId } = req.params || {};
-
-    // Prefer the same SDK used by privileged routes; fall back to app locals if present
-    const sdk =
-      (typeof getTrustedSdk === 'function' ? getTrustedSdk(req) : null) ||
-      req.app.get('integrationSdk') ||
-      req.app.get('apiSdk');
+    // --- resolve SDK robustly ---
+    let sdk = null;
+    try {
+      if (typeof getTrustedSdk === 'function') {
+        sdk = await getTrustedSdk(req, res); // <— this is the usual gotcha
+      }
+    } catch (e) {
+      console.error('[QR] getTrustedSdk threw', e);
+    }
+    sdk = sdk || req.app.get('integrationSdk') || req.app.get('apiSdk');
 
     if (!sdk || !sdk.transactions || !sdk.transactions.show) {
       console.error('[QR] SDK not wired — transactions.show missing');
-      return res
-        .status(500)
-        .type('text/plain')
-        .send('Service temporarily unavailable. Please try again later.');
+      return res.status(500).send('Server misconfiguration: SDK unavailable');
     }
 
+    const { txId } = req.params;
+
     try {
-      // Fetch the transaction to read protectedData.shippo
-      const r = await sdk.transactions.show({ id: txId });
-      const attrs = r?.data?.data?.attributes;
-      const pd = attrs?.protectedData || {};
-      const shippo = pd.shippo || {};
+      // if your SDK expects UUID, adapt accordingly
+      const tx = await sdk.transactions.show({ id: txId }, { expand: true });
 
-      // Choose the best available target; preference: QR -> label -> tracking
-      const target =
-        shippo.qr_code_url ||
-        shippo.label_url ||
-        shippo.tracking_url ||
-        shippo.tracking_url_provider;
+      const pd = tx?.data?.data?.attributes?.protectedData;
+      const shippo = pd?.shippo || {};
+      // try common keys
+      const qr =
+        shippo?.outbound?.qr_code_url ||
+        shippo?.return?.qr_code_url ||
+        shippo?.qr_code_url;
 
-      // No URL persisted yet -> show a gentle 404
-      if (!target) {
-        res.set('Cache-Control', 'no-store');
-        return res
-          .status(404)
-          .type('text/plain')
-          .send('Label not ready yet. Try again in a minute.');
-      }
+      if (qr) return res.redirect(302, qr);
 
-      // Avoid caching/SEO on the redirect
-      res.set({
-        'Cache-Control': 'no-store',
-        Pragma: 'no-cache',
-        Expires: '0',
-        'X-Robots-Tag': 'noindex, nofollow',
-      });
-
-      return res.redirect(302, target);
-    } catch (e) {
-      console.error('[QR] fetch failed', e?.response?.data || e);
-      return res
-        .status(500)
-        .type('text/plain')
-        .send('Service temporarily unavailable. Please try again later.');
+      return res.status(404).send('Label not ready yet');
+    } catch (err) {
+      console.error('[QR] transactions.show failed', err);
+      return res.status(500).send('Failed to load transaction');
     }
   });
 
