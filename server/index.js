@@ -73,35 +73,40 @@ console.log(
     : '⚠️ Missing Integration API credentials (lender SMS may fail to read protected phone).'
 );
 
-// Allow CORS for sherbrt.com
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://www.sherbrt.com'); // allow your custom domain
-  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
-  next();
-});
-
-// Add CORS middleware configuration
-const allowedOrigins = [
-  'https://sherbrt.com',        // live frontend
-  'http://localhost:3000',      // local dev
+const DEFAULT_ALLOWED_ORIGINS = [
+  'http://localhost:3000',
+  'https://localhost:3000',
+  'https://sherbrt.com',
+  'https://www.sherbrt.com',
+  'https://web-template-1.onrender.com',       // Render test client
+  'https://sherbrt-test.onrender.com'          // any other Render env we use
 ];
 
+const envAllowed = (process.env.CORS_ALLOW_ORIGIN || '')
+  .split(',')
+  .map(s => s.trim())
+  .filter(Boolean);
+
+const ALLOWED_ORIGINS = [...new Set([...DEFAULT_ALLOWED_ORIGINS, ...envAllowed])];
+
 const corsOptions = {
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      console.warn(`CORS blocked origin: ${origin}`);
-      callback(new Error('Not allowed by CORS'));
+  origin(origin, callback) {
+    // Allow same-origin or tools without an Origin header (e.g., curl/health checks)
+    if (!origin || ALLOWED_ORIGINS.includes(origin)) {
+      return callback(null, true);
     }
+    if (origin && !ALLOWED_ORIGINS.includes(origin)) {
+      console.warn('[CORS] Blocked origin:', origin);
+    }
+    return callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  methods: ['GET','HEAD','PUT','PATCH','POST','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization','X-Requested-With'],
 };
 
-app.use(cors(corsOptions));
+app.use(require('cors')(corsOptions));
+app.options('*', require('cors')(corsOptions)); // handle preflight everywhere
 
 const errorPage500 = fs.readFileSync(path.join(buildPath, '500.html'), 'utf-8');
 const errorPage404 = fs.readFileSync(path.join(buildPath, '404.html'), 'utf-8');
