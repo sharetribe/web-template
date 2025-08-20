@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] SearchPage: fix a bug with integer range values. The range end value was not exclusive.
+  [#652](https://github.com/sharetribe/web-template/pull/652)
 - [fix] IntegerRangeFilter: fix a bug with small text on grid layout.
   [#650](https://github.com/sharetribe/web-template/pull/650)
 - [add] render potential errors in EditListingStylePanel.
