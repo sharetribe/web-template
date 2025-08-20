@@ -8,7 +8,7 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const { deserialize } = require('./api-util/sdk');
+const { deserialize, getTrustedSdk } = require('./api-util/sdk');
 
 const initiateLoginAs = require('./api/initiate-login-as');
 const loginAs = require('./api/login-as');
@@ -63,16 +63,7 @@ router.post('/transition-privileged', transitionPrivileged);
 router.use('/webhooks', shippoWebhook);
 
 // QR code redirect endpoint
-router.use('/qr', qrRouter({ 
-  sharetribeSdk: require('./api-util/sdk').getTrustedSdk,
-  shippo: require('axios').create({
-    baseURL: 'https://api.goshippo.com',
-    headers: {
-      'Authorization': `ShippoToken ${process.env.SHIPPO_API_TOKEN}`,
-      'Content-Type': 'application/json'
-    }
-  })
-}));
+router.use('/qr', qrRouter({ getTrustedSdk }));
 
 // Create user with identity provider (e.g. Facebook or Google)
 // This endpoint is called to create a new user after user has confirmed

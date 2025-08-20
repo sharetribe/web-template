@@ -1,187 +1,61 @@
-const express = require('express');
-const router = express.Router();
+module.exports = ({ getTrustedSdk }) => {
+  const express = require('express');
+  const router = express.Router();
 
-module.exports = ({ sharetribeSdk, shippo }) => {
-  /**
-   * Helper function to mask sensitive strings (first 8 chars + "...")
-   * @param {string} str - The string to mask
-   * @returns {string} - Masked string
-   */
-  function mask(str) {
-    if (!str || typeof str !== 'string') return str;
-    return str.slice(0, 8) + '…';
-  }
+  // health check
+  router.get('/_debug/ping', (req, res) => res.sendStatus(204));
 
-  /**
-   * Helper function to mask URLs (strip query params and truncate path)
-   * @param {string} url - The URL to mask
-   * @returns {string} - Masked URL for logging
-   */
-  function maskUrl(url) {
-    if (!url) return 'null';
-    try {
-      const u = new URL(url);
-      return `${u.protocol}//${u.host}${u.pathname}...`;
-    } catch {
-      return '[invalid-url]';
+  router.get('/_debug/tx/:txId', async (req, res) => {
+    const sdk = getTrustedSdk(req);
+    if (!sdk?.transactions?.show) {
+      console.error('[QR] SDK not wired — transactions.show missing');
+      return res.status(500).send({ ok:false, reason:'sdk-miswired' });
     }
-  }
-
-  /**
-   * Helper function to pick specific keys from an object
-   * @param {object} obj - The object to pick from
-   * @param {string[]} keys - Array of keys to pick
-   * @returns {object} - Object with only the specified keys
-   */
-  function pick(obj, keys) {
-    if (!obj || typeof obj !== 'object') return {};
-    const result = {};
-    keys.forEach(key => {
-      if (obj.hasOwnProperty(key)) {
-        result[key] = obj[key];
-      }
-    });
-    return result;
-  }
-
-  /**
-   * Parse the Expires parameter from a Shippo URL
-   * @param {string} url - The Shippo URL with Expires query parameter
-   * @returns {number|null} - Expiry timestamp in seconds, or null if not found
-   */
-  function parseExpiresParam(url) {
+    const { txId } = req.params;
     try {
-      const u = new URL(url);
-      const exp = u.searchParams.get('Expires');
-      return exp ? Number(exp) : null;
-    } catch {
-      return null;
-    }
-  }
-
-  /**
-   * GET /_debug/ping
-   * Debug endpoint to test if QR router is working
-   */
-  router.get('/_debug/ping', (req, res) => {
-    res.status(204).end();
-  });
-
-  /**
-   * GET /_debug/tx/:transactionId
-   * Debug endpoint to inspect transaction data and protected data
-   */
-  router.get('/_debug/tx/:transactionId', async (req, res) => {
-    try {
-      const tx = await sharetribeSdk.transactions.show({ 
-        id: req.params.transactionId, 
-        queryParams: { expand: true } 
-      });
-      const pd = tx?.data?.data?.attributes?.protectedData || {};
-      
-      res.json({
-        hasQr: !!pd.outboundQrCodeUrl,
-        hasShippoTx: !!pd.outboundShippoTxId,
-        hasTrack: !!pd.outboundTrackingNumber,
-        pdKeys: Object.keys(pd),
-        shippoTxIdMasked: mask(pd.outboundShippoTxId),
-        qrMasked: maskUrl(pd.outboundQrCodeUrl)
-      });
+      const tx = await sdk.transactions.show({ id: txId, include: ['listing'] });
+      return res.json({ ok:true, id: txId, hasData: !!tx?.data, keys: Object.keys(tx?.data?.data?.attributes?.protectedData || {}) });
     } catch (e) {
-      res.status(500).json({ error: e.message });
+      console.error('[QR][_debug/tx] fetch failed', e?.response?.data || e);
+      return res.status(404).json({ ok:false, reason:'not-found' });
     }
   });
 
-  /**
-   * GET /:transactionId
-   * Redirects to a valid Shippo QR code, refreshing if expired
-   */
-  router.get('/:transactionId', async (req, res) => {
-    const { transactionId } = req.params;
-    
-    // Log the request at the top
-    console.log('[QR] hit', { txId: transactionId });
-    
+  router.get('/:txId', async (req, res) => {
+    const { txId } = req.params;
+    const sdk = getTrustedSdk(req);
+
+    if (!sdk?.transactions?.show) {
+      console.error('[QR] SDK not wired — transactions.show missing');
+      return res.status(500).type('text/plain')
+        .send('Service temporarily unavailable. Please try again later.');
+    }
+
     try {
-      // Fetch the transaction with expand so we get protectedData
-      const tx = await sharetribeSdk.transactions.show({
-        id: transactionId,
-        queryParams: { expand: true }
-      });
-      const pd = tx?.data?.data?.attributes?.protectedData || {};
-      
-      // Log what we have
-      console.log('[QR] pd keys', { 
-        hasQr: !!pd.outboundQrCodeUrl, 
-        hasShippoTx: !!pd.outboundShippoTxId, 
-        hasTrack: !!pd.outboundTrackingNumber 
-      });
-      
-      // If no outboundQrCodeUrl, but outboundShippoTxId exists, retrieve from Shippo and update pd
-      if (!pd.outboundQrCodeUrl && pd.outboundShippoTxId) {
-        try {
-          const rtx = await shippo.transaction.retrieve(pd.outboundShippoTxId);
-          
-          // Debug logging when SHIPPO_DEBUG is enabled
-          if (process.env.SHIPPO_DEBUG === 'true') {
-            const maskedFields = pick(rtx, ['object_id', 'status', 'qr_code_url', 'tracking_number', 'tracking_url_provider']);
-            console.log('[SHIPPO][RETRIEVE]', {
-              object_id: mask(maskedFields.object_id),
-              status: maskedFields.status,
-              qr_code_url: maskUrl(maskedFields.qr_code_url),
-              tracking_number: mask(maskedFields.tracking_number),
-              tracking_url_provider: maskUrl(maskedFields.tracking_url_provider)
-            });
-          }
-          
-          const freshQr = rtx?.qr_code_url || null;
-          if (freshQr) {
-            // persist back via privileged transition (merge!)
-            try {
-              await sharetribeSdk.transactions.transition({
-                id: transactionId,
-                transition: 'transition/store-shipping-urls',
-                params: { protectedData: { ...pd, outboundQrCodeUrl: freshQr } }
-              });
-              pd.outboundQrCodeUrl = freshQr;
-            } catch (transitionErr) {
-              // If transition returns 409, catch it and just log a warning
-              if (transitionErr.status === 409) {
-                console.warn('[QR] Transition 409 - shipping URLs already stored', { txId: transactionId });
-              } else {
-                throw transitionErr;
-              }
-            }
-          }
-        } catch (shippoErr) {
-          console.error('[QR] Shippo transaction retrieve failed', { 
-            txId: transactionId, 
-            shippoTxId: mask(pd.outboundShippoTxId),
-            error: shippoErr.message 
-          });
-        }
+      const r = await sdk.transactions.show({ id: txId });
+      const pd = r?.data?.data?.attributes?.protectedData || {};
+      const shippo = pd.shippo || {};
+      const url = shippo.qr_code_url || shippo.label_url || shippo.tracking_url || shippo.tracking_url_provider;
+
+      // no URL yet → 404 with a friendly message
+      if (!url) {
+        res.set('Cache-Control', 'no-store');
+        return res.status(404).type('text/plain')
+          .send('Label not ready yet. Try again in a minute.');
       }
-      
-      // If we now have pd.outboundQrCodeUrl, 302 to it with no-store headers; else return a 410
-      if (pd.outboundQrCodeUrl) {
-        res.set({
-          'Cache-Control': 'no-store',
-          'Pragma': 'no-cache',
-          'Expires': '0',
-          'X-Robots-Tag': 'noindex, nofollow',
-        });
-        
-        console.log('[QR] 302 to Shippo QR', maskUrl(pd.outboundQrCodeUrl));
-        return res.redirect(302, pd.outboundQrCodeUrl);
-      }
-      
-      // No QR available
-      console.log('[QR] 410 pending', { txId: transactionId });
-      return res.status(410).send('QR not available yet; try again in a minute.');
-      
-    } catch (err) {
-      console.error(`❌ [QR] Error processing QR request for ${transactionId}:`, err.message);
-      res.status(500).send('Service temporarily unavailable. Please try again later.');
+
+      res.set({
+        'Cache-Control': 'no-store',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+        'X-Robots-Tag': 'noindex, nofollow',
+      });
+
+      return res.redirect(302, url);
+    } catch (e) {
+      console.error('[QR] fetch failed', e?.response?.data || e);
+      return res.status(500).type('text/plain')
+        .send('Service temporarily unavailable. Please try again later.');
     }
   });
 
