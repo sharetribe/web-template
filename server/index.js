@@ -49,7 +49,7 @@ const sdkUtils = require('./api-util/sdk');
 
 const buildPath = path.resolve(__dirname, '..', 'build');
 const dev = process.env.REACT_APP_ENV === 'development';
-const PORT = parseInt(process.env.PORT, 10);
+const PORT = process.env.PORT || 3000;
 const redirectSSL =
   process.env.SERVER_SHARETRIBE_REDIRECT_SSL != null
     ? process.env.SERVER_SHARETRIBE_REDIRECT_SSL
@@ -57,9 +57,14 @@ const redirectSSL =
 const REDIRECT_SSL = redirectSSL === 'true';
 const TRUST_PROXY = process.env.SERVER_SHARETRIBE_TRUST_PROXY || null;
 const CSP = process.env.REACT_APP_CSP;
+const CSP_MODE = process.env.CSP_MODE || 'report'; // 'block' for prod, 'report' for test
 const cspReportUrl = '/csp-report';
 const cspEnabled = CSP === 'block' || CSP === 'report';
 const app = express();
+
+// Health first — must be at the very top
+app.get('/healthz', (_req, res) => res.sendStatus(204));
+app.head('/healthz', (_req, res) => res.sendStatus(204));
 
 // Boot-time Integration creds presence log
 console.log(
@@ -144,9 +149,9 @@ if (cspEnabled) {
 
   // In Helmet 4,supplying functions as directive values is not supported.
   // That's why we need to create own middleware function that calls the Helmet's middleware function
-  const reportOnly = CSP === 'report';
+  const isReportOnly = CSP_MODE !== 'block';
   app.use((req, res, next) => {
-    csp(cspReportUrl, reportOnly)(req, res, next);
+    csp(cspReportUrl, isReportOnly)(req, res, next);
   });
 }
 
@@ -331,8 +336,8 @@ if (cspEnabled) {
 }
 
 const server = app.listen(PORT, () => {
-  const mode = dev ? 'development' : 'production';
-  console.log(`Listening to port ${PORT} in ${mode} mode`);
+  const mode = process.env.NODE_ENV || 'development';
+  console.log(`Listening on port ${PORT} in ${mode} mode`);
   if (dev) {
     console.log(`Open http://localhost:${PORT}/ and start hacking!`);
   }

@@ -121,9 +121,8 @@ const defaultDirectives = {
     'js.stripe.com',
     'plausible.io',
   ],
-  "script-src-elem": [self, blob, "https://api.mapbox.com", "https://*.mapbox.com"],
-  "manifest-src": [self],
-  "worker-src": [self, blob],
+  "script-src-elem": ["'self'", "blob:", "https://api.mapbox.com", "https://*.mapbox.com"],
+  "manifest-src": ["'self'"],
   styleSrc: [self, unsafeInline, 'fonts.googleapis.com', 'api.mapbox.com'],
 };
 

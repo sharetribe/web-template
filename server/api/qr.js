@@ -22,7 +22,7 @@ module.exports = ({ getTrustedSdk }) => {
     sdk = sdk || req.app.get('integrationSdk') || req.app.get('apiSdk');
 
     return res.status(sdk ? 200 : 500).json({
-      hasSdk: !!sdk,
+      ok: !!sdk,
       hasTransactionsShow: !!sdk?.transactions?.show,
       from: {
         getTrustedSdk: typeof getTrustedSdk === 'function',
