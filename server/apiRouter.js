@@ -63,7 +63,8 @@ router.post('/transition-privileged', transitionPrivileged);
 router.use('/webhooks', shippoWebhook);
 
 // QR code redirect endpoint
-router.use('/qr', qrRouter({ getTrustedSdk }));
+const qrRouterInstance = qrRouter({ getTrustedSdk }); // factory export
+router.use('/qr', qrRouterInstance);
 
 // Create user with identity provider (e.g. Facebook or Google)
 // This endpoint is called to create a new user after user has confirmed

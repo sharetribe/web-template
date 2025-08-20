@@ -1,60 +1,67 @@
+// server/api/qr.js
+
 module.exports = ({ getTrustedSdk }) => {
   const express = require('express');
   const router = express.Router();
 
-  // health check
+  // Healthcheck: GET /api/qr/_debug/ping -> 204
   router.get('/_debug/ping', (req, res) => res.sendStatus(204));
 
-  router.get('/_debug/tx/:txId', async (req, res) => {
-    const sdk = getTrustedSdk(req);
-    if (!sdk?.transactions?.show) {
-      console.error('[QR] SDK not wired — transactions.show missing');
-      return res.status(500).send({ ok:false, reason:'sdk-miswired' });
-    }
-    const { txId } = req.params;
-    try {
-      const tx = await sdk.transactions.show({ id: txId, include: ['listing'] });
-      return res.json({ ok:true, id: txId, hasData: !!tx?.data, keys: Object.keys(tx?.data?.data?.attributes?.protectedData || {}) });
-    } catch (e) {
-      console.error('[QR][_debug/tx] fetch failed', e?.response?.data || e);
-      return res.status(404).json({ ok:false, reason:'not-found' });
-    }
-  });
-
+  // GET /api/qr/:txId -> 302 redirect to Shippo QR/label/tracking URL saved on the transaction
   router.get('/:txId', async (req, res) => {
-    const { txId } = req.params;
-    const sdk = getTrustedSdk(req);
+    const { txId } = req.params || {};
 
-    if (!sdk?.transactions?.show) {
+    // Prefer the same SDK used by privileged routes; fall back to app locals if present
+    const sdk =
+      (typeof getTrustedSdk === 'function' ? getTrustedSdk(req) : null) ||
+      req.app.get('integrationSdk') ||
+      req.app.get('apiSdk');
+
+    if (!sdk || !sdk.transactions || !sdk.transactions.show) {
       console.error('[QR] SDK not wired — transactions.show missing');
-      return res.status(500).type('text/plain')
+      return res
+        .status(500)
+        .type('text/plain')
         .send('Service temporarily unavailable. Please try again later.');
     }
 
     try {
+      // Fetch the transaction to read protectedData.shippo
       const r = await sdk.transactions.show({ id: txId });
-      const pd = r?.data?.data?.attributes?.protectedData || {};
+      const attrs = r?.data?.data?.attributes;
+      const pd = attrs?.protectedData || {};
       const shippo = pd.shippo || {};
-      const url = shippo.qr_code_url || shippo.label_url || shippo.tracking_url || shippo.tracking_url_provider;
 
-      // no URL yet → 404 with a friendly message
-      if (!url) {
+      // Choose the best available target; preference: QR -> label -> tracking
+      const target =
+        shippo.qr_code_url ||
+        shippo.label_url ||
+        shippo.tracking_url ||
+        shippo.tracking_url_provider;
+
+      // No URL persisted yet -> show a gentle 404
+      if (!target) {
         res.set('Cache-Control', 'no-store');
-        return res.status(404).type('text/plain')
+        return res
+          .status(404)
+          .type('text/plain')
           .send('Label not ready yet. Try again in a minute.');
       }
 
+      // Avoid caching/SEO on the redirect
       res.set({
         'Cache-Control': 'no-store',
-        'Pragma': 'no-cache',
-        'Expires': '0',
+        Pragma: 'no-cache',
+        Expires: '0',
         'X-Robots-Tag': 'noindex, nofollow',
       });
 
-      return res.redirect(302, url);
+      return res.redirect(302, target);
     } catch (e) {
       console.error('[QR] fetch failed', e?.response?.data || e);
-      return res.status(500).type('text/plain')
+      return res
+        .status(500)
+        .type('text/plain')
         .send('Service temporarily unavailable. Please try again later.');
     }
   });
