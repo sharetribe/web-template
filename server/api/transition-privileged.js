@@ -261,7 +261,15 @@ async function createShippingLabels(protectedData, transactionId, listing, sendS
 
     // Build short URL from live host (no hardcoding)
     const txIdStr = String(transactionId);
-    const base = process.env.ROOT_URL || `${req.protocol}://${req.get('host')}`;
+    const base =
+      process.env.ROOT_URL ||
+      (req ? `${req.protocol}://${req.get('host')}` : null);
+
+    if (!base) {
+      console.warn('[LENDER_SMS] No ROOT_URL and no req — skipping link build');
+      return { success: false, reason: 'no_base_url_available' };
+    }
+
     const shortUrl = `${base}/api/qr/${txIdStr}`;
 
     // Resolve lender phone
@@ -943,7 +951,7 @@ module.exports = async (req, res) => {
           const providerName = params?.protectedData?.providerName || 'the lender';
           
           // Build dynamic site base for borrower inbox link
-          const siteBase = process.env.ROOT_URL || (req ? `${req.protocol}://${req.get('host')}` : null);
+          const siteBase = process.env.ROOT_URL || (req ? `${req.protocol}://${req.get('host')}` : 'https://sherbrt.com');
           const buyerLink = `${siteBase}/inbox/purchases`;
           
           const message = `🎉 Your Sherbrt request was accepted! 🍧
