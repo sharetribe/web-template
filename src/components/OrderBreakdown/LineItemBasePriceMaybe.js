@@ -38,7 +38,7 @@ const LineItemBasePriceMaybe = props => {
     : 'OrderBreakdown.baseUnitQuantity';
 
   // Find correct line-item for given code prop.
-  // It should be one of the following: 'line-item/night, 'line-item/day', 'line-item/hour', or 'line-item/item'
+  // It should be one of the following: 'line-item/night, 'line-item/day', 'line-item/hour', 'line-item/fixed', 'line-item/item', 'line-item/offer', 'line-item/request'
   // These are defined in '../../util/types';
   const unitPurchase = lineItems.find(item => item.code === code && !item.reversal);
 
