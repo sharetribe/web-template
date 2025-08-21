@@ -22,6 +22,22 @@ const convertQueryParamToObject = valueRange => {
   // We explicitly compare `minValue` to null as comparing to '0' returns false but '0' is a valid range value.
   return !!valueRange && minValue != null && maxValue != null ? { minValue, maxValue } : null;
 };
+const hasValue = value => value != null;
+
+// Extracts range values for form from query parameters. If a valid query parameter exists, it converts
+// the string to an object using `convertQueryParamToObject`. If not, initializes as an empty object.
+const getValidRangeValues = (queryParamNames, rangeParams, min, max) => {
+  const parsedRangeValues = rangeParams?.[queryParamNames]
+    ? convertQueryParamToObject(rangeParams[queryParamNames])
+    : {};
+
+  const { minValue, maxValue } = parsedRangeValues || {};
+  const hasValidMinValue = hasValue(minValue) && minValue >= min;
+  const hasValidMaxValue = hasValue(maxValue) && maxValue > minValue && maxValue <= max;
+  const hasRangeValues = rangeParams && hasValidMinValue && hasValidMaxValue;
+
+  return hasRangeValues ? { minValue, maxValue } : {};
+};
 
 // Transforms a range object containing `minValue` and `maxValue`
 // into query parameter format, i.e. "0,1000"
@@ -30,6 +46,25 @@ const formatToQueryParam = (range, queryParamName) => {
   // We explicitly compare `minValue` to null as comparing to '0' returns false but '0' is a valid range value.
   const value = minValue != null && maxValue != null ? `${minValue},${maxValue}` : null;
   return { [queryParamName]: value };
+};
+
+// Handles form submission by extracting and updating the range values from the form's current state.
+const getHandleSubmit = (name, queryParamNames, onSubmit) => values => {
+  const usedValue = values?.[name] ? values[name] : values;
+  const { minValue, maxValue } = usedValue || {};
+  // // We need to send API exclusive max value
+  // // https://www.sharetribe.com/api-reference/marketplace.html#extended-data-filtering
+  // const exclusiveMax = maxValue + 1;
+
+  return onSubmit(
+    formatToQueryParam(
+      {
+        minValue: minValue,
+        maxValue: maxValue,
+      },
+      queryParamNames
+    )
+  );
 };
 
 /**
@@ -72,35 +107,10 @@ const IntegerRangeFilter = props => {
 
   const classes = classNames(rootClassName || css.root, className);
 
-  const hasValue = value => value != null;
-
-  // Extracts initial values for form from query parameters. If a valid query parameter exists, it converts
-  // the string to an object using `convertQueryParamToObject`. If not, initializes as an empty object.
-  const parsedInitialValues =
-    initialValues && initialValues[queryParamNames]
-      ? convertQueryParamToObject(initialValues[queryParamNames])
-      : {};
-
-  const { minValue, maxValue } = parsedInitialValues || {};
-  const hasInitialValues = initialValues && hasValue(minValue) && hasValue(maxValue);
-
-  const resolvedInitialValues = { [name]: hasInitialValues ? parsedInitialValues : {} };
-
-  // Handles form submission by extracting and updating the range values from the form's current state.
-  const handleSubmit = values => {
-    const usedValue = values?.[name] ? values[name] : values;
-    const { minValue, maxValue } = usedValue || {};
-
-    return onSubmit(
-      formatToQueryParam(
-        {
-          minValue: minValue,
-          maxValue: maxValue,
-        },
-        queryParamNames
-      )
-    );
-  };
+  const handleSubmit = getHandleSubmit(name, queryParamNames, onSubmit);
+  const validRangeValues = getValidRangeValues(queryParamNames, initialValues, min, max);
+  const hasInitialValues = Object.keys(validRangeValues).length > 0;
+  const resolvedInitialValues = { [name]: validRangeValues };
 
   // We use useRef to create a mutable object that persists across renders without causing re-renders.
   // This is used as a flag to control whether debouncing should be applied.
@@ -132,7 +142,7 @@ const IntegerRangeFilter = props => {
 
   // Used to display the selected values above the filter component in the "grid" view
   const labelSelectionForPlain = hasInitialValues ? (
-    <FormattedMessage id="IntegerRangeFilter.labelSelectedPlain" values={{ minValue, maxValue }} />
+    <FormattedMessage id="IntegerRangeFilter.labelSelectedPlain" values={validRangeValues} />
   ) : null;
 
   return showAsPopup ? (
