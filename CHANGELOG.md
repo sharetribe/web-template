@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] SearchPage.shared.js: category ids are always strings, so we need to convert query params to
+  strings. [#653](https://github.com/sharetribe/web-template/pull/653)
 - [fix] SearchPage: fix a bug with integer range values. The range end value was not exclusive.
   [#652](https://github.com/sharetribe/web-template/pull/652)
 - [fix] IntegerRangeFilter: fix a bug with small text on grid layout.

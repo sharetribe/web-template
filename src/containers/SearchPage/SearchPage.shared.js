@@ -19,8 +19,10 @@ import { isFieldForCategory, isFieldForListingType } from '../../util/fieldHelpe
 
 const validURLParamForCategoryData = (prefix, categories, level, params) => {
   const levelKey = constructQueryParamName(`${prefix}${level}`, 'public');
-  const levelValue = params?.[levelKey];
-  const foundCategory = categories.find(cat => cat.id === params?.[levelKey]);
+  const levelValue =
+    typeof params?.[levelKey] !== 'undefined' ? `${params?.[levelKey]}` : undefined;
+
+  const foundCategory = categories.find(cat => cat.id === levelValue);
   const subcategories = foundCategory?.subcategories || [];
   return foundCategory && subcategories.length > 0
     ? {
