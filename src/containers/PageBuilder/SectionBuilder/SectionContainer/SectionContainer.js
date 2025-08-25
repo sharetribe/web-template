@@ -31,7 +31,6 @@ const SectionContainer = props => {
   const { className, rootClassName, id, as, children, appearance, options, customOption, ...otherProps } = props;
   const Tag = as || 'section';
   const classes = classNames(rootClassName || css.root, className);
-
   const innerCss = classNames(
     css.sectionContent,
     customOption?.isLarge ? css.sectionContentLarge : '',
@@ -41,6 +40,7 @@ const SectionContainer = props => {
     customOption?.isShortC ? css.sectionContentShortC : '',
     customOption?.isSmallerT ? css.sectionContentSmallerTitle : '',
     customOption?.isMediumT ? css.sectionContentMediumTitle : '',
+    customOption?.hasPaddings ? css.sectionContentHasPaddings : '',
     customOption?.hasTextGray ? css.sectionContentHasTextGray : '',
     customOption?.hasStar ? css.starDeco : '',
     customOption?.hasStar ? (

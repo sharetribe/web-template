@@ -126,6 +126,10 @@
   } 
 }
 
+.sectionContentHasPaddings {
+  padding: 90px 0;
+}
+
 .sectionContentMediumTitle {
   header {
     margin-top: 30px;

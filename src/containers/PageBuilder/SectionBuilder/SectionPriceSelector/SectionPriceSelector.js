@@ -96,10 +96,12 @@ const PricingToggle = props => {
     } = props;
 
     const [activeSet, setActiveSet] = useState("set1");
+    const useToggle = toggles.cta1 !== 'PricingToggle.toggleSet1' || toggles.cta2 !== 'PricingToggle.toggleSet2';
 
     return (
         <div className={pricesCss.container}>
             {/* Toggle Buttons */}
+            {useToggle ? (
             <div className={pricesCss.buttonGroup}>
                 <button
                     className={`${pricesCss.toggleButton} ${activeSet === "set1" ? pricesCss.active : ""
@@ -116,6 +118,7 @@ const PricingToggle = props => {
                     {toggles.cta2}
                 </button>
             </div>
+            ) : null}
 
             {/* Card Grid */}
             <div className={pricesCss.cardGrid}>

@@ -185,6 +185,32 @@ function createBlockCustomProps(block) {
   if (block.blockName?.includes('full height media ::')) {
     blockCustomProps.hasFullHeightMedia = true;
   }
+
+  if (block.blockName?.includes('buyer list ::')) {
+    blockCustomProps.showBuyerList = true;
+    blockCustomProps.buyerListData = []
+    for (let r = 1; r <= 5; r++) {
+      blockCustomProps.buyerListData.push(
+        {
+          title: intl.formatMessage({ id: 'CustomList.' + block.blockId + '.title' + r, defaultMessage:' ' }),
+          text: intl.formatMessage({ id: 'CustomList.' + block.blockId + '.text' + r, defaultMessage:' ' }),
+        }
+      );
+    }
+  }
+  if (block.blockName?.includes('seller list ::')) {
+    blockCustomProps.showSellerList = true;
+    blockCustomProps.sellerListData = [];
+    for (let r = 1; r <= 5; r++) {
+      blockCustomProps.sellerListData.push(
+        {
+          title: intl.formatMessage({ id: 'CustomList.' + block.blockId + '.title' + r, defaultMessage:' ' }),
+          text: intl.formatMessage({ id: 'CustomList.' + block.blockId + '.text' + r, defaultMessage:' ' }),
+        }
+      );
+    }
+  }
+
   // CTA is secondary style.
   if (block.blockName?.includes('button secondary ::')) {
     blockCustomProps.hasCTASecondary = true;
@@ -192,6 +218,10 @@ function createBlockCustomProps(block) {
   // CTA is tertiary style.
   if (block.blockName?.includes('button tertiary ::')) {
     blockCustomProps.hasCTATertiary = true;
+  }
+  // Content text is smaller.
+  if (block.blockName?.includes('smaller ::')) {
+    blockCustomProps.hasTextSmaller = true;
   }
   // Content text is larger & gray.
   if (block.blockName?.includes('text larger ::')) {
@@ -212,6 +242,9 @@ function createBlockCustomProps(block) {
   // Content has numeric list large items.
   if (block.blockName?.includes('large list :: ')) {
     blockCustomProps.hasLargeList = true;
+  }
+  if (block.blockName?.includes('newsletter form  ::')) {
+    blockCustomProps.hasNewsletterForm = true;
   }
   // Image is small Icon.
   if (block.blockName?.includes('icon img ::')) {

@@ -119,8 +119,8 @@ export const CMSPageComponent = props => {
       ],
     },
     toggles: {
-      cta1: intl.formatMessage({ id: 'PricingToggle.toggleSet1', defaultMessage:'Hello' }),
-      cta2: intl.formatMessage({ id: 'PricingToggle.toggleSet2', defaultMessage:'Hello' })
+      cta1: intl.formatMessage({ id: 'PricingToggle.toggleSet1', defaultMessage:'' }),
+      cta2: intl.formatMessage({ id: 'PricingToggle.toggleSet2', defaultMessage:'' })
     },
   };
 

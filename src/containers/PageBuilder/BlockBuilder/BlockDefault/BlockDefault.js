@@ -67,6 +67,10 @@ const BlockDefault = props => {
     alignment,
     twoButtons,
     blueCols,
+    showBuyerList,
+    buyerListData,
+    showSellerList,
+    sellerListData,
     contactButtons,
     hasFullHeightMedia,
     hasIconImg,
@@ -75,6 +79,7 @@ const BlockDefault = props => {
     hasTextNoGap,
     hasLargeList,
     hasTextLarger,
+    hasTextSmaller,
     hasShortContent,
     hasCTASecondary,
     hasCTATertiary,
@@ -93,9 +98,9 @@ const BlockDefault = props => {
   const alignmentClass = alignmentClasses[alignment];
 
   const ctaCustomClass = classNames(
-    hasCTASecondary ? css.ctaSecondary 
-      : hasCTATertiary ? css.ctaTertiary 
-      : ctaButtonClass,
+    hasCTASecondary ? css.ctaSecondary
+      : hasCTATertiary ? css.ctaTertiary
+        : ctaButtonClass,
   );
 
   const textComponentsClass = classNames(
@@ -108,6 +113,7 @@ const BlockDefault = props => {
     hasTextNoGap ? css.textNoGap : '',
     hasLargeList ? css.largeList : '',
     hasTextLarger ? css.textLarger : '',
+    hasTextSmaller ? css.textSmaller : '',
     hasShortContent ? css.shortContent : '',
   );
 
@@ -120,24 +126,50 @@ const BlockDefault = props => {
   return (
     <BlockContainer id={blockId} className={classes}>
       {sliderImages?.length ? (
-        <ImageSliderBlockComponent images={sliderImages} className={fieldMediaClass} options={options}/>
+        <ImageSliderBlockComponent images={sliderImages} className={fieldMediaClass} options={options} />
       ) : <FieldMedia
-          media={media}
-          sizes={responsiveImageSizes}
-          className={fieldMediaClass}
-          options={options}
+        media={media}
+        sizes={responsiveImageSizes}
+        className={fieldMediaClass}
+        options={options}
       />}
       {hasTextComponentFields ? (
         <div className={textComponentsClass}>
           {twoButtons && twoButtons.titleEyebrow ? (
-            <span className={css.titleEyebrow}>{ twoButtons.titleEyebrow }</span>
+            <span className={css.titleEyebrow}>{twoButtons.titleEyebrow}</span>
           ) : null}
           <Field data={title} options={options} />
           <Field data={text} options={options} />
           <Field data={callToAction} className={ctaCustomClass} options={options} />
 
+          {showBuyerList ? (
+            <ol className={css.titleList}>
+             {buyerListData.map((item, index) => item.title.trim() ? (
+                <li key={index}>
+                  <div>
+                    <h3>{item.title}</h3>
+                    <div dangerouslySetInnerHTML={{ __html: item.text }}></div>
+                  </div>
+                </li>
+              ): null)}
+            </ol>
+          ) : null}
+
+          {showSellerList ? (
+            <ol className={css.titleList}>
+              {sellerListData.map((item, index) => item.title.trim() ? (
+                <li key={index}>
+                  <div>
+                    <h3>{item.title}</h3>
+                    <div dangerouslySetInnerHTML={{ __html: item.text }}></div>
+                  </div>
+                </li>
+              ): null)}
+            </ol>
+          ) : null}
+
           {contactButtons ? (
-            <div>
+            <div> 
               <div className={css.buttonWrap}>
                 <Field data={contactButtons.callToAction1} className={customProps.ctaButtonPrimaryClass} options={options} />
                 <Field data={contactButtons.callToAction2} className={customProps.ctaButtonSecondaryClass} options={options} />

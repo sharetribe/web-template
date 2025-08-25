@@ -165,6 +165,17 @@
   }
 }
 
+.textSmaller {
+  h3 {
+    font-size: 20px;
+    line-height: 1.5;
+    font-weight: 700;
+    letter-spacing: 0;
+    padding: 0;
+    text-transform: none;
+  }
+}
+
 .largeList {
   ol {
     list-style-type: decimal-leading-zero;
@@ -200,6 +211,64 @@
       }
     }
 
+  }
+}
+
+ol.titleList {
+  list-style: none; /* Removes the default numbers */
+  padding-left: 0; /* Remove default padding from the ol */
+  counter-reset: item;
+
+  li::before {
+    content: "0" counter(item) ". "; /* Displays the counter value */
+    margin-right: 0.5em; /* Adds space between number and content */
+    font-family: var(--fontFamilyRoboto);
+    font-size: 24px;
+    font-weight: var(--fontWeightBold);
+    color: var(--colorGrey300);
+    line-height: 140%;
+    transition: var(--colorTransition);
+    flex-basis: 3rem;
+  }
+
+  li {
+    display: flex; /* Makes the list item a flex container */
+    align-items: center; /* Vertically centers content along the cross-axis */
+    /* Add padding/margin as needed for the list items */
+    counter-increment: item;
+
+    >div {
+      width: 100%;
+    }
+
+    div > * {
+      font-family:  var(--fontFamilyHeadings);
+      font-weight: var(--fontWeightRegular);
+      font-style: normal;
+      font-size: 15px;
+      line-height: 120%;
+      letter-spacing: 0;
+      color: var(--colorGrey600);
+    }
+
+    div >h3 {
+      font-family: var(--fontFamilyHeadings);
+      font-weight: var(--fontWeightRegular);
+      font-style: normal;
+      font-size: 25px;
+      line-height: 120%;
+      letter-spacing: 0;
+      color: var(--colorGrey700);
+      margin-bottom: 0;
+      transition: var(--colorTransition);
+    }
+
+    &:hover {
+      &::before,
+      div > h3 {
+        color: #000;
+      }
+    }
   }
 }
 

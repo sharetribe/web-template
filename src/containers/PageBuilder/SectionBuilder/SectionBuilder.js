@@ -137,6 +137,8 @@ const SectionBuilder = props => {
         customOption.isSmallerT = section.sectionName?.indexOf('- SmallerTitle') >= 0;
         customOption.isMediumT = section.sectionName?.indexOf('- SmallTitle') >= 0;
 
+        customOption.hasPaddings = section.sectionName?.indexOf('- Paddings') >= 0;
+
         // Content text is larger & gray.
         if (section.sectionName?.includes('- TextGray')) {
           customOption.hasTextGray = true;
