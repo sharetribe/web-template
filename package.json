@@ -30,6 +30,7 @@
     "mapbox-gl-multitouch": "^1.0.3",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.48",
+    "node-fetch": "2",
     "passport": "^0.7.0",
     "passport-facebook": "^3.0.0",
     "passport-google-oauth": "^2.0.0",

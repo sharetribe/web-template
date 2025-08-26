@@ -46,6 +46,8 @@ const dataLoader = require('./dataLoader');
 const { generateCSPNonce, csp } = require('./csp');
 const sdkUtils = require('./api-util/sdk');
 
+const brevoRouter = require('./api/brevo');
+
 const buildPath = path.resolve(__dirname, '..', 'build');
 const dev = process.env.REACT_APP_ENV === 'development';
 const PORT = parseInt(process.env.PORT, 10);
@@ -77,6 +79,9 @@ const checkEnvVariables = variables => {
 checkEnvVariables(MANDATORY_ENV_VARIABLES);
 
 const app = express();
+app.use(express.json());
+
+app.use('/api/brevo', brevoRouter);
 
 const errorPage500 = fs.readFileSync(path.join(buildPath, '500.html'), 'utf-8');
 const errorPage404 = fs.readFileSync(path.join(buildPath, '404.html'), 'utf-8');

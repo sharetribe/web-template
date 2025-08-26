@@ -26,6 +26,15 @@ const NewsletterForm = ({
 
     setSubmitting(true);
     try {
+      const r = await fetch('/api/brevo/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({ email: val, hp: '' }),
+      });
+      const j = await r.json();
+      console.log(j);
+
       const addContactResponse = await fetch('https://api.brevo.com/v3/contacts', {
         method: 'POST',
         headers: {
