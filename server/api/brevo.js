@@ -1,23 +1,20 @@
-// server/api/brevo.js
 const express = require('express');
-const fetch = require('node-fetch'); // already used in FTW server; if not, `yarn add node-fetch@2`
+const fetch = require('node-fetch');
 const router = express.Router();
 
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
-const BREVO_LIST_ID = process.env.BREVO_LIST_ID; // numeric ID of the target list
+const BREVO_LIST_ID = process.env.BREVO_LIST_ID;
 
 if (!BREVO_API_KEY || !BREVO_LIST_ID) {
-  // Fail fast on boot if misconfigured
+  // Fail fast on boot if misconfigured.
   // eslint-disable-next-line no-console
   console.warn('Brevo env missing: BREVO_API_KEY and/or BREVO_LIST_ID');
 }
 
-// Basic email sanity check
+// Basic email sanity check.
 const isEmail = str =>
   typeof str === 'string' &&
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(str.trim());
-
-console.log('Brevo router loaded');
 
 router.post('/subscribe', async (req, res) => {
   try {
@@ -30,7 +27,7 @@ router.post('/subscribe', async (req, res) => {
       return res.status(400).json({ ok: false, error: 'Invalid email' });
     }
 
-    // 1) Upsert the contact
+    // 1) Upsert the contact.
     {
       const r = await fetch('https://api.brevo.com/v3/contacts', {
         method: 'POST',
@@ -41,7 +38,7 @@ router.post('/subscribe', async (req, res) => {
         },
         body: JSON.stringify({
           email: email.trim(),
-          updateEnabled: true, // upsert
+          updateEnabled: true,
         }),
       });
 
@@ -52,7 +49,7 @@ router.post('/subscribe', async (req, res) => {
       }
     }
 
-    // 2) Add to target list by email
+    // 2) Add to target list by email.
     {
       const r = await fetch(`https://api.brevo.com/v3/contacts/lists/${BREVO_LIST_ID}/contacts/add`, {
         method: 'POST',
