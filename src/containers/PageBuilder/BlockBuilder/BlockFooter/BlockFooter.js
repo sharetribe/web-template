@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import Field, { hasDataInFields } from '../../Field';
 import BlockContainer from '../BlockContainer';
 import BlockBuilder from '../../BlockBuilder';
+import NewsletterForm from '../../../../components/NewsletterForm/NewsletterForm';
 
 import css from './BlockFooter.module.css';
 
@@ -31,15 +32,25 @@ import css from './BlockFooter.module.css';
  * @returns {JSX.Element} component that renders block type: 'footerBlock'
  */
 const BlockFooter = props => {
-  const { blockId, className, rootClassName, textClassName, text, options, hasSocialLinks, customProps } = props;
+  const { blockId, className, rootClassName, textClassName, text, options, hasSocialLinks, hasNewsletterForm, customProps } = props;
   const classes = classNames(rootClassName || css.root, className);
   const hasTextComponentFields = hasDataInFields([text], options);
 
   return (
     <BlockContainer id={blockId} className={classes}>
       {hasTextComponentFields ? (
-        <div className={classNames(textClassName, css.text, css.newsletter )}>
+        <div className={classNames(textClassName, css.text)}>
           <Field data={text} options={options} />
+        </div>
+      ) : null}
+
+      {hasNewsletterForm ? (
+        <div className={classNames(css.newsletter)}>
+          <NewsletterForm
+            disclaimerText={props.disclaimerText}
+            okMsg={props.okMsg || "Thanks! Please check your inbox."}
+            errorMsg={props.errorMsg || "Subscription failed. Try again later."}
+          />
         </div>
       ) : null}
 

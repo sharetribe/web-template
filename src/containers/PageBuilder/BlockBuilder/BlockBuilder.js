@@ -243,8 +243,11 @@ function createBlockCustomProps(block) {
   if (block.blockName?.includes('large list :: ')) {
     blockCustomProps.hasLargeList = true;
   }
-  if (block.blockName?.includes('newsletter form  ::')) {
+  if (block.blockName?.includes('newsletter form ::')) {
     blockCustomProps.hasNewsletterForm = true;
+    blockCustomProps.disclaimerText="Al ingresar tu correo, aceptas recibir correos promocionales de Archivo Vintach y nuestra Política de Privacidad. Puedes darte de baja en cualquier momento.";
+    blockCustomProps.okMsg="¡Gracias! Por favor, revisa tu bandeja de entrada.";
+    blockCustomProps.errorMsg="La suscripción ha fallado. Inténtalo de nuevo más tarde.";
   }
   // Image is small Icon.
   if (block.blockName?.includes('icon img ::')) {

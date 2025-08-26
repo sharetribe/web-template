@@ -1,0 +1,78 @@
+.group {
+    position: relative;
+}
+
+.label {
+    display: block;
+}
+
+.labelText {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.disclaimerText {
+    color: var(--avGray1);
+    font-family: var(--fontFamilyRoboto);
+    font-weight: var(--fontWeightMedium);
+    font-style: normal;
+    font-size: 12px;
+    line-height: 1.2;
+    letter-spacing: 0;
+    word-break: auto-phrase;
+}
+
+.input {
+    width: 100%;
+    padding: 10px 30px 0 2px;
+    border: 0;
+    border-bottom: 1px solid #E6E56A;
+    border-radius: 0;
+    background-color: transparent;
+    color: var(--avGray1);
+
+    &:-internal-autofill-selected,
+    &:hover,
+    &:focus {
+        color: var(--avGray1);
+        background-color: transparent;
+        outline: none;
+        border: 0;
+        border-bottom: 1px solid #E6E56A;
+        box-shadow: none;
+    }
+}
+
+.button {
+    margin: 0;
+    padding: 0;
+    width: 18px;
+    height: 18px;
+    border: none;
+    outline: none;
+    position: absolute;
+    top: 18px;
+    right: 6px;
+    cursor: pointer;
+
+    > svg {
+        display: block;
+    }
+}
+
+.msgOk {
+    font-family: var(--fontFamilyRoboto);
+    font-weight: var(--fontWeightBold);
+    font-size: 14px;
+    color: #E6E56A;
+    margin-top: .5rem;
+}
+
+.msgError {
+    font-family: var(--fontFamilyRoboto);
+    font-weight: var(--fontWeightBold);
+    font-size: 14px;
+    color: var(--avPink);
+    margin-top: .5rem;
+}
