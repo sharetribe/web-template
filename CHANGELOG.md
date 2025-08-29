@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [change] Remove pickup fee line-item from the order breakdown.
+  [#655](https://github.com/sharetribe/web-template/pull/655)
 - [add] Update EditListingPage README.md to describe the data gathered and updated.
   [#654](https://github.com/sharetribe/web-template/pull/654)
 - [fix] SearchPage.shared.js: category ids are always strings, so we need to convert query params to
