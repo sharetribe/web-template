@@ -35,21 +35,12 @@ const getItemQuantityAndLineItems = (orderData, publicData, currency) => {
     : null;
 
   // Add line-item for given delivery method.
-  // Note: by default, pickup considered as free.
+  // Note: by default, pickup considered as free and, therefore, we don't add pickup fee line-item
   const deliveryLineItem = !!shippingFee
     ? [
         {
           code: 'line-item/shipping-fee',
           unitPrice: shippingFee,
-          quantity: 1,
-          includeFor: ['customer', 'provider'],
-        },
-      ]
-    : isPickup
-    ? [
-        {
-          code: 'line-item/pickup-fee',
-          unitPrice: new Money(0, currency),
           quantity: 1,
           includeFor: ['customer', 'provider'],
         },
