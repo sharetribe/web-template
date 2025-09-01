@@ -1,0 +1,138 @@
+@import '../../../styles/customMediaQueries.css';
+
+.root {
+}
+
+.iconArrow {
+  transition: all 0.2s ease-out;
+}
+
+.iconArrowAnimation {
+  transform: rotate(-180deg);
+}
+
+.menuContent {
+  margin-top: 7px;
+  padding-top: 24px;
+  padding-bottom: 24px;
+  min-width: 300px;
+  border-radius: var(--borderRadiusMedium);
+}
+
+/* left animated "border" like hover element */
+.menuItemBorder {
+  position: absolute;
+  top: 2px;
+  left: 0px;
+  height: calc(100% - 4px);
+  width: 0;
+  background-color: var(--marketplaceColor);
+  transition: width var(--transitionStyleButton);
+}
+
+/* left static border for selected element */
+.menuItemBorderSelected {
+  position: absolute;
+  top: 2px;
+  left: 0px;
+  height: calc(100% - 7px);
+  width: 6px;
+  background-color: var(--colorBlack);
+}
+
+.menuItem {
+  composes: marketplaceListingAttributeFontStyles from global;
+  color: var(--colorGrey700);
+
+  /* Layout */
+  position: relative;
+  min-width: 300px;
+  margin: 0;
+  padding: 4px 30px;
+
+  /* Override button styles */
+  outline: none;
+  text-align: left;
+  border: none;
+
+  cursor: pointer;
+
+  &:focus,
+  &:hover {
+    color: var(--colorBlack);
+  }
+
+  &:hover .menuItemBorder {
+    width: 6px;
+  }
+
+  &:disabled {
+    color: var(--colorGrey300);
+    cursor: default;
+  }
+  &:disabled:hover .menuItemBorder {
+    width: 0;
+  }
+}
+
+.sortLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  width: auto;
+  height: 35px;
+  min-height: 35px;
+
+  padding: 0 18px;
+  margin: 0 9px 0 0;
+
+  transition: all var(--transitionStyleButton);
+  cursor: pointer;
+
+  /* Font */
+  font-weight: var(--fontWeightSemiBold);
+  font-size: 13px;
+  line-height: 18px;
+  letter-spacing: 0.2px;
+
+  /* Button text styles */
+  /* Default button text is centered without decorations */
+  text-align: center;
+  text-decoration: none;
+
+  /* Button borders */
+  border: 1px solid var(--colorGrey100);
+  border-radius: var(--borderRadiusMedium);
+
+  background-color: var(--colorWhite);
+
+  &:focus,
+  &:hover {
+    outline: none;
+    box-shadow: var(--boxShadowFilterButton);
+    text-decoration: none;
+    border-color: var(--colorGrey300);
+  }
+
+  &:disabled {
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+
+  @media (--viewportMedium) {
+    gap: 36px;
+    height: auto;
+    min-height: 0;
+    padding: var(--marketplaceButtonSmallDesktopPadding);
+    margin: 0;
+
+    font-weight: var(--fontWeightMedium);
+    font-size: 13px;
+    line-height: 20px;
+
+    &:hover,
+    &:focus {
+      border-color: transparent;
+    }
+  }
+}

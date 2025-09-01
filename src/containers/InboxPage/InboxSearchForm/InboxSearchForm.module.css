@@ -1,0 +1,16 @@
+.root {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 24px;
+}
+
+.sortyByWrapper {
+  display: inline-flex;
+  margin-left: auto;
+}
+
+.sortyBy {
+  composes: marketplaceSmallFontStyles from global;
+  font-weight: var(--fontWeightRegular);
+  padding: 8px 8px 8px 0;
+}
