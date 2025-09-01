@@ -1,13 +1,7 @@
 import { storableError } from '../../util/errors';
-import { parse } from '../../util/urlHelpers';
+import { parse, getValidInboxSort } from '../../util/urlHelpers';
 import { getAllTransitionsForEveryProcess } from '../../transactions/transaction';
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
-
-// Check that the provided sort matches one of the accepted options
-const getValidSort = sort => {
-  const validOptions = ['createdAt', 'lastMessageAt', 'lastTransitionedAt'];
-  return validOptions.includes(sort) ? { sort } : {};
-};
 
 // ================ Action types ================ //
 
@@ -112,7 +106,7 @@ export const loadData = (params, search) => (dispatch, getState, sdk) => {
     'fields.image': ['variants.square-small', 'variants.square-small2x'],
     page,
     perPage: INBOX_PAGE_SIZE,
-    ...getValidSort(sort),
+    ...getValidInboxSort(sort),
   };
 
   return sdk.transactions
