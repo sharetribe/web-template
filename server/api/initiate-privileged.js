@@ -21,6 +21,7 @@ const getFullOrderData = (orderData, bodyParams, currency) => {
     ? {
         ...orderData,
         ...bodyParams.params,
+        currency,
         offer: new Money(offerInSubunits, currency),
       }
     : { ...orderData, ...bodyParams.params };

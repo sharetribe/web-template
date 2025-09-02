@@ -29,7 +29,7 @@ const getListingRelationShip = transactionShowAPIData => {
 const getFullOrderData = (orderData, bodyParams, currency, offers) => {
   const { offerInSubunits } = orderData || {};
   const transitionName = bodyParams.transition;
-  const orderDataAndParams = { ...orderData, ...bodyParams.params };
+  const orderDataAndParams = { ...orderData, ...bodyParams.params, currency };
 
   return isIntentionToMakeOffer(offerInSubunits, transitionName) ||
     isIntentionToMakeCounterOffer(offerInSubunits, transitionName)
