@@ -170,7 +170,7 @@ class KeywordFilter extends Component {
         initialValues={namedInitialValues}
         {...rest}
       >
-        <fieldset className={css.fieldPlain}>
+        <div className={css.fieldPlain}>
           <label className={css.fieldPlainLabel} htmlFor={`${id}-input`}>
             {filterText}
           </label>
@@ -183,7 +183,7 @@ class KeywordFilter extends Component {
             placeholder={placeholder}
             autoComplete="off"
           />
-        </fieldset>
+        </div>
       </FilterPlain>
     );
   }

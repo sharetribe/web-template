@@ -39,7 +39,7 @@ const EditListingStylePanel = props => {
   const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
 
   return (
-    <div className={classes}>
+    <main className={classes}>
       <H3 as="h1">
         {isPublished ? (
           <FormattedMessage
@@ -79,7 +79,7 @@ const EditListingStylePanel = props => {
         updateInProgress={updateInProgress}
         listingTitle={listing.attributes.title}
       />
-    </div>
+    </main>
   );
 };
 

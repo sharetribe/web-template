@@ -18,7 +18,7 @@ import css from './SelectMultipleFilter.module.css';
 const GroupOfFieldCheckboxes = props => {
   const { id, className, name, options } = props;
   return (
-    <fieldset className={className}>
+    <div className={className}>
       <ul className={css.list}>
         {options.map(optionConfig => {
           const { option, label } = optionConfig;
@@ -30,7 +30,7 @@ const GroupOfFieldCheckboxes = props => {
           );
         })}
       </ul>
-    </fieldset>
+    </div>
   );
 };
 
