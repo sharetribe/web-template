@@ -295,7 +295,7 @@ const EnhancedInitiateNegotiationPage = props => {
   const authorDisplayName = userDisplayNameAsString(listing?.author, '');
   const pageTitle = processName
     ? intl.formatMessage(
-        { id: `InitiateNegotiationPage.${processName}.title` },
+        { id: `InitiateNegotiationPage.makeOfferTitle` },
         { listingTitle, authorDisplayName }
       )
     : 'The page is loading data';
