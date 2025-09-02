@@ -84,7 +84,7 @@ const handleSubmit = (submitting, setSubmitting, props) => values => {
   const searchParams = parse(location.search);
   const transactionId = searchParams.transactionId;
 
-  const { offerDetails, offer } = values;
+  const { providerDefaultMessage, customerDefaultMessage, offer } = values;
 
   const { listingType, transactionProcessAlias, unitType } = listing?.attributes?.publicData || {};
 
@@ -92,7 +92,8 @@ const handleSubmit = (submitting, setSubmitting, props) => values => {
   const makeOfferParams = {
     listingId: listing?.id,
     protectedData: {
-      ...(offerDetails ? { offerDetails } : {}),
+      ...(providerDefaultMessage ? { providerDefaultMessage } : {}),
+      ...(customerDefaultMessage ? { customerDefaultMessage } : {}),
       ...getTransactionTypeData(listingType, unitType, config),
     },
     offerInSubunits: offer?.amount,

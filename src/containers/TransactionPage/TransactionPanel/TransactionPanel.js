@@ -267,7 +267,7 @@ export class TransactionPanelComponent extends Component {
 
             <ExtraDetailsMaybe
               protectedData={protectedData}
-              msgKey="offerDetails"
+              msgKey="providerDefaultMessage"
               showExtraDetailsMessage={isNegotiationProcess}
               isOwnMessage={isNegotiationProcess && isProvider}
             />

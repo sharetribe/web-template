@@ -151,16 +151,16 @@ export const MakeOfferForm = props => {
               </Heading>
 
               <FieldTextInput
-                className={css.fieldOfferDetails}
+                className={css.fieldDefaultMessage}
                 type="textarea"
-                name="offerDetails"
+                name="providerDefaultMessage"
                 id={formId ? `${formId}.message` : 'message'}
                 label={intl.formatMessage({
-                  id: 'InitiateNegotiationPage.offerDetailsLabel',
+                  id: 'InitiateNegotiationPage.defaultMessageLabel',
                 })}
                 placeholder={intl.formatMessage(
                   {
-                    id: 'InitiateNegotiationPage.offerDetailsPlaceholder',
+                    id: 'InitiateNegotiationPage.defaultMessagePlaceholder',
                   },
                   { authorDisplayName }
                 )}
