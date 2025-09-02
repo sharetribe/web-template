@@ -59,8 +59,8 @@ const ProductOrderForm = loadable(() =>
   import(/* webpackChunkName: "ProductOrderForm" */ './ProductOrderForm/ProductOrderForm')
 );
 
-const InvokeMakeOfferForm = loadable(() =>
-  import(/* webpackChunkName: "InvokeMakeOfferForm" */ './InvokeMakeOfferForm/InvokeMakeOfferForm')
+const NegotiationForm = loadable(() =>
+  import(/* webpackChunkName: "NegotiationForm" */ './NegotiationForm/NegotiationForm')
 );
 
 // This defines when ModalInMobile shows content as Modal
@@ -340,7 +340,7 @@ const OrderPanel = props => {
     mounted && shouldHavePurchase && !isClosed && typeof currentStock === 'number';
 
   const showInquiryForm = mounted && !isClosed && processName === INQUIRY_PROCESS_NAME;
-  const showInvokeMakeOfferForm = mounted && !isClosed && isNegotiationProcess;
+  const showNegotiationForm = mounted && !isClosed && isNegotiationProcess;
 
   const supportedProcessesInfo = getSupportedProcessesInfo();
   const isKnownProcess = supportedProcessesInfo.map(info => info.name).includes(processName);
@@ -513,8 +513,8 @@ const OrderPanel = props => {
           />
         ) : showInquiryForm ? (
           <InquiryWithoutPaymentForm formId="OrderPanelInquiryForm" onSubmit={onSubmit} />
-        ) : showInvokeMakeOfferForm ? (
-          <InvokeMakeOfferForm formId="OrderPanelInvokeMakeOfferForm" onSubmit={onSubmit} />
+        ) : showNegotiationForm ? (
+          <NegotiationForm formId="OrderPanelNegotiationForm" onSubmit={onSubmit} />
         ) : !isKnownProcess ? (
           <p className={css.errorSidebar}>
             <FormattedMessage id="OrderPanel.unknownTransactionProcess" />
@@ -540,7 +540,7 @@ const OrderPanel = props => {
             onClick={handleSubmit(
               isOwnListing,
               isClosed,
-              showInquiryForm || showInvokeMakeOfferForm,
+              showInquiryForm || showNegotiationForm,
               onSubmit,
               history,
               location
@@ -553,7 +553,7 @@ const OrderPanel = props => {
               <FormattedMessage id="OrderPanel.ctaButtonMessageNoStock" />
             ) : isPurchase ? (
               <FormattedMessage id="OrderPanel.ctaButtonMessagePurchase" />
-            ) : showInvokeMakeOfferForm ? (
+            ) : showNegotiationForm ? (
               <FormattedMessage id="OrderPanel.ctaButtonMessageMakeOffer" />
             ) : (
               <FormattedMessage id="OrderPanel.ctaButtonMessageInquiry" />

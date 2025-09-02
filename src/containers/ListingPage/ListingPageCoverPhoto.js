@@ -266,7 +266,7 @@ export const ListingPageComponent = props => {
     onSendInquiry,
     setInquiryModalOpen,
   });
-  // This is to navigate to InitiateNegotiationPage when InvokeMakeOfferForm is submitted
+  // This is to navigate to InitiateNegotiationPage when NegotiationForm is submitted
   const onNavigateToInitiateNegotiationPage = handleNavigateToInitiateNegotiationPage({
     ...commonParams,
     getListing,

@@ -6,7 +6,7 @@ import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 
 import { Form, PrimaryButton } from '../..';
 
-import css from './InvokeMakeOfferForm.module.css';
+import css from './NegotiationForm.module.css';
 
 const renderForm = formRenderProps => {
   // FormRenderProps from final-form
@@ -17,7 +17,7 @@ const renderForm = formRenderProps => {
     <Form id={formId} onSubmit={handleSubmit} className={classes}>
       <div className={css.submitButton}>
         <PrimaryButton type="submit">
-          <FormattedMessage id="InvokeMakeOfferForm.ctaButton" />
+          <FormattedMessage id="NegotiationForm.ctaButton" />
         </PrimaryButton>
       </div>
     </Form>
@@ -25,7 +25,8 @@ const renderForm = formRenderProps => {
 };
 
 /**
- * A form for sending an inquiry for request using price negotiation process.
+ * A form to redirect user to the InitiateNegotiationPage. It can be used to initialize the page if needed.
+ * Note: by default, the form just shows a submit button.
  *
  * @component
  * @param {Object} props
@@ -35,11 +36,11 @@ const renderForm = formRenderProps => {
  * @param {Function} props.onSubmit - The function to handle the form submission
  * @returns {JSX.Element}
  */
-const InvokeMakeOfferForm = props => {
+const NegotiationForm = props => {
   const intl = useIntl();
   const initialValues = {};
 
   return <FinalForm initialValues={initialValues} {...props} intl={intl} render={renderForm} />;
 };
 
-export default InvokeMakeOfferForm;
+export default NegotiationForm;
