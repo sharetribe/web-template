@@ -49,6 +49,8 @@ const logTx = (tx) => ({
 });
 // ---------------------------------------
 
+const { getIntegrationSdk, txUpdateProtectedData } = require('../api-util/integrationSdk');
+
 // Conditional import of sendSMS to prevent module loading errors
 let sendSMS = null;
 try {
@@ -269,12 +271,8 @@ async function createShippingLabels({
         outboundQrExpiry: parseExpiresParam(qrUrl),
         outboundPurchasedAt: new Date().toISOString(),
       };
-      const result = await txUpdateProtectedData({ id: txId, protectedData: patch });
-      if (result && result.success === false) {
-        console.warn('📝 [SHIPPO] Persistence not available, but SMS will continue:', result.reason);
-      } else {
-        console.log('📝 [SHIPPO] Stored outbound shipping artifacts in protectedData', { txId, fields: Object.keys(patch) });
-      }
+      await txUpdateProtectedData({ id: txId, protectedData: patch });
+      console.log('📝 [SHIPPO] Stored outbound shipping artifacts in protectedData', { txId, fields: Object.keys(patch) });
     } catch (e) {
       console.error('[SHIPPO] Failed to persist outbound label details to protectedData', e);
     }
@@ -428,12 +426,8 @@ async function createShippingLabels({
                 returnQrExpiry: parseExpiresParam(returnQrUrl || ''),
                 returnPurchasedAt: new Date().toISOString(),
               };
-              const result = await txUpdateProtectedData({ id: txId, protectedData: patch });
-              if (result && result.success === false) {
-                console.warn('📝 [SHIPPO] Return persistence not available, but SMS will continue:', result.reason);
-              } else {
-                console.log('📝 [SHIPPO] Stored return shipping artifacts in protectedData', { txId, fields: Object.keys(patch) });
-              }
+              await txUpdateProtectedData({ id: txId, protectedData: patch });
+              console.log('📝 [SHIPPO] Stored return shipping artifacts in protectedData', { txId, fields: Object.keys(patch) });
             } catch (e) {
               console.error('[SHIPPO] Failed to persist return label details to protectedData', e);
             }

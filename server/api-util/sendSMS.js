@@ -123,9 +123,9 @@ function sendSMS(to, message) {
   const payload = {
     to: toE164, // real E.164 - unmasked
     body: message,
-    statusCallback: process.env.PUBLIC_BASE_URL
-      ? `${process.env.PUBLIC_BASE_URL}/api/twilio/sms-status`
-      : undefined,
+      statusCallback: process.env.PUBLIC_BASE_URL
+    ? `${process.env.PUBLIC_BASE_URL}/api/twilio/sms-status`
+    : undefined,
   };
 
   // Always use Messaging Service for better deliverability
