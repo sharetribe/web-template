@@ -9,6 +9,43 @@ const {
 } = require('../api-util/sdk');
 const { maskPhone } = require('../api-util/phone');
 
+// ---- helpers (add once, top-level) ----
+const safePick = (obj, keys = []) =>
+  Object.fromEntries(keys.map(k => [k, obj && typeof obj === 'object' ? obj[k] : undefined]));
+
+const maskUrl = (u) => {
+  try {
+    if (!u) return '';
+    const url = new URL(u);
+    // keep origin + first 3 path signatures
+    const parts = url.pathname.split('/').filter(Boolean).slice(0, 3);
+    return `${url.origin}/${parts.join('/')}${parts.length ? '/...' : ''}`;
+  } catch {
+    return String(u || '').split('?')[0];
+  }
+};
+
+// Helper function to parse expiry from QR code URL
+function parseExpiresParam(url) {
+  try { 
+    const u = new URL(url); 
+    const exp = u.searchParams.get('Expires'); 
+    return exp ? new Date(Number(exp) * 1000).toISOString() : null; 
+  } catch { 
+    return null; 
+  }
+}
+
+const logTx = (tx) => ({
+  object_id: tx?.object_id,
+  status: tx?.status,
+  tracking_number: tx?.tracking_number,
+  tracking_url_provider: tx?.tracking_url_provider,
+  label_url: tx?.label_url,
+  qr_code_url: tx?.qr_code_url,
+});
+// ---------------------------------------
+
 // Conditional import of sendSMS to prevent module loading errors
 let sendSMS = null;
 try {
@@ -183,14 +220,6 @@ async function createShippingLabels({
 
     // One-time debug log after label purchase - safe structured logging of key fields
     if (process.env.SHIPPO_DEBUG === 'true') {
-      const logTx = tx => ({
-        object_id: tx?.object_id,
-        status: tx?.status,
-        tracking_number: tx?.tracking_number,
-        tracking_url_provider: maskUrl(tx?.tracking_url_provider),
-        label_url: maskUrl(tx?.label_url),
-        qr_code_url: maskUrl(tx?.qr_code_url),
-      });
       console.log('[SHIPPO][TX]', logTx(shippoTx));
       console.log('[SHIPPO][RATE]', safePick(selectedRate || {}, ['provider', 'servicelevel', 'service', 'object_id']));
     }
@@ -227,27 +256,20 @@ async function createShippingLabels({
 
     // Persist to Flex protectedData using txId
     try {
-      const existing = protectedData || {};
-      const newProtectedData = {
-        ...existing,
-        outboundLabel: {
-          carrier,
-          service,
-          trackingNumber,
-          trackingUrl,
-          labelUrl,
-          qrUrl,
-          purchasedAt: new Date().toISOString(),
-        },
+      const patch = {
+        outboundTrackingNumber: trackingNumber,
+        outboundTrackingUrl: trackingUrl,
+        outboundLabelUrl: labelUrl,
+        outboundQrUrl: qrUrl,
+        outboundCarrier: carrier,
+        outboundService: service,
+        outboundQrExpiry: parseExpiresParam(qrUrl),
+        outboundPurchasedAt: new Date().toISOString(),
       };
-
-      await integrationSdk.transactions.update({
-        id: txId, // IMPORTANT: string UUID
-        protectedData: newProtectedData,
-      });
-      console.log('[SHIPPO] Saved outbound label details to protectedData');
+      await integrationSdk.transactions.updateProtectedData({ id: txId, protectedData: patch });
+      console.log('📝 [SHIPPO] Stored outbound shipping artifacts in protectedData', { txId, fields: Object.keys(patch) });
     } catch (e) {
-      console.error('[SHIPPO] Failed to persist label details to protectedData', e);
+      console.error('[SHIPPO] Failed to persist outbound label details to protectedData', e);
     }
 
     // Provider SMS block – pass all required args
@@ -284,21 +306,11 @@ async function createShippingLabels({
     }
 
     // Parse expiry from QR code URL (keep existing logic)
-    function parseExpiresParam(url) {
-      try {
-        const u = new URL(url);
-        const exp = u.searchParams.get('Expires');
-        return exp ? Number(exp) : null;
-      } catch {
-        return null;
-      }
-    }
-    
     const qrExpiry = parseExpiresParam(qrUrl);
-    console.log('📦 [SHIPPO] QR code expiry:', qrExpiry ? new Date(qrExpiry * 1000).toISOString() : 'unknown');
+    console.log('📦 [SHIPPO] QR code expiry:', qrExpiry ? new Date(Number(qrExpiry) * 1000).toISOString() : 'unknown');
 
     // after outbound purchase success:
-    logTx('[SHIPPO][TX]', shippoTx);
+    console.log('[SHIPPO][TX]', logTx(shippoTx));
 
     // Create return shipment (customer → provider) if we have return address
     let returnLabelRes = null;
@@ -394,7 +406,7 @@ async function createShippingLabels({
             // One-time debug log for return label purchase
             if (process.env.SHIPPO_DEBUG === 'true') {
               console.log('[SHIPPO][RETURN_TX]', logTx(returnTransactionRes.data));
-              console.log('[SHIPPO][RETURN_RATE]', safePick(returnSelectedRate || {}, ['provider', 'servicelevel', 'object_id']));
+              console.log('[SHIPPO][RETURN_RATE]', safePick(returnSelectedRate || {}, ['provider', 'servicelevel', 'service', 'object_id']));
             }
             
             returnQrUrl = returnTransactionRes.data.qr_code_url;
@@ -405,25 +417,18 @@ async function createShippingLabels({
             
             // Persist return label details to Flex protectedData
             try {
-              const existing = protectedData || {};
-              const newProtectedData = {
-                ...existing,
-                returnLabel: {
-                  carrier: returnSelectedRate?.provider || null,
-                  service: returnSelectedRate?.service?.name ?? returnSelectedRate?.servicelevel?.name ?? null,
-                  trackingNumber: returnTransactionRes.data.tracking_number || null,
-                  trackingUrl: returnTrackingUrl,
-                  labelUrl: returnTransactionRes.data.label_url || null,
-                  qrUrl: returnQrUrl,
-                  purchasedAt: new Date().toISOString(),
-                },
+              const patch = {
+                returnTrackingNumber: returnTransactionRes.data.tracking_number || null,
+                returnTrackingUrl: returnTrackingUrl,
+                returnLabelUrl: returnTransactionRes.data.label_url || null,
+                returnQrUrl: returnQrUrl,
+                returnCarrier: returnSelectedRate?.provider || null,
+                returnService: returnSelectedRate?.service?.name ?? returnSelectedRate?.servicelevel?.name ?? null,
+                returnQrExpiry: parseExpiresParam(returnQrUrl || ''),
+                returnPurchasedAt: new Date().toISOString(),
               };
-
-              await integrationSdk.transactions.update({
-                id: txId,
-                protectedData: newProtectedData,
-              });
-              console.log('[SHIPPO] Saved return label details to protectedData');
+              await integrationSdk.transactions.updateProtectedData({ id: txId, protectedData: patch });
+              console.log('📝 [SHIPPO] Stored return shipping artifacts in protectedData', { txId, fields: Object.keys(patch) });
             } catch (e) {
               console.error('[SHIPPO] Failed to persist return label details to protectedData', e);
             }

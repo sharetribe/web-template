@@ -6,14 +6,21 @@ let cachedISdk = null;
 function getIntegrationSdk() {
   const cid = process.env.INTEGRATION_CLIENT_ID;
   const secret = process.env.INTEGRATION_CLIENT_SECRET;
-
-  if (!cid || !secret) {
-    throw new Error(
-      'Missing Integration API credentials: set INTEGRATION_CLIENT_ID and INTEGRATION_CLIENT_SECRET'
-    );
-  }
+  if (!cid || !secret) throw new Error('Missing Integration API credentials');
   if (!cachedISdk) {
-    cachedISdk = createInstance({ clientId: cid, clientSecret: secret });
+    const sdk = createInstance({ clientId: cid, clientSecret: secret });
+
+    // Explicit helper to update protectedData via a privileged transition.
+    sdk.transactions.updateProtectedData = async ({ id, protectedData }) => {
+      console.log('📝 [SHIPPO] Persisting protectedData via transition/store-shipping-urls', { id });
+      return sdk.transactions.transition({
+        id,
+        transition: 'transition/store-shipping-urls',
+        params: { protectedData },
+      });
+    };
+
+    cachedISdk = sdk;
   }
   return cachedISdk;
 }
