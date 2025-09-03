@@ -148,7 +148,7 @@ async function createShippingLabels({
     
     console.log('📦 [SHIPPO] Selected rate:', {
       provider: selectedRate.provider,
-      service: selectedRate.servicelevel,
+      service: selectedRate.servicelevel || selectedRate.service,
       rate: selectedRate.rate,
       object_id: selectedRate.object_id
     });
@@ -170,21 +170,17 @@ async function createShippingLabels({
         }
       }
     );
-    
+
+    // Always assign before any checks to avoid TDZ
+    const shippoTx = transactionRes.data;
+
     // Check if label purchase was successful
-    if (transactionRes.data.status !== 'SUCCESS') {
-      console.error('❌ [SHIPPO] Label purchase failed:', transactionRes.data.messages);
-      console.error('❌ [SHIPPO] Transaction status:', transactionRes.data.status);
-      return { success: false, reason: 'label_purchase_failed', status: transactionRes.data.status };
+    if (!shippoTx || shippoTx.status !== 'SUCCESS') {
+      console.error('❌ [SHIPPO] Label purchase failed:', shippoTx?.messages);
+      console.error('❌ [SHIPPO] Transaction status:', shippoTx?.status);
+      return { success: false, reason: 'label_purchase_failed', status: shippoTx?.status };
     }
-    
-    // After selecting rate and purchasing label:
-    if (!shippoTx || shippoTx.status !== 'SUCCESS' || !shippoTx.label_url) {
-      console.error('[SHIPPO] Label creation failed (no success response)', { shippoTx });
-      throw new Error('SHIPPO_LABEL_FAILED');
-    }
-    // From here forward, do NOT log "Label creation failed" – downstream errors get their own logs.
-    
+
     // One-time debug log after label purchase - safe structured logging of key fields
     if (process.env.SHIPPO_DEBUG === 'true') {
       const logTx = tx => ({
@@ -195,12 +191,9 @@ async function createShippingLabels({
         label_url: maskUrl(tx?.label_url),
         qr_code_url: maskUrl(tx?.qr_code_url),
       });
-      console.log('[SHIPPO][TX]', logTx(transactionRes.data));
-      console.log('[SHIPPO][RATE]', safePick(selectedRate || {}, ['provider', 'servicelevel', 'object_id']));
+      console.log('[SHIPPO][TX]', logTx(shippoTx));
+      console.log('[SHIPPO][RATE]', safePick(selectedRate || {}, ['provider', 'servicelevel', 'service', 'object_id']));
     }
-    
-    // Shippo success destructure – be defensive
-    const shippoTx = transactionRes.data;
     const tx = shippoTx || {};
     const trackingNumber = tx.tracking_number || null;
     const trackingUrl = tx.tracking_url_provider || null;
@@ -275,13 +268,15 @@ async function createShippingLabels({
       if (!toPhone || !msg) {
         console.warn('[SHIPPO][SMS] Missing phone or message for provider SMS', { hasPhone: !!toPhone, hasMsg: !!msg });
       } else {
-        await sendSMS({
-          to: toPhone,
-          body: msg,
-          role: 'provider',               // REQUIRED
-          transactionId: txId,
-          transition: 'transition/accept' // for metrics
-        });
+        await sendSMS(
+          toPhone,
+          msg,
+          {
+            role: 'provider',
+            transactionId: txId,
+            transition: 'transition/accept'
+          }
+        );
         console.log('[SHIPPO][SMS] Provider label/QR SMS sent');
       }
     } catch (e) {
@@ -373,7 +368,7 @@ async function createShippingLabels({
           
           console.log('📦 [SHIPPO] Selected return rate:', {
             provider: returnSelectedRate.provider,
-            service: returnSelectedRate.servicelevel,
+            service: returnSelectedRate.servicelevel || returnSelectedRate.service,
             rate: returnSelectedRate.rate,
             object_id: returnSelectedRate.object_id
           });
