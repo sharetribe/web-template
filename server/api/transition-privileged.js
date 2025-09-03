@@ -27,12 +27,15 @@ const maskUrl = (u) => {
 
 // Helper function to parse expiry from QR code URL
 function parseExpiresParam(url) {
-  try { 
-    const u = new URL(url); 
-    const exp = u.searchParams.get('Expires'); 
-    return exp ? new Date(Number(exp) * 1000).toISOString() : null; 
-  } catch { 
-    return null; 
+  try {
+    const u = new URL(url);
+    const raw = u.searchParams.get('Expires');
+    if (!raw) return null;
+    const seconds = Number(raw);
+    if (!Number.isFinite(seconds)) return null;
+    return new Date(seconds * 1000).toISOString(); // normalize to ISO
+  } catch {
+    return null;
   }
 }
 
@@ -266,7 +269,7 @@ async function createShippingLabels({
         outboundQrExpiry: parseExpiresParam(qrUrl),
         outboundPurchasedAt: new Date().toISOString(),
       };
-      await integrationSdk.transactions.updateProtectedData({ id: txId, protectedData: patch });
+      await integrationSdk.transactions.update({ id: txId, protectedData: patch });
       console.log('📝 [SHIPPO] Stored outbound shipping artifacts in protectedData', { txId, fields: Object.keys(patch) });
     } catch (e) {
       console.error('[SHIPPO] Failed to persist outbound label details to protectedData', e);
@@ -307,7 +310,7 @@ async function createShippingLabels({
 
     // Parse expiry from QR code URL (keep existing logic)
     const qrExpiry = parseExpiresParam(qrUrl);
-    console.log('📦 [SHIPPO] QR code expiry:', qrExpiry ? new Date(Number(qrExpiry) * 1000).toISOString() : 'unknown');
+    console.log('📦 [SHIPPO] QR code expiry:', qrExpiry || 'unknown');
 
     // after outbound purchase success:
     console.log('[SHIPPO][TX]', logTx(shippoTx));
@@ -427,7 +430,7 @@ async function createShippingLabels({
                 returnQrExpiry: parseExpiresParam(returnQrUrl || ''),
                 returnPurchasedAt: new Date().toISOString(),
               };
-              await integrationSdk.transactions.updateProtectedData({ id: txId, protectedData: patch });
+              await integrationSdk.transactions.update({ id: txId, protectedData: patch });
               console.log('📝 [SHIPPO] Stored return shipping artifacts in protectedData', { txId, fields: Object.keys(patch) });
             } catch (e) {
               console.error('[SHIPPO] Failed to persist return label details to protectedData', e);

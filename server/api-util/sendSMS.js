@@ -104,12 +104,22 @@ function sendSMS(to, message) {
   if (devFullLogs) console.debug('[DEV ONLY] full number:', formattedPhone);
   console.log(`📱 [CRITICAL] ========================`);
 
+  const payload = {
+    to: normalizedPhone, // real E.164
+    body: message,
+    statusCallback: process.env.PUBLIC_BASE_URL
+      ? `${process.env.PUBLIC_BASE_URL}/twilio/sms-status`
+      : undefined,
+  };
+
+  if (process.env.TWILIO_MESSAGING_SERVICE_SID) {
+    payload.messagingServiceSid = process.env.TWILIO_MESSAGING_SERVICE_SID;
+  } else {
+    payload.from = process.env.TWILIO_PHONE_NUMBER;
+  }
+
   return client.messages
-    .create({
-      body: message,
-      from: process.env.TWILIO_PHONE_NUMBER,
-      to: formattedPhone,
-    })
+    .create(payload)
     .then(msg => {
       sent('unknown');
       console.log(`📤 [CRITICAL] SMS sent successfully to ${maskPhone(formattedPhone)}`);

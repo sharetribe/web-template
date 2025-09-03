@@ -11,7 +11,7 @@ function getIntegrationSdk() {
     const sdk = createInstance({ clientId: cid, clientSecret: secret });
 
     // Explicit helper to update protectedData via a privileged transition.
-    sdk.transactions.updateProtectedData = async ({ id, protectedData }) => {
+    sdk.transactions.update = async ({ id, protectedData }) => {
       console.log('📝 [SHIPPO] Persisting protectedData via transition/store-shipping-urls', { id });
       return sdk.transactions.transition({
         id,
@@ -19,6 +19,7 @@ function getIntegrationSdk() {
         params: { protectedData },
       });
     };
+    sdk.transactions.updateProtectedData = sdk.transactions.update; // alias for existing call sites
 
     cachedISdk = sdk;
   }
