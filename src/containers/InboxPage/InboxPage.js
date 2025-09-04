@@ -7,8 +7,9 @@ import classNames from 'classnames';
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 
-import { parse } from '../../util/urlHelpers';
 import { FormattedMessage, intlShape, useIntl } from '../../util/reactIntl';
+import { parse } from '../../util/urlHelpers';
+import { getCurrentUserTypeRoles } from '../../util/userHelpers';
 import {
   propTypes,
   DATE_TYPE_DATE,
@@ -53,7 +54,6 @@ import InboxSearchForm from './InboxSearchForm/InboxSearchForm';
 
 import { stateDataShape, getStateData } from './InboxPage.stateData';
 import css from './InboxPage.module.css';
-import { getCurrentUserTypeRoles } from '../../util/userHelpers';
 
 // Check if the transaction line-items use booking-related units
 const getUnitLineItem = lineItems => {

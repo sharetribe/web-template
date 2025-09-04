@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Add ability to sort user inbox messages
+  [#656](https://github.com/sharetribe/web-template/pull/656)
 - [add] Update one Marketplace text (to be aligned with the corresponding copy in Email texts).
   [#661](https://github.com/sharetribe/web-template/pull/661)
 - [add] Add currently available translations for DE, ES, FR.
@@ -23,7 +25,9 @@ way to update this template, but currently, we follow a pattern:
     - listing page
     - listing editing pages
     - transaction page
+  
   [#649](https://github.com/sharetribe/web-template/pull/649)
+
 - [change] Remove pickup fee line-item from the order breakdown.
   [#655](https://github.com/sharetribe/web-template/pull/655)
 - [add] Update EditListingPage README.md to describe the data gathered and updated.
