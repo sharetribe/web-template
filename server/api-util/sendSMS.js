@@ -132,7 +132,9 @@ function sendSMS(to, message) {
   if (process.env.TWILIO_MESSAGING_SERVICE_SID) {
     payload.messagingServiceSid = process.env.TWILIO_MESSAGING_SERVICE_SID;
   } else {
-    console.warn('⚠️ TWILIO_MESSAGING_SERVICE_SID not set - using fallback phone number');
+    console.error('❌ TWILIO_MESSAGING_SERVICE_SID not set - SMS may fail');
+    console.error('❌ Please set TWILIO_MESSAGING_SERVICE_SID in your environment');
+    // Still try with fallback, but warn that it may not work
     payload.from = process.env.TWILIO_PHONE_NUMBER;
   }
 
