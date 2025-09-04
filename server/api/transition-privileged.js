@@ -269,8 +269,12 @@ async function createShippingLabels({
         outboundQrExpiry: parseExpiresParam(qrUrl),
         outboundPurchasedAt: new Date().toISOString(),
       };
-      await integrationSdk.transactions.update({ id: txId, protectedData: patch });
-      console.log('📝 [SHIPPO] Stored outbound shipping artifacts in protectedData', { txId, fields: Object.keys(patch) });
+      const result = await txUpdateProtectedData({ id: txId, protectedData: patch });
+      if (result && result.success === false) {
+        console.warn('📝 [SHIPPO] Persistence not available, but SMS will continue:', result.reason);
+      } else {
+        console.log('📝 [SHIPPO] Stored outbound shipping artifacts in protectedData', { txId, fields: Object.keys(patch) });
+      }
     } catch (e) {
       console.error('[SHIPPO] Failed to persist outbound label details to protectedData', e);
     }
@@ -430,8 +434,12 @@ async function createShippingLabels({
                 returnQrExpiry: parseExpiresParam(returnQrUrl || ''),
                 returnPurchasedAt: new Date().toISOString(),
               };
-              await integrationSdk.transactions.update({ id: txId, protectedData: patch });
-              console.log('📝 [SHIPPO] Stored return shipping artifacts in protectedData', { txId, fields: Object.keys(patch) });
+              const result = await txUpdateProtectedData({ id: txId, protectedData: patch });
+              if (result && result.success === false) {
+                console.warn('📝 [SHIPPO] Return persistence not available, but SMS will continue:', result.reason);
+              } else {
+                console.log('📝 [SHIPPO] Stored return shipping artifacts in protectedData', { txId, fields: Object.keys(patch) });
+              }
             } catch (e) {
               console.error('[SHIPPO] Failed to persist return label details to protectedData', e);
             }
@@ -470,18 +478,19 @@ async function createShippingLabels({
           
           // Mark as sent in protectedData
           try {
-            await integrationSdk.transactions.transition({
+            const notificationResult = await txUpdateProtectedData({
               id: txId,
-              transition: 'transition/store-shipping-urls',
-              params: {
-                protectedData: {
-                  shippingNotification: {
-                    labelCreated: { sent: true, sentAt: new Date().toISOString() }
-                  }
+              protectedData: {
+                shippingNotification: {
+                  labelCreated: { sent: true, sentAt: new Date().toISOString() }
                 }
               }
             });
-            console.log(`💾 Updated shippingNotification.labelCreated for transaction: ${transactionId}`);
+            if (notificationResult && notificationResult.success === false) {
+              console.warn('📝 [SHIPPO] Notification state update not available:', notificationResult.reason);
+            } else {
+              console.log(`💾 Updated shippingNotification.labelCreated for transaction: ${txId}`);
+            }
           } catch (updateError) {
             console.warn(`⚠️ Failed to update labelCreated notification state:`, updateError.message);
           }

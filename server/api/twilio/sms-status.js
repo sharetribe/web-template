@@ -9,7 +9,7 @@ module.exports = async (req, res) => {
     sid: MessageSid, 
     status: MessageStatus, 
     error: ErrorCode, 
-    to: maskPhone(To) 
+    to: To // Show actual phone number for debugging
   });
   
   res.sendStatus(204);
