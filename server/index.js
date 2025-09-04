@@ -49,7 +49,7 @@ const sdkUtils = require('./api-util/sdk');
 
 const buildPath = path.resolve(__dirname, '..', 'build');
 const dev = process.env.REACT_APP_ENV === 'development';
-const PORT = parseInt(process.env.PORT, 10);
+const PORT = process.env.PORT || 3000;
 const redirectSSL =
   process.env.SERVER_SHARETRIBE_REDIRECT_SSL != null
     ? process.env.SERVER_SHARETRIBE_REDIRECT_SSL
@@ -57,9 +57,14 @@ const redirectSSL =
 const REDIRECT_SSL = redirectSSL === 'true';
 const TRUST_PROXY = process.env.SERVER_SHARETRIBE_TRUST_PROXY || null;
 const CSP = process.env.REACT_APP_CSP;
+const CSP_MODE = process.env.CSP_MODE || 'report'; // 'block' for prod, 'report' for test
 const cspReportUrl = '/csp-report';
 const cspEnabled = CSP === 'block' || CSP === 'report';
 const app = express();
+
+// Health first — must be at the very top
+app.get('/healthz', (_req, res) => res.sendStatus(204));
+app.head('/healthz', (_req, res) => res.sendStatus(204));
 
 // Boot-time Integration creds presence log
 console.log(
@@ -68,36 +73,40 @@ console.log(
     : '⚠️ Missing Integration API credentials (lender SMS may fail to read protected phone).'
 );
 
-// Allow CORS for sherbrt.com
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://www.sherbrt.com'); // allow your custom domain
-  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
-  next();
-});
-
-// Add CORS middleware configuration
-const allowedOrigins = [
-  'https://sherbrt.com',        // live frontend
-  'https://web-template-1.onrender.com', // test environment
-  'http://localhost:3000',      // local dev
+const DEFAULT_ALLOWED_ORIGINS = [
+  'http://localhost:3000',
+  'https://localhost:3000',
+  'https://sherbrt.com',
+  'https://www.sherbrt.com',
+  'https://web-template-1.onrender.com',       // Render test client
+  'https://sherbrt-test.onrender.com'          // any other Render env we use
 ];
 
+const envAllowed = (process.env.CORS_ALLOW_ORIGIN || '')
+  .split(',')
+  .map(s => s.trim())
+  .filter(Boolean);
+
+const ALLOWED_ORIGINS = [...new Set([...DEFAULT_ALLOWED_ORIGINS, ...envAllowed])];
+
 const corsOptions = {
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      console.warn(`CORS blocked origin: ${origin}`);
-      callback(new Error('Not allowed by CORS'));
+  origin(origin, callback) {
+    // Allow same-origin or tools without an Origin header (e.g., curl/health checks)
+    if (!origin || ALLOWED_ORIGINS.includes(origin)) {
+      return callback(null, true);
     }
+    if (origin && !ALLOWED_ORIGINS.includes(origin)) {
+      console.warn('[CORS] Blocked origin:', origin);
+    }
+    return callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  methods: ['GET','HEAD','PUT','PATCH','POST','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization','X-Requested-With'],
 };
 
-app.use(cors(corsOptions));
+app.use(require('cors')(corsOptions));
+app.options('*', require('cors')(corsOptions)); // handle preflight everywhere
 
 const errorPage500 = fs.readFileSync(path.join(buildPath, '500.html'), 'utf-8');
 const errorPage404 = fs.readFileSync(path.join(buildPath, '404.html'), 'utf-8');
@@ -145,9 +154,9 @@ if (cspEnabled) {
 
   // In Helmet 4,supplying functions as directive values is not supported.
   // That's why we need to create own middleware function that calls the Helmet's middleware function
-  const reportOnly = CSP === 'report';
+  const isReportOnly = CSP_MODE !== 'block';
   app.use((req, res, next) => {
-    csp(cspReportUrl, reportOnly)(req, res, next);
+    csp(cspReportUrl, isReportOnly)(req, res, next);
   });
 }
 
@@ -332,8 +341,8 @@ if (cspEnabled) {
 }
 
 const server = app.listen(PORT, () => {
-  const mode = dev ? 'development' : 'production';
-  console.log(`Listening to port ${PORT} in ${mode} mode`);
+  const mode = process.env.NODE_ENV || 'development';
+  console.log(`Listening on port ${PORT} in ${mode} mode`);
   if (dev) {
     console.log(`Open http://localhost:${PORT}/ and start hacking!`);
   }

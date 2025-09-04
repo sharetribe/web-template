@@ -8,7 +8,7 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const { deserialize } = require('./api-util/sdk');
+const { deserialize, getTrustedSdk } = require('./api-util/sdk');
 
 const initiateLoginAs = require('./api/initiate-login-as');
 const loginAs = require('./api/login-as');
@@ -16,6 +16,7 @@ const transactionLineItems = require('./api/transaction-line-items');
 const initiatePrivileged = require('./api/initiate-privileged');
 const transitionPrivileged = require('./api/transition-privileged');
 const shippoWebhook = require('./webhooks/shippoTracking');
+const qrRouter = require('./api/qr');
 
 const createUserWithIdp = require('./api/auth/createUserWithIdp');
 const loginWithIdp = require('./api/auth/loginWithIdp');
@@ -60,6 +61,10 @@ router.post('/transition-privileged', transitionPrivileged);
 
 // Shippo webhook endpoint
 router.use('/webhooks', shippoWebhook);
+
+// QR code redirect endpoint
+const qrRouterInstance = qrRouter({ getTrustedSdk }); // factory export
+router.use('/qr', qrRouterInstance);
 
 // Create user with identity provider (e.g. Facebook or Google)
 // This endpoint is called to create a new user after user has confirmed

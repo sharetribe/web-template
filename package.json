@@ -95,6 +95,7 @@
   },
   "scripts": {
     "audit": "yarn audit --json | node scripts/audit.js",
+    "audit:urls": "node scripts/audit-urls.js",
     "sharetribe": "sharetribe-scripts fetch",
     "clean": "rm -rf build/*",
     "config": "node scripts/config.js",

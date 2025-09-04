@@ -68,23 +68,31 @@ function sendSMS(to, message) {
     return Promise.resolve();
   }
 
-  // Format the phone number
-  const formattedPhone = formatPhoneNumber(to);
-  if (!formattedPhone) {
+  // Duplicate prevention check
+  if (transactionId && transition && role) {
+    if (isDuplicateSend(transactionId, transition, role)) {
+      console.warn(`🔄 [DUPLICATE] SMS suppressed for ${transactionId}:${transition}:${role} within ${DUPLICATE_WINDOW_MS}ms window`);
+      return { suppressed: true, reason: 'duplicate_within_window' };
+    }
+  }
+
+  // Normalize the phone number to E.164
+  const toE164 = normalizePhoneNumber(to);
+  if (!toE164) {
     console.warn(`📱 Invalid phone number format: ${to}`);
     return Promise.resolve();
   }
 
   // E.164 validation
-  if (!isE164(formattedPhone)) {
+  if (!isE164(toE164)) {
     console.warn('[SMS] invalid phone, aborting:', to ? maskPhone(to) : 'null');
     throw new Error('Invalid E.164 phone');
   }
 
   // Check STOP list
-  if (stopList.has(formattedPhone)) {
-    console.warn('[SMS] suppressed: number opted out (STOP):', maskPhone(formattedPhone));
-    return { suppressed: true };
+  if (stopList.has(toE164)) {
+    console.warn('[SMS] suppressed: number opted out (STOP):', maskPhone(toE164));
+    return { suppressed: true, reason: 'stop_list' };
   }
 
   // 🔍 CRITICAL INVESTIGATION: Get call stack to identify which function called sendSMS
@@ -99,30 +107,59 @@ function sendSMS(to, message) {
   
   console.log(`📱 [CRITICAL] === SEND SMS CALLED ===`);
   console.log(`📱 [CRITICAL] Caller function: ${caller}`);
-  console.log(`📱 [CRITICAL] Recipient phone: ${maskPhone(formattedPhone)} (original: ${maskPhone(to)})`);
+  console.log(`📱 [CRITICAL] Raw phone: ${maskPhone(to)}`);
+  console.log(`📱 [CRITICAL] E.164 phone: ${maskPhone(toE164)}`);
   console.log(`📱 [CRITICAL] SMS message: ${message}`);
-  if (devFullLogs) console.debug('[DEV ONLY] full number:', formattedPhone);
+  console.log(`📱 [CRITICAL] Role: ${role || 'none'}`);
+  if (transactionId && transition) {
+    console.log(`📱 [CRITICAL] Transaction: ${transactionId}:${transition}`);
+  }
+  if (devFullLogs) {
+    console.debug('[DEV ONLY] Raw number:', to);
+    console.debug('[DEV ONLY] E.164 number:', toE164);
+  }
   console.log(`📱 [CRITICAL] ========================`);
 
+  const payload = {
+    to: toE164, // real E.164 - unmasked
+    body: message,
+      statusCallback: process.env.PUBLIC_BASE_URL
+    ? `${process.env.PUBLIC_BASE_URL}/api/twilio/sms-status`
+    : undefined,
+  };
+
+  // Always use Messaging Service for better deliverability
+  if (process.env.TWILIO_MESSAGING_SERVICE_SID) {
+    payload.messagingServiceSid = process.env.TWILIO_MESSAGING_SERVICE_SID;
+  } else {
+    console.error('❌ TWILIO_MESSAGING_SERVICE_SID not set - SMS may fail');
+    console.error('❌ Please set TWILIO_MESSAGING_SERVICE_SID in your environment');
+    // Still try with fallback, but warn that it may not work
+    payload.from = process.env.TWILIO_PHONE_NUMBER;
+  }
+
   return client.messages
-    .create({
-      body: message,
-      from: process.env.TWILIO_PHONE_NUMBER,
-      to: formattedPhone,
-    })
+    .create(payload)
     .then(msg => {
-      sent('unknown');
-      console.log(`📤 [CRITICAL] SMS sent successfully to ${maskPhone(formattedPhone)}`);
+      // Success
+      if (role) sent(role);
+      console.log(`📤 [CRITICAL] SMS sent successfully to ${maskPhone(toE164)}`);
       console.log(`📤 [CRITICAL] Twilio message SID: ${msg.sid}`);
+      console.log(`📤 [CRITICAL] Raw → E.164: ${maskPhone(to)} → ${maskPhone(toE164)}`);
       return msg;
     })
     .catch(err => {
       const code = err?.code || err?.status || 'unknown';
-      failed('unknown', code);
-      console.warn('[SMS] failed', { code, to: maskPhone(formattedPhone) });
+      if (role) failed(role, code);
+      console.warn('[SMS] failed', { 
+        code, 
+        rawPhone: maskPhone(to), 
+        e164Phone: maskPhone(toE164),
+        error: err.message 
+      });
 
       // 21610: STOP. Avoid future sends in this process.
-      if (String(code) === '21610') stopList.add(formattedPhone);
+      if (String(code) === '21610') stopList.add(toE164);
       throw err;
     });
 }

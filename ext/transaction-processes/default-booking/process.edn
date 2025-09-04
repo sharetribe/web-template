@@ -84,6 +84,12 @@
     {:name :action/decline-booking}],
    :from :state/preauthorized,
    :to :state/declined}
+  {:name :transition/store-shipping-urls,
+   :actor :actor.role/operator,
+   :actions [{:name :action/update-protected-data}],
+   :from :state/accepted,
+   :to :state/accepted,
+   :privileged? true}
   {:name :transition/expire,
    :at
    {:fn/min

@@ -48,8 +48,6 @@ const defaultDirectives = {
     'events.mapbox.com',
 
     // Google Analytics
-    // TODO: Signals support needs more work
-    // https://developers.google.com/tag-platform/security/guides/csp
     '*.google-analytics.com',
     '*.analytics.google.com',
     '*.googletagmanager.com',
@@ -81,7 +79,7 @@ const defaultDirectives = {
     blob,
     ...devImagesMaybe,
     '*.imgix.net',
-    'sharetribe.imgix.net', // Safari 9.1 didn't recognize asterisk rule.
+    'sharetribe.imgix.net',
 
     // Styleguide placeholder images
     'picsum.photos',
@@ -121,9 +119,10 @@ const defaultDirectives = {
     'www.googleadservices.com',
     '*.g.doubleclick.net',
     'js.stripe.com',
-    // Plausible analytics
     'plausible.io',
   ],
+  "script-src-elem": ["'self'", "blob:", "https://api.mapbox.com", "https://*.mapbox.com"],
+  "manifest-src": ["'self'"],
   styleSrc: [self, unsafeInline, 'fonts.googleapis.com', 'api.mapbox.com'],
 };
 
@@ -147,9 +146,8 @@ exports.csp = (reportUri, reportOnly) => {
   // const { imgSrc = [self] } = defaultDirectives;
   // const exampleImgSrc = imgSrc.concat('my-custom-domain.example.com');
 
-  // Parse extra hosts from environment variable
+  // Parse extra hosts from environment variable (only for legitimate third-party services)
   const EXTRA_HOSTS = (process.env.CSP_EXTRA_HOSTS || '').split(/\s+/).filter(Boolean);
-  // e.g., set CSP_EXTRA_HOSTS="https://sherbrt-test.onrender.com https://sherbrt.com"
 
   const customDirectives = {
     // Example: Add custom directive override
