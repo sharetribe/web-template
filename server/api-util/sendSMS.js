@@ -1,4 +1,6 @@
 const twilio = require('twilio');
+const { maskPhone } = require('./phone');
+const { attempt, sent, failed } = require('./metrics');
 console.log('📦 Twilio module loaded');
 
 const client = twilio(
@@ -47,6 +49,14 @@ function formatPhoneNumber(phone) {
   return null;
 }
 
+// E.164 validation
+function isE164(num) { 
+  return /^\+\d{10,15}$/.test(String(num || '')); 
+}
+
+// Optional in-memory STOP list (resets on restart)
+const stopList = new Set();
+
 function sendSMS(to, message) {
   if (!to || !message) {
     console.warn('📭 Missing phone number or message');
@@ -65,7 +75,34 @@ function sendSMS(to, message) {
     return Promise.resolve();
   }
 
-  console.log(`📱 Sending SMS to ${formattedPhone} (original: ${to})`);
+  // E.164 validation
+  if (!isE164(formattedPhone)) {
+    console.warn('[SMS] invalid phone, aborting:', to ? maskPhone(to) : 'null');
+    throw new Error('Invalid E.164 phone');
+  }
+
+  // Check STOP list
+  if (stopList.has(formattedPhone)) {
+    console.warn('[SMS] suppressed: number opted out (STOP):', maskPhone(formattedPhone));
+    return { suppressed: true };
+  }
+
+  // 🔍 CRITICAL INVESTIGATION: Get call stack to identify which function called sendSMS
+  const stack = new Error().stack;
+  const caller = stack.split('\n')[2]?.trim() || 'Unknown caller';
+  
+  // Gate full-number logs for local debugging only
+  const devFullLogs = process.env.SMS_DEBUG_FULL === '1' && process.env.NODE_ENV !== 'production';
+  
+  // Log attempt (caller should pass role-based metrics; if not possible, use 'unknown')
+  attempt('unknown');
+  
+  console.log(`📱 [CRITICAL] === SEND SMS CALLED ===`);
+  console.log(`📱 [CRITICAL] Caller function: ${caller}`);
+  console.log(`📱 [CRITICAL] Recipient phone: ${maskPhone(formattedPhone)} (original: ${maskPhone(to)})`);
+  console.log(`📱 [CRITICAL] SMS message: ${message}`);
+  if (devFullLogs) console.debug('[DEV ONLY] full number:', formattedPhone);
+  console.log(`📱 [CRITICAL] ========================`);
 
   return client.messages
     .create({
@@ -74,11 +111,19 @@ function sendSMS(to, message) {
       to: formattedPhone,
     })
     .then(msg => {
-      console.log(`📤 Sent SMS to ${formattedPhone}: ${message}`);
+      sent('unknown');
+      console.log(`📤 [CRITICAL] SMS sent successfully to ${maskPhone(formattedPhone)}`);
+      console.log(`📤 [CRITICAL] Twilio message SID: ${msg.sid}`);
       return msg;
     })
     .catch(err => {
-      console.error(`❌ Failed to send SMS to ${formattedPhone}:`, err);
+      const code = err?.code || err?.status || 'unknown';
+      failed('unknown', code);
+      console.warn('[SMS] failed', { code, to: maskPhone(formattedPhone) });
+
+      // 21610: STOP. Avoid future sends in this process.
+      if (String(code) === '21610') stopList.add(formattedPhone);
+      throw err;
     });
 }
 
