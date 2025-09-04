@@ -33,24 +33,35 @@ async function txUpdateProtectedData({ id, protectedData }) {
   console.log('📝 [SHIPPO] Attempting to update protectedData for transaction:', id);
   console.log('📝 [SHIPPO] ProtectedData to update:', Object.keys(protectedData));
   
+  // Add idempotency key to prevent retry collisions
+  const idempotencyKey = `shipping-${id}-${Date.now()}`;
+  
   try {
-    // Try direct update first (if available)
-    return sdk.transactions.update({
+    // Try using transition/update which should be available in most Flex processes
+    return sdk.transactions.transition({
       id,
-      protectedData,
+      transition: 'transition/update',
+      params: { 
+        protectedData,
+        // Add idempotency key if supported
+        ...(idempotencyKey && { idempotencyKey })
+      },
     });
   } catch (error) {
-    console.error('📝 [SHIPPO] Direct update failed, trying transition approach:', error.message);
+    console.error('📝 [SHIPPO] transition/update failed, trying alternative approaches:', error.message);
     
-    // Fallback: try to use a generic transition
+    // Fallback: try to use a generic transition if available
     try {
       return sdk.transactions.transition({
         id,
-        transition: 'transition/update',
-        params: { protectedData },
+        transition: 'transition/store-shipping',
+        params: { 
+          protectedData,
+          ...(idempotencyKey && { idempotencyKey })
+        },
       });
     } catch (transitionError) {
-      console.error('📝 [SHIPPO] Transition approach also failed:', transitionError.message);
+      console.error('📝 [SHIPPO] All transition approaches failed:', transitionError.message);
       console.error('📝 [SHIPPO] This means the shipping data cannot be persisted to the database');
       console.error('📝 [SHIPPO] SMS will still work, but shipping details won\'t be saved');
       

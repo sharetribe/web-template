@@ -279,20 +279,14 @@ async function createShippingLabels({
       console.error('[SHIPPO] Failed to persist outbound label details to protectedData', e);
     }
 
-    // Provider SMS block – pass all required args
+    // Provider SMS block – carrier-friendly messaging
     try {
       const toPhone = normalizePhone(providerPhone); // must return E.164 like +1415...
       const itemTitle = listing?.attributes?.title || 'your item';
-
-      const parts = [
-        `📦 Sherbrt shipping ready for ${itemTitle}`,
-        `Use this to ship to the borrower.`,
-      ];
-      if (qrPayload.qrUrl) parts.push(`QR (show at USPS): ${qrPayload.qrUrl}`);
-      if (qrPayload.labelUrl) parts.push(`Web label (print): ${qrPayload.labelUrl}`);
-      if (qrPayload.trackingUrl) parts.push(`Tracking: ${qrPayload.trackingUrl}`);
-
-      const msg = parts.join('\n');
+      
+      // Carrier-friendly message: short, one link, no emojis, no long URLs
+      const shippingUrl = `https://sherbrt.com/ship/${txId}`;
+      const msg = `Sherbrt: your shipping label for "${itemTitle}" is ready. Open ${shippingUrl}`;
 
       if (!toPhone || !msg) {
         console.warn('[SHIPPO][SMS] Missing phone or message for provider SMS', { hasPhone: !!toPhone, hasMsg: !!msg });
@@ -306,10 +300,10 @@ async function createShippingLabels({
             transition: 'transition/accept'
           }
         );
-        console.log('[SHIPPO][SMS] Provider label/QR SMS sent');
+        console.log('[SHIPPO][SMS] Provider carrier-friendly SMS sent');
       }
     } catch (e) {
-      console.error('[SHIPPO][SMS] Failed to send provider label/QR SMS', e);
+      console.error('[SHIPPO][SMS] Failed to send provider SMS', e);
     }
 
     // Parse expiry from QR code URL (keep existing logic)
@@ -467,7 +461,7 @@ async function createShippingLabels({
         } else {
           await sendSMS(
             borrowerPhone,
-            `📦 Label created! Your item will ship soon.\nTrack status here: ${trackingUrl}`,
+            `Sherbrt: your item will ship soon. Track at ${trackingUrl}`,
             { 
               role: 'customer',
               transactionId: txId,

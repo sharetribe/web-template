@@ -128,9 +128,11 @@ function sendSMS(to, message) {
       : undefined,
   };
 
+  // Always use Messaging Service for better deliverability
   if (process.env.TWILIO_MESSAGING_SERVICE_SID) {
     payload.messagingServiceSid = process.env.TWILIO_MESSAGING_SERVICE_SID;
   } else {
+    console.warn('⚠️ TWILIO_MESSAGING_SERVICE_SID not set - using fallback phone number');
     payload.from = process.env.TWILIO_PHONE_NUMBER;
   }
 

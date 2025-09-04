@@ -20,9 +20,12 @@ try {
 
 console.log('🚦 initiate-privileged endpoint is wired up');
 
-// Helper function to build lender SMS message
+// Helper function to build carrier-friendly lender SMS message
 function buildLenderMsg(tx, listingTitle) {
-  return `👗 New Sherbrt booking request! Someone wants to borrow your item "${listingTitle}". Tap your dashboard to respond.`;
+  // Carrier-friendly: short, one link, no emojis
+  const lenderInboxUrl = process.env.ROOT_URL || 'https://sherbrt.com/inbox/sales';
+  const lenderMsg = `Sherbrt: new booking request for "${listingTitle}". Check your inbox: ${lenderInboxUrl}`;
+  return lenderMsg;
 }
 
 module.exports = (req, res) => {
@@ -181,8 +184,10 @@ module.exports = (req, res) => {
             try {
               console.log('📨 [SMS][customer-confirmation] Preparing to send customer confirmation SMS');
               
-              const listingTitle = listing?.attributes?.title || 'your listing';
-              const customerMessage = `✅ Your booking request for "${listingTitle}" has been sent! The lender will review and respond soon.`;
+                              const listingTitle = listing?.attributes?.title || 'your listing';
+                // Carrier-friendly borrower message
+                const borrowerInboxUrl = process.env.ROOT_URL || 'https://sherbrt.com/inbox/orders';
+                const borrowerMsg = `Sherbrt: your booking request for "${listingTitle}" was sent. Track in your inbox: ${borrowerInboxUrl}`;
               
               await sendSMS(borrowerPhone, customerMessage);
               console.log(`✅ [SMS][customer-confirmation] Customer confirmation sent to ${borrowerPhone}`);
