@@ -398,7 +398,8 @@ async function createShippingLabels(protectedData, transactionId, listing, sendS
             returnQrCodeUrl: returnQrCodeUrl,
             returnTrackingUrl: returnTrackingUrl
           }
-        });
+        }
+      });
         
         console.log('💾 [SHIPPO] URLs and tracking data successfully saved to Flex transaction');
       } catch (persistError) {
