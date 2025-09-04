@@ -495,8 +495,7 @@ async function createShippingLabels(protectedData, transactionId, listing, sendS
             expiresAt: qrExpiry,
             carrier: selectedRate.provider
           }
-        }
-      });
+        });
         
         if (persistSuccess) {
           console.log('💾 [SHIPPO] URLs and tracking data successfully saved to Flex transaction');
