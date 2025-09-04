@@ -7,9 +7,6 @@ const {
   fetchCommission,
 } = require('../api-util/sdk');
 const { getIntegrationSdk } = require('../api-util/integrationSdk');
-const { maskPhone } = require('../api-util/phone');
-const { alreadySent } = require('../api-util/idempotency');
-const { attempt, sent, failed } = require('../api-util/metrics');
 
 // Conditional import of sendSMS to prevent module loading errors
 let sendSMS = null;
@@ -25,12 +22,7 @@ console.log('🚦 initiate-privileged endpoint is wired up');
 
 // Helper function to build lender SMS message
 function buildLenderMsg(tx, listingTitle) {
-  const lenderInboxUrl = 'https://sherbrt.com/inbox/sales';
-  const lenderMsg =
-    `👗 New Sherbrt booking request! ` +
-    `Someone wants to borrow your listing "${listingTitle}". ` +
-    `Check your inbox to respond: ${lenderInboxUrl}`;
-  return lenderMsg;
+  return `👗 New Sherbrt booking request! Someone wants to borrow your item "${listingTitle}". Tap your dashboard to respond.`;
 }
 
 module.exports = (req, res) => {
@@ -110,59 +102,62 @@ module.exports = (req, res) => {
         tx
       ) {
         try {
-          // 🔧 FIXED: Extract IDs from fresh transaction data with fallback to listing author
-          const txProviderId = tx?.relationships?.provider?.data?.id;
+          console.log('📨 [SMS][booking-request] Preparing to send lender notification SMS');
+          
+          // Provider resolution (you already have this pattern)
+          const txProviderId = tx?.relationships?.provider?.data?.id || null;
           const listingAuthorId = listing?.relationships?.author?.data?.id || null;
           const providerId = txProviderId || listingAuthorId;
-          const customerId = tx?.relationships?.customer?.data?.id;
-          
-          // 🔧 DEBUG: Log provider ID resolution
+
           console.log('[SMS][booking-request] Provider ID resolution:', {
-            txProviderId,
-            listingAuthorId,
-            chosenProviderId: providerId
+            txProviderId: txProviderId?.uuid || txProviderId,
+            listingAuthorId: listingAuthorId?.uuid || listingAuthorId,
+            chosenProviderId: providerId?.uuid || providerId,
           });
-          
+
           if (!providerId) {
-            console.warn('[SMS][booking-request] No provider ID found in transaction or listing; not sending SMS');
-            return apiResponse; // 🔧 FIXED: Return on all paths
+            console.warn('[SMS][booking-request] No provider ID from tx/listing; skipping lender SMS');
+          } else {
+            // 🔑 Integration fetch (operator permissions) — can read profile.protectedData
+            const iSdk = getIntegrationSdk();
+            const idStr = providerId?.uuid ?? providerId; // Integration SDK expects a string UUID
+            const prov = await iSdk.users.show({ id: idStr });
+            const prof = prov?.data?.data?.attributes?.profile || null;
+
+            // Inspect what we got (avoid logging full PII)
+            console.log('[SMS][booking-request] Provider profile fields present:', {
+              hasProtected: !!prof?.protectedData,
+              hasPublic: !!prof?.publicData,
+            });
+
+            const provPhone =
+              prof?.protectedData?.phone ??
+              prof?.protectedData?.phoneNumber ??
+              prof?.publicData?.phone ??
+              prof?.publicData?.phoneNumber ??
+              null;
+
+            console.log('[SMS][booking-request] Provider phone (raw, masked):',
+              provPhone ? `***${String(provPhone).slice(-4)}` : null
+            );
+
+            // Optional: safety — don't accidentally send to borrower's phone
+            const borrowerId = tx?.relationships?.customer?.data?.id || null;
+            if (borrowerId && (borrowerId?.uuid ?? borrowerId) === (providerId?.uuid ?? providerId)) {
+              console.warn('[SMS][booking-request] Provider equals customer; aborting lender SMS');
+            } else if (provPhone) {
+              // Your sendSMS util should normalize to E.164 and log the final +1… number
+              const listingTitle = listing?.attributes?.title || 'your listing';
+              await sendSMS(provPhone, buildLenderMsg(tx, listingTitle));
+              console.log('📱 [SMS][booking-request] Lender notification sent');
+            } else {
+              console.warn('[SMS][booking-request] Provider missing phone; skipping lender SMS');
+            }
           }
-          
-          // 🔧 FIXED: Fetch provider profile with proper includes
-          const provider = await sdk.users.show({ 
-            id: providerId,
-            include: ['profile']
-          });
-          
-          const prof = provider?.data?.data?.attributes?.profile;
-          if (!prof) {
-            console.warn('[SMS][booking-request] Provider profile not found; not sending SMS');
-            return apiResponse; // 🔧 FIXED: Return on all paths
-          }
-          
-          // 🔧 DEBUG: Log profile data structure
-          console.log('[SMS][booking-request] Provider profile data:', {
-            protectedData: prof?.protectedData,
-            publicData: prof?.publicData
-          });
-          
-          // 🔧 FIXED: Simplified phone extraction with fallback chain
-          const providerPhone = prof?.protectedData?.phone
-            ?? prof?.protectedData?.phoneNumber
-            ?? prof?.publicData?.phone
-            ?? prof?.publicData?.phoneNumber
-            ?? null;
-          
-          // 🔧 DEBUG: Log provider phone (raw) before normalization
-          console.log('[SMS][booking-request] Provider phone (raw):', providerPhone);
-          
-          if (!providerPhone) {
-            console.warn('[SMS][booking-request] Provider missing phone; continuing to borrower block');
-            // 🔧 FIXED: Don't return early, continue to borrower SMS
-          }
-          
-          // 🔧 FIXED: Fetch customer profile if available
+
+          // 🔧 FIXED: Fetch customer profile if available (borrower SMS - unchanged)
           let borrowerPhone = null;
+          const customerId = tx?.relationships?.customer?.data?.id;
           if (customerId) {
             try {
               const customer = await sdk.users.show({ 
@@ -180,33 +175,13 @@ module.exports = (req, res) => {
               console.warn('[SMS][booking-request] Could not fetch customer profile:', customerErr.message);
             }
           }
-          
-          // 🔧 FIXED: Guard against misroute
-          if (providerPhone === borrowerPhone) {
-            console.error('[SMS][booking-request] Detected borrower phone for lender notification; aborting send');
-            return apiResponse; // 🔧 FIXED: Return on all paths
-          }
-          
-          // Send lender SMS only if we have a phone number
-          if (providerPhone) {
-            const listingTitle = listing?.attributes?.title || 'your listing';
-            const lenderMessage = `👗 New Sherbrt booking request! Someone wants to borrow your item "${listingTitle}". Tap your dashboard to respond.`;
-            
-            try {
-              await sendSMS(providerPhone, lenderMessage);
-              console.log(`✅ [SMS][booking-request] Lender notification sent to ${providerPhone}`);
-            } catch (lenderSmsErr) {
-              console.error('[SMS][booking-request] Lender SMS failed:', lenderSmsErr.message);
-            }
-          } else {
-            console.log('[SMS][booking-request] Skipping lender SMS - no phone number available');
-          }
-          
+
           // Send customer confirmation SMS
           if (customerId && borrowerPhone) {
             try {
               console.log('📨 [SMS][customer-confirmation] Preparing to send customer confirmation SMS');
               
+              const listingTitle = listing?.attributes?.title || 'your listing';
               const customerMessage = `✅ Your booking request for "${listingTitle}" has been sent! The lender will review and respond soon.`;
               
               await sendSMS(borrowerPhone, customerMessage);
@@ -218,7 +193,6 @@ module.exports = (req, res) => {
           } else {
             console.log('[SMS][customer-confirmation] Skipping customer SMS - missing customerId or phone:', { customerId, borrowerPhone });
           }
-          
         } catch (err) {
           console.error('❌ [SMS][booking-request] Error in SMS logic:', err.message);
         }
