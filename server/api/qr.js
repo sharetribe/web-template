@@ -52,23 +52,58 @@ module.exports = ({ getTrustedSdk }) => {
     const { txId } = req.params;
 
     try {
-      // if your SDK expects UUID, adapt accordingly
-      const tx = await sdk.transactions.show({ id: txId }, { expand: true });
+      // 1. Try Flex first: sdk.transactions.show({ id }). If found and `protectedData.shippo.outbound.qrCodeUrl`, redirect 302 to it.
+      const resp = await sdk.transactions.show({ id: txId, include: ['lineItems'] });
+      const tx = resp?.data?.data;
+      const pData = tx?.attributes?.protectedData || {};
+      const shippo = pData?.shippo || {};
+      const outbound = shippo.outbound || {};
 
-      const pd = tx?.data?.data?.attributes?.protectedData;
-      const shippo = pd?.shippo || {};
-      // try common keys
-      const qr =
-        shippo?.outbound?.qr_code_url ||
-        shippo?.return?.qr_code_url ||
-        shippo?.qr_code_url;
+      if (outbound.qrCodeUrl) {
+        console.log(`qr:redirect source=flex`);
+        return res.redirect(302, outbound.qrCodeUrl);
+      }
 
-      if (qr) return res.redirect(302, qr);
+      // 2. Else check qrCache.get(id). If present and not expired, redirect 302.
+      // Import qrCache from transition-privileged module
+      let qrCache = null;
+      try {
+        const transitionPrivileged = require('./transition-privileged');
+        qrCache = transitionPrivileged.qrCache;
+      } catch (err) {
+        console.warn('[QR] Could not import qrCache:', err.message);
+      }
 
-      return res.status(404).send('Label not ready yet');
+      if (qrCache && qrCache.has(txId)) {
+        const cachedData = qrCache.get(txId);
+        const now = Date.now();
+        
+        // Check if not expired (expiresAt is in seconds, convert to milliseconds)
+        if (!cachedData.expiresAt || (cachedData.expiresAt * 1000) > now) {
+          console.log(`qr:redirect source=cache`);
+          return res.redirect(302, cachedData.qrCodeUrl);
+        } else {
+          console.log(`[QR] Cached QR data expired for transaction ${txId}`);
+          qrCache.delete(txId); // Clean up expired entry
+        }
+      }
+
+      // 3. Else return 202 with JSON: { ok: false, status: 'pending', message: 'Label not ready yet' }.
+      // Never return 404 for a known tx unless you're sure the label failed.
+      console.log(`[QR] No QR data available for transaction ${txId} - returning 202 pending`);
+      res.set('Cache-Control', 'no-store'); // So devices will re-poll
+      return res.status(202).json({ 
+        ok: false, 
+        status: 'pending', 
+        message: 'Label not ready yet' 
+      });
+
     } catch (err) {
-      console.error('[QR] transactions.show failed', err);
-      return res.status(500).send('Failed to load transaction');
+      // If we can't even read the transaction, it might not exist
+      if (err.response?.status === 404) {
+        return res.status(404).json({ ok: false, error: 'Transaction not found' });
+      }
+      return res.status(500).json({ ok: false, error: `Failed to read transaction: ${String(err)}` });
     }
   });
 

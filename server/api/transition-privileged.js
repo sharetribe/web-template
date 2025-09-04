@@ -50,6 +50,74 @@ try {
   sendSMS = () => Promise.resolve(); // No-op function
 }
 
+// QR delivery reliability: in-memory cache for transaction QR data
+const qrCache = new Map(); // key: transactionId, value: { qrCodeUrl, labelUrl, expiresAt, savedAt }
+
+// Evict entries older than 24h on an interval
+setInterval(() => {
+  const now = Date.now();
+  const cutoff = now - (24 * 60 * 60 * 1000); // 24 hours ago
+  let evicted = 0;
+  
+  for (const [key, value] of qrCache.entries()) {
+    if (value.savedAt < cutoff) {
+      qrCache.delete(key);
+      evicted++;
+    }
+  }
+  
+  if (evicted > 0) {
+    console.log(`🧹 [QR_CACHE] Evicted ${evicted} expired entries`);
+  }
+}, 60 * 60 * 1000); // Run every hour
+
+// Robust persistence with retry logic for Shippo data
+async function persistWithRetry(id, data, { retries = 3, delayMs = 250 } = {}) {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      // 1. Get latest transaction data
+      const tx = await data.sdk.transactions.show({ id });
+      const currentProtectedData = tx?.data?.data?.attributes?.protectedData || {};
+      
+      // 2. Merge with new Shippo data
+      const mergedProtectedData = {
+        ...currentProtectedData,
+        shippo: {
+          ...currentProtectedData.shippo,
+          outbound: {
+            ...currentProtectedData.shippo?.outbound,
+            ...data.shippoData
+          },
+          updatedAt: new Date().toISOString()
+        }
+      };
+      
+      // 3. Update transaction
+      await data.sdk.transactions.update({ 
+        id, 
+        protectedData: mergedProtectedData 
+      });
+      
+      console.log(`✅ [flex-persist] Successfully persisted Shippo data for transaction ${id}`);
+      return true;
+      
+    } catch (error) {
+      const status = error?.response?.status;
+      
+      if (status === 409 && attempt < retries) {
+        console.warn(`[flex-persist] 409 conflict – retrying ${attempt}/${retries}`);
+        await new Promise(resolve => setTimeout(resolve, delayMs));
+        continue;
+      }
+      
+      if (attempt === retries) {
+        console.error(`❌ [flex-persist] Failed after ${retries} attempts:`, error.message);
+        return false;
+      }
+    }
+  }
+}
+
 console.log('🚦 transition-privileged endpoint is wired up');
 
 // Helper function to get borrower phone number with fallbacks
@@ -279,13 +347,17 @@ async function createShippingLabels(protectedData, transactionId, listing, sendS
       // unique dedupe key for lender on this transition
       const dedupeKey = `${txIdStr}:transition/accept:lender`;
 
+      // Prefer branded short link if available, else fall back to Shippo URL
+      const qrShort = `${base}/api/qr/${txIdStr}`;
+      const finalQrUrl = qrCache.has(transactionId) ? qrShort : qrCodeUrl;
+      
       await sendSMS(
         lenderPhone,
-        `📬 Your Sherbrt shipping label is ready! 🍧 Use this QR to ship: ${shortUrl}`,
+        `📬 Your Sherbrt shipping label is ready! ${finalQrUrl}`,
         'lender',
         dedupeKey
       );
-      console.log('📱 [LENDER_SMS] sent', { to: `***${String(lenderPhone).slice(-4)}`, shortUrl });
+      console.log('📱 [LENDER_SMS] sent', { to: `***${String(lenderPhone).slice(-4)}`, finalQrUrl });
     } else {
       console.warn('⚠️ [LENDER_SMS] skipped — no lender phone on transaction/profile');
     }
@@ -381,41 +453,64 @@ async function createShippingLabels(protectedData, transactionId, listing, sendS
       // Do not rethrow — allow the HTTP handler to finish normally.
     }
 
-    // Try to persist URLs to Flex transaction via privileged transition
-    try {
-      console.log('💾 [SHIPPO] Attempting to save URLs to Flex transaction...');
-      
-      await sharetribeSdk.transactions.transition({
-        id: transactionId,
-        transition: 'transition/store-shipping-urls',
-        params: {
-          protectedData: {
-            outboundShippoTxId: transactionRes.data.object_id,
-            outboundQrCodeUrl: qrCodeUrl,
-            outboundQrCodeExpiry: qrExpiry,
-            outboundLabelUrl: labelUrl,
-            outboundTrackingUrl: trackingUrl,
-            returnQrCodeUrl: returnQrCodeUrl,
-            returnTrackingUrl: returnTrackingUrl
+          // Try to persist URLs and tracking data to Flex transaction via persistWithRetry
+      try {
+        console.log('💾 [SHIPPO] Attempting to save URLs and tracking data to Flex transaction...');
+        
+        // Extract tracking data from the transaction response
+        const trackingNumber = transactionRes.data.tracking_number;
+        let trackingUrl = transactionRes.data.tracking_url_provider || transactionRes.data.tracking_url;
+        
+        // Construct tracking URL if missing for USPS
+        if (!trackingUrl && selectedRate.provider === 'usps' && trackingNumber) {
+          trackingUrl = `https://tools.usps.com/go/TrackConfirmAction_input?origTrackNum=${trackingNumber}`;
+          console.log('📦 [SHIPPO] Constructed USPS tracking URL fallback');
+        }
+        
+        console.log('📦 [SHIPPO] Extracted tracking data:', {
+          trackingNumber: trackingNumber ? `${trackingNumber.substring(0, 4)}...` : 'none',
+          carrier: selectedRate.provider,
+          hasTrackingUrl: !!trackingUrl,
+          trackingUrlFallback: !transactionRes.data.tracking_url_provider && !transactionRes.data.tracking_url
+        });
+        
+        // Store in QR cache for immediate availability
+        const qrData = {
+          qrCodeUrl,
+          labelUrl,
+          expiresAt: qrExpiry,
+          savedAt: Date.now()
+        };
+        qrCache.set(transactionId, qrData);
+        console.log(`💾 [QR_CACHE] Stored QR data for transaction ${transactionId}`);
+        
+        // Use persistWithRetry for robust Flex persistence
+        const persistSuccess = await persistWithRetry(transactionId, {
+          sdk: sharetribeSdk,
+          shippoData: {
+            txId: transactionRes.data.object_id,
+            trackingNumber,
+            labelUrl,
+            qrCodeUrl,
+            expiresAt: qrExpiry,
+            carrier: selectedRate.provider
           }
         }
       });
         
-        console.log('💾 [SHIPPO] URLs and tracking data successfully saved to Flex transaction');
-      } catch (persistError) {
-        const status = persistError?.response?.status;
-        
-        if (status === 409) {
-          console.warn('⚠️ Flex returned 409 for transition/store-shipping-urls — add this transition to your Flex process to persist QR/track URLs. Not blocking.');
+        if (persistSuccess) {
+          console.log('💾 [SHIPPO] URLs and tracking data successfully saved to Flex transaction');
         } else {
-          console.error('❌ [SHIPPO] Non-critical step failed', {
-            where: 'flex-persist',
-            name: persistError?.name,
-            message: persistError?.message,
-            status: status,
-            data: safePick(persistError?.response?.data || {}, ['error', 'message', 'code']),
-          });
+          console.warn('⚠️ [SHIPPO] Failed to persist to Flex after retries - data available in cache');
         }
+      } catch (persistError) {
+        console.error('❌ [SHIPPO] Non-critical step failed', {
+          where: 'flex-persist',
+          name: persistError?.name,
+          message: persistError?.message,
+          status: persistError?.response?.status,
+          data: safePick(persistError?.response?.data || {}, ['error', 'message', 'code']),
+        });
         // Do not rethrow — allow the HTTP handler to finish normally.
       }
     
@@ -1153,3 +1248,6 @@ process.on('unhandledRejection', (reason, promise) => {
   // Optionally exit the process if desired:
   // process.exit(1);
 });
+
+// Export qrCache for use by other modules
+module.exports.qrCache = qrCache;
