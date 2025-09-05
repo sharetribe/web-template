@@ -27,6 +27,7 @@ import { createSlug, parse, stringify } from '../../util/urlHelpers';
 import { userDisplayNameAsString } from '../../util/data';
 import {
   INQUIRY_PROCESS_NAME,
+  NEGOTIATION_PROCESS_NAME,
   getSupportedProcessesInfo,
   isBookingProcess,
   isPurchaseProcess,
@@ -56,6 +57,10 @@ const InquiryWithoutPaymentForm = loadable(() =>
 );
 const ProductOrderForm = loadable(() =>
   import(/* webpackChunkName: "ProductOrderForm" */ './ProductOrderForm/ProductOrderForm')
+);
+
+const NegotiationForm = loadable(() =>
+  import(/* webpackChunkName: "NegotiationForm" */ './NegotiationForm/NegotiationForm')
 );
 
 // This defines when ModalInMobile shows content as Modal
@@ -110,17 +115,10 @@ const closeOrderModal = (history, location) => {
   history.push(`${pathname}${searchString}`, state);
 };
 
-const handleSubmit = (
-  isOwnListing,
-  isClosed,
-  isInquiryWithoutPayment,
-  onSubmit,
-  history,
-  location
-) => {
+const handleSubmit = (isOwnListing, isClosed, isDirectSubmit, onSubmit, history, location) => {
   // TODO: currently, inquiry-process does not have any form to ask more order data.
   // We can submit without opening any inquiry/order modal.
-  return isInquiryWithoutPayment
+  return isDirectSubmit
     ? () => onSubmit({})
     : () => openOrderModal(isOwnListing, isClosed, history, location);
 };
@@ -308,9 +306,11 @@ const OrderPanel = props => {
 
   const price = listing?.attributes?.price;
   const isPaymentProcess = processName !== INQUIRY_PROCESS_NAME;
+  const isNegotiationProcess = processName === NEGOTIATION_PROCESS_NAME;
 
-  const showPriceMissing = isPaymentProcess && !price;
-  const showInvalidCurrency = isPaymentProcess && price?.currency !== marketplaceCurrency;
+  const showPriceMissing = isPaymentProcess && !isNegotiationProcess && !price;
+  const showInvalidCurrency =
+    isPaymentProcess && !isNegotiationProcess && price?.currency !== marketplaceCurrency;
 
   const timeZone = listing?.attributes?.availabilityPlan?.timezone;
   const isClosed = listing?.attributes?.state === LISTING_STATE_CLOSED;
@@ -340,6 +340,7 @@ const OrderPanel = props => {
     mounted && shouldHavePurchase && !isClosed && typeof currentStock === 'number';
 
   const showInquiryForm = mounted && !isClosed && processName === INQUIRY_PROCESS_NAME;
+  const showNegotiationForm = mounted && !isClosed && isNegotiationProcess;
 
   const supportedProcessesInfo = getSupportedProcessesInfo();
   const isKnownProcess = supportedProcessesInfo.map(info => info.name).includes(processName);
@@ -512,6 +513,8 @@ const OrderPanel = props => {
           />
         ) : showInquiryForm ? (
           <InquiryWithoutPaymentForm formId="OrderPanelInquiryForm" onSubmit={onSubmit} />
+        ) : showNegotiationForm ? (
+          <NegotiationForm formId="OrderPanelNegotiationForm" onSubmit={onSubmit} />
         ) : !isKnownProcess ? (
           <p className={css.errorSidebar}>
             <FormattedMessage id="OrderPanel.unknownTransactionProcess" />
@@ -537,7 +540,7 @@ const OrderPanel = props => {
             onClick={handleSubmit(
               isOwnListing,
               isClosed,
-              showInquiryForm,
+              showInquiryForm || showNegotiationForm,
               onSubmit,
               history,
               location
@@ -550,6 +553,8 @@ const OrderPanel = props => {
               <FormattedMessage id="OrderPanel.ctaButtonMessageNoStock" />
             ) : isPurchase ? (
               <FormattedMessage id="OrderPanel.ctaButtonMessagePurchase" />
+            ) : showNegotiationForm ? (
+              <FormattedMessage id="OrderPanel.ctaButtonMessageMakeOffer" />
             ) : (
               <FormattedMessage id="OrderPanel.ctaButtonMessageInquiry" />
             )}
