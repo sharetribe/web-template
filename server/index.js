@@ -49,6 +49,10 @@ const sdkUtils = require('./api-util/sdk');
 
 const buildPath = path.resolve(__dirname, '..', 'build');
 const publicDir = path.join(__dirname, '..', 'public');
+
+// Diagnostic logging
+console.info('[Static] buildDir exists:', fs.existsSync(buildPath), buildPath);
+console.info('[Static] publicDir exists:', fs.existsSync(publicDir), publicDir);
 const dev = process.env.REACT_APP_ENV === 'development';
 const PORT = process.env.PORT || 3000;
 const redirectSSL =
@@ -187,25 +191,37 @@ if (TRUST_PROXY === 'true') {
 
 app.use(compression());
 app.use('/static', express.static(path.join(buildPath, 'static')));
+
+// Built assets (JS/CSS with %PUBLIC_URL% already resolved)
+app.use(express.static(buildPath, { fallthrough: true, etag: true, maxAge: '7d' }));
+// Unbuilt public assets (only as fallback for things copied 1:1, e.g., robots.txt)
 app.use(express.static(publicDir, { fallthrough: true, etag: true, maxAge: '7d' }));
 app.use(cookieParser());
 
-// Explicit routes for static files (before catch-all)
+// Explicit static routes BEFORE catch-all
 app.get(['/favicon.ico', '/robots.txt', '/sitemap.xml', '/sitemap-index.xml'], (req, res, next) => {
   const fileMap = {
-    '/favicon.ico': 'favicon.ico',
-    '/robots.txt': 'robots.txt',
-    '/sitemap.xml': 'sitemap.xml',
-    '/sitemap-index.xml': 'sitemap-index.xml'
+    '/favicon.ico':        'favicon.ico',
+    '/robots.txt':         'robots.txt',
+    '/sitemap.xml':        'sitemap.xml',
+    '/sitemap-index.xml':  'sitemap-index.xml',
   };
-  res.sendFile(path.join(publicDir, fileMap[req.path]), err => err ? next(err) : null);
+  const file = fileMap[req.path];
+  // Prefer build/, fallback to public/
+  res.sendFile(path.join(buildPath, file), err => {
+    if (err) res.sendFile(path.join(publicDir, file), err2 => err2 ? next(err2) : null);
+  });
 });
 
-// Generate web app manifest
-// When developing with "yarn run dev",
-// you can reach the manifest from http://localhost:3500/site.webmanifest
-// The corresponding <link> element is set in src/components/Page/Page.js
-app.get('/site.webmanifest', webmanifestResourceRoute);
+// Web manifest route - prefer build/site.webmanifest (created by build step), fallback to public
+app.get('/site.webmanifest', (req, res, next) => {
+  const send = p => res.type('application/manifest+json').sendFile(p, e => e ? next(e) : null);
+  send(path.join(buildPath, 'site.webmanifest'));
+}, (err, req, res, next) => {
+  if (err) {
+    res.type('application/manifest+json').sendFile(path.join(publicDir, 'site.webmanifest'), e2 => e2 ? next(e2) : null);
+  } else next();
+});
 
 // These .well-known/* endpoints will be enabled if you are using this template as OIDC proxy
 // https://www.sharetribe.com/docs/cookbook-social-logins-and-sso/setup-open-id-connect-proxy/
@@ -254,11 +270,11 @@ app.get('*', async (req, res) => {
     return res.status(200).send({ status: 'ok' });
   }
 
-  // For SPA routes, serve index.html from public directory
+  // For SPA routes, serve the built HTML shell
   if (req.accepts('html')) {
-    return res.sendFile(path.join(publicDir, 'index.html'), err => {
+    return res.sendFile(path.join(buildPath, 'index.html'), err => {
       if (err) {
-        console.error('[SPA] Error serving index.html:', err.message);
+        console.error('[SPA] Error serving build/index.html:', err.message);
         return res.status(500).json({ error: 'Internal Server Error' });
       }
     });
