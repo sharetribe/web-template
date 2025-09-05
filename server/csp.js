@@ -14,6 +14,33 @@ const baseUrl = process.env.REACT_APP_SHARETRIBE_SDK_BASE_URL || 'https://flex-a
 // If assetCdnBaseUrl is used to initialize SDK (for proxy purposes), then that URL needs to be in CSP
 const assetCdnBaseUrl = process.env.REACT_APP_SHARETRIBE_SDK_ASSET_CDN_BASE_URL;
 
+// CSP Kill-switch for emergency situations
+const MODE = (process.env.CSP_MODE || '').toLowerCase();
+if (MODE === 'off') {
+  console.log('[CSP] Kill-switch activated: CSP_MODE=off - CSP disabled');
+  exports.csp = (reportUri, reportOnly) => (req, res, next) => next();
+  exports.generateCSPNonce = (req, res, next) => next();
+  return;
+}
+
+// Helper functions for defensive parsing
+function toList(val) {
+  if (!val) return [];
+  if (Array.isArray(val)) return val.filter(Boolean).map(String);
+  return String(val)
+    .split(/[,\s]+/)
+    .map(s => s.trim())
+    .filter(Boolean);
+}
+
+function ensureArr(v) {
+  return Array.isArray(v) ? v : (v ? [String(v)] : []);
+}
+
+function maskHosts(list) {
+  return list.map(h => (h.length > 80 ? h.slice(0, 80) + '…' : h));
+}
+
 exports.generateCSPNonce = (req, res, next) => {
   // Asynchronously generate a unique nonce for each request.
   crypto.randomBytes(32, (err, randomBytes) => {
@@ -28,112 +55,6 @@ exports.generateCSPNonce = (req, res, next) => {
   });
 };
 
-// Default CSP whitelist.
-//
-// NOTE: Do not change these in the customizations, make custom
-// additions within the exported function in the bottom of this file.
-const defaultDirectives = {
-  baseUri: [self],
-  defaultSrc: [self],
-  childSrc: [blob],
-  connectSrc: [
-    self,
-    baseUrl,
-    assetCdnBaseUrl,
-    '*.st-api.com',
-    'maps.googleapis.com',
-    'places.googleapis.com',
-    '*.tiles.mapbox.com',
-    'api.mapbox.com',
-    'events.mapbox.com',
-
-    // Google Analytics
-    '*.google-analytics.com',
-    '*.analytics.google.com',
-    '*.googletagmanager.com',
-    '*.g.doubleclick.net',
-    '*.google.com',
-
-    // Plausible analytics
-    'plausible.io',
-    '*.plausible.io',
-
-    'fonts.googleapis.com',
-
-    'sentry.io',
-    '*.sentry.io',
-    '*.stripe.com',
-    'https://js.stripe.com',
-    'https://m.stripe.network',
-    'https://api.stripe.com',
-  ],
-  fontSrc: [self, data, 'assets-sharetribecom.sharetribe.com', 'fonts.gstatic.com'],
-  formAction: [self],
-  frameSrc: [
-    self,
-    '*.stripe.com',
-    'https://js.stripe.com',
-    'https://m.stripe.network',
-    '*.youtube-nocookie.com',
-    'https://bid.g.doubleclick.net',
-    'https://td.doubleclick.net',
-  ],
-  imgSrc: [
-    self,
-    data,
-    blob,
-    ...devImagesMaybe,
-    '*.imgix.net',
-    'sharetribe.imgix.net',
-
-    // Styleguide placeholder images
-    'picsum.photos',
-    '*.picsum.photos',
-
-    'api.mapbox.com',
-    'maps.googleapis.com',
-    '*.gstatic.com',
-    '*.googleapis.com',
-    '*.ggpht.com',
-
-    // Giphy
-    '*.giphy.com',
-
-    // Google Analytics
-    '*.google-analytics.com',
-    '*.analytics.google.com',
-    '*.googletagmanager.com',
-    '*.g.doubleclick.net',
-    '*.google.com',
-    'google.com',
-
-    // Youtube (static image)
-    '*.ytimg.com',
-
-    // Stripe
-    '*.stripe.com',
-    'https://js.stripe.com',
-    'https://m.stripe.network',
-  ],
-  scriptSrc: [
-    self,
-    (req, res) => `'nonce-${res.locals.cspNonce}'`,
-    unsafeEval,
-    'maps.googleapis.com',
-    'api.mapbox.com',
-    '*.googletagmanager.com',
-    '*.google-analytics.com',
-    'www.googleadservices.com',
-    '*.g.doubleclick.net',
-    'js.stripe.com',
-    'https://js.stripe.com',
-    'https://api.stripe.com',
-    'plausible.io',
-  ],
-  "script-src-elem": ["'self'", "blob:", "https://api.mapbox.com", "https://*.mapbox.com"],
-  "manifest-src": ["'self'"],
-  styleSrc: [self, unsafeInline, 'fonts.googleapis.com', 'api.mapbox.com'],
-};
 
 /**
  * Middleware for creating a Content Security Policy
@@ -145,80 +66,160 @@ const defaultDirectives = {
  * reported to the report URL instead of blocked
  */
 exports.csp = (reportUri, reportOnly) => {
-  // ================ START CUSTOM CSP URLs ================ //
+  // Build safe allowlists with defensive parsing
+  const extraAll = toList(process.env.CSP_EXTRA_HOSTS);
+  const reportOnlyExtraAll = toList(process.env.CSP_REPORT_ONLY_EXTRA_HOSTS);
 
-  // Add custom CSP whitelisted URLs here. See commented example
-  // below. For format specs and examples, see:
-  // https://content-security-policy.com/
+  // Always include Stripe + manifest self
+  const STRIPE = [
+    'https://js.stripe.com',
+    'https://m.stripe.network',
+    'https://api.stripe.com',
+  ];
 
-  // Example: extend default img directive with custom domain
-  // const { imgSrc = [self] } = defaultDirectives;
-  // const exampleImgSrc = imgSrc.concat('my-custom-domain.example.com');
+  // Parse optional extra hosts for specific directives
+  const scriptExtra = toList(process.env.CSP_SCRIPT_EXTRA);
+  const connectExtra = toList(process.env.CSP_CONNECT_EXTRA);
+  const imgExtra = toList(process.env.CSP_IMG_EXTRA);
+  const frameExtra = toList(process.env.CSP_FRAME_EXTRA);
+  const styleExtra = toList(process.env.CSP_STYLE_EXTRA);
+  const fontExtra = toList(process.env.CSP_FONT_EXTRA);
+  const manifestExtra = toList(process.env.CSP_MANIFEST_EXTRA);
 
-  // Parse extra hosts from environment variable (only for legitimate third-party services)
-  const EXTRA_HOSTS = (process.env.CSP_EXTRA_HOSTS || '').split(/\s+/).filter(Boolean);
-
-  const customDirectives = {
-    // Example: Add custom directive override
-    // imgSrc: exampleImgSrc,
+  // Build base directives safely
+  const baseDirectives = {
+    'default-src': ensureArr(self),
+    'base-uri': ensureArr(self),
+    'child-src': ensureArr(blob),
+    'form-action': ensureArr(self),
+    'object-src': ["'none'"],
+    'frame-ancestors': ensureArr(self),
+    'manifest-src': ensureArr(self).concat(manifestExtra),
+    'script-src': ensureArr(self).concat(STRIPE, scriptExtra, [
+      (req, res) => `'nonce-${res.locals.cspNonce}'`,
+      unsafeEval,
+      'maps.googleapis.com',
+      'api.mapbox.com',
+      '*.googletagmanager.com',
+      '*.google-analytics.com',
+      'www.googleadservices.com',
+      '*.g.doubleclick.net',
+      'plausible.io',
+    ]),
+    'script-src-elem': ensureArr(self).concat(STRIPE, scriptExtra, [
+      blob,
+      'https://api.mapbox.com',
+      'https://*.mapbox.com',
+    ]),
+    'connect-src': ensureArr(self).concat(STRIPE, connectExtra, [
+      baseUrl,
+      assetCdnBaseUrl,
+      '*.st-api.com',
+      'maps.googleapis.com',
+      'places.googleapis.com',
+      '*.tiles.mapbox.com',
+      'api.mapbox.com',
+      'events.mapbox.com',
+      '*.google-analytics.com',
+      '*.analytics.google.com',
+      '*.googletagmanager.com',
+      '*.g.doubleclick.net',
+      '*.google.com',
+      'plausible.io',
+      '*.plausible.io',
+      'fonts.googleapis.com',
+      'sentry.io',
+      '*.sentry.io',
+    ]),
+    'img-src': ensureArr(self).concat(STRIPE, imgExtra, [
+      data,
+      blob,
+      ...devImagesMaybe,
+      '*.imgix.net',
+      'sharetribe.imgix.net',
+      'picsum.photos',
+      '*.picsum.photos',
+      'api.mapbox.com',
+      'maps.googleapis.com',
+      '*.gstatic.com',
+      '*.googleapis.com',
+      '*.ggpht.com',
+      '*.giphy.com',
+      '*.google-analytics.com',
+      '*.analytics.google.com',
+      '*.googletagmanager.com',
+      '*.g.doubleclick.net',
+      '*.google.com',
+      'google.com',
+      '*.ytimg.com',
+    ]),
+    'style-src': ensureArr(self).concat(styleExtra, [
+      unsafeInline,
+      'fonts.googleapis.com',
+      'api.mapbox.com',
+    ]),
+    'font-src': ensureArr(self).concat(fontExtra, [
+      data,
+      'assets-sharetribecom.sharetribe.com',
+      'fonts.gstatic.com',
+    ]),
+    'frame-src': ensureArr(self).concat(STRIPE, frameExtra, [
+      '*.youtube-nocookie.com',
+      'https://bid.g.doubleclick.net',
+      'https://td.doubleclick.net',
+    ]),
   };
 
-  // ================ END CUSTOM CSP URLs ================ //
-
-  // Helmet v4 expects every value to be iterable so strings or booleans are not supported directly
-  // If we want to add block-all-mixed-content directive we need to add empty array to directives
-  // See Helmet's default directives:
-  // https://github.com/helmetjs/helmet/blob/bdb09348c17c78698b0c94f0f6cc6b3968cd43f9/middlewares/content-security-policy/index.ts#L51
-
-  // Extend relevant directives with extra hosts
-  const directives = Object.assign({ reportUri: [reportUri] }, defaultDirectives, customDirectives);
-  
-  if (EXTRA_HOSTS.length > 0) {
-    // Add extra hosts to relevant directives
-    if (directives.scriptSrc) {
-      directives.scriptSrc = [...directives.scriptSrc, ...EXTRA_HOSTS];
-    }
-    if (directives.scriptSrcElem) {
-      directives.scriptSrcElem = [...directives.scriptSrcElem, ...EXTRA_HOSTS];
-    }
-    if (directives.connectSrc) {
-      directives.connectSrc = [...directives.connectSrc, ...EXTRA_HOSTS];
-    }
-    if (directives.styleSrc) {
-      directives.styleSrc = [...directives.styleSrc, ...EXTRA_HOSTS];
-    }
-    if (directives.imgSrc) {
-      directives.imgSrc = [...directives.imgSrc, ...EXTRA_HOSTS];
-    }
-    if (directives.manifestSrc) {
-      directives.manifestSrc = [...directives.manifestSrc, ...EXTRA_HOSTS];
-    } else {
-      directives.manifestSrc = [self, ...EXTRA_HOSTS];
-    }
-  }
-  
-  if (!reportOnly && !dev) {
-    directives.upgradeInsecureRequests = [];
+  // Add extra hosts to all directives if specified
+  if (extraAll.length > 0) {
+    Object.keys(baseDirectives).forEach(key => {
+      baseDirectives[key] = baseDirectives[key].concat(extraAll);
+    });
   }
 
-  // Log CSP configuration for verification (mask long strings)
-  const logDirectives = {};
-  Object.keys(directives).forEach(key => {
-    if (Array.isArray(directives[key])) {
-      logDirectives[key] = directives[key].map(item => 
-        typeof item === 'function' ? '[function]' : 
-        item.length > 50 ? `${item.slice(0, 20)}...${item.slice(-10)}` : item
-      );
-    } else {
-      logDirectives[key] = directives[key];
-    }
+  // Add report-only extra hosts if in report-only mode
+  if (reportOnly && reportOnlyExtraAll.length > 0) {
+    Object.keys(baseDirectives).forEach(key => {
+      baseDirectives[key] = baseDirectives[key].concat(reportOnlyExtraAll);
+    });
+  }
+
+  // Clean duplicates and filter out empty values
+  Object.keys(baseDirectives).forEach(key => {
+    baseDirectives[key] = Array.from(new Set(baseDirectives[key].filter(Boolean)));
   });
-  console.log('[CSP] Content Security Policy configured:', JSON.stringify(logDirectives, null, 2));
 
-  // See: https://helmetjs.github.io/docs/csp/
-  return helmet.contentSecurityPolicy({
+  // Add report URI
+  baseDirectives.reportUri = [reportUri];
+
+  // Add upgrade insecure requests for production
+  if (!reportOnly && !dev) {
+    baseDirectives.upgradeInsecureRequests = [];
+  }
+
+  // Robust logging with masked values
+  console.info('[CSP] Mode:', MODE);
+  console.info('[CSP] Report-only:', reportOnly);
+  console.info('[CSP] script-src:', maskHosts(baseDirectives['script-src']));
+  console.info('[CSP] connect-src:', maskHosts(baseDirectives['connect-src']));
+  console.info('[CSP] img-src:', maskHosts(baseDirectives['img-src']));
+  console.info('[CSP] frame-src:', maskHosts(baseDirectives['frame-src']));
+  console.info('[CSP] manifest-src:', maskHosts(baseDirectives['manifest-src']));
+
+  // Create the CSP middleware with try/catch guard
+  const cspMiddleware = helmet.contentSecurityPolicy({
     useDefaults: false,
-    directives,
+    directives: baseDirectives,
     reportOnly,
   });
+
+  // Return middleware function with try/catch guard
+  return function csp(req, res, next) {
+    try {
+      return cspMiddleware(req, res, next);
+    } catch (e) {
+      console.error('[CSP] middleware error, passing through without CSP:', e && e.stack || e);
+      return next(); // never 500 on CSP failure
+    }
+  };
 };

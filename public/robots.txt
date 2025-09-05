@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://sherbrt.com/sitemap-index.xml
