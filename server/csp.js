@@ -63,12 +63,17 @@ const defaultDirectives = {
     'sentry.io',
     '*.sentry.io',
     '*.stripe.com',
+    'https://js.stripe.com',
+    'https://m.stripe.network',
+    'https://api.stripe.com',
   ],
   fontSrc: [self, data, 'assets-sharetribecom.sharetribe.com', 'fonts.gstatic.com'],
   formAction: [self],
   frameSrc: [
     self,
     '*.stripe.com',
+    'https://js.stripe.com',
+    'https://m.stripe.network',
     '*.youtube-nocookie.com',
     'https://bid.g.doubleclick.net',
     'https://td.doubleclick.net',
@@ -107,6 +112,8 @@ const defaultDirectives = {
 
     // Stripe
     '*.stripe.com',
+    'https://js.stripe.com',
+    'https://m.stripe.network',
   ],
   scriptSrc: [
     self,

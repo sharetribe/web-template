@@ -767,6 +767,13 @@ class StripePaymentForm extends Component {
 
   render() {
     const { onSubmit, ...rest } = this.props;
+    
+    // Guard against missing Stripe/Elements context
+    if (!this.props.stripe || !this.props.elements) {
+      // Don't throw—render a soft loader so the page never hard-crashes
+      return <div>Initializing payment form…</div>;
+    }
+    
     // Add initialValues for shipping fields
     const initialValues = {
       customerName: '',

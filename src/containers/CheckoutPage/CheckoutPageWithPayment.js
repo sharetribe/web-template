@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Elements } from '@stripe/react-stripe-js';
+import { stripePromise } from '../../stripe';
 
 // Import contexts and util modules
 import { FormattedMessage, intlShape } from '../../util/reactIntl';
@@ -746,4 +748,39 @@ export const CheckoutPageWithPayment = props => {
   );
 };
 
-export default CheckoutPageWithPayment;
+// Crash-proof wrapper component
+const CheckoutPageWithPaymentWrapper = (props) => {
+  const [stripe, setStripe] = React.useState(undefined); // undefined = loading, null = failed
+
+  React.useEffect(() => {
+    let on = true;
+    stripePromise.then(s => { if (on) setStripe(s || null); });
+    return () => { on = false; };
+  }, []);
+
+  // Runtime diagnostic banner (temporary)
+  React.useEffect(() => {
+    console.log('[CheckoutDiag] LIVE bundle Stripe key:', window.__BUILD_DIAG__?.stripePkMasked);
+  }, []);
+
+  if (stripe === undefined) {
+    return <div style={{ padding: 16 }}>Loading secure payment…</div>;
+  }
+  if (stripe === null) {
+    console.warn('[Checkout] Stripe failed to initialize. window.__BUILD_DIAG__ =', window.__BUILD_DIAG__);
+    return (
+      <div style={{ padding: 16 }}>
+        <h3>Payment temporarily unavailable</h3>
+        <p>We're having trouble loading our payment provider. Please refresh or try again in a moment.</p>
+      </div>
+    );
+  }
+
+  return (
+    <Elements stripe={stripe}>
+      <CheckoutPageWithPayment {...props} />
+    </Elements>
+  );
+};
+
+export default CheckoutPageWithPaymentWrapper;
