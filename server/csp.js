@@ -126,6 +126,8 @@ const defaultDirectives = {
     'www.googleadservices.com',
     '*.g.doubleclick.net',
     'js.stripe.com',
+    'https://js.stripe.com',
+    'https://api.stripe.com',
     'plausible.io',
   ],
   "script-src-elem": ["'self'", "blob:", "https://api.mapbox.com", "https://*.mapbox.com"],
@@ -198,6 +200,20 @@ exports.csp = (reportUri, reportOnly) => {
   if (!reportOnly && !dev) {
     directives.upgradeInsecureRequests = [];
   }
+
+  // Log CSP configuration for verification (mask long strings)
+  const logDirectives = {};
+  Object.keys(directives).forEach(key => {
+    if (Array.isArray(directives[key])) {
+      logDirectives[key] = directives[key].map(item => 
+        typeof item === 'function' ? '[function]' : 
+        item.length > 50 ? `${item.slice(0, 20)}...${item.slice(-10)}` : item
+      );
+    } else {
+      logDirectives[key] = directives[key];
+    }
+  });
+  console.log('[CSP] Content Security Policy configured:', JSON.stringify(logDirectives, null, 2));
 
   // See: https://helmetjs.github.io/docs/csp/
   return helmet.contentSecurityPolicy({

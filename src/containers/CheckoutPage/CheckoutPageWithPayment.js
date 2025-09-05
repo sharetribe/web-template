@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Elements } from '@stripe/react-stripe-js';
-import { stripePromise } from '../../stripe';
+import { getStripe } from '../../stripe';
 
 // Import contexts and util modules
 import { FormattedMessage, intlShape } from '../../util/reactIntl';
@@ -750,26 +750,26 @@ export const CheckoutPageWithPayment = props => {
 
 // Crash-proof wrapper component
 const CheckoutPageWithPaymentWrapper = (props) => {
-  const [stripe, setStripe] = React.useState(undefined); // undefined = loading, null = failed
+  const [status, setStatus] = React.useState('loading'); // loading | unavailable | ready
+  const [stripe, setStripe] = React.useState(null);
 
   React.useEffect(() => {
     let on = true;
-    stripePromise.then(s => { if (on) setStripe(s || null); });
+    (async () => {
+      console.log('[CheckoutDiag] LIVE bundle Stripe key:', window.__BUILD_DIAG__?.stripePkMasked);
+      const s = await getStripe({ timeoutMs: 8000, retryMs: 2000 });
+      if (!on) return;
+      if (s) { setStripe(s); setStatus('ready'); }
+      else { setStatus('unavailable'); }
+    })();
     return () => { on = false; };
   }, []);
 
-  // Runtime diagnostic banner (temporary)
-  React.useEffect(() => {
-    console.log('[CheckoutDiag] LIVE bundle Stripe key:', window.__BUILD_DIAG__?.stripePkMasked);
-  }, []);
-
-  if (stripe === undefined) {
-    return <div style={{ padding: 16 }}>Loading secure payment…</div>;
-  }
-  if (stripe === null) {
-    console.warn('[Checkout] Stripe failed to initialize. window.__BUILD_DIAG__ =', window.__BUILD_DIAG__);
+  if (status === 'loading') return <div style={{padding:16}}>Loading secure payment…</div>;
+  if (status === 'unavailable') {
+    console.warn('[CheckoutDiag] Stripe failed to load. Check CSP for js.stripe.com, m.stripe.network, api.stripe.com.');
     return (
-      <div style={{ padding: 16 }}>
+      <div style={{padding:16}}>
         <h3>Payment temporarily unavailable</h3>
         <p>We're having trouble loading our payment provider. Please refresh or try again in a moment.</p>
       </div>

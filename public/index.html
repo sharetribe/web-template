@@ -11,10 +11,17 @@
     <!-- Note: we generate web app manifest from design/branding.json, and it is set in src/components/Page/Page component -->
     <!-- Note: we don't use favicon.ico by default. However, favicon-48x48.png, favicon-32x32.png, favicon-16x16.png and apple-touch-icon come from hosted assets / Console -->
     <!-- End Favicons -->
+    
+    <!-- Favicon -->
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
 
     <!--!link-->
     <!--!ssrStyles-->
     <!--!ssrLinks-->
+    
+    <!-- Preconnect to Stripe domains for faster loading -->
+    <link rel="preconnect" href="https://js.stripe.com" crossorigin>
+    <link rel="preconnect" href="https://m.stripe.network" crossorigin>
 
     <style>
 
