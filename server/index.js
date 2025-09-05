@@ -187,22 +187,18 @@ if (TRUST_PROXY === 'true') {
 
 app.use(compression());
 app.use('/static', express.static(path.join(buildPath, 'static')));
-app.use(express.static(publicDir, { fallthrough: true }));
+app.use(express.static(publicDir, { fallthrough: true, etag: true, maxAge: '7d' }));
 app.use(cookieParser());
 
-// We don't serve favicon.ico from root. PNG images are used instead for icons through link elements.
-app.get('/favicon.ico', (req, res) => {
-  res.status(404).send('favicon.ico not found.');
-});
-
-// Explicit routes for sitemap and robots files (prior to catch-all)
-app.get(['/sitemap.xml', '/sitemap-index.xml', '/robots.txt'], (req, res, next) => {
-  const file = req.path === '/robots.txt'
-    ? 'robots.txt'
-    : (req.path === '/sitemap-index.xml' ? 'sitemap-index.xml' : 'sitemap.xml');
-  res.sendFile(path.join(publicDir, file), err => {
-    if (err) next(err);
-  });
+// Explicit routes for static files (before catch-all)
+app.get(['/favicon.ico', '/robots.txt', '/sitemap.xml', '/sitemap-index.xml'], (req, res, next) => {
+  const fileMap = {
+    '/favicon.ico': 'favicon.ico',
+    '/robots.txt': 'robots.txt',
+    '/sitemap.xml': 'sitemap.xml',
+    '/sitemap-index.xml': 'sitemap-index.xml'
+  };
+  res.sendFile(path.join(publicDir, fileMap[req.path]), err => err ? next(err) : null);
 });
 
 // Generate web app manifest
