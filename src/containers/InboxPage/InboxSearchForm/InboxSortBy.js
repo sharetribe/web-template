@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import classNames from 'classnames';
 
 import { IconArrowHead, Menu, MenuContent, MenuItem, MenuLabel } from '../../../components';
-import css from './SortByPopup.module.css';
+import css from './InboxSortBy.module.css';
+
+const SORT_DROPDOWN_OFFSET = -14;
 
 const optionLabel = (options, key) => {
   const option = options.find(o => o.key === key);
@@ -10,67 +12,63 @@ const optionLabel = (options, key) => {
 };
 
 /**
- * SortByPopup component
+ * A component that allows sorting of inbox messages based on a definied, limited selection of values
  *
  * @component
  * @param {Object} props
  * @param {string} [props.rootClassName] - Custom class that extends the default class for the root element
  * @param {string} [props.className] - Custom class that extends the default class for the root element
- * @param {string} [props.menuLabelRootClassName] - Custom class that extends the default class for the menu label
- * @param {string} props.urlParam - The url param
- * @param {string} props.label - The label
+ * @param {string} initialValue - Sets starting value for dropdown selection
+ * @param {Object} intl - react-intl object from injectIntl
  * @param {Function} props.onSelect - The function to handle the select
- * @param {Array<Object>} props.options - The options [{ key: string, label: string }]
- * @param {string} [props.initialValue] - The initial value
- * @param {number} [props.contentPlacementOffset] - The content placement offset
- * @returns {JSX.Element}
+ * @returns {JSX.Element} InboxSortBy component
  */
-const SortByPopup = props => {
+const InboxSortBy = props => {
   const [isOpen, setIsOpen] = useState(false);
-  const {
-    rootClassName,
-    className,
-    menuLabelRootClassName,
-    urlParam,
-    label,
-    options,
-    initialValue,
-    contentPlacementOffset = 0,
-    onSelect,
-  } = props;
+  const { rootClassName, className, intl, initialValue, onSelect } = props;
 
   const onToggleActive = isOpenParam => {
     setIsOpen(isOpenParam);
   };
 
-  const selectOption = (urlParameter, option) => {
+  const selectOption = option => {
     setIsOpen(false);
-    onSelect(urlParameter, option);
+    onSelect(option.key);
   };
 
-  // resolve menu label text and class
-  const menuLabel = initialValue ? optionLabel(options, initialValue) : label;
-
   const classes = classNames(rootClassName || css.root, className);
-  const menuLabelClasses = classNames(menuLabelRootClassName);
   const iconArrowClassName = classNames(css.iconArrow, { [css.iconArrowAnimation]: isOpen });
+
+  const sortOptions = [
+    { key: 'createdAt', label: intl.formatMessage({ id: 'InboxPage.sortBy.createdAt' }) },
+    {
+      key: 'lastMessageAt',
+      label: intl.formatMessage({ id: 'InboxPage.sortBy.lastMessageAt' }),
+    },
+    {
+      key: 'lastTransitionedAt',
+      label: intl.formatMessage({ id: 'InboxPage.sortBy.lastTransitionedAt' }),
+    },
+  ];
+
+  const menuLabel = optionLabel(sortOptions, initialValue);
 
   return (
     <Menu
       className={classes}
       useArrow={false}
-      contentPlacementOffset={contentPlacementOffset}
+      contentPlacementOffset={SORT_DROPDOWN_OFFSET}
       contentPosition="left"
       onToggleActive={onToggleActive}
       isOpen={isOpen}
       preferScreenWidthOnMobile
     >
-      <MenuLabel rootClassName={menuLabelClasses}>
+      <MenuLabel rootClassName={css.sortLabel}>
         {menuLabel}
         <IconArrowHead className={iconArrowClassName} direction="down" size="tiny" />
       </MenuLabel>
       <MenuContent className={css.menuContent}>
-        {options.map(option => {
+        {sortOptions.map(option => {
           // check if this option is selected
           const selected = initialValue === option.key;
           // menu item border class
@@ -81,10 +79,12 @@ const SortByPopup = props => {
               <button
                 className={css.menuItem}
                 disabled={option.disabled}
-                onClick={() => (selected ? null : selectOption(urlParam, option.key))}
+                onClick={() => {
+                  return selected ? null : selectOption(option);
+                }}
               >
                 <span className={menuItemBorderClass} />
-                {option.longLabel || option.label}
+                {option.label}
               </button>
             </MenuItem>
           );
@@ -94,4 +94,4 @@ const SortByPopup = props => {
   );
 };
 
-export default SortByPopup;
+export default InboxSortBy;

@@ -249,3 +249,21 @@ export const twitterPageURL = twitterHandle => {
   }
   return null;
 };
+
+/**
+ * Check that the provided sort matches one of the accepted options
+ *
+ * @param {String} sort - Sort parameter
+ *
+ * @return {Object} Returns sort parameter if valid, otherwise empty object
+ */
+export const getValidInboxSort = sort => {
+  const validOptions = ['createdAt', 'lastMessageAt', 'lastTransitionedAt'];
+  // Discard invalid sorting options
+  if (!validOptions.includes(sort)) {
+    return {};
+  }
+  // Enforce createdAt order for those returned transactions that don't have messages.
+  // Background: API does not guarantee the order of responses if the primary sort property is missing.
+  return sort === 'lastMessageAt' ? { sort: 'lastMessageAt,createdAt' } : { sort };
+};
