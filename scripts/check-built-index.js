@@ -1,14 +1,23 @@
-/* scripts/check-built-index.js */
+// scripts/check-built-index.js
 const fs = require('fs');
 const path = require('path');
-const p = path.join(__dirname, '..', 'build', 'index.html');
-if (!fs.existsSync(p)) {
-  console.error('[BuildCheck] build/index.html missing — did web build run?');
+const BUILD = path.join(process.cwd(), 'build');
+const idx = path.join(BUILD, 'index.html');
+
+if (!fs.existsSync(idx)) {
+  console.error('[BuildSanity] build/index.html missing');
   process.exit(1);
 }
-const html = fs.readFileSync(p, 'utf8');
-if (/%PUBLIC_URL%/.test(html)) {
-  console.error('[BuildCheck] %PUBLIC_URL% still present in build/index.html — wrong file served or bad build.');
+const html = fs.readFileSync(idx, 'utf8');
+
+if (!/href=["']\/favicon\.ico\?v=sherbrt1["']/.test(html)) {
+  console.error('[BuildSanity] Built index.html missing /favicon.ico?v=sherbrt1 link');
   process.exit(1);
 }
-console.log('[BuildCheck] OK build/index.html is compiled.');
+
+if (!/<script[^>]+src=/.test(html)) {
+  console.error('[BuildSanity] No <script src=...> in built index -> blank screen risk');
+  process.exit(1);
+}
+
+console.log('[BuildSanity] OK');

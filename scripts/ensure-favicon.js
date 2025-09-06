@@ -1,39 +1,56 @@
-/* scripts/ensure-favicon.js */
+// scripts/ensure-favicon.js
 const fs = require('fs');
 const path = require('path');
-const crypto = require('crypto');
 
-function sha256(p) {
-  const b = fs.readFileSync(p);
-  return crypto.createHash('sha256').update(b).digest('hex');
-}
+const ROOT = process.cwd();
+const PUB = path.join(ROOT, 'public');
+const IDX = path.join(PUB, 'index.html');
+const MAN = path.join(PUB, 'site.webmanifest');
 
-const pubFav = path.join(__dirname, '..', 'public', 'favicon.ico');
-const buildFav = path.join(__dirname, '..', 'build', 'favicon.ico');
+const required = [
+  'favicon.ico',
+  'apple-touch-icon.png',
+  'android-chrome-192x192.png',
+  'android-chrome-512x512.png',
+];
 
-if (!fs.existsSync(pubFav)) {
-  console.error('[FaviconGuard] public/favicon.ico is missing (brand icon required).');
-  process.exit(1);
-}
-
-const brandHash = sha256(pubFav);
-
-// If build favicon missing or different, copy brand over
-if (!fs.existsSync(buildFav)) {
-  console.warn('[FaviconGuard] build/favicon.ico missing → copying brand icon.');
-  fs.copyFileSync(pubFav, buildFav);
-} else {
-  const buildHash = sha256(buildFav);
-  if (buildHash !== brandHash) {
-    console.warn('[FaviconGuard] build/favicon.ico does not match brand → replacing.');
-    fs.copyFileSync(pubFav, buildFav);
+for (const f of required) {
+  if (!fs.existsSync(path.join(PUB, f))) {
+    console.error('[FaviconGuard] Missing /public/' + f);
+    process.exit(1);
   }
 }
 
-// Re-check to ensure success
-const finalHash = sha256(buildFav);
-if (finalHash !== brandHash) {
-  console.error('[FaviconGuard] Could not enforce brand favicon in build/.');
+const html = fs.readFileSync(IDX, 'utf8');
+const iconLinks = (html.match(/<link\s+[^>]*rel=["']icon["'][^>]*>/gi) || []);
+if (iconLinks.length !== 1 || !/href=["']\/favicon\.ico\?v=sherbrt1["']/.test(html)) {
+  console.error('[FaviconGuard] index.html must have exactly one <link rel="icon" href="/favicon.ico?v=sherbrt1">');
   process.exit(1);
 }
-console.log('[FaviconGuard] OK brand favicon pinned in build/.');
+
+if (!fs.existsSync(MAN)) {
+  console.error('[FaviconGuard] site.webmanifest missing');
+  process.exit(1);
+}
+const man = JSON.parse(fs.readFileSync(MAN, 'utf8'));
+const ok = (man.icons || []).every(ic =>
+  ['/android-chrome-192x192.png', '/android-chrome-512x512.png', '/apple-touch-icon.png'].includes(ic.src)
+);
+if (!ok) {
+  console.error('[FaviconGuard] site.webmanifest icons must point to /android-chrome-*.png and /apple-touch-icon.png');
+  process.exit(1);
+}
+
+// Remove any banned template paths if they slipped in
+const banned = [
+  path.join(PUB, 'static/icons/favicon.ico'),
+  path.join(PUB, 'favicon.png')
+];
+for (const b of banned) {
+  if (fs.existsSync(b)) {
+    console.warn('[FaviconGuard] Removing banned template icon:', b);
+    fs.rmSync(b, { force: true, recursive: true });
+  }
+}
+
+console.log('[FaviconGuard] OK');
