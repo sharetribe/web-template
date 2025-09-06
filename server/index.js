@@ -47,31 +47,24 @@ const dataLoader = require('./dataLoader');
 const { generateCSPNonce, csp } = require('./csp');
 const sdkUtils = require('./api-util/sdk');
 
-const buildPath = path.resolve(__dirname, '..', 'build');
+// Paths + helpers
+const exists = p => { try { return fs.existsSync(p); } catch { return false; } };
+const readHead = (p, n=20) => {
+  try { return fs.readFileSync(p, 'utf8').split('\n').slice(0,n).join('\n'); } catch { return null; }
+};
+
+const buildDir  = path.join(__dirname, '..', 'build');
 const publicDir = path.join(__dirname, '..', 'public');
 
-// Enhanced static diagnostics
-console.info('[StaticDiag] buildDir exists:', fs.existsSync(buildPath), buildPath);
-console.info('[StaticDiag] publicDir exists:', fs.existsSync(publicDir), publicDir);
-
-// Check key files
-const buildIndex = path.join(buildPath, 'index.html');
-const publicIndex = path.join(publicDir, 'index.html');
-const sherbrtFav = path.join(publicDir, 'favicon.ico');
-
-console.info('[StaticDiag] build/index.html exists:', fs.existsSync(buildIndex));
-console.info('[StaticDiag] public/index.html exists:', fs.existsSync(publicIndex));
-console.info('[StaticDiag] Favicon check: serving Sherbrt favicon.ico from', sherbrtFav, 'exists:', fs.existsSync(sherbrtFav));
-
-// List sample files in build directory
-if (fs.existsSync(buildPath)) {
-  try {
-    const buildFiles = fs.readdirSync(buildPath);
-    console.info('[StaticDiag] build/ contents:', buildFiles.slice(0, 10).join(', '), buildFiles.length > 10 ? '...' : '');
-  } catch (e) {
-    console.warn('[StaticDiag] Could not read build directory:', e.message);
-  }
-}
+console.info('[StaticDiag] buildDir:', buildDir, 'exists:', exists(buildDir));
+console.info('[StaticDiag] publicDir:', publicDir, 'exists:', exists(publicDir));
+console.info('[StaticDiag] build/index.html exists:', exists(path.join(buildDir,'index.html')));
+console.info('[StaticDiag] build/static exists:', exists(path.join(buildDir,'static')));
+try {
+  const idx = path.join(buildDir,'index.html');
+  const head = readHead(idx, 40);
+  console.info('[StaticDiag] build/index.html head:\n', head || '(missing)');
+} catch {}
 const dev = process.env.REACT_APP_ENV === 'development';
 const PORT = process.env.PORT || 3000;
 const redirectSSL =
@@ -132,8 +125,8 @@ const corsOptions = {
 app.use(require('cors')(corsOptions));
 app.options('*', require('cors')(corsOptions)); // handle preflight everywhere
 
-const errorPage500 = fs.readFileSync(path.join(buildPath, '500.html'), 'utf-8');
-const errorPage404 = fs.readFileSync(path.join(buildPath, '404.html'), 'utf-8');
+const errorPage500 = fs.readFileSync(path.join(buildDir, '500.html'), 'utf-8');
+const errorPage404 = fs.readFileSync(path.join(buildDir, '404.html'), 'utf-8');
 
 // Filter out bot requests that scan websites for php vulnerabilities
 // from paths like /asdf/index.php, //cms/wp-includes/wlwmanifest.xml, etc.
@@ -217,66 +210,60 @@ app.get('/favicon.ico', (req, res, next) => {
   res.sendFile(sherbrtFav, err => err ? next(err) : null);
 });
 
-app.use('/static', express.static(path.join(buildPath, 'static')));
+// Bundle request logging middleware
+app.use((req,res,next) => {
+  // Log all bundle requests and 404s
+  if (req.url.startsWith('/static/')) {
+    res.on('finish', () => {
+      if (res.statusCode >= 400) {
+        console.error('[BundleDiag]', req.method, req.url, '→', res.statusCode);
+      }
+    });
+  }
+  next();
+});
 
-// Built assets (JS/CSS with %PUBLIC_URL% already resolved)
-app.use(express.static(buildPath, { fallthrough: true, etag: true, maxAge: '7d' }));
-// Unbuilt public assets (only as fallback for things copied 1:1, e.g., robots.txt)
+// Static middleware: build first, then public fallback
+app.use(express.static(buildDir,  { fallthrough: true, etag: true, maxAge: '7d' }));
 app.use(express.static(publicDir, { fallthrough: true, etag: true, maxAge: '7d' }));
 app.use(cookieParser());
 
-// Static diagnostics endpoint
+// Helper function for static routes
+function sendPreferringBuild(res, file, type) {
+  const p1 = path.join(buildDir, file);
+  const p2 = path.join(publicDir, file);
+  if (type) res.type(type);
+  if (exists(p1)) return res.sendFile(p1);
+  if (exists(p2)) return res.sendFile(p2);
+  return res.status(404).end();
+}
+
+// Static diagnostics endpoints
 app.get('/__static/diag', (req, res) => {
-  const buildExists = fs.existsSync(buildPath);
-  const publicExists = fs.existsSync(publicDir);
-  const buildIndexExists = fs.existsSync(buildIndex);
-  const publicIndexExists = fs.existsSync(publicIndex);
-  const sherbrtFavExists = fs.existsSync(sherbrtFav);
-  
-  let buildContents = [];
-  if (buildExists) {
-    try {
-      buildContents = fs.readdirSync(buildPath);
-    } catch (e) {
-      buildContents = ['error reading directory'];
-    }
-  }
-  
+  const list = d => { try { return fs.readdirSync(d).slice(0,10); } catch { return []; } };
   res.json({
-    buildDir: buildPath,
-    publicDir: publicDir,
-    buildExists,
-    publicExists,
-    buildIndex: buildIndexExists,
-    publicIndex: publicIndexExists,
-    sherbrtFav: sherbrtFavExists,
-    buildContents: buildContents.slice(0, 20), // Limit to first 20 files
-    timestamp: new Date().toISOString()
+    buildIndex: fs.existsSync(path.join(buildDir,'index.html')),
+    buildStatic: fs.existsSync(path.join(buildDir,'static')),
+    sampleBuildStatic: list(path.join(buildDir,'static')),
+    faviconPublicExists: fs.existsSync(path.join(publicDir,'favicon.ico')),
+    faviconBuildExists: fs.existsSync(path.join(buildDir,'favicon.ico')),
+    time: new Date().toISOString()
   });
 });
 
-// Other explicit static routes BEFORE catch-all
-app.get(['/robots.txt', '/sitemap.xml', '/sitemap-index.xml'], (req, res, next) => {
-  const fileMap = {
-    '/robots.txt':         'robots.txt',
-    '/sitemap.xml':        'sitemap.xml',
-    '/sitemap-index.xml':  'sitemap-index.xml',
-  };
-  const file = fileMap[req.path];
-  // Prefer build/, fallback to public/
-  res.sendFile(path.join(buildPath, file), err => {
-    if (err) res.sendFile(path.join(publicDir, file), err2 => err2 ? next(err2) : null);
-  });
+app.get('/__static/which-index', (req, res) => {
+  // Show which index we are about to send
+  const p = exists(path.join(buildDir,'index.html'))
+    ? path.join(buildDir,'index.html')
+    : path.join(publicDir,'index.html');
+  res.type('text/plain').send(p + '\n\n' + (readHead(p, 30) || '(missing)'));
 });
 
-// Web manifest route - prefer build/site.webmanifest (created by build step), fallback to public
-app.get('/site.webmanifest', (req, res, next) => {
-  const send = p => res.type('application/manifest+json').sendFile(p, e => e ? next(e) : null);
-  send(path.join(buildPath, 'site.webmanifest'));
-}, (err, req, res, next) => {
-  if (err) {
-    res.type('application/manifest+json').sendFile(path.join(publicDir, 'site.webmanifest'), e2 => e2 ? next(e2) : null);
-  } else next();
+// Manifest/robots/sitemaps (prefer build, fallback public, correct type)
+app.get('/site.webmanifest', (req,res) => sendPreferringBuild(res, 'site.webmanifest', 'application/manifest+json'));
+app.get(['/robots.txt','/sitemap.xml','/sitemap-index.xml'], (req,res) => {
+  const map = {'/robots.txt':'robots.txt','/sitemap.xml':'sitemap.xml','/sitemap-index.xml':'sitemap-index.xml'};
+  return sendPreferringBuild(res, map[req.path]);
 });
 
 // These .well-known/* endpoints will be enabled if you are using this template as OIDC proxy
@@ -328,19 +315,14 @@ app.get('*', async (req, res) => {
 
   // For SPA routes, serve the built HTML shell
   if (req.accepts('html')) {
-    return res.sendFile(path.join(buildPath, 'index.html'), err => {
-      if (err) {
-        console.error('[StaticDiag] WARNING: falling back to public/index.html — app may render blank.');
-        console.error('[SPA] Error serving build/index.html:', err.message);
-        // Fallback to public/index.html
-        return res.sendFile(path.join(publicDir, 'index.html'), err2 => {
-          if (err2) {
-            console.error('[SPA] Error serving public/index.html:', err2.message);
-            return res.status(500).json({ error: 'Internal Server Error' });
-          }
-        });
-      }
-    });
+    const idx = path.join(buildDir, 'index.html');
+    if (!exists(idx)) {
+      console.error('[StaticDiag] MISSING build/index.html — falling back to public (may cause blank page).');
+      res.set('Cache-Control','no-cache');
+      return res.sendFile(path.join(publicDir, 'index.html'), e => e ? next(e) : null);
+    }
+    res.set('Cache-Control','no-cache');
+    return res.sendFile(idx, e => e ? next(e) : null);
   }
 
   const context = {};
