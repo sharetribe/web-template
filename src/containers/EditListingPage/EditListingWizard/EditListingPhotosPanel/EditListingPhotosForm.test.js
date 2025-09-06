@@ -68,7 +68,7 @@ describe('EditListingDeliveryForm', () => {
     );
 
     // Fill mandatory attributes
-    const file = new File(['hello'], './public/static/icons/favicon-16x16.png', {
+    const file = new File(['hello'], './public/favicon.ico', {
       type: 'image/png',
     });
     const input = screen.getByLabelText(/label/i);
