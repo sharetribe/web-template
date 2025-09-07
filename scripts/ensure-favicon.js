@@ -34,10 +34,12 @@ if (!fs.existsSync(MAN)) {
 }
 const man = JSON.parse(fs.readFileSync(MAN, 'utf8'));
 const ok = (man.icons || []).every(ic =>
-  ['/android-chrome-192x192.png', '/android-chrome-512x512.png', '/apple-touch-icon.png'].includes(ic.src)
+  ic.src.includes('/android-chrome-192x192.png?v=sherbrt1') ||
+  ic.src.includes('/android-chrome-512x512.png?v=sherbrt1') ||
+  ic.src.includes('/apple-touch-icon.png?v=sherbrt1')
 );
 if (!ok) {
-  console.error('[FaviconGuard] site.webmanifest icons must point to /android-chrome-*.png and /apple-touch-icon.png');
+  console.error('[FaviconGuard] site.webmanifest icons must point to versioned brand assets with ?v=sherbrt1');
   process.exit(1);
 }
 
