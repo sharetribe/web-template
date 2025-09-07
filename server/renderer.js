@@ -120,7 +120,7 @@ exports.render = function(requestUrl, context, data, renderApp, webExtractor, no
     const debugComment = nonce ? `<!-- DEBUG: nonce first8=${nonce.slice(0,8)} -->` : '';
     const preloadedStateScript = `
         ${debugComment}
-        <script ${nonceMaybe}>window.__PRELOADED_STATE__ = ${JSON.stringify(
+        <script ${nonceMaybe}>window.__APP_CONFIG__ = ${JSON.stringify(
       serializedState
     )};</script>
     `;

@@ -148,13 +148,9 @@ app.use(
 app.use(cspNonce);
 
 // 2) Base Helmet (relax COEP/COOP to avoid third-party breakage)
-app.use(helmet({
-  contentSecurityPolicy: false, // We'll add CSP separately
-  crossOriginEmbedderPolicy: false,
-  crossOriginOpenerPolicy: false,
-  referrerPolicy: {
-    policy: 'origin',
-  },
+app.use(helmet({ 
+  crossOriginEmbedderPolicy: false, 
+  crossOriginOpenerPolicy: false 
 }));
 
 // 3) CSP with nonce function (if enabled)
@@ -174,53 +170,27 @@ if (cspEnabled) {
     useDefaults: true,
     directives: {
       "default-src": ["'self'"],
-
-      // Chrome enforces elem/attr — include nonce in all 3
       "script-src": [
-        "'self'",
-        nonceFn,
-        "blob:",
+        "'self'", nonceFn, "blob:",
         process.env.NODE_ENV !== 'production' ? "'unsafe-eval'" : null,
-        "https://js.stripe.com",
-        "https://m.stripe.network",
-        "https://api.stripe.com",
-        "https://api.mapbox.com",
-        "https://*.mapbox.com",
+        "https://js.stripe.com","https://m.stripe.network","https://api.stripe.com",
+        "https://api.mapbox.com","https://*.mapbox.com",
         "https://maps.googleapis.com",
-        "https://*.googletagmanager.com",
-        "https://*.google-analytics.com",
-        "https://www.googleadservices.com",
-        "https://*.g.doubleclick.net",
+        "https://*.googletagmanager.com","https://*.google-analytics.com",
+        "https://www.googleadservices.com","https://*.g.doubleclick.net",
         "https://plausible.io",
       ].filter(Boolean),
-
       "script-src-elem": [
-        "'self'",
-        nonceFn,
-        "blob:",
-        "https://js.stripe.com",
-        "https://m.stripe.network",
-        "https://api.stripe.com",
-        "https://api.mapbox.com",
-        "https://*.mapbox.com",
+        "'self'", nonceFn, "blob:",
+        "https://js.stripe.com","https://m.stripe.network","https://api.stripe.com",
+        "https://api.mapbox.com","https://*.mapbox.com",
         "https://maps.googleapis.com",
-        "https://*.googletagmanager.com",
-        "https://*.google-analytics.com",
-        "https://www.googleadservices.com",
-        "https://*.g.doubleclick.net",
+        "https://*.googletagmanager.com","https://*.google-analytics.com",
+        "https://www.googleadservices.com","https://*.g.doubleclick.net",
         "https://plausible.io",
       ],
-
       "script-src-attr": [nonceFn],
-
-      "style-src": [
-        "'self'",
-        "'unsafe-inline'",                // needed for Mapbox CSS
-        "https://api.mapbox.com",
-        "https://*.mapbox.com",
-        "https://fonts.googleapis.com",
-      ],
-
+      "style-src": ["'self'","'unsafe-inline'","https://api.mapbox.com","https://*.mapbox.com","https://fonts.googleapis.com"],
       "connect-src": [
         "'self'",
         "https://js.stripe.com","https://m.stripe.network","https://api.stripe.com",
@@ -233,7 +203,6 @@ if (cspEnabled) {
         "https://fonts.googleapis.com",
         "https://sentry.io","https://*.sentry.io",
       ],
-
       "img-src": [
         "'self'","data:","blob:","https:",
         "https://js.stripe.com","https://m.stripe.network","https://api.stripe.com",
@@ -244,18 +213,13 @@ if (cspEnabled) {
         "https://*.giphy.com","https://*.google-analytics.com","https://*.analytics.google.com","https://*.googletagmanager.com",
         "https://*.g.doubleclick.net","https://*.google.com","https://*.ytimg.com",
       ],
-
       "font-src": ["'self'","data:","https://fonts.gstatic.com"],
-      "frame-src": [
-        "'self'","https://js.stripe.com","https://m.stripe.network","https://api.stripe.com",
-        "https://*.youtube-nocookie.com","https://bid.g.doubleclick.net","https://td.doubleclick.net",
-      ],
+      "frame-src": ["'self'","https://js.stripe.com","https://m.stripe.network","https://api.stripe.com","https://*.youtube-nocookie.com","https://bid.g.doubleclick.net","https://td.doubleclick.net"],
       "worker-src": ["'self'","blob:"],
       "manifest-src": ["'self'"],
       "object-src": ["'none'"],
       "base-uri": ["'self'"],
       "frame-ancestors": ["'self'"],
-      // for diagnostics you can temporarily enable reportOnly by swapping middleware
     },
     reportOnly: isReportOnly,
   }));
@@ -364,13 +328,13 @@ app.get('/__assets', (req, res) => {
 // CSP debug endpoint
 app.get('/debug/csp', (req, res) => {
   const n = res.locals.cspNonce || 'missing';
-  res.send(`<!doctype html>
-  <html><body>
-    <!-- nonce first8=${n.slice(0,8)} -->
-    <script nonce="${n}">
-      document.body.insertAdjacentHTML('beforeend','<p>inline ok</p>');
-    </script>
-  </body></html>`);
+  res.send(`<!doctype html><body><!-- n8=${n.slice(0,8)} --><script nonce="${n}">document.body.innerHTML='inline ok';</script></body>`);
+});
+
+// Headers debug endpoint
+app.get('/debug/headers', (req, res) => {
+  res.set('content-type', 'text/plain');
+  res.send(JSON.stringify(req.headers, null, 2));
 });
 
 // Manifest/robots/sitemaps (prefer build, fallback public, correct type)
