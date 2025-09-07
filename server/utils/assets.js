@@ -12,4 +12,13 @@ function getClientScripts() {
   return { js: entry.filter(f => f.endsWith('.js')), css: entry.filter(f => f.endsWith('.css')), error: null };
 }
 
-module.exports = { getClientScripts, BUILD };
+function logAssets() {
+  const { js, css, error } = getClientScripts();
+  if (error) {
+    console.warn('[Assets]', error);
+  } else {
+    console.log('[Assets] Found', js.length, 'JS files,', css.length, 'CSS files');
+  }
+}
+
+module.exports = { getClientScripts, logAssets, BUILD_DIR: BUILD };
