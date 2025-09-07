@@ -44,7 +44,7 @@ const sitemapResourceRoute = require('./resources/sitemap');
 const { getExtractors } = require('./importer');
 const renderer = require('./renderer');
 const dataLoader = require('./dataLoader');
-const { generateCSPNonce, csp } = require('./csp');
+const cspNonce = require('./middleware/cspNonce');
 const sdkUtils = require('./api-util/sdk');
 const { getClientScripts, logAssets, BUILD_DIR } = require('./utils/assets');
 
@@ -144,23 +144,21 @@ app.use(
   }
 );
 
-// The helmet middleware sets various HTTP headers to improve security.
-// See: https://www.npmjs.com/package/helmet
-// Helmet 4 doesn't disable CSP by default so we need to do that explicitly.
-// If csp is enabled we will add that separately.
+// 1) Nonce generator (must be first)
+app.use(cspNonce);
 
-app.use(
-  helmet({
-    contentSecurityPolicy: false,
-    referrerPolicy: {
-      policy: 'origin',
-    },
-  })
-);
+// 2) Base Helmet (relax COEP/COOP to avoid third-party breakage)
+app.use(helmet({
+  contentSecurityPolicy: false, // We'll add CSP separately
+  crossOriginEmbedderPolicy: false,
+  crossOriginOpenerPolicy: false,
+  referrerPolicy: {
+    policy: 'origin',
+  },
+}));
 
+// 3) CSP with nonce function (if enabled)
 if (cspEnabled) {
-  app.use(generateCSPNonce);
-
   // When a CSP directive is violated, the browser posts a JSON body
   // to the defined report URL and we need to parse this body.
   app.use(
@@ -169,17 +167,118 @@ if (cspEnabled) {
     })
   );
 
-  // CSP can be turned on in report or block mode. In report mode, the
-  // browser checks the policy and calls the report URL when the
-  // policy is violated, but doesn't block any requests. In block
-  // mode, the browser also blocks the requests.
-
-  // In Helmet 4,supplying functions as directive values is not supported.
-  // That's why we need to create own middleware function that calls the Helmet's middleware function
+  const nonceFn = (req, res) => `'nonce-${res.locals.cspNonce}'`;
   const isReportOnly = CSP_MODE !== 'block';
-  app.use((req, res, next) => {
-    csp(cspReportUrl, isReportOnly)(req, res, next);
-  });
+
+  app.use(helmet.contentSecurityPolicy({
+    useDefaults: true,
+    directives: {
+      "default-src": ["'self'"],
+
+      // Inline boot script must be allowed here…
+      "script-src": [
+        "'self'",
+        nonceFn,
+        "blob:",
+        process.env.NODE_ENV !== 'production' ? "'unsafe-eval'" : null,
+        "https://js.stripe.com",
+        "https://m.stripe.network",
+        "https://api.stripe.com",
+        "https://api.mapbox.com",
+        "https://*.mapbox.com",
+        "https://maps.googleapis.com",
+        "https://*.googletagmanager.com",
+        "https://*.google-analytics.com",
+        "https://www.googleadservices.com",
+        "https://*.g.doubleclick.net",
+        "https://plausible.io",
+      ].filter(Boolean),
+
+      // …and ALSO here (Chrome enforces script-src-elem)
+      "script-src-elem": [
+        "'self'",
+        nonceFn,
+        "blob:",
+        "https://js.stripe.com",
+        "https://m.stripe.network",
+        "https://api.stripe.com",
+        "https://api.mapbox.com",
+        "https://*.mapbox.com",
+        "https://maps.googleapis.com",
+        "https://*.googletagmanager.com",
+        "https://*.google-analytics.com",
+        "https://www.googleadservices.com",
+        "https://*.g.doubleclick.net",
+        "https://plausible.io",
+      ],
+
+      // If any inline attributes exist, allow via nonce (try to avoid them)
+      "script-src-attr": [nonceFn],
+
+      // Mapbox injects inline styles
+      "style-src": [
+        "'self'",
+        "'unsafe-inline'",
+        "https://api.mapbox.com",
+        "https://*.mapbox.com",
+        "https://fonts.googleapis.com",
+      ],
+
+      "connect-src": [
+        "'self'",
+        "https://js.stripe.com",
+        "https://m.stripe.network",
+        "https://api.stripe.com",
+        "https://flex-api.sharetribe.com",
+        "https://*.st-api.com",
+        "https://maps.googleapis.com",
+        "https://places.googleapis.com",
+        "https://*.tiles.mapbox.com",
+        "https://api.mapbox.com",
+        "https://events.mapbox.com",
+        "https://*.google-analytics.com",
+        "https://*.analytics.google.com",
+        "https://*.googletagmanager.com",
+        "https://*.g.doubleclick.net",
+        "https://*.google.com",
+        "https://plausible.io",
+        "https://*.plausible.io",
+        "https://fonts.googleapis.com",
+        "https://sentry.io",
+        "https://*.sentry.io",
+      ],
+
+      "img-src": [
+        "'self'", "data:", "blob:", "https:",
+        "https://js.stripe.com", "https://m.stripe.network", "https://api.stripe.com",
+        "https://*.imgix.net", "https://sharetribe.imgix.net",
+        "https://picsum.photos", "https://*.picsum.photos",
+        "https://api.mapbox.com", "https://maps.googleapis.com",
+        "https://*.gstatic.com", "https://*.googleapis.com",
+        "https://*.ggpht.com", "https://*.giphy.com",
+        "https://*.google-analytics.com", "https://*.analytics.google.com",
+        "https://*.googletagmanager.com", "https://*.g.doubleclick.net",
+        "https://*.google.com", "https://*.ytimg.com",
+      ],
+
+      "font-src": ["'self'", "data:", "https://fonts.gstatic.com"],
+      "frame-src": [
+        "'self'",
+        "https://js.stripe.com",
+        "https://m.stripe.network",
+        "https://api.stripe.com",
+        "https://*.youtube-nocookie.com",
+        "https://bid.g.doubleclick.net",
+        "https://td.doubleclick.net",
+      ],
+      "worker-src": ["'self'", "blob:"],
+      "manifest-src": ["'self'"],
+      "object-src": ["'none'"],
+      "base-uri": ["'self'"],
+      "frame-ancestors": ["'self'"],
+    },
+    reportOnly: isReportOnly,
+  }));
 }
 
 // Redirect HTTP to HTTPS if REDIRECT_SSL is `true`.

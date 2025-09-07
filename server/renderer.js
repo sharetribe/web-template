@@ -117,7 +117,9 @@ exports.render = function(requestUrl, context, data, renderApp, webExtractor, no
     // contents properly so the value can be injected in the script tag
     // as a string.
     const nonceMaybe = nonce ? `nonce="${nonce}"` : '';
+    const debugComment = nonce ? `<!-- DEBUG: CSP nonce first8=${nonce.slice(0, 8)} -->` : '';
     const preloadedStateScript = `
+        ${debugComment}
         <script ${nonceMaybe}>window.__PRELOADED_STATE__ = ${JSON.stringify(
       serializedState
     )};</script>
