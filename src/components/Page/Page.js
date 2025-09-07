@@ -234,8 +234,9 @@ class PageComponent extends Component {
       });
     }
 
-    const faviconVariants = getFaviconVariants(config);
-    const appleTouchIcon = getAppleTouchIconURL(config);
+    // Use static favicon instead of dynamic config-based favicons
+    // const faviconVariants = getFaviconVariants(config);
+    // const appleTouchIcon = getAppleTouchIconURL(config);
 
     // Marketplace color and the color for <PrimaryButton> come from configs
     // If set, we need to create those custom CSS Properties and set them for the app
@@ -253,23 +254,9 @@ class PageComponent extends Component {
           {referrer ? <meta name="referrer" content={referrer} /> : null}
           <link rel="canonical" href={canonicalUrl} />
 
-          {faviconVariants.map(variant => {
-            return (
-              <link
-                key={`icon_${variant.width}`}
-                rel="icon"
-                type="image/png"
-                sizes={`${variant.width}x${variant.height}`}
-                href={variant.url}
-              />
-            );
-          })}
-
-          {appleTouchIcon ? (
-            <link rel="apple-touch-icon" sizes="180x180" href={appleTouchIcon} />
-          ) : null}
-
-          <link rel="manifest" href={webmanifestURL(marketplaceRootURL)} />
+          <link rel="icon" href="/favicon.ico?v=sherbrt1" />
+          <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+          <link rel="manifest" href="/site.webmanifest" />
 
           <meta httpEquiv="Content-Type" content="text/html; charset=UTF-8" />
           <meta httpEquiv="Content-Language" content={intl.locale} />

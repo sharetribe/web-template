@@ -42,17 +42,9 @@ function maskHosts(list) {
 }
 
 exports.generateCSPNonce = (req, res, next) => {
-  // Asynchronously generate a unique nonce for each request.
-  crypto.randomBytes(32, (err, randomBytes) => {
-    if (err) {
-      // If there was a problem, bail.
-      next(err);
-    } else {
-      // Save the nonce, as a hex string, to `res.locals` for later.
-      res.locals.cspNonce = randomBytes.toString('hex');
-      next();
-    }
-  });
+  // Generate a unique nonce for each request synchronously for better performance
+  res.locals.cspNonce = crypto.randomBytes(16).toString('base64');
+  next();
 };
 
 
@@ -96,10 +88,10 @@ exports.csp = (reportUri, reportOnly) => {
     'frame-ancestors': ensureArr(self),
     'manifest-src': ensureArr(self).concat(manifestExtra),
     'script-src': ensureArr(self).concat(STRIPE, scriptExtra, [
-      (req, res) => `'nonce-${res.locals.cspNonce}'`,
-      unsafeEval,
+      blob,
+      'https://api.mapbox.com',
+      'https://*.mapbox.com',
       'maps.googleapis.com',
-      'api.mapbox.com',
       '*.googletagmanager.com',
       '*.google-analytics.com',
       'www.googleadservices.com',
@@ -110,7 +102,14 @@ exports.csp = (reportUri, reportOnly) => {
       blob,
       'https://api.mapbox.com',
       'https://*.mapbox.com',
+      'maps.googleapis.com',
+      '*.googletagmanager.com',
+      '*.google-analytics.com',
+      'www.googleadservices.com',
+      '*.g.doubleclick.net',
+      'plausible.io',
     ]),
+    'script-src-attr': [], // Will be populated with nonce in middleware
     'connect-src': ensureArr(self).concat(STRIPE, connectExtra, [
       baseUrl,
       assetCdnBaseUrl,
@@ -134,6 +133,7 @@ exports.csp = (reportUri, reportOnly) => {
     'img-src': ensureArr(self).concat(STRIPE, imgExtra, [
       data,
       blob,
+      'https:',
       ...devImagesMaybe,
       '*.imgix.net',
       'sharetribe.imgix.net',
@@ -157,6 +157,7 @@ exports.csp = (reportUri, reportOnly) => {
       unsafeInline,
       'fonts.googleapis.com',
       'api.mapbox.com',
+      'https://*.mapbox.com',
     ]),
     'font-src': ensureArr(self).concat(fontExtra, [
       data,
@@ -164,10 +165,13 @@ exports.csp = (reportUri, reportOnly) => {
       'fonts.gstatic.com',
     ]),
     'frame-src': ensureArr(self).concat(STRIPE, frameExtra, [
+      'https://js.stripe.com',
+      'https://m.stripe.network',
       '*.youtube-nocookie.com',
       'https://bid.g.doubleclick.net',
       'https://td.doubleclick.net',
     ]),
+    'worker-src': ensureArr(self).concat([blob]),
   };
 
   // Add extra hosts to all directives if specified
@@ -206,16 +210,24 @@ exports.csp = (reportUri, reportOnly) => {
   console.info('[CSP] frame-src:', maskHosts(baseDirectives['frame-src']));
   console.info('[CSP] manifest-src:', maskHosts(baseDirectives['manifest-src']));
 
-  // Create the CSP middleware with try/catch guard
-  const cspMiddleware = helmet.contentSecurityPolicy({
-    useDefaults: false,
-    directives: baseDirectives,
-    reportOnly,
-  });
-
-  // Return middleware function with try/catch guard
+  // Return middleware function with try/catch guard and nonce handling
   return function csp(req, res, next) {
     try {
+      // Add nonce to script-src directives if available
+      const directives = { ...baseDirectives };
+      if (res.locals.cspNonce) {
+        const nonceValue = `'nonce-${res.locals.cspNonce}'`;
+        directives['script-src'] = [...directives['script-src'], nonceValue];
+        directives['script-src-elem'] = [...directives['script-src-elem'], nonceValue];
+        directives['script-src-attr'] = [nonceValue];
+      }
+      
+      const cspMiddleware = helmet.contentSecurityPolicy({
+        useDefaults: false,
+        directives,
+        reportOnly,
+      });
+      
       return cspMiddleware(req, res, next);
     } catch (e) {
       console.error('[CSP] middleware error, passing through without CSP:', e && e.stack || e);

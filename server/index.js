@@ -46,6 +46,7 @@ const renderer = require('./renderer');
 const dataLoader = require('./dataLoader');
 const { generateCSPNonce, csp } = require('./csp');
 const sdkUtils = require('./api-util/sdk');
+const { getClientScripts, logAssets, BUILD_DIR } = require('./utils/assets');
 
 // Paths + helpers
 const exists = p => { try { return fs.existsSync(p); } catch { return false; } };
@@ -60,11 +61,15 @@ console.info('[StaticDiag] buildDir:', buildDir, 'exists:', exists(buildDir));
 console.info('[StaticDiag] publicDir:', publicDir, 'exists:', exists(publicDir));
 console.info('[StaticDiag] build/index.html exists:', exists(path.join(buildDir,'index.html')));
 console.info('[StaticDiag] build/static exists:', exists(path.join(buildDir,'static')));
+console.info('[StaticDiag] manifest present:', exists(path.join(buildDir, 'asset-manifest.json')));
 try {
   const idx = path.join(buildDir,'index.html');
   const head = readHead(idx, 40);
   console.info('[StaticDiag] build/index.html head:\n', head || '(missing)');
 } catch {}
+
+// Log asset information
+logAssets();
 const dev = process.env.REACT_APP_ENV === 'development';
 const PORT = process.env.PORT || 3000;
 const redirectSSL =
@@ -259,6 +264,24 @@ app.get('/__static/which-index', (req, res) => {
   res.type('text/plain').send(p + '\n\n' + (readHead(p, 30) || '(missing)'));
 });
 
+// Health and assets diagnostic endpoints
+app.get('/__health', (req, res) => {
+  const buildExists = fs.existsSync(path.join(buildDir, 'index.html'));
+  const manifestExists = fs.existsSync(path.join(buildDir, 'asset-manifest.json'));
+  const { js } = getClientScripts();
+  res.json({ 
+    ok: buildExists && manifestExists && js.length > 0, 
+    buildExists, 
+    manifestExists, 
+    injectedScriptsCount: js.length 
+  });
+});
+
+app.get('/__assets', (req, res) => {
+  const { js, css, error } = getClientScripts();
+  res.json({ js, css, error });
+});
+
 // Manifest/robots/sitemaps (prefer build, fallback public, correct type)
 app.get('/site.webmanifest', (req,res) => sendPreferringBuild(res, 'site.webmanifest', 'application/manifest+json'));
 app.get(['/robots.txt','/sitemap.xml','/sitemap-index.xml'], (req,res) => {
@@ -313,7 +336,7 @@ app.get('*', async (req, res) => {
     return res.status(200).send({ status: 'ok' });
   }
 
-  // For SPA routes, serve the built HTML shell
+  // For SPA routes, use SSR renderer to inject client scripts
   if (req.accepts('html')) {
     const idx = path.join(buildDir, 'index.html');
     if (!exists(idx)) {
@@ -321,8 +344,7 @@ app.get('*', async (req, res) => {
       res.set('Cache-Control','no-cache');
       return res.sendFile(path.join(publicDir, 'index.html'), e => e ? next(e) : null);
     }
-    res.set('Cache-Control','no-cache');
-    return res.sendFile(idx, e => e ? next(e) : null);
+    // Continue to SSR renderer instead of serving static file
   }
 
   const context = {};
@@ -331,6 +353,11 @@ app.get('*', async (req, res) => {
   // make sure that no sensitive data can appear in the prefetched
   // data, let's disable response caching altogether.
   res.set(noCacheHeaders);
+  
+  // For HTML requests, ensure no-cache to prevent stale shells
+  if (req.accepts('html')) {
+    res.set('Cache-Control','no-cache');
+  }
 
   // Get chunk extractors from node and web builds
   // https://loadable-components.com/docs/api-loadable-server/#chunkextractor

@@ -2,6 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const _ = require('lodash');
 const { types } = require('sharetribe-flex-sdk');
+const { getClientScripts } = require('./utils/assets');
 
 const buildPath = path.resolve(__dirname, '..', 'build');
 
@@ -124,6 +125,29 @@ exports.render = function(requestUrl, context, data, renderApp, webExtractor, no
     // Add nonce to server-side rendered script tags
     const nonceParamMaybe = nonce ? { nonce } : {};
 
+    // Get client scripts from asset manifest
+    const { js: clientJS, css: clientCSS, error } = getClientScripts();
+    let scriptsMarkup = '';
+    let stylesMarkup = '';
+
+    if (clientJS && clientJS.length > 0) {
+      // Use our asset manifest for script injection
+      const nonceAttr = nonce ? ` nonce="${nonce}"` : '';
+      scriptsMarkup = clientJS.map(src => `<script defer src="/${src}"${nonceAttr}></script>`).join('');
+      console.log('[SSR] Injected', clientJS.length, 'client scripts from manifest');
+    } else {
+      console.warn('[SSR] No client scripts resolved from manifest; serving index as-is to avoid blank screen');
+      // Don't use webExtractor fallback - serve the file as-is so CRA default tags load
+      scriptsMarkup = '';
+    }
+
+    if (clientCSS && clientCSS.length > 0) {
+      // Use our asset manifest for style injection
+      stylesMarkup = clientCSS.map(src => `<link rel="stylesheet" href="/${src}">`).join('');
+    } else {
+      stylesMarkup = webExtractor.getStyleTags();
+    }
+
     return template({
       htmlAttributes: head.htmlAttributes.toString(),
       title: head.title.toString(),
@@ -131,9 +155,9 @@ exports.render = function(requestUrl, context, data, renderApp, webExtractor, no
       meta: head.meta.toString(),
       script: head.script.toString(),
       preloadedStateScript,
-      ssrStyles: webExtractor.getStyleTags(),
+      ssrStyles: stylesMarkup,
       ssrLinks: webExtractor.getLinkTags(),
-      ssrScripts: webExtractor.getScriptTags(nonceParamMaybe),
+      ssrScripts: scriptsMarkup,
       body,
     });
   });
