@@ -175,7 +175,7 @@ if (cspEnabled) {
     directives: {
       "default-src": ["'self'"],
 
-      // Inline boot script must be allowed here…
+      // Chrome enforces elem/attr — include nonce in all 3
       "script-src": [
         "'self'",
         nonceFn,
@@ -194,7 +194,6 @@ if (cspEnabled) {
         "https://plausible.io",
       ].filter(Boolean),
 
-      // …and ALSO here (Chrome enforces script-src-elem)
       "script-src-elem": [
         "'self'",
         nonceFn,
@@ -212,13 +211,11 @@ if (cspEnabled) {
         "https://plausible.io",
       ],
 
-      // If any inline attributes exist, allow via nonce (try to avoid them)
       "script-src-attr": [nonceFn],
 
-      // Mapbox injects inline styles
       "style-src": [
         "'self'",
-        "'unsafe-inline'",
+        "'unsafe-inline'",                // needed for Mapbox CSS
         "https://api.mapbox.com",
         "https://*.mapbox.com",
         "https://fonts.googleapis.com",
@@ -226,56 +223,39 @@ if (cspEnabled) {
 
       "connect-src": [
         "'self'",
-        "https://js.stripe.com",
-        "https://m.stripe.network",
-        "https://api.stripe.com",
-        "https://flex-api.sharetribe.com",
-        "https://*.st-api.com",
-        "https://maps.googleapis.com",
-        "https://places.googleapis.com",
-        "https://*.tiles.mapbox.com",
-        "https://api.mapbox.com",
-        "https://events.mapbox.com",
-        "https://*.google-analytics.com",
-        "https://*.analytics.google.com",
-        "https://*.googletagmanager.com",
-        "https://*.g.doubleclick.net",
-        "https://*.google.com",
-        "https://plausible.io",
-        "https://*.plausible.io",
+        "https://js.stripe.com","https://m.stripe.network","https://api.stripe.com",
+        "https://flex-api.sharetribe.com","https://*.st-api.com",
+        "https://maps.googleapis.com","https://places.googleapis.com",
+        "https://*.tiles.mapbox.com","https://api.mapbox.com","https://events.mapbox.com",
+        "https://*.google-analytics.com","https://*.analytics.google.com","https://*.googletagmanager.com",
+        "https://*.g.doubleclick.net","https://*.google.com",
+        "https://plausible.io","https://*.plausible.io",
         "https://fonts.googleapis.com",
-        "https://sentry.io",
-        "https://*.sentry.io",
+        "https://sentry.io","https://*.sentry.io",
       ],
 
       "img-src": [
-        "'self'", "data:", "blob:", "https:",
-        "https://js.stripe.com", "https://m.stripe.network", "https://api.stripe.com",
-        "https://*.imgix.net", "https://sharetribe.imgix.net",
-        "https://picsum.photos", "https://*.picsum.photos",
-        "https://api.mapbox.com", "https://maps.googleapis.com",
-        "https://*.gstatic.com", "https://*.googleapis.com",
-        "https://*.ggpht.com", "https://*.giphy.com",
-        "https://*.google-analytics.com", "https://*.analytics.google.com",
-        "https://*.googletagmanager.com", "https://*.g.doubleclick.net",
-        "https://*.google.com", "https://*.ytimg.com",
+        "'self'","data:","blob:","https:",
+        "https://js.stripe.com","https://m.stripe.network","https://api.stripe.com",
+        "https://*.imgix.net","https://sharetribe.imgix.net",
+        "https://picsum.photos","https://*.picsum.photos",
+        "https://api.mapbox.com","https://maps.googleapis.com",
+        "https://*.gstatic.com","https://*.googleapis.com","https://*.ggpht.com",
+        "https://*.giphy.com","https://*.google-analytics.com","https://*.analytics.google.com","https://*.googletagmanager.com",
+        "https://*.g.doubleclick.net","https://*.google.com","https://*.ytimg.com",
       ],
 
-      "font-src": ["'self'", "data:", "https://fonts.gstatic.com"],
+      "font-src": ["'self'","data:","https://fonts.gstatic.com"],
       "frame-src": [
-        "'self'",
-        "https://js.stripe.com",
-        "https://m.stripe.network",
-        "https://api.stripe.com",
-        "https://*.youtube-nocookie.com",
-        "https://bid.g.doubleclick.net",
-        "https://td.doubleclick.net",
+        "'self'","https://js.stripe.com","https://m.stripe.network","https://api.stripe.com",
+        "https://*.youtube-nocookie.com","https://bid.g.doubleclick.net","https://td.doubleclick.net",
       ],
-      "worker-src": ["'self'", "blob:"],
+      "worker-src": ["'self'","blob:"],
       "manifest-src": ["'self'"],
       "object-src": ["'none'"],
       "base-uri": ["'self'"],
       "frame-ancestors": ["'self'"],
+      // for diagnostics you can temporarily enable reportOnly by swapping middleware
     },
     reportOnly: isReportOnly,
   }));
@@ -379,6 +359,18 @@ app.get('/__health', (req, res) => {
 app.get('/__assets', (req, res) => {
   const { js, css, error } = getClientScripts();
   res.json({ js, css, error });
+});
+
+// CSP debug endpoint
+app.get('/debug/csp', (req, res) => {
+  const n = res.locals.cspNonce || 'missing';
+  res.send(`<!doctype html>
+  <html><body>
+    <!-- nonce first8=${n.slice(0,8)} -->
+    <script nonce="${n}">
+      document.body.insertAdjacentHTML('beforeend','<p>inline ok</p>');
+    </script>
+  </body></html>`);
 });
 
 // Manifest/robots/sitemaps (prefer build, fallback public, correct type)
