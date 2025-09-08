@@ -1,9 +1,9 @@
 const fs = require('fs');
 const path = require('path');
+const { ICONS_VERSION } = require('./lib/iconsVersion');
 
 module.exports = async (req, res) => {
   const nonce = res.locals.cspNonce || '';
-  const iconsVersion = process.env.ICONS_VERSION || 'sherbrt2';
   const buildDir = path.join(__dirname, '..', 'build');
   let html = fs.readFileSync(path.join(buildDir, 'index.html'), 'utf8');
 
@@ -65,9 +65,9 @@ module.exports = async (req, res) => {
     .replace('<!--!ssrLinks-->', cssLinks)
     .replace('<head>', `<head>\n<meta name="csp-nonce" content="${nonce}">`)
     // Replace icon versioning placeholders
-    .replace(/href="\/favicon\.ico\?v=\$\{ICONS_VERSION\}"/g, `href="/favicon.ico?v=${iconsVersion}"`)
-    .replace(/href="\/apple-touch-icon\.png\?v=\$\{ICONS_VERSION\}"/g, `href="/apple-touch-icon.png?v=${iconsVersion}"`)
-    .replace(/href="\/site\.webmanifest\?v=\$\{ICONS_VERSION\}"/g, `href="/site.webmanifest?v=${iconsVersion}"`);
+    .replace(/href="\/favicon\.ico\?v=\$\{ICONS_VERSION\}"/g, `href="/favicon.ico?v=${ICONS_VERSION}"`)
+    .replace(/href="\/apple-touch-icon\.png\?v=\$\{ICONS_VERSION\}"/g, `href="/apple-touch-icon.png?v=${ICONS_VERSION}"`)
+    .replace(/href="\/site\.webmanifest\?v=\$\{ICONS_VERSION\}"/g, `href="/site.webmanifest?v=${ICONS_VERSION}"`);
 
   // Verify no placeholders remain
   if (html.includes('<!--!ssrScripts-->') || html.includes('<!--!ssrLinks-->') || html.includes('<!--!ssrStyles-->')) {
@@ -75,7 +75,7 @@ module.exports = async (req, res) => {
   }
 
   console.log(`[SSR] Injected ${cssFiles.length} CSS files, ${jsFiles.length} JS files`);
-  console.log(`[SSR] Using ICONS_VERSION: ${iconsVersion}`);
+  console.log(`[SSR] Using ICONS_VERSION: ${ICONS_VERSION}`);
 
   global.__lastRenderedHtml = html; // for debug endpoint
   return html;

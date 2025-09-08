@@ -7,6 +7,9 @@ const PUB = path.join(ROOT, 'public');
 const IDX = path.join(PUB, 'index.html');
 const MAN = path.join(PUB, 'site.webmanifest');
 
+// Read ICONS_VERSION from environment
+const ICONS_VERSION = process.env.ICONS_VERSION || 'sherbrt1';
+
 const required = [
   'favicon.ico',
   'apple-touch-icon.png',
@@ -23,8 +26,10 @@ for (const f of required) {
 
 const html = fs.readFileSync(IDX, 'utf8');
 const iconLinks = (html.match(/<link\s+[^>]*rel=["']icon["'][^>]*>/gi) || []);
-if (iconLinks.length !== 1 || !/href=["']\/favicon\.ico\?v=sherbrt1["']/.test(html)) {
-  console.error('[FaviconGuard] index.html must have exactly one <link rel="icon" href="/favicon.ico?v=sherbrt1">');
+const expectedFaviconHref = `/favicon.ico?v=${ICONS_VERSION}`;
+if (iconLinks.length !== 1 || !html.includes(`href="${expectedFaviconHref}"`)) {
+  console.error(`[FaviconGuard] index.html must have exactly one <link rel="icon" href="${expectedFaviconHref}">`);
+  console.error(`[FaviconGuard] Found ${iconLinks.length} icon links:`, iconLinks);
   process.exit(1);
 }
 
@@ -34,12 +39,13 @@ if (!fs.existsSync(MAN)) {
 }
 const man = JSON.parse(fs.readFileSync(MAN, 'utf8'));
 const ok = (man.icons || []).every(ic =>
-  ic.src.includes('/android-chrome-192x192.png?v=sherbrt1') ||
-  ic.src.includes('/android-chrome-512x512.png?v=sherbrt1') ||
-  ic.src.includes('/apple-touch-icon.png?v=sherbrt1')
+  ic.src.includes(`/android-chrome-192x192.png?v=${ICONS_VERSION}`) ||
+  ic.src.includes(`/android-chrome-512x512.png?v=${ICONS_VERSION}`) ||
+  ic.src.includes(`/apple-touch-icon.png?v=${ICONS_VERSION}`)
 );
 if (!ok) {
-  console.error('[FaviconGuard] site.webmanifest icons must point to versioned brand assets with ?v=sherbrt1');
+  console.error(`[FaviconGuard] site.webmanifest icons must point to versioned brand assets with ?v=${ICONS_VERSION}`);
+  console.error('[FaviconGuard] Expected version:', ICONS_VERSION);
   process.exit(1);
 }
 
@@ -55,4 +61,4 @@ for (const b of banned) {
   }
 }
 
-console.log('[FaviconGuard] OK');
+console.log(`[FaviconGuard] OK (ICONS_VERSION: ${ICONS_VERSION})`);

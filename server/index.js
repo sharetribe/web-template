@@ -411,9 +411,9 @@ app.post(cspReportUrl, (req, res) => {
 
 const server = app.listen(PORT, () => {
   const mode = process.env.NODE_ENV || 'development';
-  const iconsVersion = process.env.ICONS_VERSION || 'sherbrt2';
+  const { ICONS_VERSION } = require('./lib/iconsVersion');
   console.log(`Listening on port ${PORT} in ${mode} mode`);
-  console.log(`Using ICONS_VERSION: ${iconsVersion}`);
+  console.log(`Using ICONS_VERSION: ${ICONS_VERSION}`);
   if (dev) {
     console.log(`Open http://localhost:${PORT}/ and start hacking!`);
   }
