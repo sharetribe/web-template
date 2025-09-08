@@ -6,6 +6,8 @@
 import React, { Component } from 'react';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
+import { Elements, CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 
 import { FormattedMessage, injectIntl } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
@@ -93,21 +95,36 @@ const OneTimePaymentWithCardElement = props => {
   const {
     cardClasses,
     formId,
-    handleStripeElementRef,
     hasCardError,
     error,
     label,
     intl,
     marketplaceName,
   } = props;
+  const stripe = useStripe();
+  const elements = useElements();
+  
   const labelText =
     label || intl.formatMessage({ id: 'StripePaymentForm.saveAfterOnetimePayment' });
+  
+  console.log('[StripeForm] render start');
+  
+  if (!stripe || !elements) {
+    return <div>Initializing payment form…</div>;
+  }
+  
   return (
     <React.Fragment>
       <label className={css.paymentLabel} htmlFor={`${formId}-card`}>
         <FormattedMessage id="StripePaymentForm.paymentCardDetails" />
       </label>
-      <div className={cardClasses} id={`${formId}-card`} ref={handleStripeElementRef} />
+      <div className={cardClasses}>
+        <CardElement
+          id={`${formId}-card`}
+          onReady={() => console.log('[StripeForm] CardElement ready')}
+          onChange={(e) => console.log('[StripeForm] change', {complete: e.complete, empty: e.empty})}
+        />
+      </div>
       {hasCardError ? <span className={css.error}>{error}</span> : null}
       <div className={css.saveForLaterUse}>
         <FieldCheckbox
@@ -136,7 +153,6 @@ const PaymentMethodSelector = props => {
     formId,
     changePaymentMethod,
     defaultPaymentMethod,
-    handleStripeElementRef,
     hasCardError,
     error,
     paymentMethod,
@@ -163,7 +179,6 @@ const PaymentMethodSelector = props => {
         <OneTimePaymentWithCardElement
           cardClasses={cardClasses}
           formId={formId}
-          handleStripeElementRef={handleStripeElementRef}
           hasCardError={hasCardError}
           error={error}
           label={labelText}
@@ -297,64 +312,18 @@ class StripePaymentForm extends Component {
     this.updateBillingDetailsToMatchShippingAddress = this.updateBillingDetailsToMatchShippingAddress.bind(
       this
     );
-    this.handleCardValueChange = this.handleCardValueChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.paymentForm = this.paymentForm.bind(this);
-    this.initializeStripeElement = this.initializeStripeElement.bind(this);
-    this.handleStripeElementRef = this.handleStripeElementRef.bind(this);
     this.changePaymentMethod = this.changePaymentMethod.bind(this);
     this.finalFormAPI = null;
-    this.cardContainer = null;
   }
 
   componentDidMount() {
-    if (!window.Stripe) {
-      throw new Error('Stripe must be loaded for StripePaymentForm');
-    }
-
-    const publishableKey = this.props.stripePublishableKey;
-    if (publishableKey) {
-      const {
-        onStripeInitialized,
-        hasHandledCardPayment,
-        defaultPaymentMethod,
-        loadingData,
-      } = this.props;
-      this.stripe = window.Stripe(publishableKey);
-      onStripeInitialized(this.stripe);
-
-      if (!(hasHandledCardPayment || defaultPaymentMethod || loadingData)) {
-        this.initializeStripeElement();
-      }
-    }
+    // No longer needed with React Stripe Elements
   }
 
   componentWillUnmount() {
-    if (this.card) {
-      this.card.removeEventListener('change', this.handleCardValueChange);
-      this.card.unmount();
-      this.card = null;
-    }
-  }
-
-  initializeStripeElement(element) {
-    const elements = this.stripe.elements(stripeElementsOptions);
-
-    if (!this.card) {
-      this.card = elements.create('card', { style: cardStyles });
-      this.card.mount(element || this.cardContainer);
-      this.card.addEventListener('change', this.handleCardValueChange);
-      // EventListener is the only way to simulate breakpoints with Stripe.
-      window.addEventListener('resize', () => {
-        if (this.card) {
-          if (window.innerWidth < 768) {
-            this.card.update({ style: { base: { fontSize: '14px', lineHeight: '24px' } } });
-          } else {
-            this.card.update({ style: { base: { fontSize: '18px', lineHeight: '24px' } } });
-          }
-        }
-      });
-    }
+    // No longer needed with React Stripe Elements
   }
 
   updateBillingDetailsToMatchShippingAddress(shouldFill) {
@@ -372,12 +341,6 @@ class StripePaymentForm extends Component {
   }
 
   changePaymentMethod(changedTo) {
-    if (this.card && changedTo === 'defaultCard') {
-      this.card.removeEventListener('change', this.handleCardValueChange);
-      this.card.unmount();
-      this.card = null;
-      this.setState({ cardValueValid: false });
-    }
     this.setState({ paymentMethod: changedTo });
     if (changedTo === 'defaultCard' && this.finalFormAPI) {
       this.finalFormAPI.change('sameAddressCheckbox', undefined);
@@ -385,30 +348,6 @@ class StripePaymentForm extends Component {
       this.finalFormAPI.change('sameAddressCheckbox', ['sameAddress']);
       this.updateBillingDetailsToMatchShippingAddress(true);
     }
-  }
-
-  handleStripeElementRef(el) {
-    this.cardContainer = el;
-    if (this.stripe && el) {
-      this.initializeStripeElement(el);
-    }
-  }
-
-  handleCardValueChange(event) {
-    const { intl } = this.props;
-    const { error, complete } = event;
-
-    const postalCode = event.value.postalCode;
-    if (this.finalFormAPI) {
-      this.finalFormAPI.change('postal', postalCode);
-    }
-
-    this.setState(prevState => {
-      return {
-        error: error ? stripeErrorTranslation(intl, error) : null,
-        cardValueValid: complete,
-      };
-    });
   }
   handleSubmit(values) {
     const {
@@ -434,9 +373,26 @@ class StripePaymentForm extends Component {
       return;
     }
 
+    // Get Stripe instances safely
+    const stripe = this.props.stripe;
+    const elements = this.props.elements;
+    
+    if (!stripe || !elements) {
+      console.warn('[StripeForm] Stripe/Elements not ready yet');
+      return;
+    }
+    
+    const card = elements.getElement(CardElement);
+    if (!card) {
+      console.error('[StripeForm] CardElement missing at submit');
+      return;
+    }
+
     const params = {
       message: initialMessage ? initialMessage.trim() : null,
-      card: this.card,
+      card: card,
+      stripe: stripe,
+      elements: elements,
       formId,
       formValues: values,
       paymentMethod: getPaymentMethod(
@@ -570,7 +526,6 @@ class StripePaymentForm extends Component {
                 formId={formId}
                 defaultPaymentMethod={ensuredDefaultPaymentMethod}
                 changePaymentMethod={this.changePaymentMethod}
-                handleStripeElementRef={this.handleStripeElementRef}
                 hasCardError={hasCardError}
                 error={this.state.error}
                 paymentMethod={selectedPaymentMethod}
@@ -585,7 +540,6 @@ class StripePaymentForm extends Component {
                 <OneTimePaymentWithCardElement
                   cardClasses={cardClasses}
                   formId={formId}
-                  handleStripeElementRef={this.handleStripeElementRef}
                   hasCardError={hasCardError}
                   error={this.state.error}
                   intl={intl}
@@ -767,12 +721,6 @@ class StripePaymentForm extends Component {
 
   render() {
     const { onSubmit, ...rest } = this.props;
-    
-    // Guard against missing Stripe/Elements context
-    if (!this.props.stripe || !this.props.elements) {
-      // Don't throw—render a soft loader so the page never hard-crashes
-      return <div>Initializing payment form…</div>;
-    }
     
     // Add initialValues for shipping fields
     const initialValues = {

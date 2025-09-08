@@ -236,7 +236,7 @@ export const loadInitialDataForStripePayments = ({
   fetchSpeculatedTransactionIfNeeded(orderParams, pageData, fetchSpeculatedTransaction);
 };
 
-const handleSubmit = (values, process, props, stripe, submitting, setSubmitting) => {
+const handleSubmit = (values, process, props, submitting, setSubmitting) => {
   if (submitting) {
     return;
   }
@@ -420,7 +420,7 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
   const requestPaymentParams = {
     pageData,
     speculatedTransaction,
-    stripe,
+    stripe: values.stripe,
     card,
     billingDetails: getBillingDetails(formValues, currentUser),
     message,
@@ -507,8 +507,6 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
  */
 export const CheckoutPageWithPayment = props => {
   const [submitting, setSubmitting] = useState(false);
-  // Initialized stripe library is saved to state - if it's needed at some point here too.
-  const [stripe, setStripe] = useState(null);
 
   const {
     scrollingDisabled,
@@ -698,7 +696,7 @@ export const CheckoutPageWithPayment = props => {
               <StripePaymentForm
                 className={css.paymentForm}
                 onSubmit={values =>
-                  handleSubmit(values, process, props, stripe, submitting, setSubmitting)
+                  handleSubmit(values, process, props, submitting, setSubmitting)
                 }
                 inProgress={submitting}
                 formId="CheckoutPagePaymentForm"
@@ -716,7 +714,7 @@ export const CheckoutPageWithPayment = props => {
                     : null
                 }
                 paymentIntent={paymentIntent}
-                onStripeInitialized={stripe => setStripe(stripe)}
+                onStripeInitialized={() => {}}
                 askShippingDetails={askShippingDetails}
                 showPickUplocation={orderData?.deliveryMethod === 'pickup'}
                 listingLocation={listing?.attributes?.publicData?.location}
@@ -752,15 +750,23 @@ export const CheckoutPageWithPayment = props => {
 const CheckoutPageWithPaymentWrapper = (props) => {
   const [status, setStatus] = React.useState('loading'); // loading | unavailable | ready
   const [stripe, setStripe] = React.useState(null);
+  const [initError, setInitError] = React.useState(null);
 
   React.useEffect(() => {
     let on = true;
     (async () => {
-      console.log('[CheckoutDiag] LIVE bundle Stripe key:', window.__BUILD_DIAG__?.stripePkMasked);
-      const s = await getStripe({ timeoutMs: 8000, retryMs: 2000 });
-      if (!on) return;
-      if (s) { setStripe(s); setStatus('ready'); }
-      else { setStatus('unavailable'); }
+      try {
+        console.log('[CheckoutDiag] LIVE bundle Stripe key:', process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY?.slice(0,8));
+        const s = await getStripe({ timeoutMs: 8000, retryMs: 2000 });
+        if (!on) return;
+        if (s) { setStripe(s); setStatus('ready'); }
+        else { setStatus('unavailable'); }
+      } catch (err) {
+        if (!on) return;
+        console.error('[CheckoutDiag] Stripe initialization failed:', err);
+        setInitError(err);
+        setStatus('unavailable');
+      }
     })();
     return () => { on = false; };
   }, []);
@@ -772,12 +778,13 @@ const CheckoutPageWithPaymentWrapper = (props) => {
       <div style={{padding:16}}>
         <h3>Payment temporarily unavailable</h3>
         <p>We're having trouble loading our payment provider. Please refresh or try again in a moment.</p>
+        {initError && <div style={{color:'red', marginTop:8}}>We couldn't load the secure card form. Please refresh or try another browser.</div>}
       </div>
     );
   }
 
   return (
-    <Elements stripe={stripe}>
+    <Elements stripe={stripe} options={{appearance:{theme:'stripe'}}}>
       <CheckoutPageWithPayment {...props} />
     </Elements>
   );
