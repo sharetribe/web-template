@@ -35,7 +35,7 @@ export const IncludeScripts = props => {
     // NOTE: remember to update mapbox-sdk.min.js to a new version regularly.
     // mapbox-sdk.min.js is included from static folder for CSP purposes.
     mapLibraries.push(
-      <script key="mapboxSDK" src={`${rootURL}/static/scripts/mapbox/mapbox-sdk.min.js`}></script>
+      <script key="mapboxSDK" src={`${rootURL}/static/scripts/mapbox/mapbox-sdk.min.js`} nonce={document.querySelector('script[nonce]')?.getAttribute('nonce') || document.querySelector('meta[name="csp-nonce"]')?.getAttribute('content')}></script>
     );
     // License information for v3.7.0 of the mapbox-gl-js library:
     // https://github.com/mapbox/mapbox-gl-js/blob/v3.7.0/LICENSE.txt
@@ -56,6 +56,7 @@ export const IncludeScripts = props => {
         key="mapbox_GL_JS"
         src="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.js"
         crossOrigin
+        nonce={document.querySelector('script[nonce]')?.getAttribute('nonce') || document.querySelector('meta[name="csp-nonce"]')?.getAttribute('content')}
       ></script>
     );
   } else if (isGoogleMapsInUse) {
@@ -66,6 +67,7 @@ export const IncludeScripts = props => {
         key="GoogleMapsApi"
         src={`https://maps.googleapis.com/maps/api/js?key=${googleMapsAPIKey}&libraries=places`}
         crossOrigin
+        nonce={document.querySelector('script[nonce]')?.getAttribute('nonce') || document.querySelector('meta[name="csp-nonce"]')?.getAttribute('content')}
       ></script>
     );
   }

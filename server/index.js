@@ -153,41 +153,57 @@ app.use(helmet({
 }));
 
 
+// helper to avoid typos
+const SELF_ORIGINS = ["'self'", "https://sherbrt.com", "https://www.sherbrt.com"];
+
 app.use(helmet.contentSecurityPolicy({
   useDefaults: true,
   directives: {
     "default-src": ["'self'"],
+
     "script-src": [
-      "'self'", (req,res)=>`'nonce-${res.locals.cspNonce}'`, "blob:",
+      ...SELF_ORIGINS,
+      (req,res)=>`'nonce-${res.locals.cspNonce}'`,
+      "blob:",
       process.env.NODE_ENV !== 'production' ? "'unsafe-eval'" : null,
-      "https://js.stripe.com","https://m.stripe.network","https://api.stripe.com",
-      "https://api.mapbox.com","https://*.mapbox.com",
+      "https://js.stripe.com", "https://m.stripe.network", "https://api.stripe.com",
+      "https://api.mapbox.com", "https://*.mapbox.com",
       "https://maps.googleapis.com",
-      "https://*.googletagmanager.com","https://*.google-analytics.com",
-      "https://www.googleadservices.com","https://*.g.doubleclick.net",
-      "https://plausible.io",
+      "*.googletagmanager.com", "*.google-analytics.com",
+      "www.googleadservices.com", "*.g.doubleclick.net",
+      "plausible.io",
     ].filter(Boolean),
+
     "script-src-elem": [
-      "'self'", (req,res)=>`'nonce-${res.locals.cspNonce}'`, "blob:",
-      "https://js.stripe.com","https://m.stripe.network","https://api.stripe.com",
-      "https://api.mapbox.com","https://*.mapbox.com",
+      ...SELF_ORIGINS,
+      (req,res)=>`'nonce-${res.locals.cspNonce}'`,
+      "blob:",
+      "https://js.stripe.com", "https://m.stripe.network", "https://api.stripe.com",
+      "https://api.mapbox.com", "https://*.mapbox.com",
       "https://maps.googleapis.com",
-      "https://*.googletagmanager.com","https://*.google-analytics.com",
-      "https://www.googleadservices.com","https://*.g.doubleclick.net",
-      "https://plausible.io",
+      "*.googletagmanager.com", "*.google-analytics.com",
+      "www.googleadservices.com", "*.g.doubleclick.net",
+      "plausible.io",
     ],
+
     "script-src-attr": [(req,res)=>`'nonce-${res.locals.cspNonce}'`],
-    "style-src": ["'self'","'unsafe-inline'","https://api.mapbox.com","https://*.mapbox.com","https://fonts.googleapis.com"],
+
+    // keep 'unsafe-inline' (you have inline <style> with @font-face)
+    "style-src": ["'self'", "'unsafe-inline'", "https://api.mapbox.com", "https://*.mapbox.com", "https://fonts.googleapis.com"],
+
+    // ✅ add Sharetribe's font host
+    "font-src": ["'self'", "data:", "https://fonts.gstatic.com", "https://assets-sharetribecom.sharetribe.com"],
+
     "connect-src": ["'self'","https://js.stripe.com","https://m.stripe.network","https://api.stripe.com","https://flex-api.sharetribe.com","https://*.st-api.com","https://maps.googleapis.com","https://places.googleapis.com","https://*.tiles.mapbox.com","https://api.mapbox.com","https://events.mapbox.com","https://*.google-analytics.com","https://*.analytics.google.com","https://*.googletagmanager.com","https://*.g.doubleclick.net","https://*.google.com","https://plausible.io","https://*.plausible.io","https://fonts.googleapis.com","https://sentry.io","https://*.sentry.io"],
     "img-src": ["'self'","data:","blob:","https:","https://js.stripe.com","https://m.stripe.network","https://api.stripe.com","https://*.imgix.net","https://sharetribe.imgix.net","https://picsum.photos","https://*.picsum.photos","https://api.mapbox.com","https://maps.googleapis.com","https://*.gstatic.com","https://*.googleapis.com","https://*.ggpht.com","https://*.giphy.com","https://*.google-analytics.com","https://*.analytics.google.com","https://*.googletagmanager.com","https://*.g.doubleclick.net","https://*.google.com","https://*.ytimg.com"],
-    "font-src": ["'self'","data:","https://fonts.gstatic.com","https://assets-sharetribecom.sharetribe.com"],
     "frame-src": ["'self'","https://js.stripe.com","https://m.stripe.network","https://api.stripe.com","https://*.youtube-nocookie.com","https://bid.g.doubleclick.net","https://td.doubleclick.net"],
-    "worker-src": ["'self'","blob:"],
+    "worker-src": ["'self'", "blob:"],
     "manifest-src": ["'self'"],
     "object-src": ["'none'"],
     "base-uri": ["'self'"],
     "frame-ancestors": ["'self'"],
-  },
+    "upgrade-insecure-requests": []
+  }
 }));
 
 // Redirect HTTP to HTTPS if REDIRECT_SSL is `true`.

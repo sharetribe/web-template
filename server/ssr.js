@@ -18,7 +18,8 @@ module.exports = async (req, res) => {
 
   html = html
     .replace('<!--!preloadedStateScript-->', preloaded)
-    .replace('<!--!ssrScripts-->', scripts);
+    .replace('<!--!ssrScripts-->', scripts)
+    .replace('<head>', `<head>\n<meta name="csp-nonce" content="${nonce}">`);
 
   global.__lastRenderedHtml = html; // for debug endpoint
   return html;
