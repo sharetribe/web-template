@@ -252,6 +252,12 @@ app.use((req,res,next) => {
   next();
 });
 
+// Icon caching routes (before static middleware)
+app.get(['/favicon.ico', '/apple-touch-icon.png', '/site.webmanifest'], (req, res, next) => {
+  res.set('Cache-Control', 'public, max-age=31536000, immutable');
+  next();
+});
+
 // Serve only actual assets, NOT index.html
 app.use('/static', express.static(path.join(__dirname, '..', 'build', 'static'), { immutable: true, maxAge: '1y' }));
 app.get('/favicon.ico', (req,res)=>res.sendFile(path.join(__dirname,'..','build','favicon.ico')));
@@ -405,7 +411,9 @@ app.post(cspReportUrl, (req, res) => {
 
 const server = app.listen(PORT, () => {
   const mode = process.env.NODE_ENV || 'development';
+  const iconsVersion = process.env.ICONS_VERSION || 'sherbrt2';
   console.log(`Listening on port ${PORT} in ${mode} mode`);
+  console.log(`Using ICONS_VERSION: ${iconsVersion}`);
   if (dev) {
     console.log(`Open http://localhost:${PORT}/ and start hacking!`);
   }

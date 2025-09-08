@@ -32,11 +32,6 @@ export const IncludeScripts = props => {
   let analyticsLibraries = [];
 
   if (isMapboxInUse) {
-    // NOTE: remember to update mapbox-sdk.min.js to a new version regularly.
-    // mapbox-sdk.min.js is included from static folder for CSP purposes.
-    mapLibraries.push(
-      <script key="mapboxSDK" src={`${rootURL}/static/scripts/mapbox/mapbox-sdk.min.js`} nonce={document.querySelector('script[nonce]')?.getAttribute('nonce') || document.querySelector('meta[name="csp-nonce"]')?.getAttribute('content')}></script>
-    );
     // License information for v3.7.0 of the mapbox-gl-js library:
     // https://github.com/mapbox/mapbox-gl-js/blob/v3.7.0/LICENSE.txt
 
