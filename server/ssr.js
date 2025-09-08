@@ -36,21 +36,25 @@ module.exports = async (req, res) => {
     }
   }
 
-  // Build CSS links
-  let cssLinks = cssFiles.map(href => `<link rel="stylesheet" href="${href}">`).join('\n');
+  // Build CSS preloads and stylesheets
+  const cssPreloads = cssFiles
+    .map(href => `<link rel="preload" as="style" href="${href}">`)
+    .join('\n');
+
+  const cssLinks = cssFiles
+    .map(href => `<link rel="stylesheet" href="${href}">`)
+    .join('\n');
   
   // Build script tags with nonces
   let scriptTags = jsFiles.map(src => `<script defer nonce="${nonce}" src="${src}"></script>`).join('\n');
 
   // If loadable extractor is available, prefer its tags but add nonces
   if (loadableExtractor) {
-    const loadableLinks = loadableExtractor.getLinkTags();
     const loadableScripts = loadableExtractor.getScriptTags();
     
     // Add nonces to loadable scripts
     const noncedLoadableScripts = loadableScripts.replace(/<script/g, `<script nonce="${nonce}"`);
     
-    cssLinks = loadableLinks;
     scriptTags = noncedLoadableScripts;
   }
 
@@ -61,8 +65,8 @@ module.exports = async (req, res) => {
   html = html
     .replace('<!--!preloadedStateScript-->', preloaded)
     .replace('<!--!ssrScripts-->', scriptTags)
-    .replace('<!--!ssrStyles-->', cssLinks)
-    .replace('<!--!ssrLinks-->', cssLinks)
+    .replace('<!--!ssrStyles-->', cssPreloads) // optional, keep if you want the hint
+    .replace('<!--!ssrLinks-->', cssLinks)    // **must** exist, real stylesheets
     .replace('<head>', `<head>\n<meta name="csp-nonce" content="${nonce}">`)
     // Replace icon versioning placeholders
     .replace(/href="\/favicon\.ico\?v=\$\{ICONS_VERSION\}"/g, `href="/favicon.ico?v=${ICONS_VERSION}"`)
