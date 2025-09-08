@@ -252,17 +252,18 @@ app.use((req,res,next) => {
   next();
 });
 
-// Icon caching routes (before static middleware)
-app.get(['/favicon.ico', '/apple-touch-icon.png', '/site.webmanifest'], (req, res, next) => {
-  res.set('Cache-Control', 'public, max-age=31536000, immutable');
-  next();
-});
+const setAssetHeaders = (res, filePath) => {
+  // long cache for hashed assets
+  if (/\.[0-9a-f]{8,}\.(js|css|png|jpg|svg|woff2?)$/i.test(filePath)) {
+    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+  } else {
+    res.setHeader('Cache-Control', 'public, max-age=300');
+  }
+};
 
-// Serve only actual assets, NOT index.html
-app.use('/static', express.static(path.join(__dirname, '..', 'build', 'static'), { immutable: true, maxAge: '1y' }));
-app.get('/favicon.ico', (req,res)=>res.sendFile(path.join(__dirname,'..','build','favicon.ico')));
-app.get('/site.webmanifest', (req,res)=>res.sendFile(path.join(__dirname,'..','build','site.webmanifest')));
-app.get('/apple-touch-icon.png', (req,res)=>res.sendFile(path.join(__dirname,'..','build','apple-touch-icon.png')));
+// Serve built client and static assets FIRST
+app.use(express.static(buildDir,  { index: false, setHeaders: setAssetHeaders }));
+app.use(express.static(publicDir, { index: false, setHeaders: setAssetHeaders }));
 app.use(cookieParser());
 
 // Helper function for static routes
@@ -371,6 +372,7 @@ const noCacheHeaders = {
   'Cache-control': 'no-cache, no-store, must-revalidate',
 };
 
+// Only AFTER static, register the SSR catch-all
 const renderApp = require('./ssr');
 app.get('*', async (req,res,next)=>{
   try {
