@@ -6,8 +6,7 @@
 import React, { Component } from 'react';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
-import { Elements, CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
+import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 
 import { FormattedMessage, injectIntl } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
@@ -312,10 +311,13 @@ class StripePaymentForm extends Component {
     this.updateBillingDetailsToMatchShippingAddress = this.updateBillingDetailsToMatchShippingAddress.bind(
       this
     );
+    this.handleCardValueChange = this.handleCardValueChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.paymentForm = this.paymentForm.bind(this);
+    this.initializeStripeElement = this.initializeStripeElement.bind(this);
     this.changePaymentMethod = this.changePaymentMethod.bind(this);
     this.finalFormAPI = null;
+    this.cardContainer = null;
   }
 
   componentDidMount() {
@@ -349,6 +351,24 @@ class StripePaymentForm extends Component {
       this.updateBillingDetailsToMatchShippingAddress(true);
     }
   }
+
+
+  handleCardValueChange(event) {
+    const { intl } = this.props;
+    const { error, complete } = event;
+
+    const postalCode = event.value.postalCode;
+    if (this.finalFormAPI) {
+      this.finalFormAPI.change('postal', postalCode);
+    }
+
+    this.setState(prevState => {
+      return {
+        error: error ? stripeErrorTranslation(intl, error) : null,
+        cardValueValid: complete,
+      };
+    });
+  }
   handleSubmit(values) {
     const {
       onSubmit,
@@ -356,6 +376,8 @@ class StripePaymentForm extends Component {
       formId,
       hasHandledCardPayment,
       defaultPaymentMethod,
+      stripe,
+      elements,
     } = this.props;
     const { initialMessage } = values;
     const { cardValueValid, paymentMethod } = this.state;
@@ -373,10 +395,6 @@ class StripePaymentForm extends Component {
       return;
     }
 
-    // Get Stripe instances safely
-    const stripe = this.props.stripe;
-    const elements = this.props.elements;
-    
     if (!stripe || !elements) {
       console.warn('[StripeForm] Stripe/Elements not ready yet');
       return;
@@ -722,6 +740,12 @@ class StripePaymentForm extends Component {
   render() {
     const { onSubmit, ...rest } = this.props;
     
+    // Guard against missing Stripe/Elements context
+    if (!this.props.stripe || !this.props.elements) {
+      // Don't throw—render a soft loader so the page never hard-crashes
+      return <div>Initializing payment form…</div>;
+    }
+    
     // Add initialValues for shipping fields
     const initialValues = {
       customerName: '',
@@ -738,4 +762,12 @@ class StripePaymentForm extends Component {
   }
 }
 
-export default injectIntl(StripePaymentForm);
+// Wrapper component to use hooks
+const StripePaymentFormWithHooks = (props) => {
+  const stripe = useStripe();
+  const elements = useElements();
+  
+  return <StripePaymentForm {...props} stripe={stripe} elements={elements} />;
+};
+
+export default injectIntl(StripePaymentFormWithHooks);

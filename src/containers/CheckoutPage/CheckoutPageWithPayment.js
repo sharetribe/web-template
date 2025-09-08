@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 import { getStripe } from '../../stripe';
 
 // Import contexts and util modules
@@ -746,10 +747,12 @@ export const CheckoutPageWithPayment = props => {
   );
 };
 
+// Create Stripe promise once at module level
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
+
 // Crash-proof wrapper component
 const CheckoutPageWithPaymentWrapper = (props) => {
   const [status, setStatus] = React.useState('loading'); // loading | unavailable | ready
-  const [stripe, setStripe] = React.useState(null);
   const [initError, setInitError] = React.useState(null);
 
   React.useEffect(() => {
@@ -759,7 +762,7 @@ const CheckoutPageWithPaymentWrapper = (props) => {
         console.log('[CheckoutDiag] LIVE bundle Stripe key:', process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY?.slice(0,8));
         const s = await getStripe({ timeoutMs: 8000, retryMs: 2000 });
         if (!on) return;
-        if (s) { setStripe(s); setStatus('ready'); }
+        if (s) { setStatus('ready'); }
         else { setStatus('unavailable'); }
       } catch (err) {
         if (!on) return;
@@ -784,7 +787,7 @@ const CheckoutPageWithPaymentWrapper = (props) => {
   }
 
   return (
-    <Elements stripe={stripe} options={{appearance:{theme:'stripe'}}}>
+    <Elements stripe={stripePromise} options={{appearance:{theme:'stripe'}}}>
       <CheckoutPageWithPayment {...props} />
     </Elements>
   );

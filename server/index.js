@@ -196,7 +196,7 @@ app.use(helmet.contentSecurityPolicy({
 
     "connect-src": ["'self'","https://js.stripe.com","https://m.stripe.network","https://api.stripe.com","https://flex-api.sharetribe.com","https://*.st-api.com","https://maps.googleapis.com","https://places.googleapis.com","https://*.tiles.mapbox.com","https://api.mapbox.com","https://events.mapbox.com","https://*.google-analytics.com","https://*.analytics.google.com","https://*.googletagmanager.com","https://*.g.doubleclick.net","https://*.google.com","https://plausible.io","https://*.plausible.io","https://fonts.googleapis.com","https://sentry.io","https://*.sentry.io"],
     "img-src": ["'self'","data:","blob:","https:","https://js.stripe.com","https://m.stripe.network","https://api.stripe.com","https://*.imgix.net","https://sharetribe.imgix.net","https://picsum.photos","https://*.picsum.photos","https://api.mapbox.com","https://maps.googleapis.com","https://*.gstatic.com","https://*.googleapis.com","https://*.ggpht.com","https://*.giphy.com","https://*.google-analytics.com","https://*.analytics.google.com","https://*.googletagmanager.com","https://*.g.doubleclick.net","https://*.google.com","https://*.ytimg.com"],
-    "frame-src": ["'self'","https://js.stripe.com","https://m.stripe.network","https://api.stripe.com","https://*.youtube-nocookie.com","https://bid.g.doubleclick.net","https://td.doubleclick.net"],
+    "frame-src": ["'self'","https://js.stripe.com","https://m.stripe.network","https://api.stripe.com","https://hooks.stripe.com","https://*.youtube-nocookie.com","https://bid.g.doubleclick.net","https://td.doubleclick.net"],
     "worker-src": ["'self'", "blob:"],
     "manifest-src": ["'self'"],
     "object-src": ["'none'"],
