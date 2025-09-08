@@ -81,7 +81,6 @@ const TRUST_PROXY = process.env.SERVER_SHARETRIBE_TRUST_PROXY || null;
 const CSP = process.env.REACT_APP_CSP;
 const CSP_MODE = process.env.CSP_MODE || 'report'; // 'block' for prod, 'report' for test
 const cspReportUrl = '/csp-report';
-const cspEnabled = CSP === 'block' || CSP === 'report';
 const app = express();
 
 // Health first — must be at the very top
@@ -153,77 +152,43 @@ app.use(helmet({
   crossOriginOpenerPolicy: false 
 }));
 
-// 3) CSP with nonce function (if enabled)
-if (cspEnabled) {
-  // When a CSP directive is violated, the browser posts a JSON body
-  // to the defined report URL and we need to parse this body.
-  app.use(
-    bodyParser.json({
-      type: ['json', 'application/csp-report'],
-    })
-  );
 
-  const nonceFn = (req, res) => `'nonce-${res.locals.cspNonce}'`;
-  const isReportOnly = CSP_MODE !== 'block';
-
-  app.use(helmet.contentSecurityPolicy({
-    useDefaults: true,
-    directives: {
-      "default-src": ["'self'"],
-      "script-src": [
-        "'self'", nonceFn, "blob:",
-        process.env.NODE_ENV !== 'production' ? "'unsafe-eval'" : null,
-        "https://js.stripe.com","https://m.stripe.network","https://api.stripe.com",
-        "https://api.mapbox.com","https://*.mapbox.com",
-        "https://maps.googleapis.com",
-        "https://*.googletagmanager.com","https://*.google-analytics.com",
-        "https://www.googleadservices.com","https://*.g.doubleclick.net",
-        "https://plausible.io",
-      ].filter(Boolean),
-      "script-src-elem": [
-        "'self'", nonceFn, "blob:",
-        "https://js.stripe.com","https://m.stripe.network","https://api.stripe.com",
-        "https://api.mapbox.com","https://*.mapbox.com",
-        "https://maps.googleapis.com",
-        "https://*.googletagmanager.com","https://*.google-analytics.com",
-        "https://www.googleadservices.com","https://*.g.doubleclick.net",
-        "https://plausible.io",
-      ],
-      "script-src-attr": [nonceFn],
-      "style-src": ["'self'","'unsafe-inline'","https://api.mapbox.com","https://*.mapbox.com","https://fonts.googleapis.com"],
-      "connect-src": [
-        "'self'",
-        "https://js.stripe.com","https://m.stripe.network","https://api.stripe.com",
-        "https://flex-api.sharetribe.com","https://*.st-api.com",
-        "https://maps.googleapis.com","https://places.googleapis.com",
-        "https://*.tiles.mapbox.com","https://api.mapbox.com","https://events.mapbox.com",
-        "https://*.google-analytics.com","https://*.analytics.google.com","https://*.googletagmanager.com",
-        "https://*.g.doubleclick.net","https://*.google.com",
-        "https://plausible.io","https://*.plausible.io",
-        "https://fonts.googleapis.com",
-        "https://sentry.io","https://*.sentry.io",
-      ],
-      "img-src": [
-        "'self'","data:","blob:","https:",
-        "https://js.stripe.com","https://m.stripe.network","https://api.stripe.com",
-        "https://*.imgix.net","https://sharetribe.imgix.net",
-        "https://picsum.photos","https://*.picsum.photos",
-        "https://api.mapbox.com","https://maps.googleapis.com",
-        "https://*.gstatic.com","https://*.googleapis.com","https://*.ggpht.com",
-        "https://*.giphy.com","https://*.google-analytics.com","https://*.analytics.google.com","https://*.googletagmanager.com",
-        "https://*.g.doubleclick.net","https://*.google.com","https://*.ytimg.com",
-      ],
-      "font-src": ["'self'","data:","https://fonts.gstatic.com"],
-      "frame-src": ["'self'","https://js.stripe.com","https://m.stripe.network","https://api.stripe.com","https://*.youtube-nocookie.com","https://bid.g.doubleclick.net","https://td.doubleclick.net"],
-      "worker-src": ["'self'","blob:"],
-      "manifest-src": ["'self'"],
-      "object-src": ["'none'"],
-      "base-uri": ["'self'"],
-      "frame-ancestors": ["'self'"],
-    },
-    reportOnly: isReportOnly,
-  }));
-}
+app.use(helmet.contentSecurityPolicy({
+  useDefaults: true,
+  directives: {
+    "default-src": ["'self'"],
+    "script-src": [
+      "'self'", (req,res)=>`'nonce-${res.locals.cspNonce}'`, "blob:",
+      process.env.NODE_ENV !== 'production' ? "'unsafe-eval'" : null,
+      "https://js.stripe.com","https://m.stripe.network","https://api.stripe.com",
+      "https://api.mapbox.com","https://*.mapbox.com",
+      "https://maps.googleapis.com",
+      "https://*.googletagmanager.com","https://*.google-analytics.com",
+      "https://www.googleadservices.com","https://*.g.doubleclick.net",
+      "https://plausible.io",
+    ].filter(Boolean),
+    "script-src-elem": [
+      "'self'", (req,res)=>`'nonce-${res.locals.cspNonce}'`, "blob:",
+      "https://js.stripe.com","https://m.stripe.network","https://api.stripe.com",
+      "https://api.mapbox.com","https://*.mapbox.com",
+      "https://maps.googleapis.com",
+      "https://*.googletagmanager.com","https://*.google-analytics.com",
+      "https://www.googleadservices.com","https://*.g.doubleclick.net",
+      "https://plausible.io",
+    ],
+    "script-src-attr": [(req,res)=>`'nonce-${res.locals.cspNonce}'`],
+    "style-src": ["'self'","'unsafe-inline'","https://api.mapbox.com","https://*.mapbox.com","https://fonts.googleapis.com"],
+    "connect-src": ["'self'","https://js.stripe.com","https://m.stripe.network","https://api.stripe.com","https://flex-api.sharetribe.com","https://*.st-api.com","https://maps.googleapis.com","https://places.googleapis.com","https://*.tiles.mapbox.com","https://api.mapbox.com","https://events.mapbox.com","https://*.google-analytics.com","https://*.analytics.google.com","https://*.googletagmanager.com","https://*.g.doubleclick.net","https://*.google.com","https://plausible.io","https://*.plausible.io","https://fonts.googleapis.com","https://sentry.io","https://*.sentry.io"],
+    "img-src": ["'self'","data:","blob:","https:","https://js.stripe.com","https://m.stripe.network","https://api.stripe.com","https://*.imgix.net","https://sharetribe.imgix.net","https://picsum.photos","https://*.picsum.photos","https://api.mapbox.com","https://maps.googleapis.com","https://*.gstatic.com","https://*.googleapis.com","https://*.ggpht.com","https://*.giphy.com","https://*.google-analytics.com","https://*.analytics.google.com","https://*.googletagmanager.com","https://*.g.doubleclick.net","https://*.google.com","https://*.ytimg.com"],
+    "font-src": ["'self'","data:","https://fonts.gstatic.com","https://assets-sharetribecom.sharetribe.com"],
+    "frame-src": ["'self'","https://js.stripe.com","https://m.stripe.network","https://api.stripe.com","https://*.youtube-nocookie.com","https://bid.g.doubleclick.net","https://td.doubleclick.net"],
+    "worker-src": ["'self'","blob:"],
+    "manifest-src": ["'self'"],
+    "object-src": ["'none'"],
+    "base-uri": ["'self'"],
+    "frame-ancestors": ["'self'"],
+  },
+}));
 
 // Redirect HTTP to HTTPS if REDIRECT_SSL is `true`.
 // This also works behind reverse proxies (load balancers) as they are for example used by Heroku.
@@ -271,9 +236,11 @@ app.use((req,res,next) => {
   next();
 });
 
-// Static middleware: build first, then public fallback
-app.use(express.static(buildDir,  { fallthrough: true, etag: true, maxAge: '7d' }));
-app.use(express.static(publicDir, { fallthrough: true, etag: true, maxAge: '7d' }));
+// Serve only actual assets, NOT index.html
+app.use('/static', express.static(path.join(__dirname, '..', 'build', 'static'), { immutable: true, maxAge: '1y' }));
+app.get('/favicon.ico', (req,res)=>res.sendFile(path.join(__dirname,'..','build','favicon.ico')));
+app.get('/site.webmanifest', (req,res)=>res.sendFile(path.join(__dirname,'..','build','site.webmanifest')));
+app.get('/apple-touch-icon.png', (req,res)=>res.sendFile(path.join(__dirname,'..','build','apple-touch-icon.png')));
 app.use(cookieParser());
 
 // Helper function for static routes
@@ -333,8 +300,12 @@ app.get('/debug/csp', (req, res) => {
 
 // Headers debug endpoint
 app.get('/debug/headers', (req, res) => {
-  res.set('content-type', 'text/plain');
-  res.send(JSON.stringify(req.headers, null, 2));
+  res.type('text/plain').send(res.get('content-security-policy') || 'no csp header');
+});
+
+app.get('/debug/html-tail', (req, res) => {
+  const html = global.__lastRenderedHtml || '';
+  res.type('text/plain').send(html.slice(-2000)); // last 2k chars to see scripts near </body>
 });
 
 // Manifest/robots/sitemaps (prefer build, fallback public, correct type)
@@ -378,99 +349,12 @@ const noCacheHeaders = {
   'Cache-control': 'no-cache, no-store, must-revalidate',
 };
 
-app.get('*', async (req, res) => {
-  if (req.url.startsWith('/static/')) {
-    // The express.static middleware only handles static resources
-    // that it finds, otherwise passes them through. However, we don't
-    // want to render the app for missing static resources and can
-    // just return 404 right away.
-    return res.status(404).send('Static asset not found.');
-  }
-
-  if (req.url === '/_status.json') {
-    return res.status(200).send({ status: 'ok' });
-  }
-
-  // For SPA routes, use SSR renderer to inject client scripts
-  if (req.accepts('html')) {
-    const idx = path.join(buildDir, 'index.html');
-    if (!exists(idx)) {
-      console.error('[StaticDiag] MISSING build/index.html — falling back to public (may cause blank page).');
-      res.set('Cache-Control','no-cache');
-      return res.sendFile(path.join(publicDir, 'index.html'), e => e ? next(e) : null);
-    }
-    // Continue to SSR renderer instead of serving static file
-  }
-
-  const context = {};
-
-  // Until we have a better plan for caching dynamic content and we
-  // make sure that no sensitive data can appear in the prefetched
-  // data, let's disable response caching altogether.
-  res.set(noCacheHeaders);
-  
-  // For HTML requests, ensure no-cache to prevent stale shells
-  if (req.accepts('html')) {
-    res.set('Cache-Control','no-cache');
-  }
-
-  // Get chunk extractors from node and web builds
-  // https://loadable-components.com/docs/api-loadable-server/#chunkextractor
-  const { nodeExtractor, webExtractor } = getExtractors();
-
-  // Server-side entrypoint provides us the functions for server-side data loading and rendering
-  const nodeEntrypoint = nodeExtractor.requireEntrypoint();
-  const { default: renderApp, ...appInfo } = nodeEntrypoint;
-
-  const sdk = sdkUtils.getSdk(req, res);
-
-  dataLoader
-    .loadData(req.url, sdk, appInfo)
-    .then(data => {
-      const cspNonce = cspEnabled ? res.locals.cspNonce : null;
-      return renderer.render(req.url, context, data, renderApp, webExtractor, cspNonce);
-    })
-    .then(html => {
-      if (dev) {
-        const debugData = {
-          url: req.url,
-          context,
-        };
-        console.log(`\nRender info:\n${JSON.stringify(debugData, null, '  ')}`);
-      }
-
-      if (context.unauthorized) {
-        // Routes component injects the context.unauthorized when the
-        // user isn't logged in to view the page that requires
-        // authentication.
-        sdk.authInfo().then(authInfo => {
-          if (authInfo && authInfo.isAnonymous === false) {
-            // It looks like the user is logged in.
-            // Full verification would require actual call to API
-            // to refresh the access token
-            res.status(200).send(html);
-          } else {
-            // Current token is anonymous.
-            res.status(401).send(html);
-          }
-        });
-      } else if (context.forbidden) {
-        res.status(403).send(html);
-      } else if (context.url) {
-        // React Router injects the context.url if a redirect was rendered
-        res.redirect(context.url);
-      } else if (context.notfound) {
-        // NotFoundPage component injects the context.notfound when a
-        // 404 should be returned
-        res.status(404).send(html);
-      } else {
-        res.send(html);
-      }
-    })
-    .catch(e => {
-      log.error(e, 'server-side-render-failed');
-      res.status(500).send(errorPage500);
-    });
+const renderApp = require('./ssr');
+app.get('*', async (req,res,next)=>{
+  try {
+    const html = await renderApp(req,res);
+    res.type('html').send(html);
+  } catch (e) { next(e); }
 });
 
 // Set error handler. If Sentry is set up, all error responses
@@ -488,22 +372,20 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal Server Error' });
 });
 
-if (cspEnabled) {
-  // Dig out the value of the given CSP report key from the request body.
-  const reportValue = (req, key) => {
-    const report = req.body ? req.body['csp-report'] : null;
-    return report && report[key] ? report[key] : key;
-  };
+// Dig out the value of the given CSP report key from the request body.
+const reportValue = (req, key) => {
+  const report = req.body ? req.body['csp-report'] : null;
+  return report && report[key] ? report[key] : key;
+};
 
-  // Handler for CSP violation reports.
-  app.post(cspReportUrl, (req, res) => {
-    const effectiveDirective = reportValue(req, 'effective-directive');
-    const blockedUri = reportValue(req, 'blocked-uri');
-    const msg = `CSP: ${effectiveDirective} doesn't allow ${blockedUri}`;
-    log.error(new Error(msg), 'csp-violation');
-    res.status(204).end();
-  });
-}
+// Handler for CSP violation reports.
+app.post(cspReportUrl, (req, res) => {
+  const effectiveDirective = reportValue(req, 'effective-directive');
+  const blockedUri = reportValue(req, 'blocked-uri');
+  const msg = `CSP: ${effectiveDirective} doesn't allow ${blockedUri}`;
+  log.error(new Error(msg), 'csp-violation');
+  res.status(204).end();
+});
 
 const server = app.listen(PORT, () => {
   const mode = process.env.NODE_ENV || 'development';
