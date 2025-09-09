@@ -1,5 +1,5 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import { USER_LOGOUT } from './ducks/auth.duck';
+import { logoutThunk } from './ducks/auth.duck';
 import * as globalReducers from './ducks';
 import * as pageReducers from './containers/reducers';
 
@@ -14,10 +14,12 @@ const appReducer = combineReducers({ ...globalReducers, ...pageReducers });
 
 const createReducer = () => {
   return (state, action) => {
-    const appState = action.type === USER_LOGOUT ? undefined : state;
+    // Clear state when logout is successful
+    const shouldClearState = action.type === logoutThunk.fulfilled.type;
+    const appState = shouldClearState ? undefined : state;
 
     // Clear sessionStorage when logging out.
-    if (action.type === USER_LOGOUT && typeof window !== 'undefined' && !!window.sessionStorage) {
+    if (shouldClearState && typeof window !== 'undefined' && !!window.sessionStorage) {
       window.sessionStorage.clear();
     }
 
