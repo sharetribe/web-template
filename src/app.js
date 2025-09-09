@@ -203,6 +203,14 @@ const EnvironmentVariableWarning = props => {
   );
 };
 
+/**
+ * Client App
+ * @param {Object} props
+ * @param {Object} props.store
+ * @param {Object} props.hostedTranslations
+ * @param {Object} props.hostedConfig
+ * @returns {JSX.Element}
+ */
 export const ClientApp = props => {
   const { store, hostedTranslations = {}, hostedConfig = {} } = props;
   const appConfig = mergeConfig(hostedConfig, defaultConfig);
@@ -261,8 +269,17 @@ export const ClientApp = props => {
   );
 };
 
-ClientApp.propTypes = { store: any.isRequired };
-
+/**
+ * Server App
+ * @param {Object} props
+ * @param {string} props.url
+ * @param {Object} props.context
+ * @param {Object} props.helmetContext
+ * @param {Object} props.store
+ * @param {Object} props.hostedTranslations
+ * @param {Object} props.hostedConfig
+ * @returns {JSX.Element}
+ */
 export const ServerApp = props => {
   const { url, context, helmetContext, store, hostedTranslations = {}, hostedConfig = {} } = props;
   const appConfig = mergeConfig(hostedConfig, defaultConfig);
@@ -298,8 +315,6 @@ export const ServerApp = props => {
     </Configurations>
   );
 };
-
-ServerApp.propTypes = { url: string.isRequired, context: any.isRequired, store: any.isRequired };
 
 /**
  * Render the given route.
