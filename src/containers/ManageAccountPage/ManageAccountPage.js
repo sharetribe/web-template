@@ -19,8 +19,8 @@ import FooterContainer from '../FooterContainer/FooterContainer';
 
 import DeleteAccountForm from './DeleteAccountForm/DeleteAccountForm';
 
-import { deleteAccount, resetPassword } from './DeleteAccountPage.duck';
-import css from './DeleteAccountPage.module.css';
+import { deleteAccount, resetPassword } from './ManageAccountPage.duck';
+import css from './ManageAccountPage.module.css';
 
 /**
  * @param {Object} props
@@ -37,7 +37,7 @@ import css from './DeleteAccountPage.module.css';
  * @param {propTypes.error} [props.resetPasswordError] - The reset password error
  * @returns {JSX.Element}
  */
-export const DeleteAccountPageComponent = props => {
+export const ManageAccountPageComponent = props => {
   const config = useConfiguration();
   const intl = useIntl();
   const {
@@ -84,12 +84,12 @@ export const DeleteAccountPageComponent = props => {
     />
   ) : null;
 
-  const title = intl.formatMessage({ id: 'DeleteAccountPage.title' });
+  const title = intl.formatMessage({ id: 'ManageAccountPage.title' });
 
   const showManageListingsLink = showCreateListingLinkForUser(config, currentUser);
   const { showPayoutDetails, showPaymentMethods } = showPaymentDetailsForUser(config, currentUser);
   const accountSettingsNavProps = {
-    currentPage: 'DeleteAccountPage',
+    currentPage: 'ManageAccountPage',
     showPaymentMethods,
     showPayoutDetails,
   };
@@ -104,7 +104,7 @@ export const DeleteAccountPageComponent = props => {
               mobileClassName={css.mobileTopbar}
             />
             <UserNav
-              currentPage="DeleteAccountPage"
+              currentPage="ManageAccountPage"
               showManageListingsLink={showManageListingsLink}
             />
           </>
@@ -116,7 +116,7 @@ export const DeleteAccountPageComponent = props => {
       >
         <div className={css.content}>
           <H3 as="h1">
-            <FormattedMessage id="DeleteAccountPage.heading" />
+            <FormattedMessage id="ManageAccountPage.heading" />
           </H3>
           {deleteAccountForm}
         </div>
@@ -133,7 +133,7 @@ const mapStateToProps = state => {
     accountDeletionConfirmed,
     resetPasswordInProgress,
     resetPasswordError,
-  } = state.DeleteAccountPage;
+  } = state.ManageAccountPage;
   return {
     deleteAccountInProgress,
     currentUser,
@@ -152,11 +152,11 @@ const mapDispatchToProps = dispatch => ({
   onResetPassword: values => dispatch(resetPassword(values)),
 });
 
-const DeleteAccountPage = compose(
+const ManageAccountPage = compose(
   connect(
     mapStateToProps,
     mapDispatchToProps
   )
-)(DeleteAccountPageComponent);
+)(ManageAccountPageComponent);
 
-export default DeleteAccountPage;
+export default ManageAccountPage;
