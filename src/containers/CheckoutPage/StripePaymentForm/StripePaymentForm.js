@@ -3,7 +3,7 @@
  * Card is not a Final Form field so it's not available trough Final Form.
  * It's also handled separately in handleSubmit function.
  */
-import React, { Component } from 'react';
+import React, { useState, useRef } from 'react';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
@@ -304,83 +304,51 @@ const initialState = {
  * @param {boolean} props.isFuzzyLocation - Whether the location is fuzzy
  * @param {Object} props.intl - The intl object
  */
-class StripePaymentForm extends Component {
-  constructor(props) {
-    super(props);
-    this.state = initialState;
-    this.updateBillingDetailsToMatchShippingAddress = this.updateBillingDetailsToMatchShippingAddress.bind(
-      this
-    );
-    this.handleCardValueChange = this.handleCardValueChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.paymentForm = this.paymentForm.bind(this);
-    this.initializeStripeElement = this.initializeStripeElement.bind(this);
-    this.changePaymentMethod = this.changePaymentMethod.bind(this);
-    this.finalFormAPI = null;
-    this.cardContainer = null;
-  }
+function StripePaymentForm(props) {
+  const stripe = useStripe();
+  const elements = useElements();
+  
+  const [state, setState] = useState(initialState);
+  const finalFormAPI = useRef(null);
 
-  componentDidMount() {
-    // No longer needed with React Stripe Elements
-  }
+  console.log('[StripeForm] render start');
 
-  componentWillUnmount() {
-    // No longer needed with React Stripe Elements
-  }
-
-  updateBillingDetailsToMatchShippingAddress(shouldFill) {
-    const formApi = this.finalFormAPI;
-    const values = formApi.getState()?.values || {};
-    formApi.batch(() => {
-      formApi.change('name', shouldFill ? values.recipientName : '');
-      formApi.change('addressLine1', shouldFill ? values.recipientAddressLine1 : '');
-      formApi.change('addressLine2', shouldFill ? values.recipientAddressLine2 : '');
-      formApi.change('postal', shouldFill ? values.recipientPostal : '');
-      formApi.change('city', shouldFill ? values.recipientCity : '');
-      formApi.change('state', shouldFill ? values.recipientState : '');
-      formApi.change('country', shouldFill ? values.recipientCountry : '');
-    });
-  }
-
-  changePaymentMethod(changedTo) {
-    this.setState({ paymentMethod: changedTo });
-    if (changedTo === 'defaultCard' && this.finalFormAPI) {
-      this.finalFormAPI.change('sameAddressCheckbox', undefined);
-    } else if (changedTo === 'replaceCard' && this.finalFormAPI) {
-      this.finalFormAPI.change('sameAddressCheckbox', ['sameAddress']);
-      this.updateBillingDetailsToMatchShippingAddress(true);
+  const updateBillingDetailsToMatchShippingAddress = (shouldFill) => {
+    const formApi = finalFormAPI.current;
+    const values = formApi?.getState()?.values || {};
+    if (formApi) {
+      formApi.batch(() => {
+        formApi.change('name', shouldFill ? values.recipientName : '');
+        formApi.change('addressLine1', shouldFill ? values.recipientAddressLine1 : '');
+        formApi.change('addressLine2', shouldFill ? values.recipientAddressLine2 : '');
+        formApi.change('postal', shouldFill ? values.recipientPostal : '');
+        formApi.change('city', shouldFill ? values.recipientCity : '');
+        formApi.change('state', shouldFill ? values.recipientState : '');
+        formApi.change('country', shouldFill ? values.recipientCountry : '');
+      });
     }
-  }
+  };
 
-
-  handleCardValueChange(event) {
-    const { intl } = this.props;
-    const { error, complete } = event;
-
-    const postalCode = event.value.postalCode;
-    if (this.finalFormAPI) {
-      this.finalFormAPI.change('postal', postalCode);
+  const changePaymentMethod = (changedTo) => {
+    setState(prev => ({ ...prev, paymentMethod: changedTo }));
+    if (changedTo === 'defaultCard' && finalFormAPI.current) {
+      finalFormAPI.current.change('sameAddressCheckbox', undefined);
+    } else if (changedTo === 'replaceCard' && finalFormAPI.current) {
+      finalFormAPI.current.change('sameAddressCheckbox', ['sameAddress']);
+      updateBillingDetailsToMatchShippingAddress(true);
     }
+  };
 
-    this.setState(prevState => {
-      return {
-        error: error ? stripeErrorTranslation(intl, error) : null,
-        cardValueValid: complete,
-      };
-    });
-  }
-  handleSubmit(values) {
+  const handleSubmit = async (values) => {
     const {
       onSubmit,
       inProgress,
       formId,
       hasHandledCardPayment,
       defaultPaymentMethod,
-      stripe,
-      elements,
-    } = this.props;
+    } = props;
     const { initialMessage } = values;
-    const { cardValueValid, paymentMethod } = this.state;
+    const { cardValueValid, paymentMethod } = state;
     const hasDefaultPaymentMethod = defaultPaymentMethod?.id;
     const selectedPaymentMethod = getPaymentMethod(paymentMethod, hasDefaultPaymentMethod);
     const { onetimePaymentNeedsAttention } = checkOnetimePaymentFields(
@@ -419,9 +387,9 @@ class StripePaymentForm extends Component {
       ),
     };
     onSubmit(params);
-  }
+  };
 
-  paymentForm(formRenderProps) {
+  const paymentForm = (formRenderProps) => {
     const {
       className,
       rootClassName,
@@ -451,12 +419,12 @@ class StripePaymentForm extends Component {
       values,
     } = formRenderProps;
 
-    this.finalFormAPI = formApi;
+    finalFormAPI.current = formApi;
 
     const ensuredDefaultPaymentMethod = ensurePaymentMethodCard(defaultPaymentMethod);
     const billingDetailsNeeded = !(hasHandledCardPayment || confirmPaymentError);
 
-    const { cardValueValid, paymentMethod } = this.state;
+    const { cardValueValid, paymentMethod } = state;
     const hasDefaultPaymentMethod = ensuredDefaultPaymentMethod.id;
     const selectedPaymentMethod = getPaymentMethod(paymentMethod, hasDefaultPaymentMethod);
     const { onetimePaymentNeedsAttention, showOnetimePaymentFields } = checkOnetimePaymentFields(
@@ -467,11 +435,11 @@ class StripePaymentForm extends Component {
     );
 
     const submitDisabled = invalid || onetimePaymentNeedsAttention || submitInProgress;
-    const hasCardError = this.state.error && !submitInProgress;
+    const hasCardError = state.error && !submitInProgress;
     const hasPaymentErrors = confirmCardPaymentError || confirmPaymentError;
     const classes = classNames(rootClassName || css.root, className);
     const cardClasses = classNames(css.card, {
-      [css.cardSuccess]: this.state.cardValueValid,
+      [css.cardSuccess]: state.cardValueValid,
       [css.cardError]: hasCardError,
     });
 
@@ -521,7 +489,7 @@ class StripePaymentForm extends Component {
         intl={intl}
         form={formApi}
         fieldId={formId}
-        card={this.card}
+        card={null} // No longer using this.card
         locale={locale}
       />
     );
@@ -530,7 +498,7 @@ class StripePaymentForm extends Component {
 
     const handleSameAddressCheckbox = event => {
       const checked = event.target.checked;
-      this.updateBillingDetailsToMatchShippingAddress(checked);
+      updateBillingDetailsToMatchShippingAddress(checked);
     };
     const isBookingYesNo = isBooking ? 'yes' : 'no';
 
@@ -543,9 +511,9 @@ class StripePaymentForm extends Component {
                 cardClasses={cardClasses}
                 formId={formId}
                 defaultPaymentMethod={ensuredDefaultPaymentMethod}
-                changePaymentMethod={this.changePaymentMethod}
+                changePaymentMethod={changePaymentMethod}
                 hasCardError={hasCardError}
-                error={this.state.error}
+                error={state.error}
                 paymentMethod={selectedPaymentMethod}
                 intl={intl}
                 marketplaceName={marketplaceName}
@@ -559,7 +527,7 @@ class StripePaymentForm extends Component {
                   cardClasses={cardClasses}
                   formId={formId}
                   hasCardError={hasCardError}
-                  error={this.state.error}
+                  error={state.error}
                   intl={intl}
                   marketplaceName={marketplaceName}
                 />
@@ -735,39 +703,26 @@ class StripePaymentForm extends Component {
         <FormattedMessage id="StripePaymentForm.missingStripeKey" />
       </div>
     );
+  };
+
+  if (!stripe || !elements) {
+    return <div>Initializing payment form…</div>;
   }
 
-  render() {
-    const { onSubmit, ...rest } = this.props;
-    
-    // Guard against missing Stripe/Elements context
-    if (!this.props.stripe || !this.props.elements) {
-      // Don't throw—render a soft loader so the page never hard-crashes
-      return <div>Initializing payment form…</div>;
-    }
-    
-    // Add initialValues for shipping fields
-    const initialValues = {
-      customerName: '',
-      customerStreet: '',
-      customerStreet2: '',
-      customerCity: '',
-      customerState: '',
-      customerZip: '',
-      customerEmail: '',
-      customerPhone: '',
-      ...(rest.initialValues || {})
-    };
-    return <FinalForm onSubmit={this.handleSubmit} initialValues={initialValues} {...rest} render={this.paymentForm} />;
-  }
+  // Add initialValues for shipping fields
+  const initialValues = {
+    customerName: '',
+    customerStreet: '',
+    customerStreet2: '',
+    customerCity: '',
+    customerState: '',
+    customerZip: '',
+    customerEmail: '',
+    customerPhone: '',
+    ...(props.initialValues || {})
+  };
+
+  return <FinalForm onSubmit={handleSubmit} initialValues={initialValues} {...props} render={paymentForm} />;
 }
 
-// Wrapper component to use hooks
-const StripePaymentFormWithHooks = (props) => {
-  const stripe = useStripe();
-  const elements = useElements();
-  
-  return <StripePaymentForm {...props} stripe={stripe} elements={elements} />;
-};
-
-export default injectIntl(StripePaymentFormWithHooks);
+export default injectIntl(StripePaymentForm);
