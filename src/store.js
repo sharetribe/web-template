@@ -1,26 +1,28 @@
-// We create Redux store directly, instead of using any extra dependencies.
-import { legacy_createStore as createStore, applyMiddleware, compose } from 'redux';
-import thunk from 'redux-thunk';
+import { configureStore as configureStoreReduxToolkit } from '@reduxjs/toolkit';
 import createReducer from './reducers';
 import * as analytics from './analytics/analytics';
 import appSettings from './config/settings';
 
 /**
- * Create a new store with the given initial state. Adds Redux
- * middleware and enhancers.
+ * Create a new store with the given initial state.
+ * This adds default middleware (Redux Thunk) and analytics middleware from props.
+ * Redux devTools are enabled in dev mode.
  */
 export default function configureStore(initialState = {}, sdk = null, analyticsHandlers = []) {
-  const middlewares = [thunk.withExtraArgument(sdk), analytics.createMiddleware(analyticsHandlers)];
+  const store = configureStoreReduxToolkit({
+    reducer: createReducer(),
+    preloadedState: initialState,
+    middleware: getDefaultMiddleware => {
+      const middlewares = getDefaultMiddleware({
+        thunk: {
+          extraArgument: sdk,
+        },
+      }).prepend(analytics.createAnalyticsListenerMiddleware(analyticsHandlers).middleware);
 
-  // Enable Redux Devtools in client side dev mode.
-  const composeEnhancers =
-    appSettings.dev && typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-      ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-      : compose;
-
-  const enhancer = composeEnhancers(applyMiddleware(...middlewares));
-
-  const store = createStore(createReducer(), initialState, enhancer);
+      return middlewares;
+    },
+    devTools: appSettings.dev && typeof window === 'object',
+  });
 
   return store;
 }
