@@ -5,16 +5,18 @@ import { fetchCurrentUser, currentUserShowSuccess } from '../../ducks/user.duck'
 
 // ================ Action types ================ //
 
-export const DELETE_ACCOUNT_REQUEST = 'app/DeleteAccountPage/DELETE_ACCOUNT_REQUEST';
-export const DELETE_ACCOUNT_SUCCESS = 'app/DeleteAccountPage/DELETE_ACCOUNT_SUCCESS';
+export const DELETE_ACCOUNT_REQUEST = 'app/ManageAccountPage/DELETE_ACCOUNT_REQUEST';
+export const DELETE_ACCOUNT_SUCCESS = 'app/ManageAccountPage/DELETE_ACCOUNT_SUCCESS';
+export const DELETE_ACCOUNT_ERROR = 'app/ManageAccountPage/DELETE_ACCOUNT_ERROR';
 
-export const RESET_PASSWORD_REQUEST = 'app/DeleteAccountPage/RESET_PASSWORD_REQUEST';
-export const RESET_PASSWORD_SUCCESS = 'app/DeleteAccountPage/RESET_PASSWORD_SUCCESS';
-export const RESET_PASSWORD_ERROR = 'app/DeleteAccountPage/RESET_PASSWORD_ERROR';
+export const RESET_PASSWORD_REQUEST = 'app/ManageAccountPage/RESET_PASSWORD_REQUEST';
+export const RESET_PASSWORD_SUCCESS = 'app/ManageAccountPage/RESET_PASSWORD_SUCCESS';
+export const RESET_PASSWORD_ERROR = 'app/ManageAccountPage/RESET_PASSWORD_ERROR';
 
 // ================ Reducer ================ //
 
 const initialState = {
+  deleteAccountError: null,
   deleteAccountInProgress: false,
   accountDeletionConfirmed: false,
   resetPasswordInProgress: false,
@@ -32,6 +34,8 @@ export default function reducer(state = initialState, action = {}) {
       };
     case DELETE_ACCOUNT_SUCCESS:
       return { ...state, deleteAccountInProgress: false, accountDeletionConfirmed: true };
+    case DELETE_ACCOUNT_ERROR:
+      return { ...state, deleteAccountInProgress: false, deleteAccountError: payload };
 
     case RESET_PASSWORD_REQUEST:
       return { ...state, resetPasswordInProgress: true, resetPasswordError: null };
@@ -50,6 +54,11 @@ export default function reducer(state = initialState, action = {}) {
 
 export const deleteAccountRequest = () => ({ type: DELETE_ACCOUNT_REQUEST });
 export const deleteAccountSuccess = () => ({ type: DELETE_ACCOUNT_SUCCESS });
+export const deleteAccountError = error => ({
+  type: DELETE_ACCOUNT_ERROR,
+  payload: error,
+  error: true,
+});
 
 export const resetPasswordRequest = () => ({ type: RESET_PASSWORD_REQUEST });
 
