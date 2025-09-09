@@ -6,9 +6,9 @@ import css from './ProviderAddressForm.module.css';
 
 const ProviderAddressForm = ({ initialValues, onChange }) => (
   <div className={css.root}>
-    <h3 className={css.title}>Provider Address Information</h3>
+    <h3 className={css.title}>Lender Shipping Address</h3>
     <p className={css.description}>
-      Please fill out your address information below. This information will be used when you accept the request.
+    Please provide your shipping address. This ensures your item makes it back to you smoothly after each borrow.
     </p>
     <FinalForm
       initialValues={initialValues}
