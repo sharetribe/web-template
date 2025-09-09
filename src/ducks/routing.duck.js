@@ -1,32 +1,25 @@
-// ================ Action types ================ //
+import { createSlice } from '@reduxjs/toolkit';
 
-export const LOCATION_CHANGED = 'app/routing/LOCATION_CHANGED';
-
-// ================ Reducer ================ //
+// ================ Redux Toolkit Slice ================ //
 
 const initialState = {
   currentLocation: null,
   currentCanonicalPath: null,
 };
 
-export default function routingReducer(state = initialState, action = {}) {
-  const { type, payload } = action;
-  switch (type) {
-    case LOCATION_CHANGED:
-      return {
-        ...state,
-        currentLocation: payload.location,
-        currentCanonicalPath: payload.canonicalPath,
-      };
-
-    default:
-      return state;
-  }
-}
-
-// ================ Action creators ================ //
-
-export const locationChanged = (location, canonicalPath) => ({
-  type: LOCATION_CHANGED,
-  payload: { location, canonicalPath },
+const routingSlice = createSlice({
+  name: 'routing',
+  initialState,
+  reducers: {
+    locationChanged: (state, action) => {
+      const { location, canonicalPath } = action.payload;
+      state.currentLocation = location;
+      state.currentCanonicalPath = canonicalPath;
+    },
+  },
 });
+
+// ================ Exports ================ //
+
+export const { locationChanged } = routingSlice.actions;
+export default routingSlice.reducer;

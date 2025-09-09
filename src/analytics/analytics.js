@@ -1,19 +1,27 @@
-import { LOCATION_CHANGED } from '../ducks/routing.duck';
+import { createListenerMiddleware } from '@reduxjs/toolkit';
+import { locationChanged } from '../ducks/routing.duck';
 
-// Create a Redux middleware from the given analytics handlers. Each
+// Create a Redux Toolkit listener middleware for analytics handlers. Each
 // handler should have the following methods:
 //
 // - trackPageView(canonicalPath, previousPath): called when the URL is changed
-export const createMiddleware = handlers => store => next => action => {
-  const { type, payload } = action;
+export const createAnalyticsListenerMiddleware = handlers => {
+  const listenerMiddleware = createListenerMiddleware();
 
-  if (type === LOCATION_CHANGED) {
-    const previousPath = store?.getState()?.routing?.currentCanonicalPath;
-    const { canonicalPath } = payload;
-    handlers.forEach(handler => {
-      handler.trackPageView(canonicalPath, previousPath);
-    });
-  }
+  listenerMiddleware.startListening({
+    actionCreator: locationChanged,
+    effect: (action, listenerApi) => {
+      const { canonicalPath } = action.payload;
+      const previousPath = listenerApi.getOriginalState()?.routing?.currentCanonicalPath;
 
-  next(action);
+      handlers.forEach(handler => {
+        handler.trackPageView(canonicalPath, previousPath);
+      });
+    },
+  });
+
+  return listenerMiddleware;
 };
+
+// Legacy export for backward compatibility
+export const createMiddleware = createAnalyticsListenerMiddleware;
