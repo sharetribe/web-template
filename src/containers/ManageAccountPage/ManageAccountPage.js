@@ -67,23 +67,6 @@ export const ManageAccountPageComponent = props => {
     });
   };
 
-  const deleteAccountForm = user.id ? (
-    <DeleteAccountForm
-      className={css.form}
-      initialValues={{ email: currentEmail }}
-      currentUser={currentUser}
-      onResendVerificationEmail={onResendVerificationEmail}
-      onResetPassword={onResetPassword}
-      onSubmit={handleSubmit}
-      inProgress={deleteAccountInProgress}
-      ready={accountDeletionConfirmed}
-      sendVerificationEmailInProgress={sendVerificationEmailInProgress}
-      sendVerificationEmailError={sendVerificationEmailError}
-      resetPasswordInProgress={resetPasswordInProgress}
-      resetPasswordError={resetPasswordError}
-    />
-  ) : null;
-
   const title = intl.formatMessage({ id: 'ManageAccountPage.title' });
 
   const showManageListingsLink = showCreateListingLinkForUser(config, currentUser);
@@ -118,7 +101,22 @@ export const ManageAccountPageComponent = props => {
           <H3 as="h1">
             <FormattedMessage id="ManageAccountPage.heading" />
           </H3>
-          {deleteAccountForm}
+          {user.id ? (
+            <DeleteAccountForm
+              className={css.form}
+              initialValues={{ email: currentEmail }}
+              currentUser={currentUser}
+              onResendVerificationEmail={onResendVerificationEmail}
+              onResetPassword={onResetPassword}
+              onSubmit={handleSubmit}
+              inProgress={deleteAccountInProgress}
+              ready={accountDeletionConfirmed}
+              sendVerificationEmailInProgress={sendVerificationEmailInProgress}
+              sendVerificationEmailError={sendVerificationEmailError}
+              resetPasswordInProgress={resetPasswordInProgress}
+              resetPasswordError={resetPasswordError}
+            />
+          ) : null}
         </div>
       </LayoutSideNavigation>
     </Page>
