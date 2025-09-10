@@ -1,7 +1,6 @@
-import merge from 'lodash/merge';
-import { denormalisedResponseEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
-import { fetchCurrentUser, currentUserShowSuccess } from '../../ducks/user.duck';
+import { fetchCurrentUser } from '../../ducks/user.duck';
+import { logout } from '../../ducks/auth.duck';
 
 // ================ Action types ================ //
 
@@ -54,11 +53,14 @@ export default function reducer(state = initialState, action = {}) {
 
 export const deleteAccountRequest = () => ({ type: DELETE_ACCOUNT_REQUEST });
 export const deleteAccountSuccess = () => ({ type: DELETE_ACCOUNT_SUCCESS });
-export const deleteAccountError = error => ({
-  type: DELETE_ACCOUNT_ERROR,
-  payload: error,
-  error: true,
-});
+export const deleteAccountError = error => {
+  console.log('error:  ' + JSON.stringify(error, null, 4));
+  ({
+    type: DELETE_ACCOUNT_ERROR,
+    payload: error,
+    error: true,
+  });
+};
 
 export const resetPasswordRequest = () => ({ type: RESET_PASSWORD_REQUEST });
 
@@ -72,18 +74,11 @@ export const resetPasswordError = e => ({
 
 // ================ Thunks ================ //
 
-export const deleteAccount = params => (dispatch, getState, sdk) => {
+export const deleteAccount = currentPassword => (dispatch, getState, sdk) => {
   // Get current password and use it to delete the user account
   dispatch(deleteAccountRequest());
-  const {
-    /* currentPassword */
-  } = params;
 
-  console.log('deleteAccount() called');
-
-  return;
-
-  /* return sdk.currentUser
+  return sdk.currentUser
     .delete({ currentPassword: currentPassword })
     .then(() => dispatch(deleteAccountSuccess()))
     .catch(e => {
@@ -91,7 +86,10 @@ export const deleteAccount = params => (dispatch, getState, sdk) => {
       // This is thrown so that form can be cleared
       // after a timeout on deleteAccount submit handler
       throw e;
-    }); */
+    })
+    .then(() => {
+      return dispatch(logout());
+    });
 };
 
 export const resetPassword = email => (dispatch, getState, sdk) => {
