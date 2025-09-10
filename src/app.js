@@ -322,7 +322,7 @@ export const renderApp = (
   // Don't pass an SDK instance since we're only rendering the
   // component tree with the preloaded store state and components
   // shouldn't do any SDK calls in the (server) rendering lifecycle.
-  const store = configureStore(preloadedState);
+  const store = configureStore({ initialState: preloadedState });
 
   const helmetContext = {};
 

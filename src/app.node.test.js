@@ -10,7 +10,7 @@ import { ServerApp } from './app';
 import configureStore from './store';
 
 const render = (url, context) => {
-  const store = configureStore();
+  const store = configureStore({});
 
   const helmetContext = {};
 
