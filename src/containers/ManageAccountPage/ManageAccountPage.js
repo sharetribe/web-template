@@ -59,12 +59,9 @@ export const ManageAccountPageComponent = props => {
 
   const handleSubmit = values => {
     // Get password from form, use it to delete the user account
-    const {
-      /* currentPassword */
-    } = values;
-    return onSubmitDeleteAccount({
-      /* currentPassword */
-    });
+    const { currentPassword } = values;
+
+    return onSubmitDeleteAccount(currentPassword);
   };
 
   const title = intl.formatMessage({ id: 'ManageAccountPage.title' });
@@ -103,18 +100,9 @@ export const ManageAccountPageComponent = props => {
           </H3>
           {user.id ? (
             <DeleteAccountForm
-              className={css.form}
-              initialValues={{ email: currentEmail }}
-              currentUser={currentUser}
-              onResendVerificationEmail={onResendVerificationEmail}
-              onResetPassword={onResetPassword}
-              onSubmit={handleSubmit}
-              inProgress={deleteAccountInProgress}
-              ready={accountDeletionConfirmed}
-              sendVerificationEmailInProgress={sendVerificationEmailInProgress}
-              sendVerificationEmailError={sendVerificationEmailError}
-              resetPasswordInProgress={resetPasswordInProgress}
-              resetPasswordError={resetPasswordError}
+              intl={intl}
+              onSubmitDeleteAccount={values => handleSubmit(values)}
+              marketplaceName={config.marketplaceName}
             />
           ) : null}
         </div>
