@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Update one Marketplace text (to be aligned with the corresponding copy in Email texts).
+  [#661](https://github.com/sharetribe/web-template/pull/661)
 - [add] Add currently available translations for DE, ES, FR.
   [#658](https://github.com/sharetribe/web-template/pull/658)
 - [add] Add accessibility improvements to components related to
