@@ -25,7 +25,7 @@ exports.loadData = function(requestUrl, sdk, appInfo) {
   let translations = {};
   let hostedConfig = {};
 
-  const store = configureStore({}, sdk);
+  const store = configureStore({ initialState: {}, sdk });
 
   if (PREVENT_DATA_LOADING_IN_SSR) {
     // This might help certain temporary scenarios, where DDOS attack adds load to server.
