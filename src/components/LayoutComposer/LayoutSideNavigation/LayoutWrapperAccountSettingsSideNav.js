@@ -138,6 +138,14 @@ const LayoutWrapperAccountSettingsSideNav = props => {
     },
     ...payoutDetailsMaybe,
     ...paymentMethodsMaybe,
+    {
+      text: <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.deleteAccountTabTitle" />,
+      selected: currentPage === 'ManageAccountPage',
+      id: 'ManageAccountPageTab',
+      linkProps: {
+        name: 'ManageAccountPage',
+      },
+    },
   ];
 
   return <TabNav rootClassName={css.tabs} tabRootClassName={css.tab} tabs={tabs} />;
