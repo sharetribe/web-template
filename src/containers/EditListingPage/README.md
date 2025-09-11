@@ -193,5 +193,6 @@ When adding a new panel, it helps to copy an existing panel/form as the starting
 1.  Add a form
 1.  Add a panel that renders the form and handles the data
 1.  Add the panel to the `EditListingWizardTab` component
-1.  Add the tab to the `EditListingWizard` in the `TABS` variable
+1.  Add the tab to the `EditListingWizard` in the `tabsForListingType` function
+1.  Check the `tabLabelAndSubmit` function and update the translations
 1.  Check the `tabCompleted` function logic within the wizard

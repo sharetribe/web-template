@@ -13,6 +13,7 @@
   justify-content: center;
   gap: 16px;
   flex-grow: 1;
+  min-height: 400px;
 }
 
 .error {
@@ -54,6 +55,9 @@
 /* OrderPanel subcomponent */
 .orderPanel {
   margin: 16px 48px 48px 48px;
+}
+.orderPanelNextToTitle {
+  margin: -24px 48px 48px 48px;
 }
 
 .orderTitle {

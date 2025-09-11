@@ -343,7 +343,7 @@ exports.hasMinimumCommission = commission => {
  * @param {Object} priceAttribute object containing listing price information
  * @returns {Array} provider commission line item
  */
-exports.getProviderCommissionMaybe = (providerCommission, order, priceAttribute) => {
+exports.getProviderCommissionMaybe = (providerCommission, order, currency) => {
   // Check if either minimum commission or percentage are defined in the commission object
   const hasMinimumCommission = this.hasMinimumCommission(providerCommission);
   const hasCommissionPercentage = this.hasCommissionPercentage(providerCommission);
@@ -378,7 +378,7 @@ exports.getProviderCommissionMaybe = (providerCommission, order, priceAttribute)
     ? [
         {
           code: 'line-item/provider-commission',
-          unitPrice: new Money(providerCommission?.minimum_amount, priceAttribute?.currency),
+          unitPrice: new Money(providerCommission?.minimum_amount, currency),
           quantity: getNegation(1),
           includeFor: ['provider'],
         },
@@ -399,7 +399,7 @@ exports.getProviderCommissionMaybe = (providerCommission, order, priceAttribute)
  * @param {Object} order object containing order line items
  * @returns {Array} customer commission line item
  */
-exports.getCustomerCommissionMaybe = (customerCommission, order, priceAttribute) => {
+exports.getCustomerCommissionMaybe = (customerCommission, order, currency) => {
   // Check if either minimum commission or percentage are defined in the commission object
   const hasMinimumCommission = this.hasMinimumCommission(customerCommission);
   const hasCommissionPercentage = this.hasCommissionPercentage(customerCommission);
@@ -427,7 +427,7 @@ exports.getCustomerCommissionMaybe = (customerCommission, order, priceAttribute)
     ? [
         {
           code: 'line-item/customer-commission',
-          unitPrice: new Money(customerCommission?.minimum_amount, priceAttribute?.currency),
+          unitPrice: new Money(customerCommission?.minimum_amount, currency),
           quantity: 1,
           includeFor: ['customer'],
         },
