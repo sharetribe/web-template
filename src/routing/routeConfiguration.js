@@ -122,6 +122,13 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       loadData: pageDataLoadingAPI.InitiateNegotiationPage.loadData,
     },
     {
+      path: '/l/:slug/:id/request-quote',
+      name: 'RequestQuotePage',
+      auth: true,
+      component: InitiateNegotiationPage,
+      loadData: pageDataLoadingAPI.InitiateNegotiationPage.loadData,
+    },
+    {
       path: '/l/:slug/:id/checkout',
       name: 'CheckoutPage',
       auth: true,
