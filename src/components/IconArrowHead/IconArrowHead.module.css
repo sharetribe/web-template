@@ -2,3 +2,9 @@
   stroke: var(--colorGrey700);
   fill: var(--colorGrey700);
 }
+
+.rootTinyArrow {
+  fill: var(--colorGrey700);
+  stroke: var(--colorGrey700);
+  stroke-width: 1px;
+}
