@@ -101,7 +101,7 @@ export const ManageAccountPageComponent = props => {
           {user.id ? (
             <DeleteAccountForm
               intl={intl}
-              onSubmitDeleteAccount={values => handleSubmit(values)}
+              onSubmitDeleteAccount={handleSubmit}
               marketplaceName={config.marketplaceName}
             />
           ) : null}
