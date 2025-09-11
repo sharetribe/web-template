@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+## [v8.8.0] 2025-09-11
+
 - [add] Add ability to sort user inbox messages
   [#656](https://github.com/sharetribe/web-template/pull/656)
 - [add] Update one Marketplace text (to be aligned with the corresponding copy in Email texts).
@@ -41,6 +43,8 @@ way to update this template, but currently, we follow a pattern:
 
 - [add] render potential errors in EditListingStylePanel.
   [#647](https://github.com/sharetribe/web-template/pull/647)
+
+  [v8.8.0]: https://github.com/sharetribe/web-template/compare/v8.7.0...v8.8.0
 
 ## [v8.7.0] 2025-07-30
 
