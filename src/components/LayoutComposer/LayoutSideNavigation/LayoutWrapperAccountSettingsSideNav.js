@@ -139,7 +139,7 @@ const LayoutWrapperAccountSettingsSideNav = props => {
     ...payoutDetailsMaybe,
     ...paymentMethodsMaybe,
     {
-      text: <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.accountManagementTabTitle" />,
+      text: <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.manageAccountTabTitle" />,
       selected: currentPage === 'ManageAccountPage',
       id: 'ManageAccountPageTab',
       linkProps: {
