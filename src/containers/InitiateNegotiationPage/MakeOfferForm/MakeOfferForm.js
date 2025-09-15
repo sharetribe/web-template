@@ -114,12 +114,13 @@ export const MakeOfferForm = props => {
           formId,
           handleSubmit,
           inProgress,
+          invalid,
           authorDisplayName,
         } = formRenderProps;
 
         const classes = classNames(rootClassName || css.root, className);
         const submitInProgress = inProgress;
-        const submitDisabled = submitInProgress || !stripeConnected;
+        const submitDisabled = invalid || submitInProgress || !stripeConnected;
 
         return (
           <Form className={classes} onSubmit={handleSubmit} enforcePagePreloadFor="SaleDetailsPage">
