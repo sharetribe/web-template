@@ -38,6 +38,8 @@ The following parameters are required in the request body:
     - `bookingEnd`
     - `seats` (optional)
   - unitType: `fixed` – bookable listings with fixed-length sessions
+    - `bookingStart`
+    - `bookingEnd`
     - `seats` (optional)
 
 The endpoint returns the line-items for the order breakdown. It is mainly called from the listing

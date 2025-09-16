@@ -31,9 +31,9 @@ In addition, _default-booking_, _default-purchase_, and _default-negotiation_ pr
 separate inquiry state at the beginning of the process graph (to enable discussion between customer
 and provider). If the transaction entity has been created with inquire transition, the transaction
 exists already and it is also passed along with order data and listing entity for the CheckoutPage.
-In this scenario, the customer navigates to CheckoutPage from TransactionPage. This also happens
-with the negotiation process, which contains a negotiation phase before customer navigates to
-CheckoutPage.
+In this scenario, the customer navigates to CheckoutPage from TransactionPage. With the negotiation
+process, a negotiation phase always precedes payment, so the transaction always exists when the
+customer initiates payment, and the customer always navigates to CheckoutPage from TransactionPage."
 
 ## Order data and session storage
 
