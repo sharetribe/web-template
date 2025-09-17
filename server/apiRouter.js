@@ -17,6 +17,7 @@ const initiatePrivileged = require('./api/initiate-privileged');
 const transitionPrivileged = require('./api/transition-privileged');
 const shippoWebhook = require('./webhooks/shippoTracking');
 const qrRouter = require('./api/qr');
+const twilioSmsStatus = require('./api/twilio/sms-status');
 
 const createUserWithIdp = require('./api/auth/createUserWithIdp');
 const loginWithIdp = require('./api/auth/loginWithIdp');
@@ -28,6 +29,12 @@ const { authenticateGoogle, authenticateGoogleCallback } = require('./api/auth/g
 const router = express.Router();
 
 // ================ API router middleware: ================ //
+
+// Parse URL-encoded bodies (for Twilio webhooks)
+router.use(bodyParser.urlencoded({ extended: false }));
+
+// Parse JSON bodies (for general API routes)
+router.use(bodyParser.json());
 
 // Parse Transit body first to a string
 router.use(
@@ -61,6 +68,9 @@ router.post('/transition-privileged', transitionPrivileged);
 
 // Shippo webhook endpoint
 router.use('/webhooks', shippoWebhook);
+
+// Twilio SMS status callback endpoint
+router.post('/twilio/sms-status', twilioSmsStatus);
 
 // QR code redirect endpoint
 const qrRouterInstance = qrRouter({ getTrustedSdk }); // factory export

@@ -22,7 +22,7 @@ console.log('🚦 initiate-privileged endpoint is wired up');
 
 // Helper function to build carrier-friendly lender SMS message
 function buildLenderMsg(tx, listingTitle) {
-  const lenderInboxUrl = process.env.ROOT_URL ? `${process.env.ROOT_URL}/inbox/sales` : '/inbox/sales';
+  const lenderInboxUrl = process.env.PUBLIC_BASE_URL ? `${process.env.PUBLIC_BASE_URL}/inbox/sales` : '/inbox/sales';
   const lenderMsg =
     `👗🍧 New Sherbrt booking request! ` +
     `Someone wants to borrow your listing "${listingTitle}". ` +
@@ -187,12 +187,12 @@ module.exports = (req, res) => {
               console.log('📨 [SMS][customer-confirmation] Preparing to send customer confirmation SMS');
               
               const listingTitle = listing?.attributes?.title || 'your listing';
-              const borrowerInboxUrl = process.env.ROOT_URL ? `${process.env.ROOT_URL}/inbox/orders` : '/inbox/orders';
+              const borrowerInboxUrl = process.env.PUBLIC_BASE_URL ? `${process.env.PUBLIC_BASE_URL}/inbox/orders` : '/inbox/orders';
               const borrowerMsg =
                 `✅ Request sent! Your booking request for "${listingTitle}" was delivered. ` +
                 `Track and reply in your inbox: ${borrowerInboxUrl}`;
               
-              await sendSMS(borrowerPhone, customerMessage);
+              await sendSMS(borrowerPhone, borrowerMsg, { role: 'customer' });
               console.log(`✅ [SMS][customer-confirmation] Customer confirmation sent to ${borrowerPhone}`);
               
             } catch (customerSmsErr) {
@@ -226,7 +226,16 @@ module.exports = (req, res) => {
         .end();
     })
     .catch(e => {
-      handleError(res, e);
+      console.error('[initiate-privileged] failed', {
+        status: e?.status,
+        message: e?.message,
+        data: e?.data,
+        stack: e?.stack,
+        transition: bodyParams?.transition,
+        listingId: bodyParams?.params?.listingId,
+      });
+
+      return handleError(res, e);
     });
 };
 

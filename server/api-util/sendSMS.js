@@ -57,7 +57,7 @@ function isE164(num) {
 // Optional in-memory STOP list (resets on restart)
 const stopList = new Set();
 
-function sendSMS(to, message) {
+function sendSMS(to, message, opts = {}) {
   if (!to || !message) {
     console.warn('📭 Missing phone number or message');
     return Promise.resolve();
@@ -68,16 +68,11 @@ function sendSMS(to, message) {
     return Promise.resolve();
   }
 
-  // Duplicate prevention check
-  if (transactionId && transition && role) {
-    if (isDuplicateSend(transactionId, transition, role)) {
-      console.warn(`🔄 [DUPLICATE] SMS suppressed for ${transactionId}:${transition}:${role} within ${DUPLICATE_WINDOW_MS}ms window`);
-      return { suppressed: true, reason: 'duplicate_within_window' };
-    }
-  }
+  // Extract options
+  const { role, transactionId, transition, dedupeKey } = opts;
 
   // Normalize the phone number to E.164
-  const toE164 = normalizePhoneNumber(to);
+  const toE164 = formatPhoneNumber(to);
   if (!toE164) {
     console.warn(`📱 Invalid phone number format: ${to}`);
     return Promise.resolve();
@@ -103,13 +98,18 @@ function sendSMS(to, message) {
   const devFullLogs = process.env.SMS_DEBUG_FULL === '1' && process.env.NODE_ENV !== 'production';
   
   // Log attempt (caller should pass role-based metrics; if not possible, use 'unknown')
-  attempt('unknown');
+  attempt(role || 'unknown');
   
   console.log(`📱 [CRITICAL] === SEND SMS CALLED ===`);
   console.log(`📱 [CRITICAL] Caller function: ${caller}`);
   console.log(`📱 [CRITICAL] Raw phone: ${maskPhone(to)}`);
   console.log(`📱 [CRITICAL] E.164 phone: ${maskPhone(toE164)}`);
-  console.log(`📱 [CRITICAL] SMS message: ${message}`);
+  // Gate message content logs for debugging only
+  if (process.env.SMS_DEBUG_FULL === '1' && process.env.NODE_ENV !== 'production') {
+    console.log(`📱 [CRITICAL] SMS message: ${message}`);
+  } else {
+    console.log(`📱 [CRITICAL] SMS message: [${message.length} chars]`);
+  }
   console.log(`📱 [CRITICAL] Role: ${role || 'none'}`);
   if (transactionId && transition) {
     console.log(`📱 [CRITICAL] Transaction: ${transactionId}:${transition}`);
