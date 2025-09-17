@@ -20,7 +20,7 @@ import DetailCardHeadingsMaybe from './DetailCardHeadingsMaybe';
 import DetailCardImage from './DetailCardImage';
 import DeliveryInfoMaybe from './DeliveryInfoMaybe';
 import BookingLocationMaybe from './BookingLocationMaybe';
-import ExtraDetailsMaybe from './ExtraDetailsMaybe';
+import TextMaybe from './TextMaybe';
 import InquiryMessageMaybe from './InquiryMessageMaybe';
 import FeedSection from './FeedSection';
 import DiminishedActionButtonMaybe from './DiminishedActionButtonMaybe';
@@ -265,11 +265,11 @@ export class TransactionPanelComponent extends Component {
               isCustomer={isCustomer}
             />
 
-            <ExtraDetailsMaybe
-              protectedData={protectedData}
-              msgKey="providerDefaultMessage"
-              showExtraDetailsMessage={isNegotiationProcess}
-              isOwnMessage={isNegotiationProcess && isProvider}
+            <TextMaybe
+              heading={intl.formatMessage({ id: 'TransactionPanel.providerDefaultMessageLabel' })}
+              text={protectedData?.providerDefaultMessage}
+              isOwn={isNegotiationProcess && isProvider}
+              showText={isNegotiationProcess}
             />
 
             {!isInquiryProcess ? (
