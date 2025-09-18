@@ -28,6 +28,9 @@ const { authenticateGoogle, authenticateGoogleCallback } = require('./api/auth/g
 
 const router = express.Router();
 
+// SMS feature flag
+const SMS_ENABLED = process.env.SMS_ENABLED === 'true';
+
 // ================ API router middleware: ================ //
 
 // Parse URL-encoded bodies (for Twilio webhooks)
@@ -70,7 +73,11 @@ router.post('/transition-privileged', transitionPrivileged);
 router.use('/webhooks', shippoWebhook);
 
 // Twilio SMS status callback endpoint
-router.post('/twilio/sms-status', twilioSmsStatus);
+if (SMS_ENABLED) {
+  router.post('/twilio/sms-status', twilioSmsStatus);
+} else {
+  router.post('/twilio/sms-status', (_req, res) => res.status(404).send('disabled'));
+}
 
 // QR code redirect endpoint
 const qrRouterInstance = qrRouter({ getTrustedSdk }); // factory export
