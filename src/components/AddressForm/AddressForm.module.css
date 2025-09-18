@@ -1,0 +1,102 @@
+.root {
+  margin-bottom: 28px;
+}
+
+.title {
+  margin: 0 0 16px;
+  font-weight: 600;
+}
+
+.fieldRow {
+  margin-bottom: 16px;
+}
+
+.field {
+  /* space below each input */
+  margin-bottom: 14px;
+  position: relative;
+  overflow: visible; /* allow native dropdown to render */
+}
+
+.field select,
+.field input {
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
+}
+
+.field label {
+  position: static; /* avoid absolute labels covering the control */
+}
+
+.field::after {
+  /* If there is any decorative overlay, disable pointer interception */
+  pointer-events: none;
+}
+
+.sameAs {
+  margin-top: 8px;
+}
+
+.checkboxLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
+}
+
+.checkbox {
+  width: 16px;
+  height: 16px;
+}
+
+/* Responsive layout for address fields */
+@media (min-width: 768px) {
+  .fieldRow:nth-child(3), /* Street 1 */
+  .fieldRow:nth-child(4), /* Street 2 */
+  .fieldRow:nth-child(5), /* City */
+  .fieldRow:nth-child(6), /* State */
+  .fieldRow:nth-child(7), /* ZIP */
+  .fieldRow:nth-child(8), /* Email */
+  .fieldRow:nth-child(9) { /* Phone */
+    display: flex;
+    gap: 16px;
+  }
+  
+  .fieldRow:nth-child(5) .field, /* City */
+  .fieldRow:nth-child(6) .field, /* State */
+  .fieldRow:nth-child(7) .field { /* ZIP */
+    flex: 1;
+  }
+  
+  .fieldRow:nth-child(8) .field, /* Email */
+  .fieldRow:nth-child(9) .field { /* Phone */
+    flex: 1;
+  }
+}
+
+/* Disabled state styling */
+.field input:disabled,
+.field select:disabled {
+  background-color: #f8f9fa;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+/* Error state styling */
+.field input.error,
+.field select.error {
+  border-color: #dc3545;
+}
+
+.field .error {
+  color: #dc3545;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+/* Required field indicator */
+.field label.required::after {
+  content: ' *';
+  color: #dc3545;
+}
