@@ -24,8 +24,11 @@ import {
 } from '../../../components';
 
 import ShippingDetails from '../ShippingDetails/ShippingDetails';
+import AddressForm from '../../../components/AddressForm/AddressForm';
 
 import css from './StripePaymentForm.module.css';
+
+const CHECKOUT_ADDR_ENABLED = process.env.REACT_APP_CHECKOUT_ADDR_ENABLED === 'true';
 
 /**
  * Translate a Stripe API error object.
@@ -566,6 +569,12 @@ function StripePaymentForm(props) {
                 />
 
                 {billingAddress}
+
+                {CHECKOUT_ADDR_ENABLED && (
+                  <section data-test="address-form-experimental">
+                    <AddressForm namespace="billing" requiredFields={{}} disabled={true} countryAfterZipForUSCA />
+                  </section>
+                )}
 
                 {/* Shipping Details Section */}
                 <div className={css.billingDetails}>
