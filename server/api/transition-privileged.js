@@ -10,6 +10,9 @@ const {
 const { maskPhone } = require('../api-util/phone');
 const { computeShipByDate, getBookingStartISO, formatShipBy } = require('../lib/shipping');
 
+// Build-time flag for ship-by SMS feature
+const SHIP_BY_SMS_ENABLED = process.env.SHIP_BY_SMS_ENABLED === 'true';
+
 // ---- helpers (add once, top-level) ----
 const safePick = (obj, keys = []) =>
   Object.fromEntries(keys.map(k => [k, obj && typeof obj === 'object' ? obj[k] : undefined]));
@@ -40,6 +43,20 @@ const logTx = (prefix, tx) => {
   console.log(prefix, fields);
 };
 // ---------------------------------------
+
+// Helper function to compose lender SMS with ship-by date
+function composeLenderSmsV2(tx, baseMsg) {
+  try {
+    const start = getBookingStartISO(tx);
+    const shipBy = computeShipByDate(tx);
+    const shipByStr = formatShipBy(shipBy);
+    // Keep message format conservative; prepend date
+    return `[Ship by ${shipByStr}] ${baseMsg}`;
+  } catch (e) {
+    // Failsafe to base message
+    return baseMsg;
+  }
+}
 
 // Conditional import of sendSMS to prevent module loading errors
 let sendSMS = null;
@@ -1355,8 +1372,11 @@ You'll receive tracking info once it ships! ✈️👗 ${buyerLink}`;
           if (sendSMS) {
             const message = `👗🍧 New Sherbrt booking request! Someone wants to borrow your item "${listing?.attributes?.title || 'your listing'}". Tap your dashboard to respond.`;
             
+            // Apply ship-by date enhancement if enabled
+            const finalLenderMsg = SHIP_BY_SMS_ENABLED ? composeLenderSmsV2(tx, message) : message;
+            
             try {
-              await sendSMS(providerPhone, message);
+              await sendSMS(providerPhone, finalLenderMsg, { role: 'lender' });
               console.log(`✅ [SMS][booking-request] SMS sent to provider ${providerPhone}`);
             } catch (smsError) {
               console.error('❌ [SMS][booking-request] Failed to send lender notification:', smsError.message);
