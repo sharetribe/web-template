@@ -17,6 +17,28 @@ const SHIP_BY_SMS_ENABLED = process.env.SHIP_BY_SMS_ENABLED === 'true';
 const safePick = (obj, keys = []) =>
   Object.fromEntries(keys.map(k => [k, obj && typeof obj === 'object' ? obj[k] : undefined]));
 
+// Helper to sanitize protectedData by removing blank strings and undefined values
+function sanitizeProtected(obj) {
+  if (!obj || typeof obj !== 'object') return obj;
+  const out = {};
+  for (const [k, v] of Object.entries(obj)) {
+    if (v === '' || v === undefined) continue; // drop blanks/undefined
+    if (typeof v === 'string') {
+      const trimmed = v.trim();
+      if (trimmed === '') continue;
+      out[k] = trimmed;
+    } else {
+      out[k] = v;
+    }
+  }
+  return out;
+}
+
+// Helper to ensure dates are ISO strings
+function toISO(value) {
+  return value && typeof value.toISOString === 'function' ? value.toISOString() : value;
+}
+
 const maskUrl = (u) => {
   try {
     if (!u) return '';
@@ -451,13 +473,13 @@ async function createShippingLabels(protectedData, transactionId, listing, sendS
         try {
           await sdk.transactions.update({
             id: transactionId,
-            protectedData: {
+            protectedData: sanitizeProtected({
               ...protectedData,
               sms: { 
                 ...(protectedData?.sms || {}), 
                 labelReadySentAt: new Date().toISOString() 
               }
-            }
+            })
           });
           console.log('💾 [SMS] Set labelReadySentAt for idempotency');
         } catch (updateError) {
@@ -646,11 +668,11 @@ async function createShippingLabels(protectedData, transactionId, listing, sendS
           try {
             const notificationResult = await sdk.transactions.update({
               id: transactionId,
-              protectedData: {
+              protectedData: sanitizeProtected({
                 shippingNotification: {
                   labelCreated: { sent: true, sentAt: new Date().toISOString() }
                 }
-              }
+              })
             });
             if (notificationResult && notificationResult.success === false) {
               console.warn('📝 [SHIPPO] Notification state update not available:', notificationResult.reason);
@@ -964,7 +986,10 @@ module.exports = async (req, res) => {
     const body = {
       id,
       transition: bodyParams?.transition,
-      params: bodyParams.params,
+      params: {
+        ...bodyParams.params,
+        protectedData: sanitizeProtected(bodyParams.params?.protectedData)
+      },
     };
 
     // Log the final body before transition
@@ -1136,13 +1161,13 @@ module.exports = async (req, res) => {
             await sdk.transactions.update({
               id: transaction.id,
               attributes: {
-                protectedData: {
+                protectedData: sanitizeProtected({
                   ...protectedData,
                   outbound: {
                     ...outbound,
                     acceptedAt: new Date().toISOString()
                   }
-                }
+                })
               }
             });
             console.log('💾 Set outbound.acceptedAt for transition/accept');
