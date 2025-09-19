@@ -41,6 +41,7 @@ const defaultDirectives = {
     baseUrl,
     assetCdnBaseUrl,
     '*.st-api.com',
+    'https://cdn.st-api.com',
     'maps.googleapis.com',
     'places.googleapis.com',
     '*.tiles.mapbox.com',
@@ -63,10 +64,11 @@ const defaultDirectives = {
     'sentry.io',
     '*.sentry.io',
     'https://api.stripe.com',
+    'https://m.stripe.com',
     '*.stripe.com',
   ].filter(Boolean),
   fontSrc: [self, data, 'assets-sharetribecom.sharetribe.com', 'fonts.gstatic.com'],
-  formAction: [self],
+  formAction: [self, 'https://hooks.stripe.com'],
   frameSrc: [
     self,
     'https://js.stripe.com',
@@ -125,10 +127,12 @@ const defaultDirectives = {
     'js.stripe.com',
     'plausible.io',
   ],
-  "script-src-elem": [self, blob, "https://js.stripe.com", "https://api.mapbox.com", "https://*.mapbox.com"],
+  "script-src-elem": [self, (req, res) => `'nonce-${res.locals.cspNonce}'`, blob, "https://js.stripe.com", "https://api.mapbox.com", "https://*.mapbox.com"],
   "manifest-src": [self],
   "worker-src": [self, blob],
   styleSrc: [self, unsafeInline, 'fonts.googleapis.com', 'api.mapbox.com'],
+  frameAncestors: [self],
+  objectSrc: ["'none'"],
 };
 
 /**
