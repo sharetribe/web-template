@@ -15,8 +15,6 @@ const loginAs = require('./api/login-as');
 const transactionLineItems = require('./api/transaction-line-items');
 const initiatePrivileged = require('./api/initiate-privileged');
 const transitionPrivileged = require('./api/transition-privileged');
-const shippoWebhook = require('./webhooks/shippoTracking');
-const qrRouter = require('./api/qr');
 const twilioSmsStatus = require('./api/twilio/sms-status');
 
 const createUserWithIdp = require('./api/auth/createUserWithIdp');
@@ -75,6 +73,7 @@ router.post('/transition-privileged', transitionPrivileged);
 
 // Shippo webhook endpoint
 if (SHIPPO_ENABLED) {
+  const shippoWebhook = require('./webhooks/shippoTracking');
   router.use('/webhooks', shippoWebhook);
 } else {
   router.use('/webhooks', (_req, res) => res.status(404).send('disabled'));
@@ -89,6 +88,7 @@ if (SMS_ENABLED) {
 
 // QR code redirect endpoint
 if (QR_ENABLED) {
+  const qrRouter = require('./api/qr');
   const qrRouterInstance = qrRouter({ getTrustedSdk }); // factory export
   router.use('/qr', qrRouterInstance);
 } else {
