@@ -1,58 +1,83 @@
 // server/api/qr.js
-
 const express = require('express');
 
 module.exports = ({ getTrustedSdk }) => {
   const router = express.Router();
 
+  async function resolveSdk(req) {
+    // 1) Preferred: privileged SDK via getTrustedSdk
+    if (typeof getTrustedSdk === 'function') {
+      try {
+        const s = await getTrustedSdk(req);     // <-- IMPORTANT: await
+        if (s) return { sdk: s, src: 'getTrustedSdk' };
+      } catch (_) {}
+    }
+
+    // 2) Fallbacks from app locals
+    const integration = req.app.get('integrationSdk');
+    if (integration) return { sdk: integration, src: 'integrationSdk' };
+
+    const api = req.app.get('apiSdk');
+    if (api) return { sdk: api, src: 'apiSdk' };
+
+    return { sdk: null, src: null };
+  }
+
   // quick health-check
   router.get('/_debug/ping', (_req, res) => res.sendStatus(204));
 
-  // TEMP: visibility into what SDK the route sees
+  // Debug: /api/qr/_debug/sdk
   router.get('/_debug/sdk', async (req, res) => {
-    let sdk = null;
     try {
-      if (typeof getTrustedSdk === 'function') {
-        // important: pass BOTH req and res, and await
-        sdk = await getTrustedSdk(req, res);
-      }
-    } catch (e) {
-      console.error('[QR] getTrustedSdk threw', e);
+      const { sdk, src } = await resolveSdk(req);
+      const hasTransactionsShow = !!(sdk && sdk.transactions && typeof sdk.transactions.show === 'function');
+      res.json({
+        ok: !!sdk && hasTransactionsShow,
+        hasTransactionsShow,
+        from: {
+          getTrustedSdk: src === 'getTrustedSdk',
+          integrationSdk: src === 'integrationSdk',
+          apiSdk: src === 'apiSdk',
+        },
+      });
+    } catch (err) {
+      res.status(500).json({ ok: false, error: String(err) });
     }
-    sdk = sdk || req.app.get('integrationSdk') || req.app.get('apiSdk');
-
-    return res.status(sdk ? 200 : 500).json({
-      ok: !!sdk,
-      hasTransactionsShow: !!sdk?.transactions?.show,
-      from: {
-        getTrustedSdk: typeof getTrustedSdk === 'function',
-        integrationSdk: !!req.app.get('integrationSdk'),
-        apiSdk: !!req.app.get('apiSdk'),
-      },
-    });
   });
 
-  router.get('/:txId', async (req, res) => {
-    // --- resolve SDK robustly ---
-    let sdk = null;
-    try {
-      if (typeof getTrustedSdk === 'function') {
-        sdk = await getTrustedSdk(req, res); // <— this is the usual gotcha
-      }
-    } catch (e) {
-      console.error('[QR] getTrustedSdk threw', e);
-    }
-    sdk = sdk || req.app.get('integrationSdk') || req.app.get('apiSdk');
-
-    if (!sdk || !sdk.transactions || !sdk.transactions.show) {
-      console.error('[QR] SDK not wired — transactions.show missing');
-      return res.status(500).send('Server misconfiguration: SDK unavailable');
-    }
-
+  // Main QR redirect: /api/qr/:txId (constrained to UUID format)
+  router.get('/:txId([0-9a-fA-F-]{36})', async (req, res) => {
     const { txId } = req.params;
 
+    // Add guard log if PUBLIC_BASE_URL is missing
+    if (!process.env.PUBLIC_BASE_URL) console.warn('[qr] PUBLIC_BASE_URL not set');
+
+    const { sdk } = await resolveSdk(req);
+    const wired = !!(sdk && sdk.transactions && typeof sdk.transactions.show === 'function');
+    if (!wired) {
+      console.error('[QR] SDK not wired — transactions.show missing');
+      return res.status(500).json({ ok: false, error: 'SDK not wired — transactions.show missing' });
+    }
+
     try {
-      // 1. Try Flex first: sdk.transactions.show({ id }). If found and `protectedData.shippo.outbound.qrCodeUrl`, redirect 302 to it.
+      // 1. Redis cache first (faster than Flex, should have data immediately after label creation)
+      const { getRedis } = require('../redis');
+      const redis = getRedis();
+      
+      try {
+        const raw = await redis.get(`qr:${txId}`);
+        if (raw) {
+          const data = JSON.parse(raw);
+          if (data?.qrCodeUrl) {
+            console.log(`qr:redirect source=redis`);
+            return res.redirect(302, data.qrCodeUrl);
+          }
+        }
+      } catch (e) {
+        console.warn('[QR] redis get failed', e);
+      }
+
+      // 2. Flex fallback (in case Redis was missed but Flex has persisted data)
       const resp = await sdk.transactions.show({ id: txId, include: ['lineItems'] });
       const tx = resp?.data?.data;
       const pData = tx?.attributes?.protectedData || {};
@@ -62,30 +87,6 @@ module.exports = ({ getTrustedSdk }) => {
       if (outbound.qrCodeUrl) {
         console.log(`qr:redirect source=flex`);
         return res.redirect(302, outbound.qrCodeUrl);
-      }
-
-      // 2. Else check qrCache.get(id). If present and not expired, redirect 302.
-      // Import qrCache from transition-privileged module
-      let qrCache = null;
-      try {
-        const transitionPrivileged = require('./transition-privileged');
-        qrCache = transitionPrivileged.qrCache;
-      } catch (err) {
-        console.warn('[QR] Could not import qrCache:', err.message);
-      }
-
-      if (qrCache && qrCache.has(txId)) {
-        const cachedData = qrCache.get(txId);
-        const now = Date.now();
-        
-        // Check if not expired (expiresAt is in seconds, convert to milliseconds)
-        if (!cachedData.expiresAt || (cachedData.expiresAt * 1000) > now) {
-          console.log(`qr:redirect source=cache`);
-          return res.redirect(302, cachedData.qrCodeUrl);
-        } else {
-          console.log(`[QR] Cached QR data expired for transaction ${txId}`);
-          qrCache.delete(txId); // Clean up expired entry
-        }
       }
 
       // 3. Else return 202 with JSON: { ok: false, status: 'pending', message: 'Label not ready yet' }.

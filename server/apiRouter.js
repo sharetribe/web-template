@@ -31,6 +31,10 @@ const router = express.Router();
 // SMS feature flag
 const SMS_ENABLED = process.env.SMS_ENABLED === 'true';
 
+// QR and Shippo feature flags
+const QR_ENABLED = process.env.QR_ENABLED === 'true';
+const SHIPPO_ENABLED = process.env.SHIPPO_ENABLED === 'true';
+
 // ================ API router middleware: ================ //
 
 // Parse URL-encoded bodies (for Twilio webhooks)
@@ -70,7 +74,11 @@ router.post('/initiate-privileged', initiatePrivileged);
 router.post('/transition-privileged', transitionPrivileged);
 
 // Shippo webhook endpoint
-router.use('/webhooks', shippoWebhook);
+if (SHIPPO_ENABLED) {
+  router.use('/webhooks', shippoWebhook);
+} else {
+  router.use('/webhooks', (_req, res) => res.status(404).send('disabled'));
+}
 
 // Twilio SMS status callback endpoint
 if (SMS_ENABLED) {
@@ -80,8 +88,12 @@ if (SMS_ENABLED) {
 }
 
 // QR code redirect endpoint
-const qrRouterInstance = qrRouter({ getTrustedSdk }); // factory export
-router.use('/qr', qrRouterInstance);
+if (QR_ENABLED) {
+  const qrRouterInstance = qrRouter({ getTrustedSdk }); // factory export
+  router.use('/qr', qrRouterInstance);
+} else {
+  router.use('/qr', (_req, res) => res.status(404).send('disabled'));
+}
 
 // Create user with identity provider (e.g. Facebook or Google)
 // This endpoint is called to create a new user after user has confirmed
