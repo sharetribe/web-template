@@ -28,7 +28,7 @@
     "final-form-arrays": "3.1.0",
     "full-icu": "^1.5.0",
     "helmet": "^8.1.0",
-    "ioredis": "^5.7.0",
+    "ioredis": "5.7.0",
     "jose": "5.9.6",
     "lodash": "^4.17.21",
     "mapbox-gl-multitouch": "^1.0.3",
