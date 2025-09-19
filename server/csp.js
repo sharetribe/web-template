@@ -64,7 +64,7 @@ const defaultDirectives = {
     '*.sentry.io',
     'https://api.stripe.com',
     '*.stripe.com',
-  ],
+  ].filter(Boolean),
   fontSrc: [self, data, 'assets-sharetribecom.sharetribe.com', 'fonts.gstatic.com'],
   formAction: [self],
   frameSrc: [
@@ -140,6 +140,11 @@ const defaultDirectives = {
  * @returns {Object} Object containing enforce and reportOnly middleware configurations
  */
 exports.csp = ({ mode = 'report', reportUri }) => {
+  // Single source of truth for header names and behavior
+  const cspMode = mode === 'block' ? 'block' : 'report';
+  const dualReport = String(process.env.CSP_DUAL_REPORT || '').toLowerCase() === 'true';
+  const enforceHeader = 'Content-Security-Policy';
+  const reportHeader = 'Content-Security-Policy-Report-Only';
   // ================ START CUSTOM CSP URLs ================ //
 
   // Add custom CSP whitelisted URLs here. See commented example
@@ -229,5 +234,10 @@ exports.csp = ({ mode = 'report', reportUri }) => {
       directives: reportOnlyDirectives,
       reportOnly: true,
     }),
+    // Metadata for debugging
+    mode: cspMode,
+    dualReport,
+    enforceHeader,
+    reportHeader,
   };
 };

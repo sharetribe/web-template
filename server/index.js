@@ -156,12 +156,41 @@ app.use(helmet({
 // helper to avoid typos
 const SELF_ORIGINS = ["'self'", "https://sherbrt.com", "https://www.sherbrt.com"];
 
-// CSP configuration using new csp.js module
-const mode = process.env.CSP_MODE || 'report';
-const reportUri = cspReportUrl;
-const policies = csp({ mode, reportUri });
-app.use(policies.enforce);
-app.use(policies.reportOnly);
+// CSP configuration with proper nonce generation and mode switching
+const { csp, generateCSPNonce } = require('./csp');
+
+// Optional: exclude /api/* routes from CSP (set CSP_EXCLUDE_API=true)
+const excludeAPI = String(process.env.CSP_EXCLUDE_API || '').toLowerCase() === 'true';
+const cspRouteFilter = excludeAPI ? /^(?!\/api).*/ : /.*/;
+
+// Apply nonce generation (with optional API exclusion)
+app.use(cspRouteFilter, generateCSPNonce);
+
+// When a CSP directive is violated, the browser posts a JSON body
+// to the defined report URL and we need to parse this body.
+app.use(
+  bodyParser.json({
+    type: ['json', 'application/csp-report'],
+  })
+);
+
+// Build CSP policies
+const cspPolicies = csp({ mode: CSP_MODE, reportUri: cspReportUrl });
+
+// Log CSP mode at startup
+console.log(`🔐 CSP mode: ${cspPolicies.mode}, dual report: ${cspPolicies.dualReport}, exclude API: ${excludeAPI}`);
+
+if (cspPolicies.mode === 'block') {
+  // Apply enforce middleware (with optional API exclusion)
+  app.use(cspRouteFilter, cspPolicies.enforce);
+  // Apply report-only middleware if dual reporting is enabled
+  if (cspPolicies.dualReport) {
+    app.use(cspRouteFilter, cspPolicies.reportOnly);
+  }
+} else {
+  // Apply only reportOnly middleware (with optional API exclusion)
+  app.use(cspRouteFilter, cspPolicies.reportOnly);
+}
 
 // Redirect HTTP to HTTPS if REDIRECT_SSL is `true`.
 // This also works behind reverse proxies (load balancers) as they are for example used by Heroku.
