@@ -28,7 +28,7 @@ import AddressForm from '../../../components/AddressForm/AddressForm';
 
 import css from './StripePaymentForm.module.css';
 
-const CHECKOUT_ADDR_ENABLED = process.env.REACT_APP_CHECKOUT_ADDR_ENABLED === 'true';
+const ADDR_ENABLED = process.env.REACT_APP_CHECKOUT_ADDR_ENABLED === 'true';
 
 /**
  * Translate a Stripe API error object.
@@ -538,118 +538,145 @@ function StripePaymentForm(props) {
             )}
 
             {showOnetimePaymentFields ? (
-              <div className={css.billingDetails}>
-                <Heading as="h3" rootClassName={css.heading}>
-                  <FormattedMessage id="StripePaymentForm.billingDetails" />
-                </Heading>
+              <React.Fragment>
+                {!ADDR_ENABLED && (
+                  <div className={css.billingDetails}>
+                    <Heading as="h3" rootClassName={css.heading}>
+                      <FormattedMessage id="StripePaymentForm.billingDetails" />
+                    </Heading>
 
-                {askShippingDetails ? (
-                  <FieldCheckbox
-                    className={css.sameAddressCheckbox}
-                    textClassName={css.sameAddressLabel}
-                    id="sameAddressCheckbox"
-                    name="sameAddressCheckbox"
-                    label={intl.formatMessage({
-                      id: 'StripePaymentForm.sameBillingAndShippingAddress',
-                    })}
-                    value="sameAddress"
-                    useSuccessColor
-                    onChange={handleSameAddressCheckbox}
-                  />
-                ) : null}
+                    {askShippingDetails ? (
+                      <FieldCheckbox
+                        className={css.sameAddressCheckbox}
+                        textClassName={css.sameAddressLabel}
+                        id="sameAddressCheckbox"
+                        name="sameAddressCheckbox"
+                        label={intl.formatMessage({
+                          id: 'StripePaymentForm.sameBillingAndShippingAddress',
+                        })}
+                        value="sameAddress"
+                        useSuccessColor
+                        onChange={handleSameAddressCheckbox}
+                      />
+                    ) : null}
 
-                <FieldTextInput
-                  className={css.field}
-                  type="text"
-                  id="name"
-                  name="name"
-                  autoComplete="cc-name"
-                  label={billingDetailsNameLabel}
-                  placeholder={billingDetailsNamePlaceholder}
-                />
+                    <FieldTextInput
+                      className={css.field}
+                      type="text"
+                      id="name"
+                      name="name"
+                      autoComplete="cc-name"
+                      label={billingDetailsNameLabel}
+                      placeholder={billingDetailsNamePlaceholder}
+                    />
 
-                {billingAddress}
+                    {billingAddress}
 
-                {CHECKOUT_ADDR_ENABLED && (
-                  <section data-test="address-form-experimental">
-                    <AddressForm namespace="billing" requiredFields={{}} disabled={true} countryAfterZipForUSCA />
-                  </section>
+                  </div>
                 )}
 
-                {/* Shipping Details Section */}
-                <div className={css.billingDetails}>
-                  <Heading as="h3" rootClassName={css.heading}>
-                    Shipping Details
-                  </Heading>
-                  <FieldTextInput
-                    className={css.field}
-                    type="text"
-                    id="customerName"
-                    name="customerName"
-                    label="Full Name"
-                    required
-                  />
-                  <FieldTextInput
-                    className={css.field}
-                    type="text"
-                    id="customerStreet"
-                    name="customerStreet"
-                    label="Street *"
-                    placeholder="123 Example Street"
-                    required
-                  />
-                  <FieldTextInput
-                    className={css.field}
-                    type="text"
-                    id="customerStreet2"
-                    name="customerStreet2"
-                    label="Street (line 2)"
-                    placeholder="Apt 7"
-                  />
-                  <FieldTextInput
-                    className={css.field}
-                    type="text"
-                    id="customerCity"
-                    name="customerCity"
-                    label="City"
-                    required
-                  />
-                  <FieldTextInput
-                    className={css.field}
-                    type="text"
-                    id="customerState"
-                    name="customerState"
-                    label="State"
-                    required
-                  />
-                  <FieldTextInput
-                    className={css.field}
-                    type="text"
-                    id="customerZip"
-                    name="customerZip"
-                    label="ZIP Code"
-                    required
-                  />
-                  <FieldTextInput
-                    className={css.field}
-                    type="email"
-                    id="customerEmail"
-                    name="customerEmail"
-                    label="Email"
-                    required
-                    validate={value => (!value ? 'Required' : !/^\S+@\S+\.\S+$/.test(value) ? 'Invalid email' : undefined)}
-                  />
-                  <FieldTextInput
-                    className={css.field}
-                    type="tel"
-                    id="customerPhone"
-                    name="customerPhone"
-                    label="Phone Number"
-                    required
-                    validate={value => (!value ? 'Required' : !/^\+?\d{7,15}$/.test(value) ? 'Invalid phone' : undefined)}
-                  />
-                </div>
-              </div>
+                {ADDR_ENABLED && (
+                  <>
+                    <div className="section">
+                      <h3>Billing details</h3>
+                      <AddressForm
+                        namespace="billing"
+                        disabled={false}
+                        requiredFields={{ name: true, line1: true, city: true, state: true, postalCode: true }}
+                        countryAfterZipForUSCA={true}
+                      />
+                    </div>
+
+                    <div className="section">
+                      <h3>Shipping details</h3>
+                      <AddressForm
+                        namespace="shipping"
+                        disabled={false}
+                        requiredFields={{ name: true, line1: true, city: true, state: true, postalCode: true }}
+                        countryAfterZipForUSCA={true}
+                      />
+                    </div>
+                  </>
+                )}
+
+                {!ADDR_ENABLED && (
+                  <>
+                    {/* Shipping Details Section */}
+                  <div className={css.billingDetails}>
+                    <Heading as="h3" rootClassName={css.heading}>
+                      Shipping Details
+                    </Heading>
+                    <FieldTextInput
+                      className={css.field}
+                      type="text"
+                      id="customerName"
+                      name="customerName"
+                      label="Full Name"
+                      required
+                    />
+                    <FieldTextInput
+                      className={css.field}
+                      type="text"
+                      id="customerStreet"
+                      name="customerStreet"
+                      label="Street *"
+                      placeholder="123 Example Street"
+                      required
+                    />
+                    <FieldTextInput
+                      className={css.field}
+                      type="text"
+                      id="customerStreet2"
+                      name="customerStreet2"
+                      label="Street (line 2)"
+                      placeholder="Apt 7"
+                    />
+                    <FieldTextInput
+                      className={css.field}
+                      type="text"
+                      id="customerCity"
+                      name="customerCity"
+                      label="City"
+                      required
+                    />
+                    <FieldTextInput
+                      className={css.field}
+                      type="text"
+                      id="customerState"
+                      name="customerState"
+                      label="State"
+                      required
+                    />
+                    <FieldTextInput
+                      className={css.field}
+                      type="text"
+                      id="customerZip"
+                      name="customerZip"
+                      label="ZIP Code"
+                      required
+                    />
+                    <FieldTextInput
+                      className={css.field}
+                      type="email"
+                      id="customerEmail"
+                      name="customerEmail"
+                      label="Email"
+                      required
+                      validate={value => (!value ? 'Required' : !/^\S+@\S+\.\S+$/.test(value) ? 'Invalid email' : undefined)}
+                    />
+                    <FieldTextInput
+                      className={css.field}
+                      type="tel"
+                      id="customerPhone"
+                      name="customerPhone"
+                      label="Phone Number"
+                      required
+                      validate={value => (!value ? 'Required' : !/^\+?\d{7,15}$/.test(value) ? 'Invalid phone' : undefined)}
+                    />
+                  </div>
+                  </>
+                )}
+              </React.Fragment>
             ) : null}
           </React.Fragment>
         ) : loadingData ? (
