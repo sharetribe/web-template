@@ -44,7 +44,7 @@ const sitemapResourceRoute = require('./resources/sitemap');
 const { getExtractors } = require('./importer');
 const renderer = require('./renderer');
 const dataLoader = require('./dataLoader');
-const { generateCSPNonce, csp } = require('./csp');
+const { generateCSPNonce, csp: cspDirectives } = require('./csp');
 const sdkUtils = require('./api-util/sdk');
 const { getClientScripts, logAssets, BUILD_DIR } = require('./utils/assets');
 
@@ -157,7 +157,6 @@ app.use(helmet({
 const SELF_ORIGINS = ["'self'", "https://sherbrt.com", "https://www.sherbrt.com"];
 
 // CSP configuration with proper nonce generation and mode switching
-const { csp, generateCSPNonce } = require('./csp');
 
 // Optional: exclude /api/* routes from CSP (set CSP_EXCLUDE_API=true)
 const excludeAPI = String(process.env.CSP_EXCLUDE_API || '').toLowerCase() === 'true';
@@ -175,7 +174,7 @@ app.use(
 );
 
 // Build CSP policies
-const cspPolicies = csp({ mode: CSP_MODE, reportUri: cspReportUrl });
+const cspPolicies = cspDirectives({ mode: CSP_MODE, reportUri: cspReportUrl });
 
 // Log CSP mode at startup
 console.log(`🔐 CSP mode: ${cspPolicies.mode}, dual report: ${cspPolicies.dualReport}, exclude API: ${excludeAPI}`);
