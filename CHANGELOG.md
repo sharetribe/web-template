@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Update README about translation files.
+  [#668](https://github.com/sharetribe/web-template/pull/668)
 - [add] Add currently available translations for DE, ES.
   [#666](https://github.com/sharetribe/web-template/pull/666)
 - [add] Add currently available translations for DE, ES, FR.
