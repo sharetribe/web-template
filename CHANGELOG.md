@@ -30,11 +30,12 @@ way to update this template, but currently, we follow a pattern:
 - [add] Add currently available translations for DE, ES, FR.
   [#658](https://github.com/sharetribe/web-template/pull/658)
 - [add] Add accessibility improvements to components related to
-    - search pages
-    - listing page
-    - listing editing pages
-    - transaction page
-  
+
+  - search pages
+  - listing page
+  - listing editing pages
+  - transaction page
+
   [#649](https://github.com/sharetribe/web-template/pull/649)
 
 - [change] Remove pickup fee line-item from the order breakdown.

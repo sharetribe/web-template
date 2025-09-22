@@ -1,10 +1,16 @@
 # Marketplace texts
 
-The translation files in this folder are known as Marketplace texts. They are short texts used across dynamic pages of a Sharetribe marketplace, like button labels, error messages, and help texts. Hosted marketplace texts can be edited in Sharetribe Console at Build > Content > Marketplace texts.
+The translation files in this folder are known as Marketplace texts. They are short texts used
+across dynamic pages of a Sharetribe marketplace, like button labels, error messages, and help
+texts. Hosted marketplace texts can be edited in Sharetribe Console at Build > Content > Marketplace
+texts.
 
-You can learn more about Marketplace texts at https://www.sharetribe.com/docs/concepts/marketplace-texts/.
+You can learn more about Marketplace texts at
+https://www.sharetribe.com/docs/concepts/marketplace-texts/.
 
-Marketplace texts are a part of Sharetribe texts, along wiht Email texts. All Sharetribe texts added to newly created Sharetribe marketplaces can be found in the https://github.com/sharetribe/sharetribe-texts/ public repository.
+Marketplace texts are a part of Sharetribe texts, along wiht Email texts. All Sharetribe texts added
+to newly created Sharetribe marketplaces can be found in the
+https://github.com/sharetribe/sharetribe-texts/ public repository.
 
 # Translations files for copy texts
 
