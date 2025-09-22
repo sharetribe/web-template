@@ -459,6 +459,7 @@
   "InboxPage.default-negotiation.payment-expired.status": "Payment expired",
   "InboxPage.default-negotiation.pending-payment.status": "Pending payment",
   "InboxPage.default-negotiation.quote-requested.status": "Quote requested",
+  "InboxPage.default-negotiation.request-rejected.status": "Request rejected",
   "InboxPage.default-negotiation.reviewed-by-customer.status": "{transactionRole, select, customer {Waiting for provider review} other {Waiting for your review}}",
   "InboxPage.default-negotiation.reviewed-by-provider.status": "{transactionRole, select, customer {Waiting for your review} other {Waiting for customer review}}",
   "InboxPage.default-negotiation.reviewed.status": "Completed",

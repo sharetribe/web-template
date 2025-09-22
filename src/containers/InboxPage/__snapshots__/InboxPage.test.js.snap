@@ -3748,7 +3748,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
 </div>
 `;
 
-exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/make-offer-from-quote-requested 1`] = `
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/make-offer-from-request 1`] = `
 <div
   class="item"
 >
@@ -3769,7 +3769,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-MAKE_OFFER_FROM_QUOTE_REQUESTED-request"
+    href="/order/id-negotiation-MAKE_OFFER_FROM_REQUEST-request"
   >
     <div
       class="rowNotificationDot"
@@ -4270,6 +4270,64 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
 </div>
 `;
 
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/operator-reject-request 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-OPERATOR_REJECT_REQUEST-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.request-rejected.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
 exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/operator-request-changes 1`] = `
 <div
   class="item"
@@ -4553,6 +4611,64 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
       >
         <span>
           InboxPage.default-negotiation.offer-rejected.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/reject-request 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-REJECT_REQUEST-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.request-rejected.status
         </span>
       </div>
     </div>
@@ -4959,6 +5075,64 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
       >
         <span>
           InboxPage.default-negotiation.reviewed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/withdraw-request 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-WITHDRAW_REQUEST-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.request-rejected.status
         </span>
       </div>
     </div>

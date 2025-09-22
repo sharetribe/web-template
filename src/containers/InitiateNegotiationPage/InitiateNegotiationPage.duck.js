@@ -241,7 +241,7 @@ const getTransitionName = (transactionId, processAlias, state) => {
     transaction?.attributes?.lastTransition === transitions.INQUIRE
       ? transitions.MAKE_OFFER_AFTER_INQUIRY
       : transaction?.attributes?.lastTransition === transitions.REQUEST_QUOTE
-      ? transitions.MAKE_OFFER_FROM_QUOTE_REQUESTED
+      ? transitions.MAKE_OFFER_FROM_REQUEST
       : transitions.MAKE_OFFER;
 
   return transitionName;

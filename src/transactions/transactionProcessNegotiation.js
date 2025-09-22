@@ -35,7 +35,10 @@ export const transitions = {
   // Request quote is only available for the customer,
   // which in 'forward' mode is the one who contacts the provider (through a listing created by the provider).
   REQUEST_QUOTE: 'transition/request-quote',
-  MAKE_OFFER_FROM_QUOTE_REQUESTED: 'transition/make-offer-from-quote-requested',
+  MAKE_OFFER_FROM_REQUEST: 'transition/make-offer-from-request',
+  REJECT_REQUEST: 'transition/reject-request',
+  WITHDRAW_REQUEST: 'transition/withdraw-request',
+  OPERATOR_REJECT_REQUEST: 'transition/operator-reject-request',
 
   // Reject offer is available for both parties and the marketplace operator.
   OPERATOR_REJECT_OFFER: 'transition/operator-reject-offer',
@@ -106,6 +109,7 @@ export const states = {
   INITIAL: 'initial',
   INQUIRY: 'inquiry',
   QUOTE_REQUESTED: 'quote-requested',
+  REQUEST_REJECTED: 'request-rejected',
   OFFER_PENDING: 'offer-pending',
   CUSTOMER_OFFER_PENDING: 'customer-offer-pending',
   OFFER_REJECTED: 'offer-rejected',
@@ -150,7 +154,10 @@ export const graph = {
     },
     [states.QUOTE_REQUESTED]: {
       on: {
-        [transitions.MAKE_OFFER_FROM_QUOTE_REQUESTED]: states.OFFER_PENDING,
+        [transitions.MAKE_OFFER_FROM_REQUEST]: states.OFFER_PENDING,
+        [transitions.REJECT_REQUEST]: states.REQUEST_REJECTED,
+        [transitions.WITHDRAW_REQUEST]: states.REQUEST_REJECTED,
+        [transitions.OPERATOR_REJECT_REQUEST]: states.REQUEST_REJECTED,
       },
     },
     [states.INQUIRY]: {
@@ -370,7 +377,7 @@ export const isRelevantPastTransition = transition => {
     transitions.MAKE_OFFER,
     transitions.MAKE_OFFER_AFTER_INQUIRY,
     transitions.REQUEST_QUOTE,
-    transitions.MAKE_OFFER_FROM_QUOTE_REQUESTED,
+    transitions.MAKE_OFFER_FROM_REQUEST,
     transitions.OPERATOR_REJECT_OFFER,
     transitions.CUSTOMER_REJECT_OFFER,
     transitions.PROVIDER_WITHDRAW_OFFER,
@@ -425,7 +432,7 @@ export const isPrivileged = transition => {
   return [
     transitions.MAKE_OFFER,
     transitions.MAKE_OFFER_AFTER_INQUIRY,
-    transitions.MAKE_OFFER_FROM_QUOTE_REQUESTED,
+    transitions.MAKE_OFFER_FROM_REQUEST,
     transitions.CUSTOMER_MAKE_COUNTER_OFFER,
     transitions.PROVIDER_MAKE_COUNTER_OFFER,
     transitions.CUSTOMER_WITHDRAW_COUNTER_OFFER,
