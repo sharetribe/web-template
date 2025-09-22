@@ -16,7 +16,7 @@
    :to :state/quote-requested,
    :actor :actor.role/customer,
    :actions [{:name :action/update-protected-data}]}
-  {:name :transition/make-offer-from-quote-requested,
+  {:name :transition/make-offer-from-request,
    :from :state/quote-requested,
    :to :state/offer-pending,
    :actor :actor.role/provider,
@@ -25,6 +25,21 @@
     {:name :action/update-protected-data}
     {:name :action/privileged-update-metadata}],
    :privileged? true}
+  {:name :transition/reject-request,
+   :from :state/quote-requested,
+   :to :state/request-rejected,
+   :actor :actor.role/provider,
+   :actions []}
+  {:name :transition/withdraw-request,
+   :from :state/quote-requested,
+   :to :state/request-rejected,
+   :actor :actor.role/customer,
+   :actions []}
+  {:name :transition/operator-reject-request,
+   :from :state/quote-requested,
+   :to :state/request-rejected,
+   :actor :actor.role/operator,
+   :actions []}
   {:name :transition/make-offer-after-inquiry,
    :from :state/inquiry,
    :to :state/offer-pending,
@@ -263,10 +278,26 @@
    :on :transition/make-offer,
    :to :actor.role/customer,
    :template :negotiation-new-offer}
-  {:name :notification/new-offer-from-quote-requested,
-   :on :transition/make-offer-from-quote-requested,
+  {:name :notification/new-offer-from-request,
+   :on :transition/make-offer-from-request,
    :to :actor.role/customer,
-   :template :negotiation-new-offer-from-quote-requested}
+   :template :negotiation-new-offer-from-request}
+  {:name :notification/rejected-request,
+   :on :transition/reject-request,
+   :to :actor.role/customer,
+   :template :negotiation-rejected-request}
+  {:name :notification/withdrawn-request,
+   :on :transition/withdraw-request,
+   :to :actor.role/provider,
+   :template :negotiation-withdrawn-request}
+  {:name :notification/operator-rejected-request-customer,
+   :on :transition/operator-reject-request,
+   :to :actor.role/customer,
+   :template :negotiation-rejected-request}
+  {:name :notification/operator-rejected-request-provider,
+   :on :transition/operator-reject-request,
+   :to :actor.role/provider,
+   :template :negotiation-operator-rejected-request}
   {:name :notification/operator-rejected-offer-provider,
    :on :transition/operator-reject-offer,
    :to :actor.role/provider,

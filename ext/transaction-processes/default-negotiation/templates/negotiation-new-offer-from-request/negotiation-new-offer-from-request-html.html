@@ -13,9 +13,9 @@
           <table align="center" role="presentation" cellSpacing="0" cellPadding="0" border="0" width="100%" style="max-width:600px;margin:0 auto">
             <tr style="width:100%">
               <td>
-                <h1 style="color:#484848;font-size:26px;line-height:1.3;font-weight:700">{{t "NegotiationNewOfferFromQuoteRequested.Title" "You've received an offer from {providerDisplayName}" providerDisplayName=provider.display-name }}</h1>
+                <h1 style="color:#484848;font-size:26px;line-height:1.3;font-weight:700">{{t "NegotiationNewOfferFromRequest.Title" "You've received an offer from {providerDisplayName}" providerDisplayName=provider.display-name }}</h1>
                 <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">
-                  {{t "NegotiationNewOfferFromQuoteRequested.ContentParagraph1" "Please accept or reject the offer. You can also make a counter offer."}}</p>
+                  {{t "NegotiationNewOfferFromRequest.ContentParagraph1" "Please accept or reject the offer. You can also make a counter offer."}}</p>
                 <table style="color:#484848;font-size:16px;line-height:1.4;background-color:#FFF;padding:8px 24px;border-radius:8px;border:1px solid;border-color:#E1E1E1;margin:24px 0" align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                   <tbody>
                     <tr>
@@ -25,7 +25,7 @@
                             <tr>
                               <td>
                                 <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "NegotiationNewOfferFromQuoteRequested.LineTotalForRequestLabel" "Offer"}}</p>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "NegotiationNewOfferFromRequest.LineTotalForRequestLabel" "Offer"}}</p>
                                 </td>
                                 <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{> format-money money=line-total}}</p>
@@ -40,7 +40,7 @@
                             <tr>
                               <td>
                                 <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "NegotiationNewOfferFromQuoteRequested.UnitPriceLabel" "Offer"}}</p>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "NegotiationNewOfferFromRequest.UnitPriceLabel" "Offer"}}</p>
                                 </td>
                                 <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{> format-money money=line-total}}</p>
@@ -55,7 +55,7 @@
                             <tr>
                               <td>
                                 <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px;margin-bottom:1px">{{t "NegotiationNewOfferFromQuoteRequested.FeeLabel" "{marketplaceName} customer fee" marketplaceName=marketplace.name }}</p>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px;margin-bottom:1px">{{t "NegotiationNewOfferFromRequest.FeeLabel" "{marketplaceName} customer fee" marketplaceName=marketplace.name }}</p>
                                 </td>
                                 <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px;margin-bottom:1px">{{> format-money money=line-total}}</p>
@@ -71,7 +71,7 @@
                             <tr>
                               <td>
                                 <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px;font-weight:700">{{t "NegotiationNewOfferFromQuoteRequested.TOTAL" "Total price"}}</p>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px;font-weight:700">{{t "NegotiationNewOfferFromRequest.TOTAL" "Total price"}}</p>
                                 </td>
                                 <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px;font-weight:700">{{> format-money money=payin-total}}</p>
@@ -87,7 +87,7 @@
                 <table style="padding:16px 0 0" align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                   <tbody>
                     <tr>
-                      <td><a href="{{marketplace.url}}/order/{{url-encode id}}/" target="_blank" style="color:#FFF;background-color:#007DF2;border-radius:4px;font-size:15px;text-decoration:none;text-align:center;display:inline-block;min-width:210px;padding:0px 0px;line-height:100%;max-width:100%"><span><!--[if mso]><i style="letter-spacing: undefinedpx;mso-font-width:-100%;mso-text-raise:0" hidden>&nbsp;</i><![endif]--></span><span style="color:#FFF;background-color:#007DF2;border-radius:4px;font-size:15px;text-decoration:none;text-align:center;display:inline-block;min-width:210px;padding:16px 32px;max-width:100%;line-height:120%;text-transform:none;mso-padding-alt:0px;mso-text-raise:0">{{t "NegotiationNewOfferFromQuoteRequested.Cta" "React to the offer"}}</span><span><!--[if mso]><i style="letter-spacing: undefinedpx;mso-font-width:-100%" hidden>&nbsp;</i><![endif]--></span></a>
+                      <td><a href="{{marketplace.url}}/order/{{url-encode id}}/" target="_blank" style="color:#FFF;background-color:#007DF2;border-radius:4px;font-size:15px;text-decoration:none;text-align:center;display:inline-block;min-width:210px;padding:0px 0px;line-height:100%;max-width:100%"><span><!--[if mso]><i style="letter-spacing: undefinedpx;mso-font-width:-100%;mso-text-raise:0" hidden>&nbsp;</i><![endif]--></span><span style="color:#FFF;background-color:#007DF2;border-radius:4px;font-size:15px;text-decoration:none;text-align:center;display:inline-block;min-width:210px;padding:16px 32px;max-width:100%;line-height:120%;text-transform:none;mso-padding-alt:0px;mso-text-raise:0">{{t "NegotiationNewOfferFromRequest.Cta" "React to the offer"}}</span><span><!--[if mso]><i style="letter-spacing: undefinedpx;mso-font-width:-100%" hidden>&nbsp;</i><![endif]--></span></a>
                         <div>
                           <p style="font-size:14px;line-height:1.5;margin:16px 0;color:#484848">{{t "TransactionEmails.AccessibleLinkText" "Can't click the button? Here's a link for your convenience:"}} <a target="_blank" style="color:#007DF2;text-decoration:none" href="{{marketplace.url}}/order/{{url-encode id}}/">{{marketplace.url}}/order/{{url-encode id}}/</a></p>
                         </div>

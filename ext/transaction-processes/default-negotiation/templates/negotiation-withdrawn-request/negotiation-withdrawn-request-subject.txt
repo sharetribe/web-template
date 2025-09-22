@@ -1,0 +1,1 @@
+{{set-translations (asset "content/email-texts.json")}}{{t "NegotiationWithdrawnRequest.Subject" "{customerDisplayName} has withdrawn their quote request" customerDisplayName=transaction.customer.display-name }}
