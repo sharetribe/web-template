@@ -170,7 +170,7 @@ const RangeInput = props => {
             step={step}
             placeholder={defaultMinValue}
             value={fieldValues.minValue}
-            onChange={event => handleMinValueChange(event, values.minValue)}
+            onChange={handleMinValueChange}
             onBlur={handleMinValueBlur}
           ></input>
           <span className={css.valueSeparator}>-</span>
