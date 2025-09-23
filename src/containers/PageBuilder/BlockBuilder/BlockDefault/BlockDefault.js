@@ -69,8 +69,10 @@ const BlockDefault = props => {
     blueCols,
     showBuyerList,
     buyerListData,
+    buyerListButton,
     showSellerList,
     sellerListData,
+    sellerListButton,
     contactButtons,
     hasFullHeightMedia,
     hasIconImg,
@@ -123,6 +125,9 @@ const BlockDefault = props => {
     hasFullHeightMedia ? css.fullHeightMedia : '',
   );
 
+  const hasBuyerButtonField = buyerListButton?.content?.trim().length > 0 && buyerListButton?.content?.trim().length > 0;
+  const hasSellerButtonField = sellerListButton?.content?.trim().length > 0 && sellerListButton?.content?.trim().length > 0;
+
   return (
     <BlockContainer id={blockId} className={classes}>
       {sliderImages?.length ? (
@@ -143,29 +148,43 @@ const BlockDefault = props => {
           <Field data={callToAction} className={ctaCustomClass} options={options} />
 
           {showBuyerList ? (
-            <ol className={css.titleList}>
-             {buyerListData.map((item, index) => item.title.trim() ? (
-                <li key={index}>
-                  <div>
-                    <h3>{item.title}</h3>
-                    <div dangerouslySetInnerHTML={{ __html: item.text }}></div>
-                  </div>
-                </li>
-              ): null)}
-            </ol>
-          ) : null}
+             <div>
+              <ol className={css.titleList}>
+              {buyerListData.map((item, index) => item.title.trim() ? (
+                  <li key={index}>
+                    <div>
+                      <h3>{item.title}</h3>
+                      <div dangerouslySetInnerHTML={{ __html: item.text }}></div>
+                    </div>
+                  </li>
+                ): null)}
+              </ol>
+              {hasBuyerButtonField ? (
+                <div>
+                  <Field data={buyerListButton} className={customProps.ctaButtonSecondaryClass} options={options} />
+                </div>
+              ) : null}
+            </div>
+          ): null}
 
           {showSellerList ? (
-            <ol className={css.titleList}>
-              {sellerListData.map((item, index) => item.title.trim() ? (
-                <li key={index}>
-                  <div>
-                    <h3>{item.title}</h3>
-                    <div dangerouslySetInnerHTML={{ __html: item.text }}></div>
-                  </div>
-                </li>
-              ): null)}
-            </ol>
+            <div>
+              <ol className={css.titleList}>
+                {sellerListData.map((item, index) => item.title.trim() ? (
+                  <li key={index}>
+                    <div>
+                      <h3>{item.title}</h3>
+                      <div dangerouslySetInnerHTML={{ __html: item.text }}></div>
+                    </div>
+                  </li>
+                ): null)}
+              </ol>
+              {hasSellerButtonField ? (
+                <div>
+                  <Field data={sellerListButton} className={customProps.ctaButtonSecondaryClass} options={options} />
+                </div>
+              ) : null}
+            </div>
           ) : null}
 
           {contactButtons ? (

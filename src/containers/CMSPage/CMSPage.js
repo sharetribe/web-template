@@ -71,56 +71,56 @@ export const CMSPageComponent = props => {
     plans: {
       set1: [
         {
-          title: intl.formatMessage({ id: 'PricingToggle.set1.title1', defaultMessage:'Hello' }),
-          description: intl.formatMessage({ id: 'PricingToggle.set1.description1', defaultMessage:'Hello' }),
-          price: intl.formatMessage({ id: 'PricingToggle.set1.price1', defaultMessage:'Hello' }),
-          priceText: intl.formatMessage({ id: 'PricingToggle.set1.priceText1', defaultMessage:'Hello' }),
+          title: intl.formatMessage({ id: 'PricingToggle.set1.title1', defaultMessage: 'Hello' }),
+          description: intl.formatMessage({ id: 'PricingToggle.set1.description1', defaultMessage: 'Hello' }),
+          price: intl.formatMessage({ id: 'PricingToggle.set1.price1', defaultMessage: 'Hello' }),
+          priceText: intl.formatMessage({ id: 'PricingToggle.set1.priceText1', defaultMessage: 'Hello' }),
           cta: {
-            link: intl.formatMessage({ id: 'PricingToggle.set1.cta1Link', defaultMessage:'Hello' }),
-            text: intl.formatMessage({ id: 'PricingToggle.set1.cta1Text', defaultMessage:'Hello' }),
+            link: intl.formatMessage({ id: 'PricingToggle.set1.cta1Link', defaultMessage: 'Hello' }),
+            text: intl.formatMessage({ id: 'PricingToggle.set1.cta1Text', defaultMessage: 'Hello' }),
           },
-          features: intl.formatMessage({ id: 'PricingToggle.set1.features1', defaultMessage:'Hello' }),
+          features: intl.formatMessage({ id: 'PricingToggle.set1.features1', defaultMessage: 'Hello' }),
         },
         {
-          title: intl.formatMessage({ id: 'PricingToggle.set1.title2', defaultMessage:'Hello' }),
-          description: intl.formatMessage({ id: 'PricingToggle.set1.description2', defaultMessage:'Hello' }),
-          price: intl.formatMessage({ id: 'PricingToggle.set1.price2', defaultMessage:'Hello' }),
-          priceText: intl.formatMessage({ id: 'PricingToggle.set1.priceText2', defaultMessage:'Hello' }),
+          title: intl.formatMessage({ id: 'PricingToggle.set1.title2', defaultMessage: 'Hello' }),
+          description: intl.formatMessage({ id: 'PricingToggle.set1.description2', defaultMessage: 'Hello' }),
+          price: intl.formatMessage({ id: 'PricingToggle.set1.price2', defaultMessage: 'Hello' }),
+          priceText: intl.formatMessage({ id: 'PricingToggle.set1.priceText2', defaultMessage: 'Hello' }),
           cta: {
-            link: intl.formatMessage({ id: 'PricingToggle.set1.cta2Link', defaultMessage:'Hello' }),
-            text: intl.formatMessage({ id: 'PricingToggle.set1.cta2Text', defaultMessage:'Hello' }),
+            link: intl.formatMessage({ id: 'PricingToggle.set1.cta2Link', defaultMessage: 'Hello' }),
+            text: intl.formatMessage({ id: 'PricingToggle.set1.cta2Text', defaultMessage: 'Hello' }),
           },
-          features: intl.formatMessage({ id: 'PricingToggle.set1.features2', defaultMessage:'Hello' }),
+          features: intl.formatMessage({ id: 'PricingToggle.set1.features2', defaultMessage: 'Hello' }),
         },
       ],
       set2: [
         {
-          title: intl.formatMessage({ id: 'PricingToggle.set2.title1', defaultMessage:'Hello' }),
-          description: intl.formatMessage({ id: 'PricingToggle.set2.description1', defaultMessage:'Hello' }),
-          price: intl.formatMessage({ id: 'PricingToggle.set2.price1', defaultMessage:'Hello' }),
-          priceText: intl.formatMessage({ id: 'PricingToggle.set2.priceText1', defaultMessage:'Hello' }),
+          title: intl.formatMessage({ id: 'PricingToggle.set2.title1', defaultMessage: 'Hello' }),
+          description: intl.formatMessage({ id: 'PricingToggle.set2.description1', defaultMessage: 'Hello' }),
+          price: intl.formatMessage({ id: 'PricingToggle.set2.price1', defaultMessage: 'Hello' }),
+          priceText: intl.formatMessage({ id: 'PricingToggle.set2.priceText1', defaultMessage: 'Hello' }),
           cta: {
-            link: intl.formatMessage({ id: 'PricingToggle.set2.cta1Link', defaultMessage:'Hello' }),
-            text: intl.formatMessage({ id: 'PricingToggle.set2.cta1Text', defaultMessage:'Hello' }),
+            link: intl.formatMessage({ id: 'PricingToggle.set2.cta1Link', defaultMessage: 'Hello' }),
+            text: intl.formatMessage({ id: 'PricingToggle.set2.cta1Text', defaultMessage: 'Hello' }),
           },
-          features: intl.formatMessage({ id: 'PricingToggle.set2.features1', defaultMessage:'Hello' }),
+          features: intl.formatMessage({ id: 'PricingToggle.set2.features1', defaultMessage: 'Hello' }),
         },
         {
-          title: intl.formatMessage({ id: 'PricingToggle.set2.title2', defaultMessage:'Hello' }),
-          description: intl.formatMessage({ id: 'PricingToggle.set2.description2', defaultMessage:'Hello' }),
-          price: intl.formatMessage({ id: 'PricingToggle.set2.price2', defaultMessage:'Hello' }),
-          priceText: intl.formatMessage({ id: 'PricingToggle.set2.priceText2', defaultMessage:'Hello' }),
+          title: intl.formatMessage({ id: 'PricingToggle.set2.title2', defaultMessage: 'Hello' }),
+          description: intl.formatMessage({ id: 'PricingToggle.set2.description2', defaultMessage: 'Hello' }),
+          price: intl.formatMessage({ id: 'PricingToggle.set2.price2', defaultMessage: 'Hello' }),
+          priceText: intl.formatMessage({ id: 'PricingToggle.set2.priceText2', defaultMessage: 'Hello' }),
           cta: {
-            link: intl.formatMessage({ id: 'PricingToggle.set2.cta2Link', defaultMessage:'Hello' }),
-            text: intl.formatMessage({ id: 'PricingToggle.set2.cta2Text', defaultMessage:'Hello' }),
+            link: intl.formatMessage({ id: 'PricingToggle.set2.cta2Link', defaultMessage: 'Hello' }),
+            text: intl.formatMessage({ id: 'PricingToggle.set2.cta2Text', defaultMessage: 'Hello' }),
           },
-          features: intl.formatMessage({ id: 'PricingToggle.set2.features2', defaultMessage:'Hello' }),
+          features: intl.formatMessage({ id: 'PricingToggle.set2.features2', defaultMessage: 'Hello' }),
         },
       ],
     },
     toggles: {
-      cta1: intl.formatMessage({ id: 'PricingToggle.toggleSet1', defaultMessage:'' }),
-      cta2: intl.formatMessage({ id: 'PricingToggle.toggleSet2', defaultMessage:'' })
+      cta1: intl.formatMessage({ id: 'PricingToggle.toggleSet1', defaultMessage: ' ' }),
+      cta2: intl.formatMessage({ id: 'PricingToggle.toggleSet2', defaultMessage: ' ' })
     },
   };
 

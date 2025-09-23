@@ -188,24 +188,32 @@ function createBlockCustomProps(block) {
 
   if (block.blockName?.includes('buyer list ::')) {
     blockCustomProps.showBuyerList = true;
-    blockCustomProps.buyerListData = []
+    blockCustomProps.buyerListButton = {
+      fieldType: 'internalButtonLink',
+      href: intl.formatMessage({ id: 'CustomList.' + block.blockId + '.buttonLink', defaultMessage: ' ' }),
+      content: intl.formatMessage({ id: 'CustomList.' + block.blockId + '.buttonText', defaultMessage: ' ' }),
+    };
+    blockCustomProps.buyerListData = [];
     for (let r = 1; r <= 5; r++) {
-      blockCustomProps.buyerListData.push(
-        {
-          title: intl.formatMessage({ id: 'CustomList.' + block.blockId + '.title' + r, defaultMessage:' ' }),
-          text: intl.formatMessage({ id: 'CustomList.' + block.blockId + '.text' + r, defaultMessage:' ' }),
-        }
-      );
+      blockCustomProps.buyerListData.push({
+        title: intl.formatMessage({ id: 'CustomList.' + block.blockId + '.title' + r, defaultMessage: ' ' }),
+        text: intl.formatMessage({ id: 'CustomList.' + block.blockId + '.text' + r, defaultMessage: ' ' }),
+      });
     }
   }
   if (block.blockName?.includes('seller list ::')) {
     blockCustomProps.showSellerList = true;
+    blockCustomProps.sellerListButton = {
+      fieldType: 'internalButtonLink',
+      href: intl.formatMessage({ id: 'CustomList.' + block.blockId + '.buttonLink', defaultMessage: ' ' }),
+      content: intl.formatMessage({ id: 'CustomList.' + block.blockId + '.buttonText', defaultMessage: ' ' }),
+    };
     blockCustomProps.sellerListData = [];
     for (let r = 1; r <= 5; r++) {
       blockCustomProps.sellerListData.push(
         {
-          title: intl.formatMessage({ id: 'CustomList.' + block.blockId + '.title' + r, defaultMessage:' ' }),
-          text: intl.formatMessage({ id: 'CustomList.' + block.blockId + '.text' + r, defaultMessage:' ' }),
+          title: intl.formatMessage({ id: 'CustomList.' + block.blockId + '.title' + r, defaultMessage: ' ' }),
+          text: intl.formatMessage({ id: 'CustomList.' + block.blockId + '.text' + r, defaultMessage: ' ' }),
         }
       );
     }

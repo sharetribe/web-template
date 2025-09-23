@@ -127,7 +127,16 @@
 }
 
 .sectionContentHasPaddings {
-  padding: 90px 0;
+  padding: 90px 0 70px;
+
+  header > h2 + p {
+    color: #aaaaaa;
+  }
+
+  header + div {
+    margin-top: 50px;
+    margin-bottom: 50px;
+  }
 }
 
 .sectionContentMediumTitle {

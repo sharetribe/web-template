@@ -96,7 +96,7 @@ const PricingToggle = props => {
     } = props;
 
     const [activeSet, setActiveSet] = useState("set1");
-    const useToggle = toggles.cta1 !== 'PricingToggle.toggleSet1' || toggles.cta2 !== 'PricingToggle.toggleSet2';
+    const useToggle = toggles.cta1 !== ' ' || toggles.cta2 !== ' ';
 
     return (
         <div className={pricesCss.container}>
