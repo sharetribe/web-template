@@ -1,32 +1,23 @@
 @import '../../../../styles/customMediaQueries.css';
 
-header.sectionHeader {
+.sectionHeader {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
+  gap: 24px;
 
   @media (--viewportMedium) {
     flex-direction: row;
     align-items: center;
   }
+}
 
-  .textBlock {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 20px;
-
-    .description {
-      width: 100%;
-      max-width: none;
-      text-align: left;
-    }
-  }
-
-  h2 + p {
-    margin-top: 8px;
-  }
+.textBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
 }
 
 .title {
@@ -41,6 +32,9 @@ header.sectionHeader {
   font-size: 16px;
   font-weight: 400;
   line-height: 150%;
+  text-align: left;
+  max-width: none;
+  width: 100%;
 }
 
 .ctaButton {
@@ -50,20 +44,137 @@ header.sectionHeader {
   line-height: 139%;
 }
 
-.baseColumn {
+.carouselOuter {
+  --carouselWidth: 100vw;
+  --carouselHorizontalPadding: var(--contentPaddingX, 32px);
+  --carouselGap: 32px;
+  position: relative;
   max-width: var(--contentMaxWidthPages);
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-
-  gap: 32px;
   margin: 0 auto;
-  padding: 32px;
+}
 
-  @media (--viewportXSmall) {
-    grid-template-columns: repeat(2, calc((100% - 1 * 32px) / 2));
+.carouselOuter:hover .carouselArrows {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.carouselArrows:focus-within {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.noSidePaddings {
+  --carouselHorizontalPadding: 0px;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.carouselArrows {
+  pointer-events: none;
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 16px;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 200ms ease-in-out;
+
+  @media (any-hover: none) and (pointer: coarse) {
+    display: none;
+  }
+}
+
+.hideArrows {
+  display: none;
+}
+
+.carouselArrow {
+  pointer-events: auto;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(16, 38, 229, 1);
+  color: var(--colorWhite);
+  font-size: 28px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 150ms ease-in-out, transform 150ms ease-in-out, opacity 150ms ease-in-out;
+  opacity: .8;
+
+  &:hover {
+    opacity: 1;
+    transform: scale(1.05);
   }
 
-  @media (--viewportMedium) {
-    grid-template-columns: repeat(4, calc((100% - 3 * 32px) / 4));
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
   }
+}
+
+.slider {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--carouselGap);
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  padding: 24px 0 32px;
+  margin: 0;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.carouselItem {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+}
+
+.listingCard {
+  width: 100%;
+}
+
+.oneColumn .carouselItem {
+  width: calc(
+    min(var(--contentMaxWidthPages), var(--carouselWidth)) - (var(--carouselHorizontalPadding) * 2)
+  );
+}
+
+.twoColumns .carouselItem {
+  width: calc(
+    (
+        min(var(--contentMaxWidthPages), var(--carouselWidth)) - (var(--carouselHorizontalPadding) * 2) -
+          var(--carouselGap)
+      ) / 2
+  );
+}
+
+.threeColumns .carouselItem {
+  width: calc(
+    (
+        min(var(--contentMaxWidthPages), var(--carouselWidth)) - (var(--carouselHorizontalPadding) * 2) -
+          (var(--carouselGap) * 2)
+      ) / 3
+  );
+}
+
+.fourColumns .carouselItem {
+  width: calc(
+    (
+        min(var(--contentMaxWidthPages), var(--carouselWidth)) - (var(--carouselHorizontalPadding) * 2) -
+          (var(--carouselGap) * 3)
+      ) / 4
+  );
 }
