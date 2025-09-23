@@ -63,6 +63,7 @@ const RangeInput = props => {
     step,
     isInSideBar,
     initialValues,
+    intl,
   } = props;
   const { value: values = {}, onChange, name } = input;
 
@@ -161,7 +162,11 @@ const RangeInput = props => {
     <div className={classes}>
       <div className={classNames(css.contentWrapper, { [css.contentWrapperSidebar]: isInSideBar })}>
         <div className={css.inputsWrapper}>
-          {!isInSideBar ? <span className={css.labelPopup}>Range:</span> : null}
+          {!isInSideBar ? (
+            <span className={css.labelPopup}>
+              {intl.formatMessage({ id: 'IntegerRangeFilter.rangeInputsLabel' })}
+            </span>
+          ) : null}
           <input
             className={classNames(css.minValue, { [css.valueInSidebar]: isInSideBar })}
             type="number"

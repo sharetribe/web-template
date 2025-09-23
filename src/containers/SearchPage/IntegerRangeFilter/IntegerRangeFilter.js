@@ -7,7 +7,7 @@ import FilterPlain from '../FilterPlain/FilterPlain';
 import FilterPopup from '../FilterPopup/FilterPopup';
 import FieldSelectIntegerRange from './FieldSelectIntegerRange';
 
-import { FormattedMessage } from '../../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import css from './IntegerRangeFilter.module.css';
 
 const RADIX = 10;
@@ -84,10 +84,10 @@ const getHandleSubmit = (name, queryParamNames, onSubmit) => values => {
  * @param {number} [props.max] - The maximum value
  * @param {number} [props.step] - The step
  * @param {Function} props.onSubmit - The function to submit
- * @param {intlShape} props.intl - The intl object
  * @returns {JSX.Element}
  */
 const IntegerRangeFilter = props => {
+  const intl = useIntl();
   const {
     min,
     max,
@@ -98,7 +98,6 @@ const IntegerRangeFilter = props => {
     label,
     rootClassName,
     className,
-    intl,
     id,
     name,
     showAsPopup = true,
