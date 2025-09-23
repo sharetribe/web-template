@@ -21,6 +21,17 @@ const resolveMinMaxValues = (values, defaultMax, defaultMin) => {
 
 const isTooSmall = (x, limit) => x < limit;
 const isTooBig = (x, limit) => x > limit;
+const isValidMin = (minValue, minLimit, maxValue) => {
+  return (
+    Number.isInteger(minValue) && !isTooSmall(minValue, minLimit) && !isTooBig(minValue, maxValue)
+  );
+};
+const isValidMax = (maxValue, maxLimit, minValue) => {
+  return (
+    Number.isInteger(maxValue) && !isTooBig(maxValue, maxLimit) && !isTooSmall(maxValue, minValue)
+  );
+};
+
 const getValidHandles = (currentValues, inputValues, minLimit, maxLimit) => {
   const isMinUpdated = currentValues.minValue !== inputValues.minValue;
   const isMaxUpdated = currentValues.maxValue !== inputValues.maxValue;
@@ -156,6 +167,8 @@ const RangeInput = props => {
     onChange({ ...updatedValue });
   };
 
+  const isMinInvalid = !isValidMin(fieldValues.minValue, defaultMinValue, fieldValues.maxValue);
+  const isMaxInvalid = !isValidMax(fieldValues.maxValue, defaultMaxValue, fieldValues.minValue);
   const classes = isInSideBar ? css.formWrapper : null;
 
   return (
@@ -168,7 +181,10 @@ const RangeInput = props => {
             </span>
           ) : null}
           <input
-            className={classNames(css.minValue, { [css.valueInSidebar]: isInSideBar })}
+            className={classNames(css.minValue, {
+              [css.valueInSidebar]: isInSideBar,
+              [css.invalidInput]: isMinInvalid,
+            })}
             type="number"
             min={defaultMinValue}
             max={defaultMaxValue}
@@ -180,7 +196,10 @@ const RangeInput = props => {
           ></input>
           <span className={css.valueSeparator}>-</span>
           <input
-            className={classNames(css.maxValue, { [css.valueInSidebar]: isInSideBar })}
+            className={classNames(css.maxValue, {
+              [css.valueInSidebar]: isInSideBar,
+              [css.invalidInput]: isMaxInvalid,
+            })}
             type="number"
             min={defaultMinValue}
             max={defaultMaxValue}
