@@ -109,6 +109,31 @@ const RangeInput = props => {
     onChange(newValues);
   };
 
+  const handleMinValueBlur = event => {
+    const inputValue = Number.parseInt(event.target.value, RADIX);
+    if (
+      !Number.isInteger(inputValue) ||
+      inputValue < defaultMinValue ||
+      inputValue > values.maxValue
+    ) {
+      const newValues = { ...fieldValues, minValue: defaultMinValue };
+      setFieldValues(newValues);
+      onChange(newValues);
+    }
+  };
+  const handleMaxValueBlur = event => {
+    const inputValue = Number.parseInt(event.target.value, RADIX);
+    if (
+      !Number.isInteger(inputValue) ||
+      inputValue < values.minValue ||
+      inputValue > defaultMaxValue
+    ) {
+      const newValues = { ...fieldValues, maxValue: defaultMaxValue };
+      setFieldValues(newValues);
+      onChange(newValues);
+    }
+  };
+
   const handleSliderChange = updatedValue => {
     setFieldValues({ ...updatedValue });
     onChange({ ...updatedValue });
@@ -130,6 +155,7 @@ const RangeInput = props => {
             placeholder={defaultMinValue}
             value={fieldValues.minValue}
             onChange={event => handleMinValueChange(event, values.minValue)}
+            onBlur={handleMinValueBlur}
           ></input>
           <span className={css.valueSeparator}>-</span>
           <input
@@ -141,6 +167,7 @@ const RangeInput = props => {
             step={step}
             value={fieldValues.maxValue}
             onChange={handleMaxValueChange}
+            onBlur={handleMaxValueBlur}
           ></input>
         </div>
       </div>
