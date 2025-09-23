@@ -19,6 +19,42 @@ const resolveMinMaxValues = (values, defaultMax, defaultMin) => {
   };
 };
 
+const isTooSmall = (x, limit) => x < limit;
+const isTooBig = (x, limit) => x > limit;
+const getValidHandles = (currentValues, inputValues, minLimit, maxLimit) => {
+  const isMinUpdated = currentValues.minValue !== inputValues.minValue;
+  const isMaxUpdated = currentValues.maxValue !== inputValues.maxValue;
+
+  if (isMinUpdated && isMaxUpdated) {
+    const { minValue, maxValue } = inputValues;
+    const inRange = !(isTooSmall(minValue, minLimit) || isTooBig(maxValue, maxLimit));
+    // If both values are changed and are within bounds, return the new values. Otherwise, return the default values.
+    return inRange && minValue <= maxValue ? [minValue, maxValue] : [minLimit, maxLimit];
+  }
+
+  const { minValue, maxValue } = inputValues;
+  const validMin = !isMinUpdated
+    ? currentValues.minValue
+    : !Number.isInteger(minValue)
+    ? minLimit
+    : isTooSmall(minValue, minLimit)
+    ? minLimit
+    : isTooBig(minValue, maxValue)
+    ? maxValue
+    : minValue;
+  const validMax = !isMaxUpdated
+    ? currentValues.maxValue
+    : !Number.isInteger(maxValue)
+    ? maxLimit
+    : isTooBig(maxValue, maxLimit)
+    ? maxLimit
+    : isTooSmall(maxValue, minValue)
+    ? minValue
+    : maxValue;
+
+  return [validMin, validMax];
+};
+
 const RangeInput = props => {
   const {
     input,
@@ -113,7 +149,7 @@ const RangeInput = props => {
           min={defaultMinValue}
           max={defaultMaxValue}
           step={step}
-          handles={[fieldValues.minValue, fieldValues.maxValue]}
+          handles={getValidHandles(values, fieldValues, defaultMinValue, defaultMaxValue)}
           onChange={handles => {
             handleSliderChange({ minValue: handles[0], maxValue: handles[1] });
           }}
