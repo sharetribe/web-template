@@ -84,6 +84,7 @@ const getHandleSubmit = (name, queryParamNames, onSubmit) => values => {
  * @param {number} [props.max] - The maximum value
  * @param {number} [props.step] - The step
  * @param {Function} props.onSubmit - The function to submit
+ * @param {Function} [props.formatValidRangeValues] - Function to format validRangeValues for display
  * @returns {JSX.Element}
  */
 const IntegerRangeFilter = props => {
@@ -101,6 +102,7 @@ const IntegerRangeFilter = props => {
     id,
     name,
     showAsPopup = true,
+    formatValidRangeValues,
     ...rest
   } = props;
 
@@ -140,8 +142,11 @@ const IntegerRangeFilter = props => {
   };
 
   // Used to display the selected values above the filter component in the "grid" view
+  const formattedRangeValues = formatValidRangeValues
+    ? formatValidRangeValues(validRangeValues)
+    : validRangeValues;
   const labelSelectionForPlain = hasInitialValues ? (
-    <FormattedMessage id="IntegerRangeFilter.labelSelectedPlain" values={validRangeValues} />
+    <FormattedMessage id="IntegerRangeFilter.labelSelectedPlain" values={formattedRangeValues} />
   ) : null;
 
   return showAsPopup ? (
