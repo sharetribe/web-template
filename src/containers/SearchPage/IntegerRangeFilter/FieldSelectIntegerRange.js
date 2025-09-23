@@ -75,36 +75,52 @@ const RangeInput = props => {
 
   const handleMinValueChange = event => {
     const newValue = Number.parseInt(event.target.value, RADIX);
-    if (isNaN(newValue)) {
-      onChange({ ...fieldValues, minValue: defaultMinValue });
-      return;
-    }
-    if (newValue > fieldValues.maxValue) {
-      return;
-    }
-    if (newValue < defaultMinValue) {
+
+    // Faulty mode: new min value is not an integer
+    if (!Number.isInteger(newValue)) {
+      const newValues = { ...fieldValues, minValue: '' };
+      setFieldValues(newValues);
       return;
     }
 
-    const newValues = { ...fieldValues, minValue: newValue };
+    // Faulty mode: new min value is greater than the current max value or
+    //              new min value is less than the default min value
+    if (newValue > fieldValues.maxValue || newValue < defaultMinValue) {
+      const newValues = { ...fieldValues, minValue: newValue };
+      setFieldValues(newValues);
+      return;
+    }
+
+    const newValues =
+      newValue < defaultMinValue
+        ? { ...fieldValues, minValue: defaultMinValue }
+        : { ...fieldValues, minValue: newValue };
     setFieldValues(newValues);
     onChange(newValues);
   };
 
   const handleMaxValueChange = event => {
     const newValue = Number.parseInt(event.target.value, RADIX);
-    if (isNaN(newValue)) {
-      onChange({ ...fieldValues, maxValue: defaultMaxValue });
-      return;
-    }
-    if (newValue < fieldValues.minValue) {
-      return;
-    }
-    if (newValue > defaultMaxValue) {
+
+    // Faulty mode: new min value is not an integer
+    if (!Number.isInteger(newValue)) {
+      const newValues = { ...fieldValues, maxValue: '' };
+      setFieldValues(newValues);
       return;
     }
 
-    const newValues = { ...fieldValues, maxValue: newValue };
+    // Faulty mode: new max value is less than the current min value or
+    //              new max value is greater than the default max value
+    if (newValue < fieldValues.minValue || newValue > defaultMaxValue) {
+      const newValues = { ...fieldValues, maxValue: newValue };
+      setFieldValues(newValues);
+      return;
+    }
+
+    const newValues =
+      newValue > defaultMaxValue
+        ? { ...fieldValues, maxValue: defaultMaxValue }
+        : { ...fieldValues, maxValue: newValue };
     setFieldValues(newValues);
     onChange(newValues);
   };
