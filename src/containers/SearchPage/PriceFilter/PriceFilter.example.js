@@ -36,6 +36,8 @@ export const PriceFilterPopup = {
   component: PriceFilterWrapper,
   props: {
     id: 'PriceFilterPopupExample',
+    name: 'price',
+    label: 'Price',
     marketplaceCurrency: 'USD',
     queryParamNames: [URL_PARAM],
     min: 0,
@@ -54,6 +56,8 @@ export const PriceFilterPlain = {
   component: PriceFilterWrapper,
   props: {
     id: 'PriceFilterPlainExample',
+    name: 'price',
+    label: 'Price',
     marketplaceCurrency: 'USD',
     queryParamNames: [URL_PARAM],
     min: 0,

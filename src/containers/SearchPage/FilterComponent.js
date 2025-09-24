@@ -81,6 +81,7 @@ const FilterComponent = props => {
       return (
         <PriceFilter
           id={componentId}
+          name={key}
           label={intl.formatMessage({ id: 'FilterComponent.priceLabel' })}
           queryParamNames={[key]}
           initialValues={initialValues([key], liveEdit)}
