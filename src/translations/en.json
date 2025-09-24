@@ -788,6 +788,7 @@
   "ProfileSettingsPage.viewProfileLink": "View your profile",
   "IntegerRangeFilter.labelSelectedPlain": "{minValue} - {maxValue}",
   "IntegerRangeFilter.rangeInputsLabel": "Range:",
+  "IntegerRangeFilter.screenreader.rangeHandle": "{handle, select, min {Range start {value}} other {Range end {value}}}",
   "ResponsiveBackgroundImageContainer.backgroundImageAlt": "Background image",
   "ResponsiveImage.noImage": "No image",
   "ReviewForm.reviewContentLabel": "Describe your experience",

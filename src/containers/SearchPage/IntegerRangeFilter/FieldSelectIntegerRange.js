@@ -75,6 +75,7 @@ const RangeInput = props => {
     isInSideBar,
     initialValues,
     intl,
+    getLabelForRangeInput,
   } = props;
   const { value: values = {}, onChange, name } = input;
 
@@ -167,6 +168,14 @@ const RangeInput = props => {
     onChange({ ...updatedValue });
   };
 
+  const labelForRangeInput = getLabelForRangeInput
+    ? getLabelForRangeInput
+    : (value, handleName) =>
+        intl.formatMessage(
+          { id: 'IntegerRangeFilter.screenreader.rangeHandle' },
+          { value, handle: handleName }
+        );
+
   const isMinInvalid = !isValidMin(fieldValues.minValue, defaultMinValue, fieldValues.maxValue);
   const isMaxInvalid = !isValidMax(fieldValues.maxValue, defaultMaxValue, fieldValues.minValue);
   const classes = isInSideBar ? css.formWrapper : null;
@@ -193,6 +202,12 @@ const RangeInput = props => {
             value={fieldValues.minValue}
             onChange={handleMinValueChange}
             onBlur={handleMinValueBlur}
+            role="slider"
+            aria-valuenow={fieldValues.minValue}
+            aria-valuetext={labelForRangeInput(fieldValues.minValue, 'min')}
+            aria-valuemin={defaultMinValue}
+            aria-valuemax={defaultMaxValue}
+            aria-label={labelForRangeInput(fieldValues.minValue, 'min')}
           ></input>
           <span className={css.valueSeparator}>-</span>
           <input
@@ -208,6 +223,12 @@ const RangeInput = props => {
             value={fieldValues.maxValue}
             onChange={handleMaxValueChange}
             onBlur={handleMaxValueBlur}
+            role="slider"
+            aria-valuenow={fieldValues.maxValue}
+            aria-valuetext={labelForRangeInput(fieldValues.maxValue, 'max')}
+            aria-valuemin={defaultMinValue}
+            aria-valuemax={defaultMaxValue}
+            aria-label={labelForRangeInput(fieldValues.maxValue, 'max')}
           ></input>
         </div>
       </div>
