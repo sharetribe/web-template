@@ -724,6 +724,7 @@
   "PriceFilterForm.clear": "Clear",
   "PriceFilterForm.label": "Price range:",
   "PriceFilterForm.submit": "Apply",
+  "PriceFilter.screenreader.rangeHandle": "{handle, select, min {{formattedPrice} {currency} minimum price} other {{formattedPrice} {currency} maximum price}}",
   "PriceVariantPicker.onePriceVariantOnly": "{priceVariantName}",
   "PriceVariantPicker.priceVariantLabel": "Pick an option",
   "PriceVariantPicker.priceVariantUnselected": "Choose…",

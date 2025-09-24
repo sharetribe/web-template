@@ -69,12 +69,21 @@ const PriceFilter = props => {
         )
       : label;
 
+  const getLabelForRangeInput = (priceInMajorUnit, handleName) => {
+    const formattedPrice = formatCurrencyMajorUnit(intl, marketplaceCurrency, priceInMajorUnit);
+    return intl.formatMessage(
+      { id: 'PriceFilter.screenreader.rangeHandle' },
+      { formattedPrice, currency: marketplaceCurrency, handle: handleName }
+    );
+  };
+
   return (
     <IntegerRangeFilter
       label={currentLabel}
       initialValues={initialValues}
       formatValidRangeValues={formatValidRangeValues}
       queryParamNames={queryParamNames}
+      getLabelForRangeInput={getLabelForRangeInput}
       {...rest}
     />
   );
