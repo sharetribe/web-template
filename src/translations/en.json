@@ -354,6 +354,7 @@
   "EditListingWizard.default-inquiry.new.saveStyle": "Publish listing",
   "EditListingWizard.default-negotiation.new.saveDetails": "Next",
   "EditListingWizard.default-negotiation.new.saveLocation": "Next",
+  "EditListingWizard.default-negotiation.new.saveLocationNoPricingTab": "Next",
   "EditListingWizard.default-negotiation.new.savePhotos": "Publish listing",
   "EditListingWizard.default-negotiation.new.savePricing": "Next",
   "EditListingWizard.default-negotiation.new.saveStyle": "Publish listing",
