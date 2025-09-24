@@ -526,6 +526,10 @@ export const CheckoutPageWithPayment = props => {
   const showPickUpLocation = isPurchase && orderData?.deliveryMethod === 'pickup';
   const showLocation = (isBooking || isNegotiation) && listingLocation?.address;
 
+  const providerDisplayName = isNegotiation
+    ? existingTransaction?.provider?.attributes?.profile?.displayName
+    : listing?.author?.attributes?.profile?.displayName;
+
   // Check if the listing currency is compatible with Stripe for the specified transaction process.
   // This function validates the currency against the transaction process requirements and
   // ensures it is supported by Stripe, as indicated by the 'stripe' parameter.
@@ -595,7 +599,7 @@ export const CheckoutPageWithPayment = props => {
                 }
                 inProgress={submitting}
                 formId="CheckoutPagePaymentForm"
-                authorDisplayName={listing?.author?.attributes?.profile?.displayName}
+                providerDisplayName={providerDisplayName}
                 showInitialMessageInput={showInitialMessageInput}
                 initialValues={initialValuesForStripePayment}
                 initiateOrderError={initiateOrderError}
