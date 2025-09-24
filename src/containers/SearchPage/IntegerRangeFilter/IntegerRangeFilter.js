@@ -33,7 +33,7 @@ const getValidRangeValues = (queryParamNames, rangeParams, min, max) => {
 
   const { minValue, maxValue } = parsedRangeValues || {};
   const hasValidMinValue = hasValue(minValue) && minValue >= min;
-  const hasValidMaxValue = hasValue(maxValue) && maxValue > minValue && maxValue <= max;
+  const hasValidMaxValue = hasValue(maxValue) && maxValue >= minValue && maxValue <= max;
   const hasRangeValues = rangeParams && hasValidMinValue && hasValidMaxValue;
 
   return hasRangeValues ? { minValue, maxValue } : {};
