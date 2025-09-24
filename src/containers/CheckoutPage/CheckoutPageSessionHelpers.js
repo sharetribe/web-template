@@ -40,10 +40,14 @@ export const isValidBookingDates = bookingDates => {
 // Validate content of listing object received from SessionStore.
 // Currently only id & attributes.price are needed.
 export const isValidListing = listing => {
+  const { unitType } = listing?.attributes?.publicData || {};
+  const isNegotiation = ['request', 'offer'].includes(unitType);
   const props = {
     id: id => id instanceof UUID,
     attributes: v => {
-      return typeof v === 'object' && v.price instanceof Money;
+      return (
+        typeof v === 'object' && (isNegotiation || (!isNegotiation && v.price instanceof Money))
+      );
     },
   };
   return validateProperties(listing, props);
