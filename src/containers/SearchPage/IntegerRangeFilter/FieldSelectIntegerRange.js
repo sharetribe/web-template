@@ -195,6 +195,7 @@ const RangeInput = props => {
               [css.invalidInput]: isMinInvalid,
             })}
             type="number"
+            name={`${name}_min`}
             min={defaultMinValue}
             max={defaultMaxValue}
             step={step}
@@ -216,6 +217,7 @@ const RangeInput = props => {
               [css.invalidInput]: isMaxInvalid,
             })}
             type="number"
+            name={`${name}_max`}
             min={defaultMinValue}
             max={defaultMaxValue}
             placeholder={defaultMaxValue}
