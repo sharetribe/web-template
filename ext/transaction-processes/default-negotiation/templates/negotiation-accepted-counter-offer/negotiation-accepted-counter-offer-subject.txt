@@ -1,0 +1,1 @@
+{{set-translations (asset "content/email-texts.json")}}{{t "NegotiationAcceptedCounterOffer.Subject" "{providerDisplayName} has accepted your counter offer" providerDisplayName=transaction.provider.display-name }}

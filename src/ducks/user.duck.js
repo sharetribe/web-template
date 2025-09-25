@@ -4,7 +4,10 @@ import * as log from '../util/log';
 import { LISTING_STATE_DRAFT } from '../util/types';
 import { storableError } from '../util/errors';
 import { isUserAuthorized } from '../util/userHelpers';
-import { getTransitionsNeedingProviderAttention } from '../transactions/transaction';
+import {
+  getStatesNeedingProviderAttention,
+  getStatesNeedingCustomerAttention,
+} from '../transactions/transaction';
 
 import { authInfo } from './auth.duck';
 import { stripeAccountCreateSuccess } from './stripeConnectAccount.duck';
@@ -63,7 +66,8 @@ const initialState = {
   currentUserShowError: null,
   currentUserHasListings: false,
   currentUserHasListingsError: null,
-  currentUserNotificationCount: 0,
+  currentUserSaleNotificationCount: 0,
+  currentUserOrderNotificationCount: 0,
   currentUserNotificationCountError: null,
   currentUserHasOrders: null, // This is not fetched unless unverified emails exist
   currentUserHasOrdersError: null,
@@ -94,7 +98,8 @@ export default function reducer(state = initialState, action = {}) {
         currentUserShowError: null,
         currentUserHasListings: false,
         currentUserHasListingsError: null,
-        currentUserNotificationCount: 0,
+        currentUserSaleNotificationCount: 0,
+        currentUserOrderNotificationCount: 0,
         currentUserNotificationCountError: null,
       };
 
@@ -109,7 +114,11 @@ export default function reducer(state = initialState, action = {}) {
     case FETCH_CURRENT_USER_NOTIFICATIONS_REQUEST:
       return { ...state, currentUserNotificationCountError: null };
     case FETCH_CURRENT_USER_NOTIFICATIONS_SUCCESS:
-      return { ...state, currentUserNotificationCount: payload.transactions.length };
+      return {
+        ...state,
+        currentUserSaleNotificationCount: payload.saleNotificationsCount,
+        currentUserOrderNotificationCount: payload.orderNotificationsCount,
+      };
     case FETCH_CURRENT_USER_NOTIFICATIONS_ERROR:
       console.error(payload); // eslint-disable-line
       return { ...state, currentUserNotificationCountError: payload };
@@ -197,9 +206,12 @@ export const fetchCurrentUserNotificationsRequest = () => ({
   type: FETCH_CURRENT_USER_NOTIFICATIONS_REQUEST,
 });
 
-export const fetchCurrentUserNotificationsSuccess = transactions => ({
+export const fetchCurrentUserNotificationsSuccess = (
+  saleNotificationsCount,
+  orderNotificationsCount
+) => ({
   type: FETCH_CURRENT_USER_NOTIFICATIONS_SUCCESS,
-  payload: { transactions },
+  payload: { saleNotificationsCount, orderNotificationsCount },
 });
 
 const fetchCurrentUserNotificationsError = e => ({
@@ -296,25 +308,30 @@ export const fetchCurrentUserHasOrders = () => (dispatch, getState, sdk) => {
 const NOTIFICATION_PAGE_SIZE = 100;
 
 export const fetchCurrentUserNotifications = () => (dispatch, getState, sdk) => {
-  const transitionsNeedingAttention = getTransitionsNeedingProviderAttention();
-  if (transitionsNeedingAttention.length === 0) {
-    // Don't update state, if there's no need to draw user's attention after last transitions.
-    return;
-  }
+  const statesNeedingProviderAttention = getStatesNeedingProviderAttention() || [];
+  const statesNeedingCustomerAttention = getStatesNeedingCustomerAttention() || [];
 
-  const apiQueryParams = {
+  const paramsForSales = {
     only: 'sale',
-    last_transitions: transitionsNeedingAttention,
+    states: statesNeedingProviderAttention.map(state => `state/${state}`).join(','),
+    page: 1,
+    perPage: NOTIFICATION_PAGE_SIZE,
+  };
+  const paramsForOrders = {
+    only: 'order',
+    states: statesNeedingCustomerAttention.map(state => `state/${state}`).join(','),
     page: 1,
     perPage: NOTIFICATION_PAGE_SIZE,
   };
 
   dispatch(fetchCurrentUserNotificationsRequest());
-  sdk.transactions
-    .query(apiQueryParams)
-    .then(response => {
-      const transactions = response.data.data;
-      dispatch(fetchCurrentUserNotificationsSuccess(transactions));
+  Promise.all([sdk.transactions.query(paramsForSales), sdk.transactions.query(paramsForOrders)])
+    .then(([sales, orders]) => {
+      const saleNotificationsCount = sales.data.data.length;
+      const orderNotificationsCount = orders.data.data.length;
+      dispatch(
+        fetchCurrentUserNotificationsSuccess(saleNotificationsCount, orderNotificationsCount)
+      );
     })
     .catch(e => dispatch(fetchCurrentUserNotificationsError(storableError(e))));
 };

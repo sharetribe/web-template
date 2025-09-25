@@ -455,7 +455,7 @@ class StripePaymentForm extends Component {
       inProgress: submitInProgress,
       loadingData,
       formId,
-      authorDisplayName,
+      providerDisplayName,
       showInitialMessageInput,
       intl,
       initiateOrderError,
@@ -530,7 +530,7 @@ class StripePaymentForm extends Component {
 
     const messagePlaceholder = intl.formatMessage(
       { id: 'StripePaymentForm.messagePlaceholder' },
-      { name: authorDisplayName }
+      { name: providerDisplayName }
     );
 
     const messageOptionalText = intl.formatMessage({
@@ -692,7 +692,7 @@ class StripePaymentForm extends Component {
           <p className={css.paymentInfo}>
             <FormattedMessage
               id="StripePaymentForm.submitConfirmPaymentFinePrint"
-              values={{ isBooking: isBookingYesNo, name: authorDisplayName }}
+              values={{ isBooking: isBookingYesNo, name: providerDisplayName }}
             />
           </p>
         </div>

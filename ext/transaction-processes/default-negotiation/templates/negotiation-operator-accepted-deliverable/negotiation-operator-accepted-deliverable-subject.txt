@@ -1,0 +1,1 @@
+{{set-translations (asset "content/email-texts.json")}}{{t "NegotiationOperatorAcceptedDeliverable.Subject" "{marketplaceName} accepted an order on your behalf" marketplaceName=marketplace.name }}

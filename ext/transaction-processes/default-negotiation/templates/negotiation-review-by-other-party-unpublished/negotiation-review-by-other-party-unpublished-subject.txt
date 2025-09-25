@@ -1,0 +1,1 @@
+{{set-translations (asset "content/email-texts.json")}}{{t "NegotiationReviewByOtherPartyUnpublished.Subject" "Leave {otherPartyDisplayName} a review to see their review" otherPartyDisplayName=other-party.display-name }}

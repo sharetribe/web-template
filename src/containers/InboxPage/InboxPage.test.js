@@ -317,6 +317,7 @@ describe('InboxPage', () => {
           intl={fakeIntl}
           stateData={stateDataOrder}
           isBooking={false}
+          isPurchase={false}
         />
       );
       expect(tree.asFragment().firstChild).toMatchSnapshot();
@@ -365,6 +366,7 @@ describe('InboxPage', () => {
           intl={fakeIntl}
           stateData={stateDataOrder}
           isBooking={false}
+          isPurchase={true}
           stockType="multipleItems"
         />
       );
@@ -400,6 +402,7 @@ describe('InboxPage', () => {
           intl={fakeIntl}
           stateData={stateDataOrder}
           isBooking={false}
+          isPurchase={true}
           stockType="oneItem"
         />
       );
@@ -461,6 +464,7 @@ describe('InboxPage', () => {
           intl={fakeIntl}
           stateData={stateDataBooking}
           isBooking={true}
+          isPurchase={false}
         />
       );
       expect(tree.asFragment().firstChild).toMatchSnapshot();
@@ -525,6 +529,7 @@ describe('InboxPage', () => {
           intl={fakeIntl}
           stateData={stateDataBooking}
           isBooking={true}
+          isPurchase={false}
         />
       );
 
@@ -588,6 +593,7 @@ describe('InboxPage', () => {
           intl={fakeIntl}
           stateData={stateDataBooking}
           isBooking={true}
+          isPurchase={false}
         />
       );
       expect(tree.asFragment().firstChild).toMatchSnapshot();
@@ -595,6 +601,60 @@ describe('InboxPage', () => {
       const quantityFound = screen.queryAllByText('Jun 14, 2022, 10:00 AM - 1:00 PM');
       const expected = tr !== 'transition/inquire' ? 1 : 0;
       expect(quantityFound).toHaveLength(expected);
+    });
+  });
+
+  describe('InboxItem: default-negotiation process with "request"', () => {
+    const listingRequest = createListing('listing-request', {
+      publicData: {
+        listingType: 'request',
+        transactionProcessAlias: 'default-negotiation',
+        unitType: 'request',
+      },
+    });
+
+    const negotiationTransitions = getProcess('default-negotiation')?.transitions;
+
+    const negotiations = Object.keys(negotiationTransitions).map(trKey => {
+      const lineItemsMaybe = trKey !== 'INQUIRE' ? lineItems : [];
+      return {
+        tr: negotiationTransitions[trKey],
+        tx: createTransaction({
+          id: `id-negotiation-${trKey}-request`,
+          customer,
+          provider,
+          listing: listingRequest,
+          processName: 'default-negotiation',
+          processVersion: 1,
+          lastTransition: negotiationTransitions[trKey],
+          lastTransitionedAt: new Date(Date.UTC(2022, 0, 15)),
+          lineItems: lineItemsMaybe,
+        }),
+      };
+    });
+
+    test.each(negotiations)('check negotiation: $tr', ({ tr, tx }) => {
+      const transactionRole = TX_TRANSITION_ACTOR_CUSTOMER;
+      const stateDataNegotiation = getStateData({
+        transaction: tx,
+        transactionRole,
+      });
+
+      const tree = render(
+        <InboxItem
+          tx={tx}
+          transactionRole={transactionRole}
+          intl={fakeIntl}
+          stateData={stateDataNegotiation}
+          isBooking={false}
+          isPurchase={false}
+        />
+      );
+      expect(tree.asFragment().firstChild).toMatchSnapshot();
+
+      const quantityNotFound = screen.queryAllByText('InboxPage.quantity');
+      const expected = 0;
+      expect(quantityNotFound).toHaveLength(expected);
     });
   });
 });

@@ -1,0 +1,1 @@
+{{set-translations (asset "content/email-texts.json")}}{{t "NegotiationOperatorCanceledOrderCustomer.Subject" "{marketplaceName} canceled your order from {providerDisplayName}" marketplaceName=marketplace.name providerDisplayName=transaction.provider.display-name }}

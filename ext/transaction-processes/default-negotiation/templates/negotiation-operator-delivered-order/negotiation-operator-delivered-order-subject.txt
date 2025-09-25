@@ -1,0 +1,1 @@
+{{set-translations (asset "content/email-texts.json")}}{{t "NegotiationOperatorDeliveredOrder.Subject" "{marketplaceName} has marked an order from {customerDisplayName} as delivered" marketplaceName=marketplace.name customerDisplayName=transaction.customer.display-name }}

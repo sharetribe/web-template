@@ -57,6 +57,7 @@ import * as IconSocialMediaInstagram from './components/IconSocialMediaInstagram
 import * as IconSocialMediaTwitter from './components/IconSocialMediaTwitter/IconSocialMediaTwitter.example';
 import * as IconSpinner from './components/IconSpinner/IconSpinner.example';
 import * as IconSuccess from './components/IconSuccess/IconSuccess.example';
+import * as IconSynchronize from './components/IconSynchronize/IconSynchronize.example';
 import * as Logo from './components/Logo/Logo.example';
 import * as LinkedLogo from './components/Logo/LinkedLogo.example';
 import * as ListingCard from './components/ListingCard/ListingCard.example';
@@ -200,6 +201,7 @@ export {
   IconSocialMediaTwitter,
   IconSpinner,
   IconSuccess,
+  IconSynchronize,
   InboxPage,
   ImageCarousel,
   KeywordFilter,

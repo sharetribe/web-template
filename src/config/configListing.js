@@ -270,22 +270,22 @@ export const listingFields = [
  */
 
 export const listingTypes = [
-  {
-    listingType: 'daily-booking',
-    label: 'Daily booking',
-    transactionType: {
-      process: 'default-booking',
-      alias: 'default-booking/release-1',
-      unitType: 'day',
-    },
-    availabilityType: 'oneSeat',
-    defaultListingFields: {
-      location: true,
-      payoutDetails: true,
-    },
-  },
-  // // Here are some examples for other listingTypes
+  // // Here are some examples of listingTypes
   // // TODO: SearchPage does not work well if both booking and product selling are used at the same time
+  // {
+  //   listingType: 'daily-booking',
+  //   label: 'Daily booking',
+  //   transactionType: {
+  //     process: 'default-booking',
+  //     alias: 'default-booking/release-1',
+  //     unitType: 'day',
+  //   },
+  //   availabilityType: 'oneSeat',
+  //   defaultListingFields: {
+  //     location: true,
+  //     payoutDetails: true,
+  //   },
+  // },
   // {
   //   listingType: 'nightly-booking',
   //   label: 'Nightly booking',

@@ -1,0 +1,1 @@
+{{set-translations (asset "content/email-texts.json")}}{{t "NegotiationDeliverReminder.Subject" "You have three days to deliver {customerDisplayName}'s order" customerDisplayName=transaction.customer.display-name }}

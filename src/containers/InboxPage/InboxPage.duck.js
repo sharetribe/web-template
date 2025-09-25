@@ -1,6 +1,6 @@
 import { storableError } from '../../util/errors';
 import { parse, getValidInboxSort } from '../../util/urlHelpers';
-import { getAllTransitionsForEveryProcess } from '../../transactions/transaction';
+import { getSupportedProcessesInfo } from '../../transactions/transaction';
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 
 // ================ Action types ================ //
@@ -80,10 +80,11 @@ export const loadData = (params, search) => (dispatch, getState, sdk) => {
   dispatch(fetchOrdersOrSalesRequest());
 
   const { page = 1, sort } = parse(search);
+  const processNames = getSupportedProcessesInfo().map(p => p.name);
 
   const apiQueryParams = {
     only: onlyFilter,
-    lastTransitions: getAllTransitionsForEveryProcess(),
+    processNames,
     include: [
       'listing',
       'provider',

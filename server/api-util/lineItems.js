@@ -50,6 +50,10 @@ const getItemQuantityAndLineItems = (orderData, publicData, currency) => {
   return { quantity, extraLineItems: deliveryLineItem };
 };
 
+const getOfferQuantityAndLineItems = orderData => {
+  return { quantity: 1, extraLineItems: [] };
+};
+
 /**
  * Get quantity for fixed bookings with seats.
  * @param {Object} orderData
@@ -125,6 +129,8 @@ const getDateRangeQuantityAndLineItems = (orderData, code) => {
  *
  * @param {Object} listing
  * @param {Object} orderData
+ * @param {string} [orderData.priceVariantName] - The name of the price variant (potentially used with bookable unit types)
+ * @param {Money} [orderData.offer] - The offer for the offer (if transition intent is "make-offer")
  * @param {Object} providerCommission
  * @param {Object} customerCommission
  * @returns {Array} lineItems
@@ -136,10 +142,11 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
   const { unitType, priceVariants, priceVariationsEnabled } = publicData;
 
   const isBookable = ['day', 'night', 'hour', 'fixed'].includes(unitType);
+  const isNegotiationUnitType = ['offer', 'request'].includes(unitType);
   const priceAttribute = listing.attributes.price;
-  const currency = priceAttribute.currency;
+  const currency = priceAttribute?.currency || orderData.currency;
 
-  const { priceVariantName } = orderData || {};
+  const { priceVariantName, offer } = orderData || {};
   const priceVariantConfig = priceVariants
     ? priceVariants.find(pv => pv.name === priceVariantName)
     : null;
@@ -149,6 +156,8 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
   const unitPrice =
     isBookable && priceVariationsEnabled && isPriceInSubunitsValid
       ? new Money(priceInSubunits, currency)
+      : offer instanceof Money && isNegotiationUnitType
+      ? offer
       : priceAttribute;
 
   /**
@@ -175,6 +184,8 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
       ? getHourQuantityAndLineItems(orderData)
       : ['day', 'night'].includes(unitType)
       ? getDateRangeQuantityAndLineItems(orderData, code)
+      : isNegotiationUnitType
+      ? getOfferQuantityAndLineItems(orderData)
       : {};
 
   const { quantity, units, seats, extraLineItems } = quantityAndExtraLineItems;
@@ -221,8 +232,8 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
   const lineItems = [
     order,
     ...extraLineItems,
-    ...getProviderCommissionMaybe(providerCommission, order, priceAttribute),
-    ...getCustomerCommissionMaybe(customerCommission, order, priceAttribute),
+    ...getProviderCommissionMaybe(providerCommission, order, currency),
+    ...getCustomerCommissionMaybe(customerCommission, order, currency),
   ];
 
   return lineItems;

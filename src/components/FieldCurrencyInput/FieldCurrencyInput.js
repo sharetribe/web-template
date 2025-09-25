@@ -208,6 +208,7 @@ class CurrencyInputComponent extends Component {
         onFocus={this.onInputFocus}
         type="text"
         placeholder={placeholderText}
+        inputMode="decimal"
       />
     );
   }

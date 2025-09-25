@@ -1,0 +1,1 @@
+{{set-translations (asset "content/email-texts.json")}}{{t "NegotiationOperatorRejectedOffer.Subject" "{marketplaceName} rejected {providerDisplayName}'s offer on your behalf" marketplaceName=marketplace.name providerDisplayName=transaction.provider.display-name }}
