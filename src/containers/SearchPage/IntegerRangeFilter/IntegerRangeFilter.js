@@ -7,7 +7,7 @@ import FilterPlain from '../FilterPlain/FilterPlain';
 import FilterPopup from '../FilterPopup/FilterPopup';
 import FieldSelectIntegerRange from './FieldSelectIntegerRange';
 
-import { FormattedMessage } from '../../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import css from './IntegerRangeFilter.module.css';
 
 const RADIX = 10;
@@ -33,7 +33,7 @@ const getValidRangeValues = (queryParamNames, rangeParams, min, max) => {
 
   const { minValue, maxValue } = parsedRangeValues || {};
   const hasValidMinValue = hasValue(minValue) && minValue >= min;
-  const hasValidMaxValue = hasValue(maxValue) && maxValue > minValue && maxValue <= max;
+  const hasValidMaxValue = hasValue(maxValue) && maxValue >= minValue && maxValue <= max;
   const hasRangeValues = rangeParams && hasValidMinValue && hasValidMaxValue;
 
   return hasRangeValues ? { minValue, maxValue } : {};
@@ -84,10 +84,12 @@ const getHandleSubmit = (name, queryParamNames, onSubmit) => values => {
  * @param {number} [props.max] - The maximum value
  * @param {number} [props.step] - The step
  * @param {Function} props.onSubmit - The function to submit
- * @param {intlShape} props.intl - The intl object
+ * @param {Function} [props.formatValidRangeValues] - Function to format validRangeValues for display
+ * @param {Function} [props.getLabelForRangeInput] - Function to get the aria label for the range input
  * @returns {JSX.Element}
  */
 const IntegerRangeFilter = props => {
+  const intl = useIntl();
   const {
     min,
     max,
@@ -98,10 +100,11 @@ const IntegerRangeFilter = props => {
     label,
     rootClassName,
     className,
-    intl,
     id,
     name,
     showAsPopup = true,
+    formatValidRangeValues,
+    getLabelForRangeInput,
     ...rest
   } = props;
 
@@ -141,8 +144,11 @@ const IntegerRangeFilter = props => {
   };
 
   // Used to display the selected values above the filter component in the "grid" view
+  const formattedRangeValues = formatValidRangeValues
+    ? formatValidRangeValues(validRangeValues)
+    : validRangeValues;
   const labelSelectionForPlain = hasInitialValues ? (
-    <FormattedMessage id="IntegerRangeFilter.labelSelectedPlain" values={validRangeValues} />
+    <FormattedMessage id="IntegerRangeFilter.labelSelectedPlain" values={formattedRangeValues} />
   ) : null;
 
   return showAsPopup ? (
@@ -162,6 +168,8 @@ const IntegerRangeFilter = props => {
         name={name}
         step={step}
         initialValues={resolvedInitialValues}
+        intl={intl}
+        getLabelForRangeInput={getLabelForRangeInput}
       />
     </FilterPopup>
   ) : (
@@ -186,6 +194,8 @@ const IntegerRangeFilter = props => {
         name={name}
         step={step}
         initialValues={resolvedInitialValues}
+        intl={intl}
+        getLabelForRangeInput={getLabelForRangeInput}
       />
     </FilterPlain>
   );

@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] IntegerRangeFilter & PriceFilter: add faulty mode for input elements.
+  [#670](https://github.com/sharetribe/web-template/pull/670)
 - [fix] CheckoutPageWithPayment: don't show location if it's unknown for bookings.
   [#671](https://github.com/sharetribe/web-template/pull/671)
 - [add] Update README about translation files.

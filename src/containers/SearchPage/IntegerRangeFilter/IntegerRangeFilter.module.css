@@ -69,6 +69,10 @@
   width: 72px;
 }
 
+.invalidInput:focus {
+  border-color: var(--colorFail);
+}
+
 .valueSeparator {
   margin: 6px 8px 0 8px;
 

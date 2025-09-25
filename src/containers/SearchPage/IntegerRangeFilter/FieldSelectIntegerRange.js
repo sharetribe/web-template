@@ -19,6 +19,53 @@ const resolveMinMaxValues = (values, defaultMax, defaultMin) => {
   };
 };
 
+const isTooSmall = (x, limit) => x < limit;
+const isTooBig = (x, limit) => x > limit;
+const isValidMin = (minValue, minLimit, maxValue) => {
+  return (
+    Number.isInteger(minValue) && !isTooSmall(minValue, minLimit) && !isTooBig(minValue, maxValue)
+  );
+};
+const isValidMax = (maxValue, maxLimit, minValue) => {
+  return (
+    Number.isInteger(maxValue) && !isTooBig(maxValue, maxLimit) && !isTooSmall(maxValue, minValue)
+  );
+};
+
+const getValidHandles = (currentValues, inputValues, minLimit, maxLimit) => {
+  const isMinUpdated = currentValues.minValue !== inputValues.minValue;
+  const isMaxUpdated = currentValues.maxValue !== inputValues.maxValue;
+
+  if (isMinUpdated && isMaxUpdated) {
+    const { minValue, maxValue } = inputValues;
+    const inRange = !(isTooSmall(minValue, minLimit) || isTooBig(maxValue, maxLimit));
+    // If both values are changed and are within bounds, return the new values. Otherwise, return the default values.
+    return inRange && minValue <= maxValue ? [minValue, maxValue] : [minLimit, maxLimit];
+  }
+
+  const { minValue, maxValue } = inputValues;
+  const validMin = !isMinUpdated
+    ? currentValues.minValue
+    : !Number.isInteger(minValue)
+    ? minLimit
+    : isTooSmall(minValue, minLimit)
+    ? minLimit
+    : isTooBig(minValue, maxValue)
+    ? maxValue
+    : minValue;
+  const validMax = !isMaxUpdated
+    ? currentValues.maxValue
+    : !Number.isInteger(maxValue)
+    ? maxLimit
+    : isTooBig(maxValue, maxLimit)
+    ? maxLimit
+    : isTooSmall(maxValue, minValue)
+    ? minValue
+    : maxValue;
+
+  return [validMin, validMax];
+};
+
 const RangeInput = props => {
   const {
     input,
@@ -27,6 +74,8 @@ const RangeInput = props => {
     step,
     isInSideBar,
     initialValues,
+    intl,
+    getLabelForRangeInput,
   } = props;
   const { value: values = {}, onChange, name } = input;
 
@@ -39,38 +88,79 @@ const RangeInput = props => {
 
   const handleMinValueChange = event => {
     const newValue = Number.parseInt(event.target.value, RADIX);
-    if (isNaN(newValue)) {
-      onChange({ ...fieldValues, minValue: defaultMinValue });
-      return;
-    }
-    if (newValue > fieldValues.maxValue) {
-      return;
-    }
-    if (newValue < defaultMinValue) {
+
+    // Faulty mode: new min value is not an integer
+    if (!Number.isInteger(newValue)) {
+      const newValues = { ...fieldValues, minValue: '' };
+      setFieldValues(newValues);
       return;
     }
 
-    const newValues = { ...fieldValues, minValue: newValue };
+    // Faulty mode: new min value is greater than the current max value or
+    //              new min value is less than the default min value
+    if (newValue > fieldValues.maxValue || newValue < defaultMinValue) {
+      const newValues = { ...fieldValues, minValue: newValue };
+      setFieldValues(newValues);
+      return;
+    }
+
+    const newValues =
+      newValue < defaultMinValue
+        ? { ...fieldValues, minValue: defaultMinValue }
+        : { ...fieldValues, minValue: newValue };
     setFieldValues(newValues);
     onChange(newValues);
   };
 
   const handleMaxValueChange = event => {
     const newValue = Number.parseInt(event.target.value, RADIX);
-    if (isNaN(newValue)) {
-      onChange({ ...fieldValues, maxValue: defaultMaxValue });
-      return;
-    }
-    if (newValue < fieldValues.minValue) {
-      return;
-    }
-    if (newValue > defaultMaxValue) {
+
+    // Faulty mode: new min value is not an integer
+    if (!Number.isInteger(newValue)) {
+      const newValues = { ...fieldValues, maxValue: '' };
+      setFieldValues(newValues);
       return;
     }
 
-    const newValues = { ...fieldValues, maxValue: newValue };
+    // Faulty mode: new max value is less than the current min value or
+    //              new max value is greater than the default max value
+    if (newValue < fieldValues.minValue || newValue > defaultMaxValue) {
+      const newValues = { ...fieldValues, maxValue: newValue };
+      setFieldValues(newValues);
+      return;
+    }
+
+    const newValues =
+      newValue > defaultMaxValue
+        ? { ...fieldValues, maxValue: defaultMaxValue }
+        : { ...fieldValues, maxValue: newValue };
     setFieldValues(newValues);
     onChange(newValues);
+  };
+
+  const handleMinValueBlur = event => {
+    const inputValue = Number.parseInt(event.target.value, RADIX);
+    if (
+      !Number.isInteger(inputValue) ||
+      inputValue < defaultMinValue ||
+      inputValue > values.maxValue
+    ) {
+      const newValues = { ...fieldValues, minValue: defaultMinValue };
+      setFieldValues(newValues);
+      onChange(newValues);
+    }
+  };
+  const handleMaxValueBlur = event => {
+    const inputValue = Number.parseInt(event.target.value, RADIX);
+    if (
+      !Number.isInteger(inputValue) ||
+      inputValue < values.minValue ||
+      inputValue > defaultMaxValue
+    ) {
+      const newValues = { ...fieldValues, maxValue: defaultMaxValue };
+      setFieldValues(newValues);
+      onChange(newValues);
+    }
   };
 
   const handleSliderChange = updatedValue => {
@@ -78,33 +168,69 @@ const RangeInput = props => {
     onChange({ ...updatedValue });
   };
 
+  const labelForRangeInput = getLabelForRangeInput
+    ? getLabelForRangeInput
+    : (value, handleName) =>
+        intl.formatMessage(
+          { id: 'IntegerRangeFilter.screenreader.rangeHandle' },
+          { value, handle: handleName }
+        );
+
+  const isMinInvalid = !isValidMin(fieldValues.minValue, defaultMinValue, fieldValues.maxValue);
+  const isMaxInvalid = !isValidMax(fieldValues.maxValue, defaultMaxValue, fieldValues.minValue);
   const classes = isInSideBar ? css.formWrapper : null;
 
   return (
     <div className={classes}>
       <div className={classNames(css.contentWrapper, { [css.contentWrapperSidebar]: isInSideBar })}>
         <div className={css.inputsWrapper}>
-          {!isInSideBar ? <span className={css.labelPopup}>Range:</span> : null}
+          {!isInSideBar ? (
+            <span className={css.labelPopup}>
+              {intl.formatMessage({ id: 'IntegerRangeFilter.rangeInputsLabel' })}
+            </span>
+          ) : null}
           <input
-            className={classNames(css.minValue, { [css.valueInSidebar]: isInSideBar })}
+            className={classNames(css.minValue, {
+              [css.valueInSidebar]: isInSideBar,
+              [css.invalidInput]: isMinInvalid,
+            })}
             type="number"
+            name={`${name}_min`}
             min={defaultMinValue}
             max={defaultMaxValue}
             step={step}
             placeholder={defaultMinValue}
             value={fieldValues.minValue}
-            onChange={event => handleMinValueChange(event, values.minValue)}
+            onChange={handleMinValueChange}
+            onBlur={handleMinValueBlur}
+            role="slider"
+            aria-valuenow={fieldValues.minValue}
+            aria-valuetext={labelForRangeInput(fieldValues.minValue, 'min')}
+            aria-valuemin={defaultMinValue}
+            aria-valuemax={defaultMaxValue}
+            aria-label={labelForRangeInput(fieldValues.minValue, 'min')}
           ></input>
           <span className={css.valueSeparator}>-</span>
           <input
-            className={classNames(css.maxValue, { [css.valueInSidebar]: isInSideBar })}
+            className={classNames(css.maxValue, {
+              [css.valueInSidebar]: isInSideBar,
+              [css.invalidInput]: isMaxInvalid,
+            })}
             type="number"
+            name={`${name}_max`}
             min={defaultMinValue}
             max={defaultMaxValue}
             placeholder={defaultMaxValue}
             step={step}
             value={fieldValues.maxValue}
             onChange={handleMaxValueChange}
+            onBlur={handleMaxValueBlur}
+            role="slider"
+            aria-valuenow={fieldValues.maxValue}
+            aria-valuetext={labelForRangeInput(fieldValues.maxValue, 'max')}
+            aria-valuemin={defaultMinValue}
+            aria-valuemax={defaultMaxValue}
+            aria-label={labelForRangeInput(fieldValues.maxValue, 'max')}
           ></input>
         </div>
       </div>
@@ -113,7 +239,7 @@ const RangeInput = props => {
           min={defaultMinValue}
           max={defaultMaxValue}
           step={step}
-          handles={[fieldValues.minValue, fieldValues.maxValue]}
+          handles={getValidHandles(values, fieldValues, defaultMinValue, defaultMaxValue)}
           onChange={handles => {
             handleSliderChange({ minValue: handles[0], maxValue: handles[1] });
           }}
