@@ -47,6 +47,14 @@
 
 .mobileHeading {
   flex-shrink: 0;
+  margin: 0;
+
+  @media (--viewportLarge) {
+    display: none;
+  }
+}
+
+.mobileHeadingContainer {
   margin: 60px 0 0 0;
 
   @media (--viewportMedium) {
@@ -81,6 +89,15 @@
 }
 
 .desktopHeading {
+  display: none;
+
+  @media (--viewportLarge) {
+    display: block;
+    margin: 0;
+  }
+}
+
+.desktopHeadingContainer {
   display: none;
 
   @media (--viewportLarge) {
@@ -323,4 +340,20 @@
   right: 0;
   width: 100%;
   height: 100%;
+}
+
+.shopLocation {
+  text-decoration: underline;
+  font-size: 14px;
+  color: var(--marketplaceColor);
+  cursor: pointer;
+}
+
+.shopTitle {
+  font-size: 14px;
+  color: var(--colorGrey500);
+}
+
+.shopExtraInfo {
+  white-space: pre-line;
 }

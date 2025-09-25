@@ -46,6 +46,8 @@ import {
   ButtonTabNavHorizontal,
   LayoutSideNavigation,
   NamedRedirect,
+  Modal,
+  Map,
 } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
@@ -57,20 +59,25 @@ import SectionDetailsMaybe from './SectionDetailsMaybe';
 import SectionTextMaybe from './SectionTextMaybe';
 import SectionMultiEnumMaybe from './SectionMultiEnumMaybe';
 import SectionYoutubeVideoMaybe from './SectionYoutubeVideoMaybe';
+import MediaSlider from '../../components/MediaSlider/MediaSlider';
 
 const MAX_MOBILE_SCREEN_WIDTH = 768;
 const MIN_LENGTH_FOR_LONG_WORDS = 20;
 
 export const AsideContent = props => {
   const { user, displayName, showLinkToProfileSettingsPage } = props;
+  const { shopTitle } = user?.attributes?.profile?.publicData || {};
   return (
     <div className={css.asideContent}>
       <AvatarLarge className={css.avatar} user={user} disableProfileLink />
-      <H2 as="h1" className={css.mobileHeading}>
-        {displayName ? (
-          <FormattedMessage id="ProfilePage.mobileHeading" values={{ name: displayName }} />
-        ) : null}
-      </H2>
+      <div className={css.mobileHeadingContainer}>
+        <H2 as="h1" className={css.mobileHeading}>
+          {displayName ? (
+            <FormattedMessage id="ProfilePage.mobileHeading" values={{ name: displayName }} />
+          ) : null}
+        </H2>
+        {shopTitle ? <span className={css.shopTitle}>{shopTitle}</span> : null}
+      </div>
       {showLinkToProfileSettingsPage ? (
         <>
           <NamedLink className={css.editLinkMobile} name="ProfileSettingsPage">
@@ -212,6 +219,7 @@ export const CustomUserFields = props => {
 
 export const MainContent = props => {
   const [mounted, setMounted] = useState(false);
+  const [showShopLocation, setShowShopLocation] = useState(false);
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -257,11 +265,16 @@ export const MainContent = props => {
       </p>
     );
   }
+
+  const { shopTitle, shopExtraInfo, shopLocation, shopMedia } = publicData;
   return (
     <div>
-      <H2 as="h1" className={css.desktopHeading}>
-        <FormattedMessage id="ProfilePage.desktopHeading" values={{ name: displayName }} />
-      </H2>
+      <div className={css.desktopHeadingContainer}>
+        <H2 as="h1" className={css.desktopHeading}>
+          <FormattedMessage id="ProfilePage.desktopHeading" values={{ name: displayName }} />
+        </H2>
+        {shopTitle ? <span className={css.shopTitle}>{shopTitle}</span> : null}
+      </div>
       {hasBio ? <p className={css.bio}>{bioWithLinks}</p> : null}
 
       {displayName ? (
@@ -273,6 +286,29 @@ export const MainContent = props => {
         />
       ) : null}
 
+      {shopMedia ? <MediaSlider media={shopMedia} /> : null}
+
+      {shopExtraInfo ? (
+        <p className={css.shopExtraInfo} dangerouslySetInnerHTML={{ __html: shopExtraInfo }} />
+      ) : null}
+
+      {shopLocation ? (
+        <p className={css.shopLocation} onClick={() => setShowShopLocation(true)}>
+          <FormattedMessage id="ProfilePage.shopLocation" />
+        </p>
+      ) : null}
+
+      <Modal
+        isOpen={showShopLocation}
+        onClose={() => setShowShopLocation(false)}
+        onManageDisableScrolling={() => {}}
+      >
+        {showShopLocation && (
+          <div style={{ width: '640px', height: '400px' }}>
+            <Map center={shopLocation.origin} />
+          </div>
+        )}
+      </Modal>
       {hasListings ? (
         <div className={listingsContainerClasses}>
           <H4 as="h2" className={css.listingsTitle}>

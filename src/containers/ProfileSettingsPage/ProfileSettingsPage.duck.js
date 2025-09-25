@@ -2,6 +2,47 @@ import { denormalisedResponseEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
 import { currentUserShowSuccess } from '../../ducks/user.duck';
 
+const uploadShopMedia = async (shopMedia, getState) => {
+  const { currentUser } = getState().user;
+  try {
+    if (shopMedia) {
+      const response = await Promise.allSettled(
+        shopMedia.map(async media => {
+          try {
+            if (!media.presignedInfo) {
+              return {
+                url: media.url,
+                id: media.id,
+              };
+            }
+            await window.fetch(media.presignedInfo.url, {
+              method: 'PUT',
+              body: media.file,
+              headers: {
+                'If-Unmodified-Since': 'Tue, 28 Sep 2021 16:00:00 GMT',
+              },
+            });
+            const mediaId = encodeURIComponent(media.id);
+            const url = `${process.env.REACT_APP_R2_PUBLIC_DOMAIN}/shopMedia/${currentUser.id.uuid}/${mediaId}`;
+            return {
+              id: mediaId,
+              url,
+            };
+          } catch (error) {
+            console.error(error);
+            return null;
+          }
+        })
+      );
+      return response.filter(r => r.status === 'fulfilled').map(r => r.value);
+    }
+    return [];
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
 // ================ Action types ================ //
 
 export const CLEAR_UPDATED_FORM = 'app/ProfileSettingsPage/CLEAR_UPDATED_FORM';
@@ -133,8 +174,22 @@ export function uploadImage(actionPayload) {
   };
 }
 
+const formatPayload = async (payload, getState) => {
+  const { publicData } = payload;
+  const { shopMedia } = publicData;
+  console.log({ publicData });
+  const uploadedShopMedia = shopMedia ? await uploadShopMedia(shopMedia, getState) : [];
+  return {
+    ...payload,
+    publicData: {
+      ...publicData,
+      shopMedia: uploadedShopMedia,
+    },
+  };
+};
+
 export const updateProfile = actionPayload => {
-  return (dispatch, getState, sdk) => {
+  return async (dispatch, getState, sdk) => {
     dispatch(updateProfileRequest());
 
     const queryParams = {
@@ -143,8 +198,10 @@ export const updateProfile = actionPayload => {
       'fields.image': ['variants.square-small', 'variants.square-small2x'],
     };
 
+    const formattedPayload = await formatPayload(actionPayload, getState);
+
     return sdk.currentUser
-      .updateProfile(actionPayload, queryParams)
+      .updateProfile(formattedPayload, queryParams)
       .then(response => {
         dispatch(updateProfileSuccess(response));
 

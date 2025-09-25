@@ -1,0 +1,202 @@
+@import '../../styles/customMediaQueries.css';
+/* MediaSlider.module.css */
+.root {
+  position: relative;
+  width: 100%;
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-width: 500px;
+  height: auto;
+}
+
+.swiper {
+  width: 100%;
+  height: 500px;
+  position: relative;
+}
+
+.slide {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* Swiper Navigation Customization */
+.root :global(.swiper-button-next),
+.root :global(.swiper-button-prev) {
+  color: white;
+  background: rgba(0, 0, 0, 0.5);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-top: -20px;
+  opacity: 0;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.root :global(.swiper-button-next) svg,
+.root :global(.swiper-button-prev) svg {
+  width: 20px;
+  height: 20px;
+}
+
+.root :global(.swiper-button-next:hover),
+.root :global(.swiper-button-prev:hover) {
+  background: rgba(0, 0, 0, 0.7);
+  transform: scale(1.1);
+}
+
+.root :global(.swiper-button-next:after),
+.root :global(.swiper-button-prev:after) {
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.root :global(.swiper-button-next) {
+  right: 10px;
+}
+
+.root :global(.swiper-button-prev) {
+  left: 10px;
+}
+
+/* Show navigation buttons on hover */
+.root:hover :global(.swiper-button-next),
+.root:hover :global(.swiper-button-prev) {
+  opacity: 1;
+}
+
+/* Swiper Pagination Customization */
+.root :global(.swiper-pagination) {
+  bottom: 15px;
+  z-index: 10;
+}
+
+.root :global(.swiper-pagination-bullet) {
+  width: 8px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.4);
+  opacity: 1;
+  transition: all 0.2s ease;
+}
+
+.root :global(.swiper-pagination-bullet:hover) {
+  background: rgba(255, 255, 255, 0.6);
+  transform: scale(1.2);
+}
+
+.root :global(.swiper-pagination-bullet-active) {
+  background: rgba(255, 255, 255, 0.9);
+  transform: scale(1.3);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .root :global(.swiper-button-next),
+  .root :global(.swiper-button-prev) {
+    width: 35px;
+    height: 35px;
+  }
+
+  .root :global(.swiper-button-next:after),
+  .root :global(.swiper-button-prev:after) {
+    font-size: 10px;
+  }
+
+  .root :global(.swiper-button-next) {
+    right: 8px;
+  }
+
+  .root :global(.swiper-button-prev) {
+    left: 8px;
+  }
+
+  .root :global(.swiper-pagination) {
+    bottom: 12px;
+  }
+
+  .root :global(.swiper-pagination-bullet) {
+    width: 6px;
+    height: 6px;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .root :global(.swiper-button-next),
+  .root :global(.swiper-button-prev) {
+    opacity: 0.7;
+  }
+
+  .root:active :global(.swiper-button-next),
+  .root:active :global(.swiper-button-prev) {
+    opacity: 1;
+  }
+}
+
+/* Video specific styles */
+video {
+  background: #000;
+}
+
+video::-webkit-media-controls {
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.3));
+}
+
+video::-webkit-media-controls-panel {
+  background: transparent;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .root :global(.swiper-button-next),
+  .root :global(.swiper-button-prev),
+  .root :global(.swiper-pagination-bullet) {
+    transition: none;
+  }
+}
+
+/* Focus styles for keyboard navigation */
+.root :global(.swiper-button-next:focus),
+.root :global(.swiper-button-prev:focus),
+.root :global(.swiper-pagination-bullet:focus) {
+  outline: 2px solid var(--marketplaceColor);
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .root :global(.swiper-button-next),
+  .root :global(.swiper-button-prev) {
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid white;
+  }
+
+  .root :global(.swiper-pagination-bullet) {
+    border: 1px solid rgba(255, 255, 255, 0.6);
+  }
+
+  .root :global(.swiper-pagination-bullet-active) {
+    border-color: white;
+  }
+}

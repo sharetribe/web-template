@@ -21,13 +21,16 @@ import {
   FieldTextInput,
   H4,
   CustomExtendedDataField,
+  FieldLocationAutocompleteInput,
+  FieldMediaUpload,
 } from '../../../components';
 
 import css from './ProfileSettingsForm.module.css';
 
 const ACCEPT_IMAGES = 'image/*';
 const UPLOAD_CHANGE_DELAY = 2000; // Show spinner so that browser has time to load img srcset
-
+const identity = v => v;
+const PUBLIC_MEDIA_BASE_URL = process.env.REACT_APP_PUBLIC_MEDIA_BASE_URL || '';
 const DisplayNameMaybe = props => {
   const { userTypeConfig, intl } = props;
 
@@ -149,7 +152,6 @@ class ProfileSettingsFormComponent extends Component {
             userFields,
             userTypeConfig,
           } = fieldRenderProps;
-
           const user = ensureCurrentUser(currentUser);
 
           // First name
@@ -175,6 +177,19 @@ class ProfileSettingsFormComponent extends Component {
             id: 'ProfileSettingsForm.lastNameRequired',
           });
           const lastNameRequired = validators.required(lastNameRequiredMessage);
+
+          // Title
+          const titleLabel = intl.formatMessage({
+            id: 'ProfileSettingsForm.titleLabel',
+          });
+          const titlePlaceholder = intl.formatMessage({
+            id: 'ProfileSettingsForm.titlePlaceholder',
+          });
+
+          const titleRequiredMessage = intl.formatMessage({
+            id: 'ProfileSettingsForm.titleRequired',
+          });
+          const titleRequired = validators.required(titleRequiredMessage);
 
           // Bio
           const bioLabel = intl.formatMessage({
@@ -269,6 +284,27 @@ class ProfileSettingsFormComponent extends Component {
             userTypeConfig?.userType,
             false
           );
+
+          const addressRequiredMessage = intl.formatMessage({
+            id: 'ProfileSettingsForm.addressRequired',
+          });
+          const addressNotRecognizedMessage = intl.formatMessage({
+            id: 'ProfileSettingsForm.addressNotRecognized',
+          });
+
+          const addressLabel = intl.formatMessage({
+            id: 'ProfileSettingsForm.address',
+          });
+          const addressPlaceholder = intl.formatMessage({
+            id: 'ProfileSettingsForm.addressPlaceholder',
+          });
+
+          const extraInfoLabel = intl.formatMessage({
+            id: 'ProfileSettingsForm.extraInfo',
+          });
+          const extraInfoPlaceholder = intl.formatMessage({
+            id: 'ProfileSettingsForm.extraInfoPlaceholder',
+          });
 
           return (
             <Form
@@ -374,6 +410,53 @@ class ProfileSettingsFormComponent extends Component {
               </div>
 
               <DisplayNameMaybe userTypeConfig={userTypeConfig} intl={intl} />
+
+              <div className={css.sectionContainer}>
+                <H4 as="h2" className={css.sectionTitle}>
+                  <FormattedMessage id="ProfileSettingsForm.shopInfo" />
+                </H4>
+                <div className={css.infoContainer}>
+                  <FieldTextInput
+                    type="text"
+                    id="shopTitle"
+                    name="shopTitle"
+                    label={titleLabel}
+                    placeholder={titlePlaceholder}
+                    validate={titleRequired}
+                  />
+                  <FieldLocationAutocompleteInput
+                    rootClassName={css.input}
+                    inputClassName={css.locationAutocompleteInput}
+                    iconClassName={css.locationAutocompleteInputIcon}
+                    predictionsClassName={css.predictionsRoot}
+                    validClassName={css.validLocation}
+                    name="shopLocation"
+                    label={addressLabel}
+                    placeholder={addressPlaceholder}
+                    useDefaultPredictions={false}
+                    format={identity}
+                    valueFromForm={values.location}
+                    validate={validators.composeValidators(
+                      validators.autocompleteSearchRequired(addressRequiredMessage),
+                      validators.autocompletePlaceSelected(addressNotRecognizedMessage)
+                    )}
+                    key={'locationValidation'}
+                  />
+                  <FieldTextInput
+                    type="textarea"
+                    id="shopExtraInfo"
+                    name="shopExtraInfo"
+                    label={extraInfoLabel}
+                    placeholder={extraInfoPlaceholder}
+                  />
+                  <FieldMediaUpload
+                    name="shopMedia"
+                    multiple
+                    storagePath={`shopMedia/${currentUser.id.uuid}`}
+                    publicBaseUrl={PUBLIC_MEDIA_BASE_URL}
+                  />
+                </div>
+              </div>
 
               <div className={classNames(css.sectionContainer)}>
                 <H4 as="h2" className={css.sectionTitle}>

@@ -144,3 +144,11 @@ export const transitionPrivileged = body => {
 export const createUserWithIdp = body => {
   return post('/api/auth/create-user-with-idp', body);
 };
+
+// Generate presigned URL for uploading files to R2
+//
+// See `server/api/presigned-url.js` to see what data should
+// be sent in the body.
+export const generatePresignedUrl = body => {
+  return post('/api/presigned-url', body);
+};

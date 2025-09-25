@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
@@ -19,11 +19,14 @@ import { H3, Page, UserNav, NamedLink, LayoutSingleColumn } from '../../componen
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
+import { types as sdkTypes } from '../../util/sdkLoader';
 
 import ProfileSettingsForm from './ProfileSettingsForm/ProfileSettingsForm';
 
 import { updateProfile, uploadImage } from './ProfileSettingsPage.duck';
 import css from './ProfileSettingsPage.module.css';
+
+const { LatLng } = sdkTypes;
 
 const onImageUploadHandler = (values, fn) => {
   const { id, imageId, file } = values;
@@ -86,12 +89,29 @@ export const ProfileSettingsPageComponent = props => {
 
   const { userFields, userTypes = [] } = config.user;
 
-  const handleSubmit = (values, userType) => {
-    const { firstName, lastName, displayName, bio: rawBio, ...rest } = values;
-
+  const handleSubmit = async (values, userType) => {
+    const {
+      firstName,
+      lastName,
+      displayName,
+      bio: rawBio,
+      shopLocation,
+      shopExtraInfo = '',
+      shopTitle = '',
+      shopMedia = [],
+      ...rest
+    } = values;
     const displayNameMaybe = displayName
       ? { displayName: displayName.trim() }
       : { displayName: null };
+    const shopLocationMaybe =
+      shopLocation && shopLocation.selectedPlace
+        ? {
+            shopLocation: {
+              ...shopLocation.selectedPlace,
+            },
+          }
+        : {};
 
     // Ensure that the optional bio is a string
     const bio = rawBio || '';
@@ -103,6 +123,10 @@ export const ProfileSettingsPageComponent = props => {
       bio,
       publicData: {
         ...pickUserFieldsData(rest, 'public', userType, userFields),
+        ...shopLocationMaybe,
+        shopTitle,
+        shopExtraInfo,
+        shopMedia,
       },
       protectedData: {
         ...pickUserFieldsData(rest, 'protected', userType, userFields),
@@ -123,6 +147,7 @@ export const ProfileSettingsPageComponent = props => {
   };
 
   const user = ensureCurrentUser(currentUser);
+
   const {
     firstName,
     lastName,
@@ -135,28 +160,57 @@ export const ProfileSettingsPageComponent = props => {
   // I.e. the status is active, not pending-approval or banned
   const isUnauthorizedUser = currentUser && !isUserAuthorized(currentUser);
 
-  const { userType } = publicData || {};
+  const { userType, shopTitle, shopExtraInfo, shopMedia, shopLocation } = publicData || {};
   const profileImageId = user.profileImage ? user.profileImage.id : null;
   const profileImage = image || { imageId: profileImageId };
   const userTypeConfig = userTypes.find(config => config.userType === userType);
   const isDisplayNameIncluded = userTypeConfig?.defaultUserFields?.displayName !== false;
   // ProfileSettingsForm decides if it's allowed to show the input field.
   const displayNameMaybe = isDisplayNameIncluded && displayName ? { displayName } : {};
+  const initialValues = useMemo(
+    () => ({
+      firstName,
+      lastName,
+      ...displayNameMaybe,
+      bio,
+      profileImage: user.profileImage,
+      ...initialValuesForUserFields(publicData, 'public', userType, userFields),
+      ...initialValuesForUserFields(protectedData, 'protected', userType, userFields),
+      ...initialValuesForUserFields(privateData, 'private', userType, userFields),
+      shopTitle,
+      shopExtraInfo,
+      shopMedia,
+      shopLocation: {
+        search: shopLocation.address || '',
+        selectedPlace: {
+          ...shopLocation,
+          origin: new LatLng(shopLocation.origin.lat, shopLocation.origin.lng),
+        },
+      },
+    }),
+    [
+      firstName,
+      lastName,
+      JSON.stringify(displayNameMaybe),
+      bio,
+      JSON.stringify(user.profileImage),
+      JSON.stringify(publicData),
+      JSON.stringify(protectedData),
+      JSON.stringify(privateData),
+      JSON.stringify(userType),
+      JSON.stringify(userFields),
+      shopTitle,
+      shopExtraInfo,
+      JSON.stringify(shopMedia),
+      JSON.stringify(shopLocation),
+    ]
+  );
 
   const profileSettingsForm = user.id ? (
     <ProfileSettingsForm
       className={css.form}
       currentUser={currentUser}
-      initialValues={{
-        firstName,
-        lastName,
-        ...displayNameMaybe,
-        bio,
-        profileImage: user.profileImage,
-        ...initialValuesForUserFields(publicData, 'public', userType, userFields),
-        ...initialValuesForUserFields(protectedData, 'protected', userType, userFields),
-        ...initialValuesForUserFields(privateData, 'private', userType, userFields),
-      }}
+      initialValues={initialValues}
       profileImage={profileImage}
       onImageUpload={e => onImageUploadHandler(e, onImageUpload)}
       uploadInProgress={uploadInProgress}

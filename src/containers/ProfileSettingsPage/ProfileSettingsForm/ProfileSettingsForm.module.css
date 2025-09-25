@@ -281,3 +281,20 @@
   margin-top: 24px;
   margin-bottom: 56px;
 }
+
+.locationAutocompleteInput {
+  /* Safari bugfix: without this Safari will print placeholder to a wrong place */
+  &::-webkit-input-placeholder {
+    line-height: normal;
+  }
+}
+
+.locationAutocompleteInputIcon {
+  display: none;
+}
+
+.infoContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
