@@ -1406,7 +1406,7 @@ textarea {
 
   -webkit-font-smoothing: subpixel-antialiased;
 
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
   margin: 0;
 
   @media (--viewportMedium) {

@@ -67,7 +67,7 @@
 }
 .resetAllButton {
   composes: filterButton;
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
 
   /* Layout */
   margin: 0 auto 0 0;
@@ -83,7 +83,7 @@
 
 .cancelButton {
   composes: filterButton;
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
 
   /* Layout */
   margin: 0 24px 0 24px;

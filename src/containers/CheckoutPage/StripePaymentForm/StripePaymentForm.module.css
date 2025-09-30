@@ -83,7 +83,7 @@
 .saveForLaterUseLegalInfo {
   composes: h5 from global;
 
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
   display: inline-block;
   padding: 0px 0 0px 26px;
   margin-top: -2px;
@@ -131,7 +131,7 @@
 .paymentInfo {
   composes: h5 from global;
 
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
   text-align: center;
   margin: 28px 0 0 0;
 

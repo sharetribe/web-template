@@ -9,7 +9,7 @@
     font-weight: var(--fontWeightSemiBold);
     font-size: 18px;
     line-height: 24px;
-    color: var(--colorGrey300);
+    color: var(--colorGrey600);
 
     /* margin-top + n * line-height + margin-bottom => x * 6px */
     margin-top: 16px;

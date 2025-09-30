@@ -177,7 +177,7 @@
 
 .plus1Day {
   composes: marketplaceTinyFontStyles from global;
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
   position: absolute;
   bottom: -24px;
   right: 0px;

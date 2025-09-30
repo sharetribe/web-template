@@ -17,7 +17,7 @@
 .weekPicker,
 .sectionTitle {
   composes: marketplaceSearchFilterSublabelFontStyles from global;
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
 
   padding: 3px 0 3px 0;
   margin-top: 0;
@@ -135,7 +135,7 @@
 .blockedDateLabel {
   background-color: #f3f3f3;
   background-color: var(--colorGrey50);
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
 }
 
 .info {
@@ -212,7 +212,7 @@
 
 .deleteIcon {
   margin-top: -6px;
-  stroke: var(--colorGrey300);
+  stroke: var(--colorGrey600);
   transition: var(--transitionStyleButton);
 }
 
@@ -253,7 +253,7 @@
 .blockedDate {
   background-color: #f3f3f3;
   background-color: var(--colorGrey50);
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
 
   & .timeRange {
     color: var(--colorGrey300);
@@ -292,9 +292,9 @@
 }
 .sourceMaybe {
   grid-area: source;
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
 }
 
 .exceptionMsg {
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
 }

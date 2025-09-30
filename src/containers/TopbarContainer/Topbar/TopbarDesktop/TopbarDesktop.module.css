@@ -261,7 +261,7 @@
   padding: 20px 24px;
 
   /* Layout details */
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
   text-align: left;
   white-space: nowrap;
   transition: var(--transitionStyleButton);

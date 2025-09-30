@@ -82,7 +82,7 @@
 .infoText {
   composes: h5 from global;
 
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
   padding: 0;
   margin: 14px 0 0 0;
 }

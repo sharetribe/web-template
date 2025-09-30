@@ -197,7 +197,7 @@
 .close {
   composes: marketplaceModalCloseStyles from global;
 
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
   transition: var(--transitionStyleButton);
 
   &:enabled:hover,
