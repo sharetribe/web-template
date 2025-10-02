@@ -392,7 +392,12 @@ export const InboxPageComponent = props => {
             <H2 as="h1" className={css.title}>
               <FormattedMessage id="InboxPage.title" />
             </H2>
-            <TabNav rootClassName={css.tabs} tabRootClassName={css.tab} tabs={tabs} />{' '}
+            <TabNav
+              rootClassName={css.tabs}
+              tabRootClassName={css.tab}
+              tabs={tabs}
+              ariaLabel={intl.formatMessage({ id: 'InboxPage.screenreader.sidenav' })}
+            />{' '}
           </>
         }
         footer={<FooterContainer />}

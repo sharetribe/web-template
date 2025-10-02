@@ -376,6 +376,7 @@
   "EditListingWizard.payoutModalTitleOneMoreThing": "One more thing:",
   "EditListingWizard.payoutModalTitlePayoutPreferences": "Payout preferences",
   "EditListingWizard.redirectingToStripe": "You returned early from Stripe. Redirecting you back to Stripe…",
+  "EditListingWizard.screenreader.tabNavigation": "Listing edit navigation",
   "EditListingWizard.tabLabelAvailability": "Availability",
   "EditListingWizard.tabLabelDelivery": "Delivery",
   "EditListingWizard.tabLabelDetails": "Details",
@@ -486,6 +487,7 @@
   "InboxPage.quantity": "Number of items: {quantity}",
   "InboxPage.salesTabTitle": "As a provider",
   "InboxPage.salesTitle": "Inbox: As a listing author",
+  "InboxPage.screenreader.sidenav": "Inbox navigation",
   "InboxPage.seats": "Number of seats: {seats}",
   "InboxPage.sortBy.createdAt": "Newest",
   "InboxPage.sortBy.lastMessageAt": "Latest message",
@@ -511,6 +513,7 @@
   "KeywordFilter.placeholder": "Enter a keyword…",
   "LandingPage.schemaDescription": "An online marketplace.",
   "LandingPage.schemaTitle": "{marketplaceName}",
+  "LayoutSideNavigation.screenreader.accountNavigation": "Account settings navigation",
   "LayoutWrapperAccountSettingsSideNav.contactDetailsTabTitle": "Contact details",
   "LayoutWrapperAccountSettingsSideNav.passwordTabTitle": "Password",
   "LayoutWrapperAccountSettingsSideNav.paymentMethodsTabTitle": "Payment methods",
@@ -813,6 +816,7 @@
   "ProfilePage.reviewsAsACustomerTitle": "Reviews as a customer ({count})",
   "ProfilePage.reviewsFromMyCustomersTitle": "Reviews from customers ({count})",
   "ProfilePage.schemaTitle": "{name} | {marketplaceName}",
+  "ProfilePage.screenreader.reviewsNav": "Reviews navigation",
   "ProfileSettingsForm.addYourProfilePicture": "+ Add your profile picture…",
   "ProfileSettingsForm.addYourProfilePictureMobile": "+ Add",
   "ProfileSettingsForm.bioHeading": "Your profile bio",
@@ -1343,5 +1347,6 @@
   "UserDisplayName.deleted": "Deleted user",
   "UserNav.accountSettings": "Account settings",
   "UserNav.profileSettings": "Profile settings",
+  "UserNav.screenreader.userNav": "User navigation",
   "UserNav.yourListings": "Your listings"
 }

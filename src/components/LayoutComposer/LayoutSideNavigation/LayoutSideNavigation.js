@@ -37,6 +37,7 @@ const LayoutSideNavigation = props => {
     sideNav: sideNavContent,
     useAccountSettingsNav,
     accountSettingsNavProps,
+    intl,
     ...rest
   } = props;
 
@@ -65,6 +66,9 @@ const LayoutSideNavigation = props => {
                 {useAccountSettingsNav ? (
                   <LayoutWrapperAccountSettingsSideNav
                     accountSettingsNavProps={accountSettingsNavProps}
+                    ariaLabel={intl.formatMessage({
+                      id: 'LayoutSideNavigation.screenreader.accountNavigation',
+                    })}
                   />
                 ) : null}
                 {sideNavContent}

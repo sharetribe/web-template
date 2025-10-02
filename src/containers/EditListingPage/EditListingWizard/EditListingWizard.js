@@ -651,7 +651,7 @@ class EditListingWizard extends Component {
           rootClassName={css.tabsContainer}
           navRootClassName={css.nav}
           tabRootClassName={css.tab}
-          aria-label={intl.formatMessage({ id: 'EditListingWizard.screenreader.tabNavigation' })}
+          ariaLabel={intl.formatMessage({ id: 'EditListingWizard.screenreader.tabNavigation' })}
         >
           {tabs.map(tab => {
             const tabTranslations = tabLabelAndSubmit(

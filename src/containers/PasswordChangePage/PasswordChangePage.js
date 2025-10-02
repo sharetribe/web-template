@@ -94,6 +94,7 @@ export const PasswordChangePageComponent = props => {
         useAccountSettingsNav
         accountSettingsNavProps={accountSettingsNavProps}
         footer={<FooterContainer />}
+        intl={intl}
       >
         <div className={css.content}>
           <H3 as="h1">
