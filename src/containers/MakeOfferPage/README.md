@@ -1,4 +1,4 @@
-# InitiateNegotiationPage
+# MakeOfferPage
 
 The provider is navigated to this page when they are about to make an offer for a listing. The main
 purpose of this page is to add an offer, which is then used to set the line items for the

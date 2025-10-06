@@ -8,7 +8,7 @@ import ContactDetailsPage from './ContactDetailsPage/ContactDetailsPage.duck';
 import EditListingPage from './EditListingPage/EditListingPage.duck';
 import InboxPage from './InboxPage/InboxPage.duck';
 import ListingPage from './ListingPage/ListingPage.duck';
-import InitiateNegotiationPage from './InitiateNegotiationPage/InitiateNegotiationPage.duck';
+import MakeOfferPage from './MakeOfferPage/MakeOfferPage.duck';
 import ManageListingsPage from './ManageListingsPage/ManageListingsPage.duck';
 import PasswordChangePage from './PasswordChangePage/PasswordChangePage.duck';
 import PasswordRecoveryPage from './PasswordRecoveryPage/PasswordRecoveryPage.duck';
@@ -25,8 +25,8 @@ export {
   ContactDetailsPage,
   EditListingPage,
   InboxPage,
-  InitiateNegotiationPage,
   ListingPage,
+  MakeOfferPage,
   ManageListingsPage,
   PasswordChangePage,
   PasswordRecoveryPage,

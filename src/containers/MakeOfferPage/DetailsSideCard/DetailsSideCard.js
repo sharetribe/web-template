@@ -17,7 +17,7 @@ import {
 import css from './DetailsSideCard.module.css';
 
 /**
- * A card that displays the listing and booking details on the InitiateNegotiationPage.
+ * A card that displays the listing and booking details on the MakeOfferPage.
  *
  * @component
  * @param {Object} props
@@ -89,7 +89,7 @@ const DetailsSideCard = props => {
             <div className={css.priceContainer}>
               <p className={css.price}>{formatMoney(intl, price)}</p>
               <div className={css.perUnit}>
-                <FormattedMessage id="InitiateNegotiationPage.perUnit" values={{ unitType }} />
+                <FormattedMessage id="MakeOfferPage.perUnit" values={{ unitType }} />
               </div>
             </div>
           ) : null}

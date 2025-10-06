@@ -25,7 +25,7 @@ const renderForm = formRenderProps => {
 };
 
 /**
- * A form to redirect user to the InitiateNegotiationPage. It can be used to initialize the page if needed.
+ * A form to redirect user to the MakeOfferPage. It can be used to initialize the page if needed.
  * Note: by default, the form just shows a submit button.
  *
  * @component

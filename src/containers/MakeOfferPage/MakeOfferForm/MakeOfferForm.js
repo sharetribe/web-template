@@ -25,13 +25,13 @@ import css from './MakeOfferForm.module.css';
 const { Money } = sdkTypes;
 
 const getPriceValidators = (listingMinimumPriceSubUnits, marketplaceCurrency, intl) => {
-  const quoteRequiredMsgId = { id: 'InitiateNegotiationPage.quoteRequired' };
+  const quoteRequiredMsgId = { id: 'MakeOfferPage.quoteRequired' };
   const quoteRequiredMsg = intl.formatMessage(quoteRequiredMsgId);
   const quoteRequired = validators.required(quoteRequiredMsg);
 
   const minPriceRaw = new Money(listingMinimumPriceSubUnits, marketplaceCurrency);
   const minPrice = formatMoney(intl, minPriceRaw);
-  const quoteTooLowMsgId = { id: 'InitiateNegotiationPage.quoteTooLow' };
+  const quoteTooLowMsgId = { id: 'MakeOfferPage.quoteTooLow' };
   const quoteTooLowMsg = intl.formatMessage(quoteTooLowMsgId, { minPrice });
   const minQuoteRequired = validators.moneySubUnitAmountAtLeast(
     quoteTooLowMsg,
@@ -47,21 +47,21 @@ const FinePrint = ({ stripeConnected }) => {
   if (stripeConnected) {
     return (
       <div className={css.finePrint}>
-        <FormattedMessage id="InitiateNegotiationPage.finePrint" />
+        <FormattedMessage id="MakeOfferPage.finePrint" />
       </div>
     );
   }
 
   const payoutDetailsWarningLink = (
     <NamedLink name="StripePayoutPage">
-      <FormattedMessage id="InitiateNegotiationPage.payoutDetailsWarningLink" />
+      <FormattedMessage id="MakeOfferPage.payoutDetailsWarningLink" />
     </NamedLink>
   );
 
   return (
     <div className={css.finePrint}>
       <FormattedMessage
-        id="InitiateNegotiationPage.payoutDetailsWarning"
+        id="MakeOfferPage.payoutDetailsWarning"
         values={{ payoutDetailsWarningLink }}
       />
     </div>
@@ -126,10 +126,7 @@ export const MakeOfferForm = props => {
           <Form className={classes} onSubmit={handleSubmit} enforcePagePreloadFor="SaleDetailsPage">
             <div className={css.section}>
               <Heading as="label" htmlFor={`${formId}quote`} rootClassName={css.sectionHeading}>
-                <FormattedMessage
-                  id="InitiateNegotiationPage.quoteLabel"
-                  values={{ authorDisplayName }}
-                />
+                <FormattedMessage id="MakeOfferPage.quoteLabel" values={{ authorDisplayName }} />
               </Heading>
 
               <FieldCurrencyInput
@@ -138,7 +135,7 @@ export const MakeOfferForm = props => {
                 className={css.input}
                 placeholder={intl.formatMessage(
                   {
-                    id: 'InitiateNegotiationPage.quotePlaceholder',
+                    id: 'MakeOfferPage.quotePlaceholder',
                   },
                   { marketplaceCurrency }
                 )}
@@ -153,11 +150,11 @@ export const MakeOfferForm = props => {
                 id={formId ? `${formId}.message` : 'message'}
                 labelClassName={css.sectionHeading}
                 label={intl.formatMessage({
-                  id: 'InitiateNegotiationPage.defaultMessageLabel',
+                  id: 'MakeOfferPage.defaultMessageLabel',
                 })}
                 placeholder={intl.formatMessage(
                   {
-                    id: 'InitiateNegotiationPage.defaultMessagePlaceholder',
+                    id: 'MakeOfferPage.defaultMessagePlaceholder',
                   },
                   { authorDisplayName }
                 )}
@@ -167,7 +164,7 @@ export const MakeOfferForm = props => {
             <div className={submitButtonWrapperClassName}>
               <ErrorMessage error={makeOfferError} />
               <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
-                <FormattedMessage id="InitiateNegotiationPage.submitButtonText" />
+                <FormattedMessage id="MakeOfferPage.submitButtonText" />
               </PrimaryButton>
               <FinePrint stripeConnected={stripeConnected} />
             </div>

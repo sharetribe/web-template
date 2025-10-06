@@ -9,7 +9,7 @@ import { createSlug } from '../../util/urlHelpers';
 // Import shared components
 import { H4, NamedLink } from '../../components';
 
-import css from './InitiateNegotiationPage.module.css';
+import css from './MakeOfferPage.module.css';
 
 export const HeadingDetails = props => {
   const { intl, listing, listingTitle, listingTypeConfig, price } = props;
@@ -28,7 +28,7 @@ export const HeadingDetails = props => {
   return (
     <H4 as="h2" className={css.detailsHeadingMobile}>
       <FormattedMessage
-        id="InitiateNegotiationPage.listingTitle"
+        id="MakeOfferPage.listingTitle"
         values={{ listingTitle: listingTitleLink }}
       />
 

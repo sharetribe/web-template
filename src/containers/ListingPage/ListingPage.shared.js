@@ -163,17 +163,17 @@ export const handleSubmitInquiry = parameters => values => {
 };
 
 /**
- * Handle navigation to InitiateNegotiationPage. Returns a function that can be used as a form submit handler.
- * Note: this does not yet handle form values, it only navigates to the InitiateNegotiationPage.
+ * Handle navigation to MakeOfferPage. Returns a function that can be used as a form submit handler.
+ * Note: this does not yet handle form values, it only navigates to the MakeOfferPage.
  *
- * @param {Object} parameters all the info needed to navigate to InitiateNegotiationPage.
+ * @param {Object} parameters all the info needed to navigate to MakeOfferPage.
  * @param {Object} parameters.getListing The getListing function from react-router.
  * @param {Object} parameters.params The params object from react-router.
  * @param {Object} parameters.history The history object from react-router.
  * @param {Object} parameters.routes The routes object from react-router.
- * @returns {Function} A function that navigates to InitiateNegotiationPage.
+ * @returns {Function} A function that navigates to MakeOfferPage.
  */
-export const handleNavigateToInitiateNegotiationPage = parameters => () => {
+export const handleNavigateToMakeOfferPage = parameters => () => {
   const { getListing, params, history, routes } = parameters;
 
   const listingId = new UUID(params.id);
@@ -181,7 +181,7 @@ export const handleNavigateToInitiateNegotiationPage = parameters => () => {
 
   history.push(
     createResourceLocatorString(
-      'InitiateNegotiationPage',
+      'MakeOfferPage',
       routes,
       { id: listing.id.uuid, slug: createSlug(listing.attributes.title) },
       {}

@@ -35,19 +35,19 @@ const getImageVariants = listingImageConfig => {
 
 // ================ Action types ================ //
 
-export const SET_INITIAL_VALUES = 'app/InitiateNegotiationPage/SET_INITIAL_VALUES';
+export const SET_INITIAL_VALUES = 'app/MakeOfferPage/SET_INITIAL_VALUES';
 
-export const SHOW_LISTING_REQUEST = 'app/InitiateNegotiationPage/SHOW_LISTING_REQUEST';
-export const SHOW_LISTING_SUCCESS = 'app/InitiateNegotiationPage/SHOW_LISTING__SUCCESS';
-export const SHOW_LISTING_ERROR = 'app/InitiateNegotiationPage/SHOW_LISTING_ERROR';
+export const SHOW_LISTING_REQUEST = 'app/MakeOfferPage/SHOW_LISTING_REQUEST';
+export const SHOW_LISTING_SUCCESS = 'app/MakeOfferPage/SHOW_LISTING__SUCCESS';
+export const SHOW_LISTING_ERROR = 'app/MakeOfferPage/SHOW_LISTING_ERROR';
 
-export const SHOW_TRANSACTION_REQUEST = 'app/InitiateNegotiationPage/SHOW_TRANSACTION_REQUEST';
-export const SHOW_TRANSACTION_SUCCESS = 'app/InitiateNegotiationPage/SHOW_TRANSACTION_SUCCESS';
-export const SHOW_TRANSACTION_ERROR = 'app/InitiateNegotiationPage/SHOW_TRANSACTION_ERROR';
+export const SHOW_TRANSACTION_REQUEST = 'app/MakeOfferPage/SHOW_TRANSACTION_REQUEST';
+export const SHOW_TRANSACTION_SUCCESS = 'app/MakeOfferPage/SHOW_TRANSACTION_SUCCESS';
+export const SHOW_TRANSACTION_ERROR = 'app/MakeOfferPage/SHOW_TRANSACTION_ERROR';
 
-export const MAKE_OFFER_REQUEST = 'app/InitiateNegotiationPage/MAKE_OFFER_REQUEST';
-export const MAKE_OFFER_SUCCESS = 'app/InitiateNegotiationPage/MAKE_OFFER_SUCCESS';
-export const MAKE_OFFER_ERROR = 'app/InitiateNegotiationPage/MAKE_OFFER_ERROR';
+export const MAKE_OFFER_REQUEST = 'app/MakeOfferPage/MAKE_OFFER_REQUEST';
+export const MAKE_OFFER_SUCCESS = 'app/MakeOfferPage/MAKE_OFFER_SUCCESS';
+export const MAKE_OFFER_ERROR = 'app/MakeOfferPage/MAKE_OFFER_ERROR';
 
 // ================ Reducer ================ //
 
@@ -60,7 +60,7 @@ const initialState = {
   makeOfferError: null,
 };
 
-export default function initiateNegotiationPageReducer(state = initialState, action = {}) {
+export default function makeOfferPageReducer(state = initialState, action = {}) {
   const { type, payload } = action;
   switch (type) {
     case SET_INITIAL_VALUES:
@@ -257,7 +257,7 @@ const getTransitionName = (transactionId, processAlias, state) => {
  * @param {boolean} isPrivilegedTransition
  * @returns
  */
-export const initiateNegotiation = (
+export const makeOffer = (
   negotiationParams,
   processAlias,
   transactionId,

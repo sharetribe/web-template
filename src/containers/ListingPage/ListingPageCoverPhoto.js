@@ -76,7 +76,7 @@ import {
   listingImages,
   handleContactUser,
   handleSubmitInquiry,
-  handleNavigateToInitiateNegotiationPage,
+  handleNavigateToMakeOfferPage,
   handleSubmit,
   priceForSchemaMaybe,
 } from './ListingPage.shared';
@@ -266,8 +266,8 @@ export const ListingPageComponent = props => {
     onSendInquiry,
     setInquiryModalOpen,
   });
-  // This is to navigate to InitiateNegotiationPage when NegotiationForm is submitted
-  const onNavigateToInitiateNegotiationPage = handleNavigateToInitiateNegotiationPage({
+  // This is to navigate to MakeOfferPage when NegotiationForm is submitted
+  const onNavigateToMakeOfferPage = handleNavigateToMakeOfferPage({
     ...commonParams,
     getListing,
   });
@@ -284,7 +284,7 @@ export const ListingPageComponent = props => {
     if (isOwnListing || isCurrentlyClosed) {
       window.scrollTo(0, 0);
     } else if (isNegotiation) {
-      onNavigateToInitiateNegotiationPage(values);
+      onNavigateToMakeOfferPage(values);
     } else {
       onSubmit(values);
     }

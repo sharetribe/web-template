@@ -41,7 +41,7 @@ import MobileListingImage from './MobileListingImage/MobileListingImage.js';
 import LocationDetails from './LocationDetails/LocationDetails.js';
 import MakeOfferForm from './MakeOfferForm/MakeOfferForm.js';
 
-import { initiateNegotiation, sendMessage } from './MakeOfferPage.duck.js';
+import { makeOffer, sendMessage } from './MakeOfferPage.duck.js';
 
 import css from './MakeOfferPage.module.css';
 
@@ -77,7 +77,7 @@ const handleSubmit = (submitting, setSubmitting, props) => values => {
     location,
     listing,
     currentUser,
-    onInitiateNegotiation,
+    onMakeOffer,
     onSubmitCallback,
   } = props;
 
@@ -103,12 +103,7 @@ const handleSubmit = (submitting, setSubmitting, props) => values => {
 
   // This makes a single transition directly to the API endpoint
   // (unlike in the payment-related processes, where call is proxied through the server to make privileged transition)
-  onInitiateNegotiation(
-    makeOfferParams,
-    transactionProcessAlias,
-    transactionId,
-    isPrivilegedTransition
-  )
+  onMakeOffer(makeOfferParams, transactionProcessAlias, transactionId, isPrivilegedTransition)
     .then(transaction => {
       setSubmitting(false);
       onSubmitCallback();
@@ -370,10 +365,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   dispatch,
-  onInitiateNegotiation: (params, processAlias, transactionId, transitionName, isPrivileged) =>
-    dispatch(
-      initiateNegotiation(params, processAlias, transactionId, transitionName, isPrivileged)
-    ),
+  onMakeOffer: (params, processAlias, transactionId, transitionName, isPrivileged) =>
+    dispatch(makeOffer(params, processAlias, transactionId, transitionName, isPrivileged)),
   onSendMessage: params => dispatch(sendMessage(params)),
 });
 

@@ -25,11 +25,11 @@ const ErrorMessage = props => {
   return error ? (
     <p className={css.error}>
       {listingNotFound ? (
-        <FormattedMessage id="InitiateNegotiationPage.listingNotFoundError" />
+        <FormattedMessage id="MakeOfferPage.listingNotFoundError" />
       ) : noTransactionProcessAlias ? (
-        <FormattedMessage id="InitiateNegotiationPage.initiateNegotiationErrorNoProcess" />
+        <FormattedMessage id="MakeOfferPage.makeOfferErrorNoProcess" />
       ) : (
-        <FormattedMessage id="InitiateNegotiationPage.initiateNegotiationError" />
+        <FormattedMessage id="MakeOfferPage.makeOfferError" />
       )}
     </p>
   ) : null;

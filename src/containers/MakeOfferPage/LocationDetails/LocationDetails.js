@@ -30,7 +30,7 @@ const LocationDetails = props => {
   return showLocation && locationDetails ? (
     <div className={css.locationContainer}>
       <Heading as="h3" rootClassName={sectionHeadingClassName}>
-        <FormattedMessage id="InitiateNegotiationPage.locationDetailsTitle" />
+        <FormattedMessage id="MakeOfferPage.locationDetailsTitle" />
       </Heading>
       <p className={css.locationDetails}>{locationDetails}</p>
     </div>

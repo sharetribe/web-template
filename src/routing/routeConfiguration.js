@@ -19,7 +19,7 @@ const ContactDetailsPage = loadable(() => import(/* webpackChunkName: "ContactDe
 const EditListingPage = loadable(() => import(/* webpackChunkName: "EditListingPage" */ '../containers/EditListingPage/EditListingPage'));
 const EmailVerificationPage = loadable(() => import(/* webpackChunkName: "EmailVerificationPage" */ '../containers/EmailVerificationPage/EmailVerificationPage'));
 const InboxPage = loadable(() => import(/* webpackChunkName: "InboxPage" */ '../containers/InboxPage/InboxPage'));
-const InitiateNegotiationPage = loadable(() => import(/* webpackChunkName: "InitiateNegotiationPage" */ '../containers/InitiateNegotiationPage/InitiateNegotiationPage'));
+const MakeOfferPage = loadable(() => import(/* webpackChunkName: "MakeOfferPage" */ '../containers/MakeOfferPage/MakeOfferPage'));
 const LandingPage = loadable(() => import(/* webpackChunkName: "LandingPage" */ '../containers/LandingPage/LandingPage'));
 const ListingPageCoverPhoto = loadable(() => import(/* webpackChunkName: "ListingPageCoverPhoto" */ /* webpackPrefetch: true */ '../containers/ListingPage/ListingPageCoverPhoto'));
 const ListingPageCarousel = loadable(() => import(/* webpackChunkName: "ListingPageCarousel" */ /* webpackPrefetch: true */ '../containers/ListingPage/ListingPageCarousel'));
@@ -116,10 +116,10 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
     },
     {
       path: '/l/:slug/:id/make-offer',
-      name: 'InitiateNegotiationPage',
+      name: 'MakeOfferPage',
       auth: true,
-      component: InitiateNegotiationPage,
-      loadData: pageDataLoadingAPI.InitiateNegotiationPage.loadData,
+      component: MakeOfferPage,
+      loadData: pageDataLoadingAPI.MakeOfferPage.loadData,
     },
     {
       path: '/l/:slug/:id/checkout',
