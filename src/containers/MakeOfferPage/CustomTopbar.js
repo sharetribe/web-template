@@ -3,12 +3,12 @@ import classNames from 'classnames';
 
 import { LinkedLogo } from '../../components';
 
-import css from './InitiateNegotiationPage.module.css';
+import css from './MakeOfferPage.module.css';
 
 /**
- * A component that renders the custom topbar for the InitiateNegotiationPage.
+ * A component that renders the custom topbar for the MakeOfferPage.
  * We don't want to use the default topbar because there are too many
- * links leading away from the InitiateNegotiationPage.
+ * links leading away from the MakeOfferPage.
  *
  * @component
  * @param {Object} props
@@ -57,7 +57,7 @@ const CustomTopbar = props => {
     <div className={classes}>
       <LinkedLogo
         layout={isMobile ? 'mobile' : 'desktop'}
-        alt={intl.formatMessage({ id: 'InitiateNegotiationPage.goToLandingPage' })}
+        alt={intl.formatMessage({ id: 'MakeOfferPage.goToLandingPage' })}
         linkToExternalSite={linkToExternalSite}
       />
     </div>

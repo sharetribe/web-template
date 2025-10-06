@@ -5,45 +5,45 @@ import { useHistory } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 
 // Import contexts and util modules
-import { types as sdkTypes } from '../../util/sdkLoader';
-import { useConfiguration } from '../../context/configurationContext';
-import { useRouteConfiguration } from '../../context/routeConfigurationContext';
-import { userDisplayNameAsString } from '../../util/data';
-import { isErrorNoPermissionForInitiateTransactions } from '../../util/errors';
+import { types as sdkTypes } from '../../util/sdkLoader.js';
+import { useConfiguration } from '../../context/configurationContext.js';
+import { useRouteConfiguration } from '../../context/routeConfigurationContext.js';
+import { userDisplayNameAsString } from '../../util/data.js';
+import { isErrorNoPermissionForInitiateTransactions } from '../../util/errors.js';
 import {
   NO_ACCESS_PAGE_INITIATE_TRANSACTIONS,
   NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
   parse,
-} from '../../util/urlHelpers';
-import { hasPermissionToInitiateTransactions, isUserAuthorized } from '../../util/userHelpers';
-import { displayPrice } from '../../util/configHelpers';
+} from '../../util/urlHelpers.js';
+import { hasPermissionToInitiateTransactions, isUserAuthorized } from '../../util/userHelpers.js';
+import { displayPrice } from '../../util/configHelpers.js';
 import { pathByRouteName } from '../../util/routes.js';
 import {
   NEGOTIATION_PROCESS_NAME,
   REQUEST,
   resolveLatestProcessName,
-} from '../../transactions/transaction';
-import { requireListingImage } from '../../util/configHelpers';
+} from '../../transactions/transaction.js';
+import { requireListingImage } from '../../util/configHelpers.js';
 
 // Import global thunk functions
-import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
-import { isScrollingDisabled } from '../../ducks/ui.duck';
+import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck.js';
+import { isScrollingDisabled } from '../../ducks/ui.duck.js';
 
 // Import shared components
-import { H3, NamedRedirect, Page } from '../../components';
+import { H3, NamedRedirect, Page } from '../../components/index.js';
 
 // Import modules from this directory
-import CustomTopbar from './CustomTopbar';
+import CustomTopbar from './CustomTopbar.js';
 import HeadingDetails from './HeadingDetails.js';
 import DetailsSideCard from './DetailsSideCard/DetailsSideCard.js';
-import ErrorMessage from './ErrorMessage/ErrorMessage';
+import ErrorMessage from './ErrorMessage/ErrorMessage.js';
 import MobileListingImage from './MobileListingImage/MobileListingImage.js';
-import LocationDetails from './LocationDetails/LocationDetails';
-import MakeOfferForm from './MakeOfferForm/MakeOfferForm';
+import LocationDetails from './LocationDetails/LocationDetails.js';
+import MakeOfferForm from './MakeOfferForm/MakeOfferForm.js';
 
-import { initiateNegotiation, sendMessage } from './InitiateNegotiationPage.duck';
+import { initiateNegotiation, sendMessage } from './MakeOfferPage.duck.js';
 
-import css from './InitiateNegotiationPage.module.css';
+import css from './MakeOfferPage.module.css';
 
 const { UUID } = sdkTypes;
 
@@ -140,7 +140,7 @@ const hasRequirements = (stripeAccountData, requirementType) =>
   Array.isArray(stripeAccountData.requirements[requirementType]) &&
   stripeAccountData.requirements[requirementType].length > 0;
 
-const InitiateNegotiationPageComponent = props => {
+const MakeOfferPageComponent = props => {
   const [submitting, setSubmitting] = useState(false);
 
   const {
@@ -236,7 +236,7 @@ const InitiateNegotiationPageComponent = props => {
   );
 };
 
-const EnhancedInitiateNegotiationPage = props => {
+const EnhancedMakeOfferPage = props => {
   const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();
   const intl = useIntl();
@@ -269,10 +269,10 @@ const EnhancedInitiateNegotiationPage = props => {
   // Redirect if the user has no transaction rights
   const shouldRedirectNoTransactionRightsUser =
     isDataLoaded &&
-    // - either when they first arrive on the InitiateNegotiationPage
+    // - either when they first arrive on the MakeOfferPageComponent
     (!hasPermissionToInitiateTransactions(currentUser) ||
       // - or when they are sending the order (if the operator removed transaction rights
-      // when they were already on the InitiateNegotiationPage and the user has not refreshed the page)
+      // when they were already on the MakeOfferPageComponent and the user has not refreshed the page)
       isErrorNoPermissionForInitiateTransactions(makeOfferError));
 
   if (shouldRedirectUnathorizedUser) {
@@ -295,13 +295,13 @@ const EnhancedInitiateNegotiationPage = props => {
   const authorDisplayName = userDisplayNameAsString(listing?.author, '');
   const pageTitle = processName
     ? intl.formatMessage(
-        { id: `InitiateNegotiationPage.makeOfferTitle` },
+        { id: `MakeOfferPage.makeOfferTitle` },
         { listingTitle, authorDisplayName }
       )
     : 'The page is loading data';
 
   return processName && isNegotiationProcess ? (
-    <InitiateNegotiationPageComponent
+    <MakeOfferPageComponent
       config={config}
       routeConfiguration={routeConfiguration}
       intl={intl}
@@ -325,7 +325,7 @@ const mapStateToProps = state => {
     showListingError,
     makeOfferInProgress,
     makeOfferError,
-  } = state.InitiateNegotiationPage;
+  } = state.MakeOfferPage;
 
   const getListing = id => {
     const ref = { id, type: 'listing' };
@@ -377,11 +377,11 @@ const mapDispatchToProps = dispatch => ({
   onSendMessage: params => dispatch(sendMessage(params)),
 });
 
-const InitiateNegotiationPage = compose(
+const MakeOfferPage = compose(
   connect(
     mapStateToProps,
     mapDispatchToProps
   )
-)(EnhancedInitiateNegotiationPage);
+)(EnhancedMakeOfferPage);
 
-export default InitiateNegotiationPage;
+export default MakeOfferPage;
