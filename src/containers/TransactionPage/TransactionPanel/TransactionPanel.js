@@ -13,6 +13,7 @@ import { AvatarLarge, NamedLink, UserDisplayName } from '../../../components';
 
 import { stateDataShape } from '../TransactionPage.stateData';
 import SendMessageForm from '../SendMessageForm/SendMessageForm';
+import TextMaybe from '../TextMaybe/TextMaybe';
 
 // These are internal components that make this file more readable.
 import BreakdownMaybe from './BreakdownMaybe';
@@ -20,8 +21,6 @@ import DetailCardHeadingsMaybe from './DetailCardHeadingsMaybe';
 import DetailCardImage from './DetailCardImage';
 import DeliveryInfoMaybe from './DeliveryInfoMaybe';
 import BookingLocationMaybe from './BookingLocationMaybe';
-import TextMaybe from './TextMaybe';
-import InquiryMessageMaybe from './InquiryMessageMaybe';
 import FeedSection from './FeedSection';
 import DiminishedActionButtonMaybe from './DiminishedActionButtonMaybe';
 import PanelHeading from './PanelHeading';
@@ -259,17 +258,12 @@ export class TransactionPanelComponent extends Component {
               listingDeleted={listingDeleted}
             />
 
-            <InquiryMessageMaybe
-              protectedData={protectedData}
-              showInquiryMessage={isInquiryProcess}
-              isCustomer={isCustomer}
-            />
-
             <TextMaybe
-              heading={intl.formatMessage({ id: 'TransactionPanel.providerDefaultMessageLabel' })}
-              text={protectedData?.providerDefaultMessage}
-              isOwn={isNegotiationProcess && isProvider}
-              showText={isNegotiationProcess}
+              rootClassName={css.inquiryMessageContainer}
+              heading={intl.formatMessage({ id: 'TransactionPanel.inquiryMessageHeading' })}
+              text={protectedData?.inquiryMessage}
+              isOwn={isCustomer}
+              showText={isInquiryProcess}
             />
 
             {!isInquiryProcess ? (
