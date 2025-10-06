@@ -1317,7 +1317,7 @@
   "TransactionPage.listingTitleMobile": "{listingLink}",
   "TransactionPage.loadingOrderData": "Loading order data.",
   "TransactionPage.loadingSaleData": "Loading sale data.",
-  "TransactionPage.schemaTitle": "Sale details: {title}",
+  "TransactionPage.schemaTitle": "Sale details: {title} | {h1}",
   "TransactionPage.unknownTransactionProcess": "Oops, it looks like the marketplace processes aren't up to date. Please contact the marketplace operator.",
   "TransactionPanel.activityHeading": "Activity",
   "TransactionPanel.bookingLocationHeading": "Location",
