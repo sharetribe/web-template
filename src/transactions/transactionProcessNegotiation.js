@@ -45,7 +45,16 @@ export const transitions = {
   CUSTOMER_REJECT_OFFER: 'transition/customer-reject-offer',
   PROVIDER_WITHDRAW_OFFER: 'transition/provider-withdraw-offer',
 
-  // Price negotiation loop: customer makes a counter offer.
+  // Transitions for provider-driven negotiation loop
+  // TODO: this loop is not yet in use
+  UPDATE_OFFER: 'transition/update-offer',
+  ACCEPT_OFFER: 'transition/accept-offer',
+  OPERATOR_ACCEPT_OFFER: 'transition/operator-accept-offer',
+  UPDATE_FROM_UPDATE_PENDING: 'transition/update-from-update-pending',
+  CUSTOMER_REJECT_FROM_UPDATE_PENDING: 'transition/customer-reject-from-update-pending',
+  PROVIDER_WITHDRAW_FROM_UPDATE_PENDING: 'transition/provider-withdraw-from-update-pending',
+
+  // Transitions for customer-driven price negotiation loop: customer makes a counter offer.
   CUSTOMER_MAKE_COUNTER_OFFER: 'transition/customer-make-counter-offer',
   PROVIDER_MAKE_COUNTER_OFFER: 'transition/provider-make-counter-offer',
   PROVIDER_ACCEPT_COUNTER_OFFER: 'transition/provider-accept-counter-offer',
@@ -111,6 +120,7 @@ export const states = {
   QUOTE_REQUESTED: 'quote-requested',
   REQUEST_REJECTED: 'request-rejected',
   OFFER_PENDING: 'offer-pending',
+  UPDATE_PENDING: 'update-pending', // TODO: this is not yet in use/handled
   CUSTOMER_OFFER_PENDING: 'customer-offer-pending',
   OFFER_REJECTED: 'offer-rejected',
   PENDING_PAYMENT: 'pending-payment',
@@ -172,8 +182,21 @@ export const graph = {
         [transitions.PROVIDER_WITHDRAW_OFFER]: states.OFFER_REJECTED,
         [transitions.CUSTOMER_MAKE_COUNTER_OFFER]: states.CUSTOMER_OFFER_PENDING,
         [transitions.REQUEST_PAYMENT_TO_ACCEPT_OFFER]: states.PENDING_PAYMENT,
+        [transitions.UPDATE_OFFER]: states.UPDATE_PENDING,
       },
     },
+    // Provider-driven negotiation loop
+    // TODO: this is not yet in use
+    [states.UPDATE_PENDING]: {
+      on: {
+        [transitions.ACCEPT_OFFER]: states.OFFER_PENDING,
+        [transitions.OPERATOR_ACCEPT_OFFER]: states.OFFER_PENDING,
+        [transitions.UPDATE_FROM_UPDATE_PENDING]: states.UPDATE_PENDING,
+        [transitions.CUSTOMER_REJECT_FROM_UPDATE_PENDING]: states.OFFER_REJECTED,
+        [transitions.PROVIDER_WITHDRAW_FROM_UPDATE_PENDING]: states.OFFER_REJECTED,
+      },
+    },
+    // Customer-driven negotiation loop
     [states.CUSTOMER_OFFER_PENDING]: {
       on: {
         [transitions.PROVIDER_REJECT_COUNTER_OFFER]: states.OFFER_PENDING,

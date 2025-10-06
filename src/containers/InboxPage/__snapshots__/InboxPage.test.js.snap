@@ -2820,6 +2820,64 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
 </div>
 `;
 
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/accept-offer 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-ACCEPT_OFFER-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.offer-pending.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
 exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/auto-accept-deliverable 1`] = `
 <div
   class="item"
@@ -3103,6 +3161,64 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
       >
         <span>
           InboxPage.default-negotiation.customer-offer-pending.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/customer-reject-from-update-pending 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-CUSTOMER_REJECT_FROM_UPDATE_PENDING-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.offer-rejected.status
         </span>
       </div>
     </div>
@@ -3864,6 +3980,64 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
 </div>
 `;
 
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/operator-accept-offer 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-OPERATOR_ACCEPT_OFFER-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.offer-pending.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
 exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/operator-cancel 1`] = `
 <div
   class="item"
@@ -4560,6 +4734,64 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
 </div>
 `;
 
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/provider-withdraw-from-update-pending 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-PROVIDER_WITHDRAW_FROM_UPDATE_PENDING-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.offer-rejected.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
 exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/provider-withdraw-offer 1`] = `
 <div
   class="item"
@@ -5075,6 +5307,122 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
       >
         <span>
           InboxPage.default-negotiation.reviewed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/update-from-update-pending 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-UPDATE_FROM_UPDATE_PENDING-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.update-pending.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/update-offer 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-negotiation-UPDATE_OFFER-request"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-request title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-negotiation.update-pending.status
         </span>
       </div>
     </div>
