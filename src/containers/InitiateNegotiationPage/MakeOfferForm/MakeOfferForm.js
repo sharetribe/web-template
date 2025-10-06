@@ -25,21 +25,21 @@ import css from './MakeOfferForm.module.css';
 const { Money } = sdkTypes;
 
 const getPriceValidators = (listingMinimumPriceSubUnits, marketplaceCurrency, intl) => {
-  const offerRequiredMsgId = { id: 'InitiateNegotiationPage.offerRequired' };
-  const offerRequiredMsg = intl.formatMessage(offerRequiredMsgId);
-  const offerRequired = validators.required(offerRequiredMsg);
+  const quoteRequiredMsgId = { id: 'InitiateNegotiationPage.quoteRequired' };
+  const quoteRequiredMsg = intl.formatMessage(quoteRequiredMsgId);
+  const quoteRequired = validators.required(quoteRequiredMsg);
 
   const minPriceRaw = new Money(listingMinimumPriceSubUnits, marketplaceCurrency);
   const minPrice = formatMoney(intl, minPriceRaw);
-  const offerTooLowMsgId = { id: 'InitiateNegotiationPage.offerTooLow' };
-  const offerTooLowMsg = intl.formatMessage(offerTooLowMsgId, { minPrice });
-  const minOfferRequired = validators.moneySubUnitAmountAtLeast(
-    offerTooLowMsg,
+  const quoteTooLowMsgId = { id: 'InitiateNegotiationPage.quoteTooLow' };
+  const quoteTooLowMsg = intl.formatMessage(quoteTooLowMsgId, { minPrice });
+  const minQuoteRequired = validators.moneySubUnitAmountAtLeast(
+    quoteTooLowMsg,
     listingMinimumPriceSubUnits
   );
 
   return listingMinimumPriceSubUnits
-    ? validators.composeValidators(offerRequired, minOfferRequired)
+    ? validators.composeValidators(quoteRequired, minQuoteRequired)
     : priceRequired;
 };
 
@@ -125,37 +125,33 @@ export const MakeOfferForm = props => {
         return (
           <Form className={classes} onSubmit={handleSubmit} enforcePagePreloadFor="SaleDetailsPage">
             <div className={css.section}>
-              <Heading as="label" htmlFor={`${formId}offer`} rootClassName={css.sectionHeading}>
+              <Heading as="label" htmlFor={`${formId}quote`} rootClassName={css.sectionHeading}>
                 <FormattedMessage
-                  id="InitiateNegotiationPage.offerLabel"
+                  id="InitiateNegotiationPage.quoteLabel"
                   values={{ authorDisplayName }}
                 />
               </Heading>
 
               <FieldCurrencyInput
-                id={`${formId}offer`}
-                name="offer"
+                id={`${formId}quote`}
+                name="quote"
                 className={css.input}
                 placeholder={intl.formatMessage(
                   {
-                    id: 'InitiateNegotiationPage.offerPlaceholder',
+                    id: 'InitiateNegotiationPage.quotePlaceholder',
                   },
                   { marketplaceCurrency }
                 )}
                 currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
                 validate={priceValidators}
               />
-            </div>
-            <div className={css.section}>
-              <Heading as="h4" rootClassName={css.sectionHeading}>
-                <FormattedMessage id="InitiateNegotiationPage.additionalDetails" />
-              </Heading>
 
               <FieldTextInput
                 className={css.fieldDefaultMessage}
                 type="textarea"
                 name="providerDefaultMessage"
                 id={formId ? `${formId}.message` : 'message'}
+                labelClassName={css.sectionHeading}
                 label={intl.formatMessage({
                   id: 'InitiateNegotiationPage.defaultMessageLabel',
                 })}

@@ -28,7 +28,7 @@
 }
 
 .fieldDefaultMessage {
-  margin: 0 0 24px 0;
+  margin: 12px 0 24px 0;
 
   @media (--viewportMedium) {
     margin: 16px 0 24px 0;

@@ -84,7 +84,7 @@ const handleSubmit = (submitting, setSubmitting, props) => values => {
   const searchParams = parse(location.search);
   const transactionId = searchParams.transactionId;
 
-  const { providerDefaultMessage, customerDefaultMessage, offer } = values;
+  const { providerDefaultMessage, customerDefaultMessage, quote } = values;
 
   const { listingType, transactionProcessAlias, unitType } = listing?.attributes?.publicData || {};
 
@@ -96,8 +96,8 @@ const handleSubmit = (submitting, setSubmitting, props) => values => {
       ...(customerDefaultMessage ? { customerDefaultMessage } : {}),
       ...getTransactionTypeData(listingType, unitType, config),
     },
-    offerInSubunits: offer?.amount,
-    currency: offer?.currency,
+    offerInSubunits: quote?.amount,
+    currency: quote?.currency,
   };
   const isPrivilegedTransition = true;
 
