@@ -167,6 +167,7 @@ export class TransactionPanelComponent extends Component {
       intl,
       stateData = {},
       showBookingLocation = false,
+      offer,
       activityFeed,
       actionButtons,
       isInquiryProcess,
@@ -203,7 +204,6 @@ export class TransactionPanelComponent extends Component {
     const listingType = listing?.attributes?.publicData?.listingType;
     const listingTypeConfigs = config.listing.listingTypes;
     const listingTypeConfig = listingTypeConfigs.find(conf => conf.listingType === listingType);
-    const isNegotiationProcess = stateData.processName === NEGOTIATION_PROCESS_NAME;
     const showPrice = isInquiryProcess && displayPrice(listingTypeConfig);
     const showBreakDown = stateData.showBreakDown !== false; // NOTE: undefined defaults to true due to historical reasons.
 
@@ -265,6 +265,8 @@ export class TransactionPanelComponent extends Component {
               isOwn={isCustomer}
               showText={isInquiryProcess}
             />
+
+            {offer}
 
             {!isInquiryProcess ? (
               <div className={css.orderDetails}>

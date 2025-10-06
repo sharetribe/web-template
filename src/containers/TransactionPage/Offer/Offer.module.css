@@ -1,0 +1,42 @@
+@import '../../../styles/customMediaQueries.css';
+
+.offerContainer {
+  margin: 42px 24px 0 24px;
+
+  @media (--viewportMedium) {
+    padding: 7px 0 1px 0;
+    margin: 40px 24px 0 24px;
+  }
+  @media (--viewportLarge) {
+    margin: 40px 0 0 0;
+  }
+}
+
+.sectionHeading {
+  composes: h4 from global;
+  margin: 16px 0 0 0;
+  padding: 0;
+}
+
+.quoteRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0;
+}
+
+.quoteLabel {
+  composes: p from global;
+  font-weight: var(--fontWeightBold);
+  padding: 0;
+  margin-bottom: 8px;
+}
+
+.defaultMessageLabel {
+  composes: p from global;
+  font-weight: var(--fontWeightBold);
+  padding: 0;
+  margin: 0 0 8px 0;
+}
