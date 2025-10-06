@@ -49,6 +49,44 @@
     {:name :action/update-protected-data}
     {:name :action/privileged-update-metadata}],
    :privileged? true}
+  {:name :transition/update-offer,
+   :from :state/offer-pending,
+   :to :state/update-pending,
+   :actor :actor.role/provider,
+   :actions
+   [{:name :action/privileged-set-line-items}
+    {:name :action/update-protected-data}
+    {:name :action/privileged-update-metadata}],
+   :privileged? true}
+  {:name :transition/update-from-update-pending,
+   :from :state/update-pending,
+   :to :state/update-pending,
+   :actor :actor.role/provider,
+   :actions
+   [{:name :action/privileged-set-line-items}
+    {:name :action/update-protected-data}
+    {:name :action/privileged-update-metadata}],
+   :privileged? true}
+  {:name :transition/provider-withdraw-from-update-pending,
+   :from :state/update-pending,
+   :to :state/offer-rejected,
+   :actor :actor.role/provider,
+   :actions []}
+  {:name :transition/customer-reject-from-update-pending,
+   :from :state/update-pending,
+   :to :state/offer-rejected,
+   :actor :actor.role/customer,
+   :actions []}
+  {:name :transition/accept-update,
+   :from :state/update-pending,
+   :to :state/offer-pending,
+   :actor :actor.role/customer,
+   :actions []}
+  {:name :transition/operator-accept-update,
+   :from :state/update-pending,
+   :to :state/offer-pending,
+   :actor :actor.role/operator,
+   :actions []}
   {:name :transition/customer-make-counter-offer,
    :from :state/offer-pending,
    :to :state/customer-offer-pending,
@@ -344,6 +382,22 @@
    :on :transition/provider-accept-counter-offer,
    :to :actor.role/customer,
    :template :negotiation-accepted-counter-offer}
+  {:name :notification/updated-offer,
+   :on :transition/update-offer,
+   :to :actor.role/customer,
+   :template :negotiation-updated-offer}
+  {:name :notification/updated-offer-from-update-pending,
+   :on :transition/update-from-update-pending,
+   :to :actor.role/customer,
+   :template :negotiation-updated-offer}
+  {:name :notification/withdrawn-offer-from-update-pending,
+   :on :transition/provider-withdraw-from-update-pending,
+   :to :actor.role/customer,
+   :template :negotiation-withdrawn-offer}
+  {:name :notification/rejected-offer-from-update-pending,
+   :on :transition/customer-reject-from-update-pending,
+   :to :actor.role/provider,
+   :template :negotiation-rejected-offer}
   {:name :notification/order-receipt,
    :on :transition/confirm-payment,
    :to :actor.role/customer,
