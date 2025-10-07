@@ -41,7 +41,7 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
     {
       transition: transitions.PROVIDER_ACCEPT_COUNTER_OFFER,
       translationId:
-        'TransactionPage.ActivityFeed.default-negotiation.transition.customer-make-counter-offer',
+        'TransactionPage.ActivityFeed.default-negotiation.transition.provider-accept-counter-offer',
     },
     {
       transition: transitions.CUSTOMER_WITHDRAW_COUNTER_OFFER,
