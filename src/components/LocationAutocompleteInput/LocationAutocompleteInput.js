@@ -34,7 +34,7 @@ const LocationAutocompleteInputComponent = props => {
   const value = typeof valueFromForm !== 'undefined' ? valueFromForm : input.value;
   const locationAutocompleteProps = { label, meta, ...otherProps, input: { ...input, value } };
   const labelInfo = label ? (
-    <label className={labelClassName} htmlFor={input.name}>
+    <label className={labelClassName} htmlFor={props.id}>
       {label}
     </label>
   ) : null;

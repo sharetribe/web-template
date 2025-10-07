@@ -451,6 +451,7 @@ class LocationAutocompleteInputImplementation extends Component {
       disabled,
       config,
       intl,
+      id,
     } = this.props;
     const { name, onFocus } = input;
     const { search } = currentValue(this.props);
@@ -513,6 +514,7 @@ class LocationAutocompleteInputImplementation extends Component {
           autoFocus={autoFocus}
           placeholder={placeholder}
           name={name}
+          id={id}
           value={search}
           disabled={disabled || this.state.fetchingPlaceDetails}
           onFocus={handleOnFocus}

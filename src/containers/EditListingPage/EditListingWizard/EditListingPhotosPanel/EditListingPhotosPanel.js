@@ -53,15 +53,38 @@ const EditListingPhotosPanel = props => {
     onSubmit,
     onRemoveImage,
     listingImageConfig,
+    updatePageTitle: UpdatePageTitle,
+    intl,
   } = props;
 
   const rootClass = rootClassName || css.root;
   const classes = classNames(rootClass, className);
   const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
 
+  const panelHeadingProps = isPublished
+    ? {
+        id: 'EditListingPhotosPanel.title',
+        values: { listingTitle: <ListingLink listing={listing} />, lineBreak: <br /> },
+        messageProps: { listingTitle: listing.attributes.title },
+      }
+    : {
+        id: 'EditListingPhotosPanel.createListingTitle',
+        values: { lineBreak: <br /> },
+        messageProps: {},
+      };
+
   return (
     <main className={classes}>
+      <UpdatePageTitle
+        panelHeading={intl.formatMessage(
+          { id: panelHeadingProps.id },
+          { ...panelHeadingProps.messageProps }
+        )}
+      />
       <H3 as="h1">
+        <FormattedMessage id={panelHeadingProps.id} values={{ ...panelHeadingProps.values }} />
+      </H3>
+      {/* <H3 as="h1">
         {isPublished ? (
           <FormattedMessage
             id="EditListingPhotosPanel.title"
@@ -73,7 +96,7 @@ const EditListingPhotosPanel = props => {
             values={{ lineBreak: <br /> }}
           />
         )}
-      </H3>
+      </H3> */}
       <EditListingPhotosForm
         className={css.form}
         disabled={disabled}

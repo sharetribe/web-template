@@ -174,6 +174,8 @@ const EditListingAvailabilityPanel = props => {
     config,
     routeConfiguration,
     history,
+    updatePageTitle: UpdatePageTitle,
+    intl,
   } = props;
   // Hooks
   const [isEditPlanModalOpen, setIsEditPlanModalOpen] = useState(false);
@@ -257,20 +259,28 @@ const EditListingAvailabilityPanel = props => {
       });
   };
 
+  const panelHeadingProps = isPublished
+    ? {
+        id: 'EditListingAvailabilityPanel.title',
+        values: { listingTitle: <ListingLink listing={listing} />, lineBreak: <br /> },
+        messageProps: { listingTitle: listing.attributes.title },
+      }
+    : {
+        id: 'EditListingAvailabilityPanel.createListingTitle',
+        values: { lineBreak: <br /> },
+        messageProps: {},
+      };
+
   return (
     <main className={classes}>
-      <H3 as="h1" className={css.heading}>
-        {isPublished ? (
-          <FormattedMessage
-            id="EditListingAvailabilityPanel.title"
-            values={{ listingTitle: <ListingLink listing={listing} />, lineBreak: <br /> }}
-          />
-        ) : (
-          <FormattedMessage
-            id="EditListingAvailabilityPanel.createListingTitle"
-            values={{ lineBreak: <br /> }}
-          />
+      <UpdatePageTitle
+        panelHeading={intl.formatMessage(
+          { id: panelHeadingProps.id },
+          { ...panelHeadingProps.messageProps }
         )}
+      />
+      <H3 as="h1">
+        <FormattedMessage id={panelHeadingProps.id} values={{ ...panelHeadingProps.values }} />
       </H3>
 
       <div className={css.planInfo}>

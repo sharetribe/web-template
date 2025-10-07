@@ -105,6 +105,8 @@ const EditListingPricingPanel = props => {
     panelUpdated,
     updateInProgress,
     errors,
+    updatePageTitle: UpdatePageTitle,
+    intl,
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
@@ -132,20 +134,28 @@ const EditListingPricingPanel = props => {
     : !!marketplaceCurrency;
   const unitType = listing?.attributes?.publicData?.unitType;
 
+  const panelHeadingProps = isPublished
+    ? {
+        id: 'EditListingPricingPanel.title',
+        values: { listingTitle: <ListingLink listing={listing} />, lineBreak: <br /> },
+        messageProps: { listingTitle: listing.attributes.title },
+      }
+    : {
+        id: 'EditListingPricingPanel.createListingTitle',
+        values: { lineBreak: <br /> },
+        messageProps: {},
+      };
+
   return (
     <main className={classes}>
-      <H3 as="h1">
-        {isPublished ? (
-          <FormattedMessage
-            id="EditListingPricingPanel.title"
-            values={{ listingTitle: <ListingLink listing={listing} />, lineBreak: <br /> }}
-          />
-        ) : (
-          <FormattedMessage
-            id="EditListingPricingPanel.createListingTitle"
-            values={{ lineBreak: <br /> }}
-          />
+      <UpdatePageTitle
+        panelHeading={intl.formatMessage(
+          { id: panelHeadingProps.id },
+          { ...panelHeadingProps.messageProps }
         )}
+      />
+      <H3 as="h1">
+        <FormattedMessage id={panelHeadingProps.id} values={{ ...panelHeadingProps.values }} />
       </H3>
       {priceCurrencyValid ? (
         <EditListingPricingForm

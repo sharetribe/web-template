@@ -107,6 +107,7 @@ export const EditListingLocationForm = props => (
             validClassName={css.validLocation}
             autoFocus={autoFocus}
             name="location"
+            id={`${formId}.location`}
             label={intl.formatMessage({ id: 'EditListingLocationForm.address' })}
             placeholder={intl.formatMessage({
               id: 'EditListingLocationForm.addressPlaceholder',
