@@ -73,7 +73,6 @@ const categories = generateCategories([
   ['fish', [['freshwater', ['grayling', 'arctic-char', 'pike']], 'saltwater']],
   ['birds', ['parrot', 'macaw']],
 ]);
-//console.log(JSON.stringify(categories, null, 2));
 
 const listingFields = [
   {
@@ -404,14 +403,19 @@ describe('SearchPage', () => {
     const searchRouteConfig = routeConfiguration.find(conf => conf.name === 'SearchPage');
     const SearchPage = searchRouteConfig.component;
 
-    const { getByPlaceholderText, getByText, getAllByText, queryByText, getByRole } = render(
-      <SearchPage {...props} />,
-      {
-        initialState,
-        config,
-        routeConfiguration,
-      }
-    );
+    const {
+      getByPlaceholderText,
+      getByText,
+      getByLabelText,
+      getAllByText,
+      queryByText,
+      getByRole,
+    } = render(<SearchPage {...props} />, {
+      initialState,
+      config,
+      routeConfiguration,
+      messages: { 'SearchPage.screenreader.openFilterButton': 'Filter: {label}' },
+    });
 
     await waitFor(() => {
       // Has main search in Topbar and it's a location search.
@@ -438,7 +442,7 @@ describe('SearchPage', () => {
       expect(queryByText('Enum 2')).not.toBeInTheDocument();
 
       // Has Category filter
-      expect(getByText('FilterComponent.categoryLabel')).toBeInTheDocument();
+      expect(getByLabelText('Filter: FilterComponent.categoryLabel')).toBeInTheDocument();
       expect(queryByText('Dogs')).not.toBeInTheDocument();
       expect(queryByText('Cats')).not.toBeInTheDocument();
       expect(queryByText('Fish')).not.toBeInTheDocument();
@@ -467,7 +471,7 @@ describe('SearchPage', () => {
 
     // Test category intercation
     await waitFor(() => {
-      userEvent.click(getByRole('button', { name: 'FilterComponent.categoryLabel' }));
+      userEvent.click(getByRole('button', { name: 'Filter: FilterComponent.categoryLabel' }));
     });
     expect(getByText('Dogs')).toBeInTheDocument();
     expect(queryByText('Poodle')).not.toBeInTheDocument();

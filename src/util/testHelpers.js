@@ -726,13 +726,17 @@ const testMessages = mapValues(messages, (val, key) => key);
 
 // Provide all the context for components that connect to the Redux
 // store, i18n, router, etc.
-export const TestProvider = ({ children, initialState, config, routeConfiguration }) => {
+export const TestProvider = ({ children, initialState, config, routeConfiguration, messages }) => {
   const store = configureStore(initialState || {});
   const hostedConfig = config || getHostedConfiguration();
+
+  // Allow passing customized messages from a single test suite in addition to the
+  // default translation keys
+  const mergedMessages = { ...testMessages, ...messages };
   return (
     <ConfigurationProvider value={mergeConfig(hostedConfig, getDefaultConfiguration())}>
       <RouteConfigurationProvider value={routeConfiguration || getRouteConfiguration()}>
-        <IntlProvider locale="en" messages={testMessages} textComponent="span">
+        <IntlProvider locale="en" messages={mergedMessages} textComponent="span">
           <Provider store={store}>
             <HelmetProvider>
               <MemoryRouter>{children}</MemoryRouter>
@@ -759,7 +763,7 @@ export const TestProvider = ({ children, initialState, config, routeConfiguratio
 
 export const renderWithProviders = (
   ui,
-  { initialState, config, routeConfiguration, withPortals, ...renderOptions } = {}
+  { initialState, config, routeConfiguration, withPortals, messages, ...renderOptions } = {}
 ) => {
   const Wrapper = ({ children }) => {
     return (
@@ -767,6 +771,7 @@ export const renderWithProviders = (
         initialState={initialState}
         config={config}
         routeConfiguration={routeConfiguration}
+        messages={messages}
       >
         {children}
       </TestProvider>
@@ -780,6 +785,7 @@ export const renderWithProviders = (
             initialState={initialState}
             config={config}
             routeConfiguration={routeConfiguration}
+            messages={messages}
           >
             {children}
           </TestProvider>

@@ -71,13 +71,14 @@ class FilterPlainComponent extends Component {
       children,
       initialValues,
       keepDirtyOnReinitialize = false,
+      ariaLabel,
     } = this.props;
     const classes = classNames(rootClassName || css.root, className);
 
     return (
       <div className={classes}>
         <div className={css.filterHeader}>
-          <button className={css.labelButton} onClick={this.toggleIsOpen}>
+          <button className={css.labelButton} onClick={this.toggleIsOpen} aria-label={ariaLabel}>
             <span className={css.labelButtonContent}>
               <span className={css.labelWrapper}>
                 <span className={css.label}>
