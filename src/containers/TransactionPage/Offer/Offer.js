@@ -5,6 +5,8 @@ import { FormattedMessage } from '../../../util/reactIntl';
 import { types as sdkTypes } from '../../../util/sdkLoader';
 import { LISTING_UNIT_TYPES } from '../../../util/types';
 import { formatMoney } from '../../../util/currency';
+import { getProcess, resolveLatestProcessName } from '../../../transactions/transaction';
+
 import { Heading } from '../../../components';
 
 import TextMaybe from '../TextMaybe/TextMaybe';
@@ -29,8 +31,17 @@ const Offer = props => {
 
   const isProvider = transactionRole === 'provider';
   const protectedData = transaction?.attributes?.protectedData;
+  const offers = transaction?.attributes?.metadata?.offers;
 
-  const latestOfferInSubunits = transaction?.attributes?.offers?.at(-1)?.offerInSubunits;
+  const processName = resolveLatestProcessName(transaction?.attributes?.processName);
+  let process = null;
+  try {
+    process = processName ? getProcess(processName) : null;
+  } catch (error) {
+    // Process was not recognized!
+    return null;
+  }
+
   const hasLineItems = transaction?.attributes?.lineItems?.length > 0;
   const unitLineItem = hasLineItems
     ? transaction.attributes?.lineItems?.find(
@@ -38,27 +49,63 @@ const Offer = props => {
       )
     : null;
 
+  // If the customer has made a counter offer,
+  // we show the previous offer (that was in pending-offer state) as a quote
+  const isCustomerCounterOffer =
+    transaction?.attributes?.lastTransition === process.transitions.CUSTOMER_MAKE_COUNTER_OFFER;
+  const previousOfferInSubunits = offers?.at(-2)?.offerInSubunits;
   const currency = transaction?.attributes?.payinTotal?.currency;
-  const quote = latestOfferInSubunits
-    ? new Money(latestOfferInSubunits, currency)
-    : unitLineItem?.lineTotal
-    ? unitLineItem.lineTotal
-    : null;
-  const formattedQuote = quote ? formatMoney(intl, quote) : '';
+
+  const previousOffer =
+    isCustomerCounterOffer && previousOfferInSubunits
+      ? new Money(previousOfferInSubunits, currency)
+      : null;
+  const formattedPreviousOffer = previousOffer ? formatMoney(intl, previousOffer) : '';
+  const currentOffer = unitLineItem?.lineTotal ? unitLineItem.lineTotal : null;
+  const formattedCurrentOffer = currentOffer ? formatMoney(intl, currentOffer) : '';
 
   const classes = classNames(rootClassName || css.offerContainer, className);
-  return quote ? (
+  return formattedCurrentOffer ? (
     <div className={classes}>
       <Heading as="h2" rootClassName={css.sectionHeading}>
         <FormattedMessage id="TransactionPage.Offer.heading" />
       </Heading>
 
-      <div className={css.quoteRow}>
-        <span className={css.quoteLabel}>
-          <FormattedMessage id="TransactionPage.Offer.quoteLabel" />
-        </span>
-        <FormattedMessage id="TransactionPage.Offer.quote" values={{ quote: formattedQuote }} />
-      </div>
+      {isCustomerCounterOffer ? (
+        <>
+          <div className={css.quoteRow}>
+            <span className={css.quoteLabel}>
+              <FormattedMessage id="TransactionPage.Offer.quoteLabel" />
+            </span>
+            <s>
+              <FormattedMessage
+                id="TransactionPage.Offer.quote"
+                values={{ quote: formattedPreviousOffer }}
+              />
+            </s>
+          </div>
+
+          <div className={css.counterOfferRow}>
+            <span className={css.quoteLabel}>
+              <FormattedMessage id="TransactionPage.Offer.counterOfferLabel" />
+            </span>
+            <FormattedMessage
+              id="TransactionPage.Offer.quote"
+              values={{ quote: formattedCurrentOffer }}
+            />
+          </div>
+        </>
+      ) : (
+        <div className={css.quoteRow}>
+          <span className={css.quoteLabel}>
+            <FormattedMessage id="TransactionPage.Offer.quoteLabel" />
+          </span>
+          <FormattedMessage
+            id="TransactionPage.Offer.quote"
+            values={{ quote: formattedCurrentOffer }}
+          />
+        </div>
+      )}
 
       <TextMaybe
         heading={intl.formatMessage({ id: 'TransactionPage.Offer.providerDefaultMessageLabel' })}
