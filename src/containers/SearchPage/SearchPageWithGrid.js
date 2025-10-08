@@ -485,6 +485,7 @@ export class SearchPageComponent extends Component {
                   search={parse(location.search)}
                   isMapVariant={false}
                   listingTypeParam={listingTypePathParam}
+                  intl={intl}
                 />
               </div>
             </div>

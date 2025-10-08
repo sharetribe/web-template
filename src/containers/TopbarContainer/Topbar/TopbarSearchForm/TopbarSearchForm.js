@@ -16,7 +16,10 @@ const KeywordSearchField = props => {
   const { keywordSearchWrapperClasses, iconClass, intl, isMobile = false, inputRef } = props;
   return (
     <div className={keywordSearchWrapperClasses}>
-      <button className={css.searchSubmit}>
+      <button
+        className={css.searchSubmit}
+        aria-label={intl.formatMessage({ id: 'TopbarDesktop.screenreader.search' })}
+      >
         <div className={iconClass}>
           <IconSearchDesktop />
         </div>

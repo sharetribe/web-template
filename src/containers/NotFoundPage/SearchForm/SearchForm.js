@@ -15,7 +15,10 @@ const KeywordSearchField = props => {
   const { intl, inputRef } = props;
   return (
     <div className={css.keywordSearchWrapper}>
-      <button className={css.searchSubmit}>
+      <button
+        className={css.searchSubmit}
+        aria-label={intl.formatMessage({ id: 'NotFoundPage.screenreader.search' })}
+      >
         <div className={css.searchInputIcon}>
           <IconSearchDesktop />
         </div>

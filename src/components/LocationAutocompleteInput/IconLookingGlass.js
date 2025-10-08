@@ -2,7 +2,7 @@ import React from 'react';
 
 import css from './LocationAutocompleteInput.module.css';
 
-const IconLookingGlass = () => (
+const IconLookingGlass = props => (
   <svg
     className={css.iconSvg}
     width="21"
@@ -10,6 +10,7 @@ const IconLookingGlass = () => (
     viewBox="0 0 21 22"
     xmlns="http://www.w3.org/2000/svg"
     role="img"
+    aria-label={props.ariaLabel}
   >
     <g
       className={css.iconSvgGroup}

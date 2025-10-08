@@ -526,8 +526,8 @@ export class SearchPageComponent extends Component {
         schema={schema}
       >
         <TopbarContainer rootClassName={topbarClasses} currentSearchParams={validQueryParams} />
-        <div className={css.container}>
-          <div className={css.searchResultContainer} role="main">
+        <div className={css.container} role="main">
+          <div className={css.searchResultContainer}>
             <SearchFiltersMobile
               className={css.searchFiltersMobileMap}
               urlQueryParams={validQueryParams}
@@ -656,6 +656,7 @@ export class SearchPageComponent extends Component {
                   setActiveListing={onActivateListing}
                   isMapVariant
                   listingTypeParam={listingTypePathParam}
+                  intl={intl}
                 />
               </div>
             )}

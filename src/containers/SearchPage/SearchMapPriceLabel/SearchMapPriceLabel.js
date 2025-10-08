@@ -40,9 +40,9 @@ class SearchMapPriceLabel extends Component {
     const {
       className,
       rootClassName,
-      intl,
       listing,
       onListingClicked,
+      intl,
       isActive,
       config,
     } = this.props;
@@ -80,8 +80,16 @@ class SearchMapPriceLabel extends Component {
     });
     const caretClasses = classNames(css.caret, { [css.caretActive]: isActive });
 
+    const ariaLabel = priceValue
+      ? priceMessage
+      : intl.formatMessage({ id: 'SearchMapPriceLabel.screenreader.mapMarkerWithoutPrice' });
+
     return (
-      <button className={classes} onClick={() => onListingClicked(currentListing)}>
+      <button
+        className={classes}
+        onClick={() => onListingClicked(currentListing)}
+        aria-label={ariaLabel}
+      >
         <div className={css.caretShadow} />
         <div className={priceLabelClasses}>{priceMessage}</div>
         <div className={caretClasses} />

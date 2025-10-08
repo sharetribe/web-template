@@ -111,9 +111,10 @@ class Handle extends Component {
   }
 
   render() {
-    const { rootClassName, className, value, valueToPosition } = this.props;
+    const { rootClassName, className, value, valueToPosition, ariaLabel } = this.props;
     const position = valueToPosition(value);
     const classes = classNames(rootClassName || css.rootTouchBuffer, className);
+    const ariaLabelMaybe = ariaLabel ? { ['aria-label']: ariaLabel } : {};
 
     return (
       <div
@@ -127,6 +128,7 @@ class Handle extends Component {
         onTouchMove={this.onTouchMove}
         onTouchEnd={this.onTouchEnd}
         role="button"
+        {...ariaLabelMaybe}
       >
         <div
           className={classNames(css.visibleHandle, {

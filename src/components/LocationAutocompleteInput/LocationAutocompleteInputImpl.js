@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import debounce from 'lodash/debounce';
 
 import { useConfiguration } from '../../context/configurationContext';
-import { FormattedMessage } from '../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../util/reactIntl';
 
 import { IconSpinner } from '../../components';
 
@@ -450,6 +450,7 @@ class LocationAutocompleteInputImplementation extends Component {
       inputRef,
       disabled,
       config,
+      intl,
     } = this.props;
     const { name, onFocus } = input;
     const { search } = currentValue(this.props);
@@ -498,7 +499,11 @@ class LocationAutocompleteInputImplementation extends Component {
           ) : CustomIcon ? (
             <CustomIcon />
           ) : (
-            <IconLookingGlass />
+            <IconLookingGlass
+              ariaLabel={intl.formatMessage({
+                id: 'LocationAutocompleteInput.screenreader.search',
+              })}
+            />
           )}
         </div>
         <input
@@ -597,8 +602,9 @@ class LocationAutocompleteInputImplementation extends Component {
  */
 const LocationAutocompleteInputImpl = props => {
   const config = useConfiguration();
+  const intl = useIntl();
 
-  return <LocationAutocompleteInputImplementation config={config} {...props} />;
+  return <LocationAutocompleteInputImplementation config={config} intl={intl} {...props} />;
 };
 
 export default LocationAutocompleteInputImpl;
