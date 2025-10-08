@@ -356,12 +356,18 @@ export class SearchPageComponent extends Component {
       />
     );
 
+    // Parse page heading to be included in the title
+    const pageHeading = searchInProgress
+      ? intl.formatMessage({ id: 'MainPanelHeader.loadingResults' })
+      : intl.formatMessage({ id: 'MainPanelHeader.foundResults' }, { count: totalItems });
+
     const { title, description, schema } = createSearchResultSchema(
       listings,
       searchParamsInURL || {},
       intl,
       routeConfiguration,
-      config
+      config,
+      pageHeading
     );
 
     // Set topbar class based on if a modal is open in
