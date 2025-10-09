@@ -14,6 +14,14 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Improve template accessibility
+
+  - Improve contrast in grey texts
+  - Add translations for aria-labels
+  - Unify page title and heading texts
+
+  [#673](https://github.com/sharetribe/web-template/pull/673)
+
 - [change] Update browserlist-db aka caniuse-lite.
   [#679](https://github.com/sharetribe/web-template/pull/679)
 - [add] Add currently available translations for DE, ES, FR.
@@ -37,6 +45,7 @@ repository.
   reverse negotiation, but this pull request only implments the reverse negotiation (unitType:
   request) with customer-driven negotiation loop.
   [#648](https://github.com/sharetribe/web-template/pull/648)
+
 - [fix] IntegerRangeFilter & PriceFilter: add faulty mode for input elements.
   [#670](https://github.com/sharetribe/web-template/pull/670)
 - [fix] CheckoutPageWithPayment: don't show location if it's unknown for bookings.
