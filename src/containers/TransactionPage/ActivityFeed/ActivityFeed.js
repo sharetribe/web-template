@@ -127,11 +127,11 @@ const TransitionMessage = props => {
       : otherUsersName;
 
   const reviewLink = showReviewAsFirstLink ? (
-    <InlineTextButton onClick={onOpenReviewModal}>
+    <InlineTextButton onClick={onOpenReviewModal} rootClassName={css.reviewLink}>
       <FormattedMessage id="TransactionPage.ActivityFeed.reviewLink" values={{ otherUsersName }} />
     </InlineTextButton>
   ) : showReviewAsSecondLink ? (
-    <InlineTextButton onClick={onOpenReviewModal}>
+    <InlineTextButton onClick={onOpenReviewModal} rootClassName={css.reviewLink}>
       <FormattedMessage
         id="TransactionPage.ActivityFeed.reviewAsSecondLink"
         values={{ otherUsersName }}

@@ -138,6 +138,10 @@
   margin: 0;
 }
 
+.reviewLink {
+  composes: a from global;
+}
+
 .transitionDate {
   composes: marketplaceMessageDateFontStyles from global;
   color: var(--colorGrey300);
