@@ -497,9 +497,13 @@ export const CheckoutPageWithPayment = props => {
     listingLink
   );
 
+  const isBooking = processName === BOOKING_PROCESS_NAME;
+  const isPurchase = processName === PURCHASE_PROCESS_NAME;
+  const isNegotiation = processName === NEGOTIATION_PROCESS_NAME;
+
   const txTransitions = existingTransaction?.attributes?.transitions || [];
   const hasInquireTransition = txTransitions.find(tr => tr.transition === transitions.INQUIRE);
-  const showInitialMessageInput = !hasInquireTransition;
+  const showInitialMessageInput = !hasInquireTransition && !isNegotiation;
 
   // Get first and last name of the current user and use it in the StripePaymentForm to autofill the name field
   const userName = currentUser?.attributes?.profile
@@ -520,9 +524,6 @@ export const CheckoutPageWithPayment = props => {
     !hasTransactionPassedPendingPayment(existingTransaction, process);
 
   const listingLocation = listing?.attributes?.publicData?.location;
-  const isBooking = processName === BOOKING_PROCESS_NAME;
-  const isPurchase = processName === PURCHASE_PROCESS_NAME;
-  const isNegotiation = processName === NEGOTIATION_PROCESS_NAME;
   const showPickUpLocation = isPurchase && orderData?.deliveryMethod === 'pickup';
   const showLocation = (isBooking || isNegotiation) && listingLocation?.address;
 
