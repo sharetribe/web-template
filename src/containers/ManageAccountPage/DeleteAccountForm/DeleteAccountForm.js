@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import classNames from 'classnames';
 import { Form as FinalForm } from 'react-final-form';
+import classNames from 'classnames';
 
 import { FormattedMessage } from '../../../util/reactIntl';
-
 import * as validators from '../../../util/validators';
+import { isErrorTransactionHasStripeRelatedStates } from '../../../util/errors';
 
 import { Form, PrimaryButton, FieldTextInput, H4, FieldCheckbox } from '../../../components';
 
@@ -18,9 +18,6 @@ const DeleteAccountForm = props => {
   const handleSubmitDeleteAccount = values => {
     // save  for the next rendering in case the onSubmitDeleteAccount call fails
     setSubmittedValues(values);
-
-    console.log('handleSubmitDeleteAccount - values:  ' + JSON.stringify(values, null, 4));
-
     return onSubmitDeleteAccount(values);
   };
 
@@ -75,6 +72,13 @@ const DeleteAccountForm = props => {
           ? validators.composeValidators(passwordRequired, passwordMinLength)
           : null;
 
+        const ongoingTransactionsWithStripeRelatedStatesMessage = intl.formatMessage({
+          id: 'DeleteAccountForm.ongoingTransactionsWithStripeRelatedStates',
+        });
+        const userDeletionErrorText = isErrorTransactionHasStripeRelatedStates(deleteAccountError)
+          ? ongoingTransactionsWithStripeRelatedStatesMessage
+          : null;
+
         const confirmClasses = classNames(css.confirmChangesSection, {
           [css.confirmChangesSectionVisible]: deleteAccountConfirmed,
         });
@@ -121,6 +125,7 @@ const DeleteAccountForm = props => {
                 label={passwordLabel}
                 placeholder={passwordPlaceholder}
                 validate={passwordValidators}
+                customErrorText={userDeletionErrorText}
               />
             </div>
             <div className={css.bottomWrapper}>

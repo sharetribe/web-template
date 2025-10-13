@@ -338,6 +338,13 @@ export const isProviderCommissionBiggerThanMinPrice = error =>
     'Minimum commission amount is greater than the amount of money paid in'
   );
 
+export const isErrorTransactionHasStripeRelatedStates = error => {
+  return (
+    error?.status === 409 &&
+    error?.statusText.startsWith('Account has ongoing transactions with Stripe states')
+  );
+};
+
 export const storableError = err => {
   const error = err || {};
   const { name, message, status, statusText } = error;
