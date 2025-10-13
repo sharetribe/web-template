@@ -41,6 +41,7 @@ export const ManageAccountPageComponent = props => {
   const config = useConfiguration();
   const intl = useIntl();
   const {
+    deleteAccountError,
     deleteAccountInProgress,
     currentUser,
     accountDeletionConfirmed,
@@ -101,6 +102,7 @@ export const ManageAccountPageComponent = props => {
           {user.id ? (
             <DeleteAccountForm
               intl={intl}
+              deleteAccountError={deleteAccountError}
               onSubmitDeleteAccount={handleSubmit}
               marketplaceName={config.marketplaceName}
             />
@@ -115,12 +117,14 @@ const mapStateToProps = state => {
   // Topbar needs user info.
   const { currentUser, sendVerificationEmailInProgress, sendVerificationEmailError } = state.user;
   const {
+    deleteAccountError,
     deleteAccountInProgress,
     accountDeletionConfirmed,
     resetPasswordInProgress,
     resetPasswordError,
   } = state.ManageAccountPage;
   return {
+    deleteAccountError,
     deleteAccountInProgress,
     currentUser,
     accountDeletionConfirmed,
