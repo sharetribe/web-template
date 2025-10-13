@@ -44,7 +44,6 @@ export default function reducer(state = initialState, action = {}) {
     case RESET_PASSWORD_ERROR:
       console.error(payload); // eslint-disable-line no-console
       return { ...state, resetPasswordInProgress: false, resetPasswordError: payload };
-
     default:
       return state;
   }
@@ -55,7 +54,6 @@ export default function reducer(state = initialState, action = {}) {
 export const deleteAccountRequest = () => ({ type: DELETE_ACCOUNT_REQUEST });
 export const deleteAccountSuccess = () => ({ type: DELETE_ACCOUNT_SUCCESS });
 export const deleteAccountError = error => {
-  console.log('error:  ' + JSON.stringify(error, null, 4));
   ({
     type: DELETE_ACCOUNT_ERROR,
     payload: error,
@@ -80,17 +78,14 @@ export const deleteAccount = currentPassword => (dispatch, getState, sdk) => {
   dispatch(deleteAccountRequest());
 
   return deleteUserAccount({ currentPassword })
+    .then(() => dispatch(deleteAccountSuccess()))
     .then(() => {
-      dispatch(deleteAccountSuccess());
-      return;
+      // TODO: logout + clear cache
+      return dispatch(logout());
     })
     .catch(e => {
       dispatch(deleteAccountError(storableError(storableError(e))));
       throw e;
-    })
-    .then(() => {
-      // TODO: logout + clear cache
-      return dispatch(logout());
     });
 };
 
