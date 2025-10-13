@@ -96,6 +96,16 @@ exports.handleError = (res, error) => {
         statusText: error.message,
       })
       .end();
+  } else if (error.message == 'Account has ongoing transactions with Stripe states') {
+    res
+      .status(409)
+      .json({
+        name: 'LocalAPIError',
+        message: 'Local API request failed',
+        status: 409,
+        statusText: error.message,
+      })
+      .end();
   } else {
     res
       .status(500)
