@@ -1,6 +1,7 @@
 import { storableError } from '../../util/errors';
 import { fetchCurrentUser } from '../../ducks/user.duck';
 import { logout } from '../../ducks/auth.duck';
+import { deleteUserAccount } from '../../util/api';
 
 // ================ Action types ================ //
 
@@ -78,16 +79,17 @@ export const deleteAccount = currentPassword => (dispatch, getState, sdk) => {
   // Get current password and use it to delete the user account
   dispatch(deleteAccountRequest());
 
-  return sdk.currentUser
-    .delete({ currentPassword: currentPassword })
-    .then(() => dispatch(deleteAccountSuccess()))
+  return deleteUserAccount({ currentPassword })
+    .then(() => {
+      dispatch(deleteAccountSuccess());
+      return;
+    })
     .catch(e => {
       dispatch(deleteAccountError(storableError(storableError(e))));
-      // This is thrown so that form can be cleared
-      // after a timeout on deleteAccount submit handler
       throw e;
     })
     .then(() => {
+      // TODO: logout + clear cache
       return dispatch(logout());
     });
 };
