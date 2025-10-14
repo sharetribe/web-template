@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+  [#675](https://github.com/sharetribe/web-template/pull/675)
+- [fix] Fix some Marketplace texts.
+
 ## [v9.0.0] 2025-10-14
 
 This major release introduces a new transaction process: default-negotiation. It adds support for
