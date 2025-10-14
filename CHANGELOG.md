@@ -14,6 +14,14 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+## [v9.0.0] 2025-10-14
+
+This major release introduces a new transaction process: default-negotiation. It adds support for
+reverse negotiation with customer-driven negotiation loop. The process is meant for regular
+negotiation too - we'll implement that side later. This is a big change and it touches also features
+used by other processes - you should carefully check the changes before taking update from this
+repository.
+
 - [add] Add a new process: default-negotiation. There are also 2 new unit types associated with this
   new process: request and offer.With those unit types, this process can be used for regular and
   reverse negotiation, but this pull request only implments the reverse negotiation (unitType:
@@ -29,6 +37,8 @@ way to update this template, but currently, we follow a pattern:
   [#666](https://github.com/sharetribe/web-template/pull/666)
 - [add] Add currently available translations for DE, ES, FR.
   [#664](https://github.com/sharetribe/web-template/pull/664)
+
+  [v9.0.0]: https://github.com/sharetribe/web-template/compare/v8.8.0...v9.0.0
 
 ## [v8.8.0] 2025-09-11
 
