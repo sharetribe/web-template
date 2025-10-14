@@ -10,6 +10,22 @@ import { Form, PrimaryButton, FieldTextInput, H4, FieldCheckbox } from '../../..
 
 import css from './DeleteAccountForm.module.css';
 
+const ErrorMessage = props => {
+  const { error } = props;
+
+  const stripeRelatedStatesError = isErrorTransactionHasStripeRelatedStates(error);
+
+  return error ? (
+    <p className={css.error}>
+      {stripeRelatedStatesError ? (
+        <FormattedMessage id="DeleteAccountForm.ongoingTransactionsError" />
+      ) : (
+        <FormattedMessage id="DeleteAccountForm.deleteAccountError" />
+      )}
+    </p>
+  ) : null;
+};
+
 const DeleteAccountForm = props => {
   const { onSubmitDeleteAccount, intl, marketplaceName } = props;
   // submittedValues: the checkbox value and the given current password
@@ -72,13 +88,6 @@ const DeleteAccountForm = props => {
           ? validators.composeValidators(passwordRequired, passwordMinLength)
           : null;
 
-        const ongoingTransactionsWithStripeRelatedStatesMessage = intl.formatMessage({
-          id: 'DeleteAccountForm.ongoingTransactionsWithStripeRelatedStates',
-        });
-        const userDeletionErrorText = isErrorTransactionHasStripeRelatedStates(deleteAccountError)
-          ? ongoingTransactionsWithStripeRelatedStatesMessage
-          : null;
-
         const confirmClasses = classNames(css.confirmChangesSection, {
           [css.confirmChangesSectionVisible]: deleteAccountConfirmed,
         });
@@ -125,10 +134,10 @@ const DeleteAccountForm = props => {
                 label={passwordLabel}
                 placeholder={passwordPlaceholder}
                 validate={passwordValidators}
-                customErrorText={userDeletionErrorText}
               />
             </div>
             <div className={css.bottomWrapper}>
+              <ErrorMessage error={deleteAccountError} />
               <PrimaryButton
                 type="submit"
                 inProgress={inProgress}
