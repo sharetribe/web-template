@@ -163,8 +163,8 @@ const TopbarComponent = props => {
         return { keywords: values?.keywords };
       }
       // topbar search defaults to 'location' search
-      const { search, selectedPlace } = values?.location;
-      const { origin, bounds } = selectedPlace;
+      const { search, selectedPlace } = values?.location || {};
+      const { origin, bounds } = selectedPlace || {};
       const originMaybe = isOriginInUse(config) ? { origin } : {};
 
       return {

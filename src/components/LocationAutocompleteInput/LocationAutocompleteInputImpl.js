@@ -452,12 +452,16 @@ class LocationAutocompleteInputImplementation extends Component {
       config,
       intl,
       id,
+      submitButton: SubmitButton,
+      ariaLabel,
     } = this.props;
     const { name, onFocus } = input;
     const { search } = currentValue(this.props);
     const { touched, valid } = meta || {};
     const isValid = valid && touched;
     const predictions = this.currentPredictions();
+
+    const ariaLabelMaybe = ariaLabel ? { ['aria-label']: ariaLabel } : {};
 
     const handleOnFocus = e => {
       this.setState({ inputHasFocus: true });
@@ -499,6 +503,8 @@ class LocationAutocompleteInputImplementation extends Component {
             <IconSpinner className={css.iconSpinner} />
           ) : CustomIcon ? (
             <CustomIcon />
+          ) : SubmitButton ? (
+            <SubmitButton />
           ) : (
             <IconLookingGlass
               ariaLabel={intl.formatMessage({
@@ -524,6 +530,7 @@ class LocationAutocompleteInputImplementation extends Component {
           {...refMaybe}
           title={search}
           data-testid="location-search"
+          {...ariaLabelMaybe}
         />
         {renderPredictions ? (
           <LocationPredictionsList
