@@ -1,0 +1,1 @@
+{{set-translations (asset "content/email-texts.json")}}{{t "NegotiationAutoCanceledOrderProvider.Subject" "{customerDisplayName}'s order was canceled" customerDisplayName=transaction.customer.display-name }}

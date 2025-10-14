@@ -1,0 +1,1 @@
+{{set-translations (asset "content/email-texts.json")}}{{t "NegotiationAcceptedOffer.Subject" "{customerDisplayName} has accepted your offer and placed an order" customerDisplayName=transaction.customer.display-name }}

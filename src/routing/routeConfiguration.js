@@ -19,6 +19,7 @@ const ContactDetailsPage = loadable(() => import(/* webpackChunkName: "ContactDe
 const EditListingPage = loadable(() => import(/* webpackChunkName: "EditListingPage" */ '../containers/EditListingPage/EditListingPage'));
 const EmailVerificationPage = loadable(() => import(/* webpackChunkName: "EmailVerificationPage" */ '../containers/EmailVerificationPage/EmailVerificationPage'));
 const InboxPage = loadable(() => import(/* webpackChunkName: "InboxPage" */ '../containers/InboxPage/InboxPage'));
+const MakeOfferPage = loadable(() => import(/* webpackChunkName: "MakeOfferPage" */ '../containers/MakeOfferPage/MakeOfferPage'));
 const LandingPage = loadable(() => import(/* webpackChunkName: "LandingPage" */ '../containers/LandingPage/LandingPage'));
 const ListingPageCoverPhoto = loadable(() => import(/* webpackChunkName: "ListingPageCoverPhoto" */ /* webpackPrefetch: true */ '../containers/ListingPage/ListingPageCoverPhoto'));
 const ListingPageCarousel = loadable(() => import(/* webpackChunkName: "ListingPageCarousel" */ /* webpackPrefetch: true */ '../containers/ListingPage/ListingPageCarousel'));
@@ -112,6 +113,13 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       ...authForPrivateMarketplace,
       component: ListingPage,
       loadData: pageDataLoadingAPI.ListingPage.loadData,
+    },
+    {
+      path: '/l/:slug/:id/make-offer',
+      name: 'MakeOfferPage',
+      auth: true,
+      component: MakeOfferPage,
+      loadData: pageDataLoadingAPI.MakeOfferPage.loadData,
     },
     {
       path: '/l/:slug/:id/checkout',

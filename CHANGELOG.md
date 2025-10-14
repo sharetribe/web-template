@@ -14,6 +14,11 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Add a new process: default-negotiation. There are also 2 new unit types associated with this
+  new process: request and offer.With those unit types, this process can be used for regular and
+  reverse negotiation, but this pull request only implments the reverse negotiation (unitType:
+  request) with customer-driven negotiation loop.
+  [#648](https://github.com/sharetribe/web-template/pull/648)
 - [fix] IntegerRangeFilter & PriceFilter: add faulty mode for input elements.
   [#670](https://github.com/sharetribe/web-template/pull/670)
 - [fix] CheckoutPageWithPayment: don't show location if it's unknown for bookings.

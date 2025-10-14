@@ -29,6 +29,8 @@ import {
   resolveLatestProcessName,
   getProcess,
   isBookingProcess,
+  isPurchaseProcess,
+  isNegotiationProcess,
 } from '../../transactions/transaction';
 
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
@@ -156,23 +158,32 @@ export const InboxItem = props => {
     intl,
     stateData,
     isBooking,
+    isPurchase,
     availabilityType,
     stockType = STOCK_MULTIPLE_ITEMS,
   } = props;
   const { customer, provider, listing } = tx;
-  const { processName, processState, actionNeeded, isSaleNotification, isFinal } = stateData;
+  const {
+    processName,
+    processState,
+    actionNeeded,
+    isSaleNotification,
+    isOrderNotification,
+    isFinal,
+  } = stateData;
   const isCustomer = transactionRole === TX_TRANSITION_ACTOR_CUSTOMER;
 
   const lineItems = tx.attributes?.lineItems;
   const hasPricingData = lineItems.length > 0;
   const unitLineItem = getUnitLineItem(lineItems);
-  const quantity = hasPricingData && !isBooking ? unitLineItem.quantity.toString() : null;
+  const quantity = hasPricingData && isPurchase ? unitLineItem.quantity.toString() : null;
   const showStock = stockType === STOCK_MULTIPLE_ITEMS || (quantity && unitLineItem.quantity > 1);
   const otherUser = isCustomer ? provider : customer;
   const otherUserDisplayName = <UserDisplayName user={otherUser} intl={intl} />;
   const isOtherUserBanned = otherUser.attributes.banned;
 
-  const rowNotificationDot = isSaleNotification ? <div className={css.notificationDot} /> : null;
+  const rowNotificationDot =
+    isSaleNotification || isOrderNotification ? <div className={css.notificationDot} /> : null;
 
   const linkClasses = classNames(css.itemLink, {
     [css.bannedUserLink]: isOtherUserBanned,
@@ -199,7 +210,7 @@ export const InboxItem = props => {
         <div className={css.itemDetails}>
           {isBooking ? (
             <BookingTimeInfoMaybe transaction={tx} />
-          ) : hasPricingData && showStock ? (
+          ) : isPurchase && hasPricingData && showStock ? (
             <FormattedMessage id="InboxPage.quantity" values={{ quantity }} />
           ) : null}
         </div>
@@ -233,6 +244,7 @@ export const InboxItem = props => {
  * @param {Object} props.params - The params object
  * @param {string} props.params.tab - The tab
  * @param {number} props.providerNotificationCount - The provider notification count
+ * @param {number} props.customerNotificationCount - The customer notification count
  * @param {boolean} props.scrollingDisabled - Whether scrolling is disabled
  * @param {Array<propTypes.transaction>} props.transactions - The transactions array
  * @param {Object} props.intl - The intl object
@@ -251,6 +263,7 @@ export const InboxPageComponent = props => {
     pagination,
     params,
     providerNotificationCount = 0,
+    customerNotificationCount = 0,
     scrollingDisabled,
     transactions,
   } = props;
@@ -294,6 +307,8 @@ export const InboxPageComponent = props => {
     const process = tx?.attributes?.processName || transactionType?.transactionType;
     const transactionProcess = resolveLatestProcessName(process);
     const isBooking = isBookingProcess(transactionProcess);
+    const isPurchase = isPurchaseProcess(transactionProcess);
+    const isNegotiation = isNegotiationProcess(transactionProcess);
 
     // Render InboxItem only if the latest transition of the transaction is handled in the `txState` function.
     return stateData ? (
@@ -306,6 +321,7 @@ export const InboxPageComponent = props => {
           stockType={stockType}
           availabilityType={availabilityType}
           isBooking={isBooking}
+          isPurchase={isPurchase}
         />
       </li>
     ) : null;
@@ -325,6 +341,9 @@ export const InboxPageComponent = props => {
           text: (
             <span>
               <FormattedMessage id="InboxPage.ordersTabTitle" />
+              {customerNotificationCount > 0 ? (
+                <NotificationBadge count={customerNotificationCount} />
+              ) : null}
             </span>
           ),
           selected: isOrders,
@@ -423,13 +442,18 @@ export const InboxPageComponent = props => {
 
 const mapStateToProps = state => {
   const { fetchInProgress, fetchOrdersOrSalesError, pagination, transactionRefs } = state.InboxPage;
-  const { currentUser, currentUserNotificationCount: providerNotificationCount } = state.user;
+  const {
+    currentUser,
+    currentUserSaleNotificationCount,
+    currentUserOrderNotificationCount,
+  } = state.user;
   return {
     currentUser,
     fetchInProgress,
     fetchOrdersOrSalesError,
     pagination,
-    providerNotificationCount,
+    providerNotificationCount: currentUserSaleNotificationCount,
+    customerNotificationCount: currentUserOrderNotificationCount,
     scrollingDisabled: isScrollingDisabled(state),
     transactions: getMarketplaceEntities(state, transactionRefs),
   };

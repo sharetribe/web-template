@@ -11,8 +11,10 @@ import { isTransactionInitiateListingNotFoundError } from '../../util/errors';
 import {
   getProcess,
   isBookingProcessAlias,
-  PURCHASE_PROCESS_NAME,
+  resolveLatestProcessName,
   BOOKING_PROCESS_NAME,
+  NEGOTIATION_PROCESS_NAME,
+  PURCHASE_PROCESS_NAME,
 } from '../../transactions/transaction';
 
 // Import shared components
@@ -166,9 +168,15 @@ const fetchSpeculatedTransactionIfNeeded = (orderParams, pageData, fetchSpeculat
     const transactionId = tx ? tx.id : null;
     const isInquiryInPaymentProcess =
       tx?.attributes?.lastTransition === process.transitions.INQUIRE;
+    const resolvedProcessName = resolveLatestProcessName(processName);
+    const isOfferPendingInNegotiationProcess =
+      resolvedProcessName === NEGOTIATION_PROCESS_NAME &&
+      tx.attributes.state === `state/${process.states.OFFER_PENDING}`;
 
     const requestTransition = isInquiryInPaymentProcess
       ? process.transitions.REQUEST_PAYMENT_AFTER_INQUIRY
+      : isOfferPendingInNegotiationProcess
+      ? process.transitions.REQUEST_PAYMENT_TO_ACCEPT_OFFER
       : process.transitions.REQUEST_PAYMENT;
     const isPrivileged = process.isPrivileged(requestTransition);
 
@@ -489,9 +497,13 @@ export const CheckoutPageWithPayment = props => {
     listingLink
   );
 
+  const isBooking = processName === BOOKING_PROCESS_NAME;
+  const isPurchase = processName === PURCHASE_PROCESS_NAME;
+  const isNegotiation = processName === NEGOTIATION_PROCESS_NAME;
+
   const txTransitions = existingTransaction?.attributes?.transitions || [];
   const hasInquireTransition = txTransitions.find(tr => tr.transition === transitions.INQUIRE);
-  const showInitialMessageInput = !hasInquireTransition;
+  const showInitialMessageInput = !hasInquireTransition && !isNegotiation;
 
   // Get first and last name of the current user and use it in the StripePaymentForm to autofill the name field
   const userName = currentUser?.attributes?.profile
@@ -512,18 +524,22 @@ export const CheckoutPageWithPayment = props => {
     !hasTransactionPassedPendingPayment(existingTransaction, process);
 
   const listingLocation = listing?.attributes?.publicData?.location;
-  const isBooking = processName === BOOKING_PROCESS_NAME;
-  const isPurchase = processName === PURCHASE_PROCESS_NAME;
   const showPickUpLocation = isPurchase && orderData?.deliveryMethod === 'pickup';
-  const showLocation = isBooking && listingLocation?.address;
+  const showLocation = (isBooking || isNegotiation) && listingLocation?.address;
+
+  const providerDisplayName = isNegotiation
+    ? existingTransaction?.provider?.attributes?.profile?.displayName
+    : listing?.author?.attributes?.profile?.displayName;
 
   // Check if the listing currency is compatible with Stripe for the specified transaction process.
   // This function validates the currency against the transaction process requirements and
   // ensures it is supported by Stripe, as indicated by the 'stripe' parameter.
   // If using a transaction process without any stripe actions, leave out the 'stripe' parameter.
+  const currency =
+    existingTransaction?.attributes?.payinTotal?.currency || listing.attributes.price?.currency;
   const isStripeCompatibleCurrency = isValidCurrencyForTransactionProcess(
     transactionProcessAlias,
-    listing.attributes.price.currency,
+    currency,
     'stripe'
   );
 
@@ -584,7 +600,7 @@ export const CheckoutPageWithPayment = props => {
                 }
                 inProgress={submitting}
                 formId="CheckoutPagePaymentForm"
-                authorDisplayName={listing?.author?.attributes?.profile?.displayName}
+                providerDisplayName={providerDisplayName}
                 showInitialMessageInput={showInitialMessageInput}
                 initialValues={initialValuesForStripePayment}
                 initiateOrderError={initiateOrderError}

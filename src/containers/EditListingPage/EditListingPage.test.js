@@ -99,6 +99,30 @@ const listingTypesInquiry = [
   },
 ];
 
+const listingTypesNegotiation = [
+  {
+    id: 'negotiation-offer',
+    label: 'Negotiation Offer',
+    transactionProcess: {
+      name: 'default-negotiation',
+      alias: 'default-negotiation/release-1',
+    },
+    unitType: 'request',
+    defaultListingFields: {
+      availability: false,
+      description: true,
+      images: false,
+      location: false,
+      payoutDetails: false,
+      pickup: false,
+      price: false,
+      shipping: false,
+      stock: false,
+      title: true,
+    },
+  },
+];
+
 const listingFieldsInquiry = [
   {
     key: 'cat',
@@ -2617,6 +2641,155 @@ describe('EditListingPage', () => {
       expect(getByText('EditListingPhotosForm.addImagesTip')).toBeInTheDocument();
       expect(getByText('EditListingWizard.edit.savePhotos')).toBeInTheDocument();
     });
+  });
+
+  it('Negotiation: edit flow with only details and style panels', async () => {
+    const config = getConfig(listingTypesNegotiation, []);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const listing = createOwnListing('listing-negotiation', {
+      title: 'the listing',
+      description: 'Lorem ipsum',
+      publicData: {
+        listingType: 'negotiation-offer',
+        transactionProcessAlias: 'default-negotiation/release-1',
+        unitType: 'request',
+      },
+    });
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: listing.id.uuid,
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_EDIT,
+        tab: DETAILS,
+      },
+    };
+
+    const { getByText, queryByText, getByRole } = render(<EditListingPage {...props} />, {
+      initialState: initialState(listing),
+      config,
+      routeConfiguration,
+    });
+
+    await waitFor(() => {
+      // Navigation to tab
+      const tabLabel = 'EditListingWizard.tabLabelDetails';
+      expect(getByText(tabLabel)).toBeInTheDocument();
+
+      // Tab: panel title
+      expect(getByText('EditListingDetailsPanel.title')).toBeInTheDocument();
+
+      // Tab/form: form title
+      expect(getByRole('textbox', { name: 'EditListingDetailsForm.title' })).toHaveValue(
+        'the listing'
+      );
+
+      // Tab/form: description
+      expect(getByRole('textbox', { name: 'EditListingDetailsForm.description' })).toHaveValue(
+        'Lorem ipsum'
+      );
+
+      // Tab/form: save button
+      expect(
+        getByRole('button', { name: 'EditListingWizard.edit.saveDetails' })
+      ).toBeInTheDocument();
+    });
+
+    // Check that only details and photos tabs are available
+    // Details tab should be visible (current tab)
+    expect(getByText('EditListingWizard.tabLabelDetails')).toBeInTheDocument();
+
+    // Style tab should be visible (style panel)
+    expect(getByText('EditListingWizard.tabLabelStyle')).toBeInTheDocument();
+
+    // Other tabs should NOT be visible due to defaultListingFields configuration
+    const tabLabelLocation = 'EditListingWizard.tabLabelLocation';
+    expect(queryByText(tabLabelLocation)).not.toBeInTheDocument();
+
+    const tabLabelPricing = 'EditListingWizard.tabLabelPricing';
+    expect(queryByText(tabLabelPricing)).not.toBeInTheDocument();
+
+    const tabLabelPricingAndStock = 'EditListingWizard.tabLabelPricingAndStock';
+    expect(queryByText(tabLabelPricingAndStock)).not.toBeInTheDocument();
+
+    const tabLabelAvailability = 'EditListingWizard.tabLabelAvailability';
+    expect(queryByText(tabLabelAvailability)).not.toBeInTheDocument();
+
+    const tabLabelDelivery = 'EditListingWizard.tabLabelDelivery';
+    expect(queryByText(tabLabelDelivery)).not.toBeInTheDocument();
+
+    const tabLabelPhotos = 'EditListingWizard.tabLabelPhotos';
+    expect(queryByText(tabLabelPhotos)).not.toBeInTheDocument();
+  });
+
+  it('Negotiation: new listing flow with only details and style panels', async () => {
+    const config = getConfig(listingTypesNegotiation, []);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: '00000000-0000-0000-0000-000000000000',
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_NEW,
+        tab: DETAILS,
+      },
+    };
+
+    const { getByText, queryByText, getByRole } = render(<EditListingPage {...props} />, {
+      initialState: initialState(),
+      config,
+      routeConfiguration,
+    });
+
+    await waitFor(() => {
+      // Navigation to tab
+      const tabLabel = 'EditListingWizard.tabLabelDetails';
+      expect(getByText(tabLabel)).toBeInTheDocument();
+
+      // Tab: panel title
+      expect(getByText('EditListingDetailsPanel.createListingTitle')).toBeInTheDocument();
+
+      // Tab/form: form title
+      expect(getByRole('textbox', { name: 'EditListingDetailsForm.title' })).toBeInTheDocument();
+
+      // Tab/form: description
+      expect(
+        getByRole('textbox', { name: 'EditListingDetailsForm.description' })
+      ).toBeInTheDocument();
+
+      // Tab/form: save button
+      expect(
+        getByRole('button', { name: 'EditListingWizard.default-negotiation.new.saveDetails' })
+      ).toBeInTheDocument();
+    });
+
+    // Check that only details and photos tabs are available
+    // Details tab should be visible (current tab)
+    expect(getByText('EditListingWizard.tabLabelDetails')).toBeInTheDocument();
+
+    // Photos tab should be visible (style panel)
+    expect(getByText('EditListingWizard.tabLabelStyle')).toBeInTheDocument();
+
+    // Other tabs should NOT be visible due to defaultListingFields configuration
+    const tabLabelLocation = 'EditListingWizard.tabLabelLocation';
+    expect(queryByText(tabLabelLocation)).not.toBeInTheDocument();
+
+    const tabLabelPricing = 'EditListingWizard.tabLabelPricing';
+    expect(queryByText(tabLabelPricing)).not.toBeInTheDocument();
+
+    const tabLabelPricingAndStock = 'EditListingWizard.tabLabelPricingAndStock';
+    expect(queryByText(tabLabelPricingAndStock)).not.toBeInTheDocument();
+
+    const tabLabelAvailability = 'EditListingWizard.tabLabelAvailability';
+    expect(queryByText(tabLabelAvailability)).not.toBeInTheDocument();
+
+    const tabLabelDelivery = 'EditListingWizard.tabLabelDelivery';
+    expect(queryByText(tabLabelDelivery)).not.toBeInTheDocument();
+
+    const tabLabelPhotos = 'EditListingWizard.tabLabelPhotos';
+    expect(queryByText(tabLabelPhotos)).not.toBeInTheDocument();
   });
 });
 

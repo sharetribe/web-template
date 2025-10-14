@@ -36,6 +36,7 @@ import {
 import { richText } from '../../util/richText';
 import {
   isBookingProcess,
+  isNegotiationProcess,
   isPurchaseProcess,
   resolveLatestProcessName,
 } from '../../transactions/transaction';
@@ -75,6 +76,7 @@ import {
   listingImages,
   handleContactUser,
   handleSubmitInquiry,
+  handleNavigateToMakeOfferPage,
   handleSubmit,
   priceForSchemaMaybe,
 } from './ListingPage.shared';
@@ -213,7 +215,14 @@ export const ListingPageComponent = props => {
   const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
   const isBooking = isBookingProcess(processName);
   const isPurchase = isPurchaseProcess(processName);
-  const processType = isBooking ? 'booking' : isPurchase ? 'purchase' : 'inquiry';
+  const isNegotiation = isNegotiationProcess(processName);
+  const processType = isBooking
+    ? 'booking'
+    : isPurchase
+    ? 'purchase'
+    : isNegotiation
+    ? 'negotiation'
+    : 'inquiry';
 
   const validListingTypes = listingConfig.listingTypes;
   const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
@@ -221,8 +230,9 @@ export const ListingPageComponent = props => {
 
   const currentAuthor = authorAvailable ? currentListing.author : null;
   const ensuredAuthor = ensureUser(currentAuthor);
+  const authorNeedsPayoutDetails = ['booking', 'purchase'].includes(processType); // TODO: add negotiation
   const noPayoutDetailsSetWithOwnListing =
-    isOwnListing && (processType !== 'inquiry' && !currentUser?.attributes?.stripeConnected);
+    isOwnListing && (authorNeedsPayoutDetails && !currentUser?.attributes?.stripeConnected);
   const payoutDetailsWarning = noPayoutDetailsSetWithOwnListing ? (
     <div>
       <FormattedMessage id="ListingPage.payoutDetailsWarning" values={{ processType }} />
@@ -248,12 +258,18 @@ export const ListingPageComponent = props => {
     setInitialValues,
     setInquiryModalOpen,
   });
-  // Note: this is for inquiry state in booking and purchase processes. Inquiry process is handled through handleSubmit.
+  // Note: this is for inquire transition to inquiry state in booking, purchase and negotiation processes.
+  // Inquiry process is handled through handleSubmit.
   const onSubmitInquiry = handleSubmitInquiry({
     ...commonParams,
     getListing,
     onSendInquiry,
     setInquiryModalOpen,
+  });
+  // This is to navigate to MakeOfferPage when NegotiationForm is submitted
+  const onNavigateToMakeOfferPage = handleNavigateToMakeOfferPage({
+    ...commonParams,
+    getListing,
   });
   const onSubmit = handleSubmit({
     ...commonParams,
@@ -267,6 +283,8 @@ export const ListingPageComponent = props => {
     const isCurrentlyClosed = currentListing.attributes.state === LISTING_STATE_CLOSED;
     if (isOwnListing || isCurrentlyClosed) {
       window.scrollTo(0, 0);
+    } else if (isNegotiation) {
+      onNavigateToMakeOfferPage(values);
     } else {
       onSubmit(values);
     }

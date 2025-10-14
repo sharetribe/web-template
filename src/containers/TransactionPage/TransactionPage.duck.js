@@ -11,7 +11,7 @@ import {
   stringifyDateToISO8601,
 } from '../../util/dates';
 import { isTransactionsTransitionInvalidTransition, storableError } from '../../util/errors';
-import { transactionLineItems } from '../../util/api';
+import { transactionLineItems, transitionPrivileged } from '../../util/api';
 import * as log from '../../util/log';
 import {
   updatedEntities,
@@ -532,54 +532,6 @@ const listingRelationship = txResponse => {
   return txResponse.data.data.relationships.listing.data;
 };
 
-/**
- * Injects a transaction's included provider relationship as the included
- * listing's author relationship.
- * @param {*} txResponse A SDK response from transactions.show().
- * @returns a copy of the txResponse parameter with a listing.author
- * relationship added, if provider exists in the transaction's relationships.
- */
-const injectAuthorRelationship = txResponse => {
-  const {
-    included,
-    data: {
-      relationships: { provider },
-    },
-  } = txResponse.data;
-
-  // If provider has not been included, return the response with no changes.
-  if (!provider?.data?.id) {
-    return txResponse;
-  }
-
-  const includedListingIdx = included.findIndex(inc => inc.type === 'listing');
-
-  // We will set the transaction's provider as the listing's author.
-  // The full user resource we want to associate with the listing is
-  // already available in the response.data.included array, so we only
-  // need to add a relationship reference in the included listing resource.
-  included[includedListingIdx] = {
-    ...included[includedListingIdx],
-    relationships: {
-      ...included[includedListingIdx].relationships,
-      author: {
-        data: {
-          id: provider?.data?.id,
-          type: 'user',
-        },
-      },
-    },
-  };
-
-  return {
-    ...txResponse,
-    data: {
-      ...txResponse.data,
-      included: [...included],
-    },
-  };
-};
-
 export const fetchTransaction = (id, txRole, config) => (dispatch, getState, sdk) => {
   dispatch(fetchTransactionRequest());
 
@@ -595,6 +547,8 @@ export const fetchTransaction = (id, txRole, config) => (dispatch, getState, sdk
           'listing',
           'listing.currentStock',
           'listing.images',
+          'listing.author',
+          'listing.author.profileImage',
           'booking',
           'reviews',
           'reviews.author',
@@ -629,9 +583,7 @@ export const fetchTransaction = (id, txRole, config) => (dispatch, getState, sdk
         console.log(`transaction process (${processName}) was not recognized`);
       }
 
-      // API does not allow fetching transaction.listing.author, so we will
-      // set the relationship manually based on the transaction's provider.
-      return injectAuthorRelationship(response);
+      return response;
     })
     .then(response => {
       const listingFields = config?.listing?.listingFields;
@@ -671,13 +623,35 @@ const refreshTransactionEntity = (sdk, txId, dispatch) => {
 };
 
 export const makeTransition = (txId, transitionName, params) => (dispatch, getState, sdk) => {
-  if (transitionInProgress(getState())) {
+  const state = getState();
+  if (transitionInProgress(state)) {
     return Promise.reject(new Error('Transition already in progress'));
   }
   dispatch(transitionRequest(transitionName));
 
-  return sdk.transactions
-    .transition({ id: txId, transition: transitionName, params }, { expand: true })
+  const transaction = state?.marketplaceData?.entities?.transaction?.[txId?.uuid];
+  const processName = resolveLatestProcessName(transaction?.attributes?.processName);
+  const process = getProcess(processName);
+
+  // This calls the client app's server to make a privileged transition.
+  const privilegedTransition = () =>
+    transitionPrivileged({
+      isSpeculative: false,
+      orderData: params?.orderData || {},
+      bodyParams: {
+        id: txId,
+        transition: transitionName,
+        params: {}, // NOTE: lineItems and metadata are included on the server-side.
+      },
+      queryParams: {
+        expand: true,
+      },
+    });
+  const normalTransition = () =>
+    sdk.transactions.transition({ id: txId, transition: transitionName, params }, { expand: true });
+  const makeCall = process?.isPrivileged(transitionName) ? privilegedTransition : normalTransition;
+
+  return makeCall()
     .then(response => {
       dispatch(addMarketplaceEntities(response));
       dispatch(transitionSuccess());

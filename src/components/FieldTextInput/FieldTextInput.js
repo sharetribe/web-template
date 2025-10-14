@@ -12,6 +12,7 @@ const FieldTextInputComponent = props => {
     rootClassName,
     className,
     inputRootClass,
+    labelClassName,
     customErrorText,
     id,
     label,
@@ -76,10 +77,15 @@ const FieldTextInputComponent = props => {
       }
     : { className: inputClasses, id, type, ...refMaybe, ...input, ...rest };
 
+  const labelClassMaybe = labelClassName ? { className: labelClassName } : {};
   const classes = classNames(rootClassName || css.root, className);
   return (
     <div className={classes}>
-      {label ? <label htmlFor={id}>{label}</label> : null}
+      {label ? (
+        <label htmlFor={id} {...labelClassMaybe}>
+          {label}
+        </label>
+      ) : null}
       {isTextarea ? <ExpandingTextarea {...inputProps} /> : <input {...inputProps} />}
       {hideErrorMessage ? null : <ValidationError fieldMeta={fieldMeta} />}
     </div>

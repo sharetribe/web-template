@@ -250,6 +250,10 @@
     top: -200px; /* This is a hack to showcase how the component would look when the image isn't sticky */
     width: 409px;
     z-index: 1;
+
+    &.noListingImage {
+      top: 72px;
+    }
   }
 }
 
@@ -403,42 +407,6 @@
   }
 }
 
-.inquiryMessage {
-  /* Preserve newlines, but collapse other whitespace */
-  display: inline-block;
-  margin: 0;
-  padding: 8.5px 14px 8.5px 14px;
-  border-radius: 8px;
-  box-shadow: var(--boxShadow);
-  background-color: var(--colorWhite);
-
-  white-space: pre-line;
-
-  margin-top: 12px;
-  margin-bottom: 0;
-
-  @media (--viewportMedium) {
-    margin-top: 8px;
-    padding: 8px 14px 8px 14px;
-  }
-}
-
-.ownInquiryMessage {
-  composes: inquiryMessage;
-  background-color: var(--marketplaceColor);
-  color: var(--colorWhite);
-}
-
-.ownMessageContentLink {
-  color: var(--colorWhite);
-  text-decoration: underline;
-
-  &:hover {
-    text-decoration: none;
-    background-color: var(--marketplaceColorDark);
-  }
-}
-
 .messageError {
   color: var(--colorFail);
   margin: 13px 0 22px 0;
@@ -460,6 +428,7 @@
 /* Passed-in props for FeedSection subcomponent */
 .bookingLocationContainer,
 .deliveryInfoContainer,
+.inquiryMessageContainer,
 .feedContainer {
   margin: 42px 24px 0 24px;
 
@@ -501,73 +470,7 @@
   }
 }
 
-/* SaleActionButtonsMaybe subcomponent */
-.actionButtons {
-  /* Position action button row above the footer */
-  z-index: 9;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  padding: 18px 24px 18px 24px;
-
-  /* Contain repainting to this component only */
-  /* 3D painting container helps scrolling */
-  transform: translate3d(0, 0, 0);
-
-  box-shadow: var(--boxShadowTop);
-  background-color: white;
-
-  @media (--viewportLarge) {
-    z-index: unset;
-    position: static;
-    box-shadow: none;
-    width: auto;
-    margin: 0 48px 0 48px;
-    padding: 0;
-  }
-}
-
-.actionButtonWrapper {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-
-  @media (--viewportLarge) {
-    flex-direction: column;
-  }
-
-  & button:first-child {
-    margin: 0 12px 0 0;
-
-    @media (--viewportLarge) {
-      margin: 8px 0 0 0;
-
-      /* Switch order in desktop layout with accept button being on the top */
-      order: 1;
-    }
-  }
-}
-
-.actionError {
-  composes: h5 from global;
-  color: var(--colorFail);
-  margin: 0 0 11px 0;
-
-  @media (--viewportMedium) {
-    margin: 0 0 10px 0;
-    padding: 1px 0 7px 0;
-  }
-  @media (--viewportLarge) {
-    margin: 0;
-  }
-}
-
-.actionErrors {
-  width: 100%;
-  text-align: center;
-}
-
-/* Container for SaleActionButtonsMaybe subcomponent */
+/* Container for ActionButtons subcomponent */
 .mobileActionButtons {
   display: block;
 

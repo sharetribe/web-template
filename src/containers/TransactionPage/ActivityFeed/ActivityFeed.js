@@ -3,6 +3,9 @@ import dropWhile from 'lodash/dropWhile';
 import classNames from 'classnames';
 
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
+import { types as sdkTypes } from '../../../util/sdkLoader';
+import { useConfiguration } from '../../../context/configurationContext';
+import { formatMoney } from '../../../util/currency';
 import { richText } from '../../../util/richText';
 import { formatDateWithProximity } from '../../../util/dates';
 import { propTypes } from '../../../util/types';
@@ -19,6 +22,8 @@ import { Avatar, InlineTextButton, ReviewRating, UserDisplayName } from '../../.
 import { stateDataShape } from '../TransactionPage.stateData';
 
 import css from './ActivityFeed.module.css';
+
+const { Money } = sdkTypes;
 
 const MIN_LENGTH_FOR_LONG_WORDS = 20;
 
@@ -103,6 +108,7 @@ const TransitionMessage = props => {
     stateData,
     deliveryMethod,
     listingTitle,
+    negotiationOffer = '-',
     ownRole,
     otherUsersName,
     onOpenReviewModal,
@@ -110,6 +116,7 @@ const TransitionMessage = props => {
   } = props;
   const { processName, processState, showReviewAsFirstLink, showReviewAsSecondLink } = stateData;
   const stateStatus = nextState === processState ? 'current' : 'past';
+  const transitionName = transition.transition;
 
   // actor: 'you', 'system', 'operator', or display name of the other party
   const actor =
@@ -120,11 +127,11 @@ const TransitionMessage = props => {
       : otherUsersName;
 
   const reviewLink = showReviewAsFirstLink ? (
-    <InlineTextButton onClick={onOpenReviewModal}>
+    <InlineTextButton onClick={onOpenReviewModal} rootClassName={css.reviewLink}>
       <FormattedMessage id="TransactionPage.ActivityFeed.reviewLink" values={{ otherUsersName }} />
     </InlineTextButton>
   ) : showReviewAsSecondLink ? (
-    <InlineTextButton onClick={onOpenReviewModal}>
+    <InlineTextButton onClick={onOpenReviewModal} rootClassName={css.reviewLink}>
       <FormattedMessage
         id="TransactionPage.ActivityFeed.reviewAsSecondLink"
         values={{ otherUsersName }}
@@ -132,14 +139,39 @@ const TransitionMessage = props => {
     </InlineTextButton>
   ) : null;
 
+  // If there is a transition specific message, use it.
+  const messageConfig = stateData.transitionMessages?.find(m => m.transition === transitionName);
+  const transitionMessage = messageConfig
+    ? intl.formatMessage(
+        { id: messageConfig.translationId },
+        {
+          actor,
+          otherUsersName,
+          listingTitle,
+          reviewLink,
+          deliveryMethod,
+          stateStatus,
+          negotiationOffer,
+        }
+      )
+    : '';
+
   // ActivityFeed messages are tied to transaction process and transitions.
   // However, in practice, transitions leading to same state have had the same message.
-  const message = intl.formatMessage(
+  const defaultMessage = intl.formatMessage(
     { id: `TransactionPage.ActivityFeed.${processName}.${nextState}` },
-    { actor, otherUsersName, listingTitle, reviewLink, deliveryMethod, stateStatus }
+    {
+      actor,
+      otherUsersName,
+      listingTitle,
+      reviewLink,
+      deliveryMethod,
+      stateStatus,
+      negotiationOffer,
+    }
   );
 
-  return message;
+  return messageConfig ? transitionMessage : defaultMessage;
 };
 
 /**
@@ -225,6 +257,7 @@ const organizedItems = (messages, transitions, hideOldTransitions) => {
  */
 export const ActivityFeed = props => {
   const intl = props.intl || useIntl();
+  const config = useConfiguration();
   const {
     rootClassName,
     className,
@@ -246,7 +279,18 @@ export const ActivityFeed = props => {
   }
   const process = getProcess(processName);
   const transitions = transaction?.attributes?.transitions || [];
-  const relevantTransitions = transitions.filter(t =>
+  const offers = transaction?.attributes?.metadata?.offers;
+
+  const enhancedTransitions =
+    offers && process.getTransitionsWithMatchingOffers
+      ? process.getTransitionsWithMatchingOffers(transitions, offers)
+      : transitions;
+  // Check currency primarily from tx, secondarily from listing, the fallback is marketplace currency
+  const currency =
+    transaction?.attributes?.payinTotal?.currency ||
+    transaction?.listing?.attributes?.price?.currency ||
+    config.currency;
+  const relevantTransitions = enhancedTransitions.filter(t =>
     process.isRelevantPastTransition(t.transition)
   );
   const todayString = intl.formatMessage({ id: 'TransactionPage.ActivityFeed.today' });
@@ -296,6 +340,11 @@ export const ActivityFeed = props => {
       const ownRole = getUserTxRole(currentUser.id, transaction);
       const otherUser = ownRole === TX_TRANSITION_ACTOR_PROVIDER ? customer : provider;
 
+      const offerInSubunits = transition.offerInSubunits;
+      const negotiationOffer = offerInSubunits
+        ? formatMoney(intl, new Money(offerInSubunits, currency))
+        : null;
+
       transitionComponent = (
         <Transition
           formattedDate={formattedDate}
@@ -306,6 +355,7 @@ export const ActivityFeed = props => {
               stateData={stateData}
               deliveryMethod={transaction.attributes?.protectedData?.deliveryMethod || 'none'}
               listingTitle={listingTitle}
+              negotiationOffer={negotiationOffer}
               ownRole={ownRole}
               otherUsersName={<UserDisplayName user={otherUser} intl={intl} />}
               onOpenReviewModal={onOpenReviewModal}
@@ -324,7 +374,7 @@ export const ActivityFeed = props => {
       );
     }
     return (
-      <li key={transition.transition} className={css.transitionItem}>
+      <li key={`${transition.transition}-${transition.createdAt}`} className={css.transitionItem}>
         {transitionComponent}
       </li>
     );

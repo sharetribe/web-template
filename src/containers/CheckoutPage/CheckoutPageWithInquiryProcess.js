@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { bool, node, object, shape, string } from 'prop-types';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
@@ -113,6 +112,21 @@ const handleSubmit = (submitting, setSubmitting, props) => values => {
     });
 };
 
+/**
+ * Checkout page for inquiry process.
+ * @param {Object} props - The component props.
+ * @param {boolean} props.scrollingDisabled - Whether scrolling is disabled.
+ * @param {string} props.processName - The process name.
+ * @param {Object} props.pageData - The page data.
+ * @param {propTypes.listing} props.pageData.listing - The listing.
+ * @param {propTypes.transaction} [props.pageData.transaction] - The transaction.
+ * @param {Object} [props.pageData.orderData] - The order data.
+ * @param {string} props.listingTitle - The listing title.
+ * @param {string} props.title - The title.
+ * @param {intlShape} props.intl - The intl object.
+ * @param {Object} props.config - The config object.
+ * @param {propTypes.error} props.initiateInquiryError - The error message.
+ */
 export const CheckoutPageWithInquiryProcess = props => {
   const [submitting, setSubmitting] = useState(false);
 
@@ -260,29 +274,6 @@ export const CheckoutPageWithInquiryProcess = props => {
       </div>
     </Page>
   );
-};
-
-CheckoutPageWithInquiryProcess.propTypes = {
-  showPrice: true,
-};
-
-CheckoutPageWithInquiryProcess.propTypes = {
-  scrollingDisabled: bool.isRequired,
-  pageData: shape({
-    listing: propTypes.listing.isRequired,
-    transaction: propTypes.transaction,
-    orderData: object,
-  }).isRequired,
-  processName: string.isRequired,
-  listingTitle: node.isRequired,
-  title: node.isRequired,
-  showPrice: bool,
-
-  // from useIntl
-  intl: intlShape.isRequired,
-
-  // from useConfiguration
-  config: object.isRequired,
 };
 
 export default CheckoutPageWithInquiryProcess;

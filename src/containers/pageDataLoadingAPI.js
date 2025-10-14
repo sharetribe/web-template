@@ -10,6 +10,7 @@ import { loadData as EditListingPageLoader } from './EditListingPage/EditListing
 import { loadData as EmailVerificationPageLoader } from './EmailVerificationPage/EmailVerificationPage.duck';
 import { loadData as InboxPageLoader } from './InboxPage/InboxPage.duck';
 import { loadData as ListingPageLoader } from './ListingPage/ListingPage.duck';
+import { loadData as MakeOfferPageLoader } from './MakeOfferPage/MakeOfferPage.duck';
 import { loadData as ManageListingsPageLoader } from './ManageListingsPage/ManageListingsPage.duck';
 import { loadData as PaymentMethodsPageLoader } from './PaymentMethodsPage/PaymentMethodsPage.duck';
 import { loadData as PrivacyPolicyPageLoader } from './PrivacyPolicyPage/PrivacyPolicyPage.duck';
@@ -50,6 +51,9 @@ const getPageDataLoadingAPI = () => {
     },
     ListingPage: {
       loadData: ListingPageLoader,
+    },
+    MakeOfferPage: {
+      loadData: MakeOfferPageLoader,
     },
     ManageListingsPage: {
       loadData: ManageListingsPageLoader,

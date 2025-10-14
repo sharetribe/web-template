@@ -2,6 +2,7 @@ import * as log from '../util/log';
 import * as purchaseProcess from './transactionProcessPurchase';
 import * as bookingProcess from './transactionProcessBooking';
 import * as inquiryProcess from './transactionProcessInquiry';
+import * as negotiationProcess from './transactionProcessNegotiation';
 
 // Supported unit types
 // Note: These are passed to translations/microcopy in certain cases.
@@ -12,11 +13,14 @@ export const NIGHT = 'night';
 export const HOUR = 'hour';
 export const FIXED = 'fixed';
 export const INQUIRY = 'inquiry';
+export const OFFER = 'offer'; // The unitType 'offer' means that provider created the listing on default-negotiation process
+export const REQUEST = 'request'; // The unitType 'request' means that customer created the listing on default-negotiation process
 
 // Then names of supported processes
 export const PURCHASE_PROCESS_NAME = 'default-purchase';
 export const BOOKING_PROCESS_NAME = 'default-booking';
 export const INQUIRY_PROCESS_NAME = 'default-inquiry';
+export const NEGOTIATION_PROCESS_NAME = 'default-negotiation';
 
 /**
  * A process should export:
@@ -49,6 +53,12 @@ const PROCESSES = [
     alias: `${INQUIRY_PROCESS_NAME}/release-1`,
     process: inquiryProcess,
     unitTypes: [INQUIRY],
+  },
+  {
+    name: NEGOTIATION_PROCESS_NAME,
+    alias: `${NEGOTIATION_PROCESS_NAME}/release-1`,
+    process: negotiationProcess,
+    unitTypes: [OFFER, REQUEST],
   },
 ];
 
@@ -217,6 +227,8 @@ export const resolveLatestProcessName = processName => {
       return BOOKING_PROCESS_NAME;
     case INQUIRY_PROCESS_NAME:
       return INQUIRY_PROCESS_NAME;
+    case NEGOTIATION_PROCESS_NAME:
+      return NEGOTIATION_PROCESS_NAME;
     default:
       return processName;
   }
@@ -305,6 +317,27 @@ export const isBookingProcessAlias = processAlias => {
 };
 
 /**
+ * Check if the process is negotiation process
+ *
+ * @param {String} processName
+ */
+export const isNegotiationProcess = processName => {
+  const latestProcessName = resolveLatestProcessName(processName);
+  const processInfo = PROCESSES.find(process => process.name === latestProcessName);
+  return [NEGOTIATION_PROCESS_NAME].includes(processInfo?.name);
+};
+
+/**
+ * Check if the process/alias points to a negotiation process
+ *
+ * @param {String} processAlias
+ */
+export const isNegotiationProcessAlias = processAlias => {
+  const processName = processAlias ? processAlias.split('/')[0] : null;
+  return processAlias ? isNegotiationProcess(processName) : false;
+};
+
+/**
  * Check from unit type if full days should be used.
  * E.g. unit type is day or night
  * This is mainly used for availability management.
@@ -316,24 +349,28 @@ export const isFullDay = unitType => {
 };
 
 /**
- * Get transitions that need provider's attention for every supported process
+ * Get states that need provider's attention for every supported process
  */
-export const getTransitionsNeedingProviderAttention = () => {
-  return PROCESSES.reduce((accTransitions, processInfo) => {
-    const statesNeedingProviderAttention = Object.values(
-      processInfo.process.statesNeedingProviderAttention
-    );
-    const process = processInfo.process;
-    const processTransitions = statesNeedingProviderAttention.reduce(
-      (pickedTransitions, stateName) => {
-        return [...pickedTransitions, ...getTransitionsToState(process, stateName)];
-      },
-      []
-    );
-    // Return only unique transitions names
-    // TODO: this setup is subject to problems if one process has important transition named
-    // similarly as unimportant transition in another process.
-    return [...new Set([...accTransitions, ...processTransitions])];
+export const getStatesNeedingProviderAttention = () => {
+  return PROCESSES.reduce((accStates, processInfo) => {
+    const statesNeedingProviderAttention = processInfo.process.statesNeedingProviderAttention || [];
+    // Return only unique state names
+    // TODO: this setup is subject to problems if one process has important state named
+    // similarly as unimportant state in another process.
+    return [...new Set([...accStates, ...statesNeedingProviderAttention])];
+  }, []);
+};
+
+/**
+ * Get states that need customer's attention for every supported process
+ */
+export const getStatesNeedingCustomerAttention = () => {
+  return PROCESSES.reduce((accStates, processInfo) => {
+    const statesNeedingCustomerAttention = processInfo.process.statesNeedingCustomerAttention || [];
+    // Return only unique state names
+    // TODO: this setup is subject to problems if one process has important state named
+    // similarly as unimportant state in another process.
+    return [...new Set([...accStates, ...statesNeedingCustomerAttention])];
   }, []);
 };
 

@@ -1,0 +1,5 @@
+.root {
+  stroke: var(--marketplaceColor);
+  stroke-width: 3;
+  fill: transparent;
+}

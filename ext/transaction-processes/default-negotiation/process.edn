@@ -1,0 +1,595 @@
+{:format :v3,
+ :transitions
+ [{:name :transition/make-offer,
+   :to :state/offer-pending,
+   :actor :actor.role/provider,
+   :actions
+   [{:name :action/privileged-set-line-items}
+    {:name :action/update-protected-data}
+    {:name :action/privileged-update-metadata}],
+   :privileged? true}
+  {:name :transition/inquire,
+   :to :state/inquiry,
+   :actor :actor.role/provider,
+   :actions []}
+  {:name :transition/request-quote,
+   :to :state/quote-requested,
+   :actor :actor.role/customer,
+   :actions [{:name :action/update-protected-data}]}
+  {:name :transition/make-offer-from-request,
+   :from :state/quote-requested,
+   :to :state/offer-pending,
+   :actor :actor.role/provider,
+   :actions
+   [{:name :action/privileged-set-line-items}
+    {:name :action/update-protected-data}
+    {:name :action/privileged-update-metadata}],
+   :privileged? true}
+  {:name :transition/reject-request,
+   :from :state/quote-requested,
+   :to :state/request-rejected,
+   :actor :actor.role/provider,
+   :actions []}
+  {:name :transition/withdraw-request,
+   :from :state/quote-requested,
+   :to :state/request-rejected,
+   :actor :actor.role/customer,
+   :actions []}
+  {:name :transition/operator-reject-request,
+   :from :state/quote-requested,
+   :to :state/request-rejected,
+   :actor :actor.role/operator,
+   :actions []}
+  {:name :transition/make-offer-after-inquiry,
+   :from :state/inquiry,
+   :to :state/offer-pending,
+   :actor :actor.role/provider,
+   :actions
+   [{:name :action/privileged-set-line-items}
+    {:name :action/update-protected-data}
+    {:name :action/privileged-update-metadata}],
+   :privileged? true}
+  {:name :transition/update-offer,
+   :from :state/offer-pending,
+   :to :state/update-pending,
+   :actor :actor.role/provider,
+   :actions
+   [{:name :action/privileged-set-line-items}
+    {:name :action/update-protected-data}
+    {:name :action/privileged-update-metadata}],
+   :privileged? true}
+  {:name :transition/update-from-update-pending,
+   :from :state/update-pending,
+   :to :state/update-pending,
+   :actor :actor.role/provider,
+   :actions
+   [{:name :action/privileged-set-line-items}
+    {:name :action/update-protected-data}
+    {:name :action/privileged-update-metadata}],
+   :privileged? true}
+  {:name :transition/provider-withdraw-from-update-pending,
+   :from :state/update-pending,
+   :to :state/offer-rejected,
+   :actor :actor.role/provider,
+   :actions []}
+  {:name :transition/customer-reject-from-update-pending,
+   :from :state/update-pending,
+   :to :state/offer-rejected,
+   :actor :actor.role/customer,
+   :actions []}
+  {:name :transition/accept-update,
+   :from :state/update-pending,
+   :to :state/offer-pending,
+   :actor :actor.role/customer,
+   :actions []}
+  {:name :transition/operator-accept-update,
+   :from :state/update-pending,
+   :to :state/offer-pending,
+   :actor :actor.role/operator,
+   :actions []}
+  {:name :transition/customer-make-counter-offer,
+   :from :state/offer-pending,
+   :to :state/customer-offer-pending,
+   :actor :actor.role/customer,
+   :actions
+   [{:name :action/privileged-set-line-items}
+    {:name :action/privileged-update-metadata}],
+   :privileged? true}
+  {:name :transition/provider-make-counter-offer,
+   :from :state/customer-offer-pending,
+   :to :state/offer-pending,
+   :actor :actor.role/provider,
+   :actions
+   [{:name :action/privileged-set-line-items}
+    {:name :action/privileged-update-metadata}],
+   :privileged? true}
+  {:name :transition/provider-accept-counter-offer,
+   :from :state/customer-offer-pending,
+   :to :state/offer-pending,
+   :actor :actor.role/provider,
+   :actions []}
+  {:name :transition/operator-reject-offer,
+   :from :state/offer-pending,
+   :to :state/offer-rejected,
+   :actor :actor.role/operator,
+   :actions []}
+  {:name :transition/customer-reject-offer,
+   :from :state/offer-pending,
+   :to :state/offer-rejected,
+   :actor :actor.role/customer,
+   :actions []}
+  {:name :transition/provider-withdraw-offer,
+   :from :state/offer-pending,
+   :to :state/offer-rejected,
+   :actor :actor.role/provider,
+   :actions []}
+  {:name :transition/customer-withdraw-counter-offer,
+   :from :state/customer-offer-pending,
+   :to :state/offer-pending,
+   :actor :actor.role/customer,
+   :actions
+   [{:name :action/privileged-set-line-items}
+    {:name :action/privileged-update-metadata}],
+   :privileged? true}
+  {:name :transition/operator-reject-from-customer-counter-offer,
+   :from :state/customer-offer-pending,
+   :to :state/offer-rejected,
+   :actor :actor.role/operator,
+   :actions []}
+  {:name :transition/provider-reject-counter-offer,
+   :from :state/customer-offer-pending,
+   :to :state/offer-pending,
+   :actor :actor.role/provider,
+   :actions
+   [{:name :action/privileged-set-line-items}
+    {:name :action/privileged-update-metadata}],
+   :privileged? true}
+  {:name :transition/request-payment-to-accept-offer,
+   :from :state/offer-pending,
+   :to :state/pending-payment,
+   :actor :actor.role/customer,
+   :actions [{:name :action/stripe-create-payment-intent}]}
+  {:name :transition/expire-payment,
+   :from :state/pending-payment,
+   :to :state/payment-expired,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/pending-payment]}
+     {:fn/period ["PT15M"]}]},
+   :actions
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}]}
+  {:name :transition/confirm-payment,
+   :from :state/pending-payment,
+   :to :state/offer-accepted,
+   :actor :actor.role/customer,
+   :actions
+   [{:name :action/stripe-confirm-payment-intent}
+    {:name :action/stripe-capture-payment-intent}]}
+  {:name :transition/auto-cancel,
+   :from :state/offer-accepted,
+   :to :state/canceled,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/offer-accepted]}
+     {:fn/period ["P75D"]}]},
+   :actions
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}]}
+  {:name :transition/operator-cancel,
+   :from :state/offer-accepted,
+   :to :state/canceled,
+   :actor :actor.role/operator,
+   :actions
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}]}
+  {:name :transition/operator-mark-delivered,
+   :from :state/offer-accepted,
+   :to :state/delivered,
+   :actor :actor.role/operator,
+   :actions []}
+  {:name :transition/deliver,
+   :from :state/offer-accepted,
+   :to :state/delivered,
+   :actor :actor.role/provider,
+   :actions []}
+  {:name :transition/request-changes,
+   :from :state/delivered,
+   :to :state/changes-requested,
+   :actor :actor.role/customer,
+   :actions []}
+  {:name :transition/operator-request-changes,
+   :from :state/delivered,
+   :to :state/changes-requested,
+   :actor :actor.role/operator,
+   :actions []}
+  {:name :transition/deliver-changes,
+   :from :state/changes-requested,
+   :to :state/delivered,
+   :actor :actor.role/provider,
+   :actions []}
+  {:name :transition/operator-mark-changes-delivered,
+   :from :state/changes-requested,
+   :to :state/delivered,
+   :actor :actor.role/operator,
+   :actions []}
+  {:name :transition/auto-cancel-from-changes-requested,
+   :from :state/changes-requested,
+   :to :state/canceled,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/offer-accepted]}
+     {:fn/period ["P75D"]}]},
+   :actions
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}]}
+  {:name :transition/operator-cancel-from-changes-requested,
+   :from :state/changes-requested,
+   :to :state/canceled,
+   :actor :actor.role/operator,
+   :actions
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}]}
+  {:name :transition/operator-cancel-from-delivered,
+   :from :state/delivered,
+   :to :state/canceled,
+   :actor :actor.role/operator,
+   :actions
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}]}
+  {:name :transition/accept-deliverable,
+   :from :state/delivered,
+   :to :state/completed,
+   :actor :actor.role/customer,
+   :actions [{:name :action/stripe-create-payout}]}
+  {:name :transition/operator-accept-deliverable,
+   :from :state/delivered,
+   :to :state/completed,
+   :actor :actor.role/operator,
+   :actions [{:name :action/stripe-create-payout}]}
+  {:name :transition/auto-accept-deliverable,
+   :from :state/delivered,
+   :to :state/completed,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/last-entered-state :state/delivered]}
+     {:fn/period ["P14D"]}]},
+   :actions [{:name :action/stripe-create-payout}]}
+  {:name :transition/review-1-by-provider,
+   :from :state/completed,
+   :to :state/reviewed-by-provider,
+   :actor :actor.role/provider,
+   :actions [{:name :action/post-review-by-provider}]}
+  {:name :transition/review-2-by-provider,
+   :from :state/reviewed-by-customer,
+   :to :state/reviewed,
+   :actor :actor.role/provider,
+   :actions
+   [{:name :action/post-review-by-provider}
+    {:name :action/publish-reviews}]}
+  {:name :transition/review-1-by-customer,
+   :from :state/completed,
+   :to :state/reviewed-by-customer,
+   :actor :actor.role/customer,
+   :actions [{:name :action/post-review-by-customer}]}
+  {:name :transition/review-2-by-customer,
+   :from :state/reviewed-by-provider,
+   :to :state/reviewed,
+   :actor :actor.role/customer,
+   :actions
+   [{:name :action/post-review-by-customer}
+    {:name :action/publish-reviews}]}
+  {:name :transition/expire-review-period,
+   :from :state/completed,
+   :to :state/reviewed,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/completed]}
+     {:fn/period ["P7D"]}]},
+   :actions []}
+  {:name :transition/expire-provider-review-period,
+   :from :state/reviewed-by-customer,
+   :to :state/reviewed,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/completed]}
+     {:fn/period ["P7D"]}]},
+   :actions [{:name :action/publish-reviews}]}
+  {:name :transition/expire-customer-review-period,
+   :from :state/reviewed-by-provider,
+   :to :state/reviewed,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/completed]}
+     {:fn/period ["P7D"]}]},
+   :actions [{:name :action/publish-reviews}]}],
+ :notifications
+ [{:name :notification/new-quote-request,
+   :on :transition/request-quote,
+   :to :actor.role/provider,
+   :template :negotiation-new-quote-request}
+  {:name :notification/new-offer-after-inquiry,
+   :on :transition/make-offer-after-inquiry,
+   :to :actor.role/customer,
+   :template :negotiation-new-offer}
+  {:name :notification/new-offer,
+   :on :transition/make-offer,
+   :to :actor.role/customer,
+   :template :negotiation-new-offer}
+  {:name :notification/new-offer-from-request,
+   :on :transition/make-offer-from-request,
+   :to :actor.role/customer,
+   :template :negotiation-new-offer-from-request}
+  {:name :notification/rejected-request,
+   :on :transition/reject-request,
+   :to :actor.role/customer,
+   :template :negotiation-rejected-request}
+  {:name :notification/withdrawn-request,
+   :on :transition/withdraw-request,
+   :to :actor.role/provider,
+   :template :negotiation-withdrawn-request}
+  {:name :notification/operator-rejected-request-customer,
+   :on :transition/operator-reject-request,
+   :to :actor.role/customer,
+   :template :negotiation-rejected-request}
+  {:name :notification/operator-rejected-request-provider,
+   :on :transition/operator-reject-request,
+   :to :actor.role/provider,
+   :template :negotiation-operator-rejected-request}
+  {:name :notification/operator-rejected-offer-provider,
+   :on :transition/operator-reject-offer,
+   :to :actor.role/provider,
+   :template :negotiation-rejected-offer}
+  {:name :notification/operator-rejected-offer-customer,
+   :on :transition/operator-reject-offer,
+   :to :actor.role/customer,
+   :template :negotiation-operator-rejected-offer}
+  {:name :notification/rejected-offer,
+   :on :transition/customer-reject-offer,
+   :to :actor.role/provider,
+   :template :negotiation-rejected-offer}
+  {:name :notification/withdrawn-offer,
+   :on :transition/provider-withdraw-offer,
+   :to :actor.role/customer,
+   :template :negotiation-withdrawn-offer}
+  {:name :notification/new-customer-counter-offer,
+   :on :transition/customer-make-counter-offer,
+   :to :actor.role/provider,
+   :template :negotiation-new-customer-counter-offer}
+  {:name :notification/rejected-counter-offer,
+   :on :transition/provider-reject-counter-offer,
+   :to :actor.role/customer,
+   :template :negotiation-rejected-counter-offer}
+  {:name
+   :notification/operator-rejected-offer-from-counter-offer-customer,
+   :on :transition/operator-reject-from-customer-counter-offer,
+   :to :actor.role/customer,
+   :template :negotiation-operator-rejected-offer}
+  {:name
+   :notification/operator-rejected-offer-from-counter-offer-provider,
+   :on :transition/operator-reject-from-customer-counter-offer,
+   :to :actor.role/provider,
+   :template :negotiation-rejected-offer}
+  {:name :notification/withdrawn-counter-offer,
+   :on :transition/customer-withdraw-counter-offer,
+   :to :actor.role/provider,
+   :template :negotiation-withdrawn-counter-offer}
+  {:name :notification/new-provider-counter-offer,
+   :on :transition/provider-make-counter-offer,
+   :to :actor.role/customer,
+   :template :negotiation-new-provider-counter-offer}
+  {:name :notification/accepted-counter-offer,
+   :on :transition/provider-accept-counter-offer,
+   :to :actor.role/customer,
+   :template :negotiation-accepted-counter-offer}
+  {:name :notification/updated-offer,
+   :on :transition/update-offer,
+   :to :actor.role/customer,
+   :template :negotiation-updated-offer}
+  {:name :notification/updated-offer-from-update-pending,
+   :on :transition/update-from-update-pending,
+   :to :actor.role/customer,
+   :template :negotiation-updated-offer}
+  {:name :notification/withdrawn-offer-from-update-pending,
+   :on :transition/provider-withdraw-from-update-pending,
+   :to :actor.role/customer,
+   :template :negotiation-withdrawn-offer}
+  {:name :notification/rejected-offer-from-update-pending,
+   :on :transition/customer-reject-from-update-pending,
+   :to :actor.role/provider,
+   :template :negotiation-rejected-offer}
+  {:name :notification/order-receipt,
+   :on :transition/confirm-payment,
+   :to :actor.role/customer,
+   :template :negotiation-order-receipt}
+  {:name :notification/accepted-offer,
+   :on :transition/confirm-payment,
+   :to :actor.role/provider,
+   :template :negotiation-accepted-offer}
+  {:name :notification/deliver-reminder,
+   :on :transition/confirm-payment,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/offer-accepted]}
+     {:fn/period ["P72D"]}]},
+   :to :actor.role/provider,
+   :template :negotiation-deliver-reminder}
+  {:name :notification/auto-canceled-order-customer,
+   :on :transition/auto-cancel,
+   :to :actor.role/customer,
+   :template :negotiation-auto-canceled-order-customer}
+  {:name :notification/auto-canceled-order-provider,
+   :on :transition/auto-cancel,
+   :to :actor.role/provider,
+   :template :negotiation-auto-canceled-order-provider}
+  {:name :notification/operator-canceled-order-customer,
+   :on :transition/operator-cancel,
+   :to :actor.role/customer,
+   :template :negotiation-operator-canceled-order-customer}
+  {:name :notification/operator-canceled-order-provider,
+   :on :transition/operator-cancel,
+   :to :actor.role/provider,
+   :template :negotiation-operator-canceled-order-provider}
+  {:name :notification/delivered-order,
+   :on :transition/deliver,
+   :to :actor.role/customer,
+   :template :negotiation-delivered-order}
+  {:name :notification/accept-order-reminder,
+   :on :transition/deliver,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/delivered]}
+     {:fn/period ["P5D"]}]},
+   :to :actor.role/customer,
+   :template :negotiation-accept-order-reminder}
+  {:name :notification/operator-delivered-order-customer,
+   :on :transition/operator-mark-delivered,
+   :to :actor.role/customer,
+   :template :negotiation-delivered-order}
+  {:name :notification/operator-delivered-order-provider,
+   :on :transition/operator-mark-delivered,
+   :to :actor.role/provider,
+   :template :negotiation-operator-delivered-order}
+  {:name :notification/accept-order-reminder-from-operator-delivered,
+   :on :transition/operator-mark-delivered,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/delivered]}
+     {:fn/period ["P5D"]}]},
+   :to :actor.role/customer,
+   :template :negotiation-accept-order-reminder}
+  {:name :notification/deliver-changes-reminder,
+   :on :transition/request-changes,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/offer-accepted]}
+     {:fn/period ["P72D"]}]},
+   :to :actor.role/provider,
+   :template :negotiation-deliver-changes-reminder}
+  {:name :notification/new-change-request,
+   :on :transition/request-changes,
+   :to :actor.role/provider,
+   :template :negotiation-new-change-request}
+  {:name :notification/new-operator-change-request-customer,
+   :on :transition/operator-request-changes,
+   :to :actor.role/customer,
+   :template :negotiation-new-operator-change-request}
+  {:name
+   :notification/deliver-changes-reminder-from-operator-change-request,
+   :on :transition/operator-request-changes,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/offer-accepted]}
+     {:fn/period ["P72D"]}]},
+   :to :actor.role/provider,
+   :template :negotiation-deliver-changes-reminder}
+  {:name :notification/new-operator-change-request-provider,
+   :on :transition/operator-request-changes,
+   :to :actor.role/provider,
+   :template :negotiation-new-change-request}
+  {:name :notification/operator-canceled-order-from-delivered-customer,
+   :on :transition/operator-cancel-from-delivered,
+   :to :actor.role/customer,
+   :template :negotiation-operator-canceled-order-customer}
+  {:name :notification/operator-canceled-order-from-delivered-provider,
+   :on :transition/operator-cancel-from-delivered,
+   :to :actor.role/provider,
+   :template :negotiation-operator-canceled-order-provider}
+  {:name :notification/delivered-changes,
+   :on :transition/deliver-changes,
+   :to :actor.role/customer,
+   :template :negotiation-delivered-changes}
+  {:name :notification/operator-delivered-changes-customer,
+   :on :transition/operator-mark-changes-delivered,
+   :to :actor.role/customer,
+   :template :negotiation-delivered-changes}
+  {:name :notification/operator-delivered-changes-provider,
+   :on :transition/operator-mark-changes-delivered,
+   :to :actor.role/provider,
+   :template :negotiation-operator-delivered-changes}
+  {:name
+   :notification/auto-canceled-order-from-changes-requested-customer,
+   :on :transition/auto-cancel-from-changes-requested,
+   :to :actor.role/customer,
+   :template :negotiation-auto-canceled-order-customer}
+  {:name
+   :notification/auto-canceled-order-from-changes-requested-provider,
+   :on :transition/auto-cancel-from-changes-requested,
+   :to :actor.role/provider,
+   :template :negotiation-auto-canceled-order-provider}
+  {:name
+   :notification/operator-canceled-order-from-changes-requested-customer,
+   :on :transition/operator-cancel-from-changes-requested,
+   :to :actor.role/customer,
+   :template :negotiation-operator-canceled-order-customer}
+  {:name
+   :notification/operator-canceled-order-from-changes-requested-provider,
+   :on :transition/operator-cancel-from-changes-requested,
+   :to :actor.role/provider,
+   :template :negotiation-operator-canceled-order-provider}
+  {:name :notification/accepted-deliverable,
+   :on :transition/accept-deliverable,
+   :to :actor.role/provider,
+   :template :negotiation-accepted-deliverable}
+  {:name
+   :notification/review-period-started-from-accept-deliverable-customer,
+   :on :transition/accept-deliverable,
+   :to :actor.role/customer,
+   :template :negotiation-review-by-customer-wanted}
+  {:name
+   :notification/review-period-started-from-accept-deliverable-provider,
+   :on :transition/accept-deliverable,
+   :to :actor.role/provider,
+   :template :negotiation-review-by-provider-wanted}
+  {:name :notification/operator-accepted-deliverable-customer,
+   :on :transition/operator-accept-deliverable,
+   :to :actor.role/customer,
+   :template :negotiation-operator-accepted-deliverable}
+  {:name :notification/operator-accepted-deliverable-provider,
+   :on :transition/operator-accept-deliverable,
+   :to :actor.role/provider,
+   :template :negotiation-accepted-deliverable}
+  {:name
+   :notification/review-period-started-from-operator-accept-deliverable-customer,
+   :on :transition/operator-accept-deliverable,
+   :to :actor.role/customer,
+   :template :negotiation-review-by-customer-wanted}
+  {:name
+   :notification/review-period-started-from-operator-accept-deliverable-provider,
+   :on :transition/operator-accept-deliverable,
+   :to :actor.role/provider,
+   :template :negotiation-review-by-provider-wanted}
+  {:name :notification/auto-accepted-deliverable-customer,
+   :on :transition/auto-accept-deliverable,
+   :to :actor.role/customer,
+   :template :negotiation-auto-accepted-deliverable-customer}
+  {:name :notification/auto-accepted-deliverable-provider,
+   :on :transition/auto-accept-deliverable,
+   :to :actor.role/provider,
+   :template :negotiation-auto-accepted-deliverable-provider}
+  {:name
+   :notification/review-period-started-from-auto-accept-deliverable-customer,
+   :on :transition/auto-accept-deliverable,
+   :to :actor.role/customer,
+   :template :negotiation-review-by-customer-wanted}
+  {:name
+   :notification/review-period-started-from-auto-accept-deliverable-provider,
+   :on :transition/auto-accept-deliverable,
+   :to :actor.role/provider,
+   :template :negotiation-review-by-provider-wanted}
+  {:name :notification/review-by-customer-first,
+   :on :transition/review-1-by-customer,
+   :to :actor.role/provider,
+   :template :negotiation-review-by-other-party-unpublished}
+  {:name :notification/review-by-provider-first,
+   :on :transition/review-1-by-provider,
+   :to :actor.role/customer,
+   :template :negotiation-review-by-other-party-unpublished}
+  {:name :notification/review-by-customer-second,
+   :on :transition/review-2-by-customer,
+   :to :actor.role/provider,
+   :template :negotiation-review-by-other-party-published}
+  {:name :notification/review-by-provider-second,
+   :on :transition/review-2-by-provider,
+   :to :actor.role/customer,
+   :template :negotiation-review-by-other-party-published}]}
