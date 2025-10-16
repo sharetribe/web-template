@@ -67,6 +67,7 @@ module.exports = (req, res) => {
     });
 };
 
-const hasOngoingTransactionsWithStripeRelatedStates = transactions => {
-  return transactions.length > 0;
+const hasOngoingTransactionsWithStripeRelatedStates = responses => {
+  // TODO: improve
+  return responses.some(map => Array.isArray(map?.data?.data) && map.data.data.length > 0);
 };
