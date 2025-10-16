@@ -53,13 +53,11 @@ export default function reducer(state = initialState, action = {}) {
 
 export const deleteAccountRequest = () => ({ type: DELETE_ACCOUNT_REQUEST });
 export const deleteAccountSuccess = () => ({ type: DELETE_ACCOUNT_SUCCESS });
-export const deleteAccountError = error => {
-  ({
-    type: DELETE_ACCOUNT_ERROR,
-    payload: error,
-    error: true,
-  });
-};
+export const deleteAccountError = error => ({
+  type: DELETE_ACCOUNT_ERROR,
+  payload: error,
+  error: true,
+});
 
 export const resetPasswordRequest = () => ({ type: RESET_PASSWORD_REQUEST });
 
