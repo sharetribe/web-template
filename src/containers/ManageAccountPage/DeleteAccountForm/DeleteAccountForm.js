@@ -4,7 +4,10 @@ import classNames from 'classnames';
 
 import { FormattedMessage } from '../../../util/reactIntl';
 import * as validators from '../../../util/validators';
-import { isErrorTransactionHasStripeRelatedStates } from '../../../util/errors';
+import {
+  isChangeEmailWrongPassword,
+  isErrorTransactionHasStripeRelatedStates,
+} from '../../../util/errors';
 
 import { Form, PrimaryButton, FieldTextInput, H4, FieldCheckbox } from '../../../components';
 
@@ -27,9 +30,10 @@ const ErrorMessage = props => {
 };
 
 const DeleteAccountForm = props => {
-  const { onSubmitDeleteAccount, intl, marketplaceName } = props;
+  const { onSubmitDeleteAccount, intl, marketplaceName, onResetPassword } = props;
   // submittedValues: the checkbox value and the given current password
   const [submittedValues, setSubmittedValues] = useState({});
+  const [showResetPasswordMessage, setShowResetPasswordMessage] = useState(false);
 
   const handleSubmitDeleteAccount = values => {
     // save  for the next rendering in case the onSubmitDeleteAccount call fails
@@ -37,8 +41,14 @@ const DeleteAccountForm = props => {
     return onSubmitDeleteAccount(values);
   };
 
+  const handleResetPassword = email => {
+    setShowResetPasswordMessage(true);
+    onResetPassword(props.currentUser.attributes.email);
+  };
+
   return (
     <FinalForm
+      {...props}
       initialValues={submittedValues}
       onSubmit={handleSubmitDeleteAccount}
       render={fieldRenderProps => {
@@ -48,9 +58,12 @@ const DeleteAccountForm = props => {
           deleteAccountError,
           formId,
           handleSubmit,
+          currentUser,
           inProgress = false,
           invalid,
           values,
+          onResetPassword,
+          resetPasswordInProgress = false,
         } = fieldRenderProps;
         const { confirmDeleteAccount } = values;
 
@@ -88,6 +101,40 @@ const DeleteAccountForm = props => {
           ? validators.composeValidators(passwordRequired, passwordMinLength)
           : null;
 
+        const passwordFailedMessage = intl.formatMessage({
+          id: 'DeleteAccountForm.passwordFailed',
+        });
+        const passwordErrorText = isChangeEmailWrongPassword(deleteAccountError)
+          ? passwordFailedMessage
+          : null;
+
+        const sendPasswordLink = (
+          <span className={css.helperLink} onClick={handleResetPassword} role="button">
+            <FormattedMessage id="DeleteAccountForm.resetPasswordLinkText" />
+          </span>
+        );
+
+        const resendPasswordLink = (
+          <span className={css.helperLink} onClick={handleResetPassword} role="button">
+            <FormattedMessage id="DeleteAccountForm.resendPasswordLinkText" />
+          </span>
+        );
+
+        const resetPasswordLink =
+          showResetPasswordMessage || resetPasswordInProgress ? (
+            <>
+              <FormattedMessage
+                id="ContactDetailsForm.resetPasswordLinkSent"
+                values={{
+                  email: <span className={css.emailStyle}>{currentUser.attributes.email}</span>,
+                }}
+              />{' '}
+              {resendPasswordLink}
+            </>
+          ) : (
+            sendPasswordLink
+          );
+
         const confirmClasses = classNames(css.confirmChangesSection, {
           [css.confirmChangesSectionVisible]: deleteAccountConfirmed,
         });
@@ -109,20 +156,25 @@ const DeleteAccountForm = props => {
               value="deleteAccountSelected"
               useSuccessColor
             />
+            <br />
+            <p className={css.confirmChangesInfo}>
+              <FormattedMessage
+                id="DeleteAccountForm.confirmDeleteInfo"
+                values={{ marketplaceName }}
+              />
+              <br />
+            </p>
             <div className={confirmClasses}>
               <H4 as="h3" className={css.confirmChangesTitle}>
                 <FormattedMessage id="DeleteAccountForm.confirmDeleteTitle" />
               </H4>
               <p className={css.confirmChangesInfo}>
-                <FormattedMessage
-                  id="DeleteAccountForm.confirmDeleteInfo"
-                  values={{ marketplaceName }}
-                />
+                <FormattedMessage id="DeleteAccountForm.deleteAccountInfo" />
                 <br />
-                {/* <FormattedMessage
-                  id="DeleteAccountForm.resetPasswordLink"
+                <FormattedMessage
+                  id="DeleteAccountForm.resetPasswordInfo"
                   values={{ resetPasswordLink }}
-                /> */}
+                />
               </p>
 
               <FieldTextInput
@@ -134,14 +186,16 @@ const DeleteAccountForm = props => {
                 label={passwordLabel}
                 placeholder={passwordPlaceholder}
                 validate={passwordValidators}
+                customErrorText={passwordErrorText}
               />
             </div>
             <div className={css.bottomWrapper}>
-              <ErrorMessage error={deleteAccountError} />
+              {// TODO: refine
+              passwordErrorText ? null : <ErrorMessage error={deleteAccountError} />}
               <PrimaryButton
+                className={css.submitButton}
                 type="submit"
                 inProgress={inProgress}
-                //ready={pristineSinceLastSubmit}
                 disabled={submitDisabled}
               >
                 <FormattedMessage id="DeleteAccountForm.deleteAccount" />
