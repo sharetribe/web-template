@@ -30,14 +30,20 @@ const ErrorMessage = props => {
 };
 
 const DeleteAccountForm = props => {
-  const { onSubmitDeleteAccount, intl, marketplaceName } = props;
+  const { onSubmitDeleteAccount, intl, marketplaceName, onResetPassword } = props;
   // submittedValues: the checkbox value and the given current password
   const [submittedValues, setSubmittedValues] = useState({});
+  const [showResetPasswordMessage, setShowResetPasswordMessage] = useState(false);
 
   const handleSubmitDeleteAccount = values => {
     // save  for the next rendering in case the onSubmitDeleteAccount call fails
     setSubmittedValues(values);
     return onSubmitDeleteAccount(values);
+  };
+
+  const handleResetPassword = email => {
+    setShowResetPasswordMessage(true);
+    onResetPassword(props.currentUser.attributes.email);
   };
 
   return (
@@ -102,43 +108,32 @@ const DeleteAccountForm = props => {
           ? passwordFailedMessage
           : null;
 
-        const handleResetPassword = email => {
-          onResetPassword(email);
-        };
-
         const sendPasswordLink = (
-          <span
-            className={css.helperLink}
-            onClick={onResetPassword(currentUser.attributes.email)}
-            role="button"
-          >
+          <span className={css.helperLink} onClick={handleResetPassword} role="button">
             <FormattedMessage id="DeleteAccountForm.resetPasswordLinkText" />
           </span>
         );
 
         const resendPasswordLink = (
-          <span
-            className={css.helperLink}
-            onClick={handleResetPassword(currentUser.attributes.email)}
-            role="button"
-          >
+          <span className={css.helperLink} onClick={handleResetPassword} role="button">
             <FormattedMessage id="DeleteAccountForm.resendPasswordLinkText" />
           </span>
         );
 
-        const resetPasswordLink = /* this.state.showResetPasswordMessage || */ resetPasswordInProgress ? (
-          <>
-            <FormattedMessage
-              id="ContactDetailsForm.resetPasswordLinkSent"
-              values={{
-                email: <span className={css.emailStyle}>{currentUser.attributes.email}</span>,
-              }}
-            />{' '}
-            {resendPasswordLink}
-          </>
-        ) : (
-          sendPasswordLink
-        );
+        const resetPasswordLink =
+          showResetPasswordMessage || resetPasswordInProgress ? (
+            <>
+              <FormattedMessage
+                id="ContactDetailsForm.resetPasswordLinkSent"
+                values={{
+                  email: <span className={css.emailStyle}>{currentUser.attributes.email}</span>,
+                }}
+              />{' '}
+              {resendPasswordLink}
+            </>
+          ) : (
+            sendPasswordLink
+          );
 
         const confirmClasses = classNames(css.confirmChangesSection, {
           [css.confirmChangesSectionVisible]: deleteAccountConfirmed,
@@ -161,22 +156,25 @@ const DeleteAccountForm = props => {
               value="deleteAccountSelected"
               useSuccessColor
             />
+            <br />
+            <p className={css.confirmChangesInfo}>
+              <FormattedMessage
+                id="DeleteAccountForm.confirmDeleteInfo"
+                values={{ marketplaceName }}
+              />
+              <br />
+            </p>
             <div className={confirmClasses}>
               <H4 as="h3" className={css.confirmChangesTitle}>
                 <FormattedMessage id="DeleteAccountForm.confirmDeleteTitle" />
               </H4>
               <p className={css.confirmChangesInfo}>
-                <FormattedMessage
-                  id="DeleteAccountForm.confirmDeleteInfo"
-                  values={{ marketplaceName }}
-                />
+                <FormattedMessage id="DeleteAccountForm.deleteAccountInfo" />
                 <br />
-                {
-                  <FormattedMessage
-                    id="DeleteAccountForm.resetPasswordLink"
-                    values={{ resetPasswordLink }}
-                  />
-                }
+                <FormattedMessage
+                  id="DeleteAccountForm.resetPasswordInfo"
+                  values={{ resetPasswordLink }}
+                />
               </p>
 
               <FieldTextInput
