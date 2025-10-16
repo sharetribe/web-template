@@ -36,14 +36,6 @@
   }
 }
 
-.tooMany {
-  color: var(--colorGrey300);
-}
-
-.emailSent {
-  color: var(--colorGrey700);
-}
-
 .confirmChangesTitle {
   margin-top: 0;
   margin-bottom: 13px;
@@ -70,5 +62,23 @@
 
   @media (--viewportMedium) {
     margin-top: 96px;
+  }
+}
+
+.submitButton {
+  background-color: var(--colorFail);
+
+  &:focus,
+  &:hover {
+    background-color: var(--colorFailDark);
+  }
+}
+
+.error {
+  color: var(--colorFail);
+  margin-top: 0;
+
+  @media (--viewportMedium) {
+    margin-top: 0;
   }
 }
