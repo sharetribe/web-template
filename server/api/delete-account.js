@@ -1,30 +1,30 @@
 const { getSdk, getTrustedSdk, handleError } = require('../api-util/sdk');
 
+const stripeRelatedStatesForBookings = [
+  'state/pending-payment',
+  'state/preauthorized',
+  'state/accepted',
+  'state/delivered',
+];
+const stripeRelatedStatesForPurchases = [
+  'state/pending-payment',
+  'state/purchased',
+  'state/delivered',
+  'state/disputed',
+  'state/received',
+];
+const stripeRelatedStatesForNegotiation = [
+  'state/pending-payment',
+  'state/offer-accepted',
+  'state/delivered',
+  'state/changes-requested',
+  'state/completed',
+];
+
 module.exports = (req, res) => {
   const { currentPassword } = req.body;
 
   const sdk = getSdk(req, res);
-
-  const stripeRelatedStatesForBookings = [
-    'state/pending-payment',
-    'state/preauthorized',
-    'state/accepted',
-    'state/delivered',
-  ];
-  const stripeRelatedStatesForPurchases = [
-    'state/pending-payment',
-    'state/purchased',
-    'state/delivered',
-    'state/disputed',
-    'state/received',
-  ];
-  const stripeRelatedStatesForNegotiation = [
-    'state/pending-payment',
-    'state/offer-accepted',
-    'state/delivered',
-    'state/changes-requested',
-    'state/completed',
-  ];
 
   const ongoingBookingsWithStripeRelatedStates = () =>
     sdk.transactions.query({
