@@ -6,7 +6,7 @@ import { FormattedMessage } from '../../../util/reactIntl';
 import * as validators from '../../../util/validators';
 import {
   isChangeEmailWrongPassword,
-  isErrorTransactionHasStripeRelatedStates,
+  isErrorTransactionHasIncompletePaymentProcessing,
 } from '../../../util/errors';
 
 import { Form, PrimaryButton, FieldTextInput, H4, FieldCheckbox } from '../../../components';
@@ -16,11 +16,11 @@ import css from './DeleteAccountForm.module.css';
 const ErrorMessage = props => {
   const { error } = props;
 
-  const stripeRelatedStatesError = isErrorTransactionHasStripeRelatedStates(error);
+  const incompletePaymentProcessingError = isErrorTransactionHasIncompletePaymentProcessing(error);
 
   return error ? (
     <p className={css.error}>
-      {stripeRelatedStatesError ? (
+      {incompletePaymentProcessingError ? (
         <FormattedMessage id="DeleteAccountForm.ongoingTransactionsError" />
       ) : (
         <FormattedMessage id="DeleteAccountForm.deleteAccountError" />

@@ -96,7 +96,9 @@ exports.handleError = (res, error) => {
         statusText: error.message,
       })
       .end();
-  } else if (error.message == 'Account has ongoing transactions with Stripe states') {
+  } else if (
+    error.message == 'User has transactions on states that include incomplete payment processing'
+  ) {
     res
       .status(409)
       .json({
