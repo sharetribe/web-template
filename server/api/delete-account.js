@@ -51,7 +51,9 @@ module.exports = (req, res) => {
       console.log('Promise.all complete');
       if (hasOngoingTransactionsWithStripeRelatedStates(responses)) {
         console.log('hasOngoingTransactionsWithStripeRelatedStates - true');
-        throw new Error('Account has ongoing transactions with Stripe states');
+        throw new Error(
+          'User has transactions on states that include incomplete payment processing'
+        );
       }
       return getTrustedSdk(req);
     })
