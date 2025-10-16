@@ -105,3 +105,9 @@ description or try to replicate an error a user has encountered.
 ### login-as.js
 
 This endpoint represents the second phase of the authentication process for the "login-as" feature.
+
+### delete-account.js
+
+This endpoint is used to allow users to delete their accounts from a marketplace - done from the
+account management tab in user settings. It does not allow deletion if certain conditions are not
+met: the user cannot have transactions that are in payment processing states.
