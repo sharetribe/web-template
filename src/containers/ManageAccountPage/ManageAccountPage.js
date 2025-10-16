@@ -44,11 +44,7 @@ export const ManageAccountPageComponent = props => {
     deleteAccountError,
     deleteAccountInProgress,
     currentUser,
-    accountDeletionConfirmed,
     scrollingDisabled,
-    sendVerificationEmailInProgress = false,
-    sendVerificationEmailError,
-    onResendVerificationEmail,
     onSubmitDeleteAccount,
     onResetPassword,
     resetPasswordInProgress = false,
@@ -105,6 +101,11 @@ export const ManageAccountPageComponent = props => {
               deleteAccountError={deleteAccountError}
               onSubmitDeleteAccount={handleSubmit}
               marketplaceName={config.marketplaceName}
+              currentUser={currentUser}
+              deleteAccountInProgress={deleteAccountInProgress}
+              onResetPassword={onResetPassword}
+              resetPasswordInProgress={resetPasswordInProgress}
+              resetPasswordError={resetPasswordError}
             />
           ) : null}
         </div>
