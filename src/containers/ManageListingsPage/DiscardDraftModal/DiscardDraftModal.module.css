@@ -64,6 +64,11 @@
   flex-shrink: 0;
   background-color: var(--colorFail);
 
+  &:focus,
+  &:hover {
+    background-color: var(--colorFailDark);
+  }
+
   @media (--viewportMedium) {
     display: inline-block;
     width: 100%;
