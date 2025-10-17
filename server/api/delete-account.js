@@ -26,30 +26,30 @@ module.exports = (req, res) => {
 
   const sdk = getSdk(req, res);
 
-  const ongoingBookingsWithStripeRelatedStates = () =>
+  const ongoingBookingsWithIncompletePaymentProcessing = () =>
     sdk.transactions.query({
       processNames: 'default-booking',
       states: stripeRelatedStatesForBookings.join(','),
     });
-  const ongoingPurchasesWithStripeRelatedStates = () =>
+  const ongoingPurchasesWithIncompletePaymentProcessing = () =>
     sdk.transactions.query({
       processNames: 'default-purchase',
       states: stripeRelatedStatesForPurchases.join(','),
     });
-  const ongoingNegotiationsWithStripeRelatedStates = () =>
+  const ongoingNegotiationsWithIncompletePaymentProcessing = () =>
     sdk.transactions.query({
       processNames: 'default-negotiation',
       states: stripeRelatedStatesForNegotiation.join(','),
     });
 
   Promise.all([
-    ongoingBookingsWithStripeRelatedStates(),
-    ongoingPurchasesWithStripeRelatedStates(),
-    ongoingNegotiationsWithStripeRelatedStates(),
+    ongoingBookingsWithIncompletePaymentProcessing(),
+    ongoingPurchasesWithIncompletePaymentProcessing(),
+    ongoingNegotiationsWithIncompletePaymentProcessing(),
   ])
     .then(responses => {
       console.log('Promise.all complete');
-      if (hasOngoingTransactionsWithStripeRelatedStates(responses)) {
+      if (hasOngoingTransactionsWithIncompletePaymentProcessing(responses)) {
         console.log('hasOngoingTransactionsWithStripeRelatedStates - true');
         throw new Error(
           'User has transactions on states that include incomplete payment processing'
@@ -69,7 +69,9 @@ module.exports = (req, res) => {
     });
 };
 
-const hasOngoingTransactionsWithStripeRelatedStates = responses => {
-  // TODO: improve
-  return responses.some(map => Array.isArray(map?.data?.data) && map.data.data.length > 0);
+const hasOngoingTransactionsWithIncompletePaymentProcessing = responses => {
+  return responses.some(map => {
+    const queryResults = map?.data?.data;
+    return Array.isArray(queryResults) && queryResults.length > 0;
+  });
 };
