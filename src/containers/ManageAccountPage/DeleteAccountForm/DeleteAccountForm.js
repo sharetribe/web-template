@@ -6,7 +6,7 @@ import { FormattedMessage } from '../../../util/reactIntl';
 import * as validators from '../../../util/validators';
 import {
   isChangeEmailWrongPassword,
-  isErrorTransactionHasIncompletePaymentProcessing,
+  isErrorUserHasUnfinishedTransactions,
 } from '../../../util/errors';
 
 import { Form, PrimaryButton, FieldTextInput, H4, FieldCheckbox } from '../../../components';
@@ -16,11 +16,13 @@ import css from './DeleteAccountForm.module.css';
 const ErrorMessage = props => {
   const { error } = props;
 
-  const incompletePaymentProcessingError = isErrorTransactionHasIncompletePaymentProcessing(error);
+  const unfinishedTransactionsError = isErrorUserHasUnfinishedTransactions(error);
+
+  // TODO: other error handling based on backend responses
 
   return error ? (
     <p className={css.error}>
-      {incompletePaymentProcessingError ? (
+      {unfinishedTransactionsError ? (
         <FormattedMessage id="DeleteAccountForm.ongoingTransactionsError" />
       ) : (
         <FormattedMessage id="DeleteAccountForm.deleteAccountError" />
