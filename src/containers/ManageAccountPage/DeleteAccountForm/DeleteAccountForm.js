@@ -20,7 +20,7 @@ const ErrorMessage = props => {
 
   // TODO: other error handling based on backend responses
 
-  return error ? (
+  return error && !props.passwordErrorText ? (
     <p className={css.error}>
       {unfinishedTransactionsError ? (
         <FormattedMessage id="DeleteAccountForm.ongoingTransactionsError" />
@@ -43,7 +43,7 @@ const DeleteAccountForm = props => {
     return onSubmitDeleteAccount(values);
   };
 
-  const handleResetPassword = email => {
+  const handleResetPassword = () => {
     setShowResetPasswordMessage(true);
     onResetPassword(props.currentUser.attributes.email);
   };
@@ -64,7 +64,6 @@ const DeleteAccountForm = props => {
           inProgress = false,
           invalid,
           values,
-          onResetPassword,
           resetPasswordInProgress = false,
         } = fieldRenderProps;
         const { confirmDeleteAccount } = values;
@@ -106,6 +105,7 @@ const DeleteAccountForm = props => {
         const passwordFailedMessage = intl.formatMessage({
           id: 'DeleteAccountForm.passwordFailed',
         });
+
         const passwordErrorText = isChangeEmailWrongPassword(deleteAccountError)
           ? passwordFailedMessage
           : null;
@@ -192,8 +192,7 @@ const DeleteAccountForm = props => {
               />
             </div>
             <div className={css.bottomWrapper}>
-              {// TODO: refine
-              passwordErrorText ? null : <ErrorMessage error={deleteAccountError} />}
+              <ErrorMessage error={deleteAccountError} />
               <PrimaryButton
                 className={css.submitButton}
                 type="submit"
