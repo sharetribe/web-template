@@ -338,6 +338,15 @@ export const isProviderCommissionBiggerThanMinPrice = error =>
     'Minimum commission amount is greater than the amount of money paid in'
   );
 
+export const isErrorUserHasUnfinishedTransactions = error => {
+  return (
+    error?.status === 409 &&
+    error?.statusText.startsWith(
+      'User has transactions on states that include incomplete payment processing'
+    )
+  );
+};
+
 export const storableError = err => {
   const error = err || {};
   const { name, message, status, statusText } = error;
