@@ -9,6 +9,7 @@ const SectionMultiEnumMaybe = props => {
   if (!heading || !options || !hasContent) {
     return null;
   }
+  const idSlug = heading.toLowerCase().replace(/ /g, '_');
 
   return (
     <section className={css.sectionMultiEnum}>
@@ -16,7 +17,8 @@ const SectionMultiEnumMaybe = props => {
         {heading}
       </Heading>
       <PropertyGroup
-        id="ListingPage.amenities"
+        id={`ListingPage.${idSlug}`}
+        ariaLabel={heading}
         options={options}
         selectedOptions={selectedOptions}
         twoColumns={options.length > 5}
