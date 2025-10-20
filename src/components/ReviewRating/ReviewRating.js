@@ -27,6 +27,7 @@ const ReviewRating = props => {
           key={`star-${star}`}
           className={reviewStarClassName}
           isFilled={star <= rating}
+          ariaLabel={`${star}/5`}
         />
       ))}
     </span>
