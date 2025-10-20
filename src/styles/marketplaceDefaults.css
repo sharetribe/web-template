@@ -1015,7 +1015,7 @@ textarea {
   cursor: not-allowed;
   text-decoration: none;
   background-color: var(--colorGrey100);
-  color: var(--colorWhite);
+  color: var(--colorGrey700);
 }
 
 /**
