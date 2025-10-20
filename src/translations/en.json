@@ -336,6 +336,7 @@
   "EditListingStyleForm.helpText": "Decide how your listing will look like in search results.",
   "EditListingStyleForm.preview": "Preview",
   "EditListingStyleForm.publishListingFailed": "Publishing a new listing failed.",
+  "EditListingStyleForm.screenreader.chooseCardStyle": "Choose {option, select, white {white} grey {gray} black {black} brand {brand color} other {secondary brand color}} as a background color for the card.",
   "EditListingStyleForm.title": "Choose a style",
   "EditListingStyleForm.updateFailed": "Failed to update listing. Please try again.",
   "EditListingStylePanel.createListingTitle": "Style",

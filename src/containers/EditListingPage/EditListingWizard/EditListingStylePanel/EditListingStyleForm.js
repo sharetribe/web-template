@@ -4,7 +4,7 @@ import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
 
 // Import configs and util modules
-import { FormattedMessage } from '../../../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../../../util/reactIntl';
 
 // Import shared components
 import { Button, Form, ListingCardThumbnail, H5 } from '../../../../components';
@@ -14,20 +14,25 @@ import { colorSchemes } from '../../../../util/types';
 // Import modules from this directory
 import css from './EditListingStyleForm.module.css';
 
+// A `cardStyle` attribute is stored in the listing extended data. This value is used to select the correct background
+// style when rendering the listing card. The colorSchemeMap object maps the value stored in extended data (cardStyle)
+// to a color value. This color is used to fill the radio button on the StyleForm page. See also types.js and ListingCardThumbnail.module.css
+// if you are modifying this map.
+const colorSchemeMap = {
+  white: '--colorWhite',
+  grey: '--colorGrey50',
+  black: '--colorBlack',
+  'main-brand': '--marketplaceColor',
+  'primary-button': '--colorPrimaryButton',
+};
+
+const colorForScreenReader = value => {
+  return value === 'main-brand' ? 'brand' : value === 'primary-button' ? 'button' : value;
+};
+
 const FieldCardStyle = props => {
   const { className, id, value, name } = props;
-
-  // A `cardStyle` attribute is stored in the listing extended data. This value is used to select the correct background
-  // style when rendering the listing card. The colorSchemeMap object maps the value stored in extended data (cardStyle)
-  // to a color value. This color is used to fill the radio button on the StyleForm page. See also types.js and ListingCardThumbnail.module.css
-  // if you are modifying this map.
-  const colorSchemeMap = {
-    white: '--colorWhite',
-    grey: '--colorGrey50',
-    black: '--colorBlack',
-    'main-brand': '--marketplaceColor',
-    'primary-button': '--colorPrimaryButton',
-  };
+  const intl = useIntl();
 
   return (
     <span className={css.fieldCardStyle}>
@@ -38,6 +43,10 @@ const FieldCardStyle = props => {
         value={value}
         className={css.radioButtonInput}
         component="input"
+        aria-label={intl.formatMessage(
+          { id: 'EditListingStyleForm.screenreader.chooseCardStyle' },
+          { option: colorForScreenReader(value) }
+        )}
       />
       <label htmlFor={id} className={css.radioButtonLabel}>
         <div className={css.radioButtonIcon}>
