@@ -66,7 +66,7 @@ const FieldReviewRatingComponent = props => {
         >
           <IconReviewStar
             rootClassName={css.star}
-            label={intl.formatMessage({ id: `FieldReviewRating.${starId}` })}
+            ariaLabel={intl.formatMessage({ id: `FieldReviewRating.${starId}` })}
           />
         </label>
       );
