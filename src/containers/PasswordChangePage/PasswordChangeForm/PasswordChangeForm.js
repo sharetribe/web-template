@@ -215,7 +215,7 @@ class PasswordChangeForm extends Component {
                 />
               </div>
 
-              <div className={confirmClasses}>
+              <div className={confirmClasses} aria-hidden={pristine}>
                 <H4 as="h3" className={css.confirmChangesTitle}>
                   <FormattedMessage id="PasswordChangeForm.confirmChangesTitle" />
                 </H4>
