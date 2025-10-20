@@ -24,6 +24,10 @@ const BRAND_VISA = 'visa';
 const IconCard = props => {
   const { className, rootClassName, brand = 'default' } = props;
   const classes = classNames(rootClassName || css.root, className);
+  const roleInfo = {
+    role: 'img',
+    ['aria-label']: brand,
+  };
 
   switch (brand) {
     case BRAND_AMEX:
@@ -34,6 +38,7 @@ const IconCard = props => {
           viewBox="0 0 24 16"
           width="24"
           xmlns="http://www.w3.org/2000/svg"
+          {...roleInfo}
         >
           <g fill="none" fillRule="evenodd">
             <rect fill="#016fd0" height="16" rx="2" width="24" />
@@ -68,6 +73,7 @@ const IconCard = props => {
           height="16"
           viewBox="0 0 24 16"
           xmlns="http://www.w3.org/2000/svg"
+          {...roleInfo}
         >
           <g fillRule="nonzero" fill="none">
             <path
@@ -96,6 +102,7 @@ const IconCard = props => {
           height="16"
           viewBox="0 0 24 16"
           xmlns="http://www.w3.org/2000/svg"
+          {...roleInfo}
         >
           <g fillRule="nonzero" fill="none">
             <path
@@ -128,6 +135,7 @@ const IconCard = props => {
           viewBox="0 0 23 16"
           width="23"
           xmlns="http://www.w3.org/2000/svg"
+          {...roleInfo}
         >
           <g fill="none">
             <path
@@ -165,6 +173,7 @@ const IconCard = props => {
           viewBox="0 0 24 16"
           width="24"
           xmlns="http://www.w3.org/2000/svg"
+          {...roleInfo}
         >
           <g fill="none" fillRule="evenodd">
             <rect fill="#252525" height="16" rx="2" width="24" />
@@ -185,6 +194,7 @@ const IconCard = props => {
           viewBox="0 0 24 16"
           width="24"
           xmlns="http://www.w3.org/2000/svg"
+          {...roleInfo}
         >
           <g fill="none">
             <path
@@ -214,6 +224,7 @@ const IconCard = props => {
           height="16"
           viewBox="0 0 24 16"
           xmlns="http://www.w3.org/2000/svg"
+          {...roleInfo}
         >
           <g fillRule="nonzero" fill="none">
             <rect
@@ -242,6 +253,7 @@ const IconCard = props => {
           height="19"
           viewBox="0 0 29 19"
           xmlns="http://www.w3.org/2000/svg"
+          {...roleInfo}
         >
           <g fill="none" fillRule="evenodd">
             <path
