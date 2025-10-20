@@ -17,7 +17,7 @@ const IconEdit = props => {
   const { rootClassName, className, pencilClassName } = props;
   const classes = classNames(rootClassName || css.root, className);
   return (
-    <svg className={classes} width="14" height="14" xmlns="http://www.w3.org/2000/svg">
+    <svg className={classes} width="14" height="14" xmlns="http://www.w3.org/2000/svg" role="none">
       <g
         className={pencilClassName || css.pencil}
         fill="none"
