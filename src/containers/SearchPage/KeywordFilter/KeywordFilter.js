@@ -62,6 +62,7 @@ class KeywordFilter extends Component {
       id,
       name,
       label,
+      getAriaLabel,
       initialValues,
       contentPlacementOffset = 0,
       onSubmit,
@@ -137,6 +138,7 @@ class KeywordFilter extends Component {
         popupClassName={css.popupSize}
         name={name}
         label={labelForPopup}
+        ariaLabel={getAriaLabel(label)}
         isSelected={hasInitialValues}
         id={`${id}.popup`}
         showAsPopup
@@ -162,6 +164,7 @@ class KeywordFilter extends Component {
         className={className}
         rootClassName={rootClassName}
         label={labelForPlain}
+        ariaLabel={getAriaLabel(label)}
         isSelected={hasInitialValues}
         id={`${id}.plain`}
         liveEdit

@@ -47,6 +47,7 @@ const SelectSingleFilter = props => {
     initialValues,
     contentPlacementOffset = 0,
     onSubmit,
+    getAriaLabel,
     ...rest
   } = props;
 
@@ -91,6 +92,7 @@ const SelectSingleFilter = props => {
       rootClassName={rootClassName}
       popupClassName={css.popupSize}
       label={label}
+      ariaLabel={getAriaLabel(label)}
       isSelected={hasInitialValues}
       id={`${id}.popup`}
       showAsPopup
@@ -107,6 +109,7 @@ const SelectSingleFilter = props => {
       className={className}
       rootClassName={rootClassName}
       label={labelForPlain}
+      ariaLabel={getAriaLabel(label)}
       isSelected={hasInitialValues}
       id={`${id}.plain`}
       liveEdit

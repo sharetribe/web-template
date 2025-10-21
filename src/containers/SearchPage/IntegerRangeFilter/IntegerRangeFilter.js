@@ -98,6 +98,7 @@ const IntegerRangeFilter = props => {
     queryParamNames,
     initialValues,
     label,
+    getAriaLabel,
     rootClassName,
     className,
     id,
@@ -156,6 +157,7 @@ const IntegerRangeFilter = props => {
       className={classes}
       rootClassName={rootClassName}
       label={label}
+      ariaLabel={getAriaLabel(label)}
       isSelected={hasInitialValues}
       id={`${id}.popup`}
       onSubmit={handleSubmit}
@@ -177,6 +179,7 @@ const IntegerRangeFilter = props => {
       className={classes}
       rootClassName={rootClassName}
       label={label}
+      ariaLabel={getAriaLabel(label)}
       labelSelection={labelSelectionForPlain}
       labelSelectionSeparator=":"
       isSelected={hasInitialValues}

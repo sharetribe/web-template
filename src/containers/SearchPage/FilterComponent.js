@@ -60,7 +60,7 @@ const FilterComponent = props => {
           onSubmit={getHandleChangedValueFn(useHistoryPush)}
           options={convertCategoriesToSelectTreeOptions(listingCategories)}
           isNestedEnum={isNestedEnum}
-          ariaLabel={getAriaLabel(label)}
+          getAriaLabel={getAriaLabel}
           {...rest}
         />
       );
@@ -79,7 +79,7 @@ const FilterComponent = props => {
           initialValues={initialValues(paramNames, liveEdit)}
           onSubmit={getHandleChangedValueFn(useHistoryPush)}
           options={options}
-          ariaLabel={getAriaLabel(label)}
+          getAriaLabel={getAriaLabel}
           {...rest}
         />
       );
@@ -114,7 +114,7 @@ const FilterComponent = props => {
           queryParamNames={[key]}
           initialValues={initialValues([key], liveEdit)}
           onSubmit={getHandleChangedValueFn(useHistoryPush)}
-          ariaLabel={getAriaLabel(label)}
+          getAriaLabel={getAriaLabel}
           {...rest}
         />
       );
@@ -144,7 +144,7 @@ const FilterComponent = props => {
           queryParamNames={[key]}
           initialValues={initialValues([key], liveEdit)}
           onSubmit={getHandleChangedValueFn(useHistoryPush)}
-          ariaLabel={getAriaLabel(label)}
+          getAriaLabel={getAriaLabel}
           {...rest}
         />
       );
@@ -156,32 +156,31 @@ const FilterComponent = props => {
     case SCHEMA_TYPE_ENUM: {
       const { scope, enumOptions, filterConfig = {} } = config;
       const { label, filterType } = filterConfig;
-      const ariaLabel = getAriaLabel(label);
       const queryParamNames = [constructQueryParamName(key, scope)];
       return filterType === 'SelectSingleFilter' ? (
         <SelectSingleFilter
           id={componentId}
           label={label}
+          getAriaLabel={getAriaLabel}
           name={name}
           queryParamNames={queryParamNames}
           initialValues={initialValues(queryParamNames, liveEdit)}
           onSubmit={getHandleChangedValueFn(useHistoryPush)}
           options={enumOptions}
           isNestedEnum={false}
-          ariaLabel={getAriaLabel(label)}
           {...rest}
         />
       ) : (
         <SelectMultipleFilter
           id={componentId}
           label={label}
+          getAriaLabel={getAriaLabel}
           name={name}
           queryParamNames={queryParamNames}
           initialValues={initialValues(queryParamNames, liveEdit)}
           onSubmit={getHandleChangedValueFn(useHistoryPush)}
           options={enumOptions}
           schemaType={schemaType}
-          ariaLabel={ariaLabel}
           {...rest}
         />
       );
@@ -194,6 +193,7 @@ const FilterComponent = props => {
         <SelectMultipleFilter
           id={componentId}
           label={label}
+          getAriaLabel={getAriaLabel}
           name={name}
           queryParamNames={queryParamNames}
           initialValues={initialValues(queryParamNames, liveEdit)}
@@ -201,7 +201,6 @@ const FilterComponent = props => {
           options={enumOptions}
           schemaType={schemaType}
           searchMode={searchMode}
-          ariaLabel={getAriaLabel(label)}
           {...rest}
         />
       );
@@ -221,7 +220,7 @@ const FilterComponent = props => {
           min={minimum}
           max={maximum}
           step={step}
-          ariaLabel={getAriaLabel(label)}
+          getAriaLabel={getAriaLabel}
           {...rest}
         />
       );
