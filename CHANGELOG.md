@@ -14,8 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
-  [#675](https://github.com/sharetribe/web-template/pull/675)
-- [fix] Fix some Marketplace texts.
+- [fix] Fix a bug with coordinate values in the URL.
+  [#676](https://github.com/sharetribe/web-template/pull/676)
+- [fix] Fix some Marketplace texts. [#675](https://github.com/sharetribe/web-template/pull/675)
 
 ## [v9.0.0] 2025-10-14
 
