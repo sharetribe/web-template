@@ -431,6 +431,7 @@
   "FilterComponent.listingTypeLabel": "Listing type",
   "FilterComponent.priceLabel": "Price",
   "FilterComponent.seatsLabel": "Seats",
+  "FilterForm.screenreader.label": "Filter form. {mode, select, live {Changing filter values will update the search page immediately.} other {}}",
   "FilterForm.cancel": "Cancel",
   "FilterForm.clear": "Clear",
   "FilterForm.submit": "Apply",
