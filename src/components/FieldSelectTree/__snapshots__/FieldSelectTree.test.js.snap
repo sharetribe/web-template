@@ -16,6 +16,7 @@ exports[`FieldSelectTree matches snapshot 1`] = `
         style="padding-left: 12px; cursor: pointer;"
       >
         <button
+          aria-label="FieldSelectTree.screenreader.option"
           class="optionBtn"
         >
           Dogs
@@ -26,6 +27,7 @@ exports[`FieldSelectTree matches snapshot 1`] = `
         style="padding-left: 12px; cursor: pointer;"
       >
         <button
+          aria-label="FieldSelectTree.screenreader.option"
           class="optionBtn"
         >
           Cats
@@ -36,6 +38,7 @@ exports[`FieldSelectTree matches snapshot 1`] = `
         style="padding-left: 12px; cursor: pointer;"
       >
         <button
+          aria-label="FieldSelectTree.screenreader.option"
           class="optionBtn"
         >
           Fish
@@ -46,6 +49,7 @@ exports[`FieldSelectTree matches snapshot 1`] = `
         style="padding-left: 12px; cursor: pointer;"
       >
         <button
+          aria-label="FieldSelectTree.screenreader.option"
           class="optionBtn"
         >
           Birds
@@ -56,6 +60,7 @@ exports[`FieldSelectTree matches snapshot 1`] = `
         style="padding-left: 12px; cursor: pointer;"
       >
         <button
+          aria-label="FieldSelectTree.screenreader.option"
           class="optionBtn"
         >
           Reptiles

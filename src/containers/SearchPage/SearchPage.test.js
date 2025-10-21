@@ -323,6 +323,7 @@ describe('SearchPage', () => {
         initialState,
         config,
         routeConfiguration,
+        messages: { 'FieldSelectTree.screenreader.option': 'Choose {optionName}.' },
       }
     );
 
@@ -382,7 +383,7 @@ describe('SearchPage', () => {
 
     // Test category intercation: click "Fish"
     await waitFor(() => {
-      userEvent.click(getByRole('button', { name: 'Fish' }));
+      userEvent.click(getByRole('button', { name: 'Choose Fish.' }));
     });
 
     expect(getByText('Dogs')).toBeInTheDocument();
@@ -414,7 +415,10 @@ describe('SearchPage', () => {
       initialState,
       config,
       routeConfiguration,
-      messages: { 'SearchPage.screenreader.openFilterButton': 'Filter: {label}' },
+      messages: {
+        'SearchPage.screenreader.openFilterButton': 'Filter: {label}',
+        'FieldSelectTree.screenreader.option': 'Choose {optionName}.',
+      },
     });
 
     await waitFor(() => {
@@ -482,7 +486,7 @@ describe('SearchPage', () => {
 
     // Test category intercation: click "Fish"
     await waitFor(() => {
-      userEvent.click(getByRole('button', { name: 'Fish' }));
+      userEvent.click(getByRole('button', { name: 'Choose Fish.' }));
     });
     expect(getByText('Dogs')).toBeInTheDocument();
     expect(queryByText('Poodle')).not.toBeInTheDocument();
@@ -508,6 +512,9 @@ describe('SearchPage', () => {
         initialState,
         config,
         routeConfiguration,
+        messages: {
+          'FieldSelectTree.screenreader.option': 'Choose {optionName}.',
+        },
       }
     );
 
@@ -527,7 +534,7 @@ describe('SearchPage', () => {
 
     // Test category intercation: click "Fish"
     await waitFor(() => {
-      userEvent.click(getByRole('button', { name: 'Cats' }));
+      userEvent.click(getByRole('button', { name: 'Choose Cats.' }));
     });
 
     // Has no Cat filter (primary)
@@ -558,6 +565,9 @@ describe('SearchPage', () => {
         initialState,
         config,
         routeConfiguration,
+        messages: {
+          'FieldSelectTree.screenreader.option': 'Choose {optionName}.',
+        },
       }
     );
 
@@ -575,7 +585,7 @@ describe('SearchPage', () => {
 
     // Test category intercation: click "Sell bicycles"
     await waitFor(() => {
-      userEvent.click(getByRole('button', { name: 'Sell bicycles' }));
+      userEvent.click(getByRole('button', { name: 'Choose Sell bicycles.' }));
     });
 
     // Has Boat filter filter (primary)
