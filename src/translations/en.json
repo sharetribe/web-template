@@ -422,6 +422,8 @@
   "FieldSeatsInput.seatsError": "This field is required.",
   "FieldSeatsInput.seatsLabel": "Seats",
   "FieldSeatsInput.seatsPlaceholder": "Seats",
+  "FieldSelectTree.screenreader.optionSelected": "{pathMatch, select, exact {{optionName} is selected.} other {{optionName}. One of the nested options is selected.}}",
+  "FieldSelectTree.screenreader.option": "Choose {optionName}.",
   "FieldSelectUserType.label": "User type",
   "FieldSelectUserType.placeholder": "Choose a user type",
   "FieldSelectUserType.required": "You need to select a user type.",

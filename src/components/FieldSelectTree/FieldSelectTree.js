@@ -1,5 +1,6 @@
 import React from 'react';
 import { Field } from 'react-final-form';
+import { useIntl } from 'react-intl';
 import classNames from 'classnames';
 
 import { richText } from '../../util/richText';
@@ -40,7 +41,8 @@ const hasSuboptions = optionConfig => getSuboptions(optionConfig)?.length > 0;
  * @returns <li> wrapped elements.
  */
 const Option = props => {
-  const { config, level, handleChange, branchPath, ...rest } = props;
+  const intl = useIntl();
+  const { config, level, handleChange, branchPath, ancestors = [], ...rest } = props;
   const { option, label, suboptions } = config;
   const foundFromBranchPath = branchPath.find(bc => bc.option === option);
   const isOptSelected = !!foundFromBranchPath;
@@ -49,10 +51,21 @@ const Option = props => {
   const isClickable = !isOptSelected || (isOptSelected && isSuboptionSelected);
   const cursorMaybe = isClickable ? { cursor: 'pointer' } : { cursor: 'default' };
 
-  const optionLabel = richText(label || option, {
+  const optionLabelRaw = label || option;
+  const optionLabel = richText(optionLabelRaw, {
     longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
     longWordClass: css.longWord,
   });
+
+  const optionName = [...ancestors, { label: optionLabelRaw }].map(bc => bc.label).join('/');
+  const pathMatch =
+    isOptSelected && ancestors.length + 1 === branchPath.length ? 'exact' : 'nested';
+  const ariaLabel = isOptSelected
+    ? intl.formatMessage(
+        { id: 'FieldSelectTree.screenreader.optionSelected' },
+        { optionName, pathMatch }
+      )
+    : intl.formatMessage({ id: 'FieldSelectTree.screenreader.option' }, { optionName, pathMatch });
 
   const buttonClasses = classNames({
     [css.optionBtn]: !isOptSelected,
@@ -70,6 +83,7 @@ const Option = props => {
             handleChange(option, level);
           }
         }}
+        aria-label={ariaLabel}
       >
         {optionLabel}
       </button>
@@ -80,6 +94,7 @@ const Option = props => {
           level={level + 1}
           handleChange={handleChange}
           branchPath={branchPath}
+          ancestors={[...ancestors, { option, label }]}
           {...rest}
         />
       ) : null}
