@@ -14,6 +14,20 @@ const getQueryParamName = queryParamNames => {
   return Array.isArray(queryParamNames) ? queryParamNames[0] : queryParamNames;
 };
 
+const getBranchPath = (primaryOptions, currentSelections) => {
+  const currentSelectionsEntries = Object.entries(currentSelections).sort(([k, v]) => k);
+  return currentSelectionsEntries.reduce((branchPath, entry) => {
+    const [levelKey, selectedOption] = entry;
+
+    const currentOptions =
+      branchPath.length > 0 ? branchPath[branchPath.length - 1].suboptions : primaryOptions;
+    const foundOption = currentOptions.find(o => o.option === selectedOption);
+    const foundOptionWithLevelKeyMaybe = foundOption ? [{ ...foundOption, levelKey }] : [];
+
+    return [...branchPath, ...foundOptionWithLevelKeyMaybe];
+  }, []);
+};
+
 /**
  * SelectSingleFilter component
  *
@@ -64,6 +78,9 @@ const SelectSingleFilter = props => {
     [name]: pickInitialValuesForFieldSelectTree(name, initialValues, isNestedEnum),
   };
 
+  const branchPath = getBranchPath(options, pickedInitialValues[name]);
+  const categorySelection = branchPath.map(option => option.label).join('/');
+
   const handleSubmit = queryParamNames => values => {
     const isArray = Array.isArray(queryParamNames);
     const hasMultipleQueryParams = isArray && queryParamNames.length > 1;
@@ -92,7 +109,7 @@ const SelectSingleFilter = props => {
       rootClassName={rootClassName}
       popupClassName={css.popupSize}
       label={label}
-      ariaLabel={getAriaLabel(label)}
+      ariaLabel={getAriaLabel(label, categorySelection)}
       isSelected={hasInitialValues}
       id={`${id}.popup`}
       showAsPopup
@@ -109,7 +126,7 @@ const SelectSingleFilter = props => {
       className={className}
       rootClassName={rootClassName}
       label={labelForPlain}
-      ariaLabel={getAriaLabel(label)}
+      ariaLabel={getAriaLabel(label, categorySelection)}
       isSelected={hasInitialValues}
       id={`${id}.plain`}
       liveEdit

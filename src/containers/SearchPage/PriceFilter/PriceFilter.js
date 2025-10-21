@@ -65,6 +65,13 @@ const PriceFilter = props => {
 
   const hasInitialValues = initialValues && hasValue(minPrice) && hasValue(maxPrice);
 
+  const formattedRangeForAriaLabel = hasInitialValues
+    ? `${formatCurrencyMajorUnit(intl, marketplaceCurrency, minPrice)} - ${formatCurrencyMajorUnit(
+        intl,
+        marketplaceCurrency,
+        maxPrice
+      )}`
+    : '';
   const labelWithRange = hasInitialValues
     ? intl.formatMessage(
         { id: 'PriceFilter.labelSelectedButton' },
@@ -92,7 +99,7 @@ const PriceFilter = props => {
       formatValidRangeValues={formatValidRangeValues}
       queryParamNames={queryParamNames}
       getLabelForRangeInput={getLabelForRangeInput}
-      getAriaLabel={() => getAriaLabel(labelWithRange)}
+      getAriaLabel={() => getAriaLabel(label, formattedRangeForAriaLabel)}
       {...rest}
     />
   );

@@ -40,8 +40,13 @@ const FilterComponent = props => {
   const prefix = idPrefix || 'SearchPage';
   const componentId = `${prefix}.${key.toLowerCase()}`;
   const name = key.replace(/\s+/g, '-');
-  const getAriaLabel = label =>
-    intl.formatMessage({ id: 'SearchPage.screenreader.openFilterButton' }, { label });
+  const getAriaLabel = (label, values) => {
+    const status = values ? 'active' : 'inactive';
+    return intl.formatMessage(
+      { id: 'SearchPage.screenreader.openFilterButton' },
+      { label, status, values }
+    );
+  };
 
   // Default filters: price, keywords, dates
   switch (schemaType) {

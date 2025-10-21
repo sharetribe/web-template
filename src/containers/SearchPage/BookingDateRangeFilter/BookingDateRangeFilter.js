@@ -170,7 +170,7 @@ export class BookingDateRangeFilterComponent extends Component {
         {...onClearPopupMaybe}
         {...onCancelPopupMaybe}
         initialValues={initialDates}
-        ariaLabel={getAriaLabel(labelForPopup)}
+        ariaLabel={getAriaLabel(label, labelForPopup)}
         {...rest}
       >
         <FieldDateRangeController
@@ -195,7 +195,7 @@ export class BookingDateRangeFilterComponent extends Component {
         onSubmit={handleSubmit}
         {...onClearPopupMaybe}
         {...onCancelPopupMaybe}
-        ariaLabel={getAriaLabel(labelForPopup)}
+        ariaLabel={getAriaLabel(label, labelForPopup)}
         initialValues={initialDates}
         {...rest}
       >
@@ -220,7 +220,7 @@ export class BookingDateRangeFilterComponent extends Component {
         onSubmit={handleSubmit}
         {...onClearPlainMaybe}
         initialValues={initialDates}
-        ariaLabel={getAriaLabel(labelForPlain)}
+        ariaLabel={getAriaLabel(label, labelForPopup)}
         {...rest}
       >
         <FieldDateRangeController

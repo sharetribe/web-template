@@ -906,7 +906,7 @@
   "SearchPage.schemaDescription": "Showing search results",
   "SearchPage.schemaForSearch": "a query",
   "SearchPage.schemaTitle": "Search results for {searchTitle} | {marketplaceName} | {h1}",
-  "SearchPage.screenreader.openFilterButton": "Filter: {label}",
+  "SearchPage.screenreader.openFilterButton": "{label} filter. {status, select, active {Current selection: {values}.} other {Not in use.}}",
   "SearchResultsPanel.screenreader.pagination": "Pagination",
   "SearchPage.searchError": "Search failed. Please try again.",
   "SeatsFilter.labelSelected": "Seats: {seatCount}",
