@@ -18,9 +18,13 @@ const ErrorMessage = props => {
 
   const unfinishedTransactionsError = isErrorUserHasUnfinishedTransactions(error);
 
+  // Checks for forbidden error - the password is incorrect and this is handled in
+  // the customErrorText of the FieldTextInput
+  const incorrectPasswordError = isChangeEmailWrongPassword(error);
+
   // TODO: other error handling based on backend responses
 
-  return error && !props.passwordErrorText ? (
+  return error && !incorrectPasswordError ? (
     <p className={css.error}>
       {unfinishedTransactionsError ? (
         <FormattedMessage id="DeleteAccountForm.ongoingTransactionsError" />
@@ -71,13 +75,6 @@ const DeleteAccountForm = props => {
         const deleteAccountConfirmed =
           Array.isArray(confirmDeleteAccount) && confirmDeleteAccount.length > 0;
 
-        // password
-        const passwordLabel = intl.formatMessage({
-          id: 'DeleteAccountForm.passwordLabel',
-        });
-        const passwordPlaceholder = intl.formatMessage({
-          id: 'DeleteAccountForm.passwordPlaceholder',
-        });
         const passwordRequiredMessage = intl.formatMessage({
           id: 'DeleteAccountForm.passwordRequired',
         });
@@ -110,31 +107,23 @@ const DeleteAccountForm = props => {
           ? passwordFailedMessage
           : null;
 
-        const sendPasswordLink = (
-          <span className={css.helperLink} onClick={handleResetPassword} role="button">
-            <FormattedMessage id="DeleteAccountForm.resetPasswordLinkText" />
-          </span>
-        );
-
-        const resendPasswordLink = (
-          <span className={css.helperLink} onClick={handleResetPassword} role="button">
-            <FormattedMessage id="DeleteAccountForm.resendPasswordLinkText" />
-          </span>
-        );
-
         const resetPasswordLink =
           showResetPasswordMessage || resetPasswordInProgress ? (
-            <>
-              <FormattedMessage
-                id="ContactDetailsForm.resetPasswordLinkSent"
-                values={{
-                  email: <span className={css.emailStyle}>{currentUser.attributes.email}</span>,
-                }}
-              />{' '}
-              {resendPasswordLink}
-            </>
+            <FormattedMessage
+              id="DeleteAccountForm.resetPasswordLinkSent"
+              values={{
+                email: <span className={css.emailStyle}>{currentUser.attributes.email}</span>,
+                resendPasswordLink: (
+                  <span className={css.helperLink} onClick={handleResetPassword} role="button">
+                    <FormattedMessage id="DeleteAccountForm.resendPasswordLinkText" />
+                  </span>
+                ),
+              }}
+            />
           ) : (
-            sendPasswordLink
+            <span className={css.helperLink} onClick={handleResetPassword} role="button">
+              <FormattedMessage id="DeleteAccountForm.resetPasswordLinkText" />
+            </span>
           );
 
         const confirmClasses = classNames(css.confirmChangesSection, {
@@ -185,8 +174,12 @@ const DeleteAccountForm = props => {
                 name="currentPassword"
                 id={formId ? `${formId}.currentPassword` : 'currentPassword'}
                 autoComplete="current-password"
-                label={passwordLabel}
-                placeholder={passwordPlaceholder}
+                label={intl.formatMessage({
+                  id: 'DeleteAccountForm.passwordLabel',
+                })}
+                placeholder={intl.formatMessage({
+                  id: 'DeleteAccountForm.passwordPlaceholder',
+                })}
                 validate={passwordValidators}
                 customErrorText={passwordErrorText}
               />
