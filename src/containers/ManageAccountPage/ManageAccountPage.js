@@ -3,11 +3,13 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 
 import { useConfiguration } from '../../context/configurationContext';
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { ensureCurrentUser } from '../../util/data';
 import { showCreateListingLinkForUser, showPaymentDetailsForUser } from '../../util/userHelpers';
+import { pathByRouteName } from '../../util/routes';
 
 import { sendVerificationEmail } from '../../ducks/user.duck';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
@@ -39,6 +41,7 @@ import css from './ManageAccountPage.module.css';
  */
 export const ManageAccountPageComponent = props => {
   const config = useConfiguration();
+  const routeConfiguration = useRouteConfiguration();
   const intl = useIntl();
   const {
     deleteAccountError,
@@ -58,7 +61,16 @@ export const ManageAccountPageComponent = props => {
     // Get password from form, use it to delete the user account
     const { currentPassword } = values;
 
-    return onSubmitDeleteAccount(currentPassword);
+    return onSubmitDeleteAccount(currentPassword).then(() => {
+      const path = pathByRouteName('LandingPage', routeConfiguration);
+
+      // Enforce full page load against LandingPage route
+      if (typeof window !== 'undefined') {
+        window.location = path;
+      }
+
+      console.log('logged out'); // eslint-disable-line
+    });
   };
 
   const title = intl.formatMessage({ id: 'ManageAccountPage.title' });
