@@ -72,6 +72,9 @@
   &:hover {
     background-color: var(--colorFailDark);
   }
+  &:disabled {
+    background-color: var(--colorGrey100);
+  }
 }
 
 .error {
