@@ -175,7 +175,7 @@
   "DeleteAccountForm.passwordRequired": "A password is required.",
   "DeleteAccountForm.resendPasswordLinkText": "Resend instructions.",
   "DeleteAccountForm.resetPasswordInfo": "Forgot your password or don't have one? {resetPasswordLink}",
-  "DeleteAccountForm.resetPasswordLinkSent": "Instructions to reset your password have been sent to {email}.",
+  "DeleteAccountForm.resetPasswordLinkSent": "Instructions to reset your password have been sent to {email}. {resendPasswordLink}",
   "DeleteAccountForm.resetPasswordLinkText": "Send reset instructions.",
   "DiscardDraftModal.close": "Close",
   "DiscardDraftModal.message": "This can't be undone.",
