@@ -59,6 +59,10 @@ describe('urlHelpers', () => {
       expect(parseFloatNum('123.01')).toBeCloseTo(123.01, 2);
     });
 
+    it('handles float value with trailing zeros', () => {
+      expect(parseFloatNum('42.1000')).toBeCloseTo(42.1, 2);
+    });
+
     it('handles trailing chars', () => {
       expect(parseFloatNum('123abc')).toBeNull();
     });

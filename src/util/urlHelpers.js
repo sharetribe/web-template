@@ -91,8 +91,22 @@ export const parseFloatNum = str => {
   }
   const num = parseFloat(trimmed);
   const isNumber = !isNaN(num);
-  const isFullyParsedNum = isNumber && num.toString() === trimmed;
-  return isFullyParsedNum ? num : null;
+  const parts = trimmed.split('.');
+
+  if (isNumber && parts.length === 2) {
+    const [integerPart, decimalPart] = parts;
+    const isFullyParsedNum = parseInt(integerPart, 10).toString() === integerPart;
+    const isDigitsOnlyDecimal = /^\d+$/.test(decimalPart);
+    if (isFullyParsedNum && isDigitsOnlyDecimal) {
+      return num;
+    }
+  } else if (isNumber && parts.length === 1) {
+    const isFullyParsedNum = parseInt(parts[0], 10).toString() === parts[0];
+    if (isFullyParsedNum) {
+      return num;
+    }
+  }
+  return null;
 };
 
 /**
