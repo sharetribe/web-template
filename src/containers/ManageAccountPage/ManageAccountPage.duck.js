@@ -83,7 +83,6 @@ export const deleteAccount = currentPassword => (dispatch, getState, sdk) => {
     })
     .catch(e => {
       dispatch(deleteAccountError(storableError(storableError(e))));
-      throw e;
     });
 };
 
