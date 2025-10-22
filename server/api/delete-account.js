@@ -26,31 +26,35 @@ module.exports = (req, res) => {
 
   const sdk = getSdk(req, res);
 
+  // Booking states that contain Stripe payment processing
   const ongoingBookingsWithIncompletePaymentProcessing = () =>
     sdk.transactions.query({
       processNames: 'default-booking',
       states: stripeRelatedStatesForBookings.join(','),
     });
+
+  // Purchase states that contain Stripe payment processing
   const ongoingPurchasesWithIncompletePaymentProcessing = () =>
     sdk.transactions.query({
       processNames: 'default-purchase',
       states: stripeRelatedStatesForPurchases.join(','),
     });
+
+  // Negotiation states that contain Stripe payment processing
   const ongoingNegotiationsWithIncompletePaymentProcessing = () =>
     sdk.transactions.query({
       processNames: 'default-negotiation',
       states: stripeRelatedStatesForNegotiation.join(','),
     });
 
+  // Check for any states that may contain incomplete Stripe actions
   Promise.all([
     ongoingBookingsWithIncompletePaymentProcessing(),
     ongoingPurchasesWithIncompletePaymentProcessing(),
     ongoingNegotiationsWithIncompletePaymentProcessing(),
   ])
     .then(responses => {
-      console.log('Promise.all complete');
       if (hasOngoingTransactionsWithIncompletePaymentProcessing(responses)) {
-        console.log('hasOngoingTransactionsWithStripeRelatedStates - true');
         throw new Error(
           'User has transactions on states that include incomplete payment processing'
         );
@@ -75,11 +79,11 @@ module.exports = (req, res) => {
         .end();
     })
     .catch(e => {
-      console.log('delete-account catch');
       handleError(res, e);
     });
 };
 
+/// Returns true if any array in responses is not empty
 const hasOngoingTransactionsWithIncompletePaymentProcessing = responses => {
   // Response format returns transaction array inside response.data.data
   const combinedTransactions = responses.flatMap(response => response?.data?.data);
