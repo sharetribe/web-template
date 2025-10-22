@@ -294,6 +294,7 @@ const DatePicker = props => {
     onMonthChange,
     isDayBlocked = () => false,
     isBlockedBetween = () => false,
+    hasFocusOnMount = true,
   } = props;
 
   const pickerRef = useRef(null);
@@ -304,6 +305,11 @@ const DatePicker = props => {
   const [currentValue, setCurrentValue] = useState(value);
   const [calendarIndex, setCalendarIndex] = useState(0);
   const [allowSlide, setAllowSlide] = useState(true);
+  const [isMounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!range && (isDate(value) || value == null) && value !== currentValue) {
@@ -333,7 +339,9 @@ const DatePicker = props => {
   }, [value]);
 
   useEffect(() => {
-    focusDate(currentDate);
+    if (hasFocusOnMount || isMounted) {
+      focusDate(currentDate);
+    }
   }, [currentDate]);
 
   const onCurrentValueChange = value => {

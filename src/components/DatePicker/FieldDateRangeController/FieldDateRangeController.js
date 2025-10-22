@@ -92,6 +92,7 @@ const FieldDateRangeControllerComponent = props => {
  * @param {boolean} [props.useMobileMargins] - Whether to use mobile margins
  * @param {Function} [props.isOutsideRange] - The function to check if a day is outside the range
  * @param {number} [props.firstDayOfWeek] - The first day of the week (0-6, default to value set in configuration)
+ * @param {boolean} [props.hasFocusOnMount] - Whether to focus the date range picker on mount
  * @returns {JSX.Element} FieldDateRangeController component
  */
 const FieldDateRangeController = props => {
