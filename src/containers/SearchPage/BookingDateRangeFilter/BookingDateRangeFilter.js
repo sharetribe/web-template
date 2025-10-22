@@ -225,6 +225,7 @@ export class BookingDateRangeFilterComponent extends Component {
           controllerRef={node => {
             this.plainControllerRef = node;
           }}
+          hasFocusOnMount={false}
         />
       </FilterPlain>
     );
