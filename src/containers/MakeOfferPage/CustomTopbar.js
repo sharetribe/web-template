@@ -54,13 +54,13 @@ const CustomTopbar = props => {
   const classes = classNames(rootClassName || css.topbar, className);
 
   return (
-    <div className={classes}>
+    <nav className={classes}>
       <LinkedLogo
         layout={isMobile ? 'mobile' : 'desktop'}
         alt={intl.formatMessage({ id: 'MakeOfferPage.goToLandingPage' })}
         linkToExternalSite={linkToExternalSite}
       />
-    </div>
+    </nav>
   );
 };
 
