@@ -30,9 +30,6 @@ import css from './ManageAccountPage.module.css';
  * @param {propTypes.currentUser} [props.currentUser] - The current user
  * @param {boolean} [props.accountDeletionConfirmed] - Whether the account has been deleted
  * @param {boolean} props.scrollingDisabled - Whether the scrolling is disabled
- * @param {boolean} props.sendVerificationEmailInProgress - Whether the verification email is in progress
- * @param {propTypes.error} [props.sendVerificationEmailError] - The verification email error
- * @param {Function} props.onResendVerificationEmail - The resend verification email function
  * @param {Function} props.onSubmitDeleteAccount - The submit delete account function
  * @param {Function} props.onResetPassword - The reset password function
  * @param {boolean} [props.resetPasswordInProgress] - Whether the reset password is in progress
@@ -75,12 +72,8 @@ export const ManageAccountPageComponent = props => {
 
   const title = intl.formatMessage({ id: 'ManageAccountPage.title' });
 
-  const showManageListingsLink = showCreateListingLinkForUser(config, currentUser);
-  const { showPayoutDetails, showPaymentMethods } = showPaymentDetailsForUser(config, currentUser);
   const accountSettingsNavProps = {
     currentPage: 'ManageAccountPage',
-    showPaymentMethods,
-    showPayoutDetails,
   };
 
   return (
@@ -92,10 +85,7 @@ export const ManageAccountPageComponent = props => {
               desktopClassName={css.desktopTopbar}
               mobileClassName={css.mobileTopbar}
             />
-            <UserNav
-              currentPage="ManageAccountPage"
-              showManageListingsLink={showManageListingsLink}
-            />
+            <UserNav currentPage="ManageAccountPage" />
           </>
         }
         sideNav={null}
@@ -128,7 +118,7 @@ export const ManageAccountPageComponent = props => {
 
 const mapStateToProps = state => {
   // Topbar needs user info.
-  const { currentUser, sendVerificationEmailInProgress, sendVerificationEmailError } = state.user;
+  const { currentUser } = state.user;
   const {
     deleteAccountError,
     deleteAccountInProgress,
@@ -142,15 +132,12 @@ const mapStateToProps = state => {
     currentUser,
     accountDeletionConfirmed,
     scrollingDisabled: isScrollingDisabled(state),
-    sendVerificationEmailInProgress,
-    sendVerificationEmailError,
     resetPasswordInProgress,
     resetPasswordError,
   };
 };
 
 const mapDispatchToProps = dispatch => ({
-  onResendVerificationEmail: () => dispatch(sendVerificationEmail()),
   onSubmitDeleteAccount: values => dispatch(deleteAccount(values)),
   onResetPassword: values => dispatch(resetPassword(values)),
 });

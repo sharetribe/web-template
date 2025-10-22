@@ -72,13 +72,11 @@ export const resetPasswordError = e => ({
 // ================ Thunks ================ //
 
 export const deleteAccount = currentPassword => (dispatch, getState, sdk) => {
-  // Get current password and use it to delete the user account
   dispatch(deleteAccountRequest());
 
   return deleteUserAccount({ currentPassword })
     .then(() => dispatch(deleteAccountSuccess()))
     .then(() => {
-      // TODO: logout + clear cache
       return dispatch(logout());
     })
     .catch(e => {
@@ -92,9 +90,4 @@ export const resetPassword = email => (dispatch, getState, sdk) => {
     .request({ email })
     .then(() => dispatch(resetPasswordSuccess()))
     .catch(e => dispatch(resetPasswordError(storableError(e))));
-};
-
-export const loadData = () => {
-  // Since verify email happens in separate tab, current user's data might be updated
-  return fetchCurrentUser();
 };
