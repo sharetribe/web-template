@@ -77,10 +77,11 @@
   outline: none;
   text-align: left;
   border: none;
+  cursor: pointer;
 
   &:focus,
   &:hover {
-    color: var(--colorGrey700);
+    color: var(--colorBlack);
   }
 }
 

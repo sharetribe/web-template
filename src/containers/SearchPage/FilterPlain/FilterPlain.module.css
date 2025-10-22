@@ -90,7 +90,7 @@
 
   &:focus,
   &:hover {
-    color: var(--colorGrey700);
+    color: var(--colorBlack);
   }
 
   @media (--viewportMedium) {
