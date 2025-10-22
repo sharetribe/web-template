@@ -59,7 +59,7 @@ const DetailsSideCard = props => {
     : [];
 
   return (
-    <div className={css.detailsContainerDesktop}>
+    <div className={css.detailsContainerDesktop} role="complementary">
       {showListingImage && (
         <AspectRatioWrapper
           width={aspectWidth}
