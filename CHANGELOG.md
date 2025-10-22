@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] BookingDateRangeFilter: don't add focus to the current date on mount.
+  [#677](https://github.com/sharetribe/web-template/pull/677)
 - [fix] Fix a bug with coordinate values in the URL.
   [#676](https://github.com/sharetribe/web-template/pull/676)
 - [fix] Fix some Marketplace texts. [#675](https://github.com/sharetribe/web-template/pull/675)
