@@ -16,6 +16,8 @@ import css from './DeleteAccountForm.module.css';
 const ErrorMessage = props => {
   const { error } = props;
 
+  // Account deletion fails if there are transactions on states that include payment processing.
+  // Check server/api/README.md for more information
   const unfinishedTransactionsError = isErrorUserHasUnfinishedTransactions(error);
 
   // Checks for forbidden error - the password is incorrect and this is handled in
@@ -39,6 +41,7 @@ const DeleteAccountForm = props => {
   const { onSubmitDeleteAccount, intl, marketplaceName, onResetPassword } = props;
   // submittedValues: the checkbox value and the given current password
   const [submittedValues, setSubmittedValues] = useState({});
+  // showResetPasswordMessage: dictates if the reset password text should be shown
   const [showResetPasswordMessage, setShowResetPasswordMessage] = useState(false);
 
   const handleSubmitDeleteAccount = values => {

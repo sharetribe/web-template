@@ -75,12 +75,8 @@ export const ManageAccountPageComponent = props => {
 
   const title = intl.formatMessage({ id: 'ManageAccountPage.title' });
 
-  const showManageListingsLink = showCreateListingLinkForUser(config, currentUser);
-  const { showPayoutDetails, showPaymentMethods } = showPaymentDetailsForUser(config, currentUser);
   const accountSettingsNavProps = {
     currentPage: 'ManageAccountPage',
-    showPaymentMethods,
-    showPayoutDetails,
   };
 
   return (
@@ -92,10 +88,7 @@ export const ManageAccountPageComponent = props => {
               desktopClassName={css.desktopTopbar}
               mobileClassName={css.mobileTopbar}
             />
-            <UserNav
-              currentPage="ManageAccountPage"
-              showManageListingsLink={showManageListingsLink}
-            />
+            <UserNav currentPage="ManageAccountPage" />
           </>
         }
         sideNav={null}
