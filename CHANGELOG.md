@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [change] Update browserlist-db aka caniuse-lite.
+  [#679](https://github.com/sharetribe/web-template/pull/679)
 - [add] Add currently available translations for DE, ES, FR.
   [#678](https://github.com/sharetribe/web-template/pull/678)
 - [fix] BookingDateRangeFilter: don't add focus to the current date on mount.
