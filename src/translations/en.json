@@ -336,7 +336,7 @@
   "EditListingStyleForm.helpText": "Decide how your listing will look like in search results.",
   "EditListingStyleForm.preview": "Preview",
   "EditListingStyleForm.publishListingFailed": "Publishing a new listing failed.",
-  "EditListingStyleForm.screenreader.chooseCardStyle": "Choose {option, select, white {white} grey {gray} black {black} brand {brand color} other {secondary brand color}} as a background color for the card.",
+  "EditListingStyleForm.screenreader.chooseCardStyle": "Choose a background color for the card: {option, select, white {white} grey {gray} black {black} brand {brand color} other {secondary brand color}}.",
   "EditListingStyleForm.title": "Choose a style",
   "EditListingStyleForm.updateFailed": "Failed to update listing. Please try again.",
   "EditListingStylePanel.createListingTitle": "Style",
@@ -899,7 +899,7 @@
   "SearchMapInfoCard.priceStartingFrom": "From {priceValue}",
   "SearchMapPriceLabel.price": "{priceValue}",
   "SearchMapPriceLabel.priceStartingFrom": "From {priceValue}",
-  "SearchMapPriceLabel.screenreader.mapMarkerWithoutPrice": "Listing with no price",
+  "SearchMapPriceLabel.screenreader.mapMarkerWithoutPrice": "Listing without price",
   "SearchPage.createListing": "Post a new listing",
   "SearchPage.detailNo": "No",
   "SearchPage.detailYes": "Yes",
@@ -1352,6 +1352,6 @@
   "UserDisplayName.deleted": "Deleted user",
   "UserNav.accountSettings": "Account settings",
   "UserNav.profileSettings": "Profile settings",
-  "UserNav.screenreader.userNav": "User navigation",
+  "UserNav.screenreader.userNav": "User profile navigation",
   "UserNav.yourListings": "Your listings"
 }
