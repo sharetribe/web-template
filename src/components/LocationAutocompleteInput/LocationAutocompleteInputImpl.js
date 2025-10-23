@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import debounce from 'lodash/debounce';
 
 import { useConfiguration } from '../../context/configurationContext';
-import { FormattedMessage } from '../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../util/reactIntl';
 
 import { IconSpinner } from '../../components';
 
@@ -450,12 +450,18 @@ class LocationAutocompleteInputImplementation extends Component {
       inputRef,
       disabled,
       config,
+      intl,
+      id,
+      submitButton: SubmitButton,
+      ariaLabel,
     } = this.props;
     const { name, onFocus } = input;
     const { search } = currentValue(this.props);
     const { touched, valid } = meta || {};
     const isValid = valid && touched;
     const predictions = this.currentPredictions();
+
+    const ariaLabelMaybe = ariaLabel ? { ['aria-label']: ariaLabel } : {};
 
     const handleOnFocus = e => {
       this.setState({ inputHasFocus: true });
@@ -497,8 +503,14 @@ class LocationAutocompleteInputImplementation extends Component {
             <IconSpinner className={css.iconSpinner} />
           ) : CustomIcon ? (
             <CustomIcon />
+          ) : SubmitButton ? (
+            <SubmitButton />
           ) : (
-            <IconLookingGlass />
+            <IconLookingGlass
+              ariaLabel={intl.formatMessage({
+                id: 'LocationAutocompleteInput.screenreader.search',
+              })}
+            />
           )}
         </div>
         <input
@@ -508,6 +520,7 @@ class LocationAutocompleteInputImplementation extends Component {
           autoFocus={autoFocus}
           placeholder={placeholder}
           name={name}
+          id={id}
           value={search}
           disabled={disabled || this.state.fetchingPlaceDetails}
           onFocus={handleOnFocus}
@@ -517,6 +530,7 @@ class LocationAutocompleteInputImplementation extends Component {
           {...refMaybe}
           title={search}
           data-testid="location-search"
+          {...ariaLabelMaybe}
         />
         {renderPredictions ? (
           <LocationPredictionsList
@@ -597,8 +611,9 @@ class LocationAutocompleteInputImplementation extends Component {
  */
 const LocationAutocompleteInputImpl = props => {
   const config = useConfiguration();
+  const intl = useIntl();
 
-  return <LocationAutocompleteInputImplementation config={config} {...props} />;
+  return <LocationAutocompleteInputImplementation config={config} intl={intl} {...props} />;
 };
 
 export default LocationAutocompleteInputImpl;

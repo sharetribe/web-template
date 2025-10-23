@@ -165,7 +165,7 @@
     box-shadow: none;
     cursor: not-allowed;
     background-color: var(--colorGrey100);
-    color: var(--colorWhite);
+    color: var(--colorGrey700);
   }
 
   @media (--viewportMedium) {

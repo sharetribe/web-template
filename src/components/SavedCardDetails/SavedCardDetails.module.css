@@ -188,14 +188,14 @@
 
 .menuDivider {
   composes: h5 from global;
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
   padding: 14px 24px 2px 24px;
   margin: 0;
 }
 
 .savedPaymentMethodDelete {
   composes: h4 from global;
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
   cursor: pointer;
   margin-top: 14px;
   margin-bottom: 10px;
@@ -230,7 +230,7 @@
 }
 
 .cancelCardDelete {
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
   cursor: pointer;
   width: 50%;
   text-align: right;

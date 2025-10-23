@@ -96,7 +96,7 @@
 
 .imageTypes {
   composes: marketplaceTinyFontStyles from global;
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
 
   margin-top: 0;
   margin-bottom: 0;
@@ -115,7 +115,7 @@
   composes: h5 from global;
 
   flex-shrink: 0;
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
   margin-top: 24px;
   margin-bottom: 60px;
 

@@ -113,6 +113,8 @@ const EditListingDeliveryPanel = props => {
     panelUpdated,
     updateInProgress,
     errors,
+    updatePageTitle: UpdatePageTitle,
+    intl,
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
@@ -124,20 +126,28 @@ const EditListingDeliveryPanel = props => {
     listingTypeConfig?.stockType
   );
 
+  const panelHeadingProps = isPublished
+    ? {
+        id: 'EditListingDeliveryPanel.title',
+        values: { listingTitle: <ListingLink listing={listing} />, lineBreak: <br /> },
+        messageProps: { listingTitle: listing.attributes.title },
+      }
+    : {
+        id: 'EditListingDeliveryPanel.createListingTitle',
+        values: { lineBreak: <br /> },
+        messageProps: {},
+      };
+
   return (
     <main className={classes}>
-      <H3 as="h1">
-        {isPublished ? (
-          <FormattedMessage
-            id="EditListingDeliveryPanel.title"
-            values={{ listingTitle: <ListingLink listing={listing} />, lineBreak: <br /> }}
-          />
-        ) : (
-          <FormattedMessage
-            id="EditListingDeliveryPanel.createListingTitle"
-            values={{ lineBreak: <br /> }}
-          />
+      <UpdatePageTitle
+        panelHeading={intl.formatMessage(
+          { id: panelHeadingProps.id },
+          { ...panelHeadingProps.messageProps }
         )}
+      />
+      <H3 as="h1">
+        <FormattedMessage id={panelHeadingProps.id} values={{ ...panelHeadingProps.values }} />
       </H3>
       {priceCurrencyValid ? (
         <EditListingDeliveryForm

@@ -197,7 +197,7 @@ const SavedCardDetails = props => {
 
       {onDeleteCard && active !== REPLACE_CARD ? (
         <InlineTextButton onClick={handleDeleteCard} className={css.savedPaymentMethodDelete}>
-          <IconClose rootClassName={css.closeIcon} size="small" />
+          <IconClose rootClassName={css.closeIcon} size="small" ariaLabel={deletePaymentMethod} />
           {deletePaymentMethod}
         </InlineTextButton>
       ) : null}

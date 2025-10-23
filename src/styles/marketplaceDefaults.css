@@ -1015,7 +1015,7 @@ textarea {
   cursor: not-allowed;
   text-decoration: none;
   background-color: var(--colorGrey100);
-  color: var(--colorWhite);
+  color: var(--colorGrey700);
 }
 
 /**
@@ -1406,7 +1406,7 @@ textarea {
 
   -webkit-font-smoothing: subpixel-antialiased;
 
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
   margin: 0;
 
   @media (--viewportMedium) {

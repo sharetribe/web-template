@@ -30,6 +30,7 @@ const IconMinus = props => {
       viewBox="0 0 40 40"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      role="none"
     >
       <rect x="0.5" y="0.5" width="39" height="39" rx="6" />
       <path
@@ -53,6 +54,7 @@ const IconPlus = props => {
       viewBox="0 0 40 40"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      role="none"
     >
       <rect x="0.5" y="0.5" width="39" height="39" rx="6" />
       <path
@@ -93,6 +95,7 @@ const NumberInputComponent = props => {
         onClick={handleValueChange}
         disabled={value <= minValue}
         title={intl.formatMessage({ id: 'NumberInput.decrementButton' })}
+        aria-label={intl.formatMessage({ id: 'NumberInput.decrementButton' })}
       >
         <IconMinus disabled={value <= minValue} className={svgClassName} />
       </button>
@@ -103,7 +106,7 @@ const NumberInputComponent = props => {
         type="button"
         onClick={handleValueChange}
         disabled={value >= maxValue}
-        title={intl.formatMessage({ id: 'NumberInput.incrementButton' })}
+        aria-label={intl.formatMessage({ id: 'NumberInput.incrementButton' })}
       >
         <IconPlus disabled={value >= maxValue} className={svgClassName} />
       </button>

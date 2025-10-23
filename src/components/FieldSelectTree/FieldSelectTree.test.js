@@ -148,19 +148,26 @@ describe('FieldSelectTree', () => {
   });
 
   it('enables submit', () => {
-    render(<FormComponent onSubmit={noop} />);
+    render(<FormComponent onSubmit={noop} />, {
+      messages: {
+        'FieldSelectTree.screenreader.option': 'Choose {optionName}.',
+        'FieldSelectTree.screenreader.optionSelected': '{optionName} is selected.',
+      },
+    });
 
     expect(screen.getByRole('button', { name: 'Submit' })).toBeDisabled();
-    expect(screen.getByRole('button', { name: 'Dogs' })).not.toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Choose Dogs.' })).not.toBeDisabled();
 
     // Select "Fish" and see more options
-    expect(screen.queryByRole('button', { name: 'Freshwater' })).not.toBeInTheDocument();
-    userEvent.click(screen.getByRole('button', { name: 'Fish' }));
-    expect(screen.getByRole('button', { name: 'Freshwater' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Choose Freshwater.' })).not.toBeInTheDocument();
+    userEvent.click(screen.getByRole('button', { name: 'Choose Fish.' }));
+    expect(screen.getByRole('button', { name: 'Choose Fish/Freshwater.' })).toBeInTheDocument();
 
     // Select "Freshwater" and see more options
-    expect(screen.queryByRole('button', { name: 'Pike' })).not.toBeInTheDocument();
-    userEvent.click(screen.getByRole('button', { name: 'Freshwater' }));
-    expect(screen.getByRole('button', { name: 'Pike' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Choose Pike.' })).not.toBeInTheDocument();
+    userEvent.click(screen.getByRole('button', { name: 'Choose Fish/Freshwater.' }));
+    expect(
+      screen.getByRole('button', { name: 'Choose Fish/Freshwater/Pike.' })
+    ).toBeInTheDocument();
   });
 });

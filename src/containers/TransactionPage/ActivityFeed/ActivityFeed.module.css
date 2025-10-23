@@ -93,7 +93,7 @@
   composes: marketplaceMessageDateFontStyles from global;
 
   margin: 11px 0 0 0;
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
 
   @media (--viewportMedium) {
     margin: 0 0 0 0;
@@ -144,7 +144,7 @@
 
 .transitionDate {
   composes: marketplaceMessageDateFontStyles from global;
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
   margin: 7px 0 0 0;
 
   @media (--viewportMedium) {

@@ -18,6 +18,7 @@ const NoImageIcon = props => {
       height="49"
       viewBox="0 -1 48 49"
       xmlns="http://www.w3.org/2000/svg"
+      role="none"
     >
       <g fill="none" fillRule="evenodd">
         <path strokeWidth="2" strokeLinejoin="round" d="M13.6 9.6L24 .8l10.4 8.8z" />

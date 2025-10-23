@@ -9,6 +9,7 @@ const IconSearchDesktop = () => (
     height="22"
     viewBox="0 0 21 22"
     xmlns="http://www.w3.org/2000/svg"
+    role="none"
   >
     <g
       className={css.iconSvgGroup}

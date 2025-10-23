@@ -17,7 +17,7 @@ const IconSuccess = props => {
   const { rootClassName, className, fillColor } = props;
   const classes = classNames(rootClassName || css.root, className);
   return (
-    <svg className={classes} width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+    <svg className={classes} width="24" height="24" xmlns="http://www.w3.org/2000/svg" role="none">
       <g fill="none" fillRule="evenodd">
         <circle className={fillColor || css.fillColor} cx="12" cy="12" r="12" />
         <path

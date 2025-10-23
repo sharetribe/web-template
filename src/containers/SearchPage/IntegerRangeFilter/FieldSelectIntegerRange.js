@@ -176,9 +176,24 @@ const RangeInput = props => {
           { value, handle: handleName }
         );
 
+  const getHandleLabels = handles => {
+    const multipleHandles = handles.length > 1;
+    return handles.map((h, idx) => {
+      const handleName =
+        multipleHandles && idx === 0
+          ? 'min'
+          : multipleHandles && idx === handles.length - 1
+          ? 'max'
+          : 'handle';
+      return labelForRangeInput(h, handleName);
+    });
+  };
+
   const isMinInvalid = !isValidMin(fieldValues.minValue, defaultMinValue, fieldValues.maxValue);
   const isMaxInvalid = !isValidMax(fieldValues.maxValue, defaultMaxValue, fieldValues.minValue);
   const classes = isInSideBar ? css.formWrapper : null;
+
+  const validHandles = getValidHandles(values, fieldValues, defaultMinValue, defaultMaxValue);
 
   return (
     <div className={classes}>
@@ -238,8 +253,9 @@ const RangeInput = props => {
         <RangeSlider
           min={defaultMinValue}
           max={defaultMaxValue}
+          ariaLabels={getHandleLabels(validHandles)}
           step={step}
-          handles={getValidHandles(values, fieldValues, defaultMinValue, defaultMaxValue)}
+          handles={validHandles}
           onChange={handles => {
             handleSliderChange({ minValue: handles[0], maxValue: handles[1] });
           }}

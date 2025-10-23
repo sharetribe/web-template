@@ -79,7 +79,7 @@
   margin: 0;
   display: block;
   font-weight: var(--fontWeightMedium);
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
   padding: 2px 0 4px 12px;
 
   /* Override button styles */
@@ -90,7 +90,7 @@
 
   &:focus,
   &:hover {
-    color: var(--colorGrey700);
+    color: var(--colorBlack);
   }
 
   @media (--viewportMedium) {

@@ -220,7 +220,7 @@
 
 .tip {
   composes: marketplaceDefaultFontStyles from global;
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
   margin-top: 0;
   margin-bottom: 12px;
 
@@ -232,7 +232,7 @@
 
 .fileInfo {
   composes: h5 from global;
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
   margin-top: 0;
   margin-bottom: 0;
   padding-top: 5px;
@@ -269,7 +269,7 @@
 
 .extraInfo {
   composes: textSmall from global;
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
   margin-top: 11px;
 
   @media (--viewportMedium) {

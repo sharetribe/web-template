@@ -29,7 +29,14 @@ import css from './Tabs.module.css';
  * @returns {JSX.Element} Tab navigation component
  */
 const Tabs = props => {
-  const { children, className, rootClassName, navRootClassName, tabRootClassName } = props;
+  const {
+    children,
+    className,
+    rootClassName,
+    navRootClassName,
+    tabRootClassName,
+    ariaLabel,
+  } = props;
   const rootClasses = rootClassName || css.root;
   const classes = classNames(rootClasses, className);
 
@@ -69,6 +76,7 @@ const Tabs = props => {
         rootClassName={navRootClassName}
         tabs={tabNavTabs}
         tabRootClassName={tabRootClassName}
+        ariaLabel={ariaLabel}
       />
       {selectedTabPanel}
     </div>

@@ -469,7 +469,8 @@ export const createSearchResultSchema = (
   mainSearchData,
   intl,
   routeConfiguration,
-  config
+  config,
+  pageHeading
 ) => {
   // Schema for search engines (helps them to understand what this page is about)
   // http://schema.org
@@ -482,7 +483,7 @@ export const createSearchResultSchema = (
   const schemaDescription = intl.formatMessage({ id: 'SearchPage.schemaDescription' });
   const schemaTitle = intl.formatMessage(
     { id: 'SearchPage.schemaTitle' },
-    { searchTitle, marketplaceName }
+    { searchTitle, marketplaceName, h1: pageHeading }
   );
 
   const schemaListings = listings.map((l, i) => {

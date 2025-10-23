@@ -163,8 +163,8 @@ const TopbarComponent = props => {
         return { keywords: values?.keywords };
       }
       // topbar search defaults to 'location' search
-      const { search, selectedPlace } = values?.location;
-      const { origin, bounds } = selectedPlace;
+      const { search, selectedPlace } = values?.location || {};
+      const { origin, bounds } = selectedPlace || {};
       const originMaybe = isOriginInUse(config) ? { origin } : {};
 
       return {
@@ -318,7 +318,7 @@ const TopbarComponent = props => {
         onLogout={handleLogout}
         currentPage={resolvedCurrentPage}
       />
-      <div className={classNames(mobileRootClassName || css.container, mobileClassName)}>
+      <nav className={classNames(mobileRootClassName || css.container, mobileClassName)}>
         <Button
           rootClassName={css.menu}
           onClick={() => redirectToURLWithModalState(history, location, 'mobilemenu')}
@@ -336,7 +336,7 @@ const TopbarComponent = props => {
           linkToExternalSite={config?.topbar?.logoLink}
         />
         {mobileSearchButtonMaybe}
-      </div>
+      </nav>
       <div className={css.desktop}>
         <TopbarDesktop
           className={desktopClassName}

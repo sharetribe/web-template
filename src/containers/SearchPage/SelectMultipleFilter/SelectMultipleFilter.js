@@ -74,6 +74,7 @@ const SelectMultipleFilter = props => {
     id,
     name,
     label,
+    getAriaLabel,
     options,
     initialValues,
     contentPlacementOffset = 0,
@@ -123,6 +124,7 @@ const SelectMultipleFilter = props => {
       rootClassName={rootClassName}
       popupClassName={css.popupSize}
       label={labelForPopup}
+      ariaLabel={getAriaLabel(label, selectedOptions.join(', '))}
       isSelected={hasInitialValues}
       id={`${id}.popup`}
       showAsPopup
@@ -145,6 +147,7 @@ const SelectMultipleFilter = props => {
       rootClassName={rootClassName}
       label={label}
       labelSelection={labelSelectionForPlain}
+      ariaLabel={getAriaLabel(label, selectedOptions.join(', '))}
       isSelected={hasInitialValues}
       id={`${id}.plain`}
       liveEdit

@@ -43,6 +43,7 @@ const SeatsFilter = props => {
     id,
     name,
     label,
+    getAriaLabel,
     initialValues,
     contentPlacementOffset = 0,
     onSubmit,
@@ -91,6 +92,7 @@ const SeatsFilter = props => {
       popupClassName={css.popupSize}
       name={name}
       label={labelForPopup}
+      ariaLabel={getAriaLabel(label, initialSeats)}
       isSelected={hasInitialValues}
       id={`${id}.popup`}
       showAsPopup
@@ -122,6 +124,7 @@ const SeatsFilter = props => {
       className={className}
       rootClassName={rootClassName}
       label={labelForPlain}
+      ariaLabel={getAriaLabel(label, initialSeats)}
       isSelected={hasInitialValues}
       id={`${id}.plain`}
       liveEdit

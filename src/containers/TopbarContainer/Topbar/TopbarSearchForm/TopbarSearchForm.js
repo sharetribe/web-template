@@ -16,7 +16,10 @@ const KeywordSearchField = props => {
   const { keywordSearchWrapperClasses, iconClass, intl, isMobile = false, inputRef } = props;
   return (
     <div className={keywordSearchWrapperClasses}>
-      <button className={css.searchSubmit}>
+      <button
+        className={css.searchSubmit}
+        aria-label={intl.formatMessage({ id: 'TopbarDesktop.screenreader.search' })}
+      >
         <div className={iconClass}>
           <IconSearchDesktop />
         </div>
@@ -46,6 +49,14 @@ const KeywordSearchField = props => {
 
 const LocationSearchField = props => {
   const { desktopInputRootClass, intl, isMobile = false, inputRef, onLocationChange } = props;
+  const submitButton = ({}) => (
+    <button
+      className={css.searchSubmit}
+      aria-label={intl.formatMessage({ id: 'TopbarDesktop.screenreader.search' })}
+    >
+      <IconSearchDesktop />
+    </button>
+  );
   return (
     <Field
       name="location"
@@ -74,6 +85,8 @@ const LocationSearchField = props => {
             inputRef={inputRef}
             input={{ ...restInput, onChange: searchOnChange }}
             meta={meta}
+            submitButton={submitButton}
+            ariaLabel={intl.formatMessage({ id: 'TopbarDesktop.screenreader.search' })}
           />
         );
       }}
@@ -119,8 +132,15 @@ const TopbarSearchForm = props => {
     }
   };
 
+  const onLocationSubmit = values => {
+    // Allow submit button click for an empty location search form
+    if (!isMainSearchTypeKeywords(appConfig)) {
+      onSubmit({ location: values.location });
+    }
+  };
+
   const isKeywordsSearch = isMainSearchTypeKeywords(appConfig);
-  const submit = isKeywordsSearch ? onKeywordSubmit : onSubmit;
+  const submit = isKeywordsSearch ? onKeywordSubmit : onLocationSubmit;
   return (
     <FinalForm
       {...restOfProps}
@@ -136,17 +156,13 @@ const TopbarSearchForm = props => {
         const classes = classNames(rootClassName, className);
         const desktopInputRootClass = desktopInputRoot || css.desktopInputRoot;
 
-        // Location search: allow form submit only when the place has changed
-        const preventFormSubmit = e => e.preventDefault();
-        const submitFormFn = isKeywordsSearch ? handleSubmit : preventFormSubmit;
-
         const keywordSearchWrapperClasses = classNames(
           css.keywordSearchWrapper,
           isMobile ? css.mobileInputRoot : desktopInputRootClass
         );
 
         return (
-          <Form className={classes} onSubmit={submitFormFn} enforcePagePreloadFor="SearchPage">
+          <Form className={classes} onSubmit={handleSubmit} enforcePagePreloadFor="SearchPage">
             {isKeywordsSearch ? (
               <KeywordSearchField
                 keywordSearchWrapperClasses={keywordSearchWrapperClasses}

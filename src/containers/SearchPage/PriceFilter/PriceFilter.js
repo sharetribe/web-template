@@ -36,7 +36,14 @@ const parse = priceRange => {
  * @returns {JSX.Element}
  */
 const PriceFilter = props => {
-  const { marketplaceCurrency, label, initialValues, queryParamNames, ...rest } = props;
+  const {
+    marketplaceCurrency,
+    label,
+    initialValues,
+    queryParamNames,
+    getAriaLabel = () => {},
+    ...rest
+  } = props;
   const intl = useIntl();
 
   // Format function to convert minValue and maxValue to currency strings
@@ -58,16 +65,24 @@ const PriceFilter = props => {
 
   const hasInitialValues = initialValues && hasValue(minPrice) && hasValue(maxPrice);
 
-  const currentLabel =
-    hasInitialValues && rest.showAsPopup
-      ? intl.formatMessage(
-          { id: 'PriceFilter.labelSelectedButton' },
-          {
-            minPrice: formatCurrencyMajorUnit(intl, marketplaceCurrency, minPrice),
-            maxPrice: formatCurrencyMajorUnit(intl, marketplaceCurrency, maxPrice),
-          }
-        )
-      : label;
+  const formattedRangeForAriaLabel = hasInitialValues
+    ? `${formatCurrencyMajorUnit(intl, marketplaceCurrency, minPrice)} - ${formatCurrencyMajorUnit(
+        intl,
+        marketplaceCurrency,
+        maxPrice
+      )}`
+    : '';
+  const labelWithRange = hasInitialValues
+    ? intl.formatMessage(
+        { id: 'PriceFilter.labelSelectedButton' },
+        {
+          minPrice: formatCurrencyMajorUnit(intl, marketplaceCurrency, minPrice),
+          maxPrice: formatCurrencyMajorUnit(intl, marketplaceCurrency, maxPrice),
+        }
+      )
+    : label;
+
+  const currentLabel = rest.showAsPopup ? labelWithRange : label;
 
   const getLabelForRangeInput = (priceInMajorUnit, handleName) => {
     const formattedPrice = formatCurrencyMajorUnit(intl, marketplaceCurrency, priceInMajorUnit);
@@ -84,6 +99,7 @@ const PriceFilter = props => {
       formatValidRangeValues={formatValidRangeValues}
       queryParamNames={queryParamNames}
       getLabelForRangeInput={getLabelForRangeInput}
+      getAriaLabel={() => getAriaLabel(label, formattedRangeForAriaLabel)}
       {...rest}
     />
   );

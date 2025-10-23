@@ -27,6 +27,7 @@ exports[`ManageListingCard matches snapshot (purchase) 1`] = `
               <svg
                 class="noImageIcon"
                 height="49"
+                role="none"
                 viewBox="0 -1 48 49"
                 width="48"
                 xmlns="http://www.w3.org/2000/svg"
@@ -89,16 +90,20 @@ exports[`ManageListingCard matches snapshot (purchase) 1`] = `
       >
         <div
           class="root menu cardIsOpen"
+          role="menu"
         >
           <button
             class="root menuLabel"
           >
             <div
+              aria-label="ManageListingCard.screenreader.menu"
               class="iconWrapper"
+              role="button"
             >
               <svg
                 class="menuIcon menuIcon"
                 height="12"
+                role="none"
                 viewBox="0 0 26 12"
                 width="26"
                 xmlns="http://www.w3.org/2000/svg"

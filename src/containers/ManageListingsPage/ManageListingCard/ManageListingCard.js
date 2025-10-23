@@ -535,7 +535,11 @@ export const ManageListingCard = props => {
               isOpen={isMenuOpen}
             >
               <MenuLabel className={css.menuLabel} isOpenClassName={css.listingMenuIsOpen}>
-                <div className={css.iconWrapper}>
+                <div
+                  className={css.iconWrapper}
+                  role="button"
+                  aria-label={intl.formatMessage({ id: 'ManageListingCard.screenreader.menu' })}
+                >
                   <MenuIcon className={css.menuIcon} isActive={isMenuOpen} />
                 </div>
               </MenuLabel>

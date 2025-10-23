@@ -456,7 +456,7 @@
 }
 
 .sendingMessageNotAllowed {
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
 
   position: relative;
   margin: 46px 24px 0 24px;
@@ -512,7 +512,7 @@
   composes: marketplaceTinyFontStyles from global;
 
   width: max-content;
-  color: #808080;
+  color: var(--colorGrey600);
   padding: 1px 0 5px 0;
   margin: 0;
 

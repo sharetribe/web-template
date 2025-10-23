@@ -51,7 +51,7 @@ const InboxLink = ({ notificationCount, inboxTab }) => {
   );
 };
 
-const ProfileMenu = ({ currentPage, currentUser, onLogout, showManageListingsLink }) => {
+const ProfileMenu = ({ currentPage, currentUser, onLogout, showManageListingsLink, intl }) => {
   const currentPageClass = page => {
     const isAccountSettingsPage =
       page === 'AccountSettingsPage' && ACCOUNT_SETTINGS_PAGES.includes(currentPage);
@@ -59,7 +59,7 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout, showManageListingsLin
   };
 
   return (
-    <Menu>
+    <Menu ariaLabel={intl.formatMessage({ id: 'TopbarDesktop.screenreader.profileMenu' })}>
       <MenuLabel className={css.profileMenuLabel} isOpenClassName={css.profileMenuIsOpen}>
         <Avatar className={css.avatar} user={currentUser} disableProfileLink />
       </MenuLabel>
@@ -166,6 +166,7 @@ const TopbarDesktop = props => {
       currentUser={currentUser}
       onLogout={onLogout}
       showManageListingsLink={showCreateListingsLink}
+      intl={intl}
     />
   ) : null;
 
@@ -189,7 +190,10 @@ const TopbarDesktop = props => {
   );
 
   return (
-    <nav className={classes}>
+    <nav
+      className={classes}
+      aria-label={intl.formatMessage({ id: 'TopbarDesktop.screenreader.topbarNavigation' })}
+    >
       <LinkedLogo
         className={css.logoLink}
         layout="desktop"

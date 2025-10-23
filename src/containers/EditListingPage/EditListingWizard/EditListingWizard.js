@@ -651,6 +651,7 @@ class EditListingWizard extends Component {
           rootClassName={css.tabsContainer}
           navRootClassName={css.nav}
           tabRootClassName={css.tab}
+          ariaLabel={intl.formatMessage({ id: 'EditListingWizard.screenreader.tabNavigation' })}
         >
           {tabs.map(tab => {
             const tabTranslations = tabLabelAndSubmit(
@@ -682,6 +683,7 @@ class EditListingWizard extends Component {
                 onManageDisableScrolling={onManageDisableScrolling}
                 config={config}
                 routeConfiguration={routeConfiguration}
+                intl={intl}
               />
             );
           })}

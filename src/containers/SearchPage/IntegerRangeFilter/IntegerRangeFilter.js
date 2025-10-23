@@ -98,6 +98,7 @@ const IntegerRangeFilter = props => {
     queryParamNames,
     initialValues,
     label,
+    getAriaLabel,
     rootClassName,
     className,
     id,
@@ -147,6 +148,9 @@ const IntegerRangeFilter = props => {
   const formattedRangeValues = formatValidRangeValues
     ? formatValidRangeValues(validRangeValues)
     : validRangeValues;
+  const formattedRange = hasInitialValues
+    ? `${formattedRangeValues.minValue} - ${formattedRangeValues.maxValue}`
+    : '';
   const labelSelectionForPlain = hasInitialValues ? (
     <FormattedMessage id="IntegerRangeFilter.labelSelectedPlain" values={formattedRangeValues} />
   ) : null;
@@ -156,6 +160,7 @@ const IntegerRangeFilter = props => {
       className={classes}
       rootClassName={rootClassName}
       label={label}
+      ariaLabel={getAriaLabel(label, formattedRange)}
       isSelected={hasInitialValues}
       id={`${id}.popup`}
       onSubmit={handleSubmit}
@@ -177,6 +182,7 @@ const IntegerRangeFilter = props => {
       className={classes}
       rootClassName={rootClassName}
       label={label}
+      ariaLabel={getAriaLabel(label, formattedRange)}
       labelSelection={labelSelectionForPlain}
       labelSelectionSeparator=":"
       isSelected={hasInitialValues}

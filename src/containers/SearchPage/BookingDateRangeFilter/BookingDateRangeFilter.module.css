@@ -51,7 +51,7 @@
   composes: h5 from global;
   margin: 0;
   font-weight: var(--fontWeightMedium);
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
   padding: 2px 0 4px 12px;
 
   /* Override button styles */

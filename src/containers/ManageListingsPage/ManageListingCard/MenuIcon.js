@@ -22,6 +22,7 @@ const MenuIcon = props => {
       height="12"
       viewBox="0 0 26 12"
       xmlns="http://www.w3.org/2000/svg"
+      role="none"
     >
       <defs>
         <filter x="-38.9%" y="-125%" width="177.8%" height="450%" filterUnits="objectBoundingBox">

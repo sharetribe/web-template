@@ -67,7 +67,8 @@
 }
 .resetAllButton {
   composes: filterButton;
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
+  cursor: pointer;
 
   /* Layout */
   margin: 0 auto 0 0;
@@ -77,13 +78,14 @@
 
   &:focus,
   &:hover {
-    color: var(--colorGrey700);
+    color: var(--colorBlack);
   }
 }
 
 .cancelButton {
   composes: filterButton;
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
+  cursor: pointer;
 
   /* Layout */
   margin: 0 24px 0 24px;
@@ -93,7 +95,7 @@
 
   &:focus,
   &:hover {
-    color: var(--colorGrey700);
+    color: var(--colorBlack);
   }
 }
 

@@ -52,7 +52,7 @@ class RangeSliderComponent extends Component {
   }
 
   render() {
-    const { handles, min = 0, max = 10000000 } = this.props;
+    const { handles, min = 0, max = 10000000, ariaLabels = [] } = this.props;
 
     return (
       <Track handles={handles} valueToPosition={this.toPosition}>
@@ -65,6 +65,7 @@ class RangeSliderComponent extends Component {
               value={h}
               min={index === 0 ? min : handles[index - 1]}
               max={index === handles.length - 1 ? max : handles[index + 1]}
+              ariaLabel={ariaLabels[index]}
               valueToPosition={this.toPosition}
               positionToValue={this.toValue}
               changeActive={() => this.changeActive(index)}

@@ -501,13 +501,19 @@ export class SearchPageComponent extends Component {
       />
     );
 
+    // Parse page heading to be included in the title
+    const pageHeading = searchInProgress
+      ? intl.formatMessage({ id: 'MainPanelHeader.loadingResults' })
+      : intl.formatMessage({ id: 'MainPanelHeader.foundResults' }, { count: totalItems });
+
     const { bounds, origin } = searchParamsInURL || {};
     const { title, description, schema } = createSearchResultSchema(
       listings,
       searchParamsInURL || {},
       intl,
       routeConfiguration,
-      config
+      config,
+      pageHeading
     );
 
     // Set topbar class based on if a modal is open in
@@ -526,8 +532,8 @@ export class SearchPageComponent extends Component {
         schema={schema}
       >
         <TopbarContainer rootClassName={topbarClasses} currentSearchParams={validQueryParams} />
-        <div className={css.container}>
-          <div className={css.searchResultContainer} role="main">
+        <div className={css.container} role="main">
+          <div className={css.searchResultContainer}>
             <SearchFiltersMobile
               className={css.searchFiltersMobileMap}
               urlQueryParams={validQueryParams}
@@ -656,6 +662,7 @@ export class SearchPageComponent extends Component {
                   setActiveListing={onActivateListing}
                   isMapVariant
                   listingTypeParam={listingTypePathParam}
+                  intl={intl}
                 />
               </div>
             )}

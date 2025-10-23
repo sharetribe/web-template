@@ -130,6 +130,7 @@ class FilterPopupForSidebar extends Component {
       children,
       initialValues,
       keepDirtyOnReinitialize = false,
+      ariaLabel,
     } = this.props;
 
     const classes = classNames(rootClassName || css.root, className);
@@ -147,7 +148,12 @@ class FilterPopupForSidebar extends Component {
           }}
         >
           <div className={css.filterHeader}>
-            <button type="button" className={css.labelButton} onClick={() => this.toggleOpen()}>
+            <button
+              type="button"
+              className={css.labelButton}
+              onClick={() => this.toggleOpen()}
+              aria-label={ariaLabel}
+            >
               <span className={css.labelButtonContent}>
                 <span className={css.labelWrapper}>
                   <span className={css.label}>

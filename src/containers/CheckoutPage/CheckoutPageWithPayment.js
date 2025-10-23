@@ -571,7 +571,7 @@ export const CheckoutPageWithPayment = props => {
           layoutListingImageConfig={config.layout.listingImage}
           showListingImage={showListingImage}
         />
-        <div className={css.orderFormContainer}>
+        <main className={css.orderFormContainer}>
           <div className={css.headingContainer}>
             <H3 as="h1" className={css.heading}>
               {title}
@@ -631,7 +631,7 @@ export const CheckoutPageWithPayment = props => {
               />
             ) : null}
           </section>
-        </div>
+        </main>
 
         <DetailsSideCard
           listing={listing}

@@ -258,12 +258,12 @@ export const EditListingPageComponent = props => {
       removedImageIds
     );
 
-    const title = isNewListingFlow
-      ? intl.formatMessage({ id: 'EditListingPage.titleCreateListing' })
-      : intl.formatMessage({ id: 'EditListingPage.titleEditListing' });
+    const titleId = isNewListingFlow
+      ? 'EditListingPage.titleCreateListing'
+      : 'EditListingPage.titleEditListing';
 
     return (
-      <Page title={title} scrollingDisabled={scrollingDisabled}>
+      <Page title={intl.formatMessage({ id: titleId })} scrollingDisabled={scrollingDisabled}>
         <TopbarContainer
           mobileRootClassName={css.mobileTopbar}
           desktopClassName={css.desktopTopbar}
@@ -310,6 +310,7 @@ export const EditListingPageComponent = props => {
           }
           stripeAccountLinkError={getAccountLinkError}
           authScopes={authScopes}
+          titleId={titleId}
         />
       </Page>
     );

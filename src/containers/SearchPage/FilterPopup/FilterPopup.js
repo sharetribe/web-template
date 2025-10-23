@@ -132,6 +132,7 @@ class FilterPopup extends Component {
       initialValues,
       keepDirtyOnReinitialize = false,
       contentPlacementOffset = 0,
+      ariaLabel,
     } = this.props;
 
     const classes = classNames(rootClassName || css.root, className);
@@ -152,6 +153,7 @@ class FilterPopup extends Component {
             isSelected={isSelected}
             labelMaxWidth={labelMaxWidth}
             toggleOpen={this.toggleOpen}
+            ariaLabel={ariaLabel}
           >
             {label}
           </PopupOpenerButton>

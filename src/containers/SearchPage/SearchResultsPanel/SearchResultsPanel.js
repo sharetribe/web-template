@@ -30,6 +30,7 @@ const SearchResultsPanel = props => {
     setActiveListing,
     isMapVariant = true,
     listingTypeParam,
+    intl,
   } = props;
   const classes = classNames(rootClassName || css.root, className);
   const pageName = listingTypeParam ? 'SearchPageWithListingType' : 'SearchPage';
@@ -42,6 +43,7 @@ const SearchResultsPanel = props => {
         pagePathParams={{ listingType: listingTypeParam }}
         pageSearchParams={search}
         pagination={pagination}
+        aria-label={intl.formatMessage({ id: 'SearchResultsPanel.screenreader.pagination' })}
       />
     ) : null;
 

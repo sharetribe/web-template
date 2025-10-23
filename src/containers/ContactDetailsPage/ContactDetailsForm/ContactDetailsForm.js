@@ -381,7 +381,7 @@ class ContactDetailsFormComponent extends Component {
                 <PhoneNumberMaybe formId={formId} userTypeConfig={userTypeConfig} intl={intl} />
               </div>
 
-              <div className={confirmClasses}>
+              <div className={confirmClasses} aria-hidden={!emailChanged}>
                 <H4 as="h3" className={css.confirmChangesTitle}>
                   <FormattedMessage id="ContactDetailsForm.confirmChangesTitle" />
                 </H4>

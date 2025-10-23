@@ -746,9 +746,20 @@ export const TransactionPageComponent = props => {
     (process?.transitions?.CUSTOMER_MAKE_COUNTER_OFFER ||
       process?.transitions?.PROVIDER_MAKE_COUNTER_OFFER);
 
+  const pageHeading = intl.formatMessage(
+    { id: `TransactionPage.${processName}.${transactionRole}.${stateData.processState}.title` },
+    {
+      customerName: customer?.attributes.profile.displayName,
+      providerName: provider?.attributes.profile.displayName,
+    }
+  );
+
   return (
     <Page
-      title={intl.formatMessage({ id: 'TransactionPage.schemaTitle' }, { title: listingTitle })}
+      title={intl.formatMessage(
+        { id: 'TransactionPage.schemaTitle' },
+        { title: listingTitle, h1: pageHeading }
+      )}
       scrollingDisabled={scrollingDisabled}
     >
       <LayoutSingleColumn topbar={<TopbarContainer />} footer={<FooterContainer />}>

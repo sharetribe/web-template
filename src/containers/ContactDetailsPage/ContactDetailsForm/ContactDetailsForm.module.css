@@ -60,7 +60,7 @@
 
 .emailUnverified {
   composes: infoText;
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
   background-image: url('data:image/svg+xml;utf8,<svg width="12" height="12" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg"><path d="M6.52 9.098c-.163.188-.397.3-.646.31h-.032c-.238 0-.466-.094-.635-.263L2.783 6.732c-.353-.35-.354-.92-.003-1.273.35-.353.92-.354 1.272-.004L5.794 7.19l4.59-5.278C9.287.738 7.73 0 6 0 2.686 0 0 2.686 0 6c0 3.313 2.686 6 6 6 3.313 0 6-2.687 6-6 0-.91-.21-1.772-.573-2.545L6.52 9.098z" fill="%23F00" fill-rule="evenodd"/></svg>');
 }
 
@@ -96,7 +96,7 @@
 }
 
 .tooMany {
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
 }
 
 .emailSent {

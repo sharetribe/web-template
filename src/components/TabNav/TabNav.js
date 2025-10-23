@@ -43,11 +43,11 @@ const Tab = props => {
  * @returns {JSX.Element}
  */
 const TabNav = props => {
-  const { className, rootClassName, tabRootClassName, tabs } = props;
+  const { className, rootClassName, tabRootClassName, tabs, ariaLabel } = props;
   const classes = classNames(rootClassName || css.root, className);
   const tabClasses = tabRootClassName || css.tab;
   return (
-    <nav className={classes}>
+    <nav className={classes} aria-label={ariaLabel}>
       {tabs.map((tab, index) => {
         const id = typeof tab.id === 'string' ? tab.id : `${index}`;
         return <Tab key={id} id={id} className={tabClasses} {...tab} />;
