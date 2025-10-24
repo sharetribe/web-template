@@ -4,12 +4,12 @@ import reducer, { addMarketplaceEntities } from './marketplaceData.duck';
 describe('marketplaceData duck', () => {
   describe('reducer', () => {
     it('should have empty object for entities by default', () => {
-      const state = reducer();
+      const state = reducer(undefined, { type: '@@INIT' });
       expect(state.entities).toEqual({});
     });
 
     it('should add listings with addMarketplaceEntities()', () => {
-      const initialState = reducer();
+      const initialState = reducer(undefined, { type: '@@INIT' });
       const listing = createListing('test-id');
       const response = { data: { data: listing } };
       const sanitizeConfig = {};
