@@ -1,197 +1,21 @@
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import pick from 'lodash/pick';
 import { initiatePrivileged, transitionPrivileged } from '../../util/api';
 import { denormalisedResponseEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
 import * as log from '../../util/log';
-import { fetchCurrentUserHasOrdersSuccess, fetchCurrentUser } from '../../ducks/user.duck';
+import { setCurrentUserHasOrders, fetchCurrentUser } from '../../ducks/user.duck';
 
-// ================ Action types ================ //
+// ================ Async thunks ================ //
 
-export const SET_INITIAL_VALUES = 'app/CheckoutPage/SET_INITIAL_VALUES';
-
-export const INITIATE_ORDER_REQUEST = 'app/CheckoutPage/INITIATE_ORDER_REQUEST';
-export const INITIATE_ORDER_SUCCESS = 'app/CheckoutPage/INITIATE_ORDER_SUCCESS';
-export const INITIATE_ORDER_ERROR = 'app/CheckoutPage/INITIATE_ORDER_ERROR';
-
-export const CONFIRM_PAYMENT_REQUEST = 'app/CheckoutPage/CONFIRM_PAYMENT_REQUEST';
-export const CONFIRM_PAYMENT_SUCCESS = 'app/CheckoutPage/CONFIRM_PAYMENT_SUCCESS';
-export const CONFIRM_PAYMENT_ERROR = 'app/CheckoutPage/CONFIRM_PAYMENT_ERROR';
-
-export const SPECULATE_TRANSACTION_REQUEST = 'app/CheckoutPage/SPECULATE_TRANSACTION_REQUEST';
-export const SPECULATE_TRANSACTION_SUCCESS = 'app/CheckoutPage/SPECULATE_TRANSACTION_SUCCESS';
-export const SPECULATE_TRANSACTION_ERROR = 'app/CheckoutPage/SPECULATE_TRANSACTION_ERROR';
-
-export const STRIPE_CUSTOMER_REQUEST = 'app/CheckoutPage/STRIPE_CUSTOMER_REQUEST';
-export const STRIPE_CUSTOMER_SUCCESS = 'app/CheckoutPage/STRIPE_CUSTOMER_SUCCESS';
-export const STRIPE_CUSTOMER_ERROR = 'app/CheckoutPage/STRIPE_CUSTOMER_ERROR';
-
-export const INITIATE_INQUIRY_REQUEST = 'app/CheckoutPage/INITIATE_INQUIRY_REQUEST';
-export const INITIATE_INQUIRY_SUCCESS = 'app/CheckoutPage/INITIATE_INQUIRY_SUCCESS';
-export const INITIATE_INQUIRY_ERROR = 'app/CheckoutPage/INITIATE_INQUIRY_ERROR';
-
-// ================ Reducer ================ //
-
-const initialState = {
-  listing: null,
-  orderData: null,
-  speculateTransactionInProgress: false,
-  speculateTransactionError: null,
-  speculatedTransaction: null,
-  isClockInSync: false,
-  transaction: null,
-  initiateOrderError: null,
-  confirmPaymentError: null,
-  stripeCustomerFetched: false,
-  initiateInquiryInProgress: false,
-  initiateInquiryError: null,
-};
-
-export default function checkoutPageReducer(state = initialState, action = {}) {
-  const { type, payload } = action;
-  switch (type) {
-    case SET_INITIAL_VALUES:
-      return { ...initialState, ...payload };
-
-    case SPECULATE_TRANSACTION_REQUEST:
-      return {
-        ...state,
-        speculateTransactionInProgress: true,
-        speculateTransactionError: null,
-        speculatedTransaction: null,
-      };
-    case SPECULATE_TRANSACTION_SUCCESS: {
-      // Check that the local devices clock is within a minute from the server
-      const lastTransitionedAt = payload.transaction?.attributes?.lastTransitionedAt;
-      const localTime = new Date();
-      const minute = 60000;
-      return {
-        ...state,
-        speculateTransactionInProgress: false,
-        speculatedTransaction: payload.transaction,
-        isClockInSync: Math.abs(lastTransitionedAt?.getTime() - localTime.getTime()) < minute,
-      };
-    }
-    case SPECULATE_TRANSACTION_ERROR:
-      console.error(payload); // eslint-disable-line no-console
-      return {
-        ...state,
-        speculateTransactionInProgress: false,
-        speculateTransactionError: payload,
-      };
-
-    case INITIATE_ORDER_REQUEST:
-      return { ...state, initiateOrderError: null };
-    case INITIATE_ORDER_SUCCESS:
-      return { ...state, transaction: payload };
-    case INITIATE_ORDER_ERROR:
-      console.error(payload); // eslint-disable-line no-console
-      return { ...state, initiateOrderError: payload };
-
-    case CONFIRM_PAYMENT_REQUEST:
-      return { ...state, confirmPaymentError: null };
-    case CONFIRM_PAYMENT_SUCCESS:
-      return state;
-    case CONFIRM_PAYMENT_ERROR:
-      console.error(payload); // eslint-disable-line no-console
-      return { ...state, confirmPaymentError: payload };
-
-    case STRIPE_CUSTOMER_REQUEST:
-      return { ...state, stripeCustomerFetched: false };
-    case STRIPE_CUSTOMER_SUCCESS:
-      return { ...state, stripeCustomerFetched: true };
-    case STRIPE_CUSTOMER_ERROR:
-      console.error(payload); // eslint-disable-line no-console
-      return { ...state, stripeCustomerFetchError: payload };
-
-    case INITIATE_INQUIRY_REQUEST:
-      return { ...state, initiateInquiryInProgress: true, initiateInquiryError: null };
-    case INITIATE_INQUIRY_SUCCESS:
-      return { ...state, initiateInquiryInProgress: false };
-    case INITIATE_INQUIRY_ERROR:
-      return { ...state, initiateInquiryInProgress: false, initiateInquiryError: payload };
-
-    default:
-      return state;
-  }
-}
-
-// ================ Selectors ================ //
-
-// ================ Action creators ================ //
-
-export const setInitialValues = initialValues => ({
-  type: SET_INITIAL_VALUES,
-  payload: pick(initialValues, Object.keys(initialState)),
-});
-
-const initiateOrderRequest = () => ({ type: INITIATE_ORDER_REQUEST });
-
-const initiateOrderSuccess = order => ({
-  type: INITIATE_ORDER_SUCCESS,
-  payload: order,
-});
-
-const initiateOrderError = e => ({
-  type: INITIATE_ORDER_ERROR,
-  error: true,
-  payload: e,
-});
-
-const confirmPaymentRequest = () => ({ type: CONFIRM_PAYMENT_REQUEST });
-
-const confirmPaymentSuccess = orderId => ({
-  type: CONFIRM_PAYMENT_SUCCESS,
-  payload: orderId,
-});
-
-const confirmPaymentError = e => ({
-  type: CONFIRM_PAYMENT_ERROR,
-  error: true,
-  payload: e,
-});
-
-export const speculateTransactionRequest = () => ({ type: SPECULATE_TRANSACTION_REQUEST });
-
-export const speculateTransactionSuccess = transaction => ({
-  type: SPECULATE_TRANSACTION_SUCCESS,
-  payload: { transaction },
-});
-
-export const speculateTransactionError = e => ({
-  type: SPECULATE_TRANSACTION_ERROR,
-  error: true,
-  payload: e,
-});
-
-export const stripeCustomerRequest = () => ({ type: STRIPE_CUSTOMER_REQUEST });
-export const stripeCustomerSuccess = () => ({ type: STRIPE_CUSTOMER_SUCCESS });
-export const stripeCustomerError = e => ({
-  type: STRIPE_CUSTOMER_ERROR,
-  error: true,
-  payload: e,
-});
-
-export const initiateInquiryRequest = () => ({ type: INITIATE_INQUIRY_REQUEST });
-export const initiateInquirySuccess = () => ({ type: INITIATE_INQUIRY_SUCCESS });
-export const initiateInquiryError = e => ({
-  type: INITIATE_INQUIRY_ERROR,
-  error: true,
-  payload: e,
-});
-
-/* ================ Thunks ================ */
-
-export const initiateOrder = (
-  orderParams,
-  processAlias,
-  transactionId,
-  transitionName,
-  isPrivilegedTransition
-) => (dispatch, getState, sdk) => {
-  dispatch(initiateOrderRequest());
-
-  // If we already have a transaction ID, we should transition, not
-  // initiate.
+////////////////////
+// Initiate Order //
+////////////////////
+const initiateOrderPayloadCreator = (
+  { orderParams, processAlias, transactionId, transitionName, isPrivilegedTransition },
+  { dispatch, extra: sdk, rejectWithValue }
+) => {
+  // If we already have a transaction ID, we should transition, not initiate.
   const isTransition = !!transactionId;
 
   const { deliveryMethod, quantity, bookingDates, ...otherOrderParams } = orderParams;
@@ -227,13 +51,11 @@ export const initiateOrder = (
   const handleSuccess = response => {
     const entities = denormalisedResponseEntities(response);
     const order = entities[0];
-    dispatch(initiateOrderSuccess(order));
-    dispatch(fetchCurrentUserHasOrdersSuccess(true));
+    dispatch(setCurrentUserHasOrders());
     return order;
   };
 
   const handleError = e => {
-    dispatch(initiateOrderError(storableError(e)));
     const transactionIdMaybe = transactionId ? { transactionId: transactionId.uuid } : {};
     log.error(e, 'initiate-order-failed', {
       ...transactionIdMaybe,
@@ -243,7 +65,7 @@ export const initiateOrder = (
       ...orderData,
       statusText: e.statusText,
     });
-    throw e;
+    return rejectWithValue(storableError(e));
   };
 
   if (isTransition && isPrivilegedTransition) {
@@ -271,13 +93,36 @@ export const initiateOrder = (
   }
 };
 
-export const confirmPayment = (transactionId, transitionName, transitionParams = {}) => (
-  dispatch,
-  getState,
-  sdk
-) => {
-  dispatch(confirmPaymentRequest());
+export const initiateOrderThunk = createAsyncThunk(
+  'CheckoutPage/initiateOrder',
+  initiateOrderPayloadCreator
+);
+// Backward compatible wrapper function for initiateOrder
+export const initiateOrder = (
+  orderParams,
+  processAlias,
+  transactionId,
+  transitionName,
+  isPrivilegedTransition
+) => dispatch => {
+  return dispatch(
+    initiateOrderThunk({
+      orderParams,
+      processAlias,
+      transactionId,
+      transitionName,
+      isPrivilegedTransition,
+    })
+  ).unwrap();
+};
 
+/////////////////////
+// Confirm Payment //
+/////////////////////
+const confirmPaymentPayloadCreator = (
+  { transactionId, transitionName, transitionParams = {} },
+  { extra: sdk, rejectWithValue }
+) => {
   const bodyParams = {
     id: transactionId,
     transition: transitionName,
@@ -292,23 +137,40 @@ export const confirmPayment = (transactionId, transitionName, transitionParams =
     .transition(bodyParams, queryParams)
     .then(response => {
       const order = response.data.data;
-      dispatch(confirmPaymentSuccess(order.id));
       return order;
     })
     .catch(e => {
-      dispatch(confirmPaymentError(storableError(e)));
       const transactionIdMaybe = transactionId ? { transactionId: transactionId.uuid } : {};
       log.error(e, 'initiate-order-failed', {
         ...transactionIdMaybe,
       });
-      throw e;
+      return rejectWithValue(storableError(e));
     });
 };
 
-export const sendMessage = params => (dispatch, getState, sdk) => {
-  const message = params.message;
-  const orderId = params.id;
+export const confirmPaymentThunk = createAsyncThunk(
+  'CheckoutPage/confirmPayment',
+  confirmPaymentPayloadCreator
+);
+// Backward compatible wrapper function for confirmPayment
+export const confirmPayment = (
+  transactionId,
+  transitionName,
+  transitionParams = {}
+) => dispatch => {
+  return dispatch(
+    confirmPaymentThunk({
+      transactionId,
+      transitionName,
+      transitionParams,
+    })
+  ).unwrap();
+};
 
+//////////////////
+// Send Message //
+//////////////////
+const sendMessagePayloadCreator = ({ message, id: orderId }, { extra: sdk, rejectWithValue }) => {
   if (message) {
     return sdk.messages
       .send({ transactionId: orderId, content: message })
@@ -317,37 +179,36 @@ export const sendMessage = params => (dispatch, getState, sdk) => {
       })
       .catch(e => {
         log.error(e, 'initial-message-send-failed', { txId: orderId });
-        return { orderId, messageSuccess: false };
+        return rejectWithValue({ orderId, messageSuccess: false });
       });
   } else {
-    return Promise.resolve({ orderId, messageSuccess: true });
+    return { orderId, messageSuccess: true };
   }
 };
 
-/**
- * Initiate transaction against default-inquiry process
- * Note: At this point inquiry transition is made directly against Marketplace API.
- *       So, client app's server is not involved here unlike with transitions including payments.
- *
- * @param {*} inquiryParams contains listingId and protectedData
- * @param {*} processAlias 'default-inquiry/release-1'
- * @param {*} transitionName 'transition/inquire-without-payment'
- * @returns
- */
-export const initiateInquiryWithoutPayment = (inquiryParams, processAlias, transitionName) => (
-  dispatch,
-  getState,
-  sdk
-) => {
-  dispatch(initiateInquiryRequest());
+export const sendMessageThunk = createAsyncThunk(
+  'CheckoutPage/sendMessage',
+  sendMessagePayloadCreator
+);
+// Backward compatible wrapper function for sendMessage
+export const sendMessage = params => dispatch => {
+  return dispatch(sendMessageThunk(params)).unwrap();
+};
 
+//////////////////////
+// Initiate Inquiry //
+//////////////////////
+
+const initiateInquiryPayloadCreator = (
+  { inquiryParams, processAlias, transitionName },
+  { extra: sdk, rejectWithValue }
+) => {
   if (!processAlias) {
     const error = new Error('No transaction process attached to listing');
     log.error(error, 'listing-process-missing', {
-      listingId: listing?.id?.uuid,
+      listingId: inquiryParams?.listingId?.uuid,
     });
-    dispatch(initiateInquiryError(storableError(error)));
-    return Promise.reject(error);
+    return rejectWithValue(storableError(error));
   }
 
   const bodyParams = {
@@ -364,15 +225,46 @@ export const initiateInquiryWithoutPayment = (inquiryParams, processAlias, trans
     .initiate(bodyParams, queryParams)
     .then(response => {
       const transactionId = response.data.data.id;
-      dispatch(initiateInquirySuccess());
       return transactionId;
     })
     .catch(e => {
-      dispatch(initiateInquiryError(storableError(e)));
-      throw e;
+      return rejectWithValue(storableError(e));
     });
 };
 
+export const initiateInquiryThunk = createAsyncThunk(
+  'CheckoutPage/initiateInquiry',
+  initiateInquiryPayloadCreator
+);
+// Backward compatible wrapper function for initiateInquiryWithoutPayment
+/**
+ * Initiate transaction against default-inquiry process
+ * Note: At this point inquiry transition is made directly against Marketplace API.
+ *       So, client app's server is not involved here unlike with transitions including payments.
+ *
+ * @param {Object} params
+ * @param {Object} params.inquiryParams contains listingId and protectedData
+ * @param {String} params.processAlias 'default-inquiry/release-1'
+ * @param {String} params.transitionName 'transition/inquire-without-payment'
+ * @returns
+ */
+export const initiateInquiryWithoutPayment = (
+  inquiryParams,
+  processAlias,
+  transitionName
+) => dispatch => {
+  return dispatch(
+    initiateInquiryThunk({
+      inquiryParams,
+      processAlias,
+      transitionName,
+    })
+  ).unwrap();
+};
+
+///////////////////////////
+// Speculate Transaction //
+///////////////////////////
 /**
  * Initiate or transition the speculative transaction with the given
  * booking details
@@ -386,17 +278,12 @@ export const initiateInquiryWithoutPayment = (inquiryParams, processAlias, trans
  * pricing info for the booking breakdown to get a proper estimate for
  * the price with the chosen information.
  */
-export const speculateTransaction = (
-  orderParams,
-  processAlias,
-  transactionId,
-  transitionName,
-  isPrivilegedTransition
-) => (dispatch, getState, sdk) => {
-  dispatch(speculateTransactionRequest());
 
-  // If we already have a transaction ID, we should transition, not
-  // initiate.
+const speculateTransactionPayloadCreator = (
+  { orderParams, processAlias, transactionId, transitionName, isPrivilegedTransition },
+  { dispatch, extra: sdk, rejectWithValue }
+) => {
+  // If we already have a transaction ID, we should transition, not initiate.
   const isTransition = !!transactionId;
 
   const {
@@ -446,7 +333,7 @@ export const speculateTransaction = (
       throw new Error('Expected a resource in the speculate response');
     }
     const tx = entities[0];
-    dispatch(speculateTransactionSuccess(tx));
+    return tx;
   };
 
   const handleError = e => {
@@ -457,7 +344,7 @@ export const speculateTransaction = (
       ...orderData,
       statusText: e.statusText,
     });
-    return dispatch(speculateTransactionError(storableError(e)));
+    return rejectWithValue(storableError(e));
   };
 
   if (isTransition && isPrivilegedTransition) {
@@ -485,10 +372,33 @@ export const speculateTransaction = (
   }
 };
 
-// StripeCustomer is a relantionship to currentUser
-// We need to fetch currentUser with correct params to include relationship
-export const stripeCustomer = () => (dispatch, getState, sdk) => {
-  dispatch(stripeCustomerRequest());
+export const speculateTransactionThunk = createAsyncThunk(
+  'CheckoutPage/speculateTransaction',
+  speculateTransactionPayloadCreator
+);
+// Backward compatible wrapper function for speculateTransaction
+export const speculateTransaction = (
+  orderParams,
+  processAlias,
+  transactionId,
+  transitionName,
+  isPrivilegedTransition
+) => dispatch => {
+  return dispatch(
+    speculateTransactionThunk({
+      orderParams,
+      processAlias,
+      transactionId,
+      transitionName,
+      isPrivilegedTransition,
+    })
+  ).unwrap();
+};
+
+///////////////////////////
+// Fetch Stripe Customer //
+///////////////////////////
+const stripeCustomerPayloadCreator = ({}, { dispatch, rejectWithValue }) => {
   const fetchCurrentUserOptions = {
     callParams: { include: ['stripeCustomer.defaultPaymentMethod'] },
     updateHasListings: false,
@@ -498,9 +408,120 @@ export const stripeCustomer = () => (dispatch, getState, sdk) => {
 
   return dispatch(fetchCurrentUser(fetchCurrentUserOptions))
     .then(response => {
-      dispatch(stripeCustomerSuccess());
+      return response;
     })
     .catch(e => {
-      dispatch(stripeCustomerError(storableError(e)));
+      return rejectWithValue(storableError(e));
     });
 };
+
+export const stripeCustomerThunk = createAsyncThunk(
+  'CheckoutPage/stripeCustomer',
+  stripeCustomerPayloadCreator
+);
+// Backward compatible wrapper function for stripeCustomer
+export const stripeCustomer = () => dispatch => {
+  return dispatch(stripeCustomerThunk({})).unwrap();
+};
+
+// ================ Slice ================ //
+
+const initialState = {
+  listing: null,
+  orderData: null,
+  speculateTransactionInProgress: false,
+  speculateTransactionError: null,
+  speculatedTransaction: null,
+  isClockInSync: false,
+  transaction: null,
+  initiateOrderError: null,
+  confirmPaymentError: null,
+  stripeCustomerFetched: false,
+  initiateInquiryInProgress: false,
+  initiateInquiryError: null,
+};
+
+const checkoutPageSlice = createSlice({
+  name: 'CheckoutPage',
+  initialState,
+  reducers: {
+    setInitialValues: (state, action) => {
+      return { ...initialState, ...pick(action.payload, Object.keys(initialState)) };
+    },
+  },
+  extraReducers: builder => {
+    builder
+      // Initiate Order cases
+      .addCase(initiateOrderThunk.pending, state => {
+        state.initiateOrderError = null;
+      })
+      .addCase(initiateOrderThunk.fulfilled, (state, action) => {
+        state.transaction = action.payload;
+      })
+      .addCase(initiateOrderThunk.rejected, (state, action) => {
+        console.error(action.payload); // eslint-disable-line no-console
+        state.initiateOrderError = action.payload;
+      })
+      // Confirm Payment cases
+      .addCase(confirmPaymentThunk.pending, state => {
+        state.confirmPaymentError = null;
+      })
+      .addCase(confirmPaymentThunk.fulfilled, state => {
+        // Payment confirmed successfully, no state change needed
+      })
+      .addCase(confirmPaymentThunk.rejected, (state, action) => {
+        console.error(action.payload); // eslint-disable-line no-console
+        state.confirmPaymentError = action.payload;
+      })
+      // Speculate Transaction cases
+      .addCase(speculateTransactionThunk.pending, state => {
+        state.speculateTransactionInProgress = true;
+        state.speculateTransactionError = null;
+        state.speculatedTransaction = null;
+      })
+      .addCase(speculateTransactionThunk.fulfilled, (state, action) => {
+        // Check that the local devices clock is within a minute from the server
+        const lastTransitionedAt = action.payload?.attributes?.lastTransitionedAt;
+        const localTime = new Date();
+        const minute = 60000;
+        state.speculateTransactionInProgress = false;
+        state.speculatedTransaction = action.payload;
+        state.isClockInSync =
+          Math.abs(lastTransitionedAt?.getTime() - localTime.getTime()) < minute;
+      })
+      .addCase(speculateTransactionThunk.rejected, (state, action) => {
+        console.error(action.payload); // eslint-disable-line no-console
+        state.speculateTransactionInProgress = false;
+        state.speculateTransactionError = action.payload;
+      })
+      // Stripe Customer cases
+      .addCase(stripeCustomerThunk.pending, state => {
+        state.stripeCustomerFetched = false;
+      })
+      .addCase(stripeCustomerThunk.fulfilled, state => {
+        state.stripeCustomerFetched = true;
+      })
+      .addCase(stripeCustomerThunk.rejected, (state, action) => {
+        console.error(action.payload); // eslint-disable-line no-console
+        state.stripeCustomerFetchError = action.payload;
+      })
+      // Initiate Inquiry cases
+      .addCase(initiateInquiryThunk.pending, state => {
+        state.initiateInquiryInProgress = true;
+        state.initiateInquiryError = null;
+      })
+      .addCase(initiateInquiryThunk.fulfilled, state => {
+        state.initiateInquiryInProgress = false;
+      })
+      .addCase(initiateInquiryThunk.rejected, (state, action) => {
+        state.initiateInquiryInProgress = false;
+        state.initiateInquiryError = action.payload;
+      });
+  },
+});
+
+// Export the action creators
+export const { setInitialValues } = checkoutPageSlice.actions;
+
+// Export the reducer
+export default checkoutPageSlice.reducer;
