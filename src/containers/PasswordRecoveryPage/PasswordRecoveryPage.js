@@ -230,7 +230,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   onChange: () => dispatch(clearPasswordRecoveryError()),
-  onSubmitEmail: email => dispatch(recoverPassword(email)),
+  onSubmitEmail: email => dispatch(recoverPassword({ email })),
   onRetypeEmail: () => dispatch(retypePasswordRecoveryEmail()),
 });
 
