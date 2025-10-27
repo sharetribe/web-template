@@ -1,3 +1,4 @@
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { createImageVariantConfig } from '../../util/sdkLoader';
 import { isErrorUserPendingApproval, isForbiddenError, storableError } from '../../util/errors';
 import { convertUnitToSubUnit, unitDivisor } from '../../util/currency';
@@ -9,7 +10,7 @@ import {
   daysBetween,
   getStartOf,
 } from '../../util/dates';
-import { constructQueryParamName, isOriginInUse, isStockInUse } from '../../util/search';
+import { constructQueryParamName, isOriginInUse } from '../../util/search';
 import { hasPermissionToViewData, isUserAuthorized } from '../../util/userHelpers';
 import { parse } from '../../util/urlHelpers';
 
@@ -20,27 +21,7 @@ import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 // So, there's enough cards to fill all columns on full pagination pages
 const RESULT_PAGE_SIZE = 24;
 
-// ================ Action types ================ //
-
-export const SEARCH_LISTINGS_REQUEST = 'app/SearchPage/SEARCH_LISTINGS_REQUEST';
-export const SEARCH_LISTINGS_SUCCESS = 'app/SearchPage/SEARCH_LISTINGS_SUCCESS';
-export const SEARCH_LISTINGS_ERROR = 'app/SearchPage/SEARCH_LISTINGS_ERROR';
-
-export const SEARCH_MAP_LISTINGS_REQUEST = 'app/SearchPage/SEARCH_MAP_LISTINGS_REQUEST';
-export const SEARCH_MAP_LISTINGS_SUCCESS = 'app/SearchPage/SEARCH_MAP_LISTINGS_SUCCESS';
-export const SEARCH_MAP_LISTINGS_ERROR = 'app/SearchPage/SEARCH_MAP_LISTINGS_ERROR';
-
-export const SEARCH_MAP_SET_ACTIVE_LISTING = 'app/SearchPage/SEARCH_MAP_SET_ACTIVE_LISTING';
-
-// ================ Reducer ================ //
-
-const initialState = {
-  pagination: null,
-  searchParams: null,
-  searchInProgress: false,
-  searchListingsError: null,
-  currentPageResultIds: [],
-};
+// ================ Helper Functions ================ //
 
 const resultIds = data => {
   const listings = data.data;
@@ -49,62 +30,13 @@ const resultIds = data => {
     .map(l => l.id);
 };
 
-const listingPageReducer = (state = initialState, action = {}) => {
-  const { type, payload } = action;
-  switch (type) {
-    case SEARCH_LISTINGS_REQUEST:
-      return {
-        ...state,
-        searchParams: payload.searchParams,
-        searchInProgress: true,
-        searchMapListingIds: [],
-        searchListingsError: null,
-      };
-    case SEARCH_LISTINGS_SUCCESS:
-      return {
-        ...state,
-        currentPageResultIds: resultIds(payload.data),
-        pagination: payload.data.meta,
-        searchInProgress: false,
-      };
-    case SEARCH_LISTINGS_ERROR:
-      // eslint-disable-next-line no-console
-      console.error(payload);
-      return { ...state, searchInProgress: false, searchListingsError: payload };
+// ================ Async Thunks ================ //
 
-    case SEARCH_MAP_SET_ACTIVE_LISTING:
-      return {
-        ...state,
-        activeListingId: payload,
-      };
-    default:
-      return state;
-  }
-};
-
-export default listingPageReducer;
-
-// ================ Action creators ================ //
-
-export const searchListingsRequest = searchParams => ({
-  type: SEARCH_LISTINGS_REQUEST,
-  payload: { searchParams },
-});
-
-export const searchListingsSuccess = response => ({
-  type: SEARCH_LISTINGS_SUCCESS,
-  payload: { data: response.data },
-});
-
-export const searchListingsError = e => ({
-  type: SEARCH_LISTINGS_ERROR,
-  error: true,
-  payload: e,
-});
-
-export const searchListings = (searchParams, config) => (dispatch, getState, sdk) => {
-  dispatch(searchListingsRequest(searchParams));
-
+/////////////////////
+// Search Listings //
+/////////////////////
+const searchListingsPayloadCreator = ({ searchParams, config }, thunkAPI) => {
+  const { dispatch, rejectWithValue, extra: sdk } = thunkAPI;
   // SearchPage can enforce listing query to only those listings with valid listingType
   // NOTE: this only works if you have set 'enum' type search schema to listing's public data fields
   //       - listingType
@@ -361,22 +293,67 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
       const sanitizeConfig = { listingFields };
 
       dispatch(addMarketplaceEntities(response, sanitizeConfig));
-      dispatch(searchListingsSuccess(response));
       return response;
     })
     .catch(e => {
       const error = storableError(e);
-      dispatch(searchListingsError(error));
       if (!(isErrorUserPendingApproval(error) || isForbiddenError(error))) {
-        throw e;
+        return rejectWithValue(error);
       }
+      return rejectWithValue(error);
     });
 };
 
-export const setActiveListing = listingId => ({
-  type: SEARCH_MAP_SET_ACTIVE_LISTING,
-  payload: listingId,
+export const searchListings = createAsyncThunk(
+  'SearchPage/searchListings',
+  searchListingsPayloadCreator
+);
+
+// ================ Slice ================ //
+
+const searchPageSlice = createSlice({
+  name: 'SearchPage',
+  initialState: {
+    pagination: null,
+    searchParams: null,
+    searchInProgress: false,
+    searchListingsError: null,
+    currentPageResultIds: [],
+    activeListingId: null,
+  },
+  reducers: {
+    setActiveListing: (state, action) => {
+      state.activeListingId = action.payload;
+    },
+  },
+  extraReducers: builder => {
+    // Search Listings
+    builder
+      .addCase(searchListings.pending, (state, action) => {
+        state.searchParams = action.meta.arg.searchParams;
+        state.searchInProgress = true;
+        state.searchListingsError = null;
+      })
+      .addCase(searchListings.fulfilled, (state, action) => {
+        state.currentPageResultIds = resultIds(action.payload.data);
+        state.pagination = action.payload.data.meta;
+        state.searchInProgress = false;
+      })
+      .addCase(searchListings.rejected, (state, action) => {
+        // eslint-disable-next-line no-console
+        console.error(action.payload);
+        state.searchInProgress = false;
+        state.searchListingsError = action.payload;
+      });
+  },
 });
+
+// Export the action creator
+export const { setActiveListing } = searchPageSlice.actions;
+
+export default searchPageSlice.reducer;
+
+// ================ Load data ================ //
 
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   // In private marketplace mode, this page won't fetch data if the user is unauthorized
@@ -411,8 +388,8 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   } = config.layout.listingImage;
   const aspectRatio = aspectHeight / aspectWidth;
 
-  const searchListingsCall = searchListings(
-    {
+  const searchListingsCall = searchListings({
+    searchParams: {
       ...rest,
       ...originMaybe,
       ...listingTypeVariantMaybe,
@@ -447,7 +424,8 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
       ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
       'limit.images': 1,
     },
-    config
-  );
+    config,
+  });
+
   return dispatch(searchListingsCall);
 };
