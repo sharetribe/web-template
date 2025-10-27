@@ -8,7 +8,12 @@ import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { ensureCurrentUser } from '../../util/data';
-import { showCreateListingLinkForUser, showPaymentDetailsForUser } from '../../util/userHelpers';
+import {
+  showCreateListingLinkForUser,
+  showPaymentDetailsForUser,
+  initialValuesForUserFields,
+  pickUserFieldsData,
+} from '../../util/userHelpers';
 import { pathByRouteName } from '../../util/routes';
 
 import { sendVerificationEmail } from '../../ducks/user.duck';
@@ -21,8 +26,9 @@ import FooterContainer from '../FooterContainer/FooterContainer';
 
 import DeleteAccountForm from './DeleteAccountForm/DeleteAccountForm';
 
-import { deleteAccount, resetPassword } from './ManageAccountPage.duck';
+import { deleteAccount, resetPassword, updateProfile } from './ManageAccountPage.duck';
 import css from './ManageAccountPage.module.css';
+import PrivateDetailsForm from './PrivateDetailsForm/PrivateDetailsForm';
 
 /**
  * @param {Object} props
@@ -50,12 +56,38 @@ export const ManageAccountPageComponent = props => {
     scrollingDisabled,
     onSubmitDeleteAccount,
     onResetPassword,
+    onUpdateProfile,
     resetPasswordInProgress = false,
     resetPasswordError,
+    updateProfileError,
   } = props;
 
   const user = ensureCurrentUser(currentUser);
-  const currentEmail = user.attributes.email || '';
+  const { publicData, privateData } = user?.attributes.profile;
+  const { userType } = publicData || {};
+
+  const { userFields, userTypes = [] } = config.user;
+  const privateUserFields = userFields.filter(uf => uf.scope === 'private');
+  const userTypeConfig = userTypes.find(config => config.userType === userType);
+
+  const hasUserTypeFields =
+    privateUserFields.length > 0 &&
+    !!privateUserFields.find(
+      uf =>
+        !uf.userTypeConfig.limitToUserTypeIds ||
+        (uf.userTypeConfig.limitToUserTypeIds &&
+          uf.userTypeConfig.userTypeIds.includes(userTypeConfig?.userType))
+    );
+
+  const handleFieldSubmit = (values, userType) => {
+    const profile = {
+      privateData: {
+        ...pickUserFieldsData(values, 'private', userType, userFields),
+      },
+    };
+
+    onUpdateProfile(profile);
+  };
 
   const handleSubmit = values => {
     // Get password from form, use it to delete the user account
@@ -79,8 +111,8 @@ export const ManageAccountPageComponent = props => {
   const { showPayoutDetails, showPaymentMethods } = showPaymentDetailsForUser(config, currentUser);
   const accountSettingsNavProps = {
     currentPage: 'ManageAccountPage',
-    showPayoutDetails,
     showPaymentMethods,
+    showPayoutDetails,
   };
 
   return (
@@ -108,6 +140,24 @@ export const ManageAccountPageComponent = props => {
           <H3 as="h1">
             <FormattedMessage id="ManageAccountPage.heading" />
           </H3>
+          {hasUserTypeFields ? (
+            <>
+              <PrivateDetailsForm
+                className={css.form}
+                currentUser={currentUser}
+                initialValues={{
+                  ...initialValuesForUserFields(privateData, 'private', userType, userFields),
+                }}
+                updateProfileError={updateProfileError}
+                onSubmit={values => handleFieldSubmit(values, userType)}
+                marketplaceName={config.marketplaceName}
+                userFields={privateUserFields}
+                userTypeConfig={userTypeConfig}
+                intl={intl}
+              />
+              <hr className={css.accountPageDivider} />
+            </>
+          ) : null}
           {user.id ? (
             <DeleteAccountForm
               intl={intl}
@@ -136,6 +186,7 @@ const mapStateToProps = state => {
     accountDeletionConfirmed,
     resetPasswordInProgress,
     resetPasswordError,
+    updateProfileError,
   } = state.ManageAccountPage;
   return {
     deleteAccountError,
@@ -147,6 +198,7 @@ const mapStateToProps = state => {
     sendVerificationEmailError,
     resetPasswordInProgress,
     resetPasswordError,
+    updateProfileError,
   };
 };
 
@@ -154,6 +206,7 @@ const mapDispatchToProps = dispatch => ({
   onResendVerificationEmail: () => dispatch(sendVerificationEmail()),
   onSubmitDeleteAccount: values => dispatch(deleteAccount(values)),
   onResetPassword: values => dispatch(resetPassword(values)),
+  onUpdateProfile: values => dispatch(updateProfile(values)),
 });
 
 const ManageAccountPage = compose(

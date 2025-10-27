@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { storableError } from '../../util/errors';
+import { setCurrentUser } from '../../ducks/user.duck';
 import { logout } from '../../ducks/auth.duck';
 import { deleteUserAccount } from '../../util/api';
 
@@ -44,6 +45,41 @@ export const resetPasswordThunk = createAsyncThunk(
 // Note: we unwrap the thunk so that the promise chain can be listened on presentational components.
 export const resetPassword = actionPayload => dispatch => {
   return dispatch(resetPasswordThunk(actionPayload)).unwrap();
+};
+
+////////////////////
+// Update Profile //
+////////////////////
+
+export const updateProfileThunk = createAsyncThunk(
+  'ManageAccountPage/resetPassword',
+  (actionPayload, { dispatch, rejectWithValue, extra: sdk }) => {
+    const queryParams = {
+      expand: true,
+    };
+
+    return sdk.currentUser
+      .updateProfile(actionPayload, queryParams)
+      .then(response => {
+        const entities = denormalisedResponseEntities(response);
+        if (entities.length !== 1) {
+          throw new Error('Expected a resource in the sdk.currentUser.updateProfile response');
+        }
+        const currentUser = entities[0];
+
+        // Update current user in state.user.currentUser through user.duck.js
+        dispatch(setCurrentUser(currentUser));
+        return response;
+      })
+      .catch(e => {
+        return rejectWithValue(storableError(e));
+      });
+  }
+);
+
+// Backward compatible wrapper for the updateProfile thunk
+export const updateProfile = actionPayload => dispatch => {
+  return dispatch(updateProfileThunk(actionPayload));
 };
 
 // ================ Slice ================ //

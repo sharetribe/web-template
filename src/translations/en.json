@@ -819,6 +819,7 @@
   "ProductOrderForm.selectDeliveryMethodOption": "Select delivery method",
   "ProductOrderForm.selectQuantityOption": "Select…",
   "ProductOrderForm.shippingOption": "Shipping",
+  "PrivateDetailsForm.saveChanges": "Save changes",
   "ProfilePage.desktopHeading": "Hello, I'm {name}.",
   "ProfilePage.detailNo": "No",
   "ProfilePage.detailYes": "Yes",
