@@ -63,20 +63,6 @@ const ColorCard = props => {
   );
 };
 
-const { string } = PropTypes;
-
-// Jest test strip off CSS classes (css is an empty object). Otherwise this could be required prop.
-const defaultProps = { mpColor: undefined };
-// Create a real undefined value, not just injecting a hopefully undefined object.
-delete defaultProps.mpColor;
-ColorCard.defaultProps = defaultProps;
-
-ColorCard.propTypes = {
-  mpColor: string,
-  name: string.isRequired,
-  usage: string.isRequired,
-};
-
 const MarketplaceColors = () => {
   return (
     <div className={css.content}>
