@@ -365,8 +365,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   dispatch,
-  onMakeOffer: (params, processAlias, transactionId, transitionName, isPrivileged) =>
-    dispatch(makeOffer(params, processAlias, transactionId, transitionName, isPrivileged)),
+  onMakeOffer: (params, processAlias, transactionId, isPrivileged) =>
+    dispatch(makeOffer(params, processAlias, transactionId, isPrivileged)),
   onSendMessage: params => dispatch(sendMessage(params)),
 });
 

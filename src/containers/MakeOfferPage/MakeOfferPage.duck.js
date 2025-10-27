@@ -1,4 +1,5 @@
 import pick from 'lodash/pick';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
 import { initiatePrivileged, transitionPrivileged } from '../../util/api';
@@ -8,7 +9,7 @@ import * as log from '../../util/log';
 import { parse } from '../../util/urlHelpers';
 import { hasPermissionToViewData, isUserAuthorized } from '../../util/userHelpers';
 import { getProcess, resolveLatestProcessName } from '../../transactions/transaction';
-import { fetchCurrentUserHasOrdersSuccess } from '../../ducks/user.duck';
+import { setCurrentUserHasOrders } from '../../ducks/user.duck';
 import { addMarketplaceEntities, getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { fetchStripeAccount } from '../../ducks/stripeConnectAccount.duck';
 
@@ -33,135 +34,39 @@ const getImageVariants = listingImageConfig => {
   };
 };
 
-// ================ Action types ================ //
+const getTransitionName = (transactionId, processAlias, state) => {
+  const ref = { id: new UUID(transactionId), type: 'transaction' };
+  const transactions = getMarketplaceEntities(state, [ref]);
+  const transaction = transactions.length === 1 ? transactions[0] : null;
 
-export const SET_INITIAL_VALUES = 'app/MakeOfferPage/SET_INITIAL_VALUES';
+  const processName = resolveLatestProcessName(processAlias.split('/')[0]);
+  const process = getProcess(processName);
+  const transitions = process.transitions;
+  const transitionName =
+    transaction?.attributes?.lastTransition === transitions.INQUIRE
+      ? transitions.MAKE_OFFER_AFTER_INQUIRY
+      : transaction?.attributes?.lastTransition === transitions.REQUEST_QUOTE
+      ? transitions.MAKE_OFFER_FROM_REQUEST
+      : transitions.MAKE_OFFER;
 
-export const SHOW_LISTING_REQUEST = 'app/MakeOfferPage/SHOW_LISTING_REQUEST';
-export const SHOW_LISTING_SUCCESS = 'app/MakeOfferPage/SHOW_LISTING__SUCCESS';
-export const SHOW_LISTING_ERROR = 'app/MakeOfferPage/SHOW_LISTING_ERROR';
-
-export const SHOW_TRANSACTION_REQUEST = 'app/MakeOfferPage/SHOW_TRANSACTION_REQUEST';
-export const SHOW_TRANSACTION_SUCCESS = 'app/MakeOfferPage/SHOW_TRANSACTION_SUCCESS';
-export const SHOW_TRANSACTION_ERROR = 'app/MakeOfferPage/SHOW_TRANSACTION_ERROR';
-
-export const MAKE_OFFER_REQUEST = 'app/MakeOfferPage/MAKE_OFFER_REQUEST';
-export const MAKE_OFFER_SUCCESS = 'app/MakeOfferPage/MAKE_OFFER_SUCCESS';
-export const MAKE_OFFER_ERROR = 'app/MakeOfferPage/MAKE_OFFER_ERROR';
-
-// ================ Reducer ================ //
-
-const initialState = {
-  listingId: null,
-  showListingInProgress: false,
-  showListingError: null,
-  transaction: null,
-  makeOfferInProgress: false,
-  makeOfferError: null,
+  return transitionName;
 };
 
-export default function makeOfferPageReducer(state = initialState, action = {}) {
-  const { type, payload } = action;
-  switch (type) {
-    case SET_INITIAL_VALUES:
-      return { ...initialState, ...payload };
+// ================ Async Thunks ================ //
 
-    case MAKE_OFFER_REQUEST:
-      return { ...state, makeOfferError: null };
-    case MAKE_OFFER_SUCCESS:
-      return { ...state, transaction: payload };
-    case MAKE_OFFER_ERROR:
-      console.error(payload); // eslint-disable-line no-console
-      return { ...state, makeOfferError: payload };
-
-    case SHOW_LISTING_REQUEST:
-      return {
-        ...state,
-        listingId: payload.listingId,
-        showListingError: null,
-        showListingInProgress: true,
-      };
-    case SHOW_LISTING_SUCCESS:
-      return { ...state, showListingInProgress: false };
-    case SHOW_LISTING_ERROR:
-      return { ...state, showListingError: payload, showListingInProgress: false };
-
-    case SHOW_TRANSACTION_REQUEST:
-      return {
-        ...state,
-        transaction: payload.transaction,
-        showTransactionError: null,
-        showTransactionInProgress: true,
-      };
-    case SHOW_TRANSACTION_SUCCESS:
-      return { ...state, showTransactionInProgress: false };
-    case SHOW_TRANSACTION_ERROR:
-      return { ...state, showTransactionError: payload, showTransactionInProgress: false };
-
-    default:
-      return state;
-  }
-}
-
-// ================ Selectors ================ //
-
-// ================ Action creators ================ //
-
-export const setInitialValues = initialValues => ({
-  type: SET_INITIAL_VALUES,
-  payload: pick(initialValues, Object.keys(initialState)),
-});
-
-export const makeOfferRequest = () => ({ type: MAKE_OFFER_REQUEST });
-export const makeOfferSuccess = transaction => ({
-  type: MAKE_OFFER_SUCCESS,
-  payload: transaction,
-});
-export const makeOfferError = e => ({
-  type: MAKE_OFFER_ERROR,
-  error: true,
-  payload: e,
-});
-
-export const showListingRequest = listingId => ({
-  type: SHOW_LISTING_REQUEST,
-  payload: { listingId },
-});
-export const showListingSuccess = listing => ({
-  type: SHOW_LISTING_SUCCESS,
-  payload: { listing },
-});
-export const showListingError = e => ({
-  type: SHOW_LISTING_ERROR,
-  error: true,
-  payload: e,
-});
-
-export const showTransactionRequest = transactionId => ({
-  type: SHOW_TRANSACTION_REQUEST,
-  payload: { transactionId },
-});
-export const showTransactionSuccess = transaction => ({
-  type: SHOW_TRANSACTION_SUCCESS,
-  payload: { transaction },
-});
-export const showTransactionError = e => ({
-  type: SHOW_TRANSACTION_ERROR,
-  error: true,
-  payload: e,
-});
-
-/* ================ Thunks ================ */
-
-export const showListing = (listingId, config, isOwn = false) => (dispatch, getState, sdk) => {
+//////////////////
+// Show Listing //
+//////////////////
+const showListingPayloadCreator = (
+  { listingId, config, isOwn = false },
+  { dispatch, rejectWithValue, extra: sdk }
+) => {
   const {
     aspectWidth = 1,
     aspectHeight = 1,
     variantPrefix = 'listing-card',
   } = config.layout.listingImage;
   const aspectRatio = aspectHeight / aspectWidth;
-
-  dispatch(showListingRequest(listingId));
 
   const params = {
     id: listingId,
@@ -186,17 +91,30 @@ export const showListing = (listingId, config, isOwn = false) => (dispatch, getS
       const listingFields = config?.listing?.listingFields;
       const sanitizeConfig = { listingFields };
       dispatch(addMarketplaceEntities(data, sanitizeConfig));
-      dispatch(showListingSuccess(data));
       return data;
     })
     .catch(e => {
-      dispatch(showListingError(storableError(e)));
+      return rejectWithValue(storableError(e));
     });
 };
 
-export const showTransaction = (transactionId, config) => (dispatch, getState, sdk) => {
-  dispatch(showTransactionRequest(transactionId));
+export const showListingThunk = createAsyncThunk(
+  'MakeOfferPage/showListing',
+  showListingPayloadCreator
+);
 
+// Backward compatible wrapper for the thunk
+export const showListing = (listingId, config, isOwn = false) => dispatch => {
+  return dispatch(showListingThunk({ listingId, config, isOwn }));
+};
+
+//////////////////////
+// Show Transaction //
+//////////////////////
+const showTransactionPayloadCreator = (
+  { transactionId, config },
+  { dispatch, rejectWithValue, extra: sdk }
+) => {
   return sdk.transactions
     .show(
       {
@@ -218,57 +136,31 @@ export const showTransaction = (transactionId, config) => (dispatch, getState, s
     .then(response => {
       const listingFields = config?.listing?.listingFields;
       const sanitizeConfig = { listingFields };
-
-      dispatch(addMarketplaceEntities(response, sanitizeConfig)); // TODO
-      dispatch(showTransactionSuccess(response)); // TODO
+      dispatch(addMarketplaceEntities(response, sanitizeConfig));
       return response;
     })
     .catch(e => {
-      dispatch(showTransactionError(storableError(e)));
-      throw e;
+      return rejectWithValue(storableError(e));
     });
 };
 
-const getTransitionName = (transactionId, processAlias, state) => {
-  const ref = { id: new UUID(transactionId), type: 'transaction' };
-  const transactions = getMarketplaceEntities(state, [ref]);
-  const transaction = transactions.length === 1 ? transactions[0] : null;
+export const showTransactionThunk = createAsyncThunk(
+  'MakeOfferPage/showTransaction',
+  showTransactionPayloadCreator
+);
 
-  const processName = resolveLatestProcessName(processAlias.split('/')[0]);
-  const process = getProcess(processName);
-  const transitions = process.transitions;
-  const transitionName =
-    transaction?.attributes?.lastTransition === transitions.INQUIRE
-      ? transitions.MAKE_OFFER_AFTER_INQUIRY
-      : transaction?.attributes?.lastTransition === transitions.REQUEST_QUOTE
-      ? transitions.MAKE_OFFER_FROM_REQUEST
-      : transitions.MAKE_OFFER;
-
-  return transitionName;
+// Backward compatible wrapper for the thunk
+export const showTransaction = (transactionId, config) => dispatch => {
+  return dispatch(showTransactionThunk({ transactionId, config }));
 };
 
-/**
- * Initiate the negotiation by making a transition with an offer.
- *
- * @param {Object} negotiationParams
- * @param {Number} negotiationParams.offerInSubunits offer amount in subunits
- * @param {string} processAlias E.g. 'default-negotiation/release-1'
- * @param {string} transactionId uuid string
- * @param {boolean} isPrivilegedTransition
- * @returns
- */
-export const makeOffer = (
-  negotiationParams,
-  processAlias,
-  transactionId,
-  isPrivilegedTransition
-) => (dispatch, getState, sdk) => {
-  dispatch(makeOfferRequest());
-
-  // If we already have a transaction ID, we should transition, not
-  // initiate.
-  const isTransition = !!transactionId;
-
+////////////////
+// Make Offer //
+////////////////
+const makeOfferPayloadCreator = (
+  { negotiationParams, processAlias, transactionId, isPrivilegedTransition },
+  { dispatch, getState, rejectWithValue, extra: sdk }
+) => {
   const state = getState();
   const transitionName = getTransitionName(transactionId, processAlias, state);
 
@@ -278,6 +170,7 @@ export const makeOffer = (
   // Parameters only for client app's server to be used when making a privileged transition
   const orderData = offerInSubunits ? { actor: 'provider', offerInSubunits, currency } : {};
 
+  const isTransition = !!transactionId;
   const bodyParams = isTransition
     ? {
         id: transactionId,
@@ -297,13 +190,11 @@ export const makeOffer = (
   const handleSuccess = response => {
     const entities = denormalisedResponseEntities(response);
     const tx = entities[0];
-    dispatch(makeOfferSuccess(tx));
-    dispatch(fetchCurrentUserHasOrdersSuccess(true));
+    dispatch(setCurrentUserHasOrders());
     return tx;
   };
 
   const handleError = e => {
-    dispatch(makeOfferError(storableError(e)));
     const listingId = bodyParams?.params?.listingId?.uuid;
     const listingIdMaybe = listingId ? { listingId } : {};
     const transactionIdMaybe = transactionId ? { transactionId: transactionId.uuid } : {};
@@ -312,7 +203,7 @@ export const makeOffer = (
       ...listingIdMaybe,
       ...orderData,
     });
-    throw e;
+    return rejectWithValue(storableError(e));
   };
 
   if (isTransition && isPrivilegedTransition) {
@@ -334,10 +225,29 @@ export const makeOffer = (
   }
 };
 
-export const sendMessage = params => (dispatch, getState, sdk) => {
-  const message = params.message;
-  const orderId = params.id;
+export const makeOfferThunk = createAsyncThunk('MakeOfferPage/makeOffer', makeOfferPayloadCreator);
 
+// Backward compatible wrapper for the thunk
+export const makeOffer = (
+  params,
+  processAlias,
+  transactionId,
+  isPrivilegedTransition
+) => dispatch => {
+  return dispatch(
+    makeOfferThunk({
+      negotiationParams: params,
+      processAlias,
+      transactionId,
+      isPrivilegedTransition,
+    })
+  ).unwrap();
+};
+
+//////////////////
+// Send Message //
+//////////////////
+const sendMessagePayloadCreator = ({ message, orderId }, { rejectWithValue, extra: sdk }) => {
   if (message) {
     return sdk.messages
       .send({ transactionId: orderId, content: message })
@@ -346,12 +256,104 @@ export const sendMessage = params => (dispatch, getState, sdk) => {
       })
       .catch(e => {
         log.error(e, 'initial-message-send-failed', { txId: orderId });
-        return { orderId, messageSuccess: false };
+        return rejectWithValue(storableError(e));
       });
   } else {
     return Promise.resolve({ orderId, messageSuccess: true });
   }
 };
+
+export const sendMessageThunk = createAsyncThunk(
+  'MakeOfferPage/sendMessage',
+  sendMessagePayloadCreator
+);
+
+// Backward compatible wrapper for the thunk
+export const sendMessage = params => dispatch => {
+  return dispatch(sendMessageThunk({ message: params.message, orderId: params.id }));
+};
+
+// ================ Slice ================ //
+const initialState = {
+  listingId: null,
+  showListingInProgress: false,
+  showListingError: null,
+  transaction: null,
+  makeOfferInProgress: false,
+  makeOfferError: null,
+  showTransactionInProgress: false,
+  showTransactionError: null,
+};
+
+const makeOfferPageSlice = createSlice({
+  name: 'MakeOfferPage',
+  initialState,
+  reducers: {
+    setInitialState: () => initialState,
+    setInitialValues: (state, action) => {
+      return { ...initialState, ...pick(action.payload, Object.keys(initialState)) };
+    },
+  },
+  extraReducers: builder => {
+    builder
+      // showListing cases
+      .addCase(showListingThunk.pending, (state, action) => {
+        state.listingId = action.meta.arg.listingId;
+        state.showListingError = null;
+        state.showListingInProgress = true;
+      })
+      .addCase(showListingThunk.fulfilled, state => {
+        state.showListingInProgress = false;
+      })
+      .addCase(showListingThunk.rejected, (state, action) => {
+        state.showListingError = storableError(action.payload);
+        state.showListingInProgress = false;
+      })
+      // showTransaction cases
+      .addCase(showTransactionThunk.pending, (state, action) => {
+        state.transaction = action.meta.arg.transactionId;
+        state.showTransactionError = null;
+        state.showTransactionInProgress = true;
+      })
+      .addCase(showTransactionThunk.fulfilled, state => {
+        state.showTransactionInProgress = false;
+      })
+      .addCase(showTransactionThunk.rejected, (state, action) => {
+        state.showTransactionError = storableError(action.payload);
+        state.showTransactionInProgress = false;
+      })
+      // makeOffer cases
+      .addCase(makeOfferThunk.pending, state => {
+        state.makeOfferError = null;
+        state.makeOfferInProgress = true;
+      })
+      .addCase(makeOfferThunk.fulfilled, (state, action) => {
+        state.transaction = action.payload;
+        state.makeOfferInProgress = false;
+      })
+      .addCase(makeOfferThunk.rejected, (state, action) => {
+        state.makeOfferError = storableError(action.payload);
+        state.makeOfferInProgress = false;
+      })
+      // sendMessage cases
+      .addCase(sendMessageThunk.pending, state => {
+        state.sendMessageInProgress = true;
+        state.sendMessageError = null;
+      })
+      .addCase(sendMessageThunk.fulfilled, state => {
+        state.sendMessageInProgress = false;
+      })
+      .addCase(sendMessageThunk.rejected, (state, action) => {
+        state.sendMessageError = storableError(action.payload);
+        state.sendMessageInProgress = false;
+      });
+  },
+});
+
+export const { setInitialState, setInitialValues } = makeOfferPageSlice.actions;
+export default makeOfferPageSlice.reducer;
+
+// ================ Load data ================ //
 
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   const listingId = new UUID(params.id);
@@ -360,8 +362,9 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   const state = getState();
   const currentUser = state.user?.currentUser;
 
-  // Clear old line-items
-  dispatch(setInitialValues({ lineItems: null }));
+  // Clear state so that previously loaded data is not visible
+  // in case this page load fails.
+  dispatch(setInitialState());
 
   // In private marketplace mode, this page won't fetch data if the user is unauthorized
   const isAuthorized = currentUser && isUserAuthorized(currentUser);
@@ -377,7 +380,10 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
     currentUser?.stripeAccount ? [dispatch(fetchStripeAccount())] : [];
 
   const dataPromises = transactionId
-    ? [dispatch(showTransaction(transactionId, config)), ...fetchStripeAccountMaybe()]
-    : [dispatch(showListing(listingId, config, hasNoViewingRights)), ...fetchStripeAccountMaybe()];
+    ? [dispatch(showTransactionThunk({ transactionId, config })), ...fetchStripeAccountMaybe()]
+    : [
+        dispatch(showListingThunk({ listingId, config, isOwn: hasNoViewingRights })),
+        ...fetchStripeAccountMaybe(),
+      ];
   return Promise.all(dataPromises);
 };
