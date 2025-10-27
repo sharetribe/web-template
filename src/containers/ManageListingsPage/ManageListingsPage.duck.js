@@ -1,3 +1,4 @@
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { updatedEntities, denormalisedEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
 import { createImageVariantConfig } from '../../util/sdkLoader';
@@ -9,179 +10,6 @@ import { fetchCurrentUser } from '../../ducks/user.duck';
 // Current design has max 3 columns 42 is divisible by 2 and 3
 // So, there's enough cards to fill all columns on full pagination pages
 const RESULT_PAGE_SIZE = 42;
-
-// ================ Action types ================ //
-
-export const FETCH_LISTINGS_REQUEST = 'app/ManageListingsPage/FETCH_LISTINGS_REQUEST';
-export const FETCH_LISTINGS_SUCCESS = 'app/ManageListingsPage/FETCH_LISTINGS_SUCCESS';
-export const FETCH_LISTINGS_ERROR = 'app/ManageListingsPage/FETCH_LISTINGS_ERROR';
-
-export const OPEN_LISTING_REQUEST = 'app/ManageListingsPage/OPEN_LISTING_REQUEST';
-export const OPEN_LISTING_SUCCESS = 'app/ManageListingsPage/OPEN_LISTING_SUCCESS';
-export const OPEN_LISTING_ERROR = 'app/ManageListingsPage/OPEN_LISTING_ERROR';
-
-export const CLOSE_LISTING_REQUEST = 'app/ManageListingsPage/CLOSE_LISTING_REQUEST';
-export const CLOSE_LISTING_SUCCESS = 'app/ManageListingsPage/CLOSE_LISTING_SUCCESS';
-export const CLOSE_LISTING_ERROR = 'app/ManageListingsPage/CLOSE_LISTING_ERROR';
-
-export const DISCARD_DRAFT_REQUEST = 'app/ManageListingsPage/DISCARD_DRAFT_REQUEST';
-export const DISCARD_DRAFT_SUCCESS = 'app/ManageListingsPage/DISCARD_DRAFT_SUCCESS';
-export const DISCARD_DRAFT_ERROR = 'app/ManageListingsPage/DISCARD_DRAFT_ERROR';
-
-export const ADD_OWN_ENTITIES = 'app/ManageListingsPage/ADD_OWN_ENTITIES';
-export const CLEAR_OPEN_LISTING_ERROR = 'app/ManageListingsPage/CLEAR_OPEN_LISTING_ERROR';
-
-// ================ Reducer ================ //
-
-const initialState = {
-  pagination: null,
-  queryParams: null,
-  queryInProgress: false,
-  queryListingsError: null,
-  currentPageResultIds: [],
-  ownEntities: {},
-  openingListing: null,
-  openingListingError: null,
-  closingListing: null,
-  closingListingError: null,
-  discardingDraft: null,
-  discardingDraftError: null,
-};
-
-const resultIds = data => data.data.map(l => l.id);
-
-const merge = (state, sdkResponse) => {
-  const apiResponse = sdkResponse.data;
-  return {
-    ...state,
-    ownEntities: updatedEntities({ ...state.ownEntities }, apiResponse),
-  };
-};
-
-const updateListingAttributes = (state, listingEntity) => {
-  const oldListing = state.ownEntities.ownListing[listingEntity.id.uuid];
-  const updatedListing = { ...oldListing, attributes: listingEntity.attributes };
-  const ownListingEntities = {
-    ...state.ownEntities.ownListing,
-    [listingEntity.id.uuid]: updatedListing,
-  };
-  return {
-    ...state,
-    ownEntities: { ...state.ownEntities, ownListing: ownListingEntities },
-  };
-};
-
-const manageListingsPageReducer = (state = initialState, action = {}) => {
-  const { type, payload } = action;
-  switch (type) {
-    case CLEAR_OPEN_LISTING_ERROR:
-      return {
-        ...state,
-        openingListing: null,
-        openingListingError: null,
-      };
-
-    case FETCH_LISTINGS_REQUEST:
-      return {
-        ...state,
-        queryParams: payload.queryParams,
-        queryInProgress: true,
-        queryListingsError: null,
-        currentPageResultIds: [],
-      };
-    case FETCH_LISTINGS_SUCCESS:
-      return {
-        ...state,
-        currentPageResultIds: resultIds(payload.data),
-        pagination: payload.data.meta,
-        queryInProgress: false,
-      };
-    case FETCH_LISTINGS_ERROR:
-      // eslint-disable-next-line no-console
-      console.error(payload);
-      return { ...state, queryInProgress: false, queryListingsError: payload };
-
-    case OPEN_LISTING_REQUEST:
-      return {
-        ...state,
-        openingListing: payload.listingId,
-        openingListingError: null,
-      };
-    case OPEN_LISTING_SUCCESS:
-      return {
-        ...updateListingAttributes(state, payload.data),
-        openingListing: null,
-      };
-    case OPEN_LISTING_ERROR: {
-      // eslint-disable-next-line no-console
-      console.error(payload);
-      return {
-        ...state,
-        openingListing: null,
-        openingListingError: {
-          listingId: state.openingListing,
-          error: payload,
-        },
-      };
-    }
-
-    case CLOSE_LISTING_REQUEST:
-      return {
-        ...state,
-        closingListing: payload.listingId,
-        closingListingError: null,
-      };
-    case CLOSE_LISTING_SUCCESS:
-      return {
-        ...updateListingAttributes(state, payload.data),
-        closingListing: null,
-      };
-    case CLOSE_LISTING_ERROR: {
-      // eslint-disable-next-line no-console
-      console.error(payload);
-      return {
-        ...state,
-        closingListing: null,
-        closingListingError: {
-          listingId: state.closingListing,
-          error: payload,
-        },
-      };
-    }
-
-    case DISCARD_DRAFT_REQUEST:
-      return {
-        ...state,
-        discardingDraft: payload.listingId,
-        discardingDraftError: null,
-      };
-    case DISCARD_DRAFT_SUCCESS:
-      return {
-        ...state,
-        discardingDraft: null,
-      };
-    case DISCARD_DRAFT_ERROR: {
-      // eslint-disable-next-line no-console
-      console.error(payload);
-      return {
-        ...state,
-        discardingDraft: null,
-        discardingDraftError: {
-          listingId: state.discardingDraft,
-          error: payload,
-        },
-      };
-    }
-
-    case ADD_OWN_ENTITIES:
-      return merge(state, payload);
-
-    default:
-      return state;
-  }
-};
-
-export default manageListingsPageReducer;
 
 // ================ Selectors ================ //
 
@@ -201,87 +29,12 @@ export const getOwnListingsById = (state, listingIds) => {
   return denormalisedEntities(ownEntities, resources, throwIfNotFound);
 };
 
-// ================ Action creators ================ //
+// ================ Async Thunks ================ //
 
-export const clearOpenListingError = () => ({
-  type: CLEAR_OPEN_LISTING_ERROR,
-});
-
-// This works the same way as addMarketplaceEntities,
-// but we don't want to mix own listings with searched listings
-// (own listings data contains different info - e.g. exact location etc.)
-export const addOwnEntities = sdkResponse => ({
-  type: ADD_OWN_ENTITIES,
-  payload: sdkResponse,
-});
-
-export const openListingRequest = listingId => ({
-  type: OPEN_LISTING_REQUEST,
-  payload: { listingId },
-});
-
-export const openListingSuccess = response => ({
-  type: OPEN_LISTING_SUCCESS,
-  payload: response.data,
-});
-
-export const openListingError = e => ({
-  type: OPEN_LISTING_ERROR,
-  error: true,
-  payload: e,
-});
-
-export const closeListingRequest = listingId => ({
-  type: CLOSE_LISTING_REQUEST,
-  payload: { listingId },
-});
-
-export const closeListingSuccess = response => ({
-  type: CLOSE_LISTING_SUCCESS,
-  payload: response.data,
-});
-
-export const closeListingError = e => ({
-  type: CLOSE_LISTING_ERROR,
-  error: true,
-  payload: e,
-});
-
-export const discardDraftRequest = listingId => ({
-  type: DISCARD_DRAFT_REQUEST,
-  payload: { listingId },
-});
-
-export const discardDraftSuccess = () => ({
-  type: DISCARD_DRAFT_SUCCESS,
-});
-
-export const discardDraftError = e => ({
-  type: DISCARD_DRAFT_ERROR,
-  error: true,
-  payload: e,
-});
-
-export const queryListingsRequest = queryParams => ({
-  type: FETCH_LISTINGS_REQUEST,
-  payload: { queryParams },
-});
-
-export const queryListingsSuccess = response => ({
-  type: FETCH_LISTINGS_SUCCESS,
-  payload: { data: response.data },
-});
-
-export const queryListingsError = e => ({
-  type: FETCH_LISTINGS_ERROR,
-  error: true,
-  payload: e,
-});
-
-// Throwing error for new (loadData may need that info)
-export const queryOwnListings = queryParams => (dispatch, getState, sdk) => {
-  dispatch(queryListingsRequest(queryParams));
-
+////////////////////////
+// Query Own Listings //
+////////////////////////
+const queryOwnListingsPayloadCreator = (queryParams, { extra: sdk, dispatch, rejectWithValue }) => {
   const { perPage, ...rest } = queryParams;
   const params = { ...rest, perPage };
 
@@ -289,46 +42,72 @@ export const queryOwnListings = queryParams => (dispatch, getState, sdk) => {
     .query(params)
     .then(response => {
       dispatch(addOwnEntities(response));
-      dispatch(queryListingsSuccess(response));
       return response;
     })
     .catch(e => {
-      dispatch(queryListingsError(storableError(e)));
-      throw e;
+      return rejectWithValue(storableError(e));
     });
 };
 
-export const closeListing = listingId => (dispatch, getState, sdk) => {
-  dispatch(closeListingRequest(listingId));
+export const queryOwnListingsThunk = createAsyncThunk(
+  'app/ManageListingsPage/queryOwnListings',
+  queryOwnListingsPayloadCreator
+);
+// Backward compatible wrapper for the thunk
+export const queryOwnListings = queryParams => (dispatch, getState, sdk) => {
+  return dispatch(queryOwnListingsThunk(queryParams)).unwrap();
+};
 
+///////////////////
+// Close Listing //
+///////////////////
+const closeListingPayloadCreator = (listingId, { extra: sdk, rejectWithValue }) => {
   return sdk.ownListings
     .close({ id: listingId }, { expand: true })
-    .then(response => {
-      dispatch(closeListingSuccess(response));
-      return response;
-    })
+    .then(response => response)
     .catch(e => {
-      dispatch(closeListingError(storableError(e)));
+      return rejectWithValue(storableError(e));
     });
 };
 
-export const openListing = listingId => (dispatch, getState, sdk) => {
-  dispatch(openListingRequest(listingId));
+export const closeListingThunk = createAsyncThunk(
+  'app/ManageListingsPage/closeListing',
+  closeListingPayloadCreator
+);
+// Backward compatible wrapper for the thunk
+export const closeListing = listingId => (dispatch, getState, sdk) => {
+  return dispatch(closeListingThunk(listingId)).unwrap();
+};
 
+//////////////////
+// Open Listing //
+//////////////////
+const openListingPayloadCreator = (listingId, { extra: sdk, rejectWithValue }) => {
   return sdk.ownListings
     .open({ id: listingId }, { expand: true })
-    .then(response => {
-      dispatch(openListingSuccess(response));
-      return response;
-    })
+    .then(response => response)
     .catch(e => {
-      dispatch(openListingError(storableError(e)));
+      return rejectWithValue(storableError(e));
     });
 };
 
+export const openListingThunk = createAsyncThunk(
+  'app/ManageListingsPage/openListing',
+  openListingPayloadCreator
+);
+// Backward compatible wrapper for the thunk
+export const openListing = listingId => (dispatch, getState, sdk) => {
+  return dispatch(openListingThunk(listingId)).unwrap();
+};
+
+///////////////////
+// Discard Draft //
+///////////////////
+
 const delay = ms => new Promise(resolve => window.setTimeout(resolve, ms));
-export const discardDraft = listingId => (dispatch, getState, sdk) => {
-  dispatch(discardDraftRequest(listingId));
+
+const discardDraftPayloadCreator = (listingId, thunkAPI) => {
+  const { getState, extra: sdk, dispatch, rejectWithValue } = thunkAPI;
   const { queryParams } = getState().ManageListingsPage;
 
   return sdk.ownListings
@@ -340,13 +119,160 @@ export const discardDraft = listingId => (dispatch, getState, sdk) => {
     })
     .then(([_, listingResponse]) => {
       dispatch(addOwnEntities(listingResponse));
-      dispatch(queryListingsSuccess(listingResponse));
-      dispatch(discardDraftSuccess());
+      return listingResponse;
     })
     .catch(e => {
-      dispatch(discardDraftError(storableError(e)));
+      return rejectWithValue(storableError(e));
     });
 };
+
+export const discardDraftThunk = createAsyncThunk(
+  'app/ManageListingsPage/discardDraft',
+  discardDraftPayloadCreator
+);
+// Backward compatible wrapper for the thunk
+export const discardDraft = listingId => (dispatch, getState, sdk) => {
+  return dispatch(discardDraftThunk(listingId)).unwrap();
+};
+
+// ================ Slice ================ //
+
+const resultIds = data => data.data.map(l => l.id);
+
+const updateListingAttributes = (state, listingEntity) => {
+  const oldListing = state.ownEntities.ownListing[listingEntity.id.uuid];
+  const updatedListing = { ...oldListing, attributes: listingEntity.attributes };
+  const ownListingEntities = {
+    ...state.ownEntities.ownListing,
+    [listingEntity.id.uuid]: updatedListing,
+  };
+  return {
+    ...state,
+    ownEntities: { ...state.ownEntities, ownListing: ownListingEntities },
+  };
+};
+
+const manageListingsPageSlice = createSlice({
+  name: 'ManageListingsPage',
+  initialState: {
+    pagination: null,
+    queryParams: null,
+    queryInProgress: false,
+    queryListingsError: null,
+    currentPageResultIds: [],
+    ownEntities: {},
+    openingListing: null,
+    openingListingError: null,
+    closingListing: null,
+    closingListingError: null,
+    discardingDraft: null,
+    discardingDraftError: null,
+  },
+  reducers: {
+    clearOpenListingError: state => {
+      state.openingListing = null;
+      state.openingListingError = null;
+    },
+    addOwnEntities: (state, action) => {
+      // This works the same way as addMarketplaceEntities,
+      // but we don't want to mix own listings with searched listings
+      // (own listings data contains different info - e.g. exact location etc.)
+      const apiResponse = action.payload.data;
+      state.ownEntities = updatedEntities({ ...state.ownEntities }, apiResponse);
+    },
+  },
+  extraReducers: builder => {
+    // Query own listings
+    builder
+      .addCase(queryOwnListingsThunk.pending, (state, action) => {
+        state.queryParams = action.meta.arg;
+        state.queryInProgress = true;
+        state.queryListingsError = null;
+        state.currentPageResultIds = [];
+      })
+      .addCase(queryOwnListingsThunk.fulfilled, (state, action) => {
+        state.currentPageResultIds = resultIds(action.payload.data);
+        state.pagination = action.payload.meta;
+        state.queryInProgress = false;
+      })
+      .addCase(queryOwnListingsThunk.rejected, (state, action) => {
+        // eslint-disable-next-line no-console
+        console.error(action.payload || action.error);
+        state.queryInProgress = false;
+        state.queryListingsError = action.payload;
+      });
+
+    // Open listing
+    builder
+      .addCase(openListingThunk.pending, (state, action) => {
+        state.openingListing = action.meta.arg;
+        state.openingListingError = null;
+      })
+      .addCase(openListingThunk.fulfilled, (state, action) => {
+        const listing = action.payload.data.data;
+        const updatedState = updateListingAttributes(state, listing);
+        state.ownEntities = updatedState.ownEntities;
+        state.openingListing = null;
+      })
+      .addCase(openListingThunk.rejected, (state, action) => {
+        // eslint-disable-next-line no-console
+        console.error(action.payload || action.error);
+        state.openingListingError = {
+          listingId: state.openingListing,
+          error: action.payload,
+        };
+        state.openingListing = null;
+      });
+
+    // Close listing
+    builder
+      .addCase(closeListingThunk.pending, (state, action) => {
+        state.closingListing = action.meta.arg;
+        state.closingListingError = null;
+      })
+      .addCase(closeListingThunk.fulfilled, (state, action) => {
+        const listing = action.payload.data.data;
+        const updatedState = updateListingAttributes(state, listing);
+        state.ownEntities = updatedState.ownEntities;
+        state.closingListing = null;
+      })
+      .addCase(closeListingThunk.rejected, (state, action) => {
+        // eslint-disable-next-line no-console
+        console.error(action.payload || action.error);
+        state.closingListingError = {
+          listingId: state.closingListing,
+          error: action.payload,
+        };
+        state.closingListing = null;
+      });
+
+    // Discard draft
+    builder
+      .addCase(discardDraftThunk.pending, (state, action) => {
+        state.discardingDraft = action.meta.arg;
+        state.discardingDraftError = null;
+      })
+      .addCase(discardDraftThunk.fulfilled, (state, action) => {
+        state.currentPageResultIds = resultIds(action.payload.data);
+        state.pagination = action.payload.meta;
+        state.discardingDraft = null;
+      })
+      .addCase(discardDraftThunk.rejected, (state, action) => {
+        // eslint-disable-next-line no-console
+        console.error(action.payload || action.error);
+        state.discardingDraftError = {
+          listingId: state.discardingDraft,
+          error: action.payload,
+        };
+        state.discardingDraft = null;
+      });
+  },
+});
+
+export const { clearOpenListingError, addOwnEntities } = manageListingsPageSlice.actions;
+export default manageListingsPageSlice.reducer;
+
+// ================ Load data ================ //
 
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   const queryParams = parse(search);
