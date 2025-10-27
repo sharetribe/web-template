@@ -1,56 +1,47 @@
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { storableError } from '../../util/errors';
 
-// ================ Action types ================ //
+// ================ Async thunk ================ //
 
-export const RESET_PASSWORD_REQUEST = 'app/PasswordResetPage/RESET_PASSWORD_REQUEST';
-export const RESET_PASSWORD_SUCCESS = 'app/PasswordResetPage/RESET_PASSWORD_SUCCESS';
-export const RESET_PASSWORD_ERROR = 'app/PasswordResetPage/RESET_PASSWORD_ERROR';
-
-// ================ Reducer ================ //
-
-const initialState = {
-  resetPasswordInProgress: false,
-  resetPasswordError: null,
+export const resetPasswordThunk = createAsyncThunk(
+  'PasswordResetPage/resetPassword',
+  ({ email, passwordResetToken, newPassword }, { extra: sdk, rejectWithValue }) => {
+    const params = { email, passwordResetToken, newPassword };
+    return sdk.passwordReset.reset(params).catch(e => {
+      return rejectWithValue(storableError(e));
+    });
+  }
+);
+// Backward compatible wrapper for the thunk
+// Note: we unwrap the thunk so that the promise chain can be listened on presentational components.
+export const resetPassword = (email, passwordResetToken, newPassword) => dispatch => {
+  return dispatch(resetPasswordThunk({ email, passwordResetToken, newPassword })).unwrap();
 };
 
-export default function reducer(state = initialState, action = {}) {
-  const { type, payload } = action;
-  switch (type) {
-    case RESET_PASSWORD_REQUEST:
-      return { ...state, resetPasswordInProgress: true, resetPasswordError: null };
-    case RESET_PASSWORD_SUCCESS:
-      return { ...state, resetPasswordInProgress: false };
-    case RESET_PASSWORD_ERROR:
-      console.error(payload); // eslint-disable-line no-console
-      return { ...state, resetPasswordInProgress: false, resetPasswordError: payload };
-    default:
-      return state;
-  }
-}
+// ================ Slice ================ //
 
-// ================ Action creators ================ //
-
-export const resetPasswordRequest = () => ({ type: RESET_PASSWORD_REQUEST });
-
-export const resetPasswordSuccess = () => ({ type: RESET_PASSWORD_SUCCESS });
-
-export const resetPasswordError = e => ({
-  type: RESET_PASSWORD_ERROR,
-  error: true,
-  payload: e,
+const passwordResetSlice = createSlice({
+  name: 'PasswordResetPage',
+  initialState: {
+    resetPasswordInProgress: false,
+    resetPasswordError: null,
+  },
+  reducers: {},
+  extraReducers: builder => {
+    builder
+      .addCase(resetPasswordThunk.pending, state => {
+        state.resetPasswordInProgress = true;
+        state.resetPasswordError = null;
+      })
+      .addCase(resetPasswordThunk.fulfilled, state => {
+        state.resetPasswordInProgress = false;
+      })
+      .addCase(resetPasswordThunk.rejected, (state, action) => {
+        console.error(action.payload); // eslint-disable-line no-console
+        state.resetPasswordInProgress = false;
+        state.resetPasswordError = action.payload;
+      });
+  },
 });
 
-// ================ Thunks ================ //
-
-export const resetPassword = (email, passwordResetToken, newPassword) => (
-  dispatch,
-  getState,
-  sdk
-) => {
-  dispatch(resetPasswordRequest());
-  const params = { email, passwordResetToken, newPassword };
-  return sdk.passwordReset
-    .reset(params)
-    .then(() => dispatch(resetPasswordSuccess()))
-    .catch(e => dispatch(resetPasswordError(storableError(e))));
-};
+export default passwordResetSlice.reducer;
