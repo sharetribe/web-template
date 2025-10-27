@@ -819,6 +819,8 @@
   "ProductOrderForm.selectDeliveryMethodOption": "Select delivery method",
   "ProductOrderForm.selectQuantityOption": "Select…",
   "ProductOrderForm.shippingOption": "Shipping",
+  "PrivateDetailsForm.saveChanges": "Save changes",
+  "PrivateDetailsForm.updateProfileFailed": "Oops, something went wrong. Please try again.",
   "ProfilePage.desktopHeading": "Hello, I'm {name}.",
   "ProfilePage.detailNo": "No",
   "ProfilePage.detailYes": "Yes",
