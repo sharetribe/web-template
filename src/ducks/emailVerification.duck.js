@@ -1,69 +1,64 @@
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { storableError } from '../util/errors';
 import { fetchCurrentUser } from './user.duck';
 
-// ================ Action types ================ //
+// ================ Async Thunk ================ //
 
-export const VERIFICATION_REQUEST = 'app/emailVerification/VERIFICATION_REQUEST';
-export const VERIFICATION_SUCCESS = 'app/emailVerification/VERIFICATION_SUCCESS';
-export const VERIFICATION_ERROR = 'app/emailVerification/VERIFICATION_ERROR';
-
-// ================ Reducer ================ //
-
-const initialState = {
-  isVerified: false,
-
-  // verification
-  verificationError: null,
-  verificationInProgress: false,
-};
-
-export default function reducer(state = initialState, action = {}) {
-  const { type, payload } = action;
-  switch (type) {
-    case VERIFICATION_REQUEST:
-      return {
-        ...state,
-        verificationInProgress: true,
-        verificationError: null,
-      };
-    case VERIFICATION_SUCCESS:
-      return { ...state, verificationInProgress: false, isVerified: true };
-    case VERIFICATION_ERROR:
-      return { ...state, verificationInProgress: false, verificationError: payload };
-    default:
-      return state;
+export const verifyEmail = createAsyncThunk(
+  'emailVerification/verifyEmail',
+  (verificationToken, { dispatch, rejectWithValue, extra: sdk }) => {
+    return sdk.currentUser
+      .verifyEmail({ verificationToken })
+      .then(() => {
+        // Dispatch fetchCurrentUser after successful verification
+        dispatch(fetchCurrentUser({ enforce: true }));
+        return true;
+      })
+      .catch(e => {
+        return rejectWithValue(storableError(e));
+      });
+  },
+  {
+    condition: (verificationToken, { getState }) => {
+      const state = getState();
+      if (state.emailVerification.verificationInProgress) {
+        return false; // Don't dispatch if verification is already in progress
+      }
+      return true;
+    },
   }
-}
+);
 
-// ================ Selectors ================ //
-
-export const verificationInProgress = state => {
-  return state.emailVerification.verificationInProgress;
+// Backward compatible wrapper for the thunk
+export const verify = verificationToken => (dispatch, getState, sdk) => {
+  return dispatch(verifyEmail(verificationToken));
 };
 
-// ================ Action creators ================ //
+// ================ Slice ================ //
 
-export const verificationRequest = () => ({ type: VERIFICATION_REQUEST });
-export const verificationSuccess = () => ({ type: VERIFICATION_SUCCESS });
-export const verificationError = error => ({
-  type: VERIFICATION_ERROR,
-  payload: error,
-  error: true,
+const emailVerificationSlice = createSlice({
+  name: 'emailVerification',
+  initialState: {
+    isVerified: false,
+    verificationError: null,
+    verificationInProgress: false,
+  },
+  reducers: {},
+  extraReducers: builder => {
+    builder
+      .addCase(verifyEmail.pending, state => {
+        state.verificationInProgress = true;
+        state.verificationError = null;
+      })
+      .addCase(verifyEmail.fulfilled, state => {
+        state.verificationInProgress = false;
+        state.isVerified = true;
+      })
+      .addCase(verifyEmail.rejected, (state, action) => {
+        state.verificationInProgress = false;
+        state.verificationError = action.payload;
+      });
+  },
 });
 
-// ================ Thunks ================ //
-
-export const verify = verificationToken => (dispatch, getState, sdk) => {
-  if (verificationInProgress(getState())) {
-    return Promise.reject(new Error('Email verification already in progress'));
-  }
-  dispatch(verificationRequest());
-
-  // Note that the thunk does not reject when the verification fails, it
-  // just dispatches the login error action.
-  return sdk.currentUser
-    .verifyEmail({ verificationToken })
-    .then(() => dispatch(verificationSuccess()))
-    .then(() => dispatch(fetchCurrentUser({ enforce: true })))
-    .catch(e => dispatch(verificationError(storableError(e))));
-};
+export default emailVerificationSlice.reducer;
