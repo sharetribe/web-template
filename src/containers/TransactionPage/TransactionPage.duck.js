@@ -1,6 +1,6 @@
-import pick from 'lodash/pick';
 import pickBy from 'lodash/pickBy';
 import isEmpty from 'lodash/isEmpty';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
 import {
@@ -44,364 +44,56 @@ const removeOutdatedDateData = timeSlotsForDate => {
   );
 };
 
-// ================ Action types ================ //
+// Helper to fetch correct image variants for different thunk calls
+const getImageVariants = listingImageConfig => {
+  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = listingImageConfig;
+  const aspectRatio = aspectHeight / aspectWidth;
+  return {
+    'fields.image': [
+      // Profile images
+      'variants.square-small',
+      'variants.square-small2x',
 
-export const SET_INITIAL_VALUES = 'app/TransactionPage/SET_INITIAL_VALUES';
-
-export const FETCH_TRANSACTION_REQUEST = 'app/TransactionPage/FETCH_TRANSACTION_REQUEST';
-export const FETCH_TRANSACTION_SUCCESS = 'app/TransactionPage/FETCH_TRANSACTION_SUCCESS';
-export const FETCH_TRANSACTION_ERROR = 'app/TransactionPage/FETCH_TRANSACTION_ERROR';
-
-export const FETCH_TRANSITIONS_REQUEST = 'app/TransactionPage/FETCH_TRANSITIONS_REQUEST';
-export const FETCH_TRANSITIONS_SUCCESS = 'app/TransactionPage/FETCH_TRANSITIONS_SUCCESS';
-export const FETCH_TRANSITIONS_ERROR = 'app/TransactionPage/FETCH_TRANSITIONS_ERROR';
-
-export const TRANSITION_REQUEST = 'app/TransactionPage/MARK_RECEIVED_REQUEST';
-export const TRANSITION_SUCCESS = 'app/TransactionPage/TRANSITION_SUCCESS';
-export const TRANSITION_ERROR = 'app/TransactionPage/TRANSITION_ERROR';
-
-export const FETCH_MESSAGES_REQUEST = 'app/TransactionPage/FETCH_MESSAGES_REQUEST';
-export const FETCH_MESSAGES_SUCCESS = 'app/TransactionPage/FETCH_MESSAGES_SUCCESS';
-export const FETCH_MESSAGES_ERROR = 'app/TransactionPage/FETCH_MESSAGES_ERROR';
-
-export const SEND_MESSAGE_REQUEST = 'app/TransactionPage/SEND_MESSAGE_REQUEST';
-export const SEND_MESSAGE_SUCCESS = 'app/TransactionPage/SEND_MESSAGE_SUCCESS';
-export const SEND_MESSAGE_ERROR = 'app/TransactionPage/SEND_MESSAGE_ERROR';
-
-export const SEND_REVIEW_REQUEST = 'app/TransactionPage/SEND_REVIEW_REQUEST';
-export const SEND_REVIEW_SUCCESS = 'app/TransactionPage/SEND_REVIEW_SUCCESS';
-export const SEND_REVIEW_ERROR = 'app/TransactionPage/SEND_REVIEW_ERROR';
-
-export const FETCH_MONTHLY_TIME_SLOTS_REQUEST =
-  'app/TransactionPage/FETCH_MONTHLY_TIME_SLOTS_REQUEST';
-export const FETCH_MONTHLY_TIME_SLOTS_SUCCESS =
-  'app/TransactionPage/FETCH_MONTHLY_TIME_SLOTS_SUCCESS';
-export const FETCH_MONTHLY_TIME_SLOTS_ERROR = 'app/TransactionPage/FETCH_MONTHLY_TIME_SLOTS_ERROR';
-
-export const FETCH_TIME_SLOTS_FOR_DATE_REQUEST =
-  'app/TransactionPage/FETCH_TIME_SLOTS_FOR_DATE_REQUEST';
-export const FETCH_TIME_SLOTS_FOR_DATE_SUCCESS =
-  'app/TransactionPage/FETCH_TIME_SLOTS_FOR_DATE_SUCCESS';
-export const FETCH_TIME_SLOTS_FOR_DATE_ERROR =
-  'app/TransactionPage/FETCH_TIME_SLOTS_FOR_DATE_ERROR';
-
-export const FETCH_LINE_ITEMS_REQUEST = 'app/TransactionPage/FETCH_LINE_ITEMS_REQUEST';
-export const FETCH_LINE_ITEMS_SUCCESS = 'app/TransactionPage/FETCH_LINE_ITEMS_SUCCESS';
-export const FETCH_LINE_ITEMS_ERROR = 'app/TransactionPage/FETCH_LINE_ITEMS_ERROR';
-
-// ================ Reducer ================ //
-
-const initialState = {
-  fetchTransactionInProgress: false,
-  fetchTransactionError: null,
-  transactionRef: null,
-  transitionInProgress: null,
-  transitionError: null,
-  fetchMessagesInProgress: false,
-  fetchMessagesError: null,
-  totalMessages: 0,
-  totalMessagePages: 0,
-  oldestMessagePageFetched: 0,
-  messages: [],
-  initialMessageFailedToTransaction: null,
-  savePaymentMethodFailed: false,
-  sendMessageInProgress: false,
-  sendMessageError: null,
-  sendReviewInProgress: false,
-  sendReviewError: null,
-  monthlyTimeSlots: {
-    // '2022-03': {
-    //   timeSlots: [],
-    //   fetchTimeSlotsError: null,
-    //   fetchTimeSlotsInProgress: null,
-    // },
-  },
-  timeSlotsForDate: {
-    // For small time units, we fetch monthly time slots with sparse mode for calendar view
-    // and when the user clicks on a day, we make a full time slot query. This is for that purpose.
-    // '2025-02-03': {
-    //   timeSlots: [],
-    //   fetchedAt: 1738569600000,
-    //   fetchTimeSlotsError: null,
-    //   fetchTimeSlotsInProgress: null,
-    // },
-  },
-  fetchTransitionsInProgress: false,
-  fetchTransitionsError: null,
-  processTransitions: null,
-  lineItems: null,
-  fetchLineItemsInProgress: false,
-  fetchLineItemsError: null,
+      // Listing images:
+      `variants.${variantPrefix}`,
+      `variants.${variantPrefix}-2x`,
+    ],
+    ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
+    ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
+  };
 };
 
-// Merge entity arrays using ids, so that conflicting items in newer array (b) overwrite old values (a).
-// const a = [{ id: { uuid: 1 } }, { id: { uuid: 3 } }];
-// const b = [{ id: : { uuid: 2 } }, { id: : { uuid: 1 } }];
-// mergeEntityArrays(a, b)
-// => [{ id: { uuid: 3 } }, { id: : { uuid: 2 } }, { id: : { uuid: 1 } }]
-const mergeEntityArrays = (a, b) => {
-  return a.filter(aEntity => !b.find(bEntity => aEntity.id.uuid === bEntity.id.uuid)).concat(b);
+const delay = ms => new Promise(resolve => window.setTimeout(resolve, ms));
+const refreshTx = (sdk, txId) => sdk.transactions.show({ id: txId }, { expand: true });
+const refreshTransactionEntity = (sdk, txId, dispatch) => {
+  delay(3000)
+    .then(() => refreshTx(sdk, txId))
+    .then(response => {
+      dispatch(addMarketplaceEntities(response));
+      const lastTransition = response?.data?.data?.attributes?.lastTransition;
+      // We'll make another attempt if mark-received-from-purchased from default-purchase process is still the latest.
+      if (lastTransition === 'transition/mark-received-from-purchased') {
+        return delay(8000)
+          .then(() => refreshTx(sdk, txId))
+          .then(response => {
+            dispatch(addMarketplaceEntities(response));
+          });
+      }
+    })
+    .catch(e => {
+      // refresh failed, but we don't act upon it.
+      console.log('error', e);
+    });
 };
 
-export default function transactionPageReducer(state = initialState, action = {}) {
-  const { type, payload } = action;
-  switch (type) {
-    case SET_INITIAL_VALUES:
-      return { ...initialState, ...payload };
+// ================ Async Thunks ================ //
 
-    case FETCH_TRANSACTION_REQUEST:
-      return { ...state, fetchTransactionInProgress: true, fetchTransactionError: null };
-    case FETCH_TRANSACTION_SUCCESS: {
-      const transactionRef = { id: payload.data.data.id, type: 'transaction' };
-      return { ...state, fetchTransactionInProgress: false, transactionRef };
-    }
-    case FETCH_TRANSACTION_ERROR:
-      console.error(payload); // eslint-disable-line
-      return { ...state, fetchTransactionInProgress: false, fetchTransactionError: payload };
-
-    case FETCH_TRANSITIONS_REQUEST:
-      return { ...state, fetchTransitionsInProgress: true, fetchTransitionsError: null };
-    case FETCH_TRANSITIONS_SUCCESS:
-      return { ...state, fetchTransitionsInProgress: false, processTransitions: payload };
-    case FETCH_TRANSITIONS_ERROR:
-      console.error(payload); // eslint-disable-line
-      return { ...state, fetchTransitionsInProgress: false, fetchTransitionsError: payload };
-
-    case TRANSITION_REQUEST:
-      return {
-        ...state,
-        transitionInProgress: payload,
-        transitionError: null,
-      };
-    case TRANSITION_SUCCESS:
-      return { ...state, transitionInProgress: null };
-    case TRANSITION_ERROR:
-      return {
-        ...state,
-        transitionInProgress: null,
-        transitionError: payload,
-      };
-
-    case FETCH_MESSAGES_REQUEST:
-      return { ...state, fetchMessagesInProgress: true, fetchMessagesError: null };
-    case FETCH_MESSAGES_SUCCESS: {
-      const oldestMessagePageFetched =
-        state.oldestMessagePageFetched > payload.page
-          ? state.oldestMessagePageFetched
-          : payload.page;
-      return {
-        ...state,
-        fetchMessagesInProgress: false,
-        messages: mergeEntityArrays(state.messages, payload.messages),
-        totalMessages: payload.totalItems,
-        totalMessagePages: payload.totalPages,
-        oldestMessagePageFetched,
-      };
-    }
-    case FETCH_MESSAGES_ERROR:
-      return { ...state, fetchMessagesInProgress: false, fetchMessagesError: payload };
-
-    case SEND_MESSAGE_REQUEST:
-      return {
-        ...state,
-        sendMessageInProgress: true,
-        sendMessageError: null,
-        initialMessageFailedToTransaction: null,
-      };
-    case SEND_MESSAGE_SUCCESS:
-      return { ...state, sendMessageInProgress: false };
-    case SEND_MESSAGE_ERROR:
-      return { ...state, sendMessageInProgress: false, sendMessageError: payload };
-
-    case SEND_REVIEW_REQUEST:
-      return { ...state, sendReviewInProgress: true, sendReviewError: null };
-    case SEND_REVIEW_SUCCESS:
-      return { ...state, sendReviewInProgress: false };
-    case SEND_REVIEW_ERROR:
-      return { ...state, sendReviewInProgress: false, sendReviewError: payload };
-
-    case FETCH_MONTHLY_TIME_SLOTS_REQUEST: {
-      const monthlyTimeSlots = {
-        ...state.monthlyTimeSlots,
-        [payload]: {
-          ...state.monthlyTimeSlots[payload],
-          fetchTimeSlotsError: null,
-          fetchTimeSlotsInProgress: true,
-        },
-      };
-      return { ...state, monthlyTimeSlots };
-    }
-    case FETCH_MONTHLY_TIME_SLOTS_SUCCESS: {
-      const monthId = payload.monthId;
-      const monthlyTimeSlots = {
-        ...state.monthlyTimeSlots,
-        [monthId]: {
-          ...state.monthlyTimeSlots[monthId],
-          fetchTimeSlotsInProgress: false,
-          timeSlots: payload.timeSlots,
-        },
-      };
-      return { ...state, monthlyTimeSlots };
-    }
-    case FETCH_MONTHLY_TIME_SLOTS_ERROR: {
-      const monthId = payload.monthId;
-      const monthlyTimeSlots = {
-        ...state.monthlyTimeSlots,
-        [monthId]: {
-          ...state.monthlyTimeSlots[monthId],
-          fetchTimeSlotsInProgress: false,
-          fetchTimeSlotsError: payload.error,
-        },
-      };
-      return { ...state, monthlyTimeSlots };
-    }
-    case FETCH_TIME_SLOTS_FOR_DATE_REQUEST: {
-      const timeSlotsForDate = {
-        ...removeOutdatedDateData(state.timeSlotsForDate),
-        [payload]: {
-          ...state.timeSlotsForDate[payload],
-          fetchTimeSlotsError: null,
-          fetchedAt: null,
-          fetchTimeSlotsInProgress: true,
-          timeSlots: [],
-        },
-      };
-      return { ...state, timeSlotsForDate };
-    }
-    case FETCH_TIME_SLOTS_FOR_DATE_SUCCESS: {
-      const dateId = payload.dateId;
-      const timeSlotsForDate = {
-        ...state.timeSlotsForDate,
-        [dateId]: {
-          ...state.timeSlotsForDate[dateId],
-          fetchTimeSlotsInProgress: false,
-          fetchedAt: new Date().getTime(),
-          timeSlots: payload.timeSlots,
-        },
-      };
-      return { ...state, timeSlotsForDate };
-    }
-    case FETCH_TIME_SLOTS_FOR_DATE_ERROR: {
-      const dateId = payload.dateId;
-      const timeSlotsForDate = {
-        ...state.timeSlotsForDate,
-        [dateId]: {
-          ...state.timeSlotsForDate[dateId],
-          fetchTimeSlotsInProgress: false,
-          fetchTimeSlotsError: payload.error,
-        },
-      };
-      return { ...state, timeSlotsForDate };
-    }
-
-    case FETCH_LINE_ITEMS_REQUEST:
-      return { ...state, fetchLineItemsInProgress: true, fetchLineItemsError: null };
-    case FETCH_LINE_ITEMS_SUCCESS:
-      return { ...state, fetchLineItemsInProgress: false, lineItems: payload };
-    case FETCH_LINE_ITEMS_ERROR:
-      return { ...state, fetchLineItemsInProgress: false, fetchLineItemsError: payload };
-
-    default:
-      return state;
-  }
-}
-
-// ================ Selectors ================ //
-
-export const transitionInProgress = state => {
-  return state.TransactionPage.transitionInProgress;
-};
-
-// ================ Action creators ================ //
-export const setInitialValues = initialValues => ({
-  type: SET_INITIAL_VALUES,
-  payload: pick(initialValues, Object.keys(initialState)),
-});
-
-const fetchTransactionRequest = () => ({ type: FETCH_TRANSACTION_REQUEST });
-const fetchTransactionSuccess = response => ({
-  type: FETCH_TRANSACTION_SUCCESS,
-  payload: response,
-});
-const fetchTransactionError = e => ({ type: FETCH_TRANSACTION_ERROR, error: true, payload: e });
-
-const fetchTransitionsRequest = () => ({ type: FETCH_TRANSITIONS_REQUEST });
-const fetchTransitionsSuccess = response => ({
-  type: FETCH_TRANSITIONS_SUCCESS,
-  payload: response,
-});
-const fetchTransitionsError = e => ({ type: FETCH_TRANSITIONS_ERROR, error: true, payload: e });
-
-const transitionRequest = transitionName => ({ type: TRANSITION_REQUEST, payload: transitionName });
-const transitionSuccess = () => ({ type: TRANSITION_SUCCESS });
-const transitionError = e => ({ type: TRANSITION_ERROR, error: true, payload: e });
-
-const fetchMessagesRequest = () => ({ type: FETCH_MESSAGES_REQUEST });
-const fetchMessagesSuccess = (messages, pagination) => ({
-  type: FETCH_MESSAGES_SUCCESS,
-  payload: { messages, ...pagination },
-});
-const fetchMessagesError = e => ({ type: FETCH_MESSAGES_ERROR, error: true, payload: e });
-
-const sendMessageRequest = () => ({ type: SEND_MESSAGE_REQUEST });
-const sendMessageSuccess = () => ({ type: SEND_MESSAGE_SUCCESS });
-const sendMessageError = e => ({ type: SEND_MESSAGE_ERROR, error: true, payload: e });
-
-const sendReviewRequest = () => ({ type: SEND_REVIEW_REQUEST });
-const sendReviewSuccess = () => ({ type: SEND_REVIEW_SUCCESS });
-const sendReviewError = e => ({ type: SEND_REVIEW_ERROR, error: true, payload: e });
-
-export const fetchMonthlyTimeSlotsRequest = monthId => ({
-  type: FETCH_MONTHLY_TIME_SLOTS_REQUEST,
-  payload: monthId,
-});
-export const fetchMonthlyTimeSlotsSuccess = (monthId, timeSlots) => ({
-  type: FETCH_MONTHLY_TIME_SLOTS_SUCCESS,
-  payload: { timeSlots, monthId },
-});
-export const fetchMonthlyTimeSlotsError = (monthId, error) => ({
-  type: FETCH_MONTHLY_TIME_SLOTS_ERROR,
-  error: true,
-  payload: { monthId, error },
-});
-
-export const fetchTimeSlotsForDateRequest = dateId => ({
-  type: FETCH_TIME_SLOTS_FOR_DATE_REQUEST,
-  payload: dateId,
-});
-export const fetchTimeSlotsForDateSuccess = (dateId, timeSlots) => ({
-  type: FETCH_TIME_SLOTS_FOR_DATE_SUCCESS,
-  payload: { timeSlots, dateId },
-});
-export const fetchTimeSlotsForDateError = (dateId, error) => ({
-  type: FETCH_TIME_SLOTS_FOR_DATE_ERROR,
-  error: true,
-  payload: { dateId, error },
-});
-
-export const fetchLineItemsRequest = () => ({ type: FETCH_LINE_ITEMS_REQUEST });
-export const fetchLineItemsSuccess = lineItems => ({
-  type: FETCH_LINE_ITEMS_SUCCESS,
-  payload: lineItems,
-});
-export const fetchLineItemsError = error => ({
-  type: FETCH_LINE_ITEMS_ERROR,
-  error: true,
-  payload: error,
-});
-
-// ================ Thunks ================ //
-
-const timeSlotsRequest = params => (dispatch, getState, sdk) => {
-  return sdk.timeslots.query(params).then(response => {
-    return denormalisedResponseEntities(response);
-  });
-};
-
-export const fetchTimeSlots = (listingId, start, end, timeZone, options) => (
-  dispatch,
-  getState,
-  sdk
+////////////////////
+// fetchTimeSlots //
+////////////////////
+const fetchTimeSlotsPayloadCreator = (
+  { listingId, start, end, timeZone, options },
+  { rejectWithValue, extra: sdk, getState }
 ) => {
   const { extraQueryParams = null, useFetchTimeSlotsForDate = false } = options || {};
 
@@ -415,37 +107,49 @@ export const fetchTimeSlots = (listingId, start, end, timeZone, options) => (
   // This is to avoid fetching too much data (with 15 minute intervals, there can be 24*4*31 = 2928 time slots)
   if (useFetchTimeSlotsForDate) {
     const dateId = stringifyDateToISO8601(start, timeZone);
-    const dateData = getState().ListingPage.timeSlotsForDate[dateId];
+    const dateData = getState().TransactionPage.timeSlotsForDate[dateId];
     const minuteAgo = new Date().getTime() - MINUTE_IN_MS;
     const hasRecentlyFetchedData = dateData?.fetchedAt > minuteAgo;
     if (hasRecentlyFetchedData) {
-      return Promise.resolve(dateData?.timeSlots || []);
+      return Promise.resolve({ timeSlots: dateData?.timeSlots || [], dateId, type: 'date' });
     }
 
-    dispatch(fetchTimeSlotsForDateRequest(dateId));
-    return dispatch(timeSlotsRequest({ listingId, start, end, ...extraParams }))
-      .then(timeSlots => {
-        dispatch(fetchTimeSlotsForDateSuccess(dateId, timeSlots));
-        return timeSlots;
+    return sdk.timeslots
+      .query({ listingId, start, end, ...extraParams })
+      .then(response => {
+        const timeSlots = denormalisedResponseEntities(response);
+        return { timeSlots, dateId, type: 'date' };
       })
       .catch(e => {
-        dispatch(fetchTimeSlotsForDateError(dateId, storableError(e)));
-        return [];
+        return rejectWithValue({ error: storableError(e), dateId, type: 'date' });
       });
   } else {
     const monthId = monthIdString(start, timeZone);
-    dispatch(fetchMonthlyTimeSlotsRequest(monthId));
-    return dispatch(timeSlotsRequest({ listingId, start, end, ...extraParams }))
-      .then(timeSlots => {
-        dispatch(fetchMonthlyTimeSlotsSuccess(monthId, timeSlots));
-        return timeSlots;
+    return sdk.timeslots
+      .query({ listingId, start, end, ...extraParams })
+      .then(response => {
+        const timeSlots = denormalisedResponseEntities(response);
+        return { timeSlots, monthId, type: 'month' };
       })
       .catch(e => {
-        dispatch(fetchMonthlyTimeSlotsError(monthId, storableError(e)));
-        return [];
+        return rejectWithValue({ error: storableError(e), monthId, type: 'month' });
       });
   }
 };
+
+export const fetchTimeSlotsThunk = createAsyncThunk(
+  'TransactionPage/fetchTimeSlots',
+  fetchTimeSlotsPayloadCreator
+);
+
+// Backward compatible wrapper for fetchTimeSlots
+export const fetchTimeSlots = (listingId, start, end, timeZone, options) => dispatch => {
+  return dispatch(fetchTimeSlotsThunk({ listingId, start, end, timeZone, options }));
+};
+
+//////////////////////
+// fetchTransaction //
+//////////////////////
 
 // Helper function for loadData call.
 const fetchMonthlyTimeSlots = (dispatch, listing) => {
@@ -500,8 +204,24 @@ const fetchMonthlyTimeSlots = (dispatch, listing) => {
     };
 
     return Promise.all([
-      dispatch(fetchTimeSlots(listing.id, nextBoundary, nextMonthEnd, tz, options(startOfToday))),
-      dispatch(fetchTimeSlots(listing.id, nextMonth, followingMonthEnd, tz, options(nextMonth))),
+      dispatch(
+        fetchTimeSlotsThunk({
+          listingId: listing.id,
+          start: nextBoundary,
+          end: nextMonthEnd,
+          timeZone: tz,
+          options: options(startOfToday),
+        })
+      ),
+      dispatch(
+        fetchTimeSlotsThunk({
+          listingId: listing.id,
+          start: nextMonth,
+          end: followingMonthEnd,
+          timeZone: tz,
+          options: options(nextMonth),
+        })
+      ),
     ]);
   }
 
@@ -509,31 +229,14 @@ const fetchMonthlyTimeSlots = (dispatch, listing) => {
   return Promise.all([]);
 };
 
-// Helper to fetch correct image variants for different thunk calls
-const getImageVariants = listingImageConfig => {
-  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = listingImageConfig;
-  const aspectRatio = aspectHeight / aspectWidth;
-  return {
-    'fields.image': [
-      // Profile images
-      'variants.square-small',
-      'variants.square-small2x',
-
-      // Listing images:
-      `variants.${variantPrefix}`,
-      `variants.${variantPrefix}-2x`,
-    ],
-    ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
-    ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
+// fetchTransaction
+const fetchTransactionPayloadCreator = (
+  { id, txRole, config },
+  { dispatch, rejectWithValue, extra: sdk }
+) => {
+  const listingRelationship = txResponse => {
+    return txResponse.data.data.relationships.listing.data;
   };
-};
-
-const listingRelationship = txResponse => {
-  return txResponse.data.data.relationships.listing.data;
-};
-
-export const fetchTransaction = (id, txRole, config) => (dispatch, getState, sdk) => {
-  dispatch(fetchTransactionRequest());
 
   return sdk.transactions
     .show(
@@ -590,46 +293,31 @@ export const fetchTransaction = (id, txRole, config) => (dispatch, getState, sdk
       const sanitizeConfig = { listingFields };
 
       dispatch(addMarketplaceEntities(response, sanitizeConfig));
-      dispatch(fetchTransactionSuccess(response));
       return response;
     })
     .catch(e => {
-      dispatch(fetchTransactionError(storableError(e)));
-      throw e;
+      return rejectWithValue(storableError(e));
     });
 };
 
-const delay = ms => new Promise(resolve => window.setTimeout(resolve, ms));
-const refreshTx = (sdk, txId) => sdk.transactions.show({ id: txId }, { expand: true });
-const refreshTransactionEntity = (sdk, txId, dispatch) => {
-  delay(3000)
-    .then(() => refreshTx(sdk, txId))
-    .then(response => {
-      dispatch(addMarketplaceEntities(response));
-      const lastTransition = response?.data?.data?.attributes?.lastTransition;
-      // We'll make another attempt if mark-received-from-purchased from default-purchase process is still the latest.
-      if (lastTransition === 'transition/mark-received-from-purchased') {
-        return delay(8000)
-          .then(() => refreshTx(sdk, txId))
-          .then(response => {
-            dispatch(addMarketplaceEntities(response));
-          });
-      }
-    })
-    .catch(e => {
-      // refresh failed, but we don't act upon it.
-      console.log('error', e);
-    });
+export const fetchTransactionThunk = createAsyncThunk(
+  'TransactionPage/fetchTransaction',
+  fetchTransactionPayloadCreator
+);
+
+// Backward compatible wrapper for fetchTransaction
+export const fetchTransaction = (id, txRole, config) => dispatch => {
+  return dispatch(fetchTransactionThunk({ id, txRole, config }));
 };
 
-export const makeTransition = (txId, transitionName, params) => (dispatch, getState, sdk) => {
-  const state = getState();
-  if (transitionInProgress(state)) {
-    return Promise.reject(new Error('Transition already in progress'));
-  }
-  dispatch(transitionRequest(transitionName));
-
-  const transaction = state?.marketplaceData?.entities?.transaction?.[txId?.uuid];
+////////////////////
+// makeTransition //
+////////////////////
+const makeTransitionPayloadCreator = (
+  { txId, transitionName, params },
+  { dispatch, rejectWithValue, extra: sdk, getState }
+) => {
+  const transaction = getState()?.marketplaceData?.entities?.transaction?.[txId?.uuid];
   const processName = resolveLatestProcessName(transaction?.attributes?.processName);
   const process = getProcess(processName);
 
@@ -654,7 +342,6 @@ export const makeTransition = (txId, transitionName, params) => (dispatch, getSt
   return makeCall()
     .then(response => {
       dispatch(addMarketplaceEntities(response));
-      dispatch(transitionSuccess());
       dispatch(fetchCurrentUserNotifications());
 
       // There could be automatic transitions after this transition
@@ -666,18 +353,41 @@ export const makeTransition = (txId, transitionName, params) => (dispatch, getSt
       return response;
     })
     .catch(e => {
-      dispatch(transitionError(storableError(e)));
       log.error(e, `${transitionName}-failed`, {
         txId,
         transition: transitionName,
       });
-      throw e;
+      return rejectWithValue(storableError(e));
     });
 };
 
-const fetchMessages = (txId, page, config) => (dispatch, getState, sdk) => {
+export const makeTransitionThunk = createAsyncThunk(
+  'TransactionPage/makeTransition',
+  makeTransitionPayloadCreator,
+  {
+    condition: ({ txId, transitionName, params }, { getState }) => {
+      const state = getState();
+      if (state.TransactionPage.transitionInProgress) {
+        return false; // Don't execute the thunk if transition is already in progress
+      }
+      return true; // Execute the thunk
+    },
+  }
+);
+
+// Backward compatible wrapper for makeTransition
+export const makeTransition = (txId, transitionName, params) => dispatch => {
+  return dispatch(makeTransitionThunk({ txId, transitionName, params }));
+};
+
+////////////////////
+// Fetch Messages //
+////////////////////
+const fetchMessagesPayloadCreator = (
+  { txId, page, config },
+  { dispatch, rejectWithValue, extra: sdk }
+) => {
   const paging = { page, perPage: MESSAGES_PAGE_SIZE };
-  dispatch(fetchMessagesRequest());
 
   return sdk.messages
     .query({
@@ -690,30 +400,33 @@ const fetchMessages = (txId, page, config) => (dispatch, getState, sdk) => {
       const messages = denormalisedResponseEntities(response);
       const { totalItems, totalPages, page: fetchedPage } = response.data.meta;
       const pagination = { totalItems, totalPages, page: fetchedPage };
-      const totalMessages = getState().TransactionPage.totalMessages;
-
-      // Original fetchMessages call succeeded
-      dispatch(fetchMessagesSuccess(messages, pagination));
 
       // Check if totalItems has changed between fetched pagination pages
       // if totalItems has changed, fetch first page again to include new incoming messages.
       // TODO if there're more than 100 incoming messages,
       // this should loop through most recent pages instead of fetching just the first one.
-      if (totalItems > totalMessages && page > 1) {
-        dispatch(fetchMessages(txId, 1, config))
-          .then(() => {
-            // Original fetch was enough as a response for user action,
-            // this just includes new incoming messages
-          })
-          .catch(() => {
-            // Background update, no need to to do anything atm.
-          });
+      if (totalItems > 0 && page > 1) {
+        // Background update for new incoming messages
+        dispatch(fetchMessagesThunk({ txId, page: 1, config })).catch(() => {
+          // Background update, no need to to do anything atm.
+        });
       }
+
+      return { messages, pagination };
     })
     .catch(e => {
-      dispatch(fetchMessagesError(storableError(e)));
-      throw e;
+      return rejectWithValue(storableError(e));
     });
+};
+
+export const fetchMessagesThunk = createAsyncThunk(
+  'TransactionPage/fetchMessages',
+  fetchMessagesPayloadCreator
+);
+
+// Backward compatible wrapper for fetchMessages
+export const fetchMessages = (txId, page, config) => dispatch => {
+  return dispatch(fetchMessagesThunk({ txId, page, config }));
 };
 
 export const fetchMoreMessages = (txId, config) => (dispatch, getState, sdk) => {
@@ -724,12 +437,16 @@ export const fetchMoreMessages = (txId, config) => (dispatch, getState, sdk) => 
   // In case there're no more old pages left we default to fetching the current cursor position
   const nextPage = hasMoreOldMessages ? oldestMessagePageFetched + 1 : oldestMessagePageFetched;
 
-  return dispatch(fetchMessages(txId, nextPage, config));
+  return dispatch(fetchMessagesThunk({ txId, page: nextPage, config }));
 };
 
-export const sendMessage = (txId, message, config) => (dispatch, getState, sdk) => {
-  dispatch(sendMessageRequest());
-
+/////////////////
+// sendMessage //
+/////////////////
+const sendMessagePayloadCreator = (
+  { txId, message, config },
+  { dispatch, rejectWithValue, extra: sdk }
+) => {
   return sdk.messages
     .send({ transactionId: txId, content: message })
     .then(response => {
@@ -737,124 +454,368 @@ export const sendMessage = (txId, message, config) => (dispatch, getState, sdk) 
 
       // We fetch the first page again to add sent message to the page data
       // and update possible incoming messages too.
-      // TODO if there're more than 100 incoming messages,
-      // this should loop through most recent pages instead of fetching just the first one.
-      return dispatch(fetchMessages(txId, 1, config))
-        .then(() => {
-          dispatch(sendMessageSuccess());
-          return messageId;
-        })
-        .catch(() => dispatch(sendMessageSuccess()));
+      return dispatch(fetchMessagesThunk({ txId, page: 1, config }))
+        .then(() => messageId)
+        .catch(() => messageId);
     })
     .catch(e => {
-      dispatch(sendMessageError(storableError(e)));
-      // Rethrow so the page can track whether the sending failed, and
-      // keep the message in the form for a retry.
-      throw e;
+      return rejectWithValue(storableError(e));
     });
 };
 
-// If other party has already sent a review, we need to make transition to
-// transitions.REVIEW_2_BY_<CUSTOMER/PROVIDER>
-const sendReviewAsSecond = (txId, transition, params, dispatch, sdk, config) => {
-  const include = REVIEW_TX_INCLUDES;
+export const sendMessageThunk = createAsyncThunk(
+  'TransactionPage/sendMessage',
+  sendMessagePayloadCreator
+);
 
-  return sdk.transactions
-    .transition(
-      { id: txId, transition, params },
-      { expand: true, include, ...getImageVariants(config.layout.listingImage) }
-    )
-    .then(response => {
-      dispatch(addMarketplaceEntities(response));
-      dispatch(sendReviewSuccess());
-      return response;
-    })
-    .catch(e => {
-      dispatch(sendReviewError(storableError(e)));
-
-      // Rethrow so the page can track whether the sending failed, and
-      // keep the message in the form for a retry.
-      throw e;
-    });
+// Backward compatible wrapper for sendMessage
+export const sendMessage = (txId, message, config) => dispatch => {
+  return dispatch(sendMessageThunk({ txId, message, config }));
 };
 
-// If other party has not yet sent a review, we need to make transition to
-// transitions.REVIEW_1_BY_<CUSTOMER/PROVIDER>
-// However, the other party might have made the review after previous data synch point.
-// So, error is likely to happen and then we must try another state transition
-// by calling sendReviewAsSecond().
-const sendReviewAsFirst = (txId, transition, params, dispatch, sdk, config) => {
-  const include = REVIEW_TX_INCLUDES;
-
-  return sdk.transactions
-    .transition(
-      { id: txId, transition, params },
-      { expand: true, include, ...getImageVariants(config.layout.listingImage) }
-    )
-    .then(response => {
-      dispatch(addMarketplaceEntities(response));
-      dispatch(sendReviewSuccess());
-      return response;
-    })
-    .catch(e => {
-      // If transaction transition is invalid, lets try another endpoint.
-      if (isTransactionsTransitionInvalidTransition(e)) {
-        return sendReviewAsSecond(id, params, role, dispatch, sdk);
-      } else {
-        dispatch(sendReviewError(storableError(e)));
-
-        // Rethrow so the page can track whether the sending failed, and
-        // keep the message in the form for a retry.
-        throw e;
-      }
-    });
-};
-
-export const sendReview = (tx, transitionOptionsInfo, params, config) => (
-  dispatch,
-  getState,
-  sdk
+////////////////
+// sendReview //
+////////////////
+const sendReviewPayloadCreator = (
+  { tx, transitionOptionsInfo, params, config },
+  { dispatch, rejectWithValue, extra: sdk }
 ) => {
   const { reviewAsFirst, reviewAsSecond, hasOtherPartyReviewedFirst } = transitionOptionsInfo;
-  dispatch(sendReviewRequest());
+  const include = REVIEW_TX_INCLUDES;
 
-  return hasOtherPartyReviewedFirst
-    ? sendReviewAsSecond(tx?.id, reviewAsSecond, params, dispatch, sdk, config)
-    : sendReviewAsFirst(tx?.id, reviewAsFirst, params, dispatch, sdk, config);
+  const sendReviewAsSecond = () => {
+    return sdk.transactions
+      .transition(
+        { id: tx?.id, transition: reviewAsSecond, params },
+        { expand: true, include, ...getImageVariants(config.layout.listingImage) }
+      )
+      .then(response => {
+        dispatch(addMarketplaceEntities(response));
+        return response;
+      })
+      .catch(e => {
+        return rejectWithValue(storableError(e));
+      });
+  };
+
+  const sendReviewAsFirst = () => {
+    return sdk.transactions
+      .transition(
+        { id: tx?.id, transition: reviewAsFirst, params },
+        { expand: true, include, ...getImageVariants(config.layout.listingImage) }
+      )
+      .then(response => {
+        dispatch(addMarketplaceEntities(response));
+        return response;
+      })
+      .catch(e => {
+        // If transaction transition is invalid, lets try another endpoint.
+        if (isTransactionsTransitionInvalidTransition(e)) {
+          return sendReviewAsSecond();
+        } else {
+          return rejectWithValue(storableError(e));
+        }
+      });
+  };
+
+  return hasOtherPartyReviewedFirst ? sendReviewAsSecond() : sendReviewAsFirst();
 };
 
-const isNonEmpty = value => {
-  return typeof value === 'object' || Array.isArray(value) ? !isEmpty(value) : !!value;
+export const sendReviewThunk = createAsyncThunk(
+  'TransactionPage/sendReview',
+  sendReviewPayloadCreator
+);
+
+// Backward compatible wrapper for sendReview
+export const sendReview = (tx, transitionOptionsInfo, params, config) => dispatch => {
+  return dispatch(sendReviewThunk({ tx, transitionOptionsInfo, params, config }));
 };
 
-export const fetchNextTransitions = id => (dispatch, getState, sdk) => {
-  dispatch(fetchTransitionsRequest());
-
+//////////////////////
+// fetchTransitions //
+//////////////////////
+const fetchTransitionsPayloadCreator = ({ id }, { rejectWithValue, extra: sdk }) => {
   return sdk.processTransitions
     .query({ transactionId: id })
-    .then(res => {
-      dispatch(fetchTransitionsSuccess(res.data.data));
-    })
+    .then(res => res.data.data)
     .catch(e => {
-      dispatch(fetchTransitionsError(storableError(e)));
+      return rejectWithValue(storableError(e));
     });
 };
 
-export const fetchTransactionLineItems = ({ orderData, listingId, isOwnListing }) => dispatch => {
-  dispatch(fetchLineItemsRequest());
-  transactionLineItems({ orderData, listingId, isOwnListing })
-    .then(response => {
-      const lineItems = response.data;
-      dispatch(fetchLineItemsSuccess(lineItems));
-    })
+export const fetchTransitionsThunk = createAsyncThunk(
+  'TransactionPage/fetchTransitions',
+  fetchTransitionsPayloadCreator
+);
+
+// Backward compatible wrapper for fetchTransitions
+export const fetchNextTransitions = id => dispatch => {
+  return dispatch(fetchTransitionsThunk({ id }));
+};
+
+////////////////////
+// FetchLineItems //
+////////////////////
+const fetchLineItemsPayloadCreator = (
+  { orderData, listingId, isOwnListing },
+  { rejectWithValue }
+) => {
+  return transactionLineItems({ orderData, listingId, isOwnListing })
+    .then(response => response.data)
     .catch(e => {
-      dispatch(fetchLineItemsError(storableError(e)));
       log.error(e, 'fetching-line-items-failed', {
         listingId: listingId.uuid,
         orderData,
         statusText: e.statusText,
       });
+      return rejectWithValue(storableError(e));
     });
+};
+
+export const fetchLineItemsThunk = createAsyncThunk(
+  'TransactionPage/fetchLineItems',
+  fetchLineItemsPayloadCreator
+);
+
+// Backward compatible wrapper for fetchLineItems
+export const fetchTransactionLineItems = ({ orderData, listingId, isOwnListing }) => dispatch => {
+  return dispatch(fetchLineItemsThunk({ orderData, listingId, isOwnListing }));
+};
+
+// ================ Slice ================ //
+
+const initialState = {
+  fetchTransactionInProgress: false,
+  fetchTransactionError: null,
+  transactionRef: null,
+  transitionInProgress: null,
+  transitionError: null,
+  fetchMessagesInProgress: false,
+  fetchMessagesError: null,
+  totalMessages: 0,
+  totalMessagePages: 0,
+  oldestMessagePageFetched: 0,
+  messages: [],
+  initialMessageFailedToTransaction: null,
+  savePaymentMethodFailed: false,
+  sendMessageInProgress: false,
+  sendMessageError: null,
+  sendReviewInProgress: false,
+  sendReviewError: null,
+  monthlyTimeSlots: {
+    // '2022-03': {
+    //   timeSlots: [],
+    //   fetchTimeSlotsError: null,
+    //   fetchTimeSlotsInProgress: null,
+    // },
+  },
+  timeSlotsForDate: {
+    // For small time units, we fetch monthly time slots with sparse mode for calendar view
+    // and when the user clicks on a day, we make a full time slot query. This is for that purpose.
+    // '2025-02-03': {
+    //   timeSlots: [],
+    //   fetchedAt: 1738569600000,
+    //   fetchTimeSlotsError: null,
+    //   fetchTimeSlotsInProgress: null,
+    // },
+  },
+  fetchTransitionsInProgress: false,
+  fetchTransitionsError: null,
+  processTransitions: null,
+  lineItems: null,
+  fetchLineItemsInProgress: false,
+  fetchLineItemsError: null,
+};
+
+// Merge entity arrays using ids, so that conflicting items in newer array (b) overwrite old values (a).
+// const a = [{ id: { uuid: 1 } }, { id: { uuid: 3 } }];
+// const b = [{ id: : { uuid: 2 } }, { id: : { uuid: 1 } }];
+// mergeEntityArrays(a, b)
+// => [{ id: { uuid: 3 } }, { id: : { uuid: 2 } }, { id: : { uuid: 1 } }]
+const mergeEntityArrays = (a, b) => {
+  return a.filter(aEntity => !b.find(bEntity => aEntity.id.uuid === bEntity.id.uuid)).concat(b);
+};
+
+const transactionPageSlice = createSlice({
+  name: 'TransactionPage',
+  initialState,
+  reducers: {
+    setInitialValues: (state, action) => {
+      return { ...initialState, ...action.payload };
+    },
+  },
+  extraReducers: builder => {
+    builder
+      // fetchTransaction cases
+      .addCase(fetchTransactionThunk.pending, state => {
+        state.fetchTransactionInProgress = true;
+        state.fetchTransactionError = null;
+      })
+      .addCase(fetchTransactionThunk.fulfilled, (state, action) => {
+        state.fetchTransactionInProgress = false;
+        state.transactionRef = { id: action.payload.data.data.id, type: 'transaction' };
+      })
+      .addCase(fetchTransactionThunk.rejected, (state, action) => {
+        state.fetchTransactionInProgress = false;
+        state.fetchTransactionError = action.payload;
+      })
+      // fetchTransitions cases
+      .addCase(fetchTransitionsThunk.pending, state => {
+        state.fetchTransitionsInProgress = true;
+        state.fetchTransitionsError = null;
+      })
+      .addCase(fetchTransitionsThunk.fulfilled, (state, action) => {
+        state.fetchTransitionsInProgress = false;
+        state.processTransitions = action.payload;
+      })
+      .addCase(fetchTransitionsThunk.rejected, (state, action) => {
+        state.fetchTransitionsInProgress = false;
+        state.fetchTransitionsError = action.payload;
+      })
+      // makeTransition cases
+      .addCase(makeTransitionThunk.pending, (state, action) => {
+        state.transitionInProgress = action.meta.arg.transitionName;
+        state.transitionError = null;
+      })
+      .addCase(makeTransitionThunk.fulfilled, state => {
+        state.transitionInProgress = null;
+      })
+      .addCase(makeTransitionThunk.rejected, (state, action) => {
+        state.transitionInProgress = null;
+        state.transitionError = action.payload;
+      })
+      // fetchMessages cases
+      .addCase(fetchMessagesThunk.pending, state => {
+        state.fetchMessagesInProgress = true;
+        state.fetchMessagesError = null;
+      })
+      .addCase(fetchMessagesThunk.fulfilled, (state, action) => {
+        const { messages, pagination } = action.payload;
+        const oldestMessagePageFetched =
+          state.oldestMessagePageFetched > pagination.page
+            ? state.oldestMessagePageFetched
+            : pagination.page;
+
+        state.fetchMessagesInProgress = false;
+        state.messages = mergeEntityArrays(state.messages, messages);
+        state.totalMessages = pagination.totalItems;
+        state.totalMessagePages = pagination.totalPages;
+        state.oldestMessagePageFetched = oldestMessagePageFetched;
+      })
+      .addCase(fetchMessagesThunk.rejected, (state, action) => {
+        state.fetchMessagesInProgress = false;
+        state.fetchMessagesError = action.payload;
+      })
+      // sendMessage cases
+      .addCase(sendMessageThunk.pending, state => {
+        state.sendMessageInProgress = true;
+        state.sendMessageError = null;
+        state.initialMessageFailedToTransaction = null;
+      })
+      .addCase(sendMessageThunk.fulfilled, state => {
+        state.sendMessageInProgress = false;
+      })
+      .addCase(sendMessageThunk.rejected, (state, action) => {
+        state.sendMessageInProgress = false;
+        state.sendMessageError = action.payload;
+      })
+      // sendReview cases
+      .addCase(sendReviewThunk.pending, state => {
+        state.sendReviewInProgress = true;
+        state.sendReviewError = null;
+      })
+      .addCase(sendReviewThunk.fulfilled, state => {
+        state.sendReviewInProgress = false;
+      })
+      .addCase(sendReviewThunk.rejected, (state, action) => {
+        state.sendReviewInProgress = false;
+        state.sendReviewError = action.payload;
+      })
+      // fetchLineItems cases
+      .addCase(fetchLineItemsThunk.pending, state => {
+        state.fetchLineItemsInProgress = true;
+        state.fetchLineItemsError = null;
+      })
+      .addCase(fetchLineItemsThunk.fulfilled, (state, action) => {
+        state.fetchLineItemsInProgress = false;
+        state.lineItems = action.payload;
+      })
+      .addCase(fetchLineItemsThunk.rejected, (state, action) => {
+        state.fetchLineItemsInProgress = false;
+        state.fetchLineItemsError = action.payload;
+      })
+      // fetchTimeSlots cases
+      .addCase(fetchTimeSlotsThunk.pending, (state, action) => {
+        const { timeZone, options } = action.meta.arg;
+        const { useFetchTimeSlotsForDate = false } = options || {};
+
+        if (useFetchTimeSlotsForDate) {
+          const dateId = stringifyDateToISO8601(action.meta.arg.start, timeZone);
+          state.timeSlotsForDate = {
+            ...removeOutdatedDateData(state.timeSlotsForDate),
+            [dateId]: {
+              ...state.timeSlotsForDate[dateId],
+              fetchTimeSlotsError: null,
+              fetchedAt: null,
+              fetchTimeSlotsInProgress: true,
+              timeSlots: [],
+            },
+          };
+        } else {
+          const monthId = monthIdString(action.meta.arg.start, timeZone);
+          state.monthlyTimeSlots[monthId] = {
+            ...state.monthlyTimeSlots[monthId],
+            fetchTimeSlotsError: null,
+            fetchTimeSlotsInProgress: true,
+          };
+        }
+      })
+      .addCase(fetchTimeSlotsThunk.fulfilled, (state, action) => {
+        const { timeSlots, dateId, monthId, type } = action.payload;
+
+        if (type === 'date') {
+          state.timeSlotsForDate[dateId] = {
+            ...state.timeSlotsForDate[dateId],
+            fetchTimeSlotsInProgress: false,
+            fetchedAt: new Date().getTime(),
+            timeSlots,
+          };
+        } else if (type === 'month') {
+          state.monthlyTimeSlots[monthId] = {
+            ...state.monthlyTimeSlots[monthId],
+            fetchTimeSlotsInProgress: false,
+            timeSlots,
+          };
+        }
+      })
+      .addCase(fetchTimeSlotsThunk.rejected, (state, action) => {
+        const { error, dateId, monthId, type } = action.payload;
+
+        if (type === 'date') {
+          state.timeSlotsForDate[dateId] = {
+            ...state.timeSlotsForDate[dateId],
+            fetchTimeSlotsInProgress: false,
+            fetchTimeSlotsError: error,
+          };
+        } else if (type === 'month') {
+          state.monthlyTimeSlots[monthId] = {
+            ...state.monthlyTimeSlots[monthId],
+            fetchTimeSlotsInProgress: false,
+            fetchTimeSlotsError: error,
+          };
+        }
+      });
+  },
+});
+
+export const { setInitialValues } = transactionPageSlice.actions;
+
+export default transactionPageSlice.reducer;
+
+// ================ Load data ================ //
+
+const isNonEmpty = value => {
+  return typeof value === 'object' || Array.isArray(value) ? !isEmpty(value) : !!value;
 };
 
 // loadData is a collection of async calls that need to be made
@@ -873,8 +834,8 @@ export const loadData = (params, search, config) => (dispatch, getState) => {
 
   // Sale / order (i.e. transaction entity in API)
   return Promise.all([
-    dispatch(fetchTransaction(txId, txRole, config)),
-    dispatch(fetchMessages(txId, 1, config)),
-    dispatch(fetchNextTransitions(txId)),
+    dispatch(fetchTransactionThunk({ id: txId, txRole, config })),
+    dispatch(fetchMessagesThunk({ txId, page: 1, config })),
+    dispatch(fetchTransitionsThunk({ id: txId })),
   ]);
 };
