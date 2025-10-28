@@ -135,7 +135,7 @@ const signupWithIdpThunk = createAsyncThunk(
   (params, thunkAPI) => {
     const { rejectWithValue, dispatch } = thunkAPI;
     return createUserWithIdp(params)
-      .then(() => dispatch(fetchCurrentUser()))
+      .then(() => dispatch(fetchCurrentUser({ afterLogin: true })))
       .then(() => params)
       .catch(e => {
         log.error(e, 'create-user-with-idp-failed', { params });
