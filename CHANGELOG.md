@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] Only set TransactionPage pageHeading if processName resolves
+  [#681](https://github.com/sharetribe/web-template/pull/681)
+
 ## [v9.1.0] 2025-10-23
 
 - [add] Improve template accessibility
