@@ -96,6 +96,18 @@ exports.handleError = (res, error) => {
         statusText: error.message,
       })
       .end();
+  } else if (
+    error.message == 'User has transactions on states that include incomplete payment processing'
+  ) {
+    res
+      .status(409)
+      .json({
+        name: 'LocalAPIError',
+        message: 'Local API request failed',
+        status: 409,
+        statusText: error.message,
+      })
+      .end();
   } else {
     res
       .status(500)

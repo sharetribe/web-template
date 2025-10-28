@@ -330,13 +330,26 @@ export const isTransitionQuantityInfoMissingError = error =>
 
 /**
  * Check if the minimum provider commission is larger than the
- * minimum price set for the listing
+ * minimum price set for the listing.
  */
 export const isProviderCommissionBiggerThanMinPrice = error =>
   error?.status === 400 &&
   error?.statusText.startsWith(
     'Minimum commission amount is greater than the amount of money paid in'
   );
+
+/**
+ * Check if the user has any unfinished transactions that include Stripe payment
+ * processing actions.
+ */
+export const isErrorUserHasUnfinishedTransactions = error => {
+  return (
+    error?.status === 409 &&
+    error?.statusText.startsWith(
+      'User has transactions on states that include incomplete payment processing'
+    )
+  );
+};
 
 export const storableError = err => {
   const error = err || {};
