@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Add currently available translations for DE, ES, FR.
+  [#683](https://github.com/sharetribe/web-template/pull/683)
 - [fix] Only set TransactionPage pageHeading if processName resolves
   [#681](https://github.com/sharetribe/web-template/pull/681)
 
