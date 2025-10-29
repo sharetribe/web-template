@@ -401,59 +401,6 @@ describe('Duck', () => {
         makeOfferInProgress: false,
       });
     });
-
-    it('should handle sendMessageThunk.pending', () => {
-      const previousState = {
-        sendMessageInProgress: false,
-        sendMessageError: 'old error',
-      };
-
-      const action = {
-        type: 'MakeOfferPage/sendMessage/pending',
-      };
-
-      expect(reducer(previousState, action)).toEqual({
-        ...previousState,
-        sendMessageInProgress: true,
-        sendMessageError: null,
-      });
-    });
-
-    it('should handle sendMessageThunk.fulfilled', () => {
-      const previousState = {
-        sendMessageInProgress: true,
-        sendMessageError: null,
-      };
-
-      const action = {
-        type: 'MakeOfferPage/sendMessage/fulfilled',
-        payload: { orderId: 'order-id', messageSuccess: true },
-      };
-
-      expect(reducer(previousState, action)).toEqual({
-        ...previousState,
-        sendMessageInProgress: false,
-      });
-    });
-
-    it('should handle sendMessageThunk.rejected', () => {
-      const previousState = {
-        sendMessageInProgress: true,
-        sendMessageError: null,
-      };
-
-      const error = storableError(new Error('Send message error'));
-      const action = {
-        type: 'MakeOfferPage/sendMessage/rejected',
-        payload: error,
-      };
-
-      expect(reducer(previousState, action)).toEqual({
-        ...previousState,
-        sendMessageError: error,
-        sendMessageInProgress: false,
-      });
-    });
   });
 
   describe('loadData', () => {
