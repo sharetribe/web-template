@@ -41,7 +41,7 @@ import MobileListingImage from './MobileListingImage/MobileListingImage.js';
 import LocationDetails from './LocationDetails/LocationDetails.js';
 import MakeOfferForm from './MakeOfferForm/MakeOfferForm.js';
 
-import { makeOffer, sendMessage } from './MakeOfferPage.duck.js';
+import { makeOffer } from './MakeOfferPage.duck.js';
 
 import css from './MakeOfferPage.module.css';
 
@@ -367,7 +367,6 @@ const mapDispatchToProps = dispatch => ({
   dispatch,
   onMakeOffer: (params, processAlias, transactionId, isPrivileged) =>
     dispatch(makeOffer(params, processAlias, transactionId, isPrivileged)),
-  onSendMessage: params => dispatch(sendMessage(params)),
 });
 
 const MakeOfferPage = compose(

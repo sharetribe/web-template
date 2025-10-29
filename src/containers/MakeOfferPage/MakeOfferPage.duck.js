@@ -244,35 +244,6 @@ export const makeOffer = (
   ).unwrap();
 };
 
-//////////////////
-// Send Message //
-//////////////////
-const sendMessagePayloadCreator = ({ message, orderId }, { rejectWithValue, extra: sdk }) => {
-  if (message) {
-    return sdk.messages
-      .send({ transactionId: orderId, content: message })
-      .then(() => {
-        return { orderId, messageSuccess: true };
-      })
-      .catch(e => {
-        log.error(e, 'initial-message-send-failed', { txId: orderId });
-        return rejectWithValue(storableError(e));
-      });
-  } else {
-    return Promise.resolve({ orderId, messageSuccess: true });
-  }
-};
-
-export const sendMessageThunk = createAsyncThunk(
-  'MakeOfferPage/sendMessage',
-  sendMessagePayloadCreator
-);
-
-// Backward compatible wrapper for the thunk
-export const sendMessage = params => dispatch => {
-  return dispatch(sendMessageThunk({ message: params.message, orderId: params.id }));
-};
-
 // ================ Slice ================ //
 const initialState = {
   listingId: null,
@@ -334,18 +305,6 @@ const makeOfferPageSlice = createSlice({
       .addCase(makeOfferThunk.rejected, (state, action) => {
         state.makeOfferError = storableError(action.payload);
         state.makeOfferInProgress = false;
-      })
-      // sendMessage cases
-      .addCase(sendMessageThunk.pending, state => {
-        state.sendMessageInProgress = true;
-        state.sendMessageError = null;
-      })
-      .addCase(sendMessageThunk.fulfilled, state => {
-        state.sendMessageInProgress = false;
-      })
-      .addCase(sendMessageThunk.rejected, (state, action) => {
-        state.sendMessageError = storableError(action.payload);
-        state.sendMessageInProgress = false;
       });
   },
 });
