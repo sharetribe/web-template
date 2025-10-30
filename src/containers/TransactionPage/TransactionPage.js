@@ -760,18 +760,17 @@ export const TransactionPageComponent = props => {
     (process?.transitions?.CUSTOMER_MAKE_COUNTER_OFFER ||
       process?.transitions?.PROVIDER_MAKE_COUNTER_OFFER);
 
-  const pageHeading =
-    processName != null
-      ? intl.formatMessage(
-          {
-            id: `TransactionPage.${processName}.${transactionRole}.${stateData.processState}.title`,
-          },
-          {
-            customerName: customer?.attributes.profile.displayName,
-            providerName: provider?.attributes.profile.displayName,
-          }
-        )
-      : null;
+  const pageHeading = isDataAvailable
+    ? intl.formatMessage(
+        {
+          id: `TransactionPage.${processName}.${transactionRole}.${stateData.processState}.title`,
+        },
+        {
+          customerName: customer?.attributes.profile.displayName,
+          providerName: provider?.attributes.profile.displayName,
+        }
+      )
+    : null;
 
   return (
     <Page
