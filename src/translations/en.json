@@ -1189,6 +1189,8 @@
   "TransactionPage.Offer.providerDefaultMessageLabel": "Additional details",
   "TransactionPage.Offer.quoteLabel": "Quote",
   "TransactionPage.Offer.quote": "{quote}",
+  "TransactionPage.RequestQuote.heading": "Request",
+  "TransactionPage.RequestQuote.customerDefaultMessageLabel": "Description",
   "TransactionPage.default-booking.customer.accepted.title": "Your booking request was accepted!",
   "TransactionPage.default-booking.customer.canceled.title": "Your booking was canceled.",
   "TransactionPage.default-booking.customer.declined.title": "Your booking request was declined.",
