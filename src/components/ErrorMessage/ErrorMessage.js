@@ -3,7 +3,15 @@ import classNames from 'classnames';
 
 // Import contexts and util modules
 import { FormattedMessage } from '../../util/reactIntl.js';
-import { isTransactionInitiateListingNotFoundError } from '../../util/errors.js';
+import {
+  isErrorNoPermissionForInitiateTransactions,
+  isErrorNoPermissionForUserPendingApproval,
+  isTooManyRequestsError,
+  isTransactionInitiateListingNotFoundError,
+} from '../../util/errors.js';
+import { NO_ACCESS_PAGE_INITIATE_TRANSACTIONS } from '../../util/urlHelpers.js';
+
+import { NamedLink } from '../../components';
 
 import css from './ErrorMessage.module.css';
 
@@ -20,6 +28,9 @@ const ErrorMessage = props => {
 
   // There might be a deleted or closed listing
   const listingNotFound = isTransactionInitiateListingNotFoundError(error);
+  const userPendingApproval = isErrorNoPermissionForUserPendingApproval(error);
+  const userHasNoTransactionRights = isErrorNoPermissionForInitiateTransactions(error);
+  const tooManyRequests = isTooManyRequestsError(error);
 
   // No transaction process attached to listing
   const noTransactionProcessAlias = error?.message === 'No transaction process attached to listing';
@@ -30,6 +41,24 @@ const ErrorMessage = props => {
         <FormattedMessage id="ErrorMessage.listingNotFoundError" />
       ) : noTransactionProcessAlias ? (
         <FormattedMessage id="ErrorMessage.noProcessAttachedToListing" />
+      ) : tooManyRequests ? (
+        <FormattedMessage id="ErrorMessage.tooManyRequestsError" />
+      ) : userPendingApproval ? (
+        <FormattedMessage id="ErrorMessage.userPendingApprovalError" />
+      ) : userHasNoTransactionRights ? (
+        <FormattedMessage
+          id="ErrorMessage.noTransactionRightsError"
+          values={{
+            NoAccessLink: msg => (
+              <NamedLink
+                name="NoAccessPage"
+                params={{ missingAccessRight: NO_ACCESS_PAGE_INITIATE_TRANSACTIONS }}
+              >
+                {msg}
+              </NamedLink>
+            ),
+          }}
+        />
       ) : (
         <FormattedMessage id="ErrorMessage.unknownError" />
       )}
