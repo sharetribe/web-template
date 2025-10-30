@@ -26,6 +26,8 @@ import { formatMoney } from '../../util/currency';
 import { createSlug, parse, stringify } from '../../util/urlHelpers';
 import { userDisplayNameAsString } from '../../util/data';
 import {
+  OFFER,
+  REQUEST,
   getSupportedProcessesInfo,
   isBookingProcess,
   isNegotiationProcess,
@@ -61,6 +63,12 @@ const ProductOrderForm = loadable(() =>
 
 const NegotiationForm = loadable(() =>
   import(/* webpackChunkName: "NegotiationForm" */ './NegotiationForm/NegotiationForm')
+);
+
+const NegotiationRequestQuoteForm = loadable(() =>
+  import(
+    /* webpackChunkName: "NegotiationRequestQuoteForm" */ './NegotiationRequestQuoteForm/NegotiationRequestQuoteForm'
+  )
 );
 
 // This defines when ModalInMobile shows content as Modal
@@ -340,8 +348,11 @@ const OrderPanel = props => {
   const showProductOrderForm =
     mounted && shouldHavePurchase && !isClosed && typeof currentStock === 'number';
 
-  const showNegotiationForm = mounted && !isClosed && isNegotiationProcess;
   const showInquiryForm = mounted && !isClosed && isInquiry;
+  // if listing is a request, we show the negotiation form (reverse negotiation). User (provider) needs to make an offer first.
+  const showNegotiationForm = mounted && !isClosed && isNegotiation && unitType === REQUEST;
+  // if listing is an offer, we show the "request a quote" form as user needs to ask for a quote first from the provider.
+  const showRequestQuoteForm = mounted && !isClosed && isNegotiation && unitType === OFFER;
 
   const supportedProcessesInfo = getSupportedProcessesInfo();
   const isKnownProcess = supportedProcessesInfo.map(info => info.name).includes(processName);
@@ -516,6 +527,8 @@ const OrderPanel = props => {
           <InquiryWithoutPaymentForm formId="OrderPanelInquiryForm" onSubmit={onSubmit} />
         ) : showNegotiationForm ? (
           <NegotiationForm formId="OrderPanelNegotiationForm" onSubmit={onSubmit} />
+        ) : showRequestQuoteForm ? (
+          <NegotiationRequestQuoteForm formId="OrderPanelRequestQuoteForm" onSubmit={onSubmit} />
         ) : !isKnownProcess ? (
           <p className={css.errorSidebar}>
             <FormattedMessage id="OrderPanel.unknownTransactionProcess" />
@@ -556,6 +569,8 @@ const OrderPanel = props => {
               <FormattedMessage id="OrderPanel.ctaButtonMessagePurchase" />
             ) : showNegotiationForm ? (
               <FormattedMessage id="OrderPanel.ctaButtonMessageMakeOffer" />
+            ) : showRequestQuoteForm ? (
+              <FormattedMessage id="OrderPanel.ctaButtonMessageRequestAQuote" />
             ) : (
               <FormattedMessage id="OrderPanel.ctaButtonMessageInquiry" />
             )}
