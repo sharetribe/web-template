@@ -198,7 +198,7 @@ const makeOfferPayloadCreator = (
   const handleSuccess = response => {
     const entities = denormalisedResponseEntities(response);
     const tx = entities[0];
-    dispatch(setCurrentUserHasOrders());
+    dispatch(setCurrentUserHasOrders()); // TODO: this is reverse logic.
     return tx;
   };
 

@@ -23,11 +23,11 @@ import {
   NamedLink,
   Page,
   PrimaryButton,
+  TopbarSimplified,
 } from '../../components';
 
 import { getTransactionTypeData } from './CheckoutPageTransactionHelpers.js';
 
-import CustomTopbar from './CustomTopbar';
 import DetailsSideCard from './DetailsSideCard';
 import MobileListingImage from './MobileListingImage';
 
@@ -163,7 +163,7 @@ export const CheckoutPageWithInquiryProcess = props => {
 
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
-      <CustomTopbar intl={intl} linkToExternalSite={config?.topbar?.logoLink} />
+      <TopbarSimplified />
       <div className={css.contentContainer}>
         <MobileListingImage
           listingTitle={listingTitle}

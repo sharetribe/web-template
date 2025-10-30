@@ -1,29 +1,5 @@
 @import '../../styles/customMediaQueries.css';
 
-/* Dummy Topbar */
-.topbar {
-  /* Size */
-  width: 100%;
-  height: var(--topbarHeight);
-
-  /* Layout for child components */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  /* fill */
-  background-color: var(--colorWhite);
-
-  /* shadows */
-  box-shadow: var(--boxShadow);
-
-  @media (--viewportMedium) {
-    height: var(--topbarHeightDesktop);
-    justify-content: center;
-  }
-}
-/* /Dummy Topbar */
-
 /**
  * Content: mobile flow vs desktop 2 columns
  * desktop has reduced version of bookListingContainer (incl. title and Stripe paymentForm).
