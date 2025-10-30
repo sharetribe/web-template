@@ -552,6 +552,12 @@ export const TransactionPageComponent = props => {
   ) : (
     <UserDisplayName user={customer} intl={intl} />
   );
+  const onMakeOffer = handleNavigateToMakeOfferPage({
+    listing,
+    transaction,
+    history,
+    routes: routeConfiguration,
+  });
 
   const stateData = isDataAvailable
     ? getStateData(
@@ -568,6 +574,7 @@ export const TransactionPageComponent = props => {
           onOpenRequestChangesModal,
           onOpenMakeCounterOfferModal,
           onCheckoutRedirect: handleSubmitOrderRequest,
+          onMakeOfferFromRequest: onMakeOffer,
           intl,
         },
         process
@@ -621,12 +628,6 @@ export const TransactionPageComponent = props => {
     isBookingProcess(stateData.processName) &&
     process?.hasPassedState(process?.states?.ACCEPTED, transaction);
 
-  const onMakeOffer = handleNavigateToMakeOfferPage({
-    listing,
-    transaction,
-    history,
-    routes: routeConfiguration,
-  });
   const isNegotiationProcess = processName === NEGOTIATION_PROCESS_NAME;
 
   // TransactionPanel is presentational component
