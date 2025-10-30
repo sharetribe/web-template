@@ -30,10 +30,9 @@ import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck.js';
 import { isScrollingDisabled } from '../../ducks/ui.duck.js';
 
 // Import shared components
-import { H3, NamedRedirect, Page } from '../../components/index.js';
+import { H3, NamedRedirect, Page, TopbarSimplified } from '../../components/index.js';
 
 // Import modules from this directory
-import CustomTopbar from './CustomTopbar.js';
 import HeadingDetails from './HeadingDetails.js';
 import DetailsSideCard from './DetailsSideCard/DetailsSideCard.js';
 import ErrorMessage from './ErrorMessage/ErrorMessage.js';
@@ -173,7 +172,7 @@ const MakeOfferPageComponent = props => {
 
   return (
     <Page title={pageTitle} scrollingDisabled={scrollingDisabled}>
-      <CustomTopbar intl={intl} linkToExternalSite={config?.topbar?.logoLink} />
+      <TopbarSimplified />
       <div className={css.contentContainer}>
         <MobileListingImage
           listingTitle={listingTitle}
@@ -310,7 +309,7 @@ const EnhancedMakeOfferPage = props => {
     />
   ) : (
     <Page title={pageTitle} scrollingDisabled={scrollingDisabled}>
-      <CustomTopbar intl={intl} linkToExternalSite={config?.topbar?.logoLink} />
+      <TopbarSimplified />
     </Page>
   );
 };
