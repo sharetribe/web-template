@@ -1,0 +1,10 @@
+@import '../../../styles/customMediaQueries.css';
+
+.error {
+  color: var(--colorFail);
+  margin-top: 0;
+
+  @media (--viewportMedium) {
+    margin-top: 0;
+  }
+}
