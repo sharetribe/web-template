@@ -244,12 +244,15 @@ export const showPaymentDetailsForUser = (config, currentUser) => {
   const { paymentMethods = true, payoutDetails = true } =
     currentUserTypeConfig?.accountLinksVisibility || {};
 
-  return (
-    currentUser && {
-      showPayoutDetails: payoutDetails,
-      showPaymentMethods: paymentMethods,
-    }
-  );
+  return currentUser
+    ? {
+        showPayoutDetails: payoutDetails,
+        showPaymentMethods: paymentMethods,
+      }
+    : {
+        showPayoutDetails: false,
+        showPaymentMethods: false,
+      };
 };
 
 /**
