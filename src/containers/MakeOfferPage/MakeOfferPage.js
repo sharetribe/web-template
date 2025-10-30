@@ -161,6 +161,7 @@ const MakeOfferPageComponent = props => {
   const listingTypeConfig = listingTypeConfigs.find(conf => conf.listingType === listingType);
   const showPrice = displayPrice(listingTypeConfig);
   const showListingImage = requireListingImage(listingTypeConfig);
+  const showLocation = publicData?.unitType !== 'offer';
 
   const stripeConnected = currentUser?.attributes?.stripeConnected;
   const stripeAccountData = stripeConnected ? getStripeAccountData(stripeAccount) : null;
@@ -196,7 +197,7 @@ const MakeOfferPageComponent = props => {
           </div>
 
           <LocationDetails
-            showLocation={true}
+            showLocation={showLocation}
             listingLocation={publicData?.location}
             intl={intl}
             sectionHeadingClassName={css.locationHeading}
