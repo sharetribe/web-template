@@ -50,6 +50,7 @@ import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import { getStateData } from './TransactionPage.stateData';
 import ActionButtons from './ActionButtons/ActionButtons';
+import RequestQuote from './RequestQuote/RequestQuote';
 import Offer from './Offer/Offer';
 import ActivityFeed from './ActivityFeed/ActivityFeed';
 import DisputeModal from './DisputeModal/DisputeModal';
@@ -679,6 +680,14 @@ export const TransactionPageComponent = props => {
           onOpenReviewModal={onOpenReviewModal}
           onShowOlderMessages={() => onShowMoreMessages(transaction.id, config)}
           fetchMessagesInProgress={fetchMessagesInProgress}
+        />
+      }
+      requestQuote={
+        <RequestQuote
+          transaction={transaction}
+          isNegotiationProcess={isNegotiationProcess}
+          transactionRole={transactionRole}
+          intl={intl}
         />
       }
       offer={
