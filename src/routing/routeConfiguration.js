@@ -31,6 +31,7 @@ const PaymentMethodsPage = loadable(() => import(/* webpackChunkName: "PaymentMe
 const PrivacyPolicyPage = loadable(() => import(/* webpackChunkName: "PrivacyPolicyPage" */ '../containers/PrivacyPolicyPage/PrivacyPolicyPage'));
 const ProfilePage = loadable(() => import(/* webpackChunkName: "ProfilePage" */ '../containers/ProfilePage/ProfilePage'));
 const ProfileSettingsPage = loadable(() => import(/* webpackChunkName: "ProfileSettingsPage" */ '../containers/ProfileSettingsPage/ProfileSettingsPage'));
+const RequestQuotePage = loadable(() => import(/* webpackChunkName: "RequestQuotePage" */ '../containers/RequestQuotePage/RequestQuotePage'));
 const SearchPageWithMap = loadable(() => import(/* webpackChunkName: "SearchPageWithMap" */ /* webpackPrefetch: true */  '../containers/SearchPage/SearchPageWithMap'));
 const SearchPageWithGrid = loadable(() => import(/* webpackChunkName: "SearchPageWithGrid" */ /* webpackPrefetch: true */  '../containers/SearchPage/SearchPageWithGrid'));
 const StripePayoutPage = loadable(() => import(/* webpackChunkName: "StripePayoutPage" */ '../containers/StripePayoutPage/StripePayoutPage'));
@@ -120,6 +121,14 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       auth: true,
       component: MakeOfferPage,
       loadData: pageDataLoadingAPI.MakeOfferPage.loadData,
+    },
+    {
+      path: '/l/:slug/:id/request-quote',
+      name: 'RequestQuotePage',
+      auth: true,
+      component: RequestQuotePage,
+      extraProps: { mode: 'request-quote' },
+      loadData: pageDataLoadingAPI.RequestQuotePage.loadData,
     },
     {
       path: '/l/:slug/:id/checkout',

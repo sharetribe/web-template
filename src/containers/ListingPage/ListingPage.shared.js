@@ -190,6 +190,33 @@ export const handleNavigateToMakeOfferPage = parameters => () => {
 };
 
 /**
+ * Handle navigation to RequestQuotePage. Returns a function that can be used as a form submit handler.
+ * Note: this does not yet handle form values, it only navigates to the RequestQuotePage.
+ *
+ * @param {Object} parameters all the info needed to navigate to RequestQuotePage.
+ * @param {Object} parameters.getListing The getListing function from react-router.
+ * @param {Object} parameters.params The params object from react-router.
+ * @param {Object} parameters.history The history object from react-router.
+ * @param {Object} parameters.routes The routes object from react-router.
+ * @returns {Function} A function that navigates to RequestQuotePage.
+ */
+export const handleNavigateToRequestQuotePage = parameters => () => {
+  const { getListing, params, history, routes } = parameters;
+
+  const listingId = new UUID(params.id);
+  const listing = getListing(listingId);
+
+  history.push(
+    createResourceLocatorString(
+      'RequestQuotePage',
+      routes,
+      { id: listing.id.uuid, slug: createSlug(listing.attributes.title) },
+      {}
+    )
+  );
+};
+
+/**
  * Handle order submit from OrderPanel.
  *
  * @param {Object} parameters all the info needed to redirect user to CheckoutPage.
