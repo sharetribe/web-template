@@ -10,7 +10,15 @@ import css from './NegotiationRequestQuoteForm.module.css';
 
 const renderForm = formRenderProps => {
   // FormRenderProps from final-form
-  const { formId, className, rootClassName, handleSubmit } = formRenderProps;
+  const {
+    formId,
+    className,
+    rootClassName,
+    handleSubmit,
+    payoutDetailsWarning,
+    isOwnListing,
+    finePrintComponent: FinePrint,
+  } = formRenderProps;
   const classes = classNames(rootClassName || css.root, className);
 
   return (
@@ -19,6 +27,11 @@ const renderForm = formRenderProps => {
         <PrimaryButton type="submit">
           <FormattedMessage id="NegotiationRequestQuoteForm.ctaButton" />
         </PrimaryButton>
+        <FinePrint
+          payoutDetailsWarning={payoutDetailsWarning}
+          isOwnListing={isOwnListing}
+          omitYouWontBeChargedMessage={true}
+        />
       </div>
     </Form>
   );

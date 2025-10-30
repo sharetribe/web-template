@@ -38,6 +38,7 @@ import {
 
 import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2 } from '../../components';
 import PriceVariantPicker from './PriceVariantPicker/PriceVariantPicker';
+import SubmitFinePrint from './SubmitFinePrint/SubmitFinePrint';
 
 import css from './OrderPanel.module.css';
 
@@ -482,6 +483,7 @@ const OrderPanel = props => {
             startDatePlaceholder={intl.formatDate(TODAY, dateFormattingOptions)}
             startTimeInterval={startTimeInterval}
             timeZone={timeZone}
+            finePrintComponent={SubmitFinePrint}
             {...priceVariantsMaybe}
             {...sharedProps}
           />
@@ -497,6 +499,7 @@ const OrderPanel = props => {
             startDatePlaceholder={intl.formatDate(TODAY, dateFormattingOptions)}
             endDatePlaceholder={intl.formatDate(TODAY, dateFormattingOptions)}
             timeZone={timeZone}
+            finePrintComponent={SubmitFinePrint}
             {...priceVariantsMaybe}
             {...sharedProps}
           />
@@ -509,6 +512,7 @@ const OrderPanel = props => {
             monthlyTimeSlots={monthlyTimeSlots}
             onFetchTimeSlots={onFetchTimeSlots}
             timeZone={timeZone}
+            finePrintComponent={SubmitFinePrint}
             {...priceVariantsMaybe}
             {...sharedProps}
           />
@@ -524,11 +528,28 @@ const OrderPanel = props => {
             {...sharedProps}
           />
         ) : showInquiryForm ? (
-          <InquiryWithoutPaymentForm formId="OrderPanelInquiryForm" onSubmit={onSubmit} />
+          <InquiryWithoutPaymentForm
+            formId="OrderPanelInquiryForm"
+            onSubmit={onSubmit}
+            finePrintComponent={SubmitFinePrint}
+            isOwnListing={isOwnListing}
+          />
         ) : showNegotiationForm ? (
-          <NegotiationForm formId="OrderPanelNegotiationForm" onSubmit={onSubmit} />
+          <NegotiationForm
+            formId="OrderPanelNegotiationForm"
+            onSubmit={onSubmit}
+            finePrintComponent={SubmitFinePrint}
+            payoutDetailsWarning={payoutDetailsWarning}
+            isOwnListing={isOwnListing}
+          />
         ) : showRequestQuoteForm ? (
-          <NegotiationRequestQuoteForm formId="OrderPanelRequestQuoteForm" onSubmit={onSubmit} />
+          <NegotiationRequestQuoteForm
+            formId="OrderPanelRequestQuoteForm"
+            onSubmit={onSubmit}
+            finePrintComponent={SubmitFinePrint}
+            payoutDetailsWarning={payoutDetailsWarning}
+            isOwnListing={isOwnListing}
+          />
         ) : !isKnownProcess ? (
           <p className={css.errorSidebar}>
             <FormattedMessage id="OrderPanel.unknownTransactionProcess" />
