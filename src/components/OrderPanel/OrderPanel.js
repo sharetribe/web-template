@@ -26,10 +26,10 @@ import { formatMoney } from '../../util/currency';
 import { createSlug, parse, stringify } from '../../util/urlHelpers';
 import { userDisplayNameAsString } from '../../util/data';
 import {
-  INQUIRY_PROCESS_NAME,
-  NEGOTIATION_PROCESS_NAME,
   getSupportedProcessesInfo,
   isBookingProcess,
+  isNegotiationProcess,
+  isInquiryProcess,
   isPurchaseProcess,
   resolveLatestProcessName,
 } from '../../transactions/transaction';
@@ -305,17 +305,19 @@ const OrderPanel = props => {
   const lineItemUnitType = lineItemUnitTypeMaybe || `line-item/${unitType}`;
 
   const price = listing?.attributes?.price;
-  const isPaymentProcess = processName !== INQUIRY_PROCESS_NAME;
-  const isNegotiationProcess = processName === NEGOTIATION_PROCESS_NAME;
+  const isInquiry = isInquiryProcess(processName);
+  const isBooking = isBookingProcess(processName);
+  const isPurchase = isPurchaseProcess(processName);
+  const isNegotiation = isNegotiationProcess(processName);
+  const isPaymentProcess = isBooking || isPurchase || isNegotiation;
 
-  const showPriceMissing = isPaymentProcess && !isNegotiationProcess && !price;
+  const showPriceMissing = isPaymentProcess && !isNegotiation && !price;
   const showInvalidCurrency =
-    isPaymentProcess && !isNegotiationProcess && price?.currency !== marketplaceCurrency;
+    isPaymentProcess && !isNegotiation && price?.currency !== marketplaceCurrency;
 
   const timeZone = listing?.attributes?.availabilityPlan?.timezone;
   const isClosed = listing?.attributes?.state === LISTING_STATE_CLOSED;
 
-  const isBooking = isBookingProcess(processName);
   const shouldHaveFixedBookingDuration = isBooking && [LINE_ITEM_FIXED].includes(lineItemUnitType);
   const showBookingFixedDurationForm =
     mounted && shouldHaveFixedBookingDuration && !isClosed && timeZone && priceVariants?.length > 0;
@@ -329,7 +331,6 @@ const OrderPanel = props => {
 
   // The listing resource has a relationship: `currentStock`,
   // which you should include when making API calls.
-  const isPurchase = isPurchaseProcess(processName);
   const shouldHavePurchase = isPurchase && lineItemUnitType === LINE_ITEM_ITEM;
   const currentStock = listing.currentStock?.attributes?.quantity;
   const isOutOfStock = shouldHavePurchase && !isClosed && currentStock === 0;
@@ -339,8 +340,8 @@ const OrderPanel = props => {
   const showProductOrderForm =
     mounted && shouldHavePurchase && !isClosed && typeof currentStock === 'number';
 
-  const showInquiryForm = mounted && !isClosed && processName === INQUIRY_PROCESS_NAME;
   const showNegotiationForm = mounted && !isClosed && isNegotiationProcess;
+  const showInquiryForm = mounted && !isClosed && isInquiry;
 
   const supportedProcessesInfo = getSupportedProcessesInfo();
   const isKnownProcess = supportedProcessesInfo.map(info => info.name).includes(processName);
