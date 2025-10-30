@@ -4491,7 +4491,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
       class="itemState"
     >
       <div
-        class="stateName stateNoActionNeeded"
+        class="stateName stateConcluded stateNoActionNeeded"
       >
         <span>
           InboxPage.default-negotiation.request-rejected.status
@@ -4897,7 +4897,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
       class="itemState"
     >
       <div
-        class="stateName stateNoActionNeeded"
+        class="stateName stateConcluded stateNoActionNeeded"
       >
         <span>
           InboxPage.default-negotiation.request-rejected.status
@@ -5477,7 +5477,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
       class="itemState"
     >
       <div
-        class="stateName stateNoActionNeeded"
+        class="stateName stateConcluded stateNoActionNeeded"
       >
         <span>
           InboxPage.default-negotiation.request-rejected.status
