@@ -317,6 +317,27 @@ export const isBookingProcessAlias = processAlias => {
 };
 
 /**
+ * Check if the process is inquiry process
+ *
+ * @param {String} processName
+ */
+export const isInquiryProcess = processName => {
+  const latestProcessName = resolveLatestProcessName(processName);
+  const processInfo = PROCESSES.find(process => process.name === latestProcessName);
+  return [INQUIRY_PROCESS_NAME].includes(processInfo?.name);
+};
+
+/**
+ * Check if the process/alias points to a inquiry process
+ *
+ * @param {String} processAlias
+ */
+export const isInquiryProcessAlias = processAlias => {
+  const processName = processAlias ? processAlias.split('/')[0] : null;
+  return processAlias ? isInquiryProcess(processName) : false;
+};
+
+/**
  * Check if the process is negotiation process
  *
  * @param {String} processName
