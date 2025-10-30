@@ -300,7 +300,6 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  dispatch,
   onRequestQuote: (params, processAlias) => dispatch(requestQuote(params, processAlias)),
 });
 
