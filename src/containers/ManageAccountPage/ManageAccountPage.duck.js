@@ -1,93 +1,91 @@
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { storableError } from '../../util/errors';
-import { fetchCurrentUser } from '../../ducks/user.duck';
 import { logout } from '../../ducks/auth.duck';
 import { deleteUserAccount } from '../../util/api';
 
-// ================ Action types ================ //
+// ================ Async Thunks ================ //
 
-export const DELETE_ACCOUNT_REQUEST = 'app/ManageAccountPage/DELETE_ACCOUNT_REQUEST';
-export const DELETE_ACCOUNT_SUCCESS = 'app/ManageAccountPage/DELETE_ACCOUNT_SUCCESS';
-export const DELETE_ACCOUNT_ERROR = 'app/ManageAccountPage/DELETE_ACCOUNT_ERROR';
+////////////////////
+// Delete Account //
+////////////////////
 
-export const RESET_PASSWORD_REQUEST = 'app/ManageAccountPage/RESET_PASSWORD_REQUEST';
-export const RESET_PASSWORD_SUCCESS = 'app/ManageAccountPage/RESET_PASSWORD_SUCCESS';
-export const RESET_PASSWORD_ERROR = 'app/ManageAccountPage/RESET_PASSWORD_ERROR';
-
-// ================ Reducer ================ //
-
-const initialState = {
-  deleteAccountError: null,
-  deleteAccountInProgress: false,
-  accountDeletionConfirmed: false,
-  resetPasswordInProgress: false,
-  resetPasswordError: null,
-};
-
-export default function reducer(state = initialState, action = {}) {
-  const { type, payload } = action;
-  switch (type) {
-    case DELETE_ACCOUNT_REQUEST:
-      return {
-        ...state,
-        deleteAccountInProgress: true,
-        accountDeletionConfirmed: false,
-      };
-    case DELETE_ACCOUNT_SUCCESS:
-      return { ...state, deleteAccountInProgress: false, accountDeletionConfirmed: true };
-    case DELETE_ACCOUNT_ERROR:
-      return { ...state, deleteAccountInProgress: false, deleteAccountError: payload };
-
-    case RESET_PASSWORD_REQUEST:
-      return { ...state, resetPasswordInProgress: true, resetPasswordError: null };
-    case RESET_PASSWORD_SUCCESS:
-      return { ...state, resetPasswordInProgress: false };
-    case RESET_PASSWORD_ERROR:
-      console.error(payload); // eslint-disable-line no-console
-      return { ...state, resetPasswordInProgress: false, resetPasswordError: payload };
-    default:
-      return state;
+export const deleteAccountThunk = createAsyncThunk(
+  'ManageAccountPage/deleteAccount',
+  (currentPassword, { dispatch, rejectWithValue }) => {
+    return deleteUserAccount({ currentPassword })
+      .then(() => {
+        return dispatch(logout());
+      })
+      .catch(e => {
+        return rejectWithValue(storableError(e));
+      });
   }
-}
+);
 
-// ================ Action creators ================ //
+// Backward compatible wrapper for the deleteAccount thunk
+export const deleteAccount = actionPayload => dispatch => {
+  return dispatch(deleteAccountThunk(actionPayload)).unwrap();
+};
 
-export const deleteAccountRequest = () => ({ type: DELETE_ACCOUNT_REQUEST });
-export const deleteAccountSuccess = () => ({ type: DELETE_ACCOUNT_SUCCESS });
-export const deleteAccountError = error => ({
-  type: DELETE_ACCOUNT_ERROR,
-  payload: error,
-  error: true,
-});
+////////////////////
+// Reset Password //
+////////////////////
 
-export const resetPasswordRequest = () => ({ type: RESET_PASSWORD_REQUEST });
-
-export const resetPasswordSuccess = () => ({ type: RESET_PASSWORD_SUCCESS });
-
-export const resetPasswordError = e => ({
-  type: RESET_PASSWORD_ERROR,
-  error: true,
-  payload: e,
-});
-
-// ================ Thunks ================ //
-
-export const deleteAccount = currentPassword => (dispatch, getState, sdk) => {
-  dispatch(deleteAccountRequest());
-
-  return deleteUserAccount({ currentPassword })
-    .then(() => dispatch(deleteAccountSuccess()))
-    .then(() => {
-      return dispatch(logout());
-    })
-    .catch(e => {
-      dispatch(deleteAccountError(storableError(storableError(e))));
+export const resetPasswordThunk = createAsyncThunk(
+  'ManageAccountPage/resetPassword',
+  (email, { extra: sdk, rejectWithValue }) => {
+    return sdk.passwordReset.request({ email }).catch(e => {
+      return rejectWithValue(storableError(e));
     });
+  }
+);
+
+// Backward compatible wrapper for the resetPassword thunk
+// Note: we unwrap the thunk so that the promise chain can be listened on presentational components.
+export const resetPassword = actionPayload => dispatch => {
+  return dispatch(resetPasswordThunk(actionPayload)).unwrap();
 };
 
-export const resetPassword = email => (dispatch, getState, sdk) => {
-  dispatch(resetPasswordRequest());
-  return sdk.passwordReset
-    .request({ email })
-    .then(() => dispatch(resetPasswordSuccess()))
-    .catch(e => dispatch(resetPasswordError(storableError(e))));
-};
+// ================ Slice ================ //
+
+const manageAccountPageSlice = createSlice({
+  name: 'ManageAccountPage',
+  initialState: {
+    deleteAccountError: null,
+    deleteAccountInProgress: false,
+    accountDeletionConfirmed: false,
+    resetPasswordInProgress: false,
+    resetPasswordError: null,
+  },
+  reducers: {},
+  extraReducers: builder => {
+    builder
+      // deleteAccount cases
+      .addCase(deleteAccountThunk.pending, state => {
+        state.deleteAccountInProgress = true;
+        state.accountDeletionConfirmed = false;
+      })
+      .addCase(deleteAccountThunk.fulfilled, state => {
+        state.deleteAccountInProgress = false;
+        state.accountDeletionConfirmed = true;
+      })
+      .addCase(deleteAccountThunk.rejected, (state, action) => {
+        state.deleteAccountInProgress = false;
+        state.deleteAccountError = action.payload;
+      })
+      // resetPassword cases
+      .addCase(resetPasswordThunk.pending, state => {
+        state.resetPasswordInProgress = true;
+        state.resetPasswordError = null;
+      })
+      .addCase(resetPasswordThunk.fulfilled, state => {
+        state.resetPasswordInProgress = false;
+      })
+      .addCase(resetPasswordThunk.rejected, (state, action) => {
+        state.resetPasswordInProgress = false;
+        state.resetPasswordError = action.payload;
+      });
+  },
+});
+
+export default manageAccountPageSlice.reducer;
