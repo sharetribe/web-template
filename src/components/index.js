@@ -73,6 +73,7 @@ export { default as ValidationError } from './ValidationError/ValidationError';
 //////////////////////////////////////////////////////////
 
 export { default as Button, PrimaryButton, PrimaryButtonInline, SecondaryButton, SecondaryButtonInline, InlineTextButton, SocialLoginButton } from './Button/Button';
+export { default as ErrorMessage } from './ErrorMessage/ErrorMessage';
 export { default as ImageFromFile } from './ImageFromFile/ImageFromFile';
 export { default as LinkedLogo } from './Logo/LinkedLogo';
 export { default as ListingLink } from './ListingLink/ListingLink';
