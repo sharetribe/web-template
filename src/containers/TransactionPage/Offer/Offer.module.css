@@ -11,6 +11,16 @@
     margin: 40px 0 0 0;
   }
 }
+.reducedMargin {
+  margin: 24px 24px 0 24px;
+
+  @media (--viewportMedium) {
+    margin: 24px 24px 0 24px;
+  }
+  @media (--viewportLarge) {
+    margin: 24px 0 0 0;
+  }
+}
 
 .sectionHeading {
   composes: h4 from global;

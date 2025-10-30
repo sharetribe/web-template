@@ -27,6 +27,7 @@ import {
   getProcess,
   isBookingProcess,
   NEGOTIATION_PROCESS_NAME,
+  OFFER,
 } from '../../transactions/transaction';
 
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
@@ -629,6 +630,8 @@ export const TransactionPageComponent = props => {
     process?.hasPassedState(process?.states?.ACCEPTED, transaction);
 
   const isNegotiationProcess = processName === NEGOTIATION_PROCESS_NAME;
+  const isRegularNegotiation =
+    isNegotiationProcess && transaction?.attributes?.protectedData?.unitType === OFFER;
 
   // TransactionPanel is presentational component
   // that currently handles showing everything inside layout's main view area.
@@ -696,6 +699,7 @@ export const TransactionPageComponent = props => {
           transaction={transaction}
           isNegotiationProcess={isNegotiationProcess}
           transactionRole={transactionRole}
+          isRegularNegotiation={isRegularNegotiation}
           intl={intl}
         />
       }
