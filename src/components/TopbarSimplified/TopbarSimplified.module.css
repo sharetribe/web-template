@@ -1,0 +1,23 @@
+@import '../../styles/customMediaQueries.css';
+
+.root {
+  /* Size */
+  width: 100%;
+  height: var(--topbarHeight);
+
+  /* Layout for child components */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* fill */
+  background-color: var(--colorWhite);
+
+  /* shadows */
+  box-shadow: var(--boxShadow);
+
+  @media (--viewportMedium) {
+    height: var(--topbarHeightDesktop);
+    justify-content: center;
+  }
+}
