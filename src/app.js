@@ -203,6 +203,14 @@ const EnvironmentVariableWarning = props => {
   );
 };
 
+/**
+ * Client App
+ * @param {Object} props
+ * @param {Object} props.store
+ * @param {Object} props.hostedTranslations
+ * @param {Object} props.hostedConfig
+ * @returns {JSX.Element}
+ */
 export const ClientApp = props => {
   const { store, hostedTranslations = {}, hostedConfig = {} } = props;
   const appConfig = mergeConfig(hostedConfig, defaultConfig);
@@ -261,8 +269,17 @@ export const ClientApp = props => {
   );
 };
 
-ClientApp.propTypes = { store: any.isRequired };
-
+/**
+ * Server App
+ * @param {Object} props
+ * @param {string} props.url
+ * @param {Object} props.context
+ * @param {Object} props.helmetContext
+ * @param {Object} props.store
+ * @param {Object} props.hostedTranslations
+ * @param {Object} props.hostedConfig
+ * @returns {JSX.Element}
+ */
 export const ServerApp = props => {
   const { url, context, helmetContext, store, hostedTranslations = {}, hostedConfig = {} } = props;
   const appConfig = mergeConfig(hostedConfig, defaultConfig);
@@ -299,8 +316,6 @@ export const ServerApp = props => {
   );
 };
 
-ServerApp.propTypes = { url: string.isRequired, context: any.isRequired, store: any.isRequired };
-
 /**
  * Render the given route.
  *
@@ -322,7 +337,7 @@ export const renderApp = (
   // Don't pass an SDK instance since we're only rendering the
   // component tree with the preloaded store state and components
   // shouldn't do any SDK calls in the (server) rendering lifecycle.
-  const store = configureStore(preloadedState);
+  const store = configureStore({ initialState: preloadedState });
 
   const helmetContext = {};
 

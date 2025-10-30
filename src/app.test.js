@@ -30,7 +30,7 @@ describe('Application - JSDOM environment', () => {
     };
     const resolvePageAssetCall = () => Promise.resolve(pageData);
     const fakeSdk = { assetByVersion: resolvePageAssetCall, assetByAlias: resolvePageAssetCall };
-    const store = configureStore({}, fakeSdk);
+    const store = configureStore({ initialState: {}, sdk: fakeSdk });
     const div = document.createElement('div');
     const root = ReactDOMClient.createRoot(div);
 
