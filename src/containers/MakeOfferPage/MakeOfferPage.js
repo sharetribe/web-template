@@ -30,12 +30,11 @@ import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck.js';
 import { isScrollingDisabled } from '../../ducks/ui.duck.js';
 
 // Import shared components
-import { H3, NamedRedirect, Page, TopbarSimplified } from '../../components/index.js';
+import { H3, ErrorMessage, NamedRedirect, Page, TopbarSimplified } from '../../components/index.js';
 
 // Import modules from this directory
 import HeadingDetails from './HeadingDetails.js';
 import DetailsSideCard from './DetailsSideCard/DetailsSideCard.js';
-import ErrorMessage from './ErrorMessage/ErrorMessage.js';
 import MobileListingImage from './MobileListingImage/MobileListingImage.js';
 import LocationDetails from './LocationDetails/LocationDetails.js';
 import MakeOfferForm from './MakeOfferForm/MakeOfferForm.js';
