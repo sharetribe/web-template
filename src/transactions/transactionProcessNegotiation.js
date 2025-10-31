@@ -269,7 +269,7 @@ export const graph = {
 const makeOfferTransitions = [
   'transition/make-offer',
   'transition/make-offer-after-inquiry',
-  'transition/make-offer-from-quote-requested',
+  'transition/make-offer-from-request',
 ];
 
 // transitions that make a counter offer
@@ -401,6 +401,9 @@ export const isRelevantPastTransition = transition => {
     transitions.MAKE_OFFER_AFTER_INQUIRY,
     transitions.REQUEST_QUOTE,
     transitions.MAKE_OFFER_FROM_REQUEST,
+    transitions.REJECT_REQUEST,
+    transitions.WITHDRAW_REQUEST,
+    transitions.OPERATOR_REJECT_REQUEST,
     transitions.OPERATOR_REJECT_OFFER,
     transitions.CUSTOMER_REJECT_OFFER,
     transitions.PROVIDER_WITHDRAW_OFFER,

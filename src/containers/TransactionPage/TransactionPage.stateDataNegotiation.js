@@ -18,6 +18,7 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
     transactionRole,
     nextTransitions,
     onCheckoutRedirect,
+    onMakeOfferFromRequest,
     onOpenRequestChangesModal,
     onOpenMakeCounterOfferModal,
   } = txInfo;
@@ -72,6 +73,34 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
     })
     .cond([states.INQUIRY, CUSTOMER], () => {
       return { ...sharedStateData, showDetailCardHeadings: true };
+    })
+    .cond([states.QUOTE_REQUESTED, PROVIDER], () => {
+      const overwritesForMakeOfferFromRequest = {
+        onAction: () => {
+          return onMakeOfferFromRequest();
+        },
+      };
+      return {
+        ...sharedStateData,
+        showDetailCardHeadings: true,
+        showExtraInfo: true,
+        showActionButtons: true,
+        primaryButtonProps: actionButtonProps(
+          transitions.MAKE_OFFER_FROM_REQUEST,
+          PROVIDER,
+          overwritesForMakeOfferFromRequest
+        ),
+        secondaryButtonProps: actionButtonProps(transitions.REJECT_REQUEST, PROVIDER),
+      };
+    })
+    .cond([states.QUOTE_REQUESTED, CUSTOMER], () => {
+      return {
+        ...sharedStateData,
+        showDetailCardHeadings: true,
+        showExtraInfo: true,
+        showActionButtons: true,
+        secondaryButtonProps: actionButtonProps(transitions.WITHDRAW_REQUEST, CUSTOMER),
+      };
     })
     .cond([states.OFFER_PENDING, CUSTOMER], () => {
       // When customer clicks on the accept button, we just redirect them to the checkout page.

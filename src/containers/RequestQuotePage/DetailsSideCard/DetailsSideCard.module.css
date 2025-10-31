@@ -1,0 +1,117 @@
+@import '../../../styles/customMediaQueries.css';
+
+/* Details column is visible only on desktop */
+.detailsContainerDesktop {
+  display: none;
+
+  @media (--viewportLarge) {
+    flex-shrink: 0;
+    display: block;
+    /* Dimensions */
+    width: 409px;
+    padding-bottom: 36px;
+
+    /* Position */
+    margin: 56px 0 24px 0;
+
+    /* Coloring */
+    background-color: var(--colorWhite);
+    border: 1px solid var(--colorGrey100);
+    border-radius: 2px;
+  }
+}
+
+.detailsAspectWrapper {
+  position: relative;
+  background-color: var(--colorGrey100); /* Loading BG color */
+}
+
+.rootForImage {
+  /* Layout - image will take space defined by aspect ratio wrapper */
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+
+  @media (--viewportLarge) {
+    border-radius: 2px 2px 0 0;
+  }
+}
+
+.listingDetailsWrapper {
+  margin: 0 48px;
+}
+
+.avatarWrapper {
+  /* Position (over the listing image)*/
+  margin-left: 24px;
+  margin-top: -31px;
+
+  /* Rendering context to the same lavel as listing image */
+  position: relative;
+
+  /* Layout */
+  display: block;
+
+  @media (--viewportLarge) {
+    margin-left: 0;
+  }
+  &.noListingImage {
+    margin-top: 24px;
+    @media (--viewportMedium) {
+      margin-top: 32px;
+    }
+    @media (--viewportLarge) {
+      margin-top: 40px;
+    }
+  }
+}
+
+.detailsHeadings {
+  display: none;
+
+  @media (--viewportLarge) {
+    display: block;
+    margin: 0;
+  }
+  &.noListingImage {
+    @media (--viewportLarge) {
+      margin-top: 32px;
+    }
+  }
+}
+
+.orderBreakdownHeader {
+  @media (--viewportLarge) {
+    margin: 0 48px;
+  }
+}
+.orderBreakdownTitle {
+  /* Font */
+  letter-spacing: 1px;
+  font-weight: var(--fontWeightMedium);
+
+  /* Layout spacing */
+  margin: 5px 24px 25px 24px;
+
+  @media (--viewportLarge) {
+    padding: 6px 0 2px 0;
+    margin: 16px 0 8px 0;
+  }
+}
+
+.totalDivider {
+  /* dimensions */
+  width: 100%;
+  height: 1px;
+  margin: 12px 0 5px 0;
+
+  border: none;
+  background-color: var(--colorGrey100);
+
+  @media (--viewportMedium) {
+    margin: 7px 0 0 0;
+  }
+}

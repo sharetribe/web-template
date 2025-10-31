@@ -1,0 +1,105 @@
+@import '../../styles/customMediaQueries.css';
+
+/**
+ * Content: mobile flow vs desktop 2 columns
+ * desktop has reduced version of bookListingContainer (incl. title and Stripe paymentForm).
+ * priceBreakdown is inside separate column (detailsContainerDesktop)
+ */
+.contentContainer {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+
+  @media (--viewportLarge) {
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0 48px;
+  }
+}
+
+.orderFormContainer {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+
+  @media (--viewportLarge) {
+    flex-grow: 0;
+    flex-basis: 519px;
+    margin-top: 73px;
+    margin-right: 132px;
+  }
+}
+
+.headingContainer {
+  margin-top: 29px;
+  margin-bottom: 34px;
+  padding: 0 24px;
+
+  @media (--viewportMedium) {
+    margin-top: 27px;
+    margin-bottom: 30px;
+  }
+
+  @media (--viewportLarge) {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding: 0;
+  }
+}
+
+.heading {
+  /* Layout */
+  width: 100%;
+  margin-top: 0;
+  margin-bottom: 7px;
+
+  @media (--viewportMedium) {
+    margin-top: 0;
+    margin-bottom: 8px;
+  }
+}
+
+.locationHeading {
+  composes: p from global;
+  font-weight: var(--fontWeightBold);
+  margin: 0 0 12px 0;
+
+  padding-top: 4px;
+  padding-bottom: 2px;
+
+  @media (--viewportMedium) {
+    margin: 0 0 0 0;
+    padding-top: 5px;
+    padding-bottom: 3px;
+  }
+}
+
+.detailsHeadingMobile {
+  @media (--viewportLarge) {
+    display: none;
+  }
+}
+
+.paymentContainer {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 24px;
+  margin-bottom: 35px;
+
+  @media (--viewportMedium) {
+    margin-top: 2px;
+    margin-bottom: 120px;
+  }
+
+  @media (--viewportLarge) {
+    margin-top: 0;
+    padding: 0;
+  }
+}
+
+.headingPrice {
+  composes: p from global;
+  font-weight: var(--fontWeightBold);
+}

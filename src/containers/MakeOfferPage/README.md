@@ -18,7 +18,7 @@ objects with the following properties:
 - **transition**: the transition that was triggered to initiate the negotiation:
   - `transition/make-offer`
   - `transition/make-offer-after-inquiry`
-  - `transition/make-offer-from-quote-requested`
+  - `transition/make-offer-from-request`
 
 All of these transitions are only possible for the provider in the default-negotiation process.
 
