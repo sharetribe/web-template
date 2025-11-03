@@ -16,15 +16,20 @@
 :root {
   /* ================ Colors ================ */
 
-  /* Colors used for different functions (like error texts) */
-
-  --colorSuccess: #2ecc71;
-  --colorSuccessDark: #239954;
-  --colorSuccessLight: #f0fff6;
-  --colorFail: #ff0000;
-  --colorFailLight: #fff0f0;
+  /**
+  * Colors used for different functions (like error texts)
+  * Subtle color variants are used in Stripe verification status box
+  */
+  --colorSuccess: #138041;
+  --colorSuccessDark: #0d542a;
+  --colorSuccessLight: #1aad57;
+  --colorSuccessSubtle: #f0fff6;
+  --colorFail: #e7000b;
+  --colorFailDark: #cc0000;
+  --colorFailSubtle: #fff0f0;
   --colorAttention: #ffaa00;
-  --colorAttentionLight: #fff7f0;
+  --colorAttentionDark: #b25900;
+  --colorAttentionSubtle: #fff7f0;
   --colorBannedLight: var(--marketplaceColorLight);
   --colorBannedDark: var(--marketplaceColor);
 
@@ -51,17 +56,17 @@
   * In the future, we are planning to bring more --marketplace* CSS Properties
   * from hosted assets, which means that they could be managed through Console.
   */
-  --marketplaceColor: #5d2bc0; /* hsl(260, 63%, 46%) */
-  --marketplaceColorLight: #7748d5; /* hsl(260, 63%, 56%), +10L from marketplaceColor */
-  --marketplaceColorDark: #492296; /* hsl(260, 63%, 26%), -10L from marketplaceColor */
+  --marketplaceColor: #6938ef; /* hsl(256, 85%, 58%) */
+  --marketplaceColorLight: #4a12e2; /* hsl(256, 85%, 48%) */
+  --marketplaceColorDark: #8d68f3; /* hsl(256, 85%, 68% */
 
   /** 
    * The fill color used by <PrimaryButton>
    * These might be overwritten by values from hosted assets
    */
-  --colorPrimaryButton: var(--colorSuccess);
-  --colorPrimaryButtonDark: var(--colorSuccessDark);
-  --colorPrimaryButtonLight: var(--colorSuccessLight);
+  --colorPrimaryButton: #138041;
+  --colorPrimaryButtonDark: #0d542a;
+  --colorPrimaryButtonLight: #1aad57;
 
   /** 
    * The fill color used by <SecondaryButton>
@@ -69,6 +74,13 @@
   --colorSecondaryButton: var(--colorWhite);
   --colorSecondaryButtonDark: var(--colorWhite);
   --colorSecondaryButtonLight: var(--colorWhite);
+
+  /**
+   * Colors used for the user inbox item status
+   */
+  --colorStatusNormal: var(--colorGrey900);
+  --colorStatusActionNeeded: var(--colorAttentionDark);
+  --colorStatusFinalState: var(--colorGrey600);
 
   /* ================ Font ================ */
   --fontFamily: -apple-system, BlinkMacSystemFont, 'Inter', Helvetica, Arial, sans-serif,
