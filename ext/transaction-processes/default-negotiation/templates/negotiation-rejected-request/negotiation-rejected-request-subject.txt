@@ -1,1 +1,1 @@
-{{set-translations (asset "content/email-texts.json")}}{{t "NegotiationRejectedRequest.Subject" "{providerDisplayName} rejected your quote request" transaction.providerDisplayName=provider.display-name }}
+{{set-translations (asset "content/email-texts.json")}}{{t "NegotiationRejectedRequest.Subject" "{providerDisplayName} rejected your quote request" providerDisplayName=transaction.provider.display-name }}
