@@ -33,7 +33,7 @@ const FormComponent = props => (
           }}
         >
           <FormSpy onChange={onChange} />
-          <FieldDateRangeController {...dateInputProps} />
+          <FieldDateRangeController {...dateInputProps} hasFocusOnMount={false} />
           <Button type="submit" disabled={submitDisabled} style={{ marginTop: '24px' }}>
             Select
           </Button>
