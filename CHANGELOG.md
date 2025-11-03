@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] coordinate parsing: "-0" was not parsed correctly to Number.
+  [#686](https://github.com/sharetribe/web-template/pull/686)
 - [fix] showPaymentDetailsForUser: handle case when currentUser is null.
   [#684](https://github.com/sharetribe/web-template/pull/684)
 - [add] Add currently available translations for DE, ES, FR.
