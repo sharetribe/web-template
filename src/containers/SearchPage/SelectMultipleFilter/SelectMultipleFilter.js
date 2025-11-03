@@ -56,6 +56,7 @@ const format = (selectedOptions, queryParamName, schemaType, searchMode) => {
  * @param {string} props.id - The id
  * @param {string} props.name - The name
  * @param {node} props.label - The label
+ * @param {Function} props.getAriaLabel - The function to retrieve the aria label for the component
  * @param {Array<string>} props.queryParamNames - The query param names
  * @param {Object} props.initialValues - The initial values
  * @param {Function} props.onSubmit - The function to handle the submit

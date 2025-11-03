@@ -1,6 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { stringify, parse } from '../../../util/urlHelpers';
+import { fakeIntl } from '../../../util/testData';
 import { SCHEMA_TYPE_MULTI_ENUM } from '../../../util/types';
 import SelectMultipleFilter from './SelectMultipleFilter';
 
@@ -47,6 +48,14 @@ const handleSubmit = (values, history) => {
   history.push(`${window.location.pathname}${queryParams}`);
 };
 
+const getAriaLabel = (label, values) => {
+  const status = values ? 'active' : 'inactive';
+  return fakeIntl.formatMessage(
+    { id: 'SearchPage.screenreader.openFilterButton' },
+    { label, status, values }
+  );
+};
+
 const AmenitiesFilterPopup = withRouter(props => {
   const { history, location } = props;
 
@@ -60,6 +69,7 @@ const AmenitiesFilterPopup = withRouter(props => {
       name="amenities"
       queryParamNames={[URL_PARAM]}
       label="Amenities"
+      getAriaLabel={getAriaLabel}
       onSubmit={values => handleSubmit(values, history)}
       showAsPopup={true}
       liveEdit={false}
@@ -90,6 +100,7 @@ const AmenitiesFilterPlain = withRouter(props => {
       name="amenities"
       queryParamNames={[URL_PARAM]}
       label="Amenities"
+      getAriaLabel={getAriaLabel}
       onSubmit={values => {
         handleSubmit(values, history);
       }}
