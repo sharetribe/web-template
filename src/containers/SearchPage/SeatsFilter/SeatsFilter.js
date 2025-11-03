@@ -26,6 +26,7 @@ const getSeatsQueryParam = queryParamNames => {
  * @param {string} props.name
  * @param {Array<string>} props.queryParamNames
  * @param {string} props.label
+ * @param {Function} props.getAriaLabel - The function to retrieve the aria label for the component
  * @param {Function} props.onSubmit
  * @param {Object?} props.initialValues
  * @param {string | number} props.initialValues.seats

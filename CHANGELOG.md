@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] Added missing getAriaLabel to various components used in Styleguide
+  [#687](https://github.com/sharetribe/web-template/pull/687)
 - [add] Add noindex metadata to closed listings.
   [#688](https://github.com/sharetribe/web-template/pull/688)
 - [fix] coordinate parsing: "-0" was not parsed correctly to Number.

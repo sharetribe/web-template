@@ -35,6 +35,7 @@ const getKeywordQueryParam = queryParamNames => {
  * @param {string} props.id - The ID
  * @param {string} props.name - The name
  * @param {React.Node} props.label - The label
+ * @param {Function} props.getAriaLabel - The function to retrieve the aria label for the component
  * @param {Array<string>} props.queryParamNames - The query param names
  * @param {Object} props.initialValues - The initial values
  * @param {Object} props.initialValues.keyword - The keyword

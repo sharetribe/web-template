@@ -2,6 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 
 import { stringify, parse } from '../../../util/urlHelpers';
+import { fakeIntl } from '../../../util/testData';
 
 import KeywordFilter from './KeywordFilter';
 
@@ -11,6 +12,14 @@ const handleSubmit = (values, history) => {
   console.log('Submitting values', values);
   const queryParams = values ? `?${stringify(values)}` : '';
   history.push(`${window.location.pathname}${queryParams}`);
+};
+
+const getAriaLabel = (label, values) => {
+  const status = values ? 'active' : 'inactive';
+  return fakeIntl.formatMessage(
+    { id: 'SearchPage.screenreader.openFilterButton' },
+    { label, status, values }
+  );
 };
 
 const KeywordFilterPopup = withRouter(props => {
@@ -26,6 +35,7 @@ const KeywordFilterPopup = withRouter(props => {
       name="keyword"
       queryParamNames={[URL_PARAM]}
       label="Keyword"
+      getAriaLabel={getAriaLabel}
       onSubmit={values => handleSubmit(values, history)}
       showAsPopup={true}
       liveEdit={false}
@@ -54,6 +64,7 @@ const KeywordFilterPlain = withRouter(props => {
       name="keyword"
       queryParamNames={[URL_PARAM]}
       label="Keyword"
+      getAriaLabel={getAriaLabel}
       onSubmit={values => {
         handleSubmit(values, history);
       }}
