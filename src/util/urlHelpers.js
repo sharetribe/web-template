@@ -89,19 +89,16 @@ export const parseFloatNum = str => {
   if (!trimmed) {
     return null;
   }
+  // Don't allow: '9asdf' -> Number.parseFloat('9asdf') === 9
+  const isFloatShaped = /^-?\d+\.?\d*$/.test(trimmed);
   const num = parseFloat(trimmed);
   const isNumber = !isNaN(num);
-  const parts = trimmed.split('.');
 
-  if (isNumber && parts.length === 2) {
-    const [integerPart, decimalPart] = parts;
-    const isFullyParsedNum = parseInt(integerPart, 10).toString() === integerPart;
-    const isDigitsOnlyDecimal = /^\d+$/.test(decimalPart);
-    if (isFullyParsedNum && isDigitsOnlyDecimal) {
-      return num;
-    }
-  } else if (isNumber && parts.length === 1) {
-    const isFullyParsedNum = parseInt(parts[0], 10).toString() === parts[0];
+  if (isFloatShaped && isNumber) {
+    const [integerPart] = trimmed.split('.');
+    const wholeNumber = parseInt(integerPart, 10);
+    // Edge cases: Number.parseInt('-0').toString() === '0' and Number.parseInt('0009') === 9
+    const isFullyParsedNum = wholeNumber === -0 || wholeNumber.toString() === integerPart;
     if (isFullyParsedNum) {
       return num;
     }
