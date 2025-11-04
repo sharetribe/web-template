@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] Add line break to TopbarMobileMenu.signupOrLogin translation
+  [#690](https://github.com/sharetribe/web-template/pull/690)
+
 ## [v10.0.0] 2025-11-04
 
 This major release introduces Redux Toolkit for state management. This is a big change and you
