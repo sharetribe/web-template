@@ -1,7 +1,7 @@
 import { parse } from '../../util/urlHelpers';
 import { verify } from '../../ducks/emailVerification.duck';
 
-// ================ Thunks ================ //
+// ================ Load data ================ //
 
 export const loadData = (params, search) => {
   const urlParams = parse(search);

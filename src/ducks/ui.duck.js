@@ -1,18 +1,17 @@
-// ================ Action types ================ //
+import { createSlice } from '@reduxjs/toolkit';
 
-export const DISABLE_SCROLLING = 'app/ui/DISABLE_SCROLLING';
-
-// ================ Reducer ================ //
+// ================ Slice ================ //
 
 const initialState = {
   disableScrollRequests: [],
 };
 
-export default function reducer(state = initialState, action = {}) {
-  const { type, payload } = action;
-  switch (type) {
-    case DISABLE_SCROLLING: {
-      const { componentId, disableScrolling } = payload;
+const uiSlice = createSlice({
+  name: 'ui',
+  initialState,
+  reducers: {
+    disableScrolling: (state, action) => {
+      const { componentId, disableScrolling } = action.payload;
       const disableScrollRequests = state.disableScrollRequests;
       const componentIdExists = disableScrollRequests.find(c => c.componentId === componentId);
 
@@ -20,30 +19,23 @@ export default function reducer(state = initialState, action = {}) {
         const disableScrollRequestArray = disableScrollRequests.map(c => {
           return c.componentId === componentId ? { ...c, disableScrolling } : c;
         });
-        return { ...state, disableScrollRequests: [...disableScrollRequestArray] };
+        state.disableScrollRequests = [...disableScrollRequestArray];
+      } else {
+        state.disableScrollRequests = [...disableScrollRequests, { componentId, disableScrolling }];
       }
-
-      const disableScrollRequestArray = [
-        ...disableScrollRequests,
-        { componentId, disableScrolling },
-      ];
-      return {
-        ...state,
-        disableScrollRequests: disableScrollRequestArray,
-      };
-    }
-
-    default:
-      return state;
-  }
-}
-
-// ================ Action creators ================ //
-
-export const manageDisableScrolling = (componentId, disableScrolling) => ({
-  type: DISABLE_SCROLLING,
-  payload: { componentId, disableScrolling },
+    },
+  },
 });
+
+// ================ Exports ================ //
+
+export const { disableScrolling } = uiSlice.actions;
+export default uiSlice.reducer;
+
+// ================ Helper function ================ //
+
+export const manageDisableScrolling = (componentId, shouldDisableScrolling) =>
+  disableScrolling({ componentId, disableScrolling: shouldDisableScrolling });
 
 // ================ Selectors ================ //
 

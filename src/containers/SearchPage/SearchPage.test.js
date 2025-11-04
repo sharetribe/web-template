@@ -12,7 +12,7 @@ import {
   dispatchedActions,
 } from '../../util/testHelpers';
 
-import { loadData, searchListingsRequest, searchListingsSuccess } from './SearchPage.duck';
+import { loadData } from './SearchPage.duck';
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 
 const { screen, userEvent, waitFor } = testingLibrary;
@@ -667,11 +667,19 @@ describe('Duck', () => {
     // loadData() function is called. If you make customizations to the loadData() logic,
     // update this test accordingly!
     return loadData(null, null, config)(dispatch, getState, sdk).then(data => {
-      expect(dispatchedActions(dispatch)).toEqual([
-        searchListingsRequest(searchParams),
-        addMarketplaceEntities(fakeResponse([l1, l2]), sanitizeConfig),
-        searchListingsSuccess(fakeResponse([l1, l2])),
-      ]);
+      const actions = dispatchedActions(dispatch);
+      expect(actions).toHaveLength(3);
+
+      // First action should be searchListings.pending
+      expect(actions[0].type).toBe('SearchPage/searchListings/pending');
+      expect(actions[0].meta.arg.searchParams).toEqual(searchParams);
+
+      // Second action should be addMarketplaceEntities
+      expect(actions[1]).toEqual(addMarketplaceEntities(fakeResponse([l1, l2]), sanitizeConfig));
+
+      // Third action should be searchListings.fulfilled
+      expect(actions[2].type).toBe('SearchPage/searchListings/fulfilled');
+      expect(actions[2].payload).toEqual(fakeResponse([l1, l2]));
     });
   });
 

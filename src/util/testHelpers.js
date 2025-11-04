@@ -727,7 +727,7 @@ const testMessages = mapValues(messages, (val, key) => key);
 // Provide all the context for components that connect to the Redux
 // store, i18n, router, etc.
 export const TestProvider = ({ children, initialState, config, routeConfiguration, messages }) => {
-  const store = configureStore(initialState || {});
+  const store = configureStore({ initialState: initialState || {} });
   const hostedConfig = config || getHostedConfiguration();
 
   // Allow passing customized messages from a single test suite in addition to the

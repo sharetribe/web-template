@@ -1,3 +1,4 @@
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { util as sdkUtil } from '../util/sdkLoader';
 import { denormalisedResponseEntities, ensureOwnListing } from '../util/data';
 import * as log from '../util/log';
@@ -10,41 +11,9 @@ import {
 } from '../transactions/transaction';
 
 import { authInfo } from './auth.duck';
-import { stripeAccountCreateSuccess } from './stripeConnectAccount.duck';
+import { updateStripeConnectAccount } from './stripeConnectAccount.duck';
 
-// ================ Action types ================ //
-
-export const CURRENT_USER_SHOW_REQUEST = 'app/user/CURRENT_USER_SHOW_REQUEST';
-export const CURRENT_USER_SHOW_SUCCESS = 'app/user/CURRENT_USER_SHOW_SUCCESS';
-export const CURRENT_USER_SHOW_ERROR = 'app/user/CURRENT_USER_SHOW_ERROR';
-
-export const CLEAR_CURRENT_USER = 'app/user/CLEAR_CURRENT_USER';
-
-export const FETCH_CURRENT_USER_HAS_LISTINGS_REQUEST =
-  'app/user/FETCH_CURRENT_USER_HAS_LISTINGS_REQUEST';
-export const FETCH_CURRENT_USER_HAS_LISTINGS_SUCCESS =
-  'app/user/FETCH_CURRENT_USER_HAS_LISTINGS_SUCCESS';
-export const FETCH_CURRENT_USER_HAS_LISTINGS_ERROR =
-  'app/user/FETCH_CURRENT_USER_HAS_LISTINGS_ERROR';
-
-export const FETCH_CURRENT_USER_NOTIFICATIONS_REQUEST =
-  'app/user/FETCH_CURRENT_USER_NOTIFICATIONS_REQUEST';
-export const FETCH_CURRENT_USER_NOTIFICATIONS_SUCCESS =
-  'app/user/FETCH_CURRENT_USER_NOTIFICATIONS_SUCCESS';
-export const FETCH_CURRENT_USER_NOTIFICATIONS_ERROR =
-  'app/user/FETCH_CURRENT_USER_NOTIFICATIONS_ERROR';
-
-export const FETCH_CURRENT_USER_HAS_ORDERS_REQUEST =
-  'app/user/FETCH_CURRENT_USER_HAS_ORDERS_REQUEST';
-export const FETCH_CURRENT_USER_HAS_ORDERS_SUCCESS =
-  'app/user/FETCH_CURRENT_USER_HAS_ORDERS_SUCCESS';
-export const FETCH_CURRENT_USER_HAS_ORDERS_ERROR = 'app/user/FETCH_CURRENT_USER_HAS_ORDERS_ERROR';
-
-export const SEND_VERIFICATION_EMAIL_REQUEST = 'app/user/SEND_VERIFICATION_EMAIL_REQUEST';
-export const SEND_VERIFICATION_EMAIL_SUCCESS = 'app/user/SEND_VERIFICATION_EMAIL_SUCCESS';
-export const SEND_VERIFICATION_EMAIL_ERROR = 'app/user/SEND_VERIFICATION_EMAIL_ERROR';
-
-// ================ Reducer ================ //
+// ================ Helper Functions ================ //
 
 const mergeCurrentUser = (oldCurrentUser, newCurrentUser) => {
   const { id: oId, type: oType, attributes: oAttr, ...oldRelationships } = oldCurrentUser || {};
@@ -60,204 +29,18 @@ const mergeCurrentUser = (oldCurrentUser, newCurrentUser) => {
     : { id, type, attributes, ...oldRelationships, ...relationships };
 };
 
-const initialState = {
-  currentUser: null,
-  currentUserShowTimestamp: 0,
-  currentUserShowError: null,
-  currentUserHasListings: false,
-  currentUserHasListingsError: null,
-  currentUserSaleNotificationCount: 0,
-  currentUserOrderNotificationCount: 0,
-  currentUserNotificationCountError: null,
-  currentUserHasOrders: null, // This is not fetched unless unverified emails exist
-  currentUserHasOrdersError: null,
-  sendVerificationEmailInProgress: false,
-  sendVerificationEmailError: null,
-};
+// ================ Async Thunks ================ //
 
-export default function reducer(state = initialState, action = {}) {
-  const { type, payload } = action;
-  switch (type) {
-    case CURRENT_USER_SHOW_REQUEST:
-      return { ...state, currentUserShowError: null };
-    case CURRENT_USER_SHOW_SUCCESS:
-      return {
-        ...state,
-        currentUser: mergeCurrentUser(state.currentUser, payload),
-        currentUserShowTimestamp: payload ? new Date().getTime() : 0,
-      };
-    case CURRENT_USER_SHOW_ERROR:
-      // eslint-disable-next-line no-console
-      console.error(payload);
-      return { ...state, currentUserShowError: payload };
+//////////////////////////////////////////////////////////////////////
+// Fetch ownListings to check if currentUser has published listings //
+//////////////////////////////////////////////////////////////////////
 
-    case CLEAR_CURRENT_USER:
-      return {
-        ...state,
-        currentUser: null,
-        currentUserShowError: null,
-        currentUserHasListings: false,
-        currentUserHasListingsError: null,
-        currentUserSaleNotificationCount: 0,
-        currentUserOrderNotificationCount: 0,
-        currentUserNotificationCountError: null,
-      };
-
-    case FETCH_CURRENT_USER_HAS_LISTINGS_REQUEST:
-      return { ...state, currentUserHasListingsError: null };
-    case FETCH_CURRENT_USER_HAS_LISTINGS_SUCCESS:
-      return { ...state, currentUserHasListings: payload.hasListings };
-    case FETCH_CURRENT_USER_HAS_LISTINGS_ERROR:
-      console.error(payload); // eslint-disable-line
-      return { ...state, currentUserHasListingsError: payload };
-
-    case FETCH_CURRENT_USER_NOTIFICATIONS_REQUEST:
-      return { ...state, currentUserNotificationCountError: null };
-    case FETCH_CURRENT_USER_NOTIFICATIONS_SUCCESS:
-      return {
-        ...state,
-        currentUserSaleNotificationCount: payload.saleNotificationsCount,
-        currentUserOrderNotificationCount: payload.orderNotificationsCount,
-      };
-    case FETCH_CURRENT_USER_NOTIFICATIONS_ERROR:
-      console.error(payload); // eslint-disable-line
-      return { ...state, currentUserNotificationCountError: payload };
-
-    case FETCH_CURRENT_USER_HAS_ORDERS_REQUEST:
-      return { ...state, currentUserHasOrdersError: null };
-    case FETCH_CURRENT_USER_HAS_ORDERS_SUCCESS:
-      return { ...state, currentUserHasOrders: payload.hasOrders };
-    case FETCH_CURRENT_USER_HAS_ORDERS_ERROR:
-      console.error(payload); // eslint-disable-line
-      return { ...state, currentUserHasOrdersError: payload };
-
-    case SEND_VERIFICATION_EMAIL_REQUEST:
-      return {
-        ...state,
-        sendVerificationEmailInProgress: true,
-        sendVerificationEmailError: null,
-      };
-    case SEND_VERIFICATION_EMAIL_SUCCESS:
-      return {
-        ...state,
-        sendVerificationEmailInProgress: false,
-      };
-    case SEND_VERIFICATION_EMAIL_ERROR:
-      return {
-        ...state,
-        sendVerificationEmailInProgress: false,
-        sendVerificationEmailError: payload,
-      };
-
-    default:
-      return state;
-  }
-}
-
-// ================ Selectors ================ //
-
-export const hasCurrentUserErrors = state => {
-  const { user } = state;
-  return (
-    user.currentUserShowError ||
-    user.currentUserHasListingsError ||
-    user.currentUserNotificationCountError ||
-    user.currentUserHasOrdersError
-  );
-};
-
-export const verificationSendingInProgress = state => {
-  return state.user.sendVerificationEmailInProgress;
-};
-
-// ================ Action creators ================ //
-
-export const currentUserShowRequest = () => ({ type: CURRENT_USER_SHOW_REQUEST });
-
-export const currentUserShowSuccess = user => ({
-  type: CURRENT_USER_SHOW_SUCCESS,
-  payload: user,
-});
-
-export const currentUserShowError = e => ({
-  type: CURRENT_USER_SHOW_ERROR,
-  payload: e,
-  error: true,
-});
-
-export const clearCurrentUser = () => ({ type: CLEAR_CURRENT_USER });
-
-const fetchCurrentUserHasListingsRequest = () => ({
-  type: FETCH_CURRENT_USER_HAS_LISTINGS_REQUEST,
-});
-
-export const fetchCurrentUserHasListingsSuccess = hasListings => ({
-  type: FETCH_CURRENT_USER_HAS_LISTINGS_SUCCESS,
-  payload: { hasListings },
-});
-
-const fetchCurrentUserHasListingsError = e => ({
-  type: FETCH_CURRENT_USER_HAS_LISTINGS_ERROR,
-  error: true,
-  payload: e,
-});
-
-export const fetchCurrentUserNotificationsRequest = () => ({
-  type: FETCH_CURRENT_USER_NOTIFICATIONS_REQUEST,
-});
-
-export const fetchCurrentUserNotificationsSuccess = (
-  saleNotificationsCount,
-  orderNotificationsCount
-) => ({
-  type: FETCH_CURRENT_USER_NOTIFICATIONS_SUCCESS,
-  payload: { saleNotificationsCount, orderNotificationsCount },
-});
-
-const fetchCurrentUserNotificationsError = e => ({
-  type: FETCH_CURRENT_USER_NOTIFICATIONS_ERROR,
-  error: true,
-  payload: e,
-});
-
-const fetchCurrentUserHasOrdersRequest = () => ({
-  type: FETCH_CURRENT_USER_HAS_ORDERS_REQUEST,
-});
-
-export const fetchCurrentUserHasOrdersSuccess = hasOrders => ({
-  type: FETCH_CURRENT_USER_HAS_ORDERS_SUCCESS,
-  payload: { hasOrders },
-});
-
-const fetchCurrentUserHasOrdersError = e => ({
-  type: FETCH_CURRENT_USER_HAS_ORDERS_ERROR,
-  error: true,
-  payload: e,
-});
-
-export const sendVerificationEmailRequest = () => ({
-  type: SEND_VERIFICATION_EMAIL_REQUEST,
-});
-
-export const sendVerificationEmailSuccess = () => ({
-  type: SEND_VERIFICATION_EMAIL_SUCCESS,
-});
-
-export const sendVerificationEmailError = e => ({
-  type: SEND_VERIFICATION_EMAIL_ERROR,
-  error: true,
-  payload: e,
-});
-
-// ================ Thunks ================ //
-
-export const fetchCurrentUserHasListings = () => (dispatch, getState, sdk) => {
-  dispatch(fetchCurrentUserHasListingsRequest());
+const fetchCurrentUserHasListingsPayloadCreator = (_, thunkAPI) => {
+  const { getState, extra: sdk, rejectWithValue } = thunkAPI;
   const { currentUser } = getState().user;
 
   if (!currentUser) {
-    dispatch(fetchCurrentUserHasListingsSuccess(false));
-    return Promise.resolve(null);
+    return Promise.resolve({ hasListings: false });
   }
 
   const params = {
@@ -276,17 +59,28 @@ export const fetchCurrentUserHasListings = () => (dispatch, getState, sdk) => {
       const hasPublishedListings =
         hasListings &&
         ensureOwnListing(response.data.data[0]).attributes.state !== LISTING_STATE_DRAFT;
-      dispatch(fetchCurrentUserHasListingsSuccess(!!hasPublishedListings));
+      return { hasListings: !!hasPublishedListings };
     })
-    .catch(e => dispatch(fetchCurrentUserHasListingsError(storableError(e))));
+    .catch(e => rejectWithValue(storableError(e)));
 };
 
-export const fetchCurrentUserHasOrders = () => (dispatch, getState, sdk) => {
-  dispatch(fetchCurrentUserHasOrdersRequest());
+export const fetchCurrentUserHasListingsThunk = createAsyncThunk(
+  'user/fetchCurrentUserHasListings',
+  fetchCurrentUserHasListingsPayloadCreator
+);
 
+// Backward compatible wrapper for the thunk
+export const fetchCurrentUserHasListings = () => (dispatch, getState, sdk) => {
+  return dispatch(fetchCurrentUserHasListingsThunk()).unwrap();
+};
+
+///////////////////////////////////////////////////////////
+// Fetch transactions to check if currentUser has orders //
+///////////////////////////////////////////////////////////
+
+const fetchCurrentUserHasOrdersPayloadCreator = (_, { getState, extra: sdk, rejectWithValue }) => {
   if (!getState().user.currentUser) {
-    dispatch(fetchCurrentUserHasOrdersSuccess(false));
-    return Promise.resolve(null);
+    return Promise.resolve({ hasOrders: false });
   }
 
   const params = {
@@ -299,15 +93,29 @@ export const fetchCurrentUserHasOrders = () => (dispatch, getState, sdk) => {
     .query(params)
     .then(response => {
       const hasOrders = response.data.data && response.data.data.length > 0;
-      dispatch(fetchCurrentUserHasOrdersSuccess(!!hasOrders));
+      return { hasOrders: !!hasOrders };
     })
-    .catch(e => dispatch(fetchCurrentUserHasOrdersError(storableError(e))));
+    .catch(e => rejectWithValue(storableError(e)));
 };
+
+export const fetchCurrentUserHasOrdersThunk = createAsyncThunk(
+  'user/fetchCurrentUserHasOrders',
+  fetchCurrentUserHasOrdersPayloadCreator
+);
+
+// Backward compatible wrapper for the thunk
+export const fetchCurrentUserHasOrders = () => (dispatch, getState, sdk) => {
+  return dispatch(fetchCurrentUserHasOrdersThunk()).unwrap();
+};
+
+/////////////////////////////////////////////////////////////////////////////////////
+// Fetch transactions in specific states to check if currentUser has notifications //
+/////////////////////////////////////////////////////////////////////////////////////
 
 // Notificaiton page size is max (100 items on page)
 const NOTIFICATION_PAGE_SIZE = 100;
 
-export const fetchCurrentUserNotifications = () => (dispatch, getState, sdk) => {
+const fetchCurrentUserNotificationsPayloadCreator = (_, { extra: sdk, rejectWithValue }) => {
   const statesNeedingProviderAttention = getStatesNeedingProviderAttention() || [];
   const statesNeedingCustomerAttention = getStatesNeedingCustomerAttention() || [];
 
@@ -324,29 +132,30 @@ export const fetchCurrentUserNotifications = () => (dispatch, getState, sdk) => 
     perPage: NOTIFICATION_PAGE_SIZE,
   };
 
-  dispatch(fetchCurrentUserNotificationsRequest());
-  Promise.all([sdk.transactions.query(paramsForSales), sdk.transactions.query(paramsForOrders)])
+  return Promise.all([
+    sdk.transactions.query(paramsForSales),
+    sdk.transactions.query(paramsForOrders),
+  ])
     .then(([sales, orders]) => {
       const saleNotificationsCount = sales.data.data.length;
       const orderNotificationsCount = orders.data.data.length;
-      dispatch(
-        fetchCurrentUserNotificationsSuccess(saleNotificationsCount, orderNotificationsCount)
-      );
+      return { saleNotificationsCount, orderNotificationsCount };
     })
-    .catch(e => dispatch(fetchCurrentUserNotificationsError(storableError(e))));
+    .catch(e => rejectWithValue(storableError(e)));
 };
 
-/**
- * Fetch currentUser API entity.
- *
- * @param {Object} options
- * @param {Object} [options.callParams]           Optional parameters for the currentUser.show().
- * @param {boolean} [options.updateHasListings]   Make extra call for fetchCurrentUserHasListings()?
- * @param {boolean} [options.updateNotifications] Make extra call for fetchCurrentUserNotifications()?
- * @param {boolean} [options.afterLogin]          Fetch is no-op for unauthenticated users except after login() call
- * @param {boolean} [options.enforce]             Enforce the call even if the currentUser entity is freshly fetched.
- */
-export const fetchCurrentUser = options => (dispatch, getState, sdk) => {
+export const fetchCurrentUserNotificationsThunk = createAsyncThunk(
+  'user/fetchCurrentUserNotifications',
+  fetchCurrentUserNotificationsPayloadCreator
+);
+
+// Backward compatible wrapper for the thunk
+export const fetchCurrentUserNotifications = () => (dispatch, getState, sdk) => {
+  return dispatch(fetchCurrentUserNotificationsThunk()).unwrap();
+};
+
+const fetchCurrentUserPayloadCreator = (options, thunkAPI) => {
+  const { getState, dispatch, extra: sdk, rejectWithValue } = thunkAPI;
   const state = getState();
   const { currentUserHasListings, currentUserShowTimestamp } = state.user || {};
   const { isAuthenticated } = state.auth;
@@ -361,15 +170,12 @@ export const fetchCurrentUser = options => (dispatch, getState, sdk) => {
   // Double fetch might happen when e.g. profile page is making a full page load
   const aSecondAgo = new Date().getTime() - 1000;
   if (!enforce && currentUserShowTimestamp > aSecondAgo) {
-    return Promise.resolve({});
+    return Promise.resolve(state.user.currentUser);
   }
-  // Set in-progress, no errors
-  dispatch(currentUserShowRequest());
 
   if (!isAuthenticated && !afterLogin) {
     // Make sure current user is null
-    dispatch(currentUserShowSuccess(null));
-    return Promise.resolve({});
+    return Promise.resolve(null);
   }
 
   const parameters = callParams || {
@@ -403,12 +209,11 @@ export const fetchCurrentUser = options => (dispatch, getState, sdk) => {
 
       // Save stripeAccount to store.stripe.stripeAccount if it exists
       if (currentUser.stripeAccount) {
-        dispatch(stripeAccountCreateSuccess(currentUser.stripeAccount));
+        dispatch(updateStripeConnectAccount(currentUser.stripeAccount));
       }
 
       // set current user id to the logger
       log.setUserId(currentUser.id.uuid);
-      dispatch(currentUserShowSuccess(currentUser));
       return currentUser;
     })
     .then(currentUser => {
@@ -430,22 +235,172 @@ export const fetchCurrentUser = options => (dispatch, getState, sdk) => {
 
       // Make sure auth info is up to date
       dispatch(authInfo());
+      return currentUser;
     })
     .catch(e => {
       // Make sure auth info is up to date
       dispatch(authInfo());
       log.error(e, 'fetch-current-user-failed');
-      dispatch(currentUserShowError(storableError(e)));
+      return rejectWithValue(storableError(e));
     });
 };
 
-export const sendVerificationEmail = () => (dispatch, getState, sdk) => {
-  if (verificationSendingInProgress(getState())) {
-    return Promise.reject(new Error('Verification email sending already in progress'));
-  }
-  dispatch(sendVerificationEmailRequest());
+export const fetchCurrentUserThunk = createAsyncThunk(
+  'user/fetchCurrentUser',
+  fetchCurrentUserPayloadCreator
+);
+// Backward compatible wrapper for the thunk
+/**
+ * Fetch currentUser API entity.
+ *
+ * @param {Object} options
+ * @param {Object} [options.callParams]           Optional parameters for the currentUser.show().
+ * @param {boolean} [options.updateHasListings]   Make extra call for fetchCurrentUserHasListings()?
+ * @param {boolean} [options.updateNotifications] Make extra call for fetchCurrentUserNotifications()?
+ * @param {boolean} [options.afterLogin]          Fetch is no-op for unauthenticated users except after login() call
+ * @param {boolean} [options.enforce]             Enforce the call even if the currentUser entity is freshly fetched.
+ */
+export const fetchCurrentUser = options => (dispatch, getState, sdk) => {
+  return dispatch(fetchCurrentUserThunk(options)).unwrap();
+};
+
+/////////////////////////////////////////////
+// Send verification email to currentUser //
+/////////////////////////////////////////////
+
+const sendVerificationEmailPayloadCreator = (_, { extra: sdk, rejectWithValue }) => {
   return sdk.currentUser
     .sendVerificationEmail()
-    .then(() => dispatch(sendVerificationEmailSuccess()))
-    .catch(e => dispatch(sendVerificationEmailError(storableError(e))));
+    .then(() => ({}))
+    .catch(e => rejectWithValue(storableError(e)));
+};
+export const sendVerificationEmailThunk = createAsyncThunk(
+  'user/sendVerificationEmail',
+  sendVerificationEmailPayloadCreator,
+  {
+    condition: (_, { getState }) => {
+      return !getState()?.user?.sendVerificationEmailInProgress;
+    },
+  }
+);
+
+// Backward compatible wrapper for the thunk
+export const sendVerificationEmail = () => (dispatch, getState, sdk) => {
+  return dispatch(sendVerificationEmailThunk()).unwrap();
+};
+
+// ================ Slice ================ //
+
+const userSlice = createSlice({
+  name: 'user',
+  initialState: {
+    currentUser: null,
+    currentUserShowTimestamp: 0,
+    currentUserShowError: null,
+    currentUserHasListings: false,
+    currentUserHasListingsError: null,
+    currentUserSaleNotificationCount: 0,
+    currentUserOrderNotificationCount: 0,
+    currentUserNotificationCountError: null,
+    currentUserHasOrders: null, // This is not fetched unless unverified emails exist
+    currentUserHasOrdersError: null,
+    sendVerificationEmailInProgress: false,
+    sendVerificationEmailError: null,
+  },
+  reducers: {
+    clearCurrentUser: state => {
+      state.currentUser = null;
+      state.currentUserShowError = null;
+      state.currentUserHasListings = false;
+      state.currentUserHasListingsError = null;
+      state.currentUserSaleNotificationCount = 0;
+      state.currentUserOrderNotificationCount = 0;
+
+      state.currentUserNotificationCountError = null;
+    },
+    setCurrentUser: (state, action) => {
+      state.currentUser = mergeCurrentUser(state.currentUser, action.payload);
+    },
+    setCurrentUserHasOrders: state => {
+      state.currentUserHasOrders = true;
+    },
+  },
+  extraReducers: builder => {
+    builder
+      // fetchCurrentUser
+      .addCase(fetchCurrentUserThunk.pending, state => {
+        state.currentUserShowError = null;
+      })
+      .addCase(fetchCurrentUserThunk.fulfilled, (state, action) => {
+        state.currentUser = mergeCurrentUser(state.currentUser, action.payload);
+        state.currentUserShowTimestamp = action.payload ? new Date().getTime() : 0;
+      })
+      .addCase(fetchCurrentUserThunk.rejected, (state, action) => {
+        // eslint-disable-next-line no-console
+        console.error(action.payload);
+        state.currentUserShowError = action.payload;
+      })
+      // fetchCurrentUserHasListings
+      .addCase(fetchCurrentUserHasListingsThunk.pending, state => {
+        state.currentUserHasListingsError = null;
+      })
+      .addCase(fetchCurrentUserHasListingsThunk.fulfilled, (state, action) => {
+        state.currentUserHasListings = action.payload.hasListings;
+      })
+      .addCase(fetchCurrentUserHasListingsThunk.rejected, (state, action) => {
+        console.error(action.payload); // eslint-disable-line
+        state.currentUserHasListingsError = action.payload;
+      })
+      // fetchCurrentUserNotifications
+      .addCase(fetchCurrentUserNotificationsThunk.pending, state => {
+        state.currentUserNotificationCountError = null;
+      })
+      .addCase(fetchCurrentUserNotificationsThunk.fulfilled, (state, action) => {
+        state.currentUserSaleNotificationCount = action.payload.saleNotificationsCount;
+        state.currentUserOrderNotificationCount = action.payload.orderNotificationsCount;
+      })
+      .addCase(fetchCurrentUserNotificationsThunk.rejected, (state, action) => {
+        console.error(action.payload); // eslint-disable-line
+        state.currentUserNotificationCountError = action.payload;
+      })
+      // fetchCurrentUserHasOrders
+      .addCase(fetchCurrentUserHasOrdersThunk.pending, state => {
+        state.currentUserHasOrdersError = null;
+      })
+      .addCase(fetchCurrentUserHasOrdersThunk.fulfilled, (state, action) => {
+        state.currentUserHasOrders = action.payload.hasOrders;
+      })
+      .addCase(fetchCurrentUserHasOrdersThunk.rejected, (state, action) => {
+        console.error(action.payload); // eslint-disable-line
+        state.currentUserHasOrdersError = action.payload;
+      })
+      // sendVerificationEmail
+      .addCase(sendVerificationEmailThunk.pending, state => {
+        state.sendVerificationEmailInProgress = true;
+        state.sendVerificationEmailError = null;
+      })
+      .addCase(sendVerificationEmailThunk.fulfilled, state => {
+        state.sendVerificationEmailInProgress = false;
+      })
+      .addCase(sendVerificationEmailThunk.rejected, (state, action) => {
+        state.sendVerificationEmailInProgress = false;
+        state.sendVerificationEmailError = action.payload;
+      });
+  },
+});
+
+export default userSlice.reducer;
+
+export const { clearCurrentUser, setCurrentUser, setCurrentUserHasOrders } = userSlice.actions;
+
+// ================ Selectors ================ //
+
+export const hasCurrentUserErrors = state => {
+  const { user } = state;
+  return (
+    user.currentUserShowError ||
+    user.currentUserHasListingsError ||
+    user.currentUserNotificationCountError ||
+    user.currentUserHasOrdersError
+  );
 };

@@ -60,7 +60,7 @@ const compareGroups = (a, b) => {
 };
 // Returns links in order where primary links are returned first
 const sortCustomLinks = customLinks => {
-  const links = Array.isArray(customLinks) ? customLinks : [];
+  const links = Array.isArray(customLinks) ? [...customLinks] : [];
   return links.sort(compareGroups);
 };
 

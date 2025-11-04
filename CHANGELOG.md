@@ -14,6 +14,13 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [change] Start using Redux Toolkit for state management.
+
+  - All the \*.duck.js files have been converted to Redux Toolkit slices.
+  - The signature of 'configureStore' function has been changed.
+
+  [#682](https://github.com/sharetribe/web-template/pull/682)
+
 - [fix] Added missing getAriaLabel to various components used in Styleguide
   [#687](https://github.com/sharetribe/web-template/pull/687)
 - [add] Add noindex metadata to closed listings.

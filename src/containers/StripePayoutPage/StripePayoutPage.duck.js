@@ -1,3 +1,4 @@
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import pick from 'lodash/pick';
 import {
   createStripeAccount,
@@ -6,14 +7,32 @@ import {
 } from '../../ducks/stripeConnectAccount.duck';
 import { fetchCurrentUser } from '../../ducks/user.duck';
 
-// ================ Action types ================ //
+// ================ Async thunks ================ //
 
-export const SET_INITIAL_VALUES = 'app/StripePayoutPage/SET_INITIAL_VALUES';
-export const SAVE_PAYOUT_DETAILS_REQUEST = 'app/StripePayoutPage/SAVE_PAYOUT_DETAILS_REQUEST';
-export const SAVE_PAYOUT_DETAILS_SUCCESS = 'app/StripePayoutPage/SAVE_PAYOUT_DETAILS_SUCCESS';
-export const SAVE_PAYOUT_DETAILS_ERROR = 'app/StripePayoutPage/SAVE_PAYOUT_DETAILS_ERROR';
+const savePayoutDetailsPayloadCreator = (
+  { values, isUpdateCall },
+  { dispatch, extra: sdk, rejectWithValue }
+) => {
+  const upsertThunk = isUpdateCall ? updateStripeAccount : createStripeAccount;
 
-// ================ Reducer ================ //
+  return dispatch(upsertThunk(values, { expand: true }))
+    .then(response => {
+      return response;
+    })
+    .catch(() => {
+      return rejectWithValue('Failed to save payout details');
+    });
+};
+export const savePayoutDetailsThunk = createAsyncThunk(
+  'StripePayoutPage/savePayoutDetails',
+  savePayoutDetailsPayloadCreator
+);
+// Backward compatible wrapper function
+export const savePayoutDetails = (values, isUpdateCall) => dispatch => {
+  return dispatch(savePayoutDetailsThunk({ values, isUpdateCall })).unwrap();
+};
+
+// ================ Slice ================ //
 
 const initialState = {
   payoutDetailsSaveInProgress: false,
@@ -21,54 +40,36 @@ const initialState = {
   fromReturnURL: false,
 };
 
-export default function reducer(state = initialState, action = {}) {
-  const { type, payload } = action;
-  switch (type) {
-    case SET_INITIAL_VALUES:
-      return { ...initialState, ...payload };
-
-    case SAVE_PAYOUT_DETAILS_REQUEST:
-      return { ...state, payoutDetailsSaveInProgress: true };
-    case SAVE_PAYOUT_DETAILS_ERROR:
-      return { ...state, payoutDetailsSaveInProgress: false };
-    case SAVE_PAYOUT_DETAILS_SUCCESS:
-      return { ...state, payoutDetailsSaveInProgress: false, payoutDetailsSaved: true };
-
-    default:
-      return state;
-  }
-}
-
-// ================ Action creators ================ //
-
-export const setInitialValues = initialValues => ({
-  type: SET_INITIAL_VALUES,
-  payload: pick(initialValues, Object.keys(initialState)),
+const stripePayoutPageSlice = createSlice({
+  name: 'StripePayoutPage',
+  initialState,
+  reducers: {
+    setInitialValues: (state, action) => {
+      return { ...initialState, ...pick(action.payload, Object.keys(initialState)) };
+    },
+  },
+  extraReducers: builder => {
+    builder
+      // Save Payout Details cases
+      .addCase(savePayoutDetailsThunk.pending, state => {
+        state.payoutDetailsSaveInProgress = true;
+      })
+      .addCase(savePayoutDetailsThunk.fulfilled, state => {
+        state.payoutDetailsSaveInProgress = false;
+        state.payoutDetailsSaved = true;
+      })
+      .addCase(savePayoutDetailsThunk.rejected, state => {
+        state.payoutDetailsSaveInProgress = false;
+      });
+  },
 });
 
-export const savePayoutDetailsRequest = () => ({
-  type: SAVE_PAYOUT_DETAILS_REQUEST,
-});
-export const savePayoutDetailsError = () => ({
-  type: SAVE_PAYOUT_DETAILS_ERROR,
-});
-export const savePayoutDetailsSuccess = () => ({
-  type: SAVE_PAYOUT_DETAILS_SUCCESS,
-});
+// Export the action creators
+export const { setInitialValues } = stripePayoutPageSlice.actions;
 
-// ================ Thunks ================ //
+export default stripePayoutPageSlice.reducer;
 
-export const savePayoutDetails = (values, isUpdateCall) => (dispatch, getState, sdk) => {
-  const upsertThunk = isUpdateCall ? updateStripeAccount : createStripeAccount;
-  dispatch(savePayoutDetailsRequest());
-
-  return dispatch(upsertThunk(values, { expand: true }))
-    .then(response => {
-      dispatch(savePayoutDetailsSuccess());
-      return response;
-    })
-    .catch(() => dispatch(savePayoutDetailsError()));
-};
+// ================ Load Data ================ //
 
 export const loadData = () => (dispatch, getState, sdk) => {
   // Clear state so that previously loaded data is not visible
