@@ -242,14 +242,49 @@
   background-color: var(--colorSuccess);
 }
 
+.successDarkColorBackground {
+  composes: color;
+  background-color: var(--colorSuccessDark);
+}
+
+.successLightColorBackground {
+  composes: color;
+  background-color: var(--colorSuccessLight);
+}
+
+.successSubtleColorBackground {
+  composes: color;
+  background-color: var(--colorSuccessSubtle);
+}
+
 .failColorBackground {
   composes: color;
   background-color: var(--colorFail);
 }
 
+.failDarkColorBackground {
+  composes: color;
+  background-color: var(--colorFailDark);
+}
+
+.failSubtleColorBackground {
+  composes: color;
+  background-color: var(--colorFailSubtle);
+}
+
 .attentionColorBackground {
   composes: color;
   background-color: var(--colorAttention);
+}
+
+.attentionDarkColorBackground {
+  composes: color;
+  background-color: var(--colorAttentionDark);
+}
+
+.attentionSubtleColorBackground {
+  composes: color;
+  background-color: var(--colorAttentionSubtle);
 }
 
 .colorBlack {

@@ -108,6 +108,7 @@ const MarketplaceColors = () => {
           />
         </div>
         <h4>Traffic light colors</h4>
+        <h4>Green</h4>
         <div className={css.colorsGroup}>
           <ColorCard
             mpColor={css.successColorBackground}
@@ -115,14 +116,55 @@ const MarketplaceColors = () => {
             usage="e.g. color: var(--colorSuccess);"
           />
           <ColorCard
+            mpColor={css.successDarkColorBackground}
+            name="--colorSuccessDark"
+            usage="color: var(--colorSuccessDark);"
+          />
+          <ColorCard
+            mpColor={css.successLightColorBackground}
+            name="--colorSuccessLight"
+            usage="color: var(--colorSuccessLight);"
+          />
+          <ColorCard
+            mpColor={css.successSubtleColorBackground}
+            name="--colorSuccessSubtle"
+            usage="color: var(--colorSuccessSubtle);"
+          />
+        </div>
+        <h4>Red</h4>
+        <div className={css.colorsGroup}>
+          <ColorCard
             mpColor={css.failColorBackground}
             name="--colorFail"
             usage="color: var(--colorFail);"
           />
           <ColorCard
+            mpColor={css.failDarkColorBackground}
+            name="--colorFailDark"
+            usage="color: var(--colorFailDark);"
+          />
+          <ColorCard
+            mpColor={css.failSubtleColorBackground}
+            name="--colorFailSubtle"
+            usage="color: var(--colorFailSubtle);"
+          />
+        </div>
+        <h4>Yellow</h4>
+        <div className={css.colorsGroup}>
+          <ColorCard
             mpColor={css.attentionColorBackground}
             name="--colorAttention"
             usage="color: var(--colorAttention);"
+          />
+          <ColorCard
+            mpColor={css.attentionDarkColorBackground}
+            name="--colorAttentionDark"
+            usage="color: var(--colorAttentionDark);"
+          />
+          <ColorCard
+            mpColor={css.attentionSubtleColorBackground}
+            name="--colorAttentionSubtle"
+            usage="color: var(--colorAttentionSubtle);"
           />
         </div>
         <h4>Grey colors</h4>
