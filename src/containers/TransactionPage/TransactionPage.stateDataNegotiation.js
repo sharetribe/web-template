@@ -18,7 +18,7 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
     transactionRole,
     nextTransitions,
     onCheckoutRedirect,
-    onMakeOfferFromRequest,
+    onMakeOfferRedirect,
     onOpenRequestChangesModal,
     onOpenMakeCounterOfferModal,
   } = txInfo;
@@ -77,7 +77,7 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
     .cond([states.QUOTE_REQUESTED, PROVIDER], () => {
       const overwritesForMakeOfferFromRequest = {
         onAction: () => {
-          return onMakeOfferFromRequest();
+          return onMakeOfferRedirect();
         },
       };
       return {
