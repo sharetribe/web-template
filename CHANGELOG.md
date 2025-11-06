@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] RequestQuotePage: pass authorDisplayName to RequestQuoteForm.
+  [#693](https://github.com/sharetribe/web-template/pull/693)
+
 ## [v10.1.0] 2025-11-06
 
 - [add] Add support for regular negotiation flow where provider creates listings representing offers

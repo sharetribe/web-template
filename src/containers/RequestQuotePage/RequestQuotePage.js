@@ -159,6 +159,7 @@ const RequestQuotePageComponent = props => {
             <RequestQuoteForm
               intl={intl}
               config={config}
+              authorDisplayName={userDisplayNameAsString(listing?.author, '')}
               onSubmit={onSubmit}
               errorMessageComponent={ErrorMessage}
               requestQuoteError={requestQuoteError}

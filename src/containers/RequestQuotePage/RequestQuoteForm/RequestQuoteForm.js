@@ -27,12 +27,20 @@ import css from './RequestQuoteForm.module.css';
  * @param {propTypes.error} props.initiateInquiryError - The error message.
  */
 export const RequestQuoteForm = props => {
-  const { intl, config, errorMessageComponent: ErrorMessage, requestQuoteError, onSubmit } = props;
+  const {
+    intl,
+    config,
+    errorMessageComponent: ErrorMessage,
+    requestQuoteError,
+    onSubmit,
+    ...restProps
+  } = props;
 
   return (
     <FinalForm
       initialValues={{}}
       onSubmit={onSubmit}
+      {...restProps}
       render={formRenderProps => {
         const {
           rootClassName,
