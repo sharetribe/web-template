@@ -218,7 +218,6 @@ const RangeInput = props => {
             value={fieldValues.minValue}
             onChange={handleMinValueChange}
             onBlur={handleMinValueBlur}
-            role="slider"
             aria-valuenow={fieldValues.minValue}
             aria-valuetext={labelForRangeInput(fieldValues.minValue, 'min')}
             aria-valuemin={defaultMinValue}
@@ -240,7 +239,6 @@ const RangeInput = props => {
             value={fieldValues.maxValue}
             onChange={handleMaxValueChange}
             onBlur={handleMaxValueBlur}
-            role="slider"
             aria-valuenow={fieldValues.maxValue}
             aria-valuetext={labelForRangeInput(fieldValues.maxValue, 'max')}
             aria-valuemin={defaultMinValue}
