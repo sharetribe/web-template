@@ -48,8 +48,8 @@ export const transitions = {
   // Transitions for provider-driven negotiation loop
   // TODO: this loop is not yet in use
   UPDATE_OFFER: 'transition/update-offer',
-  ACCEPT_OFFER: 'transition/accept-offer',
-  OPERATOR_ACCEPT_OFFER: 'transition/operator-accept-offer',
+  ACCEPT_UPDATE: 'transition/accept-update',
+  OPERATOR_ACCEPT_UPDATE: 'transition/operator-accept-update',
   UPDATE_FROM_UPDATE_PENDING: 'transition/update-from-update-pending',
   CUSTOMER_REJECT_FROM_UPDATE_PENDING: 'transition/customer-reject-from-update-pending',
   PROVIDER_WITHDRAW_FROM_UPDATE_PENDING: 'transition/provider-withdraw-from-update-pending',
@@ -189,8 +189,8 @@ export const graph = {
     // TODO: this is not yet in use
     [states.UPDATE_PENDING]: {
       on: {
-        [transitions.ACCEPT_OFFER]: states.OFFER_PENDING,
-        [transitions.OPERATOR_ACCEPT_OFFER]: states.OFFER_PENDING,
+        [transitions.ACCEPT_UPDATE]: states.OFFER_PENDING,
+        [transitions.OPERATOR_ACCEPT_UPDATE]: states.OFFER_PENDING,
         [transitions.UPDATE_FROM_UPDATE_PENDING]: states.UPDATE_PENDING,
         [transitions.CUSTOMER_REJECT_FROM_UPDATE_PENDING]: states.OFFER_REJECTED,
         [transitions.PROVIDER_WITHDRAW_FROM_UPDATE_PENDING]: states.OFFER_REJECTED,
@@ -272,6 +272,9 @@ const makeOfferTransitions = [
   'transition/make-offer-from-request',
 ];
 
+// transitions that update the offer
+const updateOfferTransitions = ['transition/update-offer', 'transition/update-from-update-pending'];
+
 // transitions that make a counter offer
 const counterOfferTransitions = [
   'transition/customer-make-counter-offer',
@@ -287,6 +290,7 @@ const revokeCounterOfferTransitions = [
 // transitions that affect pricing on negotiation loop
 const offerTransitions = [
   ...makeOfferTransitions,
+  ...updateOfferTransitions,
   ...counterOfferTransitions,
   ...revokeCounterOfferTransitions,
 ];
@@ -407,6 +411,12 @@ export const isRelevantPastTransition = transition => {
     transitions.OPERATOR_REJECT_OFFER,
     transitions.CUSTOMER_REJECT_OFFER,
     transitions.PROVIDER_WITHDRAW_OFFER,
+    transitions.UPDATE_OFFER,
+    transitions.UPDATE_FROM_UPDATE_PENDING,
+    transitions.ACCEPT_UPDATE,
+    transitions.OPERATOR_ACCEPT_UPDATE,
+    transitions.CUSTOMER_REJECT_FROM_UPDATE_PENDING,
+    transitions.PROVIDER_WITHDRAW_FROM_UPDATE_PENDING,
     transitions.CUSTOMER_MAKE_COUNTER_OFFER,
     transitions.PROVIDER_MAKE_COUNTER_OFFER,
     transitions.PROVIDER_ACCEPT_COUNTER_OFFER,
