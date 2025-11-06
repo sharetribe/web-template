@@ -928,6 +928,15 @@ export const isPriceVariationsEnabled = (publicData, listingTypeConfig) => {
     : listingTypeConfig?.priceVariations?.enabled;
 };
 
+export const allowCustomerCounterOffer = listingTypeConfig => {
+  return listingTypeConfig?.negotiationOptions?.customerCounterOffer !== false;
+};
+
+export const allowProviderUpdateOffer = listingTypeConfig => {
+  return true;
+  //return listingTypeConfig?.negotiationOptions?.providerUpdateOffer === true;
+};
+
 ///////////////////////////////////////
 // Restructure hosted listing config //
 ///////////////////////////////////////
