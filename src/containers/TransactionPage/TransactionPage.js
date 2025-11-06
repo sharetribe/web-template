@@ -575,7 +575,7 @@ export const TransactionPageComponent = props => {
           onOpenRequestChangesModal,
           onOpenMakeCounterOfferModal,
           onCheckoutRedirect: handleSubmitOrderRequest,
-          onMakeOfferFromRequest: onMakeOffer,
+          onMakeOfferRedirect: onMakeOffer,
           intl,
         },
         process
