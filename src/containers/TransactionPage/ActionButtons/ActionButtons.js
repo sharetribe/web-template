@@ -170,6 +170,8 @@ const ActionButtons = props => {
   ) : null;
 
   const hasMultipleButtons = primaryButtonProps && secondaryButtonProps && tertiaryButtonProps;
+  const actionButtonOrder = props.actionButtonOrder || ['primary', 'secondary', 'tertiary'];
+  const renderingOrder = [...actionButtonOrder].reverse();
 
   const classes = classNames(rootClassName || css.root, className);
 
@@ -183,42 +185,51 @@ const ActionButtons = props => {
           [css.multipleButtons]: !!hasMultipleButtons,
         })}
       >
-        {tertiaryButtonProps && hasValidData ? (
-          <div className={css.actionButtonWrapper}>
-            <Button
-              inProgress={tertiaryButtonProps.inProgress}
-              disabled={buttonsDisabled || tertiaryDisabled}
-              onClick={tertiaryButtonProps.onAction}
-            >
-              {tertiaryButtonProps.buttonText}
-            </Button>
-            {tertiaryDisabled && <div className={css.finePrint}>{tertiaryReason}</div>}
-          </div>
-        ) : null}
-        {secondaryButtonProps && hasValidData ? (
-          <div className={css.actionButtonWrapper}>
-            <SecondaryButton
-              inProgress={secondaryButtonProps?.inProgress}
-              disabled={buttonsDisabled || secondaryDisabled}
-              onClick={secondaryButtonProps.onAction}
-            >
-              {secondaryButtonProps.buttonText}
-            </SecondaryButton>
-            {secondaryDisabled && <div className={css.finePrint}>{secondaryReason}</div>}
-          </div>
-        ) : null}
-        {primaryButtonProps && hasValidData ? (
-          <div className={css.actionButtonWrapper}>
-            <PrimaryButton
-              inProgress={primaryButtonProps.inProgress}
-              disabled={buttonsDisabled || primaryDisabled}
-              onClick={primaryButtonProps.onAction}
-            >
-              {primaryButtonProps.buttonText}
-            </PrimaryButton>
-            {primaryDisabled && <div className={css.finePrint}>{primaryReason}</div>}
-          </div>
-        ) : null}
+        {renderingOrder.map(buttonType => {
+          if (buttonType === 'primary') {
+            return primaryButtonProps && hasValidData ? (
+              <div className={css.actionButtonWrapper} key={buttonType}>
+                <PrimaryButton
+                  inProgress={primaryButtonProps.inProgress}
+                  disabled={buttonsDisabled || primaryDisabled}
+                  onClick={primaryButtonProps.onAction}
+                >
+                  {primaryButtonProps.buttonText}
+                </PrimaryButton>
+                {primaryDisabled && <div className={css.finePrint}>{primaryReason}</div>}
+              </div>
+            ) : null;
+          }
+          if (buttonType === 'secondary') {
+            return secondaryButtonProps && hasValidData ? (
+              <div className={css.actionButtonWrapper} key={buttonType}>
+                <SecondaryButton
+                  inProgress={secondaryButtonProps?.inProgress}
+                  disabled={buttonsDisabled || secondaryDisabled}
+                  onClick={secondaryButtonProps.onAction}
+                >
+                  {secondaryButtonProps.buttonText}
+                </SecondaryButton>
+                {secondaryDisabled && <div className={css.finePrint}>{secondaryReason}</div>}
+              </div>
+            ) : null;
+          }
+          if (buttonType === 'tertiary') {
+            return tertiaryButtonProps && hasValidData ? (
+              <div className={css.actionButtonWrapper} key={buttonType}>
+                <Button
+                  inProgress={tertiaryButtonProps?.inProgress}
+                  disabled={buttonsDisabled || tertiaryDisabled}
+                  onClick={tertiaryButtonProps.onAction}
+                >
+                  {tertiaryButtonProps.buttonText}
+                </Button>
+                {tertiaryDisabled && <div className={css.finePrint}>{tertiaryReason}</div>}
+              </div>
+            ) : null;
+          }
+          return null;
+        })}
         {!hasValidData ? (
           <div className={css.actionButtonWrapper}>
             <p className={css.error}>{intl.formatMessage({ id: errorMessageId })}</p>
