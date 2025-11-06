@@ -14,8 +14,12 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+## [v10.1.1] 2025-11-06
+
 - [fix] RequestQuotePage: pass authorDisplayName to RequestQuoteForm.
   [#693](https://github.com/sharetribe/web-template/pull/693)
+
+  [v10.1.1]: https://github.com/sharetribe/web-template/compare/v10.1.0...v10.1.1
 
 ## [v10.1.0] 2025-11-06
 
