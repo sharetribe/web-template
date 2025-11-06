@@ -3,6 +3,7 @@ import classNames from 'classnames';
 
 import { useIntl } from '../../../util/reactIntl';
 import { getStartOf } from '../../../util/dates';
+import { allowCustomerCounterOffer, allowProviderUpdateOffer } from '../../../util/configHelpers';
 
 import { PrimaryButton, SecondaryButton, Button } from '../../../components';
 
@@ -21,24 +22,37 @@ const hasReachedMaxDurationSinceTransition = (condition, transitions, timeZone) 
 const hasReachedMaxTransitions = (condition, transitions) => {
   return transitions.length >= condition.max;
 };
-const checkCondition = (condition, transitions, timeZone) => {
+const checkCondition = (condition, additionalInfo) => {
+  const { transitions, timeZone, listingTypeConfig } = additionalInfo;
+
   if (condition.type === 'durationSinceTransition') {
     return hasReachedMaxDurationSinceTransition(condition, transitions, timeZone);
   }
   if (condition.type === 'maxTransitions') {
     return hasReachedMaxTransitions(condition, transitions);
   }
+  if (condition.type === 'providerUpdateOfferHidden') {
+    // hide the button if the provider update offer is not allowed
+    return condition.action === 'hide' && !allowProviderUpdateOffer(listingTypeConfig);
+  }
+  if (condition.type === 'customerCounterOfferHidden') {
+    // hide the button if the customer counter offer is not allowed
+    return condition.action === 'hide' && !allowCustomerCounterOffer(listingTypeConfig);
+  }
   return false;
 };
 
-const getDisabledState = (buttonProps, transitions, timeZone, intl) => {
+const getButtonStatus = (buttonProps, additionalInfo) => {
+  const { transitions, timeZone, intl, listingTypeConfig } = additionalInfo;
+
   if (!buttonProps?.conditions) {
-    return { disabled: false, reason: '' };
+    return { disabled: false, reason: '', hidden: false };
   }
 
   return buttonProps.conditions.reduce(
     (acc, c) => {
-      if (!acc.disabled && c.action === 'disable' && checkCondition(c, transitions, timeZone)) {
+      const extra = { transitions, timeZone, listingTypeConfig };
+      if (!acc.disabled && c.action === 'disable' && checkCondition(c, extra)) {
         // Use disabledReason.translationKey if present
         const translationKey = c.disabledReason?.translationKey;
         const fallbackReason = 'You cannot perform this action right now.'; // This should not be shown ever.
@@ -49,12 +63,15 @@ const getDisabledState = (buttonProps, transitions, timeZone, intl) => {
 
         return {
           disabled: true,
+          hidden: false,
           reason: translationKey ? intl.formatMessage({ id: translationKey }) : fallbackReason,
         };
+      } else if (!acc.disabled && c.action === 'hide' && checkCondition(c, extra)) {
+        return { disabled: false, hidden: true, reason: '' };
       }
       return acc;
     },
-    { disabled: false, reason: '' }
+    { disabled: false, reason: '', hidden: false }
   );
 };
 
@@ -117,6 +134,7 @@ const ActionButtons = props => {
   const {
     className,
     rootClassName,
+    listingTypeConfig,
     showButtons,
     primaryButtonProps,
     secondaryButtonProps,
@@ -135,25 +153,8 @@ const ActionButtons = props => {
     return null;
   }
 
-  // Check disabling logic for each button
-  const { disabled: primaryDisabled, reason: primaryReason } = getDisabledState(
-    primaryButtonProps,
-    transitions,
-    timeZone,
-    intl
-  );
-  const { disabled: secondaryDisabled, reason: secondaryReason } = getDisabledState(
-    secondaryButtonProps,
-    transitions,
-    timeZone,
-    intl
-  );
-  const { disabled: tertiaryDisabled, reason: tertiaryReason } = getDisabledState(
-    tertiaryButtonProps,
-    transitions,
-    timeZone,
-    intl
-  );
+  // Additional data passed for the button status calculation
+  const extraData = { transitions, timeZone, intl, listingTypeConfig };
 
   const buttonsDisabled = primaryButtonProps?.inProgress || secondaryButtonProps?.inProgress;
 
@@ -187,44 +188,47 @@ const ActionButtons = props => {
       >
         {renderingOrder.map(buttonType => {
           if (buttonType === 'primary') {
-            return primaryButtonProps && hasValidData ? (
+            const { disabled, reason, hidden } = getButtonStatus(primaryButtonProps, extraData);
+            return primaryButtonProps && hasValidData && !hidden ? (
               <div className={css.actionButtonWrapper} key={buttonType}>
                 <PrimaryButton
                   inProgress={primaryButtonProps.inProgress}
-                  disabled={buttonsDisabled || primaryDisabled}
+                  disabled={buttonsDisabled || disabled}
                   onClick={primaryButtonProps.onAction}
                 >
                   {primaryButtonProps.buttonText}
                 </PrimaryButton>
-                {primaryDisabled && <div className={css.finePrint}>{primaryReason}</div>}
+                {disabled && <div className={css.finePrint}>{reason}</div>}
               </div>
             ) : null;
           }
           if (buttonType === 'secondary') {
-            return secondaryButtonProps && hasValidData ? (
+            const { disabled, reason, hidden } = getButtonStatus(secondaryButtonProps, extraData);
+            return secondaryButtonProps && hasValidData && !hidden ? (
               <div className={css.actionButtonWrapper} key={buttonType}>
                 <SecondaryButton
                   inProgress={secondaryButtonProps?.inProgress}
-                  disabled={buttonsDisabled || secondaryDisabled}
+                  disabled={buttonsDisabled || disabled}
                   onClick={secondaryButtonProps.onAction}
                 >
                   {secondaryButtonProps.buttonText}
                 </SecondaryButton>
-                {secondaryDisabled && <div className={css.finePrint}>{secondaryReason}</div>}
+                {disabled && <div className={css.finePrint}>{reason}</div>}
               </div>
             ) : null;
           }
           if (buttonType === 'tertiary') {
-            return tertiaryButtonProps && hasValidData ? (
+            const { disabled, reason, hidden } = getButtonStatus(tertiaryButtonProps, extraData);
+            return tertiaryButtonProps && hasValidData && !hidden ? (
               <div className={css.actionButtonWrapper} key={buttonType}>
                 <Button
                   inProgress={tertiaryButtonProps?.inProgress}
-                  disabled={buttonsDisabled || tertiaryDisabled}
+                  disabled={buttonsDisabled || disabled}
                   onClick={tertiaryButtonProps.onAction}
                 >
                   {tertiaryButtonProps.buttonText}
                 </Button>
-                {tertiaryDisabled && <div className={css.finePrint}>{tertiaryReason}</div>}
+                {disabled && <div className={css.finePrint}>{reason}</div>}
               </div>
             ) : null;
           }

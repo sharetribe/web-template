@@ -660,6 +660,7 @@ export const TransactionPageComponent = props => {
       showListingImage={showListingImage}
       actionButtons={
         <ActionButtons
+          listingTypeConfig={foundListingTypeConfig}
           showButtons={stateData.showActionButtons}
           primaryButtonProps={stateData?.primaryButtonProps}
           secondaryButtonProps={stateData?.secondaryButtonProps}
