@@ -688,6 +688,7 @@ export const TransactionPageComponent = props => {
       actionButtons={containerId => (
         <ActionButtons
           containerId={containerId}
+          listingTypeConfig={foundListingTypeConfig}
           showButtons={stateData.showActionButtons}
           primaryButtonProps={stateData?.primaryButtonProps}
           secondaryButtonProps={stateData?.secondaryButtonProps}
