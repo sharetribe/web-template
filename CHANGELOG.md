@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Add support for regular negotiation flow where provider creates listings representing offers
+  (e.g. projects) and customer can request for a quote.
+  [#685](https://github.com/sharetribe/web-template/pull/685)
 - [fix] Add line break to TopbarMobileMenu.signupOrLogin translation
   [#690](https://github.com/sharetribe/web-template/pull/690)
 
