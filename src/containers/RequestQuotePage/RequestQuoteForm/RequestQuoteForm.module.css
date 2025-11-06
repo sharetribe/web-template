@@ -1,0 +1,41 @@
+@import '../../../styles/customMediaQueries.css';
+
+.root {
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 40px;
+}
+
+.sectionHeading {
+  composes: p from global;
+  font-weight: var(--fontWeightBold);
+  margin: 0 0 12px 0;
+
+  padding-top: 4px;
+  padding-bottom: 2px;
+
+  @media (--viewportMedium) {
+    margin: 0 0 0 0;
+    padding-top: 5px;
+    padding-bottom: 3px;
+  }
+}
+
+.input {
+}
+
+.fieldDefaultMessage {
+  margin: 12px 0 24px 0;
+
+  @media (--viewportMedium) {
+    margin: 16px 0 24px 0;
+  }
+}
+
+.finePrint {
+  composes: marketplaceTinyFontStyles from global;
+  text-align: center;
+}

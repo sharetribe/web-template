@@ -17,48 +17,22 @@ import { getProcess } from '../../transactions/transaction';
 import {
   FieldTextInput,
   Form,
+  ErrorMessage,
   H3,
   H4,
   Heading,
   NamedLink,
   Page,
   PrimaryButton,
+  TopbarSimplified,
 } from '../../components';
 
 import { getTransactionTypeData } from './CheckoutPageTransactionHelpers.js';
 
-import CustomTopbar from './CustomTopbar';
 import DetailsSideCard from './DetailsSideCard';
 import MobileListingImage from './MobileListingImage';
 
 import css from './CheckoutPage.module.css';
-
-const ErrorMessage = props => {
-  const { error } = props;
-
-  // Since the listing data is already given from the ListingPage
-  // and stored to handle refreshes, it might not have the possible
-  // deleted or closed information in it. If the transaction
-  // initiate or the speculative initiate fail due to the listing
-  // being deleted or closed, we should dig the information from the
-  // errors and not the listing data.
-  const listingNotFound = isTransactionInitiateListingNotFoundError(error);
-
-  // No transaction process attached to listing
-  const noTransactionProcessAlias = error?.message === 'No transaction process attached to listing';
-
-  return error ? (
-    <p className={css.error}>
-      {listingNotFound ? (
-        <FormattedMessage id="CheckoutPage.listingNotFoundError" />
-      ) : noTransactionProcessAlias ? (
-        <FormattedMessage id="CheckoutPageWithInquiryProcess.initiateInquiryErrorNoProcess" />
-      ) : (
-        <FormattedMessage id="CheckoutPageWithInquiryProcess.initiateInquiryError" />
-      )}
-    </p>
-  ) : null;
-};
 
 const handleSubmit = (submitting, setSubmitting, props) => values => {
   if (submitting) {
@@ -163,7 +137,7 @@ export const CheckoutPageWithInquiryProcess = props => {
 
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
-      <CustomTopbar intl={intl} linkToExternalSite={config?.topbar?.logoLink} />
+      <TopbarSimplified />
       <div className={css.contentContainer}>
         <MobileListingImage
           listingTitle={listingTitle}

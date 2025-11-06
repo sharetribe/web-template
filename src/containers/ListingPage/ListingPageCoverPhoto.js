@@ -35,6 +35,8 @@ import {
 } from '../../util/data';
 import { richText } from '../../util/richText';
 import {
+  OFFER,
+  REQUEST,
   isBookingProcess,
   isNegotiationProcess,
   isPurchaseProcess,
@@ -77,6 +79,7 @@ import {
   handleContactUser,
   handleSubmitInquiry,
   handleNavigateToMakeOfferPage,
+  handleNavigateToRequestQuotePage,
   handleSubmit,
   priceForSchemaMaybe,
 } from './ListingPage.shared';
@@ -230,7 +233,8 @@ export const ListingPageComponent = props => {
 
   const currentAuthor = authorAvailable ? currentListing.author : null;
   const ensuredAuthor = ensureUser(currentAuthor);
-  const authorNeedsPayoutDetails = ['booking', 'purchase'].includes(processType); // TODO: add negotiation
+  const authorNeedsPayoutDetails =
+    ['booking', 'purchase'].includes(processType) || (isNegotiation && unitType === OFFER);
   const noPayoutDetailsSetWithOwnListing =
     isOwnListing && (authorNeedsPayoutDetails && !currentUser?.attributes?.stripeConnected);
   const payoutDetailsWarning = noPayoutDetailsSetWithOwnListing ? (
@@ -271,6 +275,10 @@ export const ListingPageComponent = props => {
     ...commonParams,
     getListing,
   });
+  const onNavigateToRequestQuotePage = handleNavigateToRequestQuotePage({
+    ...commonParams,
+    getListing,
+  });
   const onSubmit = handleSubmit({
     ...commonParams,
     currentUser,
@@ -283,8 +291,10 @@ export const ListingPageComponent = props => {
     const isCurrentlyClosed = currentListing.attributes.state === LISTING_STATE_CLOSED;
     if (isOwnListing || isCurrentlyClosed) {
       window.scrollTo(0, 0);
-    } else if (isNegotiation) {
+    } else if (isNegotiation && unitType === REQUEST) {
       onNavigateToMakeOfferPage(values);
+    } else if (isNegotiation && unitType === OFFER) {
+      onNavigateToRequestQuotePage(values);
     } else {
       onSubmit(values);
     }

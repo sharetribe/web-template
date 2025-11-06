@@ -161,6 +161,14 @@ const makeOfferPayloadCreator = (
   { negotiationParams, processAlias, transactionId, isPrivilegedTransition },
   { dispatch, getState, rejectWithValue, extra: sdk }
 ) => {
+  if (!processAlias) {
+    const error = new Error('No transaction process attached to listing');
+    log.error(error, 'listing-process-missing', {
+      listingId: listing?.id?.uuid,
+    });
+    return rejectWithValue(storableError(error));
+  }
+
   const state = getState();
   const transitionName = getTransitionName(transactionId, processAlias, state);
 
@@ -190,7 +198,6 @@ const makeOfferPayloadCreator = (
   const handleSuccess = response => {
     const entities = denormalisedResponseEntities(response);
     const tx = entities[0];
-    dispatch(setCurrentUserHasOrders());
     return tx;
   };
 
@@ -242,35 +249,6 @@ export const makeOffer = (
       isPrivilegedTransition,
     })
   ).unwrap();
-};
-
-//////////////////
-// Send Message //
-//////////////////
-const sendMessagePayloadCreator = ({ message, orderId }, { rejectWithValue, extra: sdk }) => {
-  if (message) {
-    return sdk.messages
-      .send({ transactionId: orderId, content: message })
-      .then(() => {
-        return { orderId, messageSuccess: true };
-      })
-      .catch(e => {
-        log.error(e, 'initial-message-send-failed', { txId: orderId });
-        return rejectWithValue(storableError(e));
-      });
-  } else {
-    return Promise.resolve({ orderId, messageSuccess: true });
-  }
-};
-
-export const sendMessageThunk = createAsyncThunk(
-  'MakeOfferPage/sendMessage',
-  sendMessagePayloadCreator
-);
-
-// Backward compatible wrapper for the thunk
-export const sendMessage = params => dispatch => {
-  return dispatch(sendMessageThunk({ message: params.message, orderId: params.id }));
 };
 
 // ================ Slice ================ //
@@ -334,18 +312,6 @@ const makeOfferPageSlice = createSlice({
       .addCase(makeOfferThunk.rejected, (state, action) => {
         state.makeOfferError = storableError(action.payload);
         state.makeOfferInProgress = false;
-      })
-      // sendMessage cases
-      .addCase(sendMessageThunk.pending, state => {
-        state.sendMessageInProgress = true;
-        state.sendMessageError = null;
-      })
-      .addCase(sendMessageThunk.fulfilled, state => {
-        state.sendMessageInProgress = false;
-      })
-      .addCase(sendMessageThunk.rejected, (state, action) => {
-        state.sendMessageError = storableError(action.payload);
-        state.sendMessageInProgress = false;
       });
   },
 });

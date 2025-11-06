@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import { useIntl } from 'react-intl';
 import classNames from 'classnames';
+
+import { useConfiguration } from '../../context/configurationContext';
 
 import { LinkedLogo } from '../../components';
 
-import css from './MakeOfferPage.module.css';
+import css from './TopbarSimplified.module.css';
 
 /**
- * A component that renders the custom topbar for the MakeOfferPage.
- * We don't want to use the default topbar because there are too many
- * links leading away from the MakeOfferPage.
+ * A component that renders a simplified top bar. This is used on situations,
+ * where we don't want the user to be distacted by the multiple links in the Topbar component.
+ * This is used in CheckoutPage, MakeOfferPage, and RequestQuotePage.
+ *
+ * Note: the real Topbar component can be found from src/containers/TopbarContainer/
  *
  * @component
  * @param {Object} props
@@ -18,9 +23,11 @@ import css from './MakeOfferPage.module.css';
  * @param {boolean} props.linkToExternalSite - Whether to link to the external site
  * @returns {JSX.Element}
  */
-const CustomTopbar = props => {
+const TopbarSimplified = props => {
   const [isMobile, setIsMobile] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const intl = useIntl();
+  const config = useConfiguration();
 
   useEffect(() => {
     setMounted(true);
@@ -50,18 +57,20 @@ const CustomTopbar = props => {
     };
   }, [mounted]);
 
-  const { className, rootClassName, intl, linkToExternalSite } = props;
-  const classes = classNames(rootClassName || css.topbar, className);
+  const { className, rootClassName } = props;
+  const linkToExternalSite = config?.topbar?.logoLink;
+
+  const classes = classNames(rootClassName || css.root, className);
 
   return (
     <nav className={classes}>
       <LinkedLogo
         layout={isMobile ? 'mobile' : 'desktop'}
-        alt={intl.formatMessage({ id: 'MakeOfferPage.goToLandingPage' })}
+        alt={intl.formatMessage({ id: 'TopbarSimplified.goToLandingPage' })}
         linkToExternalSite={linkToExternalSite}
       />
     </nav>
   );
 };
 
-export default CustomTopbar;
+export default TopbarSimplified;

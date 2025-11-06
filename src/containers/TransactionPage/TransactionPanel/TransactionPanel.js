@@ -167,6 +167,7 @@ export class TransactionPanelComponent extends Component {
       intl,
       stateData = {},
       showBookingLocation = false,
+      requestQuote,
       offer,
       activityFeed,
       actionButtons,
@@ -266,6 +267,7 @@ export class TransactionPanelComponent extends Component {
               showText={isInquiryProcess}
             />
 
+            {requestQuote}
             {offer}
 
             {!isInquiryProcess ? (
