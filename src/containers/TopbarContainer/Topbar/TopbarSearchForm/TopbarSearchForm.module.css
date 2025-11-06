@@ -84,7 +84,6 @@
   border: none;
   padding-top: 0;
   padding-bottom: 0;
-  padding-left: 10px;
 
   /* Search text gets ellipsis if it's too wide */
   text-overflow: ellipsis;
@@ -92,6 +91,7 @@
 
   margin-top: 0;
   margin-bottom: 0;
+  margin-left: 10px;
 
   &:hover,
   &:focus {
@@ -172,6 +172,7 @@
 }
 
 .searchSubmit {
+  position: relative;
   border: 0;
   padding: 0;
   cursor: pointer;
@@ -183,6 +184,16 @@
     & .iconSvgGroup {
       stroke: var(--colorGrey700);
     }
+  }
+
+  /* This increases the size of the clicable area for better accessibility */
+  &:after {
+    content: '';
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: -24px;
+    right: 0px;
   }
 }
 
