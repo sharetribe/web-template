@@ -250,7 +250,8 @@ const EnhancedMakeOfferPage = props => {
   const listing = getListing(listingId);
   const searchParams = parse(location.search);
   const transactionId = searchParams.transactionId;
-  const transaction = transactionId ? getTransaction(transactionId) : null;
+  const txId = new UUID(transactionId);
+  const transaction = transactionId ? getTransaction(txId) : null;
 
   const processName = getProcessName(transaction, listing);
   const isNegotiationProcess = processName === NEGOTIATION_PROCESS_NAME;
