@@ -5,6 +5,9 @@ const makeOfferTransitions = [
   'transition/make-offer-from-request',
 ];
 
+// default-negotiation process: transitions that update the offer
+const updateOfferTransitions = ['transition/update-offer', 'transition/update-from-update-pending'];
+
 // default-negotiation process: transitions that make a counter offer
 const counterOfferTransitions = [
   'transition/customer-make-counter-offer',
@@ -20,6 +23,7 @@ const revokeCounterOfferTransitions = [
 // default-negotiation process: transitions that affect pricing on negotiation loop
 const offerTransitionsInNegotiationProcess = [
   ...makeOfferTransitions,
+  ...updateOfferTransitions,
   ...counterOfferTransitions,
   ...revokeCounterOfferTransitions,
 ];
@@ -61,6 +65,17 @@ exports.isIntentionToMakeCounterOffer = (offerInSubunits, transitionName) => {
   const isIntentionToMakeCounterOffer = counterOfferTransitions.includes(transitionName);
   const hasOffer = offerInSubunits > 0;
   return isIntentionToMakeCounterOffer && hasOffer;
+};
+/**
+ * Checks if the transition is a update offer transition.
+ *
+ * @param {string} transitionName
+ * @returns {boolean}
+ */
+exports.isIntentionToUpdateOffer = (offerInSubunits, transitionName) => {
+  const isIntentionToUpdateOffer = updateOfferTransitions.includes(transitionName);
+  const hasOffer = offerInSubunits > 0;
+  return isIntentionToUpdateOffer && hasOffer;
 };
 /**
  * Checks if the transition is a revoke counter offer transition.
