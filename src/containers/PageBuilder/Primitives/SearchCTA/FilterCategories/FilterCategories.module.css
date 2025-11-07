@@ -92,6 +92,10 @@
 .dropdownItem {
   white-space: nowrap;
 
+  &:hover {
+    color: var(--colorBlack);
+  }
+
   @media (--viewportLarge) {
     white-space: nowrap;
   }
@@ -134,8 +138,8 @@
     position: absolute;
     width: 8px;
     height: 8px;
-    border-right: 2px solid var(--colorGrey400);
-    border-bottom: 2px solid var(--colorGrey400);
+    border-right: 2px solid var(--colorGrey600);
+    border-bottom: 2px solid var(--colorGrey600);
     transform: rotate(45deg);
   }
 
@@ -153,10 +157,10 @@
 }
 
 .unselected {
-  color: var(--colorGrey300);
+  color: var(--colorGrey600);
 
   &:hover {
-    color: var(--colorGrey700);
+    color: var(--colorBlack);
   }
 }
 
