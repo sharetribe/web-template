@@ -7,6 +7,7 @@ import * as validators from '../../../util/validators';
 import {
   isChangeEmailWrongPassword,
   isErrorUserHasUnfinishedTransactions,
+  isStripeDeletionFailedNonZeroBalance,
 } from '../../../util/errors';
 
 import { Form, PrimaryButton, FieldTextInput, H4, FieldCheckbox } from '../../../components';
@@ -24,12 +25,16 @@ const ErrorMessage = props => {
   // the customErrorText of the FieldTextInput
   const incorrectPasswordError = isChangeEmailWrongPassword(error);
 
-  // TODO: other error handling based on backend responses
+  // Account deletion fails if the user's Stripe Connect account
+  // has a non-zero balance.
+  const stripeDeletionFailedError = isStripeDeletionFailedNonZeroBalance(error);
 
   return error && !incorrectPasswordError ? (
     <p className={css.error}>
       {unfinishedTransactionsError ? (
         <FormattedMessage id="DeleteAccountForm.ongoingTransactionsError" />
+      ) : stripeDeletionFailedError ? (
+        <FormattedMessage id="DeleteAccountForm.stripeDeletionFailedError" />
       ) : (
         <FormattedMessage id="DeleteAccountForm.deleteAccountError" />
       )}

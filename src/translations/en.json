@@ -177,6 +177,7 @@
   "DeleteAccountForm.resetPasswordInfo": "Forgot your password or don't have one? {resetPasswordLink}",
   "DeleteAccountForm.resetPasswordLinkSent": "Instructions to reset your password have been sent to {email}. {resendPasswordLink}",
   "DeleteAccountForm.resetPasswordLinkText": "Send reset instructions.",
+  "DeleteAccountForm.stripeDeletionFailedError": "Account deletion failed. Stripe data could not be deleted. Please contact support.",
   "DiscardDraftModal.close": "Close",
   "DiscardDraftModal.message": "This can't be undone.",
   "DiscardDraftModal.submit": "Discard draft",

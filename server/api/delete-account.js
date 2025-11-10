@@ -62,7 +62,7 @@ module.exports = (req, res) => {
       return getTrustedSdk(req);
     })
     .then(trustedSdk => {
-      return trustedSdk.currentUser.delete({ currentPassword });
+      return trustedSdk.currentUser.delete({ currentPassword, deleteFromStripe: true });
     })
     .then(apiResponse => {
       const { status, statusText, data } = apiResponse;

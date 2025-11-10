@@ -351,6 +351,17 @@ export const isErrorUserHasUnfinishedTransactions = error => {
   );
 };
 
+/**
+ * Check if the request failed because Stripe prevented account deletion. This happens if the
+ * user's Stripe Connect account as a non-zero balance. See the [API reference]() for details.
+ */
+export const isStripeDeletionFailedNonZeroBalance = error => {
+  return (
+    error?.status === 400 &&
+    errorAPIErrors(error).some(apiError => apiError.code === 'delete-stripe-account-failed')
+  );
+};
+
 export const storableError = err => {
   const error = err || {};
   const { name, message, status, statusText } = error;
