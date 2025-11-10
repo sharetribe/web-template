@@ -409,7 +409,9 @@ const listingPageSlice = createSlice({
         state.fetchReviewsError = action.payload;
       })
       .addCase(fetchTimeSlotsThunk.pending, (state, action) => {
-        const { useFetchTimeSlotsForDate, start, timeZone } = action.meta.arg;
+        const { options, start, timeZone } = action.meta.arg;
+        const { useFetchTimeSlotsForDate = false } = options || {};
+
         if (useFetchTimeSlotsForDate) {
           const dateId = stringifyDateToISO8601(start, timeZone);
           state.timeSlotsForDate = removeOutdatedDateData(state.timeSlotsForDate);
@@ -430,7 +432,9 @@ const listingPageSlice = createSlice({
         }
       })
       .addCase(fetchTimeSlotsThunk.fulfilled, (state, action) => {
-        const { useFetchTimeSlotsForDate, start, timeZone } = action.meta.arg;
+        const { options, start, timeZone } = action.meta.arg;
+        const { useFetchTimeSlotsForDate = false } = options || {};
+
         if (useFetchTimeSlotsForDate) {
           const dateId = stringifyDateToISO8601(start, timeZone);
           if (!state.timeSlotsForDate[dateId]) {
@@ -449,7 +453,9 @@ const listingPageSlice = createSlice({
         }
       })
       .addCase(fetchTimeSlotsThunk.rejected, (state, action) => {
-        const { useFetchTimeSlotsForDate, start, timeZone } = action.meta.arg;
+        const { options, start, timeZone } = action.meta.arg;
+        const { useFetchTimeSlotsForDate = false } = options || {};
+
         if (useFetchTimeSlotsForDate) {
           const dateId = stringifyDateToISO8601(start, timeZone);
           if (!state.timeSlotsForDate[dateId]) {

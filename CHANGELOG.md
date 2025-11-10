@@ -13,6 +13,9 @@ way to update this template, but currently, we follow a pattern:
 ---
 
 ## Upcoming version 2025-XX-XX
+
+- [fix] ListingPage.duck.js: fix a bug with time slots fetching. This affects bookable listings with
+  hour or fixed durations. [#697](https://github.com/sharetribe/web-template/pull/697)
 - [add] Add currently available translations for DE, ES, FR.
   [#695](https://github.com/sharetribe/web-template/pull/695)
 
