@@ -127,7 +127,7 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
           {
             type: 'customerCounterOfferHidden',
             action: 'hide',
-          }
+          },
         ],
       };
 
@@ -156,6 +156,14 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
         },
         // conditions to disable the button
         conditions: [
+          {
+            type: 'maxTransitions',
+            action: 'disable',
+            max: 50,
+            disabledReason: {
+              translationKey: `TransactionPage.${processName}.${PROVIDER}.${states.OFFER_PENDING}.disabled.maxRequests`,
+            },
+          },
           {
             type: 'providerUpdateOfferHidden',
             action: 'hide',
@@ -197,6 +205,14 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
         },
         // conditions to disable the button
         conditions: [
+          {
+            type: 'maxTransitions',
+            action: 'disable',
+            max: 50,
+            disabledReason: {
+              translationKey: `TransactionPage.${processName}.${PROVIDER}.${states.UPDATE_PENDING}.disabled.maxRequests`,
+            },
+          },
           {
             type: 'providerUpdateOfferHidden',
             action: 'hide',
