@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Additional accesibility improvements to text and icon colors in search CTA.
+  [#696](https://github.com/sharetribe/web-template/pull/696)
 - [add] Improve template accessibility further
 
   - Improved contrast for various colors throughout the Template
