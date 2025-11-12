@@ -340,15 +340,15 @@
 
 .stateActionNeeded {
   font-weight: var(--fontWeightMedium);
-  color: var(--colorAttention);
+  color: var(--colorStatusActionNeeded);
 }
 
 .stateNoActionNeeded {
-  color: var(--colorGrey700);
+  color: var(--colorStatusNormal);
 }
 
 .stateConcluded {
-  color: var(--colorGrey300);
+  color: var(--colorStatusFinalState);
 }
 
 .bookingActionNeeded {

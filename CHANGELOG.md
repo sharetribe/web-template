@@ -14,6 +14,14 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Improve template accessibility further
+
+  - Improved contrast for various colors throughout the Template
+  - Increased area around clickable elements
+  - Updated various component roles
+
+  [#691](https://github.com/sharetribe/web-template/pull/691)
+
 ## [v10.1.2] 2025-11-10
 
 - [fix] ListingPage.duck.js: fix a bug with time slots fetching. This affects bookable listings with
