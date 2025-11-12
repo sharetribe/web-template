@@ -8,6 +8,10 @@ import css from './FilterLocation.module.css';
 
 const identity = v => v;
 
+const CustomIconLocation = () => {
+  return <IconLocation rootClassName={css.customIconLocation} />;
+};
+
 const LocationSearchField = props => {
   const [isCurrentLocation, setIsCurrentLocation] = useState(false);
   const { inputRootClass, intl, inputRef, onLocationChange, alignLeft } = props;
@@ -36,8 +40,8 @@ const LocationSearchField = props => {
             predictionsClassName={classNames(css.predictions, {
               [css.alignLeft]: alignLeft,
             })}
-            CustomIcon={IconLocation}
-            iconClassName={css.locationAutocompleteInputIcon}
+            CustomIcon={CustomIconLocation}
+            iconClassName={css.locationAutocompleteInputIconWrapper}
             isCurrentLocation={isCurrentLocation}
             placeholder={
               isCurrentLocation

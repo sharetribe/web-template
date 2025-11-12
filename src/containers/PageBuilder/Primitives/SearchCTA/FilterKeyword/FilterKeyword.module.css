@@ -36,10 +36,13 @@
     box-shadow: none;
   }
 
+  &::placeholder {
+    color: var(--colorGrey600);
+  }
   &:hover::placeholder,
   &:focus::placeholder {
     transition: 0.1s all;
-    color: var(--colorGrey700);
+    color: var(--colorBlack);
   }
 
   @media (--viewportMedium) {

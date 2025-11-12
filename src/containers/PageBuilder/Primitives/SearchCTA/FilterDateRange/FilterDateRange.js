@@ -72,7 +72,7 @@ const FilterDateRange = props => {
         tabIndex={0}
         onKeyDown={() => setIsOpen(prevState => !prevState)}
       >
-        <IconDate />
+        <IconDate rootClassName={css.iconDate} />
         <span className={labelClasses}>
           {selectedDates
             ? selectedDates

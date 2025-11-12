@@ -11,9 +11,12 @@
     outline: none;
     box-shadow: none;
   }
+  &::placeholder {
+    color: var(--colorGrey600);
+  }
   &:hover::placeholder,
   &:focus::placeholder {
-    color: var(--colorGrey700);
+    color: var(--colorBlack);
     transition: 0.1s all;
   }
 
@@ -29,12 +32,18 @@
   }
 }
 
-.locationAutocompleteInputIcon {
+.locationAutocompleteInputIconWrapper {
   display: flex;
   align-items: center;
   align-self: stretch;
   border: none;
   background-color: var(--colorWhite);
+}
+
+.customIconLocation {
+  stroke: var(--colorGrey600);
+  fill: none;
+  stroke-width: 2px;
 }
 
 .icon {
