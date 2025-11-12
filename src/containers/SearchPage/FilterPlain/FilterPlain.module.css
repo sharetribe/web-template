@@ -26,6 +26,11 @@
   border: none;
   padding: 0;
   cursor: pointer;
+
+  &:focus,
+  &:hover {
+    color: var(--marketplaceColor);
+  }
 }
 
 .labelButtonContent {
@@ -68,6 +73,10 @@
 .labelSelected {
   color: var(--marketplaceColor);
   margin-left: 5px;
+
+  &:hover {
+    color: var(--marketplaceColorDark);
+  }
 }
 
 .openSign {
