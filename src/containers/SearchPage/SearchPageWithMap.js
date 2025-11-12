@@ -557,10 +557,11 @@ export class SearchPageComponent extends Component {
                 const key = `SearchFiltersMobile.${filterConfig.scope || 'built-in'}.${
                   filterConfig.key
                 }`;
+                const filterId = `SearchFiltersMobile.${filterConfig.key.toLowerCase()}`;
                 return (
                   <FilterComponent
                     key={key}
-                    idPrefix="SearchFiltersMobile"
+                    id={filterId}
                     config={filterConfig}
                     listingCategories={listingCategories}
                     marketplaceCurrency={marketplaceCurrency}
@@ -589,10 +590,11 @@ export class SearchPageComponent extends Component {
                   const key = `SearchFiltersPrimary.${filterConfig.scope || 'built-in'}.${
                     filterConfig.key
                   }`;
+                  const filterId = `SearchFiltersPrimary.${filterConfig.key.toLowerCase()}`;
                   return (
                     <FilterComponent
                       key={key}
-                      idPrefix="SearchFiltersPrimary"
+                      id={filterId}
                       config={filterConfig}
                       listingCategories={listingCategories}
                       marketplaceCurrency={marketplaceCurrency}
@@ -621,10 +623,11 @@ export class SearchPageComponent extends Component {
                     const key = `SearchFiltersSecondary.${filterConfig.scope || 'built-in'}.${
                       filterConfig.key
                     }`;
+                    const filterId = `SearchFiltersSecondary.${filterConfig.key.toLowerCase()}`;
                     return (
                       <FilterComponent
                         key={key}
-                        idPrefix="SearchFiltersSecondary"
+                        id={filterId}
                         config={filterConfig}
                         listingCategories={listingCategories}
                         marketplaceCurrency={marketplaceCurrency}
