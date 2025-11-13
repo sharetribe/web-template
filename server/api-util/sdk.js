@@ -67,8 +67,10 @@ exports.deserialize = str => {
   return sharetribeSdk.transit.read(str, { typeHandlers });
 };
 
-exports.handleError = (res, error) => {
-  log.error(error, 'local-api-request-failed', error.data);
+exports.handleError = (res, error, options = {}) => {
+  if (!options?.skipErrorLogging) {
+    log.error(error, 'local-api-request-failed', error.data);
+  }
 
   if (error.status && error.statusText && error.data) {
     const { status, statusText, data } = error;

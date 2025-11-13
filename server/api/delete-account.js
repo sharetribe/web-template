@@ -21,6 +21,9 @@ const stripeRelatedStatesForNegotiation = [
   'state/completed',
 ];
 
+const HAS_INCOMPLETE_TRANSACTIONS =
+  'User has transactions on states that include incomplete payment processing';
+
 module.exports = (req, res) => {
   const { currentPassword } = req.body;
 
@@ -55,9 +58,7 @@ module.exports = (req, res) => {
   ])
     .then(responses => {
       if (hasOngoingTransactionsWithIncompletePaymentProcessing(responses)) {
-        throw new Error(
-          'User has transactions on states that include incomplete payment processing'
-        );
+        throw new Error(HAS_INCOMPLETE_TRANSACTIONS);
       }
       return getTrustedSdk(req);
     })
@@ -79,7 +80,8 @@ module.exports = (req, res) => {
         .end();
     })
     .catch(e => {
-      handleError(res, e);
+      const options = e.message === HAS_INCOMPLETE_TRANSACTIONS ? { skipErrorLogging: true } : {};
+      handleError(res, e, options);
     });
 };
 
