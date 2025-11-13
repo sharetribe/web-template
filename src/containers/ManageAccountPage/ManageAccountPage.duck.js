@@ -14,6 +14,7 @@ export const deleteAccountThunk = createAsyncThunk(
   (currentPassword, { dispatch, rejectWithValue }) => {
     return deleteUserAccount({ currentPassword })
       .then(() => {
+        dispatch(markAccountDeleted());
         return dispatch(logout());
       })
       .catch(e => {
@@ -54,10 +55,15 @@ const manageAccountPageSlice = createSlice({
     deleteAccountError: null,
     deleteAccountInProgress: false,
     accountDeletionConfirmed: false,
+    accountMarkedDeleted: false,
     resetPasswordInProgress: false,
     resetPasswordError: null,
   },
-  reducers: {},
+  reducers: {
+    markAccountDeleted: state => {
+      state.accountMarkedDeleted = true;
+    },
+  },
   extraReducers: builder => {
     builder
       // deleteAccount cases
@@ -87,5 +93,7 @@ const manageAccountPageSlice = createSlice({
       });
   },
 });
+
+export const { markAccountDeleted } = manageAccountPageSlice.actions;
 
 export default manageAccountPageSlice.reducer;
