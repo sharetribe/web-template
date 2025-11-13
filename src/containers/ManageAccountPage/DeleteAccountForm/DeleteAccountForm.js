@@ -79,6 +79,7 @@ const DeleteAccountForm = props => {
           resetPasswordInProgress = false,
         } = fieldRenderProps;
         const { confirmDeleteAccount } = values;
+        const { email } = currentUser.attributes;
 
         const deleteAccountConfirmed =
           Array.isArray(confirmDeleteAccount) && confirmDeleteAccount.length > 0;
@@ -168,7 +169,7 @@ const DeleteAccountForm = props => {
                 <FormattedMessage id="DeleteAccountForm.confirmDeleteTitle" />
               </H4>
               <p className={css.confirmChangesInfo}>
-                <FormattedMessage id="DeleteAccountForm.deleteAccountInfo" />
+                <FormattedMessage id="DeleteAccountForm.deleteAccountInfo" values={{ email }} />
                 <br />
                 <FormattedMessage
                   id="DeleteAccountForm.resetPasswordInfo"
