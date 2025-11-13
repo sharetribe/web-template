@@ -11,7 +11,6 @@ import { ensureCurrentUser } from '../../util/data';
 import { showCreateListingLinkForUser, showPaymentDetailsForUser } from '../../util/userHelpers';
 import { pathByRouteName } from '../../util/routes';
 
-import { sendVerificationEmail } from '../../ducks/user.duck';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 
 import { H3, Page, UserNav, LayoutSideNavigation } from '../../components';
@@ -52,7 +51,6 @@ export const ManageAccountPageComponent = props => {
   } = props;
 
   const user = ensureCurrentUser(currentUser);
-  const currentEmail = user.attributes.email || '';
 
   const handleSubmit = values => {
     // Get password from form, use it to delete the user account
