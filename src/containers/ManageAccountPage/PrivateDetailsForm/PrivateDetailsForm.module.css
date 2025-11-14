@@ -1,0 +1,37 @@
+@import '../../../styles/customMediaQueries.css';
+
+.root {
+  margin-top: 24px;
+
+  @media (--viewportMedium) {
+    margin-top: 32px;
+  }
+}
+
+.sectionContainer {
+  padding: 0;
+  margin-bottom: 36px;
+
+  @media (--viewportMedium) {
+    padding: 0;
+    margin-bottom: 56px;
+  }
+}
+
+.error {
+  /* Font */
+  composes: h4 from global;
+  color: var(--colorFail);
+  margin-top: 18px;
+  margin-bottom: 0;
+
+  @media (--viewportMedium) {
+    margin-top: 22px;
+    margin-bottom: 2px;
+  }
+}
+
+.submitButton {
+  margin-top: 24px;
+  margin-bottom: 56px;
+}
