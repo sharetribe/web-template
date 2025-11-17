@@ -78,7 +78,7 @@ const DeleteAccountForm = props => {
           values,
           resetPasswordInProgress = false,
         } = fieldRenderProps;
-        const { confirmDeleteAccount } = values;
+        const { confirmDeleteAccount, currentPassword } = values;
         const { email } = currentUser.attributes;
 
         const deleteAccountConfirmed =
@@ -140,7 +140,8 @@ const DeleteAccountForm = props => {
         });
 
         const classes = classNames(rootClassName || css.root, className);
-        const submitDisabled = invalid || inProgress || !deleteAccountConfirmed;
+        const submitDisabled =
+          invalid || inProgress || !(deleteAccountConfirmed && currentPassword);
 
         return (
           <Form
