@@ -14,6 +14,7 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] ManageListingsPage.duck.js: fix a bug with pagination links not being rendered. [#701](https://github.com/sharetribe/web-template/pull/701)
 - [add] Additional accesibility improvements to text and icon colors in search CTA.
   [#696](https://github.com/sharetribe/web-template/pull/696)
 - [add] Improve template accessibility further

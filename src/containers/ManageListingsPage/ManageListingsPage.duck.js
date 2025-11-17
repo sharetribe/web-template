@@ -192,7 +192,7 @@ const manageListingsPageSlice = createSlice({
       })
       .addCase(queryOwnListingsThunk.fulfilled, (state, action) => {
         state.currentPageResultIds = resultIds(action.payload.data);
-        state.pagination = action.payload.meta;
+        state.pagination = action.payload.data.meta;
         state.queryInProgress = false;
       })
       .addCase(queryOwnListingsThunk.rejected, (state, action) => {
