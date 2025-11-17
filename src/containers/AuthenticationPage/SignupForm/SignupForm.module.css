@@ -47,3 +47,15 @@
 .bottomWrapper {
   composes: marketplaceModalBottomWrapper from global;
 }
+
+.error {
+  composes: textXSmall from global;
+  color: var(--colorFail);
+  font-weight: var(--fontWeightBold);
+  text-align: left;
+  padding: 6px 0;
+
+  @media (--viewportMedium) {
+    padding: 8px 0;
+  }
+}

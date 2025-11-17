@@ -956,6 +956,7 @@
   "SignupForm.passwordLabel": "Password",
   "SignupForm.passwordPlaceholder": "Enter your password…",
   "SignupForm.passwordRequired": "You need to add a password.",
+  "SignupForm.passwordRepeatedOnOtherFields": "Only enter your password in the dedicated field.",
   "SignupForm.passwordTooLong": "The password can't be longer than {maxLength} characters.",
   "SignupForm.passwordTooShort": "The password should be at least {minLength} characters.",
   "SignupForm.phoneNumberLabel": "Phone number",
