@@ -50,7 +50,22 @@
   margin-top: 0;
   margin-bottom: 0;
 
+  /* Break long words into multiple lines to avoid overflow */
+  word-break: break-word;
+  hyphens: auto;
+  font-size: 20px;
+
+  @media (min-width: 375px) {
+    font-size: 24px;
+  }
+
+  @media (min-width: 450px) {
+    font-size: 30px;
+  }
+
   @media (--viewportMedium) {
+    word-break: unset;
+    hyphens: unset;
     padding: 0;
     margin-top: 0;
   }
