@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] AuthenticationPage: fix a bug with long words in the title on mobile layout.
+  [#711](https://github.com/sharetribe/web-template/pull/711)
 - [add] Add currently available translations for DE, ES, FR.
   [#710](https://github.com/sharetribe/web-template/pull/710)
 
