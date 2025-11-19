@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+## [v10.2.0] 2025-11-19
+
 - [add] Added ability to delete user account in a new account settings page.
   [#660](https://github.com/sharetribe/web-template/pull/660/)
 - [change] SignupForm: check that the password is not copy-pasted to other fields.
@@ -29,6 +31,8 @@ way to update this template, but currently, we follow a pattern:
   - Updated various component roles
 
   [#691](https://github.com/sharetribe/web-template/pull/691)
+
+  [v10.2.0]: https://github.com/sharetribe/web-template/compare/v10.1.2...v10.2.0
 
 ## [v10.1.2] 2025-11-10
 
