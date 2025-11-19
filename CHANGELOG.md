@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Add currently available translations for DE, ES, FR.
+  [#706](https://github.com/sharetribe/web-template/pull/706)
+
 ## [v10.2.0] 2025-11-19
 
 - [add] Added ability to delete user account in a new account settings page.
