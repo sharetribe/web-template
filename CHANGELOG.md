@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Added ability to delete user account in a new account settings page.
+  [#660](https://github.com/sharetribe/web-template/pull/660/)
 - [change] SignupForm: check that the password is not copy-pasted to other fields.
   [#702](https://github.com/sharetribe/web-template/pull/702)
 - [fix] ManageListingsPage.duck.js: fix a bug with pagination links not being rendered.
