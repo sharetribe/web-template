@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+## [v10.3.0] 2025-11-20
+
 - [add] Add support for Console-configured private custom user fields
   [#700](https://github.com/sharetribe/web-template/pull/700)
 - [change] make crossorigin attributes have an explicit default value.
@@ -22,6 +24,8 @@ way to update this template, but currently, we follow a pattern:
   only prediction. [#704](https://github.com/sharetribe/web-template/pull/704)
 - [add] Add currently available translations for DE, ES, FR.
   [#706](https://github.com/sharetribe/web-template/pull/706)
+
+[v10.3.0]: https://github.com/sharetribe/web-template/compare/v10.2.0...v10.3.0
 
 ## [v10.2.0] 2025-11-19
 
