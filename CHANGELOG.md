@@ -25,6 +25,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## [v10.2.0] 2025-11-19
 
+- [add] Add currently available translations for DE, ES, FR.
+  [#707](https://github.com/sharetribe/web-template/pull/707)
 - [add] Added ability to delete user account in a new account settings page.
   [#660](https://github.com/sharetribe/web-template/pull/660/)
 - [change] SignupForm: check that the password is not copy-pasted to other fields.
