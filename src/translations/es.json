@@ -821,7 +821,7 @@
   "ProductOrderForm.selectQuantityOption": "Seleccionar…",
   "ProductOrderForm.shippingOption": "Envío",
   "PrivateDetailsForm.saveChanges": "Guardar cambios",
-  "PrivateDetailsForm.updateProfileFailed": "Oops, something went wrong. Please try again.",
+  "PrivateDetailsForm.updateProfileFailed": "Algo salió mal. Inténtalo de nuevo.",
   "ProfilePage.desktopHeading": "Hola, soy {name}.",
   "ProfilePage.detailNo": "No",
   "ProfilePage.detailYes": "Sí",
