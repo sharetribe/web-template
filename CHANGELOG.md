@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [change] make crossorigin attributes have an explicit default value.
+  [#703](https://github.com/sharetribe/web-template/pull/703)
 - [fix] LocationAutocompleteInputImpl: do not select current location automatically if it is the
   only prediction. [#704](https://github.com/sharetribe/web-template/pull/704)
 - [add] Add currently available translations for DE, ES, FR.
