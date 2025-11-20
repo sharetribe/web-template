@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+## [v10.3.0] 2025-11-20
+
 - [add] Add currently available translations for DE, ES, FR.
   [#708](https://github.com/sharetribe/web-template/pull/708)
 - [add] Add support for Console-configured private custom user fields
@@ -25,7 +27,10 @@ way to update this template, but currently, we follow a pattern:
 - [add] Add currently available translations for DE, ES, FR.
   [#706](https://github.com/sharetribe/web-template/pull/706)
 
+[v10.3.0]: https://github.com/sharetribe/web-template/compare/v10.2.0...v10.3.0
+
 ## [v10.2.0] 2025-11-19
+
 - [add] Added ability to delete user account in a new account settings page.
   [#660](https://github.com/sharetribe/web-template/pull/660/)
 - [change] SignupForm: check that the password is not copy-pasted to other fields.
