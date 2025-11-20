@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] LocationAutocompleteInputImpl: do not select current location automatically if it is the
+  only prediction. [#704](https://github.com/sharetribe/web-template/pull/704)
 - [add] Add currently available translations for DE, ES, FR.
   [#706](https://github.com/sharetribe/web-template/pull/706)
 
