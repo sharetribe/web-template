@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Add support for Console-configured private custom user fields
+  [#700](https://github.com/sharetribe/web-template/pull/700)
 - [change] make crossorigin attributes have an explicit default value.
   [#703](https://github.com/sharetribe/web-template/pull/703)
 - [fix] LocationAutocompleteInputImpl: do not select current location automatically if it is the
