@@ -240,17 +240,26 @@ app.get('*', async (req, res) => {
 
   const sdk = sdkUtils.getSdk(req, res);
 
+  res.locals.beforeLoadDataTimestamp = Date.now();
+
   dataLoader
     .loadData(req.url, sdk, appInfo)
     .then(data => {
+      res.locals.timestampAfterLoadData = Date.now();
       const cspNonce = cspEnabled ? res.locals.cspNonce : null;
+
       return renderer.render(req.url, context, data, renderApp, webExtractor, cspNonce);
     })
     .then(html => {
+      res.locals.timestampAfterRender = Date.now();
+
       if (dev) {
+        // Simple logging to inspect the SSR behavior against localhost:4000 (yarn run dev-server)
         const debugData = {
           url: req.url,
           context,
+          loadDataMs: res.locals.timestampAfterLoadData - res.locals.beforeLoadDataTimestamp,
+          renderingMs: res.locals.timestampAfterRender - res.locals.timestampAfterLoadData,
         };
         console.log(`\nRender info:\n${JSON.stringify(debugData, null, '  ')}`);
       }
@@ -314,7 +323,7 @@ const server = app.listen(PORT, () => {
   const mode = dev ? 'development' : 'production';
   console.log(`Listening to port ${PORT} in ${mode} mode`);
   if (dev) {
-    console.log(`Open http://localhost:${PORT}/ and start hacking!`);
+    console.log(`Open http://localhost:${PORT}/ and start hacking!\n`);
   }
 });
 
