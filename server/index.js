@@ -45,6 +45,7 @@ const renderer = require('./renderer');
 const dataLoader = require('./dataLoader');
 const { generateCSPNonce, csp } = require('./csp');
 const sdkUtils = require('./api-util/sdk');
+const { getSDKProxy } = require('./api-util/sdkCacheProxy');
 
 const buildPath = path.resolve(__dirname, '..', 'build');
 const dev = process.env.REACT_APP_ENV === 'development';
@@ -238,7 +239,10 @@ app.get('*', async (req, res) => {
   const nodeEntrypoint = nodeExtractor.requireEntrypoint();
   const { default: renderApp, ...appInfo } = nodeEntrypoint;
 
-  const sdk = sdkUtils.getSdk(req, res);
+  // Note: Check ttl (time-to-live) and maxBytes (10MB by default for cached data) from sdkCacheProxy.js
+  // You could also define maxBytes based on free memory: const maxBytes = os.freemem() * 0.5;
+  const sharetribeSDK = sdkUtils.getSdk(req, res);
+  const sdk = getSDKProxy(sharetribeSDK);
 
   res.locals.beforeLoadDataTimestamp = Date.now();
 
