@@ -250,6 +250,9 @@ export const ManageListingsPageComponent = props => {
               onManageDisableScrolling={onManageDisableScrolling}
               onCloseModal={() => setDiscardDraftModalOpen(false)}
               onDiscardDraft={handleDiscardDraft}
+              focusElementId={
+                discardDraftModalId ? `discardButton_${discardDraftModalId.uuid}` : null
+              }
             />
           ) : null}
 

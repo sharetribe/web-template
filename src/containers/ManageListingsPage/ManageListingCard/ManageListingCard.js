@@ -153,6 +153,7 @@ const ShowFinishDraftOverlayMaybe = props => {
               discardDraftLink: (
                 <InlineTextButton
                   key="discardDraftLink"
+                  id={`discardButton_${currentListingId.uuid}`}
                   rootClassName={css.alternativeActionLink}
                   disabled={!!actionsInProgressListingId}
                   onClick={() => {

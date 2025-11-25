@@ -8,6 +8,8 @@ import InquiryForm from './InquiryForm/InquiryForm';
 
 import css from './ListingPage.module.css';
 
+const CONTACT_USER_LINK = 'inquiryModalContactUserLink';
+
 const SectionAuthorMaybe = props => {
   const {
     title,
@@ -41,6 +43,7 @@ const SectionAuthorMaybe = props => {
         currentUser={currentUser}
         onContactUser={onContactUser}
         showContact={!isInquiryProcess}
+        contactLinkId={CONTACT_USER_LINK}
       />
       <Modal
         id="ListingPage.inquiry"
@@ -49,6 +52,7 @@ const SectionAuthorMaybe = props => {
         onClose={onCloseInquiryModal}
         usePortal
         onManageDisableScrolling={onManageDisableScrolling}
+        focusElementId={CONTACT_USER_LINK}
       >
         <InquiryForm
           className={css.inquiryForm}

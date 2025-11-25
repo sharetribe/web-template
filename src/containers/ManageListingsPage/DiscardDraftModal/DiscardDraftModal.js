@@ -27,6 +27,7 @@ const DiscardDraftModal = props => {
     rootClassName,
     id,
     isOpen,
+    focusElementId,
     onCloseModal,
     onManageDisableScrolling,
     onDiscardDraft,
@@ -41,6 +42,7 @@ const DiscardDraftModal = props => {
       isOpen={isOpen}
       onClose={onCloseModal}
       onManageDisableScrolling={onManageDisableScrolling}
+      focusElementId={focusElementId}
       usePortal
       closeButtonMessage={intl.formatMessage({ id: 'DiscardDraftModal.close' })}
     >

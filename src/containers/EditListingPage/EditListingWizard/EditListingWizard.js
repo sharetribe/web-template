@@ -691,7 +691,15 @@ class EditListingWizard extends Component {
         <Modal
           id="EditListingWizard.payoutModal"
           isOpen={this.state.showPayoutDetails}
-          onClose={this.handlePayoutModalClose}
+          onClose={() => {
+            this.handlePayoutModalClose();
+            const main = document.getElementsByTagName('main')?.[0];
+            const submitButtons = main?.querySelectorAll('button[type="submit"]');
+            const lastSubmitButton = submitButtons?.[submitButtons.length - 1];
+            if (lastSubmitButton) {
+              lastSubmitButton.focus();
+            }
+          }}
           onManageDisableScrolling={onManageDisableScrolling}
           usePortal
         >
