@@ -36,6 +36,7 @@ const ReviewModal = props => {
     id,
     marketplaceName,
     isOpen,
+    focusElementId,
     onCloseModal,
     onManageDisableScrolling,
     onSubmitReview,
@@ -57,6 +58,7 @@ const ReviewModal = props => {
       isOpen={isOpen}
       onClose={onCloseModal}
       onManageDisableScrolling={onManageDisableScrolling}
+      focusElementId={focusElementId}
       usePortal
       closeButtonMessage={closeButtonMessage}
     >

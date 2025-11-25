@@ -80,6 +80,7 @@ const displayNames = (currentUser, provider, customer, intl) => {
  * @param {stateDataShape} props.stateData - The state data
  * @param {boolean} props.showBookingLocation - Whether the booking location is shown
  * @param {React.ReactNode} props.activityFeed - The activity feed
+ * @param {Function} props.actionButtons - The action buttons function
  * @param {React.ReactNode} props.orderBreakdown - The order breakdown
  * @param {React.ReactNode} props.orderPanel - The order panel
  * @param {object} props.config - The config
@@ -281,6 +282,7 @@ export class TransactionPanelComponent extends Component {
                     />
                   ) : null}
                   <DiminishedActionButtonMaybe
+                    id="mobile_disputeOrderButton"
                     showDispute={stateData.showDispute}
                     onOpenDisputeModal={onOpenDisputeModal}
                   />
@@ -346,7 +348,7 @@ export class TransactionPanelComponent extends Component {
             {stateData.showActionButtons ? (
               <>
                 <div className={css.mobileActionButtonSpacer}></div>
-                <div className={css.mobileActionButtons}>{actionButtons}</div>
+                <div className={css.mobileActionButtons}>{actionButtons('mobile')}</div>
               </>
             ) : null}
           </div>
@@ -396,10 +398,11 @@ export class TransactionPanelComponent extends Component {
                 ) : null}
 
                 {stateData.showActionButtons ? (
-                  <div className={css.desktopActionButtons}>{actionButtons}</div>
+                  <div className={css.desktopActionButtons}>{actionButtons('desktop')}</div>
                 ) : null}
               </div>
               <DiminishedActionButtonMaybe
+                id="desktop_disputeOrderButton"
                 showDispute={stateData.showDispute}
                 onOpenDisputeModal={onOpenDisputeModal}
               />

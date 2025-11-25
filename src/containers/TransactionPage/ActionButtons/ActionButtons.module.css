@@ -32,13 +32,13 @@
   gap: 12px;
 
   @media (--viewportLarge) {
-    flex-direction: column-reverse;
+    flex-direction: column;
     gap: 8px;
   }
 }
 
 .multipleButtons {
-  flex-direction: column-reverse;
+  flex-direction: column;
 }
 
 .actionButtonWrapper {

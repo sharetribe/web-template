@@ -117,6 +117,7 @@ const MakeCounterOfferModal = props => {
     id,
     isOpen = false,
     onCloseModal,
+    focusElementId,
     onManageDisableScrolling,
     onMakeCounterOffer,
     counterOfferSubmitted = false,
@@ -135,6 +136,7 @@ const MakeCounterOfferModal = props => {
       isOpen={isOpen}
       onClose={onCloseModal}
       onManageDisableScrolling={onManageDisableScrolling}
+      focusElementId={focusElementId}
       usePortal
     >
       <IconPriceTag className={css.modalIcon} />
