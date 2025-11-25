@@ -16,7 +16,9 @@ import { Button, IconClose } from '../../components';
 
 import css from './Modal.module.css';
 
-const KEY_CODE_ESCAPE = 27;
+const KEY_ESCAPE = 'Escape';
+const PAGE_ROOT_ID = 'root';
+const PORTAL_ROOT_ID = 'portal-root';
 
 class Portal extends React.Component {
   constructor(props) {
@@ -81,8 +83,11 @@ export class ModalComponent extends Component {
   }
 
   componentDidMount() {
-    const { id, isOpen, onManageDisableScrolling } = this.props;
+    const { id, isOpen, onManageDisableScrolling, usePortal } = this.props;
     onManageDisableScrolling(id, isOpen);
+    if (usePortal && isOpen) {
+      document.getElementById(PAGE_ROOT_ID)?.setAttribute('inert', '');
+    }
     window.document.body.addEventListener('keyup', this.handleBodyKeyUp);
 
     // A hack to update container height for mobile Safari,
@@ -93,33 +98,45 @@ export class ModalComponent extends Component {
     window.addEventListener('resize', this.handleResize);
 
     this.setState({
-      portalRoot: document.getElementById('portal-root'),
+      portalRoot: document.getElementById(PORTAL_ROOT_ID),
     });
   }
 
   componentDidUpdate(prevProps) {
-    const { id, isOpen, onManageDisableScrolling } = prevProps;
+    const { id, isOpen, onManageDisableScrolling, focusElementId } = prevProps;
     if (this.props.isOpen !== isOpen) {
       onManageDisableScrolling(id, this.props.isOpen);
 
       // Because we are using portal,
       // we need to set the focus inside Modal manually
-      if (this.props.usePortal && this.props.isOpen) {
-        this.refDiv.current.focus();
+      if (this.props.usePortal) {
+        if (this.props.isOpen) {
+          this.refDiv.current.focus();
+          document.getElementById(PAGE_ROOT_ID)?.setAttribute('inert', '');
+        } else {
+          document.getElementById(PAGE_ROOT_ID)?.removeAttribute('inert');
+          if (focusElementId) {
+            document.getElementById(focusElementId)?.focus();
+          }
+        }
       }
     }
   }
 
   componentWillUnmount() {
-    const { id, onManageDisableScrolling } = this.props;
+    const { id, onManageDisableScrolling, focusElementId } = this.props;
     window.document.body.removeEventListener('keyup', this.handleBodyKeyUp);
     window.document.body.removeEventListener('resize', this.handleResize);
     onManageDisableScrolling(id, false);
+    document.getElementById(PAGE_ROOT_ID)?.removeAttribute('inert');
+    if (focusElementId) {
+      document.getElementById(focusElementId)?.focus();
+    }
   }
 
   handleBodyKeyUp(event) {
     const { isOpen } = this.props;
-    if (event.keyCode === KEY_CODE_ESCAPE && isOpen) {
+    if (event.key === KEY_ESCAPE && isOpen) {
       this.handleClose(event);
     }
   }
@@ -127,6 +144,7 @@ export class ModalComponent extends Component {
   handleClose(event) {
     const { id, onClose, onManageDisableScrolling } = this.props;
     onManageDisableScrolling(id, false);
+    document.getElementById(PAGE_ROOT_ID)?.removeAttribute('inert');
     onClose(event);
   }
 
