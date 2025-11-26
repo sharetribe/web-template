@@ -212,7 +212,6 @@ class Menu extends Component {
         ref={c => {
           this.menu = c;
         }}
-        role="menu"
         {...ariaLabelMaybe}
       >
         {menuChildren}
