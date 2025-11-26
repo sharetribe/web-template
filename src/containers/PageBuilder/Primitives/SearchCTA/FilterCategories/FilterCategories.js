@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Field } from 'react-final-form';
 import classNames from 'classnames';
-import { FormattedMessage } from '../../../../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../../../../util/reactIntl';
 
 import { OutsideClickHandler } from '../../../../../components';
 
@@ -11,6 +11,7 @@ const CategoryDropdown = ({ input, className, rootClassName, categories, alignLe
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const [hasSelected, setHasSelected] = useState(false);
+  const intl = useIntl();
 
   const toggleDropdown = () => {
     setIsOpen(prev => !prev);
@@ -93,6 +94,9 @@ const CategoryDropdown = ({ input, className, rootClassName, categories, alignLe
       <div className={css.dropdownContainer}>
         <div
           role="combobox"
+          aria-label={intl.formatMessage({
+            id: 'PageBuilder.SearchCTA.CategoryFilter.placeholder',
+          })}
           aria-haspopup="listbox"
           aria-expanded={isOpen}
           aria-owns="category-listbox"
