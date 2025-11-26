@@ -181,7 +181,9 @@
 }
 
 /* link on dark theme */
-.darkTheme a {
+
+/* ************************************ */
+.darkTheme .Link__pages {
   color: white;
   text-decoration: underline;
 
