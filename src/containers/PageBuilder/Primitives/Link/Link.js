@@ -24,7 +24,7 @@ export const Link = React.forwardRef((props, ref) => {
   const routes = useRouteConfiguration();
 
   const { className, rootClassName, href, title, children } = props;
-  const classes = classNames(rootClassName || css.link, className);
+  const classes = classNames(rootClassName || css.link, className, 'Link__pages');
   const titleMaybe = title ? { title } : {};
   const linkProps = { className: classes, href, children, ...titleMaybe };
 
