@@ -8,6 +8,8 @@ const Sentry = require('@sentry/node');
 
 const ENV = process.env.REACT_APP_ENV;
 const SENTRY_DSN = process.env.REACT_APP_SENTRY_DSN;
+const VERBOSE = process.env.VERBOSE === 'true';
+const DEV = process.env.REACT_APP_ENV === 'development';
 
 const ingoreErrorsMap = {
   ['AxiosError: Network Error']: true,
@@ -75,4 +77,10 @@ exports.error = (e, code, data) => {
   console.error(e);
   console.error(code);
   console.error(data);
+};
+
+exports.devLogger = (...args) => {
+  if (DEV && VERBOSE) {
+    console.log(...args);
+  }
 };
