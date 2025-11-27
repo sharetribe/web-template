@@ -114,6 +114,7 @@ const ListingCardImage = props => {
     variantPrefix,
     showListingImage,
     style,
+    aspectRatioClassName,
   } = props;
 
   const firstImage =
@@ -122,10 +123,12 @@ const ListingCardImage = props => {
     ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
     : [];
 
+  const aspectRatioClass = aspectRatioClassName || css.aspectRatioWrapper;
+
   // Render the listing image only if listing images are enabled in the listing type
   return showListingImage ? (
     <AspectRatioWrapper
-      className={css.aspectRatioWrapper}
+      className={aspectRatioClass}
       width={aspectWidth}
       height={aspectHeight}
       {...setActivePropsMaybe}
@@ -142,7 +145,7 @@ const ListingCardImage = props => {
     <ListingCardThumbnail
       style={style}
       listingTitle={title}
-      className={css.aspectRatioWrapper}
+      className={aspectRatioClass}
       width={aspectWidth}
       height={aspectHeight}
       setActivePropsMaybe={setActivePropsMaybe}
@@ -157,6 +160,7 @@ const ListingCardImage = props => {
  * @param {Object} props
  * @param {string?} props.className add more style rules in addition to component's own css.root
  * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string?} props.aspectRatioClassName custom className for AspectRatioWrapper component
  * @param {Object} props.listing API entity: listing or ownListing
  * @param {string?} props.renderSizes for img/srcset
  * @param {Function?} props.setActiveListing
@@ -170,6 +174,8 @@ export const ListingCard = props => {
   const {
     className,
     rootClassName,
+    aspectRatioClassName,
+    darkMode,
     listing,
     renderSizes,
     setActiveListing,
@@ -218,6 +224,7 @@ export const ListingCard = props => {
         variantPrefix={variantPrefix}
         style={cardStyle}
         showListingImage={showListingImage}
+        aspectRatioClassName={aspectRatioClassName}
       />
       <div className={css.info}>
         <PriceMaybe
@@ -229,7 +236,7 @@ export const ListingCard = props => {
         />
         <div className={css.mainInfo}>
           {showListingImage && (
-            <div className={css.title}>
+            <div className={classNames(css.title, { [css.lightText]: darkMode })}>
               {richText(title, {
                 longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
                 longWordClass: css.longWord,
@@ -237,7 +244,7 @@ export const ListingCard = props => {
             </div>
           )}
           {showAuthorInfo ? (
-            <div className={css.authorInfo}>
+            <div className={classNames(css.authorInfo, { [css.lightText]: darkMode })}>
               <FormattedMessage id="ListingCard.author" values={{ authorName }} />
             </div>
           ) : null}
