@@ -699,6 +699,7 @@ export const AuthenticationPageComponent = props => {
         onClose={() => setTosModalOpen(false)}
         usePortal
         onManageDisableScrolling={onManageDisableScrolling}
+        focusElementId={'terms-accepted.tos-and-privacy'}
       >
         <div className={css.termsWrapper} role="complementary">
           <TermsOfServiceContent
@@ -714,6 +715,7 @@ export const AuthenticationPageComponent = props => {
         onClose={() => setPrivacyModalOpen(false)}
         usePortal
         onManageDisableScrolling={onManageDisableScrolling}
+        focusElementId={'terms-accepted.tos-and-privacy'}
       >
         <div className={css.privacyWrapper} role="complementary">
           <PrivacyPolicyContent

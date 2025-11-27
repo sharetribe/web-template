@@ -11,10 +11,10 @@ import css from './TransactionPanel.module.css';
 // but like ActionButtonsMayne, this could be customized to handle different actions too.
 // Essentially, this is just a placeholder for diminished actions.
 const DiminishedActionButtonMaybe = props => {
-  const { className, rootClassName, showDispute, onOpenDisputeModal } = props;
+  const { id, className, rootClassName, showDispute, onOpenDisputeModal } = props;
 
   const diminishedActionButton = onOpenDisputeModal ? (
-    <InlineTextButton className={css.diminishedActionButton} onClick={onOpenDisputeModal}>
+    <InlineTextButton id={id} className={css.diminishedActionButton} onClick={onOpenDisputeModal}>
       <FormattedMessage id="TransactionPanel.disputeOrder" />
     </InlineTextButton>
   ) : null;

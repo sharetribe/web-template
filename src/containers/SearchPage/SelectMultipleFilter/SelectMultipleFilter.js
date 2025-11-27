@@ -123,7 +123,6 @@ const SelectMultipleFilter = props => {
     <FilterPopup
       className={classes}
       rootClassName={rootClassName}
-      popupClassName={css.popupSize}
       label={labelForPopup}
       ariaLabel={getAriaLabel(label, selectedOptions.join(', '))}
       isSelected={hasInitialValues}

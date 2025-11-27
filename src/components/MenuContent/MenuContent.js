@@ -61,7 +61,9 @@ const MenuContent = props => {
   return (
     <div className={classes} ref={contentRef} style={style}>
       {arrow}
-      <ul className={contentClasses}>{children}</ul>
+      <ul className={contentClasses} role="menu">
+        {children}
+      </ul>
     </div>
   );
 };

@@ -90,7 +90,6 @@ const SeatsFilter = props => {
     <FilterPopup
       className={classes}
       rootClassName={rootClassName}
-      popupClassName={css.popupSize}
       name={name}
       label={labelForPopup}
       ariaLabel={getAriaLabel(label, initialSeats)}

@@ -107,7 +107,6 @@ const SelectSingleFilter = props => {
     <FilterPopup
       className={classes}
       rootClassName={rootClassName}
-      popupClassName={css.popupSize}
       label={label}
       ariaLabel={getAriaLabel(label, categorySelection)}
       isSelected={hasInitialValues}

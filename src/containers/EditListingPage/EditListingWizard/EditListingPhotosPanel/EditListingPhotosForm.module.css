@@ -108,7 +108,18 @@
 }
 
 .addImageInput {
-  display: none;
+  clip-path: inset(50%);
+  height: 1px;
+  width: 1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+
+  &:focus ~ .addImage {
+    border-color: var(--colorGrey300);
+  }
 }
 
 .tip {

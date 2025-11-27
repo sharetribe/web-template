@@ -118,6 +118,7 @@ const RequestChangesModal = props => {
     id,
     isOpen = false,
     onCloseModal,
+    focusElementId,
     onManageDisableScrolling,
     onChangeRequest,
     changeRequestSubmitted = false,
@@ -134,6 +135,7 @@ const RequestChangesModal = props => {
       isOpen={isOpen}
       onClose={onCloseModal}
       onManageDisableScrolling={onManageDisableScrolling}
+      focusElementId={focusElementId}
       usePortal
       closeButtonMessage={intl.formatMessage({ id: 'RequestChangesModal.close' })}
     >

@@ -90,7 +90,6 @@ exports[`ManageListingCard matches snapshot (purchase) 1`] = `
       >
         <div
           class="root menu cardIsOpen"
-          role="menu"
         >
           <button
             class="root menuLabel"
@@ -156,6 +155,7 @@ exports[`ManageListingCard matches snapshot (purchase) 1`] = `
           >
             <ul
               class="content"
+              role="menu"
             >
               <li
                 class="root"

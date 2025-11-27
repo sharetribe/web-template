@@ -8,6 +8,10 @@ import { PrimaryButton, SecondaryButton, Button } from '../../../components';
 
 import css from './ActionButtons.module.css';
 
+export const ACTION_BUTTON_1_ID = 'actionButton1';
+export const ACTION_BUTTON_2_ID = 'actionButton2';
+export const ACTION_BUTTON_3_ID = 'actionButton3';
+
 const hasReachedMaxDurationSinceTransition = (condition, transitions, timeZone) => {
   const sinceTransition = transitions.find(t => t.transition === condition.sinceTransition);
   if (sinceTransition) {
@@ -105,6 +109,7 @@ const getDisabledState = (buttonProps, transitions, timeZone, intl) => {
  * @param {Object} props
  * @param {string} [props.className]
  * @param {string} [props.rootClassName]
+ * @param {string} [props.containerId] - The id of the container that the buttons are in
  * @param {boolean} props.showButtons
  * @param {ButtonProps} [props.primaryButtonProps]
  * @param {ButtonProps} [props.secondaryButtonProps]
@@ -117,6 +122,7 @@ const ActionButtons = props => {
   const {
     className,
     rootClassName,
+    containerId = '',
     showButtons,
     primaryButtonProps,
     secondaryButtonProps,
@@ -169,7 +175,60 @@ const ActionButtons = props => {
     <p className={css.actionError}>{tertiaryButtonProps?.errorText}</p>
   ) : null;
 
+  const actionButton1 =
+    primaryButtonProps && hasValidData
+      ? [
+          <div className={css.actionButtonWrapper} key={ACTION_BUTTON_1_ID}>
+            <PrimaryButton
+              id={`${containerId}_${ACTION_BUTTON_1_ID}`}
+              inProgress={primaryButtonProps.inProgress}
+              disabled={buttonsDisabled || primaryDisabled}
+              onClick={primaryButtonProps.onAction}
+            >
+              {primaryButtonProps.buttonText}
+            </PrimaryButton>
+            {primaryDisabled && <div className={css.finePrint}>{primaryReason}</div>}
+          </div>,
+        ]
+      : [];
+  const actionButton2 =
+    secondaryButtonProps && hasValidData
+      ? [
+          <div className={css.actionButtonWrapper} key={ACTION_BUTTON_2_ID}>
+            <SecondaryButton
+              id={`${containerId}_${ACTION_BUTTON_2_ID}`}
+              inProgress={secondaryButtonProps?.inProgress}
+              disabled={buttonsDisabled || secondaryDisabled}
+              onClick={secondaryButtonProps.onAction}
+            >
+              {secondaryButtonProps.buttonText}
+            </SecondaryButton>
+            {secondaryDisabled && <div className={css.finePrint}>{secondaryReason}</div>}
+          </div>,
+        ]
+      : [];
+  const actionButton3 =
+    tertiaryButtonProps && hasValidData
+      ? [
+          <div className={css.actionButtonWrapper} key={ACTION_BUTTON_3_ID}>
+            <Button
+              id={`${containerId}_${ACTION_BUTTON_3_ID}`}
+              inProgress={tertiaryButtonProps.inProgress}
+              disabled={buttonsDisabled || tertiaryDisabled}
+              onClick={tertiaryButtonProps.onAction}
+            >
+              {tertiaryButtonProps.buttonText}
+            </Button>
+            {tertiaryDisabled && <div className={css.finePrint}>{tertiaryReason}</div>}
+          </div>,
+        ]
+      : [];
+
   const hasMultipleButtons = primaryButtonProps && secondaryButtonProps && tertiaryButtonProps;
+  const actionButtons =
+    hasMultipleButtons || containerId === 'desktop'
+      ? [...actionButton1, ...actionButton2, ...actionButton3]
+      : [...actionButton3, ...actionButton2, ...actionButton1];
 
   const classes = classNames(rootClassName || css.root, className);
 
@@ -183,42 +242,8 @@ const ActionButtons = props => {
           [css.multipleButtons]: !!hasMultipleButtons,
         })}
       >
-        {tertiaryButtonProps && hasValidData ? (
-          <div className={css.actionButtonWrapper}>
-            <Button
-              inProgress={tertiaryButtonProps.inProgress}
-              disabled={buttonsDisabled || tertiaryDisabled}
-              onClick={tertiaryButtonProps.onAction}
-            >
-              {tertiaryButtonProps.buttonText}
-            </Button>
-            {tertiaryDisabled && <div className={css.finePrint}>{tertiaryReason}</div>}
-          </div>
-        ) : null}
-        {secondaryButtonProps && hasValidData ? (
-          <div className={css.actionButtonWrapper}>
-            <SecondaryButton
-              inProgress={secondaryButtonProps?.inProgress}
-              disabled={buttonsDisabled || secondaryDisabled}
-              onClick={secondaryButtonProps.onAction}
-            >
-              {secondaryButtonProps.buttonText}
-            </SecondaryButton>
-            {secondaryDisabled && <div className={css.finePrint}>{secondaryReason}</div>}
-          </div>
-        ) : null}
-        {primaryButtonProps && hasValidData ? (
-          <div className={css.actionButtonWrapper}>
-            <PrimaryButton
-              inProgress={primaryButtonProps.inProgress}
-              disabled={buttonsDisabled || primaryDisabled}
-              onClick={primaryButtonProps.onAction}
-            >
-              {primaryButtonProps.buttonText}
-            </PrimaryButton>
-            {primaryDisabled && <div className={css.finePrint}>{primaryReason}</div>}
-          </div>
-        ) : null}
+        {actionButtons}
+
         {!hasValidData ? (
           <div className={css.actionButtonWrapper}>
             <p className={css.error}>{intl.formatMessage({ id: errorMessageId })}</p>

@@ -19,7 +19,6 @@ import SeatsFilter from './SeatsFilter/SeatsFilter';
  */
 const FilterComponent = props => {
   const {
-    idPrefix,
     config,
     urlQueryParams,
     initialValues,
@@ -37,8 +36,6 @@ const FilterComponent = props => {
   const { liveEdit, showAsPopup } = rest;
 
   const useHistoryPush = liveEdit || showAsPopup;
-  const prefix = idPrefix || 'SearchPage';
-  const componentId = `${prefix}.${key.toLowerCase()}`;
   const name = key.replace(/\s+/g, '-');
   const getAriaLabel = (label, values) => {
     const status = values ? 'active' : 'inactive';
@@ -57,7 +54,6 @@ const FilterComponent = props => {
 
       return (
         <SelectSingleFilter
-          id={componentId}
           name={key}
           label={label}
           queryParamNames={queryParamNames}
@@ -77,7 +73,6 @@ const FilterComponent = props => {
 
       return (
         <SelectSingleFilter
-          id={componentId}
           name={key}
           label={label}
           queryParamNames={[paramNames]}
@@ -93,7 +88,6 @@ const FilterComponent = props => {
       const { min, max, step } = config;
       return (
         <PriceFilter
-          id={componentId}
           name={key}
           label={intl.formatMessage({ id: 'FilterComponent.priceLabel' })}
           queryParamNames={[key]}
@@ -113,7 +107,6 @@ const FilterComponent = props => {
 
       return (
         <KeywordFilter
-          id={componentId}
           label={label}
           name={name}
           queryParamNames={[key]}
@@ -128,7 +121,6 @@ const FilterComponent = props => {
       const isNightlyMode = dateRangeMode === 'night';
       return (
         <BookingDateRangeFilter
-          id={componentId}
           label={intl.formatMessage({ id: 'FilterComponent.datesLabel' })}
           queryParamNames={[key]}
           initialValues={initialValues([key], liveEdit)}
@@ -143,7 +135,6 @@ const FilterComponent = props => {
       const label = intl.formatMessage({ id: 'FilterComponent.seatsLabel' });
       return (
         <SeatsFilter
-          id={componentId}
           name={name}
           label={label}
           queryParamNames={[key]}
@@ -164,7 +155,6 @@ const FilterComponent = props => {
       const queryParamNames = [constructQueryParamName(key, scope)];
       return filterType === 'SelectSingleFilter' ? (
         <SelectSingleFilter
-          id={componentId}
           label={label}
           getAriaLabel={getAriaLabel}
           name={name}
@@ -177,7 +167,6 @@ const FilterComponent = props => {
         />
       ) : (
         <SelectMultipleFilter
-          id={componentId}
           label={label}
           getAriaLabel={getAriaLabel}
           name={name}
@@ -196,7 +185,6 @@ const FilterComponent = props => {
       const queryParamNames = [constructQueryParamName(key, scope)];
       return (
         <SelectMultipleFilter
-          id={componentId}
           label={label}
           getAriaLabel={getAriaLabel}
           name={name}
@@ -216,7 +204,6 @@ const FilterComponent = props => {
       const queryParamNames = [constructQueryParamName(key, scope)];
       return (
         <IntegerRangeFilter
-          id={componentId}
           label={label}
           name={name}
           queryParamNames={queryParamNames}

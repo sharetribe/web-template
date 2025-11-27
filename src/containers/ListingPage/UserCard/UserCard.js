@@ -81,7 +81,15 @@ const UserCard = props => {
     setMounted(true);
   }, []);
 
-  const { rootClassName, className, user, currentUser, onContactUser, showContact = true } = props;
+  const {
+    rootClassName,
+    className,
+    user,
+    currentUser,
+    onContactUser,
+    showContact = true,
+    contactLinkId = 'contactUserLink',
+  } = props;
 
   const userIsCurrentUser = user && user.type === 'currentUser';
   const ensuredUser = userIsCurrentUser ? ensureCurrentUser(user) : ensureUser(user);
@@ -108,6 +116,7 @@ const UserCard = props => {
 
   const contact = showContact ? (
     <InlineTextButton
+      id={contactLinkId}
       rootClassName={css.contact}
       onClick={handleContactUserClick}
       enforcePagePreloadFor="SignupPage"

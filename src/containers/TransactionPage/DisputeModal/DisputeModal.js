@@ -129,6 +129,7 @@ const DisputeModal = props => {
     onCloseModal,
     onManageDisableScrolling,
     onDisputeOrder,
+    focusElementId,
     disputeSubmitted = false,
     disputeInProgress = false,
     disputeError,
@@ -143,6 +144,7 @@ const DisputeModal = props => {
       isOpen={isOpen}
       onClose={onCloseModal}
       onManageDisableScrolling={onManageDisableScrolling}
+      focusElementId={focusElementId}
       usePortal
       closeButtonMessage={intl.formatMessage({ id: 'DisputeModal.close' })}
     >
