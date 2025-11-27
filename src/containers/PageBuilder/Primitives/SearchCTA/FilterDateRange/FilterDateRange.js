@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import classNames from 'classnames';
 
 import { useIntl } from '../../../../../util/reactIntl';
@@ -7,6 +7,23 @@ import { OutsideClickHandler, IconDate, FieldDateRangeController } from '../../.
 
 import css from './FilterDateRange.module.css';
 
+const handleKeyDown = (isOpen, setIsOpen) => e => {
+  const toggleButton = e.currentTarget.getElementsByClassName(css.toggleButton)[0];
+  if ((e.target === toggleButton && e.key === 'Enter') || e.key === ' ') {
+    e.preventDefault();
+    setIsOpen(prevState => !prevState);
+    return;
+  } else if (!isOpen && e.key === 'ArrowDown') {
+    e.preventDefault();
+    setIsOpen(true);
+    return;
+  } else if (isOpen && e.key === 'Escape') {
+    e.preventDefault();
+    toggleButton.focus();
+    setIsOpen(false);
+    return;
+  }
+};
 /**
  * FilterDateRange displays a toggleable date range picker.
  *
@@ -20,6 +37,7 @@ import css from './FilterDateRange.module.css';
 const FilterDateRange = props => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedDates, setSelectedDates] = useState(null);
+  const toggleButtonRef = useRef(null);
   const { className, rootClassName, config, alignLeft } = props;
   const intl = useIntl();
 
@@ -48,6 +66,7 @@ const FilterDateRange = props => {
     const { startDate, endDate } = value;
     if (startDate && endDate) {
       setSelectedDates(formatDateRange(startDate, endDate));
+      toggleButtonRef.current?.focus();
       setIsOpen(false);
     } else {
       setSelectedDates(null);
@@ -64,13 +83,19 @@ const FilterDateRange = props => {
   });
 
   return (
-    <OutsideClickHandler className={classes} onOutsideClick={() => setIsOpen(false)}>
+    <OutsideClickHandler
+      className={classes}
+      onOutsideClick={() => setIsOpen(false)}
+      onKeyDown={handleKeyDown(isOpen, setIsOpen)}
+    >
       <div
         role="button"
+        ref={toggleButtonRef}
         className={css.toggleButton}
         onClick={() => setIsOpen(prevState => !prevState)}
         tabIndex={0}
-        onKeyDown={() => setIsOpen(prevState => !prevState)}
+        aria-controls={isOpen ? 'dateRange' : ''}
+        aria-expanded={isOpen}
       >
         <IconDate rootClassName={css.iconDate} />
         <span className={labelClasses}>
@@ -87,6 +112,7 @@ const FilterDateRange = props => {
             [css.alignLeft]: alignLeft,
           })}
           name="dateRange"
+          id="dateRange"
           minimumNights={isNightlyMode ? 1 : 0}
         />
       ) : null}

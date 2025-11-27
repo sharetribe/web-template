@@ -36,11 +36,11 @@ export default class OutsideClickHandler extends Component {
   }
 
   render() {
-    const { rootClassName, className, children } = this.props;
+    const { rootClassName, className, children, onKeyDown } = this.props;
     const classes = classNames(rootClassName || css.root, className);
 
     return (
-      <div className={classes} ref={node => (this.node = node)}>
+      <div className={classes} ref={node => (this.node = node)} onKeyDown={onKeyDown}>
         {children}
       </div>
     );
