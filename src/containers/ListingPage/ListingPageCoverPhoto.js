@@ -238,12 +238,12 @@ export const ListingPageComponent = props => {
   const noPayoutDetailsSetWithOwnListing =
     isOwnListing && (authorNeedsPayoutDetails && !currentUser?.attributes?.stripeConnected);
   const payoutDetailsWarning = noPayoutDetailsSetWithOwnListing ? (
-    <div>
+    <span className={css.payoutDetailsWarning}>
       <FormattedMessage id="ListingPage.payoutDetailsWarning" values={{ processType }} />
       <NamedLink name="StripePayoutPage">
         <FormattedMessage id="ListingPage.payoutDetailsWarningLink" />
       </NamedLink>
-    </div>
+    </span>
   ) : null;
 
   // When user is banned or deleted the listing is also deleted.
