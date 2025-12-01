@@ -3,6 +3,8 @@ const fs = require('fs');
 const _ = require('lodash');
 const { types } = require('sharetribe-flex-sdk');
 
+const PREVENT_DATA_LOADING_IN_SSR = process.env.PREVENT_DATA_LOADING_IN_SSR === 'true';
+
 const buildPath = path.resolve(__dirname, '..', 'build');
 
 // The HTML build file is generated from the `public/index.html` file
@@ -96,15 +98,22 @@ exports.render = function(requestUrl, context, data, renderApp, webExtractor, no
   // Bind webExtractor as "this" for collectChunks call.
   const collectWebChunks = webExtractor.collectChunks.bind(webExtractor);
 
+  const getHeadAndBody = () =>
+    PREVENT_DATA_LOADING_IN_SSR
+      ? Promise.resolve({
+          head: { htmlAttributes: '', title: '', link: '', meta: '', script: '' },
+          body: '',
+        })
+      : renderApp(
+          requestUrl,
+          context,
+          preloadedState,
+          translations,
+          hostedConfig,
+          collectWebChunks
+        );
   // Render the app with given route, preloaded state, hosted translations.
-  return renderApp(
-    requestUrl,
-    context,
-    preloadedState,
-    translations,
-    hostedConfig,
-    collectWebChunks
-  ).then(({ head, body }) => {
+  return getHeadAndBody().then(({ head, body }) => {
     // Preloaded state needs to be passed for client side too.
     // For security reasons we ensure that preloaded state is considered as a string
     // by replacing '<' character with its unicode equivalent.
@@ -116,11 +125,11 @@ exports.render = function(requestUrl, context, data, renderApp, webExtractor, no
     // contents properly so the value can be injected in the script tag
     // as a string.
     const nonceMaybe = nonce ? `nonce="${nonce}"` : '';
-    const preloadedStateScript = `
-        <script ${nonceMaybe}>window.__PRELOADED_STATE__ = ${JSON.stringify(
-      serializedState
-    )};</script>
-    `;
+    const preloadedStateScript = PREVENT_DATA_LOADING_IN_SSR
+      ? ''
+      : `<script ${nonceMaybe}>window.__PRELOADED_STATE__ = ${JSON.stringify(
+          serializedState
+        )};</script>`;
     // Add nonce to server-side rendered script tags
     const nonceParamMaybe = nonce ? { nonce } : {};
 
