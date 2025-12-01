@@ -118,6 +118,7 @@ export const FormWithNightBooking = {
     currency: 'USD',
     marketplaceName,
     dayCountAvailableForBooking: 90,
+    finePrintComponent: props => <div>{props.children}</div>,
   },
   group: 'forms',
 };
@@ -151,6 +152,7 @@ export const FormWithDayBooking = {
     currency: 'USD',
     marketplaceName,
     dayCountAvailableForBooking: 90,
+    finePrintComponent: props => <div>{props.children}</div>,
   },
   group: 'forms',
 };
