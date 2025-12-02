@@ -60,6 +60,7 @@ class Menu extends Component {
     }
 
     this.onBlur = this.onBlur.bind(this);
+    this.onFocus = this.onFocus.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
     this.toggleOpen = this.toggleOpen.bind(this);
     this.prepareChildren = this.prepareChildren.bind(this);
@@ -80,11 +81,21 @@ class Menu extends Component {
     if (!this.menu.contains(event.relatedTarget)) {
       const { isOpen = null, onToggleActive = null } = this.props;
 
+      if (event.relatedTarget !== null) {
+        window.__focusedElementId__ = null;
+      }
+
       if (isControlledMenu(isOpen, onToggleActive)) {
         onToggleActive(false);
       } else {
         this.setState({ isOpen: false });
       }
+    }
+  }
+
+  onFocus(event) {
+    if (event.currentTarget.contains(event.target)) {
+      window.__focusedElementId__ = event.currentTarget.firstChild?.id;
     }
   }
 
@@ -208,6 +219,7 @@ class Menu extends Component {
         id={id}
         className={classes}
         onBlur={this.onBlur}
+        onFocus={this.onFocus}
         onKeyDown={this.onKeyDown}
         ref={c => {
           this.menu = c;
