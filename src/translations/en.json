@@ -204,6 +204,7 @@
   "EditListingAvailabilityPanel.WeeklyCalendar.fetchExceptionsError": "Fetching availability exception data failed",
   "EditListingAvailabilityPanel.WeeklyCalendar.notAvailable": "Not available",
   "EditListingAvailabilityPanel.WeeklyCalendar.scheduleTitle": "Schedule for",
+  "EditListingAvailabilityPanel.WeeklyCalendar.screenreader.weekNavigation": "{direction, select, next {Next week} other {Previous week}}",
   "EditListingAvailabilityPanel.WeeklyCalendar.seats": "{seats, plural, one {{seats} seat} other {{seats} seats}}",
   "EditListingAvailabilityPanel.addException": "Add an availability exception",
   "EditListingAvailabilityPanel.availabilityPlanInfo": "When is this listing available for booking? Start by setting a default weekly schedule. After that you can adjust the availability for specific dates.",
