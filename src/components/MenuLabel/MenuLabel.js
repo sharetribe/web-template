@@ -20,7 +20,7 @@ import css from './MenuLabel.module.css';
  */
 const MenuLabel = props => {
   const [clicked, setClicked] = useState(false);
-  const { children, className, rootClassName, isOpen, isOpenClassName, onToggleActive } = props;
+  const { children, id, className, rootClassName, isOpen, isOpenClassName, onToggleActive } = props;
 
   const onClick = e => {
     e.stopPropagation();
@@ -48,7 +48,7 @@ const MenuLabel = props => {
   });
 
   return (
-    <button className={classes} onClick={onClick} onBlur={onBlur}>
+    <button id={id} className={classes} onClick={onClick} onBlur={onBlur}>
       {children}
     </button>
   );
