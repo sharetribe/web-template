@@ -33,6 +33,7 @@ const SortByPopup = props => {
     menuLabelRootClassName,
     urlParam,
     label,
+    labelId,
     options,
     initialValue,
     contentPlacementOffset = 0,
@@ -65,7 +66,7 @@ const SortByPopup = props => {
       isOpen={isOpen}
       preferScreenWidthOnMobile
     >
-      <MenuLabel rootClassName={menuLabelClasses}>
+      <MenuLabel rootClassName={menuLabelClasses} id={labelId}>
         {menuLabel}
         <IconArrowHead className={iconArrowClassName} direction="down" size="tiny" />
       </MenuLabel>

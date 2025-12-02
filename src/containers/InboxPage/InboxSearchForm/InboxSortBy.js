@@ -63,7 +63,7 @@ const InboxSortBy = props => {
       isOpen={isOpen}
       preferScreenWidthOnMobile
     >
-      <MenuLabel rootClassName={css.sortLabel}>
+      <MenuLabel id="inbox-sort-by-label" rootClassName={css.sortLabel}>
         {menuLabel}
         <IconArrowHead className={iconArrowClassName} direction="down" size="tiny" />
       </MenuLabel>

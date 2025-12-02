@@ -487,6 +487,7 @@ export class SearchPageComponent extends Component {
           onSelect={this.handleSortBy}
           showAsPopup
           mode={mode}
+          labelId={`${mode}-search-page-sort-by`}
           contentPlacementOffset={FILTER_DROPDOWN_OFFSET}
         />
       ) : null;
