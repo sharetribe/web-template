@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] Styleguide examples for booking forms were missing a mandatory prop.
+  [#719](https://github.com/sharetribe/web-template/pull/719)
 - [fix] PREVENT_DATA_LOADING_IN_SSR environment variable has not been working.
   [#717](https://github.com/sharetribe/web-template/pull/717)
 - [add] Add accessibility improvements (Modals, filters, etc.).
