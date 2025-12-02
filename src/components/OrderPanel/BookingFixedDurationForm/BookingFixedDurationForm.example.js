@@ -146,6 +146,7 @@ export const Form = {
     timeZone: 'Etc/UTC',
     marketplaceName: 'MarketplaceX',
     dayCountAvailableForBooking: 90,
+    finePrintComponent: props => <div>{props.children}</div>,
   },
   group: 'forms',
 };
