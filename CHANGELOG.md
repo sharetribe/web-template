@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+## [v10.4.0] 2025-12-02
+
 - [add] Add Proxy around SDK instance on server that caches the responses for the page-asset
   requests. [#713](https://github.com/sharetribe/web-template/pull/713)
 - [fix] Styleguide examples for booking forms were missing a mandatory prop.
@@ -30,6 +32,8 @@ way to update this template, but currently, we follow a pattern:
   [#711](https://github.com/sharetribe/web-template/pull/711)
 - [add] Add currently available translations for DE, ES, FR.
   [#710](https://github.com/sharetribe/web-template/pull/710)
+
+  [v10.4.0]: https://github.com/sharetribe/web-template/compare/v10.3.0...v10.4.0
 
 ## [v10.3.0] 2025-11-20
 
