@@ -1,5 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
+import { useIntl } from 'react-intl';
 
 // Import shared components
 import {
@@ -15,9 +16,14 @@ import css from './ListingImage.module.css';
 // Cross shaped button on the top-right corner of the image thumbnail
 const RemoveImageButton = props => {
   const { className, rootClassName, onClick } = props;
+  const intl = useIntl();
   const classes = classNames(rootClassName || css.removeImage, className);
   return (
-    <button className={classes} onClick={onClick}>
+    <button
+      className={classes}
+      onClick={onClick}
+      aria-label={intl.formatMessage({ id: 'EditListingPage.screenreader.removeImage' })}
+    >
       <svg
         width="10px"
         height="10px"

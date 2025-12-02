@@ -288,6 +288,7 @@
   "EditListingLocationPanel.createListingTitle": "Location",
   "EditListingLocationPanel.title": "Edit the location of {listingTitle}",
   "EditListingPage.loadingListingData": "Loading listing data…",
+  "EditListingPage.screenreader.removeImage": "Remove image",
   "EditListingPage.titleCreateListing": "Post a new listing | {panelHeading}",
   "EditListingPage.titleEditListing": "Edit listing | {panelHeading}",
   "EditListingPhotosForm.addImagesTip": "Tip: Upload 2-3 good-quality photos from different angles.",
