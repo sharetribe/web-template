@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Add Proxy around SDK instance on server that caches the responses for the page-asset
+  requests. [#713](https://github.com/sharetribe/web-template/pull/713)
 - [fix] Styleguide examples for booking forms were missing a mandatory prop.
   [#719](https://github.com/sharetribe/web-template/pull/719)
 - [fix] PREVENT_DATA_LOADING_IN_SSR environment variable has not been working.
