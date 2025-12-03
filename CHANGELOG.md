@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] Update the color of buttons in transaction processes email templates.
+  [#718](https://github.com/sharetribe/web-template/pull/718)
+
 ## [v10.4.0] 2025-12-02
 
 - [add] Add Proxy around SDK instance on server that caches the responses for the page-asset
