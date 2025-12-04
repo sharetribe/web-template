@@ -115,12 +115,12 @@ class FilterPlainComponent extends Component {
             onChange={this.handleChange}
             initialValues={initialValues}
             keepDirtyOnReinitialize={keepDirtyOnReinitialize}
+            clearButton={(<button type="button" className={css.clearButton} onClick={this.handleClear}>
+              <FormattedMessage id={'FilterPlain.clear'} />
+            </button>)}
           >
             {children}
           </FilterForm>
-          <button className={css.clearButton} onClick={this.handleClear}>
-            <FormattedMessage id={'FilterPlain.clear'} />
-          </button>
         </div>
       </div>
     );
