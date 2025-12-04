@@ -80,7 +80,6 @@ const FilterForm = props => {
             id={id}
             className={classes}
             onSubmit={handleSubmit}
-            tabIndex="0"
             style={{ ...style }}
             role="search"
             aria-label={intl.formatMessage(
