@@ -25,6 +25,7 @@ exports[`PaginationLinks should match snapshot with both links disabled 1`] = `
     class="pageNumberList pageNumberList1Items"
   >
     <a
+      aria-label="PaginationLinks.toPage"
       class="toPageLink currentPage"
       href="/s?page=1&param=foobar"
       title="PaginationLinks.toPage"
@@ -57,6 +58,7 @@ exports[`PaginationLinks should match snapshot with both links enabled 1`] = `
   class="root"
 >
   <a
+    aria-label="PaginationLinks.previous"
     class="prev"
     href="/s?page=1&param=foobar"
     title="PaginationLinks.previous"
@@ -79,6 +81,7 @@ exports[`PaginationLinks should match snapshot with both links enabled 1`] = `
     class="pageNumberList pageNumberList3Items"
   >
     <a
+      aria-label="PaginationLinks.toPage"
       class="toPageLink"
       href="/s?page=1&param=foobar"
       title="PaginationLinks.toPage"
@@ -86,6 +89,7 @@ exports[`PaginationLinks should match snapshot with both links enabled 1`] = `
       1
     </a>
     <a
+      aria-label="PaginationLinks.toPage"
       class="toPageLink currentPage"
       href="/s?page=2&param=foobar"
       title="PaginationLinks.toPage"
@@ -93,6 +97,7 @@ exports[`PaginationLinks should match snapshot with both links enabled 1`] = `
       2
     </a>
     <a
+      aria-label="PaginationLinks.toPage"
       class="toPageLink"
       href="/s?page=3&param=foobar"
       title="PaginationLinks.toPage"
@@ -101,6 +106,7 @@ exports[`PaginationLinks should match snapshot with both links enabled 1`] = `
     </a>
   </div>
   <a
+    aria-label="PaginationLinks.next"
     class="next"
     href="/s?page=3&param=foobar"
     title="PaginationLinks.next"
@@ -147,6 +153,7 @@ exports[`PaginationLinks should match snapshot with prev disabled and next enabl
     class="pageNumberList pageNumberList3Items"
   >
     <a
+      aria-label="PaginationLinks.toPage"
       class="toPageLink currentPage"
       href="/s?page=1&param=foobar"
       title="PaginationLinks.toPage"
@@ -154,6 +161,7 @@ exports[`PaginationLinks should match snapshot with prev disabled and next enabl
       1
     </a>
     <a
+      aria-label="PaginationLinks.toPage"
       class="toPageLink"
       href="/s?page=2&param=foobar"
       title="PaginationLinks.toPage"
@@ -161,6 +169,7 @@ exports[`PaginationLinks should match snapshot with prev disabled and next enabl
       2
     </a>
     <a
+      aria-label="PaginationLinks.toPage"
       class="toPageLink"
       href="/s?page=3&param=foobar"
       title="PaginationLinks.toPage"
@@ -169,6 +178,7 @@ exports[`PaginationLinks should match snapshot with prev disabled and next enabl
     </a>
   </div>
   <a
+    aria-label="PaginationLinks.next"
     class="next"
     href="/s?page=2&param=foobar"
     title="PaginationLinks.next"
@@ -195,6 +205,7 @@ exports[`PaginationLinks should match snapshot with prev enabled and next disabl
   class="root"
 >
   <a
+    aria-label="PaginationLinks.previous"
     class="prev"
     href="/s?page=2&param=foobar"
     title="PaginationLinks.previous"
@@ -217,6 +228,7 @@ exports[`PaginationLinks should match snapshot with prev enabled and next disabl
     class="pageNumberList pageNumberList3Items"
   >
     <a
+      aria-label="PaginationLinks.toPage"
       class="toPageLink"
       href="/s?page=1&param=foobar"
       title="PaginationLinks.toPage"
@@ -224,6 +236,7 @@ exports[`PaginationLinks should match snapshot with prev enabled and next disabl
       1
     </a>
     <a
+      aria-label="PaginationLinks.toPage"
       class="toPageLink"
       href="/s?page=2&param=foobar"
       title="PaginationLinks.toPage"
@@ -231,6 +244,7 @@ exports[`PaginationLinks should match snapshot with prev enabled and next disabl
       2
     </a>
     <a
+      aria-label="PaginationLinks.toPage"
       class="toPageLink currentPage"
       href="/s?page=3&param=foobar"
       title="PaginationLinks.toPage"
