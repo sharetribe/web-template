@@ -9,6 +9,7 @@
 .labelPlainSelected {
   color: var(--marketplaceColor);
 
+  &:focus,
   &:hover {
     color: var(--marketplaceColorDark);
   }
