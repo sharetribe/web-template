@@ -62,6 +62,7 @@ export const NamedLink = withRouter(props => {
     name,
     params = {}, // pathParams
     title,
+    ariaLabel,
     // Link props
     to = {},
     children,
@@ -85,6 +86,7 @@ export const NamedLink = withRouter(props => {
   const active = match.url && match.url === pathname;
 
   const focusHandlers = id && holdFocus ? { onFocus: handleFocus, onBlur: handleBlur } : {};
+  const ariaLabelMaybe = ariaLabel ? { ['aria-label']: ariaLabel } : {};
 
   // <a> element props
   const aElemProps = {
@@ -92,6 +94,7 @@ export const NamedLink = withRouter(props => {
     className: classNames(className, { [activeClassName]: active }),
     style,
     title,
+    ...ariaLabelMaybe,
     ...focusHandlers,
   };
 
