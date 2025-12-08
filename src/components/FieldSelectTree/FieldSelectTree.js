@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Field } from 'react-final-form';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames';
@@ -9,6 +9,102 @@ import { ValidationError } from '../../components';
 import css from './FieldSelectTree.module.css';
 
 const MIN_LENGTH_FOR_LONG_WORDS = 16;
+
+/**
+ * Collects all focusable option buttons in the tree in DFS order.
+ *
+ * @param {HTMLElement} container - The container element containing the option buttons
+ * @returns {Array<HTMLElement>} Array of focusable option buttons in order
+ */
+const getAllFocusableOptions = container => {
+  if (!container) return [];
+  const buttons = container.querySelectorAll('button');
+  return Array.from(buttons).filter(button => {
+    // Filter out disabled buttons and buttons with negative tabIndex
+    return !button.disabled && button.tabIndex !== -1;
+  });
+};
+
+/**
+ * Finds the parent <ul> element that contains the given button.
+ *
+ * @param {HTMLElement} button - The button element
+ * @returns {HTMLElement|null} The parent <ul> element or null if not found
+ */
+const getParentOptionList = (button, container) => {
+  let parent = button.parentElement;
+  while (parent && parent.tagName !== 'UL') {
+    parent = parent.parentElement;
+  }
+  if (parent === container.firstChild) {
+    parent = parent.closest('form');
+  }
+  return parent;
+};
+
+/**
+ * Finds the parent option button (the button in the parent <li> that contains the current button's <ul>).
+ *
+ * @param {HTMLElement} button - The currently focused button
+ * @param {HTMLElement} container - The container element containing all options
+ * @returns {HTMLElement|null} The parent option button or null if not found
+ */
+const getParentOptionButton = (button, container) => {
+  const parentList = getParentOptionList(button, container);
+  if (!parentList) return null;
+
+  // Find the parent <li> that contains this <ul>
+  const parentLi = parentList.parentElement;
+  if (!parentLi || parentLi.tagName !== 'LI') return null;
+
+  // Find the button within the parent <li>
+  const parentButton = parentLi.querySelector('button');
+  return parentButton || null;
+};
+
+/**
+ * Finds the next focusable option button within the same parent list, with looping.
+ *
+ * @param {HTMLElement} currentButton - The currently focused button
+ * @param {HTMLElement} container - The container element containing all options
+ * @returns {HTMLElement|null} The next focusable button or null if none exists
+ */
+const getNextOption = (currentButton, container) => {
+  const parentList = getParentOptionList(currentButton, container);
+  if (!parentList) return null;
+
+  const siblingButtons = Array.from(parentList.querySelectorAll('button')).filter(
+    button => !button.disabled && button.tabIndex !== -1
+  );
+  const currentIndex = siblingButtons.indexOf(currentButton);
+  if (currentIndex === -1) return null;
+
+  // Loop to first if at the end
+  const nextIndex = currentIndex === siblingButtons.length - 1 ? 0 : currentIndex + 1;
+  return siblingButtons[nextIndex];
+};
+
+/**
+ * Finds the previous focusable option button within the same parent list, with looping.
+ *
+ * @param {HTMLElement} currentButton - The currently focused button
+ * @param {HTMLElement} container - The container element containing all options
+ * @returns {HTMLElement|null} The previous focusable button or null if none exists
+ */
+const getPreviousOption = (currentButton, container) => {
+  const parentList = getParentOptionList(currentButton, container);
+  if (!parentList) return null;
+
+  const siblingButtons = Array.from(parentList.querySelectorAll('button')).filter(
+    button => !button.disabled && button.tabIndex !== -1
+  );
+  const currentIndex = siblingButtons.indexOf(currentButton);
+  if (currentIndex === -1) return null;
+
+  // Loop to last if at the beginning
+  const previousIndex = currentIndex === 0 ? siblingButtons.length - 1 : currentIndex - 1;
+  return siblingButtons[previousIndex];
+};
 /**
  * Pick valid option configurations with format like:
  * [{ option, label, suboptions: [{ option, label }] }]
@@ -37,12 +133,12 @@ const hasSuboptions = optionConfig => getSuboptions(optionConfig)?.length > 0;
 /**
  * A component that represents a single option.
  *
- * @param {*} props include: config, level, handleChange, branchPath
+ * @param {*} props include: config, level, handleChange, branchPath, containerRef
  * @returns <li> wrapped elements.
  */
 const Option = props => {
   const intl = useIntl();
-  const { config, level, handleChange, branchPath, ancestors = [], ...rest } = props;
+  const { config, level, handleChange, branchPath, ancestors = [], containerRef, ...rest } = props;
   const { option, label, suboptions } = config;
   const foundFromBranchPath = branchPath.find(bc => bc.option === option);
   const isOptSelected = !!foundFromBranchPath;
@@ -72,6 +168,103 @@ const Option = props => {
     [css.optionBtnSelected]: isOptSelected,
     [css.optionBtnSelectedLowest]: isOptSelected && !isSuboptionSelected,
   });
+
+  const handleKeyDown = e => {
+    if (!containerRef?.current) return;
+
+    switch (e.key) {
+      case 'ArrowDown': {
+        e.preventDefault();
+        e.stopPropagation();
+        const nextOption = getNextOption(e.target, containerRef.current);
+        if (nextOption) {
+          nextOption.focus();
+        }
+        break;
+      }
+      case 'ArrowUp': {
+        e.preventDefault();
+        e.stopPropagation();
+        const previousOption = getPreviousOption(e.target, containerRef.current);
+        if (previousOption) {
+          previousOption.focus();
+        }
+        break;
+      }
+      case 'ArrowRight': {
+        if (hasSuboptions(config) && !isOptSelected) {
+          e.preventDefault();
+          e.stopPropagation();
+          // Expand suboptions by selecting this option
+          handleChange(option, level);
+          // Focus will move to first child after suboptions are rendered
+          setTimeout(() => {
+            const allOptions = getAllFocusableOptions(containerRef.current);
+            const currentIndex = allOptions.indexOf(e.target);
+            if (currentIndex !== -1 && currentIndex < allOptions.length - 1) {
+              allOptions[currentIndex + 1]?.focus();
+            }
+          }, 100);
+        }
+        break;
+      }
+      case 'ArrowLeft': {
+        // Find parent button first (before DOM changes)
+        const parentButton = getParentOptionButton(e.target, containerRef.current);
+
+        // If there's a parent option (level > 1), deselect it
+        if (level >= 1 && ancestors.length >= 0) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          if (branchPath.length > 0) {
+            // Get the parent option (last ancestor)
+            const parentLevel = level - 1;
+
+            // Clear selections at parent level and below
+            const updatedValue = branchPath.reduce((picked, selectedOptionByLevel) => {
+              const { level: branchPathLevel, levelKey } = selectedOptionByLevel;
+              if (branchPathLevel <= parentLevel && levelKey) {
+                return { ...picked, [levelKey]: selectedOptionByLevel.option };
+              }
+              return picked;
+            }, {});
+            rest.onChange?.(updatedValue);
+          }
+
+          // Move focus to parent option button
+          if (parentButton) {
+            setTimeout(() => {
+              parentButton.focus();
+            }, 0);
+          }
+        }
+        break;
+      }
+      case 'Home': {
+        e.preventDefault();
+        e.stopPropagation();
+        const firstOption = getAllFocusableOptions(containerRef.current)?.[0];
+        if (firstOption) {
+          firstOption.focus();
+        }
+        break;
+      }
+      case 'End': {
+        e.preventDefault();
+        e.stopPropagation();
+        const allOptions = getAllFocusableOptions(containerRef.current);
+        const lastOption = allOptions?.[allOptions.length - 1];
+        if (lastOption) {
+          lastOption.focus();
+        }
+        break;
+      }
+      default:
+        break;
+    }
+  };
+
   return (
     <li className={css.option} style={{ paddingLeft: `${12}px`, ...cursorMaybe }}>
       <button
@@ -83,6 +276,7 @@ const Option = props => {
             handleChange(option, level);
           }
         }}
+        onKeyDown={handleKeyDown}
         aria-label={ariaLabel}
       >
         {optionLabel}
@@ -95,6 +289,7 @@ const Option = props => {
           handleChange={handleChange}
           branchPath={branchPath}
           ancestors={[...ancestors, { option, label }]}
+          containerRef={containerRef}
           {...rest}
         />
       ) : null}
@@ -120,11 +315,11 @@ const OptionList = props => {
  * @returns OptionList component.
  */
 const SelectOptions = props => {
-  const { options, ...rest } = props;
+  const { options, containerRef, ...rest } = props;
   return (
     <OptionList hasOptions={options?.length > 0}>
       {options.map(config => (
-        <Option key={config.option} config={config} {...rest} />
+        <Option key={config.option} config={config} containerRef={containerRef} {...rest} />
       ))}
     </OptionList>
   );
@@ -215,6 +410,7 @@ const FieldSelectTree = props => {
   const namePrefix = name;
   const level = 1;
   const validOptions = pickValidOptions(options);
+  const containerRef = useRef(null);
 
   const classes = classNames(rootClassName || css.root, className);
 
@@ -227,13 +423,16 @@ const FieldSelectTree = props => {
         const meta = fieldProps?.meta;
 
         return (
-          <div className={classes}>
+          <div ref={containerRef} className={classes}>
             {label ? <label>{label}</label> : null}
             <SelectOptions
               options={validOptions}
               level={level}
               handleChange={handleChangeFn(validOptions, fieldValue, namePrefix, onChange)}
               branchPath={branchPath}
+              containerRef={containerRef}
+              namePrefix={namePrefix}
+              onChange={onChange}
             />
 
             <ValidationError fieldMeta={meta} />
