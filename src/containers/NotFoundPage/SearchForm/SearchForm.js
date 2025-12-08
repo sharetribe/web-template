@@ -74,6 +74,7 @@ const LocationSearchField = props => {
         const searchInput = { ...restInput, onChange: searchOnChange };
         return (
           <LocationAutocompleteInput
+            id="location-search-404"
             placeholder={intl.formatMessage({ id: 'NotFoundPage.SearchForm.placeholder' })}
             iconClassName={css.searchInputIcon}
             inputClassName={css.searchInput}
