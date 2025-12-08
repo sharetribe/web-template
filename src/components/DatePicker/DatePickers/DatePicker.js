@@ -242,6 +242,7 @@ const CalendarMonth = props => {
                       aria-label={ariaLabel}
                       className={classes}
                       data-date={isoDateString}
+                      data-current={isCurrent && !isDisabled ? 'true' : undefined}
                       key={cellKey}
                       onClick={onClick}
                       onMouseEnter={onMouseEnter}
