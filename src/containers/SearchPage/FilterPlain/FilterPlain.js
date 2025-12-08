@@ -3,9 +3,10 @@ import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 
+import { KeyboardListener } from '../../../components';
+
 import IconPlus from '../IconPlus/IconPlus';
 import FilterForm from '../FilterForm/FilterForm';
-import KeyboardListener from '../KeyboardListener/KeyboardListener';
 
 import css from './FilterPlain.module.css';
 

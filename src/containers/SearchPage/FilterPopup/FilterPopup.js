@@ -3,9 +3,8 @@ import classNames from 'classnames';
 
 import { injectIntl, intlShape } from '../../../util/reactIntl';
 
-import { OutsideClickHandler } from '../../../components';
+import { KeyboardListener, OutsideClickHandler } from '../../../components';
 
-import KeyboardListener from '../KeyboardListener/KeyboardListener';
 import PopupOpenerButton from '../PopupOpenerButton/PopupOpenerButton';
 import FilterForm from '../FilterForm/FilterForm';
 
