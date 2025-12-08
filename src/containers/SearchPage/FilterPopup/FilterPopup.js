@@ -5,12 +5,61 @@ import { injectIntl, intlShape } from '../../../util/reactIntl';
 
 import { OutsideClickHandler } from '../../../components';
 
+import KeyboardListener from '../KeyboardListener/KeyboardListener';
 import PopupOpenerButton from '../PopupOpenerButton/PopupOpenerButton';
 import FilterForm from '../FilterForm/FilterForm';
 
 import css from './FilterPopup.module.css';
 
-const KEY_CODE_ESCAPE = 27;
+const FOCUSABLE_ELEMENTS = 'button, [tabindex], input, select, textarea';
+
+const moveFocusToFirstFocusableElement = formId => {
+  if (formId.indexOf('.dates.popup.form') > 0) {
+    // NOTE: this is a special case for the Dates filter.
+    // It would be better if the logic is moved to the DatePicker component.
+    const currentDate = document.getElementById(formId)?.querySelector('[data-current="true"]');
+    currentDate?.focus();
+  } else {
+    const form = document.getElementById(formId);
+    const focusableElements = form.querySelectorAll(FOCUSABLE_ELEMENTS);
+    if (focusableElements.length > 0) {
+      const firstFocusableElement = Array.from(focusableElements).find(
+        element => !(element.tabIndex < 0 || element.disabled)
+      );
+      firstFocusableElement?.focus();
+    }
+  }
+};
+
+const moveFocusToLastFocusableElement = formId => {
+  const form = document.getElementById(formId);
+  const focusableElements = form.querySelectorAll(FOCUSABLE_ELEMENTS);
+  if (focusableElements.length > 0) {
+    const lastFocusableElement = Array.from(focusableElements)
+      .reverse()
+      .find(element => !(element.tabIndex < 0 || element.disabled));
+    lastFocusableElement?.focus();
+  }
+};
+
+const moveFocusToNextFocusableElement = (formId, direction = 'next') => {
+  const form = document.getElementById(formId);
+  const focusableElements = form.querySelectorAll(FOCUSABLE_ELEMENTS);
+  if (focusableElements.length > 0) {
+    const currentIndex = Array.from(focusableElements).findIndex(
+      element => element === document.activeElement
+    );
+    const targetIndex =
+      direction === 'next' && currentIndex < focusableElements.length - 1
+        ? currentIndex + 1
+        : direction === 'next'
+        ? 0
+        : direction === 'previous' && currentIndex > 0
+        ? currentIndex - 1
+        : focusableElements.length - 1;
+    focusableElements[targetIndex]?.focus();
+  }
+};
 
 /**
  * FilterPopup component
@@ -45,19 +94,29 @@ class FilterPopup extends Component {
     this.handleCancel = this.handleCancel.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
-    this.toggleOpen = this.toggleOpen.bind(this);
+    this.toggleIsOpen = this.toggleIsOpen.bind(this);
     this.positionStyleForContent = this.positionStyleForContent.bind(this);
   }
 
   handleSubmit(values) {
-    const { onSubmit } = this.props;
+    const { id, onSubmit } = this.props;
     this.setState({ isOpen: false });
+    const button = document.getElementById(`${id}.toggle`);
+    if (button) {
+      button.focus();
+    }
+
     onSubmit(values);
   }
 
   handleClear() {
-    const { onSubmit, onClear } = this.props;
+    const { id, onSubmit, onClear } = this.props;
     this.setState({ isOpen: false });
+
+    const button = document.getElementById(`${id}.toggle`);
+    if (button) {
+      button.focus();
+    }
 
     if (onClear) {
       onClear();
@@ -67,8 +126,13 @@ class FilterPopup extends Component {
   }
 
   handleCancel() {
-    const { onSubmit, onCancel, initialValues } = this.props;
+    const { id, onSubmit, onCancel, initialValues } = this.props;
     this.setState({ isOpen: false });
+
+    const button = document.getElementById(`${id}.toggle`);
+    if (button) {
+      button.focus();
+    }
 
     if (onCancel) {
       onCancel();
@@ -83,16 +147,21 @@ class FilterPopup extends Component {
 
   handleKeyDown(e) {
     // Gather all escape presses to close menu
-    if (e.keyCode === KEY_CODE_ESCAPE) {
-      this.toggleOpen(false);
+    if (e.key === 'Escape') {
+      this.toggleIsOpen({ enforcedState: false });
     }
   }
 
-  toggleOpen(enforcedState) {
-    if (enforcedState) {
-      this.setState({ isOpen: enforcedState });
+  toggleIsOpen(options = {}) {
+    const { callback, enforcedState } = options || {};
+    const cb = callback || (() => {});
+
+    if (enforcedState !== undefined) {
+      this.setState({ isOpen: enforcedState }, cb);
     } else {
-      this.setState(prevState => ({ isOpen: !prevState.isOpen }));
+      this.setState(prevState => {
+        return { isOpen: !prevState.isOpen };
+      }, cb);
     }
   }
 
@@ -133,6 +202,7 @@ class FilterPopup extends Component {
       keepDirtyOnReinitialize = false,
       contentPlacementOffset = 0,
       ariaLabel,
+      containerId, // TODO
     } = this.props;
 
     const classes = classNames(rootClassName || css.root, className);
@@ -140,51 +210,167 @@ class FilterPopup extends Component {
     const popupSizeClasses = popupClassName || css.popupSize;
     const contentStyle = this.positionStyleForContent();
     const formId = `${id}.form`;
+    const delayedMoveFocus = (formId, isMenuOpen, moveFocusFn) => {
+      if (isMenuOpen) {
+        setTimeout(() => {
+          moveFocusFn(formId);
+        }, 100);
+      }
+    };
 
     return (
       <OutsideClickHandler onOutsideClick={this.handleBlur}>
-        <div
+        <KeyboardListener
           className={classes}
-          onKeyDown={this.handleKeyDown}
-          ref={node => {
-            this.filter = node;
+          containerId={containerId}
+          keyMap={{
+            Enter: {
+              action: 'toggle',
+              callback: (...args) => {
+                const [event, containerId, action] = args;
+                if (event.target.id === `${id}.toggle`) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  const isOpen = this.state.isOpen;
+                  this.toggleIsOpen({
+                    callback: () => {
+                      delayedMoveFocus(formId, !isOpen, moveFocusToFirstFocusableElement);
+                    },
+                  });
+                }
+              },
+            },
+            ArrowDown: {
+              action: 'down',
+              callback: (...args) => {
+                const [event, containerId, action] = args;
+                if (!this.state.isOpen && event.target.id === `${id}.toggle`) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  this.toggleIsOpen({
+                    callback: () => {
+                      delayedMoveFocus(formId, true, moveFocusToFirstFocusableElement);
+                    },
+                    enforcedState: true,
+                  });
+                } else if (this.filterContent.contains(event.target)) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  moveFocusToNextFocusableElement(formId, 'next');
+                }
+              },
+            },
+            ArrowUp: {
+              action: 'up',
+              callback: (...args) => {
+                const [event, containerId, action] = args;
+                if (this.state.isOpen && event.target.id === `${id}.toggle`) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  const button = document.getElementById(`${id}.toggle`);
+                  if (button) {
+                    button.focus();
+                  }
+
+                  this.toggleIsOpen({ enforcedState: false });
+                } else if (this.filterContent.contains(event.target)) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  moveFocusToNextFocusableElement(formId, 'previous');
+                }
+              },
+            },
+            Home: {
+              action: 'first',
+              callback: (...args) => {
+                const [event, containerId, action] = args;
+                if (!this.state.isOpen && event.target.id === `${id}.toggle`) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  this.toggleIsOpen({
+                    callback: () => {
+                      delayedMoveFocus(formId, true, moveFocusToFirstFocusableElement);
+                    },
+                    enforcedState: true,
+                  });
+                }
+              },
+            },
+            End: {
+              action: 'last',
+              callback: (...args) => {
+                const [event, containerId, action] = args;
+                if (!this.state.isOpen && event.target.id === `${id}.toggle`) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  this.toggleIsOpen({
+                    callback: () => {
+                      delayedMoveFocus(formId, true, moveFocusToLastFocusableElement);
+                    },
+                    enforcedState: true,
+                  });
+                }
+              },
+            },
+            Escape: {
+              action: 'close',
+              callback: (...args) => {
+                const [event, containerId, action] = args;
+                if (this.state.isOpen) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  const button = document.getElementById(`${id}.toggle`);
+                  if (button) {
+                    button.focus();
+                  }
+                  this.toggleIsOpen({ enforcedState: false });
+                }
+              },
+            },
           }}
         >
-          <PopupOpenerButton
-            isSelected={isSelected}
-            labelMaxWidth={labelMaxWidth}
-            toggleOpen={this.toggleOpen}
-            aria-label={ariaLabel}
-            aria-expanded={this.state.isOpen}
-            aria-controls={this.state.isOpen ? formId : ''}
-          >
-            {label}
-          </PopupOpenerButton>
           <div
-            id={id}
-            className={popupClasses}
             ref={node => {
-              this.filterContent = node;
+              this.filter = node;
             }}
-            style={contentStyle}
           >
-            {this.state.isOpen ? (
-              <FilterForm
-                id={formId}
-                paddingClasses={popupSizeClasses}
-                showAsPopup
-                contentPlacementOffset={contentPlacementOffset}
-                initialValues={initialValues}
-                keepDirtyOnReinitialize={keepDirtyOnReinitialize}
-                onSubmit={this.handleSubmit}
-                onCancel={this.handleCancel}
-                onClear={this.handleClear}
-              >
-                {children}
-              </FilterForm>
-            ) : null}
+            <PopupOpenerButton
+              id={`${id}.toggle`}
+              isSelected={isSelected}
+              labelMaxWidth={labelMaxWidth}
+              toggleOpen={() => this.toggleIsOpen()}
+              aria-label={ariaLabel}
+              aria-expanded={this.state.isOpen}
+              aria-controls={this.state.isOpen ? formId : ''}
+            >
+              {label}
+            </PopupOpenerButton>
+            <div
+              id={id}
+              className={popupClasses}
+              ref={node => {
+                this.filterContent = node;
+              }}
+              style={contentStyle}
+            >
+              {this.state.isOpen ? (
+                <FilterForm
+                  id={formId}
+                  paddingClasses={popupSizeClasses}
+                  showAsPopup
+                  contentPlacementOffset={contentPlacementOffset}
+                  initialValues={initialValues}
+                  keepDirtyOnReinitialize={keepDirtyOnReinitialize}
+                  onSubmit={this.handleSubmit}
+                  onCancel={this.handleCancel}
+                  onClear={this.handleClear}
+                >
+                  {children}
+                </FilterForm>
+              ) : null}
+            </div>
           </div>
-        </div>
+        </KeyboardListener>
       </OutsideClickHandler>
     );
   }
