@@ -7,6 +7,18 @@ import PopupOpenerButton from '../PopupOpenerButton/PopupOpenerButton';
 
 import css from './SearchFiltersPrimary.module.css';
 
+const handleKeyDown = toggleSecondaryFiltersOpen => e => {
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleSecondaryFiltersOpen(true);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleSecondaryFiltersOpen(false);
+  }
+};
+
 /**
  * SearchFiltersPrimary component
  *
@@ -38,6 +50,7 @@ const SearchFiltersPrimaryComponent = props => {
       toggleOpen={() => {
         toggleSecondaryFiltersOpen(!isSecondaryFiltersOpen);
       }}
+      onKeyDown={handleKeyDown(toggleSecondaryFiltersOpen)}
     >
       <FormattedMessage
         id="SearchFiltersPrimary.moreFiltersButton"
