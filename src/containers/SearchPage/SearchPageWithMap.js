@@ -564,6 +564,7 @@ export class SearchPageComponent extends Component {
                     key={key}
                     id={filterId}
                     config={filterConfig}
+                    containerId="SearchPage_MobileFilters"
                     listingCategories={listingCategories}
                     marketplaceCurrency={marketplaceCurrency}
                     urlQueryParams={validQueryParams}
@@ -597,6 +598,7 @@ export class SearchPageComponent extends Component {
                       key={key}
                       id={filterId}
                       config={filterConfig}
+                      containerId="SearchPageWithMap_PrimaryFilters"
                       listingCategories={listingCategories}
                       marketplaceCurrency={marketplaceCurrency}
                       urlQueryParams={validQueryParams}
@@ -630,6 +632,7 @@ export class SearchPageComponent extends Component {
                         key={key}
                         id={filterId}
                         config={filterConfig}
+                        containerId="SearchPageWithMap_SecondaryFilters"
                         listingCategories={listingCategories}
                         marketplaceCurrency={marketplaceCurrency}
                         urlQueryParams={validQueryParams}

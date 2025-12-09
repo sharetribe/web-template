@@ -401,6 +401,7 @@ export class SearchPageComponent extends Component {
                     id={filterId}
                     className={css.filter}
                     config={filterConfig}
+                    containerId="SearchPageWithGrid_DesktopFilters"
                     listingCategories={listingCategories}
                     marketplaceCurrency={marketplaceCurrency}
                     urlQueryParams={validQueryParams}
@@ -450,6 +451,7 @@ export class SearchPageComponent extends Component {
                       key={key}
                       id={filterId}
                       config={filterConfig}
+                      containerId="SearchPage_MobileFilters"
                       listingCategories={listingCategories}
                       marketplaceCurrency={marketplaceCurrency}
                       urlQueryParams={validQueryParams}
