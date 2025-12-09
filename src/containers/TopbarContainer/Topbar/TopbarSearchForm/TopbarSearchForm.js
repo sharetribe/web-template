@@ -53,6 +53,7 @@ const LocationSearchField = props => {
     <button
       className={css.searchSubmit}
       aria-label={intl.formatMessage({ id: 'TopbarDesktop.screenreader.search' })}
+      type="submit"
     >
       <IconSearchDesktop />
     </button>
