@@ -127,7 +127,7 @@ class FilterPlainComponent extends Component {
       initialValues,
       keepDirtyOnReinitialize = false,
       ariaLabel,
-      containerId, //TODO
+      containerId, // Note: this could be used to identify different filter containers
     } = this.props;
     const formId = `${id}.form`;
     const classes = classNames(rootClassName || css.root, className);

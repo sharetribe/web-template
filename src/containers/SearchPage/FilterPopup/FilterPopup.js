@@ -202,7 +202,7 @@ class FilterPopup extends Component {
       keepDirtyOnReinitialize = false,
       contentPlacementOffset = 0,
       ariaLabel,
-      containerId, // TODO
+      containerId, // Note: this could be used to identify different filter containers
     } = this.props;
 
     const classes = classNames(rootClassName || css.root, className);
