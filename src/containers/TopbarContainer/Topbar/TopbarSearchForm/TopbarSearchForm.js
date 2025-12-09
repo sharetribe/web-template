@@ -75,7 +75,7 @@ const LocationSearchField = props => {
 
         return (
           <LocationAutocompleteInput
-            id="location-search"
+            id={isMobile ? 'location-search-mobile' : 'location-search'}
             className={isMobile ? css.mobileInputRoot : desktopInputRootClass}
             iconClassName={isMobile ? css.mobileIcon : css.desktopIcon}
             inputClassName={isMobile ? css.mobileInput : css.desktopInput}
