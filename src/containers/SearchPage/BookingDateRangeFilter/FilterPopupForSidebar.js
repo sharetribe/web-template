@@ -102,6 +102,14 @@ class FilterPopupForSidebar extends Component {
       }
 
       this.toggleOpen(false);
+    } else if (e.key === 'ArrowDown' && this.filter.contains(e.target) && !this.state.isOpen) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.toggleOpen(true);
+    } else if (e.key === 'ArrowUp' && this.filter.contains(e.target) && this.state.isOpen) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.toggleOpen(false);
     }
   }
 
