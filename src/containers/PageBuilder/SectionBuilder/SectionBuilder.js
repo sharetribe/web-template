@@ -83,7 +83,14 @@ const defaultSectionComponents = {
  * @returns {JSX.Element} element containing array of sections according from given config array.
  */
 const SectionBuilder = props => {
-  const { sections = [], options } = props;
+  const {
+    sections = [],
+    featuredListingData,
+    onFetchFeaturedListings,
+    getListingEntitiesById,
+    parentPage,
+    options,
+  } = props;
   const { sectionComponents = {}, isInsideContainer, ...otherOption } = options || {};
 
   // If there's no sections, we can't render the correct section component
@@ -131,12 +138,16 @@ const SectionBuilder = props => {
           return (
             <Section
               key={`${sectionId}_i${index}`}
+              featuredListingData={featuredListingData}
               className={classes}
               defaultClasses={DEFAULT_CLASSES}
               isInsideContainer={isInsideContainer}
               options={otherOption}
               {...section}
+              onFetchFeaturedListings={onFetchFeaturedListings}
+              getListingEntitiesById={getListingEntitiesById}
               sectionId={sectionId}
+              parentPage={parentPage}
             />
           );
         } else {
