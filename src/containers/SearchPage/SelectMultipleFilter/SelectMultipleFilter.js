@@ -16,9 +16,10 @@ import css from './SelectMultipleFilter.module.css';
 // TODO: Live edit didn't work with FieldCheckboxGroup
 //       There's a mutation problem: formstate.dirty is not reliable with it.
 const GroupOfFieldCheckboxes = props => {
-  const { id, className, name, options } = props;
+  const { id, className, name, options, legend } = props;
   return (
-    <div className={className}>
+    <fieldset className={className}>
+      {legend ? <legend className={css.accessibilityLegend}>{legend}</legend> : null}
       <ul className={css.list}>
         {options.map(optionConfig => {
           const { option, label } = optionConfig;
@@ -30,7 +31,7 @@ const GroupOfFieldCheckboxes = props => {
           );
         })}
       </ul>
-    </div>
+    </fieldset>
   );
 };
 
@@ -139,6 +140,7 @@ const SelectMultipleFilter = props => {
         name={name}
         id={`${id}-checkbox-group`}
         options={options}
+        legend={label}
       />
     </FilterPopup>
   ) : (
@@ -160,6 +162,7 @@ const SelectMultipleFilter = props => {
         name={name}
         id={`${id}-checkbox-group`}
         options={options}
+        legend={label}
       />
     </FilterPlain>
   );

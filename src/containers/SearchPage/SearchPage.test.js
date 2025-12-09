@@ -346,8 +346,8 @@ describe('SearchPage', () => {
       expect(queryByText('Cat')).not.toBeInTheDocument();
       // Has no Boat filter (primary filter tied to 'sell-bicycles' listing type)
       expect(queryByText('Boat')).not.toBeInTheDocument();
-      // Has(!) Amenities filter (secondary filter)
-      expect(getByText('Amenities')).toBeInTheDocument();
+      // Has(!) Amenities filter (secondary filter) (it contains also legend for screen readers)
+      expect(getAllByText('Amenities')).toHaveLength(2);
       // Has Single Select Test filter
       expect(getByText('Single Select Test')).toBeInTheDocument();
       expect(getByText('Enum 1')).toBeInTheDocument();
@@ -532,13 +532,13 @@ describe('SearchPage', () => {
       expect(queryByText('Freshwater')).not.toBeInTheDocument();
     });
 
-    // Test category intercation: click "Fish"
+    // Test category intercation: click "Cats"
     await waitFor(() => {
       userEvent.click(getByRole('button', { name: 'Choose Cats.' }));
     });
 
-    // Has no Cat filter (primary)
-    expect(getByText('Cat')).toBeInTheDocument();
+    // Has Cat filter (enum) using SelectMultipleFilter component (it contains also legend for screen readers)
+    expect(getAllByText('Cat')).toHaveLength(2);
 
     expect(getByText('Dogs')).toBeInTheDocument();
     expect(queryByText('Poodle')).not.toBeInTheDocument();
@@ -588,8 +588,8 @@ describe('SearchPage', () => {
       userEvent.click(getByRole('button', { name: 'Choose Sell bicycles.' }));
     });
 
-    // Has Boat filter filter (primary)
-    expect(getByText('Boat')).toBeInTheDocument();
+    // Has Boat filter (enum) using SelectMultipleFilter component (it contains also legend for screen readers)
+    expect(getAllByText('Boat')).toHaveLength(2);
   });
 
   it('Check that Listing type filter is not revealed when using a listing type path param', async () => {
