@@ -64,11 +64,12 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout, showManageListingsLin
   };
 
   return (
-    <Menu ariaLabel={intl.formatMessage({ id: 'TopbarDesktop.screenreader.profileMenu' })}>
+    <Menu>
       <MenuLabel
         id="profile-menu-label"
         className={css.profileMenuLabel}
         isOpenClassName={css.profileMenuIsOpen}
+        ariaLabel={intl.formatMessage({ id: 'TopbarDesktop.screenreader.profileMenu' })}
       >
         <Avatar className={css.avatar} user={currentUser} disableProfileLink />
       </MenuLabel>

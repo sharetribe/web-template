@@ -20,7 +20,16 @@ import css from './MenuLabel.module.css';
  */
 const MenuLabel = props => {
   const [clicked, setClicked] = useState(false);
-  const { children, id, className, rootClassName, isOpen, isOpenClassName, onToggleActive } = props;
+  const {
+    children,
+    id,
+    className,
+    rootClassName,
+    isOpen,
+    isOpenClassName,
+    onToggleActive,
+    ariaLabel,
+  } = props;
 
   const onClick = e => {
     e.stopPropagation();
@@ -47,8 +56,10 @@ const MenuLabel = props => {
     [isOpenClass]: isOpen,
   });
 
+  const ariaLabelMaybe = ariaLabel ? { ['aria-label']: ariaLabel } : {};
+
   return (
-    <button id={id} className={classes} onClick={onClick} onBlur={onBlur}>
+    <button id={id} className={classes} onClick={onClick} onBlur={onBlur} {...ariaLabelMaybe}>
       {children}
     </button>
   );
