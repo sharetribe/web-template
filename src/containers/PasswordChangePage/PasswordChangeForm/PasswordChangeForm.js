@@ -233,6 +233,7 @@ class PasswordChangeForm extends Component {
                   type="password"
                   id="currentPassword"
                   name="currentPassword"
+                  disabled={pristine}
                   autoComplete="current-password"
                   label={passwordLabel}
                   placeholder={passwordPlaceholder}
