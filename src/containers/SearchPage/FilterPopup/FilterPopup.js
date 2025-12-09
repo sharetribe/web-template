@@ -92,6 +92,7 @@ class FilterPopup extends Component {
     this.handleClear = this.handleClear.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
+    this.handleOutsideClick = this.handleOutsideClick.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.toggleIsOpen = this.toggleIsOpen.bind(this);
     this.positionStyleForContent = this.positionStyleForContent.bind(this);
@@ -140,7 +141,14 @@ class FilterPopup extends Component {
     onSubmit(initialValues);
   }
 
-  handleBlur() {
+  handleBlur(event) {
+    const hasBothTargets = event.target && event.relatedTarget;
+    if (this.state.isOpen && hasBothTargets && !this.filter.contains(event.relatedTarget)) {
+      this.setState({ isOpen: false });
+    }
+  }
+
+  handleOutsideClick() {
     this.setState({ isOpen: false });
   }
 
@@ -218,7 +226,7 @@ class FilterPopup extends Component {
     };
 
     return (
-      <OutsideClickHandler onOutsideClick={this.handleBlur}>
+      <OutsideClickHandler onOutsideClick={this.handleOutsideClick}>
         <KeyboardListener
           className={classes}
           containerId={containerId}
@@ -332,6 +340,7 @@ class FilterPopup extends Component {
             ref={node => {
               this.filter = node;
             }}
+            onBlur={this.handleBlur}
           >
             <PopupOpenerButton
               id={`${id}.toggle`}
