@@ -10,13 +10,22 @@ import { propTypes } from '../../util/types';
 
 import FallbackPage from './FallbackPage';
 import { ASSET_NAME } from './LandingPage.duck';
+import { fetchFeaturedListings } from '../../ducks/featuredListings.duck';
+import { getListingsById } from '../../ducks/marketplaceData.duck';
 
 const PageBuilder = loadable(() =>
   import(/* webpackChunkName: "PageBuilder" */ '../PageBuilder/PageBuilder')
 );
 
 export const LandingPageComponent = props => {
-  const { pageAssetsData, inProgress, error } = props;
+  const {
+    pageAssetsData,
+    featuredListingData,
+    onFetchFeaturedListings,
+    getListingEntitiesById,
+    inProgress,
+    error,
+  } = props;
 
   return (
     <PageBuilder
@@ -24,6 +33,10 @@ export const LandingPageComponent = props => {
       inProgress={inProgress}
       error={error}
       fallbackPage={<FallbackPage error={error} />}
+      featuredListingData={featuredListingData?.[camelize(ASSET_NAME)] || {}}
+      parentPage={camelize(ASSET_NAME)}
+      onFetchFeaturedListings={onFetchFeaturedListings}
+      getListingEntitiesById={getListingEntitiesById}
     />
   );
 };
@@ -36,8 +49,17 @@ LandingPageComponent.propTypes = {
 
 const mapStateToProps = state => {
   const { pageAssetsData, inProgress, error } = state.hostedAssets || {};
-  return { pageAssetsData, inProgress, error };
+  const { featuredListingData } = state.featuredListings || {};
+
+  const getListingEntitiesById = listingIds => getListingsById(state, listingIds);
+
+  return { pageAssetsData, featuredListingData, getListingEntitiesById, inProgress, error };
 };
+
+const mapDispatchToProps = dispatch => ({
+  onFetchFeaturedListings: (sectionId, parentPage, listingImageConfig) =>
+    dispatch(fetchFeaturedListings({ sectionId, parentPage, listingImageConfig })),
+});
 
 // Note: it is important that the withRouter HOC is **outside** the
 // connect HOC, otherwise React Router won't rerender any Route
@@ -45,6 +67,11 @@ const mapStateToProps = state => {
 // lifecycle hook.
 //
 // See: https://github.com/ReactTraining/react-router/issues/4671
-const LandingPage = compose(connect(mapStateToProps))(LandingPageComponent);
+const LandingPage = compose(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(LandingPageComponent);
 
 export default LandingPage;

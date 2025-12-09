@@ -4,37 +4,13 @@ import classNames from 'classnames';
 // Import configs and components
 import { useConfiguration } from '../../../../context/configurationContext';
 import { lazyLoadWithDimensions } from '../../../../util/uiHelpers';
-import { createListing, createUser } from '../../../../util/testData';
 
 import Field, { hasDataInFields } from '../../Field';
 import SectionContainer from '../SectionContainer';
 import { ListingCard } from '../../../../components';
+import { IconSpinner } from '../../../../components';
 
 import css from './SectionListings.module.css';
-
-const listing1 = createListing('listing1', {}, { author: createUser('user1') });
-const listing2 = createListing('listing2', {}, { author: createUser('user1') });
-const listing3 = createListing('listing3', {}, { author: createUser('user1') });
-const listing4 = createListing('listing4', {}, { author: createUser('user1') });
-const listing5 = createListing('listing5', {}, { author: createUser('user1') });
-const listing6 = createListing('listing6', {}, { author: createUser('user1') });
-const listing7 = createListing('listing7', {}, { author: createUser('user1') });
-const listing8 = createListing('listing8', {}, { author: createUser('user1') });
-const listing9 = createListing('listing9', {}, { author: createUser('user1') });
-const listing10 = createListing('listing10', {}, { author: createUser('user1') });
-
-const listings = [
-  listing1,
-  listing2,
-  listing3,
-  listing4,
-  listing5,
-  listing6,
-  listing7,
-  listing8,
-  listing9,
-  listing10,
-];
 
 const KEY_CODE_ARROW_LEFT = 37;
 const KEY_CODE_ARROW_RIGHT = 39;
@@ -98,7 +74,6 @@ const calculateCarouselHeight = (numColumns, config, carouselWidth, isMobile = f
   const cardImageHeight = cardWidth / parsedAspectRatio;
   const cardInfoHeight = priceHeight + titleHeightSingleLine + authorInfoHeight + cardInfoPadding;
 
-
   const totalCardHeight = cardImageHeight + (isMobile ? cardInfoHeightMobile : cardInfoHeight);
   const totalWithPaddings = totalCardHeight + containerPaddingTop + containerPaddingBottom;
 
@@ -116,8 +91,34 @@ const calculateCarouselHeight = (numColumns, config, carouselWidth, isMobile = f
  * @returns {JSX.Element} Carousel container with listing cards
  */
 const ListingCarouselComponent = props => {
-  const { numColumns, listings, sliderId, darkMode } = props;
-  return (
+  const {
+    numColumns,
+    listings,
+    sliderId,
+    darkMode,
+    onFetchFeaturedListings,
+    fetched,
+    inProgress,
+    parentPage,
+    sectionId,
+    config,
+  } = props;
+
+  const listingImageConfig = config.layout.listingImage;
+
+  // TODO ADD ERROR HANDLING
+
+  useEffect(() => {
+    if (!fetched && inProgress !== true) {
+      onFetchFeaturedListings(sectionId, parentPage, listingImageConfig);
+    }
+  }, []);
+
+  if (inProgress == true) {
+    return <IconSpinner className={css.spinner} />;
+  }
+
+  return listings.length > 0 ? (
     <div className={getColumnCSS(numColumns)} id={sliderId}>
       {listings.map(listing => (
         <ListingCard
@@ -129,7 +130,7 @@ const ListingCarouselComponent = props => {
         />
       ))}
     </div>
-  );
+  ) : null;
 };
 
 /**
@@ -157,29 +158,37 @@ const SectionListings = props => {
     description,
     callToAction,
     options,
+    onFetchFeaturedListings,
+    getListingEntitiesById,
+    featuredListingData,
+    parentPage,
   } = props;
+
+  const listingIds = featuredListingData?.[sectionId]?.listingIds;
+  const listingEntities = listingIds ? getListingEntitiesById(listingIds) : [];
+
+  const fetched = featuredListingData?.[sectionId]?.fetched || false;
+  const inProgress = featuredListingData?.inProgress; //page level fetch
 
   const sliderContainerId = `${sectionId}-container`;
   const sliderId = `${sectionId}-slider`;
 
-  // TODO: calculate dynamically
-  const numberOfListings = 10;
-  const hasListings = numberOfListings > 0;
+  const numberOfListings = listingIds?.length || 0;
 
   const [carouselWidthConstant, setCarouselWidthConstant] = useState(null);
 
   useEffect(() => {
     const setCarouselWidth = () => {
-      if (hasListings) {
-        const windowWidth = window.innerWidth;
-        const elem = window.document.getElementById(sliderContainerId);
-        const scrollbarWidth = window.innerWidth - document.body.clientWidth;
-        const elementWidth =
-          elem.clientWidth >= windowWidth - scrollbarWidth ? windowWidth : elem.clientWidth;
-        const carouselWidth = elementWidth - scrollbarWidth;
-        elem.style.setProperty('--carouselWidth', `${carouselWidth}px`);
-        setCarouselWidthConstant(carouselWidth);
-      }
+      // if (hasListings) {
+      const windowWidth = window.innerWidth;
+      const elem = window.document.getElementById(sliderContainerId);
+      const scrollbarWidth = window.innerWidth - document.body.clientWidth;
+      const elementWidth =
+        elem.clientWidth >= windowWidth - scrollbarWidth ? windowWidth : elem.clientWidth;
+      const carouselWidth = elementWidth - scrollbarWidth;
+      elem.style.setProperty('--carouselWidth', `${carouselWidth}px`);
+      setCarouselWidthConstant(carouselWidth);
+      // }
     };
     setCarouselWidth();
 
@@ -246,34 +255,36 @@ const SectionListings = props => {
         </header>
       ) : null}
 
-      {hasListings ? (
-        <div className={css.carouselContainer} id={sliderContainerId}>
-          <div
-            className={classNames(css.carouselArrows, {
-              [css.notEnoughListings]: numberOfListings <= numColumns,
-            })}
-          >
-            <button className={css.carouselArrowPrev} onClick={onSlideLeft} onKeyDown={onKeyDown}>
-              ‹
-            </button>
-            <button className={css.carouselArrowNext} onClick={onSlideRight} onKeyDown={onKeyDown}>
-              ›
-            </button>
-          </div>
-          <div className={css.dynamicContainer} style={{ height: carouselHeight }}>
-            {/* Lazy-loaded carousel component renders when in viewport */}
-            <LazyListingCarouselComponent
-              numberOfListings={numberOfListings}
-              numColumns={numColumns}
-              listings={listings}
-              sliderId={sliderId}
-              darkMode={darkMode}
-            />
-          </div>
+      <div className={css.carouselContainer} id={sliderContainerId}>
+        <div
+          className={classNames(css.carouselArrows, {
+            [css.notEnoughListings]: numberOfListings <= numColumns,
+          })}
+        >
+          <button className={css.carouselArrowPrev} onClick={onSlideLeft} onKeyDown={onKeyDown}>
+            ‹
+          </button>
+          <button className={css.carouselArrowNext} onClick={onSlideRight} onKeyDown={onKeyDown}>
+            ›
+          </button>
         </div>
-      ) : null}
+        <div className={css.dynamicContainer} style={{ height: carouselHeight }}>
+          {/* Lazy-loaded carousel component renders when in viewport */}
+          <LazyListingCarouselComponent
+            numColumns={numColumns}
+            listings={listingEntities}
+            sliderId={sliderId}
+            darkMode={darkMode}
+            onFetchFeaturedListings={onFetchFeaturedListings}
+            fetched={fetched}
+            inProgress={inProgress}
+            parentPage={parentPage}
+            sectionId={sectionId}
+            config={config}
+          />
+        </div>
+      </div>
     </SectionContainer>
   );
 };
-
 export default SectionListings;
