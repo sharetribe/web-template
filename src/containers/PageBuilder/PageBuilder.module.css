@@ -11,6 +11,10 @@
 
 .main {
   display: grid;
+  scroll-margin-top: var(--topbarHeight);
+  @media (--viewportMedium) {
+    scroll-margin-top: var(--topbarHeightDesktop);
+  }
 }
 
 .loading {
