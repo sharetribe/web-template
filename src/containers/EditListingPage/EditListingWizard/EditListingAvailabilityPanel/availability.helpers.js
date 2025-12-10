@@ -164,7 +164,7 @@ const getMonthStartInTimeZone = (monthId, timeZone) => {
 // Get the range of months that we have already fetched content
 // (as a reaction to user's Next-button clicks on date picker).
 export const getMonthlyFetchRange = (monthlyExceptionQueries, timeZone) => {
-  const monthStrings = Object.keys(monthlyExceptionQueries);
+  const monthStrings = Object.keys(monthlyExceptionQueries).sort();
   const firstMonth = getMonthStartInTimeZone(monthStrings[0], timeZone);
   const lastMonth = getMonthStartInTimeZone(monthStrings[monthStrings.length - 1], timeZone);
   const exclusiveEndMonth = getStartOfNextMonth(lastMonth, timeZone);

@@ -14,8 +14,11 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
-- [fix] Update the default-negotation transaction processe email templates to use the color from Branding asset.
-  [#721](https://github.com/sharetribe/web-template/pull/721)
+- [fix] EditListingPage.duck.js: fix a bug with availability exceptions fetching. A race condition
+  was introduced when Redux TLK was taken into use.
+  [#722](https://github.com/sharetribe/web-template/pull/722)
+- [fix] Update the default-negotation transaction processe email templates to use the color from
+  Branding asset. [#721](https://github.com/sharetribe/web-template/pull/721)
 - [fix] Update the color of buttons in transaction processes email templates.
   [#718](https://github.com/sharetribe/web-template/pull/718)
 
