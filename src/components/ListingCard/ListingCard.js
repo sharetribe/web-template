@@ -1,3 +1,5 @@
+// ⚠️ If you modify the styling of this component and you're using the SectionListings component in your marketplace (featured listings)
+// please reflect those changes in the calculateCarouselHeight function in SectionListing.js to avoid layout issues
 import React from 'react';
 import classNames from 'classnames';
 

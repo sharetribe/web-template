@@ -12,8 +12,9 @@ import { IconSpinner } from '../../../../components';
 
 import css from './SectionListings.module.css';
 
-const KEY_CODE_ARROW_LEFT = 37;
-const KEY_CODE_ARROW_RIGHT = 39;
+const KEY_ARROW_LEFT = 'ArrowLeft';
+const KEY_ARROW_RIGHT = 'ArrowRight';
+const MAX_MOBILE_SCREEN_WIDTH = 768;
 
 // Configuration for supported column layouts
 // Only 3 and 4 columns are supported in this component
@@ -37,10 +38,20 @@ const parseAspectRatio = aspectRatio => {
   return width / height;
 };
 
-const isMobileViewport = () => typeof window !== 'undefined' && window.innerWidth < 768;
+const isMobileViewport = () => {
+  const hasMatchMedia = typeof window !== 'undefined' && window?.matchMedia;
+  return hasMatchMedia
+    ? window.matchMedia(`(max-width: ${MAX_MOBILE_SCREEN_WIDTH}px)`)?.matches
+    : false;
+};
 
 /**
  * Calculate the dynamic height for the carousel container based on card dimensions
+ *
+ * ⚠️ This function contains hardcoded values that refer to the properties defined in ListingCard.module.css
+ * If you modify ListingCard's font sizes, padding, margins, or layout you need to also update this function to match.
+ * See ListingCard.module.css for the properties this function refers to (search ⚠️ in ListingCard.module.css to find the relevant properties).
+ *
  * @param {number} numColumns - Number of columns in the layout
  * @param {Object} config - Configuration object containing layout settings
  * @param {number} carouselWidth - Width of the carousel container
@@ -176,6 +187,7 @@ const SectionListings = props => {
   const numberOfListings = listingIds?.length || 0;
 
   const [carouselWidthConstant, setCarouselWidthConstant] = useState(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const setCarouselWidth = () => {
@@ -196,6 +208,10 @@ const SectionListings = props => {
     return () => window.removeEventListener('resize', setCarouselWidth);
   }, []);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const onSlideLeft = e => {
     var slider = window.document.getElementById(sliderId);
     const slideWidth = numColumns * slider?.firstChild?.clientWidth;
@@ -213,11 +229,11 @@ const SectionListings = props => {
   };
 
   const onKeyDown = e => {
-    if (e.keyCode === KEY_CODE_ARROW_LEFT) {
+    if (e.key === KEY_ARROW_LEFT) {
       // Prevent changing cursor position in input
       e.preventDefault();
       onSlideLeft(e);
-    } else if (e.keyCode === KEY_CODE_ARROW_RIGHT) {
+    } else if (e.key === KEY_ARROW_RIGHT) {
       // Prevent changing cursor position in input
       e.preventDefault();
       onSlideRight(e);
@@ -231,7 +247,7 @@ const SectionListings = props => {
 
   // Create lazy-loaded version of carousel component for performance
   const LazyListingCarouselComponent = lazyLoadWithDimensions(ListingCarouselComponent);
-  const isMobile = isMobileViewport();
+  const isMobile = mounted && isMobileViewport();
 
   const carouselHeight = calculateCarouselHeight(
     numColumns,
