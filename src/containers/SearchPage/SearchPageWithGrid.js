@@ -420,7 +420,7 @@ export class SearchPageComponent extends Component {
             </div>
           </aside>
 
-          <div className={css.layoutWrapperMain} role="main">
+          <div id="main-content" className={css.layoutWrapperMain} role="main">
             <div className={css.searchResultContainer}>
               <SearchFiltersMobile
                 className={css.searchFiltersMobileList}

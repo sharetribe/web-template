@@ -45,7 +45,7 @@ const LayoutSingleColumn = props => {
             <Topbar as="header" className={css.topbar}>
               {topbarContent}
             </Topbar>
-            <Main as="main" className={classNames(css.main, mainColumnClassName)}>
+            <Main as="main" id="main-content" className={classNames(css.main, mainColumnClassName)}>
               {children}
             </Main>
             <Footer>{footerContent}</Footer>

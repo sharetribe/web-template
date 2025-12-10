@@ -12,6 +12,7 @@ import { parse, stringify } from '../../../util/urlHelpers';
 import { createResourceLocatorString, matchPathname, pathByRouteName } from '../../../util/routes';
 import {
   Button,
+  IconArrowHead,
   LimitedAccessBanner,
   LinkedLogo,
   Modal,
@@ -311,8 +312,31 @@ const TopbarComponent = props => {
     <div className={css.searchMenu} />
   );
 
+  const handleSkipToMainContent = e => {
+    e.preventDefault();
+    const mainContent = document.getElementById('main-content');
+    if (mainContent) {
+      mainContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Focus the main content for screen readers
+      mainContent.setAttribute('tabindex', '-1');
+      mainContent.focus();
+      // Remove tabindex after blur to avoid tabbing into it later
+      mainContent.addEventListener(
+        'blur',
+        () => {
+          mainContent.removeAttribute('tabindex');
+        },
+        { once: true }
+      );
+    }
+  };
+
   return (
     <div className={classes}>
+      <Button onClick={handleSkipToMainContent} className={css.skipToMainContent}>
+        <FormattedMessage id="Topbar.skipToMainContent" />
+        <IconArrowHead direction="right" size="small" rootClassName={css.skiptoMainArrow} />
+      </Button>
       <LimitedAccessBanner
         isAuthenticated={isAuthenticated}
         isLoggedInAs={isLoggedInAs}
