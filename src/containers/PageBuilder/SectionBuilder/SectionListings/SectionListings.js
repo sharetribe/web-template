@@ -4,11 +4,13 @@ import classNames from 'classnames';
 // Import configs and components
 import { useConfiguration } from '../../../../context/configurationContext';
 import { lazyLoadWithDimensions } from '../../../../util/uiHelpers';
+import { FormattedMessage } from '../../../../util/reactIntl';
 
 import Field, { hasDataInFields } from '../../Field';
 import SectionContainer from '../SectionContainer';
 import { ListingCard } from '../../../../components';
 import { IconSpinner } from '../../../../components';
+import { ErrorMessage } from '../../../../components';
 
 import css from './SectionListings.module.css';
 
@@ -58,7 +60,7 @@ const isMobileViewport = () => {
  * @param {boolean} isMobile - Whether the viewport is mobile
  * @returns {number} Calculated height in pixels
  */
-const calculateCarouselHeight = (numColumns, config, carouselWidth, isMobile = false) => {
+const calculateCarouselHeight = (numColumns, config, carouselWidth, isMobile = false, error) => {
   const thumbnailAspectRatio = config.layout.listingImage.aspectRatio;
   const paddingHorizontal = 2 * 32; // 2x32px
   const titleHeightSingleLine = 16;
@@ -88,6 +90,11 @@ const calculateCarouselHeight = (numColumns, config, carouselWidth, isMobile = f
   const totalCardHeight = cardImageHeight + (isMobile ? cardInfoHeightMobile : cardInfoHeight);
   const totalWithPaddings = totalCardHeight + containerPaddingTop + containerPaddingBottom;
 
+  const errorMessageHeight = 250;
+
+  if (error) {
+    return errorMessageHeight;
+  }
   return Math.ceil(totalWithPaddings);
 };
 
@@ -113,32 +120,44 @@ const ListingCarouselComponent = props => {
     parentPage,
     sectionId,
     config,
+    error,
+    allSections,
   } = props;
 
   const listingImageConfig = config.layout.listingImage;
 
-  // TODO ADD ERROR HANDLING
-
   useEffect(() => {
-    if (!fetched && inProgress !== true) {
-      onFetchFeaturedListings(sectionId, parentPage, listingImageConfig);
+    if (!fetched && inProgress !== true && !error) {
+      onFetchFeaturedListings(sectionId, parentPage, listingImageConfig, allSections);
     }
   }, []);
 
   if (inProgress == true) {
-    return <IconSpinner className={css.spinner} />;
+    return <IconSpinner className={css.centeredContent} />;
+  }
+
+  if (error) {
+    return (
+      <div className={css.genericErrorContainer} role="alert">
+        <h4 className={css.genericErrorTitle}>
+          <FormattedMessage id="SectionListings.genericErrorTitle" />
+        </h4>
+        <ErrorMessage error={error} />
+      </div>
+    );
   }
 
   return listings.length > 0 ? (
-    <div className={getColumnCSS(numColumns)} id={sliderId}>
+    <div className={getColumnCSS(numColumns)} id={sliderId} role="list">
       {listings.map(listing => (
-        <ListingCard
-          className={css.card}
-          aspectRatioClassName={css.carouselImageHoverEffect}
-          key={listing.id.uuid}
-          listing={listing}
-          darkMode={darkMode}
-        />
+        <li key={listing.id.uuid} className={css.listItem}>
+          <ListingCard
+            className={css.card}
+            aspectRatioClassName={css.carouselImageHoverEffect}
+            listing={listing}
+            darkMode={darkMode}
+          />
+        </li>
       ))}
     </div>
   ) : null;
@@ -173,13 +192,16 @@ const SectionListings = props => {
     getListingEntitiesById,
     featuredListingData,
     parentPage,
+    allSections,
   } = props;
 
   const listingIds = featuredListingData?.[sectionId]?.listingIds;
   const listingEntities = listingIds ? getListingEntitiesById(listingIds) : [];
 
   const fetched = featuredListingData?.[sectionId]?.fetched || false;
-  const inProgress = featuredListingData?.inProgress; //page level fetch
+  const inProgress = featuredListingData?.[sectionId]?.inProgress; //page level fetch
+
+  const error = featuredListingData?.[sectionId]?.error;
 
   const sliderContainerId = `${sectionId}-container`;
   const sliderId = `${sectionId}-slider`;
@@ -191,7 +213,6 @@ const SectionListings = props => {
 
   useEffect(() => {
     const setCarouselWidth = () => {
-      // if (hasListings) {
       const windowWidth = window.innerWidth;
       const elem = window.document.getElementById(sliderContainerId);
       const scrollbarWidth = window.innerWidth - document.body.clientWidth;
@@ -200,7 +221,6 @@ const SectionListings = props => {
       const carouselWidth = elementWidth - scrollbarWidth;
       elem.style.setProperty('--carouselWidth', `${carouselWidth}px`);
       setCarouselWidthConstant(carouselWidth);
-      // }
     };
     setCarouselWidth();
 
@@ -253,7 +273,8 @@ const SectionListings = props => {
     numColumns,
     config,
     carouselWidthConstant,
-    isMobile
+    isMobile,
+    error
   );
 
   return (
@@ -296,7 +317,9 @@ const SectionListings = props => {
             inProgress={inProgress}
             parentPage={parentPage}
             sectionId={sectionId}
+            error={error}
             config={config}
+            allSections={allSections}
           />
         </div>
       </div>

@@ -26,6 +26,7 @@ const DEFAULT_CLASSES = {
   description: css.description,
   ctaButton: css.ctaButton,
   blockContainer: css.blockContainer,
+  defaultLink: css.defaultLink,
 };
 
 /////////////////////////////////////////////
@@ -142,12 +143,13 @@ const SectionBuilder = props => {
               className={classes}
               defaultClasses={DEFAULT_CLASSES}
               isInsideContainer={isInsideContainer}
-              options={otherOption}
+              options={{ ...otherOption, defaultClasses: DEFAULT_CLASSES }}
               {...section}
               onFetchFeaturedListings={onFetchFeaturedListings}
               getListingEntitiesById={getListingEntitiesById}
               sectionId={sectionId}
               parentPage={parentPage}
+              allSections={sections}
             />
           );
         } else {

@@ -196,6 +196,22 @@ export const denormalizeAssetData = assetJson => {
   return denormalizeJsonData(data, included);
 };
 
+export const limitListingsSections = data => {
+  let acc = 0;
+  const listingSectionLimit = 10;
+  const filteredData = data.sections.filter(section => {
+    if (section.sectionType === 'listings') {
+      if (acc < listingSectionLimit) {
+        acc++;
+        return true;
+      }
+      return false;
+    }
+    return true;
+  });
+  return { meta: data.meta, sections: filteredData };
+};
+
 /**
  * Create shell objects to ensure that attributes etc. exists.
  *

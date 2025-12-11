@@ -97,6 +97,25 @@
   composes: baseCarousel;
 }
 
+.listItem {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: contents;
+}
+
+.listItem:last-of-type > * {
+  padding-right: 32px;
+  width: calc(min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px);
+}
+
+@media (min-width: 1200px) {
+  .listItem:last-of-type > * {
+    padding-right: 32px;
+    width: calc(min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px);
+  }
+}
+
 .card {
   flex: 0 0 auto;
   /* 64px = horizontal layout paddings */
@@ -106,12 +125,6 @@
   scroll-snap-align: center;
 
   transform: translateX(32px);
-
-  &:last-of-type {
-    padding-right: 32px;
-    /* 32px (padding-right above) */
-    width: calc(min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px);
-  }
 
   @media (--viewportMedium) {
     margin-right: 32px;
@@ -124,24 +137,20 @@
       max(calc((var(--carouselWidth) - var(--contentMaxWidthPages)) / 2 + 32px), 0px)
     );
 
-    &:last-of-type {
-      padding-right: 32px;
-      width: calc(
-        min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px
-      ); /* 32px (padding-right above) */
-    }
   }
 }
+
 
 .threeColumns a {
   @media (--viewportMedium) {
     /* 64px (horizontal layout paddings) - 32px (two gutters á 32px) / 3 (number of columns) */
     width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 64px - 64px) / 3);
+  }
+}
 
-    &:last-of-type {
-      /* 32px (padding-right above) / 3 (number of columns) */
-      width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px) / 3);
-    }
+.threeColumns .listItem:last-of-type > * {
+  @media (--viewportMedium) {
+    width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px) / 3);
   }
 }
 
@@ -149,11 +158,12 @@
   @media (--viewportMedium) {
     /* 64px (horizontal layout paddings) - 96px (three gutters á 32px) / 4 (number of columns) */
     width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 64px - 96px) / 4);
+  }
+}
 
-    &:last-of-type {
-      /* 32px (padding-right above) / 4 (number of columns) */
-      width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px) / 4);
-    }
+.fourColumns .listItem:last-of-type > * {
+  @media (--viewportMedium) {
+    width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px) / 4);
   }
 }
 
@@ -170,9 +180,17 @@
   }
 }
 
-.spinner {
+.centeredContent {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.genericErrorContainer {
+  composes: centeredContent;
+  border-radius: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  max-width: 500px;
 }

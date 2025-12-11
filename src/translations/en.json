@@ -938,6 +938,7 @@
   "SearchResultsPanel.screenreader.pagination": "Pagination",
   "SearchPage.searchError": "Search failed. Please try again.",
   "SeatsFilter.labelSelected": "Seats: {seatCount}",
+  "SectionListings.genericErrorTitle": "Content temporarily unavailable",
   "SelectMultipleFilter.labelSelected": "{labelText} • {count}",
   "SelectMultipleFilterPlainForm.labelSelected": "• {count}",
   "SendMessageForm.sendFailed": "Failed to send. Please try again.",
