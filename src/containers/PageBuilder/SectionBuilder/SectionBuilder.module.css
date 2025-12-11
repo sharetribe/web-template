@@ -151,6 +151,17 @@
   }
 }
 
+.defaultLink {
+  display: inline;
+  color: var(--marketplaceColor);
+
+  /* fallback option */
+  word-break: break-all;
+  /* use break-word if available */
+  word-break: break-word;
+  hyphens: auto;
+}
+
 /**
  * Theme: dark 
  * These styles are at the bottom of the file so that they overwrite rules for default "light" theme.
@@ -183,7 +194,7 @@
 /* link on dark theme */
 
 /* ************************************ */
-.darkTheme .Link__pages {
+.darkTheme .defaultLink {
   color: white;
   text-decoration: underline;
 
