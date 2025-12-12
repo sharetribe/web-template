@@ -199,14 +199,14 @@ const SectionListings = props => {
   const listingEntities = listingIds ? getListingEntitiesById(listingIds) : [];
 
   const fetched = featuredListingData?.[sectionId]?.fetched || false;
-  const inProgress = featuredListingData?.[sectionId]?.inProgress; //page level fetch
+  const inProgress = featuredListingData?.[sectionId]?.inProgress;
 
   const error = featuredListingData?.[sectionId]?.error;
 
   const sliderContainerId = `${sectionId}-container`;
   const sliderId = `${sectionId}-slider`;
 
-  const numberOfListings = listingIds?.length || 0;
+  const numberOfListings = listingEntities?.length > 0 ? listingIds?.length : 0;
 
   const [carouselWidthConstant, setCarouselWidthConstant] = useState(null);
   const [mounted, setMounted] = useState(false);

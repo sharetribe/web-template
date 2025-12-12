@@ -210,10 +210,10 @@ const featuredListingsSlice = createSlice({
             if (sectionData?.selection === 'newest') {
               sectionData.listingIds = apiResponse.data.data.map(listing => listing.id);
             }
-            if (sectionData?.selection === "manual") {
+            if (sectionData?.selection === 'manual') {
               // Filter out listing ids that were not succesfully returned by the API call
               const returnedListingIds = apiResponse.data.data.map(listing => listing.id.uuid);
-              sectionData.listingIds = sectionData.listingIds.filter(id => 
+              sectionData.listingIds = sectionData.listingIds.filter(id =>
                 returnedListingIds.includes(id.uuid)
               );
             }

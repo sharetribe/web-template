@@ -136,10 +136,8 @@
     transform: translateX(
       max(calc((var(--carouselWidth) - var(--contentMaxWidthPages)) / 2 + 32px), 0px)
     );
-
   }
 }
-
 
 .threeColumns a {
   @media (--viewportMedium) {
@@ -189,6 +187,7 @@
 
 .genericErrorContainer {
   composes: centeredContent;
+  text-align: center;
   border-radius: 20px;
   padding-left: 20px;
   padding-right: 20px;
