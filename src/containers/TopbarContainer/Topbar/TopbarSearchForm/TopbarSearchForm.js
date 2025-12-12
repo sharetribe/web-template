@@ -46,18 +46,22 @@ const KeywordSearchField = props => {
     </div>
   );
 };
-
-const LocationSearchField = props => {
-  const { desktopInputRootClass, intl, isMobile = false, inputRef, onLocationChange } = props;
-  const submitButton = ({}) => (
+const SubmitButton = props => {
+  const intl = useIntl();
+  return (
     <button
       className={css.searchSubmit}
       aria-label={intl.formatMessage({ id: 'TopbarDesktop.screenreader.search' })}
       type="submit"
+      {...props}
     >
       <IconSearchDesktop />
     </button>
   );
+};
+
+const LocationSearchField = props => {
+  const { desktopInputRootClass, intl, isMobile = false, inputRef, onLocationChange } = props;
   return (
     <Field
       name="location"
@@ -87,7 +91,7 @@ const LocationSearchField = props => {
             inputRef={inputRef}
             input={{ ...restInput, onChange: searchOnChange }}
             meta={meta}
-            submitButton={submitButton}
+            submitButton={SubmitButton}
             ariaLabel={intl.formatMessage({ id: 'TopbarDesktop.screenreader.search' })}
           />
         );
