@@ -164,6 +164,8 @@
 
 .modalContainer {
   composes: marketplaceModalInMobileBaseStyles from global;
+  height: unset;
+  min-height: 100vh;
   padding: 0;
   padding: var(--modalPadding);
 
