@@ -156,7 +156,23 @@ if (TRUST_PROXY === 'true') {
 }
 
 app.use(compression());
-app.use('/static', express.static(path.join(buildPath, 'static')));
+app.use(
+  '/static',
+  express.static(path.join(buildPath, 'static'), {
+    setHeaders: (res, path) => {
+      const isMain = path.match(
+        /^\/.*static\/(js|css)\/main\.[a-z0-9]+\.(css|js|css\.map|js\.map)$/g
+      );
+      const isChunk = path.match(
+        /^\/.*static\/(js|css)\/.*\.[a-z0-9]+\.chunk\.(css|js|css\.map|js\.map)$/g
+      );
+      if (isMain || isChunk) {
+        // cache for one year
+        res.setHeader('Cache-Control', 'public, max-age=31557600');
+      }
+    },
+  })
+);
 app.use(cookieParser());
 
 // We don't serve favicon.ico from root. PNG images are used instead for icons through link elements.
