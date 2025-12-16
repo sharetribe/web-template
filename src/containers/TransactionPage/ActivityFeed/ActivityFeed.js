@@ -28,6 +28,34 @@ const { Money } = sdkTypes;
 const MIN_LENGTH_FOR_LONG_WORDS = 20;
 
 /**
+ * Formats the content and format of the message for display. Replaces message content
+ * with a marketplace text item if the sender is banned.
+ * @param {Object} message The message to format
+ * @param {Object} transaction The transaction where the message was sent
+ * @param {Object} intl Intl
+ * @returns A rich text version of the message content
+ */
+const getMessageContent = (message, transaction, intl, richTextOptions = {}) => {
+  const { customer, provider } = transaction;
+  const customerBannedUuid = customer?.attributes.banned ? customer?.id.uuid : '';
+  const providerBannedUuid = provider?.attributes.banned ? provider?.id.uuid : '';
+
+  const isBannedSender = [customerBannedUuid, providerBannedUuid].includes(message.sender.id.uuid);
+  const content = isBannedSender
+    ? intl.formatMessage({
+        id: 'TransactionPage.messageSenderBanned',
+      })
+    : message.attributes.content;
+
+  return richText(content, {
+    linkify: true,
+    longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
+    longWordClass: css.longWord,
+    ...richTextOptions,
+  });
+};
+
+/**
  * @component
  * @param {Object} props - The props
  * @param {propTypes.message} props.message - The message
@@ -35,12 +63,8 @@ const MIN_LENGTH_FOR_LONG_WORDS = 20;
  * @returns {JSX.Element} The Message component
  */
 const Message = props => {
-  const { message, formattedDate } = props;
-  const content = richText(message.attributes.content, {
-    linkify: true,
-    longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
-    longWordClass: css.longWord,
-  });
+  const { message, formattedDate, transaction, intl } = props;
+  const content = getMessageContent(message, transaction, intl);
 
   return (
     <div className={css.message}>
@@ -61,11 +85,9 @@ const Message = props => {
  * @returns {JSX.Element} The OwnMessage component
  */
 const OwnMessage = props => {
-  const { message, formattedDate } = props;
-  const content = richText(message.attributes.content, {
-    linkify: true,
+  const { message, formattedDate, transaction, intl } = props;
+  const content = getMessageContent(message, transaction, intl, {
     linkClass: css.ownMessageContentLink,
-    longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
   });
 
   return (
@@ -303,9 +325,19 @@ export const ActivityFeed = props => {
     const formattedDate = formatDateWithProximity(message.attributes.createdAt, intl, todayString);
     const isOwnMessage = currentUser?.id && message?.sender?.id?.uuid === currentUser.id?.uuid;
     const messageComponent = isOwnMessage ? (
-      <OwnMessage message={message} formattedDate={formattedDate} />
+      <OwnMessage
+        message={message}
+        formattedDate={formattedDate}
+        transaction={transaction}
+        intl={intl}
+      />
     ) : (
-      <Message message={message} formattedDate={formattedDate} />
+      <Message
+        message={message}
+        formattedDate={formattedDate}
+        transaction={transaction}
+        intl={intl}
+      />
     );
 
     return (
