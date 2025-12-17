@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+## [v10.5.0] 2025-12-02
+
 - [add] Hide messages from banned users in ActivityFeed
   [#724](https://github.com/sharetribe/web-template/pull/724)
 - [fix] This changes the height of modals related to mobile menu and order panel on mobile layout.
@@ -25,6 +27,8 @@ way to update this template, but currently, we follow a pattern:
   Branding asset. [#721](https://github.com/sharetribe/web-template/pull/721)
 - [fix] Update the color of buttons in transaction processes email templates.
   [#718](https://github.com/sharetribe/web-template/pull/718)
+
+  [v10.5.0]: https://github.com/sharetribe/web-template/compare/v10.4.0...v10.5.0
 
 ## [v10.4.0] 2025-12-02
 
