@@ -105,4 +105,69 @@ describe('ActivityFeed', () => {
     expect(secondMsg.getByText('message 2')).toBeInTheDocument();
     expect(secondMsg.getByText('2023-11-10')).toBeInTheDocument();
   });
+
+  it('hide message if the sender is banned', () => {
+    const customer = createUser('user1', { banned: true });
+    const provider = createUser('user2');
+    const listing = createListing('listing');
+    const props = {
+      messages: [
+        createMessage(
+          'msg1',
+          { content: 'message 1', createdAt: new Date(Date.UTC(2023, 10, 9, 8, 12)) },
+          { sender: customer }
+        ),
+        createMessage(
+          'msg2',
+          { content: 'message 2', createdAt: new Date(Date.UTC(2023, 10, 10, 8, 12)) },
+          { sender: provider }
+        ),
+      ],
+      transaction: createTransaction({
+        id: 'tx1',
+        customer,
+        provider,
+        listing,
+        lastTransitionedAt: new Date(Date.UTC(2023, 4, 1)),
+        transitions: [
+          createTxTransition({
+            createdAt: new Date(Date.UTC(2023, 4, 1)),
+            by: TX_TRANSITION_ACTOR_CUSTOMER,
+            transition: processTransitions.INQUIRE,
+          }),
+        ],
+      }),
+      stateData: {
+        processName: 'default-purchase',
+        processState: 'inquiry',
+      },
+      currentUser: createCurrentUser('user2'),
+      hasOlderMessages: false,
+      fetchMessagesInProgress: false,
+      onOpenReviewModal: noop,
+      onShowOlderMessages: noop,
+      intl: fakeIntl,
+    };
+
+    render(<ActivityFeed {...props} />);
+
+    const list = screen.getByRole('list');
+    expect(list).toBeInTheDocument();
+
+    const fragment = within(list);
+    const items = fragment.getAllByRole('listitem');
+    // 1 transition and 2 messages
+    expect(items.length).toBe(2);
+
+    // Ensure that first message sent by a banned user
+    // is replaced with marketplace text key
+    const firstMsg = within(items[0]);
+    expect(firstMsg.getByText('TransactionPage.messageSenderBanned')).toBeInTheDocument();
+    expect(firstMsg.getByText('2023-11-09')).toBeInTheDocument();
+
+    // Find second message
+    const secondMsg = within(items[1]);
+    expect(secondMsg.getByText('message 2')).toBeInTheDocument();
+    expect(secondMsg.getByText('2023-11-10')).toBeInTheDocument();
+  });
 });

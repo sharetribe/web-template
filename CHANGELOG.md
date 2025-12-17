@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Hide messages from banned users in ActivityFeed
+  [#724](https://github.com/sharetribe/web-template/pull/724)
 - [fix] This changes the height of modals related to mobile menu and order panel on mobile layout.
   [#725](https://github.com/sharetribe/web-template/pull/725)
 - [fix] EditListingPage.duck.js: fix a bug with availability exceptions fetching. A race condition
