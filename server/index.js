@@ -160,6 +160,7 @@ app.use(
   '/static',
   express.static(path.join(buildPath, 'static'), {
     setHeaders: (res, path) => {
+      console.log('path', path);
       const isMain = path.match(
         /^\/.*static\/(js|css)\/main\.[a-z0-9]+\.(css|js|css\.map|js\.map)$/g
       );
