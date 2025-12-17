@@ -133,6 +133,7 @@ class FilterPlainComponent extends Component {
     const formId = `${id}.form`;
     const classes = classNames(rootClassName || css.root, className);
     const inertMaybe = this.state.isOpen ? {} : { inert: '' };
+    const isInput = element => element?.tagName?.toLowerCase() === 'input';
 
     return (
       <KeyboardListener
@@ -170,7 +171,7 @@ class FilterPlainComponent extends Component {
                     enforcedState: true,
                   });
                 }
-              } else if (this.filterContent.contains(event.target)) {
+              } else if (this.filterContent.contains(event.target) && !isInput(event.target)) {
                 event.preventDefault();
                 event.stopPropagation();
                 moveFocusToNextFocusableElement(formId, 'next');
@@ -187,7 +188,7 @@ class FilterPlainComponent extends Component {
                 if (this.state.isOpen) {
                   this.toggleIsOpen({ enforcedState: false });
                 }
-              } else if (this.filterContent.contains(event.target)) {
+              } else if (this.filterContent.contains(event.target) && !isInput(event.target)) {
                 event.preventDefault();
                 event.stopPropagation();
                 moveFocusToNextFocusableElement(formId, 'previous');

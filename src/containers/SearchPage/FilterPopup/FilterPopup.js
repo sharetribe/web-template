@@ -225,6 +225,8 @@ class FilterPopup extends Component {
       }
     };
 
+    const isInput = element => element?.tagName?.toLowerCase() === 'input';
+
     return (
       <OutsideClickHandler onOutsideClick={this.handleOutsideClick}>
         <KeyboardListener
@@ -260,7 +262,7 @@ class FilterPopup extends Component {
                     },
                     enforcedState: true,
                   });
-                } else if (this.filterContent.contains(event.target)) {
+                } else if (this.filterContent.contains(event.target) && !isInput(event.target)) {
                   event.preventDefault();
                   event.stopPropagation();
                   moveFocusToNextFocusableElement(formId, 'next');
@@ -280,7 +282,7 @@ class FilterPopup extends Component {
                   }
 
                   this.toggleIsOpen({ enforcedState: false });
-                } else if (this.filterContent.contains(event.target)) {
+                } else if (this.filterContent.contains(event.target) && !isInput(event.target)) {
                   event.preventDefault();
                   event.stopPropagation();
                   moveFocusToNextFocusableElement(formId, 'previous');

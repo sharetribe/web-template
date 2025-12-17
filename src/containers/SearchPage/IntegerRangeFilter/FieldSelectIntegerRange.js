@@ -209,11 +209,11 @@ const RangeInput = props => {
               [css.valueInSidebar]: isInSideBar,
               [css.invalidInput]: isMinInvalid,
             })}
-            type="number"
+            inputMode="numeric"
+            pattern="\d*"
             name={`${name}_min`}
             min={defaultMinValue}
             max={defaultMaxValue}
-            step={step}
             placeholder={defaultMinValue}
             value={fieldValues.minValue}
             onChange={handleMinValueChange}
@@ -230,12 +230,12 @@ const RangeInput = props => {
               [css.valueInSidebar]: isInSideBar,
               [css.invalidInput]: isMaxInvalid,
             })}
-            type="number"
+            inputMode="numeric"
+            pattern="\d*"
             name={`${name}_max`}
             min={defaultMinValue}
             max={defaultMaxValue}
             placeholder={defaultMaxValue}
-            step={step}
             value={fieldValues.maxValue}
             onChange={handleMaxValueChange}
             onBlur={handleMaxValueBlur}
