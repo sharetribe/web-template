@@ -259,6 +259,9 @@ export class TransactionPanelComponent extends Component {
               providerName={authorDisplayName}
               customerName={customerDisplayName}
               isCustomerBanned={isCustomerBanned}
+              isProviderBanned={isProviderBanned}
+              isCustomerDeleted={isCustomerDeleted}
+              isProviderDeleted={isProviderDeleted}
               listingId={listing?.id?.uuid}
               listingTitle={listingTitle}
               listingDeleted={listingDeleted}
