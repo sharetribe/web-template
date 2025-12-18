@@ -55,6 +55,22 @@ const displayNames = (currentUser, provider, customer, intl) => {
   };
 };
 
+const allowShowingExtraInfo = (showExtraInfo, transactionPartyInfo) => {
+  const {
+    isCustomer,
+    isCustomerBanned,
+    isCustomerDeleted,
+    isProvider,
+    isProviderBanned,
+    isProviderDeleted,
+  } = transactionPartyInfo;
+  return (
+    !!showExtraInfo &&
+    ((isProvider && !isCustomerBanned && !isCustomerDeleted) ||
+      (isCustomer && !isProviderBanned && !isProviderDeleted))
+  );
+};
+
 /**
  * Transaction panel
  *
@@ -189,6 +205,15 @@ export class TransactionPanelComponent extends Component {
     const isProviderBanned = !!provider?.attributes?.banned;
     const isProviderDeleted = !!provider?.attributes?.deleted;
 
+    const transactionPartyInfo = {
+      isCustomer,
+      isCustomerBanned,
+      isCustomerDeleted,
+      isProvider,
+      isProviderBanned,
+      isProviderDeleted,
+    };
+
     const { authorDisplayName, customerDisplayName, otherUserDisplayNameString } = displayNames(
       currentUser,
       provider,
@@ -249,7 +274,7 @@ export class TransactionPanelComponent extends Component {
             <PanelHeading
               processName={stateData.processName}
               processState={stateData.processState}
-              showExtraInfo={stateData.showExtraInfo}
+              showExtraInfo={allowShowingExtraInfo(stateData.showExtraInfo, transactionPartyInfo)}
               showPriceOnMobile={showPrice}
               price={listing?.attributes?.price}
               intl={intl}
@@ -258,7 +283,6 @@ export class TransactionPanelComponent extends Component {
               transactionRole={transactionRole}
               providerName={authorDisplayName}
               customerName={customerDisplayName}
-              isCustomerBanned={isCustomerBanned}
               listingId={listing?.id?.uuid}
               listingTitle={listingTitle}
               listingDeleted={listingDeleted}
