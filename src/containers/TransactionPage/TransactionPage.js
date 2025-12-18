@@ -487,6 +487,11 @@ export const TransactionPageComponent = props => {
   const listingDeleted = listing?.attributes?.deleted;
   const listingTitle = listingDeleted ? deletedListingTitle : listing?.attributes?.title;
 
+  const isCustomerBanned = !!customer?.attributes?.banned;
+  const isCustomerDeleted = !!customer?.attributes?.deleted;
+  const isProviderBanned = !!provider?.attributes?.banned;
+  const isProviderDeleted = !!provider?.attributes?.deleted;
+
   // Redirect users with someone else's direct link to their own inbox/sales or inbox/orders page.
   const isDataAvailable =
     process &&
@@ -644,6 +649,10 @@ export const TransactionPageComponent = props => {
   const isRegularNegotiation =
     isNegotiationProcess && transaction?.attributes?.protectedData?.unitType === OFFER;
 
+  const isCounterpartyInactive =
+    (isCustomerRole && (isProviderBanned || isProviderDeleted)) ||
+    (isProviderRole && (isCustomerBanned || isCustomerDeleted));
+
   const hasMatchMedia = typeof window !== 'undefined' && window?.matchMedia;
   const isMobile =
     mounted && hasMatchMedia
@@ -688,6 +697,7 @@ export const TransactionPageComponent = props => {
           transitions={txTransitions}
           {...getDataValidationResult(transaction, process)}
           timeZone={listing?.attributes?.availabilityPlan?.timezone || 'Etc/UTC'}
+          isCounterpartyInactive={isCounterpartyInactive}
         />
       )}
       activityFeed={
@@ -709,6 +719,7 @@ export const TransactionPageComponent = props => {
         <RequestQuote
           transaction={transaction}
           isNegotiationProcess={isNegotiationProcess}
+          isCustomerBanned={isCustomerBanned}
           transactionRole={transactionRole}
           intl={intl}
         />
@@ -719,6 +730,7 @@ export const TransactionPageComponent = props => {
           isNegotiationProcess={isNegotiationProcess}
           transactionRole={transactionRole}
           isRegularNegotiation={isRegularNegotiation}
+          isProviderBanned={isProviderBanned}
           intl={intl}
         />
       }
