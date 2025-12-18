@@ -17,6 +17,7 @@ const RequestQuote = props => {
     transaction,
     transactionRole,
     isNegotiationProcess,
+    isCustomerBanned,
     intl,
   } = props;
 
@@ -25,7 +26,6 @@ const RequestQuote = props => {
   }
 
   const isCustomer = transactionRole === 'customer';
-  const isCustomerBanned = transaction?.customer?.attributes?.banned;
   const protectedData = transaction?.attributes?.protectedData;
   const customerDefaultMessage = !isCustomerBanned
     ? protectedData?.customerDefaultMessage

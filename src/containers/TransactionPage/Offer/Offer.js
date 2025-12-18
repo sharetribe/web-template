@@ -23,6 +23,7 @@ const Offer = props => {
     transactionRole,
     isNegotiationProcess,
     isRegularNegotiation,
+    isProviderBanned,
     intl,
   } = props;
 
@@ -31,7 +32,6 @@ const Offer = props => {
   }
 
   const isProvider = transactionRole === 'provider';
-  const isProviderBanned = !!transaction?.provider?.attributes?.banned;
   const protectedData = transaction?.attributes?.protectedData;
   const offers = transaction?.attributes?.metadata?.offers;
   const providerDefaultMessage = !isProviderBanned
