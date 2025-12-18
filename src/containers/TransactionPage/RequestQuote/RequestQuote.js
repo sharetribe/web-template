@@ -25,8 +25,11 @@ const RequestQuote = props => {
   }
 
   const isCustomer = transactionRole === 'customer';
+  const isCustomerBanned = transaction?.customer?.attributes?.banned;
   const protectedData = transaction?.attributes?.protectedData;
-  const customerDefaultMessage = protectedData?.customerDefaultMessage;
+  const customerDefaultMessage = !isCustomerBanned
+    ? protectedData?.customerDefaultMessage
+    : intl.formatMessage({ id: 'TransactionPage.messageSenderBanned' });
 
   const processName = resolveLatestProcessName(transaction?.attributes?.processName);
   let process = null;

@@ -31,8 +31,12 @@ const Offer = props => {
   }
 
   const isProvider = transactionRole === 'provider';
+  const isProviderBanned = !!transaction?.provider?.attributes?.banned;
   const protectedData = transaction?.attributes?.protectedData;
   const offers = transaction?.attributes?.metadata?.offers;
+  const providerDefaultMessage = !isProviderBanned
+    ? protectedData?.providerDefaultMessage
+    : intl.formatMessage({ id: 'TransactionPage.messageSenderBanned' });
 
   const processName = resolveLatestProcessName(transaction?.attributes?.processName);
   let process = null;
@@ -113,7 +117,7 @@ const Offer = props => {
       <TextMaybe
         heading={intl.formatMessage({ id: 'TransactionPage.Offer.providerDefaultMessageLabel' })}
         headingClassName={css.defaultMessageLabel}
-        text={protectedData?.providerDefaultMessage}
+        text={providerDefaultMessage}
         isOwn={isNegotiationProcess && isProvider}
         showText={isNegotiationProcess}
       />
