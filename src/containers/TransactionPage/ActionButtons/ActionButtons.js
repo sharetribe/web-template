@@ -35,7 +35,11 @@ const checkCondition = (condition, transitions, timeZone) => {
   return false;
 };
 
-const getDisabledState = (buttonProps, transitions, timeZone, intl) => {
+const getDisabledState = (buttonProps, transitions, timeZone, intl, isCounterpartyInactive) => {
+  if (isCounterpartyInactive) {
+    return { disabled: true, reason: '' };
+  }
+
   if (!buttonProps?.conditions) {
     return { disabled: false, reason: '' };
   }
@@ -133,6 +137,8 @@ const ActionButtons = props => {
     hasValidData = true,
     errorMessageId,
     timeZone = 'Etc/UTC',
+    isCustomerBannedOrDeleted,
+    isProviderBannedOrDeleted,
   } = props;
 
   const intl = useIntl();
@@ -141,24 +147,29 @@ const ActionButtons = props => {
     return null;
   }
 
+  const isCounterpartyInactive = isCustomerBannedOrDeleted || isProviderBannedOrDeleted;
+
   // Check disabling logic for each button
   const { disabled: primaryDisabled, reason: primaryReason } = getDisabledState(
     primaryButtonProps,
     transitions,
     timeZone,
-    intl
+    intl,
+    isCounterpartyInactive
   );
   const { disabled: secondaryDisabled, reason: secondaryReason } = getDisabledState(
     secondaryButtonProps,
     transitions,
     timeZone,
-    intl
+    intl,
+    isCounterpartyInactive
   );
   const { disabled: tertiaryDisabled, reason: tertiaryReason } = getDisabledState(
     tertiaryButtonProps,
     transitions,
     timeZone,
-    intl
+    intl,
+    isCounterpartyInactive
   );
 
   const buttonsDisabled = primaryButtonProps?.inProgress || secondaryButtonProps?.inProgress;

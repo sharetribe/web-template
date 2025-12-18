@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Improve banned and deleted user handling on Transaction Page
+  [729](https://github.com/sharetribe/web-template/pull/729)
+
 ## [v10.5.0] 2025-12-02
 
 - [add] Hide messages from banned users in ActivityFeed

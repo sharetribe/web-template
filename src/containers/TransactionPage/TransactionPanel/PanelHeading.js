@@ -44,10 +44,19 @@ const PanelHeading = props => {
     listingTitle,
     listingDeleted,
     isCustomerBanned,
+    isProviderBanned,
+    isCustomerDeleted,
+    isProviderDeleted,
   } = props;
 
   const isProvider = transactionRole === 'provider';
   const isCustomer = !isProvider;
+
+  // Only allow showing extra info when the transaction counterparty is not banned
+  const allowShowingExtraInfo =
+    !!showExtraInfo &&
+    ((isProvider && !isCustomerBanned && !isCustomerDeleted) ||
+      (isCustomer && !isProviderBanned && !isProviderDeleted));
 
   const defaultRootClassName = isCustomer ? css.headingOrder : css.headingSale;
   const titleClasses = classNames(rootClassName || defaultRootClassName, className);
@@ -79,7 +88,7 @@ const PanelHeading = props => {
           <FormattedMessage id="TransactionPanel.messageDeletedListing" />
         </p>
       ) : null}
-      {!listingDeleted && showExtraInfo ? (
+      {!listingDeleted && allowShowingExtraInfo ? (
         <p className={css.transactionInfoMessage}>
           <FormattedMessage
             id={`TransactionPage.${processName}.${transactionRole}.${processState}.extraInfo`}

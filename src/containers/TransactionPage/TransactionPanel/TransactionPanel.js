@@ -220,6 +220,10 @@ export class TransactionPanelComponent extends Component {
     const deliveryMethod = protectedData?.deliveryMethod || 'none';
     const priceVariantName = protectedData?.priceVariantName;
 
+    const inquiryMessage = !isCustomerBanned
+      ? protectedData?.inquiryMessage
+      : intl.formatMessage({ id: 'TransactionPage.messageSenderBanned' });
+
     const classes = classNames(rootClassName || css.root, className);
 
     return (
@@ -255,6 +259,9 @@ export class TransactionPanelComponent extends Component {
               providerName={authorDisplayName}
               customerName={customerDisplayName}
               isCustomerBanned={isCustomerBanned}
+              isProviderBanned={isProviderBanned}
+              isCustomerDeleted={isCustomerDeleted}
+              isProviderDeleted={isProviderDeleted}
               listingId={listing?.id?.uuid}
               listingTitle={listingTitle}
               listingDeleted={listingDeleted}
@@ -263,7 +270,7 @@ export class TransactionPanelComponent extends Component {
             <TextMaybe
               rootClassName={css.inquiryMessageContainer}
               heading={intl.formatMessage({ id: 'TransactionPanel.inquiryMessageHeading' })}
-              text={protectedData?.inquiryMessage}
+              text={inquiryMessage}
               isOwn={isCustomer}
               showText={isInquiryProcess}
             />
