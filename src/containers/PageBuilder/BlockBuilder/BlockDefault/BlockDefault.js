@@ -57,7 +57,7 @@ const BlockDefault = props => {
     callToAction,
     media,
     responsiveImageSizes,
-    options,
+    options = {},
     alignment,
   } = props;
   const classes = classNames(rootClassName || css.root, className);

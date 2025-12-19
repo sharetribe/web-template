@@ -7,6 +7,7 @@ import SectionCarousel from './SectionCarousel';
 import SectionColumns from './SectionColumns';
 import SectionFeatures from './SectionFeatures';
 import SectionHero from './SectionHero';
+import SectionListings from './SectionListings';
 
 // Styles
 // Note: these contain
@@ -25,6 +26,7 @@ const DEFAULT_CLASSES = {
   description: css.description,
   ctaButton: css.ctaButton,
   blockContainer: css.blockContainer,
+  defaultLink: css.defaultLink,
 };
 
 /////////////////////////////////////////////
@@ -38,6 +40,7 @@ const defaultSectionComponents = {
   features: { component: SectionFeatures },
   footer: { component: SectionFooter },
   hero: { component: SectionHero },
+  listings: { component: SectionListings },
 };
 
 //////////////////////
@@ -64,7 +67,7 @@ const defaultSectionComponents = {
  * @typedef {Object} SectionConfig
  * @property {string} sectionId
  * @property {string} sectionName
- * @property {('article' | 'carousel' | 'columns' | 'features' | 'hero')} sectionType
+ * @property {('article' | 'carousel' | 'columns' | 'features' | 'hero' | 'listings')} sectionType
  */
 
 /**
@@ -81,7 +84,14 @@ const defaultSectionComponents = {
  * @returns {JSX.Element} element containing array of sections according from given config array.
  */
 const SectionBuilder = props => {
-  const { sections = [], options } = props;
+  const {
+    sections = [],
+    featuredListingData,
+    onFetchFeaturedListings,
+    getListingEntitiesById,
+    parentPage,
+    options,
+  } = props;
   const { sectionComponents = {}, isInsideContainer, ...otherOption } = options || {};
 
   // If there's no sections, we can't render the correct section component
@@ -129,12 +139,17 @@ const SectionBuilder = props => {
           return (
             <Section
               key={`${sectionId}_i${index}`}
+              featuredListingData={featuredListingData}
               className={classes}
               defaultClasses={DEFAULT_CLASSES}
               isInsideContainer={isInsideContainer}
-              options={otherOption}
+              options={{ ...otherOption, defaultClasses: DEFAULT_CLASSES }}
               {...section}
+              onFetchFeaturedListings={onFetchFeaturedListings}
+              getListingEntitiesById={getListingEntitiesById}
               sectionId={sectionId}
+              parentPage={parentPage}
+              allSections={sections}
             />
           );
         } else {
