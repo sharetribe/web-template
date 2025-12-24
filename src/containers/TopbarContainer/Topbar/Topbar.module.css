@@ -8,6 +8,36 @@
   position: relative;
 }
 
+/* Skip to main content link - visually hidden until focused */
+.skipToMainContent {
+  /* Position it off-screen by default */
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: calc(var(--zIndexTopbar) + 1);
+
+  /* Make it visible when focused */
+  &:focus {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: auto;
+    padding: 18px 24px;
+    border-radius: 0;
+
+    @media (--viewportMedium) {
+      padding: 24px 24px;
+    }
+  }
+}
+.skiptoMainArrow {
+  stroke: var(--colorWhite);
+  fill: var(--colorWhite);
+}
+
 .container {
   /* Size */
   width: 100%;

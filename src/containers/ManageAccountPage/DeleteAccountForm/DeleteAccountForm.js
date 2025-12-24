@@ -165,7 +165,7 @@ const DeleteAccountForm = props => {
               />
               <br />
             </p>
-            <div className={confirmClasses}>
+            <div className={confirmClasses} aria-hidden={!deleteAccountConfirmed}>
               <H4 as="h3" className={css.confirmChangesTitle}>
                 <FormattedMessage id="DeleteAccountForm.confirmDeleteTitle" />
               </H4>
@@ -183,6 +183,7 @@ const DeleteAccountForm = props => {
                 type="password"
                 name="currentPassword"
                 id={formId ? `${formId}.currentPassword` : 'currentPassword'}
+                disabled={!deleteAccountConfirmed}
                 autoComplete="current-password"
                 label={intl.formatMessage({
                   id: 'DeleteAccountForm.passwordLabel',

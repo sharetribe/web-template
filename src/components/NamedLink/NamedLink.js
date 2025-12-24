@@ -24,6 +24,17 @@ import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 
 import { pathByRouteName, findRouteByRouteName } from '../../util/routes';
 
+const handleFocus = event => {
+  if (event.currentTarget.contains(event.target)) {
+    window.__focusedElementId__ = event.currentTarget?.id;
+  }
+};
+const handleBlur = event => {
+  if (event.relatedTarget !== null) {
+    window.__focusedElementId__ = null;
+  }
+};
+
 /**
  * This component wraps React-Router's Link by providing name-based routing.
  *
@@ -46,9 +57,12 @@ import { pathByRouteName, findRouteByRouteName } from '../../util/routes';
 export const NamedLink = withRouter(props => {
   const routeConfiguration = useRouteConfiguration();
   const {
+    id,
+    holdFocus,
     name,
     params = {}, // pathParams
     title,
+    ariaLabel,
     // Link props
     to = {},
     children,
@@ -71,11 +85,17 @@ export const NamedLink = withRouter(props => {
   const pathname = pathByRouteName(name, routeConfiguration, params);
   const active = match.url && match.url === pathname;
 
+  const focusHandlers = id && holdFocus ? { onFocus: handleFocus, onBlur: handleBlur } : {};
+  const ariaLabelMaybe = ariaLabel ? { ['aria-label']: ariaLabel } : {};
+
   // <a> element props
   const aElemProps = {
+    id,
     className: classNames(className, { [activeClassName]: active }),
     style,
     title,
+    ...ariaLabelMaybe,
+    ...focusHandlers,
   };
 
   return (

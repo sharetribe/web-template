@@ -33,6 +33,7 @@ const LocationSearchField = props => {
 
         return (
           <LocationAutocompleteInput
+            id="location-search-filter-location"
             className={css.customField}
             useDarkText={true}
             inputClassName={isCurrentLocation ? css.inputWithCurrentLocation : inputRootClass}

@@ -40,6 +40,7 @@
   flex-direction: column;
 
   padding: 24px;
+  scroll-margin-top: var(--topbarHeight);
 
   @media (--viewportLarge) {
     /**
@@ -51,6 +52,8 @@
     border-left-width: 1px;
     border-left-style: solid;
     border-left-color: var(--colorGrey100);
+
+    scroll-margin-top: var(--topbarHeightDesktop);
   }
 
   @media (--viewportLargeWithPaddings) {

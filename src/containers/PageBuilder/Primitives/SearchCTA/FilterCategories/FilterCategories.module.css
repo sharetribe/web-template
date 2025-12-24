@@ -82,6 +82,7 @@
     color: var(--colorGrey700);
     font-weight: 500;
 
+    &.activeOption,
     &:hover {
       color: var(--colorBlack);
       text-decoration: none;

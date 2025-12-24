@@ -53,6 +53,19 @@
   border: none;
   padding: 0;
   cursor: pointer;
+
+  &:focus,
+  &:hover {
+    color: var(--marketplaceColor);
+  }
+
+  &:focus {
+    & .label,
+    & .label * {
+      color: var(--colorBlack);
+      color: var(--marketplaceColorDark);
+    }
+  }
 }
 
 .labelButtonContent {

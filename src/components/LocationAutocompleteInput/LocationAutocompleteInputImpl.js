@@ -40,6 +40,7 @@ const getGeocoderVariant = mapProvider => {
 // Renders the autocompletion prediction results in a list
 const LocationPredictionsList = props => {
   const {
+    id,
     rootClassName,
     className,
     useDarkText,
@@ -68,6 +69,8 @@ const LocationPredictionsList = props => {
           useDarkText ? css.listItemBlackText : css.listItemWhiteText
         )}
         key={predictionId}
+        id={predictionId}
+        role="option"
         onTouchStart={e => {
           e.preventDefault();
           onSelectStart(getTouchCoordinates(e.nativeEvent));
@@ -111,8 +114,10 @@ const LocationPredictionsList = props => {
   );
 
   return (
-    <div className={classes}>
-      <ul className={css.predictions}>{predictions.map(item)}</ul>
+    <div className={classes} id={id}>
+      <ul className={css.predictions} role="listbox">
+        {predictions.map(item)}
+      </ul>
       {children}
     </div>
   );
@@ -223,8 +228,9 @@ class LocationAutocompleteInputImplementation extends Component {
         this.input?.blur();
       }
     } else if (e.keyCode === KEY_CODE_TAB) {
-      this.selectItemIfNoneSelected();
-      this.input?.blur();
+      if (!e.shiftKey) {
+        this.selectItemIfNoneSelected();
+      }
     } else if (e.keyCode === KEY_CODE_ESC && this.input) {
       this.input.blur();
     }
@@ -505,6 +511,8 @@ class LocationAutocompleteInputImplementation extends Component {
         ? { ref: inputRef }
         : {};
 
+    const predictionsId = `${id}.predictions`;
+
     return (
       <div className={rootClass}>
         <div className={iconClass}>
@@ -540,9 +548,15 @@ class LocationAutocompleteInputImplementation extends Component {
           title={search}
           data-testid="location-search"
           {...ariaLabelMaybe}
+          role="combobox"
+          aria-autocomplete="list"
+          aria-expanded={renderPredictions}
+          aria-controls={predictionsId}
+          aria-activedescendant={predictions[this.state.highlightedIndex]?.id}
         />
         {renderPredictions ? (
           <LocationPredictionsList
+            id={predictionsId}
             rootClassName={predictionsClass}
             useDarkText={useDarkText}
             predictions={predictions}

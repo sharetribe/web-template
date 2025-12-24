@@ -10,8 +10,6 @@ import IconPlus from '../IconPlus/IconPlus';
 
 import css from './FilterPopupForSidebar.module.css';
 
-const KEY_CODE_ESCAPE = 27;
-
 /**
  * FilterPopupForSidebar component
  *
@@ -51,12 +49,22 @@ class FilterPopupForSidebar extends Component {
   handleSubmit(values) {
     const { onSubmit } = this.props;
     this.setState({ isOpen: false });
+    const button = document.getElementById(`${this.props.id}.toggle`);
+    if (button) {
+      button.focus();
+    }
+
     onSubmit(values);
   }
 
   handleClear() {
     const { onSubmit, onClear } = this.props;
     this.setState({ isOpen: false });
+
+    const button = document.getElementById(`${this.props.id}.toggle`);
+    if (button) {
+      button.focus();
+    }
 
     if (onClear) {
       onClear();
@@ -68,6 +76,11 @@ class FilterPopupForSidebar extends Component {
   handleCancel() {
     const { onSubmit, onCancel, initialValues } = this.props;
     this.setState({ isOpen: false });
+
+    const button = document.getElementById(`${this.props.id}.toggle`);
+    if (button) {
+      button.focus();
+    }
 
     if (onCancel) {
       onCancel();
@@ -82,16 +95,36 @@ class FilterPopupForSidebar extends Component {
 
   handleKeyDown(e) {
     // Gather all escape presses to close menu
-    if (e.keyCode === KEY_CODE_ESCAPE) {
+    if (e.key === 'Escape') {
+      const button = document.getElementById(`${this.props.id}.toggle`);
+      if (button) {
+        button.focus();
+      }
+
+      this.toggleOpen(false);
+    } else if (e.key === 'ArrowDown' && this.filter.contains(e.target) && !this.state.isOpen) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.toggleOpen(true);
+    } else if (e.key === 'ArrowUp' && this.filter.contains(e.target) && this.state.isOpen) {
+      e.preventDefault();
+      e.stopPropagation();
       this.toggleOpen(false);
     }
   }
 
   toggleOpen(enforcedState) {
+    const callback = () => {
+      const form = document.getElementById(`${this.props.id}.form`);
+      const currentDate = form?.querySelector('[data-current="true"]');
+      if (this.state.isOpen) {
+        window.setTimeout(() => currentDate?.focus(), 100);
+      }
+    };
     if (enforcedState) {
-      this.setState({ isOpen: enforcedState });
+      this.setState({ isOpen: enforcedState }, callback);
     } else {
-      this.setState(prevState => ({ isOpen: !prevState.isOpen }));
+      this.setState(prevState => ({ isOpen: !prevState.isOpen }), callback);
     }
   }
 
@@ -137,7 +170,7 @@ class FilterPopupForSidebar extends Component {
     const popupClasses = classNames(css.popup, { [css.isOpen]: this.state.isOpen });
     const popupSizeClasses = popupClassName || css.popupSize;
     const contentStyle = this.positionStyleForContent();
-
+    const formId = `${id}.form`;
     return (
       <OutsideClickHandler className={css.root} onOutsideClick={this.handleBlur}>
         <div
@@ -150,6 +183,7 @@ class FilterPopupForSidebar extends Component {
           <div className={css.filterHeader}>
             <button
               type="button"
+              id={`${id}.toggle`}
               className={css.labelButton}
               onClick={() => this.toggleOpen()}
               aria-label={ariaLabel}
@@ -182,7 +216,7 @@ class FilterPopupForSidebar extends Component {
           >
             {this.state.isOpen ? (
               <FilterForm
-                id={`${id}.form`}
+                id={formId}
                 paddingClasses={popupSizeClasses}
                 showAsPopup
                 initialValues={initialValues}

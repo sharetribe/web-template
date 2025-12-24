@@ -32,6 +32,7 @@
     position: relative;
     padding-top: var(--topbarHeightDesktop);
     min-height: calc(100vh - var(--topbarHeightDesktop));
+    scroll-margin-top: var(--topbarHeightDesktop);
   }
 }
 
@@ -151,6 +152,8 @@
     border-left-width: 1px;
     border-left-style: solid;
     border-left-color: var(--colorGrey100);
+
+    scroll-margin-top: var(--topbarHeightDesktop);
   }
 
   @media (--viewportLarge) {
