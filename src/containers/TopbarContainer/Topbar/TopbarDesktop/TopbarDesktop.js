@@ -64,7 +64,7 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout, showManageListingsLin
   };
 
   return (
-    <Menu>
+    <Menu skipFocusOnNavigation={true}>
       <MenuLabel
         id="profile-menu-label"
         className={css.profileMenuLabel}

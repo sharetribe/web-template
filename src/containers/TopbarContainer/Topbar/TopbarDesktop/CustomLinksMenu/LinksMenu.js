@@ -146,6 +146,7 @@ const LinksMenu = props => {
         contentPosition="left"
         isOpen={isOpen}
         onToggleActive={setIsOpen}
+        skipFocusOnNavigation={true}
       >
         <MenuLabel
           id="links-menu-label"

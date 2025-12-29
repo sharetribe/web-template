@@ -136,7 +136,8 @@ class Menu extends Component {
   }
 
   onFocus(event) {
-    if (event.currentTarget.contains(event.target)) {
+    const skipFocusOnNavigation = this.props.skipFocusOnNavigation;
+    if (event.currentTarget.contains(event.target) && skipFocusOnNavigation !== true) {
       window.__focusedElementId__ = event.currentTarget.firstChild?.id;
     }
   }
