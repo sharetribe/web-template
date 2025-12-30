@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [change] Add cache-control header with 1 year cache for generated main & chunck files.
+  [#727](https://github.com/sharetribe/web-template/pull/727)
 - [add] Add currently available translations for ES.
   [#731](https://github.com/sharetribe/web-template/pull/731)
 - [add] Add currently available translations for DE, FR.
