@@ -284,7 +284,7 @@ export const ActivityFeed = props => {
     rootClassName,
     className,
     messages,
-    transaction,
+    transaction = {},
     stateData = {},
     currentUser,
     hasOlderMessages,
