@@ -417,11 +417,21 @@ class SearchMapWithGoogleMaps extends Component {
     this.map = null;
     this.viewportBounds = null;
     this.idleListener = null;
-    this.state = { mapContainer: null, isMapReady: false };
+    this.state = { mapContainer: null, isMapReady: !!window?.__googleMapsLoaded };
 
     this.initializeMap = this.initializeMap.bind(this);
     this.onMount = this.onMount.bind(this);
     this.onIdle = this.onIdle.bind(this);
+
+    if (typeof window !== 'undefined' && !window.__googleMapsLoaded) {
+      // We overwrite the initMap callback function to enforce rerendering of the component
+      // when the map is rendered as part of the full page load.
+      window.initMap = () => {
+        this.setState({
+          isMapReady: true,
+        });
+      };
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -451,7 +461,7 @@ class SearchMapWithGoogleMaps extends Component {
       }
     }
 
-    if (!this.map && this.state.mapContainer) {
+    if (!this.map && this.state.mapContainer && this.state.isMapReady) {
       this.initializeMap();
 
       /* Notify parent component that the map is loaded */
@@ -463,7 +473,7 @@ class SearchMapWithGoogleMaps extends Component {
   }
 
   componentWillUnmount() {
-    this.idleListener.remove();
+    this.idleListener?.remove();
   }
 
   initializeMap() {
@@ -475,7 +485,7 @@ class SearchMapWithGoogleMaps extends Component {
       const maps = window.google.maps;
       const controlPosition = maps.ControlPosition.LEFT_TOP;
       const zoomOutToShowEarth = { zoom: 1, center: { lat: 0, lng: 0 } };
-      const zoomAndCenter = !bounds && !center ? zoomOutToShowEarth : { zoom, center };
+      const zoomAndCenter = !bounds && center == null ? zoomOutToShowEarth : { zoom, center };
 
       const mapConfig = {
         // Disable all controls except zoom
@@ -496,9 +506,6 @@ class SearchMapWithGoogleMaps extends Component {
 
       this.map = new maps.Map(this.state.mapContainer, mapConfig);
       this.idleListener = maps.event.addListener(this.map, 'idle', this.onIdle);
-      this.setState({
-        isMapReady: true,
-      });
     }
   }
 

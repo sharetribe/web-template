@@ -88,12 +88,28 @@ export const IncludeScripts = props => {
       ></script>
     );
   } else if (isGoogleMapsInUse) {
+    // Initialize "__googleMapsLoaded" flag used with Google Maps library.
+    // (Google Maps library calls this function when it is loaded - if Google Maps is used)
+    // Note 1: the callback function (window.initMap) is first defined in this script
+    // but it is modified in SearchMapWithGoogleMaps.js for the full page load on SearchPageWithMap component.
+    // The page might be rendered there earlier, so we need to catch the calls to initMap function
+    // there directly. If you are using Google Maps on your custom components,
+    // you need to setup something similar there too.
+    // Note 2: This is made as a separate file to avoid dealing with inline script tags and nonce attribute.
+    mapLibraries.push(
+      <script
+        key="GoogleMaps_initMap"
+        src={`${rootURL}/static/scripts/GoogleMaps/initMap.js`}
+      ></script>
+    );
+
     // Add Google Maps library
+    // Note: the callback function (window.initMap) is defined in the above script
     mapLibraries.push(
       <script
         id={GOOGLE_MAPS_SCRIPT_ID}
         key="GoogleMapsApi"
-        src={`https://maps.googleapis.com/maps/api/js?key=${googleMapsAPIKey}&libraries=places`}
+        src={`https://maps.googleapis.com/maps/api/js?key=${googleMapsAPIKey}&libraries=core,maps,marker,places&loading=async&callback=initMap`}
         crossOrigin="anonymous"
         {...deferMapLibrary}
       ></script>

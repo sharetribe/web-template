@@ -21,12 +21,23 @@ class DynamicGoogleMap extends Component {
     super(props);
     this.map = null;
     this.mapContainer = null;
+    this.state = { isMapReady: !!window?.__googleMapsLoaded };
 
     this.initializeMap = this.initializeMap.bind(this);
+
+    if (typeof window !== 'undefined' && !window.__googleMapsLoaded) {
+      // We overwrite the initMap callback function to enforce rerendering of the component
+      // when the map is rendered as part of the full page load.
+      window.initMap = () => {
+        this.setState({
+          isMapReady: true,
+        });
+      };
+    }
   }
 
   componentDidMount(prevProps) {
-    if (!this.map && this.mapContainer) {
+    if (!this.map && this.mapContainer && window.__googleMapsLoaded) {
       this.initializeMap();
     }
   }
