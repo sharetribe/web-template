@@ -59,7 +59,11 @@ export const IncludeScripts = props => {
     // NOTE: remember to update mapbox-sdk.min.js to a new version regularly.
     // mapbox-sdk.min.js is included from static folder for CSP purposes.
     mapLibraries.push(
-      <script key="mapboxSDK" src={`${rootURL}/static/scripts/mapbox/mapbox-sdk.min.js`}></script>
+      <script
+        key="mapboxSDK"
+        src={`${rootURL}/static/scripts/mapbox/mapbox-sdk.min.js`}
+        async
+      ></script>
     );
     // License information for v3.7.0 of the mapbox-gl-js library:
     // https://github.com/mapbox/mapbox-gl-js/blob/v3.7.0/LICENSE.txt
