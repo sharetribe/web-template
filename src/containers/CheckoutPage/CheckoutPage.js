@@ -159,6 +159,7 @@ const EnhancedCheckoutPage = props => {
     conf => conf.listingType === listing?.attributes?.publicData?.listingType
   );
   const showListingImage = requireListingImage(foundListingTypeConfig);
+  const transactionFieldConfigs = foundListingTypeConfig?.transactionFields;
 
   const listingTitle = listing?.attributes?.title;
   const authorDisplayName = userDisplayNameAsString(listing?.author, '');
@@ -182,6 +183,7 @@ const EnhancedCheckoutPage = props => {
       onInquiryWithoutPayment={onInquiryWithoutPayment}
       onSubmitCallback={onSubmitCallback}
       showListingImage={showListingImage}
+      transactionFieldConfigs={transactionFieldConfigs}
       {...props}
     />
   ) : processName && !isInquiryProcess && !speculateTransactionInProgress ? (
@@ -198,6 +200,7 @@ const EnhancedCheckoutPage = props => {
       title={title}
       onSubmitCallback={onSubmitCallback}
       showListingImage={showListingImage}
+      transactionFieldConfigs={transactionFieldConfigs}
       {...props}
     />
   ) : (

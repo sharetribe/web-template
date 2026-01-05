@@ -58,7 +58,7 @@ const ConfirmSignupFormComponent = props => (
 
       // Custom user fields. Since user types are not supported here,
       // only fields with no user type id limitation are selected.
-      const userFieldProps = getPropsForCustomUserFieldInputs(userFields, intl, userType);
+      const userFieldProps = getPropsForCustomUserFieldInputs(userFields, userType);
 
       const noUserTypes = !userType && !(userTypes?.length > 0);
       const userTypeConfig = userTypes.find(config => config.userType === userType);
