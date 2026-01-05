@@ -43,6 +43,7 @@
   color: var(--colorFail);
 }
 
+.transactionFieldsContainer,
 .paymentMethodSelector {
   margin-bottom: 36px;
 
