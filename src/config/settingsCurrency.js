@@ -2,7 +2,6 @@
 // See: https://stripe.com/docs/currencies
 export const stripeSupportedCurrencies = [
   'AUD',
-  'BGN',
   'CAD',
   'CHF',
   'CZK',
