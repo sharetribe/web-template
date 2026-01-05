@@ -234,6 +234,13 @@ export const isValidCurrencyForTransactionProcess = (
   }
 };
 
+/**
+ *
+ * @param {*} transactionFieldsConfig
+ * @param {*} intl
+ * @param {*} isCustomer
+ * @returns
+ */
 export const getPropsForCustomTransactionFieldInputs = (
   transactionFieldsConfig,
   intl,
@@ -263,6 +270,14 @@ export const getPropsForCustomTransactionFieldInputs = (
   );
 };
 
+/**
+ *
+ * @param {*} data
+ * @param {*} targetScope
+ * @param {*} isCustomer
+ * @param {*} transactionFieldConfigs
+ * @returns
+ */
 export const pickTransactionFieldsData = (
   data,
   targetScope = 'protected',
@@ -284,4 +299,42 @@ export const pickTransactionFieldsData = (
     }
     return fields;
   }, {});
+};
+
+/**
+ *
+ * @param {*} enumOptions
+ * @param {*} fieldConfigs
+ * @param {*} value
+ * @param {*} schemaType
+ * @param {*} key
+ * @param {*} label
+ * @param {*} intl
+ * @param {*} page
+ * @returns
+ */
+export const getDetailCustomFieldValue = (
+  enumOptions,
+  fieldConfigs,
+  value,
+  schemaType,
+  key,
+  label,
+  intl,
+  page
+) => {
+  const findSelectedOption = enumValue => enumOptions?.find(o => enumValue === `${o.option}`);
+  const getBooleanMessage = value =>
+    value
+      ? intl.formatMessage({ id: `${page}.detailYes` })
+      : intl.formatMessage({ id: `${page}.detailNo` });
+  const optionConfig = findSelectedOption(value);
+
+  return schemaType === 'enum'
+    ? fieldConfigs.concat({ key, value: optionConfig?.label, label })
+    : schemaType === 'boolean'
+    ? fieldConfigs.concat({ key, value: getBooleanMessage(value), label })
+    : schemaType === 'long'
+    ? fieldConfigs.concat({ key, value, label })
+    : fieldConfigs;
 };
