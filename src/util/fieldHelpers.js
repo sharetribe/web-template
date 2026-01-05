@@ -7,8 +7,14 @@ import {
   isBookingProcessAlias,
   isNegotiationProcessAlias,
 } from '../transactions/transaction';
-import { SCHEMA_TYPE_MULTI_ENUM, SCHEMA_TYPE_TEXT, SCHEMA_TYPE_YOUTUBE } from './types';
+import {
+  EXTENDED_DATA_SCHEMA_TYPES,
+  SCHEMA_TYPE_MULTI_ENUM,
+  SCHEMA_TYPE_TEXT,
+  SCHEMA_TYPE_YOUTUBE,
+} from './types';
 import appSettings from '../config/settings';
+import { addScopePrefix } from './userHelpers';
 
 const { stripeSupportedCurrencies, subUnitDivisors } = appSettings;
 
@@ -226,4 +232,56 @@ export const isValidCurrencyForTransactionProcess = (
       (!isStripeRelatedProcess && Object.keys(subUnitDivisors).includes(listingCurrency))
     );
   }
+};
+
+export const getPropsForCustomTransactionFieldInputs = (
+  transactionFieldsConfig,
+  intl,
+  isCustomer
+) => {
+  return (
+    transactionFieldsConfig?.reduce((pickedFields, fieldConfig) => {
+      const { key, showTo, schemaType, scope } = fieldConfig || {};
+      const namespacedKey = addScopePrefix(scope, key);
+      const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
+      const isTransactionScope = scope === 'protected';
+      const showField = (isCustomer && showTo.customer) || (!isCustomer && showTo.provider);
+      return isKnownSchemaType && isTransactionScope && showField
+        ? [
+            ...pickedFields,
+            {
+              key: namespacedKey,
+              name: namespacedKey,
+              fieldConfig: fieldConfig,
+              defaultRequiredMessage: intl.formatMessage({
+                id: 'CustomExtendedDataField.required',
+              }),
+            },
+          ]
+        : pickedFields;
+    }, []) || []
+  );
+};
+
+export const pickTransactionFieldsData = (
+  data,
+  targetScope = 'protected',
+  isCustomer,
+  transactionFieldConfigs
+) => {
+  return transactionFieldConfigs.reduce((fields, field) => {
+    const { key, schemaType, scope = 'protected' } = field || {};
+    const namespacedKey = addScopePrefix(scope, key);
+
+    const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
+    const isTargetScope = scope === targetScope;
+    const rolePrefix = isCustomer ? 'customer' : 'provider';
+    const roleKey = `${rolePrefix}_${key}`;
+
+    if (isKnownSchemaType && isTargetScope) {
+      const fieldValue = getFieldValue(data, namespacedKey);
+      return { ...fields, [roleKey]: fieldValue };
+    }
+    return fields;
+  }, {});
 };
