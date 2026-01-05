@@ -18,6 +18,7 @@ import {
   INQUIRY_PROCESS_NAME,
   REQUEST,
   resolveLatestProcessName,
+  isNegotiationProcess,
 } from '../../transactions/transaction';
 import { requireListingImage } from '../../util/configHelpers';
 
@@ -159,6 +160,11 @@ const EnhancedCheckoutPage = props => {
     conf => conf.listingType === listing?.attributes?.publicData?.listingType
   );
   const showListingImage = requireListingImage(foundListingTypeConfig);
+  const transactionFieldConfigs = foundListingTypeConfig?.transactionFields;
+  // We don't show or collect transaction fields on the checkout page for
+  // negotiation processes, because they are collected in earlier steps
+  // of those processes
+  const showTransactionFields = !isNegotiationProcess(processName);
 
   const listingTitle = listing?.attributes?.title;
   const authorDisplayName = userDisplayNameAsString(listing?.author, '');
@@ -182,6 +188,7 @@ const EnhancedCheckoutPage = props => {
       onInquiryWithoutPayment={onInquiryWithoutPayment}
       onSubmitCallback={onSubmitCallback}
       showListingImage={showListingImage}
+      transactionFieldConfigs={transactionFieldConfigs}
       {...props}
     />
   ) : processName && !isInquiryProcess && !speculateTransactionInProgress ? (
@@ -198,6 +205,8 @@ const EnhancedCheckoutPage = props => {
       title={title}
       onSubmitCallback={onSubmitCallback}
       showListingImage={showListingImage}
+      transactionFieldConfigs={transactionFieldConfigs}
+      showTransactionFields={showTransactionFields}
       {...props}
     />
   ) : (

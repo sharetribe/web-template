@@ -5,11 +5,13 @@
  */
 import React, { Component } from 'react';
 import { Form as FinalForm } from 'react-final-form';
+import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import { ensurePaymentMethodCard } from '../../../util/data';
+import { getPropsForCustomTransactionFieldInputs } from '../../../util/fieldHelpers';
 
 import {
   Heading,
@@ -20,6 +22,7 @@ import {
   IconSpinner,
   SavedCardDetails,
   StripePaymentAddress,
+  CustomExtendedDataField,
 } from '../../../components';
 
 import ShippingDetails from '../ShippingDetails/ShippingDetails';
@@ -476,10 +479,17 @@ class StripePaymentForm extends Component {
       marketplaceName,
       isBooking,
       isFuzzyLocation,
+      transactionFieldConfigs,
+      showTransactionFields,
       values,
     } = formRenderProps;
 
     this.finalFormAPI = formApi;
+    const hasTransactionFieldConfigs = transactionFieldConfigs.length > 0;
+    const transactionFieldsProps = getPropsForCustomTransactionFieldInputs(
+      transactionFieldConfigs,
+      true
+    );
 
     const ensuredDefaultPaymentMethod = ensurePaymentMethodCard(defaultPaymentMethod);
     const billingDetailsNeeded = !(hasHandledCardPayment || confirmPaymentError);
@@ -561,6 +571,9 @@ class StripePaymentForm extends Component {
       this.updateBillingDetailsToMatchShippingAddress(checked);
     };
     const isBookingYesNo = isBooking ? 'yes' : 'no';
+
+    const showAdditionalInfoHeading =
+      showInitialMessageInput || (hasTransactionFieldConfigs && showTransactionFields);
 
     return hasStripeKey ? (
       <Form className={classes} onSubmit={handleSubmit} enforcePagePreloadFor="OrderDetailsPage">
@@ -651,12 +664,21 @@ class StripePaymentForm extends Component {
         {initiateOrderError ? (
           <span className={css.errorMessage}>{initiateOrderError.message}</span>
         ) : null}
+
+        {showAdditionalInfoHeading ? (
+          <Heading as="h3" rootClassName={css.heading}>
+            <FormattedMessage id="StripePaymentForm.messageHeading" />
+          </Heading>
+        ) : null}
+        {hasTransactionFieldConfigs && showTransactionFields ? (
+          <div className={css.transactionFieldsContainer}>
+            {transactionFieldsProps.map(({ key, ...fieldProps }) => (
+              <CustomExtendedDataField key={key} {...fieldProps} formId={formId} />
+            ))}
+          </div>
+        ) : null}
         {showInitialMessageInput ? (
           <div>
-            <Heading as="h3" rootClassName={css.heading}>
-              <FormattedMessage id="StripePaymentForm.messageHeading" />
-            </Heading>
-
             <FieldTextInput
               type="textarea"
               id={`${formId}-message`}
@@ -706,7 +728,14 @@ class StripePaymentForm extends Component {
 
   render() {
     const { onSubmit, ...rest } = this.props;
-    return <FinalForm onSubmit={this.handleSubmit} {...rest} render={this.paymentForm} />;
+    return (
+      <FinalForm
+        onSubmit={this.handleSubmit}
+        mutators={{ ...arrayMutators }}
+        {...rest}
+        render={this.paymentForm}
+      />
+    );
   }
 }
 

@@ -3,7 +3,10 @@ import React, { useState } from 'react';
 // Import contexts and util modules
 import { FormattedMessage, intlShape } from '../../util/reactIntl';
 import { pathByRouteName } from '../../util/routes';
-import { isValidCurrencyForTransactionProcess } from '../../util/fieldHelpers.js';
+import {
+  isValidCurrencyForTransactionProcess,
+  pickTransactionFieldsData,
+} from '../../util/fieldHelpers.js';
 import { propTypes } from '../../util/types';
 import { ensureTransaction } from '../../util/data';
 import { createSlug } from '../../util/urlHelpers';
@@ -101,7 +104,13 @@ const prefixPriceVariantProperties = priceVariant => {
  * @param {Object} config app-wide configs. This contains hosted configs too.
  * @returns orderParams.
  */
-const getOrderParams = (pageData, shippingDetails, optionalPaymentParams, config) => {
+const getOrderParams = (
+  pageData,
+  shippingDetails,
+  optionalPaymentParams,
+  config,
+  transactionFieldProtectedData
+) => {
   const quantity = pageData.orderData?.quantity;
   const quantityMaybe = quantity ? { quantity } : {};
   const seats = pageData.orderData?.seats;
@@ -122,6 +131,7 @@ const getOrderParams = (pageData, shippingDetails, optionalPaymentParams, config
       ...deliveryMethodMaybe,
       ...shippingDetails,
       ...priceVariantMaybe,
+      ...transactionFieldProtectedData,
     },
   };
 
@@ -250,9 +260,14 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     pageData,
     setPageData,
     sessionStorageKey,
+    transactionFieldConfigs,
   } = props;
   const { card, message, paymentMethod: selectedPaymentMethod, formValues } = values;
   const { saveAfterOnetimePayment: saveAfterOnetimePaymentRaw } = formValues;
+
+  const transactionFieldsProtectedData = {
+    ...pickTransactionFieldsData(formValues, 'protected', true, transactionFieldConfigs),
+  };
 
   const saveAfterOnetimePayment =
     Array.isArray(saveAfterOnetimePaymentRaw) && saveAfterOnetimePaymentRaw.length > 0;
@@ -303,7 +318,13 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
 
   // These are the order parameters for the first payment-related transition
   // which is either initiate-transition or initiate-transition-after-enquiry
-  const orderParams = getOrderParams(pageData, shippingDetails, optionalPaymentParams, config);
+  const orderParams = getOrderParams(
+    pageData,
+    shippingDetails,
+    optionalPaymentParams,
+    config,
+    transactionFieldsProtectedData
+  );
 
   // There are multiple XHR calls that needs to be made against Stripe API and Sharetribe Marketplace API on checkout with payments
   processCheckoutWithPayment(orderParams, requestPaymentParams)
@@ -415,6 +436,8 @@ export const CheckoutPageWithPayment = props => {
     processName,
     listingTitle,
     title,
+    transactionFieldConfigs = [],
+    showTransactionFields,
     config,
   } = props;
 
@@ -627,6 +650,8 @@ export const CheckoutPageWithPayment = props => {
                 marketplaceName={config.marketplaceName}
                 isBooking={isBookingProcessAlias(transactionProcessAlias)}
                 isFuzzyLocation={config.maps.fuzzy.enabled}
+                transactionFieldConfigs={transactionFieldConfigs}
+                showTransactionFields={showTransactionFields}
               />
             ) : null}
           </section>

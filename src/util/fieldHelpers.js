@@ -7,8 +7,14 @@ import {
   isBookingProcessAlias,
   isNegotiationProcessAlias,
 } from '../transactions/transaction';
-import { SCHEMA_TYPE_MULTI_ENUM, SCHEMA_TYPE_TEXT, SCHEMA_TYPE_YOUTUBE } from './types';
+import {
+  EXTENDED_DATA_SCHEMA_TYPES,
+  SCHEMA_TYPE_MULTI_ENUM,
+  SCHEMA_TYPE_TEXT,
+  SCHEMA_TYPE_YOUTUBE,
+} from './types';
 import appSettings from '../config/settings';
+import { addScopePrefix } from './userHelpers';
 
 const { stripeSupportedCurrencies, subUnitDivisors } = appSettings;
 
@@ -226,4 +232,73 @@ export const isValidCurrencyForTransactionProcess = (
       (!isStripeRelatedProcess && Object.keys(subUnitDivisors).includes(listingCurrency))
     );
   }
+};
+
+/**
+ * Return props for custom transaction fields
+ * @param {Object} transactionFieldConfigs Configuration for transaction fields
+ * @param {Boolean} isCustomer Flag to determine whether the target context
+ * is a set of fields related to the customer
+ * @returns an array of props for CustomExtendedDataField: key, name,
+ * fieldConfig, defaultRequiredMessage
+ */
+export const getPropsForCustomTransactionFieldInputs = (transactionFieldConfigs, isCustomer) => {
+  return (
+    transactionFieldConfigs?.reduce((pickedFields, fieldConfig) => {
+      const { key, showTo, schemaType, scope } = fieldConfig || {};
+      const namespacedKey = addScopePrefix(scope, key);
+      const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
+      const isTransactionScope = scope === 'protected';
+      const showField =
+        (isCustomer && showTo === 'customer') || (!isCustomer && showTo === 'provider');
+      return isKnownSchemaType && isTransactionScope && showField
+        ? [
+            ...pickedFields,
+            {
+              key: namespacedKey,
+              name: namespacedKey,
+              fieldConfig: fieldConfig,
+            },
+          ]
+        : pickedFields;
+    }, []) || []
+  );
+};
+
+/**
+ * Pick extended data fields from given form data.
+ * Picking is based on extended data configuration for the transaction and target user role.
+ *
+ * This expects submit data to be namespaced (e.g. 'prot_') and it returns the field without that namespace.
+ * This function is used when form submit values are restructured for the actual API endpoint.
+ *
+ * @param {Object} data values to look through against transaction field configuration
+ * @param {String} targetScope Check that the scope of extended data in the config matches this scope
+ * @param {Boolean} isCustomer Flag to determine whether the data relates to a customer of a transaction
+ * @param {Object} transactionFieldConfigs Field configurations
+ * @returns an object with field data as key-value pairs
+ */
+export const pickTransactionFieldsData = (
+  data,
+  targetScope = 'protected',
+  isCustomer,
+  transactionFieldConfigs
+) => {
+  return transactionFieldConfigs.reduce((fields, field) => {
+    const { key, schemaType, scope = 'protected', showTo } = field || {};
+    const namespacedKey = addScopePrefix(scope, key);
+
+    const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
+    const isTargetScope = scope === targetScope;
+    const showToCustomer = showTo === 'customer';
+    const isCorrectRole = showToCustomer === isCustomer;
+    const rolePrefix = isCustomer ? 'customer' : 'provider';
+    const roleKey = `${rolePrefix}_${key}`;
+
+    if (isKnownSchemaType && isTargetScope && isCorrectRole) {
+      const fieldValue = getFieldValue(data, namespacedKey);
+      return { ...fields, [roleKey]: fieldValue };
+    }
+    return fields;
+  }, {});
 };

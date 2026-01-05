@@ -265,7 +265,6 @@ class ProfileSettingsFormComponent extends Component {
 
           const userFieldProps = getPropsForCustomUserFieldInputs(
             userFields,
-            intl,
             userTypeConfig?.userType,
             false
           );
