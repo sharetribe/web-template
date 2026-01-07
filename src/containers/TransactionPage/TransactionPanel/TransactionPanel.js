@@ -24,6 +24,7 @@ import BookingLocationMaybe from './BookingLocationMaybe';
 import FeedSection from './FeedSection';
 import DiminishedActionButtonMaybe from './DiminishedActionButtonMaybe';
 import PanelHeading from './PanelHeading';
+import CustomTransactionFields from './CustomTransactionFields';
 
 import css from './TransactionPanel.module.css';
 
@@ -234,6 +235,8 @@ export class TransactionPanelComponent extends Component {
     const showPrice = isInquiryProcess && displayPrice(listingTypeConfig);
     const showBreakDown = stateData.showBreakDown !== false; // NOTE: undefined defaults to true due to historical reasons.
 
+    const { transactionFields } = listingTypeConfig || {};
+
     const showSendMessageForm =
       !isCustomerBanned && !isCustomerDeleted && !isProviderBanned && !isProviderDeleted;
 
@@ -299,6 +302,15 @@ export class TransactionPanelComponent extends Component {
             {requestQuote}
             {offer}
 
+            {transactionFields?.length > 0 ? (
+              <CustomTransactionFields
+                protectedData={protectedData}
+                transactionFieldConfigs={transactionFields}
+                intl={intl}
+                className={css.customFieldsContainer}
+              />
+            ) : null}
+
             {!isInquiryProcess ? (
               <div className={css.orderDetails}>
                 <div className={css.orderDetailsMobileSection}>
@@ -343,7 +355,6 @@ export class TransactionPanelComponent extends Component {
                 />
               </div>
             ) : null}
-
             <FeedSection
               rootClassName={css.feedContainer}
               hasMessages={messages.length > 0}

@@ -33,8 +33,7 @@ const CustomListingFields = props => {
   };
   const propsForCustomFields =
     pickCustomFieldProps(
-      publicData,
-      metadata,
+      { publicData, metadata },
       listingFieldConfigs,
       'listingType',
       isFieldForSelectedCategories
