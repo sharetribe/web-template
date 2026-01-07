@@ -1376,6 +1376,7 @@
   "TransactionPage.default-purchase.provider.transition-mark-delivered.actionButtonShipped": "I've shipped this order",
   "TransactionPage.default-purchase.provider.transition-mark-delivered.actionError": "Oops, failed to mark the order as shipped. Please refresh the page and try again.",
   "TransactionPage.deletedListing": "deleted listing",
+  "TransactionPage.detailsTitle": "Details",
   "TransactionPage.fetchOrderFailed": "Fetching order data failed.",
   "TransactionPage.fetchSaleFailed": "Fetching sale data failed.",
   "TransactionPage.leaveReview.actionButton": "Leave a review",

@@ -189,8 +189,12 @@ export const CustomUserFields = props => {
   const shouldPickUserField = fieldConfig =>
     fieldConfig?.scope === 'public' && fieldConfig?.showConfig?.displayInProfile !== false;
   const propsForCustomFields =
-    pickCustomFieldProps(publicData, metadata, userFieldConfig, 'userType', shouldPickUserField) ||
-    [];
+    pickCustomFieldProps(
+      { publicData, metadata },
+      userFieldConfig,
+      'userType',
+      shouldPickUserField
+    ) || [];
 
   const pickUserFields = (filteredConfigs, config) => {
     const { key, schemaType, enumOptions, userTypeConfig = {}, showConfig = {} } = config;

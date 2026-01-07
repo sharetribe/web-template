@@ -5,9 +5,12 @@ import { FormattedMessage } from '../../util/reactIntl';
 import { Heading } from '../../components';
 
 import css from './CustomExtendedDataSection.module.css';
+import classNames from 'classnames';
 
 const SectionDetailsMaybe = props => {
-  const { fieldConfigs, pickExtendedDataFields, heading } = props;
+  const { fieldConfigs, pickExtendedDataFields, heading, className, rootClassName } = props;
+
+  const classes = classNames(rootClassName || css.sectionDetails, className);
 
   if (!fieldConfigs) {
     return null;
@@ -16,10 +19,12 @@ const SectionDetailsMaybe = props => {
   const existingFields = fieldConfigs?.reduce(pickExtendedDataFields, []);
 
   return existingFields?.length > 0 ? (
-    <section className={css.sectionDetails}>
-      <Heading as="h2" rootClassName={css.sectionHeading}>
-        <FormattedMessage id={heading} />
-      </Heading>
+    <section className={classes}>
+      {heading ? (
+        <Heading as="h2" rootClassName={css.sectionHeading}>
+          <FormattedMessage id={heading} />
+        </Heading>
+      ) : null}
       <ul className={css.details}>
         {existingFields.map(detail => (
           <li key={detail.key} className={css.detailsRow}>

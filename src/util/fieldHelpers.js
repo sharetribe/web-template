@@ -44,6 +44,23 @@ const getEntityTypeRestrictions = (entityTypeKey, config) => {
   return { isLimited, limitToIds };
 };
 
+const isCustomFieldRelevantForEntityType = (entityTypeKey, publicData, config) => {
+  if (entityTypeKey == null) {
+    return true;
+  }
+
+  const entityType = publicData && publicData[entityTypeKey];
+  return isFieldFor(entityTypeKey, entityType, config);
+};
+
+/**
+ * Get a snake-cased key with the specified prefix, e.g. customer_options
+ * @param {String} prefix the prefix to append to the key, e.g. 'customer'
+ * @param {String} key the original key, e.g. 'options'
+ * @returns string
+ */
+export const getPrefixedKey = (prefix, key) => `${prefix}_${key}`;
+
 /**
  * Check if the given listing type is allowed according to the given listing field config.
  *
@@ -115,8 +132,8 @@ export const pickCategoryFields = (data, prefix, level, categoryLevelOptions = [
 /**
  * Pick props for SectionMultiEnumMaybe and SectionTextMaybe display components.
  *
- * @param {*} publicData entity public data containing the value(s) to be displayed
- * @param {*} metadata entity metadata containing the value(s) to be displayed
+ * @param {*} extendedData the different entity extended data containing the value(s) to be displayed:
+ * publicData, metadata, protectedData.
  * @param {Array<Object>} fieldConfigs array of custom field configuration objects
  * @param {String} entityTypeKey the name of the key denoting the entity type in publicData.
  * E.g. 'listingType', 'userType', or 'category'
@@ -125,18 +142,16 @@ export const pickCategoryFields = (data, prefix, level, categoryLevelOptions = [
  * - 'options' and 'selectedOptions' for SCHEMA_TYPE_MULTI_ENUM
  * - or 'text' for SCHEMA_TYPE_TEXT
  */
-export const pickCustomFieldProps = (
-  publicData,
-  metadata,
-  fieldConfigs,
-  entityTypeKey,
-  shouldPickFn
-) => {
+export const pickCustomFieldProps = (extendedData, fieldConfigs, entityTypeKey, shouldPickFn) => {
+  const { publicData, metadata, protectedData } = extendedData;
   return fieldConfigs?.reduce((pickedElements, config) => {
     const { key, enumOptions, schemaType, scope = 'public', showConfig } = config;
     const { label, unselectedOptions: showUnselectedOptions } = showConfig || {};
-    const entityType = publicData && publicData[entityTypeKey];
-    const isTargetEntityType = isFieldFor(entityTypeKey, entityType, config);
+    const isTargetEntityType = isCustomFieldRelevantForEntityType(
+      entityTypeKey,
+      publicData,
+      config
+    );
 
     const createFilterOptions = options =>
       options.map(o => ({ key: `${o.option}`, label: o.label }));
@@ -146,6 +161,8 @@ export const pickCustomFieldProps = (
     const value =
       scope === 'public'
         ? getFieldValue(publicData, key)
+        : scope === 'protected'
+        ? getFieldValue(protectedData, key)
         : scope === 'metadata'
         ? getFieldValue(metadata, key)
         : null;
@@ -249,9 +266,10 @@ export const getPropsForCustomTransactionFieldInputs = (transactionFieldConfigs,
       const namespacedKey = addScopePrefix(scope, key);
       const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
       const isTransactionScope = scope === 'protected';
-      const showField =
-        (isCustomer && showTo === 'customer') || (!isCustomer && showTo === 'provider');
-      return isKnownSchemaType && isTransactionScope && showField
+      const showToCustomer = showTo === 'customer';
+      const isCorrectRole = showToCustomer === isCustomer;
+
+      return isKnownSchemaType && isTransactionScope && isCorrectRole
         ? [
             ...pickedFields,
             {
@@ -292,8 +310,7 @@ export const pickTransactionFieldsData = (
     const isTargetScope = scope === targetScope;
     const showToCustomer = showTo === 'customer';
     const isCorrectRole = showToCustomer === isCustomer;
-    const rolePrefix = isCustomer ? 'customer' : 'provider';
-    const roleKey = `${rolePrefix}_${key}`;
+    const roleKey = getPrefixedKey(showTo, key);
 
     if (isKnownSchemaType && isTargetScope && isCorrectRole) {
       const fieldValue = getFieldValue(data, namespacedKey);
