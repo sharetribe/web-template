@@ -123,7 +123,7 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
           {
             type: 'maxTransitions',
             action: 'disable',
-            max: 50,
+            max: 7, //max: 50,
             disabledReason: {
               translationKey: `TransactionPage.${processName}.${CUSTOMER}.${states.OFFER_PENDING}.disabled.maxRequests`,
             },
@@ -163,7 +163,7 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
           {
             type: 'maxTransitions',
             action: 'disable',
-            max: 50,
+            max: 7, //max: 50,
             disabledReason: {
               translationKey: `TransactionPage.${processName}.${PROVIDER}.${states.OFFER_PENDING}.disabled.maxRequests`,
             },
@@ -212,7 +212,7 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
           {
             type: 'maxTransitions',
             action: 'disable',
-            max: 50,
+            max: 7, //max: 50,
             disabledReason: {
               translationKey: `TransactionPage.${processName}.${PROVIDER}.${states.UPDATE_PENDING}.disabled.maxRequests`,
             },
