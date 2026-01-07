@@ -54,6 +54,10 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
       translationId:
         'TransactionPage.ActivityFeed.default-negotiation.transition.provider-reject-counter-offer',
     },
+    {
+      transition: transitions.ACCEPT_UPDATE,
+      translationId: 'TransactionPage.ActivityFeed.default-negotiation.transition.accept-update',
+    },
   ];
   const sharedStateData = {
     processName,
