@@ -60,7 +60,9 @@ const getButtonStatus = (buttonProps, additionalInfo) => {
   return buttonProps.conditions.reduce(
     (acc, c) => {
       const extra = { transitions, timeZone, listingTypeConfig };
-      if (!acc.disabled && c.action === 'disable' && checkCondition(c, extra)) {
+      if (!acc.hidden && c.action === 'hide' && checkCondition(c, extra)) {
+        return { disabled: false, hidden: true, reason: '' };
+      } else if (!acc.disabled && c.action === 'disable' && checkCondition(c, extra)) {
         // Use disabledReason.translationKey if present
         const translationKey = c.disabledReason?.translationKey;
         const fallbackReason = 'You cannot perform this action right now.'; // This should not be shown ever.
@@ -70,12 +72,10 @@ const getButtonStatus = (buttonProps, additionalInfo) => {
         }
 
         return {
+          hidden: acc.hidden,
           disabled: true,
-          hidden: false,
           reason: translationKey ? intl.formatMessage({ id: translationKey }) : fallbackReason,
         };
-      } else if (!acc.disabled && c.action === 'hide' && checkCondition(c, extra)) {
-        return { disabled: false, hidden: true, reason: '' };
       }
       return acc;
     },
