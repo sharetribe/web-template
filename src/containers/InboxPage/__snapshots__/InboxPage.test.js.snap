@@ -2820,7 +2820,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
 </div>
 `;
 
-exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/accept-offer 1`] = `
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/accept-update 1`] = `
 <div
   class="item"
 >
@@ -2841,7 +2841,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-ACCEPT_OFFER-request"
+    href="/order/id-negotiation-ACCEPT_UPDATE-request"
   >
     <div
       class="rowNotificationDot"
@@ -3980,7 +3980,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
 </div>
 `;
 
-exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/operator-accept-offer 1`] = `
+exports[`InboxPage InboxItem: default-negotiation process with "request" check negotiation: transition/operator-accept-update 1`] = `
 <div
   class="item"
 >
@@ -4001,7 +4001,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-OPERATOR_ACCEPT_OFFER-request"
+    href="/order/id-negotiation-OPERATOR_ACCEPT_UPDATE-request"
   >
     <div
       class="rowNotificationDot"
@@ -5361,7 +5361,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
       class="itemState"
     >
       <div
-        class="stateName stateNoActionNeeded"
+        class="stateName stateActionNeeded"
       >
         <span>
           InboxPage.default-negotiation.update-pending.status
@@ -5419,7 +5419,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
       class="itemState"
     >
       <div
-        class="stateName stateNoActionNeeded"
+        class="stateName stateActionNeeded"
       >
         <span>
           InboxPage.default-negotiation.update-pending.status
