@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Form as FinalForm } from 'react-final-form';
+import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
 
 // Import contexts and util modules
@@ -11,6 +12,10 @@ import { formatMoney } from '../../util/currency';
 import { createSlug } from '../../util/urlHelpers';
 import { isTransactionInitiateListingNotFoundError } from '../../util/errors';
 import * as validators from '../../util/validators';
+import {
+  getPropsForCustomTransactionFieldInputs,
+  pickTransactionFieldsData,
+} from '../../util/fieldHelpers.js';
 import { getProcess } from '../../transactions/transaction';
 
 // Import shared components
@@ -25,6 +30,7 @@ import {
   Page,
   PrimaryButton,
   TopbarSimplified,
+  CustomExtendedDataField,
 } from '../../components';
 
 import { getTransactionTypeData } from './CheckoutPageTransactionHelpers.js';
@@ -48,6 +54,7 @@ const handleSubmit = (submitting, setSubmitting, props) => values => {
     processName,
     onInquiryWithoutPayment,
     onSubmitCallback,
+    transactionFieldConfigs,
   } = props;
 
   const { inquiryMessage } = values;
@@ -65,6 +72,7 @@ const handleSubmit = (submitting, setSubmitting, props) => values => {
     protectedData: {
       inquiryMessage,
       ...getTransactionTypeData(listingType, unitType, config),
+      ...pickTransactionFieldsData(values, 'protected', true, transactionFieldConfigs),
     },
   };
 
@@ -114,6 +122,7 @@ export const CheckoutPageWithInquiryProcess = props => {
     title,
     showListingImage,
     initiateInquiryError,
+    transactionFieldConfigs = [],
   } = props;
 
   const onSubmit = handleSubmit(submitting, setSubmitting, props);
@@ -134,6 +143,12 @@ export const CheckoutPageWithInquiryProcess = props => {
   const listingTypeConfigs = config.listing.listingTypes;
   const listingTypeConfig = listingTypeConfigs.find(conf => conf.listingType === listingType);
   const showPrice = displayPrice(listingTypeConfig);
+
+  const hasTransactionFieldConfigs = transactionFieldConfigs.length > 0;
+  const transactionFieldsProps = getPropsForCustomTransactionFieldInputs(
+    transactionFieldConfigs,
+    true
+  );
 
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
@@ -169,6 +184,7 @@ export const CheckoutPageWithInquiryProcess = props => {
           <section className={css.paymentContainer}>
             <FinalForm
               onSubmit={onSubmit}
+              mutators={{ ...arrayMutators }}
               render={formRenderProps => {
                 const {
                   rootClassName,
@@ -190,6 +206,13 @@ export const CheckoutPageWithInquiryProcess = props => {
                     onSubmit={handleSubmit}
                     enforcePagePreloadFor="OrderDetailsPage"
                   >
+                    {hasTransactionFieldConfigs ? (
+                      <div className={css.transactionFieldsContainer}>
+                        {transactionFieldsProps.map(({ key, ...fieldProps }) => (
+                          <CustomExtendedDataField key={key} {...fieldProps} formId={formId} />
+                        ))}
+                      </div>
+                    ) : null}
                     <div className={css.section}>
                       <Heading as="h4" rootClassName={css.sectionHeading}>
                         <FormattedMessage
