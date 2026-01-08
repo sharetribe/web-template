@@ -257,7 +257,7 @@ export const isValidCurrencyForTransactionProcess = (
  * @param {Boolean} isCustomer Flag to determine whether the target context
  * is a set of fields related to the customer
  * @returns an array of props for CustomExtendedDataField: key, name,
- * fieldConfig, defaultRequiredMessage
+ * fieldConfig
  */
 export const getPropsForCustomTransactionFieldInputs = (transactionFieldConfigs, isCustomer) => {
   return (
