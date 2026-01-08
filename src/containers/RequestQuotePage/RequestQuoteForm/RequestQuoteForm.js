@@ -1,14 +1,21 @@
 import React from 'react';
 import { Form as FinalForm } from 'react-final-form';
+import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
 
 // Import contexts and util modules
 import { FormattedMessage, intlShape } from '../../../util/reactIntl.js';
 import { propTypes } from '../../../util/types.js';
 import * as validators from '../../../util/validators.js';
+import { getPropsForCustomTransactionFieldInputs } from '../../../util/fieldHelpers.js';
 
 // Import shared components
-import { FieldTextInput, Form, PrimaryButton } from '../../../components/index.js';
+import {
+  CustomExtendedDataField,
+  FieldTextInput,
+  Form,
+  PrimaryButton,
+} from '../../../components/index.js';
 
 import css from './RequestQuoteForm.module.css';
 
@@ -40,6 +47,7 @@ export const RequestQuoteForm = props => {
     <FinalForm
       initialValues={{}}
       onSubmit={onSubmit}
+      mutators={{ ...arrayMutators }}
       {...restProps}
       render={formRenderProps => {
         const {
@@ -51,15 +59,29 @@ export const RequestQuoteForm = props => {
           inProgress,
           invalid,
           authorDisplayName,
+          transactionFieldConfigs = [],
         } = formRenderProps;
 
         const classes = classNames(rootClassName || css.root, className);
         const submitInProgress = inProgress;
         const submitDisabled = invalid || submitInProgress;
 
+        const hasTransactionFieldConfigs = transactionFieldConfigs.length > 0;
+        const transactionFieldsProps = getPropsForCustomTransactionFieldInputs(
+          transactionFieldConfigs,
+          true
+        );
+
         return (
           <Form className={classes} onSubmit={handleSubmit} enforcePagePreloadFor="SaleDetailsPage">
             <div className={css.section}>
+              {hasTransactionFieldConfigs ? (
+                <div className={css.transactionFieldsContainer}>
+                  {transactionFieldsProps.map(({ key, ...fieldProps }) => (
+                    <CustomExtendedDataField key={key} {...fieldProps} formId={formId} />
+                  ))}
+                </div>
+              ) : null}
               <FieldTextInput
                 className={css.fieldDefaultMessage}
                 type="textarea"
