@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form as FinalForm } from 'react-final-form';
+import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
 
 // Import contexts and util modules
@@ -12,6 +13,7 @@ import * as validators from '../../../util/validators.js';
 
 // Import shared components
 import {
+  CustomExtendedDataField,
   FieldCurrencyInput,
   FieldTextInput,
   Form,
@@ -21,6 +23,7 @@ import {
 } from '../../../components/index.js';
 
 import css from './MakeOfferForm.module.css';
+import { getPropsForCustomTransactionFieldInputs } from '../../../util/fieldHelpers.js';
 
 const { Money } = sdkTypes;
 
@@ -91,6 +94,7 @@ export const MakeOfferForm = props => {
     errorMessageComponent: ErrorMessage,
     makeOfferError,
     onSubmit,
+    ...restProps
   } = props;
 
   const initialValuesMaybe = price ? { offer: price } : {};
@@ -105,7 +109,9 @@ export const MakeOfferForm = props => {
   return (
     <FinalForm
       initialValues={initialValuesMaybe}
+      mutators={{ ...arrayMutators }}
       onSubmit={onSubmit}
+      {...restProps}
       render={formRenderProps => {
         const {
           rootClassName,
@@ -116,11 +122,19 @@ export const MakeOfferForm = props => {
           inProgress,
           invalid,
           authorDisplayName,
+          transactionFields = [],
         } = formRenderProps;
 
         const classes = classNames(rootClassName || css.root, className);
         const submitInProgress = inProgress;
         const submitDisabled = invalid || submitInProgress || !stripeConnected;
+
+        const hasTransactionFields = transactionFields.length > 0;
+        const transactionFieldsProps = getPropsForCustomTransactionFieldInputs(
+          transactionFields,
+          intl,
+          false
+        );
 
         return (
           <Form className={classes} onSubmit={handleSubmit} enforcePagePreloadFor="SaleDetailsPage">
@@ -142,6 +156,14 @@ export const MakeOfferForm = props => {
                 currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
                 validate={priceValidators}
               />
+
+              {hasTransactionFields ? (
+                <div className={css.transactionFieldsContainer}>
+                  {transactionFieldsProps.map(({ key, ...fieldProps }) => (
+                    <CustomExtendedDataField key={key} {...fieldProps} formId={formId} />
+                  ))}
+                </div>
+              ) : null}
 
               <FieldTextInput
                 className={css.fieldDefaultMessage}
