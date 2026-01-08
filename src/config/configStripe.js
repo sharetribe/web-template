@@ -61,9 +61,9 @@ export const supportedCountries = [
     },
   },
   {
-    //Bulgraia
+    //Bulgaria
     code: 'BG',
-    currency: 'BGN',
+    currency: 'EUR',
     accountConfig: {
       iban: true,
     },
