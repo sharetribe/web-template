@@ -22,6 +22,7 @@ import {
   resolveLatestProcessName,
 } from '../../transactions/transaction.js';
 import { requireListingImage } from '../../util/configHelpers.js';
+import { pickTransactionFieldsData } from '../../util/fieldHelpers.js';
 
 // Import global thunk functions
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck.js';
@@ -58,7 +59,7 @@ const getTransactionTypeData = (listingType, unitTypeInPublicData, config) => {
   return unitTypeInPublicData ? { unitType: unitTypeInPublicData, ...rest } : {};
 };
 
-const handleSubmit = (submitting, setSubmitting, props) => values => {
+const handleSubmit = (submitting, setSubmitting, props, transactionFieldConfigs) => values => {
   if (submitting) {
     return;
   }
@@ -76,6 +77,7 @@ const handleSubmit = (submitting, setSubmitting, props) => values => {
     protectedData: {
       ...(customerDefaultMessage ? { customerDefaultMessage } : {}),
       ...getTransactionTypeData(listingType, unitType, config),
+      ...pickTransactionFieldsData(values, 'protected', true, transactionFieldConfigs),
     },
   };
 
@@ -112,7 +114,6 @@ const RequestQuotePageComponent = props => {
     requestQuoteError,
   } = props;
 
-  const onSubmit = handleSubmit(submitting, setSubmitting, props);
   const listingTitle = listing?.attributes?.title;
   const { price, publicData } = listing?.attributes || {};
   const firstImage = listing?.images?.length > 0 ? listing.images[0] : null;
@@ -122,6 +123,9 @@ const RequestQuotePageComponent = props => {
   const listingTypeConfig = listingTypeConfigs.find(conf => conf.listingType === listingType);
   const showPrice = displayPrice(listingTypeConfig);
   const showListingImage = requireListingImage(listingTypeConfig);
+  const transactionFieldConfigs = listingTypeConfig?.transactionFields || [];
+
+  const onSubmit = handleSubmit(submitting, setSubmitting, props, transactionFieldConfigs);
 
   return (
     <Page title={pageTitle} scrollingDisabled={scrollingDisabled}>
@@ -163,6 +167,7 @@ const RequestQuotePageComponent = props => {
               onSubmit={onSubmit}
               errorMessageComponent={ErrorMessage}
               requestQuoteError={requestQuoteError}
+              transactionFieldConfigs={transactionFieldConfigs}
             />
           </section>
         </main>

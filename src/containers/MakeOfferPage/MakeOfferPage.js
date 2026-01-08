@@ -29,6 +29,7 @@ import {
   REQUEST,
   resolveLatestProcessName,
 } from '../../transactions/transaction.js';
+import { pickTransactionFieldsData } from '../../util/fieldHelpers.js';
 
 // Import global thunk functions
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck.js';
@@ -67,7 +68,7 @@ const getTransactionTypeData = (listingType, unitTypeInPublicData, config) => {
   return unitTypeInPublicData ? { unitType: unitTypeInPublicData, ...rest } : {};
 };
 
-const handleSubmit = (submitting, setSubmitting, props) => values => {
+const handleSubmit = (submitting, setSubmitting, props, transactionFieldConfigs) => values => {
   if (submitting) {
     return;
   }
@@ -91,6 +92,10 @@ const handleSubmit = (submitting, setSubmitting, props) => values => {
 
   const { listingType, transactionProcessAlias, unitType } = listing?.attributes?.publicData || {};
 
+  const isOwnListing = listing.author.id === currentUser.id;
+  const isRequest = unitType === REQUEST;
+  const isCurrentUserCustomer = isOwnListing && isRequest;
+
   // These are the inquiry parameters for the (one and only) transition
   const makeOfferParams = {
     listingId: listing?.id,
@@ -98,6 +103,12 @@ const handleSubmit = (submitting, setSubmitting, props) => values => {
       ...(providerDefaultMessage ? { providerDefaultMessage } : {}),
       ...(customerDefaultMessage ? { customerDefaultMessage } : {}),
       ...getTransactionTypeData(listingType, unitType, config),
+      ...pickTransactionFieldsData(
+        values,
+        'protected',
+        isCurrentUserCustomer,
+        transactionFieldConfigs
+      ),
     },
     offerInSubunits: quote?.amount,
     currency: quote?.currency,
@@ -113,9 +124,9 @@ const handleSubmit = (submitting, setSubmitting, props) => values => {
 
       // Currently, only provider is going to see this page. They should be redirected to the SaleDetailsPage
       // If unitType is 'request', then the author of the listing is 'customer' ('offer' and other unit types are created by provider)
-      const isOwnListing = listing.author.id === currentUser.id;
-      const isRequest = unitType === REQUEST;
-      const isCurrentUserCustomer = isOwnListing && isRequest;
+      // const isOwnListing = listing.author.id === currentUser.id;
+      // const isRequest = unitType === REQUEST;
+      // const isCurrentUserCustomer = isOwnListing && isRequest;
       const transactionPage = isCurrentUserCustomer ? 'OrderDetailsPage' : 'SaleDetailsPage';
       const txDetailsPath = pathByRouteName(transactionPage, routeConfiguration, {
         id: transaction?.id?.uuid,
@@ -155,7 +166,6 @@ const MakeOfferPageComponent = props => {
     makeOfferError,
   } = props;
 
-  const onSubmit = handleSubmit(submitting, setSubmitting, props);
   const listingTitle = listing?.attributes?.title;
   const { price: listingPrice, publicData } = listing?.attributes || {};
   const firstImage = listing?.images?.length > 0 ? listing.images[0] : null;
@@ -167,6 +177,9 @@ const MakeOfferPageComponent = props => {
   const showListingImage = requireListingImage(listingTypeConfig);
   const showLocation = publicData?.unitType !== 'offer';
   const isUpdateOfferEnabled = allowProviderUpdateOffer(listingTypeConfig);
+  const transactionFieldConfigs = listingTypeConfig?.transactionFields || [];
+
+  const onSubmit = handleSubmit(submitting, setSubmitting, props, transactionFieldConfigs);
 
   const stripeConnected = currentUser?.attributes?.stripeConnected;
   const stripeAccountData = stripeConnected ? getStripeAccountData(stripeAccount) : null;
@@ -239,6 +252,7 @@ const MakeOfferPageComponent = props => {
               onSubmit={onSubmit}
               errorMessageComponent={ErrorMessage}
               makeOfferError={makeOfferError}
+              transactionFieldConfigs={transactionFieldConfigs}
             />
           </section>
         </main>
