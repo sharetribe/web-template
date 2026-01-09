@@ -9,7 +9,7 @@ import { createSlug } from '../../../util/urlHelpers';
 import {
   isBookingProcess,
   isPurchaseProcess,
-  NEGOTIATION_PROCESS_NAME,
+  isNegotiationProcess,
 } from '../../../transactions/transaction';
 import { displayPrice } from '../../../util/configHelpers';
 
@@ -197,6 +197,7 @@ export class TransactionPanelComponent extends Component {
       orderPanel,
       config,
       hasViewingRights,
+      transactionFields = [],
     } = this.props;
 
     const hasTransitions = transitions.length > 0;
@@ -238,7 +239,10 @@ export class TransactionPanelComponent extends Component {
     const showPrice = isInquiryProcess && displayPrice(listingTypeConfig);
     const showBreakDown = stateData.showBreakDown !== false; // NOTE: undefined defaults to true due to historical reasons.
 
-    const { transactionFields } = listingTypeConfig || {};
+    // Negotiation process custom transaction fields are shown in RequestQuote and Offer components,
+    // so we don't show them here
+    const showCustomTransactionFields =
+      transactionFields?.length > 0 && !isNegotiationProcess(stateData.processName);
 
     const showSendMessageForm =
       !isCustomerBanned && !isCustomerDeleted && !isProviderBanned && !isProviderDeleted;
@@ -315,7 +319,7 @@ export class TransactionPanelComponent extends Component {
             {requestQuote}
             {offer}
 
-            {transactionFields?.length > 0 ? (
+            {showCustomTransactionFields ? (
               <CustomTransactionFields
                 protectedData={protectedData}
                 transactionFieldConfigs={transactionFields}
