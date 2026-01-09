@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Update a Marketplace text
+  [#738](https://github.com/sharetribe/web-template/pull/738)
 - [remove] Bulgaria joined to Eurozone, so we removed BGN currency from the Stripe supported
   currencies. [#734](https://github.com/sharetribe/web-template/pull/734)
 - [add] Improve banned and deleted user handling on Transaction Page

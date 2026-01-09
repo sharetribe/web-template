@@ -503,7 +503,7 @@
   "InboxPage.ordersTabTitle": "As a customer",
   "InboxPage.ordersTitle": "Inbox: As a customer",
   "InboxPage.quantity": "Number of items: {quantity}",
-  "InboxPage.salesTabTitle": "As a provider",
+  "InboxPage.salesTabTitle": "As a listing author",
   "InboxPage.salesTitle": "Inbox: As a listing author",
   "InboxPage.screenreader.sidenav": "Inbox navigation",
   "InboxPage.seats": "Number of seats: {seats}",
