@@ -14,7 +14,7 @@ import {
   propTypes,
   DATE_TYPE_DATE,
   DATE_TYPE_DATETIME,
-  LINE_ITEM_NIGHT,
+  LINE_ITEM_DAY,
   LINE_ITEM_HOUR,
   LISTING_UNIT_TYPES,
   STOCK_MULTIPLE_ITEMS,
@@ -76,11 +76,11 @@ const bookingData = (tx, lineItemUnitType, timeZone) => {
   const bookingStart = displayStart || start;
   const bookingEndRaw = displayEnd || end;
 
-  // When unit type is night, we can assume booking end to be inclusive.
-  const isNight = lineItemUnitType === LINE_ITEM_NIGHT;
-  const isHour = lineItemUnitType === LINE_ITEM_HOUR;
-  const bookingEnd =
-    isNight || isHour ? bookingEndRaw : subtractTime(bookingEndRaw, 1, 'days', timeZone);
+  // LINE_ITEM_DAY uses exclusive end day, so we subtract one day from the end date
+  const isDayBooking = [LINE_ITEM_DAY].includes(lineItemUnitType);
+  const bookingEnd = isDayBooking
+    ? subtractTime(bookingEndRaw, 1, 'days', timeZone)
+    : bookingEndRaw;
 
   return { bookingStart, bookingEnd };
 };
