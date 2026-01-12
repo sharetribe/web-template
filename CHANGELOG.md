@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [add] Fix an email template subject
+  [#740](https://github.com/sharetribe/web-template/pull/740)
 - [add] Update a Marketplace text
   [#738](https://github.com/sharetribe/web-template/pull/738)
 
