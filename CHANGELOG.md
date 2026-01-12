@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] InboxPage: fix booking end time calculation for fixed booking type to use inclusive end
+  time. [#736](https://github.com/sharetribe/web-template/pull/736)
 - [remove] Bulgaria joined to Eurozone, so we removed BGN currency from the Stripe supported
   currencies. [#734](https://github.com/sharetribe/web-template/pull/734)
 - [add] Improve banned and deleted user handling on Transaction Page
