@@ -12,10 +12,15 @@ way to update this template, but currently, we follow a pattern:
 
 ---
 
-## Upcoming version 2025-XX-XX
+## Upcoming version 2026-XX-XX
 
 - [add] Update a Marketplace text
   [#738](https://github.com/sharetribe/web-template/pull/738)
+
+## [v10.6.0] 2026-01-12
+
+- [fix] InboxPage: fix booking end time calculation for fixed booking type to use inclusive end
+  time. [#736](https://github.com/sharetribe/web-template/pull/736)
 - [remove] Bulgaria joined to Eurozone, so we removed BGN currency from the Stripe supported
   currencies. [#734](https://github.com/sharetribe/web-template/pull/734)
 - [add] Improve banned and deleted user handling on Transaction Page
@@ -26,6 +31,8 @@ way to update this template, but currently, we follow a pattern:
   [#731](https://github.com/sharetribe/web-template/pull/731)
 - [add] Add currently available translations for DE, FR.
   [#730](https://github.com/sharetribe/web-template/pull/730)
+
+  [v10.6.0]: https://github.com/sharetribe/web-template/compare/v10.5.0...v10.6.0
 
 ## [v10.5.0] 2025-12-02
 
