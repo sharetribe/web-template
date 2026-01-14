@@ -7,7 +7,7 @@
     "@loadable/component": "^5.16.4",
     "@loadable/server": "^5.16.5",
     "@mapbox/polyline": "^1.2.1",
-    "@reduxjs/toolkit": "^2.9.0",
+    "@reduxjs/toolkit": "2.11.2",
     "@sentry/browser": "^8.55.0",
     "@sentry/node": "^8.55.0",
     "autosize": "^5.0.2",
